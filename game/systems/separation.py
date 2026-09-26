@@ -20,6 +20,8 @@ class SeparationSystem:
         for e in st.entities.values():
             if not e.alive or e.is_planet:
                 continue
+            if e.is_station:
+                continue    # stations are anchored: ships push away, not them
             cx, cy, cz = (int(e.pos.x // cell), int(e.pos.y // cell), int(e.pos.z // cell))
             push_x = push_y = push_z = 0.0
             for dx in (-1, 0, 1):

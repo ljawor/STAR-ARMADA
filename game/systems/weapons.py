@@ -153,8 +153,12 @@ class WeaponSystem:
                 })
                 st.spawn_effect("beam", e.pos.copy(), target_pos=target.pos.to_dict(),
                                 color=list(wd.color))
+                st.events.publish("weapon_fired", attacker_id=e.id, owner=e.owner,
+                                  weapon=wd.id, heavy=wd.is_beam or wd.damage >= 25)
             else:
                 self._launch_projectiles(e, target, wd, count)
+                st.events.publish("weapon_fired", attacker_id=e.id, owner=e.owner,
+                                  weapon=wd.id, heavy=wd.damage >= 25)
 
     def _launch_projectiles(self, e, target, wd, count: int) -> None:
         st = self.state

@@ -89,9 +89,81 @@ class Renderer:
             self._draw_projectiles()
         if "ships" not in self.skip:
             self._draw_ships(selection)
+        if "sites" not in self.skip:
+            self._draw_construction_sites()
         if "rings" not in self.skip:
             self._draw_selection_rings(selection)
         glFlush()
+
+    def _draw_construction_sites(self):
+        """Wireframe scaffold + progress ring at each queued station site.
+
+        The station entity only exists once construction completes; this makes
+        the pending build visible (and selectable via the minimap/panel).
+        """
+        st = self.state
+        for e in st.entities.values():
+            if not e.alive or not e.is_construction:
+                continue
+            item = e.build_queue[0] if e.build_queue else None
+            if item is None or item.get("kind") != "station":
+                continue
+            pos = item.get("pos")
+            if not pos:
+                continue
+            pos = (pos["x"] if isinstance(pos, dict) else pos[0],
+                   pos["y"] if isinstance(pos, dict) else pos[1],
+                   pos["z"] if isinstance(pos, dict) else pos[2])
+            sd = self.ds.stations.get(item.get("item", ""))
+            if sd is None:
+                continue
+            if not self._in_front(pos, sd.radius * 2.5):
+                continue
+            r = sd.radius
+            frac = 1.0 - max(0.0, item.get("time_left", 0)) / \
+                max(0.1, item.get("total", 1))
+            color = self._owner_color(e.owner)
+            import OpenGL.GL as GL
+            GL.glPushAttrib(GL.GL_ENABLE_BIT | GL.GL_LIGHTING_BIT |
+                            GL.GL_CURRENT_BIT | GL.GL_DEPTH_BUFFER_BIT)
+            GL.glDisable(GL.GL_LIGHTING)
+            glDisable(GL_DEPTH_TEST)
+            glLineWidth(2.0)
+            # scaffold ring on the ground plane
+            glColor4f(color[0], color[1], color[2], 0.85)
+            glBegin(GL_LINE_LOOP)
+            for i in range(24):
+                a = i / 24 * 2 * math.pi
+                glVertex3f(pos[0] + math.sin(a) * r, 0,
+                           pos[2] + math.cos(a) * r)
+            glEnd()
+            # lattice: 8 vertical posts + height ring (grows with progress)
+            glBegin(GL_LINES)
+            for i in range(8):
+                a = i / 8 * 2 * math.pi
+                sa, ca = math.sin(a) * r * 0.85, math.cos(a) * r * 0.85
+                glVertex3f(pos[0] + sa, 0, pos[2] + ca)
+                glVertex3f(pos[0] + sa, r * (0.4 + 0.6 * frac),
+                           pos[2] + ca)
+            glEnd()
+            h = r * (0.4 + 0.6 * frac)
+            glBegin(GL_LINE_LOOP)
+            for i in range(24):
+                a = i / 24 * 2 * math.pi
+                glVertex3f(pos[0] + math.sin(a) * r * 0.85, h,
+                           pos[2] + math.cos(a) * r * 0.85)
+            glEnd()
+            # green progress arc
+            glColor3f(0.4, 1.0, 0.5)
+            glLineWidth(3.0)
+            glBegin(GL_LINE_STRIP)
+            for i in range(int(40 * min(1.0, frac)) + 1):
+                a = i / 40 * 2 * math.pi
+                glVertex3f(pos[0] + math.sin(a) * r * 1.25, r * 0.5,
+                           pos[2] + math.cos(a) * r * 1.25)
+            glEnd()
+            glPopAttrib()
+            glEnable(GL_DEPTH_TEST)
 
     # ---------------------------------------------------------- view culling
     def _setup_lighting(self):
@@ -548,6 +620,45 @@ class Renderer:
         self._out_tri(tip, d, a, ref)
         glEnd()
 
+    def _dome(self, radius, lons=10, lats=7, cy=0.0):
+        """Hemisphere dome emitted inline (safe inside display lists)."""
+        glBegin(GL_TRIANGLES)
+        for i in range(lons):
+            lon0 = 2 * math.pi * i / lons
+            lon1 = 2 * math.pi * (i + 1) / lons
+            for j in range(lats):
+                lat0 = math.pi * 0.5 * j / lats        # 0..pi/2 (equator->top)
+                lat1 = math.pi * 0.5 * (j + 1) / lats
+
+                def vert(lon, lat):
+                    return (radius * math.cos(lat) * math.sin(lon),
+                            cy + radius * math.sin(lat),
+                            radius * math.cos(lat) * math.cos(lon))
+
+                a, b = vert(lon0, lat0), vert(lon1, lat0)
+                c, d = vert(lon1, lat1), vert(lon0, lat1)
+                for tri in ((a, b, c), (a, c, d)):
+                    ax_, ay_, az_ = (tri[1][0] - tri[0][0],
+                                     tri[1][1] - tri[0][1],
+                                     tri[1][2] - tri[0][2])
+                    bx_, by_, bz_ = (tri[2][0] - tri[0][0],
+                                     tri[2][1] - tri[0][1],
+                                     tri[2][2] - tri[0][2])
+                    nx = ay_ * bz_ - az_ * by_
+                    ny = az_ * bx_ - ax_ * bz_
+                    nz = ax_ * by_ - ay_ * bx_
+                    centroid = ((tri[0][0] + tri[1][0] + tri[2][0]) / 3,
+                                (tri[0][1] + tri[1][1] + tri[2][1]) / 3 - cy,
+                                (tri[0][2] + tri[1][2] + tri[2][2]) / 3)
+                    if nx * centroid[0] + ny * centroid[1] + nz * centroid[2] < 0:
+                        tri = (tri[0], tri[2], tri[1])
+                    for v in tri:
+                        n = math.sqrt(v[0] ** 2 + (v[1] - cy) ** 2
+                                      + v[2] ** 2) or 1.0
+                        glNormal3f(v[0] / n, (v[1] - cy) / n, v[2] / n)
+                        glVertex3f(*v)
+        glEnd()
+
     def _draw_ship(self, e: Entity):
         ds = self.ds
         sd = ds.ships.get(e.data_id)
@@ -618,22 +729,37 @@ class Renderer:
         GL.glPushAttrib(GL.GL_ENABLE_BIT)
         GL.glDisable(GL.GL_CULL_FACE)
         if shape == "wedge":
-            # fighter: fuselage + canopy + swept wings + tail fin
+            # fighter: fuselage + canopy + swept wings + tail fin + cannons
             self._lit_box(14, 6, 40, cy=3)
             self._out_pyr((0, 4, 34), ((-7, 1, 16), (7, 1, 16),
                                        (7, 6, 16), (-7, 6, 16)))
             self._lit_box(34, 1.6, 16, cx=18, cy=4, cz=-4)   # right wing
             self._lit_box(34, 1.6, 16, cx=-18, cy=4, cz=-4)  # left wing
             self._lit_box(2.5, 12, 14, cy=9, cz=-12)         # tail fin
+            # wingtip cannons + engine nozzles
+            self._lit_box(3, 3, 12, cx=34, cy=4, cz=4)
+            self._lit_box(3, 3, 12, cx=-34, cy=4, cz=4)
+            self._lit_box(4, 4, 3, cz=-20.5)
+            self._lit_box(3, 2, 2, cy=6.5, cz=-20.5)
         elif shape == "needle":
-            # corvette/frigate: nose pyramid + hull + bridge + engine block
+            # corvette/frigate: nose + hull + bridge + engines + turrets
             self._out_pyr((0, 3, 50), ((-8, 0, 14), (8, 0, 14),
                                        (8, 6, 14), (-8, 6, 14)))
             self._lit_box(24, 10, 44, cz=-8)
             self._lit_box(12, 7, 16, cy=7, cz=-14)           # bridge
             self._lit_box(18, 4, 8, cz=-32)                  # engine block
+            # twin engine nozzles
+            self._lit_box(6, 6, 4, cx=-5, cy=-1, cz=-36)
+            self._lit_box(6, 6, 4, cx=5, cy=-1, cz=-36)
+            # dorsal turret + sensor mast
+            self._lit_box(5, 5, 5, cy=6, cz=4)
+            self._lit_box(7, 3, 3, cy=8, cz=4)
+            self._lit_box(1.2, 10, 1.2, cy=12, cz=-18)       # antenna
+            # side sponsons (gun pods)
+            self._lit_box(4, 4, 14, cx=13.5, cy=-2, cz=-6)
+            self._lit_box(4, 4, 14, cx=-13.5, cy=-2, cz=-6)
         elif shape == "cruiser":
-            # heavy hull + bow + command tower + nacelles + engines
+            # heavy hull + bow + command tower + nacelles + engines + broadside
             self._lit_box(30, 14, 100, cz=-8)
             self._out_pyr((0, 5, 78), ((-13, 0, 40), (13, 0, 40),
                                        (13, 12, 40), (-13, 12, 40)))
@@ -641,20 +767,57 @@ class Renderer:
             self._lit_box(8, 6, 44, cx=20, cz=-26)           # right nacelle
             self._lit_box(8, 6, 44, cx=-20, cz=-26)          # left nacelle
             self._lit_box(22, 7, 10, cz=-56)                 # engine block
+            # triple engine nozzles
+            self._lit_box(6, 6, 5, cx=-7, cy=-2, cz=-61)
+            self._lit_box(6, 6, 5, cx=0, cy=-2, cz=-61)
+            self._lit_box(6, 6, 5, cx=7, cy=-2, cz=-61)
+            # command tower windows band + top comm dome (inline tristrip)
+            self._lit_box(14, 2, 6, cy=16, cz=-18)
+            self._dome(4.5, 10, 7)
+            # broadside turret rows (3 per side)
+            for cz_ in (18, -2, -22):
+                self._lit_box(6, 5, 6, cx=16, cy=5, cz=cz_)
+                self._lit_box(6, 5, 6, cx=-16, cy=5, cz=cz_)
+            # spinal cannon
+            self._lit_box(4, 4, 26, cy=8, cz=58)
+            self._out_pyr((0, 8, 92), ((-2.5, 6.5, 66), (2.5, 6.5, 66),
+                                       (2.5, 9.5, 66), (-2.5, 9.5, 66)))
         elif shape == "dagger":
-            # battleship/supercap: long dagger hull + tower + spines
+            # battleship: long dagger hull + tower + spines + heavy battery
             self._lit_box(38, 20, 150)
             self._out_pyr((0, 6, 108), ((-16, 0, 72), (16, 0, 72),
                                         (16, 16, 72), (-16, 16, 72)))
             self._lit_box(20, 24, 32, cy=20, cz=-34)         # command tower
             self._lit_box(4, 18, 18, cy=14, cz=28)           # dorsal spine
             self._lit_box(30, 10, 12, cz=-70)                # engine block
+            # quad engine nozzles
+            for cx_ in (-11, -4, 4, 11):
+                self._lit_box(5.5, 5.5, 5, cx=cx_, cy=-4, cz=-76)
+            # tower detail: windows + flag mast
+            self._lit_box(16, 3, 8, cy=30, cz=-34)
+            self._lit_box(1.5, 12, 1.5, cy=40, cz=-34)
+            # heavy turret bank (4 turrets on the spine)
+            for cz_ in (48, 24, -6, -52):
+                self._lit_box(9, 7, 9, cy=12, cz=cz_)
+                self._lit_box(3.5, 3.5, 10, cy=14, cz=cz_ + 7)
+            # side armor sponsons
+            for cz_ in (30, -30):
+                self._lit_box(6, 8, 30, cx=21, cy=-3, cz=cz_)
+                self._lit_box(6, 8, 30, cx=-21, cy=-3, cz=cz_)
         else:
-            # construction/generic: cargo box + cab + skids
+            # construction/generic: cargo box + cab + skids + crane arm
             self._lit_box(26, 14, 36, cy=2)
             self._lit_box(12, 8, 10, cy=11, cz=12)
             self._lit_box(30, 3, 8, cy=-7, cz=-10)
             self._lit_box(30, 3, 8, cy=-7, cz=12)
+            # cargo pods + crane mast
+            self._lit_box(8, 8, 8, cx=8, cy=-8, cz=16)
+            self._lit_box(8, 8, 8, cx=-8, cy=-8, cz=16)
+            self._lit_box(2.5, 14, 2.5, cx=-12, cy=16, cz=-8)
+            self._lit_box(14, 2, 2.5, cx=-5, cy=22, cz=-8)
+            # engine nozzles
+            self._lit_box(5, 5, 3, cz=-18.5)
+            self._lit_box(4, 3, 2, cy=7, cz=18.5)
         GL.glPopAttrib()
         glEndList()
         self.ship_lists[shape] = lst
@@ -739,6 +902,18 @@ class Renderer:
             # top + bottom sensor spires
             self._lit_box(r * 0.1, r * 0.45, r * 0.1, cy=r * 0.55)
             self._lit_box(r * 0.1, r * 0.45, r * 0.1, cy=-r * 0.55)
+            # ring habitation pods (8 around the ring)
+            for i in range(8):
+                a = i / 8 * 2 * math.pi
+                px_, pz_ = math.sin(a) * r, math.cos(a) * r
+                self._lit_box(r * 0.16, r * 0.12, r * 0.3,
+                              cx=px_, cy=0.0, cz=pz_)
+            # defense turret studs on the equator
+            for i in range(4):
+                a = (i / 4 + 0.125) * 2 * math.pi
+                px_, pz_ = math.sin(a) * r, math.cos(a) * r
+                self._lit_box(r * 0.08, r * 0.16, r * 0.08,
+                              cx=px_, cy=r * 0.12, cz=pz_)
         elif e.data_id == "shipyard":
             # shipyard: massive gantry frame + build cradles + core
             glColor3f(*color)
@@ -753,6 +928,17 @@ class Renderer:
             glRotatef(-90, 1, 0, 0)
             self._draw_sphere(r * 0.24, 14, 9)
             glPopMatrix()
+            # two open build cradles at the sides (ship under construction)
+            glColor3f(*dark)
+            for sgn in (-1, 1):
+                self._lit_box(r * 0.1, r * 0.5, r * 0.9,
+                              cx=sgn * r * 0.95, cy=r * 0.1)
+                self._lit_box(r * 0.4, r * 0.1, r * 0.7,
+                              cx=sgn * r * 0.95, cy=r * 0.38)
+            # greeble plates on the main block
+            glColor3f(*color)
+            self._lit_box(r * 0.62, r * 0.12, r * 0.4, cy=r * 0.62, cz=-r * 0.3)
+            self._lit_box(r * 0.2, r * 0.3, r * 0.2, cy=r * 0.72, cz=r * 0.45)
         elif e.data_id == "fighter_platform":
             # fighter platform: flat landing deck + control tower + supports
             glColor3f(*color)
@@ -820,14 +1006,23 @@ class Renderer:
                 if a <= 0:
                     continue
                 r = 30 + (fx.get("size", 40) * (0.3 + 2.2 * (1.0 - a)))
-                glColor4f(1.0, 0.6 * a + 0.3, 0.2 * a, a * 0.8)
-                self._flat_ring(pos, r)
+                # billboard fireball core + expanding billboard ring
+                self._draw_glow(pos, r * 0.8, (1.0, 0.55, 0.2),
+                                alpha=a * 0.85, additive=True)
+                self._bb_ring(pos, r, (1.0, 0.5, 0.18, a * 0.7), 3.0)
+            elif kind == "explosion_small":
+                a = max(0.0, 1.0 - t / 0.5)
+                if a <= 0:
+                    continue
+                self._draw_glow(pos, 18 + 40 * (1 - a), (1.0, 0.6, 0.25),
+                                alpha=a * 0.7, additive=True)
             elif kind in ("impact", "hull_hit"):
                 a = max(0.0, 1.0 - t / 0.35)
                 if a <= 0:
                     continue
-                glColor4f(color[0], color[1], color[2], a)
-                self._flat_ring(pos, 10 + 30 * (1 - a))
+                # camera-facing spark, not a ground disc
+                self._draw_glow(pos, 8 + 16 * (1 - a), color,
+                                alpha=a * 0.9, additive=True)
             elif kind == "beam":
                 a = max(0.0, 1.0 - t / 0.25)
                 if a <= 0 or "target_pos" not in fx:
@@ -838,29 +1033,65 @@ class Renderer:
                 glVertex3f(pos[0], pos[1], pos[2])
                 glVertex3f(*fx["target_pos"])
                 glEnd()
+                # glow at both ends of the beam
+                self._draw_glow(pos, 10, color, alpha=a * 0.8, additive=True)
+                self._draw_glow(fx["target_pos"], 14, color,
+                                alpha=a * 0.9, additive=True)
             elif kind in ("jump_charge", "jump_arrive"):
                 a = max(0.0, 1.0 - t / 1.0)
-                glColor4f(0.5, 0.7, 1.0, a * 0.7)
-                self._flat_ring(pos, 60 + 160 * (1 - a))
+                self._bb_ring(pos, 60 + 160 * (1 - a),
+                              (0.5, 0.7, 1.0, a * 0.8), 2.5)
             elif kind == "fire":
                 a = max(0.0, 1.0 - t / 2.0)
-                glColor4f(1.0, 0.5, 0.2, a * 0.5)
-                self._flat_ring(pos, fx.get("size", 40) * 1.4)
+                if a <= 0:
+                    continue
+                # flickering billboard flames on the burning hull
+                sz = fx.get("size", 40)
+                flick = 0.7 + 0.3 * math.sin(self.time * 23.0 + sz)
+                self._draw_glow(pos, sz * 0.55 * flick, (1.0, 0.45, 0.15),
+                                alpha=a * 0.55, additive=True)
+                self._draw_glow(pos, sz * 0.3 * flick, (1.0, 0.8, 0.4),
+                                alpha=a * 0.7, additive=True)
             elif kind == "muzzle":
                 a = max(0.0, 1.0 - t / 0.15)
                 if a > 0:
-                    glColor4f(color[0], color[1], color[2], a * 0.8)
-                    self._flat_ring(pos, 14)
+                    self._draw_glow(pos, 10, color, alpha=a * 0.85,
+                                    additive=True)
             elif kind == "shield_down":
                 a = max(0.0, 1.0 - t / 0.6)
-                glColor4f(0.5, 0.8, 1.0, a * 0.8)
-                self._flat_ring(pos, 80)
+                # billboard shimmer ring around the whole ship
+                self._bb_ring(pos, fx.get("size", 60) * 1.3,
+                              (0.5, 0.8, 1.0, a * 0.85), 2.5)
+                self._draw_glow(pos, fx.get("size", 60), (0.5, 0.8, 1.0),
+                                alpha=a * 0.4, additive=True)
             elif kind == "emp":
                 a = max(0.0, 1.0 - t / 0.8)
-                glColor4f(0.6, 0.4, 1.0, a * 0.7)
-                self._flat_ring(pos, 50 + 120 * (1 - a))
+                self._bb_ring(pos, 50 + 120 * (1 - a),
+                              (0.6, 0.4, 1.0, a * 0.8), 3.0)
         glDepthMask(True)
         glDisable(GL_BLEND)
+
+    def _bb_ring(self, pos, radius, color4, width=2.0):
+        """Camera-facing ring billboard (billboard-plane line loop)."""
+        if radius <= 0 or not self._in_front(pos, radius):
+            return
+        cam = self.camera
+        yaw = math.radians(cam.yaw)
+        pitch = math.radians(cam.pitch)
+        right = (math.cos(yaw), 0.0, -math.sin(yaw))
+        fwd = (-math.cos(pitch) * math.sin(yaw), -math.sin(pitch),
+               -math.cos(pitch) * math.cos(yaw))
+        up = normalize3(cross3(right, fwd))
+        glLineWidth(width)
+        glColor4f(*color4)
+        glBegin(GL_LINE_LOOP)
+        for i in range(28):
+            a = i / 28 * 2 * math.pi
+            ca, sa = math.cos(a), math.sin(a)
+            glVertex3f(pos[0] + (right[0] * ca + up[0] * sa) * radius,
+                       pos[1] + (right[1] * ca + up[1] * sa) * radius,
+                       pos[2] + (right[2] * ca + up[2] * sa) * radius)
+        glEnd()
 
     def _flat_ring(self, pos, radius):
         if not self._in_front(pos, radius):

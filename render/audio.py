@@ -21,6 +21,8 @@ class Audio:
         self.sounds: dict = {}
         self.available = False
         self.ambient_channel = None
+        self._last_laser_t = -1.0
+        self._last_hit_t = -1.0
         try:
             pygame.mixer.init(frequency=RATE, size=-16, channels=2, buffer=512)
             self.available = True
@@ -30,6 +32,8 @@ class Audio:
         st = state
         st.events.subscribe("unit_destroyed", self._ev_explosion)
         st.events.subscribe("unit_critical", self._ev_impact)
+        st.events.subscribe("weapon_fired", self._ev_fire)
+        st.events.subscribe("projectile_hit", self._ev_hit)
         st.events.subscribe("jump_complete", self._ev_jump)
         st.events.subscribe("ship_built", self._ev_build)
         st.events.subscribe("station_built", self._ev_build)
@@ -120,6 +124,23 @@ class Audio:
                 self.start_ambient()
 
     # ---------------------------------------------------------------- events
+    def _ev_fire(self, ev) -> None:
+        # rate-limit: fleets fire dozens of shots/sec — cap at ~6 lasers/sec
+        now = self.state.time
+        if now - self._last_laser_t < 0.16:
+            return
+        self._last_laser_t = now
+        heavy = bool(ev.data.get("heavy"))
+        self.play("laser_heavy" if heavy else "laser",
+                  0.42 if heavy else 0.30)
+
+    def _ev_hit(self, ev) -> None:
+        now = self.state.time
+        if now - self._last_hit_t < 0.12:
+            return
+        self._last_hit_t = now
+        self.play("impact", 0.30)
+
     def _ev_impact(self, ev) -> None:
         self.play("impact", 0.35)
 

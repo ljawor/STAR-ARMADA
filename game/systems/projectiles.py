@@ -42,6 +42,8 @@ class ProjectileSystem:
                         "impact_pos": p.pos.copy(),
                     })
                     st.spawn_effect("impact", p.pos.copy(), color=list(p.color))
+                    st.events.publish("projectile_hit", target_id=target.id,
+                                      target_owner=target.owner, weapon=p.weapon_id)
                     dead.append(pid)
         for pid in dead:
             st.projectiles.pop(pid, None)

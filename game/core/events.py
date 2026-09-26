@@ -17,6 +17,11 @@ class GameEvent:
     data: dict = field(default_factory=dict)
 
 
+# high-frequency SFX events: never enter the log ring (they would evict
+# gameplay events like unit_destroyed within a second during battles)
+NOISY_EVENTS = frozenset({"weapon_fired", "projectile_hit"})
+
+
 class EventBus:
     def __init__(self) -> None:
         self._subs: dict[str, list[Callable[[GameEvent], None]]] = defaultdict(list)
@@ -32,9 +37,10 @@ class EventBus:
 
     def publish(self, etype: str, **data: Any) -> None:
         ev = GameEvent(etype, data)
-        self.log.append(ev)
-        if len(self.log) > self.log_limit:
-            del self.log[: len(self.log) - self.log_limit]
+        if etype not in NOISY_EVENTS:
+            self.log.append(ev)
+            if len(self.log) > self.log_limit:
+                del self.log[: len(self.log) - self.log_limit]
         for fn in self._subs.get(etype, ()):
             fn(ev)
         for fn in self._any_subs:
