@@ -71,6 +71,14 @@ class HUD:
         self.buttons: list[dict] = []   # {"rect": Rect, "kind": str, "payload": dict}
         self.minimap_rect = None        # set each frame; input uses it
         self.selected_abilities: list = []
+        # scrollable panels: kind -> scroll offset in rows
+        self.scroll: dict = {"ships": 0, "techs": 0, "stations": 0}
+        self._cur_panel = None          # set by _scrollable for row callbacks
+        self._cur_player = None
+        # placement mode: payload dict for build_station awaiting a click
+        self.placement: dict | None = None
+        # per-frame scrollable regions: list of (rect, key) for wheel routing
+        self.scroll_rects: list = []
 
     # ------------------------------------------------------------------ frame
     def render(self, selection: set, hover_id: int | None,
@@ -78,12 +86,14 @@ class HUD:
                flash_left: float = 0.0, fps: float = 0.0) -> None:
         ov = self.overlay
         ov.fill((0, 0, 0, 0))
+        self.scroll_rects = []          # rebuilt each frame
         self.buttons = []
         self._top_bar(local_player, paused)
         self._left_panel(selection, local_player)
         self._right_panel(selection, local_player)
         self._event_log(local_player)
         self._minimap(selection, local_player)
+        self._placement_banner()
         if flash_msg and flash_left > 0.0:
             surf = self.font_big.render(flash_msg, True, WARN)
             r = surf.get_rect(center=(self.width // 2, self.height - 60))
@@ -266,19 +276,17 @@ class HUD:
         sel = ents[0] if ents else None
 
         y = panel.y + 10
-        # constructor selected -> build stations
+        # constructor selected -> build stations (scrollable)
         if sel is not None and sel.is_construction:
             self._label(panel.x + 12, y, "ORBITAL CONSTRUCTION", ACCENT,
                         self.font_big)
             y += 28
             sd = self.ds.ships.get(sel.data_id)
-            for sid in getattr(sd, "can_build_stations", []):
-                std = self.ds.stations.get(sid)
-                if std is None:
-                    continue
-                y = self._build_row(panel, y, std, p,
-                                    {"builder_id": sel.id, "station_kind": sid},
-                                    "build_station")
+            items = [self.ds.stations.get(sid)
+                     for sid in getattr(sd, "can_build_stations", [])
+                     if self.ds.stations.get(sid) is not None]
+            y = self._scrollable(panel, y, items, p, "stations",
+                                 self._row_build_station, sel)
         elif sel is not None and sel.is_station:
             std = self.ds.stations.get(sel.data_id)
             if std is not None and std.builds_ships:
@@ -292,46 +300,17 @@ class HUD:
                     y += 16
                 if q:
                     y += 6
-                for sid in std.builds_ships:
-                    if sid == "*":
-                        continue
-                    sd = self.ds.ships.get(sid)
-                    if sd is None:
-                        continue
-                    y = self._build_row(panel, y, sd, p,
-                                        {"shipyard_id": sel.id, "ship_id": sid},
-                                        "build_ship")
+                items = [self.ds.ships.get(sid) for sid in std.builds_ships
+                         if sid != "*" and self.ds.ships.get(sid) is not None]
+                y = self._scrollable(panel, y, items, p, "ships",
+                                     self._row_build_ship, sel)
             if std is not None and std.research:
                 self._label(panel.x + 12, y, "RESEARCH", ACCENT, self.font_big)
                 y += 28
-                for tid, td in self._techs():
-                    if td.faction != p.faction:
-                        continue
-                    done = tid in p.researched
-                    busy = tid in p.researching
-                    locked = any(r not in p.researched for r in td.requires)
-                    rect = pygame.Rect(panel.x + 12, y, 296, 34)
-                    col = (18, 22, 32, 255)
-                    tcol = TXT_DIM
-                    if done:
-                        tcol = GOOD
-                    elif locked:
-                        tcol = (90, 100, 116)
-                    else:
-                        col = (24, 34, 52, 255)
-                        tcol = TXT
-                    pygame.draw.rect(ov, col, rect, border_radius=4)
-                    pygame.draw.rect(ov, PANEL_EDGE if (done or locked) else ACCENT,
-                                     rect, 1, border_radius=4)
-                    self._label(rect.x + 8, rect.y + 2, td.display_name, tcol)
-                    cost = f"{td.cost_credits:,.0f} cr · {td.cost_materials:,.0f} mt"
-                    self._label(rect.x + 8, rect.y + 18, cost, TXT_DIM,
-                                self.font_small)
-                    if not done and not locked:
-                        self.buttons.append({"rect": rect, "kind": "research",
-                                             "payload": {"station_id": sel.id,
-                                                         "tech_id": tid}})
-                    y += 38
+                techs = [td for tid, td in self._techs()
+                         if td.faction == p.faction]
+                y = self._scrollable(panel, y, techs, p, "techs",
+                                     self._row_research, sel)
         else:
             self._label(panel.x + 12, y, "FLEET COMMAND", ACCENT, self.font_big)
             y += 28
@@ -342,6 +321,45 @@ class HUD:
             self._label(panel.x + 12, y, "G  fleet formation & stance", TXT_DIM)
             y += 18
             self._label(panel.x + 12, y, "J  hyperspace jump", TXT_DIM)
+
+    def _row_build_station(self, d, yy, payload) -> None:
+        self._build_row(self._cur_panel, yy, d, self._cur_player, payload,
+                        "build_station_place")
+
+    def _row_build_ship(self, d, yy, payload) -> None:
+        self._build_row(self._cur_panel, yy, d, self._cur_player, payload,
+                        "build_ship")
+
+    def _row_research(self, d, yy, payload) -> None:
+        """d = TechData; payload carries station_id."""
+        panel, p = self._cur_panel, self._cur_player
+        ov = self.overlay
+        rect = pygame.Rect(panel.x + 12, yy, 296, 34)
+        done = d.id in p.researched
+        locked = any(r not in p.researched for r in d.requires)
+        afford = (p.credits >= d.cost_credits
+                  and p.materials >= d.cost_materials
+                  and p.energy >= d.cost_energy)
+        col = (18, 22, 32, 255)
+        tcol = TXT_DIM
+        if done:
+            tcol = GOOD
+        elif locked:
+            tcol = (90, 100, 116)
+        elif afford:
+            col = (24, 34, 52, 255)
+            tcol = TXT
+        pygame.draw.rect(ov, col, rect, border_radius=4)
+        pygame.draw.rect(ov, PANEL_EDGE if (done or locked) else
+                         (ACCENT if afford else PANEL_EDGE), rect, 1,
+                         border_radius=4)
+        self._label(rect.x + 8, rect.y + 2, d.display_name, tcol)
+        cost = f"{d.cost_credits:,.0f} cr · {d.cost_materials:,.0f} mt"
+        self._label(rect.x + 8, rect.y + 18, cost, TXT_DIM, self.font_small)
+        if not done and not locked and afford:
+            self.buttons.append({"rect": rect, "kind": "research",
+                                 "payload": {"station_id": payload["station_id"],
+                                             "tech_id": d.id}})
 
     def _build_row(self, panel, y, d, p, payload, kind) -> int:
         """One buildable row: name, cost, affordability color. Returns next y."""
@@ -361,6 +379,49 @@ class HUD:
         if afford:
             self.buttons.append({"rect": rect, "kind": kind, "payload": payload})
         return y + 38
+
+    # ------------------------------------------------------------- scrollable lists
+    def _scrollable(self, panel, y, items, p, key, draw_fn, sel) -> int:
+        """Clip-scroll a list of buildable items inside the right panel.
+
+        draw_fn(d, yy, payload) renders one row; payload carries the selected
+        builder/shipyard id. Wheel over the panel scrolls (input.py).
+        """
+        self._cur_panel, self._cur_player = panel, p
+        ov = self.overlay
+        clip = pygame.Rect(panel.x + 4, y, panel.width - 8,
+                           panel.bottom - y - 8)
+        if clip.height <= 40:
+            return panel.bottom
+        self.scroll_rects.append((clip, key))   # wheel routing (input.py)
+        visible_rows = clip.height // 38
+        self.scroll[key] = max(0, min(self.scroll[key],
+                                      max(0, len(items) - visible_rows)))
+        off = self.scroll[key]
+        # scroll hint arrows
+        if off > 0:
+            self._label(panel.centerx - 6, y - 1, "▲", TXT_DIM, self.font_small)
+        if off + visible_rows < len(items):
+            self._label(panel.centerx - 6, clip.bottom - 12, "▼", TXT_DIM,
+                        self.font_small)
+        # clip rendering
+        old = ov.get_clip()
+        ov.set_clip(clip)
+        yy = y - off * 38
+        for d in items:
+            if yy > clip.bottom:
+                break
+            if yy + 34 >= clip.y:
+                payload = {
+                    "stations": lambda d=d: {"builder_id": sel.id,
+                                             "station_kind": d.id},
+                    "ships": lambda d=d: {"shipyard_id": sel.id,
+                                          "ship_id": d.id},
+                }[key]()
+                draw_fn(d, yy, payload)
+            yy += 38
+        ov.set_clip(old)
+        return panel.bottom
 
     def _techs(self):
         return list(getattr(self.ds, "techs", {}).items())
@@ -402,6 +463,32 @@ class HUD:
         if t == "planet_colonized":
             return f"◉ planet {d.get('planet', '?')} colonized"
         return t
+
+    # ------------------------------------------------------------- placement mode
+    def _placement_banner(self) -> None:
+        if not self.placement:
+            return
+        ov = self.overlay
+        name = str(self.placement.get("station_kind", "")).replace("_", " ")
+        text = f"PLACE {name.upper()} — left-click to position · ESC/right-click to cancel"
+        surf = self.font_big.render(text, True, WARN)
+        r = surf.get_rect(center=(self.width // 2, 56))
+        bg = r.inflate(26, 14)
+        pygame.draw.rect(ov, (30, 24, 10, 225), bg, border_radius=6)
+        pygame.draw.rect(ov, WARN, bg, 1, border_radius=6)
+        ov.blit(surf, r)
+        ghost = self.placement.get("ghost")
+        if ghost:
+            valid = ghost.get("valid", True)
+            gx, gy = ghost["sx"], ghost["sy"]
+            rad = ghost.get("radius", 120)
+            col = GOOD if valid else BAD
+            pygame.draw.circle(ov, (*col[:3], 90), (int(gx), int(gy)),
+                               max(10, int(rad)), 2)
+            pygame.draw.circle(ov, (*col[:3], 40), (int(gx), int(gy)),
+                               max(10, int(rad)))
+            pygame.draw.line(ov, col, (gx - 12, gy), (gx + 12, gy), 2)
+            pygame.draw.line(ov, col, (gx, gy - 12), (gx, gy + 12), 2)
 
     # ------------------------------------------------------------------ minimap
     def _minimap(self, selection: set, local_player: int) -> None:

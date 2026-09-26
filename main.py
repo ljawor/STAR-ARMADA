@@ -209,6 +209,7 @@ while running:
                 break
 
     inputc.update()
+    inputc.update_placement()
 
     # ---- draw
     camera.apply(W, H)

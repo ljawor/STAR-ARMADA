@@ -34,6 +34,9 @@ class InputController:
         self.grab_mouse = False
         self.local_player = 0
         self._pending_fleet: list[int] | None = None   # after G, awaiting number key
+        # right-panel scroll context (set by HUD each frame)
+        self._right_panel_rect = None
+        self._panel_scroll_key = None
 
     # ------------------------------------------------------------------ events
     def handle_event(self, ev) -> None:
@@ -45,7 +48,9 @@ class InputController:
                 pygame.event.set_grab(self.grab_mouse)
                 pygame.mouse.set_visible(not self.grab_mouse)
             elif ev.key == pygame.K_ESCAPE:
-                if st.game_over:
+                if self.hud.placement:
+                    self.hud.placement = None       # cancel placement first
+                elif st.game_over:
                     self.app.request_exit()
                 else:
                     self.selection.clear()
@@ -74,6 +79,9 @@ class InputController:
             self.keys.discard(ev.key)
         elif ev.type == pygame.MOUSEBUTTONDOWN:
             if ev.button == 1:
+                if self.hud.placement:
+                    self._confirm_placement(ev.pos)
+                    return
                 if self._click_button(ev.pos):
                     return
                 if self.hud.minimap_rect and \
@@ -83,10 +91,17 @@ class InputController:
                     self.drag_start = ev.pos
                     self.dragging = True
             elif ev.button == 3:
+                if self.hud.placement:
+                    self.hud.placement = None       # right-click cancels
+                    return
                 self.right_drag = ev.pos
             elif ev.button == 4:
+                if self._scroll_panel(-1):
+                    return
                 self.camera.zoom(0.88)
             elif ev.button == 5:
+                if self._scroll_panel(1):
+                    return
                 self.camera.zoom(1.14)
         elif ev.type == pygame.MOUSEBUTTONUP:
             if ev.button == 1 and self.dragging:
@@ -114,7 +129,18 @@ class InputController:
         if pygame.K_DOWN in self.keys or pygame.K_s in self.keys:
             self.camera.pan(0, 14 * pan_speed)
 
-    # ------------------------------------------------------------------ helpers
+    # ------------------------------------------------------------- panel scroll
+    def _scroll_panel(self, direction: int) -> bool:
+        """Wheel over a HUD scrollable list scrolls it; True if consumed."""
+        mp = pygame.mouse.get_pos()
+        for rect, key in self.hud.scroll_rects:
+            if rect.collidepoint(mp):
+                cur = self.hud.scroll.get(key, 0)
+                self.hud.scroll[key] = max(0, cur + direction)
+                return True
+        return False
+
+    # ------------------------------------------------------------- helpers
     def update(self) -> None:
         """Per-frame: follow camera."""
         if self.camera.follow_id is not None:
@@ -167,7 +193,15 @@ class InputController:
             if btn["rect"].collidepoint(pos):
                 kind, pl = btn["kind"], btn["payload"]
                 st, lp = self.state, self.local_player
-                if kind == "build_station":
+                if kind == "build_station_place":
+                    # arm placement mode: click on the field positions it
+                    self.hud.placement = {
+                        "builder_id": pl["builder_id"],
+                        "station_kind": pl["station_kind"],
+                        "ghost": None,
+                    }
+                    self.app.flash(f"select a position for {pl['station_kind']}")
+                elif kind == "build_station":
                     b = st.entity(pl["builder_id"])
                     if b is None:
                         return True
@@ -185,6 +219,49 @@ class InputController:
                     st.queue_command(self._ability_cmd(pl))
                 return True
         return False
+
+    # ------------------------------------------------------------- placement mode
+    def update_placement(self) -> None:
+        """Per-frame ghost position + validity for station placement."""
+        pl = self.hud.placement
+        if not pl:
+            return
+        mx, my = pygame.mouse.get_pos()
+        w = self.camera.screen_to_world(mx, my)
+        if w is None:
+            pl["ghost"] = None
+            return
+        ds = DataStore.get()
+        std = ds.stations.get(pl["station_kind"])
+        rad = std.radius if std else 120.0
+        valid = self._spot_clear(w[0], w[2], pl["station_kind"])
+        # also show builder reach: too far -> invalid
+        b = self.state.entity(pl["builder_id"])
+        if b is not None:
+            d2 = (b.pos.x - w[0]) ** 2 + (b.pos.z - w[2]) ** 2
+            if d2 > 3500.0 ** 2:
+                valid = False
+        pl["ghost"] = {"sx": mx, "sy": my, "valid": valid, "radius": rad,
+                       "world": w}
+
+    def _confirm_placement(self, pos: tuple) -> bool:
+        pl = self.hud.placement
+        if not pl:
+            return False
+        self.hud.placement = None       # exit mode regardless of outcome
+        w = self.camera.screen_to_world(*pos)
+        if w is None:
+            self.app.flash("cannot place there")
+            return True
+        valid = self._spot_clear(w[0], w[2], pl["station_kind"])
+        if not valid:
+            self.app.flash("position blocked")
+            return True
+        self.state.queue_command(BuildStationCommand(
+            self.local_player, pl["builder_id"], pl["station_kind"],
+            _vec3(w[0], 0.0, w[2])))
+        self.app.flash(f"constructing {pl['station_kind']}")
+        return True
 
     def _ability_cmd(self, pl: dict):
         from game.core.commands import AbilityCommand
@@ -295,6 +372,11 @@ def _ship_data(e):
     if e is None:
         return None
     return DataStore.get().ships.get(e.data_id)
+
+
+def _vec3(x, y, z):
+    from game.core.vectors import Vec3
+    return Vec3(x, y, z)
 
 
 def _cos(a):

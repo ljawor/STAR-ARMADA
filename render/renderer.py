@@ -16,15 +16,17 @@ from OpenGL.GL import (
     glBegin, glBlendFunc, glClear, glCallList, glColor3f, glColor4f,
     glDepthMask, glDisable, glEnable, glEnd, glEndList, glFlush, glLineWidth,
     glMatrixMode, glNewList, glNormal3f, glPopAttrib, glPopMatrix,
-    glPushMatrix, glRotatef, glScalef, glTranslatef, glVertex3f, GL_BLEND,
-    GL_CULL_FACE, GL_COLOR_BUFFER_BIT, GL_COMPILE, GL_CURRENT_BIT,
-    GL_DEPTH_BUFFER_BIT, GL_DEPTH_TEST, GL_LINE_LOOP, GL_LINE_STRIP, GL_LINES,
-    GL_MODELVIEW, GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_POINTS, GL_QUADS,
-    GL_SRC_ALPHA, GL_TRANSFORM_BIT, GL_TRIANGLES, GL_TRIANGLE_FAN,
+    glPushMatrix, glRotatef, glScalef, glTexCoord2f, glTranslatef, glVertex3f,
+    glBindTexture, GL_BLEND, GL_CULL_FACE, GL_COLOR_BUFFER_BIT, GL_COMPILE,
+    GL_CURRENT_BIT, GL_DEPTH_BUFFER_BIT, GL_DEPTH_TEST, GL_LINE_LOOP,
+    GL_LINE_STRIP, GL_LINES, GL_MODELVIEW, GL_ONE, GL_ONE_MINUS_SRC_ALPHA,
+    GL_POINTS, GL_QUADS, GL_SRC_ALPHA, GL_TEXTURE_2D, GL_TRANSFORM_BIT,
+    GL_TRIANGLES, GL_TRIANGLE_FAN,
 )
 import OpenGL.GL as _gl
 
 from render.camera import cross3, normalize3
+from render import textures as tex
 
 from game.core.entity import Entity
 from game.core.vectors import Vec3
@@ -55,6 +57,11 @@ class Renderer:
         self.time = 0.0
         # debug isolation: STAR_ARMADA_SKIP=nebulas,star,planets,ships,... skips passes
         self.skip = {s for s in os.environ.get("STAR_ARMADA_SKIP", "").split(",") if s}
+        self._planet_tex_cache: dict = {}   # data_id -> GL texture id
+        self._star_tex = None
+        self._nebula_tex = None
+        # unit sphere with UVs (unit radius, scaled at draw time)
+        self._unit_sphere_tex = self._build_textured_sphere_list()
 
     # ------------------------------------------------------------------ per frame
     def draw(self, dt: float, selection: set, hover_id: int | None = None) -> None:
@@ -154,8 +161,14 @@ class Renderer:
             if not self._in_front(n["pos"], n["radius"]):
                 continue
             color = n.get("color", [0.4, 0.2, 0.55])
-            self._draw_glow(n["pos"], n["radius"], color, alpha=0.13)
-            self._draw_glow(n["pos"], n["radius"] * 0.55, color, alpha=0.20)
+            if self._nebula_tex is None:
+                self._nebula_tex = tex.surface_to_texture(
+                    tex.nebula_texture(color=tuple(color)))
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+            self._draw_textured_billboard(n["pos"], n["radius"],
+                                          self._nebula_tex, 0.30)
+            self._draw_textured_billboard(n["pos"], n["radius"] * 0.55,
+                                          self._nebula_tex, 0.35)
         glDepthMask(True)
         glDisable(GL_BLEND)
 
@@ -168,13 +181,54 @@ class Renderer:
         glEnable(GL_BLEND)
         glDepthMask(False)
         col = star.get("color", [1, 0.9, 0.6])
-        # soft additive halo + hot core (true billboards, radial falloff)
-        self._draw_glow(star["pos"], star.get("size", 2000) * 2.2, col,
-                        alpha=0.35, additive=True)
-        self._draw_glow(star["pos"], star.get("size", 2000) * 0.9, col,
-                        alpha=0.85, additive=True)
+        size = star.get("size", 2000)
+        # textured star billboard (granulated surface)
+        if self._star_tex is None:
+            self._star_tex = tex.surface_to_texture(tex.star_texture())
+        self._draw_textured_billboard(star["pos"], size, self._star_tex, 1.0)
+        # soft additive halo
+        self._draw_glow(star["pos"], size * 2.0, col, alpha=0.30, additive=True)
         glDepthMask(True)
         glDisable(GL_BLEND)
+
+    def _draw_textured_billboard(self, pos, radius, tex_id, alpha):
+        """Camera-facing quad with a texture (star/nebula sprites).
+
+        Drawn unlit with identity color material so the texture's own
+        luminance shows (lit billboards facing away from the key light go
+        near-black).
+        """
+        import OpenGL.GL as GL
+        cam = self.camera
+        yaw = math.radians(cam.yaw)
+        pitch = math.radians(cam.pitch)
+        right = (math.cos(yaw), 0.0, -math.sin(yaw))
+        fwd = (-math.cos(pitch) * math.sin(yaw), -math.sin(pitch),
+               -math.cos(pitch) * math.cos(yaw))
+        # screen-up in world space (right x fwd, ~unit for any pitch)
+        up = normalize3(cross3(right, fwd))
+        GL.glPushAttrib(GL.GL_LIGHTING_BIT | GL.GL_CURRENT_BIT |
+                        GL.GL_ENABLE_BIT | GL.GL_COLOR_BUFFER_BIT)
+        GL.glDisable(GL.GL_LIGHTING)
+        GL.glDisable(GL.GL_CULL_FACE)
+        GL.glEnable(GL.GL_BLEND)
+        GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
+        glPushMatrix()
+        glTranslatef(pos[0], pos[1], pos[2])
+        glEnable(GL_TEXTURE_2D)
+        glBindTexture(GL_TEXTURE_2D, tex_id)
+        glColor4f(1, 1, 1, alpha)
+        rx, ry, rz = right
+        ux, uy, uz = up
+        glBegin(GL_QUADS)
+        glTexCoord2f(0, 1); glVertex3f((-rx - ux) * radius, (-ry - uy) * radius, (-rz - uz) * radius)
+        glTexCoord2f(1, 1); glVertex3f((rx - ux) * radius, (ry - uy) * radius, (rz - uz) * radius)
+        glTexCoord2f(1, 0); glVertex3f((rx + ux) * radius, (ry + uy) * radius, (rz + uz) * radius)
+        glTexCoord2f(0, 0); glVertex3f((-rx + ux) * radius, (-ry + uy) * radius, (-rz + uz) * radius)
+        glEnd()
+        glDisable(GL_TEXTURE_2D)
+        glPopMatrix()
+        GL.glPopAttrib()
 
     def _draw_jump_points(self):
         for jp in self.state.map_info.jump_points:
@@ -242,18 +296,29 @@ class Renderer:
             if kind == "asteroid_field":
                 self._draw_asteroid_field(e)
                 continue
-            color = PLANET_COLORS.get(kind, (0.55, 0.55, 0.6))
             glPushMatrix()
             glTranslatef(e.pos.x, e.pos.y, e.pos.z)
+            glRotatef(self.time * 1.2, 0, 1, 0)      # slow axial spin
             glEnable(GL_DEPTH_TEST)
-            # sphere
-            glColor3f(*color)
-            self._draw_sphere(e.radius, 20, 14)
+            # textured sphere (procedural equirect texture per planet type)
+            surf = tex.planet_texture(kind, seed=abs(hash(e.name_override or kind)) % 1000)
+            key = f"ptex_{kind}"
+            if key not in self._planet_tex_cache:
+                self._planet_tex_cache[key] = tex.surface_to_texture(surf)
+            glEnable(GL_TEXTURE_2D)
+            glBindTexture(GL_TEXTURE_2D, self._planet_tex_cache[key])
+            glEnable(GL_CULL_FACE)
+            glColor3f(1, 1, 1)
+            glPushMatrix()
+            glScalef(e.radius, e.radius, e.radius)
+            glCallList(self._unit_sphere_tex)
+            glPopMatrix()
+            glDisable(GL_CULL_FACE)
+            glDisable(GL_TEXTURE_2D)
             # owner ring
             if e.colonized_by is not None and e.colonized_by >= 0:
                 p = self.state.players.get(e.colonized_by)
                 if p:
-                    glRotatef(-90, 1, 0, 0)
                     glColor3f(*p.color)
                     glLineWidth(3.0)
                     glBegin(GL_LINE_LOOP)
@@ -263,6 +328,50 @@ class Renderer:
                         glVertex3f(math.sin(a) * r, 0, math.cos(a) * r)
                     glEnd()
             glPopMatrix()
+
+    def _build_textured_sphere_list(self, lons=24, lats=14):
+        """Unit-radius UV sphere display list (scaled per planet at draw)."""
+        lst = _gl.glGenLists(1)
+        glNewList(lst, GL_COMPILE)
+        for i in range(lons):
+            lon0 = 2 * math.pi * i / lons
+            lon1 = 2 * math.pi * (i + 1) / lons
+            for j in range(lats):
+                lat0 = math.pi * j / lats - math.pi / 2
+                lat1 = math.pi * (j + 1) / lats - math.pi / 2
+
+                def vert(lon, lat):
+                    return (math.cos(lat) * math.sin(lon),
+                            math.sin(lat),
+                            math.cos(lat) * math.cos(lon))
+
+                a, b = vert(lon0, lat0), vert(lon1, lat0)
+                c, d = vert(lon1, lat1), vert(lon0, lat1)
+                u0, u1 = i / lons, (i + 1) / lons
+                v0, v1 = j / lats, (j + 1) / lats
+                for tri, uvs in (((a, b, c), ((u0, v0), (u1, v0), (u1, v1))),
+                                 ((a, c, d), ((u0, v0), (u1, v1), (u0, v1)))):
+                    ax_, ay_, az_ = (tri[1][0] - tri[0][0], tri[1][1] - tri[0][1],
+                                     tri[1][2] - tri[0][2])
+                    bx_, by_, bz_ = (tri[2][0] - tri[0][0], tri[2][1] - tri[0][1],
+                                     tri[2][2] - tri[0][2])
+                    nx = ay_ * bz_ - az_ * by_
+                    ny = az_ * bx_ - ax_ * bz_
+                    nz = ax_ * by_ - ay_ * bx_
+                    centroid = (sum(v[k] for v in tri) / 3 for k in range(3))
+                    cx_, cy_, cz_ = centroid
+                    if nx * cx_ + ny * cy_ + nz * cz_ < 0:
+                        tri = (tri[0], tri[2], tri[1])
+                        uvs = (uvs[0], uvs[2], uvs[1])
+                    glBegin(GL_TRIANGLES)
+                    for v, (u, w_) in zip(tri, uvs):
+                        nn = math.sqrt(v[0] ** 2 + v[1] ** 2 + v[2] ** 2) or 1.0
+                        glNormal3f(v[0] / nn, v[1] / nn, v[2] / nn)
+                        glTexCoord2f(u, w_)
+                        glVertex3f(*v)
+                    glEnd()
+        glEndList()
+        return lst
 
     def _draw_asteroid_field(self, e):
         rng = random.Random(int(e.pos.x) % 9973)
