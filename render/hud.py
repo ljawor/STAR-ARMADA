@@ -395,6 +395,8 @@ class HUD:
             return panel.bottom
         self.scroll_rects.append((clip, key))   # wheel routing (input.py)
         visible_rows = clip.height // 38
+        if key not in self.scroll:              # unknown list kind: no scroll
+            self.scroll[key] = 0
         self.scroll[key] = max(0, min(self.scroll[key],
                                       max(0, len(items) - visible_rows)))
         off = self.scroll[key]
@@ -417,7 +419,8 @@ class HUD:
                                              "station_kind": d.id},
                     "ships": lambda d=d: {"shipyard_id": sel.id,
                                           "ship_id": d.id},
-                }[key]()
+                    "techs": lambda d=d: {"station_id": sel.id},
+                }.get(key, lambda d=d: {})()
                 draw_fn(d, yy, payload)
             yy += 38
         ov.set_clip(old)
@@ -563,6 +566,13 @@ class HUD:
             self.overlay.blit(surf, (x + 4, y + (h - surf.get_height()) // 2))
 
     # ------------------------------------------------------------------ GL upload
+    def resize(self, width: int, height: int) -> None:
+        """Re-layout for a new window size (fullscreen toggle)."""
+        self.width = width
+        self.height = height
+        self.overlay = pygame.Surface((width, height), pygame.SRCALPHA)
+        self.minimap_rect = None
+
     def _upload(self) -> None:
         if self.tex is None:
             self.tex = _gl.glGenTextures(1)

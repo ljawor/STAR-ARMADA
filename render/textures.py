@@ -14,7 +14,7 @@ import pygame
 
 from OpenGL.GL import (
     glBindTexture, glTexImage2D, glTexParameteri,
-    GL_CLAMP, GL_LINEAR, GL_RGB, GL_RGBA, GL_TEXTURE_2D,
+    GL_CLAMP, GL_CLAMP_TO_EDGE, GL_LINEAR, GL_RGB, GL_RGBA, GL_TEXTURE_2D,
     GL_TEXTURE_MAG_FILTER, GL_TEXTURE_MIN_FILTER, GL_TEXTURE_WRAP_S,
     GL_TEXTURE_WRAP_T, GL_UNSIGNED_BYTE,
 )
@@ -141,20 +141,31 @@ def planet_texture(kind: str, size: int = 256, seed: int = 5) -> pygame.Surface:
             for c in range(3):
                 img[..., c] = sea[c] + (ground[c] - sea[c]) * m
             img += (n - 0.5)[..., None] * 0.10
-    # polar caps (ice) except gas giants
+    # polar caps (ice) except gas giants — irregular soft edge so they read
+    # as terrain, not a flat gray disc
     if kind != "gas_giant":
-        polar = np.clip((math.pi / 2 - np.abs(lat - math.pi / 2)) < 0.0, 0, 1)
-        polar = np.clip((np.abs(lat - math.pi / 2) / (math.pi / 2)), 0, 1)
-        ice = (polar > 0.82).astype(np.float32)
-        for c in range(3):
-            img[..., c] = img[..., c] * (1 - ice) + 0.88 * ice
+        polar = np.abs(lat - math.pi / 2) / (math.pi / 2)   # 0 equator..1 pole
+        cap_edge = _fbm(size, seed + 41, octaves=3, base_cells=10)
+        threshold = 0.86 + (cap_edge - 0.5) * 0.12          # wavy boundary
+        soft = np.clip((polar - threshold) / 0.08, 0, 1)    # soft transition
+        # ice with faint blue-gray streaks (not featureless gray)
+        streak = _fbm(size, seed + 55, octaves=2, base_cells=18)
+        ice_r = 0.88 + streak * 0.06
+        ice_g = 0.91 + streak * 0.05
+        ice_b = 0.95 + streak * 0.03
+        for c, ice_c in enumerate((ice_r, ice_g, ice_b)):
+            img[..., c] = img[..., c] * (1 - soft) + ice_c * soft
     img = np.clip(img, 0.0, 1.0)
     return _arr_to_surface(img * 255.0)
 
 
 def star_texture(size: int = 256, seed: int = 3) -> pygame.Surface:
-    """Granulated hot-star surface."""
-    lat, lon = _sphere_equirect(size)
+    """Granulated hot-star surface (RGBA, radial limb falloff).
+
+    The billboard is a camera-facing quad: without a radial alpha falloff the
+    star reads as a SQUARE. Alpha fades from full in the core to 0 at the
+    inscribed-circle rim so the disc is round against the starfield.
+    """
     n = _fbm(size, seed, octaves=5, base_cells=8)
     granule = _fbm(size, seed + 7, octaves=3, base_cells=24)
     img = np.zeros((size, size, 3), dtype=np.float32)
@@ -165,7 +176,15 @@ def star_texture(size: int = 256, seed: int = 3) -> pygame.Surface:
     for c in range(3):
         img[..., c] = dark[c] + (base[c] - dark[c]) * t
         img[..., c] = np.where(t > 0.75, hot[c], img[..., c])
-    return _arr_to_surface(np.clip(img, 0, 1) * 255.0)
+    # radial alpha: round disc + limb darkening toward the rim
+    yy, xx = np.mgrid[0:size, 0:size]
+    fx = (xx / (size - 1)) * 2 - 1
+    fy = (yy / (size - 1)) * 2 - 1
+    r = np.sqrt(fx * fx + fy * fy)
+    limb = np.clip(1.0 - (r - 0.55) / 0.45, 0, 1) ** 1.6   # 1 inside r<0.55
+    img *= (0.62 + 0.38 * np.clip(1.0 - r, 0, 1))[..., None]
+    alpha = limb * 255.0
+    return _arr_to_surface(np.clip(img, 0, 1) * 255.0, alpha=alpha)
 
 
 def nebula_texture(size: int = 256, seed: int = 11,
@@ -212,8 +231,8 @@ def surface_to_texture(surf: pygame.Surface, mipmaps: bool = False) -> int:
     glBindTexture(GL_TEXTURE_2D, tex)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
     glTexImage2D(GL_TEXTURE_2D, 0, internal, w, h, 0, fmt,
                  GL_UNSIGNED_BYTE, data)
     return tex

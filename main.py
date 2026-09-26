@@ -59,8 +59,33 @@ if SMOKE and os.environ.get("STAR_ARMADA_FORCE_DUMMY") == "1":
     os.environ.setdefault("SDL_AUDIODRIVER", "dummy")
     pygame.quit()
     pygame.init()
-W, H = (1280, 800) if SMOKE else (1440, 900)
-screen = pygame.display.set_mode((W, H), pygame.DOUBLEBUF | pygame.OPENGL)
+FULLSCREEN = "--fullscreen" in sys.argv
+_flags = pygame.DOUBLEBUF | pygame.OPENGL
+if FULLSCREEN:
+    _info = pygame.display.Info()
+    W, H = _info.current_w, _info.current_h
+    _flags |= pygame.FULLSCREEN
+else:
+    W, H = (1280, 800) if SMOKE else (1440, 900)
+screen = pygame.display.set_mode((W, H), _flags)
+
+
+def toggle_fullscreen() -> None:
+    """Switch windowed <-> fullscreen; retarget camera + HUD."""
+    global W, H, FULLSCREEN
+    FULLSCREEN = not FULLSCREEN
+    if FULLSCREEN:
+        info = pygame.display.Info()
+        W, H = info.current_w, info.current_h
+        pygame.display.set_mode((W, H), pygame.DOUBLEBUF | pygame.OPENGL |
+                                pygame.FULLSCREEN)
+    else:
+        W, H = (1280, 800) if SMOKE else (1440, 900)
+        pygame.display.set_mode((W, H), pygame.DOUBLEBUF | pygame.OPENGL)
+    camera.width, camera.height = W, H
+    camera._proj = camera._view = None
+    hud.resize(W, H)
+    flash("fullscreen ON" if FULLSCREEN else "fullscreen OFF")
 
 # macOS (skill): pump events so the window system is up before any grabbing
 for _ in range(10):
@@ -197,6 +222,9 @@ while running:
                 continue
             if ev.key == pygame.K_F9:
                 rebuild(os.path.join(SAVES_DIR, "quicksave.json"))
+                continue
+            if ev.key == pygame.K_F11 and not SMOKE:
+                toggle_fullscreen()
                 continue
         inputc.handle_event(ev)
 
