@@ -1,0 +1,66 @@
+{
+  "ships": {
+    "syndicate_raid_squadron": {
+      "name": "Jackal Raid Wing", "faction": "syndicate",
+      "category": "fighter_squadron", "is_squadron": true, "squadron_size": 6,
+      "cost": {"credits": 240, "materials": 45, "energy": 0},
+      "crew_cost": 12, "command_cost": 1, "build_time": 7,
+      "hull": 65, "shield_quad": 10, "shield_regen": 1,
+      "speed": 135, "turn_rate": 150, "radius": 22, "sensor_range": 950,
+      "weapons": [{"weapon": "laser_cannon", "count": 1, "arcs": ["front"]}],
+      "systems": {"engines": 30, "weapons": 25, "sensors": 20},
+      "hangar_capacity": 0, "veteran_xp": 80
+    },
+    "syndicate_corvette": {
+      "name": "Marauder Corvette", "faction": "syndicate",
+      "category": "corvette",
+      "cost": {"credits": 440, "materials": 165, "energy": 50},
+      "crew_cost": 36, "command_cost": 2, "build_time": 11,
+      "hull": 800, "shield_quad": 320, "shield_regen": 12,
+      "speed": 90, "turn_rate": 62, "radius": 32, "sensor_range": 1700,
+      "weapons": [{"weapon": "laser_cannon", "count": 1, "arcs": ["all"]},
+                   {"weapon": "missile_battery", "count": 1, "arcs": ["all"]}],
+      "abilities": ["engine_overdrive", "sensor_jam"],
+      "systems": {"engines": 120, "weapons": 90, "sensors": 90, "shield_gen": 85, "hangar": 0},
+      "hangar_capacity": 0
+    },
+    "syndicate_frigate": {
+      "name": "Cutlass Frigate", "faction": "syndicate",
+      "category": "frigate",
+      "cost": {"credits": 820, "materials": 390, "energy": 110},
+      "crew_cost": 105, "command_cost": 4, "build_time": 16,
+      "hull": 2300, "shield_quad": 860, "shield_regen": 22,
+      "speed": 60, "turn_rate": 40, "radius": 50, "sensor_range": 1850,
+      "weapons": [{"weapon": "laser_cannon", "count": 2, "arcs": ["all"]},
+                   {"weapon": "missile_battery", "count": 1, "arcs": ["all"]}],
+      "abilities": ["sensor_jam"],
+      "systems": {"engines": 240, "weapons": 215, "sensors": 175, "shield_gen": 220, "hangar": 55},
+      "hangar_capacity": 0
+    },
+    "syndicate_cruiser": {
+      "name": "Reaver Assault Cruiser", "faction": "syndicate",
+      "category": "cruiser",
+      "cost": {"credits": 2100, "materials": 1300, "energy": 350},
+      "crew_cost": 360, "command_cost": 8, "build_time": 28,
+      "hull": 8200, "shield_quad": 2500, "shield_regen": 40,
+      "speed": 44, "turn_rate": 25, "radius": 86, "sensor_range": 2200,
+      "weapons": [{"weapon": "plasma_lance", "count": 2, "arcs": ["front", "left", "right"]},
+                   {"weapon": "missile_battery", "count": 2, "arcs": ["all"]},
+                   {"weapon": "point_defense", "count": 2, "arcs": ["all"]}],
+      "abilities": ["emp_burst", "engine_overdrive"],
+      "systems": {"engines": 660, "weapons": 730, "sensors": 400, "shield_gen": 620, "hangar": 190},
+      "hangar_capacity": 2, "veteran_xp": 160
+    },
+    "syndicate_constructor": {
+      "name": "Scrapyard Hauler", "faction": "syndicate",
+      "category": "construction", "is_construction": true,
+      "cost": {"credits": 360, "materials": 230, "energy": 0},
+      "crew_cost": 26, "command_cost": 1, "build_time": 10,
+      "hull": 660, "shield_quad": 290, "shield_regen": 10,
+      "speed": 60, "turn_rate": 50, "radius": 30, "sensor_range": 1200,
+      "weapons": [],
+      "systems": {"engines": 98, "weapons": 0, "sensors": 78, "shield_gen": 60, "hangar": 0},
+      "can_build_stations": ["mining_station", "trade_station", "defense_platform"]
+    }
+  }
+}

@@ -1,0 +1,144 @@
+{
+  "technologies": {
+    "imp_weapons_1": {
+      "name": "Advanced Turbolasers", "faction": "imperial", "branch": "weapons", "tier": 1,
+      "cost": {"credits": 800, "materials": 400, "energy": 200}, "research_time": 45,
+      "requires": [],
+      "effects": {"weapon_damage_mult": 1.15},
+      "description": "Improved turbolaser focusing: +15% weapon damage."
+    },
+    "imp_weapons_2": {
+      "name": "Heavy Turbolasers", "faction": "imperial", "branch": "weapons", "tier": 2,
+      "cost": {"credits": 1800, "materials": 900, "energy": 400}, "research_time": 75,
+      "requires": ["imp_weapons_1"],
+      "effects": {"weapon_damage_mult": 1.15, "unlock_range_bonus": 100},
+      "description": "Further +15% damage and +100 range on capital weapons."
+    },
+    "imp_defense_1": {
+      "name": "Reinforced Deflector Screens", "faction": "imperial", "branch": "defense", "tier": 1,
+      "cost": {"credits": 700, "materials": 500, "energy": 250}, "research_time": 40,
+      "requires": [],
+      "effects": {"shield_max_mult": 1.2},
+      "description": "+20% maximum shields on all ships and stations."
+    },
+    "imp_defense_2": {
+      "name": "Redundant Shield Generators", "faction": "imperial", "branch": "defense", "tier": 2,
+      "cost": {"credits": 1600, "materials": 1000, "energy": 500}, "research_time": 70,
+      "requires": ["imp_defense_1"],
+      "effects": {"shield_regen_mult": 1.35},
+      "description": "+35% shield regeneration."
+    },
+    "imp_propulsion_1": {
+      "name": "Ion Engine Tuning", "faction": "imperial", "branch": "propulsion", "tier": 1,
+      "cost": {"credits": 600, "materials": 350, "energy": 200}, "research_time": 35,
+      "requires": [],
+      "effects": {"speed_mult": 1.12},
+      "description": "+12% sublight speed for the whole fleet."
+    },
+    "imp_sensors_1": {
+      "name": "Long-Range Scanners", "faction": "imperial", "branch": "sensors", "tier": 1,
+      "cost": {"credits": 500, "materials": 300, "energy": 250}, "research_time": 30,
+      "requires": [],
+      "effects": {"sensor_range_mult": 1.25},
+      "description": "+25% sensor range; better hyperspace detection."
+    },
+    "imp_logistics_1": {
+      "name": "Fleet Logistics", "faction": "imperial", "branch": "logistics", "tier": 1,
+      "cost": {"credits": 900, "materials": 500, "energy": 300}, "research_time": 45,
+      "requires": [],
+      "effects": {"command_capacity_bonus": 10, "build_speed_mult": 1.15},
+      "description": "+10 command capacity, +15% build speed."
+    },
+    "imp_logistics_2": {
+      "name": "Rapid Fabrication", "faction": "imperial", "branch": "logistics", "tier": 2,
+      "cost": {"credits": 1700, "materials": 900, "energy": 450}, "research_time": 70,
+      "requires": ["imp_logistics_1"],
+      "effects": {"build_speed_mult": 1.25, "repair_mult": 1.3},
+      "description": "+25% build speed, +30% repair rates."
+    },
+    "reb_weapons_1": {
+      "name": "Precision Targeting", "faction": "rebel", "branch": "weapons", "tier": 1,
+      "cost": {"credits": 750, "materials": 380, "energy": 200}, "research_time": 42,
+      "requires": [],
+      "effects": {"accuracy_bonus": 0.06, "weapon_damage_mult": 1.08},
+      "description": "+6% accuracy, +8% damage."
+    },
+    "reb_defense_1": {
+      "name": "Layered Deflectors", "faction": "rebel", "branch": "defense", "tier": 1,
+      "cost": {"credits": 700, "materials": 480, "energy": 240}, "research_time": 40,
+      "requires": [],
+      "effects": {"shield_max_mult": 1.22},
+      "description": "+22% maximum shields."
+    },
+    "reb_propulsion_1": {
+      "name": "Skilled Piloting Doctrine", "faction": "rebel", "branch": "propulsion", "tier": 1,
+      "cost": {"credits": 600, "materials": 320, "energy": 180}, "research_time": 33,
+      "requires": [],
+      "effects": {"speed_mult": 1.15, "turn_mult": 1.1},
+      "description": "+15% speed, +10% turn rate."
+    },
+    "reb_logistics_1": {
+      "name": "Alliance Field Repair", "faction": "rebel", "branch": "logistics", "tier": 1,
+      "cost": {"credits": 850, "materials": 450, "energy": 280}, "research_time": 42,
+      "requires": [],
+      "effects": {"repair_mult": 1.35, "command_capacity_bonus": 6},
+      "description": "+35% repair rates, +6 command capacity."
+    },
+    "reb_fighters_1": {
+      "name": "Elite Starfighter Corps", "faction": "rebel", "branch": "fighters", "tier": 1,
+      "cost": {"credits": 900, "materials": 400, "energy": 300}, "research_time": 45,
+      "requires": [],
+      "effects": {"squadron_damage_mult": 1.2, "squadron_reinforce_mult": 1.25},
+      "description": "Squadrons +20% damage, +25% reinforcement speed."
+    },
+    "conf_weapons_1": {
+      "name": "Overclocked Droid Gunnery", "faction": "confederacy", "branch": "weapons", "tier": 1,
+      "cost": {"credits": 650, "materials": 420, "energy": 180}, "research_time": 38,
+      "requires": [],
+      "effects": {"weapon_damage_mult": 1.12},
+      "description": "+12% weapon damage fleet-wide."
+    },
+    "conf_defense_1": {
+      "name": "Ablative Armor Plating", "faction": "confederacy", "branch": "defense", "tier": 1,
+      "cost": {"credits": 700, "materials": 550, "energy": 200}, "research_time": 40,
+      "requires": [],
+      "effects": {"hull_mult": 1.2},
+      "description": "+20% hull on newly built ships."
+    },
+    "conf_logistics_1": {
+      "name": "Mass Fabrication Doctrine", "faction": "confederacy", "branch": "logistics", "tier": 1,
+      "cost": {"credits": 800, "materials": 500, "energy": 250}, "research_time": 40,
+      "requires": [],
+      "effects": {"build_speed_mult": 1.3, "command_capacity_bonus": 8},
+      "description": "+30% build speed, +8 command capacity."
+    },
+    "conf_propulsion_1": {
+      "name": "Signal-Boosted Drives", "faction": "confederacy", "branch": "propulsion", "tier": 1,
+      "cost": {"credits": 580, "materials": 330, "energy": 190}, "research_time": 34,
+      "requires": [],
+      "effects": {"speed_mult": 1.1},
+      "description": "+10% fleet speed."
+    },
+    "syn_weapons_1": {
+      "name": "Salvaged Gun Batteries", "faction": "syndicate", "branch": "weapons", "tier": 1,
+      "cost": {"credits": 700, "materials": 400, "energy": 200}, "research_time": 40,
+      "requires": [],
+      "effects": {"weapon_damage_mult": 1.14},
+      "description": "+14% weapon damage from refitted weapons."
+    },
+    "syn_defense_1": {
+      "name": "Patchwork Armor", "faction": "syndicate", "branch": "defense", "tier": 1,
+      "cost": {"credits": 650, "materials": 480, "energy": 220}, "research_time": 38,
+      "requires": [],
+      "effects": {"hull_mult": 1.15, "shield_max_mult": 1.1},
+      "description": "+15% hull, +10% shields."
+    },
+    "syn_sensors_1": {
+      "name": "Smuggler's Instinct", "faction": "syndicate", "branch": "sensors", "tier": 1,
+      "cost": {"credits": 500, "materials": 300, "energy": 240}, "research_time": 30,
+      "requires": [],
+      "effects": {"sensor_range_mult": 1.3},
+      "description": "+30% sensor range."
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "weapons": {
+    "salvage_railgun": {
+      "name": "Salvage Railgun", "type": "kinetic",
+      "damage": 300, "range": 2000, "reload": 4.5, "projectile_speed": 1700,
+      "accuracy": 0.72, "shield_mult": 0.4, "armor_mult": 2.8, "system_mult": 0.7,
+      "hardpoint": "front", "color": [1.0, 0.6, 0.2], "size": 4.0, "targets": "all"
+    }
+  }
+}

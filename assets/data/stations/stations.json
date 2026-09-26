@@ -1,0 +1,131 @@
+{
+  "stations": {
+    "command_station": {
+      "name": "Command Station",
+      "cost": {"credits": 2000, "materials": 1800, "energy": 400},
+      "crew_cost": 800, "build_time": 45,
+      "hull": 30000, "shield_quad": 9000, "shield_regen": 30,
+      "radius": 130, "sensor_range": 3000,
+      "weapons": [{"weapon": "turbolaser", "count": 2, "arcs": ["all"]},
+                   {"weapon": "point_defense", "count": 3, "arcs": ["all"]}],
+      "abilities": ["emergency_shield_recharge"],
+      "systems": {"engines": 0, "weapons": 1200, "sensors": 700, "shield_gen": 1500, "hangar": 400},
+      "income": {"credits": 1.0, "crew": 1.5},
+      "command_capacity": 20,
+      "builds_ships": ["imperial_corvette", "imperial_constructor", "rebel_corvette",
+                        "rebel_constructor", "confed_corvette", "confed_constructor",
+                        "imperial_tie_squadron", "rebel_x_squadron",
+                        "confed_vulture_squadron", "imperial_colonizer",
+                        "rebel_colonizer", "confed_colonizer"],
+      "storage": {"credits": 2000, "materials": 1000}
+    },
+    "mining_station": {
+      "name": "Mining Station",
+      "cost": {"credits": 700, "materials": 500, "energy": 0},
+      "crew_cost": 120, "build_time": 20,
+      "hull": 6000, "shield_quad": 1500, "shield_regen": 15,
+      "radius": 70, "sensor_range": 1000,
+      "weapons": [],
+      "systems": {"engines": 0, "weapons": 0, "sensors": 150, "shield_gen": 300, "hangar": 0},
+      "income": {"materials": 2.2, "credits": 0.5},
+      "requires_range": {"asteroid_field": 900},
+      "storage": {"materials": 500}
+    },
+    "shipyard": {
+      "name": "Shipyard",
+      "cost": {"credits": 1400, "materials": 1600, "energy": 300},
+      "crew_cost": 500, "build_time": 35,
+      "hull": 14000, "shield_quad": 4000, "shield_regen": 20,
+      "radius": 110, "sensor_range": 1500,
+      "weapons": [{"weapon": "point_defense", "count": 2, "arcs": ["all"]}],
+      "systems": {"engines": 0, "weapons": 300, "sensors": 250, "shield_gen": 600, "hangar": 300},
+      "builds_ships": ["*"],
+      "storage": {"materials": 800},
+      "command_capacity": 4
+    },
+    "research_station": {
+      "name": "Research Station",
+      "cost": {"credits": 1200, "materials": 900, "energy": 400},
+      "crew_cost": 300, "build_time": 30,
+      "hull": 8000, "shield_quad": 2500, "shield_regen": 18,
+      "radius": 85, "sensor_range": 1800,
+      "weapons": [],
+      "systems": {"engines": 0, "weapons": 0, "sensors": 350, "shield_gen": 450, "hangar": 0},
+      "research": true,
+      "income": {"credits": 0.2},
+      "command_capacity": 2
+    },
+    "defense_platform": {
+      "name": "Defense Platform",
+      "cost": {"credits": 900, "materials": 1100, "energy": 200},
+      "crew_cost": 150, "build_time": 22,
+      "hull": 11000, "shield_quad": 3000, "shield_regen": 25,
+      "radius": 60, "sensor_range": 2000,
+      "weapons": [{"weapon": "turbolaser", "count": 2, "arcs": ["all"]},
+                   {"weapon": "missile_battery", "count": 1, "arcs": ["all"]},
+                   {"weapon": "point_defense", "count": 2, "arcs": ["all"]}],
+      "systems": {"engines": 0, "weapons": 900, "sensors": 300, "shield_gen": 500, "hangar": 0},
+      "command_capacity": 0
+    },
+    "sensor_station": {
+      "name": "Sensor Station",
+      "cost": {"credits": 500, "materials": 350, "energy": 250},
+      "crew_cost": 60, "build_time": 14,
+      "hull": 3500, "shield_quad": 900, "shield_regen": 12,
+      "radius": 45, "sensor_range": 5200,
+      "weapons": [],
+      "systems": {"engines": 0, "weapons": 0, "sensors": 600, "shield_gen": 200, "hangar": 0},
+      "command_capacity": 0
+    },
+    "trade_station": {
+      "name": "Trade Station",
+      "cost": {"credits": 1000, "materials": 600, "energy": 100},
+      "crew_cost": 100, "build_time": 18,
+      "hull": 5000, "shield_quad": 1200, "shield_regen": 12,
+      "radius": 65, "sensor_range": 1200,
+      "weapons": [],
+      "systems": {"engines": 0, "weapons": 0, "sensors": 180, "shield_gen": 250, "hangar": 0},
+      "income": {"credits": 2.5},
+      "command_capacity": 0
+    },
+    "fighter_platform": {
+      "name": "Fighter Platform",
+      "cost": {"credits": 800, "materials": 700, "energy": 150},
+      "crew_cost": 150, "build_time": 20,
+      "hull": 7000, "shield_quad": 1800, "shield_regen": 15,
+      "radius": 75, "sensor_range": 1400,
+      "weapons": [{"weapon": "point_defense", "count": 2, "arcs": ["all"]}],
+      "systems": {"engines": 0, "weapons": 200, "sensors": 200, "shield_gen": 300, "hangar": 600},
+      "builds_ships": ["imperial_tie_squadron", "imperial_tie_bomber_squadron",
+                        "rebel_x_squadron", "rebel_y_squadron",
+                        "confed_vulture_squadron", "confed_bomber_squadron",
+                        "syndicate_raid_squadron"],
+      "fighter_capacity": 6,
+      "command_capacity": 2
+    },
+    "repair_dock": {
+      "name": "Repair Dock",
+      "cost": {"credits": 600, "materials": 500, "energy": 100},
+      "crew_cost": 80, "build_time": 16,
+      "hull": 6000, "shield_quad": 1400, "shield_regen": 12,
+      "radius": 70, "sensor_range": 1100,
+      "weapons": [],
+      "systems": {"engines": 0, "weapons": 0, "sensors": 150, "shield_gen": 250, "hangar": 100},
+      "repair_rate": 60,
+      "fighter_capacity": 2,
+      "command_capacity": 0
+    },
+    "energy_relay": {
+      "name": "Energy Relay",
+      "cost": {"credits": 650, "materials": 450, "energy": 0},
+      "crew_cost": 70, "build_time": 16,
+      "hull": 4000, "shield_quad": 1000, "shield_regen": 12,
+      "radius": 55, "sensor_range": 1100,
+      "weapons": [],
+      "systems": {"engines": 0, "weapons": 0, "sensors": 150, "shield_gen": 220, "hangar": 0},
+      "income": {"energy": 2.4},
+      "requires_range": {"gas_giant": 1100},
+      "command_capacity": 0
+    }
+  }
+}

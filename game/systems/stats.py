@@ -1,0 +1,222 @@
+"""Stat aggregation: tech + commander + veteran + ability modifiers in one place.
+
+Every system asks these helpers instead of re-implementing modifier math, so
+balance changes land in exactly one file.
+"""
+from __future__ import annotations
+
+from ..core.entity import Entity
+from ..data.store import DataStore
+
+
+def tech_mult(state, player_id: int, key: str, default: float = 1.0) -> float:
+    """Multiply together every researched tech effect for `key`."""
+    p = state.players.get(player_id)
+    if p is None:
+        return default
+    mult = default
+    ds = DataStore.get()
+    for tid in p.researched:
+        t = ds.techs.get(tid)
+        if t is None:
+            continue
+        v = t.effects.get(key)
+        if isinstance(v, (int, float)):
+            mult *= float(v)
+    return mult
+
+
+def tech_bonus(state, player_id: int, key: str, default: float = 0.0) -> float:
+    """Sum additive tech effects for `key`."""
+    p = state.players.get(player_id)
+    if p is None:
+        return default
+    total = default
+    ds = DataStore.get()
+    for tid in p.researched:
+        t = ds.techs.get(tid)
+        if t is None:
+            continue
+        v = t.effects.get(key)
+        if isinstance(v, (int, float)):
+            total += float(v)
+    return total
+
+
+def commander_mult(state, entity: Entity, key: str, default: float = 1.0) -> float:
+    """Fleet-wide commander bonus if the entity belongs to a fleet with a commander."""
+    if entity.fleet_id is None:
+        return default
+    fleet = state.fleets.get(entity.fleet_id)
+    if fleet is None or fleet.commander is None:
+        return default
+    ds = DataStore.get()
+    rules = ds.rules.get("commanders", {})
+    v = rules.get(fleet.commander, {}).get(key)
+    return default * (1.0 + float(v)) if v is not None else default
+
+
+def veteran_fraction(entity: Entity) -> float:
+    """0..1 progress through veteran levels (capped)."""
+    ds = DataStore.get()
+    xp_cfg = ds.rules.get("experience", {})
+    levels = xp_cfg.get("levels", [0, 120, 320, 700, 1400])
+    ship = ds.ships.get(entity.data_id) if (entity.is_ship or entity.is_squadron) else None
+    xp_req = ship.veteran_xp if ship else 100.0
+    lvl = 0
+    for i, threshold in enumerate(levels):
+        if entity.xp >= threshold * (xp_req / 100.0):
+            lvl = i
+    max_lvl = int(xp_cfg.get("max_effective_level", 5)) - 1
+    return min(lvl, max_lvl) / max(1, max_lvl - 1)
+
+
+def effective_max_shield_quad(state, e: Entity) -> float:
+    base = e.max_shield_quad
+    m = tech_mult(state, e.owner, "shield_max_mult")
+    v = 1.0 + 0.10 * veteran_fraction(e)
+    return base * m * v
+
+
+def effective_shield_regen(state, e: Entity) -> float:
+    base = e.shield_regen
+    m = tech_mult(state, e.owner, "shield_regen_mult")
+    m *= commander_mult(state, e, "shield_regen")
+    active = e.ability_active.get("boost_shields", 0) > 0 or \
+        e.ability_active.get("emergency_shield_recharge", 0) > 0
+    if active and "boost_shields" in (e.ability_active or {}):
+        ds = DataStore.get()
+        a = ds.abilities.get("boost_shields")
+        if a and e.ability_active.get("boost_shields", 0) > 0:
+            m *= a.effects.get("shield_regen_mult", 1.0)
+    v = 1.0 + 0.15 * veteran_fraction(e)
+    return base * m * v
+
+
+def effective_weapon_damage(state, e: Entity, base_damage: float) -> float:
+    dmg = base_damage
+    dmg *= tech_mult(state, e.owner, "weapon_damage_mult")
+    dmg *= commander_mult(state, e, "weapon_damage")
+    if e.ability_active.get("weapon_overcharge", 0) > 0:
+        ds = DataStore.get()
+        a = ds.abilities.get("weapon_overcharge")
+        if a:
+            dmg *= a.effects.get("damage_mult", 1.0)
+    if e.is_squadron:
+        dmg *= tech_mult(state, e.owner, "squadron_damage_mult")
+    dmg *= e.damage_multiplier()
+    dmg *= 1.0 + 0.06 * veteran_fraction(e)
+    return dmg
+
+
+def effective_weapon_cooldown(state, e: Entity, base_cd: float) -> float:
+    cd = base_cd
+    cd *= 1.0 - 0.06 * veteran_fraction(e)
+    return max(0.05, cd)
+
+
+def effective_accuracy(state, e: Entity, base_acc: float) -> float:
+    acc = base_acc
+    acc += tech_bonus(state, e.owner, "accuracy_bonus")
+    acc += 0.04 * veteran_fraction(e)
+    return min(0.99, max(0.1, acc))
+
+
+def effective_speed(state, e: Entity) -> float:
+    if e.is_station or e.is_planet:
+        return 0.0
+    base = DataStore.get().resolve_ship(e.data_id).speed if (e.is_ship or e.is_squadron) else 0
+    spd = base * e.speed_multiplier()
+    spd *= tech_mult(state, e.owner, "speed_mult")
+    spd *= 1.0 + 0.05 * veteran_fraction(e)
+    spd *= ability_speed_mult(e)
+    spd *= debuff_speed_mult(e)
+    return spd
+
+
+def effective_turn_rate(state, e: Entity) -> float:
+    base = DataStore.get().resolve_ship(e.data_id).turn_rate if (e.is_ship or e.is_squadron) else 0
+    tr = base * (0.3 + 0.7 * max(0.0, e.subsystem_fraction("engines")))
+    tr *= tech_mult(state, e.owner, "turn_mult")
+    if e.ability_active.get("engine_overdrive", 0) > 0:
+        ds = DataStore.get()
+        a = ds.abilities.get("engine_overdrive")
+        if a:
+            tr *= a.effects.get("turn_mult", 1.0)
+    return tr
+
+
+def effective_sensor_range(state, e: Entity) -> float:
+    base = getattr(e, "sensor_range", 0)
+    rng = base * e.sensor_multiplier()
+    rng *= tech_mult(state, e.owner, "sensor_range_mult")
+    rng *= commander_mult(state, e, "sensor_range")
+    rng *= 1.0 + 0.08 * veteran_fraction(e)
+    if e.ability_active.get("sensor_jammed", 0) > 0:
+        rng *= 0.4
+    if state.in_nebula(e.pos):
+        rng *= DataStore.get().rules.get("sensors", {}).get(
+            "nebula_detection_multiplier", 0.3)
+    return rng
+
+
+def effective_reinforce_mult(state, player_id: int) -> float:
+    """Tech multiplier on squadron reinforcement speed (reb_fighters_1)."""
+    return tech_mult(state, player_id, "squadron_reinforce_mult")
+
+
+def effective_build_speed(state, player_id: int) -> float:
+    m = tech_mult(state, player_id, "build_speed_mult")
+    # logistics commander on any fleet: approximate via any fleet with logistics commander
+    for fleet in state.fleets.values():
+        if fleet.owner == player_id and fleet.commander == "logistics":
+            ds = DataStore.get()
+            m *= 1.0 + ds.rules.get("commanders", {}).get("logistics", {}).get("build_speed", 0)
+            break
+    return m
+
+
+def effective_repair_rate(state, player_id: int) -> float:
+    m = tech_mult(state, player_id, "repair_mult")
+    for fleet in state.fleets.values():
+        if fleet.owner == player_id and fleet.commander == "logistics":
+            ds = DataStore.get()
+            m *= 1.0 + ds.rules.get("commanders", {}).get("logistics", {}).get("repair_rate", 0)
+            break
+    return m
+
+
+def player_command_capacity(state, player_id: int) -> int:
+    p = state.players.get(player_id)
+    if p is None:
+        return 0
+    ds = DataStore.get()
+    rules = ds.rules.get("sim", {})
+    cap = int(rules.get("command_capacity_base", 10))
+    cap += int(p.command_capacity or 0)   # set by EconomySystem from stations
+    cap += int(tech_bonus(state, player_id, "command_capacity_bonus"))
+    # military planets
+    for e in state.entities.values():
+        if e.alive and e.is_planet and e.colonized_by == player_id:
+            if e.data_id in ds.rules.get("economy", {}).get("planet_command_bonus", {}):
+                cap += int(ds.rules["economy"]["planet_command_bonus"][e.data_id])
+    return cap
+
+
+def ability_speed_mult(e: Entity) -> float:
+    if e.ability_active.get("engine_overdrive", 0) > 0:
+        ds = DataStore.get()
+        a = ds.abilities.get("engine_overdrive")
+        if a:
+            return a.effects.get("speed_mult", 1.0)
+    return 1.0
+
+
+def debuff_speed_mult(e: Entity) -> float:
+    m = 1.0
+    if e.ability_active.get("tractor_slowed", 0) > 0:
+        ds = DataStore.get()
+        a = ds.abilities.get("tractor_beam")
+        if a:
+            m *= a.effects.get("target_speed_mult", 1.0)
+    return m

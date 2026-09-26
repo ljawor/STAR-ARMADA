@@ -1,0 +1,57 @@
+{
+  "abilities": {
+    "engine_overdrive": {
+      "name": "Engine Overdrive", "cooldown": 30, "energy_cost": 25, "duration": 8,
+      "effects": {"speed_mult": 1.6, "turn_mult": 1.4},
+      "description": "Temporarily boosts engines: +60% speed, +40% turn rate."
+    },
+    "emergency_shield_recharge": {
+      "name": "Emergency Shield Recharge", "cooldown": 45, "energy_cost": 40, "duration": 0,
+      "effects": {"shield_restore_fraction": 0.6},
+      "description": "Instantly restores 60% of max shields across all quadrants."
+    },
+    "weapon_overcharge": {
+      "name": "Weapon Overcharge", "cooldown": 40, "energy_cost": 35, "duration": 10,
+      "effects": {"damage_mult": 1.5},
+      "description": "Weapons deal +50% damage for a short time."
+    },
+    "emp_burst": {
+      "name": "EMP Burst", "cooldown": 60, "energy_cost": 50, "duration": 0,
+      "radius": 900,
+      "effects": {"system_damage": 0.5, "shield_damage_fraction": 0.35},
+      "description": "Damages subsystems and drains shields of all nearby enemies."
+    },
+    "fighter_scramble": {
+      "name": "Fighter Scramble", "cooldown": 75, "energy_cost": 30, "duration": 0,
+      "effects": {"instant_reinforce": true},
+      "description": "Instantly completes hangar reinforcement for docked squadrons."
+    },
+    "repair_drones": {
+      "name": "Repair Drones", "cooldown": 50, "energy_cost": 30, "duration": 10,
+      "radius": 700,
+      "effects": {"repair_hps": 60},
+      "description": "Repairs nearby friendly ships (60 hull/s) while active."
+    },
+    "tractor_beam": {
+      "name": "Tractor Beam", "cooldown": 35, "energy_cost": 20, "duration": 6,
+      "effects": {"target_speed_mult": 0.35},
+      "description": "Slows a locked enemy ship by 65%."
+    },
+    "sensor_jam": {
+      "name": "Sensor Jam", "cooldown": 45, "energy_cost": 25, "duration": 12,
+      "radius": 800,
+      "effects": {"enemy_sensor_mult": 0.4},
+      "description": "Reduces enemy sensor range nearby by 60% while active."
+    },
+    "hyperspace_jump": {
+      "name": "Hyperspace Jump", "cooldown": 25, "energy_cost": 0, "duration": 0,
+      "effects": {},
+      "description": "Prepares and executes a strategic hyperspace jump."
+    },
+    "boost_shields": {
+      "name": "Boost Shields", "cooldown": 35, "energy_cost": 25, "duration": 10,
+      "effects": {"shield_regen_mult": 3.0},
+      "description": "Triples shield regeneration while active."
+    }
+  }
+}

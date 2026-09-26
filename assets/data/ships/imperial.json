@@ -1,0 +1,120 @@
+{
+  "ships": {
+    "imperial_tie_squadron": {
+      "name": "Talon Interceptor Squadron", "faction": "imperial",
+      "category": "fighter_squadron", "is_squadron": true, "squadron_size": 6,
+      "cost": {"credits": 220, "materials": 40, "energy": 0},
+      "crew_cost": 12, "command_cost": 1, "build_time": 7,
+      "hull": 60, "shield_quad": 0, "shield_regen": 0,
+      "speed": 130, "turn_rate": 160, "radius": 22, "sensor_range": 900,
+      "weapons": [{"weapon": "laser_cannon", "count": 1, "arcs": ["front"]}],
+      "systems": {"engines": 30, "weapons": 25, "sensors": 20},
+      "hangar_capacity": 0, "veteran_xp": 80
+    },
+    "imperial_tie_bomber_squadron": {
+      "name": "Hammer Torpedo Squadron", "faction": "imperial",
+      "category": "fighter_squadron", "is_squadron": true, "squadron_size": 6,
+      "cost": {"credits": 300, "materials": 70, "energy": 0},
+      "crew_cost": 12, "command_cost": 1, "build_time": 9,
+      "hull": 85, "shield_quad": 0, "shield_regen": 0,
+      "speed": 95, "turn_rate": 110, "radius": 24, "sensor_range": 800,
+      "weapons": [{"weapon": "proton_torpedo", "count": 1, "arcs": ["front"]}],
+      "systems": {"engines": 28, "weapons": 30, "sensors": 18},
+      "hangar_capacity": 0, "veteran_xp": 90
+    },
+    "imperial_corvette": {
+      "name": "Vigil Corvette", "faction": "imperial",
+      "category": "corvette",
+      "cost": {"credits": 480, "materials": 180, "energy": 60},
+      "crew_cost": 40, "command_cost": 2, "build_time": 12,
+      "hull": 900, "shield_quad": 350, "shield_regen": 12,
+      "speed": 75, "turn_rate": 55, "radius": 34, "sensor_range": 1500,
+      "weapons": [{"weapon": "point_defense", "count": 2, "arcs": ["all"]},
+                   {"weapon": "laser_cannon", "count": 1, "arcs": ["front"]}],
+      "abilities": ["engine_overdrive"],
+      "systems": {"engines": 120, "weapons": 100, "sensors": 80, "shield_gen": 90, "hangar": 0},
+      "hangar_capacity": 0
+    },
+    "imperial_frigate": {
+      "name": "Lancer Frigate", "faction": "imperial",
+      "category": "frigate",
+      "cost": {"credits": 900, "materials": 420, "energy": 120},
+      "crew_cost": 120, "command_cost": 4, "build_time": 18,
+      "hull": 2600, "shield_quad": 900, "shield_regen": 22,
+      "speed": 55, "turn_rate": 35, "radius": 55, "sensor_range": 1800,
+      "weapons": [{"weapon": "laser_cannon", "count": 2, "arcs": ["front", "left", "right"]},
+                   {"weapon": "point_defense", "count": 2, "arcs": ["all"]}],
+      "abilities": ["boost_shields"],
+      "systems": {"engines": 260, "weapons": 240, "sensors": 160, "shield_gen": 220, "hangar": 60},
+      "hangar_capacity": 0
+    },
+    "imperial_cruiser": {
+      "name": "Gladiator Cruiser", "faction": "imperial",
+      "category": "cruiser",
+      "cost": {"credits": 2400, "materials": 1400, "energy": 400},
+      "crew_cost": 400, "command_cost": 8, "build_time": 32,
+      "hull": 9000, "shield_quad": 2600, "shield_regen": 40,
+      "speed": 40, "turn_rate": 20, "radius": 90, "sensor_range": 2200,
+      "weapons": [{"weapon": "turbolaser", "count": 3, "arcs": ["front", "left", "right"]},
+                   {"weapon": "missile_battery", "count": 1, "arcs": ["all"]},
+                   {"weapon": "point_defense", "count": 2, "arcs": ["all"]}],
+      "abilities": ["weapon_overcharge", "engine_overdrive"],
+      "systems": {"engines": 700, "weapons": 800, "sensors": 400, "shield_gen": 650, "hangar": 200},
+      "hangar_capacity": 2, "veteran_xp": 160
+    },
+    "imperial_battleship": {
+      "name": "Executor-class Dreadnought", "faction": "imperial",
+      "category": "battleship",
+      "cost": {"credits": 6500, "materials": 4800, "energy": 1400},
+      "crew_cost": 1500, "command_cost": 15, "build_time": 60,
+      "hull": 28000, "shield_quad": 7500, "shield_regen": 70,
+      "speed": 28, "turn_rate": 11, "radius": 150, "sensor_range": 2800,
+      "weapons": [{"weapon": "heavy_turbolaser", "count": 3, "arcs": ["front", "left", "right"]},
+                   {"weapon": "ion_cannon", "count": 1, "arcs": ["front"]},
+                   {"weapon": "missile_battery", "count": 2, "arcs": ["all"]},
+                   {"weapon": "point_defense", "count": 4, "arcs": ["all"]}],
+      "abilities": ["emergency_shield_recharge", "weapon_overcharge", "sensor_jam"],
+      "systems": {"engines": 1800, "weapons": 2200, "sensors": 900, "shield_gen": 1800, "hangar": 500},
+      "hangar_capacity": 4, "veteran_xp": 240
+    },
+    "imperial_supercapital": {
+      "name": "Sovereign-class Star Dreadnought", "faction": "imperial",
+      "category": "supercapital",
+      "cost": {"credits": 16000, "materials": 12000, "energy": 4000},
+      "crew_cost": 4000, "command_cost": 30, "build_time": 110,
+      "hull": 85000, "shield_quad": 22000, "shield_regen": 120,
+      "speed": 20, "turn_rate": 6, "radius": 260, "sensor_range": 3600,
+      "weapons": [{"weapon": "heavy_turbolaser", "count": 5, "arcs": ["front", "left", "right", "rear"]},
+                   {"weapon": "beam_lance", "count": 1, "arcs": ["front"]},
+                   {"weapon": "ion_cannon", "count": 2, "arcs": ["front", "left"]},
+                   {"weapon": "point_defense", "count": 6, "arcs": ["all"]}],
+      "abilities": ["emergency_shield_recharge", "weapon_overcharge", "repair_drones"],
+      "systems": {"engines": 4500, "weapons": 6000, "sensors": 2200, "shield_gen": 5000, "hangar": 1400},
+      "hangar_capacity": 6, "veteran_xp": 400
+    },
+    "imperial_constructor": {
+      "name": "Engineering Corps Corvette", "faction": "imperial",
+      "category": "construction", "is_construction": true,
+      "cost": {"credits": 400, "materials": 250, "energy": 0},
+      "crew_cost": 30, "command_cost": 1, "build_time": 10,
+      "hull": 700, "shield_quad": 300, "shield_regen": 10,
+      "speed": 60, "turn_rate": 50, "radius": 30, "sensor_range": 1200,
+      "weapons": [],
+      "systems": {"engines": 100, "weapons": 0, "sensors": 80, "shield_gen": 60, "hangar": 0},
+      "can_build_stations": ["mining_station", "command_station", "shipyard", "research_station",
+                              "defense_platform", "sensor_station", "trade_station",
+                              "fighter_platform", "repair_dock"]
+    },
+    "imperial_colonizer": {
+      "name": "Colonial Outreach Frigate", "faction": "imperial",
+      "category": "construction", "is_construction": true, "can_colonize": true,
+      "cost": {"credits": 600, "materials": 350, "energy": 100},
+      "crew_cost": 200, "command_cost": 1, "build_time": 14,
+      "hull": 1200, "shield_quad": 400, "shield_regen": 12,
+      "speed": 50, "turn_rate": 40, "radius": 40, "sensor_range": 1400,
+      "weapons": [],
+      "systems": {"engines": 140, "weapons": 0, "sensors": 100, "shield_gen": 90, "hangar": 0},
+      "can_build_stations": []
+    }
+  }
+}

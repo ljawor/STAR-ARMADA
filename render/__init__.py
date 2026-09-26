@@ -1,0 +1,1 @@
+"""Render layer: pure view over GameState (reads sim, never mutates it)."""

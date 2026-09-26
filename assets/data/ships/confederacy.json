@@ -1,0 +1,118 @@
+{
+  "ships": {
+    "confed_vulture_squadron": {
+      "name": "Vulture Drone Wing", "faction": "confederacy",
+      "category": "fighter_squadron", "is_squadron": true, "squadron_size": 8,
+      "cost": {"credits": 180, "materials": 30, "energy": 0},
+      "crew_cost": 2, "command_cost": 1, "build_time": 5,
+      "hull": 50, "shield_quad": 0, "shield_regen": 0,
+      "speed": 120, "turn_rate": 155, "radius": 22, "sensor_range": 850,
+      "weapons": [{"weapon": "laser_cannon", "count": 1, "arcs": ["front"]}],
+      "systems": {"engines": 26, "weapons": 22, "sensors": 18},
+      "hangar_capacity": 0, "veteran_xp": 80
+    },
+    "confed_bomber_squadron": {
+      "name": "Hyena Strike Wing", "faction": "confederacy",
+      "category": "fighter_squadron", "is_squadron": true, "squadron_size": 8,
+      "cost": {"credits": 260, "materials": 60, "energy": 0},
+      "crew_cost": 2, "command_cost": 1, "build_time": 7,
+      "hull": 80, "shield_quad": 0, "shield_regen": 0,
+      "speed": 92, "turn_rate": 110, "radius": 24, "sensor_range": 800,
+      "weapons": [{"weapon": "proton_torpedo", "count": 1, "arcs": ["front"]}],
+      "systems": {"engines": 26, "weapons": 28, "sensors": 18},
+      "hangar_capacity": 0, "veteran_xp": 90
+    },
+    "confed_corvette": {
+      "name": "Droth Drone Corvette", "faction": "confederacy",
+      "category": "corvette",
+      "cost": {"credits": 380, "materials": 150, "energy": 40},
+      "crew_cost": 4, "command_cost": 2, "build_time": 9,
+      "hull": 750, "shield_quad": 300, "shield_regen": 10,
+      "speed": 80, "turn_rate": 58, "radius": 32, "sensor_range": 1450,
+      "weapons": [{"weapon": "laser_cannon", "count": 1, "arcs": ["all"]},
+                   {"weapon": "point_defense", "count": 1, "arcs": ["all"]}],
+      "abilities": [],
+      "systems": {"engines": 110, "weapons": 85, "sensors": 75, "shield_gen": 80, "hangar": 0},
+      "hangar_capacity": 0
+    },
+    "confed_frigate": {
+      "name": "Cobalt Frigate", "faction": "confederacy",
+      "category": "frigate",
+      "cost": {"credits": 760, "materials": 380, "energy": 90},
+      "crew_cost": 10, "command_cost": 4, "build_time": 14,
+      "hull": 2200, "shield_quad": 820, "shield_regen": 20,
+      "speed": 58, "turn_rate": 38, "radius": 52, "sensor_range": 1750,
+      "weapons": [{"weapon": "laser_cannon", "count": 2, "arcs": ["all"]},
+                   {"weapon": "point_defense", "count": 2, "arcs": ["all"]}],
+      "abilities": ["boost_shields"],
+      "systems": {"engines": 230, "weapons": 210, "sensors": 160, "shield_gen": 210, "hangar": 50},
+      "hangar_capacity": 0
+    },
+    "confed_cruiser": {
+      "name": "Recusant Raider", "faction": "confederacy",
+      "category": "cruiser",
+      "cost": {"credits": 1900, "materials": 1200, "energy": 300},
+      "crew_cost": 25, "command_cost": 8, "build_time": 24,
+      "hull": 7800, "shield_quad": 2300, "shield_regen": 36,
+      "speed": 46, "turn_rate": 26, "radius": 85, "sensor_range": 2100,
+      "weapons": [{"weapon": "turbolaser", "count": 2, "arcs": ["front", "left", "right"]},
+                   {"weapon": "mass_driver", "count": 1, "arcs": ["front"]},
+                   {"weapon": "point_defense", "count": 2, "arcs": ["all"]}],
+      "abilities": ["engine_overdrive"],
+      "systems": {"engines": 640, "weapons": 700, "sensors": 380, "shield_gen": 600, "hangar": 180},
+      "hangar_capacity": 2, "veteran_xp": 160
+    },
+    "confed_battleship": {
+      "name": "Bulwark Bastion", "faction": "confederacy",
+      "category": "battleship",
+      "cost": {"credits": 5400, "materials": 4300, "energy": 1100},
+      "crew_cost": 80, "command_cost": 15, "build_time": 48,
+      "hull": 24000, "shield_quad": 7000, "shield_regen": 60,
+      "speed": 30, "turn_rate": 15, "radius": 135, "sensor_range": 2700,
+      "weapons": [{"weapon": "heavy_turbolaser", "count": 2, "arcs": ["front", "left", "right"]},
+                   {"weapon": "mass_driver", "count": 2, "arcs": ["front"]},
+                   {"weapon": "point_defense", "count": 4, "arcs": ["all"]}],
+      "abilities": ["emergency_shield_recharge", "weapon_overcharge"],
+      "systems": {"engines": 1600, "weapons": 1900, "sensors": 880, "shield_gen": 1800, "hangar": 480},
+      "hangar_capacity": 4, "veteran_xp": 240
+    },
+    "confed_supercapital": {
+      "name": "Subjugator-class Sovereignty", "faction": "confederacy",
+      "category": "supercapital",
+      "cost": {"credits": 14000, "materials": 11000, "energy": 3600},
+      "crew_cost": 200, "command_cost": 30, "build_time": 100,
+      "hull": 80000, "shield_quad": 21000, "shield_regen": 110,
+      "speed": 22, "turn_rate": 7, "radius": 255, "sensor_range": 3400,
+      "weapons": [{"weapon": "beam_lance", "count": 2, "arcs": ["front", "left"]},
+                   {"weapon": "heavy_turbolaser", "count": 4, "arcs": ["front", "left", "right"]},
+                   {"weapon": "point_defense", "count": 6, "arcs": ["all"]}],
+      "abilities": ["weapon_overcharge", "emergency_shield_recharge", "emp_burst"],
+      "systems": {"engines": 4300, "weapons": 5600, "sensors": 2050, "shield_gen": 5000, "hangar": 1600},
+      "hangar_capacity": 8, "veteran_xp": 400
+    },
+    "confed_constructor": {
+      "name": "Homing Spider Droid Rig", "faction": "confederacy",
+      "category": "construction", "is_construction": true,
+      "cost": {"credits": 320, "materials": 220, "energy": 0},
+      "crew_cost": 2, "command_cost": 1, "build_time": 8,
+      "hull": 640, "shield_quad": 280, "shield_regen": 9,
+      "speed": 58, "turn_rate": 48, "radius": 30, "sensor_range": 1150,
+      "weapons": [],
+      "systems": {"engines": 95, "weapons": 0, "sensors": 75, "shield_gen": 58, "hangar": 0},
+      "can_build_stations": ["mining_station", "command_station", "shipyard", "research_station",
+                              "defense_platform", "sensor_station", "trade_station",
+                              "fighter_platform", "repair_dock"]
+    },
+    "confed_colonizer": {
+      "name": "Droid Foundry Barge", "faction": "confederacy",
+      "category": "construction", "is_construction": true, "can_colonize": true,
+      "cost": {"credits": 520, "materials": 320, "energy": 80},
+      "crew_cost": 15, "command_cost": 1, "build_time": 12,
+      "hull": 1100, "shield_quad": 390, "shield_regen": 12,
+      "speed": 50, "turn_rate": 40, "radius": 40, "sensor_range": 1350,
+      "weapons": [],
+      "systems": {"engines": 135, "weapons": 0, "sensors": 95, "shield_gen": 88, "hangar": 0},
+      "can_build_stations": []
+    }
+  }
+}

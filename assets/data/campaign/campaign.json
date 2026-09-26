@@ -1,0 +1,25 @@
+{
+  "campaign": "Rise of the Outer Armada",
+  "missions": [
+    {
+      "id": "m01_first_fleet",
+      "name": "First Fleet",
+      "map": "skirmish01",
+      "player_faction": "imperial",
+      "briefing": "Command has assigned you a single task force and a colonizable world. Establish a mining station on the asteroid field, build a constructor, and defend against the raider probing force.",
+      "loadout": {
+        "resources": {"credits": 6000, "materials": 4000, "energy": 1500, "crew": 3000},
+        "start_units": {"command_station": 1, "constructor": 1, "squadron": 2, "corvette": 2}
+      },
+      "objectives": [
+        {"type": "build_station", "station": "mining_station", "text": "Establish a mining station on the asteroid field"},
+        {"type": "build_ship", "ship": "imperial_corvette", "count": 2, "text": "Build two corvettes"},
+        {"type": "destroy_all_forces", "team": 1, "text": "Eliminate the raider force"}
+      ],
+      "enemy": {
+        "faction": "syndicate", "team": 1,
+        "start_units": {"command_station": 1, "corvette": 2, "squadron": 1}
+      }
+    }
+  ]
+}

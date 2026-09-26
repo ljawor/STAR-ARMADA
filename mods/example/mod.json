@@ -1,0 +1,6 @@
+{
+  "name": "Mod Example",
+  "description": "Demonstrates the mod loader: overrides game_rules tick rate and adds a weapon.",
+  "version": "1.0",
+  "author": "STAR ARMADA"
+}

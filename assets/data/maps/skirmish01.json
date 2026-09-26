@@ -1,0 +1,67 @@
+{
+  "id": "skirmish01",
+  "name": "Kotarri Sector — First Contact",
+  "bounds": 26000,
+  "star": {"pos": [0, -3000, 0], "size": 2600, "color": [1.0, 0.9, 0.6]},
+  "players": [
+    {
+      "slot": 0, "faction": "imperial", "team": 0, "is_ai": false, "name": "Player",
+      "start": [-11000, 0, 800],
+      "start_units": {
+        "command_station": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    },
+    {
+      "slot": 1, "faction": "imperial", "team": 1, "is_ai": true, "name": "AI Warlord",
+      "start": [11000, 0, -800],
+      "start_units": {
+        "command_station": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    }
+  ],
+  "asteroid_fields": [
+    {"id": "ast_home", "pos": [-7000, 0, 3200], "radius": 1400, "richness": 1.0},
+    {"id": "ast_enemy", "pos": [7000, 0, -3200], "radius": 1400, "richness": 1.0},
+    {"id": "ast_north", "pos": [0, 0, 6800], "radius": 1600, "richness": 1.4},
+    {"id": "ast_south", "pos": [0, 0, -6800], "radius": 1600, "richness": 1.4},
+    {"id": "ast_center", "pos": [0, 0, 0], "radius": 1800, "richness": 2.0}
+  ],
+  "gas_giants": [
+    {"id": "gas_nw", "pos": [-8500, 0, -6000], "radius": 2200, "color": [0.75, 0.6, 0.45]},
+    {"id": "gas_se", "pos": [8500, 0, 6000], "radius": 2200, "color": [0.5, 0.65, 0.8]}
+  ],
+  "planets": [
+    {"id": "planet_kel", "name": "Kel Varn", "pos": [-5200, 0, 2200], "radius": 700,
+     "type": "temperate", "color": [0.3, 0.6, 0.95]},
+    {"id": "planet_doran", "name": "Doran III", "pos": [5200, 0, -2200], "radius": 700,
+     "type": "industrial", "color": [0.65, 0.55, 0.4]},
+    {"id": "planet_solis", "name": "Solis Minor", "pos": [-2200, 0, -5200], "radius": 620,
+     "type": "agricultural", "color": [0.45, 0.75, 0.45]},
+    {"id": "planet_vorex", "name": "Vorex", "pos": [2200, 0, 5200], "radius": 620,
+     "type": "military", "color": [0.7, 0.4, 0.4]},
+    {"id": "planet_tarlis", "name": "Tarlis", "pos": [0, 0, 9800], "radius": 800,
+     "type": "gas_giant", "color": [0.8, 0.65, 0.5]},
+    {"id": "planet_myr", "name": "Myr Station World", "pos": [0, 0, -9800], "radius": 800,
+     "type": "research", "color": [0.6, 0.5, 0.85]},
+    {"id": "planet_skarn", "name": "Skarn", "pos": [9800, 0, 0], "radius": 650,
+     "type": "barren", "color": [0.55, 0.55, 0.6]},
+    {"id": "planet_ovel", "name": "Ovel", "pos": [-9800, 0, 0], "radius": 650,
+     "type": "trade", "color": [0.85, 0.75, 0.5]}
+  ],
+  "nebulas": [
+    {"pos": [-12000, 0, -9000], "radius": 4200, "color": [0.4, 0.2, 0.55]},
+    {"pos": [12000, 0, 9000], "radius": 4200, "color": [0.15, 0.4, 0.55]}
+  ],
+  "jump_points": [
+    {"pos": [-11000, 0, 0]},
+    {"pos": [11000, 0, 0]},
+    {"pos": [0, 0, 11000]},
+    {"pos": [0, 0, -11000]}
+  ]
+}
