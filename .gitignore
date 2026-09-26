@@ -9,3 +9,8 @@ saves/
 
 # OS
 .DS_Store
+
+# packaging
+build/
+dist/
+*.dmg

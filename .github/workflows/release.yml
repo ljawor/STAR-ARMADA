@@ -1,0 +1,78 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deps
+        run: |
+          python3 -m venv .venv
+          ./.venv/bin/pip install --upgrade pip
+          ./.venv/bin/pip install -r requirements.txt pyinstaller
+      - name: Build app + DMG
+        run: |
+          ./.venv/bin/pyinstaller star_armada.spec --noconfirm
+          codesign --force --deep --sign - "dist/STAR ARMADA.app"
+          mkdir -p dist/dmg_staging
+          cp -R "dist/STAR ARMADA.app" dist/dmg_staging/
+          ln -s /Applications dist/dmg_staging/Applications
+          hdiutil create -volname "STAR ARMADA" -srcfolder dist/dmg_staging \
+            -ov -format UDZO "dist/STAR-ARMADA-${GITHUB_REF_NAME}-mac.dmg"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mac-dmg
+          path: dist/STAR-ARMADA-*-mac.dmg
+
+  win:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pyinstaller
+      - name: Build exe
+        run: pyinstaller star_armada.spec --noconfirm
+      - name: Zip
+        run: |
+          Compress-Archive -Path "dist/STAR ARMADA/*" `
+            -DestinationPath "dist/STAR-ARMADA-${env:GITHUB_REF_NAME}-win.zip"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: win-zip
+          path: dist/STAR-ARMADA-*-win.zip
+
+  release:
+    needs: [mac, win]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "STAR ARMADA ${{ github.ref_name }}"
+          body: |
+            First playable release of STAR ARMADA.
+
+            - macOS: download the DMG, open it, drag the app to Applications.
+              First launch: right-click the app → Open (unsigned build).
+            - Windows: download the ZIP, extract, run `STAR ARMADA.exe`.
+          files: |
+            artifacts/mac-dmg/*
+            artifacts/win-zip/*

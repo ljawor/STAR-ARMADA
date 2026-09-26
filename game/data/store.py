@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 from dataclasses import dataclass, field
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -17,6 +18,11 @@ def _find_assets_dir() -> str:
     env = os.environ.get("STAR_ARMADA_DATA")
     if env and os.path.isdir(env):
         return env
+    # frozen (PyInstaller) build: assets live under sys._MEIPASS/assets
+    if hasattr(sys, "_MEIPASS"):
+        frozen = os.path.join(sys._MEIPASS, "assets", "data")
+        if os.path.isdir(frozen):
+            return frozen
     return os.path.join(ROOT, "assets", "data")
 
 
