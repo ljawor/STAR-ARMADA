@@ -51,9 +51,18 @@ class PlayerCommand:
         return PlayerCommand(**kwargs)
 
 
+def _xyz(t):
+    """Accept Vec3 (.x/.y/.z) or plain tuple/list — returns (x, y, z)."""
+    if t is None:
+        return None
+    if hasattr(t, "x"):
+        return (t.x, t.y, t.z)
+    return (t[0], t[1], t[2])
+
+
 def MoveCommand(player: int, unit_ids, target: Vec3) -> PlayerCommand:
     return PlayerCommand("move", player, unit_ids=tuple(unit_ids),
-                         target_pos=(target.x, target.y, target.z))
+                         target_pos=_xyz(target))
 
 
 def AttackCommand(player: int, unit_ids, target_id: int) -> PlayerCommand:
@@ -62,7 +71,7 @@ def AttackCommand(player: int, unit_ids, target_id: int) -> PlayerCommand:
 
 def AttackMoveCommand(player: int, unit_ids, target: Vec3) -> PlayerCommand:
     return PlayerCommand("attack_move", player, unit_ids=tuple(unit_ids),
-                         target_pos=(target.x, target.y, target.z))
+                         target_pos=_xyz(target))
 
 
 def StopCommand(player: int, unit_ids) -> PlayerCommand:
@@ -77,7 +86,7 @@ def BuildStationCommand(player: int, builder_id: int, station_kind: str,
                         pos: Vec3) -> PlayerCommand:
     return PlayerCommand("build_station", player, unit_ids=(builder_id,),
                          station_kind=station_kind,
-                         target_pos=(pos.x, pos.y, pos.z))
+                         target_pos=_xyz(pos))
 
 
 def BuildShipCommand(player: int, shipyard_id: int, ship_id: str,
@@ -97,7 +106,7 @@ def ResearchCommand(player: int, station_id: int, tech_id: str) -> PlayerCommand
 
 def AbilityCommand(player: int, unit_ids, ability_id: str,
                    target_id: int | None = None, target: Vec3 | None = None) -> PlayerCommand:
-    tp = (target.x, target.y, target.z) if target else None
+    tp = _xyz(target) if target else None
     return PlayerCommand("ability", player, unit_ids=tuple(unit_ids),
                          ability_id=ability_id, target_id=target_id, target_pos=tp)
 
@@ -114,7 +123,7 @@ def FleetSetStanceCommand(player: int, fleet_id: int, stance: str) -> PlayerComm
 
 def JumpCommand(player: int, unit_ids, target: Vec3) -> PlayerCommand:
     return PlayerCommand("jump", player, unit_ids=tuple(unit_ids),
-                         target_pos=(target.x, target.y, target.z))
+                         target_pos=_xyz(target))
 
 
 COMMAND_TYPES = {
