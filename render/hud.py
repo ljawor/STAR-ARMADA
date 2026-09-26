@@ -77,6 +77,8 @@ class HUD:
         self._cur_player = None
         # placement mode: payload dict for build_station awaiting a click
         self.placement: dict | None = None
+        # sim floating texts projected to screen (set per-frame by main loop)
+        self.floating_texts: list = []
         # per-frame scrollable regions: list of (rect, key) for wheel routing
         self.scroll_rects: list = []
 
@@ -93,6 +95,7 @@ class HUD:
         self._right_panel(selection, local_player)
         self._event_log(local_player)
         self._minimap(selection, local_player)
+        self._draw_floating_texts()
         self._placement_banner()
         if flash_msg and flash_left > 0.0:
             surf = self.font_big.render(flash_msg, True, WARN)
@@ -492,8 +495,36 @@ class HUD:
                                max(10, int(rad)))
             pygame.draw.line(ov, col, (gx - 12, gy), (gx + 12, gy), 2)
             pygame.draw.line(ov, col, (gx, gy - 12), (gx, gy + 12), 2)
+            # reason line: WHY the ghost is red (same validator as the sim)
+            reason = ghost.get("reason", "")
+            if not valid and reason:
+                surf = self.font_small.render(f"✕ {reason}", True, BAD)
+                r = surf.get_rect(midbottom=(gx, gy - max(10, int(rad)) - 8))
+                bg = r.inflate(12, 6)
+                pygame.draw.rect(ov, (28, 12, 10, 220), bg, border_radius=4)
+                pygame.draw.rect(ov, BAD, bg, 1, border_radius=4)
+                ov.blit(surf, r)
+            elif valid:
+                surf = self.font_small.render(
+                    f"✓ place {self.placement.get('station_kind', '').replace('_', ' ')}",
+                    True, GOOD)
+                r = surf.get_rect(midbottom=(gx, gy - max(10, int(rad)) - 8))
+                ov.blit(surf, r)
 
     # ------------------------------------------------------------------ minimap
+    def _draw_floating_texts(self) -> None:
+        """Sim rejection/status messages as floating labels above the world."""
+        ov = self.overlay
+        for x, y, text, rgb, alpha in getattr(self, "floating_texts", []):
+            if not text:
+                continue
+            surf = self.font_small.render(text, True, rgb)
+            r = surf.get_rect(midtop=(x, y))
+            bg = r.inflate(10, 4)
+            pygame.draw.rect(ov, (10, 12, 18, int(200 * alpha)), bg,
+                             border_radius=4)
+            ov.blit(surf, r)
+
     def _minimap(self, selection: set, local_player: int) -> None:
         ov = self.overlay
         st = self.state
@@ -540,6 +571,10 @@ class HUD:
 
     def set_camera_ref(self, camera) -> None:
         self.camera = camera
+
+    def set_floating_texts(self, texts: list) -> None:
+        """Screen-projected sim messages (from renderer.floating_texts_screen)."""
+        self.floating_texts = texts
 
     def _owner_rgb(self, owner: int):
         p = self.state.players.get(owner)

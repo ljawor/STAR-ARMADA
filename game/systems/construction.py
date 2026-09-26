@@ -7,6 +7,8 @@ cancelled (refund 50%). Constructor ships must be in range of a valid site
 """
 from __future__ import annotations
 
+import math
+
 from ..core.vectors import Vec3
 from ..data.store import DataStore
 from . import stats
@@ -75,43 +77,17 @@ class ConstructionSystem:
         builder = st.entity(builder_id)
         if builder is None or not builder.is_construction:
             return False
-        sd = self.ds.resolve_station(station_id)
-        unit = self.ds.resolve_ship(builder.data_id)
-        if station_id not in unit.can_build_stations:
-            st.float_text(builder.pos, "Cannot build this", (1, 0.5, 0.4))
+        ok, reason = self.check_site(station_id, pos, builder)
+        if not ok:
+            st.float_text(builder.pos, f"Cannot build: {reason}", (1, 0.5, 0.4))
             return False
+        sd = self.ds.resolve_station(station_id)
         cost = self.factory.station_build_cost(station_id)
         if not self.can_pay(player_id, cost):
-            st.float_text(builder.pos, "Insufficient resources", (1, 0.6, 0.4))
+            missing = self.missing_resources(player_id, cost)
+            st.float_text(builder.pos, f"Insufficient resources: {missing}",
+                          (1, 0.6, 0.4))
             return False
-        # placement validation: within map, not inside planet, not too close to station
-        b = st.map_info.bounds
-        if abs(pos.x) > b or abs(pos.z) > b:
-            return False
-        for e in st.entities.values():
-            if not e.alive:
-                continue
-            if e.is_planet and e.data_id == "asteroid_field":
-                continue    # building inside asteroid fields is the point of mining
-            if e.is_planet and pos.dist(e.pos) < e.radius + sd.radius + 100:
-                st.float_text(builder.pos, "Too close to planet", (1, 0.6, 0.4))
-                return False
-            if e.is_station and e.pos.dist(pos) < (e.radius + sd.radius) * 1.6:
-                st.float_text(builder.pos, "Too close to station", (1, 0.6, 0.4))
-                return False
-        req = sd.requires_range or {}
-        for req_kind, rng in req.items():
-            ok = False
-            for e in st.entities.values():
-                if e.alive and e.data_id == req_kind and pos.dist(e.pos) <= rng:
-                    ok = True
-                    break
-                if e.alive and e.is_planet and e.data_id == req_kind and pos.dist(e.pos) <= rng:
-                    ok = True
-                    break
-            if not ok:
-                st.float_text(builder.pos, f"Must be near {req_kind}", (1, 0.6, 0.4))
-                return False
         self.pay(player_id, cost)
         build_time = sd.build_time / max(0.1, stats.effective_build_speed(st, player_id))
         builder.build_queue.append({
@@ -123,6 +99,68 @@ class ConstructionSystem:
         builder.order_target_pos = pos.copy()
         builder.order_target_id = None
         return True
+
+    def missing_resources(self, player_id: int, cost: dict) -> str:
+        """Human-readable list of what the player is short of."""
+        p = self.state.players.get(player_id)
+        if p is None:
+            return "no player"
+        parts = []
+        if p.credits < cost.get("credits", 0):
+            parts.append(f"credits ({p.credits:0.0f}/{cost.get('credits', 0):0.0f})")
+        if p.materials < cost.get("materials", 0):
+            parts.append(f"materials ({p.materials:0.0f}/{cost.get('materials', 0):0.0f})")
+        if p.energy < cost.get("energy", 0):
+            parts.append(f"energy ({p.energy:0.0f}/{cost.get('energy', 0):0.0f})")
+        if p.crew < cost.get("crew", 0):
+            parts.append(f"crew ({p.crew:0.0f}/{cost.get('crew', 0):0.0f})")
+        return ", ".join(parts) if parts else "unknown"
+
+    # ---------------------------------------------------------- site validation
+    def check_site(self, station_id: str, pos, builder) -> tuple[bool, str]:
+        """Single source of truth for placement validity.
+
+        Returns (ok, reason). The placement ghost and start_station() both
+        call this, so a green ghost always means the sim will accept the
+        build. `pos` is any (x, y, z) tuple or Vec3.
+        """
+        st = self.state
+        sd = self.ds.resolve_station(station_id)
+        x, y, z = (pos.x, pos.y, pos.z) if hasattr(pos, "x") else (
+            pos[0], pos[1], pos[2])
+        # map bounds
+        b = st.map_info.bounds
+        if abs(x) > b or abs(z) > b:
+            return False, "outside the map bounds"
+        # spacing vs planets and other stations
+        for e in st.entities.values():
+            if not e.alive:
+                continue
+            if e.is_planet and e.data_id == "asteroid_field":
+                continue        # building inside asteroid fields is the point
+            if e.is_planet:
+                if math.dist((x, y, z), (e.pos.x, e.pos.y, e.pos.z)) < \
+                        e.radius + sd.radius + 100:
+                    return False, f"too close to planet {e.name_override or e.data_id}"
+            if e.is_station:
+                if math.dist((x, y, z), (e.pos.x, e.pos.y, e.pos.z)) < \
+                        (e.radius + sd.radius) * 1.6:
+                    return False, f"too close to {e.data_id.replace('_', ' ')}"
+        # requires_range: some stations must be near a specific body
+        for req_kind, rng in (sd.requires_range or {}).items():
+            ok = False
+            for e in st.entities.values():
+                if e.alive and e.data_id == req_kind and \
+                        math.dist((x, y, z), (e.pos.x, e.pos.y, e.pos.z)) <= rng:
+                    ok = True
+                    break
+            if not ok:
+                return False, f"must be within {rng:0.0f}u of {req_kind.replace('_', ' ')}"
+        # can the builder legally build this station type?
+        unit = self.ds.resolve_ship(builder.data_id)
+        if unit is not None and station_id not in unit.can_build_stations:
+            return False, f"{unit.display_name} cannot build this station"
+        return True, ""
 
     # ------------------------------------------------------------------ ship build
     def station_can_build_ship(self, station, ship_id: str) -> bool:

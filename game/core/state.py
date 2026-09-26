@@ -132,6 +132,10 @@ class GameState:
     # transient (not saved): effects for renderer
     effects: list = field(default_factory=list)
     floating_texts: list = field(default_factory=list)
+    # transient (not saved): live ConstructionSystem for renderer-side ghost
+    # validation (same rules as the sim). Wired by GameManager.__init__.
+    _construction_system: object | None = field(
+        default=None, repr=False, compare=False)
 
     # ------------------------------------------------------------------ helpers
     def rng(self) -> random.Random:

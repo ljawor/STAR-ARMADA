@@ -43,6 +43,8 @@ class GameManager:
         self.economy = EconomySystem(self.state)
         self.construction = ConstructionSystem(self.state)
         self.construction.factory = self.factory
+        # render/input reach the live validator through the state object
+        self.state._construction_system = self.construction
         self.research = ResearchSystem(self.state)
         self.formations = FormationSystem(self.state)
         self.squadrons = SquadronSystem(self.state)

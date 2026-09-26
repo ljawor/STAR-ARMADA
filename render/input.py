@@ -222,7 +222,12 @@ class InputController:
 
     # ------------------------------------------------------------- placement mode
     def update_placement(self) -> None:
-        """Per-frame ghost position + validity for station placement."""
+        """Per-frame ghost position + validity for station placement.
+
+        Uses the SAME validator as the sim (ConstructionSystem.check_site) so
+        a green ghost always means the build will be accepted — plus a reason
+        string for the red case.
+        """
         pl = self.hud.placement
         if not pl:
             return
@@ -234,15 +239,20 @@ class InputController:
         ds = DataStore.get()
         std = ds.stations.get(pl["station_kind"])
         rad = std.radius if std else 120.0
-        valid = self._spot_clear(w[0], w[2], pl["station_kind"])
-        # also show builder reach: too far -> invalid
         b = self.state.entity(pl["builder_id"])
-        if b is not None:
-            d2 = (b.pos.x - w[0]) ** 2 + (b.pos.z - w[2]) ** 2
-            if d2 > 3500.0 ** 2:
-                valid = False
-        pl["ghost"] = {"sx": mx, "sy": my, "valid": valid, "radius": rad,
-                       "world": w}
+        valid, reason = True, ""
+        if b is None:
+            valid, reason = False, "no builder selected"
+        else:
+            from game.systems.construction import ConstructionSystem
+            # reach manager via state-free instantiation: check_site needs
+            # only state+ds; grab the live system from the manager if present
+            cs = getattr(self.state, "_construction_system", None)
+            if cs is None:
+                cs = ConstructionSystem(self.state)
+            valid, reason = cs.check_site(pl["station_kind"], w, b)
+        pl["ghost"] = {"sx": mx, "sy": my, "valid": valid, "reason": reason,
+                       "radius": rad, "world": w}
 
     def _confirm_placement(self, pos: tuple) -> bool:
         pl = self.hud.placement
@@ -253,14 +263,24 @@ class InputController:
         if w is None:
             self.app.flash("cannot place there")
             return True
-        valid = self._spot_clear(w[0], w[2], pl["station_kind"])
+        b = self.state.entity(pl["builder_id"])
+        if b is None:
+            self.app.flash("no builder selected")
+            return True
+        from game.systems.construction import ConstructionSystem
+        cs = getattr(self.state, "_construction_system", None)
+        if cs is None:
+            cs = ConstructionSystem(self.state)
+        valid, reason = cs.check_site(pl["station_kind"], w, b)
         if not valid:
-            self.app.flash("position blocked")
+            # tell the player WHY in language, not just a red circle
+            self.app.flash(f"cannot build {pl['station_kind'].replace('_', ' ')}: "
+                           f"{reason}")
             return True
         self.state.queue_command(BuildStationCommand(
             self.local_player, pl["builder_id"], pl["station_kind"],
             _vec3(w[0], 0.0, w[2])))
-        self.app.flash(f"constructing {pl['station_kind']}")
+        self.app.flash(f"constructing {pl['station_kind'].replace('_', ' ')}")
         return True
 
     def _ability_cmd(self, pl: dict):
@@ -272,13 +292,17 @@ class InputController:
                               pl["ability_id"], target=tgt)
 
     def _build_spot(self, builder, station_kind: str):
-        """Place near builder, clear of planets (simple probe)."""
+        """Place near builder, first spot that passes the FULL sim validator."""
         from game.core.vectors import Vec3
+        cs = getattr(self.state, "_construction_system", None)
         for dist in (260.0, 380.0, 520.0, 700.0):
             for ang in (0.0, 1.0, 2.1, 3.1, 4.2, 5.2):
                 x = builder.pos.x + dist * _cos(ang)
                 z = builder.pos.z + dist * _sin(ang)
-                if self._spot_clear(x, z, station_kind):
+                if cs is not None and cs.check_site(
+                        station_kind, (x, 0.0, z), builder)[0]:
+                    return Vec3(x, 0.0, z)
+                if cs is None and self._spot_clear(x, z, station_kind):
                     return Vec3(x, 0.0, z)
         return Vec3(builder.pos.x + 260.0, 0.0, builder.pos.z)
 

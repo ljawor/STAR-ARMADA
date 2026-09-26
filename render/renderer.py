@@ -1175,8 +1175,37 @@ class Renderer:
         glPopMatrix()
 
     def _draw_floating_texts(self):
-        # rendered by UI layer (2D), not here
+        """Sim floating texts (e.g. build rejections) as screen-space labels.
+
+        The renderer is the only place with a camera; project each text's
+        world position to screen coords, collect them, and let the HUD blit
+        them onto its overlay (2D, crisp fonts). HUD must have been wired
+        with set_camera_ref() — otherwise skip silently.
+        """
+        # HUD consumes them via floating_texts_screen() (see hud.py); kept as
+        # a no-op here so the sim's list never renders in GL.
         pass
+
+    def floating_texts_screen(self) -> list:
+        """Project live floating texts to [(x, y, text, rgb, alpha), ...]."""
+        out = []
+        for ft in self.state.floating_texts:
+            t = ft.get("t", 0.0)
+            life = 2.2
+            a = max(0.0, 1.0 - t / life)
+            if a <= 0:
+                continue
+            pos = ft["pos"]
+            get = pos.get if isinstance(pos, dict) else (lambda k, i=None: pos[i])
+            sp = self.camera.world_to_screen(get("x", 0), get("y", 1), get("z", 2))
+            if sp is None:
+                continue
+            col = ft.get("color", (1, 1, 1))
+            rgb = (int(col[0] * 255) if col[0] <= 1 else int(col[0]),
+                   int(col[1] * 255) if col[1] <= 1 else int(col[1]),
+                   int(col[2] * 255) if col[2] <= 1 else int(col[2]))
+            out.append((int(sp[0]), int(sp[1]), ft.get("text", ""), rgb, a))
+        return out
 
 
 PLANET_COLORS = {
