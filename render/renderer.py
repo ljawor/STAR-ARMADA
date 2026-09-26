@@ -495,6 +495,59 @@ class Renderer:
             return (0.6, 0.6, 0.6)
         return p.color
 
+    def _out_tri(self, a, b, c, ref=(0.0, 0.0, 0.0)):
+        """Emit one triangle with an outward-facing normal.
+
+        Normal direction is checked against the shape's reference center and
+        the winding flipped when needed — guarantees correct culling + shading
+        regardless of how the corners were specified.
+        """
+        nx = (b[1] - a[1]) * (c[2] - a[2]) - (b[2] - a[2]) * (c[1] - a[1])
+        ny = (b[2] - a[2]) * (c[0] - a[0]) - (b[0] - a[0]) * (c[2] - a[2])
+        nz = (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])
+        cx = (a[0] + b[0] + c[0]) / 3.0 - ref[0]
+        cy = (a[1] + b[1] + c[1]) / 3.0 - ref[1]
+        cz = (a[2] + b[2] + c[2]) / 3.0 - ref[2]
+        if nx * cx + ny * cy + nz * cz < 0:
+            b, c = c, b
+            nx, ny, nz = -nx, -ny, -nz
+        n = math.sqrt(nx * nx + ny * ny + nz * nz) or 1.0
+        glNormal3f(nx / n, ny / n, nz / n)
+        glVertex3f(*a)
+        glVertex3f(*b)
+        glVertex3f(*c)
+
+    def _lit_box(self, sx, sy, sz, cx=0.0, cy=0.0, cz=0.0):
+        """Axis-aligned box with per-face outward normals (caller color)."""
+        hx, hy, hz = sx / 2.0, sy / 2.0, sz / 2.0
+        x0, x1 = cx - hx, cx + hx
+        y0, y1 = cy - hy, cy + hy
+        z0, z1 = cz - hz, cz + hz
+        ref = (cx, cy, cz)
+        glBegin(GL_TRIANGLES)          # REQUIRED: _out_tri only emits vertices
+        for quad in (((x0, y0, z1), (x1, y0, z1), (x1, y1, z1), (x0, y1, z1)),
+                     ((x1, y0, z0), (x0, y0, z0), (x0, y1, z0), (x1, y1, z0)),
+                     ((x1, y0, z1), (x1, y0, z0), (x1, y1, z0), (x1, y1, z1)),
+                     ((x0, y0, z0), (x0, y0, z1), (x0, y1, z1), (x0, y1, z0)),
+                     ((x0, y1, z1), (x1, y1, z1), (x1, y1, z0), (x0, y1, z0)),
+                     ((x0, y0, z0), (x1, y0, z0), (x1, y0, z1), (x0, y0, z1))):
+            a, b, c, d = quad
+            self._out_tri(a, b, c, ref)
+            self._out_tri(a, c, d, ref)
+        glEnd()
+
+    def _out_pyr(self, tip, base, ref=(0.0, 0.0, 0.0)):
+        """Pyramid: tip point + 4 base corners (base face included)."""
+        a, b, c, d = base
+        glBegin(GL_TRIANGLES)          # REQUIRED: _out_tri only emits vertices
+        self._out_tri(a, b, c, ref)
+        self._out_tri(a, c, d, ref)
+        self._out_tri(tip, a, b, ref)
+        self._out_tri(tip, b, c, ref)
+        self._out_tri(tip, c, d, ref)
+        self._out_tri(tip, d, a, ref)
+        glEnd()
+
     def _draw_ship(self, e: Entity):
         ds = self.ds
         sd = ds.ships.get(e.data_id)
@@ -505,7 +558,7 @@ class Renderer:
         glPushMatrix()
         glTranslatef(e.pos.x, e.pos.y, e.pos.z)
         glRotatef(math.degrees(-e.yaw), 0, 1, 0)
-        # engine glow behind ship
+        # engine trail behind ship (keeps motion readable)
         spd = e.vel.length()
         if spd > 2:
             glEnable(GL_BLEND)
@@ -539,69 +592,116 @@ class Renderer:
         glColor3f(*color)
         glCallList(lst)
         glPopMatrix()
+        # engine glow: additive billboard at the ship's tail (world space)
+        if spd > 8:
+            L = vis["scale"] * e.radius * 1.1
+            rear = (e.pos.x + L * math.sin(e.yaw),
+                    e.pos.y,
+                    e.pos.z - L * math.cos(e.yaw))
+            if self._in_front(rear, 14.0):
+                glEnable(GL_BLEND)
+                glDepthMask(False)
+                self._draw_glow(rear, 10.0 + 6.0 * min(1.0, spd / 300.0),
+                                (0.45, 0.75, 1.0), alpha=0.55, additive=True)
+                glDepthMask(True)
+                glDisable(GL_BLEND)
 
     def _ship_display_list(self, shape: str) -> int:
+        """Multi-part lit hulls. No baked colors — caller color + lighting
+        shade the geometry (tops bright, sides dark, reads as 3D)."""
         if shape in self.ship_lists:
             return self.ship_lists[shape]
         lst = _gl.glGenLists(1)
         glNewList(lst, GL_COMPILE)
-        # unit-scale procedural hulls (scaled per ship at draw time)
-        if shape == "wedge":            # fighter
-            glBegin(GL_TRIANGLES)
-            glVertex3f(0, 0, 26); glVertex3f(-10, 0, -12); glVertex3f(10, 0, -12)
-            glVertex3f(0, 3, 10); glVertex3f(10, 3, -12); glVertex3f(-10, 3, -12)
-            glEnd()
-            glBegin(GL_QUADS)
-            glVertex3f(-10, 0, -12); glVertex3f(-24, 0, -20); glVertex3f(-24, 2, -20); glVertex3f(-10, 2, -12)
-            glVertex3f(10, 0, -12); glVertex3f(24, 0, -20); glVertex3f(24, 2, -20); glVertex3f(10, 2, -12)
-            glEnd()
-        elif shape == "needle":         # corvette/frigate
-            glBegin(GL_TRIANGLES)
-            glVertex3f(0, 0, 46); glVertex3f(-9, 0, 10); glVertex3f(9, 0, 10)
-            glEnd()
-            glBegin(GL_QUADS)
-            glVertex3f(-9, 0, 10); glVertex3f(-13, 0, -30); glVertex3f(13, 0, -30); glVertex3f(9, 0, 10)
-            glVertex3f(-9, 4, 10); glVertex3f(-13, 4, -30); glVertex3f(13, 4, -30); glVertex3f(9, 4, 10)
-            # sides
-            glVertex3f(-9, 0, 10); glVertex3f(-13, 0, -30); glVertex3f(-13, 4, -30); glVertex3f(-9, 4, 10)
-            glVertex3f(9, 0, 10); glVertex3f(13, 0, -30); glVertex3f(13, 4, -30); glVertex3f(9, 4, 10)
-            glEnd()
-            # bridge
-            glBegin(GL_TRIANGLES)
-            glVertex3f(0, 12, -8); glVertex3f(-8, 2, -20); glVertex3f(8, 2, -20)
-            glEnd()
+        # two-sided: winding of emitted faces must not depend on cull state
+        import OpenGL.GL as GL
+        GL.glPushAttrib(GL.GL_ENABLE_BIT)
+        GL.glDisable(GL.GL_CULL_FACE)
+        if shape == "wedge":
+            # fighter: fuselage + canopy + swept wings + tail fin
+            self._lit_box(14, 6, 40, cy=3)
+            self._out_pyr((0, 4, 34), ((-7, 1, 16), (7, 1, 16),
+                                       (7, 6, 16), (-7, 6, 16)))
+            self._lit_box(34, 1.6, 16, cx=18, cy=4, cz=-4)   # right wing
+            self._lit_box(34, 1.6, 16, cx=-18, cy=4, cz=-4)  # left wing
+            self._lit_box(2.5, 12, 14, cy=9, cz=-12)         # tail fin
+        elif shape == "needle":
+            # corvette/frigate: nose pyramid + hull + bridge + engine block
+            self._out_pyr((0, 3, 50), ((-8, 0, 14), (8, 0, 14),
+                                       (8, 6, 14), (-8, 6, 14)))
+            self._lit_box(24, 10, 44, cz=-8)
+            self._lit_box(12, 7, 16, cy=7, cz=-14)           # bridge
+            self._lit_box(18, 4, 8, cz=-32)                  # engine block
         elif shape == "cruiser":
-            glBegin(GL_QUADS)
-            # long hull
-            glVertex3f(-12, 0, 60); glVertex3f(-18, 0, -40); glVertex3f(18, 0, -40); glVertex3f(12, 0, 60)
-            glVertex3f(-12, 8, 60); glVertex3f(-18, 8, -40); glVertex3f(18, 8, -40); glVertex3f(12, 8, 60)
-            glVertex3f(-12, 0, 60); glVertex3f(-18, 0, -40); glVertex3f(-18, 8, -40); glVertex3f(-12, 8, 60)
-            glVertex3f(12, 0, 60); glVertex3f(18, 0, -40); glVertex3f(18, 8, -40); glVertex3f(12, 8, 60)
-            glEnd()
-            glBegin(GL_TRIANGLES)
-            glVertex3f(0, 0, 90); glVertex3f(-12, 0, 60); glVertex3f(12, 0, 60)
-            glVertex3f(0, 0, 90); glVertex3f(12, 8, 60); glVertex3f(-12, 8, 60)
-            # superstructure
-            glVertex3f(0, 26, -12); glVertex3f(-14, 6, -36); glVertex3f(14, 6, -36)
-            glEnd()
-        elif shape == "dagger":         # battleship / supercapital
-            glBegin(GL_QUADS)
-            glVertex3f(-16, 0, 90); glVertex3f(-26, 0, -70); glVertex3f(26, 0, -70); glVertex3f(16, 0, 90)
-            glVertex3f(-16, 12, 90); glVertex3f(-26, 12, -70); glVertex3f(26, 12, -70); glVertex3f(16, 12, 90)
-            glVertex3f(-16, 0, 90); glVertex3f(-26, 0, -70); glVertex3f(-26, 12, -70); glVertex3f(-16, 12, 90)
-            glVertex3f(16, 0, 90); glVertex3f(26, 0, -70); glVertex3f(26, 12, -70); glVertex3f(16, 12, 90)
-            glEnd()
-            glBegin(GL_TRIANGLES)
-            glVertex3f(0, 0, 130); glVertex3f(-16, 0, 90); glVertex3f(16, 0, 90)
-            glVertex3f(0, 0, 130); glVertex3f(16, 12, 90); glVertex3f(-16, 12, 90)
-            # command tower
-            glVertex3f(0, 44, -20); glVertex3f(-18, 10, -60); glVertex3f(18, 10, -60)
-            glEnd()
-        else:                            # box (construction/stations)
-            self._draw_box(24, 12, 34)
+            # heavy hull + bow + command tower + nacelles + engines
+            self._lit_box(30, 14, 100, cz=-8)
+            self._out_pyr((0, 5, 78), ((-13, 0, 40), (13, 0, 40),
+                                       (13, 12, 40), (-13, 12, 40)))
+            self._lit_box(18, 13, 28, cy=12, cz=-18)         # command tower
+            self._lit_box(8, 6, 44, cx=20, cz=-26)           # right nacelle
+            self._lit_box(8, 6, 44, cx=-20, cz=-26)          # left nacelle
+            self._lit_box(22, 7, 10, cz=-56)                 # engine block
+        elif shape == "dagger":
+            # battleship/supercap: long dagger hull + tower + spines
+            self._lit_box(38, 20, 150)
+            self._out_pyr((0, 6, 108), ((-16, 0, 72), (16, 0, 72),
+                                        (16, 16, 72), (-16, 16, 72)))
+            self._lit_box(20, 24, 32, cy=20, cz=-34)         # command tower
+            self._lit_box(4, 18, 18, cy=14, cz=28)           # dorsal spine
+            self._lit_box(30, 10, 12, cz=-70)                # engine block
+        else:
+            # construction/generic: cargo box + cab + skids
+            self._lit_box(26, 14, 36, cy=2)
+            self._lit_box(12, 8, 10, cy=11, cz=12)
+            self._lit_box(30, 3, 8, cy=-7, cz=-10)
+            self._lit_box(30, 3, 8, cy=-7, cz=12)
+        GL.glPopAttrib()
         glEndList()
         self.ship_lists[shape] = lst
         return lst
+
+    def _station_ring(self, r: float, segments: int = 36):
+        """Chunky solid ring: top/bottom annuli + outer/inner walls.
+
+        Explicit normals (annulus faces are degenerate for the ref-dot trick
+        because all corners share the ref's plane); culling off so the ring
+        reads solid from every angle.
+        """
+        import OpenGL.GL as GL
+        GL.glPushAttrib(GL.GL_ENABLE_BIT | GL.GL_LIGHTING_BIT)
+        GL.glDisable(GL.GL_CULL_FACE)
+        top_w = r * 0.20          # annulus width
+        h = r * 0.10              # wall height
+        for i in range(segments):
+            a0 = i / segments * 2 * math.pi
+            a1 = (i + 1) / segments * 2 * math.pi
+            ro, ri = r, r - top_w
+            o0 = (math.sin(a0) * ro, 0.0, math.cos(a0) * ro)
+            o1 = (math.sin(a1) * ro, 0.0, math.cos(a1) * ro)
+            n0 = (math.sin(a0) * ri, 0.0, math.cos(a0) * ri)
+            n1 = (math.sin(a1) * ri, 0.0, math.cos(a1) * ri)
+            # top annulus (normal up)
+            glNormal3f(0, 1, 0)
+            glBegin(GL_QUADS)
+            glVertex3f(*o0); glVertex3f(*o1); glVertex3f(*n1); glVertex3f(*n0)
+            # bottom annulus (normal down)
+            glNormal3f(0, -1, 0)
+            glVertex3f(*o1); glVertex3f(*o0); glVertex3f(*n0); glVertex3f(*n1)
+            glEnd()
+            # outer wall (normal outward), two tris
+            nx0, nz0 = math.sin(a0), math.cos(a0)
+            nx1, nz1 = math.sin(a1), math.cos(a1)
+            glNormal3f(nx0, 0, nz0)
+            glBegin(GL_TRIANGLES)
+            glVertex3f(*o0)
+            glVertex3f(o0[0], h, o0[2])
+            glVertex3f(o1[0], h, o1[2])
+            glNormal3f(nx1, 0, nz1)
+            glVertex3f(*o0)
+            glVertex3f(o1[0], h, o1[2])
+            glVertex3f(*o1)
+            glEnd()
+        GL.glPopAttrib()
 
     def _draw_station(self, e: Entity):
         color = self._owner_color(e.owner)
@@ -612,45 +712,67 @@ class Renderer:
         glTranslatef(e.pos.x, e.pos.y, e.pos.z)
         glRotatef(self.time * 3.0, 0, 1, 0)
         r = e.radius
+        dark = (color[0] * 0.55, color[1] * 0.55, color[2] * 0.55)
         if e.data_id == "command_station":
-            # central core + ring + 4 spokes
+            # solid core sphere + rotating ring + 4 spoke girders + docking arms
             glPushMatrix()
             glRotatef(-90, 1, 0, 0)
             glColor3f(*color)
-            self._draw_sphere(r * 0.35, 14, 8)
+            self._draw_sphere(r * 0.42, 18, 12)
             glPopMatrix()
-            glLineWidth(4.0)
-            glBegin(GL_LINE_LOOP)
-            for i in range(36):
-                a = i / 36 * 2 * math.pi
-                glVertex3f(math.sin(a) * r, 0, math.cos(a) * r)
-            glEnd()
-            glBegin(GL_LINES)
-            for i in range(4):
-                a = i / 4 * 2 * math.pi
-                glVertex3f(0, 0, 0)
-                glVertex3f(math.sin(a) * r, 0, math.cos(a) * r)
-            glEnd()
-        else:
-            # generic station: stacked boxes + ring
+            glColor3f(*dark)
+            self._station_ring(r, 36)
+            # 4 spoke girders (chunky lit boxes)
             glColor3f(*color)
+            for i in range(4):
+                glPushMatrix()
+                glRotatef(-i * 90.0, 0, 1, 0)
+                self._lit_box(r * 1.9, r * 0.09, r * 0.09)
+                glPopMatrix()
+            # docking arms: two opposing pylons with pad boxes
+            for sgn in (-1, 1):
+                glPushMatrix()
+                glRotatef(90 if sgn > 0 else -90, 0, 1, 0)
+                self._lit_box(r * 0.9, r * 0.16, r * 0.16, cx=r * 1.2)
+                self._lit_box(r * 0.3, r * 0.18, r * 0.6, cx=r * 1.65)
+                glPopMatrix()
+            # top + bottom sensor spires
+            self._lit_box(r * 0.1, r * 0.45, r * 0.1, cy=r * 0.55)
+            self._lit_box(r * 0.1, r * 0.45, r * 0.1, cy=-r * 0.55)
+        elif e.data_id == "shipyard":
+            # shipyard: massive gantry frame + build cradles + core
+            glColor3f(*color)
+            self._lit_box(r * 0.55, r * 0.85, r * 1.15, cy=r * 0.15)
+            glColor3f(*dark)
+            self._lit_box(r * 1.6, r * 0.16, r * 0.16, cy=r * 0.8)
+            self._lit_box(r * 0.16, r * 0.85, r * 0.16, cx=r * 0.72, cy=r * 0.38)
+            self._lit_box(r * 0.16, r * 0.85, r * 0.16, cx=-r * 0.72, cy=r * 0.38)
+            glColor3f(*color)
+            self._lit_box(r * 0.75, r * 0.28, r * 0.55, cy=-r * 0.35, cz=r * 0.6)
             glPushMatrix()
-            self._draw_box(r * 0.9, r * 0.5, r * 0.9)
+            glRotatef(-90, 1, 0, 0)
+            self._draw_sphere(r * 0.24, 14, 9)
             glPopMatrix()
-            glPushMatrix()
-            glRotatef(90, 1, 0, 0)
-            glPushMatrix()
-            glScalef(1, 1, 0.3)
-            self._draw_box(r * 1.4, r * 0.3, r * 1.4)
-            glPopMatrix()
-            glPopMatrix()
-            glLineWidth(2.5)
-            glColor3f(color[0] * 0.7, color[1] * 0.7, color[2] * 0.7)
-            glBegin(GL_LINE_LOOP)
-            for i in range(30):
-                a = i / 30 * 2 * math.pi
-                glVertex3f(math.sin(a) * r * 1.2, 0, math.cos(a) * r * 1.2)
-            glEnd()
+        elif e.data_id == "fighter_platform":
+            # fighter platform: flat landing deck + control tower + supports
+            glColor3f(*color)
+            self._lit_box(r * 1.6, r * 0.12, r * 1.6, cy=r * 0.25)
+            self._lit_box(r * 0.4, r * 0.7, r * 0.4, cy=r * 0.65, cz=-r * 0.55)
+            glColor3f(*dark)
+            self._lit_box(r * 0.8, r * 0.14, r * 0.8, cy=-r * 0.05, cz=r * 0.55)
+            for sx in (-1, 1):
+                for sz in (-1, 1):
+                    self._lit_box(r * 0.12, r * 0.45, r * 0.12,
+                                  cx=sx * r * 0.65, cy=r * 0.02, cz=sz * r * 0.65)
+        else:
+            # generic platform: two stacked lit boxes + solid ring + pylon
+            glColor3f(*color)
+            self._lit_box(r * 1.0, r * 0.6, r * 1.0, cy=r * 0.1)
+            self._lit_box(r * 0.65, r * 0.35, r * 0.65, cy=r * 0.6)
+            glColor3f(*dark)
+            self._station_ring(r * 1.1, 30)
+            glColor3f(*color)
+            self._lit_box(r * 0.12, r * 0.55, r * 0.12, cy=r * 0.8)
         # construction progress ring
         if e.build_queue:
             item = e.build_queue[0]

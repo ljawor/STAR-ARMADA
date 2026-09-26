@@ -92,7 +92,15 @@ class GameManager:
             p.materials = float(res.get("materials", 4000))
             p.energy = float(res.get("energy", 2000))
             p.crew = float(res.get("crew", 4000))
-            p.color = fac.color if fac else (0.6, 0.6, 0.6)
+            # per-player color: hue-shifted variant of the faction color so two
+            # players of the SAME faction still read as distinct on the field
+            base = tuple(fac.color if fac else (0.6, 0.6, 0.6))
+            import colorsys
+            hue_shift = [0.0, 0.42, 0.62, 0.2][p.id % 4]
+            r_, g_, b_ = colorsys.rgb_to_hls(*base)
+            p.color = colorsys.hls_to_rgb((r_ + hue_shift) % 1.0,
+                                          min(0.62, max(0.45, 0.55 * (1.0 + 0.22 - 0.06 * p.id))),
+                                          0.62)
             st.players[p.id] = p
             self._spawn_start_units(p.id, pdef.get("start_units", {}),
                                     pdef.get("start", [0, 0, 0]))

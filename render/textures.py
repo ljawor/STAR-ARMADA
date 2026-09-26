@@ -175,6 +175,14 @@ def nebula_texture(size: int = 256, seed: int = 11,
     n2 = _fbm(size, seed + 31, octaves=4, base_cells=6)
     t = n * 0.65 + n2 * 0.35
     alpha = np.clip((t - 0.35) * 1.8, 0, 1) ** 1.5
+    # radial + border falloff: alpha MUST reach ~0 at all four edges or the
+    # billboard quad shows as a seam box against the starfield
+    yy, xx = np.mgrid[0:size, 0:size]
+    fx = (xx / (size - 1)) * 2 - 1
+    fy = (yy / (size - 1)) * 2 - 1
+    edge = 1.0 - np.clip(np.maximum(np.abs(fx), np.abs(fy)) - 0.55, 0, 1) / 0.45
+    radial = np.clip(1.0 - (fx * fx + fy * fy) / 2.0, 0, 1) ** 1.2
+    alpha = alpha * np.minimum(edge, radial)
     img = np.zeros((size, size, 4), dtype=np.float32)
     for c in range(3):
         img[..., c] = color[c] * (0.7 + 0.5 * n2)
