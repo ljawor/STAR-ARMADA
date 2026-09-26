@@ -7,19 +7,24 @@ quads; scale LOD keeps distant fleets readable.
 from __future__ import annotations
 
 import math
+import os
 import random
 
 import pygame
 
 from OpenGL.GL import (
-    glBegin, glBlendFunc, glCallList, glColor3f, glColor4f, glDepthMask,
-    glDisable, glEnable, glEnd, glEndList, glFlush, glLineWidth, glMatrixMode,
-    glNewList, glPopAttrib, glPopMatrix, glPushMatrix, glRotatef, glScalef,
-    glTranslatef, glVertex3f, GL_BLEND, GL_COMPILE, GL_CURRENT_BIT, GL_DEPTH_TEST,
-    GL_LINE_LOOP, GL_LINE_STRIP, GL_LINES, GL_MODELVIEW, GL_ONE_MINUS_SRC_ALPHA,
-    GL_POINTS, GL_QUADS, GL_SRC_ALPHA, GL_TRANSFORM_BIT, GL_TRIANGLES, GL_TRIANGLE_FAN,
+    glBegin, glBlendFunc, glClear, glCallList, glColor3f, glColor4f,
+    glDepthMask, glDisable, glEnable, glEnd, glEndList, glFlush, glLineWidth,
+    glMatrixMode, glNewList, glNormal3f, glPopAttrib, glPopMatrix,
+    glPushMatrix, glRotatef, glScalef, glTranslatef, glVertex3f, GL_BLEND,
+    GL_CULL_FACE, GL_COLOR_BUFFER_BIT, GL_COMPILE, GL_CURRENT_BIT,
+    GL_DEPTH_BUFFER_BIT, GL_DEPTH_TEST, GL_LINE_LOOP, GL_LINE_STRIP, GL_LINES,
+    GL_MODELVIEW, GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_POINTS, GL_QUADS,
+    GL_SRC_ALPHA, GL_TRANSFORM_BIT, GL_TRIANGLES, GL_TRIANGLE_FAN,
 )
 import OpenGL.GL as _gl
+
+from render.camera import cross3, normalize3
 
 from game.core.entity import Entity
 from game.core.vectors import Vec3
@@ -48,6 +53,8 @@ class Renderer:
         self.ship_lists: dict = {}       # (shape, scale, colorkey) -> display list id
         self._star_list = None
         self.time = 0.0
+        # debug isolation: STAR_ARMADA_SKIP=nebulas,star,planets,ships,... skips passes
+        self.skip = {s for s in os.environ.get("STAR_ARMADA_SKIP", "").split(",") if s}
 
     # ------------------------------------------------------------------ per frame
     def draw(self, dt: float, selection: set, hover_id: int | None = None) -> None:
@@ -55,17 +62,66 @@ class Renderer:
         st = self.state
         glMatrixMode(GL_MODELVIEW)
         self.camera.apply()
-        self._draw_starfield()
-        self._draw_nebulas()
-        self._draw_star()
-        self._draw_jump_points()
-        self._draw_planets()
-        self._draw_effects()
-        self._draw_projectiles()
-        self._draw_ships(selection)
-        self._draw_selection_rings(selection)
-        self._draw_floating_texts()
+        # frame start: clear color+depth. Without this, frames accumulate
+        # (smeared wedges, z-fight dither, HUD depth blocking the 3D scene).
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        self._setup_lighting()
+        if "starfield" not in self.skip:
+            self._draw_starfield()
+        if "nebulas" not in self.skip:
+            self._draw_nebulas()
+        if "star" not in self.skip:
+            self._draw_star()
+        if "jumppoints" not in self.skip:
+            self._draw_jump_points()
+        if "planets" not in self.skip:
+            self._draw_planets()
+        if "effects" not in self.skip:
+            self._draw_effects()
+        if "projectiles" not in self.skip:
+            self._draw_projectiles()
+        if "ships" not in self.skip:
+            self._draw_ships(selection)
+        if "rings" not in self.skip:
+            self._draw_selection_rings(selection)
         glFlush()
+
+    # ---------------------------------------------------------- view culling
+    def _setup_lighting(self):
+        """Fixed-function lighting: the star is the key light; soft ambient.
+
+        GL_COLOR_MATERIAL keeps faction colors; normals in display lists give
+        the shading. Effects/projectiles pass disables lighting themselves.
+        """
+        import OpenGL.GL as GL
+        star = self.state.map_info.star
+        sp = star.get("pos", [0, -3000, 0]) if star else [0, -3000, 0]
+        GL.glEnable(GL.GL_LIGHT0)
+        GL.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, (sp[0], max(sp[1], 2000.0), sp[2], 1.0))
+        GL.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE, (0.85, 0.8, 0.72, 1.0))
+        GL.glLightfv(GL.GL_LIGHT0, GL.GL_AMBIENT, (0.0, 0.0, 0.0, 1.0))
+        GL.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT, (0.34, 0.37, 0.44, 1.0))
+        GL.glEnable(GL.GL_COLOR_MATERIAL)
+        GL.glColorMaterial(GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE)
+        GL.glEnable(GL.GL_LIGHTING)
+        GL.glShadeModel(GL.GL_SMOOTH)
+
+    def _in_front(self, pos, radius: float) -> bool:
+        """False when the object's center is behind/at the eye plane.
+
+        Triangle fans crossing the near plane project with mirrored winding
+        and smear giant shapes across the screen — this guard prevents that.
+        """
+        cam = self.camera
+        eye = cam.eye_position()
+        yaw = math.radians(cam.yaw)
+        pitch = math.radians(cam.pitch)
+        fwd = (-math.cos(pitch) * math.sin(yaw), -math.sin(pitch),
+               -math.cos(pitch) * math.cos(yaw))
+        depth = ((pos[0] if hasattr(pos, "__len__") else pos.x) - eye[0]) * fwd[0] \
+            + ((pos[1] if hasattr(pos, "__len__") else pos.y) - eye[1]) * fwd[1] \
+            + ((pos[2] if hasattr(pos, "__len__") else pos.z) - eye[2]) * fwd[2]
+        return depth > radius
 
     # ------------------------------------------------------------------ background
     def _draw_starfield(self):
@@ -95,8 +151,11 @@ class Renderer:
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         glDepthMask(False)
         for n in self.state.map_info.nebulas:
+            if not self._in_front(n["pos"], n["radius"]):
+                continue
             color = n.get("color", [0.4, 0.2, 0.55])
-            self._draw_billboard_blob(n["pos"], n["radius"], color, alpha=0.16)
+            self._draw_glow(n["pos"], n["radius"], color, alpha=0.13)
+            self._draw_glow(n["pos"], n["radius"] * 0.55, color, alpha=0.20)
         glDepthMask(True)
         glDisable(GL_BLEND)
 
@@ -104,13 +163,16 @@ class Renderer:
         star = self.state.map_info.star
         if not star:
             return
+        if not self._in_front(star["pos"], star.get("size", 2000) * 2.2):
+            return
         glEnable(GL_BLEND)
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         glDepthMask(False)
-        self._draw_billboard_blob(star["pos"], star.get("size", 2000),
-                                  star.get("color", [1, 0.9, 0.6]), alpha=0.9)
-        self._draw_billboard_blob(star["pos"], star.get("size", 2000) * 1.8,
-                                  star.get("color", [1, 0.9, 0.6]), alpha=0.25)
+        col = star.get("color", [1, 0.9, 0.6])
+        # soft additive halo + hot core (true billboards, radial falloff)
+        self._draw_glow(star["pos"], star.get("size", 2000) * 2.2, col,
+                        alpha=0.35, additive=True)
+        self._draw_glow(star["pos"], star.get("size", 2000) * 0.9, col,
+                        alpha=0.85, additive=True)
         glDepthMask(True)
         glDisable(GL_BLEND)
 
@@ -135,19 +197,41 @@ class Renderer:
             glEnd()
             glPopMatrix()
 
-    def _draw_billboard_blob(self, pos, radius, color, alpha):
-        """Camera-facing circle on the battlefield plane (cheap volumetric look)."""
+    def _draw_glow(self, pos, radius, color, alpha, additive=False):
+        """True camera-facing billboard disc with radial falloff.
+
+        Vertices are computed analytically from the camera basis (yaw/pitch
+        conventions of TacticalCamera) so the disc always faces the viewer.
+        Replaces the old ground-plane disc, which smeared into giant wedges
+        when the camera viewed it near edge-on.
+        """
+        if radius <= 0:
+            return
+        cam = self.camera
+        yaw = math.radians(cam.yaw)
+        pitch = math.radians(cam.pitch)
+        fwd = (-math.cos(pitch) * math.sin(yaw), -math.sin(pitch),
+               -math.cos(pitch) * math.cos(yaw))
+        right = (math.cos(yaw), 0.0, -math.sin(yaw))
+        # screen-up in world space
+        up = normalize3(cross3(right, fwd))
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE if additive else GL_ONE_MINUS_SRC_ALPHA)
         glPushMatrix()
         glTranslatef(pos[0], pos[1], pos[2])
-        glColor4f(color[0], color[1], color[2], alpha)
+        segments = 32
         glBegin(GL_TRIANGLE_FAN)
-        glVertex3f(0, 0, 0)
-        segments = 28
+        glColor4f(color[0], color[1], color[2], alpha)      # hot center
+        glVertex3f(0.0, 0.0, 0.0)
         for i in range(segments + 1):
             a = i / segments * 2 * math.pi
-            glVertex3f(math.sin(a) * radius, 0, math.cos(a) * radius)
+            ca, sa = math.cos(a), math.sin(a)
+            glColor4f(color[0], color[1], color[2], 0.0)    # transparent rim
+            glVertex3f((right[0] * ca + up[0] * sa) * radius,
+                       (right[1] * ca + up[1] * sa) * radius,
+                       (right[2] * ca + up[2] * sa) * radius)
         glEnd()
         glPopMatrix()
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
     # ------------------------------------------------------------------ planets
     def _draw_planets(self):
@@ -201,8 +285,11 @@ class Renderer:
         glPopMatrix()
 
     def _draw_sphere(self, radius, lons=16, lats=10):
-        lst = self._sphere_list(radius)
-        glCallList(lst)
+        """Backface-culled sphere (no speckle/moire from double-sided quads)."""
+        if os.environ.get("STAR_ARMADA_NO_CULL") != "1":
+            glEnable(GL_CULL_FACE)
+        glCallList(self._sphere_list(radius))
+        glDisable(GL_CULL_FACE)
 
     def _sphere_list(self, radius):
         key = round(radius)
@@ -210,22 +297,48 @@ class Renderer:
             return self.ship_lists[key]
         lst = _gl.glGenLists(1)
         glNewList(lst, GL_COMPILE)
+        # NOTE: no glColor here — caller's color applies (planets/stations were
+        # rendering gray-white because the list overrode their color).
+        # GL_TRIANGLES with deterministic outward winding (normal-flip check):
+        # mixed winding + culling produced the dithered/patchy sphere.
         lons, lats = 18, 10
         for i in range(lons):
             lon0 = 2 * math.pi * i / lons
             lon1 = 2 * math.pi * (i + 1) / lons
-            glBegin(GL_QUADS)
             for j in range(lats):
                 lat0 = math.pi * j / lats - math.pi / 2
                 lat1 = math.pi * (j + 1) / lats - math.pi / 2
-                for lon, lat in ((lon0, lat0), (lon1, lat0), (lon1, lat1), (lon0, lat1)):
-                    x = radius * math.cos(lat) * math.sin(lon)
-                    y = radius * math.sin(lat)
-                    z = radius * math.cos(lat) * math.cos(lon)
-                    shade = 0.75 + 0.25 * math.cos(lat)
-                    glColor3f(shade, shade, shade)
-                    glVertex3f(x, y, z)
-            glEnd()
+
+                def vert(lon, lat):
+                    return (radius * math.cos(lat) * math.sin(lon),
+                            radius * math.sin(lat),
+                            radius * math.cos(lat) * math.cos(lon))
+
+                a, b = vert(lon0, lat0), vert(lon1, lat0)
+                c, d = vert(lon1, lat1), vert(lon0, lat1)
+                for tri in ((a, b, c), (a, c, d)):
+                    # outward winding: face normal must point away from origin
+                    ax_, ay_, az_ = (tri[1][0] - tri[0][0],
+                                     tri[1][1] - tri[0][1],
+                                     tri[1][2] - tri[0][2])
+                    bx_, by_, bz_ = (tri[2][0] - tri[0][0],
+                                     tri[2][1] - tri[0][1],
+                                     tri[2][2] - tri[0][2])
+                    nx = ay_ * bz_ - az_ * by_
+                    ny = az_ * bx_ - ax_ * bz_
+                    nz = ax_ * by_ - ay_ * bx_
+                    centroid = ((tri[0][0] + tri[1][0] + tri[2][0]) / 3,
+                                (tri[0][1] + tri[1][1] + tri[2][1]) / 3,
+                                (tri[0][2] + tri[1][2] + tri[2][2]) / 3)
+                    if nx * centroid[0] + ny * centroid[1] + nz * centroid[2] < 0:
+                        tri = (tri[0], tri[2], tri[1])       # flip winding
+                    glBegin(GL_TRIANGLES)
+                    for v in tri:
+                        # sphere normal = normalized vertex position
+                        n = math.sqrt(v[0] ** 2 + v[1] ** 2 + v[2] ** 2) or 1.0
+                        glNormal3f(v[0] / n, v[1] / n, v[2] / n)
+                        glVertex3f(*v)
+                    glEnd()
         glEndList()
         self.ship_lists[key] = lst
         return lst
@@ -261,9 +374,10 @@ class Renderer:
                 continue
             if e.is_planet:
                 continue
-            if e.is_ship or e.is_squadron:
+            if (e.is_ship and "ships" not in self.skip) or \
+                    (e.is_squadron and "squadrons" not in self.skip):
                 self._draw_ship(e)
-            elif e.is_station:
+            elif e.is_station and "stations" not in self.skip:
                 self._draw_station(e)
 
     def _owner_color(self, owner: int):
@@ -300,6 +414,18 @@ class Renderer:
         # hull display list
         lst = self._ship_display_list(vis["shape"])
         scale = vis["scale"] * max(1.0, e.radius / 40.0)
+        # LOD: enforce minimum screen-space size so ships stay visible/clickable
+        # at tactical zoom (spec §35 readability).
+        sp = self.camera.world_to_screen(e.pos.x, e.pos.y, e.pos.z)
+        if sp is not None:
+            eye = self.camera.eye_position()
+            dist = math.sqrt((e.pos.x - eye[0]) ** 2 + (e.pos.y - eye[1]) ** 2
+                             + (e.pos.z - eye[2]) ** 2)
+            px_per_world = self.camera.height / (
+                2.0 * dist * math.tan(math.radians(self.camera.fov / 2)))
+            # shape half-extent ~ 26 world units * scale; want >= 7 px on screen
+            want_scale = 7.0 / max(0.01, 26.0 * px_per_world)
+            scale = max(scale, want_scale)
         glScalef(scale, scale, scale)
         glColor3f(*color)
         glCallList(lst)
@@ -506,6 +632,8 @@ class Renderer:
         glDisable(GL_BLEND)
 
     def _flat_ring(self, pos, radius):
+        if not self._in_front(pos, radius):
+            return
         glPushMatrix()
         glTranslatef(pos[0], pos[1], pos[2])
         glBegin(GL_TRIANGLE_FAN)
