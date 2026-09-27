@@ -1,8 +1,9 @@
 """STAR ARMADA — fleet-based real-time space RTS (Armada II spirit, original IP).
 
 Run:
-  ./.venv/bin/python main.py                     # 1v1 skirmish, Kotarri Sector
+  ./.venv/bin/python main.py                     # menus -> skirmish/campaign
   ./.venv/bin/python main.py --smoke             # automated verification run
+  ./.venv/bin/python main.py --skirmish          # skip menus, straight to battle
   ./.venv/bin/python main.py --load saves/autosave.json
   ./.venv/bin/python main.py --mods example      # mod loader (spec §38)
 
@@ -34,6 +35,8 @@ from render.renderer import Renderer  # noqa: E402
 from render.hud import HUD  # noqa: E402
 from render.input import InputController  # noqa: E402
 from render.audio import Audio  # noqa: E402
+from render.menus import (MenuStack, MenuResult,  # noqa: E402
+                          load_settings, save_settings)
 
 TICK_RATE = 30
 TICK_DT = 1.0 / TICK_RATE
@@ -43,6 +46,7 @@ os.makedirs(SAVES_DIR, exist_ok=True)
 # --------------------------------------------------------------------------- args
 SMOKE = "--smoke" in sys.argv
 SMOKE_TICKS = 900                    # 30 sim-seconds of automated play
+SKIP_MENUS = "--skirmish" in sys.argv or SMOKE
 INITIAL_LOAD = None
 if "--load" in sys.argv:
     INITIAL_LOAD = sys.argv[sys.argv.index("--load") + 1]
@@ -59,7 +63,8 @@ if SMOKE and os.environ.get("STAR_ARMADA_FORCE_DUMMY") == "1":
     os.environ.setdefault("SDL_AUDIODRIVER", "dummy")
     pygame.quit()
     pygame.init()
-FULLSCREEN = "--fullscreen" in sys.argv
+SETTINGS = load_settings()
+FULLSCREEN = "--fullscreen" in sys.argv or bool(SETTINGS.get("fullscreen"))
 _flags = pygame.DOUBLEBUF | pygame.OPENGL
 if FULLSCREEN:
     _info = pygame.display.Info()
@@ -82,9 +87,10 @@ def toggle_fullscreen() -> None:
     else:
         W, H = (1280, 800) if SMOKE else (1440, 900)
         pygame.display.set_mode((W, H), pygame.DOUBLEBUF | pygame.OPENGL)
-    camera.width, camera.height = W, H
-    camera._proj = camera._view = None
-    hud.resize(W, H)
+    if camera is not None and hud is not None:
+        camera.width, camera.height = W, H
+        camera._proj = camera._view = None
+        hud.resize(W, H)
     flash("fullscreen ON" if FULLSCREEN else "fullscreen OFF")
 
 # macOS (skill): pump events so the window system is up before any grabbing
@@ -94,7 +100,7 @@ for _ in range(10):
 
 
 # --------------------------------------------------------------------------- game
-def make_game(load_path: str | None):
+def make_game(load_path: str | None, mission_def: dict | None = None):
     ds = DataStore.reset()
     ds = DataStore(mods=MODS or None)
     map_def = ds.maps["skirmish01"]
@@ -103,75 +109,72 @@ def make_game(load_path: str | None):
             saved = json.load(f)
         state = GameState.from_dict(saved)
         return GameManager(state=state, mods=MODS or None)
+    if mission_def is not None:
+        return GameManager.start_mission(map_def, mission_def, mods=MODS or None)
     return GameManager.start_skirmish(map_def, mods=MODS or None)
 
 
-gm = make_game(INITIAL_LOAD)
-state = gm.state
+SETTINGS_PATH = os.path.join(SAVES_DIR, "settings.json")
 
-camera = Camera(W, H)
-_start = next((e for e in state.entities.values()
-               if e.owner == 0 and e.is_station), None)
-if _start is not None:
-    camera.target = [_start.pos.x, 0.0, _start.pos.z]
-camera.zoom(0.55)                    # start close-in; wheel out for tactical view
 
-renderer = Renderer(state, camera)
-hud = HUD(W, H, state)
-hud.set_camera_ref(camera)
-audio = Audio(state)
-audio.start_ambient()
+def make_audio(state) -> Audio:
+    a = Audio(state, settings=SETTINGS)
+    a.start_ambient()
+    return a
 
+
+mode = "menu"                       # "menu" | "game"
+menu = MenuStack(W, H)
+if SKIP_MENUS:
+    mode = "game"
+
+gm = None
+state = None
+camera = None
+renderer = None
+hud = None
+audio = None
+inputc = None
+paused = False
+running = True
 flash_msg = ""
 flash_until = 0.0
+mission_def: dict | None = None
 
 
 def flash(msg: str) -> None:
     global flash_msg, flash_until
     flash_msg = msg
-    flash_until = state.time + 2.5
+    flash_until = (state.time if state else 0.0) + 2.5
 
 
-class _AppGlue:
-    """Adapter so InputController can talk back without circular imports."""
-
-    @staticmethod
-    def request_exit() -> None:
-        global running
-        running = False
-
-    @staticmethod
-    def toggle_pause() -> None:
-        global paused
-        paused = not paused
-
-    @staticmethod
-    def flash(msg: str) -> None:
-        flash(msg)
-
-
-paused = False
-running = True
-inputc = InputController(state, camera, hud, None)
-inputc.local_player = 0
-inputc.app = _AppGlue()
+def start_game(load_path: str | None = None, mdef: dict | None = None) -> None:
+    """Build the full in-game object graph (skirmish, mission, or load)."""
+    global gm, state, camera, renderer, hud, audio, inputc, paused, mission_def
+    global flash_until
+    paused = False
+    mission_def = mdef
+    gm = make_game(load_path, mdef)
+    state = gm.state
+    camera = Camera(W, H)
+    _start = next((e for e in state.entities.values()
+                   if e.owner == 0 and e.is_station), None)
+    if _start is not None:
+        camera.target = [_start.pos.x, 0.0, _start.pos.z]
+    camera.zoom(0.55)                    # start close-in; wheel out for tactics
+    renderer = Renderer(state, camera)
+    hud = HUD(W, H, state)
+    hud.set_camera_ref(camera)
+    audio = make_audio(state)
+    inputc = InputController(state, camera, hud, None)
+    inputc.local_player = 0
+    inputc.app = _AppGlue()
 
 
 def rebuild(load_path: str | None) -> None:
     """Full object-graph rebuild for quickload (F9)."""
-    global gm, state, camera, renderer, hud, audio, inputc
     audio.cleanup()
-    gm = make_game(load_path)
-    state = gm.state
-    camera = Camera(W, H)
-    renderer = Renderer(state, camera)
-    hud = HUD(W, H, state)
-    hud.set_camera_ref(camera)
-    audio = Audio(state)
-    audio.start_ambient()
-    inputc = InputController(state, camera, hud, None)
-    inputc.local_player = 0
-    inputc.app = _AppGlue()
+    start_game(load_path=load_path, mdef=mission_def)
     flash("game loaded")
 
 
@@ -201,6 +204,27 @@ def summary() -> str:
             f"P1(cr={p1.credits:0.0f} techs={len(p1.researched)})")
 
 
+class _AppGlue:
+    """Adapter so InputController can talk back without circular imports."""
+
+    @staticmethod
+    def request_exit() -> None:
+        global mode
+        mode = "menu"            # back to the main menu, keep app running
+
+    @staticmethod
+    def toggle_pause() -> None:
+        global paused
+        paused = not paused
+
+    @staticmethod
+    def flash(msg: str) -> None:
+        flash(msg)
+
+
+if SKIP_MENUS:
+    start_game(load_path=INITIAL_LOAD)
+
 # --------------------------------------------------------------------------- loop
 clock = pygame.time.Clock()
 accumulator = 0.0
@@ -211,6 +235,40 @@ last_autosave = 0.0
 
 while running:
     dt_frame = min(clock.tick(TICK_RATE) / 1000.0, 0.25)
+
+    if mode == "menu":
+        for ev in pygame.event.get():
+            if ev.type == pygame.QUIT:
+                running = False
+                break
+            menu.handle_event(ev)
+            if menu.result == "toggle_fullscreen":
+                menu.result = MenuResult.NONE
+                toggle_fullscreen()
+        menu.apply_pending()
+        SETTINGS.update(menu.settings)
+        if audio is not None:
+            audio.apply_settings(SETTINGS)
+        menu.render(dt_frame)
+        menu.draw_gl()
+        pygame.display.flip()
+        if menu.result != MenuResult.NONE:
+            res, payload = menu.result, menu.result_payload
+            menu.result = MenuResult.NONE
+            menu.result_payload = None
+            if res == MenuResult.EXIT:
+                running = False
+            elif res == MenuResult.START_SKIRMISH:
+                save_settings(SETTINGS)
+                start_game(load_path=INITIAL_LOAD)
+                mode = "game"
+            elif res == MenuResult.START_MISSION:
+                save_settings(SETTINGS)
+                start_game(load_path=None, mdef=payload)
+                mode = "game"
+        continue
+
+    # ---- game mode
     for ev in pygame.event.get():
         if ev.type == pygame.QUIT:
             running = False
@@ -226,6 +284,12 @@ while running:
             if ev.key == pygame.K_F11 and not SMOKE:
                 toggle_fullscreen()
                 continue
+            if ev.key == pygame.K_ESCAPE:
+                if state.game_over or (mission_def is not None
+                                       and (gm.mission.completed
+                                            or gm.mission.failed)):
+                    mode = "menu"       # campaign result -> back to menus
+                    continue
         inputc.handle_event(ev)
 
     if not paused and not state.game_over:
@@ -238,6 +302,15 @@ while running:
 
     inputc.update()
     inputc.update_placement()
+
+    # mission progress -> HUD panel
+    if mission_def is not None:
+        hud.mission_progress = gm.mission.progress_text()
+        hud.mission_name = mission_def.get("name", "MISSION")
+        hud.mission_done = gm.mission.completed
+        hud.mission_failed = gm.mission.failed
+    else:
+        hud.mission_progress = None
 
     # ---- draw
     camera.apply(W, H)
@@ -269,6 +342,7 @@ while running:
         running = False
 
 audio.cleanup()
+save_settings(SETTINGS)
 pygame.quit()
 if SMOKE:
     print("SMOKE_DONE " + summary())
