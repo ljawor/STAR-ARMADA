@@ -786,8 +786,20 @@ class Renderer:
             want_scale = 7.0 / max(0.01, 26.0 * px_per_world)
             scale = max(scale, want_scale)
         glScalef(scale, scale, scale)
-        glColor3f(*color)
+        # three tone passes: base owner color, dark accents, bright trim —
+        # ships read as multi-tone hardware instead of flat single-color
+        base = color
+        darkc = (color[0] * 0.42, color[1] * 0.42, color[2] * 0.42)
+        trimc = (min(1.0, color[0] * 1.5 + 0.18), min(1.0, color[1] * 1.5 + 0.18),
+                 min(1.0, color[2] * 1.5 + 0.18))
+        glColor3f(*base)
         glCallList(lst)
+        dark_lst = self._ship_display_list(vis["shape"] + "_dark")
+        trim_lst = self._ship_display_list(vis["shape"] + "_trim")
+        glColor3f(*darkc)
+        glCallList(dark_lst)
+        glColor3f(*trimc)
+        glCallList(trim_lst)
         glPopMatrix()
         # engine glow: additive billboard at the ship's tail (world space)
         if spd > 8:
@@ -804,110 +816,184 @@ class Renderer:
                 glDisable(GL_BLEND)
 
     def _ship_display_list(self, shape: str) -> int:
-        """Multi-part lit hulls. No baked colors — caller color + lighting
-        shade the geometry (tops bright, sides dark, reads as 3D)."""
+        """Multi-part lit hulls in three baked tone passes.
+
+        Builds three lists per shape: base (owner color), dark (black parts
+        colored with a 0.42 tint of the caller color at draw time), trim
+        (near-white highlights). _draw_ship sets colors and calls the three
+        in sequence, so hulls read multi-tone instead of flat single-color.
+        """
         if shape in self.ship_lists:
             return self.ship_lists[shape]
-        lst = _gl.glGenLists(1)
-        glNewList(lst, GL_COMPILE)
-        # two-sided: winding of emitted faces must not depend on cull state
         import OpenGL.GL as GL
-        GL.glPushAttrib(GL.GL_ENABLE_BIT)
-        GL.glDisable(GL.GL_CULL_FACE)
+        passes = {"base": _gl.glGenLists(1),
+                  "dark": _gl.glGenLists(1),
+                  "trim": _gl.glGenLists(1)}
+        for pname, lst in passes.items():
+            glNewList(lst, GL_COMPILE)
+            GL.glPushAttrib(GL.GL_ENABLE_BIT)
+            GL.glDisable(GL.GL_CULL_FACE)
+            self._emit_hull(shape, pname)
+            GL.glPopAttrib()
+            glEndList()
+        self.ship_lists[shape] = passes["base"]
+        self.ship_lists[shape + "_dark"] = passes["dark"]
+        self.ship_lists[shape + "_trim"] = passes["trim"]
+        return passes["base"]
+
+    def _emit_hull(self, shape: str, pname: str) -> None:
+        """Geometry for one tone pass of a ship hull."""
+        dark = pname == "dark"
+        trim = pname == "trim"
         if shape == "wedge":
-            # fighter: fuselage + canopy + swept wings + tail fin + cannons
-            self._lit_box(14, 6, 40, cy=3)
-            self._out_pyr((0, 4, 34), ((-7, 1, 16), (7, 1, 16),
-                                       (7, 6, 16), (-7, 6, 16)))
-            self._lit_box(34, 1.6, 16, cx=18, cy=4, cz=-4)   # right wing
-            self._lit_box(34, 1.6, 16, cx=-18, cy=4, cz=-4)  # left wing
-            self._lit_box(2.5, 12, 14, cy=9, cz=-12)         # tail fin
-            # wingtip cannons + engine nozzles
-            self._lit_box(3, 3, 12, cx=34, cy=4, cz=4)
-            self._lit_box(3, 3, 12, cx=-34, cy=4, cz=4)
-            self._lit_box(4, 4, 3, cz=-20.5)
-            self._lit_box(3, 2, 2, cy=6.5, cz=-20.5)
+            if not dark and not trim:
+                # fighter: fuselage + canopy + swept wings + tail fin
+                self._lit_box(14, 6, 40, cy=3)
+                self._out_pyr((0, 4, 34), ((-7, 1, 16), (7, 1, 16),
+                                           (7, 6, 16), (-7, 6, 16)))
+                self._lit_box(34, 1.6, 16, cx=18, cy=4, cz=-4)   # right wing
+                self._lit_box(34, 1.6, 16, cx=-18, cy=4, cz=-4)  # left wing
+                self._lit_box(2.5, 12, 14, cy=9, cz=-12)         # tail fin
+            elif dark:
+                # intakes, missile racks, nozzles, stabilizers
+                self._lit_box(7, 3.2, 9, cy=7.6, cz=9)           # canopy hump
+                self._lit_box(4.5, 2.2, 5, cy=9.4, cz=4)         # canopy step
+                self._lit_box(6, 3, 11, cx=18, cy=1.2, cz=-7)    # wing intakes
+                self._lit_box(6, 3, 11, cx=-18, cy=1.2, cz=-7)
+                self._lit_box(2.2, 2.2, 15, cx=10, cy=3, cz=-8)  # missile racks
+                self._lit_box(2.2, 2.2, 15, cx=-10, cy=3, cz=-8)
+                self._lit_box(3.4, 3.4, 3, cx=5, cy=0, cz=-21)   # twin nozzles
+                self._lit_box(3.4, 3.4, 3, cx=-5, cy=0, cz=-21)
+                self._lit_box(4, 4, 3, cz=-20.5)
+                self._lit_box(3, 2, 2, cy=6.5, cz=-20.5)
+                self._lit_box(9, 1.4, 7, cx=30, cy=7.5, cz=-8)   # stab fins
+                self._lit_box(9, 1.4, 7, cx=-30, cy=7.5, cz=-8)
+            else:
+                # trim: nose probe, wingtip cannons, comm whip
+                self._lit_box(1.4, 6, 1.4, cy=6, cz=20)          # nose probe
+                self._lit_box(3, 3, 12, cx=34, cy=4, cz=4)       # wingtip cannons
+                self._lit_box(3, 3, 12, cx=-34, cy=4, cz=4)
+                self._lit_box(1.2, 7, 1.2, cy=13, cz=-16)        # comm whip
         elif shape == "needle":
-            # corvette/frigate: nose + hull + bridge + engines + turrets
-            self._out_pyr((0, 3, 50), ((-8, 0, 14), (8, 0, 14),
-                                       (8, 6, 14), (-8, 6, 14)))
-            self._lit_box(24, 10, 44, cz=-8)
-            self._lit_box(12, 7, 16, cy=7, cz=-14)           # bridge
-            self._lit_box(18, 4, 8, cz=-32)                  # engine block
-            # twin engine nozzles
-            self._lit_box(6, 6, 4, cx=-5, cy=-1, cz=-36)
-            self._lit_box(6, 6, 4, cx=5, cy=-1, cz=-36)
-            # dorsal turret + sensor mast
-            self._lit_box(5, 5, 5, cy=6, cz=4)
-            self._lit_box(7, 3, 3, cy=8, cz=4)
-            self._lit_box(1.2, 10, 1.2, cy=12, cz=-18)       # antenna
-            # side sponsons (gun pods)
-            self._lit_box(4, 4, 14, cx=13.5, cy=-2, cz=-6)
-            self._lit_box(4, 4, 14, cx=-13.5, cy=-2, cz=-6)
+            if not dark and not trim:
+                # corvette/frigate: nose + hull + bridge + engine block
+                self._out_pyr((0, 3, 50), ((-8, 0, 14), (8, 0, 14),
+                                           (8, 6, 14), (-8, 6, 14)))
+                self._lit_box(24, 10, 44, cz=-8)
+                self._lit_box(12, 7, 16, cy=7, cz=-14)           # bridge
+                self._lit_box(18, 4, 8, cz=-32)                  # engine block
+            elif dark:
+                # nozzles, sponsons, keel, cargo skid
+                self._lit_box(6, 6, 4, cx=-5, cy=-1, cz=-36)
+                self._lit_box(6, 6, 4, cx=5, cy=-1, cz=-36)
+                self._lit_box(4, 4, 14, cx=13.5, cy=-2, cz=-6)   # gun pods
+                self._lit_box(4, 4, 14, cx=-13.5, cy=-2, cz=-6)
+                self._lit_box(10, 3, 6, cy=-5.5, cz=-16)         # ventral cargo
+                self._lit_box(14, 2.4, 2, cy=-5.6, cz=-10)       # keel fins
+                self._lit_box(14, 2.4, 2, cy=-5.6, cz=-22)
+                self._lit_box(8, 2, 4, cy=8.2, cz=-30)           # engine cap
+                self._lit_box(18, 2, 10, cy=6.2, cz=-18)         # spine rib
+            else:
+                # trim: turret, mast, sensor pods, running lights
+                self._lit_box(5, 5, 5, cy=6, cz=4)               # dorsal turret
+                self._lit_box(7, 3, 3, cy=8, cz=4)
+                self._lit_box(1.2, 10, 1.2, cy=12, cz=-18)       # antenna
+                self._lit_box(3, 3, 3, cx=9.5, cy=4.6, cz=-24)   # sensor pods
+                self._lit_box(3, 3, 3, cx=-9.5, cy=4.6, cz=-24)
+                self._lit_box(2, 2, 2, cx=12.6, cy=2, cz=6)      # running lights
+                self._lit_box(2, 2, 2, cx=-12.6, cy=2, cz=6)
+                self._lit_box(20, 1.6, 6, cy=5.8, cz=2)          # deck plate
         elif shape == "cruiser":
-            # heavy hull + bow + command tower + nacelles + engines + broadside
-            self._lit_box(30, 14, 100, cz=-8)
-            self._out_pyr((0, 5, 78), ((-13, 0, 40), (13, 0, 40),
-                                       (13, 12, 40), (-13, 12, 40)))
-            self._lit_box(18, 13, 28, cy=12, cz=-18)         # command tower
-            self._lit_box(8, 6, 44, cx=20, cz=-26)           # right nacelle
-            self._lit_box(8, 6, 44, cx=-20, cz=-26)          # left nacelle
-            self._lit_box(22, 7, 10, cz=-56)                 # engine block
-            # triple engine nozzles
-            self._lit_box(6, 6, 5, cx=-7, cy=-2, cz=-61)
-            self._lit_box(6, 6, 5, cx=0, cy=-2, cz=-61)
-            self._lit_box(6, 6, 5, cx=7, cy=-2, cz=-61)
-            # command tower windows band + top comm dome (inline tristrip)
-            self._lit_box(14, 2, 6, cy=16, cz=-18)
-            self._dome(4.5, 10, 7)
-            # broadside turret rows (3 per side)
-            for cz_ in (18, -2, -22):
-                self._lit_box(6, 5, 6, cx=16, cy=5, cz=cz_)
-                self._lit_box(6, 5, 6, cx=-16, cy=5, cz=cz_)
-            # spinal cannon
-            self._lit_box(4, 4, 26, cy=8, cz=58)
-            self._out_pyr((0, 8, 92), ((-2.5, 6.5, 66), (2.5, 6.5, 66),
-                                       (2.5, 9.5, 66), (-2.5, 9.5, 66)))
+            if not dark and not trim:
+                # heavy hull + bow + command tower + nacelles + engine block
+                self._lit_box(30, 14, 100, cz=-8)
+                self._out_pyr((0, 5, 78), ((-13, 0, 40), (13, 0, 40),
+                                           (13, 12, 40), (-13, 12, 40)))
+                self._lit_box(18, 13, 28, cy=12, cz=-18)         # command tower
+                self._lit_box(8, 6, 44, cx=20, cz=-26)           # right nacelle
+                self._lit_box(8, 6, 44, cx=-20, cz=-26)          # left nacelle
+                self._lit_box(22, 7, 10, cz=-56)                 # engine block
+            elif dark:
+                # nozzles, hangar bay, armor ribs, bridge wing
+                self._lit_box(6, 6, 5, cx=-7, cy=-2, cz=-61)
+                self._lit_box(6, 6, 5, cx=0, cy=-2, cz=-61)
+                self._lit_box(6, 6, 5, cx=7, cy=-2, cz=-61)
+                self._lit_box(10, 8, 14, cy=-6, cz=-40)          # ventral hangar
+                self._lit_box(8, 1.5, 12, cy=-10.2, cz=-40)      # gantry lip
+                for cz_ in (44, 20, -4, -28, -50):               # armor ribs
+                    self._lit_box(24, 2.5, 4, cy=7.5, cz=cz_)
+                self._lit_box(14, 2, 8, cy=17, cz=-30)           # aft bridge wing
+                self._lit_box(14, 2, 6, cy=16, cz=-18)           # windows band
+            else:
+                # trim: turret rows, spinal cannon, masts, emitters, dome
+                for cz_ in (18, -2, -22):                        # broadsides
+                    self._lit_box(6, 5, 6, cx=16, cy=5, cz=cz_)
+                    self._lit_box(6, 5, 6, cx=-16, cy=5, cz=cz_)
+                self._lit_box(4, 4, 26, cy=8, cz=58)             # spinal cannon
+                self._out_pyr((0, 8, 92), ((-2.5, 6.5, 66), (2.5, 6.5, 66),
+                                           (2.5, 9.5, 66), (-2.5, 9.5, 66)))
+                self._lit_box(3, 14, 3, cy=18, cz=6)             # sensor mast A
+                self._lit_box(8, 1.5, 1.5, cy=24, cz=18)         # mast crossbar
+                self._lit_box(3, 9, 3, cy=15, cz=-48)            # sensor mast B
+                self._lit_box(5, 2.5, 5, cx=13.4, cy=1, cz=-56)  # shield emitters
+                self._lit_box(5, 2.5, 5, cx=-13.4, cy=1, cz=-56)
+                self._dome(4.5, 10, 7)                           # comm dome
         elif shape == "dagger":
-            # battleship: long dagger hull + tower + spines + heavy battery
-            self._lit_box(38, 20, 150)
-            self._out_pyr((0, 6, 108), ((-16, 0, 72), (16, 0, 72),
-                                        (16, 16, 72), (-16, 16, 72)))
-            self._lit_box(20, 24, 32, cy=20, cz=-34)         # command tower
-            self._lit_box(4, 18, 18, cy=14, cz=28)           # dorsal spine
-            self._lit_box(30, 10, 12, cz=-70)                # engine block
-            # quad engine nozzles
-            for cx_ in (-11, -4, 4, 11):
-                self._lit_box(5.5, 5.5, 5, cx=cx_, cy=-4, cz=-76)
-            # tower detail: windows + flag mast
-            self._lit_box(16, 3, 8, cy=30, cz=-34)
-            self._lit_box(1.5, 12, 1.5, cy=40, cz=-34)
-            # heavy turret bank (4 turrets on the spine)
-            for cz_ in (48, 24, -6, -52):
-                self._lit_box(9, 7, 9, cy=12, cz=cz_)
-                self._lit_box(3.5, 3.5, 10, cy=14, cz=cz_ + 7)
-            # side armor sponsons
-            for cz_ in (30, -30):
-                self._lit_box(6, 8, 30, cx=21, cy=-3, cz=cz_)
-                self._lit_box(6, 8, 30, cx=-21, cy=-3, cz=cz_)
+            if not dark and not trim:
+                # battleship: hull + bow + tower + spine + engine block
+                self._lit_box(38, 20, 150)
+                self._out_pyr((0, 6, 108), ((-16, 0, 72), (16, 0, 72),
+                                            (16, 16, 72), (-16, 16, 72)))
+                self._lit_box(20, 24, 32, cy=20, cz=-34)         # command tower
+                self._lit_box(4, 18, 18, cy=14, cz=28)           # dorsal spine
+                self._lit_box(30, 10, 12, cz=-70)                # engine block
+            elif dark:
+                # nozzles, keel battery, hull trench, gantries, deflector
+                for cx_ in (-11, -4, 4, 11):                     # quad nozzles
+                    self._lit_box(5.5, 5.5, 5, cx=cx_, cy=-4, cz=-76)
+                self._lit_box(10, 5, 22, cy=-12, cz=-20)         # keel battery
+                self._lit_box(4, 3, 8, cy=-15, cz=-14)           # barrel housing
+                for cz_ in (60, 40, 8, -18, -44, -62):           # hull trench
+                    self._lit_box(2.5, 6, 8, cx=19.5, cy=-6, cz=cz_)
+                    self._lit_box(2.5, 6, 8, cx=-19.5, cy=-6, cz=cz_)
+                self._lit_box(2.5, 10, 2.5, cx=5.5, cy=20, cz=-14)
+                self._lit_box(2.5, 10, 2.5, cx=-5.5, cy=20, cz=-14)
+                self._lit_box(20, 2, 5, cy=9.5, cz=-68)          # deflector plate
+                self._lit_box(6, 8, 30, cx=21, cy=-3, cz=30)     # armor sponsons
+                self._lit_box(6, 8, 30, cx=-21, cy=-3, cz=30)
+                self._lit_box(6, 8, 30, cx=21, cy=-3, cz=-30)
+                self._lit_box(6, 8, 30, cx=-21, cy=-3, cz=-30)
+            else:
+                # trim: windows, flag mast, turret bank, bow clamps
+                self._lit_box(16, 3, 8, cy=30, cz=-34)           # tower windows
+                self._lit_box(1.5, 12, 1.5, cy=40, cz=-34)       # flag mast
+                for cz_ in (48, 24, -6, -52):                    # turret bank
+                    self._lit_box(9, 7, 9, cy=12, cz=cz_)
+                    self._lit_box(3.5, 3.5, 10, cy=14, cz=cz_ + 7)
+                self._lit_box(12, 3, 10, cy=14, cz=64)           # bow clamps
         else:
-            # construction/generic: cargo box + cab + skids + crane arm
-            self._lit_box(26, 14, 36, cy=2)
-            self._lit_box(12, 8, 10, cy=11, cz=12)
-            self._lit_box(30, 3, 8, cy=-7, cz=-10)
-            self._lit_box(30, 3, 8, cy=-7, cz=12)
-            # cargo pods + crane mast
-            self._lit_box(8, 8, 8, cx=8, cy=-8, cz=16)
-            self._lit_box(8, 8, 8, cx=-8, cy=-8, cz=16)
-            self._lit_box(2.5, 14, 2.5, cx=-12, cy=16, cz=-8)
-            self._lit_box(14, 2, 2.5, cx=-5, cy=22, cz=-8)
-            # engine nozzles
-            self._lit_box(5, 5, 3, cz=-18.5)
-            self._lit_box(4, 3, 2, cy=7, cz=18.5)
-        GL.glPopAttrib()
-        glEndList()
-        self.ship_lists[shape] = lst
-        return lst
+            if not dark and not trim:
+                # construction/generic: cargo box + cab + skids
+                self._lit_box(26, 14, 36, cy=2)
+                self._lit_box(12, 8, 10, cy=11, cz=12)
+                self._lit_box(30, 3, 8, cy=-7, cz=-10)
+                self._lit_box(30, 3, 8, cy=-7, cz=12)
+            elif dark:
+                # cargo pods, skid tank
+                self._lit_box(8, 8, 8, cx=8, cy=-8, cz=16)
+                self._lit_box(8, 8, 8, cx=-8, cy=-8, cz=16)
+                self._lit_box(6, 2, 4, cx=0, cy=-8, cz=-12)      # underslug tank
+            else:
+                # trim: crane mast + jib + welder, beacon, plating, lamps
+                self._lit_box(2.5, 14, 2.5, cx=-12, cy=16, cz=-8)
+                self._lit_box(14, 2, 2.5, cx=-5, cy=22, cz=-8)
+                self._lit_box(2, 2, 12, cx=14, cy=8, cz=6)       # crane jib tip
+                self._lit_box(1.5, 1.5, 1.5, cx=14, cy=8, cz=12) # welder head
+                self._lit_box(1.2, 6, 1.2, cx=-14, cy=8, cz=-14) # comm beacon
+                self._lit_box(20, 1.6, 5, cy=7.6, cz=-14)        # roof plating
+                self._lit_box(3, 3, 2, cx=15, cy=2, cz=-14)      # spot lamps
+                self._lit_box(5, 5, 3, cz=-18.5)                 # engine nozzles
+                self._lit_box(4, 3, 2, cy=7, cz=18.5)
 
     def _station_ring(self, r: float, segments: int = 36):
         """Chunky solid ring: top/bottom annuli + outer/inner walls.
@@ -1000,6 +1086,23 @@ class Renderer:
                 px_, pz_ = math.sin(a) * r, math.cos(a) * r
                 self._lit_box(r * 0.08, r * 0.16, r * 0.08,
                               cx=px_, cy=r * 0.12, cz=pz_)
+            # --- detail pass: command tower on the core + dish + bay lights ---
+            glColor3f(*dark)
+            self._lit_box(r * 0.34, r * 0.3, r * 0.34, cy=r * 0.5)
+            glColor3f(*color)
+            self._lit_box(r * 0.2, r * 0.1, r * 0.2, cy=r * 0.68)   # tower cap
+            glPushMatrix()
+            glTranslatef(r * 0.5, r * 0.62, 0.0)
+            self._dome(r * 0.22, 10, 6)                              # comm dish
+            glPopMatrix()
+            for i in range(4):                                        # bay cranes
+                glPushMatrix()
+                glRotatef(-i * 90.0, 0, 1, 0)
+                self._lit_box(r * 0.06, r * 0.5, r * 0.06,
+                              cx=r * 1.2, cy=r * 0.3)
+                self._lit_box(r * 0.2, r * 0.06, r * 0.1,
+                              cx=r * 1.28, cy=r * 0.52)
+                glPopMatrix()
         elif e.data_id == "shipyard":
             # shipyard: massive gantry frame + build cradles + core
             glColor3f(*color)
@@ -1025,6 +1128,19 @@ class Renderer:
             glColor3f(*color)
             self._lit_box(r * 0.62, r * 0.12, r * 0.4, cy=r * 0.62, cz=-r * 0.3)
             self._lit_box(r * 0.2, r * 0.3, r * 0.2, cy=r * 0.72, cz=r * 0.45)
+            # --- detail pass: ship under construction + welding scaffold ---
+            glColor3f(*dark)
+            for sgn in (-1, 1):                    # half-built hulls in cradles
+                self._lit_box(r * 0.5, r * 0.28, r * 0.62,
+                              cx=sgn * r * 0.95, cy=r * 0.14)
+            glColor3f(*color)
+            for i in range(3):                     # vertical weld scaffold ribs
+                self._lit_box(r * 0.05, r * 0.9, r * 0.05,
+                              cx=r * 1.32, cy=r * 0.2, cz=-r * 0.3 + i * r * 0.3)
+            self._lit_box(r * 0.05, r * 0.05, r * 0.9, cy=r * 0.65, cz=-r * 0.15)
+            glColor3f(*dark)
+            self._lit_box(r * 0.7, r * 0.1, r * 0.1, cy=-r * 0.5, cz=-r * 0.4)
+            self._lit_box(r * 0.1, r * 0.35, r * 0.1, cy=-r * 0.62, cz=r * 0.55)
         elif e.data_id == "fighter_platform":
             # fighter platform: flat landing deck + control tower + supports
             glColor3f(*color)
@@ -1036,6 +1152,15 @@ class Renderer:
                 for sz in (-1, 1):
                     self._lit_box(r * 0.12, r * 0.45, r * 0.12,
                                   cx=sx * r * 0.65, cy=r * 0.02, cz=sz * r * 0.65)
+            # --- detail pass: deck markings + parked fighter + fuel boom ---
+            glColor3f(*color)
+            for i in range(3):                     # runway stripe pairs
+                self._lit_box(r * 0.06, r * 0.02, r * 0.5,
+                              cy=r * 0.32, cz=-r * 0.45 + i * r * 0.35)
+            self._lit_box(r * 0.22, r * 0.06, r * 0.22, cy=r * 0.36, cz=r * 0.1)
+            self._lit_box(r * 0.3, r * 0.05, r * 0.06, cy=r * 0.44, cz=r * 0.3)
+            glColor3f(*dark)
+            self._lit_box(r * 0.1, r * 0.5, r * 0.1, cx=r * 0.9, cy=r * 0.3)
         else:
             # per-type detail for mining / sensor / trade / defense / repair /
             # energy relay — each reads differently at a glance
