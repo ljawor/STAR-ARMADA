@@ -94,9 +94,13 @@ BUILD mining stations → GATHER credits/materials/energy → RESEARCH upgrades
 | Procedural audio (original, no assets) | ✅ prototype |
 | Minimap, unit info panel, build/research panel | ✅ prototype |
 | Title screen, main menu, settings menu (music/SFX volume, fullscreen, autosave, pan speed — persisted to `saves/settings.json`) | ✅ prototype |
-| Campaign: 10-mission chain with briefing screens, live objectives panel | ✅ prototype |
+| Campaign: 10-mission chain with briefing screens, live objectives panel, progress persists across sessions | ✅ prototype |
+| Victory conditions: annihilation, planet majority, economic, timed (data-driven) | ✅ prototype |
+| Trade convoys between trade stations + raiding (salvage loot) | ✅ prototype |
+| Objectives: build/destroy/colonize/survive + escort_convoy, hold_point | ✅ prototype |
+| Autosave ring (3 rotating slots) | ✅ prototype |
 | Multiplayer / determinism tests | 🟠 architecture-ready (command queue + serializable state) |
-| 8-player skirmish, trading, boarding/capture | 🔲 planned (see DEV_PLAN.md) |
+| 8-player skirmish, boarding/capture | 🔲 planned (see DEV_PLAN.md) |
 
 ## Repository layout
 
@@ -121,8 +125,21 @@ python -m unittest discover -s tests -v
 ```
 
 Tests run the **real simulation headless** — no window, no GPU — covering economy,
-combat, subsystem damage, formations, squadrons, research, AI, save/load and the full
+combat, subsystem damage, formations, squadrons, research, AI, save/load, victory
+conditions, trade convoys, mission objectives and the full
 build→gather→research→fleet→attack→win loop.
+
+## Releases
+
+Tagged versions build automatically on GitHub Actions (mac DMG + Windows ZIP):
+
+```bash
+git tag v0.2.0 && git push origin v0.2.0
+```
+
+Latest: **v0.2.0** — menus + settings, 10-mission campaign, victory conditions,
+trade convoys, escort/hold-point objectives, autosave ring. See `docs/PACKAGING.md`
+for local builds (`./scripts/build_mac.sh`).
 
 ## License / originality
 
