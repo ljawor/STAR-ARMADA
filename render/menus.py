@@ -18,6 +18,7 @@ import pygame
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SETTINGS_PATH = os.path.join(ROOT, "saves", "settings.json")
+CAMPAIGN_PATH = os.path.join(ROOT, "saves", "campaign.json")
 
 DEFAULT_SETTINGS = {
     "music_volume": 0.6,
@@ -43,6 +44,24 @@ def save_settings(s: dict) -> None:
         os.makedirs(os.path.dirname(SETTINGS_PATH), exist_ok=True)
         with open(SETTINGS_PATH, "w") as f:
             json.dump(s, f, indent=2)
+    except OSError:
+        pass
+
+
+def load_campaign_progress() -> int:
+    """Highest unlocked mission index (0-based); persisted across sessions."""
+    try:
+        with open(CAMPAIGN_PATH) as f:
+            return max(0, int(json.load(f).get("mission_index", 0)))
+    except (OSError, ValueError):
+        return 0
+
+
+def save_campaign_progress(index: int) -> None:
+    try:
+        os.makedirs(os.path.dirname(CAMPAIGN_PATH), exist_ok=True)
+        with open(CAMPAIGN_PATH, "w") as f:
+            json.dump({"mission_index": int(index)}, f, indent=2)
     except OSError:
         pass
 
@@ -89,7 +108,7 @@ class MenuStack:
         self.buttons: list = []             # current-frame click targets
         self.campaign = self._load_campaign()
         self.selected_mission = 0
-        self.mission_index = 0
+        self.mission_index = load_campaign_progress()
 
     # ------------------------------------------------------------- campaign
     def _load_campaign(self) -> dict:
