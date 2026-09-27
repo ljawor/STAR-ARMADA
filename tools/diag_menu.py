@@ -33,9 +33,10 @@ def snap(name):
     # skill pitfall: glReadPixels BEFORE pygame.display.flip() — after the
     # flip the read buffer is the wrong back buffer (black frames)
     data = glReadPixels(0, 0, W, H, GL_RGB, GL_UNSIGNED_BYTE)
-    # menu quad fills the window via the inverted ortho — raw readback rows
-    # are already screen-order (a flip here turns screenshots upside down)
-    arr = np.frombuffer(data, dtype=np.uint8).reshape(H, W, 3)
+    # glReadPixels rows are BOTTOM-UP (row 0 = window bottom) → flip to get
+    # screen-order rows for the PNG (same as the 3D-scene diags)
+    raw = bytes(data)
+    arr = np.flipud(np.frombuffer(raw, dtype=np.uint8).reshape(H, W, 3))
     lit = int(((arr[:, :, 0] > 40) & (arr[:, :, 0] < 250)).sum())
     err = glGetError()
     print(f"  {name:12s} lit={lit:8d} mean={arr.mean():6.1f} GLerr=0x{err:x}")
