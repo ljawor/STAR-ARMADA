@@ -332,8 +332,10 @@ class MenuStack:
         self._title(m.get("name", "MISSION"), self.font_big,
                     self.height * 0.08)
         y = self.height * 0.18
-        # wrapped briefing text
-        wrap_w = self.width - 360
+        px, py, pw = self.width // 2 - 330, y, 660
+        # wrapped briefing text — MUST wrap to the panel's inner width, not
+        # the window (a wide window made lines overflow the panel border)
+        wrap_w = pw - 40
         words = m.get("briefing", "").split()
         lines, cur = [], ""
         for w in words:
@@ -344,7 +346,6 @@ class MenuStack:
                 cur += w + " "
         if cur:
             lines.append(cur)
-        px, py, pw = self.width // 2 - 330, y, 660
         # panel wraps briefing text + objectives + enemy line
         n_obj = len(m.get("objectives", []))
         has_enemy = bool(m.get("enemy"))
