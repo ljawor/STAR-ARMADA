@@ -14,6 +14,7 @@ from .projectiles import ProjectileSystem
 from .damage import DamageSystem
 from .abilities import AbilitySystem
 from .economy import EconomySystem
+from .trading import TradingSystem
 from .construction import ConstructionSystem
 from .research import ResearchSystem
 from .formations import FormationSystem
@@ -25,6 +26,7 @@ from .commands_handler import CommandHandler
 __all__ = [
     "UnitFactory", "MovementSystem", "SeparationSystem", "WeaponSystem",
     "ProjectileSystem", "DamageSystem", "AbilitySystem", "EconomySystem",
+    "TradingSystem",
     "ConstructionSystem", "ResearchSystem", "FormationSystem", "SquadronSystem",
     "VictorySystem", "MissionSystem", "CommandHandler",
     "effective_max_shield_quad", "effective_shield_regen", "effective_weapon_damage",

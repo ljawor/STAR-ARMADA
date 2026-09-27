@@ -178,6 +178,20 @@ def rebuild(load_path: str | None) -> None:
     flash("game loaded")
 
 
+def _unlock_next_mission() -> None:
+    """Mission completed: unlock the next campaign mission (persisted)."""
+    from render.menus import load_campaign_progress, save_campaign_progress
+    if mission_def is None:
+        return
+    ids = [m.get("id") for m in menu.campaign.get("missions", [])]
+    try:
+        idx = ids.index(mission_def.get("id"))
+    except ValueError:
+        return
+    if idx + 1 > load_campaign_progress():
+        save_campaign_progress(idx + 1)
+
+
 def write_save(path: str) -> None:
     with open(path, "w") as f:
         json.dump(state.to_dict(), f)
@@ -288,6 +302,9 @@ while running:
                 if state.game_over or (mission_def is not None
                                        and (gm.mission.completed
                                             or gm.mission.failed)):
+                    # campaign result: persist progress before menus
+                    if mission_def is not None and gm.mission.completed:
+                        _unlock_next_mission()
                     mode = "menu"       # campaign result -> back to menus
                     continue
         inputc.handle_event(ev)
@@ -329,9 +346,11 @@ while running:
         frames = 0
         fps_time = 0.0
 
-    # autosave every 60 sim-seconds (spec §32)
+    # autosave ring every 60 sim-seconds (spec §32): 3 rotating slots
     if not state.game_over and state.time - last_autosave >= 60.0:
-        write_save(os.path.join(SAVES_DIR, "autosave.json"))
+        ring = int(SETTINGS.get("autosave_index", 0)) % 3
+        write_save(os.path.join(SAVES_DIR, f"autosave_{ring}.json"))
+        SETTINGS["autosave_index"] = ring + 1
         last_autosave = state.time
 
     # smoke-mode exit: capture proof and stop

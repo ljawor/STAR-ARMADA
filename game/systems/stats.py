@@ -125,6 +125,11 @@ def effective_accuracy(state, e: Entity, base_acc: float) -> float:
 def effective_speed(state, e: Entity) -> float:
     if e.is_station or e.is_planet:
         return 0.0
+    if e.data_id == "trade_convoy":
+        # convoys steer themselves in TradingSystem; movement must not
+        # fight that (and there is no ShipData for them)
+        eco = DataStore.get().rules.get("economy", {}).get("trading", {})
+        return float(eco.get("speed", 55.0))
     base = DataStore.get().resolve_ship(e.data_id).speed if (e.is_ship or e.is_squadron) else 0
     spd = base * e.speed_multiplier()
     spd *= tech_mult(state, e.owner, "speed_mult")
@@ -135,6 +140,8 @@ def effective_speed(state, e: Entity) -> float:
 
 
 def effective_turn_rate(state, e: Entity) -> float:
+    if e.data_id == "trade_convoy":
+        return 0.0   # convoys snap-heading in TradingSystem
     base = DataStore.get().resolve_ship(e.data_id).turn_rate if (e.is_ship or e.is_squadron) else 0
     tr = base * (0.3 + 0.7 * max(0.0, e.subsystem_fraction("engines")))
     tr *= tech_mult(state, e.owner, "turn_mult")

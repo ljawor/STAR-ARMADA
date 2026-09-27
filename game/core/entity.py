@@ -72,6 +72,10 @@ class Entity:
     build_queue: list = field(default_factory=list)        # [{"item":..., "time_left":...}]
     colonized_by: int | None = None
 
+    # trading (§26): cargo convoys
+    cargo_credits: float = 0.0
+    convoy_dest: int | None = None
+
     # squadrons
     fighter_count: int = 0
     max_fighters: int = 0

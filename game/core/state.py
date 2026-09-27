@@ -119,6 +119,7 @@ class GameState:
     # outcome
     winner: int | None = None
     game_over: bool = False
+    game_over_reason: str = ""                          # victory mode that ended the game
     stats: dict = field(default_factory=dict)           # per-player kill/loss tallies
 
     # event bus (sync, rebuilt on load)
@@ -211,6 +212,7 @@ class GameState:
             "entities": {eid: self._entity_dict(e) for eid, e in self.entities.items()},
             "projectiles": [p.to_dict() for p in self.projectiles.values()],
             "winner": self.winner, "game_over": self.game_over,
+            "game_over_reason": self.game_over_reason,
             "stats": self.stats,
             "command_queue": [c.to_dict() for c in self.command_queue],
         }
@@ -241,6 +243,10 @@ class GameState:
                 for item in e.build_queue]
         if e.colonized_by is not None:
             d["colonized_by"] = e.colonized_by
+        if e.cargo_credits:
+            d["cargo_credits"] = round(e.cargo_credits, 2)
+        if e.convoy_dest is not None:
+            d["convoy_dest"] = e.convoy_dest
         if e.fighter_count or e.max_fighters:
             d["fighter_count"] = e.fighter_count
             d["max_fighters"] = e.max_fighters
@@ -302,6 +308,8 @@ class GameState:
         e.order_target_id = d.get("order_target_id")
         e.build_queue = list(d.get("build_queue", []))
         e.colonized_by = d.get("colonized_by")
+        e.cargo_credits = d.get("cargo_credits", 0.0)
+        e.convoy_dest = d.get("convoy_dest")
         e.fighter_count = d.get("fighter_count", 0)
         e.max_fighters = d.get("max_fighters", 0)
         e.hangar_id = d.get("hangar_id")
@@ -340,6 +348,7 @@ class GameState:
                          for p in d.get("projectiles", [])}
         s.winner = d.get("winner")
         s.game_over = d.get("game_over", False)
+        s.game_over_reason = d.get("game_over_reason", "")
         s.stats = d.get("stats", {})
         s.command_queue = [PlayerCommand.from_dict(c)
                            for c in d.get("command_queue", [])]

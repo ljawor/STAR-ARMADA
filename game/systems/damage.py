@@ -194,6 +194,8 @@ class DamageSystem:
                 self._update_level(attacker)
         st.events.publish("unit_destroyed", entity_id=target.id, owner=target.owner,
                           data_id=target.data_id, killed_by=aid,
+                          killer_owner=aid,
+                          cargo_credits=target.cargo_credits,
                           is_station=target.is_station)
 
     def _update_level(self, e) -> None:

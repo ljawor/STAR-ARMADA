@@ -8,17 +8,45 @@
       "player_faction": "imperial",
       "briefing": "Command has assigned you a single task force and a colonizable world. Establish a mining station on the asteroid field, build a constructor, and defend against the raider probing force.",
       "loadout": {
-        "resources": {"credits": 6000, "materials": 4000, "energy": 1500, "crew": 3000},
-        "start_units": {"command_station": 1, "constructor": 1, "squadron": 2, "corvette": 2}
+        "resources": {
+          "credits": 6000,
+          "materials": 4000,
+          "energy": 1500,
+          "crew": 3000
+        },
+        "start_units": {
+          "command_station": 1,
+          "constructor": 1,
+          "squadron": 2,
+          "corvette": 2
+        }
       },
       "objectives": [
-        {"type": "build_station", "station": "mining_station", "text": "Establish a mining station on the asteroid field"},
-        {"type": "build_ship", "ship": "imperial_corvette", "count": 2, "text": "Build two corvettes"},
-        {"type": "destroy_all_forces", "team": 1, "text": "Eliminate the raider force"}
+        {
+          "type": "build_station",
+          "station": "mining_station",
+          "text": "Establish a mining station on the asteroid field"
+        },
+        {
+          "type": "build_ship",
+          "ship": "imperial_corvette",
+          "count": 2,
+          "text": "Build two corvettes"
+        },
+        {
+          "type": "destroy_all_forces",
+          "team": 1,
+          "text": "Eliminate the raider force"
+        }
       ],
       "enemy": {
-        "faction": "syndicate", "team": 1,
-        "start_units": {"command_station": 1, "corvette": 2, "squadron": 1}
+        "faction": "syndicate",
+        "team": 1,
+        "start_units": {
+          "command_station": 1,
+          "corvette": 2,
+          "squadron": 1
+        }
       }
     },
     {
@@ -26,19 +54,41 @@
       "name": "Supply Line",
       "map": "skirmish01",
       "player_faction": "imperial",
-      "briefing": "The raiders fell back toward the Kotarri gates. Hold the sector: build a shipyard, keep a corvette screen active, and survive the counterattack that command expects within five minutes of arrival.",
+      "briefing": "Commerce keeps the fleet alive. Establish a trade station and make sure at least one convoy reaches a friendly market \u2014 raiders will be looking for easy prey.",
       "loadout": {
-        "resources": {"credits": 7000, "materials": 4500, "energy": 2000, "crew": 3500},
-        "start_units": {"command_station": 1, "shipyard": 1, "constructor": 1, "corvette": 2}
+        "resources": {
+          "credits": 7000,
+          "materials": 4500,
+          "energy": 2000,
+          "crew": 3500
+        },
+        "start_units": {
+          "command_station": 1,
+          "shipyard": 1,
+          "constructor": 1,
+          "corvette": 2
+        }
       },
       "objectives": [
-        {"type": "build_station", "station": "shipyard", "text": "Build a shipyard"},
-        {"type": "build_ship", "ship": "imperial_corvette", "count": 4, "text": "Keep four corvettes in service"},
-        {"type": "survive_time", "time": 300, "text": "Hold the sector for five minutes"}
+        {
+          "type": "escort_convoy",
+          "text": "See a trade convoy safely to market"
+        },
+        {
+          "type": "build_station",
+          "station": "trade_station",
+          "text": "Operate a trade station"
+        }
       ],
       "enemy": {
-        "faction": "syndicate", "team": 1,
-        "start_units": {"command_station": 1, "shipyard": 1, "corvette": 3, "squadron": 2}
+        "faction": "syndicate",
+        "team": 1,
+        "start_units": {
+          "command_station": 1,
+          "shipyard": 1,
+          "corvette": 3,
+          "squadron": 2
+        }
       }
     },
     {
@@ -46,19 +96,50 @@
       "name": "Asteroid War",
       "map": "skirmish01",
       "player_faction": "imperial",
-      "briefing": "The syndicate out-mines us three to one. Break their economy: destroy their mining station and keep yours alive. Their defense grid is thin — strike before the convoy arrives.",
+      "briefing": "The syndicate out-mines us three to one. Break their economy: destroy their mining station and keep yours alive. Their defense grid is thin \u2014 strike before the convoy arrives.",
       "loadout": {
-        "resources": {"credits": 6500, "materials": 4200, "energy": 1800, "crew": 3200},
-        "start_units": {"command_station": 1, "shipyard": 1, "constructor": 1, "corvette": 2, "squadron": 2}
+        "resources": {
+          "credits": 6500,
+          "materials": 4200,
+          "energy": 1800,
+          "crew": 3200
+        },
+        "start_units": {
+          "command_station": 1,
+          "shipyard": 1,
+          "constructor": 1,
+          "corvette": 2,
+          "squadron": 2
+        }
       },
       "objectives": [
-        {"type": "build_ship", "ship": "imperial_frigate", "count": 2, "text": "Build two frigates"},
-        {"type": "destroy_all_forces", "team": 1, "text": "Destroy the syndicate force and its mining station"},
-        {"type": "survive_time", "time": 240, "text": "Keep your mining station alive for four minutes"}
+        {
+          "type": "build_ship",
+          "ship": "imperial_frigate",
+          "count": 2,
+          "text": "Build two frigates"
+        },
+        {
+          "type": "destroy_all_forces",
+          "team": 1,
+          "text": "Destroy the syndicate force and its mining station"
+        },
+        {
+          "type": "survive_time",
+          "time": 240,
+          "text": "Keep your mining station alive for four minutes"
+        }
       ],
       "enemy": {
-        "faction": "syndicate", "team": 1,
-        "start_units": {"command_station": 1, "mining_station": 1, "corvette": 3, "frigate": 1, "squadron": 1}
+        "faction": "syndicate",
+        "team": 1,
+        "start_units": {
+          "command_station": 1,
+          "mining_station": 1,
+          "corvette": 3,
+          "frigate": 1,
+          "squadron": 1
+        }
       }
     },
     {
@@ -66,18 +147,45 @@
       "name": "First Blood",
       "map": "skirmish01",
       "player_faction": "imperial",
-      "briefing": "Intelligence located the raider flagship yard. Take the corridor: build a cruiser task force and wipe the enemy fleet from the sector. Watch your supply lines — raiders strike where you are weakest.",
+      "briefing": "Intelligence located the raider flagship yard. Take the corridor: build a cruiser task force and wipe the enemy fleet from the sector. Watch your supply lines \u2014 raiders strike where you are weakest.",
       "loadout": {
-        "resources": {"credits": 9000, "materials": 6000, "energy": 2500, "crew": 4200},
-        "start_units": {"command_station": 1, "shipyard": 1, "constructor": 1, "corvette": 2, "squadron": 2}
+        "resources": {
+          "credits": 9000,
+          "materials": 6000,
+          "energy": 2500,
+          "crew": 4200
+        },
+        "start_units": {
+          "command_station": 1,
+          "shipyard": 1,
+          "constructor": 1,
+          "corvette": 2,
+          "squadron": 2
+        }
       },
       "objectives": [
-        {"type": "build_ship", "ship": "imperial_cruiser", "count": 1, "text": "Build a cruiser"},
-        {"type": "destroy_all_forces", "team": 1, "text": "Destroy the enemy fleet"}
+        {
+          "type": "build_ship",
+          "ship": "imperial_cruiser",
+          "count": 1,
+          "text": "Build a cruiser"
+        },
+        {
+          "type": "destroy_all_forces",
+          "team": 1,
+          "text": "Destroy the enemy fleet"
+        }
       ],
       "enemy": {
-        "faction": "syndicate", "team": 1,
-        "start_units": {"command_station": 1, "shipyard": 1, "corvette": 4, "frigate": 2, "squadron": 2}
+        "faction": "syndicate",
+        "team": 1,
+        "start_units": {
+          "command_station": 1,
+          "shipyard": 1,
+          "corvette": 4,
+          "frigate": 2,
+          "squadron": 2
+        }
       }
     },
     {
@@ -85,20 +193,70 @@
       "name": "The Gate",
       "map": "skirmish01",
       "player_faction": "imperial",
-      "briefing": "A rebel strike wing holds the hyperspace gate. Take it: field a full battle line — corvettes, frigates and a cruiser — then clear every hostile ship from the gate zone.",
+      "briefing": "A rebel strike wing holds the hyperspace gate. Take it: field a full battle line \u2014 corvettes, frigates and a cruiser \u2014 then clear every hostile ship from the gate zone.",
       "loadout": {
-        "resources": {"credits": 10000, "materials": 7000, "energy": 3000, "crew": 5000},
-        "start_units": {"command_station": 1, "shipyard": 1, "constructor": 1, "corvette": 3, "squadron": 2}
+        "resources": {
+          "credits": 10000,
+          "materials": 7000,
+          "energy": 3000,
+          "crew": 5000
+        },
+        "start_units": {
+          "command_station": 1,
+          "shipyard": 1,
+          "constructor": 1,
+          "corvette": 3,
+          "squadron": 2
+        }
       },
       "objectives": [
-        {"type": "build_ship", "ship": "imperial_corvette", "count": 4, "text": "Field four corvettes"},
-        {"type": "build_ship", "ship": "imperial_frigate", "count": 2, "text": "Field two frigates"},
-        {"type": "build_ship", "ship": "imperial_cruiser", "count": 1, "text": "Field a cruiser"},
-        {"type": "destroy_all_forces", "team": 1, "text": "Clear the gate zone"}
+        {
+          "type": "build_ship",
+          "ship": "imperial_corvette",
+          "count": 4,
+          "text": "Field four corvettes"
+        },
+        {
+          "type": "build_ship",
+          "ship": "imperial_frigate",
+          "count": 2,
+          "text": "Field two frigates"
+        },
+        {
+          "type": "build_ship",
+          "ship": "imperial_cruiser",
+          "count": 1,
+          "text": "Field a cruiser"
+        },
+        {
+          "type": "destroy_all_forces",
+          "team": 1,
+          "text": "Clear the gate zone"
+        },
+        {
+          "type": "hold_point",
+          "pos": [
+            0,
+            0,
+            0
+          ],
+          "radius": 1500,
+          "count": 3,
+          "duration": 30.0,
+          "text": "Hold the gate zone with 3 ships for 30s"
+        }
       ],
       "enemy": {
-        "faction": "rebel", "team": 1,
-        "start_units": {"command_station": 1, "shipyard": 1, "defense_platform": 1, "corvette": 3, "frigate": 2, "squadron": 2}
+        "faction": "rebel",
+        "team": 1,
+        "start_units": {
+          "command_station": 1,
+          "shipyard": 1,
+          "defense_platform": 1,
+          "corvette": 3,
+          "frigate": 2,
+          "squadron": 2
+        }
       }
     },
     {
@@ -106,19 +264,50 @@
       "name": "Rebel Hunt",
       "map": "skirmish01",
       "player_faction": "imperial",
-      "briefing": "The rebel wing that fled the gate is regrouping. Hunt them down before they entrench. Their commander favors fighter swarms — bring point defense and corvettes.",
+      "briefing": "The rebel wing that fled the gate is regrouping. Hunt them down before they entrench. Their commander favors fighter swarms \u2014 bring point defense and corvettes.",
       "loadout": {
-        "resources": {"credits": 11000, "materials": 7500, "energy": 3200, "crew": 5200},
-        "start_units": {"command_station": 1, "shipyard": 1, "constructor": 1, "corvette": 3, "squadron": 2}
+        "resources": {
+          "credits": 11000,
+          "materials": 7500,
+          "energy": 3200,
+          "crew": 5200
+        },
+        "start_units": {
+          "command_station": 1,
+          "shipyard": 1,
+          "constructor": 1,
+          "corvette": 3,
+          "squadron": 2
+        }
       },
       "objectives": [
-        {"type": "build_ship", "ship": "imperial_tie_squadron", "count": 3, "text": "Deploy three fighter squadrons"},
-        {"type": "destroy_all_forces", "team": 1, "text": "Destroy the rebel task force"},
-        {"type": "survive_time", "time": 240, "text": "Survive their counter-strike (4 minutes)"}
+        {
+          "type": "build_ship",
+          "ship": "imperial_tie_squadron",
+          "count": 3,
+          "text": "Deploy three fighter squadrons"
+        },
+        {
+          "type": "destroy_all_forces",
+          "team": 1,
+          "text": "Destroy the rebel task force"
+        },
+        {
+          "type": "survive_time",
+          "time": 240,
+          "text": "Survive their counter-strike (4 minutes)"
+        }
       ],
       "enemy": {
-        "faction": "rebel", "team": 1,
-        "start_units": {"command_station": 1, "shipyard": 1, "corvette": 3, "frigate": 2, "squadron": 4}
+        "faction": "rebel",
+        "team": 1,
+        "start_units": {
+          "command_station": 1,
+          "shipyard": 1,
+          "corvette": 3,
+          "frigate": 2,
+          "squadron": 4
+        }
       }
     },
     {
@@ -128,16 +317,44 @@
       "player_faction": "imperial",
       "briefing": "The confederacy has fortified the nebula approach with defense platforms. Break the fortress line: destroy their defenses, then their fleet. Battleship support has been authorized.",
       "loadout": {
-        "resources": {"credits": 13000, "materials": 9000, "energy": 4000, "crew": 6000},
-        "start_units": {"command_station": 1, "shipyard": 1, "constructor": 1, "corvette": 2, "frigate": 1}
+        "resources": {
+          "credits": 13000,
+          "materials": 9000,
+          "energy": 4000,
+          "crew": 6000
+        },
+        "start_units": {
+          "command_station": 1,
+          "shipyard": 1,
+          "constructor": 1,
+          "corvette": 2,
+          "frigate": 1
+        }
       },
       "objectives": [
-        {"type": "build_ship", "ship": "imperial_battleship", "count": 1, "text": "Build a battleship"},
-        {"type": "destroy_all_forces", "team": 1, "text": "Break the fortress line"}
+        {
+          "type": "build_ship",
+          "ship": "imperial_battleship",
+          "count": 1,
+          "text": "Build a battleship"
+        },
+        {
+          "type": "destroy_all_forces",
+          "team": 1,
+          "text": "Break the fortress line"
+        }
       ],
       "enemy": {
-        "faction": "confederacy", "team": 1,
-        "start_units": {"command_station": 1, "shipyard": 1, "defense_platform": 2, "corvette": 4, "frigate": 2, "squadron": 2}
+        "faction": "confederacy",
+        "team": 1,
+        "start_units": {
+          "command_station": 1,
+          "shipyard": 1,
+          "defense_platform": 2,
+          "corvette": 4,
+          "frigate": 2,
+          "squadron": 2
+        }
       }
     },
     {
@@ -145,18 +362,46 @@
       "name": "Steel Rain",
       "map": "skirmish01",
       "player_faction": "imperial",
-      "briefing": "Confederate capital ships are staging inside the asteroid field. Field two battleships and grind their fleet to dust. Their mining network funds the war — every station counts.",
+      "briefing": "Confederate capital ships are staging inside the asteroid field. Field two battleships and grind their fleet to dust. Their mining network funds the war \u2014 every station counts.",
       "loadout": {
-        "resources": {"credits": 15000, "materials": 10000, "energy": 4500, "crew": 7000},
-        "start_units": {"command_station": 1, "shipyard": 1, "constructor": 1, "corvette": 2, "frigate": 2}
+        "resources": {
+          "credits": 15000,
+          "materials": 10000,
+          "energy": 4500,
+          "crew": 7000
+        },
+        "start_units": {
+          "command_station": 1,
+          "shipyard": 1,
+          "constructor": 1,
+          "corvette": 2,
+          "frigate": 2
+        }
       },
       "objectives": [
-        {"type": "build_ship", "ship": "imperial_battleship", "count": 2, "text": "Field two battleships"},
-        {"type": "destroy_all_forces", "team": 1, "text": "Destroy the confederate fleet and mining network"}
+        {
+          "type": "build_ship",
+          "ship": "imperial_battleship",
+          "count": 2,
+          "text": "Field two battleships"
+        },
+        {
+          "type": "destroy_all_forces",
+          "team": 1,
+          "text": "Destroy the confederate fleet and mining network"
+        }
       ],
       "enemy": {
-        "faction": "confederacy", "team": 1,
-        "start_units": {"command_station": 1, "shipyard": 1, "mining_station": 1, "corvette": 4, "frigate": 3, "squadron": 2}
+        "faction": "confederacy",
+        "team": 1,
+        "start_units": {
+          "command_station": 1,
+          "shipyard": 1,
+          "mining_station": 1,
+          "corvette": 4,
+          "frigate": 3,
+          "squadron": 2
+        }
       }
     },
     {
@@ -164,19 +409,52 @@
       "name": "The Conference",
       "map": "skirmish01",
       "player_faction": "imperial",
-      "briefing": "All three enemy powers are meeting aboard a joint command platform. A supercapital has been assigned to your flag. Protect your station at all costs — you are the shield of the conference delegation.",
+      "briefing": "All three enemy powers are meeting aboard a joint command platform. A supercapital has been assigned to your flag. Protect your station at all costs \u2014 you are the shield of the conference delegation.",
       "loadout": {
-        "resources": {"credits": 18000, "materials": 12000, "energy": 5000, "crew": 8000},
-        "start_units": {"command_station": 1, "shipyard": 1, "constructor": 1, "corvette": 2, "frigate": 2, "cruiser": 1}
+        "resources": {
+          "credits": 18000,
+          "materials": 12000,
+          "energy": 5000,
+          "crew": 8000
+        },
+        "start_units": {
+          "command_station": 1,
+          "shipyard": 1,
+          "constructor": 1,
+          "corvette": 2,
+          "frigate": 2,
+          "cruiser": 1
+        }
       },
       "objectives": [
-        {"type": "build_ship", "ship": "imperial_supercapital", "count": 1, "text": "Build the supercapital flagship"},
-        {"type": "survive_time", "time": 360, "text": "Hold the conference for six minutes"},
-        {"type": "destroy_all_forces", "team": 1, "text": "Repel the grand alliance attack"}
+        {
+          "type": "build_ship",
+          "ship": "imperial_supercapital",
+          "count": 1,
+          "text": "Build the supercapital flagship"
+        },
+        {
+          "type": "survive_time",
+          "time": 360,
+          "text": "Hold the conference for six minutes"
+        },
+        {
+          "type": "destroy_all_forces",
+          "team": 1,
+          "text": "Repel the grand alliance attack"
+        }
       ],
       "enemy": {
-        "faction": "confederacy", "team": 1,
-        "start_units": {"command_station": 1, "shipyard": 1, "corvette": 4, "frigate": 3, "cruiser": 1, "squadron": 3}
+        "faction": "confederacy",
+        "team": 1,
+        "start_units": {
+          "command_station": 1,
+          "shipyard": 1,
+          "corvette": 4,
+          "frigate": 3,
+          "cruiser": 1,
+          "squadron": 3
+        }
       }
     },
     {
@@ -184,19 +462,54 @@
       "name": "Armada",
       "map": "skirmish01",
       "player_faction": "imperial",
-      "briefing": "The outer armada makes its last stand over the Kotarri sector. Every ship you can field — take the sector, take the war. Destroy everything that bears enemy colors.",
+      "briefing": "The outer armada makes its last stand over the Kotarri sector. Every ship you can field \u2014 take the sector, take the war. Destroy everything that bears enemy colors.",
       "loadout": {
-        "resources": {"credits": 22000, "materials": 15000, "energy": 6000, "crew": 9000},
-        "start_units": {"command_station": 1, "shipyard": 1, "constructor": 1, "corvette": 3, "frigate": 2, "cruiser": 1}
+        "resources": {
+          "credits": 22000,
+          "materials": 15000,
+          "energy": 6000,
+          "crew": 9000
+        },
+        "start_units": {
+          "command_station": 1,
+          "shipyard": 1,
+          "constructor": 1,
+          "corvette": 3,
+          "frigate": 2,
+          "cruiser": 1
+        }
       },
       "objectives": [
-        {"type": "build_ship", "ship": "imperial_battleship", "count": 2, "text": "Field two battleships"},
-        {"type": "build_ship", "ship": "imperial_supercapital", "count": 1, "text": "Field the flagship"},
-        {"type": "destroy_all_forces", "team": 1, "text": "Total victory — destroy all enemy forces"}
+        {
+          "type": "build_ship",
+          "ship": "imperial_battleship",
+          "count": 2,
+          "text": "Field two battleships"
+        },
+        {
+          "type": "build_ship",
+          "ship": "imperial_supercapital",
+          "count": 1,
+          "text": "Field the flagship"
+        },
+        {
+          "type": "destroy_all_forces",
+          "team": 1,
+          "text": "Total victory \u2014 destroy all enemy forces"
+        }
       ],
       "enemy": {
-        "faction": "syndicate", "team": 1,
-        "start_units": {"command_station": 1, "shipyard": 1, "defense_platform": 2, "corvette": 5, "frigate": 4, "cruiser": 2, "squadron": 4}
+        "faction": "syndicate",
+        "team": 1,
+        "start_units": {
+          "command_station": 1,
+          "shipyard": 1,
+          "defense_platform": 2,
+          "corvette": 5,
+          "frigate": 4,
+          "cruiser": 2,
+          "squadron": 4
+        }
       }
     }
   ]

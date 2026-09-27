@@ -76,6 +76,10 @@ class MissionSystem:
                     for e in st.entities.values())
                 if not any_left:
                     o["done"] = True
+            if o["type"] == "hold_point" and not o["done"]:
+                self._update_hold_point(o, dt)
+            if o["type"] == "escort_convoy" and not o["done"]:
+                self._update_escort(o)
         if all(o["done"] for o in self.objectives):
             self.completed = True
             st.events.publish("mission_complete")
@@ -93,6 +97,65 @@ class MissionSystem:
         p = self.state.players.get(owner)
         return p.team if p else -99
 
+    # ----------------------------------------------------- new objective types
+    def _update_hold_point(self, o: dict, dt: float) -> None:
+        """Player (human team) must keep >= count entities inside radius of
+        a point for `duration` seconds (spec §28 hold-point)."""
+        st = self.state
+        pos = o.get("pos")
+        if not pos or len(pos) < 2:
+            o["done"] = True     # malformed objective auto-completes
+            return
+        px, pz = float(pos[0]), float(pos[2]) if len(pos) > 2 else float(pos[1])
+        radius = float(o.get("radius", 800))
+        need = int(o.get("count", 1))
+        human_teams = {p.team for p in st.players.values() if not p.is_ai}
+        inside = sum(
+            1 for e in st.entities.values()
+            if e.alive and e.owner >= 0
+            and self._team_of(e.owner) in human_teams
+            and (e.is_ship or e.is_squadron or e.is_station)
+            and (e.pos.x - px) ** 2 + (e.pos.z - pz) ** 2 <= radius ** 2)
+        if inside >= need:
+            o["held"] = o.get("held", 0.0) + dt
+            if o["held"] >= float(o.get("duration", 30.0)):
+                o["done"] = True
+        else:
+            o["held"] = max(0.0, o.get("held", 0.0) - dt * 2.0)  # drains fast
+
+    def _update_escort(self, o: dict) -> None:
+        """Player's trade convoy must arrive alive (spec §26+§28 escort).
+        done when one of the player's convoys publishes convoy_arrived.
+        fails the mission if it is destroyed by an enemy."""
+        st = self.state
+        if not hasattr(self, "_escort_hooked"):
+            st.events.subscribe("convoy_arrived", self._on_convoy_arrived)
+            st.events.subscribe("convoy_raided", self._on_convoy_raided)
+            self._escort_hooked = True
+        # mission-failure path: the escorted convoy died to an enemy
+        if o.get("failed"):
+            self.failed = True
+            st.events.publish("mission_failed")
+
+    def _on_convoy_arrived(self, ev) -> None:
+        for o in self.objectives:
+            if o["type"] == "escort_convoy" and not o["done"] and \
+                    self._is_human(ev.data.get("owner")):
+                o["done"] = True
+
+    def _on_convoy_raided(self, ev) -> None:
+        for o in self.objectives:
+            if o["type"] == "escort_convoy" and not o["done"]:
+                o["failed"] = True
+
     def progress_text(self) -> list:
-        return [("[x] " if o["done"] else "[ ] ") + o.get("text", o["type"])
-                for o in self.objectives]
+        out: list = []
+        for o in self.objectives:
+            mark = "[x] " if o["done"] else "[ ] "
+            txt = str(o.get("text", o["type"]))
+            if o["type"] == "hold_point" and not o["done"]:
+                need = float(o.get("duration", 30.0))
+                held = float(o.get("held", 0.0))
+                txt += f" ({held:0.0f}/{need:0.0f}s)"
+            out.append(mark + txt)
+        return out
