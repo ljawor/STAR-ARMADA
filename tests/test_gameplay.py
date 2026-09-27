@@ -118,7 +118,7 @@ class TestFormations(unittest.TestCase):
         from game.core.commands import PlayerCommand
         st.queue_command(PlayerCommand("move", 0, unit_ids=tuple(fleet.member_ids),
                                        target_pos=(target.x, target.y, target.z)))
-        run_for(gm, 30)
+        run_for(gm, 60)   # fleet includes a 60 u/s constructor + planet detour
         avg_dist = sum(e.pos.dist(target) for e in st.entities.values()
                        if e.id in fleet.member_ids and e.alive) / max(1, len(fleet.member_ids))
         self.assertLess(avg_dist, 900)

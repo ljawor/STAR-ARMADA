@@ -111,6 +111,10 @@ class GameManager:
     def _spawn_start_units(self, player_id: int, start_units: dict, start_pos) -> None:
         st = self.state
         anchor = Vec3(*start_pos)
+        # deploy ring faces AWAY from map center: starting positions sit near
+        # map edges, so the inward ring used to drop units inside a planet's
+        # keep-out bubble (ships then stalled at the rim)
+        base_ang = math.atan2(anchor.x, anchor.z) if (abs(anchor.x) + abs(anchor.z)) > 1.0 else 0.0
         p = st.players.get(player_id)
         faction = p.faction if p else "imperial"
         ship_for = {
@@ -139,7 +143,8 @@ class GameManager:
         for kind, count in start_units.items():
             count = int(count)
             for _ in range(count):
-                ang = ring * 1.7
+                # start the arc pointing outward from map center, spread ±
+                ang = base_ang + (ring - (sum(int(c) for c in start_units.values()) - 1) * 0.5) * 0.55
                 pos = Vec3(anchor.x + math.sin(ang) * (900 + ring * 60), 0,
                            anchor.z + math.cos(ang) * (900 + ring * 60))
                 ring += 1

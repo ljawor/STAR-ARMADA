@@ -303,8 +303,7 @@ class HUD:
                     y += 16
                 if q:
                     y += 6
-                items = [self.ds.ships.get(sid) for sid in std.builds_ships
-                         if sid != "*" and self.ds.ships.get(sid) is not None]
+                items = self._shipyard_items(sel, std)
                 y = self._scrollable(panel, y, items, p, "ships",
                                      self._row_build_ship, sel)
             if std is not None and std.research:
@@ -328,6 +327,31 @@ class HUD:
     def _row_build_station(self, d, yy, payload) -> None:
         self._build_row(self._cur_panel, yy, d, self._cur_player, payload,
                         "build_station_place")
+
+    def _shipyard_items(self, station, std) -> list:
+        """Buildable-ship rows for a station panel.
+
+        builds_ships lists ship ids; ["*"] expands to the full catalogue minus
+        engineering hulls when the station's build_role is "warships" — the
+        same rule ConstructionSystem.station_can_build_ship() enforces in the
+        sim, so the menu never offers a row the sim would reject.
+        """
+        cs = getattr(self.state, "_construction_system", None)
+        out = []
+        if "*" in std.builds_ships:
+            for sid in sorted(self.ds.ships):
+                sd = self.ds.ships.get(sid)
+                if sd is None:
+                    continue
+                if cs is not None and not cs.station_can_build_ship(station, sid):
+                    continue
+                out.append(sd)
+            return out
+        for sid in std.builds_ships:
+            sd = self.ds.ships.get(sid)
+            if sd is not None:
+                out.append(sd)
+        return out
 
     def _row_build_ship(self, d, yy, payload) -> None:
         self._build_row(self._cur_panel, yy, d, self._cur_player, payload,

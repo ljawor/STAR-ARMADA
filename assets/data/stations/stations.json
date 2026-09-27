@@ -12,11 +12,10 @@
       "systems": {"engines": 0, "weapons": 1200, "sensors": 700, "shield_gen": 1500, "hangar": 400},
       "income": {"credits": 1.0, "crew": 1.5},
       "command_capacity": 20,
-      "builds_ships": ["imperial_corvette", "imperial_constructor", "rebel_corvette",
-                        "rebel_constructor", "confed_corvette", "confed_constructor",
-                        "imperial_tie_squadron", "rebel_x_squadron",
-                        "confed_vulture_squadron", "imperial_colonizer",
-                        "rebel_colonizer", "confed_colonizer"],
+      "builds_ships": ["imperial_constructor", "imperial_colonizer",
+                        "rebel_constructor", "rebel_colonizer",
+                        "confed_constructor", "confed_colonizer",
+                        "syndicate_constructor"],
       "storage": {"credits": 2000, "materials": 1000}
     },
     "mining_station": {
@@ -41,7 +40,8 @@
       "systems": {"engines": 0, "weapons": 300, "sensors": 250, "shield_gen": 600, "hangar": 300},
       "builds_ships": ["*"],
       "storage": {"materials": 800},
-      "command_capacity": 4
+      "command_capacity": 4,
+      "build_role": "warships"
     },
     "research_station": {
       "name": "Research Station",

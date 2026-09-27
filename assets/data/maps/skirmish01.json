@@ -9,6 +9,7 @@
       "start": [-11000, 0, 800],
       "start_units": {
         "command_station": 1,
+        "shipyard": 1,
         "constructor": 1,
         "squadron": 2,
         "corvette": 2
@@ -19,6 +20,7 @@
       "start": [11000, 0, -800],
       "start_units": {
         "command_station": 1,
+        "shipyard": 1,
         "constructor": 1,
         "squadron": 2,
         "corvette": 2

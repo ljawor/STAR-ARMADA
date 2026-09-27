@@ -167,9 +167,17 @@ class ConstructionSystem:
         sd = self.ds.stations.get(station.data_id)
         if sd is None or not sd.builds_ships:
             return False
-        if "*" in sd.builds_ships:
+        if ship_id in sd.builds_ships:
             return True
-        return ship_id in sd.builds_ships
+        if "*" not in sd.builds_ships:
+            return False
+        if sd.build_role == "warships":
+            # shipyards build the fleet; engineering hulls come from the
+            # command station (which cannot build warships)
+            shd = self.ds.ships.get(ship_id)
+            if shd is not None and shd.category == "construction":
+                return False
+        return True
 
     def start_ship(self, station_id: int, ship_id: str, player_id: int,
                    count: int = 1) -> int:

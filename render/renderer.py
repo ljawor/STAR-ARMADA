@@ -446,11 +446,13 @@ class Renderer:
         return lst
 
     def _draw_asteroid_field(self, e):
+        """Irregular lit rock clusters: 3-5 lumpy sub-rocks per asteroid,
+        facet-shaded with a warm gray-brown palette, slow tumble."""
         rng = random.Random(int(e.pos.x) % 9973)
         glPushMatrix()
         glTranslatef(e.pos.x, e.pos.y, e.pos.z)
-        glColor3f(0.45, 0.42, 0.38)
-        n = 46
+        spin = self.time * 0.15
+        n = 40
         for i in range(n):
             a = rng.uniform(0, 2 * math.pi)
             r = e.radius * (0.15 + 0.85 * math.sqrt(rng.random()))
@@ -460,10 +462,91 @@ class Renderer:
             s = rng.uniform(12, 46)
             glPushMatrix()
             glTranslatef(x, y, z)
-            glRotatef(rng.uniform(0, 360), 0.3, 0.7, 0.2)
-            self._draw_box(s, s * 0.6, s)
+            # slow tumble (deterministic per asteroid)
+            glRotatef(spin * rng.uniform(0.4, 1.6) + rng.uniform(0, 360),
+                      0.3, 0.7, 0.2)
+            self._draw_rock(s, rng)
             glPopMatrix()
         glPopMatrix()
+
+    def _draw_rock(self, s: float, rng):
+        """One asteroid: 3-5 overlapping lit sub-rocks with irregular
+        vertex-jittered facets. Palette: warm rock gray-brown, top lighter
+        via lighting; no flat unlit quads."""
+        base = (0.52 + rng.uniform(-0.08, 0.08),
+                0.48 + rng.uniform(-0.08, 0.06),
+                0.42 + rng.uniform(-0.06, 0.06))
+        m = rng.randint(2, 4)          # sub-rock count
+        for k in range(m):
+            # deterministic jitter per sub-rock
+            jx = rng.uniform(-0.25, 0.25) * s
+            jy = rng.uniform(-0.18, 0.18) * s
+            jz = rng.uniform(-0.25, 0.25) * s
+            ss = s * (0.55 if k else rng.uniform(0.6, 0.8))
+            shade = 1.0 - 0.16 * k / max(1, m - 1)
+            glColor3f(base[0] * shade, base[1] * shade, base[2] * shade)
+            self._rock_facets(ss, rng, jx, jy, jz)
+
+    def _rock_facets(self, s: float, rng, jx: float, jy: float, jz: float):
+        """Faceted lump: an icosphere-ish hull via 8 corner + 6 face bulge
+        points, jittered, emitted as GL_TRIANGLES with per-face normals."""
+        # 8 corners of a cube, jittered radially (deterministic from rng)
+        c = []
+        for sx in (-1, 1):
+            for sy in (-1, 1):
+                for sz in (-1, 1):
+                    rr = s * 0.5 * rng.uniform(0.75, 1.25)
+                    c.append((sx * rr * 0.72 + jx, sy * rr * 0.6 + jy,
+                              sz * rr * 0.72 + jz))
+        # 6 face-bulge points for a lumpy silhouette
+        f = []
+        for dx, dy, dz in ((0, 0, 1), (0, 0, -1), (0, 1, 0),
+                           (0, -1, 0), (1, 0, 0), (-1, 0, 0)):
+            rr = s * 0.5 * rng.uniform(0.9, 1.3)
+            f.append((dx * rr + jx, dy * rr * 0.8 + jy, dz * rr + jz))
+        # explicit hull: each face is a quad of 4 jittered corners fanned
+        # through its face-bulge point -> 4 lit triangles per face
+        quads = [
+            # +z face (bulge f[0]): corners 1,3,7,5
+            ((c[1], c[3], c[7], c[5]), f[0]),
+            # -z face (bulge f[1]): corners 2,6,4,0
+            ((c[2], c[6], c[4], c[0]), f[1]),
+            # +y face (bulge f[2]): corners 2,3,7,6
+            ((c[2], c[3], c[7], c[6]), f[2]),
+            # -y face (bulge f[3]): corners 0,4,5,1
+            ((c[0], c[4], c[5], c[1]), f[3]),
+            # +x face (bulge f[4]): corners 3,1,5,7
+            ((c[3], c[1], c[5], c[7]), f[4]),
+            # -x face (bulge f[5]): corners 0,2,6,4
+            ((c[0], c[2], c[6], c[4]), f[5]),
+        ]
+        glBegin(GL_TRIANGLES)
+        for corners, bulge in quads:
+            a_, b_, cc_, d_ = corners
+            for tri in ((a_, b_, bulge), (a_, bulge, cc_),
+                        (a_, cc_, d_), (a_, d_, bulge)):
+                # per-face normal via cross product
+                ax_, ay_, az_ = (tri[1][0] - tri[0][0],
+                                 tri[1][1] - tri[0][1],
+                                 tri[1][2] - tri[0][2])
+                bx_, by_, bz_ = (tri[2][0] - tri[0][0],
+                                 tri[2][1] - tri[0][1],
+                                 tri[2][2] - tri[0][2])
+                nx = ay_ * bz_ - az_ * by_
+                ny = az_ * bx_ - ax_ * bz_
+                nz = ax_ * by_ - ay_ * bx_
+                nl = math.sqrt(nx * nx + ny * ny + nz * nz) or 1.0
+                # outward check vs sub-rock center
+                cx_ = (tri[0][0] + tri[1][0] + tri[2][0]) / 3 - jx
+                cy_ = (tri[0][1] + tri[1][1] + tri[2][1]) / 3 - jy
+                cz_ = (tri[0][2] + tri[1][2] + tri[2][2]) / 3 - jz
+                if nx * cx_ + ny * cy_ + nz * cz_ < 0:
+                    nx, ny, nz = -nx, -ny, -nz
+                    tri = (tri[0], tri[2], tri[1])
+                glNormal3f(nx / nl, ny / nl, nz / nl)
+                for v in tri:
+                    glVertex3f(*v)
+        glEnd()
 
     def _draw_sphere(self, radius, lons=16, lats=10):
         """Backface-culled sphere (no speckle/moire from double-sided quads)."""
@@ -668,7 +751,10 @@ class Renderer:
         color = self._owner_color(e.owner)
         glPushMatrix()
         glTranslatef(e.pos.x, e.pos.y, e.pos.z)
-        glRotatef(math.degrees(-e.yaw), 0, 1, 0)
+        # sim facing is (sin(yaw), 0, cos(yaw)); +yaw in GL's right-handed Y
+        # rotation matches it exactly (negative sign mirrored the ships —
+        # nose trailed while moving sideways/backwards)
+        glRotatef(math.degrees(e.yaw), 0, 1, 0)
         # engine trail behind ship (keeps motion readable)
         spd = e.vel.length()
         if spd > 2:
@@ -706,7 +792,7 @@ class Renderer:
         # engine glow: additive billboard at the ship's tail (world space)
         if spd > 8:
             L = vis["scale"] * e.radius * 1.1
-            rear = (e.pos.x + L * math.sin(e.yaw),
+            rear = (e.pos.x - L * math.sin(e.yaw),
                     e.pos.y,
                     e.pos.z - L * math.cos(e.yaw))
             if self._in_front(rear, 14.0):
@@ -951,14 +1037,136 @@ class Renderer:
                     self._lit_box(r * 0.12, r * 0.45, r * 0.12,
                                   cx=sx * r * 0.65, cy=r * 0.02, cz=sz * r * 0.65)
         else:
-            # generic platform: two stacked lit boxes + solid ring + pylon
-            glColor3f(*color)
-            self._lit_box(r * 1.0, r * 0.6, r * 1.0, cy=r * 0.1)
-            self._lit_box(r * 0.65, r * 0.35, r * 0.65, cy=r * 0.6)
-            glColor3f(*dark)
-            self._station_ring(r * 1.1, 30)
-            glColor3f(*color)
-            self._lit_box(r * 0.12, r * 0.55, r * 0.12, cy=r * 0.8)
+            # per-type detail for mining / sensor / trade / defense / repair /
+            # energy relay — each reads differently at a glance
+            did = e.data_id
+            if did == "mining_station":
+                # ore-processing plant: squat refinery block, drill mast
+                # into the rock, ore silos, conveyor arms
+                glColor3f(*color)
+                self._lit_box(r * 1.1, r * 0.55, r * 0.9, cy=r * 0.1)
+                glColor3f(*dark)
+                # drill mast + cutter head
+                self._lit_box(r * 0.14, r * 0.9, r * 0.14, cy=-r * 0.45)
+                self._lit_box(r * 0.34, r * 0.18, r * 0.34, cy=-r * 0.9)
+                glColor3f(*color)
+                # twin ore silos + top frame
+                self._lit_box(r * 0.3, r * 0.6, r * 0.3, cx=r * 0.55, cy=r * 0.5)
+                self._lit_box(r * 0.3, r * 0.6, r * 0.3, cx=-r * 0.55, cy=r * 0.5)
+                glColor3f(*dark)
+                self._lit_box(r * 1.2, r * 0.1, r * 0.12, cy=r * 0.85)
+                # conveyor arms to silos
+                self._lit_box(r * 0.5, r * 0.08, r * 0.2, cx=r * 0.4, cy=r * 0.35)
+                self._lit_box(r * 0.5, r * 0.08, r * 0.2, cx=-r * 0.4, cy=r * 0.35)
+                # greeble plates
+                glColor3f(*color)
+                self._lit_box(r * 0.7, r * 0.1, r * 0.3, cy=r * 0.42, cz=r * 0.25)
+                self._lit_box(r * 0.4, r * 0.08, r * 0.4, cy=r * 0.42, cz=-r * 0.3)
+            elif did == "sensor_station":
+                # listening post: slim pylon + huge phased-array dish + fins
+                glColor3f(*dark)
+                self._lit_box(r * 0.28, r * 1.5, r * 0.28, cy=r * 0.2)
+                glColor3f(*color)
+                glPushMatrix()
+                glTranslatef(0.0, r * 1.05, 0.0)
+                glRotatef(self.time * 8.0, 0, 1, 0)
+                glRotatef(28, 1, 0, 0)
+                self._dome(r * 0.95, 14, 6)      # dish (concave reads via rim)
+                self._lit_box(r * 0.16, r * 0.16, r * 0.5, cz=r * 0.75)
+                glPopMatrix()
+                glColor3f(*dark)
+                self._lit_box(r * 1.3, r * 0.1, r * 0.3, cy=-r * 0.35)
+                self._lit_box(r * 0.1, r * 0.5, r * 0.9, cy=r * 0.3)
+                glColor3f(*color)
+                # comm blister
+                glPushMatrix()
+                glTranslatef(0.0, -r * 0.15, r * 0.2)
+                self._dome(r * 0.3, 10, 6)
+                glPopMatrix()
+            elif did == "trade_station":
+                # commerce hub: wide stacked decks + docking spokes + beacon
+                glColor3f(*color)
+                self._lit_box(r * 1.35, r * 0.28, r * 1.35, cy=r * 0.15)
+                glColor3f(*dark)
+                self._lit_box(r * 0.95, r * 0.3, r * 0.95, cy=r * 0.5)
+                glColor3f(*color)
+                self._lit_box(r * 0.5, r * 0.3, r * 0.5, cy=r * 0.85)
+                # four docking spokes with pad boxes
+                glColor3f(*dark)
+                for i in range(4):
+                    glPushMatrix()
+                    glRotatef(-i * 90.0, 0, 1, 0)
+                    self._lit_box(r * 0.85, r * 0.08, r * 0.08, cx=r * 1.05)
+                    self._lit_box(r * 0.2, r * 0.14, r * 0.4, cx=r * 1.45)
+                    glPopMatrix()
+                # beacon spire (blinks via time-modulated glow below)
+                glColor3f(*color)
+                self._lit_box(r * 0.06, r * 0.5, r * 0.06, cy=r * 1.25)
+            elif did == "defense_platform":
+                # gun fortress: armored core + 4 turret barbettes + missile box
+                glColor3f(*dark)
+                self._lit_box(r * 0.9, r * 0.5, r * 0.9)
+                glColor3f(*color)
+                self._lit_box(r * 0.55, r * 0.35, r * 0.55, cy=r * 0.4)
+                # 4 heavy barbettes with barrels
+                for i in range(4):
+                    glPushMatrix()
+                    glRotatef(-i * 90.0, 0, 1, 0)
+                    self._lit_box(r * 0.22, r * 0.2, r * 0.22,
+                                  cx=r * 0.5, cy=r * 0.3)
+                    self._lit_box(r * 0.07, r * 0.07, r * 0.55,
+                                  cx=r * 0.5, cy=r * 0.34, cz=r * 0.3)
+                    glPopMatrix()
+                # missile battery block + armor skirt
+                glColor3f(*dark)
+                self._lit_box(r * 0.45, r * 0.25, r * 0.3, cy=r * 0.62, cz=-r * 0.2)
+                self._lit_box(r * 1.3, r * 0.12, r * 1.3, cy=-r * 0.3)
+            elif did == "repair_dock":
+                # open-frame dry dock: cradle claws + gantry + welding arms
+                glColor3f(*dark)
+                self._lit_box(r * 0.3, r * 0.7, r * 1.3, cy=r * 0.2)   # spine
+                glColor3f(*color)
+                for sgn in (-1, 1):
+                    # cradle claws (angled boxes)
+                    glPushMatrix()
+                    glTranslatef(sgn * r * 0.75, 0.0, 0.0)
+                    glRotatef(sgn * 28, 1, 0, 0)
+                    self._lit_box(r * 0.14, r * 1.0, r * 0.2)
+                    glPopMatrix()
+                self._lit_box(r * 1.4, r * 0.12, r * 0.12, cy=r * 0.75)
+                glColor3f(*dark)
+                self._lit_box(r * 0.2, r * 0.3, r * 0.2, cy=r * 0.9, cz=r * 0.4)
+            elif did == "energy_relay":
+                # reactor cluster: core sphere + collector vanes + coils
+                glPushMatrix()
+                glRotatef(-90, 1, 0, 0)
+                glColor3f(*color)
+                self._draw_sphere(r * 0.45, 16, 10)
+                glPopMatrix()
+                glColor3f(*dark)
+                for i in range(3):
+                    glPushMatrix()
+                    glRotatef(-i * 120.0, 0, 1, 0)
+                    self._lit_box(r * 0.08, r * 0.9, r * 0.35, cy=r * 0.2)
+                    glPopMatrix()
+                glColor3f(*color)
+                # ring of coils
+                for i in range(6):
+                    a = i / 6 * 2 * math.pi
+                    self._lit_box(r * 0.16, r * 0.3, r * 0.16,
+                                  cx=math.sin(a) * r * 0.85,
+                                  cy=-r * 0.2,
+                                  cz=math.cos(a) * r * 0.85)
+                self._lit_box(r * 0.1, r * 0.8, r * 0.1, cy=r * 0.7)
+            else:
+                # generic platform: two stacked lit boxes + solid ring + pylon
+                glColor3f(*color)
+                self._lit_box(r * 1.0, r * 0.6, r * 1.0, cy=r * 0.1)
+                self._lit_box(r * 0.65, r * 0.35, r * 0.65, cy=r * 0.6)
+                glColor3f(*dark)
+                self._station_ring(r * 1.1, 30)
+                glColor3f(*color)
+                self._lit_box(r * 0.12, r * 0.55, r * 0.12, cy=r * 0.8)
         # construction progress ring
         if e.build_queue:
             item = e.build_queue[0]

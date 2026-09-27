@@ -125,9 +125,8 @@ class AIPlayer:
         if not self.my_stations("research_station") and idle and p.credits > 2400:
             self._queue_build(idle[0], "research_station", self._offset(home, -700))
             return
-        # more constructors if rich
-        shipyards = self.my_stations("shipyard")
-        if len(constructors) < 2 and shipyards and p.credits > 2500:
+        # more constructors if rich (command station builds engineering hulls)
+        if len(constructors) < 2 and p.credits > 2500:
             faction = p.faction
             sid = {
                 "imperial": "imperial_constructor",
@@ -135,8 +134,10 @@ class AIPlayer:
                 "confederacy": "confed_constructor",
                 "syndicate": "syndicate_constructor",
             }.get(faction)
-            if sid:
-                self._queue_ship(shipyards[0], sid, 1)
+            cmd = next((s for s in self.my_stations("command_station")
+                        if len(s.build_queue) < 2), None)
+            if sid and cmd:
+                self._queue_ship(cmd, sid, 1)
 
     def _is_builder(self, e) -> bool:
         sd = self.ds.ships.get(e.data_id)
@@ -166,7 +167,9 @@ class AIPlayer:
     @staticmethod
     def _offset(anchor, dist: float) -> Vec3:
         import math
-        ang = anchor.spawn_time * 1.7 % 6.28
+        # deterministic per-anchor angle (stable across ticks, but varies by
+        # station type) so retry attempts don't hammer one illegal site
+        ang = (anchor.pos.x * 0.013 + anchor.pos.z * 0.007) % 6.28
         return Vec3(anchor.pos.x + math.sin(ang) * dist, 0,
                     anchor.pos.z + math.cos(ang) * dist)
 
@@ -257,15 +260,17 @@ class AIPlayer:
               "confederacy": "confed_battleship"}.get(faction)
         plan = []
         if p.credits > 600 and counts.get(sq, 0) < 3:
-            plan.append((fighter_plat or cmd_station, sq))
+            # fighters: fighter platform preferred; shipyard also fields them
+            station = fighter_plat or shipyard
+            plan.append((station, sq))
         elif p.credits > 1400 and counts.get(cv, 0) < 4:
-            plan.append((shipyard or cmd_station, cv))
+            plan.append((shipyard, cv))
         elif p.credits > 3500 and counts.get(fr, 0) < 3:
-            plan.append((shipyard or cmd_station, fr))
+            plan.append((shipyard, fr))
         elif p.credits > 9000 and counts.get(cr, 0) < 2:
-            plan.append((shipyard or cmd_station, cr))
+            plan.append((shipyard, cr))
         elif bs and p.credits > 16000 and counts.get(bs, 0) < 1:
-            plan.append((shipyard or cmd_station, bs))
+            plan.append((shipyard, bs))
         for station, ship_id in plan:
             if station is None:
                 continue
