@@ -36,16 +36,15 @@ class TestConvoys(unittest.TestCase):
         gm = make_game(ai=False)
         st = gm.state
         ts = gm.trading
-        ts.cfg.update(spawn_interval=0.5, speed=20000.0)  # teleport-fast convoy
+        ts.cfg.update(spawn_interval=0.5)
+        import game.data.store as _s
+        _s.DataStore.get().rules["economy"]["trading"]["speed"] = 400.0
         stations = _two_traders(gm)
         p0 = st.players[0]
         cr0 = p0.credits
-        run_for(gm, 1.2)
-        arrived = any(e.data_id == "trade_convoy" and not e.alive
-                      for e in st.entities.values())
-        # convoy reached the destination within the run (or is very close)
-        if arrived:
-            self.assertGreater(p0.credits, cr0)   # destination owner paid
+        run_for(gm, 40.0)
+        paid = p0.credits > cr0
+        self.assertTrue(paid, "destination owner should be paid on arrival")
 
     def test_raid_loots_killer(self):
         gm = make_game(ai=False)

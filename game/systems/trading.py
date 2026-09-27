@@ -70,6 +70,10 @@ class TradingSystem:
         e.convoy_dest = dest.id
         e.spawn_time = st.time
         e.name_override = "Trade Convoy"
+        # MovementSystem drives integration: convoy "moves" toward the
+        # destination every tick (TradingSystem sets the heading/vel too)
+        e.order_type = "move"
+        e.order_target_id = dest.id
         return e
 
     # ----------------------------------------------------------------- events
@@ -124,5 +128,8 @@ class TradingSystem:
                 e.alive = False
                 st.dead_ids.append(e.id)
                 continue
-            e.vel = Vec3(d.x / dist * speed, 0.0, d.z / dist * speed)
+            # movement drives the convoy (order_target set at spawn); do NOT
+            # write vel here — it would overwrite movement's accel each tick
+            # and cap the convoy at a crawl (found via probe)
+            d = dest.pos - e.pos
             e.yaw = math.atan2(d.x, d.z)
