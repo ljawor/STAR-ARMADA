@@ -81,6 +81,41 @@ class HUD:
         self.floating_texts: list = []
         # per-frame scrollable regions: list of (rect, key) for wheel routing
         self.scroll_rects: list = []
+        # mission state snapshot (set by main loop when a campaign is active)
+        self.mission_progress: list | None = None   # progress_text() rows
+        self.mission_name: str | None = None
+        self.mission_done: bool = False
+        self.mission_failed: bool = False
+
+    def _mission_panel(self, local_player: int) -> None:
+        """Objectives card (top-center) while a campaign mission runs."""
+        if not self.mission_progress:
+            return
+        ov = self.overlay
+        rows = self.mission_progress
+        w = 380
+        x = (self.width - w) // 2
+        y = 46
+        state_col = (120, 200, 140) if self.mission_done else \
+            ((220, 120, 110) if self.mission_failed else (150, 175, 220))
+        title = self.mission_name or "MISSION"
+        h = 40 + 22 * len(rows)
+        pygame.draw.rect(ov, PANEL_BG, (x, y, w, h), border_radius=8)
+        pygame.draw.rect(ov, PANEL_EDGE, (x, y, w, h), 1, border_radius=8)
+        surf = self.font_big.render(title, True, state_col)
+        ov.blit(surf, (x + 14, y + 8))
+        yy = y + 38
+        for row in rows:
+            done = row.startswith("[x]")
+            col = (140, 220, 150) if done else (200, 214, 240)
+            surf = self.font_small.render(row, True, col)
+            ov.blit(surf, (x + 14, yy))
+            yy += 22
+        if self.mission_done or self.mission_failed:
+            tag = "MISSION COMPLETE — press ESC" if self.mission_done \
+                else "MISSION FAILED — press ESC"
+            surf = self.font_big.render(tag, True, state_col)
+            ov.blit(surf, (x + 14, yy + 4))
 
     # ------------------------------------------------------------------ frame
     def render(self, selection: set, hover_id: int | None,
@@ -95,6 +130,7 @@ class HUD:
         self._right_panel(selection, local_player)
         self._event_log(local_player)
         self._minimap(selection, local_player)
+        self._mission_panel(local_player)
         self._draw_floating_texts()
         self._placement_banner()
         if flash_msg and flash_left > 0.0:
