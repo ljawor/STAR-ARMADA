@@ -8,7 +8,7 @@
 
 ## Local macOS build
 ```bash
-./scripts/build_mac.sh                 # -> dist/STAR-ARMADA-0.1.0-mac.dmg
+./scripts/build_mac.sh                 # -> dist/STAR-ARMADA-0.2.0-mac.dmg
 ```
 The script uses `.venv` if present, installs `pyinstaller` into it if missing,
 runs `star_armada.spec`, ad-hoc codesigns the .app, and wraps it in a DMG.
@@ -16,7 +16,7 @@ runs `star_armada.spec`, ad-hoc codesigns the .app, and wraps it in a DMG.
 ## Releases
 Tag a version and GitHub Actions builds both artifacts automatically:
 ```bash
-git tag v0.1.0 && git push origin v0.1.0
+git tag v0.2.0 && git push origin v0.2.0
 ```
 Workflow: `.github/workflows/release.yml` — attaches the DMG and ZIP to the
 GitHub release for the tag.

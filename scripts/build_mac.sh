@@ -28,7 +28,7 @@ APP="dist/STAR ARMADA.app"
 # ad-hoc codesign so Gatekeeper doesn't hard-fail local runs
 codesign --force --deep --sign - "$APP" 2>/dev/null || true
 
-OUT="${1:-dist/STAR-ARMADA-0.1.0-mac.dmg}"
+OUT="${1:-dist/STAR-ARMADA-0.2.0-mac.dmg}"
 mkdir -p dist/dmg_staging
 rm -rf dist/dmg_staging/*
 cp -R "$APP" dist/dmg_staging/

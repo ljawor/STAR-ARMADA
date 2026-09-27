@@ -68,8 +68,8 @@ app = BUNDLE(
     info_plist={
         "CFBundleName": "STAR ARMADA",
         "CFBundleDisplayName": "STAR ARMADA",
-        "CFBundleShortVersionString": "0.1.0",
-        "CFBundleVersion": "0.1.0",
+        "CFBundleShortVersionString": "0.2.0",
+        "CFBundleVersion": "0.2.0",
         "NSHighResolutionCapable": True,
         "LSMinimumSystemVersion": "11.0",
     },
