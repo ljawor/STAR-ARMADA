@@ -104,6 +104,7 @@ class StationData:
     requires_range: dict | None = None                    # {"asteroid": 900} etc
     repair_rate: float = 0.0
     fighter_capacity: int = 0
+    build_role: str = ""          # "" all · "warships" excludes engineering hulls
 
 
 @dataclass(slots=True)
@@ -363,7 +364,8 @@ class DataStore:
                 command_capacity=int(s.get("command_capacity", 0)),
                 requires_range=dict(s.get("requires_range") or {}),
                 repair_rate=float(s.get("repair_rate", 0)),
-                fighter_capacity=int(s.get("fighter_capacity", 0)))
+                fighter_capacity=int(s.get("fighter_capacity", 0)),
+                build_role=str(s.get("build_role", "")))
 
     def _load_tech(self) -> None:
         for tid, t in self._read("technology/technology.json")["technologies"].items():

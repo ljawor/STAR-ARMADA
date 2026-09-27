@@ -14,9 +14,9 @@ import pygame
 
 from OpenGL.GL import (
     glBindTexture, glTexImage2D, glTexParameteri,
-    GL_CLAMP, GL_CLAMP_TO_EDGE, GL_LINEAR, GL_RGB, GL_RGBA, GL_TEXTURE_2D,
-    GL_TEXTURE_MAG_FILTER, GL_TEXTURE_MIN_FILTER, GL_TEXTURE_WRAP_S,
-    GL_TEXTURE_WRAP_T, GL_UNSIGNED_BYTE,
+    GL_CLAMP, GL_CLAMP_TO_EDGE, GL_LINEAR, GL_REPEAT, GL_RGB, GL_RGBA,
+    GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_TEXTURE_MIN_FILTER,
+    GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T, GL_UNSIGNED_BYTE,
 )
 
 
@@ -210,14 +210,65 @@ def nebula_texture(size: int = 256, seed: int = 11,
                            alpha=np.clip(img[..., 3], 0, 1) * 255.0)
 
 
+def hull_texture(size: int = 256, seed: int = 7) -> pygame.Surface:
+    """Tileable grayscale hull-panel texture (plates, seams, rivets, grunge).
+
+    Ships render with GL_MODULATE so the owner color multiplies this map:
+    grayscale stays in [~0.5, 1.0] so hulls keep their faction hue while
+    gaining panel plating, seam grooves and rivet rows. Tiles cleanly
+    (GL_REPEAT): panel grid and seams wrap at the borders.
+    """
+    rng = np.random.RandomState(seed)
+    panels = 8
+    cell = size // panels
+    img = np.ones((size, size), dtype=np.float32) * 0.88
+    # per-panel plating shade; some panels recessed (darker armor inserts)
+    shade = rng.rand(panels, panels).astype(np.float32) * 0.14 + 0.80
+    shade[rng.rand(panels, panels) < 0.18] -= 0.10
+    for iy in range(panels):
+        for ix in range(panels):
+            img[iy * cell:(iy + 1) * cell, ix * cell:(ix + 1) * cell] = shade[iy, ix]
+    # seam grooves at cell borders (some skipped -> larger plate clusters)
+    seam = np.zeros((size, size), dtype=np.float32)
+    for iy in range(panels + 1):
+        if rng.rand() < 0.75:
+            seam[(iy * cell) % size:(iy * cell) % size + 2, :] = 1.0
+    for ix in range(panels + 1):
+        if rng.rand() < 0.75:
+            seam[:, (ix * cell) % size:(ix * cell) % size + 2] = 1.0
+    img[seam > 0] = 0.58
+    # rivet dots flanking the seams
+    riv = np.zeros((size, size), dtype=np.float32)
+    for iy in range(panels + 1):
+        y = (iy * cell) % size
+        for x in range(4, size, 12):
+            riv[(y + 3) % size, x:x + 2] = 1.0
+            riv[(y - 5) % size, x:x + 2] = 1.0
+    img[riv > 0] = 0.50
+    # occasional hatches / access panels
+    for iy in range(panels):
+        for ix in range(panels):
+            if rng.rand() < 0.08:
+                y0, x0 = iy * cell + 4, ix * cell + 4
+                img[y0:y0 + cell - 8, x0:x0 + cell - 8] = 0.66
+    # grime + fine wear
+    img += (_fbm(size, seed + 3, octaves=4, base_cells=6) - 0.5) * 0.12
+    img += (_value_noise(size, 32, seed + 9) - 0.5) * 0.06
+    # keep the floor high enough that GL_MODULATE never blackens faction hues
+    img = np.clip(img, 0.58, 1.0)
+    return _arr_to_surface(np.repeat(img[..., None], 3, axis=2) * 255.0)
+
+
 # --------------------------------------------------------------------------- GL
-def surface_to_texture(surf: pygame.Surface, mipmaps: bool = False) -> int:
+def surface_to_texture(surf: pygame.Surface, mipmaps: bool = False,
+                       repeat: bool = False) -> int:
     """Upload a pygame Surface as a GL texture (returns tex id).
 
     Format-aware: surfaces without an alpha channel upload as GL_RGB —
     tostring("RGBA") on an opaque surface emits alpha=0 bytes, which
     disappears completely when alpha blending is enabled (star/nebula
     billboards rendered black because of this).
+    repeat=True sets GL_REPEAT wrapping (tileable hull-panel maps).
     """
     w, h = surf.get_size()
     has_alpha = surf.get_masks()[3] != 0
@@ -231,8 +282,9 @@ def surface_to_texture(surf: pygame.Surface, mipmaps: bool = False) -> int:
     glBindTexture(GL_TEXTURE_2D, tex)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
+    wrap = GL_REPEAT if repeat else GL_CLAMP_TO_EDGE
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap)
     glTexImage2D(GL_TEXTURE_2D, 0, internal, w, h, 0, fmt,
                  GL_UNSIGNED_BYTE, data)
     return tex

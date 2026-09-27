@@ -33,8 +33,8 @@ class TestSetup(unittest.TestCase):
     def test_command_capacity(self):
         gm = make_game()
         p0 = gm.state.players[0]
-        # base 10 + command station 20
-        self.assertEqual(p0.command_capacity, 30)
+        # base 10 + command station 20 + shipyard 4
+        self.assertEqual(p0.command_capacity, 34)
 
 
 class TestEconomy(unittest.TestCase):
