@@ -10,7 +10,13 @@
     "starting_materials": 4000,
     "starting_energy": 2000,
     "starting_crew": 4000,
-    "victory_check_interval": 1.0
+    "victory_check_interval": 1.0,
+    "victory": {
+      "modes": ["annihilation"],
+      "planet_majority": {"fraction": 0.6, "min_colonized": 4},
+      "economic": {"credits": 15000, "planets": 3},
+      "timed": {"time_limit": 1200.0}
+    }
   },
   "economy": {
     "planet_income": {

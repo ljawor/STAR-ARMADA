@@ -119,6 +119,7 @@ class GameState:
     # outcome
     winner: int | None = None
     game_over: bool = False
+    game_over_reason: str = ""                          # victory mode that ended the game
     stats: dict = field(default_factory=dict)           # per-player kill/loss tallies
 
     # event bus (sync, rebuilt on load)
@@ -211,6 +212,7 @@ class GameState:
             "entities": {eid: self._entity_dict(e) for eid, e in self.entities.items()},
             "projectiles": [p.to_dict() for p in self.projectiles.values()],
             "winner": self.winner, "game_over": self.game_over,
+            "game_over_reason": self.game_over_reason,
             "stats": self.stats,
             "command_queue": [c.to_dict() for c in self.command_queue],
         }
@@ -340,6 +342,7 @@ class GameState:
                          for p in d.get("projectiles", [])}
         s.winner = d.get("winner")
         s.game_over = d.get("game_over", False)
+        s.game_over_reason = d.get("game_over_reason", "")
         s.stats = d.get("stats", {})
         s.command_queue = [PlayerCommand.from_dict(c)
                            for c in d.get("command_queue", [])]
