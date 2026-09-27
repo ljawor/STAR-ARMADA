@@ -58,6 +58,7 @@ class Renderer:
         # debug isolation: STAR_ARMADA_SKIP=nebulas,star,planets,ships,... skips passes
         self.skip = {s for s in os.environ.get("STAR_ARMADA_SKIP", "").split(",") if s}
         self._planet_tex_cache: dict = {}   # data_id -> GL texture id
+        self._hull_tex: int | None = None   # grayscale panel map (modulated)
         self._star_tex = None
         self._nebula_tex = None
         # unit sphere with UVs (unit radius, scaled at draw time)
@@ -633,6 +634,18 @@ class Renderer:
     # ------------------------------------------------------------------ ships
     def _draw_ships(self, selection: set):
         st = self.state
+        # hull panel texture scoped to the ship/station pass only: grayscale
+        # plate map multiplied by owner color (GL_MODULATE). Untextured passes
+        # (starfield points, rings, sites) must not inherit the bound texture.
+        import OpenGL.GL as GL
+        if self._hull_tex is None:
+            self._hull_tex = tex.surface_to_texture(tex.hull_texture(),
+                                                    repeat=True)
+        GL.glPushAttrib(int(GL.GL_ENABLE_BIT) | int(GL.GL_TEXTURE_BIT))
+        GL.glEnable(GL.GL_TEXTURE_2D)
+        GL.glBindTexture(GL.GL_TEXTURE_2D, self._hull_tex)
+        GL.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_MODULATE)
+        GL.glEnable(GL.GL_NORMALIZE)   # ships/stations get scaled at draw time
         for e in st.entities.values():
             if not e.alive:
                 continue
@@ -643,6 +656,7 @@ class Renderer:
                 self._draw_ship(e)
             elif e.is_station and "stations" not in self.skip:
                 self._draw_station(e)
+        GL.glPopAttrib()
 
     def _owner_color(self, owner: int):
         p = self.state.players.get(owner)
@@ -650,8 +664,8 @@ class Renderer:
             return (0.6, 0.6, 0.6)
         return p.color
 
-    def _out_tri(self, a, b, c, ref=(0.0, 0.0, 0.0)):
-        """Emit one triangle with an outward-facing normal.
+    def _out_tri(self, a, b, c, ref=(0.0, 0.0, 0.0), uvs=None):
+        """Emit one triangle with an outward-facing normal (optional UVs).
 
         Normal direction is checked against the shape's reference center and
         the winding flipped when needed — guarantees correct culling + shading
@@ -668,27 +682,129 @@ class Renderer:
             nx, ny, nz = -nx, -ny, -nz
         n = math.sqrt(nx * nx + ny * ny + nz * nz) or 1.0
         glNormal3f(nx / n, ny / n, nz / n)
-        glVertex3f(*a)
-        glVertex3f(*b)
-        glVertex3f(*c)
+        if uvs is not None:
+            glTexCoord2f(uvs[0][0], uvs[0][1])
+            glVertex3f(*a)
+            glTexCoord2f(uvs[1][0], uvs[1][1])
+            glVertex3f(*b)
+            glTexCoord2f(uvs[2][0], uvs[2][1])
+            glVertex3f(*c)
+        else:
+            glVertex3f(*a)
+            glVertex3f(*b)
+            glVertex3f(*c)
+
+    def _panel(self, x0, z0, x1, z1, y=0.0, u0=0.0, v0=0.0, u1=1.0, v1=1.0):
+        """Textured horizontal panel (normal +y) with explicit UVs."""
+        glBegin(GL_QUADS)
+        glNormal3f(0.0, 1.0, 0.0)
+        glTexCoord2f(u0, v0); glVertex3f(x0, y, z0)
+        glTexCoord2f(u1, v0); glVertex3f(x1, y, z0)
+        glTexCoord2f(u1, v1); glVertex3f(x1, y, z1)
+        glTexCoord2f(u0, v1); glVertex3f(x0, y, z1)
+        glEnd()
+
+    def _octa_tube(self, r0, r1, z0, z1, squash=1.0, rot=0.0):
+        """Octagonal tube frustum (flat facets, rounded silhouette).
+
+        Radii interpolate r0->r1 over z0->z1; squash flattens y (ship keels);
+        rot spins the cross-section so panels alternate per segment.
+        """
+        col = [(math.cos(rot + i * math.pi / 4),
+                math.sin(rot + i * math.pi / 4) * squash) for i in range(8)]
+        glBegin(GL_TRIANGLES)
+        for i in range(8):
+            x0_, y0_ = col[i]
+            x1_, y1_ = col[(i + 1) % 8]
+            a = (x0_ * r0, y0_ * r0, z0)
+            b = (x1_ * r0, y1_ * r0, z0)
+            c = (x1_ * r1, y1_ * r1, z1)
+            d = (x0_ * r1, y0_ * r1, z1)
+            # quad (a,b,c,d) with plate-proportional UVs
+            self._out_tri(a, b, c, ((a[0] + c[0]) / 2, (a[1] + c[1]) / 2, (a[2] + c[2]) / 2),
+                          uvs=((i / 8, z0 / 64), ((i + 1) / 8, z0 / 64), ((i + 1) / 8, z1 / 64)))
+            self._out_tri(a, c, d, ((a[0] + c[0]) / 2, (a[1] + c[1]) / 2, (a[2] + c[2]) / 2),
+                          uvs=((i / 8, z0 / 64), ((i + 1) / 8, z1 / 64), (i / 8, z1 / 64)))
+        # end caps (octagonal fans)
+        for zz, rr, flip in ((z0, r0, 1), (z1, r1, -1)):
+            if rr <= 0.05:
+                continue
+            center = (0, 0, zz)
+            ring = [(col[i][0] * rr, col[i][1] * rr, zz) for i in range(8)]
+            for i in range(8):
+                p, q = ring[i], ring[(i + 1) % 8]
+                if flip > 0:
+                    self._out_tri(center, q, p, center,
+                                  uvs=((0.5, zz / 64), ((i + 1) / 8, zz / 64), (i / 8, zz / 64)))
+                else:
+                    self._out_tri(center, p, q, center,
+                                  uvs=((0.5, zz / 64), (i / 8, zz / 64), ((i + 1) / 8, zz / 64)))
+        glEnd()
+
+    def _capsule(self, radius, cy=0.0, z0=0.0, z1=0.0, lons=8, lats=3,
+                 squash=1.0):
+        """Rounded end cap: hemisphere band emitted inline (textured UVs)."""
+        glBegin(GL_TRIANGLES)
+        for i in range(lons):
+            lon0 = 2 * math.pi * i / lons
+            lon1 = 2 * math.pi * (i + 1) / lons
+            for j in range(lats):
+                lat0 = math.pi * 0.5 * j / lats
+                lat1 = math.pi * 0.5 * (j + 1) / lats
+
+                def vert(lon, lat):
+                    return (radius * math.cos(lat) * math.sin(lon),
+                            cy + radius * math.sin(lat) * squash,
+                            z0 + (radius - radius * math.cos(lat))
+                            if z1 >= z0 else
+                            z0 - (radius - radius * math.cos(lat)))
+
+                a, b = vert(lon0, lat0), vert(lon1, lat0)
+                c, d = vert(lon1, lat1), vert(lon0, lat1)
+                for tri, uvs in (((a, b, c),
+                                  ((i / lons, 0.5 + lat0 / 3),
+                                   ((i + 1) / lons, 0.5 + lat0 / 3),
+                                   ((i + 1) / lons, 0.5 + lat1 / 3))),
+                                 ((a, c, d),
+                                  ((i / lons, 0.5 + lat0 / 3),
+                                   ((i + 1) / lons, 0.5 + lat1 / 3),
+                                   (i / lons, 0.5 + lat1 / 3)))):
+                    aa, bb, cc = tri
+                    self._out_tri(aa, bb, cc,
+                                  (cy, cy + radius, z0 + radius), uvs=uvs)
+        glEnd()
 
     def _lit_box(self, sx, sy, sz, cx=0.0, cy=0.0, cz=0.0):
-        """Axis-aligned box with per-face outward normals (caller color)."""
+        """Axis-aligned box with per-face outward normals (caller color).
+
+        UVs derive from world coordinates / 64 so the hull-panel texture
+        keeps one plate scale on every part, box or tube.
+        """
         hx, hy, hz = sx / 2.0, sy / 2.0, sz / 2.0
         x0, x1 = cx - hx, cx + hx
         y0, y1 = cy - hy, cy + hy
         z0, z1 = cz - hz, cz + hz
         ref = (cx, cy, cz)
+        s = 1.0 / 64.0
         glBegin(GL_TRIANGLES)          # REQUIRED: _out_tri only emits vertices
-        for quad in (((x0, y0, z1), (x1, y0, z1), (x1, y1, z1), (x0, y1, z1)),
-                     ((x1, y0, z0), (x0, y0, z0), (x0, y1, z0), (x1, y1, z0)),
-                     ((x1, y0, z1), (x1, y0, z0), (x1, y1, z0), (x1, y1, z1)),
-                     ((x0, y0, z0), (x0, y0, z1), (x0, y1, z1), (x0, y1, z0)),
-                     ((x0, y1, z1), (x1, y1, z1), (x1, y1, z0), (x0, y1, z0)),
-                     ((x0, y0, z0), (x1, y0, z0), (x1, y0, z1), (x0, y0, z1))):
+        # (quad corners, uv-mapping: v spans the vertical axis, u horizontal)
+        for quad, umap, vmap in (
+                (((x0, y0, z1), (x1, y0, z1), (x1, y1, z1), (x0, y1, z1)),
+                 lambda p: p[0] * s, lambda p: p[1] * s),   # front  (+z)
+                (((x1, y0, z0), (x0, y0, z0), (x0, y1, z0), (x1, y1, z0)),
+                 lambda p: p[0] * s, lambda p: p[1] * s),   # back   (-z)
+                (((x1, y0, z1), (x1, y0, z0), (x1, y1, z0), (x1, y1, z1)),
+                 lambda p: p[2] * s, lambda p: p[1] * s),   # right  (+x)
+                (((x0, y0, z0), (x0, y0, z1), (x0, y1, z1), (x0, y1, z0)),
+                 lambda p: p[2] * s, lambda p: p[1] * s),   # left   (-x)
+                (((x0, y1, z1), (x1, y1, z1), (x1, y1, z0), (x0, y1, z0)),
+                 lambda p: p[0] * s, lambda p: p[2] * s),   # top    (+y)
+                (((x0, y0, z0), (x1, y0, z0), (x1, y0, z1), (x0, y0, z1)),
+                 lambda p: p[0] * s, lambda p: p[2] * s)):  # bottom (-y)
             a, b, c, d = quad
-            self._out_tri(a, b, c, ref)
-            self._out_tri(a, c, d, ref)
+            uvs = lambda *pts: [(umap(p), vmap(p)) for p in pts]
+            self._out_tri(a, b, c, ref, uvs=uvs(a, b, c))
+            self._out_tri(a, c, d, ref, uvs=uvs(a, c, d))
         glEnd()
 
     def _out_pyr(self, tip, base, ref=(0.0, 0.0, 0.0)):
@@ -789,9 +905,9 @@ class Renderer:
         # three tone passes: base owner color, dark accents, bright trim —
         # ships read as multi-tone hardware instead of flat single-color
         base = color
-        darkc = (color[0] * 0.42, color[1] * 0.42, color[2] * 0.42)
-        trimc = (min(1.0, color[0] * 1.5 + 0.18), min(1.0, color[1] * 1.5 + 0.18),
-                 min(1.0, color[2] * 1.5 + 0.18))
+        darkc = (color[0] * 0.52, color[1] * 0.52, color[2] * 0.52)
+        trimc = (min(1.0, color[0] * 1.4 + 0.25), min(1.0, color[1] * 1.4 + 0.25),
+                 min(1.0, color[2] * 1.4 + 0.25))
         glColor3f(*base)
         glCallList(lst)
         dark_lst = self._ship_display_list(vis["shape"] + "_dark")
@@ -876,33 +992,37 @@ class Renderer:
                 self._lit_box(1.2, 7, 1.2, cy=13, cz=-16)        # comm whip
         elif shape == "needle":
             if not dark and not trim:
-                # corvette/frigate: nose + hull + bridge + engine block
-                self._out_pyr((0, 3, 50), ((-8, 0, 14), (8, 0, 14),
-                                           (8, 6, 14), (-8, 6, 14)))
-                self._lit_box(24, 10, 44, cz=-8)
-                self._lit_box(12, 7, 16, cy=7, cz=-14)           # bridge
-                self._lit_box(18, 4, 8, cz=-32)                  # engine block
+                # corvette/frigate — rounded hull: tapered octagonal nose,
+                # octagonal main tube, capsule stern, rounded bridge pod
+                self._octa_tube(8.5, 3.0, 14, 46, squash=0.55)     # tapered nose
+                self._capsule(3.0, cy=0.0, z0=46, z1=52)           # nose cap
+                self._octa_tube(10.5, 10.5, -30, 14, squash=0.55)  # main hull
+                self._capsule(10.5, cy=0.0, z0=-30, z1=-42, squash=0.55)  # stern
+                # bridge pod (rounded, sits dorsal-aft)
+                self._octa_tube(5.5, 4.5, -24, -8, squash=0.8, rot=math.pi / 8)
+                self._capsule(4.5, cy=0.8, z0=-24, z1=-30, squash=0.8)
             elif dark:
-                # nozzles, sponsons, keel, cargo skid
-                self._lit_box(6, 6, 4, cx=-5, cy=-1, cz=-36)
-                self._lit_box(6, 6, 4, cx=5, cy=-1, cz=-36)
-                self._lit_box(4, 4, 14, cx=13.5, cy=-2, cz=-6)   # gun pods
-                self._lit_box(4, 4, 14, cx=-13.5, cy=-2, cz=-6)
-                self._lit_box(10, 3, 6, cy=-5.5, cz=-16)         # ventral cargo
-                self._lit_box(14, 2.4, 2, cy=-5.6, cz=-10)       # keel fins
-                self._lit_box(14, 2.4, 2, cy=-5.6, cz=-22)
-                self._lit_box(8, 2, 4, cy=8.2, cz=-30)           # engine cap
-                self._lit_box(18, 2, 10, cy=6.2, cz=-18)         # spine rib
+                # nozzles, gun pods, keel fins, intake band, armor skirt
+                self._lit_box(3.4, 3.4, 4, cx=-4.5, cy=0.5, cz=-43)
+                self._lit_box(3.4, 3.4, 4, cx=4.5, cy=0.5, cz=-43)  # twin nozzles
+                self._lit_box(4, 4, 14, cx=12.5, cy=-2, cz=-6)      # gun pods
+                self._lit_box(4, 4, 14, cx=-12.5, cy=-2, cz=-6)
+                self._lit_box(13, 2.4, 2, cy=-5.2, cz=-10)          # keel fins
+                self._lit_box(13, 2.4, 2, cy=-5.2, cz=-22)
+                self._lit_box(15, 1.8, 8, cy=5.4, cz=-16)           # intake band
+                self._lit_box(9, 3, 5, cy=-4.5, cz=-14)             # ventral skid
+                self._octa_tube(6.2, 6.2, -38, -30, squash=0.55)    # armor skirt
             else:
-                # trim: turret, mast, sensor pods, running lights
-                self._lit_box(5, 5, 5, cy=6, cz=4)               # dorsal turret
-                self._lit_box(7, 3, 3, cy=8, cz=4)
-                self._lit_box(1.2, 10, 1.2, cy=12, cz=-18)       # antenna
-                self._lit_box(3, 3, 3, cx=9.5, cy=4.6, cz=-24)   # sensor pods
-                self._lit_box(3, 3, 3, cx=-9.5, cy=4.6, cz=-24)
-                self._lit_box(2, 2, 2, cx=12.6, cy=2, cz=6)      # running lights
-                self._lit_box(2, 2, 2, cx=-12.6, cy=2, cz=6)
-                self._lit_box(20, 1.6, 6, cy=5.8, cz=2)          # deck plate
+                # trim: dorsal turret + barrels (forward, on the hull spine),
+                # comm mast, sensor pods, running lights, deck strip
+                self._lit_box(4.5, 4.5, 4.5, cy=6.2, cz=0)          # dorsal turret
+                self._lit_box(1.6, 1.6, 9, cy=6.2, cz=-8)           # twin barrels
+                self._lit_box(1.2, 9, 1.2, cy=10, cz=-18)           # comm mast
+                self._lit_box(2.6, 2.6, 2.6, cx=8.5, cy=4.2, cz=-26)  # sensor pods
+                self._lit_box(2.6, 2.6, 2.6, cx=-8.5, cy=4.2, cz=-26)
+                self._lit_box(1.8, 1.8, 1.8, cx=10.4, cy=2, cz=6)   # running lights
+                self._lit_box(1.8, 1.8, 1.8, cx=-10.4, cy=2, cz=6)
+                self._lit_box(16, 1.2, 5, cy=5.0, cz=2)             # deck strip
         elif shape == "cruiser":
             if not dark and not trim:
                 # heavy hull + bow + command tower + nacelles + engine block
