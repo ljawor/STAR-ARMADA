@@ -235,6 +235,8 @@ class DataStore:
 
     def ship_visual(self, data_id: str) -> dict:
         """Renderer hint: procedural shape description per ship category."""
+        if data_id == "trade_convoy":
+            return {"shape": "box", "scale": 0.7}   # cargo container hull
         s = self.ships.get(data_id)
         if not s:
             return {"shape": "box", "scale": 1.0}

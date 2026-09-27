@@ -31,6 +31,14 @@
     "planet_command_bonus": {"military": 5},
     "planet_crew_bonus": {"agricultural": 0.3, "temperate": 0.15},
     "trade_station_income_credits": 2.5,
+    "trading": {
+      "spawn_interval": 45.0,
+      "cargo_credits": 150.0,
+      "loot_fraction": 0.5,
+      "speed": 55.0,
+      "hull": 250.0,
+      "reward_owner": "destination"
+    },
     "repair_dock_rate": 40.0,
     "repair_dock_range": 500
   },

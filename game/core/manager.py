@@ -15,6 +15,7 @@ from ..core.vectors import Vec3
 from ..core.world import Fleet
 from ..systems import (UnitFactory, MovementSystem, SeparationSystem, WeaponSystem,
                        ProjectileSystem, DamageSystem, AbilitySystem, EconomySystem,
+                       TradingSystem,
                        ConstructionSystem, ResearchSystem, FormationSystem,
                        SquadronSystem, VictorySystem, MissionSystem, CommandHandler)
 from ..ai import AIManager
@@ -41,6 +42,7 @@ class GameManager:
         self.damage = DamageSystem(self.state)
         self.abilities = AbilitySystem(self.state)
         self.economy = EconomySystem(self.state)
+        self.trading = TradingSystem(self.state)
         self.construction = ConstructionSystem(self.state)
         self.construction.factory = self.factory
         # render/input reach the live validator through the state object
@@ -265,7 +267,8 @@ class GameManager:
             self._capacity_timer = 0.0
             EconomySystem.recompute_command_capacity(st)
 
-        # 15. victory & mission
+        # 15. trading, victory & mission
+        self.trading.update(dt)
         self.victory.update(dt)
         self.mission.update(dt)
 

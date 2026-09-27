@@ -243,6 +243,10 @@ class GameState:
                 for item in e.build_queue]
         if e.colonized_by is not None:
             d["colonized_by"] = e.colonized_by
+        if e.cargo_credits:
+            d["cargo_credits"] = round(e.cargo_credits, 2)
+        if e.convoy_dest is not None:
+            d["convoy_dest"] = e.convoy_dest
         if e.fighter_count or e.max_fighters:
             d["fighter_count"] = e.fighter_count
             d["max_fighters"] = e.max_fighters
@@ -304,6 +308,8 @@ class GameState:
         e.order_target_id = d.get("order_target_id")
         e.build_queue = list(d.get("build_queue", []))
         e.colonized_by = d.get("colonized_by")
+        e.cargo_credits = d.get("cargo_credits", 0.0)
+        e.convoy_dest = d.get("convoy_dest")
         e.fighter_count = d.get("fighter_count", 0)
         e.max_fighters = d.get("max_fighters", 0)
         e.hangar_id = d.get("hangar_id")
