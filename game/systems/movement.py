@@ -52,6 +52,13 @@ class MovementSystem:
                 to_target = target_pos - e.pos
                 dist = to_target.length()
                 # desired heading
+                dir_t = to_target.normalized()
+                # gravity-well avoidance: arc around planets on the path
+                # (straight thrust into a keep-out bubble is damped by the
+                # separation system every tick → ships stalled forever)
+                gate = self._avoid_redirect(st, e, target_pos, dir_t, dist)
+                if gate is not None:
+                    to_target = gate - e.pos
                 desired_yaw = math.atan2(to_target.x, to_target.z)
                 turn = stats.effective_turn_rate(st, e)
                 diff = self._angle_diff(desired_yaw - e.yaw)
@@ -79,8 +86,9 @@ class MovementSystem:
                     if v > desired_speed:
                         e.vel.set_scaled(e.vel, desired_speed / v)
                 else:
-                    # brake while turning
-                    e.vel.set_scaled(e.vel, 0.97)
+                    # brake while turning (keep some flow — hard stops feel
+                    # sluggish; nose-first projection still prevents crabbing)
+                    e.vel.set_scaled(e.vel, 0.985)
 
                 # station-keeping: stop at destination (or standoff at target entity)
                 standoff = 0.0
@@ -105,6 +113,17 @@ class MovementSystem:
                 # no destination: gentle brake, keep facing
                 e.vel.set_scaled(e.vel, 0.98)
 
+            # NOSE-FIRST guarantee: project velocity onto facing before
+            # integrating — the lateral (strafe) component is discarded and
+            # reverse velocity is clamped to zero, so a ship can only ever
+            # travel toward its nose (or hang while turning).
+            facing = Vec3(math.sin(e.yaw), 0.0, math.cos(e.yaw))
+            along = e.vel.x * facing.x + e.vel.z * facing.z
+            if along < 0.0:
+                along = 0.0
+            e.vel.x = facing.x * along
+            e.vel.z = facing.z * along
+
             # integrate
             e.pos.add_scaled(e.vel, dt)
             # soft map bounds
@@ -122,3 +141,58 @@ class MovementSystem:
         while a < -math.pi:
             a += 2 * math.pi
         return a
+
+    # ------------------------------------------------------------------ avoidance
+    def _avoid_redirect(self, st, e, target_pos, dir_t, dist) -> Vec3 | None:
+        """Tangent steering around planet gravity wells.
+
+        If the straight path to `target_pos` cuts a planet's keep-out bubble
+        (planet radius + ship radius + clearance) and the ship is heading into
+        it, return a gate point on the bubble rim to steer toward instead.
+        Ships already heading away (or beyond the bubble) get None.
+        """
+        clearance = 120.0
+        best_gate = None
+        best_cost = 1e18
+        for p in st.entities.values():
+            if not p.alive or not p.is_planet or p.data_id == "asteroid_field":
+                continue
+            well = p.radius + e.radius + clearance
+            to_p = p.pos - e.pos
+            d_p = to_p.length()
+            if d_p > well + dist:      # planet can't be between ship and target
+                continue
+            # projection of planet onto the ship->target ray
+            along = max(0.0, dir_t.dot(to_p))
+            # miss distance of the straight path from the planet center
+            miss_sq = max(0.0, d_p * d_p - along * along)
+            if miss_sq >= well * well:
+                continue               # path already clears the bubble
+            # steer to the rim: tangent point offset perpendicular to the ray,
+            # on the side the ship is already on (minimal sidestep)
+            radial = to_p - dir_t * along
+            radial_len = radial.length()
+            if radial_len < 1.0:
+                # head-on: pick perpendicular by current heading side
+                side = 1.0 if math.sin(e.yaw) * dir_t.z - \
+                    math.cos(e.yaw) * dir_t.x <= 0 else -1.0
+                radial = Vec3(-dir_t.z * side, 0.0, dir_t.x * side)
+                radial_len = 1.0
+            radial /= radial_len
+            gate = p.pos - radial * well
+            # don't choose a gate that's farther than a usable one; prefer the
+            # nearest threatening planet by along-track distance
+            cost = along + (well - math.sqrt(miss_sq))
+            if cost < best_cost:
+                best_cost = cost
+                best_gate = gate
+        if best_gate is None:
+            return None
+        # only redirect while heading INTO the well (alignment vs gate > 0);
+        # once abeam/behind, the rim push + separation resolve it naturally
+        to_gate = best_gate - e.pos
+        if to_gate.length() < 1.0:
+            return None
+        if to_gate.normalized().dot(dir_t) < 0.1:
+            return None
+        return best_gate
