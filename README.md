@@ -19,8 +19,8 @@ cd STAR-ARMADA
 source .venv/bin/activate       # if you use the bundled venv
 pip install pygame-ce PyOpenGL numpy   # skip if already installed
 
-python main.py                  # windowed game
-python main.py --skirmish       # straight into a skirmish vs AI
+python main.py                  # title screen → main menu → game
+python main.py --skirmish       # straight into a skirmish vs AI (skips menus)
 python main.py --demo           # AI-vs-AI attract demo (no input needed)
 python main.py --headless-test  # 1200-tick full-loop simulation test
 python main.py --version
@@ -47,7 +47,17 @@ python main.py --version
 | X | Tactical overview |
 | P / F5 | Pause |
 | F9 / F10 | Quick save / quick load |
-| ESC | Quit |
+| ESC | Quit (in-game ESC at mission end → main menu) |
+| F11 | Toggle fullscreen |
+
+## Menus
+
+`main.py` now starts at the **title screen** → **main menu** (Skirmish / Campaign /
+Settings / Quit). Settings (music/SFX volume, fullscreen, autosave, camera pan speed)
+persist to `saves/settings.json`. The **Campaign** screen lists the 10-mission
+"Rise of the Outer Armada" chain (`assets/data/campaign/campaign.json`); each mission
+has a briefing (story, objectives, enemy preview) before LAUNCH, and in-game objectives
+are tracked live in the HUD with COMPLETE/FAILED states.
 
 ## Gameplay loop (prototype = vertical slice)
 
@@ -83,7 +93,8 @@ BUILD mining stations → GATHER credits/materials/energy → RESEARCH upgrades
 | Save / load (quick save F9 / load F10) | ✅ prototype |
 | Procedural audio (original, no assets) | ✅ prototype |
 | Minimap, unit info panel, build/research panel | ✅ prototype |
-| Campaign missions | 🟠 stub (1 tutorial mission defined, mission system in place) |
+| Title screen, main menu, settings menu (music/SFX volume, fullscreen, autosave, pan speed — persisted to `saves/settings.json`) | ✅ prototype |
+| Campaign: 10-mission chain with briefing screens, live objectives panel | ✅ prototype |
 | Multiplayer / determinism tests | 🟠 architecture-ready (command queue + serializable state) |
 | 8-player skirmish, trading, boarding/capture | 🔲 planned (see DEV_PLAN.md) |
 
@@ -96,8 +107,8 @@ game/                    simulation core (no rendering imports)
   data/                  loaders + dataclasses mirroring the JSON schema
   systems/               simulation systems (movement, combat, economy, ...)
   ai/                    strategic & tactical AI
-render/                  OpenGL renderer, camera, UI, minimap, audio, input
-assets/data/             JSON: factions, ships, weapons, tech, maps, abilities
+render/                  OpenGL renderer, camera, UI, minimap, menus, audio, input
+assets/data/             JSON: factions, ships, weapons, tech, maps, abilities, campaign
 assets/audio/            (generated at runtime — no binary assets committed)
 tests/                   headless simulation tests
 docs/                    design + architecture notes
