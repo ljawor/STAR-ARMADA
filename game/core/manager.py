@@ -164,6 +164,52 @@ class GameManager:
         gm.load_map(map_def)
         return gm
 
+    @staticmethod
+    def start_mission(map_def: dict, mission_def: dict,
+                      mods: list[str] | None = None) -> "GameManager":
+        """Campaign mission: loadout overrides, custom enemy, mission wiring.
+
+        Player 0 gets the mission loadout (resources + start units); the map's
+        slot-1 player is replaced by the mission's enemy force (faction, team,
+        units). MissionSystem drives objectives + mission_complete/failed.
+        """
+        gm = GameManager(mission_def=mission_def, mods=mods)
+        # map players: [human, enemy] — rewrite slot 1 from the mission enemy
+        enemy = mission_def.get("enemy", {})
+        map_players = [dict(p) for p in map_def.get("players", [])]
+        if len(map_players) > 1 and enemy:
+            map_players[1]["faction"] = enemy.get("faction", "syndicate")
+            map_players[1]["team"] = int(enemy.get("team", 1))
+            map_players[1]["is_ai"] = True
+            map_players[1]["name"] = "Enemy"
+            if enemy.get("start_units"):
+                map_players[1]["start_units"] = dict(enemy["start_units"])
+        mdef = dict(map_def, players=map_players)
+        gm.load_map(mdef)
+        # apply mission loadout to the human player (slot 0)
+        loadout = mission_def.get("loadout", {})
+        st = gm.state
+        p0 = st.players.get(0)
+        if p0 is not None:
+            res = loadout.get("resources", {})
+            p0.credits = float(res.get("credits", p0.credits))
+            p0.materials = float(res.get("materials", p0.materials))
+            p0.energy = float(res.get("energy", p0.energy))
+            p0.crew = float(res.get("crew", p0.crew))
+        # spawn loadout units: clear map start_units for player 0 by despawning
+        # what load_map already created, then spawn the mission loadout
+        spawn = loadout.get("start_units")
+        if spawn is not None:
+            for e in [e for e in st.entities.values()
+                      if e.alive and e.owner == 0
+                      and (e.is_ship or e.is_station or e.is_squadron)]:
+                e.alive = False
+            st.entities = {k: v for k, v in st.entities.items() if v.alive}
+            start = map_players[0].get("start", [0, 0, 0])
+            gm._spawn_start_units(0, spawn, start)
+        EconomySystem.recompute_command_capacity(st)
+        return gm
+
     # ------------------------------------------------------------------ tick
     def step(self, dt: float) -> None:
         st = self.state

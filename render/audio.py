@@ -15,9 +15,10 @@ RATE = 22050
 
 
 class Audio:
-    def __init__(self, state, muted: bool = False):
+    def __init__(self, state, muted: bool = False, settings: dict | None = None):
         self.state = state
         self.muted = muted
+        self.settings = settings or {}
         self.sounds: dict = {}
         self.available = False
         self.ambient_channel = None
@@ -91,9 +92,11 @@ class Audio:
     def play(self, name: str, volume: float = 0.5) -> None:
         if self.muted or not self.available:
             return
+        # global SFX volume from settings (default 0.8)
+        master = float(self.settings.get("sfx_volume", 0.8))
         snd = self.sounds.get(name)
-        if snd is not None:
-            snd.set_volume(volume)
+        if snd is not None and master > 0.01:
+            snd.set_volume(volume * master)
             snd.play()
 
     def start_ambient(self) -> None:
@@ -111,9 +114,19 @@ class Audio:
         snd = pygame.mixer.Sound(buffer=np.column_stack([st, st]).tobytes())
         ch = pygame.mixer.find_channel(True)
         if ch:
-            ch.set_volume(0.5)
+            # ambient hum rides the music_volume slider
+            ch.set_volume(0.5 * float(self.settings.get("music_volume", 0.6)))
             ch.play(snd, loops=-1)
             self.ambient_channel = ch
+
+    def apply_settings(self, settings: dict) -> None:
+        """Live-apply volume changes from the settings menu."""
+        self.settings = settings
+        if not self.available:
+            return
+        if self.ambient_channel:
+            self.ambient_channel.set_volume(
+                0.5 * float(settings.get("music_volume", 0.6)))
 
     def toggle_mute(self) -> None:
         self.muted = not self.muted
