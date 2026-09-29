@@ -49,6 +49,7 @@ BAR_SHIELD = (84, 150, 220)
 BAR_HULL = (110, 200, 120)
 BAR_STRUCT = (150, 150, 160)
 TRADE = (226, 196, 120)          # cargo / trade income readouts
+RESEARCH = (168, 140, 255)       # research progress bars / readouts
 DRAG_FILL = (86, 140, 220, 26)   # box-select rectangle (subtle tint)
 DRAG_EDGE = (170, 215, 255, 200)
 
@@ -225,6 +226,29 @@ class HUD:
             return f"INCOME {inc:0.1f}cr/s · NEEDS A SECOND MARKET"
         return f"INCOME {inc:0.1f}cr/s · {out} CONVOY{'S' if out != 1 else ''} OUT"
 
+    # ------------------------------------------------------------------ research
+    def _station_research(self, station_id: int, owner: int):
+        """In-progress research assigned to ONE station, or None.
+
+        Returns (tech_data, time_left, total). Players research per-player
+        (Player.researching), but each job is pinned to the station that
+        started it — so a station panel must filter by station_id, not just
+        by owner, or two research stations would both claim the same job.
+        """
+        p = self.state.players.get(owner)
+        if p is None:
+            return None
+        for tid, info in getattr(p, "researching", {}).items():
+            if int(info.get("station_id", -1)) != int(station_id):
+                continue
+            td = self.ds.techs.get(tid)
+            if td is None:
+                continue
+            total = max(0.1, float(info.get("total", td.research_time)))
+            left = max(0.0, float(info.get("time_left", total)))
+            return td, left, total
+        return None
+
     # ------------------------------------------------------------------ left panel
     def _left_panel(self, selection: set, local_player: int) -> None:
         ov = self.overlay
@@ -263,10 +287,30 @@ class HUD:
         # not fully readable"). Advance the cursor past it instead of letting
         # the bars overlap.
         y = panel.y + 70
-        if e.data_id == "trade_convoy" or e.data_id == "trade_station":
+        if e.data_id in ("trade_convoy", "trade_station"):
             self._label(panel.x + 12, y, self._trade_line(e), TRADE,
                         self.font_small)
             y += 18
+        elif e.is_station:
+            # research stations: the panel showed nothing while a tech was
+            # being researched (reported: "we need to see the progress of
+            # research ... order: idle" - ORDER went blank because the
+            # station's own order_type is idle the whole time). Show the live
+            # job: which tech, a progress bar and the seconds remaining.
+            job = self._station_research(e.id, e.owner)
+            if job is None:
+                y += 8
+            else:
+                td, left, total = job
+                self._label(panel.x + 12, y, f"RESEARCHING {td.display_name.upper()}",
+                            RESEARCH, self.font_small)
+                y += 16
+                self._bar(panel.x + 12, y, 296, 10, 1.0 - left / total, RESEARCH)
+                pct = int(round((1.0 - left / total) * 100))
+                self._label(panel.x + 12, y + 12,
+                            f"{pct}% · {left:0.0f}s remaining", TXT_DIM,
+                            self.font_small)
+                y += 30
         else:
             y += 8
         # hull
@@ -294,12 +338,18 @@ class HUD:
         self._bar(panel.x + 12, y, 296, 8, ef, (150, 220, 240))
         y += 18
         # orders
-        order = e.order_type.replace("_", " ").upper()
+        order = e.order_type.replace("_", " ").upper() or "IDLE"
         if e.order_target_id is not None:
             tgt = st.entity(e.order_target_id)
             if tgt:
                 order += f" → {self.ds.unit_name(tgt)}"
-        self._label(panel.x + 12, y, f"ORDER: {order}", TXT_DIM)
+        # a station whose own order is idle can still be busy researching; the
+        # panel read "ORDER: " (blank) while a tech was clearly running, which
+        # is what made the research state look missing entirely.
+        if e.is_station and self._station_research(e.id, e.owner) is not None:
+            order = "RESEARCHING"
+        self._label(panel.x + 12, y, f"ORDER: {order}",
+                    RESEARCH if order == "RESEARCHING" else TXT_DIM)
         y += 20
         # squadron count
         if e.is_squadron:
@@ -385,8 +435,31 @@ class HUD:
             if std is not None and std.research:
                 self._label(panel.x + 12, y, "RESEARCH", ACCENT, self.font_big)
                 y += 28
+                # in-progress first: a running tech must show its progress and
+                # must NOT also sit in the available list below (it would look
+                # unstarted and re-clickable).
+                running = getattr(p, "researching", {}) or {}
+                for tid, info in running.items():
+                    td = self.ds.techs.get(tid)
+                    if td is None or td.faction != p.faction:
+                        continue
+                    total = max(0.1, float(info.get("total", td.research_time)))
+                    left = max(0.0, float(info.get("time_left", total)))
+                    self._label(panel.x + 12, y,
+                                f"IN PROGRESS · {td.display_name.upper()}",
+                                RESEARCH, self.font_small)
+                    y += 16
+                    self._bar(panel.x + 12, y, 296, 12, 1.0 - left / total,
+                              RESEARCH)
+                    pct = int(round((1.0 - left / total) * 100))
+                    self._label(panel.x + 12, y + 14,
+                                f"{pct}% · {left:0.0f}s remaining", TXT_DIM,
+                                self.font_small)
+                    y += 32
+                if running:
+                    y += 4
                 techs = [td for tid, td in self._techs()
-                         if td.faction == p.faction]
+                         if td.faction == p.faction and tid not in running]
                 y = self._scrollable(panel, y, techs, p, "techs",
                                      self._row_research, sel)
         else:
