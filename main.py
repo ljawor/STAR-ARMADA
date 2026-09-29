@@ -179,6 +179,7 @@ def start_game(load_path: str | None = None, mdef: dict | None = None) -> None:
     hud = HUD(W, H, state)
     hud.set_camera_ref(camera)
     audio = make_audio(state)
+    audio.set_camera(camera)          # distance attenuation + stereo pan
     inputc = InputController(state, camera, hud, None)
     inputc.local_player = 0
     inputc.app = _AppGlue()
@@ -375,8 +376,13 @@ while running:
         print("SMOKE_OK " + summary() + " shot=" + shot)
         running = False
 
-audio.cleanup()
+if audio is not None:
+    audio.cleanup()
+else:
+    # pygame.init() opens a mixer even while sitting in the menus, so there is
+    # still a device to release when no game was ever started.
+    pygame.mixer.quit()
 save_settings(SETTINGS)
 pygame.quit()
-if SMOKE:
+if SMOKE and state is not None:
     print("SMOKE_DONE " + summary())

@@ -1,8 +1,21 @@
-"""Procedural spatial-ish audio via pygame mixer + numpy (no audio assets).
+"""Procedural combat audio — synthesized at the MIXER's real rate, no assets.
 
-All SFX are synthesized at startup: engine hum (ambient), laser fire, impact,
-explosion, hyperspace charge, UI clicks. Event-bus driven: subscribes to
-GameState.events so the sim never imports audio.
+Event-bus driven, so the sim never imports audio. Every voice is built from
+filtered noise, swept tones and sub-bass; nothing is a raw hiss burst.
+
+Two rules learned the hard way here:
+
+1. Synthesize at whatever rate the mixer ACTUALLY runs at. ``pygame.init()``
+   already opens the mixer (44100 on macOS) before this class is constructed,
+   so an ``init(frequency=22050)`` afterwards is a silent no-op — the buffers
+   are then played 2x fast and 2x high. ``self.rate`` is always read back from
+   ``pygame.mixer.get_init()``.
+2. One voice per weapon family, and separate shield/hull impact voices. A
+   single "laser" pluck plus one noise burst for everything is what a missing
+   audio asset sounds like; the ear needs the weapon to be identifiable.
+
+Playback is spatial-ish: distance attenuation and stereo pan from the camera,
+plus per-category rate limiting (the sim publishes dozens of shots/second).
 """
 from __future__ import annotations
 
@@ -11,9 +24,149 @@ import math
 import numpy as np
 import pygame
 
-RATE = 22050
+#: Rate we ASK the mixer for. The real rate is read back into ``Audio.rate``.
+RATE = 44100
+
+#: weapon type -> voice, used when the type has no damage-based variant.
+VOICE_BY_TYPE = {
+    "laser": "laser",
+    "point_defense": "laser_pd",
+    "turbolaser": "turbolaser",
+    "ion": "ion",
+    "missile": "missile",
+    "torpedo": "torpedo",
+    "plasma": "plasma",
+    "kinetic": "kinetic",
+    "beam": "beam",
+}
+
+#: seconds of quiet required between plays of a category (audio-side throttle;
+#: the sim is never throttled for audio's sake).
+RATE_LIMITS = {
+    "fire": 0.085,
+    "hit": 0.070,
+    "explosion": 0.050,
+    "crit": 0.900,
+    "build": 0.220,
+    "ui": 0.040,
+    "alert": 0.600,
+    "convoy": 0.400,
+    "raid": 0.400,
+    "mission": 1.000,
+    "ability": 0.080,
+    "jump": 0.300,
+}
+
+#: distance (world units) at which a sound has fallen to ~half gain.
+_REF_DIST = 1500.0
+#: beyond this, skip playback entirely — the battle is off-screen.
+_MAX_DIST = 14000.0
 
 
+# --------------------------------------------------------------------- helpers
+def _rng(seed: int) -> np.random.RandomState:
+    return np.random.RandomState(seed)
+
+
+def _tone(n, rate, f0, f1, curve=1.0, harmonics=((1, 1.0),)) -> np.ndarray:
+    """Swept additive tone. ``curve`` bends the sweep (1 = linear)."""
+    if n <= 0:
+        return np.zeros(0)
+    t = np.arange(n) / rate
+    u = (t / max(t[-1], 1e-6)) ** curve
+    f = f0 + (f1 - f0) * u
+    ph = 2.0 * math.pi * np.cumsum(f) / rate
+    w = np.zeros(n)
+    for mult, amp in harmonics:
+        w += amp * np.sin(ph * mult)
+    return w
+
+
+def _shape(x, rate, fc, res=0.0, slope=2.0, hp=0.0, nfft=512) -> np.ndarray:
+    """Zero-phase WOLA spectral shaping with a time-varying corner.
+
+    ``fc`` may be a scalar or a per-sample array (Hz), which is how the
+    downward-sweeping blasts get their body instead of a static hiss.
+    ``res`` adds a resonant bump at the corner; ``hp`` adds a low cut.
+    """
+    n = len(x)
+    if n <= 0:
+        return x
+    # keep the frame no longer than the signal, and a power of two
+    nfft = max(64, min(nfft, 1 << int(math.log2(max(64, n)))))
+    hop = max(1, nfft // 2)
+    win = np.hanning(nfft)
+    f = np.fft.rfftfreq(nfft, 1.0 / rate)
+    pad = np.concatenate([x, np.zeros(nfft)])
+    fc_arr = (np.full(n, float(fc)) if np.isscalar(fc)
+              else np.asarray(fc, dtype=np.float64))
+    acc = np.zeros(n + nfft)
+    wsum = np.zeros(n + nfft)
+    for pos in range(0, n, hop):
+        blk = pad[pos:pos + nfft]
+        if len(blk) < nfft:                     # tail frame: zero-pad
+            blk = np.concatenate([blk, np.zeros(nfft - len(blk))])
+        c = max(float(fc_arr[min(pos + nfft // 2, n - 1)]), 20.0)
+        r = f / c
+        h = 1.0 / np.sqrt(1.0 + r ** slope)
+        if res:
+            h = h * (1.0 + res * np.exp(-((r - 1.0) / 0.45) ** 2))
+        if hp:
+            rh = f / hp
+            h = h * (rh / np.sqrt(1.0 + rh * rh))
+        y = np.fft.irfft(np.fft.rfft(blk * win) * h, nfft)
+        acc[pos:pos + nfft] += y * win
+        wsum[pos:pos + nfft] += win * win
+    return acc[:n] / np.maximum(wsum[:n], 1e-6)
+
+
+def _env(n, rate, attack=0.004, decay=3.0, hold=0.0) -> np.ndarray:
+    """Click-free envelope: smoothstep attack from exactly 0, exp decay."""
+    t = np.arange(n) / rate
+    a = np.clip(t / max(attack, 1e-4), 0.0, 1.0)
+    a = a * a * (3.0 - 2.0 * a)
+    return a * np.exp(-decay * np.maximum(t - hold, 0.0))
+
+
+def _norm(x, peak=0.85) -> np.ndarray:
+    m = float(np.max(np.abs(x)))
+    return x if m < 1e-9 else x * (peak / m)
+
+
+def _tail(x, rate, ms=6.0) -> np.ndarray:
+    """Fade the last few ms to zero so a truncated tail never clicks."""
+    n = len(x)
+    k = min(n, int(rate * ms / 1000.0))
+    if k > 1:
+        x = x.copy()
+        x[n - k:] *= np.linspace(1.0, 0.0, k)
+    return x
+
+
+def _to_sound(mono, rate, peak=0.85) -> pygame.mixer.Sound:
+    mono = _tail(_norm(np.asarray(mono, dtype=np.float64), peak), rate)
+    st = (np.clip(mono, -1.0, 1.0) * 32767.0).astype(np.int16)
+    return pygame.mixer.Sound(buffer=np.ascontiguousarray(
+        np.column_stack([st, st])).tobytes())
+
+
+def voice_for_weapon(wtype, damage=0.0, is_beam=False) -> str:
+    """Pick the firing voice for a weapon. Pure, so it is testable headless."""
+    if is_beam:
+        return "beam"
+    if wtype == "turbolaser":
+        return "turbolaser_heavy" if damage >= 150 else "turbolaser"
+    if wtype == "laser":
+        return "laser_heavy" if damage >= 25 else "laser"
+    return VOICE_BY_TYPE.get(wtype or "", "laser")
+
+
+def explosion_voice(radius: float, is_station: bool = False) -> str:
+    """Blast size from the dying entity's radius — fighters pop, capitals roar."""
+    return "big_explosion" if (is_station or radius >= 110.0) else "explosion"
+
+
+# ---------------------------------------------------------------------- engine
 class Audio:
     def __init__(self, state, muted: bool = False, settings: dict | None = None):
         self.state = state
@@ -21,103 +174,339 @@ class Audio:
         self.settings = settings or {}
         self.sounds: dict = {}
         self.available = False
+        self.rate = RATE
         self.ambient_channel = None
-        self._last_laser_t = -1.0
-        self._last_hit_t = -1.0
+        self.camera = None
+        self._last: dict = {}
+        self._variant = 0
+        self._ds = None
         try:
+            # pygame.init() has already opened the mixer at the device default
+            # (44100). Re-open at OUR rate so synthesis and playback agree;
+            # if that fails we still read the real rate back and stay in pitch.
+            if pygame.mixer.get_init() is not None:
+                pygame.mixer.quit()
             pygame.mixer.init(frequency=RATE, size=-16, channels=2, buffer=512)
+            init = pygame.mixer.get_init()
+            if init is None:
+                return
+            self.rate = int(init[0])
+            pygame.mixer.set_num_channels(32)
+            # Reserve one channel so the ambient loop can never be stolen by
+            # find_channel(True) when a battle saturates the mixer.
+            pygame.mixer.set_reserved(1)
             self.available = True
         except pygame.error:
             return
         self._build()
         st = state
         st.events.subscribe("unit_destroyed", self._ev_explosion)
-        st.events.subscribe("unit_critical", self._ev_impact)
+        st.events.subscribe("unit_critical", self._ev_critical)
         st.events.subscribe("weapon_fired", self._ev_fire)
         st.events.subscribe("projectile_hit", self._ev_hit)
         st.events.subscribe("jump_complete", self._ev_jump)
         st.events.subscribe("ship_built", self._ev_build)
-        st.events.subscribe("station_built", self._ev_build)
-        st.events.subscribe("research_complete", self._ev_build)
+        st.events.subscribe("station_built", self._ev_station)
+        st.events.subscribe("research_complete", self._ev_research)
         st.events.subscribe("unit_leveled", self._ev_level)
         st.events.subscribe("game_over", self._ev_game_over)
+        st.events.subscribe("mission_complete", self._ev_mission_complete)
+        st.events.subscribe("mission_failed", self._ev_mission_failed)
+        st.events.subscribe("convoy_arrived", self._ev_convoy)
+        st.events.subscribe("convoy_raided", self._ev_raid)
+        st.events.subscribe("ability_used", self._ev_ability)
+
+    # ------------------------------------------------------------- data access
+    def _store(self):
+        if self._ds is None:
+            from game.data.store import DataStore      # local: avoid a cycle
+            self._ds = DataStore.get()
+        return self._ds
 
     # ---------------------------------------------------------------- synthesis
     def _build(self) -> None:
-        self.sounds["laser"] = self._pluck(0.07, 880.0, decay=26.0, vol=0.30)
-        self.sounds["laser_heavy"] = self._pluck(0.13, 240.0, decay=14.0, vol=0.42)
-        self.sounds["impact"] = self._noise_burst(0.09, 700.0, 200.0, 9.0, 0.30)
-        self.sounds["explosion"] = self._noise_burst(0.65, 320.0, 45.0, 3.2, 0.65)
-        self.sounds["big_explosion"] = self._noise_burst(1.3, 180.0, 26.0, 1.9, 0.85)
-        self.sounds["jump"] = self._sweep(1.4, 90.0, 1400.0, vol=0.4)
-        self.sounds["build"] = self._pluck(0.16, 520.0, decay=10.0, vol=0.32)
-        self.sounds["ui"] = self._pluck(0.045, 700.0, decay=16.0, vol=0.22)
-        self.sounds["alert"] = self._pluck(0.30, 392.0, decay=4.5, vol=0.34)
+        rate = self.rate
+        rng = _rng(7)
 
-    def _pluck(self, dur, freq, decay, vol=0.4) -> pygame.mixer.Sound:
-        t = np.linspace(0.0, dur, int(RATE * dur), endpoint=False)
-        wave = (np.sin(2 * math.pi * freq * t) * 0.7
-                + np.sin(2 * math.pi * freq * 2.02 * t) * 0.2
-                + np.sin(2 * math.pi * freq * 2.99 * t) * 0.1)
-        env = np.exp(-decay * t)
-        mono = (wave * env * vol)
-        st = (mono * 32767).astype(np.int16)
-        return pygame.mixer.Sound(buffer=np.column_stack([st, st]).tobytes())
+        def noise(dur, seed):
+            return _rng(seed).uniform(-1.0, 1.0, max(1, int(rate * dur)))
 
-    def _noise_burst(self, dur, f_hi, f_lo, decay, vol=0.5) -> pygame.mixer.Sound:
-        n = int(RATE * dur)
-        rng = np.random.RandomState(11)
-        noise = rng.uniform(-1.0, 1.0, n)
-        # cheap low-pass via cumulative smoothing toward low-freq rumble
-        t = np.linspace(0.0, dur, n, endpoint=False)
-        sweep = f_hi + (f_lo - f_hi) * (t / max(dur, 1e-6))
-        carrier = np.sin(2 * math.pi * np.cumsum(sweep) / RATE)
-        mix = 0.65 * noise + 0.35 * carrier
-        env = np.exp(-decay * t)
-        mono = mix * env * vol
-        st = (mono * 32767).astype(np.int16)
-        return pygame.mixer.Sound(buffer=np.column_stack([st, st]).tobytes())
+        # --- energy weapons: bright transient + fast downward pitch sweep ----
+        def laser(dur=0.085, f0=2400.0, f1=620.0, dec=26.0, brite=0.30):
+            n = int(rate * dur)
+            body = _tone(n, rate, f0, f1, curve=0.6,
+                         harmonics=((1, 0.75), (2, 0.20), (3, 0.10)))
+            air = _shape(noise(dur, 3), rate, 6000.0, hp=900.0)
+            return body * _env(n, rate, 0.0015, dec) + \
+                air * _env(n, rate, 0.001, dec * 1.6) * brite
 
-    def _sweep(self, dur, f0, f1, vol=0.4) -> pygame.mixer.Sound:
-        n = int(RATE * dur)
-        t = np.linspace(0.0, dur, n, endpoint=False)
-        f = f0 + (f1 - f0) * (t / dur) ** 2
-        wave = np.sin(2 * math.pi * np.cumsum(f) / RATE)
-        env = np.sin(math.pi * t / dur) ** 0.5      # fade in/out
-        mono = wave * env * vol
-        st = (mono * 32767).astype(np.int16)
-        return pygame.mixer.Sound(buffer=np.column_stack([st, st]).tobytes())
+        self.sounds["laser"] = _to_sound(laser(0.085, 2400.0, 620.0, 26.0), rate)
+        self.sounds["laser_b"] = _to_sound(laser(0.080, 2600.0, 700.0, 29.0), rate)
+        self.sounds["laser_c"] = _to_sound(laser(0.092, 2210.0, 560.0, 24.0), rate)
+        # point-defense: thinner and higher, lower amplitude
+        self.sounds["laser_pd"] = _to_sound(
+            laser(0.058, 3100.0, 1100.0, 40.0, brite=0.45) * 0.7, rate)
+        # heavy laser (future-proofing for damage >= 25 lasers)
+        self.sounds["laser_heavy"] = _to_sound(
+            laser(0.16, 1300.0, 260.0, 15.0, brite=0.35) * 1.0, rate)
+
+        # --- turbolaser: punchy low crack with a metallic tail --------------
+        def turbolaser(dur, f0, f1, dec, vol=1.0):
+            n = int(rate * dur)
+            body = _tone(n, rate, f0, f1, curve=0.5,
+                         harmonics=((1, 0.7), (2, 0.35), (3, 0.22), (5, 0.12)))
+            crack = _shape(noise(dur, 5), rate, 2600.0, res=1.2, hp=300.0)
+            return (body * _env(n, rate, 0.003, dec)
+                    + crack * _env(n, rate, 0.001, dec * 2.2) * 0.55) * vol
+
+        self.sounds["turbolaser"] = _to_sound(turbolaser(0.28, 520.0, 150.0, 11.0), rate)
+        self.sounds["turbolaser_heavy"] = _to_sound(
+            turbolaser(0.42, 340.0, 96.0, 7.5, vol=1.05), rate)
+
+        # --- ion cannon: buzzing electric discharge (ring modulation) -------
+        def ion(dur=0.34):
+            n = int(rate * dur)
+            carrier = _tone(n, rate, 700.0, 320.0, curve=0.7,
+                            harmonics=((1, 0.6), (3, 0.35), (5, 0.2), (7, 0.12)))
+            t = np.arange(n) / rate
+            buzz = 0.55 + 0.45 * np.sign(np.sin(2 * math.pi * 62.0 * t))
+            zap = _shape(noise(dur, 11), rate, 3400.0, res=1.6, hp=600.0)
+            return (carrier * buzz * 0.8 + zap * 0.35) * _env(n, rate, 0.004, 9.0)
+
+        self.sounds["ion"] = _to_sound(ion(), rate)
+
+        # --- missiles/torpedoes: launch thump + whooshing motor ------------
+        def whoosh(dur, seed, cut0, cut1, dec, thump_f=90.0, vol=1.0):
+            n = int(rate * dur)
+            t = np.arange(n) / rate
+            cut = cut0 + (cut1 - cut0) * (t / max(dur, 1e-6)) ** 0.6
+            air = _shape(noise(dur, seed), rate, cut, res=0.9, hp=180.0)
+            thump = _tone(n, rate, thump_f * 1.6, thump_f * 0.6, curve=0.5)
+            return (air * _env(n, rate, 0.012, dec)
+                    + thump * _env(n, rate, 0.004, 16.0) * 0.5) * vol
+
+        self.sounds["missile"] = _to_sound(whoosh(0.55, 21, 900.0, 2600.0, 4.2), rate)
+        self.sounds["torpedo"] = _to_sound(
+            whoosh(0.70, 23, 650.0, 2000.0, 3.2, thump_f=70.0, vol=1.05), rate)
+
+        # --- mass driver: supersonic crack then a low thud -----------------
+        def kinetic(dur=0.22):
+            n = int(rate * dur)
+            bang = _shape(noise(dur, 31), rate, 5200.0, res=1.0, hp=700.0)
+            body = _tone(n, rate, 220.0, 70.0, curve=0.5,
+                         harmonics=((1, 0.8), (2, 0.3)))
+            return (bang * _env(n, rate, 0.0008, 34.0)
+                    + body * _env(n, rate, 0.004, 13.0) * 0.8)
+
+        self.sounds["kinetic"] = _to_sound(kinetic(), rate)
+
+        # --- plasma: wet flame burst, band-passed around a sweep -----------
+        def plasma(dur=0.30):
+            n = int(rate * dur)
+            t = np.arange(n) / rate
+            cut = 1500.0 + (420.0 - 1500.0) * (t / dur) ** 0.5
+            flame = _shape(noise(dur, 41), rate, cut, res=1.4, hp=250.0)
+            core = _tone(n, rate, 480.0, 180.0, curve=0.8,
+                         harmonics=((1, 0.7), (2, 0.25)))
+            return flame * _env(n, rate, 0.006, 8.0) + core * _env(n, rate, 0.005, 12.0) * 0.6
+
+        self.sounds["plasma"] = _to_sound(plasma(), rate)
+
+        # --- beam lance: sustained hum with vibrato, fade in AND out -------
+        def beam(dur=0.40):
+            n = int(rate * dur)
+            t = np.arange(n) / rate
+            vib = 1.0 + 0.012 * np.sin(2 * math.pi * 7.0 * t)
+            hum = _tone(n, rate, 1180.0, 900.0, curve=0.4,
+                        harmonics=((1, 0.55), (2, 0.25), (4, 0.12)))
+            hiss = _shape(noise(dur, 51), rate, 4200.0, res=1.1, hp=1200.0)
+            env = np.clip(t / 0.02, 0, 1) * np.clip((dur - t) / 0.06, 0, 1)
+            return (hum * vib + hiss * 0.30) * env
+
+        self.sounds["beam"] = _to_sound(beam(), rate)
+
+        # --- impacts: shield = glassy zap, hull = metal clang ---------------
+        def shield_hit(seed, dur=0.14, f=1750.0):
+            n = int(rate * dur)
+            ring = _tone(n, rate, f, f * 0.72, curve=0.3,
+                         harmonics=((1, 0.6), (2.6, 0.25), (4.1, 0.12)))
+            zap = _shape(noise(dur, seed), rate, 7000.0, res=1.5, hp=2500.0)
+            return ring * _env(n, rate, 0.0015, 26.0) + \
+                zap * _env(n, rate, 0.001, 45.0) * 0.40
+
+        def hull_hit(seed, dur=0.20, f=520.0):
+            n = int(rate * dur)
+            # inharmonic partials = metal, not a musical note
+            clang = _tone(n, rate, f, f * 0.85, curve=0.4,
+                          harmonics=((1, 0.6), (2.41, 0.3), (3.77, 0.18), (5.3, 0.1)))
+            thud = _shape(noise(dur, seed), rate, 1400.0, res=1.2, hp=120.0)
+            return clang * _env(n, rate, 0.002, 17.0) + \
+                thud * _env(n, rate, 0.001, 30.0) * 0.45
+
+        self.sounds["impact_shield"] = _to_sound(shield_hit(61), rate)
+        self.sounds["impact_shield_b"] = _to_sound(shield_hit(67, 0.13, 1960.0), rate)
+        self.sounds["impact_hull"] = _to_sound(hull_hit(71), rate)
+        self.sounds["impact_hull_b"] = _to_sound(hull_hit(73, 0.19, 580.0), rate)
+        # generic fallback (no target resolvable)
+        self.sounds["impact"] = self.sounds["impact_hull"]
+
+        # --- explosions: sweeping resonant noise + sub-bass thump -----------
+        def blast(dur, seed, cut0, cut1, dec, sub_f, sub_dec, res=1.5, vol=1.0):
+            n = int(rate * dur)
+            t = np.arange(n) / rate
+            cut = cut0 + (cut1 - cut0) * (t / max(dur, 1e-6)) ** 0.45
+            fire = _shape(noise(dur, seed), rate, cut, res=res, nfft=1024)
+            crack = _shape(noise(dur, seed + 1), rate, 4200.0, hp=500.0,
+                           nfft=512)
+            sub = _tone(n, rate, sub_f * 1.7, sub_f * 0.75, curve=0.5)
+            return (fire * _env(n, rate, 0.006, dec) * 1.0
+                    + crack * _env(n, rate, 0.001, 42.0) * 0.35
+                    + sub * _env(n, rate, 0.010, sub_dec) * 0.75) * vol
+
+        self.sounds["explosion"] = _to_sound(
+            blast(0.75, 101, 1500.0, 70.0, 5.2, 52.0, 5.0), rate)
+        self.sounds["big_explosion"] = _to_sound(
+            blast(1.50, 107, 1000.0, 38.0, 2.6, 34.0, 2.2, res=1.8, vol=1.05), rate)
+
+        # --- utility voices -------------------------------------------------
+        # hyperspace charge: rising sweep, faded in and out (no click)
+        n = int(rate * 1.4)
+        t = np.arange(n) / rate
+        f = 90.0 + (1400.0 - 90.0) * (t / 1.4) ** 2
+        w = np.sin(2 * math.pi * np.cumsum(f) / rate)
+        shine = _shape(noise(1.4, 131), rate, 3000.0, res=0.8, hp=400.0)
+        je = np.sin(math.pi * t / 1.4) ** 0.5
+        self.sounds["jump"] = _to_sound((w + shine * 0.25) * je, rate, peak=0.7)
+
+        def chirp(freqs, dur_each=0.11, vol=0.75, seed=0):
+            parts = []
+            for i, fr in enumerate(freqs):
+                nn = int(rate * dur_each)
+                tone = _tone(nn, rate, fr, fr * 1.004,
+                             harmonics=((1, 0.7), (2, 0.18), (3, 0.08)))
+                parts.append(tone * _env(nn, rate, 0.006, 9.0))
+            return np.concatenate(parts) * vol
+
+        self.sounds["build"] = _to_sound(chirp([523.0, 784.0], 0.13, 0.7), rate)
+        self.sounds["research"] = _to_sound(
+            chirp([523.25, 659.25, 783.99, 1046.5], 0.14, 0.7), rate)
+        # two-tone alarm, three pulses — used for battle warnings
+        self.sounds["alert"] = _to_sound(
+            chirp([392.0, 523.25, 392.0, 523.25, 392.0, 523.25], 0.15, 0.65), rate)
+        self.sounds["warning"] = _to_sound(
+            chirp([330.0, 247.0, 330.0, 247.0], 0.13, 0.7), rate)
+        self.sounds["convoy"] = _to_sound(chirp([659.25, 880.0], 0.22, 0.55), rate)
+        self.sounds["raid"] = _to_sound(
+            _shape(noise(0.60, 151), rate, 700.0, res=1.7, hp=90.0)
+            * _env(int(rate * 0.60), rate, 0.02, 5.0), rate)
+        self.sounds["ability"] = _to_sound(
+            chirp([440.0, 660.0, 880.0], 0.14, 0.6), rate)
+        self.sounds["mission_complete"] = _to_sound(
+            chirp([523.25, 659.25, 783.99, 1046.5, 1318.5], 0.19, 0.8), rate)
+        self.sounds["mission_failed"] = _to_sound(
+            chirp([392.0, 349.23, 293.66, 233.08], 0.26, 0.75), rate)
+
+        # short soft UI blip (kept click-free with a 5 ms attack)
+        nn = int(rate * 0.05)
+        ui = _tone(nn, rate, 900.0, 760.0, harmonics=((1, 0.7), (2, 0.2)))
+        self.sounds["ui"] = _to_sound(ui * _env(nn, rate, 0.005, 42.0), rate,
+                                      peak=0.55)
+        del rng  # noise draws are seeded per voice; the global rng is unused
 
     # ---------------------------------------------------------------- playback
-    def play(self, name: str, volume: float = 0.5) -> None:
+    def set_camera(self, camera) -> None:
+        """Camera used for distance attenuation and stereo pan (optional)."""
+        self.camera = camera
+
+    def _spatial(self, pos):
+        """Return (gain, pan) for a world position; (1.0, 0.0) when unknown."""
+        cam = self.camera
+        if cam is None or pos is None:
+            return 1.0, 0.0
+        try:
+            tgt = cam.target
+            dx = float(pos[0]) - float(tgt[0])
+            dz = float(pos[2]) - float(tgt[2])
+            dist = math.hypot(dx, dz)
+            gain = 1.0 / (1.0 + (dist / _REF_DIST) ** 1.4)
+            if dist > _MAX_DIST:
+                return 0.0, 0.0
+            # pan by the camera's right vector on the XZ plane
+            yaw = math.radians(float(getattr(cam, "yaw", 0.0)))
+            right_x, right_z = math.cos(yaw), -math.sin(yaw)
+            if dist < 1e-6:
+                return gain, 0.0
+            pan = max(-1.0, min(1.0, (dx * right_x + dz * right_z) / dist))
+            return gain, pan
+        except Exception:
+            return 1.0, 0.0
+
+    def _allowed(self, category: str) -> bool:
+        """Per-category audio-side throttle (the sim is never throttled)."""
+        limit = RATE_LIMITS.get(category)
+        if not limit:
+            return True
+        now = float(getattr(self.state, "time", 0.0))
+        if now - self._last.get(category, -999.0) < limit:
+            return False
+        self._last[category] = now
+        return True
+
+    def play(self, name: str, volume: float = 0.5, pos=None) -> None:
         if self.muted or not self.available:
             return
-        # global SFX volume from settings (default 0.8)
         master = float(self.settings.get("sfx_volume", 0.8))
         snd = self.sounds.get(name)
-        if snd is not None and master > 0.01:
-            snd.set_volume(volume * master)
-            snd.play()
+        if snd is None or master <= 0.01:
+            return
+        gain, pan = self._spatial(pos)
+        vol = volume * master * gain
+        if vol < 0.02:
+            return
+        left = max(0.0, min(1.0, vol * (1.0 - max(0.0, pan) * 0.55)))
+        right = max(0.0, min(1.0, vol * (1.0 + min(0.0, pan) * 0.55)))
+        try:
+            ch = pygame.mixer.find_channel(True)
+        except pygame.error:
+            return
+        if ch is None:
+            return
+        ch.set_volume(left, right)
+        ch.play(snd)
 
     def start_ambient(self) -> None:
-        """Low engine-room hum loop."""
+        """Low engine-room hum + filtered rumble loop."""
         if self.muted or not self.available or self.ambient_channel:
             return
+        rate = self.rate
         dur = 4.0
-        t = np.linspace(0.0, dur, int(RATE * dur), endpoint=False)
+        n = int(rate * dur)
+        t = np.linspace(0.0, dur, n, endpoint=False)
         hum = (np.sin(2 * math.pi * 42.0 * t) * 0.5
                + np.sin(2 * math.pi * 63.5 * t) * 0.3
                + np.sin(2 * math.pi * 89.0 * t) * 0.2)
+        rumble = _shape(_rng(211).uniform(-1.0, 1.0, n), rate, 220.0, hp=40.0)
         wobble = 0.85 + 0.15 * np.sin(2 * math.pi * 0.25 * t)
-        mono = hum * wobble * 0.12
-        st = (mono * 32767).astype(np.int16)
-        snd = pygame.mixer.Sound(buffer=np.column_stack([st, st]).tobytes())
-        ch = pygame.mixer.find_channel(True)
-        if ch:
-            # ambient hum rides the music_volume slider
+        mono = (hum * wobble * 0.12 + rumble * 0.03)
+        st = (np.clip(mono, -1, 1) * 32767).astype(np.int16)
+        snd = pygame.mixer.Sound(buffer=np.ascontiguousarray(
+            np.column_stack([st, st])).tobytes())
+        ch = self._reserve_ambient()
+        if ch is not None:
             ch.set_volume(0.5 * float(self.settings.get("music_volume", 0.6)))
             ch.play(snd, loops=-1)
             self.ambient_channel = ch
+
+    def _reserve_ambient(self):
+        """The channel set aside for the ambient loop (channel 0)."""
+        try:
+            ch = pygame.mixer.Channel(0)
+            # mark it busy WITHOUT stealing: play a real Sound to guarantee it
+            # is the channel the loop lands on, then hand it to the hum.
+            ch.play(pygame.mixer.Sound(buffer=b"\x00" * 4))
+            return ch
+        except pygame.error:
+            return None
 
     def apply_settings(self, settings: dict) -> None:
         """Live-apply volume changes from the settings menu."""
@@ -131,49 +520,166 @@ class Audio:
     def toggle_mute(self) -> None:
         self.muted = not self.muted
         if self.available:
-            pygame.mixer.set_num_channels(8 if not self.muted else 0)
+            pygame.mixer.set_num_channels(0 if self.muted else 32)
             if not self.muted:
                 self.ambient_channel = None
                 self.start_ambient()
 
-    # ---------------------------------------------------------------- events
+    # ------------------------------------------------------------------ events
+    def _weapon(self, wid):
+        """WeaponData for an id, or None (data-less weapons must not crash)."""
+        if not wid:
+            return None
+        try:
+            return self._store().weapons.get(wid)
+        except Exception:
+            return None
+
     def _ev_fire(self, ev) -> None:
-        # rate-limit: fleets fire dozens of shots/sec — cap at ~6 lasers/sec
-        now = self.state.time
-        if now - self._last_laser_t < 0.16:
+        # fleets fire dozens of shots/sec: throttle audio, never the sim
+        if not self._allowed("fire"):
             return
-        self._last_laser_t = now
-        heavy = bool(ev.data.get("heavy"))
-        self.play("laser_heavy" if heavy else "laser",
-                  0.42 if heavy else 0.30)
+        wd = self._weapon(ev.data.get("weapon"))
+        wtype = getattr(wd, "type", None)
+        dmg = float(getattr(wd, "damage", 0.0) or 0.0)
+        is_beam = bool(getattr(wd, "is_beam", False))
+        voice = voice_for_weapon(wtype, dmg, is_beam)
+        # rotate laser variants so sustained fire does not sound mechanical
+        if voice == "laser":
+            self._variant = (self._variant + 1) % 3
+            voice = ("laser", "laser_b", "laser_c")[self._variant]
+        heavy = voice in ("turbolaser_heavy", "laser_heavy", "torpedo", "kinetic")
+        self.play(voice, 0.42 if heavy else 0.30, pos=self._ev_pos(ev))
+
+    def _ev_pos(self, ev):
+        """World position of an event, when the payload or entity provides one."""
+        p = ev.data.get("pos") or ev.data.get("impact_pos")
+        if p:
+            return p
+        eid = ev.data.get("entity_id") or ev.data.get("attacker_id") \
+            or ev.data.get("target_id")
+        if eid is None:
+            return None
+        e = self.state.entities.get(eid)
+        return getattr(e, "pos", None) if e is not None else None
 
     def _ev_hit(self, ev) -> None:
-        now = self.state.time
-        if now - self._last_hit_t < 0.12:
+        if not self._allowed("hit"):
             return
-        self._last_hit_t = now
-        self.play("impact", 0.30)
+        target = self.state.entities.get(ev.data.get("target_id"))
+        shielded = bool(target is not None and self._shield_absorbed(target, ev))
+        self._variant = (self._variant + 1) % 2
+        if shielded:
+            voice = ("impact_shield", "impact_shield_b")[self._variant]
+        else:
+            voice = ("impact_hull", "impact_hull_b")[self._variant]
+        self.play(voice, 0.30, pos=self._ev_pos(ev))
 
-    def _ev_impact(self, ev) -> None:
-        self.play("impact", 0.35)
+    @staticmethod
+    def _shield_absorbed(target, ev) -> bool:
+        """Did this hit land on a shield arc that still had charge?
+
+        Only the quadrant FACING the impact depletes (see DamageSystem), so
+        summing every quadrant would report "shield" even once the facing arc
+        is flat and the hull is taking damage — which is exactly the sound cue
+        the player needs.
+        """
+        if getattr(target, "max_shield_quad", 0.0) <= 0:
+            return False
+        shields = getattr(target, "shields", None) or {}
+        if not shields:
+            return False
+        impact = ev.data.get("impact_pos")
+        if impact is None:
+            return False
+        try:
+            dx = float(impact[0] if not hasattr(impact, "x") else impact.x) - target.pos.x
+            dz = float(impact[2] if not hasattr(impact, "z") else impact.z) - target.pos.z
+            if abs(dx) > abs(dz):
+                fx, fz = math.sin(target.yaw), math.cos(target.yaw)
+                quad = "left" if (dx * fz - dz * fx) > 0 else "right"
+            else:
+                quad = "front" if dz > 0 else "rear"
+        except Exception:
+            return True                      # unknown geometry: assume shielded
+        # the facing arc absorbs, and any overflow reaches the hull; if the
+        # facing arc is already empty the hit is a hull hit.
+        return float(shields.get(quad, 0.0)) > 0.0
+
+    def _ev_critical(self, ev) -> None:
+        if not self._allowed("crit"):
+            return
+        self.play("warning", 0.5, pos=self._ev_pos(ev))
+
+    def _radius(self, ev) -> float:
+        did = ev.data.get("data_id")
+        if not did:
+            return 0.0
+        try:
+            ds = self._store()
+            for table in (ds.ships, ds.stations):
+                d = table.get(did)
+                if d is not None:
+                    return float(getattr(d, "radius", 0.0) or 0.0)
+        except Exception:
+            return 0.0
+        return 0.0
 
     def _ev_explosion(self, ev) -> None:
-        big = bool(ev.data.get("supercapital") or ev.data.get("is_station"))
-        self.play("big_explosion" if big else "explosion",
-                  0.8 if big else 0.55)
+        if not self._allowed("explosion"):
+            return
+        radius = self._radius(ev)
+        is_station = bool(ev.data.get("is_station"))
+        voice = explosion_voice(radius, is_station)
+        big = voice == "big_explosion"
+        self.play(voice, 0.85 if big else 0.55, pos=self._ev_pos(ev))
 
     def _ev_jump(self, ev) -> None:
-        self.play("jump", 0.6)
+        self.play("jump", 0.6, pos=self._ev_pos(ev))
 
     def _ev_level(self, ev) -> None:
         self.play("ui", 0.4)
 
-    def _ev_game_over(self, ev) -> None:
-        self.play("big_explosion", 0.9)
-        self.play("alert", 0.6)
-
     def _ev_build(self, ev) -> None:
-        self.play("build", 0.5)
+        if self._allowed("build"):
+            self.play("build", 0.5)
+
+    def _ev_station(self, ev) -> None:
+        if self._allowed("build"):
+            self.play("build", 0.7)
+
+    def _ev_research(self, ev) -> None:
+        if self._allowed("build"):
+            self.play("research", 0.6)
+
+    def _ev_convoy(self, ev) -> None:
+        if self._allowed("convoy"):
+            self.play("convoy", 0.5, pos=self._ev_pos(ev))
+
+    def _ev_raid(self, ev) -> None:
+        if self._allowed("raid"):
+            self.play("raid", 0.6, pos=self._ev_pos(ev))
+
+    def _ev_ability(self, ev) -> None:
+        if self._allowed("ability"):
+            self.play("ability", 0.5, pos=self._ev_pos(ev))
+
+    def _ev_mission_complete(self, ev) -> None:
+        if self._allowed("mission"):
+            self.play("mission_complete", 0.8)
+
+    def _ev_mission_failed(self, ev) -> None:
+        if self._allowed("mission"):
+            self.play("mission_failed", 0.8)
+
+    def _ev_game_over(self, ev) -> None:
+        if not self._allowed("mission"):
+            return
+        winner = ev.data.get("winner", getattr(self.state, "winner", -1))
+        if winner == 0:
+            self.play("mission_complete", 0.9)
+        else:
+            self.play("mission_failed", 0.9)
 
     def cleanup(self) -> None:
         if self.ambient_channel:
