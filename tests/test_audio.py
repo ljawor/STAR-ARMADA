@@ -12,6 +12,7 @@ that proves the event subscriptions really fire the right voices.
 from __future__ import annotations
 
 import os
+import subprocess
 import sys
 import unittest
 
@@ -477,6 +478,41 @@ class TestEndToEnd(unittest.TestCase):
         gm.step(1 / 30)
         self.assertTrue(any(n.endswith("explosion") for n in seen),
                         f"a kill produced no blast voice: {seen}")
+
+
+class TestShutdown(unittest.TestCase):
+    """main.py's teardown must survive being reached with no game started.
+
+    Reported crash: the traceback ended at module level with
+    `AttributeError: 'NoneType' object has no attribute 'cleanup'`, because
+    `audio` is None until start_game() runs and the final teardown called
+    audio.cleanup() unconditionally.
+    """
+
+    def test_teardown_is_guarded_for_a_menu_only_exit(self):
+        main_py = os.path.join(os.path.dirname(os.path.dirname(
+            os.path.abspath(__file__))), "main.py")
+        src = open(main_py).read()
+        self.assertIn("if audio is not None:", src,
+                      "main.py must guard the teardown: quitting from a menu "
+                      "never builds an Audio, so audio is still None")
+        self.assertNotIn("\naudio.cleanup()", src,
+                         "an unguarded audio.cleanup() crashes on a menu exit")
+
+    def test_the_exit_probe_reproduces_and_clears_the_crash(self):
+        """Drive the real main.py through a menu quit with audio unset."""
+        probe = os.path.join(os.path.dirname(os.path.dirname(
+            os.path.abspath(__file__))), "tools", "probe_main_exit.py")
+        if not os.path.exists(probe):
+            self.skipTest("probe_main_exit.py missing")
+        r = subprocess.run(
+            [sys.executable, probe],
+            cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            capture_output=True, text=True, timeout=300,
+            env=dict(os.environ, PYTHONPATH="."),
+        )
+        self.assertIn("MAIN_EXIT_OK", r.stdout,
+                      f"menu-exit shutdown not clean:\n{r.stdout[-800:]}")
 
 
 if __name__ == "__main__":
