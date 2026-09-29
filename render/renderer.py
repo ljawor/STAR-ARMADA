@@ -2068,14 +2068,19 @@ class Renderer:
                 m += (wobble / (k + 1)) * math.sin(
                     (k + 2) * a + ph + phase * (0.6 + 0.35 * k))
             # per-angle brightness jitter: breaks the smooth radial ramp so the
-            # cloud is mottled instead of an even gradient
+            # cloud is mottled instead of an even gradient. Kept DELIBERATELY
+            # SUBTLE (0.84..1.0): under additive blending a strong per-angle
+            # swing renders as radial spokes/pinwheel, because adjacent vertices
+            # differ in colour and the blend adds them as bands. The irregular
+            # SILHOUETTE (m, above) is what should carry the shape — brightness
+            # only mottles it.
             j = 1.0
             for k in range(3):
                 ph = ((((seed + 13) >> (k * 5)) & 0xFF) / 255.0) * 6.28318
                 j += (0.5 / (k + 1)) * math.sin(
                     (k + 2) * (a * 1.7 + 0.9) + ph
                     + phase * 1.69 * (0.6 + 0.35 * k))
-            out.append((max(0.22, m), 0.55 + 0.45 * max(0.22, j) ** 0.5))
+            out.append((max(0.22, m), 0.84 + 0.16 * max(0.22, j) ** 0.5))
         return out
 
     @staticmethod
@@ -2084,8 +2089,21 @@ class Renderer:
         return ring[(i + rot) % len(ring)]
 
     def _draw_glow_ring(self, pos, radius, color, alpha, ring, rot=0,
-                        additive=True) -> None:
-        """Camera-facing billboard with an irregular silhouette from `ring`."""
+                        additive=True, inner=0.0, nrings=1) -> None:
+        """Camera-facing billboard with an irregular silhouette from `ring`.
+
+        `nrings` > 1 splits the billboard into nested lumpy contours with a
+        radial alpha falloff. This matters MORE than the outline, and an
+        outline-only fix is exactly what failed: a plain fan's brightest point
+        is one shared centre vertex, so several overlapping shells pile up
+        there and clip to a saturated flat plate (measured on a real frame:
+        85% of bright pixels pinned at full white, 3,214 px of ONE colour).
+        However lumpy the rim is, the eye lands on that white disc — which is
+        what "still the same, I do not see any change" was looking at.
+
+        `inner` > 0 starts the shape at that fraction of the radius, giving a
+        lumpy RING with a soft inner edge, so the flash has no solid core.
+        """
         if radius <= 0 or alpha <= 0:
             return
         cam = self.camera
@@ -2096,21 +2114,65 @@ class Renderer:
         right = (math.cos(yaw), 0.0, -math.sin(yaw))
         up = normalize3(cross3(right, fwd))
         n = len(ring)
+        bands = max(1, int(nrings))
         glBlendFunc(GL_SRC_ALPHA, GL_ONE if additive else GL_ONE_MINUS_SRC_ALPHA)
         glPushMatrix()
         glTranslatef(pos[0], pos[1], pos[2])
-        glBegin(GL_TRIANGLE_FAN)
-        glColor4f(color[0], color[1], color[2], min(1.0, alpha))
-        glVertex3f(0.0, 0.0, 0.0)
-        for i in range(n + 1):
-            m, j = self._ring_lookup(ring, i, rot)
-            a = (i % n) / n * 6.28318
-            ca, sa = math.cos(a), math.sin(a)
-            glColor4f(color[0] * j, color[1] * j, color[2] * j, 0.0)
-            glVertex3f((right[0] * ca + up[0] * sa) * radius * m,
-                       (right[1] * ca + up[1] * sa) * radius * m,
-                       (right[2] * ca + up[2] * sa) * radius * m)
-        glEnd()
+        if inner <= 0.0 and bands == 1:
+            # Plain blob: keep the single shared centre vertex. With a
+            # GL_QUAD_STRIP the centre is duplicated once per angle, and each
+            # copy carries that angle's brightness jitter, so neighbouring
+            # wedges disagree at the middle and the puff renders as a pinwheel
+            # of radial spokes. One centre vertex cannot disagree with itself.
+            glBegin(GL_TRIANGLE_FAN)
+            glColor4f(color[0], color[1], color[2], min(1.0, alpha))
+            glVertex3f(0.0, 0.0, 0.0)
+            for i in range(n + 1):
+                m, j = self._ring_lookup(ring, i, rot)
+                a = (i % n) / n * 6.28318
+                ca, sa = math.cos(a), math.sin(a)
+                glColor4f(color[0] * j, color[1] * j, color[2] * j, 0.0)
+                glVertex3f((right[0] * ca + up[0] * sa) * radius * m,
+                           (right[1] * ca + up[1] * sa) * radius * m,
+                           (right[2] * ca + up[2] * sa) * radius * m)
+            glEnd()
+            glPopMatrix()
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+            return
+        r0 = radius * inner if inner > 0.0 else 0.0
+        # One GL_QUAD_STRIP per band, with exactly TWO vertices per angle.
+        #
+        # A single strip carrying every band's vertices per angle does NOT
+        # work: a quad strip joins CONSECUTIVE vertices, so it must alternate
+        # between two curves. With 3 vertices per angle the strip runs
+        # inner -> mid -> outer and then pairs outer(angle i) with
+        # inner(angle i+1) — a quad spanning the entire band radially, which
+        # renders as a dark radial SPOKE. One shock shell drawn alone produced
+        # 12+ wedges and no ring at all; that pinwheel, not the shock colour,
+        # was what made the blast look wrong.
+        for k in range(bands):
+            fa = k / bands
+            fb = (k + 1) / bands
+
+            def _band_alpha(f):
+                if inner > 0.0:
+                    return alpha * (4.0 * f * (1.0 - f)) ** 0.8   # soft both edges
+                return alpha * (1.0 - f) ** 1.4              # blob: centre -> rim
+
+            glBegin(GL_QUAD_STRIP)
+            for i in range(n + 1):
+                m, j = self._ring_lookup(ring, i, rot)
+                a = (i % n) / n * 6.28318
+                ca, sa = math.cos(a), math.sin(a)
+                ix = (right[0] * ca + up[0] * sa)
+                iy = (right[1] * ca + up[1] * sa)
+                iz = (right[2] * ca + up[2] * sa)
+                jr, jg, jb = color[0] * j, color[1] * j, color[2] * j
+                for f in (fa, fb):
+                    rr = r0 + (radius * m - r0) * f
+                    glColor4f(jr, jg, jb, min(1.0, _band_alpha(f)))
+                    glVertex3f(ix * rr, iy * rr, iz * rr)
+            glEnd()
         glPopMatrix()
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
@@ -2136,6 +2198,9 @@ class Renderer:
         glDisable(GL_CULL_FACE)
         glPushMatrix()
         glTranslatef(pos[0], pos[1], pos[2])
+        # Two strips, TWO vertices per angle (see the note in
+        # _draw_glow_ring): three vertices per angle makes a quad strip emit a
+        # full-width radial quad per segment, which renders as dark spokes.
         glBegin(GL_QUAD_STRIP)
         for i in range(n + 1):
             m, _j = self._ring_lookup(ring, i, rot)
@@ -2146,10 +2211,32 @@ class Renderer:
             iy = (right[1] * ca + up[1] * sa)
             iz = (right[2] * ca + up[2] * sa)
             inner = rm - thickness * m
-            glColor4f(color[0], color[1], color[2], alpha * 0.16)
+            mid = inner + (rm - inner) * 0.55
+            glColor4f(color[0], color[1], color[2], alpha * 0.13)
             glVertex3f(ix * inner, iy * inner, iz * inner)
-            glColor4f(color[0], color[1], color[2], alpha)
-            glVertex3f(ix * rm, iy * rm, iz * rm)
+            glColor4f(color[0], color[1], color[2], alpha * 0.55)
+            glVertex3f(ix * mid, iy * mid, iz * mid)
+        glEnd()
+        glBegin(GL_QUAD_STRIP)
+        for i in range(n + 1):
+            m, _j = self._ring_lookup(ring, i, rot)
+            a = (i % n) / n * 6.28318
+            rm = radius * m
+            ca, sa = math.cos(a), math.sin(a)
+            ix = (right[0] * ca + up[0] * sa)
+            iy = (right[1] * ca + up[1] * sa)
+            iz = (right[2] * ca + up[2] * sa)
+            inner = rm - thickness * m
+            mid = inner + (rm - inner) * 0.55
+            # The OUTER edge must fade to nothing. Ending the strip on a bright
+            # vertex gives the shell a crisp outer contour, and a crisp contour
+            # at this size reads as a drawn olive donut.
+            glColor4f(color[0], color[1], color[2], alpha * 0.55)
+            glVertex3f(ix * mid, iy * mid, iz * mid)
+            glColor4f(color[0], color[1], color[2], alpha * 0.10)
+            glVertex3f(ix * (rm + thickness * 0.85 * m),
+                       iy * (rm + thickness * 0.85 * m),
+                       iz * (rm + thickness * 0.85 * m))
         glEnd()
         glPopMatrix()
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
@@ -2178,11 +2265,20 @@ class Renderer:
 
         spin = age * 3.4            # the fire churns as it expands
 
-        # --- 1. flash: white-hot, only a few frames
+        # --- 1. flash: white-hot, only a few frames. This is the BRIGHTEST and
+        # most-looked-at layer, so it must NOT be the smooth disc it used to be:
+        # left as a plain _draw_glow it re-introduced exactly the perfect-circle
+        # look the rest of this function was rewritten to remove (reported:
+        # "still the same, I do not see any change"). It is drawn as a lumpy
+        # RING (inner=0.4) rather than a blob so there is no solid saturated
+        # core, and the alpha is deliberately below 1.0: overlapping additive
+        # shells were clipping the centre to flat white.
         if age < 0.14:
             fa = 1.0 - age / 0.14
-            self._draw_glow(pos, r * (1.1 + 2.0 * age), (1.0, 1.0, 0.96),
-                            alpha=fa * 0.90, additive=True)
+            self._draw_glow_ring(pos, r * (1.1 + 2.0 * age), (1.0, 1.0, 0.96),
+                                 alpha=fa * 0.40,
+                                 ring=self._fx_ring(seed + 900, spin, 4, 0.40, 26),
+                                 rot=2, additive=True, nrings=3)
 
         # --- 2. fireball: several LUMPY shells instead of one smooth disc, so
         # the silhouette is turbulent and the interior mottled. One ring is
@@ -2192,26 +2288,26 @@ class Renderer:
         fade = max(0.0, 1.0 - age) ** 1.25
         grow = r * (0.90 + 2.10 * age ** 0.5)
         ring_big = self._fx_ring(seed, spin, 5, 0.34, 34)
-        for i in range(5):
-            ang = (i / 5.0) * 6.28318 + rnd(i) * 1.3 + spin * 0.5
+        for i in range(7):
+            ang = (i / 7.0) * 6.28318 + rnd(i) * 1.3 + spin * 0.5
             off = r * (0.20 + 0.30 * rnd(10 + i)) * (0.4 + age)
             self._draw_glow_ring(
                 (pos[0] + math.cos(ang) * off,
                  pos[1] + (rnd(30 + i) - 0.5) * off,
                  pos[2] + math.sin(ang) * off),
                 grow * (0.55 + 0.42 * rnd(20 + i)), cool,
-                alpha=0.52 * fade, ring=ring_big, rot=i * 7)
+                alpha=0.16 * fade, ring=ring_big, rot=i * 7)
         ring_mid = self._fx_ring(seed + 77, -spin * 0.8, 4, 0.26, 26)
         if age < 0.75:                                   # mid, hotter shell
             hot = max(0.0, 1.0 - age / 0.75)
             self._draw_glow_ring(pos, r * (0.50 + 1.30 * age ** 0.6),
                                  (1.0, 0.70 + 0.28 * hot, 0.28 + 0.35 * hot),
-                                 alpha=0.85 * hot ** 1.1, ring=ring_mid, rot=3)
+                                 alpha=0.34 * hot ** 1.1, ring=ring_mid, rot=3)
         ring_core = self._fx_ring(seed + 99, spin * 1.4, 3, 0.18, 18)
         if age < 0.30:                                   # white-hot core
             hc = 1.0 - age / 0.30
             self._draw_glow_ring(pos, r * (0.35 + 0.75 * hc), (1.0, 0.98, 0.92),
-                                 alpha=0.95 * hc, ring=ring_core, rot=1)
+                                 alpha=0.34 * hc, ring=ring_core, rot=1)
 
         # --- 3. shock front: irregular, faint and SHORT-LIVED. Deliberately
         # kept subordinate to the fire — a large crisp ring was what made the
@@ -2221,7 +2317,7 @@ class Renderer:
             self._draw_shock_shell(
                 pos, r * (1.15 + 2.00 * sa ** 0.62),
                 (1.0, 0.86, 0.66), (1.0 - sa) ** 1.9 * 0.45, r * 0.55,
-                ring=self._fx_ring(seed + 5, sa * 2.2, 4, 0.20, 40))
+                ring=self._fx_ring(seed + 5, sa * 2.2, 4, 0.34, 40))
 
         # --- 4. smoke: many faint, large, overlapping puffs. Fewer/stronger
         # puffs composite into a single grey mass with its own visible
@@ -2231,7 +2327,11 @@ class Renderer:
             sm = min(1.0, (age - 0.08) / 0.35)
             sfade = max(0.0, 1.0 - max(0.0, (age - 0.40) / 0.60))
             smoke = tuple(c * 0.10 for c in cool)
-            ring_sm = self._fx_ring(seed + 40, age * 1.6, 4, 0.30, 20)
+            # n=48/wobble=0.16, not n=20/0.30: a coarse ring renders as a
+            # jagged star with visible facets, and because it is a big dark
+            # additive-less mass the facets read as radial spokes/pinwheel
+            # around the fireball. Verified by drawing this layer alone.
+            ring_sm = self._fx_ring(seed + 40, age * 1.6, 4, 0.18, 28)
             for k in range(7):
                 ang = (k / 7.0) * 6.28318 + rnd(k) * 1.4
                 drift = r * (0.9 + 2.8 * age) * (0.5 + 0.7 * rnd(10 + k))
