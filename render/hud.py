@@ -48,6 +48,7 @@ BAR_BG = (34, 44, 62, 255)
 BAR_SHIELD = (84, 150, 220)
 BAR_HULL = (110, 200, 120)
 BAR_STRUCT = (150, 150, 160)
+TRADE = (226, 196, 120)          # cargo / trade income readouts
 
 LOG_TYPES = ("unit_destroyed", "station_built", "research_complete",
              "planet_colonized", "construction_complete")
@@ -197,6 +198,29 @@ class HUD:
             ov.blit(surf, (self.width // 2 - surf.get_width() // 2,
                            self.height // 2 + 4))
 
+    # ------------------------------------------------------------------ trade
+    def _trade_line(self, e) -> str:
+        """One-line trade status for a convoy or trade station."""
+        st = self.state
+        if e.data_id == "trade_convoy":
+            dest = st.entity(e.convoy_dest if e.convoy_dest is not None else -1)
+            where = dest.owner if dest is not None else None
+            who = st.players[where].name if where in st.players else "?"
+            tgt = f"→ {who}" if dest is not None else "→ no market"
+            return f"CARGO {e.cargo_credits:0.0f}cr  {tgt}"
+        # trade station: passive income + live outbound convoys
+        rate = self.ds.stations.get("trade_station")
+        inc = 0.0
+        if rate is not None and isinstance(rate.income, dict):
+            inc = float(rate.income.get("credits", 0.0))
+        out = sum(1 for c in st.entities.values()
+                  if c.alive and c.data_id == "trade_convoy" and c.owner == e.owner)
+        markets = sum(1 for s in st.entities.values()
+                      if s.alive and s.data_id == "trade_station")
+        if markets < 2:
+            return f"INCOME {inc:0.1f}cr/s · NEEDS A SECOND MARKET"
+        return f"INCOME {inc:0.1f}cr/s · {out} CONVOY{'S' if out != 1 else ''} OUT"
+
     # ------------------------------------------------------------------ left panel
     def _left_panel(self, selection: set, local_player: int) -> None:
         ov = self.overlay
@@ -227,6 +251,12 @@ class HUD:
         lv = f"  LV{e.level}" if e.level > 1 else ""
         self._label(panel.x + 12, panel.y + 52, f"LEVEL {e.level}{lv}", WARN
                     if e.level >= 4 else TXT_DIM)
+        # trade readout: cargo convoys and trade stations had NO UI at all, so
+        # the whole trading system was invisible in play (no income figure, no
+        # destination). Show what the selected unit is actually doing.
+        if e.data_id == "trade_convoy" or e.data_id == "trade_station":
+            self._label(panel.x + 12, panel.y + 70, self._trade_line(e), TRADE,
+                        self.font_small)
 
         y = panel.y + 78
         # hull

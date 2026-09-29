@@ -35,7 +35,7 @@
       "spawn_interval": 45.0,
       "cargo_credits": 150.0,
       "loot_fraction": 0.5,
-      "speed": 55.0,
+      "speed": 95.0,
       "hull": 250.0,
       "reward_owner": "destination"
     },

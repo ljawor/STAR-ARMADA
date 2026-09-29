@@ -85,6 +85,7 @@
         "team": 1,
         "start_units": {
           "command_station": 1,
+          "trade_station": 1,
           "shipyard": 1,
           "corvette": 3,
           "squadron": 2

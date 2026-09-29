@@ -17,6 +17,7 @@ class MissionSystem:
         self.objectives = []
         self.completed = False
         self.failed = False
+        self._escorted_id = None       # the player convoy we are escorting
         if mission_def:
             self.objectives = [dict(o, done=False) for o in mission_def.get("objectives", [])]
             state.events.subscribe("station_built", self._on_station_built)
@@ -138,15 +139,31 @@ class MissionSystem:
             st.events.publish("mission_failed")
 
     def _on_convoy_arrived(self, ev) -> None:
+        """Complete the escort objective when the PLAYER's convoy lands.
+
+        Must key on `convoy_owner`, not `owner`. With the default
+        reward_owner="destination" the payload's `owner` is whoever was PAID —
+        the destination's owner — so reading it here credited the player for
+        an ENEMY convoy docking at their station (verified: objective flipped
+        done on an AI-owned convoy at t=644s) while never completing for the
+        player's own delivery to an enemy market.
+        """
         for o in self.objectives:
             if o["type"] == "escort_convoy" and not o["done"] and \
-                    self._is_human(ev.data.get("owner")):
+                    self._is_human(ev.data.get("convoy_owner")):
                 o["done"] = True
+                self._escorted_id = ev.data.get("entity_id")
 
     def _on_convoy_raided(self, ev) -> None:
+        """Fail the escort objective only for the PLAYER's own convoy.
+
+        A raided enemy or AI convoy must not fail the player's mission.
+        """
         for o in self.objectives:
             if o["type"] == "escort_convoy" and not o["done"]:
-                o["failed"] = True
+                if self._is_human(ev.data.get("convoy_owner")) or \
+                        self._escorted_id == ev.data.get("entity_id"):
+                    o["failed"] = True
 
     def progress_text(self) -> list:
         out: list = []
