@@ -76,12 +76,13 @@ class Fleet:
     rally_point: tuple | None = None      # last formation-move destination
     _last_move_issue: float = -999.0      # last time formation orders were issued
 
-    def to_dict(self) -> dict:
+    def to_dict(self, precise: bool = False) -> dict:
         return {
             "id": self.id, "owner": self.owner, "name": self.name,
             "commander": self.commander, "formation": self.formation,
             "stance": self.stance, "member_ids": sorted(self.member_ids),
-            "flagship_id": self.flagship_id, "xp": round(self.xp, 2),
+            "flagship_id": self.flagship_id,
+            "xp": self.xp if precise else round(self.xp, 2),
             "rally_point": list(self.rally_point) if self.rally_point else None,
         }
 
@@ -116,13 +117,15 @@ class Projectile:
     color: tuple = (1.0, 0.8, 0.3)
     size: float = 2.0
 
-    def to_dict(self) -> dict:
+    def to_dict(self, precise: bool = False) -> dict:
         return {
             "id": self.id, "owner": self.owner, "weapon_id": self.weapon_id,
-            "pos": self.pos.to_dict(), "vel": self.vel.to_dict(),
-            "target_id": self.target_id, "damage": round(self.damage, 2),
+            "pos": self.pos.to_dict(precise), "vel": self.vel.to_dict(precise),
+            "target_id": self.target_id,
+            "damage": self.damage if precise else round(self.damage, 2),
             "shield_mult": self.shield_mult, "armor_mult": self.armor_mult,
-            "system_mult": self.system_mult, "life": round(self.life, 3),
+            "system_mult": self.system_mult,
+            "life": self.life if precise else round(self.life, 3),
             "is_beam": self.is_beam, "color": list(self.color), "size": self.size,
         }
 

@@ -43,12 +43,14 @@ class PlayerState:
                 used += DataStore.get().command_cost(e)
         return used
 
-    def to_dict(self) -> dict:
+    def to_dict(self, precise: bool = False) -> dict:
         return {
             "id": self.id, "faction": self.faction, "is_ai": self.is_ai,
             "ai_difficulty": self.ai_difficulty, "name": self.name,
-            "credits": round(self.credits, 2), "materials": round(self.materials, 2),
-            "energy": round(self.energy, 2), "crew": round(self.crew, 2),
+            "credits": self.credits if precise else round(self.credits, 2),
+            "materials": self.materials if precise else round(self.materials, 2),
+            "energy": self.energy if precise else round(self.energy, 2),
+            "crew": self.crew if precise else round(self.crew, 2),
             "command_capacity": self.command_capacity, "team": self.team,
             "researched": sorted(self.researched),
             "researching": {k: v for k, v in self.researching.items()},
@@ -130,6 +132,20 @@ class GameState:
     dead_ids: list = field(default_factory=list)
     dmg_system: object | None = None
 
+    # replay recorder + net session (transient; not saved)
+    _recorder: object | None = field(default=None, repr=False, compare=False)
+    _net_session: object | None = field(default=None, repr=False, compare=False)
+
+    def queue_command(self, cmd: PlayerCommand) -> None:
+        self.command_queue.append(cmd)
+        # replay + net hooks (set by main.py / net session; None in plain games)
+        recorder = self._recorder
+        if recorder is not None:
+            recorder.on_command(cmd, self.tick)
+        session = self._net_session
+        if session is not None:
+            session.submit(cmd, self.tick)
+
     # transient (not saved): effects for renderer
     effects: list = field(default_factory=list)
     floating_texts: list = field(default_factory=list)
@@ -160,9 +176,6 @@ class GameState:
             del self.floating_texts[:20]
         self.floating_texts.append({"pos": pos.to_dict(), "text": text,
                                     "color": list(color), "t": 0.0})
-
-    def queue_command(self, cmd: PlayerCommand) -> None:
-        self.command_queue.append(cmd)
 
     def players_in_team(self, team: int) -> list:
         return [p for p in self.players.values() if p.team == team]
@@ -198,19 +211,23 @@ class GameState:
         return Vec3(*best["pos"]) if best else None
 
     # ------------------------------------------------------------------ save/load
-    def to_dict(self) -> dict:
+    def to_dict(self, precise: bool = False) -> dict:
+        """Serialize. precise=True (replay/lockstep) skips float rounding —
+        regular saves round for size/readability, replays need bit-exact state."""
         return {
             "format": 3,
             "seed": self.seed, "game_type": self.game_type, "mission_id": self.mission_id,
-            "time": round(self.time, 3), "tick": self.tick,
+            "time": self.time if precise else round(self.time, 3),
+            "tick": self.tick,
             "next_entity_id": self.next_entity_id,
             "next_fleet_id": self.next_fleet_id,
             "next_projectile_id": self.next_projectile_id,
             "map_info": self.map_info.to_dict(),
-            "players": {pid: p.to_dict() for pid, p in self.players.items()},
-            "fleets": {fid: f.to_dict() for fid, f in self.fleets.items()},
-            "entities": {eid: self._entity_dict(e) for eid, e in self.entities.items()},
-            "projectiles": [p.to_dict() for p in self.projectiles.values()],
+            "players": {pid: p.to_dict(precise) for pid, p in self.players.items()},
+            "fleets": {fid: f.to_dict(precise) for fid, f in self.fleets.items()},
+            "entities": {eid: self._entity_dict(e, precise)
+                         for eid, e in self.entities.items()},
+            "projectiles": [p.to_dict(precise) for p in self.projectiles.values()],
             "winner": self.winner, "game_over": self.game_over,
             "game_over_reason": self.game_over_reason,
             "stats": self.stats,
@@ -218,33 +235,43 @@ class GameState:
         }
 
     @staticmethod
-    def _entity_dict(e: Entity) -> dict:
+    def _entity_dict(e: Entity, precise: bool = False) -> dict:
         d = {
             "id": e.id, "kind": e.kind, "owner": e.owner, "data_id": e.data_id,
-            "pos": e.pos.to_dict(), "vel": e.vel.to_dict(), "yaw": round(e.yaw, 4),
+            "pos": e.pos.to_dict(precise), "vel": e.vel.to_dict(precise),
+            "yaw": e.yaw if precise else round(e.yaw, 4),
             "radius": e.radius, "is_ship": e.is_ship, "is_station": e.is_station,
             "is_squadron": e.is_squadron, "is_construction": e.is_construction,
-            "is_planet": e.is_planet, "hull": round(e.hull, 2), "max_hull": e.max_hull,
-            "shields": {q: round(v, 2) for q, v in e.shields.items()},
+            "is_planet": e.is_planet,
+            "hull": e.hull if precise else round(e.hull, 2),
+            "max_hull": e.max_hull,
+            "shields": ({q: v for q, v in e.shields.items()} if precise else
+                        {q: round(v, 2) for q, v in e.shields.items()}),
             "max_shield_quad": e.max_shield_quad, "shield_regen": e.shield_regen,
-            "systems": {k: {"hp": round(v.hp, 2), "max_hp": v.max_hp}
+            "systems": {k: ({"hp": v.hp, "max_hp": v.max_hp} if precise else
+                            {"hp": round(v.hp, 2), "max_hp": v.max_hp})
                         for k, v in e.systems.items()},
-            "alive": e.alive, "xp": round(e.xp, 2), "level": e.level,
-            "order_type": e.order_type, "energy": round(e.energy, 2),
+            "alive": e.alive, "xp": e.xp if precise else round(e.xp, 2),
+            "level": e.level,
+            "order_type": e.order_type,
+            "energy": e.energy if precise else round(e.energy, 2),
             "max_energy": e.max_energy, "spawn_time": e.spawn_time,
         }
         if e.order_target_pos:
-            d["order_target_pos"] = e.order_target_pos.to_dict()
+            d["order_target_pos"] = e.order_target_pos.to_dict(precise)
         if e.order_target_id is not None:
             d["order_target_id"] = e.order_target_id
         if e.build_queue:
-            d["build_queue"] = [
-                {k: (round(v, 2) if isinstance(v, float) else v) for k, v in item.items()}
-                for item in e.build_queue]
+            if precise:
+                d["build_queue"] = [dict(item) for item in e.build_queue]
+            else:
+                d["build_queue"] = [
+                    {k: (round(v, 2) if isinstance(v, float) else v) for k, v in item.items()}
+                    for item in e.build_queue]
         if e.colonized_by is not None:
             d["colonized_by"] = e.colonized_by
         if e.cargo_credits:
-            d["cargo_credits"] = round(e.cargo_credits, 2)
+            d["cargo_credits"] = e.cargo_credits if precise else round(e.cargo_credits, 2)
         if e.convoy_dest is not None:
             d["convoy_dest"] = e.convoy_dest
         if e.fighter_count or e.max_fighters:
