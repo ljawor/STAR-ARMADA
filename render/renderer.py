@@ -2293,7 +2293,13 @@ class Renderer:
             glRotatef(-90, 1, 0, 0)
             glColor4f(col[0], col[1], col[2], 0.9)
             glLineWidth(2.0)
-            r = e.radius * (1.35 if not e.is_planet else 1.1)
+            # A shielded unit draws its shield shell at radius * 1.35, which is
+            # exactly where this ring used to sit — the two coincided and the
+            # crisp outline cut across the soft bubble's rim. Keep the ring, but
+            # tuck it inside the bubble so the two read as separate cues.
+            shielded = (not e.is_planet) and e.max_shield_total() > 0 \
+                and e.total_shield() > 0
+            r = e.radius * (1.1 if shielded else (1.35 if not e.is_planet else 1.1))
             glBegin(GL_LINE_LOOP)
             for i in range(28):
                 a = i / 28 * 2 * math.pi
