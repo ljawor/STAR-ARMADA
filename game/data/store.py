@@ -213,10 +213,16 @@ class DataStore:
         return t
 
     def command_cost(self, e) -> int:
-        if e.is_squadron:
-            return self.resolve_ship(e.data_id).command_cost
-        if e.is_ship:
-            return self.resolve_ship(e.data_id).command_cost
+        """Command points this unit consumes (0 if it has no ship data).
+
+        Must stay total: trade_convoy is a simulated ship with deliberately no
+        ShipData entry (TradingSystem mints it directly), and this is reached
+        from the HUD's command-capacity readout on every frame. An unguarded
+        resolve_ship() here crashed the game the moment a convoy existed.
+        """
+        if e.is_squadron or e.is_ship:
+            s = self.ships.get(e.data_id)
+            return s.command_cost if s is not None else 0
         return 0
 
     def unit_name(self, e) -> str:

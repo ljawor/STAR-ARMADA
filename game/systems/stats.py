@@ -125,13 +125,14 @@ def effective_accuracy(state, e: Entity, base_acc: float) -> float:
 def effective_speed(state, e: Entity) -> float:
     if e.is_station or e.is_planet:
         return 0.0
-    if e.data_id == "trade_convoy":
-        # convoys steer themselves in TradingSystem; movement must not
-        # fight that (and there is no ShipData for them)
+    s = DataStore.get().ships.get(e.data_id) if (e.is_ship or e.is_squadron) else None
+    if s is None:
+        # no ShipData: trade convoys are minted by TradingSystem and steer
+        # themselves (movement must not fight that). Fall back to the trading
+        # speed so any other data-less hull still moves rather than crashing.
         eco = DataStore.get().rules.get("economy", {}).get("trading", {})
-        return float(eco.get("speed", 55.0))
-    base = DataStore.get().resolve_ship(e.data_id).speed if (e.is_ship or e.is_squadron) else 0
-    spd = base * e.speed_multiplier()
+        return float(eco.get("speed", 55.0)) if e.data_id == "trade_convoy" else 0.0
+    spd = s.speed * e.speed_multiplier()
     spd *= tech_mult(state, e.owner, "speed_mult")
     spd *= 1.0 + 0.05 * veteran_fraction(e)
     spd *= ability_speed_mult(e)
@@ -140,9 +141,11 @@ def effective_speed(state, e: Entity) -> float:
 
 
 def effective_turn_rate(state, e: Entity) -> float:
-    if e.data_id == "trade_convoy":
-        return 0.0   # convoys snap-heading in TradingSystem
-    base = DataStore.get().resolve_ship(e.data_id).turn_rate if (e.is_ship or e.is_squadron) else 0
+    s = DataStore.get().ships.get(e.data_id) if (e.is_ship or e.is_squadron) else None
+    if s is None:
+        # trade convoys snap-heading in TradingSystem (and have no ShipData)
+        return 0.0
+    base = s.turn_rate
     tr = base * (0.3 + 0.7 * max(0.0, e.subsystem_fraction("engines")))
     tr *= tech_mult(state, e.owner, "turn_mult")
     if e.ability_active.get("engine_overdrive", 0) > 0:

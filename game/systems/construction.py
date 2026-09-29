@@ -217,8 +217,8 @@ class ConstructionSystem:
         planet = st.entity(planet_id)
         if unit is None or planet is None or not planet.is_planet:
             return False
-        ud = self.ds.resolve_ship(unit.data_id)
-        if not ud.can_colonize:
+        ud = self.ds.ships.get(unit.data_id)
+        if ud is None or not ud.can_colonize:
             return False
         if planet.colonized_by is not None:
             return False

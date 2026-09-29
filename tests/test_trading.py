@@ -191,5 +191,49 @@ class TestStartUnits(unittest.TestCase):
                          "mission enemy trade_station did not spawn")
 
 
+class TestConvoyHasNoShipData(unittest.TestCase):
+    """A trade_convoy is a simulated ship with NO ShipData entry (TradingSystem
+    mints it directly). Any code path that assumes ship data exists crashes —
+    the reported one was the HUD's command-capacity readout, on every frame."""
+
+    def _with_convoy(self):
+        gm = make_game(ai=False)
+        st = gm.state
+        gm.factory.spawn_station("trade_station", 0, Vec3(-6000, 0, 0))
+        gm.factory.spawn_station("trade_station", 1, Vec3(6000, 0, 0))
+        gm.trading.cfg.update(spawn_interval=0.5, speed=10.0)
+        run_for(gm, 1.0)
+        conv = next(e for e in st.entities.values()
+                    if e.alive and e.data_id == "trade_convoy")
+        return gm, st, conv
+
+    def test_command_used_is_total(self):
+        """Was: KeyError "Unknown ship id 'trade_convoy'" -> game crash."""
+        gm, st, conv = self._with_convoy()
+        for pid, p in st.players.items():
+            used = p.command_used(st.entities)
+            self.assertIsInstance(used, int, f"player {pid} used={used!r}")
+
+    def test_command_cost_zero_for_convoy(self):
+        gm, st, conv = self._with_convoy()
+        self.assertEqual(DataStore.get().command_cost(conv), 0)
+
+    def test_convoy_stats_do_not_crash(self):
+        """effective_speed/turn_rate are called every simulation tick."""
+        from game.systems import stats
+        gm, st, conv = self._with_convoy()
+        self.assertGreater(stats.effective_speed(st, conv), 0.0)
+        self.assertEqual(stats.effective_turn_rate(st, conv), 0.0)
+        # must not raise either
+        DataStore.get().unit_name(conv)
+        conv.hull_fraction()
+        conv.speed_multiplier()
+
+    def test_whole_sim_runs_with_convoys_alive(self):
+        """No other system may crash once a convoy exists."""
+        gm, st, conv = self._with_convoy()
+        run_for(gm, 30.0)          # would raise from any per-tick system
+
+
 if __name__ == "__main__":
     unittest.main()
