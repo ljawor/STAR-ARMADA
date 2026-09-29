@@ -254,11 +254,17 @@ class HUD:
         # trade readout: cargo convoys and trade stations had NO UI at all, so
         # the whole trading system was invisible in play (no income figure, no
         # destination). Show what the selected unit is actually doing.
+        # It gets its own row: drawn at +70 the 14px line ran under the HULL
+        # bar at +78, which painted the text out (reported: "income text is
+        # not fully readable"). Advance the cursor past it instead of letting
+        # the bars overlap.
+        y = panel.y + 70
         if e.data_id == "trade_convoy" or e.data_id == "trade_station":
-            self._label(panel.x + 12, panel.y + 70, self._trade_line(e), TRADE,
+            self._label(panel.x + 12, y, self._trade_line(e), TRADE,
                         self.font_small)
-
-        y = panel.y + 78
+            y += 18
+        else:
+            y += 8
         # hull
         frac = max(0.0, e.hull / max(1.0, e.max_hull))
         self._bar(panel.x + 12, y, 296, 14, frac, BAR_HULL, "HULL")
