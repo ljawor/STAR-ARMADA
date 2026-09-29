@@ -66,6 +66,19 @@ if SMOKE and os.environ.get("STAR_ARMADA_FORCE_DUMMY") == "1":
 SETTINGS = load_settings()
 FULLSCREEN = "--fullscreen" in sys.argv or bool(SETTINGS.get("fullscreen"))
 _flags = pygame.DOUBLEBUF | pygame.OPENGL
+_aa = int(SETTINGS.get("msaa", 4))
+if os.environ.get("STAR_ARMADA_MSAA"):
+    _aa = int(os.environ["STAR_ARMADA_MSAA"])
+if _aa > 1:
+    # Request a multisampled backbuffer BEFORE set_mode. The context is
+    # OpenGL 2.1 (Apple Metal), which reports SAMPLES=0 on the default
+    # context: without this every edge in the game is hard-aliased.
+    # 8x is not available on this driver, so 4x is the ceiling.
+    try:
+        pygame.display.gl_set_attribute(pygame.GL_MULTISAMPLEBUFFERS, 1)
+        pygame.display.gl_set_attribute(pygame.GL_MULTISAMPLESAMPLES, _aa)
+    except Exception:                                    # noqa: BLE001
+        _aa = 0                                          # keep running, no AA
 if FULLSCREEN:
     _info = pygame.display.Info()
     W, H = _info.current_w, _info.current_h

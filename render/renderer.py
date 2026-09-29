@@ -18,10 +18,10 @@ from OpenGL.GL import (
     glMatrixMode, glNewList, glNormal3f, glPopAttrib, glPopMatrix,
     glPushMatrix, glRotatef, glScalef, glTexCoord2f, glTranslatef, glVertex3f,
     glBindTexture, GL_BLEND, GL_CULL_FACE, GL_COLOR_BUFFER_BIT, GL_COMPILE,
-    GL_CURRENT_BIT, GL_DEPTH_BUFFER_BIT, GL_DEPTH_TEST, GL_LINE_LOOP,
-    GL_LINE_STRIP, GL_LINES, GL_MODELVIEW, GL_ONE, GL_ONE_MINUS_SRC_ALPHA,
-    GL_POINTS, GL_QUADS, GL_SRC_ALPHA, GL_TEXTURE_2D, GL_TRANSFORM_BIT,
-    GL_TRIANGLES, GL_TRIANGLE_FAN,
+    GL_CURRENT_BIT, GL_DEPTH_BUFFER_BIT, GL_DEPTH_TEST, GL_LIGHTING,
+    GL_LINE_LOOP, GL_LINE_STRIP, GL_LINES, GL_MODELVIEW, GL_ONE,
+    GL_ONE_MINUS_SRC_ALPHA, GL_POINTS, GL_QUADS, GL_SRC_ALPHA, GL_TEXTURE_2D,
+    GL_TRANSFORM_BIT, GL_TRIANGLES, GL_TRIANGLE_FAN,
 )
 import OpenGL.GL as _gl
 
@@ -172,6 +172,11 @@ class Renderer:
 
         GL_COLOR_MATERIAL keeps faction colors; normals in display lists give
         the shading. Effects/projectiles pass disables lighting themselves.
+
+        A specular material is set once here so the metal pass in
+        ``_draw_ship``/``_draw_station`` has something to reflect: without it
+        GL_MATERIAL defaults give no highlight at all, and every hull reads as
+        flat plastic regardless of how good its geometry is.
         """
         import OpenGL.GL as GL
         star = self.state.map_info.star
@@ -179,8 +184,13 @@ class Renderer:
         GL.glEnable(GL.GL_LIGHT0)
         GL.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, (sp[0], max(sp[1], 2000.0), sp[2], 1.0))
         GL.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE, (0.85, 0.8, 0.72, 1.0))
+        GL.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR, (1.0, 0.97, 0.90, 1.0))
         GL.glLightfv(GL.GL_LIGHT0, GL.GL_AMBIENT, (0.0, 0.0, 0.0, 1.0))
         GL.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT, (0.34, 0.37, 0.44, 1.0))
+        # per-vertex evaluation of the highlight: the cheap "infinite viewer"
+        # default collapses to a single value across a large hull, visible only
+        # on a few coincidental normals.
+        GL.glLightModeli(GL.GL_LIGHT_MODEL_LOCAL_VIEWER, 1)
         GL.glEnable(GL.GL_COLOR_MATERIAL)
         GL.glColorMaterial(GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE)
         GL.glEnable(GL.GL_LIGHTING)
@@ -902,20 +912,40 @@ class Renderer:
             want_scale = 7.0 / max(0.01, 26.0 * px_per_world)
             scale = max(scale, want_scale)
         glScalef(scale, scale, scale)
-        # three tone passes: base owner color, dark accents, bright trim —
-        # ships read as multi-tone hardware instead of flat single-color
+        # four tone passes: base owner color, dark accents, bright trim, then
+        # emissive windows/nozzles/nav-lights. Ships read as multi-tone hardware
+        # instead of flat single-color, and the lit pass carries its own glow.
         base = color
         darkc = (color[0] * 0.52, color[1] * 0.52, color[2] * 0.52)
         trimc = (min(1.0, color[0] * 1.4 + 0.25), min(1.0, color[1] * 1.4 + 0.25),
                  min(1.0, color[2] * 1.4 + 0.25))
-        glColor3f(*base)
-        glCallList(lst)
         dark_lst = self._ship_display_list(vis["shape"] + "_dark")
         trim_lst = self._ship_display_list(vis["shape"] + "_trim")
+        lit_lst = self._ship_display_list(vis["shape"] + "_lit")
+        # metal pass (A2): base + dark hull plates get a broad metallic sheen.
+        # Shininess is LOW on purpose — probed on these hull facets, 24+ puts
+        # the highlight on normals that mostly are not there (0 visible px),
+        # while 8 gives a wide sheen across many plates.
+        self._material_metal(8.0, (0.42, 0.42, 0.42))
+        glColor3f(*base)
+        glCallList(lst)
         glColor3f(*darkc)
         glCallList(dark_lst)
+        # ...trim is polished, so it gets a tighter, brighter highlight
+        self._material_metal(12.0, (0.85, 0.85, 0.85))
         glColor3f(*trimc)
         glCallList(trim_lst)
+        self._material_matte()
+        # emissive details: drawn UNLIT so they read as light sources rather
+        # than surfaces being lit (with lighting on, a window on the ship's
+        # dark side goes black — the opposite of the intent)
+        import OpenGL.GL as GL
+        GL.glDisable(GL.GL_LIGHTING)
+        GL.glDisable(GL.GL_TEXTURE_2D)
+        glColor3f(1.0, 0.80, 0.52)
+        glCallList(lit_lst)
+        GL.glEnable(GL.GL_TEXTURE_2D)
+        GL.glEnable(GL.GL_LIGHTING)
         glPopMatrix()
         # engine glow: additive billboard at the ship's tail (world space)
         if spd > 8:
@@ -931,38 +961,75 @@ class Renderer:
                 glDepthMask(True)
                 glDisable(GL_BLEND)
 
-    def _ship_display_list(self, shape: str) -> int:
-        """Multi-part lit hulls in three baked tone passes.
+    def _material_metal(self, shininess: float, spec: tuple):
+        """Give the current pass a specular response — without touching colour.
 
-        Builds three lists per shape: base (owner color), dark (black parts
-        colored with a 0.42 tint of the caller color at draw time), trim
-        (near-white highlights). _draw_ship sets colors and calls the three
-        in sequence, so hulls read multi-tone instead of flat single-color.
+        GL_COLOR_MATERIAL is deliberately left ENABLED and bound to
+        AMBIENT_AND_DIFFUSE. Disabling it (the obvious way to keep the
+        highlight independent of the part's colour) looks correct in
+        isolation but silently drops glColor's *diffuse* contribution: every
+        plate then shades with the default grey-white material and the
+        owner's colour is lost. Measured on a P0 cruiser — with
+        GL_COLOR_MATERIAL off the dark/trim tone passes collapse onto the
+        base pass; with it on they stay correctly separated.
+
+        Setting GL_SPECULAR/GL_SHININESS alone leaves the faction tint
+        intact and still produces the highlight.
+
+        Shininess is kept LOW (see callers): these hull facets have few
+        normals, and a tight exponent concentrates the highlight onto
+        geometry that mostly is not there — probed, shininess 24+ leaves no
+        visible highlight at all, while 2-12 gives a broad metallic sheen.
+        """
+        import OpenGL.GL as GL
+        GL.glMaterialfv(GL.GL_FRONT_AND_BACK, GL.GL_SPECULAR,
+                        (spec[0], spec[1], spec[2], 1.0))
+        GL.glMaterialf(GL.GL_FRONT_AND_BACK, GL.GL_SHININESS, shininess)
+
+    def _material_matte(self):
+        """Back to diffuse-only (no highlight) for the next pass."""
+        import OpenGL.GL as GL
+        GL.glMaterialfv(GL.GL_FRONT_AND_BACK, GL.GL_SPECULAR, (0.0, 0.0, 0.0, 1.0))
+        GL.glMaterialf(GL.GL_FRONT_AND_BACK, GL.GL_SHININESS, 0.0)
+
+    def _ship_display_list(self, shape: str) -> int:
+        """Multi-part lit hulls in four baked tone passes.
+
+        Builds four lists per shape: base (owner color), dark (a 0.52 tint of
+        the caller color), trim (near-white highlights) and lit (emissive —
+        windows, nozzle interiors, running lights; unlit and untextured).
+        _draw_ship sets colors and calls them in sequence, so hulls read
+        multi-tone instead of flat single-color, and the lit pass gives every
+        ship a set of glowing details that survive even in shadow.
         """
         if shape in self.ship_lists:
             return self.ship_lists[shape]
         import OpenGL.GL as GL
-        passes = {"base": _gl.glGenLists(1),
-                  "dark": _gl.glGenLists(1),
-                  "trim": _gl.glGenLists(1)}
+        passes = {p: _gl.glGenLists(1) for p in ("base", "dark", "trim", "lit")}
         for pname, lst in passes.items():
             glNewList(lst, GL_COMPILE)
             GL.glPushAttrib(GL.GL_ENABLE_BIT)
             GL.glDisable(GL.GL_CULL_FACE)
+            if pname == "lit":
+                # emissive pass: no lighting (a window is its own light source)
+                # and no hull-panel texture (it would darken the glow).
+                GL.glDisable(GL.GL_LIGHTING)
+                GL.glDisable(GL.GL_TEXTURE_2D)
             self._emit_hull(shape, pname)
             GL.glPopAttrib()
             glEndList()
         self.ship_lists[shape] = passes["base"]
-        self.ship_lists[shape + "_dark"] = passes["dark"]
-        self.ship_lists[shape + "_trim"] = passes["trim"]
+        for pname in ("dark", "trim", "lit"):
+            self.ship_lists[shape + "_" + pname] = passes[pname]
         return passes["base"]
 
     def _emit_hull(self, shape: str, pname: str) -> None:
         """Geometry for one tone pass of a ship hull."""
         dark = pname == "dark"
         trim = pname == "trim"
+        lit = pname == "lit"
         if shape == "wedge":
-            if not dark and not trim:
+            if not dark and not trim and not lit:
                 # fighter: fuselage + canopy + swept wings + tail fin
                 self._lit_box(14, 6, 40, cy=3)
                 self._out_pyr((0, 4, 34), ((-7, 1, 16), (7, 1, 16),
@@ -984,14 +1051,14 @@ class Renderer:
                 self._lit_box(3, 2, 2, cy=6.5, cz=-20.5)
                 self._lit_box(9, 1.4, 7, cx=30, cy=7.5, cz=-8)   # stab fins
                 self._lit_box(9, 1.4, 7, cx=-30, cy=7.5, cz=-8)
-            else:
+            elif trim:
                 # trim: nose probe, wingtip cannons, comm whip
                 self._lit_box(1.4, 6, 1.4, cy=6, cz=20)          # nose probe
                 self._lit_box(3, 3, 12, cx=34, cy=4, cz=4)       # wingtip cannons
                 self._lit_box(3, 3, 12, cx=-34, cy=4, cz=4)
                 self._lit_box(1.2, 7, 1.2, cy=13, cz=-16)        # comm whip
         elif shape == "needle":
-            if not dark and not trim:
+            if not dark and not trim and not lit:
                 # corvette/frigate — rounded hull: tapered octagonal nose,
                 # octagonal main tube, capsule stern, rounded bridge pod
                 self._octa_tube(8.5, 3.0, 14, 46, squash=0.55)     # tapered nose
@@ -1012,7 +1079,7 @@ class Renderer:
                 self._lit_box(15, 1.8, 8, cy=5.4, cz=-16)           # intake band
                 self._lit_box(9, 3, 5, cy=-4.5, cz=-14)             # ventral skid
                 self._octa_tube(6.2, 6.2, -38, -30, squash=0.55)    # armor skirt
-            else:
+            elif trim:
                 # trim: dorsal turret + barrels (forward, on the hull spine),
                 # comm mast, sensor pods, running lights, deck strip
                 self._lit_box(4.5, 4.5, 4.5, cy=6.2, cz=0)          # dorsal turret
@@ -1024,7 +1091,7 @@ class Renderer:
                 self._lit_box(1.8, 1.8, 1.8, cx=-10.4, cy=2, cz=6)
                 self._lit_box(16, 1.2, 5, cy=5.0, cz=2)             # deck strip
         elif shape == "cruiser":
-            if not dark and not trim:
+            if not dark and not trim and not lit:
                 # heavy hull + bow + command tower + nacelles + engine block
                 self._lit_box(30, 14, 100, cz=-8)
                 self._out_pyr((0, 5, 78), ((-13, 0, 40), (13, 0, 40),
@@ -1044,7 +1111,7 @@ class Renderer:
                     self._lit_box(24, 2.5, 4, cy=7.5, cz=cz_)
                 self._lit_box(14, 2, 8, cy=17, cz=-30)           # aft bridge wing
                 self._lit_box(14, 2, 6, cy=16, cz=-18)           # windows band
-            else:
+            elif trim:
                 # trim: turret rows, spinal cannon, masts, emitters, dome
                 for cz_ in (18, -2, -22):                        # broadsides
                     self._lit_box(6, 5, 6, cx=16, cy=5, cz=cz_)
@@ -1059,7 +1126,7 @@ class Renderer:
                 self._lit_box(5, 2.5, 5, cx=-13.4, cy=1, cz=-56)
                 self._dome(4.5, 10, 7)                           # comm dome
         elif shape == "dagger":
-            if not dark and not trim:
+            if not dark and not trim and not lit:
                 # battleship: hull + bow + tower + spine + engine block
                 self._lit_box(38, 20, 150)
                 self._out_pyr((0, 6, 108), ((-16, 0, 72), (16, 0, 72),
@@ -1083,7 +1150,7 @@ class Renderer:
                 self._lit_box(6, 8, 30, cx=-21, cy=-3, cz=30)
                 self._lit_box(6, 8, 30, cx=21, cy=-3, cz=-30)
                 self._lit_box(6, 8, 30, cx=-21, cy=-3, cz=-30)
-            else:
+            elif trim:
                 # trim: windows, flag mast, turret bank, bow clamps
                 self._lit_box(16, 3, 8, cy=30, cz=-34)           # tower windows
                 self._lit_box(1.5, 12, 1.5, cy=40, cz=-34)       # flag mast
@@ -1092,7 +1159,7 @@ class Renderer:
                     self._lit_box(3.5, 3.5, 10, cy=14, cz=cz_ + 7)
                 self._lit_box(12, 3, 10, cy=14, cz=64)           # bow clamps
         else:
-            if not dark and not trim:
+            if not dark and not trim and not lit:
                 # construction/generic: cargo box + cab + skids
                 self._lit_box(26, 14, 36, cy=2)
                 self._lit_box(12, 8, 10, cy=11, cz=12)
@@ -1103,7 +1170,7 @@ class Renderer:
                 self._lit_box(8, 8, 8, cx=8, cy=-8, cz=16)
                 self._lit_box(8, 8, 8, cx=-8, cy=-8, cz=16)
                 self._lit_box(6, 2, 4, cx=0, cy=-8, cz=-12)      # underslug tank
-            else:
+            elif trim:
                 # trim: crane mast + jib + welder, beacon, plating, lamps
                 self._lit_box(2.5, 14, 2.5, cx=-12, cy=16, cz=-8)
                 self._lit_box(14, 2, 2.5, cx=-5, cy=22, cz=-8)
@@ -1114,6 +1181,79 @@ class Renderer:
                 self._lit_box(3, 3, 2, cx=15, cy=2, cz=-14)      # spot lamps
                 self._lit_box(5, 5, 3, cz=-18.5)                 # engine nozzles
                 self._lit_box(4, 3, 2, cy=7, cz=18.5)
+        if lit:
+            # emissive details last so they are visible in every shape branch
+            self._emit_glazing(shape if shape in
+                               ("needle", "cruiser", "dagger", "wedge", "box")
+                               else "box")
+
+    def _emit_glazing(self, shape: str) -> None:
+        """Emissive windows, nozzle interiors and running lights.
+
+        Drawn in the ``lit`` pass, which runs unlit and untextured, so these
+        boxes read as their own light sources. Window strips are long/thin and
+        inset just proud of the hull plating they sit on; running lights are
+        small port(red)/starboard(green) markers placed so the eye can read
+        which way a hull is facing at tactical zoom.
+        """
+        # warm cabin white — the lit pass has no lighting, so this colour is
+        # exactly what hits the framebuffer
+        w = (1.0, 0.80, 0.52)
+        # ---- window strips -------------------------------------------------
+        # strips are per-shape; widths/heights are a fraction of the hull
+        strips = {
+            # (x, y, z, sx, sy, sz)
+            "needle": [(-9.6, 3.0, -4, 0.5, 1.1, 16), (9.6, 3.0, -4, 0.5, 1.1, 16),
+                       (-5.0, 5.6, -14, 6.0, 0.5, 0.9), (5.0, 5.6, -14, 6.0, 0.5, 0.9),
+                       (-6.6, 4.0, 8, 0.5, 0.9, 9), (6.6, 4.0, 8, 0.5, 0.9, 9),
+                       (-8.5, 3.2, -34, 4.0, 0.5, 0.9), (8.5, 3.2, -34, 4.0, 0.5, 0.9)],
+            "cruiser": [(-13.6, 4.0, -30, 0.5, 1.3, 46), (13.6, 4.0, -30, 0.5, 1.3, 46),
+                        (-13.6, -2.0, -6, 0.5, 0.9, 26), (13.6, -2.0, -6, 0.5, 0.9, 26),
+                        (-9.0, 17.5, -18, 16.0, 1.4, 0.8),
+                        (-11.0, 15.0, -30, 8.0, 0.8, 0.8),
+                        (-15.0, 4.0, -40, 10.0, 0.7, 0.8)],
+            "dagger": [(-17.6, 6.0, -44, 0.5, 1.6, 66), (17.6, 6.0, -44, 0.5, 1.6, 66),
+                       (-19.5, 8.0, 20, 0.5, 1.1, 40), (19.5, 8.0, 20, 0.5, 1.1, 40),
+                       (-17.5, -6.0, -30, 0.5, 0.9, 30), (17.5, -6.0, -30, 0.5, 0.9, 30),
+                       (-11.0, 30.5, -34, 18.0, 1.6, 0.8),
+                       (-5.0, 26.0, -34, 0.8, 0.8, 8.0), (5.0, 26.0, -34, 0.8, 0.8, 8.0),
+                       (-11.0, 21.5, 28, 6.0, 0.8, 0.8)],
+            "wedge": [(6.0, 4.6, 2, 0.5, 1.2, 8), (-6.0, 4.6, 2, 0.5, 1.2, 8),
+                      (14.0, 4.6, -6, 0.6, 0.8, 8), (-14.0, 4.6, -6, 0.6, 0.8, 8),
+                      (0.0, 4.2, 30, 3.2, 0.6, 0.8)],
+            "box": [(0.0, 6.0, 19.0, 6.0, 1.2, 0.8),
+                    (-13.0, 2.0, 4, 0.6, 2.0, 10), (13.0, 2.0, 4, 0.6, 2.0, 10),
+                    (0.0, 9.0, 17.0, 3.0, 0.8, 0.8)],
+        }[shape] if shape in ("needle", "cruiser", "dagger", "wedge", "box") else []
+        for x, y, z, sx, sy, sz in strips:
+            self._lit_box(sx, sy, sz, cx=x, cy=y, cz=z)
+        # ---- engine nozzle interiors --------------------------------------
+        # a bright disc inside each nozzle: the same positions the `dark` pass
+        # cuts the nozzle bodies into
+        nozzles = {
+            "needle": [(-4.5, 0.5, -44.2), (4.5, 0.5, -44.2)],
+            "cruiser": [(-7, -2, -62.4), (0, -2, -62.4), (7, -2, -62.4)],
+            "dagger": [(-11, -4, -77.4), (-4, -4, -77.4), (4, -4, -77.4), (11, -4, -77.4)],
+            "wedge": [(5, 0, -22.0), (-5, 0, -22.0)],
+            "box": [(0, 0, -20.0)],
+        }.get(shape, [])
+        for x, y, z in nozzles:
+            self._lit_box(4.2, 4.2, 0.7, cx=x, cy=y, cz=z)
+        # ---- running lights ----------------------------------------------
+        # port = red, starboard = green. Colour is per-vertex here; the pass is
+        # unlit so these stay crisp at any distance.
+        nav = {
+            "needle": [(10.6, 2.2, 4), (-10.6, 2.2, 4)],
+            "cruiser": [(20, 6, 6), (-20, 6, 6)],
+            "dagger": [(21, 9, 0), (-21, 9, 0)],
+            "wedge": [(35, 4, 4), (-35, 4, 4)],
+            "box": [(13, 8, -14), (-13, 8, -14)],
+        }.get(shape, [])
+        for i, (x, y, z) in enumerate(nav):
+            col = (1.0, 0.18, 0.14) if i == 0 else (0.25, 1.0, 0.35)
+            glColor3f(*col)
+            self._lit_box(1.7, 1.7, 1.7, cx=x, cy=y, cz=z)
+        glColor3f(*w)
 
     def _station_ring(self, r: float, segments: int = 36):
         """Chunky solid ring: top/bottom annuli + outer/inner walls.
@@ -1168,6 +1308,10 @@ class Renderer:
         glRotatef(self.time * 3.0, 0, 1, 0)
         r = e.radius
         dark = (color[0] * 0.55, color[1] * 0.55, color[2] * 0.55)
+        # metal pass (A2): structural parts read as lit alloy. Low shininess —
+        # see _material_metal; a tight exponent leaves no visible highlight on
+        # these large flat facets.
+        self._material_metal(8.0, (0.40, 0.40, 0.40))
         if e.data_id == "command_station":
             # solid core sphere + rotating ring + 4 spoke girders + docking arms
             glPushMatrix()
@@ -1412,6 +1556,22 @@ class Renderer:
                 self._station_ring(r * 1.1, 30)
                 glColor3f(*color)
                 self._lit_box(r * 0.12, r * 0.55, r * 0.12, cy=r * 0.8)
+        # emissive pass (A3): lit windows + nav beacons. Lighting and the hull
+        # panel texture are switched off for this call, so these read as light
+        # sources rather than surfaces being lit.
+        self._material_matte()
+        glDisable(GL_LIGHTING)
+        glDisable(GL_TEXTURE_2D)
+        glColor3f(1.0, 0.80, 0.52)
+        # the lit list is authored at UNIT radius, so it must be scaled by the
+        # station's radius (without this the windows are 0.05 world units and
+        # never visible — the whole emissive pass silently does nothing).
+        glPushMatrix()
+        glScalef(r, r, r)
+        glCallList(self._station_lit_list(e.data_id))
+        glPopMatrix()
+        glEnable(GL_TEXTURE_2D)
+        glEnable(GL_LIGHTING)
         # construction progress ring
         if e.build_queue:
             item = e.build_queue[0]
@@ -1429,22 +1589,248 @@ class Renderer:
         glPopMatrix()
 
     # ------------------------------------------------------------------ projectiles
+    def _station_lit_list(self, data_id: str) -> int:
+        """Baked emissive details for one station type (built once, reused).
+
+        A station is drawn every frame from `r`-relative calls, so the lit
+        windows cannot be a fixed world-size box: the list is compiled for a
+        UNIT radius and scaled by `e.radius` at call time, exactly like the
+        hull lists are scaled by ship visual scale.
+        """
+        key = "station_lit:" + data_id
+        cached = self.ship_lists.get(key)
+        if cached is not None:
+            return cached
+        import OpenGL.GL as GL
+        lst = _gl.glGenLists(1)
+        glNewList(lst, GL_COMPILE)
+        GL.glPushAttrib(GL.GL_ENABLE_BIT)
+        GL.glDisable(GL.GL_CULL_FACE)
+        self._emit_station_lit(data_id)
+        GL.glPopAttrib()
+        glEndList()
+        self.ship_lists[key] = lst
+        return lst
+
+    def _emit_station_lit(self, data_id: str) -> None:
+        """Windows, hangar mouths and nav beacons at unit radius.
+
+        Warm cabin light for inhabited volumes, cyan for hangar/work areas,
+        and red/green beacon pairs so a station reads as *operating* rather
+        than as dead geometry.
+        """
+        warm = (1.0, 0.80, 0.52)
+        cool = (0.62, 0.88, 1.0)
+        if data_id == "command_station":
+            # ring habitation pods: window band around each pod
+            for i in range(8):
+                a = i / 8 * 2 * math.pi
+                px_, pz_ = math.sin(a), math.cos(a)
+                glColor3f(*warm)
+                self._lit_box(0.10, 0.035, 0.20, cx=px_ * 1.02, cy=0.0, cz=pz_ * 1.02)
+                self._lit_box(0.20, 0.035, 0.10, cx=px_ * 1.02, cy=0.0, cz=pz_ * 1.02)
+            # core: a band of lit deck lines + the command tower glazing
+            for i in range(12):
+                a = i / 12 * 2 * math.pi
+                glColor3f(*warm)
+                self._lit_box(0.03, 0.05, 0.05, cx=math.sin(a) * 0.43,
+                              cy=-0.10, cz=math.cos(a) * 0.43)
+            glColor3f(*warm)
+            self._lit_box(0.34, 0.04, 0.34, cy=0.70)          # tower cap glazing
+            self._lit_box(0.26, 0.03, 0.05, cy=0.50, cz=0.17)  # observation deck
+            glColor3f(*cool)                                    # docking bay mouths
+            for sgn in (-1, 1):
+                self._lit_box(0.04, 0.10, 0.34, cx=sgn * 1.55, cy=0.0)
+            # nav beacons: red top, green bottom
+            glColor3f(1.0, 0.18, 0.14)
+            self._lit_box(0.05, 0.05, 0.05, cy=0.92)
+            glColor3f(0.25, 1.0, 0.35)
+            self._lit_box(0.05, 0.05, 0.05, cy=-0.92)
+        elif data_id == "shipyard":
+            # build cradles: work-light strips along both gantries
+            glColor3f(*cool)
+            for sgn in (-1, 1):
+                for k in range(4):
+                    self._lit_box(0.05, 0.04, 0.20, cx=sgn * 0.95,
+                                  cy=0.34, cz=-0.30 + k * 0.20)
+            glColor3f(*warm)
+            # gantry top strip sits ON TOP of the beam, not inside it: the beam
+            # is 0.16 tall about y=0.80, so a strip at 0.80 is fully buried and
+            # the whole warm pass renders zero visible pixels (probed).
+            self._lit_box(0.40, 0.05, 0.05, cy=0.90)           # gantry top strip
+            # pylon lights are pushed to the OUTER face (pylons span x 0.64-0.80)
+            self._lit_box(0.06, 0.30, 0.06, cx=0.83, cy=0.30)  # pylon lights
+            self._lit_box(0.06, 0.30, 0.06, cx=-0.83, cy=0.30)
+            glColor3f(1.0, 0.18, 0.14)
+            self._lit_box(0.05, 0.05, 0.05, cx=0.83, cy=0.92)
+            glColor3f(0.25, 1.0, 0.35)
+            self._lit_box(0.05, 0.05, 0.05, cx=-0.83, cy=0.92)
+        elif data_id == "fighter_platform":
+            glColor3f(*warm)
+            # pushed proud of the control tower's front face (tower spans
+            # z -0.75..-0.35 about cz=-0.55); at cz=-0.55 it was buried.
+            self._lit_box(0.30, 0.03, 0.05, cy=0.30, cz=-0.32)  # tower glazing
+            self._lit_box(0.05, 0.03, 0.22, cx=0.30, cy=0.30, cz=-0.32)
+            glColor3f(*cool)                                     # deck edge lighting
+            for i in range(5):
+                self._lit_box(0.06, 0.03, 0.06, cx=-2 * 0.32 + i * 0.32,
+                              cy=0.32, cz=0.78)
+                self._lit_box(0.06, 0.03, 0.06, cx=-2 * 0.32 + i * 0.32,
+                              cy=0.32, cz=-0.78)
+            glColor3f(1.0, 0.18, 0.14)
+            self._lit_box(0.05, 0.05, 0.05, cy=1.02, cz=-0.55)
+            glColor3f(0.25, 1.0, 0.35)
+            self._lit_box(0.05, 0.05, 0.05, cy=0.32, cz=0.80)
+        elif data_id == "mining_station":
+            glColor3f(*warm)
+            self._lit_box(0.55, 0.04, 0.05, cy=0.22, cz=0.46)    # refinery windows
+            self._lit_box(0.05, 0.04, 0.45, cx=0.56, cy=0.22)
+            glColor3f(*cool)                                      # drill head work lights
+            for i in range(4):
+                a = i / 4 * 2 * math.pi + 0.4
+                self._lit_box(0.05, 0.05, 0.05, cx=math.sin(a) * 0.20,
+                              cy=-0.86, cz=math.cos(a) * 0.20)
+            glColor3f(1.0, 0.18, 0.14)
+            self._lit_box(0.05, 0.05, 0.05, cx=0.55, cy=0.86)
+            glColor3f(0.25, 1.0, 0.35)
+            self._lit_box(0.05, 0.05, 0.05, cx=-0.55, cy=0.86)
+        elif data_id == "sensor_station":
+            glColor3f(*cool)                                      # array emitter ring
+            for i in range(10):
+                a = i / 10 * 2 * math.pi
+                self._lit_box(0.04, 0.04, 0.04, cx=math.sin(a) * 0.45,
+                              cy=1.30, cz=math.cos(a) * 0.45)
+            glColor3f(*warm)
+            self._lit_box(0.14, 0.04, 0.14, cy=0.16, cz=0.30)     # crew blister
+            glColor3f(1.0, 0.18, 0.14)
+            self._lit_box(0.05, 0.05, 0.05, cy=1.62)
+            glColor3f(0.25, 1.0, 0.35)
+            self._lit_box(0.05, 0.05, 0.05, cy=-0.42)
+        elif data_id == "trade_station":
+            for deck, y in ((0.62, 0.62), (0.42, 0.15)):
+                glColor3f(*warm)
+                for i in range(8):
+                    a = i / 8 * 2 * math.pi
+                    self._lit_box(0.07, 0.04, 0.07, cx=math.sin(a) * deck,
+                                  cy=y, cz=math.cos(a) * deck)
+            glColor3f(*cool)                                      # docking pad lights
+            for i in range(4):
+                a = i / 4 * 2 * math.pi
+                glPushMatrix()
+                glRotatef(-i * 90.0, 0, 1, 0)
+                self._lit_box(0.10, 0.04, 0.10, cx=1.45, cy=0.08)
+                glPopMatrix()
+            glColor3f(1.0, 0.18, 0.14)
+            self._lit_box(0.05, 0.05, 0.05, cy=1.55)
+            glColor3f(0.25, 1.0, 0.35)
+            self._lit_box(0.05, 0.05, 0.05, cy=-0.45)
+        elif data_id == "defense_platform":
+            glColor3f(*cool)
+            for i in range(4):                                    # barbette lights
+                glPushMatrix()
+                glRotatef(-i * 90.0, 0, 1, 0)
+                self._lit_box(0.08, 0.04, 0.08, cx=0.52, cy=0.42)
+                glPopMatrix()
+            glColor3f(*warm)
+            self._lit_box(0.30, 0.04, 0.05, cy=0.12, cz=0.42)     # bunker windows
+            glColor3f(1.0, 0.18, 0.14)
+            self._lit_box(0.05, 0.05, 0.05, cy=0.62, cz=-0.20)
+            glColor3f(0.25, 1.0, 0.35)
+            self._lit_box(0.05, 0.05, 0.05, cy=-0.45)
+        elif data_id == "repair_dock":
+            glColor3f(*cool)                                      # welding arcs in the cradle
+            for sgn in (-1, 1):
+                for k in range(3):
+                    self._lit_box(0.05, 0.05, 0.05, cx=sgn * 0.72,
+                                  cy=0.40, cz=-0.40 + k * 0.40)
+            glColor3f(*warm)
+            self._lit_box(0.22, 0.04, 0.05, cy=0.92, cz=0.40)
+            glColor3f(1.0, 0.18, 0.14)
+            self._lit_box(0.05, 0.05, 0.05, cy=1.00)
+            glColor3f(0.25, 1.0, 0.35)
+            self._lit_box(0.05, 0.05, 0.05, cy=-0.40)
+        elif data_id == "energy_relay":
+            glColor3f(*cool)                                      # collector coils glow
+            for i in range(6):
+                a = i / 6 * 2 * math.pi
+                self._lit_box(0.07, 0.14, 0.07, cx=math.sin(a) * 0.85,
+                              cy=-0.20, cz=math.cos(a) * 0.85)
+            glColor3f(0.70, 0.55, 1.0)                            # reactor core seam
+            self._lit_box(0.10, 0.10, 0.10)
+            glColor3f(1.0, 0.18, 0.14)
+            self._lit_box(0.05, 0.05, 0.05, cy=1.14)
+            glColor3f(0.25, 1.0, 0.35)
+            self._lit_box(0.05, 0.05, 0.05, cy=-0.62)
+        else:
+            glColor3f(*warm)
+            self._lit_box(0.60, 0.04, 0.06, cy=0.42, cz=0.52)
+            self._lit_box(0.06, 0.04, 0.50, cx=0.52, cy=0.22)
+            glColor3f(1.0, 0.18, 0.14)
+            self._lit_box(0.05, 0.05, 0.05, cy=1.12)
+            glColor3f(0.25, 1.0, 0.35)
+            self._lit_box(0.05, 0.05, 0.05, cy=-0.50)
+
     def _draw_projectiles(self):
+        """Bolts as glowing tracers, not single pixels.
+
+        These were bare 1px GL_POINTS in the projectile's flat colour, which
+        is nearly invisible at tactical zoom and reads as noise rather than
+        weapons fire. Each bolt now gets an additive core plus a soft halo.
+
+        The halo is floored in SCREEN space (same readability rule the ship
+        LOD uses): a fixed world radius scales to ~3px at overview distance,
+        where bolts need to still read as fire. Probed: a 9-unit halo renders
+        16px wide at camera distance 600 but only 3px at 4200.
+        """
         st = self.state
+        # bolts are emissive — without this they are lit like surfaces and lose
+        # most of their brightness
+        import OpenGL.GL as GL
+        GL.glDisable(GL.GL_LIGHTING)
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         glDepthMask(False)
-        glBegin(GL_POINTS)
+        eye = self.camera.eye_position()
+        half_fov_tan = math.tan(math.radians(self.camera.fov / 2))
+        pts = []
         for p in st.projectiles.values():
-            glColor4f(p.color[0], p.color[1], p.color[2], 0.95)
-            _gl.glVertex3f(p.pos.x, p.pos.y, p.pos.z)
-        glEnd()
+            pos = (p.pos.x, p.pos.y, p.pos.z)
+            if not self._in_front(pos, 4.0):
+                continue
+            col = (p.color[0], p.color[1], p.color[2])
+            dist = math.sqrt((pos[0] - eye[0]) ** 2 + (pos[1] - eye[1]) ** 2
+                             + (pos[2] - eye[2]) ** 2)
+            # world units per screen pixel at this depth
+            px_per_world = self.camera.height / (2.0 * max(1.0, dist) * half_fov_tan)
+            halo = max(9.0, 5.0 / max(1e-6, px_per_world))
+            self._draw_glow(pos, halo, col, alpha=0.45, additive=True)
+            pts.append((pos[0], pos[1], pos[2],
+                        min(1.0, col[0] + 0.55), min(1.0, col[1] + 0.55),
+                        min(1.0, col[2] + 0.55)))
+        # cores batched into one point list — cheap, and the additive halo has
+        # already given each bolt its footprint
+        if pts:
+            _gl.glPointSize(3.2)
+            glBegin(GL_POINTS)
+            for (x, y, z, cr, cg, cb) in pts:
+                glColor4f(cr, cg, cb, 0.95)
+                _gl.glVertex3f(x, y, z)
+            glEnd()
         glDepthMask(True)
         glDisable(GL_BLEND)
+        GL.glEnable(GL.GL_LIGHTING)
 
     # ------------------------------------------------------------------ effects
     def _draw_effects(self):
         st = self.state
+        # Effects are EMISSIVE — they must not be modulated by the scene
+        # lighting. With GL_LIGHTING left on, additive glows get multiplied by
+        # the (dark) lit surface under them and a detonation peaks at ~0.62
+        # instead of white-hot, losing roughly half its brightness and area
+        # (measured: blast pixels 1406 -> 2471 with lighting off).
+        # Billboards here also carry no normals, so lighting only darkens them.
+        import OpenGL.GL as GL
+        GL.glDisable(GL.GL_LIGHTING)
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         glDepthMask(False)
@@ -1458,11 +1844,33 @@ class Renderer:
                 a = max(0.0, 1.0 - t / life)
                 if a <= 0:
                     continue
-                r = 30 + (fx.get("size", 40) * (0.3 + 2.2 * (1.0 - a)))
-                # billboard fireball core + expanding billboard ring
-                self._draw_glow(pos, r * 0.8, (1.0, 0.55, 0.2),
-                                alpha=a * 0.85, additive=True)
-                self._bb_ring(pos, r, (1.0, 0.5, 0.18, a * 0.7), 3.0)
+                size = fx.get("size", 40)
+                r = 30 + (size * (0.3 + 2.2 * (1.0 - a)))
+                # layered detonation: white-hot core -> fireball -> expanding
+                # shock ring -> ember sparks. The old version was a single
+                # orange blob with a line ring, which read as a decal rather
+                # than an event.
+                self._draw_glow(pos, r * 0.55,
+                                (1.0, 0.97, 0.88), alpha=a * 0.95, additive=True)
+                self._draw_glow(pos, r * 0.85, (1.0, 0.5, 0.16),
+                                alpha=a * 0.90, additive=True)
+                # shock wave races out ahead of the fireball
+                self._bb_ring(pos, r * 1.45, (1.0, 0.8, 0.5, a * a * 0.8), 3.0)
+                self._bb_ring(pos, r * 1.10, (1.0, 0.5, 0.18, a * 0.75), 2.0)
+                # embers thrown clear of the fireball; they keep travelling
+                # outward as the blast expands, so the debris silhouette grows
+                # even while the core fades
+                seed = fx.get("seed", 0)
+                n_sparks = 10
+                for i in range(n_sparks):
+                    ang = (i / n_sparks) * 2 * math.pi + seed
+                    tilt = ((i * 37 + seed * 13) % 100) / 100.0 - 0.5
+                    spread = r * (1.25 + 1.55 * (1.0 - a))
+                    self._draw_glow((pos[0] + math.cos(ang) * spread,
+                                     pos[1] + tilt * spread * 0.6,
+                                     pos[2] + math.sin(ang) * spread),
+                                    9.0 + 9.0 * a, (1.0, 0.62, 0.26),
+                                    alpha=a * 0.85, additive=True)
             elif kind == "explosion_small":
                 a = max(0.0, 1.0 - t / 0.5)
                 if a <= 0:
@@ -1480,16 +1888,20 @@ class Renderer:
                 a = max(0.0, 1.0 - t / 0.25)
                 if a <= 0 or "target_pos" not in fx:
                     continue
-                glColor4f(color[0], color[1], color[2], a)
-                glLineWidth(2.5)
-                glBegin(GL_LINES)
-                glVertex3f(pos[0], pos[1], pos[2])
-                glVertex3f(*fx["target_pos"])
-                glEnd()
+                tgt = fx["target_pos"]
+                # layered ribbon: wide soft sheath + hot narrow core. A single
+                # 2.5px GL_LINES beam read as a hairline scratch; this gives
+                # beam fire actual presence without any post-processing.
+                self._beam_ribbon(pos, tgt, 9.0,
+                                  (color[0] * 0.8, color[1] * 0.8, color[2] * 0.8,
+                                   a * 0.5))
+                self._beam_ribbon(pos, tgt, 3.0, (color[0], color[1], color[2], a))
+                self._beam_ribbon(pos, tgt, 1.2,
+                                  (min(1.0, color[0] + 0.5), min(1.0, color[1] + 0.5),
+                                   min(1.0, color[2] + 0.5), a * 0.95))
                 # glow at both ends of the beam
-                self._draw_glow(pos, 10, color, alpha=a * 0.8, additive=True)
-                self._draw_glow(fx["target_pos"], 14, color,
-                                alpha=a * 0.9, additive=True)
+                self._draw_glow(pos, 14, color, alpha=a * 0.8, additive=True)
+                self._draw_glow(tgt, 20, color, alpha=a * 0.9, additive=True)
             elif kind in ("jump_charge", "jump_arrive"):
                 a = max(0.0, 1.0 - t / 1.0)
                 self._bb_ring(pos, 60 + 160 * (1 - a),
@@ -1523,6 +1935,46 @@ class Renderer:
                               (0.6, 0.4, 1.0, a * 0.8), 3.0)
         glDepthMask(True)
         glDisable(GL_BLEND)
+        GL.glEnable(GL.GL_LIGHTING)
+
+    def _beam_ribbon(self, a, b, width: float, color4) -> None:
+        """Camera-facing quad from `a` to `b` — a beam with real thickness.
+
+        A GL_LINES beam is one pixel wide no matter how close the camera is,
+        so capital-ship fire reads as a hairline scratch. This builds a quad
+        in the billboard plane: the perpendicular offset is the beam axis
+        crossed with the eye vector, so the ribbon always faces the camera
+        and keeps its width at any angle.
+        """
+        if not self._in_front(a, 1.0) and not self._in_front(b, 1.0):
+            return
+        import OpenGL.GL as GL
+        cam = self.camera
+        eye = cam.eye_position()
+        mid = ((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2)
+        axis = (b[0] - a[0], b[1] - a[1], b[2] - a[2])
+        alen = math.sqrt(axis[0] ** 2 + axis[1] ** 2 + axis[2] ** 2)
+        if alen < 1e-6:
+            return
+        axis = (axis[0] / alen, axis[1] / alen, axis[2] / alen)
+        view = (mid[0] - eye[0], mid[1] - eye[1], mid[2] - eye[2])
+        # perpendicular = axis x view, normalised
+        px = axis[1] * view[2] - axis[2] * view[1]
+        py = axis[2] * view[0] - axis[0] * view[2]
+        pz = axis[0] * view[1] - axis[1] * view[0]
+        plen = math.sqrt(px * px + py * py + pz * pz)
+        if plen < 1e-6:
+            return
+        hw = width * 0.5
+        px, py, pz = px / plen * hw, py / plen * hw, pz / plen * hw
+        GL.glDisable(GL.GL_CULL_FACE)
+        glColor4f(*color4)
+        glBegin(GL_QUADS)
+        glVertex3f(a[0] - px, a[1] - py, a[2] - pz)
+        glVertex3f(b[0] - px, b[1] - py, b[2] - pz)
+        glVertex3f(b[0] + px, b[1] + py, b[2] + pz)
+        glVertex3f(a[0] + px, a[1] + py, a[2] + pz)
+        glEnd()
 
     def _bb_ring(self, pos, radius, color4, width=2.0):
         """Camera-facing ring billboard (billboard-plane line loop)."""
