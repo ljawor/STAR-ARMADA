@@ -15,6 +15,18 @@ from . import stats
 from .unit_factory import UnitFactory
 
 
+def _body_clearance(body, station_radius: float) -> float:
+    """Minimum distance from a body's centre a station of `station_radius` may sit.
+
+    Mirrors the planet-spacing rule in ``check_site`` (``< (body.radius +
+    station.radius) * 1.6``) and adds a small margin, so a placement window
+    derived from this value can never land inside the exclusion zone. Sharing the
+    term is the point: when the two were written independently they contradicted
+    each other and the station became unbuildable.
+    """
+    return (body.radius + station_radius) * 1.6 + 50.0
+
+
 class ConstructionSystem:
     def __init__(self, state):
         self.state = state
@@ -146,12 +158,19 @@ class ConstructionSystem:
                 if math.dist((x, y, z), (e.pos.x, e.pos.y, e.pos.z)) < \
                         (e.radius + sd.radius) * 1.6:
                     return False, f"too close to {e.data_id.replace('_', ' ')}"
-        # requires_range: some stations must be near a specific body
+        # requires_range: some stations must be near a specific body.
+        # The window has to be measured from the body's ACTUAL radius, because
+        # the planet-spacing rule above keeps stations ~1.6-2.4x the body
+        # radius away from its centre. energy_relay's flat 1100u sat entirely
+        # inside that exclusion zone (gas giants are r2200 -> nearest legal
+        # spot 2355u), so the station could not be built anywhere at all.
         for req_kind, rng in (sd.requires_range or {}).items():
             ok = False
             for e in st.entities.values():
-                if e.alive and e.data_id == req_kind and \
-                        math.dist((x, y, z), (e.pos.x, e.pos.y, e.pos.z)) <= rng:
+                if not (e.alive and e.data_id == req_kind):
+                    continue
+                clear = _body_clearance(e, sd.radius) if req_kind != "asteroid_field" else 0.0
+                if math.dist((x, y, z), (e.pos.x, e.pos.y, e.pos.z)) <= clear + rng:
                     ok = True
                     break
             if not ok:

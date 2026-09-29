@@ -101,7 +101,7 @@
       "systems": {"engines": 95, "weapons": 0, "sensors": 75, "shield_gen": 58, "hangar": 0},
       "can_build_stations": ["mining_station", "command_station", "shipyard", "research_station",
                               "defense_platform", "sensor_station", "trade_station",
-                              "fighter_platform", "repair_dock"]
+                              "fighter_platform", "repair_dock", "energy_relay"]
     },
     "confed_colonizer": {
       "name": "Droid Foundry Barge", "faction": "confederacy",

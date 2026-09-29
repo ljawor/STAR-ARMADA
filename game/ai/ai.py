@@ -140,6 +140,15 @@ class AIPlayer:
             if site is not None:
                 self._queue_build(idle[0], "research_station", site)
                 return
+        # Energy relay: the ONLY station that produces EN, and EN is spent on
+        # every warship and on research, so an AI that never builds one runs
+        # its fleet into a hard floor (reported: "my EN is 10 and I can't build
+        # anymore"). Build it once mining is running, before the luxury extras.
+        if not self.my_stations("energy_relay") and idle and p.credits > 900:
+            site = self._find_energy_relay_site(home, idle[0])
+            if site is not None:
+                self._queue_build(idle[0], "energy_relay", site)
+                return
         # more constructors if rich (command station builds engineering hulls)
         if len(constructors) < 2 and p.credits > 2500:
             faction = p.faction
@@ -215,6 +224,38 @@ class AIPlayer:
                 ok, _reason = cs.check_site(kind, pos, builder)
                 if ok:
                     return pos
+        return None
+
+    def _find_energy_relay_site(self, home, builder, max_dist: float = 9000.0):
+        """A legal energy_relay site near a gas giant, else None.
+
+        energy_relay is the only station that produces EN, and its placement
+        window is a ring around a gas giant — far from `home`, so the generic
+        ring sweep below would never find it. Sweep the gas giant itself and
+        hand back the first site the sim's validator accepts.
+        """
+        import math
+        from ..systems.construction import _body_clearance
+        cs = getattr(self.state, "_construction_system", None)
+        if cs is None:
+            return None
+        relay_r = self.ds.resolve_station("energy_relay").radius
+        giants = [e for e in self.state.entities.values()
+                  if e.alive and e.data_id == "gas_giant"]
+        # nearest gas giant first
+        giants.sort(key=lambda g: home.pos.dist_sq(g.pos))
+        for gas in giants:
+            if home.pos.dist(gas.pos) > max_dist:
+                continue
+            base = _body_clearance(gas, relay_r)
+            for i in range(24):
+                ang = (gas.pos.x * 0.013 + gas.pos.z * 0.007) % 6.28 + (i / 24) * 2 * math.pi
+                for r in (base + 200, base + 700, base + 1400):
+                    pos = Vec3(gas.pos.x + math.sin(ang) * r, 0,
+                               gas.pos.z + math.cos(ang) * r)
+                    ok, _reason = cs.check_site("energy_relay", pos, builder)
+                    if ok:
+                        return pos
         return None
 
     def _queue_build(self, builder, station_kind: str, pos: Vec3) -> None:
@@ -342,13 +383,28 @@ class AIPlayer:
             return
         if p.credits < threshold:
             return
-        # nearest uncolonized planet not too close to enemy
+        target = self._pick_colony_target(home)
+        if target is not None:
+            st.queue_command(PlayerCommand("colonize", self.player_id,
+                                           unit_ids=(colonizer.id,),
+                                           target_id=target.id))
+
+    def _pick_colony_target(self, home):
+        """Nearest uncolonized planet worth taking, else None.
+
+        Gas giants are included: `planet_income` pays EN for a gas giant and
+        nothing else, so they are the only route to a second EN source (the
+        other being an energy_relay). Barren worlds pay nothing at all, so
+        they stay excluded. Planets sitting near an enemy station are left
+        alone so the colonizer is not thrown away.
+        """
+        st = self.state
         target = None
         best_d = 1e18
         for e in st.entities.values():
             if not e.alive or not e.is_planet or e.colonized_by is not None:
                 continue
-            if e.data_id in ("gas_giant", "barren"):
+            if e.data_id == "barren":
                 continue
             # skip planets near enemy stations
             near_enemy = any(en.alive and en.is_station and en.owner >= 0
@@ -360,10 +416,7 @@ class AIPlayer:
             d = home.pos.dist_sq(e.pos)
             if d < best_d:
                 target, best_d = e, d
-        if target is not None:
-            st.queue_command(PlayerCommand("colonize", self.player_id,
-                                           unit_ids=(colonizer.id,),
-                                           target_id=target.id))
+        return target
 
     def _decide_attack(self) -> None:
         st = self.state
