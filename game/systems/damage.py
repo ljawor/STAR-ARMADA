@@ -196,6 +196,7 @@ class DamageSystem:
                           data_id=target.data_id, killed_by=aid,
                           killer_owner=aid,
                           cargo_credits=target.cargo_credits,
+                          pos=target.pos.to_dict(),
                           is_station=target.is_station)
 
     def _update_level(self, e) -> None:

@@ -37,13 +37,28 @@ class TradingSystem:
         return [e for e in self.state.entities.values()
                 if e.alive and e.is_station and e.data_id == "trade_station"]
 
+    def _destinations_for(self, src) -> list:
+        """Markets `src` can ship to: every OTHER trade station.
+
+        A route needs two ends, so a lone trade station has nowhere to send a
+        convoy (see the gate in _spawn_convoys). Trade stations only — routing
+        to the owner's own command station would let a player pay themselves
+        cargo_credits every interval, an unbounded money loop.
+        """
+        return [d for d in self._trade_stations() if d.id != src.id]
+
     def _spawn_convoys(self) -> None:
         st = self.state
         stations = self._trade_stations()
+        # NOTE: deliberate gate — trade needs TWO markets. This used to be
+        # silently unsatisfiable in practice (the AI only built a station
+        # above 4000cr, which it holds for ~1.7% of a match), so trading
+        # never ran in a real game. The AI gate and the campaign data were
+        # fixed alongside this.
         if len(stations) < 2:
             return
         for src in stations:
-            dests = [d for d in stations if d.id != src.id]
+            dests = self._destinations_for(src)
             if not dests:
                 continue
             dest = min(dests, key=lambda d: src.pos.dist(d.pos))
@@ -51,7 +66,8 @@ class TradingSystem:
             hull = float(self.cfg.get("hull", 250.0))
             e = self._make_convoy(src, dest, cargo, hull)
             st.events.publish("convoy_spawned", entity_id=e.id,
-                              owner=src.owner, dest=dest.id)
+                              owner=src.owner, dest=dest.id,
+                              cargo=cargo)
 
     def _make_convoy(self, src, dest, cargo: float, hull: float):
         from ..core.entity import Entity
@@ -85,12 +101,20 @@ class TradingSystem:
         # event carries the cargo snapshot
         cargo = float(ev.data.get("cargo_credits", 0.0))
         killer_owner = ev.data.get("killer_owner", -1)
+        # the convoy's own owner is the kill event's victim owner
+        convoy_owner = ev.data.get("owner", -1)
         loot = cargo * float(self.cfg.get("loot_fraction", 0.5))
         p = st.players.get(killer_owner)
+        raid_pos = Vec3.from_dict(ev.data.get("pos") or [0.0, 0.0, 0.0])
         if p is not None and loot > 0:
             p.credits += loot
+            st.float_text(raid_pos, f"+{loot:0.0f}cr raided", (1, 0.85, 0.4))
+        # publish even when the looter is unresolved so an escort objective can
+        # still fail the mission when the cargo is lost to an enemy
+        if killer_owner != convoy_owner:
             st.events.publish("convoy_raided", entity_id=ev.data.get("entity_id"),
-                              looter=killer_owner, loot=loot)
+                              looter=killer_owner, loot=loot,
+                              convoy_owner=convoy_owner, cargo=cargo)
 
     # ----------------------------------------------------------------- update
     def update(self, dt: float) -> None:
@@ -101,14 +125,13 @@ class TradingSystem:
             self._spawn_convoys()
         pay_destination = \
             self.cfg.get("reward_owner", "destination") == "destination"
-        speed = float(self.cfg.get("speed", 55.0))
         for e in list(st.entities.values()):
             if not e.alive or e.data_id != "trade_convoy":
                 continue
             dest = st.entity(e.convoy_dest if e.convoy_dest is not None else -1)
             if dest is None or not dest.alive:
                 # destination lost: re-target the nearest other trade station
-                alts = [s for s in self._trade_stations() if s.id != e.id]
+                alts = self._destinations_for(e)
                 if not alts:
                     continue
                 dest = min(alts, key=lambda s: e.pos.dist(s.pos))
@@ -116,15 +139,21 @@ class TradingSystem:
             d = dest.pos - e.pos
             dist = d.length()
             if dist <= dest.radius + 120:
-                owner = dest.owner if pay_destination else e.owner
-                p = st.players.get(owner)
+                convoy_owner = e.owner
+                paid = dest.owner if pay_destination else convoy_owner
+                p = st.players.get(paid)
                 if p is not None and e.cargo_credits > 0:
                     p.credits += e.cargo_credits
                     st.float_text(e.pos,
                                   f"+{e.cargo_credits:0.0f}cr delivered",
                                   (0.6, 1, 0.6))
                     st.events.publish("convoy_arrived", entity_id=e.id,
-                                      owner=owner, cargo=e.cargo_credits)
+                                      owner=paid, convoy_owner=convoy_owner,
+                                      dest=dest.id, cargo=e.cargo_credits)
+                elif p is not None:
+                    st.events.publish("convoy_arrived", entity_id=e.id,
+                                      owner=paid, convoy_owner=convoy_owner,
+                                      dest=dest.id, cargo=0.0)
                 e.alive = False
                 st.dead_ids.append(e.id)
                 continue

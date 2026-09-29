@@ -118,16 +118,28 @@ class AIPlayer:
             if site:
                 self._queue_build(idle[0], "mining_station", site)
                 return
-        if len(trade) < 2 and p.credits > 4000 and idle:
-            self._queue_build(idle[0], "trade_station", self._offset(home, 900))
-            return
-        # shipyard early
+        # shipyard early — keep this ahead of trade: a young AI that spends its
+        # opening credits on a trade station can't build warships or more
+        # constructors with two idle builders in the meantime
         if not self.my_stations("shipyard") and idle and p.credits > 2200:
-            self._queue_build(idle[0], "shipyard", self._offset(home, 700))
-            return
+            site = self._find_station_site("shipyard", 700, home, idle[0])
+            if site is not None:
+                self._queue_build(idle[0], "shipyard", site)
+                return
+        # trade stations once the economy is running. The AI builds its own
+        # proactively: a route needs two markets, so whichever side builds
+        # first, the pair starts trading (and the receiver — not the shipper —
+        # is paid, so both sides profit from each other's convoys).
+        if len(trade) < 2 and p.credits > 1500 and idle:
+            site = self._find_station_site("trade_station", 900, home, idle[0])
+            if site is not None:
+                self._queue_build(idle[0], "trade_station", site)
+                return
         if not self.my_stations("research_station") and idle and p.credits > 2400:
-            self._queue_build(idle[0], "research_station", self._offset(home, -700))
-            return
+            site = self._find_station_site("research_station", 700, home, idle[0])
+            if site is not None:
+                self._queue_build(idle[0], "research_station", site)
+                return
         # more constructors if rich (command station builds engineering hulls)
         if len(constructors) < 2 and p.credits > 2500:
             faction = p.faction
@@ -175,6 +187,35 @@ class AIPlayer:
         ang = (anchor.pos.x * 0.013 + anchor.pos.z * 0.007) % 6.28
         return Vec3(anchor.pos.x + math.sin(ang) * dist, 0,
                     anchor.pos.z + math.cos(ang) * dist)
+
+    def _find_station_site(self, kind: str, dist: float, home, builder):
+        """First LEGAL site for `kind` on a ring around `home`, else None.
+
+        `_offset()` returns a single deterministic angle, which is fine until
+        that one direction happens to be blocked — on skirmish01 it points
+        straight at the planet Skarn, so every trade-station build the AI
+        queued was rejected by check_site and silently went nowhere (the AI
+        held enough credits for the whole match and still never built one).
+        Sweep the ring and hand back the first site the sim's own validator
+        accepts, so a green site always means the build will land.
+        """
+        import math
+        ang0 = (home.pos.x * 0.013 + home.pos.z * 0.007) % 6.28
+        # reuse the sim's own validator (exposed on the state for render/input)
+        # so a site chosen here is guaranteed to be accepted by the build
+        cs = getattr(self.state, "_construction_system", None)
+        if cs is None:
+            return None
+        n = 16
+        for i in range(n):
+            ang = ang0 + (i / n) * 2 * math.pi
+            for r in (dist, dist * 1.35, dist * 0.75):
+                pos = Vec3(home.pos.x + math.sin(ang) * r, 0,
+                           home.pos.z + math.cos(ang) * r)
+                ok, _reason = cs.check_site(kind, pos, builder)
+                if ok:
+                    return pos
+        return None
 
     def _queue_build(self, builder, station_kind: str, pos: Vec3) -> None:
         st = self.state

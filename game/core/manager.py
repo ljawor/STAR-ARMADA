@@ -152,7 +152,10 @@ class GameManager:
                 ring += 1
                 if kind == "command_station":
                     self.factory.spawn_station("command_station", player_id, anchor)
-                elif kind in ("mining_station", "shipyard", "research_station"):
+                elif kind in ("mining_station", "shipyard", "research_station",
+                              "trade_station", "defense_platform",
+                              "sensor_station", "fighter_platform",
+                              "repair_dock", "energy_relay"):
                     self.factory.spawn_station(kind, player_id, pos)
                 else:
                     sid = ship_for.get(kind, {}).get(faction)
