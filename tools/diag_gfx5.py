@@ -12,7 +12,10 @@ Checks
              its limb (measured as a radial mean over the whole bubble)
 3. SEE-THROUGH the ship stays visible inside the bubble (no occlusion)
 4. STRENGTH  a depleted shield renders a visibly weaker bubble
+4b. RAMP     the bubble shifts blue -> yellow -> orange -> red as shields drop
 5. NO SHIELD a unit with no shield capacity gets no bubble at all
+5b. CLEAN    no flat outline circle or half-circle health arcs around a
+             selected shielded unit (they were removed as clutter)
 6. QUADRANT  losing a quadrant flashes that FACE of the bubble, and the
              flash decays away again
 7. No GL errors.
@@ -117,13 +120,13 @@ class Scene:
         self.r = Renderer(st, cam_for(dist))
         self.r.time = 2.0
 
-    def frame(self, entities):
+    def frame(self, entities, selected=()):
         st.entities.clear()
         for e in entities:
             st.entities[e.id] = e
         glClearColor(0, 0, 0, 1)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        self.r.draw(1 / 30, set())
+        self.r.draw(1 / 30, set(selected))
         err = glGetError()
         if err != GL_NO_ERROR:
             _fail.append(f"GL error 0x{err:x}")
@@ -239,6 +242,93 @@ print(f"[4] shield emission: full={full_lum:.0f} at 25%={weak_lum:.0f} "
 if weak_lum >= full_lum * 0.9:
     _fail.append(f"depleted shield not weaker: {weak_lum:.0f} vs {full_lum:.0f}")
 
+# ------------------------------------------------------------ 4b. COLOUR RAMP
+# The bubble must shift blue -> yellow -> orange -> red as shields drop, so
+# strength reads from colour alone. Measures the hue of the shell's own
+# emission at a few strengths (bubble-only, differenced against no-shield).
+print("[4b] strength -> bubble hue (dominant channel of the shell):")
+
+
+def bubble_hue(frac):
+    """Hue of the bubble's INTERIOR, where the field's own colour dominates.
+
+    Sampled over the mid-radius band rather than the whole shell: the rim is
+    deliberately whitened (real fields scatter harder at grazing angles), and
+    that white term adds blue at every strength, which would mask the ramp.
+    At mid-radius the whitening is nil, so the pixels here are the true ramp
+    colour, faded by strength.
+    """
+    ents = [mk(30, FRIGATE, 0, (0, 0, 0), yaw=math.radians(20), radius=RAD)]
+    for q in QUADRANTS:
+        ents[0].shields[q] = ents[0].max_shield_quad * frac
+    sc = Scene()
+    sc.frame(ents)                    # prime at this level (no false hit)
+    arr = sc.frame(ents)
+    d = np.clip(arr - no_b, 0, None).max(axis=2)
+    ys_, xs_ = np.nonzero(d > 0.008)
+    if len(xs_) == 0:
+        return None
+    cx_, cy_ = xs_.mean(), ys_.mean()
+    rr_ = np.sqrt((xs_ - cx_) ** 2 + (ys_ - cy_) ** 2)
+    R_ = max(1.0, rr_.max())
+    sel = (rr_ > 0.30 * R_) & (rr_ < 0.58 * R_)
+    if not sel.any():
+        return None
+    px = np.clip(arr - no_b, 0, None)[ys_[sel], xs_[sel]]
+    return (float(px[:, 0].mean()), float(px[:, 1].mean()),
+            float(px[:, 2].mean()))
+
+
+ramp = [(1.00, "blue"), (0.60, "yellow"), (0.35, "orange"), (0.12, "red")]
+hues = {}
+for frac, name in ramp:
+    h = bubble_hue(frac)
+    if h is None:
+        _fail.append(f"no bubble emission at {frac:.2f} shields")
+        hues[frac] = (0.0, 0.0, 0.0)
+        continue
+    # NORMALISE by brightness before comparing: the bubble fades as well as
+    # reddens, so raw channel means shrink toward zero with strength and a
+    # "red minus blue" on them measures dimming, not hue.
+    tot = max(1e-6, h[0] + h[1] + h[2])
+    nrm = (h[0] / tot, h[1] / tot, h[2] / tot)
+    hues[frac] = nrm
+    print(f"    {frac:4.2f} shields ({name:6s}): "
+          f"R={nrm[0]:.3f} G={nrm[1]:.3f} B={nrm[2]:.3f}")
+# blue at full: B dominant. red at low: R dominant with little B.
+if not (hues[1.00][2] > hues[1.00][0]):
+    _fail.append(f"full-strength bubble is not blue-dominant: {hues[1.00]}")
+if not (hues[0.12][0] > hues[0.12][2]):
+    _fail.append(f"low-shield bubble is not red-dominant: {hues[0.12]}")
+# the ramp must be monotonic in normalised red-minus-blue: blue -> red
+rmb = [hues[f][0] - hues[f][2] for f, _ in ramp]
+if not all(a < b for a, b in zip(rmb, rmb[1:])):
+    _fail.append(f"colour ramp not monotonic blue->red: "
+                 f"{[round(x, 3) for x in rmb]}")
+
+# ---- 4c. NO GREEN BAND. A straight yellow->blue interpolation passes through
+# olive, which is not on the requested blue/yellow/orange/red ramp and reads as
+# neither healthy nor damaged. Sweep the whole range and require that green
+# never dominates BOTH other channels anywhere.
+print("[4c] full-range sweep (green must never dominate both R and B):")
+worst = None
+for i in range(2, 10):
+    frac = i / 10.0
+    h = bubble_hue(frac)
+    if h is None:
+        _fail.append(f"no bubble emission at {frac:.1f} shields")
+        continue
+    tot = max(1e-6, h[0] + h[1] + h[2])
+    n = (h[0] / tot, h[1] / tot, h[2] / tot)
+    greenish = n[1] > n[0] and n[1] > n[2]
+    if worst is None or n[1] - max(n[0], n[2]) > worst[1]:
+        worst = (frac, n[1] - max(n[0], n[2]), n)
+    print(f"    {frac:4.1f}: R={n[0]:.3f} G={n[1]:.3f} B={n[2]:.3f}"
+          f"{'   <-- GREEN-DOMINANT' if greenish else ''}")
+    if greenish:
+        _fail.append(f"bubble goes green-dominant at {frac:.1f} shields: "
+                     f"R={n[0]:.3f} G={n[1]:.3f} B={n[2]:.3f}")
+
 # ------------------------------------------------------------ 5. NO SHIELD
 noshield = mk(5, FRIGATE, 0, (0, 0, 0), yaw=math.radians(20), radius=RAD,
               shield_quad=0.0)
@@ -250,6 +340,30 @@ print(f"[5] no-shield unit: bubble px 0 (skipped by capacity), "
       f"frame-to-frame stray px={stray}")
 if stray > 20:
     _fail.append(f"unit without shields rendered a changing overlay ({stray} px)")
+
+# ---- 5b. a SELECTED shielded unit must carry no flat outline circle and no
+# half-circle health arcs — the bubble replaces them. The removed arcs floated
+# at radius*1.6 above the hull and the ring at radius*1.35, so both showed up
+# as crisp thin strokes; assert they are gone from a selected unit.
+sc_sel = Scene()
+sel_ship = [mk(12, FRIGATE, 0, (0, 0, 0), yaw=math.radians(20), radius=RAD)]
+sc_sel.frame(sel_ship, selected={12})
+sel_arr = sc_sel.frame(sel_ship, selected={12})
+sc_nosel = Scene()
+sc_nosel.frame(sel_ship)
+nosel_arr = sc_nosel.frame(sel_ship)
+# With the ring and arcs removed, selecting a SHIELDED unit adds no crisp
+# marker at all: the bubble already shows everything.
+sel_extra = int((np.abs(sel_arr - nosel_arr).max(axis=2) > 0.03).sum())
+print(f"[5b] shielded unit: selection adds {sel_extra} px "
+      f"(ring + health arcs removed)")
+if sel_extra > 60:
+    _fail.append(f"selected shielded unit still draws a marker "
+                 f"({sel_extra} px) - ring/arcs not fully removed")
+# and the removed arcs sat ABOVE the hull: nothing should be drawn there now
+ys3, xs3 = np.nonzero(np.abs(sel_arr - nosel_arr).max(axis=2) > 0.03)
+if len(ys3):
+    print(f"    remnant bbox y {ys3.min()}..{ys3.max()} (ship centre y={sy})")
 
 # ------------------------------------------------------------ 6. QUADRANT HIT
 # NOTE: the hit detector diffs against the PREVIOUS frame's quadrant values,
@@ -380,23 +494,23 @@ else:
                      f"{inner}/{tot}), not a volume")
 
 # ------------------------------------------------------------ 8. montage
-mont = [mk(20, "imperial_cruiser", 0, (-1500, 0, -300), yaw=math.radians(15),
-           radius=70.0),
-        mk(21, "imperial_cruiser", 1, (1600, 0, 200), yaw=math.radians(200),
-           radius=70.0),
-        mk(22, "imperial_frigate", 0, (-700, 0, 700), yaw=math.radians(-40),
-           radius=RAD),
-        mk(23, "imperial_frigate", 1, (700, 0, -800), yaw=math.radians(140),
-           radius=RAD),
-        mk(24, "confed_corvette", 0, (0, 0, 1400), yaw=math.radians(60),
-           radius=30.0)]
-# mixed strengths so the montage shows the full / depleted / critical range
-for q in QUADRANTS:
-    mont[1].shields[q] = mont[1].max_shield_quad * 0.35
-scm = Scene(dist=4600.0)
+# One row per strength decade so the blue -> yellow -> orange -> red ramp is
+# visible in a single image, plus a selected unit to show the markers are gone.
+mont = []
+_specs = [("imperial_cruiser", 70.0, 1.00), ("imperial_cruiser", 70.0, 0.80),
+          ("imperial_frigate", RAD, 0.60), ("imperial_frigate", RAD, 0.35),
+          ("confed_corvette", 30.0, 0.12)]
+for i, (did, rad, frac) in enumerate(_specs):
+    col = i % 2
+    e = mk(20 + i, did, col, ((i - 2) * 1500, 0, -600 + (i % 2) * 900),
+           yaw=math.radians(20 + i * 55), radius=rad)
+    for q in QUADRANTS:
+        e.shields[q] = e.max_shield_quad * frac
+    mont.append(e)
+scm = Scene(dist=6400.0)
 arr = None
 for _ in range(4):
-    arr = scm.frame(mont)
+    arr = scm.frame(mont, selected={22})   # one selected, to show markers gone
 save_png(arr, out)
 print("saved", out)
 

@@ -38,6 +38,42 @@ from game.data.store import DataStore
 # the flat outline circle the additive shell replaced.
 SHIELD_MIN_PX = 74.0
 
+
+def shield_color(s: float) -> tuple[float, float, float]:
+    """Bubble colour for a shield-strength fraction.
+
+    Blue at full strength, shifting through yellow and orange to red as the
+    field weakens, so a glance at the 3D view says how much shield is left
+    without reading the side panel. The bubble vanishes entirely at zero (see
+    the `frac <= 0.001` guard in `_draw_shields`), so the ramp's last readable
+    state is the red warning.
+    """
+    stops = ((0.12, (1.00, 0.18, 0.12)),     # red    — about to fail
+             (0.30, (1.00, 0.48, 0.06)),     # orange
+             (0.62, (1.00, 0.86, 0.06)),     # yellow — long, saturated band so
+                                             # "damaged but holding" is its own
+                                             # readable state, not a brief
+                                             # transition
+             (0.85, (1.00, 0.97, 0.90)),     # warm white — see below
+             (1.00, (0.30, 0.55, 1.00)))     # blue   — nominal
+    # The warm-white stop is not decoration. A straight yellow->blue blend
+    # passes through (0.65, 0.69, 0.58), where green outweighs both red and
+    # blue — the bubble turns olive at ~75% shields, exactly when it should
+    # still read as healthy, and olive is nowhere on the requested ramp.
+    # Routing through a white with R >= G keeps red the dominant channel on
+    # the yellow half and blue the dominant one on the blue half, so green
+    # never leads at any strength.
+    if s <= stops[0][0]:
+        return stops[0][1]
+    for (s0, c0), (s1, c1) in zip(stops, stops[1:]):
+        if s <= s1:
+            k = (s - s0) / max(1e-6, s1 - s0)
+            return (c0[0] + (c1[0] - c0[0]) * k,
+                    c0[1] + (c1[1] - c0[1]) * k,
+                    c0[2] + (c1[2] - c0[2]) * k)
+    return stops[-1][1]
+
+
 # --------------------------------------------------------------------------- stars
 def make_starfield(count: int = 1400, bounds: float = 30000.0, seed: int = 7):
     rng = random.Random(seed)
@@ -2068,6 +2104,14 @@ class Renderer:
             return cached
         import OpenGL.GL as GL
         strength = bucket / 8.0
+        # Colour comes from the FULL strength range; alpha does not. A field
+        # that fades linearly to nothing spends its last, most urgent quarter
+        # (red) below the visibility threshold, so the warning colour would
+        # never actually be seen. The ramp supplies hue, and alpha is floored
+        # so red stays legible right up to the bubble vanishing at zero.
+        cr, cg, cb = shield_color(strength)
+        _a_lo, _a_hi = 0.45, 1.0
+        fade = _a_lo + (_a_hi - _a_lo) * strength
         # Base interior alpha. The camera-facing hemisphere contributes this
         # once; it is set so the bubble keeps the soft blue wash of the
         # reference art rather than reading as an empty outline. The limb term
@@ -2095,12 +2139,17 @@ class Renderer:
 
             def shade(lat, lon):
                 graze = 1.0 - abs(math.cos(lat))
-                a = (BASE_A + 0.52 * (graze ** 2.0)) * strength
-                # whitening toward the limb: a real field scatters harder
-                # where the view grazes it
-                t = graze ** 3.0
-                glColor4f(0.30 + 0.55 * t, 0.55 + 0.35 * t,
-                          1.0, min(1.0, a))
+                a = (BASE_A + 0.52 * (graze ** 2.0)) * fade
+                # Slight whitening toward the limb (a real field scatters
+                # harder where the view grazes it) — but DELIBERATELY CAPPED.
+                # An uncapped white mix drives the rim to pure white, which is
+                # the brightest part of the bubble and therefore the part the
+                # eye reads: the strength colour would be washed out precisely
+                # where it matters. At 0.45 the limb keeps its hue while still
+                # looking brighter than the body.
+                t = 0.45 * (graze ** 3.0)
+                glColor4f(cr + (1.0 - cr) * t, cg + (1.0 - cg) * t,
+                          cb + (1.0 - cb) * t, min(1.0, a))
 
             # One quad strip per longitude column: adjacent cells share their
             # edge vertices, where two triangles would emit 6 vertices per cell
@@ -2198,10 +2247,12 @@ class Renderer:
             return
         p = (e.pos.x + d[0] * r * 0.92, e.pos.y + d[1] * r * 0.92,
              e.pos.z + d[2] * r * 0.92)
-        col = self._owner_color(e.owner)
+        # Flash in the field's own colour, pushed toward white so a hit reads as
+        # a bright impact regardless of how depleted the bubble is.
+        col = shield_color(max(0.0, min(1.0, frac)))
         self._draw_glow(p, r * 0.62,
-                        (col[0] * 0.5 + 0.5, col[1] * 0.5 + 0.7,
-                         min(1.0, col[2] * 0.4 + 0.8)),
+                        (col[0] * 0.45 + 0.55, col[1] * 0.45 + 0.55,
+                         col[2] * 0.45 + 0.55),
                         alpha=strength * 0.5 * frac, additive=True)
 
     def _px_per_world(self, pos) -> float:
@@ -2300,47 +2351,20 @@ class Renderer:
             shielded = (not e.is_planet) and e.max_shield_total() > 0 \
                 and e.total_shield() > 0
             r = e.radius * (1.1 if shielded else (1.35 if not e.is_planet else 1.1))
-            glBegin(GL_LINE_LOOP)
-            for i in range(28):
-                a = i / 28 * 2 * math.pi
-                glVertex3f(math.sin(a) * r, 0, math.cos(a) * r)
-            glEnd()
+            if not shielded:
+                glBegin(GL_LINE_LOOP)
+                for i in range(28):
+                    a = i / 28 * 2 * math.pi
+                    glVertex3f(math.sin(a) * r, 0, math.cos(a) * r)
+                glEnd()
             glPopMatrix()
-        # health arcs for damaged selected units
-        for eid in selection:
-            e = self.state.entities.get(eid)
-            if e is None or not e.alive or e.is_planet:
-                continue
-            self._draw_health_arc(e)
+        # Health arcs removed: the flat outline ring and the two half-circle
+        # arcs were unreadable clutter that the shield bubble now supersedes —
+        # the bubble shows shield strength directly (colour ramp + fade), and
+        # the side panel still shows exact hull/shield figures for the selected
+        # unit. A selected shieldless unit keeps its outline ring as before.
         glEnable(GL_DEPTH_TEST)
         glDisable(GL_BLEND)
-
-    def _draw_health_arc(self, e: Entity):
-        """Arc showing shield (outer) and hull (inner) fractions above the unit."""
-        frac_h = max(0.0, e.hull_fraction())
-        frac_s = (e.total_shield() / e.max_shield_total()) if e.max_shield_total() > 0 else 0.0
-        r = e.radius * 1.6
-        glPushMatrix()
-        glTranslatef(e.pos.x, e.pos.y + e.radius * 0.5 + 30, e.pos.z)
-        glRotatef(-90, 1, 0, 0)
-        glLineWidth(3.0)
-        # hull arc
-        glBegin(GL_LINE_STRIP)
-        for i in range(int(24 * frac_h) + 1):
-            a = math.pi * (i / 24)          # half circle
-            glVertex3f(math.cos(a) * r, 0, math.sin(a) * r)
-        glColor3f(0.3, 1.0, 0.4)
-        glEnd()
-        # shield arc (blue, outer)
-        if frac_s > 0:
-            r2 = r * 1.25
-            glBegin(GL_LINE_STRIP)
-            glColor3f(0.4, 0.7, 1.0)
-            for i in range(int(24 * frac_s) + 1):
-                a = math.pi * (i / 24)
-                glVertex3f(math.cos(a) * r2, 0, math.sin(a) * r2)
-            glEnd()
-        glPopMatrix()
 
     def _draw_floating_texts(self):
         """Sim floating texts (e.g. build rejections) as screen-space labels.
