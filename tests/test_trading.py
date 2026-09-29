@@ -234,6 +234,17 @@ class TestConvoyHasNoShipData(unittest.TestCase):
         gm, st, conv = self._with_convoy()
         run_for(gm, 30.0)          # would raise from any per-tick system
 
+    def test_check_site_tolerates_data_less_builder(self):
+        """check_site resolved the BUILDER through resolve_ship, whose
+        ``unit is not None`` guard was dead code (it RAISES on an unknown id)
+        — so placing a station from any hull without ship data raised."""
+        gm, st, conv = self._with_convoy()
+        cs = st._construction_system
+        site = conv.pos + Vec3(400.0, 0.0, 400.0)
+        ok, reason = cs.check_site("trade_station", site, conv)
+        self.assertIsInstance(ok, bool)
+        self.assertIsInstance(reason, str)
+
 
 if __name__ == "__main__":
     unittest.main()

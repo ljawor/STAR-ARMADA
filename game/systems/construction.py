@@ -157,7 +157,10 @@ class ConstructionSystem:
             if not ok:
                 return False, f"must be within {rng:0.0f}u of {req_kind.replace('_', ' ')}"
         # can the builder legally build this station type?
-        unit = self.ds.resolve_ship(builder.data_id)
+        # .get() not resolve_ship(): the ``unit is not None`` test below was
+        # dead code because resolve_ship RAISES on an unknown id, so this
+        # crashed for any builder without ship data (e.g. a station).
+        unit = self.ds.ships.get(builder.data_id)
         if unit is not None and station_id not in unit.can_build_stations:
             return False, f"{unit.display_name} cannot build this station"
         return True, ""
