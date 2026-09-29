@@ -157,7 +157,10 @@ class ConstructionSystem:
             if not ok:
                 return False, f"must be within {rng:0.0f}u of {req_kind.replace('_', ' ')}"
         # can the builder legally build this station type?
-        unit = self.ds.resolve_ship(builder.data_id)
+        # .get() not resolve_ship(): the ``unit is not None`` test below was
+        # dead code because resolve_ship RAISES on an unknown id, so this
+        # crashed for any builder without ship data (e.g. a station).
+        unit = self.ds.ships.get(builder.data_id)
         if unit is not None and station_id not in unit.can_build_stations:
             return False, f"{unit.display_name} cannot build this station"
         return True, ""
@@ -217,8 +220,8 @@ class ConstructionSystem:
         planet = st.entity(planet_id)
         if unit is None or planet is None or not planet.is_planet:
             return False
-        ud = self.ds.resolve_ship(unit.data_id)
-        if not ud.can_colonize:
+        ud = self.ds.ships.get(unit.data_id)
+        if ud is None or not ud.can_colonize:
             return False
         if planet.colonized_by is not None:
             return False
