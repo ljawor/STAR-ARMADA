@@ -2311,12 +2311,16 @@ class Renderer:
 
         # --- 3. shock front: irregular, faint and SHORT-LIVED. Deliberately
         # kept subordinate to the fire — a large crisp ring was what made the
-        # blast read as a drawn circle (it dominated the frame at t~0.45).
-        if age < 0.42:
-            sa = age / 0.42
+        # blast read as a drawn circle. Tuned against a STATION-scale blast
+        # (size 300), where the old parameters produced a ~560 px radius torus
+        # with a 165 px band: an unmistakable khaki donut dominating the frame.
+        # A pressure front should be a thin, faint ripple, so both the band and
+        # the peak opacity are much smaller than the fireball's.
+        if age < 0.34:
+            sa = age / 0.34
             self._draw_shock_shell(
-                pos, r * (1.15 + 2.00 * sa ** 0.62),
-                (1.0, 0.86, 0.66), (1.0 - sa) ** 1.9 * 0.45, r * 0.55,
+                pos, r * (1.10 + 1.30 * sa ** 0.62),
+                (1.0, 0.88, 0.70), (1.0 - sa) ** 2.2 * 0.20, r * 0.22,
                 ring=self._fx_ring(seed + 5, sa * 2.2, 4, 0.34, 40))
 
         # --- 4. smoke: many faint, large, overlapping puffs. Fewer/stronger
@@ -2332,14 +2336,20 @@ class Renderer:
             # additive-less mass the facets read as radial spokes/pinwheel
             # around the fireball. Verified by drawing this layer alone.
             ring_sm = self._fx_ring(seed + 40, age * 1.6, 4, 0.18, 28)
-            for k in range(7):
-                ang = (k / 7.0) * 6.28318 + rnd(k) * 1.4
-                drift = r * (0.9 + 2.8 * age) * (0.5 + 0.7 * rnd(10 + k))
+            for k in range(9):
+                ang = (k / 9.0) * 6.28318 + rnd(k) * 1.4
+                # sqrt spreads the puffs over the DISC. A linear spread crowds
+                # them into an annulus, which leaves a hole at the centre and
+                # renders as a dark smoke RING around the fire — plainly
+                # visible on a station-scale blast.
+                spread = math.sqrt(0.05 + 0.95 * rnd(10 + k))
+                drift = r * (0.9 + 2.8 * age) * spread
                 self._draw_glow_ring(
-                    (pos[0] + math.cos(ang) * drift * 0.7,
+                    (pos[0] + math.cos(ang) * drift * 0.9,
                      pos[1] + r * 0.45 * age + drift * 0.25,
-                     pos[2] + math.sin(ang) * drift * 0.7),
-                    r * (0.95 + 2.1 * age), smoke, alpha=0.15 * sm * sfade,
+                     pos[2] + math.sin(ang) * drift * 0.9),
+                    r * (0.95 + 2.1 * age) * (0.70 + 0.60 * rnd(20 + k)),
+                    smoke, alpha=0.13 * sm * sfade,
                     ring=ring_sm, rot=k * 3, additive=False)
 
         # --- 5. embers and debris thrown on ballistic arcs
