@@ -9,9 +9,24 @@ Produces dist/STAR ARMADA.app (macOS) or dist/STAR ARMADA/STAR ARMADA.exe
 sys._MEIPASS/assets.
 """
 import os
+import re
 
 block_cipher = None
 ROOT = os.path.abspath(SPECPATH)
+
+
+def _version() -> str:
+    """Read the version from game/__init__.py — the single source of truth.
+
+    It used to be written out by hand here too, and the two drifted: the
+    package said 0.3.0 while the bundle and the DMG name still said 0.2.0.
+    """
+    with open(os.path.join(ROOT, "game", "__init__.py")) as f:
+        m = re.search(r'^__version__\s*=\s*"([^"]+)"', f.read(), re.M)
+    return m.group(1) if m else "0.0.0"
+
+
+VERSION = _version()
 
 a = Analysis(
     ["main.py"],
@@ -68,8 +83,8 @@ app = BUNDLE(
     info_plist={
         "CFBundleName": "STAR ARMADA",
         "CFBundleDisplayName": "STAR ARMADA",
-        "CFBundleShortVersionString": "0.2.0",
-        "CFBundleVersion": "0.2.0",
+        "CFBundleShortVersionString": VERSION,
+        "CFBundleVersion": VERSION,
         "NSHighResolutionCapable": True,
         "LSMinimumSystemVersion": "11.0",
     },

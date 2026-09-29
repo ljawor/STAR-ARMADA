@@ -10,6 +10,11 @@ PY=""
 if [ -x ".venv/bin/python" ]; then PY=".venv/bin/python"
 else PY="python3"; fi
 
+# the spec reads game/__init__.py; build_mac.sh reads it too so the DMG name
+# can never drift from the bundle version again
+VER=$("$PY" -c 'import re;print(re.search(r"__version__\s*=\s*\"([^\"]+)\"", open("game/__init__.py").read()).group(1))')
+echo "Building STAR ARMADA $VER"
+
 # ensure build tooling in the venv (PEP 668: never system pip)
 if ! "$PY" -m PyInstaller --version >/dev/null 2>&1; then
   if [ "$PY" = ".venv/bin/python" ]; then
@@ -28,7 +33,7 @@ APP="dist/STAR ARMADA.app"
 # ad-hoc codesign so Gatekeeper doesn't hard-fail local runs
 codesign --force --deep --sign - "$APP" 2>/dev/null || true
 
-OUT="${1:-dist/STAR-ARMADA-0.2.0-mac.dmg}"
+OUT="${1:-dist/STAR-ARMADA-$VER-mac.dmg}"
 mkdir -p dist/dmg_staging
 rm -rf dist/dmg_staging/*
 cp -R "$APP" dist/dmg_staging/

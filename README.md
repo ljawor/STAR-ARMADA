@@ -134,11 +134,14 @@ build→gather→research→fleet→attack→win loop.
 Tagged versions build automatically on GitHub Actions (mac DMG + Windows ZIP):
 
 ```bash
-git tag v0.2.0 && git push origin v0.2.0
+git tag v0.3.0 && git push origin v0.3.0
 ```
 
-Latest: **v0.2.0** — menus + settings, 10-mission campaign, victory conditions,
-trade convoys, escort/hold-point objectives, autosave ring. See `docs/PACKAGING.md`
+Latest: **v0.3.0** — rebuilt combat audio (per-weapon voices, no more 2x-pitch
+bug), professional layered explosions, trade convoys visible on the map,
+reachable trading, and a fix for the crash when quitting from a menu. Earlier:
+v0.2.0 — menus + settings, 10-mission campaign, victory conditions, trade
+convoys, escort/hold-point objectives, autosave ring. See `docs/PACKAGING.md`
 for local builds (`./scripts/build_mac.sh`).
 
 ## License / originality
