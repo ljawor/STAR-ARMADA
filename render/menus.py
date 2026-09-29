@@ -12,13 +12,35 @@ from __future__ import annotations
 import json
 import math
 import os
+import sys
 
 import numpy as np
 import pygame
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SETTINGS_PATH = os.path.join(ROOT, "saves", "settings.json")
-CAMPAIGN_PATH = os.path.join(ROOT, "saves", "campaign.json")
+# Assets are read from the bundle; anything WRITABLE must not be. A frozen app
+# lives in /Applications (or runs straight off a read-only DMG), so ROOT is not
+# ours to write into — and when it was, every update wiped the user's settings
+# and campaign progress. Frozen builds keep user data in Application Support.
+ASSET_ROOT = getattr(sys, "_MEIPASS", ROOT)
+if getattr(sys, "frozen", False):
+    if sys.platform == "darwin":
+        USER_DIR = os.path.join(
+            os.path.expanduser("~"), "Library", "Application Support", "STAR ARMADA")
+    elif os.name == "nt":
+        USER_DIR = os.path.join(
+            os.environ.get("APPDATA", os.path.expanduser("~")), "STAR ARMADA")
+    else:
+        USER_DIR = os.path.join(
+            os.environ.get("XDG_DATA_HOME",
+                           os.path.join(os.path.expanduser("~"), ".local", "share")),
+            "STAR ARMADA")
+else:
+    USER_DIR = ROOT
+
+SAVES_DIR = os.path.join(USER_DIR, "saves")
+SETTINGS_PATH = os.path.join(SAVES_DIR, "settings.json")
+CAMPAIGN_PATH = os.path.join(SAVES_DIR, "campaign.json")
 
 DEFAULT_SETTINGS = {
     "music_volume": 0.6,
@@ -112,7 +134,7 @@ class MenuStack:
 
     # ------------------------------------------------------------- campaign
     def _load_campaign(self) -> dict:
-        path = os.path.join(ROOT, "assets", "data", "campaign", "campaign.json")
+        path = os.path.join(ASSET_ROOT, "assets", "data", "campaign", "campaign.json")
         try:
             with open(path) as f:
                 return json.load(f)
