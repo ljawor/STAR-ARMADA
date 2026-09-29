@@ -100,7 +100,12 @@ class DamageSystem:
             # hull threshold effects
             self._hull_threshold_effects(target)
             if impact_pos is not None:
-                st.spawn_effect("hull_hit", impact_pos.copy())
+                # warm spark, not white: with no colour this defaulted to
+                # (1,1,1) and ADDITIVE blending turned it into a flat white
+                # disc that read as a hole in the hull rather than an impact
+                st.spawn_effect("hull_hit", impact_pos.copy(),
+                                color=[1.0, 0.62, 0.26],
+                                size=target.radius)
 
         # --- attacker XP
         if attacker is not None and attacker.alive and attacker.owner >= 0:
@@ -169,7 +174,10 @@ class DamageSystem:
         target.alive = False
         target.hull = 0.0
         st.dead_ids.append(target.id)
-        st.spawn_effect("explosion", target.pos.copy(), size=target.radius)
+        # `seed` varies the blast shape per kill. Drawn from the SIM's rng (not
+        # the renderer's) so it stays bit-identical across replays/lockstep.
+        st.spawn_effect("explosion", target.pos.copy(), size=target.radius,
+                        seed=int(st.rng().random() * 1000))
         if target.owner >= 0:
             # crew reclaim (spec §4)
             p = st.players.get(target.owner)

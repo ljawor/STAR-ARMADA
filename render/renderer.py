@@ -922,9 +922,12 @@ class Renderer:
 
     def _draw_ship(self, e: Entity):
         ds = self.ds
-        sd = ds.ships.get(e.data_id)
-        if sd is None:
-            return
+        # NOTE: deliberately NO bail-out when there is no ShipData entry.
+        # ``trade_convoy`` is minted by TradingSystem with no ShipData by
+        # design, and ship_visual() already knows how to describe it. The old
+        # ``if sd is None: return`` made convoys draw on the MINIMAP (which
+        # iterates entities directly) but never in the 3D view, so they were
+        # impossible to find or attack.
         vis = ds.ship_visual(e.data_id)
         color = self._owner_color(e.owner)
         glPushMatrix()
@@ -1888,50 +1891,33 @@ class Renderer:
             pos = fx["pos"]
             color = fx.get("color", [1, 1, 1])
             if kind == "explosion":
-                life = 1.2
-                a = max(0.0, 1.0 - t / life)
-                if a <= 0:
-                    continue
-                size = fx.get("size", 40)
-                r = 30 + (size * (0.3 + 2.2 * (1.0 - a)))
-                # layered detonation: white-hot core -> fireball -> expanding
-                # shock ring -> ember sparks. The old version was a single
-                # orange blob with a line ring, which read as a decal rather
-                # than an event.
-                self._draw_glow(pos, r * 0.55,
-                                (1.0, 0.97, 0.88), alpha=a * 0.95, additive=True)
-                self._draw_glow(pos, r * 0.85, (1.0, 0.5, 0.16),
-                                alpha=a * 0.90, additive=True)
-                # shock wave races out ahead of the fireball
-                self._bb_ring(pos, r * 1.45, (1.0, 0.8, 0.5, a * a * 0.8), 3.0)
-                self._bb_ring(pos, r * 1.10, (1.0, 0.5, 0.18, a * 0.75), 2.0)
-                # embers thrown clear of the fireball; they keep travelling
-                # outward as the blast expands, so the debris silhouette grows
-                # even while the core fades
-                seed = fx.get("seed", 0)
-                n_sparks = 10
-                for i in range(n_sparks):
-                    ang = (i / n_sparks) * 2 * math.pi + seed
-                    tilt = ((i * 37 + seed * 13) % 100) / 100.0 - 0.5
-                    spread = r * (1.25 + 1.55 * (1.0 - a))
-                    self._draw_glow((pos[0] + math.cos(ang) * spread,
-                                     pos[1] + tilt * spread * 0.6,
-                                     pos[2] + math.sin(ang) * spread),
-                                    9.0 + 9.0 * a, (1.0, 0.62, 0.26),
-                                    alpha=a * 0.85, additive=True)
+                self._draw_explosion(pos, fx.get("size", 40), t,
+                                     fx.get("seed", 0))
             elif kind == "explosion_small":
-                a = max(0.0, 1.0 - t / 0.5)
+                a = max(0.0, 1.0 - t / 0.6)
                 if a <= 0:
                     continue
-                self._draw_glow(pos, 18 + 40 * (1 - a), (1.0, 0.6, 0.25),
-                                alpha=a * 0.7, additive=True)
+                # scaled-down version of the full blast so small kills read as
+                # the same phenomenon, not a different (orange blob) effect
+                self._draw_explosion(pos, max(10.0, fx.get("size", 20)) * 0.5,
+                                     t * 0.55, fx.get("seed", 3))
             elif kind in ("impact", "hull_hit"):
                 a = max(0.0, 1.0 - t / 0.35)
                 if a <= 0:
                     continue
-                # camera-facing spark, not a ground disc
-                self._draw_glow(pos, 8 + 16 * (1 - a), color,
-                                alpha=a * 0.9, additive=True)
+                # two-tone spark with a shock glint, not a single white disc
+                sz = 8.0 + 16.0 * (1 - a)
+                self._draw_glow(pos, sz * 1.35, color,
+                                alpha=a * 0.55, additive=True)
+                self._draw_glow(pos, sz * 0.55,
+                                (min(1.0, color[0] + 0.35),
+                                 min(1.0, color[1] + 0.30),
+                                 min(1.0, color[2] + 0.20)),
+                                alpha=a * 0.95, additive=True)
+                if a > 0.45:
+                    self._bb_ring(pos, sz * (1.6 + 2.4 * (1 - a)),
+                                  (color[0], color[1], color[2],
+                                   (a - 0.45) * 0.9), 1.6)
             elif kind == "beam":
                 a = max(0.0, 1.0 - t / 0.25)
                 if a <= 0 or "target_pos" not in fx:
@@ -1984,6 +1970,162 @@ class Renderer:
         glDepthMask(True)
         glDisable(GL_BLEND)
         GL.glEnable(GL.GL_LIGHTING)
+
+    # ------------------------------------------------------------------ explosions
+    @staticmethod
+    def _fx_ramp(age: float) -> tuple:
+        """Fireball colour over its life: white-hot -> yellow -> orange -> red.
+
+        A single fixed colour reads as a flat sticker. Ramping through the
+        blackbody sequence is what makes a blast look like it is *cooling*.
+        """
+        stops = (
+            (0.00, (1.00, 0.97, 0.88)),
+            (0.16, (1.00, 0.88, 0.52)),
+            (0.40, (1.00, 0.55, 0.16)),
+            (0.70, (0.86, 0.26, 0.07)),
+            (1.00, (0.44, 0.10, 0.04)),
+        )
+        a = max(0.0, min(1.0, age))
+        for i in range(len(stops) - 1):
+            t0, c0 = stops[i]
+            t1, c1 = stops[i + 1]
+            if a <= t1:
+                f = 0.0 if t1 <= t0 else (a - t0) / (t1 - t0)
+                return (c0[0] + (c1[0] - c0[0]) * f,
+                        c0[1] + (c1[1] - c0[1]) * f,
+                        c0[2] + (c1[2] - c0[2]) * f)
+        return stops[-1][1]
+
+    def _fx_streak(self, pos, direction, length: float, width: float,
+                   color4) -> None:
+        """Camera-facing quad along `direction` — a glowing debris fragment.
+
+        Discs read as soft puffs; a fragment needs a *directional* mark so the
+        debris field looks thrown rather than sprayed.
+        """
+        d = normalize3(direction)
+        if d[0] == 0.0 and d[1] == 0.0 and d[2] == 0.0:
+            return
+        cam = self.camera
+        eye = cam.eye_position()
+        view = (pos[0] - eye[0], pos[1] - eye[1], pos[2] - eye[2])
+        px = d[1] * view[2] - d[2] * view[1]
+        py = d[2] * view[0] - d[0] * view[2]
+        pz = d[0] * view[1] - d[1] * view[0]
+        plen = math.sqrt(px * px + py * py + pz * pz)
+        if plen < 1e-6:
+            return
+        hw = width * 0.5
+        px, py, pz = px / plen * hw, py / plen * hw, pz / plen * hw
+        a = (pos[0] - d[0] * length * 0.5, pos[1] - d[1] * length * 0.5,
+             pos[2] - d[2] * length * 0.5)
+        b = (pos[0] + d[0] * length * 0.5, pos[1] + d[1] * length * 0.5,
+             pos[2] + d[2] * length * 0.5)
+        glDisable(GL_CULL_FACE)
+        glColor4f(*color4)
+        glBegin(GL_QUADS)
+        glVertex3f(a[0] - px, a[1] - py, a[2] - pz)
+        glVertex3f(b[0] - px, b[1] - py, b[2] - pz)
+        glVertex3f(b[0] + px, b[1] + py, b[2] + pz)
+        glVertex3f(a[0] + px, a[1] + py, a[2] + pz)
+        glEnd()
+
+    def _draw_explosion(self, pos, size: float, t: float, seed: int = 0) -> None:
+        """Layered detonation, staged so the eye reads an EVENT.
+
+        Six overlapping phenomena, each with its own envelope, instead of one
+        blob: a white flash, a fireball that cools white->red while expanding,
+        a shockwave racing out ahead of it, dark smoke rolling out behind and
+        lingering, embers thrown on ballistic arcs, and staggered secondary
+        pops. All of it is derived from `t` and `seed`, so it is stable per
+        effect and costs no per-particle state.
+        """
+        life = 1.5
+        age = t / life
+        if age >= 1.0:
+            return
+        r = max(16.0, float(size))
+        # cheap deterministic hash so each blast differs but never jitters
+        h = (seed * 2654435761) & 0xFFFFFFFF
+
+        def rnd(i: int) -> float:
+            return (((h >> (i * 3)) ^ (i * 1103515245)) & 0xFFFF) / 65535.0
+
+        # --- 1. flash: one or two frames of white-hot light
+        if age < 0.18:
+            fa = 1.0 - age / 0.18
+            self._draw_glow(pos, r * (1.2 + 1.8 * age), (1.0, 1.0, 0.95),
+                            alpha=fa * 0.95, additive=True)
+        # --- 2. fireball: two shells so it has depth, cooling through the ramp
+        cool = self._fx_ramp(age / 0.85)
+        fade = max(0.0, 1.0 - age) ** 1.3
+        self._draw_glow(pos, r * (1.0 + 2.7 * age ** 0.55), cool,
+                        alpha=0.80 * fade, additive=True)
+        if age < 0.7:
+            hot = max(0.0, 1.0 - age / 0.7)
+            self._draw_glow(pos, r * (0.55 + 1.25 * age ** 0.6),
+                            (1.0, 0.90 * hot + 0.30, 0.55 * hot),
+                            alpha=0.95 * hot ** 1.2, additive=True)
+        # --- 3. shockwave: a thin bright front with a soft band trailing it.
+        # A single hard line-loop reads as a drawn circle; pairing it with a
+        # wide low-alpha band gives the falloff a real shock front has.
+        if age < 0.55:
+            sa = age / 0.55
+            rad = r * (1.3 + 5.5 * sa ** 0.7)
+            fade_ring = (1.0 - sa) ** 1.6
+            self._bb_ring(pos, rad, (1.0, 0.80, 0.55, fade_ring * 0.30), 7.0)
+            self._bb_ring(pos, rad, (1.0, 0.92, 0.78, fade_ring * 0.62), 1.4)
+        # --- 4. smoke: dark, slow, drifts outward and lingers past the fire
+        if age > 0.10:
+            sm = min(1.0, (age - 0.10) / 0.35)
+            sfade = max(0.0, 1.0 - max(0.0, (age - 0.45) / 0.55))
+            smoke = tuple(c * 0.10 for c in cool)
+            for k in range(3):
+                ang = (k / 3) * 2 * math.pi + rnd(k) * 1.4
+                drift = r * (0.8 + 2.2 * age) * (0.6 + 0.5 * rnd(10 + k))
+                self._draw_glow((pos[0] + math.cos(ang) * drift * 0.7,
+                                 pos[1] + r * 0.35 * age + drift * 0.22,
+                                 pos[2] + math.sin(ang) * drift * 0.7),
+                                r * (0.75 + 1.5 * age), smoke,
+                                alpha=0.42 * sm * sfade, additive=False)
+        # --- 5. embers: ballistic fragments, streaked along their velocity
+        if age < 0.9:
+            ea = max(0.0, 1.0 - age / 0.9)
+            n = 14
+            for i in range(n):
+                ang = (i / n) * 2 * math.pi + rnd(i) * 0.9
+                elev = (rnd(20 + i) - 0.5) * 1.1
+                sp = r * (1.1 + 3.6 * age) * (0.55 + 0.9 * rnd(40 + i))
+                vel = (math.cos(ang) * math.cos(elev),
+                       math.sin(elev),
+                       math.sin(ang) * math.cos(elev))
+                p = (pos[0] + vel[0] * sp, pos[1] + vel[1] * sp,
+                     pos[2] + vel[2] * sp)
+                self._draw_glow(p, (3.0 + 5.0 * rnd(60 + i)) * (0.4 + ea),
+                                cool, alpha=0.75 * ea, additive=True)
+                # streak TRAILING the fragment, drawn outward from the ember
+                # rather than centred on it: centred streaks crossed the
+                # fireball core and read as scratches over the blast.
+                if i % 3 == 0 and ea > 0.30 and sp > r * 1.4:
+                    self._fx_streak((p[0] + vel[0] * r * 0.30,
+                                     p[1] + vel[1] * r * 0.30,
+                                     p[2] + vel[2] * r * 0.30),
+                                    vel, r * 0.55 * (0.5 + ea), 2.0,
+                                    (cool[0], cool[1], cool[2], 0.45 * ea))
+        # --- 6. secondaries: small staggered pops inside the fireball
+        for k in range(2):
+            t0 = 0.16 + 0.14 * k + 0.10 * rnd(k)
+            if 0.0 <= (age - t0) < 0.22:
+                sub = (age - t0) / 0.22
+                ang = rnd(70 + k) * 6.28
+                off = r * 0.7 * (0.4 + rnd(80 + k))
+                self._draw_glow((pos[0] + math.cos(ang) * off,
+                                 pos[1] + (rnd(90 + k) - 0.5) * off * 0.6,
+                                 pos[2] + math.sin(ang) * off),
+                                r * (0.35 + 0.7 * sub),
+                                self._fx_ramp(sub),
+                                alpha=0.85 * (1.0 - sub), additive=True)
 
     def _beam_ribbon(self, a, b, width: float, color4) -> None:
         """Camera-facing quad from `a` to `b` — a beam with real thickness.
