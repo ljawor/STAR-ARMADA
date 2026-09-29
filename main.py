@@ -36,11 +36,13 @@ from render.hud import HUD  # noqa: E402
 from render.input import InputController  # noqa: E402
 from render.audio import Audio  # noqa: E402
 from render.menus import (MenuStack, MenuResult,  # noqa: E402
-                          load_settings, save_settings)
+                          load_settings, save_settings, USER_DIR)
 
 TICK_RATE = 30
 TICK_DT = 1.0 / TICK_RATE
-SAVES_DIR = os.path.join(ROOT, "saves")
+# User data follows the same rule as menus.py: a frozen app must never write
+# into its own bundle, so this is the same directory the menus persist to.
+SAVES_DIR = os.path.join(USER_DIR, "saves")
 os.makedirs(SAVES_DIR, exist_ok=True)
 
 # --------------------------------------------------------------------------- args
@@ -207,15 +209,25 @@ def _unlock_next_mission() -> None:
 
 
 def write_save(path: str) -> None:
-    with open(path, "w") as f:
-        json.dump(state.to_dict(), f)
+    """Persist a snapshot. Never fatal: a read-only location must not crash."""
+    try:
+        os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
+        with open(path, "w") as f:
+            json.dump(state.to_dict(), f)
+    except OSError as exc:
+        print(f"WARN: could not write save {path}: {exc}")
 
 
 def take_screenshot(path: str) -> None:
     data = glReadPixels(0, 0, W, H, GL_RGB, GL_UNSIGNED_BYTE)
     img = pygame.image.frombuffer(data, (W, H), "RGB")
     img = pygame.transform.flip(img, False, True)
-    pygame.image.save(img, path)
+    try:
+        os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
+        pygame.image.save(img, path)
+    except (OSError, pygame.error) as exc:
+        # a screenshot must never take the app down
+        print(f"WARN: could not save screenshot {path}: {exc}")
 
 
 def summary() -> str:
@@ -371,7 +383,7 @@ while running:
 
     # smoke-mode exit: capture proof and stop
     if SMOKE and state.tick >= SMOKE_TICKS:
-        shot = os.path.join(ROOT, "saves", "smoke_screenshot.png")
+        shot = os.path.join(SAVES_DIR, "smoke_screenshot.png")
         take_screenshot(shot)
         print("SMOKE_OK " + summary() + " shot=" + shot)
         running = False
