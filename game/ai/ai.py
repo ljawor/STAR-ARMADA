@@ -67,11 +67,14 @@ class AIPlayer:
     # ------------------------------------------------------------------ strategic
     def strategic_tick(self, dt: float) -> None:
         st = self.state
-        self.decision_timer -= dt
-        if self.decision_timer > 0:
+        # deterministic cadence: derive from sim tick, not accumulated dt —
+        # restores/replays restart timers at 0, which would shift the schedule
+        interval_ticks = max(1, round(
+            self.ds.rules.get("ai", {}).get("strategic_interval", 1.0)
+            / max(0.5, self.difficulty().get("decision_mult", 1.0))
+            * 30))
+        if st.tick % interval_ticks != self.player_id % interval_ticks:
             return
-        mult = self.difficulty().get("decision_mult", 1.0)
-        self.decision_timer = self.ds.rules.get("ai", {}).get("strategic_interval", 1.0) / max(0.5, mult)
 
         p = st.players.get(self.player_id)
         if p is None:
@@ -403,10 +406,11 @@ class AIPlayer:
     # ------------------------------------------------------------------ tactical
     def tactical_tick(self, dt: float) -> None:
         st = self.state
-        self.tactical_timer -= dt
-        if self.tactical_timer > 0:
+        # deterministic cadence (tick-derived, offset by player to spread load)
+        interval_ticks = max(1, round(
+            self.ds.rules.get("ai", {}).get("tactical_interval", 0.2) * 30))
+        if st.tick % interval_ticks != (self.player_id + 3) % interval_ticks:
             return
-        self.tactical_timer = self.ds.rules.get("ai", {}).get("tactical_interval", 0.2)
         retreat_frac = self.ds.rules.get("ai", {}).get("retreat_hull_fraction", 0.28)
         home = self.home_station()
         for e in self.my_units():

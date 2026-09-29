@@ -103,7 +103,9 @@ class Vec3:
             self.z + (o.z - self.z) * t,
         )
 
-    def to_dict(self):
+    def to_dict(self, precise: bool = False):
+        if precise:
+            return [self.x, self.y, self.z]
         return [round(self.x, 4), round(self.y, 4), round(self.z, 4)]
 
     @staticmethod
