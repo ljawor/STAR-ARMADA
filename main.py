@@ -179,6 +179,7 @@ def start_game(load_path: str | None = None, mdef: dict | None = None) -> None:
     hud = HUD(W, H, state)
     hud.set_camera_ref(camera)
     audio = make_audio(state)
+    audio.set_camera(camera)          # distance attenuation + stereo pan
     inputc = InputController(state, camera, hud, None)
     inputc.local_player = 0
     inputc.app = _AppGlue()
