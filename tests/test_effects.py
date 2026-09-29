@@ -116,5 +116,55 @@ class TestHitEffectData(unittest.TestCase):
                             "both kills got the same seed")
 
 
+class TestBlastSilhouette(unittest.TestCase):
+    """The blast must not be built from mathematically perfect circles.
+
+    Reported twice: "Explosions still look very simple". A pixel COUNT could
+    not see the problem — measured on the real renderer, the blast silhouette
+    came out with roughness 0.01, i.e. literally a compass circle, because
+    every shell was a radially symmetric triangle fan. These tests pin the
+    ring generator that replaced it (the shape maths is pure Python, so unlike
+    the GL drawing it IS unit-testable).
+    """
+
+    def test_ring_is_irregular(self):
+        from render.renderer import Renderer
+        ring = Renderer._fx_ring(seed=7, phase=1.3, lobes=5, wobble=0.34, n=34)
+        radii = [m for m, _j in ring]
+        self.assertEqual(len(radii), 34)
+        spread = (max(radii) - min(radii)) / (sum(radii) / len(radii))
+        self.assertGreater(spread, 0.25,
+                           f"ring is nearly circular (spread {spread:.3f})")
+        # and the variation must be smooth, not per-vertex noise: a jagged
+        # splat would read as noise rather than as a churning cloud. Sampled
+        # densely (n=120) the highest harmonic (6*angle) is far below Nyquist,
+        # so adjacent radii should differ only slightly.
+        dense = [m for m, _j in
+                 Renderer._fx_ring(seed=7, phase=1.3, lobes=5, wobble=0.34,
+                                   n=120)]
+        steps = [abs(dense[i] - dense[(i + 1) % len(dense)])
+                 for i in range(len(dense))]
+        self.assertLess(max(steps), 0.20,
+                        f"ring is jagged (max neighbour step {max(steps):.3f})")
+
+    def test_ring_brightness_jitter_never_blows_out(self):
+        from render.renderer import Renderer
+        ring = Renderer._fx_ring(seed=11, phase=0.4, lobes=3, wobble=0.5, n=20)
+        for m, j in ring:
+            self.assertGreater(m, 0.0, "non-positive radius multiplier")
+            self.assertLessEqual(j, 1.15, f"brightness jitter too high: {j}")
+            self.assertGreater(j, 0.2, f"brightness jitter too low: {j}")
+
+    def test_ring_differs_by_seed_and_phase(self):
+        from render.renderer import Renderer
+        a = Renderer._fx_ring(1, 0.0, 4, 0.3, 24)
+        b = Renderer._fx_ring(2, 0.0, 4, 0.3, 24)
+        c = Renderer._fx_ring(1, 2.0, 4, 0.3, 24)
+        self.assertNotEqual([m for m, _ in a], [m for m, _ in b],
+                            "different seeds produced identical rings")
+        self.assertNotEqual([m for m, _ in a], [m for m, _ in c],
+                            "phase did not churn the ring")
+
+
 if __name__ == "__main__":
     unittest.main()

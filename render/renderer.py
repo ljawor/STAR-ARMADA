@@ -109,10 +109,21 @@ class Renderer:
         self._shield_flash: dict = {}
         # unit sphere with UVs (unit radius, scaled at draw time)
         self._unit_sphere_tex = self._build_textured_sphere_list()
+        # set by diag/probe scripts: freeze the animation clock so consecutive
+        # frames are otherwise identical (baseline-subtraction diffs)
+        self.diff_render = False
 
     # ------------------------------------------------------------------ per frame
     def draw(self, dt: float, selection: set, hover_id: int | None = None) -> None:
-        self.time += dt
+        # Probe/test hook: freeze the animation clock so consecutive frames are
+        # otherwise identical. `self.time` drives the planet spin, station
+        # rotation and starfield drift, so with it advancing every pixel of the
+        # background changes between two "identical" frames — which defeats
+        # baseline-subtraction diffs used to measure a single effect's
+        # contribution (an effect mask then covers the whole screen). Normal
+        # gameplay never sets this.
+        if not getattr(self, "diff_render", False):
+            self.time += dt
         st = self.state
         glMatrixMode(GL_MODELVIEW)
         self.camera.apply()
@@ -2031,101 +2042,249 @@ class Renderer:
         glVertex3f(a[0] + px, a[1] + py, a[2] + pz)
         glEnd()
 
+    @staticmethod
+    def _fx_ring(seed: int, phase: float, lobes: int, wobble: float,
+                 n: int) -> list:
+        """Precompute (radius_mult, brightness_jitter) around a circle, once.
+
+        A radially symmetric fan is geometrically perfect, and a perfect circle
+        reads as a DRAWN shape rather than as fire (measured on the real
+        renderer: silhouette roughness 0.01 — literally a compass circle).
+        Modulating the radius with a few shifted harmonics gives a churning,
+        lumpy outline instead.
+
+        Computing that per VERTEX cost ~2.9 ms per explosion (30 simultaneous
+        blasts fell under 30 fps), because it is several sin() calls per vertex
+        in Python. Precomputing one ring and having every shell index into it
+        at a different offset cuts the trig by an order of magnitude while
+        still giving each shell a differently-shaped silhouette.
+        """
+        out = []
+        for i in range(n):
+            a = i / n * 6.28318
+            m = 1.0
+            for k in range(lobes):
+                ph = (((seed >> (k * 5)) & 0xFF) / 255.0) * 6.28318
+                m += (wobble / (k + 1)) * math.sin(
+                    (k + 2) * a + ph + phase * (0.6 + 0.35 * k))
+            # per-angle brightness jitter: breaks the smooth radial ramp so the
+            # cloud is mottled instead of an even gradient
+            j = 1.0
+            for k in range(3):
+                ph = ((((seed + 13) >> (k * 5)) & 0xFF) / 255.0) * 6.28318
+                j += (0.5 / (k + 1)) * math.sin(
+                    (k + 2) * (a * 1.7 + 0.9) + ph
+                    + phase * 1.69 * (0.6 + 0.35 * k))
+            out.append((max(0.22, m), 0.55 + 0.45 * max(0.22, j) ** 0.5))
+        return out
+
+    @staticmethod
+    def _ring_lookup(ring: list, i: int, rot: int):
+        """Ring sample at angular index i, rotated by `rot` (wraps)."""
+        return ring[(i + rot) % len(ring)]
+
+    def _draw_glow_ring(self, pos, radius, color, alpha, ring, rot=0,
+                        additive=True) -> None:
+        """Camera-facing billboard with an irregular silhouette from `ring`."""
+        if radius <= 0 or alpha <= 0:
+            return
+        cam = self.camera
+        yaw = math.radians(cam.yaw)
+        pitch = math.radians(cam.pitch)
+        fwd = (-math.cos(pitch) * math.sin(yaw), -math.sin(pitch),
+               -math.cos(pitch) * math.cos(yaw))
+        right = (math.cos(yaw), 0.0, -math.sin(yaw))
+        up = normalize3(cross3(right, fwd))
+        n = len(ring)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE if additive else GL_ONE_MINUS_SRC_ALPHA)
+        glPushMatrix()
+        glTranslatef(pos[0], pos[1], pos[2])
+        glBegin(GL_TRIANGLE_FAN)
+        glColor4f(color[0], color[1], color[2], min(1.0, alpha))
+        glVertex3f(0.0, 0.0, 0.0)
+        for i in range(n + 1):
+            m, j = self._ring_lookup(ring, i, rot)
+            a = (i % n) / n * 6.28318
+            ca, sa = math.cos(a), math.sin(a)
+            glColor4f(color[0] * j, color[1] * j, color[2] * j, 0.0)
+            glVertex3f((right[0] * ca + up[0] * sa) * radius * m,
+                       (right[1] * ca + up[1] * sa) * radius * m,
+                       (right[2] * ca + up[2] * sa) * radius * m)
+        glEnd()
+        glPopMatrix()
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
+    def _draw_shock_shell(self, pos, radius, color, alpha, thickness, ring,
+                          rot=0) -> None:
+        """Irregular expanding annulus: a shock FRONT, not a drawn circle.
+
+        Ramped from faint on the inside to bright at the leading edge, so the
+        shell has a direction. The radius comes from an irregular ring — a true
+        circle here was the single most artificial-looking part of the blast.
+        """
+        if radius <= 0 or alpha <= 0:
+            return
+        cam = self.camera
+        yaw = math.radians(cam.yaw)
+        pitch = math.radians(cam.pitch)
+        fwd = (-math.cos(pitch) * math.sin(yaw), -math.sin(pitch),
+               -math.cos(pitch) * math.cos(yaw))
+        right = (math.cos(yaw), 0.0, -math.sin(yaw))
+        up = normalize3(cross3(right, fwd))
+        n = len(ring)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE)
+        glDisable(GL_CULL_FACE)
+        glPushMatrix()
+        glTranslatef(pos[0], pos[1], pos[2])
+        glBegin(GL_QUAD_STRIP)
+        for i in range(n + 1):
+            m, _j = self._ring_lookup(ring, i, rot)
+            a = (i % n) / n * 6.28318
+            rm = radius * m
+            ca, sa = math.cos(a), math.sin(a)
+            ix = (right[0] * ca + up[0] * sa)
+            iy = (right[1] * ca + up[1] * sa)
+            iz = (right[2] * ca + up[2] * sa)
+            inner = rm - thickness * m
+            glColor4f(color[0], color[1], color[2], alpha * 0.16)
+            glVertex3f(ix * inner, iy * inner, iz * inner)
+            glColor4f(color[0], color[1], color[2], alpha)
+            glVertex3f(ix * rm, iy * rm, iz * rm)
+        glEnd()
+        glPopMatrix()
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
     def _draw_explosion(self, pos, size: float, t: float, seed: int = 0) -> None:
         """Layered detonation, staged so the eye reads an EVENT.
 
-        Six overlapping phenomena, each with its own envelope, instead of one
-        blob: a white flash, a fireball that cools white->red while expanding,
-        a shockwave racing out ahead of it, dark smoke rolling out behind and
-        lingering, embers thrown on ballistic arcs, and staggered secondary
-        pops. All of it is derived from `t` and `seed`, so it is stable per
-        effect and costs no per-particle state.
+        All of it derives from `t` and `seed`, so there is no per-particle
+        state. The shapes are deliberately IRREGULAR: an earlier revision drew
+        mathematically perfect circles (measured silhouette roughness 0.01)
+        with a smooth symmetric core, which read as drawn graphics rather than
+        as fire.
+
+        Geometry comes from a few precomputed irregular rings rather than
+        per-vertex trig, so a 30-blast battle stays realtime.
         """
         life = 1.5
         age = t / life
         if age >= 1.0:
             return
         r = max(16.0, float(size))
-        # cheap deterministic hash so each blast differs but never jitters
         h = (seed * 2654435761) & 0xFFFFFFFF
 
         def rnd(i: int) -> float:
             return (((h >> (i * 3)) ^ (i * 1103515245)) & 0xFFFF) / 65535.0
 
-        # --- 1. flash: one or two frames of white-hot light
-        if age < 0.18:
-            fa = 1.0 - age / 0.18
-            self._draw_glow(pos, r * (1.2 + 1.8 * age), (1.0, 1.0, 0.95),
-                            alpha=fa * 0.95, additive=True)
-        # --- 2. fireball: two shells so it has depth, cooling through the ramp
+        spin = age * 3.4            # the fire churns as it expands
+
+        # --- 1. flash: white-hot, only a few frames
+        if age < 0.14:
+            fa = 1.0 - age / 0.14
+            self._draw_glow(pos, r * (1.1 + 2.0 * age), (1.0, 1.0, 0.96),
+                            alpha=fa * 0.90, additive=True)
+
+        # --- 2. fireball: several LUMPY shells instead of one smooth disc, so
+        # the silhouette is turbulent and the interior mottled. One ring is
+        # built and every shell reads it at a different rotation, so the shells
+        # disagree on shape without paying for 5 separate trig sweeps.
         cool = self._fx_ramp(age / 0.85)
-        fade = max(0.0, 1.0 - age) ** 1.3
-        self._draw_glow(pos, r * (1.0 + 2.7 * age ** 0.55), cool,
-                        alpha=0.80 * fade, additive=True)
-        if age < 0.7:
-            hot = max(0.0, 1.0 - age / 0.7)
-            self._draw_glow(pos, r * (0.55 + 1.25 * age ** 0.6),
-                            (1.0, 0.90 * hot + 0.30, 0.55 * hot),
-                            alpha=0.95 * hot ** 1.2, additive=True)
-        # --- 3. shockwave: a thin bright front with a soft band trailing it.
-        # A single hard line-loop reads as a drawn circle; pairing it with a
-        # wide low-alpha band gives the falloff a real shock front has.
-        if age < 0.55:
-            sa = age / 0.55
-            rad = r * (1.3 + 5.5 * sa ** 0.7)
-            fade_ring = (1.0 - sa) ** 1.6
-            self._bb_ring(pos, rad, (1.0, 0.80, 0.55, fade_ring * 0.30), 7.0)
-            self._bb_ring(pos, rad, (1.0, 0.92, 0.78, fade_ring * 0.62), 1.4)
-        # --- 4. smoke: dark, slow, drifts outward and lingers past the fire
-        if age > 0.10:
-            sm = min(1.0, (age - 0.10) / 0.35)
-            sfade = max(0.0, 1.0 - max(0.0, (age - 0.45) / 0.55))
+        fade = max(0.0, 1.0 - age) ** 1.25
+        grow = r * (0.90 + 2.10 * age ** 0.5)
+        ring_big = self._fx_ring(seed, spin, 5, 0.34, 34)
+        for i in range(5):
+            ang = (i / 5.0) * 6.28318 + rnd(i) * 1.3 + spin * 0.5
+            off = r * (0.20 + 0.30 * rnd(10 + i)) * (0.4 + age)
+            self._draw_glow_ring(
+                (pos[0] + math.cos(ang) * off,
+                 pos[1] + (rnd(30 + i) - 0.5) * off,
+                 pos[2] + math.sin(ang) * off),
+                grow * (0.55 + 0.42 * rnd(20 + i)), cool,
+                alpha=0.52 * fade, ring=ring_big, rot=i * 7)
+        ring_mid = self._fx_ring(seed + 77, -spin * 0.8, 4, 0.26, 26)
+        if age < 0.75:                                   # mid, hotter shell
+            hot = max(0.0, 1.0 - age / 0.75)
+            self._draw_glow_ring(pos, r * (0.50 + 1.30 * age ** 0.6),
+                                 (1.0, 0.70 + 0.28 * hot, 0.28 + 0.35 * hot),
+                                 alpha=0.85 * hot ** 1.1, ring=ring_mid, rot=3)
+        ring_core = self._fx_ring(seed + 99, spin * 1.4, 3, 0.18, 18)
+        if age < 0.30:                                   # white-hot core
+            hc = 1.0 - age / 0.30
+            self._draw_glow_ring(pos, r * (0.35 + 0.75 * hc), (1.0, 0.98, 0.92),
+                                 alpha=0.95 * hc, ring=ring_core, rot=1)
+
+        # --- 3. shock front: irregular, faint and SHORT-LIVED. Deliberately
+        # kept subordinate to the fire — a large crisp ring was what made the
+        # blast read as a drawn circle (it dominated the frame at t~0.45).
+        if age < 0.42:
+            sa = age / 0.42
+            self._draw_shock_shell(
+                pos, r * (1.15 + 2.00 * sa ** 0.62),
+                (1.0, 0.86, 0.66), (1.0 - sa) ** 1.9 * 0.45, r * 0.55,
+                ring=self._fx_ring(seed + 5, sa * 2.2, 4, 0.20, 40))
+
+        # --- 4. smoke: many faint, large, overlapping puffs. Fewer/stronger
+        # puffs composite into a single grey mass with its own visible
+        # boundary, which reads as a sticker; low-alpha and heavily overlapped
+        # it reads as haze instead.
+        if age > 0.08:
+            sm = min(1.0, (age - 0.08) / 0.35)
+            sfade = max(0.0, 1.0 - max(0.0, (age - 0.40) / 0.60))
             smoke = tuple(c * 0.10 for c in cool)
-            for k in range(3):
-                ang = (k / 3) * 2 * math.pi + rnd(k) * 1.4
-                drift = r * (0.8 + 2.2 * age) * (0.6 + 0.5 * rnd(10 + k))
-                self._draw_glow((pos[0] + math.cos(ang) * drift * 0.7,
-                                 pos[1] + r * 0.35 * age + drift * 0.22,
-                                 pos[2] + math.sin(ang) * drift * 0.7),
-                                r * (0.75 + 1.5 * age), smoke,
-                                alpha=0.42 * sm * sfade, additive=False)
-        # --- 5. embers: ballistic fragments, streaked along their velocity
-        if age < 0.9:
-            ea = max(0.0, 1.0 - age / 0.9)
-            n = 14
+            ring_sm = self._fx_ring(seed + 40, age * 1.6, 4, 0.30, 20)
+            for k in range(7):
+                ang = (k / 7.0) * 6.28318 + rnd(k) * 1.4
+                drift = r * (0.9 + 2.8 * age) * (0.5 + 0.7 * rnd(10 + k))
+                self._draw_glow_ring(
+                    (pos[0] + math.cos(ang) * drift * 0.7,
+                     pos[1] + r * 0.45 * age + drift * 0.25,
+                     pos[2] + math.sin(ang) * drift * 0.7),
+                    r * (0.95 + 2.1 * age), smoke, alpha=0.15 * sm * sfade,
+                    ring=ring_sm, rot=k * 3, additive=False)
+
+        # --- 5. embers and debris thrown on ballistic arcs
+        if age < 0.95:
+            ea = max(0.0, 1.0 - age / 0.95)
+            n = 18
+            ring_deb = self._fx_ring(seed + 200, spin * 2.0, 3, 0.45, 12)
+            col_ember = self._fx_ramp(min(1.0, age * 1.5 + 0.25))
             for i in range(n):
-                ang = (i / n) * 2 * math.pi + rnd(i) * 0.9
-                elev = (rnd(20 + i) - 0.5) * 1.1
-                sp = r * (1.1 + 3.6 * age) * (0.55 + 0.9 * rnd(40 + i))
+                ang = (i / n) * 6.28318 + rnd(i) * 0.9
+                elev = (rnd(60 + i) - 0.5) * 1.1
+                sp = r * (1.1 + 4.2 * age) * (0.55 + 0.9 * rnd(40 + i))
                 vel = (math.cos(ang) * math.cos(elev),
                        math.sin(elev),
                        math.sin(ang) * math.cos(elev))
                 p = (pos[0] + vel[0] * sp, pos[1] + vel[1] * sp,
                      pos[2] + vel[2] * sp)
-                self._draw_glow(p, (3.0 + 5.0 * rnd(60 + i)) * (0.4 + ea),
-                                cool, alpha=0.75 * ea, additive=True)
-                # streak TRAILING the fragment, drawn outward from the ember
-                # rather than centred on it: centred streaks crossed the
-                # fireball core and read as scratches over the blast.
-                if i % 3 == 0 and ea > 0.30 and sp > r * 1.4:
+                big = i % 4 == 0        # a few real fragments, not just sparks
+                self._draw_glow_ring(
+                    p,
+                    (4.0 + 7.0 * rnd(80 + i)) * (0.4 + ea) * (1.8 if big else 1.0),
+                    col_ember, alpha=0.80 * ea, ring=ring_deb, rot=i)
+                if (big or i % 3 == 0) and ea > 0.30 and sp > r * 1.4:
                     self._fx_streak((p[0] + vel[0] * r * 0.30,
                                      p[1] + vel[1] * r * 0.30,
                                      p[2] + vel[2] * r * 0.30),
-                                    vel, r * 0.55 * (0.5 + ea), 2.0,
-                                    (cool[0], cool[1], cool[2], 0.45 * ea))
-        # --- 6. secondaries: small staggered pops inside the fireball
-        for k in range(2):
-            t0 = 0.16 + 0.14 * k + 0.10 * rnd(k)
-            if 0.0 <= (age - t0) < 0.22:
-                sub = (age - t0) / 0.22
-                ang = rnd(70 + k) * 6.28
-                off = r * 0.7 * (0.4 + rnd(80 + k))
-                self._draw_glow((pos[0] + math.cos(ang) * off,
-                                 pos[1] + (rnd(90 + k) - 0.5) * off * 0.6,
-                                 pos[2] + math.sin(ang) * off),
-                                r * (0.35 + 0.7 * sub),
-                                self._fx_ramp(sub),
-                                alpha=0.85 * (1.0 - sub), additive=True)
+                                    vel, r * 0.65 * (0.5 + ea), 2.2,
+                                    (col_ember[0], col_ember[1], col_ember[2],
+                                     0.40 * ea))
+
+        # --- 6. secondaries: staggered pops inside the fireball
+        for k in range(3):
+            t0 = 0.14 + 0.13 * k + 0.10 * rnd(k)
+            if 0.0 <= (age - t0) < 0.24:
+                sub = (age - t0) / 0.24
+                ang = rnd(70 + k) * 6.28318
+                off = r * 0.75 * (0.4 + rnd(90 + k))
+                self._draw_glow_ring(
+                    (pos[0] + math.cos(ang) * off,
+                     pos[1] + (rnd(100 + k) - 0.5) * off * 0.6,
+                     pos[2] + math.sin(ang) * off),
+                    r * (0.35 + 0.80 * sub), self._fx_ramp(sub),
+                    alpha=0.85 * (1.0 - sub),
+                    ring=self._fx_ring(seed + 300 + k, sub * 3.0, 4, 0.38, 22),
+                    rot=k * 5)
 
     def _beam_ribbon(self, a, b, width: float, color4) -> None:
         """Camera-facing quad from `a` to `b` — a beam with real thickness.
