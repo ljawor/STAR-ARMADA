@@ -20,17 +20,23 @@ from OpenGL.GL import (
     glBindTexture, GL_BLEND, GL_CULL_FACE, GL_COLOR_BUFFER_BIT, GL_COMPILE,
     GL_CURRENT_BIT, GL_DEPTH_BUFFER_BIT, GL_DEPTH_TEST, GL_LIGHTING,
     GL_LINE_LOOP, GL_LINE_STRIP, GL_LINES, GL_MODELVIEW, GL_ONE,
-    GL_ONE_MINUS_SRC_ALPHA, GL_POINTS, GL_QUADS, GL_SRC_ALPHA, GL_TEXTURE_2D,
-    GL_TRANSFORM_BIT, GL_TRIANGLES, GL_TRIANGLE_FAN,
+    GL_ONE_MINUS_SRC_ALPHA, GL_POINTS, GL_QUADS, GL_QUAD_STRIP, GL_SRC_ALPHA,
+    GL_TEXTURE_2D, GL_TRANSFORM_BIT, GL_TRIANGLES, GL_TRIANGLE_FAN,
 )
 import OpenGL.GL as _gl
 
 from render.camera import cross3, normalize3
 from render import textures as tex
 
-from game.core.entity import Entity
+from game.core.entity import Entity, QUADRANTS
 from game.core.vectors import Vec3
 from game.data.store import DataStore
+
+# Shield bubbles never render smaller than this across, in screen pixels. The
+# hull pass applies the same idea to ship scale (spec §35 readability): without
+# it a distant bubble resolves to nothing but its rim and collapses back into
+# the flat outline circle the additive shell replaced.
+SHIELD_MIN_PX = 74.0
 
 # --------------------------------------------------------------------------- stars
 def make_starfield(count: int = 1400, bounds: float = 30000.0, seed: int = 7):
@@ -61,6 +67,10 @@ class Renderer:
         self._hull_tex: int | None = None   # grayscale panel map (modulated)
         self._star_tex = None
         self._nebula_tex = None
+        # shield bubbles: last seen quadrant values (to detect a hit) and the
+        # per-quadrant flash timers that decay after one
+        self._prev_shields: dict = {}
+        self._shield_flash: dict = {}
         # unit sphere with UVs (unit radius, scaled at draw time)
         self._unit_sphere_tex = self._build_textured_sphere_list()
 
@@ -90,6 +100,12 @@ class Renderer:
             self._draw_projectiles()
         if "ships" not in self.skip:
             self._draw_ships(selection)
+        if "shields" not in self.skip:
+            # after the hull pass so the bubble composites over the ship it
+            # encloses; before the selection rings so those stay on top
+            units = [e for e in st.entities.values()
+                     if e.alive and not e.is_planet]
+            self._draw_shields(units, dt)
         if "sites" not in self.skip:
             self._draw_construction_sites()
         if "rings" not in self.skip:
@@ -903,11 +919,7 @@ class Renderer:
         # at tactical zoom (spec §35 readability).
         sp = self.camera.world_to_screen(e.pos.x, e.pos.y, e.pos.z)
         if sp is not None:
-            eye = self.camera.eye_position()
-            dist = math.sqrt((e.pos.x - eye[0]) ** 2 + (e.pos.y - eye[1]) ** 2
-                             + (e.pos.z - eye[2]) ** 2)
-            px_per_world = self.camera.height / (
-                2.0 * dist * math.tan(math.radians(self.camera.fov / 2)))
+            px_per_world = self._px_per_world((e.pos.x, e.pos.y, e.pos.z))
             # shape half-extent ~ 26 world units * scale; want >= 7 px on screen
             want_scale = 7.0 / max(0.01, 26.0 * px_per_world)
             scale = max(scale, want_scale)
@@ -2013,6 +2025,251 @@ class Renderer:
         glPopMatrix()
 
     # ------------------------------------------------------------------ overlays
+    # ---------------------------------------------------------------- shields
+    def _shield_shell_list(self, bucket: int = 8) -> int:
+        """Unit shell for shield bubbles, with the rim glow BAKED IN.
+
+        Fixed-function GL cannot evaluate a Fresnel term per fragment, and a
+        plain specular highlight lands wherever the normal bisects light and
+        view — a sun-glint on a ball, not the bright limb the reference art
+        shows. So the shell is built VIEW-ALIGNED: local +Z always points at
+        the camera, which makes the grazing angle a pure function of latitude.
+        The rim falloff is then baked into per-vertex alpha here, once, with
+        no per-frame CPU cost (a per-vertex CPU Fresnel would be ~3.6k
+        vertices per shielded ship, every frame).
+
+        Because the shell is view-aligned it is also CAMERA- AND YAW-
+        INDEPENDENT, so exactly one list per strength bucket is needed for the
+        whole game. Keying it on ship yaw (as an earlier revision did) would
+        allocate a fresh 3.2k-vertex list for every heading a ship turned
+        through — an unbounded GL memory leak.
+
+        Only the camera-facing hemisphere is emitted (see the geometry loop);
+        the shell is additive and its rim lands at the shared silhouette, so
+        the far half would only duplicate pixels at twice the cost.
+
+        `bucket` (1..8) is the shield-strength level. Vertex colours in a
+        display list are fixed, so strength cannot be applied at draw time —
+        instead one list is cached per strength octant. That is 8 lists total
+        built lazily, giving a real visual read of shield strength (and
+        avoiding the alternative of emitting ~3.2k vertices per ship per
+        frame in immediate mode).
+
+        Per-quadrant state is NOT baked here: the sector of the bubble facing
+        a given quadrant moves with the ship's heading AND the camera, so
+        baking it would reintroduce the unbounded cache above. Quadrant
+        damage is shown by the transient hit flash instead (see
+        `_shield_quadrant_glow`).
+        """
+        bucket = max(1, min(8, int(bucket)))
+        key = f"shield_shell:{bucket}"
+        cached = self.ship_lists.get(key)
+        if cached is not None:
+            return cached
+        import OpenGL.GL as GL
+        strength = bucket / 8.0
+        # Base interior alpha. The camera-facing hemisphere contributes this
+        # once; it is set so the bubble keeps the soft blue wash of the
+        # reference art rather than reading as an empty outline. The limb term
+        # dominates at the silhouette, which is where the eye reads the rim.
+        BASE_A = 0.026
+        lst = _gl.glGenLists(1)
+        glNewList(lst, GL_COMPILE)
+        GL.glPushAttrib(int(GL.GL_ENABLE_BIT))
+        GL.glDisable(GL.GL_CULL_FACE)   # two-sided, like every other hull pass
+        # The shell is additive and symmetric about the camera axis, so only
+        # the camera-facing hemisphere is emitted. The rim glow sits exactly at
+        # the silhouette (lat = 90 deg), which is shared by both hemispheres;
+        # the far half would add identical pixels at twice the vertex cost.
+        # Halving the geometry here is what makes the pass affordable in a
+        # large battle (~150 shielded units).
+        lons, lats = 40, 10
+        for i in range(lons):
+            lon0 = 2 * math.pi * i / lons
+            lon1 = 2 * math.pi * (i + 1) / lons
+
+            def vert(lon, lat):
+                return (math.sin(lat) * math.sin(lon),
+                        math.sin(lat) * math.cos(lon),
+                        math.cos(lat))
+
+            def shade(lat, lon):
+                graze = 1.0 - abs(math.cos(lat))
+                a = (BASE_A + 0.52 * (graze ** 2.0)) * strength
+                # whitening toward the limb: a real field scatters harder
+                # where the view grazes it
+                t = graze ** 3.0
+                glColor4f(0.30 + 0.55 * t, 0.55 + 0.35 * t,
+                          1.0, min(1.0, a))
+
+            # One quad strip per longitude column: adjacent cells share their
+            # edge vertices, where two triangles would emit 6 vertices per cell
+            # (4 unique) — 33% fewer vertices for identical pixels.
+            glBegin(GL_QUAD_STRIP)
+            for j in range(lats + 1):
+                lat = math.pi * 0.5 * j / lats
+                shade(lat, lon0)
+                glVertex3f(*vert(lon0, lat))
+                shade(lat, lon1)
+                glVertex3f(*vert(lon1, lat))
+            glEnd()
+        GL.glPopAttrib()
+        glEndList()
+        self.ship_lists[key] = lst
+        return lst
+
+    def _camera_basis(self):
+        """(right, up, toward_eye) unit vectors for the current camera."""
+        cam = self.camera
+        yaw = math.radians(cam.yaw)
+        pitch = math.radians(cam.pitch)
+        right = (math.cos(yaw), 0.0, -math.sin(yaw))
+        fwd = (-math.cos(pitch) * math.sin(yaw), -math.sin(pitch),
+               -math.cos(pitch) * math.cos(yaw))
+        up = normalize3(cross3(right, fwd))
+        toward_eye = (-fwd[0], -fwd[1], -fwd[2])
+        return right, up, toward_eye
+
+    def _shield_radius(self, e) -> float:
+        """World radius of a unit's shield shell.
+
+        Includes the readability floor (see SHIELD_MIN_PX) so the bubble and
+        the quadrant hit-flash it sits on always agree on where the surface is.
+        """
+        r = e.radius * 1.35
+        ppw = self._px_per_world((e.pos.x, e.pos.y, e.pos.z))
+        if ppw > 0.0:
+            want_r = SHIELD_MIN_PX * 0.5 / ppw
+            if want_r > r:
+                r = want_r
+        return r
+
+    def _shield_bubble(self, e, frac: float) -> None:
+        """Additive energy bubble scaled by remaining shield strength.
+
+        Depth writes are off: the bubble must never occlude the ship inside
+        it, and two additive translucent shells writing depth fight each
+        other. It is drawn after the hull pass so the ship reads through it.
+        """
+        if frac <= 0.0:
+            return
+        # Readability floor (spec §35, same rule the hull pass applies to ship
+        # scale): at tactical zoom a distant bubble shrinks until only its rim
+        # is resolved and it degenerates back into the flat outline circle this
+        # pass exists to replace. Grow it until the shell is at least
+        # SHIELD_MIN_PX across so it still reads as a volume.
+        r = self._shield_radius(e)
+        pos = (e.pos.x, e.pos.y, e.pos.z)
+        if not self._in_front(pos, r):
+            return
+        right, up, toward_eye = self._camera_basis()
+        glPushMatrix()
+        glTranslatef(pos[0], pos[1], pos[2])
+        # orient the shell so its baked +Z axis points at the camera
+        _gl.glMultMatrixf([right[0], right[1], right[2], 0.0,
+                           up[0], up[1], up[2], 0.0,
+                           toward_eye[0], toward_eye[1], toward_eye[2], 0.0,
+                           0.0, 0.0, 0.0, 1.0])
+        glScalef(r, r, r)
+        glEnable(GL_BLEND)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE)          # additive: pure emission
+        glDepthMask(False)
+        bucket = max(1, min(8, int(round(frac * 8.0))))
+        glCallList(self._shield_shell_list(bucket))
+        glDepthMask(True)
+        glDisable(GL_BLEND)
+        glPopMatrix()
+
+    def _shield_quadrant_glow(self, e, frac: float, q: str, strength: float):
+        """Flash on the bubble facing the quadrant that just took a hit."""
+        yaw = e.yaw
+        s, c = math.sin(yaw), math.cos(yaw)
+        r = self._shield_radius(e)
+        # forward in model space is +Z (matches the renderer's +yaw rotation);
+        # engine glow/trail use the negated pair for "behind"
+        dirs = {
+            "front": (s, 0.0, c),
+            "rear": (-s, 0.0, -c),
+            "left": (c, 0.0, -s),
+            "right": (-c, 0.0, s),
+        }
+        d = dirs.get(q)
+        if d is None:
+            return
+        p = (e.pos.x + d[0] * r * 0.92, e.pos.y + d[1] * r * 0.92,
+             e.pos.z + d[2] * r * 0.92)
+        col = self._owner_color(e.owner)
+        self._draw_glow(p, r * 0.62,
+                        (col[0] * 0.5 + 0.5, col[1] * 0.5 + 0.7,
+                         min(1.0, col[2] * 0.4 + 0.8)),
+                        alpha=strength * 0.5 * frac, additive=True)
+
+    def _px_per_world(self, pos) -> float:
+        """Screen pixels per world unit at `pos` (0.0 if behind the camera)."""
+        if not self._in_front(pos, 0.0):
+            return 0.0
+        eye = self.camera.eye_position()
+        dist = math.sqrt((pos[0] - eye[0]) ** 2 + (pos[1] - eye[1]) ** 2
+                         + (pos[2] - eye[2]) ** 2)
+        if dist <= 1e-6:
+            return 0.0
+        return self.camera.height / (
+            2.0 * dist * math.tan(math.radians(self.camera.fov / 2)))
+
+    def _draw_shields(self, units, dt: float) -> None:
+        """Shield bubbles for every unit that has shields worth showing.
+
+        Reads the four per-quadrant values the sim already tracks
+        (front/rear/left/right) — previously only visible as four small bars
+        in the side panel. Strength is the mean quadrant fraction, and a
+        quadrant that loses shields flashes on that FACE of the bubble, so
+        the mechanic is readable in the 3D view for the first time.
+        """
+        st = self.state
+        import OpenGL.GL as GL
+        prev = self._prev_shields
+        flash = self._shield_flash
+        GL.glPushAttrib(int(GL.GL_ENABLE_BIT) | int(GL.GL_CURRENT_BIT) |
+                        int(GL.GL_LIGHTING_BIT))
+        GL.glDisable(GL.GL_LIGHTING)      # the shell carries its own baked light
+        GL.glDisable(GL.GL_TEXTURE_2D)
+        glEnable(GL_DEPTH_TEST)
+        for e in units:
+            if not e.alive or e.is_planet:
+                continue
+            if e.max_shield_total() <= 0:
+                continue
+            quads = {q: e.shields.get(q, 0.0) for q in QUADRANTS}
+            frac = (sum(quads.values()) / e.max_shield_total())
+            if frac <= 0.001:
+                flash.pop(e.id, None)
+                prev[e.id] = quads
+                continue
+            # detect shield loss per quadrant -> raise a flash on that face
+            old = prev.get(e.id)
+            if old is not None:
+                for q, v in quads.items():
+                    if v < old.get(q, v) - 1e-6:
+                        flash.setdefault(e.id, {})[q] = 1.0
+            for q in list(flash.get(e.id, {})):
+                f = flash[e.id][q] - dt * 3.0
+                if f <= 0.0:
+                    flash[e.id].pop(q, None)
+                else:
+                    flash[e.id][q] = f
+            prev[e.id] = quads
+            self._shield_bubble(e, frac)
+            for q, f in list(flash.get(e.id, {}).items()):
+                self._shield_quadrant_glow(e, frac, q, f)
+        # drop cache entries for units that no longer exist
+        if len(prev) > 512:
+            live = {e.id for e in st.entities.values()}
+            for eid in [k for k in prev if k not in live]:
+                prev.pop(eid, None)
+                flash.pop(eid, None)
+        glDisable(GL_DEPTH_TEST)
+        GL.glPopAttrib()
+
     def _draw_selection_rings(self, selection: set):
         if not selection:
             return
