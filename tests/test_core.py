@@ -1,7 +1,7 @@
 """Core simulation tests: setup, economy, movement, combat, subsystems."""
 import unittest
 
-from helpers import make_game, run_for
+from helpers import make_game, run_for, order_build
 from game.core.vectors import Vec3
 from game.core.commands import MoveCommand, AttackCommand
 from game.data.store import DataStore
@@ -53,7 +53,7 @@ class TestEconomy(unittest.TestCase):
                        if e.alive and e.owner == 0 and e.is_construction)
         ast = next(e for e in st.entities.values() if e.data_id == "asteroid_field"
                    and e.pos.x < 0)
-        ok = gm.construction.start_station(builder.id, "mining_station", ast.pos.copy(), 0)
+        ok = order_build(gm, builder, "mining_station", ast.pos.copy(), 0)
         self.assertTrue(ok)
         run_for(gm, 25)   # build 20s + a bit
         station = next((e for e in st.entities.values()

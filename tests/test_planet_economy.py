@@ -245,7 +245,10 @@ class TestAIEnergyEconomy(unittest.TestCase):
 
         min_en = None
         got_relay_at = None
-        for _ in range(30 * 60 * 8):          # 8 sim-minutes
+        # 20 min: the relay sits ~7200u out by a gas giant and the constructor
+        # must WALK there now that build range is enforced, so it lands late in
+        # the AI's build order (~830s).
+        for _ in range(30 * 60 * 20):          # 20 sim-minutes
             gm.step(1 / 30)
             en = st.players[ai_id].energy
             min_en = en if min_en is None else min(min_en, en)

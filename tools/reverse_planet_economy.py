@@ -27,8 +27,9 @@ PY = os.path.join(ROOT, ".venv", "bin", "python")
 def run_suite(cwd):
     env = dict(os.environ, SDL_AUDIODRIVER="dummy", PYTHONPATH=".:tests")
     p = subprocess.run(
-        [PY, "-m", "unittest", "tests.test_planet_economy"],
-        cwd=cwd, env=env, capture_output=True, text=True, timeout=300)
+        [PY, "-m", "unittest",
+         "tests.test_planet_economy", "tests.test_construction_range"],
+        cwd=cwd, env=env, capture_output=True, text=True, timeout=420)
     out = p.stdout + p.stderr
     return p.returncode, out
 
@@ -138,8 +139,8 @@ def main():
         with open(p) as f:
             src = f.read()
         broken = src.replace(
-            '        if not self.my_stations("energy_relay") and idle and p.credits > 900:',
-            '        if False and idle and p.credits > 900:', 1)
+            '        if (self._count_stations("energy_relay") == 0 and idle',
+            '        if (False and self._count_stations("energy_relay") == 0 and idle', 1)
         if broken == src:
             raise AssertionError("D4 injection did not match")
         with open(p, "w") as f:
@@ -162,6 +163,47 @@ def main():
         return "AI skips gas giants again (the only EN-paying planet)"
 
     defects.append(("D5 AI skips gas giants", d5))
+
+    # ------------- D6: no build-range rule at all (the reported bug) ---------
+    def d6(d):
+        p = os.path.join(d, "game/systems/construction.py")
+        with open(p) as f:
+            src = f.read()
+        # Returning a huge range is the ORIGINAL behaviour: start_station never
+        # checked how far the builder was, so a station could be ordered on the
+        # far side of the map and the constructor would fly over and build it.
+        broken = src.replace(
+            '        return float(self.ds.rules.get("economy", {}).get("station_build_range", 1200))',
+            '        return 1e12   # DEFECT INJECTION: no proximity rule', 1)
+        if broken == src:
+            raise AssertionError("D6 injection did not match")
+        with open(p, "w") as f:
+            f.write(broken)
+        return "station_build_range disabled (unlimited build distance)"
+
+    defects.append(("D6 no builder-proximity rule", d6))
+
+    # ------------- D7: AI drops far sites instead of walking over ------------
+    def d7(d):
+        p = os.path.join(d, "game/ai/ai.py")
+        with open(p) as f:
+            src = f.read()
+        broken = src.replace(
+            """            if far:
+                st.queue_command(PlayerCommand(
+                    "move", self.player_id, unit_ids=(builder.id,),
+                    target_pos=(pos.x, pos.y, pos.z)))
+                self._pending_site[builder.id] = (station_kind, pos)
+                return""",
+            """            if far:
+                return      # DEFECT INJECTION: abandon any site out of range""", 1)
+        if broken == src:
+            raise AssertionError("D7 injection did not match")
+        with open(p, "w") as f:
+            f.write(broken)
+        return "AI abandons out-of-range sites (no walk-into-range)"
+
+    defects.append(("D7 AI never walks into range", d7))
 
     print()
     caught = 0

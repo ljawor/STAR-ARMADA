@@ -258,6 +258,15 @@ class InputController:
             if cs is None:
                 cs = ConstructionSystem(self.state)
             valid, reason = cs.check_site(pl["station_kind"], w, b)
+            # Proximity is enforced at order time (start_station), not by
+            # check_site — surfaced here so the ghost goes red and says why
+            # instead of the click being silently rejected.
+            if valid and hasattr(cs, "too_far_to_build"):
+                far, d, lim = cs.too_far_to_build(w, b)
+                if far:
+                    valid = False
+                    reason = (f"constructor {d - lim:,.0f}u out of range "
+                              f"({d:,.0f}u, max {lim:,.0f}u)")
         pl["ghost"] = {"sx": mx, "sy": my, "valid": valid, "reason": reason,
                        "radius": rad, "world": w}
 
