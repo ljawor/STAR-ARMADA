@@ -49,6 +49,8 @@ BAR_SHIELD = (84, 150, 220)
 BAR_HULL = (110, 200, 120)
 BAR_STRUCT = (150, 150, 160)
 TRADE = (226, 196, 120)          # cargo / trade income readouts
+DRAG_FILL = (86, 140, 220, 26)   # box-select rectangle (subtle tint)
+DRAG_EDGE = (170, 215, 255, 200)
 
 LOG_TYPES = ("unit_destroyed", "station_built", "research_complete",
              "planet_colonized", "construction_complete")
@@ -80,6 +82,7 @@ class HUD:
         self.placement: dict | None = None
         # sim floating texts projected to screen (set per-frame by main loop)
         self.floating_texts: list = []
+        self.drag_box = None            # (start, cur) screen corners while dragging
         # per-frame scrollable regions: list of (rect, key) for wheel routing
         self.scroll_rects: list = []
         # mission state snapshot (set by main loop when a campaign is active)
@@ -133,6 +136,7 @@ class HUD:
         self._minimap(selection, local_player)
         self._mission_panel(local_player)
         self._draw_floating_texts()
+        self._draw_drag_box()
         self._placement_banner()
         if flash_msg and flash_left > 0.0:
             surf = self.font_big.render(flash_msg, True, WARN)
@@ -671,6 +675,34 @@ class HUD:
     def set_floating_texts(self, texts: list) -> None:
         """Screen-projected sim messages (from renderer.floating_texts_screen)."""
         self.floating_texts = texts
+
+    def set_drag_box(self, start, cur) -> None:
+        """Live box-select rectangle in screen space (None while not dragging)."""
+        self.drag_box = (start, cur)
+
+    def _draw_drag_box(self) -> None:
+        """Draw the box-select rectangle between the two screen corners.
+
+        Left-drag always selected correctly, but nothing ever DREW the box, so
+        the drag looked like it was doing nothing.
+        """
+        box = getattr(self, "drag_box", None)
+        if not box:
+            return
+        start, cur = box
+        # check the corners BEFORE unpacking: main.py calls set_drag_box(None,
+        # None) every frame while not dragging, which is truthy as a tuple
+        if start is None or cur is None:
+            return
+        x0, y0 = start
+        x1, y1 = cur
+        if abs(x1 - x0) < 2 and abs(y1 - y0) < 2:
+            return
+        ov = self.overlay
+        rect = pygame.Rect(min(x0, x1), min(y0, y1),
+                           abs(x1 - x0), abs(y1 - y0))
+        pygame.draw.rect(ov, DRAG_FILL, rect)
+        pygame.draw.rect(ov, DRAG_EDGE, rect, 1)
 
     def _owner_rgb(self, owner: int):
         p = self.state.players.get(owner)

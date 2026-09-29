@@ -29,6 +29,7 @@ class InputController:
         self.selection: set[int] = set()
         self.groups: dict[int, set[int]] = {}   # control groups 1-9
         self.drag_start: tuple | None = None
+        self.drag_cur: tuple | None = None      # live drag corner (box-select)
         self.dragging = False
         self.right_drag: tuple | None = None
         self.grab_mouse = False
@@ -56,11 +57,12 @@ class InputController:
                     self.selection.clear()
                     self._pending_fleet = None
             elif pygame.K_1 <= ev.key <= pygame.K_9:
+                num = ev.key - pygame.K_0
                 if self._pending_fleet:
                     self._create_fleet(self._pending_fleet, formation="line")
-                    self._control_group(ev.key - pygame.K_0)
+                    self._control_group(num, assign=True)
                 else:
-                    self._control_group(ev.key - pygame.K_0)
+                    self._control_group(num, assign=self._ctrl_down(ev))
             elif ev.key == pygame.K_g and self.selection:
                 self._pending_fleet = sorted(self.selection)
                 self.app.flash("press 1-9 to form fleet, or F for formation")
@@ -107,10 +109,15 @@ class InputController:
             if ev.button == 1 and self.dragging:
                 self._finish_box_select(ev.pos)
                 self.dragging = False
+                self.drag_start = None
+                self.drag_cur = None
             elif ev.button == 3:
                 self._right_click(ev.pos)
                 self.right_drag = None
         elif ev.type == pygame.MOUSEMOTION:
+            if self.dragging:
+                # live corner so the HUD can draw the selection rectangle
+                self.drag_cur = ev.pos
             if self.right_drag is not None:
                 # rotate camera on right-drag (macOS sensitivity per skill)
                 dx, dy = ev.rel
@@ -366,13 +373,38 @@ class InputController:
         self.state.queue_command(JumpCommand(self.local_player, ids, tgt))
         self.app.flash("hyperspace jump charging")
 
-    def _control_group(self, num: int) -> None:
-        if pygame.K_LSHIFT in self.keys or pygame.K_RSHIFT in self.keys:
+    def _ctrl_down(self, ev=None) -> bool:
+        """Is Ctrl (or Cmd on macOS) held?
+
+        Read the live modifier state from the event, falling back to the
+        event-tracked key set. Never uses key.get_pressed() (macOS skill).
+        """
+        mods = getattr(ev, "mod", 0) if ev is not None else 0
+        if mods & (pygame.KMOD_CTRL | pygame.KMOD_LMETA | pygame.KMOD_RMETA):
+            return True
+        return bool(self.keys & {pygame.K_LCTRL, pygame.K_RCTRL,
+                                 pygame.K_LGUI, pygame.K_RGUI})
+
+    def _control_group(self, num: int, assign: bool | None = None) -> None:
+        """Ctrl/Shift+<n> assigns the selection to group `n`; <n> alone recalls.
+
+        Previously EVERY number key assigned, so Ctrl+1..9 never worked —
+        pressing Ctrl+2 overwrote group 2 with the current selection and left
+        the selection unchanged, instead of recalling the group.
+        """
+        if assign is None:
+            assign = bool(self.keys & {pygame.K_LCTRL, pygame.K_RCTRL,
+                                       pygame.K_LGUI, pygame.K_RGUI})
+        if assign:
+            self.groups[num] = set(self.selection)
+            self.app.flash(f"group {num} set ({len(self.selection)} units)")
+        elif pygame.K_LSHIFT in self.keys or pygame.K_RSHIFT in self.keys:
             cur = self.groups.get(num, set())
             self.selection = set(self.selection) | cur
         else:
-            self.groups[num] = set(self.selection)
-            self.selection = set(self.groups[num])
+            self.selection = set(self.groups.get(num, set()))
+            if self.selection:
+                self.app.flash(f"group {num} ({len(self.selection)} units)")
 
     def _create_fleet(self, ids: list, formation: str = "line") -> None:
         self.state.queue_command(FleetCreateCommand(

@@ -346,6 +346,8 @@ while running:
     camera.apply(W, H)
     renderer.draw(dt_frame, inputc.selection)
     hud.set_floating_texts(renderer.floating_texts_screen())
+    # live box-select rectangle while left-dragging
+    hud.set_drag_box(inputc.drag_start, inputc.drag_cur)
     flash_left = flash_until - state.time
     hud.render(inputc.selection, None, 0, paused, flash_msg,
                max(0.0, flash_left), fps)
