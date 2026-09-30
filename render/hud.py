@@ -164,26 +164,47 @@ class HUD:
             return
         x = 14
         cap_used = p.command_used(st.entities)
+        # Show each resource's income alongside it. EN was a black box in play:
+        # the number never moved and nothing said why — the top bar was the only
+        # place it appeared, with no rate. The rate is what makes "I have no EN"
+        # legible as "I own no gas giant and no energy relay".
+        inc = getattr(p, "income_frame", {}) or {}
         cells = (
-            ("CR", f"{p.credits:,.0f}", ACCENT),
-            ("MT", f"{p.materials:,.0f}", (200, 170, 120)),
-            ("EN", f"{p.energy:,.0f}", (150, 220, 240)),
-            ("CRW", f"{p.crew:,.0f}", GOOD),
+            ("CR", f"{p.credits:,.0f}", ACCENT, inc.get("credits", 0.0)),
+            ("MT", f"{p.materials:,.0f}", (200, 170, 120), inc.get("materials", 0.0)),
+            ("EN", f"{p.energy:,.0f}", (150, 220, 240), inc.get("energy", 0.0)),
+            ("CRW", f"{p.crew:,.0f}", GOOD, inc.get("crew", 0.0)),
             ("CMD", f"{cap_used}/{p.command_capacity}",
-             WARN if cap_used >= p.command_capacity else TXT),
+             WARN if cap_used >= p.command_capacity else TXT, None),
         )
-        for label, val, col in cells:
+        for label, val, col, rate in cells:
             surf = self.font.render(label, True, TXT_DIM)
             ov.blit(surf, (x, 9))
             x += surf.get_width() + 5
             surf = self.font_big.render(val, True, col)
             ov.blit(surf, (x, 7))
-            x += surf.get_width() + 22
+            x += surf.get_width() + 4
+            if rate is not None:
+                # a genuinely zero rate is the interesting case — say so in the
+                # warning colour instead of hiding it
+                if abs(rate) < 1e-9:
+                    rtext, rcol = "0/s", BAD
+                else:
+                    rtext, rcol = f"{rate:0.1f}/s", TXT_DIM
+                rsurf = self.font.render(rtext, True, rcol)
+                ov.blit(rsurf, (x, 14))
+                x += rsurf.get_width() + 14
+            else:
+                x += 18
 
         t = st.time
         clock = f"{int(t // 60):02d}:{int(t % 60):02d}"
+        # Right-aligned, not centred: the resource row now carries an income
+        # rate per resource and reaches ~800px in the late game, which ran
+        # straight through a centred clock. PAUSED sits at width-200 and still
+        # clears this.
         surf = self.font_big.render(clock, True, TXT)
-        ov.blit(surf, (self.width // 2 - surf.get_width() // 2, 7))
+        ov.blit(surf, (self.width - surf.get_width() - 14, 7))
 
         if paused:
             surf = self.font_big.render("PAUSED", True, WARN)

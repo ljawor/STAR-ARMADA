@@ -23,6 +23,10 @@ class AIPlayer:
         self.tactical_timer = 0.0
         self.last_strategic = {}
         self.attack_fleet_id = None
+        # builder_id -> (station_kind, Vec3): a site the constructor is walking
+        # to, because the sim refuses the build until it is within
+        # `station_build_range`
+        self._pending_site: dict = {}
 
     # ------------------------------------------------------------------ helpers
     def my_units(self, kind=None):
@@ -84,6 +88,7 @@ class AIPlayer:
             return
 
         # 1. economy: keep constructors alive and building
+        self._flush_pending_sites()
         self._ensure_economy(home)
 
         # 2. defense platforms when threatened
@@ -101,19 +106,41 @@ class AIPlayer:
         # 6. attack decision
         self._decide_attack()
 
+    def _count_stations(self, kind: str) -> int:
+        """Stations of `kind` that exist, are being walked to, or are building.
+
+        `my_stations()` only counts finished ones. Now that a constructor has to
+        travel to its site, a station can be "owed" for a minute or more, so
+        counting only finished stations made the AI re-queue the same need over
+        and over (it built five mining stations against a desired four and
+        never got as far as trade or research).
+        """
+        n = len(self.my_stations(kind))
+        for _bid, (k, _pos) in self._pending_site.items():
+            if k == kind:
+                n += 1
+        for e in self.my_units():
+            if e.is_construction and e.build_queue:
+                for it in e.build_queue:
+                    if it.get("kind") == "station" and it.get("item") == kind:
+                        n += 1
+        return n
+
     def _ensure_economy(self, home) -> None:
         st = self.state
         ds = self.ds
         constructors = [e for e in self.my_units() if e.is_construction and
                         not e.is_planet and self._is_builder(e)]
-        miners = self.my_stations("mining_station")
-        trade = self.my_stations("trade_station")
         # count idle constructors with money
         p = st.players.get(self.player_id)
-        idle = [c for c in constructors if not c.build_queue]
+        # A constructor walking to a site it has already been assigned has an
+        # empty build_queue, so it still looks idle. Re-tasking it every tick
+        # meant it never arrived anywhere and no station ever got built.
+        idle = [c for c in constructors
+                if not c.build_queue and c.id not in self._pending_site]
         # desired: miners >= desired_miners; then trade stations
         desired_miners = int(ds.rules.get("ai", {}).get("desired_miners", 4))
-        if len(miners) < desired_miners and idle:
+        if self._count_stations("mining_station") < desired_miners and idle:
             site = self._find_asteroid_site(home)
             if site:
                 self._queue_build(idle[0], "mining_station", site)
@@ -121,24 +148,43 @@ class AIPlayer:
         # shipyard early — keep this ahead of trade: a young AI that spends its
         # opening credits on a trade station can't build warships or more
         # constructors with two idle builders in the meantime
-        if not self.my_stations("shipyard") and idle and p.credits > 2200:
+        if not self._count_stations("shipyard") and idle and p.credits > 2200:
             site = self._find_station_site("shipyard", 700, home, idle[0])
             if site is not None:
                 self._queue_build(idle[0], "shipyard", site)
                 return
-        # trade stations once the economy is running. The AI builds its own
-        # proactively: a route needs two markets, so whichever side builds
-        # first, the pair starts trading (and the receiver — not the shipper —
-        # is paid, so both sides profit from each other's convoys).
-        if len(trade) < 2 and p.credits > 1500 and idle:
+        # ONE trade station, then research, THEN the second market. A route only
+        # needs two markets and the opposing side builds its own, so racing to
+        # build both ourselves just burns the credits research needs — with two
+        # priority-2 markets the AI spent everything on trade and had taken no
+        # tech by 16 minutes.
+        if self._count_stations("trade_station") < 1 and p.credits > 1500 and idle:
             site = self._find_station_site("trade_station", 900, home, idle[0])
             if site is not None:
                 self._queue_build(idle[0], "trade_station", site)
                 return
-        if not self.my_stations("research_station") and idle and p.credits > 2400:
+        if not self._count_stations("research_station") and idle and p.credits > 2400:
             site = self._find_station_site("research_station", 700, home, idle[0])
             if site is not None:
                 self._queue_build(idle[0], "research_station", site)
+                return
+        # Energy relay: the ONLY station that produces EN, and EN is spent on
+        # every warship and on research, so an AI that never builds one runs
+        # its fleet into a hard floor (reported: "my EN is 10 and I can't build
+        # anymore"). Cheap (650cr) but FAR (~7200u out by a gas giant), so the
+        # trip monopolises whichever constructor takes it — queued ahead of
+        # mining it starved the whole early economy. Queue it once the core
+        # economy exists and a constructor can be spared.
+        if (self._count_stations("energy_relay") == 0 and idle
+                and p.credits > 900 and self._count_stations("research_station")):
+            site = self._find_energy_relay_site(home, idle[0])
+            if site is not None:
+                self._queue_build(idle[0], "energy_relay", site)
+                return
+        if self._count_stations("trade_station") < 2 and p.credits > 1500 and idle:
+            site = self._find_station_site("trade_station", 900, home, idle[0])
+            if site is not None:
+                self._queue_build(idle[0], "trade_station", site)
                 return
         # more constructors if rich (command station builds engineering hulls)
         if len(constructors) < 2 and p.credits > 2500:
@@ -217,11 +263,99 @@ class AIPlayer:
                     return pos
         return None
 
+    def _find_energy_relay_site(self, home, builder, max_dist: float = 9000.0):
+        """A legal energy_relay site near a gas giant, else None.
+
+        energy_relay is the only station that produces EN, and its placement
+        window is a ring around a gas giant — far from `home`, so the generic
+        ring sweep below would never find it. Sweep the gas giant itself and
+        hand back the first site the sim's validator accepts.
+        """
+        import math
+        from ..systems.construction import _body_clearance
+        cs = getattr(self.state, "_construction_system", None)
+        if cs is None:
+            return None
+        relay_r = self.ds.resolve_station("energy_relay").radius
+        giants = [e for e in self.state.entities.values()
+                  if e.alive and e.data_id == "gas_giant"]
+        # nearest gas giant first
+        giants.sort(key=lambda g: home.pos.dist_sq(g.pos))
+        for gas in giants:
+            if home.pos.dist(gas.pos) > max_dist:
+                continue
+            base = _body_clearance(gas, relay_r)
+            for i in range(24):
+                ang = (gas.pos.x * 0.013 + gas.pos.z * 0.007) % 6.28 + (i / 24) * 2 * math.pi
+                for r in (base + 200, base + 700, base + 1400):
+                    pos = Vec3(gas.pos.x + math.sin(ang) * r, 0,
+                               gas.pos.z + math.cos(ang) * r)
+                    ok, _reason = cs.check_site("energy_relay", pos, builder)
+                    if ok:
+                        return pos
+        return None
+
     def _queue_build(self, builder, station_kind: str, pos: Vec3) -> None:
+        """Queue a station build, walking the constructor into range first.
+
+        The sim refuses a site beyond the builder's `station_build_range`, and
+        the AI evaluates sites from the builder's CURRENT position — a
+        constructor that is still mining or flying home would otherwise have
+        every order bounced forever. So: in range, build; out of range, send it
+        over and build next tick (the site itself was already validated, and
+        `start_station` re-validates on arrival).
+        """
         st = self.state
+        cs = getattr(st, "_construction_system", None)
+        if cs is not None and hasattr(cs, "too_far_to_build"):
+            far, _d, _lim = cs.too_far_to_build(pos, builder)
+            if far:
+                st.queue_command(PlayerCommand(
+                    "move", self.player_id, unit_ids=(builder.id,),
+                    target_pos=(pos.x, pos.y, pos.z)))
+                self._pending_site[builder.id] = (station_kind, pos)
+                return
         st.queue_command(PlayerCommand(
             "build_station", self.player_id, unit_ids=(builder.id,),
             station_kind=station_kind, target_pos=(pos.x, pos.y, pos.z)))
+
+    def _flush_pending_sites(self) -> None:
+        """Build any station whose constructor has finished walking over.
+
+        The site is held STABLE across ticks. Re-picking it every tick (which
+        the finders do — asteroid sites are even randomised) sent the
+        constructor after a target that moved each frame, so it never arrived
+        and no station was ever built.
+        """
+        st = self.state
+        cs = getattr(st, "_construction_system", None)
+        for bid, (kind, pos) in list(self._pending_site.items()):
+            b = st.entity(bid)
+            if b is None or not b.alive or not b.is_construction:
+                del self._pending_site[bid]
+                continue
+            if b.build_queue:
+                continue        # busy building something else
+            far = True
+            if cs is not None and hasattr(cs, "too_far_to_build"):
+                far, _d, _lim = cs.too_far_to_build(pos, b)
+            if not far:
+                # in range at last — place it (start_station re-validates)
+                del self._pending_site[bid]
+                st.queue_command(PlayerCommand(
+                    "build_station", self.player_id, unit_ids=(b.id,),
+                    station_kind=kind, target_pos=(pos.x, pos.y, pos.z)))
+                continue
+            # still out of range: is it actually heading for THIS site?
+            tgt = b.order_target_pos
+            heading = (b.order_type == "move" and tgt is not None
+                       and abs(tgt.x - pos.x) < 1.0 and abs(tgt.z - pos.z) < 1.0)
+            if not heading:
+                # the order was never given or has been interrupted — re-issue
+                # the same destination rather than abandoning the site
+                st.queue_command(PlayerCommand(
+                    "move", self.player_id, unit_ids=(b.id,),
+                    target_pos=(pos.x, pos.y, pos.z)))
 
     def _queue_ship(self, shipyard, ship_id: str, count: int) -> None:
         st = self.state
@@ -342,13 +476,28 @@ class AIPlayer:
             return
         if p.credits < threshold:
             return
-        # nearest uncolonized planet not too close to enemy
+        target = self._pick_colony_target(home)
+        if target is not None:
+            st.queue_command(PlayerCommand("colonize", self.player_id,
+                                           unit_ids=(colonizer.id,),
+                                           target_id=target.id))
+
+    def _pick_colony_target(self, home):
+        """Nearest uncolonized planet worth taking, else None.
+
+        Gas giants are included: `planet_income` pays EN for a gas giant and
+        nothing else, so they are the only route to a second EN source (the
+        other being an energy_relay). Barren worlds pay nothing at all, so
+        they stay excluded. Planets sitting near an enemy station are left
+        alone so the colonizer is not thrown away.
+        """
+        st = self.state
         target = None
         best_d = 1e18
         for e in st.entities.values():
             if not e.alive or not e.is_planet or e.colonized_by is not None:
                 continue
-            if e.data_id in ("gas_giant", "barren"):
+            if e.data_id == "barren":
                 continue
             # skip planets near enemy stations
             near_enemy = any(en.alive and en.is_station and en.owner >= 0
@@ -360,10 +509,7 @@ class AIPlayer:
             d = home.pos.dist_sq(e.pos)
             if d < best_d:
                 target, best_d = e, d
-        if target is not None:
-            st.queue_command(PlayerCommand("colonize", self.player_id,
-                                           unit_ids=(colonizer.id,),
-                                           target_id=target.id))
+        return target
 
     def _decide_attack(self) -> None:
         st = self.state

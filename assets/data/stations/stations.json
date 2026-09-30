@@ -124,7 +124,7 @@
       "weapons": [],
       "systems": {"engines": 0, "weapons": 0, "sensors": 150, "shield_gen": 220, "hangar": 0},
       "income": {"energy": 2.4},
-      "requires_range": {"gas_giant": 1100},
+      "requires_range": {"gas_giant": 3200},
       "command_capacity": 0
     }
   }

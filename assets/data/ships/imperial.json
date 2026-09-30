@@ -103,7 +103,7 @@
       "systems": {"engines": 100, "weapons": 0, "sensors": 80, "shield_gen": 60, "hangar": 0},
       "can_build_stations": ["mining_station", "command_station", "shipyard", "research_station",
                               "defense_platform", "sensor_station", "trade_station",
-                              "fighter_platform", "repair_dock"]
+                              "fighter_platform", "repair_dock", "energy_relay"]
     },
     "imperial_colonizer": {
       "name": "Colonial Outreach Frigate", "faction": "imperial",

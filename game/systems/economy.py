@@ -27,13 +27,31 @@ class EconomySystem:
         for e in st.entities.values():
             if not e.alive:
                 continue
-            if e.owner < 0:
-                continue
-            p = st.players.get(e.owner)
+            # A COLONIZED planet is owned by its colonizer but has
+            # `owner == -1` (planets are neutral terrain; colonising sets only
+            # `colonized_by`). Reading `e.owner` here skipped every planet, so
+            # the whole planet_income table was dead — no EN from gas giants
+            # and no credits/crew from any other world.
+            if e.is_planet:
+                if e.colonized_by is None or e.colonized_by < 0:
+                    continue
+                owner = e.colonized_by
+            else:
+                owner = e.owner
+                if owner < 0:
+                    continue
+            p = st.players.get(owner)
             if p is None:
                 continue
-            if e.is_planet and e.colonized_by == e.owner:
-                rates = planet_income.get(e.data_id, {})
+            if e.is_planet:
+                rates = dict(planet_income.get(e.data_id, {}))
+                # planet_crew_bonus was declared in game_rules.json and never
+                # read anywhere — agricultural/temperate worlds never paid the
+                # extra crew they advertise. Fold it in here, which is the one
+                # place a colony's output is computed.
+                for res, bonus in eco.get("planet_crew_bonus", {}).items():
+                    if res == e.data_id:
+                        rates["crew"] = rates.get("crew", 0.0) + bonus
                 for res, rate in rates.items():
                     p.income_frame[res] = p.income_frame.get(res, 0.0) + rate
             elif e.is_station:

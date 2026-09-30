@@ -60,7 +60,7 @@
       "speed": 60, "turn_rate": 50, "radius": 30, "sensor_range": 1200,
       "weapons": [],
       "systems": {"engines": 98, "weapons": 0, "sensors": 78, "shield_gen": 60, "hangar": 0},
-      "can_build_stations": ["mining_station", "trade_station", "defense_platform"]
+      "can_build_stations": ["mining_station", "trade_station", "defense_platform", "energy_relay"]
     }
   }
 }

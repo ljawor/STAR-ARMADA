@@ -15,6 +15,18 @@ from . import stats
 from .unit_factory import UnitFactory
 
 
+def _body_clearance(body, station_radius: float) -> float:
+    """Minimum distance from a body's centre a station of `station_radius` may sit.
+
+    Mirrors the planet-spacing rule in ``check_site`` (``< (body.radius +
+    station.radius) * 1.6``) and adds a small margin, so a placement window
+    derived from this value can never land inside the exclusion zone. Sharing the
+    term is the point: when the two were written independently they contradicted
+    each other and the station became unbuildable.
+    """
+    return (body.radius + station_radius) * 1.6 + 50.0
+
+
 class ConstructionSystem:
     def __init__(self, state):
         self.state = state
@@ -71,11 +83,40 @@ class ConstructionSystem:
         return used + cmd_cost <= p.command_capacity
 
     # ------------------------------------------------------------------ station build
+    def build_range(self) -> float:
+        """How far from the builder a station may be sited."""
+        return float(self.ds.rules.get("economy", {}).get("station_build_range", 1200))
+
+    def too_far_to_build(self, pos, builder) -> tuple[bool, float, float]:
+        """(too_far, distance, limit) — the builder must be able to reach the site.
+
+        This is deliberately NOT part of ``check_site``. That function answers
+        "is this ground legal", and the AI's site finders use it to pick a site
+        before the builder has moved there — adding proximity would make the
+        relay (which lives out by a gas giant, sometimes 7000u from home)
+        unfindable. Proximity is a property of the ORDER, so it is enforced
+        where the order is issued.
+        """
+        x, y, z = (pos.x, pos.y, pos.z) if hasattr(pos, "x") else (pos[0], pos[1], pos[2])
+        lim = self.build_range()
+        d = math.dist((x, y, z), (builder.pos.x, builder.pos.y, builder.pos.z))
+        return d > lim, d, lim
+
     def start_station(self, builder_id: int, station_id: str, pos: Vec3,
                       player_id: int) -> bool:
         st = self.state
         builder = st.entity(builder_id)
         if builder is None or not builder.is_construction:
+            return False
+        # The builder has to actually be able to PLACE the thing — otherwise a
+        # player can order a station on the far side of the map and the
+        # constructor silently flies there and builds it.
+        far, d, lim = self.too_far_to_build(pos, builder)
+        if far:
+            st.float_text(builder.pos,
+                          f"Constructor is {d - lim:,.0f}u out of range "
+                          f"({d:,.0f}u, max {lim:,.0f}u)",
+                          (1, 0.5, 0.4))
             return False
         ok, reason = self.check_site(station_id, pos, builder)
         if not ok:
@@ -146,12 +187,19 @@ class ConstructionSystem:
                 if math.dist((x, y, z), (e.pos.x, e.pos.y, e.pos.z)) < \
                         (e.radius + sd.radius) * 1.6:
                     return False, f"too close to {e.data_id.replace('_', ' ')}"
-        # requires_range: some stations must be near a specific body
+        # requires_range: some stations must be near a specific body.
+        # The window has to be measured from the body's ACTUAL radius, because
+        # the planet-spacing rule above keeps stations ~1.6-2.4x the body
+        # radius away from its centre. energy_relay's flat 1100u sat entirely
+        # inside that exclusion zone (gas giants are r2200 -> nearest legal
+        # spot 2355u), so the station could not be built anywhere at all.
         for req_kind, rng in (sd.requires_range or {}).items():
             ok = False
             for e in st.entities.values():
-                if e.alive and e.data_id == req_kind and \
-                        math.dist((x, y, z), (e.pos.x, e.pos.y, e.pos.z)) <= rng:
+                if not (e.alive and e.data_id == req_kind):
+                    continue
+                clear = _body_clearance(e, sd.radius) if req_kind != "asteroid_field" else 0.0
+                if math.dist((x, y, z), (e.pos.x, e.pos.y, e.pos.z)) <= clear + rng:
                     ok = True
                     break
             if not ok:

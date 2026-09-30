@@ -40,7 +40,8 @@
       "reward_owner": "destination"
     },
     "repair_dock_rate": 40.0,
-    "repair_dock_range": 500
+    "repair_dock_range": 500,
+    "station_build_range": 1200
   },
   "sensors": {
     "nebula_detection_multiplier": 0.3,

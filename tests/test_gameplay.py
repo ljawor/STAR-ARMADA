@@ -1,7 +1,7 @@
 """Full gameplay loop test: BUILD → GATHER → RESEARCH → FLEET → ATTACK → WIN (spec §47)."""
 import unittest
 
-from helpers import make_game, run_for
+from helpers import make_game, run_for, order_build
 from game.core.vectors import Vec3
 from game.core.commands import (
     BuildStationCommand, BuildShipCommand, ResearchCommand,
@@ -23,7 +23,7 @@ class TestConstruction(unittest.TestCase):
 
     def test_build_mining_station(self):
         gm, st, builder, home, ast = self._prep()
-        ok = gm.construction.start_station(builder.id, "mining_station", ast.pos.copy(), 0)
+        ok = order_build(gm, builder, "mining_station", ast.pos.copy(), 0)
         self.assertTrue(ok)
         run_for(gm, 30)
         mines = [e for e in st.entities.values()
@@ -33,7 +33,7 @@ class TestConstruction(unittest.TestCase):
     def test_build_shipyard_and_ships(self):
         gm, st, builder, home, ast = self._prep()
         pos = home.pos + Vec3(600, 0, 0)
-        self.assertTrue(gm.construction.start_station(builder.id, "shipyard", pos, 0))
+        self.assertTrue(order_build(gm, builder, "shipyard", pos, 0))
         run_for(gm, 45)
         yard = next((e for e in st.entities.values()
                      if e.is_station and e.data_id == "shipyard"), None)
@@ -50,7 +50,7 @@ class TestConstruction(unittest.TestCase):
         gm, st, builder, home, ast = self._prep()
         st.players[0].credits = 0
         st.players[0].materials = 0
-        ok = gm.construction.start_station(builder.id, "mining_station", ast.pos.copy(), 0)
+        ok = order_build(gm, builder, "mining_station", ast.pos.copy(), 0)
         self.assertFalse(ok)
 
     def test_colonize_planet(self):
@@ -78,8 +78,7 @@ class TestResearch(unittest.TestCase):
     def test_research_flow(self):
         gm, st, builder, home = self._prep()
         # build research station
-        self.assertTrue(gm.construction.start_station(
-            builder.id, "research_station", home.pos + Vec3(-600, 0, 0), 0))
+        self.assertTrue(order_build(gm, builder, "research_station", home.pos + Vec3(-600, 0, 0), 0))
         run_for(gm, 40)
         lab = next((e for e in st.entities.values()
                     if e.is_station and e.data_id == "research_station"), None)
@@ -178,7 +177,10 @@ class TestAI(unittest.TestCase):
 
     def test_ai_researches(self):
         gm = make_game()
-        run_for(gm, 600)
+        # 15 min, not 10: a constructor now has to TRAVEL to each site
+        # (`economy.station_build_range`), so the AI's build order runs longer —
+        # it takes its first tech at ~680s.
+        run_for(gm, 900)
         p1 = gm.state.players[1]
         # AI should have research station + at least started research
         self.assertTrue(p1.researched or p1.researching)
@@ -199,8 +201,7 @@ class TestFullLoop(unittest.TestCase):
                        if e.alive and e.owner == 0 and e.is_construction)
         home = next(e for e in st.entities.values() if e.is_station and e.owner == 0)
         # 1. BUILD shipyard
-        self.assertTrue(gm.construction.start_station(
-            builder.id, "shipyard", home.pos + Vec3(800, 0, 0), 0))
+        self.assertTrue(order_build(gm, builder, "shipyard", home.pos + Vec3(800, 0, 0), 0))
         run_for(gm, 45)
         yard = next(e for e in st.entities.values()
                     if e.is_station and e.data_id == "shipyard" and e.owner == 0)
