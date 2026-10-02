@@ -177,6 +177,10 @@ def start_game(load_path: str | None = None, mdef: dict | None = None) -> None:
     if _start is not None:
         camera.target = [_start.pos.x, 0.0, _start.pos.z]
     camera.zoom(0.55)                    # start close-in; wheel out for tactics
+    if renderer is not None:
+        renderer.close()
+    if hud is not None:
+        hud.close()
     renderer = Renderer(state, camera)
     hud = HUD(W, H, state)
     hud.set_camera_ref(camera)
@@ -395,6 +399,10 @@ else:
     # still a device to release when no game was ever started.
     pygame.mixer.quit()
 save_settings(SETTINGS)
+if renderer is not None:
+    renderer.close()
+if hud is not None:
+    hud.close()
 pygame.quit()
 if SMOKE and state is not None:
     print("SMOKE_DONE " + summary())

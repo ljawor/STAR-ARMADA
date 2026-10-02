@@ -92,6 +92,13 @@ class HUD:
         self.mission_done: bool = False
         self.mission_failed: bool = False
 
+    def close(self) -> None:
+        """Release the overlay texture before the current GL context is lost."""
+        if self.tex is not None:
+            from OpenGL import GL
+            GL.glDeleteTextures([self.tex])
+            self.tex = None
+
     def _mission_panel(self, local_player: int) -> None:
         """Objectives card (top-center) while a campaign mission runs."""
         if not self.mission_progress:
@@ -276,7 +283,8 @@ class HUD:
         st = self.state
         ents = [st.entity(eid) for eid in sorted(selection)]
         ents = [e for e in ents if e is not None]
-        panel = pygame.Rect(10, 44, 320, 430)
+        # Idle help is a card, not a full-height inspector hiding the world.
+        panel = pygame.Rect(10, 44, 320, 430 if ents else 84)
         pygame.draw.rect(ov, PANEL_BG, panel, border_radius=8)
         pygame.draw.rect(ov, PANEL_EDGE, panel, 1, border_radius=8)
         if not ents:
@@ -416,14 +424,15 @@ class HUD:
         ov = self.overlay
         st = self.state
         p = st.players.get(local_player)
-        panel = pygame.Rect(self.width - 330, 44, 320, 430)
-        pygame.draw.rect(ov, PANEL_BG, panel, border_radius=8)
-        pygame.draw.rect(ov, PANEL_EDGE, panel, 1, border_radius=8)
         if p is None:
             return
-        ents = [st.entity(eid) for eid in selection]
+        ents = [st.entity(eid) for eid in sorted(selection)]
         ents = [e for e in ents if e is not None and e.owner == local_player]
         sel = ents[0] if ents else None
+        contextual = sel is not None and (sel.is_construction or sel.is_station)
+        panel = pygame.Rect(self.width - 330, 44, 320, 430 if contextual else 124)
+        pygame.draw.rect(ov, PANEL_BG, panel, border_radius=8)
+        pygame.draw.rect(ov, PANEL_EDGE, panel, 1, border_radius=8)
 
         y = panel.y + 10
         # constructor selected -> build stations (scrollable)
@@ -632,13 +641,15 @@ class HUD:
         log = [ev for ev in self.state.events.log if ev.type in LOG_TYPES]
         if not log:
             return
-        x, y = 10, self.height - 210
-        rect = pygame.Rect(x, y, 420, 196)
+        rows = log[-9:]
+        height = 34 + 18 * len(rows)
+        x, y = 10, self.height - 14 - height
+        rect = pygame.Rect(x, y, 420, height)
         pygame.draw.rect(ov, PANEL_BG, rect, border_radius=8)
         pygame.draw.rect(ov, PANEL_EDGE, rect, 1, border_radius=8)
         self._label(x + 10, y + 6, "INCOMING", TXT_DIM, self.font_small)
         yy = y + 24
-        for ev in log[-9:]:
+        for ev in rows:
             d = ev.data
             line = self._event_text(ev, local_player)
             col = GOOD if d.get("owner", d.get("winner", -9)) == local_player \
@@ -854,6 +865,10 @@ class HUD:
         glLoadIdentity()
         # NOTE: no glClear here — the world was already rendered this frame;
         # clearing would erase the 3D scene under the overlay.
+        # HUD texels are display colours, not lit hull material. Leaving world
+        # lighting enabled modulates every label by the last geometry normal.
+        was_lit = _gl.glIsEnabled(_gl.GL_LIGHTING)
+        glDisable(_gl.GL_LIGHTING)
         glDisable(GL_DEPTH_TEST)
         glEnable(GL_TEXTURE_2D)
         glEnable(GL_BLEND)
@@ -869,6 +884,8 @@ class HUD:
         glDisable(GL_TEXTURE_2D)
         glDisable(GL_BLEND)
         glEnable(GL_DEPTH_TEST)
+        if was_lit:
+            glEnable(_gl.GL_LIGHTING)
         glMatrixMode(GL_PROJECTION)
         glPopMatrix()
         glMatrixMode(GL_MODELVIEW)
