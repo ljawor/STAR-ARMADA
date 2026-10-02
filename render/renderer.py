@@ -1,12 +1,13 @@
 """Main renderer: draws the world from GameState (pure view — never mutates sim).
 
-Immediate-mode modern-ish GL (fixed pipeline for prototype clarity). Ship meshes
-are cached display lists per (shape, owner-color) template; effects are pooled
-quads; scale LOD keeps distant fleets readable.
+Compatibility OpenGL renderer: GLSL 1.20 materials shade opaque ships and planets,
+with a fixed-function fallback. Cached solid meshes, procedural sky/planet maps
+and screen-space scale LOD keep fleets readable.
 """
 from __future__ import annotations
 
 import math
+import hashlib
 import os
 import random
 
@@ -27,6 +28,8 @@ import OpenGL.GL as _gl
 
 from render.camera import cross3, normalize3
 from render import textures as tex
+from render.fleet_materials import FleetMaterials
+from render.fleet_geometry import armor_loft
 
 from game.core.entity import Entity, QUADRANTS
 from game.core.vectors import Vec3
@@ -93,6 +96,7 @@ class Renderer:
         self.state = state
         self.camera = camera
         self.ds = DataStore.get()
+        self.materials = FleetMaterials()
         self.starfield = make_starfield()
         self.ship_lists: dict = {}       # (shape, scale, colorkey) -> display list id
         self._star_list = None
@@ -101,6 +105,7 @@ class Renderer:
         self.skip = {s for s in os.environ.get("STAR_ARMADA_SKIP", "").split(",") if s}
         self._planet_tex_cache: dict = {}   # data_id -> GL texture id
         self._hull_tex: int | None = None   # grayscale panel map (modulated)
+        self._space_tex = None
         self._star_tex = None
         self._nebula_tex = None
         # shield bubbles: last seen quadrant values (to detect a hit) and the
@@ -112,6 +117,26 @@ class Renderer:
         # set by diag/probe scripts: freeze the animation clock so consecutive
         # frames are otherwise identical (baseline-subtraction diffs)
         self.diff_render = False
+
+    def close(self):
+        """Release owned GL objects once, while their context is still current."""
+        self.materials.close()
+        lists = set(self.ship_lists.values())
+        lists.update((self._star_list, self._unit_sphere_tex))
+        for list_id in lists:
+            if list_id:
+                _gl.glDeleteLists(list_id, 1)
+        self.ship_lists.clear()
+        self._star_list = self._unit_sphere_tex = None
+        textures = set(self._planet_tex_cache.values())
+        textures.update((self._hull_tex, self._space_tex,
+                         self._star_tex, self._nebula_tex))
+        textures.discard(None)
+        textures.discard(0)
+        if textures:
+            _gl.glDeleteTextures(sorted(textures))
+        self._planet_tex_cache.clear()
+        self._hull_tex = self._space_tex = self._star_tex = self._nebula_tex = None
 
     # ------------------------------------------------------------------ per frame
     def draw(self, dt: float, selection: set, hover_id: int | None = None) -> None:
@@ -278,6 +303,26 @@ class Renderer:
 
     # ------------------------------------------------------------------ background
     def _draw_starfield(self):
+        # An eye-centered sphere gives the sky angular parallax on orbit, never
+        # translation on pan. Depth writes stay off; it cannot hide world objects.
+        _gl.glPushAttrib(_gl.GL_ENABLE_BIT | _gl.GL_TEXTURE_BIT |
+                         _gl.GL_DEPTH_BUFFER_BIT | _gl.GL_CURRENT_BIT |
+                         _gl.GL_LIGHTING_BIT)
+        if self._space_tex is None:
+            self._space_tex = tex.surface_to_texture(tex.deep_space_texture())
+        glDisable(GL_LIGHTING)
+        glDisable(GL_CULL_FACE)
+        glDisable(GL_DEPTH_TEST)
+        glDepthMask(False)
+        glEnable(GL_TEXTURE_2D)
+        glBindTexture(GL_TEXTURE_2D, self._space_tex)
+        glColor3f(1, 1, 1)
+        glPushMatrix()
+        glTranslatef(*self.camera.eye_position())
+        glScalef(40000, 40000, 40000)
+        glCallList(self._unit_sphere_tex)
+        glPopMatrix()
+        glDisable(GL_TEXTURE_2D)
         if self._star_list is None:
             lst = _gl.glGenLists(1)
             glNewList(lst, GL_COMPILE)
@@ -298,6 +343,7 @@ class Renderer:
         glCallList(self._star_list)
         glPopMatrix()
         glDepthMask(True)
+        glPopAttrib()
 
     def _draw_nebulas(self):
         glEnable(GL_BLEND)
@@ -434,6 +480,15 @@ class Renderer:
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
     # ------------------------------------------------------------------ planets
+    def _planet_texture_for(self, e):
+        key = (e.data_id, e.name_override or e.data_id)
+        if key not in self._planet_tex_cache:
+            # Python hash() changes per process; worlds must not change on reload.
+            seed = int.from_bytes(hashlib.blake2s(key[1].encode(), digest_size=4).digest(), 'little')
+            surf = tex.planet_texture(e.data_id, size=512, seed=seed % 1000000)
+            self._planet_tex_cache[key] = tex.surface_to_texture(surf)
+        return self._planet_tex_cache[key]
+
     def _draw_planets(self):
         for e in self.state.entities.values():
             if not e.alive or not e.is_planet:
@@ -447,17 +502,28 @@ class Renderer:
             glRotatef(self.time * 1.2, 0, 1, 0)      # slow axial spin
             glEnable(GL_DEPTH_TEST)
             # textured sphere (procedural equirect texture per planet type)
-            surf = tex.planet_texture(kind, seed=abs(hash(e.name_override or kind)) % 1000)
-            key = f"ptex_{kind}"
-            if key not in self._planet_tex_cache:
-                self._planet_tex_cache[key] = tex.surface_to_texture(surf)
+            texture = self._planet_texture_for(e)
             glEnable(GL_TEXTURE_2D)
-            glBindTexture(GL_TEXTURE_2D, self._planet_tex_cache[key])
+            glBindTexture(GL_TEXTURE_2D, texture)
             glEnable(GL_CULL_FACE)
             glColor3f(1, 1, 1)
             glPushMatrix()
             glScalef(e.radius, e.radius, e.radius)
-            glCallList(self._unit_sphere_tex)
+            air = 0.0 if kind == "barren" else 1.0
+            with self.materials.use("planet", atmosphere=air, shell=0.0):
+                glCallList(self._unit_sphere_tex)
+            # Thin, depth-tested atmosphere: transparent center, soft lit limb.
+            # Do not emit a second opaque planet on the fixed-function fallback.
+            if air and self.materials.available:
+                _gl.glPushAttrib(_gl.GL_ENABLE_BIT | _gl.GL_COLOR_BUFFER_BIT |
+                                 _gl.GL_DEPTH_BUFFER_BIT)
+                glEnable(GL_BLEND)
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE)
+                glDepthMask(False)
+                glScalef(1.018, 1.018, 1.018)
+                with self.materials.use("planet", atmosphere=air, shell=1.0):
+                    glCallList(self._unit_sphere_tex)
+                glPopAttrib()
             glPopMatrix()
             glDisable(GL_CULL_FACE)
             glDisable(GL_TEXTURE_2D)
@@ -475,7 +541,7 @@ class Renderer:
                     glEnd()
             glPopMatrix()
 
-    def _build_textured_sphere_list(self, lons=24, lats=14):
+    def _build_textured_sphere_list(self, lons=64, lats=40):
         """Unit-radius UV sphere display list (scaled per planet at draw)."""
         lst = _gl.glGenLists(1)
         glNewList(lst, GL_COMPILE)
@@ -989,14 +1055,16 @@ class Renderer:
         # the highlight on normals that mostly are not there (0 visible px),
         # while 8 gives a wide sheen across many plates.
         self._material_metal(8.0, (0.42, 0.42, 0.42))
-        glColor3f(*base)
-        glCallList(lst)
-        glColor3f(*darkc)
-        glCallList(dark_lst)
-        # ...trim is polished, so it gets a tighter, brighter highlight
-        self._material_metal(12.0, (0.85, 0.85, 0.85))
-        glColor3f(*trimc)
-        glCallList(trim_lst)
+        with self.materials.use("hull", materialPass=0.0):
+            glColor3f(*base)
+            glCallList(lst)
+            self.materials.hull_pass(1.0)
+            glColor3f(*darkc)
+            glCallList(dark_lst)
+            self._material_metal(12.0, (0.85, 0.85, 0.85))
+            self.materials.hull_pass(2.0)
+            glColor3f(*trimc)
+            glCallList(trim_lst)
         self._material_matte()
         # emissive details: drawn UNLIT so they read as light sources rather
         # than surfaces being lit (with lighting on, a window on the ship's
@@ -1085,6 +1153,15 @@ class Renderer:
             self.ship_lists[shape + "_" + pname] = passes[pname]
         return passes["base"]
 
+    def _armor_loft(self, sections, bevel=2.0):
+        glBegin(GL_TRIANGLES)
+        for normal, vertices in armor_loft(sections, bevel):
+            glNormal3f(*normal)
+            for x, y, z in vertices:
+                glTexCoord2f(x / 32.0, z / 32.0)
+                glVertex3f(x, y, z)
+        glEnd()
+
     def _emit_hull(self, shape: str, pname: str) -> None:
         """Geometry for one tone pass of a ship hull."""
         dark = pname == "dark"
@@ -1155,10 +1232,10 @@ class Renderer:
         elif shape == "cruiser":
             if not dark and not trim and not lit:
                 # heavy hull + bow + command tower + nacelles + engine block
-                self._lit_box(30, 14, 100, cz=-8)
-                self._out_pyr((0, 5, 78), ((-13, 0, 40), (13, 0, 40),
-                                           (13, 12, 40), (-13, 12, 40)))
-                self._lit_box(18, 13, 28, cy=12, cz=-18)         # command tower
+                self._armor_loft(((-58, 13, 7, -7), (-30, 18, 7, -7),
+                                  (30, 14, 7, -7), (78, 2, 5, -3)), 2.8)
+                self._armor_loft(((-32, 9, 18.5, 7), (-12, 9, 18.5, 7),
+                                  (-4, 5, 13, 7)), 2.0)
                 self._lit_box(8, 6, 44, cx=20, cz=-26)           # right nacelle
                 self._lit_box(8, 6, 44, cx=-20, cz=-26)          # left nacelle
                 self._lit_box(22, 7, 10, cz=-56)                 # engine block
@@ -1190,10 +1267,14 @@ class Renderer:
         elif shape == "dagger":
             if not dark and not trim and not lit:
                 # battleship: hull + bow + tower + spine + engine block
-                self._lit_box(38, 20, 150)
-                self._out_pyr((0, 6, 108), ((-16, 0, 72), (16, 0, 72),
-                                            (16, 16, 72), (-16, 16, 72)))
-                self._lit_box(20, 24, 32, cy=20, cz=-34)         # command tower
+                self._armor_loft(((-75, 20, 10, -10), (-48, 27, 10, -10),
+                                  (30, 23, 10, -10), (72, 16, 8, -7),
+                                  (108, 2, 5, -3)), 3.5)
+                # Stepped command citadel instead of a featureless tall cube.
+                self._armor_loft(((-50, 12, 22, 9), (-24, 12, 22, 9),
+                                  (-16, 8, 17, 9)), 2.5)
+                self._armor_loft(((-45, 8, 30, 21), (-30, 8, 30, 21),
+                                  (-24, 5, 26, 21)), 1.8)
                 self._lit_box(4, 18, 18, cy=14, cz=28)           # dorsal spine
                 self._lit_box(30, 10, 12, cz=-70)                # engine block
             elif dark:

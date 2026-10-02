@@ -12,8 +12,10 @@ Controls (spec §33):
   RMB drag        rotate camera                  wheel      zoom
   WASD/arrows     pan                            F10        toggle mouse grab
   1-9 (+shift)    control groups                 G then 1-9 create fleet
-  S stop · H follow · J jump · SPACE pause      F5/F9      quicksave/quickload
-  ESC             deselect (quit on game over)
+  F               fleet panel (formation / commander)
+  S stop · J jump · SPACE follow · M free/follow · Q/E rotate · X overview
+  P pause         F5/F9 quicksave/quickload
+  ESC             cancel placement/panel, otherwise return to main menu
 """
 from __future__ import annotations
 
@@ -177,6 +179,10 @@ def start_game(load_path: str | None = None, mdef: dict | None = None) -> None:
     if _start is not None:
         camera.target = [_start.pos.x, 0.0, _start.pos.z]
     camera.zoom(0.55)                    # start close-in; wheel out for tactics
+    if renderer is not None:
+        renderer.close()
+    if hud is not None:
+        hud.close()
     renderer = Renderer(state, camera)
     hud = HUD(W, H, state)
     hud.set_camera_ref(camera)
@@ -343,7 +349,7 @@ while running:
             if state.game_over:
                 break
 
-    inputc.update()
+    inputc.update(dt_frame)
     inputc.update_placement()
 
     # mission progress -> HUD panel
@@ -395,6 +401,10 @@ else:
     # still a device to release when no game was ever started.
     pygame.mixer.quit()
 save_settings(SETTINGS)
+if renderer is not None:
+    renderer.close()
+if hud is not None:
+    hud.close()
 pygame.quit()
 if SMOKE and state is not None:
     print("SMOKE_DONE " + summary())

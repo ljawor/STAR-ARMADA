@@ -141,6 +141,30 @@ def planet_texture(kind: str, size: int = 256, seed: int = 5) -> pygame.Surface:
             for c in range(3):
                 img[..., c] = sea[c] + (ground[c] - sea[c]) * m
             img += (n - 0.5)[..., None] * 0.10
+    # Terrain has fine elevation/albedo variation and shallow coastal shelves;
+    # cloud decks use independent multi-scale weather, not continent outlines.
+    detail = _fbm(size, seed + 213, octaves=5, base_cells=18)
+    if kind in ("temperate", "agricultural", "trade", "research"):
+        threshold = .45 if kind == "agricultural" else .5
+        landmix = np.clip((n - threshold) / .018 + .5, 0, 1)
+        shelf = np.exp(-((n - threshold + .017) / .020) ** 2)
+        ocean = np.zeros_like(img) + np.array([.025, .10, .21])
+        ocean += shelf[..., None] * np.array([.02,.15,.17])
+        ground = np.zeros_like(img) + np.array([.19,.28,.16])
+        dry = np.clip((detail - .38) * 2.5, 0, 1)
+        ground += dry[..., None] * np.array([.22,.15,.08])
+        ground *= (.68 + detail * .7)[..., None]
+        if kind == "research":
+            ground *= np.array([1.2,.85,1.4])
+        img = ocean * (1-landmix[..., None]) + ground * landmix[..., None]
+    else:
+        img *= (.80 + detail * .4)[..., None]
+    if kind not in ("barren", "asteroid_field", "gas_giant"):
+        weather = _fbm(size, seed + 307, octaves=5, base_cells=12)
+        fronts = np.sin(lon * 3 + lat * 7 + weather * 9) * .035
+        clouds = np.clip((weather + fronts - .48) * 5, 0, .86)
+        clouds *= np.clip(np.sin(lat), 0, 1) ** .35
+        img = img * (1-clouds[..., None]) + np.array([.86,.89,.91]) * clouds[..., None]
     # polar caps (ice) except gas giants — irregular soft edge so they read
     # as terrain, not a flat gray disc
     if kind != "gas_giant":
@@ -155,6 +179,11 @@ def planet_texture(kind: str, size: int = 256, seed: int = 5) -> pygame.Surface:
         ice_b = 0.95 + streak * 0.03
         for c, ice_c in enumerate((ice_r, ice_g, ice_b)):
             img[..., c] = img[..., c] * (1 - soft) + ice_c * soft
+    # Exact longitude closure and pole averages avoid a visible meridian or
+    # pinwheel at the singularities of the UV sphere.
+    img[:, -1] = img[:, 0]
+    img[0, :] = img[0].mean(axis=0)
+    img[-1, :] = img[-1].mean(axis=0)
     img = np.clip(img, 0.0, 1.0)
     return _arr_to_surface(img * 255.0)
 
@@ -208,6 +237,31 @@ def nebula_texture(size: int = 256, seed: int = 11,
     img[..., 3] = alpha
     return _arr_to_surface(np.clip(img[..., :3], 0, 1) * 255.0,
                            alpha=np.clip(img[..., 3], 0, 1) * 255.0)
+
+
+def deep_space_texture(size: int = 1024, seed: int = 17) -> pygame.Surface:
+    """Dim, seamless sky panorama: blue dust, violet filaments, dark lanes.
+
+    Cached by the renderer, centered on the eye, not a camera-facing cloud card.
+    Stars remain a separate crisp pass. No simulation or global RNG is touched.
+    """
+    lat, lon = _sphere_equirect(size)
+    coarse = _fbm(size, seed, octaves=5, base_cells=3)
+    fine = _fbm(size, seed + 71, octaves=5, base_cells=9)
+    belt = np.exp(-((lat - math.pi / 2 + .48 * np.sin(lon * 2)) / .55) ** 2)
+    cloud = np.clip((coarse - .27) * 2.1, 0, 1) ** 1.7 * belt
+    wisps = np.clip((fine - .38) * 3.1, 0, 1)
+    dust = np.clip((.52 - fine) * 5.0, 0, 1) ** 2
+    rgb = np.zeros((size, size, 3), dtype=np.float32)
+    rgb[:] = (.009, .016, .032)
+    rgb += cloud[..., None] * np.array([.12, .20, .29])
+    rgb += (cloud * wisps)[..., None] * np.array([.11, .035, .15])
+    rgb *= (1 - dust * cloud * .82)[..., None]
+    # Pole average removes pinwheels and exact edge equality avoids meridians.
+    polar = np.clip(np.sin(lat), 0, 1) ** .5
+    rgb = rgb * polar[..., None] + np.array([.009,.016,.032]) * (1-polar[..., None])
+    rgb[:, -1] = rgb[:, 0]
+    return _arr_to_surface(np.clip(rgb, 0, 1) * 255)
 
 
 def hull_texture(size: int = 256, seed: int = 7) -> pygame.Surface:
