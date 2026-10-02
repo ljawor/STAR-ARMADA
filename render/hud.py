@@ -81,6 +81,9 @@ class HUD:
         self._cur_player = None
         # placement mode: payload dict for build_station awaiting a click
         self.placement: dict | None = None
+        self.fleet_panel: bool = False
+        self.fleet_formation: str = "line"
+        self.fleet_commander: str | None = None
         # sim floating texts projected to screen (set per-frame by main loop)
         self.floating_texts: list = []
         self.drag_box = None            # (start, cur) screen corners while dragging
@@ -292,7 +295,7 @@ class HUD:
             self._label(panel.x + 12, panel.y + 34,
                         "left-click / drag to select ships", TXT_DIM)
             self._label(panel.x + 12, panel.y + 52,
-                        "1-9 control groups · G fleet menu", TXT_DIM)
+                        "1-9 control groups · F fleet menu", TXT_DIM)
             return
 
         e = ents[0]
@@ -421,6 +424,9 @@ class HUD:
 
     # ------------------------------------------------------------------ right panel
     def _right_panel(self, selection: set, local_player: int) -> None:
+        if self.fleet_panel:
+            self._fleet_panel(selection, local_player)
+            return
         ov = self.overlay
         st = self.state
         p = st.players.get(local_player)
@@ -499,9 +505,78 @@ class HUD:
             y += 20
             self._label(panel.x + 12, y, "B  build menu · R  research", TXT_DIM)
             y += 18
-            self._label(panel.x + 12, y, "G  fleet formation & stance", TXT_DIM)
+            self._label(panel.x + 12, y, "F  fleet formation & commander", TXT_DIM)
             y += 18
             self._label(panel.x + 12, y, "J  hyperspace jump", TXT_DIM)
+
+    def _fleet_panel(self, selection: set, local_player: int) -> None:
+        """Fleet intent controls; eligibility is re-read on every drawn frame."""
+        panel = pygame.Rect(self.width - 330, 44, 320, 430)
+        pygame.draw.rect(self.overlay, PANEL_BG, panel, border_radius=8)
+        pygame.draw.rect(self.overlay, PANEL_EDGE, panel, 1, border_radius=8)
+        ships = [e for eid in sorted(selection)
+                 if (e := self.state.entity(eid)) is not None
+                 and e.alive and e.owner == local_player and e.is_ship]
+        x, y = panel.x + 12, panel.y + 10
+        self._label(x, y, "CREATE FLEET", ACCENT, self.font_big)
+        y += 28
+        self._label(x, y, f"{len(ships)} selected own ships", TXT)
+        y += 22
+        for ship in ships[:2]:
+            name = ship.name_override or self.ds.unit_name(ship)
+            self._label(x, y, self._fleet_text(name, 296), TXT_DIM, self.font_small)
+            y += 16
+        if len(ships) > 2:
+            self._label(x, y, f"+ {len(ships) - 2} more ships", TXT_DIM, self.font_small)
+            y += 16
+        if not ships:
+            self._label(x, y, "Select alive ships you own to create a fleet.", WARN,
+                        self.font_small)
+            y += 16
+        y += 8
+        for title, kind, field, keys, selected in (
+                ("FORMATION", "fleet_formation", "formation",
+                 list(self.ds.rules.get("formations", {})), self.fleet_formation),
+                ("COMMANDER", "fleet_commander", "commander",
+                 [None] + list(self.ds.rules.get("commanders", {})), self.fleet_commander)):
+            self._label(x, y, title, TXT_DIM, self.font_small)
+            y += 20
+            for i, key in enumerate(keys):
+                rect = pygame.Rect(x + (i % 2) * 152, y + (i // 2) * 26, 144, 22)
+                label = "None" if key is None else str(key).replace("_", " ").title()
+                self._fleet_button(rect, label, kind, {field: key}, key == selected)
+            y += ((len(keys) + 1) // 2) * 26 + 10
+        rect = pygame.Rect(x, panel.bottom - 40, 198, 28)
+        if ships:
+            self._fleet_button(rect, "Create fleet", "fleet_create", {
+                "unit_ids": [e.id for e in ships],
+                "formation": self.fleet_formation,
+                "commander": self.fleet_commander,
+            })
+        else:
+            pygame.draw.rect(self.overlay, BAR_BG, rect, border_radius=4)
+            self._label(rect.x + 8, rect.y + 6, "Create fleet (no ships)", TXT_DIM,
+                        self.font_small)
+        self._fleet_button(pygame.Rect(x + 206, rect.y, 90, 28), "Close",
+                           "fleet_close", {})
+
+    def _fleet_text(self, text: str, width: int) -> str:
+        """Fit data-driven names without painting over adjacent controls."""
+        if self.font_small.size(text)[0] <= width:
+            return text
+        while text and self.font_small.size(text + "…")[0] > width:
+            text = text[:-1]
+        return text + "…"
+
+    def _fleet_button(self, rect, label, kind, payload, selected=False) -> None:
+        pygame.draw.rect(self.overlay, (24, 34, 52, 255), rect, border_radius=4)
+        pygame.draw.rect(self.overlay, ACCENT if selected else PANEL_EDGE,
+                         rect, 1, border_radius=4)
+        label = ("▸ " if selected else "") + label
+        self._label(rect.x + 8, rect.y + (rect.height - self.font_small.get_height()) // 2,
+                    self._fleet_text(label, rect.width - 16),
+                    ACCENT if selected else TXT, self.font_small)
+        self.buttons.append({"rect": rect, "kind": kind, "payload": payload})
 
     def _row_build_station(self, d, yy, payload) -> None:
         self._build_row(self._cur_panel, yy, d, self._cur_player, payload,

@@ -32,22 +32,23 @@ python main.py --version
 |---|---|
 | Left-drag | Box select |
 | Left-click | Select unit / station |
-| Right-click | Order move (attack-move when cursor on enemy) |
-| A | Attack-move |
-| S | Stop |
-| H | Hold position |
+| Right-click | Attack target / colonize planet; attack-move on empty ground |
+| Right-drag | Rotate camera |
+| S | Stop selected units (pan down when nothing is selected) |
+| H | Follow selection (legacy alias for Space) |
 | Ctrl+1..9 | Assign control group |
 | 1..9 | Select control group |
 | F | Fleet panel (group selected ships into a fleet, pick commander) |
 | Space | Follow selection |
 | M | Toggle follow / free camera |
 | Q / E | Rotate camera |
-| WASD / arrows | Pan |
+| WASD / arrows | Pan; manual pan releases follow (S stops when units are selected) |
 | Mouse-wheel | Zoom (tactical → fighter scale) |
 | X | Tactical overview |
-| P / F5 | Pause |
-| F9 / F10 | Quick save / quick load |
-| ESC | Quit (in-game ESC at mission end → main menu) |
+| P | Pause / resume |
+| F5 / F9 | Quick save / quick load |
+| F10 | Toggle mouse grab |
+| ESC | Cancel placement / close fleet panel first; otherwise return to main menu |
 | F11 | Toggle fullscreen |
 
 ## Menus

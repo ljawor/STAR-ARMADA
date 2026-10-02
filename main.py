@@ -12,8 +12,10 @@ Controls (spec §33):
   RMB drag        rotate camera                  wheel      zoom
   WASD/arrows     pan                            F10        toggle mouse grab
   1-9 (+shift)    control groups                 G then 1-9 create fleet
-  S stop · H follow · J jump · SPACE pause      F5/F9      quicksave/quickload
-  ESC             deselect (quit on game over)
+  F               fleet panel (formation / commander)
+  S stop · J jump · SPACE follow · M free/follow · Q/E rotate · X overview
+  P pause         F5/F9 quicksave/quickload
+  ESC             cancel placement/panel, otherwise return to main menu
 """
 from __future__ import annotations
 
@@ -347,7 +349,7 @@ while running:
             if state.game_over:
                 break
 
-    inputc.update()
+    inputc.update(dt_frame)
     inputc.update_placement()
 
     # mission progress -> HUD panel

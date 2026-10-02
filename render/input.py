@@ -42,7 +42,14 @@ class InputController:
     # ------------------------------------------------------------------ events
     def handle_event(self, ev) -> None:
         st = self.state
+        if ev.type == pygame.WINDOWFOCUSLOST:
+            self.keys.clear()
+            self.dragging = False
+            self.drag_start = self.drag_cur = self.right_drag = None
+            return
         if ev.type == pygame.KEYDOWN:
+            if ev.key in self.keys:
+                return                         # ignore OS key-repeat for toggles
             self.keys.add(ev.key)
             if ev.key == pygame.K_F10:
                 self.grab_mouse = not self.grab_mouse
@@ -51,11 +58,15 @@ class InputController:
             elif ev.key == pygame.K_ESCAPE:
                 if self.hud.placement:
                     self.hud.placement = None       # cancel placement first
-                elif st.game_over:
-                    self.app.request_exit()
-                else:
-                    self.selection.clear()
+                elif self.hud.fleet_panel:
+                    self.hud.fleet_panel = False
                     self._pending_fleet = None
+                elif self._pending_fleet:
+                    self._pending_fleet = None
+                    self.app.flash("fleet creation cancelled")
+                else:
+                    self.keys.clear()
+                    self.app.request_exit()
             elif pygame.K_1 <= ev.key <= pygame.K_9:
                 num = ev.key - pygame.K_0
                 if self._pending_fleet:
@@ -66,8 +77,12 @@ class InputController:
             elif ev.key == pygame.K_g and self.selection:
                 self._pending_fleet = sorted(self.selection)
                 self.app.flash("press 1-9 to form fleet, or F for formation")
-            elif ev.key == pygame.K_f and self._pending_fleet:
-                self._create_fleet(self._pending_fleet, formation="line")
+            elif ev.key == pygame.K_f:
+                self.hud.fleet_panel = not self.hud.fleet_panel
+                self._pending_fleet = None
+                if self.hud.fleet_panel:
+                    self.hud.placement = None
+                    self.app.flash("fleet panel: choose formation and commander")
             elif ev.key == pygame.K_j and self.selection:
                 self._queue_jump()
             elif ev.key == pygame.K_s and self.selection:
@@ -75,8 +90,22 @@ class InputController:
                                              sorted(self.selection)))
             elif ev.key == pygame.K_h and self.selection:
                 self.camera.follow_id = sorted(self.selection)[0]
-            elif ev.key == pygame.K_SPACE:
+            elif ev.key == pygame.K_p:
                 self.app.toggle_pause()
+            elif ev.key == pygame.K_SPACE:
+                self._follow_selection()
+            elif ev.key == pygame.K_x:
+                self.camera.follow_id = None
+                self.camera.target = [0.0, 0.0, 0.0]
+                self.camera.distance = self.camera.zoom_limits[1]
+                self.camera.pitch = 89.0
+                self.app.flash("tactical overview")
+            elif ev.key == pygame.K_m:
+                if self.camera.follow_id is None:
+                    self._follow_selection()
+                else:
+                    self.camera.follow_id = None
+                    self.app.flash("free camera")
         elif ev.type == pygame.KEYUP:
             self.keys.discard(ev.key)
         elif ev.type == pygame.MOUSEBUTTONDOWN:
@@ -122,18 +151,27 @@ class InputController:
                 # rotate camera on right-drag (macOS sensitivity per skill)
                 dx, dy = ev.rel
                 self.camera.rotate(-dx * 0.25, -dy * 0.18)
-        self._camera_keys()
 
-    def _camera_keys(self) -> None:
+    def _camera_keys(self, dt: float) -> None:
         """Pan with arrows/WASD via event-tracked key set (skill: event-based)."""
-        pan_speed = 1.0
+        dt = max(0.0, dt)
+        pan_speed = dt * 30.0
+        pan_down = (pygame.K_DOWN in self.keys or
+                    (pygame.K_s in self.keys and not self.selection))
+        if self.keys & {pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP,
+                        pygame.K_a, pygame.K_d, pygame.K_w} or pan_down:
+            self.camera.follow_id = None
+        if pygame.K_q in self.keys:
+            self.camera.rotate(-60.0 * dt, 0)
+        if pygame.K_e in self.keys:
+            self.camera.rotate(60.0 * dt, 0)
         if pygame.K_LEFT in self.keys or pygame.K_a in self.keys:
             self.camera.pan(-14 * pan_speed, 0)
         if pygame.K_RIGHT in self.keys or pygame.K_d in self.keys:
             self.camera.pan(14 * pan_speed, 0)
         if pygame.K_UP in self.keys or pygame.K_w in self.keys:
             self.camera.pan(0, -14 * pan_speed)
-        if pygame.K_DOWN in self.keys or pygame.K_s in self.keys:
+        if pan_down:
             self.camera.pan(0, 14 * pan_speed)
 
     # ------------------------------------------------------------- panel scroll
@@ -148,8 +186,21 @@ class InputController:
         return False
 
     # ------------------------------------------------------------- helpers
-    def update(self) -> None:
-        """Per-frame: follow camera."""
+    def _follow_selection(self) -> None:
+        """Follow the first live selected unit without changing simulation time."""
+        entity = next((e for i in sorted(self.selection)
+                       if (e := self.state.entity(i)) is not None), None)
+        if entity is None:
+            self.app.flash("select a unit to follow")
+            return
+        self.camera.follow_id = entity.id
+        self.camera.target[0] = entity.pos.x
+        self.camera.target[2] = entity.pos.z
+        self.app.flash("following selection")
+
+    def update(self, dt: float = 1.0 / 30.0) -> None:
+        """Per-frame held-key motion and follow camera, not event-rate motion."""
+        self._camera_keys(dt)
         if self.camera.follow_id is not None:
             e = self.state.entity(self.camera.follow_id)
             if e is None:
@@ -200,6 +251,11 @@ class InputController:
             if btn["rect"].collidepoint(pos):
                 kind, pl = btn["kind"], btn["payload"]
                 st, lp = self.state, self.local_player
+                if kind in {"fleet_formation", "fleet_commander",
+                            "fleet_create", "fleet_close"} and not self.hud.fleet_panel:
+                    # Buttons remain from the last render until the next frame.
+                    # Consume stale controls without acting or selecting the scene.
+                    return True
                 if kind == "build_station_place":
                     # arm placement mode: click on the field positions it
                     self.hud.placement = {
@@ -222,6 +278,22 @@ class InputController:
                 elif kind == "research":
                     st.queue_command(ResearchCommand(
                         lp, pl["station_id"], pl["tech_id"]))
+                elif kind == "fleet_formation":
+                    self.hud.fleet_formation = pl["formation"]
+                elif kind == "fleet_commander":
+                    self.hud.fleet_commander = pl["commander"]
+                elif kind == "fleet_create":
+                    ids = [i for i in pl["unit_ids"]
+                           if (e := st.entity(i)) is not None
+                           and e.owner == lp and e.is_ship]
+                    if ids:
+                        self._create_fleet(ids, self.hud.fleet_formation,
+                                           self.hud.fleet_commander)
+                        self.hud.fleet_panel = False
+                    else:
+                        self.app.flash("select your ships to form a fleet")
+                elif kind == "fleet_close":
+                    self.hud.fleet_panel = False
                 elif kind == "ability":
                     st.queue_command(self._ability_cmd(pl))
                 return True
@@ -415,10 +487,11 @@ class InputController:
             if self.selection:
                 self.app.flash(f"group {num} ({len(self.selection)} units)")
 
-    def _create_fleet(self, ids: list, formation: str = "line") -> None:
+    def _create_fleet(self, ids: list, formation: str = "line",
+                      commander: str | None = None) -> None:
         self.state.queue_command(FleetCreateCommand(
             self.local_player, ids, name=f"Fleet {len(self.state.fleets) + 1}",
-            formation=formation))
+            formation=formation, commander=commander))
         self._pending_fleet = None
         self.app.flash(f"fleet formed ({formation})")
 
