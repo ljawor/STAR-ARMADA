@@ -1,0 +1,239 @@
+{
+  "id": "skirmish02",
+  "name": "Trinary Reach",
+  "max_players": 3,
+  "description": "Three distant bastions form an equilateral triangle around an unclaimed central mining reserve. Each commander has an equally close asteroid field, temperate colony and gas giant; open lanes invite a two-front contest. Scout before committing: starting fleets have no enemy sensor contact. The central reserve rewards expansion but leaves its miners exposed to both rivals.",
+  "bounds": 32000,
+  "star": {
+    "pos": [
+      0,
+      -5000,
+      0
+    ],
+    "size": 2200,
+    "color": [
+      1.0,
+      0.85,
+      0.6
+    ]
+  },
+  "players": [
+    {
+      "slot": 0,
+      "faction": "imperial",
+      "team": 0,
+      "is_ai": false,
+      "name": "Player",
+      "start": [
+        0.0,
+        0,
+        11000.0
+      ],
+      "start_units": {
+        "command_station": 1,
+        "shipyard": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    },
+    {
+      "slot": 1,
+      "faction": "imperial",
+      "team": 1,
+      "is_ai": true,
+      "name": "AI Commander 1",
+      "start": [
+        9526.279442,
+        0,
+        -5500.0
+      ],
+      "start_units": {
+        "command_station": 1,
+        "shipyard": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    },
+    {
+      "slot": 2,
+      "faction": "imperial",
+      "team": 2,
+      "is_ai": true,
+      "name": "AI Commander 2",
+      "start": [
+        -9526.279442,
+        0,
+        -5500.0
+      ],
+      "start_units": {
+        "command_station": 1,
+        "shipyard": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    }
+  ],
+  "asteroid_fields": [
+    {
+      "id": "ast_reach_0",
+      "pos": [
+        0.0,
+        0,
+        8000.0
+      ],
+      "radius": 1400,
+      "richness": 1.0
+    },
+    {
+      "id": "ast_reach_1",
+      "pos": [
+        6928.20323,
+        0,
+        -4000.0
+      ],
+      "radius": 1400,
+      "richness": 1.0
+    },
+    {
+      "id": "ast_reach_2",
+      "pos": [
+        -6928.20323,
+        0,
+        -4000.0
+      ],
+      "radius": 1400,
+      "richness": 1.0
+    },
+    {
+      "id": "ast_reach_center",
+      "pos": [
+        0,
+        0,
+        0
+      ],
+      "radius": 1600,
+      "richness": 1.5
+    }
+  ],
+  "gas_giants": [
+    {
+      "id": "gas_reach_0",
+      "pos": [
+        -4442.841446,
+        0,
+        7246.458438
+      ],
+      "radius": 1500,
+      "color": [
+        0.65,
+        0.55,
+        0.8
+      ]
+    },
+    {
+      "id": "gas_reach_1",
+      "pos": [
+        8497.037817,
+        0,
+        224.384338
+      ],
+      "radius": 1500,
+      "color": [
+        0.65,
+        0.55,
+        0.8
+      ]
+    },
+    {
+      "id": "gas_reach_2",
+      "pos": [
+        -4054.196371,
+        0,
+        -7470.842776
+      ],
+      "radius": 1500,
+      "color": [
+        0.65,
+        0.55,
+        0.8
+      ]
+    }
+  ],
+  "planets": [
+    {
+      "id": "planet_reach_0",
+      "name": "Reach Haven 1",
+      "pos": [
+        2400.284652,
+        0,
+        6575.60899
+      ],
+      "radius": 700,
+      "type": "temperate",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    },
+    {
+      "id": "planet_reach_1",
+      "name": "Reach Haven 2",
+      "pos": [
+        4494.502105,
+        0,
+        -5366.51198
+      ],
+      "radius": 700,
+      "type": "temperate",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    },
+    {
+      "id": "planet_reach_2",
+      "name": "Reach Haven 3",
+      "pos": [
+        -6894.786757,
+        0,
+        -1209.09701
+      ],
+      "radius": 700,
+      "type": "temperate",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    }
+  ],
+  "nebulas": [],
+  "jump_points": [
+    {
+      "pos": [
+        0.0,
+        0,
+        14000.0
+      ]
+    },
+    {
+      "pos": [
+        12124.355653,
+        0,
+        -7000.0
+      ]
+    },
+    {
+      "pos": [
+        -12124.355653,
+        0,
+        -7000.0
+      ]
+    }
+  ]
+}

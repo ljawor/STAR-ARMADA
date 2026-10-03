@@ -21,6 +21,22 @@ class MovementSystem:
     def update(self, dt: float) -> None:
         st = self.state
         ds = DataStore.get()
+        combat_contacts = []
+        # Physical frame snapshots make swept collision handling independent of
+        # which hull integrates first. They are never destinations: only a target
+        # that passes clear_unseen_targets AND live detection may use one.
+        start_positions = {e.id: e.pos.copy() for e in st.entities.values() if e.alive}
+        # Fleet assault travel is paced by its slowest active combat member.
+        # Otherwise the light screen reaches the enemy minutes before capitals,
+        # dies in its orbit, and takes allied remote detection with it.
+        fleet_speeds = {}
+        for fleet in st.fleets.values():
+            speeds = [stats.effective_speed(st, member)
+                      for mid in fleet.member_ids
+                      if (member := st.entity(mid)) is not None
+                      and member.order_type in ("attack", "chase", "attack_move")]
+            if speeds:
+                fleet_speeds[fleet.id] = min(speeds)
         for e in st.entities.values():
             if not e.alive or e.is_station or e.is_planet:
                 continue
@@ -31,6 +47,19 @@ class MovementSystem:
                 continue
             if e.ability_active.get("hyperspace_transit", 0) > 0:
                 continue
+
+            # Only explicit combat travel uses an orbit. Ordinary move/follow,
+            # commercial routes, hold and planetary colonization stay unchanged.
+            combat_target = None
+            if e.order_type in ("attack", "chase", "attack_move"):
+                tid = e.current_target if e.order_type == "attack_move" else e.order_target_id
+                if tid is None:
+                    tid = e.current_target
+                candidate = st.entity(tid) if tid is not None else None
+                if (candidate is not None and not candidate.is_planet
+                        and st.is_enemy(e.owner, candidate.owner)
+                        and st.can_see(e.owner, candidate.id)):
+                    combat_target = candidate
 
             # pick destination
             target_pos = None
@@ -50,6 +79,21 @@ class MovementSystem:
                 e.vel.set_scaled(e.vel, 0.95)
                 continue
 
+            combat_radius = None
+            preferred = 0.0
+            firing_window = False
+            if combat_target is not None:
+                target_entity = combat_target
+                target_pos = combat_target.pos
+                combat_radius, preferred = self._combat_ranges(e, combat_target)
+                combat_contacts.append((e, combat_target, combat_radius,
+                                        start_positions[e.id] - start_positions[combat_target.id]))
+
+            if (e.order_type in ("attack", "chase", "attack_move")
+                    and e.fleet_id in fleet_speeds
+                    and (combat_target is None or e.pos.dist(combat_target.pos) > preferred * 1.6)):
+                desired_speed = min(desired_speed, fleet_speeds[e.fleet_id])
+
             if target_pos is not None:
                 to_target = target_pos - e.pos
                 dist = to_target.length()
@@ -61,6 +105,42 @@ class MovementSystem:
                 gate = self._avoid_redirect(st, e, target_pos, dir_t, dist)
                 if gate is not None:
                     to_target = gate - e.pos
+                if combat_radius is not None:
+                    radial = (e.pos - target_pos).normalized()
+                    if radial.length_sq() < 1e-8:
+                        radial = Vec3(math.sin(e.id * 2.399963229728653), 0,
+                                      math.cos(e.id * 2.399963229728653))
+                    side = 1.0 if e.id % 2 else -1.0
+                    tangent = Vec3(radial.z * side, 0, -radial.x * side)
+                    correction = max(-2.0, min(2.0, (preferred - dist) / max(80.0, preferred * .2)))
+                    # Approach directly until near the firing shell; a large
+                    # tangent bias on a distant contact can arc out of detection
+                    # before the attacker ever reaches its useful weapon range.
+                    orbit_weight = max(0.0, min(1.0, (preferred * 1.6 - dist) /
+                                                max(1.0, preferred * .6)))
+                    to_target = tangent * orbit_weight + radial * correction
+                    # Curvature must be achievable even by slow-turning capitals.
+                    desired_speed = min(desired_speed, preferred * math.radians(
+                        stats.effective_turn_rate(st, e)) * .45)
+                    unit = ds.ships.get(e.data_id)
+                    front_reach = max((ds.resolve_weapon(ref["weapon"] if isinstance(ref, dict) else ref).range
+                                       for ref in unit.weapons
+                                       if ds.resolve_weapon(ref["weapon"] if isinstance(ref, dict) else ref).hardpoint == "front"),
+                                      default=0.0) if unit else 0.0
+                    # A tangent nose cannot also point inward. Alternate real
+                    # nose-first travel with stopped, target-facing fire windows.
+                    # Phase uses persisted sim time, never a local timer/RNG.
+                    turn_time = 90.0 / max(1.0, stats.effective_turn_rate(st, e))
+                    window = turn_time + 4.0
+                    phase = (st.time + e.id * 1.618) % (window * 2 + 24.0)
+                    firing_window = dist <= front_reach and phase < window
+                    if firing_window:
+                        to_target = target_pos - e.pos
+                    elif gate is not None and dist > preferred * 1.25:
+                        # Preserve the stable center-bound approach detour.
+                        # Once in the firing shell, do not repeatedly replace
+                        # local orbit steering with distant gravity-well gates.
+                        to_target = gate - e.pos
                 desired_yaw = math.atan2(to_target.x, to_target.z)
                 turn = stats.effective_turn_rate(st, e)
                 diff = self._angle_diff(desired_yaw - e.yaw)
@@ -78,7 +158,9 @@ class MovementSystem:
                 speed = desired_speed * max(0.15, alignment)
                 if e.order_type == "move" and dist < arrival:
                     speed = desired_speed * (dist / arrival)
-                if alignment > 0.35:
+                if firing_window:
+                    e.vel.set_scaled(e.vel, 0.0)
+                elif alignment > 0.35:
                     accel = desired_speed * 1.6
                     dv = facing * accel * dt
                     # steer velocity toward facing direction
@@ -126,8 +208,12 @@ class MovementSystem:
             e.vel.x = facing.x * along
             e.vel.z = facing.z * along
 
-            # integrate
-            e.pos.add_scaled(e.vel, dt)
+            # integrate: combat uses swept segment clipping, not endpoint-only
+            # damping, so even an abnormally large dt cannot cross the target.
+            if combat_radius is not None:
+                self._combat_integrate(e, combat_target, combat_radius, dt)
+            else:
+                e.pos.add_scaled(e.vel, dt)
             # soft map bounds
             b = st.map_info.bounds
             if abs(e.pos.x) > b or abs(e.pos.z) > b or abs(e.pos.y) > b * 0.5:
@@ -135,6 +221,72 @@ class MovementSystem:
                 e.pos.z = max(-b, min(b, e.pos.z))
                 e.pos.y = max(-b * 0.5, min(b * 0.5, e.pos.y))
                 e.vel.set_scaled(e.vel, 0.5)
+
+        # Resolve a moving enemy that integrated later in dictionary order.
+        # This is collision recovery only, not a hidden-target steering query.
+        for e, target, radius, initial_offset in combat_contacts:
+            if st.can_see(e.owner, target.id):
+                self._combat_integrate(e, target, radius, 0.0, initial_offset)
+
+    @staticmethod
+    def _combat_integrate(e, target, radius, dt, initial_offset=None):
+        offset = e.pos - target.pos
+        if offset.length_sq() < radius * radius:
+            # Explicit collision recovery is the sole positional sidestep;
+            # propulsion remains nose-first, with no lateral velocity retained.
+            radial = offset.normalized()
+            if offset.length_sq() < 1e-12:
+                radial = Vec3(math.sin(e.id * 2.399963229728653), 0,
+                              math.cos(e.id * 2.399963229728653))
+            e.pos.set(target.pos + radial * (radius + 1e-6))
+            e.vel.set_scaled(e.vel, 0.0)
+            return
+        delta = e.vel * dt
+        if initial_offset is not None:
+            # Relative swept path catches a center moving through the attacker,
+            # even when both final endpoints are outside the forbidden sphere.
+            if initial_offset.length_sq() < radius * radius:
+                return  # the initial overlap was already recovered above
+            delta = offset - initial_offset
+            offset = initial_offset
+        a = delta.length_sq()
+        b = offset.dot(delta)
+        c = offset.length_sq() - radius * radius
+        fraction = 1.0
+        discriminant = b * b - a * c
+        if a > 1e-12 and b < 0 and discriminant >= 0:
+            entry = (-b - math.sqrt(discriminant)) / a
+            if 0 <= entry <= 1:
+                fraction = max(0.0, entry - 1e-8)
+                e.vel.set_scaled(e.vel, 0.0)
+        if initial_offset is None:
+            e.pos.add_scaled(delta, fraction)
+        elif fraction < 1.0:
+            # Contact displacement follows the moving exclusion sphere; this
+            # explicit collision correction does not introduce strafe velocity.
+            e.pos.set(target.pos + offset + delta * fraction)
+
+    @staticmethod
+    def _combat_ranges(e, target):
+        """Center-based reach, matching WeaponSystem; never shrink hull safety.
+
+        Longest applicable weapon gives a useful orbit (78% range), leaving
+        maneuver margin. An oversized target remains unreachable, not penetrable.
+        """
+        ds = DataStore.get()
+        unit = ds.ships.get(e.data_id)
+        ranges = []
+        if unit is not None:
+            for ref in unit.weapons:
+                wd = ds.resolve_weapon(ref["weapon"] if isinstance(ref, dict) else ref)
+                if (wd.targets == "fighters" and not target.is_squadron
+                        or wd.targets == "capital" and not (target.is_ship or target.is_station)):
+                    continue
+                ranges.append(wd.range)
+        hard = target.radius + e.radius + 40.0
+        reach = max(ranges, default=0.0)
+        margin = min(60.0, (reach - hard) * .5) if reach > hard else 60.0
+        return hard, max(hard + margin, reach * .78)
 
     @staticmethod
     def _angle_diff(a: float) -> float:

@@ -450,8 +450,17 @@ class AIPlayer:
             plan.append((shipyard, cr))
         elif bs and p.credits > 16000 and counts.get(bs, 0) < 1:
             plan.append((shipyard, bs))
+        # Once the first market exists, finish its route before replacing
+        # expendable scouts. Orbit combat makes scout losses real; repeatedly
+        # replacing them otherwise drains credits below the second-market
+        # economic gate and delays the route. Include queued/pending sites so production
+        # resumes as soon as that investment is already accounted for.
+        trade_count = self._count_stations("trade_station")
+        reserve = max(1500.0, self.ds.stations["trade_station"].cost_credits) if trade_count == 1 else 0.0
         for station, ship_id in plan:
             if station is None:
+                continue
+            if p.credits - self.ds.ships[ship_id].cost_credits < reserve:
                 continue
             if len(station.build_queue) < 2:
                 self._queue_ship(station, ship_id, 1)

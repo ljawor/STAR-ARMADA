@@ -1,6 +1,8 @@
 {
   "id": "skirmish01",
-  "name": "Kotarri Sector — First Contact",
+  "name": "Sector Duel — Kotarri Sector",
+  "max_players": 2,
+  "description": "The original Kotarri duel: two distant bases contest a rich central asteroid field and north/south expansion reserves. Nearby mining supports both openings; the sector's varied trade, industrial and research worlds offer asymmetric colony choices. Outer nebula banks conceal flanking approaches. Legacy terrain, spawn anchors and starting fleets are unchanged; scout before crossing the center.",
   "bounds": 26000,
   "star": {"pos": [0, -3000, 0], "size": 2600, "color": [1.0, 0.9, 0.6]},
   "players": [

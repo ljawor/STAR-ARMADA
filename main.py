@@ -117,7 +117,8 @@ for _ in range(10):
 
 
 # --------------------------------------------------------------------------- game
-def make_game(load_path: str | None, mission_def: dict | None = None):
+def make_game(load_path: str | None, mission_def: dict | None = None,
+              skirmish_options: dict | None = None):
     ds = DataStore.reset()
     ds = DataStore(mods=MODS or None)
     map_def = ds.maps["skirmish01"]
@@ -128,6 +129,9 @@ def make_game(load_path: str | None, mission_def: dict | None = None):
         return GameManager(state=state, mods=MODS or None)
     if mission_def is not None:
         return GameManager.start_mission(map_def, mission_def, mods=MODS or None)
+    if skirmish_options is not None:
+        from game.core.skirmish import build_skirmish_map
+        map_def = build_skirmish_map(ds, skirmish_options)
     return GameManager.start_skirmish(map_def, mods=MODS or None)
 
 
@@ -165,13 +169,14 @@ def flash(msg: str) -> None:
     flash_until = (state.time if state else 0.0) + 2.5
 
 
-def start_game(load_path: str | None = None, mdef: dict | None = None) -> None:
+def start_game(load_path: str | None = None, mdef: dict | None = None,
+               skirmish_options: dict | None = None) -> None:
     """Build the full in-game object graph (skirmish, mission, or load)."""
     global gm, state, camera, renderer, hud, audio, inputc, paused, mission_def
     global flash_until
     paused = False
     mission_def = mdef
-    gm = make_game(load_path, mdef)
+    gm = make_game(load_path, mdef, skirmish_options)
     state = gm.state
     camera = Camera(W, H)
     _start = next((e for e in state.entities.values()
@@ -306,7 +311,7 @@ while running:
                 running = False
             elif res == MenuResult.START_SKIRMISH:
                 save_settings(SETTINGS)
-                start_game(load_path=INITIAL_LOAD)
+                start_game(load_path=None, skirmish_options=payload)
                 mode = "game"
             elif res == MenuResult.START_MISSION:
                 save_settings(SETTINGS)

@@ -1,0 +1,388 @@
+{
+  "id": "skirmish04",
+  "name": "Nebula Frontier",
+  "max_players": 4,
+  "description": "Four cardinal frontier bases expand toward a cross of clear approach lanes. Large diagonal gas giants force fleets around their gravity wells, while surrounding nebula banks reduce sensors and offer concealed flanking routes; nebulae are not impassable walls. Each start has an equally close mining field and temperate colony outside the clouds. Four inner mining pockets reward control of the approaches; the open outer rim remains an alternative to the central chokepoints.",
+  "bounds": 36000,
+  "star": {
+    "pos": [
+      0,
+      -6500,
+      0
+    ],
+    "size": 1800,
+    "color": [
+      0.85,
+      0.9,
+      1.0
+    ]
+  },
+  "players": [
+    {
+      "slot": 0,
+      "faction": "imperial",
+      "team": 0,
+      "is_ai": false,
+      "name": "Player",
+      "start": [
+        0.0,
+        0,
+        12000.0
+      ],
+      "start_units": {
+        "command_station": 1,
+        "shipyard": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    },
+    {
+      "slot": 1,
+      "faction": "imperial",
+      "team": 1,
+      "is_ai": true,
+      "name": "AI Commander 1",
+      "start": [
+        12000.0,
+        0,
+        0.0
+      ],
+      "start_units": {
+        "command_station": 1,
+        "shipyard": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    },
+    {
+      "slot": 2,
+      "faction": "imperial",
+      "team": 2,
+      "is_ai": true,
+      "name": "AI Commander 2",
+      "start": [
+        0.0,
+        0,
+        -12000.0
+      ],
+      "start_units": {
+        "command_station": 1,
+        "shipyard": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    },
+    {
+      "slot": 3,
+      "faction": "imperial",
+      "team": 3,
+      "is_ai": true,
+      "name": "AI Commander 3",
+      "start": [
+        -12000.0,
+        0,
+        -0.0
+      ],
+      "start_units": {
+        "command_station": 1,
+        "shipyard": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    }
+  ],
+  "asteroid_fields": [
+    {
+      "id": "ast_frontier_home_0",
+      "pos": [
+        0.0,
+        0,
+        8500.0
+      ],
+      "radius": 1400,
+      "richness": 1.0
+    },
+    {
+      "id": "ast_frontier_gate_0",
+      "pos": [
+        0.0,
+        0,
+        3000.0
+      ],
+      "radius": 1200,
+      "richness": 1.3
+    },
+    {
+      "id": "ast_frontier_home_1",
+      "pos": [
+        8500.0,
+        0,
+        0.0
+      ],
+      "radius": 1400,
+      "richness": 1.0
+    },
+    {
+      "id": "ast_frontier_gate_1",
+      "pos": [
+        3000.0,
+        0,
+        0.0
+      ],
+      "radius": 1200,
+      "richness": 1.3
+    },
+    {
+      "id": "ast_frontier_home_2",
+      "pos": [
+        0.0,
+        0,
+        -8500.0
+      ],
+      "radius": 1400,
+      "richness": 1.0
+    },
+    {
+      "id": "ast_frontier_gate_2",
+      "pos": [
+        0.0,
+        0,
+        -3000.0
+      ],
+      "radius": 1200,
+      "richness": 1.3
+    },
+    {
+      "id": "ast_frontier_home_3",
+      "pos": [
+        -8500.0,
+        0,
+        -0.0
+      ],
+      "radius": 1400,
+      "richness": 1.0
+    },
+    {
+      "id": "ast_frontier_gate_3",
+      "pos": [
+        -3000.0,
+        0,
+        -0.0
+      ],
+      "radius": 1200,
+      "richness": 1.3
+    }
+  ],
+  "gas_giants": [
+    {
+      "id": "gas_frontier_gate_0",
+      "pos": [
+        3535.533906,
+        0,
+        3535.533906
+      ],
+      "radius": 2100,
+      "color": [
+        0.5,
+        0.65,
+        0.8
+      ]
+    },
+    {
+      "id": "gas_frontier_gate_1",
+      "pos": [
+        3535.533906,
+        0,
+        -3535.533906
+      ],
+      "radius": 2100,
+      "color": [
+        0.5,
+        0.65,
+        0.8
+      ]
+    },
+    {
+      "id": "gas_frontier_gate_2",
+      "pos": [
+        -3535.533906,
+        0,
+        -3535.533906
+      ],
+      "radius": 2100,
+      "color": [
+        0.5,
+        0.65,
+        0.8
+      ]
+    },
+    {
+      "id": "gas_frontier_gate_3",
+      "pos": [
+        -3535.533906,
+        0,
+        3535.533906
+      ],
+      "radius": 2100,
+      "color": [
+        0.5,
+        0.65,
+        0.8
+      ]
+    }
+  ],
+  "planets": [
+    {
+      "id": "planet_frontier_0",
+      "name": "Frontier Haven 1",
+      "pos": [
+        2400.284652,
+        0,
+        6575.60899
+      ],
+      "radius": 700,
+      "type": "temperate",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    },
+    {
+      "id": "planet_frontier_1",
+      "name": "Frontier Haven 2",
+      "pos": [
+        6575.60899,
+        0,
+        -2400.284652
+      ],
+      "radius": 700,
+      "type": "temperate",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    },
+    {
+      "id": "planet_frontier_2",
+      "name": "Frontier Haven 3",
+      "pos": [
+        -2400.284652,
+        0,
+        -6575.60899
+      ],
+      "radius": 700,
+      "type": "temperate",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    },
+    {
+      "id": "planet_frontier_3",
+      "name": "Frontier Haven 4",
+      "pos": [
+        -6575.60899,
+        0,
+        2400.284652
+      ],
+      "radius": 700,
+      "type": "temperate",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    }
+  ],
+  "nebulas": [
+    {
+      "pos": [
+        3535.533906,
+        0,
+        3535.533906
+      ],
+      "radius": 3300,
+      "color": [
+        0.25,
+        0.3,
+        0.55
+      ]
+    },
+    {
+      "pos": [
+        3535.533906,
+        0,
+        -3535.533906
+      ],
+      "radius": 3300,
+      "color": [
+        0.25,
+        0.3,
+        0.55
+      ]
+    },
+    {
+      "pos": [
+        -3535.533906,
+        0,
+        -3535.533906
+      ],
+      "radius": 3300,
+      "color": [
+        0.25,
+        0.3,
+        0.55
+      ]
+    },
+    {
+      "pos": [
+        -3535.533906,
+        0,
+        3535.533906
+      ],
+      "radius": 3300,
+      "color": [
+        0.25,
+        0.3,
+        0.55
+      ]
+    }
+  ],
+  "jump_points": [
+    {
+      "pos": [
+        0.0,
+        0,
+        15000.0
+      ]
+    },
+    {
+      "pos": [
+        15000.0,
+        0,
+        0.0
+      ]
+    },
+    {
+      "pos": [
+        0.0,
+        0,
+        -15000.0
+      ]
+    },
+    {
+      "pos": [
+        -15000.0,
+        0,
+        -0.0
+      ]
+    }
+  ]
+}

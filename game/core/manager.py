@@ -109,6 +109,11 @@ class GameManager:
             p.color = colorsys.hls_to_rgb((r_ + hue_shift) % 1.0,
                                           min(0.62, max(0.45, 0.55 * (1.0 + 0.22 - 0.06 * p.id))),
                                           0.62)
+            explicit_color = pdef.get("color")
+            if (isinstance(explicit_color, (list, tuple)) and len(explicit_color) == 3
+                    and all(type(c) in (int, float) and 0 <= c <= 1
+                            and math.isfinite(c) for c in explicit_color)):
+                p.color = tuple(explicit_color)
             st.players[p.id] = p
             self._spawn_start_units(p.id, pdef.get("start_units", {}),
                                     pdef.get("start", [0, 0, 0]))
@@ -301,15 +306,29 @@ class GameManager:
             st.floating_texts = [f for f in st.floating_texts if f["t"] < 2.5]
 
     def _update_jumps(self, dt: float) -> None:
+        from ..systems.jump import jump_destination, jump_footprint_valid, clear_jump_orders
         st = self.state
-        for e in list(st.entities.values()):
+        for e in sorted(st.entities.values(), key=lambda e: e.id):
             if not e.alive or e.jump_charge <= 0:
+                continue
+            # Restored charges still require safe geometry and a real ship. Do
+            # NOT recheck exploration: an earlier group arrival can reveal it.
+            target = jump_destination(st, e.owner, e.jump_target, require_unexplored=False)
+            if (not math.isfinite(e.jump_charge) or not e.is_ship or e.hull <= 0
+                    or e.is_squadron or e.is_station or e.is_planet
+                    or e.data_id not in self.ds.ships
+                    or self.ds.ships[e.data_id].is_squadron or target is None
+                    or not jump_footprint_valid(st, e.owner, target, e.radius,
+                                                require_unexplored=False)):
+                e.jump_charge = 0.0
+                e.jump_target = None
+                clear_jump_orders(e)
                 continue
             e.jump_charge -= dt
             if e.jump_charge <= 0:
-                target = e.jump_target or e.pos
                 e.pos.set(target)
-                e.vel = Vec3(0, 0, 0)
+                clear_jump_orders(e)
+                e.jump_charge = 0.0
                 e.jump_target = None
                 st.spawn_effect("jump_arrive", e.pos.copy(), size=e.radius)
                 st.float_text(e.pos, "HYPERSPACE EXIT", (0.6, 0.8, 1.0))

@@ -39,6 +39,8 @@ python main.py --version
 | Ctrl+1..9 | Assign control group |
 | 1..9 | Select control group |
 | F | Fleet panel (group selected ships into a fleet, pick commander) |
+| J, then left-click | Hyperjump selected ships to a destination on the battlefield or minimap; explored and unexplored areas are allowed |
+| Esc / right-click during jump selection | Cancel destination selection |
 | Space | Follow selection |
 | M | Toggle follow / free camera |
 | Q / E | Rotate camera |
@@ -59,6 +61,54 @@ persist to `saves/settings.json`. The **Campaign** screen lists the 10-mission
 "Rise of the Outer Armada" chain (`assets/data/campaign/campaign.json`); each mission
 has a briefing (story, objectives, enemy preview) before LAUNCH, and in-game objectives
 are tracked live in the HUD with COMPLETE/FAILED states.
+
+## Skirmish maps and setup contract
+
+The built-in skirmish catalogue is restricted to these four map IDs. Capacity is
+**total players**, including the human; selecting fewer opponents uses the first
+consecutive spawn slots and leaves the remaining terrain/resources in place.
+
+| Map ID | Public name | Capacity | Layout |
+|---|---|---:|---|
+| `skirmish01` | Sector Duel — Kotarri Sector | 2 | Original duel; legacy geometry, starts and loadout preserved |
+| `skirmish02` | Trinary Reach | 3 | Equilateral triangle, personal expansion pockets, contested central mine |
+| `skirmish03` | Crossroads | 4 | Open corner quadrants with broad flanking lanes and four inner reserves |
+| `skirmish04` | Nebula Frontier | 4 | Cardinal starts, diagonal gas-giant barriers and sensor-reducing nebula banks |
+
+New maps give each slot the same nearest mining-field distance and an equally
+accessible temperate colony, with room for station construction. Kotarri retains
+its existing asymmetric colony types and distances rather than changing campaign
+or integration-fixture gameplay. Nebulae reduce sensors; they are not solid walls.
+Each JSON exposes `name`, `description`, `max_players`, `bounds`, player `start`
+positions and neutral geometry (`asteroid_fields`, `gas_giants`, `planets`,
+`nebulas`, `jump_points`) for a public terrain preview, not live enemy intelligence.
+
+Setup requirements/contract:
+
+- One human in slot 0 plus **1–3 AI opponents**, limited to map capacity minus one;
+  each active slot has its own team (free-for-all).
+- Active players must have distinct colors from **blue, red, green, purple,
+  orange, cyan, yellow, pink**. Color identifies the player independently of faction.
+- Difficulty is **easy**, **normal** (default), or **hard**, applied to AI players.
+- Faction choices use registered data IDs: `imperial` (Galactic Imperium), `rebel`
+  (Free Systems Alliance), `confederacy` (Automated Legions), and `syndicate`
+  (Outer Rim Syndicate). Syndicate remains marked non-playable in the faction data;
+  its prototype skirmish support should not be mistaken for full faction parity.
+  Faction data determines starting resources and available engineering/combat hulls.
+- Default map slots are all Imperial, with one command station, one shipyard, one
+  constructor, two squadrons and two corvettes per slot. The JSON loadout uses
+  generic ship roles, resolved to faction-specific hulls when the game starts.
+- The setup payload has `map_id`, integer `ai_count`, four-slot `colors` and
+  `factions` lists, and `ai_difficulty`; inactive choice slots do not participate.
+  Setup conversion must not mutate the shared DataStore map definition.
+
+Focused map acceptance checks (real headless GameManager starts, actual starter
+footprints/gravity clearance, resource access, legal AI sites and short deterministic
+AI runs; not a substitute for full-match or rendered-menu playtesting):
+
+```bash
+PYTHONPATH=tests .venv/bin/python -m unittest test_skirmish_maps -v
+```
 
 ## Gameplay loop (prototype = vertical slice)
 
