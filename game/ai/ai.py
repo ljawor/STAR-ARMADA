@@ -371,6 +371,7 @@ class AIPlayer:
         for e in st.entities.values():
             if e.alive and e.owner >= 0 and st.is_enemy(self.player_id, e.owner) \
                     and (e.is_ship or e.is_squadron) \
+                    and st.can_see(self.player_id, e.id) \
                     and e.pos.dist(home.pos) < 2500:
                 threatened = True
                 break
@@ -495,13 +496,20 @@ class AIPlayer:
         target = None
         best_d = 1e18
         for e in st.entities.values():
-            if not e.alive or not e.is_planet or e.colonized_by is not None:
+            if not e.alive or not e.is_planet:
+                continue
+            # Map geometry/type is public; ownership is only current sensor
+            # intel or the last observed snapshot. Undiscovered is unknown,
+            # not a license to inspect the live planet's colonized_by.
+            known = st.known_entity(self.player_id, e.id)
+            if known is not None and known.colonized_by is not None:
                 continue
             if e.data_id == "barren":
                 continue
             # skip planets near enemy stations
             near_enemy = any(en.alive and en.is_station and en.owner >= 0
                              and st.is_enemy(self.player_id, en.owner)
+                             and st.can_see(self.player_id, en.id)
                              and en.pos.dist(e.pos) < 3000
                              for en in st.entities.values())
             if near_enemy:
@@ -523,13 +531,15 @@ class AIPlayer:
         enemy_strength = 0.0
         enemy_target = None
         for e in st.entities.values():
-            if e.alive and e.owner >= 0 and st.is_enemy(self.player_id, e.owner):
+            if (e.alive and e.owner >= 0 and st.is_enemy(self.player_id, e.owner)
+                    and st.can_see(self.player_id, e.id)):
                 enemy_strength += _unit_strength(self.ds, e)
                 if enemy_target is None or (e.is_station and not enemy_target.is_station):
                     enemy_target = e
         if my_strength := my_strength:
             pass
         if enemy_target is None:
+            self._scout_unknown()
             return
         if my_strength > enemy_strength * courage * 0.9:
             # assemble all combat ships into one fleet and attack
@@ -559,6 +569,36 @@ class AIPlayer:
                 st.queue_command(PlayerCommand("fleet_stance", self.player_id,
                                                target_id=fleet.id, stance="retreat"))
 
+    def _scout_unknown(self) -> None:
+        """Explore public map waypoints, never an unseen entity's coordinates."""
+        st = self.state
+        home = self.home_station()
+        if home is None:
+            return
+        # One active map scout is enough. Dispatching another idle ship each
+        # strategic tick empties the home defense and sends the whole fleet
+        # abroad before economy/research infrastructure is established.
+        if any(e.order_type == "attack_move" for e in self.my_units()
+               if (e.is_ship or e.is_squadron) and not e.is_construction):
+            return
+        scouts = [e for e in self.my_units()
+                  if (e.is_ship or e.is_squadron) and not e.is_construction
+                  and e.order_type == "idle" and _unit_strength(self.ds, e) > 0]
+        if not scouts:
+            return
+        # Mirror of our own spawn is a map guess, not enemy-base intel. Then
+        # visit public jump points; cadence comes from persisted simulation tick.
+        guesses = [Vec3(-home.pos.x, home.pos.y, -home.pos.z)]
+        guesses += [Vec3(*point["pos"]) for point in st.map_info.jump_points]
+        guesses = [pos for pos in guesses if pos.dist(home.pos) > 1000]
+        if not guesses:
+            return
+        destination = guesses[(st.tick // 1800) % len(guesses)]
+        scout = max(scouts, key=lambda e: (self.ds.ships[e.data_id].speed, -e.id))
+        st.queue_command(PlayerCommand(
+            "attack_move", self.player_id, unit_ids=(scout.id,),
+            target_pos=(destination.x, destination.y, destination.z)))
+
     def attack_fleet_missing(self) -> bool:
         st = self.state
         fleet = st.fleets.get(self.attack_fleet_id or 0)
@@ -586,6 +626,7 @@ class AIPlayer:
             return False
         for e in st.entities.values():
             if e.alive and e.owner >= 0 and st.is_enemy(self.player_id, e.owner) \
+                    and st.can_see(self.player_id, e.id) \
                     and (e.is_ship or e.is_squadron) and e.pos.dist(home.pos) < 2200:
                 return True
         return False
@@ -607,7 +648,9 @@ class AIPlayer:
                 # constructors flee from enemies
                 for tid in st.grid.query_sphere(st.entities, e.pos, 1200):
                     t = st.entity(tid)
-                    if t and st.is_enemy(self.player_id, t.owner) and (t.is_ship or t.is_squadron):
+                    if (t and st.is_enemy(self.player_id, t.owner)
+                            and st.can_see(self.player_id, t.id)
+                            and (t.is_ship or t.is_squadron)):
                         if home is not None:
                             e.order_type = "move"
                             e.order_target_pos = home.pos.copy()
@@ -630,7 +673,8 @@ class AIPlayer:
                 best, best_d = None, 1e18
                 for tid in st.grid.query_sphere(st.entities, e.pos, scan):
                     t = st.entity(tid)
-                    if t and st.is_enemy(self.player_id, t.owner) and not t.is_planet:
+                    if (t and st.is_enemy(self.player_id, t.owner) and not t.is_planet
+                            and st.can_see(self.player_id, t.id)):
                         d = e.pos.dist_sq(t.pos)
                         if d < best_d:
                             best, best_d = t, d

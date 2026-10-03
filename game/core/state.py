@@ -7,6 +7,10 @@ from __future__ import annotations
 
 import random
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ..systems.visibility import SensorQueries
 
 from .vectors import Vec3
 from .entity import Entity
@@ -27,7 +31,7 @@ class PlayerState:
     energy: float = 0.0
     crew: float = 0.0
     command_capacity: int = 0
-    team: int = 0
+    team: int | None = None
     researched: set = field(default_factory=set)
     researching: dict = field(default_factory=dict)   # tech_id -> {"station_id","time_left","total"}
     color: tuple = (0.4, 0.7, 1.0)
@@ -64,7 +68,7 @@ class PlayerState:
             ai_difficulty=d.get("ai_difficulty", "normal"), name=d.get("name", "Player"),
             credits=d.get("credits", 0), materials=d.get("materials", 0),
             energy=d.get("energy", 0), crew=d.get("crew", 0),
-            command_capacity=d.get("command_capacity", 0), team=d.get("team", 0),
+            command_capacity=d.get("command_capacity", 0), team=d.get("team"),
         )
         p.researched = set(d.get("researched", []))
         p.researching = dict(d.get("researching", {}))
@@ -109,6 +113,12 @@ class GameState:
     fleets: dict = field(default_factory=dict)          # id -> Fleet
     grid: SpatialGrid = field(default_factory=SpatialGrid)
     map_info: MapInfo = field(default_factory=MapInfo)
+    # Persistent XZ exploration: world-origin floor(x / cell), floor(z / cell).
+    visibility_cell_size: float = 500.0
+    explored_cells: dict = field(default_factory=dict)
+    discovered_planets: dict = field(default_factory=dict)  # pid -> eid -> Entity snapshot
+    _visibility_system: object | None = field(default=None, repr=False, compare=False)
+    _sensor_queries: SensorQueries | None = field(default=None, repr=False, compare=False)
 
     # command input
     command_queue: list = field(default_factory=list)   # PlayerCommand list
@@ -162,9 +172,66 @@ class GameState:
         e = self.entities.get(eid)
         return e if (e and e.alive) else None
 
+    def allied_player_ids(self, player_id: int) -> list[int]:
+        """Missing/negative teams are solo; team zero is a valid alliance."""
+        me = self.players.get(player_id)
+        if me is None:
+            return []
+        return sorted(p.id for p in self.players.values()
+                      if p.id == player_id or (me.team is not None and me.team >= 0
+                                              and p.team == me.team))
+
+    def _live_sensors(self):
+        if self._sensor_queries is None:
+            from ..systems.visibility import SensorQueries
+            self._sensor_queries = SensorQueries(self)
+        return self._sensor_queries
+
+    def sensor_sources(self, player_id: int) -> list[tuple[Entity, float]]:
+        """Sorted live allied observers; range memoization validates live inputs."""
+        return self._live_sensors().sources(player_id)
+
+    def is_position_visible(self, player_id: int, pos: Vec3) -> bool:
+        return self._live_sensors().visible(player_id, pos)
+
+    def can_see(self, player_id: int, entity_id: int) -> bool:
+        e = self.entity(entity_id)
+        if player_id not in self.players or e is None:
+            return False
+        allies = self.allied_player_ids(player_id)
+        return ((not e.is_planet and e.owner in allies)
+                or self._live_sensors().visible(player_id, e.pos, allies))
+
     def add_entity(self, e: Entity) -> Entity:
         self.entities[e.id] = e
         return e
+
+    def visibility_cell(self, pos: Vec3) -> tuple[int, int] | None:
+        half = self.map_info.bounds / 2.0
+        if not (-half <= pos.x <= half and -half <= pos.z <= half):
+            return None
+        import math
+        # Upper boundary belongs to the last interior cell, not a phantom row.
+        x = min(pos.x, math.nextafter(half, -math.inf))
+        z = min(pos.z, math.nextafter(half, -math.inf))
+        return (math.floor(x / self.visibility_cell_size),
+                math.floor(z / self.visibility_cell_size))
+
+    def is_position_explored(self, player_id: int, pos: Vec3) -> bool:
+        cell = self.visibility_cell(pos)
+        return cell is not None and any(
+            cell in self.explored_cells.get(pid, set())
+            for pid in self.allied_player_ids(player_id))
+
+    def known_entity(self, player_id: int, entity_id: int) -> Entity | None:
+        if self.can_see(player_id, entity_id):
+            return self.entity(entity_id)
+        for pid in self.allied_player_ids(player_id):
+            snapshot = self.discovered_planets.get(pid, {}).get(entity_id)
+            if snapshot is not None:
+                import copy
+                return copy.deepcopy(snapshot)
+        return None
 
     def spawn_effect(self, kind: str, pos: Vec3, **kw) -> None:
         if len(self.effects) > 1200:      # hard cap, pooled by renderer anyway
@@ -185,7 +252,7 @@ class GameState:
         if me is None:
             return []
         return [p for p in self.players.values()
-                if p.id != player_id and p.team != me.team]
+                if p.id not in self.allied_player_ids(player_id)]
 
     def is_enemy(self, a_owner: int, b_owner: int) -> bool:
         if a_owner < 0 or b_owner < 0 or a_owner == b_owner:
@@ -193,7 +260,7 @@ class GameState:
         pa, pb = self.players.get(a_owner), self.players.get(b_owner)
         if not pa or not pb:
             return False
-        return pa.team != pb.team
+        return b_owner not in self.allied_player_ids(a_owner)
 
     def in_nebula(self, pos: Vec3) -> bool:
         for n in self.map_info.nebulas:
@@ -223,6 +290,12 @@ class GameState:
             "next_fleet_id": self.next_fleet_id,
             "next_projectile_id": self.next_projectile_id,
             "map_info": self.map_info.to_dict(),
+            "visibility_cell_size": self.visibility_cell_size,
+            "explored_cells": {pid: [list(cell) for cell in sorted(cells)]
+                               for pid, cells in sorted(self.explored_cells.items())},
+            "discovered_planets": {
+                pid: {eid: self._entity_dict(e, precise) for eid, e in sorted(memory.items())}
+                for pid, memory in sorted(self.discovered_planets.items())},
             "players": {pid: p.to_dict(precise) for pid, p in self.players.items()},
             "fleets": {fid: f.to_dict(precise) for fid, f in self.fleets.items()},
             "entities": {eid: self._entity_dict(e, precise)
@@ -238,6 +311,7 @@ class GameState:
     def _entity_dict(e: Entity, precise: bool = False) -> dict:
         d = {
             "id": e.id, "kind": e.kind, "owner": e.owner, "data_id": e.data_id,
+            "sensor_range": e.sensor_range,
             "pos": e.pos.to_dict(precise), "vel": e.vel.to_dict(precise),
             "yaw": e.yaw if precise else round(e.yaw, 4),
             "radius": e.radius, "is_ship": e.is_ship, "is_station": e.is_station,
@@ -298,7 +372,8 @@ class GameState:
         if e.ability_cooldowns:
             d["ability_cooldowns"] = {k: round(v, 2) for k, v in e.ability_cooldowns.items()}
         if e.ability_active:
-            d["ability_active"] = {k: round(v, 2) for k, v in e.ability_active.items()}
+            d["ability_active"] = {k: (v if precise else round(v, 2))
+                                   for k, v in e.ability_active.items()}
         if e.weapon_cooldowns:
             d["weapon_cooldowns"] = {k: round(v, 3) for k, v in e.weapon_cooldowns.items()}
         if e.current_target is not None:
@@ -352,6 +427,16 @@ class GameState:
         if "patrol_b" in d:
             e.patrol_b = Vec3.from_dict(d["patrol_b"])
         e.current_target = d.get("current_target")
+        if "sensor_range" in d:
+            e.sensor_range = float(d["sensor_range"])
+        elif e.is_ship or e.is_squadron or e.is_station:
+            # Old saves predate the base sensor field; only known definitions
+            # get ranges. Unknown/neutral entities never gain free detection.
+            from ..data.store import DataStore
+            ds = DataStore.get()
+            definition = (ds.stations.get(e.data_id) if e.is_station
+                          else ds.ships.get(e.data_id))
+            e.sensor_range = definition.sensor_range if definition else 0.0
         return e
 
     @classmethod
@@ -365,6 +450,13 @@ class GameState:
         s.next_fleet_id = d.get("next_fleet_id", 1)
         s.next_projectile_id = d.get("next_projectile_id", 1)
         s.map_info = MapInfo.from_dict(d.get("map_info", {}))
+        s.visibility_cell_size = float(d.get("visibility_cell_size", 500.0))
+        s.explored_cells = {int(pid): {tuple(cell) for cell in cells}
+                            for pid, cells in d.get("explored_cells", {}).items()}
+        s.discovered_planets = {
+            int(pid): {int(eid): cls._entity_from_dict(ed) for eid, ed in memory.items()
+                       if ed.get("is_planet", False)}
+            for pid, memory in d.get("discovered_planets", {}).items()}
         s.players = {int(pid): PlayerState.from_dict(pd)
                      for pid, pd in d.get("players", {}).items()}
         s.fleets = {int(fid): Fleet.from_dict(fd)

@@ -11,6 +11,7 @@ import math
 from ..core.vectors import Vec3
 from ..data.store import DataStore
 from . import stats
+from .weapons import clear_unseen_targets
 
 
 class MovementSystem:
@@ -23,6 +24,7 @@ class MovementSystem:
         for e in st.entities.values():
             if not e.alive or e.is_station or e.is_planet:
                 continue
+            clear_unseen_targets(st, e)
             if e.jump_charge > 0:
                 # charging hyperspace: engines locked
                 e.vel.set_scaled(e.vel, 0.9)

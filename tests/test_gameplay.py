@@ -5,7 +5,7 @@ from helpers import make_game, run_for, order_build
 from game.core.vectors import Vec3
 from game.core.commands import (
     BuildStationCommand, BuildShipCommand, ResearchCommand,
-    FleetCreateCommand, AttackCommand, MoveCommand,
+    FleetCreateCommand, AttackCommand, AttackMoveCommand, MoveCommand,
 )
 
 
@@ -225,9 +225,19 @@ class TestFullLoop(unittest.TestCase):
                                             commander="aggressive", formation="wedge"))
         run_for(gm, 0.5)
         fleet = next(iter(st.fleets.values()))
-        # 5. ATTACK enemy base
+        # 5. Scout toward the scenario's fixed opposing spawn, not a hidden
+        # entity lock. Exploration alone cannot authorize an attack command.
         enemy_home = next(e for e in st.entities.values()
                           if e.is_station and e.owner == 1)
+        self.assertFalse(st.can_see(0, enemy_home.id))
+        opposing_start = next(p['start'] for p in gm.ds.maps['skirmish01']['players']
+                              if p['slot'] == 1)
+        st.queue_command(AttackMoveCommand(0, list(fleet.member_ids), Vec3(*opposing_start)))
+        for _ in range(30 * 900):
+            gm.step(1 / 30)
+            if st.can_see(0, enemy_home.id) or st.game_over:
+                break
+        self.assertTrue(st.can_see(0, enemy_home.id), "fleet never discovered enemy base")
         st.queue_command(AttackCommand(0, list(fleet.member_ids), enemy_home.id))
         won = False
         for _ in range(60 * 900):    # up to 15 minutes sim (travel + siege)

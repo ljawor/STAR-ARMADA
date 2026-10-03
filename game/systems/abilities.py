@@ -64,6 +64,17 @@ class AbilitySystem:
         a = self.ds.abilities.get(ability_id)
         if a is None or not e.alive:
             return False
+        # Validate entity-targeted intent before spending resources. Area effects
+        # (including sensor_jam) do not need an entity lock.
+        if target_id is not None:
+            target = st.entity(target_id)
+            if target is None or (st.is_enemy(e.owner, target.owner)
+                                  and not st.can_see(e.owner, target_id)):
+                return False
+        if ability_id == "tractor_beam":
+            target = st.entity(target_id) if target_id is not None else None
+            if target is None or not st.is_enemy(e.owner, target.owner):
+                return False
         if e.ability_cooldowns.get(ability_id, 0.0) > 0:
             return False
         if e.energy < a.energy_cost:

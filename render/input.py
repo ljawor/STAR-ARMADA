@@ -42,6 +42,7 @@ class InputController:
     # ------------------------------------------------------------------ events
     def handle_event(self, ev) -> None:
         st = self.state
+        self._prune_contacts()
         if ev.type == pygame.WINDOWFOCUSLOST:
             self.keys.clear()
             self.dragging = False
@@ -186,8 +187,18 @@ class InputController:
         return False
 
     # ------------------------------------------------------------- helpers
+    def _prune_contacts(self) -> None:
+        """UI memory must never keep following an unseen live enemy."""
+        self.selection.intersection_update(
+            eid for eid in tuple(self.selection)
+            if self.state.can_see(self.local_player, eid))
+        if self.camera.follow_id is not None and not self.state.can_see(
+                self.local_player, self.camera.follow_id):
+            self.camera.follow_id = None
+
     def _follow_selection(self) -> None:
         """Follow the first live selected unit without changing simulation time."""
+        self._prune_contacts()
         entity = next((e for i in sorted(self.selection)
                        if (e := self.state.entity(i)) is not None), None)
         if entity is None:
@@ -200,6 +211,7 @@ class InputController:
 
     def update(self, dt: float = 1.0 / 30.0) -> None:
         """Per-frame held-key motion and follow camera, not event-rate motion."""
+        self._prune_contacts()
         self._camera_keys(dt)
         if self.camera.follow_id is not None:
             e = self.state.entity(self.camera.follow_id)
@@ -220,7 +232,7 @@ class InputController:
         lo_y, hi_y = sorted((y0, y1))
         picked = set()
         for e in self.state.entities.values():
-            if not e.alive or e.owner == -1:
+            if not e.alive or e.owner == -1 or not self.state.can_see(self.local_player, e.id):
                 continue
             sp = self.camera.world_to_screen(e.pos.x, e.pos.y, e.pos.z)
             if sp is None:
@@ -235,7 +247,7 @@ class InputController:
     def _single_select(self, mx: float, my: float) -> None:
         best, best_d = None, 28.0
         for e in self.state.entities.values():
-            if not e.alive or e.owner == -1:
+            if not e.alive or e.owner == -1 or not self.state.can_see(self.local_player, e.id):
                 continue
             sp = self.camera.world_to_screen(e.pos.x, e.pos.y, e.pos.z)
             if sp is None:
@@ -303,9 +315,8 @@ class InputController:
     def update_placement(self) -> None:
         """Per-frame ghost position + validity for station placement.
 
-        Uses the SAME validator as the sim (ConstructionSystem.check_site) so
-        a green ghost always means the build will be accepted — plus a reason
-        string for the red case.
+        Preview uses only current player knowledge; the sim rechecks physical
+        legality when the order executes.
         """
         pl = self.hud.placement
         if not pl:
@@ -329,16 +340,8 @@ class InputController:
             cs = getattr(self.state, "_construction_system", None)
             if cs is None:
                 cs = ConstructionSystem(self.state)
-            valid, reason = cs.check_site(pl["station_kind"], w, b)
-            # Proximity is enforced at order time (start_station), not by
-            # check_site — surfaced here so the ghost goes red and says why
-            # instead of the click being silently rejected.
-            if valid and hasattr(cs, "too_far_to_build"):
-                far, d, lim = cs.too_far_to_build(w, b)
-                if far:
-                    valid = False
-                    reason = (f"constructor {d - lim:,.0f}u out of range "
-                              f"({d:,.0f}u, max {lim:,.0f}u)")
+            valid, reason = cs.check_site(pl["station_kind"], w, b,
+                                          viewer=self.local_player)
         pl["ghost"] = {"sx": mx, "sy": my, "valid": valid, "reason": reason,
                        "radius": rad, "world": w}
 
@@ -359,7 +362,8 @@ class InputController:
         cs = getattr(self.state, "_construction_system", None)
         if cs is None:
             cs = ConstructionSystem(self.state)
-        valid, reason = cs.check_site(pl["station_kind"], w, b)
+        valid, reason = cs.check_site(pl["station_kind"], w, b,
+                                      viewer=self.local_player)
         if not valid:
             # tell the player WHY in language, not just a red circle
             self.app.flash(f"cannot build {pl['station_kind'].replace('_', ' ')}: "
@@ -407,6 +411,7 @@ class InputController:
         return True
 
     def _right_click(self, pos: tuple) -> None:
+        self._prune_contacts()
         if not self.selection:
             return
         st, lp = self.state, self.local_player
@@ -433,7 +438,8 @@ class InputController:
     def _pick_target(self, pos: tuple):
         best, best_d = None, 30.0
         for e in self.state.entities.values():
-            if not e.alive or e.owner == -1 or e.is_planet and e.colonized_by is not None:
+            if (not e.alive or e.owner == -1 or not self.state.can_see(self.local_player, e.id)
+                    or e.is_planet and e.colonized_by is not None):
                 continue
             sp = self.camera.world_to_screen(e.pos.x, e.pos.y, e.pos.z)
             if sp is None:
@@ -486,6 +492,7 @@ class InputController:
             self.selection = set(self.groups.get(num, set()))
             if self.selection:
                 self.app.flash(f"group {num} ({len(self.selection)} units)")
+        self._prune_contacts()
 
     def _create_fleet(self, ids: list, formation: str = "line",
                       commander: str | None = None) -> None:

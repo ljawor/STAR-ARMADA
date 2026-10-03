@@ -32,6 +32,7 @@ from OpenGL.GL import (
 )
 
 from game.core.entity import QUADRANTS
+from render.fog import FogMask, known_entities
 from game.data.store import DataStore
 
 # ---------------------------------------------------------------- palette (blue-gray)
@@ -64,6 +65,7 @@ class HUD:
         self.width = width
         self.height = height
         self.state = state
+        self.fog = FogMask()
         self.ds = DataStore.get()
         pygame.font.init()
         self.font = pygame.font.SysFont("menlo,consolas,monaco", 15)
@@ -136,6 +138,8 @@ class HUD:
     def render(self, selection: set, hover_id: int | None,
                local_player: int, paused: bool, flash_msg: str = "",
                flash_left: float = 0.0, fps: float = 0.0) -> None:
+        self.local_player = local_player
+        selection = {eid for eid in selection if self.state.can_see(local_player, eid)}
         ov = self.overlay
         ov.fill((0, 0, 0, 0))
         self.scroll_rects = []          # rebuilt each frame
@@ -239,7 +243,7 @@ class HUD:
         """One-line trade status for a convoy or trade station."""
         st = self.state
         if e.data_id == "trade_convoy":
-            dest = st.entity(e.convoy_dest if e.convoy_dest is not None else -1)
+            dest = st.known_entity(getattr(self, "local_player", 0), e.convoy_dest if e.convoy_dest is not None else -1)
             where = dest.owner if dest is not None else None
             who = st.players[where].name if where in st.players else "?"
             tgt = f"→ {who}" if dest is not None else "→ no market"
@@ -250,9 +254,11 @@ class HUD:
         if rate is not None and isinstance(rate.income, dict):
             inc = float(rate.income.get("credits", 0.0))
         out = sum(1 for c in st.entities.values()
-                  if c.alive and c.data_id == "trade_convoy" and c.owner == e.owner)
+                  if c.alive and c.data_id == "trade_convoy" and c.owner == e.owner
+                  and st.can_see(getattr(self, "local_player", 0), c.id))
         markets = sum(1 for s in st.entities.values()
-                      if s.alive and s.data_id == "trade_station")
+                      if s.alive and s.data_id == "trade_station"
+                      and st.can_see(getattr(self, "local_player", 0), s.id))
         if markets < 2:
             return f"INCOME {inc:0.1f}cr/s · NEEDS A SECOND MARKET"
         return f"INCOME {inc:0.1f}cr/s · {out} CONVOY{'S' if out != 1 else ''} OUT"
@@ -284,7 +290,7 @@ class HUD:
     def _left_panel(self, selection: set, local_player: int) -> None:
         ov = self.overlay
         st = self.state
-        ents = [st.entity(eid) for eid in sorted(selection)]
+        ents = [st.known_entity(local_player, eid) for eid in sorted(selection)]
         ents = [e for e in ents if e is not None]
         # Idle help is a card, not a full-height inspector hiding the world.
         panel = pygame.Rect(10, 44, 320, 430 if ents else 84)
@@ -369,10 +375,13 @@ class HUD:
         ef = e.energy / max(1.0, e.max_energy)
         self._bar(panel.x + 12, y, 296, 8, ef, (150, 220, 240))
         y += 18
+        from game.systems.stats import effective_sensor_range
+        self._label(panel.x + 12, y, f"SENSORS {effective_sensor_range(st, e):,.0f}u", TXT_DIM)
+        y += 20
         # orders
         order = e.order_type.replace("_", " ").upper() or "IDLE"
         if e.order_target_id is not None:
-            tgt = st.entity(e.order_target_id)
+            tgt = st.known_entity(local_player, e.order_target_id)
             if tgt:
                 order += f" → {self.ds.unit_name(tgt)}"
         # a station whose own order is idle can still be busy researching; the
@@ -432,7 +441,7 @@ class HUD:
         p = st.players.get(local_player)
         if p is None:
             return
-        ents = [st.entity(eid) for eid in sorted(selection)]
+        ents = [st.known_entity(local_player, eid) for eid in sorted(selection)]
         ents = [e for e in ents if e is not None and e.owner == local_player]
         sel = ents[0] if ents else None
         contextual = sel is not None and (sel.is_construction or sel.is_station)
@@ -713,7 +722,9 @@ class HUD:
     # ------------------------------------------------------------------ event log
     def _event_log(self, local_player: int) -> None:
         ov = self.overlay
-        log = [ev for ev in self.state.events.log if ev.type in LOG_TYPES]
+        # Global enemy research/build/destruction events are not intelligence.
+        log = [ev for ev in self.state.events.log if ev.type in LOG_TYPES
+               and ev.data.get("owner") == local_player]
         if not log:
             return
         rows = log[-9:]
@@ -822,7 +833,10 @@ class HUD:
             return int(cx + wx / half * (size / 2 - 4)), \
                    int(cy + wz / half * (size / 2 - 4))
 
-        for e in st.entities.values():
+        # Reuse the small cached cell mask, rather than scanning screen pixels.
+        fog = self.fog.surface(st, local_player)
+        ov.blit(pygame.transform.scale(fog, (size - 8, size - 8)), (x + 4, y + 4))
+        for e in known_entities(st, local_player):
             if not e.alive:
                 continue
             mx, my = px(e.pos.x, e.pos.z)
@@ -831,6 +845,8 @@ class HUD:
                 col = (70, 80, 100, 255)
                 if e.colonized_by is not None:
                     col = self._owner_rgb(e.colonized_by)
+                if not st.can_see(local_player, e.id):
+                    col = tuple(int(c * .42) for c in col[:3])
                 pygame.draw.circle(ov, col, (mx, my), r, 1 if e.colonized_by is None else 0)
             elif e.owner == -1:
                 continue
@@ -844,7 +860,7 @@ class HUD:
                 else:
                     pygame.draw.rect(ov, col, (mx - 2, my - 2, 4, 4))
         for eid in selection:
-            e = st.entity(eid)
+            e = st.known_entity(local_player, eid)
             if e is not None:
                 mx, my = px(e.pos.x, e.pos.z)
                 pygame.draw.circle(ov, (255, 255, 255), (mx, my), 5, 1)
