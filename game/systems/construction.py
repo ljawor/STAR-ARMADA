@@ -120,6 +120,11 @@ class ConstructionSystem:
             return False
         ok, reason = self.check_site(station_id, pos, builder)
         if not ok:
+            # Rejection remains authoritative, but feedback must not name a
+            # hidden obstruction. Re-evaluate only the player's known site.
+            preview_ok, preview_reason = self.check_site(
+                station_id, pos, builder, viewer=player_id)
+            reason = "site unavailable" if preview_ok else preview_reason
             st.float_text(builder.pos, f"Cannot build: {reason}", (1, 0.5, 0.4))
             return False
         sd = self.ds.resolve_station(station_id)
@@ -158,13 +163,20 @@ class ConstructionSystem:
         return ", ".join(parts) if parts else "unknown"
 
     # ---------------------------------------------------------- site validation
-    def check_site(self, station_id: str, pos, builder) -> tuple[bool, str]:
-        """Single source of truth for placement validity.
+    def check_site(self, station_id: str, pos, builder, *,
+                   viewer: int | None = None) -> tuple[bool, str]:
+        """Return (ok, reason) for a tuple or Vec3 site.
 
-        Returns (ok, reason). The placement ghost and start_station() both
-        call this, so a green ghost always means the sim will accept the
-        build. `pos` is any (x, y, z) tuple or Vec3.
+        The default is authoritative ground validation, without builder range
+        (AI site finders validate before travelling). Explicit ``viewer`` mode
+        is a knowledge-limited placement preview: range is checked first, and
+        a green ghost is not a guarantee that the real build will succeed.
         """
+        if viewer is not None:
+            far, d, lim = self.too_far_to_build(pos, builder)
+            if far:
+                return False, (f"constructor {d - lim:,.0f}u out of range "
+                               f"({d:,.0f}u, max {lim:,.0f}u)")
         st = self.state
         sd = self.ds.resolve_station(station_id)
         x, y, z = (pos.x, pos.y, pos.z) if hasattr(pos, "x") else (
@@ -174,8 +186,12 @@ class ConstructionSystem:
         if abs(x) > b or abs(z) > b:
             return False, "outside the map bounds"
         # spacing vs planets and other stations
+        # Preview obstructions must be currently detected, never charted/stale.
+        # Default callers (AI and sim) retain the complete physical entity list.
         for e in st.entities.values():
             if not e.alive:
+                continue
+            if viewer is not None and not st.can_see(viewer, e.id):
                 continue
             if e.is_planet and e.data_id == "asteroid_field":
                 continue        # building inside asteroid fields is the point

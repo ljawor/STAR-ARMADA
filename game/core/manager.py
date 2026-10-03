@@ -19,6 +19,7 @@ from ..systems import (UnitFactory, MovementSystem, SeparationSystem, WeaponSyst
                        ConstructionSystem, ResearchSystem, FormationSystem,
                        SquadronSystem, VictorySystem, MissionSystem, CommandHandler)
 from ..ai import AIManager
+from ..systems.visibility import VisibilitySystem
 
 
 class GameManager:
@@ -35,6 +36,8 @@ class GameManager:
 
         # systems
         self.factory = UnitFactory(self.state)
+        self.visibility = VisibilitySystem(self.state)
+        self.state._visibility_system = self.visibility
         self.movement = MovementSystem(self.state)
         self.separation = SeparationSystem(self.state)
         self.weapons = WeaponSystem(self.state)
@@ -57,6 +60,7 @@ class GameManager:
         self.ai = AIManager(self.state)
         self.state.dmg_system = self.damage
         self._capacity_timer = 0.0
+        self.visibility.update()
 
     # ------------------------------------------------------------------ setup
     def load_map(self, map_def: dict) -> None:
@@ -109,6 +113,8 @@ class GameManager:
             self._spawn_start_units(p.id, pdef.get("start_units", {}),
                                     pdef.get("start", [0, 0, 0]))
         EconomySystem.recompute_command_capacity(st)
+
+        self.visibility.update()
 
     def _spawn_start_units(self, player_id: int, start_units: dict, start_pos) -> None:
         st = self.state
@@ -189,6 +195,10 @@ class GameManager:
             map_players[1]["name"] = "Enemy"
             if enemy.get("start_units"):
                 map_players[1]["start_units"] = dict(enemy["start_units"])
+        # Do not explore using provisional map units replaced by the loadout.
+        loadout = mission_def.get("loadout", {})
+        if "start_units" in loadout and map_players:
+            map_players[0]["start_units"] = {}
         mdef = dict(map_def, players=map_players)
         gm.load_map(mdef)
         # apply mission loadout to the human player (slot 0)
@@ -213,6 +223,7 @@ class GameManager:
             start = map_players[0].get("start", [0, 0, 0])
             gm._spawn_start_units(0, spawn, start)
         EconomySystem.recompute_command_capacity(st)
+        gm.visibility.update()
         return gm
 
     # ------------------------------------------------------------------ tick
@@ -224,6 +235,7 @@ class GameManager:
         st.time += dt
 
         # 0. commands
+        self.visibility.update()
         self.commands.consume()
 
         # 0.5 hyperspace jump charging (spec §17)
@@ -237,7 +249,9 @@ class GameManager:
         self.separation.update(dt)
         self.squadrons.update(dt)
 
-        # 5. weapons fire
+        # 5. Remember post-movement coverage before combat can kill observers.
+        # Live detection itself never depends on these exploration passes.
+        self.visibility.update()
         self.weapons.update(dt)
 
         # 6. projectiles fly, queue impacts
@@ -274,6 +288,7 @@ class GameManager:
         self.trading.update(dt)
         self.victory.update(dt)
         self.mission.update(dt)
+        self.visibility.update()
 
         # 16. effects aging
         for fx in st.effects:

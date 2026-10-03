@@ -11,6 +11,7 @@ import math
 from ..core.vectors import Vec3
 from ..data.store import DataStore
 from . import stats
+from .weapons import clear_unseen_targets
 
 
 class SquadronSystem:
@@ -28,6 +29,7 @@ class SquadronSystem:
         for e in st.entities.values():
             if not e.alive or not e.is_squadron:
                 continue
+            clear_unseen_targets(st, e)
             if do_tactical:
                 self._squadron_behavior(e)
             self._reinforce_and_repair(e, dt)
@@ -61,7 +63,8 @@ class SquadronSystem:
         scan = sd.sensor_range
         for tid in st.grid.query_sphere(st.entities, e.pos, scan):
             t = st.entity(tid)
-            if t is None or not st.is_enemy(e.owner, t.owner) or t.is_planet:
+            if (t is None or not st.is_enemy(e.owner, t.owner) or t.is_planet
+                    or not st.can_see(e.owner, tid)):
                 continue
             if t.is_squadron and fighter_target is None:
                 fighter_target = t

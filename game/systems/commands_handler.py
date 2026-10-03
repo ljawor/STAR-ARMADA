@@ -70,7 +70,8 @@ class CommandHandler:
     def _do_attack(self, cmd: PlayerCommand) -> None:
         st = self.state
         target = st.entity(cmd.target_id or 0)
-        if target is None:
+        if (target is None or not st.is_enemy(cmd.player, target.owner)
+                or not st.can_see(cmd.player, target.id)):
             return
         for e in self._units(cmd):
             if e.is_station or e.is_planet:

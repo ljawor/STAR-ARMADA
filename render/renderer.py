@@ -27,6 +27,7 @@ from OpenGL.GL import (
 import OpenGL.GL as _gl
 
 from render.camera import cross3, normalize3
+from render.fog import FogMask, known_entities, effect_visible, position, segment_visible
 from render import textures as tex
 from render.fleet_materials import FleetMaterials
 from render.fleet_geometry import armor_loft, ship_mesh, station_mesh, ROLES
@@ -94,6 +95,8 @@ def make_starfield(count: int = 1400, bounds: float = 30000.0, seed: int = 7):
 class Renderer:
     def __init__(self, state, camera):
         self.state = state
+        self.local_player = 0
+        self.fog = FogMask()
         self.camera = camera
         self.ds = DataStore.get()
         self.materials = FleetMaterials()
@@ -121,6 +124,9 @@ class Renderer:
     def close(self):
         """Release owned GL objects once, while their context is still current."""
         self.materials.close()
+        fog = getattr(self, "fog", None)
+        if fog is not None:
+            fog.close()
         lists = set(self.ship_lists.values())
         lists.update((self._star_list, self._unit_sphere_tex))
         for list_id in lists:
@@ -166,6 +172,10 @@ class Renderer:
             self._draw_jump_points()
         if "planets" not in self.skip:
             self._draw_planets()
+        # Chart remembered terrain, not friendly units: own/allied contacts are
+        # always known even when their sensor subsystem is disabled. Live
+        # combat passes below independently enforce exact current detection.
+        self.fog.draw(st, self.local_player)
         if "effects" not in self.skip:
             self._draw_effects()
         if "projectiles" not in self.skip:
@@ -176,7 +186,7 @@ class Renderer:
             # after the hull pass so the bubble composites over the ship it
             # encloses; before the selection rings so those stay on top
             units = [e for e in st.entities.values()
-                     if e.alive and not e.is_planet]
+                     if e.alive and not e.is_planet and st.can_see(self.local_player, e.id)]
             self._draw_shields(units, dt)
         if "effects" not in self.skip:
             self._draw_hits()
@@ -194,7 +204,7 @@ class Renderer:
         """
         st = self.state
         for e in st.entities.values():
-            if not e.alive or not e.is_construction:
+            if (not e.alive or not e.is_construction or e.owner != self.local_player):
                 continue
             item = e.build_queue[0] if e.build_queue else None
             if item is None or item.get("kind") != "station":
@@ -352,6 +362,8 @@ class Renderer:
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         glDepthMask(False)
         for n in self.state.map_info.nebulas:
+            if not self.state.is_position_explored(self.local_player, position(n["pos"])):
+                continue
             if not self._in_front(n["pos"], n["radius"]):
                 continue
             color = n.get("color", [0.4, 0.2, 0.55])
@@ -426,6 +438,8 @@ class Renderer:
 
     def _draw_jump_points(self):
         for jp in self.state.map_info.jump_points:
+            if not self.state.is_position_explored(self.local_player, position(jp["pos"])):
+                continue
             pos = jp["pos"]
             glPushMatrix()
             glTranslatef(pos[0], pos[1], pos[2])
@@ -492,7 +506,7 @@ class Renderer:
         return self._planet_tex_cache[key]
 
     def _draw_planets(self):
-        for e in self.state.entities.values():
+        for e in known_entities(self.state, self.local_player):
             if not e.alive or not e.is_planet:
                 continue
             kind = e.data_id
@@ -788,7 +802,7 @@ class Renderer:
         GL.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_MODULATE)
         GL.glEnable(GL.GL_NORMALIZE)   # ships/stations get scaled at draw time
         for e in st.entities.values():
-            if not e.alive:
+            if not e.alive or not st.can_see(self.local_player, e.id):
                 continue
             if e.is_planet:
                 continue
@@ -1017,7 +1031,10 @@ class Renderer:
         glRotatef(math.degrees(e.yaw), 0, 1, 0)
         # engine trail behind ship (keeps motion readable)
         spd = e.vel.length()
-        if spd > 2:
+        trail_length = vis["scale"] * e.radius * (2.2 + spd / 120.0)
+        tail = Vec3(e.pos.x - trail_length * math.sin(e.yaw), e.pos.y,
+                    e.pos.z - trail_length * math.cos(e.yaw))
+        if spd > 2 and segment_visible(self.state, self.local_player, e.pos, tail):
             glEnable(GL_BLEND)
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
             glDepthMask(False)
@@ -1090,7 +1107,8 @@ class Renderer:
             rear = (e.pos.x - L * math.sin(e.yaw),
                     e.pos.y,
                     e.pos.z - L * math.cos(e.yaw))
-            if self._in_front(rear, 14.0):
+            if (self._in_front(rear, 14.0) and self.state.is_position_visible(
+                    self.local_player, position(rear))):
                 glEnable(GL_BLEND)
                 glDepthMask(False)
                 self._draw_glow(rear, 10.0 + 6.0 * min(1.0, spd / 300.0),
@@ -1730,6 +1748,8 @@ class Renderer:
         half_fov_tan = math.tan(math.radians(self.camera.fov / 2))
         pts = []
         for p in st.projectiles.values():
+            if not st.is_position_visible(self.local_player, p.pos):
+                continue
             pos = (p.pos.x, p.pos.y, p.pos.z)
             if not self._in_front(pos, 4.0):
                 continue
@@ -1771,6 +1791,8 @@ class Renderer:
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         glDepthMask(False)
         for fx in st.effects[:400]:
+            if not effect_visible(st, self.local_player, fx):
+                continue
             kind = fx["kind"]
             t = fx.get("t", 0.0)
             pos = fx["pos"]
@@ -1846,6 +1868,8 @@ class Renderer:
         """Contact markings composite after hulls, not underneath their armor."""
         from render.hit_effects import draw_hit
         for fx in self.state.effects[:400]:
+            if not effect_visible(self.state, self.local_player, fx):
+                continue
             if fx["kind"] in ("shield_hit", "hull_hit", "impact"):
                 draw_hit(self, fx)
 
@@ -2564,7 +2588,7 @@ class Renderer:
         GL.glDisable(GL.GL_TEXTURE_2D)
         glEnable(GL_DEPTH_TEST)
         for e in units:
-            if not e.alive or e.is_planet:
+            if not e.alive or e.is_planet or not st.can_see(self.local_player, e.id):
                 continue
             if e.max_shield_total() <= 0:
                 continue
@@ -2606,7 +2630,7 @@ class Renderer:
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         for eid in selection:
-            e = self.state.entities.get(eid)
+            e = self.state.known_entity(self.local_player, eid)
             if e is None or not e.alive:
                 continue
             p = self.state.players.get(e.owner)
@@ -2660,6 +2684,8 @@ class Renderer:
         """Project live floating texts to [(x, y, text, rgb, alpha), ...]."""
         out = []
         for ft in self.state.floating_texts:
+            if not self.state.is_position_visible(self.local_player, position(ft["pos"])):
+                continue
             t = ft.get("t", 0.0)
             life = 2.2
             a = max(0.0, 1.0 - t / life)
