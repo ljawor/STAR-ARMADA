@@ -1,0 +1,335 @@
+{
+  "id": "skirmish03",
+  "name": "Crossroads",
+  "max_players": 4,
+  "description": "Four corner bases overlook a broad, unobstructed central crossroads. Identical home mining fields, temperate colonies and gas giants support independent openings; four inner asteroid reserves create multiple expansion choices rather than one mandatory choke. Wide diagonal and lateral approaches favor scouting, mobile fleets and flanking. No enemy starts inside another fleet's sensor coverage.",
+  "bounds": 36000,
+  "star": {
+    "pos": [
+      0,
+      -5500,
+      0
+    ],
+    "size": 2000,
+    "color": [
+      1.0,
+      0.9,
+      0.7
+    ]
+  },
+  "players": [
+    {
+      "slot": 0,
+      "faction": "imperial",
+      "team": 0,
+      "is_ai": false,
+      "name": "Player",
+      "start": [
+        10000.0,
+        0,
+        10000.0
+      ],
+      "start_units": {
+        "command_station": 1,
+        "shipyard": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    },
+    {
+      "slot": 1,
+      "faction": "imperial",
+      "team": 1,
+      "is_ai": true,
+      "name": "AI Commander 1",
+      "start": [
+        10000.0,
+        0,
+        -10000.0
+      ],
+      "start_units": {
+        "command_station": 1,
+        "shipyard": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    },
+    {
+      "slot": 2,
+      "faction": "imperial",
+      "team": 2,
+      "is_ai": true,
+      "name": "AI Commander 2",
+      "start": [
+        -10000.0,
+        0,
+        -10000.0
+      ],
+      "start_units": {
+        "command_station": 1,
+        "shipyard": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    },
+    {
+      "slot": 3,
+      "faction": "imperial",
+      "team": 3,
+      "is_ai": true,
+      "name": "AI Commander 3",
+      "start": [
+        -10000.0,
+        0,
+        10000.0
+      ],
+      "start_units": {
+        "command_station": 1,
+        "shipyard": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    }
+  ],
+  "asteroid_fields": [
+    {
+      "id": "ast_cross_home_0",
+      "pos": [
+        7525.126266,
+        0,
+        7525.126266
+      ],
+      "radius": 1400,
+      "richness": 1.0
+    },
+    {
+      "id": "ast_cross_inner_0",
+      "pos": [
+        2828.427125,
+        0,
+        2828.427125
+      ],
+      "radius": 1200,
+      "richness": 1.3
+    },
+    {
+      "id": "ast_cross_home_1",
+      "pos": [
+        7525.126266,
+        0,
+        -7525.126266
+      ],
+      "radius": 1400,
+      "richness": 1.0
+    },
+    {
+      "id": "ast_cross_inner_1",
+      "pos": [
+        2828.427125,
+        0,
+        -2828.427125
+      ],
+      "radius": 1200,
+      "richness": 1.3
+    },
+    {
+      "id": "ast_cross_home_2",
+      "pos": [
+        -7525.126266,
+        0,
+        -7525.126266
+      ],
+      "radius": 1400,
+      "richness": 1.0
+    },
+    {
+      "id": "ast_cross_inner_2",
+      "pos": [
+        -2828.427125,
+        0,
+        -2828.427125
+      ],
+      "radius": 1200,
+      "richness": 1.3
+    },
+    {
+      "id": "ast_cross_home_3",
+      "pos": [
+        -7525.126266,
+        0,
+        7525.126266
+      ],
+      "radius": 1400,
+      "richness": 1.0
+    },
+    {
+      "id": "ast_cross_inner_3",
+      "pos": [
+        -2828.427125,
+        0,
+        2828.427125
+      ],
+      "radius": 1200,
+      "richness": 1.3
+    }
+  ],
+  "gas_giants": [
+    {
+      "id": "gas_cross_0",
+      "pos": [
+        2332.301867,
+        0,
+        9724.215547
+      ],
+      "radius": 1500,
+      "color": [
+        0.7,
+        0.6,
+        0.45
+      ]
+    },
+    {
+      "id": "gas_cross_1",
+      "pos": [
+        9724.215547,
+        0,
+        -2332.301867
+      ],
+      "radius": 1500,
+      "color": [
+        0.7,
+        0.6,
+        0.45
+      ]
+    },
+    {
+      "id": "gas_cross_2",
+      "pos": [
+        -2332.301867,
+        0,
+        -9724.215547
+      ],
+      "radius": 1500,
+      "color": [
+        0.7,
+        0.6,
+        0.45
+      ]
+    },
+    {
+      "id": "gas_cross_3",
+      "pos": [
+        -9724.215547,
+        0,
+        2332.301867
+      ],
+      "radius": 1500,
+      "color": [
+        0.7,
+        0.6,
+        0.45
+      ]
+    }
+  ],
+  "planets": [
+    {
+      "id": "planet_cross_0",
+      "name": "Crossroads Haven 1",
+      "pos": [
+        8613.670712,
+        0,
+        4006.828779
+      ],
+      "radius": 700,
+      "type": "temperate",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    },
+    {
+      "id": "planet_cross_1",
+      "name": "Crossroads Haven 2",
+      "pos": [
+        4006.828779,
+        0,
+        -8613.670712
+      ],
+      "radius": 700,
+      "type": "temperate",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    },
+    {
+      "id": "planet_cross_2",
+      "name": "Crossroads Haven 3",
+      "pos": [
+        -8613.670712,
+        0,
+        -4006.828779
+      ],
+      "radius": 700,
+      "type": "temperate",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    },
+    {
+      "id": "planet_cross_3",
+      "name": "Crossroads Haven 4",
+      "pos": [
+        -4006.828779,
+        0,
+        8613.670712
+      ],
+      "radius": 700,
+      "type": "temperate",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    }
+  ],
+  "nebulas": [],
+  "jump_points": [
+    {
+      "pos": [
+        10606.601718,
+        0,
+        10606.601718
+      ]
+    },
+    {
+      "pos": [
+        10606.601718,
+        0,
+        -10606.601718
+      ]
+    },
+    {
+      "pos": [
+        -10606.601718,
+        0,
+        -10606.601718
+      ]
+    },
+    {
+      "pos": [
+        -10606.601718,
+        0,
+        10606.601718
+      ]
+    }
+  ]
+}

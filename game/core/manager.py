@@ -109,6 +109,11 @@ class GameManager:
             p.color = colorsys.hls_to_rgb((r_ + hue_shift) % 1.0,
                                           min(0.62, max(0.45, 0.55 * (1.0 + 0.22 - 0.06 * p.id))),
                                           0.62)
+            explicit_color = pdef.get("color")
+            if (isinstance(explicit_color, (list, tuple)) and len(explicit_color) == 3
+                    and all(type(c) in (int, float) and 0 <= c <= 1
+                            and math.isfinite(c) for c in explicit_color)):
+                p.color = tuple(explicit_color)
             st.players[p.id] = p
             self._spawn_start_units(p.id, pdef.get("start_units", {}),
                                     pdef.get("start", [0, 0, 0]))
