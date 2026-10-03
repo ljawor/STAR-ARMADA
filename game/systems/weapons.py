@@ -15,6 +15,32 @@ from ..data.store import DataStore
 from . import stats
 
 
+def clear_unseen_targets(st, e) -> None:
+    """Drop contact-dependent orders before any system reads a live position."""
+    if e.current_target is not None:
+        target = st.entity(e.current_target)
+        if target is None or (st.is_enemy(e.owner, target.owner)
+                              and not st.can_see(e.owner, target.id)):
+            e.current_target = None
+            if e.order_type in ("attack", "chase") and e.order_target_id is None:
+                e.order_type = "idle"
+                e.order_target_pos = None
+    if e.order_target_id is not None:
+        target = st.entity(e.order_target_id)
+        # Trade routes have explicit stationary market endpoints, not enemy
+        # combat locks. Preserve commerce/escort movement without relaxing any
+        # attack, chase, or hostile follow order.
+        commercial_route = (e.data_id == "trade_convoy" and e.order_type == "move"
+                            and target is not None and target.is_station
+                            and target.data_id == "trade_station")
+        if target is None or (not commercial_route
+                              and st.is_enemy(e.owner, target.owner)
+                              and not st.can_see(e.owner, target.id)):
+            e.order_target_id = None
+            e.order_target_pos = None
+            e.order_type = "idle"
+
+
 class WeaponSystem:
     def __init__(self, state):
         self.state = state
@@ -23,7 +49,8 @@ class WeaponSystem:
     # ------------------------------------------------------------------ helpers
     def _target_valid(self, e, tid: int) -> bool:
         t = self.state.entity(tid)
-        if t is None or not self.state.is_enemy(e.owner, t.owner):
+        if (t is None or not self.state.is_enemy(e.owner, t.owner)
+                or not self.state.can_see(e.owner, tid)):
             return False
         return True
 
@@ -63,7 +90,7 @@ class WeaponSystem:
             if tid == e.id:
                 continue
             t = st.entity(tid)
-            if t is None or not st.is_enemy(e.owner, t.owner):
+            if not self._target_valid(e, tid):
                 continue
             # squadrons prefer fighters, etc. handled by weapon filters at fire time
             d = e.pos.dist_sq(t.pos)
@@ -89,6 +116,7 @@ class WeaponSystem:
         st = self.state
         if e.owner < 0:
             return
+        clear_unseen_targets(st, e)
         # determine target
         target = None
         if e.current_target is not None:
@@ -150,8 +178,18 @@ class WeaponSystem:
                     "attacker": e, "target": target, "damage": dmg,
                     "shield_mult": wd.shield_mult, "armor_mult": wd.armor_mult,
                     "system_mult": wd.system_mult, "weapon": wd,
+                    # Visual-only direction: leave impact_pos absent, preserving
+                    # the existing front-quadrant beam damage rule and XP path.
+                    "impact_direction": target.pos - e.pos,
+                    "effect_seed": ((st.seed * 73856093) ^ (st.tick * 19349663)
+                                    ^ (e.id * 83492791) ^ idx) & 0xffffffff,
                 })
-                st.spawn_effect("beam", e.pos.copy(), target_pos=target.pos.to_dict(),
+                incoming = (target.pos - e.pos).normalized()
+                shell = target.radius * (1.35 if target.shields.get("front", 0) > 0
+                                          and wd.shield_mult > 0 else .6)
+                contact = target.pos - incoming * shell
+                st.spawn_effect("beam", e.pos.copy(), target_pos=contact.to_dict(),
+                                target_id=target.id, resolved_contact=True,
                                 color=list(wd.color))
                 st.events.publish("weapon_fired", attacker_id=e.id, owner=e.owner,
                                   weapon=wd.id, heavy=wd.is_beam or wd.damage >= 25)
@@ -162,6 +200,8 @@ class WeaponSystem:
 
     def _launch_projectiles(self, e, target, wd, count: int) -> None:
         st = self.state
+        if not self._target_valid(e, target.id):
+            return
         dmg = stats.effective_weapon_damage(st, e, wd.damage)
         base = Vec3(math.sin(e.yaw), 0, math.cos(e.yaw))
         for i in range(count):

@@ -68,6 +68,24 @@ BUILD mining stations → GATHER credits/materials/energy → RESEARCH upgrades
 → FORM fleets with commanders → ATTACK enemy base → DESTROY command station → WIN
 ```
 
+## Sensors and fog of war
+
+Space has three visibility states: **unexplored**, **explored but outside sensor coverage**,
+and **currently detected**. Exploring a region charts its fixed map features; it does
+not grant permanent tracking of enemy fleets. Enemy ships and stations require current
+friendly sensor coverage to appear on the battlefield or minimap and to be targeted.
+
+Every ship and station uses its own data-defined `sensor_range`. Friendly teammates
+share detection. Sensor stations extend the network significantly: their base range is
+5,200 units, compared with 3,000 for command stations and 1,000–2,000 for most other
+stations. Ship ranges vary by class and faction. Sensor damage, jamming, nebulae,
+research and recon commanders modify effective range.
+
+Losing detection breaks the target lock: weapons cannot fire new shots or keep chasing
+an unseen target's live position. Already-fired ballistic shots continue travelling;
+guided projectiles cannot keep tracking a target outside sensor coverage. A remote
+friendly sensor can provide detection for another ship's longer-range weapons.
+
 ## Feature matrix (vertical slice vs full spec)
 
 | Spec section | Status |

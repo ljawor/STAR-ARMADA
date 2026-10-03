@@ -39,6 +39,8 @@ class DamageSystem:
                 attacker_id=hit.get("attacker_id", -2),
                 weapon=hit.get("weapon"),
                 impact_pos=hit.get("impact_pos"),
+                impact_direction=hit.get("impact_direction"),
+                effect_seed=hit.get("effect_seed"),
             )
 
         # 2. shield regeneration
@@ -66,7 +68,8 @@ class DamageSystem:
     def _apply_damage(self, target, raw_damage: float, shield_mult: float,
                       armor_mult: float, system_mult: float,
                       attacker=None, attacker_id: int = -2, weapon=None,
-                      impact_pos=None) -> None:
+                      impact_pos=None, impact_direction=None,
+                      effect_seed=None) -> None:
         st = self.state
         if target is None or not target.alive or target.is_planet:
             return
@@ -85,9 +88,13 @@ class DamageSystem:
             absorbed = min(target.shields[quad], remaining * shield_mult)
             target.shields[quad] -= absorbed
             remaining -= absorbed / max(shield_mult, 0.01)
+            if absorbed > 0:
+                self._spawn_hit("shield_hit", target, impact_pos, attacker,
+                                absorbed, impact_direction, effect_seed)
             if target.shields[quad] <= 0.0:
                 target.shields[quad] = 0.0
-                st.spawn_effect("shield_down", target.pos.copy())
+                # Local absorbed contact already renders the collapse; do not
+                # add the old whole-unit shield_down billboard on top.
 
         target.last_hit_time = st.time
 
@@ -99,13 +106,9 @@ class DamageSystem:
             self._chip_systems(target, hull_damage, system_mult)
             # hull threshold effects
             self._hull_threshold_effects(target)
-            if impact_pos is not None:
-                # warm spark, not white: with no colour this defaulted to
-                # (1,1,1) and ADDITIVE blending turned it into a flat white
-                # disc that read as a hole in the hull rather than an impact
-                st.spawn_effect("hull_hit", impact_pos.copy(),
-                                color=[1.0, 0.62, 0.26],
-                                size=target.radius)
+            if hull_damage > 0:
+                self._spawn_hit("hull_hit", target, impact_pos, attacker,
+                                hull_damage, impact_direction, effect_seed)
 
         # --- attacker XP
         if attacker is not None and attacker.alive and attacker.owner >= 0:
@@ -116,6 +119,34 @@ class DamageSystem:
         # --- death
         if target.hull <= 0:
             self._kill(target, attacker, attacker_id)
+
+    def _spawn_hit(self, kind, target, impact_pos, attacker, damage,
+                   impact_direction=None, effect_seed=None):
+        """Visual metadata only; never consume the simulation RNG."""
+        delta = (impact_pos - target.pos) if impact_pos is not None else Vec3()
+        if delta.length() < 1e-6 and attacker is not None:
+            delta = attacker.pos - target.pos
+        if delta.length() < 1e-6 and impact_direction is not None:
+            delta = impact_direction * -1.0
+        if delta.length() < 1e-6:
+            delta = Vec3(math.sin(target.yaw), 0, math.cos(target.yaw))
+        normal = delta * (1.0 / delta.length())
+        direction = (impact_direction * (1.0 / impact_direction.length())
+                     if impact_direction is not None and impact_direction.length() > 1e-6
+                     else normal * -1.0)
+        radius = target.radius * (1.35 if kind == "shield_hit" else .6)
+        contact = target.pos + normal * radius
+        seed = (int(effect_seed) if effect_seed is not None else
+                ((self.state.seed * 73856093) ^ (self.state.tick * 19349663)
+                 ^ (target.id * 83492791) ^ int(damage * 1000)) & 0xffffffff)
+        self.state.spawn_effect(kind, contact, target_id=target.id,
+                                center=target.pos.to_dict(), normal=normal.to_dict(),
+                                direction=direction.to_dict(), radius=radius,
+                                target_radius=target.radius,
+                                size=min(18.0, max(2.0, target.radius * .12)),
+                                seed=seed, damage=damage,
+                                color=([.12, .65, 1.] if kind == "shield_hit"
+                                       else [1., .46, .12]))
 
     def _quadrant_for(self, target, impact_pos) -> str:
         """Which shield quadrant does an impact at `impact_pos` hit?"""
