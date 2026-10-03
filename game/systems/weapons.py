@@ -150,8 +150,18 @@ class WeaponSystem:
                     "attacker": e, "target": target, "damage": dmg,
                     "shield_mult": wd.shield_mult, "armor_mult": wd.armor_mult,
                     "system_mult": wd.system_mult, "weapon": wd,
+                    # Visual-only direction: leave impact_pos absent, preserving
+                    # the existing front-quadrant beam damage rule and XP path.
+                    "impact_direction": target.pos - e.pos,
+                    "effect_seed": ((st.seed * 73856093) ^ (st.tick * 19349663)
+                                    ^ (e.id * 83492791) ^ idx) & 0xffffffff,
                 })
-                st.spawn_effect("beam", e.pos.copy(), target_pos=target.pos.to_dict(),
+                incoming = (target.pos - e.pos).normalized()
+                shell = target.radius * (1.35 if target.shields.get("front", 0) > 0
+                                          and wd.shield_mult > 0 else .6)
+                contact = target.pos - incoming * shell
+                st.spawn_effect("beam", e.pos.copy(), target_pos=contact.to_dict(),
+                                target_id=target.id, resolved_contact=True,
                                 color=list(wd.color))
                 st.events.publish("weapon_fired", attacker_id=e.id, owner=e.owner,
                                   weapon=wd.id, heavy=wd.is_beam or wd.damage >= 25)

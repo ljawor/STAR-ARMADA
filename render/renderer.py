@@ -29,7 +29,7 @@ import OpenGL.GL as _gl
 from render.camera import cross3, normalize3
 from render import textures as tex
 from render.fleet_materials import FleetMaterials
-from render.fleet_geometry import armor_loft
+from render.fleet_geometry import armor_loft, ship_mesh, station_mesh, ROLES
 
 from game.core.entity import Entity, QUADRANTS
 from game.core.vectors import Vec3
@@ -178,6 +178,8 @@ class Renderer:
             units = [e for e in st.entities.values()
                      if e.alive and not e.is_planet]
             self._draw_shields(units, dt)
+        if "effects" not in self.skip:
+            self._draw_hits()
         if "sites" not in self.skip:
             self._draw_construction_sites()
         if "rings" not in self.skip:
@@ -1065,6 +1067,9 @@ class Renderer:
             self.materials.hull_pass(2.0)
             glColor3f(*trimc)
             glCallList(trim_lst)
+        glDisable(GL_TEXTURE_2D)
+        glColor3f(*(min(1.0, c * 1.15 + .14) for c in color))
+        glCallList(self._ship_display_list(vis["shape"] + "_accent"))
         self._material_matte()
         # emissive details: drawn UNLIT so they read as light sources rather
         # than surfaces being lit (with lighting on, a window on the ship's
@@ -1074,6 +1079,8 @@ class Renderer:
         GL.glDisable(GL.GL_TEXTURE_2D)
         glColor3f(1.0, 0.80, 0.52)
         glCallList(lit_lst)
+        glColor3f(0.38, 0.82, 1.0)
+        glCallList(self._ship_display_list(vis["shape"] + "_cool"))
         GL.glEnable(GL.GL_TEXTURE_2D)
         GL.glEnable(GL.GL_LIGHTING)
         glPopMatrix()
@@ -1135,7 +1142,7 @@ class Renderer:
         if shape in self.ship_lists:
             return self.ship_lists[shape]
         import OpenGL.GL as GL
-        passes = {p: _gl.glGenLists(1) for p in ("base", "dark", "trim", "lit")}
+        passes = {p: _gl.glGenLists(1) for p in ROLES}
         for pname, lst in passes.items():
             glNewList(lst, GL_COMPILE)
             GL.glPushAttrib(GL.GL_ENABLE_BIT)
@@ -1145,11 +1152,11 @@ class Renderer:
                 # and no hull-panel texture (it would darken the glow).
                 GL.glDisable(GL.GL_LIGHTING)
                 GL.glDisable(GL.GL_TEXTURE_2D)
-            self._emit_hull(shape, pname)
+            self._emit_detail_hull(shape, pname)
             GL.glPopAttrib()
             glEndList()
         self.ship_lists[shape] = passes["base"]
-        for pname in ("dark", "trim", "lit"):
+        for pname in ROLES[1:]:
             self.ship_lists[shape + "_" + pname] = passes[pname]
         return passes["base"]
 
@@ -1442,280 +1449,43 @@ class Renderer:
         GL.glPopAttrib()
 
     def _draw_station(self, e: Entity):
-        color = self._owner_color(e.owner)
-        sd = self.ds.stations.get(e.data_id)
-        if sd is None:
+        """Radius-50 cached hardware with scoped alloy shading and faction paint."""
+        if self.ds.stations.get(e.data_id) is None:
             return
+        color = self._owner_color(e.owner)
         glPushMatrix()
         glTranslatef(e.pos.x, e.pos.y, e.pos.z)
         glRotatef(self.time * 3.0, 0, 1, 0)
-        r = e.radius
-        dark = (color[0] * 0.55, color[1] * 0.55, color[2] * 0.55)
-        # metal pass (A2): structural parts read as lit alloy. Low shininess —
-        # see _material_metal; a tight exponent leaves no visible highlight on
-        # these large flat facets.
-        self._material_metal(8.0, (0.40, 0.40, 0.40))
-        if e.data_id == "command_station":
-            # solid core sphere + rotating ring + 4 spoke girders + docking arms
-            glPushMatrix()
-            glRotatef(-90, 1, 0, 0)
-            glColor3f(*color)
-            self._draw_sphere(r * 0.42, 18, 12)
-            glPopMatrix()
-            glColor3f(*dark)
-            self._station_ring(r, 36)
-            # 4 spoke girders (chunky lit boxes)
-            glColor3f(*color)
-            for i in range(4):
-                glPushMatrix()
-                glRotatef(-i * 90.0, 0, 1, 0)
-                self._lit_box(r * 1.9, r * 0.09, r * 0.09)
-                glPopMatrix()
-            # docking arms: two opposing pylons with pad boxes
-            for sgn in (-1, 1):
-                glPushMatrix()
-                glRotatef(90 if sgn > 0 else -90, 0, 1, 0)
-                self._lit_box(r * 0.9, r * 0.16, r * 0.16, cx=r * 1.2)
-                self._lit_box(r * 0.3, r * 0.18, r * 0.6, cx=r * 1.65)
-                glPopMatrix()
-            # top + bottom sensor spires
-            self._lit_box(r * 0.1, r * 0.45, r * 0.1, cy=r * 0.55)
-            self._lit_box(r * 0.1, r * 0.45, r * 0.1, cy=-r * 0.55)
-            # ring habitation pods (8 around the ring)
-            for i in range(8):
-                a = i / 8 * 2 * math.pi
-                px_, pz_ = math.sin(a) * r, math.cos(a) * r
-                self._lit_box(r * 0.16, r * 0.12, r * 0.3,
-                              cx=px_, cy=0.0, cz=pz_)
-            # defense turret studs on the equator
-            for i in range(4):
-                a = (i / 4 + 0.125) * 2 * math.pi
-                px_, pz_ = math.sin(a) * r, math.cos(a) * r
-                self._lit_box(r * 0.08, r * 0.16, r * 0.08,
-                              cx=px_, cy=r * 0.12, cz=pz_)
-            # --- detail pass: command tower on the core + dish + bay lights ---
-            glColor3f(*dark)
-            self._lit_box(r * 0.34, r * 0.3, r * 0.34, cy=r * 0.5)
-            glColor3f(*color)
-            self._lit_box(r * 0.2, r * 0.1, r * 0.2, cy=r * 0.68)   # tower cap
-            glPushMatrix()
-            glTranslatef(r * 0.5, r * 0.62, 0.0)
-            self._dome(r * 0.22, 10, 6)                              # comm dish
-            glPopMatrix()
-            for i in range(4):                                        # bay cranes
-                glPushMatrix()
-                glRotatef(-i * 90.0, 0, 1, 0)
-                self._lit_box(r * 0.06, r * 0.5, r * 0.06,
-                              cx=r * 1.2, cy=r * 0.3)
-                self._lit_box(r * 0.2, r * 0.06, r * 0.1,
-                              cx=r * 1.28, cy=r * 0.52)
-                glPopMatrix()
-        elif e.data_id == "shipyard":
-            # shipyard: massive gantry frame + build cradles + core
-            glColor3f(*color)
-            self._lit_box(r * 0.55, r * 0.85, r * 1.15, cy=r * 0.15)
-            glColor3f(*dark)
-            self._lit_box(r * 1.6, r * 0.16, r * 0.16, cy=r * 0.8)
-            self._lit_box(r * 0.16, r * 0.85, r * 0.16, cx=r * 0.72, cy=r * 0.38)
-            self._lit_box(r * 0.16, r * 0.85, r * 0.16, cx=-r * 0.72, cy=r * 0.38)
-            glColor3f(*color)
-            self._lit_box(r * 0.75, r * 0.28, r * 0.55, cy=-r * 0.35, cz=r * 0.6)
-            glPushMatrix()
-            glRotatef(-90, 1, 0, 0)
-            self._draw_sphere(r * 0.24, 14, 9)
-            glPopMatrix()
-            # two open build cradles at the sides (ship under construction)
-            glColor3f(*dark)
-            for sgn in (-1, 1):
-                self._lit_box(r * 0.1, r * 0.5, r * 0.9,
-                              cx=sgn * r * 0.95, cy=r * 0.1)
-                self._lit_box(r * 0.4, r * 0.1, r * 0.7,
-                              cx=sgn * r * 0.95, cy=r * 0.38)
-            # greeble plates on the main block
-            glColor3f(*color)
-            self._lit_box(r * 0.62, r * 0.12, r * 0.4, cy=r * 0.62, cz=-r * 0.3)
-            self._lit_box(r * 0.2, r * 0.3, r * 0.2, cy=r * 0.72, cz=r * 0.45)
-            # --- detail pass: ship under construction + welding scaffold ---
-            glColor3f(*dark)
-            for sgn in (-1, 1):                    # half-built hulls in cradles
-                self._lit_box(r * 0.5, r * 0.28, r * 0.62,
-                              cx=sgn * r * 0.95, cy=r * 0.14)
-            glColor3f(*color)
-            for i in range(3):                     # vertical weld scaffold ribs
-                self._lit_box(r * 0.05, r * 0.9, r * 0.05,
-                              cx=r * 1.32, cy=r * 0.2, cz=-r * 0.3 + i * r * 0.3)
-            self._lit_box(r * 0.05, r * 0.05, r * 0.9, cy=r * 0.65, cz=-r * 0.15)
-            glColor3f(*dark)
-            self._lit_box(r * 0.7, r * 0.1, r * 0.1, cy=-r * 0.5, cz=-r * 0.4)
-            self._lit_box(r * 0.1, r * 0.35, r * 0.1, cy=-r * 0.62, cz=r * 0.55)
-        elif e.data_id == "fighter_platform":
-            # fighter platform: flat landing deck + control tower + supports
-            glColor3f(*color)
-            self._lit_box(r * 1.6, r * 0.12, r * 1.6, cy=r * 0.25)
-            self._lit_box(r * 0.4, r * 0.7, r * 0.4, cy=r * 0.65, cz=-r * 0.55)
-            glColor3f(*dark)
-            self._lit_box(r * 0.8, r * 0.14, r * 0.8, cy=-r * 0.05, cz=r * 0.55)
-            for sx in (-1, 1):
-                for sz in (-1, 1):
-                    self._lit_box(r * 0.12, r * 0.45, r * 0.12,
-                                  cx=sx * r * 0.65, cy=r * 0.02, cz=sz * r * 0.65)
-            # --- detail pass: deck markings + parked fighter + fuel boom ---
-            glColor3f(*color)
-            for i in range(3):                     # runway stripe pairs
-                self._lit_box(r * 0.06, r * 0.02, r * 0.5,
-                              cy=r * 0.32, cz=-r * 0.45 + i * r * 0.35)
-            self._lit_box(r * 0.22, r * 0.06, r * 0.22, cy=r * 0.36, cz=r * 0.1)
-            self._lit_box(r * 0.3, r * 0.05, r * 0.06, cy=r * 0.44, cz=r * 0.3)
-            glColor3f(*dark)
-            self._lit_box(r * 0.1, r * 0.5, r * 0.1, cx=r * 0.9, cy=r * 0.3)
-        else:
-            # per-type detail for mining / sensor / trade / defense / repair /
-            # energy relay — each reads differently at a glance
-            did = e.data_id
-            if did == "mining_station":
-                # ore-processing plant: squat refinery block, drill mast
-                # into the rock, ore silos, conveyor arms
-                glColor3f(*color)
-                self._lit_box(r * 1.1, r * 0.55, r * 0.9, cy=r * 0.1)
-                glColor3f(*dark)
-                # drill mast + cutter head
-                self._lit_box(r * 0.14, r * 0.9, r * 0.14, cy=-r * 0.45)
-                self._lit_box(r * 0.34, r * 0.18, r * 0.34, cy=-r * 0.9)
-                glColor3f(*color)
-                # twin ore silos + top frame
-                self._lit_box(r * 0.3, r * 0.6, r * 0.3, cx=r * 0.55, cy=r * 0.5)
-                self._lit_box(r * 0.3, r * 0.6, r * 0.3, cx=-r * 0.55, cy=r * 0.5)
-                glColor3f(*dark)
-                self._lit_box(r * 1.2, r * 0.1, r * 0.12, cy=r * 0.85)
-                # conveyor arms to silos
-                self._lit_box(r * 0.5, r * 0.08, r * 0.2, cx=r * 0.4, cy=r * 0.35)
-                self._lit_box(r * 0.5, r * 0.08, r * 0.2, cx=-r * 0.4, cy=r * 0.35)
-                # greeble plates
-                glColor3f(*color)
-                self._lit_box(r * 0.7, r * 0.1, r * 0.3, cy=r * 0.42, cz=r * 0.25)
-                self._lit_box(r * 0.4, r * 0.08, r * 0.4, cy=r * 0.42, cz=-r * 0.3)
-            elif did == "sensor_station":
-                # listening post: slim pylon + huge phased-array dish + fins
-                glColor3f(*dark)
-                self._lit_box(r * 0.28, r * 1.5, r * 0.28, cy=r * 0.2)
-                glColor3f(*color)
-                glPushMatrix()
-                glTranslatef(0.0, r * 1.05, 0.0)
-                glRotatef(self.time * 8.0, 0, 1, 0)
-                glRotatef(28, 1, 0, 0)
-                self._dome(r * 0.95, 14, 6)      # dish (concave reads via rim)
-                self._lit_box(r * 0.16, r * 0.16, r * 0.5, cz=r * 0.75)
-                glPopMatrix()
-                glColor3f(*dark)
-                self._lit_box(r * 1.3, r * 0.1, r * 0.3, cy=-r * 0.35)
-                self._lit_box(r * 0.1, r * 0.5, r * 0.9, cy=r * 0.3)
-                glColor3f(*color)
-                # comm blister
-                glPushMatrix()
-                glTranslatef(0.0, -r * 0.15, r * 0.2)
-                self._dome(r * 0.3, 10, 6)
-                glPopMatrix()
-            elif did == "trade_station":
-                # commerce hub: wide stacked decks + docking spokes + beacon
-                glColor3f(*color)
-                self._lit_box(r * 1.35, r * 0.28, r * 1.35, cy=r * 0.15)
-                glColor3f(*dark)
-                self._lit_box(r * 0.95, r * 0.3, r * 0.95, cy=r * 0.5)
-                glColor3f(*color)
-                self._lit_box(r * 0.5, r * 0.3, r * 0.5, cy=r * 0.85)
-                # four docking spokes with pad boxes
-                glColor3f(*dark)
-                for i in range(4):
-                    glPushMatrix()
-                    glRotatef(-i * 90.0, 0, 1, 0)
-                    self._lit_box(r * 0.85, r * 0.08, r * 0.08, cx=r * 1.05)
-                    self._lit_box(r * 0.2, r * 0.14, r * 0.4, cx=r * 1.45)
-                    glPopMatrix()
-                # beacon spire (blinks via time-modulated glow below)
-                glColor3f(*color)
-                self._lit_box(r * 0.06, r * 0.5, r * 0.06, cy=r * 1.25)
-            elif did == "defense_platform":
-                # gun fortress: armored core + 4 turret barbettes + missile box
-                glColor3f(*dark)
-                self._lit_box(r * 0.9, r * 0.5, r * 0.9)
-                glColor3f(*color)
-                self._lit_box(r * 0.55, r * 0.35, r * 0.55, cy=r * 0.4)
-                # 4 heavy barbettes with barrels
-                for i in range(4):
-                    glPushMatrix()
-                    glRotatef(-i * 90.0, 0, 1, 0)
-                    self._lit_box(r * 0.22, r * 0.2, r * 0.22,
-                                  cx=r * 0.5, cy=r * 0.3)
-                    self._lit_box(r * 0.07, r * 0.07, r * 0.55,
-                                  cx=r * 0.5, cy=r * 0.34, cz=r * 0.3)
-                    glPopMatrix()
-                # missile battery block + armor skirt
-                glColor3f(*dark)
-                self._lit_box(r * 0.45, r * 0.25, r * 0.3, cy=r * 0.62, cz=-r * 0.2)
-                self._lit_box(r * 1.3, r * 0.12, r * 1.3, cy=-r * 0.3)
-            elif did == "repair_dock":
-                # open-frame dry dock: cradle claws + gantry + welding arms
-                glColor3f(*dark)
-                self._lit_box(r * 0.3, r * 0.7, r * 1.3, cy=r * 0.2)   # spine
-                glColor3f(*color)
-                for sgn in (-1, 1):
-                    # cradle claws (angled boxes)
-                    glPushMatrix()
-                    glTranslatef(sgn * r * 0.75, 0.0, 0.0)
-                    glRotatef(sgn * 28, 1, 0, 0)
-                    self._lit_box(r * 0.14, r * 1.0, r * 0.2)
-                    glPopMatrix()
-                self._lit_box(r * 1.4, r * 0.12, r * 0.12, cy=r * 0.75)
-                glColor3f(*dark)
-                self._lit_box(r * 0.2, r * 0.3, r * 0.2, cy=r * 0.9, cz=r * 0.4)
-            elif did == "energy_relay":
-                # reactor cluster: core sphere + collector vanes + coils
-                glPushMatrix()
-                glRotatef(-90, 1, 0, 0)
-                glColor3f(*color)
-                self._draw_sphere(r * 0.45, 16, 10)
-                glPopMatrix()
-                glColor3f(*dark)
-                for i in range(3):
-                    glPushMatrix()
-                    glRotatef(-i * 120.0, 0, 1, 0)
-                    self._lit_box(r * 0.08, r * 0.9, r * 0.35, cy=r * 0.2)
-                    glPopMatrix()
-                glColor3f(*color)
-                # ring of coils
-                for i in range(6):
-                    a = i / 6 * 2 * math.pi
-                    self._lit_box(r * 0.16, r * 0.3, r * 0.16,
-                                  cx=math.sin(a) * r * 0.85,
-                                  cy=-r * 0.2,
-                                  cz=math.cos(a) * r * 0.85)
-                self._lit_box(r * 0.1, r * 0.8, r * 0.1, cy=r * 0.7)
-            else:
-                # generic platform: two stacked lit boxes + solid ring + pylon
-                glColor3f(*color)
-                self._lit_box(r * 1.0, r * 0.6, r * 1.0, cy=r * 0.1)
-                self._lit_box(r * 0.65, r * 0.35, r * 0.65, cy=r * 0.6)
-                glColor3f(*dark)
-                self._station_ring(r * 1.1, 30)
-                glColor3f(*color)
-                self._lit_box(r * 0.12, r * 0.55, r * 0.12, cy=r * 0.8)
-        # emissive pass (A3): lit windows + nav beacons. Lighting and the hull
-        # panel texture are switched off for this call, so these read as light
-        # sources rather than surfaces being lit.
+        glPushMatrix()
+        # Keep shader model coordinates near ship dimensions: scaling unit-radius
+        # geometry would make every station fit inside a single shader plate.
+        scale = e.radius / 50.0
+        glScalef(scale, scale, scale)
+        self._material_metal(8.0, (0.50, 0.55, 0.62))
+        with self.materials.use("hull", materialPass=0.0):
+            for role, material_pass, tint in (
+                    ("base", 0.0, color),
+                    ("dark", 1.0, (0.20, 0.24, 0.30)),
+                    ("trim", 2.0, (0.68, 0.76, 0.84))):
+                self.materials.hull_pass(material_pass)
+                if not self.materials.available and role == "base":
+                    tint = tuple(.42 + .18*c for c in color)
+                glColor3f(*tint)
+                glCallList(self._station_detail_list(e.data_id, role))
+        # Dedicated broad painted armor, not an overall owner tint. Draw outside
+        # the alloy shader so faction saturation survives on the actual plates.
+        glDisable(GL_TEXTURE_2D)
+        glColor3f(*(min(1.0, c*1.15+.14) for c in color))
+        glCallList(self._station_detail_list(e.data_id, "accent"))
         self._material_matte()
         glDisable(GL_LIGHTING)
-        glDisable(GL_TEXTURE_2D)
         glColor3f(1.0, 0.80, 0.52)
-        # the lit list is authored at UNIT radius, so it must be scaled by the
-        # station's radius (without this the windows are 0.05 world units and
-        # never visible — the whole emissive pass silently does nothing).
-        glPushMatrix()
-        glScalef(r, r, r)
-        glCallList(self._station_lit_list(e.data_id))
-        glPopMatrix()
+        glCallList(self._station_detail_list(e.data_id, "lit"))
+        glColor3f(0.38, 0.82, 1.0)
+        glCallList(self._station_detail_list(e.data_id, "cool"))
         glEnable(GL_TEXTURE_2D)
         glEnable(GL_LIGHTING)
-        # construction progress ring
+        glPopMatrix()
         if e.build_queue:
             item = e.build_queue[0]
             frac = 1.0 - max(0.0, item.get("time_left", 0)) / max(0.1, item.get("total", 1))
@@ -1723,13 +1493,36 @@ class Renderer:
             glColor3f(0.4, 1.0, 0.5)
             glLineWidth(3.0)
             glBegin(GL_LINE_STRIP)
-            rr = r * 1.5
             for i in range(int(40 * min(1.0, frac)) + 1):
                 a = i / 40 * 2 * math.pi
-                glVertex3f(math.sin(a) * rr, r * 0.8, math.cos(a) * rr)
+                glVertex3f(math.sin(a) * e.radius * 1.5, e.radius * 0.8,
+                           math.cos(a) * e.radius * 1.5)
             glEnd()
             glEnable(GL_DEPTH_TEST)
         glPopMatrix()
+
+    def _station_detail_list(self, data_id, role):
+        key = "station_detail:" + data_id + ":" + role
+        if key not in self.ship_lists:
+            lst = _gl.glGenLists(1)
+            glNewList(lst, GL_COMPILE)
+            self._emit_detail_mesh(station_mesh(data_id)[role])
+            glEndList()
+            self.ship_lists[key] = lst
+        return self.ship_lists[key]
+
+    def _emit_detail_mesh(self, mesh):
+        """One batch per material role; normals and UVs stay in model space."""
+        glBegin(GL_TRIANGLES)
+        for normal, vertices in mesh:
+            glNormal3f(*normal)
+            for x, y, z in vertices:
+                glTexCoord2f(x / 32.0, z / 32.0)
+                glVertex3f(x, y, z)
+        glEnd()
+
+    def _emit_detail_hull(self, shape, role):
+        self._emit_detail_mesh(ship_mesh(shape)[role])
 
     # ------------------------------------------------------------------ projectiles
     def _station_lit_list(self, data_id: str) -> int:
@@ -1993,23 +1786,8 @@ class Renderer:
                 # the same phenomenon, not a different (orange blob) effect
                 self._draw_explosion(pos, max(10.0, fx.get("size", 20)) * 0.5,
                                      t * 0.55, fx.get("seed", 3))
-            elif kind in ("impact", "hull_hit"):
-                a = max(0.0, 1.0 - t / 0.35)
-                if a <= 0:
-                    continue
-                # two-tone spark with a shock glint, not a single white disc
-                sz = 8.0 + 16.0 * (1 - a)
-                self._draw_glow(pos, sz * 1.35, color,
-                                alpha=a * 0.55, additive=True)
-                self._draw_glow(pos, sz * 0.55,
-                                (min(1.0, color[0] + 0.35),
-                                 min(1.0, color[1] + 0.30),
-                                 min(1.0, color[2] + 0.20)),
-                                alpha=a * 0.95, additive=True)
-                if a > 0.45:
-                    self._bb_ring(pos, sz * (1.6 + 2.4 * (1 - a)),
-                                  (color[0], color[1], color[2],
-                                   (a - 0.45) * 0.9), 1.6)
+            elif kind in ("shield_hit", "hull_hit", "impact"):
+                continue  # rendered after opaque hulls and the standing shell
             elif kind == "beam":
                 a = max(0.0, 1.0 - t / 0.25)
                 if a <= 0 or "target_pos" not in fx:
@@ -2027,7 +1805,8 @@ class Renderer:
                                    min(1.0, color[2] + 0.5), a * 0.95))
                 # glow at both ends of the beam
                 self._draw_glow(pos, 14, color, alpha=a * 0.8, additive=True)
-                self._draw_glow(tgt, 20, color, alpha=a * 0.9, additive=True)
+                if not fx.get("resolved_contact", False):
+                    self._draw_glow(tgt, 8, color, alpha=a * 0.35, additive=True)
             elif kind in ("jump_charge", "jump_arrive"):
                 a = max(0.0, 1.0 - t / 1.0)
                 self._bb_ring(pos, 60 + 160 * (1 - a),
@@ -2062,6 +1841,13 @@ class Renderer:
         glDepthMask(True)
         glDisable(GL_BLEND)
         GL.glEnable(GL.GL_LIGHTING)
+
+    def _draw_hits(self):
+        """Contact markings composite after hulls, not underneath their armor."""
+        from render.hit_effects import draw_hit
+        for fx in self.state.effects[:400]:
+            if fx["kind"] in ("shield_hit", "hull_hit", "impact"):
+                draw_hit(self, fx)
 
     # ------------------------------------------------------------------ explosions
     @staticmethod
@@ -2802,8 +2588,8 @@ class Renderer:
                     flash[e.id][q] = f
             prev[e.id] = quads
             self._shield_bubble(e, frac)
-            for q, f in list(flash.get(e.id, {}).items()):
-                self._shield_quadrant_glow(e, frac, q, f)
+            # Damage-resolved shield_hit effects render localized curved contacts.
+            # Never layer the old radius-sized additive quadrant billboard over them.
         # drop cache entries for units that no longer exist
         if len(prev) > 512:
             live = {e.id for e in st.entities.values()}
