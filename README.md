@@ -110,6 +110,17 @@ AI runs; not a substitute for full-match or rendered-menu playtesting):
 PYTHONPATH=tests .venv/bin/python -m unittest test_skirmish_maps -v
 ```
 
+## LAN multiplayer
+
+Open **Multiplayer** to host or join by LAN IPv4 address. The host selects a
+**TCP port** (default **7777**) and uses the same four maps as Skirmish, with
+**2–4 human players** and optional AI within map capacity. Cooperative play puts
+humans on a shared team against AI; free-for-all uses separate teams.
+
+For setup, Windows Firewall commands, and troubleshooting, see **docs/LAN.md**.
+Firewall rules are not changed automatically. All computers must use the same game
+version and simulation content. LAN matches disable independent pause and save/load.
+
 ## Gameplay loop (prototype = vertical slice)
 
 ```
