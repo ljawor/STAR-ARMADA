@@ -34,6 +34,7 @@ class InputController:
         self.right_drag: tuple | None = None
         self.grab_mouse = False
         self.local_player = 0
+        self._pending_jump: tuple[int, ...] | None = None
         self._pending_fleet: list[int] | None = None   # after G, awaiting number key
         # right-panel scroll context (set by HUD each frame)
         self._right_panel_rect = None
@@ -44,6 +45,7 @@ class InputController:
         st = self.state
         self._prune_contacts()
         if ev.type == pygame.WINDOWFOCUSLOST:
+            self._cancel_jump()
             self.keys.clear()
             self.dragging = False
             self.drag_start = self.drag_cur = self.right_drag = None
@@ -57,7 +59,9 @@ class InputController:
                 pygame.event.set_grab(self.grab_mouse)
                 pygame.mouse.set_visible(not self.grab_mouse)
             elif ev.key == pygame.K_ESCAPE:
-                if self.hud.placement:
+                if self._pending_jump is not None:
+                    self._cancel_jump()
+                elif self.hud.placement:
                     self.hud.placement = None       # cancel placement first
                 elif self.hud.fleet_panel:
                     self.hud.fleet_panel = False
@@ -69,6 +73,7 @@ class InputController:
                     self.keys.clear()
                     self.app.request_exit()
             elif pygame.K_1 <= ev.key <= pygame.K_9:
+                self._cancel_jump()
                 num = ev.key - pygame.K_0
                 if self._pending_fleet:
                     self._create_fleet(self._pending_fleet, formation="line")
@@ -76,9 +81,11 @@ class InputController:
                 else:
                     self._control_group(num, assign=self._ctrl_down(ev))
             elif ev.key == pygame.K_g and self.selection:
+                self._cancel_jump()
                 self._pending_fleet = sorted(self.selection)
                 self.app.flash("press 1-9 to form fleet, or F for formation")
             elif ev.key == pygame.K_f:
+                self._cancel_jump()
                 self.hud.fleet_panel = not self.hud.fleet_panel
                 self._pending_fleet = None
                 if self.hud.fleet_panel:
@@ -111,6 +118,9 @@ class InputController:
             self.keys.discard(ev.key)
         elif ev.type == pygame.MOUSEBUTTONDOWN:
             if ev.button == 1:
+                if self._pending_jump is not None:
+                    self._confirm_jump(ev.pos)
+                    return
                 if self.hud.placement:
                     self._confirm_placement(ev.pos)
                     return
@@ -123,6 +133,9 @@ class InputController:
                     self.drag_start = ev.pos
                     self.dragging = True
             elif ev.button == 3:
+                if self._pending_jump is not None:
+                    self._cancel_jump()
+                    return
                 if self.hud.placement:
                     self.hud.placement = None       # right-click cancels
                     return
@@ -141,7 +154,7 @@ class InputController:
                 self.dragging = False
                 self.drag_start = None
                 self.drag_cur = None
-            elif ev.button == 3:
+            elif ev.button == 3 and self.right_drag is not None:
                 self._right_click(ev.pos)
                 self.right_drag = None
         elif ev.type == pygame.MOUSEMOTION:
@@ -212,6 +225,9 @@ class InputController:
     def update(self, dt: float = 1.0 / 30.0) -> None:
         """Per-frame held-key motion and follow camera, not event-rate motion."""
         self._prune_contacts()
+        if self._pending_jump is not None and not self._jump_units(self._pending_jump):
+            self._cancel_jump()
+            self.app.flash("jump cancelled: no eligible ships remain")
         self._camera_keys(dt)
         if self.camera.follow_id is not None:
             e = self.state.entity(self.camera.follow_id)
@@ -449,16 +465,78 @@ class InputController:
                 best, best_d = e, d
         return best
 
+    def _cancel_jump(self) -> None:
+        if self._pending_jump is not None:
+            self._pending_jump = None
+            self.hud.jump_prompt = False
+            self.dragging = False
+            self.drag_start = self.drag_cur = self.right_drag = None
+            self.app.flash("jump destination selection cancelled")
+
+    def _jump_units(self, ids) -> tuple[int, ...]:
+        """Inspect only snapshotted own units, never destination entities."""
+        return tuple(i for i in sorted(ids)
+                     if (e := self.state.entity(i)) is not None
+                     and e.owner == self.local_player and e.alive and e.hull > 0
+                     and e.is_ship and not e.is_squadron
+                     and not e.is_station and not e.is_planet
+                     and (sd := _ship_data(e)) is not None and not sd.is_squadron
+                     and e.jump_charge <= 0 and e.jump_target is None
+                     and e.ability_cooldowns.get("_jump_cd", 0) <= 0)
+
     def _queue_jump(self) -> None:
-        from game.core.commands import JumpCommand
-        from game.core.vectors import Vec3
-        ids = sorted(self.selection)
-        if not ids:
+        if self._pending_jump is not None:
             return
-        # jump toward the map center by default (prototype: no jump-point UI yet)
-        tgt = Vec3(0.0, 0.0, 0.0)
-        self.state.queue_command(JumpCommand(self.local_player, ids, tgt))
-        self.app.flash("hyperspace jump charging")
+        ids = self._jump_units(self.selection)
+        if not ids:
+            self.app.flash("select eligible own ships ready to jump")
+            return
+        self._pending_jump = ids
+        self.hud.jump_prompt = True
+        self.hud.placement = None
+        self.hud.fleet_panel = False
+        self._pending_fleet = None
+        self.dragging = False
+        self.drag_start = self.drag_cur = self.right_drag = None
+        self.app.flash("jump: click destination on ground or minimap; Esc cancels")
+
+    def _confirm_jump(self, pos: tuple) -> None:
+        from game.core.commands import JumpCommand
+        ids = self._jump_units(self._pending_jump or ())
+        if not ids:
+            self._cancel_jump()
+            self.app.flash("jump cancelled: no eligible ships remain")
+            return
+        width, height = self.camera.width, self.camera.height
+        if not (0 <= pos[0] < width and 0 <= pos[1] < height):
+            self.app.flash("cannot jump there: click inside battlefield or minimap")
+            return
+        r = self.hud.minimap_rect
+        if r is not None and r.collidepoint(pos):
+            if not r.inflate(-8, -8).collidepoint(pos):
+                self.app.flash("cannot jump there: click inside minimap content")
+                return
+            w = self._minimap_world(pos)
+        else:
+            if (any(b["rect"].collidepoint(pos) for b in self.hud.buttons)
+                    or any(r.collidepoint(pos) for r in
+                           getattr(self.hud, "blocked_rects", []))):
+                self.app.flash("cannot jump through HUD: click ground or minimap")
+                return
+            w = self.camera.screen_to_world(*pos)
+        if w is None:
+            self.app.flash("cannot jump there: choose battlefield ground")
+            return
+        from math import isfinite
+        target = _vec3(w[0], 0.0, w[2])
+        half = self.state.map_info.bounds / 2.0
+        if not all(isfinite(v) and abs(v) <= half for v in (target.x, target.z)):
+            self.app.flash("cannot jump there: outside map bounds")
+            return
+        self.state.queue_command(JumpCommand(
+            self.local_player, ids, target))
+        self._cancel_jump()
+        self.app.flash("hyperspace jump ordered")
 
     def _ctrl_down(self, ev=None) -> bool:
         """Is Ctrl (or Cmd on macOS) held?
@@ -502,12 +580,17 @@ class InputController:
         self._pending_fleet = None
         self.app.flash(f"fleet formed ({formation})")
 
-    def _minimap_jump(self, pos: tuple) -> None:
+    def _minimap_world(self, pos: tuple) -> tuple:
+        """Inverse of HUD._minimap px(): four-pixel content inset."""
         r = self.hud.minimap_rect
         bounds = max(1.0, self.state.map_info.bounds)
         half = bounds / 2.0
         wx = (pos[0] - r.centerx) / (r.width / 2 - 4) * half
         wz = (pos[1] - r.centery) / (r.height / 2 - 4) * half
+        return wx, 0.0, wz
+
+    def _minimap_jump(self, pos: tuple) -> None:
+        wx, _, wz = self._minimap_world(pos)
         self.camera.target[0] = wx
         self.camera.target[2] = wz
         self.camera.clamp_target()

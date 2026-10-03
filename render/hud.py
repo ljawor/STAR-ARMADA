@@ -76,6 +76,7 @@ class HUD:
         self.tex = None
         self.buttons: list[dict] = []   # {"rect": Rect, "kind": str, "payload": dict}
         self.minimap_rect = None        # set each frame; input uses it
+        self.blocked_rects: list = []   # opaque HUD geometry for ground picking
         self.selected_abilities: list = []
         # scrollable panels: kind -> scroll offset in rows
         self.scroll: dict = {"ships": 0, "techs": 0, "stations": 0}
@@ -83,6 +84,7 @@ class HUD:
         self._cur_player = None
         # placement mode: payload dict for build_station awaiting a click
         self.placement: dict | None = None
+        self.jump_prompt: bool = False
         self.fleet_panel: bool = False
         self.fleet_formation: str = "line"
         self.fleet_commander: str | None = None
@@ -117,6 +119,7 @@ class HUD:
             ((220, 120, 110) if self.mission_failed else (150, 175, 220))
         title = self.mission_name or "MISSION"
         h = 40 + 22 * len(rows)
+        self.blocked_rects.append(pygame.Rect(x, y, w, h))
         pygame.draw.rect(ov, PANEL_BG, (x, y, w, h), border_radius=8)
         pygame.draw.rect(ov, PANEL_EDGE, (x, y, w, h), 1, border_radius=8)
         surf = self.font_big.render(title, True, state_col)
@@ -144,6 +147,7 @@ class HUD:
         ov.fill((0, 0, 0, 0))
         self.scroll_rects = []          # rebuilt each frame
         self.buttons = []
+        self.blocked_rects = []
         self._top_bar(local_player, paused)
         self._left_panel(selection, local_player)
         self._right_panel(selection, local_player)
@@ -153,10 +157,17 @@ class HUD:
         self._draw_floating_texts()
         self._draw_drag_box()
         self._placement_banner()
+        if self.jump_prompt:
+            prompt = self.font.render("JUMP: click destination on ground or minimap | Esc / right-click cancel", True, WARN)
+            rect = prompt.get_rect(center=(self.width // 2, self.height - 96))
+            self.blocked_rects.append(rect.inflate(20, 12))
+            pygame.draw.rect(ov, PANEL_BG, rect.inflate(20, 12), border_radius=6)
+            ov.blit(prompt, rect)
         if flash_msg and flash_left > 0.0:
             surf = self.font_big.render(flash_msg, True, WARN)
             r = surf.get_rect(center=(self.width // 2, self.height - 60))
             bg = r.inflate(24, 12)
+            self.blocked_rects.append(bg)
             pygame.draw.rect(ov, PANEL_BG, bg, border_radius=6)
             pygame.draw.rect(ov, PANEL_EDGE, bg, 1, border_radius=6)
             ov.blit(surf, r)
@@ -171,6 +182,7 @@ class HUD:
         st = self.state
         p = st.players.get(local_player)
         rect = pygame.Rect(0, 0, self.width, 34)
+        self.blocked_rects.append(rect)
         pygame.draw.rect(ov, HEADER_BG, rect)
         pygame.draw.line(ov, PANEL_EDGE, (0, 33), (self.width, 33), 1)
 
@@ -294,6 +306,7 @@ class HUD:
         ents = [e for e in ents if e is not None]
         # Idle help is a card, not a full-height inspector hiding the world.
         panel = pygame.Rect(10, 44, 320, 430 if ents else 84)
+        self.blocked_rects.append(panel)
         pygame.draw.rect(ov, PANEL_BG, panel, border_radius=8)
         pygame.draw.rect(ov, PANEL_EDGE, panel, 1, border_radius=8)
         if not ents:
@@ -446,6 +459,7 @@ class HUD:
         sel = ents[0] if ents else None
         contextual = sel is not None and (sel.is_construction or sel.is_station)
         panel = pygame.Rect(self.width - 330, 44, 320, 430 if contextual else 124)
+        self.blocked_rects.append(panel)
         pygame.draw.rect(ov, PANEL_BG, panel, border_radius=8)
         pygame.draw.rect(ov, PANEL_EDGE, panel, 1, border_radius=8)
 
@@ -521,6 +535,7 @@ class HUD:
     def _fleet_panel(self, selection: set, local_player: int) -> None:
         """Fleet intent controls; eligibility is re-read on every drawn frame."""
         panel = pygame.Rect(self.width - 330, 44, 320, 430)
+        self.blocked_rects.append(panel)
         pygame.draw.rect(self.overlay, PANEL_BG, panel, border_radius=8)
         pygame.draw.rect(self.overlay, PANEL_EDGE, panel, 1, border_radius=8)
         ships = [e for eid in sorted(selection)
@@ -731,6 +746,7 @@ class HUD:
         height = 34 + 18 * len(rows)
         x, y = 10, self.height - 14 - height
         rect = pygame.Rect(x, y, 420, height)
+        self.blocked_rects.append(rect)
         pygame.draw.rect(ov, PANEL_BG, rect, border_radius=8)
         pygame.draw.rect(ov, PANEL_EDGE, rect, 1, border_radius=8)
         self._label(x + 10, y + 6, "INCOMING", TXT_DIM, self.font_small)

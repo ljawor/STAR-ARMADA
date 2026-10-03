@@ -39,6 +39,8 @@ python main.py --version
 | Ctrl+1..9 | Assign control group |
 | 1..9 | Select control group |
 | F | Fleet panel (group selected ships into a fleet, pick commander) |
+| J, then left-click | Hyperjump selected ships to a destination on the battlefield or minimap; explored and unexplored areas are allowed |
+| Esc / right-click during jump selection | Cancel destination selection |
 | Space | Follow selection |
 | M | Toggle follow / free camera |
 | Q / E | Rotate camera |

@@ -360,9 +360,9 @@ class GameState:
         if e.formation_slot:
             d["formation_slot"] = e.formation_slot
         if e.jump_charge:
-            d["jump_charge"] = round(e.jump_charge, 2)
+            d["jump_charge"] = e.jump_charge if precise else round(e.jump_charge, 2)
         if e.jump_target is not None:
-            d["jump_target"] = e.jump_target.to_dict()
+            d["jump_target"] = e.jump_target.to_dict(precise)
         if e.name_override:
             d["name_override"] = e.name_override
         if e.patrol_a is not None:
@@ -370,7 +370,8 @@ class GameState:
         if e.patrol_b is not None:
             d["patrol_b"] = e.patrol_b.to_dict()
         if e.ability_cooldowns:
-            d["ability_cooldowns"] = {k: round(v, 2) for k, v in e.ability_cooldowns.items()}
+            d["ability_cooldowns"] = {k: (v if precise else round(v, 2))
+                                      for k, v in e.ability_cooldowns.items()}
         if e.ability_active:
             d["ability_active"] = {k: (v if precise else round(v, 2))
                                    for k, v in e.ability_active.items()}

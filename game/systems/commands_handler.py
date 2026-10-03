@@ -181,20 +181,34 @@ class CommandHandler:
         """Hyperspace jump (spec §17): prep time by size, then instant relocation."""
         st = self.state
         ds = self.ds
-        target = Vec3(*cmd.target_pos)
+        from .jump import jump_destination, plan_jump_exits, clear_jump_orders, detach_jumpers
+        target = jump_destination(st, cmd.player, cmd.target_pos)
+        if target is None:
+            return
         rules = ds.rules.get("hyperspace", {})
         prep_per_cp = rules.get("prep_seconds_per_command_point", 1.2)
         min_prep = rules.get("min_prep_seconds", 3.0)
-        for e in self._units(cmd):
-            if e.is_station or e.is_planet:
+        eligible = []
+        for e in {e.id: e for e in self._units(cmd)}.values():
+            if (not e.alive or e.hull <= 0 or not e.is_ship
+                    or e.is_station or e.is_planet or e.is_squadron):
                 continue
-            if e.ability_cooldowns.get("_jump_cd", 0) > 0:
+            if (e.jump_charge > 0 or e.jump_target is not None
+                    or e.ability_cooldowns.get("_jump_cd", 0) > 0):
                 continue
             sd = ds.ships.get(e.data_id)
-            if sd is None:
-                continue
+            if sd is not None and not sd.is_squadron:
+                eligible.append(e)
+        exits = plan_jump_exits(st, cmd.player, eligible, target)
+        if exits is None:
+            return
+        # Planning is atomic: never change fleet membership on rejection.
+        detach_jumpers(st, [e for e, _ in exits])
+        for e, destination in exits:
+            sd = ds.ships[e.data_id]
             prep = max(min_prep, sd.command_cost * prep_per_cp)
-            e.jump_target = target.copy()
+            clear_jump_orders(e)
+            e.jump_target = destination
             e.jump_charge = prep
             e.ability_cooldowns["_jump_cd"] = rules.get("cooldown_after_jump", 20.0)
             st.spawn_effect("jump_charge", e.pos.copy())
