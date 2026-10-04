@@ -104,6 +104,8 @@ class Renderer:
         self.ship_lists: dict = {}       # (shape, scale, colorkey) -> display list id
         self._star_list = None
         self.time = 0.0
+        self.camera.bind_scene(state, lambda: self.local_player,
+                               lambda: math.radians(self.time * 3.))
         # debug isolation: STAR_ARMADA_SKIP=nebulas,star,planets,ships,... skips passes
         self.skip = {s for s in os.environ.get("STAR_ARMADA_SKIP", "").split(",") if s}
         self._planet_tex_cache: dict = {}   # data_id -> GL texture id
@@ -304,10 +306,7 @@ class Renderer:
         """
         cam = self.camera
         eye = cam.eye_position()
-        yaw = math.radians(cam.yaw)
-        pitch = math.radians(cam.pitch)
-        fwd = (-math.cos(pitch) * math.sin(yaw), -math.sin(pitch),
-               -math.cos(pitch) * math.cos(yaw))
+        _, _, fwd = cam.basis()
         depth = ((pos[0] if hasattr(pos, "__len__") else pos.x) - eye[0]) * fwd[0] \
             + ((pos[1] if hasattr(pos, "__len__") else pos.y) - eye[1]) * fwd[1] \
             + ((pos[2] if hasattr(pos, "__len__") else pos.z) - eye[2]) * fwd[2]
@@ -405,14 +404,7 @@ class Renderer:
         near-black).
         """
         import OpenGL.GL as GL
-        cam = self.camera
-        yaw = math.radians(cam.yaw)
-        pitch = math.radians(cam.pitch)
-        right = (math.cos(yaw), 0.0, -math.sin(yaw))
-        fwd = (-math.cos(pitch) * math.sin(yaw), -math.sin(pitch),
-               -math.cos(pitch) * math.cos(yaw))
-        # screen-up in world space (right x fwd, ~unit for any pitch)
-        up = normalize3(cross3(right, fwd))
+        right, up, _ = self.camera.basis()
         GL.glPushAttrib(GL.GL_LIGHTING_BIT | GL.GL_CURRENT_BIT |
                         GL.GL_ENABLE_BIT | GL.GL_COLOR_BUFFER_BIT)
         GL.glDisable(GL.GL_LIGHTING)
@@ -470,13 +462,7 @@ class Renderer:
         if radius <= 0:
             return
         cam = self.camera
-        yaw = math.radians(cam.yaw)
-        pitch = math.radians(cam.pitch)
-        fwd = (-math.cos(pitch) * math.sin(yaw), -math.sin(pitch),
-               -math.cos(pitch) * math.cos(yaw))
-        right = (math.cos(yaw), 0.0, -math.sin(yaw))
-        # screen-up in world space
-        up = normalize3(cross3(right, fwd))
+        right, up, fwd = cam.basis()
         glBlendFunc(GL_SRC_ALPHA, GL_ONE if additive else GL_ONE_MINUS_SRC_ALPHA)
         glPushMatrix()
         glTranslatef(pos[0], pos[1], pos[2])
@@ -2023,12 +2009,7 @@ class Renderer:
         if radius <= 0 or alpha <= 0:
             return
         cam = self.camera
-        yaw = math.radians(cam.yaw)
-        pitch = math.radians(cam.pitch)
-        fwd = (-math.cos(pitch) * math.sin(yaw), -math.sin(pitch),
-               -math.cos(pitch) * math.cos(yaw))
-        right = (math.cos(yaw), 0.0, -math.sin(yaw))
-        up = normalize3(cross3(right, fwd))
+        right, up, fwd = cam.basis()
         n = len(ring)
         bands = max(1, int(nrings))
         glBlendFunc(GL_SRC_ALPHA, GL_ONE if additive else GL_ONE_MINUS_SRC_ALPHA)
@@ -2103,12 +2084,7 @@ class Renderer:
         if radius <= 0 or alpha <= 0:
             return
         cam = self.camera
-        yaw = math.radians(cam.yaw)
-        pitch = math.radians(cam.pitch)
-        fwd = (-math.cos(pitch) * math.sin(yaw), -math.sin(pitch),
-               -math.cos(pitch) * math.cos(yaw))
-        right = (math.cos(yaw), 0.0, -math.sin(yaw))
-        up = normalize3(cross3(right, fwd))
+        right, up, fwd = cam.basis()
         n = len(ring)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE)
         glDisable(GL_CULL_FACE)
@@ -2355,13 +2331,7 @@ class Renderer:
         """Camera-facing ring billboard (billboard-plane line loop)."""
         if radius <= 0 or not self._in_front(pos, radius):
             return
-        cam = self.camera
-        yaw = math.radians(cam.yaw)
-        pitch = math.radians(cam.pitch)
-        right = (math.cos(yaw), 0.0, -math.sin(yaw))
-        fwd = (-math.cos(pitch) * math.sin(yaw), -math.sin(pitch),
-               -math.cos(pitch) * math.cos(yaw))
-        up = normalize3(cross3(right, fwd))
+        right, up, fwd = self.camera.basis()
         glLineWidth(width)
         glColor4f(*color4)
         glBegin(GL_LINE_LOOP)
@@ -2496,13 +2466,7 @@ class Renderer:
 
     def _camera_basis(self):
         """(right, up, toward_eye) unit vectors for the current camera."""
-        cam = self.camera
-        yaw = math.radians(cam.yaw)
-        pitch = math.radians(cam.pitch)
-        right = (math.cos(yaw), 0.0, -math.sin(yaw))
-        fwd = (-math.cos(pitch) * math.sin(yaw), -math.sin(pitch),
-               -math.cos(pitch) * math.cos(yaw))
-        up = normalize3(cross3(right, fwd))
+        right, up, fwd = self.camera.basis()
         toward_eye = (-fwd[0], -fwd[1], -fwd[2])
         return right, up, toward_eye
 
@@ -2591,9 +2555,7 @@ class Renderer:
         eye = self.camera.eye_position()
         if camera_depth:
             # Ship LOD must agree at equal camera depth, including off-axis hulls.
-            yaw, pitch = math.radians(self.camera.yaw), math.radians(self.camera.pitch)
-            forward = (-math.cos(pitch)*math.sin(yaw), -math.sin(pitch),
-                       -math.cos(pitch)*math.cos(yaw))
+            _, _, forward = self.camera.basis()
             dist = sum((pos[i]-eye[i])*forward[i] for i in range(3))
         else:
             # Preserve the existing station/planet/general-effects appearance.

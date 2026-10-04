@@ -424,19 +424,19 @@ class Audio:
         if cam is None or pos is None:
             return 1.0, 0.0
         try:
-            tgt = cam.target
-            dx = float(pos[0]) - float(tgt[0])
-            dz = float(pos[2]) - float(tgt[2])
-            dist = math.hypot(dx, dz)
+            eye = cam.eye_position()
+            dx = float(pos[0]) - float(eye[0])
+            dy = float(pos[1]) - float(eye[1])
+            dz = float(pos[2]) - float(eye[2])
+            dist = math.sqrt(dx * dx + dy * dy + dz * dz)
             gain = 1.0 / (1.0 + (dist / _REF_DIST) ** 1.4)
             if dist > _MAX_DIST:
                 return 0.0, 0.0
             # pan by the camera's right vector on the XZ plane
-            yaw = math.radians(float(getattr(cam, "yaw", 0.0)))
-            right_x, right_z = math.cos(yaw), -math.sin(yaw)
+            right, _, _ = cam.basis()
             if dist < 1e-6:
                 return gain, 0.0
-            pan = max(-1.0, min(1.0, (dx * right_x + dz * right_z) / dist))
+            pan = max(-1.0, min(1.0, (dx * right[0] + dy * right[1] + dz * right[2]) / dist))
             return gain, pan
         except Exception:
             return 1.0, 0.0

@@ -249,7 +249,10 @@ class ShipSizesTests(unittest.TestCase):
         from unittest.mock import patch
         from types import SimpleNamespace
         from render import hit_effects
-        r = SimpleNamespace(_px_per_world=lambda pos: .1, camera=SimpleNamespace(yaw=0.,pitch=60.))
+        from render.camera import Camera
+        camera = Camera(960, 720)
+        camera.yaw, camera.pitch = 0., 60.
+        r = SimpleNamespace(_px_per_world=lambda pos: .1, camera=camera)
         fx = dict(kind='shield_hit', pos=(0,0,10), center=(0,0,0), radius=10., visual_contact=True)
         with patch.object(hit_effects, 'hit_geometry', return_value=dict(triangles=[],lines=[])) as geometry:
             hit_effects.draw_hit(r, fx)

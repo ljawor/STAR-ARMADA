@@ -239,13 +239,12 @@ class TestSynthesisQuality(unittest.TestCase):
 
 class TestSpatial(unittest.TestCase):
     def test_distance_attenuates_and_silences_far_battles(self):
-        class Cam:
-            target = [0.0, 0.0, 0.0]
-            yaw = 0.0
-
+        from render.camera import Camera
+        camera = Camera(960, 640)
+        camera.yaw = 0.
         a, _ = _audio()
-        a.set_camera(Cam())
-        near, _ = a._spatial([0.0, 0.0, 0.0])
+        a.set_camera(camera)
+        near, _ = a._spatial(camera.eye_position())
         mid, _ = a._spatial([3000.0, 0.0, 0.0])
         far, _ = a._spatial([20000.0, 0.0, 0.0])
         self.assertAlmostEqual(near, 1.0, places=5)
@@ -253,12 +252,11 @@ class TestSpatial(unittest.TestCase):
         self.assertEqual(far, 0.0, "an off-screen blast must be silent")
 
     def test_pan_follows_the_camera_right_vector(self):
-        class Cam:
-            target = [0.0, 0.0, 0.0]
-            yaw = 0.0
-
+        from render.camera import Camera
+        camera = Camera(960, 640)
+        camera.yaw = 0.
         a, _ = _audio()
-        a.set_camera(Cam())
+        a.set_camera(camera)
         _, left = a._spatial([-2000.0, 0.0, 0.0])
         _, right = a._spatial([2000.0, 0.0, 0.0])
         self.assertLess(left, 0.0)

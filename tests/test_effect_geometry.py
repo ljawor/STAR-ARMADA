@@ -78,7 +78,9 @@ class _Capture:
 def _fake_renderer():
     """A Renderer with no GL setup at all — __init__ would need a context."""
     r = R.Renderer.__new__(R.Renderer)
-    r.camera = types.SimpleNamespace(yaw=0.0, pitch=25.0)
+    from render.camera import Camera
+    r.camera = Camera(1280, 800)
+    r.camera.yaw, r.camera.pitch = 0., 25.
     return r
 
 

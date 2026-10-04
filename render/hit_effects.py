@@ -165,9 +165,7 @@ def draw_hit(renderer, fx):
         radius = float(fx.get('radius', 1.))
         if not fx.get('visual_contact'):
             radius = max(radius, SHIELD_MIN_PX*.5/ppw)
-    yaw, pitch = math.radians(renderer.camera.yaw), math.radians(renderer.camera.pitch)
-    right = (math.cos(yaw), 0., -math.sin(yaw))
-    up = (-math.sin(pitch)*math.sin(yaw), math.cos(pitch), -math.sin(pitch)*math.cos(yaw))
+    right, up, _ = renderer.camera.basis()
     visual_size = None
     ppw = renderer._px_per_world(fx['pos'])
     if ppw <= 0:

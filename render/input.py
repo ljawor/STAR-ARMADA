@@ -34,6 +34,7 @@ class InputController:
         self.right_drag: tuple | None = None
         self.grab_mouse = False
         self.local_player = 0
+        self.camera.bind_scene(state, lambda: self.local_player)
         self._pending_jump: tuple[int, ...] | None = None
         self._pending_ability: dict | None = None
         self._pending_fleet: list[int] | None = None   # after G, awaiting number key
@@ -43,6 +44,7 @@ class InputController:
 
     # ------------------------------------------------------------------ events
     def handle_event(self, ev) -> None:
+        self.camera.refresh_scene()
         st = self.state
         self._prune_contacts()
         if ev.type == pygame.WINDOWFOCUSLOST:
@@ -255,6 +257,7 @@ class InputController:
             else:
                 self.camera.target[0] = e.pos.x
                 self.camera.target[2] = e.pos.z
+        self.camera.refresh_scene()
 
     def _finish_box_select(self, end: tuple) -> None:
         assert self.drag_start is not None
@@ -292,9 +295,7 @@ class InputController:
         if e.is_station or not (e.is_ship or e.is_squadron):
             return d
         eye = self.camera.eye_position()
-        yaw, pitch = math.radians(self.camera.yaw), math.radians(self.camera.pitch)
-        forward = (-math.cos(pitch)*math.sin(yaw), -math.sin(pitch),
-                   -math.cos(pitch)*math.cos(yaw))
+        _, _, forward = self.camera.basis()
         depth = sum((v-eye[i])*forward[i] for i,v in enumerate((e.pos.x,e.pos.y,e.pos.z)))
         if depth <= 0: return d
         ppw = self.camera.height/(2*depth*math.tan(math.radians(self.camera.fov/2)))
@@ -677,6 +678,7 @@ class InputController:
 
     def _minimap_jump(self, pos: tuple) -> None:
         wx, _, wz = self._minimap_world(pos)
+        self.camera.follow_id = None
         self.camera.target[0] = wx
         self.camera.target[2] = wz
         self.camera.clamp_target()
