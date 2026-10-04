@@ -1,4 +1,4 @@
-"""Victory condition tests (spec §46): annihilation baseline + new modes."""
+"""Legacy campaign victory rules (spec §46), explicitly in command mode."""
 import json
 import os
 import unittest
@@ -13,10 +13,11 @@ def _patch_victory(gm, victory_cfg):
 
 
 class TestAnnihilation(unittest.TestCase):
-    def test_default_mode_ends_game(self):
+    def test_command_mode_ends_game(self):
         gm = make_game(ai=False)
-        # kill both command stations of team 1 -> team 0 wins
+        # Destroy enemy command stations: legacy campaign annihilation.
         st = gm.state
+        st.map_info.victory_mode = "command"  # Legacy campaign rules, not skirmish.
         for e in list(st.entities.values()):
             if e.alive and e.is_station and e.owner == 1 and \
                     gm.ds.stations.get(e.data_id) and \
@@ -37,6 +38,7 @@ class TestPlanetMajority(unittest.TestCase):
     def test_majority_triggers(self):
         gm = make_game(ai=False)
         st = gm.state
+        st.map_info.victory_mode = "command"  # Legacy campaign rules, not skirmish.
         _patch_victory(gm, {"modes": ["planet_majority"],
                             "planet_majority": {"fraction": 0.5,
                                                 "min_colonized": 3}})
@@ -53,6 +55,7 @@ class TestPlanetMajority(unittest.TestCase):
     def test_below_min_colonized_does_not_trigger(self):
         gm = make_game(ai=False)
         st = gm.state
+        st.map_info.victory_mode = "command"  # Legacy campaign rules, not skirmish.
         _patch_victory(gm, {"modes": ["planet_majority"],
                             "planet_majority": {"fraction": 0.5,
                                                 "min_colonized": 20}})
@@ -67,6 +70,7 @@ class TestEconomic(unittest.TestCase):
     def test_credits_and_planets_trigger(self):
         gm = make_game(ai=False)
         st = gm.state
+        st.map_info.victory_mode = "command"  # Legacy campaign rules, not skirmish.
         _patch_victory(gm, {"modes": ["economic"],
                             "economic": {"credits": 100, "planets": 1}})
         p0 = st.players[0]
@@ -84,6 +88,7 @@ class TestTimed(unittest.TestCase):
     def test_timeout_picks_leader(self):
         gm = make_game(ai=False)
         st = gm.state
+        st.map_info.victory_mode = "command"  # Legacy campaign rules, not skirmish.
         _patch_victory(gm, {"modes": ["timed"],
                             "timed": {"time_limit": 5.0}})
         # break symmetry: player 0 colonizes one extra planet (+3 score)
@@ -98,6 +103,7 @@ class TestTimed(unittest.TestCase):
     def test_tie_yields_no_winner(self):
         gm = make_game(ai=False)
         st = gm.state
+        st.map_info.victory_mode = "command"  # Legacy campaign rules, not skirmish.
         _patch_victory(gm, {"modes": ["timed"],
                             "timed": {"time_limit": 5.0}})
         # equalize scores: colonize one planet each (start is symmetric)

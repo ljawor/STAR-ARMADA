@@ -83,10 +83,12 @@ class MapInfo:
     nebulas: list = field(default_factory=list)     # {pos,radius}
     jump_points: list = field(default_factory=list) # {pos}
     star: dict = field(default_factory=dict)
+    victory_mode: str = "command"  # legacy saves/campaign; skirmish uses elimination
 
     def to_dict(self) -> dict:
         return {"name": self.name, "bounds": self.bounds, "nebulas": self.nebulas,
-                "jump_points": self.jump_points, "star": self.star}
+                "jump_points": self.jump_points, "star": self.star,
+                "victory_mode": self.victory_mode}
 
     @staticmethod
     def from_dict(d: dict) -> "MapInfo":
@@ -94,6 +96,7 @@ class MapInfo:
         m.nebulas = d.get("nebulas", [])
         m.jump_points = d.get("jump_points", [])
         m.star = d.get("star", {})
+        m.victory_mode = d.get("victory_mode", "command")
         return m
 
 
@@ -354,6 +357,8 @@ class GameState:
             d["cargo_credits"] = e.cargo_credits if precise else round(e.cargo_credits, 2)
         if e.convoy_dest is not None:
             d["convoy_dest"] = e.convoy_dest
+        if e.convoy_source is not None:
+            d["convoy_source"] = e.convoy_source
         if e.fighter_count or e.max_fighters:
             d["fighter_count"] = e.fighter_count
             d["max_fighters"] = e.max_fighters
@@ -419,6 +424,7 @@ class GameState:
         e.colonized_by = d.get("colonized_by")
         e.cargo_credits = d.get("cargo_credits", 0.0)
         e.convoy_dest = d.get("convoy_dest")
+        e.convoy_source = d.get("convoy_source")
         e.fighter_count = d.get("fighter_count", 0)
         e.max_fighters = d.get("max_fighters", 0)
         e.hangar_id = d.get("hangar_id")

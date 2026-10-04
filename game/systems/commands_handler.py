@@ -24,6 +24,10 @@ class CommandHandler:
         queue, st.command_queue = st.command_queue, []
         for cmd in queue:
             self._apply(cmd)
+        # Trading updates after movement; repair legacy hostile endpoints here
+        # even on ticks without commands, before movement can read them.
+        from .trading import TradingSystem
+        TradingSystem.validate_routes(st)
 
     # ------------------------------------------------------------------ dispatch
     def _apply(self, cmd: PlayerCommand) -> None:
@@ -66,6 +70,28 @@ class CommandHandler:
             e.order_target_pos = dest
             e.order_target_id = None
             n += 1
+
+    def _do_trade_route(self, cmd: PlayerCommand) -> None:
+        from .trading import TradingSystem
+        st = self.state
+        dest = st.entity(cmd.target_id) if cmd.target_id is not None else None
+        if dest is None or not TradingSystem.valid_market(st, cmd.player, dest):
+            return
+        for e in self._units(cmd):
+            if not e.alive or not e.is_ship or e.data_id != "trade_convoy":
+                continue
+            if not TradingSystem.valid_destination(st, e, dest):
+                continue
+            e.convoy_dest = dest.id
+            e.order_target_id = dest.id
+            e.order_target_pos = None
+            e.order_type = "move"
+            # Validation now sees a consistent endpoint; discard old heading
+            # and momentum here, before the first redirected movement tick.
+            import math
+            e.vel = Vec3()
+            direction = dest.pos - e.pos
+            e.yaw = math.atan2(direction.x, direction.z)
 
     def _do_attack(self, cmd: PlayerCommand) -> None:
         st = self.state

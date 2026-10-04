@@ -28,6 +28,74 @@ class SkirmishMenuTests(unittest.TestCase):
         press(self.menu, 'start_skirmish')
         self.menu.render(0)
 
+    def test_every_active_slot_including_you_cycles_team_once_per_gesture(self):
+        self.open_setup()
+        press(self.menu, 'skirmish_map', 'skirmish03')
+        self.menu.render(0)
+        for _ in range(2):
+            press(self.menu, 'skirmish_ai', 1)
+            self.menu.render(0)
+        original_colors = self.menu.skirmish_options['colors'][:]
+        original_factions = self.menu.skirmish_options['factions'][:]
+        controls = [b for b in self.menu.buttons if b['action'] == 'skirmish_team']
+        self.assertEqual([b['payload'] for b in controls], [0, 1, 2, 3])
+        for slot in range(4):
+            for _ in range(4):
+                old = self.menu.skirmish_options['teams'][slot]
+                pos = press(self.menu, 'skirmish_team', slot, release=False)
+                self.menu.render(0)
+                self.menu.handle_event(pygame.event.Event(pygame.MOUSEBUTTONUP, pos=pos, button=1))
+                self.assertEqual(self.menu.skirmish_options['teams'][slot], (old + 1) % 4)
+                self.assertIn(f'Team {(old + 1) % 4 + 1}', ' '.join(self.menu.skirmish_rendered_text))
+        self.assertEqual(self.menu.skirmish_options['colors'], original_colors)
+        self.assertEqual(self.menu.skirmish_options['factions'], original_factions)
+
+    def test_roster_explains_relative_allies_and_enemies_when_your_team_changes(self):
+        self.open_setup()
+        press(self.menu, 'skirmish_map', 'skirmish03')
+        self.menu.render(0)
+        press(self.menu, 'skirmish_ai', 1)
+        self.menu.render(0)
+        press(self.menu, 'skirmish_team', 0)
+        self.menu.render(0)
+        rendered = ' '.join(self.menu.skirmish_rendered_text)
+        self.assertIn('You', rendered)
+        self.assertIn('AI 1 · Ally', rendered)
+        self.assertIn('AI 2 · Enemy', rendered)
+        self.assertIn('Same team = allies', rendered)
+        self.assertIn('share vision, not control', rendered)
+        self.assertIn('AI PLAYERS', rendered)
+        self.assertNotIn('FREE FOR ALL', rendered)
+        self.assertEqual([b['payload'] for b in self.menu.buttons if b['action'] == 'skirmish_team'], [0, 1, 2])
+
+    def test_all_allied_launch_is_blocked_with_clear_recoverable_error(self):
+        self.open_setup()
+        press(self.menu, 'skirmish_team', 0)  # Team 2 matches AI 1.
+        press(self.menu, 'launch_skirmish')  # No intervening render.
+        self.assertEqual(self.menu.result, MenuResult.NONE)
+        self.assertIsNone(self.menu.result_payload)
+        self.assertEqual(self.menu.screen, 'skirmish')
+        self.assertIn('two different teams', self.menu.skirmish_notice)
+        self.assertIn('enemy', self.menu.skirmish_notice)
+        self.menu.render(0)
+        self.assertIn('two different teams', ' '.join(self.menu.skirmish_rendered_text))
+        press(self.menu, 'skirmish_team', 1)
+        press(self.menu, 'launch_skirmish')
+        self.assertEqual(self.menu.result, MenuResult.START_SKIRMISH)
+        payload = self.menu.result_payload
+        assert isinstance(payload, dict)
+        self.assertEqual(payload['teams'], [1, 2, 2, 3])
+        self.menu.skirmish_options['teams'][0] = 0
+        self.assertEqual(payload['teams'][0], 1)
+
+    def test_roster_faction_names_remain_fully_readable_beside_team_controls(self):
+        self.open_setup()
+        for faction in ('imperial', 'rebel', 'confederacy', 'syndicate'):
+            self.menu.skirmish_options['factions'][0] = faction
+            self.menu.render(0)
+            name = self.menu.skirmish_store.factions[faction].display_name
+            self.assertIn(name + ' ›', self.menu.skirmish_rendered_text)
+
     def test_four_public_map_cards_with_capacity_and_preview(self):
         self.open_setup()
         cards = [b for b in self.menu.buttons if b['action'] == 'skirmish_map']
@@ -46,6 +114,8 @@ class SkirmishMenuTests(unittest.TestCase):
             press(self.menu, 'skirmish_ai', 1)
             self.menu.render(0)
         self.assertEqual(self.menu.skirmish_options['ai_count'], 3)
+        press(self.menu, 'skirmish_team', 3)
+        saved_teams = self.menu.skirmish_options['teams'][:]
         saved = self.menu.skirmish_options['colors'][:]
         press(self.menu, 'skirmish_map', 'skirmish02')
         self.assertEqual(self.menu.skirmish_options['ai_count'], 2)
@@ -56,6 +126,9 @@ class SkirmishMenuTests(unittest.TestCase):
         press(self.menu, 'skirmish_ai', -1)
         self.assertEqual(self.menu.skirmish_options['ai_count'], 1)
         self.assertEqual(self.menu.skirmish_options['colors'], saved)
+        self.assertEqual(self.menu.skirmish_options['teams'], saved_teams)
+        self.menu.render(0)
+        self.assertEqual([b['payload'] for b in self.menu.buttons if b['action'] == 'skirmish_team'], [0, 1])
 
     def test_color_cycle_swaps_duplicate_and_up_never_cycles_again(self):
         from game.core.skirmish import PLAYER_COLORS
@@ -99,9 +172,11 @@ class SkirmishMenuTests(unittest.TestCase):
         pos = press(self.menu, 'launch_skirmish')
         self.assertEqual(self.menu.result, MenuResult.START_SKIRMISH)
         payload = self.menu.result_payload
+        assert isinstance(payload, dict)
         self.assertEqual(payload['factions'][0], 'rebel')
         self.assertEqual(payload['ai_difficulty'], 'hard')
-        self.assertEqual(set(payload), {'map_id', 'ai_count', 'colors', 'factions', 'ai_difficulty'})
+        self.assertEqual(set(payload), {'map_id', 'ai_count', 'colors', 'factions', 'ai_difficulty', 'teams'})
+        self.assertEqual(payload['teams'], [0, 1, 2, 3])
         self.menu.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=pos, button=1))
         self.assertIs(self.menu.result_payload, payload)
         self.menu.skirmish_options['colors'][0] = 'pink'

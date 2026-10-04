@@ -29,7 +29,7 @@ def default_skirmish_options(ds) -> dict:
     """Return independent, four-slot menu defaults (only active slots matter)."""
     return {"map_id": "skirmish01", "ai_count": 1,
             "colors": list(PLAYER_COLORS)[:4], "factions": ["imperial"] * 4,
-            "ai_difficulty": "normal"}
+            "ai_difficulty": "normal", "teams": [0, 1, 2, 3]}
 
 
 def build_skirmish_map(ds, options: dict) -> dict:
@@ -52,6 +52,16 @@ def build_skirmish_map(ds, options: dict) -> dict:
             or difficulty not in ds.rules.get('ai', {}).get('difficulty', {})):
         raise ValueError('Unsupported AI difficulty')
     active = ai_count + 1
+    # LAN owns its cooperative/FFA policy and overwrites teams after this
+    # shared map conversion. Never interpret inherited skirmish choices there.
+    lan_policy = 'human_count' in options and 'cooperative' in options
+    teams = [0, 1, 2, 3] if lan_policy else options.get('teams', [0, 1, 2, 3])
+    if not isinstance(teams, list) or len(teams) != 4:
+        raise ValueError('teams must be a four-slot list')
+    if any(type(team) is not int or not 0 <= team <= 3 for team in teams[:active]):
+        raise ValueError('Active teams must be integers from 0 to 3')
+    if len(set(teams[:active])) < 2:
+        raise ValueError('Choose at least two different teams: every fleet needs an enemy.')
     for key in ('colors', 'factions'):
         if not isinstance(options[key], list) or len(options[key]) != 4:
             raise ValueError(f'{key} must be a four-slot list')
@@ -95,7 +105,8 @@ def build_skirmish_map(ds, options: dict) -> dict:
     result["players"] = result["players"][:options["ai_count"] + 1]
     for slot, player in enumerate(result["players"]):
         faction = options["factions"][slot]
-        player.update(slot=slot, team=slot, is_ai=slot > 0, faction=faction,
+        player.update(slot=slot, team=teams[slot],
+                      is_ai=slot > 0, faction=faction,
                       name=f"{'Player' if slot == 0 else f'AI {slot}'} — {ds.factions[faction].display_name}",
                       color=PLAYER_COLORS[options["colors"][slot]],
                       ai_difficulty=options["ai_difficulty"])

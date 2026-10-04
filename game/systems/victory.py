@@ -1,14 +1,13 @@
 """VictorySystem — skirmish + configurable victory conditions (spec §46).
 
-Modes (any may be active; map/rule driven, data lives in game_rules.json
-under `victory`):
-  annihilation  — destroy all enemy command stations (classic, always on)
-  planet_majority — hold > fraction of colonized planets at check time
-  economic      — accumulate >= credits while holding >= N planets
-  timed         — highest score when time_limit expires (score = eco+military)
+Modes:
+  elimination — skirmish/LAN: destroy every enemy ship, station and squadron;
+                surviving allied players share victory, even fallen members.
+  command     — legacy saves/campaign: command-station annihilation plus
+                optional planet-majority, economic and timed rules.
 
-The mode list comes from rules.victory.modes; default ["annihilation"] keeps
-old behavior identical. Extra modes publish `game_over` with a reason.
+MapInfo.victory_mode selects the contract. The legacy command path keeps
+rules.victory.modes and its command-capacity fallback unchanged.
 """
 from __future__ import annotations
 
@@ -88,6 +87,22 @@ class VictorySystem:
             return
         self._timer = 0.0
         if not st.players:
+            return
+
+        # Skirmish/LAN victory is exclusively coalition elimination. Capacity,
+        # planets, resources and time cannot end a round with enemy units alive.
+        if st.map_info.victory_mode == "elimination":
+            living = {tuple(st.allied_player_ids(e.owner))
+                      for e in st.entities.values()
+                      if e.alive and e.owner >= 0 and e.owner in st.players
+                      and (e.is_ship or e.is_station or e.is_squadron)
+                      and not e.is_planet}
+            if len(living) <= 1:
+                coalition = next(iter(living)) if living else ()
+                st.game_over = True
+                st.winner = coalition[0] if coalition else None
+                st.game_over_reason = "elimination"
+                st.events.publish("game_over", winner=st.winner, reason="elimination")
             return
 
         vic = self.ds.rules.get("sim", {}).get("victory", {})

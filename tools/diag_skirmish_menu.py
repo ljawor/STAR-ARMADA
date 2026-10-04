@@ -47,7 +47,20 @@ def main():
                 click(menu, 'skirmish_color', 0)
                 click(menu, 'skirmish_faction', 0)
                 click(menu, 'skirmish_difficulty')
+                # Drive real SDL gestures, including YOUR team and 2v2 AI allies.
+                expected_teams = [2, 0] if count == 2 else [2, 2, 0, 0][:count]
+                for slot, team in enumerate(expected_teams):
+                    while menu.skirmish_options['teams'][slot] != team:
+                        click(menu, 'skirmish_team', slot)
+                        menu.render(0)
                 menu.render(0)
+                rendered = ' '.join(menu.skirmish_rendered_text)
+                assert 'Same team = allies' in rendered
+                assert 'share vision, not control' in rendered
+                assert 'You' in rendered and 'Enemy' in rendered
+                if count > 2:
+                    assert 'AI 1 · Ally' in rendered
+                assert [b['payload'] for b in menu.buttons if b['action'] == 'skirmish_team'] == list(range(count))
                 window = pygame.Rect(0, 0, width, height)
                 assert all(window.contains(b['rect']) for b in menu.buttons)
                 texts = [r for r in menu.skirmish_text_bounds if r.w > 0]
@@ -83,7 +96,26 @@ def main():
                 for slot in range(count):
                     expected = PLAYER_COLORS[menu.result_payload['colors'][slot]]
                     assert tuple(gm.state.players[slot].color) == expected
-                print(f'PASS {width}x{height} {map_id}: {count} players, pixels/layout/launch')
+                    assert gm.state.players[slot].team == expected_teams[slot]
+                if count > 2:
+                    assert gm.state.allied_player_ids(0) == [0, 1]
+                    assert all(gm.state.can_see(0, e.id) for e in gm.state.entities.values() if e.owner == 1)
+                for _ in range(3):
+                    gm.step(1 / 30)
+                assert gm.state.tick == 3 and not gm.state.game_over
+                print(f'PASS {width}x{height} {map_id}: {count} players, teams={expected_teams}, pixels/layout/launch')
+            # An invalid all-allied setup stays on-screen, then recovers.
+            menu = MenuStack(width, height)
+            menu.screen = 'skirmish'
+            menu.render(0)
+            click(menu, 'skirmish_team', 0)
+            click(menu, 'launch_skirmish')
+            assert menu.result == MenuResult.NONE and menu.result_payload is None
+            menu.render(0)
+            assert 'two different teams' in ' '.join(menu.skirmish_rendered_text)
+            click(menu, 'skirmish_team', 1)
+            click(menu, 'launch_skirmish')
+            assert menu.result == MenuResult.START_SKIRMISH
         print('SKIRMISH_MENU_DIAG_OK')
     finally:
         pygame.quit()

@@ -178,6 +178,8 @@ class GameManager:
                        mods: list[str] | None = None) -> "GameManager":
         gm = GameManager(mission_def=mission_def, mods=mods)
         gm.load_map(map_def)
+        if mission_def is None:
+            gm.state.map_info.victory_mode = "elimination"
         return gm
 
     @staticmethod

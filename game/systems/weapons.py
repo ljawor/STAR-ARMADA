@@ -19,8 +19,8 @@ def clear_unseen_targets(st, e) -> None:
     """Drop contact-dependent orders before any system reads a live position."""
     if e.current_target is not None:
         target = st.entity(e.current_target)
-        if target is None or (st.is_enemy(e.owner, target.owner)
-                              and not st.can_see(e.owner, target.id)):
+        if (target is None or not st.is_enemy(e.owner, target.owner)
+                or not st.can_see(e.owner, target.id)):
             e.current_target = None
             if e.order_type in ("attack", "chase") and e.order_target_id is None:
                 e.order_type = "idle"
@@ -30,10 +30,15 @@ def clear_unseen_targets(st, e) -> None:
         # Trade routes have explicit stationary market endpoints, not enemy
         # combat locks. Preserve commerce/escort movement without relaxing any
         # attack, chase, or hostile follow order.
+        from .trading import TradingSystem
         commercial_route = (e.data_id == "trade_convoy" and e.order_type == "move"
-                            and target is not None and target.is_station
-                            and target.data_id == "trade_station")
-        if target is None or (not commercial_route
+                            and e.order_target_id == e.convoy_dest
+                            and e.order_target_pos is None
+                            and TradingSystem.valid_destination(st, e, target))
+        friendly_attack = (e.order_type in ("attack", "chase")
+                           and target is not None
+                           and not st.is_enemy(e.owner, target.owner))
+        if target is None or friendly_attack or (not commercial_route
                               and st.is_enemy(e.owner, target.owner)
                               and not st.can_see(e.owner, target.id)):
             e.order_target_id = None
