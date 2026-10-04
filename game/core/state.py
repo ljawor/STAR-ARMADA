@@ -147,13 +147,19 @@ class GameState:
     _net_session: object | None = field(default=None, repr=False, compare=False)
 
     def queue_command(self, cmd: PlayerCommand) -> None:
+        session = self._net_session
+        # LAN human input is committed only by the shared network turn.
+        # AI input is a deterministic simulation output on every peer.
+        intercepts = bool(getattr(session, "intercepts_commands", False))
+        player = self.players.get(cmd.player)
+        if intercepts and not (player is not None and player.is_ai):
+            session.submit(cmd, self.tick)
+            return
         self.command_queue.append(cmd)
-        # replay + net hooks (set by main.py / net session; None in plain games)
         recorder = self._recorder
         if recorder is not None:
             recorder.on_command(cmd, self.tick)
-        session = self._net_session
-        if session is not None:
+        if session is not None and not intercepts:
             session.submit(cmd, self.tick)
 
     # transient (not saved): effects for renderer

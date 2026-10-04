@@ -93,6 +93,7 @@ class MenuResult:
     NONE = "none"
     START_SKIRMISH = "start_skirmish"
     START_MISSION = "start_mission"     # payload: mission def dict
+    START_LAN = 'start_lan'             # payload: session; ownership transfers to main
     EXIT = "exit"
 
 
@@ -138,6 +139,15 @@ class MenuStack:
         self.skirmish_notice = ""
         self.skirmish_text_bounds = []
         self.skirmish_preview_starts = []
+        from copy import deepcopy
+        self.lan_options = deepcopy(self.skirmish_options)
+        self.lan_options.update(human_count=2, ai_count=0, cooperative=False)
+        self.lan_port = '7777'
+        self.lan_address = '127.0.0.1'
+        self.lan_name = 'Player'
+        self.lan_focus = None
+        self.lan_notice = ''
+        self.lan_session = None
 
     # ------------------------------------------------------------- campaign
     def _load_campaign(self) -> dict:
@@ -262,6 +272,16 @@ class MenuStack:
             self._screen_campaign()
         elif self.screen == "briefing":
             self._screen_briefing()
+        elif self.screen == "lan":
+            self._title('LAN MULTIPLAYER', self.font_big, 70)
+            for i, (label, action) in enumerate((('HOST GAME', 'lan_host_setup'),
+                                                ('JOIN GAME', 'lan_join_setup'),
+                                                ('BACK', 'goto_main'))):
+                self._button(pygame.Rect(self.width // 2 - 170, 170 + i * 66, 340, 48),
+                             label, action)
+
+        elif self.screen in ('lan_host', 'lan_join', 'lan_lobby'):
+            self._screen_lan()
 
     # --------------------------------------------------------------- screens
     def _screen_splash(self) -> None:
@@ -290,6 +310,7 @@ class MenuStack:
         mouse = pygame.mouse.get_pos()
         for i, (label, action) in enumerate((
                 ("SKIRMISH", "start_skirmish"),
+                ("MULTIPLAYER / LAN", "goto_lan"),
                 ("CAMPAIGN", "goto_campaign"),
                 ("SETTINGS", "goto_settings"),
                 ("QUIT", "exit"))):
@@ -298,6 +319,119 @@ class MenuStack:
 
     def skirmish_capacity(self, map_id):
         return len(self.skirmish_store.maps[map_id]['players'])
+
+    def _lan_choice(self, action, value):
+        from game.core.skirmish import PLAYER_COLORS
+        o = self.lan_options
+        capacity = self.skirmish_capacity(o['map_id'])
+        if action == 'lan_map':
+            o['map_id'] = value
+            capacity = self.skirmish_capacity(value)
+            o['human_count'] = min(capacity, o['human_count'])
+            o['ai_count'] = min(o['ai_count'], capacity - o['human_count'])
+        elif action == 'lan_humans':
+            o['human_count'] = min(capacity, max(2, o['human_count'] + value))
+            o['ai_count'] = min(o['ai_count'], capacity - o['human_count'])
+        elif action == 'lan_ai':
+            o['ai_count'] = min(2, capacity - o['human_count'], max(0, o['ai_count'] + value))
+        elif action == 'lan_color':
+            palette = list(PLAYER_COLORS)
+            old = o['colors'][value]
+            new = palette[(palette.index(old) + 1) % len(palette)]
+            for slot, color in enumerate(o['colors']):
+                if slot != value and color == new:
+                    o['colors'][slot] = old
+            o['colors'][value] = new
+        elif action in ('lan_faction', 'lan_difficulty'):
+            keys = ('imperial', 'rebel', 'confederacy', 'syndicate') if action == 'lan_faction' else ('easy', 'normal', 'hard')
+            current = o['factions'][value] if action == 'lan_faction' else o['ai_difficulty']
+            new = keys[(keys.index(current) + 1) % len(keys)]
+            if action == 'lan_faction':
+                o['factions'][value] = new
+            else:
+                o['ai_difficulty'] = new
+        elif action == 'lan_cooperative':
+            o['cooperative'] = not o['cooperative']
+
+    def _screen_lan(self):
+        """800x600 logical canvas; event targets track painted controls."""
+        from game.core.skirmish import SKIRMISH_MAP_IDS, COLOR_NAMES
+        target = self._surface
+        self._surface = pygame.Surface((800, 600))
+        self._surface.fill((6, 9, 19))
+        font = pygame.font.SysFont('helvetica,arial', 18)
+        self.lan_rendered_text = []
+        def text(value, x, y, width=744):
+            value = str(value)
+            self.lan_rendered_text.append(value)
+            while font.size(value)[0] > width:
+                value = value[:-2] + '…'
+            self._surface.blit(font.render(value, True, (210, 222, 246)), (x, y))
+        def button(rect, label, action, payload=None):
+            rect = pygame.Rect(rect)
+            self.buttons.append(dict(rect=rect, action=action, payload=payload))
+            pygame.draw.rect(self._surface, (30, 48, 76), rect, border_radius=5)
+            text(label, rect.x + 8, rect.y + 7, rect.w - 16)
+        text('LAN / ' + self.screen[4:].upper(), 28, 20)
+        o = self.lan_options
+        if self.screen == 'lan_host':
+            for i, mid in enumerate(SKIRMISH_MAP_IDS):
+                button((28 + i * 188, 56, 178, 42),
+                       ('● ' if mid == o['map_id'] else '') + self.skirmish_store.maps[mid]['name'], 'lan_map', mid)
+            text(f"Humans {o['human_count']} / capacity {self.skirmish_capacity(o['map_id'])}", 28, 114)
+            button((264, 106, 38, 34), '−', 'lan_humans', -1)
+            button((310, 106, 38, 34), '+', 'lan_humans', 1)
+            text(f"AI {o['ai_count']} (0–2)", 420, 114)
+            button((662, 106, 38, 34), '−', 'lan_ai', -1)
+            button((708, 106, 38, 34), '+', 'lan_ai', 1)
+            for slot in range(4):
+                y = 156 + slot * 44
+                role = 'HUMAN' if slot < o['human_count'] else 'AI' if slot < o['human_count'] + o['ai_count'] else 'UNUSED'
+                text(f'{slot + 1} {role}', 28, y + 8, 128)
+                button((164, y, 184, 36), COLOR_NAMES[o['colors'][slot]] + ' ›', 'lan_color', slot)
+                button((360, y, 386, 36), o['factions'][slot] + ' ›', 'lan_faction', slot)
+            button((28, 342, 320, 36), 'Difficulty: ' + o['ai_difficulty'], 'lan_difficulty')
+            button((360, 342, 386, 36), 'Humans vs AI' if o['cooperative'] else 'Free for all', 'lan_cooperative')
+        if self.screen == 'lan_lobby' and self.lan_session is not None:
+            snap = self.lan_session.snapshot
+            o = snap.get('options') or self.lan_options
+            text(f"{snap.get('status', 'Connecting')} / TCP {snap.get('port', self.lan_port)}", 28, 62)
+            text('Host IPs: ' + ', '.join(snap.get('addresses', [])), 28, 92)
+            text(f"Map: {o['map_id']} / Humans: {o['human_count']} / AI: {o['ai_count']} / {o['ai_difficulty']}", 28, 126)
+            text('Humans vs AI' if o['cooperative'] else 'Free for all', 28, 152)
+            players = {p['slot']: p for p in snap.get('players', [])}
+            for slot in range(o['human_count']):
+                p = players.get(slot)
+                text(f"{slot + 1}: " + (f"{p['name']} — {'READY' if p['ready'] else 'NOT READY'}" if p else 'Waiting for player…'), 28, 196 + slot * 42)
+            if not snap.get('error'):
+                if snap.get('is_host'):
+                    button((28, 390, 220, 38), 'EDIT SETUP', 'lan_edit')
+                p = players.get(self.lan_session.local_player)
+                if p:
+                    button((360, 390, 180, 38), 'UNREADY' if p['ready'] else 'READY', 'lan_ready')
+                if snap.get('is_host') and snap.get('can_start'):
+                    button((550, 390, 196, 38), 'LAUNCH GAME', 'lan_start')
+                text('All humans must connect and ready.' if snap.get('is_host') else 'Waiting for host to launch.', 28, 446)
+            else:
+                button((526, 540, 220, 38), 'RECONNECT', 'lan_reconnect')
+        if self.screen in ('lan_host', 'lan_join'):
+            for i, (field, label) in enumerate((('lan_name', 'Nickname'), ('lan_port', 'TCP port'))):
+                text(label, 28, 398 + i * 44)
+                button((164, 390 + i * 44, 300, 36), getattr(self, field) + (' |' if self.lan_focus == field else ''), 'lan_field', field)
+            if self.screen == 'lan_join':
+                text('Host IPv4 address', 28, 158)
+                button((28, 194, 718, 40), self.lan_address + (' |' if self.lan_focus == 'lan_address' else ''), 'lan_field', 'lan_address')
+            button((526, 540, 220, 38), 'APPLY SETUP' if self.lan_session is not None else 'HOST' if self.screen == 'lan_host' else 'CONNECT', 'lan_connect')
+        text(self.lan_notice, 28, 496)
+        button((28, 540, 180, 38), 'BACK / ESC', 'lan_back')
+        logical = self._surface
+        self._surface = target
+        scale = min(self.width / 800, self.height / 600)
+        ox, oy = (self.width - round(800 * scale)) // 2, (self.height - round(600 * scale)) // 2
+        target.blit(pygame.transform.smoothscale(logical, (round(800 * scale), round(600 * scale))), (ox, oy))
+        for b in self.buttons:
+            r = b['rect']
+            b['rect'] = pygame.Rect(ox + round(r.x * scale), oy + round(r.y * scale), round(r.w * scale), round(r.h * scale))
 
     def _screen_skirmish(self):
         """Measured logical layout, letterboxed at smaller window sizes."""
@@ -573,10 +707,87 @@ class MenuStack:
         self._button(back, "BACK", "goto_campaign", hot=back.collidepoint(mouse))
 
     # -------------------------------------------------------------- events
+    def close(self):
+        """Release owned networking and GL resources before context teardown."""
+        self.close_lan()
+        if self.overlay_tex is not None:
+            from OpenGL.GL import glDeleteTextures
+            glDeleteTextures([self.overlay_tex])
+            self.overlay_tex = None
+
+    def close_lan(self):
+        if self.lan_session is not None:
+            self.lan_session.close()
+            self.lan_session = None
+        self.lan_focus = None
+        self.buttons = []
+
+    def _lan_call(self, method, *args):
+        try:
+            getattr(self.lan_session, method)(*args)
+        except Exception as exc:
+            self.lan_notice = str(exc)
+            self.close_lan()
+            self.screen = 'lan_join'
+
+    def _connect_lan(self):
+        from copy import deepcopy
+        if self.lan_session is not None:
+            try:
+                if not self.lan_session.snapshot.get('is_host'):
+                    return
+                self.lan_session.configure(deepcopy(self.lan_options))
+                self.screen = 'lan_lobby'
+                self.lan_focus = None
+                self.buttons = []
+            except Exception as exc:
+                self.lan_notice = str(exc)
+            return
+        if not self.lan_port.isascii() or not self.lan_port.isdecimal() or not 1 <= int(self.lan_port) <= 65535:
+            self.lan_notice = 'TCP port must be a number from 1 to 65535.'
+            return
+        if not self.lan_name.strip() or (self.screen == 'lan_join' and not self.lan_address.strip()):
+            self.lan_notice = 'Enter a nickname and host address.'
+            return
+        try:
+            from game.net.lan import LanSession
+            self.close_lan()
+            port = int(self.lan_port)
+            if self.screen == 'lan_host':
+                self.lan_session = LanSession.host(port, deepcopy(self.lan_options), name=self.lan_name.strip())
+            else:
+                self.lan_session = LanSession.join(self.lan_address.strip(), port, name=self.lan_name.strip())
+            self.screen = 'lan_lobby'
+            self.lan_notice = ''
+        except Exception as exc:
+            self.lan_notice = str(exc)
+
     def handle_event(self, ev) -> None:
+        if self.screen in ('lan_host', 'lan_join') and self.lan_focus:
+            field = self.lan_focus
+            if ev.type == pygame.TEXTINPUT:
+                value = ev.text
+                if field == 'lan_port':
+                    value = ''.join(c for c in value if c in '0123456789')
+                setattr(self, field, (getattr(self, field) + value)[:5 if field == 'lan_port' else 64])
+                return
+            if ev.type == pygame.KEYDOWN and ev.key != pygame.K_ESCAPE:
+                if ev.key == pygame.K_BACKSPACE:
+                    setattr(self, field, getattr(self, field)[:-1])
+                elif ev.key == pygame.K_a and getattr(ev, 'mod', 0) & (pygame.KMOD_CTRL | pygame.KMOD_META):
+                    setattr(self, field, '')
+                elif ev.key == pygame.K_TAB:
+                    fields = ['lan_name', 'lan_port'] + (['lan_address'] if self.screen == 'lan_join' else [])
+                    self.lan_focus = fields[(fields.index(field) + 1) % len(fields)]
+                elif ev.key == pygame.K_RETURN:
+                    self._connect_lan()
+                return
         if ev.type == pygame.KEYDOWN:
             if ev.key == pygame.K_ESCAPE:
-                if self.screen == "splash":
+                if self.screen.startswith('lan'):
+                    self.close_lan()
+                    self.screen = 'main' if self.screen == 'lan' else 'lan'
+                elif self.screen == "splash":
                     self.result = MenuResult.EXIT
                 elif self.screen in ("settings", "campaign", "briefing", "skirmish"):
                     self.screen = "main" if self.screen != "briefing" \
@@ -598,6 +809,43 @@ class MenuStack:
                     return
                 if act == "goto_main":
                     self.screen = "main"
+                elif act == "goto_lan":
+                    self.screen = "lan"
+                elif act in ('lan_host_setup', 'lan_join_setup'):
+                    self.screen = 'lan_host' if act == 'lan_host_setup' else 'lan_join'
+                    self.buttons = []
+                elif act == 'lan_field':
+                    if self.lan_session is None:
+                        self.lan_focus = b['payload']
+                elif act == 'lan_edit' and self.lan_session is not None:
+                    from copy import deepcopy
+                    if self.lan_session.snapshot.get('is_host'):
+                        self.lan_options = deepcopy(self.lan_session.snapshot['options'])
+                        self.screen = 'lan_host'
+                        self.buttons = []
+                elif act == 'lan_connect':
+                    self._connect_lan()
+                elif act == 'lan_back':
+                    self.close_lan()
+                    self.screen = 'lan'
+                elif act == 'lan_ready' and self.lan_session is not None:
+                    p = next((p for p in self.lan_session.snapshot['players'] if p['slot'] == self.lan_session.local_player), None)
+                    if p and not self.lan_session.snapshot.get('error'):
+                        self._lan_call('set_ready', not p['ready'])
+                    self.buttons = []
+                elif act == 'lan_start' and self.lan_session is not None:
+                    snap = self.lan_session.snapshot
+                    if snap.get('is_host') and snap.get('can_start') and not snap.get('error'):
+                        self._lan_call('start')
+                    self.buttons = []
+                elif act == 'lan_reconnect':
+                    host = self.lan_session.snapshot.get('is_host', False)
+                    self.close_lan()
+                    self.screen = 'lan_host' if host else 'lan_join'
+                elif act in ('lan_map', 'lan_humans', 'lan_ai', 'lan_color', 'lan_faction', 'lan_difficulty', 'lan_cooperative'):
+                    self._lan_choice(act, b['payload'])
+                    if act in ('lan_map', 'lan_humans', 'lan_ai'):
+                        self.buttons = []
                 elif act == "goto_campaign":
                     self.screen = "campaign"
                 elif act == "goto_settings":
@@ -681,6 +929,22 @@ class MenuStack:
                 return
 
     def apply_pending(self) -> None:
+        if self.lan_session is not None:
+            try:
+                self.lan_session.poll()
+                snap = self.lan_session.snapshot
+                if snap.get('error'):
+                    self.lan_notice = str(snap['error'])
+                    self.buttons = []
+                elif self.lan_session.launch is not None:
+                    self.result = MenuResult.START_LAN
+                    self.result_payload = self.lan_session
+                    self.lan_session = None
+                    self.buttons = []
+            except Exception as exc:
+                self.lan_notice = str(exc)
+                self.close_lan()
+                self.screen = 'lan_join'
         if self._dirty_settings:
             save_settings(self.settings)
             self._dirty_settings = False

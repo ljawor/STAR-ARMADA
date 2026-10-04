@@ -138,8 +138,18 @@ def make_game(load_path: str | None, mission_def: dict | None = None,
 SETTINGS_PATH = os.path.join(SAVES_DIR, "settings.json")
 
 
+class _ViewpointAudio(Audio):
+    """Keep legacy Audio's positional mixing; resolve outcomes for our slot."""
+    def _ev_game_over(self, ev):
+        if self._allowed('mission'):
+            winner = ev.data.get('winner', self.state.winner)
+            won = winner in self.state.allied_player_ids(self.local_player)
+            self.play('mission_complete' if won else 'mission_failed', .9)
+
+
 def make_audio(state) -> Audio:
-    a = Audio(state, settings=SETTINGS)
+    a = _ViewpointAudio(state, settings=SETTINGS)
+    a.local_player = local_player
     a.start_ambient()
     return a
 
@@ -156,6 +166,8 @@ renderer = None
 hud = None
 audio = None
 inputc = None
+net_session = None
+local_player = 0
 paused = False
 running = True
 flash_msg = ""
@@ -170,17 +182,28 @@ def flash(msg: str) -> None:
 
 
 def start_game(load_path: str | None = None, mdef: dict | None = None,
-               skirmish_options: dict | None = None) -> None:
+               skirmish_options: dict | None = None, lan_session=None) -> None:
     """Build the full in-game object graph (skirmish, mission, or load)."""
     global gm, state, camera, renderer, hud, audio, inputc, paused, mission_def
     global flash_until
+    global net_session, local_player, accumulator, last_autosave
     paused = False
     mission_def = mdef
-    gm = make_game(load_path, mdef, skirmish_options)
+    if net_session is not None and net_session is not lan_session:
+        net_session.close()
+    net_session = lan_session
+    local_player = int(lan_session.launch['local_player']) if lan_session is not None else 0
+    if lan_session is not None:
+        gm = GameManager.start_skirmish(lan_session.launch['map_def'], mods=MODS or None)
+    else:
+        gm = make_game(load_path, mdef, skirmish_options)
     state = gm.state
+    state._net_session = lan_session
+    accumulator = 0.0
+    last_autosave = state.time
     camera = Camera(W, H)
     _start = next((e for e in state.entities.values()
-                   if e.owner == 0 and e.is_station), None)
+                   if e.owner == local_player and e.is_station), None)
     if _start is not None:
         camera.target = [_start.pos.x, 0.0, _start.pos.z]
     camera.zoom(0.55)                    # start close-in; wheel out for tactics
@@ -189,20 +212,107 @@ def start_game(load_path: str | None = None, mdef: dict | None = None,
     if hud is not None:
         hud.close()
     renderer = Renderer(state, camera)
+    renderer.local_player = local_player
     hud = HUD(W, H, state)
+    hud.local_player = local_player
     hud.set_camera_ref(camera)
+    if audio is not None:
+        audio.cleanup()
     audio = make_audio(state)
+    audio.local_player = local_player
     audio.set_camera(camera)          # distance attenuation + stereo pan
     inputc = InputController(state, camera, hud, None)
-    inputc.local_player = 0
+    inputc.local_player = local_player
     inputc.app = _AppGlue()
 
 
 def rebuild(load_path: str | None) -> None:
     """Full object-graph rebuild for quickload (F9)."""
-    audio.cleanup()
+    if net_session is not None:
+        return
     start_game(load_path=load_path, mdef=mission_def)
     flash("game loaded")
+
+
+def advance_simulation(dt_frame):
+    """LAN advances at most one barrier per frame; waiting never accrues debt."""
+    global accumulator
+    if paused or state.game_over:
+        accumulator = 0.0
+        return
+    if net_session is not None:
+        accumulator += dt_frame
+        if accumulator >= TICK_DT:
+            # Preserve fractional render time on success, but never retain
+            # whole overdue ticks that could cause a later catch-up burst.
+            if net_session.advance(gm, TICK_DT):
+                accumulator -= TICK_DT
+                # A quantized frame may leave one tick (within roundoff):
+                # keep it, since the one-step cap delayed legitimate progress.
+                # Larger render hitches must not fund a later catch-up burst.
+                if accumulator > TICK_DT + 1e-12:
+                    accumulator %= TICK_DT
+            else:
+                # A network barrier wait discards all accumulated time.
+                accumulator = 0.0
+        return
+    accumulator += dt_frame
+    while accumulator >= TICK_DT:
+        gm.step(TICK_DT)
+        accumulator -= TICK_DT
+        if state.game_over:
+            break
+
+
+def leave_game(reason=''):
+    """Release match ownership and return to a usable reconnect/menu screen."""
+    global net_session, mode, paused, accumulator, audio
+    networked = net_session is not None
+    if net_session is not None:
+        net_session.close()
+        net_session = None
+    if state is not None:
+        state._net_session = None
+    if audio is not None:
+        audio.cleanup()
+        audio = None
+    mode, paused, accumulator = 'menu', False, 0.0
+    menu.close_lan()
+    menu.screen = 'lan_join' if networked else 'main'
+    menu.lan_notice = reason or ('Left LAN game. Host or reconnect to play again.' if networked else '')
+    menu.buttons = []
+
+
+def poll_network():
+    if net_session is None:
+        return
+    try:
+        net_session.poll()
+        if net_session.snapshot.get('error'):
+            leave_game(str(net_session.snapshot['error']))
+    except Exception as exc:
+        leave_game(str(exc))
+
+
+def handle_game_input(ev):
+    try:
+        inputc.handle_event(ev)
+    except Exception as exc:
+        if net_session is None:
+            raise
+        leave_game(str(exc))
+
+
+def handle_network_event(ev):
+    if net_session is None or ev.type != pygame.KEYDOWN:
+        return False
+    if ev.key == pygame.K_ESCAPE:
+        leave_game()
+        return True
+    if ev.key in (pygame.K_p, pygame.K_F5, pygame.K_F9):
+        flash('Pause/save/load are disabled in LAN games.')
+        return True
+    return False
 
 
 def _unlock_next_mission() -> None:
@@ -221,6 +331,8 @@ def _unlock_next_mission() -> None:
 
 def write_save(path: str) -> None:
     """Persist a snapshot. Never fatal: a read-only location must not crash."""
+    if net_session is not None:
+        return
     try:
         os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
         with open(path, "w") as f:
@@ -260,13 +372,13 @@ class _AppGlue:
 
     @staticmethod
     def request_exit() -> None:
-        global mode
-        mode = "menu"            # back to the main menu, keep app running
+        leave_game()
 
     @staticmethod
     def toggle_pause() -> None:
         global paused
-        paused = not paused
+        if net_session is None:
+            paused = not paused
 
     @staticmethod
     def flash(msg: str) -> None:
@@ -317,14 +429,28 @@ while running:
                 save_settings(SETTINGS)
                 start_game(load_path=None, mdef=payload)
                 mode = "game"
+            elif res == MenuResult.START_LAN:
+                try:
+                    start_game(lan_session=payload)
+                    mode = 'game'
+                except Exception as exc:
+                    payload.close()
+                    leave_game(str(exc))
         continue
 
     # ---- game mode
+    poll_network()
+    if mode != 'game':
+        continue
     for ev in pygame.event.get():
         if ev.type == pygame.QUIT:
             running = False
             break
         if ev.type == pygame.KEYDOWN:
+            if handle_network_event(ev):
+                if mode != 'game':
+                    break
+                continue
             if ev.key == pygame.K_F5:
                 write_save(os.path.join(SAVES_DIR, "quicksave.json"))
                 flash("quicksaved")
@@ -344,15 +470,19 @@ while running:
                         _unlock_next_mission()
                     mode = "menu"       # campaign result -> back to menus
                     continue
-        inputc.handle_event(ev)
+        handle_game_input(ev)
+        if mode != 'game':
+            break
 
-    if not paused and not state.game_over:
-        accumulator += dt_frame
-        while accumulator >= TICK_DT:
-            gm.step(TICK_DT)
-            accumulator -= TICK_DT
-            if state.game_over:
-                break
+    if mode != 'game' or not running:
+        continue
+    try:
+        advance_simulation(dt_frame)
+    except Exception as exc:
+        if net_session is None:
+            raise
+        leave_game(str(exc))
+        continue
 
     inputc.update(dt_frame)
     inputc.update_placement()
@@ -373,7 +503,7 @@ while running:
     # live box-select rectangle while left-dragging
     hud.set_drag_box(inputc.drag_start, inputc.drag_cur)
     flash_left = flash_until - state.time
-    hud.render(inputc.selection, None, 0, paused, flash_msg,
+    hud.render(inputc.selection, None, local_player, paused, flash_msg,
                max(0.0, flash_left), fps)
     hud.draw_gl()
     pygame.display.flip()
@@ -386,7 +516,7 @@ while running:
         fps_time = 0.0
 
     # autosave ring every 60 sim-seconds (spec §32): 3 rotating slots
-    if not state.game_over and state.time - last_autosave >= 60.0:
+    if net_session is None and not state.game_over and state.time - last_autosave >= 60.0:
         ring = int(SETTINGS.get("autosave_index", 0)) % 3
         write_save(os.path.join(SAVES_DIR, f"autosave_{ring}.json"))
         SETTINGS["autosave_index"] = ring + 1
@@ -399,6 +529,9 @@ while running:
         print("SMOKE_OK " + summary() + " shot=" + shot)
         running = False
 
+menu.close()
+if net_session is not None:
+    net_session.close()
 if audio is not None:
     audio.cleanup()
 else:

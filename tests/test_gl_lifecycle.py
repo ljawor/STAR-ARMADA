@@ -122,7 +122,8 @@ class MainLifecycleTests(unittest.TestCase):
             events.append('HUD')
             return Mock()
         ns = dict(renderer=old_renderer, hud=old_hud, W=640, H=480,
-                  make_game=lambda *args: SimpleNamespace(state=SimpleNamespace(entities={})),
+                  net_session=None, audio=None,
+                  make_game=lambda *args: SimpleNamespace(state=SimpleNamespace(entities={}, time=0.0)),
                   Camera=Mock(), Renderer=create_renderer, HUD=create_hud,
                   make_audio=Mock(), InputController=Mock(), _AppGlue=Mock())
         exec(compile(ast.Module(body=[start], type_ignores=[]), 'main.py', 'exec'), ns)
@@ -143,7 +144,8 @@ class MainLifecycleTests(unittest.TestCase):
                 pygame.quit.side_effect = lambda: events.append('quit')
                 exec(code, dict(audio=None, renderer=renderer if started else None,
                                 hud=hud if started else None, pygame=pygame,
-                                save_settings=Mock(), SETTINGS={}, SMOKE=False))
+                                save_settings=Mock(), SETTINGS={}, SMOKE=False,
+                                menu=Mock(), net_session=None))
                 self.assertEqual(events, ['renderer.close', 'hud.close', 'quit'] if started else ['quit'])
 
 

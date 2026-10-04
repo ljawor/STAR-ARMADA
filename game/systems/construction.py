@@ -106,7 +106,8 @@ class ConstructionSystem:
                       player_id: int) -> bool:
         st = self.state
         builder = st.entity(builder_id)
-        if builder is None or not builder.is_construction:
+        if (builder is None or not builder.alive or builder.owner != player_id
+                or not builder.is_ship or not builder.is_construction):
             return False
         # The builder has to actually be able to PLACE the thing — otherwise a
         # player can order a station on the far side of the map and the
@@ -282,7 +283,8 @@ class ConstructionSystem:
         st = self.state
         unit = st.entity(colonizer_id)
         planet = st.entity(planet_id)
-        if unit is None or planet is None or not planet.is_planet:
+        if (unit is None or not unit.alive or unit.owner != player_id
+                or not unit.is_ship or planet is None or not planet.is_planet):
             return False
         ud = self.ds.ships.get(unit.data_id)
         if ud is None or not ud.can_colonize:
