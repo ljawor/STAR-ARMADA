@@ -237,9 +237,11 @@ class HUD:
             ov.blit(surf, (self.width - 200, 7))
         if st.game_over:
             w = st.winner
-            col = GOOD if w == local_player else BAD
+            won = w in st.allied_player_ids(local_player)
+            col = TXT_DIM if w is None else (GOOD if won else BAD)
             name = st.players[w].name if w in st.players else f"team {w}"
-            surf = self.font_title.render(f"VICTORY — {name}", True, col)
+            title = "DRAW" if w is None else f"{'VICTORY' if won else 'DEFEAT'} — {name}"
+            surf = self.font_title.render(title, True, col)
             rect = surf.get_rect(center=(self.width // 2, self.height // 2 - 40))
             bg = rect.inflate(30, 16)
             pygame.draw.rect(ov, PANEL_BG, bg, border_radius=6)

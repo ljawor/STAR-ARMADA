@@ -7,14 +7,34 @@ from game.core.vectors import Vec3
 from game.data.store import DataStore
 
 
-def _two_traders(gm):
-    """Spawn a trade station for both players near their command stations."""
+def _two_traders(gm, distance=1800.0):
+    """Two own markets safely away from player 1, who remains an enemy."""
+    return [gm.factory.spawn_station("trade_station", 0, Vec3(-6000, 0, z))
+            for z in (0, distance)]
+
+
+def _allied_traders(gm):
+    """An AI ally's market, with a living third enemy to prevent auto-victory."""
+    from game.core.state import PlayerState
     st = gm.state
-    st.next_entity_id  # noqa
-    for pid, x in ((0, -6000.0), (1, 6000.0)):
-        gm.factory.spawn_station("trade_station", pid, Vec3(x, 0, 0))
-    return [e for e in st.entities.values()
-            if e.alive and e.data_id == "trade_station"]
+    st.players[0].team = st.players[1].team = 0
+    st.players[1].is_ai = True  # make_game(ai=False) leaves AI controllers disabled
+    st.players[2] = PlayerState(2, team=1, is_ai=True)
+    gm.factory.spawn_station("command_station", 2, Vec3(10000, 0, 10000))
+    return [gm.factory.spawn_station("trade_station", pid, Vec3(-6000, 0, z))
+            for pid, z in ((0, 0), (1, 1800))]
+
+
+def _advance_until(test, gm, predicate, max_ticks=1800):
+    """Bounded real-manager progress; never accept game-over no-op ticks."""
+    for _ in range(max_ticks):
+        if predicate():
+            return
+        tick = gm.state.tick
+        gm.step(1 / 30)
+        test.assertEqual(gm.state.tick, tick + 1)
+        test.assertFalse(gm.state.game_over)
+    test.fail("condition not reached during live simulation")
 
 
 class TestConvoys(unittest.TestCase):
@@ -31,21 +51,43 @@ class TestConvoys(unittest.TestCase):
         c = convoys[0]
         self.assertGreater(c.cargo_credits, 0)
         self.assertIsNotNone(c.convoy_dest)
-        self.assertIn(c.owner, (0, 1))
+        self.assertEqual(c.owner, 0)
+        self.assertIn(c.convoy_dest, [station.id for station in stations])
 
     def test_convoy_arrives_and_pays(self):
         gm = make_game(ai=False)
         st = gm.state
         ts = gm.trading
-        ts.cfg.update(spawn_interval=0.5)
-        import game.data.store as _s
-        _s.DataStore.get().rules["economy"]["trading"]["speed"] = 400.0
-        stations = _two_traders(gm)
-        p0 = st.players[0]
-        cr0 = p0.credits
-        run_for(gm, 40.0)
-        paid = p0.credits > cr0
-        self.assertTrue(paid, "destination owner should be paid on arrival")
+        from unittest.mock import patch
+        ts.cfg.update(spawn_interval=100000, reward_owner="destination")
+        source, destination = _allied_traders(gm)
+        c = ts._make_convoy(source, destination, 150.0, 250.0)
+        start = c.pos.copy()
+        arrived = []
+        balance = {}
+
+        def observe_payment(ev):
+            data = dict(ev.data)
+            paid = st.players[data["owner"]]
+            arrived.append((data, paid.credits - balance[data["owner"]]))
+
+        update = ts.update
+
+        def observed_update(dt):
+            # Economy already ran this tick: isolate the actual delivery credit.
+            balance.update({pid: p.credits for pid, p in st.players.items()})
+            update(dt)
+
+        st.events.subscribe("convoy_arrived", observe_payment)
+        with patch.object(ts, "update", side_effect=observed_update):
+            _advance_until(self, gm, lambda: bool(arrived))
+        self.assertEqual(len(arrived), 1)
+        data, reward = arrived[0]
+        self.assertEqual(data, dict(entity_id=c.id, owner=1, convoy_owner=0,
+                                    dest=destination.id, cargo=150.0))
+        self.assertEqual(reward, data["cargo"])
+        self.assertGreater(c.pos.dist_sq(start), 0)
+        self.assertFalse(c.alive)
 
     def test_raid_loots_killer(self):
         gm = make_game(ai=False)
@@ -66,9 +108,12 @@ class TestConvoys(unittest.TestCase):
             "damage": 10**9, "shield_mult": 1.0, "armor_mult": 1.0,
             "system_mult": 1.0, "weapon": None, "impact_pos": c.pos.copy(),
         })
-        run_for(gm, 0.2)
+        self.assertEqual(c.owner, 0)
+        self.assertTrue(st.is_enemy(1, c.owner))
+        gm.damage.update(0)  # real damage/payment, without ordinary economy income
         loot = c.cargo_credits * ts.cfg.get("loot_fraction", 0.5)
-        self.assertGreaterEqual(p1.credits, cr1 + loot - 1.0)
+        self.assertFalse(c.alive)
+        self.assertEqual(p1.credits - cr1, loot)
 
     def test_no_trade_stations_no_convoys(self):
         gm = make_game(ai=False)
@@ -133,31 +178,42 @@ class TestConvoyArrivalSemantics(unittest.TestCase):
         gm = make_game(ai=False)
         st = gm.state
         _mission(gm, [{"type": "escort_convoy", "text": "Escort"}])
-        gm.factory.spawn_station("trade_station", 0, Vec3(-6000, 0, 0))
-        gm.factory.spawn_station("trade_station", 1, Vec3(6000, 0, 0))
-        import game.data.store as _s
-        _s.DataStore.get().rules["economy"]["trading"]["speed"] = 400.0
-        gm.trading.cfg.update(spawn_interval=0.5)
-
+        human_market, ally_market = _allied_traders(gm)
+        gm.trading.cfg.update(spawn_interval=100000, reward_owner="destination")
         seen = []
         st.events.subscribe("convoy_arrived", lambda e: seen.append(dict(e.data)))
-        run_for(gm, 45.0)
-        self.assertTrue(seen, "no arrivals to inspect")
-        # every arrival must name its convoy's real owner
-        for a in seen:
-            self.assertIn("convoy_owner", a)
-        human = [a for a in seen if a["convoy_owner"] == 0]
-        if human:
-            self.assertTrue(gm.mission.objectives[0]["done"])
+        # Install the mission's real event hooks before the first delivery.
+        gm.step(1 / 30)
+        ai_convoy = gm.trading._make_convoy(ally_market, human_market, 150, 250)
+        ai_start = ai_convoy.pos.copy()
+        _advance_until(self, gm, lambda: bool(seen))
+        self.assertEqual(len(seen), 1)
+        self.assertEqual(seen[0]["entity_id"], ai_convoy.id)
+        self.assertEqual(seen[0]["convoy_owner"], 1)
+        self.assertEqual(seen[0]["owner"], 0)
+        self.assertGreater(ai_convoy.pos.dist_sq(ai_start), 0)
+        self.assertFalse(gm.mission.objectives[0]["done"])
+        self.assertFalse(gm.mission.completed)
+        self.assertFalse(gm.mission.failed)
+
+        human_convoy = gm.trading._make_convoy(human_market, ally_market, 150, 250)
+        human_start = human_convoy.pos.copy()
+        _advance_until(self, gm, lambda: len(seen) == 2)
+        self.assertEqual(seen[1]["entity_id"], human_convoy.id)
+        self.assertEqual(seen[1]["convoy_owner"], 0)
+        self.assertEqual(seen[1]["owner"], 1)
+        self.assertGreater(human_convoy.pos.dist_sq(human_start), 0)
+        self.assertTrue(gm.mission.objectives[0]["done"])
+        self.assertTrue(gm.mission.completed)
+        self.assertEqual(gm.mission._escorted_id, human_convoy.id)
 
     def test_raid_signal_names_the_victim_convoy(self):
         """convoy_raided must carry convoy_owner so an escort objective can
         tell the player's loss from an enemy's."""
         gm = make_game(ai=False)
         st = gm.state
-        gm.factory.spawn_station("trade_station", 0, Vec3(-6000, 0, 0))
-        gm.factory.spawn_station("trade_station", 1, Vec3(6000, 0, 0))
-        gm.trading.cfg.update(spawn_interval=0.5, speed=10.0)
+        _two_traders(gm, distance=6000.0)
+        gm.trading.cfg.update(spawn_interval=0.5)
         raided = []
         st.events.subscribe("convoy_raided", lambda e: raided.append(dict(e.data)))
         run_for(gm, 1.0)
@@ -199,9 +255,8 @@ class TestConvoyHasNoShipData(unittest.TestCase):
     def _with_convoy(self):
         gm = make_game(ai=False)
         st = gm.state
-        gm.factory.spawn_station("trade_station", 0, Vec3(-6000, 0, 0))
-        gm.factory.spawn_station("trade_station", 1, Vec3(6000, 0, 0))
-        gm.trading.cfg.update(spawn_interval=0.5, speed=10.0)
+        _two_traders(gm, distance=6000.0)
+        gm.trading.cfg.update(spawn_interval=0.5)
         run_for(gm, 1.0)
         conv = next(e for e in st.entities.values()
                     if e.alive and e.data_id == "trade_convoy")
@@ -232,7 +287,12 @@ class TestConvoyHasNoShipData(unittest.TestCase):
     def test_whole_sim_runs_with_convoys_alive(self):
         """No other system may crash once a convoy exists."""
         gm, st, conv = self._with_convoy()
+        tick = st.tick
         run_for(gm, 30.0)          # would raise from any per-tick system
+        self.assertEqual(st.tick - tick, int(30.0 / (1 / 30)))
+        self.assertFalse(st.game_over)
+        self.assertTrue(conv.alive)
+        self.assertGreater(conv.pos.dist_sq(Vec3(-6000, 0, 0)), 0)
 
     def test_check_site_tolerates_data_less_builder(self):
         """check_site resolved the BUILDER through resolve_ship, whose

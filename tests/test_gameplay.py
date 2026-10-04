@@ -187,8 +187,8 @@ class TestAI(unittest.TestCase):
 
 
 class TestFullLoop(unittest.TestCase):
-    def test_destroy_enemy_base_wins(self):
-        """The §47 acceptance loop, driven through commands like a player."""
+    def test_destroy_all_enemy_forces_wins(self):
+        """The §47 skirmish acceptance loop, won by real fleet combat."""
         gm = make_game(ai=False)
         st = gm.state
         # cheat resources like a campaign grant
@@ -239,29 +239,74 @@ class TestFullLoop(unittest.TestCase):
                 break
         self.assertTrue(st.can_see(0, enemy_home.id), "fleet never discovered enemy base")
         st.queue_command(AttackCommand(0, list(fleet.member_ids), enemy_home.id))
-        won = False
-        for _ in range(60 * 900):    # up to 15 minutes sim (travel + siege)
+        # Command-station destruction is only the first objective. Retarget
+        # surviving contacts through player commands, never hidden entity locks.
+        enemy_forces = [e for e in st.entities.values()
+                        if e.alive and e.owner == 1
+                        and (e.is_ship or e.is_station or e.is_squadron)]
+        self.assertTrue(any(e.is_ship for e in enemy_forces))
+        self.assertTrue(any(e.is_station for e in enemy_forces))
+        self.assertTrue(any(e.is_squadron for e in enemy_forces))
+        for tick in range(30 * 1800):  # Bounded 30-minute siege and cleanup.
+            if tick % (30 * 5) == 0 and not enemy_home.alive:
+                members = [st.entities[i] for i in fleet.member_ids
+                           if i in st.entities and st.entities[i].alive]
+                self.assertTrue(members, "assault fleet was destroyed")
+                contacts = [e for e in st.entities.values()
+                            if e.alive and e.owner == 1
+                            and (e.is_ship or e.is_station or e.is_squadron)
+                            and st.can_see(0, e.id)]
+                if contacts:
+                    target = min(contacts, key=lambda e: (
+                        min(member.pos.dist(e.pos) for member in members), e.id))
+                    st.queue_command(AttackCommand(0, [e.id for e in members], target.id))
+                else:
+                    st.queue_command(AttackMoveCommand(
+                        0, [e.id for e in members], Vec3(*opposing_start)))
             gm.step(1 / 30)
             if st.game_over:
-                won = st.winner == 0
                 break
-        self.assertTrue(st.game_over, "game did not end after fleet assault")
-        self.assertTrue(won, "player did not win")
+        remaining = [(e.id, e.data_id, e.hull, e.pos)
+                     for e in st.entities.values()
+                     if e.alive and e.owner == 1
+                     and (e.is_ship or e.is_station or e.is_squadron)]
+        self.assertTrue(st.game_over, f"fleet assault left enemy forces: {remaining}")
+        self.assertEqual(st.winner, 0)
+        self.assertEqual(st.game_over_reason, "elimination")
+        self.assertEqual(remaining, [])
+        self.assertTrue(all(not e.alive for e in enemy_forces))
 
-    def test_victory_requires_command_station(self):
+    def test_victory_requires_all_enemy_forces(self):
         gm = make_game(ai=False)
         st = gm.state
-        # kill both command stations -> game over
-        for e in [e for e in st.entities.values() if e.data_id == "command_station"]:
-            e.hull = 1
-            st.damage_queue.append({
-                "attacker_id": -2, "attacker_entity": None, "target": e,
-                "damage": 10 ** 9, "shield_mult": 1, "armor_mult": 1,
-                "system_mult": 1, "weapon": None, "impact_pos": e.pos.copy(),
-            })
-        gm.step(1 / 30)
-        gm.step(1.0)
+        self.assertEqual(st.map_info.victory_mode, "elimination")
+        enemy_forces = [e for e in st.entities.values()
+                        if e.alive and e.owner == 1
+                        and (e.is_ship or e.is_station or e.is_squadron)]
+        command_stations = [e for e in enemy_forces if e.data_id == "command_station"]
+        self.assertTrue(command_stations)
+
+        def destroy_through_damage_queue(entities):
+            for e in entities:
+                st.damage_queue.append({
+                    "attacker_id": 0, "attacker_entity": None, "target": e,
+                    "damage": 10 ** 9, "shield_mult": 1, "armor_mult": 1,
+                    "system_mult": 1, "weapon": None, "impact_pos": e.pos.copy(),
+                })
+            run_for(gm, 2)
+
+        destroy_through_damage_queue(command_stations)
+        self.assertTrue(all(not e.alive for e in command_stations))
+        self.assertFalse(st.game_over, "base destruction must not win a skirmish")
+        remaining = [e for e in enemy_forces if e.alive]
+        self.assertTrue(any(e.is_ship for e in remaining))
+        self.assertTrue(any(e.is_station for e in remaining))
+        self.assertTrue(any(e.is_squadron for e in remaining))
+        destroy_through_damage_queue(remaining)
+        self.assertTrue(all(not e.alive for e in enemy_forces))
         self.assertTrue(st.game_over)
+        self.assertEqual(st.winner, 0)
+        self.assertEqual(st.game_over_reason, "elimination")
 
 
 if __name__ == "__main__":

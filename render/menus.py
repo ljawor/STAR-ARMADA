@@ -474,7 +474,7 @@ class MenuStack:
                 self._surface.blit(glyph, bounds)
                 self.skirmish_text_bounds.append(bounds)
 
-        def button(rect, label, action, payload=None, selected=False, swatch=None):
+        def button(rect, label, action, payload=None, selected=False, swatch=None, size=16):
             rect = pygame.Rect(rect)
             self.buttons.append({'rect': rect, 'action': action, 'payload': payload})
             pygame.draw.rect(self._surface, (37, 63, 98) if selected else (20, 31, 50),
@@ -487,11 +487,11 @@ class MenuStack:
                 pygame.draw.rect(self._surface, rgb, (rect.x + 10, rect.y + 11, 16, 16),
                                  border_radius=3)
                 inset = 34
-            text(label, (rect.x + inset, rect.y + 9, rect.w - inset - 8, rect.h - 12), 16)
+            text(label, (rect.x + inset, rect.y + 9, rect.w - inset - 8, rect.h - 12), size)
 
         options = self.skirmish_options
         text('SKIRMISH / FLEET DEPLOYMENT', (32, 22, 1056, 44), 34)
-        text('Choose a battlefield. Configure your fleet. Launch when ready.',
+        text('Same team = allies. AI allies share vision, not control. Keep at least two different teams.',
              (32, 68, 1056, 24), 16, (139, 161, 194))
         for i, map_id in enumerate(SKIRMISH_MAP_IDS):
             data = self.skirmish_store.maps[map_id]
@@ -500,7 +500,7 @@ class MenuStack:
                    map_id == options['map_id'])
             text(data['name'], (x + 12, y + 10, 224, 24), 18)
             text(data.get('description', ''), (x + 12, y + 36, 224, 36), 14, wrap=True)
-            text(f"{self.skirmish_capacity(map_id)} PLAYERS  /  FREE FOR ALL",
+            text(f"{self.skirmish_capacity(map_id)} PLAYERS  /  TEAMS OR FFA",
                  (x + 12, y + 77, 224, 20), 14, (114, 182, 242))
         data = self.skirmish_store.maps[options['map_id']]
         preview = pygame.Rect(572, 110, 516, 180)
@@ -532,16 +532,19 @@ class MenuStack:
         text('FLEET ROSTER', (32, 357, 508, 28), 24)
         for slot in range(options['ai_count'] + 1):
             y = 397 + slot * 46
-            text('YOU' if slot == 0 else f'AI {slot}', (32, y + 8, 62, 28), 18)
+            relation = 'Ally' if options['teams'][slot] == options['teams'][0] else 'Enemy'
+            text('You' if slot == 0 else f'AI {slot} · {relation}', (32, y + 10, 92, 24), 14)
             color = options['colors'][slot]
-            button((102, y, 144, 38), COLOR_NAMES[color] + ' ›',
+            button((132, y, 114, 38), COLOR_NAMES[color] + ' ›',
                    'skirmish_color', slot, swatch=color)
             faction = self.skirmish_store.factions[options['factions'][slot]]
-            button((258, y, 282, 38), faction.display_name + ' ›', 'skirmish_faction', slot)
+            button((258, y, 176, 38), faction.display_name + ' ›', 'skirmish_faction', slot, size=14)
+            button((446, y, 94, 38), f"Team {options['teams'][slot] + 1} ›",
+                   'skirmish_team', slot)
         text(data['name'], (572, 330, 516, 34), 24)
         text(data.get('description', ''), (572, 370, 516, 104), 14,
              (160, 181, 214), wrap=True)
-        text(f"AI OPPONENTS   {options['ai_count']} / {self.skirmish_capacity(options['map_id']) - 1}",
+        text(f"AI PLAYERS   {options['ai_count']} / {self.skirmish_capacity(options['map_id']) - 1}",
              (572, 491, 350, 26), 18)
         button((980, 484, 48, 38), '−', 'skirmish_ai', -1)
         button((1040, 484, 48, 38), '+', 'skirmish_ai', 1)
@@ -549,7 +552,7 @@ class MenuStack:
         button((806, 529, 282, 38), options['ai_difficulty'].upper() + ' ›', 'skirmish_difficulty')
         text(self.skirmish_notice or 'Distinct colors are kept automatically. Click to cycle.',
              (572, 575, 516, 42), 16, (160, 181, 214), wrap=True)
-        text('Unused fleet choices are retained when reducing opponents.',
+        text('Unused fleet choices are retained when reducing AI players.',
              (32, 587, 508, 38), 14, (139, 161, 194), wrap=True)
         button((32, 630, 180, 42), 'BACK / ESC', 'goto_main')
         button((806, 630, 282, 42), 'LAUNCH SKIRMISH', 'launch_skirmish', selected=True)
@@ -858,7 +861,7 @@ class MenuStack:
                     maximum = self.skirmish_capacity(b['payload']) - 1
                     if self.skirmish_options['ai_count'] > maximum:
                         self.skirmish_options['ai_count'] = maximum
-                        self.skirmish_notice = f'Map capacity: reduced to {maximum} AI opponent(s).'
+                        self.skirmish_notice = f'Map capacity: reduced to {maximum} AI player(s).'
                     else:
                         self.skirmish_notice = ''
                     self.buttons = []
@@ -893,12 +896,23 @@ class MenuStack:
                     slot = b['payload']
                     current = self.skirmish_options['factions'][slot]
                     self.skirmish_options['factions'][slot] = factions[(factions.index(current) + 1) % len(factions)]
+                elif act == "skirmish_team":
+                    slot = b['payload']
+                    teams = self.skirmish_options['teams']
+                    teams[slot] = (teams[slot] + 1) % 4
+                    self.skirmish_notice = ''
                 elif act == "skirmish_difficulty":
                     levels = ('easy', 'normal', 'hard')
                     current = self.skirmish_options['ai_difficulty']
                     self.skirmish_options['ai_difficulty'] = levels[(levels.index(current) + 1) % len(levels)]
                 elif act == "launch_skirmish":
                     from copy import deepcopy
+                    from game.core.skirmish import build_skirmish_map
+                    try:
+                        build_skirmish_map(self.skirmish_store, self.skirmish_options)
+                    except ValueError as exc:
+                        self.skirmish_notice = str(exc)
+                        return
                     self.result_payload = deepcopy(self.skirmish_options)
                     self.result = MenuResult.START_SKIRMISH
                     self.buttons = []

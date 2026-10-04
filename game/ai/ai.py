@@ -511,7 +511,8 @@ class AIPlayer:
             # intel or the last observed snapshot. Undiscovered is unknown,
             # not a license to inspect the live planet's colonized_by.
             known = st.known_entity(self.player_id, e.id)
-            if known is not None and known.colonized_by is not None:
+            if known is not None and (known.colonized_by is not None
+                                      or known.owner in st.allied_player_ids(self.player_id)):
                 continue
             if e.data_id == "barren":
                 continue

@@ -74,6 +74,7 @@ class Entity:
 
     # trading (§26): cargo convoys
     cargo_credits: float = 0.0
+    convoy_source: int | None = None  # unknown legacy source cannot authorize trade
     convoy_dest: int | None = None
 
     # squadrons

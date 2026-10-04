@@ -35,7 +35,7 @@ class DamageSystem:
                 shield_mult=hit["shield_mult"],
                 armor_mult=hit["armor_mult"],
                 system_mult=hit["system_mult"],
-                attacker=hit.get("attacker_entity"),
+                attacker=hit.get("attacker_entity") or hit.get("attacker"),
                 attacker_id=hit.get("attacker_id", -2),
                 weapon=hit.get("weapon"),
                 impact_pos=hit.get("impact_pos"),
@@ -72,6 +72,11 @@ class DamageSystem:
                       effect_seed=None) -> None:
         st = self.state
         if target is None or not target.alive or target.is_planet:
+            return
+        source_owner = attacker.owner if attacker is not None else attacker_id
+        # Enforce nonaggression at resolution too: queued beams/impacts may
+        # predate an alliance change. Keep neutral/environmental physics intact.
+        if source_owner >= 0 and target.owner in st.allied_player_ids(source_owner):
             return
 
         # quadrant facing: which shield arc was hit?

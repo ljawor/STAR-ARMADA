@@ -59,22 +59,25 @@ class TestEscort(unittest.TestCase):
         gm = make_game(ai=False)
         st = gm.state
         _mission(gm, [{"type": "escort_convoy", "text": "Escort the convoy"}])
-        # human player's trade stations so the convoy belongs to the human
-        gm.factory.spawn_station("trade_station", 0, Vec3(-6000, 0, 0))
-        gm.factory.spawn_station("trade_station", 1, Vec3(6000, 0, 0))
-        import game.data.store as _s
-        _s.DataStore.get().rules["economy"]["trading"]["speed"] = 300.0
+        from test_trading import _two_traders, _advance_until
+        source, destination = _two_traders(gm)
         gm.trading.cfg.update(spawn_interval=0.5)
-        run_for(gm, 45.0)
+        arrived = []
+        st.events.subscribe("convoy_arrived", lambda e: arrived.append(dict(e.data)))
+        _advance_until(self, gm, lambda: gm.mission.objectives[0]["done"])
+        self.assertTrue(arrived, "escort must complete through a real delivery")
+        self.assertEqual(arrived[0]["convoy_owner"], 0)
+        self.assertIn(arrived[0]["dest"], (source.id, destination.id))
+        self.assertTrue(gm.mission.completed)
         self.assertTrue(gm.mission.objectives[0]["done"])
 
     def test_convoy_destroyed_fails_mission(self):
         gm = make_game(ai=False)
         st = gm.state
         _mission(gm, [{"type": "escort_convoy", "text": "Escort the convoy"}])
-        gm.factory.spawn_station("trade_station", 0, Vec3(-6000, 0, 0))
-        gm.factory.spawn_station("trade_station", 1, Vec3(6000, 0, 0))
-        gm.trading.cfg.update(spawn_interval=0.5, speed=10.0)  # too slow to arrive
+        from test_trading import _two_traders
+        _two_traders(gm, distance=6000.0)
+        gm.trading.cfg.update(spawn_interval=0.5)  # route cannot arrive before raid
         run_for(gm, 1.0)
         c = next(e for e in st.entities.values()
                  if e.alive and e.data_id == "trade_convoy" and e.owner == 0)

@@ -359,13 +359,16 @@ class SensorCombatTests(unittest.TestCase):
         self.assertEqual(self.ship.order_type, 'idle')
         self.assertIsNone(self.ship.order_target_pos)
 
-    def test_commercial_convoy_route_to_hidden_market_is_not_attack_chase(self):
+    def test_commercial_convoy_route_to_distant_allied_market_is_not_attack_chase(self):
+        self.st.players[1].team = self.st.players[0].team
         market = self.gm.factory.spawn_station('trade_station', 1, Vec3(0, 0, 8000))
-        # Commercial routes intentionally connect opposing markets; stopping an
-        # existing convoy is not a combat-contact loss and breaks escort missions.
+        source = self.gm.factory.spawn_station('trade_station', 0, Vec3(-2000, 0, 0))
+        # Legal commercial routes are independent of combat contact distance.
         from game.core.entity import Entity
         convoy = Entity(id=999, kind='ship', owner=0, data_id='trade_convoy', pos=Vec3())
         convoy.is_ship = True
+        convoy.convoy_source = source.id
+        convoy.convoy_dest = market.id
         convoy.order_type = 'move'
         convoy.order_target_id = market.id
         self.st.entities[convoy.id] = convoy

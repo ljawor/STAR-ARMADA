@@ -85,8 +85,20 @@ positions and neutral geometry (`asteroid_fields`, `gas_giants`, `planets`,
 
 Setup requirements/contract:
 
-- One human in slot 0 plus **1–3 AI opponents**, limited to map capacity minus one;
-  each active slot has its own team (free-for-all).
+- One human in slot 0 plus **1–3 AI players**, limited to map capacity minus one.
+  Choose **Team 1–4** for each player: matching teams are allies; different teams
+  are enemies. At least two active teams are required to launch.
+- Allied ships and stations are always visible, including allied AI fleets outside
+  your own sensors. Allies share sensor coverage and exploration, but not control
+  of each other's units. Unseen enemies remain hidden.
+- Allies cannot attack each other. Trade routes connect only distinct **own or
+  allied trading stations**, never enemy stations. Convoys cannot deliver back
+  to their source market. Restored legacy convoys without recorded source-market
+  identity remain idle and generate no delivery income; build new routes instead.
+- Skirmish and LAN victory requires eliminating **every enemy ship, squadron and
+  station**. Destroying only the enemy command station is insufficient. Victory
+  belongs to the surviving team, including an ally whose own forces were eliminated.
+  Campaign objectives retain their mission-specific rules.
 - Active players must have distinct colors from **blue, red, green, purple,
   orange, cyan, yellow, pink**. Color identifies the player independently of faction.
 - Difficulty is **easy**, **normal** (default), or **hard**, applied to AI players.
@@ -99,8 +111,9 @@ Setup requirements/contract:
   constructor, two squadrons and two corvettes per slot. The JSON loadout uses
   generic ship roles, resolved to faction-specific hulls when the game starts.
 - The setup payload has `map_id`, integer `ai_count`, four-slot `colors` and
-  `factions` lists, and `ai_difficulty`; inactive choice slots do not participate.
-  Setup conversion must not mutate the shared DataStore map definition.
+  `factions` lists, `ai_difficulty`, and an optional four-slot integer `teams` list
+  (values 0–3). Omitting teams retains free-for-all defaults; inactive choices do
+  not participate. Setup conversion must not mutate the shared DataStore map definition.
 
 Focused map acceptance checks (real headless GameManager starts, actual starter
 footprints/gravity clearance, resource access, legal AI sites and short deterministic
