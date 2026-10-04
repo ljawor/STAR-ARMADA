@@ -162,7 +162,9 @@ def draw_hit(renderer, fx):
         ppw = renderer._px_per_world(center)
         if ppw <= 0:
             return
-        radius = max(float(fx.get('radius', 1.)), SHIELD_MIN_PX*.5/ppw)
+        radius = float(fx.get('radius', 1.))
+        if not fx.get('visual_contact'):
+            radius = max(radius, SHIELD_MIN_PX*.5/ppw)
     yaw, pitch = math.radians(renderer.camera.yaw), math.radians(renderer.camera.pitch)
     right = (math.cos(yaw), 0., -math.sin(yaw))
     up = (-math.sin(pitch)*math.sin(yaw), math.cos(pitch), -math.sin(pitch)*math.cos(yaw))
@@ -174,6 +176,8 @@ def draw_hit(renderer, fx):
         # At tactical zoom a physically-sized spark fell entirely between
         # pixel centers. Keep a 7px contact, not an explosion-sized billboard.
         visual_size = max(min(18., float(fx.get('size', 5.))), 7./ppw)
+        if fx.get('visual_contact'):
+            visual_size = min(visual_size, float(fx.get('size', 5.)))
     mesh = hit_geometry(fx, radius=radius, billboard_basis=(right, up),
                         visual_size=visual_size)
     if not mesh['triangles'] and not mesh['lines']:

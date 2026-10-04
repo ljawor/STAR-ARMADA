@@ -7,8 +7,11 @@ from render.input import InputController
 
 class FogState:
     def __init__(self):
-        self.entities = {1: SimpleNamespace(id=1, alive=True, owner=0, pos=Vec3(10, 0, 10), is_planet=False),
-                         2: SimpleNamespace(id=2, alive=True, owner=1, pos=Vec3(80, 0, 80), is_planet=False, colonized_by=None)}
+        from game.core.entity import Entity
+        self.entities = {1: Entity(id=1, kind='ship', owner=0, data_id='imperial_corvette',
+                                   pos=Vec3(10, 0, 10), is_ship=True),
+                         2: Entity(id=2, kind='ship', owner=1, data_id='imperial_corvette',
+                                   pos=Vec3(80, 0, 80), is_ship=True)}
         self.visible = {1}
     def entity(self, eid):
         return self.entities.get(eid)
@@ -21,8 +24,10 @@ class FogState:
 class FogInputTests(unittest.TestCase):
     def setUp(self):
         self.state = FogState()
-        self.camera = SimpleNamespace(world_to_screen=lambda x, y, z: (x, z),
-            follow_id=2, target=[80, 0, 80])
+        from render.camera import Camera
+        self.camera = Camera(1280, 800)
+        self.camera.world_to_screen = lambda x, y, z: (x, z)
+        self.camera.follow_id, self.camera.target = 2, [80, 0, 80]
         self.input = InputController(self.state, self.camera, SimpleNamespace(), SimpleNamespace(flash=lambda s: None))
 
     def test_hidden_enemy_not_pickable(self):
