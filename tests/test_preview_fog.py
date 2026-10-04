@@ -7,6 +7,7 @@ from game.core.state import GameState, PlayerState
 from game.core.vectors import Vec3
 from game.systems.construction import ConstructionSystem
 from game.systems.unit_factory import UnitFactory
+from render.camera import Camera
 from render.input import InputController
 
 
@@ -24,8 +25,10 @@ class PlacementFogTests(unittest.TestCase):
         self.enemy = self.factory.spawn_station('defense_platform', 1, Vec3(*self.site))
         self.flashes = []
         self.hud = SimpleNamespace(placement=None)
-        self.input = InputController(self.st,
-            SimpleNamespace(screen_to_world=lambda *args: self.site), self.hud,
+        camera = Camera(1280, 800)
+        # Placement tests choose a world site without depending on projection.
+        camera.screen_to_world = lambda mx, my, plane_y=0: self.site
+        self.input = InputController(self.st, camera, self.hud,
             SimpleNamespace(flash=self.flashes.append))
 
     def ghost_verdict(self):

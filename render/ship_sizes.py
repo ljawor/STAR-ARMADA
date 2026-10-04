@@ -11,6 +11,10 @@ from render.fleet_geometry import ship_mesh
 RATIOS = {'fighter_squadron': .6, 'corvette': 1., 'frigate': 1.5,
           'cruiser': 2.5, 'battleship': 3.5, 'supercapital': 5.,
           'construction': 1.}
+READABILITY_PX = 7.
+READABILITY_HALF = 26.
+READABILITY_SCALE = .7
+READABILITY_FLOOR = .01
 
 
 @lru_cache(maxsize=5)
@@ -52,7 +56,12 @@ def readable_size(ds, data_id, px_per_world):
     apply its multiplier to all classes instead of independently inflating hulls.
     """
     size = ship_size(ds, data_id)
-    boost = max(1., 7./(max(.01, 26*px_per_world)*.7))
+    # An eye-plane/behind-eye contact has no projected size. The readability
+    # floor must not turn that sentinel into a 1000x hull surrounding the eye.
+    if px_per_world <= 0.:
+        return size
+    boost = max(1., READABILITY_PX / (max(READABILITY_FLOOR,
+                                        READABILITY_HALF * px_per_world) * READABILITY_SCALE))
     return replace(size, **{field: getattr(size, field)*boost for field in
                            ('scale', 'length', 'radius', 'stern', 'half_width')})
 

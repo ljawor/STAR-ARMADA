@@ -6,6 +6,7 @@ import helpers
 from game.core.entity import Entity
 from game.core.state import PlayerState
 from game.core.vectors import Vec3
+from render.camera import Camera
 from render.fog import FogMask, known_entities
 from render.hud import HUD
 from render.input import InputController
@@ -63,7 +64,7 @@ class AllianceVisibilityTests(unittest.TestCase):
         hud._right_panel({self.ally.id}, 0)
         self.assertFalse(any(b['kind'] in ('build_ship', 'build_station_place', 'research')
                              for b in hud.buttons))
-        inp = InputController(self.st, SimpleNamespace(), hud,
+        inp = InputController(self.st, Camera(1280, 800), hud,
                               SimpleNamespace(flash=lambda text: None))
         self.assertEqual(inp._jump_units({self.own.id, self.ally.id}), (self.own.id,))
         self.assertEqual({e.id for e in self.gm.player_entities(0)}, {self.own.id})

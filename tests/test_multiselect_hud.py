@@ -3,6 +3,7 @@ import unittest
 from helpers import make_game
 from game.core.vectors import Vec3
 from render.hud import HUD
+from render.camera import Camera
 
 
 class SelectionHUDTests(unittest.TestCase):
@@ -39,7 +40,7 @@ class SelectionHUDTests(unittest.TestCase):
         b.ability_cooldowns[aid] = 12
         selection = {a.id, b.id, foreign.id}
         self.view._left_panel(selection, 0)
-        ctrl = InputController(self.st, SimpleNamespace(), self.view, SimpleNamespace())
+        ctrl = InputController(self.st, Camera(1280, 800), self.view, SimpleNamespace())
         ctrl.selection = selection
         button = next(b for b in self.view.buttons if b['kind'] == 'ability' and b['payload']['ability_id'] == aid)
         ctrl._click_button(button['rect'].center)
@@ -97,7 +98,7 @@ class SelectionHUDTests(unittest.TestCase):
         from render.input import InputController
         import pygame
         exited = []
-        ctrl = InputController(self.st, SimpleNamespace(follow_id=None), self.view,
+        ctrl = InputController(self.st, Camera(1280, 800), self.view,
             SimpleNamespace(request_exit=lambda: exited.append(True)))
         ctrl._pending_ability = {'ability_id': 'tractor_beam', 'unit_ids': []}
         self.view.ability_prompt = 'target'
@@ -176,8 +177,10 @@ class SelectionHUDTests(unittest.TestCase):
         a = self.game.factory.spawn_ship(sd.id, 0, Vec3())
         a.energy = 1000
         target = self.game.factory.spawn_ship(sd.id, 1, Vec3(500, 0, 0))
-        camera = SimpleNamespace(follow_id=None, world_to_screen=lambda x, y, z: (x, z),
-            eye_position=lambda: (0, 20000, 0), yaw=0, pitch=89, height=800, fov=60)
+        camera = Camera(1280, 800)
+        camera.world_to_screen = lambda x, y, z: (x, z)
+        camera.yaw, camera.pitch, camera.distance = 0., 89., 20000.
+        camera.fov = 60.
         ctrl = InputController(self.st, camera, self.view, SimpleNamespace(flash=lambda s: None))
         ctrl.selection = {a.id}
         self.view._left_panel(ctrl.selection, 0)
@@ -197,7 +200,7 @@ class SelectionHUDTests(unittest.TestCase):
         import pygame
         ships = [self.game.factory.spawn_ship(next(iter(self.view.ds.ships)), 0, Vec3()) for _ in range(30)]
         self.view._left_panel({e.id for e in ships}, 0)
-        ctrl = InputController(self.st, SimpleNamespace(follow_id=None), self.view, SimpleNamespace())
+        ctrl = InputController(self.st, Camera(1280, 800), self.view, SimpleNamespace())
         with patch('pygame.mouse.get_pos', return_value=(100, 120)):
             ctrl.handle_event(pygame.event.Event(pygame.MOUSEWHEEL, y=-1, x=0))
         self.assertEqual(self.view.scroll['selection'], 1)
@@ -300,7 +303,7 @@ class SelectionHUDTests(unittest.TestCase):
         aid = sd.abilities[0]
         a.energy = b.energy = 1000
         b.ability_cooldowns[aid] = 10
-        ctrl = InputController(self.st, SimpleNamespace(), self.view, SimpleNamespace(flash=lambda s: None))
+        ctrl = InputController(self.st, Camera(1280, 800), self.view, SimpleNamespace(flash=lambda s: None))
         ctrl.selection = {a.id, b.id, enemy.id}
         self.view.buttons = [{'rect': pygame.Rect(10, 10, 100, 20), 'kind': 'ability',
             'payload': {'ability_id': aid, 'unit_ids': [a.id, b.id, enemy.id, 999999]}}]
