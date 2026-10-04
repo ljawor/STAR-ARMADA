@@ -235,7 +235,7 @@ class WeaponSystem:
                 pos=muzzle.copy(), vel=vel, target_id=target.id,
                 damage=dmg, shield_mult=wd.shield_mult, armor_mult=wd.armor_mult,
                 system_mult=wd.system_mult, life=wd.range / wd.projectile_speed + 1.0,
-                color=wd.color, size=wd.size,
+                color=wd.color, size=wd.size, attacker_entity_id=e.id,
             )
             st.next_projectile_id += 1
             st.projectiles[p.id] = p

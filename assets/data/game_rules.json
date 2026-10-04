@@ -59,6 +59,8 @@
     "xp_per_kill_fraction": 0.12,
     "levels": [0, 120, 320, 700, 1400],
     "per_level": {
+      "attack_bonus": 0.05,
+      "defense_bonus": 0.05,
       "accuracy_bonus": 0.03,
       "regen_bonus": 0.05,
       "cooldown_bonus": 0.03,

@@ -58,6 +58,42 @@ LOG_TYPES = ("unit_destroyed", "station_built", "research_complete",
              "planet_colonized", "construction_complete")
 
 
+def ship_rank_panel_data(entity, store=None, experience=None):
+    """Read-only rank readouts; combat power comes from shared sim helpers.
+
+    Optional dependencies keep the panel model testable without SDL or GL.
+    Defense multiplier is incoming damage, as defined by the sim API.
+    """
+    if not (entity.is_ship or entity.is_squadron):
+        return None
+    if store is None:
+        store = DataStore.get()
+    ship = store.ships.get(entity.data_id)
+    if ship is None:
+        return None
+    if experience is None:
+        from game.systems import experience
+    rank = experience.rank_for(entity)
+    cap = experience.max_rank(entity)
+    if rank >= cap:
+        xp_text = f"MAX RANK · XP {entity.xp:,.0f}"
+    else:
+        if hasattr(experience, "rank_info"):
+            threshold = experience.rank_info(entity)["next_threshold"]
+        else:
+            # Compatibility for injected helpers exposing the original API.
+            from game.systems.experience import DEFAULT_LEVELS
+            levels = store.rules.get("experience", {}).get("levels", DEFAULT_LEVELS)
+            threshold = levels[rank] * ship.veteran_xp / 100.0
+        xp_text = f"XP {entity.xp:,.0f} / {threshold:,.0f} · NEXT RANK"
+    return {
+        "rank_text": f"RANK {rank}/{cap}",
+        "xp_text": xp_text,
+        "attack_text": f"ATTACK +{(experience.attack_multiplier(entity) - 1) * 100:.1f}%",
+        "defense_text": f"DAMAGE REDUCTION {(1 - experience.defense_multiplier(entity)) * 100:.1f}%",
+    }
+
+
 class HUD:
     """Composited 2D overlay. Pure view: render(state, selection) -> GL quad."""
 
@@ -329,17 +365,19 @@ class HUD:
         self._label(panel.x + 12, panel.y + 8, name.upper(), TXT, self.font_big)
         fac = st.players[e.owner].name if e.owner in st.players else "Neutral"
         self._label(panel.x + 12, panel.y + 34, f"{cat.upper()} · {fac}", TXT_DIM)
-        lv = f"  LV{e.level}" if e.level > 1 else ""
-        self._label(panel.x + 12, panel.y + 52, f"LEVEL {e.level}{lv}", WARN
-                    if e.level >= 4 else TXT_DIM)
-        # trade readout: cargo convoys and trade stations had NO UI at all, so
-        # the whole trading system was invisible in play (no income figure, no
-        # destination). Show what the selected unit is actually doing.
-        # It gets its own row: drawn at +70 the 14px line ran under the HULL
-        # bar at +78, which painted the text out (reported: "income text is
-        # not fully readable"). Advance the cursor past it instead of letting
-        # the bars overlap.
-        y = panel.y + 70
+        rank_data = ship_rank_panel_data(e, self.ds)
+        y = panel.y + 52
+        if rank_data is not None:
+            self._label(panel.x + 12, y, rank_data["rank_text"], WARN)
+            y += 20
+            for key in ("xp_text", "attack_text", "defense_text"):
+                self._label(panel.x + 12, y, rank_data[key], TXT_DIM,
+                            self.font_small)
+                y += 16
+        else:
+            self._label(panel.x + 12, y, f"LEVEL {e.level}", TXT_DIM)
+            y += 18
+        # Flow the cursor: rank/XP rows must not run underneath hull bars.
         if e.data_id in ("trade_convoy", "trade_station"):
             self._label(panel.x + 12, y, self._trade_line(e), TRADE,
                         self.font_small)

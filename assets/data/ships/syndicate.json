@@ -9,9 +9,10 @@
       "speed": 135, "turn_rate": 150, "radius": 22, "sensor_range": 950,
       "weapons": [{"weapon": "laser_cannon", "count": 1, "arcs": ["front"]}],
       "systems": {"engines": 30, "weapons": 25, "sensors": 20},
-      "hangar_capacity": 0, "veteran_xp": 80
+      "hangar_capacity": 0, "max_rank": 5, "veteran_xp": 80
     },
     "syndicate_corvette": {
+      "max_rank": 5,
       "name": "Marauder Corvette", "faction": "syndicate",
       "category": "corvette",
       "cost": {"credits": 440, "materials": 165, "energy": 50},
@@ -25,6 +26,7 @@
       "hangar_capacity": 0
     },
     "syndicate_frigate": {
+      "max_rank": 5,
       "name": "Cutlass Frigate", "faction": "syndicate",
       "category": "frigate",
       "cost": {"credits": 820, "materials": 390, "energy": 110},
@@ -49,9 +51,10 @@
                    {"weapon": "point_defense", "count": 2, "arcs": ["all"]}],
       "abilities": ["emp_burst", "engine_overdrive"],
       "systems": {"engines": 660, "weapons": 730, "sensors": 400, "shield_gen": 620, "hangar": 190},
-      "hangar_capacity": 2, "veteran_xp": 160
+      "hangar_capacity": 2, "max_rank": 5, "veteran_xp": 160
     },
     "syndicate_constructor": {
+      "max_rank": 5,
       "name": "Scrapyard Hauler", "faction": "syndicate",
       "category": "construction", "is_construction": true,
       "cost": {"credits": 360, "materials": 230, "energy": 0},

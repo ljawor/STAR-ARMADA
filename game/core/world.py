@@ -116,12 +116,14 @@ class Projectile:
     is_beam: bool = False
     color: tuple = (1.0, 0.8, 0.3)
     size: float = 2.0
+    attacker_entity_id: int | None = None
 
     def to_dict(self, precise: bool = False) -> dict:
         return {
             "id": self.id, "owner": self.owner, "weapon_id": self.weapon_id,
             "pos": self.pos.to_dict(precise), "vel": self.vel.to_dict(precise),
             "target_id": self.target_id,
+            "attacker_entity_id": self.attacker_entity_id,
             "damage": self.damage if precise else round(self.damage, 2),
             "shield_mult": self.shield_mult, "armor_mult": self.armor_mult,
             "system_mult": self.system_mult,
@@ -140,4 +142,5 @@ class Projectile:
             is_beam=d.get("is_beam", False),
             color=tuple(d.get("color", (1, 0.8, 0.3))),
             size=d.get("size", 2.0),
+            attacker_entity_id=d.get("attacker_entity_id"),
         )

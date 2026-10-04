@@ -9,7 +9,7 @@
       "speed": 120, "turn_rate": 155, "radius": 22, "sensor_range": 850,
       "weapons": [{"weapon": "laser_cannon", "count": 1, "arcs": ["front"]}],
       "systems": {"engines": 26, "weapons": 22, "sensors": 18},
-      "hangar_capacity": 0, "veteran_xp": 80
+      "hangar_capacity": 0, "max_rank": 5, "veteran_xp": 80
     },
     "confed_bomber_squadron": {
       "name": "Hyena Strike Wing", "faction": "confederacy",
@@ -20,9 +20,10 @@
       "speed": 92, "turn_rate": 110, "radius": 24, "sensor_range": 800,
       "weapons": [{"weapon": "proton_torpedo", "count": 1, "arcs": ["front"]}],
       "systems": {"engines": 26, "weapons": 28, "sensors": 18},
-      "hangar_capacity": 0, "veteran_xp": 90
+      "hangar_capacity": 0, "max_rank": 5, "veteran_xp": 90
     },
     "confed_corvette": {
+      "max_rank": 5,
       "name": "Droth Drone Corvette", "faction": "confederacy",
       "category": "corvette",
       "cost": {"credits": 380, "materials": 150, "energy": 40},
@@ -36,6 +37,7 @@
       "hangar_capacity": 0
     },
     "confed_frigate": {
+      "max_rank": 5,
       "name": "Cobalt Frigate", "faction": "confederacy",
       "category": "frigate",
       "cost": {"credits": 760, "materials": 380, "energy": 90},
@@ -60,7 +62,7 @@
                    {"weapon": "point_defense", "count": 2, "arcs": ["all"]}],
       "abilities": ["engine_overdrive"],
       "systems": {"engines": 640, "weapons": 700, "sensors": 380, "shield_gen": 600, "hangar": 180},
-      "hangar_capacity": 2, "veteran_xp": 160
+      "hangar_capacity": 2, "max_rank": 5, "veteran_xp": 160
     },
     "confed_battleship": {
       "name": "Bulwark Bastion", "faction": "confederacy",
@@ -74,7 +76,7 @@
                    {"weapon": "point_defense", "count": 4, "arcs": ["all"]}],
       "abilities": ["emergency_shield_recharge", "weapon_overcharge"],
       "systems": {"engines": 1600, "weapons": 1900, "sensors": 880, "shield_gen": 1800, "hangar": 480},
-      "hangar_capacity": 4, "veteran_xp": 240
+      "hangar_capacity": 4, "max_rank": 5, "veteran_xp": 240
     },
     "confed_supercapital": {
       "name": "Subjugator-class Sovereignty", "faction": "confederacy",
@@ -88,9 +90,10 @@
                    {"weapon": "point_defense", "count": 6, "arcs": ["all"]}],
       "abilities": ["weapon_overcharge", "emergency_shield_recharge", "emp_burst"],
       "systems": {"engines": 4300, "weapons": 5600, "sensors": 2050, "shield_gen": 5000, "hangar": 1600},
-      "hangar_capacity": 8, "veteran_xp": 400
+      "hangar_capacity": 8, "max_rank": 5, "veteran_xp": 400
     },
     "confed_constructor": {
+      "max_rank": 5,
       "name": "Homing Spider Droid Rig", "faction": "confederacy",
       "category": "construction", "is_construction": true,
       "cost": {"credits": 320, "materials": 220, "energy": 0},
@@ -104,6 +107,7 @@
                               "fighter_platform", "repair_dock", "energy_relay"]
     },
     "confed_colonizer": {
+      "max_rank": 5,
       "name": "Droid Foundry Barge", "faction": "confederacy",
       "category": "construction", "is_construction": true, "can_colonize": true,
       "cost": {"credits": 520, "materials": 320, "energy": 80},

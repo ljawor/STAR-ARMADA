@@ -16,6 +16,7 @@ from ..core.entity import QUADRANTS, SubsystemState
 from ..core.vectors import Vec3
 from ..data.store import DataStore
 from . import stats
+from .experience import rank_for, defense_multiplier
 
 
 class DamageSystem:
@@ -86,11 +87,13 @@ class DamageSystem:
         else:
             quad = "front"
 
-        remaining = raw_damage
+        remaining = max(0.0, raw_damage) * defense_multiplier(target)
+        actual_damage = 0.0
 
         # --- shields first
         if target.max_shield_quad > 0 and target.shields.get(quad, 0) > 0:
             absorbed = min(target.shields[quad], remaining * shield_mult)
+            actual_damage += absorbed
             target.shields[quad] -= absorbed
             remaining -= absorbed / max(shield_mult, 0.01)
             if absorbed > 0:
@@ -105,7 +108,8 @@ class DamageSystem:
 
         # --- armor/hull
         if remaining > 0:
-            hull_damage = remaining * armor_mult
+            hull_damage = min(max(0.0, target.hull), remaining * max(0.0, armor_mult))
+            actual_damage += hull_damage
             target.hull -= hull_damage
             # subsystem chip
             self._chip_systems(target, hull_damage, system_mult)
@@ -116,8 +120,8 @@ class DamageSystem:
                                 hull_damage, impact_direction, effect_seed)
 
         # --- attacker XP
-        if attacker is not None and attacker.alive and attacker.owner >= 0:
-            attacker.xp += raw_damage * self.ds.rules.get("experience", {}).get(
+        if self._eligible_for_xp(attacker, target):
+            attacker.xp += actual_damage * self.ds.rules.get("experience", {}).get(
                 "xp_per_damage", 0.01)
             self._update_level(attacker)
 
@@ -231,7 +235,7 @@ class DamageSystem:
         if aid >= 0:
             st.stats.setdefault(str(aid), {"kills": 0, "losses": 0, "credits_spent": 0})
             st.stats[str(aid)]["kills"] += 1
-            if attacker is not None:
+            if self._eligible_for_xp(attacker, target):
                 xp_gain = target.max_hull * ds.rules.get("experience", {}).get(
                     "xp_per_kill_fraction", 0.12)
                 attacker.xp += xp_gain
@@ -243,17 +247,18 @@ class DamageSystem:
                           pos=target.pos.to_dict(),
                           is_station=target.is_station)
 
+    def _eligible_for_xp(self, attacker, target) -> bool:
+        return (attacker is not None and attacker.alive and attacker.owner >= 0
+                and not attacker.is_station and (attacker.is_ship or attacker.is_squadron)
+                and target.owner >= 0 and not target.is_planet
+                and (target.is_ship or target.is_squadron or target.is_station)
+                and self.state.is_enemy(attacker.owner, target.owner))
+
     def _update_level(self, e) -> None:
-        ds = self.ds
-        levels = ds.rules.get("experience", {}).get("levels", [0, 120, 320, 700, 1400])
-        unit = ds.ships.get(e.data_id) if (e.is_ship or e.is_squadron) else None
-        xp_req = unit.veteran_xp if unit else 100.0
-        new_level = 1
-        for i, threshold in enumerate(levels):
-            if e.xp >= threshold * (xp_req / 100.0):
-                new_level = i + 1
-        if new_level > e.level:
-            e.level = new_level
+        new_level = rank_for(e)
+        old_level = e.level
+        e.level = new_level
+        if new_level > old_level:
             self.state.float_text(e.pos, f"LEVEL {new_level}", (1, 0.9, 0.4))
             self.state.events.publish("unit_leveled", entity_id=e.id, level=new_level)
 
