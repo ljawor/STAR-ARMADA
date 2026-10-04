@@ -260,6 +260,38 @@ class InputController:
         else:
             self.selection.clear()
 
+    def _ship_pick_distance(self, e, sp, mouse, floor):
+        """Keep the small-contact affordance, also accept projected visual hulls.
+
+        Eight actual all-role bounds corners are projected with the renderer's
+        shared LOD rule. Simulation/collision radius never enters picking.
+        """
+        import math
+        from itertools import product
+        from render.ship_sizes import readable_size, _bounds
+        d = math.hypot(sp[0]-mouse[0], sp[1]-mouse[1])
+        if e.is_station or not (e.is_ship or e.is_squadron):
+            return d
+        eye = self.camera.eye_position()
+        yaw, pitch = math.radians(self.camera.yaw), math.radians(self.camera.pitch)
+        forward = (-math.cos(pitch)*math.sin(yaw), -math.sin(pitch),
+                   -math.cos(pitch)*math.cos(yaw))
+        depth = sum((v-eye[i])*forward[i] for i,v in enumerate((e.pos.x,e.pos.y,e.pos.z)))
+        if depth <= 0: return d
+        ppw = self.camera.height/(2*depth*math.tan(math.radians(self.camera.fov/2)))
+        size = readable_size(DataStore.get(), e.data_id, ppw)
+        lo, hi, _ = _bounds(size.shape)
+        ca, sa = math.cos(e.yaw), math.sin(e.yaw)
+        points = []
+        for x,y,z in product(*zip(lo,hi)):
+            x,y,z = x*size.scale,y*size.scale,z*size.scale
+            p = self.camera.world_to_screen(e.pos.x+x*ca+z*sa,e.pos.y+y,e.pos.z+z*ca-x*sa)
+            if p is not None: points.append(p)
+        if not points: return d
+        dx = max(min(p[0] for p in points)-mouse[0],0.,mouse[0]-max(p[0] for p in points))
+        dy = max(min(p[1] for p in points)-mouse[1],0.,mouse[1]-max(p[1] for p in points))
+        return min(d, math.hypot(dx,dy)+floor*.5)
+
     def _single_select(self, mx: float, my: float) -> None:
         best, best_d = None, 28.0
         for e in self.state.entities.values():
@@ -268,7 +300,7 @@ class InputController:
             sp = self.camera.world_to_screen(e.pos.x, e.pos.y, e.pos.z)
             if sp is None:
                 continue
-            d = ((sp[0] - mx) ** 2 + (sp[1] - my) ** 2) ** 0.5
+            d = self._ship_pick_distance(e, sp, (mx, my), 28.)
             if d < best_d:
                 best, best_d = e, d
         self.selection = {best.id} if best else set()
@@ -460,7 +492,7 @@ class InputController:
             sp = self.camera.world_to_screen(e.pos.x, e.pos.y, e.pos.z)
             if sp is None:
                 continue
-            d = ((sp[0] - pos[0]) ** 2 + (sp[1] - pos[1]) ** 2) ** 0.5
+            d = self._ship_pick_distance(e, sp, pos, 30.)
             if d < best_d:
                 best, best_d = e, d
         return best

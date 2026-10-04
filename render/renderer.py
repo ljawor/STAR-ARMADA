@@ -1013,6 +1013,34 @@ class Renderer:
                         glVertex3f(*v)
         glEnd()
 
+    def _ship_size(self, e):
+        from render.ship_sizes import readable_size
+        return readable_size(self.ds, e.data_id,
+                             self._px_per_world((e.pos.x, e.pos.y, e.pos.z), camera_depth=True))
+
+    def _visual_hit(self, fx):
+        """Copy sim contacts onto visual surfaces; never modify effect/save data."""
+        target_id = fx.get('target_id')
+        # Ballistic effects may expose a legal historical contact, not a hidden
+        # target's current transform. Gate before any live-position sizing/remap.
+        if not self.state.can_see(self.local_player, target_id):
+            return fx
+        e = self.state.entities.get(target_id)
+        if e is None or e.is_station or not (e.is_ship or e.is_squadron):
+            return fx
+        from render.ship_sizes import hull_contact_distance
+        size = self._ship_size(e)
+        n = tuple(fx.get('normal', (0., 0., 1.)))
+        length = math.sqrt(sum(x*x for x in n)) or 1.
+        n = tuple(x/length for x in n)
+        center = (e.pos.x, e.pos.y, e.pos.z)
+        radius = (self._shield_radius(e) if fx.get('kind') == 'shield_hit' else
+                  hull_contact_distance(size, n, e.yaw))
+        return dict(fx, center=center, radius=radius,
+                    pos=tuple(center[i]+n[i]*radius for i in range(3)),
+                    size=min(float(fx.get('size', 5.)), size.length*.12),
+                    visual_contact=True)
+
     def _draw_ship(self, e: Entity):
         ds = self.ds
         # NOTE: deliberately NO bail-out when there is no ShipData entry.
@@ -1022,6 +1050,7 @@ class Renderer:
         # iterates entities directly) but never in the 3D view, so they were
         # impossible to find or attack.
         vis = ds.ship_visual(e.data_id)
+        size = self._ship_size(e)
         color = self._owner_color(e.owner)
         glPushMatrix()
         glTranslatef(e.pos.x, e.pos.y, e.pos.z)
@@ -1031,33 +1060,25 @@ class Renderer:
         glRotatef(math.degrees(e.yaw), 0, 1, 0)
         # engine trail behind ship (keeps motion readable)
         spd = e.vel.length()
-        trail_length = vis["scale"] * e.radius * (2.2 + spd / 120.0)
-        tail = Vec3(e.pos.x - trail_length * math.sin(e.yaw), e.pos.y,
-                    e.pos.z - trail_length * math.cos(e.yaw))
+        trail_length = size.length * (1.1 + spd / 240.0)
+        tail_offset = size.stern - trail_length
+        tail = Vec3(e.pos.x + tail_offset * math.sin(e.yaw), e.pos.y,
+                    e.pos.z + tail_offset * math.cos(e.yaw))
         if spd > 2 and segment_visible(self.state, self.local_player, e.pos, tail):
             glEnable(GL_BLEND)
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
             glDepthMask(False)
             glColor4f(0.4, 0.7, 1.0, min(0.55, spd / 400.0))
             glBegin(GL_TRIANGLES)
-            L = vis["scale"] * e.radius * (2.2 + spd / 120.0)
-            glVertex3f(0, 0, -L)
-            glVertex3f(-e.radius * 0.35, 0, 0)
-            glVertex3f(e.radius * 0.35, 0, 0)
+            glVertex3f(0, 0, size.stern - trail_length)
+            glVertex3f(-size.half_width * 0.35, 0, size.stern)
+            glVertex3f(size.half_width * 0.35, 0, size.stern)
             glEnd()
             glDepthMask(True)
             glDisable(GL_BLEND)
         # hull display list
         lst = self._ship_display_list(vis["shape"])
-        scale = vis["scale"] * max(1.0, e.radius / 40.0)
-        # LOD: enforce minimum screen-space size so ships stay visible/clickable
-        # at tactical zoom (spec §35 readability).
-        sp = self.camera.world_to_screen(e.pos.x, e.pos.y, e.pos.z)
-        if sp is not None:
-            px_per_world = self._px_per_world((e.pos.x, e.pos.y, e.pos.z))
-            # shape half-extent ~ 26 world units * scale; want >= 7 px on screen
-            want_scale = 7.0 / max(0.01, 26.0 * px_per_world)
-            scale = max(scale, want_scale)
+        scale = size.scale
         glScalef(scale, scale, scale)
         # four tone passes: base owner color, dark accents, bright trim, then
         # emissive windows/nozzles/nav-lights. Ships read as multi-tone hardware
@@ -1103,15 +1124,16 @@ class Renderer:
         glPopMatrix()
         # engine glow: additive billboard at the ship's tail (world space)
         if spd > 8:
-            L = vis["scale"] * e.radius * 1.1
+            L = -size.stern
             rear = (e.pos.x - L * math.sin(e.yaw),
                     e.pos.y,
                     e.pos.z - L * math.cos(e.yaw))
-            if (self._in_front(rear, 14.0) and self.state.is_position_visible(
+            glow_radius = size.length * (.10 + .06 * min(1., spd / 300.))
+            if (self._in_front(rear, glow_radius) and self.state.is_position_visible(
                     self.local_player, position(rear))):
                 glEnable(GL_BLEND)
                 glDepthMask(False)
-                self._draw_glow(rear, 10.0 + 6.0 * min(1.0, spd / 300.0),
+                self._draw_glow(rear, glow_radius,
                                 (0.45, 0.75, 1.0), alpha=0.55, additive=True)
                 glDepthMask(True)
                 glDisable(GL_BLEND)
@@ -1871,7 +1893,10 @@ class Renderer:
             if not effect_visible(self.state, self.local_player, fx):
                 continue
             if fx["kind"] in ("shield_hit", "hull_hit", "impact"):
-                draw_hit(self, fx)
+                visual_fx = self._visual_hit(fx)
+                # A detected center does not imply its visual surface is sensed.
+                if effect_visible(self.state, self.local_player, visual_fx):
+                    draw_hit(self, visual_fx)
 
     # ------------------------------------------------------------------ explosions
     @staticmethod
@@ -2487,6 +2512,8 @@ class Renderer:
         Includes the readability floor (see SHIELD_MIN_PX) so the bubble and
         the quadrant hit-flash it sits on always agree on where the surface is.
         """
+        if not e.is_station and (e.is_ship or e.is_squadron):
+            return self._ship_size(e).radius * 1.08
         r = e.radius * 1.35
         ppw = self._px_per_world((e.pos.x, e.pos.y, e.pos.z))
         if ppw > 0.0:
@@ -2557,13 +2584,20 @@ class Renderer:
                          col[2] * 0.45 + 0.55),
                         alpha=strength * 0.5 * frac, additive=True)
 
-    def _px_per_world(self, pos) -> float:
+    def _px_per_world(self, pos, *, camera_depth=False) -> float:
         """Screen pixels per world unit at `pos` (0.0 if behind the camera)."""
         if not self._in_front(pos, 0.0):
             return 0.0
         eye = self.camera.eye_position()
-        dist = math.sqrt((pos[0] - eye[0]) ** 2 + (pos[1] - eye[1]) ** 2
-                         + (pos[2] - eye[2]) ** 2)
+        if camera_depth:
+            # Ship LOD must agree at equal camera depth, including off-axis hulls.
+            yaw, pitch = math.radians(self.camera.yaw), math.radians(self.camera.pitch)
+            forward = (-math.cos(pitch)*math.sin(yaw), -math.sin(pitch),
+                       -math.cos(pitch)*math.cos(yaw))
+            dist = sum((pos[i]-eye[i])*forward[i] for i in range(3))
+        else:
+            # Preserve the existing station/planet/general-effects appearance.
+            dist = math.sqrt(sum((pos[i]-eye[i])**2 for i in range(3)))
         if dist <= 1e-6:
             return 0.0
         return self.camera.height / (
@@ -2643,7 +2677,10 @@ class Renderer:
                 col = (1.0, 0.8, 0.25)
             glPushMatrix()
             glTranslatef(e.pos.x, e.pos.y, e.pos.z)
-            glRotatef(-90, 1, 0, 0)
+            # Ship circles live in the same XZ plane as their hull footprint.
+            # Preserve the committed orientation for stations/planet markers.
+            if e.is_station or not (e.is_ship or e.is_squadron):
+                glRotatef(-90, 1, 0, 0)
             glColor4f(col[0], col[1], col[2], 0.9)
             glLineWidth(2.0)
             # A shielded unit draws its shield shell at radius * 1.35, which is
@@ -2652,7 +2689,9 @@ class Renderer:
             # tuck it inside the bubble so the two read as separate cues.
             shielded = (not e.is_planet) and e.max_shield_total() > 0 \
                 and e.total_shield() > 0
-            r = e.radius * (1.1 if shielded else (1.35 if not e.is_planet else 1.1))
+            visual_radius = (self._ship_size(e).radius if not e.is_station
+                             and (e.is_ship or e.is_squadron) else e.radius)
+            r = visual_radius * (1.1 if shielded else (1.35 if not e.is_planet else 1.1))
             if not shielded:
                 glBegin(GL_LINE_LOOP)
                 for i in range(28):
