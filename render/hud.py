@@ -94,6 +94,33 @@ def ship_rank_panel_data(entity, store=None, experience=None):
     }
 
 
+def selected_ability_data(state, selection, local_player, store=None):
+    """Read only own, live detected hulls; deduplicate capabilities, not ships."""
+    store = store or DataStore.get()
+    groups = {}
+    for eid in sorted(set(selection)):
+        e = state.entity(eid)
+        if (e is None or not e.alive or e.owner != local_player
+                or not state.can_see(local_player, eid)):
+            continue
+        sd = store.ships.get(e.data_id)
+        for aid in sorted(set(sd.abilities if sd else [])):
+            ad = store.abilities.get(aid)
+            if ad is None:
+                continue
+            row = groups.setdefault(aid, {'ability_id': aid, 'count': 0,
+                'unit_ids': [], 'cooldowns': [], 'low_energy': 0})
+            row['count'] += 1
+            cd = e.ability_cooldowns.get(aid, 0)
+            if cd > 0:
+                row['cooldowns'].append(cd)
+            elif e.energy < ad.energy_cost:
+                row['low_energy'] += 1
+            else:
+                row['unit_ids'].append(eid)
+    return [groups[aid] for aid in sorted(groups)]
+
+
 class HUD:
     """Composited 2D overlay. Pure view: render(state, selection) -> GL quad."""
 
@@ -121,6 +148,7 @@ class HUD:
         # placement mode: payload dict for build_station awaiting a click
         self.placement: dict | None = None
         self.jump_prompt: bool = False
+        self.ability_prompt: str = ""
         self.fleet_panel: bool = False
         self.fleet_formation: str = "line"
         self.fleet_commander: str | None = None
@@ -193,8 +221,9 @@ class HUD:
         self._draw_floating_texts()
         self._draw_drag_box()
         self._placement_banner()
-        if self.jump_prompt:
-            prompt = self.font.render("JUMP: click destination on ground or minimap | Esc / right-click cancel", True, WARN)
+        if self.jump_prompt or self.ability_prompt:
+            text = self.ability_prompt or "JUMP: click destination on ground or minimap | Esc / right-click cancel"
+            prompt = self.font.render(text, True, WARN)
             rect = prompt.get_rect(center=(self.width // 2, self.height - 96))
             self.blocked_rects.append(rect.inflate(20, 12))
             pygame.draw.rect(ov, PANEL_BG, rect.inflate(20, 12), border_radius=6)
@@ -341,9 +370,13 @@ class HUD:
         ov = self.overlay
         st = self.state
         ents = [st.known_entity(local_player, eid) for eid in sorted(selection)]
-        ents = [e for e in ents if e is not None]
+        ents = [e for e in ents if e is not None and e.alive
+                and st.can_see(local_player, e.id)]
+        if len(ents) > 1:
+            self._selection_panel(ents, local_player)
+            return
         # Idle help is a card, not a full-height inspector hiding the world.
-        panel = pygame.Rect(10, 44, 320, 430 if ents else 84)
+        panel = pygame.Rect(10, 44, 320, min(540, self.height - 260) if ents else 84)
         self.blocked_rects.append(panel)
         pygame.draw.rect(ov, PANEL_BG, panel, border_radius=8)
         pygame.draw.rect(ov, PANEL_EDGE, panel, 1, border_radius=8)
@@ -362,9 +395,9 @@ class HUD:
         if e.name_override:
             name = e.name_override
         cat = sd.category if sd else (std.id.replace("_", " ") if std else e.kind)
-        self._label(panel.x + 12, panel.y + 8, name.upper(), TXT, self.font_big)
+        self._label(panel.x + 12, panel.y + 8, self._fit_text(name.upper(), 296, self.font_big), TXT, self.font_big)
         fac = st.players[e.owner].name if e.owner in st.players else "Neutral"
-        self._label(panel.x + 12, panel.y + 34, f"{cat.upper()} · {fac}", TXT_DIM)
+        self._label(panel.x + 12, panel.y + 34, self._fit_text(f"{cat.upper()} · {fac}", 296), TXT_DIM)
         rank_data = ship_rank_panel_data(e, self.ds)
         y = panel.y + 52
         if rank_data is not None:
@@ -442,7 +475,7 @@ class HUD:
         # is what made the research state look missing entirely.
         if e.is_station and self._station_research(e.id, e.owner) is not None:
             order = "RESEARCHING"
-        self._label(panel.x + 12, y, f"ORDER: {order}",
+        self._label(panel.x + 12, y, self._fit_text(f"ORDER: {order}", 296),
                     RESEARCH if order == "RESEARCHING" else TXT_DIM)
         y += 20
         # squadron count
@@ -456,33 +489,90 @@ class HUD:
             item = e.build_queue[0]
             it_name = item.get("item", "")
             done = 1.0 - item.get("time_left", 0) / max(0.1, item.get("total", 1))
+            self._label(panel.x + 12, y, self._fit_text(f"BUILDING {it_name.upper()}", 296, self.font_small), TXT,
+                        self.font_small)
+            y += 18
             self._bar(panel.x + 12, y, 296, 10, done, ACCENT)
-            self._label(panel.x + 12, y - 14, f"BUILDING {it_name.upper()}", TXT)
-            y += 34
+            y += 18
         # jump charge
         if e.jump_target is not None:
             self._label(panel.x + 12, y,
                         f"HYPERSPACE CHARGE {e.jump_charge:0.0f}", WARN)
             y += 20
-        # abilities (clickable)
-        for aid in getattr(sd, "abilities", []) if sd else []:
-            ad = self.ds.abilities.get(aid)
-            if ad is None:
-                continue
-            cd = e.ability_cooldowns.get(aid, 0.0)
-            ready = cd <= 0 and e.energy >= ad.energy_cost
-            rect = pygame.Rect(panel.x + 12, y, 296, 20)
-            pygame.draw.rect(ov, (24, 32, 48, 255) if ready else (18, 22, 32, 255),
-                             rect, border_radius=4)
-            pygame.draw.rect(ov, ACCENT if ready else PANEL_EDGE, rect, 1,
-                             border_radius=4)
-            label = f"{ad.display_name}  [{cd:0.0f}s]" if cd > 0 else ad.display_name
-            self._label(rect.x + 8, rect.y + 2, label,
-                        TXT if ready else TXT_DIM)
-            self.buttons.append({"rect": rect, "kind": "ability",
-                                 "payload": {"unit_ids": sorted(selection),
-                                             "ability_id": aid}})
-            y += 24
+        # Own capabilities only, paged inside the inspector.
+        self._ability_rows(panel, y, ents, local_player)
+
+    def _selection_panel(self, ents, local_player):
+        panel = pygame.Rect(10, 44, 320, min(430, self.height - 270))
+        self.blocked_rects.append(panel)
+        pygame.draw.rect(self.overlay, PANEL_BG, panel, border_radius=8)
+        pygame.draw.rect(self.overlay, PANEL_EDGE, panel, 1, border_radius=8)
+        self._label(panel.x + 12, panel.y + 8,
+                    f"SELECTED UNITS · {len(ents)}", TXT, self.font_big)
+        y = panel.y + 58
+        groups = selected_ability_data(self.state, [e.id for e in ents], local_player, self.ds)
+        reserve = min(160, len(groups) * 40 + 24) if groups else 0
+        rows = max(1, (panel.bottom - y - reserve - 10) // 38)
+        off = max(0, min(self.scroll.get('selection', 0), max(0, len(ents) - rows)))
+        self.scroll['selection'] = off
+        self.visible_selection_ids = [e.id for e in ents[off:off + rows]]
+        self.scroll_rects.append((pygame.Rect(panel.x, panel.y + 38, panel.width, rows * 38 + 20), 'selection'))
+        self._label(panel.x + 12, panel.y + 36,
+                    f"Units {off + 1}-{min(off + rows, len(ents))}/{len(ents)} · wheel", TXT_DIM, self.font_small)
+        self._page_controls(panel, panel.y + 34, "selection", rows, off, len(ents))
+        for e in ents[off:off + rows]:
+            name = e.name_override or self.ds.unit_name(e)
+            self._label(panel.x + 12, y, self._fleet_text(name, 296), TXT,
+                        self.font_small)
+            rank = ship_rank_panel_data(e, self.ds)
+            status = rank["rank_text"] if rank else e.kind.upper()
+            if e.is_squadron:
+                status += f" · {e.fighter_count}/{e.max_fighters} fighters"
+            status += f" · HULL {e.hull / max(1, e.max_hull):.0%}"
+            self._label(panel.x + 12, y + 16, status, TXT_DIM, self.font_small)
+            y += 38
+        self._ability_rows(panel, y, ents, local_player)
+
+    def _page_controls(self, panel, y, key, capacity, off, count):
+        if count <= capacity:
+            return
+        for x, text, delta, enabled in ((panel.right - 60, "▲", -capacity, off > 0),
+                                      (panel.right - 34, "▼", capacity, off + capacity < count)):
+            rect = pygame.Rect(x, y, 22, 18)
+            pygame.draw.rect(self.overlay, BAR_BG, rect, border_radius=3)
+            self._label(x + 5, y + 1, text, ACCENT if enabled else TXT_DIM, self.font_small)
+            if enabled:
+                self.buttons.append({"rect": rect, "kind": "hud_scroll",
+                    "payload": {"key": key, "delta": delta}})
+
+    def _ability_rows(self, panel, y, ents, local_player):
+        groups = selected_ability_data(self.state, [e.id for e in ents], local_player, self.ds)
+        y += 20
+        capacity = max(0, (panel.bottom - y - 8) // 40)
+        off = max(0, min(self.scroll.get('abilities', 0), max(0, len(groups) - capacity)))
+        self.scroll['abilities'] = off
+        if groups and capacity:
+            self.scroll_rects.append((pygame.Rect(panel.x, y - 20, panel.width, panel.bottom - y + 20), 'abilities'))
+            self._label(panel.x + 12, y - 18,
+                        f"Abilities {off + 1}-{min(off + capacity, len(groups))}/{len(groups)}", TXT_DIM, self.font_small)
+            self._page_controls(panel, y - 20, "abilities", capacity, off, len(groups))
+        for row in groups[off:off + capacity]:
+            ad = self.ds.abilities[row['ability_id']]
+            rect = pygame.Rect(panel.x + 12, y, 296, 36)
+            pygame.draw.rect(self.overlay, BAR_BG, rect, border_radius=4)
+            self._label(rect.x + 8, y + 2, self._fleet_text(ad.display_name, 280), TXT,
+                        self.font_small)
+            cooldowns = row['cooldowns']
+            status = f"{len(row['unit_ids'])}/{row['count']} ready"
+            if cooldowns:
+                status += f" · {len(cooldowns)} CD {min(cooldowns):.0f}-{max(cooldowns):.0f}s"
+            if row['low_energy']:
+                status += f" · {row['low_energy']} low EN"
+            self._label(rect.x + 8, y + 18, status, TXT_DIM, self.font_small)
+            if row['unit_ids']:
+                self.buttons.append({'rect': rect, 'kind': 'ability', 'payload': {
+                    'ability_id': row['ability_id'], 'unit_ids': row['unit_ids']}})
+            y += 40
 
     # ------------------------------------------------------------------ right panel
     def _right_panel(self, selection: set, local_player: int) -> None:
@@ -623,6 +713,14 @@ class HUD:
                         self.font_small)
         self._fleet_button(pygame.Rect(x + 206, rect.y, 90, 28), "Close",
                            "fleet_close", {})
+
+    def _fit_text(self, text, width, font=None):
+        font = font or self.font
+        if font.size(text)[0] <= width:
+            return text
+        while text and font.size(text + "…")[0] > width:
+            text = text[:-1]
+        return text + "…"
 
     def _fleet_text(self, text: str, width: int) -> str:
         """Fit data-driven names without painting over adjacent controls."""

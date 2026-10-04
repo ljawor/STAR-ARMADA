@@ -35,6 +35,7 @@ class InputController:
         self.grab_mouse = False
         self.local_player = 0
         self._pending_jump: tuple[int, ...] | None = None
+        self._pending_ability: dict | None = None
         self._pending_fleet: list[int] | None = None   # after G, awaiting number key
         # right-panel scroll context (set by HUD each frame)
         self._right_panel_rect = None
@@ -46,6 +47,7 @@ class InputController:
         self._prune_contacts()
         if ev.type == pygame.WINDOWFOCUSLOST:
             self._cancel_jump()
+            self._cancel_ability()
             self.keys.clear()
             self.dragging = False
             self.drag_start = self.drag_cur = self.right_drag = None
@@ -59,7 +61,9 @@ class InputController:
                 pygame.event.set_grab(self.grab_mouse)
                 pygame.mouse.set_visible(not self.grab_mouse)
             elif ev.key == pygame.K_ESCAPE:
-                if self._pending_jump is not None:
+                if self._pending_ability is not None:
+                    self._cancel_ability()
+                elif self._pending_jump is not None:
                     self._cancel_jump()
                 elif self.hud.placement:
                     self.hud.placement = None       # cancel placement first
@@ -116,8 +120,14 @@ class InputController:
                     self.app.flash("free camera")
         elif ev.type == pygame.KEYUP:
             self.keys.discard(ev.key)
+        elif ev.type == pygame.MOUSEWHEEL:
+            if not self._scroll_panel(-ev.y):
+                self.camera.zoom(0.88 ** ev.y)
         elif ev.type == pygame.MOUSEBUTTONDOWN:
             if ev.button == 1:
+                if self._pending_ability is not None:
+                    self._confirm_ability(ev.pos)
+                    return
                 if self._pending_jump is not None:
                     self._confirm_jump(ev.pos)
                     return
@@ -126,6 +136,8 @@ class InputController:
                     return
                 if self._click_button(ev.pos):
                     return
+                if any(r.collidepoint(ev.pos) for r in getattr(self.hud, 'blocked_rects', [])):
+                    return
                 if self.hud.minimap_rect and \
                         self.hud.minimap_rect.collidepoint(ev.pos):
                     self._minimap_jump(ev.pos)
@@ -133,6 +145,9 @@ class InputController:
                     self.drag_start = ev.pos
                     self.dragging = True
             elif ev.button == 3:
+                if self._pending_ability is not None:
+                    self._cancel_ability()
+                    return
                 if self._pending_jump is not None:
                     self._cancel_jump()
                     return
@@ -225,6 +240,10 @@ class InputController:
     def update(self, dt: float = 1.0 / 30.0) -> None:
         """Per-frame held-key motion and follow camera, not event-rate motion."""
         self._prune_contacts()
+        if (self._pending_ability is not None
+                and not self._ability_cmd(self._pending_ability).unit_ids):
+            self._cancel_ability()
+            self.app.flash("ability cancelled: no eligible ships remain")
         if self._pending_jump is not None and not self._jump_units(self._pending_jump):
             self._cancel_jump()
             self.app.flash("jump cancelled: no eligible ships remain")
@@ -316,7 +335,10 @@ class InputController:
                     # Buttons remain from the last render until the next frame.
                     # Consume stale controls without acting or selecting the scene.
                     return True
-                if kind == "build_station_place":
+                if kind == "hud_scroll":
+                    key = pl["key"]
+                    self.hud.scroll[key] = max(0, self.hud.scroll.get(key, 0) + pl["delta"])
+                elif kind == "build_station_place":
                     # arm placement mode: click on the field positions it
                     self.hud.placement = {
                         "builder_id": pl["builder_id"],
@@ -355,7 +377,15 @@ class InputController:
                 elif kind == "fleet_close":
                     self.hud.fleet_panel = False
                 elif kind == "ability":
-                    st.queue_command(self._ability_cmd(pl))
+                    cmd = self._ability_cmd(pl)
+                    if cmd.unit_ids:
+                        if pl["ability_id"] == "tractor_beam":
+                            self._cancel_jump()
+                            self.hud.placement = None
+                            self._pending_ability = dict(pl, unit_ids=list(cmd.unit_ids))
+                            self.hud.ability_prompt = "TRACTOR BEAM: click a detected enemy · Esc / right-click cancel"
+                        else:
+                            st.queue_command(cmd)
                 return True
         return False
 
@@ -423,12 +453,35 @@ class InputController:
         self.app.flash(f"constructing {pl['station_kind'].replace('_', ' ')}")
         return True
 
+    def _cancel_ability(self):
+        self._pending_ability = None
+        self.hud.ability_prompt = ""
+        self.dragging = False
+        self.drag_start = self.drag_cur = self.right_drag = None
+
+    def _confirm_ability(self, pos):
+        if any(r.collidepoint(pos) for r in self.hud.blocked_rects):
+            return
+        target = self._pick_target(pos)
+        if target is None or not self.state.is_enemy(self.local_player, target.owner):
+            self.app.flash("choose a detected enemy")
+            return
+        cmd = self._ability_cmd(self._pending_ability)
+        if cmd.unit_ids:
+            cmd.target_id = target.id
+            self.state.queue_command(cmd)
+        self._cancel_ability()
+
     def _ability_cmd(self, pl: dict):
         from game.core.commands import AbilityCommand
         tgt = None
         if pl.get("targeted"):
             tgt = self.camera.screen_to_world(*pygame.mouse.get_pos())
-        return AbilityCommand(self.local_player, pl["unit_ids"],
+        from render.hud import selected_ability_data
+        ids = set(pl['unit_ids']) & self.selection
+        rows = selected_ability_data(self.state, ids, self.local_player)
+        eligible = next((r['unit_ids'] for r in rows if r['ability_id'] == pl['ability_id']), [])
+        return AbilityCommand(self.local_player, eligible,
                               pl["ability_id"], target=tgt)
 
     def _build_spot(self, builder, station_kind: str):
@@ -523,6 +576,7 @@ class InputController:
         if not ids:
             self.app.flash("select eligible own ships ready to jump")
             return
+        self._cancel_ability()
         self._pending_jump = ids
         self.hud.jump_prompt = True
         self.hud.placement = None
