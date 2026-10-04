@@ -33,6 +33,56 @@ class JumpInputTests(unittest.TestCase):
         for kind in (pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP):
             self.ic.handle_event(pygame.event.Event(kind, button=button, pos=pos))
 
+    def arm_tractor(self):
+        from dataclasses import replace
+        ds = DataStore.get()
+        sd = ds.ships[self.ship.data_id]
+        ds.ships[sd.id] = replace(sd, abilities=['tractor_beam'])
+        self.ship.energy = 1000
+        self.hud.blocked_rects = []
+        self.hud.buttons = [{'rect': pygame.Rect(10, 10, 100, 20),
+            'kind': 'ability', 'payload': {'ability_id': 'tractor_beam',
+                                         'unit_ids': [self.ship.id]}}]
+        self.ic._click_button((20, 15))
+        self.assertIsNotNone(self.ic._pending_ability)
+
+    def test_jump_replaces_tractor_targeting_before_click_or_escape(self):
+        for action in ('click', 'escape'):
+            with self.subTest(action=action):
+                self.arm_tractor()
+                self.camera.screen_to_world = Mock(return_value=(8000, 0, 6000))
+                self.press(pygame.K_j)
+                self.assertIsNone(self.ic._pending_ability)
+                self.assertEqual(self.hud.ability_prompt, '')
+                self.assertEqual(self.ic._pending_jump, (self.ship.id,))
+                self.assertTrue(self.hud.jump_prompt)
+                if action == 'click':
+                    self.click((640, 300))
+                    self.assertEqual(len(self.st.command_queue), 1)
+                    cmd = self.st.command_queue.pop()
+                    self.assertEqual(cmd.type, 'jump')
+                    self.assertEqual(cmd.unit_ids, (self.ship.id,))
+                    self.assertEqual(cmd.target_pos, (8000, 0, 6000))
+                else:
+                    self.press(pygame.K_ESCAPE)
+                    self.assertFalse(self.st.command_queue)
+                    self.app.request_exit.assert_not_called()
+                self.assertIsNone(self.ic._pending_jump)
+                self.assertIsNone(self.ic._pending_ability)
+                self.assertFalse(self.hud.jump_prompt)
+                self.assertFalse(self.ic.dragging)
+
+    def test_tractor_replaces_jump_targeting(self):
+        self.press(pygame.K_j)
+        self.arm_tractor()
+        self.assertIsNone(self.ic._pending_jump)
+        self.assertFalse(self.hud.jump_prompt)
+        self.assertTrue(self.hud.ability_prompt)
+        self.press(pygame.K_ESCAPE)
+        self.assertIsNone(self.ic._pending_ability)
+        self.assertFalse(self.st.command_queue)
+        self.app.request_exit.assert_not_called()
+
     def test_world_click_queues_snapshot_at_ground_tuple_without_fallthrough(self):
         self.camera.screen_to_world = Mock(return_value=(8000.0, 0.0, 6000.0))
         self.press(pygame.K_j)
@@ -240,7 +290,7 @@ class JumpInputTests(unittest.TestCase):
         # Exercise the real HUD composition; only GL upload needs a context.
         hud._upload = Mock()
         render = Mock(wraps=hud.font.render)
-        hud.font = SimpleNamespace(render=render)
+        hud.font = SimpleNamespace(render=render, size=hud.font.size)
         hud.jump_prompt = True
         hud.render({self.ship.id}, None, 0, False)
         prompts = [c.args[0] for c in render.call_args_list

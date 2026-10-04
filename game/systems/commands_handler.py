@@ -155,8 +155,10 @@ class CommandHandler:
 
     def _do_ability(self, cmd: PlayerCommand) -> None:
         tp = Vec3(*cmd.target_pos) if cmd.target_pos else None
-        for e in self._units(cmd):
-            self.abilities.activate(e, cmd.ability_id, cmd.target_id, tp)
+        for e in {e.id: e for e in self._units(cmd)}.values():
+            sd = self.ds.ships.get(e.data_id)
+            if sd is not None and cmd.ability_id in sd.abilities:
+                self.abilities.activate(e, cmd.ability_id, cmd.target_id, tp)
 
     def _do_fleet_create(self, cmd: PlayerCommand) -> None:
         st = self.state
