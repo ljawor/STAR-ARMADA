@@ -336,6 +336,8 @@ class GameState:
                         for k, v in e.systems.items()},
             "alive": e.alive, "xp": e.xp if precise else round(e.xp, 2),
             "level": e.level,
+            "retarget_cooldown": e.retarget_cooldown if precise else round(e.retarget_cooldown, 3),
+            "last_hit_time": e.last_hit_time if precise else round(e.last_hit_time, 3),
             "order_type": e.order_type,
             "energy": e.energy if precise else round(e.energy, 2),
             "max_energy": e.max_energy, "spawn_time": e.spawn_time,
@@ -387,7 +389,8 @@ class GameState:
             d["ability_active"] = {k: (v if precise else round(v, 2))
                                    for k, v in e.ability_active.items()}
         if e.weapon_cooldowns:
-            d["weapon_cooldowns"] = {k: round(v, 3) for k, v in e.weapon_cooldowns.items()}
+            d["weapon_cooldowns"] = {k: (v if precise else round(v, 3))
+                                      for k, v in e.weapon_cooldowns.items()}
         if e.current_target is not None:
             d["current_target"] = e.current_target
         return d
@@ -413,7 +416,10 @@ class GameState:
         e.shields = dict(d.get("shields", {}))
         e.systems = {k: SubsystemStub(v["hp"], v["max_hp"])
                      for k, v in d.get("systems", {}).items()}
-        e.last_hit_time = -999.0
+        e.last_hit_time = d.get("last_hit_time", -999.0)
+        e.retarget_cooldown = d.get("retarget_cooldown", 0.0)
+        from ..systems.experience import rank_for
+        e.level = rank_for(e)
         e.weapon_cooldowns = {int(k): v for k, v in d.get("weapon_cooldowns", {}).items()}
         e.ability_cooldowns = dict(d.get("ability_cooldowns", {}))
         e.ability_active = dict(d.get("ability_active", {}))

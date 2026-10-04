@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from ..core.entity import Entity
 from ..data.store import DataStore
+from .experience import rank_for, attack_multiplier, SAFETY_MAX_RANK
 
 
 def tech_mult(state, player_id: int, key: str, default: float = 1.0) -> float:
@@ -58,17 +59,7 @@ def commander_mult(state, entity: Entity, key: str, default: float = 1.0) -> flo
 
 def veteran_fraction(entity: Entity) -> float:
     """0..1 progress through veteran levels (capped)."""
-    ds = DataStore.get()
-    xp_cfg = ds.rules.get("experience", {})
-    levels = xp_cfg.get("levels", [0, 120, 320, 700, 1400])
-    ship = ds.ships.get(entity.data_id) if (entity.is_ship or entity.is_squadron) else None
-    xp_req = ship.veteran_xp if ship else 100.0
-    lvl = 0
-    for i, threshold in enumerate(levels):
-        if entity.xp >= threshold * (xp_req / 100.0):
-            lvl = i
-    max_lvl = int(xp_cfg.get("max_effective_level", 5)) - 1
-    return min(lvl, max_lvl) / max(1, max_lvl - 1)
+    return (rank_for(entity) - 1) / (SAFETY_MAX_RANK - 1)
 
 
 def effective_max_shield_quad(state, e: Entity) -> float:
@@ -105,7 +96,7 @@ def effective_weapon_damage(state, e: Entity, base_damage: float) -> float:
     if e.is_squadron:
         dmg *= tech_mult(state, e.owner, "squadron_damage_mult")
     dmg *= e.damage_multiplier()
-    dmg *= 1.0 + 0.06 * veteran_fraction(e)
+    dmg *= attack_multiplier(e)
     return dmg
 
 

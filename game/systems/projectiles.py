@@ -32,7 +32,8 @@ class ProjectileSystem:
                 if st.is_enemy(p.owner, target.owner):
                     st.damage_queue.append({
                         "attacker_id": p.owner,
-                        "attacker_entity": None,
+                        "attacker_entity": (st.entity(p.attacker_entity_id)
+                                            if p.attacker_entity_id is not None else None),
                         "target": target,
                         "damage": p.damage,
                         "shield_mult": p.shield_mult,

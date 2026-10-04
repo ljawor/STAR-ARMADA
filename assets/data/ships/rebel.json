@@ -10,7 +10,7 @@
       "weapons": [{"weapon": "laser_cannon", "count": 1, "arcs": ["front"]},
                    {"weapon": "proton_torpedo", "count": 1, "arcs": ["front"]}],
       "systems": {"engines": 32, "weapons": 28, "sensors": 22},
-      "hangar_capacity": 0, "veteran_xp": 80
+      "hangar_capacity": 0, "max_rank": 5, "veteran_xp": 80
     },
     "rebel_y_squadron": {
       "name": "Bulwark Bomber Squadron", "faction": "rebel",
@@ -21,9 +21,10 @@
       "speed": 90, "turn_rate": 105, "radius": 24, "sensor_range": 850,
       "weapons": [{"weapon": "proton_torpedo", "count": 2, "arcs": ["front"]}],
       "systems": {"engines": 30, "weapons": 34, "sensors": 20},
-      "hangar_capacity": 0, "veteran_xp": 90
+      "hangar_capacity": 0, "max_rank": 5, "veteran_xp": 90
     },
     "rebel_corvette": {
+      "max_rank": 5,
       "name": "Blockade Runner", "faction": "rebel",
       "category": "corvette",
       "cost": {"credits": 460, "materials": 170, "energy": 60},
@@ -37,6 +38,7 @@
       "hangar_capacity": 0
     },
     "rebel_frigate": {
+      "max_rank": 5,
       "name": "Escort Frigate", "faction": "rebel",
       "category": "frigate",
       "cost": {"credits": 880, "materials": 400, "energy": 120},
@@ -61,7 +63,7 @@
                    {"weapon": "point_defense", "count": 3, "arcs": ["all"]}],
       "abilities": ["emergency_shield_recharge", "fighter_scramble"],
       "systems": {"engines": 680, "weapons": 760, "sensors": 420, "shield_gen": 700, "hangar": 240},
-      "hangar_capacity": 3, "veteran_xp": 160
+      "hangar_capacity": 3, "max_rank": 5, "veteran_xp": 160
     },
     "rebel_battleship": {
       "name": "Hope-class Command Cruiser", "faction": "rebel",
@@ -75,7 +77,7 @@
                    {"weapon": "point_defense", "count": 4, "arcs": ["all"]}],
       "abilities": ["emergency_shield_recharge", "repair_drones", "sensor_jam"],
       "systems": {"engines": 1700, "weapons": 2000, "sensors": 950, "shield_gen": 2000, "hangar": 520},
-      "hangar_capacity": 5, "veteran_xp": 240
+      "hangar_capacity": 5, "max_rank": 5, "veteran_xp": 240
     },
     "rebel_supercapital": {
       "name": "Independence-class Fleet Carrier", "faction": "rebel",
@@ -88,9 +90,10 @@
                    {"weapon": "point_defense", "count": 8, "arcs": ["all"]}],
       "abilities": ["fighter_scramble", "emergency_shield_recharge", "repair_drones"],
       "systems": {"engines": 4200, "weapons": 5200, "sensors": 2100, "shield_gen": 5200, "hangar": 2200},
-      "hangar_capacity": 10, "veteran_xp": 400
+      "hangar_capacity": 10, "max_rank": 5, "veteran_xp": 400
     },
     "rebel_constructor": {
+      "max_rank": 5,
       "name": "Alliance Engineering Sled", "faction": "rebel",
       "category": "construction", "is_construction": true,
       "cost": {"credits": 380, "materials": 240, "energy": 0},
@@ -104,6 +107,7 @@
                               "fighter_platform", "repair_dock", "energy_relay"]
     },
     "rebel_colonizer": {
+      "max_rank": 5,
       "name": "Freedom Colony Ship", "faction": "rebel",
       "category": "construction", "is_construction": true, "can_colonize": true,
       "cost": {"credits": 580, "materials": 340, "energy": 100},

@@ -7,6 +7,7 @@ load time, not mid-battle.
 from __future__ import annotations
 
 import json
+import math
 import os
 import sys
 from dataclasses import dataclass, field
@@ -76,6 +77,7 @@ class ShipData:
     can_build_stations: list = field(default_factory=list)
     can_colonize: bool = False
     veteran_xp: float = 100.0
+    max_rank: int = 5
 
 
 @dataclass(slots=True)
@@ -347,6 +349,7 @@ class DataStore:
                     can_build_stations=list(s.get("can_build_stations", [])),
                     can_colonize=bool(s.get("can_colonize", False)),
                     veteran_xp=float(s.get("veteran_xp", 100)),
+                    max_rank=s.get("max_rank", 5),
                 )
 
     def _load_stations(self) -> None:
@@ -474,11 +477,37 @@ class DataStore:
                 is_construction=bool(s.get("is_construction", False)),
                 can_build_stations=list(s.get("can_build_stations", [])),
                 can_colonize=bool(s.get("can_colonize", False)),
-                veteran_xp=float(s.get("veteran_xp", 100)))
+                veteran_xp=float(s.get("veteran_xp", 100)),
+                max_rank=s.get("max_rank", 5))
 
     # ------------------------------------------------------------- validation
     def _validate(self) -> None:
+        cfg = self.rules.get("experience", {})
+        levels = cfg.get("levels", [0, 120, 320, 700, 1400])
+        def finite_number(value):
+            return type(value) in (int, float) and math.isfinite(value)
+        if (not isinstance(levels, list) or not levels
+                or any(not finite_number(v) or v < 0 for v in levels)
+                or levels[0] != 0 or any(a >= b for a, b in zip(levels, levels[1:]))):
+            raise ValueError("experience levels must start at zero and strictly increase")
+        cap = cfg.get("max_effective_level", 5)
+        if type(cap) is not int or not 1 <= cap <= 5:
+            raise ValueError("experience max_effective_level must be an integer from 1 to 5")
+        for key, default in (("xp_per_damage", .01), ("xp_per_kill_fraction", .12)):
+            value = cfg.get(key, default)
+            if not finite_number(value) or value < 0:
+                raise ValueError(f"experience {key} must be finite and nonnegative")
+        bonuses = cfg.get("per_level", {})
+        for key in ("attack_bonus", "defense_bonus"):
+            value = bonuses.get(key, .05)
+            if (not finite_number(value) or value < 0
+                    or (key == "defense_bonus" and value > .25)):
+                raise ValueError(f"experience {key} is outside its valid range")
         for sid, s in self.ships.items():
+            if type(s.max_rank) is not int or not 1 <= s.max_rank <= 5:
+                raise ValueError(f"Ship '{sid}' max_rank must be an integer from 1 to 5")
+            if not finite_number(s.veteran_xp) or s.veteran_xp <= 0:
+                raise ValueError(f"Ship '{sid}' veteran_xp must be finite and positive")
             for wref in s.weapons:
                 wid = wref["weapon"] if isinstance(wref, dict) else wref
                 if wid not in self.weapons:

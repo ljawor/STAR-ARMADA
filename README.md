@@ -53,6 +53,31 @@ python main.py --version
 | ESC | Cancel placement / close fleet panel first; otherwise return to main menu |
 | F11 | Toggle fullscreen |
 
+## Combat experience and ship ranks
+
+Ships and fighter squadrons begin at **rank 1**. Fighting earns XP from actual
+shield and hull damage dealt to enemies (overkill is excluded), plus a kill
+reward based on the destroyed unit's maximum hull. Own/allied units, neutral
+terrain, dead attackers and station attackers cannot provide ship XP.
+Already-fired projectiles still inflict damage after their shooter dies, but
+cannot award that dead ship XP.
+
+Every catalogue ship/squadron declares `max_rank` (currently **5**). Promotions
+add **5% weapon damage** and **5 percentage points of incoming damage reduction**
+per rank: rank 5 has +20% attack and 20% damage reduction. Reduction applies to
+both shields and hull, not just shield capacity. Existing veteran utility/shield
+bonuses remain, but there is no second veteran weapon-damage multiplier.
+
+Balance lives in `assets/data/game_rules.json`: `experience.levels` defines
+cumulative thresholds, scaled by each ship's `veteran_xp / 100`;
+`experience.max_effective_level` is the global cap, and
+`experience.per_level.attack_bonus` / `defense_bonus` configure promotions.
+The effective cap is the minimum of the ship cap, global cap, available
+thresholds and safety cap 5. XP can continue accumulating at the cap. DataStore
+validates caps, thresholds and bonuses after mod overrides; older ship
+definitions without `max_rank` default to 5, and old saves derive rank from XP.
+Full-precision saves/replays preserve XP and projectile shooter identity.
+
 ## Menus
 
 `main.py` now starts at the **title screen** → **main menu** (Skirmish / Campaign /

@@ -9,7 +9,7 @@
       "speed": 130, "turn_rate": 160, "radius": 22, "sensor_range": 900,
       "weapons": [{"weapon": "laser_cannon", "count": 1, "arcs": ["front"]}],
       "systems": {"engines": 30, "weapons": 25, "sensors": 20},
-      "hangar_capacity": 0, "veteran_xp": 80
+      "hangar_capacity": 0, "max_rank": 5, "veteran_xp": 80
     },
     "imperial_tie_bomber_squadron": {
       "name": "Hammer Torpedo Squadron", "faction": "imperial",
@@ -20,9 +20,10 @@
       "speed": 95, "turn_rate": 110, "radius": 24, "sensor_range": 800,
       "weapons": [{"weapon": "proton_torpedo", "count": 1, "arcs": ["front"]}],
       "systems": {"engines": 28, "weapons": 30, "sensors": 18},
-      "hangar_capacity": 0, "veteran_xp": 90
+      "hangar_capacity": 0, "max_rank": 5, "veteran_xp": 90
     },
     "imperial_corvette": {
+      "max_rank": 5,
       "name": "Vigil Corvette", "faction": "imperial",
       "category": "corvette",
       "cost": {"credits": 480, "materials": 180, "energy": 60},
@@ -36,6 +37,7 @@
       "hangar_capacity": 0
     },
     "imperial_frigate": {
+      "max_rank": 5,
       "name": "Lancer Frigate", "faction": "imperial",
       "category": "frigate",
       "cost": {"credits": 900, "materials": 420, "energy": 120},
@@ -60,7 +62,7 @@
                    {"weapon": "point_defense", "count": 2, "arcs": ["all"]}],
       "abilities": ["weapon_overcharge", "engine_overdrive"],
       "systems": {"engines": 700, "weapons": 800, "sensors": 400, "shield_gen": 650, "hangar": 200},
-      "hangar_capacity": 2, "veteran_xp": 160
+      "hangar_capacity": 2, "max_rank": 5, "veteran_xp": 160
     },
     "imperial_battleship": {
       "name": "Executor-class Dreadnought", "faction": "imperial",
@@ -75,7 +77,7 @@
                    {"weapon": "point_defense", "count": 4, "arcs": ["all"]}],
       "abilities": ["emergency_shield_recharge", "weapon_overcharge", "sensor_jam"],
       "systems": {"engines": 1800, "weapons": 2200, "sensors": 900, "shield_gen": 1800, "hangar": 500},
-      "hangar_capacity": 4, "veteran_xp": 240
+      "hangar_capacity": 4, "max_rank": 5, "veteran_xp": 240
     },
     "imperial_supercapital": {
       "name": "Sovereign-class Star Dreadnought", "faction": "imperial",
@@ -90,9 +92,10 @@
                    {"weapon": "point_defense", "count": 6, "arcs": ["all"]}],
       "abilities": ["emergency_shield_recharge", "weapon_overcharge", "repair_drones"],
       "systems": {"engines": 4500, "weapons": 6000, "sensors": 2200, "shield_gen": 5000, "hangar": 1400},
-      "hangar_capacity": 6, "veteran_xp": 400
+      "hangar_capacity": 6, "max_rank": 5, "veteran_xp": 400
     },
     "imperial_constructor": {
+      "max_rank": 5,
       "name": "Engineering Corps Corvette", "faction": "imperial",
       "category": "construction", "is_construction": true,
       "cost": {"credits": 400, "materials": 250, "energy": 0},
@@ -106,6 +109,7 @@
                               "fighter_platform", "repair_dock", "energy_relay"]
     },
     "imperial_colonizer": {
+      "max_rank": 5,
       "name": "Colonial Outreach Frigate", "faction": "imperial",
       "category": "construction", "is_construction": true, "can_colonize": true,
       "cost": {"credits": 600, "materials": 350, "energy": 100},
