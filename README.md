@@ -2,7 +2,11 @@
 
 **STAR ARMADA** is a large-scale, fleet-based real-time strategy game in the spirit of
 classic space-fleet RTS titles (Armada II / Fleet Operations era). It runs entirely on
-Python 3 — simulation, AI, rendering (modern OpenGL via pygame-ce) and audio.
+Python 3 — deterministic simulation, AI, OpenGL rendering via pygame-ce and procedural audio.
+
+**Current release: [v0.5.1](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.5.1)**
+— macOS DMG and Windows ZIP, including combat ranks, fleet-selection HUD, LAN
+multiplayer, alliances, and close-zoom/minimap camera fixes.
 
 The setting is an original space-opera universe. Prototype faction/ship names are
 placeholder-style data (Imperial / Rebel / Confederacy / Syndicate) so the feel reads
@@ -16,15 +20,22 @@ them and the game changes with zero code edits.
 
 ```bash
 cd STAR-ARMADA
-source .venv/bin/activate       # if you use the bundled venv
-pip install pygame-ce PyOpenGL numpy   # skip if already installed
+python3 -m venv .venv           # Python 3.11 recommended
+source .venv/bin/activate       # Windows: .venv\Scripts\activate
+python -m pip install -r requirements.txt
 
 python main.py                  # title screen → main menu → game
 python main.py --skirmish       # straight into a skirmish vs AI (skips menus)
-python main.py --demo           # AI-vs-AI attract demo (no input needed)
-python main.py --headless-test  # 1200-tick full-loop simulation test
-python main.py --version
+python main.py --smoke          # automated rendered gameplay smoke
+python main.py --fullscreen     # start fullscreen
+python main.py --load saves/quicksave.json
+python main.py --mods example   # load a data override mod
 ```
+
+For packaged builds, download the DMG or ZIP from the release above; Python is
+not required. On macOS, drag the app to Applications. The app is ad-hoc signed,
+not Apple-notarized; first launch may require right-click → Open. On Windows,
+extract the entire ZIP and run `STAR ARMADA.exe` (unsigned).
 
 ## Controls
 
@@ -45,7 +56,8 @@ python main.py --version
 | M | Toggle follow / free camera |
 | Q / E | Rotate camera |
 | WASD / arrows | Pan; manual pan releases follow (S stops when units are selected) |
-| Mouse-wheel | Zoom (tactical → fighter scale) |
+| Mouse-wheel | Zoom (tactical → fighter scale); scroll roster/abilities when hovering their HUD lists |
+| Left-click minimap | Recenter the camera and release follow mode |
 | X | Tactical overview |
 | P | Pause / resume |
 | F5 / F9 | Quick save / quick load |
@@ -78,11 +90,32 @@ validates caps, thresholds and bonuses after mod overrides; older ship
 definitions without `max_rank` default to 5, and old saves derive rank from XP.
 Full-precision saves/replays preserve XP and projectile shooter identity.
 
+## Fleet selection and tactical presentation
+
+Selecting several ships shows a scrollable/paged roster rather than only one
+representative ship. The HUD combines the selected owned units' special abilities,
+with readiness, cooldown and energy feedback; commands apply only to eligible
+owned recipients. Jump destination selection and targeted abilities are mutually
+exclusive and can be canceled. Construction orders and progress are laid out
+separately, including on smaller windows.
+
+Ship sizes are normalized from rendered hull geometry: the largest hull is
+**5× a corvette**, with a shared tactical readability scale. Metal hulls,
+procedural planets/deep space, directional shield impacts, hull-hit effects and
+per-weapon procedural audio distinguish fleets and combat. Close zoom now avoids
+visible base geometry without changing requested zoom limits; ships behind the
+camera no longer inflate into giant mesh planes. Picking, effects and audio use
+the same effective camera view, and camera obstacle filtering avoids unnecessary
+distant hidden-fleet visibility scans.
+
 ## Menus
 
 `main.py` now starts at the **title screen** → **main menu** (Skirmish / Campaign /
-Settings / Quit). Settings (music/SFX volume, fullscreen, autosave, camera pan speed)
-persist to `saves/settings.json`. The **Campaign** screen lists the 10-mission
+Multiplayer / Settings / Quit). Settings (music/SFX volume, fullscreen, autosave,
+camera pan speed) persist to `saves/settings.json` in source runs. Packaged builds
+store settings, saves and campaign progress outside the application bundle:
+`~/Library/Application Support/STAR ARMADA` on macOS and `%APPDATA%\STAR ARMADA`
+on Windows. The **Campaign** screen lists the 10-mission
 "Rise of the Outer Armada" chain (`assets/data/campaign/campaign.json`); each mission
 has a briefing (story, objectives, enemy preview) before LAUNCH, and in-game objectives
 are tracked live in the HUD with COMPLETE/FAILED states.
@@ -159,12 +192,13 @@ For setup, Windows Firewall commands, and troubleshooting, see **docs/LAN.md**.
 Firewall rules are not changed automatically. All computers must use the same game
 version and simulation content. LAN matches disable independent pause and save/load.
 
-## Gameplay loop (prototype = vertical slice)
+## Gameplay loop
 
 ```
 BUILD mining stations → GATHER credits/materials/energy → RESEARCH upgrades
 → BUILD fleet (fighters → corvettes → frigates → cruiser → battleship)
-→ FORM fleets with commanders → ATTACK enemy base → DESTROY command station → WIN
+→ FORM fleets with commanders → FIGHT and earn ranks
+→ ELIMINATE all enemy ships, squadrons and stations → TEAM VICTORY
 ```
 
 ## Sensors and fog of war
@@ -189,11 +223,11 @@ friendly sensor can provide detection for another ship's longer-range weapons.
 
 | Spec section | Status |
 |---|---|
-| 3D tactical camera (zoom/pan/rotate/bookmarks) | ✅ prototype |
+| 3D tactical camera, minimap recenter, geometry-safe close zoom | ✅ implemented |
 | Box/drag select, control groups, fleets | ✅ prototype |
-| 4 factions (data-driven) | ✅ prototype (playable: Empire) |
+| Four data-driven factions | ✅ faction-selectable setup; Syndicate remains a prototype, not full parity |
 | Resources: credits/materials/energy/crew, command capacity | ✅ prototype |
-| Stations: command, mining, shipyard, research, defense, sensor, fighter platform, repair | ✅ prototype |
+| Stations: command, mining, shipyard, research, defense, sensor, fighter platform, repair, trade, energy relay | ✅ prototype |
 | Planets (colonize, bonuses), asteroid fields, nebulae, jump points | ✅ prototype (colonize: build) |
 | Ships: fighter→supercapital, construction ship | ✅ prototype |
 | Fighter **squadrons** with losses + carrier reinforcement | ✅ prototype |
@@ -205,19 +239,21 @@ friendly sensor can provide detection for another ship's longer-range weapons.
 | Formations: line/wedge/column/diamond/screen/escort | ✅ prototype |
 | Fleet command + commanders (aggressive/logistics/recon/defensive) | ✅ prototype |
 | Technology tree (data-driven, per faction) | ✅ prototype |
-| Experience levels (Recruit→Legendary) | ✅ prototype |
+| Combat XP, per-ship capped ranks, attack and defense promotions | ✅ implemented; rank/XP HUD |
 | Strategic + tactical AI, update-frequency tiers | ✅ prototype |
-| Skirmish victory: destroy enemy command station | ✅ prototype |
-| Save / load (quick save F9 / load F10) | ✅ prototype |
+| Skirmish/LAN team victory: eliminate all enemy forces | ✅ implemented; shared allied detection/exploration |
+| Save / load (quick save F5 / load F9) | ✅ implemented; disabled during LAN matches |
 | Procedural audio (original, no assets) | ✅ prototype |
-| Minimap, unit info panel, build/research panel | ✅ prototype |
+| Minimap, fleet roster/ability union, rank inspector, build/research progress | ✅ implemented |
 | Title screen, main menu, settings menu (music/SFX volume, fullscreen, autosave, pan speed — persisted to `saves/settings.json`) | ✅ prototype |
 | Campaign: 10-mission chain with briefing screens, live objectives panel, progress persists across sessions | ✅ prototype |
 | Victory conditions: annihilation, planet majority, economic, timed (data-driven) | ✅ prototype |
 | Trade convoys between trade stations + raiding (salvage loot) | ✅ prototype |
 | Objectives: build/destroy/colonize/survive + escort_convoy, hold_point | ✅ prototype |
 | Autosave ring (3 rotating slots) | ✅ prototype |
-| Multiplayer / determinism tests | 🟠 architecture-ready (command queue + serializable state) |
+| LAN host/join, 2–4 humans, optional AI, configurable TCP port | ✅ implemented; matching version/content required |
+| Deterministic lockstep, serialized commands, replay infrastructure | ✅ implemented and tested |
+| Four skirmish maps, player factions/colors/teams, AI difficulty | ✅ implemented; 2–4 total players by map |
 | 8-player skirmish, boarding/capture | 🔲 planned (see DEV_PLAN.md) |
 
 ## Repository layout
@@ -229,6 +265,7 @@ game/                    simulation core (no rendering imports)
   data/                  loaders + dataclasses mirroring the JSON schema
   systems/               simulation systems (movement, combat, economy, ...)
   ai/                    strategic & tactical AI
+  net/                   LAN lobby, transports, lockstep and replay
 render/                  OpenGL renderer, camera, UI, minimap, menus, audio, input
 assets/data/             JSON: factions, ships, weapons, tech, maps, abilities, campaign
 assets/audio/            (generated at runtime — no binary assets committed)
@@ -239,28 +276,53 @@ docs/                    design + architecture notes
 ## Testing
 
 ```bash
-python -m unittest discover -s tests -v
+PYTHONPATH=tests .venv/bin/python -m unittest discover -s tests -v
 ```
 
 Tests run the **real simulation headless** — no window, no GPU — covering economy,
 combat, subsystem damage, formations, squadrons, research, AI, save/load, victory
 conditions, trade convoys, mission objectives and the full
-build→gather→research→fleet→attack→win loop.
+build→gather→research→fleet→attack→win loop. The v0.5.1 release passed **525
+automated tests**, plus **40 real SDL/OpenGL before/after camera cases** and
+independent correctness/performance review. Render diagnostics in `tools/` need
+a working window server/OpenGL context; they are separate from headless tests.
 
 ## Releases
 
-Tagged versions build automatically on GitHub Actions (mac DMG + Windows ZIP):
+**[Download v0.5.1](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.5.1)**:
 
-```bash
-git tag v0.3.0 && git push origin v0.3.0
-```
+- **macOS:** `STAR-ARMADA-v0.5.1-mac.dmg`
+- **Windows:** `STAR-ARMADA-v0.5.1-win.zip`
 
-Latest: **v0.3.0** — rebuilt combat audio (per-weapon voices, no more 2x-pitch
-bug), professional layered explosions, trade convoys visible on the map,
-reachable trading, and a fix for the crash when quitting from a menu. Earlier:
-v0.2.0 — menus + settings, 10-mission campaign, victory conditions, trade
-convoys, escort/hold-point objectives, autosave ring. See `docs/PACKAGING.md`
-for local builds (`./scripts/build_mac.sh`).
+The published DMG passed image integrity, signature, version and inspected
+bundled-code checks, plus a gameplay smoke from a read-only mount. The Windows
+ZIP passed native CI build, archive/executable/data integrity checks. Both
+assets matched their published SHA-256 hashes. **Interactive Windows gameplay
+was not tested.**
+
+Tagged versions (`v*`) trigger native macOS and Windows builds and GitHub Release
+publication. Version is defined once in `game/__init__.py`; merge the version
+bump through a PR before tagging its merged commit. See `docs/PACKAGING.md` for
+local builds (`./scripts/build_mac.sh`).
+
+## Completed development
+
+| Release | Delivered |
+|---|---|
+| **v0.5.1** | Close/very-close base camera safety, minimap recenter/follow correction, behind-eye ship-size fix, consistent projection/picking/audio, and large-fleet camera query optimization |
+| **v0.5.0** | Combat XP and capped ship ranks with attack/defense bonuses; selected-fleet roster and combined special abilities; construction-progress layout fixes; alliances/team elimination and normalized hull sizes |
+| **v0.4.0** | LAN host/join with human and AI slots and selectable port; click-targeted hyperjump; combat standoff/orbit behavior; metal hulls, planets, deep-space and shield/hull impact graphics |
+| **v0.3.0** | Per-weapon combat audio/pitch fixes, layered explosions, reachable trade convoys, and writable user data outside frozen application bundles |
+| **v0.2.0** | Menus/settings, 10-mission campaign, data-driven victory conditions, trading/raiding, escort/hold-point objectives and rotating autosaves |
+
+### Still in development
+
+The game remains a playable prototype, not the full design specification.
+Eight-player matches, boarding/capture, expanded campaign scripting/cinematics,
+full faction parity, in-game mod management and further rendering optimization
+remain development work. Current skirmish/LAN capacity is **2–4 total players**,
+limited by the selected map. See `docs/DEV_PLAN.md` for the broader plan; the
+feature matrix above describes the implemented release behavior.
 
 ## License / originality
 
