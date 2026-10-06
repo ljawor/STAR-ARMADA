@@ -48,6 +48,9 @@ DEFAULT_SETTINGS = {
     "fullscreen": False,
     "pan_speed": 1.0,
     "autosave": True,
+    # Ownership marker verbosity in the 3D view: 'all' | 'hostiles' | 'off'.
+    # Read-only view state — never part of the simulation.
+    "markers": "all",
 }
 
 
@@ -607,8 +610,18 @@ class MenuStack:
         toggle(y0 + 2 * row_h, "Fullscreen", "fullscreen")
         toggle(y0 + 2 * row_h + 54, "Autosave", "autosave")
 
+        # Ownership markers cycle rather than toggle: three readable states, so
+        # a player who dislikes icon clutter is not forced to lose hostiles.
+        mode = self.settings.get("markers", "all")
+        if mode not in ("all", "hostiles", "off"):
+            mode = "all"
+        r = pygame.Rect(self.width // 2 - 220, y0 + 2 * row_h + 108,
+                        bw, bh)
+        self._button(r, f"Ownership markers: {mode.upper()}", "cycle_markers",
+                     hot=r.collidepoint(mouse))
+
         # pan speed slider too
-        slider(y0 + 2 * row_h + 108 + 24, "Camera pan speed", "pan_speed")
+        slider(y0 + 2 * row_h + 162 + 24, "Camera pan speed", "pan_speed")
 
         back = pygame.Rect(self.width // 2 - 110, self.height - 90, 220, 48)
         self._button(back, "BACK", "goto_main", hot=back.collidepoint(mouse))
@@ -926,6 +939,11 @@ class MenuStack:
                         self.result_payload = ms[self.selected_mission]
                 elif act == "exit":
                     self.result = MenuResult.EXIT
+                elif act == "cycle_markers":
+                    from render.markers import next_mode
+                    self.settings["markers"] = next_mode(
+                        self.settings.get("markers", "all"))
+                    self._dirty_settings = True
                 elif act == "toggle":
                     key = b["payload"]["key"]
                     self.settings[key] = not self.settings.get(key)

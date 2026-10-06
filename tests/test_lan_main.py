@@ -17,7 +17,7 @@ def factories():
               MODS=[], W=800, H=600, gm=None, state=None, camera=None, renderer=None,
               hud=None, audio=None, inputc=None, net_session=None, local_player=0,
               accumulator=0., last_autosave=0., menu=Mock(), mode='game', paused=False,
-              TICK_DT=1/30, Audio=object)
+              TICK_DT=1/30, Audio=object, SETTINGS={})
     for name in ('Camera', 'Renderer', 'HUD', 'InputController'):
         ns[name] = Mock(side_effect=lambda *a: SimpleNamespace(close=Mock(), zoom=Mock(), set_camera_ref=Mock()))
     ns['make_audio'] = Mock(side_effect=lambda state: SimpleNamespace(cleanup=Mock(), set_camera=Mock(), state=state))
