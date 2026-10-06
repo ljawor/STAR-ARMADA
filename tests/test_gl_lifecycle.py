@@ -122,7 +122,7 @@ class MainLifecycleTests(unittest.TestCase):
             events.append('HUD')
             return Mock()
         ns = dict(renderer=old_renderer, hud=old_hud, W=640, H=480,
-                  net_session=None, audio=None,
+                  net_session=None, audio=None, SETTINGS={},
                   make_game=lambda *args: SimpleNamespace(state=SimpleNamespace(entities={}, time=0.0)),
                   Camera=Mock(), Renderer=create_renderer, HUD=create_hud,
                   make_audio=Mock(), InputController=Mock(), _AppGlue=Mock())

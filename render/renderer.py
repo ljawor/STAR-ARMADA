@@ -21,7 +21,8 @@ from OpenGL.GL import (
     glBindTexture, GL_BLEND, GL_CULL_FACE, GL_COLOR_BUFFER_BIT, GL_COMPILE,
     GL_CURRENT_BIT, GL_DEPTH_BUFFER_BIT, GL_DEPTH_TEST, GL_LIGHTING,
     GL_LINE_LOOP, GL_LINE_STRIP, GL_LINES, GL_MODELVIEW, GL_ONE,
-    GL_ONE_MINUS_SRC_ALPHA, GL_POINTS, GL_QUADS, GL_QUAD_STRIP, GL_SRC_ALPHA,
+    GL_ONE_MINUS_SRC_ALPHA, GL_POINTS, GL_POLYGON, GL_QUADS, GL_QUAD_STRIP,
+    GL_SRC_ALPHA,
     GL_TEXTURE_2D, GL_TRANSFORM_BIT, GL_TRIANGLES, GL_TRIANGLE_FAN,
 )
 import OpenGL.GL as _gl
@@ -29,6 +30,7 @@ import OpenGL.GL as _gl
 from render.camera import cross3, normalize3
 from render.fog import FogMask, known_entities, effect_visible, position, segment_visible
 from render import textures as tex
+from render import markers as mk
 from render.fleet_materials import FleetMaterials
 from render.fleet_geometry import armor_loft, ship_mesh, station_mesh, ROLES
 
@@ -41,6 +43,12 @@ from game.data.store import DataStore
 # it a distant bubble resolves to nothing but its rim and collapses back into
 # the flat outline circle the additive shell replaced.
 SHIELD_MIN_PX = 74.0
+
+# Ownership markers are clamped in screen pixels, so a marker keeps the same
+# readable footprint whether the hull under it is 2 px or 200 px. This is the
+# opposite of SHIELD_MIN_PX's job above: that one keeps the bubble honest about
+# how big the object is, this one deliberately ignores apparent size.
+MARKER_ALPHA = 0.92
 
 
 def shield_color(s: float) -> tuple[float, float, float]:
@@ -96,6 +104,9 @@ class Renderer:
     def __init__(self, state, camera):
         self.state = state
         self.local_player = 0
+        # Ownership marker verbosity: 'all' | 'hostiles' | 'off'. Read-only
+        # view state (never serialized, never in the sim).
+        self.marker_mode = "all"
         self.fog = FogMask()
         self.camera = camera
         self.ds = DataStore.get()
@@ -194,6 +205,11 @@ class Renderer:
             self._draw_hits()
         if "sites" not in self.skip:
             self._draw_construction_sites()
+        if "markers" not in self.skip:
+            # After the bubbles: a hostile diamond must never be swallowed by an
+            # allied bubble drawn on top of it. Before the selection rings so
+            # the local player's own selection stays the topmost cue.
+            self._draw_ownership_markers()
         if "rings" not in self.skip:
             self._draw_selection_rings(selection)
         glFlush()
@@ -799,6 +815,102 @@ class Renderer:
                 self._draw_station(e)
         GL.glPopAttrib()
 
+    # ------------------------------------------------------- ownership markers
+    def _relation(self, owner: int) -> str:
+        """Own/ally/enemy/neutral for an owner from the local player's view."""
+        return mk.relation_of(self.local_player, owner,
+                              self.state.allied_player_ids(self.local_player))
+
+    def _hull_color(self, e):
+        """Base hull tint, pushed apart by relation.
+
+        Hull tint is the ownership channel the additive shield bubble washes
+        out, so own/ally hulls are lifted and hostile hulls darkened to keep the
+        tint readable in a scrum. Planets/terrain are left alone.
+        """
+        color = self._owner_color(e.owner)
+        if e.is_planet:
+            return color
+        return mk.hull_shade(color, self._relation(e.owner))
+
+    def _draw_ownership_markers(self):
+        """Screen-clamped chevron (own/ally) / diamond (hostile) on each unit.
+
+        Only currently detected units get a marker — a marker outside sensor
+        coverage would be the same intelligence leak the fog mask exists to
+        prevent.
+        """
+        mode = mk.marker_mode(getattr(self, "marker_mode", "all"))
+        if mode == "off":
+            return
+        import OpenGL.GL as GL
+        st = self.state
+        units = [e for e in st.entities.values()
+                 if e.alive and not e.is_planet
+                 and st.can_see(self.local_player, e.id)]
+        units = [e for e in units
+                 if mk.shows_marker(self._relation(e.owner), mode)]
+        if not units:
+            return
+        right, up, _ = self._camera_basis()
+        GL.glPushAttrib(int(GL.GL_ENABLE_BIT) | int(GL.GL_CURRENT_BIT) |
+                        int(GL.GL_LIGHTING_BIT) | int(GL.GL_LINE_BIT))
+        GL.glDisable(GL.GL_LIGHTING)
+        GL.glDisable(GL.GL_TEXTURE_2D)
+        GL.glDisable(GL.GL_CULL_FACE)
+        glDisable(GL_DEPTH_TEST)          # a cue that can be hidden is useless
+        GL.glEnable(GL.GL_BLEND)
+        GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
+        GL.glDepthMask(False)
+        for e in units:
+            pos = (e.pos.x, e.pos.y, e.pos.z)
+            # px_per_world is computed at camera depth so two hulls side by side
+            # get the same marker size (same rule ship LOD uses).
+            ppw = self._px_per_world(pos, camera_depth=True)
+            if ppw <= 0.0 or not self._in_front(pos, 0.0):
+                continue
+            apparent = max(0.0, self._ship_size(e).length * ppw
+                           if not e.is_station else e.radius * 2.0 * ppw)
+            r = mk.world_radius(mk.marker_px(apparent), ppw)
+            if r <= 0.0:
+                continue
+            rel = self._relation(e.owner)
+            col = mk.marker_color(rel, self._owner_color(e.owner)
+                                  if rel in ("own", "ally") else None)
+            poly = mk.shape_for(rel)
+            GL.glPushMatrix()
+            # Camera-aligned billboard: markers are flat icons, so they must
+            # face the eye exactly like the shield shells do.
+            _gl.glMultMatrixf([right[0], right[1], right[2], 0.0,
+                               up[0], up[1], up[2], 0.0,
+                               0.0, 0.0, 1.0, 0.0,
+                               0.0, 0.0, 0.0, 1.0])
+            GL.glTranslatef(pos[0], pos[1], pos[2])
+            # Lift the icon off the hull center so it labels the ship instead of
+            # covering it; scaled with r so the gap holds at every zoom.
+            GL.glTranslatef(0.0, r * 1.55, 0.0)
+            # Dark outline first (cheap 1.30x silhouette), then the fill: the
+            # outline is what keeps a marker readable over a bright hull, a
+            # starfield or the planet behind it.
+            GL.glLineWidth(1.6)
+            GL.glColor4f(mk.OUTLINE_COLOR[0], mk.OUTLINE_COLOR[1],
+                         mk.OUTLINE_COLOR[2], MARKER_ALPHA)
+            glBegin(GL_LINE_LOOP)
+            for px_, py_ in poly:
+                glVertex3f(px_ * r * 1.30, py_ * r * 1.30, 0.0)
+            glEnd()
+            GL.glColor4f(col[0], col[1], col[2], MARKER_ALPHA)
+            glBegin(GL_POLYGON)
+            for px_, py_ in poly:
+                glVertex3f(px_ * r, py_ * r, 0.0)
+            glEnd()
+            GL.glPopMatrix()
+        GL.glDepthMask(True)
+        GL.glDisable(GL.GL_BLEND)
+        glEnable(GL_DEPTH_TEST)
+        GL.glEnable(GL.GL_CULL_FACE)
+        GL.glPopAttrib()
+
     def _owner_color(self, owner: int):
         p = self.state.players.get(owner)
         if p is None:
@@ -1037,7 +1149,7 @@ class Renderer:
         # impossible to find or attack.
         vis = ds.ship_visual(e.data_id)
         size = self._ship_size(e)
-        color = self._owner_color(e.owner)
+        color = self._hull_color(e)
         glPushMatrix()
         glTranslatef(e.pos.x, e.pos.y, e.pos.z)
         # sim facing is (sin(yaw), 0, cos(yaw)); +yaw in GL's right-handed Y

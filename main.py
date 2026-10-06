@@ -213,6 +213,8 @@ def start_game(load_path: str | None = None, mdef: dict | None = None,
         hud.close()
     renderer = Renderer(state, camera)
     renderer.local_player = local_player
+    # Ownership-marker verbosity is view-only; Settings owns the value.
+    renderer.marker_mode = SETTINGS.get("markers", "all")
     hud = HUD(W, H, state)
     hud.local_player = local_player
     hud.set_camera_ref(camera)
