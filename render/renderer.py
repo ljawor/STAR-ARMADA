@@ -881,11 +881,14 @@ class Renderer:
             GL.glPushMatrix()
             # Camera-aligned billboard: markers are flat icons, so they must
             # face the eye exactly like the shield shells do.
+            # TRANSLATE FIRST (world pos), THEN ROTATE (camera basis) —
+            # the shield bubble does it in this order; doing it reversed
+            # placed markers at camera-space coordinates, not world pos.
+            GL.glTranslatef(pos[0], pos[1], pos[2])
             _gl.glMultMatrixf([right[0], right[1], right[2], 0.0,
                                up[0], up[1], up[2], 0.0,
                                0.0, 0.0, 1.0, 0.0,
                                0.0, 0.0, 0.0, 1.0])
-            GL.glTranslatef(pos[0], pos[1], pos[2])
             # Lift the icon off the hull center so it labels the ship instead of
             # covering it; scaled with r so the gap holds at every zoom.
             GL.glTranslatef(0.0, r * 1.55, 0.0)
