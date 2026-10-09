@@ -9,15 +9,36 @@ import math
 from render.fleet_geometry import station_mesh
 
 
-@lru_cache(maxsize=10)
-def station_bounds(data_id):
-    vertices = [p for mesh in station_mesh(data_id).values() for _, tri in mesh for p in tri]
+def station_bounds(data_id, faction='imperial'):
+    from render.faction_visuals import normalize_station_key
+    return _station_bounds(*normalize_station_key(data_id, faction))
+
+
+@lru_cache(maxsize=40)
+def _station_bounds(faction, data_id):
+    vertices = [p for mesh in station_mesh(data_id, faction).values() for _, tri in mesh for p in tri]
     return tuple(min(p[i] for p in vertices) for i in range(3)), tuple(max(p[i] for p in vertices) for i in range(3))
+
+
+station_bounds.cache_info = _station_bounds.cache_info
+station_bounds.cache_clear = _station_bounds.cache_clear
+
+
+def station_radius(data_id, faction="imperial"):
+    from render.faction_visuals import normalize_station_key
+    return _station_radius(*normalize_station_key(data_id, faction))
+
+
+@lru_cache(maxsize=40)
+def _station_radius(faction, data_id):
+    return max(math.sqrt(sum(v*v for v in p)) for mesh in station_mesh(data_id, faction).values()
+               for _, tri in mesh for p in tri)
 
 
 def scene_boxes(state, player_id, station_angle, ray=None):
     from game.data.store import DataStore
     ds = DataStore.get()
+    from render.faction_visuals import owner_faction, ship_visual_key
     boxes = []
     hardware = {}  # Per-query catalogue geometry; no live visibility cache.
     for e in state.entities.values():
@@ -33,16 +54,20 @@ def scene_boxes(state, player_id, station_angle, ray=None):
         if e.is_station:
             if ds.stations.get(e.data_id) is None:
                 continue
-            lo, hi = station_bounds(e.data_id)
+            lo, hi = station_bounds(e.data_id, owner_faction(state, e.owner))
             scale, angle = e.radius / 50., station_angle
         else:
-            from render.ship_sizes import ship_size, _bounds
-            if e.data_id not in hardware:
-                size = ship_size(ds, e.data_id)
+            from render.ship_sizes import ship_size, _bounds, RATIOS
+            faction = owner_faction(state, e.owner)
+            data = ds.ships.get(e.data_id)
+            ratio = RATIOS.get(data.category, 1.) if data else 1.
+            key = (ship_visual_key(ds, e.data_id, faction), ratio)
+            if key not in hardware:
+                size = ship_size(ds, e.data_id, faction)
                 lo, hi, _ = _bounds(size.shape)
-                hardware[e.data_id] = (tuple(v * size.scale for v in lo),
+                hardware[key] = (tuple(v * size.scale for v in lo),
                                        tuple(v * size.scale for v in hi))
-            lo, hi = hardware[e.data_id]
+            lo, hi = hardware[key]
             scale, angle = 1., e.yaw
         box = ((e.pos.x, e.pos.y, e.pos.z), angle,
                tuple(v * scale for v in lo), tuple(v * scale for v in hi))

@@ -25,8 +25,13 @@ from render.input import InputController
 from render.hud import HUD
 
 
+# Freeze the pre-camera-fix control; HEAD already includes the fix after PR #30.
+# A moving HEAD makes every later feature falsely fail the non-vacuity checks.
+BASELINE = '75fc2be^'
+
+
 def committed(path):
-    source = subprocess.check_output(['git', 'show', 'HEAD:' + path], cwd=ROOT, text=True)
+    source = subprocess.check_output(['git', 'show', BASELINE + ':' + path], cwd=ROOT, text=True)
     module = types.ModuleType('baseline_' + Path(path).stem)
     module.__file__ = str(ROOT / path)
     sys.modules[module.__name__] = module
@@ -76,6 +81,12 @@ def main():
         return baseline_sizes.readable_size(renderer.ds, entity.data_id,
             renderer._px_per_world((entity.pos.x, entity.pos.y, entity.pos.z), camera_depth=True))
     baseline_renderer._ship_size = baseline_ship_size
+    # Isolate camera geometry from the later ownership-tint/marker feature.
+    # The historical control predates relation shading; use its owner paint
+    # in the current diagnostic subclass too, without changing production.
+    class CameraProbeRenderer(Renderer):
+        def _hull_color(self, entity):
+            return self._owner_color(entity.owner)
     results = []
     # Factory geometry only: no radius manipulation or hand-built station.
     cases = [('close', 300., 55.), ('very_close', 180., 55.),
@@ -84,7 +95,7 @@ def main():
              ('rear_ship_close', 300., 55.), ('rear_ship_very_close', 180., 55.)]
     for label, camera_cls, renderer_cls, input_cls in (
             ('baseline', baseline_camera, baseline_renderer, baseline_input),
-            ('fixed', Camera, Renderer, InputController)):
+            ('fixed', Camera, CameraProbeRenderer, InputController)):
         cam = camera_cls(W, H)
         hud = HUD(W, H, st)
         hud.render(set(), None, 0, False, '', 0., 60.)
@@ -92,7 +103,7 @@ def main():
         renderer = renderer_cls(st, cam)
         renderer.diff_render = True
         renderer.skip = {'starfield', 'nebulas', 'star', 'jumppoints', 'planets',
-                         'sites', 'shields', 'projectiles', 'effects', 'squadrons'}
+                         'sites', 'shields', 'projectiles', 'effects', 'squadrons', 'markers'}
         for case, distance, pitch in cases:
             rear_ship.alive = case.startswith('rear_ship')
             cam.distance, cam.pitch, cam.yaw, cam.near = distance, pitch, 45., 20.
@@ -153,14 +164,14 @@ def main():
         safe_pixels = {}
         for label, camera_cls, renderer_cls, input_cls in (
                 ('baseline', baseline_camera, baseline_renderer, baseline_input),
-                ('fixed', Camera, Renderer, InputController)):
+                ('fixed', Camera, CameraProbeRenderer, InputController)):
             cam = camera_cls(W, H)
             hud = HUD(W, H, graph)
             hud.render(set(), None, 0, False, '', 0., 60.)
             control = input_cls(graph, cam, hud, types.SimpleNamespace(flash=lambda *_: None))
             renderer = renderer_cls(graph, cam)
             renderer.diff_render = True
-            renderer.skip = {'starfield', 'nebulas', 'star', 'jumppoints', 'sites', 'shields', 'projectiles', 'effects', 'squadrons'}
+            renderer.skip = {'starfield', 'nebulas', 'star', 'jumppoints', 'sites', 'shields', 'projectiles', 'effects', 'squadrons', 'markers'}
             for suffix, distance, pitch in (('close', 300., 55.), ('very_close', 180., 55.), ('minimap', 180., 8.)):
                 cam.target = [subject.pos.x, 0., subject.pos.z] if scene not in ('empty', 'safe_corvette') else [0., 0., 0.]
                 cam.distance, cam.pitch, cam.yaw = distance, pitch, 45.

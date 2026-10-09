@@ -500,6 +500,7 @@ while running:
 
     # ---- draw
     camera.apply(W, H)
+    renderer.placement = hud.placement  # render-side preview only; never sim state
     renderer.draw(dt_frame, inputc.selection)
     hud.set_floating_texts(renderer.floating_texts_screen())
     # live box-select rectangle while left-dragging

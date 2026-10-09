@@ -292,19 +292,31 @@ class InputController:
         from itertools import product
         from render.ship_sizes import readable_size, _bounds
         d = math.hypot(sp[0]-mouse[0], sp[1]-mouse[1])
-        if e.is_station or not (e.is_ship or e.is_squadron):
+        if not (e.is_station or e.is_ship or e.is_squadron):
             return d
         eye = self.camera.eye_position()
         _, _, forward = self.camera.basis()
         depth = sum((v-eye[i])*forward[i] for i,v in enumerate((e.pos.x,e.pos.y,e.pos.z)))
         if depth <= 0: return d
         ppw = self.camera.height/(2*depth*math.tan(math.radians(self.camera.fov/2)))
-        size = readable_size(DataStore.get(), e.data_id, ppw)
-        lo, hi, _ = _bounds(size.shape)
-        ca, sa = math.cos(e.yaw), math.sin(e.yaw)
+        from render.faction_visuals import owner_faction, normalize_station_key
+        faction = owner_faction(self.state, e.owner)
+        if e.is_station:
+            faction, _ = normalize_station_key(e.data_id, faction)
+            if faction == "imperial":
+                return d  # keep protected legacy station affordance
+            from render.camera_geometry import station_bounds
+            lo, hi = station_bounds(e.data_id, faction)
+            scale = e.radius / 50.
+            yaw = self.camera._station_angle()
+        else:
+            size = readable_size(DataStore.get(), e.data_id, ppw, faction)
+            lo, hi, _ = _bounds(size.shape)
+            scale, yaw = size.scale, e.yaw
+        ca, sa = math.cos(yaw), math.sin(yaw)
         points = []
         for x,y,z in product(*zip(lo,hi)):
-            x,y,z = x*size.scale,y*size.scale,z*size.scale
+            x,y,z = x*scale,y*scale,z*scale
             p = self.camera.world_to_screen(e.pos.x+x*ca+z*sa,e.pos.y+y,e.pos.z+z*ca-x*sa)
             if p is not None: points.append(p)
         if not points: return d
@@ -421,8 +433,11 @@ class InputController:
                 cs = ConstructionSystem(self.state)
             valid, reason = cs.check_site(pl["station_kind"], w, b,
                                           viewer=self.local_player)
+        from render.faction_visuals import owner_faction
         pl["ghost"] = {"sx": mx, "sy": my, "valid": valid, "reason": reason,
-                       "radius": rad, "world": w}
+                       "radius": rad, "world": w, "station_kind": pl["station_kind"],
+                       "builder_id": pl["builder_id"],
+                       "faction": owner_faction(self.state, self.local_player)}
 
     def _confirm_placement(self, pos: tuple) -> bool:
         pl = self.hud.placement
