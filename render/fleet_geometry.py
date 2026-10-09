@@ -158,7 +158,12 @@ def _ring(outer, inner, height, sides):
 
 def ship_mesh(shape):
     """Immutable ship triangles. Unknown utility IDs share one canonical cache."""
-    return _ship_mesh(shape if shape in ('wedge','needle','cruiser','dagger') else 'box')
+    from render.faction_visuals import normalize_ship_key
+    shape = normalize_ship_key(shape)
+    if ':' in shape:
+        from render.faction_ships import ship_mesh as faction_ship_mesh
+        return faction_ship_mesh(*shape.split(':'))
+    return _ship_mesh(shape)
 
 
 @lru_cache(maxsize=5)
@@ -241,9 +246,14 @@ STATION_TYPES = ('command_station', 'shipyard', 'research_station', 'defense_pla
                  'repair_dock', 'energy_relay')
 
 
-def station_mesh(data_id):
+def station_mesh(data_id, faction='imperial'):
     """Station mesh at radius 50, matching ship-scale material coordinates."""
-    return _station_mesh(data_id if data_id in STATION_TYPES else 'research_station')
+    from render.faction_visuals import normalize_station_key
+    faction, data_id = normalize_station_key(data_id, faction)
+    if faction != 'imperial':
+        from render.faction_stations import station_mesh as faction_station_mesh
+        return faction_station_mesh(faction, data_id)
+    return _station_mesh(data_id)
 
 
 @lru_cache(maxsize=10)

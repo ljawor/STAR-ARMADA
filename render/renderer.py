@@ -205,6 +205,7 @@ class Renderer:
             self._draw_hits()
         if "sites" not in self.skip:
             self._draw_construction_sites()
+            self._draw_placement_preview()
         if "markers" not in self.skip:
             # After the bubbles: a hostile diamond must never be swallowed by an
             # allied bubble drawn on top of it. Before the selection rings so
@@ -213,6 +214,54 @@ class Renderer:
         if "rings" not in self.skip:
             self._draw_selection_rings(selection)
         glFlush()
+
+    def _draw_placement_preview(self):
+        """Knowledge-limited input feedback, never an authoritative site query."""
+        placement = getattr(self, "placement", None)
+        ghost = placement.get("ghost") if placement else None
+        if not ghost:
+            return
+        builder = self.state.entities.get(placement.get("builder_id"))
+        if (builder is None or not builder.alive or not builder.is_construction
+                or builder.owner != self.local_player):
+            return
+        data_id = placement.get("station_kind")
+        data = self.ds.stations.get(data_id)
+        pos = ghost.get("world")
+        if data is None or pos is None or not self._in_front(pos, data.radius * 3.):
+            return
+        from render.faction_visuals import owner_faction
+        faction = owner_faction(self.state, builder.owner)
+        color = (.30, .90, .55) if ghost.get("valid") else (1., .25, .20)
+        self._draw_station_outline(data_id, faction, pos, data.radius, color)
+
+    def _draw_station_outline(self, data_id, faction, pos, radius, color):
+        """Exact all-role hardware wireframe with fully scoped preview GL state."""
+        import OpenGL.GL as GL
+        # Direct triangle emission: list construction must never nest in a list.
+        mesh = station_mesh(data_id, faction)
+        GL.glPushAttrib(GL.GL_ENABLE_BIT | GL.GL_LIGHTING_BIT | GL.GL_CURRENT_BIT |
+                        GL.GL_DEPTH_BUFFER_BIT | GL.GL_COLOR_BUFFER_BIT |
+                        GL.GL_POLYGON_BIT | GL.GL_LINE_BIT | GL.GL_TEXTURE_BIT)
+        glPushMatrix()
+        try:
+            GL.glDisable(GL.GL_LIGHTING)
+            GL.glDisable(GL.GL_TEXTURE_2D)
+            GL.glDisable(GL.GL_CULL_FACE)
+            GL.glEnable(GL.GL_BLEND)
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+            GL.glDepthMask(False)
+            GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE)
+            glLineWidth(1.)
+            glColor4f(*color, .55)
+            glTranslatef(*pos)
+            glRotatef(self.time * 3., 0, 1, 0)
+            glScalef(radius / 50., radius / 50., radius / 50.)
+            for triangles in mesh.values():
+                self._emit_detail_mesh(triangles)
+        finally:
+            glPopMatrix()
+            GL.glPopAttrib()
 
     def _draw_construction_sites(self):
         """Wireframe scaffold + progress ring at each queued station site.
@@ -242,6 +291,10 @@ class Renderer:
             frac = 1.0 - max(0.0, item.get("time_left", 0)) / \
                 max(0.1, item.get("total", 1))
             color = self._owner_color(e.owner)
+            from render.faction_visuals import owner_faction
+            faction = owner_faction(st, e.owner)
+            if faction != 'imperial':
+                self._draw_station_outline(item['item'], faction, pos, r, color)
             import OpenGL.GL as GL
             GL.glPushAttrib(GL.GL_ENABLE_BIT | GL.GL_LIGHTING_BIT |
                             GL.GL_CURRENT_BIT | GL.GL_DEPTH_BUFFER_BIT)
@@ -870,7 +923,7 @@ class Renderer:
             if ppw <= 0.0 or not self._in_front(pos, 0.0):
                 continue
             apparent = max(0.0, self._ship_size(e).length * ppw
-                           if not e.is_station else e.radius * 2.0 * ppw)
+                           if not e.is_station else self._station_visual_radius(e) * 2.0 * ppw)
             r = mk.world_radius(mk.marker_px(apparent), ppw)
             if r <= 0.0:
                 continue
@@ -1114,10 +1167,21 @@ class Renderer:
                         glVertex3f(*v)
         glEnd()
 
+    def _station_visual_radius(self, e):
+        from render.faction_visuals import owner_faction, normalize_station_key
+        faction, data_id = normalize_station_key(e.data_id,
+                            owner_faction(getattr(self, 'state', None), e.owner))
+        if faction == 'imperial':
+            return e.radius
+        from render.camera_geometry import station_radius
+        return station_radius(data_id, faction) * (e.radius / 50.)
+
     def _ship_size(self, e):
         from render.ship_sizes import readable_size
+        from render.faction_visuals import owner_faction
         return readable_size(self.ds, e.data_id,
-                             self._px_per_world((e.pos.x, e.pos.y, e.pos.z), camera_depth=True))
+                             self._px_per_world((e.pos.x, e.pos.y, e.pos.z), camera_depth=True),
+                             owner_faction(getattr(self, 'state', None), e.owner))
 
     def _visual_hit(self, fx):
         """Copy sim contacts onto visual surfaces; never modify effect/save data."""
@@ -1127,18 +1191,54 @@ class Renderer:
         if not self.state.can_see(self.local_player, target_id):
             return fx
         e = self.state.entities.get(target_id)
-        if e is None or e.is_station or not (e.is_ship or e.is_squadron):
+        if e is None:
             return fx
-        from render.ship_sizes import hull_contact_distance
+        if e.is_station:
+            from render.faction_visuals import owner_faction, normalize_station_key
+            faction, _ = normalize_station_key(e.data_id, owner_faction(self.state, e.owner))
+            if faction == "imperial":
+                return fx  # protected legacy station effect path
+            from render.ship_sizes import station_contact_offset
+            n = tuple(fx.get("normal", (0., 0., 1.)))
+            length = math.sqrt(sum(x*x for x in n)) or 1.
+            n = tuple(x/length for x in n)
+            center = (e.pos.x, e.pos.y, e.pos.z)
+            if fx.get("kind") == "shield_hit":
+                radius = self._shield_radius(e)
+                offset = tuple(x*radius for x in n)
+            else:
+                desired = tuple(fx.get('pos', center)[i]-center[i] for i in range(3))
+                offset = station_contact_offset(e.data_id, faction, e.radius, n,
+                                                math.radians(self.time * 3.), desired)
+                if offset is None:
+                    return fx
+                radius = math.sqrt(sum(x*x for x in offset))
+            return dict(fx, center=center, radius=radius,
+                        pos=tuple(center[i]+offset[i] for i in range(3)),
+                        visual_contact=True)
+        if not (e.is_ship or e.is_squadron):
+            return fx
+        from render.ship_sizes import hull_contact_distance, hull_contact_offset
+        from render.faction_visuals import normalize_ship_key
         size = self._ship_size(e)
         n = tuple(fx.get('normal', (0., 0., 1.)))
         length = math.sqrt(sum(x*x for x in n)) or 1.
         n = tuple(x/length for x in n)
         center = (e.pos.x, e.pos.y, e.pos.z)
-        radius = (self._shield_radius(e) if fx.get('kind') == 'shield_hit' else
-                  hull_contact_distance(size, n, e.yaw))
+        # Canonical render identity protects legacy/unknown-mod hulls even
+        # when captured by a non-Imperial owner. Shields retain their old path.
+        if fx.get('kind') != 'shield_hit' and ':' in normalize_ship_key(size.shape):
+            desired = tuple(fx.get('pos', center)[i]-center[i] for i in range(3))
+            offset = hull_contact_offset(size, n, e.yaw, desired)
+            if offset is None:
+                return fx
+            radius = math.sqrt(sum(x*x for x in offset))
+        else:
+            radius = (self._shield_radius(e) if fx.get('kind') == 'shield_hit' else
+                      hull_contact_distance(size, n, e.yaw))
+            offset = tuple(x*radius for x in n)
         return dict(fx, center=center, radius=radius,
-                    pos=tuple(center[i]+n[i]*radius for i in range(3)),
+                    pos=tuple(center[i]+offset[i] for i in range(3)),
                     size=min(float(fx.get('size', 5.)), size.length*.12),
                     visual_contact=True)
 
@@ -1150,8 +1250,8 @@ class Renderer:
         # ``if sd is None: return`` made convoys draw on the MINIMAP (which
         # iterates entities directly) but never in the 3D view, so they were
         # impossible to find or attack.
-        vis = ds.ship_visual(e.data_id)
         size = self._ship_size(e)
+        vis = {"shape": size.shape}
         color = self._hull_color(e)
         glPushMatrix()
         glTranslatef(e.pos.x, e.pos.y, e.pos.z)
@@ -1280,8 +1380,16 @@ class Renderer:
         multi-tone instead of flat single-color, and the lit pass gives every
         ship a set of glowing details that survive even in shadow.
         """
-        if shape in self.ship_lists:
-            return self.ship_lists[shape]
+        from render.faction_visuals import normalize_ship_key
+        requested_role = "base"
+        for role in ROLES[1:]:
+            if shape.endswith("_" + role):
+                shape, requested_role = shape[:-len(role)-1], role
+                break
+        shape = normalize_ship_key(shape)
+        key = shape if requested_role == "base" else shape + "_" + requested_role
+        if key in self.ship_lists:
+            return self.ship_lists[key]
         import OpenGL.GL as GL
         passes = {p: _gl.glGenLists(1) for p in ROLES}
         for pname, lst in passes.items():
@@ -1299,7 +1407,7 @@ class Renderer:
         self.ship_lists[shape] = passes["base"]
         for pname in ROLES[1:]:
             self.ship_lists[shape + "_" + pname] = passes[pname]
-        return passes["base"]
+        return passes[requested_role]
 
     def _armor_loft(self, sections, bevel=2.0):
         glBegin(GL_TRIANGLES)
@@ -1593,6 +1701,8 @@ class Renderer:
         """Radius-50 cached hardware with scoped alloy shading and faction paint."""
         if self.ds.stations.get(e.data_id) is None:
             return
+        from render.faction_visuals import owner_faction
+        faction = owner_faction(self.state, e.owner)
         color = self._owner_color(e.owner)
         glPushMatrix()
         glTranslatef(e.pos.x, e.pos.y, e.pos.z)
@@ -1612,18 +1722,18 @@ class Renderer:
                 if not self.materials.available and role == "base":
                     tint = tuple(.42 + .18*c for c in color)
                 glColor3f(*tint)
-                glCallList(self._station_detail_list(e.data_id, role))
+                glCallList(self._station_detail_list(e.data_id, role, faction))
         # Dedicated broad painted armor, not an overall owner tint. Draw outside
         # the alloy shader so faction saturation survives on the actual plates.
         glDisable(GL_TEXTURE_2D)
         glColor3f(*(min(1.0, c*1.15+.14) for c in color))
-        glCallList(self._station_detail_list(e.data_id, "accent"))
+        glCallList(self._station_detail_list(e.data_id, "accent", faction))
         self._material_matte()
         glDisable(GL_LIGHTING)
         glColor3f(1.0, 0.80, 0.52)
-        glCallList(self._station_detail_list(e.data_id, "lit"))
+        glCallList(self._station_detail_list(e.data_id, "lit", faction))
         glColor3f(0.38, 0.82, 1.0)
-        glCallList(self._station_detail_list(e.data_id, "cool"))
+        glCallList(self._station_detail_list(e.data_id, "cool", faction))
         glEnable(GL_TEXTURE_2D)
         glEnable(GL_LIGHTING)
         glPopMatrix()
@@ -1642,12 +1752,15 @@ class Renderer:
             glEnable(GL_DEPTH_TEST)
         glPopMatrix()
 
-    def _station_detail_list(self, data_id, role):
-        key = "station_detail:" + data_id + ":" + role
+    def _station_detail_list(self, data_id, role, faction="imperial"):
+        from render.faction_visuals import normalize_station_key
+        faction, data_id = normalize_station_key(data_id, faction)
+        role = role if role in ROLES else "base"
+        key = "station_detail:" + faction + ":" + data_id + ":" + role
         if key not in self.ship_lists:
             lst = _gl.glGenLists(1)
             glNewList(lst, GL_COMPILE)
-            self._emit_detail_mesh(station_mesh(data_id)[role])
+            self._emit_detail_mesh(station_mesh(data_id, faction)[role])
             glEndList()
             self.ship_lists[key] = lst
         return self.ship_lists[key]
@@ -2594,6 +2707,11 @@ class Renderer:
         if not e.is_station and (e.is_ship or e.is_squadron):
             return self._ship_size(e).radius * 1.08
         r = e.radius * 1.35
+        if e.is_station:
+            from render.faction_visuals import owner_faction, normalize_station_key
+            faction, _ = normalize_station_key(e.data_id, owner_faction(getattr(self, "state", None), e.owner))
+            if faction != "imperial":
+                r = self._station_visual_radius(e) * 1.08
         ppw = self._px_per_world((e.pos.x, e.pos.y, e.pos.z))
         if ppw > 0.0:
             want_r = SHIELD_MIN_PX * 0.5 / ppw
@@ -2767,7 +2885,8 @@ class Renderer:
             shielded = (not e.is_planet) and e.max_shield_total() > 0 \
                 and e.total_shield() > 0
             visual_radius = (self._ship_size(e).radius if not e.is_station
-                             and (e.is_ship or e.is_squadron) else e.radius)
+                             and (e.is_ship or e.is_squadron) else
+                             self._station_visual_radius(e) if e.is_station else e.radius)
             r = visual_radius * (1.1 if shielded else (1.35 if not e.is_planet else 1.1))
             if not shielded:
                 glBegin(GL_LINE_LOOP)

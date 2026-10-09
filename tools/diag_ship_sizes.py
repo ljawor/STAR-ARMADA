@@ -28,7 +28,7 @@ from render.ship_sizes import ship_size, RATIOS
 import render.renderer as current
 
 W, H = 1280, 960
-SKIP = {'starfield','star','planets','nebulas','jumppoints','rings','sites','effects','projectiles','shields'}
+SKIP = {'starfield','star','planets','nebulas','jumppoints','rings','sites','effects','projectiles','shields','markers'}
 
 
 def main():
@@ -132,6 +132,9 @@ def main():
     metrics['before_fleet']=fleet(old,'before')
     old.close()
     r=current.Renderer(st,cam)
+    # This historical size control predates ownership relation shading.
+    # Isolate size/geometry by matching its paint; production stays untouched.
+    r._hull_color=lambda e: r._owner_color(e.owner)
     r.skip=set(SKIP);r.time=3.;r.diff_render=True
     for distance, control in controls.items():
         cam.distance=distance

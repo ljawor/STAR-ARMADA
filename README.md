@@ -4,9 +4,12 @@
 classic space-fleet RTS titles (Armada II / Fleet Operations era). It runs entirely on
 Python 3 — deterministic simulation, AI, OpenGL rendering via pygame-ce and procedural audio.
 
-**Current release: [v0.5.1](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.5.1)**
-— macOS DMG and Windows ZIP, including combat ranks, fleet-selection HUD, LAN
-multiplayer, alliances, and close-zoom/minimap camera fixes.
+**Current published release: [v0.5.2](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.5.2)**
+— macOS DMG and Windows ZIP with ownership markers, combat ranks, fleet-selection
+HUD, LAN multiplayer and alliances.
+
+**Upcoming v0.6.0:** faction-specific ships and stations with the Galactic
+Imperium's existing look preserved. Packages are pending release publication.
 
 The setting is an original space-opera universe. Prototype faction/ship names are
 placeholder-style data (Imperial / Rebel / Confederacy / Syndicate) so the feel reads
@@ -107,6 +110,29 @@ visible base geometry without changing requested zoom limits; ships behind the
 camera no longer inflate into giant mesh planes. Picking, effects and audio use
 the same effective camera view, and camera obstacle filtering avoids unnecessary
 distant hidden-fleet visibility scans.
+
+## Faction ships and stations
+
+Faction identity now comes from **3D geometry**, independently of player color:
+
+| Faction | Ships | Stations |
+|---|---|---|
+| **Galactic Imperium** | Existing tapered escorts and capitals retained | Existing station look retained |
+| **Free Systems Alliance** | Segmented hulls, twin nacelles and open hangars | Linked habitats and open oval frames |
+| **Automated Legions** | Forked bows and repeated robotic machinery | Threefold hubs and modular machine docks |
+| **Outer Rim Syndicate** | Asymmetric armored barges and offset bridges | Salvaged modules, unequal docks and cranes |
+
+The redesign covers all **32 existing catalogue ships**, all **40 faction/station
+combinations** (ten station types per faction), and four faction convoy designs.
+Construction previews and sites match the faction hardware; camera bounds, shields
+and hull-hit contacts follow the rendered geometry, including open docking/fork gaps.
+Galactic Imperium geometry and material treatment remain unchanged. No new ship
+classes, balance changes or full Syndicate gameplay parity are implied.
+See [the faction hardware notes](docs/FACTION_VISUALS.md) for design and diagnostics.
+
+Ownership remains a separate visual channel: colored hull accents and screen-clamped
+markers distinguish players and hostiles. Settings allow markers on all units,
+hostiles only, or off; markers obey current sensor visibility.
 
 ## Menus
 
@@ -225,6 +251,7 @@ friendly sensor can provide detection for another ship's longer-range weapons.
 |---|---|
 | 3D tactical camera, minimap recenter, geometry-safe close zoom | ✅ implemented |
 | Box/drag select, control groups, fleets | ✅ prototype |
+| Faction-specific ship/station/convoy hardware, protected Imperial look | ✅ implemented across the existing catalogue |
 | Four data-driven factions | ✅ faction-selectable setup; Syndicate remains a prototype, not full parity |
 | Resources: credits/materials/energy/crew, command capacity | ✅ prototype |
 | Stations: command, mining, shipyard, research, defense, sensor, fighter platform, repair, trade, energy relay | ✅ prototype |
@@ -282,23 +309,28 @@ PYTHONPATH=tests .venv/bin/python -m unittest discover -s tests -v
 Tests run the **real simulation headless** — no window, no GPU — covering economy,
 combat, subsystem damage, formations, squadrons, research, AI, save/load, victory
 conditions, trade convoys, mission objectives and the full
-build→gather→research→fleet→attack→win loop. The v0.5.1 release passed **525
-automated tests**, plus **40 real SDL/OpenGL before/after camera cases** and
-independent correctness/performance review. Render diagnostics in `tools/` need
-a working window server/OpenGL context; they are separate from headless tests.
+build→gather→research→fleet→attack→win loop. The v0.6.0 source tree passed **577
+headless tests**, plus real SDL/OpenGL catalogue checks for 32 ships, 40 station
+variants, four convoys, all station placement/construction views and all four
+faction close-camera keep-outs. **19 protected Imperial pixel comparisons were
+unchanged.** Independent code review, ship-size/close-zoom regressions and the
+30-second rendered gameplay smoke also passed. Render diagnostics in `tools/`
+need a working window server/OpenGL context; they are separate from headless tests.
 
 ## Releases
 
-**[Download v0.5.1](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.5.1)**:
+**[Download v0.5.2](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.5.2)** is the current published build.
 
-- **macOS:** `STAR-ARMADA-v0.5.1-mac.dmg`
-- **Windows:** `STAR-ARMADA-v0.5.1-win.zip`
+The upcoming **v0.6.0** tag workflow will publish:
 
-The published DMG passed image integrity, signature, version and inspected
-bundled-code checks, plus a gameplay smoke from a read-only mount. The Windows
-ZIP passed native CI build, archive/executable/data integrity checks. Both
-assets matched their published SHA-256 hashes. **Interactive Windows gameplay
-was not tested.**
+- **macOS:** `STAR-ARMADA-v0.6.0-mac.dmg`
+- **Windows:** `STAR-ARMADA-v0.6.0-win.zip`
+
+Release verification checks include DMG image integrity, signing, version and
+inspected bundled-code comparisons, followed by a gameplay smoke from a read-only
+mount. The Windows ZIP is built on a native Windows runner and checked for archive,
+executable and bundled-data integrity. **These package checks do not establish
+interactive Windows gameplay testing.**
 
 Tagged versions (`v*`) trigger native macOS and Windows builds and GitHub Release
 publication. Version is defined once in `game/__init__.py`; merge the version
@@ -309,6 +341,8 @@ local builds (`./scripts/build_mac.sh`).
 
 | Release | Delivered |
 |---|---|
+| **v0.6.0 (upcoming)** | Distinct ships, ten station types and convoys for every faction; Imperial look preserved; faction construction previews, geometry-safe cameras and exact hull contacts |
+| **v0.5.2** | Ownership hull shading and screen-clamped friend/hostile markers with configurable visibility |
 | **v0.5.1** | Close/very-close base camera safety, minimap recenter/follow correction, behind-eye ship-size fix, consistent projection/picking/audio, and large-fleet camera query optimization |
 | **v0.5.0** | Combat XP and capped ship ranks with attack/defense bonuses; selected-fleet roster and combined special abilities; construction-progress layout fixes; alliances/team elimination and normalized hull sizes |
 | **v0.4.0** | LAN host/join with human and AI slots and selectable port; click-targeted hyperjump; combat standoff/orbit behavior; metal hulls, planets, deep-space and shield/hull impact graphics |
