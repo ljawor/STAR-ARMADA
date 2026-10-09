@@ -4,12 +4,10 @@
 classic space-fleet RTS titles (Armada II / Fleet Operations era). It runs entirely on
 Python 3 — deterministic simulation, AI, OpenGL rendering via pygame-ce and procedural audio.
 
-**Current published release: [v0.5.2](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.5.2)**
-— macOS DMG and Windows ZIP with ownership markers, combat ranks, fleet-selection
-HUD, LAN multiplayer and alliances.
-
-**Upcoming v0.6.0:** faction-specific ships and stations with the Galactic
-Imperium's existing look preserved. Packages are pending release publication.
+**Current release: [v0.6.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.6.0)**
+— macOS DMG and Windows ZIP, featuring faction-specific ships and stations,
+ownership markers, combat ranks, fleet-selection HUD, LAN multiplayer and alliances.
+The Galactic Imperium's existing look is preserved.
 
 The setting is an original space-opera universe. Prototype faction/ship names are
 placeholder-style data (Imperial / Rebel / Confederacy / Syndicate) so the feel reads
@@ -319,18 +317,17 @@ need a working window server/OpenGL context; they are separate from headless tes
 
 ## Releases
 
-**[Download v0.5.2](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.5.2)** is the current published build.
-
-The upcoming **v0.6.0** tag workflow will publish:
+**[Download v0.6.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.6.0)**:
 
 - **macOS:** `STAR-ARMADA-v0.6.0-mac.dmg`
 - **Windows:** `STAR-ARMADA-v0.6.0-win.zip`
 
-Release verification checks include DMG image integrity, signing, version and
-inspected bundled-code comparisons, followed by a gameplay smoke from a read-only
-mount. The Windows ZIP is built on a native Windows runner and checked for archive,
-executable and bundled-data integrity. **These package checks do not establish
-interactive Windows gameplay testing.**
+The published DMG passed image integrity, signing, version and inspected
+bundled-code comparisons, plus a 30-second gameplay smoke from a read-only mount.
+The published Windows ZIP passed native Windows CI build, ZIP CRC, executable
+header, bundled-data and inspected-code checks. Both downloaded assets matched
+their published SHA-256 hashes and sizes. **Interactive Windows gameplay was
+not tested.**
 
 Tagged versions (`v*`) trigger native macOS and Windows builds and GitHub Release
 publication. Version is defined once in `game/__init__.py`; merge the version
@@ -341,7 +338,7 @@ local builds (`./scripts/build_mac.sh`).
 
 | Release | Delivered |
 |---|---|
-| **v0.6.0 (upcoming)** | Distinct ships, ten station types and convoys for every faction; Imperial look preserved; faction construction previews, geometry-safe cameras and exact hull contacts |
+| **v0.6.0** | Distinct ships, ten station types and convoys for every faction; Imperial look preserved; faction construction previews, geometry-safe cameras and exact hull contacts |
 | **v0.5.2** | Ownership hull shading and screen-clamped friend/hostile markers with configurable visibility |
 | **v0.5.1** | Close/very-close base camera safety, minimap recenter/follow correction, behind-eye ship-size fix, consistent projection/picking/audio, and large-fleet camera query optimization |
 | **v0.5.0** | Combat XP and capped ship ranks with attack/defense bonuses; selected-fleet roster and combined special abilities; construction-progress layout fixes; alliances/team elimination and normalized hull sizes |
