@@ -36,12 +36,17 @@ class CommandHandler:
         fn = getattr(self, "_do_" + t, None)
         if fn is None:
             return
+        if t != 'board':
+            for e in self._units(cmd):
+                self.state._boarding_system.cancel(e)
         fn(cmd)
 
     def _units(self, cmd: PlayerCommand):
         st = self.state
         return [st.entity(uid) for uid in cmd.unit_ids
                 if st.entity(uid) is not None
+                and st.entity(uid).operational
+                and not st.entity(uid).boarding
                 and st.entity(uid).owner == cmd.player]
 
     def _do_move(self, cmd: PlayerCommand) -> None:
@@ -70,6 +75,12 @@ class CommandHandler:
             e.order_target_pos = dest
             e.order_target_id = None
             n += 1
+
+    def _do_board(self, cmd: PlayerCommand) -> None:
+        target = self.state.entity(cmd.target_id) if cmd.target_id is not None else None
+        if target is not None:
+            for e in sorted({e.id: e for e in self._units(cmd)}.values(), key=lambda u: u.id):
+                self.state._boarding_system.launch(e, target)
 
     def _do_trade_route(self, cmd: PlayerCommand) -> None:
         from .trading import TradingSystem
@@ -133,13 +144,13 @@ class CommandHandler:
             e.order_target_id = None
 
     def _do_build_station(self, cmd: PlayerCommand) -> None:
-        if not cmd.unit_ids:
+        if not self._units(cmd):
             return
         self.construction.start_station(
             cmd.unit_ids[0], cmd.station_kind, Vec3(*cmd.target_pos), cmd.player)
 
     def _do_build_ship(self, cmd: PlayerCommand) -> None:
-        if not cmd.unit_ids:
+        if not self._units(cmd):
             return
         count = int(cmd.name) if cmd.name and cmd.name.isdigit() else 1
         self.construction.start_ship(cmd.unit_ids[0], cmd.ship_id, cmd.player, count)
@@ -149,7 +160,7 @@ class CommandHandler:
             self.construction.start_colonize(uid, cmd.target_id, cmd.player)
 
     def _do_research(self, cmd: PlayerCommand) -> None:
-        if not cmd.unit_ids:
+        if not self._units(cmd):
             return
         self.research.start_research(cmd.player, cmd.unit_ids[0], cmd.tech_id)
 

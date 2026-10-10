@@ -1,72 +1,151 @@
 # STAR ARMADA — Development Plan
 
-Phases follow spec §48. The vertical slice (Phase 1–6 partial) is complete and playable;
-later phases build on it without rewrites.
+Phases follow spec §48. This is a delivery-status plan, not a claim of full-spec
+completion. Phases 1–6 have playable prototype implementations. Later phases are
+partly delivered; the remaining work is listed explicitly below.
 
-## Phase 1 — Window, camera, map, selection, movement ✅
-pygame-ce window, modern-OpenGL renderer, 3D tactical camera (pan/rotate/zoom, fighter→
-capital scale), map from JSON (planets, asteroids, nebulae, jump points), box select,
-control groups, movement with acceleration/turn + soft collision separation.
+## Status conventions
 
-## Phase 2 — Units, health, combat, weapons, shields ✅
-Data-driven ships (fighter→supercapital), hull/shield quadrants, subsystem damage,
-weapon types with multipliers vs shields/armor, projectiles, point defense,
-experience levels.
+- **Delivered**: merged implementation; packaging/release coverage may vary.
+- **Implemented, awaiting merge**: tested feature branch, not a released feature.
+- **Pending**: missing deliverable, not merely an older roadmap label.
+- Recommendations below define the proposed finish order, not additional approved scope.
 
-## Phase 3 — Resources, mining, construction, stations ✅
-Credits/materials/energy/crew + command capacity; mining stations on asteroid fields;
-construction ships build all stations; shipyard builds ships; planets colonizable
-(colony ships→build orders on planets) with bonuses; trade income.
+## Phase 1 — Window, camera, map, selection, movement ✅ prototype delivered
 
-## Phase 4 — Technology, upgrades, special abilities ✅
-Per-faction tech trees (weapons/defense/propulsion/sensors/logistics), research stations
-required, abilities (engine overdrive, shield recharge, weapon overcharge, EMP burst,
-fighter scramble, repair drones, hyperspace jump) with cooldown/energy.
+pygame-ce/OpenGL, 3D tactical camera, data-driven geography, selection/control groups,
+nose-first movement, minimap, geometry-safe close zoom and consistent picking.
+Four skirmish maps support 2–4 total players with factions/colors/teams/difficulty.
 
-## Phase 5 — Fleet management, formations, fighters, carriers ✅
-Fleets + commanders (4 archetypes with fleet-wide bonuses), formations
-(line/wedge/column/diamond/screen/escort), squadrons with carrier reinforcement.
+## Phase 2 — Units, health, combat, weapons, shields ✅ prototype delivered
 
-## Phase 6 — AI ✅ (prototype level)
-Strategic AI 1 Hz (economy→expansion→tech→fleet→defense), tactical AI 5 Hz
-(attack/retreat/focus). Difficulty via income/decision modifiers.
+Data-driven fighter-to-supercapital catalogue, shield quadrants, subsystem damage,
+projectiles/point defense, combat standoff/orbits, capped XP ranks and rank inspector.
+Crew/life-support/boarding extensions are implemented in PR #37, awaiting merge.
 
-## Phase 7 — Campaign, missions, objectives, cinematics 🟠
-MissionSystem + objectives; **menus shipped** (title screen, main menu, settings —
-`render/menus.py`), **10-mission chain** "Rise of the Outer Armada" per spec §29 with
-briefing screens and live HUD objectives; campaign progress persists
-(`saves/campaign.json`). Objective types: build_station, build_ship, destroy_all_forces,
-colonize_planet, survive_time, **escort_convoy, hold_point**. Next: scripted triggers,
-victory cinematics (currently a HUD COMPLETE/FAILED card + return to menu).
+## Phase 3 — Resources, construction, stations ✅ prototype delivered
 
-## Phase 8 — Multiplayer architecture 🟠 next
-Command-queue + serializable state already in place. Next: fixed-tick lockstep (20 Hz),
-input-delay buffer, command log replay, per-tick checksums, lobby (LAN), reconnect.
-Determinism requirements: no wall-clock in sim, seeded RNG in state, ordered command
-consumption (all present).
+Credits/materials/energy/crew and command capacity; mining, reachable gas-giant energy
+relays, constructor-range station orders, shipyards, research and colony bonuses.
+Trade convoys, delivery, raiding and serialized commercial routes are implemented.
+Further economic/faction balance is not complete merely because these systems exist.
+
+## Phase 4 — Technology and special abilities ✅ prototype delivered
+
+Per-faction tech trees, research prerequisites and cooldown/energy-based abilities,
+including repair drones and click-targeted hyperspace jumps.
+
+## Phase 5 — Fleets, formations, fighters, carriers ✅ prototype delivered
+
+Fleet commanders/formations, squadrons and carrier repair/reinforcement; multi-selection
+roster and combined abilities. PR #37 adds capture-safe carrier dependent cleanup.
+
+## Phase 6 — AI 🟠 prototype delivered; gameplay completion pending
+
+Strategic/tactical AI, difficulty modifiers, scouting, infrastructure and fleet combat
+exist. Remaining: teach AI boarding/crew-risk handling and validate complete matches
+across factions/maps/difficulties. Full Syndicate parity remains unverified/incomplete;
+faction-specific meshes must not be confused with complete faction gameplay.
+
+## Phase 7 — Campaign, objectives and cinematics 🟠
+
+**Delivered:** title/main/settings/campaign menus; 10-mission chain, briefing screens,
+live build/destroy/colonize/survive/escort/hold objectives and persisted campaign progress.
+
+**Pending:** deterministic scripted triggers (reinforcements, timed/event-driven waves,
+objective transitions), cinematic presentation and complete campaign playthrough QA.
+Integrate new capture/crew mechanics into mission semantics and tutorial objectives.
+Survival timers already exist; do not list them again as missing infrastructure.
+
+## Phase 8 — Multiplayer and replay 🟠
+
+**Delivered:** serialized commands, deterministic lockstep/input buffering/checksums,
+replay recorder/player infrastructure and tests; direct-IP TCP LAN host/join, selectable
+port, 2–4 humans with optional AI, readiness/configuration and content checks.
+Disconnects/desync stop matches; LAN disables independent pause and save/load.
+
+**Pending:** reconnect/resynchronization, player-facing replay recording/browser/playback,
+and end-to-end mixed-platform multiplayer acceptance. Eight-player capacity is a
+separate pending expansion: maps, UI/setup and load/network testing must all grow together.
+The existing LAN lobby is not a missing feature.
 
 ## Phase 9 — Modding 🟠
-All balance is JSON. Next: mod folders with override/merge semantics, in-game mod list,
-asset-pack manifest, custom faction wizard.
 
-## Phase 10 — Optimization, graphics, audio, UI polish, balancing 🔲
-Current: spatial hash, AI tiers, pooled effects, display-list ships. Also shipped here:
-multi-tone hulls + procedural hull texture, station detail, rounded corvette.
-Next: LOD fighter simulation, GPU instancing for fighters, occlusion/LOD models,
-spectrogram-tested procedural audio pack, per-faction liveries, balance pass with
-auto-battle harness (headless AI vs AI batch runner exists: `python main.py --demo`).
+**Delivered:** CLI `--mods`, example mod, data-folder overrides, catalogue loading and
+post-override validation. Overrides already exist; the current game-rules override
+replaces that file rather than providing a general deep-merge contract.
 
-## Post-slice backlog (spec sections)
-- §26 Trading: trade station income ✅, **convoys + raiding ✅** (TradingSystem:
-  spawn → delivery payment / salvage loot) → routes, convoy persistence
-- §27 Capture/boarding: schema fields reserved (`boarding`) → disable+board minigame
-- §28 Map objectives: destroy-station ✅, **convoy escort ✅, hold-point ✅** →
-  survival timers
-- §32 Save: quick save ✅, **autosave ring ✅ (3 slots), campaign slots ✅** → replay files
-- §46 Victory: command-station ✅, **planet majority ✅, economic ✅, timed ✅**
+**Pending:** defined/tested merge and load-order semantics, manifest/version/dependency
+and compatibility metadata, in-game mod discovery/selection/error reporting, asset-pack
+support and custom faction wizard. Preserve reproducible simulation content fingerprints
+and matching content requirements for LAN/replay.
 
-## Working rules
-- Simulation stays UI-free; every new feature lands with a headless test first.
-- No placeholder functions that silently do nothing — unfinished systems raise or are
-  listed here explicitly.
-- Balance values only in JSON.
+## Phase 10 — Performance, presentation and balance 🟠
+
+**Delivered:** spatial hashing, AI cadence tiers, display-list meshes, optimized sensor
+and camera queries, metal/material rendering, planets/deep space, local shield/hull
+impacts, layered explosions, per-weapon procedural audio, player ownership markers,
+and faction-specific ships/stations/convoys with protected Imperial geometry.
+
+**Pending:** measured large-battle budgets and optimization, fighter simulation/model
+LOD, GPU instancing/appropriate batching and occlusion where profiling justifies them;
+final audio quality/mix validation, UX/tutorial/accessibility polish, faction/economy/
+combat balance and release acceptance on both platforms. Existing audio, faction visuals
+and screen-size readability are not equivalent to completion of every original LOD,
+audio-pack or livery requirement.
+
+## Cross-cutting backlog
+
+- **§27 Boarding:** implemented/tested in open PR #37, not merged or released.
+  Physical craft, contested control, ship/station ownership transfer, life-support
+  attrition and intact abandoned hulls; 608 headless tests passed on that branch plus
+  real SDL/OpenGL boarding diagnostics. See [BOARDING.md](BOARDING.md).
+- **Boarding followups:** AI doctrine, friendly recrewing and practical recovery of
+  abandoned hulls. Neutral salvage requires an explicit scope decision.
+- **Optional captured-vessel outcomes:** sale, conversion, captured-tech research and
+  temporary use remain deferred, not required to close the core boarding loop.
+- **§26 Trading:** convoy routes and persistence exist; improve convoy/escort legibility
+  and audit self-trade profitability as part of the balance pass.
+- **§28 Objectives:** escort/hold/survival exist; expanded scripting belongs to Phase 7.
+- **§32 Saves:** quick save/load, rotating autosaves and campaign progress exist;
+  replay infrastructure exists, but player-facing replay workflow remains pending.
+- **§46 Victory:** command-station/planet-majority/economic/timed modes and allied
+  elimination exist. Regression-test new abandonment against each mode and campaign
+  objective rules rather than assuming identical semantics.
+
+## Proposed finish order
+
+1. **Close and release the boarding increment.** Review/playtest PR #37, merge only
+   after approval; verify save compatibility, boarding during real LAN play and native
+   packaged gameplay before a separately approved version bump/release.
+2. **Complete the crew gameplay loop and AI.** AI handles support damage, retreat,
+   repair, boarding and derelicts; define recrewing/recovery costs and rules. Make
+   abandonment intentional gameplay rather than a human-only mechanic.
+3. **Complete campaign gameplay (Phase 7 logic).** Persisted deterministic triggers,
+   waves/objective transitions, capture/crew objectives and playable mission progression.
+   Keep cinematic polish after the mission logic is stable.
+4. **Finish multiplayer/replay resilience (Phase 8).** Reconnect/resync and user replay
+   workflow; prove commands, scripting, captures and saves/replays stay deterministic.
+5. **Complete faction gameplay and balance.** Resolve Syndicate scope/parity; run
+   repeatable full-match economy/combat/AI benchmarks before scaling up player counts.
+6. **Meet performance targets, then expand to eight players.** Profile realistic fleets,
+   implement justified LOD/batching/instancing and add balanced larger maps/setup/UI.
+   Require playable frame/tick times and network stability, not only eight slots.
+7. **Finish mod delivery (Phase 9).** Stable merge rules, manifest/compatibility contract,
+   mod selection/error UX, asset packs and faction authoring after schemas stabilize.
+8. **Final campaign/presentation/release pass (Phase 10).** Cinematics, audio mix,
+   tutorials/accessibility/UX, complete campaign and long skirmish/LAN playtests,
+   native macOS/Windows packaging and interactive acceptance, refreshed docs.
+
+Optional captured-vessel outcomes can follow the core completion milestones; do not
+let speculative features block shipping the required playable loop.
+
+## Completion gates
+
+- Each feature has simulation regressions; deterministic changes have exact restore
+  and replay/LAN coverage, not only a coarse checksum.
+- Player-facing changes have real SDL/OpenGL evidence and playtest acceptance.
+- Full suite, independent review and branch → PR precede merge; no direct main commits.
+- Released status requires verified packaged artifacts. Passing source tests alone
+  does not prove Windows gameplay or cross-platform LAN readiness.
+- Balance stays data-driven; the renderer remains a read-only simulation view.

@@ -99,6 +99,8 @@ class InputController:
                     self.app.flash("fleet panel: choose formation and commander")
             elif ev.key == pygame.K_j and self.selection:
                 self._queue_jump()
+            elif ev.key == pygame.K_b and self.selection:
+                self._queue_board()
             elif ev.key == pygame.K_s and self.selection:
                 st.queue_command(StopCommand(self.local_player,
                                              sorted(self.selection)))
@@ -389,6 +391,8 @@ class InputController:
                         self.app.flash("select your ships to form a fleet")
                 elif kind == "fleet_close":
                     self.hud.fleet_panel = False
+                elif kind == 'board':
+                    self._queue_board()
                 elif kind == "ability":
                     cmd = self._ability_cmd(pl)
                     if cmd.unit_ids:
@@ -475,6 +479,23 @@ class InputController:
         self.dragging = False
         self.drag_start = self.drag_cur = self.right_drag = None
 
+    def _queue_board(self):
+        from game.systems.boarding import boarding_capable
+        ids = [i for i in sorted(self.selection) if (e := self.state.entity(i)) is not None
+               and e.owner == self.local_player and boarding_capable(e) and e.crew >= 2
+               and e.jump_charge <= 0
+               and not any(c.boarding.get('source') == i for c in self.state.entities.values())]
+        if not ids:
+            self.app.flash('select own boarding-capable ships with crew and no deployed party')
+            return
+        self._cancel_jump()
+        self._cancel_ability()
+        self.hud.placement = None
+        self.hud.fleet_panel = False
+        self._pending_fleet = None
+        self._pending_ability = {'ability_id': '_board', 'unit_ids': ids}
+        self.hud.ability_prompt = 'BOARD: click a detected disabled enemy hull · shields down · Esc / right-click cancel'
+
     def _confirm_ability(self, pos):
         if any(r.collidepoint(pos) for r in self.hud.blocked_rects):
             return
@@ -483,6 +504,14 @@ class InputController:
             self.app.flash("choose a detected enemy")
             return
         cmd = self._ability_cmd(self._pending_ability)
+        if cmd.type == 'board':
+            from game.systems.boarding import boarding_reason
+            reasons = [(i, boarding_reason(self.state, self.state.entity(i), target))
+                       for i in cmd.unit_ids]
+            cmd.unit_ids = tuple(i for i, reason in reasons if not reason)
+            if not cmd.unit_ids:
+                self.app.flash('cannot board: ' + (reasons[0][1] if reasons else 'no eligible ships'))
+                return
         if cmd.unit_ids:
             cmd.target_id = target.id
             self.state.queue_command(cmd)
@@ -490,6 +519,14 @@ class InputController:
 
     def _ability_cmd(self, pl: dict):
         from game.core.commands import AbilityCommand
+        if pl['ability_id'] == '_board':
+            from game.core.commands import PlayerCommand
+            from game.systems.boarding import boarding_capable
+            ids = tuple(i for i in sorted(set(pl['unit_ids']) & self.selection)
+                        if (e := self.state.entity(i)) is not None and e.owner == self.local_player
+                        and boarding_capable(e) and e.crew >= 2 and e.jump_charge <= 0
+                        and not any(c.boarding.get('source') == i for c in self.state.entities.values()))
+            return PlayerCommand('board', self.local_player, unit_ids=ids)
         tgt = None
         if pl.get("targeted"):
             tgt = self.camera.screen_to_world(*pygame.mouse.get_pos())

@@ -482,6 +482,8 @@ class DataStore:
 
     # ------------------------------------------------------------- validation
     def _validate(self) -> None:
+        from ..systems.boarding import validate_boarding_rules
+        validate_boarding_rules(self.rules)
         cfg = self.rules.get("experience", {})
         levels = cfg.get("levels", [0, 120, 320, 700, 1400])
         def finite_number(value):

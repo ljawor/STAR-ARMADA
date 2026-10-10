@@ -36,7 +36,7 @@ class VictorySystem:
         for p in self.state.players.values():
             has_command = False
             for e in self.state.entities.values():
-                if e.alive and e.is_station and e.owner == p.id:
+                if e.operational and e.is_station and e.owner == p.id:
                     sd = self.ds.stations.get(e.data_id)
                     if sd and sd.command_capacity >= 15:
                         has_command = True
@@ -49,7 +49,7 @@ class VictorySystem:
         """Timed-victory score: economy (planets+stations) + military (units)."""
         score: dict = {}
         for e in self.state.entities.values():
-            if not e.alive:
+            if not e.operational:
                 continue
             # colonized planets count for their colonizer even though the
             # planet entity's owner is neutral (-1) until conquered
@@ -94,7 +94,7 @@ class VictorySystem:
         if st.map_info.victory_mode == "elimination":
             living = {tuple(st.allied_player_ids(e.owner))
                       for e in st.entities.values()
-                      if e.alive and e.owner >= 0 and e.owner in st.players
+                      if e.operational and e.owner >= 0 and e.owner in st.players
                       and (e.is_ship or e.is_station or e.is_squadron)
                       and not e.is_planet}
             if len(living) <= 1:

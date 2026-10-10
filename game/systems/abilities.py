@@ -15,7 +15,7 @@ class AbilitySystem:
     def update(self, dt: float) -> None:
         st = self.state
         for e in st.entities.values():
-            if not e.alive:
+            if not e.operational:
                 continue
             # cooldowns
             for aid in list(e.ability_cooldowns.keys()):
@@ -44,6 +44,8 @@ class AbilitySystem:
                 t = st.entity(tid)
                 if t is None or t.owner != e.owner or t is e or t.is_planet:
                     continue
+                from .crew import repair_life_support
+                repair_life_support(t, rate * dt)
                 if t.hull < t.max_hull:
                     t.hull = min(t.max_hull, t.hull + rate * dt)
                     st.spawn_effect("repair", t.pos.copy())
@@ -62,7 +64,7 @@ class AbilitySystem:
         """Returns True if the ability fired. Checks ownership, cooldown, energy."""
         st = self.state
         a = self.ds.abilities.get(ability_id)
-        if a is None or not e.alive:
+        if a is None or not e.operational:
             return False
         # Validate entity-targeted intent before spending resources. Area effects
         # (including sensor_jam) do not need an entity lock.

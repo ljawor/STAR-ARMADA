@@ -49,6 +49,8 @@ def ship_size(ds, data_id, faction=None):
     shape = ship_visual_key(ds, data_id, faction)
     data = ds.ships.get(data_id)
     ratio = RATIOS.get(data.category, 1.) if data else 1.
+    if data_id == 'boarding_craft':
+        ratio = .4
     lo, hi, radius = _bounds(shape)
     nlo, nhi, _ = _bounds('needle')
     length = (nhi[2]-nlo[2])*.7*ratio

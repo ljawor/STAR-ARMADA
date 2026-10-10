@@ -29,7 +29,7 @@ class SensorQueries:
 
     @staticmethod
     def _eligible(e, allies):
-        return (e.alive and e.owner in allies
+        return (e.operational and e.owner in allies
                 and (e.is_ship or e.is_station or e.is_squadron))
 
     def radius(self, e):

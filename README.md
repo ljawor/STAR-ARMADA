@@ -51,6 +51,7 @@ extract the entire ZIP and run `STAR ARMADA.exe` (unsigned).
 | Ctrl+1..9 | Assign control group |
 | 1..9 | Select control group |
 | F | Fleet panel (group selected ships into a fleet, pick commander) |
+| B, then left-click | Board a detected disabled enemy ship/station with an eligible ship; otherwise toggle build menu |
 | J, then left-click | Hyperjump selected ships to a destination on the battlefield or minimap; explored and unexplored areas are allowed |
 | Esc / right-click during jump selection | Cancel destination selection |
 | Space | Follow selection |
@@ -65,6 +66,16 @@ extract the entire ZIP and run `STAR ARMADA.exe` (unsigned).
 | F10 | Toggle mouse grab |
 | ESC | Cancel placement / close fleet panel first; otherwise return to main menu |
 | F11 | Toggle fullscreen |
+
+## Boarding, crew and life support
+
+Ships and stations carry onboard crew and damageable life support. Failing support
+kills crew gradually; zero crew leaves an abandoned intact hull. Frigate-and-larger
+ships can deploy real boarding craft against detected disabled enemy ships/stations
+with all shields down, fight for control and capture them. Select a capable ship,
+press **B** or click **Board enemy hull**, then click the target. Abandoned hulls have
+no defenders and are easier to capture. Repair docks/drones repair support equipment,
+not dead crew. See [docs/BOARDING.md](docs/BOARDING.md) for mechanics and limits.
 
 ## Combat experience and ship ranks
 
@@ -279,7 +290,8 @@ friendly sensor can provide detection for another ship's longer-range weapons.
 | LAN host/join, 2–4 humans, optional AI, configurable TCP port | ✅ implemented; matching version/content required |
 | Deterministic lockstep, serialized commands, replay infrastructure | ✅ implemented and tested |
 | Four skirmish maps, player factions/colors/teams, AI difficulty | ✅ implemented; 2–4 total players by map |
-| 8-player skirmish, boarding/capture | 🔲 planned (see DEV_PLAN.md) |
+| Boarding/capture, onboard crew/life support and abandoned hulls | 🟠 implemented/tested in PR #37; awaiting merge, not in v0.6.0 |
+| 8-player skirmish | 🔲 planned; current capacity is 2–4 total players |
 
 ## Repository layout
 
@@ -349,9 +361,10 @@ local builds (`./scripts/build_mac.sh`).
 ### Still in development
 
 The game remains a playable prototype, not the full design specification.
-Eight-player matches, boarding/capture, expanded campaign scripting/cinematics,
-full faction parity, in-game mod management and further rendering optimization
-remain development work. Current skirmish/LAN capacity is **2–4 total players**,
+Boarding/capture and crew/life support are implemented/tested in open PR #37,
+but are not merged or included in v0.6.0. Eight-player matches, expanded campaign
+scripting/cinematics, full faction parity, in-game mod management, reconnect/replay
+UX and further performance work remain pending. Current skirmish/LAN capacity is **2–4 total players**,
 limited by the selected map. See `docs/DEV_PLAN.md` for the broader plan; the
 feature matrix above describes the implemented release behavior.
 

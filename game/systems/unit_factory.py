@@ -41,6 +41,9 @@ class UnitFactory:
         for sname, hp in sd.systems.items():
             if hp and hp > 0:
                 e.systems[sname] = SubsystemState(hp=float(hp), max_hp=float(hp))
+        e.crew = e.max_crew = max(1, int(sd.crew_cost))
+        life_hp = max(1.0, float(sd.systems.get("life_support", 100)))
+        e.systems["life_support"] = SubsystemState(life_hp, life_hp)
         e.energy = 100.0
         e.max_energy = 100.0
         e.sensor_range = sd.sensor_range
@@ -76,6 +79,9 @@ class UnitFactory:
         for sname, hp in sd.systems.items():
             if hp and hp > 0:
                 e.systems[sname] = SubsystemState(hp=float(hp), max_hp=float(hp))
+        e.crew = e.max_crew = max(1, int(sd.crew_cost))
+        life_hp = max(1.0, float(sd.systems.get("life_support", 100)))
+        e.systems["life_support"] = SubsystemState(life_hp, life_hp)
         e.energy = 100.0
         e.max_energy = 100.0
         e.sensor_range = sd.sensor_range

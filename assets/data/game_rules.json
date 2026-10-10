@@ -1,4 +1,16 @@
 {
+  "boarding": {
+    "life_support_loss_per_second": 1.0,
+    "life_support_failure_fraction": 0.25,
+    "range": 500.0,
+    "party_fraction": 0.25,
+    "craft_speed": 180.0,
+    "craft_hull": 80.0,
+    "control_seconds": 5.0,
+    "resistance_seconds": 20.0,
+    "combat_losses_per_second": 1.0,
+    "capable_categories": ["frigate", "cruiser", "battleship", "supercapital"]
+  },
   "sim": {
     "tick_rate": 30,
     "command_capacity_base": 10,

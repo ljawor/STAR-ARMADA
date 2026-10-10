@@ -27,7 +27,7 @@ class SquadronSystem:
         if do_tactical:
             self._tactical_timer = 0.0
         for e in st.entities.values():
-            if not e.alive or not e.is_squadron:
+            if not e.operational or not e.is_squadron:
                 continue
             clear_unseen_targets(st, e)
             if do_tactical:
@@ -52,7 +52,7 @@ class SquadronSystem:
         if e.hull_fraction() < self.ds.rules.get("squadrons", {}).get(
                 "return_hull_fraction", 0.45):
             hangar = st.entity(e.hangar_id) if e.hangar_id else None
-            if hangar is not None and hangar.alive:
+            if hangar is not None and hangar.operational and hangar.owner == e.owner:
                 if e.order_type != "follow" or e.order_target_id != hangar.id:
                     e.order_type = "follow"
                     e.order_target_id = hangar.id
@@ -76,7 +76,7 @@ class SquadronSystem:
             # bombers avoid enemy fighters: if one is close, evade toward hangar
             if fighter_target is not None and e.pos.dist(fighter_target.pos) < 600:
                 hangar = st.entity(e.hangar_id) if e.hangar_id else None
-                if hangar is not None:
+                if hangar is not None and hangar.operational and hangar.owner == e.owner:
                     e.order_type = "follow"
                     e.order_target_id = hangar.id
                     return
@@ -97,17 +97,13 @@ class SquadronSystem:
     # ------------------------------------------------------------------ hangars
     def _reinforce_and_repair(self, e, dt: float) -> None:
         st = self.state
-        if e.fighter_count >= e.max_fighters and e.hull >= e.max_hull:
-            return
-        # must be near a friendly hangar (station or carrier)
+        # Validate assignments even for healthy squadrons after carrier loss/capture.
         hangar = st.entity(e.hangar_id) if e.hangar_id else None
-        if hangar is None or not hangar.alive:
-            # find nearest friendly hangar and assign
+        if hangar is None or not hangar.operational or hangar.owner != e.owner:
             hangar = self._find_hangar(e)
-            if hangar is not None:
-                e.hangar_id = hangar.id
-            else:
-                return
+            e.hangar_id = hangar.id if hangar is not None else None
+        if hangar is None or (e.fighter_count >= e.max_fighters and e.hull >= e.max_hull):
+            return
         radius = self.ds.rules.get("squadrons", {}).get("landing_radius", 450)
         if e.pos.dist(hangar.pos) > radius + hangar.radius:
             return
@@ -141,7 +137,7 @@ class SquadronSystem:
         st = self.state
         best, best_d = None, 1e18
         for h in st.entities.values():
-            if not h.alive or h.owner != e.owner or h.is_planet:
+            if not h.operational or h.owner != e.owner or h.is_planet:
                 continue
             if h.is_station:
                 hd = self.ds.stations.get(h.data_id)

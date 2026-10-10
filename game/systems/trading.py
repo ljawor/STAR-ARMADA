@@ -35,7 +35,7 @@ class TradingSystem:
     # ------------------------------------------------------------------ spawn
     def _trade_stations(self) -> list:
         return [e for e in self.state.entities.values()
-                if e.alive and e.is_station and e.data_id == "trade_station"]
+                if e.operational and e.is_station and e.data_id == "trade_station"]
 
     def _destinations_for(self, src) -> list:
         """Markets `src` can ship to: OTHER own or allied trade stations.
@@ -71,7 +71,7 @@ class TradingSystem:
                               cargo=cargo)
 
     def _make_convoy(self, src, dest, cargo: float, hull: float):
-        from ..core.entity import Entity
+        from ..core.entity import Entity, SubsystemState
         st = self.state
         e = Entity(
             id=st.next_entity_id, kind="ship", owner=src.owner,
@@ -80,6 +80,8 @@ class TradingSystem:
         st.next_entity_id += 1
         st.add_entity(e)
         e.is_ship = True
+        e.crew = e.max_crew = 1
+        e.systems["life_support"] = SubsystemState(100.0, 100.0)
         e.hull = hull
         e.max_hull = hull
         e.radius = 18.0
@@ -96,7 +98,7 @@ class TradingSystem:
 
     @staticmethod
     def valid_market(st, owner, dest) -> bool:
-        return bool(dest is not None and dest.alive and dest.is_station
+        return bool(dest is not None and dest.operational and dest.is_station
                     and dest.data_id == "trade_station"
                     and dest.owner in st.allied_player_ids(owner))
 
@@ -111,7 +113,7 @@ class TradingSystem:
     def validate_routes(cls, st) -> None:
         """Repair saved/captured routes before movement and again before payment."""
         for e in st.entities.values():
-            if not e.alive or e.data_id != "trade_convoy":
+            if not e.operational or e.data_id != "trade_convoy":
                 continue
             dest = st.entity(e.convoy_dest) if e.convoy_dest is not None else None
             if not cls.valid_destination(st, e, dest):
@@ -169,7 +171,7 @@ class TradingSystem:
         pay_destination = \
             self.cfg.get("reward_owner", "destination") == "destination"
         for e in list(st.entities.values()):
-            if not e.alive or e.data_id != "trade_convoy":
+            if not e.operational or e.data_id != "trade_convoy":
                 continue
             dest = st.entity(e.convoy_dest if e.convoy_dest is not None else -1)
             if not self.valid_destination(st, e, dest):

@@ -33,7 +33,9 @@ middle, safe flanks, chokepoints.
 - **Hull**: thresholds 90/70/50/30/10% escalate subsystem degradation; visible damage
   state for the renderer (smoke/fire at low hull).
 - **Subsystems**: engines (speed), weapons (damage), sensors (range), shield_gen,
-  hangar (launch/recovery). Chipped by every hull hit; ion weapons hammer them.
+  hangar (launch/recovery), life_support (onboard crew survival). Chipped by every
+  hull hit; ion weapons hammer them. Below 25% life support, crew die gradually;
+  zero crew leaves an intact, non-operational abandoned hull.
 - **Weapons** (data-driven): laser, turbolaser, ion, missile, torpedo, plasma, beam,
   point-defense, tractor. Each has range, reload, accuracy, projectile speed,
   shield/armor multipliers, subsystem multiplier, hardpoint arc.
@@ -69,3 +71,12 @@ objective lists (MissionSystem).
 ## 9. Originality
 No third-party code, assets, names-as-trademarked-content or sounds. The JSON data is
 the mod surface: rename/retheme everything without touching code.
+
+## 10. Boarding and capture
+Eligible frigate-and-larger ships deploy damageable boarding craft against detected
+enemy ships or stations with shields down. Staffed targets also require a disabled
+engine, weapon or life-support subsystem. Surviving attackers fight for control,
+crew the captured hull and transfer ownership; empty hulls offer no resistance.
+Press **B** or use the inspector's boarding button, then select the target.
+See [BOARDING.md](BOARDING.md) for defaults, interruption rules, crew conservation,
+save/replay coverage and explicitly deferred optional captured-vessel features.
