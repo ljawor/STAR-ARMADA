@@ -250,10 +250,36 @@ def station_mesh(data_id, faction='imperial'):
     """Station mesh at radius 50, matching ship-scale material coordinates."""
     from render.faction_visuals import normalize_station_key
     faction, data_id = normalize_station_key(data_id, faction)
+    if data_id in ('defense_satellite', 'attack_satellite'):
+        return _satellite_mesh(data_id, faction)
     if faction != 'imperial':
         from render.faction_stations import station_mesh as faction_station_mesh
         return faction_station_mesh(faction, data_id)
     return _station_mesh(data_id)
+
+
+@lru_cache(maxsize=8)
+def _satellite_mesh(kind, faction):
+    """Closed planetary hardware; shared roles, faction-specific silhouettes."""
+    h = _Hardware()
+    sides = {'imperial': 6, 'rebel': 12, 'confederacy': 8, 'syndicate': 5}[faction]
+    h.ring('base', 32, .1, 18, sides=sides)
+    h.ring('trim', 34, 29, 3, (0, 10, 0), sides=sides)
+    h.plate('accent', (42, 2, 22), (0, 12, 0), 1)
+    h.plate('cool', (12, 1, 8), (0, 14, 0), .3)
+    for angle in (0, 120, 240):
+        a = math.radians(angle)
+        x, z = math.sin(a)*35, math.cos(a)*35
+        h.plate('dark', (12, 8, 18), (x, 0, z), 1, angle)
+        h.plate('accent', (10, 1, 14), (x, 5, z), .5, angle)
+        h.plate('lit', (6, 1, 3), (x, 6, z), .3, angle)
+        if kind == 'attack_satellite':
+            h.plate('base', (9, 10, 34), (x, 12, z), 1, angle)
+            h.plate('trim', (3, 3, 46), (x, 20, z), .5, angle)
+        else:
+            h.ring('base', 9, .1, 9, (x, 12, z), sides=8)
+            h.plate('trim', (3, 3, 18), (x, 18, z), .5, angle)
+    return h.finish()
 
 
 @lru_cache(maxsize=10)

@@ -57,6 +57,12 @@ class WeaponSystem:
         if (t is None or not self.state.is_enemy(e.owner, t.owner)
                 or not self.state.can_see(e.owner, tid)):
             return False
+        if t.is_planet:
+            return False
+        if e.data_id == 'defense_satellite' and not t.is_squadron:
+            return False
+        if e.data_id == 'attack_satellite' and (not t.is_ship or t.is_squadron):
+            return False
         craft = self.state.entity(e.boarding_party_id) if e.boarding_party_id is not None else None
         if (craft is not None and craft.boarding.get('source') == e.id
                 and craft.boarding.get('target') == tid
@@ -126,6 +132,9 @@ class WeaponSystem:
         st = self.state
         if e.owner < 0 or not e.operational:
             return
+        if e.order_type == 'explore':
+            e.current_target = None
+            return  # survey missions evade; already-fired projectiles stay ballistic
         clear_unseen_targets(st, e)
         # determine target
         target = None

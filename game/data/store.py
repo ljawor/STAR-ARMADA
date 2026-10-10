@@ -488,8 +488,20 @@ class DataStore:
     def _validate(self) -> None:
         from ..systems.boarding import validate_boarding_rules
         validate_boarding_rules(self.rules)
+        from ..systems.repairs import validate_repair_rules
+        validate_repair_rules(self.rules)
+        from ..systems.exploration import validate_exploration_rules
+        validate_exploration_rules(self.rules)
+        economy = self.rules.get('economy', {})
+        for key, default in [('trade_station_min_distance', 1500.0),
+                             ('enemy_command_build_min_distance', 3000.0)]:
+            value = economy.get(key, default)
+            if type(value) not in (int, float) or not math.isfinite(value) or value <= 0:
+                raise ValueError(f'economy {key} must be finite and positive')
         from ..systems.crew_recovery import validate_recovery_rules
         validate_recovery_rules(self.rules)
+        from ..systems.colonies import validate_colony_catalogue
+        validate_colony_catalogue(self)
         cfg = self.rules.get("experience", {})
         levels = cfg.get("levels", [0, 120, 320, 700, 1400])
         def finite_number(value):

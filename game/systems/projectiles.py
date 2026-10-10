@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from ..core.vectors import Vec3
 from ..data.store import DataStore
+from . import stats
 
 
 class ProjectileSystem:
@@ -19,7 +20,26 @@ class ProjectileSystem:
     def update(self, dt: float) -> None:
         st = self.state
         dead = []
-        for pid, p in st.projectiles.items():
+        for pid, p in sorted(st.projectiles.items()):
+            wd = self.ds.weapons.get(p.weapon_id)
+            if wd is not None and 'missile' in wd.id:
+                defenders = [e for e in st.entities.values()
+                    if e.operational and e.data_id == 'defense_satellite'
+                    and st.is_enemy(e.owner, p.owner)
+                    and p.pos.dist(e.pos) <= self.ds.weapons['point_defense'].range]
+                for defender in sorted(defenders, key=lambda e: e.id):
+                    efficiency = stats.staffing_fraction(defender) * max(0.0, defender.subsystem_fraction('weapons'))
+                    if defender.ability_cooldowns.get('_intercept', 0) > 0 or efficiency <= 0:
+                        continue
+                    defender.ability_cooldowns['_intercept'] = (
+                        stats.effective_weapon_cooldown(st, defender, self.ds.weapons['point_defense'].reload)
+                        / efficiency)
+                    dead.append(pid)
+                    st.spawn_effect('beam', defender.pos.copy(), target_pos=p.pos.to_dict(), color=[.4, .8, 1])
+                    st.events.publish('missile_intercepted', entity_id=defender.id, projectile_id=pid, owner=defender.owner)
+                    break
+                if pid in dead:
+                    continue
             p.pos.add_scaled(p.vel, dt)
             p.life -= dt
             if p.life <= 0:

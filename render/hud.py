@@ -376,7 +376,7 @@ class HUD:
             self._selection_panel(ents, local_player)
             return
         # Idle help is a card, not a full-height inspector hiding the world.
-        recovery_extra = bool(ents and (ents[0].crew_mission or ents[0].crew < ents[0].max_crew
+        recovery_extra = bool(ents and (ents[0].order_type in ('repair', 'explore') or ents[0].crew_mission or ents[0].crew < ents[0].max_crew
                               or getattr(self.ds.ships.get(ents[0].data_id), 'crew_capacity', 0)))
         panel = pygame.Rect(10, 44, 320, (min(650, self.height - 145) if recovery_extra
                             else min(540, self.height - 260)) if ents else 84)
@@ -392,6 +392,26 @@ class HUD:
             return
 
         e = ents[0]
+        if e.is_planet:
+            from game.systems.colonies import eligible_planet
+            self._label(panel.x + 12, panel.y + 8, self._fit_text(self.ds.unit_name(e).upper(), 296, self.font_big), TXT, self.font_big)
+            owner = st.players.get(e.colonized_by) if eligible_planet(e) else None
+            self._label(panel.x + 12, panel.y + 40, self._fit_text('COLONY OWNER: ' + (owner.name if owner else 'Uncolonized'), 296), TXT)
+            self._label(panel.x + 12, panel.y + 62, e.data_id.upper(), TXT_DIM)
+            rates = dict(self.ds.rules.get('economy', {}).get('planet_income', {}).get(e.data_id, {})) if eligible_planet(e) else {}
+            rates['crew'] = rates.get('crew', 0) + self.ds.rules.get('economy', {}).get('planet_crew_bonus', {}).get(e.data_id, 0)
+            y = panel.y + 92
+            self._label(panel.x + 12, y, 'INCOME / SECOND (owned colony)', ACCENT)
+            for resource in ('credits', 'materials', 'energy', 'crew'):
+                y += 20
+                self._label(panel.x + 12, y, f"{resource}: {rates.get(resource, 0):g}", TXT_DIM)
+            y += 30
+            y = self._wrapped_labels(panel.x + 12, y, 'Gas and terrain cannot be colonized.' if not eligible_planet(e) else 'Right-click with colony ship to settle/capture.', 296)
+            if e.colonized_by == local_player and e.build_queue:
+                item = e.build_queue[0]
+                self._label(panel.x + 12, y + 24, self._fit_text('BUILDING ' + item['item'].replace('_', ' ').upper(), 296, self.font_small), TXT, self.font_small)
+                self._bar(panel.x + 12, y + 44, 296, 10, 1 - item['time_left'] / max(.1, item['total']), ACCENT)
+            return
         sd = self.ds.ships.get(e.data_id)
         std = self.ds.stations.get(e.data_id) if sd is None else None
         name = self.ds.unit_name(e)
@@ -511,6 +531,31 @@ class HUD:
         self._label(panel.x + 12, y, self._fit_text(f"ORDER: {order}", 296),
                     RESEARCH if order == "RESEARCHING" else TXT_DIM)
         y += 20
+        if e.order_type == 'repair' and e.owner == local_player:
+            from game.systems.repairs import repair_rules, missing_hp
+            from game.systems.stats import effective_repair_rate
+            target = st.known_entity(local_player, e.order_target_id)
+            cfg = repair_rules()
+            rate = cfg['hp_per_second'] * effective_repair_rate(st, e.owner, e)
+            if target is not None and target.owner == local_player:
+                missing = missing_hp(target)
+                total = target.max_hull + sum(s.max_hp for s in target.systems.values())
+                self._label(panel.x + 12, y, f'{missing:,.1f} HP missing · hull + systems', WARN, self.font_small)
+                y += 16
+                self._bar(panel.x + 12, y, 296, 8, 1 - missing / max(1, total), GOOD)
+                y += 14
+                p = st.players.get(local_player)
+                status = 'APPROACHING' if e.order_target_pos is not None else ('WAITING FOR CR / MT' if p and (p.credits <= 0 or p.materials <= 0) else 'REPAIRING')
+                self._label(panel.x + 12, y, status + ' · no crew restored', TXT_DIM, self.font_small)
+                y += 16
+            y = self._wrapped_labels(panel.x + 12, y,
+                f"{rate:g} HP/s · {cfg['credits_per_hp']:g} CR/HP · {cfg['materials_per_hp']:g} MT/HP", 296)
+        elif e.order_type == 'explore' and e.owner == local_player:
+            target = e.order_target_pos
+            text = f'SURVEY → {target.x:,.0f}, {target.z:,.0f}' if target else 'SURVEY · waiting for a safe route'
+            self._label(panel.x + 12, y, text, WARN, self.font_small)
+            y += 16
+            y = self._wrapped_labels(panel.x + 12, y, 'Auto patrol · avoid detected enemies · no combat', 296)
         # squadron count
         if e.is_squadron:
             self._label(panel.x + 12, y,
@@ -522,7 +567,12 @@ class HUD:
             item = e.build_queue[0]
             it_name = item.get("item", "")
             done = 1.0 - item.get("time_left", 0) / max(0.1, item.get("total", 1))
-            self._label(panel.x + 12, y, self._fit_text(f"BUILDING {it_name.upper()}", 296, self.font_small), TXT,
+            if item.get('kind') == 'colonize':
+                phase = 'CAPTURING' if item.get('target_owner') is not None else 'COLONIZING'
+                it_name = f"{phase} {item.get('status', '').upper()} · {item['time_left']:.1f}s"
+            else:
+                it_name = 'BUILDING ' + it_name.upper()
+            self._label(panel.x + 12, y, self._fit_text(it_name, 296, self.font_small), TXT,
                         self.font_small)
             y += 18
             self._bar(panel.x + 12, y, 296, 10, done, ACCENT)
@@ -607,6 +657,34 @@ class HUD:
                     'ability_id': row['ability_id'], 'unit_ids': row['unit_ids']}})
             y += 40
 
+    def _planet_menu(self, planet, local_player):
+        from game.systems.colonies import eligible_planet
+        panel = pygame.Rect(self.width - 330, 44, 320, 280)
+        self.blocked_rects.append(panel)
+        pygame.draw.rect(self.overlay, PANEL_BG, panel, border_radius=8)
+        pygame.draw.rect(self.overlay, PANEL_EDGE, panel, 1, border_radius=8)
+        y = panel.y + 10
+        self._label(panel.x + 12, y, 'PLANETARY SATELLITES', ACCENT, self.font_big)
+        y += 30
+        if not eligible_planet(planet) or planet.colonized_by != local_player:
+            self._label(panel.x + 12, y, 'Requires your non-gas colony', TXT_DIM)
+            return
+        cs = self.state._construction_system
+        cap = int(self.ds.rules.get('colonies', {}).get('satellite_cap', 6))
+        slots = len(cs.satellite_slots(planet))
+        self._label(panel.x + 12, y, f'SLOTS {slots}/{cap} · includes paid queue', TXT_DIM)
+        y += 24
+        for role, description in (('defense_satellite', 'Intercepts missiles and enemy fighters'),
+                                  ('attack_satellite', 'Engages enemy ships; clear before capture')):
+            data = self.ds.stations[role]
+            payload = {'planet_id': planet.id, 'station_kind': role}
+            next_y = self._build_row(panel, y, data, self.state.players[local_player], payload, 'build_satellite')
+            if slots >= cap:
+                self.buttons[:] = [b for b in self.buttons if b.get('payload') != payload]
+            next_y = self._wrapped_labels(panel.x + 12, next_y, description, 296)
+            y = self._wrapped_labels(panel.x + 12, next_y,
+                        f'{data.cost_energy:,.0f} EN · {data.crew_cost:,.0f} crew · {data.build_time:g}s', 296) + 8
+
     # ------------------------------------------------------------------ right panel
     def _right_panel(self, selection: set, local_player: int) -> None:
         if self.fleet_panel:
@@ -618,6 +696,10 @@ class HUD:
         if p is None:
             return
         ents = [st.known_entity(local_player, eid) for eid in sorted(selection)]
+        planet = next((e for e in ents if e is not None and e.is_planet), None)
+        if planet is not None:
+            self._planet_menu(planet, local_player)
+            return
         ents = [e for e in ents if e is not None and e.owner == local_player]
         sel = ents[0] if ents else None
         contextual = sel is not None and (sel.is_construction or sel.is_station)
@@ -625,15 +707,50 @@ class HUD:
         has_boarders = any(boarding_capable(e) for e in ents)
         recovery = st._crew_recovery_system
         transports = [e for e in ents if recovery and recovery.capacity(e) and e.operational]
+        from game.systems.repairs import builder_capable, repair_rules
+        from game.systems.exploration import exploration_capable
+        builders = [e for e in ents if builder_capable(st, e) and e.jump_charge <= 0 and e.jump_target is None]
+        scouts = [e for e in ents if e.operational and exploration_capable(e)]
+        boarders = [e for e in ents if boarding_capable(e)]
+        support_extra = (90 if builders else 0) + (64 if scouts else 0) + (112 if boarders else 0)
         panel = pygame.Rect(self.width - 330, 44, 320,
-                            430 if contextual else (290 if transports else (164 if has_boarders else 124)))
+                            min(self.height - 270, (430 if contextual else (260 if transports else 124)) + support_extra))
         self.blocked_rects.append(panel)
         pygame.draw.rect(ov, PANEL_BG, panel, border_radius=8)
         pygame.draw.rect(ov, PANEL_EDGE, panel, 1, border_radius=8)
 
         y = panel.y + 10
+        if scouts:
+            self._fleet_button(pygame.Rect(panel.x + 12, y, 296, 26),
+                               'Explore map · automatic fighter patrol', 'explore', {'unit_ids': [e.id for e in scouts]})
+            y += 30
+            y = self._wrapped_labels(panel.x + 12, y, 'Auto patrol: avoid detected enemies · no combat · S to stop.', 296) + 6
+        if builders:
+            self._fleet_button(pygame.Rect(panel.x + 12, y, 296, 26),
+                               'Repair owned hull / systems', 'repair', {'unit_ids': [e.id for e in builders]})
+            y += 30
+            cfg = repair_rules()
+            y = self._wrapped_labels(panel.x + 12, y,
+                f"{cfg['hp_per_second']:g} base HP/s · {cfg['credits_per_hp']:g} CR/HP · {cfg['materials_per_hp']:g} MT/HP. Hull + systems; no crew. S to stop.", 296) + 6
+        if boarders:
+            self._fleet_button(pygame.Rect(panel.x + 12, y, 296, 26),
+                               f'B  Board enemy hull · {len(boarders)} capable', 'board', {})
+            y += 30
+            from game.systems.boarding import boarding_rules
+            y = self._wrapped_labels(panel.x + 12, y,
+                f"Detected enemy · all shields down · within {boarding_rules()['range']:g}u hull reach. No disabled system required. Capture restores life support to at least 10%; no satellites.", 296) + 6
         # constructor selected -> build stations (scrollable)
-        if sel is not None and sel.is_construction:
+        colony = self.ds.ships.get(sel.data_id) if sel is not None else None
+        if colony is not None and colony.can_colonize:
+            self._label(panel.x + 12, y, 'COLONY SHIP', ACCENT, self.font_big)
+            y += 32
+            from game.systems.colonies import colony_rules
+            control_seconds = colony_rules()['control_seconds']
+            for text in ('Right-click a non-gas planet.', 'Neutral: colonize · Enemy: capture',
+                         'Destroy ALL defending satellites first.', f'Approach then {control_seconds:g} seconds uninterrupted.',
+                         'Ship consumed only on success.', 'No additional resource or crew fee.'):
+                y = self._wrapped_labels(panel.x + 12, y, text, 296) + 6
+        elif sel is not None and sel.is_construction:
             self._label(panel.x + 12, y, "ORBITAL CONSTRUCTION", ACCENT,
                         self.font_big)
             y += 28
@@ -659,6 +776,10 @@ class HUD:
                 items = self._shipyard_items(sel, std)
                 y = self._scrollable(panel, y, items, p, "ships",
                                      self._row_build_ship, sel)
+            if sel.data_id == 'repair_dock':
+                self._label(panel.x + 12, y, 'REPAIR DOCK', ACCENT, self.font_big)
+                y += 28
+                y = self._wrapped_labels(panel.x + 12, y, 'Automatic equipment repair: ships / fighters only; not stations. Does not restore crew.', 296)
             if std is not None and std.research:
                 self._label(panel.x + 12, y, "RESEARCH", ACCENT, self.font_big)
                 y += 28
@@ -699,15 +820,6 @@ class HUD:
             self._label(panel.x + 12, y, "F  fleet formation & commander", TXT_DIM)
             y += 18
             self._label(panel.x + 12, y, "J  hyperspace jump", TXT_DIM)
-            from game.systems.boarding import boarding_capable
-            capable = [e for e in ents if boarding_capable(e)]
-            if capable:
-                y += 20
-                rect = pygame.Rect(panel.x + 12, y, 296, 26)
-                pygame.draw.rect(ov, BAR_BG, rect, border_radius=4)
-                self._label(rect.x + 8, rect.y + 4,
-                            f'B  Board enemy hull · {len(capable)} capable', TXT, self.font_small)
-                self.buttons.append({'rect': rect, 'kind': 'board', 'payload': {}})
 
         if transports and not contextual:
             y += 24
@@ -772,6 +884,22 @@ class HUD:
         self._fleet_button(pygame.Rect(x + 206, rect.y, 90, 28), "Close",
                            "fleet_close", {})
 
+    def _wrapped_labels(self, x, y, text, width):
+        """Flow complete help text within a panel's content width."""
+        line = ''
+        for word in text.split():
+            candidate = (line + ' ' + word).strip()
+            if line and self.font_small.size(candidate)[0] > width:
+                self._label(x, y, line, TXT_DIM, self.font_small)
+                y += self.font_small.get_linesize()
+                line = word
+            else:
+                line = candidate
+        if line:
+            self._label(x, y, self._fit_text(line, width, self.font_small), TXT_DIM, self.font_small)
+            y += self.font_small.get_linesize()
+        return y
+
     def _fit_text(self, text, width, font=None):
         font = font or self.font
         if font.size(text)[0] <= width:
@@ -823,7 +951,7 @@ class HUD:
             return out
         for sid in std.builds_ships:
             sd = self.ds.ships.get(sid)
-            if sd is not None:
+            if sd is not None and (cs is None or cs.station_can_build_ship(station, sid)):
                 out.append(sd)
         return out
 
@@ -865,21 +993,22 @@ class HUD:
     def _build_row(self, panel, y, d, p, payload, kind) -> int:
         """One buildable row: name, cost, affordability color. Returns next y."""
         ov = self.overlay
-        rect = pygame.Rect(panel.x + 12, y, 296, 34)
+        rect = pygame.Rect(panel.x + 12, y, 296, 50)
         afford = (p.credits >= d.cost_credits and p.materials >= d.cost_materials
                   and p.energy >= d.cost_energy and p.crew >= d.crew_cost)
         pygame.draw.rect(ov, (24, 34, 52, 255) if afford else (18, 22, 32, 255),
                          rect, border_radius=4)
         pygame.draw.rect(ov, ACCENT if afford else PANEL_EDGE, rect, 1,
                          border_radius=4)
-        self._label(rect.x + 8, rect.y + 2, d.display_name,
+        self._label(rect.x + 8, rect.y + 2, self._fit_text(d.display_name, 280),
                     TXT if afford else TXT_DIM)
-        cost = (f"{d.cost_credits:,.0f} cr · {d.cost_materials:,.0f} mt"
-                f" · {getattr(d, 'command_cost', 0)} cmd")
-        self._label(rect.x + 8, rect.y + 18, cost, TXT_DIM, self.font_small)
+        cost = f"{d.cost_credits:,.0f} cr · {d.cost_materials:,.0f} mt · {d.cost_energy:,.0f} EN"
+        self._label(rect.x + 8, rect.y + 18, self._fit_text(cost, 280, self.font_small), TXT_DIM, self.font_small)
+        staffing = f"{d.crew_cost:,.0f} crew · {getattr(d, 'command_cost', 0)} cmd · {d.build_time:g}s"
+        self._label(rect.x + 8, rect.y + 34, self._fit_text(staffing, 280, self.font_small), TXT_DIM, self.font_small)
         if afford:
             self.buttons.append({"rect": rect, "kind": kind, "payload": payload})
-        return y + 38
+        return y + 54
 
     # ------------------------------------------------------------- scrollable lists
     def _scrollable(self, panel, y, items, p, key, draw_fn, sel) -> int:
@@ -895,7 +1024,8 @@ class HUD:
         if clip.height <= 40:
             return panel.bottom
         self.scroll_rects.append((clip, key))   # wheel routing (input.py)
-        visible_rows = clip.height // 38
+        row_height = 38 if key == 'techs' else 54
+        visible_rows = clip.height // row_height
         if key not in self.scroll:              # unknown list kind: no scroll
             self.scroll[key] = 0
         self.scroll[key] = max(0, min(self.scroll[key],
@@ -910,20 +1040,17 @@ class HUD:
         # clip rendering
         old = ov.get_clip()
         ov.set_clip(clip)
-        yy = y - off * 38
-        for d in items:
-            if yy > clip.bottom:
-                break
-            if yy + 34 >= clip.y:
-                payload = {
-                    "stations": lambda d=d: {"builder_id": sel.id,
-                                             "station_kind": d.id},
-                    "ships": lambda d=d: {"shipyard_id": sel.id,
-                                          "ship_id": d.id},
-                    "techs": lambda d=d: {"station_id": sel.id},
-                }.get(key, lambda d=d: {})()
-                draw_fn(d, yy, payload)
-            yy += 38
+        yy = y
+        for d in items[off:off + visible_rows]:
+            payload = {
+                "stations": lambda d=d: {"builder_id": sel.id,
+                                         "station_kind": d.id},
+                "ships": lambda d=d: {"shipyard_id": sel.id,
+                                      "ship_id": d.id},
+                "techs": lambda d=d: {"station_id": sel.id},
+            }.get(key, lambda d=d: {})()
+            draw_fn(d, yy, payload)
+            yy += row_height
         ov.set_clip(old)
         return panel.bottom
 

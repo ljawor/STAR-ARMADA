@@ -1,4 +1,11 @@
 {
+  "colonies": {"satellite_cap": 6, "control_seconds": 15.0, "approach_range": 600.0, "orbit_clearance": 350.0},
+  "engineer_repairs": {
+    "hp_per_second": 20.0,
+    "credits_per_hp": 0.2,
+    "materials_per_hp": 0.1,
+    "range": 400.0
+  },
   "boarding": {
     "life_support_loss_per_second": 1.0,
     "life_support_failure_fraction": 0.25,
@@ -33,12 +40,12 @@
   "economy": {
     "planet_income": {
       "temperate": {"credits": 1.2, "crew": 0.25},
-      "industrial": {"credits": 0.4, "materials": 1.0},
-      "gas_giant": {"energy": 1.4},
+      "industrial": {"credits": 0.4, "materials": 1.0, "crew": 0.1},
       "agricultural": {"credits": 0.5, "crew": 0.5},
-      "military": {"credits": 0.3},
-      "research": {"credits": 0.6},
-      "barren": {"credits": 0.2}
+      "military": {"credits": 0.3, "crew": 0.3},
+      "research": {"credits": 0.6, "crew": 0.1},
+      "barren": {"credits": 0.2, "crew": 0.05},
+      "trade": {"credits": 1.8, "crew": 0.1}
     },
     "planet_command_bonus": {"military": 5},
     "planet_crew_bonus": {"agricultural": 0.3, "temperate": 0.15},
@@ -53,7 +60,9 @@
     },
     "repair_dock_rate": 40.0,
     "repair_dock_range": 500,
-    "station_build_range": 1200
+    "station_build_range": 1200,
+    "trade_station_min_distance": 1500,
+    "enemy_command_build_min_distance": 3000
   },
   "sensors": {
     "nebula_detection_multiplier": 0.3,

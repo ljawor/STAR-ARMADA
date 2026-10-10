@@ -106,6 +106,10 @@ class InputController:
             elif ev.key == pygame.K_b and self.selection:
                 self._queue_board()
             elif ev.key == pygame.K_s and self.selection:
+                self._cancel_jump()
+                self._cancel_ability()
+                self.hud.placement = None
+                self._pending_fleet = None
                 st.queue_command(StopCommand(self.local_player,
                                              sorted(self.selection)))
             elif ev.key == pygame.K_h and self.selection:
@@ -276,7 +280,7 @@ class InputController:
         lo_y, hi_y = sorted((y0, y1))
         picked = set()
         for e in self.state.entities.values():
-            if not e.alive or e.owner == -1 or not self.state.can_see(self.local_player, e.id):
+            if not e.alive or (e.owner == -1 and not e.is_planet) or not self.state.can_see(self.local_player, e.id):
                 continue
             sp = self.camera.world_to_screen(e.pos.x, e.pos.y, e.pos.z)
             if sp is None:
@@ -333,7 +337,7 @@ class InputController:
     def _single_select(self, mx: float, my: float) -> None:
         best, best_d = None, 28.0
         for e in self.state.entities.values():
-            if not e.alive or e.owner == -1 or not self.state.can_see(self.local_player, e.id):
+            if not e.alive or (e.owner == -1 and not e.is_planet) or not self.state.can_see(self.local_player, e.id):
                 continue
             sp = self.camera.world_to_screen(e.pos.x, e.pos.y, e.pos.z)
             if sp is None:
@@ -373,6 +377,12 @@ class InputController:
                     st.queue_command(BuildStationCommand(
                         lp, pl["builder_id"], pl["station_kind"], pos3))
                     self.app.flash(f"constructing {pl['station_kind']}")
+                elif kind == 'build_satellite':
+                    planet = st.entity(pl['planet_id'])
+                    if planet is not None and planet.id in self.selection and planet.colonized_by == lp:
+                        from game.core.commands import PlayerCommand
+                        st.queue_command(PlayerCommand('build_satellite', lp,
+                            target_id=planet.id, station_kind=pl['station_kind']))
                 elif kind == "build_ship":
                     st.queue_command(BuildShipCommand(
                         lp, pl["shipyard_id"], pl["ship_id"], 1))
@@ -395,6 +405,21 @@ class InputController:
                         self.app.flash("select your ships to form a fleet")
                 elif kind == "fleet_close":
                     self.hud.fleet_panel = False
+                elif kind == 'explore':
+                    from game.core.commands import PlayerCommand
+                    from game.systems.exploration import exploration_capable
+                    ids = tuple(i for i in sorted(set(pl.get('unit_ids', ())) & self.selection)
+                                if (e := st.entity(i)) is not None and e.owner == lp
+                                and e.operational and exploration_capable(e))
+                    if ids:
+                        self._cancel_jump()
+                        self._cancel_ability()
+                        self.hud.placement = None
+                        self.hud.fleet_panel = False
+                        self._pending_fleet = None
+                        st.queue_command(PlayerCommand('explore', lp, unit_ids=ids))
+                elif kind == 'repair':
+                    self._queue_repair(pl)
                 elif kind in ('crew_load', 'crew_deliver', 'crew_cancel'):
                     self._queue_crew(kind)
                 elif kind == 'board':
@@ -485,6 +510,23 @@ class InputController:
         self.dragging = False
         self.drag_start = self.drag_cur = self.right_drag = None
 
+    def _queue_repair(self, payload):
+        from game.systems.repairs import builder_capable
+        ids = [i for i in sorted(set(payload.get('unit_ids', ())) & self.selection)
+               if (e := self.state.entity(i)) is not None
+               and e.owner == self.local_player and builder_capable(self.state, e)
+               and e.jump_charge <= 0 and e.jump_target is None]
+        if not ids:
+            self.app.flash('select your operating constructor')
+            return
+        self._cancel_jump()
+        self._cancel_ability()
+        self.hud.placement = None
+        self.hud.fleet_panel = False
+        self._pending_fleet = None
+        self._pending_ability = {'ability_id': '_repair', 'unit_ids': ids}
+        self.hud.ability_prompt = 'REPAIR: click owned damaged hull · paid CR / MT · Esc / right-click cancel'
+
     def _queue_crew(self, kind):
         from game.core.commands import PlayerCommand
         recovery = self.state._crew_recovery_system
@@ -524,14 +566,24 @@ class InputController:
         self.hud.fleet_panel = False
         self._pending_fleet = None
         self._pending_ability = {'ability_id': '_board', 'unit_ids': ids}
-        self.hud.ability_prompt = 'BOARD: click a detected disabled enemy hull · shields down · Esc / right-click cancel'
+        self.hud.ability_prompt = 'BOARD: detected enemy hull · all shields down · Esc / right-click cancel'
 
     def _confirm_ability(self, pos):
         if any(r.collidepoint(pos) for r in self.hud.blocked_rects):
             return
         target = self._pick_target(pos)
         cmd = self._ability_cmd(self._pending_ability)
-        if cmd.type == 'crew_deliver':
+        if cmd.type == 'repair':
+            from game.systems.repairs import repair_reason
+            if target is None or target.owner != self.local_player:
+                self.app.flash('choose an owned damaged hull')
+                return
+            reasons = [(i, repair_reason(self.state, self.state.entity(i), target)) for i in cmd.unit_ids]
+            cmd.unit_ids = tuple(i for i, reason in reasons if not reason)
+            if not cmd.unit_ids:
+                self.app.flash('cannot repair: ' + (reasons[0][1] if reasons else 'no eligible constructors'))
+                return
+        elif cmd.type == 'crew_deliver':
             if target is None or target.owner != self.local_player:
                 self.app.flash('choose an owned hull')
                 return
@@ -559,6 +611,14 @@ class InputController:
 
     def _ability_cmd(self, pl: dict):
         from game.core.commands import AbilityCommand
+        if pl['ability_id'] == '_repair':
+            from game.core.commands import PlayerCommand
+            from game.systems.repairs import builder_capable
+            ids = tuple(i for i in sorted(set(pl['unit_ids']) & self.selection)
+                        if (e := self.state.entity(i)) is not None
+                        and e.owner == self.local_player and builder_capable(self.state, e)
+                        and e.jump_charge <= 0 and e.jump_target is None)
+            return PlayerCommand('repair', self.local_player, unit_ids=ids)
         if pl['ability_id'] == '_crew_deliver':
             from game.core.commands import PlayerCommand
             recovery = self.state._crew_recovery_system
@@ -618,12 +678,13 @@ class InputController:
             return
         st, lp = self.state, self.local_player
         ids = sorted(self.selection)
-        w = self.camera.screen_to_world(*pos)
+        # Resolve hardware targets before querying the ground GL matrices.
         # target priority: enemy unit > colonizable planet > ground move
         target = self._pick_target(pos)
         if target is not None:
             e = target
-            if e.is_planet and e.colonized_by is None:
+            from game.systems.colonies import eligible_planet
+            if eligible_planet(e) and (e.colonized_by is None or st.is_enemy(lp, e.colonized_by)):
                 colonizers = [i for i in ids
                               if (sd := _ship_data(st.entity(i))) is not None
                               and sd.can_colonize]
@@ -633,15 +694,16 @@ class InputController:
                     return
             st.queue_command(AttackCommand(lp, ids, e.id))
             self.app.flash(f"attack {DataStore.get().unit_name(e)}")
-        elif w is not None:
+        elif (w := self.camera.screen_to_world(*pos)) is not None:
             st.queue_command(AttackMoveCommand(lp, ids, w))
             self.app.flash("attack-move")
 
     def _pick_target(self, pos: tuple):
         best, best_d = None, 30.0
         for e in self.state.entities.values():
-            if (not e.alive or e.owner == -1 or not self.state.can_see(self.local_player, e.id)
-                    or e.is_planet and e.colonized_by is not None):
+            from game.systems.colonies import eligible_planet
+            if (not e.alive or (e.owner == -1 and not eligible_planet(e))
+                    or not self.state.can_see(self.local_player, e.id)):
                 continue
             sp = self.camera.world_to_screen(e.pos.x, e.pos.y, e.pos.z)
             if sp is None:

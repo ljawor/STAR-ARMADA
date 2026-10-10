@@ -29,8 +29,45 @@ class TestBoarding(unittest.TestCase):
         self.gm.commands.consume()
         return [e for e in self.st.entities.values() if e.data_id == 'boarding_craft']
 
+    def test_functional_staffed_shieldless_target_accepts_boarding(self):
+        self.target.crew = 10
+        self.assertTrue(self.target.operational)
+        self.assertEqual(len(self.launch()), 1)
+
+    def test_functional_staffed_capture_through_manager_ticks(self):
+        self.target.crew = 5
+        self.target.order_type = 'hold'
+        self.target.last_hit_time = self.st.time + 100
+        self.st.queue_command(PlayerCommand('board', 0, unit_ids=(self.source.id,), target_id=self.target.id))
+        self.gm.step(1 / 30)
+        self.assertIsNotNone(self.source.boarding_party_id)
+        for _ in range(450):
+            self.gm.step(1 / 30)
+            if self.target.owner == 0:
+                break
+        self.assertEqual(self.target.owner, 0)
+        self.assertGreater(self.target.crew, 0)
+        for subsystem in self.target.systems.values():
+            self.assertGreater(subsystem.hp, 0)
+
+    def test_success_alone_stabilizes_support_without_minting_crew(self):
+        self.target.systems['life_support'].hp = 0
+        total = self.source.crew
+        pool = self.st.players[0].crew
+        craft = self.launch()[0]
+        self.gm.boarding.update(.01)
+        self.assertEqual(self.target.systems['life_support'].hp, 0)
+        craft.pos = self.target.pos.copy()
+        self.gm.boarding.update(6)
+        support = self.target.systems['life_support']
+        self.assertEqual(support.hp, support.max_hp * .1)
+        self.assertEqual(self.source.crew + self.target.crew, total)
+        self.assertEqual(self.st.players[0].crew, pool)
+        self.gm.boarding.update(6)
+        self.assertEqual(support.hp, support.max_hp * .1)
+
     def test_authoritative_launch_rejects_illegal_targets_and_sources(self):
-        cases = ['own', 'allied', 'hidden', 'range', 'shield', 'staffed', 'incapable', 'crew', 'jump', 'planet']
+        cases = ['own', 'allied', 'hidden', 'range', 'shield', 'incapable', 'crew', 'jump', 'planet']
         for case in cases:
             with self.subTest(case=case):
                 self.setUp()
@@ -107,7 +144,7 @@ class TestBoarding(unittest.TestCase):
         self.assertEqual(banks, [(p.credits, p.materials, p.energy, p.crew) for p in self.st.players.values()])
 
     def test_interruptions_return_survivors_and_never_capture_invalid_target(self):
-        for case in ('hidden', 'dead', 'transferred', 'range', 'shields', 'repaired', 'stop', 'source_dead'):
+        for case in ('hidden', 'dead', 'transferred', 'range', 'shields', 'stop', 'source_dead'):
             with self.subTest(case=case):
                 self.setUp()
                 before = self.source.crew

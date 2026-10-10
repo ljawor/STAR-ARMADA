@@ -13,6 +13,7 @@ from ..core.vectors import Vec3
 from ..data.store import DataStore
 from . import stats
 from .unit_factory import UnitFactory
+from .colonies import colony_rules
 
 
 def _body_clearance(body, station_radius: float) -> float:
@@ -109,6 +110,9 @@ class ConstructionSystem:
         if (builder is None or not builder.operational or builder.owner != player_id
                 or not builder.is_ship or not builder.is_construction):
             return False
+        unit = self.ds.ships.get(builder.data_id)
+        if unit is None or unit.can_colonize or station_id in ('defense_satellite', 'attack_satellite'):
+            return False
         # The builder has to actually be able to PLACE the thing — otherwise a
         # player can order a station on the far side of the map and the
         # constructor silently flies there and builds it.
@@ -139,7 +143,7 @@ class ConstructionSystem:
         build_time = sd.build_time / max(0.1, stats.effective_build_speed(st, player_id))
         builder.build_queue.append({
             "kind": "station", "item": station_id, "time_left": build_time,
-            "total": build_time, "pos": pos.to_dict(), "status": "paid",
+            "total": build_time, "pos": [pos.x, pos.y, pos.z], "status": "paid",
         })
         # move builder to site
         builder.order_type = "move"
@@ -164,6 +168,53 @@ class ConstructionSystem:
         return ", ".join(parts) if parts else "unknown"
 
     # ---------------------------------------------------------- site validation
+    def station_min_distance(self, station_id, other_id, other_radius, player_id,
+                             other_owner=None) -> float:
+        """Shared center-distance rule for live hardware and paid sites."""
+        radius = self.ds.resolve_station(station_id).radius
+        minimum = (radius + other_radius) * 1.6
+        economy = self.ds.rules.get('economy', {})
+        if station_id == other_id == 'trade_station':
+            minimum = max(minimum, float(economy.get('trade_station_min_distance', 1500)))
+        if (other_id == 'command_station' and other_owner is not None
+                and self.state.is_enemy(player_id, other_owner)):
+            minimum = max(minimum, float(economy.get('enemy_command_build_min_distance', 3000)))
+        return minimum
+
+    def _check_station_spacing(self, station_id, pos, player_id, *, viewer=None,
+                               ignore_work=None) -> tuple[bool, str]:
+        st = self.state
+        coords = (pos.x, pos.y, pos.z) if hasattr(pos, 'x') else pos
+        if not all(math.isfinite(v) for v in coords):
+            return False, 'invalid site coordinates'
+        if abs(coords[0]) > st.map_info.bounds or abs(coords[2]) > st.map_info.bounds:
+            return False, 'outside the map bounds'
+        for e in st.entities.values():
+            if not e.alive:
+                continue
+            if e.is_station and (viewer is None or st.can_see(viewer, e.id)):
+                minimum = self.station_min_distance(station_id, e.data_id, e.radius, player_id, e.owner)
+                if math.dist(coords, (e.pos.x, e.pos.y, e.pos.z)) < minimum:
+                    if e.data_id == 'command_station' and st.is_enemy(player_id, e.owner):
+                        return False, 'too close to hostile command station'
+                    return False, f"too close to {e.data_id.replace('_', ' ')}"
+            # Build queues are private intent, even on detected enemy builders.
+            if viewer is not None and e.owner not in st.allied_player_ids(viewer):
+                continue
+            for work in e.build_queue:
+                if (work is ignore_work or work.get('kind') not in ('station', 'satellite')
+                        or work.get('status') != 'paid' or work.get('pos') is None):
+                    continue
+                other = self.ds.stations.get(work.get('item'))
+                if other is None:
+                    continue
+                # Only live command centers impose territorial exclusion;
+                # queued hardware reserves its physical footprint/market spacing.
+                minimum = self.station_min_distance(station_id, other.id, other.radius, player_id)
+                if math.dist(coords, work['pos']) < minimum:
+                    return False, f"too close to {other.id.replace('_', ' ')} site"
+        return True, ''
+
     def check_site(self, station_id: str, pos, builder, *,
                    viewer: int | None = None) -> tuple[bool, str]:
         """Return (ok, reason) for a tuple or Vec3 site.
@@ -173,6 +224,9 @@ class ConstructionSystem:
         is a knowledge-limited placement preview: range is checked first, and
         a green ghost is not a guarantee that the real build will succeed.
         """
+        x, y, z = (pos.x, pos.y, pos.z) if hasattr(pos, 'x') else pos
+        if not all(math.isfinite(v) for v in (x, y, z)):
+            return False, 'invalid site coordinates'
         if viewer is not None:
             far, d, lim = self.too_far_to_build(pos, builder)
             if far:
@@ -200,10 +254,9 @@ class ConstructionSystem:
                 if math.dist((x, y, z), (e.pos.x, e.pos.y, e.pos.z)) < \
                         e.radius + sd.radius + 100:
                     return False, f"too close to planet {e.name_override or e.data_id}"
-            if e.is_station:
-                if math.dist((x, y, z), (e.pos.x, e.pos.y, e.pos.z)) < \
-                        (e.radius + sd.radius) * 1.6:
-                    return False, f"too close to {e.data_id.replace('_', ' ')}"
+        ok, reason = self._check_station_spacing(station_id, pos, builder.owner, viewer=viewer)
+        if not ok:
+            return ok, reason
         # requires_range: some stations must be near a specific body.
         # The window has to be measured from the body's ACTUAL radius, because
         # the planet-spacing rule above keeps stations ~1.6-2.4x the body
@@ -232,6 +285,12 @@ class ConstructionSystem:
 
     # ------------------------------------------------------------------ ship build
     def station_can_build_ship(self, station, ship_id: str) -> bool:
+        shd = self.ds.ships.get(ship_id)
+        player = self.state.players.get(station.owner)
+        if shd is None or player is None or shd.faction != player.faction:
+            return False
+        if shd.can_colonize and station.data_id != "command_station":
+            return False
         sd = self.ds.stations.get(station.data_id)
         if sd is None or not sd.builds_ships:
             return False
@@ -278,38 +337,100 @@ class ConstructionSystem:
             queued += 1
         return queued
 
+    # ------------------------------------------------------------------ satellites
+    def satellite_slots(self, planet):
+        live = {e.satellite_slot for e in self.state.entities.values()
+                if e.alive and e.planet_id == planet.id}
+        return live | {i['slot'] for i in planet.build_queue if i.get('kind') == 'satellite'}
+
+    def satellite_site(self, planet, station_id, slot):
+        cap = colony_rules()['satellite_cap']
+        sd = self.ds.stations[station_id]
+        radius = planet.radius + sd.radius + colony_rules()['orbit_clearance']
+        angle = slot * 2 * math.pi / cap
+        return planet.pos + Vec3(math.sin(angle) * radius, 0, math.cos(angle) * radius)
+
+    def start_satellite(self, planet_id, station_id, player_id):
+        from .colonies import eligible_planet
+        planet = self.state.entity(planet_id)
+        if (not eligible_planet(planet) or planet.colonized_by != player_id
+                or station_id not in ('defense_satellite', 'attack_satellite')):
+            return False
+        used = self.satellite_slots(planet)
+        cap = colony_rules()['satellite_cap']
+        sd = self.ds.stations[station_id]
+        # Search free slots in stable order, including paid site reservations.
+        for slot in range(cap):
+            if slot in used:
+                continue
+            pos = self.satellite_site(planet, station_id, slot)
+            if not self._check_station_spacing(station_id, pos, player_id)[0]:
+                continue
+            blocked = False
+            for e in self.state.entities.values():
+                if e.alive and e.is_planet and e is not planet and e.data_id != 'asteroid_field':
+                    if pos.dist(e.pos) < (e.radius + sd.radius) * 1.6:
+                        blocked = True
+                        break
+            if not blocked:
+                break
+        else:
+            return False
+        cost = self.factory.station_build_cost(station_id)
+        if not self.can_pay(player_id, cost):
+            return False
+        self.pay(player_id, cost)
+        planet.build_queue.append(dict(kind='satellite', item=station_id,
+            time_left=sd.build_time, total=sd.build_time, status='paid',
+            source_owner=player_id, slot=slot, pos=pos.to_dict(precise=True)))
+        return True
+
     # ------------------------------------------------------------------ colonize
     def start_colonize(self, colonizer_id: int, planet_id: int, player_id: int) -> bool:
         st = self.state
         unit = st.entity(colonizer_id)
         planet = st.entity(planet_id)
+        from .colonies import eligible_planet
         if (unit is None or not unit.operational or unit.owner != player_id
-                or not unit.is_ship or planet is None or not planet.is_planet):
+                or not unit.is_ship):
             return False
         ud = self.ds.ships.get(unit.data_id)
-        if ud is None or not ud.can_colonize:
+        if ud is None or not ud.can_colonize or unit.jump_charge > 0 or unit.jump_target is not None:
             return False
-        if planet.colonized_by is not None:
+        # A new control intent replaces the old mission even if its target is
+        # rejected. Authorize the source first: foreign/incapable units retain jobs.
+        if any(work.get('kind') == 'colonize' for work in unit.build_queue):
+            from .jump import clear_jump_orders
+            unit.build_queue[:] = [work for work in unit.build_queue if work.get('kind') != 'colonize']
+            clear_jump_orders(unit)
+        if not eligible_planet(planet):
             return False
-        if unit.pos.dist(planet.pos) > planet.radius + 600:
+        if planet.colonized_by is not None and not st.is_enemy(player_id, planet.colonized_by):
+            return False
+        from .colonies import defending_satellites
+        if planet.colonized_by is not None and defending_satellites(st, planet):
+            return False
+        from .jump import clear_jump_orders, detach_jumpers
+        detach_jumpers(st, [unit])
+        clear_jump_orders(unit)
+        unit.build_queue.clear()
+        if unit.pos.dist(planet.pos) > planet.radius + colony_rules()['approach_range']:
             # move there first; colonization completes on arrival via queue
             unit.order_type = "move"
-            unit.order_target_id = planet_id
-            unit.order_target_pos = None
+            unit.order_target_id = None
+            radial = (unit.pos - planet.pos).normalized()
+            unit.order_target_pos = planet.pos + radial * (planet.radius + colony_rules()['approach_range'] * .65)
             unit.build_queue.append({
-                "kind": "colonize", "item": str(planet_id), "time_left": 0.0,
-                "total": 0.0, "planet_id": planet_id, "status": "traveling",
+                "kind": "colonize", "item": str(planet_id), "time_left": colony_rules()["control_seconds"],
+                "total": colony_rules()["control_seconds"], "planet_id": planet_id, "status": "traveling",
+                "source_owner": player_id, "target_owner": planet.colonized_by,
             })
             return True
         # in range: start timer
-        cost = {"credits": 500, "materials": 200, "energy": 100, "crew": 300}
-        if not self.can_pay(player_id, cost):
-            st.float_text(unit.pos, "Insufficient resources", (1, 0.6, 0.4))
-            return False
-        self.pay(player_id, cost)
         unit.build_queue.append({
-            "kind": "colonize", "item": str(planet_id), "time_left": 15.0,
-            "total": 15.0, "planet_id": planet_id, "status": "paid",
+            "kind": "colonize", "item": str(planet_id), "time_left": colony_rules()["control_seconds"],
+            "total": colony_rules()["control_seconds"], "planet_id": planet_id, "status": "paid",
+            "source_owner": player_id, "target_owner": planet.colonized_by,
         })
         return True
 
@@ -317,25 +438,38 @@ class ConstructionSystem:
     def update(self, dt: float) -> None:
         st = self.state
         done_events = []
-        for e in st.entities.values():
-            if not e.operational or not e.build_queue:
+        for e in sorted(st.entities.values(), key=lambda e: e.id):
+            if not e.build_queue:
                 continue
             item = e.build_queue[0]
-            if item.get("status") == "traveling":
-                planet = st.entity(int(item["planet_id"]))
-                if planet is None or planet.colonized_by is not None:
+            if item.get('kind') == 'colonize':
+                from .colonies import eligible_planet
+                planet = st.entity(item['planet_id'])
+                if (not e.operational or e.owner != item.get('source_owner', e.owner)
+                        or not eligible_planet(planet)
+                        or planet.colonized_by != item.get('target_owner')
+                        or (planet.colonized_by is not None and not st.is_enemy(e.owner, planet.colonized_by))
+                        or e.jump_charge > 0 or e.jump_target is not None):
                     e.build_queue.pop(0)
                     continue
-                if e.pos.dist(planet.pos) <= planet.radius + 600:
-                    cost = {"credits": 500, "materials": 200, "energy": 100, "crew": 300}
-                    if self.can_pay(e.owner, cost):
-                        self.pay(e.owner, cost)
-                        item["time_left"] = 15.0
-                        item["total"] = 15.0
-                        item["status"] = "paid"
-                    else:
-                        st.float_text(e.pos, "Insufficient resources", (1, 0.6, 0.4))
-                        e.build_queue.pop(0)
+                from .colonies import defending_satellites
+                if defending_satellites(st, planet):
+                    item.update(time_left=colony_rules()['control_seconds'], total=colony_rules()['control_seconds'], status='blocked')
+                    continue
+                if e.pos.dist(planet.pos) > planet.radius + colony_rules()['approach_range']:
+                    item.update(time_left=colony_rules()['control_seconds'], total=colony_rules()['control_seconds'], status='traveling')
+                    continue
+                item['status'] = 'paid'
+                e.order_type = 'hold'
+                e.order_target_pos = None
+                e.order_target_id = None
+                e.vel = Vec3()
+                item['time_left'] = item['time_left'] - dt
+                if item['time_left'] <= 0:
+                    e.build_queue.pop(0)
+                    done_events.append((e, item))
+                continue
+            if not e.operational:
                 continue
             speed = 1.0
             if item.get("kind") == "ship" and e.is_station:
@@ -352,7 +486,24 @@ class ConstructionSystem:
     def _complete(self, builder, item: dict) -> None:
         st = self.state
         kind = item.get("kind")
-        if kind == "station":
+        if kind in ('station', 'satellite'):
+            owner = item['source_owner'] if kind == 'satellite' else builder.owner
+            # Paid work is consumed at completion. A newly hostile center or
+            # occupied site cancels the placement without refund (like capture
+            # invalidation); existing stations and ship production are untouched.
+            if not self._check_station_spacing(item['item'], item['pos'], owner,
+                                                ignore_work=item)[0]:
+                st.float_text(builder.pos, 'Cannot build: site unavailable', (1, .5, .4))
+                return
+        if kind == 'satellite':
+            from .colonies import eligible_planet
+            if not eligible_planet(builder) or builder.colonized_by != item['source_owner']:
+                return
+            satellite = self.factory.spawn_station(item['item'], builder.colonized_by, Vec3(*item['pos']))
+            satellite.planet_id = builder.id
+            satellite.satellite_slot = item['slot']
+            st.events.publish('station_built', entity_id=satellite.id, station=satellite.data_id, owner=satellite.owner)
+        elif kind == "station":
             pos = Vec3(*item["pos"])
             station = self.factory.spawn_station(item["item"], builder.owner, pos)
             st.float_text(pos, "Station complete", (0.6, 1, 0.6))
@@ -374,8 +525,39 @@ class ConstructionSystem:
                               owner=builder.owner)
         elif kind == "colonize":
             planet = st.entity(int(item["planet_id"]))
-            if planet is not None and planet.is_planet and planet.colonized_by is None:
+            from .colonies import eligible_planet, defending_satellites
+            if (not eligible_planet(planet) or not builder.operational
+                    or defending_satellites(st, planet)
+                    or builder.pos.dist(planet.pos) > planet.radius + colony_rules()['approach_range']
+                    or builder.owner != item.get('source_owner', builder.owner)
+                    or planet.colonized_by != item.get('target_owner')
+                    or (planet.colonized_by is not None and not st.is_enemy(builder.owner, planet.colonized_by))):
+                return
+            if planet is not None:
+                from .jump import clear_jump_orders, detach_jumpers
+                previous_owner = planet.colonized_by
+                planet.build_queue.clear()  # paid work is lost, never refunded
+                clear_jump_orders(planet)
+                planet.jump_charge = 0
+                planet.jump_target = None
+                planet.ability_active.clear()
+                planet.ability_cooldowns.clear()
                 planet.colonized_by = builder.owner
+                for dependent in sorted(st.entities.values(), key=lambda e: e.id):
+                    if dependent is builder:
+                        continue
+                    if dependent.order_target_id in (planet.id, builder.id):
+                        clear_jump_orders(dependent)
+                    if dependent.current_target in (planet.id, builder.id):
+                        dependent.current_target = None
+                    for field in ('hangar_id', 'launched_from', 'convoy_source', 'convoy_dest'):
+                        if getattr(dependent, field) in (planet.id, builder.id):
+                            setattr(dependent, field, None)
+                    dependent.build_queue[:] = [work for work in dependent.build_queue
+                        if not (work.get('kind') == 'colonize' and work.get('planet_id') == planet.id)]
+                detach_jumpers(st, [builder])
+                st.events.publish('planet_captured' if previous_owner is not None else 'planet_settled',
+                    planet_id=planet.id, owner=builder.owner, previous_owner=previous_owner)
                 st.float_text(planet.pos, "Planet colonized", (0.6, 1, 0.6))
                 st.events.publish("planet_colonized", planet_id=planet.id,
                                   owner=builder.owner)
