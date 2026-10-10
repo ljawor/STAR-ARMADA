@@ -339,9 +339,9 @@ class ConstructionSystem:
                 continue
             speed = 1.0
             if item.get("kind") == "ship" and e.is_station:
-                speed = stats.effective_build_speed(st, e.owner)
+                speed = stats.effective_build_speed(st, e.owner, e)
             elif e.is_construction:
-                speed = stats.effective_build_speed(st, e.owner)
+                speed = stats.effective_build_speed(st, e.owner, e)
             item["time_left"] -= dt * speed
             if item["time_left"] <= 0:
                 e.build_queue.pop(0)

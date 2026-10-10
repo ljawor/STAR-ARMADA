@@ -64,6 +64,38 @@
       "weapons": [],
       "systems": {"engines": 98, "weapons": 0, "sensors": 78, "shield_gen": 60, "hangar": 0},
       "can_build_stations": ["mining_station", "trade_station", "defense_platform", "energy_relay"]
+    },
+    "syndicate_crew_transport": {
+      "name": "Syndicate Crew Transport",
+      "faction": "syndicate",
+      "category": "crew_transport",
+      "max_rank": 5,
+      "cost": {
+        "credits": 550,
+        "materials": 300,
+        "energy": 75
+      },
+      "crew_cost": 24,
+      "command_cost": 2,
+      "build_time": 15,
+      "hull": 1200,
+      "shield_quad": 200,
+      "shield_regen": 8,
+      "speed": 70,
+      "turn_rate": 55,
+      "radius": 32,
+      "sensor_range": 1400,
+      "weapons": [],
+      "abilities": [],
+      "systems": {
+        "engines": 100,
+        "weapons": 0,
+        "sensors": 100,
+        "shield_gen": 100,
+        "hangar": 0,
+        "life_support": 100
+      },
+      "crew_capacity": 240
     }
   }
 }

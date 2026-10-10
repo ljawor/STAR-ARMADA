@@ -44,7 +44,7 @@ class SensorQueries:
         xp = ds.rules.get("experience", {})
         ship = ds.ships.get(e.data_id) if e.is_ship or e.is_squadron else None
         nebula = st.in_nebula(e.pos)
-        key = (e.sensor_range, e.sensor_multiplier(), techs, commander, e.xp,
+        key = (e.sensor_range, e.sensor_multiplier(), e.crew, e.max_crew, techs, commander, e.xp,
                tuple(xp.get("levels", [0, 120, 320, 700, 1400])),
                xp.get("max_effective_level", 5), ship.veteran_xp if ship else 100.0,
                ship.max_rank if ship else 1, e.is_ship, e.is_squadron, e.is_station,

@@ -80,7 +80,8 @@ class ResearchSystem:
                 if station is None or station.owner != p.id or not station.operational:
                     del p.researching[tid]
                     continue
-                info["time_left"] -= dt
+                from . import stats
+                info["time_left"] -= dt * stats.effective_research_speed(st, station)
                 if info["time_left"] <= 0:
                     del p.researching[tid]
                     p.researched.add(tid)

@@ -216,7 +216,11 @@ class DamageSystem:
     def _kill(self, target, attacker, attacker_id: int) -> None:
         st = self.state
         ds = self.ds
+        target.crew_cargo = 0  # passengers are casualties, never reclaimed pool crew
+        target.crew_mission.clear()
         target.alive = False
+        if st._crew_recovery_system is not None:
+            st._crew_recovery_system.validate()
         target.hull = 0.0
         st.dead_ids.append(target.id)
         # `seed` varies the blast shape per kill. Drawn from the SIM's rng (not

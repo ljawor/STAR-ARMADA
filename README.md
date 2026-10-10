@@ -77,6 +77,18 @@ press **B** or click **Board enemy hull**, then click the target. Abandoned hull
 no defenders and are easier to capture. Repair docks/drones repair support equipment,
 not dead crew. See [docs/BOARDING.md](docs/BOARDING.md) for mechanics and limits.
 
+The `feature/crew-recovery-ai` increment (awaiting review/merge, not a packaged release)
+adds automatic owned-hull recruitment near friendly bases and faction crew transports.
+Build/select a transport: **L** loads passengers at a base; **R** / **Deliver crew**
+then click an owned hull for field delivery. **Cancel crew order** keeps passengers.
+Repair life support to **50%** first. Recruitment/loading consumes unassigned crew and
+credits over time; delivery does not charge twice. Cargo is separate from onboard crew,
+never powers the ship, and is lost without refund on destruction. Understaffing
+proportionally reduces movement, weapons, sensors, repairs, production and research;
+life-support effectiveness is not staffing-scaled. Cautious AI uses the same commands.
+No towing, allied reclaim or neutral salvage. Initial defaults and limitations:
+[docs/CREW_RECOVERY.md](docs/CREW_RECOVERY.md).
+
 ## Combat experience and ship ranks
 
 Ships and fighter squadrons begin at **rank 1**. Fighting earns XP from actual
@@ -290,7 +302,8 @@ friendly sensor can provide detection for another ship's longer-range weapons.
 | LAN host/join, 2–4 humans, optional AI, configurable TCP port | ✅ implemented; matching version/content required |
 | Deterministic lockstep, serialized commands, replay infrastructure | ✅ implemented and tested |
 | Four skirmish maps, player factions/colors/teams, AI difficulty | ✅ implemented; 2–4 total players by map |
-| Boarding/capture, onboard crew/life support and abandoned hulls | 🟠 implemented/tested in PR #37; awaiting merge, not in v0.6.0 |
+| Boarding/capture, onboard crew/life support and abandoned hulls | ✅ merged in #37; not in the v0.6.0 package |
+| Base crew recruitment, field crew transports, proportional staffing, cautious boarding/recovery AI | 🟠 implemented on `feature/crew-recovery-ai`; awaiting review/merge, not packaged |
 | 8-player skirmish | 🔲 planned; current capacity is 2–4 total players |
 
 ## Repository layout
@@ -361,8 +374,9 @@ local builds (`./scripts/build_mac.sh`).
 ### Still in development
 
 The game remains a playable prototype, not the full design specification.
-Boarding/capture and crew/life support are implemented/tested in open PR #37,
-but are not merged or included in v0.6.0. Eight-player matches, expanded campaign
+Boarding/capture and crew/life support are merged in #37, but are not included in
+the v0.6.0 package. Crew recovery/staffing/AI is on `feature/crew-recovery-ai`, awaiting
+review/merge, with numeric defaults still requiring balance validation. Eight-player matches, expanded campaign
 scripting/cinematics, full faction parity, in-game mod management, reconnect/replay
 UX and further performance work remain pending. Current skirmish/LAN capacity is **2–4 total players**,
 limited by the selected map. See `docs/DEV_PLAN.md` for the broader plan; the

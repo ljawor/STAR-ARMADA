@@ -33,7 +33,9 @@ class AIPlayer:
         st = self.state
         out = []
         for e in st.entities.values():
-            if e.operational and not e.boarding and e.owner == self.player_id:
+            if (e.operational and not e.boarding and e.boarding_party_id is None
+                    and not e.crew_mission and e.owner == self.player_id
+                    and not getattr(self.ds.ships.get(e.data_id), 'crew_capacity', 0)):
                 if e.is_station and "station" in (kind or ""):
                     out.append(e)
                 elif e.is_ship or e.is_squadron:
@@ -89,6 +91,7 @@ class AIPlayer:
 
         # 1. economy: keep constructors alive and building
         self._flush_pending_sites()
+        self._ensure_crew_logistics(home)
         self._ensure_economy(home)
 
         # 2. defense platforms when threatened
@@ -641,6 +644,102 @@ class AIPlayer:
                 return True
         return False
 
+    def _ensure_crew_logistics(self, home):
+        recovery = self.state._crew_recovery_system
+        from ..systems.crew_recovery import recovery_rules
+        cfg = recovery_rules()
+        needs_repair = any(e.alive and e.owner == self.player_id
+                           and e.subsystem_fraction('life_support') < cfg['ai_support_retreat']
+                           for e in self.state.entities.values() if e.is_ship or e.is_station)
+        if needs_repair and self._count_stations('repair_dock') == 0:
+            builders = sorted((c for c in self.my_constructors()
+                               if c.id not in self._pending_site
+                               and 'repair_dock' in self.ds.ships[c.data_id].can_build_stations),
+                              key=lambda c: (c.pos.dist_sq(home.pos), c.id))
+            for builder in builders:
+                pos = self._find_station_site('repair_dock', 450, home, builder)
+                if pos is not None:
+                    self._queue_build(builder, 'repair_dock', pos)
+                    break
+        stranded = [e for e in self.state.entities.values() if e.alive and e.owner == self.player_id
+                    and not e.boarding and (e.is_ship or e.is_station)
+                    and e.crew < e.max_crew and recovery.base_for(e) is None
+                    and e.subsystem_fraction('life_support') >= cfg['support_threshold']]
+        if not stranded:
+            return
+        p = self.state.players[self.player_id]
+        # A remote derelict cannot move or recruit itself. Count it only when
+        # the authoritative automatic recruitment path can restart its crew.
+        if any(e.alive and e.owner == self.player_id and recovery.capacity(e)
+               and (e.operational or (
+                   not e.boarding and e.crew < e.max_crew
+                   and e.subsystem_fraction('life_support') >= cfg['support_threshold']
+                   and recovery.base_for(e) is not None
+                   and p.crew >= 1 and p.credits >= cfg['credits_per_crew']))
+               for e in self.state.entities.values()):
+            return
+        if any(self.ds.ships.get(q.get('item')) and self.ds.ships[q['item']].crew_capacity
+               for e in self.my_stations() for q in e.build_queue):
+            return
+        transports = sorted(s.id for s in self.ds.ships.values()
+                            if s.faction == self.state.players[self.player_id].faction and s.crew_capacity)
+        for yard in sorted(self.my_stations('shipyard'), key=lambda e: e.id):
+            if transports and not yard.build_queue:
+                self._queue_ship(yard, transports[0], 1)
+                return
+
+    def _crew_recovery(self, e):
+        from ..systems.crew_recovery import recovery_rules
+        from ..systems.stats import staffing_fraction
+        from ..core.commands import PlayerCommand
+        cfg = recovery_rules()
+        recovery = self.state._crew_recovery_system
+        # Failing support takes precedence over loading/delivery, and a fallback
+        # recovery destination is reconsidered when usable repairs appear.
+        # Preserve actual repair missions through their completion threshold.
+        if e.crew_mission and (
+                e.subsystem_fraction('life_support') >= cfg['ai_support_retreat']
+                or (e.crew_mission.get('phase') == 'recover'
+                    and recovery.repairs_support(self.state.entity(e.crew_mission.get('target')), e))):
+            return True
+        if not e.is_ship or e.is_squadron:
+            return False
+        # Idle transports need their operating complement before field work;
+        # healthy active missions above remain authoritative until completion.
+        if (recovery.capacity(e)
+                and e.subsystem_fraction('life_support') >= cfg['ai_support_retreat']
+                and staffing_fraction(e) >= cfg['ai_staffing_retreat']):
+            targets = [t for t in self.state.entities.values()
+                       if t.alive and t.owner == e.owner and t is not e and not t.boarding
+                       and (t.is_ship or t.is_station or t.is_squadron)
+                       and t.crew < t.max_crew and recovery.base_for(t) is None
+                       and t.subsystem_fraction('life_support') >= cfg['support_threshold']]
+            target = min(targets, key=lambda t: (t.crew > 0, e.pos.dist_sq(t.pos), t.id), default=None)
+            if target is not None and e.crew_cargo > 0:
+                self.state.queue_command(PlayerCommand('crew_deliver', e.owner, unit_ids=(e.id,), target_id=target.id))
+                return True
+            if target is not None and recovery.base_for(e) is not None:
+                self.state.queue_command(PlayerCommand('crew_load', e.owner, unit_ids=(e.id,)))
+                return True
+            if target is None:
+                return True  # unarmed logistics hardware never scouts or attacks
+        if (e.subsystem_fraction('life_support') >= cfg['ai_support_retreat']
+                and staffing_fraction(e) >= cfg['ai_staffing_retreat'] and not recovery.capacity(e)):
+            return False
+        bases = [b for b in self.state.entities.values() if b.operational and b.is_station
+                 and b.owner in self.state.allied_player_ids(e.owner)
+                 and b.data_id in cfg['base_types']]
+        if e.subsystem_fraction('life_support') < cfg['ai_support_retreat']:
+            docks = [b for b in bases if recovery.repairs_support(b, e)]
+            if docks:
+                bases = docks
+        base = min(bases, key=lambda b: (e.pos.dist_sq(b.pos), b.id), default=None)
+        if (base is not None and not (e.crew_mission.get('phase') == 'recover'
+                                      and e.crew_mission.get('target') == base.id)):
+            self.state.queue_command(PlayerCommand('crew_recover', e.owner,
+                                                   unit_ids=(e.id,), target_id=base.id))
+        return True
+
     # ------------------------------------------------------------------ tactical
     def tactical_tick(self, dt: float) -> None:
         st = self.state
@@ -651,7 +750,30 @@ class AIPlayer:
             return
         retreat_frac = self.ds.rules.get("ai", {}).get("retreat_hull_fraction", 0.28)
         home = self.home_station()
-        for e in self.my_units():
+        for e in sorted(st.entities.values(), key=lambda e: e.id):
+            if e.owner != self.player_id or not e.operational or e.boarding or e.boarding_party_id is not None:
+                continue
+            if self._crew_recovery(e):
+                continue
+            from ..systems.boarding import boarding_capable, boarding_reason, boarding_rules
+            from ..systems.crew_recovery import recovery_rules
+            from ..core.commands import PlayerCommand
+            if boarding_capable(e) and e.boarding_party_id is None:
+                party = min(e.crew - 1, max(1, int(e.crew * boarding_rules()['party_fraction'])))
+                # Detection must precede reading live enemy crew/support/position.
+                candidates = [t for t in sorted(st.entities.values(), key=lambda t: t.id)
+                              if st.is_enemy(e.owner, t.owner) and st.can_see(e.owner, t.id)
+                              and not boarding_reason(st, e, t)
+                              and party >= max(1, t.crew) * recovery_rules()['ai_board_ratio']
+                              and not any(c.alive
+                                          and (c.owner in st.allied_player_ids(e.owner)
+                                               or st.can_see(e.owner, c.id))
+                                          and c.boarding.get('target') == t.id
+                                          for c in st.entities.values())]
+                if candidates:
+                    target = min(candidates, key=lambda t: (e.pos.dist_sq(t.pos), t.id))
+                    st.queue_command(PlayerCommand('board', e.owner, unit_ids=(e.id,), target_id=target.id))
+                    continue
             if not (e.is_ship or e.is_squadron):
                 continue
             if e.is_construction:

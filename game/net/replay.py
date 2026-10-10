@@ -44,6 +44,9 @@ def state_checksum(state: GameState) -> str:
                              e.subsystem_hp('life_support')], separators=(',', ':')).encode())
         h.update(json.dumps(e.boarding, sort_keys=True, separators=(',', ':')).encode())
         h.update(str(e.boarding_party_id).encode())
+        h.update(json.dumps([e.recruitment_progress, e.crew_cargo,
+                             e.cargo_loss_accumulator, e.crew_mission],
+                            sort_keys=True, separators=(',', ':')).encode())
     for pid in sorted(st.players):
         p = st.players[pid]
         h.update(

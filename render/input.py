@@ -99,6 +99,10 @@ class InputController:
                     self.app.flash("fleet panel: choose formation and commander")
             elif ev.key == pygame.K_j and self.selection:
                 self._queue_jump()
+            elif ev.key == pygame.K_l and self.selection:
+                self._queue_crew('crew_load')
+            elif ev.key == pygame.K_r and self.selection:
+                self._queue_crew('crew_deliver')
             elif ev.key == pygame.K_b and self.selection:
                 self._queue_board()
             elif ev.key == pygame.K_s and self.selection:
@@ -391,6 +395,8 @@ class InputController:
                         self.app.flash("select your ships to form a fleet")
                 elif kind == "fleet_close":
                     self.hud.fleet_panel = False
+                elif kind in ('crew_load', 'crew_deliver', 'crew_cancel'):
+                    self._queue_crew(kind)
                 elif kind == 'board':
                     self._queue_board()
                 elif kind == "ability":
@@ -479,6 +485,30 @@ class InputController:
         self.dragging = False
         self.drag_start = self.drag_cur = self.right_drag = None
 
+    def _queue_crew(self, kind):
+        from game.core.commands import PlayerCommand
+        recovery = self.state._crew_recovery_system
+        ids = tuple(i for i in sorted(self.selection) if (e := self.state.entity(i)) is not None
+                    and e.owner == self.local_player and e.operational and recovery.capacity(e)
+                    and not e.boarding and e.jump_charge <= 0)
+        if not ids:
+            self.app.flash('select your operating crew transport')
+            return
+        if kind != 'crew_deliver':
+            self.state.queue_command(PlayerCommand(kind, self.local_player, unit_ids=ids))
+            return
+        ids = tuple(i for i in ids if self.state.entity(i).crew_cargo > 0)
+        if not ids:
+            self.app.flash('load passengers at a friendly base first')
+            return
+        self._cancel_jump()
+        self._cancel_ability()
+        self.hud.placement = None
+        self.hud.fleet_panel = False
+        self._pending_fleet = None
+        self._pending_ability = {'ability_id': '_crew_deliver', 'unit_ids': list(ids)}
+        self.hud.ability_prompt = 'CREW: click an owned hull · life support >=50% · Esc / right-click cancel'
+
     def _queue_board(self):
         from game.systems.boarding import boarding_capable
         ids = [i for i in sorted(self.selection) if (e := self.state.entity(i)) is not None
@@ -500,10 +530,20 @@ class InputController:
         if any(r.collidepoint(pos) for r in self.hud.blocked_rects):
             return
         target = self._pick_target(pos)
-        if target is None or not self.state.is_enemy(self.local_player, target.owner):
+        cmd = self._ability_cmd(self._pending_ability)
+        if cmd.type == 'crew_deliver':
+            if target is None or target.owner != self.local_player:
+                self.app.flash('choose an owned hull')
+                return
+            recovery = self.state._crew_recovery_system
+            reasons = [(i, recovery.reason(self.state.entity(i), 'deliver', target)) for i in cmd.unit_ids]
+            cmd.unit_ids = tuple(i for i, reason in reasons if not reason)
+            if not cmd.unit_ids:
+                self.app.flash('cannot deliver: ' + (reasons[0][1] if reasons else 'no eligible transports'))
+                return
+        elif target is None or not self.state.is_enemy(self.local_player, target.owner):
             self.app.flash("choose a detected enemy")
             return
-        cmd = self._ability_cmd(self._pending_ability)
         if cmd.type == 'board':
             from game.systems.boarding import boarding_reason
             reasons = [(i, boarding_reason(self.state, self.state.entity(i), target))
@@ -519,6 +559,14 @@ class InputController:
 
     def _ability_cmd(self, pl: dict):
         from game.core.commands import AbilityCommand
+        if pl['ability_id'] == '_crew_deliver':
+            from game.core.commands import PlayerCommand
+            recovery = self.state._crew_recovery_system
+            ids = tuple(i for i in sorted(set(pl['unit_ids']) & self.selection)
+                        if (e := self.state.entity(i)) is not None and e.owner == self.local_player
+                        and e.operational and recovery.capacity(e) and e.crew_cargo > 0
+                        and not e.boarding and e.jump_charge <= 0)
+            return PlayerCommand('crew_deliver', self.local_player, unit_ids=ids)
         if pl['ability_id'] == '_board':
             from game.core.commands import PlayerCommand
             from game.systems.boarding import boarding_capable

@@ -18,6 +18,13 @@ def update_crew(state, dt):
         if not e.alive or e.is_planet or not (e.is_ship or e.is_station or e.is_squadron):
             continue
         support = e.subsystem_fraction('life_support')
+        if e.crew_cargo > 0 and support < threshold:
+            e.cargo_loss_accumulator += dt * rate * (1.0 - support / threshold)
+            loss = min(e.crew_cargo, int(e.cargo_loss_accumulator))
+            e.cargo_loss_accumulator -= loss
+            e.crew_cargo -= loss
+            if loss:
+                state.events.publish('passengers_lost', entity_id=e.id, crew=loss)
         if e.crew > 0 and support < threshold:
             e.crew_loss_accumulator += dt * rate * (1.0 - support / threshold)
             loss = min(e.crew, int(e.crew_loss_accumulator))

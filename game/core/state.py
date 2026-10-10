@@ -108,6 +108,7 @@ class GameState:
     mission_id: str | None = None
     time: float = 0.0
     tick: int = 0
+    capacity_timer: float = 0.0
 
     # world content
     entities: dict = field(default_factory=dict)        # id -> Entity
@@ -120,6 +121,7 @@ class GameState:
     visibility_cell_size: float = 500.0
     explored_cells: dict = field(default_factory=dict)
     discovered_planets: dict = field(default_factory=dict)  # pid -> eid -> Entity snapshot
+    _crew_recovery_system: object | None = field(default=None, repr=False, compare=False)
     _boarding_system: object | None = field(default=None, repr=False, compare=False)
     _visibility_system: object | None = field(default=None, repr=False, compare=False)
     _sensor_queries: SensorQueries | None = field(default=None, repr=False, compare=False)
@@ -299,6 +301,7 @@ class GameState:
             "seed": self.seed, "game_type": self.game_type, "mission_id": self.mission_id,
             "time": self.time if precise else round(self.time, 3),
             "tick": self.tick,
+            "capacity_timer": self.capacity_timer,
             "next_entity_id": self.next_entity_id,
             "next_fleet_id": self.next_fleet_id,
             "next_projectile_id": self.next_projectile_id,
@@ -342,6 +345,10 @@ class GameState:
             "level": e.level,
             "crew": e.crew, "max_crew": e.max_crew,
             "crew_loss_accumulator": e.crew_loss_accumulator,
+            "recruitment_progress": e.recruitment_progress,
+            "crew_cargo": e.crew_cargo,
+            "cargo_loss_accumulator": e.cargo_loss_accumulator,
+            "crew_mission": dict(e.crew_mission),
             "boarding": dict(e.boarding),
             "boarding_party_id": e.boarding_party_id,
             "retarget_cooldown": e.retarget_cooldown if precise else round(e.retarget_cooldown, 3),
@@ -432,6 +439,10 @@ class GameState:
         e.crew = d.get('crew', e.max_crew)
         e.crew_loss_accumulator = d.get('crew_loss_accumulator', 0.0)
         e.boarding = dict(d.get('boarding', {}))
+        e.recruitment_progress = d.get('recruitment_progress', 0.0)
+        e.crew_cargo = d.get('crew_cargo', 0)
+        e.cargo_loss_accumulator = d.get('cargo_loss_accumulator', 0.0)
+        e.crew_mission = dict(d.get('crew_mission', {}))
         e.boarding_party_id = d.get('boarding_party_id')
         if not e.is_planet and (e.is_ship or e.is_station or e.is_squadron):
             e.systems.setdefault('life_support', SubsystemStub(100.0, 100.0))
@@ -482,7 +493,7 @@ class GameState:
         s = cls(
             seed=d.get("seed", 12345), game_type=d.get("game_type", "skirmish"),
             mission_id=d.get("mission_id"), time=d.get("time", 0.0),
-            tick=d.get("tick", 0),
+            tick=d.get("tick", 0), capacity_timer=d.get("capacity_timer", 0.0),
         )
         s.next_entity_id = d.get("next_entity_id", 1)
         s.next_fleet_id = d.get("next_fleet_id", 1)
