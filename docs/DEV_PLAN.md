@@ -11,6 +11,23 @@ partly delivered; the remaining work is listed explicitly below.
 - **Pending**: missing deliverable, not merely an older roadmap label.
 - Recommendations below define the proposed finish order, not additional approved scope.
 
+## Current release and branch scope
+
+GitHub v0.7.0 was published October 10, 2026 with
+`STAR-ARMADA-v0.7.0-mac.dmg` and `STAR-ARMADA-v0.7.0-win.zip`. PRs #37, #38 and
+#40 are merged and included. Release notes record downloaded SHA-256 verification,
+DMG/ZIP integrity checks and a 30-second frozen macOS smoke (`SMOKE_OK`, version
+0.7.0). Native interactive Windows gameplay was not exercised; mixed-platform LAN
+acceptance remains open. Packaging is delivered, not missing infrastructure.
+
+The user-requested **5× planet resource and crew income** follow-up is implemented
+on the existing PR #39 branch, not in v0.7.0. A 48-scenario, 120-second
+faction/map/difficulty sweep and four 900-second same-faction probes completed;
+these are bounded observations, not full-match balance acceptance. The same branch
+fixes campaign objective authority and abandonment/restore semantics.
+See [GAMEPLAY_ACCEPTANCE.md](GAMEPLAY_ACCEPTANCE.md) for evidence and open gates.
+Historical test counts below describe their original increments.
+
 ## Phase 1 — Window, camera, map, selection, movement ✅ prototype delivered
 
 pygame-ce/OpenGL, 3D tactical camera, data-driven geography, selection/control groups,
@@ -22,14 +39,16 @@ Four skirmish maps support 2–4 total players with factions/colors/teams/diffic
 Data-driven fighter-to-supercapital catalogue, shield quadrants, subsystem damage,
 projectiles/point defense, combat standoff/orbits, capped XP ranks and rank inspector.
 Crew/life-support/boarding extensions are merged in #37. Recovery, four faction
-crew transports and proportional staffing are merged in #38 (`6c76978`). Neither
-increment is included in the v0.6.0 packaged release.
+crew transports and proportional staffing are merged in #38 (`6c76978`). Both
+increments are included in the v0.7.0 packaged release.
 
 ## Phase 3 — Resources, construction, stations ✅ prototype delivered
 
 Credits/materials/energy/crew and command capacity; mining, reachable gas-giant energy
 relays, constructor-range station orders, shipyards, research and colony bonuses.
 Trade convoys, delivery, raiding and serialized commercial routes are implemented.
+PR #40 colonies, timed capture, orbital satellites and paid support orders are merged
+and packaged in v0.7.0; the 5× planet resource and crew income follow-up is branch-only.
 Further economic/faction balance is not complete merely because these systems exist.
 
 ## Phase 4 — Technology and special abilities ✅ prototype delivered
@@ -103,26 +122,28 @@ audio-pack or livery requirement.
 
 ## Cross-cutting backlog
 
-- **Planetary colonies and satellites:** implemented and verified on
-  `feat/planet-colonies-satellites`, awaiting merge; not packaged. Command-only colony
+- **Planetary colonies and satellites:** merged in #40 and packaged in v0.7.0. Command-only colony
   ships for all four built-in factions, non-gas settlement, crew/type-resource output,
   timed capture after satellite destruction, planet-menu defense/attack production
-  and AI integration. Acceptance: 766 full-suite tests passed, independent review
+  and AI integration. Historical PR #40 acceptance: 766 full-suite tests passed, independent review
   passed, and real SDL/GL diagnostics passed at 1280×800 and 1024×768.
   See [COLONIES.md](COLONIES.md); numeric defaults are balance proposals.
 
-- **§27 Boarding:** merged in #37; not included in the v0.6.0 packaged release.
+- **§27 Boarding:** merged in #37 and packaged in v0.7.0.
   Physical craft, contested control, ship/station ownership transfer, life-support
-  attrition and intact abandoned hulls; 608 headless tests passed on that branch plus
+  attrition and intact abandoned hulls; historical branch acceptance: 608 headless tests passed plus
   real SDL/OpenGL boarding diagnostics. See [BOARDING.md](BOARDING.md).
 - **Crew recovery:** base recruitment, commanded field transports, proportional staffing,
   cautious AI and integrated controls/diagnostics are merged in #38 (`6c76978`),
-  not packaged/released; see [CREW_RECOVERY.md](CREW_RECOVERY.md).
-  Final acceptance: 652 headless tests passed, 24 real SDL/OpenGL captures at
+  packaged in v0.7.0; see [CREW_RECOVERY.md](CREW_RECOVERY.md).
+  Historical PR #38 acceptance: 652 headless tests passed, 24 real SDL/OpenGL captures at
   1280×800 and 1024×768, exact restore/replay regressions and independent review.
   Baseline LAN test timing races were fixed without changing production LAN code.
   Numeric defaults are initial configurable balance proposals. Neutral salvage/towing
   and optional conversion/sale are outside this approved increment.
+- **Branch-only planet income balance:** user-requested 5× resource and crew income is
+  implemented on PR #39, not shipped in v0.7.0. Focused income regressions and bounded
+  faction/map/difficulty observations exist; statistical complete-match balance remains open.
 - **Optional captured-vessel outcomes:** sale, conversion, captured-tech research and
   temporary use remain deferred, not required to close the core boarding loop.
 - **§26 Trading:** convoy routes and persistence exist; improve convoy/escort legibility
@@ -136,12 +157,15 @@ audio-pack or livery requirement.
 
 ## Proposed finish order
 
-1. **Release acceptance for boarding.** #37 is merged; verify boarding during real LAN
-   play and native packaged gameplay before a separately approved version bump/release.
-2. **Balance and release-test crew recovery.** #38 is merged and independently reviewed;
-   source tests and real GL acceptance passed. Tune recruitment/loading/delivery costs
-   and AI heuristics through long matches, then complete native packaged and mixed-platform
-   LAN acceptance. No towing or neutrality expansion; no new release has been created.
+1. **Close interactive release acceptance.** v0.7.0 already packages #37/#38/#40.
+   Exercise boarding, recovery, colonies and support orders in native interactive
+   Windows gameplay and mixed-platform LAN; existing CI/archive checks and the frozen
+   macOS smoke do not prove these open gates. No packaging rebuild is inherently missing.
+2. **Balance and integrated gameplay acceptance.** Validate the branch-only 5× planet
+   resource income change, recruitment/loading/delivery costs and AI heuristics through
+   repeatable long matches across factions/maps/difficulties. Historical source/GL
+   results are not a new matrix pass; record actual results before claiming acceptance.
+   No towing or neutrality expansion; any future release requires separate approval.
 3. **Next feature: complete campaign gameplay (Phase 7 logic).** Persisted deterministic triggers,
    waves/objective transitions, capture/crew objectives and playable mission progression.
    Keep cinematic polish after the mission logic is stable.
@@ -156,7 +180,8 @@ audio-pack or livery requirement.
    mod selection/error UX, asset packs and faction authoring after schemas stabilize.
 8. **Final campaign/presentation/release pass (Phase 10).** Cinematics, audio mix,
    tutorials/accessibility/UX, complete campaign and long skirmish/LAN playtests,
-   native macOS/Windows packaging and interactive acceptance, refreshed docs.
+   regression-check existing native macOS/Windows packaging and complete interactive
+   acceptance, refreshed docs.
 
 Optional captured-vessel outcomes can follow the core completion milestones; do not
 let speculative features block shipping the required playable loop.

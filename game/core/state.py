@@ -11,6 +11,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from ..systems.visibility import SensorQueries
+    from ..systems.missions import MissionSystem
 
 from .vectors import Vec3
 from .entity import Entity
@@ -106,6 +107,8 @@ class GameState:
     seed: int = 12345
     game_type: str = "skirmish"            # skirmish|campaign
     mission_id: str | None = None
+    mission_state: dict | None = None  # definition and objective progress on restore
+    _mission_system: MissionSystem | None = field(default=None, repr=False, compare=False)
     time: float = 0.0
     tick: int = 0
     capacity_timer: float = 0.0
@@ -310,6 +313,8 @@ class GameState:
         return {
             "format": 3,
             "seed": self.seed, "game_type": self.game_type, "mission_id": self.mission_id,
+            "mission_state": (self._mission_system.to_dict()
+                              if self._mission_system is not None else self.mission_state),
             "time": self.time if precise else round(self.time, 3),
             "tick": self.tick,
             "capacity_timer": self.capacity_timer,
@@ -509,7 +514,8 @@ class GameState:
     def from_dict(cls, d: dict) -> "GameState":
         s = cls(
             seed=d.get("seed", 12345), game_type=d.get("game_type", "skirmish"),
-            mission_id=d.get("mission_id"), time=d.get("time", 0.0),
+            mission_id=d.get("mission_id"), mission_state=d.get("mission_state"),
+            time=d.get("time", 0.0),
             tick=d.get("tick", 0), capacity_timer=d.get("capacity_timer", 0.0),
         )
         s.next_entity_id = d.get("next_entity_id", 1)

@@ -188,7 +188,6 @@ def start_game(load_path: str | None = None, mdef: dict | None = None,
     global flash_until
     global net_session, local_player, accumulator, last_autosave
     paused = False
-    mission_def = mdef
     if net_session is not None and net_session is not lan_session:
         net_session.close()
     net_session = lan_session
@@ -197,6 +196,7 @@ def start_game(load_path: str | None = None, mdef: dict | None = None,
         gm = GameManager.start_skirmish(lan_session.launch['map_def'], mods=MODS or None)
     else:
         gm = make_game(load_path, mdef, skirmish_options)
+    mission_def = gm.mission.mission
     state = gm.state
     state._net_session = lan_session
     accumulator = 0.0

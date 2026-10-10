@@ -6,6 +6,7 @@ mission_complete / mission_failed. Objective types implemented in the slice:
 """
 from __future__ import annotations
 
+from copy import deepcopy
 from ..data.store import DataStore
 
 
@@ -13,17 +14,41 @@ class MissionSystem:
     def __init__(self, state, mission_def: dict | None = None):
         self.state = state
         self.ds = DataStore.get()
-        self.mission = mission_def
+        saved = state.mission_state
+        if mission_def is None and saved is not None:
+            mission_def = saved.get("definition")
+        self.mission = deepcopy(mission_def)
         self.objectives = []
         self.completed = False
         self.failed = False
         self._escorted_id = None       # the player convoy we are escorting
-        if mission_def:
+        state._mission_system = self
+        if mission_def is not None:
             self.objectives = [dict(o, done=False) for o in mission_def.get("objectives", [])]
+            if saved is not None and saved.get("definition") == mission_def:
+                self.objectives = deepcopy(saved.get("objectives", self.objectives))
+                self.completed = bool(saved.get("completed", False))
+                self.failed = bool(saved.get("failed", False))
+                self._escorted_id = saved.get("escorted_id")
             state.events.subscribe("station_built", self._on_station_built)
             state.events.subscribe("ship_built", self._on_ship_built)
             state.events.subscribe("unit_destroyed", self._on_unit_destroyed)
             state.events.subscribe("planet_colonized", self._on_colonized)
+            if not self.completed and not self.failed and any(
+                    o["type"] == "escort_convoy" and not o["done"] for o in self.objectives):
+                state.events.subscribe("convoy_arrived", self._on_convoy_arrived)
+                state.events.subscribe("convoy_raided", self._on_convoy_raided)
+        self._escort_hooked = any(o["type"] == "escort_convoy" for o in self.objectives)
+        # The restore snapshot is consumed; serialization now reads this system.
+        state.mission_state = None
+
+    def to_dict(self) -> dict | None:
+        """Persist mission identity, exact progress and terminal outcome."""
+        if self.mission is None:
+            return None
+        return deepcopy(dict(definition=self.mission, objectives=self.objectives,
+                             completed=self.completed, failed=self.failed,
+                             escorted_id=self._escorted_id))
 
     # ------------------------------------------------------------------ events
     def _player_team(self, player_id: int) -> int:
@@ -72,7 +97,7 @@ class MissionSystem:
             if o["type"] == "destroy_all_forces" and not o["done"]:
                 team = o.get("team")
                 any_left = any(
-                    e.alive and e.owner >= 0 and self._team_of(e.owner) == team
+                    e.operational and e.owner >= 0 and self._team_of(e.owner) == team
                     and (e.is_ship or e.is_squadron or e.is_station)
                     for e in st.entities.values())
                 if not any_left:
@@ -81,18 +106,21 @@ class MissionSystem:
                 self._update_hold_point(o, dt)
             if o["type"] == "escort_convoy" and not o["done"]:
                 self._update_escort(o)
-        if all(o["done"] for o in self.objectives):
-            self.completed = True
-            st.events.publish("mission_complete")
-        # failure: player loses all stations
+        # Failure takes precedence over a deadline reached on the loss tick.
+        if self.failed:
+            return
         human = [p for p in st.players.values() if not p.is_ai]
         for p in human:
-            has_any = any(e.alive and e.owner == p.id and (e.is_station or e.is_ship)
+            has_any = any(e.operational and e.owner == p.id
+                          and (e.is_station or e.is_ship or e.is_squadron)
                           for e in st.entities.values())
             if not has_any and st.time > 5.0:
                 self.failed = True
                 st.events.publish("mission_failed")
-                break
+                return
+        if all(o["done"] for o in self.objectives):
+            self.completed = True
+            st.events.publish("mission_complete")
 
     def _team_of(self, owner: int) -> int:
         p = self.state.players.get(owner)
@@ -113,7 +141,7 @@ class MissionSystem:
         human_teams = {p.team for p in st.players.values() if not p.is_ai}
         inside = sum(
             1 for e in st.entities.values()
-            if e.alive and e.owner >= 0
+            if e.operational and e.owner >= 0
             and self._team_of(e.owner) in human_teams
             and (e.is_ship or e.is_squadron or e.is_station)
             and (e.pos.x - px) ** 2 + (e.pos.z - pz) ** 2 <= radius ** 2)
@@ -129,7 +157,8 @@ class MissionSystem:
         done when one of the player's convoys publishes convoy_arrived.
         fails the mission if it is destroyed by an enemy."""
         st = self.state
-        if not hasattr(self, "_escort_hooked"):
+        # Compatibility for objectives attached dynamically by callers.
+        if not self._escort_hooked:
             st.events.subscribe("convoy_arrived", self._on_convoy_arrived)
             st.events.subscribe("convoy_raided", self._on_convoy_raided)
             self._escort_hooked = True

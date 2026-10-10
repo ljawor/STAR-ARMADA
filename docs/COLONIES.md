@@ -25,7 +25,23 @@
 | `approach_range` | 600 units beyond the planetary surface |
 | `orbit_clearance` | 350 units beyond planet + satellite radii |
 
-Satellite costs, crew, hulls, weapons and production time are data-driven in `assets/data/stations/stations.json`. Planet income is configured in `economy.planet_income`, with existing `planet_crew_bonus` added once. Every built-in eligible planet type supplies some crew and at least one economic resource. These numeric defaults require long-match balancing.
+Satellite costs, crew, hulls, weapons and production time are data-driven in `assets/data/stations/stations.json`. Planet income is configured in `economy.planet_income`, with `planet_crew_bonus` added **once**. The built-in resource rates and additive crew bonuses have both been increased to exactly **5×** their previous values; station income (including mining, trade and energy relays), convoy rewards, AI difficulty multipliers, command-capacity bonuses and all costs are unchanged. These numeric defaults still require long-match balancing.
+
+Effective output per second, including crew bonuses (**PR #39 branch-only balance change; not included in v0.7.0**):
+
+| Planet type | Credits (old → new) | Materials (old → new) | Crew (old → new) |
+|---|---:|---:|---:|
+| Temperate | 1.2 → 6 | 0 → 0 | 0.4 → 2 |
+| Industrial | 0.4 → 2 | 1 → 5 | 0.1 → 0.5 |
+| Agricultural | 0.5 → 2.5 | 0 → 0 | 0.8 → 4 |
+| Military | 0.3 → 1.5 | 0 → 0 | 0.3 → 1.5 |
+| Research | 0.6 → 3 | 0 → 0 | 0.1 → 0.5 |
+| Barren | 0.2 → 1 | 0 → 0 | 0.05 → 0.25 |
+| Trade | 1.8 → 9 | 0 → 0 | 0.1 → 0.5 |
+
+All eligible built-in planet types produce zero energy. Temperate base crew is now 1.25 plus 0.75 bonus; agricultural base crew is 2.5 plus 1.5 bonus. Gas giants remain ineligible and provide no colony output, including legacy saved gas colonies.
+
+This is a data-only default change, not a runtime multiplier: the simulation and HUD read the same configured rates. Mods replacing `game_rules.json` retain their literal configured output; omitted income/bonus tables still default to empty, without inheriting built-in rates or an implicit 5× multiplier. Existing saves use the currently loaded catalogue rules on restoration, since economic rates are not stored in the saved state.
 
 ## Persistence and compatibility
 
@@ -33,7 +49,7 @@ The existing `colonized_by` field is authoritative for colony ownership; planets
 
 Legacy gas-planet ownership is retained as historical save data, but cannot provide colony income or authorize satellite construction. Energy production near gas giants uses energy relays instead. For compatibility, legacy command-mode planet-majority/economic requirements and timed scoring still count that saved ownership; ordinary skirmish/LAN elimination does not use planet ownership to determine victory. New matches cannot create gas colonies.
 
-The `build_satellite` command is registered for serialized commands and LAN validation. This source increment is **implemented and verified, awaiting merge**, not packaged. Acceptance: **699 full-suite tests passed**, independent review passed, and the real SDL/OpenGL diagnostic passed at both 1280×800 and 1024×768 with 18 captures. Python compilation and diff checks passed. Existing test-helper unclosed-file ResourceWarnings remain non-failing warnings. This does not establish native Windows or cross-platform LAN gameplay acceptance.
+The `build_satellite` command is registered for serialized commands and LAN validation. The colony increment and follow-up support orders are **merged in #40 and packaged in v0.7.0**. Historical acceptance after support-order integration: **766 full-suite tests passed**, independent review passed, and real SDL/OpenGL diagnostics passed at 1280×800 and 1024×768. Existing test-helper unclosed-file ResourceWarnings remain non-failing warnings. This does not establish native interactive Windows or cross-platform LAN gameplay acceptance, nor acceptance of the branch-only 5× income change.
 
 ## Verification
 

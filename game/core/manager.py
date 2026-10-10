@@ -319,7 +319,10 @@ class GameManager:
 
         # 15. trading, victory & mission
         self.trading.update(dt)
-        self.victory.update(dt)
+        # Campaign outcomes belong to objectives/failure, not skirmish rules.
+        # Losing the last command center must not freeze a still-active mission.
+        if self.mission.mission is None:
+            self.victory.update(dt)
         self.mission.update(dt)
         self.visibility.update()
 

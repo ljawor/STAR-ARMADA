@@ -4,10 +4,11 @@
 classic space-fleet RTS titles (Armada II / Fleet Operations era). It runs entirely on
 Python 3 — deterministic simulation, AI, OpenGL rendering via pygame-ce and procedural audio.
 
-**Current release: [v0.6.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.6.0)**
-— macOS DMG and Windows ZIP, featuring faction-specific ships and stations,
-ownership markers, combat ranks, fleet-selection HUD, LAN multiplayer and alliances.
-The Galactic Imperium's existing look is preserved.
+**Current release: [v0.7.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.7.0)**
+— published October 10, 2026, with macOS DMG and Windows ZIP. Adds boarding, crew
+recovery/transports, planetary colonies/satellites and support orders to the existing
+faction hardware, combat ranks, fleet HUD, LAN multiplayer and alliances.
+Native interactive Windows gameplay and mixed-platform LAN acceptance remain open.
 
 The setting is an original space-opera universe. Prototype faction/ship names are
 placeholder-style data (Imperial / Rebel / Confederacy / Syndicate) so the feel reads
@@ -51,7 +52,7 @@ extract the entire ZIP and run `STAR ARMADA.exe` (unsigned).
 | Ctrl+1..9 | Assign control group |
 | 1..9 | Select control group |
 | F | Fleet panel (group selected ships into a fleet, pick commander) |
-| B, then left-click | Board a detected disabled enemy ship/station with an eligible ship; otherwise toggle build menu |
+| B, then left-click | Board a detected shields-down enemy ship/station with an eligible ship; otherwise toggle build menu |
 | J, then left-click | Hyperjump selected ships to a destination on the battlefield or minimap; explored and unexplored areas are allowed |
 | Esc / right-click during jump selection | Cancel destination selection |
 | Space | Follow selection |
@@ -81,8 +82,8 @@ Equipment repair does not replace dead crew. See [docs/SUPPORT_ORDERS.md](docs/S
 for the PR #40 support-order changes and [docs/BOARDING.md](docs/BOARDING.md) for the
 underlying boarding mechanics.
 
-The `feature/crew-recovery-ai` increment (awaiting review/merge, not a packaged release)
-adds automatic owned-hull recruitment near friendly bases and faction crew transports.
+Crew recovery (merged in PR #38 and included in v0.7.0) adds automatic owned-hull
+recruitment near friendly bases and faction crew transports.
 Build/select a transport: **L** loads passengers at a base; **R** / **Deliver crew**
 then click an owned hull for field delivery. **Cancel crew order** keeps passengers.
 Repair life support to **50%** first. Recruitment/loading consumes unassigned crew and
@@ -93,22 +94,28 @@ life-support effectiveness is not staffing-scaled. Cautious AI uses the same com
 No towing, allied reclaim or neutral salvage. Initial defaults and limitations:
 [docs/CREW_RECOVERY.md](docs/CREW_RECOVERY.md).
 
-## Planetary colonies and satellites (implemented, awaiting merge)
+## Planetary colonies and satellites (released in v0.7.0)
 
-The `feat/planet-colonies-satellites` source increment extends colony ships for all
+PR #40, merged October 10, 2026 and included in v0.7.0, extends colony ships for all
 four built-in factions (including a new Syndicate colony hull): command-center-only
 production, non-gas planetary settlement,
 crew/resource income and timed enemy-colony capture after all defending satellites
 are destroyed. Successful control consumes the colony ship without an extra fee.
 Owned planets expose paid defense/attack satellite construction with a shared limit.
-Player controls, AI and persistence passed the **766-test suite**, independent review
-and real SDL/OpenGL diagnostics. The same branch adds paid engineer repairs,
+Historical PR #40 acceptance: player controls, AI and persistence passed the
+**766-test suite**, independent review and real SDL/OpenGL diagnostics. The release adds paid engineer repairs,
 ship/fighter-only repair docks, universal build crew-cost labels and automatic fighter
 exploration that avoids detected enemies. Trade stations require 1,500-unit spacing;
 new stations/satellites require 3,000-unit clearance from enemy command centers.
-See [docs/SUPPORT_ORDERS.md](docs/SUPPORT_ORDERS.md). This branch is not merged or included in the
-packaged release. See [docs/COLONIES.md](docs/COLONIES.md) for the approved rules,
-initial tuning and diagnostics.
+See [docs/SUPPORT_ORDERS.md](docs/SUPPORT_ORDERS.md) and
+[docs/COLONIES.md](docs/COLONIES.md) for the approved rules, initial tuning and diagnostics.
+
+**Branch-only balance follow-up:** **5× colonized-planet resource and crew income**
+is implemented on PR #39, together with campaign objective/abandonment save-restore
+fixes. It is not included in v0.7.0. Bounded AI matrix and long-probe observations,
+mechanic regressions and open acceptance gates are recorded in
+[docs/GAMEPLAY_ACCEPTANCE.md](docs/GAMEPLAY_ACCEPTANCE.md); these do not establish
+statistical full-match balance or Windows/mixed-platform LAN acceptance.
 
 ## Combat experience and ship ranks
 
@@ -297,7 +304,7 @@ friendly sensor can provide detection for another ship's longer-range weapons.
 | Four data-driven factions | ✅ faction-selectable setup; Syndicate remains a prototype, not full parity |
 | Resources: credits/materials/energy/crew, command capacity | ✅ prototype |
 | Stations: command, mining, shipyard, research, defense, sensor, fighter platform, repair, trade, energy relay | ✅ prototype |
-| Planets (colonize, bonuses), asteroid fields, nebulae, jump points | ✅ prototype (colonize: build) |
+| Planetary colonies, timed capture and orbital satellites; asteroid fields, nebulae, jump points | ✅ prototype; colonies/satellites merged in #40 and released in v0.7.0 |
 | Ships: fighter→supercapital, construction ship | ✅ prototype |
 | Fighter **squadrons** with losses + carrier reinforcement | ✅ prototype |
 | Hull / shields / **subsystem damage** (engines, weapons, sensors, shields, hangar) | ✅ prototype |
@@ -323,8 +330,8 @@ friendly sensor can provide detection for another ship's longer-range weapons.
 | LAN host/join, 2–4 humans, optional AI, configurable TCP port | ✅ implemented; matching version/content required |
 | Deterministic lockstep, serialized commands, replay infrastructure | ✅ implemented and tested |
 | Four skirmish maps, player factions/colors/teams, AI difficulty | ✅ implemented; 2–4 total players by map |
-| Boarding/capture, onboard crew/life support and abandoned hulls | ✅ merged in #37; not in the v0.6.0 package |
-| Base crew recruitment, field crew transports, proportional staffing, cautious boarding/recovery AI | 🟠 implemented on `feature/crew-recovery-ai`; awaiting review/merge, not packaged |
+| Boarding/capture, onboard crew/life support and abandoned hulls | ✅ merged in #37; released in v0.7.0 |
+| Base crew recruitment, field crew transports, proportional staffing, cautious boarding/recovery AI | ✅ merged in #38; released in v0.7.0; balance acceptance remains open |
 | 8-player skirmish | 🔲 planned; current capacity is 2–4 total players |
 
 ## Repository layout
@@ -353,27 +360,33 @@ PYTHONPATH=tests .venv/bin/python -m unittest discover -s tests -v
 Tests run the **real simulation headless** — no window, no GPU — covering economy,
 combat, subsystem damage, formations, squadrons, research, AI, save/load, victory
 conditions, trade convoys, mission objectives and the full
-build→gather→research→fleet→attack→win loop. The v0.6.0 source tree passed **577
+build→gather→research→fleet→attack→win loop. Historical v0.6.0 acceptance: its source tree passed **577
 headless tests**, plus real SDL/OpenGL catalogue checks for 32 ships, 40 station
 variants, four convoys, all station placement/construction views and all four
 faction close-camera keep-outs. **19 protected Imperial pixel comparisons were
 unchanged.** Independent code review, ship-size/close-zoom regressions and the
 30-second rendered gameplay smoke also passed. Render diagnostics in `tools/`
 need a working window server/OpenGL context; they are separate from headless tests.
+Historical v0.7.0 acceptance recorded **766 headless tests**, independent support-order
+review and real SDL/OpenGL diagnostics at 1280×800 and 1024×768. Current branch
+observations and exact campaign restore regressions are recorded separately in
+[docs/GAMEPLAY_ACCEPTANCE.md](docs/GAMEPLAY_ACCEPTANCE.md); release-era tests are
+not proof of statistical full-match balance.
 
 ## Releases
 
-**[Download v0.6.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.6.0)**:
+**[Download v0.7.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.7.0)**
+(published October 10, 2026):
 
-- **macOS:** `STAR-ARMADA-v0.6.0-mac.dmg`
-- **Windows:** `STAR-ARMADA-v0.6.0-win.zip`
+- **macOS:** `STAR-ARMADA-v0.7.0-mac.dmg`
+- **Windows:** `STAR-ARMADA-v0.7.0-win.zip`
 
-The published DMG passed image integrity, signing, version and inspected
-bundled-code comparisons, plus a 30-second gameplay smoke from a read-only mount.
-The published Windows ZIP passed native Windows CI build, ZIP CRC, executable
-header, bundled-data and inspected-code checks. Both downloaded assets matched
-their published SHA-256 hashes and sizes. **Interactive Windows gameplay was
-not tested.**
+The release notes record successful native macOS/Windows CI builds, downloaded
+assets matching GitHub SHA-256 digests, DMG checksum and Windows ZIP integrity
+checks. The published macOS bundle reports 0.7.0 and passed a 30-second frozen-app
+smoke (`SMOKE_OK`). **Native interactive Windows gameplay was not exercised;
+mixed-platform LAN acceptance remains open.** Packaging is delivered, not a
+missing feature; these remaining interactive checks are separate acceptance gates.
 
 Tagged versions (`v*`) trigger native macOS and Windows builds and GitHub Release
 publication. Version is defined once in `game/__init__.py`; merge the version
@@ -384,6 +397,7 @@ local builds (`./scripts/build_mac.sh`).
 
 | Release | Delivered |
 |---|---|
+| **v0.7.0** | Boarding and crew/life support (#37), crew recovery/transports and cautious AI (#38), colonies/capture/satellites and support orders (#40); published macOS DMG and Windows ZIP |
 | **v0.6.0** | Distinct ships, ten station types and convoys for every faction; Imperial look preserved; faction construction previews, geometry-safe cameras and exact hull contacts |
 | **v0.5.2** | Ownership hull shading and screen-clamped friend/hostile markers with configurable visibility |
 | **v0.5.1** | Close/very-close base camera safety, minimap recenter/follow correction, behind-eye ship-size fix, consistent projection/picking/audio, and large-fleet camera query optimization |
@@ -395,9 +409,11 @@ local builds (`./scripts/build_mac.sh`).
 ### Still in development
 
 The game remains a playable prototype, not the full design specification.
-Boarding/capture and crew/life support are merged in #37, but are not included in
-the v0.6.0 package. Crew recovery/staffing/AI is on `feature/crew-recovery-ai`, awaiting
-review/merge, with numeric defaults still requiring balance validation. Eight-player matches, expanded campaign
+Boarding/capture (#37), crew recovery/staffing/AI (#38), and colonies/support orders
+(#40) are merged and packaged in v0.7.0. Long-match balance, native interactive
+Windows and mixed-platform LAN acceptance remain open. The 5× colonized-planet
+resource and crew income follow-up is branch-only, not part of v0.7.0; bounded
+observations and remaining balance gates are documented separately. Eight-player matches, expanded campaign
 scripting/cinematics, full faction parity, in-game mod management, reconnect/replay
 UX and further performance work remain pending. Current skirmish/LAN capacity is **2–4 total players**,
 limited by the selected map. See `docs/DEV_PLAN.md` for the broader plan; the
