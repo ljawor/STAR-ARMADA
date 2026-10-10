@@ -21,8 +21,9 @@ Four skirmish maps support 2–4 total players with factions/colors/teams/diffic
 
 Data-driven fighter-to-supercapital catalogue, shield quadrants, subsystem damage,
 projectiles/point defense, combat standoff/orbits, capped XP ranks and rank inspector.
-Crew/life-support/boarding extensions are merged in #37. Recovery and proportional
-staffing are implemented on `feature/crew-recovery-ai`, awaiting review/merge.
+Crew/life-support/boarding extensions are merged in #37. Recovery, four faction
+crew transports and proportional staffing are merged in #38 (`6c76978`). Neither
+increment is included in the v0.6.0 packaged release.
 
 ## Phase 3 — Resources, construction, stations ✅ prototype delivered
 
@@ -44,9 +45,13 @@ roster and combined abilities. Merged #37 adds capture-safe carrier dependent cl
 ## Phase 6 — AI 🟠 prototype delivered; gameplay completion pending
 
 Strategic/tactical AI, difficulty modifiers, scouting, infrastructure and fleet combat
-exist. The crew-recovery branch adds cautious detected-target boarding, support/crew
-retreat, repair infrastructure and transport logistics. Remaining: validate complete
-matches across factions/maps/difficulties. Full Syndicate parity remains unverified/incomplete;
+exist. Merged #38 adds cautious detected-target boarding, support/crew retreat,
+repair infrastructure and transport logistics, including emergency mission interruption,
+repair-destination reassessment and replacement of stranded abandoned transports.
+Remaining: validate complete matches across factions/maps/difficulties and tune recovery
+costs/rates/AI thresholds. Autonomous field repair dispatch to unsafe abandoned hulls
+is not implemented; these hulls still require external repair assistance.
+Full Syndicate parity remains unverified/incomplete;
 faction-specific meshes must not be confused with complete faction gameplay.
 
 ## Phase 7 — Campaign, objectives and cinematics 🟠
@@ -103,8 +108,11 @@ audio-pack or livery requirement.
   attrition and intact abandoned hulls; 608 headless tests passed on that branch plus
   real SDL/OpenGL boarding diagnostics. See [BOARDING.md](BOARDING.md).
 - **Crew recovery:** base recruitment, commanded field transports, proportional staffing,
-  cautious AI and integrated controls/diagnostics are implemented on
-  `feature/crew-recovery-ai`, awaiting review/merge; see [CREW_RECOVERY.md](CREW_RECOVERY.md).
+  cautious AI and integrated controls/diagnostics are merged in #38 (`6c76978`),
+  not packaged/released; see [CREW_RECOVERY.md](CREW_RECOVERY.md).
+  Final acceptance: 652 headless tests passed, 24 real SDL/OpenGL captures at
+  1280×800 and 1024×768, exact restore/replay regressions and independent review.
+  Baseline LAN test timing races were fixed without changing production LAN code.
   Numeric defaults are initial configurable balance proposals. Neutral salvage/towing
   and optional conversion/sale are outside this approved increment.
 - **Optional captured-vessel outcomes:** sale, conversion, captured-tech research and
@@ -122,11 +130,11 @@ audio-pack or livery requirement.
 
 1. **Release acceptance for boarding.** #37 is merged; verify boarding during real LAN
    play and native packaged gameplay before a separately approved version bump/release.
-2. **Review and balance the crew recovery increment.** Implementation/test/GL acceptance
-   is on `feature/crew-recovery-ai`, not merged or packaged. Review the explicit
-   recruitment/loading/delivery costs and AI heuristics, then complete long-match
-   faction balance and release/LAN acceptance. No towing or neutrality expansion.
-3. **Complete campaign gameplay (Phase 7 logic).** Persisted deterministic triggers,
+2. **Balance and release-test crew recovery.** #38 is merged and independently reviewed;
+   source tests and real GL acceptance passed. Tune recruitment/loading/delivery costs
+   and AI heuristics through long matches, then complete native packaged and mixed-platform
+   LAN acceptance. No towing or neutrality expansion; no new release has been created.
+3. **Next feature: complete campaign gameplay (Phase 7 logic).** Persisted deterministic triggers,
    waves/objective transitions, capture/crew objectives and playable mission progression.
    Keep cinematic polish after the mission logic is stable.
 4. **Finish multiplayer/replay resilience (Phase 8).** Reconnect/resync and user replay
