@@ -376,7 +376,10 @@ class HUD:
             self._selection_panel(ents, local_player)
             return
         # Idle help is a card, not a full-height inspector hiding the world.
-        panel = pygame.Rect(10, 44, 320, min(540, self.height - 260) if ents else 84)
+        recovery_extra = bool(ents and (ents[0].crew_mission or ents[0].crew < ents[0].max_crew
+                              or getattr(self.ds.ships.get(ents[0].data_id), 'crew_capacity', 0)))
+        panel = pygame.Rect(10, 44, 320, (min(650, self.height - 145) if recovery_extra
+                            else min(540, self.height - 260)) if ents else 84)
         self.blocked_rects.append(panel)
         pygame.draw.rect(ov, PANEL_BG, panel, border_radius=8)
         pygame.draw.rect(ov, PANEL_EDGE, panel, 1, border_radius=8)
@@ -454,6 +457,21 @@ class HUD:
             self._label(panel.x + 12, y, f'CREW {e.crew}/{e.max_crew}{status}',
                         BAD if e.crew <= 0 else TXT_DIM, self.font_small)
             y += 18
+        recovery = st._crew_recovery_system
+        if recovery and not e.is_planet:
+            from game.systems.stats import staffing_fraction
+            self._label(panel.x + 12, y, f'STAFF {staffing_fraction(e):.0%} · operating complement', TXT_DIM, self.font_small)
+            y += 16
+            capacity = recovery.capacity(e)
+            if capacity or e.crew_cargo:
+                self._label(panel.x + 12, y, f'CARGO {e.crew_cargo}/{capacity} · passengers', GOOD, self.font_small)
+                y += 16
+            if e.owner == local_player and (e.crew_mission or e.crew < e.max_crew):
+                text, reason = recovery.status(e)
+                self._label(panel.x + 12, y, self._fit_text(text, 296, self.font_small), WARN, self.font_small)
+                y += 16
+                self._label(panel.x + 12, y, self._fit_text(reason, 296, self.font_small), TXT_DIM, self.font_small)
+                y += 16
         parties = [c for c in st.entities.values() if c.alive and c.boarding
                    and st.can_see(local_player, c.id)
                    and (c.id == e.id or c.boarding['source'] == e.id or c.boarding['target'] == e.id)]
@@ -605,8 +623,10 @@ class HUD:
         contextual = sel is not None and (sel.is_construction or sel.is_station)
         from game.systems.boarding import boarding_capable
         has_boarders = any(boarding_capable(e) for e in ents)
+        recovery = st._crew_recovery_system
+        transports = [e for e in ents if recovery and recovery.capacity(e) and e.operational]
         panel = pygame.Rect(self.width - 330, 44, 320,
-                            430 if contextual else (164 if has_boarders else 124))
+                            430 if contextual else (290 if transports else (164 if has_boarders else 124)))
         self.blocked_rects.append(panel)
         pygame.draw.rect(ov, PANEL_BG, panel, border_radius=8)
         pygame.draw.rect(ov, PANEL_EDGE, panel, 1, border_radius=8)
@@ -688,6 +708,17 @@ class HUD:
                 self._label(rect.x + 8, rect.y + 4,
                             f'B  Board enemy hull · {len(capable)} capable', TXT, self.font_small)
                 self.buttons.append({'rect': rect, 'kind': 'board', 'payload': {}})
+
+        if transports and not contextual:
+            y += 24
+            for label, kind in [('L  Load passengers at friendly base', 'crew_load'),
+                                ('R  Deliver crew to owned hull', 'crew_deliver'),
+                                ('Cancel crew order · keep passengers', 'crew_cancel')]:
+                rect = pygame.Rect(panel.x + 12, y, 296, 26)
+                pygame.draw.rect(ov, BAR_BG, rect, border_radius=4)
+                self._label(rect.x + 8, rect.y + 4, label, TXT, self.font_small)
+                self.buttons.append({'rect': rect, 'kind': kind, 'payload': {}})
+                y += 30
 
     def _fleet_panel(self, selection: set, local_player: int) -> None:
         """Fleet intent controls; eligibility is re-read on every drawn frame."""

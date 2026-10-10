@@ -117,12 +117,13 @@ class SquadronSystem:
         if hangar.is_station and hangar_data:
             rate /= max(0.2, min(1.0, hangar_ok))
         rate /= max(0.2, stats.effective_reinforce_mult(st, e.owner))
+        staffing = stats.staffing_fraction(hangar)
         # repair
         if e.hull < e.max_hull:
-            e.hull = min(e.max_hull, e.hull + e.max_hull * 0.05 * dt)
+            e.hull = min(e.max_hull, e.hull + e.max_hull * 0.05 * dt * staffing)
         # reinforce
         if e.fighter_count < e.max_fighters:
-            e.fighter_count = min(e.max_fighters, e.fighter_count + dt / max(0.5, rate))
+            e.fighter_count = min(e.max_fighters, e.fighter_count + dt * staffing / max(0.5, rate))
             if e.fighter_count >= e.max_fighters:
                 e.fighter_count = e.max_fighters
                 # undock: drift away

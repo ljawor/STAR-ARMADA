@@ -11,7 +11,7 @@ from render.faction_visuals import SHIP_KEYS, normalize_ship_key, ship_visual_ke
 
 RATIOS = {'fighter_squadron': .6, 'corvette': 1., 'frigate': 1.5,
           'cruiser': 2.5, 'battleship': 3.5, 'supercapital': 5.,
-          'construction': 1.}
+          'construction': 1., 'crew_transport': .8}
 READABILITY_PX = 7.
 READABILITY_HALF = 26.
 READABILITY_SCALE = .7

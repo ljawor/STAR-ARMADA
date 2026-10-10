@@ -21,7 +21,8 @@ Four skirmish maps support 2–4 total players with factions/colors/teams/diffic
 
 Data-driven fighter-to-supercapital catalogue, shield quadrants, subsystem damage,
 projectiles/point defense, combat standoff/orbits, capped XP ranks and rank inspector.
-Crew/life-support/boarding extensions are implemented in PR #37, awaiting merge.
+Crew/life-support/boarding extensions are merged in #37. Recovery and proportional
+staffing are implemented on `feature/crew-recovery-ai`, awaiting review/merge.
 
 ## Phase 3 — Resources, construction, stations ✅ prototype delivered
 
@@ -38,13 +39,14 @@ including repair drones and click-targeted hyperspace jumps.
 ## Phase 5 — Fleets, formations, fighters, carriers ✅ prototype delivered
 
 Fleet commanders/formations, squadrons and carrier repair/reinforcement; multi-selection
-roster and combined abilities. PR #37 adds capture-safe carrier dependent cleanup.
+roster and combined abilities. Merged #37 adds capture-safe carrier dependent cleanup.
 
 ## Phase 6 — AI 🟠 prototype delivered; gameplay completion pending
 
 Strategic/tactical AI, difficulty modifiers, scouting, infrastructure and fleet combat
-exist. Remaining: teach AI boarding/crew-risk handling and validate complete matches
-across factions/maps/difficulties. Full Syndicate parity remains unverified/incomplete;
+exist. The crew-recovery branch adds cautious detected-target boarding, support/crew
+retreat, repair infrastructure and transport logistics. Remaining: validate complete
+matches across factions/maps/difficulties. Full Syndicate parity remains unverified/incomplete;
 faction-specific meshes must not be confused with complete faction gameplay.
 
 ## Phase 7 — Campaign, objectives and cinematics 🟠
@@ -96,12 +98,15 @@ audio-pack or livery requirement.
 
 ## Cross-cutting backlog
 
-- **§27 Boarding:** implemented/tested in open PR #37, not merged or released.
+- **§27 Boarding:** merged in #37; not included in the v0.6.0 packaged release.
   Physical craft, contested control, ship/station ownership transfer, life-support
   attrition and intact abandoned hulls; 608 headless tests passed on that branch plus
   real SDL/OpenGL boarding diagnostics. See [BOARDING.md](BOARDING.md).
-- **Boarding followups:** AI doctrine, friendly recrewing and practical recovery of
-  abandoned hulls. Neutral salvage requires an explicit scope decision.
+- **Crew recovery:** base recruitment, commanded field transports, proportional staffing,
+  cautious AI and integrated controls/diagnostics are implemented on
+  `feature/crew-recovery-ai`, awaiting review/merge; see [CREW_RECOVERY.md](CREW_RECOVERY.md).
+  Numeric defaults are initial configurable balance proposals. Neutral salvage/towing
+  and optional conversion/sale are outside this approved increment.
 - **Optional captured-vessel outcomes:** sale, conversion, captured-tech research and
   temporary use remain deferred, not required to close the core boarding loop.
 - **§26 Trading:** convoy routes and persistence exist; improve convoy/escort legibility
@@ -115,12 +120,12 @@ audio-pack or livery requirement.
 
 ## Proposed finish order
 
-1. **Close and release the boarding increment.** Review/playtest PR #37, merge only
-   after approval; verify save compatibility, boarding during real LAN play and native
-   packaged gameplay before a separately approved version bump/release.
-2. **Complete the crew gameplay loop and AI.** AI handles support damage, retreat,
-   repair, boarding and derelicts; define recrewing/recovery costs and rules. Make
-   abandonment intentional gameplay rather than a human-only mechanic.
+1. **Release acceptance for boarding.** #37 is merged; verify boarding during real LAN
+   play and native packaged gameplay before a separately approved version bump/release.
+2. **Review and balance the crew recovery increment.** Implementation/test/GL acceptance
+   is on `feature/crew-recovery-ai`, not merged or packaged. Review the explicit
+   recruitment/loading/delivery costs and AI heuristics, then complete long-match
+   faction balance and release/LAN acceptance. No towing or neutrality expansion.
 3. **Complete campaign gameplay (Phase 7 logic).** Persisted deterministic triggers,
    waves/objective transitions, capture/crew objectives and playable mission progression.
    Keep cinematic polish after the mission logic is stable.

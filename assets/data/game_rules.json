@@ -116,5 +116,21 @@
   },
   "missions": {
     "fail_on_flagship_loss": false
+  },
+  "crew_recovery": {
+    "base_range": 600,
+    "transfer_range": 180,
+    "recruitment_rate": 4,
+    "delivery_rate": 8,
+    "credits_per_crew": 2,
+    "support_threshold": 0.5,
+    "base_types": [
+      "command_station",
+      "shipyard",
+      "repair_dock"
+    ],
+    "ai_support_retreat": 0.65,
+    "ai_staffing_retreat": 0.6,
+    "ai_board_ratio": 1.5
   }
 }

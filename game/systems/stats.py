@@ -10,6 +10,11 @@ from ..data.store import DataStore
 from .experience import rank_for, attack_multiplier, SAFETY_MAX_RANK
 
 
+def staffing_fraction(e: Entity) -> float:
+    """Operating complement only; passengers never contribute efficiency."""
+    return min(1.0, max(0.0, e.crew / e.max_crew)) if e.max_crew > 0 else 0.0
+
+
 def tech_mult(state, player_id: int, key: str, default: float = 1.0) -> float:
     """Multiply together every researched tech effect for `key`."""
     p = state.players.get(player_id)
@@ -98,7 +103,7 @@ def effective_weapon_damage(state, e: Entity, base_damage: float) -> float:
         dmg *= tech_mult(state, e.owner, "squadron_damage_mult")
     dmg *= e.damage_multiplier()
     dmg *= attack_multiplier(e)
-    return dmg
+    return dmg * staffing_fraction(e)
 
 
 def effective_weapon_cooldown(state, e: Entity, base_cd: float) -> float:
@@ -123,13 +128,16 @@ def effective_speed(state, e: Entity) -> float:
         # themselves (movement must not fight that). Fall back to the trading
         # speed so any other data-less hull still moves rather than crashing.
         eco = DataStore.get().rules.get("economy", {}).get("trading", {})
-        return float(eco.get("speed", 55.0)) if e.data_id == "trade_convoy" else 0.0
+        if e.data_id == 'boarding_craft':
+            from .boarding import boarding_rules
+            return boarding_rules()['craft_speed'] * staffing_fraction(e)
+        return float(eco.get("speed", 55.0)) * staffing_fraction(e) if e.data_id == "trade_convoy" else 0.0
     spd = s.speed * e.speed_multiplier()
     spd *= tech_mult(state, e.owner, "speed_mult")
     spd *= 1.0 + 0.05 * veteran_fraction(e)
     spd *= ability_speed_mult(e)
     spd *= debuff_speed_mult(e)
-    return spd
+    return spd * staffing_fraction(e)
 
 
 def effective_turn_rate(state, e: Entity) -> float:
@@ -145,7 +153,7 @@ def effective_turn_rate(state, e: Entity) -> float:
         a = ds.abilities.get("engine_overdrive")
         if a:
             tr *= a.effects.get("turn_mult", 1.0)
-    return tr
+    return tr * staffing_fraction(e)
 
 
 def effective_sensor_range(state, e: Entity) -> float:
@@ -159,7 +167,7 @@ def effective_sensor_range(state, e: Entity) -> float:
     if state.in_nebula(e.pos):
         rng *= DataStore.get().rules.get("sensors", {}).get(
             "nebula_detection_multiplier", 0.3)
-    return rng
+    return rng * staffing_fraction(e)
 
 
 def effective_reinforce_mult(state, player_id: int) -> float:
@@ -167,7 +175,7 @@ def effective_reinforce_mult(state, player_id: int) -> float:
     return tech_mult(state, player_id, "squadron_reinforce_mult")
 
 
-def effective_build_speed(state, player_id: int) -> float:
+def effective_build_speed(state, player_id: int, entity=None) -> float:
     m = tech_mult(state, player_id, "build_speed_mult")
     # logistics commander on any fleet: approximate via any fleet with logistics commander
     for fleet in state.fleets.values():
@@ -175,17 +183,25 @@ def effective_build_speed(state, player_id: int) -> float:
             ds = DataStore.get()
             m *= 1.0 + ds.rules.get("commanders", {}).get("logistics", {}).get("build_speed", 0)
             break
-    return m
+    return m * staffing_fraction(entity) if entity is not None else m
 
 
-def effective_repair_rate(state, player_id: int) -> float:
+def effective_research_speed(state, e):
+    return staffing_fraction(e)
+
+
+def effective_production_rate(state, e, rate):
+    return rate * staffing_fraction(e)
+
+
+def effective_repair_rate(state, player_id: int, entity=None) -> float:
     m = tech_mult(state, player_id, "repair_mult")
     for fleet in state.fleets.values():
         if fleet.owner == player_id and fleet.commander == "logistics":
             ds = DataStore.get()
             m *= 1.0 + ds.rules.get("commanders", {}).get("logistics", {}).get("repair_rate", 0)
             break
-    return m
+    return m * staffing_fraction(entity) if entity is not None else m
 
 
 def player_command_capacity(state, player_id: int) -> int:

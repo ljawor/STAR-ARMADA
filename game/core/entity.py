@@ -54,6 +54,10 @@ class Entity:
     crew: int = 1
     max_crew: int = 1
     crew_loss_accumulator: float = 0.0
+    recruitment_progress: float = 0.0
+    crew_cargo: int = 0
+    cargo_loss_accumulator: float = 0.0
+    crew_mission: dict = field(default_factory=dict)
     boarding: dict = field(default_factory=dict)  # physical craft's persisted mission
     boarding_party_id: int | None = None  # source's active craft; O(1) combat gate
 

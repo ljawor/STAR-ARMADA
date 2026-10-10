@@ -37,6 +37,9 @@ class GameManager:
         # systems
         self.factory = UnitFactory(self.state)
         from ..systems.boarding import BoardingSystem
+        from ..systems.crew_recovery import CrewRecoverySystem
+        self.recovery = CrewRecoverySystem(self.state)
+        self.state._crew_recovery_system = self.recovery
         self.boarding = BoardingSystem(self.state)
         self.state._boarding_system = self.boarding
         self.visibility = VisibilitySystem(self.state)
@@ -62,8 +65,15 @@ class GameManager:
                                        self.formations, self.abilities)
         self.ai = AIManager(self.state)
         self.state.dmg_system = self.damage
-        self._capacity_timer = 0.0
         self.visibility.update()
+
+    @property
+    def _capacity_timer(self):
+        return self.state.capacity_timer
+
+    @_capacity_timer.setter
+    def _capacity_timer(self, value):
+        self.state.capacity_timer = value
 
     # ------------------------------------------------------------------ setup
     def load_map(self, map_def: dict) -> None:
@@ -272,6 +282,7 @@ class GameManager:
         # 7. damage resolution (single writer)
         self.damage.update(dt)
         self.boarding.update(dt)
+        self.recovery.update(dt)
 
         # 8. abilities
         self.abilities.update(dt)

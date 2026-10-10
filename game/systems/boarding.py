@@ -100,7 +100,8 @@ class BoardingSystem:
         docking_distance = 1.2 * (destination.radius + craft.radius)
         if distance <= docking_distance + 1e-6:
             return True
-        travel = min(distance - docking_distance, boarding_rules()['craft_speed'] * dt)
+        from .stats import effective_speed
+        travel = min(distance - docking_distance, effective_speed(self.state, craft) * dt)
         craft.pos = craft.pos + delta * (travel / distance)
         craft.yaw = math.atan2(delta.x, delta.z)
         return False
@@ -220,11 +221,18 @@ class BoardingSystem:
                         if research.get('station_id') == target.id:
                             del player.researching[tid]
                 target.owner = craft.owner
+                target.crew_mission.clear()
+                target.recruitment_progress = 0.0
+                if st._crew_recovery_system is not None:
+                    st._crew_recovery_system.validate()
                 target.crew = min(target.max_crew, craft.crew)
                 target.crew_loss_accumulator = 0.0
                 source = st.entity(info['source'])
                 if source is not None:
-                    source.crew += craft.crew - target.crew
+                    surplus = craft.crew - target.crew
+                    restored = min(surplus, max(0, source.max_crew - source.crew))
+                    source.crew += restored
+                    st.players[craft.owner].crew += surplus - restored
                 self._remove(craft)
                 EconomySystem.recompute_command_capacity(st)
                 st.events.publish('unit_captured', entity_id=target.id, owner=target.owner,

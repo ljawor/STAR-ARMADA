@@ -58,7 +58,7 @@ class EconomySystem:
                 sd = self.ds.stations.get(e.data_id)
                 if sd:
                     for res, rate in sd.income.items():
-                        p.income_frame[res] = p.income_frame[res] + rate
+                        p.income_frame[res] = p.income_frame[res] + stats.effective_production_rate(st, e, rate)
 
         # --- AI difficulty income multiplier
         for p in st.players.values():
@@ -85,7 +85,7 @@ class EconomySystem:
             sd = self.ds.stations.get(e.data_id)
             if not sd or sd.repair_rate <= 0:
                 continue
-            rate = sd.repair_rate * stats.effective_repair_rate(st, e.owner)
+            rate = sd.repair_rate * stats.effective_repair_rate(st, e.owner, e)
             for tid in st.grid.query_sphere(st.entities, e.pos, sd.radius + rng0):
                 t = st.entity(tid)
                 if t is None or t.owner != e.owner or t is e or t.is_planet:

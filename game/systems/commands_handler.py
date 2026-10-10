@@ -28,6 +28,7 @@ class CommandHandler:
         # even on ticks without commands, before movement can read them.
         from .trading import TradingSystem
         TradingSystem.validate_routes(st)
+        st._crew_recovery_system.validate()
 
     # ------------------------------------------------------------------ dispatch
     def _apply(self, cmd: PlayerCommand) -> None:
@@ -39,6 +40,9 @@ class CommandHandler:
         if t != 'board':
             for e in self._units(cmd):
                 self.state._boarding_system.cancel(e)
+        if t not in ('crew_load', 'crew_deliver', 'crew_recover'):
+            for e in self._units(cmd):
+                self.state._crew_recovery_system.cancel(e)
         fn(cmd)
 
     def _units(self, cmd: PlayerCommand):
@@ -81,6 +85,23 @@ class CommandHandler:
         if target is not None:
             for e in sorted({e.id: e for e in self._units(cmd)}.values(), key=lambda u: u.id):
                 self.state._boarding_system.launch(e, target)
+
+    def _do_crew_load(self, cmd):
+        for e in sorted({e.id: e for e in self._units(cmd)}.values(), key=lambda e: e.id):
+            self.state._crew_recovery_system.start(e, 'load')
+
+    def _do_crew_deliver(self, cmd):
+        target = self.state.entity(cmd.target_id) if type(cmd.target_id) is int else None
+        for e in sorted({e.id: e for e in self._units(cmd)}.values(), key=lambda e: e.id):
+            self.state._crew_recovery_system.start(e, 'deliver', target)
+
+    def _do_crew_recover(self, cmd):
+        target = self.state.entity(cmd.target_id) if type(cmd.target_id) is int else None
+        for e in sorted({e.id: e for e in self._units(cmd)}.values(), key=lambda e: e.id):
+            self.state._crew_recovery_system.start(e, 'recover', target)
+
+    def _do_crew_cancel(self, cmd):
+        pass  # dispatch already cancelled owned units, preserving passengers
 
     def _do_trade_route(self, cmd: PlayerCommand) -> None:
         from .trading import TradingSystem

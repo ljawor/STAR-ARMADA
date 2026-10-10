@@ -39,7 +39,7 @@ class AbilitySystem:
         if a is None:
             return
         if aid == "repair_drones":
-            rate = a.effects.get("repair_hps", 60) * stats.effective_repair_rate(st, e.owner)
+            rate = a.effects.get("repair_hps", 60) * stats.effective_repair_rate(st, e.owner, e)
             for tid in st.grid.query_sphere(st.entities, e.pos, a.radius):
                 t = st.entity(tid)
                 if t is None or t.owner != e.owner or t is e or t.is_planet:

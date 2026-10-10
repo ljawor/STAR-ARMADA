@@ -78,6 +78,7 @@ class ShipData:
     can_colonize: bool = False
     veteran_xp: float = 100.0
     max_rank: int = 5
+    crew_capacity: int = 0
 
 
 @dataclass(slots=True)
@@ -256,6 +257,7 @@ class DataStore:
             "battleship": {"shape": "dagger", "scale": 2.4},
             "supercapital": {"shape": "dagger", "scale": 4.2},
             "construction": {"shape": "box", "scale": 0.8},
+            "crew_transport": {"shape": "box", "scale": 0.8},
         }
         return shapes.get(s.category, {"shape": "needle", "scale": 1.0})
 
@@ -350,6 +352,7 @@ class DataStore:
                     can_colonize=bool(s.get("can_colonize", False)),
                     veteran_xp=float(s.get("veteran_xp", 100)),
                     max_rank=s.get("max_rank", 5),
+                    crew_capacity=s.get("crew_capacity", 0),
                 )
 
     def _load_stations(self) -> None:
@@ -478,12 +481,15 @@ class DataStore:
                 can_build_stations=list(s.get("can_build_stations", [])),
                 can_colonize=bool(s.get("can_colonize", False)),
                 veteran_xp=float(s.get("veteran_xp", 100)),
-                max_rank=s.get("max_rank", 5))
+                max_rank=s.get("max_rank", 5),
+                crew_capacity=s.get("crew_capacity", 0))
 
     # ------------------------------------------------------------- validation
     def _validate(self) -> None:
         from ..systems.boarding import validate_boarding_rules
         validate_boarding_rules(self.rules)
+        from ..systems.crew_recovery import validate_recovery_rules
+        validate_recovery_rules(self.rules)
         cfg = self.rules.get("experience", {})
         levels = cfg.get("levels", [0, 120, 320, 700, 1400])
         def finite_number(value):
@@ -506,6 +512,8 @@ class DataStore:
                     or (key == "defense_bonus" and value > .25)):
                 raise ValueError(f"experience {key} is outside its valid range")
         for sid, s in self.ships.items():
+            if type(s.crew_capacity) is not int or s.crew_capacity < 0:
+                raise ValueError(f"Ship {sid} crew_capacity must be a nonnegative integer")
             if type(s.max_rank) is not int or not 1 <= s.max_rank <= 5:
                 raise ValueError(f"Ship '{sid}' max_rank must be an integer from 1 to 5")
             if not finite_number(s.veteran_xp) or s.veteran_xp <= 0:

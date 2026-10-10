@@ -170,14 +170,13 @@ class ProtocolTests(unittest.TestCase):
                 pump([h, c], lambda: c.launch is not None)
             for payload in (b'', struct.pack('!I', 1)+b'{',
                             struct.pack('!I', 32)+b'{"type":"hello","version":"bad"}'):
-                probe = socket.create_connection(('127.0.0.1', h.port))
-                h.poll()
-                if payload:
-                    probe.sendall(payload)
-                probe.close()
-                for _ in range(10):
-                    h.poll()
-                    c.poll()
+                with socket.create_connection(('127.0.0.1', h.port)) as probe:
+                    # Connect completion does not guarantee accept readiness.
+                    pump([h, c], lambda: len(h._peers) == 2)
+                    if payload:
+                        probe.sendall(payload)
+                # EOF/malformed-frame delivery is asynchronous, not ten polls.
+                pump([h, c], lambda: len(h._peers) == 1)
                 self.assertEqual(h.snapshot['status'], 'running' if running else 'lobby')
                 self.assertEqual(len(h._peers), 1)
 
@@ -298,7 +297,8 @@ class ProtocolTests(unittest.TestCase):
         h = LanSession.host(free_port(), default_lan_options())
         self.addCleanup(h.close)
         with socket.create_connection(('127.0.0.1', h.port)):
-            h.poll()
+            # Wait for accept before inspecting the unjoined peer's timeout.
+            pump([h], lambda: len(h._peers) == 1)
             h._peers[0].last -= 100
             start = time.monotonic()
             h.poll()

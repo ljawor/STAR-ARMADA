@@ -47,6 +47,8 @@ def ship_visual_key(ds, data_id, faction=None):
         if data_id == 'trade_convoy' and faction in FACTIONS[1:]:
             return faction + ':convoy'
         return normalize_ship_key(ds.ship_visual(data_id)['shape'])
+    if data.category == 'crew_transport' and data.crew_capacity > 0:
+        return data.faction + ':convoy' if data.faction in FACTIONS[1:] else 'box'
     if data_id not in KNOWN_SHIP_IDS or data.faction not in FACTIONS[1:]:
         return normalize_ship_key(ds.ship_visual(data_id)['shape'])
     role = data.category
