@@ -290,7 +290,8 @@ friendly sensor can provide detection for another ship's longer-range weapons.
 | LAN host/join, 2–4 humans, optional AI, configurable TCP port | ✅ implemented; matching version/content required |
 | Deterministic lockstep, serialized commands, replay infrastructure | ✅ implemented and tested |
 | Four skirmish maps, player factions/colors/teams, AI difficulty | ✅ implemented; 2–4 total players by map |
-| 8-player skirmish, boarding/capture | 🔲 planned (see DEV_PLAN.md) |
+| Boarding/capture, onboard crew/life support and abandoned hulls | 🟠 implemented/tested in PR #37; awaiting merge, not in v0.6.0 |
+| 8-player skirmish | 🔲 planned; current capacity is 2–4 total players |
 
 ## Repository layout
 
@@ -360,9 +361,10 @@ local builds (`./scripts/build_mac.sh`).
 ### Still in development
 
 The game remains a playable prototype, not the full design specification.
-Eight-player matches, boarding/capture, expanded campaign scripting/cinematics,
-full faction parity, in-game mod management and further rendering optimization
-remain development work. Current skirmish/LAN capacity is **2–4 total players**,
+Boarding/capture and crew/life support are implemented/tested in open PR #37,
+but are not merged or included in v0.6.0. Eight-player matches, expanded campaign
+scripting/cinematics, full faction parity, in-game mod management, reconnect/replay
+UX and further performance work remain pending. Current skirmish/LAN capacity is **2–4 total players**,
 limited by the selected map. See `docs/DEV_PLAN.md` for the broader plan; the
 feature matrix above describes the implemented release behavior.
 
