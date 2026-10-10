@@ -38,7 +38,7 @@ class SquadronSystem:
     def _squadron_behavior(self, e) -> None:
         st = self.state
         # manual orders win: attack/attack_move/move by player are respected
-        if e.order_type in ("move", "attack_move"):
+        if e.order_type in ("move", "attack_move", "explore"):
             return
         if e.order_type == "attack" and st.entity(e.order_target_id or 0) is not None:
             return
@@ -131,8 +131,9 @@ class SquadronSystem:
                 if away.length_sq() < 1.0:
                     away = Vec3(1, 0, 0)
                 e.pos.add_scaled(away.normalized(), hangar.radius + 120)
-                e.order_type = "idle"
-                e.order_target_id = None
+                if e.order_type != 'explore':
+                    e.order_type = "idle"
+                    e.order_target_id = None
 
     def _find_hangar(self, e):
         st = self.state

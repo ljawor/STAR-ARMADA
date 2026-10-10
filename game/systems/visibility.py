@@ -12,6 +12,7 @@ import math
 
 from ..data.store import DataStore
 from . import stats
+from .colonies import eligible_planet
 
 
 class SensorQueries:
@@ -148,7 +149,8 @@ class VisibilitySystem:
             memory = {}
             for aid in allies:
                 cells.update(st.explored_cells.get(aid, set()))
-                memory.update(st.discovered_planets.get(aid, {}))
+                memory.update({eid: st.planet_snapshot(e) for eid, e in
+                               st.discovered_planets.get(aid, {}).items()})
             sources = st.sensor_sources(pid)
             group = tuple(allies)
             signature = (st.visibility_cell_size, st.map_info.bounds,
@@ -163,12 +165,13 @@ class VisibilitySystem:
                 coverage = cached[1]
             cells.update(coverage)
             for planet in planets:
-                if any((e.pos.x-planet.pos.x)**2 + (e.pos.y-planet.pos.y)**2
-                       + (e.pos.z-planet.pos.z)**2 <= radius*radius
-                       for e, radius in sources):
-                    previous = memory.get(planet.id)
-                    if previous is None or previous != planet:
-                        memory[planet.id] = copy.deepcopy(planet)
+                # Match can_see's always-visible colony policy, without rescanning
+                # live observers for every other planet: sources are already current.
+                if ((eligible_planet(planet) and planet.colonized_by in allies)
+                        or any((e.pos.x-planet.pos.x)**2 + (e.pos.y-planet.pos.y)**2
+                               + (e.pos.z-planet.pos.z)**2 <= radius*radius
+                               for e, radius in sources)):
+                    memory[planet.id] = st.planet_snapshot(planet)
             for aid in allies:
                 if st.explored_cells.get(aid) != cells:
                     st.explored_cells[aid] = set(cells)

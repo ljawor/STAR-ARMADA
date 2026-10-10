@@ -40,6 +40,12 @@ class GameManager:
         from ..systems.crew_recovery import CrewRecoverySystem
         self.recovery = CrewRecoverySystem(self.state)
         self.state._crew_recovery_system = self.recovery
+        from ..systems.repairs import RepairSystem
+        self.repairs = RepairSystem(self.state)
+        self.state._repair_system = self.repairs
+        from ..systems.exploration import ExplorationSystem
+        self.exploration = ExplorationSystem(self.state)
+        self.state._exploration_system = self.exploration
         self.boarding = BoardingSystem(self.state)
         self.state._boarding_system = self.boarding
         self.visibility = VisibilitySystem(self.state)
@@ -259,6 +265,8 @@ class GameManager:
         update_crew(st, dt)
         self.visibility.update()
         self.commands.consume()
+        self.repairs.validate()
+        self.exploration.update(dt)
 
         # 0.5 hyperspace jump charging (spec §17)
         self._update_jumps(dt)
@@ -282,6 +290,7 @@ class GameManager:
         # 7. damage resolution (single writer)
         self.damage.update(dt)
         self.boarding.update(dt)
+        self.repairs.update(dt)
         self.recovery.update(dt)
 
         # 8. abilities

@@ -71,11 +71,15 @@ extract the entire ZIP and run `STAR ARMADA.exe` (unsigned).
 
 Ships and stations carry onboard crew and damageable life support. Failing support
 kills crew gradually; zero crew leaves an abandoned intact hull. Frigate-and-larger
-ships can deploy real boarding craft against detected disabled enemy ships/stations
+ships can deploy real boarding craft against detected enemy ships/stations
 with all shields down, fight for control and capture them. Select a capable ship,
-press **B** or click **Board enemy hull**, then click the target. Abandoned hulls have
-no defenders and are easier to capture. Repair docks/drones repair support equipment,
-not dead crew. See [docs/BOARDING.md](docs/BOARDING.md) for mechanics and limits.
+press **B** or click **Board enemy hull**, then click the target. Successful capture
+stabilizes life support to at least **10%**, but does not revive crew. Abandoned hulls have
+no defenders and are easier to capture. Repair docks repair owned ships/fighters only;
+engineer ships can explicitly repair owned ships, fighters and stations for CR/MT.
+Equipment repair does not replace dead crew. See [docs/SUPPORT_ORDERS.md](docs/SUPPORT_ORDERS.md)
+for the PR #40 support-order changes and [docs/BOARDING.md](docs/BOARDING.md) for the
+underlying boarding mechanics.
 
 The `feature/crew-recovery-ai` increment (awaiting review/merge, not a packaged release)
 adds automatic owned-hull recruitment near friendly bases and faction crew transports.
@@ -88,6 +92,23 @@ proportionally reduces movement, weapons, sensors, repairs, production and resea
 life-support effectiveness is not staffing-scaled. Cautious AI uses the same commands.
 No towing, allied reclaim or neutral salvage. Initial defaults and limitations:
 [docs/CREW_RECOVERY.md](docs/CREW_RECOVERY.md).
+
+## Planetary colonies and satellites (implemented, awaiting merge)
+
+The `feat/planet-colonies-satellites` source increment extends colony ships for all
+four built-in factions (including a new Syndicate colony hull): command-center-only
+production, non-gas planetary settlement,
+crew/resource income and timed enemy-colony capture after all defending satellites
+are destroyed. Successful control consumes the colony ship without an extra fee.
+Owned planets expose paid defense/attack satellite construction with a shared limit.
+Player controls, AI and persistence passed the **766-test suite**, independent review
+and real SDL/OpenGL diagnostics. The same branch adds paid engineer repairs,
+ship/fighter-only repair docks, universal build crew-cost labels and automatic fighter
+exploration that avoids detected enemies. Trade stations require 1,500-unit spacing;
+new stations/satellites require 3,000-unit clearance from enemy command centers.
+See [docs/SUPPORT_ORDERS.md](docs/SUPPORT_ORDERS.md). This branch is not merged or included in the
+packaged release. See [docs/COLONIES.md](docs/COLONIES.md) for the approved rules,
+initial tuning and diagnostics.
 
 ## Combat experience and ship ranks
 

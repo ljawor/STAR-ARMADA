@@ -41,6 +41,9 @@ class MovementSystem:
             if not e.operational or e.is_station or e.is_planet:
                 continue
             clear_unseen_targets(st, e)
+            if e.order_type == 'repair' and e.order_target_pos is None:
+                e.vel.set_scaled(e.vel, 0.0)
+                continue
             if e.jump_charge > 0:
                 # charging hyperspace: engines locked
                 e.vel.set_scaled(e.vel, 0.9)
@@ -64,7 +67,7 @@ class MovementSystem:
             # pick destination
             target_pos = None
             target_entity = None
-            if e.order_target_id is not None:
+            if e.order_target_id is not None and e.order_type != 'repair':
                 target_entity = st.entity(e.order_target_id)
                 if target_entity is not None:
                     target_pos = target_entity.pos

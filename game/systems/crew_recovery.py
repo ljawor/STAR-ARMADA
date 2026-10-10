@@ -44,7 +44,8 @@ class CrewRecoverySystem:
         # Economy repair service is own-only; allied recruitment service does
         # not make an allied dock a usable life-support repair destination.
         sd = DataStore.get().stations.get(base.data_id) if base else None
-        return bool(base and base.operational and base.owner == e.owner
+        from .economy import dock_repairable
+        return bool(dock_repairable(e) and base and base.operational and base.owner == e.owner
                     and sd and sd.repair_rate > 0)
 
     def capacity(self, e):

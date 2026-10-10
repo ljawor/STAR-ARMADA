@@ -57,6 +57,8 @@ def boarding_reason(state, source, target, *, ongoing=False):
         return 'source is jumping'
     if target is None or not state.can_see(source.owner, target.id):
         return 'target not currently detected'
+    if target.planet_id is not None or target.data_id in ('defense_satellite', 'attack_satellite'):
+        return 'planetary satellites must be destroyed, not boarded'
     if (not target.alive or target.is_planet or target.boarding
             or not (target.is_ship or target.is_squadron or target.is_station)):
         return 'target is not a capturable hull'
@@ -66,9 +68,6 @@ def boarding_reason(state, source, target, *, ongoing=False):
         return 'target out of boarding range'
     if target.total_shield() > 0:
         return 'lower all target shields'
-    if target.crew > 0 and not any(name in target.systems and target.subsystem_hp(name) <= 0
-                                   for name in ('engines', 'weapons', 'life_support')):
-        return 'disable engines, weapons or life support first'
     return ''
 
 
@@ -221,6 +220,9 @@ class BoardingSystem:
                         if research.get('station_id') == target.id:
                             del player.researching[tid]
                 target.owner = craft.owner
+                support = target.systems.get('life_support')
+                if support is not None:
+                    support.hp = max(support.hp, support.max_hp * .1)
                 target.crew_mission.clear()
                 target.recruitment_progress = 0.0
                 if st._crew_recovery_system is not None:

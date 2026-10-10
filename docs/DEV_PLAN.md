@@ -98,6 +98,14 @@ audio-pack or livery requirement.
 
 ## Cross-cutting backlog
 
+- **Planetary colonies and satellites:** implemented and verified on
+  `feat/planet-colonies-satellites`, awaiting merge; not packaged. Command-only colony
+  ships for all four built-in factions, non-gas settlement, crew/type-resource output,
+  timed capture after satellite destruction, planet-menu defense/attack production
+  and AI integration. Acceptance: 766 full-suite tests passed, independent review
+  passed, and real SDL/GL diagnostics passed at 1280×800 and 1024×768.
+  See [COLONIES.md](COLONIES.md); numeric defaults are balance proposals.
+
 - **§27 Boarding:** merged in #37; not included in the v0.6.0 packaged release.
   Physical craft, contested control, ship/station ownership transfer, life-support
   attrition and intact abandoned hulls; 608 headless tests passed on that branch plus

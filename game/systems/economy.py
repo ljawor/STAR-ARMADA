@@ -9,6 +9,13 @@ from ..data.store import DataStore
 from . import stats
 
 
+def dock_repairable(entity):
+    """Equipment service for ships/fighters, not stations/terrain/boarding craft."""
+    return bool(entity and entity.alive and not entity.is_station and not entity.is_planet
+                and (entity.is_ship or entity.is_squadron)
+                and not entity.boarding and entity.data_id != 'boarding_craft')
+
+
 class EconomySystem:
     def __init__(self, state):
         self.state = state
@@ -33,7 +40,8 @@ class EconomySystem:
             # the whole planet_income table was dead — no EN from gas giants
             # and no credits/crew from any other world.
             if e.is_planet:
-                if e.colonized_by is None or e.colonized_by < 0:
+                from .colonies import eligible_planet
+                if not eligible_planet(e) or e.colonized_by is None or e.colonized_by < 0:
                     continue
                 owner = e.colonized_by
             else:
@@ -88,7 +96,7 @@ class EconomySystem:
             rate = sd.repair_rate * stats.effective_repair_rate(st, e.owner, e)
             for tid in st.grid.query_sphere(st.entities, e.pos, sd.radius + rng0):
                 t = st.entity(tid)
-                if t is None or t.owner != e.owner or t is e or t.is_planet:
+                if not dock_repairable(t) or t.owner != e.owner or t is e:
                     continue
                 from .crew import repair_life_support
                 repair_life_support(t, rate * dt)

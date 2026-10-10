@@ -54,7 +54,8 @@ class FogHUDTests(unittest.TestCase):
         f = UnitFactory(st)
         scout = f.spawn_ship('imperial_corvette', 0, Vec3(100, 0, 0))
         planet = f.spawn_planet({'id': 'chart', 'type': 'barren', 'pos': [0, 0, 0], 'radius': 500})
-        planet.colonized_by = 0
+        st.players[1] = PlayerState(1)
+        planet.colonized_by = 1
         visibility = VisibilitySystem(st)
         visibility.update()
         hud = HUD(1280, 800, st)

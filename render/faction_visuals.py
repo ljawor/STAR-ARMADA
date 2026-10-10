@@ -18,11 +18,11 @@ KNOWN_SHIP_IDS = frozenset(
                    'battleship', 'supercapital', 'constructor', 'colonizer')),
         ('confed', ('vulture_squadron', 'bomber_squadron', 'corvette', 'frigate', 'cruiser',
                     'battleship', 'supercapital', 'constructor', 'colonizer')),
-        ('syndicate', ('raid_squadron', 'corvette', 'frigate', 'cruiser', 'constructor')))
+        ('syndicate', ('raid_squadron', 'corvette', 'frigate', 'cruiser', 'constructor', 'colonizer')))
     for suffix in suffixes)
 STATION_TYPES = ('command_station', 'shipyard', 'research_station', 'defense_platform',
                  'mining_station', 'sensor_station', 'trade_station', 'fighter_platform',
-                 'repair_dock', 'energy_relay')
+                 'repair_dock', 'energy_relay', 'defense_satellite', 'attack_satellite')
 
 
 def owner_faction(state, owner):

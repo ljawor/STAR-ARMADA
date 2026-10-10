@@ -65,6 +65,18 @@
       "systems": {"engines": 98, "weapons": 0, "sensors": 78, "shield_gen": 60, "hangar": 0},
       "can_build_stations": ["mining_station", "trade_station", "defense_platform", "energy_relay"]
     },
+    "syndicate_colonizer": {
+      "max_rank": 5,
+      "name": "Frontier Settlement Barge", "faction": "syndicate",
+      "category": "construction", "is_construction": true, "can_colonize": true,
+      "cost": {"credits": 600, "materials": 350, "energy": 100},
+      "crew_cost": 200, "command_cost": 1, "build_time": 14,
+      "hull": 1200, "shield_quad": 400, "shield_regen": 12,
+      "speed": 50, "turn_rate": 40, "radius": 40, "sensor_range": 1400,
+      "weapons": [],
+      "systems": {"engines": 140, "weapons": 0, "sensors": 100, "shield_gen": 90, "hangar": 0},
+      "can_build_stations": []
+    },
     "syndicate_crew_transport": {
       "name": "Syndicate Crew Transport",
       "faction": "syndicate",
