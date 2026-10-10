@@ -123,6 +123,8 @@ class GameState:
     discovered_planets: dict = field(default_factory=dict)  # pid -> eid -> Entity snapshot
     _crew_recovery_system: object | None = field(default=None, repr=False, compare=False)
     _boarding_system: object | None = field(default=None, repr=False, compare=False)
+    _repair_system: object | None = field(default=None, repr=False, compare=False)
+    _exploration_system: object | None = field(default=None, repr=False, compare=False)
     _visibility_system: object | None = field(default=None, repr=False, compare=False)
     _sensor_queries: SensorQueries | None = field(default=None, repr=False, compare=False)
 

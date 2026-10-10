@@ -46,12 +46,21 @@ class CommandHandler:
         if t not in ('crew_load', 'crew_deliver', 'crew_recover'):
             for e in self._units(cmd):
                 self.state._crew_recovery_system.cancel(e)
+        if t != 'repair':
+            for e in self._units(cmd):
+                self.state._repair_system.cancel(e)
+        if t != 'explore':
+            for e in self._units(cmd):
+                self.state._exploration_system.cancel(e)
         fn(cmd)
 
     def _units(self, cmd: PlayerCommand):
         st = self.state
+        if type(cmd.player) is not int or not isinstance(cmd.unit_ids, (list, tuple)):
+            return []
         return [st.entity(uid) for uid in cmd.unit_ids
-                if st.entity(uid) is not None
+                if type(uid) is int and 0 < uid <= 2147483647
+                and st.entity(uid) is not None
                 and st.entity(uid).operational
                 and not st.entity(uid).boarding
                 and st.entity(uid).owner == cmd.player]
@@ -82,6 +91,15 @@ class CommandHandler:
             e.order_target_pos = dest
             e.order_target_id = None
             n += 1
+
+    def _do_explore(self, cmd):
+        for e in sorted({e.id: e for e in self._units(cmd)}.values(), key=lambda e: e.id):
+            self.state._exploration_system.start(e, cmd.player)
+
+    def _do_repair(self, cmd):
+        target = self.state.entity(cmd.target_id) if type(cmd.target_id) is int else None
+        for e in sorted({e.id: e for e in self._units(cmd)}.values(), key=lambda e: e.id):
+            self.state._repair_system.start(e, target, cmd.player)
 
     def _do_board(self, cmd: PlayerCommand) -> None:
         target = self.state.entity(cmd.target_id) if cmd.target_id is not None else None

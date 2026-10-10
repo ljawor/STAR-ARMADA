@@ -143,7 +143,7 @@ class ConstructionSystem:
         build_time = sd.build_time / max(0.1, stats.effective_build_speed(st, player_id))
         builder.build_queue.append({
             "kind": "station", "item": station_id, "time_left": build_time,
-            "total": build_time, "pos": pos.to_dict(), "status": "paid",
+            "total": build_time, "pos": [pos.x, pos.y, pos.z], "status": "paid",
         })
         # move builder to site
         builder.order_type = "move"
@@ -168,6 +168,53 @@ class ConstructionSystem:
         return ", ".join(parts) if parts else "unknown"
 
     # ---------------------------------------------------------- site validation
+    def station_min_distance(self, station_id, other_id, other_radius, player_id,
+                             other_owner=None) -> float:
+        """Shared center-distance rule for live hardware and paid sites."""
+        radius = self.ds.resolve_station(station_id).radius
+        minimum = (radius + other_radius) * 1.6
+        economy = self.ds.rules.get('economy', {})
+        if station_id == other_id == 'trade_station':
+            minimum = max(minimum, float(economy.get('trade_station_min_distance', 1500)))
+        if (other_id == 'command_station' and other_owner is not None
+                and self.state.is_enemy(player_id, other_owner)):
+            minimum = max(minimum, float(economy.get('enemy_command_build_min_distance', 3000)))
+        return minimum
+
+    def _check_station_spacing(self, station_id, pos, player_id, *, viewer=None,
+                               ignore_work=None) -> tuple[bool, str]:
+        st = self.state
+        coords = (pos.x, pos.y, pos.z) if hasattr(pos, 'x') else pos
+        if not all(math.isfinite(v) for v in coords):
+            return False, 'invalid site coordinates'
+        if abs(coords[0]) > st.map_info.bounds or abs(coords[2]) > st.map_info.bounds:
+            return False, 'outside the map bounds'
+        for e in st.entities.values():
+            if not e.alive:
+                continue
+            if e.is_station and (viewer is None or st.can_see(viewer, e.id)):
+                minimum = self.station_min_distance(station_id, e.data_id, e.radius, player_id, e.owner)
+                if math.dist(coords, (e.pos.x, e.pos.y, e.pos.z)) < minimum:
+                    if e.data_id == 'command_station' and st.is_enemy(player_id, e.owner):
+                        return False, 'too close to hostile command station'
+                    return False, f"too close to {e.data_id.replace('_', ' ')}"
+            # Build queues are private intent, even on detected enemy builders.
+            if viewer is not None and e.owner not in st.allied_player_ids(viewer):
+                continue
+            for work in e.build_queue:
+                if (work is ignore_work or work.get('kind') not in ('station', 'satellite')
+                        or work.get('status') != 'paid' or work.get('pos') is None):
+                    continue
+                other = self.ds.stations.get(work.get('item'))
+                if other is None:
+                    continue
+                # Only live command centers impose territorial exclusion;
+                # queued hardware reserves its physical footprint/market spacing.
+                minimum = self.station_min_distance(station_id, other.id, other.radius, player_id)
+                if math.dist(coords, work['pos']) < minimum:
+                    return False, f"too close to {other.id.replace('_', ' ')} site"
+        return True, ''
+
     def check_site(self, station_id: str, pos, builder, *,
                    viewer: int | None = None) -> tuple[bool, str]:
         """Return (ok, reason) for a tuple or Vec3 site.
@@ -177,6 +224,9 @@ class ConstructionSystem:
         is a knowledge-limited placement preview: range is checked first, and
         a green ghost is not a guarantee that the real build will succeed.
         """
+        x, y, z = (pos.x, pos.y, pos.z) if hasattr(pos, 'x') else pos
+        if not all(math.isfinite(v) for v in (x, y, z)):
+            return False, 'invalid site coordinates'
         if viewer is not None:
             far, d, lim = self.too_far_to_build(pos, builder)
             if far:
@@ -204,10 +254,9 @@ class ConstructionSystem:
                 if math.dist((x, y, z), (e.pos.x, e.pos.y, e.pos.z)) < \
                         e.radius + sd.radius + 100:
                     return False, f"too close to planet {e.name_override or e.data_id}"
-            if e.is_station:
-                if math.dist((x, y, z), (e.pos.x, e.pos.y, e.pos.z)) < \
-                        (e.radius + sd.radius) * 1.6:
-                    return False, f"too close to {e.data_id.replace('_', ' ')}"
+        ok, reason = self._check_station_spacing(station_id, pos, builder.owner, viewer=viewer)
+        if not ok:
+            return ok, reason
         # requires_range: some stations must be near a specific body.
         # The window has to be measured from the body's ACTUAL radius, because
         # the planet-spacing rule above keeps stations ~1.6-2.4x the body
@@ -315,20 +364,14 @@ class ConstructionSystem:
             if slot in used:
                 continue
             pos = self.satellite_site(planet, station_id, slot)
+            if not self._check_station_spacing(station_id, pos, player_id)[0]:
+                continue
             blocked = False
             for e in self.state.entities.values():
-                if e.alive and (e.is_planet or e.is_station) and e is not planet and e.data_id != 'asteroid_field':
+                if e.alive and e.is_planet and e is not planet and e.data_id != 'asteroid_field':
                     if pos.dist(e.pos) < (e.radius + sd.radius) * 1.6:
                         blocked = True
                         break
-                for work in e.build_queue:
-                    if work.get('kind') in ('station', 'satellite') and work.get('pos'):
-                        other = self.ds.stations.get(work.get('item'))
-                        if other and pos.dist(Vec3(*work['pos'])) < (other.radius + sd.radius) * 1.6:
-                            blocked = True
-                            break
-                if blocked:
-                    break
             if not blocked:
                 break
         else:
@@ -443,6 +486,15 @@ class ConstructionSystem:
     def _complete(self, builder, item: dict) -> None:
         st = self.state
         kind = item.get("kind")
+        if kind in ('station', 'satellite'):
+            owner = item['source_owner'] if kind == 'satellite' else builder.owner
+            # Paid work is consumed at completion. A newly hostile center or
+            # occupied site cancels the placement without refund (like capture
+            # invalidation); existing stations and ship production are untouched.
+            if not self._check_station_spacing(item['item'], item['pos'], owner,
+                                                ignore_work=item)[0]:
+                st.float_text(builder.pos, 'Cannot build: site unavailable', (1, .5, .4))
+                return
         if kind == 'satellite':
             from .colonies import eligible_planet
             if not eligible_planet(builder) or builder.colonized_by != item['source_owner']:

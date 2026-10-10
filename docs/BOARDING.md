@@ -19,8 +19,9 @@ recrewing are not implemented by this change.
 
 1. Select your frigates, cruisers, battleships or supercapitals.
 2. Bring a detected hostile hull within boarding range and lower **every shield
-   quadrant**. Staffed targets additionally need a fully disabled engine, weapon or
-   life-support subsystem. Destroyed shield generators prevent shield regeneration;
+   quadrant**. PR #40 removes the disabled-subsystem prerequisite for staffed
+   targets. Successful capture stabilizes life support to at least 10% health,
+   without restoring dead crew. Destroyed shield generators prevent regeneration;
    otherwise regenerated shields interrupt the attempt.
 3. Press **B** or click **Board enemy hull**, then left-click the target.
 4. A real, damageable boarding craft transports a party drawn from the source ship's

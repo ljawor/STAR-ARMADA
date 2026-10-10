@@ -108,7 +108,7 @@ FIXED_DT = 1 / 30
 INPUT_DELAY = 3  # 100 ms: pipeline network round trips, never wait on the frame thread.
 COMMAND_TYPES = {'move', 'attack', 'attack_move', 'stop', 'hold', 'build_station',
                  'build_satellite', 'build_ship', 'colonize', 'research', 'ability', 'fleet_create',
-                 'fleet_stance', 'jump', 'trade_route'}
+                 'fleet_stance', 'jump', 'trade_route', 'repair', 'explore'}
 
 
 def _canonical(value):
@@ -159,6 +159,7 @@ def _commands(commands, owner):
             raise ValueError('Invalid command type')
         required = {'move': ('target_pos',), 'attack_move': ('target_pos',),
                     'jump': ('target_pos',), 'attack': ('target_id',),
+                    'repair': ('target_id',),
                     'build_station': ('station_kind', 'target_pos'),
                     'build_satellite': ('station_kind', 'target_id'),
                     'build_ship': ('ship_id',), 'colonize': ('target_id',),

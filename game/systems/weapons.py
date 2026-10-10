@@ -132,6 +132,9 @@ class WeaponSystem:
         st = self.state
         if e.owner < 0 or not e.operational:
             return
+        if e.order_type == 'explore':
+            e.current_target = None
+            return  # survey missions evade; already-fired projectiles stay ballistic
         clear_unseen_targets(st, e)
         # determine target
         target = None

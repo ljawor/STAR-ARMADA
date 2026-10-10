@@ -1,5 +1,11 @@
 {
   "colonies": {"satellite_cap": 6, "control_seconds": 15.0, "approach_range": 600.0, "orbit_clearance": 350.0},
+  "engineer_repairs": {
+    "hp_per_second": 20.0,
+    "credits_per_hp": 0.2,
+    "materials_per_hp": 0.1,
+    "range": 400.0
+  },
   "boarding": {
     "life_support_loss_per_second": 1.0,
     "life_support_failure_fraction": 0.25,
@@ -54,7 +60,9 @@
     },
     "repair_dock_rate": 40.0,
     "repair_dock_range": 500,
-    "station_build_range": 1200
+    "station_build_range": 1200,
+    "trade_station_min_distance": 1500,
+    "enemy_command_build_min_distance": 3000
   },
   "sensors": {
     "nebula_detection_multiplier": 0.3,

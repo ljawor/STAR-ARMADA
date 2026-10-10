@@ -63,7 +63,9 @@ class AIPlayer:
         return stations[0] if stations else None
 
     def _busy(self, e) -> bool:
-        return bool(e.build_queue)
+        return (bool(e.build_queue) or e.id in self._pending_site
+                or any(cmd.player == self.player_id and cmd.type == 'build_station'
+                       and e.id in cmd.unit_ids for cmd in self.state.command_queue))
 
     def difficulty(self) -> dict:
         p = self.state.players.get(self.player_id)
@@ -129,6 +131,8 @@ class AIPlayer:
                 for it in e.build_queue:
                     if it.get("kind") == "station" and it.get("item") == kind:
                         n += 1
+        n += sum(cmd.player == self.player_id and cmd.type == 'build_station'
+                 and cmd.station_kind == kind for cmd in self.state.command_queue)
         return n
 
     def _ensure_economy(self, home) -> None:
@@ -141,12 +145,12 @@ class AIPlayer:
         # A constructor walking to a site it has already been assigned has an
         # empty build_queue, so it still looks idle. Re-tasking it every tick
         # meant it never arrived anywhere and no station ever got built.
-        idle = [c for c in constructors
-                if not c.build_queue and c.id not in self._pending_site]
+        idle = sorted((c for c in constructors if not self._busy(c)),
+                      key=lambda c: (c.pos.dist_sq(home.pos), c.id))
         # desired: miners >= desired_miners; then trade stations
         desired_miners = int(ds.rules.get("ai", {}).get("desired_miners", 4))
         if self._count_stations("mining_station") < desired_miners and idle:
-            site = self._find_asteroid_site(home)
+            site = self._find_asteroid_site(home, idle[0])
             if site:
                 self._queue_build(idle[0], "mining_station", site)
                 return
@@ -158,11 +162,9 @@ class AIPlayer:
             if site is not None:
                 self._queue_build(idle[0], "shipyard", site)
                 return
-        # ONE trade station, then research, THEN the second market. A route only
-        # needs two markets and the opposing side builds its own, so racing to
-        # build both ourselves just burns the credits research needs — with two
-        # priority-2 markets the AI spent everything on trade and had taken no
-        # tech by 16 minutes.
+        # ONE trade station, then research, THEN the second market. A legal
+        # route needs two own/allied markets; build our pair without spending
+        # the credits research needs on both markets at once.
         if self._count_stations("trade_station") < 1 and p.credits > 1500 and idle:
             site = self._find_station_site("trade_station", 900, home, idle[0])
             if site is not None:
@@ -209,8 +211,12 @@ class AIPlayer:
         sd = self.ds.ships.get(e.data_id)
         return bool(sd and sd.is_construction and not sd.can_colonize)
 
-    def _find_asteroid_site(self, home):
+    def _find_asteroid_site(self, home, builder=None):
         st = self.state
+        if builder is None:
+            builder = next((c for c in self.my_units() if self._is_builder(c)), None)
+        if builder is None:
+            return None
         # nearest asteroid field without too many of my mining stations nearby
         best, best_d = None, 1e18
         for e in st.entities.values():
@@ -227,8 +233,15 @@ class AIPlayer:
             return None
         import math
         ang = st.rng().uniform(0, 6.28)
-        return Vec3(best.pos.x + math.sin(ang) * best.radius * 0.5, 0,
-                    best.pos.z + math.cos(ang) * best.radius * 0.5)
+        # Paid sites and unpaid travel intent now reserve footprints too. A
+        # blocked random sample must not consume the whole economy decision.
+        for i in range(16):
+            angle = ang + i * 2 * math.pi / 16
+            pos = Vec3(best.pos.x + math.sin(angle) * best.radius * 0.5, 0,
+                       best.pos.z + math.cos(angle) * best.radius * 0.5)
+            if self._site_available('mining_station', pos, builder):
+                return pos
+        return None
 
     @staticmethod
     def _offset(anchor, dist: float) -> Vec3:
@@ -238,6 +251,27 @@ class AIPlayer:
         ang = (anchor.pos.x * 0.013 + anchor.pos.z * 0.007) % 6.28
         return Vec3(anchor.pos.x + math.sin(ang) * dist, 0,
                     anchor.pos.z + math.cos(ang) * dist)
+
+    def _site_available(self, kind, pos, builder) -> bool:
+        """Full physical legality plus our own unpaid intent reservations."""
+        st = self.state
+        cs = getattr(st, '_construction_system', None)
+        if cs is None or not cs.check_site(kind, pos, builder)[0]:
+            return False
+        reservations = []
+        for bid, (other_kind, other_pos) in self._pending_site.items():
+            source = st.entity(bid)
+            if (bid != builder.id and source is not None and source.operational
+                    and source.owner == self.player_id and not source.build_queue):
+                reservations.append((other_kind, other_pos))
+        reservations.extend((cmd.station_kind, Vec3(*cmd.target_pos))
+            for cmd in st.command_queue if cmd.player == self.player_id
+            and cmd.type == 'build_station' and cmd.target_pos is not None)
+        for other_kind, other_pos in reservations:
+            other = self.ds.stations[other_kind]
+            if pos.dist(other_pos) < cs.station_min_distance(kind, other_kind, other.radius, self.player_id):
+                return False
+        return True
 
     def _find_station_site(self, kind: str, dist: float, home, builder):
         """First LEGAL site for `kind` on a ring around `home`, else None.
@@ -263,8 +297,7 @@ class AIPlayer:
             for r in (dist, dist * 1.35, dist * 0.75):
                 pos = Vec3(home.pos.x + math.sin(ang) * r, 0,
                            home.pos.z + math.cos(ang) * r)
-                ok, _reason = cs.check_site(kind, pos, builder)
-                if ok:
+                if self._site_available(kind, pos, builder):
                     return pos
         return None
 
@@ -312,6 +345,8 @@ class AIPlayer:
         """
         st = self.state
         cs = getattr(st, "_construction_system", None)
+        if not self._site_available(station_kind, pos, builder):
+            return
         if cs is not None and hasattr(cs, "too_far_to_build"):
             far, _d, _lim = cs.too_far_to_build(pos, builder)
             if far:
@@ -341,6 +376,11 @@ class AIPlayer:
                 continue
             if b.build_queue:
                 continue        # busy building something else
+            if not self._site_available(kind, pos, b):
+                # Release both the stale travel reservation and its economic
+                # reserve; the next strategic pass can choose another legal site.
+                del self._pending_site[bid]
+                continue
             far = True
             if cs is not None and hasattr(cs, "too_far_to_build"):
                 far, _d, _lim = cs.too_far_to_build(pos, b)
@@ -382,7 +422,7 @@ class AIPlayer:
                 break
         defenses = self.my_stations("defense_platform")
         idle = [c for c in self.my_units()
-                if self._is_builder(c) and not c.build_queue and c.id not in self._pending_site]
+                if self._is_builder(c) and not self._busy(c)]
         if threatened and len(defenses) < 3 and idle:
             import math
             ang = st.rng().uniform(0, 6.28)
