@@ -142,7 +142,9 @@ class SensorCombatTests(unittest.TestCase):
         colonizer.sensor_range = 100
         self.st.players[0].credits = 10000
         ai = AIPlayer(self.st, 0)
-        for owner, colonized_by in ((-1, None), (1, 1), (0, 0), (1, None)):
+        # Own colonies are always visible; only neutral/enemy mutations can
+        # exercise genuinely hidden ownership here.
+        for owner, colonized_by in ((-1, None), (1, 1), (1, None)):
             with self.subTest(owner=owner, colonized_by=colonized_by):
                 near.owner, near.colonized_by = owner, colonized_by
                 self.assertFalse(self.st.can_see(0, near.id))
@@ -168,7 +170,7 @@ class SensorCombatTests(unittest.TestCase):
                 home.sensor_range = 2500
                 self.gm.visibility.update()
                 before = ai._pick_colony_target(home)
-                self.assertIs(before, near if observed is None else far)
+                self.assertIs(before, near)  # enemy colonies are capturable
                 home.sensor_range = 100
                 near.owner = -1 if hidden is None else hidden
                 near.colonized_by = hidden
@@ -181,10 +183,10 @@ class SensorCombatTests(unittest.TestCase):
                 self.assertIs(ai._pick_colony_target(home), before)
                 home.sensor_range = 2500
                 self.assertTrue(self.st.can_see(0, near.id))
-                self.assertIs(ai._pick_colony_target(home), near if hidden is None else far)
+                self.assertIs(ai._pick_colony_target(home), near)
                 self.gm.visibility.update()
                 home.sensor_range = 100
-                self.assertIs(ai._pick_colony_target(home), near if hidden is None else far)
+                self.assertIs(ai._pick_colony_target(home), near)
 
     def test_ai_colony_selection_respects_visible_ownership(self):
         from game.ai.ai import AIPlayer
@@ -199,7 +201,7 @@ class SensorCombatTests(unittest.TestCase):
                 near.colonized_by = None if owner == -1 else owner
                 self.assertTrue(self.st.can_see(0, near.id))
                 self.assertIs(self.st.known_entity(0, near.id), near)
-                self.assertIs(ai._pick_colony_target(home), near if owner == -1 else far)
+                self.assertIs(ai._pick_colony_target(home), far if owner == 0 else near)
 
     def test_ai_expansion_enemy_station_proximity_is_sensor_gated(self):
         from game.ai.ai import AIPlayer

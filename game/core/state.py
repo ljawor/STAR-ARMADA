@@ -211,7 +211,8 @@ class GameState:
         if player_id not in self.players or e is None:
             return False
         allies = self.allied_player_ids(player_id)
-        return ((not e.is_planet and e.owner in allies)
+        from ..systems.colonies import eligible_planet
+        return ((e.owner in allies if not e.is_planet else eligible_planet(e) and e.colonized_by in allies)
                 or self._live_sensors().visible(player_id, e.pos, allies))
 
     def add_entity(self, e: Entity) -> Entity:
@@ -238,14 +239,22 @@ class GameState:
             cell in self.explored_cells.get(pid, set())
             for pid in self.allied_player_ids(player_id))
 
+    @staticmethod
+    def planet_snapshot(planet: Entity) -> Entity:
+        """Charted geometry and last observed ownership, never private runtime."""
+        return Entity(id=planet.id, kind=planet.kind, owner=planet.owner,
+                      data_id=planet.data_id, pos=Vec3(planet.pos.x, planet.pos.y, planet.pos.z),
+                      yaw=planet.yaw, radius=planet.radius, is_planet=True,
+                      alive=planet.alive, name_override=planet.name_override,
+                      colonized_by=planet.colonized_by)
+
     def known_entity(self, player_id: int, entity_id: int) -> Entity | None:
         if self.can_see(player_id, entity_id):
             return self.entity(entity_id)
         for pid in self.allied_player_ids(player_id):
             snapshot = self.discovered_planets.get(pid, {}).get(entity_id)
             if snapshot is not None:
-                import copy
-                return copy.deepcopy(snapshot)
+                return self.planet_snapshot(snapshot)
         return None
 
     def spawn_effect(self, kind: str, pos: Vec3, **kw) -> None:
@@ -310,7 +319,8 @@ class GameState:
             "explored_cells": {pid: [list(cell) for cell in sorted(cells)]
                                for pid, cells in sorted(self.explored_cells.items())},
             "discovered_planets": {
-                pid: {eid: self._entity_dict(e, precise) for eid, e in sorted(memory.items())}
+                pid: {eid: self._entity_dict(self.planet_snapshot(e), precise)
+                      for eid, e in sorted(memory.items())}
                 for pid, memory in sorted(self.discovered_planets.items())},
             "players": {pid: p.to_dict(precise) for pid, p in self.players.items()},
             "fleets": {fid: f.to_dict(precise) for fid, f in self.fleets.items()},
@@ -368,6 +378,9 @@ class GameState:
                 d["build_queue"] = [
                     {k: (round(v, 2) if isinstance(v, float) else v) for k, v in item.items()}
                     for item in e.build_queue]
+        if e.planet_id is not None:
+            d['planet_id'] = e.planet_id
+            d['satellite_slot'] = e.satellite_slot
         if e.colonized_by is not None:
             d["colonized_by"] = e.colonized_by
         if e.cargo_credits:
@@ -458,6 +471,8 @@ class GameState:
         e.order_target_id = d.get("order_target_id")
         e.build_queue = list(d.get("build_queue", []))
         e.colonized_by = d.get("colonized_by")
+        e.planet_id = d.get("planet_id")
+        e.satellite_slot = d.get("satellite_slot")
         e.cargo_credits = d.get("cargo_credits", 0.0)
         e.convoy_dest = d.get("convoy_dest")
         e.convoy_source = d.get("convoy_source")
@@ -503,7 +518,8 @@ class GameState:
         s.explored_cells = {int(pid): {tuple(cell) for cell in cells}
                             for pid, cells in d.get("explored_cells", {}).items()}
         s.discovered_planets = {
-            int(pid): {int(eid): cls._entity_from_dict(ed) for eid, ed in memory.items()
+            int(pid): {int(eid): cls.planet_snapshot(cls._entity_from_dict(ed))
+                       for eid, ed in memory.items()
                        if ed.get("is_planet", False)}
             for pid, memory in d.get("discovered_planets", {}).items()}
         s.players = {int(pid): PlayerState.from_dict(pd)

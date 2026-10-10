@@ -104,10 +104,12 @@ class AIPlayer:
         self._produce_fleet(home)
 
         # 5. expansion
-        self._maybe_expand(home)
+        clearing_colony = self._maybe_expand(home)
 
-        # 6. attack decision
-        self._decide_attack()
+        # Colony defenders gate capture; general fleet movement must not replace
+        # their attack orders later in the same strategic update.
+        if not clearing_colony:
+            self._decide_attack()
 
     def _count_stations(self, kind: str) -> int:
         """Stations of `kind` that exist, are being walked to, or are building.
@@ -380,7 +382,7 @@ class AIPlayer:
                 break
         defenses = self.my_stations("defense_platform")
         idle = [c for c in self.my_units()
-                if c.is_construction and not self._is_builder(c) and not c.build_queue]
+                if self._is_builder(c) and not c.build_queue and c.id not in self._pending_site]
         if threatened and len(defenses) < 3 and idle:
             import math
             ang = st.rng().uniform(0, 6.28)
@@ -453,74 +455,158 @@ class AIPlayer:
             plan.append((shipyard, cr))
         elif bs and p.credits > 16000 and counts.get(bs, 0) < 1:
             plan.append((shipyard, bs))
-        # Once the first market exists, finish its route before replacing
-        # expendable scouts. Orbit combat makes scout losses real; repeatedly
-        # replacing them otherwise drains credits below the second-market
-        # economic gate and delays the route. Include queued/pending sites so production
-        # resumes as soon as that investment is already accounted for.
-        trade_count = self._count_stations("trade_station")
-        reserve = max(1500.0, self.ds.stations["trade_station"].cost_credits) if trade_count == 1 else 0.0
+        # Preserve the next mining/research/relay/market gate and unpaid travel
+        # sites before replacing expendable scouts or upgrading the fleet.
+        reserve = self._infrastructure_reserve()
+        budget = self._projected_budget()
         for station, ship_id in plan:
             if station is None:
                 continue
-            if p.credits - self.ds.ships[ship_id].cost_credits < reserve:
+            cost = st._construction_system.factory.ship_build_cost(ship_id)
+            if any(budget[key] - cost.get(key, 0) < reserve[key] for key in budget):
                 continue
             if len(station.build_queue) < 2:
                 self._queue_ship(station, ship_id, 1)
                 return  # one command per tick keeps queue fair
 
-    def _maybe_expand(self, home) -> None:
+    def _infrastructure_reserve(self) -> dict[str, float]:
+        """Protect unpaid travel sites and the next core economic gate."""
+        factory = self.state._construction_system.factory
+        reserve: dict[str, float] = dict.fromkeys(('credits', 'materials', 'energy', 'crew'), 0.0)
+        for bid, (kind, _pos) in self._pending_site.items():
+            builder = self.state.entity(bid)
+            if builder is None or builder.owner != self.player_id or builder.build_queue:
+                continue
+            cost = factory.station_build_cost(kind)
+            for key in reserve:
+                reserve[key] += cost.get(key, 0)
+        milestones = [('mining_station', int(self.ds.rules.get('ai', {}).get('desired_miners', 4)), 0),
+                      ('shipyard', 1, 2201), ('trade_station', 1, 1501),
+                      ('research_station', 1, 2401), ('energy_relay', 1, 901),
+                      ('trade_station', 2, 1501)]
+        for kind, count, gate in milestones:
+            if self._count_stations(kind) < count:
+                cost = factory.station_build_cost(kind)
+                for key in reserve:
+                    reserve[key] += max(cost.get(key, 0), gate if key == 'credits' else 0)
+                break
+        # A lone market must retain its route-completion gate even when an
+        # earlier milestone (such as mining) is the next infrastructure need.
+        # Count queued/pending markets too; their unpaid costs remain above.
+        if self._count_stations('trade_station') == 1:
+            reserve['credits'] = max(reserve['credits'], 1500.0,
+                                     factory.station_build_cost('trade_station').get('credits', 0))
+        return reserve
+
+    def _projected_budget(self):
+        """Bank after this player's unconsumed paid commands (queues are paid)."""
+        p = self.state.players[self.player_id]
+        budget = {key: getattr(p, key) for key in ('credits', 'materials', 'energy', 'crew')}
+        factory = self.state._construction_system.factory
+        for cmd in self.state.command_queue:
+            if cmd.player != self.player_id:
+                continue
+            count = 1
+            if cmd.type == 'build_ship':
+                cost = factory.ship_build_cost(cmd.ship_id)
+                count = int(cmd.name) if cmd.name and cmd.name.isdigit() else 1
+            elif cmd.type in ('build_station', 'build_satellite'):
+                cost = factory.station_build_cost(cmd.station_kind)
+            elif cmd.type == 'research':
+                tech = self.ds.techs[cmd.tech_id]
+                cost = {key: getattr(tech, 'cost_' + key, 0) for key in budget}
+            else:
+                continue
+            for key in budget:
+                budget[key] -= cost.get(key, 0) * count
+        return budget
+
+    def _maybe_expand(self, home) -> bool | None:
         st = self.state
         p = st.players.get(self.player_id)
         ds = self.ds
         threshold = ds.rules.get("ai", {}).get("expand_credits", 4000)
+        from ..systems.colonies import eligible_planet
+        budget = self._projected_budget()
+        for planet in sorted(st.entities.values(), key=lambda e: e.id):
+            known = st.known_entity(self.player_id, planet.id)
+            if not eligible_planet(planet) or known is None or known.colonized_by != self.player_id:
+                continue
+            roles = {e.data_id for e in self.my_stations() if e.planet_id == planet.id}
+            roles.update(i['item'] for i in planet.build_queue if i.get('kind') == 'satellite')
+            roles.update(c.station_kind for c in st.command_queue
+                         if c.player == self.player_id and c.type == 'build_satellite'
+                         and c.target_id == planet.id)
+            for role in ('defense_satellite', 'attack_satellite'):
+                cost = st._construction_system.factory.station_build_cost(role)
+                reserve = self._infrastructure_reserve()
+                reserve['credits'] = max(5000, reserve['credits'])
+                if (role not in roles and self.my_stations('mining_station')
+                        and budget['materials'] > 2500
+                        and all(budget[key] - cost[key] >= reserve[key] for key in budget)):
+                    st.queue_command(PlayerCommand('build_satellite', self.player_id,
+                        target_id=planet.id, station_kind=role))
+                    for key in budget:
+                        budget[key] -= cost[key]
         colonizer = next((e for e in self.my_units()
                           if e.is_construction and getattr(
                               self.ds.ships.get(e.data_id), "can_colonize", False)
                           and not e.build_queue), None)
         if colonizer is None:
             # build one
-            shipyard = next((s for s in self.my_stations("shipyard")), None)
+            shipyard = next((s for s in self.my_stations("command_station")), None)
             faction = p.faction
-            sid = {"imperial": "imperial_colonizer", "rebel": "rebel_colonizer",
-                   "confederacy": "confed_colonizer"}.get(faction)
-            if sid and shipyard and p.credits > 2000 and len(shipyard.build_queue) < 2:
+            sid = next((s.id for s in sorted(ds.ships.values(), key=lambda s: s.id)
+                        if s.faction == faction and s.can_colonize), None)
+            existing = any(getattr(ds.ships.get(e.data_id), 'can_colonize', False) for e in self.my_units())
+            queued = (any(i.get('item') == sid for s in self.my_stations() for i in s.build_queue)
+                      or any(c.player == self.player_id and c.type == 'build_ship' and c.ship_id == sid
+                             for c in st.command_queue))
+            cost = st._construction_system.factory.ship_build_cost(sid) if sid else {}
+            reserve = self._infrastructure_reserve()
+            budget = self._projected_budget()
+            if (sid and shipyard and not existing and not queued and p.credits > 2000
+                    and len(shipyard.build_queue) < 2
+                    and all(budget[key] - cost.get(key, 0) >= reserve[key] for key in budget)):
                 self._queue_ship(shipyard, sid, 1)
-            return
-        if p.credits < threshold:
             return
         target = self._pick_colony_target(home)
         if target is not None:
+            defenders = [e for e in st.entities.values() if e.alive and e.planet_id == target.id
+                         and st.is_enemy(self.player_id, e.owner) and st.can_see(self.player_id, e.id)]
+            if defenders:
+                defender = min(defenders, key=lambda e: e.id)
+                fighters = [e.id for e in self.my_units() if e.is_ship and not e.is_construction
+                            and not e.is_squadron and getattr(ds.ships.get(e.data_id), 'weapons', [])]
+                if fighters:
+                    st.queue_command(PlayerCommand('attack', self.player_id,
+                        unit_ids=tuple(sorted(fighters)), target_id=defender.id))
+                    return True
+                return False
+            if p.credits < threshold:
+                return
             st.queue_command(PlayerCommand("colonize", self.player_id,
                                            unit_ids=(colonizer.id,),
                                            target_id=target.id))
 
     def _pick_colony_target(self, home):
-        """Nearest uncolonized planet worth taking, else None.
-
-        Gas giants are included: `planet_income` pays EN for a gas giant and
-        nothing else, so they are the only route to a second EN source (the
-        other being an energy_relay). Barren worlds pay nothing at all, so
-        they stay excluded. Planets sitting near an enemy station are left
-        alone so the colonizer is not thrown away.
-        """
+        """Public static geometry and last observed ownership only."""
         st = self.state
         target = None
         best_d = 1e18
+        from ..systems.colonies import eligible_planet
         for e in st.entities.values():
-            if not e.alive or not e.is_planet:
+            if not eligible_planet(e):
                 continue
             # Map geometry/type is public; ownership is only current sensor
             # intel or the last observed snapshot. Undiscovered is unknown,
             # not a license to inspect the live planet's colonized_by.
             known = st.known_entity(self.player_id, e.id)
-            if known is not None and (known.colonized_by is not None
+            if known is not None and (known.colonized_by in st.allied_player_ids(self.player_id)
                                       or known.owner in st.allied_player_ids(self.player_id)):
                 continue
-            if e.data_id == "barren":
-                continue
             # skip planets near enemy stations
-            near_enemy = any(en.alive and en.is_station and en.owner >= 0
+            near_enemy = any(en.alive and en.is_station and en.planet_id != e.id and en.owner >= 0
                              and st.is_enemy(self.player_id, en.owner)
                              and st.can_see(self.player_id, en.id)
                              and en.pos.dist(e.pos) < 3000

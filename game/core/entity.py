@@ -82,6 +82,8 @@ class Entity:
     # economy / construction
     build_queue: list = field(default_factory=list)        # [{"item":..., "time_left":...}]
     colonized_by: int | None = None
+    planet_id: int | None = None  # persistent satellite attachment
+    satellite_slot: int | None = None
 
     # trading (§26): cargo convoys
     cargo_credits: float = 0.0

@@ -57,6 +57,8 @@ def boarding_reason(state, source, target, *, ongoing=False):
         return 'source is jumping'
     if target is None or not state.can_see(source.owner, target.id):
         return 'target not currently detected'
+    if target.planet_id is not None or target.data_id in ('defense_satellite', 'attack_satellite'):
+        return 'planetary satellites must be destroyed, not boarded'
     if (not target.alive or target.is_planet or target.boarding
             or not (target.is_ship or target.is_squadron or target.is_station)):
         return 'target is not a capturable hull'

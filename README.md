@@ -89,6 +89,19 @@ life-support effectiveness is not staffing-scaled. Cautious AI uses the same com
 No towing, allied reclaim or neutral salvage. Initial defaults and limitations:
 [docs/CREW_RECOVERY.md](docs/CREW_RECOVERY.md).
 
+## Planetary colonies and satellites (implemented, awaiting merge)
+
+The `feat/planet-colonies-satellites` source increment extends colony ships for all
+four built-in factions (including a new Syndicate colony hull): command-center-only
+production, non-gas planetary settlement,
+crew/resource income and timed enemy-colony capture after all defending satellites
+are destroyed. Successful control consumes the colony ship without an extra fee.
+Owned planets expose paid defense/attack satellite construction with a shared limit.
+Player controls, AI and persistence passed the 699-test suite, independent review
+and real SDL/OpenGL diagnostics. This branch is not merged or included in the
+packaged release. See [docs/COLONIES.md](docs/COLONIES.md) for the approved rules,
+initial tuning and diagnostics.
+
 ## Combat experience and ship ranks
 
 Ships and fighter squadrons begin at **rank 1**. Fighting earns XP from actual

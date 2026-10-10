@@ -392,6 +392,26 @@ class HUD:
             return
 
         e = ents[0]
+        if e.is_planet:
+            from game.systems.colonies import eligible_planet
+            self._label(panel.x + 12, panel.y + 8, self._fit_text(self.ds.unit_name(e).upper(), 296, self.font_big), TXT, self.font_big)
+            owner = st.players.get(e.colonized_by) if eligible_planet(e) else None
+            self._label(panel.x + 12, panel.y + 40, self._fit_text('COLONY OWNER: ' + (owner.name if owner else 'Uncolonized'), 296), TXT)
+            self._label(panel.x + 12, panel.y + 62, e.data_id.upper(), TXT_DIM)
+            rates = dict(self.ds.rules.get('economy', {}).get('planet_income', {}).get(e.data_id, {})) if eligible_planet(e) else {}
+            rates['crew'] = rates.get('crew', 0) + self.ds.rules.get('economy', {}).get('planet_crew_bonus', {}).get(e.data_id, 0)
+            y = panel.y + 92
+            self._label(panel.x + 12, y, 'INCOME / SECOND (owned colony)', ACCENT)
+            for resource in ('credits', 'materials', 'energy', 'crew'):
+                y += 20
+                self._label(panel.x + 12, y, f"{resource}: {rates.get(resource, 0):g}", TXT_DIM)
+            y += 30
+            y = self._wrapped_labels(panel.x + 12, y, 'Gas and terrain cannot be colonized.' if not eligible_planet(e) else 'Right-click with colony ship to settle/capture.', 296)
+            if e.colonized_by == local_player and e.build_queue:
+                item = e.build_queue[0]
+                self._label(panel.x + 12, y + 24, self._fit_text('BUILDING ' + item['item'].replace('_', ' ').upper(), 296, self.font_small), TXT, self.font_small)
+                self._bar(panel.x + 12, y + 44, 296, 10, 1 - item['time_left'] / max(.1, item['total']), ACCENT)
+            return
         sd = self.ds.ships.get(e.data_id)
         std = self.ds.stations.get(e.data_id) if sd is None else None
         name = self.ds.unit_name(e)
@@ -522,7 +542,12 @@ class HUD:
             item = e.build_queue[0]
             it_name = item.get("item", "")
             done = 1.0 - item.get("time_left", 0) / max(0.1, item.get("total", 1))
-            self._label(panel.x + 12, y, self._fit_text(f"BUILDING {it_name.upper()}", 296, self.font_small), TXT,
+            if item.get('kind') == 'colonize':
+                phase = 'CAPTURING' if item.get('target_owner') is not None else 'COLONIZING'
+                it_name = f"{phase} {item.get('status', '').upper()} · {item['time_left']:.1f}s"
+            else:
+                it_name = 'BUILDING ' + it_name.upper()
+            self._label(panel.x + 12, y, self._fit_text(it_name, 296, self.font_small), TXT,
                         self.font_small)
             y += 18
             self._bar(panel.x + 12, y, 296, 10, done, ACCENT)
@@ -607,6 +632,34 @@ class HUD:
                     'ability_id': row['ability_id'], 'unit_ids': row['unit_ids']}})
             y += 40
 
+    def _planet_menu(self, planet, local_player):
+        from game.systems.colonies import eligible_planet
+        panel = pygame.Rect(self.width - 330, 44, 320, 280)
+        self.blocked_rects.append(panel)
+        pygame.draw.rect(self.overlay, PANEL_BG, panel, border_radius=8)
+        pygame.draw.rect(self.overlay, PANEL_EDGE, panel, 1, border_radius=8)
+        y = panel.y + 10
+        self._label(panel.x + 12, y, 'PLANETARY SATELLITES', ACCENT, self.font_big)
+        y += 30
+        if not eligible_planet(planet) or planet.colonized_by != local_player:
+            self._label(panel.x + 12, y, 'Requires your non-gas colony', TXT_DIM)
+            return
+        cs = self.state._construction_system
+        cap = int(self.ds.rules.get('colonies', {}).get('satellite_cap', 6))
+        slots = len(cs.satellite_slots(planet))
+        self._label(panel.x + 12, y, f'SLOTS {slots}/{cap} · includes paid queue', TXT_DIM)
+        y += 24
+        for role, description in (('defense_satellite', 'Intercepts missiles and enemy fighters'),
+                                  ('attack_satellite', 'Engages enemy ships; clear before capture')):
+            data = self.ds.stations[role]
+            payload = {'planet_id': planet.id, 'station_kind': role}
+            next_y = self._build_row(panel, y, data, self.state.players[local_player], payload, 'build_satellite')
+            if slots >= cap:
+                self.buttons[:] = [b for b in self.buttons if b.get('payload') != payload]
+            next_y = self._wrapped_labels(panel.x + 12, next_y, description, 296)
+            y = self._wrapped_labels(panel.x + 12, next_y,
+                        f'{data.cost_energy:,.0f} EN · {data.crew_cost:,.0f} crew · {data.build_time:g}s', 296) + 8
+
     # ------------------------------------------------------------------ right panel
     def _right_panel(self, selection: set, local_player: int) -> None:
         if self.fleet_panel:
@@ -618,6 +671,10 @@ class HUD:
         if p is None:
             return
         ents = [st.known_entity(local_player, eid) for eid in sorted(selection)]
+        planet = next((e for e in ents if e is not None and e.is_planet), None)
+        if planet is not None:
+            self._planet_menu(planet, local_player)
+            return
         ents = [e for e in ents if e is not None and e.owner == local_player]
         sel = ents[0] if ents else None
         contextual = sel is not None and (sel.is_construction or sel.is_station)
@@ -633,7 +690,17 @@ class HUD:
 
         y = panel.y + 10
         # constructor selected -> build stations (scrollable)
-        if sel is not None and sel.is_construction:
+        colony = self.ds.ships.get(sel.data_id) if sel is not None else None
+        if colony is not None and colony.can_colonize:
+            self._label(panel.x + 12, y, 'COLONY SHIP', ACCENT, self.font_big)
+            y += 32
+            from game.systems.colonies import colony_rules
+            control_seconds = colony_rules()['control_seconds']
+            for text in ('Right-click a non-gas planet.', 'Neutral: colonize · Enemy: capture',
+                         'Destroy ALL defending satellites first.', f'Approach then {control_seconds:g} seconds uninterrupted.',
+                         'Ship consumed only on success.', 'No additional resource or crew fee.'):
+                y = self._wrapped_labels(panel.x + 12, y, text, 296) + 6
+        elif sel is not None and sel.is_construction:
             self._label(panel.x + 12, y, "ORBITAL CONSTRUCTION", ACCENT,
                         self.font_big)
             y += 28
@@ -772,6 +839,22 @@ class HUD:
         self._fleet_button(pygame.Rect(x + 206, rect.y, 90, 28), "Close",
                            "fleet_close", {})
 
+    def _wrapped_labels(self, x, y, text, width):
+        """Flow complete help text within a panel's content width."""
+        line = ''
+        for word in text.split():
+            candidate = (line + ' ' + word).strip()
+            if line and self.font_small.size(candidate)[0] > width:
+                self._label(x, y, line, TXT_DIM, self.font_small)
+                y += self.font_small.get_linesize()
+                line = word
+            else:
+                line = candidate
+        if line:
+            self._label(x, y, self._fit_text(line, width, self.font_small), TXT_DIM, self.font_small)
+            y += self.font_small.get_linesize()
+        return y
+
     def _fit_text(self, text, width, font=None):
         font = font or self.font
         if font.size(text)[0] <= width:
@@ -823,7 +906,7 @@ class HUD:
             return out
         for sid in std.builds_ships:
             sd = self.ds.ships.get(sid)
-            if sd is not None:
+            if sd is not None and (cs is None or cs.station_can_build_ship(station, sid)):
                 out.append(sd)
         return out
 

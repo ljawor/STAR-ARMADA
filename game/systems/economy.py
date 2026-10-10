@@ -33,7 +33,8 @@ class EconomySystem:
             # the whole planet_income table was dead — no EN from gas giants
             # and no credits/crew from any other world.
             if e.is_planet:
-                if e.colonized_by is None or e.colonized_by < 0:
+                from .colonies import eligible_planet
+                if not eligible_planet(e) or e.colonized_by is None or e.colonized_by < 0:
                     continue
                 owner = e.colonized_by
             else:

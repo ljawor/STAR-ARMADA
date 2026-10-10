@@ -276,7 +276,7 @@ class InputController:
         lo_y, hi_y = sorted((y0, y1))
         picked = set()
         for e in self.state.entities.values():
-            if not e.alive or e.owner == -1 or not self.state.can_see(self.local_player, e.id):
+            if not e.alive or (e.owner == -1 and not e.is_planet) or not self.state.can_see(self.local_player, e.id):
                 continue
             sp = self.camera.world_to_screen(e.pos.x, e.pos.y, e.pos.z)
             if sp is None:
@@ -333,7 +333,7 @@ class InputController:
     def _single_select(self, mx: float, my: float) -> None:
         best, best_d = None, 28.0
         for e in self.state.entities.values():
-            if not e.alive or e.owner == -1 or not self.state.can_see(self.local_player, e.id):
+            if not e.alive or (e.owner == -1 and not e.is_planet) or not self.state.can_see(self.local_player, e.id):
                 continue
             sp = self.camera.world_to_screen(e.pos.x, e.pos.y, e.pos.z)
             if sp is None:
@@ -373,6 +373,12 @@ class InputController:
                     st.queue_command(BuildStationCommand(
                         lp, pl["builder_id"], pl["station_kind"], pos3))
                     self.app.flash(f"constructing {pl['station_kind']}")
+                elif kind == 'build_satellite':
+                    planet = st.entity(pl['planet_id'])
+                    if planet is not None and planet.id in self.selection and planet.colonized_by == lp:
+                        from game.core.commands import PlayerCommand
+                        st.queue_command(PlayerCommand('build_satellite', lp,
+                            target_id=planet.id, station_kind=pl['station_kind']))
                 elif kind == "build_ship":
                     st.queue_command(BuildShipCommand(
                         lp, pl["shipyard_id"], pl["ship_id"], 1))
@@ -618,12 +624,13 @@ class InputController:
             return
         st, lp = self.state, self.local_player
         ids = sorted(self.selection)
-        w = self.camera.screen_to_world(*pos)
+        # Resolve hardware targets before querying the ground GL matrices.
         # target priority: enemy unit > colonizable planet > ground move
         target = self._pick_target(pos)
         if target is not None:
             e = target
-            if e.is_planet and e.colonized_by is None:
+            from game.systems.colonies import eligible_planet
+            if eligible_planet(e) and (e.colonized_by is None or st.is_enemy(lp, e.colonized_by)):
                 colonizers = [i for i in ids
                               if (sd := _ship_data(st.entity(i))) is not None
                               and sd.can_colonize]
@@ -633,15 +640,16 @@ class InputController:
                     return
             st.queue_command(AttackCommand(lp, ids, e.id))
             self.app.flash(f"attack {DataStore.get().unit_name(e)}")
-        elif w is not None:
+        elif (w := self.camera.screen_to_world(*pos)) is not None:
             st.queue_command(AttackMoveCommand(lp, ids, w))
             self.app.flash("attack-move")
 
     def _pick_target(self, pos: tuple):
         best, best_d = None, 30.0
         for e in self.state.entities.values():
-            if (not e.alive or e.owner == -1 or not self.state.can_see(self.local_player, e.id)
-                    or e.is_planet and e.colonized_by is not None):
+            from game.systems.colonies import eligible_planet
+            if (not e.alive or (e.owner == -1 and not eligible_planet(e))
+                    or not self.state.can_see(self.local_player, e.id)):
                 continue
             sp = self.camera.world_to_screen(e.pos.x, e.pos.y, e.pos.z)
             if sp is None:

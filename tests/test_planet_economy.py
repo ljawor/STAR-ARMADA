@@ -87,20 +87,20 @@ class TestPlanetIncome(unittest.TestCase):
         self.assertGreaterEqual(p.income_frame.get("crew", 0.0),
                                 rates.get("crew", 0.0) + crew_bonus - 1e-6)
 
-    def test_colonized_gas_giant_generates_energy(self):
+    def test_gas_giant_rejects_colonization_and_legacy_colony_income(self):
         gm = make_game(ai=False)
         p = gm.state.players[0]
         gas = _first(gm.state, data_id="gas_giant")
         self.assertIsNotNone(gas)
-        self.assertTrue(_colonize(gm, gas))
-
-        rate = DataStore.get().rules["economy"]["planet_income"]["gas_giant"]["energy"]
-        self.assertAlmostEqual(p.income_frame.get("energy", 0.0), rate, places=6)
-
-        # and the stock must actually grow, not just the reported rate
+        self.assertFalse(_colonize(gm, gas))
+        self.assertIsNone(gas.colonized_by)
+        self.assertEqual(p.income_frame.get('energy', 0), 0)
+        # Legacy ownership is not a loophole into forbidden gas income.
+        gas.colonized_by = 0
         e0 = p.energy
         _step(gm, 10)
-        self.assertAlmostEqual(p.energy - e0, rate * 10, places=1)
+        self.assertEqual(p.energy, e0)
+        self.assertEqual(p.income_frame.get('energy', 0), 0)
 
     def test_uncolonized_planet_pays_nothing(self):
         gm = make_game(ai=False)
@@ -113,10 +113,19 @@ class TestPlanetIncome(unittest.TestCase):
         """Income must go to the colonizer, not to whoever happens to be P0."""
         gm = make_game(ai=False)
         p0 = gm.state.players[0]
-        gas = _first(gm.state, data_id="gas_giant")
-        _colonize(gm, gas, player=1, fac="imperial")
-        self.assertEqual(gas.colonized_by, 1)
-        self.assertEqual(p0.income_frame.get("energy", 0.0), 0.0)
+        _step(gm, 1)
+        own_rate = p0.income_frame.get('credits', 0)
+        planet = _first(gm.state, data_id="temperate")
+        self.assertTrue(_colonize(gm, planet, player=1, fac="imperial"))
+        self.assertEqual(planet.colonized_by, 1)
+        self.assertAlmostEqual(p0.income_frame.get('credits', 0), own_rate)
+        p1 = gm.state.players[1]
+        rates = DataStore.get().rules['economy']['planet_income']['temperate']
+        self.assertGreaterEqual(p1.income_frame.get('credits', 0), rates['credits'])
+        before0, before1 = p0.credits, p1.credits
+        _step(gm, 10)
+        self.assertAlmostEqual(p0.credits - before0, own_rate * 10, places=5)
+        self.assertGreaterEqual(p1.credits - before1, rates['credits'] * 10)
 
 
 class TestEnergyRelayPlacement(unittest.TestCase):
@@ -280,55 +289,26 @@ class TestAIEnergyEconomy(unittest.TestCase):
         ok, reason = st._construction_system.check_site("energy_relay", site, builder)
         self.assertTrue(ok, f"finder returned a site the sim rejects: {reason}")
 
-    def test_colony_target_selection_includes_gas_giants(self):
-        """Gas giants are the only EN-paying planet; barren pays nothing.
-
-        The old filter skipped BOTH, so the AI could never take a gas giant
-        even with a colonizer in hand.
-        """
+    def test_colony_target_selection_rejects_gas_and_accepts_barren(self):
         gm = make_game(ai=True)
         st = gm.state
-        ai_id = next(pid for pid, p in st.players.items() if p.is_ai)
         gm.ai.ensure()
-        ai = gm.ai.ais[ai_id]
+        ai = gm.ai.ais[1]
         home = ai.home_station()
-        if home is None:
-            self.skipTest("AI has no home station in this fixture")
-
-        # clear the board of ownership so selection is purely about type
+        gas = _first(st, data_id="gas_giant")
+        barren = _first(st, data_id="barren")
+        self.assertIsNotNone(gas)
+        self.assertIsNotNone(barren)
         for e in st.entities.values():
             if e.is_planet:
-                e.colonized_by = None
-        # put every candidate near home so distance can't decide it
-        planets = [e for e in st.entities.values()
-                   if e.alive and e.is_planet and e.data_id != "barren"]
-        self.assertTrue(planets, "fixture has no planets")
-        for e in planets:
-            e.pos = Vec3(home.pos.x + 400.0, 0.0, home.pos.z + 400.0)
+                e.alive = e is gas
+        gas.pos = home.pos + Vec3(400, 0, 400)
+        self.assertIsNone(ai._pick_colony_target(home), 'gas giants cannot be colonies')
+        barren.alive = True
+        barren.colonized_by = None
+        barren.pos = home.pos + Vec3(800, 0, 800)
+        self.assertIs(ai._pick_colony_target(home), barren)
 
-        types = {e.data_id for e in planets}
-        self.assertIn("gas_giant", types, "fixture has no gas giant to select")
-
-        picked = ai._pick_colony_target(home)
-        self.assertIsNotNone(picked, "AI selected no colony target at all")
-        self.assertNotEqual(picked.data_id, "barren")
-        # and a gas giant specifically must be reachable by the rule
-        gas = [e for e in planets if e.data_id == "gas_giant"]
-        single = [e for e in planets if e is not gas[0]]
-        for e in single:
-            e.alive = False
-        self.assertIs(ai._pick_colony_target(home), gas[0],
-                      "AI will not colonize a gas giant even as the only option")
-        # barren must stay excluded even as the only option
-        barren = next((e for e in st.entities.values()
-                       if e.is_planet and e.data_id == "barren"), None)
-        if barren is not None:
-            gas[0].alive = False
-            barren.alive = True
-            barren.colonized_by = None
-            barren.pos = Vec3(home.pos.x + 400.0, 0.0, home.pos.z + 400.0)
-            self.assertIsNone(ai._pick_colony_target(home),
-                              "AI still targets worthless barren planets")
 
 
 if __name__ == "__main__":

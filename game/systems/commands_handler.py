@@ -37,6 +37,9 @@ class CommandHandler:
         fn = getattr(self, "_do_" + t, None)
         if fn is None:
             return
+        if t != 'colonize':
+            for e in self._units(cmd):
+                e.build_queue[:] = [i for i in e.build_queue if i.get('kind') != 'colonize']
         if t != 'board':
             for e in self._units(cmd):
                 self.state._boarding_system.cancel(e)
@@ -175,6 +178,9 @@ class CommandHandler:
             return
         count = int(cmd.name) if cmd.name and cmd.name.isdigit() else 1
         self.construction.start_ship(cmd.unit_ids[0], cmd.ship_id, cmd.player, count)
+
+    def _do_build_satellite(self, cmd: PlayerCommand) -> None:
+        self.construction.start_satellite(cmd.target_id, cmd.station_kind, cmd.player)
 
     def _do_colonize(self, cmd: PlayerCommand) -> None:
         for uid in cmd.unit_ids:

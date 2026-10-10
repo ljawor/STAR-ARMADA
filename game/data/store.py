@@ -490,6 +490,8 @@ class DataStore:
         validate_boarding_rules(self.rules)
         from ..systems.crew_recovery import validate_recovery_rules
         validate_recovery_rules(self.rules)
+        from ..systems.colonies import validate_colony_catalogue
+        validate_colony_catalogue(self)
         cfg = self.rules.get("experience", {})
         levels = cfg.get("levels", [0, 120, 320, 700, 1400])
         def finite_number(value):

@@ -205,14 +205,21 @@ class DirectOwnershipTests(unittest.TestCase):
                     self.assertEqual(protected(gm, [colonizer]), before)
                     self.assertIsNone(planet.colonized_by)
 
-    def test_own_colonizer_can_travel_before_paying(self):
+    def test_own_colonizer_can_travel_without_control_fee(self):
+        from game.systems.colonies import colony_rules
         gm = make_game(ai=False)
         _, colonizers, planet = actors(gm)
         colonizer = colonizers[0]
         before = protected(gm, [colonizer])[1]
         self.assertTrue(gm.construction.start_colonize(colonizer.id, planet.id, 0))
-        self.assertEqual(colonizer.order_target_id, planet.id)
+        self.assertIsNone(colonizer.order_target_id)
+        self.assertEqual(colonizer.order_type, 'move')
+        self.assertEqual(colonizer.build_queue[0]['planet_id'], planet.id)
         self.assertEqual(colonizer.build_queue[0]['status'], 'traveling')
+        approach = colonizer.order_target_pos
+        self.assertIsNotNone(approach)
+        self.assertGreater(approach.dist(planet.pos), planet.radius + colonizer.radius)
+        self.assertLess(approach.dist(planet.pos), planet.radius + colony_rules()['approach_range'])
         self.assertEqual(protected(gm, [colonizer])[1], before)
 
     def test_station_rejects_nonship_constructor_without_mutations(self):
