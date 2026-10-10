@@ -38,7 +38,7 @@ class MovementSystem:
             if speeds:
                 fleet_speeds[fleet.id] = min(speeds)
         for e in st.entities.values():
-            if not e.alive or e.is_station or e.is_planet:
+            if not e.operational or e.is_station or e.is_planet:
                 continue
             clear_unseen_targets(st, e)
             if e.jump_charge > 0:

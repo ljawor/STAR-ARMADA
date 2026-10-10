@@ -127,6 +127,7 @@ def JumpCommand(player: int, unit_ids, target: Vec3) -> PlayerCommand:
 
 
 COMMAND_TYPES = {
+    "board",
     "move", "attack", "attack_move", "stop", "hold", "build_station", "build_ship",
     "colonize", "research", "ability", "fleet_create", "fleet_stance", "jump",
 }

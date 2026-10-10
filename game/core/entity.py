@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 from .vectors import Vec3
 
 QUADRANTS = ("front", "rear", "left", "right")
-SUBSYSTEMS = ("engines", "weapons", "sensors", "shield_gen", "hangar")
+SUBSYSTEMS = ("engines", "weapons", "sensors", "shield_gen", "hangar", "life_support")
 
 
 @dataclass(slots=True)
@@ -49,6 +49,13 @@ class Entity:
     alive: bool = True
     xp: float = 0.0
     level: int = 1
+
+    # Onboard complement is distinct from the player's unassigned crew pool.
+    crew: int = 1
+    max_crew: int = 1
+    crew_loss_accumulator: float = 0.0
+    boarding: dict = field(default_factory=dict)  # physical craft's persisted mission
+    boarding_party_id: int | None = None  # source's active craft; O(1) combat gate
 
     # orders
     order_type: str = "idle"        # idle|move|attack|attack_move|hold|follow|patrol
@@ -98,6 +105,11 @@ class Entity:
     _last_damage_state: int = -1
 
     # ------------------------------------------------------------------ helpers
+    @property
+    def operational(self) -> bool:
+        """Abandoned units remain alive physical hulls, not functional assets."""
+        return self.alive and (self.is_planet or self.crew > 0)
+
     @property
     def is_combat_unit(self) -> bool:
         return (self.is_ship or self.is_squadron or self.is_station) and self.owner >= 0

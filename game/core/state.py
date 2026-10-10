@@ -120,6 +120,7 @@ class GameState:
     visibility_cell_size: float = 500.0
     explored_cells: dict = field(default_factory=dict)
     discovered_planets: dict = field(default_factory=dict)  # pid -> eid -> Entity snapshot
+    _boarding_system: object | None = field(default=None, repr=False, compare=False)
     _visibility_system: object | None = field(default=None, repr=False, compare=False)
     _sensor_queries: SensorQueries | None = field(default=None, repr=False, compare=False)
 
@@ -212,6 +213,9 @@ class GameState:
                 or self._live_sensors().visible(player_id, e.pos, allies))
 
     def add_entity(self, e: Entity) -> Entity:
+        if not e.is_planet and (e.is_ship or e.is_station or e.is_squadron):
+            from .entity import SubsystemState
+            e.systems.setdefault('life_support', SubsystemState(100.0, 100.0))
         self.entities[e.id] = e
         return e
 
@@ -336,6 +340,10 @@ class GameState:
                         for k, v in e.systems.items()},
             "alive": e.alive, "xp": e.xp if precise else round(e.xp, 2),
             "level": e.level,
+            "crew": e.crew, "max_crew": e.max_crew,
+            "crew_loss_accumulator": e.crew_loss_accumulator,
+            "boarding": dict(e.boarding),
+            "boarding_party_id": e.boarding_party_id,
             "retarget_cooldown": e.retarget_cooldown if precise else round(e.retarget_cooldown, 3),
             "last_hit_time": e.last_hit_time if precise else round(e.last_hit_time, 3),
             "order_type": e.order_type,
@@ -416,6 +424,17 @@ class GameState:
         e.shields = dict(d.get("shields", {}))
         e.systems = {k: SubsystemStub(v["hp"], v["max_hp"])
                      for k, v in d.get("systems", {}).items()}
+        from ..data.store import DataStore
+        ds = DataStore.get()
+        definition = ds.stations.get(e.data_id) if e.is_station else ds.ships.get(e.data_id)
+        complement = max(1, int(definition.crew_cost)) if definition else 1
+        e.max_crew = d.get('max_crew', complement)
+        e.crew = d.get('crew', e.max_crew)
+        e.crew_loss_accumulator = d.get('crew_loss_accumulator', 0.0)
+        e.boarding = dict(d.get('boarding', {}))
+        e.boarding_party_id = d.get('boarding_party_id')
+        if not e.is_planet and (e.is_ship or e.is_station or e.is_squadron):
+            e.systems.setdefault('life_support', SubsystemStub(100.0, 100.0))
         e.last_hit_time = d.get("last_hit_time", -999.0)
         e.retarget_cooldown = d.get("retarget_cooldown", 0.0)
         from ..systems.experience import rank_for

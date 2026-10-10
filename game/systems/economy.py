@@ -25,7 +25,7 @@ class EconomySystem:
 
         # --- station + planet income
         for e in st.entities.values():
-            if not e.alive:
+            if not e.operational:
                 continue
             # A COLONIZED planet is owned by its colonizer but has
             # `owner == -1` (planets are neutral terrain; colonising sets only
@@ -80,7 +80,7 @@ class EconomySystem:
         repair_cfg = eco.get("repair_dock_rate", 40), eco.get("repair_dock_range", 500)
         rate0, rng0 = repair_cfg
         for e in st.entities.values():
-            if not e.alive or not e.is_station:
+            if not e.operational or not e.is_station:
                 continue
             sd = self.ds.stations.get(e.data_id)
             if not sd or sd.repair_rate <= 0:
@@ -90,6 +90,8 @@ class EconomySystem:
                 t = st.entity(tid)
                 if t is None or t.owner != e.owner or t is e or t.is_planet:
                     continue
+                from .crew import repair_life_support
+                repair_life_support(t, rate * dt)
                 if t.hull < t.max_hull:
                     t.hull = min(t.max_hull, t.hull + rate * dt)
 
@@ -103,7 +105,7 @@ class EconomySystem:
         for p in state.players.values():
             cap = int(rules.get("command_capacity_base", 10))
             for e in state.entities.values():
-                if e.alive and e.is_station and e.owner == p.id:
+                if e.operational and e.is_station and e.owner == p.id:
                     sd = ds.stations.get(e.data_id)
                     if sd:
                         cap += sd.command_capacity

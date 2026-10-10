@@ -46,7 +46,7 @@ class DamageSystem:
 
         # 2. shield regeneration
         for e in st.entities.values():
-            if not e.alive or e.is_planet:
+            if not e.operational or e.is_planet:
                 continue
             if e.max_shield_quad <= 0:
                 continue
@@ -62,7 +62,12 @@ class DamageSystem:
         # 3. cleanup dead
         if st.dead_ids:
             for eid in st.dead_ids:
-                st.entities.pop(eid, None)
+                craft = st.entities.get(eid)
+                if craft is not None and craft.boarding:
+                    from .boarding import BoardingSystem
+                    BoardingSystem(st)._remove(craft)
+                else:
+                    st.entities.pop(eid, None)
             st.dead_ids.clear()
 
     # ------------------------------------------------------------------ damage
@@ -222,10 +227,8 @@ class DamageSystem:
             # crew reclaim (spec §4)
             p = st.players.get(target.owner)
             if p and (target.is_ship or target.is_squadron):
-                unit = ds.ships.get(target.data_id)
-                if unit:
-                    p.crew += unit.crew_cost * ds.rules.get("sim", {}).get(
-                        "crew_reclaim_fraction", 0.4)
+                p.crew += max(0, target.crew) * ds.rules.get("sim", {}).get(
+                    "crew_reclaim_fraction", 0.4)
             st.stats.setdefault(str(target.owner), {"kills": 0, "losses": 0, "credits_spent": 0})
             st.stats[str(target.owner)]["losses"] += 1
         if attacker is not None:

@@ -57,6 +57,11 @@ class WeaponSystem:
         if (t is None or not self.state.is_enemy(e.owner, t.owner)
                 or not self.state.can_see(e.owner, tid)):
             return False
+        craft = self.state.entity(e.boarding_party_id) if e.boarding_party_id is not None else None
+        if (craft is not None and craft.boarding.get('source') == e.id
+                and craft.boarding.get('target') == tid
+                and craft.boarding.get('phase') != 'return'):
+            return False  # do not shoot the hull our own party is capturing
         return True
 
     def _weapon_can_hit(self, weapon_data, target) -> bool:
@@ -107,19 +112,19 @@ class WeaponSystem:
     def update(self, dt: float) -> None:
         st = self.state
         for e in st.entities.values():
-            if not e.alive:
+            if not e.operational:
                 continue
             if e.is_station or e.is_planet:
                 continue   # stations fire via DefenseSystem? no — same loop below
             self._ship_weapons(e, dt)
         # stations/planets weapons
         for e in st.entities.values():
-            if e.alive and (e.is_station or e.is_planet):
+            if e.operational and (e.is_station or e.is_planet):
                 self._ship_weapons(e, dt, is_static=True)
 
     def _ship_weapons(self, e, dt: float, is_static: bool = False) -> None:
         st = self.state
-        if e.owner < 0:
+        if e.owner < 0 or not e.operational:
             return
         clear_unseen_targets(st, e)
         # determine target

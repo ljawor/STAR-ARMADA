@@ -33,7 +33,7 @@ class AIPlayer:
         st = self.state
         out = []
         for e in st.entities.values():
-            if e.alive and e.owner == self.player_id:
+            if e.operational and not e.boarding and e.owner == self.player_id:
                 if e.is_station and "station" in (kind or ""):
                     out.append(e)
                 elif e.is_ship or e.is_squadron:
@@ -47,7 +47,7 @@ class AIPlayer:
         st = self.state
         out = []
         for e in st.entities.values():
-            if e.alive and e.is_station and e.owner == self.player_id:
+            if e.operational and e.is_station and e.owner == self.player_id:
                 if kind is None or e.data_id == kind:
                     out.append(e)
         return out
@@ -331,7 +331,7 @@ class AIPlayer:
         cs = getattr(st, "_construction_system", None)
         for bid, (kind, pos) in list(self._pending_site.items()):
             b = st.entity(bid)
-            if b is None or not b.alive or not b.is_construction:
+            if b is None or not b.operational or b.owner != self.player_id or not b.is_construction:
                 del self._pending_site[bid]
                 continue
             if b.build_queue:

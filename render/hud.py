@@ -449,7 +449,22 @@ class HUD:
                       142, 11, cur / quad_h, BAR_SHIELD, q[:2].upper())
         y += 48
         # systems
-        for name_s, sys_st in list(e.systems.items())[:5]:
+        if not e.is_planet:
+            status = ' · ABANDONED' if e.crew <= 0 else ''
+            self._label(panel.x + 12, y, f'CREW {e.crew}/{e.max_crew}{status}',
+                        BAD if e.crew <= 0 else TXT_DIM, self.font_small)
+            y += 18
+        parties = [c for c in st.entities.values() if c.alive and c.boarding
+                   and st.can_see(local_player, c.id)
+                   and (c.id == e.id or c.boarding['source'] == e.id or c.boarding['target'] == e.id)]
+        if parties:
+            party = min(parties, key=lambda c: c.id)
+            info = party.boarding
+            self._label(panel.x + 12, y,
+                        f"BOARDING {info['phase'].upper()} {min(1, info['progress']):.0%} · {party.crew} crew",
+                        WARN, self.font_small)
+            y += 16
+        for name_s, sys_st in e.systems.items():
             sf = sys_st.hp / max(1.0, sys_st.max_hp)
             col = GOOD if sf > 0.7 else (WARN if sf > 0.35 else BAD)
             self._bar(panel.x + 12, y, 240, 8, sf, col)
@@ -588,7 +603,10 @@ class HUD:
         ents = [e for e in ents if e is not None and e.owner == local_player]
         sel = ents[0] if ents else None
         contextual = sel is not None and (sel.is_construction or sel.is_station)
-        panel = pygame.Rect(self.width - 330, 44, 320, 430 if contextual else 124)
+        from game.systems.boarding import boarding_capable
+        has_boarders = any(boarding_capable(e) for e in ents)
+        panel = pygame.Rect(self.width - 330, 44, 320,
+                            430 if contextual else (164 if has_boarders else 124))
         self.blocked_rects.append(panel)
         pygame.draw.rect(ov, PANEL_BG, panel, border_radius=8)
         pygame.draw.rect(ov, PANEL_EDGE, panel, 1, border_radius=8)
@@ -656,11 +674,20 @@ class HUD:
             y += 28
             self._label(panel.x + 12, y, "select a constructor or station", TXT_DIM)
             y += 20
-            self._label(panel.x + 12, y, "B  build menu · R  research", TXT_DIM)
+            self._label(panel.x + 12, y, "build / research: select a station", TXT_DIM, self.font_small)
             y += 18
             self._label(panel.x + 12, y, "F  fleet formation & commander", TXT_DIM)
             y += 18
             self._label(panel.x + 12, y, "J  hyperspace jump", TXT_DIM)
+            from game.systems.boarding import boarding_capable
+            capable = [e for e in ents if boarding_capable(e)]
+            if capable:
+                y += 20
+                rect = pygame.Rect(panel.x + 12, y, 296, 26)
+                pygame.draw.rect(ov, BAR_BG, rect, border_radius=4)
+                self._label(rect.x + 8, rect.y + 4,
+                            f'B  Board enemy hull · {len(capable)} capable', TXT, self.font_small)
+                self.buttons.append({'rect': rect, 'kind': 'board', 'payload': {}})
 
     def _fleet_panel(self, selection: set, local_player: int) -> None:
         """Fleet intent controls; eligibility is re-read on every drawn frame."""

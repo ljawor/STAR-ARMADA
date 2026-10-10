@@ -37,7 +37,7 @@ class ResearchSystem:
     def has_research_station(self, player_id: int, station_id: int) -> bool:
         st = self.state
         station = st.entity(station_id)
-        if station is None or station.owner != player_id or not station.is_station:
+        if station is None or not station.operational or station.owner != player_id or not station.is_station:
             return False
         sd = self.ds.stations.get(station.data_id)
         return bool(sd and sd.research)
@@ -77,7 +77,7 @@ class ResearchSystem:
                 info = p.researching[tid]
                 # station must still exist
                 station = st.entity(int(info["station_id"]))
-                if station is None:
+                if station is None or station.owner != p.id or not station.operational:
                     del p.researching[tid]
                     continue
                 info["time_left"] -= dt

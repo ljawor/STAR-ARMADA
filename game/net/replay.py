@@ -40,6 +40,10 @@ def state_checksum(state: GameState) -> str:
             f"{eid}|{e.data_id}|{e.owner}|"
             f"{e.pos.x:.3f},{e.pos.y:.3f},{e.pos.z:.3f}|"
             f"{e.hull:.3f}|{int(e.alive)}|{e.order_type};".encode())
+        h.update(json.dumps([e.crew, e.max_crew, e.crew_loss_accumulator,
+                             e.subsystem_hp('life_support')], separators=(',', ':')).encode())
+        h.update(json.dumps(e.boarding, sort_keys=True, separators=(',', ':')).encode())
+        h.update(str(e.boarding_party_id).encode())
     for pid in sorted(st.players):
         p = st.players[pid]
         h.update(

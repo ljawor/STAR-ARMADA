@@ -36,6 +36,9 @@ class GameManager:
 
         # systems
         self.factory = UnitFactory(self.state)
+        from ..systems.boarding import BoardingSystem
+        self.boarding = BoardingSystem(self.state)
+        self.state._boarding_system = self.boarding
         self.visibility = VisibilitySystem(self.state)
         self.state._visibility_system = self.visibility
         self.movement = MovementSystem(self.state)
@@ -242,6 +245,8 @@ class GameManager:
         st.time += dt
 
         # 0. commands
+        from ..systems.crew import update_crew
+        update_crew(st, dt)
         self.visibility.update()
         self.commands.consume()
 
@@ -266,6 +271,7 @@ class GameManager:
 
         # 7. damage resolution (single writer)
         self.damage.update(dt)
+        self.boarding.update(dt)
 
         # 8. abilities
         self.abilities.update(dt)

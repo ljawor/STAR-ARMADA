@@ -73,6 +73,7 @@ def effective_shield_regen(state, e: Entity) -> float:
     base = e.shield_regen
     m = tech_mult(state, e.owner, "shield_regen_mult")
     m *= commander_mult(state, e, "shield_regen")
+    m *= e.subsystem_fraction('shield_gen')
     active = e.ability_active.get("boost_shields", 0) > 0 or \
         e.ability_active.get("emergency_shield_recharge", 0) > 0
     if active and "boost_shields" in (e.ability_active or {}):

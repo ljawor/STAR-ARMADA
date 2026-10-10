@@ -54,6 +54,14 @@ strategic AI 1 Hz; distant-fighter LOD simplification is a renderer concern plus
 
 ## 3. State & entities
 
+Onboard `crew`, `max_crew`, fractional casualty accumulator, `boarding` craft mission
+and `boarding_party_id` source reference are persisted in entity state and replay
+checksums. Crew logic runs through `update_crew` before command consumption;
+`BoardingSystem` advances physical craft/control after damage resolution. Input queues
+serialized `board` commands, with execution-time ownership/detection/eligibility
+checks. Abandoned hulls remain alive but fail `Entity.operational`, the gate shared
+by movement/combat/sensors/economy/construction/research/AI. See BOARDING.md.
+
 `GameState` is one plain object holding **everything** mutable: entities, players,
 projectiles, effects, world time, RNG. It is fully serializable (`to_dict`/`from_dict`)
 — the save system is a thin wrapper (`SaveSystem.save(state, path)` = `json.dump`).
@@ -86,7 +94,7 @@ fields and raises on unknown weapon/ability ids — no silent typos.
 
 ## 5. Subsystem damage (spec §12/§14)
 
-Each ship has `systems: {engines, weapons, sensors, shield_gen, hangar}` each with
+Each ship has `systems: {engines, weapons, sensors, shield_gen, hangar, life_support}` each with
 `hp ≤ max_hp`. `DamageSystem.apply` routes damage: shields absorb first (per-quadrant),
 then hull; each hull hit also chips subsystem HP proportional to damage; hull thresholds
 (90/70/50/30/10 %) escalate subsystem degradation and trigger `unit_critical` events.

@@ -106,7 +106,7 @@ class ConstructionSystem:
                       player_id: int) -> bool:
         st = self.state
         builder = st.entity(builder_id)
-        if (builder is None or not builder.alive or builder.owner != player_id
+        if (builder is None or not builder.operational or builder.owner != player_id
                 or not builder.is_ship or not builder.is_construction):
             return False
         # The builder has to actually be able to PLACE the thing — otherwise a
@@ -252,7 +252,7 @@ class ConstructionSystem:
         """Queue `count` ships; returns number queued."""
         st = self.state
         station = st.entity(station_id)
-        if station is None or not station.is_station or station.owner != player_id:
+        if station is None or not station.operational or not station.is_station or station.owner != player_id:
             return 0
         sd = self.ds.resolve_ship(ship_id)
         if not self.station_can_build_ship(station, ship_id):
@@ -283,7 +283,7 @@ class ConstructionSystem:
         st = self.state
         unit = st.entity(colonizer_id)
         planet = st.entity(planet_id)
-        if (unit is None or not unit.alive or unit.owner != player_id
+        if (unit is None or not unit.operational or unit.owner != player_id
                 or not unit.is_ship or planet is None or not planet.is_planet):
             return False
         ud = self.ds.ships.get(unit.data_id)
@@ -318,7 +318,7 @@ class ConstructionSystem:
         st = self.state
         done_events = []
         for e in st.entities.values():
-            if not e.alive or not e.build_queue:
+            if not e.operational or not e.build_queue:
                 continue
             item = e.build_queue[0]
             if item.get("status") == "traveling":

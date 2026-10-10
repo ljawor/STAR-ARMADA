@@ -59,7 +59,10 @@ auto-battle harness (headless AI vs AI batch runner exists: `python main.py --de
 ## Post-slice backlog (spec sections)
 - §26 Trading: trade station income ✅, **convoys + raiding ✅** (TradingSystem:
   spawn → delivery payment / salvage loot) → routes, convoy persistence
-- §27 Capture/boarding: schema fields reserved (`boarding`) → disable+board minigame
+- §27 Capture/boarding: disable → physical boarding craft → contested control →
+  ship/station capture ✅; crew/life-support attrition and abandoned hulls ✅.
+  Optional sale/conversion/captured-tech research/temporary use remain deferred;
+  AI boarding doctrine and friendly recrewing are not implemented. See BOARDING.md.
 - §28 Map objectives: destroy-station ✅, **convoy escort ✅, hold-point ✅** →
   survival timers
 - §32 Save: quick save ✅, **autosave ring ✅ (3 slots), campaign slots ✅** → replay files
