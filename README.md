@@ -4,12 +4,14 @@
 classic space-fleet RTS titles (Armada II / Fleet Operations era). It runs entirely on
 Python 3 — deterministic simulation, AI, OpenGL rendering via pygame-ce and procedural audio.
 
-**Current release: [v0.10.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.10.0)**
-— published October 11, 2026, with macOS DMG and Windows ZIP. Adds independent
-panel minimization, inclined satellite orbits, cheaper/lighter satellites and six
-separate planetary building slots to v0.9.0. Downloaded hashes, code/data integrity
-and read-only frozen macOS smoke passed. Final native Cocoa wheel-input QA,
-native interactive Windows gameplay and mixed-platform LAN acceptance remain open.
+**Current release: [v0.10.1](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.10.1)**
+— published October 11, 2026, with macOS DMG and **unsigned Windows ZIP**.
+Fixes quiet ship/fighter firing sounds and silence after live volume changes;
+includes v0.10.0 planetary hardware and HUD improvements. Downloaded hashes,
+three inspected runtime modules and all 15 tracked assets match tagged source;
+read-only frozen macOS smoke passed. Trusted Windows certificate signing (#45),
+native listening/Windows gameplay, Cocoa wheel-input QA and mixed-platform LAN
+acceptance remain open. Smart App Control may still block the unsigned Windows build.
 
 The setting is an original space-opera universe. Prototype faction/ship names are
 placeholder-style data (Imperial / Rebel / Confederacy / Syndicate) so the feel reads
