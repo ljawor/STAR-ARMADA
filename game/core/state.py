@@ -395,6 +395,9 @@ class GameState:
             d['satellite_slot'] = e.satellite_slot
             d['satellite_orbit_phase'] = e.satellite_orbit_phase
             d['planet_building_slot'] = e.planet_building_slot
+        if e.satellite_locks:
+            d['satellite_locks'] = {str(slot): until
+                                    for slot, until in sorted(e.satellite_locks.items())}
         if e.colonized_by is not None:
             d["colonized_by"] = e.colonized_by
         if e.cargo_credits:
@@ -490,6 +493,8 @@ class GameState:
         e.satellite_slot = d.get("satellite_slot")
         e.satellite_orbit_phase = d.get("satellite_orbit_phase")
         e.planet_building_slot = d.get("planet_building_slot")
+        e.satellite_locks = {int(slot): float(until)
+                             for slot, until in (d.get("satellite_locks") or {}).items()}
         e.cargo_credits = d.get("cargo_credits", 0.0)
         e.convoy_dest = d.get("convoy_dest")
         e.convoy_source = d.get("convoy_source")

@@ -144,6 +144,15 @@ def validate_payloads(initial):
                 occupied.add(key)
         if entity.get('satellite_orbit_phase') is not None:
             require(orbit is not None and surface is None, 'attachment.orbit_phase')
+        lock_map = entity.get('satellite_locks')
+        if lock_map:
+            require(planet_source(entity) and entity.get('alive', True), 'satellite_locks.planet')
+            for slot, until in lock_map.items():
+                require(slot.isdecimal() and str(int(slot)) == slot
+                        and 0 <= int(slot) < colony_rules()['satellite_cap'],
+                        'satellite_locks.slot')
+                require(type(until) in (int, float) and math.isfinite(until) and until >= 0.0,
+                        'satellite_locks.until')
         for record in entity.get('build_queue', []):
             payload(record, {'kind': str, 'item': str, 'time_left': float, 'total': float,
                              'status': str, 'pos': tuple[float, float, float], 'planet_id': int,

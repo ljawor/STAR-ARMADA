@@ -228,6 +228,12 @@ class DamageSystem:
             st._crew_recovery_system.validate()
         target.hull = 0.0
         st.dead_ids.append(target.id)
+        # #57: losing a satellite makes its site uninhabitable for the rebuild
+        # penalty. The deadline lives on the planet, so it is serialized with
+        # the world it belongs to and survives a capture of that world.
+        if target.satellite_slot is not None and target.planet_id is not None:
+            from .colonies import lock_satellite_slot
+            lock_satellite_slot(st, st.entity(target.planet_id), target.satellite_slot)
         # `seed` varies the blast shape per kill. Drawn from the SIM's rng (not
         # the renderer's) so it stays bit-identical across replays/lockstep.
         st.spawn_effect("explosion", target.pos.copy(), size=target.radius,

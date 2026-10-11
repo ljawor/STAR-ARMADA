@@ -86,6 +86,9 @@ class Entity:
     satellite_slot: int | None = None
     satellite_orbit_phase: float | None = None
     planet_building_slot: int | None = None
+    # #57: slot -> sim time at which the rebuild penalty on a destroyed
+    # satellite's slot expires. Site state on the planet, never render state.
+    satellite_locks: dict[int, float] = field(default_factory=dict)
 
     # trading (§26): cargo convoys
     cargo_credits: float = 0.0
