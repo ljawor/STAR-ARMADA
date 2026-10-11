@@ -1,71 +1,246 @@
 {
   "weapons": {
     "laser_cannon": {
-      "name": "Laser Cannon", "type": "laser",
-      "damage": 14, "range": 900, "reload": 0.55, "projectile_speed": 1400,
-      "accuracy": 0.88, "shield_mult": 1.15, "armor_mult": 0.7, "system_mult": 0.35,
-      "hardpoint": "all", "color": [0.35, 0.9, 1.0], "size": 1.6, "targets": "all"
+      "name": "Laser Cannon",
+      "type": "laser",
+      "damage": 14,
+      "range": 900,
+      "reload": 0.55,
+      "projectile_speed": 1400,
+      "accuracy": 0.88,
+      "shield_mult": 1.15,
+      "armor_mult": 0.7,
+      "system_mult": 0.35,
+      "hardpoint": "all",
+      "color": [
+        0.35,
+        0.9,
+        1.0
+      ],
+      "size": 1.6,
+      "targets": "all"
     },
     "point_defense": {
-      "name": "Point-Defense Laser", "type": "point_defense",
-      "damage": 7, "range": 520, "reload": 0.28, "projectile_speed": 1900,
-      "accuracy": 0.95, "shield_mult": 1.0, "armor_mult": 0.5, "system_mult": 0.25,
-      "hardpoint": "all", "color": [0.7, 1.0, 0.75], "size": 1.1, "targets": "fighters"
+      "name": "Point-Defense Laser",
+      "type": "point_defense",
+      "damage": 7,
+      "range": 520,
+      "reload": 0.28,
+      "projectile_speed": 1900,
+      "accuracy": 0.95,
+      "shield_mult": 1.0,
+      "armor_mult": 0.5,
+      "system_mult": 0.25,
+      "hardpoint": "all",
+      "color": [
+        0.7,
+        1.0,
+        0.75
+      ],
+      "size": 1.1,
+      "targets": "fighters"
     },
     "turbolaser": {
-      "name": "Turbolaser", "type": "turbolaser",
-      "damage": 90, "range": 1800, "reload": 2.2, "projectile_speed": 1000,
-      "accuracy": 0.8, "shield_mult": 1.1, "armor_mult": 1.0, "system_mult": 0.5,
-      "hardpoint": "front", "color": [0.4, 0.7, 1.0], "size": 3.0, "targets": "all"
+      "name": "Turbolaser",
+      "type": "turbolaser",
+      "damage": 90,
+      "range": 1800,
+      "reload": 2.2,
+      "projectile_speed": 1000,
+      "accuracy": 0.8,
+      "shield_mult": 1.1,
+      "armor_mult": 1.0,
+      "system_mult": 0.5,
+      "hardpoint": "front",
+      "color": [
+        0.4,
+        0.7,
+        1.0
+      ],
+      "size": 3.0,
+      "targets": "all"
     },
     "heavy_turbolaser": {
-      "name": "Heavy Turbolaser", "type": "turbolaser",
-      "damage": 210, "range": 2200, "reload": 3.4, "projectile_speed": 900,
-      "accuracy": 0.78, "shield_mult": 1.05, "armor_mult": 1.25, "system_mult": 0.55,
-      "hardpoint": "front", "color": [0.35, 0.6, 1.0], "size": 4.5, "targets": "all"
+      "name": "Heavy Turbolaser",
+      "type": "turbolaser",
+      "damage": 210,
+      "range": 2200,
+      "reload": 3.4,
+      "projectile_speed": 900,
+      "accuracy": 0.78,
+      "shield_mult": 1.05,
+      "armor_mult": 1.25,
+      "system_mult": 0.55,
+      "hardpoint": "front",
+      "color": [
+        0.35,
+        0.6,
+        1.0
+      ],
+      "size": 4.5,
+      "targets": "all"
     },
     "ion_cannon": {
-      "name": "Ion Cannon", "type": "ion",
-      "damage": 70, "range": 2000, "reload": 3.0, "projectile_speed": 1100,
-      "accuracy": 0.82, "shield_mult": 2.2, "armor_mult": 0.3, "system_mult": 2.6,
-      "hardpoint": "front", "color": [0.45, 0.5, 1.0], "size": 3.2, "targets": "all"
+      "name": "Ion Cannon",
+      "type": "ion",
+      "damage": 70,
+      "range": 2000,
+      "reload": 3.0,
+      "projectile_speed": 1100,
+      "accuracy": 0.82,
+      "shield_mult": 2.2,
+      "armor_mult": 0.3,
+      "system_mult": 2.6,
+      "hardpoint": "front",
+      "color": [
+        0.45,
+        0.5,
+        1.0
+      ],
+      "size": 3.2,
+      "targets": "all"
     },
     "missile_battery": {
-      "name": "Missile Battery", "type": "missile",
-      "damage": 55, "range": 1600, "reload": 1.6, "projectile_speed": 700,
-      "accuracy": 0.9, "shield_mult": 0.8, "armor_mult": 1.2, "system_mult": 0.8,
-      "hardpoint": "all", "color": [1.0, 0.75, 0.4], "size": 2.2, "targets": "all"
+      "name": "Missile Battery",
+      "type": "missile",
+      "damage": 55,
+      "range": 1600,
+      "reload": 1.6,
+      "projectile_speed": 700,
+      "accuracy": 0.9,
+      "shield_mult": 0.8,
+      "armor_mult": 1.2,
+      "system_mult": 0.8,
+      "hardpoint": "all",
+      "color": [
+        1.0,
+        0.75,
+        0.4
+      ],
+      "size": 2.2,
+      "targets": "all"
     },
     "proton_torpedo": {
-      "name": "Proton Torpedo", "type": "torpedo",
-      "damage": 260, "range": 1400, "reload": 5.5, "projectile_speed": 520,
-      "accuracy": 0.85, "shield_mult": 0.55, "armor_mult": 2.3, "system_mult": 1.1,
-      "hardpoint": "all", "color": [1.0, 0.5, 0.3], "size": 3.5, "targets": "capital"
+      "name": "Proton Torpedo",
+      "type": "torpedo",
+      "damage": 260,
+      "range": 1400,
+      "reload": 5.5,
+      "projectile_speed": 520,
+      "accuracy": 0.85,
+      "shield_mult": 0.55,
+      "armor_mult": 2.3,
+      "system_mult": 1.1,
+      "hardpoint": "all",
+      "color": [
+        1.0,
+        0.5,
+        0.3
+      ],
+      "size": 3.5,
+      "targets": "capital"
     },
     "plasma_lance": {
-      "name": "Plasma Lance", "type": "plasma",
-      "damage": 130, "range": 1300, "reload": 2.6, "projectile_speed": 800,
-      "accuracy": 0.85, "shield_mult": 1.4, "armor_mult": 1.0, "system_mult": 1.0,
-      "hardpoint": "front", "color": [0.2, 1.0, 0.6], "size": 3.0, "targets": "all"
+      "name": "Plasma Lance",
+      "type": "plasma",
+      "damage": 130,
+      "range": 1300,
+      "reload": 2.6,
+      "projectile_speed": 800,
+      "accuracy": 0.85,
+      "shield_mult": 1.4,
+      "armor_mult": 1.0,
+      "system_mult": 1.0,
+      "hardpoint": "front",
+      "color": [
+        0.2,
+        1.0,
+        0.6
+      ],
+      "size": 3.0,
+      "targets": "all"
     },
     "mass_driver": {
-      "name": "Mass Driver", "type": "kinetic",
-      "damage": 240, "range": 1900, "reload": 4.0, "projectile_speed": 1600,
-      "accuracy": 0.7, "shield_mult": 0.35, "armor_mult": 2.6, "system_mult": 0.7,
-      "hardpoint": "front", "color": [1.0, 0.9, 0.6], "size": 3.8, "targets": "all"
+      "name": "Mass Driver",
+      "type": "kinetic",
+      "damage": 240,
+      "range": 1900,
+      "reload": 4.0,
+      "projectile_speed": 1600,
+      "accuracy": 0.7,
+      "shield_mult": 0.35,
+      "armor_mult": 2.6,
+      "system_mult": 0.7,
+      "hardpoint": "front",
+      "color": [
+        1.0,
+        0.9,
+        0.6
+      ],
+      "size": 3.8,
+      "targets": "all"
     },
     "beam_lance": {
-      "name": "Beam Lance", "type": "beam",
-      "damage": 55, "range": 2400, "reload": 0.2, "projectile_speed": 5000,
-      "accuracy": 0.97, "shield_mult": 0.9, "armor_mult": 1.0, "system_mult": 0.6,
-      "hardpoint": "front", "color": [0.8, 0.4, 1.0], "size": 2.0, "is_beam": true,
+      "name": "Beam Lance",
+      "type": "beam",
+      "damage": 55,
+      "range": 2400,
+      "reload": 0.2,
+      "projectile_speed": 5000,
+      "accuracy": 0.97,
+      "shield_mult": 0.9,
+      "armor_mult": 1.0,
+      "system_mult": 0.6,
+      "hardpoint": "front",
+      "color": [
+        0.8,
+        0.4,
+        1.0
+      ],
+      "size": 2.0,
+      "is_beam": true,
       "targets": "all"
     },
     "interceptor_cannon": {
-      "name": "Interceptor Cannon", "type": "laser",
-      "damage": 10, "range": 750, "reload": 0.4, "projectile_speed": 1600,
-      "accuracy": 0.9, "shield_mult": 1.2, "armor_mult": 0.55, "system_mult": 0.3,
-      "hardpoint": "all", "color": [0.4, 1.0, 0.9], "size": 1.3, "targets": "fighters"
+      "name": "Interceptor Cannon",
+      "type": "laser",
+      "damage": 10,
+      "range": 750,
+      "reload": 0.4,
+      "projectile_speed": 1600,
+      "accuracy": 0.9,
+      "shield_mult": 1.2,
+      "armor_mult": 0.55,
+      "system_mult": 0.3,
+      "hardpoint": "all",
+      "color": [
+        0.4,
+        1.0,
+        0.9
+      ],
+      "size": 1.3,
+      "targets": "fighters"
+    },
+    "planet_pulsar_beam": {
+      "name": "Pulsar Beam",
+      "type": "beam",
+      "damage": 320,
+      "range": 4200,
+      "reload": 5.0,
+      "projectile_speed": 5000,
+      "accuracy": 0.97,
+      "shield_mult": 1.0,
+      "armor_mult": 1.0,
+      "system_mult": 0.5,
+      "hardpoint": "all",
+      "color": [
+        0.7,
+        0.3,
+        1.0
+      ],
+      "size": 3.0,
+      "is_beam": true,
+      "targets": "capital"
     }
   }
 }

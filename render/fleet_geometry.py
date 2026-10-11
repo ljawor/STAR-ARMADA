@@ -248,6 +248,10 @@ STATION_TYPES = ('command_station', 'shipyard', 'research_station', 'defense_pla
 
 def station_mesh(data_id, faction='imperial'):
     """Station mesh at radius 50, matching ship-scale material coordinates."""
+    from game.systems.planet_buildings import BUILDING_TYPES
+    if data_id in BUILDING_TYPES:
+        from render.planet_building_geometry import building_mesh
+        return building_mesh(data_id, faction)
     from render.faction_visuals import normalize_station_key
     faction, data_id = normalize_station_key(data_id, faction)
     if data_id in ('defense_satellite', 'attack_satellite'):

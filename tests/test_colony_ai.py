@@ -20,12 +20,71 @@ class ColonyAITests(unittest.TestCase):
                 e.colonized_by = 0
         p = st.players[0]
         p.credits, p.materials, p.energy = 6500, 10000, 10000
+        available = p.credits - 5000
+        expected_buys = 0
+        for planet in sorted(st.entities.values(), key=lambda e: e.id):
+            if not planet.is_planet or planet.colonized_by != 0:
+                continue
+            for role in ('defense_satellite', 'attack_satellite'):
+                cost = gm.factory.station_build_cost(role)['credits']
+                if available >= cost:
+                    available -= cost
+                    expected_buys += 1
         ai._maybe_expand(home)
         buys = [c for c in st.command_queue if c.type == 'build_satellite']
-        self.assertEqual(len(buys), 1, 'optional satellites must retain the economic credit reserve')
+        self.assertGreater(expected_buys, 0)
+        self.assertEqual(len(buys), expected_buys,
+                         'optional satellites must share the catalogue-priced reserve')
+        # Later colonizer replacements must retain the same colony reserve.
+        projected_orbit_credits = p.credits - sum(
+            gm.factory.station_build_cost(c.station_kind)['credits'] for c in buys)
+        self.assertEqual(projected_orbit_credits, 5000 + available)
+        self.assertGreaterEqual(projected_orbit_credits, 5000)
         gm.step(1 / 30)
         self.assertGreaterEqual(p.credits, 5000)
-        self.assertEqual(sum(len(e.build_queue) for e in st.entities.values() if e.is_planet), 1)
+        self.assertEqual(sum(sum(i['kind'] == 'satellite' for i in e.build_queue)
+                             for e in st.entities.values() if e.is_planet), expected_buys)
+
+    def test_colony_spending_preserves_materials_through_colonizer_replacement(self):
+        for materials in (2600, 3100):
+            with self.subTest(materials=materials):
+                gm = make_game(ai=False)
+                st = gm.state
+                from game.ai.ai import AIPlayer
+                ai = AIPlayer(st, 0)
+                home = ai.home_station()
+                assert home is not None
+                gm.factory.spawn_station('mining_station', 0, home.pos + Vec3(500, 0, 500))
+                planet = next(e for e in st.entities.values() if e.data_id == 'temperate')
+                planet.colonized_by = 0
+                p = st.players[0]
+                p.credits, p.materials, p.energy = 20000, materials, 10000
+                ai._maybe_expand(home)
+                self.assertGreaterEqual(ai._projected_budget()['materials'], 2500)
+                gm.step(1 / 30)
+                self.assertGreaterEqual(p.materials, 2500)
+
+    def test_surface_commands_preserve_credit_reserve_before_replacement(self):
+        gm = make_game(ai=False)
+        st = gm.state
+        from game.ai.ai import AIPlayer
+        ai = AIPlayer(st, 0)
+        home = ai.home_station()
+        assert home is not None
+        gm.factory.spawn_station('mining_station', 0, home.pos + Vec3(500, 0, 500))
+        planet = next(e for e in st.entities.values() if e.data_id == 'temperate')
+        planet.colonized_by = 0
+        for role in ('defense_satellite', 'attack_satellite'):
+            satellite = gm.factory.spawn_station(role, 0, planet.pos + Vec3(500, 0, 0))
+            satellite.planet_id = planet.id
+        p = st.players[0]
+        cost = gm.factory.station_build_cost('planet_extractor')
+        p.credits, p.materials, p.energy = 5000 + cost['credits'], 10000, 10000
+        ai._maybe_expand(home)
+        self.assertTrue(any(c.type == 'build_planet_building' for c in st.command_queue))
+        self.assertGreaterEqual(ai._projected_budget()['credits'], 5000)
+        gm.step(1 / 30)
+        self.assertGreaterEqual(p.credits, 5000)
 
     def test_satellites_account_for_earlier_unconsumed_ship_commands(self):
         gm = make_game(ai=False)
@@ -89,11 +148,18 @@ class ColonyAITests(unittest.TestCase):
         ai._maybe_expand(home)
         first = list(st.command_queue)
         self.assertEqual(len([c for c in first if c.type == 'build_satellite']), 2)
+        surface = [c for c in first if c.type == 'build_planet_building']
+        self.assertEqual([c.station_kind for c in surface], ['planet_extractor'])
+        self.assertEqual([c.ship_id for c in first if c.type == 'build_ship'],
+                         ['imperial_colonizer'], 'surplus must still fund colonizer replacement')
+        projected = ai._projected_budget()
+        self.assertGreaterEqual(projected['credits'], 5000)
+        self.assertGreaterEqual(projected['materials'], 2500)
         ai._maybe_expand(home)
         self.assertEqual(st.command_queue, first)
         gm.step(1 / 30)
-        self.assertEqual({item['item'] for item in planet.build_queue},
-                         {'defense_satellite', 'attack_satellite'})
+        self.assertCountEqual([item['item'] for item in planet.build_queue],
+                              ['defense_satellite', 'attack_satellite', 'planet_extractor'])
         self.assertGreaterEqual(p.credits, 5000)
         self.assertGreaterEqual(p.materials, 2500)
 

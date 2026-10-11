@@ -358,15 +358,15 @@
     "defense_satellite": {
       "name": "Defense Satellite",
       "cost": {
-        "credits": 900,
-        "materials": 1100,
-        "energy": 200
+        "credits": 600,
+        "materials": 700,
+        "energy": 150
       },
-      "crew_cost": 150,
+      "crew_cost": 100,
       "build_time": 22,
-      "hull": 11000,
-      "shield_quad": 3000,
-      "shield_regen": 25,
+      "hull": 5500,
+      "shield_quad": 1000,
+      "shield_regen": 15,
       "radius": 45,
       "sensor_range": 2000,
       "weapons": [
@@ -390,15 +390,15 @@
     "attack_satellite": {
       "name": "Attack Satellite",
       "cost": {
-        "credits": 900,
-        "materials": 1100,
-        "energy": 200
+        "credits": 600,
+        "materials": 700,
+        "energy": 150
       },
-      "crew_cost": 150,
+      "crew_cost": 100,
       "build_time": 22,
-      "hull": 11000,
-      "shield_quad": 3000,
-      "shield_regen": 25,
+      "hull": 5500,
+      "shield_quad": 1000,
+      "shield_regen": 15,
       "radius": 45,
       "sensor_range": 2000,
       "weapons": [
@@ -425,6 +425,107 @@
         "hangar": 0
       },
       "command_capacity": 0
+    },
+    "planet_extractor": {
+      "name": "Resource Extractor",
+      "cost": {
+        "credits": 800,
+        "materials": 600,
+        "energy": 200
+      },
+      "crew_cost": 100,
+      "build_time": 24,
+      "hull": 6000,
+      "shield_quad": 0,
+      "shield_regen": 0,
+      "radius": 45,
+      "sensor_range": 3500,
+      "weapons": [],
+      "systems": {
+        "weapons": 500,
+        "sensors": 250,
+        "shield_gen": 500
+      },
+      "income": {
+        "materials": 3.0,
+        "energy": 1.0
+      }
+    },
+    "planet_trade_hub": {
+      "name": "Trade Hub",
+      "cost": {
+        "credits": 900,
+        "materials": 500,
+        "energy": 200
+      },
+      "crew_cost": 100,
+      "build_time": 24,
+      "hull": 6000,
+      "shield_quad": 0,
+      "shield_regen": 0,
+      "radius": 45,
+      "sensor_range": 3500,
+      "weapons": [],
+      "systems": {
+        "weapons": 500,
+        "sensors": 250,
+        "shield_gen": 500
+      },
+      "income": {
+        "credits": 4.0
+      }
+    },
+    "planet_shield_generator": {
+      "name": "Surface Shield Generator",
+      "cost": {
+        "credits": 1100,
+        "materials": 900,
+        "energy": 200
+      },
+      "crew_cost": 100,
+      "build_time": 24,
+      "hull": 6000,
+      "shield_quad": 1500,
+      "shield_regen": 20,
+      "radius": 45,
+      "sensor_range": 3500,
+      "weapons": [],
+      "systems": {
+        "weapons": 500,
+        "sensors": 250,
+        "shield_gen": 500
+      },
+      "income": {}
+    },
+    "planet_pulsar_cannon": {
+      "name": "Pulsar Cannon",
+      "cost": {
+        "credits": 1400,
+        "materials": 1200,
+        "energy": 200
+      },
+      "crew_cost": 100,
+      "build_time": 24,
+      "hull": 6000,
+      "shield_quad": 0,
+      "shield_regen": 0,
+      "radius": 45,
+      "sensor_range": 3500,
+      "weapons": [
+        {
+          "weapon": "planet_pulsar_beam",
+          "count": 1,
+          "arcs": [
+            "all"
+          ]
+        }
+      ],
+      "systems": {
+        "weapons": 500,
+        "sensors": 250,
+        "shield_gen": 500
+      },
+      "income": {}
     }
   }
 }

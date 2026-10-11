@@ -199,12 +199,18 @@ class ConstructionExclusionTests(unittest.TestCase):
     def test_satellite_exact_hostile_boundary_and_paid_site_obstruction(self):
         planet = self.planet()
         site0 = self.cs.satellite_site(planet, 'defense_satellite', 0)
-        self.factory.spawn_station('command_station', 1, site0 + Vec3(0, 0, 3000))
+        center = self.factory.spawn_station('command_station', 1, site0 + Vec3(0, 0, 3000))
+        self.assertEqual(site0.dist(center.pos), 3000)
+        from game.systems.colonies import colony_rules
+        legal = [slot for slot in range(1, colony_rules()['satellite_cap'])
+                 if self.cs.satellite_site(planet, 'defense_satellite', slot).dist(center.pos) >= 3000]
+        self.assertTrue(legal)
         # A paid ordinary site blocks slot 0 independently of the boundary.
         self.builder.build_queue.append(dict(kind='station', item='trade_station',
             pos=site0.to_dict(precise=True), status='paid', time_left=100, total=100))
         self.assertTrue(self.cs.start_satellite(planet.id, 'defense_satellite', 0))
-        self.assertEqual(planet.build_queue[0]['slot'], 1)
+        self.assertEqual(planet.build_queue[0]['slot'], legal[0])
+        self.assertGreaterEqual(Vec3(*planet.build_queue[0]['pos']).dist(center.pos), 3000)
         planet.build_queue.clear()
         self.builder.build_queue.clear()
         self.assertTrue(self.cs.start_satellite(planet.id, 'defense_satellite', 0))

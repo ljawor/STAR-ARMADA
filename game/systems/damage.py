@@ -95,6 +95,11 @@ class DamageSystem:
         remaining = max(0.0, raw_damage) * defense_multiplier(target)
         actual_damage = 0.0
 
+        from .planet_buildings import absorb_surface_damage
+        unshielded = absorb_surface_damage(st, target, remaining, shield_mult)
+        actual_damage += (remaining - unshielded) * max(0.0, shield_mult)
+        remaining = unshielded
+
         # --- shields first
         if target.max_shield_quad > 0 and target.shields.get(quad, 0) > 0:
             absorbed = min(target.shields[quad], remaining * shield_mult)

@@ -111,7 +111,8 @@ class ConstructionSystem:
                 or not builder.is_ship or not builder.is_construction):
             return False
         unit = self.ds.ships.get(builder.data_id)
-        if unit is None or unit.can_colonize or station_id in ('defense_satellite', 'attack_satellite'):
+        if unit is None or unit.can_colonize or station_id in ('defense_satellite', 'attack_satellite',
+                'planet_extractor', 'planet_trade_hub', 'planet_shield_generator', 'planet_pulsar_cannon'):
             return False
         # The builder has to actually be able to PLACE the thing — otherwise a
         # player can order a station on the far side of the map and the
@@ -182,7 +183,7 @@ class ConstructionSystem:
         return minimum
 
     def _check_station_spacing(self, station_id, pos, player_id, *, viewer=None,
-                               ignore_work=None) -> tuple[bool, str]:
+                               ignore_work=None, ignore_entity=None) -> tuple[bool, str]:
         st = self.state
         coords = (pos.x, pos.y, pos.z) if hasattr(pos, 'x') else pos
         if not all(math.isfinite(v) for v in coords):
@@ -190,7 +191,7 @@ class ConstructionSystem:
         if abs(coords[0]) > st.map_info.bounds or abs(coords[2]) > st.map_info.bounds:
             return False, 'outside the map bounds'
         for e in st.entities.values():
-            if not e.alive:
+            if not e.alive or e is ignore_entity:
                 continue
             if e.is_station and (viewer is None or st.can_see(viewer, e.id)):
                 minimum = self.station_min_distance(station_id, e.data_id, e.radius, player_id, e.owner)
@@ -340,15 +341,14 @@ class ConstructionSystem:
     # ------------------------------------------------------------------ satellites
     def satellite_slots(self, planet):
         live = {e.satellite_slot for e in self.state.entities.values()
-                if e.alive and e.planet_id == planet.id}
+                if e.alive and e.planet_id == planet.id and e.satellite_slot is not None}
         return live | {i['slot'] for i in planet.build_queue if i.get('kind') == 'satellite'}
 
     def satellite_site(self, planet, station_id, slot):
         cap = colony_rules()['satellite_cap']
+        from .satellite_orbits import orbit_position
         sd = self.ds.stations[station_id]
-        radius = planet.radius + sd.radius + colony_rules()['orbit_clearance']
-        angle = slot * 2 * math.pi / cap
-        return planet.pos + Vec3(math.sin(angle) * radius, 0, math.cos(angle) * radius)
+        return orbit_position(planet, sd.radius, slot * 2 * math.pi / cap)
 
     def start_satellite(self, planet_id, station_id, player_id):
         from .colonies import eligible_planet
@@ -495,13 +495,28 @@ class ConstructionSystem:
                                                 ignore_work=item)[0]:
                 st.float_text(builder.pos, 'Cannot build: site unavailable', (1, .5, .4))
                 return
-        if kind == 'satellite':
+        if kind == 'planet_building':
+            from .planet_buildings import planet_building_site
+            from .colonies import eligible_planet
+            if not eligible_planet(builder) or builder.colonized_by != item['source_owner']:
+                return
+            pos, normal = planet_building_site(builder, item['slot'])
+            if not self._check_station_spacing(item['item'], pos, builder.colonized_by,
+                                               ignore_work=item)[0]:
+                st.float_text(builder.pos, 'Cannot build: site unavailable', (1, .5, .4))
+                return
+            building = self.factory.spawn_station(item['item'], builder.colonized_by, pos)
+            building.planet_id = builder.id
+            building.planet_building_slot = item['slot']
+            st.events.publish('station_built', entity_id=building.id, station=building.data_id, owner=building.owner)
+        elif kind == 'satellite':
             from .colonies import eligible_planet
             if not eligible_planet(builder) or builder.colonized_by != item['source_owner']:
                 return
             satellite = self.factory.spawn_station(item['item'], builder.colonized_by, Vec3(*item['pos']))
             satellite.planet_id = builder.id
             satellite.satellite_slot = item['slot']
+            satellite.satellite_orbit_phase = item['slot'] * 2 * math.pi / colony_rules()['satellite_cap']
             st.events.publish('station_built', entity_id=satellite.id, station=satellite.data_id, owner=satellite.owner)
         elif kind == "station":
             pos = Vec3(*item["pos"])
@@ -543,6 +558,8 @@ class ConstructionSystem:
                 planet.ability_active.clear()
                 planet.ability_cooldowns.clear()
                 planet.colonized_by = builder.owner
+                from .planet_buildings import transfer_buildings
+                transfer_buildings(st, planet, builder.owner)
                 for dependent in sorted(st.entities.values(), key=lambda e: e.id):
                     if dependent is builder:
                         continue

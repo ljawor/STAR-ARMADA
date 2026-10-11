@@ -84,6 +84,8 @@ class Entity:
     colonized_by: int | None = None
     planet_id: int | None = None  # persistent satellite attachment
     satellite_slot: int | None = None
+    satellite_orbit_phase: float | None = None
+    planet_building_slot: int | None = None
 
     # trading (§26): cargo convoys
     cargo_credits: float = 0.0

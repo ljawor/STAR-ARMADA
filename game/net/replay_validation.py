@@ -106,6 +106,16 @@ def payload(value, schema, required, path):
 
 
 def validate_payloads(initial):
+    from ..systems.planet_buildings import BUILDING_TYPES, building_rules
+    from ..systems.colonies import COLONY_TYPES, SATELLITE_TYPES, colony_rules
+    entities = {int(key): value for key, value in initial.get('entities', {}).items()}
+    players = {int(key) for key in initial.get('players', {})}
+    occupied = set()
+
+    def planet_source(entity):
+        return (entity is not None and entity.get('is_planet') is True
+                and entity.get('kind') == 'planet' and entity.get('data_id') in COLONY_TYPES)
+
     for player in initial.get('players', {}).values():
         for record in player.get('researching', {}).values():
             payload(record, {'station_id': int, 'time_left': float, 'total': float},
@@ -114,12 +124,47 @@ def validate_payloads(initial):
         payload(record, {'kills': int, 'losses': int, 'credits_spent': float},
                 {'kills', 'losses'}, 'stats')
     for entity in initial.get('entities', {}).values():
+        surface = entity.get('planet_building_slot')
+        orbit = entity.get('satellite_slot')
+        planet_id = entity.get('planet_id')
+        if surface is not None or orbit is not None or planet_id is not None:
+            require(type(planet_id) is int and planet_source(entities.get(planet_id)),
+                    'attachment.planet_id')
+            require(entity.get('kind') == 'station' and entity.get('is_station') is True,
+                    'attachment.station')
+            require((surface is None) != (orbit is None), 'attachment.discriminator')
+            slot = surface if surface is not None else orbit
+            cap = building_rules()['slot_cap'] if surface is not None else colony_rules()['satellite_cap']
+            require(type(slot) is int and 0 <= slot < cap, 'attachment.slot')
+            require(entity.get('data_id') in (BUILDING_TYPES if surface is not None else SATELLITE_TYPES),
+                    'attachment.type')
+            if entity.get('alive', True):
+                key = (planet_id, surface is not None, slot)
+                require(key not in occupied, 'attachment.slot occupied')
+                occupied.add(key)
+        if entity.get('satellite_orbit_phase') is not None:
+            require(orbit is not None and surface is None, 'attachment.orbit_phase')
         for record in entity.get('build_queue', []):
             payload(record, {'kind': str, 'item': str, 'time_left': float, 'total': float,
                              'status': str, 'pos': tuple[float, float, float], 'planet_id': int,
                              'source_owner': int, 'target_owner': int | None, 'slot': int},
                     {'kind', 'item', 'time_left', 'total'}, 'build_queue')
-            require(record['kind'] in ('ship', 'station', 'satellite', 'colonize'), 'build_queue.kind')
+            require(record['kind'] in ('ship', 'station', 'satellite', 'planet_building', 'colonize'), 'build_queue.kind')
+            if record['kind'] in ('planet_building', 'satellite'):
+                require({'source_owner', 'slot'} <= record.keys(), 'build_queue.planet fields')
+                require(planet_source(entity) and entity.get('alive', True)
+                        and record['source_owner'] in players
+                        and entity.get('colonized_by') == record['source_owner'],
+                        'build_queue.owned planet')
+                surface_work = record['kind'] == 'planet_building'
+                require(record['item'] in (BUILDING_TYPES if surface_work else SATELLITE_TYPES),
+                        'build_queue.planet item')
+                cap = building_rules()['slot_cap'] if surface_work else colony_rules()['satellite_cap']
+                require(type(record['slot']) is int and 0 <= record['slot'] < cap,
+                        'build_queue.slot')
+                key = (entity['id'], surface_work, record['slot'])
+                require(key not in occupied, 'build_queue.slot occupied')
+                occupied.add(key)
             if record['kind'] in ('station', 'satellite'):
                 require('pos' in record, 'build_queue.pos')
             if record['kind'] == 'colonize':

@@ -137,11 +137,13 @@ class HUD:
         self.font_title = pygame.font.SysFont("helvetica,arial", 22, bold=True)
         self.overlay = pygame.Surface((width, height), pygame.SRCALPHA)
         self.tex = None
+        self.minimized = {'left': False, 'right': False, 'mission': False}
         self.buttons: list[dict] = []   # {"rect": Rect, "kind": str, "payload": dict}
         self.minimap_rect = None        # set each frame; input uses it
         self.blocked_rects: list = []   # opaque HUD geometry for ground picking
         self.selected_abilities: list = []
         # scrollable panels: kind -> scroll offset in rows
+        self.planet_page = 'surface'
         self.scroll: dict = {"ships": 0, "techs": 0, "stations": 0}
         self._cur_panel = None          # set by _scrollable for row callbacks
         self._cur_player = None
@@ -157,6 +159,7 @@ class HUD:
         self.drag_box = None            # (start, cur) screen corners while dragging
         # per-frame scrollable regions: list of (rect, key) for wheel routing
         self.scroll_rects: list = []
+        self.scroll_panels: dict = {}
         # mission state snapshot (set by main loop when a campaign is active)
         self.mission_progress: list | None = None   # progress_text() rows
         self.mission_name: str | None = None
@@ -170,7 +173,51 @@ class HUD:
             GL.glDeleteTextures([self.tex])
             self.tex = None
 
-    def _mission_panel(self, local_player: int) -> None:
+    def _draw_collapsible(self, key, title, draw):
+        """Separate control rail; minimized panels occupy only their restore tab."""
+        w = min(380, self.width - 680) if key == 'mission' else 320
+        x = ((self.width - w) // 2 if key == 'mission'
+             else (10 if key == 'left' else self.width - 330))
+        rail = pygame.Rect(x, 44, w, 28)
+        if self.minimized[key]:
+            rail.width = self.font_small.size(title + '  +')[0] + 24
+            if key == 'right': rail.right = self.width - 10
+            if key == 'mission': rail.centerx = self.width // 2
+            self.blocked_rects.append(rail)
+            self._fleet_button(rail, title + '  +', 'hud_panel',
+                               {'panel': key, 'minimized': False})
+            return
+        start = len(self.buttons)
+        rect_start = len(self.blocked_rects)
+        scroll_start = len(self.scroll_rects)
+        draw()
+        for _, scroll_key in self.scroll_rects[scroll_start:]:
+            self.scroll_panels[scroll_key] = key
+        if len(self.blocked_rects) > rect_start:
+            self.blocked_rects[rect_start] = self.blocked_rects[rect_start].union(rail)
+        else:
+            self.blocked_rects.append(rail)
+        pygame.draw.rect(self.overlay, HEADER_BG, rail, border_radius=5)
+        self._label(x + 12, rail.y + 6, title, TXT_DIM, self.font_small)
+        self._fleet_button(pygame.Rect(rail.right - 94, rail.y + 3, 88, 22),
+                           'Minimize', 'hud_panel', {'panel': key, 'minimized': True})
+        for button in self.buttons[start:]:
+            button['panel'] = key
+
+    def _left_panel(self, selection, local_player):
+        self._draw_collapsible('left', 'SELECTION',
+                              lambda: self._left_panel_content(selection, local_player))
+
+    def _right_panel(self, selection, local_player):
+        self._draw_collapsible('right', 'ACTIONS / BUILD',
+                              lambda: self._right_panel_content(selection, local_player))
+
+    def _mission_panel(self, local_player):
+        if self.mission_progress:
+            self._draw_collapsible('mission', 'MISSION TASKS',
+                                  lambda: self._mission_panel_content(local_player))
+
+    def _mission_panel_content(self, local_player: int) -> None:
         """Objectives card (top-center) while a campaign mission runs."""
         if not self.mission_progress:
             return
@@ -179,7 +226,7 @@ class HUD:
         # Reserve the same side columns as the inspectors/action controls.
         w = min(380, self.width - 680)
         x = (self.width - w) // 2
-        y = 46
+        y = 74
         state_col = (120, 200, 140) if self.mission_done else \
             ((220, 120, 110) if self.mission_failed else (150, 175, 220))
         title = self.mission_name or "MISSION"
@@ -391,7 +438,7 @@ class HUD:
         return None
 
     # ------------------------------------------------------------------ left panel
-    def _left_panel(self, selection: set, local_player: int) -> None:
+    def _left_panel_content(self, selection: set, local_player: int) -> None:
         ov = self.overlay
         st = self.state
         ents = [st.known_entity(local_player, eid) for eid in sorted(selection)]
@@ -403,7 +450,7 @@ class HUD:
         # Idle help is a card, not a full-height inspector hiding the world.
         recovery_extra = bool(ents and (ents[0].order_type in ('repair', 'explore') or ents[0].crew_mission or ents[0].crew < ents[0].max_crew
                               or getattr(self.ds.ships.get(ents[0].data_id), 'crew_capacity', 0)))
-        panel = pygame.Rect(10, 44, 320, (min(650, self.height - 145) if recovery_extra
+        panel = pygame.Rect(10, 72, 320, (min(650, self.height - 145) if recovery_extra
                             else min(540, self.height - 260)) if ents else 84)
         self.blocked_rects.append(panel)
         pygame.draw.rect(ov, PANEL_BG, panel, border_radius=8)
@@ -426,11 +473,19 @@ class HUD:
             rates = dict(self.ds.rules.get('economy', {}).get('planet_income', {}).get(e.data_id, {})) if eligible_planet(e) else {}
             rates['crew'] = rates.get('crew', 0) + self.ds.rules.get('economy', {}).get('planet_crew_bonus', {}).get(e.data_id, 0)
             y = panel.y + 92
-            self._label(panel.x + 12, y, 'INCOME / SECOND (owned colony)', ACCENT)
+            self._label(panel.x + 12, y, 'BASE COLONY / SECOND', ACCENT)
             for resource in ('credits', 'materials', 'energy', 'crew'):
                 y += 20
                 self._label(panel.x + 12, y, f"{resource}: {rates.get(resource, 0):g}", TXT_DIM)
-            y += 30
+            if e.colonized_by == local_player:
+                from game.systems.planet_buildings import building_income
+                bonus = building_income(st, e)
+                y += 26
+                self._label(panel.x + 12, y, 'SURFACE BONUS / SECOND', ACCENT)
+                for resource in ('credits', 'materials', 'energy', 'crew'):
+                    y += 20
+                    self._label(panel.x + 12, y, f"{resource}: +{bonus.get(resource, 0):g}", TXT_DIM)
+            y += 24
             y = self._wrapped_labels(panel.x + 12, y, 'Gas and terrain cannot be colonized.' if not eligible_planet(e) else 'Right-click with colony ship to settle/capture.', 296)
             if e.colonized_by == local_player and e.build_queue:
                 item = e.build_queue[0]
@@ -611,7 +666,7 @@ class HUD:
         self._ability_rows(panel, y, ents, local_player)
 
     def _selection_panel(self, ents, local_player):
-        panel = pygame.Rect(10, 44, 320, min(430, self.height - 270))
+        panel = pygame.Rect(10, 72, 320, min(430, self.height - 270))
         self.blocked_rects.append(panel)
         pygame.draw.rect(self.overlay, PANEL_BG, panel, border_radius=8)
         pygame.draw.rect(self.overlay, PANEL_EDGE, panel, 1, border_radius=8)
@@ -684,34 +739,73 @@ class HUD:
 
     def _planet_menu(self, planet, local_player):
         from game.systems.colonies import eligible_planet
-        panel = pygame.Rect(self.width - 330, 44, 320, 280)
+        from game.systems.planet_buildings import BUILDING_TYPES, building_rules, building_slots
+        panel = pygame.Rect(self.width - 330, 72, 320, self.height - 308)
         self.blocked_rects.append(panel)
         pygame.draw.rect(self.overlay, PANEL_BG, panel, border_radius=8)
         pygame.draw.rect(self.overlay, PANEL_EDGE, panel, 1, border_radius=8)
-        y = panel.y + 10
-        self._label(panel.x + 12, y, 'PLANETARY SATELLITES', ACCENT, self.font_big)
+        x, y = panel.x + 12, panel.y + 10
+        self._label(x, y, 'COLONY HARDWARE', ACCENT, self.font_big)
         y += 30
         if not eligible_planet(planet) or planet.colonized_by != local_player:
-            self._label(panel.x + 12, y, 'Requires your non-gas colony', TXT_DIM)
+            self._label(x, y, 'Requires your non-gas colony', TXT_DIM)
             return
-        cs = self.state._construction_system
-        cap = int(self.ds.rules.get('colonies', {}).get('satellite_cap', 6))
-        slots = len(cs.satellite_slots(planet))
-        self._label(panel.x + 12, y, f'SLOTS {slots}/{cap} · includes paid queue', TXT_DIM)
+        cap = building_rules()['slot_cap']
+        slots = building_slots(self.state, planet)
+        orbit_cap = int(self.ds.rules.get('colonies', {}).get('satellite_cap', 6))
+        orbit_slots = self.state._construction_system.satellite_slots(planet)
+        self._label(x, y, f'SURFACE {len(slots)}/{cap} · ORBIT {len(orbit_slots)}/{orbit_cap}', TXT_DIM)
+        y += 22
+        for i, (page, text) in enumerate((('surface', 'Surface buildings'), ('orbit', 'Orbital satellites'))):
+            self._fleet_button(pygame.Rect(x + i * 152, y, 144, 26), text,
+                               'hud_planet_page', {'page': page}, self.planet_page == page)
+        y += 34
+        surface = self.planet_page == 'surface'
+        occupied = slots if surface else orbit_slots
+        self._label(x, y, 'Paid queue reserves slots · first free', TXT_DIM, self.font_small)
+        y += 20
+        for slot in range(cap if surface else orbit_cap):
+            status = 'FREE'
+            entity = next((e for e in self.state.entities.values() if e.alive and e.planet_id == planet.id
+                           and (e.planet_building_slot if surface else e.satellite_slot) == slot), None)
+            queued = next((q for q in planet.build_queue if q.get('kind') == ('planet_building' if surface else 'satellite')
+                           and q.get('slot') == slot), None)
+            if entity is not None: status = self.ds.unit_name(entity)
+            elif queued is not None: status = f"PAID {queued['time_left']:.0f}s"
+            elif slot in occupied: status = 'RESERVED'
+            self._label(x + (slot % 3) * 100, y + (slot // 3) * 18,
+                        self._fit_text(f'{slot + 1}: {status}', 96, self.font_small),
+                        GOOD if slot not in occupied else WARN, self.font_small)
+        y += 46
+        descriptions = {
+            'planet_extractor': 'Adds colony resource output.',
+            'planet_trade_hub': 'Adds credit income; basic colony income remains.',
+            'planet_shield_generator': 'Shields surface buildings only; not ships or satellites.',
+            'planet_pulsar_cannon': 'Long-range anti-ship pulsar; not anti-fighter defense.',
+            'defense_satellite': 'Intercepts missiles and enemy fighters.',
+            'attack_satellite': 'Engages enemy ships; clear before capture.',
+        }
+        items = BUILDING_TYPES if surface else ('defense_satellite', 'attack_satellite')
+        key = 'planet_buildings' if surface else 'planet_satellites'
+        capacity = max(1, (panel.bottom - y - 34) // 104)
+        off = max(0, min(self.scroll.get(key, 0), max(0, len(items) - capacity)))
+        self.scroll[key] = off
+        self._label(x, y, f'Build {off + 1}-{min(off + capacity, len(items))}/{len(items)} · wheel', TXT_DIM, self.font_small)
+        self._page_controls(panel, y - 2, key, capacity, off, len(items))
         y += 24
-        for role, description in (('defense_satellite', 'Intercepts missiles and enemy fighters'),
-                                  ('attack_satellite', 'Engages enemy ships; clear before capture')):
+        self.scroll_rects.append((pygame.Rect(panel.x + 4, y, panel.width - 8, panel.bottom - y - 4), key))
+        for role in items[off:off + capacity]:
             data = self.ds.stations[role]
             payload = {'planet_id': planet.id, 'station_kind': role}
-            next_y = self._build_row(panel, y, data, self.state.players[local_player], payload, 'build_satellite')
-            if slots >= cap:
+            next_y = self._build_row(panel, y, data, self.state.players[local_player], payload,
+                                     'build_planet_building' if surface else 'build_satellite')
+            if len(occupied) >= (cap if surface else orbit_cap):
                 self.buttons[:] = [b for b in self.buttons if b.get('payload') != payload]
-            next_y = self._wrapped_labels(panel.x + 12, next_y, description, 296)
-            y = self._wrapped_labels(panel.x + 12, next_y,
-                        f'{data.cost_energy:,.0f} EN · {data.crew_cost:,.0f} crew · {data.build_time:g}s', 296) + 8
+            self._wrapped_labels(x, next_y, descriptions[role], 296)
+            y += 104
 
     # ------------------------------------------------------------------ right panel
-    def _right_panel(self, selection: set, local_player: int) -> None:
+    def _right_panel_content(self, selection: set, local_player: int) -> None:
         if self.fleet_panel:
             self._fleet_panel(selection, local_player)
             return
@@ -738,7 +832,7 @@ class HUD:
         scouts = [e for e in ents if e.operational and exploration_capable(e)]
         boarders = [e for e in ents if boarding_capable(e)]
         support_extra = (90 if builders else 0) + (64 if scouts else 0) + (112 if boarders else 0)
-        panel = pygame.Rect(self.width - 330, 44, 320,
+        panel = pygame.Rect(self.width - 330, 72, 320,
                             min(self.height - 270, (430 if contextual else (260 if transports else 124)) + support_extra))
         self.blocked_rects.append(panel)
         pygame.draw.rect(ov, PANEL_BG, panel, border_radius=8)
@@ -859,7 +953,7 @@ class HUD:
 
     def _fleet_panel(self, selection: set, local_player: int) -> None:
         """Fleet intent controls; eligibility is re-read on every drawn frame."""
-        panel = pygame.Rect(self.width - 330, 44, 320, 430)
+        panel = pygame.Rect(self.width - 330, 72, 320, 430)
         self.blocked_rects.append(panel)
         pygame.draw.rect(self.overlay, PANEL_BG, panel, border_radius=8)
         pygame.draw.rect(self.overlay, PANEL_EDGE, panel, 1, border_radius=8)
@@ -1295,6 +1389,9 @@ class HUD:
         self.height = height
         self.overlay = pygame.Surface((width, height), pygame.SRCALPHA)
         self.minimap_rect = None
+        self.buttons.clear()
+        self.scroll_rects.clear()
+        self.blocked_rects.clear()
 
     def _upload(self) -> None:
         if self.tex is None:

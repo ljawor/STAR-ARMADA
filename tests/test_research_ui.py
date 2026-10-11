@@ -30,9 +30,6 @@ try:                        # colour constant only exists post-fix, so that this
 except ImportError:         # hud.py and fail on BEHAVIOUR, not on import
     RESEARCH = (168, 140, 255)
 
-# left panel is Rect(10, 44, 320, 430); the research block starts at panel.y+70
-# with the progress bar 16px below that, 10px tall.
-LEFT_BAR_BAND = (14, 130, 296, 12)
 
 
 def _research_station(gm, player):
@@ -56,9 +53,20 @@ def _draw_panels(hud, selection, player):
     hud.overlay.fill((0, 0, 0, 0))
     hud.scroll_rects = []
     hud.buttons = []
+    hud.blocked_rects.clear()
+    hud.research_bar_rects = []
+    original_bar = hud._bar
+    def record_bar(x, y, w, h, frac, color, label=None):
+        if color == RESEARCH:
+            hud.research_bar_rects.append(pygame.Rect(x, y, w, h))
+        return original_bar(x, y, w, h, frac, color, label)
     hud.scroll = {"ships": 0, "techs": 0, "stations": 0}
-    hud._left_panel(selection, player)
-    hud._right_panel(selection, player)
+    hud._bar = record_bar
+    try:
+        hud._left_panel(selection, player)
+        hud._right_panel(selection, player)
+    finally:
+        hud._bar = original_bar
 
 
 def _panel_texts(hud, selection, player):
@@ -80,8 +88,16 @@ def _panel_texts(hud, selection, player):
 
 def _research_px(hud):
     """Progress-bar pixels painted in the left panel's research band."""
-    x0, y0, w, h = LEFT_BAR_BAND
-    sub = pygame.surfarray.array3d(hud.overlay)[x0:x0 + w, y0:y0 + h]
+    # Observe the real _bar call, then measure its actual painted pixels.
+    # The left research block flows below the station title and level rows.
+    left_bars = [rect for rect in hud.research_bar_rects
+                 if rect.centerx < hud.width // 2]
+    if len(left_bars) != 1:
+        raise AssertionError(f'expected one left research bar, got {left_bars}')
+    rect = left_bars[0]
+    if not any(panel.contains(rect) for panel in hud.blocked_rects):
+        raise AssertionError(f'research bar outside rendered panels: {rect}')
+    sub = pygame.surfarray.array3d(hud.overlay.subsurface(rect))
     hit = (np.abs(sub.astype(int) - np.array(RESEARCH[:3])).sum(axis=2) <= 30)
     return int(hit.sum())
 

@@ -2,7 +2,8 @@
 import math
 from ..data.store import DataStore
 
-DEFAULTS = dict(satellite_cap=6, control_seconds=15.0, approach_range=600.0, orbit_clearance=350.0)
+DEFAULTS = dict(satellite_cap=6, control_seconds=15.0, approach_range=600.0, orbit_clearance=350.0,
+                orbit_inclination=0.55, orbit_speed=0.06)
 SATELLITE_TYPES = ('defense_satellite', 'attack_satellite')
 
 
@@ -39,7 +40,7 @@ COLONY_TYPES = frozenset(('temperate', 'industrial', 'agricultural', 'military',
 
 def defending_satellites(state, planet):
     return [e for e in state.entities.values()
-            if e.alive and e.planet_id == planet.id]
+            if e.alive and e.planet_id == planet.id and e.data_id in SATELLITE_TYPES]
 
 
 def eligible_planet(planet):

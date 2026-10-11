@@ -505,6 +505,8 @@ class DataStore:
         validate_recovery_rules(self.rules)
         from ..systems.colonies import validate_colony_catalogue
         validate_colony_catalogue(self)
+        from ..systems.planet_buildings import validate_building_catalogue
+        validate_building_catalogue(self)
         cfg = self.rules.get("experience", {})
         levels = cfg.get("levels", [0, 120, 320, 700, 1400])
         def finite_number(value):

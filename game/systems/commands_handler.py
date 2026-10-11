@@ -197,6 +197,10 @@ class CommandHandler:
         count = int(cmd.name) if cmd.name and cmd.name.isdigit() else 1
         self.construction.start_ship(cmd.unit_ids[0], cmd.ship_id, cmd.player, count)
 
+    def _do_build_planet_building(self, cmd: PlayerCommand) -> None:
+        from .planet_buildings import start_building
+        start_building(self.construction, cmd.target_id, cmd.station_kind, cmd.player)
+
     def _do_build_satellite(self, cmd: PlayerCommand) -> None:
         self.construction.start_satellite(cmd.target_id, cmd.station_kind, cmd.player)
 

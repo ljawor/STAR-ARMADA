@@ -149,6 +149,17 @@ combat balance and release acceptance on both platforms. Existing audio, faction
 and screen-size readability are not equivalent to completion of every original LOD,
 audio-pack or livery requirement.
 
+## Planetary hardware / HUD follow-up — v0.10.0 source increment
+
+Independent panel minimization, inclined moving satellites with engagement pauses,
+lower satellite cost/durability and six separate resource/trade/shield/pulsar surface
+slots are implemented for v0.10.0. Independent reviews
+approved the source and the final stable-tree suite passed 946 tests. Hardware GL
+acceptance passed; final native Cocoa wheel-input QA is still focus-blocked. The user
+authorized merge and release with that limit disclosed; published-package verification
+remains a separate gate.
+See [PLANETARY_HARDWARE.md](PLANETARY_HARDWARE.md) for mechanics and evidence.
+
 ## Cross-cutting backlog
 
 - **Planetary colonies and satellites:** merged in #40 and packaged in v0.7.0. Command-only colony
