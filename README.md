@@ -4,12 +4,10 @@
 classic space-fleet RTS titles (Armada II / Fleet Operations era). It runs entirely on
 Python 3 — deterministic simulation, AI, OpenGL rendering via pygame-ce and procedural audio.
 
-**Current release: [v0.8.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.8.0)**
-— published October 11, 2026, with macOS DMG and Windows ZIP. Adds campaign scripting,
-an introductory recovery drill, exact runtime restore/player-facing replays and
-5× colonized-planet income to the boarding, crew recovery and colonies of v0.7.0.
-The Phase 10 presentation increment below is prepared as v0.9.0 source; it is not
-included in the published v0.8.0 packages.
+**Current release: [v0.9.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.9.0)**
+— published October 11, 2026, with macOS DMG and Windows ZIP. Adds standard/night
+audio mixing, mono/live controls, skippable campaign intros/outros, paged F1 help
+and settings, recovery-drill hints and targeted accessibility options to v0.8.0.
 Native interactive Windows gameplay and mixed-platform LAN acceptance remain open.
 
 The setting is an original space-opera universe. Prototype faction/ship names are
@@ -197,7 +195,7 @@ recovery drill plus the original ten-mission "Rise of the Outer Armada" chain (`
 has a briefing (story, objectives, enemy preview) before LAUNCH, and in-game objectives
 are tracked live in the HUD with COMPLETE/FAILED states.
 
-### Phase 10 presentation (v0.9.0 source)
+### Phase 10 presentation (released in v0.9.0)
 
 The v0.9.0 increment adds:
 
@@ -216,10 +214,11 @@ The v0.9.0 increment adds:
   malformed/nonfinite values.
 
 Native macOS audio and SDL/OpenGL diagnostics pass at 1024×768 and 1280×800;
-the local frozen candidate also passes a read-only DMG smoke. Human listening,
+the published v0.9.0 frozen app also passes a read-only DMG smoke. Human listening,
 natural tutorial usability, native Windows and mixed-platform LAN remain open.
 See [Phase 10 acceptance](docs/PHASE10_ACCEPTANCE.md) for evidence and limits.
-Publication and downloaded-package verification are separate release gates.
+Both published downloads passed package verification; those checks do not close
+the human/platform acceptance gates above.
 
 ## Skirmish maps and setup contract
 
@@ -403,15 +402,15 @@ not proof of statistical full-match balance.
 
 ## Releases
 
-**[Download v0.8.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.8.0)**
+**[Download v0.9.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.9.0)**
 (published October 11, 2026):
 
-- **macOS:** `STAR-ARMADA-v0.8.0-mac.dmg`
-- **Windows:** `STAR-ARMADA-v0.8.0-win.zip`
+- **macOS:** `STAR-ARMADA-v0.9.0-mac.dmg`
+- **Windows:** `STAR-ARMADA-v0.9.0-win.zip`
 
 The release notes record successful native macOS/Windows CI builds, downloaded
 assets matching GitHub SHA-256 digests, DMG checksum and Windows ZIP integrity
-checks. The published macOS bundle reports 0.8.0 and passed a 30-second frozen-app
+checks. The published macOS bundle reports 0.9.0 and passed a 30-second frozen-app
 smoke (`SMOKE_OK`). **Native interactive Windows gameplay was not exercised;
 mixed-platform LAN acceptance remains open.** Packaging is delivered, not a
 missing feature; these remaining interactive checks are separate acceptance gates.
@@ -425,6 +424,7 @@ local builds (`./scripts/build_mac.sh`).
 
 | Release | Delivered |
 |---|---|
+| **v0.9.0** | Standard/night audio mix, mono/live controls, short skippable campaign cinematics, paged help/settings, recovery hints and targeted accessibility (#41); verified published macOS DMG and Windows ZIP |
 | **v0.8.0** | Campaign scripting/reinforcements, eleven-mission catalogue, stable-ID progression, canonical runtime restore, replay recording/browser/playback and 5× colonized-planet income (#39); published macOS DMG and Windows ZIP |
 | **v0.7.0** | Boarding and crew/life support (#37), crew recovery/transports and cautious AI (#38), colonies/capture/satellites and support orders (#40); published macOS DMG and Windows ZIP |
 | **v0.6.0** | Distinct ships, ten station types and convoys for every faction; Imperial look preserved; faction construction previews, geometry-safe cameras and exact hull contacts |
@@ -449,7 +449,7 @@ See [campaign notes](docs/CAMPAIGN_SCRIPTING.md)
 and [replay notes](docs/REPLAYS.md). Reconnect has standalone tested foundations only:
 **live LAN disconnects still end matches**. Production freeze/rollback, input
 reconciliation and UI handoff remain pending; see [reconnect scope](docs/LAN_RECONNECT.md).
-The Phase 10 audio/cinematic/help increment is in v0.9.0 source; its acceptance limits
+The Phase 10 audio/cinematic/help increment is packaged in v0.9.0; its acceptance limits
 are listed above. Eight-player matches, natural full campaign playthroughs, full faction parity,
 in-game mod management and further performance work remain pending. Current skirmish/LAN capacity is **2–4 total players**,
 limited by the selected map. See `docs/DEV_PLAN.md` for the broader plan; the

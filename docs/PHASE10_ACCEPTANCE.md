@@ -7,8 +7,9 @@ and bounded tutorial/accessibility/UX improvements. Presentation stays outside t
 deterministic simulation. Cinematics must not interrupt live LAN or replay playback.
 Implementation was originally approved without a version bump, merge or release.
 On October 11, 2026, the user separately authorized merge and a new release.
-v0.9.0 release preparation changes version metadata/docs only; publication and
-downloaded-package verification remain separate gates until executed.
+v0.9.0 release preparation changed version metadata/docs only. PR #41 was merged
+and v0.9.0 published on October 11, 2026; downloaded-package verification passed
+separately from the historical source/local-candidate acceptance below.
 
 Native Windows hardware is unavailable for this increment. Windows gameplay and
 mixed-platform LAN remain **OPEN** regardless of local tests or archive integrity.
@@ -31,6 +32,7 @@ remain unchecked.
 | Tutorial usability | OPEN | Natural-navigation human recovery-drill playthrough; no fixture repositioning |
 | macOS source gameplay | PASS — diagnostic/smoke | Native SDL/GL diagnostics and 30-second source `SMOKE_OK`; not a full campaign playthrough |
 | Local frozen macOS candidate | PASS — local smoke | Fresh PyInstaller app; five changed modules match source bytecode; stale 0.6.0 control rejected; read-only checksum-verified DMG `SMOKE_OK`; isolated writable user data/replay output |
+| Published v0.9.0 packages | PASS — artifact verification | Native macOS/Windows/publication CI succeeded; both downloaded digests/sizes match; DMG/signature and 211-member ZIP pass; six inspected modules and all tracked assets match source; downloaded macOS read-only smoke passes |
 | Full regression suite and independent review | PASS | Final stable run: 905 tests, 380.245s, exit zero. Independent source re-review approved 78 audio/presentation plus 43 LAN/jump/support tests; shutdown-fixture review approved six lifecycle tests |
 | Native Windows gameplay | OPEN — no machine available | Native executable and interactive checklist below |
 | Mixed-platform LAN | OPEN — no Windows machine available | Separate Mac/Windows peers, gameplay and aligned continuation |
@@ -86,6 +88,34 @@ Local retained evidence is under the configured Hermes scratch directory:
   `Library/Application Support/STAR ARMADA`, not the mounted app. Ad-hoc signed
   arm64 candidate; no notarization, Windows candidate or published download implied.
   This smoke is a skirmish, not frozen campaign/help interactive acceptance.
+
+## Published v0.9.0 verification — October 11, 2026
+
+- PR #41 merged at `158be9f485727ed9b45bba730d0978eb33676698`; the immutable
+  `v0.9.0` tag points to that production commit. Later release-documentation updates
+  do not move the tested tag.
+- Release Actions run `38121932878` succeeded for native macOS, Windows and
+  publication jobs. Both published downloads were fetched and verified, not
+  substituted with the earlier local candidate.
+- `STAR-ARMADA-v0.9.0-mac.dmg`: SHA-256
+  `365d9deeda59ee788122c34565e78a0c2c9f0c7208cef5189fe49f381782f55d`.
+  DMG checksum and signature verification passed; both bundle versions are 0.9.0.
+  Read-only downloaded frozen app exited zero after 30 seconds with `SMOKE_OK`,
+  writing a fresh screenshot/replay under isolated user Application Support.
+- `STAR-ARMADA-v0.9.0-win.zip`: SHA-256
+  `be7d1196c989b3441301005b054724551a25b3d41ea69d9e5606ecf941d107b3`.
+  All 211 members pass archive integrity; expected executable has the MZ header.
+  This is not native Windows gameplay acceptance.
+- All 15 tracked assets match on both platforms, with only text CRLF/LF
+  normalization. Structural bytecode matches source for all six inspected modules:
+  main, version package, audio, cinematics, presentation/help and menus.
+- The 905-test source acceptance is reused because subsequent changes were only
+  version metadata/docs. Eighteen version-sensitive replay/browser tests passed
+  before merge. Human listening, natural tutorial/campaign and Windows/mixed-platform
+  gates remain open.
+- Downloaded assets and `verification.json` are retained under `dist/release-v0.9.0`;
+  retained logs are `v0.9.0-release-actions.log`, `v0.9.0-dmg-verify.log`,
+  `v0.9.0-frozen-smoke.log` and `v0.9.0-version-tests.log` in Hermes scratch.
 
 ## Native interactive checklist
 

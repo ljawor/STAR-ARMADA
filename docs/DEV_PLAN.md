@@ -131,12 +131,14 @@ and camera queries, metal/material rendering, planets/deep space, local shield/h
 impacts, layered explosions, per-weapon procedural audio, player ownership markers,
 and faction-specific ships/stations/convoys with protected Imperial geometry.
 
-**v0.9.0 presentation source increment:** implements
+**Merged in #41 and packaged in v0.9.0:**
 standard/night audio mix, mono/live gains and reserved alerts, short skippable
 campaign intros/outros, paged F1 help/settings, optional recovery-drill hints,
 high-contrast panels and reduced cinematic motion. Native macOS mixer and real
 SDL/GL diagnostics passed at 1024×768 and 1280×800; a local frozen read-only DMG
-candidate passed smoke. These changes are not in published v0.8.0. Human listening,
+candidate passed smoke; the published v0.9.0 DMG then passed a read-only frozen smoke,
+and both published downloads passed digest/asset/code integrity checks. These changes
+are not in v0.8.0. Human listening,
 natural tutorial usability, native Windows and mixed-platform LAN remain open.
 See [PHASE10_ACCEPTANCE.md](PHASE10_ACCEPTANCE.md) for exact gates and limits.
 
@@ -198,7 +200,7 @@ audio-pack or livery requirement.
 3. **Complete campaign acceptance (Phase 7).** Scripting, reinforcement waves,
    staged/capture/crew objectives and stable-ID progression now exist. Run natural-navigation
    full playthroughs of all 11 missions and tune waves/objective pacing; do not rebuild scripting.
-   Short skippable cinematics are implemented in v0.9.0 source; full natural
+   Short skippable cinematics are released in v0.9.0; full natural
    mission playthrough acceptance remains separate.
 4. **Next major feature: live multiplayer resilience (Phase 8).** Integrate distributed
    freeze/rollback, acknowledged-input reconciliation and atomic reconnect/resync handoff.
