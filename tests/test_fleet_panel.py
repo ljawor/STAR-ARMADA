@@ -17,6 +17,7 @@ class TestFleetPanel(unittest.TestCase):
         self.hud.overlay.fill((0, 0, 0, 0))
         self.hud.buttons = []
         self.hud.scroll_rects = []
+        self.hud.blocked_rects.clear()
         self.hud._right_panel(selection, 0)
         return self.hud.buttons
 
@@ -83,9 +84,15 @@ class TestFleetPanel(unittest.TestCase):
                     buttons = self.draw(selection)
                 finally:
                     self.hud._label = original
-                panel = pygame.Rect(width - 330, 44, 320, 430)
+                # Production registers the union of the independent rail/body.
+                # Use that actual occlusion geometry, not the old body height.
+                panels = self.hud.blocked_rects
+                self.assertEqual(len(panels), 1)
+                viewport = self.hud.overlay.get_rect()
+                self.assertTrue(all(viewport.contains(p) for p in panels))
+                self.assertEqual(sum(b['kind'] == 'hud_panel' for b in buttons), 1)
                 for button in buttons:
-                    self.assertTrue(panel.contains(button['rect']))
+                    self.assertTrue(any(panel.contains(button['rect']) for panel in panels))
                     # Actual painted bright glyphs, not just declared button rects.
                     rgb = pygame.surfarray.array3d(self.hud.overlay.subsurface(button['rect']))
                     self.assertGreater(int((rgb.max(axis=2) > 120).sum()), 5)
@@ -93,7 +100,7 @@ class TestFleetPanel(unittest.TestCase):
                     for other in buttons[i + 1:]:
                         self.assertFalse(button['rect'].colliderect(other['rect']))
                 for text, rect in labels:
-                    self.assertTrue(panel.contains(rect), text)
+                    self.assertTrue(any(panel.contains(rect) for panel in panels), text)
                 for i, (text, rect) in enumerate(labels):
                     for other_text, other_rect in labels[i + 1:]:
                         self.assertFalse(rect.colliderect(other_rect), (text, other_text))

@@ -94,6 +94,17 @@ life-support effectiveness is not staffing-scaled. Cautious AI uses the same com
 No towing, allied reclaim or neutral salvage. Initial defaults and limitations:
 [docs/CREW_RECOVERY.md](docs/CREW_RECOVERY.md).
 
+## Planetary hardware / HUD follow-up (feature branch)
+
+The current feature branch adds independently minimizable left/right/mission panels,
+3D satellite orbits that pause for engagement, lower satellite cost/durability, and
+six separate planetary surface slots for resource, trade, surface-only shield and
+long-range pulsar buildings. Basic colony income remains unchanged. This increment
+is **not merged or released**. The final 946-test suite and independent source reviews
+passed; final native wheel-input QA remains focus-blocked, so PR delivery stays draft.
+See [PLANETARY_HARDWARE.md](docs/PLANETARY_HARDWARE.md)
+for mechanics, configurable tuning and pending/executed acceptance gates.
+
 ## Planetary colonies and satellites (released in v0.7.0)
 
 PR #40, merged October 10, 2026 and included in v0.7.0, extends colony ships for all

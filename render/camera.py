@@ -53,7 +53,34 @@ class Camera:
             requested = self._requested_eye()
             ray = camera_ray(self.target, requested, self.near, self.fov,
                              self.width / max(1, self.height), self.height)
-            boxes = scene_boxes(self._scene, self._scene_player(), self._station_angle(), ray)
+            player, angle = self._scene_player(), self._station_angle()
+            attached = {e.id: e for e in self._scene.entities.values()
+                        if e.is_station and (e.planet_building_slot is not None
+                                             or e.satellite_slot is not None)}
+            scene = self._scene
+            if attached:
+                # Leave legacy/ship geometry and its pre-visibility broad phase
+                # untouched; attached hardware uses the renderer's full frame.
+                from types import SimpleNamespace
+                scene = SimpleNamespace(
+                    entities={i: e for i, e in scene.entities.items() if i not in attached},
+                    players=scene.players, known_entity=scene.known_entity,
+                    can_see=scene.can_see)
+            boxes = scene_boxes(scene, player, angle, ray)
+            if attached:
+                from render.planet_building_geometry import station_camera_box
+                from render.camera_geometry import box_interval
+                from game.data.store import DataStore
+                extra = []
+                for e in attached.values():
+                    if not e.alive or DataStore.get().stations.get(e.data_id) is None:
+                        continue
+                    box = station_camera_box(self._scene, e, angle)
+                    if ray is not None and box_interval(*ray[:2], box, ray[2]) is None:
+                        continue
+                    if self._scene.can_see(player, e.id):
+                        extra.append(box)
+                boxes += tuple(extra)
             self._scene_geometry_key = self._geometry_key(requested)
             if boxes != self._camera_boxes:
                 self._camera_boxes = boxes

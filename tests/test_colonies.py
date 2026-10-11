@@ -428,7 +428,9 @@ class ColonyTests(unittest.TestCase):
                 station_kind='defense_satellite' if i % 2 == 0 else 'attack_satellite'))
         self.gm.step(1 / 30)
         self.assertEqual(len(self.planet.build_queue), 6)
-        self.assertLess(p.credits, before - 5000)
+        cost = sum(self.gm.factory.station_build_cost(work['item'])['credits']
+                   for work in self.planet.build_queue)
+        self.assertAlmostEqual(p.credits, before - cost + p.income_frame['credits'] / 30)
         run_for(self.gm, 140)
         satellites = [e for e in self.st.entities.values() if e.alive and getattr(e, 'planet_id', None) == self.planet.id]
         self.assertEqual(len(satellites), 6)

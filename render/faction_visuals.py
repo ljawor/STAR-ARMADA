@@ -36,7 +36,8 @@ def normalize_ship_key(key):
 
 
 def normalize_station_key(data_id, faction='imperial'):
-    if data_id not in STATION_TYPES:
+    from game.systems.planet_buildings import BUILDING_TYPES
+    if data_id not in STATION_TYPES and data_id not in BUILDING_TYPES:
         return 'imperial', 'research_station'
     return (faction if faction in FACTIONS else 'imperial'), data_id
 

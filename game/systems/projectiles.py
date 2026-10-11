@@ -23,12 +23,11 @@ class ProjectileSystem:
         for pid, p in sorted(st.projectiles.items()):
             wd = self.ds.weapons.get(p.weapon_id)
             if wd is not None and 'missile' in wd.id:
+                from .satellite_orbits import missile_engagement
                 defenders = [e for e in st.entities.values()
-                    if e.operational and e.data_id == 'defense_satellite'
-                    and st.is_enemy(e.owner, p.owner)
-                    and p.pos.dist(e.pos) <= self.ds.weapons['point_defense'].range]
+                             if missile_engagement(st, e, p, self.ds)]
                 for defender in sorted(defenders, key=lambda e: e.id):
-                    efficiency = stats.staffing_fraction(defender) * max(0.0, defender.subsystem_fraction('weapons'))
+                    efficiency = stats.interception_efficiency(defender)
                     if defender.ability_cooldowns.get('_intercept', 0) > 0 or efficiency <= 0:
                         continue
                     defender.ability_cooldowns['_intercept'] = (

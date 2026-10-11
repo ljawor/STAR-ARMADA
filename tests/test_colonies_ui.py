@@ -30,6 +30,14 @@ class ColonyHUDTests(unittest.TestCase):
         before = json.loads(json.dumps(self.st.to_dict(precise=True)))
         self.ctrl.selection = {self.planet.id}
         self.hud._right_panel(self.ctrl.selection, 0)
+        self.assertEqual(self.hud.planet_page, 'surface')
+        self.assertFalse(any(b['kind'] == 'build_satellite' for b in self.hud.buttons))
+        orbit_tab = next(b for b in self.hud.buttons
+                         if b['kind'] == 'hud_planet_page' and b['payload']['page'] == 'orbit')
+        self.ctrl._click_button(orbit_tab['rect'].center)
+        self.assertEqual(self.hud.planet_page, 'orbit')
+        self.hud.buttons.clear(); self.hud.blocked_rects.clear()
+        self.hud._right_panel(self.ctrl.selection, 0)
         buttons = [b for b in self.hud.buttons if b['kind'] == 'build_satellite']
         self.assertEqual(len(buttons), 2)
         self.assertEqual(before, json.loads(json.dumps(self.st.to_dict(precise=True))))
@@ -166,7 +174,8 @@ class ColonyHUDTests(unittest.TestCase):
         self.hud._label = label
         self.hud._left_panel({self.planet.id}, 0)
         self.assertTrue(any('COLONY OWNER' in s and 'Player' in s for s in labels))
-        self.assertTrue(any('INCOME' in s for s in labels))
+        self.assertIn('BASE COLONY / SECOND', labels)
+        self.assertIn('SURFACE BONUS / SECOND', labels)
         self.assertIn('crew: 2', labels)
         self.assertIn('credits: 6', labels)
         self.planet.colonized_by = None

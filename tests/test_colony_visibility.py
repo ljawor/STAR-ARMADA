@@ -49,13 +49,19 @@ class ColonyVisibilityTests(unittest.TestCase):
                                          settler_owner, 'remote visible ownership was not remembered')
                     # Runtime production is private even while the colony is always visible.
                     # Use the actual paid satellite schema; privacy is not a malformed-save test.
-                    planet.build_queue = [dict(kind='satellite', item='attack_satellite',
-                                               pos=planet.pos.to_dict(precise=True),
-                                               time_left=13.25, total=22)]
+                    cost = gm.factory.station_build_cost('attack_satellite')
+                    for resource, amount in cost.items():
+                        player = st.players[settler_owner]
+                        setattr(player, resource, max(getattr(player, resource), amount))
+                    self.assertTrue(gm.construction.start_satellite(
+                        planet.id, 'attack_satellite', settler_owner))
                     gm.visibility.update()
                     for viewer in (0, 2):
                         self.assertEqual(st.discovered_planets[viewer][planet.id].build_queue, [])
                     # A later hidden enemy transfer must retain the last observed colony owner.
+                    # This direct transfer bypasses the normal cancellation path;
+                    # do not persist paid work authorized for the former owner.
+                    planet.build_queue.clear()
                     planet.colonized_by = 1
                     planet.name_override = 'Hidden enemy rename'
                     gm.visibility.update()

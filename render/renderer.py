@@ -206,6 +206,8 @@ class Renderer:
         if "sites" not in self.skip:
             self._draw_construction_sites()
             self._draw_placement_preview()
+        if "surface_slots" not in self.skip:
+            self._draw_surface_slots(selection)
         if "markers" not in self.skip:
             # After the bubbles: a hostile diamond must never be swallowed by an
             # allied bubble drawn on top of it. Before the selection rings so
@@ -214,6 +216,79 @@ class Renderer:
         if "rings" not in self.skip:
             self._draw_selection_rings(selection)
         glFlush()
+
+    def _draw_surface_slots(self, selection):
+        """Depth-tested surface pads: empty ticks, occupied rings, paid scaffolds."""
+        from render.planet_building_geometry import visible_surface_slots
+        slots = visible_surface_slots(self.state, self.local_player, selection)
+        if not slots:
+            return
+        _gl.glPushAttrib(_gl.GL_ENABLE_BIT | _gl.GL_CURRENT_BIT | _gl.GL_LINE_BIT |
+                         _gl.GL_DEPTH_BUFFER_BIT | _gl.GL_COLOR_BUFFER_BIT | _gl.GL_POLYGON_BIT)
+        glDisable(GL_TEXTURE_2D)
+        glDisable(GL_LIGHTING)
+        glEnable(GL_DEPTH_TEST)
+        glDisable(GL_CULL_FACE)
+        for pad in slots:
+            color = self._owner_color(self.local_player)
+            if pad['status'] == 'building':
+                color = (1., .72, .22)
+            elif pad['status'] == 'empty':
+                color = (.42, .75, .86)
+            glColor3f(*color)
+            glLineWidth(2.)
+            glPushMatrix()
+            glTranslatef(*pad['origin'])
+            basis=pad['basis']
+            _gl.glMultMatrixf([*basis[0],0.,*basis[1],0.,*basis[2],0.,0.,0.,0.,1.])
+            r=pad['radius']
+            glBegin(GL_LINE_LOOP)
+            for i in range(32):
+                a=i/32*2*math.pi
+                glVertex3f(math.sin(a)*r,2.,math.cos(a)*r)
+            glEnd()
+            if pad['status'] == 'empty':
+                glBegin(_gl.GL_LINES)
+                for x,z in ((1,0),(-1,0),(0,1),(0,-1)):
+                    glVertex3f(x*r*.65,2.,z*r*.65)
+                    glVertex3f(x*r*1.2,2.,z*r*1.2)
+                glEnd()
+            elif pad['status'] == 'building':
+                sd=self.ds.stations.get(pad['kind'])
+                if sd:
+                    glPushMatrix()
+                    scale=sd.radius/50.
+                    glScalef(scale,scale,scale)
+                    _gl.glPolygonMode(_gl.GL_FRONT_AND_BACK,_gl.GL_LINE)
+                    glCallList(self._station_detail_list(pad['kind'],'base',
+                        self.state.players[self.local_player].faction))
+                    _gl.glPolygonMode(_gl.GL_FRONT_AND_BACK,_gl.GL_FILL)
+                    glPopMatrix()
+                glColor3f(.4,1.,.5)
+                glLineWidth(3.)
+                glBegin(GL_LINE_STRIP)
+                for i in range(int(40*pad['progress'])+1):
+                    a=i/40*2*math.pi
+                    glVertex3f(math.sin(a)*r*1.25,3.,math.cos(a)*r*1.25)
+                glEnd()
+            glPopMatrix()
+        glPopAttrib()
+
+    def _draw_surface_selection(self, e):
+        from render.planet_building_geometry import station_frame
+        origin,basis,scale=station_frame(self.state,e)
+        glPushMatrix()
+        glTranslatef(*origin)
+        _gl.glMultMatrixf([*basis[0],0.,*basis[1],0.,*basis[2],0.,0.,0.,0.,1.])
+        glEnable(GL_DEPTH_TEST)
+        glColor3f(.4,1.,.5)
+        glLineWidth(3.)
+        glBegin(GL_LINE_LOOP)
+        for x,z in ((-38,-38),(38,-38),(38,38),(-38,38)):
+            glVertex3f(x*scale,2.,z*scale)
+        glEnd()
+        glDisable(GL_DEPTH_TEST)
+        glPopMatrix()
 
     def _draw_placement_preview(self):
         """Knowledge-limited input feedback, never an authoritative site query."""
@@ -1194,6 +1269,17 @@ class Renderer:
         if e is None:
             return fx
         if e.is_station:
+            if e.planet_building_slot is not None or e.satellite_slot is not None:
+                from render.planet_building_geometry import attached_contact_point
+                center = e.pos.to_tuple()
+                n = tuple(fx.get('normal', (0., 0., 1.)))
+                length = math.sqrt(sum(x*x for x in n)) or 1.
+                n = tuple(x / length for x in n)
+                point = attached_contact_point(self.state, e, n, tuple(fx.get('pos', center)))
+                if point is None:
+                    return fx
+                return dict(fx, center=center, pos=point,
+                            radius=math.dist(center, point), visual_contact=True)
             from render.faction_visuals import owner_faction, normalize_station_key
             faction, _ = normalize_station_key(e.data_id, owner_faction(self.state, e.owner))
             if faction == "imperial":
@@ -1705,8 +1791,10 @@ class Renderer:
         faction = owner_faction(self.state, e.owner)
         color = self._owner_color(e.owner)
         glPushMatrix()
-        glTranslatef(e.pos.x, e.pos.y, e.pos.z)
-        glRotatef(self.time * 3.0, 0, 1, 0)
+        from render.planet_building_geometry import station_frame
+        origin, basis, scale = station_frame(self.state, e, math.radians(self.time * 3.))
+        glTranslatef(*origin)
+        _gl.glMultMatrixf([*basis[0], 0., *basis[1], 0., *basis[2], 0., 0., 0., 0., 1.])
         glPushMatrix()
         # Keep shader model coordinates near ship dimensions: scaling unit-radius
         # geometry would make every station fit inside a single shader plate.
@@ -1754,7 +1842,9 @@ class Renderer:
 
     def _station_detail_list(self, data_id, role, faction="imperial"):
         from render.faction_visuals import normalize_station_key
-        faction, data_id = normalize_station_key(data_id, faction)
+        from game.systems.planet_buildings import BUILDING_TYPES
+        if data_id not in BUILDING_TYPES:
+            faction, data_id = normalize_station_key(data_id, faction)
         role = role if role in ROLES else "base"
         key = "station_detail:" + faction + ":" + data_id + ":" + role
         if key not in self.ship_lists:
@@ -2819,6 +2909,10 @@ class Renderer:
         for e in units:
             if not e.alive or e.is_planet or not st.can_see(self.local_player, e.id):
                 continue
+            # Generator pools protect surface hardware only; an exterior bubble
+            # would falsely advertise protection for orbiting ships/satellites.
+            if e.planet_building_slot is not None:
+                continue
             if e.max_shield_total() <= 0:
                 continue
             quads = {q: e.shields.get(q, 0.0) for q in QUADRANTS}
@@ -2861,6 +2955,9 @@ class Renderer:
         for eid in selection:
             e = self.state.known_entity(self.local_player, eid)
             if e is None or not e.alive:
+                continue
+            if e.planet_building_slot is not None:
+                self._draw_surface_selection(e)
                 continue
             p = self.state.players.get(e.owner)
             col = p.color if p else (1, 1, 1)

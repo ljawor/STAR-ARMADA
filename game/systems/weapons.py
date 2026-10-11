@@ -61,7 +61,7 @@ class WeaponSystem:
             return False
         if e.data_id == 'defense_satellite' and not t.is_squadron:
             return False
-        if e.data_id == 'attack_satellite' and (not t.is_ship or t.is_squadron):
+        if e.data_id in ('attack_satellite', 'planet_pulsar_cannon') and (not t.is_ship or t.is_squadron):
             return False
         craft = self.state.entity(e.boarding_party_id) if e.boarding_party_id is not None else None
         if (craft is not None and craft.boarding.get('source') == e.id
@@ -131,6 +131,9 @@ class WeaponSystem:
     def _ship_weapons(self, e, dt: float, is_static: bool = False) -> None:
         st = self.state
         if e.owner < 0 or not e.operational:
+            return
+        if e.data_id == 'planet_pulsar_cannon' and e.subsystem_fraction('weapons') <= 0:
+            e.current_target = None
             return
         if e.order_type == 'explore':
             e.current_target = None

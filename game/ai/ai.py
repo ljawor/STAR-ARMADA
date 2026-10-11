@@ -536,6 +536,20 @@ class AIPlayer:
         if self._count_stations('trade_station') == 1:
             reserve['credits'] = max(reserve['credits'], 1500.0,
                                      factory.station_build_cost('trade_station').get('credits', 0))
+        # Unpaid orbital/surface investments carry their reserve into every
+        # later hull purchase, not only the pass that queued the investment.
+        if any(c.player == self.player_id and c.type in
+               ('build_satellite', 'build_planet_building')
+               for c in self.state.command_queue):
+            reserve['credits'] = max(5000, reserve['credits'])
+            reserve['materials'] = max(2500, reserve['materials'])
+        return reserve
+
+    def _colony_reserve(self):
+        """Optional colony spending never consumes core infrastructure gates."""
+        reserve = self._infrastructure_reserve()
+        reserve['credits'] = max(5000, reserve['credits'])
+        reserve['materials'] = max(2500, reserve['materials'])
         return reserve
 
     def _projected_budget(self):
@@ -550,7 +564,7 @@ class AIPlayer:
             if cmd.type == 'build_ship':
                 cost = factory.ship_build_cost(cmd.ship_id)
                 count = int(cmd.name) if cmd.name and cmd.name.isdigit() else 1
-            elif cmd.type in ('build_station', 'build_satellite'):
+            elif cmd.type in ('build_station', 'build_satellite', 'build_planet_building'):
                 cost = factory.station_build_cost(cmd.station_kind)
             elif cmd.type == 'research':
                 tech = self.ds.techs[cmd.tech_id]
@@ -568,10 +582,12 @@ class AIPlayer:
         threshold = ds.rules.get("ai", {}).get("expand_credits", 4000)
         from ..systems.colonies import eligible_planet
         budget = self._projected_budget()
+        has_colony = False
         for planet in sorted(st.entities.values(), key=lambda e: e.id):
             known = st.known_entity(self.player_id, planet.id)
             if not eligible_planet(planet) or known is None or known.colonized_by != self.player_id:
                 continue
+            has_colony = True
             roles = {e.data_id for e in self.my_stations() if e.planet_id == planet.id}
             roles.update(i['item'] for i in planet.build_queue if i.get('kind') == 'satellite')
             roles.update(c.station_kind for c in st.command_queue
@@ -579,8 +595,7 @@ class AIPlayer:
                          and c.target_id == planet.id)
             for role in ('defense_satellite', 'attack_satellite'):
                 cost = st._construction_system.factory.station_build_cost(role)
-                reserve = self._infrastructure_reserve()
-                reserve['credits'] = max(5000, reserve['credits'])
+                reserve = self._colony_reserve()
                 if (role not in roles and self.my_stations('mining_station')
                         and budget['materials'] > 2500
                         and all(budget[key] - cost[key] >= reserve[key] for key in budget)):
@@ -588,6 +603,33 @@ class AIPlayer:
                         target_id=planet.id, station_kind=role))
                     for key in budget:
                         budget[key] -= cost[key]
+        # One surface investment per pass, after orbital protection, without
+        # consuming core infrastructure or earlier unconsumed command reserves.
+        from ..systems.planet_buildings import building_slots, building_rules
+        for planet in sorted(st.entities.values(), key=lambda e: e.id):
+            known = st.known_entity(self.player_id, planet.id)
+            if (not eligible_planet(planet) or known is None
+                    or known.colonized_by != self.player_id):
+                continue
+            pending = [c for c in st.command_queue if c.player == self.player_id
+                       and c.type == 'build_planet_building' and c.target_id == planet.id]
+            if pending or len(building_slots(st, planet)) >= building_rules()['slot_cap']:
+                continue
+            roles = {e.data_id for e in self.my_stations() if e.planet_id == planet.id}
+            roles.update(w['item'] for w in planet.build_queue if w.get('kind') == 'planet_building')
+            role = next((r for r in ('planet_extractor', 'planet_trade_hub',
+                                     'planet_shield_generator', 'planet_pulsar_cannon')
+                         if r not in roles), None)
+            if role is None or not self.my_stations('mining_station'):
+                continue
+            cost = st._construction_system.factory.station_build_cost(role)
+            reserve = self._colony_reserve()
+            if all(budget[k] - cost[k] >= reserve[k] for k in budget):
+                st.queue_command(PlayerCommand('build_planet_building', self.player_id,
+                    target_id=planet.id, station_kind=role))
+                for key in budget:
+                    budget[key] -= cost[key]
+                break
         colonizer = next((e for e in self.my_units()
                           if e.is_construction and getattr(
                               self.ds.ships.get(e.data_id), "can_colonize", False)
@@ -603,7 +645,7 @@ class AIPlayer:
                       or any(c.player == self.player_id and c.type == 'build_ship' and c.ship_id == sid
                              for c in st.command_queue))
             cost = st._construction_system.factory.ship_build_cost(sid) if sid else {}
-            reserve = self._infrastructure_reserve()
+            reserve = self._colony_reserve() if has_colony else self._infrastructure_reserve()
             budget = self._projected_budget()
             if (sid and shipyard and not existing and not queued and p.credits > 2000
                     and len(shipyard.build_queue) < 2
@@ -613,6 +655,7 @@ class AIPlayer:
         target = self._pick_colony_target(home)
         if target is not None:
             defenders = [e for e in st.entities.values() if e.alive and e.planet_id == target.id
+                         and e.data_id in ('defense_satellite', 'attack_satellite')
                          and st.is_enemy(self.player_id, e.owner) and st.can_see(self.player_id, e.id)]
             if defenders:
                 defender = min(defenders, key=lambda e: e.id)

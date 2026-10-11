@@ -62,6 +62,8 @@ class GameManager:
         self.construction.factory = self.factory
         # render/input reach the live validator through the state object
         self.state._construction_system = self.construction
+        from ..systems.satellite_orbits import SatelliteOrbitSystem
+        self.satellite_orbits = SatelliteOrbitSystem(self.state, self.weapons, self.construction)
         self.research = ResearchSystem(self.state)
         self.formations = FormationSystem(self.state)
         self.squadrons = SquadronSystem(self.state)
@@ -286,6 +288,8 @@ class GameManager:
         self.movement.update(dt)
         self.separation.update(dt)
         self.squadrons.update(dt)
+        self.satellite_orbits.update(dt)
+        st.grid.rebuild(st.entities)
 
         # 5. Remember post-movement coverage before combat can kill observers.
         # Live detection itself never depends on these exploration passes.

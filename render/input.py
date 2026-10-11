@@ -166,6 +166,9 @@ class InputController:
                 if self.hud.placement:
                     self.hud.placement = None       # right-click cancels
                     return
+                if any(r.collidepoint(ev.pos) for r in getattr(self.hud, 'blocked_rects', [])):
+                    self.right_drag = None
+                    return
                 self.right_drag = ev.pos
             elif ev.button == 4:
                 if self._scroll_panel(-1):
@@ -176,6 +179,13 @@ class InputController:
                     return
                 self.camera.zoom(1.14)
         elif ev.type == pygame.MOUSEBUTTONUP:
+            if any(r.collidepoint(ev.pos) for r in getattr(self.hud, 'blocked_rects', [])):
+                if ev.button == 1:
+                    self.dragging = False
+                    self.drag_start = self.drag_cur = None
+                elif ev.button == 3:
+                    self.right_drag = None
+                return
             if ev.button == 1 and self.dragging:
                 self._finish_box_select(ev.pos)
                 self.dragging = False
@@ -221,6 +231,9 @@ class InputController:
         mp = pygame.mouse.get_pos()
         for rect, key in self.hud.scroll_rects:
             if rect.collidepoint(mp):
+                panel = getattr(self.hud, 'scroll_panels', {}).get(key)
+                if panel and self.hud.minimized[panel]:
+                    return True  # stale event batch: neither scroll nor world zoom
                 cur = self.hud.scroll.get(key, 0)
                 self.hud.scroll[key] = max(0, cur + direction)
                 return True
@@ -304,6 +317,9 @@ class InputController:
         d = math.hypot(sp[0]-mouse[0], sp[1]-mouse[1])
         if not (e.is_station or e.is_ship or e.is_squadron):
             return d
+        if e.is_station and (e.planet_building_slot is not None or e.satellite_slot is not None):
+            from render.planet_building_geometry import station_pick_distance
+            return station_pick_distance(self.state, e, self.camera, mouse, floor)
         eye = self.camera.eye_position()
         _, _, forward = self.camera.basis()
         depth = sum((v-eye[i])*forward[i] for i,v in enumerate((e.pos.x,e.pos.y,e.pos.z)))
@@ -353,6 +369,11 @@ class InputController:
             if btn["rect"].collidepoint(pos):
                 kind, pl = btn["kind"], btn["payload"]
                 st, lp = self.state, self.local_player
+                if kind == 'hud_panel':
+                    self.hud.minimized[pl['panel']] = pl['minimized']
+                    return True
+                if btn.get('panel') and self.hud.minimized[btn['panel']]:
+                    return True
                 if kind in {"fleet_formation", "fleet_commander",
                             "fleet_create", "fleet_close"} and not self.hud.fleet_panel:
                     # Buttons remain from the last render until the next frame.
@@ -377,11 +398,17 @@ class InputController:
                     st.queue_command(BuildStationCommand(
                         lp, pl["builder_id"], pl["station_kind"], pos3))
                     self.app.flash(f"constructing {pl['station_kind']}")
-                elif kind == 'build_satellite':
+                elif kind == 'hud_planet_page':
+                    self.hud.planet_page = pl['page']
+                elif kind in ('build_satellite', 'build_planet_building'):
+                    from game.systems.colonies import eligible_planet
                     planet = st.entity(pl['planet_id'])
-                    if planet is not None and planet.id in self.selection and planet.colonized_by == lp:
+                    page = 'surface' if kind == 'build_planet_building' else 'orbit'
+                    if (eligible_planet(planet) and planet.id in self.selection
+                            and planet.colonized_by == lp and st.can_see(lp, planet.id)
+                            and self.hud.planet_page == page):
                         from game.core.commands import PlayerCommand
-                        st.queue_command(PlayerCommand('build_satellite', lp,
+                        st.queue_command(PlayerCommand(kind, lp,
                             target_id=planet.id, station_kind=pl['station_kind']))
                 elif kind == "build_ship":
                     st.queue_command(BuildShipCommand(

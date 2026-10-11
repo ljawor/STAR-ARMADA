@@ -1,5 +1,7 @@
 {
-  "colonies": {"satellite_cap": 6, "control_seconds": 15.0, "approach_range": 600.0, "orbit_clearance": 350.0},
+  "colonies": {"satellite_cap": 6, "control_seconds": 15.0, "approach_range": 600.0, "orbit_clearance": 350.0,
+               "orbit_inclination": 0.55, "orbit_speed": 0.06},
+  "planet_buildings": {"slot_cap": 6},
   "engineer_repairs": {
     "hp_per_second": 20.0,
     "credits_per_hp": 0.2,
