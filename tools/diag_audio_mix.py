@@ -82,7 +82,10 @@ def main():
         assert abs(audio.ambient_channel.get_volume() - .5) < .01
         audio.apply_settings({'audio_dynamic_range': 'night', 'audio_mono': True})
         audio.play('big_explosion', 1.)
-        assert pygame.mixer.Channel(3).get_sound() is audio.night_sounds['big_explosion']
+        playing = pygame.mixer.Channel(3).get_sound()
+        assert playing is audio._quiet_sounds[audio.night_sounds['big_explosion']]
+        np.testing.assert_array_equal(pygame.sndarray.array(playing),
+                                      pygame.sndarray.array(audio.night_sounds['big_explosion']))
         assert audio.mix_gains('big_explosion', 1.)[0] == audio.mix_gains('big_explosion', 1.)[1]
         report['live_control_probe_passed'] = True
         pygame.mixer.stop()
