@@ -5,7 +5,10 @@
 This increment targets audio mix, short skippable in-engine campaign intros/outros,
 and bounded tutorial/accessibility/UX improvements. Presentation stays outside the
 deterministic simulation. Cinematics must not interrupt live LAN or replay playback.
-It does not authorize a version bump, merge, tag or published release.
+Implementation was originally approved without a version bump, merge or release.
+On October 11, 2026, the user separately authorized merge and a new release.
+v0.9.0 release preparation changes version metadata/docs only; publication and
+downloaded-package verification remain separate gates until executed.
 
 Native Windows hardware is unavailable for this increment. Windows gameplay and
 mixed-platform LAN remain **OPEN** regardless of local tests or archive integrity.
@@ -34,8 +37,9 @@ remain unchecked.
 
 ## Executed evidence and reproduction
 
-The implementation is on `feature/phase10-presentation`, based on released v0.8.0.
-The candidate still reports 0.8.0: this is deliberately not a new version or release.
+The implementation was verified on `feature/phase10-presentation`, based on v0.8.0.
+The initial local candidate reports 0.8.0; it predates the separately authorized
+v0.9.0 release preparation and is not a published release artifact.
 
 ```bash
 PYTHONPATH=tests .venv/bin/python -m unittest test_audio test_audio_mix test_cinematics test_presentation_ux test_presentation_main -q

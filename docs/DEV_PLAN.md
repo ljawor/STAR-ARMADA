@@ -131,7 +131,7 @@ and camera queries, metal/material rendering, planets/deep space, local shield/h
 impacts, layered explosions, per-weapon procedural audio, player ownership markers,
 and faction-specific ships/stations/convoys with protected Imperial geometry.
 
-**Branch-only presentation increment:** `feature/phase10-presentation` implements
+**v0.9.0 presentation source increment:** implements
 standard/night audio mix, mono/live gains and reserved alerts, short skippable
 campaign intros/outros, paged F1 help/settings, optional recovery-drill hints,
 high-contrast panels and reduced cinematic motion. Native macOS mixer and real
@@ -198,7 +198,7 @@ audio-pack or livery requirement.
 3. **Complete campaign acceptance (Phase 7).** Scripting, reinforcement waves,
    staged/capture/crew objectives and stable-ID progression now exist. Run natural-navigation
    full playthroughs of all 11 missions and tune waves/objective pacing; do not rebuild scripting.
-   Short skippable cinematics are implemented on the Phase 10 branch; full natural
+   Short skippable cinematics are implemented in v0.9.0 source; full natural
    mission playthrough acceptance remains separate.
 4. **Next major feature: live multiplayer resilience (Phase 8).** Integrate distributed
    freeze/rollback, acknowledged-input reconciliation and atomic reconnect/resync handoff.
@@ -211,7 +211,7 @@ audio-pack or livery requirement.
    Require playable frame/tick times and network stability, not only eight slots.
 7. **Finish mod delivery (Phase 9).** Stable merge rules, manifest/compatibility contract,
    mod selection/error UX, asset packs and faction authoring after schemas stabilize.
-8. **Finish presentation acceptance (Phase 10).** Review the branch-only audio mix,
+8. **Finish presentation acceptance (Phase 10).** Validate the v0.9.0 audio mix,
    short campaign cinematics and targeted tutorials/accessibility/UX. Human listening,
    natural recovery-drill/campaign and long skirmish/LAN playtests remain open;
    regression-check existing native macOS/Windows packaging and complete interactive

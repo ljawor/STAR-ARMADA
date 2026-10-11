@@ -8,7 +8,8 @@ Python 3 — deterministic simulation, AI, OpenGL rendering via pygame-ce and pr
 — published October 11, 2026, with macOS DMG and Windows ZIP. Adds campaign scripting,
 an introductory recovery drill, exact runtime restore/player-facing replays and
 5× colonized-planet income to the boarding, crew recovery and colonies of v0.7.0.
-The Phase 10 presentation increment described below is branch-only, not in v0.8.0.
+The Phase 10 presentation increment below is prepared as v0.9.0 source; it is not
+included in the published v0.8.0 packages.
 Native interactive Windows gameplay and mixed-platform LAN acceptance remain open.
 
 The setting is an original space-opera universe. Prototype faction/ship names are
@@ -196,9 +197,9 @@ recovery drill plus the original ten-mission "Rise of the Outer Armada" chain (`
 has a briefing (story, objectives, enemy preview) before LAUNCH, and in-game objectives
 are tracked live in the HUD with COMPLETE/FAILED states.
 
-### Phase 10 presentation (branch-only)
+### Phase 10 presentation (v0.9.0 source)
 
-The `feature/phase10-presentation` increment adds:
+The v0.9.0 increment adds:
 
 - **Audio:** standard/night dynamic-range profiles, mono output, live music/SFX gain
   controls and reserved ambient/critical/objective channels. Own notifications are
@@ -218,7 +219,7 @@ Native macOS audio and SDL/OpenGL diagnostics pass at 1024×768 and 1280×800;
 the local frozen candidate also passes a read-only DMG smoke. Human listening,
 natural tutorial usability, native Windows and mixed-platform LAN remain open.
 See [Phase 10 acceptance](docs/PHASE10_ACCEPTANCE.md) for evidence and limits.
-No new release or merge is implied.
+Publication and downloaded-package verification are separate release gates.
 
 ## Skirmish maps and setup contract
 
@@ -448,7 +449,7 @@ See [campaign notes](docs/CAMPAIGN_SCRIPTING.md)
 and [replay notes](docs/REPLAYS.md). Reconnect has standalone tested foundations only:
 **live LAN disconnects still end matches**. Production freeze/rollback, input
 reconciliation and UI handoff remain pending; see [reconnect scope](docs/LAN_RECONNECT.md).
-The Phase 10 audio/cinematic/help increment is branch-only; its acceptance limits
+The Phase 10 audio/cinematic/help increment is in v0.9.0 source; its acceptance limits
 are listed above. Eight-player matches, natural full campaign playthroughs, full faction parity,
 in-game mod management and further performance work remain pending. Current skirmish/LAN capacity is **2–4 total players**,
 limited by the selected map. See `docs/DEV_PLAN.md` for the broader plan; the
