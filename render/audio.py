@@ -199,6 +199,7 @@ class Audio:
         self._variant = 0
         self._voice_cursor = 0
         self._active_voices = {}
+        self._quiet_sounds = {}
         self._ds = None
         try:
             # pygame.init() has already opened the mixer at the device default
@@ -527,7 +528,20 @@ class Audio:
             return
         if ch is None:
             return
-        ch.set_volume(left, right)
+        # pygame's stereo setter truncates gains to unsigned 8-bit panning.
+        # Stage ALL battle voices from their first sample: live volume/mono
+        # edits can make an initially louder transient quiet, and SDL cannot
+        # swap its PCM without restarting the attack. Their maximum .07 gain
+        # is below this exact 1/8 Sound gain, so compensation never clips or
+        # increases the intended mix budget. Reserved warnings stay literal.
+        if name not in ("warning", "alert", "mission_complete", "mission_failed"):
+            if snd not in self._quiet_sounds:
+                quiet = pygame.mixer.Sound(buffer=snd.get_raw())
+                quiet.set_volume(0.125)
+                self._quiet_sounds[snd] = quiet
+            snd = self._quiet_sounds[snd]
+        sound_gain = snd.get_volume()
+        ch.set_volume(left / sound_gain, right / sound_gain)
         ch.play(snd)
         # Store a detached position: settings refresh never retains/mutates an
         # entity's vector. Ignore stale entries once SDL finishes/replaces it.
@@ -601,7 +615,9 @@ class Audio:
                 if not channel.get_busy() or channel.get_sound() is not sound:
                     self._active_voices.pop(slot, None)
                 else:
-                    channel.set_volume(*self.mix_gains(name, volume, pos))
+                    left, right = self.mix_gains(name, volume, pos)
+                    sound_gain = sound.get_volume()
+                    channel.set_volume(left / sound_gain, right / sound_gain)
         if self.ambient_channel:
             self.ambient_channel.set_volume(
                 0.0 if self.muted else 0.5 * self.settings["music_volume"])
@@ -845,3 +861,5 @@ class Audio:
             self.ambient_channel.stop()
         if self.available:
             pygame.mixer.quit()
+        self._active_voices.clear()
+        self._quiet_sounds.clear()

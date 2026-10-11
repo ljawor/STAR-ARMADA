@@ -34,6 +34,7 @@ class TestAudioMix(unittest.TestCase):
         a._spatial = lambda pos: (1., .8)
         a.play('big_explosion', 1., [1, 0, 0])
         actual = pygame.mixer.Channel
+        playing = actual(3).get_sound()
         changed = {}
         def channel(index):
             real = actual(index)
@@ -45,8 +46,11 @@ class TestAudioMix(unittest.TestCase):
         with patch('render.audio.pygame.mixer.Channel', side_effect=channel):
             a.apply_settings({'sfx_volume': .25, 'audio_mono': True})
         self.assertIn(3, changed, 'a live nonzero edit left old gains playing')
-        self.assertEqual(changed[3], a.mix_gains('big_explosion', 1., [1, 0, 0]))
-        self.assertIs(actual(3).get_sound(), a.sounds['big_explosion'])
+        self.assertEqual(changed[3], tuple(g / playing.get_volume()
+                                          for g in a.mix_gains('big_explosion', 1., [1, 0, 0])))
+        self.assertIs(actual(3).get_sound(), playing, 'settings must not restart a transient')
+        np.testing.assert_array_equal(pygame.sndarray.array(playing),
+                                      pygame.sndarray.array(a.sounds['big_explosion']))
 
     def test_live_dynamic_range_change_discards_old_transients(self):
         a = self.audio
@@ -57,7 +61,10 @@ class TestAudioMix(unittest.TestCase):
         self.assertFalse(pygame.mixer.Channel(3).get_busy())
         self.assertIs(a.ambient_channel.get_sound(), ambient)
         a.play('big_explosion', 1.)
-        self.assertIs(pygame.mixer.Channel(3).get_sound(), a.night_sounds['big_explosion'])
+        playing = pygame.mixer.Channel(3).get_sound()
+        self.assertIs(playing, a._quiet_sounds[a.night_sounds['big_explosion']])
+        np.testing.assert_array_equal(pygame.sndarray.array(playing),
+                                      pygame.sndarray.array(a.night_sounds['big_explosion']))
 
     def test_build_completion_cannot_suppress_own_research_completion(self):
         a = self.audio
