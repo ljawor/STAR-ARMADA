@@ -329,7 +329,7 @@ friendly sensor can provide detection for another ship's longer-range weapons.
 | Autosave ring (3 rotating slots) | ✅ prototype |
 | LAN host/join, 2–4 humans, optional AI, configurable TCP port | ✅ implemented; matching version/content required |
 | Deterministic lockstep, serialized commands, replay infrastructure | ✅ implemented and tested |
-| Replay recording/browser/read-only playback | 🟠 verified on current branch; not merged/released |
+| Replay recording/browser/read-only playback | ✅ verified in v0.8.0 source; see release notes for package verification |
 | LAN reconnect/resync | 🔲 production integration pending; tested standalone foundation only |
 | Four skirmish maps, player factions/colors/teams, AI difficulty | ✅ implemented; 2–4 total players by map |
 | Boarding/capture, onboard crew/life support and abandoned hulls | ✅ merged in #37; released in v0.7.0 |
@@ -414,10 +414,11 @@ The game remains a playable prototype, not the full design specification.
 Boarding/capture (#37), crew recovery/staffing/AI (#38), and colonies/support orders
 (#40) are merged and packaged in v0.7.0. Long-match balance, native interactive
 Windows and mixed-platform LAN acceptance remain open. The 5× colonized-planet
-resource and crew income follow-up is branch-only, not part of v0.7.0; bounded
+resource and crew income follow-up is included in v0.8.0 source, not v0.7.0; bounded
 observations and remaining balance gates are documented separately. Campaign scripting,
 staged capture/crew objectives and replay recording/browser/playback are implemented
-locally on this branch, not merged or packaged; see [campaign notes](docs/CAMPAIGN_SCRIPTING.md)
+in the v0.8.0 source increment; package checks are recorded in release notes.
+See [campaign notes](docs/CAMPAIGN_SCRIPTING.md)
 and [replay notes](docs/REPLAYS.md). Reconnect has standalone tested foundations only:
 **live LAN disconnects still end matches**. Production freeze/rollback, input
 reconciliation and UI handoff remain pending; see [reconnect scope](docs/LAN_RECONNECT.md).

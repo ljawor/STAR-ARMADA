@@ -27,7 +27,7 @@
 
 Satellite costs, crew, hulls, weapons and production time are data-driven in `assets/data/stations/stations.json`. Planet income is configured in `economy.planet_income`, with `planet_crew_bonus` added **once**. The built-in resource rates and additive crew bonuses have both been increased to exactly **5×** their previous values; station income (including mining, trade and energy relays), convoy rewards, AI difficulty multipliers, command-capacity bonuses and all costs are unchanged. These numeric defaults still require long-match balancing.
 
-Effective output per second, including crew bonuses (**PR #39 branch-only balance change; not included in v0.7.0**):
+Effective output per second, including crew bonuses (**v0.8.0 income balance change from PR #39; not included in v0.7.0**):
 
 | Planet type | Credits (old → new) | Materials (old → new) | Crew (old → new) |
 |---|---:|---:|---:|

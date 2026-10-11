@@ -11,7 +11,7 @@ partly delivered; the remaining work is listed explicitly below.
 - **Pending**: missing deliverable, not merely an older roadmap label.
 - Recommendations below define the proposed finish order, not additional approved scope.
 
-## Current release and branch scope
+## Current source and release scope
 
 GitHub v0.7.0 was published October 10, 2026 with
 `STAR-ARMADA-v0.7.0-mac.dmg` and `STAR-ARMADA-v0.7.0-win.zip`. PRs #37, #38 and
@@ -20,10 +20,13 @@ DMG/ZIP integrity checks and a 30-second frozen macOS smoke (`SMOKE_OK`, version
 0.7.0). Native interactive Windows gameplay was not exercised; mixed-platform LAN
 acceptance remains open. Packaging is delivered, not missing infrastructure.
 
-The user-requested **5× planet resource and crew income** follow-up is implemented
-on the existing PR #39 branch, not in v0.7.0. A 48-scenario, 120-second
+The **v0.8.0** source increment from PR #39 includes the user-requested
+**5× planet resource and crew income**, deterministic campaign scripting and the
+player-facing replay workflow. Package publication and downloaded artifact verification
+are recorded separately in the v0.8.0 GitHub release notes; these features are absent
+from v0.7.0. A 48-scenario, 120-second
 faction/map/difficulty sweep and four 900-second same-faction probes completed;
-these are bounded observations, not full-match balance acceptance. The same branch
+these are bounded observations, not full-match balance acceptance. This increment
 fixes campaign objective authority and abandonment/restore semantics.
 See [GAMEPLAY_ACCEPTANCE.md](GAMEPLAY_ACCEPTANCE.md) for evidence and open gates.
 Historical test counts below describe their original increments.
@@ -48,7 +51,7 @@ Credits/materials/energy/crew and command capacity; mining, reachable gas-giant 
 relays, constructor-range station orders, shipyards, research and colony bonuses.
 Trade convoys, delivery, raiding and serialized commercial routes are implemented.
 PR #40 colonies, timed capture, orbital satellites and paid support orders are merged
-and packaged in v0.7.0; the 5× planet resource and crew income follow-up is branch-only.
+and packaged in v0.7.0; v0.8.0 includes the 5× planet resource and crew income follow-up.
 Further economic/faction balance is not complete merely because these systems exist.
 
 ## Phase 4 — Technology and special abilities ✅ prototype delivered
@@ -78,7 +81,7 @@ faction-specific meshes must not be confused with complete faction gameplay.
 **Delivered:** title/main/settings/campaign menus; 10-mission chain, briefing screens,
 live build/destroy/colonize/survive/escort/hold objectives and persisted campaign progress.
 
-**Implemented locally on the existing PR #39 branch; not merged/released:** persisted
+**Implemented in the v0.8.0 source increment (PR #39):** persisted
 simulation tick/time/event/objective triggers, once-only reinforcements, staged objectives
 and real capture/crew attribution; recovery drill plus the original ten missions.
 Stable-ID progress migration and paged selection preserve legacy unlocks.
@@ -97,7 +100,7 @@ replay recorder/player infrastructure and tests; direct-IP TCP LAN host/join, se
 port, 2–4 humans with optional AI, readiness/configuration and content checks.
 Disconnects/desync stop matches; LAN disables independent pause and save/load.
 
-**Implemented locally; not merged/released:** automatic human-command replay recording,
+**Implemented in the v0.8.0 source increment (PR #39):** automatic human-command replay recording,
 paged browser and read-only playback with pause/speed/end controls and content/version
 validation. See [REPLAYS.md](REPLAYS.md). Reconnect has tested snapshots, authenticated
 barriers, delayed-input journals and bounded transfer primitives only; these are NOT
@@ -156,8 +159,8 @@ audio-pack or livery requirement.
   Baseline LAN test timing races were fixed without changing production LAN code.
   Numeric defaults are initial configurable balance proposals. Neutral salvage/towing
   and optional conversion/sale are outside this approved increment.
-- **Branch-only planet income balance:** user-requested 5× resource and crew income is
-  implemented on PR #39, not shipped in v0.7.0. Focused income regressions and bounded
+- **Planet income balance:** user-requested 5× resource and crew income is
+  included in the v0.8.0 source increment, absent from v0.7.0. Focused income regressions and bounded
   faction/map/difficulty observations exist; statistical complete-match balance remains open.
 - **Optional captured-vessel outcomes:** sale, conversion, captured-tech research and
   temporary use remain deferred, not required to close the core boarding loop.
@@ -165,7 +168,7 @@ audio-pack or livery requirement.
   and audit self-trade profitability as part of the balance pass.
 - **§28 Objectives:** escort/hold/survival exist; expanded scripting belongs to Phase 7.
 - **§32 Saves:** quick save/load, rotating autosaves and campaign progress exist;
-  player-facing replay workflow is implemented locally, awaiting final verification/merge;
+  player-facing replay workflow and exact future-state restoration are verified in v0.8.0 source;
   production LAN reconnect remains pending.
 - **§46 Victory:** command-station/planet-majority/economic/timed modes and allied
   elimination exist. Regression-test new abandonment against each mode and campaign
@@ -173,20 +176,24 @@ audio-pack or livery requirement.
 
 ## Proposed finish order
 
-1. **Close interactive release acceptance.** v0.7.0 already packages #37/#38/#40.
+1. **Close interactive release acceptance.** v0.7.0 already packages #37/#38/#40;
+   v0.8.0 adds the verified PR #39 source increment.
    Exercise boarding, recovery, colonies and support orders in native interactive
    Windows gameplay and mixed-platform LAN; existing CI/archive checks and the frozen
    macOS smoke do not prove these open gates. No packaging rebuild is inherently missing.
-2. **Balance and integrated gameplay acceptance.** Validate the branch-only 5× planet
+2. **Balance and integrated gameplay acceptance.** Validate the v0.8.0 5× planet
    resource income change, recruitment/loading/delivery costs and AI heuristics through
    repeatable long matches across factions/maps/difficulties. Historical source/GL
    results are not a new matrix pass; record actual results before claiming acceptance.
-   No towing or neutrality expansion; any future release requires separate approval.
-3. **Next feature: complete campaign gameplay (Phase 7 logic).** Persisted deterministic triggers,
-   waves/objective transitions, capture/crew objectives and playable mission progression.
+   No towing or neutrality expansion; releases after the authorized v0.8.0 need separate approval.
+3. **Complete campaign acceptance (Phase 7).** Scripting, reinforcement waves,
+   staged/capture/crew objectives and stable-ID progression now exist. Run natural-navigation
+   full playthroughs of all 11 missions and tune waves/objective pacing; do not rebuild scripting.
    Keep cinematic polish after the mission logic is stable.
-4. **Finish multiplayer/replay resilience (Phase 8).** Reconnect/resync and user replay
-   workflow; prove commands, scripting, captures and saves/replays stay deterministic.
+4. **Next major feature: live multiplayer resilience (Phase 8).** Integrate distributed
+   freeze/rollback, acknowledged-input reconciliation and atomic reconnect/resync handoff.
+   Replay recording/browser/playback already exist; preserve deterministic scripting,
+   capture and mid-match restoration while testing 2–4 human disconnect/rejoin scenarios.
 5. **Complete faction gameplay and balance.** Resolve Syndicate scope/parity; run
    repeatable full-match economy/combat/AI benchmarks before scaling up player counts.
 6. **Meet performance targets, then expand to eight players.** Profile realistic fleets,

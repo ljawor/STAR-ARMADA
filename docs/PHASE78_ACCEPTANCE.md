@@ -1,7 +1,8 @@
-# Phase 7/8 branch acceptance — October 11, 2026
+# Phase 7/8 source acceptance — October 11, 2026
 
-This increment remains branch-only on PR #39. No merge, version bump, release or
-Windows/mixed-platform interactive acceptance is implied.
+This report records PR #39 source verification for v0.8.0. Package publication,
+downloaded artifact checks and frozen smoke results are recorded separately in
+the GitHub release notes. Windows/mixed-platform interactive acceptance is not implied.
 
 ## Implemented
 

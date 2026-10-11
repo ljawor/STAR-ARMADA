@@ -1,6 +1,6 @@
 # Crew recovery, proportional staffing and cautious AI
 
-Implemented on `feature/crew-recovery-ai`, awaiting review/merge; **not a packaged release**.
+Merged in PR #38 and packaged in v0.7.0; full-match balance and native Windows/mixed-platform interactive acceptance remain open.
 Boarding/life support itself was merged in #37 (`1ca3207`). Recovery adds no towing,
 neutral salvage, sale, conversion or allied-hull reclaim.
 

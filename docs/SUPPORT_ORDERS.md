@@ -1,6 +1,6 @@
 # Support orders, boarding and construction spacing
 
-Status: **implemented and verified on `feat/planet-colonies-satellites`**, extending PR #40; awaiting merge, not packaged. Full headless suite: **766 tests passed**. Real Cocoa SDL/OpenGL support-order diagnostics passed at 1280×800 and 1024×768, including exhaustive crew-cost labels, actual repair billing, fighter discovery/avoidance, cancellation and immutable rendering. Independent support-order review passed.
+Status: **merged in PR #40 and packaged in v0.7.0**. Historical full headless suite: **766 tests passed**. Real Cocoa SDL/OpenGL support-order diagnostics passed at 1280×800 and 1024×768, including exhaustive crew-cost labels, actual repair billing, fighter discovery/avoidance, cancellation and immutable rendering. Independent support-order review passed.
 
 ## Approved rules
 
