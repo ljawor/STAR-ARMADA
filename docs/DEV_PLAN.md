@@ -13,12 +13,19 @@ partly delivered; the remaining work is listed explicitly below.
 
 ## Current source and release scope
 
-**Current release: v0.10.0**, published October 11, 2026. PR #43 adds planetary
-surface hardware, inclined satellite orbits, reduced satellite cost/durability and
-independent HUD panel minimization. Both published package digests, 26 inspected
-code modules and all 15 tracked assets match the tagged source. Read-only downloaded
-macOS frozen smoke passed. Final native Cocoa wheel-input, interactive Windows and
-mixed-platform LAN gates remain open. The following older increments are historical.
+**Current release: v0.10.1**, published October 11, 2026. PR #47 fixes quiet
+ship/fighter firing and live-volume silence; #49 prepares the authoritative version.
+The unchanged runtime tree passed 956 tests; 36 replay/content-sensitive tests
+passed after the version-only bump. Both downloaded package digests, three inspected
+runtime modules and all 15 tracked assets match the immutable tag. Read-only
+macOS frozen smoke passed. The Windows ZIP is explicitly **unsigned**; trusted
+certificate signing / Smart App Control acceptance (#45), native listening and
+Windows gameplay, Cocoa wheel-input and mixed-platform LAN gates remain open.
+
+The preceding **v0.10.0** release includes PR #43 planetary surface hardware,
+inclined satellite orbits, reduced satellite cost/durability and independent HUD
+panel minimization. Its historical package verification covered 26 code modules
+and all 15 tracked assets. The following older increments are historical.
 
 GitHub v0.7.0 was published October 10, 2026 with
 `STAR-ARMADA-v0.7.0-mac.dmg` and `STAR-ARMADA-v0.7.0-win.zip`. PRs #37, #38 and
