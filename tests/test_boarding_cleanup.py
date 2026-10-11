@@ -88,6 +88,16 @@ class TestBoardingCleanup(unittest.TestCase):
                                  bomber.order_target_id == self.carrier.id)
 
     def test_capture_detaches_old_owner_carrier_dependents_before_restore(self):
+        # This fixture is about capture bookkeeping, not gunnery. Capture puts a
+        # prize crew aboard the carrier (crew 100, operational), and once every
+        # shot is aimed from the muzzle (#60) that crew and the boarding cruiser
+        # both land fire on the ex-owner's squadron loitering beside them: the
+        # dependent this test inspects dies four ticks after the capture. Silence
+        # both hulls so the assertions still measure the invariant they name - a
+        # surviving old-owner dependent is detached and stays detached across a
+        # precise restore - instead of the outcome of a firefight.
+        self.source.systems['weapons'].hp = 0
+        self.carrier.systems['weapons'].hp = 0
         bomber = self.gm.factory.spawn_ship('imperial_tie_bomber_squadron', 1, Vec3(600, 0, 0))
         bomber.hangar_id = bomber.launched_from = self.carrier.id
         bomber.order_type = 'follow'
