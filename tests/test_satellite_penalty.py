@@ -35,7 +35,9 @@ class SatellitePenaltyTests(unittest.TestCase):
     def satellite(self, owner=0, slot=0, pos=None):
         """A satellite as the build path leaves it: attached to a real slot."""
         pos = self.planet.pos + Vec3(0, 0, self.planet.radius + 900) if pos is None else pos
-        sat = self.gm.factory.spawn_station('defense_satellite', owner, pos)
+        # `attack_satellite`: the anti-ship platform engages the attacker, and an
+        # engaged satellite holds still in its orbit instead of teleporting.
+        sat = self.gm.factory.spawn_station('attack_satellite', owner, pos)
         sat.planet_id = self.planet.id
         sat.satellite_slot = slot
         return sat
@@ -67,18 +69,17 @@ class SatellitePenaltyTests(unittest.TestCase):
         sat = self.satellite(slot=0)
         slot = sat.satellite_slot
         self.assertIn(slot, self.occupied())
-        # Real guns, not a test shortcut: the frigate's orders put the satellite
-        # in combat and the satellite dies to fire. A `defense_satellite` cannot
-        # engage a frigate, so the attacker is never interrupted.
-        gunner = self.gm.factory.spawn_ship('imperial_frigate', 1, sat.pos + Vec3(600, 0, 0))
-        gunner.order_type = 'attack'
-        gunner.order_target_id = sat.id
-        gunner.current_target = sat.id
-        for _ in range(240 * 30):
+        # Real guns, not a test shortcut: the shot lands through
+        # `_apply_damage` -> `_kill`, the same path a player's kill takes.
+        gunner = self.gm.factory.spawn_ship('imperial_cruiser', 1, sat.pos + Vec3(1500, 0, 0))
+        gunner.sensor_range = 20000
+        self.st.queue_command(PlayerCommand('attack', 1, unit_ids=(gunner.id,), target_id=sat.id))
+        for _ in range(300 * 30):
             if not sat.alive:
                 break
             self.gm.step(1 / 30)
-        self.assertFalse(sat.alive, 'frigate failed to kill the satellite in 240s')
+        self.assertFalse(sat.alive, 'a cruiser failed to kill the satellite in 300s')
+        self.assertNotIn(sat.id, self.st.entities)
         self.assertEqual(colonies.satellite_lock_remaining(self.st, self.planet, slot), 180.0)
         # The site is unavailable: the next paid satellite is reserved elsewhere.
         self.assertIn(slot, self.occupied())
@@ -98,8 +99,9 @@ class SatellitePenaltyTests(unittest.TestCase):
         self.assertEqual(raw['entities'][str(self.planet.id)]['satellite_locks'], {'2': 180.0})
         validate_state(raw)                       # schema accepts the new field
         restored = GameManager(GameState.from_dict(raw))
-        self.assertEqual(colonies.satellite_lock_remaining(restored.state, restored.state.entity(self.planet.id), 2),
-                         180.0)
+        expected = colonies.satellite_lock_remaining(self.st, self.planet, 2)
+        self.assertAlmostEqual(colonies.satellite_lock_remaining(
+            restored.state, restored.state.entity(self.planet.id), 2), expected, places=6)
         # Lockstep/replay: both worlds must stay bit-identical while the clock runs.
         for _ in range(30):
             self.gm.step(1 / 30)
@@ -107,14 +109,15 @@ class SatellitePenaltyTests(unittest.TestCase):
             self.assertEqual(self.snapshot(), json.loads(json.dumps(restored.state.to_dict(precise=True))))
         for bad, path in (({'9': 1.0}, 'satellite_locks.slot'),
                           ({'2': -1.0}, 'satellite_locks.until'),
-                          ({'2': float('nan')}, 'satellite_locks.until')):
+                          ({'2': float('nan')}, r'satellite_locks\[2\]'),
+                          ({'2': 'soon'}, r'satellite_locks\[2\]')):
             payload = self.snapshot()
             payload['entities'][str(self.planet.id)]['satellite_locks'] = bad
             with self.assertRaisesRegex(ValueError, path):
                 validate_state(payload)
         payload = self.snapshot()
         payload['entities'][str(self.planet.id)]['satellite_locks'] = {'2': 180.0}
-        del payload['entities'][str(self.planet.id)]['is_planet']
+        payload['entities'][str(self.planet.id)]['is_planet'] = False
         with self.assertRaises(ValueError):
             validate_state(payload)              # not a planet: no slot to lock
 
@@ -133,7 +136,7 @@ class SatellitePenaltyTests(unittest.TestCase):
         captor = self.gm.factory.spawn_ship('imperial_colonizer', 1,
             self.planet.pos + Vec3(0, 0, self.planet.radius + 300))
         self.st.queue_command(PlayerCommand('colonize', 1, unit_ids=(captor.id,), target_id=self.planet.id))
-        run_for(self.gm, 14)
+        run_for(self.gm, 20)                     # the colonizer's own 15s control timer
         self.assertEqual(self.planet.colonized_by, 1)
         self.assertGreater(colonies.satellite_lock_remaining(self.st, self.planet, 0), 0.0)
 
@@ -181,10 +184,8 @@ class SatellitePenaltyHUDTests(unittest.TestCase):
 
     def test_orbit_panel_counts_the_rebuild_down_instead_of_offering_the_slot(self):
         from game.systems.colonies import lock_satellite_slot
-        sat = self.gm.factory.spawn_station('defense_satellite', 0,
-            self.planet.pos + Vec3(0, 0, self.planet.radius + 900))
-        sat.planet_id = self.planet.id
-        sat.satellite_slot = 0
+        # The wreck is gone, the site is not: an empty but locked slot reads
+        # REBUILD with the time left, never FREE.
         lock_satellite_slot(self.st, self.planet, 0)
         texts = self.panel_text()
         self.assertTrue(any(t.startswith('1: REBUILD') for t in texts), texts)
