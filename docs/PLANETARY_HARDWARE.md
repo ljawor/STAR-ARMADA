@@ -2,13 +2,14 @@
 
 ## Delivery status
 
-Implemented on `feature/planet-buildings-orbits-hud`; not merged or released.
+Implemented for the v0.10.0 source increment; release preparation is in progress.
 Independent source and final-delta reviews approved the feature. The final stable-tree
 suite passed **946 tests in 397.945 seconds**. The preceding 944-test run exposed stale
 fixtures and a genuine AI projected-reserve defect; both were corrected without
 relaxing visibility, reserve, construction or input assertions.
 Final native Cocoa wheel-input acceptance remains open because the diagnostic cannot
-reliably acquire focus. Keep PR delivery **draft**, not ready to merge or release.
+reliably acquire focus. The user authorized merge and release with this known gate
+still open; publication and downloaded-package verification are separate gates.
 
 ## Controls
 
@@ -87,6 +88,6 @@ implied by source implementation.
 These are controlled fixtures, not natural campaign playthroughs or full-match balance
 acceptance. Post-review hardware GL rerun passed all ten captures. The original
 18-capture HUD input run passed, but final focus-dependent reruns did not complete;
-historical success is not final-tree native input acceptance. Clear this gate before
-marking the draft PR ready to merge. Native Windows and mixed-platform interactive
+historical success is not final-tree native input acceptance. This limitation remains
+disclosed despite release authorization. Native Windows and mixed-platform interactive
 acceptance are not established by these macOS probes.
