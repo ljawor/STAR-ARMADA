@@ -46,7 +46,7 @@
       "crew_cost": 360, "command_cost": 8, "build_time": 28,
       "hull": 8200, "shield_quad": 2500, "shield_regen": 40,
       "speed": 44, "turn_rate": 25, "radius": 86, "sensor_range": 2200,
-      "weapons": [{"weapon": "plasma_lance", "count": 2, "arcs": ["front", "left", "right"]},
+      "weapons": [{"weapon": "plasma_lance", "count": 2, "arcs": ["all"]},
                    {"weapon": "missile_battery", "count": 2, "arcs": ["all"]},
                    {"weapon": "point_defense", "count": 2, "arcs": ["all"]}],
       "abilities": ["emp_burst", "engine_overdrive"],
