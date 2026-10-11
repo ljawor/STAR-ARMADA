@@ -486,6 +486,9 @@ class DataStore:
 
     # ------------------------------------------------------------- validation
     def _validate(self) -> None:
+        from ..systems.campaign_validation import validate_campaign
+        for mission in self.campaign.get('missions', []):
+            validate_campaign(mission, self)
         from ..systems.boarding import validate_boarding_rules
         validate_boarding_rules(self.rules)
         from ..systems.repairs import validate_repair_rules

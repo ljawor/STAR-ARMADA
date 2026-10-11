@@ -167,6 +167,9 @@ hud = None
 audio = None
 inputc = None
 net_session = None
+recording = None
+playback = None
+replay_notice = ""
 local_player = 0
 paused = False
 running = True
@@ -182,23 +185,37 @@ def flash(msg: str) -> None:
 
 
 def start_game(load_path: str | None = None, mdef: dict | None = None,
-               skirmish_options: dict | None = None, lan_session=None) -> None:
+               skirmish_options: dict | None = None, lan_session=None,
+               replay_path: str | None = None) -> None:
     """Build the full in-game object graph (skirmish, mission, or load)."""
     global gm, state, camera, renderer, hud, audio, inputc, paused, mission_def
     global flash_until
     global net_session, local_player, accumulator, last_autosave
+    global recording, playback, replay_notice
+    from game.net.replay import MatchRecording, PlaybackSession, load_replay
+    candidate = PlaybackSession(load_replay(replay_path)) if replay_path else None
+    if 'finish_recording' in globals():
+        finish_recording()
+    playback = candidate
+    replay_notice = ''
     paused = False
     if net_session is not None and net_session is not lan_session:
         net_session.close()
     net_session = lan_session
     local_player = int(lan_session.launch['local_player']) if lan_session is not None else 0
-    if lan_session is not None:
+    if playback is not None:
+        gm = playback.gm
+        local_player = int(playback._data.get('local_player', 0))
+    elif lan_session is not None:
         gm = GameManager.start_skirmish(lan_session.launch['map_def'], mods=MODS or None)
     else:
         gm = make_game(load_path, mdef, skirmish_options)
     mission_def = gm.mission.mission
     state = gm.state
     state._net_session = lan_session
+    recording = None
+    if playback is None and 'begin_recording' in globals():
+        recording = begin_recording(gm)
     accumulator = 0.0
     last_autosave = state.time
     camera = Camera(W, H)
@@ -223,14 +240,54 @@ def start_game(load_path: str | None = None, mdef: dict | None = None,
     audio = make_audio(state)
     audio.local_player = local_player
     audio.set_camera(camera)          # distance attenuation + stereo pan
-    inputc = InputController(state, camera, hud, None)
+    if playback is not None:
+        from render.replay_input import ReplayInput, configure_replay_hud
+        configure_replay_hud(hud)
+        inputc = ReplayInput(state, camera, hud, None)
+    else:
+        inputc = InputController(state, camera, hud, None)
     inputc.local_player = local_player
     inputc.app = _AppGlue()
 
 
+def begin_recording(manager):
+    from game.net.replay import MatchRecording
+    from render.menus import USER_DIR
+    current = MatchRecording(manager,
+                             mode='lan' if net_session is not None else 'campaign' if mission_def is not None else 'skirmish',
+                             local_player=local_player, mods=MODS)
+    current.user_dir = USER_DIR
+    return current
+
+
+def finish_recording():
+    """Persist once on match end/leave/rebuild/quit; failure never kills play."""
+    global recording, replay_notice
+    current = globals().get('recording')
+    if current is None:
+        return
+    recording = None
+    current.close()
+    import os
+    user_dir = getattr(current, 'user_dir', None)
+    if user_dir is None:
+        from render.menus import USER_DIR
+        user_dir = USER_DIR
+    from uuid import uuid4
+    path = os.path.join(user_dir, 'replays', 'match-' + uuid4().hex + '.json')
+    try:
+        current.save(path)
+        replay_notice = 'Replay saved: ' + os.path.basename(path)
+    except (OSError, ValueError) as exc:
+        replay_notice = 'Replay could not be saved: ' + str(exc)
+    if globals().get('menu') is not None:
+        menu.replay_notice = replay_notice
+    print(replay_notice)
+
+
 def rebuild(load_path: str | None) -> None:
     """Full object-graph rebuild for quickload (F9)."""
-    if net_session is not None:
+    if net_session is not None or globals().get('playback') is not None:
         return
     start_game(load_path=load_path, mdef=mission_def)
     flash("game loaded")
@@ -239,6 +296,9 @@ def rebuild(load_path: str | None) -> None:
 def advance_simulation(dt_frame):
     """LAN advances at most one barrier per frame; waiting never accrues debt."""
     global accumulator
+    if globals().get('playback') is not None:
+        playback.advance(dt_frame)
+        return
     if paused or state.game_over:
         accumulator = 0.0
         return
@@ -269,6 +329,9 @@ def advance_simulation(dt_frame):
 def leave_game(reason=''):
     """Release match ownership and return to a usable reconnect/menu screen."""
     global net_session, mode, paused, accumulator, audio
+    finish_recording()
+    replaying = globals().get('playback') is not None
+    globals()['playback'] = None
     networked = net_session is not None
     if net_session is not None:
         net_session.close()
@@ -280,7 +343,10 @@ def leave_game(reason=''):
         audio = None
     mode, paused, accumulator = 'menu', False, 0.0
     menu.close_lan()
-    menu.screen = 'lan_join' if networked else 'main'
+    menu.screen = 'replays' if replaying else 'lan_join' if networked else 'main'
+    if replaying:
+        menu.open_replays()
+        menu.replay_notice = reason
     menu.lan_notice = reason or ('Left LAN game. Host or reconnect to play again.' if networked else '')
     menu.buttons = []
 
@@ -297,10 +363,24 @@ def poll_network():
 
 
 def handle_game_input(ev):
+    if globals().get('playback') is not None and ev.type == pygame.KEYDOWN:
+        if ev.key == pygame.K_ESCAPE:
+            leave_game()
+            return
+        if ev.key == pygame.K_p:
+            if not getattr(ev, 'repeat', False):
+                playback.paused = not playback.paused
+            return
+        if ev.key in (pygame.K_LEFTBRACKET, pygame.K_RIGHTBRACKET):
+            if not getattr(ev, 'repeat', False):
+                playback.change_speed(-1 if ev.key == pygame.K_LEFTBRACKET else 1)
+            return
+        if ev.key in (pygame.K_F5, pygame.K_F9):
+            return
     try:
         inputc.handle_event(ev)
     except Exception as exc:
-        if net_session is None:
+        if net_session is None and globals().get('playback') is None:
             raise
         leave_game(str(exc))
 
@@ -319,21 +399,21 @@ def handle_network_event(ev):
 
 def _unlock_next_mission() -> None:
     """Mission completed: unlock the next campaign mission (persisted)."""
-    from render.menus import load_campaign_progress, save_campaign_progress
-    if mission_def is None:
+    from render.menus import unlock_campaign_mission
+    if mission_def is None or globals().get('playback') is not None:
         return
     ids = [m.get("id") for m in menu.campaign.get("missions", [])]
     try:
         idx = ids.index(mission_def.get("id"))
     except ValueError:
         return
-    if idx + 1 > load_campaign_progress():
-        save_campaign_progress(idx + 1)
+    if idx + 1 < len(ids):
+        unlock_campaign_mission(ids[idx + 1])
 
 
 def write_save(path: str) -> None:
     """Persist a snapshot. Never fatal: a read-only location must not crash."""
-    if net_session is not None:
+    if net_session is not None or globals().get('playback') is not None:
         return
     try:
         os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
@@ -431,6 +511,14 @@ while running:
                 save_settings(SETTINGS)
                 start_game(load_path=None, mdef=payload)
                 mode = "game"
+            elif res == MenuResult.START_REPLAY:
+                try:
+                    start_game(replay_path=payload)
+                    mode = 'game'
+                except (OSError, ValueError, TypeError, KeyError) as exc:
+                    menu.open_replays()
+                    menu.replay_notice = str(exc)[:240]
+                    mode = 'menu'
             elif res == MenuResult.START_LAN:
                 try:
                     start_game(lan_session=payload)
@@ -449,6 +537,11 @@ while running:
             running = False
             break
         if ev.type == pygame.KEYDOWN:
+            if playback is not None and ev.key != pygame.K_F11:
+                handle_game_input(ev)
+                if mode != 'game':
+                    break
+                continue
             if handle_network_event(ev):
                 if mode != 'game':
                     break
@@ -470,6 +563,8 @@ while running:
                     # campaign result: persist progress before menus
                     if mission_def is not None and gm.mission.completed:
                         _unlock_next_mission()
+                    if 'finish_recording' in globals():
+                        finish_recording()
                     mode = "menu"       # campaign result -> back to menus
                     continue
         handle_game_input(ev)
@@ -481,11 +576,13 @@ while running:
     try:
         advance_simulation(dt_frame)
     except Exception as exc:
-        if net_session is None:
+        if net_session is None and globals().get('playback') is None:
             raise
         leave_game(str(exc))
         continue
 
+    if playback is None and state.game_over:
+        finish_recording()
     inputc.update(dt_frame)
     inputc.update_placement()
 
@@ -506,7 +603,18 @@ while running:
     # live box-select rectangle while left-dragging
     hud.set_drag_box(inputc.drag_start, inputc.drag_cur)
     flash_left = flash_until - state.time
-    hud.render(inputc.selection, None, local_player, paused, flash_msg,
+    view_msg = flash_msg
+    view_paused = paused
+    if playback is not None:
+        view_paused = playback.paused
+        status = 'ENDED' if playback.ended else 'PAUSED' if playback.paused else 'PLAYING'
+        elapsed = (state.tick - playback._data['initial_state'].get('tick', 0)) / TICK_RATE
+        duration = (playback.end_tick - playback._data['initial_state'].get('tick', 0)) / TICK_RATE
+        view_msg = f'REPLAY {status} {elapsed:.1f}/{duration:.1f}s {playback.speed:g}x | P pause [ ] speed Esc exit'
+        flash_left = 1.
+    elif replay_notice:
+        view_msg, flash_left = replay_notice, 1.
+    hud.render(inputc.selection, None, local_player, view_paused, view_msg,
                max(0.0, flash_left), fps)
     hud.draw_gl()
     pygame.display.flip()
@@ -519,7 +627,7 @@ while running:
         fps_time = 0.0
 
     # autosave ring every 60 sim-seconds (spec §32): 3 rotating slots
-    if net_session is None and not state.game_over and state.time - last_autosave >= 60.0:
+    if playback is None and net_session is None and not state.game_over and state.time - last_autosave >= 60.0:
         ring = int(SETTINGS.get("autosave_index", 0)) % 3
         write_save(os.path.join(SAVES_DIR, f"autosave_{ring}.json"))
         SETTINGS["autosave_index"] = ring + 1
@@ -532,6 +640,8 @@ while running:
         print("SMOKE_OK " + summary() + " shot=" + shot)
         running = False
 
+if 'finish_recording' in globals():
+    finish_recording()
 menu.close()
 if net_session is not None:
     net_session.close()

@@ -75,8 +75,10 @@ PYTHONPATH=tests .venv/bin/python -m unittest discover -s tests -q
 - Support-order GL diagnostic failed twice at the real-pointer-over-production-list
   precondition; it remains unverified, not a pass. No support-control production code
   was changed in this increment.
-- Existing entity-bearing `precise_checksum` of restored saves raises `TypeError`
-  for `SubsystemStub`; campaign restore acceptance uses exact JSON-normalized full
-  state comparisons. Mission-only precise checksum continuity is covered separately.
+- Historical restored entity-bearing checksums failed on `SubsystemStub`. The
+  subsequent campaign/replay increment restores canonical subsystem objects and
+  persists future AI/system state; extended exact save/replay continuation tests
+  cover the corrected path. Old files lacking runtime state cannot recover
+  historical AI strategy and carry a compatibility warning.
 
 No other recruitment/repair/combat prices or AI thresholds were silently retuned.

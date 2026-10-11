@@ -190,8 +190,8 @@ Multiplayer / Settings / Quit). Settings (music/SFX volume, fullscreen, autosave
 camera pan speed) persist to `saves/settings.json` in source runs. Packaged builds
 store settings, saves and campaign progress outside the application bundle:
 `~/Library/Application Support/STAR ARMADA` on macOS and `%APPDATA%\STAR ARMADA`
-on Windows. The **Campaign** screen lists the 10-mission
-"Rise of the Outer Armada" chain (`assets/data/campaign/campaign.json`); each mission
+on Windows. On the current branch, the **Campaign** screen pages an introductory
+recovery drill plus the original ten-mission "Rise of the Outer Armada" chain (`assets/data/campaign/campaign.json`); each mission
 has a briefing (story, objectives, enemy preview) before LAUNCH, and in-game objectives
 are tracked live in the HUD with COMPLETE/FAILED states.
 
@@ -322,13 +322,15 @@ friendly sensor can provide detection for another ship's longer-range weapons.
 | Procedural audio (original, no assets) | ✅ prototype |
 | Minimap, fleet roster/ability union, rank inspector, build/research progress | ✅ implemented |
 | Title screen, main menu, settings menu (music/SFX volume, fullscreen, autosave, pan speed — persisted to `saves/settings.json`) | ✅ prototype |
-| Campaign: 10-mission chain with briefing screens, live objectives panel, progress persists across sessions | ✅ prototype |
+| Campaign: ten combat missions plus recovery drill, persisted triggers/waves and staged capture/crew objectives | 🟠 implemented on current branch; full playthrough acceptance pending |
 | Victory conditions: annihilation, planet majority, economic, timed (data-driven) | ✅ prototype |
 | Trade convoys between trade stations + raiding (salvage loot) | ✅ prototype |
 | Objectives: build/destroy/colonize/survive + escort_convoy, hold_point | ✅ prototype |
 | Autosave ring (3 rotating slots) | ✅ prototype |
 | LAN host/join, 2–4 humans, optional AI, configurable TCP port | ✅ implemented; matching version/content required |
 | Deterministic lockstep, serialized commands, replay infrastructure | ✅ implemented and tested |
+| Replay recording/browser/read-only playback | 🟠 verified on current branch; not merged/released |
+| LAN reconnect/resync | 🔲 production integration pending; tested standalone foundation only |
 | Four skirmish maps, player factions/colors/teams, AI difficulty | ✅ implemented; 2–4 total players by map |
 | Boarding/capture, onboard crew/life support and abandoned hulls | ✅ merged in #37; released in v0.7.0 |
 | Base crew recruitment, field crew transports, proportional staffing, cautious boarding/recovery AI | ✅ merged in #38; released in v0.7.0; balance acceptance remains open |
@@ -413,9 +415,14 @@ Boarding/capture (#37), crew recovery/staffing/AI (#38), and colonies/support or
 (#40) are merged and packaged in v0.7.0. Long-match balance, native interactive
 Windows and mixed-platform LAN acceptance remain open. The 5× colonized-planet
 resource and crew income follow-up is branch-only, not part of v0.7.0; bounded
-observations and remaining balance gates are documented separately. Eight-player matches, expanded campaign
-scripting/cinematics, full faction parity, in-game mod management, reconnect/replay
-UX and further performance work remain pending. Current skirmish/LAN capacity is **2–4 total players**,
+observations and remaining balance gates are documented separately. Campaign scripting,
+staged capture/crew objectives and replay recording/browser/playback are implemented
+locally on this branch, not merged or packaged; see [campaign notes](docs/CAMPAIGN_SCRIPTING.md)
+and [replay notes](docs/REPLAYS.md). Reconnect has standalone tested foundations only:
+**live LAN disconnects still end matches**. Production freeze/rollback, input
+reconciliation and UI handoff remain pending; see [reconnect scope](docs/LAN_RECONNECT.md).
+Eight-player matches, full campaign playthroughs/cinematics, full faction parity,
+in-game mod management and further performance work remain pending. Current skirmish/LAN capacity is **2–4 total players**,
 limited by the selected map. See `docs/DEV_PLAN.md` for the broader plan; the
 feature matrix above describes the implemented release behavior.
 

@@ -92,7 +92,14 @@ class SupportOrdersUITests(unittest.TestCase):
         self.assertIsNone(command.target_id)
         self.assertIsNone(self.ctrl._pending_ability)
         after = self.st.to_dict(precise=True)
-        before['command_queue'] = after['command_queue']
+        # Ignore ONLY the verified new input, in both save representations;
+        # retain all prior queued commands and every other runtime/AI field.
+        self.assertEqual(after['command_queue'].pop(), command.to_dict())
+        from game.net.reconnect import _encode
+        queues = [value for key, value in after['runtime_state']['state'][1]
+                  if key == ['scalar', 'command_queue']]
+        self.assertEqual(len(queues), 1)
+        self.assertEqual(queues[0][1].pop(), _encode(command))
         self.assertEqual(before, after)
 
 

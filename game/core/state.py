@@ -112,6 +112,8 @@ class GameState:
     time: float = 0.0
     tick: int = 0
     capacity_timer: float = 0.0
+    runtime_state: dict | None = None  # versioned future-state graph on restore
+    _manager: object | None = field(default=None, repr=False, compare=False)
 
     # world content
     entities: dict = field(default_factory=dict)        # id -> Entity
@@ -310,8 +312,11 @@ class GameState:
     def to_dict(self, precise: bool = False) -> dict:
         """Serialize. precise=True (replay/lockstep) skips float rounding —
         regular saves round for size/readability, replays need bit-exact state."""
+        from .runtime_snapshot import capture_runtime
         return {
             "format": 3,
+            "runtime_state": (capture_runtime(self._manager)
+                              if self._manager is not None else self.runtime_state),
             "seed": self.seed, "game_type": self.game_type, "mission_id": self.mission_id,
             "mission_state": (self._mission_system.to_dict()
                               if self._mission_system is not None else self.mission_state),
@@ -449,7 +454,8 @@ class GameState:
             spawn_time=d.get("spawn_time", 0.0),
         )
         e.shields = dict(d.get("shields", {}))
-        e.systems = {k: SubsystemStub(v["hp"], v["max_hp"])
+        from .entity import SubsystemState
+        e.systems = {k: SubsystemState(v["hp"], v["max_hp"])
                      for k, v in d.get("systems", {}).items()}
         from ..data.store import DataStore
         ds = DataStore.get()
@@ -465,7 +471,7 @@ class GameState:
         e.crew_mission = dict(d.get('crew_mission', {}))
         e.boarding_party_id = d.get('boarding_party_id')
         if not e.is_planet and (e.is_ship or e.is_station or e.is_squadron):
-            e.systems.setdefault('life_support', SubsystemStub(100.0, 100.0))
+            e.systems.setdefault('life_support', SubsystemState(100.0, 100.0))
         e.last_hit_time = d.get("last_hit_time", -999.0)
         e.retarget_cooldown = d.get("retarget_cooldown", 0.0)
         from ..systems.experience import rank_for
@@ -511,12 +517,19 @@ class GameState:
         return e
 
     @classmethod
-    def from_dict(cls, d: dict) -> "GameState":
+    def from_dict(cls, d: dict, *, sanitize_save: bool = True) -> "GameState":
+        # Ordinary saves retain the historical invalid numeric jump repair.
+        # Untrusted replay reconstruction explicitly opts out before restoring.
+        runtime = d.get("runtime_state")
+        if sanitize_save and runtime is not None:
+            from .runtime_snapshot import migrate_saved_runtime
+            runtime = migrate_saved_runtime(runtime)
         s = cls(
             seed=d.get("seed", 12345), game_type=d.get("game_type", "skirmish"),
             mission_id=d.get("mission_id"), mission_state=d.get("mission_state"),
             time=d.get("time", 0.0),
             tick=d.get("tick", 0), capacity_timer=d.get("capacity_timer", 0.0),
+            runtime_state=runtime,
         )
         s.next_entity_id = d.get("next_entity_id", 1)
         s.next_fleet_id = d.get("next_fleet_id", 1)
@@ -536,6 +549,10 @@ class GameState:
                     for fid, fd in d.get("fleets", {}).items()}
         s.entities = {int(eid): cls._entity_from_dict(ed)
                       for eid, ed in d.get("entities", {}).items()}
+        if sanitize_save:
+            from .runtime_snapshot import repair_saved_jump
+            for entity in s.entities.values():
+                repair_saved_jump(entity)
         s.projectiles = {p["id"]: Projectile.from_dict(p)
                          for p in d.get("projectiles", [])}
         s.winner = d.get("winner")

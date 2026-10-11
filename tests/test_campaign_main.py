@@ -45,8 +45,7 @@ class CampaignMainTests(unittest.TestCase):
                     self.assertEqual(ns['mission_def'], ns['gm'].mission.mission)
                     self.assertEqual(ns['mission_def']['id'], 'restored')
                     ns['menu'].campaign = {'missions': [{'id': 'old'}, {'id': 'restored'}, {'id': 'next'}]}
-                    progress = SimpleNamespace(load_campaign_progress=Mock(return_value=0),
-                                               save_campaign_progress=Mock())
+                    progress = SimpleNamespace(unlock_campaign_mission=Mock())
                     with patch.dict(sys.modules, {'render.menus': progress}):
                         code = ast.fix_missing_locations(ast.Module(
                             body=[hud_reader, result_reader], type_ignores=[]))
@@ -56,7 +55,7 @@ class CampaignMainTests(unittest.TestCase):
                     self.assertTrue(ns['hud'].mission_done)
                     self.assertFalse(ns['hud'].mission_failed)
                     self.assertEqual(ns['mode'], 'menu')
-                    progress.save_campaign_progress.assert_called_once_with(2)
+                    progress.unlock_campaign_mission.assert_called_once_with('next')
 
 
 if __name__ == '__main__':

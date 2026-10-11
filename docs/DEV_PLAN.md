@@ -78,10 +78,17 @@ faction-specific meshes must not be confused with complete faction gameplay.
 **Delivered:** title/main/settings/campaign menus; 10-mission chain, briefing screens,
 live build/destroy/colonize/survive/escort/hold objectives and persisted campaign progress.
 
-**Pending:** deterministic scripted triggers (reinforcements, timed/event-driven waves,
-objective transitions), cinematic presentation and complete campaign playthrough QA.
-Integrate new capture/crew mechanics into mission semantics and tutorial objectives.
-Survival timers already exist; do not list them again as missing infrastructure.
+**Implemented locally on the existing PR #39 branch; not merged/released:** persisted
+simulation tick/time/event/objective triggers, once-only reinforcements, staged objectives
+and real capture/crew attribution; recovery drill plus the original ten missions.
+Stable-ID progress migration and paged selection preserve legacy unlocks.
+See [CAMPAIGN_SCRIPTING.md](CAMPAIGN_SCRIPTING.md) for exact scope and QA limits.
+
+**Pending:** natural-navigation campaign playthroughs, wave balance, cinematic
+presentation and cross-platform acceptance. Final source verification passed:
+861 tests, independent re-review and real UI diagnostics; see
+[PHASE78_ACCEPTANCE.md](PHASE78_ACCEPTANCE.md). Focused command and scripting
+regressions do not complete full campaign playthrough QA.
 
 ## Phase 8 — Multiplayer and replay 🟠
 
@@ -90,10 +97,18 @@ replay recorder/player infrastructure and tests; direct-IP TCP LAN host/join, se
 port, 2–4 humans with optional AI, readiness/configuration and content checks.
 Disconnects/desync stop matches; LAN disables independent pause and save/load.
 
-**Pending:** reconnect/resynchronization, player-facing replay recording/browser/playback,
-and end-to-end mixed-platform multiplayer acceptance. Eight-player capacity is a
-separate pending expansion: maps, UI/setup and load/network testing must all grow together.
-The existing LAN lobby is not a missing feature.
+**Implemented locally; not merged/released:** automatic human-command replay recording,
+paged browser and read-only playback with pause/speed/end controls and content/version
+validation. See [REPLAYS.md](REPLAYS.md). Reconnect has tested snapshots, authenticated
+barriers, delayed-input journals and bounded transfer primitives only; these are NOT
+enabled in production LAN. Live disconnects still terminate matches.
+
+**Pending:** production distributed freeze/rollback, acknowledged-input reconciliation,
+reconnect/resynchronization and atomic UI/recorder handoff; end-to-end mixed-platform
+acceptance. Final replay/source verification passed; see [PHASE78_ACCEPTANCE.md](PHASE78_ACCEPTANCE.md).
+See [LAN_RECONNECT.md](LAN_RECONNECT.md) for the remaining backend work.
+Eight-player capacity is a separate pending expansion: maps, UI/setup and load/network
+testing must all grow together. The existing LAN lobby is not a missing feature.
 
 ## Phase 9 — Modding 🟠
 
@@ -150,7 +165,8 @@ audio-pack or livery requirement.
   and audit self-trade profitability as part of the balance pass.
 - **§28 Objectives:** escort/hold/survival exist; expanded scripting belongs to Phase 7.
 - **§32 Saves:** quick save/load, rotating autosaves and campaign progress exist;
-  replay infrastructure exists, but player-facing replay workflow remains pending.
+  player-facing replay workflow is implemented locally, awaiting final verification/merge;
+  production LAN reconnect remains pending.
 - **§46 Victory:** command-station/planet-majority/economic/timed modes and allied
   elimination exist. Regression-test new abandonment against each mode and campaign
   objective rules rather than assuming identical semantics.
