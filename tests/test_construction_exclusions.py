@@ -219,11 +219,20 @@ class ConstructionExclusionTests(unittest.TestCase):
     def test_satellite_search_checks_hostile_exclusion_at_every_slot(self):
         from game.systems.colonies import colony_rules
         planet = self.planet()
-        center = self.factory.spawn_station('command_station', 1, Vec3(0, 0, 2500))
+        cap = int(colony_rules()["satellite_cap"])
+        # Each slot now rides its own shell and plane (#51), so derive the sites
+        # instead of assuming one shared ring, and put the hostile command
+        # station ON the first slot's site: the search has to notice that
+        # blocked slot and skip past it to the first legal one.
+        sites = [self.cs.satellite_site(planet, 'attack_satellite', slot)
+                 for slot in range(cap)]
+        # 1500u outward of the first slot's own site: inside the 3000u hostile
+        # exclusion for the near slots, well outside it for the far ones.
+        outward = sites[0] - planet.pos
+        outward = outward * (1500.0 / outward.length())
+        center = self.factory.spawn_station('command_station', 1, sites[0] + outward)
         center.crew = 0
-        cap = colony_rules()['satellite_cap']
-        legal = [slot for slot in range(cap)
-                 if self.cs.satellite_site(planet, 'attack_satellite', slot).dist(center.pos) >= 3000]
+        legal = [slot for slot in range(cap) if sites[slot].dist(center.pos) >= 3000]
         self.assertTrue(legal)
         self.assertNotEqual(legal[0], 0)
         self.assertTrue(self.cs.start_satellite(planet.id, 'attack_satellite', 0))

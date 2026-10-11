@@ -123,6 +123,90 @@ class TestConvoys(unittest.TestCase):
         self.assertEqual(len(convoys), 0)
 
 
+def _surface_hub(gm, planet):
+    """An operational planet Trade Hub on a colonised world (issue #53)."""
+    planet.colonized_by = 0
+    hub = gm.factory.spawn_station("planet_trade_hub", 0,
+                                   planet.pos + Vec3(planet.radius, 0, 0))
+    hub.planet_id = planet.id
+    hub.planet_building_slot = 0
+    return hub
+
+
+def _temperate(gm):
+    return next(e for e in gm.state.entities.values()
+                if e.data_id == "temperate" and e.owner == -1)
+
+
+class TestPlanetTradeHub(unittest.TestCase):
+    """Reported (#53): "Planet trading hub does not trade with trading stations"."""
+
+    def test_hub_is_a_market_end_for_convoys(self):
+        gm = make_game(ai=False)
+        st = gm.state
+        gm.trading.cfg["spawn_interval"] = 0.5
+        hub = _surface_hub(gm, _temperate(gm))
+        self.assertIn(hub, gm.trading.markets(st))
+        run_for(gm, 2.0)
+        self.assertEqual([e for e in st.entities.values()
+                          if e.alive and e.data_id == "trade_convoy"], [],
+                         "a lone market has nowhere to ship")
+        station = gm.factory.spawn_station("trade_station", 0, Vec3(-6000, 0, 0))
+        run_for(gm, 2.0)
+        convoys = [e for e in st.entities.values()
+                   if e.alive and e.data_id == "trade_convoy"]
+        self.assertTrue(convoys, "hub opened no route to the station")
+        self.assertTrue(all(c.convoy_dest in (hub.id, station.id) for c in convoys))
+        self.assertIn(hub.id, {c.convoy_source for c in convoys} |
+                      {c.convoy_dest for c in convoys})
+
+    def test_hub_convoy_delivers_and_pays_the_reward(self):
+        from unittest.mock import patch
+        gm = make_game(ai=False)
+        st = gm.state
+        ts = gm.trading
+        ts.cfg.update(spawn_interval=100000, reward_owner="destination")
+        hub = _surface_hub(gm, _temperate(gm))
+        station = gm.factory.spawn_station("trade_station", 0, Vec3(-6000, 0, 0))
+        self.assertTrue(ts.valid_market(st, 0, hub))
+        c = ts._make_convoy(hub, station, 150.0, 250.0)
+        self.assertTrue(ts.valid_market(st, 0, st.entity(c.convoy_dest)))
+        arrived = []
+        balance = {}
+
+        def observe_payment(ev):
+            data = dict(ev.data)
+            arrived.append((data, st.players[data["owner"]].credits
+                             - balance[data["owner"]]))
+
+        update = ts.update
+
+        def observed_update(dt):
+            balance.update({pid: p.credits for pid, p in st.players.items()})
+            update(dt)
+
+        st.events.subscribe("convoy_arrived", observe_payment)
+        with patch.object(ts, "update", side_effect=observed_update):
+            _advance_until(self, gm, lambda: bool(arrived))
+        data, reward = arrived[0]
+        self.assertEqual(data["dest"], station.id)
+        self.assertEqual(data["cargo"], 150.0)
+        self.assertEqual(reward, data["cargo"])
+        self.assertFalse(c.alive)
+
+    def test_hub_stops_trading_when_its_world_is_lost(self):
+        gm = make_game(ai=False)
+        st = gm.state
+        planet = _temperate(gm)
+        hub = _surface_hub(gm, planet)
+        station = gm.factory.spawn_station("trade_station", 0, Vec3(-6000, 0, 0))
+        self.assertIn(hub, gm.trading.markets(st))
+        planet.colonized_by = 1                       # captured by the enemy
+        self.assertNotIn(hub, gm.trading.markets(st))
+        self.assertFalse(gm.trading.valid_market(st, 0, hub))
+        self.assertTrue(gm.trading.valid_market(st, 0, station))
+
+
 class TestTradingReachability(unittest.TestCase):
     """Regressions for trading never actually running in a real game."""
 

@@ -16,6 +16,45 @@ def building_mesh(kind, faction='imperial'):
     return _building_mesh(kind, faction)
 
 
+def planet_shield_fields(state):
+    """Every colony shield field on the map, in ONE pass: `{planet_id: field}`.
+
+    The renderer needs all of them each frame, so it must not rescan the entity
+    dictionary once per planet the way a per-planet query would.
+    """
+    fields = {}
+    for e in sorted(state.entities.values(), key=lambda e: e.id):
+        if not (e.alive and e.operational
+                and e.data_id == 'planet_shield_generator'):
+            continue
+        planet = state.entity(e.planet_id) if e.planet_id is not None else None
+        if planet is None or getattr(planet, 'colonized_by', None) != e.owner:
+            continue
+        total = e.max_shield_total()
+        if total <= 0:
+            continue
+        fields[planet.id] = (e, max(0.0, min(1.0, e.total_shield() / total)),
+                             planet.radius * 1.04 + 48.0)
+    return fields
+
+
+def planet_shield_field(state, planet):
+    """`(generator, strength, radius)` for ONE colonized planet's surface shield.
+
+    The generator's quadrant pools absorb damage aimed at the planet's surface
+    hardware only (`planet_buildings.absorb_surface_damage`), so the field it
+    raises hugs the world just above its foundations. It deliberately does NOT
+    reach the orbital shells: an exterior bubble would advertise protection for
+    satellites and ships that the sim never shields. Returns `(None, 0.0, 0.0)`
+    when the planet has no operational, owner-held generator.
+    """
+    if planet is None or getattr(planet, 'colonized_by', None) is None or planet.colonized_by < 0:
+        return None, 0.0, 0.0
+    # Clearance above the tallest surface hardware (~50 u) but far inside the
+    # lowest satellite shell (planet.radius + orbit_clearance).
+    return planet_shield_fields(state).get(planet.id, (None, 0.0, 0.0))
+
+
 @lru_cache(maxsize=16)
 def _building_mesh(kind, faction):
     h = _Hardware()

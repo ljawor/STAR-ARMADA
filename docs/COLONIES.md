@@ -24,6 +24,7 @@
 | `satellite_cap` | 6 shared slots |
 | `approach_range` | 600 units beyond the planetary surface |
 | `orbit_clearance` | 350 units beyond planet + satellite radii |
+| `orbit_shell_spacing` | 160 units added per successive satellite slot: each slot rides its own orbit shell |
 
 Satellite costs, crew, hulls, weapons and production time are data-driven in `assets/data/stations/stations.json`. Planet income is configured in `economy.planet_income`, with `planet_crew_bonus` added **once**. The built-in resource rates and additive crew bonuses have both been increased to exactly **5×** their previous values; station income (including mining, trade and energy relays), convoy rewards, AI difficulty multipliers, command-capacity bonuses and all costs are unchanged. These numeric defaults still require long-match balancing.
 

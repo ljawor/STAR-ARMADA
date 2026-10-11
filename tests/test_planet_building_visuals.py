@@ -86,3 +86,65 @@ class SurfaceGeometryTests(unittest.TestCase):
         box=module.station_camera_box(state,e)
         for p in pts:
             self.assertTrue(all(box[2][i]<=p[i]-box[0][i]<=box[3][i] for i in range(3)))
+
+    def test_planet_shield_field_hugs_hardware_and_needs_an_owned_generator(self):
+        """Reported (#55): "planet shield generator does not show any visual"."""
+        module=importlib.import_module('render.planet_building_geometry')
+        self.assertTrue(hasattr(module,'planet_shield_field'),'missing planet shield field')
+        from types import SimpleNamespace
+        planet=Entity(id=1,kind='planet',owner=-1,data_id='temperate',pos=Vec3(),radius=650)
+        planet.is_planet=True
+        planet.colonized_by=0
+        gen=Entity(id=2,kind='station',owner=0,data_id='planet_shield_generator',radius=45,
+                   pos=Vec3(650,0,0),planet_id=1,planet_building_slot=0)
+        gen.is_station=True
+        gen.crew=20
+        gen.shields={'front':1500.,'rear':1500.,'left':0.,'right':750.}
+        gen.max_shield_quad=1500.
+        entities={1:planet,2:gen}
+        state=SimpleNamespace(entities=entities,entity=lambda i:entities.get(i))
+        generator,strength,radius=module.planet_shield_field(state,planet)
+        self.assertIs(generator,gen)
+        self.assertAlmostEqual(strength,3750./6000.)       # collapsed quadrants dim it
+        self.assertGreater(radius,planet.radius+50.)       # clears the surface hardware
+        self.assertLess(radius,planet.radius+350.)         # stays inside the satellite shells
+        # Never claims to shield a world it does not own, or one it lost.
+        planet.colonized_by=1
+        self.assertEqual(module.planet_shield_field(state,planet),(None,0.,0.))
+        planet.colonized_by=None
+        self.assertEqual(module.planet_shield_field(state,planet),(None,0.,0.))
+        planet.colonized_by=0
+        gen.crew=0                                          # abandoned: not operational
+        self.assertEqual(module.planet_shield_field(state,planet),(None,0.,0.))
+        gen.crew=20
+        gen.shields={q:0. for q in list(gen.shields)}
+        # A collapsed field is still an owned operational generator: strength
+        # 0.0 tells the renderer to draw nothing without pretending it is gone.
+        self.assertEqual(module.planet_shield_field(state,planet)[1],0.)
+        self.assertIs(module.planet_shield_field(state,planet)[0],gen)
+        gen.shields={'front':1500.}
+        gen.planet_id=99                                   # another world's generator
+        self.assertEqual(module.planet_shield_field(state,planet),(None,0.,0.))
+        # A live generator with intact pools raises the field again.
+        gen.planet_id=1
+        gen.shields={'front':1500.,'rear':1500.,'left':1500.,'right':1500.}
+        self.assertAlmostEqual(module.planet_shield_field(state,planet)[1],1.)
+        # The renderer asks for every field in one pass, not planet by planet.
+        self.assertTrue(hasattr(module,'planet_shield_fields'),'missing batched fields')
+        other=Entity(id=3,kind='planet',owner=-1,data_id='industrial',pos=Vec3(9000,0,0),radius=500)
+        other.is_planet=True
+        other.colonized_by=1
+        enemy_gen=Entity(id=4,kind='station',owner=1,data_id='planet_shield_generator',radius=45,
+                         pos=Vec3(9500,0,0),planet_id=3,planet_building_slot=0)
+        enemy_gen.is_station=True
+        enemy_gen.crew=20
+        enemy_gen.shields={'front':900.,'rear':900.,'left':900.,'right':900.}
+        enemy_gen.max_shield_quad=900.
+        entities.update({3:other,4:enemy_gen})
+        fields=module.planet_shield_fields(state)
+        self.assertEqual(sorted(fields),[1,3])
+        self.assertIs(fields[1][0],gen)
+        self.assertAlmostEqual(fields[1][1],1.)
+        self.assertAlmostEqual(fields[3][1],1.)
+        self.assertAlmostEqual(fields[3][2],other.radius*1.04+48.)
+        self.assertIs(module.planet_shield_field(state,other)[0],enemy_gen)
