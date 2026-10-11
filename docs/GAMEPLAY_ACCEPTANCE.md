@@ -2,10 +2,12 @@
 
 ## Scope and approved behavior
 
-This branch reconciles the roadmap with released v0.7.0, increases all built-in
+PR #39, merged and packaged in v0.8.0 on October 11, 2026, reconciles the roadmap
+with released v0.7.0, increases all built-in
 colonized-planet resource and crew rates (including additive crew bonuses) to
 exactly 5×, and fixes campaign lifecycle integration. These follow-up changes
-are not included in v0.7.0. No release or merge is implied.
+are not included in v0.7.0. The observations below remain historical controlled
+evidence, not new natural-playthrough or full-match balance acceptance.
 
 Campaign mission objectives determine completion; skirmish command-station rules
 must not freeze an active mission. Abandoned nonoperational hulls cannot hold

@@ -140,15 +140,22 @@ class MainLifecycleTests(unittest.TestCase):
         for started in (False, True):
             with self.subTest(started=started):
                 events = []
-                renderer, hud, pygame = Mock(), Mock(), Mock()
+                renderer, hud, presentation, pygame = Mock(), Mock(), Mock(), Mock()
                 renderer.close.side_effect = lambda: events.append('renderer.close')
                 hud.close.side_effect = lambda: events.append('hud.close')
+                presentation.cleanup.side_effect = lambda: events.append('presentation.cleanup')
                 pygame.quit.side_effect = lambda: events.append('quit')
                 exec(code, dict(audio=None, renderer=renderer if started else None,
-                                hud=hud if started else None, pygame=pygame,
+                                hud=hud if started else None,
+                                presentation=presentation if started else None, pygame=pygame,
                                 save_settings=Mock(), SETTINGS={}, SMOKE=False,
                                 menu=Mock(), net_session=None))
-                self.assertEqual(events, ['renderer.close', 'hud.close', 'quit'] if started else ['quit'])
+                self.assertEqual(events, ['renderer.close', 'hud.close', 'presentation.cleanup', 'quit']
+                                 if started else ['quit'])
+                if started:
+                    presentation.cleanup.assert_called_once_with()
+                else:
+                    presentation.cleanup.assert_not_called()
 
 
 class SkyStateTests(unittest.TestCase):

@@ -51,17 +51,44 @@ DEFAULT_SETTINGS = {
     # Ownership marker verbosity in the 3D view: 'all' | 'hostiles' | 'off'.
     # Read-only view state — never part of the simulation.
     "markers": "all",
+    "audio_dynamic_range": "standard",
+    "audio_mono": False,
+    "cinematics_enabled": True,
+    "reduced_motion": False,
+    "tutorial_hints": True,
+    "high_contrast_ui": False,
 }
+
+
+def validate_presentation_settings(settings: dict) -> dict:
+    """Normalize only presentation preferences; retain legacy/mod settings."""
+    result = dict(settings) if isinstance(settings, dict) else {}
+    for key in ('music_volume', 'sfx_volume', 'pan_speed'):
+        value = result.get(key)
+        if type(value) not in (int, float) or (isinstance(value, float) and not math.isfinite(value)):
+            value = DEFAULT_SETTINGS[key]
+        result[key] = min(1.0, max(0.0, value))
+    for key in ('fullscreen', 'autosave', 'audio_mono', 'cinematics_enabled',
+                'reduced_motion', 'tutorial_hints', 'high_contrast_ui'):
+        if type(result.get(key)) is not bool:
+            result[key] = DEFAULT_SETTINGS[key]
+    if result.get('markers') not in ('all', 'hostiles', 'off'):
+        result['markers'] = DEFAULT_SETTINGS['markers']
+    if result.get('audio_dynamic_range') not in ('standard', 'night'):
+        result['audio_dynamic_range'] = 'standard'
+    return result
 
 
 def load_settings() -> dict:
     s = dict(DEFAULT_SETTINGS)
     try:
         with open(SETTINGS_PATH) as f:
-            s.update(json.load(f))
+            saved = json.load(f)
+        if isinstance(saved, dict):
+            s.update(saved)
     except (OSError, ValueError):
         pass
-    return s
+    return validate_presentation_settings(s)
 
 
 def save_settings(s: dict) -> None:
@@ -232,6 +259,13 @@ class MenuStack:
                                GL_QUADS, GL_SRC_ALPHA, GL_RGB,
                                GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
                                GL_TEXTURE_MIN_FILTER, GL_UNSIGNED_BYTE)
+        from OpenGL import GL as gl
+        matrix_mode = int(gl.glGetIntegerv(gl.GL_MATRIX_MODE))
+        gl.glPushAttrib(gl.GL_ENABLE_BIT | gl.GL_COLOR_BUFFER_BIT |
+                        gl.GL_TEXTURE_BIT | gl.GL_CURRENT_BIT)
+        gl.glDisable(gl.GL_LIGHTING)
+        gl.glDisable(gl.GL_CULL_FACE)
+        gl.glBlendEquation(gl.GL_FUNC_ADD)
         surf = self._surface
         if self.overlay_tex is None:
             self.overlay_tex = glGenTextures_proxy()
@@ -270,6 +304,8 @@ class MenuStack:
         glPopMatrix()
         glMatrixMode(GL_MODELVIEW)
         glPopMatrix()
+        gl.glPopAttrib()
+        gl.glMatrixMode(matrix_mode)
 
     # ------------------------------------------------------------- backdrop
     def _draw_backdrop(self) -> None:
@@ -287,9 +323,10 @@ class MenuStack:
             s.blit(glow, (cx - r, cy - r))
         # drifting parallax stars
         for star in self.stars:
-            star[1] += star[2] * 0.35
-            if star[1] > self.height:
-                star[1] = 0.0
+            if not self.settings.get("reduced_motion", False):
+                star[1] += star[2] * 0.35
+                if star[1] > self.height:
+                    star[1] = 0.0
             b = 90 + int(star[3] * 130)
             sz = 1 if star[2] < 0.7 else 2
             s.fill((b, b, min(255, b + 20)),
@@ -318,7 +355,8 @@ class MenuStack:
 
     # ----------------------------------------------------------- main draw
     def render(self, dt: float) -> None:
-        self.t += dt
+        if not self.settings.get("reduced_motion", False):
+            self.t += dt
         self.buttons = []
         self._draw_backdrop()
         if self.screen == "splash":
@@ -724,58 +762,96 @@ class MenuStack:
         self.replay_text_bounds = [transform(r) for r in self.replay_text_bounds]
 
     def _screen_settings(self) -> None:
-        self._title("SETTINGS", self.font_big, self.height * 0.08)
+        """Three bounded pages, with explicit values and keyboard focus."""
+        pages = (
+            ('Sound & display', (('Music volume', 'music_volume', 'slider'),
+                ('SFX volume', 'sfx_volume', 'slider'), ('Fullscreen', 'fullscreen', 'toggle'),
+                ('Autosave', 'autosave', 'toggle'), ('Ownership markers', 'markers', 'cycle_markers'),
+                ('Camera pan speed', 'pan_speed', 'slider'))),
+            ('Audio & presentation', (('Dynamic range', 'audio_dynamic_range', 'cycle_range'),
+                ('Mono audio', 'audio_mono', 'toggle'), ('Cinematics', 'cinematics_enabled', 'toggle'),
+                ('Reduced motion', 'reduced_motion', 'toggle'), ('Tutorial hints', 'tutorial_hints', 'toggle'))),
+            ('Readability & help', (('High contrast panels', 'high_contrast_ui', 'toggle'),)),
+        )
+        self.settings_page = min(2, max(0, getattr(self, 'settings_page', 0)))
+        self.settings_focus = getattr(self, 'settings_focus', -1)
+        self.settings_text_bounds = []
+        title, rows = pages[self.settings_page]
         mouse = pygame.mouse.get_pos()
-        y0 = self.height * 0.22
-        row_h = 64
-        bw, bh = 200, 40
+        foreground = (255, 255, 255) if self.settings['high_contrast_ui'] else (220, 230, 255)
+        panel = pygame.Rect(self.width // 2 - 330, 112, 660, self.height - 222)
+        pygame.draw.rect(self._surface, (0, 0, 0) if self.settings['high_contrast_ui'] else (10, 14, 26), panel)
 
-        def slider(y, label, key):
-            r = pygame.Rect(self.width // 2 - 220, y, 440, 26)
-            pygame.draw.rect(self._surface, (22, 30, 50), r, border_radius=4)
-            frac = float(self.settings.get(key, 0.7))
-            fill = pygame.Rect(r.x, r.y, int(r.w * frac), r.h)
-            pygame.draw.rect(self._surface, (70, 110, 190), fill,
-                             border_radius=4)
-            pygame.draw.rect(self._surface, (90, 120, 180), r, 1,
-                             border_radius=4)
-            lab = self.font_small.render(label, True, (200, 215, 245))
-            self._surface.blit(lab, (r.x, y - 24))
-            val = self.font_small.render(f"{int(frac * 100)}%", True,
-                                         (150, 175, 220))
-            self._surface.blit(val, (r.right + 8, y + 2))
-            self.buttons.append({"rect": r, "action": "slider",
-                                 "payload": {"key": key, "rect": r}})
+        def text(label, pos, font=None):
+            rendered = (font or self.font_small).render(label, True, foreground)
+            bounds = self._surface.blit(rendered, pos)
+            self.settings_text_bounds.append((label, bounds))
 
-        slider(y0, "Music volume", "music_volume")
-        slider(y0 + row_h, "SFX volume", "sfx_volume")
+        text('SETTINGS', (panel.x + 18, 58), self.font_big)
+        text(f'{title} - Page {self.settings_page + 1}/3', (panel.x + 18, panel.y + 18), self.font_med)
+        for index, (label, key, action) in enumerate(rows):
+            y = panel.y + 64 + index * 60
+            r = pygame.Rect(panel.x + 18, y, panel.w - 36, 42)
+            focused = self.settings_focus == index
+            hot = focused or r.collidepoint(mouse)
+            pygame.draw.rect(self._surface, (45, 65, 105) if hot else (20, 28, 46), r)
+            pygame.draw.rect(self._surface, foreground if focused else (100, 125, 165), r, 2 if focused else 1)
+            value = self.settings.get(key)
+            if action == 'slider':
+                value = min(1.0, max(0.0, float(value)))
+                bar = pygame.Rect(r.right - 220, r.y + 16, 140, 10)
+                pygame.draw.rect(self._surface, (60, 75, 95), bar)
+                pygame.draw.rect(self._surface, (160, 190, 255), (bar.x, bar.y, int(value * bar.w), bar.h))
+                text(f'{int(value * 100)}%', (r.right - 65, r.y + 10))
+                payload = {'key': key, 'rect': bar}
+            else:
+                value = ('ON' if value else 'OFF') if action == 'toggle' else str(value).upper()
+                text(value, (r.right - 145, r.y + 10))
+                payload = {'key': key}
+            text(label, (r.x + 12, r.y + 10))
+            self.buttons.append({'rect': r, 'action': action, 'payload': payload})
+        if self.settings_page == 2:
+            for index, line in enumerate(('F1: keyboard and controls help during play.',
+                'High contrast applies to help / hint panels only.',
+                'Reduced motion disables menu drift and cinematic motion.',
+                'Not whole-game scaling or full colorblind compliance.')):
+                text(line, (panel.x + 18, panel.y + 142 + index * 30))
+        text('Tab/Up/Down: focus  Enter: toggle  Left/Right: volume', (panel.x + 18, panel.bottom - 52))
+        text('Page Up/Down: pages  Esc: back', (panel.x + 18, panel.bottom - 28))
+        for index, (label, action, payload) in enumerate((('PREVIOUS', 'settings_page', -1),
+                ('NEXT', 'settings_page', 1), ('BACK', 'goto_main', None))):
+            r = pygame.Rect(panel.x + index * 224, self.height - 90, 212, 48)
+            self._button(r, label, action, payload, hot=r.collidepoint(mouse))
+            # Include the actual button glyph bounds in diagnostic containment.
+            self.settings_text_bounds.append((label, self.font_med.render(label, True, foreground).get_rect(center=r.center)))
 
-        # toggles
-        def toggle(y, label, key):
-            on = bool(self.settings.get(key))
-            r = pygame.Rect(self.width // 2 - 220, y, bw, bh)
-            self._button(r, f"{label}: {'ON' if on else 'OFF'}",
-                         "toggle", {"key": key},
-                         hot=r.collidepoint(mouse))
-
-        toggle(y0 + 2 * row_h, "Fullscreen", "fullscreen")
-        toggle(y0 + 2 * row_h + 54, "Autosave", "autosave")
-
-        # Ownership markers cycle rather than toggle: three readable states, so
-        # a player who dislikes icon clutter is not forced to lose hostiles.
-        mode = self.settings.get("markers", "all")
-        if mode not in ("all", "hostiles", "off"):
-            mode = "all"
-        r = pygame.Rect(self.width // 2 - 220, y0 + 2 * row_h + 108,
-                        bw, bh)
-        self._button(r, f"Ownership markers: {mode.upper()}", "cycle_markers",
-                     hot=r.collidepoint(mouse))
-
-        # pan speed slider too
-        slider(y0 + 2 * row_h + 162 + 24, "Camera pan speed", "pan_speed")
-
-        back = pygame.Rect(self.width // 2 - 110, self.height - 90, 220, 48)
-        self._button(back, "BACK", "goto_main", hot=back.collidepoint(mouse))
+    def _settings_key(self, ev) -> bool:
+        if ev.type != pygame.KEYDOWN or ev.key == pygame.K_ESCAPE:
+            return False
+        if ev.key in (pygame.K_PAGEUP, pygame.K_PAGEDOWN):
+            delta = 1 if ev.key == pygame.K_PAGEDOWN else -1
+            self.settings_page = min(2, max(0, getattr(self, 'settings_page', 0) + delta))
+            self.settings_focus = -1
+            self.buttons = []
+            return True
+        controls = [b for b in self.buttons if isinstance(b.get('payload'), dict) and 'key' in b['payload']]
+        if not controls:
+            return True
+        focus = getattr(self, 'settings_focus', -1)
+        if ev.key in (pygame.K_TAB, pygame.K_UP, pygame.K_DOWN):
+            delta = -1 if ev.key == pygame.K_UP or (ev.key == pygame.K_TAB and getattr(ev, 'mod', 0) & pygame.KMOD_SHIFT) else 1
+            self.settings_focus = (focus + delta) % len(controls)
+        elif ev.key in (pygame.K_RETURN, pygame.K_SPACE, pygame.K_LEFT, pygame.K_RIGHT):
+            focus = max(0, min(len(controls) - 1, focus))
+            button = controls[focus]
+            if button['action'] == 'slider':
+                key = button['payload']['key']
+                delta = -0.05 if ev.key == pygame.K_LEFT else 0.05
+                self.settings[key] = round(min(1, max(0, self.settings[key] + delta)), 2)
+                self._dirty_settings = True
+            else:
+                self.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1, pos=button['rect'].center))
+        return True
 
     def _screen_campaign(self) -> None:
         self._title(self.campaign.get("campaign", "CAMPAIGN"),
@@ -949,6 +1025,8 @@ class MenuStack:
             self.lan_notice = str(exc)
 
     def handle_event(self, ev) -> None:
+        if self.screen == 'settings' and self._settings_key(ev):
+            return
         if self.screen in ('lan_host', 'lan_join') and self.lan_focus:
             field = self.lan_focus
             if ev.type == pygame.TEXTINPUT:
@@ -1129,6 +1207,13 @@ class MenuStack:
                         self.result_payload = ms[self.selected_mission]
                 elif act == "exit":
                     self.result = MenuResult.EXIT
+                elif act == "settings_page":
+                    self.settings_page = min(2, max(0, getattr(self, 'settings_page', 0) + b['payload']))
+                    self.settings_focus = -1
+                    self.buttons = []
+                elif act == "cycle_range":
+                    self.settings["audio_dynamic_range"] = ("night" if self.settings.get("audio_dynamic_range") == "standard" else "standard")
+                    self._dirty_settings = True
                 elif act == "cycle_markers":
                     from render.markers import next_mode
                     self.settings["markers"] = next_mode(
