@@ -131,9 +131,18 @@ and camera queries, metal/material rendering, planets/deep space, local shield/h
 impacts, layered explosions, per-weapon procedural audio, player ownership markers,
 and faction-specific ships/stations/convoys with protected Imperial geometry.
 
+**Branch-only presentation increment:** `feature/phase10-presentation` implements
+standard/night audio mix, mono/live gains and reserved alerts, short skippable
+campaign intros/outros, paged F1 help/settings, optional recovery-drill hints,
+high-contrast panels and reduced cinematic motion. Native macOS mixer and real
+SDL/GL diagnostics passed at 1024×768 and 1280×800; a local frozen read-only DMG
+candidate passed smoke. These changes are not in published v0.8.0. Human listening,
+natural tutorial usability, native Windows and mixed-platform LAN remain open.
+See [PHASE10_ACCEPTANCE.md](PHASE10_ACCEPTANCE.md) for exact gates and limits.
+
 **Pending:** measured large-battle budgets and optimization, fighter simulation/model
 LOD, GPU instancing/appropriate batching and occlusion where profiling justifies them;
-final audio quality/mix validation, UX/tutorial/accessibility polish, faction/economy/
+human audio quality validation, broader UX/tutorial/accessibility polish, faction/economy/
 combat balance and release acceptance on both platforms. Existing audio, faction visuals
 and screen-size readability are not equivalent to completion of every original LOD,
 audio-pack or livery requirement.
@@ -189,7 +198,8 @@ audio-pack or livery requirement.
 3. **Complete campaign acceptance (Phase 7).** Scripting, reinforcement waves,
    staged/capture/crew objectives and stable-ID progression now exist. Run natural-navigation
    full playthroughs of all 11 missions and tune waves/objective pacing; do not rebuild scripting.
-   Keep cinematic polish after the mission logic is stable.
+   Short skippable cinematics are implemented on the Phase 10 branch; full natural
+   mission playthrough acceptance remains separate.
 4. **Next major feature: live multiplayer resilience (Phase 8).** Integrate distributed
    freeze/rollback, acknowledged-input reconciliation and atomic reconnect/resync handoff.
    Replay recording/browser/playback already exist; preserve deterministic scripting,
@@ -201,8 +211,9 @@ audio-pack or livery requirement.
    Require playable frame/tick times and network stability, not only eight slots.
 7. **Finish mod delivery (Phase 9).** Stable merge rules, manifest/compatibility contract,
    mod selection/error UX, asset packs and faction authoring after schemas stabilize.
-8. **Final campaign/presentation/release pass (Phase 10).** Cinematics, audio mix,
-   tutorials/accessibility/UX, complete campaign and long skirmish/LAN playtests,
+8. **Finish presentation acceptance (Phase 10).** Review the branch-only audio mix,
+   short campaign cinematics and targeted tutorials/accessibility/UX. Human listening,
+   natural recovery-drill/campaign and long skirmish/LAN playtests remain open;
    regression-check existing native macOS/Windows packaging and complete interactive
    acceptance, refreshed docs.
 

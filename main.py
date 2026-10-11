@@ -37,6 +37,7 @@ from render.renderer import Renderer  # noqa: E402
 from render.hud import HUD  # noqa: E402
 from render.input import InputController  # noqa: E402
 from render.audio import Audio  # noqa: E402
+
 from render.menus import (MenuStack, MenuResult,  # noqa: E402
                           load_settings, save_settings, USER_DIR)
 
@@ -68,6 +69,8 @@ if SMOKE and os.environ.get("STAR_ARMADA_FORCE_DUMMY") == "1":
     pygame.quit()
     pygame.init()
 SETTINGS = load_settings()
+SETTINGS.setdefault('cinematics_enabled', True)
+SETTINGS.setdefault('reduced_motion', False)
 FULLSCREEN = "--fullscreen" in sys.argv or bool(SETTINGS.get("fullscreen"))
 _flags = pygame.DOUBLEBUF | pygame.OPENGL
 _aa = int(SETTINGS.get("msaa", 4))
@@ -176,6 +179,9 @@ running = True
 flash_msg = ""
 flash_until = 0.0
 mission_def: dict | None = None
+cinematic = None
+campaign_outcome_seen = False
+presentation = None
 
 
 def flash(msg: str) -> None:
@@ -192,6 +198,7 @@ def start_game(load_path: str | None = None, mdef: dict | None = None,
     global flash_until
     global net_session, local_player, accumulator, last_autosave
     global recording, playback, replay_notice
+    global presentation
     from game.net.replay import MatchRecording, PlaybackSession, load_replay
     candidate = PlaybackSession(load_replay(replay_path)) if replay_path else None
     if 'finish_recording' in globals():
@@ -248,6 +255,14 @@ def start_game(load_path: str | None = None, mdef: dict | None = None,
         inputc = InputController(state, camera, hud, None)
     inputc.local_player = local_player
     inputc.app = _AppGlue()
+    from render.presentation import PresentationOverlay
+    if globals().get('presentation') is not None:
+        presentation.cleanup()
+    presentation = PresentationOverlay(W, H, SETTINGS, local_player)
+    globals()['cinematic'] = None
+    globals()['campaign_outcome_seen'] = False
+    if mdef is not None and load_path is None:
+        start_campaign_presentation(fresh=True)
 
 
 def begin_recording(manager):
@@ -293,9 +308,69 @@ def rebuild(load_path: str | None) -> None:
     flash("game loaded")
 
 
+def start_campaign_presentation(fresh=False):
+    """Intro only for a fresh local campaign; never suspend LAN/replay."""
+    global cinematic, campaign_outcome_seen
+    from render.cinematics import CampaignCinematic
+    cinematic = None
+    campaign_outcome_seen = False
+    if (fresh and mission_def is not None and net_session is None
+            and globals().get('playback') is None
+            and SETTINGS.get('cinematics_enabled', True)):
+        cinematic = CampaignCinematic(mission_def, camera,
+                                     reduced_motion=SETTINGS.get('reduced_motion', False))
+
+
+def sync_campaign_outcome():
+    """Latch the real outcome, persist success independently of skip/settings."""
+    global cinematic, campaign_outcome_seen
+    from render.cinematics import CampaignCinematic
+    if (globals().get('mission_def') is None or net_session is not None
+            or globals().get('playback') is not None
+            or globals().get('campaign_outcome_seen', False)):
+        return
+    if not (gm.mission.completed or gm.mission.failed or state.game_over):
+        return
+    campaign_outcome_seen = True
+    won = gm.mission.completed
+    if won:
+        _unlock_next_mission()
+    if SETTINGS.get('cinematics_enabled', True):
+        controller = globals().get('inputc')
+        if controller is not None:
+            controller.keys.clear()
+            controller.dragging = False
+            controller.drag_start = controller.drag_cur = controller.right_drag = None
+        if cinematic is not None:
+            cinematic.finish()
+        cinematic = CampaignCinematic(mission_def, camera,
+            reduced_motion=SETTINGS.get('reduced_motion', False),
+            outcome='MISSION COMPLETE' if won else 'MISSION FAILED')
+
+
+def draw_campaign_presentation(dt_frame):
+    """The production world, frozen simulation/FX, with a view-only overlay."""
+    global cinematic, accumulator
+    accumulator = 0.0
+    cinematic.update(dt_frame)
+    camera.apply(W, H)
+    renderer.placement = None
+    renderer.draw(0.0, set())
+    cinematic.draw_gl(W, H)
+    pygame.display.flip()
+    if cinematic.finished:
+        outcome = cinematic.outcome
+        cinematic = None
+        if outcome is not None:
+            leave_game()
+
+
 def advance_simulation(dt_frame):
     """LAN advances at most one barrier per frame; waiting never accrues debt."""
     global accumulator
+    if globals().get('cinematic') is not None and net_session is None and globals().get('playback') is None:
+        accumulator = 0.0
+        return
     if globals().get('playback') is not None:
         playback.advance(dt_frame)
         return
@@ -322,6 +397,10 @@ def advance_simulation(dt_frame):
     while accumulator >= TICK_DT:
         gm.step(TICK_DT)
         accumulator -= TICK_DT
+        sync_campaign_outcome()
+        if globals().get('cinematic') is not None:
+            accumulator = 0.0
+            break
         if state.game_over:
             break
 
@@ -329,6 +408,13 @@ def advance_simulation(dt_frame):
 def leave_game(reason=''):
     """Release match ownership and return to a usable reconnect/menu screen."""
     global net_session, mode, paused, accumulator, audio
+    global presentation
+    if globals().get('presentation') is not None:
+        presentation.cleanup()
+    presentation = None
+    if globals().get('cinematic') is not None:
+        cinematic.finish()
+        globals()['cinematic'] = None
     finish_recording()
     replaying = globals().get('playback') is not None
     globals()['playback'] = None
@@ -383,6 +469,42 @@ def handle_game_input(ev):
         if net_session is None and globals().get('playback') is None:
             raise
         leave_game(str(exc))
+
+
+def handle_presentation_input(ev):
+    """Help is view-only and modal for input, never a LAN pause."""
+    overlay = globals().get('presentation')
+    if overlay is None:
+        return False
+    was_open = overlay.help_visible
+    consumed = overlay.handle_event(ev)
+    if overlay.help_visible != was_open:
+        inputc.keys.clear()
+        inputc.dragging = False
+        inputc.drag_start = inputc.drag_cur = inputc.right_drag = None
+        inputc._pending_fleet = None
+        inputc._cancel_jump()
+        inputc._cancel_ability()
+        hud_view = globals().get('hud')
+        if hud_view is not None:
+            hud_view.placement = None
+    elif consumed and ev.type == pygame.MOUSEBUTTONUP:
+        # End only the intercepted gesture, without selecting or issuing orders.
+        if ev.button == 1:
+            inputc.dragging = False
+            inputc.drag_start = inputc.drag_cur = None
+        elif ev.button == 3:
+            inputc.right_drag = None
+    return consumed
+
+
+def draw_presentation_overlay():
+    overlay = globals().get('presentation')
+    if overlay is not None:
+        overlay.draw(state, inputc, width=W, height=H, local_player=local_player,
+                     blocked_rects=hud.blocked_rects)
+        overlay.draw_gl()
+        hud.blocked_rects.extend(overlay.panel_rects)
 
 
 def handle_network_event(ev):
@@ -532,10 +654,21 @@ while running:
     poll_network()
     if mode != 'game':
         continue
+    sync_campaign_outcome()
+    presentation_frame = cinematic is not None
+    help_frame = presentation is not None and presentation.help_visible
     for ev in pygame.event.get():
         if ev.type == pygame.QUIT:
             running = False
             break
+        if presentation_frame:
+            cinematic.handle_event(ev)
+            continue
+        if handle_presentation_input(ev):
+            help_frame = help_frame or presentation.help_visible
+            continue
+        if help_frame:
+            continue
         if ev.type == pygame.KEYDOWN:
             if playback is not None and ev.key != pygame.K_F11:
                 handle_game_input(ev)
@@ -561,8 +694,10 @@ while running:
                                        and (gm.mission.completed
                                             or gm.mission.failed)):
                     # campaign result: persist progress before menus
-                    if mission_def is not None and gm.mission.completed:
+                    if (mission_def is not None and gm.mission.completed
+                            and not globals().get('campaign_outcome_seen', False)):
                         _unlock_next_mission()
+                        campaign_outcome_seen = True
                     if 'finish_recording' in globals():
                         finish_recording()
                     mode = "menu"       # campaign result -> back to menus
@@ -573,12 +708,20 @@ while running:
 
     if mode != 'game' or not running:
         continue
+    if presentation_frame:
+        draw_campaign_presentation(dt_frame)
+        continue
     try:
         advance_simulation(dt_frame)
     except Exception as exc:
         if net_session is None and globals().get('playback') is None:
             raise
         leave_game(str(exc))
+        continue
+
+    sync_campaign_outcome()
+    if cinematic is not None:
+        draw_campaign_presentation(dt_frame)
         continue
 
     if playback is None and state.game_over:
@@ -617,6 +760,7 @@ while running:
     hud.render(inputc.selection, None, local_player, view_paused, view_msg,
                max(0.0, flash_left), fps)
     hud.draw_gl()
+    draw_presentation_overlay()
     pygame.display.flip()
 
     frames += 1
@@ -656,6 +800,8 @@ if renderer is not None:
     renderer.close()
 if hud is not None:
     hud.close()
+if presentation is not None:
+    presentation.cleanup()
 pygame.quit()
 if SMOKE and state is not None:
     print("SMOKE_DONE " + summary())

@@ -4,10 +4,11 @@
 classic space-fleet RTS titles (Armada II / Fleet Operations era). It runs entirely on
 Python 3 — deterministic simulation, AI, OpenGL rendering via pygame-ce and procedural audio.
 
-**Current release: [v0.7.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.7.0)**
-— published October 10, 2026, with macOS DMG and Windows ZIP. Adds boarding, crew
-recovery/transports, planetary colonies/satellites and support orders to the existing
-faction hardware, combat ranks, fleet HUD, LAN multiplayer and alliances.
+**Current release: [v0.8.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.8.0)**
+— published October 11, 2026, with macOS DMG and Windows ZIP. Adds campaign scripting,
+an introductory recovery drill, exact runtime restore/player-facing replays and
+5× colonized-planet income to the boarding, crew recovery and colonies of v0.7.0.
+The Phase 10 presentation increment described below is branch-only, not in v0.8.0.
 Native interactive Windows gameplay and mixed-platform LAN acceptance remain open.
 
 The setting is an original space-opera universe. Prototype faction/ship names are
@@ -110,9 +111,9 @@ new stations/satellites require 3,000-unit clearance from enemy command centers.
 See [docs/SUPPORT_ORDERS.md](docs/SUPPORT_ORDERS.md) and
 [docs/COLONIES.md](docs/COLONIES.md) for the approved rules, initial tuning and diagnostics.
 
-**Branch-only balance follow-up:** **5× colonized-planet resource and crew income**
-is implemented on PR #39, together with campaign objective/abandonment save-restore
-fixes. It is not included in v0.7.0. Bounded AI matrix and long-probe observations,
+**Released balance follow-up:** **5× colonized-planet resource and crew income**
+was merged in PR #39 and packaged in v0.8.0, together with campaign objective/abandonment
+save-restore fixes. It is not included in v0.7.0. Bounded AI matrix and long-probe observations,
 mechanic regressions and open acceptance gates are recorded in
 [docs/GAMEPLAY_ACCEPTANCE.md](docs/GAMEPLAY_ACCEPTANCE.md); these do not establish
 statistical full-match balance or Windows/mixed-platform LAN acceptance.
@@ -190,10 +191,34 @@ Multiplayer / Settings / Quit). Settings (music/SFX volume, fullscreen, autosave
 camera pan speed) persist to `saves/settings.json` in source runs. Packaged builds
 store settings, saves and campaign progress outside the application bundle:
 `~/Library/Application Support/STAR ARMADA` on macOS and `%APPDATA%\STAR ARMADA`
-on Windows. On the current branch, the **Campaign** screen pages an introductory
+on Windows. Since v0.8.0, the **Campaign** screen pages an introductory
 recovery drill plus the original ten-mission "Rise of the Outer Armada" chain (`assets/data/campaign/campaign.json`); each mission
 has a briefing (story, objectives, enemy preview) before LAUNCH, and in-game objectives
 are tracked live in the HUD with COMPLETE/FAILED states.
+
+### Phase 10 presentation (branch-only)
+
+The `feature/phase10-presentation` increment adds:
+
+- **Audio:** standard/night dynamic-range profiles, mono output, live music/SFX gain
+  controls and reserved ambient/critical/objective channels. Own notifications are
+  independent of camera distance; spatial enemy combat cues still require detection.
+- **Campaign:** short in-engine intros and success/failure outros. Enter, Space,
+  Escape or mouse click skips; camera and simulation time are restored without
+  catch-up. Cinematics can be disabled and never run in LAN or replay playback.
+- **Help:** F1 opens paged controls/support help; Escape/F1 closes. It consumes gameplay
+  input, clears held gestures/targeting, and does not independently pause LAN.
+- **Targeted accessibility:** high-contrast help/hint panels, optional recovery-drill
+  hints placed around existing HUD controls, and reduced cinematic pan/fades.
+  This is not whole-game scaling, screen-reader support or removal of all combat effects.
+- **Settings:** keyboard/mouse-reachable pages; all new options persist and reject
+  malformed/nonfinite values.
+
+Native macOS audio and SDL/OpenGL diagnostics pass at 1024×768 and 1280×800;
+the local frozen candidate also passes a read-only DMG smoke. Human listening,
+natural tutorial usability, native Windows and mixed-platform LAN remain open.
+See [Phase 10 acceptance](docs/PHASE10_ACCEPTANCE.md) for evidence and limits.
+No new release or merge is implied.
 
 ## Skirmish maps and setup contract
 
@@ -377,15 +402,15 @@ not proof of statistical full-match balance.
 
 ## Releases
 
-**[Download v0.7.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.7.0)**
-(published October 10, 2026):
+**[Download v0.8.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.8.0)**
+(published October 11, 2026):
 
-- **macOS:** `STAR-ARMADA-v0.7.0-mac.dmg`
-- **Windows:** `STAR-ARMADA-v0.7.0-win.zip`
+- **macOS:** `STAR-ARMADA-v0.8.0-mac.dmg`
+- **Windows:** `STAR-ARMADA-v0.8.0-win.zip`
 
 The release notes record successful native macOS/Windows CI builds, downloaded
 assets matching GitHub SHA-256 digests, DMG checksum and Windows ZIP integrity
-checks. The published macOS bundle reports 0.7.0 and passed a 30-second frozen-app
+checks. The published macOS bundle reports 0.8.0 and passed a 30-second frozen-app
 smoke (`SMOKE_OK`). **Native interactive Windows gameplay was not exercised;
 mixed-platform LAN acceptance remains open.** Packaging is delivered, not a
 missing feature; these remaining interactive checks are separate acceptance gates.
@@ -399,6 +424,7 @@ local builds (`./scripts/build_mac.sh`).
 
 | Release | Delivered |
 |---|---|
+| **v0.8.0** | Campaign scripting/reinforcements, eleven-mission catalogue, stable-ID progression, canonical runtime restore, replay recording/browser/playback and 5× colonized-planet income (#39); published macOS DMG and Windows ZIP |
 | **v0.7.0** | Boarding and crew/life support (#37), crew recovery/transports and cautious AI (#38), colonies/capture/satellites and support orders (#40); published macOS DMG and Windows ZIP |
 | **v0.6.0** | Distinct ships, ten station types and convoys for every faction; Imperial look preserved; faction construction previews, geometry-safe cameras and exact hull contacts |
 | **v0.5.2** | Ownership hull shading and screen-clamped friend/hostile markers with configurable visibility |
@@ -414,15 +440,16 @@ The game remains a playable prototype, not the full design specification.
 Boarding/capture (#37), crew recovery/staffing/AI (#38), and colonies/support orders
 (#40) are merged and packaged in v0.7.0. Long-match balance, native interactive
 Windows and mixed-platform LAN acceptance remain open. The 5× colonized-planet
-resource and crew income follow-up is included in v0.8.0 source, not v0.7.0; bounded
+resource and crew income follow-up is packaged in v0.8.0, not v0.7.0; bounded
 observations and remaining balance gates are documented separately. Campaign scripting,
 staged capture/crew objectives and replay recording/browser/playback are implemented
-in the v0.8.0 source increment; package checks are recorded in release notes.
+in v0.8.0; package checks are recorded in release notes.
 See [campaign notes](docs/CAMPAIGN_SCRIPTING.md)
 and [replay notes](docs/REPLAYS.md). Reconnect has standalone tested foundations only:
 **live LAN disconnects still end matches**. Production freeze/rollback, input
 reconciliation and UI handoff remain pending; see [reconnect scope](docs/LAN_RECONNECT.md).
-Eight-player matches, full campaign playthroughs/cinematics, full faction parity,
+The Phase 10 audio/cinematic/help increment is branch-only; its acceptance limits
+are listed above. Eight-player matches, natural full campaign playthroughs, full faction parity,
 in-game mod management and further performance work remain pending. Current skirmish/LAN capacity is **2–4 total players**,
 limited by the selected map. See `docs/DEV_PLAN.md` for the broader plan; the
 feature matrix above describes the implemented release behavior.

@@ -48,6 +48,7 @@ RATE_LIMITS = {
     "explosion": 0.050,
     "crit": 0.900,
     "build": 0.220,
+    "research": 0.220,
     "ui": 0.040,
     "alert": 0.600,
     "convoy": 0.400,
@@ -166,12 +167,29 @@ def explosion_voice(radius: float, is_station: bool = False) -> str:
     return "big_explosion" if (is_station or radius >= 110.0) else "explosion"
 
 
+def sane_settings(settings):
+    """Copy presentation settings; invalid/nonfinite volumes use safe defaults."""
+    result = dict(settings or {})
+    for key, default in (("sfx_volume", 0.8), ("music_volume", 0.6)):
+        try:
+            value = float(result.get(key, default))
+        except (TypeError, ValueError, OverflowError):
+            value = default
+        result[key] = max(0.0, min(1.0, value)) if math.isfinite(value) else default
+    result["audio_dynamic_range"] = ("night" if result.get("audio_dynamic_range") == "night"
+                                     else "standard")
+    result["audio_mono"] = result.get("audio_mono") is True
+    return result
+
+
 # ---------------------------------------------------------------------- engine
 class Audio:
-    def __init__(self, state, muted: bool = False, settings: dict | None = None):
+    def __init__(self, state, muted: bool = False, settings: dict | None = None,
+                 local_player: int = 0):
         self.state = state
+        self.local_player = local_player
         self.muted = muted
-        self.settings = settings or {}
+        self.settings = sane_settings(settings)
         self.sounds: dict = {}
         self.available = False
         self.rate = RATE
@@ -179,6 +197,8 @@ class Audio:
         self.camera = None
         self._last: dict = {}
         self._variant = 0
+        self._voice_cursor = 0
+        self._active_voices = {}
         self._ds = None
         try:
             # pygame.init() has already opened the mixer at the device default
@@ -192,13 +212,22 @@ class Audio:
                 return
             self.rate = int(init[0])
             pygame.mixer.set_num_channels(32)
-            # Reserve one channel so the ambient loop can never be stolen by
-            # find_channel(True) when a battle saturates the mixer.
-            pygame.mixer.set_reserved(1)
+            # Do not use find_channel(force=True): its forced fallback can
+            # return reserved channels. All production allocation is explicit.
+            pygame.mixer.set_reserved(3)
             self.available = True
         except pygame.error:
             return
         self._build()
+        # Peak-reducing companding lifts quiet tails relative to transients.
+        # Separate cached buffers leave the established standard timbres intact.
+        self.night_sounds = {}
+        for name, sound in self.sounds.items():
+            pcm = pygame.sndarray.array(sound).astype(np.float64) / 32768.0
+            peak = float(np.max(np.abs(pcm)))
+            shaped = np.sign(pcm) * np.sqrt(np.abs(pcm) / max(peak, 1e-9)) * min(peak, 0.60)
+            self.night_sounds[name] = pygame.mixer.Sound(
+                buffer=np.ascontiguousarray(shaped * 32767, dtype=np.int16).tobytes())
         st = state
         st.events.subscribe("unit_destroyed", self._ev_explosion)
         st.events.subscribe("unit_critical", self._ev_critical)
@@ -424,6 +453,8 @@ class Audio:
         if cam is None or pos is None:
             return 1.0, 0.0
         try:
+            if hasattr(pos, "to_tuple"):
+                pos = pos.to_tuple()
             eye = cam.eye_position()
             dx = float(pos[0]) - float(eye[0])
             dy = float(pos[1]) - float(eye[1])
@@ -452,27 +483,63 @@ class Audio:
         self._last[category] = now
         return True
 
+    def mix_gains(self, name: str, volume: float = 0.5, pos=None):
+        """Production stereo gains, also consumed by the offline WAV probe."""
+        gain, pan = self._spatial(pos)
+        if self.settings["audio_mono"]:
+            pan = 0.0
+        try:
+            volume = float(volume)
+        except (TypeError, ValueError, OverflowError):
+            volume = 0.0
+        if not math.isfinite(volume) or self.muted:
+            volume = 0.0
+        # A bounded eight-voice battle pool plus two isolated alert voices.
+        # Worst coherent SFX peak: .85 * (8*.07 + .18 + .22) = .816;
+        # ambient peak <= .16 at gain <= .5 adds at most .08 (< .9 total).
+        budget = .22 if name in ("mission_complete", "mission_failed") else (
+            .18 if name in ("warning", "alert") else .07)
+        vol = max(0.0, min(1.0, volume)) * self.settings["sfx_volume"] * gain * budget
+        return (vol * (1.0 - max(0.0, pan) * 0.55),
+                vol * (1.0 + min(0.0, pan) * 0.55))
+
     def play(self, name: str, volume: float = 0.5, pos=None) -> None:
         if self.muted or not self.available:
             return
-        master = float(self.settings.get("sfx_volume", 0.8))
-        snd = self.sounds.get(name)
-        if snd is None or master <= 0.01:
+        bank = self.night_sounds if self.settings["audio_dynamic_range"] == "night" else self.sounds
+        snd = bank.get(name)
+        left, right = self.mix_gains(name, volume, pos)
+        if snd is None or max(left, right) < 0.0005:
             return
-        gain, pan = self._spatial(pos)
-        vol = volume * master * gain
-        if vol < 0.02:
-            return
-        left = max(0.0, min(1.0, vol * (1.0 - max(0.0, pan) * 0.55)))
-        right = max(0.0, min(1.0, vol * (1.0 + min(0.0, pan) * 0.55)))
         try:
-            ch = pygame.mixer.find_channel(True)
+            if name in ("mission_complete", "mission_failed"):
+                slot = 2
+            elif name in ("warning", "alert"):
+                slot = 1
+            else:
+                slot = next((i for i in range(3, 11)
+                             if not pygame.mixer.Channel(i).get_busy()), None)
+                if slot is None:
+                    slot = 3 + self._voice_cursor
+                    self._voice_cursor = (self._voice_cursor + 1) % 8
+            ch = pygame.mixer.Channel(slot)
         except pygame.error:
             return
         if ch is None:
             return
         ch.set_volume(left, right)
         ch.play(snd)
+        # Store a detached position: settings refresh never retains/mutates an
+        # entity's vector. Ignore stale entries once SDL finishes/replaces it.
+        if pos is None:
+            point = None
+        elif hasattr(pos, "to_tuple"):
+            point = pos.to_tuple()
+        elif isinstance(pos, (list, tuple)):
+            point = tuple(pos)
+        else:
+            point = None
+        self._active_voices[slot] = (name, volume, point, snd)
 
     def start_ambient(self) -> None:
         """Low engine-room hum + filtered rumble loop."""
@@ -487,7 +554,14 @@ class Audio:
                + np.sin(2 * math.pi * 89.0 * t) * 0.2)
         rumble = _shape(_rng(211).uniform(-1.0, 1.0, n), rate, 220.0, hp=40.0)
         wobble = 0.85 + 0.15 * np.sin(2 * math.pi * 0.25 * t)
-        mono = (hum * wobble * 0.12 + rumble * 0.03)
+        mono = np.clip(hum * wobble * 0.12 + rumble * 0.03, -0.16, 0.16)
+        # WOLA edge normalization can amplify noise in the first few samples.
+        # Ease both loop edges to zero instead of repeating that transient.
+        edge = min(n // 2, int(rate * 0.02))
+        ramp = np.linspace(0.0, 1.0, edge)
+        ramp = ramp * ramp * (3.0 - 2.0 * ramp)
+        mono[:edge] *= ramp
+        mono[-edge:] *= ramp[::-1]
         st = (np.clip(mono, -1, 1) * 32767).astype(np.int16)
         snd = pygame.mixer.Sound(buffer=np.ascontiguousarray(
             np.column_stack([st, st])).tobytes())
@@ -510,22 +584,82 @@ class Audio:
 
     def apply_settings(self, settings: dict) -> None:
         """Live-apply volume changes from the settings menu."""
-        self.settings = settings
+        previous_profile = self.settings["audio_dynamic_range"]
+        self.settings = sane_settings(settings)
         if not self.available:
             return
+        # SDL cannot seek a Sound when replacing its PCM bank. End old
+        # transients rather than replaying their attacks in the new profile.
+        if (self.settings["sfx_volume"] == 0.0 or self.muted
+                or previous_profile != self.settings["audio_dynamic_range"]):
+            for i in range(1, 11):
+                pygame.mixer.Channel(i).stop()
+            self._active_voices.clear()
+        else:
+            for slot, (name, volume, pos, sound) in list(self._active_voices.items()):
+                channel = pygame.mixer.Channel(slot)
+                if not channel.get_busy() or channel.get_sound() is not sound:
+                    self._active_voices.pop(slot, None)
+                else:
+                    channel.set_volume(*self.mix_gains(name, volume, pos))
         if self.ambient_channel:
             self.ambient_channel.set_volume(
-                0.5 * float(settings.get("music_volume", 0.6)))
+                0.0 if self.muted else 0.5 * self.settings["music_volume"])
 
     def toggle_mute(self) -> None:
         self.muted = not self.muted
         if self.available:
-            pygame.mixer.set_num_channels(0 if self.muted else 32)
+            pygame.mixer.stop()
+            if self.ambient_channel:
+                self.ambient_channel.set_volume(0.0)
             if not self.muted:
                 self.ambient_channel = None
                 self.start_ambient()
 
     # ------------------------------------------------------------------ events
+    def _event_owner(self, ev):
+        for key in ("owner", "player", "target_owner"):
+            if ev.data.get(key) is not None:
+                return ev.data[key]
+        for key in ("entity_id", "attacker_id", "target_id"):
+            e = self.state.entities.get(ev.data.get(key))
+            if e is not None:
+                return getattr(e, "owner", None)
+        return None
+
+    def _own_event(self, ev):
+        return self._event_owner(ev) == self.local_player
+
+    def _audible_event(self, ev):
+        """Use live detection, never explored memory; run BEFORE rate limiting.
+
+        Data-only legacy synthesis fixtures have no visibility API. Production
+        GameState always does, and unresolved/hidden foreign events fail closed.
+        A local kill notification is already player knowledge even if a dead
+        victim has ceased to be a live sensor contact.
+        """
+        if self._own_event(ev) or ev.data.get("killer_owner") == self.local_player:
+            return True
+        can_see = getattr(self.state, "can_see", None)
+        if not callable(can_see):
+            return True
+        for key in ("entity_id", "attacker_id", "target_id"):
+            eid = ev.data.get(key)
+            if eid is not None and can_see(self.local_player, eid):
+                return True
+        # Destroyed entities cease being live contacts; check their position
+        # against CURRENT sensors, not discovery or hidden entity metadata.
+        pos = ev.data.get("pos") or ev.data.get("impact_pos")
+        visible = getattr(self.state, "is_position_visible", None)
+        if pos is not None and callable(visible):
+            from game.core.vectors import Vec3
+            try:
+                point = pos if isinstance(pos, Vec3) else Vec3.from_dict(pos)
+                return bool(visible(self.local_player, point))
+            except (TypeError, ValueError, IndexError, KeyError):
+                pass
+        return False
+
     def _weapon(self, wid):
         """WeaponData for an id, or None (data-less weapons must not crash)."""
         if not wid:
@@ -536,6 +670,8 @@ class Audio:
             return None
 
     def _ev_fire(self, ev) -> None:
+        if not self._audible_event(ev):
+            return
         # fleets fire dozens of shots/sec: throttle audio, never the sim
         if not self._allowed("fire"):
             return
@@ -564,6 +700,8 @@ class Audio:
         return getattr(e, "pos", None) if e is not None else None
 
     def _ev_hit(self, ev) -> None:
+        if not self._audible_event(ev):
+            return
         if not self._allowed("hit"):
             return
         target = self.state.entities.get(ev.data.get("target_id"))
@@ -607,9 +745,11 @@ class Audio:
         return float(shields.get(quad, 0.0)) > 0.0
 
     def _ev_critical(self, ev) -> None:
+        if not self._own_event(ev):
+            return
         if not self._allowed("crit"):
             return
-        self.play("warning", 0.5, pos=self._ev_pos(ev))
+        self.play("warning", 0.5)
 
     def _radius(self, ev) -> float:
         did = ev.data.get("data_id")
@@ -626,6 +766,8 @@ class Audio:
         return 0.0
 
     def _ev_explosion(self, ev) -> None:
+        if not self._audible_event(ev):
+            return
         if not self._allowed("explosion"):
             return
         radius = self._radius(ev)
@@ -635,32 +777,48 @@ class Audio:
         self.play(voice, 0.85 if big else 0.55, pos=self._ev_pos(ev))
 
     def _ev_jump(self, ev) -> None:
+        if not self._audible_event(ev):
+            return
         self.play("jump", 0.6, pos=self._ev_pos(ev))
 
     def _ev_level(self, ev) -> None:
+        if not self._own_event(ev):
+            return
         self.play("ui", 0.4)
 
     def _ev_build(self, ev) -> None:
+        if not self._own_event(ev):
+            return
         if self._allowed("build"):
             self.play("build", 0.5)
 
     def _ev_station(self, ev) -> None:
+        if not self._own_event(ev):
+            return
         if self._allowed("build"):
             self.play("build", 0.7)
 
     def _ev_research(self, ev) -> None:
-        if self._allowed("build"):
+        if not self._own_event(ev):
+            return
+        if self._allowed("research"):
             self.play("research", 0.6)
 
     def _ev_convoy(self, ev) -> None:
+        if self.local_player not in (ev.data.get("owner"), ev.data.get("convoy_owner")):
+            return
         if self._allowed("convoy"):
-            self.play("convoy", 0.5, pos=self._ev_pos(ev))
+            self.play("convoy", 0.5)
 
     def _ev_raid(self, ev) -> None:
+        if self.local_player not in (ev.data.get("looter"), ev.data.get("convoy_owner")):
+            return
         if self._allowed("raid"):
-            self.play("raid", 0.6, pos=self._ev_pos(ev))
+            self.play("raid", 0.6)
 
     def _ev_ability(self, ev) -> None:
+        if not self._audible_event(ev):
+            return
         if self._allowed("ability"):
             self.play("ability", 0.5, pos=self._ev_pos(ev))
 
@@ -676,7 +834,8 @@ class Audio:
         if not self._allowed("mission"):
             return
         winner = ev.data.get("winner", getattr(self.state, "winner", -1))
-        if winner == 0:
+        allies = getattr(self.state, "allied_player_ids", lambda pid: [pid])(self.local_player)
+        if winner in allies:
             self.play("mission_complete", 0.9)
         else:
             self.play("mission_failed", 0.9)
