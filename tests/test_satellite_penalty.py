@@ -196,3 +196,17 @@ class SatellitePenaltyHUDTests(unittest.TestCase):
         texts = self.panel_text()
         self.assertFalse(any(t.startswith('1: REBUILD') for t in texts), texts)
         self.assertTrue(any(t.startswith('1: FREE') for t in texts), texts)
+
+    def test_drawing_the_panel_never_prunes_simulation_state(self):
+        """A frame asks for the countdown; a frame must not change the world."""
+        from game.systems.colonies import lock_satellite_slot
+        lock_satellite_slot(self.st, self.planet, 0)
+        self.st.time += 181.0                   # expired, and not yet swept by a tick
+        snapshot = json.loads(json.dumps(self.st.to_dict(precise=True)))
+        self.assertTrue(any(t.startswith('1: FREE') for t in self.panel_text()),
+                        'an expired penalty must already read as free')
+        self.panel_text()
+        self.assertEqual(json.loads(json.dumps(self.st.to_dict(precise=True))), snapshot,
+                         'drawing the panel pruned simulation state')
+        self.gm.step(1 / 30)                    # the simulation is what sweeps it
+        self.assertEqual(self.planet.satellite_locks, {})

@@ -55,13 +55,27 @@ def satellite_lock_remaining(state, planet, slot) -> float:
 
 
 def locked_satellite_slots(state, planet) -> set:
-    """Slots still paying the destruction penalty, dropping expired entries."""
+    """Slots still paying the destruction penalty (read-only).
+
+    Expired entries are filtered, never removed here: the HUD asks for this every
+    frame, and a draw call must not be able to change simulation state. Expiry is
+    swept on tick by `prune_satellite_locks`.
+    """
     if planet is None or not planet.satellite_locks:
         return set()
-    expired = [s for s, until in planet.satellite_locks.items() if until <= state.time]
-    for slot in expired:
-        planet.satellite_locks.pop(slot, None)
-    return set(planet.satellite_locks)
+    return {slot for slot, until in planet.satellite_locks.items() if until > state.time}
+
+
+def prune_satellite_locks(state) -> int:
+    """Drop expired rebuild penalties. Simulation-side, once per tick."""
+    dropped = 0
+    for e in state.entities.values():
+        if not e.satellite_locks:
+            continue
+        for slot in [s for s, until in e.satellite_locks.items() if until <= state.time]:
+            e.satellite_locks.pop(slot, None)
+            dropped += 1
+    return dropped
 
 
 def lock_satellite_slot(state, planet, slot) -> float:

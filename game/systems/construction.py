@@ -440,6 +440,10 @@ class ConstructionSystem:
     # ------------------------------------------------------------------ tick queues
     def update(self, dt: float) -> None:
         st = self.state
+        # Expired satellite rebuild penalties are swept here, on tick, so nothing
+        # render-side ever has to mutate simulation state to keep them tidy (#57).
+        from .colonies import prune_satellite_locks
+        prune_satellite_locks(st)
         done_events = []
         for e in sorted(st.entities.values(), key=lambda e: e.id):
             if not e.build_queue:
