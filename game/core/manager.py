@@ -73,6 +73,14 @@ class GameManager:
         self.state.dmg_system = self.damage
         self.visibility.update()
 
+        # Old saves retain fresh/lazy brains and zero system timers. Install
+        # exact new state only after construction has bound every system.
+        if self.state.runtime_state is not None:
+            from .runtime_snapshot import restore_runtime
+            restore_runtime(self, self.state.runtime_state)
+            self.state.runtime_state = None
+        self.state._manager = self
+
     @property
     def _capacity_timer(self):
         return self.state.capacity_timer
@@ -319,7 +327,10 @@ class GameManager:
 
         # 15. trading, victory & mission
         self.trading.update(dt)
-        self.victory.update(dt)
+        # Campaign outcomes belong to objectives/failure, not skirmish rules.
+        # Losing the last command center must not freeze a still-active mission.
+        if self.mission.mission is None:
+            self.victory.update(dt)
         self.mission.update(dt)
         self.visibility.update()
 

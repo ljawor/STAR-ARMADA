@@ -180,6 +180,8 @@ class AllianceVictoryTests(unittest.TestCase):
         self.assertEqual(restored.state.map_info.victory_mode, "elimination")
         self.assertEqual(restored.state.allied_player_ids(0), [0, 2])
         self.assertEqual(restored.state.to_dict(precise=True), gm.state.to_dict(precise=True))
+        # Emulate an actual old file, not a projection edit of a new exact save.
+        saved.pop("runtime_state")
         del saved["map_info"]["victory_mode"]
         self.assertEqual(GameManager(GameState.from_dict(saved)).state.map_info.victory_mode,
                          "command")

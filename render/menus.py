@@ -73,22 +73,75 @@ def save_settings(s: dict) -> None:
         pass
 
 
-def load_campaign_progress() -> int:
-    """Highest unlocked mission index (0-based); persisted across sessions."""
+# Frozen v1 order: never infer legacy indices from a reordered catalogue.
+_LEGACY_MISSION_IDS = (
+    'm01_first_fleet', 'm02_supply_line', 'm03_asteroid_war',
+    'm04_first_blood', 'm05_the_gate', 'm06_rebel_hunt',
+    'm07_fortress_line', 'm08_steel_rain', 'm09_the_conference', 'm10_armada',
+)
+
+
+def _campaign_ids() -> list[str]:
+    try:
+        with open(os.path.join(ASSET_ROOT, 'assets', 'data', 'campaign', 'campaign.json')) as f:
+            return [m['id'] for m in json.load(f)['missions']]
+    except (OSError, ValueError, KeyError, TypeError):
+        return []
+
+
+def _write_campaign_unlocks(ids: list[str]) -> None:
+    try:
+        os.makedirs(os.path.dirname(CAMPAIGN_PATH), exist_ok=True)
+        with open(CAMPAIGN_PATH, 'w') as f:
+            json.dump({'schema_version': 2, 'unlocked_mission_ids': ids}, f, indent=2)
+    except OSError:
+        pass
+
+
+def load_campaign_unlocks() -> set[str]:
+    """Stable unlock IDs; a missing/corrupt file starts at the tutorial only."""
+    catalogue = _campaign_ids()
+    initial = catalogue[:1]
     try:
         with open(CAMPAIGN_PATH) as f:
-            return max(0, int(json.load(f).get("mission_index", 0)))
-    except (OSError, ValueError):
-        return 0
+            saved = json.load(f)
+        if not isinstance(saved, dict):
+            return set(initial)
+        version = saved.get('schema_version', 1)
+        if type(version) is not int or version not in (1, 2):
+            return set(initial)
+        if version == 2:
+            ids = saved.get('unlocked_mission_ids')
+            if not isinstance(ids, list) or not all(isinstance(i, str) for i in ids):
+                return set(initial)
+            return set(initial + ids)
+        index = saved.get('mission_index')
+        if isinstance(index, bool) or not isinstance(index, int) or index < 0:
+            return set(initial)
+        ids = list(dict.fromkeys(initial + list(_LEGACY_MISSION_IDS[:index + 1])))
+        _write_campaign_unlocks(ids)
+        return set(ids)
+    except (OSError, ValueError, TypeError, AttributeError):
+        return set(initial)
+
+
+def load_campaign_progress() -> int:
+    """Compatibility adapter: highest current index of the stable unlock IDs."""
+    unlocked = load_campaign_unlocks()
+    return max((i for i, mid in enumerate(_campaign_ids()) if mid in unlocked), default=0)
+
+
+def unlock_campaign_mission(mission_id: str) -> None:
+    """Merge one gameplay unlock without replacing stable or unknown mod IDs."""
+    unlocked = load_campaign_unlocks()
+    if mission_id not in unlocked:
+        unlocked.add(mission_id)
+        _write_campaign_unlocks(sorted(unlocked))
 
 
 def save_campaign_progress(index: int) -> None:
-    try:
-        os.makedirs(os.path.dirname(CAMPAIGN_PATH), exist_ok=True)
-        with open(CAMPAIGN_PATH, "w") as f:
-            json.dump({"mission_index": int(index)}, f, indent=2)
-    except OSError:
-        pass
+    """Compatibility setter; indices refer to the current catalogue, not v1."""
+    _write_campaign_unlocks(_campaign_ids()[:max(0, int(index)) + 1])
 
 
 class MenuResult:
@@ -96,6 +149,7 @@ class MenuResult:
     NONE = "none"
     START_SKIRMISH = "start_skirmish"
     START_MISSION = "start_mission"     # payload: mission def dict
+    START_REPLAY = 'start_replay'       # payload: validated replay path
     START_LAN = 'start_lan'             # payload: session; ownership transfers to main
     EXIT = "exit"
 
@@ -151,6 +205,10 @@ class MenuStack:
         self.lan_focus = None
         self.lan_notice = ''
         self.lan_session = None
+        self.replay_paths = []
+        self.replay_page = 0
+        self.replay_notice = ''
+        self.replay_rows = {}
 
     # ------------------------------------------------------------- campaign
     def _load_campaign(self) -> dict:
@@ -271,6 +329,8 @@ class MenuStack:
             self._screen_skirmish()
         elif self.screen == "settings":
             self._screen_settings()
+        elif self.screen == "replays":
+            self._screen_replays()
         elif self.screen == "campaign":
             self._screen_campaign()
         elif self.screen == "briefing":
@@ -315,10 +375,16 @@ class MenuStack:
                 ("SKIRMISH", "start_skirmish"),
                 ("MULTIPLAYER / LAN", "goto_lan"),
                 ("CAMPAIGN", "goto_campaign"),
+                ("REPLAYS", "goto_replays"),
                 ("SETTINGS", "goto_settings"),
                 ("QUIT", "exit"))):
             r = pygame.Rect(x, y0 + i * (bh + 14), bw, bh)
             self._button(r, label, action, hot=r.collidepoint(mouse))
+        notice = self.replay_notice
+        while notice and self.font_small.size(notice)[0] > self.width - 40:
+            notice = notice[:-2] + '…'
+        if notice:
+            self._title(notice, self.font_small, self.height - 32, (190, 205, 230))
 
     def skirmish_capacity(self, map_id):
         return len(self.skirmish_store.maps[map_id]['players'])
@@ -572,6 +638,91 @@ class MenuStack:
         self.skirmish_preview_starts = [(ox + round(x * scale), oy + round(y * scale))
                                         for x, y in self.skirmish_preview_starts]
 
+    def open_replays(self):
+        """Snapshot bounded directory entries; only visible pages parse files."""
+        self.screen = 'replays'
+        self.buttons = []
+        self.replay_paths = []
+        self.replay_rows = {}
+        self.replay_page = 0
+        self.replay_notice = ''
+        folder = os.path.join(USER_DIR, 'replays')
+        try:
+            with os.scandir(folder) as entries:
+                for index, entry in enumerate(entries):
+                    if index >= 4096 or len(self.replay_paths) >= 1000:
+                        self.replay_notice = 'Browser limit reached (1000 replays / 4096 entries). Archive older files and refresh.'
+                        break
+                    if entry.name.endswith('.json') and entry.is_file(follow_symlinks=False):
+                        self.replay_paths.append(entry.path)
+            self.replay_paths.sort(key=lambda path: os.path.basename(path))
+        except FileNotFoundError:
+            pass
+        except OSError as exc:
+            self.replay_notice = 'Cannot browse replays: ' + str(exc)[:180]
+
+    def _screen_replays(self):
+        from game.net.replay import load_replay
+        target = self._surface
+        self._surface = pygame.Surface((800, 600))
+        self._surface.fill((6, 9, 19))
+        self.replay_rendered_text = []
+        self.replay_text_bounds = []
+        def text(value, x, y, width=744):
+            value = str(value)
+            while value and self.font_small.size(value)[0] > width:
+                value = value[:-2] + '…'
+            glyph = self.font_small.render(value, True, (205, 220, 245))
+            bounds = glyph.get_rect(topleft=(x, y))
+            self._surface.blit(glyph, bounds)
+            self.replay_text_bounds.append(bounds)
+            self.replay_rendered_text.append(value)
+        def button(rect, label, action, payload=None):
+            rect = pygame.Rect(rect)
+            self.buttons.append(dict(rect=rect, action=action, payload=payload))
+            pygame.draw.rect(self._surface, (26, 43, 69), rect, border_radius=5)
+            text(label, rect.x + 10, rect.y + 9, rect.w - 20)
+        text('REPLAYS / READ-ONLY PLAYBACK', 28, 22)
+        text('Matches record automatically. P pause / [ ] speed / Esc exit.', 28, 52)
+        paths = self.replay_paths[self.replay_page * 6:(self.replay_page + 1) * 6]
+        if not paths:
+            text('No replays yet. Finish or leave a match to save one.', 28, 126)
+        for i, path in enumerate(paths):
+            if path not in self.replay_rows:
+                try:
+                    data = load_replay(path)
+                    duration = (data['end_tick'] - data['initial_state'].get('tick', 0)) / 30
+                    self.replay_rows[path] = (f"{data.get('mode', 'legacy')} / {duration:.1f}s / "
+                                              f"game {data.get('game_version', '?')} / format v{data['version']}")
+                    if data.get('compatibility_warning'):
+                        self.replay_rows[path] += (' / legacy: duration/content unverified'
+                            if data['version'] == 1 else ' / future-state unavailable')
+                except (OSError, ValueError, TypeError, KeyError) as exc:
+                    self.replay_rows[path] = 'Cannot play: ' + str(exc)
+            y = 96 + i * 60
+            button((28, y, 744, 54), os.path.basename(path), 'play_replay', path)
+            text(self.replay_rows[path], 38, y + 32, 724)
+        pages = max(1, (len(self.replay_paths) + 5) // 6)
+        text(f'Page {self.replay_page + 1}/{pages} / {len(self.replay_paths)} files', 28, 468)
+        text(self.replay_notice, 28, 498)
+        button((28, 540, 136, 38), 'BACK / ESC', 'goto_main')
+        button((174, 540, 136, 38), 'REFRESH', 'replay_refresh')
+        if self.replay_page:
+            button((456, 540, 146, 38), 'PREVIOUS', 'replay_page', -1)
+        if self.replay_page + 1 < pages:
+            button((612, 540, 160, 38), 'NEXT', 'replay_page', 1)
+        logical = self._surface
+        self._surface = target
+        scale = min(self.width / 800, self.height / 600)
+        ox, oy = (self.width - round(800 * scale)) // 2, (self.height - round(600 * scale)) // 2
+        target.blit(pygame.transform.smoothscale(logical, (round(800 * scale), round(600 * scale))), (ox, oy))
+        def transform(r):
+            return pygame.Rect(ox + round(r.x * scale), oy + round(r.y * scale),
+                               round(r.w * scale), round(r.h * scale))
+        for b in self.buttons:
+            b['rect'] = transform(b['rect'])
+        self.replay_text_bounds = [transform(r) for r in self.replay_text_bounds]
+
     def _screen_settings(self) -> None:
         self._title("SETTINGS", self.font_big, self.height * 0.08)
         mouse = pygame.mouse.get_pos()
@@ -631,14 +782,22 @@ class MenuStack:
                     self.font_big, self.height * 0.08)
         missions = self.campaign.get("missions", [])
         mouse = pygame.mouse.get_pos()
-        y0 = self.height * 0.20
+        y0 = int(self.height * 0.20)
+        page_size = max(1, (self.height - 120 - y0) // 58)
+        pages = max(1, (len(missions) + page_size - 1) // page_size)
+        self.campaign_page = min(pages - 1, max(0, getattr(self, 'campaign_page', 0)))
+        unlocked_ids = load_campaign_unlocks()
+        self.campaign_rows = {}
         if not missions:
             t = self.font_med.render("No missions defined.", True,
                                      (200, 100, 100))
             self._surface.blit(t, (self.width // 2 - 120, y0))
-        for i, m in enumerate(missions):
-            r = pygame.Rect(self.width // 2 - 260, y0 + i * 58, 520, 48)
-            unlocked = i <= self.mission_index
+        start = self.campaign_page * page_size
+        for i in range(start, min(len(missions), start + page_size)):
+            m = missions[i]
+            r = pygame.Rect(self.width // 2 - 260, y0 + (i - start) * 58, 520, 48)
+            self.campaign_rows[m.get('id')] = r
+            unlocked = m.get('id') in unlocked_ids
             hot = r.collidepoint(mouse)
             col = (30, 42, 70) if unlocked else (16, 20, 32)
             pygame.draw.rect(self._surface, col, r, border_radius=6)
@@ -656,6 +815,17 @@ class MenuStack:
             if unlocked:
                 self.buttons.append({"rect": r, "action": "select_mission",
                                      "payload": i})
+        if pages > 1:
+            self._title(f'PAGE {self.campaign_page + 1} / {pages}',
+                        self.font_small, self.height - 112)
+            if self.campaign_page > 0:
+                previous = pygame.Rect(self.width - 440, self.height - 80, 180, 46)
+                self._button(previous, 'PREVIOUS', 'campaign_page', payload=-1,
+                             hot=previous.collidepoint(mouse))
+            if self.campaign_page < pages - 1:
+                following = pygame.Rect(self.width - 220, self.height - 80, 180, 46)
+                self._button(following, 'NEXT', 'campaign_page', payload=1,
+                             hot=following.collidepoint(mouse))
         back = pygame.Rect(40, self.height - 80, 180, 46)
         self._button(back, "BACK", "goto_main", hot=back.collidepoint(mouse))
 
@@ -805,7 +975,7 @@ class MenuStack:
                     self.screen = 'main' if self.screen == 'lan' else 'lan'
                 elif self.screen == "splash":
                     self.result = MenuResult.EXIT
-                elif self.screen in ("settings", "campaign", "briefing", "skirmish"):
+                elif self.screen in ("settings", "campaign", "briefing", "skirmish", "replays"):
                     self.screen = "main" if self.screen != "briefing" \
                         else "campaign"
                 elif self.screen == "main":
@@ -825,6 +995,23 @@ class MenuStack:
                     return
                 if act == "goto_main":
                     self.screen = "main"
+                elif act == 'goto_replays':
+                    self.open_replays()
+                elif act == 'replay_page':
+                    self.replay_page = min(max(0, (len(self.replay_paths) - 1) // 6),
+                                           max(0, self.replay_page + b['payload']))
+                    self.buttons = []
+                elif act == 'replay_refresh':
+                    self.open_replays()
+                elif act == 'play_replay':
+                    from game.net.replay import load_replay, validate_replay
+                    try:
+                        validate_replay(load_replay(b['payload']), check_compatibility=True)
+                        self.result = MenuResult.START_REPLAY
+                        self.result_payload = b['payload']
+                        self.buttons = []
+                    except (OSError, ValueError, TypeError, KeyError) as exc:
+                        self.replay_notice = str(exc)[:240]
                 elif act == "goto_lan":
                     self.screen = "lan"
                 elif act in ('lan_host_setup', 'lan_join_setup'):
@@ -862,6 +1049,9 @@ class MenuStack:
                     self._lan_choice(act, b['payload'])
                     if act in ('lan_map', 'lan_humans', 'lan_ai'):
                         self.buttons = []
+                elif act == "campaign_page":
+                    self.campaign_page = max(0, getattr(self, 'campaign_page', 0) + b['payload'])
+                    self.buttons = []
                 elif act == "goto_campaign":
                     self.screen = "campaign"
                 elif act == "goto_settings":

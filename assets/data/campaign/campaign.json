@@ -2,11 +2,111 @@
   "campaign": "Rise of the Outer Armada",
   "missions": [
     {
+      "id": "m00_recovery_drill",
+      "name": "Recovery Drill",
+      "map": "skirmish01",
+      "player_faction": "imperial",
+      "briefing": "Practice personnel logistics before your first deployment. Load the crew transport near your command station. Use the cruiser to board the shieldless abandoned syndicate corvette, then order the loaded transport to deliver at least four personnel to the owned abandoned frigate. Equipment repair does not replace crew; recovery requires life support at 50% or higher. Both drill targets begin with healthy life support.",
+      "loadout": {
+        "resources": {
+          "credits": 6000,
+          "materials": 4000,
+          "energy": 1500,
+          "crew": 3000
+        },
+        "start_units": {
+          "command_station": 1,
+          "cruiser": 1
+        }
+      },
+      "enemy": {
+        "faction": "syndicate",
+        "team": 1,
+        "start_units": {
+          "command_station": 1
+        }
+      },
+      "objectives": [
+        {
+          "id": "capture",
+          "type": "capture_unit",
+          "ship": "syndicate_corvette",
+          "text": "Board and capture the abandoned syndicate corvette"
+        },
+        {
+          "id": "recover",
+          "type": "recover_crew",
+          "ship": "imperial_frigate",
+          "count": 4,
+          "method": "crew_delivered",
+          "active": false,
+          "text": "Deliver four personnel to the abandoned owned frigate"
+        }
+      ],
+      "triggers": [
+        {
+          "id": "drill_targets",
+          "when": {
+            "tick": 1
+          },
+          "actions": [
+            {
+              "type": "reinforcements",
+              "units": [
+                {
+                  "ship": "imperial_crew_transport",
+                  "owner": 0,
+                  "pos": [
+                    -11000,
+                    0,
+                    400
+                  ]
+                },
+                {
+                  "ship": "imperial_frigate",
+                  "owner": 0,
+                  "pos": [
+                    -8000,
+                    0,
+                    -2000
+                  ],
+                  "crew": 0
+                },
+                {
+                  "ship": "syndicate_corvette",
+                  "owner": 1,
+                  "pos": [
+                    -8000,
+                    0,
+                    1800
+                  ],
+                  "crew": 0,
+                  "shields_down": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "recovery_stage",
+          "when": {
+            "objective": "capture"
+          },
+          "actions": [
+            {
+              "type": "activate_objective",
+              "objective": "recover"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "m01_first_fleet",
       "name": "First Fleet",
       "map": "skirmish01",
       "player_faction": "imperial",
-      "briefing": "Command has assigned you a single task force and a colonizable world. Establish a mining station on the asteroid field, build a constructor, and defend against the raider probing force.",
+      "briefing": "Command has assigned you a single task force and a colonizable world. Establish a mining station on the asteroid field, use your shipyard to build two corvettes, and eliminate the raider probing force.",
       "loadout": {
         "resources": {
           "credits": 6000,
@@ -17,6 +117,7 @@
         "start_units": {
           "command_station": 1,
           "constructor": 1,
+          "shipyard": 1,
           "squadron": 2,
           "corvette": 2
         }
@@ -54,7 +155,7 @@
       "name": "Supply Line",
       "map": "skirmish01",
       "player_faction": "imperial",
-      "briefing": "Commerce keeps the fleet alive. Establish a trade station and make sure at least one convoy reaches a friendly market \u2014 raiders will be looking for easy prey.",
+      "briefing": "Commerce keeps the fleet alive. Build a second trade station at least 1,500 units from your existing market and make sure at least one convoy reaches a friendly market \u2014 raiders will be looking for easy prey.",
       "loadout": {
         "resources": {
           "credits": 7000,
@@ -63,6 +164,7 @@
           "crew": 3500
         },
         "start_units": {
+          "trade_station": 1,
           "command_station": 1,
           "shipyard": 1,
           "constructor": 1,
@@ -262,10 +364,87 @@
     },
     {
       "id": "m06_rebel_hunt",
+      "triggers": [
+        {
+          "id": "counterstrike_1",
+          "when": {
+            "time": 60
+          },
+          "actions": [
+            {
+              "type": "reinforcements",
+              "units": [
+                {
+                  "ship": "rebel_x_squadron",
+                  "owner": 1,
+                  "pos": [
+                    6500,
+                    0,
+                    2200
+                  ]
+                },
+                {
+                  "ship": "rebel_x_squadron",
+                  "owner": 1,
+                  "pos": [
+                    6500,
+                    0,
+                    -2200
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "counterstrike_2",
+          "when": {
+            "time": 120
+          },
+          "actions": [
+            {
+              "type": "reinforcements",
+              "units": [
+                {
+                  "ship": "rebel_corvette",
+                  "owner": 1,
+                  "pos": [
+                    7000,
+                    0,
+                    2000
+                  ]
+                },
+                {
+                  "ship": "rebel_corvette",
+                  "owner": 1,
+                  "pos": [
+                    7000,
+                    0,
+                    -2000
+                  ]
+                },
+                {
+                  "ship": "rebel_frigate",
+                  "owner": 1,
+                  "pos": [
+                    7600,
+                    0,
+                    0
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "activate_objective",
+              "objective": "hunt_clearance"
+            }
+          ]
+        }
+      ],
       "name": "Rebel Hunt",
       "map": "skirmish01",
       "player_faction": "imperial",
-      "briefing": "The rebel wing that fled the gate is regrouping. Hunt them down before they entrench. Their commander favors fighter swarms \u2014 bring point defense and corvettes.",
+      "briefing": "The rebel wing that fled the gate is regrouping. Hunt them down before they entrench. Their commander favors fighter swarms \u2014 bring point defense and corvettes. Counter-strike reinforcements arrive after one and two minutes; clearance is assessed after the second wave.",
       "loadout": {
         "resources": {
           "credits": 11000,
@@ -291,7 +470,9 @@
         {
           "type": "destroy_all_forces",
           "team": 1,
-          "text": "Destroy the rebel task force"
+          "id": "hunt_clearance",
+          "active": false,
+          "text": "Destroy the rebel task force after both counter-strike waves"
         },
         {
           "type": "survive_time",

@@ -176,30 +176,55 @@ class HUD:
             return
         ov = self.overlay
         rows = self.mission_progress
-        w = 380
+        # Reserve the same side columns as the inspectors/action controls.
+        w = min(380, self.width - 680)
         x = (self.width - w) // 2
         y = 46
         state_col = (120, 200, 140) if self.mission_done else \
             ((220, 120, 110) if self.mission_failed else (150, 175, 220))
         title = self.mission_name or "MISSION"
-        h = 40 + 22 * len(rows)
-        self.blocked_rects.append(pygame.Rect(x, y, w, h))
-        pygame.draw.rect(ov, PANEL_BG, (x, y, w, h), border_radius=8)
-        pygame.draw.rect(ov, PANEL_EDGE, (x, y, w, h), 1, border_radius=8)
-        surf = self.font_big.render(title, True, state_col)
-        ov.blit(surf, (x + 14, y + 8))
-        yy = y + 38
+        # Measure every line before painting so wrapped rows grow the card.
+        blocks = [(title, self.font_big, state_col)]
         for row in rows:
-            done = row.startswith("[x]")
-            col = (140, 220, 150) if done else (200, 214, 240)
-            surf = self.font_small.render(row, True, col)
-            ov.blit(surf, (x + 14, yy))
-            yy += 22
+            col = (140, 220, 150) if row.startswith("[x]") else (200, 214, 240)
+            blocks.append((row, self.font_small, col))
         if self.mission_done or self.mission_failed:
             tag = "MISSION COMPLETE — press ESC" if self.mission_done \
                 else "MISSION FAILED — press ESC"
-            surf = self.font_big.render(tag, True, state_col)
-            ov.blit(surf, (x + 14, yy + 4))
+            blocks.append((tag, self.font_big, state_col))
+        lines = []
+        yy = y + 8
+        for text, font, col in blocks:
+            line = ''
+            wrapped = []
+            for word in text.split():
+                candidate = (line + ' ' + word).strip()
+                if line and font.size(candidate)[0] > w - 28:
+                    wrapped.append(line)
+                    line = word
+                else:
+                    line = candidate
+                # A mod objective/title may have no spaces. Split by measured
+                # glyph width, not character count, and retain every character.
+                while font.size(line)[0] > w - 28:
+                    cut = 1
+                    while cut < len(line) and font.size(line[:cut + 1])[0] <= w - 28:
+                        cut += 1
+                    wrapped.append(line[:cut])
+                    line = line[cut:]
+            if line:
+                wrapped.append(line)
+            for line in wrapped:
+                surf = font.render(line, True, col)
+                lines.append((surf, yy))
+                yy += max(font.get_linesize(), surf.get_height()) + 2
+            yy += 6
+        h = yy - y + 2
+        self.blocked_rects.append(pygame.Rect(x, y, w, h))
+        pygame.draw.rect(ov, PANEL_BG, (x, y, w, h), border_radius=8)
+        pygame.draw.rect(ov, PANEL_EDGE, (x, y, w, h), 1, border_radius=8)
+        for surf, yy in lines:
+            ov.blit(surf, (x + 14, yy))
 
     # ------------------------------------------------------------------ frame
     def render(self, selection: set, hover_id: int | None,

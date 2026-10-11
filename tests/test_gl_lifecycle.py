@@ -123,7 +123,9 @@ class MainLifecycleTests(unittest.TestCase):
             return Mock()
         ns = dict(renderer=old_renderer, hud=old_hud, W=640, H=480,
                   net_session=None, audio=None, SETTINGS={},
-                  make_game=lambda *args: SimpleNamespace(state=SimpleNamespace(entities={}, time=0.0)),
+                  make_game=lambda *args: SimpleNamespace(
+                      state=SimpleNamespace(entities={}, time=0.0),
+                      mission=SimpleNamespace(mission=None)),
                   Camera=Mock(), Renderer=create_renderer, HUD=create_hud,
                   make_audio=Mock(), InputController=Mock(), _AppGlue=Mock())
         exec(compile(ast.Module(body=[start], type_ignores=[]), 'main.py', 'exec'), ns)

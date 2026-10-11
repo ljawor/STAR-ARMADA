@@ -5,6 +5,7 @@ __pycache__/
 
 # Runtime artifacts
 saves/
+replays/
 *.log
 
 # OS

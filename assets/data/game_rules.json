@@ -39,16 +39,16 @@
   },
   "economy": {
     "planet_income": {
-      "temperate": {"credits": 1.2, "crew": 0.25},
-      "industrial": {"credits": 0.4, "materials": 1.0, "crew": 0.1},
-      "agricultural": {"credits": 0.5, "crew": 0.5},
-      "military": {"credits": 0.3, "crew": 0.3},
-      "research": {"credits": 0.6, "crew": 0.1},
-      "barren": {"credits": 0.2, "crew": 0.05},
-      "trade": {"credits": 1.8, "crew": 0.1}
+      "temperate": {"credits": 6.0, "crew": 1.25},
+      "industrial": {"credits": 2.0, "materials": 5.0, "crew": 0.5},
+      "agricultural": {"credits": 2.5, "crew": 2.5},
+      "military": {"credits": 1.5, "crew": 1.5},
+      "research": {"credits": 3.0, "crew": 0.5},
+      "barren": {"credits": 1.0, "crew": 0.25},
+      "trade": {"credits": 9.0, "crew": 0.5}
     },
     "planet_command_bonus": {"military": 5},
-    "planet_crew_bonus": {"agricultural": 0.3, "temperate": 0.15},
+    "planet_crew_bonus": {"agricultural": 1.5, "temperate": 0.75},
     "trade_station_income_credits": 2.5,
     "trading": {
       "spawn_interval": 45.0,

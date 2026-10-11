@@ -6,6 +6,7 @@ mission_complete / mission_failed. Objective types implemented in the slice:
 """
 from __future__ import annotations
 
+from copy import deepcopy
 from ..data.store import DataStore
 
 
@@ -13,17 +14,59 @@ class MissionSystem:
     def __init__(self, state, mission_def: dict | None = None):
         self.state = state
         self.ds = DataStore.get()
-        self.mission = mission_def
+        saved = state.mission_state
+        if mission_def is None and saved is not None:
+            mission_def = saved.get("definition")
+        self.mission = deepcopy(mission_def)
+        if self.mission is not None:
+            from .campaign_validation import validate_campaign
+            validate_campaign(self.mission, self.ds)
         self.objectives = []
         self.completed = False
         self.failed = False
         self._escorted_id = None       # the player convoy we are escorting
-        if mission_def:
+        state._mission_system = self
+        if mission_def is not None:
             self.objectives = [dict(o, done=False) for o in mission_def.get("objectives", [])]
+            if saved is not None and saved.get("definition") == mission_def:
+                self.objectives = deepcopy(saved.get("objectives", self.objectives))
+                self.completed = bool(saved.get("completed", False))
+                self.failed = bool(saved.get("failed", False))
+                self._escorted_id = saved.get("escorted_id")
             state.events.subscribe("station_built", self._on_station_built)
             state.events.subscribe("ship_built", self._on_ship_built)
             state.events.subscribe("unit_destroyed", self._on_unit_destroyed)
             state.events.subscribe("planet_colonized", self._on_colonized)
+            state.events.subscribe('unit_captured', self._on_captured)
+            state.events.subscribe('crew_delivered', self._on_recovered)
+            state.events.subscribe('crew_replenished', self._on_recovered)
+            if not self.completed and not self.failed and any(
+                    o["type"] == "escort_convoy" and not o["done"] for o in self.objectives):
+                state.events.subscribe("convoy_arrived", self._on_convoy_arrived)
+                state.events.subscribe("convoy_raided", self._on_convoy_raided)
+        self._escort_hooked = any(o["type"] == "escort_convoy" for o in self.objectives)
+        # The restore snapshot is consumed; serialization now reads this system.
+        state.mission_state = None
+        from .campaign_script import CampaignScript
+        self.script = CampaignScript(self, saved.get('script') if saved is not None
+                                     and saved.get('definition') == mission_def else None)
+
+    def to_dict(self) -> dict | None:
+        """Persist mission identity, exact progress and terminal outcome."""
+        if self.mission is None:
+            return None
+        return deepcopy(dict(definition=self.mission, objectives=self.objectives,
+                             completed=self.completed, failed=self.failed,
+                             escorted_id=self._escorted_id, script=self.script.to_dict()))
+
+    def fail(self):
+        if not self.completed and not self.failed:
+            self.failed = True
+            self.state.events.publish("mission_failed")
+
+    def _active(self, objective):
+        return (not self.completed and not self.failed
+                and objective.get('active', True) and not objective['done'])
 
     # ------------------------------------------------------------------ events
     def _player_team(self, player_id: int) -> int:
@@ -32,14 +75,14 @@ class MissionSystem:
 
     def _on_station_built(self, ev) -> None:
         for o in self.objectives:
-            if o["type"] == "build_station" and not o["done"]:
+            if o["type"] == "build_station" and self._active(o):
                 if o.get("station") == ev.data.get("station") and \
                         self._is_human(ev.data.get("owner")):
                     o["done"] = True
 
     def _on_ship_built(self, ev) -> None:
         for o in self.objectives:
-            if o["type"] == "build_ship" and not o["done"]:
+            if o["type"] == "build_ship" and self._active(o):
                 if o.get("ship") == ev.data.get("ship") and \
                         self._is_human(ev.data.get("owner")):
                     o["count_done"] = o.get("count_done", 0) + 1
@@ -51,10 +94,37 @@ class MissionSystem:
 
     def _on_colonized(self, ev) -> None:
         for o in self.objectives:
-            if o["type"] == "colonize_planet" and not o["done"]:
+            if o["type"] == "colonize_planet" and self._active(o):
                 if o.get("planet") in (None, ev.data.get("planet_id")) and \
                         self._is_human(ev.data.get("owner")):
                     o["done"] = True
+
+    def _on_captured(self, ev):
+        target = self.state.entity(ev.data.get('entity_id'))
+        if target is None or not self._is_human(target.owner):
+            return
+        previous = self.state.players.get(ev.data.get('previous_owner'))
+        if previous is None or previous.team == self._team_of(target.owner):
+            return
+        for o in self.objectives:
+            if (o['type'] == 'capture_unit' and self._active(o)
+                    and o.get('ship', target.data_id) == target.data_id
+                    and o.get('entity_id', target.id) == target.id):
+                o['count_done'] = o.get('count_done', 0) + 1
+                o['done'] = o['count_done'] >= o.get('count', 1)
+
+    def _on_recovered(self, ev):
+        target = self.state.entity(ev.data.get('target', ev.data.get('entity_id')))
+        if target is None or not self._is_human(target.owner) or not target.operational:
+            return
+        for o in self.objectives:
+            if (o['type'] == 'recover_crew' and self._active(o)
+                    and o.get('ship', target.data_id) == target.data_id
+                    and o.get('entity_id', target.id) == target.id
+                    and (not o.get('method') or o['method'] == ev.type)):
+                o['count_done'] = o.get('count_done', 0) + ev.data.get('crew', 0)
+                o['recovered_id'] = target.id
+                o['done'] = o['count_done'] >= o.get('count', 1)
 
     def _is_human(self, owner) -> bool:
         p = self.state.players.get(owner)
@@ -65,34 +135,44 @@ class MissionSystem:
         if self.mission is None or self.completed or self.failed:
             return
         st = self.state
+        if any(o.get('active', True) and o.get('failed') for o in self.objectives):
+            self.fail()
+            return
+        # Loss is checked before scripted reinforcements can rescue a lost force.
+        human = [p for p in st.players.values() if not p.is_ai]
+        if st.time > 5 and any(not any(e.operational and e.owner == p.id
+                and (e.is_station or e.is_ship or e.is_squadron)
+                for e in st.entities.values()) for p in human):
+            self.fail()
+            return
+        self.script.update()
+        if self.failed:
+            return
         for o in self.objectives:
+            if not self._active(o):
+                continue
             if o["type"] == "survive_time" and not o["done"]:
                 if st.time >= o.get("time", 300):
                     o["done"] = True
             if o["type"] == "destroy_all_forces" and not o["done"]:
                 team = o.get("team")
                 any_left = any(
-                    e.alive and e.owner >= 0 and self._team_of(e.owner) == team
+                    e.operational and e.owner >= 0 and self._team_of(e.owner) == team
                     and (e.is_ship or e.is_squadron or e.is_station)
                     for e in st.entities.values())
                 if not any_left:
                     o["done"] = True
             if o["type"] == "hold_point" and not o["done"]:
                 self._update_hold_point(o, dt)
-            if o["type"] == "escort_convoy" and not o["done"]:
+            if o["type"] == "escort_convoy" and self._active(o):
                 self._update_escort(o)
-        if all(o["done"] for o in self.objectives):
+        # Failure takes precedence over a deadline reached on the loss tick.
+        if self.failed:
+            return
+        if (not self.script.pending and all(o['done'] for o in self.objectives
+                                             if o.get('active', True))):
             self.completed = True
             st.events.publish("mission_complete")
-        # failure: player loses all stations
-        human = [p for p in st.players.values() if not p.is_ai]
-        for p in human:
-            has_any = any(e.alive and e.owner == p.id and (e.is_station or e.is_ship)
-                          for e in st.entities.values())
-            if not has_any and st.time > 5.0:
-                self.failed = True
-                st.events.publish("mission_failed")
-                break
 
     def _team_of(self, owner: int) -> int:
         p = self.state.players.get(owner)
@@ -113,7 +193,7 @@ class MissionSystem:
         human_teams = {p.team for p in st.players.values() if not p.is_ai}
         inside = sum(
             1 for e in st.entities.values()
-            if e.alive and e.owner >= 0
+            if e.operational and e.owner >= 0
             and self._team_of(e.owner) in human_teams
             and (e.is_ship or e.is_squadron or e.is_station)
             and (e.pos.x - px) ** 2 + (e.pos.z - pz) ** 2 <= radius ** 2)
@@ -129,7 +209,8 @@ class MissionSystem:
         done when one of the player's convoys publishes convoy_arrived.
         fails the mission if it is destroyed by an enemy."""
         st = self.state
-        if not hasattr(self, "_escort_hooked"):
+        # Compatibility for objectives attached dynamically by callers.
+        if not self._escort_hooked:
             st.events.subscribe("convoy_arrived", self._on_convoy_arrived)
             st.events.subscribe("convoy_raided", self._on_convoy_raided)
             self._escort_hooked = True
@@ -149,7 +230,7 @@ class MissionSystem:
         player's own delivery to an enemy market.
         """
         for o in self.objectives:
-            if o["type"] == "escort_convoy" and not o["done"] and \
+            if o["type"] == "escort_convoy" and self._active(o) and \
                     self._is_human(ev.data.get("convoy_owner")):
                 o["done"] = True
                 self._escorted_id = ev.data.get("entity_id")
@@ -160,7 +241,7 @@ class MissionSystem:
         A raided enemy or AI convoy must not fail the player's mission.
         """
         for o in self.objectives:
-            if o["type"] == "escort_convoy" and not o["done"]:
+            if o["type"] == "escort_convoy" and self._active(o):
                 if self._is_human(ev.data.get("convoy_owner")) or \
                         self._escorted_id == ev.data.get("entity_id"):
                     o["failed"] = True
@@ -168,6 +249,8 @@ class MissionSystem:
     def progress_text(self) -> list:
         out: list = []
         for o in self.objectives:
+            if not o.get('active', True):
+                continue
             mark = "[x] " if o["done"] else "[ ] "
             txt = str(o.get("text", o["type"]))
             if o["type"] == "hold_point" and not o["done"]:

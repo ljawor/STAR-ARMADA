@@ -48,7 +48,10 @@ class ColonyVisibilityTests(unittest.TestCase):
                         self.assertEqual(st.discovered_planets[viewer][planet.id].colonized_by,
                                          settler_owner, 'remote visible ownership was not remembered')
                     # Runtime production is private even while the colony is always visible.
-                    planet.build_queue = [dict(item='attack_satellite', time_left=13.25, total=22)]
+                    # Use the actual paid satellite schema; privacy is not a malformed-save test.
+                    planet.build_queue = [dict(kind='satellite', item='attack_satellite',
+                                               pos=planet.pos.to_dict(precise=True),
+                                               time_left=13.25, total=22)]
                     gm.visibility.update()
                     for viewer in (0, 2):
                         self.assertEqual(st.discovered_planets[viewer][planet.id].build_queue, [])

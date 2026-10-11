@@ -167,7 +167,8 @@ class ColonyHUDTests(unittest.TestCase):
         self.hud._left_panel({self.planet.id}, 0)
         self.assertTrue(any('COLONY OWNER' in s and 'Player' in s for s in labels))
         self.assertTrue(any('INCOME' in s for s in labels))
-        self.assertTrue(any('crew: 0.4' in s for s in labels))
+        self.assertIn('crew: 2', labels)
+        self.assertIn('credits: 6', labels)
         self.planet.colonized_by = None
         ship = self.gm.factory.spawn_ship('imperial_colonizer', 0, self.planet.pos + Vec3(0, 0, 1000))
         self.gm.construction.start_colonize(ship.id, self.planet.id, 0)

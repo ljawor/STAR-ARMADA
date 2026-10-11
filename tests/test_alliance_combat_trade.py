@@ -189,6 +189,8 @@ class AllianceCombatTradeTests(unittest.TestCase):
         c = self.gm.trading._make_convoy(src, ally, 150, 250)
         c.pos = ally.pos.copy()
         snapshot = self.st.to_dict(precise=True)
+        # Real pre-source saves also predate the authoritative runtime graph.
+        snapshot.pop('runtime_state')
         for saved in snapshot['entities'].values():
             saved.pop('convoy_source', None)
         gm = GameManager(GameState.from_dict(snapshot))

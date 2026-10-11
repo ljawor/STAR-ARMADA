@@ -51,6 +51,7 @@ import struct
 import time
 from game.data.store import DataStore
 from game import __version__ as GAME_VERSION
+from game.systems.campaign_script import CampaignScript
 
 PROTOCOL_VERSION = 1
 MAX_FRAME = 262144
@@ -112,6 +113,8 @@ COMMAND_TYPES = {'move', 'attack', 'attack_move', 'stop', 'hold', 'build_station
 
 
 def _canonical(value):
+    if isinstance(value, CampaignScript):
+        return _canonical(dict(triggers=value.triggers, progress=value.progress))
     if is_dataclass(value):
         return {f.name: _canonical(getattr(value, f.name)) for f in fields(value)}
     if isinstance(value, dict):
