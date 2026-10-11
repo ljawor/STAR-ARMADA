@@ -233,12 +233,87 @@ class InputControlsTests(unittest.TestCase):
         self.assertIsNone(self.camera.follow_id)
         self.assertNotEqual(self.camera.target, before)
 
-    def test_stop_key_does_not_also_pan_selected_ships(self):
+    def _world_offset(self, point=(0.0, 0.0, 0.0), yaw=45.0):
+        """Analytic screen offset of a fixed world point in the camera basis.
+
+        +x is to the right on screen, +y is up; both normalised by depth, so
+        this is the same comparison the GL projection makes, without a context.
+        """
+        self.camera.yaw = yaw
+        right, up, fwd = self.camera.basis()
+        eye = self.camera.eye_position()
+        rel = [point[i] - eye[i] for i in range(3)]
+        depth = sum(a * b for a, b in zip(rel, fwd))
+        self.assertGreater(depth, 1e-6, 'probe point fell behind the eye')
+        return (sum(a * b for a, b in zip(rel, right)) / depth,
+                sum(a * b for a, b in zip(rel, up)) / depth)
+
+    def test_pan_keys_move_the_view_the_way_the_player_expects(self):
+        """#48 reported the camera keys as reversed.
+
+        Pressing up/left pans the view up/left, so the world has to scroll
+        down/right. Checked through the camera's own basis at two yaws, so it
+        holds for a rotated camera as well as a fresh one.
+        """
+        for key, direction, axis in (
+                (pygame.K_UP, 'up', 'dy'), (pygame.K_w, 'up', 'dy'),
+                (pygame.K_DOWN, 'down', 'dy'),
+                (pygame.K_LEFT, 'left', 'dx'), (pygame.K_a, 'left', 'dx'),
+                (pygame.K_RIGHT, 'right', 'dx'), (pygame.K_d, 'right', 'dx')):
+            for yaw in (45.0, 120.0):
+                with self.subTest(key=pygame.key.name(key), yaw=yaw):
+                    self.input.selection = set()
+                    self.camera.follow_id = None
+                    self.camera.target = [0.0, 0.0, 0.0]
+                    index = 1 if axis == 'dy' else 0
+                    before = self._world_offset(yaw=yaw)[index]
+                    self.input.keys = {key}
+                    self.input.update(1.0 / 30.0)
+                    after = self._world_offset(yaw=yaw)[index]
+                    delta = after - before
+                    self.assertNotAlmostEqual(delta, 0.0, places=6,
+                                              msg=f'{pygame.key.name(key)} did not pan')
+                    wanted = -1.0 if direction in ('up', 'right') else 1.0
+                    self.assertGreater(
+                        delta * wanted, 0.0,
+                        f'{pygame.key.name(key)} panned the view {direction} but the '
+                        f'world scrolled the wrong way (delta {delta:+.4f})')
+
+    def test_s_pans_the_camera_down_when_nothing_is_selected(self):
+        """#48 also reported the S key as dead; with no selection it pans."""
+        self.input.selection = set()
+        self.camera.target = [0.0, 0.0, 0.0]
+        before = self._world_offset()[1]
+        self.input.keys = {pygame.K_s}
+        self.input.update(1.0 / 30.0)
+        self.assertGreater(self._world_offset()[1] - before, 0.0,
+                           'S pans the view down, so the world scrolls up')
+
+    def test_backspace_stops_selected_ships_without_panning(self):
+        """#48: Stop moved to Backspace so S can always pan."""
         before = list(self.camera.target)
-        self.press(pygame.K_s, release=False)
+        self.press(pygame.K_BACKSPACE, release=False)
         self.input.update()
         self.assertEqual(self.camera.target, before)
         self.assertEqual(self.state.command_queue[0].type, 'stop')
+
+    def test_backspace_without_a_selection_stops_nothing(self):
+        self.input.selection = set()
+        self.press(pygame.K_BACKSPACE)
+        self.input.update()
+        self.assertFalse(self.state.command_queue)
+
+    def test_s_pans_with_a_selection_and_stops_nothing(self):
+        """The reported 'dead S key': panning must survive a selection."""
+        self.assertTrue(self.input.selection)
+        self.camera.target = [0.0, 0.0, 0.0]
+        before = self._world_offset()[1]
+        self.press(pygame.K_s, release=False)
+        self.input.update(1.0 / 30.0)
+        self.assertGreater(self._world_offset()[1] - before, 0.0,
+                           'S pans the view down even with units selected')
+        self.assertFalse(self.state.command_queue,
+                         'S must not secretly issue a stop order')
 
 
 if __name__ == '__main__':

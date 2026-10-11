@@ -131,7 +131,7 @@ def main():
                         ('escape', pygame.event.Event(pygame.KEYDOWN, key=pygame.K_ESCAPE)),
                         ('right_click', pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=3, pos=(width//2, height//2))),
                         ('focus_loss', pygame.event.Event(pygame.WINDOWFOCUSLOST)),
-                        ('stop', pygame.event.Event(pygame.KEYDOWN, key=pygame.K_s))):
+                        ('stop', pygame.event.Event(pygame.KEYDOWN, key=pygame.K_BACKSPACE))):
                     repair = next(b for b in hud.buttons if b['kind'] == 'repair')
                     before = st.to_dict(precise=True)
                     deliver(control, pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1, pos=repair['rect'].center))
@@ -221,9 +221,9 @@ def main():
                 dock = gm.factory.spawn_station('repair_dock', 0, Vec3(-700, 0, 500))
                 capture('dock_help', {dock.id})
                 capture('mixed_support', {builder.id, scout.id, ship.id})
-                # S stops the physical survey too, not merely its target prompt.
+                # Backspace stops the physical survey too, not merely its target prompt.
                 capture('exploration_before_stop', {scout.id})
-                deliver(control, pygame.event.Event(pygame.KEYDOWN, key=pygame.K_s))
+                deliver(control, pygame.event.Event(pygame.KEYDOWN, key=pygame.K_BACKSPACE))
                 assert st.command_queue[-1].type == 'stop'
                 gm.step(1/30)
                 assert scout.order_type != 'explore'

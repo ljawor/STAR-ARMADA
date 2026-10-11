@@ -108,7 +108,8 @@ class ReplayWorkflowTests(unittest.TestCase):
             self.assertIsNone(ns.get('recording'))
             self.assertIsNotNone(ns.get('playback'))
             before = precise(ns['state'])
-            for key in (pygame.K_s, pygame.K_j, pygame.K_b, pygame.K_F5, pygame.K_F9, pygame.K_g):
+            for key in (pygame.K_s, pygame.K_BACKSPACE, pygame.K_j, pygame.K_b,
+                        pygame.K_F5, pygame.K_F9, pygame.K_g):
                 ns['handle_game_input'](pygame.event.Event(pygame.KEYDOWN, key=key))
             for button in (1, 3):
                 for kind in (pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP):
