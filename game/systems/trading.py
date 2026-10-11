@@ -18,6 +18,11 @@ import math
 from ..data.store import DataStore
 from ..core.vectors import Vec3
 
+# Market ends a convoy may run between. A planet Trade Hub is a market just
+# like a trade station (issue #53): without it a hub earned passive income but
+# never opened a route or spawned ships.
+MARKET_TYPES = ("trade_station", "planet_trade_hub")
+
 
 class TradingSystem:
     def __init__(self, state):
@@ -33,24 +38,35 @@ class TradingSystem:
         state.events.subscribe("unit_destroyed", self._on_unit_destroyed)
 
     # ------------------------------------------------------------------ spawn
-    def _trade_stations(self) -> list:
-        return [e for e in self.state.entities.values()
-                if e.operational and e.is_station and e.data_id == "trade_station"]
+    @classmethod
+    def market_held(cls, st, e) -> bool:
+        """A surface hub only trades while its host world is still its owner's."""
+        if e.data_id != "planet_trade_hub":
+            return True
+        planet = st.entity(e.planet_id) if e.planet_id is not None else None
+        return planet is not None and planet.colonized_by == e.owner
+
+    @classmethod
+    def markets(cls, st) -> list:
+        """Operational market ends: trade stations and planet trade hubs."""
+        return [e for e in st.entities.values()
+                if e.operational and e.is_station and e.data_id in MARKET_TYPES
+                and cls.market_held(st, e)]
 
     def _destinations_for(self, src) -> list:
-        """Markets `src` can ship to: OTHER own or allied trade stations.
+        """Markets `src` can ship to: OTHER own or allied markets.
 
-        A route needs two ends, so a lone trade station has nowhere to send a
-        convoy (see the gate in _spawn_convoys). Trade stations only — routing
+        A route needs two ends, so a lone market has nowhere to send a
+        convoy (see the gate in _spawn_convoys). Markets only — routing
         to the owner's own command station would let a player pay themselves
         cargo_credits every interval, an unbounded money loop.
         """
-        return [d for d in self._trade_stations() if d.id != src.id
+        return [d for d in self.markets(self.state) if d.id != src.id
                 and d.owner in self.state.allied_player_ids(src.owner)]
 
     def _spawn_convoys(self) -> None:
         st = self.state
-        stations = self._trade_stations()
+        stations = self.markets(st)
         # NOTE: deliberate gate — trade needs TWO markets. This used to be
         # silently unsatisfiable in practice (the AI only built a station
         # above 4000cr, which it holds for ~1.7% of a match), so trading
@@ -99,7 +115,8 @@ class TradingSystem:
     @staticmethod
     def valid_market(st, owner, dest) -> bool:
         return bool(dest is not None and dest.operational and dest.is_station
-                    and dest.data_id == "trade_station"
+                    and dest.data_id in MARKET_TYPES
+                    and TradingSystem.market_held(st, dest)
                     and dest.owner in st.allied_player_ids(owner))
 
     @classmethod

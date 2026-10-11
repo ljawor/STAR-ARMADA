@@ -348,7 +348,7 @@ class ConstructionSystem:
         cap = colony_rules()['satellite_cap']
         from .satellite_orbits import orbit_position
         sd = self.ds.stations[station_id]
-        return orbit_position(planet, sd.radius, slot * 2 * math.pi / cap)
+        return orbit_position(planet, sd.radius, slot * 2 * math.pi / cap, slot)
 
     def start_satellite(self, planet_id, station_id, player_id):
         from .colonies import eligible_planet

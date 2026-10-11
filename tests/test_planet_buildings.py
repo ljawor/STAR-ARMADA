@@ -146,6 +146,43 @@ class PlanetBuildingTests(unittest.TestCase):
         run_for(self.gm, .2)
         self.assertEqual(enemy.hull + sum(enemy.shields.values()), before)
 
+    def test_pulsar_cannon_beats_at_its_own_gun_range(self):
+        """Reported (#52): "when building a pulsar cannon we are not able to fire it"."""
+        from game.systems import stats
+        catalogued = self.gm.ds.weapons['planet_pulsar_beam'].range
+        self.assertEqual(catalogued, 8400)
+        # The emplacement must also SEE that far: detection gates every launch,
+        # so a beam range beyond its own sensor range would still never fire.
+        station = self.gm.ds.stations['planet_pulsar_cannon']
+        self.assertEqual(station.sensor_range, 8400)
+        self.build('planet_pulsar_cannon')
+        run_for(self.gm, 25)
+        cannon = self.buildings()[0]
+        self.assertEqual(stats.effective_sensor_range(self.st, cannon), 8400)
+        for distance in (2000.0, 6000.0, 8000.0):
+            enemy = self.gm.factory.spawn_ship('imperial_cruiser', 1,
+                                               cannon.pos + Vec3(distance, 0, 0))
+            enemy.order_type = 'hold'
+            cannon.weapon_cooldowns.clear()
+            cannon.energy = cannon.max_energy
+            before = enemy.total_shield() + enemy.hull
+            run_for(self.gm, 1.5)
+            self.assertEqual(cannon.current_target, enemy.id)
+            self.assertLess(enemy.total_shield() + enemy.hull, before,
+                            f'beam did not fire at {distance:.0f}u')
+            enemy.alive = False
+            self.st.dead_ids.append(enemy.id)
+        # Beyond the gun: seen is fine, fired is not.
+        out_of_range = self.gm.factory.spawn_ship('imperial_cruiser', 1,
+                                                  cannon.pos + Vec3(9000, 0, 0))
+        out_of_range.order_type = 'hold'
+        cannon.weapon_cooldowns.clear()
+        before = out_of_range.total_shield() + out_of_range.hull
+        run_for(self.gm, 2.0)
+        self.assertFalse(self.st.can_see(0, out_of_range.id))
+        self.assertIsNone(cannon.current_target)
+        self.assertEqual(out_of_range.total_shield() + out_of_range.hull, before)
+
     def test_surface_shield_absorbs_only_surface_damage_and_scales_with_staffing(self):
         self.build('planet_shield_generator')
         run_for(self.gm, 25)

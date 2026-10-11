@@ -1,5 +1,6 @@
 """Inclined orbital motion and engagement suspension via real manager ticks."""
 import json
+import math
 import unittest
 from helpers import make_game, run_for
 from game.core.commands import PlayerCommand
@@ -59,6 +60,47 @@ class SatelliteOrbitTests(unittest.TestCase):
             self.assertGreaterEqual(sd.hull, 4000)
             self.assertLess(sd.shield_quad, 3000)
             self.assertGreater(sd.shield_quad, 0)
+
+    def test_constellation_uses_distinct_planes_and_nested_shells(self):
+        """Reported (#51): "satellites are orbiting next to each other"."""
+        from game.systems.colonies import colony_rules
+        from game.systems.satellite_orbits import orbit_plane, orbit_radius
+        cfg = colony_rules()
+        cap = int(cfg['satellite_cap'])
+        planes = [orbit_plane(self.planet.id, slot, cfg) for slot in range(cap)]
+        self.assertEqual(len(set(planes)), cap)                 # no shared ring
+        self.assertEqual(len({round(inc, 6) for _, inc in planes}), cap)
+        for _, inclination in planes:
+            self.assertGreater(inclination, 0.0)                # all still inclined
+            self.assertLess(inclination, math.pi / 2)
+        radii = [orbit_radius(self.planet, 45.0, slot, cfg) for slot in range(cap)]
+        self.assertEqual(radii, sorted(radii))
+        self.assertEqual(len(set(radii)), cap)
+        # Shells are stacked wider than the shared spacing rule, so two
+        # satellites in different planes can never cross into each other and
+        # freeze the orbit. 2 * (45 + 45) * 1.6 is the sim's own floor.
+        self.assertGreaterEqual(min(b - a for a, b in zip(radii, radii[1:])), 144.0)
+        # Same planet, same slot -> same plane: determinism and peers agree
+        # without persisting anything new.
+        self.assertEqual(orbit_plane(self.planet.id, 2, cfg), planes[2])
+        self.assertNotEqual(orbit_plane(self.planet.id + 1, 2, cfg), planes[2])
+
+    def test_full_constellation_keeps_orbiting_apart(self):
+        for _ in range(6):
+            self.st.queue_command(PlayerCommand('build_satellite', 0,
+                target_id=self.planet.id, station_kind='attack_satellite'))
+        run_for(self.gm, 24 * 6 + 20)
+        sats = sorted((e for e in self.st.entities.values()
+                       if e.planet_id == self.planet.id and e.satellite_slot is not None),
+                      key=lambda e: e.satellite_slot)
+        self.assertEqual([e.satellite_slot for e in sats], list(range(6)))
+        before = {e.id: e.pos.copy() for e in sats}
+        run_for(self.gm, 300)
+        for e in sats:                      # nobody is wedged on an obstacle
+            self.assertGreater(e.pos.dist(before[e.id]), 1.0)
+        for i, a in enumerate(sats):
+            for b in sats[i + 1:]:
+                self.assertGreaterEqual(a.pos.dist(b.pos), (a.radius + b.radius) * 1.6)
 
     def test_hidden_missile_source_cannot_pause_or_trigger_interception(self):
         from game.core.world import Projectile

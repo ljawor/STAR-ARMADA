@@ -5,11 +5,30 @@ from .colonies import colony_rules, SATELLITE_TYPES
 from . import stats
 
 
-def orbit_position(planet, station_radius, phase):
+def orbit_plane(planet_id, slot, cfg):
+    """Deterministic per-satellite orbital plane.
+
+    Every satellite used to share one plane derived from `planet.id`, so a
+    planet's whole constellation rode a single ring. Derive node AND
+    inclination from (planet, slot) instead: stable across save/restore and
+    across peers (nothing new to serialize), but visually distinct orbits.
+    """
+    h = ((planet_id * 73856093) ^ ((slot + 1) * 19349663)) & 0xffffffff
+    node = (h % 4096) / 4096.0 * 2 * math.pi
+    spread = 0.45 + 0.9 * (((h >> 12) & 0x3ff) / 1023.0)
+    return node, cfg['orbit_inclination'] * spread
+
+
+def orbit_radius(planet, station_radius, slot, cfg):
+    """Nested shells: distinct radii keep crossing orbits collision-free."""
+    return (planet.radius + station_radius + cfg['orbit_clearance']
+            + slot * cfg['orbit_shell_spacing'])
+
+
+def orbit_position(planet, station_radius, phase, slot=0):
     cfg = colony_rules()
-    radius = planet.radius + station_radius + cfg['orbit_clearance']
-    inclination = cfg['orbit_inclination']
-    node = (planet.id * 0.6180339887498949) % (2 * math.pi)
+    radius = orbit_radius(planet, station_radius, slot, cfg)
+    node, inclination = orbit_plane(planet.id, slot, cfg)
     x = math.sin(phase) * radius
     z = math.cos(phase) * radius * math.cos(inclination)
     y = math.cos(phase) * radius * math.sin(inclination)
@@ -85,7 +104,7 @@ class SatelliteOrbitSystem:
             segments = max(1, math.ceil(dt * cfg['orbit_speed'] / .02))
             for _ in range(segments):
                 phase = (e.satellite_orbit_phase + dt * cfg['orbit_speed'] / segments) % (2 * math.pi)
-                pos = orbit_position(planet, e.radius, phase)
+                pos = orbit_position(planet, e.radius, phase, e.satellite_slot)
                 if not self.legal(e, planet, pos):
                     break
                 e.satellite_orbit_phase = phase

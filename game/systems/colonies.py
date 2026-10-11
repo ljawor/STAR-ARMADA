@@ -3,7 +3,7 @@ import math
 from ..data.store import DataStore
 
 DEFAULTS = dict(satellite_cap=6, control_seconds=15.0, approach_range=600.0, orbit_clearance=350.0,
-                orbit_inclination=0.55, orbit_speed=0.06)
+                orbit_inclination=0.55, orbit_speed=0.06, orbit_shell_spacing=160.0)
 SATELLITE_TYPES = ('defense_satellite', 'attack_satellite')
 
 

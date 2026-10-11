@@ -29,7 +29,11 @@ planetary production reachable at 1024×768 and 1280×800.
 ## Satellites
 
 Existing attack/defense roles share six satellite slots. Paid construction reserves
-capacity. Positions now travel on an inclined 3D orbit, not a fixed flat ring.
+capacity. Each slot rides its **own** inclined 3D orbit: the node and the inclination
+are derived deterministically from `(planet_id, satellite_slot)`, and each slot adds
+`orbit_shell_spacing` (160 units) to its orbit radius, so a planet's satellites no
+longer share one ring. Both values are recomputed, never serialized, so they stay
+stable across save/restore and agree between lockstep peers.
 Valid, detected, in-range engagement pauses orbital movement; normal weapons or
 missile interception execute, then orbital travel resumes when no eligible threat
 remains. Physical obstructions can hold an orbit; satellites do not phase through
@@ -54,13 +58,25 @@ Buildings have solid outward-oriented meshes on the actual planet surface.
 | Resource Extractor | 800 / 600 / 200 | +3 materials and +1 energy per second |
 | Trade Hub | 900 / 500 / 200 | +4 credits per second |
 | Surface Shield Generator | 1,100 / 900 / 200 | Shared protection for this colony's surface buildings only |
-| Pulsar Cannon | 1,400 / 1,200 / 200 | Long-range anti-ship beam; requires current detection |
+| Pulsar Cannon | 1,400 / 1,200 / 200 | 8,400-unit anti-ship beam; its own sensor range matches the gun, so it engages without a forward sensor |
 
 All four initially require 100 crew and 24 seconds of construction. Staffing and
 subsystem health affect operation. Basic colony income and recruitment remain
 unchanged; surface production adds to that income exactly once through the ordinary
-station economy. Trade hubs provide income rather than spawning a second convoy
-system. Ships and orbital satellites never receive the surface generator's protection.
+station economy. A planet **Trade Hub is a real market end**: convoys run between it
+and any other own/allied market (hub or trade station), the destination owner is paid
+on arrival, and the convoy is raidable like any other. A hub trades only while its
+host world is still its owner's, so losing the colony closes the route. Ships and
+orbital satellites never receive the surface generator's protection.
+
+An operational, owner-held Surface Shield Generator also raises a **visible field**: a
+translucent additive shell hugging the world just above its foundations (planet radius
+times 1.04, plus 48 units). It is drawn after the fog pass so the ground overlay cannot
+composite over it, depth-tested without depth writes so it never hides the hardware
+inside it, and brightens while it absorbs. It deliberately stops well short of the
+lowest satellite shell: the simulation shields the colony's surface buildings only, so
+the field never advertises protection for satellites or ships. Ownership stays
+authoritative — a world that changes hands, or a generator without crew, draws nothing.
 
 Destroying hardware frees its slot. Completed surface hardware survives colony
 capture and transfers to the new owner; the former owner's paid queue is cleared
@@ -72,8 +88,49 @@ are serialized. The AI makes conservative surface investments while retaining it
 infrastructure/economic reserve. No new released-package or cross-platform claim is
 implied by source implementation.
 
+## Planetary hardware fixes (branch `feature/planetary-hardware-fixes`, unreleased)
+
+Four reported defects in the hardware above, fixed together on one branch: every
+satellite on a planet rode a single ring, the Pulsar Cannon could not reach anything
+worth shooting, a Trade Hub earned income but never traded, and an operational
+Surface Shield Generator drew nothing.
+
+- **#51 varied satellite orbits** — the node and inclination are derived from
+  `(planet_id, satellite_slot)` and each slot adds `orbit_shell_spacing` (160 units)
+  to its radius, so six satellites hold six shells and six planes. Six built
+  satellites measured radii 1,095 → 1,895 units, six distinct planes, kept orbiting
+  for 300 s and never closed nearer than 444.7 units (the sim's own spacing floor is
+  144). Deterministic and peer-safe: nothing new is serialized.
+- **#52 pulsar reach** — the emplacement already auto-fired, it simply out-ranged
+  itself. The beam is now 8,400 units and the cannon's own sensor range matches the
+  gun, because current detection gates every launch. Measured: engages and strips 320
+  shields at 2,000 / 6,000 / 8,400 units, and holds fire at 9,000 units, where it is
+  not detected. With the previous values it never fired at 6,000 or 8,000 units.
+- **#53 trade hub as a market end** — a market is now a `trade_station` **or** a
+  `planet_trade_hub` (`TradingSystem.markets`), a hub trades only while its host world
+  is still its owner's (`market_held`), and both the spawn gate and the HUD's "needs a
+  second market" line read that one source. Measured: a lone hub spawns nothing;
+  hub + station spawned 18 convoys, 14 arrived, +7,500 credits over 400 s, with live
+  routes running in both directions.
+- **#55 visible planet shields** — a colonized world with an operational, owner-held
+  generator raises the translucent additive shell described above; an abandoned
+  generator, a lost colony, a foreign generator or a collapsed field draws nothing.
+
+Each new regression was replayed against `HEAD` loaded in memory to prove it is not
+vacuous: HEAD's constellation is one coplanar ring with a single radius, HEAD's
+catalogue never fires past 4,200 units, HEAD's hub is not a market, and HEAD has no
+planet shield field at all.
+
 ## Executed evidence
 
+- Whole-tree suite on this branch: **963 tests passed** in 448.274 seconds, exit 0,
+  after the four fixes and their regressions; compile and whitespace checks passed.
+  The branch's focused gate (satellite orbits, surface buildings, surface geometry,
+  trade, construction exclusions) is 58 of those tests.
+- `tools/diag_planet_shields.py`: five real Cocoa/OpenGL control-versus-field captures
+  at 1280×800 and 1024×768. The field is additive, entirely contained in the projected
+  shell, never hides the hardware inside it, draws **exactly zero** changed pixels once
+  the generator is abandoned, and returns at full strength afterwards.
 - Final whole-tree suite: **946 tests passed**, after the independent reserve/fixture
   review; compile and whitespace checks passed.
 - Independent replay reconstruction probes rejected duplicate live/queued slot

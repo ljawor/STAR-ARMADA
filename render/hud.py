@@ -391,7 +391,7 @@ class HUD:
 
     # ------------------------------------------------------------------ trade
     def _trade_line(self, e) -> str:
-        """One-line trade status for a convoy or trade station."""
+        """One-line trade status for a convoy or a market (station or hub)."""
         st = self.state
         if e.data_id == "trade_convoy":
             dest = st.known_entity(getattr(self, "local_player", 0), e.convoy_dest if e.convoy_dest is not None else -1)
@@ -399,17 +399,19 @@ class HUD:
             who = st.players[where].name if where in st.players else "?"
             tgt = f"→ {who}" if dest is not None else "→ no market"
             return f"CARGO {e.cargo_credits:0.0f}cr  {tgt}"
-        # trade station: passive income + live outbound convoys
-        rate = self.ds.stations.get("trade_station")
+        # market (trade station / surface trade hub): income + outbound convoys
+        rate = self.ds.stations.get(e.data_id)
         inc = 0.0
         if rate is not None and isinstance(rate.income, dict):
             inc = float(rate.income.get("credits", 0.0))
         out = sum(1 for c in st.entities.values()
                   if c.alive and c.data_id == "trade_convoy" and c.owner == e.owner
                   and st.can_see(getattr(self, "local_player", 0), c.id))
-        markets = sum(1 for s in st.entities.values()
-                      if s.alive and s.data_id == "trade_station"
-                      and st.can_see(getattr(self, "local_player", 0), s.id))
+        # Same source of truth as the spawn gate: a second market must be a real
+        # operational market the player can currently see.
+        from game.systems.trading import TradingSystem
+        markets = sum(1 for s in TradingSystem.markets(st)
+                      if st.can_see(getattr(self, "local_player", 0), s.id))
         if markets < 2:
             return f"INCOME {inc:0.1f}cr/s · NEEDS A SECOND MARKET"
         return f"INCOME {inc:0.1f}cr/s · {out} CONVOY{'S' if out != 1 else ''} OUT"
@@ -514,7 +516,7 @@ class HUD:
             self._label(panel.x + 12, y, f"LEVEL {e.level}", TXT_DIM)
             y += 18
         # Flow the cursor: rank/XP rows must not run underneath hull bars.
-        if e.data_id in ("trade_convoy", "trade_station"):
+        if e.data_id in ("trade_convoy", "trade_station", "planet_trade_hub"):
             self._label(panel.x + 12, y, self._trade_line(e), TRADE,
                         self.font_small)
             y += 18

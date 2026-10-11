@@ -128,6 +128,9 @@ class Renderer:
         # per-quadrant flash timers that decay after one
         self._prev_shields: dict = {}
         self._shield_flash: dict = {}
+        # planet-wide surface shield field: same drop-detection, keyed by planet
+        self._planet_shield_prev: dict = {}
+        self._planet_shield_flash: dict = {}
         # unit sphere with UVs (unit radius, scaled at draw time)
         self._unit_sphere_tex = self._build_textured_sphere_list()
         # set by diag/probe scripts: freeze the animation clock so consecutive
@@ -189,6 +192,11 @@ class Renderer:
         # always known even when their sensor subsystem is disabled. Live
         # combat passes below independently enforce exact current detection.
         self.fog.draw(st, self.local_player)
+        if "planet_shields" not in self.skip:
+            # After the fog quad: the shell is translucent hardware, not terrain
+            # the fog chart owns, and drawing it first let the ground overlay
+            # composite over the lit limb.
+            self._draw_planet_shields(dt)
         if "effects" not in self.skip:
             self._draw_effects()
         if "projectiles" not in self.skip:
@@ -2887,6 +2895,89 @@ class Renderer:
             return 0.0
         return self.camera.height / (
             2.0 * dist * math.tan(math.radians(self.camera.fov / 2)))
+
+    # ------------------------------------------------------------ planet shields
+    def _draw_planet_shields(self, dt: float) -> None:
+        """Translucent surface-shield field over a colonized world.
+
+        An operational `planet_shield_generator` raises a real damage-absorbing
+        field in the sim (its quadrant pools eat hits on the planet's surface
+        hardware) but nothing was drawn for it — reported as "planet shields are
+        not visible". The shell is the same view-aligned unit sphere the ship
+        bubbles use, scaled to the world: additive, depth-tested, no depth
+        writes, so it never hides the hardware inside it.
+        """
+        from render.planet_building_geometry import planet_shield_fields
+        st = self.state
+        import OpenGL.GL as GL
+        fields = planet_shield_fields(st)
+        if not fields:
+            return
+        drawn = False
+        for e in known_entities(st, self.local_player):
+            if not e.alive or not e.is_planet or e.data_id == "asteroid_field":
+                continue
+            generator, strength, radius = fields.get(e.id, (None, 0.0, 0.0))
+            if generator is None or strength <= 0.0:
+                continue
+            # Detection of the generator gates the field, like every other
+            # contact cue; a hidden world's shield is not a licence to see it.
+            if not st.can_see(self.local_player, generator.id):
+                continue
+            if not drawn:
+                GL.glPushAttrib(int(GL.GL_ENABLE_BIT) | int(GL.GL_CURRENT_BIT) |
+                                int(GL.GL_LIGHTING_BIT))
+                GL.glDisable(GL.GL_LIGHTING)     # shell carries its own baked light
+                GL.glDisable(GL.GL_TEXTURE_2D)
+                glEnable(GL_DEPTH_TEST)
+                drawn = True
+            self._planet_shield_dome(e, generator, radius, strength, dt)
+        if drawn:
+            GL.glPopAttrib()
+        # bounded caches: a campaign can retire and recolonize many worlds
+        if len(self._planet_shield_prev) > 64:
+            live = {e.id for e in st.entities.values() if e.is_planet}
+            for key in [k for k in self._planet_shield_prev if k not in live]:
+                self._planet_shield_prev.pop(key, None)
+                self._planet_shield_flash.pop(key, None)
+
+    def _planet_shield_dome(self, planet, generator, radius: float,
+                            strength: float, dt: float) -> None:
+        """One additive shell above the world, pulsed while it absorbs."""
+        total = generator.total_shield()
+        old = self._planet_shield_prev.get(planet.id)
+        if old is not None and total < old - 1e-6:
+            self._planet_shield_flash[planet.id] = 1.0
+        self._planet_shield_prev[planet.id] = total
+        flash = self._planet_shield_flash.get(planet.id, 0.0)
+        if flash > 0.0:
+            flash = max(0.0, flash - dt * 3.0)
+            self._planet_shield_flash[planet.id] = flash
+        pos = (planet.pos.x, planet.pos.y, planet.pos.z)
+        if not self._in_front(pos, radius):
+            return
+        right, up, toward_eye = self._camera_basis()
+        glPushMatrix()
+        glTranslatef(pos[0], pos[1], pos[2])
+        _gl.glMultMatrixf([right[0], right[1], right[2], 0.0,
+                           up[0], up[1], up[2], 0.0,
+                           toward_eye[0], toward_eye[1], toward_eye[2], 0.0,
+                           0.0, 0.0, 0.0, 1.0])
+        glScalef(radius, radius, radius)
+        glEnable(GL_BLEND)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE)          # additive: pure emission
+        glDepthMask(False)
+        bucket = max(1, min(8, int(round(strength * 8.0))))
+        # Strength is baked into the shared shell's vertex colours, so a hit is
+        # shown by re-adding the emission (1..2 extra passes) rather than by
+        # tinting at draw time, which a display list cannot do. The localized
+        # contact itself is the curved `shield_hit` effect the sim spawns on the
+        # surface hardware that absorbed the damage.
+        for _ in range(1 + int(round(flash * 2.0))):
+            glCallList(self._shield_shell_list(bucket))
+        glDepthMask(True)
+        glDisable(GL_BLEND)
+        glPopMatrix()
 
     def _draw_shields(self, units, dt: float) -> None:
         """Shield bubbles for every unit that has shields worth showing.

@@ -44,7 +44,7 @@ class TestCrew(unittest.TestCase):
         self.gm.weapons.update(1)
         self.assertEqual(self.st.damage_queue, [])
         self.assertEqual(self.st.projectiles, {})
-        self.assertEqual(self.gm.trading._trade_stations(), [])
+        self.assertEqual(self.gm.trading.markets(self.st), [])
         self.gm.economy.update(1)
         self.assertEqual(self.st.players[0].income_frame['crew'], 0)
         self.gm.victory.update(2)
@@ -71,7 +71,7 @@ class TestCrew(unittest.TestCase):
         self.assertEqual(e.energy, 1)
         self.assertFalse(self.gm.abilities.activate(e, 'emergency_shield_recharge'))
         self.assertNotIn(e, AIPlayer(self.st, 0).my_units())
-        self.assertNotIn(market, self.gm.trading._trade_stations())
+        self.assertNotIn(market, self.gm.trading.markets(self.st))
         squad.hangar_id = carrier.id
         squad.hull = 1
         before = squad.hull
