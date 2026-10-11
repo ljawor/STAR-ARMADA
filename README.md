@@ -4,11 +4,12 @@
 classic space-fleet RTS titles (Armada II / Fleet Operations era). It runs entirely on
 Python 3 — deterministic simulation, AI, OpenGL rendering via pygame-ce and procedural audio.
 
-**Current release: [v0.9.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.9.0)**
-— published October 11, 2026, with macOS DMG and Windows ZIP. Adds standard/night
-audio mixing, mono/live controls, skippable campaign intros/outros, paged F1 help
-and settings, recovery-drill hints and targeted accessibility options to v0.8.0.
-Native interactive Windows gameplay and mixed-platform LAN acceptance remain open.
+**Current release: [v0.10.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.10.0)**
+— published October 11, 2026, with macOS DMG and Windows ZIP. Adds independent
+panel minimization, inclined satellite orbits, cheaper/lighter satellites and six
+separate planetary building slots to v0.9.0. Downloaded hashes, code/data integrity
+and read-only frozen macOS smoke passed. Final native Cocoa wheel-input QA,
+native interactive Windows gameplay and mixed-platform LAN acceptance remain open.
 
 The setting is an original space-opera universe. Prototype faction/ship names are
 placeholder-style data (Imperial / Rebel / Confederacy / Syndicate) so the feel reads
@@ -94,14 +95,15 @@ life-support effectiveness is not staffing-scaled. Cautious AI uses the same com
 No towing, allied reclaim or neutral salvage. Initial defaults and limitations:
 [docs/CREW_RECOVERY.md](docs/CREW_RECOVERY.md).
 
-## Planetary hardware / HUD follow-up (v0.10.0 source increment)
+## Planetary hardware / HUD follow-up (released in v0.10.0)
 
 The v0.10.0 increment adds independently minimizable left/right/mission panels,
 3D satellite orbits that pause for engagement, lower satellite cost/durability, and
 six separate planetary surface slots for resource, trade, surface-only shield and
 long-range pulsar buildings. Basic colony income remains unchanged. This increment
-is undergoing release preparation. The final 946-test suite and independent source
-reviews passed; final native wheel-input QA remains focus-blocked and disclosed.
+is merged in #43 and included in the verified published v0.10.0 packages. The final
+946-test suite and independent source reviews passed; final native wheel-input QA
+remains focus-blocked and disclosed.
 See [PLANETARY_HARDWARE.md](docs/PLANETARY_HARDWARE.md)
 for mechanics, configurable tuning and pending/executed acceptance gates.
 

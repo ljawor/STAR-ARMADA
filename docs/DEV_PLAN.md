@@ -13,6 +13,13 @@ partly delivered; the remaining work is listed explicitly below.
 
 ## Current source and release scope
 
+**Current release: v0.10.0**, published October 11, 2026. PR #43 adds planetary
+surface hardware, inclined satellite orbits, reduced satellite cost/durability and
+independent HUD panel minimization. Both published package digests, 26 inspected
+code modules and all 15 tracked assets match the tagged source. Read-only downloaded
+macOS frozen smoke passed. Final native Cocoa wheel-input, interactive Windows and
+mixed-platform LAN gates remain open. The following older increments are historical.
+
 GitHub v0.7.0 was published October 10, 2026 with
 `STAR-ARMADA-v0.7.0-mac.dmg` and `STAR-ARMADA-v0.7.0-win.zip`. PRs #37, #38 and
 #40 are merged and included. Release notes record downloaded SHA-256 verification,
@@ -149,15 +156,15 @@ combat balance and release acceptance on both platforms. Existing audio, faction
 and screen-size readability are not equivalent to completion of every original LOD,
 audio-pack or livery requirement.
 
-## Planetary hardware / HUD follow-up — v0.10.0 source increment
+## Planetary hardware / HUD follow-up — released in v0.10.0
 
 Independent panel minimization, inclined moving satellites with engagement pauses,
 lower satellite cost/durability and six separate resource/trade/shield/pulsar surface
 slots are implemented for v0.10.0. Independent reviews
 approved the source and the final stable-tree suite passed 946 tests. Hardware GL
 acceptance passed; final native Cocoa wheel-input QA is still focus-blocked. The user
-authorized merge and release with that limit disclosed; published-package verification
-remains a separate gate.
+authorized merge and release with that limit disclosed. PR #43 is merged and both
+published packages passed digest, code/data integrity and macOS frozen-smoke checks.
 See [PLANETARY_HARDWARE.md](PLANETARY_HARDWARE.md) for mechanics and evidence.
 
 ## Cross-cutting backlog
