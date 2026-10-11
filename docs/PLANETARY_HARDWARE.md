@@ -2,14 +2,20 @@
 
 ## Delivery status
 
-Implemented for the v0.10.0 source increment; release preparation is in progress.
+Merged in PR #43 and published in v0.10.0 on October 11, 2026. The immutable release
+tag points to `16502e6b2376f9527474ea5f1c302020966b042d`; publication documentation
+is a separate later commit, not a moved production tag.
 Independent source and final-delta reviews approved the feature. The final stable-tree
 suite passed **946 tests in 397.945 seconds**. The preceding 944-test run exposed stale
 fixtures and a genuine AI projected-reserve defect; both were corrected without
 relaxing visibility, reserve, construction or input assertions.
 Final native Cocoa wheel-input acceptance remains open because the diagnostic cannot
 reliably acquire focus. The user authorized merge and release with this known gate
-still open; publication and downloaded-package verification are separate gates.
+still open. Publication and downloaded-package verification subsequently passed:
+both SHA-256 digests match GitHub, DMG/ZIP integrity passes, 26 inspected modules and
+15 tracked assets match tagged source, and the read-only mounted macOS app produced
+fresh screenshot/replay output with `SMOKE_OK` under an isolated HOME. The old v0.9.0
+Windows package was rejected by the v0.10.0 freshness comparison.
 
 ## Controls
 
