@@ -11,7 +11,7 @@ import math
 from ..core.vectors import Vec3
 from ..data.store import DataStore
 from . import stats
-from .weapons import clear_unseen_targets
+from .weapons import clear_unseen_targets, mount_needs_nose
 
 
 class MovementSystem:
@@ -126,10 +126,16 @@ class MovementSystem:
                     desired_speed = min(desired_speed, preferred * math.radians(
                         stats.effective_turn_rate(st, e)) * .45)
                     unit = ds.ships.get(e.data_id)
-                    front_reach = max((ds.resolve_weapon(ref["weapon"] if isinstance(ref, dict) else ref).range
-                                       for ref in unit.weapons
-                                       if ds.resolve_weapon(ref["weapon"] if isinstance(ref, dict) else ref).hardpoint == "front"),
-                                      default=0.0) if unit else 0.0
+                    # Only a nose-only mount forces the stopped, target-facing
+                    # fire windows below. A hull whose batteries cover every
+                    # bearing (#58: capitals) can keep travelling and shoot.
+                    front_reach = 0.0
+                    if unit:
+                        for ref in unit.weapons:
+                            ref_wd = ds.resolve_weapon(
+                                ref["weapon"] if isinstance(ref, dict) else ref)
+                            if mount_needs_nose(ref, ref_wd):
+                                front_reach = max(front_reach, ref_wd.range)
                     # A tangent nose cannot also point inward. Alternate real
                     # nose-first travel with stopped, target-facing fire windows.
                     # Phase uses persisted sim time, never a local timer/RNG.

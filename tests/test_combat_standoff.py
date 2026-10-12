@@ -39,6 +39,19 @@ class CombatStandoffTests(unittest.TestCase):
         return distances, travel, shots
 
     def test_visible_station_approach_becomes_firing_orbit(self):
+        """A hull whose mounts cover every bearing keeps firing while it orbits.
+
+        #58 made the catalogue's per-mount `arcs` authoritative, so the
+        Imperial corvette's forward-only laser no longer strafes broadside;
+        the all-round Confed corvette keeps the original invariant (an orbit
+        inside weapon reach that keeps landing shots) at the original floor.
+        """
+        self.ship.alive = False
+        self.ship = self.gm.factory.spawn_ship('confed_corvette', 0, Vec3(0, 0, -1200))
+        self.ship.sensor_range = 10000
+        self.ship.order_type = 'attack'
+        self.ship.order_target_id = self.target.id
+        self.ship.current_target = self.target.id
         distances, travel, shots = self.advance()
         self.assertGreaterEqual(min(distances), self.target.radius+self.ship.radius+40-1e-6)
         self.assertGreater(min(distances[-900:]), 500, 'must not slowly thrust into target center')
@@ -93,6 +106,12 @@ class CombatStandoffTests(unittest.TestCase):
                 self.assertEqual(self.ship.vel, Vec3())
 
     def test_front_arc_capital_orbit_has_repeated_firing_windows(self):
+        """A full-coverage capital keeps firing while it orbits (#58).
+
+        It no longer needs the alternating stopped, target-facing fire windows
+        that a nose-only hull uses: its batteries cover every bearing, so the
+        beams must fire continuously from the tangent orbit.
+        """
         self.ship.alive = False
         self.ship = self.gm.factory.spawn_ship('confed_supercapital', 0, Vec3(0, 0, -1872))
         self.ship.sensor_range = 10000
@@ -272,6 +291,13 @@ class CombatStandoffTests(unittest.TestCase):
                 restored = GameManager(GameState.from_dict(restored.state.to_dict(precise=True)))
 
     def test_large_dt_moving_target_cannot_tunnel_past_stopped_attacker(self):
+        # #58: this cruiser's batteries now cover every bearing, so it no longer
+        # freezes in a front-arc fire window during the step. It still ends the
+        # step stopped (speed 0) at the swept keep-out boundary, which resolves
+        # 163.9986 from the target centre against the 164 disc sum - 1.4e-3
+        # deeper than the frozen trajectory's exact 164.0000. The invariant is
+        # unchanged (a moving target must not pass through the attacker), so the
+        # bound is stated as the disc sum instead of a hand-tuned 163.999.
         self.ship.data_id = 'imperial_cruiser'
         self.ship.radius = 90
         self.ship.pos = Vec3(0, 0, -166)
@@ -284,9 +310,11 @@ class CombatStandoffTests(unittest.TestCase):
         self.ship.order_target_id = self.ship.current_target = self.target.id
         self.st.time = 41.0 - (self.ship.id * 1.618) % 41.0  # stopped front-fire phase
         self.gm.movement.update(10)
-        self.assertLess(self.ship.pos.z, self.target.pos.z-163.999)
+        separation = self.target.pos.z - self.ship.pos.z
+        self.assertGreater(separation, self.ship.radius + self.target.radius - 0.01)
 
     def test_large_dt_moving_target_sweep_is_safe_when_target_integrates_first(self):
+        """The same sweep with the target integrating first (see the note above)."""
         self.ship.data_id = 'imperial_cruiser'
         self.ship.radius = 90
         self.ship.pos = Vec3(0, 0, -166)
@@ -300,7 +328,8 @@ class CombatStandoffTests(unittest.TestCase):
         self.st.time = 41.0 - (self.ship.id * 1.618) % 41.0
         self.st.entities = {self.target.id: self.target, self.ship.id: self.ship}
         self.gm.movement.update(10)
-        self.assertLess(self.ship.pos.z, self.target.pos.z-163.999)
+        separation = self.target.pos.z - self.ship.pos.z
+        self.assertGreater(separation, self.ship.radius + self.target.radius - 0.01)
 
     def test_combat_approach_keeps_planet_gravity_well_redirect(self):
         self.gm.factory.spawn_planet({'id': 'obstacle', 'type': 'temperate',

@@ -15,6 +15,26 @@ from ..data.store import DataStore
 from . import stats
 
 
+def mount_arcs(wref, wd) -> tuple:
+    """Sectors one hardpoint may fire into.
+
+    The ship's own mount spec wins: `{"weapon": ..., "count": n, "arcs": [...]}`
+    lists the sectors that mount was fitted for. The weapon catalogue's single
+    `hardpoint` is only the fallback for mounts that declare none (#58: those
+    per-mount lists were never read, so every capital's main battery silently
+    fell back to `hardpoint: "front"` and could not shoot past its nose).
+    """
+    arcs = wref.get("arcs") if isinstance(wref, dict) else None
+    if arcs:
+        return tuple(arcs)
+    return (wd.hardpoint,)
+
+
+def mount_needs_nose(wref, wd) -> bool:
+    """True when every sector of this mount points forward, so the hull must aim."""
+    return all(arc == "front" for arc in mount_arcs(wref, wd))
+
+
 def clear_unseen_targets(st, e) -> None:
     """Drop contact-dependent orders before any system reads a live position."""
     if e.current_target is not None:
@@ -97,6 +117,10 @@ class WeaponSystem:
         if hardpoint == "right":
             return abs(d) < 0.7 and (to_t.x * math.cos(e.yaw) - to_t.z * math.sin(e.yaw)) < 0
         return True
+
+    def _in_arcs(self, e, target, arcs) -> bool:
+        """True when the target sits in any sector this hardpoint was fitted for."""
+        return any(self._in_arc(e, target, arc) for arc in arcs)
 
     def find_target(self, e, scan_radius: float):
         """Nearest valid enemy in radius (None otherwise)."""
@@ -185,7 +209,7 @@ class WeaponSystem:
                 continue
             if dist > wd.range or not self._weapon_can_hit(wd, target):
                 continue
-            if not self._in_arc(e, target, wd.hardpoint) and not is_static:
+            if not is_static and not self._in_arcs(e, target, mount_arcs(wref, wd)):
                 continue
             # energy check
             if wd.energy_cost > 0 and e.energy < wd.energy_cost:
