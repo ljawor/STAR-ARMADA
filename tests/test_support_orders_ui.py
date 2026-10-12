@@ -189,10 +189,11 @@ class SupportOrdersUITests(unittest.TestCase):
 
 
     def test_stop_cancels_pending_repair_without_late_confirmation(self):
+        """Stop is Backspace since #48 (S is a camera pan key again)."""
         builder = self.gm.factory.spawn_ship('imperial_constructor', 0, Vec3())
         self.ctrl.selection = {builder.id}
         self.ctrl._queue_repair({'unit_ids': [builder.id]})
-        self.ctrl.handle_event(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_s))
+        self.ctrl.handle_event(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_BACKSPACE))
         self.assertIsNone(self.ctrl._pending_ability)
         self.assertEqual(self.hud.ability_prompt, '')
         self.assertEqual([c.type for c in self.st.command_queue], ['stop'])
@@ -212,7 +213,7 @@ class SupportOrdersUITests(unittest.TestCase):
 
     def test_support_help_explains_limits_before_ordering(self):
         for ship_id, required in (
-            ('imperial_constructor', ('CR/HP', 'MT/HP', 'no crew', 'S to stop')),
+            ('imperial_constructor', ('CR/HP', 'MT/HP', 'no crew', 'Backspace to stop')),
             ('imperial_frigate', ('all shields down', 'satellites', '10%')),
             ('imperial_tie_squadron', ('avoid detected enemies', 'no combat')),
             ('repair_dock', ('ships / fighters only', 'not stations'))):

@@ -21,13 +21,13 @@ HELP_PAGES = (
     ('KEYBOARD & CONTROLS', (
         'Select: left click or left drag. Shift adds to selection.',
         'Orders: right click a location to move or a detected enemy to attack.',
-        'Camera: arrows / W A D pan; S pans only with no selection.',
+        'Camera: arrows or W A S D pan the view (S pans too, even with units selected).',
         'Mouse wheel: zoom. Q / E: rotate. Minimap click: recenter.',
         'Space: focus selection. H: follow selected unit. M: toggle follow.',
         'X: tactical overview. P: pause. F10: toggle mouse grab.',
         'Ctrl/Cmd + 1-9: assign control group. 1-9: recall; Shift: add.',
         'F: fleet panel. G then 1-9: create fleet. J: jump destination.',
-        'S with selection: stop. Esc: cancel targeting or leave match.',
+        'Backspace: stop selected units. Esc: cancel targeting or leave match.',
         'F1 / Esc: close help. Page Up/Down: help pages.',
     )),
     ('RECOVERY & SUPPORT', (
