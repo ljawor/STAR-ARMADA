@@ -580,7 +580,7 @@ class AIPlayer:
         p = st.players.get(self.player_id)
         ds = self.ds
         threshold = ds.rules.get("ai", {}).get("expand_credits", 4000)
-        from ..systems.colonies import eligible_planet
+        from ..systems.colonies import colony_rules, eligible_planet
         budget = self._projected_budget()
         has_colony = False
         for planet in sorted(st.entities.values(), key=lambda e: e.id):
@@ -593,10 +593,15 @@ class AIPlayer:
             roles.update(c.station_kind for c in st.command_queue
                          if c.player == self.player_id and c.type == 'build_satellite'
                          and c.target_id == planet.id)
+            # #57: a slot under the destruction penalty is unavailable, so the
+            # orbit can be full even with room on paper. Queueing into it would
+            # only be refused at admission and burn a strategic decision.
+            orbit_full = (len(st._construction_system.satellite_slots(planet))
+                          >= colony_rules()['satellite_cap'])
             for role in ('defense_satellite', 'attack_satellite'):
                 cost = st._construction_system.factory.station_build_cost(role)
                 reserve = self._colony_reserve()
-                if (role not in roles and self.my_stations('mining_station')
+                if (not orbit_full and role not in roles and self.my_stations('mining_station')
                         and budget['materials'] > 2500
                         and all(budget[key] - cost[key] >= reserve[key] for key in budget)):
                     st.queue_command(PlayerCommand('build_satellite', self.player_id,

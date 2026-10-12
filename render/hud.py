@@ -740,7 +740,7 @@ class HUD:
             y += 40
 
     def _planet_menu(self, planet, local_player):
-        from game.systems.colonies import eligible_planet
+        from game.systems.colonies import eligible_planet, satellite_lock_remaining
         from game.systems.planet_buildings import BUILDING_TYPES, building_rules, building_slots
         panel = pygame.Rect(self.width - 330, 72, 320, self.height - 308)
         self.blocked_rects.append(panel)
@@ -764,7 +764,8 @@ class HUD:
         y += 34
         surface = self.planet_page == 'surface'
         occupied = slots if surface else orbit_slots
-        self._label(x, y, 'Paid queue reserves slots · first free', TXT_DIM, self.font_small)
+        self._label(x, y, 'Paid queue reserves · wreck locks site 3 min' if not surface
+                    else 'Paid queue reserves slots · first free', TXT_DIM, self.font_small)
         y += 20
         for slot in range(cap if surface else orbit_cap):
             status = 'FREE'
@@ -772,12 +773,17 @@ class HUD:
                            and (e.planet_building_slot if surface else e.satellite_slot) == slot), None)
             queued = next((q for q in planet.build_queue if q.get('kind') == ('planet_building' if surface else 'satellite')
                            and q.get('slot') == slot), None)
+            remaining = 0.0 if surface else satellite_lock_remaining(self.state, planet, slot)
             if entity is not None: status = self.ds.unit_name(entity)
             elif queued is not None: status = f"PAID {queued['time_left']:.0f}s"
+            elif remaining > 0.0: status = f"REBUILD {remaining / 60:.1f}m"
             elif slot in occupied: status = 'RESERVED'
+            colour = GOOD
+            if remaining > 0.0: colour = ACCENT
+            elif slot in occupied: colour = WARN
             self._label(x + (slot % 3) * 100, y + (slot // 3) * 18,
                         self._fit_text(f'{slot + 1}: {status}', 96, self.font_small),
-                        GOOD if slot not in occupied else WARN, self.font_small)
+                        colour, self.font_small)
         y += 46
         descriptions = {
             'planet_extractor': 'Adds colony resource output.',

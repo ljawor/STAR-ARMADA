@@ -340,9 +340,12 @@ class ConstructionSystem:
 
     # ------------------------------------------------------------------ satellites
     def satellite_slots(self, planet):
+        """Slots a new satellite cannot use: live, paid, or under the #57 penalty."""
+        from .colonies import locked_satellite_slots
         live = {e.satellite_slot for e in self.state.entities.values()
                 if e.alive and e.planet_id == planet.id and e.satellite_slot is not None}
-        return live | {i['slot'] for i in planet.build_queue if i.get('kind') == 'satellite'}
+        return (live | {i['slot'] for i in planet.build_queue if i.get('kind') == 'satellite'}
+                | locked_satellite_slots(self.state, planet))
 
     def satellite_site(self, planet, station_id, slot):
         cap = colony_rules()['satellite_cap']
@@ -437,6 +440,10 @@ class ConstructionSystem:
     # ------------------------------------------------------------------ tick queues
     def update(self, dt: float) -> None:
         st = self.state
+        # Expired satellite rebuild penalties are swept here, on tick, so nothing
+        # render-side ever has to mutate simulation state to keep them tidy (#57).
+        from .colonies import prune_satellite_locks
+        prune_satellite_locks(st)
         done_events = []
         for e in sorted(st.entities.values(), key=lambda e: e.id):
             if not e.build_queue:

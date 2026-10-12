@@ -250,6 +250,16 @@ class WeaponSystem:
             return
         dmg = stats.effective_weapon_damage(st, e, wd.damage)
         base = Vec3(math.sin(e.yaw), 0, math.cos(e.yaw))
+        # The muzzle sits `0.8 * radius` ahead of the hull along its facing, so
+        # every shot has to be aimed FROM the muzzle. Aiming from `e.pos`
+        # instead displaces the whole trajectory sideways by the muzzle offset
+        # whenever the hull is not pointing exactly at its target - and a ship
+        # in a firing orbit points broadside at it (90 degrees, measured), which
+        # is the full 72-unit offset on a cruiser. That is wider than a surface
+        # building's or a corvette's hit sphere (27-50 units), so no shot could
+        # ever land: hulls under ~120 radius were effectively invulnerable, and
+        # the reported surface hardware could not be destroyed at all (#60).
+        muzzle = e.pos + base * (e.radius * 0.8)
         for i in range(count):
             # aim with lead + spread
             aim = target.pos.copy()
@@ -259,18 +269,15 @@ class WeaponSystem:
                 (st.rng().random() - 0.5) * target.radius,
             )
             aim.add_scaled(spread, 1.0)
-            vel = aim - e.pos
-            d = vel.length()
-            if d < 1e-3:
-                continue
+            vel = aim - muzzle
+            d = max(1.0, vel.length())
             # lead the target
             tv = target.vel
             t_impact = d / wd.projectile_speed
             aim2 = aim + tv * t_impact
-            vel = aim2 - e.pos
+            vel = aim2 - muzzle
             d = max(1.0, vel.length())
             vel = vel * (wd.projectile_speed / d)
-            muzzle = e.pos + base * (e.radius * 0.8)
             p = Projectile(
                 id=st.next_projectile_id, owner=e.owner, weapon_id=wd.id,
                 pos=muzzle.copy(), vel=vel, target_id=target.id,

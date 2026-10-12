@@ -12,6 +12,7 @@
 - Select an owned planet to build satellites through its HUD. Build costs are charged when the simulation accepts the command. Both satellite roles share one per-planet capacity, including paid queued construction.
 - Defense satellites intercept hostile missiles and engage hostile fighters. Attack satellites engage hostile ships.
 - Capture transfers future income and loses the previous owner's unfinished satellite construction without refunds.
+- Destroying a satellite locks **the site it occupied** for `satellite_penalty_seconds` (180 s). While the penalty runs the slot cannot be rebuilt in, the orbit panel prints `REBUILD <time left>` instead of `FREE`, and the slot search places the next paid satellite elsewhere. It is world state: it survives save/reload, replay digests and a capture of the planet. Re-destroying a satellite on a locked site can only push the deadline out.
 - AI follows the same serialized commands, expands to eligible planets, builds both satellite roles and attacks detected defending satellites before attempting capture. It must not inspect hidden live planetary ownership.
 
 ## Initial tuning, not final balance
@@ -25,6 +26,7 @@
 | `approach_range` | 600 units beyond the planetary surface |
 | `orbit_clearance` | 350 units beyond planet + satellite radii |
 | `orbit_shell_spacing` | 160 units added per successive satellite slot: each slot rides its own orbit shell |
+| `satellite_penalty_seconds` | 180 seconds: how long a destroyed satellite's slot stays unbuildable |
 
 Satellite costs, crew, hulls, weapons and production time are data-driven in `assets/data/stations/stations.json`. Planet income is configured in `economy.planet_income`, with `planet_crew_bonus` added **once**. The built-in resource rates and additive crew bonuses have both been increased to exactly **5×** their previous values; station income (including mining, trade and energy relays), convoy rewards, AI difficulty multipliers, command-capacity bonuses and all costs are unchanged. These numeric defaults still require long-match balancing.
 
@@ -48,6 +50,8 @@ This is a data-only default change, not a runtime multiplier: the simulation and
 
 The existing `colonized_by` field is authoritative for colony ownership; planets remain neutral terrain under `owner`. Satellites persist their `planet_id` and `satellite_slot`. Mission queues retain source/target ownership and full-precision timers in precise saves.
 
+The lockout is stored on the planet as `satellite_locks` (`{slot: sim time the penalty ends}`), so it reloads and replays exactly; `game/net/replay_validation.py` rejects a lock map on anything but a live planet, with a slot outside `satellite_cap` or with a non-finite/negative deadline. Render code only ever reads it (`colonies.satellite_lock_remaining`) — expiring entries are pruned by the simulation, never by a draw call.
+
 Legacy gas-planet ownership is retained as historical save data, but cannot provide colony income or authorize satellite construction. Energy production near gas giants uses energy relays instead. For compatibility, legacy command-mode planet-majority/economic requirements and timed scoring still count that saved ownership; ordinary skirmish/LAN elimination does not use planet ownership to determine victory. New matches cannot create gas colonies.
 
 The `build_satellite` command is registered for serialized commands and LAN validation. The colony increment and follow-up support orders are **merged in #40 and packaged in v0.7.0**. Historical acceptance after support-order integration: **766 full-suite tests passed**, independent review passed, and real SDL/OpenGL diagnostics passed at 1280×800 and 1024×768. Existing test-helper unclosed-file ResourceWarnings remain non-failing warnings. This does not establish native interactive Windows or cross-platform LAN gameplay acceptance, nor acceptance of the branch-only 5× income change.
@@ -61,3 +65,9 @@ PYTHONPATH=tests .venv/bin/python -m unittest discover -s tests -q
 ```
 
 The real SDL/OpenGL diagnostic exercises physical selection, right-click colony intent, the planet's build buttons, progress, construction and capture at 1280×800 and 1024×768. It checks render-state immutability and satellite pixels against a draw-disabled control. Full-precision restoration tests compare exact JSON-normalized state on continuation, not only replay hashes.
+
+### Satellite slot lockout (#57)
+
+`tests/test_satellite_penalty.py` covers it end to end: a cruiser kills an `attack_satellite` through the real damage path, the lock appears at exactly 180 s, the next paid satellite is reserved in a different slot, the slot frees itself 180 s later, the deadline survives a `to_dict(precise=True)` round trip with bit-identical continuation, malformed lock maps are rejected by the replay schema, a capture of the planet keeps the wreck penalty, and the AI does not queue into a fully locked orbit (with a non-vacuity control that removes the lock and sees the same decision fire). The panel text is asserted through the real HUD with the labels captured, at both ends of the countdown.
+
+**Related defect, not fixed here (#62):** an *unengaged* satellite teleports between ticks with `vel = 0`, so no shot can lead it. A `defense_satellite` cannot engage a cruiser, so it never stops teleporting and is effectively unkillable by ships (measured 0 hits from 277 shots); an `attack_satellite` engages, holds its orbit, and dies normally (142.5 s to one cruiser).

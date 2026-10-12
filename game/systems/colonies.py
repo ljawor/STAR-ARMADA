@@ -3,7 +3,8 @@ import math
 from ..data.store import DataStore
 
 DEFAULTS = dict(satellite_cap=6, control_seconds=15.0, approach_range=600.0, orbit_clearance=350.0,
-                orbit_inclination=0.55, orbit_speed=0.06, orbit_shell_spacing=160.0)
+                orbit_inclination=0.55, orbit_speed=0.06, orbit_shell_spacing=160.0,
+                satellite_penalty_seconds=180.0)
 SATELLITE_TYPES = ('defense_satellite', 'attack_satellite')
 
 
@@ -41,6 +42,52 @@ COLONY_TYPES = frozenset(('temperate', 'industrial', 'agricultural', 'military',
 def defending_satellites(state, planet):
     return [e for e in state.entities.values()
             if e.alive and e.planet_id == planet.id and e.data_id in SATELLITE_TYPES]
+
+
+def satellite_lock_remaining(state, planet, slot) -> float:
+    """Seconds left before a destroyed satellite's slot may be rebuilt (#57).
+
+    Read-only: rendering and UI must never prune simulation state.
+    """
+    if planet is None or slot is None or not planet.satellite_locks:
+        return 0.0
+    return max(0.0, planet.satellite_locks.get(slot, 0.0) - state.time)
+
+
+def locked_satellite_slots(state, planet) -> set:
+    """Slots still paying the destruction penalty (read-only).
+
+    Expired entries are filtered, never removed here: the HUD asks for this every
+    frame, and a draw call must not be able to change simulation state. Expiry is
+    swept on tick by `prune_satellite_locks`.
+    """
+    if planet is None or not planet.satellite_locks:
+        return set()
+    return {slot for slot, until in planet.satellite_locks.items() if until > state.time}
+
+
+def prune_satellite_locks(state) -> int:
+    """Drop expired rebuild penalties. Simulation-side, once per tick."""
+    dropped = 0
+    for e in state.entities.values():
+        if not e.satellite_locks:
+            continue
+        for slot in [s for s, until in e.satellite_locks.items() if until <= state.time]:
+            e.satellite_locks.pop(slot, None)
+            dropped += 1
+    return dropped
+
+
+def lock_satellite_slot(state, planet, slot) -> float:
+    """Start (or extend) the rebuild penalty for a slot whose satellite died.
+
+    Re-destruction can only push the deadline out, never pull it in.
+    """
+    if planet is None or slot is None or not eligible_planet(planet):
+        return 0.0
+    until = state.time + colony_rules()['satellite_penalty_seconds']
+    planet.satellite_locks[slot] = max(planet.satellite_locks.get(slot, 0.0), until)
+    return planet.satellite_locks[slot]
 
 
 def eligible_planet(planet):
