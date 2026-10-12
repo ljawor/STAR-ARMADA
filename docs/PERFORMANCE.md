@@ -1,17 +1,21 @@
 # Performance benchmark — issues #59 and #54
 
 This is a measurement tool, not a claim that Windows performance is accepted.
+Windows measurements were taken on the reporter's own laptop and are recorded
+below; the gates that remain open are listed in the acceptance matrix at the end.
 The GPU already renders the world through OpenGL; issue #59's proposed GPU
 rewrite is a hypothesis, not evidence of the bottleneck. No simulation work
 has been moved to a GPU and no entities, effects, meshes or visual passes are
 removed by this change.
 
-## Filip: run on the Windows laptop
+## Windows commands (executed on the reporter's laptop)
 
-Use the published **v0.11.0** build, not an older released executable.
-Keep the laptop plugged in, record the Windows power mode, and close unrelated
-CPU/GPU-heavy programs. Use the same settings and GPU for every comparison.
-A native Windows machine is required for Windows performance acceptance.
+These commands were run on the reporter's own Windows laptop; the measurements are in
+"Measured Windows result" below. Use the published **v0.11.0** build, not an older
+released executable. Keep the laptop plugged in, record the Windows power mode and note
+which GPU Windows selects — the GPU is a per-application Windows setting, so "the same
+GPU for every comparison" has to be verified in the report's `graphics.gpu` field rather
+than assumed. Keep unrelated CPU/GPU-heavy programs closed.
 
 From a source checkout, in PowerShell at the repository root:
 
@@ -125,6 +129,99 @@ Instrumented profiling is separate from timing: in the 500-ship, ten-tick
 control, target validation calls fell from 234,084 to 115,186 (see generated
 profile JSON; this is not a universal bound).
 
+## Measured Windows result (native laptop)
+
+Measured on the reporter's own machine: Acer Nitro ANV15-52, Intel Core i9-13900H,
+32 GB, Windows 11 10.0.26300, internal 1536×864 display, AC connected, **Balanced**
+power plan, 1280×800 with actual 4× MSAA. Two implementations were measured in fresh
+subprocesses, three trials per workload: a source checkout at `da417ce` and the
+downloaded **v0.11.0** Windows ZIP (sha256 `d576e16e…`, matching the published digest).
+Values are the median of each trial's median, in ms.
+
+### As shipped: the OpenGL context lands on the integrated GPU
+
+| workload / stage | source (py 3.14.7) | packaged v0.11.0 (py 3.11.9) | macOS M4 candidate |
+|---|---:|---:|---:|
+| 200 ships, sim-only | 11.314 | 12.083 | 7.035 |
+| 500 ships, sim-only | 36.052 | 40.141 | 24.268 |
+| 200 ships, full: sim | 11.546 | 12.276 | — |
+| 200 ships, full: world | 96.869 | 91.167 | — |
+| 200 ships, full: hud | 7.192 | 7.245 | — |
+| 200 ships, full: synchronized frame | 119.050 | 113.575 | — |
+| 500 ships, full: sim | 36.746 | 40.863 | 25.736 |
+| 500 ships, full: camera | 3.882 | 4.168 | — |
+| 500 ships, full: world | 218.987 | 209.978 | 90.824 |
+| 500 ships, full: hud | 9.303 | 9.642 | 6.399 |
+| 500 ships, full: swap | 0.208 | 0.200 | — |
+| 500 ships, full: synchronized frame | 269.943 | 267.178 | 125.711 |
+| 500 ships, full, `--vsync 1` frame | 272.182 | 266.871 | — |
+
+Both `python.exe` and `STAR ARMADA.exe` created their OpenGL context on the **Intel
+Iris Xe** (driver 32.0.101.6874); no per-app graphics preference was set, and the
+NVIDIA RTX 5060 Laptop GPU stayed idle. Relative to the macOS candidate column, the
+500-corvette fixture costs about 1.65× the simulation time, 2.31× the world stage and
+2.13× the synchronized frame. Rendering is the dominant cost on this platform too:
+world is 78.6% (packaged) and 81.1% (source) of the as-shipped synchronized frame at
+500 ships.
+
+### Alternating integrated/discrete-GPU A/B
+
+The GPU is selectable per application, so the two settings were interleaved inside one
+session (order reversed every trial) with a per-app `High performance` preference
+flipped before each child; `GL_RENDERER` confirmed the requested GPU in all 12
+full-mode trials.
+
+| workload / stage | Iris Xe iGPU ms | RTX 5060 dGPU ms | change |
+|---|---:|---:|---:|
+| 500 ships, sim-only (control) | 34.176 | 34.263 | +0.3% |
+| 200 ships, full: world | 102.606 | 74.496 | −27.4% |
+| 200 ships, full: synchronized frame | 124.305 | 97.740 | −21.4% |
+| 500 ships, full: world | 241.787 | 170.818 | −29.4% |
+| 500 ships, full: hud | 10.016 | 17.025 | +70.0% |
+| 500 ships, full: swap | 0.150 | 0.596 | +297.3% |
+| 500 ships, full: synchronized frame | 294.047 | 235.512 | −19.9% |
+
+The CPU-only control is unchanged between the two GPU settings, so the render-stage
+differences are a GPU effect and not session drift. The discrete GPU renders the world
+27–29% faster and takes 20–21% off the synchronized frame, but the HUD and the swap
+stage get markedly more expensive — consistent with a render-offload path that copies
+each frame back to the display GPU. World remains the largest stage on both settings.
+For a player on this hardware the actionable step is Windows **Settings → System →
+Display → Graphics → add `STAR ARMADA.exe` → High performance**; this document does not
+claim the game can select the GPU for the user.
+
+### Reproducibility and caveats on Windows
+
+- 72 benchmark trials were run in three sessions (30 as-shipped, 24 with the discrete GPU
+  enabled, 18 interleaved A/B). Every trial executed 70 ticks with no early game over,
+  showed combat activity in all 60 measured samples, and produced identical full-precision
+  initial/final state hashes (`2c81e4fd…` → `880b3b59…` at 500 ships); the frozen Windows
+  package reproduces the source build's simulation exactly.
+- Real-GL framebuffers are **not bit-exact on every trial**: two variants were captured
+  and differ by 3 pixels out of 1,024,000, each by one LSB, in the world pass. The two
+  GPUs hash differently from each other, as expected for different rasterizers. Precise
+  simulation state never differed.
+- `--vsync 1` produced no measurable pacing difference (272.2 vs 269.9 ms at 500 ships)
+  and `reported_swap_interval` is `null`, as this document already warns for Windows
+  loaders; no driver pacing was observable.
+- World is 79–81% of the synchronized frame at 500 ships in the as-shipped sessions
+  (73–82% across all six measured configurations) — the largest remaining stage on
+  Windows too.
+- The packaged build runs Python 3.11.9 and its sim-only medians are 6.8% (200 ships) to
+  11.3% (500 ships) above the dev venv's Python 3.14.7 under the same conditions; that is
+  an interpreter difference between the packaged toolchain and this checkout, not a
+  packaging defect.
+- Cross-session drift was up to ~10% on CPU-only stages (source 500-ship sim-only medians
+  38.2 / 36.1 / 34.2 ms in three separate clean sessions) and ~10% on GPU stages, which is
+  why the GPU comparison above is interleaved in one session.
+- An earlier measurement batch was discarded: while the machine was busy it produced a
+  2–6× spread and one differing framebuffer hash. Only trials with machine-wide CPU busy
+  ≤ 0.45 and no heavy concurrent GPU process were kept (observed busy: 0.08–0.24).
+- Full mode is synchronized (`glFinish`) CPU/driver/completed-GPU time, not gameplay
+  FPS. The packaged executable reports `Windows-10-10.0.26300` because Python 3.11's
+  `platform` module does not label Windows 11; the source run on Python 3.14.7 reports
+  `Windows-11-10.0.26300`. Same operating system.
+
 ## Scope and acceptance matrix
 
 | Gate | Status / required evidence |
@@ -140,10 +237,12 @@ profile JSON; this is not a universal bound).
 | Native macOS frozen entry point | PASS — downloaded v0.11.0 read-only smoke plus sim/full benchmarks |
 | Stable whole-tree regression suite | PASS — 1,009 tests, serialized final-tree run (446.235 s) |
 | Independent review | PASS — no blocking security or logic findings; source review only |
-| Native Windows packaged function and GPU/driver measurements | **OPEN — Filip's laptop** |
+| Native Windows packaged function and GPU/driver measurements | PASS — reporter's laptop, 72 trials: source `da417ce` + downloaded v0.11.0 package, both benchmark modes, real GL, GPU/driver/MSAA recorded; see "Measured Windows result" |
+| Windows GPU selection and offload cost | MEASURED — OpenGL defaults to the integrated Iris Xe; the discrete RTX 5060 cuts the world stage 27–29% and the synchronized frame 20–21% but adds HUD/swap cost; interactive feel not yet accepted |
 | Windows interactive large-fleet acceptance | **OPEN — Filip**, after measurements and play testing |
 
 Neither issue is automatically closed. The user authorized merge and v0.11.0
-publication after the Windows acceptance limitation was disclosed. Native
-Windows performance, gameplay and signing/policy acceptance remain open.
-Refs #59, #54.
+publication after the Windows acceptance limitation was disclosed. Native Windows
+measurements are now recorded above; the frozen package runs and reports on Windows.
+Interactive Windows gameplay/feel, Windows signing and security-policy acceptance,
+native listening and mixed-platform LAN acceptance remain open. Refs #59, #54.
