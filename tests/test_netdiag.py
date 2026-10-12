@@ -88,12 +88,13 @@ class ConnectCodeTests(unittest.TestCase):
         were not #56's cause (the content hash was). The classifier is kept as a
         robustness fix, and this pins that it never *narrows* what was accepted.
         """
-        # On Windows EWOULDBLOCK IS 10035; elsewhere it is not, and the old
-        # expression rejected the Winsock-only codes outright.
-        self.assertEqual(legacy_join_predicate(10035), errno.EWOULDBLOCK == 10035)
-        for code in (10036, 10037):
-            self.assertFalse(legacy_join_predicate(code), code)
-            self.assertEqual(classify_connect_result(code), 'pending')
+        # Windows CPython maps EWOULDBLOCK/EINPROGRESS/EALREADY to 10035/10036/10037,
+        # so the old expression accepted them there and rejected them elsewhere —
+        # which is why the connect codes were the wrong theory for #56.
+        aliased = {0, errno.EINPROGRESS, errno.EWOULDBLOCK, errno.EALREADY}
+        for code in (10035, 10036, 10037):
+            self.assertEqual(legacy_join_predicate(code), code in aliased, code)
+            self.assertEqual(classify_connect_result(code), 'pending', code)
         # Everything the old expression accepted is still accepted.
         for code in (0,) + (errno.EINPROGRESS, errno.EWOULDBLOCK, errno.EALREADY):
             self.assertTrue(legacy_join_predicate(code), code)

@@ -368,6 +368,21 @@ def socket_probes():
                 refused_pending=pending_completion_probe('127.0.0.1', closed_port))
 
 
+def lan_scene(ticks=0):
+    """The one fixed scene: canonical LAN map, one AI opponent, no human orders.
+
+    Both the fingerprint and `tools/lan_state_diff.py` build it through here so
+    the two machines are always measuring the same thing.
+    """
+    from game.core.manager import GameManager
+    from game.net.lan import build_lan_map
+    map_def = build_lan_map(DataStore.get(), default_lan_options())
+    manager = GameManager.start_skirmish(map_def)
+    for _ in range(int(ticks)):
+        manager.step(1 / 30)
+    return manager
+
+
 def sim_fingerprint(ticks=SIM_FINGERPRINT_TICKS):
     """Checksum of one fixed scene: do two platforms simulate the same game?
 
@@ -381,11 +396,9 @@ def sim_fingerprint(ticks=SIM_FINGERPRINT_TICKS):
     digests name the subsystem that diverged, so two reports can be diffed
     instead of guessed at.
     """
-    from game.core.manager import GameManager
-    from game.net.lan import build_lan_map, precise_checksum
+    from game.net.lan import precise_checksum
     try:
-        map_def = build_lan_map(DataStore.get(), default_lan_options())
-        manager = GameManager.start_skirmish(map_def)
+        manager = lan_scene()
         timeline = [dict(tick=0, checksum=precise_checksum(manager))]
         for tick in range(1, int(ticks) + 1):
             manager.step(1 / 30)

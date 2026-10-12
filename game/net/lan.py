@@ -188,12 +188,17 @@ def _canonical(value):
     raise TypeError(f'Unserializable simulation value: {type(value)}')
 
 
-def precise_checksum(manager):
+def canonical_state(manager):
     """Full-precision state and future-affecting AI/system state, no caches.
 
     Include all entity dataclass fields (even fields omitted by save files),
     queues, seed/tick (rng is derived from these), and persistent system timers.
     Cross-platform float divergence is a fatal desync, never rounded away.
+
+    `precise_checksum` hashes exactly this structure, and `tools/lan_state_diff.py`
+    dumps it, so a checksum difference can be traced to a named value instead of
+    being guessed at (a mixed-platform pair reported different checksums from the
+    very first tick, which is what that tool is for).
     """
     st = manager.state
     omitted = {'grid', 'events', 'dmg_system', 'effects', 'floating_texts'}
@@ -205,8 +210,13 @@ def precise_checksum(manager):
     systems = {name: {k: _canonical(v) for k, v in vars(getattr(manager, name)).items()
                       if k not in ('state', 'ds')}
                for name in ('trading', 'squadrons', 'victory', 'mission')}
-    return hashlib.sha256(_json(_canonical(dict(state=state, ai=brains, systems=systems,
-                                               capacity_timer=manager._capacity_timer)))).hexdigest()
+    return _canonical(dict(state=state, ai=brains, systems=systems,
+                           capacity_timer=manager._capacity_timer))
+
+
+def precise_checksum(manager):
+    """The lockstep ticksum: hash of `canonical_state`."""
+    return hashlib.sha256(_json(canonical_state(manager))).hexdigest()
 
 
 def _commands(commands, owner):
