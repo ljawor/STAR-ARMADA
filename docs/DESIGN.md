@@ -15,11 +15,17 @@ matters far less than composition, positioning and timing.
 | Materials | mining stations (asteroid fields), industrial planets | stations, capitals, defenses |
 | Energy | gas-giant platforms, energy planets, reactors | advanced ships, shields, abilities |
 | Crew | command stations, crew planets | ships, stations, squadrons |
-| Command capacity | command stations (+tech, +military planets) | fleet size/weight |
+| Command capacity | operational stations, every owned eligible colony (+tech) | living fleet/infrastructure and paid queues |
 
 Ships and stations cost a mix; destroyed ships refund a fraction of crew. Command
 capacity gates spam: fighter squadron 1, corvette 2, frigate 4, cruiser 8, battleship 15,
 supercapital 30.
+
+Stations, surface buildings and satellites consume 1 CMD; research stations consume
+5. Each eligible owned colony supplies a command center's catalogue capacity (20 by
+default), replacing the old military-only bonus. Paid production reserves CMD before
+spending, and the HUD includes those reservations. See [COMMAND_CAPACITY.md](COMMAND_CAPACITY.md)
+for abandonment, capacity loss, capture, save compatibility and mod behavior.
 
 ## 3. Battlefield geography
 Maps are JSON: planets (type → economic bonus, colonizable), asteroid fields (mining

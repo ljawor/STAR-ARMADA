@@ -134,6 +134,7 @@
     },
     "research_station": {
       "name": "Research Station",
+      "command_cost": 5,
       "cost": {
         "credits": 1200,
         "materials": 900,

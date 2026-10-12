@@ -115,6 +115,16 @@ remains focus-blocked and disclosed.
 See [PLANETARY_HARDWARE.md](docs/PLANETARY_HARDWARE.md)
 for mechanics, configurable tuning and pending/executed acceptance gates.
 
+## Infrastructure command points (#70; branch implementation, unreleased)
+
+All living stations, surface buildings and satellites consume **1 CMD**, except
+research stations (**5 CMD**). Every owned eligible colony adds a command center's
+capacity (**20** by default, mod-aware). Paid construction reserves CMD before
+resources are charged; the HUD's used total includes reservations and its build rows
+show their CMD costs. Abandoned hulls still count, while destruction/cancellation
+releases usage. Losing capacity blocks new purchases, not already paid production.
+See [the accounting and lifecycle contract](docs/COMMAND_CAPACITY.md).
+
 ## Planetary colonies and satellites (released in v0.7.0)
 
 PR #40, merged October 10, 2026 and included in v0.7.0, extends colony ships for all

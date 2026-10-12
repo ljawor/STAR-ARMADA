@@ -47,6 +47,16 @@ class ColonyVisibilityTests(unittest.TestCase):
                         self.assertTrue(st.can_see(viewer, planet.id))
                         self.assertEqual(st.discovered_planets[viewer][planet.id].colonized_by,
                                          settler_owner, 'remote visible ownership was not remembered')
+                    # Fast control can finish before the normal 1 Hz capacity refresh,
+                    # especially for the newly added allied player. Advance real ticks
+                    # until the colony's authoritative capacity permits paid work.
+                    command_cost = gm.ds.stations['attack_satellite'].command_cost
+                    for _ in range(30):
+                        if gm.construction.command_available(settler_owner, command_cost):
+                            break
+                        gm.step(1 / 30)
+                    self.assertTrue(gm.construction.command_available(
+                        settler_owner, command_cost), 'colony capacity did not refresh')
                     # Runtime production is private even while the colony is always visible.
                     # Use the actual paid satellite schema; privacy is not a malformed-save test.
                     cost = gm.factory.station_build_cost('attack_satellite')

@@ -104,6 +104,7 @@ class StationData:
     research: bool = False
     storage: dict = field(default_factory=dict)           # resource -> cap bonus
     command_capacity: int = 0
+    command_cost: int = 1
     requires_range: dict | None = None                    # {"asteroid": 900} etc
     repair_rate: float = 0.0
     fighter_capacity: int = 0
@@ -216,7 +217,7 @@ class DataStore:
         return t
 
     def command_cost(self, e) -> int:
-        """Command points this unit consumes (0 if it has no ship data).
+        """Command points this unit consumes (0 for non-catalogue units/terrain).
 
         Must stay total: trade_convoy is a simulated ship with deliberately no
         ShipData entry (TradingSystem mints it directly), and this is reached
@@ -225,6 +226,9 @@ class DataStore:
         """
         if e.is_squadron or e.is_ship:
             s = self.ships.get(e.data_id)
+            return s.command_cost if s is not None else 0
+        if e.is_station:
+            s = self.stations.get(e.data_id)
             return s.command_cost if s is not None else 0
         return 0
 
@@ -376,6 +380,7 @@ class DataStore:
                 research=bool(s.get("research", False)),
                 storage=dict(s.get("storage", {})),
                 command_capacity=int(s.get("command_capacity", 0)),
+                command_cost=s.get("command_cost", 5 if sid == "research_station" else 1),
                 requires_range=dict(s.get("requires_range") or {}),
                 repair_rate=float(s.get("repair_rate", 0)),
                 fighter_capacity=int(s.get("fighter_capacity", 0)),
@@ -543,6 +548,8 @@ class DataStore:
                 if aid not in self.abilities:
                     raise ValueError(f"Ship '{sid}' references unknown ability '{aid}'")
         for sid, st in self.stations.items():
+            if type(st.command_cost) is not int or st.command_cost < 0:
+                raise ValueError(f"Station '{sid}' command_cost must be a nonnegative integer")
             for wref in st.weapons:
                 wid = wref["weapon"] if isinstance(wref, dict) else wref
                 if wid not in self.weapons:
