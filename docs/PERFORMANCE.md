@@ -143,5 +143,7 @@ profile JSON; this is not a universal bound).
 | Native Windows packaged function and GPU/driver measurements | **OPEN — Filip's laptop** |
 | Windows interactive large-fleet acceptance | **OPEN — Filip**, after measurements and play testing |
 
-Neither issue is automatically closed by this PR. No merge, version bump,
-release or signing/policy acceptance is included. Refs #59, #54.
+Neither issue is automatically closed. The user authorized merge and v0.11.0
+publication after the Windows acceptance limitation was disclosed. Native
+Windows performance, gameplay and signing/policy acceptance remain open.
+Refs #59, #54.
