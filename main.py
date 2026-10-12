@@ -520,15 +520,41 @@ def draw_presentation_overlay():
 
 
 def handle_network_event(ev):
+    """LAN-only keys. #69: Escape is NOT swallowed here — a networked player
+    cancels the current operation and leaves the match with the same rule as a
+    local one, so a single press cannot drop them out mid-order."""
     if net_session is None or ev.type != pygame.KEYDOWN:
         return False
-    if ev.key == pygame.K_ESCAPE:
-        leave_game()
-        return True
     if ev.key in (pygame.K_p, pygame.K_F5, pygame.K_F9):
         flash('Pause/save/load are disabled in LAN games.')
         return True
     return False
+
+
+def escape_from_decided_match() -> bool:
+    """A decided match: one Escape returns to the previous screen. True if handled.
+
+    #69 keeps a single Escape as the abort key during play, but once the result
+    is on screen the player is acknowledging an outcome, not cancelling an
+    order, so one press is enough there.
+    """
+    global campaign_outcome_seen, mode
+    if not (state.game_over or (mission_def is not None
+                                and (gm.mission.completed or gm.mission.failed))):
+        return False
+    # campaign result: persist progress before menus
+    if (mission_def is not None and gm.mission.completed
+            and not globals().get('campaign_outcome_seen', False)):
+        _unlock_next_mission()
+        campaign_outcome_seen = True
+    if 'finish_recording' in globals():
+        finish_recording()
+    if net_session is not None:
+        # a decided LAN match still owns a live session: release it properly
+        leave_game('Match finished.')
+    else:
+        mode = "menu"       # campaign result -> back to the previous screen
+    return True
 
 
 def _unlock_next_mission() -> None:
@@ -701,19 +727,8 @@ while running:
             if ev.key == pygame.K_F11 and not SMOKE:
                 toggle_fullscreen()
                 continue
-            if ev.key == pygame.K_ESCAPE:
-                if state.game_over or (mission_def is not None
-                                       and (gm.mission.completed
-                                            or gm.mission.failed)):
-                    # campaign result: persist progress before menus
-                    if (mission_def is not None and gm.mission.completed
-                            and not globals().get('campaign_outcome_seen', False)):
-                        _unlock_next_mission()
-                        campaign_outcome_seen = True
-                    if 'finish_recording' in globals():
-                        finish_recording()
-                    mode = "menu"       # campaign result -> back to menus
-                    continue
+            if ev.key == pygame.K_ESCAPE and escape_from_decided_match():
+                continue
         handle_game_input(ev)
         if mode != 'game':
             break

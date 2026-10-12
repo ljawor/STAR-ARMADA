@@ -1,6 +1,5 @@
 """Headless execution of the actual campaign load and completion readers."""
 import ast
-import copy
 import json
 from pathlib import Path
 import sys
@@ -19,17 +18,12 @@ class CampaignMainTests(unittest.TestCase):
         gm.mission.mission.update(id='restored', name='Restored campaign')
         gm.step(1 / 30)
         tree = ast.parse((ROOT / 'main.py').read_text())
-        # Execute the real HUD and terminal-result branches, not copied logic.
+        # Execute the real HUD reader; the terminal-result behaviour is the real
+        # escape_from_decided_match() below (#69 moved it out of the loop).
         hud_reader = next(n for n in ast.walk(tree) if isinstance(n, ast.If)
                           and any(isinstance(x, ast.Assign) and any(
                               isinstance(t, ast.Attribute) and t.attr == 'mission_progress'
                               for t in x.targets) for x in n.body))
-        result_reader = next(n for n in ast.walk(tree) if isinstance(n, ast.If)
-                             and isinstance(n.test, ast.BoolOp)
-                             and ast.unparse(n.test).startswith('state.game_over or'))
-        result_reader = copy.deepcopy(result_reader)
-        result_reader.body = [ast.Pass() if isinstance(n, ast.Continue) else n
-                              for n in result_reader.body]
         scratch = Path.home() / '.hermes/cache/scratch'
         with tempfile.TemporaryDirectory(dir=scratch) as directory:
             save = Path(directory) / 'campaign.json'
@@ -48,8 +42,12 @@ class CampaignMainTests(unittest.TestCase):
                     progress = SimpleNamespace(unlock_campaign_mission=Mock())
                     with patch.dict(sys.modules, {'render.menus': progress}):
                         code = ast.fix_missing_locations(ast.Module(
-                            body=[hud_reader, result_reader], type_ignores=[]))
+                            body=[hud_reader], type_ignores=[]))
                         exec(compile(code, str(ROOT / 'main.py'), 'exec'), ns)
+                        # #69: the terminal Escape branch is a real function now,
+                        # so call it instead of executing a copied branch.
+                        self.assertIn('escape_from_decided_match', ns)
+                        self.assertTrue(ns['escape_from_decided_match']())
                     self.assertEqual(ns['hud'].mission_name, 'Restored campaign')
                     self.assertEqual(ns['hud'].mission_progress, ns['gm'].mission.progress_text())
                     self.assertTrue(ns['hud'].mission_done)

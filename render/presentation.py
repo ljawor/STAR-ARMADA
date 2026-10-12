@@ -27,7 +27,7 @@ HELP_PAGES = (
         'X: tactical overview. P: pause. F10: toggle mouse grab.',
         'Ctrl/Cmd + 1-9: assign control group. 1-9: recall; Shift: add.',
         'F: fleet panel. G then 1-9: create fleet. J: jump destination.',
-        'Backspace: stop selected units. Esc: cancel targeting or leave match.',
+        'Backspace: stop selected units. Esc: cancel; Esc twice: leave match.',
         'F1 / Esc: close help. Page Up/Down: help pages.',
     )),
     ('RECOVERY & SUPPORT', (

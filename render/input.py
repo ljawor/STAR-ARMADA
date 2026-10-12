@@ -18,6 +18,10 @@ from game.core.commands import (
 )
 from game.data.store import DataStore
 
+# #69: Escape aborts whatever the player is doing. A second Escape press inside
+# this window opens the previous screen, so one stray press cannot end a match.
+MENU_ARM_SECONDS = 2.5
+
 
 class InputController:
     def __init__(self, state, camera, hud, app):
@@ -38,6 +42,8 @@ class InputController:
         self._pending_jump: tuple[int, ...] | None = None
         self._pending_ability: dict | None = None
         self._pending_fleet: list[int] | None = None   # after G, awaiting number key
+        self._menu_armed = False                # #69: first Escape armed the menu
+        self._menu_arm_left = 0.0
         # right-panel scroll context (set by HUD each frame)
         self._right_panel_rect = None
         self._panel_scroll_key = None
@@ -51,6 +57,7 @@ class InputController:
             self._cancel_jump()
             self._cancel_ability()
             self.keys.clear()
+            self._disarm_menu()
             self.dragging = False
             self.drag_start = self.drag_cur = self.right_drag = None
             return
@@ -58,26 +65,16 @@ class InputController:
             if ev.key in self.keys:
                 return                         # ignore OS key-repeat for toggles
             self.keys.add(ev.key)
+            if ev.key != pygame.K_ESCAPE:
+                # #69: only Escape itself arms the menu; any other press means
+                # the player has moved on, so a later Escape must abort again.
+                self._disarm_menu()
             if ev.key == pygame.K_F10:
                 self.grab_mouse = not self.grab_mouse
                 pygame.event.set_grab(self.grab_mouse)
                 pygame.mouse.set_visible(not self.grab_mouse)
             elif ev.key == pygame.K_ESCAPE:
-                if self._pending_ability is not None:
-                    self._cancel_ability()
-                elif self._pending_jump is not None:
-                    self._cancel_jump()
-                elif self.hud.placement:
-                    self.hud.placement = None       # cancel placement first
-                elif self.hud.fleet_panel:
-                    self.hud.fleet_panel = False
-                    self._pending_fleet = None
-                elif self._pending_fleet:
-                    self._pending_fleet = None
-                    self.app.flash("fleet creation cancelled")
-                else:
-                    self.keys.clear()
-                    self.app.request_exit()
+                self._escape()
             elif pygame.K_1 <= ev.key <= pygame.K_9:
                 self._cancel_jump()
                 num = ev.key - pygame.K_0
@@ -142,6 +139,7 @@ class InputController:
             if not self._scroll_panel(-ev.y):
                 self.camera.zoom(0.88 ** ev.y)
         elif ev.type == pygame.MOUSEBUTTONDOWN:
+            self._disarm_menu()      # a click is the player moving on, not a menu press
             if ev.button == 1:
                 if self._pending_ability is not None:
                     self._confirm_ability(ev.pos)
@@ -247,6 +245,50 @@ class InputController:
         return False
 
     # ------------------------------------------------------------- helpers
+    def _escape(self) -> None:
+        """#69: abort the current operation; Escape again opens the previous screen.
+
+        Escape used to leave the match whenever nothing was pending, so one
+        stray press dropped the player out of a running game. It now only
+        aborts, and that abort press arms the menu, so the next Escape press
+        (inside MENU_ARM_SECONDS) opens the previous screen.
+        """
+        if self._abort_current_operation():
+            self._arm_menu()
+        elif self._menu_armed:
+            self._disarm_menu()
+            self.keys.clear()
+            self.app.request_exit()
+        else:
+            self._arm_menu()
+            self.app.flash("nothing to cancel - press Esc again for the main menu")
+
+    def _abort_current_operation(self) -> bool:
+        """Cancel targeting/placement/fleet intent. True if anything was active."""
+        if self._pending_ability is not None:
+            self._cancel_ability()
+        elif self._pending_jump is not None:
+            self._cancel_jump()
+        elif self.hud.placement:
+            self.hud.placement = None       # cancel placement first
+        elif self.hud.fleet_panel:
+            self.hud.fleet_panel = False
+            self._pending_fleet = None
+        elif self._pending_fleet:
+            self._pending_fleet = None
+            self.app.flash("fleet creation cancelled")
+        else:
+            return False
+        return True
+
+    def _arm_menu(self) -> None:
+        self._menu_armed = True
+        self._menu_arm_left = MENU_ARM_SECONDS
+
+    def _disarm_menu(self) -> None:
+        self._menu_armed = False
+        self._menu_arm_left = 0.0
+
     def _prune_contacts(self) -> None:
         """UI memory must never keep following an unseen live enemy."""
         self.selection.intersection_update(
@@ -279,6 +321,12 @@ class InputController:
         if self._pending_jump is not None and not self._jump_units(self._pending_jump):
             self._cancel_jump()
             self.app.flash("jump cancelled: no eligible ships remain")
+        if self._menu_armed:
+            # #69: the second Escape press has to follow the first closely, so a
+            # prompt from a minute ago cannot end the match later.
+            self._menu_arm_left -= max(0.0, dt)
+            if self._menu_arm_left <= 0.0:
+                self._disarm_menu()
         self._camera_keys(dt)
         if self.camera.follow_id is not None:
             e = self.state.entity(self.camera.follow_id)

@@ -155,7 +155,9 @@ def main():
                 submitted.append((command, tick))
                 return real_submit(command, tick)
             client.submit = submit
-            pygame.event.post(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_s, unicode='s', mod=0))
+            # Stop has been on Backspace since #48/#63; S pans the view, so the
+            # old K_s probe no longer submits anything (stale since that merge).
+            pygame.event.post(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_BACKSPACE, unicode='', mod=0))
             before = len(st.command_queue)
             step()
             assert len(st.command_queue) == before
@@ -187,6 +189,14 @@ def main():
             data = glReadPixels(0, 0, 800, 600, GL_RGB, GL_UNSIGNED_BYTE)
             image = pygame.transform.flip(pygame.image.frombuffer(data, (800, 600), 'RGB'), False, True)
             pygame.image.save(image, out / 'client.png')
+            # #69: Escape aborts the current operation first; a single press
+            # must not drop a networked player out of a live match.
+            pygame.event.post(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_ESCAPE, mod=0))
+            step()
+            assert ns['mode'] == 'game', 'one Escape left the match'
+            assert ns['net_session'] is not None, 'one Escape closed the session'
+            pygame.event.post(pygame.event.Event(pygame.KEYUP, key=pygame.K_ESCAPE, mod=0))
+            step()
             pygame.event.post(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_ESCAPE, mod=0))
             step()
             assert ns['mode'] == 'menu' and ns['net_session'] is None
