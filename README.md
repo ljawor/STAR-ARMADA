@@ -13,9 +13,11 @@ version-only preparation. Downloaded hashes, 22 inspected runtime modules and
 all 15 tracked assets match immutable tagged source. Read-only frozen macOS
 smoke and both frozen benchmark modes passed.
 See [performance measurements and Filip's commands](docs/PERFORMANCE.md).
-Windows performance/gameplay, trusted certificate signing, native listening,
-Cocoa wheel-input QA and mixed-platform LAN acceptance remain open. Smart App
-Control may still block the unsigned Windows build.
+Windows performance and the packaged benchmark have now been measured on a native
+Windows laptop ([details](docs/PERFORMANCE.md)); interactive Windows gameplay/feel,
+trusted certificate signing, native listening, Cocoa wheel-input QA and mixed-platform
+LAN acceptance remain open. Smart App Control may still block the unsigned Windows
+build.
 
 The setting is an original space-opera universe. Prototype faction/ship names are
 placeholder-style data (Imperial / Rebel / Confederacy / Syndicate) so the feel reads

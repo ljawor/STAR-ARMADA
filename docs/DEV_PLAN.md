@@ -23,8 +23,12 @@ fire-arc and planetary projectile/slot-lockout fixes in #61, #63, #64 and #65.
 Both published downloads passed digest/integrity checks; 22 inspected runtime
 modules and all 15 tracked assets match the immutable tag. Read-only frozen
 macOS smoke and both frozen benchmark modes passed.
-Windows performance/gameplay, defense-satellite orbit targeting (#62), trusted
-Windows signing and mixed-platform LAN acceptance remain open. See
+Native Windows measurements were taken on Filip's laptop in October 2026 (source
+`da417ce` and the downloaded v0.11.0 package, both benchmark modes, integrated and
+discrete GPU, 72 trials): the frozen Windows build runs and reports, rendering
+dominates the frame, and OpenGL defaults to the integrated GPU. Interactive Windows
+gameplay/feel, defense-satellite orbit targeting (#62), trusted Windows signing and
+mixed-platform LAN acceptance remain open. See
 [PERFORMANCE.md](PERFORMANCE.md) for measured scope and reporter commands.
 
 **Previous release: v0.10.1**, published October 11, 2026. PR #47 fixes quiet
