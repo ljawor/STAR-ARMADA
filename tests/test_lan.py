@@ -574,8 +574,13 @@ class DiagnosticTests(unittest.TestCase):
             reports = [json.loads((Path(out)/f'{role}.json').read_text()) for role in ('host','client')]
             self.assertEqual(reports[0]['checksums'], reports[1]['checksums'])
             self.assertEqual(len(reports[0]['checksums']), 181)
+            # Pacing is hardware acceptance: a shared CI runner declares a lower
+            # floor and the correctness clauses below still gate there.
+            import os
+            floor = float(os.environ.get('STAR_ARMADA_PACING_FLOOR', '27'))
             for r in reports:
-                self.assertGreaterEqual(r['ticks_per_second'], 27., {k: v for k, v in r.items() if k != 'checksums'})
+                self.assertGreaterEqual(r['ticks_per_second'], floor,
+                                        {k: v for k, v in r.items() if k != 'checksums'})
                 self.assertTrue(r['human_moved'])
                 self.assertGreater(r['human_commands'], 1)
                 self.assertGreater(r['ai_commands'], 0)

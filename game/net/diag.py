@@ -34,13 +34,15 @@ import platform
 import socket
 import sys
 import time
+import hashlib
+import select
 from datetime import datetime, timezone
 
 from game import __version__ as GAME_VERSION
 from game.data.store import DataStore
 from game.net import lan as lan_module
 from game.net.lan import (CONNECT_IN_PROGRESS, DEFAULT_PORT, PROTOCOL_VERSION, LanSession,
-                          TIMEOUT, classify_connect_result, connect_failure_message,
+                          TIMEOUT, _json, classify_connect_result, connect_failure_message,
                           content_hash, default_lan_options)
 
 MODES = ('info', 'listen', 'connect')
@@ -58,6 +60,7 @@ USAGE = (
 BLACK_HOLE = ('192.0.2.1', 7777)
 LOOPBACK_PAIR_WAIT = 5.0
 SIM_FINGERPRINT_TICKS = 60
+SIM_FINGERPRINT_STEP = 1
 
 
 # ----------------------------------------------------------------- reporting
@@ -194,8 +197,8 @@ def raw_connect(address, port, timeout=5.0):
             # the elapsed time is what identifies a dropped SYN.
             result['outcome'] = 'timeout'
             result['outcome_message'] = (
-                f'no answer within {timeout:g}s — the SYN is being dropped (host firewall) '
-                f'or {address} is not routable from here')
+                f'no completion within {timeout:g}s — a firewall dropping the SYN, an '
+                f'unroutable {address}, or a refusal this platform did not surface')
         else:
             result['outcome'] = 'refused' if code in (errno.ECONNREFUSED, 10061) else 'failed'
             result['outcome_message'] = connect_failure_message(code, address, port)
@@ -304,8 +307,50 @@ def run_info(port=DEFAULT_PORT):
             f'This platform reports connect_ex() = {observed} for a connection that cannot '
             f'finish ({classify_connect_result(observed)}); the join path accepts both the '
             'POSIX and the Winsock in-progress codes.')
+    pending = report['socket_probes']['refused_pending']
+    if not pending.get('completion_reported', True):
+        report['verdict'].append(
+            f'This platform did not report a loopback refusal to the production poll loop '
+            f'within {pending["seconds"]:g}s ({pending["polls"]} polls); a join to a host '
+            f'that is not listening will wait for the {TIMEOUT:g}s lockstep timeout instead '
+            'of failing at once. The TCP attempt itself is not the problem.')
     report['ok'] = bool(pair.get('paired'))
     return report
+
+
+def pending_completion_probe(address, port, timeout=2.0):
+    """Reproduce the production wait for a nonblocking connect to complete.
+
+    `LanSession.poll` polls select() for writability and reads SO_ERROR; this
+    records how many polls and how long the platform needs to report the
+    outcome, and whether it reports one at all. A platform that never reports
+    completion leaves a joining client waiting for the 15 s lockstep timeout,
+    which reads to a player as "cannot connect".
+    """
+    probe = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    result = dict(address=address, port=port)
+    try:
+        probe.setblocking(False)
+        result['connect_ex'] = probe.connect_ex((address, port))
+        started = time.monotonic()
+        polls = 0
+        outcome = None
+        while time.monotonic() - started < timeout:
+            polls += 1
+            _, writable, exceptional = select.select([], [probe], [probe], 0)
+            if writable or exceptional:
+                so_error = probe.getsockopt(socket.SOL_SOCKET, socket.SO_ERROR)
+                outcome = ('connected' if so_error == 0
+                           else connect_failure_message(so_error, address, port))
+                break
+            time.sleep(0.005)
+        result.update(polls=polls, seconds=round(time.monotonic() - started, 4),
+                      completion_reported=outcome is not None, outcome=outcome)
+    except OSError as exc:
+        result['error'] = str(exc)
+    finally:
+        probe.close()
+    return result
 
 
 def socket_probes():
@@ -319,7 +364,8 @@ def socket_probes():
     closed_port = probe.getsockname()[1]
     probe.close()
     return dict(black_hole=raw_connect(BLACK_HOLE[0], BLACK_HOLE[1], timeout=1.0),
-                refused=raw_connect('127.0.0.1', closed_port, timeout=1.0))
+                refused=raw_connect('127.0.0.1', closed_port, timeout=1.0),
+                refused_pending=pending_completion_probe('127.0.0.1', closed_port))
 
 
 def sim_fingerprint(ticks=SIM_FINGERPRINT_TICKS):
@@ -330,15 +376,28 @@ def sim_fingerprint(ticks=SIM_FINGERPRINT_TICKS):
     one AI opponent, no human orders). Two machines that print different values
     will desync as soon as the match starts, whatever the handshake says; a
     mixed-platform pair therefore compares this before playing.
+
+    The per-tick timeline locates the FIRST divergent tick and the per-component
+    digests name the subsystem that diverged, so two reports can be diffed
+    instead of guessed at.
     """
     from game.core.manager import GameManager
     from game.net.lan import build_lan_map, precise_checksum
     try:
         map_def = build_lan_map(DataStore.get(), default_lan_options())
         manager = GameManager.start_skirmish(map_def)
-        for _ in range(int(ticks)):
+        timeline = [dict(tick=0, checksum=precise_checksum(manager))]
+        for tick in range(1, int(ticks) + 1):
             manager.step(1 / 30)
-        return dict(ticks=manager.state.tick, checksum=precise_checksum(manager))
+            if tick % SIM_FINGERPRINT_STEP == 0 or tick == int(ticks):
+                timeline.append(dict(tick=manager.state.tick,
+                                     checksum=precise_checksum(manager)))
+        state = manager.state.to_dict(precise=True)
+        components = {key: hashlib.sha256(_json(value)).hexdigest()[:16]
+                      for key, value in sorted(state.items())}
+        return dict(ticks=manager.state.tick, step=SIM_FINGERPRINT_STEP,
+                    checksum=timeline[-1]['checksum'], timeline=timeline,
+                    components=components)
     except Exception as exc:                     # noqa: BLE001 - report, never crash
         return dict(ticks=0, checksum=None, error=f'{type(exc).__name__}: {exc}')
 

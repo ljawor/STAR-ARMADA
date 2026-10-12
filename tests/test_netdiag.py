@@ -80,11 +80,21 @@ class ConnectCodeTests(unittest.TestCase):
             self.assertEqual(classify_connect_result(code), 'failed', code)
         self.assertIn('unrecognized', connect_failure_message(123456, '10.0.0.5', 7777))
 
-    def test_pre_fix_join_predicate_would_have_rejected_the_windows_code(self):
-        """Non-vacuity for issue #56: the old expression rejected 10035."""
-        self.assertFalse(legacy_join_predicate(10035))
-        self.assertEqual(classify_connect_result(10035), 'pending')
-        # The two must still agree on the codes the old expression did accept.
+    def test_legacy_join_predicate_rejected_the_winsock_code_only_where_it_aliases_errno(self):
+        """What the old expression really did, per platform — issue #56 discipline.
+
+        Windows aliases errno.EWOULDBLOCK to 10035, so the old tuple accepted the
+        in-progress code there; the real Windows runner proved the connect codes
+        were not #56's cause (the content hash was). The classifier is kept as a
+        robustness fix, and this pins that it never *narrows* what was accepted.
+        """
+        # On Windows EWOULDBLOCK IS 10035; elsewhere it is not, and the old
+        # expression rejected the Winsock-only codes outright.
+        self.assertEqual(legacy_join_predicate(10035), errno.EWOULDBLOCK == 10035)
+        for code in (10036, 10037):
+            self.assertFalse(legacy_join_predicate(code), code)
+            self.assertEqual(classify_connect_result(code), 'pending')
+        # Everything the old expression accepted is still accepted.
         for code in (0,) + (errno.EINPROGRESS, errno.EWOULDBLOCK, errno.EALREADY):
             self.assertTrue(legacy_join_predicate(code), code)
             self.assertIn(classify_connect_result(code), ('connected', 'pending'), code)
@@ -152,6 +162,16 @@ class NetdiagContractTests(unittest.TestCase):
         self.assertEqual(first, second)
         self.assertEqual(first['ticks'], 10)
         self.assertNotEqual(diag.sim_fingerprint(ticks=20)['checksum'], first['checksum'])
+        # The timeline locates the first divergent tick on two machines, one
+        # entry per tick, ending on the reported checksum; the components name
+        # the divergent subsystem. Both must be present and self-consistent.
+        self.assertEqual([entry['tick'] for entry in first['timeline']],
+                         list(range(0, 11)))
+        self.assertEqual(first['timeline'][-1]['checksum'], first['checksum'])
+        self.assertNotEqual(first['timeline'][0]['checksum'], first['checksum'])
+        self.assertIn('entities', first['components'])
+        self.assertEqual(first['components'], second['components'])
+        self.assertTrue(all(len(digest) == 16 for digest in first['components'].values()))
 
     def test_missing_parent_directories_are_created(self):
         out = os.path.join(self.tmp.name, 'nested', 'deeper', 'report.json')
@@ -202,9 +222,22 @@ class NetdiagContractTests(unittest.TestCase):
     def test_raw_connect_reports_the_outcome_not_only_a_number(self):
         """A refused dial and a dropped SYN must not read as the same failure."""
         refused = diag.raw_connect('127.0.0.1', free_port(), timeout=1.0)
-        self.assertEqual(refused['outcome'], 'refused')
-        self.assertIn('nothing is listening', refused['outcome_message'])
-        self.assertEqual(refused['nonblocking_verdict'], 'failed')
+        # macOS reports the refusal inside the wait; the Windows runner returns an
+        # in-progress code for the whole timeout and reports no completion at all
+        # (see refused_pending), so the honest outcome there is 'timeout' and the
+        # message says the platform did not surface it. The probe must never claim
+        # a firewall blocked a loopback port.
+        self.assertIn(refused['outcome'], ('refused', 'timeout'), refused)
+        if refused['outcome'] == 'refused':
+            self.assertIn('nothing is listening', refused['outcome_message'])
+            self.assertEqual(refused['nonblocking_verdict'], 'failed')
+            self.assertTrue(refused['pending_writable'])
+        else:
+            self.assertIn('did not surface', refused['outcome_message'])
+            self.assertEqual(refused['nonblocking_verdict'], 'pending')
+            pending = diag.pending_completion_probe('127.0.0.1', refused['port'], timeout=1.0)
+            self.assertFalse(pending['completion_reported'], pending)
+            self.assertGreaterEqual(pending['polls'], 1)
 
     def test_output_is_harmless_without_a_console(self):
         """Frozen GUI builds have stdout=None; --netdiag must still complete."""

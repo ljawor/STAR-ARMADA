@@ -10,15 +10,37 @@ version/content rejection.
 
 ## What is known about issue #56
 
-The Windows **client** was rejected before any packet mattered: `connect_ex()`
-returns the raw Winsock in-progress code (`WSAEWOULDBLOCK` = 10035) on Windows,
-while `LanSession.join` compared that number against POSIX `errno` values, so
-every join from Windows failed with `Connection failed` no matter who hosted.
-`classify_connect_result()` now accepts both code families and the failure text
-names the code (`connect_failure_message`). Windows **hosting** is a different
-failure mode and is what the listen probe below is for: an inbound firewall rule
-(a dismissed first-run prompt leaves a *block* rule that also blocks outgoing
-traffic) or the client dialing the wrong interface address.
+**Root cause (fixed, proven on a real Windows runner): the content hash.** The
+host compared `content_hash()` of the game data and rejected the `hello` with
+*content mismatch* in both directions. `content_hash()` read assets through
+`Path.read_text()` **with no encoding**, so Windows used its locale default
+(cp1252) and macOS UTF-8; `maps/skirmish01.json` is named
+`Sector Duel — Kotarri Sector`, so the two machines hashed different text.
+
+| Where | `content_hash` |
+|---|---|
+| Windows, real `windows-latest` runner, before the fix | `3caadfefd77d05af…` |
+| macOS, before the fix | `c285da46fe94b83f…` |
+| macOS with cp1252 emulated (before the fix) | `3caadfefd77d05af…` — the Windows value |
+| Windows, real runner, after the fix | `c285da46fe94b83f…` — the macOS value |
+
+Assets are now read as explicit UTF-8 everywhere (text mode also normalizes CRLF
+vs LF, so a Windows checkout hashes like an LF one).
+
+Secondary, kept as robustness — **not** the cause: `LanSession.join` compared the
+`connect_ex()` result against POSIX `errno` values only. `classify_connect_result()`
+now accepts both families and the failure text names the raw code
+(`connect_failure_message`). Windows happened to alias `errno.EWOULDBLOCK` to
+`10035`, so the join path already accepted the code it returns in practice.
+
+**Still open: cross-platform simulation identity.** `sim_fingerprint` over 60
+ticks of the real LAN scene differs between the two machines
+(macOS `b8b05b9c…`, Windows `01a9f663…`). The handshake no longer blocks, but a
+mixed pair whose ticks checksum differently will raise `Desync` as soon as the
+match runs, so the report carries a per-tick timeline (first divergent tick) and
+per-component digests (which part of the state diverged) to diff the two files.
+Compare that value before playing; an equal value means the pair is safe to
+launch.
 
 ## Running it
 
@@ -55,6 +77,11 @@ run itself failed (bad arguments, unwritable report path).
 3. **The game itself**, not just the probe: host in the Multiplayer/LAN lobby on
    one machine, join the other, both READY, launch.
 
+Before step 3, compare `sim_fingerprint.checksum` in the two `info` reports. A
+different value means the two machines simulate the same scene differently: the
+handshake will succeed but the lockstep checksum comparison will desync the
+match, so report the pair of values instead of playing a match that cannot last.
+
 ## Reading the outcome
 
 | Listen report | Connect report | Meaning |
@@ -71,6 +98,20 @@ is visible before any cross-machine test), and the code that platform reports
 for a connection that cannot finish — printed by both machines, so neither side
 is assumed to behave like the other.
 
+Two more keys are worth knowing when reading `info`:
+
+- `socket_probes.refused_pending` — the production poll loop (`select` for
+  writability, then `SO_ERROR`) dialing a port nothing listens on. Windows was
+  observed not to report the refusal inside the wait at all
+  (`completion_reported: false`), while macOS reports it in milliseconds; when
+  that happens the report says so, because a join to a non-listening host will
+  then wait for the lockstep timeout instead of failing at once. It does not mean
+  the firewall blocked a loopback port.
+- `sim_fingerprint.timeline` / `sim_fingerprint.components` — the per-tick
+  checksums and the per-top-level-key digests of the 60-tick scene. Diff the two
+  machines' files: the first differing tick entry localizes **when** the pair
+  diverges and the differing `components` keys name **what** diverged.
+
 ## What this does and does not prove
 
 - `info` and the loopback pairing prove the app's own listen/accept/handshake
@@ -79,3 +120,8 @@ is assumed to behave like the other.
   game is the acceptance that closes the issue.
 - CI (`windows-signal.yml`) runs the same probe and the focused LAN tests on
   `windows-latest`: portability evidence, not GL, input-feel or LAN pairing.
+- The Windows job lowers `STAR_ARMADA_PACING_FLOOR` (27 → 15 ticks/s). Pacing is
+  hardware acceptance and a shared 2-vCPU runner paced 20.9 ticks/s; the
+  correctness clauses — identical checksums every tick, every tick executed, AI
+  and human commands present — still gate there. Measure the real floor on the
+  machine that plays the match.
