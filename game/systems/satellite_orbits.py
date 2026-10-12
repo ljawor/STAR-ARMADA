@@ -92,14 +92,15 @@ class SatelliteOrbitSystem:
             if (not e.alive or e.data_id not in SATELLITE_TYPES or e.planet_id is None
                     or e.satellite_slot is None):
                 continue
+            e.vel = Vec3()
             planet = self.state.entity(e.planet_id)
             if planet is None:
                 continue
             if e.satellite_orbit_phase is None:
                 e.satellite_orbit_phase = e.satellite_slot * 2 * math.pi / cfg['satellite_cap']
-            e.vel = Vec3()
             if not e.operational or self.engaged(e):
                 continue
+            before = e.pos.copy()
             # Bounded angular segments prevent tunnelling through fixed obstacles.
             segments = max(1, math.ceil(dt * cfg['orbit_speed'] / .02))
             for _ in range(segments):
@@ -109,3 +110,8 @@ class SatelliteOrbitSystem:
                     break
                 e.satellite_orbit_phase = phase
                 e.pos = pos
+            # Report the displacement actually accepted this tick, including a
+            # partially blocked orbit. Gunnery leads this velocity; stations are
+            # skipped by MovementSystem, so it must not be integrated again.
+            if dt > 0:
+                e.vel = (e.pos - before) * (1.0 / dt)

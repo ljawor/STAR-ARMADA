@@ -70,4 +70,22 @@ The real SDL/OpenGL diagnostic exercises physical selection, right-click colony 
 
 `tests/test_satellite_penalty.py` covers it end to end: a cruiser kills an `attack_satellite` through the real damage path, the lock appears at exactly 180 s, the next paid satellite is reserved in a different slot, the slot frees itself 180 s later, the deadline survives a `to_dict(precise=True)` round trip with bit-identical continuation, malformed lock maps are rejected by the replay schema, a capture of the planet keeps the wreck penalty, and the AI does not queue into a fully locked orbit (with a non-vacuity control that removes the lock and sees the same decision fire). The panel text is asserted through the real HUD with the labels captured, at both ends of the countdown.
 
-**Related defect, not fixed here (#62):** an *unengaged* satellite teleports between ticks with `vel = 0`, so no shot can lead it. A `defense_satellite` cannot engage a cruiser, so it never stops teleporting and is effectively unkillable by ships (measured 0 hits from 277 shots); an `attack_satellite` engages, holds its orbit, and dies normally (142.5 s to one cruiser).
+### Orbital velocity and ship fire (#62)
+
+Unengaged satellites now report `vel = (accepted_position - previous_position) / dt`
+from their actual orbital displacement. This lets existing projectile lead hit a
+moving defense satellite without changing its targets: defense still engages only
+fighters and missiles, never cruisers. The orbit system remains the sole position
+integrator; movement and separation skip stations, preventing double integration.
+Engagement, abandoned crew, a fully blocked orbit or a missing parent clears velocity
+to zero; partially blocked ticks report only accepted travel. Orbital phase, velocity
+and projectile state use the existing precise save/replay fields.
+
+`tests/test_satellite_velocity.py` verifies both roles' position/velocity consistency,
+engagement and resumption, blocked/abandoned motion, phase wrap, zero-duration ticks,
+missing parents, precise saved/replayed combat continuation and real cruiser kills
+with the existing slot lockout. On the controlled 1,500-unit cruiser fixture, defense
+went from **6 hits / 431 projectiles, no kill in 300 s** to **115 hits / 131 projectiles,
+one kill in 106.233 s**; defense fired zero shots back. Attack also remains killable
+(**107 hits / 110 projectiles, one kill in 109.033 s**). These are regression-fixture
+measurements, not a balance retune or natural-playthrough acceptance.
