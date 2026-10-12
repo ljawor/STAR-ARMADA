@@ -156,10 +156,15 @@ class PresentationOverlay:
                 if entity.alive:
                     selected.append(entity)
         owned = [e for e in selected if e.owner == self.local_player]
-        goal = ('Goal: deliver ' + str(objective.get('count', 4)) + ' personnel.'
+        full_recovery = objective.get('type') == 'recover_crew' and objective.get('full_complement')
+        goal = ('Goal: restore the captured corvette to 100% onboard crew.' if full_recovery
+                else 'Goal: deliver ' + str(objective.get('count', 4)) + ' personnel.'
                 if objective.get('type') == 'recover_crew' else 'Goal: board and capture the hull.')
+        recovery_hint = ('Automatic recruitment near a friendly recovery base OR crew transport delivery both count. '
+                         'Equipment repair does NOT replace crew.')
         if not selected:
-            return [goal, 'Select your cruiser to board (B), or crew transport to load (L). F1: controls.']
+            return [goal, recovery_hint if full_recovery else
+                    'Select your cruiser to board (B), or crew transport to load (L). F1: controls.']
         transport = next((e for e in owned if (DataStore.get().ships.get(e.data_id) is not None
                           and DataStore.get().ships[e.data_id].crew_capacity > 0)), None)
         entity = transport or next(iter(owned), selected[0])
@@ -174,6 +179,8 @@ class PresentationOverlay:
         status = f'Crew: {entity.crew}/{entity.max_crew}. Life support: {support:.0%}.'
         if support < threshold:
             instruction = f'Repair life support to {threshold:.0%} first. Equipment repair does NOT replace crew.'
+        elif full_recovery and transport is None:
+            instruction = recovery_hint
         elif entity.crew == 0:
             instruction = 'Deliver passengers from a crew transport. Equipment repair does NOT replace crew.'
         elif transport is not None:

@@ -58,6 +58,18 @@ restrict attribution. `count` defaults to 1. This is a personnel-count milestone
 continues to enforce ownership, life-support safety, resource costs and conservation.
 Exact partial count and the last recovered entity ID are saved.
 
+Opt-in `full_complement: true` changes `recover_crew` to a **live onboard-state**
+goal. `captured_objective` must reference a single-unit `capture_unit` objective.
+That capture persists its exact `captured_id`; recovery checks only that living,
+human-owned hull and requires `crew >= max_crew > 0`. Another hull of the same
+class, cumulative transfers, loaded passengers and equipment repairs cannot finish
+it. Do not set `method`: both automatic recruitment and transport delivery count.
+The scan runs after stage activation, so a boarding party that already fills the
+complement completes immediately without a subsequent delivery/recruitment event.
+The captured ID, partial onboard progress and stage state survive precise saves.
+Existing event-count recovery definitions and saved definitions retain their old
+semantics. Campaign unlock IDs and the frozen legacy-index migration are unchanged.
+
 ## Persistence and integration
 
 `mission_state` contains the definition, objective progress and terminal flags plus
@@ -79,7 +91,11 @@ No cinematics, arbitrary executable callbacks, repeat-wave DSL or editor is incl
 
 - `m00_recovery_drill` precedes First Fleet: a cruiser/command station, scripted crew
   transport, owned abandoned frigate and shieldless hostile derelict. Capture opens
-  the field-delivery objective. Healthy life support keeps repair teaching separate.
+  a 100% onboard-crew objective on THAT captured syndicate corvette. Automatic base
+  recruitment and transport delivery both count; no delivery event is required.
+  The frigate remains optional practice, never a completion requirement. Healthy
+  life support keeps repair teaching separate. A full surviving boarding party can
+  finish immediately; general boarding and personnel mechanics are not changed.
 - `m01_first_fleet`: starts with a usable shipyard; briefing now agrees with the
   two-new-corvettes objective rather than claiming an unrequested constructor build.
 - `m02_supply_line`: starts with one owned market; briefing asks for a second legal
@@ -88,6 +104,34 @@ No cinematics, arbitrary executable callbacks, repeat-wave DSL or editor is incl
   destroy-all clearance becomes active only after the second wave.
 
 ## QA evidence and limits
+
+### Issue #80 current source verification
+
+`tests/test_recovery_drill.py` first failed on the old drill for full-complement,
+automatic-recruitment and captured-corvette transport completion. Controlled
+fixtures launch a real boarding craft, then reduce its complement to four survivors
+to leave a meaningful recovery stage (a fully staffed cruiser otherwise captures
+this corvette with 36/36 crew). Both recovery methods finish at exactly 36/36;
+wrong-class-instance, hostile/dead target and partial-complement controls do not.
+Full JSON-normalized precise equality holds immediately and every continuation tick
+for mid-recruitment (300 ticks) and mid-delivery (120 ticks) restores.
+
+The updated `tools/diag_campaign_phase7.py` passes on real Cocoa SDL/OpenGL at
+1024×768 and 1280×800. Each resolution enumerates/renders all 11 campaign briefings,
+records 32 framebuffers, verifies actual mission glyph blits inside padded cards,
+hint glyph containment, read-only precise state, zero GL errors, and zero objective
+overflow/control overlap. Exact restoration holds through 600 capture and 150
+mid-objective-delivery ticks; the latter starts at 8/36 onboard crew, not after
+completion. Captures and the exact mid-objective saves are in
+`/Users/lukaszjawor/.hermes/cache/scratch/issue80-gl/` (`report.json`,
+`1024_mid_objective_save.json`, `1280_mid_objective_save.json`); RED evidence is
+`/Users/lukaszjawor/.hermes/cache/scratch/issue80-red.log`.
+
+This is controlled production-command/HUD acceptance, not a naturally navigated
+human playthrough. Repositioning, disabled cruiser weapons and four-survivor craft
+setup are explicit fixtures. Windows, balance, release and integrated full-suite
+acceptance remain separate. The following Phase 7 evidence is historical and its
+frigate-delivery objective is superseded by #80.
 
 Focused command:
 

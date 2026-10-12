@@ -25,12 +25,13 @@ from render.camera import Camera
 from render.hud import HUD
 from render.input import InputController
 from render.renderer import Renderer
+from render.presentation import PresentationOverlay
 
 
 class RecordingSurface(pygame.Surface):
     def blit(self, source, dest, *args, **kwargs):
         if self.recording:
-            self.text_rects.append(source.get_rect(topleft=dest))
+            self.text_rects.append(source.get_rect(topleft=dest.topleft if isinstance(dest, pygame.Rect) else dest))
         return super().blit(source, dest, *args, **kwargs)
 
 
@@ -85,6 +86,14 @@ def main():
                 pygame.event.pump()
                 assert pygame.display.get_driver() == 'cocoa'
                 menu = menus.MenuStack(width, height)
+                menu._surface = RecordingSurface((width, height))
+                menu._surface.recording = False
+                original_backdrop = menu._draw_backdrop
+                def backdrop():
+                    menu._surface.recording = False
+                    original_backdrop()
+                    menu._surface.recording = True
+                menu._draw_backdrop = backdrop
                 screen = pygame.Rect(0, 0, width, height)
                 entry: dict[str, Any] = dict(resolution=[width, height], driver=pygame.display.get_driver(), captures=[],
                              briefings=[], mission_frames={})
@@ -107,16 +116,26 @@ def main():
                     def panel(rect, alpha=200):
                         panels.append(pygame.Rect(rect)); original_panel(rect, alpha)
                     menu._panel = panel
+                    menu._surface.text_rects = []
+                    menu._surface.recording = True
                     try:
                         menu.render(0)
                     finally:
                         menu._panel = original_panel
+                        menu._surface.recording = False
+                    assert all(screen.contains(r) for r in menu._surface.text_rects)
                     for i, b in enumerate(menu.buttons):
                         assert screen.contains(b['rect']), b
                         assert not any(b['rect'].colliderect(c['rect']) for c in menu.buttons[i+1:])
                     assert all(screen.contains(r) for r in panels)
                     if menu.screen == 'briefing':
                         assert not any(r.colliderect(b['rect']) for r in panels for b in menu.buttons)
+                        for glyph in menu._surface.text_rects:
+                            for body in panels:
+                                if glyph.colliderect(body):
+                                    assert body.inflate(-20, -20).contains(glyph), (body, glyph)
+                        assert not any(a.colliderect(b) for i, a in enumerate(menu._surface.text_rects)
+                                       for b in menu._surface.text_rects[i+1:])
                     menu.draw_gl(); capture(name)
 
                 menu.screen = 'campaign'
@@ -167,6 +186,7 @@ def main():
                 flashes = []
                 control = InputController(st, camera, hud, SimpleNamespace(flash=flashes.append))
                 renderer = Renderer(st, camera)
+                presentation = PresentationOverlay(width, height)
                 renderer.diff_render = True
                 try:
                     def frame(name, selection, stress=None):
@@ -184,8 +204,13 @@ def main():
                         renderer.draw(0, control.selection)
                         hud.render(control.selection, None, 0, False)
                         hud.draw_gl()
+                        presentation.draw(st, selection=control.selection, blocked_rects=hud.blocked_rects)
+                        for text, rect in presentation.text_bounds:
+                            assert any(r.inflate(-30, -30).contains(rect) for r in presentation.panel_rects), (text, rect)
+                        presentation.draw_gl()
                         assert st.to_dict(precise=True) == before
-                        entry['mission_frames'][name] = hud.mission_measurement
+                        entry['mission_frames'][name] = dict(hud.mission_measurement,
+                            hint_glyphs=[dict(text=t, rect=list(r)) for t, r in presentation.text_bounds])
                         capture(name)
 
                     for tag, flags in (('active', (False, False)), ('complete', (True, False)), ('failed', (False, True))):
@@ -276,43 +301,56 @@ def main():
 
                     gm.step(1/30)
                     assert cruiser.boarding_party_id is not None, 'board command was not accepted'
+                    # Controlled casualty fixture leaves a genuinely partial captured complement.
+                    craft = st.entity(cruiser.boarding_party_id)
+                    assert craft is not None
+                    craft.crew = 4
                     frame('controlled_boarding_craft', {cruiser.id})
-                    continuation('capture', 240)
+                    continuation('capture', 600)
                     assert target.owner == 0 and gm.mission.objectives[0]['done']
                     recovery = next(o for o in gm.mission.objectives if o['id'] == 'recover')
                     assert recovery['active'] and not recovery['done']
                     frame('controlled_capture_recovery_stage', {target.id})
-                    transport.pos = Vec3(frigate.pos.x, 0, frigate.pos.z + 100)
+                    base = next(e for e in gm.player_entities(0) if e.data_id == 'command_station')
+                    transport.pos = Vec3(base.pos.x, 0, base.pos.z + 400)
+                    from game.core.commands import PlayerCommand
+                    st.queue_command(PlayerCommand('crew_load', 0, unit_ids=(transport.id,)))
+                    for _ in range(360): gm.step(1/30)
+                    assert transport.crew_cargo >= target.max_crew - target.crew
+                    transport.pos = Vec3(target.pos.x, 0, target.pos.z + 100)
                     gm.visibility.update()
-                    camera.target = [frigate.pos.x, frigate.pos.y, frigate.pos.z]
+                    camera.target = [target.pos.x, target.pos.y, target.pos.z]
                     frame('controlled_crew_delivery_controls', {transport.id})
                     click(control, next(b for b in hud.buttons if b['kind'] == 'crew_deliver')['rect'].center)
                     frame('controlled_crew_delivery_prompt', {transport.id})
-                    point = camera.world_to_screen(frigate.pos.x, frigate.pos.y, frigate.pos.z)
+                    point = camera.world_to_screen(target.pos.x, target.pos.y, target.pos.z)
                     assert point and not any(r.collidepoint(point) for r in hud.blocked_rects)
                     click(control, point)
                     assert st.command_queue[-1].type == 'crew_deliver'
-                    assert st.command_queue[-1].target_id == frigate.id
-                    continuation('delivery', 90)
-                    assert gm.mission.completed and recovery['done'] and frigate.crew >= 4
+                    assert st.command_queue[-1].target_id == target.id
+                    for _ in range(15): gm.step(1/30)
+                    assert 4 < target.crew < target.max_crew and not recovery['done']
+                    frame('controlled_mid_objective_delivery', {target.id})
+                    (args.out / f'{width}_mid_objective_save.json').write_text(json.dumps(precise(st), indent=2))
+                    continuation('mid_objective_delivery', 150)
+                    assert gm.mission.completed and recovery['done'] and target.crew == target.max_crew
                     assert {'boarding_launched', 'unit_captured', 'crew_delivered'} <= {e['type'] for e in events}
-                    frame('controlled_tutorial_completed', {frigate.id})
+                    frame('controlled_tutorial_completed', {target.id})
                     entry.update(gl_error=0, passengers_loaded=passengers_loaded,
                                  delivery_movement=movement, board_hidden_target_rejected=True,
                                  board_detected_target_command=True, real_capture=target.owner == 0,
-                                 recovered_crew=frigate.crew, objective_events=events,
-                                 precise_restore_continuation_ticks=330,
+                                 recovered_crew=target.crew, max_crew=target.max_crew, objective_events=events,
+                                 precise_restore_continuation_ticks=750,
                                  mission_completed=gm.mission.completed,
                                  objective_text_overflow_px=max(m['text_overflow_px'] for m in entry['mission_frames'].values()),
                                  objective_card_overlaps_controls=any(m['card_control_overlap'] for m in entry['mission_frames'].values()),
-                                 limits='Natural initial crew loading/delivery navigation and hidden-target rejection. Controlled detected-target fixture repositions cruiser near target, disables cruiser weapons, then repositions loaded transport near frigate. Real SDL clicks, authoritative boarding craft/capture and crew delivery; no timer jumps or synthetic events. Not a naturally navigated human playthrough or combat-balance/platform acceptance.')
+                                 limits='Natural initial optional-frigate delivery navigation and hidden-target rejection. Controlled fixture repositions cruiser, disables weapons, reduces launched boarding craft to four survivors, reloads/repositions transport near captured corvette. Real SDL clicks and production capture/delivery. No timer jumps or synthetic objective events. Not a natural human playthrough, balance, Windows or release acceptance.')
                 finally:
-                    renderer.close(); hud.close(); menu.close()
+                    presentation.cleanup(); renderer.close(); hud.close(); menu.close()
                 Path(menus.CAMPAIGN_PATH).unlink(missing_ok=True)
             (args.out / 'report.json').write_text(json.dumps(report, indent=2))
+            assert all(r['precise_restore_continuation_match'] for r in report), 'exact restore failed: see divergence artifacts'
             print('DIAG_CAMPAIGN_PHASE7_UI_AND_CONTROLLED_CONTINUATION_OK', json.dumps(report, indent=2))
-            if not all(r['precise_restore_continuation_match'] for r in report):
-                print('DIAG_CAMPAIGN_PHASE7_EXTENDED_RESTORE_PARTIAL: see resolution restore_divergence artifacts; not a HUD/capture gate success claim')
         finally:
             pygame.quit()
 

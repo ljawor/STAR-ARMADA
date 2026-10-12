@@ -6,7 +6,7 @@
       "name": "Recovery Drill",
       "map": "skirmish01",
       "player_faction": "imperial",
-      "briefing": "Practice personnel logistics before your first deployment. Load the crew transport near your command station. Use the cruiser to board the shieldless abandoned syndicate corvette, then order the loaded transport to deliver at least four personnel to the owned abandoned frigate. Equipment repair does not replace crew; recovery requires life support at 50% or higher. Both drill targets begin with healthy life support.",
+      "briefing": "Board the shieldless abandoned syndicate corvette with your cruiser (B). Restore THAT captured corvette to 100% onboard crew. Automatic recruitment near a friendly base and crew transport delivery both count; a full boarding party can finish immediately. Load transport passengers at your command station (L), then deliver to the captured corvette (R). Life support must be at least 50%; equipment repair does not replace crew. The frigate is optional practice.",
       "loadout": {
         "resources": {
           "credits": 6000,
@@ -36,11 +36,11 @@
         {
           "id": "recover",
           "type": "recover_crew",
-          "ship": "imperial_frigate",
-          "count": 4,
-          "method": "crew_delivered",
+          "ship": "syndicate_corvette",
+          "captured_objective": "capture",
+          "full_complement": true,
           "active": false,
-          "text": "Deliver four personnel to the abandoned owned frigate"
+          "text": "Restore the captured corvette to 100% onboard crew"
         }
       ],
       "triggers": [

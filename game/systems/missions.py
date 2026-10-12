@@ -111,6 +111,7 @@ class MissionSystem:
                     and o.get('ship', target.data_id) == target.data_id
                     and o.get('entity_id', target.id) == target.id):
                 o['count_done'] = o.get('count_done', 0) + 1
+                o['captured_id'] = target.id
                 o['done'] = o['count_done'] >= o.get('count', 1)
 
     def _on_recovered(self, ev):
@@ -118,7 +119,7 @@ class MissionSystem:
         if target is None or not self._is_human(target.owner) or not target.operational:
             return
         for o in self.objectives:
-            if (o['type'] == 'recover_crew' and self._active(o)
+            if (o['type'] == 'recover_crew' and not o.get('full_complement') and self._active(o)
                     and o.get('ship', target.data_id) == target.data_id
                     and o.get('entity_id', target.id) == target.id
                     and (not o.get('method') or o['method'] == ev.type)):
@@ -162,6 +163,15 @@ class MissionSystem:
                     for e in st.entities.values())
                 if not any_left:
                     o["done"] = True
+            if o['type'] == 'recover_crew' and o.get('full_complement'):
+                capture = next((c for c in self.objectives
+                                if c.get('id') == o.get('captured_objective')), None)
+                target = st.entity(capture.get('captured_id')) if capture and capture['done'] else None
+                if (target is not None and target.alive and self._is_human(target.owner)
+                        and o.get('ship', target.data_id) == target.data_id):
+                    o['recovered_id'] = target.id
+                    o['count_done'] = target.crew
+                    o['done'] = target.max_crew > 0 and target.crew >= target.max_crew
             if o["type"] == "hold_point" and not o["done"]:
                 self._update_hold_point(o, dt)
             if o["type"] == "escort_convoy" and self._active(o):
