@@ -111,7 +111,7 @@ class SeparationSystem:
                             d2 = dxp * dxp + dyp * dyp + dzp * dzp
                             if d2 > min_dist * min_dist or d2 < 1e-6:
                                 continue
-                            d = d2 ** 0.5
+                            d = math.sqrt(d2)
                             overlap = (min_dist - d) / min_dist
                             strength = 60.0 if (e.is_squadron or o.is_squadron) else 26.0
                             push = overlap * strength * dt
@@ -138,7 +138,7 @@ class SeparationSystem:
                     d2 = dx * dx + dy * dy + dz * dz
                     rr = p.radius + e.radius + 40
                     if d2 < rr * rr and d2 > 1e-6:
-                        d = d2 ** 0.5
+                        d = math.sqrt(d2)
                         push = (rr - d) * 2.0 * dt
                         e.pos.x += dx / d * push
                         e.pos.y += dy / d * push

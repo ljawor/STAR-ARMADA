@@ -12,7 +12,7 @@ def recovery_rules():
 
 
 def validate_recovery_rules(rules):
-    import math
+    from game.core import detmath as math  # deterministic sim math, never the platform libm
     cfg = rules.get('crew_recovery', {})
     if not isinstance(cfg, dict):
         raise ValueError('crew_recovery rules must be an object')

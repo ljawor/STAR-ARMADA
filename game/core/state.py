@@ -233,7 +233,7 @@ class GameState:
         half = self.map_info.bounds / 2.0
         if not (-half <= pos.x <= half and -half <= pos.z <= half):
             return None
-        import math
+        from game.core import detmath as math  # deterministic sim math, never the platform libm
         # Upper boundary belongs to the last interior cell, not a phantom row.
         x = min(pos.x, math.nextafter(half, -math.inf))
         z = min(pos.z, math.nextafter(half, -math.inf))
@@ -296,14 +296,16 @@ class GameState:
     def in_nebula(self, pos: Vec3) -> bool:
         for n in self.map_info.nebulas:
             dx, dy, dz = pos.x - n["pos"][0], pos.y - n["pos"][1], pos.z - n["pos"][2]
-            if dx * dx + dy * dy + dz * dz <= n["radius"] ** 2:
+            if dx * dx + dy * dy + dz * dz <= n["radius"] * n["radius"]:
                 return True
         return False
 
     def nearest_jump_point(self, pos: Vec3) -> Vec3 | None:
         best, bd = None, 1e18
         for jp in self.map_info.jump_points:
-            d = (pos.x - jp["pos"][0]) ** 2 + (pos.y - jp["pos"][1]) ** 2 + (pos.z - jp["pos"][2]) ** 2
+            d = ((pos.x - jp["pos"][0]) * (pos.x - jp["pos"][0])
+             + (pos.y - jp["pos"][1]) * (pos.y - jp["pos"][1])
+             + (pos.z - jp["pos"][2]) * (pos.z - jp["pos"][2]))
             if d < bd:
                 best, bd = jp, d
         return Vec3(*best["pos"]) if best else None

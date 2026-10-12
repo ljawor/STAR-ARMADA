@@ -78,7 +78,7 @@ class CommandHandler:
                 continue
             # spread destinations for large groups
             if len(cmd.unit_ids) > 1:
-                import math
+                from game.core import detmath as math  # deterministic sim math, never the platform libm
                 ring = n // 6
                 k = n % 6
                 ang = k * (math.pi / 3) + ring * 0.5
@@ -141,7 +141,7 @@ class CommandHandler:
             e.order_type = "move"
             # Validation now sees a consistent endpoint; discard old heading
             # and momentum here, before the first redirected movement tick.
-            import math
+            from game.core import detmath as math  # deterministic sim math, never the platform libm
             e.vel = Vec3()
             direction = dest.pos - e.pos
             e.yaw = math.atan2(direction.x, direction.z)

@@ -1,8 +1,7 @@
 """Persistent fighter survey intent; visibility alone records actual discoveries."""
 from __future__ import annotations
 
-import math
-
+from game.core import detmath as math  # deterministic sim math, never the platform libm
 from ..core.vectors import Vec3
 from ..data.store import DataStore
 from .jump import clear_jump_orders, detach_jumpers

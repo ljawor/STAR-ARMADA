@@ -1,5 +1,5 @@
 """Deterministic physical boarding craft and capture; intent enters via commands."""
-import math
+from game.core import detmath as math  # deterministic sim math, never the platform libm
 from ..core.entity import Entity, SubsystemState
 from ..data.store import DataStore
 

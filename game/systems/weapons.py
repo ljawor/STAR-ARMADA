@@ -7,8 +7,7 @@ handed to ProjectileSystem. Auto-targeting respects weapon `targets` restriction
 """
 from __future__ import annotations
 
-import math
-
+from game.core import detmath as math  # deterministic sim math, never the platform libm
 from ..core.vectors import Vec3
 from ..core.world import Projectile
 from ..data.store import DataStore

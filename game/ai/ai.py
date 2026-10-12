@@ -231,7 +231,7 @@ class AIPlayer:
                 best, best_d = e, d
         if best is None:
             return None
-        import math
+        from game.core import detmath as math  # deterministic sim math, never the platform libm
         ang = st.rng().uniform(0, 6.28)
         # Paid sites and unpaid travel intent now reserve footprints too. A
         # blocked random sample must not consume the whole economy decision.
@@ -245,7 +245,7 @@ class AIPlayer:
 
     @staticmethod
     def _offset(anchor, dist: float) -> Vec3:
-        import math
+        from game.core import detmath as math  # deterministic sim math, never the platform libm
         # deterministic per-anchor angle (stable across ticks, but varies by
         # station type) so retry attempts don't hammer one illegal site
         ang = (anchor.pos.x * 0.013 + anchor.pos.z * 0.007) % 6.28
@@ -284,7 +284,7 @@ class AIPlayer:
         Sweep the ring and hand back the first site the sim's own validator
         accepts, so a green site always means the build will land.
         """
-        import math
+        from game.core import detmath as math  # deterministic sim math, never the platform libm
         ang0 = (home.pos.x * 0.013 + home.pos.z * 0.007) % 6.28
         # reuse the sim's own validator (exposed on the state for render/input)
         # so a site chosen here is guaranteed to be accepted by the build
@@ -309,7 +309,7 @@ class AIPlayer:
         ring sweep below would never find it. Sweep the gas giant itself and
         hand back the first site the sim's validator accepts.
         """
-        import math
+        from game.core import detmath as math  # deterministic sim math, never the platform libm
         from ..systems.construction import _body_clearance
         cs = getattr(self.state, "_construction_system", None)
         if cs is None:
@@ -424,13 +424,13 @@ class AIPlayer:
         idle = [c for c in self.my_units()
                 if self._is_builder(c) and not self._busy(c)]
         if threatened and len(defenses) < 3 and idle:
-            import math
+            from game.core import detmath as math  # deterministic sim math, never the platform libm
             ang = st.rng().uniform(0, 6.28)
             pos = Vec3(home.pos.x + math.sin(ang) * 500, 0,
                        home.pos.z + math.cos(ang) * 500)
             self._queue_build(idle[0], "defense_platform", pos)
         elif p.credits > 3000 and len(defenses) < 2 and idle:
-            import math
+            from game.core import detmath as math  # deterministic sim math, never the platform libm
             ang = st.rng().uniform(0, 6.28)
             pos = Vec3(home.pos.x + math.sin(ang) * 500, 0,
                        home.pos.z + math.cos(ang) * 500)

@@ -1,7 +1,5 @@
 """Strict validation for the opt-in deterministic campaign script format."""
-import math
-
-
+from game.core import detmath as math  # deterministic sim math, never the platform libm
 def validate_campaign(mission, ds):
     def require(condition, reason):
         if not condition:

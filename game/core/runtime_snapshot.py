@@ -37,7 +37,7 @@ def repair_saved_jump(entity):
     Finite geometry/capability failures still use the manager's authoritative
     completion guard. Valid intent, AI, timers and pending work stay exact.
     """
-    import math
+    from game.core import detmath as math  # deterministic sim math, never the platform libm
     from ..systems.jump import clear_jump_orders
     values = [entity.jump_charge]
     if entity.jump_target is not None:
@@ -56,7 +56,7 @@ def migrate_saved_runtime(data):
     leave all other schema checks to the strict graph decoder. Never catch and
     discard a graph or rebuild its AI from the compatibility projection.
     """
-    import math
+    from game.core import detmath as math  # deterministic sim math, never the platform libm
     from copy import deepcopy
     codec = _codec()
     result = deepcopy(data)

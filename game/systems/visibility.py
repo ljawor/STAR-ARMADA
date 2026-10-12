@@ -8,8 +8,7 @@ detection: GameState queries use exact 3D center distances and current stats.
 from __future__ import annotations
 
 import copy
-import math
-
+from game.core import detmath as math  # deterministic sim math, never the platform libm
 from ..data.store import DataStore
 from . import stats
 from .colonies import eligible_planet
@@ -168,8 +167,9 @@ class VisibilitySystem:
                 # Match can_see's always-visible colony policy, without rescanning
                 # live observers for every other planet: sources are already current.
                 if ((eligible_planet(planet) and planet.colonized_by in allies)
-                        or any((e.pos.x-planet.pos.x)**2 + (e.pos.y-planet.pos.y)**2
-                               + (e.pos.z-planet.pos.z)**2 <= radius*radius
+                        or any((e.pos.x-planet.pos.x) * (e.pos.x-planet.pos.x)
+                               + (e.pos.y-planet.pos.y) * (e.pos.y-planet.pos.y)
+                               + (e.pos.z-planet.pos.z) * (e.pos.z-planet.pos.z) <= radius*radius
                                for e, radius in sources)):
                     memory[planet.id] = st.planet_snapshot(planet)
             for aid in allies:

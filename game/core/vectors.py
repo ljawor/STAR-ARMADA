@@ -5,7 +5,7 @@ no external math dependency. Small helper class keeps call sites readable.
 """
 from __future__ import annotations
 
-import math
+from game.core import detmath as math  # deterministic sim math, never the platform libm
 from dataclasses import dataclass, field
 
 
@@ -68,10 +68,12 @@ class Vec3:
         return self.x * self.x + self.y * self.y + self.z * self.z
 
     def dist(self, o: "Vec3") -> float:
-        return math.sqrt((self.x - o.x) ** 2 + (self.y - o.y) ** 2 + (self.z - o.z) ** 2)
+        return math.sqrt((self.x - o.x) * (self.x - o.x) + (self.y - o.y) * (self.y - o.y)
+                  + (self.z - o.z) * (self.z - o.z))
 
     def dist_sq(self, o: "Vec3") -> float:
-        return (self.x - o.x) ** 2 + (self.y - o.y) ** 2 + (self.z - o.z) ** 2
+        return ((self.x - o.x) * (self.x - o.x) + (self.y - o.y) * (self.y - o.y)
+                + (self.z - o.z) * (self.z - o.z))
 
     def normalized(self) -> "Vec3":
         n = self.length()

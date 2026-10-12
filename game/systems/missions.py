@@ -196,7 +196,8 @@ class MissionSystem:
             if e.operational and e.owner >= 0
             and self._team_of(e.owner) in human_teams
             and (e.is_ship or e.is_squadron or e.is_station)
-            and (e.pos.x - px) ** 2 + (e.pos.z - pz) ** 2 <= radius ** 2)
+            and (e.pos.x - px) * (e.pos.x - px) + (e.pos.z - pz) * (e.pos.z - pz)
+               <= radius * radius)
         if inside >= need:
             o["held"] = o.get("held", 0.0) + dt
             if o["held"] >= float(o.get("duration", 30.0)):
