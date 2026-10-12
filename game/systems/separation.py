@@ -5,6 +5,7 @@ Uses the shared spatial grid, runs every tick but is cheap (few neighbors).
 """
 from __future__ import annotations
 
+from ..core import detmath as math
 from ..data.store import DataStore
 
 

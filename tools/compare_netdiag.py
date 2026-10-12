@@ -50,6 +50,15 @@ def divergent_components(left, right):
     return [key for key in keys if left_keys.get(key) != right_keys.get(key)]
 
 
+def fingerprint_profiles(report):
+    """{profile: fingerprint} — current reports carry several, older ones just one."""
+    profiles = report.get('sim_fingerprints')
+    if isinstance(profiles, dict) and profiles:
+        return profiles
+    single = report.get('sim_fingerprint')
+    return {single.get('profile', 'canonical'): single} if isinstance(single, dict) else {}
+
+
 def compare(mac, win, mac_label='machine-a', win_label='machine-b'):
     """Return (ok, lines). Every line is either OK / FAIL / note."""
     lines = []
@@ -90,53 +99,76 @@ def compare(mac, win, mac_label='machine-a', win_label='machine-b'):
         lines.append(f'OK   content_hash {left[:16]}… — the handshake accepts this pair')
 
     # 2. Simulation identity — a matching handshake still desyncs if this differs.
-    left = mac.get('sim_fingerprint') or {}
-    right = win.get('sim_fingerprint') or {}
-    for label, fp in ((mac_label, left), (win_label, right)):
-        if fp.get('error'):
+    mac_profiles, win_profiles = fingerprint_profiles(mac), fingerprint_profiles(win)
+    shared = [name for name in mac_profiles if name in win_profiles]
+    if not shared:
+        ok = False
+        lines.append('FAIL simulation fingerprint: the two reports share no scene '
+                     f'profile ({sorted(mac_profiles)} vs {sorted(win_profiles)}) — rerun '
+                     '"--netdiag info" on both machines')
+    for name in shared:
+        suffix = f' [{name} scene]' if len(shared) > 1 else ''
+        left, right = mac_profiles[name], win_profiles[name]
+        for label, fp in ((mac_label, left), (win_label, right)):
+            if fp.get('error'):
+                ok = False
+                lines.append(f'FAIL simulation fingerprint{suffix} on {label}: {fp["error"]}')
+        left_sum, right_sum = left.get('checksum'), right.get('checksum')
+        left_ticks, right_ticks = left.get('timeline') or [], right.get('timeline') or []
+        tick = compared_ticks = None
+        compared_ticks = bool(left_ticks and right_ticks)
+        if compared_ticks:
+            tick, shared_ticks = _first_divergent_tick(left_ticks, right_ticks)
+        if not left_sum or not right_sum:
             ok = False
-            lines.append(f'FAIL simulation fingerprint on {label}: {fp["error"]}')
-    left_sum, right_sum = left.get('checksum'), right.get('checksum')
-    left_ticks, right_ticks = left.get('timeline') or [], right.get('timeline') or []
-    tick = shared = None
-    compared_ticks = bool(left_ticks and right_ticks)
-    if compared_ticks:
-        tick, shared = _first_divergent_tick(left_ticks, right_ticks)
-    if not left_sum or not right_sum:
+            lines.append(f'FAIL simulation fingerprint{suffix}: missing ({left_sum!r} vs '
+                         f'{right_sum!r})')
+        elif left_sum == right_sum and tick is None:
+            lines.append(f'OK   simulation fingerprint{suffix} {left_sum[:16]}… over '
+                         f'{left.get("ticks")} ticks — both machines advance the scene '
+                         'identically')
+        else:
+            ok = False
+            if left_sum != right_sum:
+                lines.append(f'FAIL simulation fingerprint{suffix}: {mac_label} '
+                             f'{left_sum[:16]}… != {win_label} {right_sum[:16]}… — the '
+                             'handshake will succeed but the lockstep checksum comparison '
+                             'desyncs the match')
+            else:
+                # A mid-scene divergence that happens to end on the same value is still a
+                # desync: lockstep compares every tick, not only the last one.
+                lines.append(f'FAIL simulation fingerprint{suffix}: the final checksums '
+                             f'agree ({left_sum[:16]}…) but the per-tick timeline diverges '
+                             f'at tick {tick} of {shared_ticks} — the scene is not identical '
+                             'every tick, so lockstep desyncs the match before that point')
+            if not compared_ticks:
+                lines.append('note one report carries no per-tick timeline — rerun '
+                             '"--netdiag info" on both machines to localize the divergence')
+            elif tick is None:
+                lines.append(f'note no divergent tick among the {shared_ticks} ticks both '
+                             'reports list — the timelines disagree about the scene they '
+                             'measured')
+            else:
+                lines.append(f'note first divergent tick: {tick} of {shared_ticks} compared '
+                             'ticks')
+            components = divergent_components(left, right)
+            if components is None:
+                lines.append('note no per-component digests in these reports (older report?)')
+            elif components:
+                lines.append('note differing state components: ' + ', '.join(components))
+            else:
+                lines.append('note no per-component difference (digests agree) — the '
+                             'difference is inside a component this report does not break '
+                             'down further')
+
+    for name in sorted(set(mac_profiles) - set(win_profiles)):
         ok = False
-        lines.append(f'FAIL simulation fingerprint: missing ({left_sum!r} vs {right_sum!r})')
-    elif left_sum == right_sum and tick is None:
-        lines.append(f'OK   simulation fingerprint {left_sum[:16]}… over '
-                     f'{left.get("ticks")} ticks — both machines advance the scene identically')
-    else:
+        lines.append(f'FAIL simulation fingerprint [{name} scene]: {win_label} did not run '
+                     'it — both machines must run the same profiles')
+    for name in sorted(set(win_profiles) - set(mac_profiles)):
         ok = False
-        if left_sum != right_sum:
-            lines.append(f'FAIL simulation fingerprint: {mac_label} {left_sum[:16]}… != '
-                         f'{win_label} {right_sum[:16]}… — the handshake will succeed but the '
-                         'lockstep checksum comparison desyncs the match')
-        else:
-            # A mid-scene divergence that happens to end on the same value is still a
-            # desync: lockstep compares every tick, not only the last one.
-            lines.append(f'FAIL simulation fingerprint: the final checksums agree '
-                         f'({left_sum[:16]}…) but the per-tick timeline diverges at tick '
-                         f'{tick} of {shared} — the scene is not identical every tick, so '
-                         'lockstep desyncs the match before that point')
-        if not compared_ticks:
-            lines.append('note one report carries no per-tick timeline — rerun '
-                         '"--netdiag info" on both machines to localize the divergence')
-        elif tick is None:
-            lines.append(f'note no divergent tick among the {shared} ticks both reports '
-                         'list — the timelines disagree about the scene they measured')
-        else:
-            lines.append(f'note first divergent tick: {tick} of {shared} compared ticks')
-        components = divergent_components(left, right)
-        if components is None:
-            lines.append('note no per-component digests in these reports (older report?)')
-        elif components:
-            lines.append('note differing state components: ' + ', '.join(components))
-        else:
-            lines.append('note no per-component difference (digests agree) — the difference '
-                         'is inside a component this report does not break down further')
+        lines.append(f'FAIL simulation fingerprint [{name} scene]: {mac_label} did not run '
+                     'it — both machines must run the same profiles')
 
     # 3. Informational: what each machine can be dialed at.
     for label, report in ((mac_label, mac), (win_label, win)):

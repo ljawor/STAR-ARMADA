@@ -29,13 +29,13 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 
-def dump(ticks, out):
+def dump(ticks, out, scene='canonical'):
     """Write the canonical state exactly as `precise_checksum` sees it."""
     from game.net.diag import lan_scene
     from game.net.lan import canonical_state, precise_checksum
-    manager = lan_scene(ticks)
+    manager = lan_scene(ticks, profile=scene)
     state = canonical_state(manager)
-    payload = dict(ticks=ticks, checksum=precise_checksum(manager), state=state)
+    payload = dict(scene=scene, ticks=ticks, checksum=precise_checksum(manager), state=state)
     Path(out).write_text(json.dumps(payload, indent=1, sort_keys=True), encoding='utf-8')
     return payload
 
@@ -71,12 +71,17 @@ def differences(left, right, path='$', found=None, limit=None):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(
-        description='Dump or diff the canonical LAN scene state of two machines.')
+        description='Dump or diff a fixed LAN scene state of two machines.')
     sub = parser.add_subparsers(dest='mode', required=True)
     dump_parser = sub.add_parser('dump', help='write this machine\'s canonical state')
     dump_parser.add_argument('--out', required=True)
     dump_parser.add_argument('--ticks', type=int, default=0,
                              help='simulation steps before dumping (default 0: as built)')
+    from game.net.diag import LAN_PROFILES
+    dump_parser.add_argument('--scene', choices=LAN_PROFILES, default='canonical',
+                             help='which fixed scene to dump (default canonical; '
+                                  '"contact" stages an actual engagement, so the '
+                                  'collision and weapon maths are compared too)')
     diff_parser = sub.add_parser('diff', help='compare two dumps')
     diff_parser.add_argument('left')
     diff_parser.add_argument('right')
@@ -85,8 +90,8 @@ def main(argv=None):
     args = parser.parse_args(argv)
 
     if args.mode == 'dump':
-        payload = dump(args.ticks, args.out)
-        print(f'dumped {args.out}: ticks={payload["ticks"]} '
+        payload = dump(args.ticks, args.out, scene=args.scene)
+        print(f'dumped {args.out}: scene={payload["scene"]} ticks={payload["ticks"]} '
               f'checksum={payload["checksum"][:16]}…')
         return 0
 
@@ -101,8 +106,12 @@ def main(argv=None):
         if 'state' not in payload:
             print(f'lan_state_diff: {path} is not a dump (no "state" key)', file=sys.stderr)
             return 2
-        print(f'note {path}: ticks={payload.get("ticks")} '
-              f'checksum={str(payload.get("checksum"))[:16]}…')
+        print(f'note {path}: scene={payload.get("scene", "canonical")} '
+              f'ticks={payload.get("ticks")} checksum={str(payload.get("checksum"))[:16]}…')
+    scenes = {payload.get('scene', 'canonical') for payload in payloads}
+    if len(scenes) > 1:
+        print(f'note dumps are from different scenes ({", ".join(sorted(scenes))}) — '
+              'dump the same scene on both machines to compare them')
     if payloads[0].get('checksum') == payloads[1].get('checksum'):
         print('IDENTICAL checksums — no divergence to trace')
         return 0

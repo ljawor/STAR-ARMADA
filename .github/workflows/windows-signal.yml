@@ -33,14 +33,16 @@ jobs:
         run: python main.py --netdiag info --out netdiag-windows.json
       - name: Show the report
         run: Get-Content netdiag-windows.json
-      - name: Dump the canonical scene state on Windows
+      - name: Dump the scene states on Windows
         # The exact structure the lockstep checksum hashes: when two platforms
         # report different checksums, diffing these dumps names the value instead
         # of leaving "checksums differ" as the whole diagnosis. Ticks 0 separates
-        # scene construction from the step itself.
+        # scene construction from the step itself, and `--scene contact` covers the
+        # collision/weapon maths that the strategic canonical scene never reaches.
         run: |
           python tools/lan_state_diff.py dump --out state-win-ticks0.json
           python tools/lan_state_diff.py dump --out state-win-ticks1.json --ticks 1
+          python tools/lan_state_diff.py dump --out state-win-contact-ticks60.json --scene contact --ticks 60
       - name: Focused LAN tests on Windows
         env:
           PYTHONPATH: tests
@@ -54,7 +56,7 @@ jobs:
           STAR_ARMADA_PACING_FLOOR: "15"
         # test_lan.DiagnosticTests runs the real two-process LAN diagnostic here
         # too: cross-process determinism must hold on Windows, not only on macOS.
-        run: python -m unittest test_netdiag test_netdiag_compare test_lan_state_diff test_lan test_multiplayer -v
+        run: python -m unittest test_netdiag test_netdiag_compare test_lan_state_diff test_sim_profiles test_lan test_multiplayer -v
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -63,6 +65,7 @@ jobs:
             netdiag-windows.json
             state-win-ticks0.json
             state-win-ticks1.json
+            state-win-contact-ticks60.json
 
   package-windows:
     # Manual runs only: hands the reporter a candidate build (an artifact, never

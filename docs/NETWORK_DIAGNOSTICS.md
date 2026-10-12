@@ -33,14 +33,28 @@ now accepts both families and the failure text names the raw code
 (`connect_failure_message`). Windows happened to alias `errno.EWOULDBLOCK` to
 `10035`, so the join path already accepted the code it returns in practice.
 
-**Still open: cross-platform simulation identity.** `sim_fingerprint` over 60
-ticks of the real LAN scene differs between the two machines
-(macOS `b8b05b9c…`, Windows `01a9f663…`). The handshake no longer blocks, but a
-mixed pair whose ticks checksum differently will raise `Desync` as soon as the
-match runs, so the report carries a per-tick timeline (first divergent tick) and
-per-component digests (which part of the state diverged) to diff the two files.
-Compare that value before playing; an equal value means the pair is safe to
-launch.
+**Fixed: cross-platform simulation identity.** The same 60-tick LAN scene hashed
+differently on the two machines (macOS `b8b05b9c…`, Windows `01a9f663…`) because
+the simulation computed `sin`/`cos`/`atan2` with the platform's `libm` (macOS vs
+UCRT). `game/core/detmath.py` now provides those functions built from the
+correctly rounded operations only (`+ - * / sqrt`), and every simulation module
+imports it instead of the platform module; rendering keeps the fast one. Both
+machines now report the same `sim_fingerprint` — verified on real Windows in CI
+(canonical and contact scene, 600 ticks of it identical every tick) and the value
+is carried in every `info` report so a pair can check before playing.
+
+The report carries, per profile, a per-tick timeline (first divergent tick) and
+per-component digests (which part of the state diverged), so two files can be
+diffed instead of guessed at if this ever regresses.
+
+**Two scene profiles, because one scene was not evidence.** `canonical` is the
+strategic LAN map: two fleets, 22000 units apart, where no weapon is ever in range
+and no two ships are ever inside separation range. `contact` stages the same map's
+ships into an actual engagement, so the collision, movement, weapon and AI maths
+all execute every tick. A check that only runs `canonical` cannot see a divergence
+in the collision maths — that gap let a broken separation module pass the Windows
+job while 86 local tests failed — so a pair of machines is compatible only when
+**every** profile agrees.
 
 ## Running it
 
@@ -77,10 +91,12 @@ run itself failed (bad arguments, unwritable report path).
 3. **The game itself**, not just the probe: host in the Multiplayer/LAN lobby on
    one machine, join the other, both READY, launch.
 
-Before step 3, compare `sim_fingerprint.checksum` in the two `info` reports. A
-different value means the two machines simulate the same scene differently: the
-handshake will succeed but the lockstep checksum comparison will desync the
-match, so report the pair of values instead of playing a match that cannot last.
+Before step 3, compare every `sim_fingerprints` entry in the two `info` reports —
+`tools/compare_netdiag.py MAC.json WIN.json` does the comparison and names the
+profile, the first divergent tick and the differing state components. A different
+value means the two machines simulate the same scene differently: the handshake
+will succeed but the lockstep checksum comparison will desync the match, so report
+the pair of values instead of playing a match that cannot last.
 
 ## Reading the outcome
 
@@ -107,10 +123,16 @@ Two more keys are worth knowing when reading `info`:
   that happens the report says so, because a join to a non-listening host will
   then wait for the lockstep timeout instead of failing at once. It does not mean
   the firewall blocked a loopback port.
-- `sim_fingerprint.timeline` / `sim_fingerprint.components` — the per-tick
-  checksums and the per-top-level-key digests of the 60-tick scene. Diff the two
-  machines' files: the first differing tick entry localizes **when** the pair
+- `sim_fingerprints.<profile>.timeline` / `.components` — the per-tick checksums
+  and the per-top-level-key digests of that scene (60 ticks for `canonical`, 600
+  for `contact`, which needs the longer run to keep the fleets engaged). Diff the
+  two machines' files: the first differing tick entry localizes **when** the pair
   diverges and the differing `components` keys name **what** diverged.
+  `sim_fingerprint` is still written and holds the `canonical` profile, so older
+  tooling keeps working.
+- `tools/lan_state_diff.py dump --scene contact --ticks 60` dumps the contact
+  scene's canonical state: when a checksum differs, diffing two of these names the
+  value instead of leaving "checksums differ" as the whole diagnosis.
 
 ## What this does and does not prove
 
@@ -118,8 +140,10 @@ Two more keys are worth knowing when reading `info`:
   path on that machine — never the platform pairing.
 - A real two-machine run proves the pairing; a LAN match played to a launched
   game is the acceptance that closes the issue.
-- CI (`windows-signal.yml`) runs the same probe and the focused LAN tests on
-  `windows-latest`: portability evidence, not GL, input-feel or LAN pairing.
+- CI (`windows-signal.yml`) runs the same probe, both scene profiles and the
+  focused LAN tests (including `test_sim_profiles`, which asserts that each profile
+  reaches the subsystems it claims to) on `windows-latest`: portability evidence,
+  not GL, input-feel or LAN pairing.
 - The Windows job lowers `STAR_ARMADA_PACING_FLOOR` (27 → 15 ticks/s). Pacing is
   hardware acceptance and a shared 2-vCPU runner paced 20.9 ticks/s; the
   correctness clauses — identical checksums every tick, every tick executed, AI

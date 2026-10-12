@@ -61,6 +61,11 @@ BLACK_HOLE = ('192.0.2.1', 7777)
 LOOPBACK_PAIR_WAIT = 5.0
 SIM_FINGERPRINT_TICKS = 60
 SIM_FINGERPRINT_STEP = 1
+# The contact scene only proves anything while the fleets are still interacting:
+# 600 ticks (20 s of sim) covers closing, the first exchange and the resulting
+# manoeuvring, and costs ~3 s.
+CONTACT_FINGERPRINT_TICKS = 600
+PROFILE_TICKS = {'canonical': SIM_FINGERPRINT_TICKS, 'contact': CONTACT_FINGERPRINT_TICKS}
 
 
 # ----------------------------------------------------------------- reporting
@@ -261,13 +266,25 @@ def loopback_pair(port=None):
 
 # -------------------------------------------------------------------- modes
 
+def sim_fingerprints(ticks=None):
+    """{profile: fingerprint} for every scene profile, canonical first.
+
+    A single scene is not evidence that two platforms agree: each profile has to
+    cover the subsystems it claims to. Both are reported, and a pair of machines
+    is only compatible when every profile matches.
+    """
+    return {profile: sim_fingerprint(ticks or PROFILE_TICKS[profile], profile=profile)
+            for profile in LAN_PROFILES}
+
+
 def run_info(port=DEFAULT_PORT):
     report = _base_report('info', port)
     report['port_status'] = port_status(port)
     report['output_path'] = default_out('info')
     report['loopback_pair'] = loopback_pair()
     report['socket_probes'] = socket_probes()
-    report['sim_fingerprint'] = sim_fingerprint()
+    report['sim_fingerprints'] = sim_fingerprints()
+    report['sim_fingerprint'] = report['sim_fingerprints'][DEFAULT_PROFILE]
     report['verdict'] = []
     pair = report['loopback_pair']
     if pair.get('paired'):
@@ -286,15 +303,17 @@ def run_info(port=DEFAULT_PORT):
         report['verdict'].append(
             'This machine has several dialable addresses; the other machine must dial the '
             'one on the shared network: ' + ', '.join(report['addresses']['dialable']))
-    fingerprint = report['sim_fingerprint']
-    if fingerprint['checksum'] is None:
-        report['verdict'].append(
-            f'Simulation fingerprint FAILED to run: {fingerprint["error"]}')
-    else:
-        report['verdict'].append(
-            f'Simulation fingerprint {fingerprint["checksum"][:16]} over '
-            f'{fingerprint["ticks"]} ticks — this value must be identical on both '
-            'machines, or the match will desync after it connects.')
+    for name, fingerprint in report['sim_fingerprints'].items():
+        if fingerprint['checksum'] is None:
+            report['verdict'].append(
+                f'Simulation fingerprint ({name} scene) FAILED to run: '
+                f'{fingerprint["error"]}')
+        else:
+            report['verdict'].append(
+                f'Simulation fingerprint ({name} scene) '
+                f'{fingerprint["checksum"][:16]} over {fingerprint["ticks"]} ticks — '
+                'every scene must be identical on both machines, or the match will '
+                'desync after it connects.')
     observed = report['socket_probes']['black_hole'].get('nonblocking_code')
     if classify_connect_result(observed) == 'failed':
         report['verdict'].append(
@@ -368,22 +387,66 @@ def socket_probes():
                 refused_pending=pending_completion_probe('127.0.0.1', closed_port))
 
 
-def lan_scene(ticks=0):
-    """The one fixed scene: canonical LAN map, one AI opponent, no human orders.
+# Scene profiles. `canonical` is the shared reference both machines compare;
+# `contact` is the same map staged into a fight, because `canonical` alone left a
+# hole the two-platform check could not see (see _stage_contact).
+LAN_PROFILES = ('canonical', 'contact')
+DEFAULT_PROFILE = 'canonical'
+CONTACT_SHIPS = ('imperial_corvette', 'imperial_tie_squadron',
+                 'imperial_corvette', 'imperial_tie_squadron')
+CONTACT_ENGAGEMENT_METERS = 400.0
+CONTACT_TICKS = 600
+
+
+def lan_scene(ticks=0, profile=DEFAULT_PROFILE):
+    """A fixed scene two machines can measure against each other.
 
     Both the fingerprint and `tools/lan_state_diff.py` build it through here so
     the two machines are always measuring the same thing.
     """
     from game.core.manager import GameManager
     from game.net.lan import build_lan_map
+    if profile not in LAN_PROFILES:
+        raise ValueError(f'unknown scene profile {profile!r}; expected one of {LAN_PROFILES}')
     map_def = build_lan_map(DataStore.get(), default_lan_options())
     manager = GameManager.start_skirmish(map_def)
+    if profile == 'contact':
+        _stage_contact(manager)
     for _ in range(int(ticks)):
         manager.step(1 / 30)
     return manager
 
 
-def sim_fingerprint(ticks=SIM_FINGERPRINT_TICKS):
+def _stage_contact(manager):
+    """Fly both starting rosters into each other over the empty middle.
+
+    The canonical profile keeps the two fleets ~22000 units apart: no ship is ever
+    inside separation range, no weapon is ever in range, and the AI has nothing to
+    shoot at. The subsystem that does the most per-tick floating point work — the
+    collision/separation maths — therefore never ran in the check that was supposed
+    to prove two platforms simulate one match, and a broken separation module
+    passed Windows CI while every local test failed.
+
+    This stages the same ships, from the same map, four per side, interleaved
+    within 600 units of each other and ordered through the middle of the other
+    fleet, so separation, movement, weapons and the AI all execute every tick.
+    """
+    from game.core.vectors import Vec3
+    for owner in (0, 1):
+        side = 1.0 if owner == 0 else -1.0
+        for index, ship_id in enumerate(CONTACT_SHIPS):
+            # Spawned already inside each other's separation range (~30-90 units
+            # against a 40-80 unit pair radius): the first tick cannot skip the
+            # collision maths, and the move orders through the far side of the other
+            # fleet keep re-creating contact for the whole run.
+            pos = Vec3(side * (30.0 + 12.0 * index), 0.0, side * 18.0)
+            ship = manager.factory.spawn_ship(ship_id, owner, pos)
+            ship.order_type = 'move'
+            ship.order_target_pos = Vec3(side * CONTACT_ENGAGEMENT_METERS, 0.0, 0.0)
+    return manager
+
+
+def sim_fingerprint(ticks=SIM_FINGERPRINT_TICKS, profile=DEFAULT_PROFILE):
     """Checksum of one fixed scene: do two platforms simulate the same game?
 
     Lockstep only survives if every peer computes identical state every tick, so
@@ -398,7 +461,7 @@ def sim_fingerprint(ticks=SIM_FINGERPRINT_TICKS):
     """
     from game.net.lan import precise_checksum
     try:
-        manager = lan_scene()
+        manager = lan_scene(profile=profile)
         timeline = [dict(tick=0, checksum=precise_checksum(manager))]
         for tick in range(1, int(ticks) + 1):
             manager.step(1 / 30)
@@ -408,7 +471,7 @@ def sim_fingerprint(ticks=SIM_FINGERPRINT_TICKS):
         state = manager.state.to_dict(precise=True)
         components = {key: hashlib.sha256(_json(value)).hexdigest()[:16]
                       for key, value in sorted(state.items())}
-        return dict(ticks=manager.state.tick, step=SIM_FINGERPRINT_STEP,
+        return dict(profile=profile, ticks=manager.state.tick, step=SIM_FINGERPRINT_STEP,
                     checksum=timeline[-1]['checksum'], timeline=timeline,
                     components=components)
     except Exception as exc:                     # noqa: BLE001 - report, never crash

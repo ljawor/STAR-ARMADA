@@ -9,6 +9,7 @@ simulation can reach a platform transcendental any more.
 """
 from __future__ import annotations
 
+import ast
 import math
 import random
 import re
@@ -135,6 +136,30 @@ class DeterminismTests(unittest.TestCase):
                 if re.match(r'^\s*(import math|from math import)\b', line):
                     offenders.append(f'{path.relative_to(ROOT)}:{number}: {line.strip()}')
         self.assertEqual(offenders, [], 'simulation modules must import game.core.detmath')
+
+    def test_every_module_that_uses_math_binds_it(self):
+        """A module may not reference `math.` without importing something as math.
+
+        Swapping the import and rewriting exponents in one pass is exactly how
+        separation.py lost its binding once; this catches it in a second instead
+        of 86 runtime errors.
+        """
+        offenders = []
+        for path in _simulation_sources():
+            source = path.read_text(encoding='utf-8')
+            if not re.search(r'\bmath\.', source):
+                continue
+            tree = ast.parse(source)
+            bound = False
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Import):
+                    bound |= any(alias.name == 'math' or alias.asname == 'math' for alias in node.names)
+                elif isinstance(node, ast.ImportFrom):
+                    names = [alias.asname or alias.name for alias in node.names]
+                    bound |= 'math' in names or node.module in ('math', 'game.core.detmath')
+            if not bound:
+                offenders.append(str(path.relative_to(ROOT)))
+        self.assertEqual(offenders, [])
 
     def test_no_simulation_module_uses_float_exponentiation(self):
         """`x ** 2` and `x ** 0.5` compile to libm pow, which is not identical.
