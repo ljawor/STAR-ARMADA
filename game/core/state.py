@@ -41,11 +41,31 @@ class PlayerState:
         "credits": 0.0, "materials": 0.0, "energy": 0.0, "crew": 0.0})
 
     def command_used(self, entities: dict) -> int:
+        """Committed CMD: living owned hardware plus valid paid build reservations.
+
+        Abandoned hulls and paused work still count; terrain uses colonized_by
+        for its queue, never its neutral owner. Unpaid intent does not count.
+        """
         from ..data.store import DataStore  # local import to avoid cycle
+        ds = DataStore.get()
         used = 0
         for e in entities.values():
-            if e.alive and e.owner == self.id and (e.is_ship or e.is_squadron):
-                used += DataStore.get().command_cost(e)
+            if not e.alive:
+                continue
+            if e.owner == self.id:
+                used += ds.command_cost(e)
+            owner = e.colonized_by if e.is_planet else e.owner
+            if owner != self.id:
+                continue
+            for work in e.build_queue:
+                if work.get('status') != 'paid' or work.get('source_owner', owner) != owner:
+                    continue
+                kind = work.get('kind')
+                catalogue = ds.ships if kind == 'ship' else ds.stations if kind in (
+                    'station', 'satellite', 'planet_building') else {}
+                data = catalogue.get(work.get('item'))
+                if data is not None:
+                    used += data.command_cost
         return used
 
     def to_dict(self, precise: bool = False) -> dict:

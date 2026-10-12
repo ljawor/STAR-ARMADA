@@ -108,18 +108,5 @@ class EconomySystem:
     @staticmethod
     def recompute_command_capacity(state) -> None:
         """Called 1 Hz by GameManager. Writes PlayerState.command_capacity."""
-        ds = DataStore.get()
-        rules = ds.rules.get("sim", {})
         for p in state.players.values():
-            cap = int(rules.get("command_capacity_base", 10))
-            for e in state.entities.values():
-                if e.operational and e.is_station and e.owner == p.id:
-                    sd = ds.stations.get(e.data_id)
-                    if sd:
-                        cap += sd.command_capacity
-            cap += int(stats.tech_bonus(state, p.id, "command_capacity_bonus"))
-            eco = ds.rules.get("economy", {})
-            for e in state.entities.values():
-                if e.alive and e.is_planet and e.colonized_by == p.id:
-                    cap += int(eco.get("planet_command_bonus", {}).get(e.data_id, 0))
-            p.command_capacity = cap
+            p.command_capacity = stats.player_command_capacity(state, p.id)

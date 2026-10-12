@@ -65,21 +65,7 @@ class ConstructionSystem:
         p = self.state.players.get(player_id)
         if p is None:
             return False
-        used = 0
-        ds = self.ds
-        for e in self.state.entities.values():
-            if e.alive and e.owner == player_id and (e.is_ship or e.is_squadron):
-                sd = ds.ships.get(e.data_id)
-                if sd:
-                    used += sd.command_cost
-        # queued ships also reserve command points
-        for e in self.state.entities.values():
-            if e.alive and e.is_station and e.owner == player_id:
-                for item in e.build_queue:
-                    if item.get("kind") == "ship" and item.get("status") == "paid":
-                        sd = ds.ships.get(item.get("item", ""))
-                        if sd:
-                            used += sd.command_cost
+        used = p.command_used(self.state.entities)
         return used + cmd_cost <= p.command_capacity
 
     # ------------------------------------------------------------------ station build
@@ -134,6 +120,9 @@ class ConstructionSystem:
             return False
         sd = self.ds.resolve_station(station_id)
         cost = self.factory.station_build_cost(station_id)
+        if not self.command_available(player_id, sd.command_cost):
+            st.float_text(builder.pos, "Command capacity reached", (1, 0.6, 0.4))
+            return False
         if not self.can_pay(player_id, cost):
             missing = self.missing_resources(player_id, cost)
             st.float_text(builder.pos, f"Insufficient resources: {missing}",
@@ -361,6 +350,9 @@ class ConstructionSystem:
         used = self.satellite_slots(planet)
         cap = colony_rules()['satellite_cap']
         sd = self.ds.stations[station_id]
+        if not self.command_available(player_id, sd.command_cost):
+            self.state.float_text(planet.pos, "Command capacity reached", (1, 0.6, 0.4))
+            return False
         # Search free slots in stable order, including paid site reservations.
         for slot in range(cap):
             if slot in used:

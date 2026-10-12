@@ -57,6 +57,9 @@ def start_building(construction, planet_id, kind, player):
     if not construction._check_station_spacing(kind, pos, player)[0]:
         return False
     cost = construction.factory.station_build_cost(kind)
+    if not construction.command_available(player, construction.ds.stations[kind].command_cost):
+        st.float_text(planet.pos, "Command capacity reached", (1, 0.6, 0.4))
+        return False
     if not construction.can_pay(player, cost):
         return False
     construction.pay(player, cost)

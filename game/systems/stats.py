@@ -221,13 +221,19 @@ def player_command_capacity(state, player_id: int) -> int:
     ds = DataStore.get()
     rules = ds.rules.get("sim", {})
     cap = int(rules.get("command_capacity_base", 10))
-    cap += int(p.command_capacity or 0)   # set by EconomySystem from stations
-    cap += int(tech_bonus(state, player_id, "command_capacity_bonus"))
-    # military planets
     for e in state.entities.values():
-        if e.alive and e.is_planet and e.colonized_by == player_id:
-            if e.data_id in ds.rules.get("economy", {}).get("planet_command_bonus", {}):
-                cap += int(ds.rules["economy"]["planet_command_bonus"][e.data_id])
+        if e.operational and e.is_station and e.owner == player_id:
+            station = ds.stations.get(e.data_id)
+            if station is not None:
+                cap += station.command_capacity
+    cap += int(tech_bonus(state, player_id, "command_capacity_bonus"))
+    # Every eligible colony provides one command center's catalogue capacity.
+    # Do not add the former military-only bonus or repeat base/technology gains.
+    from .colonies import eligible_planet
+    center = ds.stations.get('command_station')
+    for e in state.entities.values():
+        if eligible_planet(e) and e.colonized_by == player_id and center is not None:
+            cap += center.command_capacity
     return cap
 
 

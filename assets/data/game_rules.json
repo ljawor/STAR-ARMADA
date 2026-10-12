@@ -26,7 +26,6 @@
     "command_capacity_base": 10,
     "command_per_station": 20,
     "command_tech_bonus": 10,
-    "command_military_planet_bonus": 5,
     "crew_reclaim_fraction": 0.4,
     "starting_credits": 8000,
     "starting_materials": 4000,
@@ -50,7 +49,6 @@
       "barren": {"credits": 1.0, "crew": 0.25},
       "trade": {"credits": 9.0, "crew": 0.5}
     },
-    "planet_command_bonus": {"military": 5},
     "planet_crew_bonus": {"agricultural": 1.5, "temperate": 0.75},
     "trade_station_income_credits": 2.5,
     "trading": {
