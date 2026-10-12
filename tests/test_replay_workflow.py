@@ -327,24 +327,20 @@ class ReplayWorkflowTests(unittest.TestCase):
                 replay.load_replay(path)
 
     def test_terminal_campaign_escape_finishes_recording_in_actual_branch(self):
-        import ast
-        from copy import deepcopy
         from unittest.mock import Mock, patch
-        from test_lan_main import factories, ROOT
+        from test_lan_main import factories
         from test_campaign_lifecycle import campaign
         gm = campaign([{'type': 'survive_time', 'time': 0.}])
         recorder = replay.MatchRecording(gm, mode='campaign')
         gm.step(1/30)
-        tree = ast.parse((ROOT / 'main.py').read_text())
-        branch = deepcopy(next(n for n in ast.walk(tree) if isinstance(n, ast.If)
-                               and isinstance(n.test, ast.BoolOp) and ast.unparse(n.test).startswith('state.game_over or')))
-        code = ast.For(target=ast.Name(id='_frame', ctx=ast.Store()),
-                       iter=ast.Tuple(elts=[ast.Constant(0)], ctx=ast.Load()), body=[branch], orelse=[])
         ns = factories()
         ns.update(state=gm.state, gm=gm, mission_def=gm.mission.mission, recording=recorder,
                   _unlock_next_mission=Mock())
         with tempfile.TemporaryDirectory() as directory, patch('render.menus.USER_DIR', directory):
-            exec(compile(ast.fix_missing_locations(ast.Module(body=[code], type_ignores=[])), 'main.py', 'exec'), ns)
+            # #69: the terminal Escape branch is the real function now, so run it
+            # instead of executing a copy of the loop's inline condition.
+            self.assertIn('escape_from_decided_match', ns)
+            self.assertTrue(ns['escape_from_decided_match']())
             self.assertIsNone(ns['recording'], 'campaign menu return did not finalize replay')
             self.assertEqual(len(list((Path(directory) / 'replays').glob('*.json'))), 1)
             self.assertEqual(ns['mode'], 'menu')

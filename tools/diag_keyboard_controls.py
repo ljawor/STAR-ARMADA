@@ -125,7 +125,10 @@ try:
     assert ns['mode'] == 'menu'
     print(f'DIAG_KEYBOARD_OK F Space Q/E X M P Esc; fleet_panel_changed_pixels={changed.sum()}; output={out}')
 finally:
-    ns['audio'].cleanup()
+    # Leaving the match through Escape releases its audio (leave_game sets the
+    # global to None), so the probe must not assume the mixer is still there.
+    if ns['audio'] is not None:
+        ns['audio'].cleanup()
     ns['renderer'].close()
     ns['hud'].close()
     pygame.quit()

@@ -145,8 +145,38 @@ class LanMainTests(unittest.TestCase):
         self.assertEqual(ns['menu'].screen, 'lan_join')
         self.assertIn('Peer disconnected', ns['menu'].lan_notice)
         ns['net_session'] = SimpleNamespace(close=Mock())
-        self.assertTrue(ns['handle_network_event'](pygame.event.Event(pygame.KEYDOWN, key=pygame.K_ESCAPE)))
+        ns['mode'] = 'game'
+        # #69: the LAN hook no longer steals Escape — the in-match abort rule
+        # owns it, so a pending operation is cancelled before any exit.
+        self.assertFalse(ns['handle_network_event'](
+            pygame.event.Event(pygame.KEYDOWN, key=pygame.K_ESCAPE)))
+        self.assertIsNotNone(ns['net_session'])
+        self.assertEqual(ns['mode'], 'game')
+
+    def test_decided_lan_match_releases_its_session_on_escape(self):
+        """#69: a finished LAN match must still close its socket on Escape."""
+        ns = factories()
+        ns['mission_def'] = None
+        ns['state'] = SimpleNamespace(game_over=True)
+        ns['gm'] = Mock()
+        ns['net_session'] = SimpleNamespace(close=Mock())
+        ns['audio'] = SimpleNamespace(cleanup=Mock())
+        self.assertIn('escape_from_decided_match', ns)
+        self.assertTrue(ns['escape_from_decided_match']())
+        self.assertEqual(ns['mode'], 'menu')
         self.assertIsNone(ns['net_session'])
+        self.assertEqual(ns['menu'].screen, 'lan_join')
+
+    def test_running_match_escape_never_leaves_on_its_own(self):
+        """#69: the decided-result shortcut must not fire during play."""
+        ns = factories()
+        ns['mission_def'] = None
+        ns['state'] = SimpleNamespace(game_over=False)
+        ns['gm'] = Mock(mission=SimpleNamespace(completed=False, failed=False))
+        ns['net_session'] = SimpleNamespace(close=Mock())
+        self.assertFalse(ns['escape_from_decided_match']())
+        self.assertEqual(ns['mode'], 'game')
+        self.assertIsNotNone(ns['net_session'])
 
     def test_network_step_waits_without_catchup_and_never_double_steps(self):
         ns = factories()

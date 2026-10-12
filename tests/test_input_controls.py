@@ -7,7 +7,7 @@ import pygame
 from game.core.manager import GameManager
 from game.data.store import DataStore
 from render.camera import Camera
-from render.input import InputController
+from render.input import MENU_ARM_SECONDS, InputController
 
 
 class InputControlsTests(unittest.TestCase):
@@ -80,21 +80,53 @@ class InputControlsTests(unittest.TestCase):
         self.assertEqual(self.camera.distance, self.camera.zoom_limits[1])
         self.assertEqual(self.camera.pitch, 89.0)
 
-    def test_escape_returns_to_menu_during_active_game(self):
+    def test_escape_aborts_instead_of_leaving_the_match(self):
+        """#69: one Escape must not drop the player out of a running match."""
+        self.press(pygame.K_ESCAPE)
+        self.assertFalse(self.exited)
+        self.assertIn('Esc again', self.messages[-1])
+
+    def test_escape_twice_returns_to_the_previous_screen(self):
+        """#69: the second press, inside the window, opens the menu."""
+        self.press(pygame.K_ESCAPE)
         self.press(pygame.K_ESCAPE)
         self.assertTrue(self.exited)
+
+    def test_stale_escape_prompt_is_forgotten(self):
+        self.press(pygame.K_ESCAPE)
+        self.input.update(MENU_ARM_SECONDS + 0.1)
+        self.press(pygame.K_ESCAPE)
+        self.assertFalse(self.exited, 'an expired prompt must re-arm, not leave')
+
+    def test_other_input_cancels_the_pending_menu_prompt(self):
+        for interrupt in (pygame.K_p, None):
+            with self.subTest(interrupt=interrupt):
+                self.exited = False
+                self.input._disarm_menu()      # fresh: earlier cases may have armed it
+                self.press(pygame.K_ESCAPE)
+                if interrupt is None:
+                    self.input.handle_event(pygame.event.Event(
+                        pygame.MOUSEBUTTONDOWN, button=1, pos=(400, 300)))
+                else:
+                    self.press(interrupt)
+                self.press(pygame.K_ESCAPE)
+                self.assertFalse(self.exited, 'Escape must abort again, not leave')
 
     def test_escape_cancels_placement_before_exiting(self):
         self.hud.placement = {'builder_id': self.ship.id}
         self.press(pygame.K_ESCAPE)
         self.assertIsNone(self.hud.placement)
         self.assertFalse(self.exited)
+        self.press(pygame.K_ESCAPE)      # the cancel press armed the menu
+        self.assertTrue(self.exited)
 
     def test_escape_closes_fleet_panel_before_exiting(self):
         self.hud.fleet_panel = True
         self.press(pygame.K_ESCAPE)
         self.assertFalse(self.hud.fleet_panel)
         self.assertFalse(self.exited)
+        self.press(pygame.K_ESCAPE)
+        self.assertTrue(self.exited)
 
     def test_f_toggles_fleet_panel_without_g_prefix(self):
         self.press(pygame.K_f)

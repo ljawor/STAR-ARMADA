@@ -72,7 +72,7 @@ extract the entire ZIP and run `STAR ARMADA.exe` (unsigned).
 | P | Pause / resume |
 | F5 / F9 | Quick save / quick load |
 | F10 | Toggle mouse grab |
-| ESC | Cancel placement / close fleet panel first; otherwise return to main menu |
+| ESC | Abort the current operation: ability/jump targeting, placement, fleet panel. Press twice to return to the previous screen |
 | F11 | Toggle fullscreen |
 
 ## Boarding, crew and life support
