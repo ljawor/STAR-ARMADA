@@ -183,7 +183,15 @@ class ConstructionSystem:
                 continue
             if e.is_station and (viewer is None or st.can_see(viewer, e.id)):
                 minimum = self.station_min_distance(station_id, e.data_id, e.radius, player_id, e.owner)
-                if math.dist(coords, (e.pos.x, e.pos.y, e.pos.z)) < minimum:
+                distance = math.dist(coords, (e.pos.x, e.pos.y, e.pos.z))
+                if e.satellite_slot is not None and e.planet_id is not None:
+                    from .satellite_orbits import orbit_geometry, ring_distance
+                    parent = st.entity(e.planet_id)
+                    if parent is not None:
+                        plan = orbit_geometry(st, parent, e.radius, e.satellite_slot)
+                        if plan is not None:
+                            distance = min(distance, ring_distance(parent.pos, *plan, Vec3(*coords)))
+                if distance < minimum:
                     if e.data_id == 'command_station' and st.is_enemy(player_id, e.owner):
                         return False, 'too close to hostile command station'
                     return False, f"too close to {e.data_id.replace('_', ' ')}"
@@ -200,7 +208,13 @@ class ConstructionSystem:
                 # Only live command centers impose territorial exclusion;
                 # queued hardware reserves its physical footprint/market spacing.
                 minimum = self.station_min_distance(station_id, other.id, other.radius, player_id)
-                if math.dist(coords, work['pos']) < minimum:
+                distance = math.dist(coords, work['pos'])
+                if work['kind'] == 'satellite' and e.is_planet and type(work.get('slot')) is int:
+                    from .satellite_orbits import orbit_geometry, ring_distance
+                    plan = orbit_geometry(st, e, other.radius, work['slot'])
+                    if plan is not None:
+                        distance = min(distance, ring_distance(e.pos, *plan, Vec3(*coords)))
+                if distance < minimum:
                     return False, f"too close to {other.id.replace('_', ' ')} site"
         return True, ''
 
@@ -339,7 +353,33 @@ class ConstructionSystem:
         cap = colony_rules()['satellite_cap']
         from .satellite_orbits import orbit_position
         sd = self.ds.stations[station_id]
-        return orbit_position(planet, sd.radius, slot * 2 * math.pi / cap, slot)
+        return orbit_position(planet, sd.radius, slot * 2 * math.pi / cap, slot, state=self.state)
+
+    def satellite_ring_available(self, planet, station_id, slot, player_id, *, ignore_work=None):
+        """Reserve a complete terrain-certified orbit, not just its build phase."""
+        from .satellite_orbits import orbit_geometry, ring_distance
+        sd = self.ds.stations[station_id]
+        plan = orbit_geometry(self.state, planet, sd.radius, slot)
+        if plan is None:
+            return False
+        radius, node, inclination = plan
+        for other in self.state.entities.values():
+            if not other.alive:
+                continue
+            if other.is_station:
+                minimum = self.station_min_distance(station_id, other.data_id, other.radius,
+                                                    player_id, other.owner)
+                if ring_distance(planet.pos, radius, node, inclination, other.pos) < minimum:
+                    return False
+            for work in other.build_queue:
+                if (work is ignore_work or work.get('kind') not in ('station', 'satellite')
+                        or work.get('status') != 'paid' or work.get('pos') is None):
+                    continue
+                data = self.ds.stations[work['item']]
+                minimum = self.station_min_distance(station_id, data.id, data.radius, player_id)
+                if ring_distance(planet.pos, radius, node, inclination, Vec3(*work['pos'])) < minimum:
+                    return False
+        return True
 
     def start_satellite(self, planet_id, station_id, player_id):
         from .colonies import eligible_planet
@@ -358,6 +398,8 @@ class ConstructionSystem:
             if slot in used:
                 continue
             pos = self.satellite_site(planet, station_id, slot)
+            if pos is None or not self.satellite_ring_available(planet, station_id, slot, player_id):
+                continue
             if not self._check_station_spacing(station_id, pos, player_id)[0]:
                 continue
             blocked = False
@@ -510,6 +552,10 @@ class ConstructionSystem:
         elif kind == 'satellite':
             from .colonies import eligible_planet
             if not eligible_planet(builder) or builder.colonized_by != item['source_owner']:
+                return
+            if not self.satellite_ring_available(builder, item['item'], item['slot'],
+                                                 item['source_owner'], ignore_work=item):
+                st.float_text(builder.pos, 'Cannot build: orbit unavailable', (1, .5, .4))
                 return
             satellite = self.factory.spawn_station(item['item'], builder.colonized_by, Vec3(*item['pos']))
             satellite.planet_id = builder.id
