@@ -130,12 +130,16 @@ class WeaponSystem:
             if tid == e.id:
                 continue
             t = st.entity(tid)
-            if not self._target_valid(e, tid):
+            if t is None:
+                continue
+            # Visibility is a live (potentially expensive) sensor query. A
+            # farther candidate cannot replace the winner even when visible.
+            # Preserve grid iteration order and strict '<' equal-distance ties.
+            d = e.pos.dist_sq(t.pos)
+            if d >= best_d or not self._target_valid(e, tid):
                 continue
             # squadrons prefer fighters, etc. handled by weapon filters at fire time
-            d = e.pos.dist_sq(t.pos)
-            if d < best_d:
-                best, best_d = t, d
+            best, best_d = t, d
         return best
 
     # ------------------------------------------------------------------ update

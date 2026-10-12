@@ -95,7 +95,8 @@ class FogMask:
         cell = state.visibility_cell_size
         sources = tuple((e.id, e.pos.x, e.pos.y, e.pos.z, r)
                         for e, r in state.sensor_sources(player_id))
-        explored = frozenset(state.explored_cells.get(player_id, set()))
+        explored = frozenset(cell for pid in state.allied_player_ids(player_id)
+                             for cell in state.explored_cells.get(pid, set()))
         key = (id(state), player_id, bounds, cell, sources, explored)
         if key == self._key:
             return self._surface
@@ -111,13 +112,17 @@ class FogMask:
         for _, sx, sy, sz, radius in sources:
             visible |= ((centers[:, None]-sx)**2 + sy*sy
                         + (centers[None, :]-sz)**2 <= radius*radius)
-        for z in range(n):
-            for x in range(n):
-                pos = Vec3(centers[x], 0, centers[z])
-                charted = state.is_position_explored(player_id, pos)
-                alpha = 0 if visible[x, z] else (155 if charted else 255)
-                color = (12, 22, 38, alpha) if charted else (3, 6, 13, alpha)
-                surface.set_at((x, z), color)
+        # Read the same current allied explored cells once, then bulk-write
+        # pygame's [x, z] pixels. Texel centers and colors are unchanged.
+        indices = np.floor(centers / cell).astype(int)
+        charted = np.fromiter(((int(x), int(z)) in explored
+                              for x in indices for z in indices), dtype=bool,
+                             count=n * n).reshape(n, n)
+        rgb = np.where(charted[:, :, None], (12, 22, 38), (3, 6, 13)).astype(np.uint8)
+        pygame.surfarray.blit_array(surface, rgb)
+        alpha = pygame.surfarray.pixels_alpha(surface)
+        alpha[:] = np.where(visible, 0, np.where(charted, 155, 255))
+        del alpha  # Release the Surface lock before upload/minimap scaling.
         self._key, self._surface = key, surface
         return surface
 
