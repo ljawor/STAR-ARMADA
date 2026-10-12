@@ -151,8 +151,11 @@ class Camera:
         # forward (screen up) vector on XZ plane
         fx = -math.sin(yaw)
         fz = -math.cos(yaw)
-        self.target[0] -= (dx * rx - dy * fx) * scale
-        self.target[2] -= (dx * rz - dy * fz) * scale
+        # +dx pans the view right, +dy pans it down the screen: the world
+        # scrolls the other way, which is what the arrow/WASD keys promise.
+        # (#48: both axes were sign-flipped, so every key panned backwards.)
+        self.target[0] += (dx * rx - dy * fx) * scale
+        self.target[2] += (dx * rz - dy * fz) * scale
         self.clamp_target()
 
     def rotate(self, dyaw: float, dpitch: float) -> None:

@@ -851,14 +851,14 @@ class HUD:
             self._fleet_button(pygame.Rect(panel.x + 12, y, 296, 26),
                                'Explore map · automatic fighter patrol', 'explore', {'unit_ids': [e.id for e in scouts]})
             y += 30
-            y = self._wrapped_labels(panel.x + 12, y, 'Auto patrol: avoid detected enemies · no combat · S to stop.', 296) + 6
+            y = self._wrapped_labels(panel.x + 12, y, 'Auto patrol: avoid detected enemies · no combat · Backspace to stop.', 296) + 6
         if builders:
             self._fleet_button(pygame.Rect(panel.x + 12, y, 296, 26),
                                'Repair owned hull / systems', 'repair', {'unit_ids': [e.id for e in builders]})
             y += 30
             cfg = repair_rules()
             y = self._wrapped_labels(panel.x + 12, y,
-                f"{cfg['hp_per_second']:g} base HP/s · {cfg['credits_per_hp']:g} CR/HP · {cfg['materials_per_hp']:g} MT/HP. Hull + systems; no crew. S to stop.", 296) + 6
+                f"{cfg['hp_per_second']:g} base HP/s · {cfg['credits_per_hp']:g} CR/HP · {cfg['materials_per_hp']:g} MT/HP. Hull + systems; no crew. Backspace to stop.", 296) + 6
         if boarders:
             self._fleet_button(pygame.Rect(panel.x + 12, y, 296, 26),
                                f'B  Board enemy hull · {len(boarders)} capable', 'board', {})

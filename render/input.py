@@ -105,13 +105,19 @@ class InputController:
                 self._queue_crew('crew_deliver')
             elif ev.key == pygame.K_b and self.selection:
                 self._queue_board()
-            elif ev.key == pygame.K_s and self.selection:
+            elif ev.key == pygame.K_BACKSPACE:
+                # #48: Stop moved off S so WASD panning cannot break; S now
+                # pans the camera like the other pan keys, selection or not.
                 self._cancel_jump()
                 self._cancel_ability()
                 self.hud.placement = None
                 self._pending_fleet = None
-                st.queue_command(StopCommand(self.local_player,
-                                             sorted(self.selection)))
+                if self.selection:
+                    st.queue_command(StopCommand(self.local_player,
+                                                 sorted(self.selection)))
+                    self.app.flash("stop")
+                else:
+                    self.app.flash("backspace: nothing selected to stop")
             elif ev.key == pygame.K_h and self.selection:
                 self.camera.follow_id = sorted(self.selection)[0]
             elif ev.key == pygame.K_p:
@@ -207,10 +213,11 @@ class InputController:
         """Pan with arrows/WASD via event-tracked key set (skill: event-based)."""
         dt = max(0.0, dt)
         pan_speed = dt * 30.0
-        pan_down = (pygame.K_DOWN in self.keys or
-                    (pygame.K_s in self.keys and not self.selection))
-        if self.keys & {pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP,
-                        pygame.K_a, pygame.K_d, pygame.K_w} or pan_down:
+        # #48: S pans down like the rest of WASD, with or without a selection
+        # (Stop is on Backspace), so the pan scheme never looks dead.
+        pan_keys = {pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN,
+                    pygame.K_a, pygame.K_d, pygame.K_w, pygame.K_s}
+        if self.keys & pan_keys:
             self.camera.follow_id = None
         if pygame.K_q in self.keys:
             self.camera.rotate(-60.0 * dt, 0)
@@ -222,7 +229,7 @@ class InputController:
             self.camera.pan(14 * pan_speed, 0)
         if pygame.K_UP in self.keys or pygame.K_w in self.keys:
             self.camera.pan(0, -14 * pan_speed)
-        if pan_down:
+        if pygame.K_DOWN in self.keys or pygame.K_s in self.keys:
             self.camera.pan(0, 14 * pan_speed)
 
     # ------------------------------------------------------------- panel scroll
