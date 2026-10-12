@@ -1,5 +1,5 @@
 """Constructor field repairs: persistent orders, equipment only, pay per HP."""
-import math
+from game.core import detmath as math  # deterministic sim math, never the platform libm
 from ..data.store import DataStore
 from ..core.vectors import Vec3
 from .stats import effective_repair_rate

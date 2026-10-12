@@ -6,8 +6,7 @@ fleet has a rally point; slots are recomputed on membership/formation change.
 """
 from __future__ import annotations
 
-import math
-
+from game.core import detmath as math  # deterministic sim math, never the platform libm
 from ..core.vectors import Vec3
 from ..data.store import DataStore
 

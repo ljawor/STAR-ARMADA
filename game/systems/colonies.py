@@ -1,5 +1,5 @@
 """Shared read-only planetary eligibility and configurable tuning."""
-import math
+from game.core import detmath as math  # deterministic sim math, never the platform libm
 from ..data.store import DataStore
 
 DEFAULTS = dict(satellite_cap=6, control_seconds=15.0, approach_range=600.0, orbit_clearance=350.0,

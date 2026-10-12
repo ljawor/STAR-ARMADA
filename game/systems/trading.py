@@ -13,8 +13,7 @@ Rules config (game_rules.json economy.trading):
 """
 from __future__ import annotations
 
-import math
-
+from game.core import detmath as math  # deterministic sim math, never the platform libm
 from ..data.store import DataStore
 from ..core.vectors import Vec3
 

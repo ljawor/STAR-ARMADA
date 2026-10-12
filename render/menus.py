@@ -110,7 +110,10 @@ _LEGACY_MISSION_IDS = (
 
 def _campaign_ids() -> list[str]:
     try:
-        with open(os.path.join(ASSET_ROOT, 'assets', 'data', 'campaign', 'campaign.json')) as f:
+        # Game data is UTF-8 on every platform: the locale default (cp1252 on
+        # Windows) decoded a non-ASCII asset differently there (issue #56).
+        with open(os.path.join(ASSET_ROOT, 'assets', 'data', 'campaign', 'campaign.json'),
+                  encoding='utf-8') as f:
             return [m['id'] for m in json.load(f)['missions']]
     except (OSError, ValueError, KeyError, TypeError):
         return []
@@ -241,7 +244,7 @@ class MenuStack:
     def _load_campaign(self) -> dict:
         path = os.path.join(ASSET_ROOT, "assets", "data", "campaign", "campaign.json")
         try:
-            with open(path) as f:
+            with open(path, encoding='utf-8') as f:
                 return json.load(f)
         except (OSError, ValueError):
             return {"campaign": "Campaign", "missions": []}

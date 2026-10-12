@@ -6,8 +6,7 @@ driver (fixed-step in the live game, whatever the test chooses headless).
 """
 from __future__ import annotations
 
-import math
-
+from game.core import detmath as math  # deterministic sim math, never the platform libm
 from ..data.store import DataStore
 from ..core.state import GameState, PlayerState
 from ..core.events import EventBus

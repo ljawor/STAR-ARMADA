@@ -6,8 +6,7 @@ reserved exits only, never exploration or current sensing. Y uses the same
 """
 from __future__ import annotations
 
-import math
-
+from game.core import detmath as math  # deterministic sim math, never the platform libm
 from ..core.vectors import Vec3
 
 

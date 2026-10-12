@@ -6,8 +6,7 @@ stations never move. Formation slot targets are resolved before this system runs
 """
 from __future__ import annotations
 
-import math
-
+from game.core import detmath as math  # deterministic sim math, never the platform libm
 from ..core.vectors import Vec3
 from ..data.store import DataStore
 from . import stats

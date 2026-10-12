@@ -75,6 +75,58 @@ def _local_addresses():
     return addresses
 
 
+# connect_ex() returns the *platform's own* error number: POSIX reports
+# EINPROGRESS/EALREADY/EWOULDBLOCK while Windows reports the raw Winsock code
+# (WSAEWOULDBLOCK/WSAEINPROGRESS/WSAEALREADY = 10035/10036/10037). errno's
+# constants are NOT the same numbers on both platforms, so both sets are
+# accepted literally here. Issue #56: a Windows client used to be rejected as
+# "Connection failed" no matter which platform hosted, because its
+# 10035 was compared against POSIX errno values.
+CONNECT_IN_PROGRESS = frozenset((
+    0,
+    errno.EINPROGRESS, errno.EALREADY, errno.EWOULDBLOCK, errno.EAGAIN,
+    errno.EINTR,
+    10035,  # WSAEWOULDBLOCK
+    10036,  # WSAEINPROGRESS
+    10037,  # WSAEALREADY
+))
+
+CONNECT_ERROR_HINTS = {
+    errno.ECONNREFUSED: 'nothing is listening there (host not hosting, or a different port)',
+    errno.ETIMEDOUT: 'no answer at all (firewall dropping the SYN, or the wrong address)',
+    errno.EHOSTUNREACH: 'host unreachable (wrong network or address)',
+    errno.ENETUNREACH: 'network unreachable (no route to that address)',
+    errno.EADDRNOTAVAIL: 'that address does not exist on this machine',
+    errno.EACCES: 'blocked by the local firewall or permissions',
+    10061: 'nothing is listening there (host not hosting, or a different port)',
+    10060: 'no answer at all (firewall dropping the SYN, or the wrong address)',
+    10065: 'host unreachable (wrong network or address)',
+    10051: 'network unreachable (no route to that address)',
+    10013: 'blocked by the local firewall or permissions',
+    10049: 'that address does not exist on this machine',
+}
+
+
+def classify_connect_result(code):
+    """'connected', 'pending' or 'failed' for one connect_ex() return value."""
+    if type(code) is not int:
+        return 'failed'
+    if code not in CONNECT_IN_PROGRESS:
+        return 'failed'
+    return 'connected' if code == 0 else 'pending'
+
+
+def connect_failure_message(code, address, port):
+    """Player-facing failure text that names the code, so reports stay diagnosable."""
+    hint = CONNECT_ERROR_HINTS.get(code)
+    if hint:
+        reason = f'{code}: {hint}'
+    else:
+        name = errno.errorcode.get(code)
+        reason = f'{code}: {name}' if name else f'unrecognized socket error {code}'
+    return f'Connection failed ({reason}) — dialing {address}:{port}'
+
+
 def _port(port):
     if type(port) is not int or not 1 <= port <= 65535:
         raise ValueError('Port must be an integer from 1 to 65535')
@@ -92,10 +144,18 @@ def _json(value):
 
 
 def content_hash(ds):
-    """Canonical raw JSON plus loaded data; reject modded LAN sessions."""
+    """Canonical raw JSON plus loaded data; reject modded LAN sessions.
+
+    Read through an explicit UTF-8: the default text encoding is the platform's
+    locale (cp1252 on Windows), so a non-ASCII asset hashed to two different
+    values and the handshake refused every mixed-platform session in both
+    directions — maps/skirmish01.json is named "Sector Duel — Kotarri Sector"
+    (issue #56). Text mode also normalizes CRLF, so a Windows checkout hashes
+    like an LF one.
+    """
     if ds.mod_files:
         raise ValueError('LAN does not support mods')
-    raw = {p.relative_to(ds.assets_dir).as_posix(): json.loads(p.read_text())
+    raw = {p.relative_to(ds.assets_dir).as_posix(): json.loads(p.read_text(encoding='utf-8'))
            for p in sorted(Path(ds.assets_dir).rglob('*.json'))}
     loaded = {key: {k: asdict(v) for k, v in getattr(ds, key).items()}
               for key in ('weapons', 'ships', 'stations', 'abilities', 'techs', 'factions')}
@@ -128,12 +188,17 @@ def _canonical(value):
     raise TypeError(f'Unserializable simulation value: {type(value)}')
 
 
-def precise_checksum(manager):
+def canonical_state(manager):
     """Full-precision state and future-affecting AI/system state, no caches.
 
     Include all entity dataclass fields (even fields omitted by save files),
     queues, seed/tick (rng is derived from these), and persistent system timers.
     Cross-platform float divergence is a fatal desync, never rounded away.
+
+    `precise_checksum` hashes exactly this structure, and `tools/lan_state_diff.py`
+    dumps it, so a checksum difference can be traced to a named value instead of
+    being guessed at (a mixed-platform pair reported different checksums from the
+    very first tick, which is what that tool is for).
     """
     st = manager.state
     omitted = {'grid', 'events', 'dmg_system', 'effects', 'floating_texts'}
@@ -145,8 +210,13 @@ def precise_checksum(manager):
     systems = {name: {k: _canonical(v) for k, v in vars(getattr(manager, name)).items()
                       if k not in ('state', 'ds')}
                for name in ('trading', 'squadrons', 'victory', 'mission')}
-    return hashlib.sha256(_json(_canonical(dict(state=state, ai=brains, systems=systems,
-                                               capacity_timer=manager._capacity_timer)))).hexdigest()
+    return _canonical(dict(state=state, ai=brains, systems=systems,
+                           capacity_timer=manager._capacity_timer))
+
+
+def precise_checksum(manager):
+    """The lockstep ticksum: hash of `canonical_state`."""
+    return hashlib.sha256(_json(canonical_state(manager))).hexdigest()
 
 
 def _commands(commands, owner):
@@ -226,6 +296,7 @@ class _Peer:
         self.next_tick = 0
         self.last = time.monotonic()
         self.connected = True
+        self.target = None                      # (address, port) for outbound peers
 
     def send(self, message):
         data = _json(message)
@@ -240,6 +311,11 @@ class _Peer:
                 if n == 0:
                     raise ConnectionError('Disconnected')
                 del self.tx[:n]
+            except (ConnectionResetError, ConnectionAbortedError) as exc:
+                # Windows reports 10054/10053 here; keep a stable word in front
+                # of the platform's own text so player-facing messages and
+                # regression fixtures match on every platform.
+                raise ConnectionError(f'Disconnected: {exc}') from None
             except BlockingIOError:
                 pass
 
@@ -251,6 +327,8 @@ class _Peer:
                 raise ConnectionError('Disconnected')
             self.last = time.monotonic()
             self.rx.extend(data)
+        except (ConnectionResetError, ConnectionAbortedError) as exc:
+            raise ConnectionError(f'Disconnected: {exc}') from None
         except BlockingIOError:
             pass
         messages = []
@@ -332,11 +410,13 @@ class LanSession:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         peer = _Peer(sock)
         result = sock.connect_ex((address, port))
-        if result not in (0, errno.EINPROGRESS, errno.EWOULDBLOCK, errno.EALREADY):
+        verdict = classify_connect_result(result)
+        if verdict == 'failed':
             sock.close()
-            self._fail('Connection failed')
+            self._fail(connect_failure_message(result, address, port))
             return self
-        peer.connected = result == 0
+        peer.connected = verdict == 'connected'
+        peer.target = (address, port)
         self._peers = [peer]
         peer.send(dict(type='hello', name=name, version=GAME_VERSION,
                        protocol=PROTOCOL_VERSION, content=self._content))
@@ -353,6 +433,23 @@ class LanSession:
     @property
     def launch(self):
         return deepcopy(self._launch)
+
+    def peer_report(self):
+        """Accepted-connection view for `--netdiag`; never mutates the session.
+
+        Distinguishes "TCP arrived" (peer accepted) from "handshake completed"
+        (slot assigned), which is what separates a firewall block from a
+        version/content rejection in a mixed-platform report.
+        """
+        rows = []
+        for peer in self._peers:
+            try:
+                remote = peer.sock.getpeername()
+                address = f'{remote[0]}:{remote[1]}'
+            except OSError:
+                address = None
+            rows.append(dict(address=address, connected=bool(peer.connected), slot=peer.slot))
+        return rows
 
     def _broadcast(self, message):
         for peer in self._peers:
@@ -611,8 +708,10 @@ class LanSession:
                         _, writable, exceptional = select.select([], [peer.sock], [peer.sock], 0)
                         if not writable and not exceptional:
                             continue
-                        if peer.sock.getsockopt(socket.SOL_SOCKET, socket.SO_ERROR):
-                            raise ConnectionError('Connection failed')
+                        so_error = peer.sock.getsockopt(socket.SOL_SOCKET, socket.SO_ERROR)
+                        if so_error:
+                            address, port = peer.target or ('?', self.port)
+                            raise ConnectionError(connect_failure_message(so_error, address, port))
                         peer.connected = True
                     for message in peer.poll():
                         self._receive(peer, message)

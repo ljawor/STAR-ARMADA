@@ -2,9 +2,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
-import math
-
-
+from game.core import detmath as math  # deterministic sim math, never the platform libm
 def _finite_number(value):
     try:
         return type(value) in (int, float) and math.isfinite(value)

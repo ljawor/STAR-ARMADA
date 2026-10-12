@@ -1,0 +1,95 @@
+name: Windows signal
+
+# Issue #56 is a Windows-vs-macOS LAN failure: the everyday suite runs on macOS,
+# so this is the only per-push Windows evidence. Scope is deliberately small —
+# a private repo spends Actions minutes at a 2x multiplier for Windows runners,
+# and only the socket/LAN surface is platform-sensitive here.
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  windows-lan:
+    name: LAN surface on real Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: netdiag on real Windows
+        # Exercises the real entry point: environment, local addresses, the
+        # observe-this-platform socket probes and a real host+join pairing.
+        run: python main.py --netdiag info --out netdiag-windows.json
+      - name: Show the report
+        run: Get-Content netdiag-windows.json
+      - name: Dump the scene states on Windows
+        # The exact structure the lockstep checksum hashes: when two platforms
+        # report different checksums, diffing these dumps names the value instead
+        # of leaving "checksums differ" as the whole diagnosis. Ticks 0 separates
+        # scene construction from the step itself, and `--scene contact` covers the
+        # collision/weapon maths that the strategic canonical scene never reaches.
+        run: |
+          python tools/lan_state_diff.py dump --out state-win-ticks0.json
+          python tools/lan_state_diff.py dump --out state-win-ticks1.json --ticks 1
+          python tools/lan_state_diff.py dump --out state-win-contact-ticks60.json --scene contact --ticks 60
+      - name: Focused LAN tests on Windows
+        env:
+          PYTHONPATH: tests
+          SDL_VIDEODRIVER: dummy
+          SDL_AUDIODRIVER: dummy
+          # Pacing is hardware acceptance, not correctness: this shared 2-vCPU
+          # runner paced 20.9 ticks/s against the 27 ticks/s LAN floor. The floor
+          # is lowered here and the correctness clauses (identical checksums every
+          # tick, all ticks executed, AI and human commands present) still gate;
+          # the real floor is measured on the reporter's own PC.
+          STAR_ARMADA_PACING_FLOOR: "15"
+        # test_lan.DiagnosticTests runs the real two-process LAN diagnostic here
+        # too: cross-process determinism must hold on Windows, not only on macOS.
+        run: python -m unittest test_netdiag test_netdiag_compare test_lan_state_diff test_sim_profiles test_lan test_multiplayer -v
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: netdiag-windows
+          path: |
+            netdiag-windows.json
+            state-win-ticks0.json
+            state-win-ticks1.json
+            state-win-contact-ticks60.json
+
+  package-windows:
+    # Manual runs only: hands the reporter a candidate build (an artifact, never
+    # a published release) to re-test the pairing on the real PC.
+    name: Candidate Windows package (manual)
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pyinstaller
+      - name: Build exe
+        run: pyinstaller star_armada.spec --noconfirm
+      - name: Zip
+        run: |
+          Compress-Archive -Path "dist/STAR ARMADA/*" `
+            -DestinationPath "dist/STAR-ARMADA-candidate-win.zip"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: star-armada-candidate-win
+          path: dist/STAR-ARMADA-candidate-win.zip

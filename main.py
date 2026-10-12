@@ -29,6 +29,12 @@ if "--benchmark" in sys.argv:
     from game.benchmark import cli as benchmark_cli
     raise SystemExit(benchmark_cli([arg for arg in sys.argv[1:] if arg != "--benchmark"]))
 
+# Same rule for the LAN diagnostic: no SDL, no window, no assets beyond the
+# data store — it must run on a machine where the game itself will not start.
+if "--netdiag" in sys.argv:
+    from game.net.diag import cli as netdiag_cli
+    raise SystemExit(netdiag_cli([arg for arg in sys.argv[1:] if arg != "--netdiag"]))
+
 ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, ROOT)
 

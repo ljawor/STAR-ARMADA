@@ -1,5 +1,5 @@
 """Deterministic inclined satellite orbits; no wall-clock or renderer state."""
-import math
+from game.core import detmath as math  # deterministic sim math, never the platform libm
 from ..core.vectors import Vec3
 from .colonies import colony_rules, SATELLITE_TYPES
 from . import stats

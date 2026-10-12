@@ -1,5 +1,5 @@
 """Planet-only paid surface hardware; supplemental income is not colony income."""
-import math
+from game.core import detmath as math  # deterministic sim math, never the platform libm
 from ..core.vectors import Vec3
 from ..data.store import DataStore
 from .colonies import eligible_planet
