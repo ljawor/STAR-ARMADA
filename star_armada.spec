@@ -41,6 +41,12 @@ a = Analysis(
         "OpenGL.GL",
         "OpenGL.GLU",
         "numpy",
+        # Imported lazily inside functions (menus, main --netdiag): name them
+        # explicitly so the diagnostic exists in the frozen build that has to
+        # report a connect failure.
+        "game.net",
+        "game.net.lan",
+        "game.net.diag",
     ],
     hookspath=[],
     hooksconfig={},
