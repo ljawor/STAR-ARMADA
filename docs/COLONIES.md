@@ -76,7 +76,9 @@ Unengaged satellites now report `vel = (accepted_position - previous_position) /
 from their actual orbital displacement. This lets existing projectile lead hit a
 moving defense satellite without changing its targets: defense still engages only
 fighters and missiles, never cruisers. The orbit system remains the sole position
-integrator; movement and separation skip stations, preventing double integration.
+integrator; movement and pairwise separation skip stations, preventing double
+integration. The separate planet-gravity correction still applies to stations;
+normal satellite orbital clearance keeps them outside that correction region.
 Engagement, abandoned crew, a fully blocked orbit or a missing parent clears velocity
 to zero; partially blocked ticks report only accepted travel. Orbital phase, velocity
 and projectile state use the existing precise save/replay fields.
