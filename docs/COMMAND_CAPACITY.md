@@ -32,8 +32,9 @@ Implemented on `fix/infrastructure-command-points`; not a merge or release claim
 
 Abandoned but living hulls still consume CMD, and their paused paid queues retain
 reservations. Only operational stations supply their catalogue capacity, as before.
-Destroyed hulls/queues release usage; canceled work releases its reservation using
-existing cancellation/refund rules. Ownership changes transfer living usage.
+Destroyed hulls/queues release usage; removing paid work releases its derived
+reservation. The reservation-removal regression clears a queue directly; it does not
+establish player-accessible cancellation or refund behavior. Ownership changes transfer living usage.
 Colony capture clears old paid work without a refund and transfers completed surface
 buildings, so old reservations disappear and surviving hardware counts for its new owner.
 
