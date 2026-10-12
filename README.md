@@ -4,20 +4,18 @@
 classic space-fleet RTS titles (Armada II / Fleet Operations era). It runs entirely on
 Python 3 — deterministic simulation, AI, OpenGL rendering via pygame-ce and procedural audio.
 
-**Next release preparation: v0.11.0** — large-fleet CPU/fog optimizations,
-benchmark JSON for Windows testing, and the merged input/planetary combat fixes.
-The source passed 1,009 tests; publication and downloaded-package verification
-are pending. See [performance measurements and commands](docs/PERFORMANCE.md).
-Windows performance acceptance remains Filip's laptop test.
-
-**Current release: [v0.10.1](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.10.1)**
-— published October 11, 2026, with macOS DMG and **unsigned Windows ZIP**.
-Fixes quiet ship/fighter firing sounds and silence after live volume changes;
-includes v0.10.0 planetary hardware and HUD improvements. Downloaded hashes,
-three inspected runtime modules and all 15 tracked assets match tagged source;
-read-only frozen macOS smoke passed. Trusted Windows certificate signing (#45),
-native listening/Windows gameplay, Cocoa wheel-input QA and mixed-platform LAN
-acceptance remain open. Smart App Control may still block the unsigned Windows build.
+**Current release: [v0.11.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.11.0)**
+— published October 12, 2026, with macOS DMG and **unsigned Windows ZIP**.
+Adds large-fleet CPU/fog optimizations and benchmark JSON for Windows testing;
+includes the merged input/planetary combat fixes. The source passed 1,009 tests
+and independent review; 52 replay/content/performance tests passed after the
+version-only preparation. Downloaded hashes, 22 inspected runtime modules and
+all 15 tracked assets match immutable tagged source. Read-only frozen macOS
+smoke and both frozen benchmark modes passed.
+See [performance measurements and Filip's commands](docs/PERFORMANCE.md).
+Windows performance/gameplay, trusted certificate signing, native listening,
+Cocoa wheel-input QA and mixed-platform LAN acceptance remain open. Smart App
+Control may still block the unsigned Windows build.
 
 The setting is an original space-opera universe. Prototype faction/ship names are
 placeholder-style data (Imperial / Rebel / Confederacy / Syndicate) so the feel reads

@@ -8,7 +8,7 @@ removed by this change.
 
 ## Filip: run on the Windows laptop
 
-Use a build containing this branch, **not an older released executable**.
+Use the published **v0.11.0** build, not an older released executable.
 Keep the laptop plugged in, record the Windows power mode, and close unrelated
 CPU/GPU-heavy programs. Use the same settings and GPU for every comparison.
 A native Windows machine is required for Windows performance acceptance.
@@ -22,7 +22,7 @@ py -3.11 -m venv .venv
 .\.venv\Scripts\python.exe main.py --benchmark --mode full --units 500 --frames 60 --warmup 10 --width 1280 --height 800 --vsync 0 --msaa 4 --output "$HOME\Desktop\armada-full-500.json" --screenshot "$HOME\Desktop\armada-full-500.png"
 ```
 
-For a future packaged build containing this PR, run from the extracted game
+For the published v0.11.0 Windows ZIP, run from the extracted game
 folder (it does not need Python, git or the source tree):
 
 ```powershell
@@ -137,7 +137,7 @@ profile JSON; this is not a universal bound).
 | Local baseline/candidate per-stage measurement | PASS — 24 fresh-process trials, see results above |
 | Real Cocoa SDL/GL world/HUD/swap | PASS — exact final framebuffer hashes match baseline |
 | Source CLI + malformed/cancelled report behavior | PASS — focused contract tests and actual sim CLI invocation |
-| Native macOS frozen entry point | OPEN — not exercised for this PR |
+| Native macOS frozen entry point | PASS — downloaded v0.11.0 read-only smoke plus sim/full benchmarks |
 | Stable whole-tree regression suite | PASS — 1,009 tests, serialized final-tree run (446.235 s) |
 | Independent review | PASS — no blocking security or logic findings; source review only |
 | Native Windows packaged function and GPU/driver measurements | **OPEN — Filip's laptop** |
