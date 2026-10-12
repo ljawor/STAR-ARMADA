@@ -13,18 +13,21 @@ partly delivered; the remaining work is listed explicitly below.
 
 ## Current source and release scope
 
-**v0.11.0 release preparation:** PR #66 adds measured large-fleet CPU/fog
-optimizations and player-runnable benchmark JSON for Filip's Windows laptop.
-The stable source passed 1,009 tests and independent review; 24 controlled
-baseline/candidate trials preserved precise state and final rendered pixels.
-This increment also packages the already-merged input, fire-arc and planetary
-projectile/slot-lockout fixes in #61, #63, #64 and #65. Published package and
-frozen-runtime verification are pending until the release assets are checked.
+**Current release: v0.11.0**, published October 12, 2026. PR #66 is merged
+and packaged: measured large-fleet CPU/fog optimizations and player-runnable
+benchmark JSON for Filip's Windows laptop. The stable source passed 1,009
+tests and independent review; 52 replay/content/performance tests passed after
+version preparation. Twenty-four controlled baseline/candidate trials preserved
+precise state and final rendered pixels. This increment also packages input,
+fire-arc and planetary projectile/slot-lockout fixes in #61, #63, #64 and #65.
+Both published downloads passed digest/integrity checks; 22 inspected runtime
+modules and all 15 tracked assets match the immutable tag. Read-only frozen
+macOS smoke and both frozen benchmark modes passed.
 Windows performance/gameplay, defense-satellite orbit targeting (#62), trusted
 Windows signing and mixed-platform LAN acceptance remain open. See
 [PERFORMANCE.md](PERFORMANCE.md) for measured scope and reporter commands.
 
-**Current release: v0.10.1**, published October 11, 2026. PR #47 fixes quiet
+**Previous release: v0.10.1**, published October 11, 2026. PR #47 fixes quiet
 ship/fighter firing and live-volume silence; #49 prepares the authoritative version.
 The unchanged runtime tree passed 956 tests; 36 replay/content-sensitive tests
 passed after the version-only bump. Both downloaded package digests, three inspected
