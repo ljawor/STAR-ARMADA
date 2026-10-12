@@ -78,6 +78,85 @@ Evidence is retained outside the repository in the Hermes scratch directory
 `live-restore-report.json`, `verified-focused.log`, `reservation-tests.log`,
 `all-maps-report.json`, and `gl-final/` (report plus four PNGs).
 
+## Independent review follow-up (third fix)
+
+The independent review supplied two radius-500 controlled planets at
+`[0, 0, 0]` and `[2165.0635094610966, 0, 1249.9999999999998]`, with only
+slot 5 unlocked. Both purchases passed initial-point checks, yet the first
+ring at phase `4.9043751981040655` came within `21.395788` units of the second
+complete ring, below the unchanged 144-unit clearance.
+
+- Admission and completion now check **complete ring against complete ring**
+  for live/paid and paid/paid hardware, across planets as well as within a colony.
+  Current live positions and stored paid birth sites remain additional keep-outs.
+- The certificate is conservative, not sample-only acceptance: distance to a
+  closed circle is 1-Lipschitz. For every arc interval on circle A, its distance
+  to the complete circle B is bounded below by midpoint-to-B distance minus
+  `A.radius * interval_half_angle`. Only intervals whose lower bound clears the
+  original minimum plus a numerical guard are accepted; all unresolved intervals
+  are subdivided. Exact enclosing-sphere/radial-shell lower bounds handle easy
+  pairs. Budget exhaustion (4096 intervals, depth 18), intersection and near-boundary
+  uncertainty reject, never claim safety. A bounded derived cache stores only
+  geometry/minimum-dependent certificates, not simulation state.
+- Planetary paid-reservation preview authority uses `colonized_by` and the
+  reservation's matching `source_owner`, not neutral terrain `owner`. The existing
+  allied placement-reservation policy is retained; this does **not** authorize
+  allied production-menu inspection. Detected enemy planets/builders still reveal
+  no private paid intent. Own/allied/visible-enemy/stale-enemy-source controls pass.
+- A mobile hull overlapping a satellite birth site rejects new admission without
+  payment (the deterministic slot search may choose another clear slot). If a
+  mobile arrives during already-paid work, completion is deferred at that same
+  precise site/slot with its paid reservation retained. Departure allows delivery;
+  there is no cancellation, repayment or refund for this transient condition.
+  Manager/restore tests compare every deferred and resumed tick exactly, with an
+  independent income control proving no monetary change besides normal income.
+  Existing stationary-conflict and ownership-invalidation policies are unchanged.
+- Mod geometry fails closed for nonpositive/nonfinite hull or orbit geometry,
+  capacity outside 1–64, inclination above pi, and shell gaps below the largest
+  hull-pair clearance plus guard. The bounded radial search also certifies the
+  parent keep-out for the innermost point of each integration chord (at most .02
+  radians), rather than merely its circular endpoints. It does not shrink hulls,
+  spacing, parent clearance or terrain exclusions.
+
+### Final executed follow-up gates
+
+Evidence root: `star-armada-75-evidence/third/` in Hermes scratch.
+
+- Red: `red-rings.log` records both live/paid and paid/paid admissions wrongly
+  succeeding; `red-preview.log` records own/allied reservations omitted;
+  `red-mobile.log` records admitted overlap and consumed paid completion;
+  `red-mod.log` / `red-angle.log` record uncertified mod shells/parent/angle geometry.
+  Green: all eight new review regressions pass (`review.log`).
+- Final serialized focused gates: **107 tests passed**, split into review (8),
+  orbit/velocity/penalty (19), construction exclusions/range (29),
+  colonies/surface/CMD (46), Nebula fast (4) and the separately executed long
+  exact-continuation test (1). `focused-report.json` and per-gate logs retain
+  actual exit codes, counts and wall times. The 7800-tick paid-constellation
+  restore/revolution test completed; no interrupted run is counted as passing.
+- Two old hostile-spacing fixtures also failed at unchanged `a9843b7`
+  (`baseline-spacing-fixtures.log`): their initial-point legality did not prove
+  complete-ring legality. They now retain exact 3000-unit point-boundary equality,
+  paid-site blocking and abandoned-hostile exclusions using legal full-ring fixtures.
+  A third old fixture placed an untyped satellite reservation on a constructor;
+  it now creates actual paid planet work with source/slot metadata and preserves
+  exact slot-search/spending assertions.
+- Fresh all-map probe: **108 unique fixtures**, all 18 eligible planets on all four
+  registered maps, and **1566 certified ring pairs**. Every default terrain plan
+  equals `a9843b7` exactly. Actual production orbital updates executed 3300 ticks
+  per map; every satellite travelled at least `6.599999999999273` radians, with
+  analytical terrain margin at least `3.2549228645548283` units. Per-map JSON
+  batches are read back, deduplicated and checked against the expected 108 count.
+  See `all-maps-report.json`, `all-maps.log`, and `skirmish*-orbits.json`.
+- Final Cocoa/Apple M4 GL diagnostic passed after the final simulation changes:
+  four real framebuffer stages (38–76 hardware-control pixels), exact read-only
+  rendering and no GL errors, `9.491999999999676` radians of travel, minimum
+  terrain margin `4.638210172808613`, and maximum displacement
+  `2.8939995176673037` units/tick. `gl-final/report.json`, four PNGs and
+  `gl-final.log` retain the evidence. The scene includes the existing fog/background
+  cards; this orbital fix does not change rendering.
+- Focused compilation and `git diff --check` passed. No prices, maps, catalogue
+  defaults, combat rules, serialization fields or migration speed changed.
+
 ## Limits
 
 The replay was executed to the first demonstrated persistent block, not its full

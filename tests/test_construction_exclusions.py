@@ -197,17 +197,23 @@ class ConstructionExclusionTests(unittest.TestCase):
         return planet
 
     def test_satellite_exact_hostile_boundary_and_paid_site_obstruction(self):
+        from game.systems.colonies import colony_rules
         planet = self.planet()
         site0 = self.cs.satellite_site(planet, 'defense_satellite', 0)
         center = self.factory.spawn_station('command_station', 1, site0 + Vec3(0, 0, 3000))
         self.assertEqual(site0.dist(center.pos), 3000)
-        from game.systems.colonies import colony_rules
-        legal = [slot for slot in range(1, colony_rules()['satellite_cap'])
-                 if self.cs.satellite_site(planet, 'defense_satellite', slot).dist(center.pos) >= 3000]
-        self.assertTrue(legal)
-        # A paid ordinary site blocks slot 0 independently of the boundary.
+        self.assertTrue(self.cs._check_station_spacing('defense_satellite', site0, 0)[0])
+        # Exact point equality is still legal, but a near side of its COMPLETE
+        # ring can be inside the same unchanged 3000u territorial exclusion.
+        self.assertFalse(self.cs.satellite_ring_available(planet, 'defense_satellite', 0, 0))
+        center.pos = Vec3(0, 8000, 0)
+        # A paid ordinary site blocks slot 0 independently of that boundary.
         self.builder.build_queue.append(dict(kind='station', item='trade_station',
             pos=site0.to_dict(precise=True), status='paid', time_left=100, total=100))
+        legal = [slot for slot in range(colony_rules()['satellite_cap'])
+                 if self.cs.satellite_ring_available(planet, 'defense_satellite', slot, 0)]
+        self.assertTrue(legal)
+        self.assertNotEqual(legal[0], 0)
         self.assertTrue(self.cs.start_satellite(planet.id, 'defense_satellite', 0))
         self.assertEqual(planet.build_queue[0]['slot'], legal[0])
         self.assertGreaterEqual(Vec3(*planet.build_queue[0]['pos']).dist(center.pos), 3000)
@@ -220,19 +226,14 @@ class ConstructionExclusionTests(unittest.TestCase):
         from game.systems.colonies import colony_rules
         planet = self.planet()
         cap = int(colony_rules()["satellite_cap"])
-        # Each slot now rides its own shell and plane (#51), so derive the sites
-        # instead of assuming one shared ring, and put the hostile command
-        # station ON the first slot's site: the search has to notice that
-        # blocked slot and skip past it to the first legal one.
-        sites = [self.cs.satellite_site(planet, 'attack_satellite', slot)
-                 for slot in range(cap)]
-        # 1500u outward of the first slot's own site: inside the 3000u hostile
-        # exclusion for the near slots, well outside it for the far ones.
-        outward = sites[0] - planet.pos
-        outward = outward * (1500.0 / outward.length())
-        center = self.factory.spawn_station('command_station', 1, sites[0] + outward)
+        from game.systems.satellite_orbits import orbit_geometry, ring_distance
+        # An abandoned hostile center still excludes the whole circle, not
+        # merely its initial phase. This bearing blocks inner slot 0 but leaves
+        # full rings 1/3/4 legal under the unchanged 3000u rule.
+        center = self.factory.spawn_station('command_station', 1, Vec3(0, 3250, 0))
         center.crew = 0
-        legal = [slot for slot in range(cap) if sites[slot].dist(center.pos) >= 3000]
+        legal = [slot for slot in range(cap) if ring_distance(planet.pos,
+                 *orbit_geometry(self.st, planet, 45, slot), center.pos) >= 3000]
         self.assertTrue(legal)
         self.assertNotEqual(legal[0], 0)
         self.assertTrue(self.cs.start_satellite(planet.id, 'attack_satellite', 0))

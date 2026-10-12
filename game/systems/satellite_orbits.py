@@ -52,6 +52,58 @@ def ring_distance(center, radius, node, inclination, point):
     return math.sqrt(max(0., delta.length_sq() + radius * radius - 2 * radius * projected))
 
 
+def rings_clear(center_a, plan_a, center_b, plan_b, minimum):
+    """Certify ALL phase pairs; uncertainty/budget exhaustion rejects.
+
+    Distance to a closed set is 1-Lipschitz. On each arc of circle A,
+    distance to the complete circle B is at least its midpoint distance
+    minus A's radius * half-angle (an upper bound on point displacement).
+    Subdivide only uncertified arcs, never accept from samples alone.
+    """
+    return _rings_clear(center_a.to_tuple(), tuple(plan_a), center_b.to_tuple(),
+                        tuple(plan_b), minimum)
+
+
+from functools import lru_cache
+
+
+@lru_cache(maxsize=4096)
+def _rings_clear(center_a, plan_a, center_b, plan_b, minimum):
+    if not all(math.isfinite(v) for v in (*center_a, *center_b, *plan_a, *plan_b, minimum)):
+        return False
+    a, b = Vec3(*center_a), Vec3(*center_b)
+    ra, node, inclination = plan_a
+    rb = plan_b[0]
+    if min(ra, rb) <= 0 or minimum < 0:
+        return False
+    # Guard roundoff in analytic distances/subdivision, not a relaxed keep-out.
+    guard = max(.001, max(abs(v) for v in (*center_a, *center_b, ra, rb)) * 1e-12)
+    floor = minimum + guard
+    centers = a.dist(b)
+    if max(centers - ra - rb, abs(ra - rb) - centers) >= floor:
+        return True
+    if ra > rb:
+        return _rings_clear(center_b, plan_b, center_a, plan_a, minimum)
+    u = Vec3(math.cos(node), 0, math.sin(node))
+    v = Vec3(-math.sin(node) * math.cos(inclination), math.sin(inclination),
+             math.cos(node) * math.cos(inclination))
+    pending = [(math.pi, math.pi, 0)]
+    for _ in range(4096):
+        if not pending:
+            return True
+        phase, half, depth = pending.pop()
+        point = a + (u * math.sin(phase) + v * math.cos(phase)) * ra
+        distance = ring_distance(b, *plan_b, point)
+        if distance - ra * half >= floor:
+            continue
+        if distance < floor or depth >= 18:
+            return False
+        half *= .5
+        pending.append((phase + half, half, depth + 1))
+        pending.append((phase - half, half, depth + 1))
+    return False
+
+
 def orbit_geometry(state, planet, station_radius, slot):
     """Public fixed terrain determines safe rings, never hidden contacts.
 
@@ -62,16 +114,24 @@ def orbit_geometry(state, planet, station_radius, slot):
     """
     cfg = colony_rules()
     from ..data.store import DataStore
-    shell_radius = max(station_radius, *(DataStore.get().stations[k].radius for k in SATELLITE_TYPES))
+    hulls = (station_radius, *(DataStore.get().stations[k].radius for k in SATELLITE_TYPES))
+    if (any(type(r) not in (int, float) or not math.isfinite(r) or r <= 0 for r in hulls)
+            or type(cfg['satellite_cap']) is not int or not 1 <= cfg['satellite_cap'] <= 64
+            or any(type(cfg[k]) not in (int, float) or not math.isfinite(cfg[k]) or cfg[k] <= 0
+                   for k in ('orbit_clearance', 'orbit_shell_spacing', 'orbit_inclination'))
+            or cfg['orbit_inclination'] > math.pi):
+        return None
+    shell_radius = max(hulls)
+    # Distinct planes cross, so radial shell gaps must protect the largest
+    # modded hull pair. Never weaken spacing or rescale a mod's hardware.
+    if cfg['satellite_cap'] > 1 and cfg['orbit_shell_spacing'] < 3.2 * shell_radius + .001:
+        return None
     bodies = tuple((e.id, e.pos.x, e.pos.y, e.pos.z, e.radius)
                    for e in sorted(state.entities.values(), key=lambda e: e.id)
                    if e.alive and e.is_planet and e is not planet and e.data_id != 'asteroid_field')
     plans = _terrain_plans(planet.id, planet.pos.to_tuple(), planet.radius, shell_radius,
                            tuple(sorted(cfg.items())), bodies, state.map_info.bounds)
     return plans[slot] if plans is not None and 0 <= slot < len(plans) else None
-
-
-from functools import lru_cache
 
 
 @lru_cache(maxsize=256)
@@ -84,6 +144,10 @@ def _terrain_plans(planet_id, center, planet_radius, station_radius, config, bod
         plans = []
         for slot in range(cfg['satellite_cap']):
             radius = planet_radius + station_radius + cfg['orbit_clearance'] + slot * cfg['orbit_shell_spacing'] + offset
+            # Integration uses chords of at most .02 radians. Certify their
+            # innermost point against the unchanged parent keep-out as well.
+            if radius * math.cos(.01) < planet_radius + station_radius + 40 + .001:
+                break
             candidates = [orbit_plane(planet_id, slot, cfg)]
             for _, x, y, z, _ in bodies:
                 normal = (Vec3(x, y, z) - center).normalized()

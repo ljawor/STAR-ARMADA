@@ -195,10 +195,18 @@ class ConstructionSystem:
                     if e.data_id == 'command_station' and st.is_enemy(player_id, e.owner):
                         return False, 'too close to hostile command station'
                     return False, f"too close to {e.data_id.replace('_', ' ')}"
-            # Build queues are private intent, even on detected enemy builders.
-            if viewer is not None and e.owner not in st.allied_player_ids(viewer):
+            # Placement shares allied paid reservations, not arbitrary detected
+            # production details. Planet terrain owner remains neutral: control
+            # AND the paid source must authorize this particular reservation.
+            queue_owner = e.colonized_by if e.is_planet else e.owner
+            allies = st.allied_player_ids(viewer) if viewer is not None else None
+            if allies is not None and queue_owner not in allies:
                 continue
             for work in e.build_queue:
+                if (allies is not None and e.is_planet
+                        and (work.get('source_owner') != queue_owner
+                             or work.get('source_owner') not in allies)):
+                    continue
                 if (work is ignore_work or work.get('kind') not in ('station', 'satellite')
                         or work.get('status') != 'paid' or work.get('pos') is None):
                     continue
@@ -357,7 +365,7 @@ class ConstructionSystem:
 
     def satellite_ring_available(self, planet, station_id, slot, player_id, *, ignore_work=None):
         """Reserve a complete terrain-certified orbit, not just its build phase."""
-        from .satellite_orbits import orbit_geometry, ring_distance
+        from .satellite_orbits import orbit_geometry, ring_distance, rings_clear
         sd = self.ds.stations[station_id]
         plan = orbit_geometry(self.state, planet, sd.radius, slot)
         if plan is None:
@@ -371,6 +379,12 @@ class ConstructionSystem:
                                                     player_id, other.owner)
                 if ring_distance(planet.pos, radius, node, inclination, other.pos) < minimum:
                     return False
+                if other.satellite_slot is not None and other.planet_id is not None:
+                    parent = self.state.entity(other.planet_id)
+                    other_plan = (orbit_geometry(self.state, parent, other.radius, other.satellite_slot)
+                                  if parent is not None else None)
+                    if other_plan is None or not rings_clear(planet.pos, plan, parent.pos, other_plan, minimum):
+                        return False
             for work in other.build_queue:
                 if (work is ignore_work or work.get('kind') not in ('station', 'satellite')
                         or work.get('status') != 'paid' or work.get('pos') is None):
@@ -379,7 +393,19 @@ class ConstructionSystem:
                 minimum = self.station_min_distance(station_id, data.id, data.radius, player_id)
                 if ring_distance(planet.pos, radius, node, inclination, Vec3(*work['pos'])) < minimum:
                     return False
+                if work['kind'] == 'satellite':
+                    other_plan = (orbit_geometry(self.state, other, data.radius, work['slot'])
+                                  if other.is_planet and type(work.get('slot')) is int else None)
+                    if other_plan is None or not rings_clear(planet.pos, plan, other.pos, other_plan, minimum):
+                        return False
         return True
+
+    def satellite_birth_available(self, station_id, pos):
+        """Mobile hulls reserve today's birth footprint, not their future paths."""
+        radius = self.ds.stations[station_id].radius
+        return all(not e.alive or not (e.is_ship or e.is_squadron)
+                   or pos.dist(e.pos) >= (radius + e.radius) * 1.6
+                   for e in self.state.entities.values())
 
     def start_satellite(self, planet_id, station_id, player_id):
         from .colonies import eligible_planet
@@ -399,6 +425,8 @@ class ConstructionSystem:
                 continue
             pos = self.satellite_site(planet, station_id, slot)
             if pos is None or not self.satellite_ring_available(planet, station_id, slot, player_id):
+                continue
+            if not self.satellite_birth_available(station_id, pos):
                 continue
             if not self._check_station_spacing(station_id, pos, player_id)[0]:
                 continue
@@ -552,6 +580,12 @@ class ConstructionSystem:
         elif kind == 'satellite':
             from .colonies import eligible_planet
             if not eligible_planet(builder) or builder.colonized_by != item['source_owner']:
+                return
+            if not self.satellite_birth_available(item['item'], Vec3(*item['pos'])):
+                # Transient mobile occupancy delays delivery, never destroys or
+                # refunds paid work. Keep the exact site/slot and reservation.
+                item['time_left'] = 0.
+                builder.build_queue.insert(0, item)
                 return
             if not self.satellite_ring_available(builder, item['item'], item['slot'],
                                                  item['source_owner'], ignore_work=item):
