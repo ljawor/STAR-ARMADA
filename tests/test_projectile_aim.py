@@ -131,11 +131,9 @@ class SurfaceHardwareKillPathTests(unittest.TestCase):
 
     def test_a_satellite_is_destructible_before_any_lockout_exists(self):
         """#57's prerequisite: a destroyed satellite is a real, reachable event."""
-        # An `attack_satellite`, not a `defense_satellite`: only the anti-ship
-        # platform is a valid target for, and can engage, the cruiser below, and
-        # an *engaged* satellite stops teleporting its orbit. A `defense_satellite`
-        # cannot shoot at a cruiser, so it keeps teleporting with `vel = 0` and no
-        # shot can ever lead it (separate defect, measured 0/277 hits, not #60).
+        # Keep the anti-ship platform as #57's lockout fixture. Both moving
+        # defense and engaged attack platforms are covered by #62's separate
+        # position/velocity and real projectile-kill regressions.
         self.assertTrue(self.gm.construction.start_satellite(self.planet.id,
                                                               'attack_satellite', 0))
         run_for(self.gm, 200)

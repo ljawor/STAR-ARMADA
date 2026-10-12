@@ -89,7 +89,9 @@ class SatellitePenaltyTests(unittest.TestCase):
         run_for(self.gm, 179)
         self.assertGreater(colonies.satellite_lock_remaining(self.st, self.planet, slot), 0.0)
         run_for(self.gm, 2)
-        self.assertEqual(colonies.locked_satellite_slots(self.st, self.planet), set())
+        # Other slots can acquire independent penalties: the still-hostile
+        # cruiser can now kill the newly built orbiting defense satellite (#62).
+        self.assertNotIn(slot, colonies.locked_satellite_slots(self.st, self.planet))
         self.assertEqual(colonies.satellite_lock_remaining(self.st, self.planet, slot), 0.0)
 
     def test_the_penalty_is_world_state_so_it_survives_save_restore_and_replay(self):
