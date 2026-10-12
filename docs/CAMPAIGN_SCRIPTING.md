@@ -127,6 +127,45 @@ completion. Captures and the exact mid-objective saves are in
 `1024_mid_objective_save.json`, `1280_mid_objective_save.json`); RED evidence is
 `/Users/lukaszjawor/.hermes/cache/scratch/issue80-red.log`.
 
+#### Strict replay review-blocker follow-up — October 12, 2026
+
+Earlier direct state/ReplayPlayer restoration did **not** establish acceptance at
+production's untrusted replay boundary. Before the schema fix, the new
+`test_recovery_drill_replay` regressions ran red: four errors in 2.955 seconds,
+rejecting fresh/mid-recovery `captured_objective` and legacy capture progress
+`captured_id`. Log: `~/.hermes/cache/scratch/80-replay-schema-red.log`.
+An additional immutable `e9152ed` schema control rejects all 12 combinations of
+fresh/mid-recovery/legacy-capture and validate/save/load/PlaybackSession;
+`~/.hermes/cache/scratch/80-replay-schema-baseline-entrypoints.json` records
+exact errors and the audited objective field sets.
+
+Audit confirmed `recovered_id` was **already** typed and mutable before #80.
+The missing schema entries were `captured_objective: str`,
+`full_complement: bool`, and `captured_id: int`; capture progress is now mutable,
+while both definition fields remain identity-bound. Entity/capture/recovery IDs
+are strict integers bounded to 0..100000000, matching replay command IDs.
+Campaign validation still checks the referenced single-capture objective and
+rejects method-specific full-complement definitions; unknown fields still reject.
+
+The six new regressions exercise production MatchRecording validate/save/load
+and PlaybackSession for fresh, mid-recruitment and legacy event-count capture
+progress, full precise state immediately and every recorded tick (300 ticks
+through mid-recruitment completion), malformed types/ranges/definition mutations,
+accepted ID endpoints, and the warned legacy projection without runtime state.
+Legacy tests use controlled historical-shape fixtures, not an archived user file;
+missing future AI/timers still carry the existing compatibility limitation.
+Final focused replay/campaign run: **81 tests passed in 72.622 seconds**, log
+`~/.hermes/cache/scratch/80-replay-campaign-focused.log`. Compile and diff checks
+passed. No new full-suite or independent re-review claim is made here.
+
+After the final schema/test changes, real Cocoa campaign GL passed again:
+`DIAG_CAMPAIGN_PHASE7_UI_AND_CONTROLLED_CONTINUATION_OK`, both 1024×768 and
+1280×800, 64 PNG captures, 750 exact restore continuation ticks per resolution,
+real capture and 36/36 crew completion, zero GL errors/overflow/control overlap.
+Evidence: `~/.hermes/cache/scratch/80-replay-schema-campaign-gl/` and sibling
+`.log`; completion captures at both sizes were also visually inspected.
+This diagnostic verifies controlled campaign UI/restore, not the replay browser.
+
 This is controlled production-command/HUD acceptance, not a naturally navigated
 human playthrough. Repositioning, disabled cruiser weapons and four-survivor craft
 setup are explicit fixtures. Windows, balance, release and integrated full-suite
