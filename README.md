@@ -4,6 +4,12 @@
 classic space-fleet RTS titles (Armada II / Fleet Operations era). It runs entirely on
 Python 3 — deterministic simulation, AI, OpenGL rendering via pygame-ce and procedural audio.
 
+**Next release preparation: v0.11.0** — large-fleet CPU/fog optimizations,
+benchmark JSON for Windows testing, and the merged input/planetary combat fixes.
+The source passed 1,009 tests; publication and downloaded-package verification
+are pending. See [performance measurements and commands](docs/PERFORMANCE.md).
+Windows performance acceptance remains Filip's laptop test.
+
 **Current release: [v0.10.1](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.10.1)**
 — published October 11, 2026, with macOS DMG and **unsigned Windows ZIP**.
 Fixes quiet ship/fighter firing sounds and silence after live volume changes;

@@ -23,6 +23,12 @@ import json
 import os
 import sys
 
+# Dispatch before SDL/audio/menu initialization; frozen Windows GUI builds
+# return their report through --output rather than a missing console.
+if "--benchmark" in sys.argv:
+    from game.benchmark import cli as benchmark_cli
+    raise SystemExit(benchmark_cli([arg for arg in sys.argv[1:] if arg != "--benchmark"]))
+
 ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, ROOT)
 

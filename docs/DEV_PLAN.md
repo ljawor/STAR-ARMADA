@@ -13,6 +13,17 @@ partly delivered; the remaining work is listed explicitly below.
 
 ## Current source and release scope
 
+**v0.11.0 release preparation:** PR #66 adds measured large-fleet CPU/fog
+optimizations and player-runnable benchmark JSON for Filip's Windows laptop.
+The stable source passed 1,009 tests and independent review; 24 controlled
+baseline/candidate trials preserved precise state and final rendered pixels.
+This increment also packages the already-merged input, fire-arc and planetary
+projectile/slot-lockout fixes in #61, #63, #64 and #65. Published package and
+frozen-runtime verification are pending until the release assets are checked.
+Windows performance/gameplay, defense-satellite orbit targeting (#62), trusted
+Windows signing and mixed-platform LAN acceptance remain open. See
+[PERFORMANCE.md](PERFORMANCE.md) for measured scope and reporter commands.
+
 **Current release: v0.10.1**, published October 11, 2026. PR #47 fixes quiet
 ship/fighter firing and live-volume silence; #49 prepares the authoritative version.
 The unchanged runtime tree passed 956 tests; 36 replay/content-sensitive tests

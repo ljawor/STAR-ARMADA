@@ -135,6 +135,8 @@ class FogMaskTests(unittest.TestCase):
             visibility_cell_size = 100
             explored_cells = {0: set()}
             calls = 0
+            def allied_player_ids(self, pid):
+                return [pid]
             def sensor_sources(self, pid):
                 self.calls += 1
                 return [(SimpleNamespace(id=1, pos=Vec3(0, 0, 0)), 100)]
@@ -151,7 +153,7 @@ class FogMaskTests(unittest.TestCase):
         from render import fog
         self.assertTrue(hasattr(fog, 'FogMask'), 'no visual fog mask')
         st = SimpleNamespace(map_info=SimpleNamespace(bounds=1000), visibility_cell_size=500,
-            explored_cells={0: {(0, 0)}}, tick=0,
+            explored_cells={0: {(0, 0)}}, tick=0, allied_player_ids=lambda pid: [pid],
             sensor_sources=lambda pid: [(SimpleNamespace(id=1, pos=Vec3(-250, 0, -250)), 200)],
             is_position_visible=lambda pid, pos: pos.x < 0 and pos.z < 0,
             is_position_explored=lambda pid, pos: pos.x >= 0 and pos.z >= 0)
