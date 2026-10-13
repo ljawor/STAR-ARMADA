@@ -29,6 +29,28 @@ familiar, but **no copyrighted assets, code, maps, sounds or text from any comme
 game are used**. Every ship, weapon, faction, tech and map is a JSON data file — replace
 them and the game changes with zero code edits.
 
+### Weapon fire look and pulsar reach (#90, #81)
+
+Weapon fire is shaped by family instead of every projectile being the same round
+speck in a different colour. Laser, point-defence and turbolaser bolts are thin
+rectangles elongated along their heading; torpedoes and missiles are squares. Each
+is a soft additive halo around a hot core, expanded into triangles and emitted in a
+single batched pass for the whole volley (the old path issued one glow call per
+projectile, which is what made fleet-scale volleys expensive). Ion, plasma, kinetic
+and beam weapons keep the previous round glow, so super weapons such as the pulsar
+cannon are unchanged; a bolt fired straight at or away from the camera has no
+screen-space heading and falls back to a vertical streak rather than collapsing to a
+dot. Both extents carry a screen-space floor, because a world-only size is about one
+pixel at overview range.
+
+The pulsar cannon also out-ranged the map it defends: `planet_pulsar_beam` reached
+8400 units on a ~24000-unit skirmish span, a third of the map from one planetary
+battery. Reach is now **6720**, with the cannon's `sensor_range` moved with it —
+detection gates every launch, so shortening one without the other would blind the
+battery. The #52 regression ("when building a pulsar cannon we are not able to fire
+it") now pins the guarantee rather than the number: the emplacement must see as far
+as it shoots and must fire across that whole band, and never past it.
+
 ---
 
 ## v0.13.0 — Clean Classic menus, battle backgrounds, Saved Games and replay management
