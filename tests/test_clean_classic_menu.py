@@ -1,15 +1,32 @@
 """Clean classic presentation contracts, using actual software menu pixels."""
 import unittest
+import tempfile
+from pathlib import Path
 from unittest.mock import patch
 import pygame
 from render.menus import MenuStack
 
 
 class CleanClassicTests(unittest.TestCase):
+    def setUp(self):
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        root = Path(temp.name)
+        saves = root / 'saves'
+        scope = patch.multiple('render.menus', USER_DIR=str(root), SAVES_DIR=str(saves),
+                               SETTINGS_PATH=str(saves / 'settings.json'),
+                               CAMPAIGN_PATH=str(saves / 'campaign.json'))
+        scope.start()
+        self.addCleanup(scope.stop)
+
+    def make_menu(self, w, h):
+        menu = MenuStack(w, h)
+        self.addCleanup(menu.close)
+        return menu
     def test_join_and_lobby_keep_actions_without_per_frame_font_allocation(self):
         with patch('pygame.mouse.get_pos', return_value=(0, 0)):
             for screen in ('lan_join', 'lan_lobby'):
-                menu = MenuStack(800, 600)
+                menu = self.make_menu(800, 600)
                 menu.screen = screen
                 menu.render(0)
                 self.assertIn('lan_back', [b['action'] for b in menu.buttons])
@@ -22,7 +39,7 @@ class CleanClassicTests(unittest.TestCase):
     def test_host_uses_shared_battlefield_preview_swatches_and_pinned_session_controls(self):
         from game.core.skirmish import PLAYER_COLORS
         with patch('pygame.mouse.get_pos', return_value=(0, 0)):
-            menu = MenuStack(1120, 700)
+            menu = self.make_menu(1120, 700)
             menu.screen = 'lan_host'
             menu.render(0)
             maps = [b['rect'] for b in menu.buttons if b['action'] == 'lan_map']
@@ -41,7 +58,7 @@ class CleanClassicTests(unittest.TestCase):
 
     def test_multiline_glyph_bounds_never_overlap_at_larger_resolution(self):
         with patch('pygame.mouse.get_pos', return_value=(0, 0)):
-            menu = MenuStack(1440, 900)
+            menu = self.make_menu(1440, 900)
             menu.screen = 'skirmish'
             menu.render(0)
             bounds = [r for r in menu.skirmish_text_bounds if r.w]
@@ -50,7 +67,7 @@ class CleanClassicTests(unittest.TestCase):
 
     def test_skirmish_battlefield_list_preview_roster_settings_and_cached_fonts(self):
         with patch('pygame.mouse.get_pos', return_value=(0, 0)):
-            menu = MenuStack(1280, 800)
+            menu = self.make_menu(1280, 800)
             menu.screen = 'skirmish'
             menu.render(0)
             maps = [b['rect'] for b in menu.buttons if b['action'] == 'skirmish_map']
@@ -66,11 +83,11 @@ class CleanClassicTests(unittest.TestCase):
     def test_centered_primary_action_has_seaglass_fill_and_quiet_secondaries(self):
         with patch('pygame.mouse.get_pos', return_value=(0, 0)):
             for w, h in ((800, 600), (960, 640), (1280, 800), (1440, 900)):
-                menu = MenuStack(w, h)
+                menu = self.make_menu(w, h)
                 menu.screen = 'main'
                 menu.render(0)
                 self.assertEqual([b['action'] for b in menu.buttons],
-                                 ['start_skirmish', 'goto_lan', 'goto_campaign', 'goto_replays', 'goto_settings', 'exit'])
+                                 ['start_skirmish', 'goto_lan', 'goto_campaign', 'goto_saved_games', 'goto_replays', 'goto_settings', 'exit'])
                 for b in menu.buttons:
                     self.assertEqual(b['rect'].centerx, w // 2)
                     self.assertTrue(pygame.Rect(0, 0, w, h).contains(b['rect']))

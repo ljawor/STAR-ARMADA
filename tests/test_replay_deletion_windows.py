@@ -211,6 +211,43 @@ class NativeWindowsDeletionTests(unittest.TestCase):
         self.folder = self.root / 'replays'
         self.folder.mkdir()
 
+    def test_saved_games_namespace_uncapped_delete_and_safe_read_real_handles(self):
+        from render.save_library import delete_selected, delete_all, browse, open_selected
+        protected = ('settings.json', 'CAMPAIGN.JSON', 'manual.json', 'match-replay.json', 'screen.png')
+        for name in protected:
+            (self.folder / name).write_bytes(b'preserve')
+        selected = self.folder / 'quicksave.json'
+        selected.write_bytes(b'{bad')
+        with open_selected(str(self.folder), str(selected)) as stream:
+            self.assertEqual(stream.read(), b'{bad')
+        rows, notice = browse(str(self.folder))
+        self.assertEqual(list(rows), [str(selected)])
+        self.assertEqual(notice, '')
+        with self.assertRaises(OSError):
+            delete_selected(str(self.folder), str(self.folder / 'settings.json'))
+        delete_selected(str(self.folder), str(selected))
+        self.assertFalse(selected.exists())
+        for i in range(4101):
+            (self.folder / f'autosave_{i}.json').write_bytes(b'{bad')
+        outside = self.root / 'outside'
+        outside.mkdir()
+        (outside / 'quicksave.json').write_bytes(b'outside')
+        alias = self.root / 'save-alias'
+        self.junction(alias, self.folder)
+        with self.assertRaises(OSError):
+            delete_all(str(alias))
+        with self.assertRaises(OSError):
+            open_selected(str(alias), str(alias / 'autosave_0.json'))
+        child = self.folder / 'quicksave.json'
+        self.junction(child, outside)
+        with self.assertRaises(OSError):
+            delete_selected(str(self.folder), str(child))
+        self.assertEqual(delete_all(str(self.folder)), (4101, 0, ''))
+        self.assertTrue(child.is_dir())
+        self.assertEqual((outside / 'quicksave.json').read_bytes(), b'outside')
+        for name in protected:
+            self.assertEqual((self.folder / name).read_bytes(), b'preserve')
+
     def test_selected_and_uncapped_all_delete_real_files(self):
         from render.replay_library import delete_selected, delete_all
         selected = self.folder / 'match-α.json'

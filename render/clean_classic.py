@@ -27,7 +27,8 @@ def main_menu(menu):
     mouse = pygame.mouse.get_pos()
     for i, (label, action) in enumerate((('Skirmish', 'start_skirmish'),
             ('Multiplayer / LAN', 'goto_lan'), ('Campaign', 'goto_campaign'),
-            ('Replays', 'goto_replays'), ('Settings', 'goto_settings'), ('Quit', 'exit'))):
+            ('Saved Games', 'goto_saved_games'), ('Replays', 'goto_replays'),
+            ('Settings', 'goto_settings'), ('Quit', 'exit'))):
         rect = pygame.Rect(cx - width // 2, y + i * round(48 * scale), width, height)
         menu.buttons.append(dict(rect=rect, action=action, payload=None))
         primary = i == 0
@@ -55,7 +56,13 @@ class SetupCanvas:
         if prefix not in cache:
             cache[prefix] = pygame.Surface((1120, 700))
         self.surface = cache[prefix]
-        self.surface.fill((8, 15, 22))
+        # Carry the aspect-preserving backdrop into the logical UI canvas.
+        # An opaque full-canvas fill would hide the movie behind setup screens.
+        scale = min(menu.width / 1120, menu.height / 700)
+        size = (round(1120 * scale), round(700 * scale))
+        crop = pygame.Rect((menu.width - size[0]) // 2,
+                           (menu.height - size[1]) // 2, *size)
+        pygame.transform.smoothscale(self.target.subsurface(crop), (1120, 700), self.surface)
         self.texts, self.bounds, self.starts = [], [], []
 
     def text(self, value, rect, size=16, color=INK, wrap=False):

@@ -137,7 +137,12 @@ class NetdiagContractTests(unittest.TestCase):
 
     def test_info_report_is_written_with_required_fields(self):
         out = self.report_path()
-        status, text = self.run_cli(['info', '--out', out])
+        # This verifies a healthy report, not availability of the user's LAN
+        # port, which another process or a preceding test can legitimately use.
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
+            probe.bind(('127.0.0.1', 0))
+            port = probe.getsockname()[1]
+        status, text = self.run_cli(['info', '--port', str(port), '--out', out])
         self.assertEqual(status, 0, text)
         self.assertTrue(os.path.isfile(out))
         with open(out) as handle:
