@@ -16,26 +16,6 @@ them and the game changes with zero code edits.
 
 ---
 
-## v0.12.1 — Renderer performance improvements
-
-This release applies the PR#87 quality-preserving renderer optimizations:
-
-- Per-frame cache for camera basis, owner colors/relations and per-entity view data.
-- Role-batched ship/station draws (base/dark/trim, accent, lit/cool) to cut GL state changes.
-- Distance/material-role LOD for small on-screen ships.
-- Batched ownership markers and shield-shell detail LOD.
-- Shield opacity tuning so dense fleets no longer additive-saturate to white.
-
-Measured on the macOS 500-corvette stress benchmark (1280×800, 4× MSAA, vsync off):
-- World render median: **98.5 ms → 65.0 ms** (~34% reduction).
-- Full frame median: **133.5 ms → 100.0 ms** (~25% reduction).
-- Station-heavy and developed-base scenes are already inside the 33 ms render budget.
-
-Station rotation, MSAA, visual passes and gameplay are unchanged. The final
-**1,162-test** suite passed; LAN network tests and `--netdiag` passed locally.
-Native Windows interactive and mixed-platform live LAN acceptance remain separate
-open gates.
-
 ## v0.13.0 — Clean Classic menus, battle backgrounds, Saved Games and replay management
 
 This release unifies menu presentation across every screen with the approved Clean Classic design: centered main menu, a clear seaglass primary action, proportional typography and restrained dark panels. A close-up looping battle sequence involving frigates and dreadnoughts now runs behind the title screen, main menu, Skirmish setup, LAN host/join/lobby, Settings, Campaign list and briefing screens. The Replay browser remains static and receives a Skirmish-style library/details/actions layout.
@@ -443,22 +423,22 @@ friendly sensor can provide detection for another ship's longer-range weapons.
 | Save / load (quick save F5 / load F9) | ✅ implemented; disabled during LAN matches |
 | Procedural audio (original, no assets) | ✅ prototype |
 | Minimap, fleet roster/ability union, rank inspector, build/research progress | ✅ implemented |
-|| Title screen, main menu, settings menu (music/SFX volume, fullscreen, autosave, pan speed — persisted to `saves/settings.json`) | ✅ prototype; Clean Classic unified since v0.13.0; battle backgrounds on all non-replay screens |
-|| Campaign: ten combat missions plus recovery drill, persisted triggers/waves and staged capture/crew objectives | ✅ released since v0.8.0; recovery objective correction released in v0.12.0; natural full playthrough acceptance pending |
-|| Victory conditions: annihilation, planet majority, economic, timed (data-driven) | ✅ prototype |
-|| Trade convoys between trade stations + raiding (salvage loot) | ✅ prototype |
-|| Objectives: build/destroy/colonize/survive + escort_convoy, hold_point | ✅ prototype |
-|| Autosave ring (3 rotating slots) | ✅ prototype |
-|| LAN host/join, 2–4 humans, optional AI, configurable TCP port | ✅ implemented; matching version/content required |
-|| Deterministic lockstep, serialized commands, replay infrastructure | ✅ implemented and tested |
-|| Replay recording/browser/read-only playback | ✅ released in v0.8.0; timestamps, selection, bulk delete, metadata-only rendering since v0.13.0; strict version/content compatibility |
-|| LAN reconnect/resync | 🔲 production integration pending; tested standalone foundation only |
-|| Four skirmish maps, player factions/colors/teams, AI difficulty | ✅ implemented; 2–4 total players by map |
-|| Boarding/capture, onboard crew/life support and abandoned hulls | ✅ merged in #37; released in v0.7.0 |
-|| Base crew recruitment, field crew transports, proportional staffing, cautious boarding/recovery AI | ✅ merged in #38; released in v0.7.0; balance acceptance remains open |
-|| Saved Games library (Load/Delete quick/autosaves) | ✅ implemented v0.13.0; managed namespace only, Cancel-default confirmations |
-|| Native Windows safe deletion acceptance | ✅ 7 real-kernel tests v0.13.0 (4,101-file uncapped, symlinks/junctions, containment, replacement blocking, handle cleanup, saved-games namespace) |
-|| 8-player skirmish | 🔲 planned; current capacity is 2–4 total players |
+| Title screen, main menu, settings menu (music/SFX volume, fullscreen, autosave, pan speed — persisted to `saves/settings.json`) | ✅ prototype; Clean Classic unified since v0.13.0; battle backgrounds on all non-replay screens |
+| Campaign: ten combat missions plus recovery drill, persisted triggers/waves and staged capture/crew objectives | ✅ released since v0.8.0; recovery objective correction released in v0.12.0; natural full playthrough acceptance pending |
+| Victory conditions: annihilation, planet majority, economic, timed (data-driven) | ✅ prototype |
+| Trade convoys between trade stations + raiding (salvage loot) | ✅ prototype |
+| Objectives: build/destroy/colonize/survive + escort_convoy, hold_point | ✅ prototype |
+| Autosave ring (3 rotating slots) | ✅ prototype |
+| LAN host/join, 2–4 humans, optional AI, configurable TCP port | ✅ implemented; matching version/content required |
+| Deterministic lockstep, serialized commands, replay infrastructure | ✅ implemented and tested |
+| Replay recording/browser/read-only playback | ✅ released in v0.8.0; timestamps, selection, bulk delete, metadata-only rendering since v0.13.0; strict version/content compatibility |
+| LAN reconnect/resync | 🔲 production integration pending; tested standalone foundation only |
+| Four skirmish maps, player factions/colors/teams, AI difficulty | ✅ implemented; 2–4 total players by map |
+| Boarding/capture, onboard crew/life support and abandoned hulls | ✅ merged in #37; released in v0.7.0 |
+| Base crew recruitment, field crew transports, proportional staffing, cautious boarding/recovery AI | ✅ merged in #38; released in v0.7.0; balance acceptance remains open |
+| Saved Games library (Load/Delete quick/autosaves) | ✅ implemented v0.13.0; managed namespace only, Cancel-default confirmations |
+| Native Windows safe deletion acceptance | ✅ 7 real-kernel tests v0.13.0 (4,101-file uncapped, symlinks/junctions, containment, replacement blocking, handle cleanup, saved-games namespace) |
+| 8-player skirmish | 🔲 planned; current capacity is 2–4 total players |
 
 ## Repository layout
 
