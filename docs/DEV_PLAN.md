@@ -11,7 +11,7 @@ partly delivered; the remaining work is listed explicitly below.
 - **Pending**: missing deliverable, not merely an older roadmap label.
 - Recommendations below define the proposed finish order, not additional approved scope.
 
-## Next release — v0.14.0 (source prepared, packaging pending)
+## Current release — v0.14.0, October 14, 2026
 
 The increment collects everything merged since v0.13.0: hyperspace transit travel and
 post-jump shield lockdown (#92, #78), the campaign returning to the campaign screen after a
@@ -21,10 +21,20 @@ five paid station refit levels (#77), **English/German/Polish language packs** w
 Settings selector (#93) and **re-voiced laser and photon weapon families** (#91). The local
 whole-tree gate is **1,404 tests with 1 pre-existing environmental failure** (the menu-exit
 audio probe, which fails identically on v0.13.0 under a dummy driver), and each cluster
-carried a sabotage matrix recorded in its pull request. Package and download claims belong
-to the release notes once the tag's macOS DMG and Windows ZIP have been verified.
+carried a sabotage matrix recorded in its pull request.
 
-## Current release — v0.13.0, October 13, 2026
+Tagged `v0.14.0` on merge commit `210bf58`; both native builds published on
+October 14, 2026. The downloaded DMG was hashed and inspected here: `hdiutil verify`
+reports a valid checksum, the mount carries the app and the Applications symlink, all three
+language packs are inside the bundle, and the packaged app reports 0.14.0 and runs its
+simulation benchmark and LAN diagnostic with the same initial-state hash
+(`781bfd08e4f14d71…`) and the same canonical (60-tick) and contact (600-tick) fingerprints as
+the source build. The Windows ZIP passes `unzip -t` and contains `STAR ARMADA.exe` with the
+language packs, but the Windows executable was not run: frozen Windows gameplay,
+mixed-platform live LAN, interactive acceptance and signing remain open. Per-artifact hashes
+and evidence are in the release notes.
+
+## v0.13.0 — Clean Classic menus, Saved Games and replay management, October 13, 2026
 
 Clean Classic menu unification on every screen, looping battle backgrounds on non-replay
 menus, the Saved Games library with explicit Load/Delete, unified replay management, and
