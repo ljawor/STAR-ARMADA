@@ -150,6 +150,63 @@ PYTHONPATH=tests .venv/bin/python -m unittest discover -s tests -q
 
 Also inspect the current camera diagnostics (`tools/diag_close_zoom.py`, `tools/diag_camera_refresh_perf.py`) and production LAN pacing/recovery diagnostics before selecting gates. The fixed-combat benchmark is not a replacement for developed-base or multiplayer acceptance.
 
+## Implementation steps (in progress)
+
+### Step 1 — Cache per-frame view-dependent calculations
+
+**Files:** `render/renderer.py`, `render/camera.py`, `render/fleet_materials.py`
+
+1. Add a per-frame render cache keyed by `(state.tick, camera geometry, selection, local_player, marker_mode, skip set, frozen time)`.
+2. Cache the camera eye, basis, forward vector and the constant `height / (2 * tan(fov/2))` scale factor.
+3. Cache per owner: `_owner_color`, `_relation`.
+4. Cache per visible entity: position tuple, `_ship_size` / station visual radius, `_px_per_world` at camera depth, apparent screen size, shield radius, in-front test and owner color.
+5. Reuse these values across `_draw_ships`, `_draw_ownership_markers`, `_draw_shields`, `_draw_selection_rings` and effect passes; do not recompute them for every subpass.
+6. Make `FleetMaterials.hull_pass()` safe when called outside an active hull program (no-op) so batch helpers can switch passes without `GLError 1282`.
+
+**Measured result (M4, 500 corvettes, 1280×800, 4× MSAA, vsync off):**
+- `world` median: **98.5 ms → 88.0 ms** (~10.7 % reduction)
+- `frame` median: **133.5 ms → 125.4 ms** (~6.1 % reduction)
+- full-precision simulation checksum unchanged.
+
+### Step 2 — Batch ship/station draws by material role
+
+**Files:** `render/renderer.py`
+
+1. Replace per-entity `_draw_ship` / `_draw_station` loops with a single pass that collects visible ships/squadrons and stations, pre-resolves their display-list IDs and transforms.
+2. Draw all opaque hull roles (`base`, `dark`, `trim`) in role order, binding the hull GLSL program once per role and updating only the `materialPass` uniform per entity.
+3. Draw the `accent` pass with matte lighting/texturing disabled once for all entities.
+4. Draw all emissive roles (`lit`, `cool`) in a single lighting/texturing-disabled batch.
+5. Keep engine trails before the hull pass and engine glows after it; keep station construction rings after station hulls so draw order semantics are preserved.
+6. Continue using the existing display lists and do not drop any visual pass.
+7. Restore the active shader program to `0` at the end of `_draw_ships` so ownership markers/effects/HUD are not drawn with the hull program still bound.
+
+**Measured result:** same benchmark as Step 1; the role batching is the dominant share of the world-stage reduction. Visual output matches the original when the animation clock is frozen; benchmark screenshots differ only because the benchmark does not freeze `renderer.time`.
+
+### Step 3 — Single visible-entity list per frame
+
+**Files:** `render/renderer.py`
+
+1. Build one filtered list of currently visible alive non-planet entities inside the frame cache.
+2. Use this list for hull drawing, shield bubbles, ownership markers and selection rings instead of re-iterating `state.entities.values()` and re-running `can_see` in every pass.
+3. Invalidate the list whenever the frame-cache key changes.
+
+**Measured result:** `can_see` and entity iteration are now executed once per visible entity per frame rather than once per render subpass.
+
+### Verification run so far
+
+- `python -m compileall -q game render main.py` — clean.
+- `PYTHONPATH=tests ./.venv/bin/python -m unittest test_performance test_separation_performance test_fog_render test_gl_lifecycle -q` — 35 tests OK.
+- Full benchmark (baseline vs optimized) — identical state checksum, world stage reduced.
+
+### Remaining work / next steps
+
+- [ ] Run the complete stable test suite (`PYTHONPATH=tests ./.venv/bin/python -m unittest discover -s tests -q`).
+- [ ] Verify visual parity on a frozen-clock diagnostic (`tools/diag_modern_fleet.py` or equivalent) and fix any remaining threshold mismatch.
+- [ ] Profile the remaining world-stage cost (still ~88 ms median) to identify the next bottleneck; candidates are per-entity `glPushMatrix`/`glCallList` overhead, ownership markers, shield bubbles, and the fixed-function state setup.
+- [ ] Station-heavy and developed-base benchmarks.
+- [ ] Replay-backed reproduction and LAN pacing only after the renderer reliably clears the 33 ms frame budget.
+- [ ] Windows native performance and candidate-package acceptance remain pending gates.
+
 ## Delivery gates still open
 
-All proposed fixes, station-heavy measurements, replay-backed reproduction, native Windows performance, mixed-platform LAN pacing, candidate-package acceptance and human visual/gameplay acceptance are **pending**. Creating this plan closes none of those gates.
+Station-heavy measurements, replay-backed reproduction, native Windows performance, mixed-platform LAN pacing, candidate-package acceptance and human visual/gameplay acceptance are **pending**. The renderer is not yet reliably inside the 33 ms frame budget, so LAN pacing work is still blocked.

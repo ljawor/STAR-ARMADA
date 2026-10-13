@@ -133,9 +133,129 @@ class Renderer:
         self._planet_shield_flash: dict = {}
         # unit sphere with UVs (unit radius, scaled at draw time)
         self._unit_sphere_tex = self._build_textured_sphere_list()
+        # per-frame render cache: keyed by state tick + camera geometry + view
+        # inputs so repeated subpasses do not recompute view-dependent values.
+        self._frame_key = None
+        self._frame_cache = {}
+        self._reset_frame_cache()
         # set by diag/probe scripts: freeze the animation clock so consecutive
         # frames are otherwise identical (baseline-subtraction diffs)
         self.diff_render = False
+
+    def _reset_frame_cache(self):
+        """Invalidate cached view data so the next draw rebuilds it."""
+        self._frame_key = None
+        self._frame_cache.clear()
+
+    def _ensure_frame_cache(self, selection: set) -> dict:
+        """Return a frame cache valid for the current state/camera/selection.
+
+        Cached values are render-only and never enter saves/checksums.  The key
+        includes state.tick so newly spawned/killed units are picked up, the
+        camera geometry key so any view change rebuilds the cache, and the
+        selection/marker inputs so HUD feedback stays current.
+        """
+        cam = self.camera
+        key = (
+            id(self.state),
+            self.state.tick,
+            cam._geometry_key(cam._requested_eye()),
+            frozenset(selection),
+            self.local_player,
+            self.marker_mode,
+            frozenset(self.skip),
+            self.time if getattr(self, "diff_render", False) else None,
+        )
+        if self._frame_key == key:
+            return self._frame_cache
+        cache = {}
+        eye = cam.eye_position()
+        right, up, fwd = cam.basis()
+        cache["eye"] = eye
+        cache["basis"] = (right, up, fwd)
+        cache["toward_eye"] = (-fwd[0], -fwd[1], -fwd[2])
+        cache["px_scale"] = cam.height / (2.0 * math.tan(math.radians(cam.fov / 2.0)))
+        # reuse owner colors/relations for markers/rings
+        cache["owner_color"] = {}
+        cache["relation"] = {}
+        for owner_id in self.state.players:
+            cache["owner_color"][owner_id] = self._owner_color(owner_id)
+            cache["relation"][owner_id] = self._relation(owner_id)
+        # one visibility-filtered list for all world passes
+        visible = []
+        mode = mk.marker_mode(getattr(self, "marker_mode", "all"))
+        for e in self.state.entities.values():
+            if not e.alive or e.is_planet:
+                continue
+            if not self.state.can_see(self.local_player, e.id):
+                continue
+            entry = self._entity_view_data(e, eye, right, up, fwd, cache["px_scale"])
+            entry["shows_marker"] = mode == "off" or mk.shows_marker(
+                cache["relation"].get(e.owner, "neutral"), mode)
+            cache[e.id] = entry
+            visible.append((e, entry))
+        cache["visible"] = visible
+        self._frame_key = key
+        self._frame_cache = cache
+        return cache
+
+    def _entity_view_data(self, e, eye, right, up, fwd, px_scale):
+        """Precompute position, sizes and screen metrics for one visible entity."""
+        pos = (e.pos.x, e.pos.y, e.pos.z)
+        dx = pos[0] - eye[0]
+        dy = pos[1] - eye[1]
+        dz = pos[2] - eye[2]
+        depth = dx * fwd[0] + dy * fwd[1] + dz * fwd[2]
+        in_front = depth > 0.0
+        if in_front:
+            camera_depth = dx * fwd[0] + dy * fwd[1] + dz * fwd[2]
+            ppw_camera = px_scale / camera_depth if camera_depth > 1e-6 else 0.0
+        else:
+            ppw_camera = 0.0
+        if e.is_station:
+            size = None
+            visual_radius = self._station_visual_radius(e)
+            shield_radius = self._shield_radius(e)
+        else:
+            size = self._ship_size(e)
+            visual_radius = size.radius
+            shield_radius = visual_radius * 1.08
+        # marker/shield apparent size at camera depth
+        if in_front and ppw_camera > 0.0:
+            apparent = visual_radius * 2.0 * ppw_camera
+        else:
+            apparent = 0.0
+        return {
+            "pos": pos,
+            "depth": depth,
+            "in_front": in_front,
+            "ppw_camera": ppw_camera,
+            "size": size,
+            "visual_radius": visual_radius,
+            "shield_radius": shield_radius,
+            "apparent": apparent,
+        }
+
+    def _in_front_cached(self, cache: dict, pos, radius: float = 0.0) -> bool:
+        """In-front test reusing the cached eye and forward vector."""
+        eye, (right, up, fwd) = cache["eye"], cache["basis"]
+        depth = (pos[0] - eye[0]) * fwd[0] + (pos[1] - eye[1]) * fwd[1] + (pos[2] - eye[2]) * fwd[2]
+        return depth > radius
+
+    def _px_per_world_cached(self, cache: dict, pos, *, camera_depth=False) -> float:
+        if not self._in_front_cached(cache, pos, 0.0):
+            return 0.0
+        eye, (right, up, fwd) = cache["eye"], cache["basis"]
+        dx = pos[0] - eye[0]
+        dy = pos[1] - eye[1]
+        dz = pos[2] - eye[2]
+        if camera_depth:
+            dist = dx * fwd[0] + dy * fwd[1] + dz * fwd[2]
+        else:
+            dist = math.sqrt(dx * dx + dy * dy + dz * dz)
+        if dist <= 1e-6:
+            return 0.0
+        return cache["px_scale"] / dist
 
     def close(self):
         """Release owned GL objects once, while their context is still current."""
@@ -172,6 +292,7 @@ class Renderer:
         if not getattr(self, "diff_render", False):
             self.time += dt
         st = self.state
+        cache = self._ensure_frame_cache(selection)
         glMatrixMode(GL_MODELVIEW)
         self.camera.apply()
         # frame start: clear color+depth. Without this, frames accumulate
@@ -202,13 +323,11 @@ class Renderer:
         if "projectiles" not in self.skip:
             self._draw_projectiles()
         if "ships" not in self.skip:
-            self._draw_ships(selection)
+            self._draw_ships(selection, cache)
         if "shields" not in self.skip:
             # after the hull pass so the bubble composites over the ship it
             # encloses; before the selection rings so those stay on top
-            units = [e for e in st.entities.values()
-                     if e.alive and not e.is_planet and st.can_see(self.local_player, e.id)]
-            self._draw_shields(units, dt)
+            self._draw_shields([e for e, _ in cache["visible"]], dt, cache)
         if "effects" not in self.skip:
             self._draw_hits()
         if "sites" not in self.skip:
@@ -220,9 +339,9 @@ class Renderer:
             # After the bubbles: a hostile diamond must never be swallowed by an
             # allied bubble drawn on top of it. Before the selection rings so
             # the local player's own selection stays the topmost cue.
-            self._draw_ownership_markers()
+            self._draw_ownership_markers(cache)
         if "rings" not in self.skip:
-            self._draw_selection_rings(selection)
+            self._draw_selection_rings(selection, cache)
         glFlush()
 
     def _draw_surface_slots(self, selection):
@@ -925,7 +1044,7 @@ class Renderer:
         glEnd()
 
     # ------------------------------------------------------------------ ships
-    def _draw_ships(self, selection: set):
+    def _draw_ships(self, selection: set, cache=None):
         st = self.state
         # hull panel texture scoped to the ship/station pass only: grayscale
         # plate map multiplied by owner color (GL_MODULATE). Untextured passes
@@ -939,17 +1058,225 @@ class Renderer:
         GL.glBindTexture(GL.GL_TEXTURE_2D, self._hull_tex)
         GL.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_MODULATE)
         GL.glEnable(GL.GL_NORMALIZE)   # ships/stations get scaled at draw time
-        for e in st.entities.values():
-            if not e.alive or not st.can_see(self.local_player, e.id):
-                continue
-            if e.is_planet:
-                continue
-            if (e.is_ship and "ships" not in self.skip) or \
-                    (e.is_squadron and "squadrons" not in self.skip):
-                self._draw_ship(e)
-            elif e.is_station and "stations" not in self.skip:
-                self._draw_station(e)
+        if cache is not None:
+            visible = cache.get("visible", [])
+            ships = [e for e, _ in visible
+                     if (e.is_ship and "ships" not in self.skip) or
+                        (e.is_squadron and "squadrons" not in self.skip)]
+            stations = [e for e, _ in visible
+                        if e.is_station and "stations" not in self.skip]
+            # Batched draw: one pass per material role to cut GL state changes.
+            # Engine trails are emitted before hulls so motion cues stay behind.
+            for e in ships:
+                self._draw_ship_trail(e)
+            for role, material_pass in (
+                    ("base", 0.0),
+                    ("dark", 1.0),
+                    ("trim", 2.0)):
+                self._draw_ship_role_batch(role, ships, stations, cache,
+                                           material_pass=material_pass)
+            # Dedicated emissive batch: lighting/texturing disabled once.
+            if ships or stations:
+                glDisable(GL_LIGHTING)
+                glDisable(GL_TEXTURE_2D)
+                self._draw_ship_role_batch("lit", ships, stations, cache)
+                self._draw_ship_role_batch("cool", ships, stations, cache)
+                glEnable(GL_LIGHTING)
+                glEnable(GL_TEXTURE_2D)
+            # Accent pass re-enables lighting outside the hull shader.
+            if ships or stations:
+                glDisable(GL_TEXTURE_2D)
+                glEnable(GL_LIGHTING)
+                self._material_matte()
+                self._draw_ship_role_batch("accent", ships, stations, cache)
+                glEnable(GL_TEXTURE_2D)
+            # Per-ship engine glows (additive world-space billboards) after hulls.
+            for e in ships:
+                self._draw_ship_glow(e)
+            # Station construction rings on top of station hulls.
+            for e in stations:
+                self._draw_station_queue_ring(e)
+        else:
+            for e in st.entities.values():
+                if not e.alive or not st.can_see(self.local_player, e.id):
+                    continue
+                if e.is_planet:
+                    continue
+                if (e.is_ship and "ships" not in self.skip) or \
+                        (e.is_squadron and "squadrons" not in self.skip):
+                    self._draw_ship(e)
+                elif e.is_station and "stations" not in self.skip:
+                    self._draw_station(e)
+        if self.materials.available:
+            _gl.glUseProgram(0)
         GL.glPopAttrib()
+
+    def _draw_ship_trail(self, e):
+        size = self._ship_size(e)
+        spd = e.vel.length()
+        if spd <= 2:
+            return
+        trail_length = size.length * (1.1 + spd / 240.0)
+        tail_offset = size.stern - trail_length
+        tail = Vec3(e.pos.x + tail_offset * math.sin(e.yaw), e.pos.y,
+                    e.pos.z + tail_offset * math.cos(e.yaw))
+        if not segment_visible(self.state, self.local_player, e.pos, tail):
+            return
+        glEnable(GL_BLEND)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+        glDepthMask(False)
+        glColor4f(0.4, 0.7, 1.0, min(0.55, spd / 400.0))
+        glPushMatrix()
+        glTranslatef(e.pos.x, e.pos.y, e.pos.z)
+        glRotatef(math.degrees(e.yaw), 0, 1, 0)
+        glBegin(GL_TRIANGLES)
+        glVertex3f(0, 0, size.stern - trail_length)
+        glVertex3f(-size.half_width * 0.35, 0, size.stern)
+        glVertex3f(size.half_width * 0.35, 0, size.stern)
+        glEnd()
+        glPopMatrix()
+        glDepthMask(True)
+        glDisable(GL_BLEND)
+
+    def _draw_ship_glow(self, e):
+        size = self._ship_size(e)
+        spd = e.vel.length()
+        if spd <= 8:
+            return
+        L = -size.stern
+        rear = (e.pos.x - L * math.sin(e.yaw),
+                e.pos.y,
+                e.pos.z - L * math.cos(e.yaw))
+        glow_radius = size.length * (.10 + .06 * min(1., spd / 300.))
+        if (self._in_front(rear, glow_radius) and self.state.is_position_visible(
+                self.local_player, position(rear))):
+            glEnable(GL_BLEND)
+            glDepthMask(False)
+            self._draw_glow(rear, glow_radius,
+                            (0.45, 0.75, 1.0), alpha=0.55, additive=True)
+            glDepthMask(True)
+            glDisable(GL_BLEND)
+
+    def _draw_ship_role_batch(self, role, ships, stations, cache, material_pass=None):
+        """Draw one material role for all visible ships/squadrons and stations.
+
+        Uses the cached transform matrices per entity; color is computed from
+        the cached owner color and relation.  Stops short of batching accent/lit
+        emissive passes across all entities because they require no texture +
+        disabled lighting and can still be emitted without per-entity shader
+        switching.
+        """
+        rel_cache = cache["relation"]
+        col_cache = cache["owner_color"]
+        if role == "lit" or role == "cool":
+            # Caller already disabled lighting/texture for the emissive batch.
+            pass
+        elif role == "accent":
+            # Caller already set matte lighting and disabled texturing.
+            pass
+        elif material_pass is not None:
+            # base/dark/trim under hull shader
+            self._material_metal(8.0 if role == "base" else 12.0 if role == "trim" else 8.0,
+                                 (0.42, 0.42, 0.42) if role != "trim" else (0.85, 0.85, 0.85))
+            if self.materials.available:
+                _gl.glUseProgram(self.materials.programs["hull"])
+                self.materials.hull_pass(material_pass)
+        prev_program = None
+        if material_pass is not None and self.materials.available:
+            prev_program = int(_gl.glGetIntegerv(_gl.GL_CURRENT_PROGRAM))
+            _gl.glUseProgram(self.materials.programs["hull"])
+            self.materials.hull_pass(material_pass)
+        for e in ships:
+            entry = cache.get(e.id)
+            if entry is None:
+                continue
+            size = entry["size"]
+            color = col_cache.get(e.owner, (0.6, 0.6, 0.6))
+            color = mk.hull_shade(color, rel_cache.get(e.owner, "neutral"))
+            glPushMatrix()
+            glTranslatef(e.pos.x, e.pos.y, e.pos.z)
+            glRotatef(math.degrees(e.yaw), 0, 1, 0)
+            glScalef(size.scale, size.scale, size.scale)
+            if role == "base":
+                glColor3f(*color)
+            elif role == "dark":
+                glColor3f(color[0] * 0.52, color[1] * 0.52, color[2] * 0.52)
+            elif role == "trim":
+                glColor3f(min(1.0, color[0] * 1.4 + 0.25),
+                           min(1.0, color[1] * 1.4 + 0.25),
+                           min(1.0, color[2] * 1.4 + 0.25))
+            elif role == "accent":
+                glColor3f(*(min(1.0, c * 1.15 + .14) for c in color))
+            elif role == "lit":
+                glColor3f(1.0, 0.80, 0.52)
+            elif role == "cool":
+                # lighting/texture already disabled by the lit pass; keep off
+                glColor3f(0.38, 0.82, 1.0)
+            glCallList(self._ship_display_list(size.shape + ("" if role == "base" else "_" + role)))
+            glPopMatrix()
+        for e in stations:
+            if role in ("base", "dark", "trim") and material_pass is None:
+                continue
+            entry = cache.get(e.id)
+            if entry is None:
+                continue
+            color = col_cache.get(e.owner, (0.6, 0.6, 0.6))
+            from render.planet_building_geometry import station_frame
+            from render.faction_visuals import owner_faction
+            faction = owner_faction(self.state, e.owner)
+            origin, basis, _ = station_frame(self.state, e, math.radians(self.time * 3.))
+            glPushMatrix()
+            glTranslatef(*origin)
+            _gl.glMultMatrixf([*basis[0], 0., *basis[1], 0., *basis[2], 0., 0., 0., 0., 1.])
+            scale = e.radius / 50.0
+            glScalef(scale, scale, scale)
+            if role in ("base", "dark", "trim"):
+                if role == "base":
+                    tint = color
+                    if not self.materials.available:
+                        tint = tuple(.42 + .18 * c for c in color)
+                elif role == "dark":
+                    tint = (0.20, 0.24, 0.30)
+                else:
+                    tint = (0.68, 0.76, 0.84)
+                glColor3f(*tint)
+                if self.materials.available:
+                    self.materials.hull_pass(material_pass)
+                glCallList(self._station_detail_list(e.data_id, role, faction))
+            elif role == "accent":
+                glColor3f(*(min(1.0, c * 1.15 + .14) for c in color))
+                glCallList(self._station_detail_list(e.data_id, "accent", faction))
+            elif role == "lit":
+                glColor3f(1.0, 0.80, 0.52)
+                glCallList(self._station_detail_list(e.data_id, "lit", faction))
+            elif role == "cool":
+                glColor3f(0.38, 0.82, 1.0)
+                glCallList(self._station_detail_list(e.data_id, "cool", faction))
+            glPopMatrix()
+        # Restore fixed-function state that the caller set up for this batch.
+        if role in ("lit", "cool"):
+            glEnable(GL_LIGHTING)
+            glEnable(GL_TEXTURE_2D)
+        elif role == "accent":
+            glEnable(GL_TEXTURE_2D)
+        if prev_program is not None:
+            _gl.glUseProgram(prev_program)
+
+    def _draw_station_queue_ring(self, e):
+        if not e.build_queue:
+            return
+        item = e.build_queue[0]
+        frac = 1.0 - max(0.0, item.get("time_left", 0)) / max(0.1, item.get("total", 1))
+        glDisable(GL_DEPTH_TEST)
+        glColor3f(0.4, 1.0, 0.5)
+        glLineWidth(3.0)
+        glBegin(GL_LINE_STRIP)
+        for i in range(int(40 * min(1.0, frac)) + 1):
+            a = i / 40 * 2 * math.pi
+            glVertex3f(math.sin(a) * e.radius * 1.5, e.radius * 0.8,
+                       math.cos(a) * e.radius * 1.5)
+        glEnd()
+        glEnable(GL_DEPTH_TEST)
 
     # ------------------------------------------------------- ownership markers
     def _relation(self, owner: int) -> str:
@@ -969,26 +1296,23 @@ class Renderer:
             return color
         return mk.hull_shade(color, self._relation(e.owner))
 
-    def _draw_ownership_markers(self):
+    def _draw_ownership_markers(self, cache):
         """Screen-clamped chevron (own/ally) / diamond (hostile) on each unit.
 
         Only currently detected units get a marker — a marker outside sensor
         coverage would be the same intelligence leak the fog mask exists to
         prevent.
         """
+        visible = cache.get("visible")
+        if not visible:
+            return
         mode = mk.marker_mode(getattr(self, "marker_mode", "all"))
         if mode == "off":
             return
         import OpenGL.GL as GL
-        st = self.state
-        units = [e for e in st.entities.values()
-                 if e.alive and not e.is_planet
-                 and st.can_see(self.local_player, e.id)]
-        units = [e for e in units
-                 if mk.shows_marker(self._relation(e.owner), mode)]
-        if not units:
-            return
-        right, up, _ = self._camera_basis()
+        rel_cache = cache["relation"]
+        col_cache = cache["owner_color"]
+        right, up, _ = cache["basis"]
         GL.glPushAttrib(int(GL.GL_ENABLE_BIT) | int(GL.GL_CURRENT_BIT) |
                         int(GL.GL_LIGHTING_BIT) | int(GL.GL_LINE_BIT))
         GL.glDisable(GL.GL_LIGHTING)
@@ -998,39 +1322,28 @@ class Renderer:
         GL.glEnable(GL.GL_BLEND)
         GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
         GL.glDepthMask(False)
-        for e in units:
-            pos = (e.pos.x, e.pos.y, e.pos.z)
-            # px_per_world is computed at camera depth so two hulls side by side
-            # get the same marker size (same rule ship LOD uses).
-            ppw = self._px_per_world(pos, camera_depth=True)
-            if ppw <= 0.0 or not self._in_front(pos, 0.0):
+        for e, entry in visible:
+            if not entry.get("shows_marker"):
                 continue
-            apparent = max(0.0, self._ship_size(e).length * ppw
-                           if not e.is_station else self._station_visual_radius(e) * 2.0 * ppw)
+            ppw = entry["ppw_camera"]
+            apparent = entry["apparent"]
+            if ppw <= 0.0 or apparent <= 0.0:
+                continue
             r = mk.world_radius(mk.marker_px(apparent), ppw)
             if r <= 0.0:
                 continue
-            rel = self._relation(e.owner)
-            col = mk.marker_color(rel, self._owner_color(e.owner)
+            rel = rel_cache.get(e.owner, "neutral")
+            col = mk.marker_color(rel, col_cache.get(e.owner)
                                   if rel in ("own", "ally") else None)
             poly = mk.shape_for(rel)
             GL.glPushMatrix()
-            # Camera-aligned billboard: markers are flat icons, so they must
-            # face the eye exactly like the shield shells do.
-            # TRANSLATE FIRST (world pos), THEN ROTATE (camera basis) —
-            # the shield bubble does it in this order; doing it reversed
-            # placed markers at camera-space coordinates, not world pos.
+            pos = entry["pos"]
             GL.glTranslatef(pos[0], pos[1], pos[2])
             _gl.glMultMatrixf([right[0], right[1], right[2], 0.0,
                                up[0], up[1], up[2], 0.0,
                                0.0, 0.0, 1.0, 0.0,
                                0.0, 0.0, 0.0, 1.0])
-            # Lift the icon off the hull center so it labels the ship instead of
-            # covering it; scaled with r so the gap holds at every zoom.
             GL.glTranslatef(0.0, r * 1.55, 0.0)
-            # Dark outline first (cheap 1.30x silhouette), then the fill: the
-            # outline is what keeps a marker readable over a bright hull, a
-            # starfield or the planet behind it.
             GL.glLineWidth(1.6)
             GL.glColor4f(mk.OUTLINE_COLOR[0], mk.OUTLINE_COLOR[1],
                          mk.OUTLINE_COLOR[2], MARKER_ALPHA)
@@ -2817,7 +3130,7 @@ class Renderer:
                 r = want_r
         return r
 
-    def _shield_bubble(self, e, frac: float) -> None:
+    def _shield_bubble(self, e, frac: float, cache=None) -> None:
         """Additive energy bubble scaled by remaining shield strength.
 
         Depth writes are off: the bubble must never occlude the ship inside
@@ -2831,11 +3144,26 @@ class Renderer:
         # is resolved and it degenerates back into the flat outline circle this
         # pass exists to replace. Grow it until the shell is at least
         # SHIELD_MIN_PX across so it still reads as a volume.
-        r = self._shield_radius(e)
-        pos = (e.pos.x, e.pos.y, e.pos.z)
-        if not self._in_front(pos, r):
+        if cache is not None:
+            entry = cache.get(e.id)
+            if entry is None:
+                return
+            r = entry["shield_radius"]
+            pos = entry["pos"]
+            ppw = entry["ppw_camera"]
+            in_front = entry["in_front"]
+        else:
+            pos = (e.pos.x, e.pos.y, e.pos.z)
+            ppw = self._px_per_world(pos)
+            r = self._shield_radius(e)
+            in_front = self._in_front(pos, r)
+        if ppw > 0.0:
+            want_r = SHIELD_MIN_PX * 0.5 / ppw
+            if want_r > r:
+                r = want_r
+        if not in_front:
             return
-        right, up, toward_eye = self._camera_basis()
+        right, up, toward_eye = (cache["basis"][0], cache["basis"][1], cache["toward_eye"]) if cache else self._camera_basis()
         glPushMatrix()
         glTranslatef(pos[0], pos[1], pos[2])
         # orient the shell so its baked +Z axis points at the camera
@@ -2979,7 +3307,7 @@ class Renderer:
         glDisable(GL_BLEND)
         glPopMatrix()
 
-    def _draw_shields(self, units, dt: float) -> None:
+    def _draw_shields(self, units, dt: float, cache=None) -> None:
         """Shield bubbles for every unit that has shields worth showing.
 
         Reads the four per-quadrant values the sim already tracks
@@ -2998,7 +3326,7 @@ class Renderer:
         GL.glDisable(GL.GL_TEXTURE_2D)
         glEnable(GL_DEPTH_TEST)
         for e in units:
-            if not e.alive or e.is_planet or not st.can_see(self.local_player, e.id):
+            if not e.alive or e.is_planet:
                 continue
             # Generator pools protect surface hardware only; an exterior bubble
             # would falsely advertise protection for orbiting ships/satellites.
@@ -3025,7 +3353,7 @@ class Renderer:
                 else:
                     flash[e.id][q] = f
             prev[e.id] = quads
-            self._shield_bubble(e, frac)
+            self._shield_bubble(e, frac, cache)
             # Damage-resolved shield_hit effects render localized curved contacts.
             # Never layer the old radius-sized additive quadrant billboard over them.
         # drop cache entries for units that no longer exist
@@ -3037,7 +3365,7 @@ class Renderer:
         glDisable(GL_DEPTH_TEST)
         GL.glPopAttrib()
 
-    def _draw_selection_rings(self, selection: set):
+    def _draw_selection_rings(self, selection: set, cache=None):
         if not selection:
             return
         glDisable(GL_DEPTH_TEST)
@@ -3072,9 +3400,13 @@ class Renderer:
             # tuck it inside the bubble so the two read as separate cues.
             shielded = (not e.is_planet) and e.max_shield_total() > 0 \
                 and e.total_shield() > 0
-            visual_radius = (self._ship_size(e).radius if not e.is_station
-                             and (e.is_ship or e.is_squadron) else
-                             self._station_visual_radius(e) if e.is_station else e.radius)
+            visual_radius = (cache.get(e.id, {}).get("shield_radius")
+                             if (cache is not None and not e.is_station and (e.is_ship or e.is_squadron))
+                             else cache.get(e.id, {}).get("visual_radius")
+                             if (cache is not None and e.is_station)
+                             else self._ship_size(e).radius
+                             if (not e.is_station and (e.is_ship or e.is_squadron))
+                             else self._station_visual_radius(e) if e.is_station else e.radius)
             r = visual_radius * (1.1 if shielded else (1.35 if not e.is_planet else 1.1))
             if not shielded:
                 glBegin(GL_LINE_LOOP)
@@ -3084,7 +3416,7 @@ class Renderer:
                 glEnd()
             glPopMatrix()
         # Health arcs removed: the flat outline ring and the two half-circle
-        # arcs were unreadable clutter that the shield bubble now supersedes —
+        # arcs were unreadable clutter that the bubble now supersedes —
         # the bubble shows shield strength directly (colour ramp + fade), and
         # the side panel still shows exact hull/shield figures for the selected
         # unit. A selected shieldless unit keeps its outline ring as before.
