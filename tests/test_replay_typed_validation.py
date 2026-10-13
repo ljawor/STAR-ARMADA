@@ -1,15 +1,27 @@
 """Untrusted replay state is rejected before browser approval or simulation."""
+import os
+from unittest.mock import patch
 from copy import deepcopy
 import json
 from pathlib import Path
 import tempfile
 import unittest
-from unittest.mock import patch
 from game.net.replay import MatchRecording, PlaybackSession, validate_replay
 from test_replay_workflow import game
 
 
 class TypedReplayValidationTests(unittest.TestCase):
+    def setUp(self):
+        holder = tempfile.TemporaryDirectory()
+        self.addCleanup(holder.cleanup)
+        # `render.menus` freezes its persistence paths at import, so a temporary USER_DIR
+        # does not move SETTINGS_PATH: pin the settings file itself, or this menu draws in
+        # whatever language the developer's own game last saved.
+        scope = patch('render.menus.SETTINGS_PATH',
+                      os.path.join(holder.name, 'settings.json'))
+        scope.start()
+        self.addCleanup(scope.stop)
+
     def test_typed_state_is_rejected_before_browser_approval(self):
         import pygame
         from render.menus import MenuStack, MenuResult

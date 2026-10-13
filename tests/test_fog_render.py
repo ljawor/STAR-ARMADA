@@ -97,7 +97,7 @@ class FogHUDTests(unittest.TestCase):
         e = UnitFactory(st).spawn_ship('imperial_corvette', 0, Vec3(0, 0, 0))
         hud = HUD(1280, 800, st)
         labels = []
-        hud._label = lambda x, y, text, *args: labels.append(text)
+        hud._label = lambda x, y, text, *args, **kwargs: labels.append(text)
         hud._left_panel({e.id}, 0)
         self.assertIn(f'SENSORS {effective_sensor_range(st, e):,.0f}u', labels)
 

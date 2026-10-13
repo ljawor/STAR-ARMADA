@@ -168,20 +168,34 @@ def campaign(menu, unlocked_ids, completed_ids: set[str] | frozenset[str] = froz
 
 
 def settings(menu):
+    from render import i18n
     pages = (
         ('Sound & display', (('Music volume', 'music_volume', 'slider'),
             ('SFX volume', 'sfx_volume', 'slider'), ('Fullscreen', 'fullscreen', 'toggle'),
             ('Autosave', 'autosave', 'toggle'), ('Ownership markers', 'markers', 'cycle_markers'),
-            ('Camera pan speed', 'pan_speed', 'slider'))),
+            ('Camera pan speed', 'pan_speed', 'slider')), ()),
         ('Audio & presentation', (('Dynamic range', 'audio_dynamic_range', 'cycle_range'),
             ('Mono audio', 'audio_mono', 'toggle'), ('Cinematics', 'cinematics_enabled', 'toggle'),
-            ('Reduced motion', 'reduced_motion', 'toggle'), ('Tutorial hints', 'tutorial_hints', 'toggle'))),
-        ('Readability & help', (('High contrast panels', 'high_contrast_ui', 'toggle'),)),
+            ('Reduced motion', 'reduced_motion', 'toggle'), ('Tutorial hints', 'tutorial_hints', 'toggle')), ()),
+        ('Readability & help', (('High contrast panels', 'high_contrast_ui', 'toggle'),),
+            ('F1: keyboard and controls help during play.',
+             'High contrast applies to help / hint panels only.',
+             'Reduced motion disables menu drift and cinematic motion.',
+             'Not whole-game scaling or full colorblind compliance.')),
+        # #93: the language row sits on its own page with the rules it follows, so
+        # the fallback behaviour is stated where the choice is made.
+        ('Language', (('Language', 'language', 'cycle_language'),),
+            ('Menus, panels and data names (ships, stations, factions) are translated.',
+             'The pack is chosen from assets/data/lang/; English is the catalogue.',
+             'A line a pack does not carry falls back to English.',
+             'Presentation only: the language never changes a match or a replay.')),
     )
-    menu.settings_page = min(2, max(0, getattr(menu, 'settings_page', 0)))
+    menu.settings_page = min(len(pages) - 1, max(0, getattr(menu, 'settings_page', 0)))
     menu.settings_focus = getattr(menu, 'settings_focus', -1)
-    title, rows = pages[menu.settings_page]
-    c = _canvas(menu, 'settings', 'Settings', f'{title} · Page {menu.settings_page + 1}/3')
+    title, rows, notes = pages[menu.settings_page]
+    c = _canvas(menu, 'settings', 'Settings',
+                i18n.t('{page} · Page {n}/{total}', page=i18n.t(title),
+                       n=menu.settings_page + 1, total=len(pages)))
     for index, (label, key, action) in enumerate(rows):
         r = pygame.Rect(52, 164 + index * 61, 1016, 48)
         hot = menu.settings_focus == index or _hot(c, r)
@@ -197,16 +211,19 @@ def settings(menu):
             c.text(f'{int(value * 100)}%', (988, r.y + 12, 64, 28), 18)
             payload = {'key': key, 'rect': bar}
         else:
-            value = ('ON' if value else 'OFF') if action == 'toggle' else str(value).upper()
+            # The language row names the pack in its own language, never in the active
+            # one: "Polski" has to be readable to someone stuck in a pack they cannot read.
+            if action == 'cycle_language':
+                value = i18n.label(str(value))
+            elif action == 'toggle':
+                value = 'ON' if value else 'OFF'
+            else:
+                value = str(value).upper()
             c.text(value + ' ›', (788, r.y + 12, 264, 28), 18, ACCENT)
             payload = {'key': key}
         menu.buttons.append(dict(rect=r, action=action, payload=payload))
-    if menu.settings_page == 2:
-        for index, line in enumerate(('F1: keyboard and controls help during play.',
-            'High contrast applies to help / hint panels only.',
-            'Reduced motion disables menu drift and cinematic motion.',
-            'Not whole-game scaling or full colorblind compliance.')):
-            c.text(line, (68, 246 + index * 40, 968, 30), 18, MUTED)
+    for index, line in enumerate(notes):
+        c.text(line, (68, 246 + index * 40, 968, 30), 18, MUTED)
     c.text('Tab / Up / Down: focus · Enter: toggle · Left / Right: volume', (52, 552, 1016, 24), 16, MUTED)
     c.text('Page Up / Down: pages · Esc: back', (52, 581, 1016, 24), 16, MUTED)
     c.button((32, 650, 180, 36), 'Back', 'goto_main')

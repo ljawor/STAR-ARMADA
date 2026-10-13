@@ -57,7 +57,7 @@ class TestBoardingUI(unittest.TestCase):
         self.gm.commands.consume()
         craft = next(e for e in self.st.entities.values() if e.boarding)
         labels = []
-        self.hud._label = lambda x, y, text, *args: labels.append(str(text))
+        self.hud._label = lambda x, y, text, *args, **kwargs: labels.append(str(text))
         self.hud._left_panel({self.ship.id}, 0)
         self.assertTrue(any('BOARDING TRANSIT' in text for text in labels))
         labels.clear()
@@ -74,14 +74,14 @@ class TestBoardingUI(unittest.TestCase):
 
     def test_no_build_hotkey_is_advertised_as_boarding(self):
         labels = []
-        self.hud._label = lambda x, y, text, *args: labels.append(str(text))
+        self.hud._label = lambda x, y, text, *args, **kwargs: labels.append(str(text))
         self.hud._right_panel(self.ctrl.selection, 0)
         self.assertFalse(any('B  build menu' in text for text in labels))
 
     def test_inspector_shows_onboard_crew_life_support_and_abandonment(self):
         labels = []
         orig = self.hud._label
-        def label(x, y, text, color=None, font=None):
+        def label(x, y, text, color=None, font=None, translate=True):
             labels.append(str(text)); orig(x, y, text, color, font)
         self.hud._label = label
         self.target.systems['life_support'].hp = 0

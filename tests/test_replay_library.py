@@ -19,6 +19,12 @@ class LibraryTests(unittest.TestCase):
         self.scope = patch('render.menus.USER_DIR', str(self.root))
         self.scope.start()
         self.addCleanup(self.scope.stop)
+        # USER_DIR is frozen into SETTINGS_PATH at import, so pin that too: without it
+        # this library would render in the developer's saved language.
+        self.settings = patch('render.menus.SETTINGS_PATH',
+                             str(self.root / 'settings.json'))
+        self.settings.start()
+        self.addCleanup(self.settings.stop)
         self.menu = MenuStack(1024, 768)
 
     def click(self, action, payload=None):

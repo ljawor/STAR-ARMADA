@@ -24,7 +24,7 @@ class PlanetBuildingUITests(unittest.TestCase):
         p.credits = p.materials = p.energy = p.crew = 100000
         self.labels = []
         original = self.hud._label
-        def label(x, y, text, color=None, font=None):
+        def label(x, y, text, color=None, font=None, translate=True):
             self.labels.append((str(text), pygame.Rect(x, y, *(font or self.hud.font).size(str(text)))))
             original(x, y, text, color, font)
         self.hud._label = label

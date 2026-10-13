@@ -74,7 +74,7 @@ def _panel_texts(hud, selection, player):
     seen = []
     orig = hud._label
 
-    def spy(x, y, s, color=None, font=None):
+    def spy(x, y, s, color=None, font=None, translate=True):
         seen.append(str(s))
         return orig(x, y, s, color, font)
 

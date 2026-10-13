@@ -225,6 +225,16 @@ authorized merge and release with that limit disclosed. PR #43 is merged and bot
 published packages passed digest, code/data integrity and macOS frozen-smoke checks.
 See [PLANETARY_HARDWARE.md](PLANETARY_HARDWARE.md) for mechanics and evidence.
 
+## Localization — English, German, Polish (#93) ✅ delivered
+
+Language packs (`assets/data/lang/{en,de,pl}.json`) with the English pack as the catalogue,
+a `Settings → Language` selector, and lookups at the drawing edges only — the simulation
+never reads a pack, so a language cannot change `state_sha256`, a replay or a lockstep
+peer. Both packs are complete against the catalogue (326 UI strings + 96 data names) and
+`tests/test_i18n.py` plus `tools/diag_i18n.py` pin the contract. See
+`docs/LOCALIZATION.md`. Deliberately left open: locale number formatting, and the
+runtime flash messages the input layer assembles from live values.
+
 ## Cross-cutting backlog
 
 - **Planetary colonies and satellites:** merged in #40 and packaged in v0.7.0. Command-only colony

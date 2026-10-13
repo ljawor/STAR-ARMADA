@@ -95,7 +95,7 @@ class SettingsTests(unittest.TestCase):
             menu.settings = dict(menus.DEFAULT_SETTINGS)
             menu.screen = 'settings'
             seen = set()
-            for page in range(3):
+            for page in range(4):
                 menu.render(0)
                 viewport = pygame.Rect(0, 0, width, height)
                 for button in menu.buttons:

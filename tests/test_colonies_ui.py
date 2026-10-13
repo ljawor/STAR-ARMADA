@@ -50,7 +50,7 @@ class ColonyHUDTests(unittest.TestCase):
     def test_only_colony_owner_sees_live_production(self):
         self.planet.build_queue = [dict(item='attack_satellite', time_left=13.25, total=22)]
         labels = []
-        self.hud._label = lambda x, y, text, *args: labels.append(str(text))
+        self.hud._label = lambda x, y, text, *args, **kwargs: labels.append(str(text))
         self.hud._left_panel({self.planet.id}, 0)
         self.assertTrue(any('BUILDING ATTACK SATELLITE' in s for s in labels))
         self.planet.colonized_by = 1
@@ -118,7 +118,7 @@ class ColonyHUDTests(unittest.TestCase):
         previous = rules.get('control_seconds')
         rules['control_seconds'] = 27.5
         labels = []
-        self.hud._label = lambda x, y, text, *args: labels.append(str(text))
+        self.hud._label = lambda x, y, text, *args, **kwargs: labels.append(str(text))
         try:
             self.hud._right_panel({colony.id}, 0)
             self.assertIn('27.5 seconds', ' '.join(labels))
@@ -135,7 +135,7 @@ class ColonyHUDTests(unittest.TestCase):
         for width, height in ((1280, 800), (1024, 768)):
             hud = HUD(width, height, self.st)
             labels = []
-            def label(x, y, text, color=None, font=None):
+            def label(x, y, text, color=None, font=None, translate=True):
                 labels.append((text, pygame.Rect(x, y, *(font or hud.font).size(str(text)))))
             hud._label = label
             try:
@@ -168,7 +168,7 @@ class ColonyHUDTests(unittest.TestCase):
     def test_colony_labels_income_progress_and_no_constructor_menu(self):
         labels = []
         original = self.hud._label
-        def label(x, y, text, *args):
+        def label(x, y, text, *args, **kwargs):
             labels.append(str(text))
             original(x, y, text, *args)
         self.hud._label = label

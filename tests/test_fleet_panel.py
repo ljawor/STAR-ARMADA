@@ -75,10 +75,10 @@ class TestFleetPanel(unittest.TestCase):
                 self.hud.resize(width, height)
                 labels = []
                 original = self.hud._label
-                def record(x, y, text, color=None, font=None):
+                def record(x, y, text, color=None, font=None, translate=True):
                     used_font = font or self.hud.font
                     labels.append((str(text), pygame.Rect(x, y, *used_font.size(str(text)))))
-                    original(x, y, text, color, font)
+                    original(x, y, text, color, font, translate)
                 self.hud._label = record
                 try:
                     buttons = self.draw(selection)
@@ -110,9 +110,9 @@ class TestFleetPanel(unittest.TestCase):
     def test_idle_help_advertises_fleet_panel_key(self):
         labels = []
         original = self.hud._label
-        def record(x, y, text, color=None, font=None):
+        def record(x, y, text, color=None, font=None, translate=True):
             labels.append(str(text))
-            original(x, y, text, color, font)
+            original(x, y, text, color, font, translate)
         self.hud._label = record
         try:
             self.draw(set())

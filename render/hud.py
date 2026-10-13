@@ -19,6 +19,8 @@ import math
 
 import pygame
 
+from render import i18n
+
 from OpenGL.GL import (
     glBegin, glBindTexture, glBlendFunc, glColor3f, glColor4f, glDisable,
     glEnable, glEnd, glPopMatrix, glPushMatrix, glTexCoord2f, glTexImage2D,
@@ -370,14 +372,16 @@ class HUD:
         ov.blit(surf, (self.width - surf.get_width() - 14, 7))
 
         if paused:
-            surf = self.font_big.render("PAUSED", True, WARN)
+            surf = self.font_big.render(i18n.t("PAUSED"), True, WARN)
             ov.blit(surf, (self.width - 200, 7))
         if st.game_over:
             w = st.winner
             won = w in st.allied_player_ids(local_player)
             col = TXT_DIM if w is None else (GOOD if won else BAD)
             name = st.players[w].name if w in st.players else f"team {w}"
-            title = "DRAW" if w is None else f"{'VICTORY' if won else 'DEFEAT'} — {name}"
+            title = i18n.t("DRAW") if w is None else i18n.t(
+                '{outcome} — {name}',
+                outcome=i18n.t('VICTORY' if won else 'DEFEAT'), name=name)
             surf = self.font_title.render(title, True, col)
             rect = surf.get_rect(center=(self.width // 2, self.height // 2 - 40))
             bg = rect.inflate(30, 16)
@@ -385,7 +389,7 @@ class HUD:
             pygame.draw.rect(ov, col, bg, 2, border_radius=6)
             ov.blit(surf, rect)
         if st.game_over:
-            surf = self.font.render("press ESC to exit", True, TXT_DIM)
+            surf = self.font.render(i18n.t("press ESC to exit"), True, TXT_DIM)
             ov.blit(surf, (self.width // 2 - surf.get_width() // 2,
                            self.height // 2 + 4))
 
@@ -1044,18 +1048,24 @@ class HUD:
                            "fleet_close", {})
 
     def _wrapped_labels(self, x, y, text, width):
-        """Flow complete help text within a panel's content width."""
+        """Flow complete help text within a panel's content width.
+
+        The string is translated *before* it is wrapped: a wrapped fragment ("As built ·
+        buy a level to raise hull,") is not a catalogue key, so a per-line lookup would
+        fall back to English for exactly the long sentences a player has to read.
+        """
         line = ''
-        for word in text.split():
+        for word in i18n.t(text).split():
             candidate = (line + ' ' + word).strip()
             if line and self.font_small.size(candidate)[0] > width:
-                self._label(x, y, line, TXT_DIM, self.font_small)
+                self._label(x, y, line, TXT_DIM, self.font_small, translate=False)
                 y += self.font_small.get_linesize()
                 line = word
             else:
                 line = candidate
         if line:
-            self._label(x, y, self._fit_text(line, width, self.font_small), TXT_DIM, self.font_small)
+            self._label(x, y, self._fit_text(line, width, self.font_small), TXT_DIM,
+                        self.font_small, translate=False)
             y += self.font_small.get_linesize()
         return y
 
@@ -1107,19 +1117,24 @@ class HUD:
             return y
         level = station_level(sel)
         table = bonus_table(sel, self.ds)
-        self._label(panel.x + 12, y, f"REFIT · LEVEL {level}/{table['max_level']}",
-                    ACCENT, self.font_big)
+        self._label(panel.x + 12, y,
+                    i18n.t('REFIT · LEVEL {level}/{max}', level=level,
+                           max=table['max_level']), ACCENT, self.font_big,
+                    translate=False)
         y += 26
         effects = []
         for key, text in (('hull_bonus', 'hull'), ('shield_bonus', 'shields'),
                           ('shield_regen_bonus', 'regen'), ('damage_bonus', 'damage'),
                           ('production_bonus', 'output'), ('convoy_cargo_bonus', 'cargo')):
             if table[key]:
-                effects.append(f"{text} +{table[key] * 100:.0f}%")
+                # Both the unit word and the whole line go through the pack: the line is
+                # assembled here, so a lookup of the finished string would always miss.
+                effects.append(i18n.t('{label} +{percent}%', label=i18n.t(text),
+                                      percent=f"{table[key] * 100:.0f}"))
         if table['extra_shots']:
-            effects.append(f"+{table['extra_shots']} shot/mount")
+            effects.append(i18n.t("+{count} shot/mount", count=table['extra_shots']))
         if table['extra_convoys']:
-            effects.append(f"+{table['extra_convoys']} convoy")
+            effects.append(i18n.t("+{count} convoy", count=table['extra_convoys']))
         y = self._wrapped_labels(panel.x + 12, y,
                                  ' · '.join(effects) if effects else
                                  'As built · buy a level to raise hull, shields and output.',
@@ -1145,8 +1160,9 @@ class HUD:
         button = pygame.Rect(panel.x + 12, y, 296, 20)
         pygame.draw.rect(self.overlay, BAR_BG, button, border_radius=3)
         pygame.draw.rect(self.overlay, ACCENT, button, 1, border_radius=3)
-        self._label(button.x + 8, button.y + 3, f"▲ Refit to level {level + 1}", TXT,
-                    self.font_small)
+        self._label(button.x + 8, button.y + 3,
+                    i18n.t('▲ Refit to level {level}', level=level + 1), TXT,
+                    self.font_small, translate=False)
         self.buttons.append({"rect": button, "kind": "upgrade_station",
                              "payload": {"target_id": sel.id}})
         y += 22
@@ -1154,9 +1170,11 @@ class HUD:
                       and player.materials >= cost['materials']
                       and player.energy >= cost['energy'])
         self._label(panel.x + 12, y,
-                    f"{cost['credits']:,.0f} cr · {cost['materials']:,.0f} mt · "
-                    f"{cost['energy']:,.0f} EN · {seconds:.0f}s",
-                    TXT if affordable else WARN, self.font_small)
+                    i18n.t('{credits} cr · {materials} mt · {energy} EN · {time}s',
+                           credits=f"{cost['credits']:,.0f}",
+                           materials=f"{cost['materials']:,.0f}",
+                           energy=f"{cost['energy']:,.0f}", time=f"{seconds:.0f}"),
+                    TXT if affordable else WARN, self.font_small, translate=False)
         return y + 20
 
     def _shipyard_items(self, station, std) -> list:
@@ -1212,8 +1230,11 @@ class HUD:
                          (ACCENT if afford else PANEL_EDGE), rect, 1,
                          border_radius=4)
         self._label(rect.x + 8, rect.y + 2, d.display_name, tcol)
-        cost = f"{d.cost_credits:,.0f} cr · {d.cost_materials:,.0f} mt"
-        self._label(rect.x + 8, rect.y + 18, cost, TXT_DIM, self.font_small)
+        cost = i18n.t('{credits} cr · {materials} mt',
+                      credits=f"{d.cost_credits:,.0f}",
+                      materials=f"{d.cost_materials:,.0f}")
+        self._label(rect.x + 8, rect.y + 18, cost, TXT_DIM, self.font_small,
+                    translate=False)
         if not done and not locked and afford:
             self.buttons.append({"rect": rect, "kind": "research",
                                  "payload": {"station_id": payload["station_id"],
@@ -1231,10 +1252,19 @@ class HUD:
                          border_radius=4)
         self._label(rect.x + 8, rect.y + 2, self._fit_text(d.display_name, 280),
                     TXT if afford else TXT_DIM)
-        cost = f"{d.cost_credits:,.0f} cr · {d.cost_materials:,.0f} mt · {d.cost_energy:,.0f} EN"
-        self._label(rect.x + 8, rect.y + 18, self._fit_text(cost, 280, self.font_small), TXT_DIM, self.font_small)
-        staffing = f"{d.crew_cost:,.0f} crew · {getattr(d, 'command_cost', 0)} cmd · {d.build_time:g}s"
-        self._label(rect.x + 8, rect.y + 34, self._fit_text(staffing, 280, self.font_small), TXT_DIM, self.font_small)
+        cost = i18n.t('{credits} cr · {materials} mt · {energy} EN',
+                      credits=f"{d.cost_credits:,.0f}",
+                      materials=f"{d.cost_materials:,.0f}",
+                      energy=f"{d.cost_energy:,.0f}")
+        self._label(rect.x + 8, rect.y + 18, self._fit_text(cost, 280, self.font_small),
+                    TXT_DIM, self.font_small, translate=False)
+        staffing = i18n.t('{crew} crew · {command} cmd · {time}s',
+                          crew=f"{d.crew_cost:,.0f}",
+                          command=f"{getattr(d, 'command_cost', 0)}",
+                          time=f"{d.build_time:g}")
+        self._label(rect.x + 8, rect.y + 34,
+                    self._fit_text(staffing, 280, self.font_small), TXT_DIM,
+                    self.font_small, translate=False)
         if afford:
             self.buttons.append({"rect": rect, "kind": kind, "payload": payload})
         return y + 54
@@ -1476,8 +1506,13 @@ class HUD:
         return (int(c[0] * 255), int(c[1] * 255), int(c[2] * 255))
 
     # ------------------------------------------------------------------ text/bar utils
-    def _label(self, x, y, text, color=TXT, font=None):
-        surf = (font or self.font).render(str(text), True, color)
+    def _label(self, x, y, text, color=TXT, font=None, translate=True):
+        # Drawing edge (#93): panel headings and values funnel through here, including
+        # data names (ship / station / tech display names). `translate=False` is for
+        # callers that already hold a translated string: a wrapped line is not a msgid,
+        # so looking it up again could only ever miss.
+        surf = (font or self.font).render(
+            str(i18n.t(text) if translate else text), True, color)
         self.overlay.blit(surf, (x, y))
 
     def _bar(self, x, y, w, h, frac, color, label=None):
