@@ -424,7 +424,9 @@ def draw_campaign_presentation(dt_frame):
         outcome = cinematic.outcome
         cinematic = None
         if outcome is not None:
-            leave_game()
+            # A campaign result returns to the campaign screen, not the main menu
+            # (#89); the cinematic only ever exists for a campaign mission.
+            leave_game(screen='campaign' if mission_def is not None else None)
 
 
 def advance_simulation(dt_frame):
@@ -467,8 +469,12 @@ def advance_simulation(dt_frame):
             break
 
 
-def leave_game(reason=''):
-    """Release match ownership and return to a usable reconnect/menu screen."""
+def leave_game(reason='', screen=None):
+    """Release match ownership and return to a usable reconnect/menu screen.
+
+    ``screen`` overrides the destination when the caller knows where the player
+    came from; the default keeps the LAN/replay/skirmish behaviour unchanged.
+    """
     global net_session, mode, paused, accumulator, audio
     global presentation
     if globals().get('presentation') is not None:
@@ -491,7 +497,7 @@ def leave_game(reason=''):
         audio = None
     mode, paused, accumulator = 'menu', False, 0.0
     menu.close_lan()
-    menu.screen = 'replays' if replaying else 'lan_join' if networked else 'main'
+    menu.screen = screen or ('replays' if replaying else 'lan_join' if networked else 'main')
     if replaying:
         menu.open_replays()
         menu.replay_notice = reason
@@ -604,14 +610,20 @@ def escape_from_decided_match() -> bool:
         leave_game('Match finished.')
     else:
         mode = "menu"       # campaign result -> back to the previous screen
+        if mission_def is not None:
+            # campaign result (cinematics disabled): the campaign screen is the
+            # screen the player deployed from, not the main menu (#89)
+            menu.screen = 'campaign'
+            menu.buttons = []
     return True
 
 
 def _unlock_next_mission() -> None:
-    """Mission completed: unlock the next campaign mission (persisted)."""
-    from render.menus import unlock_campaign_mission
+    """Mission completed: mark it finished and unlock the next mission (persisted)."""
+    from render.menus import complete_campaign_mission, unlock_campaign_mission
     if mission_def is None or globals().get('playback') is not None:
         return
+    complete_campaign_mission(mission_def.get('id'))
     ids = [m.get("id") for m in menu.campaign.get("missions", [])]
     try:
         idx = ids.index(mission_def.get("id"))

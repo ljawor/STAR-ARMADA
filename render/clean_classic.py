@@ -7,6 +7,9 @@ MUTED = (152, 168, 183)
 ACCENT = (184, 220, 215)
 BORDER = (43, 57, 69)
 PANEL = (17, 28, 38)
+#: Finished-work colour, kept distinct from both the seaglass accent and the
+#: muted grey so a completed campaign row cannot read as merely "available".
+DONE = (226, 197, 121)
 
 
 @lru_cache(maxsize=32)
