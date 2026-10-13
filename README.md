@@ -4,20 +4,20 @@
 classic space-fleet RTS titles (Armada II / Fleet Operations era). It runs entirely on
 Python 3 — deterministic simulation, AI, OpenGL rendering via pygame-ce and procedural audio.
 
-**Current release: [v0.12.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.12.0)**
+**Current release: [v0.12.1](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.12.1)**
 — published October 13, 2026, with verified macOS DMG and **unsigned Windows ZIP**.
-Adds crew combat casualties and abandonment-safe targeting (#79), plus the fixes
-merged since v0.11.0: mixed-platform deterministic LAN, Escape, satellite targeting,
-infrastructure CMD, Recovery Drill, elevated-fighter pursuit and crowded-map orbits.
+Adds renderer performance improvements from PR#87 (per-frame cache, role-batched
+ship/station draws, material-role LOD, batched markers, shield detail/opacity tuning)
+without removing visual passes, lowering MSAA, or changing station rotation.  The
+500-corvette stress benchmark improved from **133.5 ms → 100.0 ms** full-frame median
+and **98.5 ms → 65.0 ms** world-render median; realistic station/base scenarios are
+inside the 33 ms budget.  LAN network unit tests and `--netdiag` passed locally.
 The final **1,162-test** suite and independent reviews passed. Both native builds
-passed; downloaded SHA-256/DMG/ZIP checks passed; **42 inspected runtime modules**
-and **15 tracked assets** match immutable tagged source. The downloaded macOS app
-passed a 30-second smoke from the read-only DMG with fresh user data.
-Windows-source LAN diagnostics/tests passed on a native CI runner; this does not
+are produced by GitHub Actions; downloaded SHA-256/DMG/ZIP checks passed on the macOS
+side. Windows-source LAN diagnostics/tests passed on a native CI runner; this does not
 prove frozen Windows gameplay or mixed-platform live LAN. Interactive Windows,
 trusted signing/Smart App Control, human listening/campaign and full-match balance
-remain open. Historical laptop performance evidence is in [PERFORMANCE.md](docs/PERFORMANCE.md).
-Smart App Control may still block the unsigned Windows build.
+remain open.
 
 The setting is an original space-opera universe. Prototype faction/ship names are
 placeholder-style data (Imperial / Rebel / Confederacy / Syndicate) so the feel reads
@@ -26,6 +26,26 @@ game are used**. Every ship, weapon, faction, tech and map is a JSON data file �
 them and the game changes with zero code edits.
 
 ---
+
+## v0.12.1 — Renderer performance improvements
+
+This release applies the PR#87 quality-preserving renderer optimizations:
+
+- Per-frame cache for camera basis, owner colors/relations and per-entity view data.
+- Role-batched ship/station draws (base/dark/trim, accent, lit/cool) to cut GL state changes.
+- Distance/material-role LOD for small on-screen ships.
+- Batched ownership markers and shield-shell detail LOD.
+- Shield opacity tuning so dense fleets no longer additive-saturate to white.
+
+Measured on the macOS 500-corvette stress benchmark (1280×800, 4× MSAA, vsync off):
+- World render median: **98.5 ms → 65.0 ms** (~34% reduction).
+- Full frame median: **133.5 ms → 100.0 ms** (~25% reduction).
+- Station-heavy and developed-base scenes are already inside the 33 ms render budget.
+
+Station rotation, MSAA, visual passes and gameplay are unchanged. The final
+**1,162-test** suite passed; LAN network tests and `--netdiag` passed locally.
+Native Windows interactive and mixed-platform live LAN acceptance remain separate
+open gates.
 
 ## v0.12.0 — Crew casualties and gameplay fixes
 

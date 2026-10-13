@@ -180,8 +180,11 @@ class FleetMaterials:
             GL.glUseProgram(previous)
 
     def hull_pass(self, value):
-        if self.available:
-            GL.glUniform1f(self.locations['hull', 'materialPass'], value)
+        """No-op if no program is active; only safe inside `use('hull', ...)` scope."""
+        if self.available and 'hull' in self.programs:
+            program = int(GL.glGetIntegerv(GL.GL_CURRENT_PROGRAM))
+            if program == self.programs['hull']:
+                GL.glUniform1f(self.locations['hull', 'materialPass'], value)
 
     def close(self):
         for program in self.programs.values():
