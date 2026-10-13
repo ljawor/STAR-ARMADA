@@ -114,6 +114,12 @@ class MovementSystem:
                                       math.cos(e.id * 2.399963229728653))
                     side = 1.0 if e.id % 2 else -1.0
                     tangent = Vec3(radial.z * side, 0, -radial.x * side)
+                    if tangent.length_sq() < 1e-8:
+                        # An exactly overhead contact has no XZ radial bearing.
+                        # Give its firing orbit a deterministic horizontal side
+                        # rather than stalling outside every nose weapon's arc.
+                        tangent = Vec3(math.cos(e.yaw) * side, 0,
+                                       -math.sin(e.yaw) * side)
                     correction = max(-2.0, min(2.0, (preferred - dist) / max(80.0, preferred * .2)))
                     # Approach directly until near the firing shell; a large
                     # tangent bias on a distant contact can arc out of detection
@@ -121,6 +127,12 @@ class MovementSystem:
                     orbit_weight = max(0.0, min(1.0, (preferred * 1.6 - dist) /
                                                 max(1.0, preferred * .6)))
                     to_target = tangent * orbit_weight + radial * correction
+                    # Orbit in the contact's elevation plane, not a tiny XZ
+                    # circle on the vertical pole of its 3-D firing sphere.
+                    # Otherwise a yaw-only front mount can never bear on an
+                    # overhead contact even after the ship climbs into range.
+                    to_target.y += orbit_weight * max(-2.0, min(2.0,
+                        (target_pos.y - e.pos.y) / max(80.0, preferred * .2)))
                     # Curvature must be achievable even by slow-turning capitals.
                     desired_speed = min(desired_speed, preferred * math.radians(
                         stats.effective_turn_rate(st, e)) * .45)
@@ -158,8 +170,13 @@ class MovementSystem:
                 else:
                     e.yaw += max_turn if diff > 0 else -max_turn
 
-                facing = Vec3(math.sin(e.yaw), 0.0, math.cos(e.yaw))
-                alignment = facing.dot(to_target.normalized())
+                # Yaw controls the horizontal nose; elevation follows the
+                # accepted 3-D steering vector. Coplanar movement is unchanged.
+                steering = to_target.normalized()
+                horizontal = math.sqrt(max(0.0, 1.0 - steering.y * steering.y))
+                facing = Vec3(math.sin(e.yaw) * horizontal, steering.y,
+                              math.cos(e.yaw) * horizontal)
+                alignment = facing.dot(steering)
 
                 # arrive: slow down near destination
                 arrival = 220.0
@@ -203,17 +220,21 @@ class MovementSystem:
                         e.order_target_id = None
             else:
                 # no destination: gentle brake, keep facing
+                facing = Vec3(math.sin(e.yaw), 0.0, math.cos(e.yaw))
                 e.vel.set_scaled(e.vel, 0.98)
 
             # NOSE-FIRST guarantee: project velocity onto facing before
             # integrating — the lateral (strafe) component is discarded and
             # reverse velocity is clamped to zero, so a ship can only ever
             # travel toward its nose (or hang while turning).
-            facing = Vec3(math.sin(e.yaw), 0.0, math.cos(e.yaw))
-            along = e.vel.x * facing.x + e.vel.z * facing.z
+            # Project all three components onto the steered nose. Previously
+            # thrust and this projection ignored altitude: gravity-well pushes
+            # could loft a fighter beyond range and pursuers could never climb.
+            along = e.vel.x * facing.x + e.vel.y * facing.y + e.vel.z * facing.z
             if along < 0.0:
                 along = 0.0
             e.vel.x = facing.x * along
+            e.vel.y = facing.y * along
             e.vel.z = facing.z * along
 
             # integrate: combat uses swept segment clipping, not endpoint-only
