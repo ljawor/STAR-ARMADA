@@ -387,6 +387,8 @@ class GameState:
                         for k, v in e.systems.items()},
             "alive": e.alive, "xp": e.xp if precise else round(e.xp, 2),
             "level": e.level,
+            # #77: refit level is hull state, so it rides the save graph.
+            "upgrade_level": e.upgrade_level,
             "crew": e.crew, "max_crew": e.max_crew,
             "crew_loss_accumulator": e.crew_loss_accumulator,
             "crew_damage_accumulator": e.crew_damage_accumulator,
@@ -485,6 +487,7 @@ class GameState:
             max_shield_quad=d.get("max_shield_quad", 0.0),
             shield_regen=d.get("shield_regen", 0.0),
             alive=d.get("alive", True), xp=d.get("xp", 0.0), level=d.get("level", 1),
+            upgrade_level=d.get("upgrade_level", 1),
             order_type=d.get("order_type", "idle"),
             energy=d.get("energy", 100.0), max_energy=d.get("max_energy", 100.0),
             spawn_time=d.get("spawn_time", 0.0),

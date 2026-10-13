@@ -14,7 +14,7 @@ import pygame
 from game.core.commands import (
     AttackCommand, AttackMoveCommand, BuildShipCommand, BuildStationCommand,
     CancelBuildCommand, ColonizeCommand, FleetCreateCommand, MoveCommand,
-    ResearchCommand, StopCommand,
+    ResearchCommand, StopCommand, UpgradeStationCommand,
 )
 from game.data.store import DataStore
 
@@ -490,6 +490,16 @@ class InputController:
                             and type(index) is int
                             and 0 <= index < len(target.build_queue)):
                         st.queue_command(CancelBuildCommand(lp, target.id, index))
+                elif kind == "upgrade_station":
+                    # #77: the row names the station it was drawn for. A row left
+                    # over from another selection is inert; ownership and eligibility
+                    # are re-checked by the simulation, which also refuses an
+                    # unaffordable step with a float text.
+                    raw_id = pl.get("target_id")
+                    target = st.entity(raw_id) if type(raw_id) is int else None
+                    if (target is not None and target.is_station and target.alive
+                            and target.owner == lp and target.id in self.selection):
+                        st.queue_command(UpgradeStationCommand(lp, target.id))
                 elif kind == "research":
                     st.queue_command(ResearchCommand(
                         lp, pl["station_id"], pl["tech_id"]))

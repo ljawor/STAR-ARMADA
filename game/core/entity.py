@@ -49,6 +49,9 @@ class Entity:
     alive: bool = True
     xp: float = 0.0
     level: int = 1
+    # #77: paid refit level of a station hull (1 = as built). Belongs to the hull,
+    # not the owner, so a captured station keeps what was paid for it.
+    upgrade_level: int = 1
 
     # Onboard complement is distinct from the player's unassigned crew pool.
     crew: int = 1

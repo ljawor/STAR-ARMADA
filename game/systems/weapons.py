@@ -235,6 +235,8 @@ class WeaponSystem:
             e.energy -= wd.energy_cost
             e.weapon_cooldowns[key] = stats.effective_weapon_cooldown(st, e, wd.reload)
             count = wref["count"] if isinstance(wref, dict) else 1
+            from .upgrades import extra_shots   # #77: refit adds shots per mount
+            count = count + extra_shots(e)
             if wd.is_beam:
                 # beams tick damage directly
                 dmg = stats.effective_weapon_damage(st, e, wd.damage * count)

@@ -516,6 +516,8 @@ class DataStore:
         validate_colony_catalogue(self)
         from ..systems.planet_buildings import validate_building_catalogue
         validate_building_catalogue(self)
+        from ..systems.upgrades import validate_rules as validate_station_upgrades
+        validate_station_upgrades(self)
         cfg = self.rules.get("experience", {})
         levels = cfg.get("levels", [0, 120, 320, 700, 1400])
         def finite_number(value):

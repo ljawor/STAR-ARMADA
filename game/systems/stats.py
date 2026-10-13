@@ -113,6 +113,8 @@ def effective_weapon_damage(state, e: Entity, base_damage: float) -> float:
         dmg *= tech_mult(state, e.owner, "squadron_damage_mult")
     dmg *= e.damage_multiplier()
     dmg *= attack_multiplier(e)
+    from .upgrades import damage_multiplier      # #77 refit firepower, stations only
+    dmg *= damage_multiplier(e)
     return dmg * staffing_fraction(e)
 
 
@@ -201,7 +203,8 @@ def effective_research_speed(state, e):
 
 
 def effective_production_rate(state, e, rate):
-    return rate * staffing_fraction(e)
+    from .upgrades import production_multiplier  # #77 refit output, stations only
+    return rate * staffing_fraction(e) * production_multiplier(e)
 
 
 def effective_repair_rate(state, player_id: int, entity=None) -> float:

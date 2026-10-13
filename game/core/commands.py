@@ -138,9 +138,19 @@ def CancelBuildCommand(player: int, target_id: int, index: int = 0) -> PlayerCom
     return PlayerCommand("cancel_build", player, target_id=target_id, name=str(index))
 
 
+def UpgradeStationCommand(player: int, target_id: int) -> PlayerCommand:
+    """Buy the next refit level of an owned station (#77).
+
+    The station must be a yard-built hull — planet buildings and satellites are out
+    of scope — and the simulation re-checks ownership, the level cap, a pending
+    refit and the player's ability to pay.
+    """
+    return PlayerCommand("upgrade_station", player, target_id=target_id)
+
+
 COMMAND_TYPES = {
     "repair", "explore", "board", "crew_load", "crew_deliver", "crew_cancel", "crew_recover",
     "move", "attack", "attack_move", "stop", "hold", "build_station", "build_ship",
     "build_satellite", "build_planet_building", "colonize", "research", "ability", "fleet_create", "fleet_stance", "jump",
-    "cancel_build",
+    "cancel_build", "upgrade_station",
 }
