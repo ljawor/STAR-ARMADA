@@ -88,6 +88,69 @@ class TestCrewDamage(unittest.TestCase):
                              json.loads(json.dumps(self.st.to_dict(precise=True))))
         self.assertLess(self.target.hull, hull)  # actual in-flight combat, not an idle save fixture
 
+    def test_strict_restore_rejects_malformed_damage_accumulator(self):
+        from game.net.replay_validation import reconstruct, validate_state
+        from game.net.reconnect import _decode, _encode, capture_snapshot, restore_snapshot
+        from copy import deepcopy
+        baseline = json.loads(json.dumps(self.st.to_dict(precise=True)))
+        packet = json.loads(capture_snapshot(self.gm))
+        for value in (-100, -.01, float('nan'), float('inf'), float('-inf'),
+                      True, '9', None, []):
+            with self.subTest(value=value):
+                snapshot = deepcopy(baseline)
+                snapshot['entities'][str(self.target.id)]['crew_damage_accumulator'] = value
+                with self.assertRaises(ValueError):
+                    validate_state(snapshot)
+                with self.assertRaises(ValueError):
+                    GameState.from_dict(snapshot, sanitize_save=False)
+                with self.assertRaises(ValueError):
+                    reconstruct(snapshot)
+                # Canonical runtime/reconnect must reject even when the visible
+                # compatibility projection is valid (before checksum comparison).
+                setattr(self.target, 'crew_damage_accumulator', value)
+                canonical = json.loads(json.dumps(self.st.to_dict(precise=True)))
+                canonical['entities'] = deepcopy(baseline['entities'])
+                with self.assertRaises(ValueError):
+                    GameManager(GameState.from_dict(canonical, sanitize_save=False))
+                with self.assertRaises(ValueError):
+                    _decode(_encode(self.target))
+                graph = _decode(packet['body']['state'])
+                setattr(graph['entities'][self.target.id], 'crew_damage_accumulator', value)
+                malformed_packet = deepcopy(packet)
+                malformed_packet['body']['state'] = _encode(graph)
+                with self.assertRaises(ValueError):
+                    restore_snapshot(json.dumps(malformed_packet).encode())
+        self.target.crew_damage_accumulator = 0.0
+
+    def test_malformed_live_damage_accumulator_cannot_mint_crew(self):
+        for value in (-100, -.01, float('nan'), float('inf'), float('-inf'),
+                      True, '9', None, []):
+            with self.subTest(value=value):
+                self.target.crew = 20
+                setattr(self.target, 'crew_damage_accumulator', value)
+                self.hit(1)
+                self.assertEqual(self.target.crew, 20)
+                self.assertEqual(self.target.crew_damage_accumulator, 1)
+
+    def test_valid_accumulator_strict_restores_continue_exactly(self):
+        from game.net.reconnect import _decode, _encode
+        from game.net.replay_validation import reconstruct
+        for value in (0, 0.0, 9.123456789123):
+            with self.subTest(value=value):
+                self.target.crew_damage_accumulator = value
+                snapshot = json.loads(json.dumps(self.st.to_dict(precise=True)))
+                restored = reconstruct(snapshot)
+                self.assertEqual(_decode(_encode(self.target)).crew_damage_accumulator, value)
+                self.assertEqual(json.loads(json.dumps(restored.state.to_dict(precise=True))), snapshot)
+                for damage in (.123456789123, 1, 10):
+                    for gm in (self.gm, restored):
+                        gm.state.damage_queue.append(dict(target=gm.state.entity(self.target.id),
+                            damage=damage, shield_mult=1, armor_mult=1, system_mult=0,
+                            attacker=gm.state.entity(self.attacker.id)))
+                        gm.step(1 / 30)
+                    self.assertEqual(json.loads(json.dumps(restored.state.to_dict(precise=True))),
+                                     json.loads(json.dumps(self.st.to_dict(precise=True))))
+
     def test_projection_without_runtime_retains_damage_fraction_and_permission(self):
         self.target.crew_damage_accumulator = 9.123456789123
         self.attacker.order_type = 'attack'

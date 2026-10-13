@@ -132,6 +132,12 @@ class DamageSystem:
             # Only capped, post-shield, post-armor hull loss costs personnel.
             threshold = self.ds.rules.get("combat", {}).get("hull_damage_per_crew", 10.0)
             if threshold > 0 and target.crew > 0:
+                # Ordinary saves/direct mutations bypass strict replay decoding.
+                # Discard corrupt history, never turn negative losses into recruits.
+                accumulator = target.crew_damage_accumulator
+                if (type(accumulator) not in (int, float) or accumulator < 0
+                        or not math.isfinite(accumulator)):
+                    target.crew_damage_accumulator = 0.0
                 target.crew_damage_accumulator += hull_damage
                 casualties = int(target.crew_damage_accumulator / threshold)
                 loss = min(target.crew, casualties)

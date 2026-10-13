@@ -553,6 +553,9 @@ class GameState:
 
     @classmethod
     def from_dict(cls, d: dict, *, sanitize_save: bool = True) -> "GameState":
+        if not sanitize_save:
+            from ..net.replay_validation import validate_state
+            validate_state(d)
         # Ordinary saves retain the historical invalid numeric jump repair.
         # Untrusted replay reconstruction explicitly opts out before restoring.
         runtime = d.get("runtime_state")

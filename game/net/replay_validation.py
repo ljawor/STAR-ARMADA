@@ -56,6 +56,9 @@ def typed(value, hint, path):
                 continue
             require(key in hints and not key.startswith('_'), path + '.' + str(key))
             typed(item, OVERRIDES.get(base, {}).get(key, hints[key]), path + '.' + key)
+        if base is Entity:
+            require(value.get('crew_damage_accumulator', 0.0) >= 0,
+                    path + '.crew_damage_accumulator')
     elif base in (list, tuple, set):
         require(type(value) in (list, tuple), path)
         if args:
