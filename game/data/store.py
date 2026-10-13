@@ -500,6 +500,10 @@ class DataStore:
         validate_repair_rules(self.rules)
         from ..systems.exploration import validate_exploration_rules
         validate_exploration_rules(self.rules)
+        casualty_damage = self.rules.get('combat', {}).get('hull_damage_per_crew', 10.0)
+        if (type(casualty_damage) not in (int, float) or not math.isfinite(casualty_damage)
+                or casualty_damage < 0):
+            raise ValueError('combat hull_damage_per_crew must be finite and nonnegative (0 disables)')
         economy = self.rules.get('economy', {})
         for key, default in [('trade_station_min_distance', 1500.0),
                              ('enemy_command_build_min_distance', 3000.0)]:

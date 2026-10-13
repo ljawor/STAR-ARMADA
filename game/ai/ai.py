@@ -414,7 +414,7 @@ class AIPlayer:
         # threatened? enemy within 2500 of home
         threatened = False
         for e in st.entities.values():
-            if e.alive and e.owner >= 0 and st.is_enemy(self.player_id, e.owner) \
+            if e.operational and e.owner >= 0 and st.is_enemy(self.player_id, e.owner) \
                     and (e.is_ship or e.is_squadron) \
                     and st.can_see(self.player_id, e.id) \
                     and e.pos.dist(home.pos) < 2500:
@@ -718,7 +718,7 @@ class AIPlayer:
         enemy_strength = 0.0
         enemy_target = None
         for e in st.entities.values():
-            if (e.alive and e.owner >= 0 and st.is_enemy(self.player_id, e.owner)
+            if (e.operational and e.owner >= 0 and st.is_enemy(self.player_id, e.owner)
                     and st.can_see(self.player_id, e.id)):
                 enemy_strength += _unit_strength(self.ds, e)
                 if enemy_target is None or (e.is_station and not enemy_target.is_station):
@@ -812,7 +812,7 @@ class AIPlayer:
         if home is None:
             return False
         for e in st.entities.values():
-            if e.alive and e.owner >= 0 and st.is_enemy(self.player_id, e.owner) \
+            if e.operational and e.owner >= 0 and st.is_enemy(self.player_id, e.owner) \
                     and st.can_see(self.player_id, e.id) \
                     and (e.is_ship or e.is_squadron) and e.pos.dist(home.pos) < 2200:
                 return True
@@ -954,7 +954,7 @@ class AIPlayer:
                 # constructors flee from enemies
                 for tid in st.grid.query_sphere(st.entities, e.pos, 1200):
                     t = st.entity(tid)
-                    if (t and st.is_enemy(self.player_id, t.owner)
+                    if (t and t.operational and st.is_enemy(self.player_id, t.owner)
                             and st.can_see(self.player_id, t.id)
                             and (t.is_ship or t.is_squadron)):
                         if home is not None:
@@ -979,7 +979,7 @@ class AIPlayer:
                 best, best_d = None, 1e18
                 for tid in st.grid.query_sphere(st.entities, e.pos, scan):
                     t = st.entity(tid)
-                    if (t and st.is_enemy(self.player_id, t.owner) and not t.is_planet
+                    if (t and t.operational and st.is_enemy(self.player_id, t.owner) and not t.is_planet
                             and st.can_see(self.player_id, t.id)):
                         d = e.pos.dist_sq(t.pos)
                         if d < best_d:

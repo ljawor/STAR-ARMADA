@@ -15,7 +15,7 @@ DamageSystem is the single writer that kills the hull. Only the aim was wrong.
 import math
 import unittest
 
-from helpers import make_game, run_for
+from helpers import make_game, run_for, queue_detected_human_attack
 from game.core.commands import PlayerCommand
 from game.core.vectors import Vec3
 
@@ -118,9 +118,16 @@ class SurfaceHardwareKillPathTests(unittest.TestCase):
         self.st.queue_command(PlayerCommand('attack', 1, unit_ids=(attacker.id,),
                                             target_id=building.id))
         elapsed = 0.0
+        reattacked = False
         while building.alive and elapsed < 300.0:
             self.gm.step(DT)
             elapsed += DT
+            if building.alive and not building.operational and not reattacked:
+                self.assertIsNone(attacker.current_target)
+                self.assertIn(slot, building_slots(self.st, self.planet))
+                queue_detected_human_attack(self.gm, 1, [attacker.id], building.id)
+                reattacked = True
+        self.assertTrue(reattacked)
         self.assertFalse(building.alive,
                          f'surface hardware survived {elapsed:.0f}s of a cruiser; '
                          f'hull {building.hull:.0f}/{building.max_hull:.0f}')
@@ -145,9 +152,16 @@ class SurfaceHardwareKillPathTests(unittest.TestCase):
         self.st.queue_command(PlayerCommand('attack', 1, unit_ids=(attacker.id,),
                                             target_id=satellite.id))
         elapsed = 0.0
+        reattacked = False
         while satellite.alive and elapsed < 300.0:
             self.gm.step(DT)
             elapsed += DT
+            if satellite.alive and not satellite.operational and not reattacked:
+                self.assertIsNone(attacker.current_target)
+                self.assertFalse(self.planet.satellite_locks)
+                queue_detected_human_attack(self.gm, 1, [attacker.id], satellite.id)
+                reattacked = True
+        self.assertTrue(reattacked)
         self.assertFalse(satellite.alive,
                          f'a satellite survived {elapsed:.0f}s of a cruiser')
         self.assertNotIn(satellite.id, self.st.entities)

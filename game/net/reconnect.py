@@ -148,6 +148,8 @@ def _validate_type(value, expected):
     if is_dataclass(base):
         for name, hint in get_type_hints(base).items():
             _validate_type(getattr(value, name), _CONTAINER_TYPES.get(base, {}).get(name, hint))
+        if base is Entity and value.crew_damage_accumulator < 0:
+            raise ValueError('Snapshot crew_damage_accumulator schema mismatch')
         if base is Fleet and value.rally_point is not None and len(value.rally_point) != 3:
             raise ValueError('Snapshot rally coordinate schema mismatch')
     elif args and base is dict:

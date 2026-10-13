@@ -10,7 +10,7 @@ import json
 import unittest
 from types import SimpleNamespace
 import pygame
-from helpers import make_game, run_for
+from helpers import make_game, run_for, queue_detected_human_attack
 from game.core.commands import PlayerCommand
 from game.core.state import GameState
 from game.core.manager import GameManager
@@ -74,10 +74,18 @@ class SatellitePenaltyTests(unittest.TestCase):
         gunner = self.gm.factory.spawn_ship('imperial_cruiser', 1, sat.pos + Vec3(1500, 0, 0))
         gunner.sensor_range = 20000
         self.st.queue_command(PlayerCommand('attack', 1, unit_ids=(gunner.id,), target_id=sat.id))
+        reattacked = False
         for _ in range(300 * 30):
             if not sat.alive:
                 break
             self.gm.step(1 / 30)
+            if sat.alive and not sat.operational and not reattacked:
+                self.assertIsNone(gunner.current_target)
+                self.assertIn(slot, self.occupied())
+                self.assertEqual(colonies.satellite_lock_remaining(self.st, self.planet, slot), 0.0)
+                queue_detected_human_attack(self.gm, 1, [gunner.id], sat.id)
+                reattacked = True
+        self.assertTrue(reattacked)
         self.assertFalse(sat.alive, 'a cruiser failed to kill the satellite in 300s')
         self.assertNotIn(sat.id, self.st.entities)
         self.assertEqual(colonies.satellite_lock_remaining(self.st, self.planet, slot), 180.0)

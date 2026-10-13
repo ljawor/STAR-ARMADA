@@ -33,17 +33,37 @@ def update_crew(state, dt):
             if loss:
                 state.events.publish('crew_lost', entity_id=e.id, owner=e.owner, crew=e.crew)
                 if e.crew == 0:
-                    state.float_text(e.pos, 'ABANDONED', (1, .7, .3))
-                    state.events.publish('unit_abandoned', entity_id=e.id, owner=e.owner)
+                    abandon_unit(state, e)
         if e.crew <= 0:
-            if e.fleet_id is not None:
-                from .jump import detach_jumpers
-                detach_jumpers(state, [e])
-            e.vel = Vec3()
-            e.order_type = 'idle'
-            e.order_target_pos = e.order_target_id = e.current_target = None
-            e.jump_charge = 0.0
-            e.jump_target = None
-            e.ability_active.clear()
-            for q in e.shields:
-                e.shields[q] = 0.0
+            stop_abandoned_unit(state, e)
+
+
+def stop_abandoned_unit(state, e):
+    if e.fleet_id is not None:
+        from .jump import detach_jumpers
+        detach_jumpers(state, [e])
+    e.abandoned_attack_target = None
+    e.vel = Vec3()
+    e.order_type = 'idle'
+    e.order_target_pos = e.order_target_id = e.current_target = None
+    e.jump_charge = 0.0
+    e.jump_target = None
+    e.ability_active.clear()
+    for q in e.shields:
+        e.shields[q] = 0.0
+
+
+def abandon_unit(state, e):
+    """Invalidate old combat intent in both directions at the casualty boundary."""
+    stop_abandoned_unit(state, e)
+    for other in state.entities.values():
+        if other.abandoned_attack_target == e.id:
+            other.abandoned_attack_target = None
+        if other.current_target == e.id:
+            other.current_target = None
+        if other.order_type in ('attack', 'chase') and other.order_target_id == e.id:
+            other.order_type = 'idle'
+            other.order_target_id = other.order_target_pos = None
+    if e.hull > 0:
+        state.float_text(e.pos, 'ABANDONED', (1, .7, .3))
+        state.events.publish('unit_abandoned', entity_id=e.id, owner=e.owner)

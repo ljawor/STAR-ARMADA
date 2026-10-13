@@ -1,11 +1,11 @@
 """Full gameplay loop test: BUILD → GATHER → RESEARCH → FLEET → ATTACK → WIN (spec §47)."""
 import unittest
 
-from helpers import make_game, run_for, order_build
+from helpers import make_game, run_for, order_build, queue_detected_human_attack
 from game.core.vectors import Vec3
 from game.core.commands import (
     BuildStationCommand, BuildShipCommand, ResearchCommand,
-    FleetCreateCommand, AttackCommand, AttackMoveCommand, MoveCommand,
+    FleetCreateCommand, AttackCommand, AttackMoveCommand, MoveCommand, HoldCommand,
 )
 
 
@@ -158,9 +158,29 @@ class TestSquadrons(unittest.TestCase):
         st = gm.state
         sq = gm.factory.spawn_ship("imperial_tie_squadron", 0, Vec3(-2000, 0, 0))
         enemy = gm.factory.spawn_ship("imperial_corvette", 1, Vec3(-1500, 0, 0))
-        run_for(gm, 3)
+        # Acquire while both units are operational and before incoming fire
+        # damages squadron sensors enough to lose this contact.
+        run_for(gm, 0.5)
+        self.assertTrue(sq.operational)
+        self.assertTrue(enemy.operational)
+        self.assertTrue(st.can_see(0, enemy.id))
         self.assertEqual(sq.order_type, "attack")
         self.assertEqual(sq.current_target, enemy.id)
+        # A surviving hull abandoned by real damage is not an automatic target.
+        st.damage_queue.append({
+            "attacker_id": 0, "attacker_entity": sq, "target": enemy,
+            "damage": 600, "shield_mult": 0, "armor_mult": 1,
+            "system_mult": 0, "weapon": None, "impact_pos": sq.pos.copy(),
+        })
+        gm.step(1 / 30)
+        self.assertTrue(enemy.alive)
+        self.assertFalse(enemy.operational)
+        self.assertTrue(st.can_see(0, enemy.id))
+        self.assertIsNone(sq.current_target)
+        run_for(gm, 0.5)
+        self.assertTrue(st.can_see(0, enemy.id))
+        self.assertNotEqual(sq.order_type, "attack")
+        self.assertIsNone(sq.current_target)
 
 
 class TestAI(unittest.TestCase):
@@ -192,6 +212,15 @@ class TestFullLoop(unittest.TestCase):
         gm = make_game(ai=False)
         st = gm.state
         # cheat resources like a campaign grant
+        opposing_start = next(p['start'] for p in gm.ds.maps['skirmish01']['players']
+                              if p['slot'] == 1)
+        # Preserve one operational enemy until the base's derelicts are finished.
+        # Use real enemy-player movement/hold commands, not victory suppression
+        # or post-combat crew/hull edits. A squadron's hull dies before its crew
+        # can be depleted by the configured casualty ratio.
+        reserve_site = Vec3(*opposing_start) + Vec3(0, 0, 6000)
+        reserve = next(e for e in st.entities.values() if e.owner == 1 and e.is_squadron)
+        st.queue_command(MoveCommand(1, [reserve.id], reserve_site))
         p0 = st.players[0]
         p0.credits += 50000
         p0.materials += 30000
@@ -216,6 +245,9 @@ class TestFullLoop(unittest.TestCase):
         self.assertEqual(queued, 2)
         queued += gm.construction.start_ship(yard.id, "imperial_corvette", 0, 4)
         run_for(gm, 90)
+        self.assertLess(reserve.pos.dist(reserve_site), 500)
+        self.assertTrue(reserve.operational)
+        st.queue_command(HoldCommand(1, [reserve.id]))
         combat = [e for e in st.entities.values()
                   if e.alive and e.owner == 0 and e.is_ship
                   and not e.is_construction]
@@ -230,8 +262,6 @@ class TestFullLoop(unittest.TestCase):
         enemy_home = next(e for e in st.entities.values()
                           if e.is_station and e.owner == 1)
         self.assertFalse(st.can_see(0, enemy_home.id))
-        opposing_start = next(p['start'] for p in gm.ds.maps['skirmish01']['players']
-                              if p['slot'] == 1)
         st.queue_command(AttackMoveCommand(0, list(fleet.member_ids), Vec3(*opposing_start)))
         for _ in range(30 * 900):
             gm.step(1 / 30)
@@ -247,10 +277,13 @@ class TestFullLoop(unittest.TestCase):
         self.assertTrue(any(e.is_ship for e in enemy_forces))
         self.assertTrue(any(e.is_station for e in enemy_forces))
         self.assertTrue(any(e.is_squadron for e in enemy_forces))
+        derelict_reattacks = set()
         for tick in range(30 * 1800):  # Bounded 30-minute siege and cleanup.
-            if tick % (30 * 5) == 0 and not enemy_home.alive:
+            # An abandoned but living base also needs fresh intent; waiting for
+            # its death would deadlock cleanup.
+            if tick % (30 * 5) == 0:
                 members = [st.entities[i] for i in fleet.member_ids
-                           if i in st.entities and st.entities[i].alive]
+                           if i in st.entities and st.entities[i].operational]
                 self.assertTrue(members, "assault fleet was destroyed")
                 contacts = [e for e in st.entities.values()
                             if e.alive and e.owner == 1
@@ -258,11 +291,17 @@ class TestFullLoop(unittest.TestCase):
                             and st.can_see(0, e.id)]
                 if contacts:
                     target = min(contacts, key=lambda e: (
+                        # Finish derelicts before removing the last operational
+                        # enemy: operational elimination legitimately ends play.
+                        e.operational,
+                        not e.is_station,
                         min(member.pos.dist(e.pos) for member in members), e.id))
-                    st.queue_command(AttackCommand(0, [e.id for e in members], target.id))
+                    if not target.operational:
+                        derelict_reattacks.add(target.id)
+                    queue_detected_human_attack(gm, 0, [e.id for e in members], target.id)
                 else:
                     st.queue_command(AttackMoveCommand(
-                        0, [e.id for e in members], Vec3(*opposing_start)))
+                        0, [e.id for e in members], reserve_site))
             gm.step(1 / 30)
             if st.game_over:
                 break
@@ -271,6 +310,7 @@ class TestFullLoop(unittest.TestCase):
                      if e.alive and e.owner == 1
                      and (e.is_ship or e.is_station or e.is_squadron)]
         self.assertTrue(st.game_over, f"fleet assault left enemy forces: {remaining}")
+        self.assertIn(enemy_home.id, derelict_reattacks)
         self.assertEqual(st.winner, 0)
         self.assertEqual(st.game_over_reason, "elimination")
         self.assertEqual(remaining, [])

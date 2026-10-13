@@ -49,7 +49,7 @@ def repair_saved_jump(entity):
 
 
 def migrate_saved_runtime(data):
-    """Repair only the historical numeric invalid-jump save contract.
+    """Migrate absent #79 fields and historical numeric invalid-jump saves.
 
     This is NOT a replay/reconnect decoder. Replace nonfinite jump numbers
     temporarily, validate the entire Entity before cancelling its intent, and
@@ -62,6 +62,18 @@ def migrate_saved_runtime(data):
     result = deepcopy(data)
     if type(result) is not dict:
         return result  # Strict decode will reject the original malformed schema.
+    # Both live entities and remembered planet snapshots carry Entity fields.
+    pending = [result.get('state')]
+    while pending:
+        node = pending.pop()
+        if type(node) is list:
+            if (len(node) == 3 and node[:2] == ['object', 'Entity']
+                    and type(node[2]) is dict):
+                node[2].setdefault('crew_damage_accumulator', ['scalar', 0.0])
+                node[2].setdefault('abandoned_attack_target', ['scalar', None])
+            pending.extend(node)
+        elif type(node) is dict:
+            pending.extend(node.values())
     root = result.get('state')
     if type(root) is not list or len(root) != 2 or root[0] != 'dict' or type(root[1]) is not list:
         return result

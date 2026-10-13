@@ -29,15 +29,24 @@ class DamageSystem:
         # 1. resolve queued damage (beams, EMP, projectile impacts already queued)
         queue, st.damage_queue = st.damage_queue, []
         for hit in queue:
+            attacker = hit.get("attacker_entity") or hit.get("attacker")
+            weapon = hit.get("weapon")
+            # Beam intent is not an in-flight physical projectile. Revalidate
+            # sequentially so the hit that abandons a hull cuts later beams off
+            # in this same queue; ballistic impacts deliberately bypass this.
+            if weapon is not None and weapon.is_beam and attacker is not None:
+                from .weapons import combat_target_allowed
+                if not attacker.operational or not combat_target_allowed(st, attacker, hit["target"]):
+                    continue
             self._apply_damage(
                 target=hit["target"],
                 raw_damage=hit["damage"],
                 shield_mult=hit["shield_mult"],
                 armor_mult=hit["armor_mult"],
                 system_mult=hit["system_mult"],
-                attacker=hit.get("attacker_entity") or hit.get("attacker"),
+                attacker=attacker,
                 attacker_id=hit.get("attacker_id", -2),
-                weapon=hit.get("weapon"),
+                weapon=weapon,
                 impact_pos=hit.get("impact_pos"),
                 impact_direction=hit.get("impact_direction"),
                 effect_seed=hit.get("effect_seed"),
@@ -120,6 +129,25 @@ class DamageSystem:
             hull_damage = min(max(0.0, target.hull), remaining * max(0.0, armor_mult))
             actual_damage += hull_damage
             target.hull -= hull_damage
+            # Only capped, post-shield, post-armor hull loss costs personnel.
+            threshold = self.ds.rules.get("combat", {}).get("hull_damage_per_crew", 10.0)
+            if threshold > 0 and target.crew > 0:
+                # Ordinary saves/direct mutations bypass strict replay decoding.
+                # Discard corrupt history, never turn negative losses into recruits.
+                accumulator = target.crew_damage_accumulator
+                if (type(accumulator) not in (int, float) or accumulator < 0
+                        or not math.isfinite(accumulator)):
+                    target.crew_damage_accumulator = 0.0
+                target.crew_damage_accumulator += hull_damage
+                casualties = int(target.crew_damage_accumulator / threshold)
+                loss = min(target.crew, casualties)
+                target.crew_damage_accumulator -= casualties * threshold
+                target.crew -= loss
+                if loss:
+                    st.events.publish("crew_lost", entity_id=target.id, owner=target.owner, crew=target.crew)
+                    if target.crew == 0:
+                        from .crew import abandon_unit
+                        abandon_unit(st, target)
             # subsystem chip
             self._chip_systems(target, hull_damage, system_mult)
             # hull threshold effects

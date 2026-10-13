@@ -62,7 +62,7 @@ class SquadronSystem:
         scan = sd.sensor_range
         for tid in st.grid.query_sphere(st.entities, e.pos, scan):
             t = st.entity(tid)
-            if (t is None or not st.is_enemy(e.owner, t.owner) or t.is_planet
+            if (t is None or not t.operational or not st.is_enemy(e.owner, t.owner) or t.is_planet
                     or not st.can_see(e.owner, tid)):
                 continue
             if t.is_squadron and fighter_target is None:

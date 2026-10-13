@@ -52,6 +52,8 @@ class CommandHandler:
         if t != 'explore':
             for e in self._units(cmd):
                 self.state._exploration_system.cancel(e)
+        for e in self._units(cmd):
+            e.abandoned_attack_target = None
         fn(cmd)
 
     def _units(self, cmd: PlayerCommand):
@@ -152,12 +154,16 @@ class CommandHandler:
         if (target is None or not st.is_enemy(cmd.player, target.owner)
                 or not st.can_see(cmd.player, target.id)):
             return
+        player = st.players.get(cmd.player)
+        if not target.operational and (player is None or player.is_ai):
+            return
         for e in self._units(cmd):
             if e.is_station or e.is_planet:
                 continue
             e.order_type = "attack"
             e.order_target_id = target.id
             e.current_target = target.id
+            e.abandoned_attack_target = target.id if not target.operational else None
 
     def _do_attack_move(self, cmd: PlayerCommand) -> None:
         pos = Vec3(*cmd.target_pos)
