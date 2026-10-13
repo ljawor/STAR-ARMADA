@@ -37,6 +37,13 @@ class CommandHandler:
         fn = getattr(self, "_do_" + t, None)
         if fn is None:
             return
+        if t == 'cancel_build':
+            # Cancelling queued work is a queue edit, not new intent: it must
+            # never supersede the unit's other standing orders the way a new
+            # order does (a payload naming a unit would otherwise strip that
+            # unit's colonisation/repair/exploration work on its way through).
+            fn(cmd)
+            return
         if t != 'colonize':
             for e in self._units(cmd):
                 e.build_queue[:] = [i for i in e.build_queue if i.get('kind') != 'colonize']
@@ -206,6 +213,10 @@ class CommandHandler:
     def _do_build_planet_building(self, cmd: PlayerCommand) -> None:
         from .planet_buildings import start_building
         start_building(self.construction, cmd.target_id, cmd.station_kind, cmd.player)
+
+    def _do_cancel_build(self, cmd: PlayerCommand) -> None:
+        index = int(cmd.name) if cmd.name and cmd.name.isdigit() else 0
+        self.construction.cancel_build(cmd.target_id, cmd.player, index)
 
     def _do_build_satellite(self, cmd: PlayerCommand) -> None:
         self.construction.start_satellite(cmd.target_id, cmd.station_kind, cmd.player)

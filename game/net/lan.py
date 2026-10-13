@@ -169,7 +169,7 @@ FIXED_DT = 1 / 30
 INPUT_DELAY = 3  # 100 ms: pipeline network round trips, never wait on the frame thread.
 COMMAND_TYPES = {'move', 'attack', 'attack_move', 'stop', 'hold', 'build_station',
                  'build_satellite', 'build_planet_building', 'build_ship', 'colonize', 'research', 'ability', 'fleet_create',
-                 'fleet_stance', 'jump', 'trade_route', 'repair', 'explore'}
+                 'fleet_stance', 'jump', 'trade_route', 'repair', 'explore', 'cancel_build'}
 
 
 def _canonical(value):
@@ -237,13 +237,18 @@ def _commands(commands, owner):
                     'build_satellite': ('station_kind', 'target_id'),
                     'build_planet_building': ('station_kind', 'target_id'),
                     'build_ship': ('ship_id',), 'colonize': ('target_id',),
-                    'research': ('tech_id',), 'ability': ('ability_id',)}
+                    'research': ('tech_id',), 'ability': ('ability_id',),
+                    'cancel_build': ('target_id', 'name')}
         if any(d.get(key) is None for key in required.get(d['type'], ())):
             raise ValueError('Missing required command fields')
         if d['type'] == 'build_ship' and 'name' in d:
             count = d['name']
             if not isinstance(count, str) or not count.isascii() or not count.isdigit() or len(count) > 2 or not 1 <= int(count) <= 99:
                 raise ValueError('Ship build count limit')
+        if d['type'] == 'cancel_build' and 'name' in d:
+            index = d['name']
+            if not isinstance(index, str) or not index.isascii() or not index.isdigit() or len(index) > 2 or int(index) > 99:
+                raise ValueError('Invalid cancel index')
         units = d.get('unit_ids', [])
         if not isinstance(units, list) or len(units) > MAX_UNITS or any(type(i) is not int or not 0 < i <= 2147483647 for i in units):
             raise ValueError('Invalid unit ids')

@@ -126,8 +126,21 @@ def JumpCommand(player: int, unit_ids, target: Vec3) -> PlayerCommand:
                          target_pos=_xyz(target))
 
 
+def CancelBuildCommand(player: int, target_id: int, index: int = 0) -> PlayerCommand:
+    """Cancel one queued construction item and refund half of what it cost.
+
+    `target_id` is the builder holding the queue: a station or constructor (its
+    own ship/station queue) or a colony planet (its paid surface and satellite
+    queue). The queue index rides in `name` because PlayerCommand has no integer
+    field left, and the LAN validator already guards a two-digit digit string
+    there for a build count.
+    """
+    return PlayerCommand("cancel_build", player, target_id=target_id, name=str(index))
+
+
 COMMAND_TYPES = {
     "repair", "explore", "board", "crew_load", "crew_deliver", "crew_cancel", "crew_recover",
     "move", "attack", "attack_move", "stop", "hold", "build_station", "build_ship",
     "build_satellite", "build_planet_building", "colonize", "research", "ability", "fleet_create", "fleet_stance", "jump",
+    "cancel_build",
 }

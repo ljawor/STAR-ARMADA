@@ -33,8 +33,13 @@ Merged in PR #74 and packaged in the verified v0.12.0 DMG and Windows ZIP.
 Abandoned but living hulls still consume CMD, and their paused paid queues retain
 reservations. Only operational stations supply their catalogue capacity, as before.
 Destroyed hulls/queues release usage; removing paid work releases its derived
-reservation. The reservation-removal regression clears a queue directly; it does not
-establish player-accessible cancellation or refund behavior. Ownership changes transfer living usage.
+reservation. Removing paid work is now **player-accessible** (#94): a
+`cancel_build` command pops one queue item (the builder station/constructor, or a
+colony planet's own surface/satellite queue) and pays back 50% of that item's
+catalogue cost through the existing `refund()` helper — the other half pays for the
+work already done, and dropping the item releases its CMD reservation and any site or
+orbit slot it held. Colonisation is a standing fleet order with no resource cost, not
+paid construction, so it is not cancellable this way. Ownership changes transfer living usage.
 Colony capture clears old paid work without a refund and transfers completed surface
 buildings, so old reservations disappear and surviving hardware counts for its new owner.
 

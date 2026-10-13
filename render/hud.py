@@ -779,16 +779,30 @@ class HUD:
                            and q.get('slot') == slot), None)
             remaining = 0.0 if surface else satellite_lock_remaining(self.state, planet, slot)
             if entity is not None: status = self.ds.unit_name(entity)
-            elif queued is not None: status = f"PAID {queued['time_left']:.0f}s"
+            elif queued is not None: status = f"PAID {queued['time_left']:.0f}s ✕"
             elif remaining > 0.0: status = f"REBUILD {remaining / 60:.1f}m"
             elif slot in occupied: status = 'RESERVED'
             colour = GOOD
             if remaining > 0.0: colour = ACCENT
             elif slot in occupied: colour = WARN
-            self._label(x + (slot % 3) * 100, y + (slot // 3) * 18,
+            cell_x, cell_y = x + (slot % 3) * 100, y + (slot // 3) * 18
+            if queued is not None:
+                colour = WARN
+            self._label(cell_x, cell_y,
                         self._fit_text(f'{slot + 1}: {status}', 96, self.font_small),
                         colour, self.font_small)
-        y += 46
+            if queued is not None:
+                self.buttons.append({'rect': pygame.Rect(cell_x, cell_y, 96, 16),
+                                     'kind': 'cancel_build',
+                                     'payload': {'target_id': planet.id,
+                                                 'page': 'surface' if surface else 'orbit',
+                                                 'index': planet.build_queue.index(queued)}})
+        y += 42
+        if any(q.get('kind') in ('planet_building', 'satellite') for q in planet.build_queue):
+            self._label(x, y, '✕ cancels paid work · 50% refunded', ACCENT, self.font_small)
+            y += 16
+        else:
+            y += 4
         descriptions = {
             'planet_extractor': 'Adds colony resource output.',
             'planet_trade_hub': 'Adds credit income; basic colony income remains.',
@@ -898,10 +912,23 @@ class HUD:
                             self.font_big)
                 y += 28
                 q = sel.build_queue
-                for item in q[:3]:
-                    self._label(panel.x + 12, y,
-                                f"▸ {str(item.get('item', '')).upper()}", TXT_DIM)
-                    y += 16
+                for index, item in enumerate(q[:3]):
+                    row = pygame.Rect(panel.x + 12, y - 1, 296, 18)
+                    self._label(row.x, row.y + 1,
+                                self._fit_text(f"▸ {str(item.get('item', '')).upper()}", 190),
+                                TXT_DIM, self.font_small)
+                    self._label(row.x + 192, row.y + 1,
+                                f"{max(0.0, float(item.get('time_left', 0.0))):.0f}s",
+                                TXT_DIM, self.font_small)
+                    if item.get('kind') in ('ship', 'station', 'satellite'):
+                        button = pygame.Rect(row.right - 62, row.y, 62, 18)
+                        pygame.draw.rect(self.overlay, BAR_BG, button, border_radius=3)
+                        pygame.draw.rect(self.overlay, ACCENT, button, 1, border_radius=3)
+                        self._label(button.x + 6, button.y + 1, "✕ Cancel", TXT,
+                                    self.font_small)
+                        self.buttons.append({"rect": button, "kind": "cancel_build",
+                                             "payload": {"target_id": sel.id, "index": index}})
+                    y += 20
                 if q:
                     y += 6
                 items = self._shipyard_items(sel, std)
