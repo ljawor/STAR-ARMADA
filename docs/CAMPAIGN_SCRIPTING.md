@@ -197,17 +197,19 @@ None of these is a full natural-navigation playthrough or human campaign accepta
 Campaign progression and catalogue UI regressions:
 
 ```sh
-PYTHONPATH=tests .venv/bin/python -m unittest test_mission_hud_layout test_campaign_phase7_progress test_campaign_main test_campaign_phase7_script test_campaign_lifecycle test_trading -q
+PYTHONPATH=tests .venv/bin/python -m unittest test_mission_hud_layout test_campaign_phase7_progress test_campaign_completion_flow test_campaign_main test_campaign_phase7_script test_campaign_lifecycle test_trading -q
 PYTHONPATH=. .venv/bin/python tools/diag_campaign_phase7.py --out <artifact-directory>
 ```
 
 The expanded focused run passes 46 tests (28.150 seconds locally). Strict test-first reproduction caught legacy
 `mission_index: 0` returning 0 instead of the current First Fleet index 1, then
-caught an offscreen campaign row before paging was implemented. Schema v2 stores
-`unlocked_mission_ids`; legacy indices map through the frozen original ten-mission
-order. Migration is idempotent. A fresh profile unlocks only mandatory `m00`; legacy
-index 0 retains both `m00` and First Fleet, without requiring the tutorial again.
-Numeric load/save compatibility adapters remain available; the list uses stable
+caught an offscreen campaign row before paging was implemented. Schema v3 stores
+`unlocked_mission_ids` plus `completed_mission_ids` (the won missions the campaign
+screen marks COMPLETE in gold, still selectable for replay); legacy indices map
+through the frozen original ten-mission order and v1/v2 files load with an empty
+completed set. Migration is idempotent. A fresh profile unlocks only mandatory `m00`;
+legacy index 0 retains both `m00` and First Fleet, without requiring the tutorial
+again. Numeric load/save compatibility adapters remain available; the list uses stable
 IDs rather than treating the highest index as a blanket unlock after reordering.
 
 The actual Cocoa SDL/GL diagnostic enumerates all 11 exact row IDs over two pages

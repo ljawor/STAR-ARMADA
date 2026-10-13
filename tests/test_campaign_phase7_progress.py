@@ -22,8 +22,9 @@ class CampaignProgressTests(unittest.TestCase):
         self.path.write_text(json.dumps({'mission_index': 0}))
         self.assertEqual(menus.load_campaign_progress(), 1)
         saved = json.loads(self.path.read_text())
-        self.assertEqual(saved['schema_version'], 2)
+        self.assertEqual(saved['schema_version'], 3)
         self.assertEqual(saved['unlocked_mission_ids'], ['m00_recovery_drill', 'm01_first_fleet'])
+        self.assertEqual(saved['completed_mission_ids'], [])
     def test_all_legacy_unlocks_survive_and_migration_is_idempotent(self):
         for index in range(10):
             with self.subTest(index=index):
@@ -98,8 +99,9 @@ class CampaignProgressTests(unittest.TestCase):
                     with patch.object(menus, '_campaign_ids', return_value=catalogue):
                         self.run_main_unlock(catalogue)
                         saved = json.loads(self.path.read_text())
-                        self.assertEqual(saved['schema_version'], 2)
+                        self.assertEqual(saved['schema_version'], 3)
                         self.assertEqual(set(saved['unlocked_mission_ids']), set(retained + ['next']))
+                        self.assertEqual(saved['completed_mission_ids'], ['m01_first_fleet'])
                         first = self.path.read_text()
                         self.run_main_unlock(catalogue)
                         self.assertEqual(self.path.read_text(), first)
@@ -112,12 +114,17 @@ class CampaignProgressTests(unittest.TestCase):
         self.run_main_unlock(catalogue, playback=object())
         self.assertEqual(self.path.read_text(), raw)
 
-    def test_actual_main_unlock_ignores_final_or_unknown_mission(self):
+    def test_actual_main_unlock_finishing_the_campaign_only_marks_it_complete(self):
         catalogue = ['m00_recovery_drill', 'm01_first_fleet']
-        for completed in ('m01_first_fleet', 'unknown'):
-            with self.subTest(completed=completed):
-                self.run_main_unlock(catalogue, completed=completed)
-                self.assertFalse(self.path.exists())
+        self.run_main_unlock(catalogue, completed='m01_first_fleet')
+        saved = json.loads(self.path.read_text())
+        # no next mission exists, so nothing new is unlocked — the win is only recorded
+        self.assertEqual(saved['unlocked_mission_ids'], ['m00_recovery_drill'])
+        self.assertEqual(saved['completed_mission_ids'], ['m01_first_fleet'])
+
+    def test_actual_main_unlock_never_records_an_unknown_mission(self):
+        self.run_main_unlock(['m00_recovery_drill', 'm01_first_fleet'], completed='unknown')
+        self.assertFalse(self.path.exists())
 
     def test_catalogue_pages_are_complete_selectable_and_do_not_overlap(self):
         import pygame

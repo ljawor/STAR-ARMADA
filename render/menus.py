@@ -120,40 +120,63 @@ def _campaign_ids() -> list[str]:
         return []
 
 
-def _write_campaign_unlocks(ids: list[str]) -> None:
+def _write_campaign_progress(unlocked, completed=()) -> None:
+    """Schema v3: stable unlock IDs plus the IDs of missions actually won."""
     try:
         os.makedirs(os.path.dirname(CAMPAIGN_PATH), exist_ok=True)
         with open(CAMPAIGN_PATH, 'w') as f:
-            json.dump({'schema_version': 2, 'unlocked_mission_ids': ids}, f, indent=2)
+            json.dump({'schema_version': 3,
+                       'unlocked_mission_ids': sorted(unlocked),
+                       'completed_mission_ids': sorted(completed)}, f, indent=2)
     except OSError:
         pass
 
 
-def load_campaign_unlocks() -> set[str]:
-    """Stable unlock IDs; a missing/corrupt file starts at the tutorial only."""
+def _campaign_progress() -> tuple[set[str], set[str]]:
+    """(unlocked IDs, completed IDs) with the same strictness as v1/v2 loading.
+
+    A missing, unreadable or malformed file yields the tutorial only and is left
+    untouched; a valid v1 file is migrated in place (that migration is the one
+    documented write-on-read). Completed IDs are additive: v1/v2 files have
+    none, so old progress opens with an empty finished set.
+    """
     catalogue = _campaign_ids()
     initial = catalogue[:1]
     try:
         with open(CAMPAIGN_PATH) as f:
             saved = json.load(f)
         if not isinstance(saved, dict):
-            return set(initial)
+            return set(initial), set()
         version = saved.get('schema_version', 1)
-        if type(version) is not int or version not in (1, 2):
-            return set(initial)
-        if version == 2:
+        if type(version) is not int or version not in (1, 2, 3):
+            return set(initial), set()
+        if version in (2, 3):
             ids = saved.get('unlocked_mission_ids')
             if not isinstance(ids, list) or not all(isinstance(i, str) for i in ids):
-                return set(initial)
-            return set(initial + ids)
+                return set(initial), set()
+            completed = saved.get('completed_mission_ids', []) if version == 3 else []
+            if not isinstance(completed, list) or not all(isinstance(i, str)
+                                                          for i in completed):
+                return set(initial), set()
+            return set(initial + ids), set(completed)
         index = saved.get('mission_index')
         if isinstance(index, bool) or not isinstance(index, int) or index < 0:
-            return set(initial)
+            return set(initial), set()
         ids = list(dict.fromkeys(initial + list(_LEGACY_MISSION_IDS[:index + 1])))
-        _write_campaign_unlocks(ids)
-        return set(ids)
+        _write_campaign_progress(ids)
+        return set(ids), set()
     except (OSError, ValueError, TypeError, AttributeError):
-        return set(initial)
+        return set(initial), set()
+
+
+def load_campaign_unlocks() -> set[str]:
+    """Stable unlock IDs; a missing/corrupt file starts at the tutorial only."""
+    return _campaign_progress()[0]
+
+
+def load_campaign_completed() -> set[str]:
+    """IDs of missions the player has won; empty for pre-v3 progress files."""
+    return _campaign_progress()[1]
 
 
 def load_campaign_progress() -> int:
@@ -164,15 +187,31 @@ def load_campaign_progress() -> int:
 
 def unlock_campaign_mission(mission_id: str) -> None:
     """Merge one gameplay unlock without replacing stable or unknown mod IDs."""
-    unlocked = load_campaign_unlocks()
+    unlocked, completed = _campaign_progress()
     if mission_id not in unlocked:
         unlocked.add(mission_id)
-        _write_campaign_unlocks(sorted(unlocked))
+        _write_campaign_progress(sorted(unlocked), completed)
+
+
+def complete_campaign_mission(mission_id: str | None) -> None:
+    """Record a won mission so the campaign screen can mark it COMPLETE.
+
+    Catalogue IDs only: a mod ID or a stale replay mission definition must not
+    mint campaign progress. Repeat acknowledgements are idempotent (no rewrite).
+    """
+    if not isinstance(mission_id, str) or mission_id not in _campaign_ids():
+        return
+    unlocked, completed = _campaign_progress()
+    if mission_id in completed:
+        return
+    completed.add(mission_id)
+    _write_campaign_progress(sorted(unlocked), sorted(completed))
 
 
 def save_campaign_progress(index: int) -> None:
     """Compatibility setter; indices refer to the current catalogue, not v1."""
-    _write_campaign_unlocks(_campaign_ids()[:max(0, int(index)) + 1])
+    _write_campaign_progress(_campaign_ids()[:max(0, int(index)) + 1],
+                             _campaign_progress()[1])
 
 
 class MenuResult:
@@ -592,7 +631,7 @@ class MenuStack:
 
     def _screen_campaign(self) -> None:
         from render.classic_screens import campaign
-        campaign(self, load_campaign_unlocks())
+        campaign(self, load_campaign_unlocks(), load_campaign_completed())
 
     def _screen_briefing(self) -> None:
         from render.classic_screens import briefing

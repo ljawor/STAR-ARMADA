@@ -276,7 +276,9 @@ store settings, saves and campaign progress outside the application bundle:
 on Windows. Since v0.8.0, the **Campaign** screen pages an introductory
 recovery drill plus the original ten-mission "Rise of the Outer Armada" chain (`assets/data/campaign/campaign.json`); each mission
 has a briefing (story, objectives, enemy preview) before LAUNCH, and in-game objectives
-are tracked live in the HUD with COMPLETE/FAILED states.
+are tracked live in the HUD with COMPLETE/FAILED states. A finished mission is marked
+COMPLETE in gold on the campaign screen and stays selectable for replay, and
+acknowledging a campaign result returns to that campaign screen rather than the main menu.
 
 Recovery Drill's current source objective (#80) is to capture the abandoned syndicate
 corvette and restore **that captured corvette to 100% onboard crew**. Automatic

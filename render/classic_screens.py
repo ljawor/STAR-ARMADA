@@ -1,6 +1,6 @@
 """Clean Classic ancillary screens; presentation only, existing menu actions."""
 import pygame
-from render.clean_classic import SetupCanvas, ACCENT, BORDER, INK, MUTED, PANEL
+from render.clean_classic import SetupCanvas, ACCENT, BORDER, DONE, INK, MUTED, PANEL
 
 
 def _button(c, rect, label, action, payload=None, primary=False, focused=False):
@@ -118,8 +118,9 @@ def briefing(menu):
     c.finish()
 
 
-def campaign(menu, unlocked_ids):
+def campaign(menu, unlocked_ids, completed_ids: set[str] | frozenset[str] = frozenset()):
     missions = menu.campaign.get('missions', [])
+    completed_ids = set(completed_ids)
     page_size = 7
     pages = max(1, (len(missions) + page_size - 1) // page_size)
     menu.campaign_page = min(pages - 1, max(0, getattr(menu, 'campaign_page', 0)))
@@ -133,15 +134,31 @@ def campaign(menu, unlocked_ids):
         mission = missions[i]
         r = pygame.Rect(52, 164 + (i - start) * 60, 1016, 50)
         unlocked = mission.get('id') in unlocked_ids
-        pygame.draw.rect(c.surface, (28, 48, 53) if unlocked and _hot(c, r) else (14, 24, 33) if unlocked else (12, 20, 27), r, border_radius=4)
-        pygame.draw.rect(c.surface, ACCENT if unlocked and _hot(c, r) else BORDER, r, 1, border_radius=4)
-        c.text(f'{i + 1:02d}', (r.x + 16, r.y + 13, 46, 28), 18, ACCENT if unlocked else MUTED)
-        c.text(mission.get('name', mission.get('id', '?')), (r.x + 78, r.y + 13, 708, 28), 18, INK if unlocked else MUTED)
-        c.text('AVAILABLE' if unlocked else 'LOCKED', (r.right - 184, r.y + 15, 166, 26), 16, ACCENT if unlocked else MUTED)
+        # A won mission stays selectable (replays are the review loop) but reads
+        # as finished: gold row, gold status, distinct from available/locked.
+        done = mission.get('id') in completed_ids
+        if done:
+            fill = (26, 54, 46) if _hot(c, r) else (18, 42, 37)
+            edge = DONE
+        elif unlocked:
+            fill = (28, 48, 53) if _hot(c, r) else (14, 24, 33)
+            edge = ACCENT if _hot(c, r) else BORDER
+        else:
+            fill, edge = (12, 20, 27), BORDER
+        pygame.draw.rect(c.surface, fill, r, border_radius=4)
+        pygame.draw.rect(c.surface, edge, r, 1, border_radius=4)
+        c.text(f'{i + 1:02d}', (r.x + 16, r.y + 13, 46, 28), 18,
+               DONE if done else ACCENT if unlocked else MUTED)
+        c.text(mission.get('name', mission.get('id', '?')), (r.x + 78, r.y + 13, 708, 28), 18,
+               INK if unlocked else MUTED)
+        status = 'COMPLETE' if done else 'AVAILABLE' if unlocked else 'LOCKED'
+        c.text(status, (r.right - 184, r.y + 15, 166, 26), 16,
+               DONE if done else ACCENT if unlocked else MUTED)
         menu.campaign_rows[mission.get('id')] = _map_rect(menu, r)
         if unlocked:
             menu.buttons.append(dict(rect=r, action='select_mission', payload=i))
-    c.text('Complete missions to unlock the next chapter.', (52, 586, 1016, 26), 16, MUTED)
+    c.text('COMPLETE missions stay playable · finish a mission to unlock the next chapter.',
+           (52, 586, 1016, 26), 16, MUTED)
     _button(c, (32, 650, 180, 36), 'Back', 'goto_main')
     if menu.campaign_page > 0:
         _button(c, (684, 650, 192, 36), 'Previous page', 'campaign_page', -1)
