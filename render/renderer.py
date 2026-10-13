@@ -50,6 +50,91 @@ SHIELD_MIN_PX = 74.0
 # how big the object is, this one deliberately ignores apparent size.
 MARKER_ALPHA = 0.92
 
+# --- weapon fire look (#90) -------------------------------------------------
+# Laser-family projectiles are thin rectangles elongated along their heading and
+# torpedoes/missiles are squares, instead of every bolt being the same round
+# glow-and-speck. Ion, plasma, kinetic and beam weapons keep that treatment: the
+# brief is explicit that super weapons like the biggest ships and the pulsar
+# cannon stay as they are.
+BOLT_WEAPON_TYPES = ("laser", "point_defense", "turbolaser")
+SQUARE_WEAPON_TYPES = ("torpedo", "missile")
+
+BOLT_LENGTH_PER_SIZE = 5.5      # bolt length, in weapon data sizes
+BOLT_WIDTH_PER_SIZE = 0.85      # bolt width: long and thin, never a dot
+BOLT_MIN_PX = (3.6, 1.8)        # SCREEN-space floor (length, width) in pixels
+SQUARE_SIDE_PER_SIZE = 2.1
+SQUARE_MIN_PX = 3.0
+# Soft additive halo around the hot core, as a multiple of the core's extents.
+# Kept tight on purpose: the halo is drawn additively OVER the core, so an
+# oversized or over-bright halo sums past 1.0 and bleaches the bolt to white,
+# throwing away the per-weapon colour at close range.
+BOLT_HALO = (1.7, 2.2)
+SQUARE_HALO = 2.0
+HALO_ALPHA = 0.26
+CORE_ALPHA = 0.92
+#: How far the core is pushed towards white. Deliberately partial: a flat
+#: "+0.45 clamped" turned every light-coloured bolt into a white slab.
+CORE_WHITEN = 0.28
+
+
+def projectile_shape(weapon_type: str | None) -> str:
+    """'bolt', 'square' or 'legacy' for a weapon family (#90)."""
+    if weapon_type in BOLT_WEAPON_TYPES:
+        return "bolt"
+    if weapon_type in SQUARE_WEAPON_TYPES:
+        return "square"
+    return "legacy"
+
+
+def projectile_extents(shape: str, size: float, px_per_world: float) -> tuple[float, float]:
+    """(length, width) of one projectile's core quad, in world units.
+
+    Pure, so the proportions are testable without a GL context. Both extents
+    carry a SCREEN-space floor: a world-only size is ~1 px at overview range,
+    which is exactly the readability failure the old point sprites had.
+    """
+    if shape == "square":
+        side = max(size * SQUARE_SIDE_PER_SIZE, SQUARE_MIN_PX * px_per_world)
+        return side, side
+    return (max(size * BOLT_LENGTH_PER_SIZE, BOLT_MIN_PX[0] * px_per_world),
+            max(size * BOLT_WIDTH_PER_SIZE, BOLT_MIN_PX[1] * px_per_world))
+
+
+def square_quad_offsets(side: float):
+    """Axis-aligned corners for a square projectile.
+
+    Squares are deliberately NOT oriented by their heading: a square rotated to
+    follow a diagonal heading reads as a diamond, which is not what "torpedoes
+    look like squares" means. Caught by eye in the close-combat capture.
+    """
+    half = side / 2.0
+    return ((half, half), (half, -half), (-half, -half), (-half, half))
+
+
+def projectile_quad_offsets(vel, right, up, length: float, width: float):
+    """Four corners, in the camera plane, of a projectile quad.
+
+    Offsets are (u, v) along `right`/`up`; the renderer maps them to world space.
+    The long axis follows the projectile's heading projected into the view plane.
+    A shot fired straight at or away from the camera has no screen-space heading
+    at all — falling back to a fixed axis keeps it a visible streak instead of
+    collapsing to a dot.
+    """
+    v = normalize3((vel[0], vel[1], vel[2])) if any(vel) else (0.0, 0.0, 0.0)
+    dr = v[0] * right[0] + v[1] * right[1] + v[2] * right[2]
+    du = v[0] * up[0] + v[1] * up[1] + v[2] * up[2]
+    proj = math.hypot(dr, du)
+    if proj < 0.15:
+        ux, uy = 0.0, 1.0
+    else:
+        ux, uy = dr / proj, du / proj
+    px_, py_ = -uy, ux
+    hl, hw = length / 2.0, width / 2.0
+    return ((ux * hl + px_ * hw, uy * hl + py_ * hw),
+            (ux * hl - px_ * hw, uy * hl - py_ * hw),
+            (-ux * hl - px_ * hw, -uy * hl - py_ * hw),
+            (-ux * hl + px_ * hw, -uy * hl + py_ * hw))
+
 
 def shield_color(s: float) -> tuple[float, float, float]:
     """Bubble colour for a shield-strength fraction.
@@ -2446,16 +2531,17 @@ class Renderer:
             self._lit_box(0.05, 0.05, 0.05, cy=-0.50)
 
     def _draw_projectiles(self):
-        """Bolts as glowing tracers, not single pixels.
+        """Shaped weapon fire: bolts for lasers, squares for torpedoes (#90).
 
-        These were bare 1px GL_POINTS in the projectile's flat colour, which
-        is nearly invisible at tactical zoom and reads as noise rather than
-        weapons fire. Each bolt now gets an additive core plus a soft halo.
+        Laser-family bolts are thin rectangles elongated along their heading and
+        torpedoes/missiles are squares; each is a soft additive halo around a hot
+        core, so a volley still reads as fire instead of noise at tactical zoom.
+        Ion, plasma, kinetic and beam projectiles keep the previous additive glow
+        plus point-sprite core.
 
-        The halo is floored in SCREEN space (same readability rule the ship
-        LOD uses): a fixed world radius scales to ~3px at overview distance,
-        where bolts need to still read as fire. Probed: a 9-unit halo renders
-        16px wide at camera distance 600 but only 3px at 4200.
+        Every shaped projectile is expanded into triangles and emitted in ONE
+        glBegin(GL_TRIANGLES): a begin/end pair per bolt is what made the old
+        per-projectile glow path expensive at fleet scale.
         """
         st = self.state
         # bolts are emissive — without this they are lit like surfaces and lose
@@ -2466,8 +2552,10 @@ class Renderer:
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         glDepthMask(False)
         eye = self.camera.eye_position()
+        right, up, _fwd = self.camera.basis()
         half_fov_tan = math.tan(math.radians(self.camera.fov / 2))
         pts = []
+        shaped = []     # (pos, colour, alpha) vertices for one additive pass
         for p in st.projectiles.values():
             if not st.is_position_visible(self.local_player, p.pos):
                 continue
@@ -2479,14 +2567,53 @@ class Renderer:
                              + (pos[2] - eye[2]) ** 2)
             # world units per screen pixel at this depth
             px_per_world = self.camera.height / (2.0 * max(1.0, dist) * half_fov_tan)
-            halo = max(9.0, 5.0 / max(1e-6, px_per_world))
-            self._draw_glow(pos, halo, col, alpha=0.45, additive=True)
-            pts.append((pos[0], pos[1], pos[2],
-                        min(1.0, col[0] + 0.55), min(1.0, col[1] + 0.55),
-                        min(1.0, col[2] + 0.55)))
+            wd = self.ds.weapons.get(p.weapon_id)
+            shape = projectile_shape(wd.type if wd is not None else None)
+            if shape == "legacy":
+                halo = max(9.0, 5.0 / max(1e-6, px_per_world))
+                self._draw_glow(pos, halo, col, alpha=0.45, additive=True)
+                pts.append((pos[0], pos[1], pos[2],
+                            min(1.0, col[0] + 0.55), min(1.0, col[1] + 0.55),
+                            min(1.0, col[2] + 0.55)))
+                continue
+            length, width = projectile_extents(shape, p.size, px_per_world)
+            vel = p.vel.to_tuple()
+            if shape == "square":
+                halo_l = halo_w = length * SQUARE_HALO
+                corners = [self._plane_point(pos, right, up, u, v)
+                           for (u, v) in square_quad_offsets(halo_l)]
+            else:
+                halo_l = length * BOLT_HALO[0]
+                halo_w = width * BOLT_HALO[1]
+                corners = [self._plane_point(pos, right, up, u, v)
+                           for (u, v) in projectile_quad_offsets(vel, right, up,
+                                                                 halo_l, halo_w)]
+            # halo: centre bright, rim transparent — a flat quad would read as a
+            # hard-edged slab instead of fire
+            for i in range(4):
+                shaped.append((pos, col, HALO_ALPHA))
+                shaped.append((corners[i], col, 0.0))
+                shaped.append((corners[(i + 1) % 4], col, 0.0))
+            hot = tuple(min(1.0, c * (1.0 - CORE_WHITEN) + CORE_WHITEN)
+                        for c in col)
+            core = [self._plane_point(pos, right, up, u, v)
+                    for (u, v) in (square_quad_offsets(length) if shape == "square"
+                                   else projectile_quad_offsets(vel, right, up,
+                                                                length, width))]
+            for a, b, c in ((0, 1, 2), (0, 2, 3)):
+                for index in (a, b, c):
+                    shaped.append((core[index], hot, CORE_ALPHA))
+        if shaped:
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE)       # bolts are additive
+            glBegin(GL_TRIANGLES)
+            for (point, colour, alpha) in shaped:
+                glColor4f(colour[0], colour[1], colour[2], alpha)
+                glVertex3f(point[0], point[1], point[2])
+            glEnd()
         # cores batched into one point list — cheap, and the additive halo has
         # already given each bolt its footprint
         if pts:
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
             _gl.glPointSize(3.2)
             glBegin(GL_POINTS)
             for (x, y, z, cr, cg, cb) in pts:
@@ -2496,6 +2623,12 @@ class Renderer:
         glDepthMask(True)
         glDisable(GL_BLEND)
         GL.glEnable(GL.GL_LIGHTING)
+
+    def _plane_point(self, pos, right, up, u, v):
+        """World position for a camera-plane offset from `pos` (no GL matrix use)."""
+        return (pos[0] + right[0] * u + up[0] * v,
+                pos[1] + right[1] * u + up[1] * v,
+                pos[2] + right[2] * u + up[2] * v)
 
     # ------------------------------------------------------------------ effects
     def _draw_effects(self):

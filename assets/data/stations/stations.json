@@ -511,7 +511,7 @@
       "shield_quad": 0,
       "shield_regen": 0,
       "radius": 45,
-      "sensor_range": 8400,
+      "sensor_range": 6720,
       "weapons": [
         {
           "weapon": "planet_pulsar_beam",

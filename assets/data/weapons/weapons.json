@@ -225,7 +225,7 @@
       "name": "Pulsar Beam",
       "type": "beam",
       "damage": 320,
-      "range": 8400,
+      "range": 6720,
       "reload": 5.0,
       "projectile_speed": 5000,
       "accuracy": 0.97,

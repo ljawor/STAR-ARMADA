@@ -147,19 +147,27 @@ class PlanetBuildingTests(unittest.TestCase):
         self.assertEqual(enemy.hull + sum(enemy.shields.values()), before)
 
     def test_pulsar_cannon_beats_at_its_own_gun_range(self):
-        """Reported (#52): "when building a pulsar cannon we are not able to fire it"."""
+        """Reported (#52): "when building a pulsar cannon we are not able to fire it".
+
+        #81 shortened the battery's reach, so this now pins the GUARANTEE rather
+        # than the number: whatever the catalogue says, the emplacement must see
+        # that far and must actually fire across the whole band — and never past
+        # it. A literal here would have to be edited every time the reach moves,
+        # and the band it was checked at would silently stop matching it.
+        """
         from game.systems import stats
-        catalogued = self.gm.ds.weapons['planet_pulsar_beam'].range
-        self.assertEqual(catalogued, 8400)
+        catalogued = float(self.gm.ds.weapons['planet_pulsar_beam'].range)
+        self.assertAlmostEqual(catalogued, 6720.0)
         # The emplacement must also SEE that far: detection gates every launch,
         # so a beam range beyond its own sensor range would still never fire.
         station = self.gm.ds.stations['planet_pulsar_cannon']
-        self.assertEqual(station.sensor_range, 8400)
+        self.assertGreaterEqual(float(station.sensor_range), catalogued)
         self.build('planet_pulsar_cannon')
         run_for(self.gm, 25)
         cannon = self.buildings()[0]
-        self.assertEqual(stats.effective_sensor_range(self.st, cannon), 8400)
-        for distance in (2000.0, 6000.0, 8000.0):
+        self.assertGreaterEqual(stats.effective_sensor_range(self.st, cannon),
+                                catalogued)
+        for distance in (2000.0, catalogued * 0.55, catalogued * 0.95):
             enemy = self.gm.factory.spawn_ship('imperial_cruiser', 1,
                                                cannon.pos + Vec3(distance, 0, 0))
             enemy.order_type = 'hold'
@@ -173,8 +181,8 @@ class PlanetBuildingTests(unittest.TestCase):
             enemy.alive = False
             self.st.dead_ids.append(enemy.id)
         # Beyond the gun: seen is fine, fired is not.
-        out_of_range = self.gm.factory.spawn_ship('imperial_cruiser', 1,
-                                                  cannon.pos + Vec3(9000, 0, 0))
+        out_of_range = self.gm.factory.spawn_ship(
+            'imperial_cruiser', 1, cannon.pos + Vec3(catalogued * 1.2, 0, 0))
         out_of_range.order_type = 'hold'
         cannon.weapon_cooldowns.clear()
         before = out_of_range.total_shield() + out_of_range.hull
