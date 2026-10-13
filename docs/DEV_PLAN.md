@@ -11,15 +11,20 @@ partly delivered; the remaining work is listed explicitly below.
 - **Pending**: missing deliverable, not merely an older roadmap label.
 - Recommendations below define the proposed finish order, not additional approved scope.
 
-## v0.12.0 release preparation — October 13, 2026
+## Current release — v0.12.0, October 13, 2026
 
 The user authorized a new macOS DMG and Windows ZIP including crew combat damage
-(#79) and the fixes merged after v0.11.0. The #79 source is implemented on the
-release branch and independently reviewed. The final stable-tree suite passed
-**1,162 tests**; real Cocoa SDL/OpenGL crew-damage diagnostics passed for ships and
-stations at 1280×800 and 1024×768. These are source/controlled-interaction gates,
-not natural human playthrough or Windows acceptance. Publication and downloaded
-package verification remain pending until recorded below.
+(#79) and the fixes merged after v0.11.0. PR #85 is merged and #79 is closed.
+The final stable-tree suite passed **1,162 tests**; independent production and
+fixture reviews approved. Real Cocoa SDL/OpenGL crew-damage checks passed for
+ships/stations at 1280×800 and 1024×768, including actual SDL explicit reattack.
+Native macOS, Windows and publication jobs passed for tag `v0.12.0` / `aae86fa`.
+Both published downloads passed SHA-256/DMG/ZIP integrity; 42 inspected runtime
+modules and all 15 tracked assets match immutable tagged source. Downloaded macOS
+bundle version 0.12.0 passed a 30-second read-only frozen smoke with fresh HOME
+and new screenshot/replay output outside the bundle. Windows-source LAN tests
+also passed in native CI. Controlled source/runner evidence does not establish
+natural human playthrough, frozen Windows gameplay or mixed-platform live LAN.
 
 - **Crew damage (#79):** approved tuning is one operating-crew casualty per 10
   actual unshielded hull damage. Fractional hits accumulate deterministically and are persisted precisely.
@@ -39,9 +44,9 @@ package verification remain pending until recorded below.
   full-match balance remain open. Historical laptop benchmarks do not establish
   this release's Windows runtime acceptance.
 
-## Current source and release scope
+## Historical release evidence
 
-**Current release: v0.11.0**, published October 12, 2026. PR #66 is merged
+**Previous release: v0.11.0**, published October 12, 2026. PR #66 is merged
 and packaged: measured large-fleet CPU/fog optimizations and player-runnable
 benchmark JSON for Filip's Windows laptop. The stable source passed 1,009
 tests and independent review; 52 replay/content/performance tests passed after
@@ -59,7 +64,7 @@ gameplay/feel, trusted Windows signing and
 mixed-platform LAN acceptance remain open. See
 [PERFORMANCE.md](PERFORMANCE.md) for measured scope and reporter commands.
 
-**Previous release: v0.10.1**, published October 11, 2026. PR #47 fixes quiet
+**Earlier release: v0.10.1**, published October 11, 2026. PR #47 fixes quiet
 ship/fighter firing and live-volume silence; #49 prepares the authoritative version.
 The unchanged runtime tree passed 956 tests; 36 replay/content-sensitive tests
 passed after the version-only bump. Both downloaded package digests, three inspected
@@ -255,6 +260,18 @@ See [PLANETARY_HARDWARE.md](PLANETARY_HARDWARE.md) for mechanics and evidence.
 - **§46 Victory:** command-station/planet-majority/economic/timed modes and allied
   elimination exist. Regression-test new abandonment against each mode and campaign
   objective rules rather than assuming identical semantics.
+
+## Immediate issue follow-ups (outside v0.12.0)
+
+1. **#78 — Post-jump shields:** implement a persisted 15-second arrival lockout;
+   settle shield-drain/recovery semantics first and test crew-damage interaction.
+2. **#81 — Pulsar range:** clarify desired versus reported range before changing
+   weapon/sensor tuning; this is separate from closed #52 firing functionality.
+3. **#77 — Station upgrades:** define eligible hardware, five-level numbering,
+   paid costs/bonuses/timing and capture/AI policy before implementing commands/HUD.
+
+The abandoned-satellite AI capture stall is a disclosed consequence of #79;
+choose a separate capture/destruction policy before expanding AI permissions.
 
 ## Proposed finish order
 

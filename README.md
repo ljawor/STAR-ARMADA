@@ -4,20 +4,20 @@
 classic space-fleet RTS titles (Armada II / Fleet Operations era). It runs entirely on
 Python 3 — deterministic simulation, AI, OpenGL rendering via pygame-ce and procedural audio.
 
-**Current release: [v0.11.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.11.0)**
-— published October 12, 2026, with macOS DMG and **unsigned Windows ZIP**.
-Adds large-fleet CPU/fog optimizations and benchmark JSON for Windows testing;
-includes the merged input/planetary combat fixes. The source passed 1,009 tests
-and independent review; 52 replay/content/performance tests passed after the
-version-only preparation. Downloaded hashes, 22 inspected runtime modules and
-all 15 tracked assets match immutable tagged source. Read-only frozen macOS
-smoke and both frozen benchmark modes passed.
-See [performance measurements and Filip's commands](docs/PERFORMANCE.md).
-Windows performance and the packaged benchmark have now been measured on a native
-Windows laptop ([details](docs/PERFORMANCE.md)); interactive Windows gameplay/feel,
-trusted certificate signing, native listening, Cocoa wheel-input QA and mixed-platform
-LAN acceptance remain open. Smart App Control may still block the unsigned Windows
-build.
+**Current release: [v0.12.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.12.0)**
+— published October 13, 2026, with verified macOS DMG and **unsigned Windows ZIP**.
+Adds crew combat casualties and abandonment-safe targeting (#79), plus the fixes
+merged since v0.11.0: mixed-platform deterministic LAN, Escape, satellite targeting,
+infrastructure CMD, Recovery Drill, elevated-fighter pursuit and crowded-map orbits.
+The final **1,162-test** suite and independent reviews passed. Both native builds
+passed; downloaded SHA-256/DMG/ZIP checks passed; **42 inspected runtime modules**
+and **15 tracked assets** match immutable tagged source. The downloaded macOS app
+passed a 30-second smoke from the read-only DMG with fresh user data.
+Windows-source LAN diagnostics/tests passed on a native CI runner; this does not
+prove frozen Windows gameplay or mixed-platform live LAN. Interactive Windows,
+trusted signing/Smart App Control, human listening/campaign and full-match balance
+remain open. Historical laptop performance evidence is in [PERFORMANCE.md](docs/PERFORMANCE.md).
+Smart App Control may still block the unsigned Windows build.
 
 The setting is an original space-opera universe. Prototype faction/ship names are
 placeholder-style data (Imperial / Rebel / Confederacy / Syndicate) so the feel reads
@@ -27,17 +27,18 @@ them and the game changes with zero code edits.
 
 ---
 
-## v0.12.0 release preparation
+## v0.12.0 — Crew casualties and gameplay fixes
 
-The next user-authorized release includes combat crew casualties (#79), at **one
+This release includes combat crew casualties (#79), at **one
 operating crew member per 10 actual unshielded hull damage**, plus the merged
 mixed-platform LAN, Escape, satellite targeting, infrastructure CMD, Recovery Drill,
 elevated-fighter pursuit and crowded-map orbit fixes (#68/#71/#73/#74/#82/#83/#84).
 Automatic and retained attacks stop when a target becomes abandoned; a fresh
 explicit attack on a detected abandoned enemy can destroy it. Fractional casualty
 progress survives precise save/replay restoration. Independent review, the final
-**1,162-test** suite and real macOS crew-damage SDL/OpenGL checks passed. Package
-publication/download verification are pending; current links still refer to v0.11.0.
+**1,162-test** suite and real macOS crew-damage SDL/OpenGL checks passed. Both
+published packages passed download integrity/code/data verification; native Windows
+interactive and mixed-platform live LAN acceptance remain separate open gates.
 
 Remaining issue work, outside this release: #78 (15-second post-jump shield lockout),
 #81 (clarify pulsar range), and #77 (paid five-level station upgrades).
@@ -140,7 +141,7 @@ remains focus-blocked and disclosed.
 See [PLANETARY_HARDWARE.md](docs/PLANETARY_HARDWARE.md)
 for mechanics, configurable tuning and pending/executed acceptance gates.
 
-## Infrastructure command points (#70; merged in #74, v0.12.0 release scope)
+## Infrastructure command points (#70; released in v0.12.0)
 
 All living stations, surface buildings and satellites consume **1 CMD**, except
 research stations (**5 CMD**). Every owned eligible colony adds a command center's
@@ -257,7 +258,7 @@ recruitment near a friendly base and loaded crew-transport delivery both count; 
 full surviving boarding party can complete it immediately. The abandoned frigate
 is optional practice, not a delivery requirement. Personnel costs, life-support
 safety and campaign unlock-save migration are unchanged. The correction is merged
-in #82 and included in the v0.12.0 release scope; see `docs/CAMPAIGN_SCRIPTING.md`
+in #82 and released in v0.12.0; see `docs/CAMPAIGN_SCRIPTING.md`
 for controlled QA evidence. Natural human playthrough acceptance remains separate.
 
 ### Phase 10 presentation (released in v0.9.0)
@@ -412,7 +413,7 @@ friendly sensor can provide detection for another ship's longer-range weapons.
 | Procedural audio (original, no assets) | ✅ prototype |
 | Minimap, fleet roster/ability union, rank inspector, build/research progress | ✅ implemented |
 | Title screen, main menu, settings menu (music/SFX volume, fullscreen, autosave, pan speed — persisted to `saves/settings.json`) | ✅ prototype |
-| Campaign: ten combat missions plus recovery drill, persisted triggers/waves and staged capture/crew objectives | ✅ released since v0.8.0; recovery objective correction in v0.12.0 scope; natural full playthrough acceptance pending |
+| Campaign: ten combat missions plus recovery drill, persisted triggers/waves and staged capture/crew objectives | ✅ released since v0.8.0; recovery objective correction released in v0.12.0; natural full playthrough acceptance pending |
 | Victory conditions: annihilation, planet majority, economic, timed (data-driven) | ✅ prototype |
 | Trade convoys between trade stations + raiding (salvage loot) | ✅ prototype |
 | Objectives: build/destroy/colonize/survive + escort_convoy, hold_point | ✅ prototype |
@@ -467,17 +468,19 @@ not proof of statistical full-match balance.
 
 ## Releases
 
-**[Download v0.11.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.11.0)**
-(published October 12, 2026):
+**[Download v0.12.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.12.0)**
+(published October 13, 2026):
 
-- **macOS:** `STAR-ARMADA-v0.11.0-mac.dmg`
-- **Windows:** `STAR-ARMADA-v0.11.0-win.zip` (unsigned)
+- **macOS:** `STAR-ARMADA-v0.12.0-mac.dmg`
+- **Windows:** `STAR-ARMADA-v0.12.0-win.zip` (unsigned)
 
-Historical v0.11.0 verification: native macOS/Windows CI builds, downloaded
-SHA-256/DMG/ZIP integrity, inspected code/data and read-only frozen macOS smoke
-and benchmark modes passed. Native Windows benchmarks were measured separately.
-This does not establish v0.12.0 package verification, native interactive Windows
-acceptance or mixed-platform LAN readiness. See the current-release block above.
+Both published downloads match GitHub SHA-256 digests, pass DMG/ZIP integrity
+and match the immutable tag for 42 inspected runtime modules and all 15 tracked
+assets. The downloaded macOS bundle reports 0.12.0 and passed a 30-second smoke
+from the read-only mount; new screenshot/replay data were written outside the app.
+Windows-source LAN checks passed in CI; native frozen Windows gameplay and
+mixed-platform live LAN acceptance remain open. Full hashes/evidence are in the
+release notes. Historical v0.11.0 laptop measurements remain separate evidence.
 
 Tagged versions (`v*`) trigger native macOS and Windows builds and GitHub Release
 publication. Version is defined once in `game/__init__.py`; merge the version
@@ -488,6 +491,10 @@ local builds (`./scripts/build_mac.sh`).
 
 | Release | Delivered |
 |---|---|
+| **v0.12.0** | Crew hull-damage casualties and abandonment-safe targeting (#85/#79); mixed-platform deterministic LAN, Escape, orbit targeting, infrastructure CMD, Recovery Drill, elevated-fighter pursuit and crowded-map orbit fixes; verified DMG and Windows ZIP |
+| **v0.11.0** | Large-fleet CPU/fog optimization and packaged benchmark reports (#66); input, capital arcs and planetary projectile/slot-lockout fixes |
+| **v0.10.1** | Quiet firing audio and live-volume silence correction (#47) |
+| **v0.10.0** | Surface resource/trade/shield/pulsar hardware, satellite orbits and independent HUD panel minimization (#43) |
 | **v0.9.0** | Standard/night audio mix, mono/live controls, short skippable campaign cinematics, paged help/settings, recovery hints and targeted accessibility (#41); verified published macOS DMG and Windows ZIP |
 | **v0.8.0** | Campaign scripting/reinforcements, eleven-mission catalogue, stable-ID progression, canonical runtime restore, replay recording/browser/playback and 5× colonized-planet income (#39); published macOS DMG and Windows ZIP |
 | **v0.7.0** | Boarding and crew/life support (#37), crew recovery/transports and cautious AI (#38), colonies/capture/satellites and support orders (#40); published macOS DMG and Windows ZIP |
