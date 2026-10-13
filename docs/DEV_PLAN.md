@@ -15,8 +15,11 @@ partly delivered; the remaining work is listed explicitly below.
 
 The user authorized a new macOS DMG and Windows ZIP including crew combat damage
 (#79) and the fixes merged after v0.11.0. The #79 source is implemented on the
-release branch; independent review and the final full suite remain pending. This section describes release scope;
-publication and downloaded-package verification are pending until recorded below.
+release branch and independently reviewed. The final stable-tree suite passed
+**1,162 tests**; real Cocoa SDL/OpenGL crew-damage diagnostics passed for ships and
+stations at 1280×800 and 1024×768. These are source/controlled-interaction gates,
+not natural human playthrough or Windows acceptance. Publication and downloaded
+package verification remain pending until recorded below.
 
 - **Crew damage (#79):** approved tuning is one operating-crew casualty per 10
   actual unshielded hull damage. Fractional hits accumulate deterministically and are persisted precisely.

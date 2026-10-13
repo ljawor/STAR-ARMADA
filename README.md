@@ -35,8 +35,9 @@ mixed-platform LAN, Escape, satellite targeting, infrastructure CMD, Recovery Dr
 elevated-fighter pursuit and crowded-map orbit fixes (#68/#71/#73/#74/#82/#83/#84).
 Automatic and retained attacks stop when a target becomes abandoned; a fresh
 explicit attack on a detected abandoned enemy can destroy it. Fractional casualty
-progress must survive save/replay restoration. Package publication and final
-verification are pending; current download links above still refer to v0.11.0.
+progress survives precise save/replay restoration. Independent review, the final
+**1,162-test** suite and real macOS crew-damage SDL/OpenGL checks passed. Package
+publication/download verification are pending; current links still refer to v0.11.0.
 
 Remaining issue work, outside this release: #78 (15-second post-jump shield lockout),
 #81 (clarify pulsar range), and #77 (paid five-level station upgrades).
