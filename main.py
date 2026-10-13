@@ -134,20 +134,52 @@ for _ in range(10):
 # --------------------------------------------------------------------------- game
 def make_game(load_path: str | None, mission_def: dict | None = None,
               skirmish_options: dict | None = None):
-    ds = DataStore.reset()
-    ds = DataStore(mods=MODS or None)
-    map_def = ds.maps["skirmish01"]
-    if load_path:
-        with open(load_path) as f:
-            saved = json.load(f)
-        state = GameState.from_dict(saved)
-        return GameManager(state=state, mods=MODS or None)
-    if mission_def is not None:
-        return GameManager.start_mission(map_def, mission_def, mods=MODS or None)
-    if skirmish_options is not None:
-        from game.core.skirmish import build_skirmish_map
-        map_def = build_skirmish_map(ds, skirmish_options)
-    return GameManager.start_skirmish(map_def, mods=MODS or None)
+    # Candidate systems bind a new catalogue singleton during reconstruction.
+    # Failed saves must restore even this hidden ownership, including I/O errors.
+    previous_store = DataStore._instance
+    accepted = False
+    try:
+        ds = DataStore.reset()
+        ds = DataStore(mods=MODS or None)
+        map_def = ds.maps["skirmish01"]
+        if load_path:
+            from render.save_library import managed_name, open_selected, MAX_SAVE_BYTES
+            managed = (managed_name(os.path.basename(load_path))
+                       and os.path.dirname(os.path.abspath(load_path)) == os.path.abspath(SAVES_DIR))
+            with (open_selected(SAVES_DIR, load_path) if managed else open(load_path, 'rb')) as f:
+                encoded = f.read(MAX_SAVE_BYTES + 1)
+                if len(encoded) > MAX_SAVE_BYTES:
+                    raise ValueError('Saved game exceeds size limit (64 MiB)')
+                saved = json.loads(encoded)
+            try:
+                if (not isinstance(saved, dict) or not isinstance(saved.get('players'), dict)
+                        or not saved['players'] or not isinstance(saved.get('entities'), dict)):
+                    raise ValueError('Not a supported game save')
+                if type(saved.get('format', 1)) is not int or saved.get('format', 1) not in (1, 2, 3):
+                    raise ValueError('Unsupported saved-game format')
+                from game.net.replay_validation import validate_mission, validate_state
+                validate_mission(saved.get('mission_state'), ds)
+                state = GameState.from_dict(saved)
+                manager = GameManager(state=state, mods=MODS or None)
+                # Preserve ordinary-save migration/repair, then validate the resulting
+                # candidate with the existing typed boundary (including legacy state).
+                candidate_state = manager.state.to_dict(precise=True)
+                validate_state(candidate_state)
+                validate_mission(candidate_state.get('mission_state'), manager.ds)
+                accepted = True
+                return manager
+            except (TypeError, KeyError, AttributeError, IndexError, ZeroDivisionError,
+                    OverflowError, RecursionError) as exc:
+                raise ValueError('Invalid saved game: ' + str(exc)[:180]) from exc
+        if mission_def is not None:
+            return GameManager.start_mission(map_def, mission_def, mods=MODS or None)
+        if skirmish_options is not None:
+            from game.core.skirmish import build_skirmish_map
+            map_def = build_skirmish_map(ds, skirmish_options)
+        return GameManager.start_skirmish(map_def, mods=MODS or None)
+    finally:
+        if load_path and not accepted:
+            DataStore._instance = previous_store
 
 
 SETTINGS_PATH = os.path.join(SAVES_DIR, "settings.json")
@@ -213,6 +245,11 @@ def start_game(load_path: str | None = None, mdef: dict | None = None,
     global presentation
     from game.net.replay import MatchRecording, PlaybackSession, load_replay
     candidate = PlaybackSession(load_replay(replay_path)) if replay_path else None
+    # Decode and construct the complete manager before ending recording, closing
+    # network ownership, or replacing any live graph/resources. Failed saves are inert.
+    candidate_gm = (candidate.gm if candidate is not None else
+                    GameManager.start_skirmish(lan_session.launch['map_def'], mods=MODS or None)
+                    if lan_session is not None else make_game(load_path, mdef, skirmish_options))
     if 'finish_recording' in globals():
         finish_recording()
     playback = candidate
@@ -223,12 +260,8 @@ def start_game(load_path: str | None = None, mdef: dict | None = None,
     net_session = lan_session
     local_player = int(lan_session.launch['local_player']) if lan_session is not None else 0
     if playback is not None:
-        gm = playback.gm
         local_player = int(playback._data.get('local_player', 0))
-    elif lan_session is not None:
-        gm = GameManager.start_skirmish(lan_session.launch['map_def'], mods=MODS or None)
-    else:
-        gm = make_game(load_path, mdef, skirmish_options)
+    gm = candidate_gm
     mission_def = gm.mission.mission
     state = gm.state
     state._net_session = lan_session
@@ -275,6 +308,23 @@ def start_game(load_path: str | None = None, mdef: dict | None = None,
     globals()['campaign_outcome_seen'] = False
     if mdef is not None and load_path is None:
         start_campaign_presentation(fresh=True)
+
+
+def load_saved_game(path):
+    """Main-menu transition; use the existing save factory and full start_game path."""
+    global mode
+    from render.save_library import selected_name
+    try:
+        selected_name(SAVES_DIR, path)
+        start_game(load_path=path)
+    except (OSError, ValueError, RecursionError) as exc:
+        menu.screen = 'saved_games'
+        menu.buttons = []
+        menu.save_notice = 'Cannot load save: ' + str(exc)[:200]
+        mode = 'menu'
+        return False
+    mode = 'game'
+    return True
 
 
 def begin_recording(manager):
@@ -679,6 +729,8 @@ while running:
                     menu.open_replays()
                     menu.replay_notice = str(exc)[:240]
                     mode = 'menu'
+            elif res == MenuResult.LOAD_GAME:
+                load_saved_game(payload)
             elif res == MenuResult.START_LAN:
                 try:
                     start_game(lan_session=payload)

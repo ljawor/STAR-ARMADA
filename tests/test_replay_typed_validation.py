@@ -37,11 +37,18 @@ class TypedReplayValidationTests(unittest.TestCase):
                         menu = MenuStack(1024, 768)
                         menu.open_replays()
                         menu.render(0.)
-                        self.assertIn('Cannot play:', menu.replay_rows[str(path)])
+                        # Browsing reads only bounded metadata; selecting never approves playback.
+                        button = next(b for b in menu.buttons if b['action'] == 'select_replay')
+                        menu.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1,
+                                                           pos=button['rect'].center))
+                        self.assertEqual(menu.result, MenuResult.NONE)
+                        menu.render(0.)
                         button = next(b for b in menu.buttons if b['action'] == 'play_replay')
                         menu.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1,
                                                            pos=button['rect'].center))
                         self.assertEqual(menu.result, MenuResult.NONE)
+                        self.assertTrue(menu.replay_notice)
+                        self.assertEqual(menu.replay_selected, str(path))
 
     def test_mission_definition_and_progress_are_typed_before_approval(self):
         from test_campaign_lifecycle import campaign

@@ -14,6 +14,23 @@ NEW_DEFAULTS = dict(audio_dynamic_range='standard', audio_mono=False,
 
 
 class SettingsTests(unittest.TestCase):
+    def setUp(self):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        root = Path(directory.name)
+        saves = root / 'saves'
+        saves.mkdir()
+        scope = patch.multiple(menus, USER_DIR=str(root), SAVES_DIR=str(saves),
+                               SETTINGS_PATH=str(saves / 'settings.json'),
+                               CAMPAIGN_PATH=str(saves / 'campaign.json'))
+        scope.start()
+        self.addCleanup(scope.stop)
+
+    def make_menu(self, width, height):
+        menu = menus.MenuStack(width, height)
+        self.addCleanup(menu.close)
+        return menu
+
     def test_corrupt_legacy_values_do_not_crash_settings_controls(self):
         for value in (None, 'broken', [], {}, True, float('nan'), float('inf')):
             values = dict(menus.DEFAULT_SETTINGS, music_volume=value,
@@ -52,7 +69,7 @@ class SettingsTests(unittest.TestCase):
     def test_reduced_motion_freezes_menu_backdrop_and_splash_pulse(self):
         pygame.display.init()
         self.addCleanup(pygame.display.quit)
-        menu = menus.MenuStack(1024, 768)
+        menu = self.make_menu(1024, 768)
         menu.settings['reduced_motion'] = True
         before = menu.stars.copy()
         menu.render(0.5)
@@ -62,14 +79,19 @@ class SettingsTests(unittest.TestCase):
         self.assertEqual(pygame.image.tobytes(menu._surface, 'RGB'), first)
         menu.settings['reduced_motion'] = False
         menu.render(0.1)
+        self.assertNotEqual(pygame.image.tobytes(menu._surface, 'RGB'), first)
+        # Stars are the fallback, not a second animation beneath movie playback.
+        menu.settings['cinematics_enabled'] = False
+        menu.render(0.1)
         self.assertFalse((menu.stars == before).all())
+        menu.close()
 
     def test_all_settings_reachable_contained_keyboard_and_mouse(self):
         expected = set(menus.DEFAULT_SETTINGS)
         pygame.display.init()
         self.addCleanup(pygame.display.quit)
         for width, height in ((1024, 768), (1280, 800)):
-            menu = menus.MenuStack(width, height)
+            menu = self.make_menu(width, height)
             menu.settings = dict(menus.DEFAULT_SETTINGS)
             menu.screen = 'settings'
             seen = set()
@@ -102,6 +124,45 @@ class SettingsTests(unittest.TestCase):
             menu.settings_focus = 0
             menu.handle_event(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_LEFT))
             self.assertEqual(menu.settings['music_volume'], 0.55)
+
+
+class SettingsFixtureIsolationTests(unittest.TestCase):
+    def test_settings_cases_preserve_outer_legacy_campaign_and_settings_even_on_failure(self):
+        from unittest.mock import Mock
+        for fail_render in (False, True):
+            with self.subTest(fail_render=fail_render), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                saves = root / 'saves'
+                saves.mkdir()
+                campaign = saves / 'campaign.json'
+                settings = saves / 'settings.json'
+                campaign_bytes = b'{"mission_index":3}\n'
+                settings_bytes = b'{"music_volume":0.13,"reduced_motion":true}\n'
+                campaign.write_bytes(campaign_bytes)
+                settings.write_bytes(settings_bytes)
+                instances = []
+                initial_settings = []
+                original = menus.MenuStack
+                def tracked(*args, **kwargs):
+                    instance = original(*args, **kwargs)
+                    instances.append(instance)
+                    initial_settings.append(dict(instance.settings))
+                    instance.close = Mock(wraps=instance.close)
+                    if fail_render:
+                        instance.render = Mock(side_effect=AssertionError('injected render failure'))
+                    return instance
+                with patch.multiple(menus, USER_DIR=str(root), SAVES_DIR=str(saves),
+                                    SETTINGS_PATH=str(settings), CAMPAIGN_PATH=str(campaign)), \
+                        patch.object(menus, 'MenuStack', side_effect=tracked):
+                    result = unittest.TestResult()
+                    unittest.defaultTestLoader.loadTestsFromTestCase(SettingsTests).run(result)
+                self.assertEqual(campaign.read_bytes(), campaign_bytes)
+                self.assertEqual(settings.read_bytes(), settings_bytes)
+                self.assertTrue(instances)
+                self.assertTrue(all(values == menus.DEFAULT_SETTINGS for values in initial_settings))
+                self.assertTrue(all(instance.close.called for instance in instances))
+                self.assertEqual(result.errors, [])
+                self.assertEqual(len(result.failures), 2 if fail_render else 0, result.failures)
 
 
 class HelpTests(unittest.TestCase):

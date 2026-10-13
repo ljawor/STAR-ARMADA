@@ -1,7 +1,8 @@
 """Menu stack: starting screen, main menu, settings, campaign briefing.
 
 Pure view — no simulation. Rendered as an SDL surface composited to a GL
-quad over a starfield backdrop, same pipeline as HUD.draw_gl(). Own event
+quad, same pipeline as HUD.draw_gl(). Non-replay menus share the battle movie
+backdrop, with a starfield fallback; replay browsing stays static. Own event
 pump; main.py swaps stacks on MenuResult transitions.
 
 Persisted settings (saves/settings.json): music/sfx volume, fullscreen,
@@ -180,6 +181,7 @@ class MenuResult:
     START_SKIRMISH = "start_skirmish"
     START_MISSION = "start_mission"     # payload: mission def dict
     START_REPLAY = 'start_replay'       # payload: validated replay path
+    LOAD_GAME = 'load_game'            # payload: selected managed save filepath
     START_LAN = 'start_lan'             # payload: session; ownership transfers to main
     EXIT = "exit"
 
@@ -237,8 +239,22 @@ class MenuStack:
         self.lan_session = None
         self.replay_paths = []
         self.replay_page = 0
+        self.replay_selected = None
+        self.replay_confirmation = None
+        self.replay_metadata = {}
         self.replay_notice = ''
         self.replay_rows = {}
+
+        self.save_paths = []
+        self.save_metadata = {}
+        self.save_page = 0
+        self.save_selected = None
+        self.save_confirmation = None
+        self.save_notice = ''
+
+        # Presentation-only movie resources open lazily on non-replay menus.
+        self._menu_movie = None
+        self._splash_shade = None
 
     # ------------------------------------------------------------- campaign
     def _load_campaign(self) -> dict:
@@ -312,6 +328,8 @@ class MenuStack:
 
     # ------------------------------------------------------------- backdrop
     def _draw_backdrop(self) -> None:
+        if self.screen != 'replays' and self._draw_splash_movie():
+            return
         s = self._surface
         s.fill((4, 5, 12))
         # nebula glow blobs (static, cheap)
@@ -372,17 +390,15 @@ class MenuStack:
             self._screen_settings()
         elif self.screen == "replays":
             self._screen_replays()
+        elif self.screen == 'saved_games':
+            from render.classic_saves import saved_games
+            saved_games(self)
         elif self.screen == "campaign":
             self._screen_campaign()
         elif self.screen == "briefing":
             self._screen_briefing()
         elif self.screen == "lan":
-            self._title('LAN MULTIPLAYER', self.font_big, 70)
-            for i, (label, action) in enumerate((('HOST GAME', 'lan_host_setup'),
-                                                ('JOIN GAME', 'lan_join_setup'),
-                                                ('BACK', 'goto_main'))):
-                self._button(pygame.Rect(self.width // 2 - 170, 170 + i * 66, 340, 48),
-                             label, action)
+            self._screen_lan_chooser()
 
         elif self.screen in ('lan_host', 'lan_join', 'lan_lobby'):
             self._screen_lan()
@@ -394,7 +410,8 @@ class MenuStack:
         sub = self.font_med.render("FLEET COMMAND", True, (140, 165, 220))
         self._surface.blit(sub, sub.get_rect(centerx=self.width // 2,
                                              y=self.height * 0.22 + 150))
-        pulse = 0.55 + 0.45 * math.sin(self.t * 2.2)
+        pulse = (1.0 if self.settings.get('reduced_motion', False)
+                 else 0.55 + 0.45 * math.sin(self.t * 2.2))
         hint = self.font_small.render("click anywhere to begin", True,
                                       (int(150 * pulse + 60), 170, 220))
         self._surface.blit(hint, hint.get_rect(centerx=self.width // 2,
@@ -402,30 +419,36 @@ class MenuStack:
         self.buttons.append({"rect": pygame.Rect(0, 0, self.width, self.height),
                              "action": "goto_main", "payload": None})
 
+    def _draw_splash_movie(self) -> bool:
+        """Shared menu battle backdrop; replay browsing stays static."""
+        if not self.settings.get('cinematics_enabled', True):
+            return False
+        if self._menu_movie is None:
+            from render.menu_movie import MenuMovie
+            self._menu_movie = MenuMovie(os.path.join(ASSET_ROOT, 'assets'))
+        if not self._menu_movie.available:
+            return False
+        meta = self._menu_movie.metadata
+        scale = max(self.width / meta['width'], self.height / meta['height'])
+        size = (math.ceil(meta['width'] * scale), math.ceil(meta['height'] * scale))
+        frame = self._menu_movie.get_frame(
+            self.t, size, reduced_motion=self.settings.get('reduced_motion', False))
+        if frame is None:
+            return False
+        self._surface.blit(frame, ((self.width - size[0]) // 2,
+                                   (self.height - size[1]) // 2))
+        # Never mutate a decoder-owned cached frame; shade our composition only.
+        shade_key = (self.width, self.height, self.settings.get('high_contrast_ui', False))
+        if self._splash_shade is None or self._splash_shade[0] != shade_key:
+            shade = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+            shade.fill((3, 8, 14, 165 if shade_key[2] else 110))
+            self._splash_shade = (shade_key, shade)
+        self._surface.blit(self._splash_shade[1], (0, 0))
+        return True
+
     def _screen_main(self) -> None:
-        self._title("STAR ARMADA", self.font_title, self.height * 0.14)
-        sub = self.font_small.render("Fleet Command — Outer Armada Campaign",
-                                     True, (130, 150, 200))
-        self._surface.blit(sub, sub.get_rect(centerx=self.width // 2,
-                                             y=self.height * 0.14 + 80))
-        bw, bh = 340, 52
-        x = self.width // 2 - bw // 2
-        y0 = self.height * 0.32
-        mouse = pygame.mouse.get_pos()
-        for i, (label, action) in enumerate((
-                ("SKIRMISH", "start_skirmish"),
-                ("MULTIPLAYER / LAN", "goto_lan"),
-                ("CAMPAIGN", "goto_campaign"),
-                ("REPLAYS", "goto_replays"),
-                ("SETTINGS", "goto_settings"),
-                ("QUIT", "exit"))):
-            r = pygame.Rect(x, y0 + i * (bh + 14), bw, bh)
-            self._button(r, label, action, hot=r.collidepoint(mouse))
-        notice = self.replay_notice
-        while notice and self.font_small.size(notice)[0] > self.width - 40:
-            notice = notice[:-2] + '…'
-        if notice:
-            self._title(notice, self.font_small, self.height - 32, (190, 205, 230))
+        from render.clean_classic import main_menu
+        main_menu(self)
 
     def skirmish_capacity(self, map_id):
         return len(self.skirmish_store.maps[map_id]['players'])
@@ -464,220 +487,20 @@ class MenuStack:
             o['cooperative'] = not o['cooperative']
 
     def _screen_lan(self):
-        """800x600 logical canvas; event targets track painted controls."""
-        from game.core.skirmish import SKIRMISH_MAP_IDS, COLOR_NAMES
-        target = self._surface
-        self._surface = pygame.Surface((800, 600))
-        self._surface.fill((6, 9, 19))
-        font = pygame.font.SysFont('helvetica,arial', 18)
-        self.lan_rendered_text = []
-        def text(value, x, y, width=744):
-            value = str(value)
-            self.lan_rendered_text.append(value)
-            while font.size(value)[0] > width:
-                value = value[:-2] + '…'
-            self._surface.blit(font.render(value, True, (210, 222, 246)), (x, y))
-        def button(rect, label, action, payload=None):
-            rect = pygame.Rect(rect)
-            self.buttons.append(dict(rect=rect, action=action, payload=payload))
-            pygame.draw.rect(self._surface, (30, 48, 76), rect, border_radius=5)
-            text(label, rect.x + 8, rect.y + 7, rect.w - 16)
-        text('LAN / ' + self.screen[4:].upper(), 28, 20)
-        o = self.lan_options
         if self.screen == 'lan_host':
-            for i, mid in enumerate(SKIRMISH_MAP_IDS):
-                button((28 + i * 188, 56, 178, 42),
-                       ('● ' if mid == o['map_id'] else '') + self.skirmish_store.maps[mid]['name'], 'lan_map', mid)
-            text(f"Humans {o['human_count']} / capacity {self.skirmish_capacity(o['map_id'])}", 28, 114)
-            button((264, 106, 38, 34), '−', 'lan_humans', -1)
-            button((310, 106, 38, 34), '+', 'lan_humans', 1)
-            text(f"AI {o['ai_count']} (0–2)", 420, 114)
-            button((662, 106, 38, 34), '−', 'lan_ai', -1)
-            button((708, 106, 38, 34), '+', 'lan_ai', 1)
-            for slot in range(4):
-                y = 156 + slot * 44
-                role = 'HUMAN' if slot < o['human_count'] else 'AI' if slot < o['human_count'] + o['ai_count'] else 'UNUSED'
-                text(f'{slot + 1} {role}', 28, y + 8, 128)
-                button((164, y, 184, 36), COLOR_NAMES[o['colors'][slot]] + ' ›', 'lan_color', slot)
-                button((360, y, 386, 36), o['factions'][slot] + ' ›', 'lan_faction', slot)
-            button((28, 342, 320, 36), 'Difficulty: ' + o['ai_difficulty'], 'lan_difficulty')
-            button((360, 342, 386, 36), 'Humans vs AI' if o['cooperative'] else 'Free for all', 'lan_cooperative')
-        if self.screen == 'lan_lobby' and self.lan_session is not None:
-            snap = self.lan_session.snapshot
-            o = snap.get('options') or self.lan_options
-            text(f"{snap.get('status', 'Connecting')} / TCP {snap.get('port', self.lan_port)}", 28, 62)
-            text('Host IPs: ' + ', '.join(snap.get('addresses', [])), 28, 92)
-            text(f"Map: {o['map_id']} / Humans: {o['human_count']} / AI: {o['ai_count']} / {o['ai_difficulty']}", 28, 126)
-            text('Humans vs AI' if o['cooperative'] else 'Free for all', 28, 152)
-            players = {p['slot']: p for p in snap.get('players', [])}
-            for slot in range(o['human_count']):
-                p = players.get(slot)
-                text(f"{slot + 1}: " + (f"{p['name']} — {'READY' if p['ready'] else 'NOT READY'}" if p else 'Waiting for player…'), 28, 196 + slot * 42)
-            if not snap.get('error'):
-                if snap.get('is_host'):
-                    button((28, 390, 220, 38), 'EDIT SETUP', 'lan_edit')
-                p = players.get(self.lan_session.local_player)
-                if p:
-                    button((360, 390, 180, 38), 'UNREADY' if p['ready'] else 'READY', 'lan_ready')
-                if snap.get('is_host') and snap.get('can_start'):
-                    button((550, 390, 196, 38), 'LAUNCH GAME', 'lan_start')
-                text('All humans must connect and ready.' if snap.get('is_host') else 'Waiting for host to launch.', 28, 446)
-            else:
-                button((526, 540, 220, 38), 'RECONNECT', 'lan_reconnect')
-        if self.screen in ('lan_host', 'lan_join'):
-            for i, (field, label) in enumerate((('lan_name', 'Nickname'), ('lan_port', 'TCP port'))):
-                text(label, 28, 398 + i * 44)
-                button((164, 390 + i * 44, 300, 36), getattr(self, field) + (' |' if self.lan_focus == field else ''), 'lan_field', field)
-            if self.screen == 'lan_join':
-                text('Host IPv4 address', 28, 158)
-                button((28, 194, 718, 40), self.lan_address + (' |' if self.lan_focus == 'lan_address' else ''), 'lan_field', 'lan_address')
-            button((526, 540, 220, 38), 'APPLY SETUP' if self.lan_session is not None else 'HOST' if self.screen == 'lan_host' else 'CONNECT', 'lan_connect')
-        text(self.lan_notice, 28, 496)
-        button((28, 540, 180, 38), 'BACK / ESC', 'lan_back')
-        logical = self._surface
-        self._surface = target
-        scale = min(self.width / 800, self.height / 600)
-        ox, oy = (self.width - round(800 * scale)) // 2, (self.height - round(600 * scale)) // 2
-        target.blit(pygame.transform.smoothscale(logical, (round(800 * scale), round(600 * scale))), (ox, oy))
-        for b in self.buttons:
-            r = b['rect']
-            b['rect'] = pygame.Rect(ox + round(r.x * scale), oy + round(r.y * scale), round(r.w * scale), round(r.h * scale))
+            from render.clean_classic import host_setup
+            host_setup(self)
+        else:
+            from render.classic_screens import lan_session
+            lan_session(self)
+
+    def _screen_lan_chooser(self):
+        from render.classic_screens import lan_chooser
+        lan_chooser(self)
 
     def _screen_skirmish(self):
-        """Measured logical layout, letterboxed at smaller window sizes."""
-        from game.core.skirmish import PLAYER_COLORS, COLOR_NAMES, SKIRMISH_MAP_IDS
-        target = self._surface
-        scale = min(self.width / 1120, self.height / 700)
-        ox = (self.width - round(1120 * scale)) // 2
-        oy = (self.height - round(700 * scale)) // 2
-        self._surface = pygame.Surface((1120, 700))
-        self._surface.fill((6, 9, 19))
-        self.skirmish_rendered_text = []
-        self.skirmish_text_bounds = []
-        self.skirmish_preview_starts = []
-        fonts = {size: pygame.font.SysFont('helvetica,arial', size, bold=size >= 24)
-                 for size in (14, 16, 18, 24, 34)}
-
-        def text(value, rect, size=18, color=(210, 222, 246), wrap=False):
-            rect = pygame.Rect(rect)
-            font = fonts[size]
-            lines, line = [], ''
-            for word in str(value).split():
-                candidate = (line + ' ' + word).strip()
-                if wrap and font.size(candidate)[0] > rect.w and line:
-                    lines.append(line)
-                    line = word
-                else:
-                    line = candidate
-            lines.append(line)
-            # Ellipsize to measured width/height, never paint outside a box.
-            max_lines = max(1, rect.h // font.get_linesize())
-            for i, line in enumerate(lines[:max_lines]):
-                truncated = i == max_lines - 1 and len(lines) > max_lines
-                while line and font.size(line + ('…' if truncated else ''))[0] > rect.w:
-                    line = line[:-1]
-                    truncated = True
-                rendered = line + ('…' if truncated else '')
-                self.skirmish_rendered_text.append(rendered)
-                glyph = font.render(rendered, True, color)
-                bounds = glyph.get_rect(topleft=(rect.x, rect.y + i * font.get_linesize()))
-                self._surface.blit(glyph, bounds)
-                self.skirmish_text_bounds.append(bounds)
-
-        def button(rect, label, action, payload=None, selected=False, swatch=None, size=16):
-            rect = pygame.Rect(rect)
-            self.buttons.append({'rect': rect, 'action': action, 'payload': payload})
-            pygame.draw.rect(self._surface, (37, 63, 98) if selected else (20, 31, 50),
-                             rect, border_radius=7)
-            pygame.draw.rect(self._surface, (114, 182, 242) if selected else (53, 76, 109),
-                             rect, 1, border_radius=7)
-            inset = 12
-            if swatch:
-                rgb = tuple(round(c * 255) for c in PLAYER_COLORS[swatch])
-                pygame.draw.rect(self._surface, rgb, (rect.x + 10, rect.y + 11, 16, 16),
-                                 border_radius=3)
-                inset = 34
-            text(label, (rect.x + inset, rect.y + 9, rect.w - inset - 8, rect.h - 12), size)
-
-        options = self.skirmish_options
-        text('SKIRMISH / FLEET DEPLOYMENT', (32, 22, 1056, 44), 34)
-        text('Same team = allies. AI allies share vision, not control. Keep at least two different teams.',
-             (32, 68, 1056, 24), 16, (139, 161, 194))
-        for i, map_id in enumerate(SKIRMISH_MAP_IDS):
-            data = self.skirmish_store.maps[map_id]
-            x, y = 32 + (i % 2) * 260, 110 + (i // 2) * 112
-            button((x, y, 248, 100), '', 'skirmish_map', map_id,
-                   map_id == options['map_id'])
-            text(data['name'], (x + 12, y + 10, 224, 24), 18)
-            text(data.get('description', ''), (x + 12, y + 36, 224, 36), 14, wrap=True)
-            text(f"{self.skirmish_capacity(map_id)} PLAYERS  /  TEAMS OR FFA",
-                 (x + 12, y + 77, 224, 20), 14, (114, 182, 242))
-        data = self.skirmish_store.maps[options['map_id']]
-        preview = pygame.Rect(572, 110, 516, 180)
-        pygame.draw.rect(self._surface, (11, 20, 32), preview, border_radius=7)
-        pygame.draw.rect(self._surface, (53, 76, 109), preview, 1, border_radius=7)
-        bounds = float(data['bounds'])
-        def point(pos):
-            return (round(preview.x + 18 + (pos[0] / bounds + .5) * (preview.w - 36)),
-                    round(preview.y + 18 + (pos[2] / bounds + .5) * (preview.h - 36)))
-        old_clip = self._surface.get_clip()
-        self._surface.set_clip(preview.inflate(-4, -4))
-        for kind, color in (('nebulas', (54, 40, 86)), ('gas_giants', (105, 131, 161)),
-                            ('asteroid_fields', (174, 137, 76)), ('planets', (100, 185, 160)),
-                            ('jump_points', (109, 160, 223))):
-            for feature in data.get(kind, []):
-                radius = max(3, round(feature.get('radius', 200) / bounds * preview.h))
-                pygame.draw.circle(self._surface, color, point(feature['pos']), radius,
-                                   1 if kind in ('gas_giants', 'jump_points') else 0)
-        for i, player in enumerate(data['players']):
-            pos = point(player['start'])
-            self.skirmish_preview_starts.append(pos)
-            color = tuple(round(c * 255) for c in PLAYER_COLORS[options['colors'][i]])
-            pygame.draw.circle(self._surface, color if i <= options['ai_count'] else (76, 86, 102),
-                               pos, 7)
-            text(str(i + 1), (pos[0] + 10, pos[1] - 9, 20, 20), 14)
-        self._surface.set_clip(old_clip)
-        text('PUBLIC MAP  ·  numbered starts / gold resources / teal worlds',
-             (572, 297, 516, 22), 14, (139, 161, 194))
-        text('FLEET ROSTER', (32, 357, 508, 28), 24)
-        for slot in range(options['ai_count'] + 1):
-            y = 397 + slot * 46
-            relation = 'Ally' if options['teams'][slot] == options['teams'][0] else 'Enemy'
-            text('You' if slot == 0 else f'AI {slot} · {relation}', (32, y + 10, 92, 24), 14)
-            color = options['colors'][slot]
-            button((132, y, 114, 38), COLOR_NAMES[color] + ' ›',
-                   'skirmish_color', slot, swatch=color)
-            faction = self.skirmish_store.factions[options['factions'][slot]]
-            button((258, y, 176, 38), faction.display_name + ' ›', 'skirmish_faction', slot, size=14)
-            button((446, y, 94, 38), f"Team {options['teams'][slot] + 1} ›",
-                   'skirmish_team', slot)
-        text(data['name'], (572, 330, 516, 34), 24)
-        text(data.get('description', ''), (572, 370, 516, 104), 14,
-             (160, 181, 214), wrap=True)
-        text(f"AI PLAYERS   {options['ai_count']} / {self.skirmish_capacity(options['map_id']) - 1}",
-             (572, 491, 350, 26), 18)
-        button((980, 484, 48, 38), '−', 'skirmish_ai', -1)
-        button((1040, 484, 48, 38), '+', 'skirmish_ai', 1)
-        text('AI DIFFICULTY', (572, 537, 210, 26), 18)
-        button((806, 529, 282, 38), options['ai_difficulty'].upper() + ' ›', 'skirmish_difficulty')
-        text(self.skirmish_notice or 'Distinct colors are kept automatically. Click to cycle.',
-             (572, 575, 516, 42), 16, (160, 181, 214), wrap=True)
-        text('Unused fleet choices are retained when reducing AI players.',
-             (32, 587, 508, 38), 14, (139, 161, 194), wrap=True)
-        button((32, 630, 180, 42), 'BACK / ESC', 'goto_main')
-        button((806, 630, 282, 42), 'LAUNCH SKIRMISH', 'launch_skirmish', selected=True)
-        logical = self._surface
-        self._surface = target
-        target.blit(pygame.transform.smoothscale(logical, (round(1120 * scale), round(700 * scale))), (ox, oy))
-        def transform(rect):
-            return pygame.Rect(ox + round(rect.x * scale), oy + round(rect.y * scale),
-                               round(rect.w * scale), round(rect.h * scale))
-        for item in self.buttons:
-            item['rect'] = transform(item['rect'])
-        self.skirmish_text_bounds = [transform(r) for r in self.skirmish_text_bounds]
-        self.skirmish_preview_rect = transform(preview)
-        self.skirmish_preview_starts = [(ox + round(x * scale), oy + round(y * scale))
-                                        for x, y in self.skirmish_preview_starts]
+        from render.clean_classic import skirmish_setup
+        skirmish_setup(self)
 
     def open_replays(self):
         """Snapshot bounded directory entries; only visible pages parse files."""
@@ -685,148 +508,59 @@ class MenuStack:
         self.buttons = []
         self.replay_paths = []
         self.replay_rows = {}
+        self.replay_metadata = {}
         self.replay_page = 0
+        self.replay_selected = None
+        self.replay_confirmation = None
         self.replay_notice = ''
         folder = os.path.join(USER_DIR, 'replays')
         try:
+            if os.path.islink(folder):
+                raise OSError('Refusing symlinked replay directory')
             with os.scandir(folder) as entries:
                 for index, entry in enumerate(entries):
-                    if index >= 4096 or len(self.replay_paths) >= 1000:
-                        self.replay_notice = 'Browser limit reached (1000 replays / 4096 entries). Archive older files and refresh.'
+                    if index >= 4096:
+                        self.replay_notice = 'Scan limit: showing newest 1000 of first 4096 entries. Delete ALL still covers all files.'
                         break
                     if entry.name.endswith('.json') and entry.is_file(follow_symlinks=False):
                         self.replay_paths.append(entry.path)
-            self.replay_paths.sort(key=lambda path: os.path.basename(path))
+            from render.replay_library import metadata
+            for path in self.replay_paths:
+                try:
+                    self.replay_metadata[path] = metadata(path)
+                except OSError:
+                    self.replay_metadata[path] = (0, 'Unknown time / unavailable', {})
+            self.replay_paths.sort(key=lambda path: (-self.replay_metadata[path][0], os.path.basename(path)))
+            if len(self.replay_paths) > 1000:
+                self.replay_paths = self.replay_paths[:1000]
+                self.replay_metadata = {path: self.replay_metadata[path] for path in self.replay_paths}
+                if not self.replay_notice:
+                    self.replay_notice = 'Browser limit: showing newest 1000 replays. Delete ALL still covers all files.'
         except FileNotFoundError:
-            pass
+            self.replay_paths = []
+            self.replay_metadata = {}
         except OSError as exc:
+            self.replay_paths = []
+            self.replay_metadata = {}
             self.replay_notice = 'Cannot browse replays: ' + str(exc)[:180]
 
     def _screen_replays(self):
-        from game.net.replay import load_replay
-        target = self._surface
-        self._surface = pygame.Surface((800, 600))
-        self._surface.fill((6, 9, 19))
-        self.replay_rendered_text = []
-        self.replay_text_bounds = []
-        def text(value, x, y, width=744):
-            value = str(value)
-            while value and self.font_small.size(value)[0] > width:
-                value = value[:-2] + '…'
-            glyph = self.font_small.render(value, True, (205, 220, 245))
-            bounds = glyph.get_rect(topleft=(x, y))
-            self._surface.blit(glyph, bounds)
-            self.replay_text_bounds.append(bounds)
-            self.replay_rendered_text.append(value)
-        def button(rect, label, action, payload=None):
-            rect = pygame.Rect(rect)
-            self.buttons.append(dict(rect=rect, action=action, payload=payload))
-            pygame.draw.rect(self._surface, (26, 43, 69), rect, border_radius=5)
-            text(label, rect.x + 10, rect.y + 9, rect.w - 20)
-        text('REPLAYS / READ-ONLY PLAYBACK', 28, 22)
-        text('Matches record automatically. P pause / [ ] speed / Esc exit.', 28, 52)
-        paths = self.replay_paths[self.replay_page * 6:(self.replay_page + 1) * 6]
-        if not paths:
-            text('No replays yet. Finish or leave a match to save one.', 28, 126)
-        for i, path in enumerate(paths):
-            if path not in self.replay_rows:
-                try:
-                    data = load_replay(path)
-                    duration = (data['end_tick'] - data['initial_state'].get('tick', 0)) / 30
-                    self.replay_rows[path] = (f"{data.get('mode', 'legacy')} / {duration:.1f}s / "
-                                              f"game {data.get('game_version', '?')} / format v{data['version']}")
-                    if data.get('compatibility_warning'):
-                        self.replay_rows[path] += (' / legacy: duration/content unverified'
-                            if data['version'] == 1 else ' / future-state unavailable')
-                except (OSError, ValueError, TypeError, KeyError) as exc:
-                    self.replay_rows[path] = 'Cannot play: ' + str(exc)
-            y = 96 + i * 60
-            button((28, y, 744, 54), os.path.basename(path), 'play_replay', path)
-            text(self.replay_rows[path], 38, y + 32, 724)
-        pages = max(1, (len(self.replay_paths) + 5) // 6)
-        text(f'Page {self.replay_page + 1}/{pages} / {len(self.replay_paths)} files', 28, 468)
-        text(self.replay_notice, 28, 498)
-        button((28, 540, 136, 38), 'BACK / ESC', 'goto_main')
-        button((174, 540, 136, 38), 'REFRESH', 'replay_refresh')
-        if self.replay_page:
-            button((456, 540, 146, 38), 'PREVIOUS', 'replay_page', -1)
-        if self.replay_page + 1 < pages:
-            button((612, 540, 160, 38), 'NEXT', 'replay_page', 1)
-        logical = self._surface
-        self._surface = target
-        scale = min(self.width / 800, self.height / 600)
-        ox, oy = (self.width - round(800 * scale)) // 2, (self.height - round(600 * scale)) // 2
-        target.blit(pygame.transform.smoothscale(logical, (round(800 * scale), round(600 * scale))), (ox, oy))
-        def transform(r):
-            return pygame.Rect(ox + round(r.x * scale), oy + round(r.y * scale),
-                               round(r.w * scale), round(r.h * scale))
-        for b in self.buttons:
-            b['rect'] = transform(b['rect'])
-        self.replay_text_bounds = [transform(r) for r in self.replay_text_bounds]
+        from render.classic_replays import replay_library
+        replay_library(self)
+
+    def open_saved_games(self):
+        from render.save_library import browse
+        self.screen = 'saved_games'
+        self.buttons = []
+        self.save_metadata, self.save_notice = browse(SAVES_DIR)
+        self.save_paths = list(self.save_metadata)
+        self.save_selected = None
+        self.save_page = 0
+        self.save_confirmation = None
 
     def _screen_settings(self) -> None:
-        """Three bounded pages, with explicit values and keyboard focus."""
-        pages = (
-            ('Sound & display', (('Music volume', 'music_volume', 'slider'),
-                ('SFX volume', 'sfx_volume', 'slider'), ('Fullscreen', 'fullscreen', 'toggle'),
-                ('Autosave', 'autosave', 'toggle'), ('Ownership markers', 'markers', 'cycle_markers'),
-                ('Camera pan speed', 'pan_speed', 'slider'))),
-            ('Audio & presentation', (('Dynamic range', 'audio_dynamic_range', 'cycle_range'),
-                ('Mono audio', 'audio_mono', 'toggle'), ('Cinematics', 'cinematics_enabled', 'toggle'),
-                ('Reduced motion', 'reduced_motion', 'toggle'), ('Tutorial hints', 'tutorial_hints', 'toggle'))),
-            ('Readability & help', (('High contrast panels', 'high_contrast_ui', 'toggle'),)),
-        )
-        self.settings_page = min(2, max(0, getattr(self, 'settings_page', 0)))
-        self.settings_focus = getattr(self, 'settings_focus', -1)
-        self.settings_text_bounds = []
-        title, rows = pages[self.settings_page]
-        mouse = pygame.mouse.get_pos()
-        foreground = (255, 255, 255) if self.settings['high_contrast_ui'] else (220, 230, 255)
-        panel = pygame.Rect(self.width // 2 - 330, 112, 660, self.height - 222)
-        pygame.draw.rect(self._surface, (0, 0, 0) if self.settings['high_contrast_ui'] else (10, 14, 26), panel)
-
-        def text(label, pos, font=None):
-            rendered = (font or self.font_small).render(label, True, foreground)
-            bounds = self._surface.blit(rendered, pos)
-            self.settings_text_bounds.append((label, bounds))
-
-        text('SETTINGS', (panel.x + 18, 58), self.font_big)
-        text(f'{title} - Page {self.settings_page + 1}/3', (panel.x + 18, panel.y + 18), self.font_med)
-        for index, (label, key, action) in enumerate(rows):
-            y = panel.y + 64 + index * 60
-            r = pygame.Rect(panel.x + 18, y, panel.w - 36, 42)
-            focused = self.settings_focus == index
-            hot = focused or r.collidepoint(mouse)
-            pygame.draw.rect(self._surface, (45, 65, 105) if hot else (20, 28, 46), r)
-            pygame.draw.rect(self._surface, foreground if focused else (100, 125, 165), r, 2 if focused else 1)
-            value = self.settings.get(key)
-            if action == 'slider':
-                value = min(1.0, max(0.0, float(value)))
-                bar = pygame.Rect(r.right - 220, r.y + 16, 140, 10)
-                pygame.draw.rect(self._surface, (60, 75, 95), bar)
-                pygame.draw.rect(self._surface, (160, 190, 255), (bar.x, bar.y, int(value * bar.w), bar.h))
-                text(f'{int(value * 100)}%', (r.right - 65, r.y + 10))
-                payload = {'key': key, 'rect': bar}
-            else:
-                value = ('ON' if value else 'OFF') if action == 'toggle' else str(value).upper()
-                text(value, (r.right - 145, r.y + 10))
-                payload = {'key': key}
-            text(label, (r.x + 12, r.y + 10))
-            self.buttons.append({'rect': r, 'action': action, 'payload': payload})
-        if self.settings_page == 2:
-            for index, line in enumerate(('F1: keyboard and controls help during play.',
-                'High contrast applies to help / hint panels only.',
-                'Reduced motion disables menu drift and cinematic motion.',
-                'Not whole-game scaling or full colorblind compliance.')):
-                text(line, (panel.x + 18, panel.y + 142 + index * 30))
-        text('Tab/Up/Down: focus  Enter: toggle  Left/Right: volume', (panel.x + 18, panel.bottom - 52))
-        text('Page Up/Down: pages  Esc: back', (panel.x + 18, panel.bottom - 28))
-        for index, (label, action, payload) in enumerate((('PREVIOUS', 'settings_page', -1),
-                ('NEXT', 'settings_page', 1), ('BACK', 'goto_main', None))):
-            r = pygame.Rect(panel.x + index * 224, self.height - 90, 212, 48)
-            self._button(r, label, action, payload, hot=r.collidepoint(mouse))
-            # Include the actual button glyph bounds in diagnostic containment.
-            self.settings_text_bounds.append((label, self.font_med.render(label, True, foreground).get_rect(center=r.center)))
+        from render.classic_screens import settings
+        settings(self)
 
     def _settings_key(self, ev) -> bool:
         if ev.type != pygame.KEYDOWN or ev.key == pygame.K_ESCAPE:
@@ -857,124 +591,21 @@ class MenuStack:
         return True
 
     def _screen_campaign(self) -> None:
-        self._title(self.campaign.get("campaign", "CAMPAIGN"),
-                    self.font_big, self.height * 0.08)
-        missions = self.campaign.get("missions", [])
-        mouse = pygame.mouse.get_pos()
-        y0 = int(self.height * 0.20)
-        page_size = max(1, (self.height - 120 - y0) // 58)
-        pages = max(1, (len(missions) + page_size - 1) // page_size)
-        self.campaign_page = min(pages - 1, max(0, getattr(self, 'campaign_page', 0)))
-        unlocked_ids = load_campaign_unlocks()
-        self.campaign_rows = {}
-        if not missions:
-            t = self.font_med.render("No missions defined.", True,
-                                     (200, 100, 100))
-            self._surface.blit(t, (self.width // 2 - 120, y0))
-        start = self.campaign_page * page_size
-        for i in range(start, min(len(missions), start + page_size)):
-            m = missions[i]
-            r = pygame.Rect(self.width // 2 - 260, y0 + (i - start) * 58, 520, 48)
-            self.campaign_rows[m.get('id')] = r
-            unlocked = m.get('id') in unlocked_ids
-            hot = r.collidepoint(mouse)
-            col = (30, 42, 70) if unlocked else (16, 20, 32)
-            pygame.draw.rect(self._surface, col, r, border_radius=6)
-            pygame.draw.rect(self._surface,
-                             (120, 150, 210) if hot else (70, 90, 140),
-                             r, 1, border_radius=6)
-            num = self.font_med.render(f"{i + 1:02d}", True,
-                                       (150, 175, 220) if unlocked
-                                       else (90, 100, 120))
-            self._surface.blit(num, (r.x + 14, r.y + 12))
-            name = self.font_med.render(
-                m.get("name", m.get("id", "?")), True,
-                (220, 230, 255) if unlocked else (90, 100, 120))
-            self._surface.blit(name, (r.x + 64, r.y + 12))
-            if unlocked:
-                self.buttons.append({"rect": r, "action": "select_mission",
-                                     "payload": i})
-        if pages > 1:
-            self._title(f'PAGE {self.campaign_page + 1} / {pages}',
-                        self.font_small, self.height - 112)
-            if self.campaign_page > 0:
-                previous = pygame.Rect(self.width - 440, self.height - 80, 180, 46)
-                self._button(previous, 'PREVIOUS', 'campaign_page', payload=-1,
-                             hot=previous.collidepoint(mouse))
-            if self.campaign_page < pages - 1:
-                following = pygame.Rect(self.width - 220, self.height - 80, 180, 46)
-                self._button(following, 'NEXT', 'campaign_page', payload=1,
-                             hot=following.collidepoint(mouse))
-        back = pygame.Rect(40, self.height - 80, 180, 46)
-        self._button(back, "BACK", "goto_main", hot=back.collidepoint(mouse))
+        from render.classic_screens import campaign
+        campaign(self, load_campaign_unlocks())
 
     def _screen_briefing(self) -> None:
-        missions = self.campaign.get("missions", [])
-        if self.selected_mission >= len(missions):
-            self.screen = "campaign"
-            return
-        m = missions[self.selected_mission]
-        self._title(m.get("name", "MISSION"), self.font_big,
-                    self.height * 0.08)
-        y = self.height * 0.18
-        px, py, pw = self.width // 2 - 330, y, 660
-        # wrapped briefing text — MUST wrap to the panel's inner width, not
-        # the window (a wide window made lines overflow the panel border)
-        wrap_w = pw - 40
-        words = m.get("briefing", "").split()
-        lines, cur = [], ""
-        for w in words:
-            if self.font_med.size(cur + w)[0] > wrap_w:
-                lines.append(cur)
-                cur = w + " "
-            else:
-                cur += w + " "
-        if cur:
-            lines.append(cur)
-        # panel wraps briefing text + objectives + enemy line
-        n_obj = len(m.get("objectives", []))
-        has_enemy = bool(m.get("enemy"))
-        panel_h = (34 * max(1, len(lines)) + 60 + 26 + 22 * n_obj
-                   + (42 if has_enemy else 10))
-        self._panel((px, py, pw, panel_h))
-        ty = py + 16
-        for ln in lines:
-            self._surface.blit(self.font_med.render(ln, True, (205, 218, 245)),
-                               (px + 20, ty))
-            ty += 30
-        # objectives
-        oy = ty + 14
-        self._surface.blit(self.font_small.render("OBJECTIVES", True,
-                                                  (150, 175, 220)),
-                           (px + 20, oy))
-        oy += 26
-        for o in m.get("objectives", []):
-            self._surface.blit(self.font_small.render(
-                "- " + o.get("text", o.get("type", "?")), True,
-                (185, 200, 230)), (px + 34, oy))
-            oy += 22
-        # enemy + loadout summary
-        ey = oy + 18
-        enemy = m.get("enemy", {})
-        if enemy:
-            self._surface.blit(self.font_small.render(
-                f"Enemy: {enemy.get('faction', '?')} force", True,
-                (220, 160, 140)), (px + 20, ey))
-        # buttons
-        mouse = pygame.mouse.get_pos()
-        bw, bh = 200, 48
-        launch = pygame.Rect(self.width - 300, self.height - 90, bw, bh)
-        self._button(launch, "LAUNCH", "launch_mission",
-                     payload=self.selected_mission,
-                     hot=launch.collidepoint(mouse))
-        back = pygame.Rect(self.width - 300 - bw - 20, self.height - 90,
-                           bw, bh)
-        self._button(back, "BACK", "goto_campaign", hot=back.collidepoint(mouse))
+        from render.classic_screens import briefing
+        briefing(self)
 
     # -------------------------------------------------------------- events
     def close(self):
         """Release owned networking and GL resources before context teardown."""
         self.close_lan()
+        if self._menu_movie is not None:
+            self._menu_movie.close()
+            self._menu_movie = None
+        self._splash_shade = None
         if self.overlay_tex is not None:
             from OpenGL.GL import glDeleteTextures
             glDeleteTextures([self.overlay_tex])
@@ -1028,6 +659,16 @@ class MenuStack:
             self.lan_notice = str(exc)
 
     def handle_event(self, ev) -> None:
+        if self.screen == 'saved_games' and self.save_confirmation and ev.type == pygame.KEYDOWN:
+            if ev.key in (pygame.K_ESCAPE, pygame.K_RETURN, pygame.K_KP_ENTER):
+                self.save_confirmation = None
+                self.buttons = []
+            return
+        if self.screen == 'replays' and self.replay_confirmation and ev.type == pygame.KEYDOWN:
+            if ev.key in (pygame.K_ESCAPE, pygame.K_RETURN, pygame.K_KP_ENTER):
+                self.replay_confirmation = None
+                self.buttons = []
+            return
         if self.screen == 'settings' and self._settings_key(ev):
             return
         if self.screen in ('lan_host', 'lan_join') and self.lan_focus:
@@ -1056,7 +697,7 @@ class MenuStack:
                     self.screen = 'main' if self.screen == 'lan' else 'lan'
                 elif self.screen == "splash":
                     self.result = MenuResult.EXIT
-                elif self.screen in ("settings", "campaign", "briefing", "skirmish", "replays"):
+                elif self.screen in ("settings", "campaign", "briefing", "skirmish", "replays", 'saved_games'):
                     self.screen = "main" if self.screen != "briefing" \
                         else "campaign"
                 elif self.screen == "main":
@@ -1078,12 +719,102 @@ class MenuStack:
                     self.screen = "main"
                 elif act == 'goto_replays':
                     self.open_replays()
+                elif act in ('goto_saved_games', 'save_refresh'):
+                    self.open_saved_games()
+                elif act == 'save_page':
+                    self.save_page = min(max(0, (len(self.save_paths) - 1) // 6),
+                                         max(0, self.save_page + b['payload']))
+                    self.buttons = []
+                elif act == 'select_save':
+                    if b['payload'] in self.save_metadata:
+                        self.save_selected = b['payload']
+                    self.buttons = []
+                elif act == 'load_save':
+                    if self.save_selected and b['payload'] == self.save_selected:
+                        self.result = MenuResult.LOAD_GAME
+                        self.result_payload = self.save_selected
+                        self.buttons = []
+                elif act == 'save_delete_all':
+                    self.save_confirmation = 'ALL'
+                    self.buttons = []
+                elif act == 'save_delete':
+                    if self.save_selected:
+                        self.save_confirmation = self.save_selected
+                        self.buttons = []
+                elif act == 'save_cancel_delete':
+                    self.save_confirmation = None
+                    self.buttons = []
+                elif act == 'save_confirm_delete':
+                    from render.save_library import delete_selected, delete_all
+                    path = self.save_confirmation
+                    try:
+                        count, failed, error = 1, 0, ''
+                        if path == 'ALL':
+                            count, failed, error = delete_all(SAVES_DIR)
+                        else:
+                            delete_selected(SAVES_DIR, path)
+                        page = self.save_page
+                        self.open_saved_games()
+                        self.save_page = min(page, max(0, (len(self.save_paths) - 1) // 6))
+                        self.save_notice = f'Deleted {count} saved game(s).'
+                        if failed:
+                            self.save_notice += f' {failed} failed: {error}'
+                    except OSError as exc:
+                        self.save_confirmation = None
+                        self.buttons = []
+                        self.save_notice = 'Cannot delete save: ' + str(exc)[:180]
                 elif act == 'replay_page':
                     self.replay_page = min(max(0, (len(self.replay_paths) - 1) // 6),
                                            max(0, self.replay_page + b['payload']))
                     self.buttons = []
                 elif act == 'replay_refresh':
                     self.open_replays()
+                elif act == 'select_replay':
+                    self.replay_selected = b['payload']
+                    from game.net.replay import load_replay
+                    try:
+                        data = load_replay(self.replay_selected)
+                        duration = (data['end_tick'] - data['initial_state'].get('tick', 0)) / 30
+                        detail = (f"{data.get('mode', 'legacy')} / {duration:.1f}s / "
+                                  f"game {data.get('game_version', '?')} / format v{data['version']}")
+                        if data.get('compatibility_warning'):
+                            detail += (' / legacy: duration/content unverified' if data['version'] == 1
+                                       else ' / future-state unavailable')
+                    except (OSError, ValueError, TypeError, KeyError) as exc:
+                        detail = 'Cannot play: ' + str(exc)[:180]
+                    self.replay_notice = detail
+                    self.replay_rows[self.replay_selected] = self.replay_metadata[self.replay_selected][1] + ' / ' + detail
+                    self.buttons = []
+                elif act == 'replay_delete_all':
+                    self.replay_confirmation = 'ALL'
+                    self.buttons = []
+                elif act == 'replay_delete':
+                    if self.replay_selected:
+                        self.replay_confirmation = self.replay_selected
+                        self.buttons = []
+                elif act == 'replay_cancel_delete':
+                    self.replay_confirmation = None
+                    self.buttons = []
+                elif act == 'replay_confirm_delete':
+                    path = self.replay_confirmation
+                    try:
+                        from render.replay_library import delete_selected, delete_all
+                        folder = os.path.join(USER_DIR, 'replays')
+                        count, failed, error = 1, 0, ''
+                        if path == 'ALL':
+                            count, failed, error = delete_all(folder)
+                        else:
+                            delete_selected(folder, path)
+                        page = self.replay_page
+                        self.open_replays()
+                        self.replay_page = min(page, max(0, (len(self.replay_paths) - 1) // 6))
+                        self.replay_notice = f'Deleted {count} replay(s).'
+                        if failed:
+                            self.replay_notice += f' {failed} failed: {error}'
+                    except OSError as exc:
+                        self.replay_confirmation = None
+                        self.buttons = []
+                        self.replay_notice = 'Cannot delete replay: ' + str(exc)[:180]
                 elif act == 'play_replay':
                     from game.net.replay import load_replay, validate_replay
                     try:

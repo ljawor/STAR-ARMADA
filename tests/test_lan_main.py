@@ -1,5 +1,6 @@
 """Execute actual main factories without importing its SDL entry loop."""
 import ast
+import os
 from pathlib import Path
 import unittest
 from types import SimpleNamespace
@@ -13,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def factories():
     tree = ast.parse((ROOT / 'main.py').read_text())
-    ns = dict(GameManager=GameManager, GameState=GameState, DataStore=DataStore,
+    ns = dict(os=os, GameManager=GameManager, GameState=GameState, DataStore=DataStore,
               MODS=[], W=800, H=600, gm=None, state=None, camera=None, renderer=None,
               hud=None, audio=None, inputc=None, net_session=None, local_player=0,
               accumulator=0., last_autosave=0., menu=Mock(), mode='game', paused=False,
