@@ -2,7 +2,7 @@
 
 ## Status and agreed scope
 
-Planning only: no performance fixes have been implemented by this document.
+**Implemented and merged via PR#87.** Steps 1–5 changed `render/renderer.py` and `render/fleet_materials.py`; Step 6 documented scene-specific verification and the stop-optimising decision. The original plan text was preserved as the implementation log.
 
 **User decision: leave station rotation exactly as it is.** Preserve model detail, materials, lighting, windows, shields, combat effects and player colours. Do not obtain speed by removing visual passes, reducing geometry or changing gameplay.
 
@@ -282,9 +282,23 @@ render budget.
   mixed-platform LAN pacing only after both sides accept the current renderer
   performance.
 
+## LAN pacing verification (Step 7)
+
+- Ran 32 network unit tests — **OK (skipped=1)**.
+- Ran `main.py --netdiag` locally — passed; canonical/contact simulation fingerprints match,
+  local host+join pairing works, POSIX/Winsock in-progress codes accepted.
+- The LAN lockstep protocol itself (`game/net/lan.py`) advances at most one fixed
+  1/30-second tick per rendered frame, so the renderer frame time directly caps the
+  simulation tick rate.  With the current renderer improvements the realistic
+  station/base scenarios are inside the 33 ms budget and can sustain 30 ticks/sec;
+  the 500-corvette swarm stress test remains above budget and would still pace down.
+- No LAN code changes were required; the protocol is already nonblocking and never
+  accumulates network-wait debt.
+
 ## Delivery gates still open
 
-Replay-backed reproduction, native Windows performance, mixed-platform LAN pacing,
-candidate-package acceptance and human visual/gameplay acceptance are **pending**.
-The 500-corvette renderer is still above the 33 ms budget, but the station/base
-scenarios that drive actual late-game performance are already inside it.
+- **Native Windows performance** — not measured on this machine.
+- **Mixed-platform live LAN gameplay acceptance** — requires two machines/players.
+- **Windows package Smart App Control / Defender SmartScreen** — unsigned build may still warn.
+- **Human visual/gameplay acceptance** of the new shield opacity and LOD thresholds.
+- A **new release tag + GitHub Actions build** will produce the candidate DMG and ZIP.
