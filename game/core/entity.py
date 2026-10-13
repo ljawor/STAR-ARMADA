@@ -54,6 +54,7 @@ class Entity:
     crew: int = 1
     max_crew: int = 1
     crew_loss_accumulator: float = 0.0
+    crew_damage_accumulator: float = 0.0  # actual hull HP toward next casualty
     recruitment_progress: float = 0.0
     crew_cargo: int = 0
     cargo_loss_accumulator: float = 0.0
@@ -71,6 +72,7 @@ class Entity:
     # combat runtime
     weapon_cooldowns: dict = field(default_factory=dict)   # weapon idx -> seconds
     current_target: int | None = None
+    abandoned_attack_target: int | None = None  # new human order on a derelict only
     retarget_cooldown: float = 0.0
 
     # abilities (runtime state)

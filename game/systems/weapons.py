@@ -34,12 +34,22 @@ def mount_needs_nose(wref, wd) -> bool:
     return all(arc == "front" for arc in mount_arcs(wref, wd))
 
 
+def combat_target_allowed(st, e, target, *, automatic=False) -> bool:
+    """Live combat policy; explicit derelict permission never authorizes acquisition."""
+    return bool(target is not None and target.alive and not target.is_planet
+                and st.is_enemy(e.owner, target.owner)
+                and st.can_see(e.owner, target.id)
+                and (target.operational or (not automatic
+                     and e.owner in st.players and not st.players[e.owner].is_ai
+                     and e.abandoned_attack_target == target.id
+                     and e.order_type == 'attack' and e.order_target_id == target.id)))
+
+
 def clear_unseen_targets(st, e) -> None:
     """Drop contact-dependent orders before any system reads a live position."""
     if e.current_target is not None:
         target = st.entity(e.current_target)
-        if (target is None or not st.is_enemy(e.owner, target.owner)
-                or not st.can_see(e.owner, target.id)):
+        if not combat_target_allowed(st, e, target):
             e.current_target = None
             if e.order_type in ("attack", "chase") and e.order_target_id is None:
                 e.order_type = "idle"
@@ -54,15 +64,16 @@ def clear_unseen_targets(st, e) -> None:
                             and e.order_target_id == e.convoy_dest
                             and e.order_target_pos is None
                             and TradingSystem.valid_destination(st, e, target))
-        friendly_attack = (e.order_type in ("attack", "chase")
-                           and target is not None
-                           and not st.is_enemy(e.owner, target.owner))
-        if target is None or friendly_attack or (not commercial_route
+        forbidden_attack = (e.order_type in ("attack", "chase")
+                           and not combat_target_allowed(st, e, target))
+        if target is None or forbidden_attack or (not commercial_route
                               and st.is_enemy(e.owner, target.owner)
                               and not st.can_see(e.owner, target.id)):
             e.order_target_id = None
             e.order_target_pos = None
             e.order_type = "idle"
+    if e.order_type != "attack" or e.order_target_id != e.abandoned_attack_target:
+        e.abandoned_attack_target = None
 
 
 class WeaponSystem:
@@ -71,12 +82,9 @@ class WeaponSystem:
         self.ds = DataStore.get()
 
     # ------------------------------------------------------------------ helpers
-    def _target_valid(self, e, tid: int) -> bool:
+    def _target_valid(self, e, tid: int, *, automatic=False) -> bool:
         t = self.state.entity(tid)
-        if (t is None or not self.state.is_enemy(e.owner, t.owner)
-                or not self.state.can_see(e.owner, tid)):
-            return False
-        if t.is_planet:
+        if not combat_target_allowed(self.state, e, t, automatic=automatic):
             return False
         if e.data_id == 'defense_satellite' and not t.is_squadron:
             return False
@@ -135,7 +143,8 @@ class WeaponSystem:
             # farther candidate cannot replace the winner even when visible.
             # Preserve grid iteration order and strict '<' equal-distance ties.
             d = e.pos.dist_sq(t.pos)
-            if d >= best_d or not self._target_valid(e, tid):
+            if (d >= best_d or not t.operational
+                    or not self._target_valid(e, tid, automatic=True)):
                 continue
             # squadrons prefer fighters, etc. handled by weapon filters at fire time
             best, best_d = t, d

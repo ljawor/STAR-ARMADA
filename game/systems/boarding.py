@@ -185,6 +185,9 @@ class BoardingSystem:
                 lost = min(target.crew, int(info['defender_loss']))
                 info['defender_loss'] -= lost
                 target.crew -= lost
+                if lost and target.crew == 0:
+                    from .crew import abandon_unit
+                    abandon_unit(st, target)
             if craft.crew <= 0:
                 self._remove(craft)
                 st.events.publish('boarding_failed', entity_id=craft.id, target=target.id,

@@ -389,6 +389,8 @@ class GameState:
             "level": e.level,
             "crew": e.crew, "max_crew": e.max_crew,
             "crew_loss_accumulator": e.crew_loss_accumulator,
+            "crew_damage_accumulator": e.crew_damage_accumulator,
+            "abandoned_attack_target": e.abandoned_attack_target,
             "recruitment_progress": e.recruitment_progress,
             "crew_cargo": e.crew_cargo,
             "cargo_loss_accumulator": e.cargo_loss_accumulator,
@@ -491,6 +493,8 @@ class GameState:
         e.max_crew = d.get('max_crew', complement)
         e.crew = d.get('crew', e.max_crew)
         e.crew_loss_accumulator = d.get('crew_loss_accumulator', 0.0)
+        e.crew_damage_accumulator = d.get('crew_damage_accumulator', 0.0)
+        e.abandoned_attack_target = d.get('abandoned_attack_target')
         e.boarding = dict(d.get('boarding', {}))
         e.recruitment_progress = d.get('recruitment_progress', 0.0)
         e.crew_cargo = d.get('crew_cargo', 0)
