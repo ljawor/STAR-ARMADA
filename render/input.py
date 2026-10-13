@@ -294,6 +294,11 @@ class InputController:
         self.selection.intersection_update(
             eid for eid in tuple(self.selection)
             if self.state.can_see(self.local_player, eid))
+        # A hull in hyperspace transit renders nowhere on the strategic view:
+        # drop it from selection too, or the HUD would describe a ghost (#92).
+        self.selection.intersection_update(
+            eid for eid in tuple(self.selection)
+            if (e := self.state.entity(eid)) is not None and not e.jump_travelling)
         if self.camera.follow_id is not None and not self.state.can_see(
                 self.local_player, self.camera.follow_id):
             self.camera.follow_id = None

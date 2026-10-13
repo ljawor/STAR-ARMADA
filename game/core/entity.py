@@ -110,6 +110,17 @@ class Entity:
     # hyperspace
     jump_charge: float = 0.0           # seconds accumulated toward jump prep
     jump_target: Vec3 | None = None
+    # #92 transit phase: after charge expires the hull rides hyperspace along
+    # the straight origin→exit corridor. jump_target stays the reserved exit
+    # until arrival; jump_charge becomes the seconds left in transit.
+    jump_origin: Vec3 | None = None
+    jump_travelling: bool = False
+    jump_transit_total: float = 0.0
+
+    @property
+    def in_jump(self) -> bool:
+        """Any hyperspace phase: prep, staged charge or transit."""
+        return self.jump_charge > 0 or self.jump_target is not None
 
     # misc
     name_override: str | None = None

@@ -445,6 +445,13 @@ class GameState:
             d["jump_charge"] = e.jump_charge if precise else round(e.jump_charge, 2)
         if e.jump_target is not None:
             d["jump_target"] = e.jump_target.to_dict(precise)
+        if e.jump_origin is not None:
+            d["jump_origin"] = e.jump_origin.to_dict(precise)
+        if e.jump_travelling:
+            d["jump_travelling"] = True
+        if e.jump_transit_total:
+            d["jump_transit_total"] = (e.jump_transit_total if precise
+                                       else round(e.jump_transit_total, 2))
         if e.name_override:
             d["name_override"] = e.name_override
         if e.patrol_a is not None:
@@ -533,6 +540,10 @@ class GameState:
         e.jump_charge = d.get("jump_charge", 0.0)
         if "jump_target" in d:
             e.jump_target = Vec3.from_dict(d["jump_target"])
+        if "jump_origin" in d:
+            e.jump_origin = Vec3.from_dict(d["jump_origin"])
+        e.jump_travelling = bool(d.get("jump_travelling", False))
+        e.jump_transit_total = d.get("jump_transit_total", 0.0)
         e.name_override = d.get("name_override")
         if "patrol_a" in d:
             e.patrol_a = Vec3.from_dict(d["patrol_a"])

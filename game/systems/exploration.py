@@ -37,7 +37,7 @@ class ExplorationSystem:
         if (player not in self.state.players or entity.owner != player
                 or self.state.entity(entity.id) is not entity
                 or not entity.operational or not exploration_capable(entity)
-                or entity.ability_active.get('hyperspace_transit', 0) > 0):
+                or entity.jump_travelling):
             return False
         detach_jumpers(self.state, [entity])
         clear_jump_orders(entity)

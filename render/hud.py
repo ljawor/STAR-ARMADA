@@ -659,8 +659,12 @@ class HUD:
             y += 18
             self._bar(panel.x + 12, y, 296, 10, done, ACCENT)
             y += 18
-        # jump charge
-        if e.jump_target is not None:
+        # jump charge / transit
+        if e.jump_travelling:
+            self._label(panel.x + 12, y,
+                        f"HYPERSPACE TRANSIT {e.jump_charge:0.0f}s", WARN)
+            y += 20
+        elif e.jump_target is not None:
             self._label(panel.x + 12, y,
                         f"HYPERSPACE CHARGE {e.jump_charge:0.0f}", WARN)
             y += 20

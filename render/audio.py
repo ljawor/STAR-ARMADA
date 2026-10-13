@@ -56,6 +56,7 @@ RATE_LIMITS = {
     "mission": 1.000,
     "ability": 0.080,
     "jump": 0.300,
+    "jump_depart": 0.400,
 }
 
 #: distance (world units) at which a sound has fallen to ~half gain.
@@ -235,6 +236,7 @@ class Audio:
         st.events.subscribe("weapon_fired", self._ev_fire)
         st.events.subscribe("projectile_hit", self._ev_hit)
         st.events.subscribe("jump_complete", self._ev_jump)
+        st.events.subscribe("jump_depart", self._ev_jump_depart)
         st.events.subscribe("ship_built", self._ev_build)
         st.events.subscribe("station_built", self._ev_station)
         st.events.subscribe("research_complete", self._ev_research)
@@ -407,6 +409,13 @@ class Audio:
         shine = _shape(noise(1.4, 131), rate, 3000.0, res=0.8, hp=400.0)
         je = np.sin(math.pi * t / 1.4) ** 0.5
         self.sounds["jump"] = _to_sound((w + shine * 0.25) * je, rate, peak=0.7)
+        # hyperspace departure (#92): the mirror voice — falling sweep, the
+        # hull dropping into FTL at charge end. Same envelope family.
+        f = 1400.0 + (90.0 - 1400.0) * (t / 1.4) ** 2
+        w = np.sin(2 * math.pi * np.cumsum(f) / rate)
+        shine = _shape(noise(1.4, 132), rate, 3000.0, res=0.8, hp=400.0)
+        self.sounds["jump_depart"] = _to_sound(
+            (w + shine * 0.22) * je, rate, peak=0.6)
 
         def chirp(freqs, dur_each=0.11, vol=0.75, seed=0):
             parts = []
@@ -796,6 +805,11 @@ class Audio:
         if not self._audible_event(ev):
             return
         self.play("jump", 0.6, pos=self._ev_pos(ev))
+
+    def _ev_jump_depart(self, ev) -> None:
+        if not self._audible_event(ev):
+            return
+        self.play("jump_depart", 0.55, pos=self._ev_pos(ev))
 
     def _ev_level(self, ev) -> None:
         if not self._own_event(ev):

@@ -459,7 +459,8 @@ class ConstructionSystem:
                 or not unit.is_ship):
             return False
         ud = self.ds.ships.get(unit.data_id)
-        if ud is None or not ud.can_colonize or unit.jump_charge > 0 or unit.jump_target is not None:
+        if ud is None or not ud.can_colonize or unit.jump_charge > 0 \
+                or unit.jump_target is not None or unit.jump_travelling:
             return False
         # A new control intent replaces the old mission even if its target is
         # rejected. Authorize the source first: foreign/incapable units retain jobs.

@@ -79,6 +79,11 @@ class AbilitySystem:
                 return False
         if e.ability_cooldowns.get(ability_id, 0.0) > 0:
             return False
+        if ability_id == "emergency_shield_recharge" and \
+                e.ability_cooldowns.get("shield_lockdown", 0.0) > 0:
+            # #78: shields stay down right after hyperspace exit; recharge
+            # cannot bypass the lockdown.
+            return False
         if e.energy < a.energy_cost:
             return False
         e.energy -= a.energy_cost

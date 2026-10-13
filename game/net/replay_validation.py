@@ -297,13 +297,28 @@ def reconstruct(initial, mods=None):
         manager = GameManager(state=GameState.from_dict(deepcopy(initial), sanitize_save=False), mods=mods or None)
         # Save loading may cancel historical bad jump intent. Replay approval
         # instead rejects it, on the reconstructed canonical graph before ticks.
-        from ..systems.jump import jump_destination, jump_footprint_valid
+        # Transit states (#92) are validated with the same strictness.
+        from ..systems.jump import (jump_destination, jump_footprint_valid,
+                                    transit_seconds)
         for entity in manager.state.entities.values():
             if entity.alive and entity.jump_charge > 0:
                 target = jump_destination(manager.state, entity.owner, entity.jump_target)
                 require(target is not None and
                         jump_footprint_valid(manager.state, entity.owner, target, entity.radius),
                         'jump destination/footprint')
+                if entity.jump_travelling:
+                    origin = jump_destination(manager.state, entity.owner,
+                                              entity.jump_origin)
+                    require(origin is not None, 'transit origin geometry')
+                    require(type(entity.jump_transit_total) is float
+                            and math.isfinite(entity.jump_transit_total)
+                            and entity.jump_transit_total > 0.0
+                            and entity.jump_charge <= entity.jump_transit_total,
+                            'transit duration/progress')
+                    rules = manager.ds.rules.get('hyperspace', {})
+                    require(entity.jump_transit_total ==
+                            transit_seconds(rules, entity.jump_origin.dist(target)),
+                            'transit duration matches rules')
         if initial.get('runtime_state') is not None:
             import json
             visible = json.loads(json.dumps(manager.state.to_dict(precise=True)))

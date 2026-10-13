@@ -46,6 +46,22 @@ def detach_jumpers(state, ships) -> None:
             fleet.flagship_id = flagship.id if flagship is not None else None
 
 
+def transit_seconds(rules, distance: float) -> float:
+    """Deterministic transit duration (#92): distance over speed, clamped."""
+    speed = rules.get("transit_units_per_second", 240.0)
+    tmin = rules.get("min_transit_seconds", 3.0)
+    tmax = rules.get("max_transit_seconds", 120.0)
+    if (isinstance(speed, bool) or not isinstance(speed, (int, float))
+            or not math.isfinite(speed) or speed <= 0
+            or isinstance(tmin, bool) or not isinstance(tmin, (int, float))
+            or not math.isfinite(tmin) or tmin < 0
+            or isinstance(tmax, bool) or not isinstance(tmax, (int, float))
+            or not math.isfinite(tmax) or tmax < tmin):
+        raise ValueError('hyperspace transit rules must be finite and ordered')
+    raw = distance / speed
+    return max(tmin, min(tmax, raw))
+
+
 def jump_destination(state, player: int, target, *, require_unexplored: bool = False) -> Vec3 | None:
     """Parse a strict finite triple inside the map; never coerce malformed input."""
     if player not in state.players:

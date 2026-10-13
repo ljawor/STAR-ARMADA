@@ -82,14 +82,14 @@ class ProjectileSystem:
                 continue
             if not st.is_enemy(p.owner, t.owner):
                 continue
-            if t.is_planet:
+            if t.is_planet or t.jump_travelling:
                 continue
             # proximity check against entity radius
             if p.pos.dist(t.pos) <= max(t.radius * 0.6, 14.0):
                 return (t, st.entities.get(tid))
         # fallback: targeted entity check (fast projectiles can tunnel the grid cell)
         t = st.entity(p.target_id)
-        if t is not None and st.is_enemy(p.owner, t.owner):
+        if t is not None and st.is_enemy(p.owner, t.owner) and not t.jump_travelling:
             if p.pos.dist(t.pos) <= max(t.radius * 1.1, 24.0):
                 return (t, st.entities.get(p.target_id))
         return None

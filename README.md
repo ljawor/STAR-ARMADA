@@ -8,6 +8,21 @@ Python 3 — deterministic simulation, AI, OpenGL rendering via pygame-ce and pr
 — published October 13, 2026, with verified macOS DMG and **unsigned Windows ZIP**.
 Adds Clean Classic menu unification across all screens, a looping close-up battle background on every non-replay menu, a Saved Games library with explicit Load/Delete actions, and unified replay management with timestamps, selection and bulk deletion. Includes native Windows safe deletion acceptance (4,101-file uncapped delete, symlink/junction containment, replacement blocking, handle cleanup, plus new saved-games namespace test). The final **1,266-test** suite and independent reviews passed. Both native builds are produced by GitHub Actions; downloaded SHA-256/DMG/ZIP checks passed on the macOS side. Windows-source LAN diagnostics/tests passed on a native CI runner; this does not prove frozen Windows gameplay or mixed-platform live LAN. Interactive Windows, trusted signing/Smart App Control, human listening/campaign and full-match balance remain open.
 
+## v0.14.0 (unreleased) — Hyperspace transit travel and post-jump shield lockdown
+
+Hyperjumps (#92) are no longer instant: the charge countdown ends with a departure
+ring/sound and the hull rides hyperspace along the origin→exit corridor. Travel time
+scales with distance (240 units/second, clamped 3–120 s). While in transit the ship
+is invisible on the strategic view for every player, cannot be targeted, hit, boarded
+or sensed, and its own sensors are inert — but it keeps moving on the minimap. On
+arrival the reserved exit position is re-checked and shields stay down for 15 seconds
+(#78): no regeneration and no emergency recharge until the lockdown expires. A group
+jump still lands every ship on its deterministic reserved exit; saves, restores and
+replays serialize the full transit state bit-exactly.
+
+The final **1,251-test** suite passed (1 pre-existing, environment-dependent failure
+in the menu-exit audio probe reproduces on the release tag and is unrelated).
+
 The setting is an original space-opera universe. Prototype faction/ship names are
 placeholder-style data (Imperial / Rebel / Confederacy / Syndicate) so the feel reads
 familiar, but **no copyrighted assets, code, maps, sounds or text from any commercial

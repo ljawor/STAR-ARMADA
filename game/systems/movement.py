@@ -47,7 +47,9 @@ class MovementSystem:
                 # charging hyperspace: engines locked
                 e.vel.set_scaled(e.vel, 0.9)
                 continue
-            if e.ability_active.get("hyperspace_transit", 0) > 0:
+            if e.jump_travelling:
+                # hyperspace transit (#92): engines are meaningless in FTL;
+                # position rides the origin→exit corridor via jump system
                 continue
 
             # Only explicit combat travel uses an orbit. Ordinary move/follow,

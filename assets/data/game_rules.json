@@ -75,7 +75,11 @@
     "prep_seconds_per_command_point": 1.2,
     "min_prep_seconds": 3.0,
     "cooldown_after_jump": 20.0,
-    "energy_cost_per_command_point": 12.0
+    "energy_cost_per_command_point": 12.0,
+    "transit_units_per_second": 240.0,
+    "min_transit_seconds": 3.0,
+    "max_transit_seconds": 120.0,
+    "shield_lockdown_seconds": 15.0
   },
   "experience": {
     "xp_per_damage": 0.01,
