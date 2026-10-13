@@ -389,6 +389,31 @@ See [Phase 10 acceptance](docs/PHASE10_ACCEPTANCE.md) for evidence and limits.
 Both published downloads passed package verification; those checks do not close
 the human/platform acceptance gates above.
 
+## Localization — English, German, Polish (#93)
+
+The game ships three languages. `Settings → Language` cycles them and applies immediately;
+the choice persists in `saves/settings.json` as `"language": "pl"`.
+
+A language is **presentation only**: packs are read at the drawing edges (the classic
+canvas, the menu helpers, `HUD._label` and the word-wrap helper), a pack that is missing a
+line falls back to English, and no module under `game/` can even import the layer — so two
+lockstep peers may play the same match in different languages and still agree on every
+ticksum. Assembled text (a victory banner, a refit level line, a resource bill) is asked
+for as a template, e.g. `t('{credits} cr · {materials} mt')`, and every data-driven name
+(ships, stations, factions, tech, weapons) is translated too:
+
+| | English | Deutsch | Polski |
+|---|---|---|---|
+| Station panel | `REFIT · LEVEL 3/5` | `UMBAU · STUFE 3/5` | `PRZEBUDOWA · POZIOM 3/5` |
+| Main menu | `Settings` | `Einstellungen` | `Ustawienia` |
+| A hull | `Shipyard` | `Werft` | `Stocznia` |
+
+Packs live in `assets/data/lang/`; `tools/lang_coverage.py` extracts the catalogue from the
+source and reports coverage (currently **100%** for both packs: 326 UI strings + 96 names),
+and `tools/build_lang_packs.py` refuses to write a pack that is missing a key or carrying a
+dead one. See `docs/LOCALIZATION.md` and run `python tools/diag_i18n.py` to re-check that
+geometry, truncation and lookup coverage all hold.
+
 ## Skirmish maps and setup contract
 
 The built-in skirmish catalogue is restricted to these four map IDs. Capacity is

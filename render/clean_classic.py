@@ -2,6 +2,8 @@
 from functools import lru_cache
 import pygame
 
+from render import i18n
+
 INK = (229, 235, 236)
 MUTED = (152, 168, 183)
 ACCENT = (184, 220, 215)
@@ -23,8 +25,10 @@ def main_menu(menu):
     cx = menu.width // 2
     title = font(round(46 * scale), True).render('STAR ARMADA', True, INK)
     surface.blit(title, title.get_rect(center=(cx, round(menu.height * .20))))
-    subtitle = font(round(13 * scale)).render('FLEET COMMAND  ·  OUTER ARMADA', True, MUTED)
+    subtitle = font(round(13 * scale)).render(
+        i18n.t('FLEET COMMAND  ·  OUTER ARMADA'), True, MUTED)
     surface.blit(subtitle, subtitle.get_rect(center=(cx, round(menu.height * .27))))
+    drawn = []
     width, height = round(310 * scale), round(40 * scale)
     y = round(menu.height * .35)
     mouse = pygame.mouse.get_pos()
@@ -34,6 +38,11 @@ def main_menu(menu):
             ('Settings', 'goto_settings'), ('Quit', 'exit'))):
         rect = pygame.Rect(cx - width // 2, y + i * round(48 * scale), width, height)
         menu.buttons.append(dict(rect=rect, action=action, payload=None))
+        # This screen draws its own labels rather than going through the canvas, so the
+        # lookup happens here — and the drawn text is recorded for the same reason the
+        # canvas records its own.
+        label = i18n.t(label)
+        drawn.append(label)
         primary = i == 0
         pygame.draw.rect(surface, ACCENT if primary else (25, 39, 49) if rect.collidepoint(mouse) else (13, 23, 32), rect, border_radius=4)
         if not primary:
@@ -47,6 +56,7 @@ def main_menu(menu):
     if notice:
         glyph = f.render(notice, True, MUTED)
         surface.blit(glyph, glyph.get_rect(center=(cx, menu.height - 20)))
+    menu.main_rendered_text = drawn
 
 class SetupCanvas:
     """One cached logical surface, measured glyphs, and mapped hit targets."""
@@ -69,6 +79,9 @@ class SetupCanvas:
         self.texts, self.bounds, self.starts = [], [], []
 
     def text(self, value, rect, size=16, color=INK, wrap=False):
+        # Drawing edge (#93): every classic-screen label, value and note is looked up
+        # here, so the whole menu surface is translated without touching a call site.
+        value = i18n.t(value)
         rect = pygame.Rect(rect)
         f = font(size, size >= 24)
         lines, line = [], ''
@@ -96,6 +109,12 @@ class SetupCanvas:
 
     def button(self, rect, label, action, payload=None, selected=False, swatch=None, primary=False, size=14):
         from game.core.skirmish import PLAYER_COLORS
+        # Drawing edge (#93): these labels arrive already suffixed ("Blue ›", "Team 2 ›") so
+        # that the row reads as click-to-cycle. The suffix is not part of any msgid, so look
+        # up the name alone and put the affordance back — dropping it would silently remove
+        # the only cue that the row cycles.
+        suffix = ' ›' if label.endswith(' ›') else ''
+        label = i18n.t(label[:-len(suffix)] if suffix else label) + suffix
         rect = pygame.Rect(rect)
         self.menu.buttons.append(dict(rect=rect, action=action, payload=payload))
         pygame.draw.rect(self.surface, ACCENT if primary else (28, 48, 53) if selected else (14, 24, 33), rect, border_radius=4)

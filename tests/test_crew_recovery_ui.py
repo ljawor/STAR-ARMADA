@@ -47,7 +47,7 @@ class RecoveryUITests(unittest.TestCase):
         self.t.crew //= 2
         self.gm.recovery.start(self.t, 'load')
         labels = []
-        self.hud._label = lambda x, y, text, *args: labels.append(str(text))
+        self.hud._label = lambda x, y, text, *args, **kwargs: labels.append(str(text))
         before = self.st.to_dict(precise=True)
         self.hud._left_panel({self.t.id}, 0)
         self.assertTrue(any('CARGO 20/240' in s for s in labels))

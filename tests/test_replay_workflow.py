@@ -1,4 +1,6 @@
 """Player-facing replay vertical slices; full precision, not coarse checksums."""
+import os
+from unittest.mock import patch
 import json
 import tempfile
 import unittest
@@ -19,6 +21,17 @@ def game():
 
 
 class ReplayWorkflowTests(unittest.TestCase):
+    def setUp(self):
+        holder = tempfile.TemporaryDirectory()
+        self.addCleanup(holder.cleanup)
+        # `render.menus` freezes its persistence paths at import, so a temporary USER_DIR
+        # does not move SETTINGS_PATH: pin the settings file itself, or this menu draws in
+        # whatever language the developer's own game last saved.
+        scope = patch('render.menus.SETTINGS_PATH',
+                      os.path.join(holder.name, 'settings.json'))
+        scope.start()
+        self.addCleanup(scope.stop)
+
     def test_record_consumed_commands_once_and_precise_every_tick(self):
         self.assertTrue(hasattr(replay, 'MatchRecording'), 'consumed-tick recording missing')
         gm = game()

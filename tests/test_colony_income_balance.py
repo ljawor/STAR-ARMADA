@@ -174,7 +174,7 @@ class ColonyIncomeBalanceTests(unittest.TestCase):
                     pygame.font.init()
                     hud = HUD(1280, 800, gm.state)
                     labels = []
-                    hud._label = lambda x, y, text, *args: labels.append(str(text))
+                    hud._label = lambda x, y, text, *args, **kwargs: labels.append(str(text))
                     try:
                         hud._left_panel({planet.id}, 0)
                         for resource in RESOURCES:

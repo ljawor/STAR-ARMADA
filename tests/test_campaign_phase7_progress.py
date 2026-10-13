@@ -17,6 +17,13 @@ class CampaignProgressTests(unittest.TestCase):
         self.patch = patch.object(menus, 'CAMPAIGN_PATH', str(self.path))
         self.patch.start()
         self.addCleanup(self.patch.stop)
+        # `render.menus` freezes its persistence paths at import, so a temporary
+        # campaign path does not move SETTINGS_PATH: the language this menu draws in
+        # must not come from the file the developer's own game wrote.
+        self.settings = patch.object(menus, 'SETTINGS_PATH',
+                                     str(Path(self.tmp.name) / 'settings.json'))
+        self.settings.start()
+        self.addCleanup(self.settings.stop)
 
     def test_legacy_zero_keeps_first_fleet_unlocked_after_tutorial_insertion(self):
         self.path.write_text(json.dumps({'mission_index': 0}))

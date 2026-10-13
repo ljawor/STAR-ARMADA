@@ -1,4 +1,6 @@
 """Menu events use software surfaces: no display or OpenGL required."""
+import os
+import tempfile
 import unittest
 from unittest.mock import patch
 import pygame
@@ -20,6 +22,15 @@ class SkirmishMenuTests(unittest.TestCase):
         mouse = patch('pygame.mouse.get_pos', return_value=(0, 0))
         mouse.start()
         self.addCleanup(mouse.stop)
+        holder = tempfile.TemporaryDirectory()
+        self.addCleanup(holder.cleanup)
+        # `render.menus` freezes its persistence paths at import, so a temporary USER_DIR
+        # does not move SETTINGS_PATH: pin the settings file itself, or this menu draws in
+        # whatever language the developer's own game last saved.
+        scope = patch('render.menus.SETTINGS_PATH',
+                      os.path.join(holder.name, 'settings.json'))
+        scope.start()
+        self.addCleanup(scope.stop)
         self.menu = MenuStack(1280, 800)
         self.menu.screen = 'main'
         self.menu.render(0)

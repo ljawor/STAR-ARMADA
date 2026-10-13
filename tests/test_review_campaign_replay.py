@@ -1,4 +1,5 @@
 """Independent-review regressions through production browser/manager paths."""
+import os
 import json
 import tempfile
 import unittest
@@ -12,6 +13,17 @@ from test_replay_workflow import game
 
 
 class ReviewReplayTests(unittest.TestCase):
+    def setUp(self):
+        holder = tempfile.TemporaryDirectory()
+        self.addCleanup(holder.cleanup)
+        # `render.menus` freezes its persistence paths at import, so a temporary USER_DIR
+        # does not move SETTINGS_PATH: pin the settings file itself, or this menu draws in
+        # whatever language the developer's own game last saved.
+        scope = patch('render.menus.SETTINGS_PATH',
+                      os.path.join(holder.name, 'settings.json'))
+        scope.start()
+        self.addCleanup(scope.stop)
+
     def test_malformed_player_with_human_stop_is_rejected_by_browser(self):
         import pygame
         from render.menus import MenuStack, MenuResult

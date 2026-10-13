@@ -18,6 +18,8 @@ import sys
 import numpy as np
 import pygame
 
+from render import i18n
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Assets are read from the bundle; anything WRITABLE must not be. A frozen app
 # lives in /Applications (or runs straight off a read-only DMG), so ROOT is not
@@ -58,6 +60,9 @@ DEFAULT_SETTINGS = {
     "reduced_motion": False,
     "tutorial_hints": True,
     "high_contrast_ui": False,
+    # Presentation only: the language selects a pack of drawing strings, and the
+    # simulation never reads it, so two peers may ship different languages.
+    "language": "en",
 }
 
 
@@ -77,6 +82,10 @@ def validate_presentation_settings(settings: dict) -> dict:
         result['markers'] = DEFAULT_SETTINGS['markers']
     if result.get('audio_dynamic_range') not in ('standard', 'night'):
         result['audio_dynamic_range'] = 'standard'
+    # A tuple, not a set: an unhashable value in a hand-edited settings.json (a list,
+    # say) must be rejected like any other bad value, not crash the loader.
+    if result.get('language') not in tuple(code for code, _label in i18n.LANGUAGES):
+        result['language'] = DEFAULT_SETTINGS['language']
     return result
 
 
@@ -236,6 +245,9 @@ class MenuStack:
         self.result = MenuResult.NONE
         self.result_payload = None
         self.settings = load_settings()
+        # Presentation only: activate the saved pack before the first frame, so a
+        # language chosen last session is live in this one.
+        i18n.apply_from_settings(self.settings)
         self._dirty_settings = False
         self._music_preview = False
 
@@ -401,6 +413,9 @@ class MenuStack:
     def _button(self, rect, label, action, payload=None, hot=False) -> None:
         self.buttons.append({"rect": rect, "action": action,
                              "payload": payload})
+        # Drawing edge (#93): every menu button label is looked up here, so a screen
+        # is translated without a single call site being touched.
+        label = i18n.t(label)
         col = (52, 76, 128) if hot else (30, 42, 70)
         pygame.draw.rect(self._surface, col, rect, border_radius=6)
         pygame.draw.rect(self._surface, (120, 150, 210) if hot else (70, 90, 140),
@@ -410,7 +425,7 @@ class MenuStack:
         self._surface.blit(surf, surf.get_rect(center=rect.center))
 
     def _title(self, text, font, y, col=(235, 240, 255)) -> None:
-        surf = font.render(text, True, col)
+        surf = font.render(i18n.t(text), True, col)
         self._surface.blit(surf, surf.get_rect(centerx=self.width // 2, y=y))
 
     # ----------------------------------------------------------- main draw
@@ -606,7 +621,7 @@ class MenuStack:
             return False
         if ev.key in (pygame.K_PAGEUP, pygame.K_PAGEDOWN):
             delta = 1 if ev.key == pygame.K_PAGEDOWN else -1
-            self.settings_page = min(2, max(0, getattr(self, 'settings_page', 0) + delta))
+            self.settings_page = min(3, max(0, getattr(self, 'settings_page', 0) + delta))
             self.settings_focus = -1
             self.buttons = []
             return True
@@ -981,7 +996,7 @@ class MenuStack:
                 elif act == "exit":
                     self.result = MenuResult.EXIT
                 elif act == "settings_page":
-                    self.settings_page = min(2, max(0, getattr(self, 'settings_page', 0) + b['payload']))
+                    self.settings_page = min(3, max(0, getattr(self, 'settings_page', 0) + b['payload']))
                     self.settings_focus = -1
                     self.buttons = []
                 elif act == "cycle_range":
@@ -991,6 +1006,12 @@ class MenuStack:
                     from render.markers import next_mode
                     self.settings["markers"] = next_mode(
                         self.settings.get("markers", "all"))
+                    self._dirty_settings = True
+                elif act == "cycle_language":
+                    code = i18n.cycle(str(self.settings.get("language", i18n.DEFAULT_LANGUAGE)))
+                    # Apply immediately: the settings row shows the native label of the
+                    # pack that is now live, not of the one that was requested.
+                    self.settings["language"] = i18n.set_language(code)
                     self._dirty_settings = True
                 elif act == "toggle":
                     key = b["payload"]["key"]

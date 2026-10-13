@@ -18,10 +18,10 @@ class SupportOrdersUITests(unittest.TestCase):
         self.labels = []
         self.rects = []
         original = self.hud._label
-        def label(x, y, text, color=None, font=None):
+        def label(x, y, text, color=None, font=None, translate=True):
             self.labels.append(str(text))
             self.rects.append(pygame.Rect(x, y, *(font or self.hud.font).size(str(text))))
-            original(x, y, text, color, font)
+            original(x, y, text, color, font, translate)
         self.hud._label = label
         self.messages = []
         self.ctrl = InputController(self.st, Camera(1024, 768), self.hud,

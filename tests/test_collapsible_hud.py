@@ -80,7 +80,7 @@ class CollapsibleHUDTests(unittest.TestCase):
     def test_collapse_button_label_is_not_truncated(self):
         labels = []
         original = self.hud._label
-        def label(x, y, text, *args):
+        def label(x, y, text, *args, **kwargs):
             labels.append(text)
             original(x, y, text, *args)
         self.hud._label = label

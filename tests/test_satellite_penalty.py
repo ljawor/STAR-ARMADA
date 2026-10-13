@@ -185,7 +185,7 @@ class SatellitePenaltyHUDTests(unittest.TestCase):
 
     def panel_text(self):
         texts = []
-        self.hud._label = lambda x, y, text, color=None, font=None: texts.append(str(text))
+        self.hud._label = lambda x, y, text, color=None, font=None, translate=True: texts.append(str(text))
         self.hud.buttons.clear()
         self.hud.blocked_rects.clear()
         self.hud.planet_page = 'orbit'

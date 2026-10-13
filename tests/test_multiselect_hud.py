@@ -13,7 +13,7 @@ class SelectionHUDTests(unittest.TestCase):
         self.view = HUD(1280, 800, self.st)
         self.labels = []
         original = self.view._label
-        def label(x, y, text, color=None, font=None):
+        def label(x, y, text, color=None, font=None, translate=True):
             self.labels.append(str(text))
             original(x, y, text, color, font)
         self.view._label = label
@@ -157,7 +157,7 @@ class SelectionHUDTests(unittest.TestCase):
         other = self.game.factory.spawn_ship(next(iter(self.view.ds.ships)), 0, Vec3())
         records = []
         original = self.view._label
-        def label(x, y, text, color=None, font=None):
+        def label(x, y, text, color=None, font=None, translate=True):
             records.append(pygame.Rect(x, y, *(font or self.view.font).size(str(text))))
             original(x, y, text, color, font)
         self.view._label = label
@@ -231,7 +231,7 @@ class SelectionHUDTests(unittest.TestCase):
         sd = replace(sd, abilities=list(abilities))
         labels = []
         original = self.view._label
-        def label(x, y, text, color=None, font=None):
+        def label(x, y, text, color=None, font=None, translate=True):
             labels.append(pygame.Rect(x, y, *(font or self.view.font).size(str(text))))
             original(x, y, text, color, font)
         self.view._label = label
@@ -260,7 +260,7 @@ class SelectionHUDTests(unittest.TestCase):
         ship.build_queue = [{'item': 'sensor_station', 'time_left': 5, 'total': 10}]
         records, bars = [], []
         original = self.view._label
-        def label(x, y, text, color=None, font=None):
+        def label(x, y, text, color=None, font=None, translate=True):
             records.append((str(text), pygame.Rect(x, y, *(font or self.view.font).size(str(text)))))
             original(x, y, text, color, font)
         original_bar = self.view._bar

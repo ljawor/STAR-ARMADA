@@ -135,7 +135,7 @@ class ShipRankPanelTests(unittest.TestCase):
         labels, bars = [], []
         original_label, original_bar = view._label, view._bar
 
-        def label(x, y, text, color=hud.TXT, font=None):
+        def label(x, y, text, color=hud.TXT, font=None, translate=True):
             font = font or view.font
             labels.append((text, pygame.Rect(x, y, *font.size(str(text)))))
             original_label(x, y, text, color, font)
