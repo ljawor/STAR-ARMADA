@@ -2,7 +2,7 @@
   "colonies": {"satellite_cap": 6, "control_seconds": 15.0, "approach_range": 600.0, "orbit_clearance": 350.0,
                "orbit_inclination": 0.55, "orbit_speed": 0.06, "orbit_shell_spacing": 160.0,
                "satellite_penalty_seconds": 180.0},
-  "planet_buildings": {"slot_cap": 6},
+  "planet_buildings": {"slot_cap": 6, "resource_units_per_second": 80},
   "combat": {"hull_damage_per_crew": 10.0},
   "engineer_repairs": {
     "hp_per_second": 20.0,

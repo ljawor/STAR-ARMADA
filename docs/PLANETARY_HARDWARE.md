@@ -58,9 +58,16 @@ Buildings have solid outward-oriented meshes on the actual planet surface.
 | Resource Extractor | 800 / 600 / 200 | +3 materials and +1 energy per second |
 | Trade Hub | 900 / 500 / 200 | +4 credits per second |
 | Surface Shield Generator | 1,100 / 900 / 200 | Shared protection for this colony's surface buildings only |
-| Pulsar Cannon | 1,400 / 1,200 / 200 | 8,400-unit anti-ship beam; its own sensor range matches the gun, so it engages without a forward sensor |
+| Pulsar Cannon | 1,400 / 1,200 / 200 | 6,720-unit anti-ship beam (#81 shortened the reach from 8,400); its own sensor range matches the gun, so it engages without a forward sensor |
 
-All four initially require 100 crew and 24 seconds of construction. Staffing and
+All four require 100 crew. Construction time is **derived from the resource bill**
+(#95): each building works through its own credits + materials + energy at
+`planet_buildings.resource_units_per_second` (80 units/s shipped), so the extractor
+and trade hub (1,600 units) take 20 s, the shield generator (2,200) 27.5 s and the
+pulsar cannon (2,800) 35 s. The catalogue's `build_time` mirrors the derived value and
+the store refuses a catalogue that disagrees, so the HUD row and the simulation can
+never advertise different times; a mod retunes the whole pacing by changing the one
+rule. Staffing and
 subsystem health affect operation. Basic colony income and recruitment remain
 unchanged; surface production adds to that income exactly once through the ordinary
 station economy. A planet **Trade Hub is a real market end**: convoys run between it

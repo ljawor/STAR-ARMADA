@@ -348,6 +348,62 @@ class ConstructionSystem:
             queued += 1
         return queued
 
+    # ------------------------------------------------------------------ cancels
+    def cancel_build(self, target_id, player_id: int, index: int = 0) -> bool:
+        """Cancel one queued item and pay back half of what it cost (#94).
+
+        `target_id` is whatever holds the queue: a station or constructor cancels
+        from its own queue (ships, stations), a colony planet from the paid
+        surface/satellite queue it owns — a planet queue reserves a build site or
+        orbit slot, so dropping the item releases that reservation with it.
+        Refund is `refund()`'s 50%: the other half pays for work already done, and
+        command capacity needs no bookkeeping because usage/reservations are
+        derived from the live queues. Colonisation is a standing fleet order with
+        no resource cost, not paid construction, so re-ordering the ship remains
+        the way to stop it.
+        """
+        st = self.state
+        builder = st.entity(target_id) if type(target_id) is int else None
+        if builder is None or not builder.alive:
+            return False
+        if builder.is_planet:
+            if builder.colonized_by != player_id:
+                return False
+            allowed = ('planet_building', 'satellite')
+        else:
+            if builder.owner != player_id or not builder.operational:
+                return False
+            allowed = ('ship', 'station', 'satellite')
+        queue = builder.build_queue
+        if type(index) is not int or not 0 <= index < len(queue):
+            return False
+        item = queue[index]
+        kind = item.get('kind')
+        if kind not in allowed:
+            st.float_text(builder.pos, 'Cannot cancel this order', (1, 0.6, 0.4))
+            return False
+        queue.pop(index)
+        cost = self._queued_cost(item)
+        if cost:
+            self.refund(player_id, cost)
+        st.float_text(builder.pos, f'Cancelled {item.get("item", "")} · 50% refunded',
+                      (1, 0.85, 0.4))
+        st.events.publish('build_cancelled', entity_id=builder.id, kind=kind,
+                          item=item.get('item'), owner=player_id, index=index)
+        return True
+
+    def _queued_cost(self, item: dict) -> dict:
+        """Catalogue cost paid when `item` was queued; empty for costless work."""
+        data_id = item.get('item')
+        if not data_id:
+            return {}
+        kind = item.get('kind')
+        if kind == 'ship':
+            return self.factory.ship_build_cost(data_id)
+        if kind in ('station', 'satellite', 'planet_building'):
+            return self.factory.station_build_cost(data_id)
+        return {}
+
     # ------------------------------------------------------------------ satellites
     def satellite_slots(self, planet):
         """Slots a new satellite cannot use: live, paid, or under the #57 penalty."""

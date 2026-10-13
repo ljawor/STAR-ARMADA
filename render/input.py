@@ -13,8 +13,8 @@ import pygame
 
 from game.core.commands import (
     AttackCommand, AttackMoveCommand, BuildShipCommand, BuildStationCommand,
-    ColonizeCommand, FleetCreateCommand, MoveCommand, ResearchCommand,
-    StopCommand,
+    CancelBuildCommand, ColonizeCommand, FleetCreateCommand, MoveCommand,
+    ResearchCommand, StopCommand,
 )
 from game.data.store import DataStore
 
@@ -473,6 +473,23 @@ class InputController:
                 elif kind == "build_ship":
                     st.queue_command(BuildShipCommand(
                         lp, pl["shipyard_id"], pl["ship_id"], 1))
+                elif kind == "cancel_build":
+                    # Payload names the queue holder (station/constructor or
+                    # colony planet) and the index inside its build_queue. A row
+                    # left over from another selection or planet page is inert:
+                    # the target must still be selected and the page unchanged.
+                    raw_id = pl.get("target_id")
+                    target = st.entity(raw_id) if type(raw_id) is int else None
+                    index = pl.get("index")
+                    page = pl.get("page")
+                    owner = None
+                    if target is not None:
+                        owner = target.colonized_by if target.is_planet else target.owner
+                    if (target is not None and owner == lp and target.id in self.selection
+                            and (page is None or page == self.hud.planet_page)
+                            and type(index) is int
+                            and 0 <= index < len(target.build_queue)):
+                        st.queue_command(CancelBuildCommand(lp, target.id, index))
                 elif kind == "research":
                     st.queue_command(ResearchCommand(
                         lp, pl["station_id"], pl["tech_id"]))

@@ -15,7 +15,7 @@ DamageSystem is the single writer that kills the hull. Only the aim was wrong.
 import math
 import unittest
 
-from helpers import make_game, run_for, queue_detected_human_attack
+from helpers import make_game, run_for, run_until, queue_detected_human_attack
 from game.core.commands import PlayerCommand
 from game.core.vectors import Vec3
 
@@ -102,7 +102,11 @@ class SurfaceHardwareKillPathTests(unittest.TestCase):
         self.st.queue_command(PlayerCommand('build_planet_building', 0,
                                             target_id=self.planet.id, station_kind=kind))
         self.gm.step(DT)
-        run_for(self.gm, 25)
+        # Wait on the delivered hull, not a second count: surface build time is
+        # derived from the building's cost (#95).
+        run_until(self.gm, lambda: any(e.alive and e.planet_id == self.planet.id
+                                       and e.planet_building_slot is not None
+                                       for e in self.st.entities.values()))
         return next(e for e in self.st.entities.values()
                     if e.alive and e.planet_id == self.planet.id
                     and e.planet_building_slot is not None)

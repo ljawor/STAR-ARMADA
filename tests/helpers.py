@@ -26,6 +26,25 @@ def run_for(gm: GameManager, seconds: float, dt: float = 1 / 30) -> None:
         gm.step(dt)
 
 
+def run_until(gm: GameManager, predicate, limit_seconds: float = 600.0,
+              dt: float = 1 / 30) -> float:
+    """Tick until `predicate()` holds; raise if it never does within the limit.
+
+    Tests wait on the delivered condition rather than a hardcoded number of
+    seconds, so content pacing can change (surface build time is derived from
+    cost — #95) without silently weakening what the test checks. Returns the
+    elapsed simulated seconds.
+    """
+    steps = int(limit_seconds / dt)
+    for step in range(steps):
+        if predicate():
+            return step * dt
+        gm.step(dt)
+    if predicate():
+        return steps * dt
+    raise AssertionError(f'condition not met within {limit_seconds:g}s')
+
+
 def queue_detected_human_attack(gm: GameManager, player: int, unit_ids, target_id: int) -> None:
     """Submit fresh human intent through the serialized production command seam.
 

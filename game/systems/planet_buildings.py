@@ -5,11 +5,32 @@ from ..data.store import DataStore
 from .colonies import eligible_planet
 
 BUILDING_TYPES = ('planet_extractor', 'planet_trade_hub', 'planet_shield_generator', 'planet_pulsar_cannon')
-DEFAULTS = dict(slot_cap=6)
+# Surface construction pacing: resource units (credits + materials + energy) the
+# colony works through per second. It lives in game_rules.json so mods retune
+# build pacing without touching code, and every building's time is derived from
+# its own cost rather than hand-set per type (#95).
+DEFAULTS = dict(slot_cap=6, resource_units_per_second=80)
 
 
 def building_rules():
     return dict(DEFAULTS, **DataStore.get().rules.get('planet_buildings', {}))
+
+
+def building_time(kind, store=None, rules=None) -> float:
+    """Seconds a surface building needs, derived from its resource cost (#95).
+
+    The time is the catalogue cost in resource units over
+    `resource_units_per_second`, so a dearer building always takes longer and
+    two buildings of equal cost take equal time. `validate_building_catalogue`
+    refuses a catalogue whose own `build_time` disagrees with this value, so the
+    HUD row (which prints the catalogue number) can never advertise a time the
+    simulation does not use.
+    """
+    store = DataStore.get() if store is None else store
+    cfg = building_rules() if rules is None else dict(DEFAULTS, **rules)
+    sd = store.stations[kind]
+    units = float(sd.cost_credits) + float(sd.cost_materials) + float(sd.cost_energy)
+    return units / float(cfg['resource_units_per_second'])
 
 
 def building_slots(state, planet):
@@ -63,9 +84,9 @@ def start_building(construction, planet_id, kind, player):
     if not construction.can_pay(player, cost):
         return False
     construction.pay(player, cost)
-    sd = construction.ds.stations[kind]
+    seconds = building_time(kind, construction.ds)
     planet.build_queue.append(dict(kind='planet_building', item=kind, slot=slot,
-        source_owner=player, time_left=sd.build_time, total=sd.build_time, status='paid'))
+        source_owner=player, time_left=seconds, total=seconds, status='paid'))
     return True
 
 
@@ -122,6 +143,19 @@ def validate_building_catalogue(ds):
     cfg = ds.rules.get('planet_buildings', {})
     if not isinstance(cfg, dict) or type(cfg.get('slot_cap', 6)) is not int or cfg.get('slot_cap', 6) != 6:
         raise ValueError('planet_buildings slot_cap must be 6')
+    rate = cfg.get('resource_units_per_second', DEFAULTS['resource_units_per_second'])
+    if type(rate) not in (int, float) or not math.isfinite(rate) or rate <= 0:
+        raise ValueError('planet_buildings resource_units_per_second must be a positive number')
+    # Build time is derived from cost, so a catalogue that hand-sets a different
+    # number would make the HUD (which prints the catalogue) lie about the sim.
+    for kind in BUILDING_TYPES:
+        sd = ds.stations.get(kind)
+        if sd is None:
+            raise ValueError(f'missing surface building catalogue entry: {kind}')
+        derived = building_time(kind, ds, cfg)
+        if abs(float(sd.build_time) - derived) > 1e-9:
+            raise ValueError(
+                f'{kind} build_time {sd.build_time:g} must equal its cost-derived {derived:g}s')
     for ship in ds.ships.values():
         if any(kind in BUILDING_TYPES for kind in ship.can_build_stations):
             raise ValueError('surface buildings can only build through a planet')

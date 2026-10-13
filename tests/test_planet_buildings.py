@@ -1,7 +1,7 @@
 """Surface production and lifecycle through authoritative manager ticks."""
 import json
 import unittest
-from helpers import make_game, run_for
+from helpers import make_game, run_for, run_until
 from game.core.commands import PlayerCommand
 from game.core.vectors import Vec3
 
@@ -88,17 +88,13 @@ class PlanetBuildingTests(unittest.TestCase):
         self.build()
         self.assertEqual(len(self.planet.build_queue), 1)
         hostile.pos = site + Vec3(2999, 0, 0)
-        run_for(self.gm, 25)
+        run_until(self.gm, lambda: not self.planet.build_queue)
         self.assertEqual(self.buildings(), [])
         self.assertEqual(self.planet.build_queue, [])
 
     def test_partial_surface_shield_applies_efficiency_once_and_credits_drained_pool_xp(self):
-        self.build('planet_shield_generator')
-        run_for(self.gm, 25)
-        generator = self.buildings()[0]
-        self.build()
-        run_for(self.gm, 25)
-        surface = next(e for e in self.buildings() if e is not generator)
+        generator = self.build_and_wait('planet_shield_generator')
+        surface = self.build_and_wait()
         attacker = self.gm.factory.spawn_ship('imperial_corvette', 1, Vec3(12000, 0, 12000))
         generator.crew = generator.max_crew / 2
         before_hull = surface.hull
@@ -127,10 +123,21 @@ class PlanetBuildingTests(unittest.TestCase):
         return [e for e in self.st.entities.values()
                 if e.alive and e.planet_id == self.planet.id and e.planet_building_slot is not None]
 
+    def build_and_wait(self, kind='planet_extractor'):
+        """Order surface work and tick until that building stands.
+
+        The wait is on the delivered entity, not a fixed number of seconds: the
+        surface build time is derived from the building's resource cost (#95),
+        so a literal here would silently stop covering the dearer buildings.
+        Returns the new building.
+        """
+        before = {e.id for e in self.buildings()}
+        self.build(kind)
+        run_until(self.gm, lambda: any(e.id not in before for e in self.buildings()))
+        return next(e for e in self.buildings() if e.id not in before)
+
     def test_pulsar_engages_detected_ships_at_long_range_not_fighters(self):
-        self.build('planet_pulsar_cannon')
-        run_for(self.gm, 25)
-        cannon = self.buildings()[0]
+        cannon = self.build_and_wait('planet_pulsar_cannon')
         enemy = self.gm.factory.spawn_ship('imperial_corvette', 1, cannon.pos + Vec3(3900, 0, 0))
         enemy.order_type = 'hold'
         fighter = self.gm.factory.spawn_ship('imperial_tie_squadron', 1, cannon.pos + Vec3(300, 0, 0))
@@ -162,9 +169,7 @@ class PlanetBuildingTests(unittest.TestCase):
         # so a beam range beyond its own sensor range would still never fire.
         station = self.gm.ds.stations['planet_pulsar_cannon']
         self.assertGreaterEqual(float(station.sensor_range), catalogued)
-        self.build('planet_pulsar_cannon')
-        run_for(self.gm, 25)
-        cannon = self.buildings()[0]
+        cannon = self.build_and_wait('planet_pulsar_cannon')
         self.assertGreaterEqual(stats.effective_sensor_range(self.st, cannon),
                                 catalogued)
         for distance in (2000.0, catalogued * 0.55, catalogued * 0.95):
@@ -192,12 +197,8 @@ class PlanetBuildingTests(unittest.TestCase):
         self.assertEqual(out_of_range.total_shield() + out_of_range.hull, before)
 
     def test_surface_shield_absorbs_only_surface_damage_and_scales_with_staffing(self):
-        self.build('planet_shield_generator')
-        run_for(self.gm, 25)
-        generator = self.buildings()[0]
-        self.build()
-        run_for(self.gm, 25)
-        surface = next(e for e in self.buildings() if e is not generator)
+        generator = self.build_and_wait('planet_shield_generator')
+        surface = self.build_and_wait()
         satellite = self.gm.factory.spawn_station('attack_satellite', 0,
             self.planet.pos + Vec3(0, 0, self.planet.radius + 400))
         satellite.planet_id = self.planet.id
@@ -222,9 +223,7 @@ class PlanetBuildingTests(unittest.TestCase):
         self.assertLess(surface.hull, before[surface.id])
 
     def test_capture_transfers_finished_buildings_not_blockers_and_clears_queues(self):
-        self.build('planet_trade_hub')
-        run_for(self.gm, 25)
-        building = self.buildings()[0]
+        building = self.build_and_wait('planet_trade_hub')
         self.build()
         captor = self.gm.factory.spawn_ship('imperial_colonizer', 1,
             self.planet.pos + Vec3(0, 0, self.planet.radius + 300))

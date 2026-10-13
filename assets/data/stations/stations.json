@@ -435,7 +435,7 @@
         "energy": 200
       },
       "crew_cost": 100,
-      "build_time": 24,
+      "build_time": 20,
       "hull": 6000,
       "shield_quad": 0,
       "shield_regen": 0,
@@ -460,7 +460,7 @@
         "energy": 200
       },
       "crew_cost": 100,
-      "build_time": 24,
+      "build_time": 20,
       "hull": 6000,
       "shield_quad": 0,
       "shield_regen": 0,
@@ -484,7 +484,7 @@
         "energy": 200
       },
       "crew_cost": 100,
-      "build_time": 24,
+      "build_time": 27.5,
       "hull": 6000,
       "shield_quad": 1500,
       "shield_regen": 20,
@@ -506,7 +506,7 @@
         "energy": 200
       },
       "crew_cost": 100,
-      "build_time": 24,
+      "build_time": 35,
       "hull": 6000,
       "shield_quad": 0,
       "shield_regen": 0,

@@ -199,6 +199,27 @@ show their CMD costs. Abandoned hulls still count, while destruction/cancellatio
 releases usage. Losing capacity blocks new purchases, not already paid production.
 See [the accounting and lifecycle contract](docs/COMMAND_CAPACITY.md).
 
+### Cancelling paid work and cost-based building times (#94, #95)
+
+Paid construction is now cancellable. A selected station's build-queue rows and a
+colony's paid slot cells carry a **✕ Cancel** affordance that submits a
+`cancel_build` command; it stops one queued item and refunds **half** of that
+item's catalogue cost (the other half pays for work already done). The freed
+command points — and, for a colony, the freed surface slot or orbit — return
+immediately, because usage and reservations are derived from the live queues.
+Colonisation is a standing fleet order with no resource cost, not paid
+construction, so it is not cancellable this way; re-order the ship instead. A
+cancel is never treated as a new order, so it cannot supersede the units' other
+standing orders. Surface building time now follows the resource bill (#95):
+seconds are the building's credits + materials + energy over
+`planet_buildings.resource_units_per_second` (80 units/s shipped), so the
+extractor and trade hub take 20 s, the shield generator 27.5 s and the pulsar
+cannon 35 s instead of every type sharing one flat 24 s. The catalogue
+`build_time` must mirror the derived value — the data store rejects a catalogue
+that disagrees, which keeps the time the HUD prints equal to the one the
+simulation runs. See [docs/COMMAND_CAPACITY.md](docs/COMMAND_CAPACITY.md) and
+[docs/PLANETARY_HARDWARE.md](docs/PLANETARY_HARDWARE.md).
+
 ## Planetary colonies and satellites (released in v0.7.0)
 
 PR #40, merged October 10, 2026 and included in v0.7.0, extends colony ships for all
