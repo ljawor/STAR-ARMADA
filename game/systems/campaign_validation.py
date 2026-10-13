@@ -19,6 +19,14 @@ def validate_campaign(mission, ds):
             require(type(o.get('count', 1)) is int and o.get('count', 1) > 0, 'positive objective count')
             require(o.get('ship') is None or o['ship'] in ds.ships, 'unknown objective ship')
             require(o.get('method') in (None, 'crew_delivered', 'crew_replenished'), 'unknown recovery method')
+        if 'full_complement' in o:
+            require(o['type'] == 'recover_crew' and type(o['full_complement']) is bool,
+                    'full_complement requires a recovery objective and boolean')
+        if o.get('full_complement'):
+            capture = next((c for c in objectives if c.get('id') == o.get('captured_objective')), None)
+            require(capture is not None and capture['type'] == 'capture_unit'
+                    and capture.get('count', 1) == 1, 'full recovery needs a single capture objective')
+            require(o.get('method') is None, 'full recovery is state-based, not method-specific')
     triggers = mission.get('triggers', [])
     require(isinstance(triggers, list), 'triggers must be a list')
     seen = set()

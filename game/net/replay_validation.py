@@ -199,7 +199,8 @@ OBJECTIVE_FIELDS = {
     'planet': str, 'method': str, 'team': int, 'entity_id': int,
     'count': int, 'time': float, 'duration': float, 'radius': float,
     'active': bool, 'done': bool, 'failed': bool, 'count_done': int,
-    'held': float, 'recovered_id': int,
+    'held': float, 'recovered_id': int, 'captured_id': int,
+    'captured_objective': str, 'full_complement': bool,
 }
 
 
@@ -228,6 +229,8 @@ def validate_mission(saved, ds):
                 typed(value, OBJECTIVE_FIELDS[key], 'mission.objective.' + key)
                 if key in ('count', 'time', 'duration', 'radius', 'count_done', 'held', 'entity_id', 'recovered_id'):
                     require(value >= (1 if key == 'count' else 0), 'mission.objective.' + key)
+                if key in ('entity_id', 'captured_id', 'recovered_id'):
+                    require(0 <= value <= 100000000, 'mission.objective.' + key)
         if progress:
             require(type(record.get('done')) is bool, 'mission.objective.done')
         if record['type'] == 'hold_point':
@@ -241,7 +244,7 @@ def validate_mission(saved, ds):
         objective(record)
     progress = saved.get('objectives', [dict(o, done=False) for o in objectives])
     require(type(progress) is list and len(progress) == len(objectives), 'mission.objectives')
-    mutable = {'active', 'done', 'failed', 'count_done', 'held', 'recovered_id'}
+    mutable = {'active', 'done', 'failed', 'count_done', 'held', 'recovered_id', 'captured_id'}
     for original, record in zip(objectives, progress):
         objective(record, progress=True)
         require({k: v for k, v in record.items() if k not in mutable} ==

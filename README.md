@@ -226,6 +226,14 @@ recovery drill plus the original ten-mission "Rise of the Outer Armada" chain (`
 has a briefing (story, objectives, enemy preview) before LAUNCH, and in-game objectives
 are tracked live in the HUD with COMPLETE/FAILED states.
 
+Recovery Drill's current source objective (#80) is to capture the abandoned syndicate
+corvette and restore **that captured corvette to 100% onboard crew**. Automatic
+recruitment near a friendly base and loaded crew-transport delivery both count; a
+full surviving boarding party can complete it immediately. The abandoned frigate
+is optional practice, not a delivery requirement. Personnel costs, life-support
+safety and campaign unlock-save migration are unchanged. This fix is not yet a
+published-release claim; see `docs/CAMPAIGN_SCRIPTING.md` for controlled QA evidence.
+
 ### Phase 10 presentation (released in v0.9.0)
 
 The v0.9.0 increment adds:

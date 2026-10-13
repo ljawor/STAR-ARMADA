@@ -144,20 +144,13 @@ class TestCampaignScript(unittest.TestCase):
         self.assertEqual(target.owner, 0)
         recovery = next(o for o in gm.mission.objectives if o['id'] == 'recover')
         self.assertTrue(recovery['active'])
-        transport.pos = Vec3(frigate.pos.x, 0, frigate.pos.z + 100)
-        gm.state.queue_command(PlayerCommand('crew_deliver', 0, unit_ids=(transport.id,), target_id=frigate.id))
-        gm.visibility.update()
-        recorder = ReplayRecorder(gm.state)
-        # Pending intent is part of the precise initial snapshot.
-        restored = GameManager(GameState.from_dict(json.loads(json.dumps(recorder.to_dict()['initial_state']))))
-        self.assertEqual(precise(restored.state), precise(gm.state))
-        for _ in range(90):
-            gm.step(1 / 30)
-            restored.step(1 / 30)
-            self.assertEqual(precise(restored.state), precise(gm.state))
-        self.assertTrue(gm.mission.completed)
+        # The full surviving boarding party already fills the captured hull.
+        # No separate frigate or delivery event may be required.
         self.assertTrue(recovery['done'])
-        self.assertGreaterEqual(frigate.crew, 4)
+        self.assertEqual(recovery['recovered_id'], target.id)
+        self.assertEqual(target.crew, target.max_crew)
+        self.assertTrue(gm.mission.completed)
+        self.assertEqual(frigate.crew, 0)
 
     def test_first_and_supplyline_content_have_real_production_and_friendly_markets(self):
         from game.data.store import DataStore
