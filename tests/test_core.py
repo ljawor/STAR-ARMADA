@@ -1,7 +1,7 @@
 """Core simulation tests: setup, economy, movement, combat, subsystems."""
 import unittest
 
-from helpers import make_game, run_for, order_build
+from helpers import make_game, run_for, order_build, queue_detected_human_attack
 from game.core.vectors import Vec3
 from game.core.commands import MoveCommand, AttackCommand
 from game.data.store import DataStore
@@ -97,18 +97,28 @@ class TestCombat(unittest.TestCase):
 
     def test_ships_fight_and_die(self):
         gm, st = self._fight_setup()
-        # spawn two enemy frigates near each other
-        fr0 = gm.factory.spawn_ship("imperial_frigate", 0, Vec3(-500, 0, 0))
+        # An asymmetric duel leaves an operational human finisher rather than
+        # two equally depleted hulls with no crew able to issue another attack.
+        fr0 = gm.factory.spawn_ship("imperial_cruiser", 0, Vec3(-500, 0, 0))
         fr1 = gm.factory.spawn_ship("imperial_frigate", 1, Vec3(500, 0, 0))
+        # Isolate combat/death from sensor subsystem damage losing contact.
+        fr0.sensor_range = fr1.sensor_range = 20000
         st.queue_command(AttackCommand(0, [fr0.id], fr1.id))
         st.queue_command(AttackCommand(1, [fr1.id], fr0.id))
         dead_seen = False
-        for _ in range(60 * 90):     # up to 90 sim-seconds
+        reattacked = set()
+        for _ in range(30 * 180):
             gm.step(1 / 30)
             if not fr0.alive or not fr1.alive:
                 dead_seen = True
                 break
-        self.assertTrue(dead_seen, "no ship died in 90s of mutual attack")
+            for attacker, target in ((fr0, fr1), (fr1, fr0)):
+                if attacker.operational and not target.operational and target.id not in reattacked:
+                    self.assertIsNone(attacker.current_target)
+                    queue_detected_human_attack(gm, attacker.owner, [attacker.id], target.id)
+                    reattacked.add(target.id)
+        self.assertTrue(reattacked, "combat never required a new derelict attack")
+        self.assertTrue(dead_seen, "no ship died in 180s including explicit reattack")
 
     def test_shields_absorb_then_hull(self):
         gm, st = self._fight_setup()

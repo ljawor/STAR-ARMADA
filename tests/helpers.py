@@ -26,6 +26,19 @@ def run_for(gm: GameManager, seconds: float, dt: float = 1 / 30) -> None:
         gm.step(dt)
 
 
+def queue_detected_human_attack(gm: GameManager, player: int, unit_ids, target_id: int) -> None:
+    """Submit fresh human intent through the serialized production command seam.
+
+    Destruction fixtures call this again only AFTER combat abandons the target;
+    the initial operational-target order cannot authorize finishing a derelict.
+    """
+    from game.core.commands import AttackCommand, PlayerCommand
+    if gm.state.players[player].is_ai or not gm.state.can_see(player, target_id):
+        raise AssertionError('an explicit human attack requires a currently detected target')
+    command = AttackCommand(player, unit_ids, target_id)
+    gm.state.queue_command(PlayerCommand.from_dict(json.loads(json.dumps(command.to_dict()))))
+
+
 def order_build(gm: GameManager, builder, kind: str, pos, player: int = 0) -> bool:
     """Order a station build from a builder already AT the site.
 

@@ -1,7 +1,7 @@
 """#62: orbit kinematics must be visible to ballistic gunnery."""
 import unittest
 
-from helpers import make_game, run_for
+from helpers import make_game, run_for, queue_detected_human_attack
 from game.core.commands import PlayerCommand
 from game.core.vectors import Vec3
 
@@ -172,10 +172,16 @@ class SatelliteVelocityTests(unittest.TestCase):
                 st.events.subscribe('projectile_hit', hit)
                 st.queue_command(PlayerCommand('attack', 1, unit_ids=(attacker.id,), target_id=satellite.id))
                 start = st.tick
+                reattacked = False
                 for _ in range(9000):
                     gm.step(DT)
                     if not satellite.alive:
                         break
+                    if not satellite.operational and not reattacked:
+                        self.assertIsNone(attacker.current_target)
+                        self.assertFalse(planet.satellite_locks)
+                        queue_detected_human_attack(gm, 1, [attacker.id], satellite.id)
+                        reattacked = True
                 elapsed = (st.tick - start) * DT
                 print(f'SATELLITE_COMBAT {kind} shots={counts["shots"]} hits={counts["hits"]} '
                       f'kills={st.stats.get("1", {}).get("kills", 0)} elapsed={elapsed:.3f} '
@@ -185,6 +191,7 @@ class SatelliteVelocityTests(unittest.TestCase):
                     self.assertEqual(counts['retaliation'], 0)
                     self.assertIsNone(satellite.current_target)
                 self.assertGreater(counts['hits'], 0)
+                self.assertTrue(reattacked)
                 self.assertFalse(satellite.alive)
                 self.assertNotIn(satellite.id, st.entities)
                 self.assertEqual(st.stats['1']['kills'], 1)
