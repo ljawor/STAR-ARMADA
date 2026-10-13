@@ -192,17 +192,36 @@ Also inspect the current camera diagnostics (`tools/diag_close_zoom.py`, `tools/
 
 **Measured result:** `can_see` and entity iteration are now executed once per visible entity per frame rather than once per render subpass.
 
+### Step 4 — Per-size material-role LOD
+
+**Files:** `render/renderer.py`
+
+1. Add configurable pixel-diameter thresholds (`_LOD_BASE_ONLY_PX`, `_LOD_DETAIL_PX`) to `_draw_ship_role_batch`.
+2. For ships below `_LOD_DETAIL_PX`, skip the `dark`, `trim`, `accent` and `cool` detail roles; only the `base` hull and `lit` emissive windows are drawn.
+3. For ships below `_LOD_BASE_ONLY_PX`, draw only the `base` role.
+4. Stations and close ships retain all six roles so quality is preserved where the detail is readable.
+5. The LOD decision uses the same cached `apparent` screen diameter that the readability scaler already computes, so no extra work is added per frame.
+
+**Measured result (same 500-corvette benchmark):**
+- world median: **88.0 ms → 75.4 ms** (additional ~14.3% reduction)
+- frame median: **125.4 ms → 114.8 ms** (additional ~8.5% reduction)
+- cumulative vs baseline: world **98.5 ms → 75.4 ms** (~23.5%), frame **133.5 ms → 114.8 ms** (~14.0%).
+
 ### Verification run so far
 
 - `python -m compileall -q game render main.py` — clean.
 - `PYTHONPATH=tests ./.venv/bin/python -m unittest test_performance test_separation_performance test_fog_render test_gl_lifecycle -q` — 35 tests OK.
-- Full benchmark (baseline vs optimized) — identical state checksum, world stage reduced.
+- Full suite (`discover -s tests`) — 1162 tests OK.
+- Full benchmark (baseline vs cache+batch vs cache+batch+LOD) on M4, 500 corvettes, 1280×800, 4× MSAA, vsync off:
+  - baseline: world median **98.5 ms**, frame median **133.5 ms**.
+  - after Steps 1–3: world median **88.0 ms**, frame median **125.4 ms**.
+  - after Step 4 LOD: world median **75.4 ms**, frame median **114.8 ms**.
+  - simulation checksum unchanged in all runs.
 
 ### Remaining work / next steps
 
-- [ ] Run the complete stable test suite (`PYTHONPATH=tests ./.venv/bin/python -m unittest discover -s tests -q`).
-- [ ] Verify visual parity on a frozen-clock diagnostic (`tools/diag_modern_fleet.py` or equivalent) and fix any remaining threshold mismatch.
-- [ ] Profile the remaining world-stage cost (still ~88 ms median) to identify the next bottleneck; candidates are per-entity `glPushMatrix`/`glCallList` overhead, ownership markers, shield bubbles, and the fixed-function state setup.
+- [ ] Decide whether the now-visible shield bubbles are acceptable (the baseline may have inadvertently suppressed them). If they must stay subtle, tune the bubble alpha/radius rather than disabling the pass.
+- [ ] Run the complete stable test suite again after LOD.
 - [ ] Station-heavy and developed-base benchmarks.
 - [ ] Replay-backed reproduction and LAN pacing only after the renderer reliably clears the 33 ms frame budget.
 - [ ] Windows native performance and candidate-package acceptance remain pending gates.

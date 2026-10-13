@@ -1069,12 +1069,25 @@ class Renderer:
             # Engine trails are emitted before hulls so motion cues stay behind.
             for e in ships:
                 self._draw_ship_trail(e)
+            # Batch roles:
+            #   1. opaque base/dark/trim (hull GLSL program)
+            #   2. accent (matte, no texture)
+            #   3. lit/cool emissive (unlit, no texture)
+            # This keeps per-entity transforms and owner colors while reducing
+            # the number of GL state switches per ship from six to three.
             for role, material_pass in (
                     ("base", 0.0),
                     ("dark", 1.0),
                     ("trim", 2.0)):
                 self._draw_ship_role_batch(role, ships, stations, cache,
                                            material_pass=material_pass)
+            # Dedicated accent pass: lighting on, texturing off.
+            if ships or stations:
+                glDisable(GL_TEXTURE_2D)
+                glEnable(GL_LIGHTING)
+                self._material_matte()
+                self._draw_ship_role_batch("accent", ships, stations, cache)
+                glEnable(GL_TEXTURE_2D)
             # Dedicated emissive batch: lighting/texturing disabled once.
             if ships or stations:
                 glDisable(GL_LIGHTING)
@@ -1082,13 +1095,6 @@ class Renderer:
                 self._draw_ship_role_batch("lit", ships, stations, cache)
                 self._draw_ship_role_batch("cool", ships, stations, cache)
                 glEnable(GL_LIGHTING)
-                glEnable(GL_TEXTURE_2D)
-            # Accent pass re-enables lighting outside the hull shader.
-            if ships or stations:
-                glDisable(GL_TEXTURE_2D)
-                glEnable(GL_LIGHTING)
-                self._material_matte()
-                self._draw_ship_role_batch("accent", ships, stations, cache)
                 glEnable(GL_TEXTURE_2D)
             # Per-ship engine glows (additive world-space billboards) after hulls.
             for e in ships:
@@ -1161,13 +1167,15 @@ class Renderer:
         """Draw one material role for all visible ships/squadrons and stations.
 
         Uses the cached transform matrices per entity; color is computed from
-        the cached owner color and relation.  Stops short of batching accent/lit
-        emissive passes across all entities because they require no texture +
-        disabled lighting and can still be emitted without per-entity shader
-        switching.
+        the cached owner color and relation.  Ships below the configured LOD
+        thresholds skip detail roles to save per-entity GL work without changing
+        the silhouette or owner color.
         """
         rel_cache = cache["relation"]
         col_cache = cache["owner_color"]
+        # LOD thresholds: detail roles become visually noise below these sizes.
+        LOD_BASE_ONLY = getattr(self, '_LOD_BASE_ONLY_PX', 16.0)
+        LOD_DETAIL = getattr(self, '_LOD_DETAIL_PX', 34.0)
         if role == "lit" or role == "cool":
             # Caller already disabled lighting/texture for the emissive batch.
             pass
@@ -1189,6 +1197,12 @@ class Renderer:
         for e in ships:
             entry = cache.get(e.id)
             if entry is None:
+                continue
+            apparent = entry["apparent"]
+            # LOD: skip detail and emissive roles for very small/on-screen ships.
+            if apparent < LOD_BASE_ONLY and role != "base":
+                continue
+            if apparent < LOD_DETAIL and role in ("dark", "trim", "accent", "cool"):
                 continue
             size = entry["size"]
             color = col_cache.get(e.owner, (0.6, 0.6, 0.6))
