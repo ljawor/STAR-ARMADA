@@ -11,6 +11,29 @@ partly delivered; the remaining work is listed explicitly below.
 - **Pending**: missing deliverable, not merely an older roadmap label.
 - Recommendations below define the proposed finish order, not additional approved scope.
 
+## v0.12.0 release preparation — October 13, 2026
+
+The user authorized a new macOS DMG and Windows ZIP including crew combat damage
+(#79) and the fixes merged after v0.11.0. The #79 source is implemented on the
+release branch; independent review and the final full suite remain pending. This section describes release scope;
+publication and downloaded-package verification are pending until recorded below.
+
+- **Crew damage (#79):** approved tuning is one operating-crew casualty per 10
+  actual unshielded hull damage. Fractional hits accumulate deterministically and are persisted precisely.
+  Automatic and retained attacks stop at abandonment; a fresh explicit attack on
+  an already abandoned detected enemy can destroy it. Ownership/recovery and
+  already-fired ballistic impacts retain their existing contracts.
+- **Already merged fixes:** mixed-platform content hashing/deterministic math (#68),
+  Escape abort/menu behavior (#71), orbiting defense-satellite targeting (#73),
+  infrastructure/colony CMD accounting (#74), Recovery Drill crew completion (#82),
+  elevated-fighter pursuit (#83), and crowded-map orbital clearance (#84).
+- **Remaining issue work:** #78 post-jump 15-second shield lockout; #81 pulsar range
+  intent/tuning; #77 five-level paid station upgrades. These are not included here.
+- **Separate acceptance:** native Windows gameplay, mixed-platform live LAN,
+  trusted Windows signing/Smart App Control, human campaign/audio acceptance and
+  full-match balance remain open. Historical laptop benchmarks do not establish
+  this release's Windows runtime acceptance.
+
 ## Current source and release scope
 
 **Current release: v0.11.0**, published October 12, 2026. PR #66 is merged
@@ -27,7 +50,7 @@ Native Windows measurements were taken on Filip's laptop in October 2026 (source
 `da417ce` and the downloaded v0.11.0 package, both benchmark modes, integrated and
 discrete GPU, 72 trials): the frozen Windows build runs and reports, rendering
 dominates the frame, and OpenGL defaults to the integrated GPU. Interactive Windows
-gameplay/feel, defense-satellite orbit targeting (#62), trusted Windows signing and
+gameplay/feel, trusted Windows signing and
 mixed-platform LAN acceptance remain open. See
 [PERFORMANCE.md](PERFORMANCE.md) for measured scope and reporter commands.
 
@@ -119,8 +142,8 @@ and real capture/crew attribution; recovery drill plus the original ten missions
 Stable-ID progress migration and paged selection preserve legacy unlocks.
 See [CAMPAIGN_SCRIPTING.md](CAMPAIGN_SCRIPTING.md) for exact scope and QA limits.
 
-**Pending:** natural-navigation campaign playthroughs, wave balance, cinematic
-presentation and cross-platform acceptance. Final source verification passed:
+**Pending:** natural-navigation campaign playthroughs, wave balance and cross-platform
+acceptance. Short skippable cinematics were released in v0.9.0. Historical v0.8.0 source verification passed:
 861 tests, independent re-review and real UI diagnostics; see
 [PHASE78_ACCEPTANCE.md](PHASE78_ACCEPTANCE.md). Focused command and scripting
 regressions do not complete full campaign playthrough QA.
@@ -239,7 +262,7 @@ See [PLANETARY_HARDWARE.md](PLANETARY_HARDWARE.md) for mechanics and evidence.
    resource income change, recruitment/loading/delivery costs and AI heuristics through
    repeatable long matches across factions/maps/difficulties. Historical source/GL
    results are not a new matrix pass; record actual results before claiming acceptance.
-   No towing or neutrality expansion; releases after the authorized v0.8.0 need separate approval.
+   No towing or neutrality expansion. The v0.12.0 release is user-authorized; later releases need separate approval.
 3. **Complete campaign acceptance (Phase 7).** Scripting, reinforcement waves,
    staged/capture/crew objectives and stable-ID progression now exist. Run natural-navigation
    full playthroughs of all 11 missions and tune waves/objective pacing; do not rebuild scripting.

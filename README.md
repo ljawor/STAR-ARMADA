@@ -27,6 +27,20 @@ them and the game changes with zero code edits.
 
 ---
 
+## v0.12.0 release preparation
+
+The next user-authorized release includes combat crew casualties (#79), at **one
+operating crew member per 10 actual unshielded hull damage**, plus the merged
+mixed-platform LAN, Escape, satellite targeting, infrastructure CMD, Recovery Drill,
+elevated-fighter pursuit and crowded-map orbit fixes (#68/#71/#73/#74/#82/#83/#84).
+Automatic and retained attacks stop when a target becomes abandoned; a fresh
+explicit attack on a detected abandoned enemy can destroy it. Fractional casualty
+progress must survive save/replay restoration. Package publication and final
+verification are pending; current download links above still refer to v0.11.0.
+
+Remaining issue work, outside this release: #78 (15-second post-jump shield lockout),
+#81 (clarify pulsar range), and #77 (paid five-level station upgrades).
+
 ## Quick Start
 
 ```bash
@@ -56,7 +70,7 @@ extract the entire ZIP and run `STAR ARMADA.exe` (unsigned).
 | Left-click | Select unit / station |
 | Right-click | Attack target / colonize planet; attack-move on empty ground |
 | Right-drag | Rotate camera |
-| S | Stop selected units (pan down when nothing is selected) |
+| Backspace | Stop selected units and cancel pending orders |
 | H | Follow selection (legacy alias for Space) |
 | Ctrl+1..9 | Assign control group |
 | 1..9 | Select control group |
@@ -67,7 +81,7 @@ extract the entire ZIP and run `STAR ARMADA.exe` (unsigned).
 | Space | Follow selection |
 | M | Toggle follow / free camera |
 | Q / E | Rotate camera |
-| WASD / arrows | Pan; manual pan releases follow (S stops when units are selected) |
+| WASD / arrows | Pan; manual pan releases follow |
 | Mouse-wheel | Zoom (tactical → fighter scale); scroll roster/abilities when hovering their HUD lists |
 | Left-click minimap | Recenter the camera and release follow mode |
 | X | Tactical overview |
@@ -80,7 +94,14 @@ extract the entire ZIP and run `STAR ARMADA.exe` (unsigned).
 ## Boarding, crew and life support
 
 Ships and stations carry onboard crew and damageable life support. Failing support
-kills crew gradually; zero crew leaves an abandoned intact hull. Frigate-and-larger
+kills crew gradually. The v0.12.0 source also loses **one operating crew member per
+10 actual hull damage** after shields and armor; smaller hits accumulate toward the
+next casualty. Configure `combat.hull_damage_per_crew` in `game_rules.json` (`0`
+disables combat casualties). Passengers and unassigned crew pools are unchanged.
+Zero crew leaves an abandoned intact hull with its existing owner. Automatic and
+retained attacks stop at abandonment, preserving the hull for recovery/capture;
+a new explicit attack on a detected enemy derelict permits destruction.
+Already-fired physical projectiles can still hit. Frigate-and-larger
 ships can deploy real boarding craft against detected enemy ships/stations
 with all shields down, fight for control and capture them. Select a capable ship,
 press **B** or click **Board enemy hull**, then click the target. Successful capture
@@ -115,7 +136,7 @@ remains focus-blocked and disclosed.
 See [PLANETARY_HARDWARE.md](docs/PLANETARY_HARDWARE.md)
 for mechanics, configurable tuning and pending/executed acceptance gates.
 
-## Infrastructure command points (#70; branch implementation, unreleased)
+## Infrastructure command points (#70; merged in #74, v0.12.0 release scope)
 
 All living stations, surface buildings and satellites consume **1 CMD**, except
 research stations (**5 CMD**). Every owned eligible colony adds a command center's
@@ -231,8 +252,9 @@ corvette and restore **that captured corvette to 100% onboard crew**. Automatic
 recruitment near a friendly base and loaded crew-transport delivery both count; a
 full surviving boarding party can complete it immediately. The abandoned frigate
 is optional practice, not a delivery requirement. Personnel costs, life-support
-safety and campaign unlock-save migration are unchanged. This fix is not yet a
-published-release claim; see `docs/CAMPAIGN_SCRIPTING.md` for controlled QA evidence.
+safety and campaign unlock-save migration are unchanged. The correction is merged
+in #82 and included in the v0.12.0 release scope; see `docs/CAMPAIGN_SCRIPTING.md`
+for controlled QA evidence. Natural human playthrough acceptance remains separate.
 
 ### Phase 10 presentation (released in v0.9.0)
 
@@ -386,14 +408,14 @@ friendly sensor can provide detection for another ship's longer-range weapons.
 | Procedural audio (original, no assets) | ✅ prototype |
 | Minimap, fleet roster/ability union, rank inspector, build/research progress | ✅ implemented |
 | Title screen, main menu, settings menu (music/SFX volume, fullscreen, autosave, pan speed — persisted to `saves/settings.json`) | ✅ prototype |
-| Campaign: ten combat missions plus recovery drill, persisted triggers/waves and staged capture/crew objectives | 🟠 implemented on current branch; full playthrough acceptance pending |
+| Campaign: ten combat missions plus recovery drill, persisted triggers/waves and staged capture/crew objectives | ✅ released since v0.8.0; recovery objective correction in v0.12.0 scope; natural full playthrough acceptance pending |
 | Victory conditions: annihilation, planet majority, economic, timed (data-driven) | ✅ prototype |
 | Trade convoys between trade stations + raiding (salvage loot) | ✅ prototype |
 | Objectives: build/destroy/colonize/survive + escort_convoy, hold_point | ✅ prototype |
 | Autosave ring (3 rotating slots) | ✅ prototype |
 | LAN host/join, 2–4 humans, optional AI, configurable TCP port | ✅ implemented; matching version/content required |
 | Deterministic lockstep, serialized commands, replay infrastructure | ✅ implemented and tested |
-| Replay recording/browser/read-only playback | ✅ verified in v0.8.0 source; see release notes for package verification |
+| Replay recording/browser/read-only playback | ✅ released in v0.8.0; strict version/content compatibility |
 | LAN reconnect/resync | 🔲 production integration pending; tested standalone foundation only |
 | Four skirmish maps, player factions/colors/teams, AI difficulty | ✅ implemented; 2–4 total players by map |
 | Boarding/capture, onboard crew/life support and abandoned hulls | ✅ merged in #37; released in v0.7.0 |
@@ -441,18 +463,17 @@ not proof of statistical full-match balance.
 
 ## Releases
 
-**[Download v0.9.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.9.0)**
-(published October 11, 2026):
+**[Download v0.11.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.11.0)**
+(published October 12, 2026):
 
-- **macOS:** `STAR-ARMADA-v0.9.0-mac.dmg`
-- **Windows:** `STAR-ARMADA-v0.9.0-win.zip`
+- **macOS:** `STAR-ARMADA-v0.11.0-mac.dmg`
+- **Windows:** `STAR-ARMADA-v0.11.0-win.zip` (unsigned)
 
-The release notes record successful native macOS/Windows CI builds, downloaded
-assets matching GitHub SHA-256 digests, DMG checksum and Windows ZIP integrity
-checks. The published macOS bundle reports 0.9.0 and passed a 30-second frozen-app
-smoke (`SMOKE_OK`). **Native interactive Windows gameplay was not exercised;
-mixed-platform LAN acceptance remains open.** Packaging is delivered, not a
-missing feature; these remaining interactive checks are separate acceptance gates.
+Historical v0.11.0 verification: native macOS/Windows CI builds, downloaded
+SHA-256/DMG/ZIP integrity, inspected code/data and read-only frozen macOS smoke
+and benchmark modes passed. Native Windows benchmarks were measured separately.
+This does not establish v0.12.0 package verification, native interactive Windows
+acceptance or mixed-platform LAN readiness. See the current-release block above.
 
 Tagged versions (`v*`) trigger native macOS and Windows builds and GitHub Release
 publication. Version is defined once in `game/__init__.py`; merge the version
