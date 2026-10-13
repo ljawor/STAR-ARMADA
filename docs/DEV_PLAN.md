@@ -22,7 +22,9 @@ publication and downloaded-package verification are pending until recorded below
   actual unshielded hull damage. Fractional hits accumulate deterministically and are persisted precisely.
   Automatic and retained attacks stop at abandonment; a fresh explicit attack on
   an already abandoned detected enemy can destroy it. Ownership/recovery and
-  already-fired ballistic impacts retain their existing contracts.
+  already-fired ballistic impacts retain their existing contracts. AI does not
+  destroy derelicts; an abandoned defending satellite is unboardable and still
+  blocks colony capture, so AI capture can stall indefinitely.
 - **Already merged fixes:** mixed-platform content hashing/deterministic math (#68),
   Escape abort/menu behavior (#71), orbiting defense-satellite targeting (#73),
   infrastructure/colony CMD accounting (#74), Recovery Drill crew completion (#82),

@@ -101,7 +101,10 @@ disables combat casualties). Passengers and unassigned crew pools are unchanged.
 Zero crew leaves an abandoned intact hull with its existing owner. Automatic and
 retained attacks stop at abandonment, preserving the hull for recovery/capture;
 a new explicit attack on a detected enemy derelict permits destruction.
-Already-fired physical projectiles can still hit. Frigate-and-larger
+Already-fired physical projectiles can still hit. AI does not deliberately destroy
+derelicts: abandoned planetary satellites cannot be boarded and still block colony
+capture, so an AI capture can stall indefinitely until that hardware is removed.
+Frigate-and-larger
 ships can deploy real boarding craft against detected enemy ships/stations
 with all shields down, fight for control and capture them. Select a capable ship,
 press **B** or click **Board enemy hull**, then click the target. Successful capture
