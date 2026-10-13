@@ -89,9 +89,11 @@ try:
     assert ns['mode'] == 'game' and ns['recording'] is not None
     own = next(e.id for e in ns['state'].entities.values() if e.owner == 0 and e.is_ship)
     ns['inputc'].selection = {own}
-    press(pygame.K_s)
+    press(pygame.K_BACKSPACE)
     for _ in range(30):
         frame()
+    press(pygame.K_ESCAPE)
+    assert ns['mode'] == 'game' and ns['inputc']._menu_armed
     press(pygame.K_ESCAPE)
     assert ns['mode'] == 'menu'
     files = sorted((out / 'user/replays').glob('*.json'))
@@ -115,7 +117,7 @@ try:
         for page in range(3):
             frame(f'browser-{width}-{page}.png')
             menu = ns['menu']
-            seen.update(b['payload'] for b in menu.buttons if b['action'] == 'play_replay')
+            seen.update(b['payload'] for b in menu.buttons if b['action'] == 'select_replay')
             assert all(pygame.Rect(0, 0, width, height).contains(r) for r in menu.replay_text_bounds)
             assert all(not a.colliderect(b) for i, a in enumerate(menu.replay_text_bounds)
                        for b in menu.replay_text_bounds[i + 1:]), 'overlapping replay text'
@@ -124,9 +126,28 @@ try:
         assert len(seen) == 16, 'paging did not expose every fixture'
         menu.open_replays()
         frame()
+        click('select_replay', str(broken))
+        assert ns['mode'] == 'menu' and menu.replay_selected == str(broken)
         click('play_replay', str(broken))
         assert 'JSON' in menu.replay_notice and ns['mode'] == 'menu'
         frame(f'error-{width}.png')
+        click('replay_delete')
+        frame(f'confirm-selected-{width}.png')
+        assert {b['action'] for b in menu.buttons} == {'replay_cancel_delete', 'replay_confirm_delete'}
+        press(pygame.K_RETURN)
+        assert broken.exists() and menu.replay_confirmation is None
+        click('replay_delete')
+        click('replay_confirm_delete')
+        assert not broken.exists() and len(menu.replay_paths) == 15
+        broken.write_text('{bad')
+        menu.open_replays()
+        frame()
+        click('replay_delete_all')
+        frame(f'confirm-all-{width}.png')
+        press(pygame.K_ESCAPE)
+        assert len(list(files[0].parent.glob('*.json'))) == 16
+        click('select_replay', str(files[0].parent / 'fixture-00.json'))
+        frame(f'browser-selected-{width}.png')
         click('play_replay', str(files[0].parent / 'fixture-00.json'))
         assert ns['mode'] == 'game' and ns['playback'] is not None, 'main menu did not launch playback'
         press(pygame.K_p)
@@ -143,7 +164,8 @@ try:
         press(pygame.K_RIGHTBRACKET)
         assert ns['playback'].speed == 2.
         frame(f'paused-{width}.png')
-        assert not ns['hud'].buttons, 'replay HUD still advertises gameplay actions'
+        hud_kinds = {button['kind'] for button in ns['hud'].buttons}
+        assert hud_kinds <= {'hud_panel', 'hud_scroll'}, f'replay HUD gameplay actions: {hud_kinds}'
         press(pygame.K_p)
         for _ in range(100):
             frame()
@@ -155,9 +177,28 @@ try:
         assert precise() == final
         press(pygame.K_ESCAPE)
         assert ns['mode'] == 'menu' and files[0].read_bytes() == original
+    # Only isolated diagnostic fixtures: bulk deletion must exceed both browse caps.
+    for index in range(4107):
+        (files[0].parent / f'bulk-{index}.json').write_text('{bad')
+    outside = out / 'outside.json'
+    outside.write_text('preserve')
+    (files[0].parent / 'link.json').symlink_to(outside)
+    menu = ns['menu']
+    menu.open_replays()
+    frame()
+    assert len(menu.replay_paths) == 1000 and 'limit' in menu.replay_notice
+    bulk_count = sum(p.suffix == '.json' and p.is_file() and not p.is_symlink()
+                     for p in files[0].parent.iterdir())
+    click('replay_delete_all')
+    frame('confirm-all-beyond-caps.png')
+    click('replay_confirm_delete')
+    assert {p.name for p in files[0].parent.iterdir()} == {'link.json'}
+    assert outside.read_text() == 'preserve' and menu.replay_paths == []
+    frame('browser-empty-after-delete-all.png')
     report = dict(result='DIAG_REPLAY_OK', driver=pygame.display.get_driver(),
                   captures=captures, resolutions=[[1024, 768], [1280, 800]],
                   commands=len(data['commands']), end_tick=data['end_tick'],
+                  bulk_deleted=bulk_count, confirmations_default_cancel=True, outside_fixture_preserved=True,
                   limitation='Local macOS SDL/GL automation only; not cross-platform interactive acceptance.')
     (out / 'report.json').write_text(json.dumps(report, indent=2))
     print(json.dumps(report, indent=2))

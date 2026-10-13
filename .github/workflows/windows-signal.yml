@@ -57,6 +57,17 @@ jobs:
         # test_lan.DiagnosticTests runs the real two-process LAN diagnostic here
         # too: cross-process determinism must hold on Windows, not only on macOS.
         run: python -m unittest test_netdiag test_netdiag_compare test_lan_state_diff test_sim_profiles test_lan test_multiplayer -v
+      - name: Replay deletion on real Windows
+        env:
+          PYTHONPATH: tests
+          SDL_VIDEODRIVER: dummy
+          SDL_AUDIODRIVER: dummy
+        # Real kernel tests cover handles, junctions, locked files and all-file
+        # deletion; portable mocks are not evidence of native syscall safety.
+        run: |
+          python -c "import os, unittest; assert os.name == 'nt', 'Native Windows deletion gate requires Windows'; suite = unittest.defaultTestLoader.loadTestsFromName('test_replay_deletion_windows.NativeWindowsDeletionTests'); expected = suite.countTestCases(); result = unittest.TextTestRunner(verbosity=2).run(suite); optional = 'test_file_symlink_is_never_deleted_or_followed'; raise SystemExit(0 if result.wasSuccessful() and result.testsRun == expected and all(test._testMethodName == optional for test, reason in result.skipped) else 1)"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m unittest test_replay_deletion_windows test_replay_library -v
       - uses: actions/upload-artifact@v4
         if: always()
         with:

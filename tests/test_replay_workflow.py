@@ -152,7 +152,7 @@ class ReplayWorkflowTests(unittest.TestCase):
                 seen = set()
                 for page in range(3):
                     menu.render(0.)
-                    entries = [b for b in menu.buttons if b['action'] == 'play_replay']
+                    entries = [b for b in menu.buttons if b['action'] == 'select_replay']
                     self.assertLessEqual(len(entries), 6)
                     seen.update(Path(b['payload']).name for b in entries)
                     if page < 2:
@@ -164,9 +164,15 @@ class ReplayWorkflowTests(unittest.TestCase):
                 broken = next(b for b in menu.buttons if Path(b.get('payload') or '').name == 'broken.json')
                 menu.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1, pos=broken['rect'].center))
                 self.assertEqual(menu.result, MenuResult.NONE)
+                menu.render(0.)
+                play = next(b for b in menu.buttons if b['action'] == 'play_replay')
+                menu.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1, pos=play['rect'].center))
                 self.assertIn('JSON', menu.replay_notice)
-                valid = next(b for b in menu.buttons if b['action'] == 'play_replay' and b is not broken)
+                valid = next(b for b in menu.buttons if b['action'] == 'select_replay' and b['payload'] != broken['payload'])
                 menu.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1, pos=valid['rect'].center))
+                menu.render(0.)
+                play = next(b for b in menu.buttons if b['action'] == 'play_replay')
+                menu.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1, pos=play['rect'].center))
                 self.assertEqual(menu.result, MenuResult.START_REPLAY)
                 self.assertEqual(menu.result_payload, valid['payload'])
                 self.assertEqual(menu.buttons, [])

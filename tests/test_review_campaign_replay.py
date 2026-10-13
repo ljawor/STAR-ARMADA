@@ -32,6 +32,10 @@ class ReviewReplayTests(unittest.TestCase):
                 menu = MenuStack(1024, 768)
                 menu.open_replays()
                 menu.render(0.)
+                button = next(b for b in menu.buttons if b['action'] == 'select_replay')
+                menu.handle_event(pygame.event.Event(
+                    pygame.MOUSEBUTTONDOWN, button=1, pos=button['rect'].center))
+                menu.render(0.)
                 self.assertIn('Cannot play:', menu.replay_rows[str(path)])
                 button = next(b for b in menu.buttons if b['action'] == 'play_replay')
                 menu.handle_event(pygame.event.Event(
@@ -42,6 +46,7 @@ class ReviewReplayTests(unittest.TestCase):
                 load_replay(path)
 
     def test_old_v2_browser_warns_future_state_not_unknown_duration(self):
+        import pygame
         from render.menus import MenuStack
         data = MatchRecording(game()).to_dict()
         data['initial_state'].pop('runtime_state', None)
@@ -53,6 +58,10 @@ class ReviewReplayTests(unittest.TestCase):
             with patch('render.menus.USER_DIR', directory):
                 menu = MenuStack(1024, 768)
                 menu.open_replays()
+                menu.render(0.)
+                button = next(b for b in menu.buttons if b['action'] == 'select_replay')
+                menu.handle_event(pygame.event.Event(
+                    pygame.MOUSEBUTTONDOWN, button=1, pos=button['rect'].center))
                 menu.render(0.)
                 row = menu.replay_rows[str(path)]
                 self.assertIn('future-state unavailable', row)
@@ -76,6 +85,10 @@ class ReviewReplayTests(unittest.TestCase):
             with patch('render.menus.USER_DIR', directory):
                 menu = MenuStack(1024, 768)
                 menu.open_replays()
+                menu.render(0.)
+                button = next(b for b in menu.buttons if b['action'] == 'select_replay')
+                menu.handle_event(pygame.event.Event(
+                    pygame.MOUSEBUTTONDOWN, button=1, pos=button['rect'].center))
                 menu.render(0.)
                 self.assertIn('Cannot play:', menu.replay_rows[str(path)])
                 button = next(b for b in menu.buttons if b['action'] == 'play_replay')
