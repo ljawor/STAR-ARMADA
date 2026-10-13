@@ -907,6 +907,7 @@ class HUD:
                                  self._row_build_station, sel)
         elif sel is not None and sel.is_station:
             std = self.ds.stations.get(sel.data_id)
+            y = self._refit_block(panel, y, sel, p)
             if std is not None and std.builds_ships:
                 self._label(panel.x + 12, y, "SHIP PRODUCTION", ACCENT,
                             self.font_big)
@@ -1087,6 +1088,76 @@ class HUD:
     def _row_build_station(self, d, yy, payload) -> None:
         self._build_row(self._cur_panel, yy, d, self._cur_player, payload,
                         "build_station_place")
+
+    def _refit_block(self, panel, y, sel, player) -> int:
+        """Refit level, its accumulated effects and the button that buys the next (#77).
+
+        Only yard-built stations get this block: planet buildings and satellites are
+        out of scope, and `upgrades.eligible` is the same predicate the simulation
+        applies, so the panel never offers a row the sim would refuse. A pending
+        refit shows its own timer and cancel affordance instead of the button, so a
+        station that builds no ships can still stop the work it paid for.
+        """
+        from game.systems.upgrades import (bonus_table, eligible, queued_refit,
+                                           station_level, upgrade_cost, upgrade_time)
+        # `_right_panel_content` has already dropped anything this player does not own,
+        # so ownership is not re-checked here; `eligible` keeps planet-built hardware
+        # out of the block, because an extractor *is* yours.
+        if not eligible(sel, self.ds):
+            return y
+        level = station_level(sel)
+        table = bonus_table(sel, self.ds)
+        self._label(panel.x + 12, y, f"REFIT · LEVEL {level}/{table['max_level']}",
+                    ACCENT, self.font_big)
+        y += 26
+        effects = []
+        for key, text in (('hull_bonus', 'hull'), ('shield_bonus', 'shields'),
+                          ('shield_regen_bonus', 'regen'), ('damage_bonus', 'damage'),
+                          ('production_bonus', 'output'), ('convoy_cargo_bonus', 'cargo')):
+            if table[key]:
+                effects.append(f"{text} +{table[key] * 100:.0f}%")
+        if table['extra_shots']:
+            effects.append(f"+{table['extra_shots']} shot/mount")
+        if table['extra_convoys']:
+            effects.append(f"+{table['extra_convoys']} convoy")
+        y = self._wrapped_labels(panel.x + 12, y,
+                                 ' · '.join(effects) if effects else
+                                 'As built · buy a level to raise hull, shields and output.',
+                                 296) + 6
+        pending = queued_refit(sel)
+        if pending is not None:
+            index = sel.build_queue.index(pending)
+            left = max(0.0, float(pending.get('time_left', 0.0)))
+            self._label(panel.x + 12, y + 1, f"REFIT IN PROGRESS · {left:.0f}s",
+                        TXT_DIM, self.font_small)
+            button = pygame.Rect(panel.right - 74, y, 62, 18)
+            pygame.draw.rect(self.overlay, BAR_BG, button, border_radius=3)
+            pygame.draw.rect(self.overlay, ACCENT, button, 1, border_radius=3)
+            self._label(button.x + 6, button.y + 1, "✕ Cancel", TXT, self.font_small)
+            self.buttons.append({"rect": button, "kind": "cancel_build",
+                                 "payload": {"target_id": sel.id, "index": index}})
+            return y + 22
+        cost = upgrade_cost(sel, self.ds)
+        seconds = upgrade_time(sel, self.ds)
+        if cost is None or seconds is None:
+            self._label(panel.x + 12, y, 'MAXIMUM LEVEL', TXT_DIM, self.font_small)
+            return y + 20
+        button = pygame.Rect(panel.x + 12, y, 296, 20)
+        pygame.draw.rect(self.overlay, BAR_BG, button, border_radius=3)
+        pygame.draw.rect(self.overlay, ACCENT, button, 1, border_radius=3)
+        self._label(button.x + 8, button.y + 3, f"▲ Refit to level {level + 1}", TXT,
+                    self.font_small)
+        self.buttons.append({"rect": button, "kind": "upgrade_station",
+                             "payload": {"target_id": sel.id}})
+        y += 22
+        affordable = (player.credits >= cost['credits']
+                      and player.materials >= cost['materials']
+                      and player.energy >= cost['energy'])
+        self._label(panel.x + 12, y,
+                    f"{cost['credits']:,.0f} cr · {cost['materials']:,.0f} mt · "
+                    f"{cost['energy']:,.0f} EN · {seconds:.0f}s",
+                    TXT if affordable else WARN, self.font_small)
+        return y + 20
 
     def _shipyard_items(self, station, std) -> list:
         """Buildable-ship rows for a station panel.

@@ -267,8 +267,12 @@ See [PLANETARY_HARDWARE.md](PLANETARY_HARDWARE.md) for mechanics and evidence.
    settle shield-drain/recovery semantics first and test crew-damage interaction.
 2. **#81 — Pulsar range:** clarify desired versus reported range before changing
    weapon/sensor tuning; this is separate from closed #52 firing functionality.
-3. **#77 — Station upgrades:** define eligible hardware, five-level numbering,
-   paid costs/bonuses/timing and capture/AI policy before implementing commands/HUD.
+3. **#77 — Station upgrades:** the design contract is now written and implemented —
+   eligible hardware, five-level numbering, paid costs/bonuses/timing and
+   capture/AI policy are defined in `docs/STATION_UPGRADES.md`. The one item left
+   deliberately open is the **AI's upgrade heuristic**: the AI accepts the command
+   but never chooses to spend on a refit, and valuing a refit against a new hull is
+   a balance decision rather than plumbing.
 
 The abandoned-satellite AI capture stall is a disclosed consequence of #79;
 choose a separate capture/destruction policy before expanding AI permissions.

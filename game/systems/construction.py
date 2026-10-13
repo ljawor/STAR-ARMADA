@@ -373,7 +373,7 @@ class ConstructionSystem:
         else:
             if builder.owner != player_id or not builder.operational:
                 return False
-            allowed = ('ship', 'station', 'satellite')
+            allowed = ('ship', 'station', 'satellite', 'station_upgrade')
         queue = builder.build_queue
         if type(index) is not int or not 0 <= index < len(queue):
             return False
@@ -393,7 +393,15 @@ class ConstructionSystem:
         return True
 
     def _queued_cost(self, item: dict) -> dict:
-        """Catalogue cost paid when `item` was queued; empty for costless work."""
+        """Catalogue cost paid when `item` was queued; empty for costless work.
+
+        A refit's price depends on the station's target level and its catalogue cost,
+        which the catalogue alone cannot reproduce, so the item carries the exact
+        bill that was paid and that is what comes back.
+        """
+        stored = item.get('cost')
+        if isinstance(stored, dict):
+            return dict(stored)
         data_id = item.get('item')
         if not data_id:
             return {}
@@ -403,6 +411,47 @@ class ConstructionSystem:
         if kind in ('station', 'satellite', 'planet_building'):
             return self.factory.station_build_cost(data_id)
         return {}
+
+    # ------------------------------------------------------------------ upgrades
+    def start_upgrade(self, station_id, player_id: int) -> bool:
+        """Buy the next refit level of an owned station (#77).
+
+        Paid up front and queued on the station's own build queue, so a refit orders
+        itself behind any hull already building there. The station keeps operating
+        for the whole refit — it is work inside a live hull, not a new one — and the
+        timer is fixed at purchase (like satellite and surface work), so an
+        under-crewed station cannot stall its own refit forever.
+        """
+        from .upgrades import eligible, queued_refit, station_level, upgrade_cost, upgrade_time
+        st = self.state
+        station = st.entity(station_id) if type(station_id) is int else None
+        if station is None or not station.alive or not station.operational:
+            return False
+        if station.owner != player_id or not eligible(station, self.ds):
+            return False
+        if queued_refit(station) is not None:
+            st.float_text(station.pos, 'Refit already in progress', (1, 0.6, 0.4))
+            return False
+        cost = upgrade_cost(station, self.ds)
+        seconds = upgrade_time(station, self.ds)
+        if cost is None or seconds is None:
+            st.float_text(station.pos, 'Already at maximum level', (1, 0.6, 0.4))
+            return False
+        if not self.can_pay(player_id, cost):
+            missing = self.missing_resources(player_id, cost)
+            st.float_text(station.pos, f'Insufficient resources: {missing}', (1, 0.6, 0.4))
+            return False
+        target = station_level(station) + 1
+        self.pay(player_id, cost)
+        station.build_queue.append({
+            'kind': 'station_upgrade', 'item': station.data_id, 'level': target,
+            'time_left': seconds, 'total': seconds, 'status': 'paid',
+            'source_owner': player_id, 'cost': dict(cost),
+        })
+        st.float_text(station.pos, f'Refit ordered · level {target}', (0.7, 0.9, 1))
+        st.events.publish('station_upgrade_started', entity_id=station.id,
+                          station=station.data_id, owner=player_id, level=target)
+        return True
 
     # ------------------------------------------------------------------ satellites
     def satellite_slots(self, planet):
@@ -673,6 +722,12 @@ class ConstructionSystem:
             st.float_text(ship.pos, sd.display_name, (0.7, 0.9, 1))
             st.events.publish("ship_built", entity_id=ship.id, ship=ship_id,
                               owner=builder.owner)
+        elif kind == "station_upgrade":
+            # #77: refit work completes on the station itself. Capacity fields are
+            # raised here, once, because damage/repair/AI/digest read them directly.
+            from .upgrades import apply_level
+            if builder.is_station and builder.alive:
+                apply_level(st, builder, item)
         elif kind == "colonize":
             planet = st.entity(int(item["planet_id"]))
             from .colonies import eligible_planet, defending_satellites

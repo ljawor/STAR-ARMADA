@@ -51,6 +51,38 @@ battery. The #52 regression ("when building a pulsar cannon we are not able to f
 it") now pins the guarantee rather than the number: the emplacement must see as far
 as it shoots and must fire across that whole band, and never past it.
 
+### Station upgrades — five paid refit levels (#77)
+
+Stations are no longer fixed at the strength they were built with. Every station hull
+laid down by a construction ship or a shipyard can be refitted through **five levels**
+(level 1 is the hull as it leaves the yard; the four steps above it are paid work), and
+the station panel carries the row: the level, the accumulated effect of the levels
+already bought, and one button per step with its price and refit time.
+
+A refit costs a fraction of the station's *own* catalogue build bill (0.75×, 1.10×,
+1.50×, 2.00×) and takes a fraction of its build time (0.60×, 0.85×, 1.10×, 1.40×), so
+a command station's refit is dearer than a sensor station's and a full ladder costs
+5.35× the hull. Each level raises hull capacity, shields and shield regeneration, and
+adds the category bonus the hull can actually use: firepower and an extra shot per
+weapon mount for anything that can shoot, resource output for anything with an income
+table, and more, fuller convoys for a trade station. Categories come from the
+catalogue, not from station names, so a mod that arms a mining station gets a
+firepower ladder for it.
+
+The work is paid up front, queued on the station's own build queue and finished on a
+timer while the station keeps operating — and it is cancellable like any other paid
+work, refunding half of the exact bill that was paid (`cancel_build`, #94). Hull and
+shield capacity are raised once at completion and the current quads and hull are
+*scaled* with them, so a refit can never be bought as a cheap repair. `upgrade_level`
+is hull state: a captured station keeps the level its previous owner paid for, the
+level rides the save graph and the LAN reconnect snapshot, and it is part of the
+per-tick desync digest, so two peers that disagreed about a refit fail loudly instead
+of diverging. Saves made before #77 load as an all-level-1 fleet.
+
+Planet-built hardware is deliberately out of scope: the four surface buildings and the
+two orbit satellites are excluded, exactly as the issue specified. Full contract in
+[`docs/STATION_UPGRADES.md`](docs/STATION_UPGRADES.md).
+
 ---
 
 ## v0.13.0 — Clean Classic menus, battle backgrounds, Saved Games and replay management

@@ -37,11 +37,11 @@ class CommandHandler:
         fn = getattr(self, "_do_" + t, None)
         if fn is None:
             return
-        if t == 'cancel_build':
-            # Cancelling queued work is a queue edit, not new intent: it must
-            # never supersede the unit's other standing orders the way a new
-            # order does (a payload naming a unit would otherwise strip that
-            # unit's colonisation/repair/exploration work on its way through).
+        if t == 'cancel_build' or t == 'upgrade_station':
+            # Cancelling queued work and buying a station refit are queue edits, not
+            # new intent: they must never supersede the unit's other standing orders
+            # the way a new order does (a payload naming a unit would otherwise strip
+            # that unit's colonisation/repair/exploration work on its way through).
             fn(cmd)
             return
         if t != 'colonize':
@@ -217,6 +217,11 @@ class CommandHandler:
     def _do_cancel_build(self, cmd: PlayerCommand) -> None:
         index = int(cmd.name) if cmd.name and cmd.name.isdigit() else 0
         self.construction.cancel_build(cmd.target_id, cmd.player, index)
+
+    def _do_upgrade_station(self, cmd: PlayerCommand) -> None:
+        # #77: the simulation re-checks ownership, the level cap, a pending refit and
+        # the player's ability to pay; a rejection changes nothing and pays nothing.
+        self.construction.start_upgrade(cmd.target_id, cmd.player)
 
     def _do_build_satellite(self, cmd: PlayerCommand) -> None:
         self.construction.start_satellite(cmd.target_id, cmd.station_kind, cmd.player)

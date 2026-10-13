@@ -16,6 +16,7 @@ from __future__ import annotations
 from game.core import detmath as math  # deterministic sim math, never the platform libm
 from ..data.store import DataStore
 from ..core.vectors import Vec3
+from . import upgrades  # #77 refit bonuses on markets; no import cycle (upgrades is a leaf)
 
 # Market ends a convoy may run between. A planet Trade Hub is a market just
 # like a trade station (issue #53): without it a hub earned passive income but
@@ -78,12 +79,19 @@ class TradingSystem:
             if not dests:
                 continue
             dest = min(dests, key=lambda d: (src.pos.dist_sq(d.pos), d.id))
-            cargo = float(self.cfg.get("cargo_credits", 150.0))
+            # #77: a refitted market releases more convoys, each carrying more.
+            cargo = (float(self.cfg.get("cargo_credits", 150.0))
+                     * upgrades.convoy_cargo_multiplier(src))
             hull = float(self.cfg.get("hull", 250.0))
-            e = self._make_convoy(src, dest, cargo, hull)
-            st.events.publish("convoy_spawned", entity_id=e.id,
-                              owner=src.owner, dest=dest.id,
-                              cargo=cargo)
+            for slot in range(1 + upgrades.extra_convoys(src)):
+                e = self._make_convoy(src, dest, cargo, hull)
+                if slot:
+                    # Deterministic lateral offset keeps parallel convoys from
+                    # spawning stacked. No rng draw, so every peer stays in lockstep.
+                    e.pos = src.pos + Vec3(0.0, 0.0, 45.0 * slot)
+                st.events.publish("convoy_spawned", entity_id=e.id,
+                                  owner=src.owner, dest=dest.id,
+                                  cargo=cargo)
 
     def _make_convoy(self, src, dest, cargo: float, hull: float):
         from ..core.entity import Entity, SubsystemState

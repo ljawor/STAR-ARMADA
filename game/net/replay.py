@@ -40,6 +40,9 @@ def state_checksum(state: GameState) -> str:
             f"{eid}|{e.data_id}|{e.owner}|"
             f"{e.pos.x:.3f},{e.pos.y:.3f},{e.pos.z:.3f}|"
             f"{e.hull:.3f}|{int(e.alive)}|{e.order_type};".encode())
+        # #77: a refit level changes hull, shields, firepower and output, so a peer
+        # that disagreed about it must fail the digest, not merely diverge quietly.
+        h.update(f"L{e.upgrade_level}|".encode())
         h.update(json.dumps([e.crew, e.max_crew, e.crew_loss_accumulator,
                              e.crew_damage_accumulator, e.abandoned_attack_target,
                              e.subsystem_hp('life_support')], separators=(',', ':')).encode())

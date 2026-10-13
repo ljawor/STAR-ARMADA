@@ -78,6 +78,9 @@ def migrate_saved_runtime(data):
                     and type(node[2]) is dict):
                 node[2].setdefault('crew_damage_accumulator', ['scalar', 0.0])
                 node[2].setdefault('abandoned_attack_target', ['scalar', None])
+                # #77: saves that predate station refits load as an all-level-1
+                # fleet instead of failing the strict graph decode.
+                node[2].setdefault('upgrade_level', ['scalar', 1])
             pending.extend(node)
         elif type(node) is dict:
             pending.extend(node.values())
