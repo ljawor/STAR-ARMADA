@@ -4,11 +4,23 @@
 classic space-fleet RTS titles (Armada II / Fleet Operations era). It runs entirely on
 Python 3 — deterministic simulation, AI, OpenGL rendering via pygame-ce and procedural audio.
 
-**Current release: [v0.13.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.13.0)**
-— published October 13, 2026, with verified macOS DMG and **unsigned Windows ZIP**.
-Adds Clean Classic menu unification across all screens, a looping close-up battle background on every non-replay menu, a Saved Games library with explicit Load/Delete actions, and unified replay management with timestamps, selection and bulk deletion. Includes native Windows safe deletion acceptance (4,101-file uncapped delete, symlink/junction containment, replacement blocking, handle cleanup, plus new saved-games namespace test). The final **1,266-test** suite and independent reviews passed. Both native builds are produced by GitHub Actions; downloaded SHA-256/DMG/ZIP checks passed on the macOS side. Windows-source LAN diagnostics/tests passed on a native CI runner; this does not prove frozen Windows gameplay or mixed-platform live LAN. Interactive Windows, trusted signing/Smart App Control, human listening/campaign and full-match balance remain open.
+**Current release: [v0.14.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.14.0)**
+— published October 14, 2026, with verified macOS DMG and **unsigned Windows ZIP**.
+Adds hyperspace transit travel and post-jump shield lockdown, English/German/Polish language
+packs, laser and photon weapon voices rebuilt against reference recordings, five paid station
+refit levels, cancel refunds with cost-derived build times, family-shaped weapon fire with a
+6720 pulsar reach, and campaign return with COMPLETE wins. The final **1,404-test** suite and
+independent reviews passed. Both native builds are produced by GitHub Actions; the downloaded
+DMG was hashed and inspected here, passes `hdiutil verify`, ships the three language packs and
+runs the packaged app's simulation benchmark and LAN diagnostic with a state hash and
+60-tick/600-tick fingerprints identical to the source build. Windows-source LAN
+diagnostics/tests passed on a native CI runner; this does not prove frozen Windows gameplay or
+mixed-platform live LAN. Interactive Windows, trusted signing/Smart App Control, human
+listening/campaign and full-match balance remain open.
+## v0.14.0 — Hyperspace transit, language packs, weapon voices and five-level station refits
 
-## v0.14.0 (unreleased) — Hyperspace transit, language packs, weapon voices and five-level station refits
+Published October 14, 2026 with a verified macOS DMG and an unsigned Windows ZIP
+([release notes](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.14.0)).
 
 Hyperjumps (#92) are no longer instant: the charge countdown ends with a departure
 ring/sound and the hull rides hyperspace along the origin→exit corridor. Travel time
@@ -633,6 +645,23 @@ not proof of statistical full-match balance.
 
 ## Releases
 
+**[Download v0.14.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.14.0)**
+(published October 14, 2026):
+
+- **macOS:** `STAR-ARMADA-v0.14.0-mac.dmg`
+- **Windows:** `STAR-ARMADA-v0.14.0-win.zip` (unsigned)
+
+Both published downloads were re-downloaded from the release and hashed here: DMG
+`2ff802dfb8bf1b5378a8ae454b77a546d61d06087547ad06a09e1f0cd91d4690`, ZIP
+`74ccca2f039e784a4d1c76b46e05ee560b60b5c8cf7ecc5d0fb8b2a3c631b526`. The DMG passes
+`hdiutil verify`, mounts with the app and the Applications symlink, ships all three language
+packs, and the packaged app reports 0.14.0 and runs its simulation benchmark and LAN
+diagnostic with the same initial-state hash and the same canonical (60-tick) and contact
+(600-tick) fingerprints as the source build. The Windows ZIP passes `unzip -t` and contains
+`STAR ARMADA.exe` and the language packs; the Windows executable itself was **not** run, so
+frozen Windows gameplay and mixed-platform live LAN remain open. Full hashes and per-artifact
+evidence are in the release notes.
+
 **[Download v0.13.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.13.0)**
 (published October 13, 2026):
 
@@ -664,6 +693,7 @@ local builds (`./scripts/build_mac.sh`).
 
 | Release | Delivered |
 |---|---|
+| **v0.14.0** | Hyperspace transit travel and post-jump shield lockdown (#92/#78); campaign return with COMPLETE wins (#89); cancel refunds and cost-derived surface build times (#94/#95); family-shaped weapon fire with a 6720 pulsar reach (#90/#81); five paid station refit levels (#77); English/German/Polish language packs with a Settings selector (#93); laser/photon weapon voices rebuilt against reference recordings (#91); verified DMG and Windows ZIP |
 | **v0.13.0** | Clean Classic menu unification, looping battle backgrounds on all non-replay screens, Saved Games library with Load/Delete, replay management with timestamps/selection/bulk deletion, native Windows safe deletion acceptance (7 real-kernel tests); verified DMG and Windows ZIP |
 | **v0.12.1** | Renderer performance improvements (per-frame cache, role-batched draws, LOD, marker batching, shield opacity) without visual quality loss; 500-corvette stress 133.5→100.0 ms full-frame, 98.5→65.0 ms world-render; verified DMG and Windows ZIP |
 | **v0.12.0** | Crew hull-damage casualties and abandonment-safe targeting (#85/#79); mixed-platform deterministic LAN, Escape, orbit targeting, infrastructure CMD, Recovery Drill, elevated-fighter pursuit and crowded-map orbit fixes; verified DMG and Windows ZIP |
