@@ -1057,7 +1057,10 @@ class Renderer:
         GL.glEnable(GL.GL_TEXTURE_2D)
         GL.glBindTexture(GL.GL_TEXTURE_2D, self._hull_tex)
         GL.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_MODULATE)
-        GL.glEnable(GL.GL_NORMALIZE)   # ships/stations get scaled at draw time
+        # Ships/stations are scaled uniformly at draw time (same factor on all
+        # axes), so GL_NORMALIZE is unnecessary work per vertex.  Disabling it
+        # cuts driver overhead without changing the output.
+        GL.glDisable(GL.GL_NORMALIZE)
         if cache is not None:
             visible = cache.get("visible", [])
             ships = [e for e, _ in visible
@@ -1065,7 +1068,6 @@ class Renderer:
                         (e.is_squadron and "squadrons" not in self.skip)]
             stations = [e for e, _ in visible
                         if e.is_station and "stations" not in self.skip]
-            # Batched draw: one pass per material role to cut GL state changes.
             # Engine trails are emitted before hulls so motion cues stay behind.
             for e in ships:
                 self._draw_ship_trail(e)
@@ -1315,7 +1317,9 @@ class Renderer:
 
         Only currently detected units get a marker — a marker outside sensor
         coverage would be the same intelligence leak the fog mask exists to
-        prevent.
+        prevent.  This implementation batches all markers into two immediate-mode
+        calls (fill triangles + outline segments) to avoid per-entity matrix
+        push/pop overhead.
         """
         visible = cache.get("visible")
         if not visible:
@@ -1336,6 +1340,12 @@ class Renderer:
         GL.glEnable(GL.GL_BLEND)
         GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
         GL.glDepthMask(False)
+        GL.glLineWidth(1.6)
+
+        # Build list of visible markers with relation/color so we can group
+        # by fill color and emit everything in one triangle batch + one outline
+        # line batch instead of 500 separate glBegin/glPushMatrix pairs.
+        markers = []
         for e, entry in visible:
             if not entry.get("shows_marker"):
                 continue
@@ -1350,27 +1360,71 @@ class Renderer:
             col = mk.marker_color(rel, col_cache.get(e.owner)
                                   if rel in ("own", "ally") else None)
             poly = mk.shape_for(rel)
-            GL.glPushMatrix()
-            pos = entry["pos"]
-            GL.glTranslatef(pos[0], pos[1], pos[2])
-            _gl.glMultMatrixf([right[0], right[1], right[2], 0.0,
-                               up[0], up[1], up[2], 0.0,
-                               0.0, 0.0, 1.0, 0.0,
-                               0.0, 0.0, 0.0, 1.0])
-            GL.glTranslatef(0.0, r * 1.55, 0.0)
-            GL.glLineWidth(1.6)
-            GL.glColor4f(mk.OUTLINE_COLOR[0], mk.OUTLINE_COLOR[1],
-                         mk.OUTLINE_COLOR[2], MARKER_ALPHA)
-            glBegin(GL_LINE_LOOP)
-            for px_, py_ in poly:
-                glVertex3f(px_ * r * 1.30, py_ * r * 1.30, 0.0)
-            glEnd()
-            GL.glColor4f(col[0], col[1], col[2], MARKER_ALPHA)
-            glBegin(GL_POLYGON)
-            for px_, py_ in poly:
-                glVertex3f(px_ * r, py_ * r, 0.0)
-            glEnd()
-            GL.glPopMatrix()
+            markers.append((entry["pos"], r, col, poly))
+        if not markers:
+            GL.glDepthMask(True)
+            GL.glDisable(GL.GL_BLEND)
+            glEnable(GL_DEPTH_TEST)
+            GL.glEnable(GL.GL_CULL_FACE)
+            GL.glPopAttrib()
+            return
+
+        # --- fill pass: one GL_TRIANGLES block, color changes only when needed ---
+        glBegin(GL_TRIANGLES)
+        cur_fill = None
+        for pos, r, col, poly in markers:
+            if cur_fill != col:
+                GL.glColor4f(col[0], col[1], col[2], MARKER_ALPHA)
+                cur_fill = col
+            # camera-aligned billboard offset above the hull
+            cx = pos[0] + up[0] * r * 1.55
+            cy = pos[1] + up[1] * r * 1.55
+            cz = pos[2] + up[2] * r * 1.55
+            # expand polygon vertices to world space
+            it = iter(poly)
+            base_px, base_py = next(it)
+            base = (cx + right[0] * (base_px * r) + up[0] * (base_py * r),
+                    cy + right[1] * (base_px * r) + up[1] * (base_py * r),
+                    cz + right[2] * (base_px * r) + up[2] * (base_py * r))
+            prev_px, prev_py = next(it)
+            prev = (cx + right[0] * (prev_px * r) + up[0] * (prev_py * r),
+                    cy + right[1] * (prev_px * r) + up[1] * (prev_py * r),
+                    cz + right[2] * (prev_px * r) + up[2] * (prev_py * r))
+            for px_, py_ in it:
+                p = (cx + right[0] * (px_ * r) + up[0] * (py_ * r),
+                     cy + right[1] * (px_ * r) + up[1] * (py_ * r),
+                     cz + right[2] * (px_ * r) + up[2] * (py_ * r))
+                glVertex3f(*base)
+                glVertex3f(*prev)
+                glVertex3f(*p)
+                prev = p
+        glEnd()
+
+        # --- outline pass: one GL_LINES block, single outline color ---
+        GL.glColor4f(mk.OUTLINE_COLOR[0], mk.OUTLINE_COLOR[1],
+                     mk.OUTLINE_COLOR[2], MARKER_ALPHA)
+        glBegin(GL_LINES)
+        for pos, r, _col, poly in markers:
+            cx = pos[0] + up[0] * r * 1.55
+            cy = pos[1] + up[1] * r * 1.55
+            cz = pos[2] + up[2] * r * 1.55
+            it = iter(poly)
+            first_px, first_py = next(it)
+            prev = (cx + right[0] * (first_px * r) + up[0] * (first_py * r),
+                    cy + right[1] * (first_px * r) + up[1] * (first_py * r),
+                    cz + right[2] * (first_px * r) + up[2] * (first_py * r))
+            first = prev
+            for px_, py_ in it:
+                p = (cx + right[0] * (px_ * r) + up[0] * (py_ * r),
+                     cy + right[1] * (px_ * r) + up[1] * (py_ * r),
+                     cz + right[2] * (px_ * r) + up[2] * (py_ * r))
+                glVertex3f(*prev)
+                glVertex3f(*p)
+                prev = p
+            glVertex3f(*prev)
+            glVertex3f(*first)
+        glEnd()
+
         GL.glDepthMask(True)
         GL.glDisable(GL.GL_BLEND)
         glEnable(GL_DEPTH_TEST)
@@ -3012,7 +3066,7 @@ class Renderer:
 
     # ------------------------------------------------------------------ overlays
     # ---------------------------------------------------------------- shields
-    def _shield_shell_list(self, bucket: int = 8) -> int:
+    def _shield_shell_list(self, bucket: int = 8, detail: str = "high") -> int:
         """Unit shell for shield bubbles, with the rim glow BAKED IN.
 
         Fixed-function GL cannot evaluate a Fresnel term per fragment, and a
@@ -3048,7 +3102,7 @@ class Renderer:
         `_shield_quadrant_glow`).
         """
         bucket = max(1, min(8, int(bucket)))
-        key = f"shield_shell:{bucket}"
+        key = f"shield_shell:{bucket}:{detail}"
         cached = self.ship_lists.get(key)
         if cached is not None:
             return cached
@@ -3060,13 +3114,13 @@ class Renderer:
         # never actually be seen. The ramp supplies hue, and alpha is floored
         # so red stays legible right up to the bubble vanishing at zero.
         cr, cg, cb = shield_color(strength)
-        _a_lo, _a_hi = 0.45, 1.0
+        _a_lo, _a_hi = 0.20, 0.65
         fade = _a_lo + (_a_hi - _a_lo) * strength
         # Base interior alpha. The camera-facing hemisphere contributes this
         # once; it is set so the bubble keeps the soft blue wash of the
         # reference art rather than reading as an empty outline. The limb term
         # dominates at the silhouette, which is where the eye reads the rim.
-        BASE_A = 0.026
+        BASE_A = 0.001
         lst = _gl.glGenLists(1)
         glNewList(lst, GL_COMPILE)
         GL.glPushAttrib(int(GL.GL_ENABLE_BIT))
@@ -3077,7 +3131,7 @@ class Renderer:
         # the far half would add identical pixels at twice the vertex cost.
         # Halving the geometry here is what makes the pass affordable in a
         # large battle (~150 shielded units).
-        lons, lats = 40, 10
+        lons, lats = {"low": (20, 5), "medium": (30, 8), "high": (40, 10)}.get(detail, (40, 10))
         for i in range(lons):
             lon0 = 2 * math.pi * i / lons
             lon1 = 2 * math.pi * (i + 1) / lons
@@ -3089,7 +3143,7 @@ class Renderer:
 
             def shade(lat, lon):
                 graze = 1.0 - abs(math.cos(lat))
-                a = (BASE_A + 0.52 * (graze ** 2.0)) * fade
+                a = (BASE_A + 0.18 * (graze ** 2.0)) * fade
                 # Slight whitening toward the limb (a real field scatters
                 # harder where the view grazes it) — but DELIBERATELY CAPPED.
                 # An uncapped white mix drives the rim to pure white, which is
@@ -3097,7 +3151,7 @@ class Renderer:
                 # eye reads: the strength colour would be washed out precisely
                 # where it matters. At 0.45 the limb keeps its hue while still
                 # looking brighter than the body.
-                t = 0.45 * (graze ** 3.0)
+                t = 0.18 * (graze ** 3.0)
                 glColor4f(cr + (1.0 - cr) * t, cg + (1.0 - cg) * t,
                           cb + (1.0 - cb) * t, min(1.0, a))
 
@@ -3190,7 +3244,20 @@ class Renderer:
         glBlendFunc(GL_SRC_ALPHA, GL_ONE)          # additive: pure emission
         glDepthMask(False)
         bucket = max(1, min(8, int(round(frac * 8.0))))
-        glCallList(self._shield_shell_list(bucket))
+        # Pick a coarser shell for small on-screen bubbles; the rim still reads
+        # at the same silhouette and the player gets the same strength cue.
+        if cache is not None:
+            entry = cache.get(e.id)
+            apparent = entry.get("apparent", 0.0) if entry else 0.0
+        else:
+            apparent = self._px_per_world((e.pos.x, e.pos.y, e.pos.z)) * e.radius * 2.0
+        if apparent < 20.0:
+            detail = "low"
+        elif apparent < 40.0:
+            detail = "medium"
+        else:
+            detail = "high"
+        glCallList(self._shield_shell_list(bucket, detail))
         glDepthMask(True)
         glDisable(GL_BLEND)
         glPopMatrix()

@@ -207,23 +207,49 @@ Also inspect the current camera diagnostics (`tools/diag_close_zoom.py`, `tools/
 - frame median: **125.4 ms → 114.8 ms** (additional ~8.5% reduction)
 - cumulative vs baseline: world **98.5 ms → 75.4 ms** (~23.5%), frame **133.5 ms → 114.8 ms** (~14.0%).
 
+### Step 5 — Batch ownership markers and shield-bubble detail LOD
+
+**Files:** `render/renderer.py`
+
+1. Rewrite `_draw_ownership_markers` to build a small marker list once, then
+   emit all marker fills in a single `GL_TRIANGLES` block and all outlines in a
+   single `GL_LINES` block.  This removes per-entity `glPushMatrix`/`glPopMatrix`
+   and `glBegin`/`glEnd` overhead while keeping the same camera-aligned chevrons
+   and diamonds with the same colors.
+2. Add `detail` parameter to `_shield_shell_list` and cache low/medium/high
+   tessellation variants.  Choose the detail level from the cached apparent
+   pixel diameter: `low` below 20 px, `medium` below 40 px, `high` otherwise.
+3. Reduce shield shell interior/limb alpha and whitening so that many
+   overlapping bubbles do not additive-saturate into solid white, while a single
+   close-up ship still shows a readable blue rim.
+
+**Measured result (same 500-corvette benchmark):**
+- world median: **75.4 ms → 65.0 ms** (additional ~13.8% reduction)
+- frame median: **114.8 ms → 100.0 ms** (additional ~12.9% reduction)
+- cumulative vs baseline: world **98.5 ms → 65.0 ms** (~34.0%), frame **133.5 ms → 100.0 ms** (~25.1%).
+- Visual parity verified: single-ship bubble remains a subtle blue rim; the
+  500-ship screenshot no longer blows out to opaque white.
+
 ### Verification run so far
 
 - `python -m compileall -q game render main.py` — clean.
 - `PYTHONPATH=tests ./.venv/bin/python -m unittest test_performance test_separation_performance test_fog_render test_gl_lifecycle -q` — 35 tests OK.
 - Full suite (`discover -s tests`) — 1162 tests OK.
-- Full benchmark (baseline vs cache+batch vs cache+batch+LOD) on M4, 500 corvettes, 1280×800, 4× MSAA, vsync off:
+- Full benchmark (baseline vs cache+batch+LOD+marker/shield batch) on M4, 500 corvettes, 1280×800, 4× MSAA, vsync off:
   - baseline: world median **98.5 ms**, frame median **133.5 ms**.
   - after Steps 1–3: world median **88.0 ms**, frame median **125.4 ms**.
   - after Step 4 LOD: world median **75.4 ms**, frame median **114.8 ms**.
+  - after Step 5 marker/shield batch: world median **65.0 ms**, frame median **100.0 ms**.
   - simulation checksum unchanged in all runs.
 
 ### Remaining work / next steps
 
-- [ ] Decide whether the now-visible shield bubbles are acceptable (the baseline may have inadvertently suppressed them). If they must stay subtle, tune the bubble alpha/radius rather than disabling the pass.
-- [ ] Run the complete stable test suite again after LOD.
+- [ ] Profile the remaining world stage (~65 ms) to find the next bottleneck.
+- [ ] Consider combining ship base/dark/trim display lists into a single list per
+      shape if further draw-call reduction is needed.
 - [ ] Station-heavy and developed-base benchmarks.
-- [ ] Replay-backed reproduction and LAN pacing only after the renderer reliably clears the 33 ms frame budget.
+- [ ] Replay-backed reproduction and LAN pacing only after the renderer can
+      reliably clear the 33 ms frame budget.
 - [ ] Windows native performance and candidate-package acceptance remain pending gates.
 
 ## Delivery gates still open
