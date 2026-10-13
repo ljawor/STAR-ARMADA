@@ -88,7 +88,7 @@ are serialized. The AI makes conservative surface investments while retaining it
 infrastructure/economic reserve. No new released-package or cross-platform claim is
 implied by source implementation.
 
-## Planetary hardware fixes (branch `feature/planetary-hardware-fixes`, unreleased)
+## Planetary hardware fixes (merged in #61, released in v0.11.0)
 
 Four reported defects in the hardware above, fixed together on one branch: every
 satellite on a planet rode a single ring, the Pulsar Cannon could not reach anything
@@ -116,10 +116,10 @@ Surface Shield Generator drew nothing.
   generator raises the translucent additive shell described above; an abandoned
   generator, a lost colony, a foreign generator or a collapsed field draws nothing.
 
-Each new regression was replayed against `HEAD` loaded in memory to prove it is not
-vacuous: HEAD's constellation is one coplanar ring with a single radius, HEAD's
-catalogue never fires past 4,200 units, HEAD's hub is not a market, and HEAD has no
-planet shield field at all.
+Each new regression was replayed against the pre-fix baseline loaded in memory
+to prove it was not vacuous: that baseline used one coplanar constellation ring,
+never fired past 4,200 units, did not treat a hub as a market and had no planet
+shield field. These are historical control results, not current HEAD behavior.
 
 ## Executed evidence
 

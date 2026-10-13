@@ -1,6 +1,6 @@
 # Infrastructure command points (#70)
 
-Implemented on `fix/infrastructure-command-points`; not a merge or release claim.
+Merged in PR #74 and packaged in the verified v0.12.0 DMG and Windows ZIP.
 
 ## Accounting contract
 
@@ -82,5 +82,7 @@ reads the real top-bar painter's committed total, captures framebuffers, checks 
 errors and preserves exact simulation state. Paging is programmatic; this is not
 native mouse-focus/wheel acceptance.
 
-The parent integration gate must still run the stable combined-tree full suite
-serialized, independent review and any requested native packaged/platform acceptance.
+The final v0.12.0 stable-tree suite passed 1,162 tests and independent review.
+Both published packages passed download integrity/code/data verification and the
+downloaded read-only macOS app passed smoke. Native interactive Windows and
+mixed-platform live LAN acceptance remain open.
