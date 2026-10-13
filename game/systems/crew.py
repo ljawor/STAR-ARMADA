@@ -48,6 +48,9 @@ def stop_abandoned_unit(state, e):
     e.order_target_pos = e.order_target_id = e.current_target = None
     e.jump_charge = 0.0
     e.jump_target = None
+    e.jump_travelling = False
+    e.jump_origin = None
+    e.jump_transit_total = 0.0
     e.ability_active.clear()
     for q in e.shields:
         e.shields[q] = 0.0

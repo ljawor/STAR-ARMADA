@@ -315,7 +315,15 @@ class TestAudioProducerAudit(unittest.TestCase):
         self.assertIn('ability', self.played)
         own.jump_charge = .00001
         own.jump_target = Vec3(1000, 0, 1000)
-        gm.step(1 / 30)
+        # #92: charge expiry begins transit; jump_complete fires on arrival.
+        # Force near-instant transit rules and step through the whole ride.
+        rules = gm.ds.rules['hyperspace']
+        rules['transit_units_per_second'] = 1e9
+        rules['min_transit_seconds'] = 1e-6
+        gm.step(1 / 30)                      # charge expires → transit begins
+        self.assertTrue(own.jump_travelling)
+        gm.step(1 / 30)                      # transit expires → arrival + sound
+        self.assertFalse(own.jump_travelling)
         self.assertIn('jump', self.played)
         self.assertTrue({'unit_critical', 'unit_leveled', 'ability_used', 'jump_complete'}
                         <= {name for name, _ in self.observed})

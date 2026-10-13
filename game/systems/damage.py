@@ -61,6 +61,12 @@ class DamageSystem:
             # regen pauses shortly after being hit
             if st.time - e.last_hit_time < 4.0:
                 continue
+            # #78: shields stay down for a fixed window after hyperspace exit
+            if (e.ability_cooldowns or {}).get('shield_lockdown', 0) > 0:
+                continue
+            # in-transit hulls have inert shield projectors (no regen mid-jump)
+            if e.jump_travelling:
+                continue
             regen = stats.effective_shield_regen(st, e) * dt
             maxq = stats.effective_max_shield_quad(st, e)
             for q in QUADRANTS:
@@ -87,7 +93,14 @@ class DamageSystem:
         st = self.state
         if target is None or not target.alive or target.is_planet:
             return
+        # Hyperspace transit hulls are untouchable: no queued impact or beam
+        # from any source can reach them (issue #92).
+        if target.jump_travelling:
+            return
         source_owner = attacker.owner if attacker is not None else attacker_id
+        # A transiting attacker likewise fires nothing: drop queued intent.
+        if attacker is not None and attacker.jump_travelling:
+            return
         # Enforce nonaggression at resolution too: queued beams/impacts may
         # predate an alliance change. Keep neutral/environmental physics intact.
         if source_owner >= 0 and target.owner in st.allied_player_ids(source_owner):

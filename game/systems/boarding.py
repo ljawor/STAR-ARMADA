@@ -53,10 +53,12 @@ def boarding_reason(state, source, target, *, ongoing=False):
     if not ongoing and any(e.alive and e.boarding.get('source') == source.id
                            for e in state.entities.values()):
         return 'boarding party already deployed'
-    if source.jump_charge > 0:
+    if source.jump_charge > 0 or source.jump_travelling:
         return 'source is jumping'
     if target is None or not state.can_see(source.owner, target.id):
         return 'target not currently detected'
+    if target.jump_travelling:
+        return 'target is in hyperspace'
     if target.planet_id is not None or target.data_id in ('defense_satellite', 'attack_satellite'):
         return 'planetary satellites must be destroyed, not boarded'
     if (not target.alive or target.is_planet or target.boarding
@@ -205,6 +207,9 @@ class BoardingSystem:
                 target.build_queue.clear()  # paid work belongs to the old owner; no refund/mint
                 target.jump_charge = 0.0
                 target.jump_target = None
+                target.jump_travelling = False
+                target.jump_origin = None
+                target.jump_transit_total = 0.0
                 target.ability_active.clear()
                 target.ability_cooldowns.clear()
                 target.hangar_id = target.launched_from = None

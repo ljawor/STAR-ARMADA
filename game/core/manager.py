@@ -348,10 +348,18 @@ class GameManager:
             st.floating_texts = [f for f in st.floating_texts if f["t"] < 2.5]
 
     def _update_jumps(self, dt: float) -> None:
-        from ..systems.jump import jump_destination, jump_footprint_valid, clear_jump_orders
+        from ..systems.jump import (jump_destination, jump_footprint_valid,
+                                    clear_jump_orders, transit_seconds)
+        rules = self.ds.rules.get("hyperspace", {})
+        lockdown_seconds = rules.get("shield_lockdown_seconds", 15.0)
         st = self.state
         for e in sorted(st.entities.values(), key=lambda e: e.id):
-            if not e.alive or e.jump_charge <= 0:
+            if not e.alive:
+                continue
+            # Not in any hyperspace phase: leave every other order untouched.
+            # (Validating phase-less entities here would wipe move/attack
+            # orders across the whole fleet every tick.)
+            if e.jump_charge <= 0 and e.jump_target is None and not e.jump_travelling:
                 continue
             # Restored charges still require safe geometry and a real ship. Do
             # NOT recheck exploration: an earlier group arrival can reveal it.
@@ -364,17 +372,43 @@ class GameManager:
                                                 require_unexplored=False)):
                 e.jump_charge = 0.0
                 e.jump_target = None
+                e.jump_travelling = False
+                e.jump_origin = None
+                e.jump_transit_total = 0.0
                 clear_jump_orders(e)
+                continue
+            if e.jump_travelling:
+                # Transit phase (#92): the hull rides the origin→exit corridor
+                # and is untouchable — weapons/projectiles/damage skip it.
+                e.jump_charge -= dt
+                if e.jump_charge <= 0:
+                    e.pos.set(target)
+                    clear_jump_orders(e)
+                    e.jump_travelling = False
+                    e.jump_origin = None
+                    e.jump_charge = 0.0
+                    e.jump_target = None
+                    e.jump_transit_total = 0.0
+                    if e.max_shield_quad > 0 and lockdown_seconds > 0:
+                        e.ability_cooldowns["shield_lockdown"] = lockdown_seconds
+                    st.spawn_effect("jump_arrive", e.pos.copy(), size=e.radius)
+                    st.float_text(e.pos, "HYPERSPACE EXIT", (0.6, 0.8, 1.0))
+                    st.events.publish("jump_complete", entity_id=e.id, owner=e.owner)
+                else:
+                    fraction = 1.0 - e.jump_charge / max(1e-12, e.jump_transit_total)
+                    e.pos.set(e.jump_origin + (target - e.jump_origin) * fraction)
+                continue
+            if e.jump_charge <= 0:
                 continue
             e.jump_charge -= dt
             if e.jump_charge <= 0:
-                e.pos.set(target)
-                clear_jump_orders(e)
-                e.jump_charge = 0.0
-                e.jump_target = None
-                st.spawn_effect("jump_arrive", e.pos.copy(), size=e.radius)
-                st.float_text(e.pos, "HYPERSPACE EXIT", (0.6, 0.8, 1.0))
-                st.events.publish("jump_complete", entity_id=e.id, owner=e.owner)
+                # Charge complete: begin transit instead of teleporting (#92).
+                e.jump_travelling = True
+                e.jump_origin = e.pos.copy()
+                total = transit_seconds(rules, e.pos.dist(target))
+                e.jump_transit_total = total
+                e.jump_charge = total
+                st.spawn_effect("jump_depart", e.pos.copy(), size=e.radius)
 
     # ------------------------------------------------------------------ queries
     def player_entities(self, player_id: int) -> list:

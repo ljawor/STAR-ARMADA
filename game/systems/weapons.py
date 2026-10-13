@@ -37,6 +37,7 @@ def mount_needs_nose(wref, wd) -> bool:
 def combat_target_allowed(st, e, target, *, automatic=False) -> bool:
     """Live combat policy; explicit derelict permission never authorizes acquisition."""
     return bool(target is not None and target.alive and not target.is_planet
+                and not target.jump_travelling
                 and st.is_enemy(e.owner, target.owner)
                 and st.can_see(e.owner, target.id)
                 and (target.operational or (not automatic
@@ -167,6 +168,11 @@ class WeaponSystem:
     def _ship_weapons(self, e, dt: float, is_static: bool = False) -> None:
         st = self.state
         if e.owner < 0 or not e.operational:
+            return
+        if e.jump_travelling:
+            # In hyperspace: sensors and weapon locks are inert for the whole
+            # ride. Arrival clears the state; nothing fires or tracks (issue #92).
+            e.current_target = None
             return
         if e.data_id == 'planet_pulsar_cannon' and e.subsystem_fraction('weapons') <= 0:
             e.current_target = None

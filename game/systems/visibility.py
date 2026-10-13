@@ -29,7 +29,9 @@ class SensorQueries:
 
     @staticmethod
     def _eligible(e, allies):
-        return (e.operational and e.owner in allies
+        # A hull in hyperspace transit detects nothing and cannot be detected
+        # (issue #92): it drops out of live sensing for the whole ride.
+        return (e.operational and e.owner in allies and not e.jump_travelling
                 and (e.is_ship or e.is_station or e.is_squadron))
 
     def radius(self, e):

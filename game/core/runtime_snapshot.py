@@ -36,15 +36,22 @@ def repair_saved_jump(entity):
 
     Finite geometry/capability failures still use the manager's authoritative
     completion guard. Valid intent, AI, timers and pending work stay exact.
+    Transit totals/origins with the same sickness cancel with them (#92).
     """
     from game.core import detmath as math  # deterministic sim math, never the platform libm
     from ..systems.jump import clear_jump_orders
     values = [entity.jump_charge]
     if entity.jump_target is not None:
         values.extend((entity.jump_target.x, entity.jump_target.y, entity.jump_target.z))
+    values.append(entity.jump_transit_total)
+    if entity.jump_origin is not None:
+        values.extend((entity.jump_origin.x, entity.jump_origin.y, entity.jump_origin.z))
     if any(type(v) is float and not math.isfinite(v) for v in values):
         entity.jump_charge = 0.0
         entity.jump_target = None
+        entity.jump_travelling = False
+        entity.jump_origin = None
+        entity.jump_transit_total = 0.0
         clear_jump_orders(entity)
 
 
@@ -92,11 +99,12 @@ def migrate_saved_runtime(data):
                     or type(node[2]) is not dict):
                 continue
             attributes = node[2]
-            numbers = [attributes.get('jump_charge')]
-            target = attributes.get('jump_target')
-            if (type(target) is list and len(target) == 3 and target[:2] == ['object', 'Vec3']
-                    and type(target[2]) is dict):
-                numbers.extend(target[2].values())
+            numbers = [attributes.get('jump_charge'), attributes.get('jump_transit_total')]
+            for vec_key in ('jump_target', 'jump_origin'):
+                vec = attributes.get(vec_key)
+                if (type(vec) is list and len(vec) == 3 and vec[:2] == ['object', 'Vec3']
+                        and type(vec[2]) is dict):
+                    numbers.extend(vec[2].values())
             changed = False
             for number in numbers:
                 if (type(number) is list and len(number) == 2 and number[0] == 'scalar'
@@ -110,6 +118,9 @@ def migrate_saved_runtime(data):
                 from ..systems.jump import clear_jump_orders
                 entity.jump_charge = 0.0
                 entity.jump_target = None
+                entity.jump_travelling = False
+                entity.jump_origin = None
+                entity.jump_transit_total = 0.0
                 clear_jump_orders(entity)
                 entry[1] = codec._encode(entity)
     return result

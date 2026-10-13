@@ -10,6 +10,12 @@ from game.core.vectors import Vec3
 class TestJumpSim(unittest.TestCase):
     def setUp(self):
         self.gm = make_game(ai=False)
+        # Transit phase (#92) made effectively instantaneous so these tests
+        # keep exercising acceptance/exits/tick determinism; real-distance
+        # transit behavior lives in tests/test_jump_travel.py.
+        rules = self.gm.ds.rules['hyperspace']
+        rules['transit_units_per_second'] = 1e9
+        rules['min_transit_seconds'] = 1e-6
         self.st = self.gm.state
         self.ship = next(e for e in self.st.entities.values()
                          if e.owner == 0 and e.is_ship)
@@ -138,6 +144,9 @@ class TestJumpSim(unittest.TestCase):
         def precise(gm):
             return json.loads(json.dumps(gm.state.to_dict(precise=True)))
 
+        # The restored manager rebuilds its own DataStore: re-apply the test's
+        # near-instant transit rules so both sides walk the same lifecycle (#92).
+        restored.ds.rules['hyperspace'].update(self.gm.ds.rules['hyperspace'])
         self.assertEqual(precise(restored), payload)
         loaded = restored.state.entities[jumper.id]
         self.assertIsNone(loaded.fleet_id)
@@ -231,16 +240,24 @@ class TestJumpSim(unittest.TestCase):
         self.assertIsNone(self.ship.patrol_a)
         self.assertIsNone(self.ship.patrol_b)
         self.assertEqual(self.ship.vel, Vec3())
-        # Orders received during charge must not create a phantom chase on exit.
+        # Orders received during charge must not create a phantom chase on exit:
+        # they must also be cleared on TRANSIT arrival (#92).
         self.ship.order_type = 'attack'
         self.ship.current_target = 999
         self.ship.order_target_id = 999
         self.gm._update_jumps(self.ship.jump_charge)
+        self.assertTrue(self.ship.jump_travelling)  # charge out, transit began
+        # phantom orders assigned mid-transit survive the ride but die on exit
+        self.ship.order_type = 'attack'
+        self.ship.current_target = 999
+        self.ship.order_target_id = 999
+        self.gm._update_jumps(self.ship.jump_charge + 1 / 30)
         self.assertEqual(self.ship.pos, Vec3(2500, 0, 4500))
         self.assertEqual(self.ship.order_type, 'idle')
         self.assertIsNone(self.ship.current_target)
         self.assertIsNone(self.ship.order_target_id)
         self.assertEqual(self.ship.jump_charge, 0)
+        self.assertFalse(self.ship.jump_travelling)
 
     def test_group_reserves_deterministic_hull_clearance_exits(self):
         self.gm.factory.spawn_ship('imperial_frigate', 0, Vec3(-11000, 0, -1500))
@@ -263,7 +280,10 @@ class TestJumpSim(unittest.TestCase):
         self.gm.visibility.update()
         self.assertTrue(self.st.is_position_explored(0, first.pos))
         self.assertTrue(any(e.jump_charge > 0 for e in ships))
-        self.gm._update_jumps(max(e.jump_charge for e in ships) + 1)
+        self.gm._update_jumps(max(e.jump_charge for e in ships) + 1 / 30)
+        # transit ends after the longest ride; positions land on reserved exits
+        self.gm._update_jumps(max(e.jump_charge for e in ships
+                                  if e is not None) + 1 / 30)
         self.assertTrue(all(e.jump_charge == 0 and e.jump_target is None for e in ships))
         self.assertEqual({e.id: e.pos for e in ships}, reserved)
 
@@ -294,6 +314,7 @@ class TestJumpSim(unittest.TestCase):
                 self.jump((target.x, target.y, target.z))
                 self.assertEqual(self.ship.jump_target, target)
                 self.gm._update_jumps(self.ship.jump_charge)
+                self.gm._update_jumps(self.ship.jump_charge + 1 / 30)  # (#92)
                 self.assertEqual(self.ship.pos, target)
 
     def test_allied_explored_destination_accepted(self):
@@ -305,6 +326,7 @@ class TestJumpSim(unittest.TestCase):
         self.jump((target.x, target.y, target.z))
         self.assertEqual(self.ship.jump_target, target)
         self.gm._update_jumps(self.ship.jump_charge)
+        self.gm._update_jumps(self.ship.jump_charge + 1 / 30)  # (#92)
         self.assertEqual(self.ship.pos, target)
 
     def test_currently_sensed_destination_accepted(self):
@@ -314,6 +336,7 @@ class TestJumpSim(unittest.TestCase):
         self.jump((target.x, target.y, target.z))
         self.assertEqual(self.ship.jump_target, target)
         self.gm._update_jumps(self.ship.jump_charge)
+        self.gm._update_jumps(self.ship.jump_charge + 1 / 30)  # (#92)
         self.assertEqual(self.ship.pos, target)
 
     def test_group_exits_independent_of_exploration_and_selection_order(self):
@@ -333,7 +356,8 @@ class TestJumpSim(unittest.TestCase):
         self.jump(target, list(reversed(ids)))
         self.assertEqual(exits, {uid: self.st.entities[uid].jump_target for uid in ids})
         self.assertTrue(all(self.st.is_position_explored(0, p) for p in exits.values()))
-        self.gm._update_jumps(max(self.st.entities[uid].jump_charge for uid in ids) + 1)
+        self.gm._update_jumps(max(self.st.entities[uid].jump_charge for uid in ids) + 1 / 30)
+        self.gm._update_jumps(max(self.st.entities[uid].jump_charge for uid in ids) + 1 / 30)
         self.assertEqual(exits, {uid: self.st.entities[uid].pos for uid in ids})
 
     def test_restored_invalid_charge_cannot_teleport_outside_map(self):
@@ -439,6 +463,9 @@ class TestJumpSim(unittest.TestCase):
             self.assertEqual(loaded.jump_target, e.jump_target)
             self.assertEqual(loaded.ability_cooldowns, e.ability_cooldowns)
         self.assertEqual(state_checksum(self.st), state_checksum(restored.state))
+        # Same DataStore override as the other restore test: the rebuilt
+        # manager must walk the identical lifecycle (#92).
+        restored.ds.rules['hyperspace'].update(self.gm.ds.rules['hyperspace'])
         for _ in range(150):
             self.gm.step(1 / 30)
             restored.step(1 / 30)

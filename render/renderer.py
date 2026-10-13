@@ -189,6 +189,11 @@ class Renderer:
                 continue
             if not self.state.can_see(self.local_player, e.id):
                 continue
+            if e.jump_travelling:
+                # In hyperspace: no hull, no glow, no marker on the strategic
+                # view for anyone — including the owner (issue #92). The HUD
+                # minimap still tracks the moving contact from sim position.
+                continue
             entry = self._entity_view_data(e, eye, right, up, fwd, cache["px_scale"])
             entry["shows_marker"] = mode == "off" or mk.shows_marker(
                 cache["relation"].get(e.owner, "neutral"), mode)
@@ -1108,7 +1113,8 @@ class Renderer:
             for e in st.entities.values():
                 if not e.alive or not st.can_see(self.local_player, e.id):
                     continue
-                if e.is_planet:
+                if e.is_planet or e.jump_travelling:
+                    # in hyperspace: no fixed-function hull either (#92)
                     continue
                 if (e.is_ship and "ships" not in self.skip) or \
                         (e.is_squadron and "squadrons" not in self.skip):
@@ -2544,7 +2550,7 @@ class Renderer:
                 self._draw_glow(pos, 14, color, alpha=a * 0.8, additive=True)
                 if not fx.get("resolved_contact", False):
                     self._draw_glow(tgt, 8, color, alpha=a * 0.35, additive=True)
-            elif kind in ("jump_charge", "jump_arrive"):
+            elif kind in ("jump_charge", "jump_arrive", "jump_depart"):
                 a = max(0.0, 1.0 - t / 1.0)
                 self._bb_ring(pos, 60 + 160 * (1 - a),
                               (0.5, 0.7, 1.0, a * 0.8), 2.5)
