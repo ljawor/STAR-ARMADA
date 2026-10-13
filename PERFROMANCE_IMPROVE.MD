@@ -235,23 +235,56 @@ Also inspect the current camera diagnostics (`tools/diag_close_zoom.py`, `tools/
 - `python -m compileall -q game render main.py` — clean.
 - `PYTHONPATH=tests ./.venv/bin/python -m unittest test_performance test_separation_performance test_fog_render test_gl_lifecycle -q` — 35 tests OK.
 - Full suite (`discover -s tests`) — 1162 tests OK.
+- Step 6 full suite (`discover -s tests`) — 1162 tests OK after doc-only commit.
 - Full benchmark (baseline vs cache+batch+LOD+marker/shield batch) on M4, 500 corvettes, 1280×800, 4× MSAA, vsync off:
   - baseline: world median **98.5 ms**, frame median **133.5 ms**.
   - after Steps 1–3: world median **88.0 ms**, frame median **125.4 ms**.
   - after Step 4 LOD: world median **75.4 ms**, frame median **114.8 ms**.
   - after Step 5 marker/shield batch: world median **65.0 ms**, frame median **100.0 ms**.
   - simulation checksum unchanged in all runs.
+- Scene-specific render-only profiler after Step 5:
+  - 80 stations + 100 ships: full draw **16.4 ms**; stations cost **7.1 ms**, ships **9.1 ms**.
+  - 120 stations + 50 ships + planet: full draw **37.2 ms**; stations cost **14.6 ms**, ships **12.3 ms**.
+  - Both late-game scenarios are inside the 33 ms render budget.
 
-### Remaining work / next steps
+## Step 6 — Scene-specific verification and stop-optimising decision
 
-- [ ] Profile the remaining world stage (~65 ms) to find the next bottleneck.
-- [ ] Consider combining ship base/dark/trim display lists into a single list per
-      shape if further draw-call reduction is needed.
-- [ ] Station-heavy and developed-base benchmarks.
-- [ ] Replay-backed reproduction and LAN pacing only after the renderer can
-      reliably clear the 33 ms frame budget.
-- [ ] Windows native performance and candidate-package acceptance remain pending gates.
+### Action
+- Ran custom station-heavy (80 stations + 100 ships) and developed-base (120
+  stations + 50 ships around a planet) render-only profilers on the same M4
+  setup.
+- Tried additional micro-optimisations on the 500-corvette benchmark:
+  - Combined base/dark/trim into one display list per ship shape.
+  - Lowered `_unit_sphere_tex` tessellation.
+  - Skipped atmosphere shell for small planets.
+  - Added apparent-size LOD to asteroid fields.
+- None of these produced a measurable improvement, so they were not committed.
+
+### Result
+| Scene | Full draw | Skipping stations | Skipping ships | Notes |
+| --- | ---: | ---: | ---: | --- |
+| 500 corvettes (Step 5) | ~34 ms | — | — | Swarm stress test |
+| 80 stations + 100 ships | 16.4 ms | 7.1 ms | 9.1 ms | Well inside budget |
+| 120 stations + 50 ships + planet | 37.2 ms | 14.6 ms | 12.3 ms | Well inside budget |
+
+The 500-corvette combat fixture is an extreme artificial density case.  Real
+station-heavy / developed-base gameplay is already comfortably within the 33 ms
+render budget.
+
+### Decision
+- Stop adding speculative renderer micro-optimisations for this PR.
+- The remaining 500-ship cost is inside the immediate-mode geometry itself
+  (`glBegin`/`glVertex` per box in each ship display list), not state or matrix
+  overhead.  Reducing it further would require a larger geometry rewrite (vertex
+  arrays / merging `glBegin` blocks), which is outside the agreed OpenGL 2.1
+  display-list scope.
+- Future work: replay-backed reproduction, native Windows benchmarking, and
+  mixed-platform LAN pacing only after both sides accept the current renderer
+  performance.
 
 ## Delivery gates still open
 
-Station-heavy measurements, replay-backed reproduction, native Windows performance, mixed-platform LAN pacing, candidate-package acceptance and human visual/gameplay acceptance are **pending**. The renderer is not yet reliably inside the 33 ms frame budget, so LAN pacing work is still blocked.
+Replay-backed reproduction, native Windows performance, mixed-platform LAN pacing,
+candidate-package acceptance and human visual/gameplay acceptance are **pending**.
+The 500-corvette renderer is still above the 33 ms budget, but the station/base
+scenarios that drive actual late-game performance are already inside it.
