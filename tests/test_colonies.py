@@ -396,19 +396,24 @@ class ColonyTests(unittest.TestCase):
                 slot1 = self.gm.construction.satellite_site(self.planet, 'defense_satellite', 1)
                 if obstruction == 'station':
                     self.gm.factory.spawn_station('sensor_station', 0, slot0)
-                else:
+                elif obstruction == 'pending_station':
                     constructor = next(e for e in self.st.entities.values()
                                        if e.owner == 0 and e.data_id == 'imperial_constructor')
-                    constructor.build_queue.append(dict(
-                        kind='station' if obstruction == 'pending_station' else 'satellite',
-                        item='sensor_station' if obstruction == 'pending_station' else 'attack_satellite',
+                    constructor.build_queue.append(dict(kind='station', item='sensor_station',
                         time_left=1000., total=1000., status='paid', pos=slot0.to_dict(precise=True)))
+                else:
+                    # Satellite work belongs to a controlled planet with a paid
+                    # source and slot, never an unattached constructor queue.
+                    self.assertTrue(self.gm.construction.start_satellite(
+                        self.planet.id, 'attack_satellite', 0))
+                    self.planet.build_queue[0]['time_left'] = 1000.
                 before = self.st.players[0].credits
                 self.st.queue_command(PlayerCommand('build_satellite', 0,
                     target_id=self.planet.id, station_kind='defense_satellite'))
                 self.gm.step(1 / 30)
-                self.assertEqual(len(self.planet.build_queue), 1)
-                work = self.planet.build_queue[0]
+                expected_prior = [0] if obstruction == 'pending_satellite' else []
+                self.assertEqual(len(self.planet.build_queue), len(expected_prior) + 1)
+                work = self.planet.build_queue[-1]
                 self.assertEqual(work['slot'], 1)
                 self.assertEqual(work['pos'], slot1.to_dict(precise=True))
                 self.assertAlmostEqual(self.st.players[0].credits,
@@ -416,7 +421,7 @@ class ColonyTests(unittest.TestCase):
                     + self.st.players[0].income_frame['credits'] / 30)
                 # The next intent reserves the next legal slot, not the paid site.
                 self.assertTrue(self.gm.construction.start_satellite(self.planet.id, 'attack_satellite', 0))
-                self.assertEqual([w['slot'] for w in self.planet.build_queue], [1, 2])
+                self.assertEqual([w['slot'] for w in self.planet.build_queue], expected_prior + [1, 2])
 
     def test_owned_planet_builds_paid_satellites_with_shared_reserved_cap(self):
         self.planet.colonized_by = 0

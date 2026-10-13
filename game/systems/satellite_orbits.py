@@ -25,15 +25,154 @@ def orbit_radius(planet, station_radius, slot, cfg):
             + slot * cfg['orbit_shell_spacing'])
 
 
-def orbit_position(planet, station_radius, phase, slot=0):
+def orbit_position(planet, station_radius, phase, slot=0, *, state=None):
     cfg = colony_rules()
-    radius = orbit_radius(planet, station_radius, slot, cfg)
-    node, inclination = orbit_plane(planet.id, slot, cfg)
+    if state is None:
+        radius = orbit_radius(planet, station_radius, slot, cfg)
+        node, inclination = orbit_plane(planet.id, slot, cfg)
+    else:
+        plan = orbit_geometry(state, planet, station_radius, slot)
+        if plan is None:
+            return None
+        radius, node, inclination = plan
     x = math.sin(phase) * radius
     z = math.cos(phase) * radius * math.cos(inclination)
     y = math.cos(phase) * radius * math.sin(inclination)
     return planet.pos + Vec3(x * math.cos(node) - z * math.sin(node), y,
                              x * math.sin(node) + z * math.cos(node))
+
+
+def ring_distance(center, radius, node, inclination, point):
+    """Exact minimum center-distance from a point to the COMPLETE circle."""
+    delta = point - center
+    u = Vec3(math.cos(node), 0, math.sin(node))
+    v = Vec3(-math.sin(node) * math.cos(inclination), math.sin(inclination),
+             math.cos(node) * math.cos(inclination))
+    projected = math.hypot(delta.dot(u), delta.dot(v))
+    return math.sqrt(max(0., delta.length_sq() + radius * radius - 2 * radius * projected))
+
+
+def rings_clear(center_a, plan_a, center_b, plan_b, minimum):
+    """Certify ALL phase pairs; uncertainty/budget exhaustion rejects.
+
+    Distance to a closed set is 1-Lipschitz. On each arc of circle A,
+    distance to the complete circle B is at least its midpoint distance
+    minus A's radius * half-angle (an upper bound on point displacement).
+    Subdivide only uncertified arcs, never accept from samples alone.
+    """
+    return _rings_clear(center_a.to_tuple(), tuple(plan_a), center_b.to_tuple(),
+                        tuple(plan_b), minimum)
+
+
+from functools import lru_cache
+
+
+@lru_cache(maxsize=4096)
+def _rings_clear(center_a, plan_a, center_b, plan_b, minimum):
+    if not all(math.isfinite(v) for v in (*center_a, *center_b, *plan_a, *plan_b, minimum)):
+        return False
+    a, b = Vec3(*center_a), Vec3(*center_b)
+    ra, node, inclination = plan_a
+    rb = plan_b[0]
+    if min(ra, rb) <= 0 or minimum < 0:
+        return False
+    # Guard roundoff in analytic distances/subdivision, not a relaxed keep-out.
+    guard = max(.001, max(abs(v) for v in (*center_a, *center_b, ra, rb)) * 1e-12)
+    floor = minimum + guard
+    centers = a.dist(b)
+    if max(centers - ra - rb, abs(ra - rb) - centers) >= floor:
+        return True
+    if ra > rb:
+        return _rings_clear(center_b, plan_b, center_a, plan_a, minimum)
+    u = Vec3(math.cos(node), 0, math.sin(node))
+    v = Vec3(-math.sin(node) * math.cos(inclination), math.sin(inclination),
+             math.cos(node) * math.cos(inclination))
+    pending = [(math.pi, math.pi, 0)]
+    for _ in range(4096):
+        if not pending:
+            return True
+        phase, half, depth = pending.pop()
+        point = a + (u * math.sin(phase) + v * math.cos(phase)) * ra
+        distance = ring_distance(b, *plan_b, point)
+        if distance - ra * half >= floor:
+            continue
+        if distance < floor or depth >= 18:
+            return False
+        half *= .5
+        pending.append((phase + half, half, depth + 1))
+        pending.append((phase - half, half, depth + 1))
+    return False
+
+
+def orbit_geometry(state, planet, station_radius, slot):
+    """Public fixed terrain determines safe rings, never hidden contacts.
+
+    Keep normal rings where the entire circle fits. Crowded planets use
+    near-polar planes normal to neighbouring bodies, not a smaller keep-out.
+    A shared small shell offset preserves separation between every slot.
+    The cache is derived geometry only, excluded from save/replay state.
+    """
+    cfg = colony_rules()
+    from ..data.store import DataStore
+    hulls = (station_radius, *(DataStore.get().stations[k].radius for k in SATELLITE_TYPES))
+    if (any(type(r) not in (int, float) or not math.isfinite(r) or r <= 0 for r in hulls)
+            or type(cfg['satellite_cap']) is not int or not 1 <= cfg['satellite_cap'] <= 64
+            or any(type(cfg[k]) not in (int, float) or not math.isfinite(cfg[k]) or cfg[k] <= 0
+                   for k in ('orbit_clearance', 'orbit_shell_spacing', 'orbit_inclination'))
+            or cfg['orbit_inclination'] > math.pi):
+        return None
+    shell_radius = max(hulls)
+    # Distinct planes cross, so radial shell gaps must protect the largest
+    # modded hull pair. Never weaken spacing or rescale a mod's hardware.
+    if cfg['satellite_cap'] > 1 and cfg['orbit_shell_spacing'] < 3.2 * shell_radius + .001:
+        return None
+    bodies = tuple((e.id, e.pos.x, e.pos.y, e.pos.z, e.radius)
+                   for e in sorted(state.entities.values(), key=lambda e: e.id)
+                   if e.alive and e.is_planet and e is not planet and e.data_id != 'asteroid_field')
+    plans = _terrain_plans(planet.id, planet.pos.to_tuple(), planet.radius, shell_radius,
+                           tuple(sorted(cfg.items())), bodies, state.map_info.bounds)
+    return plans[slot] if plans is not None and 0 <= slot < len(plans) else None
+
+
+@lru_cache(maxsize=256)
+def _terrain_plans(planet_id, center, planet_radius, station_radius, config, bodies, bounds):
+    cfg = dict(config)
+    center = Vec3(*center)
+    # Radius is expanded only if even the best plane of an inner shell cannot
+    # clear the body. 32u increments leave all configured inter-shell gaps intact.
+    for offset in range(0, 513, 32):
+        plans = []
+        for slot in range(cfg['satellite_cap']):
+            radius = planet_radius + station_radius + cfg['orbit_clearance'] + slot * cfg['orbit_shell_spacing'] + offset
+            # Integration uses chords of at most .02 radians. Certify their
+            # innermost point against the unchanged parent keep-out as well.
+            if radius * math.cos(.01) < planet_radius + station_radius + 40 + .001:
+                break
+            candidates = [orbit_plane(planet_id, slot, cfg)]
+            for _, x, y, z, _ in bodies:
+                normal = (Vec3(x, y, z) - center).normalized()
+                # Distinct slightly tilted planes; a body-normal ring maximizes
+                # clearance at fixed radius. Try that optimum last as fallback.
+                for tilt in ((slot + 1) * .015, -(slot + 1) * .015, 0.):
+                    n = (normal + Vec3(0, tilt, 0)).normalized()
+                    node = math.atan2(-n.x, n.z)
+                    inclination = math.atan2(math.hypot(n.x, n.z), -n.y)
+                    candidates.append((node, inclination))
+            for node, inclination in candidates:
+                if abs(center.x) + radius > bounds or abs(center.z) + radius > bounds:
+                    continue
+                if all(ring_distance(center, radius, node, inclination, Vec3(x, y, z))
+                       >= (station_radius + other_radius) * 1.6 + .001
+                       for _, x, y, z, other_radius in bodies):
+                    plans.append((radius, node, inclination))
+                    break
+            else:
+                break
+        if len(plans) == cfg['satellite_cap']:
+            return tuple(plans)
+    # Impossible/modded geometry fails closed rather than spending on a ring
+    # that looks legal at one phase but will inevitably freeze later.
+    return None
 
 
 def missile_engagement(state, defender, projectile, ds):
@@ -86,6 +225,75 @@ class SatelliteOrbitSystem:
                 return False
         return True
 
+    def legal_segment(self, e, planet, start, end):
+        """Swept spheres, including paid sites; bounded angles alone can tunnel."""
+        direction = end - start
+        length_sq = direction.length_sq()
+        def closest(point):
+            fraction = max(0., min(1., (point - start).dot(direction) / length_sq)) if length_sq else 0.
+            return start + direction * fraction
+        for other in self.state.entities.values():
+            if not other.alive or other is e or other.data_id == 'asteroid_field':
+                continue
+            if other is planet:
+                floor = planet.radius + e.radius + 40
+            elif other.planet_building_slot is not None and other.planet_id == planet.id:
+                continue
+            elif other.is_station:
+                floor = self.construction.station_min_distance(e.data_id, other.data_id,
+                    other.radius, e.owner, other.owner)
+            else:
+                floor = (e.radius + other.radius) * 1.6
+            if closest(other.pos).dist(other.pos) < floor:
+                return False
+            for work in other.build_queue:
+                if (work.get('kind') not in ('station', 'satellite') or work.get('status') != 'paid'
+                        or work.get('pos') is None):
+                    continue
+                sd = self.construction.ds.stations[work['item']]
+                floor = self.construction.station_min_distance(e.data_id, sd.id, sd.radius, e.owner)
+                point = Vec3(*work['pos'])
+                if closest(point).dist(point) < floor:
+                    return False
+        return self.legal(e, planet, end)
+
+    def _advance(self, e, planet, seconds, cfg):
+        plan = orbit_geometry(self.state, planet, e.radius, e.satellite_slot)
+        if plan is None:
+            return False
+        radius, node, inclination = plan
+        expected = orbit_position(planet, e.radius, e.satellite_orbit_phase,
+                                  e.satellite_slot, state=self.state)
+        if e.pos.dist(expected) > 1e-6:
+            # Existing saves/replays retain their old plane. Rejoin the nearest
+            # point on the certified ring at orbital speed, never teleport.
+            delta = e.pos - planet.pos
+            u = Vec3(math.cos(node), 0, math.sin(node))
+            v = Vec3(-math.sin(node) * math.cos(inclination), math.sin(inclination),
+                     math.cos(node) * math.cos(inclination))
+            phase = math.atan2(delta.dot(u), delta.dot(v)) % (2 * math.pi)
+            target = orbit_position(planet, e.radius, phase, e.satellite_slot, state=self.state)
+            before_radius = delta.length()
+            a, b = delta.normalized(), (target - planet.pos).normalized()
+            angle = math.atan2(a.cross(b).length(), a.dot(b))
+            distance = angle * max(radius, before_radius) + abs(radius - before_radius)
+            fraction = min(1., seconds * cfg['orbit_speed'] * radius / max(distance, 1e-9))
+            direction = (a * (1 - fraction) + b * fraction).normalized()
+            pos = planet.pos + direction * (before_radius + (radius - before_radius) * fraction)
+            if not self.legal_segment(e, planet, e.pos, pos):
+                return False
+            e.pos = pos
+            if fraction == 1.:
+                e.pos = target
+                e.satellite_orbit_phase = phase
+            return True
+        phase = (e.satellite_orbit_phase + seconds * cfg['orbit_speed']) % (2 * math.pi)
+        pos = orbit_position(planet, e.radius, phase, e.satellite_slot, state=self.state)
+        if not self.legal_segment(e, planet, e.pos, pos):
+            return False
+        e.satellite_orbit_phase, e.pos = phase, pos
+        return True
+
     def update(self, dt):
         cfg = colony_rules()
         for e in sorted(self.state.entities.values(), key=lambda e: e.id):
@@ -104,12 +312,8 @@ class SatelliteOrbitSystem:
             # Bounded angular segments prevent tunnelling through fixed obstacles.
             segments = max(1, math.ceil(dt * cfg['orbit_speed'] / .02))
             for _ in range(segments):
-                phase = (e.satellite_orbit_phase + dt * cfg['orbit_speed'] / segments) % (2 * math.pi)
-                pos = orbit_position(planet, e.radius, phase, e.satellite_slot)
-                if not self.legal(e, planet, pos):
+                if not self._advance(e, planet, dt / segments, cfg):
                     break
-                e.satellite_orbit_phase = phase
-                e.pos = pos
             # Report the displacement actually accepted this tick, including a
             # partially blocked orbit. Gunnery leads this velocity; stations are
             # skipped by MovementSystem, so it must not be integrated again.
