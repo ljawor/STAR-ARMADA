@@ -108,9 +108,12 @@ class TestRateAgreement(unittest.TestCase):
         a, _ = _audio()
         if not a.available:
             return
-        # a 0.085 s laser must not come back as ~0.043 s
-        got = a.sounds["laser"].get_length()
-        self.assertAlmostEqual(got, 0.085, delta=0.005)
+        # the point is rate agreement: a 0.30 s laser must not come back as
+        # ~0.15 s because the buffer was synthesised at half the mixer's rate.
+        # Durations are the ones the #91 recipes ask for in render/audio.py.
+        for name, intended in (("laser", 0.30), ("turbolaser", 0.50)):
+            with self.subTest(voice=name):
+                self.assertAlmostEqual(a.sounds[name].get_length(), intended, delta=0.005)
 
     def test_all_voices_are_audible_and_click_free(self):
         a, _ = _audio()

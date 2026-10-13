@@ -13,6 +13,13 @@ Two rules learned the hard way here:
 2. One voice per weapon family, and separate shield/hull impact voices. A
    single "laser" pluck plus one noise burst for everything is what a missing
    audio asset sounds like; the ear needs the weapon to be identifiable.
+3. Voice character is measured, never guessed. The owner's reference recordings
+   (a laser and a photon gun) are NOT shipped — every voice here is synthesised —
+   so "matches the reference" means numbers: tools/sfx_character.py measures both
+   with the same function (weight = spectral centroid, crack = 95 % rolloff, tail)
+   and tools/diag_weapon_sfx.py fails when a voice leaves the band the references
+   define. Note the rolloff is a percentile of the MAGNITUDE spectrum, so a brief
+   click cannot raise it: only top end that lasts as long as the body can.
 
 Playback is spatial-ish: distance attenuation and stereo pan from the camera,
 plus per-category rate limiting (the sim publishes dozens of shots/second).
@@ -263,37 +270,59 @@ class Audio:
         def noise(dur, seed):
             return _rng(seed).uniform(-1.0, 1.0, max(1, int(rate * dur)))
 
-        # --- energy weapons: bright transient + fast downward pitch sweep ----
-        def laser(dur=0.085, f0=2400.0, f1=620.0, dec=26.0, brite=0.30):
+        # --- energy weapons: a dark thump with a short bright edge (#91) -------
+        # Tuned against the owner's reference recording of a laser shot, measured
+        # with tools/sfx_character.py: weight around a 1.3 kHz centroid, a 137 ms
+        # tail, a ~2.8 kHz ring-out rolloff. The old voice was an 85 ms chirp whose
+        # centroid sat above 5 kHz — heard next to the reference it is a hiss with
+        # no weight. Layers are unit-peaked before mixing because _shape()
+        # attenuates each band by its own factor, so raw levels are not comparable.
+        def laser(dur=0.30, f0=1500.0, f1=330.0, dec=15.0, fc=1050.0,
+                  bed=0.0121, brite=1.99, bed_fc=4200.0, bed_hp=2200.0,
+                  edge_fc=5600.0, edge_hp=3400.0):
             n = int(rate * dur)
-            body = _tone(n, rate, f0, f1, curve=0.6,
-                         harmonics=((1, 0.75), (2, 0.20), (3, 0.10)))
-            air = _shape(noise(dur, 3), rate, 6000.0, hp=900.0)
-            return body * _env(n, rate, 0.0015, dec) + \
-                air * _env(n, rate, 0.001, dec * 1.6) * brite
+            body = _shape(_tone(n, rate, f0, f1, curve=0.55,
+                                harmonics=((1, 1.0), (2, 0.22), (3, 0.06))),
+                          rate, fc, res=0.45, hp=70.0) * _env(n, rate, 0.002, dec)
+            # sustained fizz: keeps top end alive exactly as long as the body rings
+            fizz = _norm(_shape(noise(dur, 3), rate, bed_fc, res=0.3, slope=2.8,
+                                hp=bed_hp) * _env(n, rate, 0.004, dec), 1.0)
+            # 7 ms edge: marks the leading edge. It cannot carry the rolloff — a
+            # burst that short has no magnitude to speak of inside a 300 ms window.
+            edge = _norm(_shape(noise(dur, 9), rate, edge_fc, res=0.3, slope=2.8,
+                                hp=edge_hp) * _env(n, rate, 0.0006, 150.0), 1.0)
+            return body + fizz * bed + edge * brite
 
-        self.sounds["laser"] = _to_sound(laser(0.085, 2400.0, 620.0, 26.0), rate)
-        self.sounds["laser_b"] = _to_sound(laser(0.080, 2600.0, 700.0, 29.0), rate)
-        self.sounds["laser_c"] = _to_sound(laser(0.092, 2210.0, 560.0, 24.0), rate)
-        # point-defense: thinner and higher, lower amplitude
+        self.sounds["laser"] = _to_sound(laser(0.30, 1500.0, 330.0, 15.0, 1050.0), rate)
+        self.sounds["laser_b"] = _to_sound(laser(0.28, 1660.0, 372.0, 16.5, 1150.0), rate)
+        self.sounds["laser_c"] = _to_sound(laser(0.32, 1360.0, 296.0, 13.5, 980.0), rate)
+        # point-defense: the same gun, smaller — brighter, over sooner
         self.sounds["laser_pd"] = _to_sound(
-            laser(0.058, 3100.0, 1100.0, 40.0, brite=0.45) * 0.7, rate)
-        # heavy laser (future-proofing for damage >= 25 lasers)
+            laser(0.19, 2350.0, 620.0, 24.0, 1900.0, bed=0.0100, brite=1.60), rate)
+        # heavy laser (damage >= 25): deeper body, longer ring
         self.sounds["laser_heavy"] = _to_sound(
-            laser(0.16, 1300.0, 260.0, 15.0, brite=0.35) * 1.0, rate)
+            laser(0.42, 1060.0, 232.0, 10.5, 900.0, bed=0.0130, brite=1.50), rate)
 
-        # --- turbolaser: punchy low crack with a metallic tail --------------
-        def turbolaser(dur, f0, f1, dec, vol=1.0):
+        # --- turbolaser / plasma: the photon-gun character (issue #91) --------
+        # Measured against the owner's reference recording of a photon gun: weight
+        # around a 1.0 kHz centroid yet BROADBAND (95 % rolloff ~7.3 kHz) and
+        # ringing for ~350 ms. A laser keeps its top end to itself precisely because
+        # it is short; the photon voice earns its crack from fizz that lasts as long
+        # as the shot does — a brief click cannot carry it (see tools/sfx_character.py
+        # on why the rolloff is a magnitude percentile, not an energy one).
+        def turbolaser(dur, f0, f1, dec, fc, bed, vol=1.0):
             n = int(rate * dur)
-            body = _tone(n, rate, f0, f1, curve=0.5,
-                         harmonics=((1, 0.7), (2, 0.35), (3, 0.22), (5, 0.12)))
-            crack = _shape(noise(dur, 5), rate, 2600.0, res=1.2, hp=300.0)
-            return (body * _env(n, rate, 0.003, dec)
-                    + crack * _env(n, rate, 0.001, dec * 2.2) * 0.55) * vol
+            body = _shape(_tone(n, rate, f0, f1, curve=0.5,
+                                harmonics=((1, 0.9), (2, 0.4), (3, 0.18), (4, 0.07))),
+                          rate, fc, res=0.5, hp=60.0) * _env(n, rate, 0.0025, dec)
+            fizz = _norm(_shape(noise(dur, 5), rate, 6500.0, res=0.2, slope=3.0,
+                                hp=3000.0) * _env(n, rate, 0.006, dec), 1.0)
+            return (body + fizz * bed) * vol
 
-        self.sounds["turbolaser"] = _to_sound(turbolaser(0.28, 520.0, 150.0, 11.0), rate)
+        self.sounds["turbolaser"] = _to_sound(
+            turbolaser(0.50, 460.0, 120.0, 6.6, 1900.0, 0.0330), rate)
         self.sounds["turbolaser_heavy"] = _to_sound(
-            turbolaser(0.42, 340.0, 96.0, 7.5, vol=1.05), rate)
+            turbolaser(0.68, 330.0, 86.0, 4.6, 1600.0, 0.0295), rate)
 
         # --- ion cannon: buzzing electric discharge (ring modulation) -------
         def ion(dur=0.34):
@@ -332,15 +361,17 @@ class Audio:
 
         self.sounds["kinetic"] = _to_sound(kinetic(), rate)
 
-        # --- plasma: wet flame burst, band-passed around a sweep -----------
-        def plasma(dur=0.30):
+        # --- plasma: the photon character with the top end closing downward ----
+        def plasma(dur=0.45, dec=6.6, bed=0.0330):
             n = int(rate * dur)
             t = np.arange(n) / rate
-            cut = 1500.0 + (420.0 - 1500.0) * (t / dur) ** 0.5
-            flame = _shape(noise(dur, 41), rate, cut, res=1.4, hp=250.0)
-            core = _tone(n, rate, 480.0, 180.0, curve=0.8,
-                         harmonics=((1, 0.7), (2, 0.25)))
-            return flame * _env(n, rate, 0.006, 8.0) + core * _env(n, rate, 0.005, 12.0) * 0.6
+            cut = 8000.0 + (4200.0 - 8000.0) * (t / dur) ** 0.5
+            flame = _norm(_shape(noise(dur, 41), rate, cut, res=0.2, slope=3.0,
+                                 hp=2600.0) * _env(n, rate, 0.006, dec), 1.0)
+            core = _shape(_tone(n, rate, 420.0, 140.0, curve=0.7,
+                                harmonics=((1, 0.9), (2, 0.4), (3, 0.14))),
+                          rate, 1700.0, res=0.45, hp=60.0) * _env(n, rate, 0.003, dec)
+            return core + flame * bed
 
         self.sounds["plasma"] = _to_sound(plasma(), rate)
 

@@ -8,7 +8,7 @@ Python 3 — deterministic simulation, AI, OpenGL rendering via pygame-ce and pr
 — published October 13, 2026, with verified macOS DMG and **unsigned Windows ZIP**.
 Adds Clean Classic menu unification across all screens, a looping close-up battle background on every non-replay menu, a Saved Games library with explicit Load/Delete actions, and unified replay management with timestamps, selection and bulk deletion. Includes native Windows safe deletion acceptance (4,101-file uncapped delete, symlink/junction containment, replacement blocking, handle cleanup, plus new saved-games namespace test). The final **1,266-test** suite and independent reviews passed. Both native builds are produced by GitHub Actions; downloaded SHA-256/DMG/ZIP checks passed on the macOS side. Windows-source LAN diagnostics/tests passed on a native CI runner; this does not prove frozen Windows gameplay or mixed-platform live LAN. Interactive Windows, trusted signing/Smart App Control, human listening/campaign and full-match balance remain open.
 
-## v0.14.0 (unreleased) — Hyperspace transit travel and post-jump shield lockdown
+## v0.14.0 (unreleased) — Hyperspace transit, language packs, weapon voices and five-level station refits
 
 Hyperjumps (#92) are no longer instant: the charge countdown ends with a departure
 ring/sound and the hull rides hyperspace along the origin→exit corridor. Travel time
@@ -20,8 +20,18 @@ arrival the reserved exit position is re-checked and shields stay down for 15 se
 jump still lands every ship on its deterministic reserved exit; saves, restores and
 replays serialize the full transit state bit-exactly.
 
-The final **1,251-test** suite passed (1 pre-existing, environment-dependent failure
-in the menu-exit audio probe reproduces on the release tag and is unrelated).
+The final **1,404-test** suite passed (1 pre-existing, environment-dependent failure
+in the menu-exit audio probe reproduces on v0.13.0 and is unrelated; 8 platform skips).
+
+Beyond hyperspace, this increment collects everything merged since v0.13.0: the campaign
+returns to the campaign screen after a mission and marks wins COMPLETE (#89); cancelling
+paid queued work refunds exactly half of the bill that was paid and surface build times are
+derived from the catalogue bill at 80 units/second ([`docs/COMMAND_CAPACITY.md`](docs/COMMAND_CAPACITY.md),
+#94, #95); weapon fire is shaped by family and the pulsar cannon's reach is 6720 (#90, #81);
+stations gain five paid refit levels ([`docs/STATION_UPGRADES.md`](docs/STATION_UPGRADES.md),
+#77); the interface ships **English, German and Polish** ([`docs/LOCALIZATION.md`](docs/LOCALIZATION.md),
+#93); and the laser and photon weapon families were re-voiced against reference recordings
+([`docs/WEAPON_AUDIO.md`](docs/WEAPON_AUDIO.md), #91).
 
 The setting is an original space-opera universe. Prototype faction/ship names are
 placeholder-style data (Imperial / Rebel / Confederacy / Syndicate) so the feel reads
@@ -414,6 +424,30 @@ and `tools/build_lang_packs.py` refuses to write a pack that is missing a key or
 dead one. See `docs/LOCALIZATION.md` and run `python tools/diag_i18n.py` to re-check that
 geometry, truncation and lookup coverage all hold.
 
+## Weapon audio — laser and photon voices (#91)
+
+Every sound is synthesised by `render/audio.py` at load time; **no audio file ships with the
+game**. Issue #91 was "improve sound effects" with no symptom named until two reference
+recordings were supplied — a laser and a photon gun — so the voices were re-tuned against
+what those recordings actually measure:
+
+| voice | before | after |
+|---|---|---|
+| laser family | 85 ms chirp, centroid >5 kHz | 300 ms dark thump, centroid ~1.4 kHz, 137 ms tail |
+| point-defense | short thin chirp | same gun smaller: brighter, over in 90 ms |
+| turbolaser (+ heavy) | 280 ms band-limited crack | 500/680 ms broadband thump, rolloff ~7.3 kHz |
+| plasma lance | short band-passed flame | same photon character, top end closing downward |
+
+The references are a **target, not an asset**: they are not in the repo, and were measured
+with `tools/sfx_character.py`, which measures a recording and a synthesised voice with the
+same function (weight = spectral centroid, crack = 95 % magnitude rolloff, tail). Their
+numbers live in that module's `REFERENCE_TARGETS`; `tools/diag_weapon_sfx.py` re-checks every
+voice against the band they define and exports each as a WAV and a spectrogram, and
+`tests/test_weapon_sfx.py` pins bands, voice relationships and "no two weapons measure as the
+same shot". One deviation is deliberate: the recordings swell to their peak over 70–150 ms,
+a game voice is punched in ~3 ms, because fire feedback cannot wait. See
+`docs/WEAPON_AUDIO.md`.
+
 ## Skirmish maps and setup contract
 
 The built-in skirmish catalogue is restricted to these four map IDs. Capacity is
@@ -538,9 +572,10 @@ friendly sensor can provide detection for another ship's longer-range weapons.
 | Strategic + tactical AI, update-frequency tiers | ✅ prototype |
 | Skirmish/LAN team victory: eliminate all enemy forces | ✅ implemented; shared allied detection/exploration |
 | Save / load (quick save F5 / load F9) | ✅ implemented; disabled during LAN matches |
-| Procedural audio (original, no assets) | ✅ prototype |
+| Procedural audio (original, no assets) | ✅ implemented; laser, turbolaser and plasma families re-voiced against reference recordings (#91) |
 | Minimap, fleet roster/ability union, rank inspector, build/research progress | ✅ implemented |
 | Title screen, main menu, settings menu (music/SFX volume, fullscreen, autosave, pan speed — persisted to `saves/settings.json`) | ✅ prototype; Clean Classic unified since v0.13.0; battle backgrounds on all non-replay screens |
+| Language packs: English, German, Polish with a `Settings → Language` selector | ✅ implemented (#93); 422/422 strings and names translated, presentation-only so a language cannot reach the simulation |
 | Campaign: ten combat missions plus recovery drill, persisted triggers/waves and staged capture/crew objectives | ✅ released since v0.8.0; recovery objective correction released in v0.12.0; natural full playthrough acceptance pending |
 | Victory conditions: annihilation, planet majority, economic, timed (data-driven) | ✅ prototype |
 | Trade convoys between trade stations + raiding (salvage loot) | ✅ prototype |

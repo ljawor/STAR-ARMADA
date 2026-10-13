@@ -11,7 +11,29 @@ partly delivered; the remaining work is listed explicitly below.
 - **Pending**: missing deliverable, not merely an older roadmap label.
 - Recommendations below define the proposed finish order, not additional approved scope.
 
-## Current release — v0.12.0, October 13, 2026
+## Next release — v0.14.0 (source prepared, packaging pending)
+
+The increment collects everything merged since v0.13.0: hyperspace transit travel and
+post-jump shield lockdown (#92, #78), the campaign returning to the campaign screen after a
+mission and marking wins COMPLETE (#89), cancelling paid queued work with cost-derived
+surface build times (#94, #95), shaped weapon fire with a shorter pulsar reach (#90, #81),
+five paid station refit levels (#77), **English/German/Polish language packs** with a
+Settings selector (#93) and **re-voiced laser and photon weapon families** (#91). The local
+whole-tree gate is **1,404 tests with 1 pre-existing environmental failure** (the menu-exit
+audio probe, which fails identically on v0.13.0 under a dummy driver), and each cluster
+carried a sabotage matrix recorded in its pull request. Package and download claims belong
+to the release notes once the tag's macOS DMG and Windows ZIP have been verified.
+
+## Current release — v0.13.0, October 13, 2026
+
+Clean Classic menu unification on every screen, looping battle backgrounds on non-replay
+menus, the Saved Games library with explicit Load/Delete, unified replay management, and
+native Windows safe deletion acceptance; **1,266 tests** and both native builds published
+from GitHub Actions. See the README release section and the
+[release page](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.13.0) for the verified
+detail.
+
+## v0.12.0 — crew combat damage (#79), October 13, 2026
 
 The user authorized a new macOS DMG and Windows ZIP including crew combat damage
 (#79) and the fixes merged after v0.11.0. PR #85 is merged and #79 is closed.
@@ -234,6 +256,23 @@ peer. Both packs are complete against the catalogue (326 UI strings + 96 data na
 `tests/test_i18n.py` plus `tools/diag_i18n.py` pin the contract. See
 `docs/LOCALIZATION.md`. Deliberately left open: locale number formatting, and the
 runtime flash messages the input layer assembles from live values.
+
+## Weapon audio — laser and photon voices (#91) ✅ delivered
+
+The laser family, the point-defense gun, the turbolaser (standard and heavy) and the plasma
+lance were re-tuned against two reference recordings the owner supplied (a laser shot and a
+photon gun). Those recordings are **not** shipped: every voice is still synthesised by
+`render/audio.py`, so the references are treated as targets measured by
+`tools/sfx_character.py` (weight = spectral centroid, crack = 95 % magnitude rolloff, tail =
+−20 dB length) and re-checked by `tools/diag_weapon_sfx.py`, which exports each voice as a WAV
+and a spectrogram. Before/after: an 85 ms chirp with its centroid above 5 kHz became a 300 ms
+dark thump (centroid ~1.4 kHz, 137 ms tail, matching the recording's 136.8 ms); the
+turbolaser became a 500/680 ms broadband thump that keeps its top end for as long as it
+rings. Deliberate deviation: the recordings swell to their peak over 70–150 ms while a game
+voice is punched in ~3 ms. `tests/test_weapon_sfx.py` pins the bands and the voice
+relationships; an 11-row sabotage matrix caught every de-fixed behaviour. See
+`docs/WEAPON_AUDIO.md`. Out of scope: music, per-weapon variants beyond these two families,
+and any change to the mix/volume balance.
 
 ## Cross-cutting backlog
 
