@@ -4,20 +4,9 @@
 classic space-fleet RTS titles (Armada II / Fleet Operations era). It runs entirely on
 Python 3 — deterministic simulation, AI, OpenGL rendering via pygame-ce and procedural audio.
 
-**Current release: [v0.12.1](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.12.1)**
+**Current release: [v0.13.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.13.0)**
 — published October 13, 2026, with verified macOS DMG and **unsigned Windows ZIP**.
-Adds renderer performance improvements from PR#87 (per-frame cache, role-batched
-ship/station draws, material-role LOD, batched markers, shield detail/opacity tuning)
-without removing visual passes, lowering MSAA, or changing station rotation.  The
-500-corvette stress benchmark improved from **133.5 ms → 100.0 ms** full-frame median
-and **98.5 ms → 65.0 ms** world-render median; realistic station/base scenarios are
-inside the 33 ms budget.  LAN network unit tests and `--netdiag` passed locally.
-The final **1,162-test** suite and independent reviews passed. Both native builds
-are produced by GitHub Actions; downloaded SHA-256/DMG/ZIP checks passed on the macOS
-side. Windows-source LAN diagnostics/tests passed on a native CI runner; this does not
-prove frozen Windows gameplay or mixed-platform live LAN. Interactive Windows,
-trusted signing/Smart App Control, human listening/campaign and full-match balance
-remain open.
+Adds Clean Classic menu unification across all screens, a looping close-up battle background on every non-replay menu, a Saved Games library with explicit Load/Delete actions, and unified replay management with timestamps, selection and bulk deletion. Includes native Windows safe deletion acceptance (4,101-file uncapped delete, symlink/junction containment, replacement blocking, handle cleanup, plus new saved-games namespace test). The final **1,266-test** suite and independent reviews passed. Both native builds are produced by GitHub Actions; downloaded SHA-256/DMG/ZIP checks passed on the macOS side. Windows-source LAN diagnostics/tests passed on a native CI runner; this does not prove frozen Windows gameplay or mixed-platform live LAN. Interactive Windows, trusted signing/Smart App Control, human listening/campaign and full-match balance remain open.
 
 The setting is an original space-opera universe. Prototype faction/ship names are
 placeholder-style data (Imperial / Rebel / Confederacy / Syndicate) so the feel reads
@@ -47,15 +36,37 @@ Station rotation, MSAA, visual passes and gameplay are unchanged. The final
 Native Windows interactive and mixed-platform live LAN acceptance remain separate
 open gates.
 
-## v0.12.0 — Crew casualties and gameplay fixes
+## v0.13.0 — Clean Classic menus, battle backgrounds, Saved Games and replay management
 
-This release includes combat crew casualties (#79), at **one
-operating crew member per 10 actual unshielded hull damage**, plus the merged
-mixed-platform LAN, Escape, satellite targeting, infrastructure CMD, Recovery Drill,
-elevated-fighter pursuit and crowded-map orbit fixes (#68/#71/#73/#74/#82/#83/#84).
-Automatic and retained attacks stop when a target becomes abandoned; a fresh
-explicit attack on a detected abandoned enemy can destroy it. Fractional casualty
-progress survives precise save/replay restoration. Independent review, the final
+This release unifies menu presentation across every screen with the approved Clean Classic design: centered main menu, a clear seaglass primary action, proportional typography and restrained dark panels. A close-up looping battle sequence involving frigates and dreadnoughts now runs behind the title screen, main menu, Skirmish setup, LAN host/join/lobby, Settings, Campaign list and briefing screens. The Replay browser remains static and receives a Skirmish-style library/details/actions layout.
+
+**Saved Games** is a new main-menu entry exposing the existing F5/F9 quicksave/quickload system through a Clean Classic library. Passive row selection shows UTC timestamps and save kind (Quick/Autosave); explicit **Load selected** restores the canonical state through the existing `GameState.from_dict` → `GameManager` pipeline, including campaign progress and a 120-tick full-precision continuation verified against the production F5 writer. **Delete selected** and **Delete all** operate on the managed namespace only (`quicksave.json`, `autosave.json`, `autosave_<digits>.json`), with Cancel-default confirmations; settings, campaign, replays and unknown files are protected.
+
+The Replay browser adds newest-first timestamp ordering, select/delete-all/delete-selected with Cancel-default confirmations, and metadata-only rendering (no gameplay reconstruction). Native Windows safe deletion now includes seven real-kernel tests: the original six (4,101-file uncapped delete, symlink/junction containment, replacement blocking, handle cleanup) plus a new saved-games namespace test.
+
+Independent integrated review passed after malformed-save and fixture-isolation regressions were fixed with strict RED→GREEN cycles. The final **1,266-test** suite passed.
+
+## v0.12.1 — Renderer performance improvements
+
+This release applies the PR#87 quality-preserving renderer optimizations:
+
+- Per-frame cache for camera basis, owner colors/relations and per-entity view data.
+- Role-batched ship/station draws (base/dark/trim, accent, lit/cool) to cut GL state changes.
+- Distance/material-role LOD for small on-screen ships.
+- Batched ownership markers and shield-shell detail LOD.
+- Shield opacity tuning so dense fleets no longer additive-saturate to white.
+
+Measured on the macOS 500-corvette stress benchmark (1280×800, 4× MSAA, vsync off):
+- World render median: **98.5 ms → 65.0 ms** (~34% reduction).
+- Full frame median: **133.5 ms → 100.0 ms** (~25% reduction).
+- Station-heavy and developed-base scenes are already inside the 33 ms render budget.
+
+Station rotation, MSAA, visual passes and gameplay are unchanged. The final
+**1,162-test** suite passed; LAN network tests and `--netdiag` passed locally.
+Native Windows interactive and mixed-platform live LAN acceptance remain separate
+open gates.
+
+## v0.12.0 — Crew casualties and gameplay fixes
 **1,162-test** suite and real macOS crew-damage SDL/OpenGL checks passed. Both
 published packages passed download integrity/code/data verification; native Windows
 interactive and mixed-platform live LAN acceptance remain separate open gates.
@@ -432,20 +443,22 @@ friendly sensor can provide detection for another ship's longer-range weapons.
 | Save / load (quick save F5 / load F9) | ✅ implemented; disabled during LAN matches |
 | Procedural audio (original, no assets) | ✅ prototype |
 | Minimap, fleet roster/ability union, rank inspector, build/research progress | ✅ implemented |
-| Title screen, main menu, settings menu (music/SFX volume, fullscreen, autosave, pan speed — persisted to `saves/settings.json`) | ✅ prototype |
-| Campaign: ten combat missions plus recovery drill, persisted triggers/waves and staged capture/crew objectives | ✅ released since v0.8.0; recovery objective correction released in v0.12.0; natural full playthrough acceptance pending |
-| Victory conditions: annihilation, planet majority, economic, timed (data-driven) | ✅ prototype |
-| Trade convoys between trade stations + raiding (salvage loot) | ✅ prototype |
-| Objectives: build/destroy/colonize/survive + escort_convoy, hold_point | ✅ prototype |
-| Autosave ring (3 rotating slots) | ✅ prototype |
-| LAN host/join, 2–4 humans, optional AI, configurable TCP port | ✅ implemented; matching version/content required |
-| Deterministic lockstep, serialized commands, replay infrastructure | ✅ implemented and tested |
-| Replay recording/browser/read-only playback | ✅ released in v0.8.0; strict version/content compatibility |
-| LAN reconnect/resync | 🔲 production integration pending; tested standalone foundation only |
-| Four skirmish maps, player factions/colors/teams, AI difficulty | ✅ implemented; 2–4 total players by map |
-| Boarding/capture, onboard crew/life support and abandoned hulls | ✅ merged in #37; released in v0.7.0 |
-| Base crew recruitment, field crew transports, proportional staffing, cautious boarding/recovery AI | ✅ merged in #38; released in v0.7.0; balance acceptance remains open |
-| 8-player skirmish | 🔲 planned; current capacity is 2–4 total players |
+|| Title screen, main menu, settings menu (music/SFX volume, fullscreen, autosave, pan speed — persisted to `saves/settings.json`) | ✅ prototype; Clean Classic unified since v0.13.0; battle backgrounds on all non-replay screens |
+|| Campaign: ten combat missions plus recovery drill, persisted triggers/waves and staged capture/crew objectives | ✅ released since v0.8.0; recovery objective correction released in v0.12.0; natural full playthrough acceptance pending |
+|| Victory conditions: annihilation, planet majority, economic, timed (data-driven) | ✅ prototype |
+|| Trade convoys between trade stations + raiding (salvage loot) | ✅ prototype |
+|| Objectives: build/destroy/colonize/survive + escort_convoy, hold_point | ✅ prototype |
+|| Autosave ring (3 rotating slots) | ✅ prototype |
+|| LAN host/join, 2–4 humans, optional AI, configurable TCP port | ✅ implemented; matching version/content required |
+|| Deterministic lockstep, serialized commands, replay infrastructure | ✅ implemented and tested |
+|| Replay recording/browser/read-only playback | ✅ released in v0.8.0; timestamps, selection, bulk delete, metadata-only rendering since v0.13.0; strict version/content compatibility |
+|| LAN reconnect/resync | 🔲 production integration pending; tested standalone foundation only |
+|| Four skirmish maps, player factions/colors/teams, AI difficulty | ✅ implemented; 2–4 total players by map |
+|| Boarding/capture, onboard crew/life support and abandoned hulls | ✅ merged in #37; released in v0.7.0 |
+|| Base crew recruitment, field crew transports, proportional staffing, cautious boarding/recovery AI | ✅ merged in #38; released in v0.7.0; balance acceptance remains open |
+|| Saved Games library (Load/Delete quick/autosaves) | ✅ implemented v0.13.0; managed namespace only, Cancel-default confirmations |
+|| Native Windows safe deletion acceptance | ✅ 7 real-kernel tests v0.13.0 (4,101-file uncapped, symlinks/junctions, containment, replacement blocking, handle cleanup, saved-games namespace) |
+|| 8-player skirmish | 🔲 planned; current capacity is 2–4 total players |
 
 ## Repository layout
 
@@ -488,6 +501,14 @@ not proof of statistical full-match balance.
 
 ## Releases
 
+**[Download v0.13.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.13.0)**
+(published October 13, 2026):
+
+- **macOS:** `STAR-ARMADA-v0.13.0-mac.dmg`
+- **Windows:** `STAR-ARMADA-v0.13.0-win.zip` (unsigned)
+
+Both published downloads match GitHub SHA-256 digests, pass DMG/ZIP integrity and match the immutable tag for inspected runtime modules and tracked assets. The downloaded macOS bundle reports 0.13.0 and passes a 30-second smoke from the read-only mount; new screenshot/replay data are written outside the app. Windows-source LAN checks passed in CI; native frozen Windows gameplay and mixed-platform live LAN acceptance remain open. Full hashes/evidence are in the release notes.
+
 **[Download v0.12.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.12.0)**
 (published October 13, 2026):
 
@@ -511,6 +532,8 @@ local builds (`./scripts/build_mac.sh`).
 
 | Release | Delivered |
 |---|---|
+| **v0.13.0** | Clean Classic menu unification, looping battle backgrounds on all non-replay screens, Saved Games library with Load/Delete, replay management with timestamps/selection/bulk deletion, native Windows safe deletion acceptance (7 real-kernel tests); verified DMG and Windows ZIP |
+| **v0.12.1** | Renderer performance improvements (per-frame cache, role-batched draws, LOD, marker batching, shield opacity) without visual quality loss; 500-corvette stress 133.5→100.0 ms full-frame, 98.5→65.0 ms world-render; verified DMG and Windows ZIP |
 | **v0.12.0** | Crew hull-damage casualties and abandonment-safe targeting (#85/#79); mixed-platform deterministic LAN, Escape, orbit targeting, infrastructure CMD, Recovery Drill, elevated-fighter pursuit and crowded-map orbit fixes; verified DMG and Windows ZIP |
 | **v0.11.0** | Large-fleet CPU/fog optimization and packaged benchmark reports (#66); input, capital arcs and planetary projectile/slot-lockout fixes |
 | **v0.10.1** | Quiet firing audio and live-volume silence correction (#47) |
