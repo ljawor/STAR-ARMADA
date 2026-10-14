@@ -302,15 +302,23 @@ class ReplayWorkflowTests(unittest.TestCase):
         from unittest.mock import Mock
         from test_lan_main import factories, ROOT
         tree = ast.parse((ROOT / 'main.py').read_text())
-        branch = deepcopy(next(n for n in ast.walk(tree) if isinstance(n, ast.Try)
-                               and any(isinstance(call, ast.Call) and isinstance(call.func, ast.Name)
-                                       and call.func.id == 'advance_simulation' for call in ast.walk(n))))
+        loop = next(n for n in tree.body if isinstance(n, ast.While))
+        branches = [n for n in loop.body if isinstance(n, ast.If)
+                    and isinstance(n.test, ast.UnaryOp) and isinstance(n.test.op, ast.Not)
+                    and isinstance(n.test.operand, ast.Call)
+                    and isinstance(n.test.operand.func, ast.Name)
+                    and n.test.operand.func.id == 'step_game_frame']
+        self.assertEqual(len(branches), 1, 'Actual loop must use the production simulation boundary')
+        branch = deepcopy(branches[0])
         code = ast.For(target=ast.Name(id='_frame', ctx=ast.Store()),
                        iter=ast.Tuple(elts=[ast.Constant(0)], ctx=ast.Load()), body=[branch], orelse=[])
         ns = factories()
-        ns.update(playback=SimpleNamespace(), state=game().state, dt_frame=.1,
-                  advance_simulation=Mock(side_effect=ValueError('Invalid replay continuation')))
+        # Keep advance_simulation real: its playback path raises into the real
+        # helper called by the actual main loop, then leave_game updates the browser.
+        playback = SimpleNamespace(advance=Mock(side_effect=ValueError('Invalid replay continuation')))
+        ns.update(playback=playback, state=game().state, dt_frame=.1)
         exec(compile(ast.fix_missing_locations(ast.Module(body=[code], type_ignores=[])), 'main.py', 'exec'), ns)
+        playback.advance.assert_called_once_with(.1)
         self.assertEqual(ns['mode'], 'menu')
         self.assertEqual(ns['menu'].screen, 'replays')
         self.assertIn('continuation', ns['menu'].replay_notice)

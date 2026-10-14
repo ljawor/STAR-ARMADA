@@ -21,6 +21,18 @@ The map catalogue is the same as Skirmish: Sector Duel / Kotarri Sector (2 total
 
 Gameplay advances only when every human has contributed the next turn. The UI stays responsive while waiting. Disconnects and synchronization failures stop the match rather than silently allowing divergent simulations. LAN matches do not support independent pause, quickload or restoring a saved multiplayer session.
 
+### Human orders and local limits
+
+Boarding, crew loading (**L**), crew delivery and crew cancellation use the same delayed lockstep path as other human orders. `board` and `crew_deliver` require a target hull; `crew_load` and `crew_cancel` carry selected unit IDs without a target. Crew orders require a nonempty selection and reject unrelated payload fields. `crew_recover` remains AI-only and cannot be submitted by a peer. The wire authenticates the player slot; the simulation separately rechecks source ownership and current target legality when the order executes. Teammates cannot command each other's ships; delivery requires an owned hull, while boarding requires a visible, in-range, shieldless enemy capturable hull.
+
+The protocol remains limited to **256 selected unit IDs per order** and **64 pending human orders per turn per player**. A local order exceeding either limit is rejected as a whole with an in-match notice. Previously accepted pending orders and the LAN session survive. No automatic splitting or partial paid action occurs; reduce the selection or wait for the next turn and retry. A malicious or malformed peer message still terminates the match.
+
+Controlled in-match LAN failures and uncaught Python exceptions now have small, sanitized, best-effort durable reports; see [Network diagnostics](NETWORK_DIAGNOSTICS.md). They are not full crash dumps.
+
+### Recovery status
+
+Production disconnects still end the match. There is **no production reconnect/resume integration**: `game/net/reconnect.py` and its diagnostics test snapshot/transfer/input-ledger foundations only. They do not establish a distributed freeze point, reopen the live session, reconcile the running delayed pipeline, or atomically replace the manager/UI/recorder. Returning to the join menu starts a new connection, not continuation of the interrupted match. See [LAN reconnect foundations](LAN_RECONNECT.md).
+
 ## Windows Firewall: host rule
 
 Keep Windows Firewall enabled. For a trusted home LAN, use the **Private** network profile. On managed/company networks, ask the administrator instead of changing policy.
