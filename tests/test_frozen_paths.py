@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import importlib
 import os
+import subprocess
 import sys
 import types
 import unittest
@@ -114,6 +115,29 @@ class TestFrozenPaths(unittest.TestCase):
         self.assertFalse(getattr(sys, "frozen", False))
         import render.menus as menus
         self.assertEqual(menus.ASSET_ROOT, menus.ROOT)
+
+    def test_every_folder_a_dev_run_writes_into_the_repo_is_ignored(self):
+        """USER_DIR is the repo in an unfrozen run, so its runtime folders must not be committable.
+
+        A dev run writes saves and replays into the working tree, and — after a crash —
+        `install_exception_hook(USER_DIR)` leaves diagnostics/failure-N.json beside them. The
+        first two were ignored and the third was not, so a crash dump from the suite was
+        swept into a `git add -A` and merged. Pinned here rather than in a source grep: the
+        rule is only worth anything if git itself agrees with it.
+        """
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        if not os.path.isdir(os.path.join(root, ".git")):
+            self.skipTest("not a git checkout")
+        try:
+            subprocess.run(["git", "--version"], capture_output=True, check=True)
+        except (OSError, subprocess.CalledProcessError):
+            self.skipTest("git is not available")
+        for sample in ("saves/save.json", "replays/match.rep", "diagnostics/failure-0.json"):
+            with self.subTest(sample=sample):
+                result = subprocess.run(["git", "-C", root, "check-ignore", "-q", sample],
+                                        capture_output=True)
+                self.assertEqual(result.returncode, 0,
+                                 f"{sample} would be committed: add its folder to .gitignore")
 
 
 if __name__ == "__main__":
