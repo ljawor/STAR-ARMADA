@@ -165,7 +165,8 @@ class SettingsIntegrationTests(unittest.TestCase):
         # Persistence constants are patched before any MenuStack exists.
         scope = patch.multiple(menus, USER_DIR=str(root), SAVES_DIR=str(saves),
                                SETTINGS_PATH=str(saves / 'settings.json'),
-                               CAMPAIGN_PATH=str(saves / 'campaign.json'))
+                               CAMPAIGN_PATH=str(saves / 'campaign.json'),
+                               BALANCE_PATH=str(saves / 'balance.json'))
         scope.start()
         self.addCleanup(scope.stop)
         self.addCleanup(i18n.set_language, i18n.DEFAULT_LANGUAGE)
@@ -267,7 +268,7 @@ class SettingsIntegrationTests(unittest.TestCase):
         menu.settings['language'] = 'pl'
         i18n.set_language('pl')
         texts = self.open_settings(menu, 3)
-        self.assertIn('Język · Strona 4/4', texts)
+        self.assertIn('Język · Strona 4/5', texts)
         self.assertIn('Język', texts)
 
     def test_the_refit_block_translates_its_assembled_lines(self):

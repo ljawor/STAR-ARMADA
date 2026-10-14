@@ -6,7 +6,7 @@ Tactical: per-unit combat micro — intercept, retreat damaged ships, focus targ
 """
 from __future__ import annotations
 
-from ..core.commands import PlayerCommand
+from ..core.commands import PlayerCommand, UpgradeStationCommand
 from ..core.vectors import Vec3
 from ..data.store import DataStore
 
@@ -403,7 +403,26 @@ class AIPlayer:
                     target_pos=(pos.x, pos.y, pos.z)))
 
     def _queue_ship(self, shipyard, ship_id: str, count: int) -> None:
+        """Queue hulls — or buy the refit level that makes them buildable (#106).
+
+        Every ship order this AI places funnels through here, so this is where the
+        player's per-station-type gate is answered. A hull gated behind a refit level
+        is priced, not banned: an AI that merely stopped building would be quietly
+        crippled by a setting it can pay for, so it buys the level instead and lets the
+        next tick place the order. The simulation re-checks the level cap, a pending
+        refit and the bill, so an unaffordable step is a visible no-op rather than a bug.
+        """
+        from game.systems import construction, upgrades
         st = self.state
+        player = st.players.get(self.player_id)
+        gate = construction.required_level(self.ds, shipyard.data_id, ship_id) if player else 1
+        if (player is not None
+                and upgrades.station_level(shipyard) < gate
+                and construction.type_can_build_ship(self.ds, shipyard.data_id,
+                                                     player.faction, ship_id)
+                and upgrades.upgrade_cost(shipyard, self.ds) is not None):
+            st.queue_command(UpgradeStationCommand(self.player_id, shipyard.id))
+            return
         st.queue_command(PlayerCommand(
             "build_ship", self.player_id, unit_ids=(shipyard.id,),
             ship_id=ship_id, name=str(count)))

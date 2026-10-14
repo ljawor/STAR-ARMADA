@@ -2,6 +2,29 @@
 import pygame
 from render.clean_classic import SetupCanvas, ACCENT, BORDER, DONE, INK, MUTED, PANEL
 
+#: Number of Settings pages and the index of the Game Balance one (#106). menus.py reads the
+#: count for its Page Up / Down clamp and its next-page button, so the two cannot drift.
+SETTINGS_PAGE_COUNT = 5
+BALANCE_PAGE = 4
+
+#: The Game Balance editor's pages, in tab order, with the rect each tab occupies. The tabs
+#: carry their *index* as their payload — a tab is a jump, where every other page control in
+#: the menus is a step of ±1 — so this tuple is what both the tabs and `MenuStack`'s clamp
+#: read, and the payload of a tab cannot point at a page that does not exist.
+BALANCE_PAGES = ('Per-level gains', 'Build levels')
+BALANCE_TAB_RECTS = ((440, 150, 300, 34), (756, 150, 332, 34))
+
+#: Human wording for the row each gain edits. The words are the HUD refit block's own where the
+#: panel already names a resource, so the screen that tunes a station and the panel that
+#: describes it name the same thing; the value column carries the number.
+GAIN_LABELS = {
+    'hull_bonus': 'hull', 'shield_bonus': 'shields',
+    'shield_regen_bonus': 'regen', 'damage_bonus': 'damage',
+    'production_bonus': 'output', 'convoy_cargo_bonus': 'cargo',
+    'volley_shots_per_level': 'extra shots',
+    'convoy_per_two_levels': 'convoys',
+}
+
 
 def _button(c, rect, label, action, payload=None, primary=False, focused=False):
     c.button(rect, label, action, payload, selected=focused or _hot(c, rect), primary=primary)
@@ -189,6 +212,9 @@ def settings(menu):
              'The pack is chosen from assets/data/lang/; English is the catalogue.',
              'A line a pack does not carry falls back to English.',
              'Presentation only: the language never changes a match or a replay.')),
+        # #106: the tuning door sits last on purpose — the language tests and the page
+        # walk both count pages, and a page inserted in the middle would renumber them.
+        ('Game Balance', (), ()),
     )
     menu.settings_page = min(len(pages) - 1, max(0, getattr(menu, 'settings_page', 0)))
     menu.settings_focus = getattr(menu, 'settings_focus', -1)
@@ -224,6 +250,8 @@ def settings(menu):
         menu.buttons.append(dict(rect=r, action=action, payload=payload))
     for index, line in enumerate(notes):
         c.text(line, (68, 246 + index * 40, 968, 30), 18, MUTED)
+    if menu.settings_page == BALANCE_PAGE:
+        _balance_settings_body(menu, c)
     c.text('Tab / Up / Down: focus · Enter: toggle · Left / Right: volume', (52, 552, 1016, 24), 16, MUTED)
     c.text('Page Up / Down: pages · Esc: back', (52, 581, 1016, 24), 16, MUTED)
     c.button((32, 650, 180, 36), 'Back', 'goto_main')
@@ -234,3 +262,109 @@ def settings(menu):
     for b in menu.buttons:
         if b['action'] == 'slider':
             b['payload']['rect'] = _map_rect(menu, b['payload']['rect'])
+
+
+def _balance_settings_body(menu, c):
+    """The Game Balance page: what is tuned, where the file lives, and the way in (#106)."""
+    from render import i18n
+    tuned, gated = menu.balance_summary()
+    c.text('Station upgrades', (52, 176, 700, 30), 20)
+    if tuned or gated:
+        c.text(i18n.t('Retuned station types: {tuned}', tuned=tuned) + ' · '
+               + i18n.t('Gated hulls: {gated}', gated=gated), (52, 216, 1004, 26), 18, DONE)
+    else:
+        c.text('Every station uses the shipped balance.', (52, 216, 1004, 26), 18, MUTED)
+    c.text('Per station type, a refit level can be made to gain more, and a hull can be held back'
+           ' until its station reaches a level.', (52, 258, 1016, 60), 18, MUTED, wrap=True)
+    c.text('The tuning is saved the moment it changes and survives application updates: it lives'
+           ' beside settings.json in your user data, never inside the application bundle.',
+           (52, 320, 1016, 60), 18, MUTED, wrap=True)
+    _button(c, (52, 410, 500, 44), 'Station upgrades ›', 'goto_balance', primary=True)
+    c.text('A retuned station reads the same numbers in the simulation, in its own panel and in a'
+           ' replay recorded with it.', (52, 470, 1016, 60), 18, MUTED)
+
+
+def balance(menu):
+    """Settings → Game Balance → Station upgrades (#106).
+
+    Presentation only, and a draft editor: every press edits `menu.balance_draft`, which the
+    menu stack validates and writes once per frame while it is dirty. The screen therefore has
+    no half-applied state to leave behind — either the whole config passes the strict reader or
+    nothing was written.
+
+    The rows are the station's own (`balance.bonus_rows`, `balance.editable_ships`), so the
+    screen can neither offer a gain the simulation would not read nor a hull it would refuse.
+    """
+    from render import i18n
+    from game.data import balance as balance_config
+    from game.systems import upgrades
+    draft = menu.balance_draft
+    station = menu.balance_selected()
+    c = _canvas(menu, 'balance', 'Game Balance',
+                i18n.t('Station upgrades · what each level gains, and what a hull needs'))
+    tuned, gated = menu.balance_summary()
+    c.text('FACTION', (52, 150, 368, 24), 16, MUTED)
+    faction = menu.skirmish_store.factions[menu.balance_faction]
+    _button(c, (52, 176, 368, 36), i18n.name(faction.display_name) + (
+        ' ›' if len(menu.balance_factions()) > 1 else ''), 'balance_faction', 1)
+    c.text('STATIONS', (52, 226, 368, 24), 16, MUTED)
+    for index, station_id in enumerate(menu.balance_stations()):
+        row = pygame.Rect(52, 252 + index * 34, 368, 30)
+        _button(c, row, '', 'balance_station', station_id, focused=station_id == station)
+        edited = (station_id in draft['station_upgrades']
+                  or station_id in draft['build_levels'])
+        if edited:
+            # A dot rather than a word: it needs no translation and it survives the narrow
+            # library column at the smallest window.
+            pygame.draw.circle(c.surface, DONE, (row.x + 9, row.centery), 3)
+        c.text(i18n.name(menu.skirmish_store.stations[station_id].display_name),
+               (row.x + 20, row.y + 5, 336, 24), 16)
+    for index, label in enumerate(BALANCE_PAGES):
+        _button(c, BALANCE_TAB_RECTS[index], label, 'balance_page', index,
+                focused=menu.balance_page == index)
+    y = 196
+    if station is None:
+        c.text('No station to retune for this faction.', (440, 200, 648, 26), 18, MUTED)
+    elif menu.balance_page == 0:
+        gains = draft['station_upgrades'].get(station, {})
+        for key in balance_config.bonus_rows(menu.skirmish_store, station):
+            value = gains.get(key, upgrades.DEFAULTS[key])
+            edited = key in gains
+            shown = (i18n.t('+{count} per level', count=int(value))
+                     if key in balance_config.COUNT_KEYS
+                     else i18n.t('+{percent}% per level', percent=f'{value * 100:g}'))
+            c.text(i18n.t(GAIN_LABELS[key]), (456, y + 10, 220, 26), 18)
+            if edited:
+                c.text('MODIFIED', (682, y + 13, 96, 22), 14, DONE)
+            _button(c, (784, y + 4, 40, 34), '−', 'balance_step', {'key': key, 'delta': -1})
+            c.text(shown, (830, y + 10, 200, 26), 18, DONE if edited else INK)
+            _button(c, (1036, y + 4, 40, 34), '+', 'balance_step', {'key': key, 'delta': 1})
+            y += 44
+        c.text('The gain each refit level adds, as a share of the shipped value. 100% doubles it.',
+               (440, 560, 648, 22), 14, MUTED)
+    else:
+        hulls = balance_config.editable_ships(menu.skirmish_store, station, menu.balance_faction)
+        levels = draft['build_levels'].get(station, {})
+        if not hulls:
+            c.text('This station lays down no ships.', (440, 200, 648, 26), 18, MUTED)
+        for ship_id in hulls:
+            level = levels.get(ship_id, balance_config.DEFAULT_BUILD_LEVEL)
+            c.text(i18n.name(menu.skirmish_store.ships[ship_id].display_name),
+                   (456, y + 10, 320, 26), 18)
+            _button(c, (784, y + 4, 40, 34), '−', 'balance_gate_step',
+                    {'station': station, 'ship_id': ship_id, 'delta': -1})
+            c.text(i18n.t('as shipped') if level <= balance_config.DEFAULT_BUILD_LEVEL
+                   else i18n.t('level {level}', level=level), (830, y + 10, 200, 26), 18,
+                   DONE if level > balance_config.DEFAULT_BUILD_LEVEL else MUTED)
+            _button(c, (1036, y + 4, 40, 34), '+', 'balance_gate_step',
+                    {'station': station, 'ship_id': ship_id, 'delta': 1})
+            y += 44
+        c.text('A hull waits for its station to reach this level — for every player and the AI.',
+               (440, 560, 648, 22), 14, MUTED)
+    c.text(menu.balance_notice or (i18n.t('Retuned station types: {tuned}', tuned=tuned) + ' · '
+                                   + i18n.t('Gated hulls: {gated}', gated=gated)),
+           (440, 586, 648, 22), 14, MUTED)
+    _button(c, (32, 650, 180, 36), 'Back', 'balance_back')
+    _button(c, (612, 650, 224, 36), 'Reset this station', 'balance_reset_station')
+    _button(c, (852, 650, 236, 36), 'Reset all tuning', 'balance_reset_all')
+    c.finish()

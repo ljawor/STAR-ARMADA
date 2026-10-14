@@ -26,7 +26,7 @@ import unittest
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 FIELDS = ("ROOT", "ASSET_ROOT", "USER_DIR", "SAVES_DIR",
-          "SETTINGS_PATH", "CAMPAIGN_PATH")
+          "SETTINGS_PATH", "CAMPAIGN_PATH", "BALANCE_PATH")
 
 
 def paths_as_frozen(frozen, platform, meipass=None):
@@ -74,7 +74,7 @@ class TestFrozenPaths(unittest.TestCase):
         # assets come from the bundle ...
         self.assertEqual(m.ASSET_ROOT, bundle)
         # ... but nothing writable may live there
-        for field in ("SAVES_DIR", "SETTINGS_PATH", "CAMPAIGN_PATH"):
+        for field in ("SAVES_DIR", "SETTINGS_PATH", "CAMPAIGN_PATH", "BALANCE_PATH"):
             self.assertFalse(getattr(m, field).startswith(bundle),
                              f"{field} must not be inside the app bundle")
         self.assertIn("Application Support", m.USER_DIR)

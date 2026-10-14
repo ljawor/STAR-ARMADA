@@ -53,6 +53,7 @@ import socket
 import struct
 import time
 from game.data.store import DataStore
+from game.data import balance as balance_config
 from game import __version__ as GAME_VERSION
 from game.systems.campaign_script import CampaignScript
 
@@ -147,14 +148,16 @@ def _json(value):
 
 
 def content_hash(ds):
-    """Canonical raw JSON plus loaded data; reject modded LAN sessions.
+    """Canonical raw JSON plus loaded data, minus the player's station balance (#106).
 
-    Read through an explicit UTF-8: the default text encoding is the platform's
-    locale (cp1252 on Windows), so a non-ASCII asset hashed to two different
-    values and the handshake refused every mixed-platform session in both
-    directions — maps/skirmish01.json is named "Sector Duel — Kotarri Sector"
-    (issue #56). Text mode also normalizes CRLF, so a Windows checkout hashes
-    like an LF one.
+    The overlay is hashed separately (`station_balance`) and exchanged in the handshake, so
+    a peer whose balance file differs can adopt the host's numbers for the match instead of
+    being refused. Everything a peer cannot reconcile — the catalogue, the mods and the game
+    version — is still compared exactly. Read through an explicit UTF-8: the default text
+    encoding is the platform's locale (cp1252 on Windows), so a non-ASCII asset hashed to two
+    different values and the handshake refused every mixed-platform session in both
+    directions — maps/skirmish01.json is named "Sector Duel — Kotarri Sector" (issue #56).
+    Text mode also normalizes CRLF, so a Windows checkout hashes like an LF one.
     """
     if ds.mod_files:
         raise ValueError('LAN does not support mods')
@@ -162,8 +165,23 @@ def content_hash(ds):
            for p in sorted(Path(ds.assets_dir).rglob('*.json'))}
     loaded = {key: {k: asdict(v) for k, v in getattr(ds, key).items()}
               for key in ('weapons', 'ships', 'stations', 'abilities', 'techs', 'factions')}
-    loaded.update(maps=ds.maps, rules=ds.rules, campaign=ds.campaign)
+    loaded.update(maps=ds.maps, rules=ds.base_rules, campaign=ds.campaign)
     return hashlib.sha256(_json(dict(raw=raw, loaded=loaded))).hexdigest()
+
+
+def station_balance(ds):
+    """The station tuning this catalogue carries, canonicalized (#106).
+
+    Read through `normalize` rather than handed over raw: the sender's copy may come from a
+    hand-edited file, and what travels must be a config the strict reader on the other end
+    can accept whole — a peer refused over the sender's own file would be a mystery.
+    """
+    return balance_config.normalize(dict(ds.balance or {}))
+
+
+def station_balance_digest(ds):
+    """Short digest of `station_balance`: what a pair announces, never what they compare."""
+    return balance_config.digest(station_balance(ds))
 
 
 MAX_COMMANDS = 64
@@ -407,6 +425,12 @@ class LanSession:
         self._heartbeat = time.monotonic()
         self._ds = DataStore.get()
         self._content = content_hash(self._ds)
+        # The tuning this match runs with, and the player's own, which comes back when the
+        # session closes: a host's numbers are adopted for one match, never kept (#106).
+        self._balance = station_balance(self._ds)
+        self._own_balance = dict(self._balance)
+        self._adopted = None
+        self._before_adoption = None
         self._addresses = _local_addresses()
         self._recovery = None
 
@@ -497,10 +521,54 @@ class LanSession:
         peer.target = (address, port)
         self._peers = [peer]
         peer.send(dict(type='hello', name=name, version=GAME_VERSION,
-                       protocol=PROTOCOL_VERSION, content=self._content))
+                       protocol=PROTOCOL_VERSION, content=self._content,
+                       balance=station_balance_digest(self._ds)))
         if recovery:
             self.enable_recovery(clock=clock)
         return self
+
+    @property
+    def station_balance(self):
+        """The station tuning this match runs with — the host's, once it has been adopted."""
+        return deepcopy(self._balance)
+
+    def _adopt_balance(self, config):
+        """Run the host's numbers for this match, and nothing less than all of them.
+
+        The config arrives over the wire, so it is read strictly: a half-applied overlay would
+        put this peer on numbers the host never agreed to, and that would surface minutes later
+        as an unexplained desync instead of as a refusal here (#106). Adoption goes through the
+        process-wide overlay because every route that builds a catalogue — the match, a replay,
+        the validator — reads it; leaving any one of them on the player's own numbers is the
+        same desync reached by a quieter road.
+        """
+        if config is None:
+            raise ValueError('station balance mismatch')
+        try:
+            adopted = balance_config.validate(config)
+        except (ValueError, TypeError, KeyError, RecursionError) as exc:
+            raise ValueError(f'station balance mismatch: {exc}') from None
+        if adopted == self._balance:
+            return
+        self._before_adoption = DataStore._instance
+        self._adopted = adopted
+        self._balance = adopted
+        balance_config.set_active(adopted)
+        DataStore.reset()
+        self._ds = DataStore.get()
+        self._content = content_hash(self._ds)
+
+    def _restore_balance(self):
+        """Put the player's own tuning back, and the catalogue that was built from it."""
+        if self._adopted is None:
+            return
+        self._adopted = None
+        self._balance = dict(self._own_balance)
+        balance_config.set_active(self._own_balance)
+        DataStore.reset()
+        if self._before_adoption is not None:
+            DataStore._instance = self._before_adoption
+        self._before_adoption = None
 
     @property
     def snapshot(self):
@@ -604,7 +672,8 @@ class LanSession:
                 peer.slot = len(self._players)
                 self._players.append(dict(slot=peer.slot, name=name, ready=False))
                 peer.send(dict(type='welcome', slot=peer.slot, version=GAME_VERSION,
-                               protocol=PROTOCOL_VERSION, content=self._content))
+                               protocol=PROTOCOL_VERSION, content=self._content,
+                               balance=self._balance))
                 self._lobby()
                 if self._recovery:
                     self._recovery.admitted(peer)
@@ -623,6 +692,10 @@ class LanSession:
                         raise ValueError(f'{field} mismatch')
                 if type(m.get('slot')) is not int or not 1 <= m['slot'] <= 3:
                     raise ValueError('Invalid slot')
+                # The host's numbers become this peer's numbers before the lobby reports
+                # the match as configured: the launch map, the simulation and every
+                # catalogue built from here on must already read them (#106).
+                self._adopt_balance(m.get('balance'))
                 self.local_player = m['slot']
                 self._status = 'lobby'
             elif kind == 'lobby' and self._status == 'lobby':
@@ -860,3 +933,4 @@ class LanSession:
             p.close()
         self._peers = []
         self._status = 'closed'
+        self._restore_balance()

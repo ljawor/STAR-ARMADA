@@ -12,6 +12,8 @@ import os
 import sys
 from dataclasses import dataclass, field
 
+from . import balance as balance_config
+
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
@@ -160,7 +162,8 @@ def _color(v, default):
 class DataStore:
     _instance: "DataStore | None" = None
 
-    def __init__(self, assets_dir: str | None = None, mods: list[str] | None = None):
+    def __init__(self, assets_dir: str | None = None, mods: list[str] | None = None,
+                 balance: dict | None = None):
         self.assets_dir = assets_dir or _find_assets_dir()
         self.weapons: dict[str, WeaponData] = {}
         self.ships: dict[str, ShipData] = {}
@@ -170,9 +173,11 @@ class DataStore:
         self.factions: dict[str, FactionData] = {}
         self.maps: dict[str, dict] = {}
         self.rules: dict = {}
+        self.base_rules: dict = {}          # shipped + mods, before the player's balance
+        self.balance: dict = {}             # the overlay this catalogue was built with
         self.campaign: dict = {}
         self.mod_files: dict[str, str] = {}      # relative path -> file content (mod loader)
-        self._load_all(mods or [])
+        self._load_all(mods or [], balance)
         DataStore._instance = self
 
     # ------------------------------------------------------------- access
@@ -271,7 +276,7 @@ class DataStore:
         with open(path, "r", encoding="utf-8") as f:
             return json.load(f)
 
-    def _load_all(self, mods: list[str]) -> None:
+    def _load_all(self, mods: list[str], balance: dict | None = None) -> None:
         self.rules = self._read("game_rules.json")
         self._load_weapons()
         self._load_abilities()
@@ -284,6 +289,14 @@ class DataStore:
         for mod in mods:
             self._load_mod(mod)
         self._validate()
+        # The player's station balance (#106) is folded in last, after the catalogue and any
+        # mods have been validated: it is the final word on its own two sections and can
+        # neither invalidate the catalogue nor be mistaken for it. `None` means "whatever the
+        # running game has loaded"; only a LAN client, adopting the host's numbers for one
+        # match, passes an explicit overlay.
+        self.balance = dict(balance if balance is not None else balance_config.active())
+        self.base_rules = dict(self.rules)
+        balance_config.merge_into_rules(self.rules, self.balance)
 
     def _load_weapons(self) -> None:
         for wid, w in self._read("weapons/weapons.json")["weapons"].items():

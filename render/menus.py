@@ -44,6 +44,10 @@ else:
 SAVES_DIR = os.path.join(USER_DIR, "saves")
 SETTINGS_PATH = os.path.join(SAVES_DIR, "settings.json")
 CAMPAIGN_PATH = os.path.join(SAVES_DIR, "campaign.json")
+# Station balance (#106): the same rule as settings and campaign progress. The shipped
+# catalogue is inside the bundle and an update replaces it, so anything the player tunes has
+# to live here or the next version silently reverts it.
+BALANCE_PATH = os.path.join(SAVES_DIR, "balance.json")
 
 DEFAULT_SETTINGS = {
     "music_volume": 0.6,
@@ -108,6 +112,71 @@ def save_settings(s: dict) -> None:
             json.dump(s, f, indent=2)
     except OSError:
         pass
+
+
+def load_balance() -> dict:
+    """The station balance overlay (#106), normalised. A broken file reads as shipped values.
+
+    Lenient on purpose: this is a file a player may hand-edit, and a station's worth of
+    mistyped JSON must not stop the game from starting.
+    """
+    from game.data import balance
+    try:
+        with open(BALANCE_PATH, encoding="utf-8") as f:
+            saved = json.load(f)
+    except (OSError, ValueError):
+        return balance.defaults()
+    return balance.normalize(saved)
+
+
+def save_balance(config) -> bool:
+    """Write the overlay, and install it for the next catalogue. False = refused, unwritten.
+
+    Validated before writing: a config the balance screen could not have produced is a bug
+    or a corrupt hand-edit, and persisting it would turn both into a mystery in the next
+    match instead of an error here. Nothing is written on refusal — the file on disk stays
+    the last good one.
+    """
+    from game.data import balance
+    try:
+        clean = balance.validate(config)
+    except ValueError:
+        return False
+    try:
+        os.makedirs(os.path.dirname(BALANCE_PATH), exist_ok=True)
+        # Explicit UTF-8 both ways, like the campaign and settings files: the locale
+        # default is cp1252 on Windows, and a mod's display names are not ours to
+        # constrain to ASCII (issue #56's lesson).
+        with open(BALANCE_PATH, "w", encoding="utf-8") as f:
+            json.dump(clean, f, indent=2)
+    except (OSError, ValueError):
+        return False
+    # Installed for later catalogues as well as written: a match started from this menu builds
+    # its own catalogue, and the LAN handshake reads the same numbers, so an edit must not
+    # need a restart to take effect.
+    balance.set_active(clean)
+    return True
+
+
+def load_balance_into_game() -> dict:
+    """Read the balance file and install it as the overlay later catalogues pick up."""
+    from game.data import balance
+    return balance.set_active(load_balance())
+
+
+def reset_balance() -> None:
+    """Forget the tuning: remove the file and go back to the shipped numbers.
+
+    Removing rather than writing a file of shipped values: an absent file and one that
+    says nothing must mean the same thing to every reader, and a player who resets has not
+    tuned anything — the next build's shipped balance is then genuinely in force.
+    """
+    from game.data import balance
+    try:
+        os.remove(BALANCE_PATH)
+    except OSError:
+        pass                                  # absent is the state we want anyway
+    balance.set_active(None)
 
 
 # Frozen v1 order: never infer legacy indices from a reordered catalogue.
@@ -250,6 +319,15 @@ class MenuStack:
         i18n.apply_from_settings(self.settings)
         self._dirty_settings = False
         self._music_preview = False
+        # #106: the station balance editor works on a draft, and the draft is what gets
+        # written. A screen that mutated the live overlay as it drew would half-apply a
+        # config the strict reader might have refused whole.
+        self.balance_draft = load_balance()
+        self.balance_faction = 'imperial'
+        self.balance_station = None
+        self.balance_page = 0
+        self.balance_notice = ''
+        self._dirty_balance = False
 
         pygame.font.init()
         self.font_title = pygame.font.SysFont("helvetica,arial", 64, bold=True)
@@ -442,6 +520,8 @@ class MenuStack:
             self._screen_skirmish()
         elif self.screen == "settings":
             self._screen_settings()
+        elif self.screen == "balance":
+            self._screen_balance()
         elif self.screen == "replays":
             self._screen_replays()
         elif self.screen == 'saved_games':
@@ -616,12 +696,115 @@ class MenuStack:
         from render.classic_screens import settings
         settings(self)
 
+    def _screen_balance(self) -> None:
+        from render.classic_screens import balance
+        balance(self)
+
+    def _settings_page_count(self) -> int:
+        from render.classic_screens import SETTINGS_PAGE_COUNT
+        return SETTINGS_PAGE_COUNT
+
+    def _balance_page_count(self) -> int:
+        """Pages the Game Balance editor draws; its tabs carry a page index, not a step."""
+        from render.classic_screens import BALANCE_PAGES
+        return len(BALANCE_PAGES)
+
+    def balance_summary(self) -> tuple:
+        """(station types retuned, hulls gated) in the current draft, for the two screens."""
+        from game.data import balance
+        return balance.tuned_summary(self.balance_draft, self.skirmish_store.stations)
+
+    # -------------------------------------------------------- station balance (#106)
+    def balance_factions(self) -> tuple:
+        """Factions that actually field stations, in catalogue order."""
+        from game.data import balance
+        return tuple(faction for faction in self.skirmish_store.factions
+                     if balance.faction_station_types(self.skirmish_store, faction))
+
+    def balance_stations(self) -> tuple:
+        """Station types of the selected faction, in catalogue order."""
+        from game.data import balance
+        return balance.faction_station_types(self.skirmish_store, self.balance_faction)
+
+    def balance_selected(self):
+        """The station type the details column describes; falls back to the first listed.
+
+        A selection has to survive a faction change and a screen the player re-enters: the
+        alternative is an empty details column that reads as "this faction has no stations".
+        """
+        stations = self.balance_stations()
+        if self.balance_station in stations:
+            return self.balance_station
+        return stations[0] if stations else None
+
+    def _balance_sync_selection(self) -> None:
+        self.balance_station = self.balance_selected()
+
+    def _balance_cycle_faction(self, delta: int) -> None:
+        factions = self.balance_factions()
+        if not factions:
+            return
+        index = factions.index(self.balance_faction) if self.balance_faction in factions else 0
+        self.balance_faction = factions[(index + delta) % len(factions)]
+        self._balance_sync_selection()
+
+    def _balance_gain_step(self, payload) -> None:
+        """One stepper press on a per-level gain: edit the draft, never the live overlay."""
+        from game.data import balance
+        station = self.balance_selected()
+        if station is None:
+            return
+        key = payload['key']
+        current = self.balance_draft['station_upgrades'].get(station, {}).get(key)
+        if current is None:
+            from game.systems import upgrades
+            current = upgrades.DEFAULTS[key]
+        step = 1 if key in balance.COUNT_KEYS else 0.01
+        self.balance_draft = balance.set_gain(self.balance_draft, station, key,
+                                             current + step * payload['delta'])
+        self._dirty_balance = True
+        self.balance_notice = ''
+
+    def _balance_gate_step(self, payload) -> None:
+        from game.data import balance
+        station, ship_id = payload['station'], payload['ship_id']
+        current = self.balance_draft['build_levels'].get(station, {}).get(
+            ship_id, balance.DEFAULT_BUILD_LEVEL)
+        self.balance_draft = balance.set_build_level(self.balance_draft, station, ship_id,
+                                                     current + payload['delta'])
+        self._dirty_balance = True
+        self.balance_notice = ''
+
+    def _balance_reset_station(self) -> None:
+        from game.data import balance
+        station = self.balance_selected()
+        if station is None:
+            return
+        self.balance_draft = balance.reset_station(self.balance_draft, station)
+        self._dirty_balance = True
+        self.balance_notice = i18n.t('{station} is back to the shipped balance.',
+                                     station=i18n.name(self.skirmish_store.stations[station].display_name))
+
+    def _balance_reset_all(self) -> None:
+        """Reset means "nothing is tuned": the file goes, rather than a file of defaults.
+
+        An absent file and one that says nothing have to mean the same thing to every
+        reader, and a player who resets has *not* tuned anything — so the next build's
+        shipped balance is genuinely in force, not an overlay that copies it.
+        """
+        from game.data import balance
+        self.balance_draft = balance.defaults()
+        self._dirty_balance = False
+        reset_balance()
+        self.balance_notice = i18n.t('Every station uses the shipped balance again.')
+
     def _settings_key(self, ev) -> bool:
         if ev.type != pygame.KEYDOWN or ev.key == pygame.K_ESCAPE:
             return False
         if ev.key in (pygame.K_PAGEUP, pygame.K_PAGEDOWN):
             delta = 1 if ev.key == pygame.K_PAGEDOWN else -1
-            self.settings_page = min(3, max(0, getattr(self, 'settings_page', 0) + delta))
+            self.settings_page = min(self._settings_page_count() - 1,
+                                     max(0, getattr(self, 'settings_page', 0) + delta))
             self.settings_focus = -1
             self.buttons = []
             return True
@@ -1000,9 +1183,46 @@ class MenuStack:
                 elif act == "exit":
                     self.result = MenuResult.EXIT
                 elif act == "settings_page":
-                    self.settings_page = min(3, max(0, getattr(self, 'settings_page', 0) + b['payload']))
+                    self.settings_page = min(self._settings_page_count() - 1,
+                                             max(0, getattr(self, 'settings_page', 0) + b['payload']))
                     self.settings_focus = -1
                     self.buttons = []
+                elif act == "goto_balance":
+                    self.screen = "balance"
+                    self._balance_sync_selection()
+                    self.balance_notice = ''
+                    self.buttons = []
+                elif act == "balance_back":
+                    # Back goes where the door is: the Game Balance page of Settings, which is
+                    # how the screen was reached from the menu.
+                    self.screen = "settings"
+                    self.settings_page = self._settings_page_count() - 1
+                    self.buttons = []
+                elif act == "balance_faction":
+                    self._balance_cycle_faction(b['payload'])
+                    self.balance_notice = ''
+                    self.buttons = []
+                elif act == "balance_station":
+                    self.balance_station = b['payload']
+                    self.balance_notice = ''
+                    self.buttons = []
+                elif act == "balance_page":
+                    # A tab *names* the page it opens; every other page control in the menus
+                    # steps by ±1. Adding this payload is what made "Per-level gains" dead
+                    # once "Build levels" was open (#106): the tab was drawn, the press
+                    # landed, and the page did not move.
+                    self.balance_page = min(self._balance_page_count() - 1,
+                                            max(0, int(b['payload'])))
+                    self.balance_notice = ''
+                    self.buttons = []
+                elif act == "balance_step":
+                    self._balance_gain_step(b['payload'])
+                elif act == "balance_gate_step":
+                    self._balance_gate_step(b['payload'])
+                elif act == "balance_reset_station":
+                    self._balance_reset_station()
+                elif act == "balance_reset_all":
+                    self._balance_reset_all()
                 elif act == "cycle_range":
                     self.settings["audio_dynamic_range"] = ("night" if self.settings.get("audio_dynamic_range") == "standard" else "standard")
                     self._dirty_settings = True
@@ -1053,6 +1273,20 @@ class MenuStack:
         if self._dirty_settings:
             save_settings(self.settings)
             self._dirty_settings = False
+        if self._dirty_balance:
+            # Validated before it is written: a draft the strict reader would refuse is a bug
+            # in the screen, and saying so beats persisting it and meeting it again as a
+            # mystery in the next match.
+            from game.data import balance
+            if balance.is_default(self.balance_draft):
+                # Nothing is tuned, so there is nothing to keep: the file exists exactly when
+                # something is tuned, and a reset therefore reaches the shipped numbers.
+                reset_balance()
+                self._dirty_balance = False
+            elif save_balance(self.balance_draft):
+                self._dirty_balance = False
+            else:
+                self.balance_notice = i18n.t('This tuning could not be saved.')
 
 
 def glGenTextures_proxy() -> int:

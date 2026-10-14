@@ -331,10 +331,15 @@ and any change to the mix/volume balance.
    weapon/sensor tuning; this is separate from closed #52 firing functionality.
 3. **#77 — Station upgrades:** the design contract is now written and implemented —
    eligible hardware, five-level numbering, paid costs/bonuses/timing and
-   capture/AI policy are defined in `docs/STATION_UPGRADES.md`. The one item left
-   deliberately open is the **AI's upgrade heuristic**: the AI accepts the command
-   but never chooses to spend on a refit, and valuing a refit against a new hull is
-   a balance decision rather than plumbing.
+   capture/AI policy are defined in `docs/STATION_UPGRADES.md`. #106 added the
+   player-facing half of the same contract: per-station-type gains editable on the
+   Game Balance settings page, a per-level build gate in the one predicate every
+   shipyard queue funnels through, the config kept in per-user data so an update
+   cannot revert it, and the host's tuning exchanged over the LAN handshake. The one
+   item left deliberately open is the **AI's upgrade heuristic**: the AI answers a
+   gate by buying the level it needs, but never chooses to refit a station for the
+   bonus alone, and valuing a refit against a new hull is a balance decision rather
+   than plumbing.
 
 The abandoned-satellite AI capture stall is a disclosed consequence of #79;
 choose a separate capture/destruction policy before expanding AI permissions.

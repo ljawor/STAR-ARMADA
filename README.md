@@ -17,6 +17,31 @@ runs the packaged app's simulation benchmark and LAN diagnostic with a state has
 diagnostics/tests passed on a native CI runner; this does not prove frozen Windows gameplay or
 mixed-platform live LAN. Interactive Windows, trusted signing/Smart App Control, human
 listening/campaign and full-match balance remain open.
+## Unreleased — Station balance: retunable refit gains and per-level build gates (#106)
+
+The five-level station refit ladder is no longer fixed data. **Settings → Game Balance → Station
+upgrades** (page 5 of 5) picks a faction, lists every station type its builders can lay down, and
+edits the per-level gains that station actually uses — the individual rows the simulation reads,
+not one percentage standing in for all of them. The second page sets **build levels**: a hull can
+be made to wait until its station has paid for refit level 2..5 before it may be built, for every
+player and for the AI alike. A gated hull stays on the build panel drawn locked with the level it
+wants, and the AI buys the level rather than stalling when it can pay for it.
+
+The configuration lives in `balance.json` beside `settings.json`, `campaign.json` and the saved
+games in the per-user data directory, never in the app bundle: an update replaces
+`assets/data/game_rules.json` and would otherwise revert the player's numbers. It is read
+leniently when the player may have hand-edited it (unreadable entries drop out; the game still
+starts) and strictly when it arrives over the network (a config that cannot be applied whole is
+refused, never half-applied). One overlay is folded into the catalogue's live rules, so the
+simulation, the station panel, the replay recorder, replay validation and the LAN handshake all
+read the same numbers.
+
+On LAN the tuning travels with the handshake instead of being compared: the content hash still
+covers the shipped catalogue, mods and game version exactly, and the host's overlay rides in the
+`welcome` so a peer whose own file differs adopts the host's numbers for that match — and gives
+them back when the session closes, writing nothing to its own file. Full contract in
+[`docs/STATION_UPGRADES.md`](docs/STATION_UPGRADES.md).
+
 ## v0.14.0 — Hyperspace transit, language packs, weapon voices and five-level station refits
 
 Published October 14, 2026 with a verified macOS DMG and an unsigned Windows ZIP

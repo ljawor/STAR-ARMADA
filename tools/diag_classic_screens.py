@@ -22,7 +22,8 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
     rows = []
     variants = ['lan', 'lan_join', 'lobby_host', 'lobby_client', 'lobby_error',
-                'settings_0', 'settings_1', 'settings_2', 'campaign_0', 'campaign_1',
+                'settings_0', 'settings_1', 'settings_2', 'settings_4', 'balance_gains',
+                'balance_levels', 'balance_tab_back', 'campaign_0', 'campaign_1',
                 'briefing_0', 'briefing_5']
     pygame.init()
     try:
@@ -30,6 +31,7 @@ def main():
              patch('render.menus.SAVES_DIR', str(out / 'isolated-user/saves')), \
              patch('render.menus.SETTINGS_PATH', str(out / 'isolated-user/saves/settings.json')), \
              patch('render.menus.CAMPAIGN_PATH', str(out / 'isolated-user/saves/campaign.json')), \
+             patch('render.menus.BALANCE_PATH', str(out / 'isolated-user/saves/balance.json')), \
              patch('pygame.mouse.get_pos', return_value=(0, 0)):
             for w, h in ((800, 600), (1280, 800), (1440, 900), (2400, 1400)):
                 pygame.display.set_mode((w, h), pygame.DOUBLEBUF | pygame.OPENGL)
@@ -48,6 +50,17 @@ def main():
                             menu.campaign_page = int(variant[-1])
                         if variant.startswith('briefing'):
                             menu.selected_mission = int(variant[-1])
+                        if variant.startswith('balance'):
+                            # A tuned draft, so the capture shows the retuned rows and the gate
+                            # rather than a screen that looks identical to an untouched one.
+                            menu.balance_faction = 'imperial'
+                            menu.balance_draft['station_upgrades']['shipyard'] = {
+                                'hull_bonus': 0.25, 'volley_shots_per_level': 3}
+                            menu.balance_draft['build_levels']['shipyard'] = {
+                                'imperial_battleship': 3}
+                            menu.balance_station = 'shipyard'
+                            menu.balance_page = 0 if variant.endswith('gains') else 1
+                            menu.balance_notice = ''
                         if variant.startswith('lobby'):
                             options = deepcopy(menu.lan_options)
                             options.update(map_id='skirmish03', human_count=4, ai_count=0)
@@ -58,6 +71,22 @@ def main():
                             menu.lan_session = SimpleNamespace(snapshot=snap, local_player=0, close=lambda: None)
                             before = deepcopy(snap)
                         menu.render(0)
+                        if variant == 'balance_tab_back':
+                            # The reported defect, driven the way the player drives it: with the
+                            # levels page open, the gains tab must still reach its own page —
+                            # the tab was drawn, the press landed, and nothing moved because the
+                            # handler stepped an absolute page index (#106).
+                            assert menu.balance_page == 1, 'variant must start on the levels page'
+                            tab = next(b for b in menu.buttons if b['action'] == 'balance_page'
+                                       and b['payload'] == 0)
+                            menu.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1,
+                                                                pos=tab['rect'].center))
+                            assert menu.balance_page == 0, 'the gains tab did not reach its page'
+                            menu.render(0)
+                            assert any(b['action'] == 'balance_step' for b in menu.buttons), \
+                                'the tab switched but the body it names did not draw'
+                            assert not any(b['action'] == 'balance_gate_step'
+                                           for b in menu.buttons)
                         assert menu._menu_movie is not None and menu._menu_movie.available, 'Battle movie missing from non-replay screen'
                         prefix = 'lan' if menu.screen.startswith('lan') else menu.screen
                         bounds = getattr(menu, prefix + '_text_bounds')
@@ -79,7 +108,7 @@ def main():
                         frame = np.flipud(np.frombuffer(pixels, dtype=np.uint8).reshape(h, w, 3))
                         assert glGetError() == 0
                         assert np.max(frame) > 150
-                        primary = next((b for b in menu.buttons if b['action'] in ('lan_host_setup', 'lan_connect', 'lan_start', 'lan_reconnect', 'launch_mission')), None)
+                        primary = next((b for b in menu.buttons if b['action'] in ('lan_host_setup', 'lan_connect', 'lan_start', 'lan_reconnect', 'launch_mission', 'goto_balance')), None)
                         if primary:
                             r = primary['rect']
                             scale = min(w / 1120, h / 700)
