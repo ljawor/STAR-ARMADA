@@ -246,3 +246,82 @@ publication after the Windows acceptance limitation was disclosed. Native Window
 measurements are now recorded above; the frozen package runs and reports on Windows.
 Interactive Windows gameplay/feel, Windows signing and security-policy acceptance,
 native listening and mixed-platform LAN acceptance remain open. Refs #59, #54.
+
+## LAN checksum canonicalization — 2026-10-14
+
+The LAN checksum is outside the built-in frame benchmark. Its recursive
+canonicalization was measured independently; the original profile showed redundant
+whole-tree traversal and per-scalar dataclass introspection. This change collects
+raw state/AI/system subtrees and canonicalizes once, checking exact primitive types
+before dataclass introspection. No state fields, float precision, set ordering,
+JSON/hash format, exclusions or tick pacing change. There is no result/field cache;
+`precise_checksum` and its SHA256 call are unchanged.
+
+Native macOS arm64 / Apple M4, macOS 26.6.2, Python 3.11.16. Three alternating
+fresh-process baseline/candidate trials per fixture, each with 20 warmup ticks and
+60 measured evolving ticks; `perf_counter_ns` measures the complete checksum only.
+No profiler, GL, network waits or other test runs are included in these timings.
+Byte/hash comparison executes outside the timed interval. These are synthetic CPU
+checksum measurements, not live-match FPS or Windows acceptance.
+
+Baseline functions were independently extracted using
+`git show 84f81f2:game/net/lan.py`, retained in scratch alongside an immutable
+candidate extraction. The small fixture is the existing 14-station / 10-corvette
+probe; the large fixture is the built-in 500-corvette / 2-command-station scene.
+Both fixtures exclude AI. Raw medians / nearest-rank p95, milliseconds:
+
+| Fixture | Trial | Baseline median / p95 | Candidate median / p95 |
+|---|---:|---:|---:|
+| 24 units | 1 | 3.537437 / 3.673750 | 1.697688 / 1.759083 |
+| 24 units | 2 | 3.495500 / 3.710500 | 1.724229 / 1.859167 |
+| 24 units | 3 | 3.585209 / 3.752250 | 1.735042 / 1.814042 |
+| 502 units | 1 | 42.464729 / 45.713792 | 18.703875 / 19.474875 |
+| 502 units | 2 | 43.149396 / 45.631209 | 18.776730 / 19.794209 |
+| 502 units | 3 | 43.483208 / 46.441458 | 19.015500 / 19.663500 |
+
+Median-of-trial-medians: **3.537437 → 1.724229 ms (51.26% reduction)** at
+24 units; **43.149396 → 18.776730 ms (56.48% reduction)** at 502 units.
+All three trials improve for both fixtures, so this is retained rather than a
+no-gain micro-optimization. Earlier 3.74 / 47.38 ms baselines are historical;
+the table is the fresh native comparison, not a comparison against those old runs.
+
+Every trial compares exact canonical JSON bytes and SHA256 at all 81 states
+(ticks 0–80); all twelve timelines match their corresponding fixture baseline.
+Dedicated unittest coverage freezes the original two-pass algorithm and checks
+41 evolving combat states, 61 real-AI states, changing persistent systems,
+capacity timers, all entity dataclass fields, campaign trigger/progress data,
+private dataclass fields, numeric/string key collisions, tuple/list/set ordering,
+Unicode, signed zero, tiny/full-precision floats, nonfinite JSON rejection and
+unsupported-type rejection. Before source changes the traversal regression fails
+with two visits instead of one; the scalar-introspection regression separately
+fails with six calls instead of zero. Both pass afterward.
+
+Focused verification (no full suite in this work):
+
+- 139 checksum/LAN/network diagnostic tests pass, including command safety,
+  reconnect, ownership, queueing, state diff and local TCP contracts.
+- 25 replay-future-state/performance/separation differential tests pass.
+- `main.py --netdiag` passes local host/join pairing: canonical fingerprint
+  `7f36f020e85e98a4` / 60 ticks and contact fingerprint
+  `2c80dd7fe7de1a96` / 600 ticks remain unchanged.
+- Compile gate passes; existing edits outside the assigned checksum functions
+  in `game/net/lan.py` are byte-identical to the pre-edit snapshot.
+
+Reproduction evidence (local scratch, not shipped):
+`~/.hermes/cache/scratch/star-armada-lan-perf/checksum-optimization/`
+contains baseline/candidate function snapshots, `measure.py`, twelve JSON reports
+with all timing samples and hash timelines, RED logs and `netdiag.json`.
+From the repository root, rerun one native trial with:
+
+```sh
+D="$HOME/.hermes/cache/scratch/star-armada-lan-perf/checksum-optimization"
+.venv/bin/python "$D/measure.py" baseline 24 "$D/repeat-24-baseline.json"
+.venv/bin/python "$D/measure.py" candidate 24 "$D/repeat-24-candidate.json"
+# Use 502 in place of 24 for the large fixture; alternate execution order.
+PYTHONPATH=tests .venv/bin/python -m unittest test_checksum_canonicalization -v
+```
+
+Remaining: integrated full suite, independent review, native Windows measurement
+and two-machine mixed-platform live LAN acceptance. Rendering throughput remains
+an independent bottleneck; this does not claim the reported crash is reproduced
+or that lockstep pacing should be changed. No commits or GitHub actions performed.

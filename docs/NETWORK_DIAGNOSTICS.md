@@ -1,5 +1,66 @@
 # LAN diagnostics across two machines (`--netdiag`)
 
+## Automatic bounded failure reports (separate from `--netdiag`)
+
+The actual main failure paths write best-effort reports to
+`USER_DIR/diagnostics/failure-0.json` through `failure-7.json`, using the same
+persistence root as saves/settings, never the frozen application bundle.
+Each report contains schema version, Unix timestamp, game build/version,
+simulation tick (or `null`), phase (`transport`, `input`, `simulation`,
+`termination`, `unhandled`), a fixed reason classification, and a built-in Python
+exception class if available. Custom exception names become `Exception`.
+Reasons include `disconnect`, `desync`, `loading_timeout`, `lockstep_timeout`,
+`peer_timeout`, `connect_failure`, `protocol_rejection`, `controlled_termination`
+and `python_exception`. Arbitrary caller/peer error text is never persisted.
+
+Main records controlled launched-match LAN errors **before** session/state
+teardown. Errors inside LAN `advance` retain their `simulation` phase when main
+observes them through polling; other poll failures use `transport`. Main input
+and simulation Python exception boundaries record those phases. The installed
+`sys.excepthook` records other uncaught Python exceptions, including
+renderer/display/input-update failures, as `unhandled`, then calls the original
+Python hook. Its usual stderr traceback is **not copied into these files**.
+The initiating peer may report `desync` while another reports `disconnect`;
+collect reports from both computers.
+
+The automatic ring deliberately omits addresses, ports, nicknames, bearer tokens,
+command payloads, arbitrary messages, traceback paths/source/locals, snapshots,
+and replay contents. It uploads nothing. Unlike this ring, the explicitly invoked
+`--netdiag` reports below contain addresses and detailed environment information;
+review/redact those files before sharing.
+
+**Bounds:** at most eight JSON reports, each below 1 KiB. Slots wrap in-process
+and restart at zero after a process restart; this does not guarantee retaining
+the eight newest events across restarts. In-process writes are serialized;
+contents are fsynced before atomic replacement. Permission, full-disk,
+serialization and replace failures return `False`, never an exception into play.
+At most eight bounded `.tmp` paths may remain after abrupt termination or failed
+cleanup. Persistence is best effort, not guaranteed through power loss.
+A normal voluntary leave or nonfatal local order rejection creates no failure
+report; local rejections show an in-match notice instead.
+
+**Limits:** captures controlled **launched-match** LAN termination and Python
+exceptions reaching the installed hook. Ordinary lobby errors remain UI notices.
+Imports before menu persistence-root initialization, background-thread errors,
+signals, native GL/access violations, forced kills and `os._exit` are not captured.
+Use OS crash reports/stderr for those incidents. These reports contain no scene
+performance timings and do not implement production reconnect/resume; the
+snapshot/transfer/ledger code remains a foundation only (`LAN_RECONNECT.md`).
+
+Focused verification (temporary isolated report roots, real loopback TCP,
+real managers, natural L/Backspace and AST-loaded actual main boundaries):
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tests .venv/bin/python -m unittest \
+  test_lan_human_safety test_lan_failure_diagnostics -v
+```
+
+The tests cover host/client origins, every exercised tick's full-precision hash,
+atomic local limits, fatal malformed peer input, paid crew conservation,
+boarding/capture, and accepted-command once-only recording/replay. They are not
+native-GL/full-application or frozen Mac/Windows mixed-machine acceptance.
+
+
 A mixed-platform connect failure needs **both** platforms, so the game ships one
 command that each machine runs once and writes one JSON file. Diff the two
 files instead of guessing: bind address and port, every local address a peer

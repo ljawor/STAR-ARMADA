@@ -68,11 +68,18 @@ def hit_geometry(fx, radius=None, billboard_basis=None, visual_size=None):
         r = max(1., float(radius if radius is not None else fx.get('radius', size*8)))
         p = _offset(center, n, r)
         # Geodesic cap: every sample lies on the actual spherical shell.
+        # Adjacent triangles share corners; this cache lives for one contact only.
+        sphere_points = {}
         def sphere(theta, phi):
-            radial = tuple(n[k]*math.cos(theta) +
-                           (u[k]*math.cos(phi)+v[k]*math.sin(phi))*math.sin(theta)
-                           for k in range(3))
-            q = _offset(center, radial, r)
+            key = (theta, phi)
+            q = sphere_points.get(key)
+            if q is None:
+                # Reuse scalar trig without changing coordinate operation order.
+                ct, cp, sp, st = math.cos(theta), math.cos(phi), math.sin(phi), math.sin(theta)
+                radial = tuple(n[k]*ct + (u[k]*cp+v[k]*sp)*st for k in range(3))
+                q = _offset(center, radial, r)
+                sphere_points[key] = q
+            # Retain duplicates and their original order in the diagnostic shell.
             mesh['shell'].append(q)
             return q
 

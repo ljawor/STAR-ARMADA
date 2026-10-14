@@ -170,10 +170,20 @@ INPUT_DELAY = 3  # 100 ms: pipeline network round trips, never wait on the frame
 COMMAND_TYPES = {'move', 'attack', 'attack_move', 'stop', 'hold', 'build_station',
                  'build_satellite', 'build_planet_building', 'build_ship', 'colonize', 'research', 'ability', 'fleet_create',
                  'fleet_stance', 'jump', 'trade_route', 'repair', 'explore', 'cancel_build',
-                 'upgrade_station'}
+                 'upgrade_station', 'board', 'crew_load', 'crew_deliver', 'crew_cancel'}
+# Human-only wire schemas. crew_recover is AI intent, never peer-submitted.
+HUMAN_CREW_FIELDS = {
+    'board': {'type', 'player', 'unit_ids', 'target_id'},
+    'crew_deliver': {'type', 'player', 'unit_ids', 'target_id'},
+    'crew_load': {'type', 'player', 'unit_ids'},
+    'crew_cancel': {'type', 'player', 'unit_ids'},
+}
 
 
 def _canonical(value):
+    # Exact types only: scalar subclasses keep the original rejection behavior.
+    if value is None or type(value) in (int, float, str, bool):
+        return value
     if isinstance(value, CampaignScript):
         return _canonical(dict(triggers=value.triggers, progress=value.progress))
     if is_dataclass(value):
@@ -184,8 +194,6 @@ def _canonical(value):
         return [_canonical(v) for v in value]
     if isinstance(value, set):
         return sorted((_canonical(v) for v in value), key=lambda v: _json(v))
-    if value is None or type(value) in (int, float, str, bool):
-        return value
     raise TypeError(f'Unserializable simulation value: {type(value)}')
 
 
@@ -203,12 +211,13 @@ def canonical_state(manager):
     """
     st = manager.state
     omitted = {'grid', 'events', 'dmg_system', 'effects', 'floating_texts'}
-    state = {f.name: _canonical(getattr(st, f.name)) for f in fields(st)
+    # Collect raw subtrees, then canonicalize exactly once at the root.
+    state = {f.name: getattr(st, f.name) for f in fields(st)
              if not f.name.startswith('_') and f.name not in omitted}
-    brains = {pid: {k: _canonical(v) for k, v in vars(ai).items()
+    brains = {pid: {k: v for k, v in vars(ai).items()
                     if k not in ('state', 'ds')}
               for pid, ai in manager.ai.ais.items()}
-    systems = {name: {k: _canonical(v) for k, v in vars(getattr(manager, name)).items()
+    systems = {name: {k: v for k, v in vars(getattr(manager, name)).items()
                       if k not in ('state', 'ds')}
                for name in ('trading', 'squadrons', 'victory', 'mission')}
     return _canonical(dict(state=state, ai=brains, systems=systems,
@@ -231,7 +240,11 @@ def _commands(commands, owner):
             raise ValueError('Command slot ownership violation')
         if d.get('type') not in COMMAND_TYPES:
             raise ValueError('Invalid command type')
-        required = {'move': ('target_pos',), 'attack_move': ('target_pos',),
+        if d['type'] in HUMAN_CREW_FIELDS:
+            if set(d) - HUMAN_CREW_FIELDS[d['type']] or not d.get('unit_ids'):
+                raise ValueError('Invalid human crew fields')
+        required = {'board': ('target_id',), 'crew_deliver': ('target_id',),
+                    'move': ('target_pos',), 'attack_move': ('target_pos',),
                     'jump': ('target_pos',), 'attack': ('target_id',),
                     'repair': ('target_id',),
                     'build_station': ('station_kind', 'target_pos'),
@@ -358,6 +371,10 @@ class _Peer:
         self.sock.close()
 
 
+class LocalSubmissionRejected(ValueError):
+    """Atomic local intent rejection; never a remote protocol exception."""
+
+
 class LanSession:
     intercepts_commands = True
 
@@ -373,6 +390,7 @@ class LanSession:
         self._revision = 0
         self._status = 'lobby' if is_host else 'connecting'
         self._error = ''
+        self._failure_phase = 'transport'
         self._launch = None
         self._tick = 0
         self._pending = []
@@ -430,7 +448,7 @@ class LanSession:
 
     @property
     def snapshot(self):
-        return deepcopy(dict(status=self._status, error=self._error, players=self._players,
+        return deepcopy(dict(status=self._status, error=self._error, failure_phase=self._failure_phase, players=self._players,
                              options=self._options, revision=self._revision, port=self.port, addresses=self._addresses,
                              is_host=self.is_host, can_start=self.is_host and self._status == 'lobby'
                              and len(self._players) == self._options.get('human_count')
@@ -568,12 +586,21 @@ class LanSession:
                 raise ValueError('Unexpected message')
 
     def submit(self, cmd, current_tick):
-        if self._status != 'running' or type(current_tick) is not int or current_tick != self._tick:
-            raise ValueError('Command requires current running tick')
-        data = cmd.to_dict()
-        _commands([data], self.local_player)
-        if len(self._pending) >= MAX_COMMANDS:
-            raise ValueError('Command count limit')
+        # Validate completely before mutating accepted pending intent. Only this
+        # local seam converts rejection; peer parsing remains fatal ValueError.
+        try:
+            if self._status != 'running' or type(current_tick) is not int or current_tick != self._tick:
+                raise ValueError('Command requires current running tick')
+            data = cmd.to_dict()
+            _commands([data], self.local_player)
+            if len(self._pending) >= MAX_COMMANDS:
+                raise ValueError('Command count limit')
+        except ValueError as exc:
+            reason = str(exc)
+            notice = {'Invalid unit ids': f'Order rejected: select at most {MAX_UNITS} units.',
+                      'Command count limit': f'Order rejected: at most {MAX_COMMANDS} orders per turn.'}.get(
+                          reason, 'Order rejected: invalid local command.')
+            raise LocalSubmissionRejected(notice) from None
         self._pending.append(data)
 
     def _receive_tick(self, peer, m):
@@ -677,7 +704,7 @@ class LanSession:
             self.poll()  # Flush released frame even if caller stops after this tick.
             return True
         except (ValueError, TypeError, KeyError, OverflowError) as exc:
-            self._fail(str(exc))
+            self._fail(str(exc), phase='simulation')
             return False
 
     def poll(self):
@@ -737,10 +764,11 @@ class LanSession:
         except (OSError, ValueError, KeyError, TypeError, IndexError, RecursionError, OverflowError) as exc:
             self._fail(str(exc))
 
-    def _fail(self, error):
+    def _fail(self, error, *, phase='transport'):
         self.close()
         self._status = 'error'
         self._error = str(error)
+        self._failure_phase = phase
 
     def close(self):
         if self._listener:

@@ -53,6 +53,9 @@ from render.audio import Audio  # noqa: E402
 from render.menus import (MenuStack, MenuResult,  # noqa: E402
                           load_settings, save_settings, USER_DIR)
 
+from game.net.diagnostics import install_exception_hook
+install_exception_hook(USER_DIR, lambda: getattr(globals().get('state'), 'tick', None))
+
 TICK_RATE = 30
 TICK_DT = 1.0 / TICK_RATE
 # User data follows the same rule as menus.py: a frozen app must never write
@@ -469,7 +472,7 @@ def advance_simulation(dt_frame):
             break
 
 
-def leave_game(reason='', screen=None):
+def leave_game(reason='', screen=None, *, phase='termination', exception=None):
     """Release match ownership and return to a usable reconnect/menu screen.
 
     ``screen`` overrides the destination when the caller knows where the player
@@ -477,6 +480,10 @@ def leave_game(reason='', screen=None):
     """
     global net_session, mode, paused, accumulator, audio
     global presentation
+    if (reason or exception is not None) and net_session is not None and globals().get('USER_DIR') is not None:
+        from game.net.diagnostics import record_failure
+        record_failure(USER_DIR, phase=phase, tick=getattr(state, 'tick', None),
+                       reason=reason, exception=exception)
     if globals().get('presentation') is not None:
         presentation.cleanup()
     presentation = None
@@ -510,10 +517,11 @@ def poll_network():
         return
     try:
         net_session.poll()
-        if net_session.snapshot.get('error'):
-            leave_game(str(net_session.snapshot['error']))
+        if net_session.snapshot.get('status') == 'error' or net_session.snapshot.get('error'):
+            leave_game(str(net_session.snapshot.get('error') or 'LAN session failed.'),
+                       phase=net_session.snapshot.get('failure_phase', 'transport'))
     except Exception as exc:
-        leave_game(str(exc))
+        leave_game(str(exc), phase='transport', exception=exc)
 
 
 def handle_game_input(ev):
@@ -531,12 +539,27 @@ def handle_game_input(ev):
             return
         if ev.key in (pygame.K_F5, pygame.K_F9):
             return
+    from game.net.lan import LocalSubmissionRejected
     try:
         inputc.handle_event(ev)
+    except LocalSubmissionRejected as exc:
+        flash(str(exc))
     except Exception as exc:
         if net_session is None and globals().get('playback') is None:
             raise
-        leave_game(str(exc))
+        leave_game(str(exc), phase='input', exception=exc)
+
+
+def step_game_frame(dt_frame):
+    """Actual main simulation exception boundary, shared with focused probes."""
+    try:
+        advance_simulation(dt_frame)
+    except Exception as exc:
+        if net_session is None and globals().get('playback') is None:
+            raise
+        leave_game(str(exc), phase='simulation', exception=exc)
+        return False
+    return True
 
 
 def handle_presentation_input(ev):
@@ -802,12 +825,7 @@ while running:
     if presentation_frame:
         draw_campaign_presentation(dt_frame)
         continue
-    try:
-        advance_simulation(dt_frame)
-    except Exception as exc:
-        if net_session is None and globals().get('playback') is None:
-            raise
-        leave_game(str(exc))
+    if not step_game_frame(dt_frame):
         continue
 
     sync_campaign_outcome()
