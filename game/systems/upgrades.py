@@ -11,6 +11,7 @@ from __future__ import annotations
 from typing import Any
 
 from ..core import detmath as math  # deterministic sim math, never the platform libm
+from ..data import balance
 from ..data.store import DataStore
 
 # Hardware built *on* a planet is explicitly out of scope (the issue excludes it):
@@ -90,14 +91,14 @@ def _station_data(e, ds=None):
     return ds.stations.get(e.data_id) if e is not None else None
 
 
-def is_armed(e, ds=None) -> bool:
-    """True when a weapon in the catalogue actually deals damage.
+def type_is_armed(ds, station_id: str) -> bool:
+    """True when a catalogue hull carries a weapon that actually deals damage.
 
-    Read from the data, never from the name, so a mod that arms a mining station
-    gets a firepower ladder for it with no code change.
+    Read from the data, never from the name, so a mod that arms a mining station gets a
+    firepower ladder for it with no code change. Entity-free on purpose: the balance
+    screen asks the same question about a station *type* before offering it a damage row.
     """
-    ds = DataStore.get() if ds is None else ds
-    data = _station_data(e, ds)
+    data = (ds.stations or {}).get(station_id)
     if data is None:
         return False
     for wref in getattr(data, 'weapons', ()) or ():
@@ -110,10 +111,22 @@ def is_armed(e, ds=None) -> bool:
     return False
 
 
-def produces(e, ds=None) -> bool:
-    """True when the catalogue carries an income table this hull can collect."""
-    data = _station_data(e, ds)
+def is_armed(e, ds=None) -> bool:
+    """True when a live hull's station type is armed; a ship or planet never is."""
+    ds = DataStore.get() if ds is None else ds
+    return type_is_armed(ds, e.data_id) if _station_data(e, ds) is not None else False
+
+
+def type_produces(ds, station_id: str) -> bool:
+    """True when a catalogue hull carries an income table a collected load can fill."""
+    data = (ds.stations or {}).get(station_id)
     return bool(getattr(data, 'income', None)) if data is not None else False
+
+
+def produces(e, ds=None) -> bool:
+    """True when a live hull's station type has an income table to collect."""
+    ds = DataStore.get() if ds is None else ds
+    return type_produces(ds, e.data_id) if _station_data(e, ds) is not None else False
 
 
 def step_multiplier(rules: dict, level: int, key: str) -> float:
@@ -185,51 +198,82 @@ def _level_factor(level: int, key: str, rules=None) -> float:
     return 1.0 + _number(rules, key) * max(0, int(level) - 1)
 
 
-def hull_multiplier(e, rules=None) -> float:
-    return _level_factor(station_level(e), 'hull_bonus', rules) if e is not None and e.is_station else 1.0
+def station_rules(e, rules=None, ds=None) -> dict:
+    """The tuning one hull actually uses: the global table plus its type's overrides.
+
+    The global table is the shipped shape; a player may replace individual gains for a
+    station type (#106). Merging here — rather than at each call site — keeps hull,
+    shields, firepower, output and the panel's effect line reading one dict, so a hull
+    can never be scaled by one set of numbers and described by another.
+    """
+    if rules is not None:
+        # An explicit table means the caller took control (the established way to retune
+        # under test); file overrides are deliberately not folded on top of it.
+        return rules
+    ds = DataStore.get() if ds is None else ds
+    base = upgrade_rules(ds)
+    if e is None or not e.is_station:
+        return base
+    try:
+        # Read from the catalogue's own rules, not from the merged upgrade table: the overlay
+        # is a sibling key there, so folding it into `base` first would have hidden it.
+        overrides = balance.station_overrides(ds.rules, e.data_id)
+    except Exception:                       # a hand-edited rules file must not crash a tick
+        return base
+    return dict(base, **overrides) if overrides else base
 
 
-def shield_multiplier(e, rules=None) -> float:
-    return _level_factor(station_level(e), 'shield_bonus', rules) if e is not None and e.is_station else 1.0
-
-
-def shield_regen_multiplier(e, rules=None) -> float:
-    return _level_factor(station_level(e), 'shield_regen_bonus', rules) if e is not None and e.is_station else 1.0
-
-
-def damage_multiplier(e, rules=None) -> float:
-    """Firepower bonus for an armed station; ships and planets are untouched."""
-    if not (e is not None and e.is_station):
+def hull_multiplier(e, rules=None, ds=None) -> float:
+    if e is None or not e.is_station:
         return 1.0
-    return _level_factor(station_level(e), 'damage_bonus', rules)
+    return _level_factor(station_level(e), 'hull_bonus', station_rules(e, rules, ds))
 
 
-def extra_shots(e, rules=None) -> int:
+def shield_multiplier(e, rules=None, ds=None) -> float:
+    if e is None or not e.is_station:
+        return 1.0
+    return _level_factor(station_level(e), 'shield_bonus', station_rules(e, rules, ds))
+
+
+def shield_regen_multiplier(e, rules=None, ds=None) -> float:
+    if e is None or not e.is_station:
+        return 1.0
+    return _level_factor(station_level(e), 'shield_regen_bonus', station_rules(e, rules, ds))
+
+
+def damage_multiplier(e, rules=None, ds=None) -> float:
+    """Firepower bonus for an armed station; ships and planets are untouched."""
+    if e is None or not e.is_station:
+        return 1.0
+    return _level_factor(station_level(e), 'damage_bonus', station_rules(e, rules, ds))
+
+
+def extra_shots(e, rules=None, ds=None) -> int:
     """Extra projectiles/beam ticks each weapon mount fires per volley."""
-    if not (e is not None and e.is_station):
+    if e is None or not e.is_station:
         return 0
-    rules = upgrade_rules() if rules is None else rules
+    rules = station_rules(e, rules, ds)
     return int(_number(rules, 'volley_shots_per_level') * _steps(e))
 
 
-def production_multiplier(e, rules=None) -> float:
+def production_multiplier(e, rules=None, ds=None) -> float:
     """Output bonus for a collecting station; planets stay at 1.0 (excluded)."""
     if not (e is not None and e.is_station and not getattr(e, 'is_planet', False)):
         return 1.0
-    return _level_factor(station_level(e), 'production_bonus', rules)
+    return _level_factor(station_level(e), 'production_bonus', station_rules(e, rules, ds))
 
 
-def convoy_cargo_multiplier(e, rules=None) -> float:
-    if not (e is not None and e.is_station):
+def convoy_cargo_multiplier(e, rules=None, ds=None) -> float:
+    if e is None or not e.is_station:
         return 1.0
-    return _level_factor(station_level(e), 'convoy_cargo_bonus', rules)
+    return _level_factor(station_level(e), 'convoy_cargo_bonus', station_rules(e, rules, ds))
 
 
-def extra_convoys(e, rules=None) -> int:
+def extra_convoys(e, rules=None, ds=None) -> int:
     """Additional convoys a market releases each interval."""
-    if not (e is not None and e.is_station):
+    if e is None or not e.is_station:
         return 0
-    rules = upgrade_rules() if rules is None else rules
+    rules = station_rules(e, rules, ds)
     return int(_number(rules, 'convoy_per_two_levels') * (_steps(e) // 2))
 
 
@@ -239,14 +283,14 @@ def bonus_table(e, ds=None) -> dict:
     return {
         'level': station_level(e), 'max_level': max_level(upgrade_rules(ds)),
         'steps': _steps(e),
-        'hull_bonus': hull_multiplier(e) - 1.0,
-        'shield_bonus': shield_multiplier(e) - 1.0,
-        'shield_regen_bonus': shield_regen_multiplier(e) - 1.0,
-        'damage_bonus': damage_multiplier(e) - 1.0,
-        'extra_shots': extra_shots(e),
-        'production_bonus': production_multiplier(e) - 1.0,
-        'convoy_cargo_bonus': convoy_cargo_multiplier(e) - 1.0,
-        'extra_convoys': extra_convoys(e),
+        'hull_bonus': hull_multiplier(e, ds=ds) - 1.0,
+        'shield_bonus': shield_multiplier(e, ds=ds) - 1.0,
+        'shield_regen_bonus': shield_regen_multiplier(e, ds=ds) - 1.0,
+        'damage_bonus': damage_multiplier(e, ds=ds) - 1.0,
+        'extra_shots': extra_shots(e, ds=ds),
+        'production_bonus': production_multiplier(e, ds=ds) - 1.0,
+        'convoy_cargo_bonus': convoy_cargo_multiplier(e, ds=ds) - 1.0,
+        'extra_convoys': extra_convoys(e, ds=ds),
     }
 
 
@@ -270,10 +314,16 @@ def apply_level(state, station, item: dict) -> bool:
                              max_level()))
     if target == current:
         return False
-    hull_factor = _level_factor(target, 'hull_bonus') / _level_factor(current, 'hull_bonus')
-    shield_factor = _level_factor(target, 'shield_bonus') / _level_factor(current, 'shield_bonus')
-    regen_factor = (_level_factor(target, 'shield_regen_bonus')
-                    / _level_factor(current, 'shield_regen_bonus'))
+    # The same table `bonus_table`/`hull_multiplier` report (#106): scaling capacity by the
+    # shipped gain while the panel quoted the player's edited one would leave a station
+    # permanently disagreeing with its own description.
+    rules = station_rules(station, ds=ds)
+    hull_factor = (_level_factor(target, 'hull_bonus', rules)
+                   / _level_factor(current, 'hull_bonus', rules))
+    shield_factor = (_level_factor(target, 'shield_bonus', rules)
+                     / _level_factor(current, 'shield_bonus', rules))
+    regen_factor = (_level_factor(target, 'shield_regen_bonus', rules)
+                    / _level_factor(current, 'shield_regen_bonus', rules))
     station.upgrade_level = target
     station.max_hull = max(1.0, float(station.max_hull) * hull_factor)
     station.hull = max(0.0, min(station.max_hull, float(station.hull) * hull_factor))
@@ -315,3 +365,14 @@ def validate_rules(ds) -> None:
         value = rules.get(key, DEFAULTS[key])
         if type(value) not in (int, float) or not math.isfinite(float(value)) or float(value) < 0:
             raise ValueError(f'station_upgrades {key} must be a non-negative number')
+    # The player overlay (#106) is written into this same rules dict by `DataStore`, so a
+    # mod that ships one must not be able to hand the simulation a gain the balance screen
+    # could never produce. Read with the strict reader, against the ladder just validated.
+    overlay = {'version': balance.SCHEMA_VERSION,
+               'station_upgrades': ds.rules.get(balance.RULES_KEY) or {},
+               'build_levels': ds.rules.get(balance.BUILD_LEVEL_RULES_KEY) or {}}
+    if overlay['station_upgrades'] or overlay['build_levels']:
+        try:
+            balance.validate(overlay, max_level(rules))
+        except ValueError as exc:
+            raise ValueError(str(exc)) from None

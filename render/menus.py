@@ -44,6 +44,10 @@ else:
 SAVES_DIR = os.path.join(USER_DIR, "saves")
 SETTINGS_PATH = os.path.join(SAVES_DIR, "settings.json")
 CAMPAIGN_PATH = os.path.join(SAVES_DIR, "campaign.json")
+# Station balance (#106): the same rule as settings and campaign progress. The shipped
+# catalogue is inside the bundle and an update replaces it, so anything the player tunes has
+# to live here or the next version silently reverts it.
+BALANCE_PATH = os.path.join(SAVES_DIR, "balance.json")
 
 DEFAULT_SETTINGS = {
     "music_volume": 0.6,
@@ -108,6 +112,53 @@ def save_settings(s: dict) -> None:
             json.dump(s, f, indent=2)
     except OSError:
         pass
+
+
+def load_balance() -> dict:
+    """The station balance overlay (#106), normalised. A broken file reads as shipped values.
+
+    Lenient on purpose: this is a file a player may hand-edit, and a station's worth of
+    mistyped JSON must not stop the game from starting.
+    """
+    from game.data import balance
+    try:
+        with open(BALANCE_PATH, encoding="utf-8") as f:
+            saved = json.load(f)
+    except (OSError, ValueError):
+        return balance.defaults()
+    return balance.normalize(saved)
+
+
+def save_balance(config) -> bool:
+    """Write the overlay, and install it for the next catalogue. False = refused, unwritten.
+
+    Validated before writing: a config the balance screen could not have produced is a bug
+    or a corrupt hand-edit, and persisting it would turn both into a mystery in the next
+    match instead of an error here. Nothing is written on refusal — the file on disk stays
+    the last good one.
+    """
+    from game.data import balance
+    try:
+        clean = balance.validate(config)
+    except ValueError:
+        return False
+    try:
+        os.makedirs(os.path.dirname(BALANCE_PATH), exist_ok=True)
+        with open(BALANCE_PATH, "w") as f:
+            json.dump(clean, f, indent=2)
+    except OSError:
+        return False
+    # Installed for later catalogues as well as written: a match started from this menu builds
+    # its own catalogue, and the LAN handshake reads the same numbers, so an edit must not
+    # need a restart to take effect.
+    balance.set_active(clean)
+    return True
+
+
+def load_balance_into_game() -> dict:
+    """Read the balance file and install it as the overlay later catalogues pick up."""
+    from game.data import balance
+    return balance.set_active(load_balance())
 
 
 # Frozen v1 order: never infer legacy indices from a reordered catalogue.

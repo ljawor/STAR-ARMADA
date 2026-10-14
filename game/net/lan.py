@@ -147,14 +147,16 @@ def _json(value):
 
 
 def content_hash(ds):
-    """Canonical raw JSON plus loaded data; reject modded LAN sessions.
+    """Canonical raw JSON plus loaded data, minus the player's station balance (#106).
 
-    Read through an explicit UTF-8: the default text encoding is the platform's
-    locale (cp1252 on Windows), so a non-ASCII asset hashed to two different
-    values and the handshake refused every mixed-platform session in both
-    directions — maps/skirmish01.json is named "Sector Duel — Kotarri Sector"
-    (issue #56). Text mode also normalizes CRLF, so a Windows checkout hashes
-    like an LF one.
+    The overlay is hashed separately (`station_balance`) and exchanged in the handshake, so
+    a peer whose balance file differs can adopt the host's numbers for the match instead of
+    being refused. Everything a peer cannot reconcile — the catalogue, the mods and the game
+    version — is still compared exactly. Read through an explicit UTF-8: the default text
+    encoding is the platform's locale (cp1252 on Windows), so a non-ASCII asset hashed to two
+    different values and the handshake refused every mixed-platform session in both
+    directions — maps/skirmish01.json is named "Sector Duel — Kotarri Sector" (issue #56).
+    Text mode also normalizes CRLF, so a Windows checkout hashes like an LF one.
     """
     if ds.mod_files:
         raise ValueError('LAN does not support mods')
@@ -162,7 +164,7 @@ def content_hash(ds):
            for p in sorted(Path(ds.assets_dir).rglob('*.json'))}
     loaded = {key: {k: asdict(v) for k, v in getattr(ds, key).items()}
               for key in ('weapons', 'ships', 'stations', 'abilities', 'techs', 'factions')}
-    loaded.update(maps=ds.maps, rules=ds.rules, campaign=ds.campaign)
+    loaded.update(maps=ds.maps, rules=ds.base_rules, campaign=ds.campaign)
     return hashlib.sha256(_json(dict(raw=raw, loaded=loaded))).hexdigest()
 
 

@@ -9,8 +9,10 @@ from __future__ import annotations
 
 from game.core import detmath as math  # deterministic sim math, never the platform libm
 from ..core.vectors import Vec3
+from ..data import balance
 from ..data.store import DataStore
 from . import stats
+from . import upgrades
 from .unit_factory import UnitFactory
 from .colonies import colony_rules
 
@@ -25,6 +27,50 @@ def _body_clearance(body, station_radius: float) -> float:
     each other and the station became unbuildable.
     """
     return (body.radius + station_radius) * 1.6 + 50.0
+
+
+def type_can_build_ship(ds, station_id: str, faction: str, ship_id: str) -> bool:
+    """Catalogue gate for a station *type* and a faction: the ship gate without a level.
+
+    `ConstructionSystem.station_can_build_ship` is this predicate plus the player's
+    per-level build gate (#106); the HUD rows and the balance screen ask this one, so no
+    surface can offer a hull the simulation would refuse, or hide one it would accept.
+    """
+    sd = ds.stations.get(station_id)
+    shd = ds.ships.get(ship_id)
+    if sd is None or shd is None or not getattr(sd, 'builds_ships', None):
+        return False
+    if shd.faction != faction:
+        return False
+    if shd.can_colonize and station_id != "command_station":
+        return False
+    if ship_id in sd.builds_ships:
+        return True
+    if "*" not in sd.builds_ships:
+        return False
+    if sd.build_role == "warships" and shd.category == "construction":
+        # shipyards build the fleet; engineering hulls come from the command station
+        # (which cannot build warships)
+        return False
+    return True
+
+
+def buildable_ship_ids(ds, station_id: str, faction: str) -> list[str]:
+    """Hulls this station type may lay down for a faction at *some* level, in panel order.
+
+    `["*"]` expands to the whole catalogue (sorted, as the shipyard panel lists it); an
+    explicit list keeps its declared order.
+    """
+    sd = ds.stations.get(station_id)
+    if sd is None or not getattr(sd, 'builds_ships', None):
+        return []
+    candidates = sorted(ds.ships) if "*" in sd.builds_ships else list(sd.builds_ships)
+    return [sid for sid in candidates if type_can_build_ship(ds, station_id, faction, sid)]
+
+
+def required_level(ds, station_id: str, ship_id: str) -> int:
+    """Minimum refit level a station type needs before it may lay this hull down."""
+    return balance.build_level(ds.rules, station_id, ship_id)
 
 
 class ConstructionSystem:
@@ -296,26 +342,19 @@ class ConstructionSystem:
 
     # ------------------------------------------------------------------ ship build
     def station_can_build_ship(self, station, ship_id: str) -> bool:
-        shd = self.ds.ships.get(ship_id)
+        """Catalogue gate plus the player's per-level build gate (#106).
+
+        The level gate lives here rather than at the call sites because every route into a
+        shipyard queue already funnels through this predicate: the panel rows, the AI's
+        `build_ship` intent and the human command seam. A gate enforced anywhere else would
+        be a gate the AI walks around.
+        """
         player = self.state.players.get(station.owner)
-        if shd is None or player is None or shd.faction != player.faction:
+        if player is None or not type_can_build_ship(self.ds, station.data_id,
+                                                   player.faction, ship_id):
             return False
-        if shd.can_colonize and station.data_id != "command_station":
-            return False
-        sd = self.ds.stations.get(station.data_id)
-        if sd is None or not sd.builds_ships:
-            return False
-        if ship_id in sd.builds_ships:
-            return True
-        if "*" not in sd.builds_ships:
-            return False
-        if sd.build_role == "warships":
-            # shipyards build the fleet; engineering hulls come from the
-            # command station (which cannot build warships)
-            shd = self.ds.ships.get(ship_id)
-            if shd is not None and shd.category == "construction":
-                return False
-        return True
+        return (upgrades.station_level(station)
+                >= required_level(self.ds, station.data_id, ship_id))
 
     def start_ship(self, station_id: int, ship_id: str, player_id: int,
                    count: int = 1) -> int:

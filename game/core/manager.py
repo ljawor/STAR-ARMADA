@@ -23,11 +23,11 @@ from ..systems.visibility import VisibilitySystem
 
 class GameManager:
     def __init__(self, state: GameState | None = None, mission_def: dict | None = None,
-                 mods: list[str] | None = None):
+                 mods: list[str] | None = None, balance: dict | None = None):
         self.state = state or GameState()
         self.state.events = EventBus()
         DataStore.reset()
-        self.ds = DataStore(mods=mods)
+        self.ds = DataStore(mods=mods, balance=balance)
 
         # transient combat plumbing (not saved; rebuilt after load)
         self.state.damage_queue = []
@@ -203,8 +203,9 @@ class GameManager:
 
     @staticmethod
     def start_skirmish(map_def: dict, mission_def: dict | None = None,
-                       mods: list[str] | None = None) -> "GameManager":
-        gm = GameManager(mission_def=mission_def, mods=mods)
+                       mods: list[str] | None = None,
+                       balance: dict | None = None) -> "GameManager":
+        gm = GameManager(mission_def=mission_def, mods=mods, balance=balance)
         gm.load_map(map_def)
         if mission_def is None:
             gm.state.map_info.victory_mode = "elimination"
@@ -212,14 +213,15 @@ class GameManager:
 
     @staticmethod
     def start_mission(map_def: dict, mission_def: dict,
-                      mods: list[str] | None = None) -> "GameManager":
+                      mods: list[str] | None = None,
+                      balance: dict | None = None) -> "GameManager":
         """Campaign mission: loadout overrides, custom enemy, mission wiring.
 
         Player 0 gets the mission loadout (resources + start units); the map's
         slot-1 player is replaced by the mission's enemy force (faction, team,
         units). MissionSystem drives objectives + mission_complete/failed.
         """
-        gm = GameManager(mission_def=mission_def, mods=mods)
+        gm = GameManager(mission_def=mission_def, mods=mods, balance=balance)
         # map players: [human, enemy] — rewrite slot 1 from the mission enemy
         enemy = mission_def.get("enemy", {})
         map_players = [dict(p) for p in map_def.get("players", [])]
