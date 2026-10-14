@@ -86,7 +86,8 @@ if SMOKE and os.environ.get("STAR_ARMADA_FORCE_DUMMY") == "1":
 SETTINGS = load_settings()
 # Station balance (#106) is installed before the first catalogue exists: every DataStore
 # folds the overlay into its rules, so one built earlier would hand the player shipped numbers
-# in one place and edited ones in another — and the LAN handshake would hash the wrong ones.
+# in one place and edited ones in another — and a LAN client would announce the wrong tuning
+# before the host could hand it its own.
 BALANCE = load_balance_into_game()
 SETTINGS.setdefault('cinematics_enabled', True)
 SETTINGS.setdefault('reduced_motion', False)

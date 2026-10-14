@@ -42,7 +42,9 @@ orders itself behind any ship already building.
 
 Every level above 1 raises the hull, and the category bonuses follow the issue: a
 hull that can fire gains firepower, a hull that collects gains output, a market
-gains convoys.
+gains convoys. The gains below are **what the game ships**; since #106 a player may
+retune them per station *type* on the Game Balance screen, and the numbers the
+simulation applies are whatever that file says (see *Player-tuned balance* below).
 
 | Effect | Per level | At level 5 | Applies to |
 |---|---|---|---|
@@ -106,11 +108,56 @@ The level is part of the per-tick desync digest
 ## Capture and AI policy
 
 `upgrade_level` belongs to the hull, not to the owner: a captured station is worth
-what its previous owner paid for it and keeps its level. The AI has **no upgrade
-heuristic yet** — it accepts the command (the seam is owner-agnostic) but never
-chooses to spend on a refit, and says so here rather than pretending parity. Closing
-that gap means teaching the AI to value a station's refit against a new hull, which
-is a balance decision, not plumbing.
+what its previous owner paid for it and keeps its level. The AI has **no proactive
+upgrade heuristic** — it never chooses to refit a station for the bonus alone, and
+says so here rather than pretending parity. It does answer a build gate: when a hull
+it wants is gated behind a refit level it can afford and its catalogue allows, it
+buys the level rather than stalling, and the simulation re-checks the price, the cap
+and any pending refit (#106). Closing the rest of the gap means teaching the AI to
+value a station's refit against a new hull, which is a balance decision, not plumbing.
+
+## Player-tuned balance and per-level build gates (#106)
+
+The shipped gains are the starting point, not the law. **Settings → Game Balance → Station
+upgrades** (page 5 of 5) picks a faction, lists every station type that faction's builders can
+lay down, and edits the individual rows that station actually uses — never a row the simulation
+would not read, and never one aggregate percentage standing in for all of them. The second page
+sets **build levels**: a hull can be made to wait until its station has paid for a given refit
+level (level 2..5), and that gate applies to every player and to the AI.
+
+The file is `balance.json`, written beside `settings.json`, `campaign.json` and the saved games in
+the per-user data directory — *not* in the app bundle, because every update replaces
+`assets/data/game_rules.json` and would silently revert the player's numbers (the same reason
+v0.13.0 moved settings out of the bundle). `Reset this station` clears one station type's rows and
+gates; `Reset all tuning` deletes the file, so a station with nothing tuned reads the shipped
+numbers again.
+
+| Section | Shape |
+|---|---|
+| `station_upgrades` | `{station_type: {gain_key: value}}`, values as fractions for the percentage rows and whole numbers for shots/convoys |
+| `build_levels` | `{station_type: {ship_id: level}}`, levels 2..5 |
+
+One file, two readings. A file the *player* may have hand-edited is read **leniently**: unreadable
+entries are dropped and the game still starts. A config that arrives **over the network** is read
+**strictly**: anything unrepresentable raises and the match is refused, never half-applied. The
+overlay is folded into `DataStore.rules` (`station_upgrades`, `build_levels`) as the last step of
+the catalogue load, so the simulation, the station panel, the replay recorder, replay validation
+and the LAN handshake all read one set of numbers. The screen edits a draft, validates it, and only
+then writes and installs it; a draft the strict reader would refuse is reported, not persisted.
+
+Build levels live inside `ConstructionSystem.station_can_build_ship` — the single predicate every
+route into a shipyard queue funnels through (panel rows, the AI's `build_ship` intent, the human
+command seam). A gated hull **stays on the panel, drawn locked**, saying which refit level it
+waits for: a gate that hid its hull would be indistinguishable from a bug. The AI answers the gate
+by buying the level when it can pay for it and the hull is in its catalogue.
+
+On LAN the tuning is exchanged with the handshake instead of being compared: `content_hash`
+covers the shipped catalogue, mods and game version exactly as before, and the host's overlay
+rides in the `welcome` frame. A peer whose own file differs adopts the host's numbers for that
+match and gives them back — with the catalogue built from them — when the session closes, so
+nothing is written to its file and no later match is affected. The overlay is normalized on the
+way out (a peer can never be refused over its sender's own hand-edited file) and validated on the
+way in.
 
 ## Verification
 
@@ -119,3 +166,10 @@ time ladders, each bonus category, the queue seam, cancellation with its half re
 save/load and old-save migration, the digest, and the HUD/input affordance.
 `tools/diag_station_upgrades.py` renders the panel at both supported resolutions and
 reports the geometry of the upgrade row.
+
+`tests/test_station_balance.py` covers #106: both readings of the config, the overlay
+reaching the live rules and the LAN content hash, the tuned gain as the simulation and the
+panel apply it, the gate in the panel rows, the AI's refit, persistence beside the other
+user files, the screen driven through the rects it draws, and a real-TCP pair whose files
+differ running the host's numbers for one match. `tools/diag_classic_screens.py` captures both
+pages at four window sizes under a real GL driver (`balance_gains`, `balance_levels`).
