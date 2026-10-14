@@ -144,9 +144,12 @@ def save_balance(config) -> bool:
         return False
     try:
         os.makedirs(os.path.dirname(BALANCE_PATH), exist_ok=True)
-        with open(BALANCE_PATH, "w") as f:
+        # Explicit UTF-8 both ways, like the campaign and settings files: the locale
+        # default is cp1252 on Windows, and a mod's display names are not ours to
+        # constrain to ASCII (issue #56's lesson).
+        with open(BALANCE_PATH, "w", encoding="utf-8") as f:
             json.dump(clean, f, indent=2)
-    except OSError:
+    except (OSError, ValueError):
         return False
     # Installed for later catalogues as well as written: a match started from this menu builds
     # its own catalogue, and the LAN handshake reads the same numbers, so an edit must not
