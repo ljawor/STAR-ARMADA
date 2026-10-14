@@ -522,7 +522,7 @@ class LanSession:
         self._peers = [peer]
         peer.send(dict(type='hello', name=name, version=GAME_VERSION,
                        protocol=PROTOCOL_VERSION, content=self._content,
-                       balance=balance_config.digest(self._balance)))
+                       balance=station_balance_digest(self._ds)))
         if recovery:
             self.enable_recovery(clock=clock)
         return self
