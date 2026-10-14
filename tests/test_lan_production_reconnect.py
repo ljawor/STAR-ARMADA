@@ -76,6 +76,38 @@ class ProductionReconnectTests(unittest.TestCase):
                     return
         self.fail([s.recovery_snapshot for s in sessions])
 
+    def test_freeze_roundoff_never_exceeds_wire_grace_limit(self):
+        # Windows monotonic readings near startup can make (now + 60) - now
+        # round above 60 even when the clock has not advanced at all.
+        now = [4.001]
+        sessions, managers = self.setup_match(3, clock=lambda: now[0])
+        self.align(sessions, managers, 8)
+        sessions[1]._peers[0].sock.shutdown(socket.SHUT_RDWR)
+        self.recover(sessions, managers)
+        self.assertEqual(len({precise_checksum(m) for m in managers}), 1)
+        self.align(sessions, managers, 10)
+
+    def test_freeze_wire_bound_remains_strict_and_repeat_cannot_renew_grace(self):
+        import math
+        now = [4.001]
+        sessions, _ = self.setup_match(2, clock=lambda: now[0])
+        host, client = sessions
+        host._recovery.begin()
+        message = host._recovery.freeze_message()
+        self.assertLessEqual(message['remaining'], 60.)
+        client._recovery.receive(client._peers[0], message)
+        deadline = client._recovery.deadline
+        now[0] += 1.
+        client._recovery.receive(client._peers[0], message)
+        self.assertEqual(client._recovery.deadline, deadline)
+        for remaining in (math.nextafter(60., math.inf), math.inf, math.nan, True, 0., -1.):
+            with self.subTest(remaining=remaining):
+                with self.assertRaisesRegex(ValueError, 'Invalid freeze deadline or epoch'):
+                    client._recovery.receive(client._peers[0], dict(message, remaining=remaining))
+        now[0] = deadline
+        with self.assertRaisesRegex(ValueError, 'Reconnect grace expired'):
+            client._recovery.check()
+
     def test_deadline_is_absolute_across_freeze_transfer_and_application_loading(self):
         for phase in ('freeze', 'transfer', 'install'):
             with self.subTest(phase=phase):

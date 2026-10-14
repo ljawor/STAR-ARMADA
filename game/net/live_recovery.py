@@ -124,8 +124,11 @@ class LiveRecovery:
             self.s._broadcast(self.freeze_message())
 
     def freeze_message(self):
+        # Subtracting a rounded absolute deadline can produce 60 + one ULP
+        # on an unchanged monotonic clock. Bound outgoing grace, not incoming
+        # validation; the original absolute deadline remains authoritative.
         return dict(type='recovery_freeze', epoch=self.epoch,
-                    remaining=max(0., self.deadline-self.clock()))
+                    remaining=min(60., max(0., self.deadline-self.clock())))
 
     def lost(self, peer):
         s = self.s
