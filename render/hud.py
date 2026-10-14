@@ -1182,29 +1182,38 @@ class HUD:
 
         builds_ships lists ship ids; ["*"] expands to the full catalogue minus
         engineering hulls when the station's build_role is "warships" — the
-        same rule ConstructionSystem.station_can_build_ship() enforces in the
-        sim, so the menu never offers a row the sim would reject.
+        catalogue half of ConstructionSystem.station_can_build_ship(), asked here
+        without its level half. A hull the player gated behind a refit level (#106)
+        therefore stays in the list and is drawn locked with its level: the gate is
+        a price on the row, not a reason to hide a hull from the panel that would
+        happily accept it one refit from now.
         """
-        cs = getattr(self.state, "_construction_system", None)
+        from game.systems import construction
+        player = self.state.players.get(getattr(station, "owner", None))
+        faction = getattr(player, "faction", None)
+        if faction is None:
+            # Nobody to judge the catalogue against (a hulk, a bare fixture): fall
+            # back to the declared list so the panel still draws something.
+            ids = sorted(self.ds.ships) if "*" in std.builds_ships else list(std.builds_ships)
+            return [self.ds.ships[sid] for sid in ids if sid in self.ds.ships]
         out = []
-        if "*" in std.builds_ships:
-            for sid in sorted(self.ds.ships):
-                sd = self.ds.ships.get(sid)
-                if sd is None:
-                    continue
-                if cs is not None and not cs.station_can_build_ship(station, sid):
-                    continue
-                out.append(sd)
-            return out
-        for sid in std.builds_ships:
+        for sid in construction.buildable_ship_ids(self.ds, station.data_id, faction):
             sd = self.ds.ships.get(sid)
-            if sd is not None and (cs is None or cs.station_can_build_ship(station, sid)):
+            if sd is not None:
                 out.append(sd)
         return out
 
     def _row_build_ship(self, d, yy, payload) -> None:
+        """One hull; one behind a refit level states the level instead of hiding."""
+        from game.systems import construction, upgrades
+        station = self.state.entity(payload.get("shipyard_id"))
+        gated = 0
+        if station is not None and station.owner == getattr(self._cur_player, "id", -1):
+            need = construction.required_level(self.ds, station.data_id, d.id)
+            if need > upgrades.station_level(station):
+                gated = need
         self._build_row(self._cur_panel, yy, d, self._cur_player, payload,
-                        "build_ship")
+                        "build_ship", gated=gated)
 
     def _row_research(self, d, yy, payload) -> None:
         """d = TechData; payload carries station_id."""
@@ -1240,12 +1249,19 @@ class HUD:
                                  "payload": {"station_id": payload["station_id"],
                                              "tech_id": d.id}})
 
-    def _build_row(self, panel, y, d, p, payload, kind) -> int:
-        """One buildable row: name, cost, affordability color. Returns next y."""
+    def _build_row(self, panel, y, d, p, payload, kind, gated: int = 0) -> int:
+        """One buildable row: name, cost, affordability color. Returns next y.
+
+        `gated` is the refit level the hull needs and the station has not reached
+        (#106). Such a row is drawn like an unaffordable one — dim name, no button —
+        but says why on its staffing line, because a gate the player configured has
+        to be readable at the moment it bites.
+        """
         ov = self.overlay
         rect = pygame.Rect(panel.x + 12, y, 296, 50)
-        afford = (p.credits >= d.cost_credits and p.materials >= d.cost_materials
-                  and p.energy >= d.cost_energy and p.crew >= d.crew_cost)
+        afford = (not gated) and (
+            p.credits >= d.cost_credits and p.materials >= d.cost_materials
+            and p.energy >= d.cost_energy and p.crew >= d.crew_cost)
         pygame.draw.rect(ov, (24, 34, 52, 255) if afford else (18, 22, 32, 255),
                          rect, border_radius=4)
         pygame.draw.rect(ov, ACCENT if afford else PANEL_EDGE, rect, 1,
@@ -1262,9 +1278,15 @@ class HUD:
                           crew=f"{d.crew_cost:,.0f}",
                           command=f"{getattr(d, 'command_cost', 0)}",
                           time=f"{d.build_time:g}")
-        self._label(rect.x + 8, rect.y + 34,
-                    self._fit_text(staffing, 280, self.font_small), TXT_DIM,
-                    self.font_small, translate=False)
+        if gated:
+            self._label(rect.x + 8, rect.y + 34,
+                        self._fit_text(i18n.t('Refit level {level} required',
+                                             level=gated), 280, self.font_small),
+                        WARN, self.font_small)
+        else:
+            self._label(rect.x + 8, rect.y + 34,
+                        self._fit_text(staffing, 280, self.font_small), TXT_DIM,
+                        self.font_small, translate=False)
         if afford:
             self.buttons.append({"rect": rect, "kind": kind, "payload": payload})
         return y + 54

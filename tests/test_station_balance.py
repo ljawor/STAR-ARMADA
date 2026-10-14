@@ -16,6 +16,8 @@ import tempfile
 import unittest
 from unittest import mock
 
+import pygame
+
 from helpers import make_game
 from game.core.commands import PlayerCommand, UpgradeStationCommand
 from game.data import balance
@@ -431,3 +433,407 @@ class BalanceRefitFlowTests(unittest.TestCase):
         self.assertAlmostEqual(upgrades.production_multiplier(station, ds=self.ds), 1.3, places=6)
         graph = self.st.to_dict(precise=True)
         self.assertIn('upgrade_level', json.dumps(graph))
+
+
+class BalanceBuildRowTests(unittest.TestCase):
+    """The panel a player reads a gate off: the hull stays, the button does not (#106).
+
+    A gate that hides its hull is indistinguishable from a bug — the player tuned the
+    level, so the panel has to say which level it is waiting for, on the row itself.
+    """
+
+    def setUp(self):
+        import pygame
+        from render.hud import HUD
+        self.addCleanup(balance.set_active, None)
+        pygame.display.init()
+        self.addCleanup(pygame.display.quit)
+        self.gm = make_game(ai=False)
+        self.st = self.gm.state
+        self.ds = self.gm.ds
+        self.player = self.st.players[0]
+        self.player.credits = self.player.materials = self.player.energy = self.player.crew = 100000
+        self.observer = next(e for e in self.st.entities.values()
+                             if e.owner == 0 and e.is_ship)
+        self.hud = HUD(1280, 800, self.st)
+        self.hud._cur_panel = pygame.Rect(940, 90, 320, 620)
+        self.hud._cur_player = self.player
+
+    def spawn(self, kind, away=400):
+        from game.core.vectors import Vec3
+        return self.gm.factory.spawn_station(kind, 0, self.observer.pos + Vec3(0, 0, away))
+
+    def draw_rows(self, yard):
+        """Draw every ship row of a yard panel; returns the buttons it registered."""
+        items = self.hud._shipyard_items(yard, self.ds.stations[yard.data_id])
+        self.hud.buttons.clear()
+        for row, sd in enumerate(items):
+            self.hud._row_build_ship(sd, row * 54,
+                                     {'shipyard_id': yard.id, 'ship_id': sd.id})
+        return items, list(self.hud.buttons)
+
+    def test_a_gated_hull_is_listed_and_states_the_level_it_wants(self):
+        from render import hud as hud_module
+        yard = self.spawn('shipyard')
+        self.ds.rules[balance.BUILD_LEVEL_RULES_KEY] = {'shipyard': {'imperial_cruiser': 2}}
+        items, buttons = self.draw_rows(yard)
+        self.assertIn('imperial_cruiser', [sd.id for sd in items])
+        self.assertEqual([b['payload']['ship_id'] for b in buttons
+                          if b['payload']['ship_id'] == 'imperial_cruiser'], [])
+        asked = []
+        real_t = hud_module.i18n.t
+
+        def recorder(text, **fields):
+            asked.append((text, fields))
+            return real_t(text, **fields)
+
+        hud_module.i18n.t = recorder
+        try:
+            self.draw_rows(yard)
+        finally:
+            hud_module.i18n.t = real_t
+        self.assertIn(('Refit level {level} required', {'level': 2}), asked)
+
+    def test_the_same_row_becomes_buildable_once_the_refit_lands(self):
+        """The in-test control: the gate is what withheld the button, not the fixture."""
+        yard = self.spawn('shipyard')
+        self.ds.rules[balance.BUILD_LEVEL_RULES_KEY] = {'shipyard': {'imperial_cruiser': 2}}
+        _items, before = self.draw_rows(yard)
+        yard.upgrade_level = 2
+        _items, after = self.draw_rows(yard)
+        self.assertNotIn('imperial_cruiser', [b['payload']['ship_id'] for b in before])
+        self.assertIn('imperial_cruiser', [b['payload']['ship_id'] for b in after])
+
+    def test_an_ungated_panel_is_untouched_by_the_gate_machinery(self):
+        yard = self.spawn('shipyard')
+        _items, buttons = self.draw_rows(yard)
+        self.assertIn('imperial_cruiser', [b['payload']['ship_id'] for b in buttons])
+
+
+class BalanceAiGateTests(unittest.TestCase):
+    """An AI met by a gate it can pay for buys the level instead of going quiet (#106)."""
+
+    def setUp(self):
+        from game.ai.ai import AIPlayer
+        self.addCleanup(balance.set_active, None)
+        self.gm = make_game(ai=False)
+        self.st = self.gm.state
+        self.ds = self.gm.ds
+        self.player = self.st.players[0]
+        self.player.credits = self.player.materials = self.player.energy = self.player.crew = 100000
+        self.observer = next(e for e in self.st.entities.values())
+        self.ai = AIPlayer(self.st, 0)
+
+    def spawn(self, kind, away=400):
+        from game.core.vectors import Vec3
+        return self.gm.factory.spawn_station(kind, 0, self.observer.pos + Vec3(0, 0, away))
+
+    def queued(self):
+        return [c for c in self.st.command_queue if c.player == 0]
+
+    def test_the_ai_orders_the_refit_a_gated_hull_needs(self):
+        yard = self.spawn('shipyard')
+        self.ds.rules[balance.BUILD_LEVEL_RULES_KEY] = {'shipyard': {'imperial_cruiser': 2}}
+        self.st.command_queue.clear()
+        self.ai._queue_ship(yard, 'imperial_cruiser', 1)
+        pending = self.queued()
+        self.assertEqual([c.type for c in pending], ['upgrade_station'])
+        self.assertEqual(pending[0].target_id, yard.id)
+        self.assertFalse(any(c.type == 'build_ship' for c in self.st.command_queue))
+
+    def test_the_refit_is_ordered_once_and_then_the_hull_is(self):
+        yard = self.spawn('shipyard')
+        self.ds.rules[balance.BUILD_LEVEL_RULES_KEY] = {'shipyard': {'imperial_cruiser': 2}}
+        self.st.command_queue.clear()
+        self.ai._queue_ship(yard, 'imperial_cruiser', 1)
+        self.assertEqual(len(self.queued()), 1)
+        self.assertEqual(self.queued()[0].type, 'upgrade_station')
+        # The level has since landed: the same order now places the hull it wanted.
+        yard.upgrade_level = 2
+        self.st.command_queue.clear()
+        self.ai._queue_ship(yard, 'imperial_cruiser', 1)
+        self.assertEqual([c.type for c in self.queued()], ['build_ship'])
+        self.assertEqual(self.queued()[0].ship_id, 'imperial_cruiser')
+
+    def test_an_ungated_order_still_places_the_hull_directly(self):
+        yard = self.spawn('shipyard')
+        self.st.command_queue.clear()
+        self.ai._queue_ship(yard, 'imperial_corvette', 1)
+        self.assertEqual([c.type for c in self.queued()], ['build_ship'])
+
+    def test_the_ai_never_orders_a_hull_the_catalogue_refuses(self):
+        """A gate it cannot lift is not a reason to spend: the order is left to the sim."""
+        yard = self.spawn('mining_station')
+        self.ds.rules[balance.BUILD_LEVEL_RULES_KEY] = {'mining_station': {'imperial_cruiser': 2}}
+        self.st.command_queue.clear()
+        self.ai._queue_ship(yard, 'imperial_cruiser', 1)
+        self.assertEqual([c.type for c in self.queued()], ['build_ship'])
+
+
+class BalanceScreenTests(unittest.TestCase):
+    """Settings → Game Balance → Station upgrades: the door, the editor and the file (#106).
+
+    The screen is driven the way a player drives it — through `handle_event` on the rects it
+    drew — so a row that renders but cannot be clicked, or a press that reaches no draft, fails
+    here rather than in a capture.
+    """
+
+    def setUp(self):
+        import pygame
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        root = directory.name
+        self.saves = os.path.join(root, 'saves')
+        os.makedirs(self.saves)
+        self.path = os.path.join(self.saves, 'balance.json')
+        self.scope = mock.patch.multiple(
+            menus, USER_DIR=root, SAVES_DIR=self.saves,
+            SETTINGS_PATH=os.path.join(self.saves, 'settings.json'),
+            CAMPAIGN_PATH=os.path.join(self.saves, 'campaign.json'),
+            BALANCE_PATH=self.path)
+        self.scope.start()
+        self.addCleanup(self.scope.stop)
+        self.addCleanup(balance.set_active, None)
+        self.addCleanup(DataStore.reset)
+        pygame.display.init()
+        self.addCleanup(pygame.display.quit)
+        self.menu = menus.MenuStack(1280, 800)
+        self.addCleanup(self.menu.close)
+
+    # ------------------------------------------------------------------ the door
+    def test_the_game_balance_page_names_what_is_tuned_and_opens_the_editor(self):
+        self.menu.screen = 'settings'
+        self.menu.settings_page = 4
+        self.menu.buttons = []
+        self.menu.render(0)
+        texts = self.menu.settings_rendered_text
+        self.assertIn('Game Balance · Page 5/5', texts)
+        self.assertIn('Every station uses the shipped balance.', texts)
+        door = next(b for b in self.menu.buttons if b['action'] == 'goto_balance')
+        self.menu.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1,
+                                                  pos=door['rect'].center))
+        self.assertEqual(self.menu.screen, 'balance')
+        self.menu.buttons = []
+        self.menu.render(0)
+        self.assertIn('Game Balance', self.menu.balance_rendered_text)
+
+    def test_the_editor_returns_to_the_page_it_was_opened_from(self):
+        self.menu.screen = 'balance'
+        self.menu.buttons = []
+        self.menu.render(0)
+        back = next(b for b in self.menu.buttons if b['action'] == 'balance_back')
+        self.menu.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1,
+                                                  pos=back['rect'].center))
+        self.assertEqual((self.menu.screen, self.menu.settings_page), ('settings', 4))
+
+    # ------------------------------------------------------------------ the rows
+    def test_the_screen_offers_exactly_the_rows_the_station_uses(self):
+        """One source of truth: a row the sim would not read must not be offered."""
+        self.menu.screen = 'balance'
+        self.menu.balance_faction = 'imperial'
+        for station_id in balance.faction_station_types(self.menu.skirmish_store, 'imperial'):
+            with self.subTest(station=station_id):
+                self.menu.balance_station = station_id
+                self.menu.balance_page = 0
+                self.menu.buttons = []
+                self.menu.render(0)
+                offered = [b['payload']['key'] for b in self.menu.buttons
+                           if b['action'] == 'balance_step']
+                self.assertEqual(set(offered), set(balance.bonus_rows(self.menu.skirmish_store,
+                                                                     station_id)))
+                self.menu.balance_page = 1
+                self.menu.buttons = []
+                self.menu.render(0)
+                hulls = [b['payload']['ship_id'] for b in self.menu.buttons
+                         if b['action'] == 'balance_gate_step']
+                self.assertEqual(set(hulls), set(balance.editable_ships(
+                    self.menu.skirmish_store, station_id, 'imperial')))
+
+    def test_the_faction_combo_lists_that_factions_stations(self):
+        self.menu.screen = 'balance'
+        self.menu.balance_faction = 'imperial'
+        self.menu.buttons = []
+        self.menu.render(0)
+        self.assertEqual([b['payload'] for b in self.menu.buttons
+                          if b['action'] == 'balance_station'],
+                         list(balance.faction_station_types(self.menu.skirmish_store, 'imperial')))
+        self.menu.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1,
+                                                  pos=next(b for b in self.menu.buttons
+                                                           if b['action'] == 'balance_faction'
+                                                           )['rect'].center))
+        self.menu.buttons = []
+        self.menu.render(0)
+        self.assertEqual([b['payload'] for b in self.menu.buttons
+                          if b['action'] == 'balance_station'],
+                         list(balance.faction_station_types(self.menu.skirmish_store, 'rebel')))
+        self.assertIn(self.menu.balance_station,
+                      balance.faction_station_types(self.menu.skirmish_store, 'rebel'))
+
+    # -------------------------------------------------------------- the presses
+    def step(self, action, payload):
+        """Press the stepper the screen drew for `payload`, after drawing it."""
+        self.menu.buttons = []
+        self.menu.render(0)
+        button = next(b for b in self.menu.buttons
+                      if b['action'] == action and all(b['payload'][k] == v
+                                                       for k, v in payload.items()))
+        self.menu.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1,
+                                                  pos=button['rect'].center))
+
+    def test_a_press_edits_the_draft_writes_the_file_and_reaches_the_next_match(self):
+        self.menu.screen = 'balance'
+        self.menu.balance_station = 'shipyard'
+        self.menu.balance_page = 0
+        shipped = upgrades.DEFAULTS['hull_bonus']
+        self.step('balance_step', {'key': 'hull_bonus', 'delta': 1})
+        self.assertAlmostEqual(
+            self.menu.balance_draft['station_upgrades']['shipyard']['hull_bonus'],
+            shipped + 0.01, places=9)
+        self.assertFalse(os.path.exists(self.path))      # not until the frame writes it
+        self.menu.apply_pending()
+        with open(self.path) as f:
+            self.assertAlmostEqual(json.load(f)['station_upgrades']['shipyard']['hull_bonus'],
+                                   shipped + 0.01, places=9)
+        # The same press reaches a catalogue built afterwards, without a restart: what the
+        # next match reads is what the screen wrote.
+        DataStore.reset()
+        store = DataStore()
+        self.addCleanup(DataStore.reset)
+        self.assertEqual(store.rules[balance.RULES_KEY],
+                         {'shipyard': {'hull_bonus': round(shipped + 0.01, 4)}})
+        self.menu.buttons = []
+        self.menu.render(0)
+        self.assertIn('MODIFIED', self.menu.balance_rendered_text)
+
+    def test_a_row_stepped_back_to_the_shipped_number_stops_being_modified(self):
+        self.menu.screen = 'balance'
+        self.menu.balance_station = 'mining_station'
+        self.menu.balance_page = 0
+        self.step('balance_step', {'key': 'production_bonus', 'delta': 1})
+        self.assertEqual(self.menu.balance_draft['station_upgrades'],
+                         {'mining_station': {'production_bonus': 0.16}})
+        self.step('balance_step', {'key': 'production_bonus', 'delta': -1})
+        self.assertTrue(balance.is_default(self.menu.balance_draft))
+        self.menu.buttons = []
+        self.menu.render(0)
+        self.assertNotIn('MODIFIED', self.menu.balance_rendered_text)
+
+    def test_the_stepper_cannot_reach_a_value_the_strict_reader_refuses(self):
+        """Every value a stepper can land on has to be a value the file may carry."""
+        self.menu.screen = 'balance'
+        self.menu.balance_station = 'shipyard'
+        self.menu.balance_page = 0
+        for _ in range(40):
+            self.step('balance_step', {'key': 'hull_bonus', 'delta': -1})
+        self.assertEqual(self.menu.balance_draft['station_upgrades']['shipyard']['hull_bonus'], 0.0)
+        for _ in range(balance.MAX_COUNT_GAIN + 20):
+            self.step('balance_step', {'key': 'volley_shots_per_level', 'delta': 1})
+        self.assertEqual(self.menu.balance_draft['station_upgrades']['shipyard']
+                         ['volley_shots_per_level'], balance.MAX_COUNT_GAIN)
+        # Nothing the screen produced may be refused: a refusal would leave the draft
+        # unwritten and the notice would say so.
+        self.menu.apply_pending()
+        self.assertNotEqual(self.menu.balance_notice, 'This tuning could not be saved.')
+        with open(self.path) as f:
+            self.assertEqual(json.load(f), self.menu.balance_draft)
+
+    # ------------------------------------------------------------------- the gates
+    def test_a_gate_the_screen_sets_is_the_gate_the_simulation_enforces(self):
+        self.menu.screen = 'balance'
+        self.menu.balance_station = 'shipyard'
+        self.menu.balance_page = 1
+        self.step('balance_gate_step', {'station': 'shipyard', 'ship_id': 'imperial_cruiser',
+                                        'delta': 1})
+        self.assertEqual(self.menu.balance_draft['build_levels'],
+                         {'shipyard': {'imperial_cruiser': 2}})
+        self.menu.apply_pending()
+        DataStore.reset()
+        store = DataStore()
+        self.assertEqual(construction.required_level(store, 'shipyard', 'imperial_cruiser'), 2)
+        game = make_game(ai=False)
+        observer = next(e for e in game.state.entities.values()
+                        if e.owner == 0 and e.is_ship)
+        from game.core.vectors import Vec3
+        yard = game.factory.spawn_station('shipyard', 0, observer.pos + Vec3(0, 0, 400))
+        self.assertFalse(game.construction.station_can_build_ship(yard, 'imperial_cruiser'))
+        # And a hull that was not gated is untouched.
+        self.assertTrue(game.construction.station_can_build_ship(yard, 'imperial_corvette'))
+
+    def test_the_gate_page_offers_only_hulls_the_station_could_build(self):
+        """A gate on a hull the sim refuses anyway would be a row that means nothing."""
+        for faction in self.menu.balance_factions():
+            for station_id in balance.faction_station_types(self.menu.skirmish_store, faction):
+                with self.subTest(faction=faction, station=station_id):
+                    for ship_id in balance.editable_ships(self.menu.skirmish_store, station_id,
+                                                          faction):
+                        self.assertTrue(construction.type_can_build_ship(
+                            self.menu.skirmish_store, station_id, faction, ship_id))
+
+    def test_stepping_a_gate_back_to_the_shipped_level_removes_it(self):
+        self.menu.screen = 'balance'
+        self.menu.balance_station = 'shipyard'
+        self.menu.balance_page = 1
+        self.step('balance_gate_step', {'station': 'shipyard', 'ship_id': 'imperial_cruiser',
+                                        'delta': 1})
+        self.step('balance_gate_step', {'station': 'shipyard', 'ship_id': 'imperial_cruiser',
+                                        'delta': -1})
+        self.assertTrue(balance.is_default(self.menu.balance_draft))
+        self.menu.buttons = []
+        self.menu.render(0)
+        self.assertIn('as shipped', self.menu.balance_rendered_text)
+
+    # ------------------------------------------------------------------- the resets
+    def test_reset_this_station_leaves_the_other_stations_alone(self):
+        self.menu.screen = 'balance'
+        self.menu.balance_draft = balance.set_gain(
+            balance.set_gain(balance.defaults(), 'shipyard', 'hull_bonus', 0.5),
+            'mining_station', 'production_bonus', 0.4)
+        self.menu.balance_draft = balance.set_build_level(self.menu.balance_draft, 'shipyard',
+                                                          'imperial_cruiser', 3)
+        self.menu.balance_station = 'shipyard'
+        self.step('balance_reset_station', {})
+        self.assertEqual(self.menu.balance_draft['station_upgrades'],
+                         {'mining_station': {'production_bonus': 0.4}})
+        self.assertEqual(self.menu.balance_draft['build_levels'], {})
+        self.menu.apply_pending()
+        with open(self.path) as f:
+            self.assertEqual(json.load(f)['station_upgrades'],
+                             {'mining_station': {'production_bonus': 0.4}})
+
+    def test_reset_all_tuning_removes_the_file_and_returns_the_shipped_numbers(self):
+        self.menu.screen = 'balance'
+        self.menu.balance_draft = balance.set_gain(balance.defaults(), 'shipyard',
+                                                   'hull_bonus', 0.5)
+        self.menu._dirty_balance = True
+        self.menu.apply_pending()
+        self.assertTrue(os.path.exists(self.path))
+        self.assertEqual(balance.active()['station_upgrades'], {'shipyard': {'hull_bonus': 0.5}})
+        self.menu.balance_station = 'shipyard'
+        self.step('balance_reset_all', {})
+        self.assertFalse(os.path.exists(self.path))
+        self.assertTrue(balance.is_default(balance.active()))
+        self.menu.buttons = []
+        self.menu.render(0)
+        self.assertIn('Every station uses the shipped balance again.', self.menu.balance_rendered_text)
+
+    def test_a_tuned_station_survives_a_re_entry_and_a_new_menu(self):
+        """The draft is the file: a menu built after a save starts from the saved numbers."""
+        self.menu.screen = 'balance'
+        self.menu.balance_station = 'trade_station'
+        self.menu.balance_page = 0
+        self.step('balance_step', {'key': 'convoy_cargo_bonus', 'delta': 1})
+        self.step('balance_step', {'key': 'convoy_cargo_bonus', 'delta': 1})
+        self.menu.apply_pending()
+        reopened = menus.MenuStack(1280, 800)
+        self.addCleanup(reopened.close)
+        reopened.screen = 'balance'
+        self.assertEqual(reopened.balance_draft['station_upgrades'],
+                         {'trade_station': {'convoy_cargo_bonus': 0.17}})
+        reopened.buttons = []
+        reopened.render(0)
+        self.assertIn('Retuned station types: 1 · Gated hulls: 0', reopened.balance_rendered_text)
+        reopened.balance_station = 'trade_station'
+        reopened.buttons = []
+        reopened.render(0)
+        self.assertIn('MODIFIED', reopened.balance_rendered_text)
+        self.assertIn('+17% per level', reopened.balance_rendered_text)

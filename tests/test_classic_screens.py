@@ -16,6 +16,9 @@ def isolated_user_data(tmp_path, monkeypatch):
     monkeypatch.setattr('render.menus.SAVES_DIR', str(tmp_path / 'saves'))
     monkeypatch.setattr('render.menus.SETTINGS_PATH', str(tmp_path / 'saves/settings.json'))
     monkeypatch.setattr('render.menus.CAMPAIGN_PATH', str(tmp_path / 'saves/campaign.json'))
+    # The balance editor writes this one (#106): a fixture that only patched the other three
+    # would let a screen test tune the developer's own balance file.
+    monkeypatch.setattr('render.menus.BALANCE_PATH', str(tmp_path / 'saves/balance.json'))
     instances = []
     original = MenuStack
     def tracked(*args, **kwargs):
@@ -119,17 +122,24 @@ def geometry(menu, bounds):
         assert not any(b['rect'].colliderect(other['rect']) for other in menu.buttons[i+1:])
 
 def test_settings_classic_responsive_focus_and_slider_payload_mapping():
+    from render.classic_screens import SETTINGS_PAGE_COUNT
     with patch('pygame.mouse.get_pos', return_value=(0, 0)):
         for size in SIZES:
             menu = menu_at(size, 'settings')
             seen = set()
-            for page in range(3):
+            # Every page, counted by the screen itself: a walk shorter than the page list
+            # silently stops covering the settings that live on the pages it never opens.
+            for page in range(SETTINGS_PAGE_COUNT):
                 menu.settings_page = page
                 menu.settings_focus = 0
                 menu.render(0)
                 geometry(menu, [r for _, r in menu.settings_text_bounds if r.w])
                 controls = [b for b in menu.buttons if isinstance(b['payload'], dict)]
                 seen.update(b['payload']['key'] for b in controls)
+                if not controls:
+                    # A page that carries no setting control — the Game Balance door (#106) —
+                    # has no row to focus, measure or slide.
+                    continue
                 first = controls[0]['rect']
                 assert first.w > size[0] * .7
                 pixels = [tuple(menu._surface.get_at((first.centerx, first.top + dy)))[:3] for dy in range(3)]

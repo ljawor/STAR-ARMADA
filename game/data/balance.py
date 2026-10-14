@@ -282,3 +282,71 @@ def editable_ships(ds, station_id: str, faction_id: str) -> tuple[str, ...]:
     """
     from ..systems import construction
     return construction.buildable_ship_ids(ds, station_id, faction_id)
+
+
+# ------------------------------------------------------------------- editing a draft
+def clamp_gain(key: str, value) -> float | int:
+    """A gain the schema will accept: a fraction, or whole shots / convoys.
+
+    The screen steps by one percent or by one unit and can be dragged to either end of
+    the range, so the clamp lives here rather than in a widget: a value the stepper could
+    produce and :func:`_gain` would refuse is a bug the screen must not be able to write.
+    """
+    if key in COUNT_KEYS:
+        return max(0, min(MAX_COUNT_GAIN, int(round(value))))
+    return max(0.0, min(MAX_FRACTION_GAIN, round(float(value), 4)))
+
+
+def set_gain(config, station_id: str, key: str, value) -> dict:
+    """One gain retuned in a copy of a draft; the shipped value is stored as absence.
+
+    Dropping an entry that matches the shipped number matters twice over: the row must
+    stop reading as modified once the player steps it back, and an overlay that says
+    nothing must hash like one that says nothing — `is_default` and the LAN digest both
+    read the stored shape, not the effective numbers.
+    """
+    from ..systems import upgrades
+    clean = normalize(config)
+    number = clamp_gain(key, value)
+    gains = clean['station_upgrades'].setdefault(station_id, {})
+    if abs(float(number) - float(upgrades.DEFAULTS[key])) < 1e-9:
+        gains.pop(key, None)
+    else:
+        gains[key] = number
+    if not gains:
+        clean['station_upgrades'].pop(station_id, None)
+    return clean
+
+
+def set_build_level(config, station_id: str, ship_id: str, level) -> dict:
+    """One hull's gate; the default level is stored as absence, exactly as `_walk` reads it.
+
+    A gate of 1 is what a station starts at, and a stored 1 would be rejected by the strict
+    reader — the screen resets a gate by removing it, never by writing the default.
+    """
+    clean = normalize(config)
+    levels = clean['build_levels'].setdefault(station_id, {})
+    top = _max_level()
+    value = max(DEFAULT_BUILD_LEVEL, min(top, int(level)))
+    if value <= DEFAULT_BUILD_LEVEL:
+        levels.pop(ship_id, None)
+    else:
+        levels[ship_id] = value
+    if not levels:
+        clean['build_levels'].pop(station_id, None)
+    return clean
+
+
+def reset_station(config, station_id: str) -> dict:
+    """Drop every edit this station type carries, gains and gates alike."""
+    clean = normalize(config)
+    clean['station_upgrades'].pop(station_id, None)
+    clean['build_levels'].pop(station_id, None)
+    return clean
+
+
+def tuned_summary(config) -> tuple[int, int]:
+    """(station types retuned, hulls gated) — what the settings page reports."""
+    clean = normalize(config)
+    return (len(clean['station_upgrades']),
+            sum(len(levels) for levels in clean['build_levels'].values()))

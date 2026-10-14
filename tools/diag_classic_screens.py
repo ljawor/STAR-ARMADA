@@ -22,14 +22,15 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
     rows = []
     variants = ['lan', 'lan_join', 'lobby_host', 'lobby_client', 'lobby_error',
-                'settings_0', 'settings_1', 'settings_2', 'campaign_0', 'campaign_1',
-                'briefing_0', 'briefing_5']
+                'settings_0', 'settings_1', 'settings_2', 'settings_4', 'balance_gains',
+                'balance_levels', 'campaign_0', 'campaign_1', 'briefing_0', 'briefing_5']
     pygame.init()
     try:
         with patch('render.menus.USER_DIR', str(out / 'isolated-user')), \
              patch('render.menus.SAVES_DIR', str(out / 'isolated-user/saves')), \
              patch('render.menus.SETTINGS_PATH', str(out / 'isolated-user/saves/settings.json')), \
              patch('render.menus.CAMPAIGN_PATH', str(out / 'isolated-user/saves/campaign.json')), \
+             patch('render.menus.BALANCE_PATH', str(out / 'isolated-user/saves/balance.json')), \
              patch('pygame.mouse.get_pos', return_value=(0, 0)):
             for w, h in ((800, 600), (1280, 800), (1440, 900), (2400, 1400)):
                 pygame.display.set_mode((w, h), pygame.DOUBLEBUF | pygame.OPENGL)
@@ -48,6 +49,17 @@ def main():
                             menu.campaign_page = int(variant[-1])
                         if variant.startswith('briefing'):
                             menu.selected_mission = int(variant[-1])
+                        if variant.startswith('balance'):
+                            # A tuned draft, so the capture shows the retuned rows and the gate
+                            # rather than a screen that looks identical to an untouched one.
+                            menu.balance_faction = 'imperial'
+                            menu.balance_draft['station_upgrades']['shipyard'] = {
+                                'hull_bonus': 0.25, 'volley_shots_per_level': 3}
+                            menu.balance_draft['build_levels']['shipyard'] = {
+                                'imperial_battleship': 3}
+                            menu.balance_station = 'shipyard'
+                            menu.balance_page = 0 if variant.endswith('gains') else 1
+                            menu.balance_notice = ''
                         if variant.startswith('lobby'):
                             options = deepcopy(menu.lan_options)
                             options.update(map_id='skirmish03', human_count=4, ai_count=0)
@@ -79,7 +91,7 @@ def main():
                         frame = np.flipud(np.frombuffer(pixels, dtype=np.uint8).reshape(h, w, 3))
                         assert glGetError() == 0
                         assert np.max(frame) > 150
-                        primary = next((b for b in menu.buttons if b['action'] in ('lan_host_setup', 'lan_connect', 'lan_start', 'lan_reconnect', 'launch_mission')), None)
+                        primary = next((b for b in menu.buttons if b['action'] in ('lan_host_setup', 'lan_connect', 'lan_start', 'lan_reconnect', 'launch_mission', 'goto_balance')), None)
                         if primary:
                             r = primary['rect']
                             scale = min(w / 1120, h / 700)
