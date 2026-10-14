@@ -4,8 +4,12 @@ __pycache__/
 .venv/
 
 # Runtime artifacts
+# An unfrozen run keeps its user data next to the repo (render.menus USER_DIR = ROOT), so
+# these are written into the working tree: settings/saves, replays, and the crash dumps
+# install_exception_hook(USER_DIR) leaves in diagnostics/.
 saves/
 replays/
+diagnostics/
 *.log
 
 # OS
