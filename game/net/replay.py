@@ -319,8 +319,33 @@ class MatchRecording:
             self._data['end_tick'] = self.gm.state.tick
         return result
 
+    def rebind_manager(self, manager):
+        """Transfer the single step observer without resetting replay history.
+
+        Recovery must drain to the recorded boundary, not skip or replay ticks.
+        The caller validates the recovered graph before invoking this seam.
+        """
+        if manager is self.gm:
+            return
+        old = self.gm
+        active = old.step == self.step
+        native = manager.step
+        # Pending initial commands belong to the serialized initial snapshot,
+        # not the command log. Reconstruction creates new command identities.
+        pending_indices = [i for i, cmd in enumerate(old.state.command_queue)
+                           if any(cmd is pending for pending in self._initial_pending)]
+        pending = [manager.state.command_queue[i] for i in pending_indices]
+        if active:
+            old.step = self._step
+        self.gm = manager
+        self._step = native
+        self._initial_pending = pending
+        if active:
+            manager.step = self.step
+
     def close(self):
-        self.gm.step = self._step
+        if self.gm.step == self.step:
+            self.gm.step = self._step
 
     def to_dict(self):
         from copy import deepcopy

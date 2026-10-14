@@ -707,9 +707,13 @@ class MenuStack:
                 self.lan_session = LanSession.host(port, deepcopy(self.lan_options), name=self.lan_name.strip())
             else:
                 self.lan_session = LanSession.join(self.lan_address.strip(), port, name=self.lan_name.strip())
+            # Enable before either socket is polled: the initial hello must
+            # negotiate recovery, never a late gameplay-only opt-in.
+            self.lan_session.enable_recovery()
             self.screen = 'lan_lobby'
             self.lan_notice = ''
         except Exception as exc:
+            self.close_lan()
             self.lan_notice = str(exc)
 
     def handle_event(self, ev) -> None:

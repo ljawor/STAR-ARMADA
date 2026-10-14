@@ -237,23 +237,54 @@ class Audio:
             shaped = np.sign(pcm) * np.sqrt(np.abs(pcm) / max(peak, 1e-9)) * min(peak, 0.60)
             self.night_sounds[name] = pygame.mixer.Sound(
                 buffer=np.ascontiguousarray(shaped * 32767, dtype=np.int16).tobytes())
-        st = state
-        st.events.subscribe("unit_destroyed", self._ev_explosion)
-        st.events.subscribe("unit_critical", self._ev_critical)
-        st.events.subscribe("weapon_fired", self._ev_fire)
-        st.events.subscribe("projectile_hit", self._ev_hit)
-        st.events.subscribe("jump_complete", self._ev_jump)
-        st.events.subscribe("jump_depart", self._ev_jump_depart)
-        st.events.subscribe("ship_built", self._ev_build)
-        st.events.subscribe("station_built", self._ev_station)
-        st.events.subscribe("research_complete", self._ev_research)
-        st.events.subscribe("unit_leveled", self._ev_level)
-        st.events.subscribe("game_over", self._ev_game_over)
-        st.events.subscribe("mission_complete", self._ev_mission_complete)
-        st.events.subscribe("mission_failed", self._ev_mission_failed)
-        st.events.subscribe("convoy_arrived", self._ev_convoy)
-        st.events.subscribe("convoy_raided", self._ev_raid)
-        st.events.subscribe("ability_used", self._ev_ability)
+        self._subscribe(state)
+
+    def _subscribe(self, state):
+        if not self.available:
+            return
+        for event, method in self._EVENT_HANDLERS:
+            state.events.subscribe(event, getattr(self, method))
+
+    _EVENT_HANDLERS = (
+        ('unit_destroyed', '_ev_explosion'),
+        ('unit_critical', '_ev_critical'),
+        ('weapon_fired', '_ev_fire'),
+        ('projectile_hit', '_ev_hit'),
+        ('jump_complete', '_ev_jump'),
+        ('jump_depart', '_ev_jump_depart'),
+        ('ship_built', '_ev_build'),
+        ('station_built', '_ev_station'),
+        ('research_complete', '_ev_research'),
+        ('unit_leveled', '_ev_level'),
+        ('game_over', '_ev_game_over'),
+        ('mission_complete', '_ev_mission_complete'),
+        ('mission_failed', '_ev_mission_failed'),
+        ('convoy_arrived', '_ev_convoy'),
+        ('convoy_raided', '_ev_raid'),
+        ('ability_used', '_ev_ability'),
+    )
+
+    def _detach(self, state):
+        # EventBus has no public unsubscribe; remove only this engine's handlers.
+        for event, method in self._EVENT_HANDLERS:
+            callbacks = getattr(state.events, '_subs', {}).get(event, [])
+            handler = getattr(self, method)
+            callbacks[:] = [fn for fn in callbacks if fn != handler]
+
+    def rebind_state(self, state, ds=None):
+        """Transfer event ownership without touching mixer, voices or ambience."""
+        if state is self.state:
+            self._ds = ds
+            return
+        try:
+            self._subscribe(state)
+        except Exception:
+            self._detach(state)
+            raise
+        self._detach(self.state)
+        self.state, self._ds = state, ds
+        self._last.clear()
+
 
     # ------------------------------------------------------------- data access
     def _store(self):
@@ -902,6 +933,7 @@ class Audio:
             self.play("mission_failed", 0.9)
 
     def cleanup(self) -> None:
+        self._detach(self.state)
         if self.ambient_channel:
             self.ambient_channel.stop()
         if self.available:

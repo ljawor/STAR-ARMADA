@@ -19,7 +19,7 @@
 
 The map catalogue is the same as Skirmish: Sector Duel / Kotarri Sector (2 total players), Trinary Reach (3), Crossroads (4), and Nebula Frontier (4). Humans and AI share the map's capacity. Two humans can play alone or add AI on a larger map. Cooperative mode puts humans on one team against AI; free-for-all gives each player a separate team. Teammates share sensors, but not control of each other's ships.
 
-Gameplay advances only when every human has contributed the next turn. The UI stays responsive while waiting. Disconnects and synchronization failures stop the match rather than silently allowing divergent simulations. LAN matches do not support independent pause, quickload or restoring a saved multiplayer session.
+Gameplay advances only when every human has contributed the next turn. The UI stays responsive while waiting. Synchronization failures stop the match rather than silently allowing divergent simulations. Unexpected post-launch transport interruption now attempts experimental same-host recovery as described below; recovery can still fail. LAN matches do not support independent pause, quickload or restoring a saved multiplayer session.
 
 ### Human orders and local limits
 
@@ -31,7 +31,21 @@ Controlled in-match LAN failures and uncaught Python exceptions now have small, 
 
 ### Recovery status
 
-Production disconnects still end the match. There is **no production reconnect/resume integration**: `game/net/reconnect.py` and its diagnostics test snapshot/transfer/input-ledger foundations only. They do not establish a distributed freeze point, reopen the live session, reconcile the running delayed pipeline, or atomically replace the manager/UI/recorder. Returning to the join menu starts a new connection, not continuation of the interrupted match. See [LAN reconnect foundations](LAN_RECONNECT.md).
+**Experimental, not production-ready or released.** The LAN host/join menus enable
+same-host reconnect before handshake. After all clients have received the launch,
+an unexpected socket interruption can pause all humans, retry the original host
+and restore the delayed pipeline within one absolute 60-second grace. The paused
+overlay shows missing peers, deadline and phase; camera controls remain available,
+while world orders are blocked. **Escape / Cancel reconnect leaves the match.**
+Delivered shutdown, abort, protocol errors and desync remain terminal. There is no
+host migration or process-restart recovery; returning to Join starts a new session.
+
+Known unfixed blockers include unauthenticated admission starvation, loss of the
+initial start packet stranding a client in the lobby, and partial renderer
+construction leaking GL resources. The integrated suite and user-data-preservation
+gate failed; native mixed Mac/Windows physical-machine acceptance and original
+crash attribution remain open. Use only a trusted isolated LAN and protect user
+data before manual experiments. See [implemented scope, blockers and evidence](LAN_RECONNECT.md).
 
 ## Windows Firewall: host rule
 

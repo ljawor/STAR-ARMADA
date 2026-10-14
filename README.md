@@ -596,7 +596,7 @@ friendly sensor can provide detection for another ship's longer-range weapons.
 | LAN host/join, 2–4 humans, optional AI, configurable TCP port | ✅ implemented; matching version/content required |
 | Deterministic lockstep, serialized commands, replay infrastructure | ✅ implemented and tested |
 | Replay recording/browser/read-only playback | ✅ released in v0.8.0; timestamps, selection, bulk delete, metadata-only rendering since v0.13.0; strict version/content compatibility |
-| LAN reconnect/resync | 🔲 production integration pending; tested standalone foundation only |
+| LAN reconnect/resync | 🟠 experimental same-host live integration; known unfixed blockers, not production-ready or released |
 | Four skirmish maps, player factions/colors/teams, AI difficulty | ✅ implemented; 2–4 total players by map |
 | Boarding/capture, onboard crew/life support and abandoned hulls | ✅ merged in #37; released in v0.7.0 |
 | Base crew recruitment, field crew transports, proportional staffing, cautious boarding/recovery AI | ✅ merged in #38; released in v0.7.0; balance acceptance remains open |
@@ -722,9 +722,11 @@ observations and remaining balance gates are documented separately. Campaign scr
 staged capture/crew objectives and replay recording/browser/playback are implemented
 in v0.8.0; package checks are recorded in release notes.
 See [campaign notes](docs/CAMPAIGN_SCRIPTING.md)
-and [replay notes](docs/REPLAYS.md). Reconnect has standalone tested foundations only:
-**live LAN disconnects still end matches**. Production freeze/rollback, input
-reconciliation and UI handoff remain pending; see [reconnect scope](docs/LAN_RECONNECT.md).
+and [replay notes](docs/REPLAYS.md). This source adds **experimental same-host LAN reconnect**
+with freeze/drain, delayed-input reconciliation and UI/recorder handoff. It is enabled
+by the LAN menus, but known admission, launch-delivery and resource-cleanup defects
+remain; the integrated suite and persistence-preservation gate failed. This is not
+a readiness or release claim; see [scope, blockers and evidence](docs/LAN_RECONNECT.md).
 The Phase 10 audio/cinematic/help increment is packaged in v0.9.0; its acceptance limits
 are listed above. Eight-player matches, natural full campaign playthroughs, full faction parity,
 in-game mod management and further performance work remain pending. Current skirmish/LAN capacity is **2–4 total players**,

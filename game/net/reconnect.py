@@ -1,8 +1,10 @@
-"""Opt-in reconnect primitives, NOT integrated into production LanSession.
+"""Snapshot/transfer foundations used by the opt-in live production backend.
 
 Only trusted same-content/same-version LAN skirmishes. No pickle, arbitrary
 imports, float rounding, simulation wallclock, or changes to the normal tick path.
-See docs/LAN_RECONNECT.md for the required distributed barrier/input seams.
+`live_recovery.py` owns distributed freeze/drain, target-tick input reconciliation,
+private admission, all-peer install ACK and absolute grace. RecoveryBarrier and
+PendingInputs below remain standalone quiet-barrier policy primitives.
 """
 from dataclasses import fields, is_dataclass
 from typing import Any, get_type_hints, get_origin, get_args

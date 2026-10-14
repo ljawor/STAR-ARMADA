@@ -1,218 +1,187 @@
-# LAN reconnect: tested foundation, not a shipped reconnect flow
+# LAN reconnect: experimental same-host live integration
 
 ## Status and scope
 
-`game/net/reconnect.py` supplies opt-in primitives for **same-host, same-build,
-same-content LAN skirmishes**. They are deliberately **not enabled in
-`LanSession` or `main.py`**. A production joined-peer disconnect, loading timeout,
-protocol error, or desync still terminates the match. There is no host migration,
-new reconnect button, automatic reconnect, or promise of process-restart recovery.
+**Implemented in this source, enabled by the LAN menus, not production-ready or
+released.** The user authorized an experimental merge despite known blockers,
+not stable release approval. The implementation targets same-host, same-build,
+same-content trusted-LAN skirmishes with 2–4 humans **after every participant has
+received the canonical launch**. Initial launch-packet loss is not recovered.
 
-This is the narrow foundation permitted by the implementation request. Do not
-mark LAN reconnect complete based on its diagnostic. The diagnostic externally
-quiesces simulations at one canonical tick; it does not discover that barrier in
-an interrupted production lockstep session.
+`LanSession` remains opt-in for programmatic callers: pass `recovery=True` to
+`host`/`join`, or call `enable_recovery()` before any handshake bytes are sent.
+Every human must opt in; mixed opt-in is rejected. `render/menus.py` opts in before
+polling. Unexpected socket EOF retries only the original host address. A live
+host process and its original session/listener must survive; there is no host
+migration, saved-multiplayer-session load or process-restart recovery. Delivered
+shutdown/abort, protocol errors, desync and grace expiry remain terminal.
 
-## Delivered APIs
+TCP bearer credentials are plaintext. Use only a trusted isolated LAN; this is
+not Internet-facing authentication or an availability guarantee. Returning to
+the Join menu starts a new connection rather than restoring a lost slot.
 
-- `capture_snapshot(manager) -> bytes` and `restore_snapshot(bytes) -> GameManager`:
-  full-precision dataclass fields, integer/tuple dictionary keys, sets and tuples,
-  queued commands, all AI instance variables excluding `state`/`ds`, trading,
-  squadron, victory and mission state, plus command-capacity timer. The new
-  campaign-script object's triggers/progress are explicitly represented rather
-  than following its cyclic manager references. Mission-bearing managers are
-  rejected: LAN currently launches skirmishes only.
-- Restoring constructs a **new** manager with all systems pointing to its **same
-  restored state**. Constructor-time visibility/queue resets happen before the
-  snapshot fields are installed. Spatial/query caches are rebuilt/lazy; events,
-  visual effects, floating text and transient recorder/network pointers are not
-  transported. No pickle, dynamically imported wire types, float rounding or
-  `GameState.to_dict()` substitution is used. Unsupported future field types
-  fail closed. Maintain this schema and checksum together when new mutable
-  simulation-system state is introduced.
-- Snapshot envelopes require exact game version, protocol, content hash, tick
-  and `precise_checksum`. Snapshot size is bounded to **8 MiB**. These are
-  authenticated-host data, not a general-purpose hostile save-file sandbox.
-- `RecoveryBarrier(humans, content)`: host policy for a **caller-proven already
-  quiesced** barrier. `credentials(slot)` returns a random session ID and
-  per-slot bearer token, each generated from 32 random bytes, plus credential
-  generation/build/protocol. `interrupt(slot, tick=..., digest=..., now=...)`
-  starts one absolute **60-second** grace. Further disconnects, authentication,
-  loading, heartbeats and polling do not extend it. Pass monotonic transport
-  time to `poll`, `authenticate`, `acknowledge`, and `finish`.
-- `authenticate(slot, **credentials, content=..., now=...)` checks exact session,
-  slot token, credential generation, build, protocol and content. Invalid
-  outsider requests raise `ValueError` without killing continuing participants.
-  Acknowledgements from authenticated participants must match epoch, canonical
-  tick and the digest of the **snapshot + pending-input bundle**. A mismatch is
-  terminal. `finish(now=...)` succeeds only after all humans acknowledge and
-  before grace expires; it rotates tokens. `abort()` and `host_lost()` are
-  terminal. Keep credentials private to the corresponding slot, out of lobby
-  snapshots, reports, logs and replay files. Current LAN TCP is unencrypted:
-  bearer authentication is for trusted LANs, not protection from network sniffing.
-- `PendingInputs(humans, barrier_tick=...)`: bounded authoritative input journal.
-  One batch per slot per strictly increasing target tick, at most 64 commands,
-  target within the current barrier plus twice the production input delay.
-  Assign a per-slot `sequence` **before** transmission. `accept` is idempotent
-  only for an identical outstanding retry, rejects changed/skipped/spent
-  sequences, and detaches submitted mutable data. `for_tick` returns slot-ordered
-  commands. Call `commit_through(executed_tick)` only after execution; spent
-  watermarks survive `export()`/`restore()`. The ledger is separate from the
-  state's already-committed command queue.
-- `ChunkSender(bundle_bytes)` / `ChunkReceiver(expected_digest)`: SHA-256-verified,
-  contiguous transfer with **32 KiB raw chunks**, one frame queued per `pump(peer)`
-  and backpressure at the existing 64 KiB IO budget. Uses existing `_Peer` framing
-  and its frame/buffer limits; no oversized snapshot frame or unbounded enqueue
-  loop. The complete transmitted bundle must also fit 8 MiB; the diagnostic's
-  base64 snapshot packaging reduces the usable raw-snapshot budget. Reject an
-  oversized final bundle instead of silently raising transport limits. Restart
-  an interrupted transfer with a new receiver/transfer ID; no
-  partial-transfer continuation is promised. The recovery coordinator's absolute
-  grace must continue running through all chunk transfer and graph loading.
+## Implemented backend and application handoff
 
-## Why production integration is intentionally blocked
+`game/net/live_recovery.py` drives distributed freeze, bounded released-frame
+**drain, never rollback**, and target-tick input reconciliation. Ordinary
+`advance(gm, dt)` remains paused; `recovery_step(gm)` explicitly advances at most
+one already-released fixed tick. The host selects the maximum reported tick,
+requires skew within the delayed pipeline, sends authoritative drain proof, and
+requires precise graph agreement before capturing a snapshot. Normal ticks keep
+bounded input/frame history, not per-tick graph snapshots.
 
-Production `LanSession` pipelines input/checksum frames three ticks ahead. On
-socket loss, host and continuing clients need not be at the same simulation tick.
-Its `_pending`, `_sealed`, `_inputs`, `_frames`, `_checksums` and each peer's
-`next_tick` are transport state, not recoverable from a `GameState` save. A local
-submission may have left `_pending` but not reached the host; another copy may be
-accepted or already spent. The current wire input protocol has no persistent
-per-submission ID or acknowledged execution watermark. Simply reconnecting a
-socket, resetting its turn counters, or replacing one graph silently loses or
-repeats inputs. Taking a snapshot while other peers still advance is not a
-canonical all-peer pause.
+The live journal identifies a batch by original authenticated slot + target tick;
+it is **not** the standalone `PendingInputs` sequence ledger. Unsealed local
+drafts, sealed-but-unsent batches, accepted-unspent batches and already-executed
+actions are reconciled separately. Conflicting accepted retries, spent entries,
+gaps and invalid future frontiers are rejected. The bundle reconstructs pending
+inputs, sealed checksums, released frames and peer counters without changing
+original paid-command execution ticks.
 
-### Required backend work before enabling recovery
+Original slot-bound private credentials, staged next credentials and all-peer
+install ACKs guard resume. Credential rotation commits only after all ACKs;
+continuing sockets and the original host listener are retained. Chunked drain
+proof, input reports and snapshot bundles use existing frame/buffer caps and
+backpressure. One absolute **60-second** deadline begins at first interruption
+and covers retries, transfer, graph reconstruction and application installation;
+additional interruptions and heartbeats do not extend it.
 
-1. Add explicit wire-versioned pause/freeze messages and canonical barrier
-   selection for **all** humans, including continuing connections. Journal
-   committed frames and graph snapshots sufficiently to reconcile bounded
-   pipeline skew. Either drain to a proven common barrier with all necessary
-   inputs, or roll all graphs back consistently. Never let the live tick driver
-   keep stepping one graph after recovery begins.
-2. Assign stable input batch IDs at submission/sealing and retain local
-   unconfirmed submissions through socket replacement. Reconcile each peer's
-   pending/sealed/in-flight inputs against authoritative accepted and spent
-   watermarks before finalizing the bundle. Retain original target ticks; do not
-   blindly merge journal entries into `GameState.command_queue`.
-3. Integrate resume-token issuance into the slot's original authenticated
-   handshake, keep disconnected slots reserved, keep the same host listener,
-   reject outsiders/stale generations before sending a snapshot, and bind every
-   received acknowledgement to that connection's authenticated slot. Do not trust
-   a client-supplied acknowledgement slot number as connection identity.
-4. Separate **recoverable transport interruption** from fatal protocol/desync
-   errors and explicit terminal close/abort. Preserve lobby port-probe handling
-   and cold-launch absolute loading deadlines. Host loss is always terminal.
-5. Reset/rebuild delayed frame/checksum/sequence pipelines from the authoritative
-   bundle, validate every restored graph, then broadcast a single all-peer resume
-   epoch. Check the original absolute grace at every phase. Do not start a fresh
-   loading deadline or extend it on heartbeats. Start grace at the **first
-   detected transport interruption**, not at a later snapshot/quiescence stage;
-   pass that original detection time to the foundation policy and check current
-   monotonic time before any later phase.
+The caller takes `take_restored_manager()`, prepares the replacement application
+graph, then calls `acknowledge_install(manager)`. `main.py` validates the drained
+tick/hash and rebuilds camera, renderer, HUD and input references; transfers audio
+event ownership without reopening the mixer; transfers the existing recorder;
+retains valid selection/groups/follow target; clears accumulator debt; and ACKs
+only after rebinding. Partial renderer-constructor failure still leaks resources
+(see blockers); successful-path handoff is not exception-safety proof.
 
-### Required `main.py` / UI seam (no changes delivered here)
+The Clean Classic recovery overlay reports missing peers, remaining grace and
+actual phase/barrier progress. It blocks world orders, clears pending gestures,
+allows camera movement/zoom, and offers **Escape / Cancel reconnect and leave
+match**. It does not invent transfer percentages when none are available.
 
-The eventual integrated session needs an explicit recovering status, detached
-recovery progress (missing slots, time remaining, loading/hash-ack phase), an
-abort action, and an atomic restored-manager handoff. Existing
-`session.advance(gm, dt)` must return `False` throughout recovery with no
-simulation catch-up debt. On handoff, rebind **gm, state, renderer, HUD, input,
-audio/event subscriptions, camera/viewer callbacks, recorder/network pointers**
-and selection references; clear old accumulator debt. Do not add reconnect UI
-that calls these standalone primitives without the backend steps above.
+## Snapshot and transfer foundations
 
-There is deliberately no production `LanSession.resume()`/`reconnect()` API yet.
-The tested `restore_snapshot` return value is a seam for future integration,
-not an automatically installed game graph.
+`game/net/reconnect.py` supplies the shared graph codec and chunk transport:
 
-## Validation fixes and remaining trust boundaries
+- `capture_snapshot(manager)` / `restore_snapshot(bytes)` preserve full-precision
+  dataclass fields, typed dictionary keys, sets/tuples, queued commands, AI and
+  future-affecting system state, including command-capacity timers and campaign
+  script progress without following cyclic manager references. Mission-bearing
+  managers are rejected: LAN currently launches skirmishes only.
+- A restored manager's systems share its one restored state. Constructor-time
+  normalization/queue clearing precedes snapshot installation. Spatial/query
+  caches rebuild lazily; event subscribers, visual effects, floating text and
+  transient recorder/network pointers are not transported. No pickle, arbitrary
+  dynamic imports, float rounding or save-dictionary substitution is used.
+- Envelopes require exact version/protocol/content/tick/precise checksum. Core
+  dataclass runtime types and annotated nested fields, entity/player/fleet/
+  projectile dictionaries, queued PlayerCommands, SubsystemState/Vec3, AI roster
+  and required system attributes are checked before installing decoded fields.
+  An equivalent dictionary is not accepted as a typed runtime object merely
+  because it produces the same canonical checksum.
+- Malformed shapes, unhashable keys/elements, nonfinite numbers and recursion/
+  encoding errors become controlled ValueErrors. Payloads are capped at **8 MiB**,
+  logical decode depth at **64**, and aggregate decoded nodes at **250,000**.
+  The byte-bounded JSON document is allocated before logical decode budgets run.
+- `ChunkSender` / `ChunkReceiver` use SHA-256 integrity, contiguous **32 KiB raw
+  chunks**, one queued frame per pump and existing **64 KiB IO** backpressure.
+  Whole bundles must fit the cap; general frame/buffer limits are not raised.
+  Interrupted transfers restart with a new receiver, not partial continuation.
+- `RecoveryBarrier` and `PendingInputs` remain standalone caller-proven quiet-
+  barrier policy primitives, not the production live coordinator/journal.
+  `RecoveryBarrier` binds session/slot/generation/build/content and enforces the
+  first absolute grace and authenticated all-peer ACKs. Its caller supplies
+  connection identity. `PendingInputs` requires outstanding sequences exactly
+  `spent+1 .. next-1`, rejects gaps/duplicates/conflicts/spent retries, and keeps
+  its ledger distinct from already-committed graph commands.
 
-The detached decoded graph is validated **before any snapshot fields are installed**:
-exact core dataclass runtime types and annotated field types, typed entity/player/
-fleet/projectile dictionaries with matching IDs, queued `PlayerCommand`s, nested
-`SubsystemState`/`Vec3`, discovery snapshots, exploration cells, and typed cooldown/
-color/member containers. A dict with identical fields is not a typed object, even
-if `precise_checksum` cannot distinguish them. Required AI attributes, ownership,
-brain roster (empty before the first tick, complete afterwards), timers, attack
-fleet ID and pending-site `(station_kind, Vec3)` entries are checked. Required
-system attribute keys/types and fixed config/script/progress dictionary shapes
-are checked against a newly constructed empty manager before installation.
+Trust boundary: snapshots are authenticated **trusted-host** data, not a hostile
+save sandbox. Checksums are alignment/integrity checks, not authorization or a
+MAC. Untyped gameplay payload interiors, map geometry, statistics and extra AI/
+script values do not have exhaustive gameplay/range/referential-integrity
+validation. A dishonest host can supply self-consistent state. Supported field
+schemas and checksums must evolve together as mutable simulation state changes.
 
-Malformed envelope/body/type-tag/collection shapes, unhashable keys/elements,
-nonfinite numbers and JSON recursion/encoding errors raise controlled `ValueError`.
-The existing 8 MiB byte cap remains; decoded values have a **64 logical-level depth
-cap** and **250,000-node aggregate budget** across state, AI and systems (keys,
-scalars and containers count). These independently bound deep recursion and
-small-node object amplification; they are conservative foundation policy limits,
-not a measured maximum supported match size. The JSON parser still allocates the
-byte-bounded document before the logical decode budget is applied.
+## Known unfixed blockers — experimental merge only
 
-Restored input entries must have exactly `slot`, `sequence`, `target_tick`, and
-`commands`. Each slot's outstanding sequences must cover `spent+1 .. next-1`
-exactly once; empty gaps and identical duplicate entries are rejected. Normal
-`accept` retries remain idempotent. The diagnostic's acknowledgement handler binds
-to the **host peer-map slot** and rejects a supplied slot mismatch before policy
-mutation. The policy API itself still relies on its caller to supply connection
-identity; it does not authenticate sockets.
+1. **Admission starvation (high):** unauthenticated incomplete-frame sockets count
+   against the four-peer admission cap before authentication. Partial bytes renew
+   receive-idle time without completing authentication. An independent four-human
+   real-TCP probe occupied remaining capacity with two outsiders, rejected five
+   valid original-slot retries, then expired grace. Reserved-slot identity does not
+   guarantee reconnect availability. No absolute authentication deadline or
+   unauthenticated-pool displacement is implemented.
+2. **Initial start-packet loss (high):** if the host has entered running but a ready
+   client loses the socket before receiving `start`, the client is still lobby and
+   cannot enter recovery or construct a manager. Independent 2/3/4-human probes
+   reproduce client `Disconnected` while the host waits in recovering. Existing
+   startup tests wait for every launch first; they do not cover this boundary.
+3. **Partial Renderer construction:** failure after GL display-list/shader program
+   allocation can leak those resources because the constructor never returns the
+   object to `install_recovered_manager` for cleanup. Current injected-constructor
+   tests reject before partial allocation; they do not prove cleanup of that case.
+4. **Integrated suite fails:** 1478 tests, 0 failures, **2 errors**, 8 existing skips.
+   Both `test_gl_lifecycle.MainLifecycleTests.test_shutdown_closes_views_before_quit_and_handles_menu_only`
+   subtests (`started=False/True`) raise `NameError: recovery_overlay is not defined`
+   in the AST-extracted shutdown fixture. Immutable base `319250d` passes that
+   unchanged test. No guard, weakened assertion or new skip was added to hide it.
+5. **User-data preservation failed in that run:** three repository autosaves and
+   `campaign.json` changed; `match-8897608fad5c4e888acd33627c52591d.json` appeared in
+   replays. Attribution is unresolved despite an audit barrier reporting no
+   violations. Application Support files did not change. Original snapshots and
+   changed-file evidence are preserved; files were not restored/deleted. Do not
+   claim the whole run was persistence-safe or rerun it against real user data.
+6. **Acceptance gaps:** physical mixed Mac/Windows recovery and attribution of the
+   original crash remain unproven. Silent network blackholes can hit global
+   lockstep timeout before peer-loss recovery; EOF probes do not establish
+   blackhole recovery. Native Windows headless backend CI does not prove GL
+   handoff, frozen packages or interactive mixed-machine play.
 
-Remaining boundaries are intentional:
+No version bump is made: `game/__init__.py` remains `0.14.0`. Repository release
+instructions require a feature-branch bump for a release, not every source merge;
+this request authorizes neither a stable increment, tag nor publication. Exact
+source commits/content, not the unchanged display version alone, identify this
+experiment. No release workflow is dispatched by this PR preparation.
 
-- Only authenticated, same-version/content, trusted-host skirmish snapshots are
-  supported. Checksums are integrity/alignment checks, not authorization or a MAC;
-  the host can construct a self-consistent but dishonest graph.
-- Untyped payload interiors remain host-owned semantics: build/research/damage/
-  boarding/crew-mission records, map geometry dictionaries, statistics, extra AI
-  strategy values, and script progress collection contents are not exhaustively
-  validated as gameplay schemas. Core annotations and explicitly listed nested
-  types are checked, but this is **not** a hostile-save sandbox, a complete
-  referential-integrity/catalogue/range validator, or proof every accepted graph
-  can execute arbitrary future ticks.
-- The subsequent replay/save fidelity fix restores canonical `SubsystemState`
-  objects instead of dynamically synthesized stubs and preserves future-affecting
-  AI/system state in a versioned runtime graph. Ordinary restored graphs can now
-  share the codec; old files without runtime state retain a documented fresh-AI/
-  reset-timer fallback rather than a historical exactness guarantee.
-- Distributed quiescence, original handshake/connection authentication, input
-  reconciliation, production recovery wiring, UI handoff, host migration and
-  unencrypted-LAN bearer-token risks remain as documented above.
+## Verification evidence and limits
 
-Only focused reconnect tests/diagnostics are run for these fixes; no full-suite,
-commit or push is part of this validation change.
+The completed native Cocoa/real-GL integration report and raw logs live at
+`~/.hermes/cache/scratch/star-armada-production-reconnect/integrated/REPORT.md`
+and `report.json`; security/start-boundary reproductions are in
+`~/.hermes/cache/scratch/lan-independent-review/review.json`. These are local
+evidence paths, not committed CI artifacts. Read their failures, not just passes.
 
-## Verification
+- Production diagnostic: all **12 real-TCP** cases (2/3/4 humans × pending,
+  lost-before-accept, accepted-unspent, spent), exact control/peer continuation
+  through tick 60 and paid queues once. This tight-loop diagnostic uses multiple
+  managers in one process and is not an FPS or process-isolation benchmark.
+- Separate independent-process recovery evidence covers all 12 cases; it does
+  not substitute for physical mixed-machine tests.
+- Actual host and joined app probes: unchanged application path, real GL, natural
+  paid input before/after handoff, original recording and exact playback;
+  31-tick future traces. Overlay measured at 640×480 and 1920×1080.
+- Recovery-enabled independent-process SDL Clock pacing: 300 ticks, 301 aligned
+  hashes; host 29.303 TPS, client 29.290 TPS against an explicit 27 TPS floor.
+- Full integration remains **FAIL** for the shutdown and persistence gates above.
+  It is not rerun during experimental-merge preparation.
+
+Windows signal retains every prior check and adds `test_lan_reconnect` and
+`test_lan_production_reconnect` to its explicit portable module list. The genuine
+GL assertions in `test_lan_recovery_handoff` and `test_lan_recovery_ui` are not run
+under that job's dummy video, weakened or relabeled as passing native Windows GL
+acceptance. Its pre-existing shared-runner pacing floor remains 15 TPS; that is
+not the native 27 TPS hardware acceptance target. Read the exact PR checks for
+the final head before making any CI claim.
+
+Focused entrypoints (run with isolated temporary persistence paths):
 
 ```sh
-PYTHONPATH=tests .venv/bin/python -m unittest test_lan_reconnect -v
-PYTHONPATH=. .venv/bin/python tools/diag_lan_reconnect.py
+PYTHONPATH=tests .venv/bin/python -m unittest test_lan_reconnect test_lan_production_reconnect -v
+PYTHONPATH=. .venv/bin/python tools/diag_lan_production_reconnect.py --out /absolute/scratch/new-recovery-run --ticks 60
+# Real video/GL required, never dummy video:
+PYTHONPATH=tests .venv/bin/python -m unittest test_lan_recovery_handoff test_lan_recovery_ui -v
 ```
 
-RED/GREEN cycles covered missing full snapshots, authenticated all-peer policy,
-absolute grace/terminal failures, credential generation/build checks, pending
-input retries/spent watermarks/turn bounds and bounded real TCP transfer.
-
-The focused diagnostic reports `LAN_RECONNECT_FOUNDATION_OK` for **2, 3 and 4
-humans**. It opens actual loopback TCP connections, closes a participant socket,
-detects EOF, keeps other sockets alive, reconnects to the same listener/port,
-rejects an invalid token, transfers the authoritative snapshot/input bundle,
-restores every peer and requires every hash acknowledgement. It compares exact
-checksums at the restored tick and **every one of 60 following ticks**, with one
-actual delayed human command per slot executed exactly once per graph. Two- and
-three-human scenarios also preserve an active AI brain. This is a single-process
-multi-graph test using real sockets, **not** independent-process live reconnect
-acceptance. A second actual disconnect replays the old rotated credential and
-proves rejection. Real TCP heartbeats accompany fake monotonic times through
-absolute grace expiry; TCP abort and observed host EOF are terminal policy
-scenarios. These remain externally driven foundation tests, not live main-loop
-recovery tests. Separate unit tests cover fatal recovery-hash mismatch and loading
-that cannot outlive grace. A separate chunk test transfers a payload larger than
-both the production frame and send-buffer bounds.
-
-Existing fatal protocol/disconnect and startup deadline tests remain unchanged
-and pass. Existing `tools/diag_lan.py` was also exercised in two independent
-processes with both 33/33/34 ms pacing and real SDL `Clock.tick(30)`: 180 ticks,
-181 exact aligned hashes, nonzero human/AI inputs, and more than 27 ticks/second
-for both peers in both modes. No reconnect logic is added to the ordinary
-simulation hot path. Full suite, GL/menu acceptance and mixed-platform tests are
-left to the parent integration gate.
+The older `tools/diag_lan_reconnect.py` reports foundation-only acceptance for
+externally quiesced same-process multi-graph TCP scenarios. Its historical passes
+are not live backend, application, process-isolation or mixed-platform proof.
