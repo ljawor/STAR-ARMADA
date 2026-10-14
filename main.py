@@ -229,6 +229,7 @@ mission_def: dict | None = None
 cinematic = None
 campaign_outcome_seen = False
 presentation = None
+recovery_overlay = None
 
 
 def flash(msg: str) -> None:
@@ -311,6 +312,86 @@ def start_game(load_path: str | None = None, mdef: dict | None = None,
     globals()['campaign_outcome_seen'] = False
     if mdef is not None and load_path is None:
         start_campaign_presentation(fresh=True)
+
+
+def install_recovered_manager(candidate):
+    """Validate the drained canonical barrier, prepare, then publish one graph.
+
+    The caller ACKs only after this returns. No tick rewind, new recording or
+    mixer restart is permitted. Constructors touch only a private camera.
+    """
+    global gm, state, camera, renderer, hud, inputc, mission_def
+    global accumulator, last_autosave
+    from game.net.lan import precise_checksum
+    from game.net.replay_validation import validate_state, validate_mission
+    if net_session is None or candidate is gm:
+        raise ValueError('Recovery requires a detached LAN manager')
+    old_gm, old_state = gm, state
+    old_renderer, old_hud = renderer, hud
+    # Candidate reconstruction may replace the singleton. Live consumers must
+    # retain their original catalogue even when preparation/validation fails.
+    previous_store = old_gm.ds
+    prepared_renderer = prepared_hud = None
+    published = False
+    try:
+        validate_state(candidate.state.to_dict(precise=True))
+        validate_mission(candidate.state.mission_state, candidate.ds)
+        if (candidate.state.tick != old_state.tick
+                or precise_checksum(candidate) != precise_checksum(old_gm)):
+            raise ValueError('Recovered manager differs from the drained canonical barrier')
+        DataStore._instance = candidate.ds
+        prepared_camera = Camera(W, H)
+        for name in ('distance', 'yaw', 'pitch', 'fov', 'near', 'far', 'zoom_limits'):
+            setattr(prepared_camera, name, getattr(camera, name))
+        prepared_camera.target = list(camera.target)
+        def retained(eid):
+            entity = candidate.state.known_entity(local_player, eid)
+            return entity is not None and entity.alive
+        prepared_camera.follow_id = camera.follow_id if retained(camera.follow_id) else None
+        prepared_hud = HUD(W, H, candidate.state)
+        prepared_hud.local_player = local_player
+        prepared_hud.set_camera_ref(prepared_camera)
+        prepared_input = InputController(candidate.state, prepared_camera, prepared_hud, _AppGlue())
+        prepared_input.local_player = local_player
+        prepared_input.selection = {eid for eid in inputc.selection if retained(eid)}
+        prepared_input.groups = {key: {eid for eid in ids if retained(eid)}
+                                 for key, ids in inputc.groups.items()}
+        prepared_input.grab_mouse = inputc.grab_mouse
+        # Bind renderer last so the camera keeps its animation callback too.
+        prepared_renderer = Renderer(candidate.state, prepared_camera)
+        prepared_renderer.local_player = local_player
+        prepared_renderer.marker_mode = SETTINGS.get('markers', 'all')
+        # No remaining preparation can fail after ownership transfer. Undo audio
+        # if recorder transfer rejects a malformed/closed recording.
+        if audio is not None:
+            audio.rebind_state(candidate.state, candidate.ds)
+        try:
+            if recording is not None:
+                recording.rebind_manager(candidate)
+        except Exception:
+            if audio is not None:
+                audio.rebind_state(old_state, old_gm.ds)
+            raise
+        candidate.state._net_session = net_session
+        gm, state, camera, renderer, hud, inputc = (
+            candidate, candidate.state, prepared_camera, prepared_renderer,
+            prepared_hud, prepared_input)
+        mission_def = gm.mission.mission
+        accumulator, last_autosave = 0.0, state.time
+        old_state._net_session = None
+        if audio is not None:
+            audio.set_camera(camera)
+        published = True
+    finally:
+        if not published:
+            DataStore._instance = previous_store
+            if prepared_renderer is not None:
+                prepared_renderer.close()
+            if prepared_hud is not None:
+                prepared_hud.close()
+    # Old resources are released only after all live references agree.
+    old_renderer.close()
+    old_hud.close()
 
 
 def load_saved_game(path):
@@ -432,9 +513,27 @@ def draw_campaign_presentation(dt_frame):
             leave_game(screen='campaign' if mission_def is not None else None)
 
 
+def lan_recovering():
+    return net_session is not None and net_session.snapshot.get('status') == 'recovering'
+
+
+def drive_lan_recovery():
+    """Bounded canonical drain; the session never publishes application state."""
+    global accumulator
+    accumulator = 0.0
+    net_session.recovery_step(gm)
+    candidate = net_session.take_restored_manager()
+    if candidate is not None:
+        install_recovered_manager(candidate)
+        net_session.acknowledge_install(candidate)
+
+
 def advance_simulation(dt_frame):
     """LAN advances at most one barrier per frame; waiting never accrues debt."""
     global accumulator
+    if net_session is not None and getattr(net_session, 'snapshot', {}).get('status') == 'recovering':
+        drive_lan_recovery()
+        return
     if globals().get('cinematic') is not None and net_session is None and globals().get('playback') is None:
         accumulator = 0.0
         return
@@ -479,7 +578,10 @@ def leave_game(reason='', screen=None, *, phase='termination', exception=None):
     came from; the default keeps the LAN/replay/skirmish behaviour unchanged.
     """
     global net_session, mode, paused, accumulator, audio
-    global presentation
+    global presentation, recovery_overlay
+    if globals().get('recovery_overlay') is not None:
+        recovery_overlay.cleanup()
+        recovery_overlay = None
     if (reason or exception is not None) and net_session is not None and globals().get('USER_DIR') is not None:
         from game.net.diagnostics import record_failure
         record_failure(USER_DIR, phase=phase, tick=getattr(state, 'tick', None),
@@ -517,6 +619,9 @@ def poll_network():
         return
     try:
         net_session.poll()
+        if (net_session.snapshot.get('status') == 'recovering'
+                or globals().get('recovery_overlay') is not None):
+            sync_recovery_overlay()
         if net_session.snapshot.get('status') == 'error' or net_session.snapshot.get('error'):
             leave_game(str(net_session.snapshot.get('error') or 'LAN session failed.'),
                        phase=net_session.snapshot.get('failure_phase', 'transport'))
@@ -524,7 +629,60 @@ def poll_network():
         leave_game(str(exc), phase='transport', exception=exc)
 
 
+def sync_recovery_overlay():
+    """Invalidate pending world gestures once on entry, not every render frame."""
+    global recovery_overlay, accumulator
+    if lan_recovering():
+        accumulator = 0.0
+        if globals().get('recovery_overlay') is None:
+            from render.recovery_overlay import RecoveryOverlay
+            recovery_overlay = RecoveryOverlay(W, H)
+            inputc.keys.clear()
+            inputc.dragging = False
+            inputc.drag_start = inputc.drag_cur = inputc.right_drag = None
+            inputc._pending_fleet = inputc._pending_jump = inputc._pending_ability = None
+            inputc._menu_armed = False
+            hud.placement = None
+    elif globals().get('recovery_overlay') is not None:
+        recovery_overlay.cleanup()
+        recovery_overlay = None
+
+
+def draw_recovery_overlay():
+    sync_recovery_overlay()
+    if recovery_overlay is not None:
+        recovery_overlay.draw(net_session.recovery_snapshot, width=W, height=H)
+        recovery_overlay.draw_gl()
+
+
+def handle_recovery_event(ev):
+    """Consume all world input during recovery; allow only view-safe controls."""
+    if not lan_recovering():
+        return False
+    sync_recovery_overlay()
+    if recovery_overlay.handle_event(ev):
+        net_session.abort_recovery()
+        leave_game('Reconnect cancelled. You left the LAN match.')
+        return True
+    view_keys = {pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN,
+                 pygame.K_w, pygame.K_a, pygame.K_s, pygame.K_d,
+                 pygame.K_q, pygame.K_e}
+    if ev.type in (pygame.KEYDOWN, pygame.KEYUP) and ev.key in view_keys:
+        if ev.type == pygame.KEYDOWN:
+            inputc.keys.add(ev.key)
+        else:
+            inputc.keys.discard(ev.key)
+    elif ev.type == pygame.WINDOWFOCUSLOST:
+        inputc.keys.clear()
+    elif ev.type == pygame.MOUSEWHEEL:
+        camera.zoom(0.88 ** ev.y)
+    return True
+
+
 def handle_game_input(ev):
+    if net_session is not None and getattr(net_session, 'snapshot', {}).get('status') == 'recovering':
+        handle_recovery_event(ev)
+        return
     if globals().get('playback') is not None and ev.type == pygame.KEYDOWN:
         if ev.key == pygame.K_ESCAPE:
             leave_game()
@@ -786,6 +944,10 @@ while running:
         if ev.type == pygame.QUIT:
             running = False
             break
+        if handle_recovery_event(ev):
+            if mode != 'game':
+                break
+            continue
         if presentation_frame:
             cinematic.handle_event(ev)
             continue
@@ -836,7 +998,8 @@ while running:
     if playback is None and state.game_over:
         finish_recording()
     inputc.update(dt_frame)
-    inputc.update_placement()
+    if not lan_recovering():
+        inputc.update_placement()
 
     # mission progress -> HUD panel
     if mission_def is not None:
@@ -870,6 +1033,7 @@ while running:
                max(0.0, flash_left), fps)
     hud.draw_gl()
     draw_presentation_overlay()
+    draw_recovery_overlay()
     pygame.display.flip()
 
     frames += 1
@@ -896,6 +1060,8 @@ while running:
 if 'finish_recording' in globals():
     finish_recording()
 menu.close()
+if recovery_overlay is not None:
+    recovery_overlay.cleanup()
 if net_session is not None:
     net_session.close()
 if audio is not None:

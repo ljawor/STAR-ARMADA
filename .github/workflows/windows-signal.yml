@@ -56,7 +56,10 @@ jobs:
           STAR_ARMADA_PACING_FLOOR: "15"
         # test_lan.DiagnosticTests runs the real two-process LAN diagnostic here
         # too: cross-process determinism must hold on Windows, not only on macOS.
-        run: python -m unittest test_netdiag test_netdiag_compare test_lan_state_diff test_sim_profiles test_lan test_multiplayer test_checksum_canonicalization test_lan_human_safety test_lan_failure_diagnostics -v
+        # Portable foundation + production backend recovery checks use real TCP.
+        # Handoff/UI modules additionally require real GL; do not run their GL
+        # assertions under dummy video or silently skip them in this job.
+        run: python -m unittest test_netdiag test_netdiag_compare test_lan_state_diff test_sim_profiles test_lan test_multiplayer test_checksum_canonicalization test_lan_human_safety test_lan_failure_diagnostics test_lan_reconnect test_lan_production_reconnect -v
       - name: Replay deletion on real Windows
         env:
           PYTHONPATH: tests

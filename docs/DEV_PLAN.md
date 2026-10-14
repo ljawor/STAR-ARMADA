@@ -195,18 +195,21 @@ regressions do not complete full campaign playthrough QA.
 **Delivered:** serialized commands, deterministic lockstep/input buffering/checksums,
 replay recorder/player infrastructure and tests; direct-IP TCP LAN host/join, selectable
 port, 2–4 humans with optional AI, readiness/configuration and content checks.
-Disconnects/desync stop matches; LAN disables independent pause and save/load.
+Desync remains terminal; unexpected post-launch socket loss now attempts experimental
+same-host recovery. LAN disables independent pause and save/load.
 
 **Implemented in the v0.8.0 source increment (PR #39):** automatic human-command replay recording,
 paged browser and read-only playback with pause/speed/end controls and content/version
-validation. See [REPLAYS.md](REPLAYS.md). Reconnect has tested snapshots, authenticated
-barriers, delayed-input journals and bounded transfer primitives only; these are NOT
-enabled in production LAN. Live disconnects still terminate matches.
+validation. See [REPLAYS.md](REPLAYS.md). Experimental live same-host reconnect now
+adds distributed freeze/released-frame drain, target-tick input reconciliation,
+bounded authenticated transfer and application/UI/recorder handoff. LAN menus
+enable it before handshake; this is not a released or production-ready feature.
 
-**Pending:** production distributed freeze/rollback, acknowledged-input reconciliation,
-reconnect/resynchronization and atomic UI/recorder handoff; end-to-end mixed-platform
-acceptance. Final replay/source verification passed; see [PHASE78_ACCEPTANCE.md](PHASE78_ACCEPTANCE.md).
-See [LAN_RECONNECT.md](LAN_RECONNECT.md) for the remaining backend work.
+**Blocked:** unauthenticated admission starvation, initial start-packet loss, partial
+renderer-construction GL leaks, shutdown-fixture errors and failed user-data
+preservation. Physical mixed-platform acceptance and original crash attribution
+remain open. The earlier replay/source evidence in [PHASE78_ACCEPTANCE.md](PHASE78_ACCEPTANCE.md)
+does not override these failures. See [LAN_RECONNECT.md](LAN_RECONNECT.md).
 Eight-player capacity is a separate pending expansion: maps, UI/setup and load/network
 testing must all grow together. The existing LAN lobby is not a missing feature.
 
@@ -315,7 +318,7 @@ and any change to the mix/volume balance.
 - **§28 Objectives:** escort/hold/survival exist; expanded scripting belongs to Phase 7.
 - **§32 Saves:** quick save/load, rotating autosaves and campaign progress exist;
   player-facing replay workflow and exact future-state restoration are verified in v0.8.0 source;
-  production LAN reconnect remains pending.
+  live same-host LAN reconnect is experimental with known unfixed blockers.
 - **§46 Victory:** command-station/planet-majority/economic/timed modes and allied
   elimination exist. Regression-test new abandonment against each mode and campaign
   objective rules rather than assuming identical semantics.
@@ -353,10 +356,11 @@ choose a separate capture/destruction policy before expanding AI permissions.
    full playthroughs of all 11 missions and tune waves/objective pacing; do not rebuild scripting.
    Short skippable cinematics are released in v0.9.0; full natural
    mission playthrough acceptance remains separate.
-4. **Next major feature: live multiplayer resilience (Phase 8).** Integrate distributed
-   freeze/rollback, acknowledged-input reconciliation and atomic reconnect/resync handoff.
-   Replay recording/browser/playback already exist; preserve deterministic scripting,
-   capture and mid-match restoration while testing 2–4 human disconnect/rejoin scenarios.
+4. **Close live multiplayer resilience blockers (Phase 8).** The experimental
+   freeze/drain, target-tick reconciliation and application handoff now exist. Fix
+   admission starvation, launch-delivery loss, constructor cleanup and the failing
+   shutdown/persistence gates before claiming readiness. Preserve deterministic
+   replay and test 2–4 human recovery on physical mixed Mac/Windows machines.
 5. **Complete faction gameplay and balance.** Resolve Syndicate scope/parity; run
    repeatable full-match economy/combat/AI benchmarks before scaling up player counts.
 6. **Meet performance targets, then expand to eight players.** Profile realistic fleets,

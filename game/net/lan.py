@@ -5,7 +5,10 @@ Snapshot is a detached lobby dict. Configure resets readiness; start requires
 all configured human slots connected and ready. Launch supplies canonical map.
 Attach session to state._net_session; advance(gm, dt) performs at most one fixed
 1/30-second tick, never accumulating network-wait time. AI stays local on every
-peer. Fatal protocol/disconnect/desync/timeout errors stop the session.
+peer. Legacy protocol/disconnect/desync/timeout errors stop the session.
+Opt-in recovery must be enabled before handshake on EVERY human; the caller
+must explicitly drive paused drain and rebind/install ACK (see live_recovery).
+Bearer authentication is plaintext, trusted isolated LAN only; no host migration.
 Cold renderer/audio loading has a separate absolute 60-second budget; the
 initial all-human checksum barrier restores normal 15-second stall detection.
 """
@@ -405,9 +408,58 @@ class LanSession:
         self._ds = DataStore.get()
         self._content = content_hash(self._ds)
         self._addresses = _local_addresses()
+        self._recovery = None
+
+    def enable_recovery(self, *, clock=None):
+        """Opt in before handshake; caller must drive drain/install while paused."""
+        if self._status not in ('connecting', 'lobby') or self._tick:
+            raise ValueError('Enable recovery before match start')
+        if self._recovery is None:
+            if (self.is_host and len(self._players) > 1) or (not self.is_host and self.local_player != -1):
+                raise ValueError('Enable recovery before handshake')
+            if not self.is_host:
+                peer = self._peers[0]
+                if len(peer.tx) < 4 or struct.unpack('!I', peer.tx[:4])[0] != len(peer.tx)-4:
+                    raise ValueError('Enable recovery before handshake hello is sent')
+                try:
+                    hello = json.loads(peer.tx[4:])
+                except ValueError:
+                    raise ValueError('Enable recovery before handshake hello is sent') from None
+                if hello.get('type') != 'hello':
+                    raise ValueError('Enable recovery before handshake hello is sent')
+            from game.net.live_recovery import LiveRecovery
+            self._recovery = LiveRecovery(self, clock=clock)
+            if not self.is_host:
+                hello['recovery'] = True
+                peer.tx.clear()
+                peer.send(hello)
+        return self
+
+    @property
+    def recovery_snapshot(self):
+        return self._recovery.snapshot if self._recovery else dict(status='disabled')
+
+    def recovery_step(self, manager):
+        return self._recovery.step(manager) if self._recovery else False
+
+    def take_restored_manager(self):
+        return self._recovery.take_manager() if self._recovery else None
+
+    def acknowledge_install(self, manager):
+        if self._recovery is None:
+            raise ValueError('Recovery not enabled')
+        try:
+            return self._recovery.acknowledge_install(manager)
+        except (ValueError, TypeError, KeyError, OverflowError, RecursionError) as exc:
+            self._fail(str(exc), phase='recovery')
+            raise
+
+    def abort_recovery(self):
+        if self._recovery:
+            self._recovery.abort()
 
     @classmethod
-    def host(cls, port, options, name='Host'):
+    def host(cls, port, options, name='Host', *, recovery=False, clock=None):
         self = cls(port, name, True)
         build_lan_map(self._ds, options)
         self._options = deepcopy(options)
@@ -421,10 +473,12 @@ class LanSession:
             raise
         self._listener = listener
         self._players = [dict(slot=0, name=name, ready=False)]
+        if recovery:
+            self.enable_recovery(clock=clock)
         return self
 
     @classmethod
-    def join(cls, address, port, name='Player'):
+    def join(cls, address, port, name='Player', *, recovery=False, clock=None):
         self = cls(port, name, False)
         # Numeric direct-IP only: do not run blocking DNS on the frame thread.
         try:
@@ -444,6 +498,8 @@ class LanSession:
         self._peers = [peer]
         peer.send(dict(type='hello', name=name, version=GAME_VERSION,
                        protocol=PROTOCOL_VERSION, content=self._content))
+        if recovery:
+            self.enable_recovery(clock=clock)
         return self
 
     @property
@@ -526,6 +582,8 @@ class LanSession:
             self._fail(str(exc))
 
     def _receive(self, peer, m):
+        if self._recovery and self._recovery.receive(peer, m):
+            return
         kind = m.get('type')
         if kind == 'ping' and ((self.is_host and peer.slot is not None) or (not self.is_host and self.local_player >= 0)):
             return
@@ -536,6 +594,8 @@ class LanSession:
             if peer.slot is None:
                 if kind != 'hello' or self._status != 'lobby' or len(self._players) >= self._options['human_count']:
                     raise ValueError('Lobby full or invalid handshake')
+                if m.get('recovery', False) is not bool(self._recovery):
+                    raise ValueError('Recovery opt-in mismatch')
                 for field, expected in (('version', GAME_VERSION), ('protocol', PROTOCOL_VERSION),
                                         ('content', self._content)):
                     if type(m.get(field)) is not type(expected) or m[field] != expected:
@@ -546,6 +606,8 @@ class LanSession:
                 peer.send(dict(type='welcome', slot=peer.slot, version=GAME_VERSION,
                                protocol=PROTOCOL_VERSION, content=self._content))
                 self._lobby()
+                if self._recovery:
+                    self._recovery.admitted(peer)
             elif kind == 'ready' and self._status == 'lobby' and type(m.get('ready')) is bool:
                 if type(m.get('revision')) is not int or m['revision'] != self._revision:
                     return  # Old consent must never apply to a changed configuration.
@@ -642,6 +704,8 @@ class LanSession:
             peer.next_tick = INPUT_DELAY if tick == 0 else tick + 1
 
     def _coordinate(self, tick):
+        if self._recovery and self._status == 'recovering':
+            return
         inputs = self._inputs.get(tick, {})
         if len(inputs) != self._options['human_count'] or tick in self._frames:
             return
@@ -651,6 +715,8 @@ class LanSession:
         frame = dict(type='frame', tick=tick, checksum=next(iter(hashes)),
                      commands=[d for slot in sorted(inputs) for d in inputs[slot]['commands']])
         self._frames[tick] = frame
+        if self._recovery:
+            self._recovery.released(frame)
         self._broadcast(frame)
 
     def advance(self, gm, dt):
@@ -679,6 +745,8 @@ class LanSession:
                     self._checksums[0] = self._sealed
                     messages.insert(0, dict(type='input', tick=0, checksum=self._sealed, commands=[]))
                 for message in messages:
+                    if self._recovery:
+                        self._recovery.sealed(message)
                     if self.is_host:
                         self._inputs.setdefault(message['tick'], {})[0] = message
                         self._coordinate(message['tick'])
@@ -711,6 +779,10 @@ class LanSession:
         if self._status in ('closed', 'error'):
             return
         try:
+            if self._recovery:
+                self._recovery.poll()
+                if self._status == 'error':
+                    return
             if time.monotonic() - self._heartbeat > TIMEOUT / 3:
                 for peer in self._peers:
                     if peer.connected and ((self.is_host and peer.slot is not None) or (not self.is_host and self.local_player >= 0)):
@@ -755,7 +827,9 @@ class LanSession:
                     if not loading_peer and time.monotonic() - peer.last > TIMEOUT:
                         raise ConnectionError('Peer timeout')
                     peer.flush()
-                except (OSError, ValueError, KeyError, TypeError, IndexError, RecursionError, OverflowError):
+                except (OSError, ValueError, KeyError, TypeError, IndexError, RecursionError, OverflowError) as exc:
+                    if isinstance(exc, OSError) and self._recovery and self._recovery.lost(peer):
+                        continue
                     if not self.is_host or peer.slot is not None:
                         raise
                     # A TCP port probe is not a participant in the match.
@@ -771,6 +845,14 @@ class LanSession:
         self._failure_phase = phase
 
     def close(self):
+        if self._recovery and self._status in ('running', 'recovering'):
+            for peer in self._peers:
+                if peer.connected and (not self.is_host or peer.slot is not None):
+                    try:
+                        peer.send(dict(type='recovery_shutdown'))
+                        peer.flush()
+                    except (OSError, ValueError):
+                        pass  # Best effort: abrupt transport loss is not explicit consent.
         if self._listener:
             self._listener.close()
             self._listener = None
