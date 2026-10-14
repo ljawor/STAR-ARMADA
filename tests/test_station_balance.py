@@ -814,6 +814,31 @@ class BalanceScreenTests(unittest.TestCase):
         self.assertEqual((self.menu.screen, self.menu.settings_page), ('settings', 4))
 
     # ------------------------------------------------------------------ the rows
+    def test_the_page_tabs_reach_their_own_page_from_either_side(self):
+        """A tab *names* its page; a handler that steps the payload strands the other one.
+
+        The two tabs are the only absolute page control in the menus — every other page
+        button carries ±1 — so adding the payload made "Per-level gains" (page 0) a no-op
+        once "Build levels" was open: a screen the player could see but not leave.
+        """
+        self.menu.screen = 'balance'
+        self.menu.balance_page = 0
+        for target, body_action in ((1, 'balance_gate_step'), (0, 'balance_step')):
+            with self.subTest(target=target):
+                self.menu.buttons = []
+                self.menu.render(0)
+                tab = next(b for b in self.menu.buttons
+                           if b['action'] == 'balance_page' and b['payload'] == target)
+                self.menu.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1,
+                                                          pos=tab['rect'].center))
+                self.assertEqual(self.menu.balance_page, target)
+                # And the body the tab names is the body that draws: a page the player
+                # switched to but that still shows the other page's rows is the same bug
+                # wearing a different face.
+                self.menu.buttons = []
+                self.menu.render(0)
+                self.assertTrue([b for b in self.menu.buttons if b['action'] == body_action])
+
     def test_the_screen_offers_exactly_the_rows_the_station_uses(self):
         """One source of truth: a row the sim would not read must not be offered."""
         self.menu.screen = 'balance'

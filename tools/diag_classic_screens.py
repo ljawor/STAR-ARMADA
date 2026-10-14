@@ -23,7 +23,8 @@ def main():
     rows = []
     variants = ['lan', 'lan_join', 'lobby_host', 'lobby_client', 'lobby_error',
                 'settings_0', 'settings_1', 'settings_2', 'settings_4', 'balance_gains',
-                'balance_levels', 'campaign_0', 'campaign_1', 'briefing_0', 'briefing_5']
+                'balance_levels', 'balance_tab_back', 'campaign_0', 'campaign_1',
+                'briefing_0', 'briefing_5']
     pygame.init()
     try:
         with patch('render.menus.USER_DIR', str(out / 'isolated-user')), \
@@ -70,6 +71,22 @@ def main():
                             menu.lan_session = SimpleNamespace(snapshot=snap, local_player=0, close=lambda: None)
                             before = deepcopy(snap)
                         menu.render(0)
+                        if variant == 'balance_tab_back':
+                            # The reported defect, driven the way the player drives it: with the
+                            # levels page open, the gains tab must still reach its own page —
+                            # the tab was drawn, the press landed, and nothing moved because the
+                            # handler stepped an absolute page index (#106).
+                            assert menu.balance_page == 1, 'variant must start on the levels page'
+                            tab = next(b for b in menu.buttons if b['action'] == 'balance_page'
+                                       and b['payload'] == 0)
+                            menu.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1,
+                                                                pos=tab['rect'].center))
+                            assert menu.balance_page == 0, 'the gains tab did not reach its page'
+                            menu.render(0)
+                            assert any(b['action'] == 'balance_step' for b in menu.buttons), \
+                                'the tab switched but the body it names did not draw'
+                            assert not any(b['action'] == 'balance_gate_step'
+                                           for b in menu.buttons)
                         assert menu._menu_movie is not None and menu._menu_movie.available, 'Battle movie missing from non-replay screen'
                         prefix = 'lan' if menu.screen.startswith('lan') else menu.screen
                         bounds = getattr(menu, prefix + '_text_bounds')

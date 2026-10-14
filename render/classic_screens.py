@@ -7,6 +7,13 @@ from render.clean_classic import SetupCanvas, ACCENT, BORDER, DONE, INK, MUTED, 
 SETTINGS_PAGE_COUNT = 5
 BALANCE_PAGE = 4
 
+#: The Game Balance editor's pages, in tab order, with the rect each tab occupies. The tabs
+#: carry their *index* as their payload — a tab is a jump, where every other page control in
+#: the menus is a step of ±1 — so this tuple is what both the tabs and `MenuStack`'s clamp
+#: read, and the payload of a tab cannot point at a page that does not exist.
+BALANCE_PAGES = ('Per-level gains', 'Build levels')
+BALANCE_TAB_RECTS = ((440, 150, 300, 34), (756, 150, 332, 34))
+
 #: Human wording for the row each gain edits. The words are the HUD refit block's own where the
 #: panel already names a resource, so the screen that tunes a station and the panel that
 #: describes it name the same thing; the value column carries the number.
@@ -312,10 +319,9 @@ def balance(menu):
             pygame.draw.circle(c.surface, DONE, (row.x + 9, row.centery), 3)
         c.text(i18n.name(menu.skirmish_store.stations[station_id].display_name),
                (row.x + 20, row.y + 5, 336, 24), 16)
-    _button(c, (440, 150, 300, 34), 'Per-level gains', 'balance_page', 0,
-            focused=menu.balance_page == 0)
-    _button(c, (756, 150, 332, 34), 'Build levels', 'balance_page', 1,
-            focused=menu.balance_page == 1)
+    for index, label in enumerate(BALANCE_PAGES):
+        _button(c, BALANCE_TAB_RECTS[index], label, 'balance_page', index,
+                focused=menu.balance_page == index)
     y = 196
     if station is None:
         c.text('No station to retune for this faction.', (440, 200, 648, 26), 18, MUTED)

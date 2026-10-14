@@ -704,6 +704,11 @@ class MenuStack:
         from render.classic_screens import SETTINGS_PAGE_COUNT
         return SETTINGS_PAGE_COUNT
 
+    def _balance_page_count(self) -> int:
+        """Pages the Game Balance editor draws; its tabs carry a page index, not a step."""
+        from render.classic_screens import BALANCE_PAGES
+        return len(BALANCE_PAGES)
+
     def balance_summary(self) -> tuple:
         """(station types retuned, hulls gated) in the current draft, for the two screens."""
         from game.data import balance
@@ -1202,7 +1207,12 @@ class MenuStack:
                     self.balance_notice = ''
                     self.buttons = []
                 elif act == "balance_page":
-                    self.balance_page = min(1, max(0, getattr(self, 'balance_page', 0) + b['payload']))
+                    # A tab *names* the page it opens; every other page control in the menus
+                    # steps by ±1. Adding this payload is what made "Per-level gains" dead
+                    # once "Build levels" was open (#106): the tab was drawn, the press
+                    # landed, and the page did not move.
+                    self.balance_page = min(self._balance_page_count() - 1,
+                                            max(0, int(b['payload'])))
                     self.balance_notice = ''
                     self.buttons = []
                 elif act == "balance_step":
