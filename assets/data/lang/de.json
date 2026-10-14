@@ -4,7 +4,7 @@
  "+{count} shot/mount": "+{count} Schuss je Lafette",
  "+{percent}% per level": "+{percent}% pro Stufe",
  "1-9 control groups · F fleet menu": "1-9 Kontrollgruppen · F Flottenmenü",
- "A hull waits for its station to reach this level — for every player, and for the AI. \"As shipped\" is buildable straight away.": "Ein Rumpf wartet, bis seine Station diese Stufe erreicht — für jeden Spieler und für die KI. „Wie ausgeliefert“ ist sofort baubar.",
+ "A hull waits for its station to reach this level — for every player and the AI.": "Ein Rumpf wartet, bis seine Station diese Stufe erreicht — für jeden Spieler und die KI.",
  "A line a pack does not carry falls back to English.": "Eine Zeile, die ein Sprachpaket nicht enthält, bleibt Englisch.",
  "A retuned station reads the same numbers in the simulation, in its own panel and in a replay recorded with it.": "Eine abgestimmte Station liest dieselben Zahlen in der Simulation, in ihrem eigenen Panel und in einer damit aufgezeichneten Aufzeichnung.",
  "ACTIONS / BUILD": "AKTIONEN / BAU",

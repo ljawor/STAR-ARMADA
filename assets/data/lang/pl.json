@@ -4,7 +4,7 @@
  "+{count} shot/mount": "+{count} strzał/montaż",
  "+{percent}% per level": "+{percent}% na poziom",
  "1-9 control groups · F fleet menu": "1-9 grupy sterowania · F menu floty",
- "A hull waits for its station to reach this level — for every player, and for the AI. \"As shipped\" is buildable straight away.": "Kadłub czeka, aż jego stacja osiągnie ten poziom — dla każdego gracza i dla AI. „Jak fabrycznie“ można budować od razu.",
+ "A hull waits for its station to reach this level — for every player and the AI.": "Kadłub czeka, aż jego stacja osiągnie ten poziom — dla każdego gracza i AI.",
  "A line a pack does not carry falls back to English.": "Wiersz, którego nie ma w pakiecie, pozostaje po angielsku.",
  "A retuned station reads the same numbers in the simulation, in its own panel and in a replay recorded with it.": "Dostrojona stacja odczytuje te same liczby w symulacji, w swoim panelu i w zapisie wykonanym z nią.",
  "ACTIONS / BUILD": "AKCJE / BUDOWA",

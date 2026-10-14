@@ -4,7 +4,7 @@
  "+{count} shot/mount": "+{count} shot/mount",
  "+{percent}% per level": "+{percent}% per level",
  "1-9 control groups · F fleet menu": "1-9 control groups · F fleet menu",
- "A hull waits for its station to reach this level — for every player, and for the AI. \"As shipped\" is buildable straight away.": "A hull waits for its station to reach this level — for every player, and for the AI. \"As shipped\" is buildable straight away.",
+ "A hull waits for its station to reach this level — for every player and the AI.": "A hull waits for its station to reach this level — for every player and the AI.",
  "A line a pack does not carry falls back to English.": "A line a pack does not carry falls back to English.",
  "A retuned station reads the same numbers in the simulation, in its own panel and in a replay recorded with it.": "A retuned station reads the same numbers in the simulation, in its own panel and in a replay recorded with it.",
  "ACTIONS / BUILD": "ACTIONS / BUILD",

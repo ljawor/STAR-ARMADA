@@ -353,8 +353,8 @@ def balance(menu):
             _button(c, (1036, y + 4, 40, 34), '+', 'balance_gate_step',
                     {'station': station, 'ship_id': ship_id, 'delta': 1})
             y += 44
-        c.text('A hull waits for its station to reach this level — for every player, and for the'
-               ' AI. "As shipped" is buildable straight away.', (440, 560, 648, 22), 14, MUTED)
+        c.text('A hull waits for its station to reach this level — for every player and the AI.',
+               (440, 560, 648, 22), 14, MUTED)
     c.text(menu.balance_notice or (i18n.t('Retuned station types: {tuned}', tuned=tuned) + ' · '
                                    + i18n.t('Gated hulls: {gated}', gated=gated)),
            (440, 586, 648, 22), 14, MUTED)
