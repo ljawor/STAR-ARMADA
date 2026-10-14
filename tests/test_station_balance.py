@@ -12,7 +12,9 @@ the file that survives an update because it lives in the user data directory.
 import json
 import os
 import shutil
+import socket
 import tempfile
+import time
 import unittest
 from unittest import mock
 
@@ -568,6 +570,163 @@ class BalanceAiGateTests(unittest.TestCase):
         self.st.command_queue.clear()
         self.ai._queue_ship(yard, 'imperial_cruiser', 1)
         self.assertEqual([c.type for c in self.queued()], ['build_ship'])
+
+
+class LanBalanceExchangeTests(unittest.TestCase):
+    """A host's tuning travels to the peer, for that match and no longer (#106).
+
+    Two machines, one process: the host is built while the process runs the tuned overlay, the
+    client is built after the overlay is back to shipped — which is exactly what the two
+    players' own files would say on their own machines.
+    """
+
+    def setUp(self):
+        self.addCleanup(balance.set_active, None)
+        self.addCleanup(DataStore.reset)
+        balance.set_active(None)
+        DataStore.reset()
+
+    def machine(self, overlay):
+        """Put a process on `overlay`'s numbers, the way starting the app does."""
+        balance.set_active(overlay)
+        DataStore.reset()
+        return DataStore.get()
+
+    def pair(self, host_overlay, client_overlay=None, *, start=True):
+        """A real-TCP host and client whose local tunings may differ."""
+        from game.net.lan import LanSession, default_lan_options
+        options = default_lan_options()
+        options.update(map_id='skirmish01', human_count=2, ai_count=0)
+        with socket.socket() as probe:
+            probe.bind(('127.0.0.1', 0))
+            port = probe.getsockname()[1]
+        self.machine(host_overlay)
+        host = LanSession.host(port, options)
+        self.addCleanup(host.close)
+        self.machine(client_overlay if client_overlay is not None else balance.defaults())
+        client = LanSession.join('127.0.0.1', port)
+        self.addCleanup(client.close)
+        sessions = [host, client]
+        self.pump(sessions, lambda: all(len(s.snapshot['players']) == 2 for s in sessions))
+        if start:
+            for s in sessions:
+                s.set_ready(True)
+            self.pump(sessions, lambda: host.snapshot['can_start'])
+            host.start()
+            self.pump(sessions, lambda: all(s.launch for s in sessions))
+        return host, client
+
+    def pump(self, sessions, predicate, seconds=5):
+        deadline = time.monotonic() + seconds
+        while time.monotonic() < deadline:
+            for session in sessions:
+                session.poll()
+            if predicate():
+                return
+            time.sleep(.001)
+        raise AssertionError([s.snapshot for s in sessions])
+
+    TUNED = {'version': 1,
+             'station_upgrades': {'shipyard': {'hull_bonus': 0.4},
+                                  'mining_station': {'production_bonus': 0.3}},
+             'build_levels': {'shipyard': {'imperial_cruiser': 2}}}
+
+    def test_the_client_runs_the_hosts_numbers_without_anyone_owning_the_same_file(self):
+        host, client = self.pair(self.TUNED)
+        # The handshake completed and the match started: a differing tuning is adopted, not
+        # refused, which is the whole point of hashing it separately from the catalogue.
+        self.assertEqual(client.local_player, 1)
+        self.assertIsNotNone(client.launch)
+        self.assertEqual(client.launch['map_def'], host.launch['map_def'])
+        self.assertEqual(client.station_balance, balance.validate(self.TUNED))
+        self.assertEqual(balance.active()['station_upgrades'],
+                         self.TUNED['station_upgrades'])
+        # The match itself: both managers read the tuned numbers off one handshake.
+        from game.core.manager import GameManager
+        managers = [GameManager.start_skirmish(s.launch['map_def']) for s in (host, client)]
+        for gm in managers:
+            self.assertEqual(balance.station_overrides(gm.ds.rules, 'shipyard'),
+                             {'hull_bonus': 0.4})
+            self.assertEqual(construction.required_level(gm.ds, 'shipyard',
+                                                         'imperial_cruiser'), 2)
+        self.assertEqual(managers[0].ds.rules[balance.RULES_KEY],
+                         managers[1].ds.rules[balance.RULES_KEY])
+
+    def test_the_adopted_numbers_are_given_back_when_the_match_ends(self):
+        host, client = self.pair(self.TUNED)
+        own = client._before_adoption                 # the catalogue this peer had before the match
+        self.assertIsNotNone(own)
+        self.assertTrue(balance.is_default(own.balance))
+        self.assertEqual(balance.station_overrides(DataStore.get().rules, 'shipyard'),
+                         {'hull_bonus': 0.4})
+        client.close()
+        # For that match only: the peer is back on its own numbers, and on the catalogue that
+        # was built from them, with nothing written to any file.
+        self.assertIs(DataStore.get(), own)
+        self.assertTrue(balance.is_default(balance.active()))
+        self.assertTrue(balance.is_default(DataStore.get().balance))
+        self.assertEqual(balance.station_overrides(own.rules, 'shipyard'), {})
+
+    def test_a_client_already_on_those_numbers_adopts_nothing(self):
+        host, client = self.pair(balance.defaults())
+        self.assertIsNone(client._adopted)
+        self.assertIsNone(client._before_adoption)
+        store = DataStore.get()
+        self.assertTrue(balance.is_default(store.balance))
+        self.assertTrue(balance.is_default(client.station_balance))
+
+    def test_a_config_the_strict_reader_refuses_stops_the_match_whole(self):
+        """A half-applied overlay is a desync with a delay fuse; refuse it at the door."""
+        _host, client = self.pair({'version': 1}, start=False)
+        before = DataStore.get()
+        for bad in ({'version': 99},
+                    {'version': 1, 'station_upgrades': {'shipyard': {'hull_bonus': -5}}},
+                    {'version': 1, 'station_upgrades': {'shipyard': {'no_such_bonus': 1}}},
+                    {'version': 1, 'station_upgrades': {'shipyard': {'hull_bonus': 'lots'}}},
+                    {'version': 1, 'build_levels': {'shipyard': {'imperial_cruiser': 9}}},
+                    None):
+            with self.subTest(config=bad):
+                with self.assertRaises(ValueError):
+                    client._adopt_balance(bad)
+                self.assertIs(DataStore.get(), before)
+                self.assertTrue(balance.is_default(balance.active()))
+                self.assertEqual(client.station_balance, balance.defaults())
+
+    def test_a_peer_sending_the_hostile_config_is_refused_and_never_half_applied(self):
+        from game.net.lan import LanSession, default_lan_options
+        options = default_lan_options()
+        options.update(human_count=2, ai_count=0)
+        with socket.socket() as probe:
+            probe.bind(('127.0.0.1', 0))
+            port = probe.getsockname()[1]
+        self.machine(balance.defaults())
+        host = LanSession.host(port, options)
+        self.addCleanup(host.close)
+        host._balance = {'version': 1, 'station_upgrades': {'shipyard': {'hull_bonus': -5}}}
+        client = LanSession.join('127.0.0.1', port)
+        self.addCleanup(client.close)
+        self.pump([host, client], lambda: client.snapshot['status'] == 'error')
+        self.assertIn('station balance', client.snapshot['error'])
+        self.assertTrue(balance.is_default(balance.active()))
+        self.assertTrue(balance.is_default(DataStore.get().balance))
+
+    def test_what_goes_on_the_wire_is_something_the_strict_reader_accepts(self):
+        """A hand-edited file on either side must not be able to refuse the other peer."""
+        hand_edited = {'version': 1,
+                       'station_upgrades': {'shipyard': {'hull_bonus': -1, 'nonsense': 2},
+                                            'no_such_station': {'hull_bonus': 0.2}},
+                       'build_levels': {'shipyard': {'imperial_cruiser': 99}}}
+        wire = balance.normalize(hand_edited)
+        self.assertEqual(balance.validate(wire), wire)      # never half-applied, never refused
+        # What the sim cannot use is gone; a station id this build does not field is kept but
+        # counted by nothing, so it cannot be reported as a change the game can see.
+        self.assertNotIn('shipyard', wire['station_upgrades'])   # nothing usable survived
+        self.assertEqual(wire['build_levels'], {})
+        self.assertEqual(balance.tuned_summary(wire), (1, 0))
+        self.assertEqual(balance.tuned_summary(wire, {'shipyard': None}), (0, 0))
+        # And it is the same bytes the pair announces: a digest that is not canonical would
+        # differ between two peers holding the same numbers.
+        self.assertEqual(balance.digest(wire), balance.digest(json.loads(json.dumps(wire))))
 
 
 class BalanceScreenTests(unittest.TestCase):

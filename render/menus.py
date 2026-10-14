@@ -704,7 +704,7 @@ class MenuStack:
     def balance_summary(self) -> tuple:
         """(station types retuned, hulls gated) in the current draft, for the two screens."""
         from game.data import balance
-        return balance.tuned_summary(self.balance_draft)
+        return balance.tuned_summary(self.balance_draft, self.skirmish_store.stations)
 
     # -------------------------------------------------------- station balance (#106)
     def balance_factions(self) -> tuple:

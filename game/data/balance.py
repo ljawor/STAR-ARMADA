@@ -345,8 +345,18 @@ def reset_station(config, station_id: str) -> dict:
     return clean
 
 
-def tuned_summary(config) -> tuple[int, int]:
-    """(station types retuned, hulls gated) — what the settings page reports."""
+def tuned_summary(config, known=None) -> tuple[int, int]:
+    """(station types retuned, hulls gated) — what the settings page reports.
+
+    `known` limits the count to station types the catalogue actually fields. A typo in a
+    hand-edited file names no station, and a summary that counted it would report a change
+    nothing in the game can see. The entry itself stays in the config: an id this build does
+    not know may belong to a mod that is not loaded yet, and dropping it would throw away the
+    player's numbers rather than ignore them (#106).
+    """
     clean = normalize(config)
-    return (len(clean['station_upgrades']),
-            sum(len(levels) for levels in clean['build_levels'].values()))
+    stations, gates = clean['station_upgrades'], clean['build_levels']
+    if known is not None:
+        stations = {k: v for k, v in stations.items() if k in known}
+        gates = {k: v for k, v in gates.items() if k in known}
+    return len(stations), sum(len(levels) for levels in gates.values())
