@@ -208,14 +208,35 @@ class BalanceRuleTests(unittest.TestCase):
 
     # ------------------------------------------------------------- the build gate
     def test_the_panel_expansion_and_the_simulation_gate_agree(self):
-        """One expansion: nothing the sim refuses may be offered, nothing offered refused."""
+        """One expansion: the panel offers the catalogue, the sim refuses the gates on top.
+
+        Both halves are asserted with a gate in place, because a gate is the only thing that can
+        make them disagree: the panel must keep offering the hull (it is drawn locked), while the
+        simulation refuses it until the refit lands and accepts it the moment it does.
+        """
         for station_id in self.ds.stations:
-            holder = type('S', (), {'data_id': station_id, 'owner': 0})()
+            holder = type('S', (), {'data_id': station_id, 'owner': 0, 'upgrade_level': 1})()
             offered = set(construction.buildable_ship_ids(self.ds, station_id, self.player.faction))
             accepted = {sid for sid in self.ds.ships
                         if self.gm.construction.station_can_build_ship(holder, sid)}
             with self.subTest(station=station_id):
                 self.assertEqual(offered, accepted)
+                self.ds.rules[balance.BUILD_LEVEL_RULES_KEY] = {
+                    station_id: {sid: 2 for sid in offered}}
+                try:
+                    self.assertEqual(
+                        set(construction.buildable_ship_ids(self.ds, station_id,
+                                                            self.player.faction)), offered)
+                    self.assertEqual({sid for sid in self.ds.ships
+                                      if self.gm.construction.station_can_build_ship(holder, sid)},
+                                     set())
+                    refitted = type('S', (), {'data_id': station_id, 'owner': 0,
+                                              'upgrade_level': 2})()
+                    self.assertEqual({sid for sid in self.ds.ships
+                                      if self.gm.construction.station_can_build_ship(refitted, sid)},
+                                     offered)
+                finally:
+                    self.ds.rules[balance.BUILD_LEVEL_RULES_KEY] = {}
 
     def test_the_catalogue_gate_still_refuses_what_it_always_refused(self):
         player = self.gm.construction
@@ -377,6 +398,13 @@ class BalanceFileTests(unittest.TestCase):
     def test_a_save_installs_the_overlay_for_the_next_match_without_a_restart(self):
         self.assertTrue(menus.save_balance(tuned(station_upgrades={'shipyard': {'hull_bonus': 0.3}})))
         self.assertEqual(balance.active()['station_upgrades'], {'shipyard': {'hull_bonus': 0.3}})
+        # Installed *and* folded: the claim is that the next match runs these numbers, and the
+        # match reads them off its own catalogue's rules, not off the process-wide overlay.
+        DataStore.reset()
+        self.addCleanup(DataStore.reset)
+        store = DataStore()
+        self.assertEqual(balance.station_overrides(store.rules, 'shipyard'), {'hull_bonus': 0.3})
+        self.assertEqual(store.balance['station_upgrades'], {'shipyard': {'hull_bonus': 0.3}})
 
     def test_a_corrupt_file_reads_as_shipped_values_rather_than_stopping_the_game(self):
         os.makedirs(os.path.dirname(self.path), exist_ok=True)
