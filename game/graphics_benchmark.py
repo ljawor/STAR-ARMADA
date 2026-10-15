@@ -17,11 +17,18 @@ from game.systems.economy import EconomySystem
 from game.systems.satellite_orbits import orbit_position
 
 
-FIXTURES = ('four-player-distributed-v1', 'four-player-combat-v1', 'four-player-close-v1')
+STRESS_FIXTURES = ('four-player-distributed-v1', 'four-player-combat-v1', 'four-player-close-v1')
+STOCK_FIXTURES = ('four-player-stock-distributed-v1', 'four-player-stock-combat-v1')
+FIXTURES = STRESS_FIXTURES + STOCK_FIXTURES
 # No artificial immortal hulls, weapon changes, AI income multipliers or tech.
 COMBAT_MIX = (('imperial_corvette', 60), ('imperial_frigate', 40),
               ('imperial_cruiser', 30), ('imperial_battleship', 16),
               ('imperial_supercapital', 4))
+# Level-one stock shipyard, no research or refits; the entire fleet can be paid
+# from the fixture's existing 10,000/resource grant after removing its hulls.
+# 40 fleet CMD + 26 infrastructure CMD = 66 / 78, leaving 12 CMD headroom.
+STOCK_COMBAT_MIX = (('imperial_corvette', 8), ('imperial_frigate', 4),
+                    ('imperial_cruiser', 1))
 ORDINARY_STATIONS = ('command_station', 'mining_station', 'shipyard',
                      'research_station', 'defense_platform', 'sensor_station',
                      'fighter_platform', 'repair_dock', 'energy_relay', 'mining_station')
@@ -54,9 +61,11 @@ class Fixture:
 
     def metadata(self) -> dict:
         # A fresh JSON-compatible copy: report mutation cannot change the recipe.
+        stock = self.name in STOCK_FIXTURES
         return dict(name=self.name, players=4, factions=['imperial'] * 4,
                     teams=[0, 1, 2, 3], ai=False, local_player=0,
-                    combat_mix_per_player=dict(COMBAT_MIX),
+                    workload_class='stock' if stock else 'stress',
+                    combat_mix_per_player=dict(STOCK_COMBAT_MIX if stock else COMBAT_MIX),
                     ordinary_station_mix_per_player=dict(Counter(ORDINARY_STATIONS)),
                     planet_mix_per_player={'temperate': 1, 'industrial': 1},
                     satellite_mix_per_planet={'defense_satellite': 2, 'attack_satellite': 2},
@@ -66,8 +75,10 @@ class Fixture:
                     max_ticks=self.max_ticks,
                     assumptions=[
                         'Four human slots, same Imperial faction, distinct colours, hostile teams; no strategic AI.',
-                        'Direct valid starting-state setup; unresearched stock catalogue hulls; no build queues.',
-                        'Requested pre-existing fleet exceeds current stock construction command capacity (906 used / 78 available per player); no capacity rules changed. This is a scale workload, not a proof this exact economy can build the fleet.',
+                        'Direct factory setup of completed hardware, colonies and staggered convoys; not a replay of paid construction, resource gathering, colonization or station-site validation; no build queues.',
+                        ('Stock fleet: 8 corvettes, 4 frigates, 1 cruiser per player; 40 fleet + 26 infrastructure CMD = 66 / 78. All selected hulls queue at the existing level-one stock shipyard with empty research and the existing resource grant; no tech, refit or balance overrides.' if stock else
+                         'Requested pre-existing fleet exceeds current stock construction command capacity (906 used / 78 available per player); no capacity rules changed. This is a scale workload, not a proof this exact economy can build the fleet.'),
+                        'Ten ordinary stations include the command station; two eligible colonies supply stock command capacity. Infrastructure sites are prebuilt, not proof of an organic build history (mines/relay require suitable terrain when constructed).',
                         'Four extra trade stations per player; four pre-existing convoys per source, nearest own market.',
                         'Convoys start at staggered route progress; deliveries remove hulls normally, never respawned by fixture.',
                         'At most 300 fixed 30 Hz ticks (10 simulated seconds), below the stock 45s convoy spawn interval.',
@@ -163,6 +174,9 @@ class Activity:
 def make_fixture(name):
     if name not in FIXTURES:
         raise ValueError(f'unknown graphics fixture: {name}')
+    stock = name in STOCK_FIXTURES
+    combat = name in ('four-player-combat-v1', 'four-player-stock-combat-v1')
+    mix = STOCK_COMBAT_MIX if stock else COMBAT_MIX
     gm = GameManager()
     st = gm.state
     st.seed = 12345
@@ -211,12 +225,14 @@ def make_fixture(name):
         # contact; all four owners remain visible through ordinary sensors.
         bands = ((24, 130, -3500), (20, 200, -1700), (20, 320, 500),
                  (16, 500, 2900), (8, 900, 5500))
-        for (kind, number), (columns, spacing, start_z) in zip(COMBAT_MIX, bands):
+        if stock:
+            bands = ((16, 130, -600), (16, 200, 0), (4, 320, 600))
+        for (kind, number), (columns, spacing, start_z) in zip(mix, bands):
             for index in range(number):
                 slot = index * 4 + owner
                 x = (slot % columns - (columns - 1) / 2) * spacing
                 z = start_z + (slot // columns) * spacing
-                if name == 'four-player-combat-v1':
+                if combat:
                     pos = Vec3(x, 0, z)
                     yaw = math.pi / 2 if owner % 2 == 0 else -math.pi / 2
                 else:
@@ -224,7 +240,7 @@ def make_fixture(name):
                     yaw = math.pi + owner * math.pi / 2
                 ship = gm.factory.spawn_ship(kind, owner, pos, yaw=yaw)
                 ship.order_type = 'hold'
-                if kind == 'imperial_supercapital':
+                if kind == ('imperial_cruiser' if stock else 'imperial_supercapital'):
                     flagships.append(ship)
 
     st.grid.rebuild(st.entities)
@@ -232,7 +248,7 @@ def make_fixture(name):
     gm.visibility.update()
     selected = flagships[0]
     camera = CameraSpec((0., 0., 16000.), 23000.)
-    if name == 'four-player-combat-v1':
+    if combat:
         camera = CameraSpec((0., 0., 1400.), 14000., pitch=70.)
     elif name == 'four-player-close-v1':
         camera = CameraSpec(selected.pos.to_tuple(), 1800., yaw=35., pitch=30.)

@@ -41,8 +41,11 @@ station within the ten regular stations is an explicit fixture assumption.
 The initial versioned mixed fleet uses **906 command points against 78 capacity
 per player** with its stock station mix. It is a prebuilt graphics/scale workload,
 not proof that this precise fleet is constructible in an ordinary match. No
-capacity or balance rules have been changed. Resolve a buildable fleet/station
-mix with the owner before calling it representative gameplay acceptance.
+capacity or balance rules have been changed. The owner approved retaining this
+as a stress workload and adding a separate stock-buildable workload without
+changing balance. Its exact versioned fleet mix must be derived from actual
+command capacity, faction availability and construction prerequisites. Direct
+fixture setup is not proof of a complete organic construction history.
 
 "Combat ships" does not silently prescribe 150 supercapital-class hulls. A
 versioned, documented catalogue mix is an initial benchmark assumption, not a

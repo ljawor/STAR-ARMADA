@@ -4,6 +4,123 @@ import unittest
 
 
 class FixtureInventoryTests(unittest.TestCase):
+    def test_stock_v1_hash_contracts(self):
+        from game.benchmark import state_hash
+        from game.graphics_benchmark import make_fixture
+        expected = {
+            'four-player-stock-distributed-v1': (
+                'aa6cf00baafcfdac8404fbae1bee22058e3e48e6d3e5bc1ce17050967545e533',
+                'c107e1871574c3c3ee4f3f36dd49c2c78014f1a9af6948c595048248a0c52aa1'),
+            'four-player-stock-combat-v1': (
+                '4bd9dcc1480932f3d22a40d90bbb1f78c37b42858114733f2d41b94d4dcc6b22',
+                '1d3134b93be431486667275aa617108723c4c5d69d2b9aa29cbbef5f1527db3e')}
+        for name, (initial, final) in expected.items():
+            scene = make_fixture(name)
+            self.assertEqual(state_hash(scene.manager.state), initial)
+            for _ in range(3):
+                scene.manager.step(1 / 30)
+            self.assertEqual(state_hash(scene.manager.state), final)
+
+    def test_stress_v1_hashes_remain_exact(self):
+        from game.benchmark import state_hash
+        from game.graphics_benchmark import STRESS_FIXTURES, make_fixture
+        distributed = ('52b3f50152737186527ab844c966232bbf5e3435c8b9e344f405b99a77d00c2a',
+                       '73d5770c1699548adf8b5a460b77fbc65cca7b3a65ed1009964acb439d9c529a')
+        combat = ('8179f6f09697f42783037c71577ee04172995ee8ac06bbf88884d285f9a897da',
+                  '0142b42190f326ed13f57ab76a6a7a01e578e5d99fe57128f8199df512521995')
+        for name in STRESS_FIXTURES:
+            scene = make_fixture(name)
+            expected = combat if name == 'four-player-combat-v1' else distributed
+            self.assertEqual(scene.metadata()['workload_class'], 'stress')
+            self.assertEqual(state_hash(scene.manager.state), expected[0])
+            for _ in range(3):
+                scene.manager.step(1 / 30)
+            self.assertEqual(state_hash(scene.manager.state), expected[1])
+
+    def test_stock_runtime_fog_routes_orbits_income_and_all_owner_combat(self):
+        from game.graphics_benchmark import STOCK_FIXTURES, make_fixture, semantic_inventory
+        from render.camera import Camera
+        from game.graphics_benchmark import visibility_sample
+        for name in STOCK_FIXTURES:
+            scene = make_fixture(name)
+            gm, st = scene.manager, scene.manager.state
+            satellites = {e.id: e.pos.copy() for e in st.entities.values() if e.satellite_slot is not None}
+            transports = {e.id: e.pos.copy() for e in st.entities.values() if e.data_id == 'trade_convoy'}
+            for e in st.entities.values():
+                if e.data_id == 'trade_convoy':
+                    self.assertTrue(gm.trading.valid_destination(st, e, st.entity(e.convoy_dest)))
+                if e.satellite_slot is not None:
+                    self.assertTrue(gm.satellite_orbits.legal(e, st.entity(e.planet_id), e.pos))
+            detected = visibility_sample(st)['detected']['total']['combat_ships']
+            combat = name == 'four-player-stock-combat-v1'
+            self.assertEqual(detected, 52 if combat else 13)
+            if combat:
+                for width, height in ((1280, 800), (1920, 1080)):
+                    camera = Camera(width, height)
+                    scene.camera.apply(camera)
+                    camera.bind_scene(st, lambda: 0)
+                    self.assertEqual(visibility_sample(st, camera)['centres_in_viewport']['total']['combat_ships'], 52)
+            owners = [set(), set(), set()]
+            classes = set()
+            arrivals = []
+            def shot(event):
+                ship = st.entities[event.data['attacker_id']]
+                owners[min((st.tick - 1) // 100, 2)].add(ship.owner)
+                classes.add(ship.data_id)
+            st.events.subscribe('weapon_fired', shot)
+            st.events.subscribe('convoy_arrived', lambda event: arrivals.append(event.data))
+            for _ in range(scene.max_ticks):
+                gm.step(1 / 30)
+                for player in st.players.values():
+                    self.assertLessEqual(player.command_used(st.entities), player.command_capacity)
+            self.assertEqual(st.tick, 300)
+            self.assertFalse(st.game_over)
+            self.assertTrue(arrivals)
+            self.assertTrue(all(p.credits > 10000 and p.income_frame['credits'] > 0 for p in st.players.values()))
+            self.assertTrue(all(st.entity(i).pos.dist(pos) > 1 for i, pos in satellites.items()))
+            self.assertTrue(any(st.entity(i) is not None and st.entity(i).pos.dist(pos) > 1
+                                for i, pos in transports.items()))
+            self.assertLess(semantic_inventory(st)['total']['transports'], 64)
+            if combat:
+                self.assertEqual(owners, [set(range(4))] * 3)
+                self.assertTrue({'imperial_corvette', 'imperial_frigate', 'imperial_cruiser'} <= classes)
+
+    def test_stock_recipe_is_queueable_at_unchanged_stock_yards_and_tech(self):
+        from game.graphics_benchmark import FIXTURES, make_fixture, semantic_inventory
+        from game.systems.construction import required_level
+        from game.systems.upgrades import station_level
+        name = 'four-player-stock-distributed-v1'
+        self.assertIn(name, FIXTURES)
+        scene = make_fixture(name)
+        gm, st = scene.manager, scene.manager.state
+        self.assertEqual(semantic_inventory(st)['total'], dict(
+            combat_ships=52, ordinary_stations=40, trade_stations=16,
+            transports=64, planets=8, satellites=32))
+        self.assertEqual(scene.metadata()['workload_class'], 'stock')
+        self.assertEqual(scene.metadata()['combat_mix_per_player'], dict(
+            imperial_corvette=8, imperial_frigate=4, imperial_cruiser=1))
+        for owner, player in st.players.items():
+            self.assertEqual(player.researched, set())
+            self.assertEqual(player.researching, {})
+            self.assertEqual(player.command_capacity, 78)
+            self.assertEqual(player.command_used(st.entities), 66)
+            yard = next(e for e in st.entities.values()
+                        if e.owner == owner and e.data_id == 'shipyard')
+            self.assertEqual(station_level(yard), 1)
+            fleet = [e for e in st.entities.values() if e.owner == owner
+                     and e.is_ship and e.data_id != 'trade_convoy']
+            for ship in fleet:
+                self.assertTrue(gm.construction.station_can_build_ship(yard, ship.data_id))
+                self.assertEqual(required_level(gm.ds, yard.data_id, ship.data_id), 1)
+                del st.entities[ship.id]
+            # Exercise real affordability, faction/type/level gates and paid CMD
+            # reservations for the ENTIRE fleet, no resources/tech/yard edits.
+            for kind, count in scene.metadata()['combat_mix_per_player'].items():
+                self.assertEqual(gm.construction.start_ship(yard.id, kind, owner, count), count)
+            self.assertEqual(player.command_used(st.entities), 66)
+            self.assertEqual(len(yard.build_queue), 13)
+            self.assertFalse(player.researched)
+
     def test_four_player_inventory_and_real_routes(self):
         self.assertIsNotNone(importlib.util.find_spec('game.graphics_benchmark'),
                              'versioned representative fixtures are missing')
@@ -90,7 +207,8 @@ class FixtureInventoryTests(unittest.TestCase):
         for name in FIXTURES:
             a, b = make_fixture(name), make_fixture(name)
             metadata = a.metadata()
-            self.assertEqual(metadata['command_budget_initial']['0'], {'used': 906, 'capacity': 78})
+            used = 66 if metadata['workload_class'] == 'stock' else 906
+            self.assertEqual(metadata['command_budget_initial']['0'], {'used': used, 'capacity': 78})
             self.assertEqual(state_hash(a.manager.state), state_hash(b.manager.state))
             for _ in range(2):
                 a.manager.step(1 / 30)
@@ -126,6 +244,21 @@ class FixtureInventoryTests(unittest.TestCase):
 
 
 class BenchmarkReportTests(unittest.TestCase):
+    def test_stock_reporting_actual_units_and_command_budgets(self):
+        from game.benchmark import run_benchmark
+        from game.graphics_benchmark import STOCK_FIXTURES
+        for name in STOCK_FIXTURES:
+            report = run_benchmark(fixture=name, mode='sim', frames=2, warmup=1)
+            self.assertEqual(report['units'], 52)
+            self.assertEqual(report['scene']['workload_class'], 'stock')
+            self.assertEqual(report['inventory_initial']['total']['combat_ships'], 52)
+            self.assertEqual(len(report['command_budget_per_sample']), 2)
+            self.assertEqual(report['command_budget_final'], report['command_budget_per_sample'][-1])
+            for budget in report['command_budget_per_sample']:
+                for owner in range(4):
+                    self.assertLessEqual(budget[str(owner)]['used'], budget[str(owner)]['capacity'])
+            self.assertTrue(any('not a replay' in note for note in report['scene']['assumptions']))
+
     def test_fixture_reports_precise_repeatable_state_inventory_and_separate_lan_stage(self):
         from game import benchmark
         self.assertIn('fixture', __import__('inspect').signature(benchmark.run_benchmark).parameters,
@@ -171,6 +304,9 @@ class BenchmarkReportTests(unittest.TestCase):
             with patch.object(benchmark, 'default_output_path', return_value=default):
                 for args, code in [(['--help'], 0),
                                    (['--fixture', 'bad'], 1),
+                                   (['--fixture', 'four-player-stock-combat-v1', '--units=52'], 1),
+                                   (['--fixture', 'four-player-stock-distributed-v1', '--units', '200'], 1),
+                                   (['--fixture', 'four-player-stock-combat-v1', '--frames', '300', '--warmup', '1'], 1),
                                    (['--fixture', 'four-player-combat-v1', '--units', '600'], 1),
                                    (['--fixture', 'four-player-combat-v1', '--frames', '301'], 1)]:
                     self.assertEqual(benchmark.cli(args + ['--output', str(output)]), code)
@@ -213,6 +349,10 @@ else:
 from game.benchmark import run_benchmark
 r = run_benchmark(fixture='four-player-distributed-v1', mode='sim', frames=1, warmup=0)
 assert r['counts_initial']['entities'] == 760
+for fixture in ('four-player-stock-distributed-v1', 'four-player-stock-combat-v1'):
+    r = run_benchmark(fixture=fixture, mode='sim', frames=1, warmup=0)
+    assert r['counts_initial']['entities'] == 212
+    assert r['units'] == 52
 assert 'pygame' not in sys.modules
 assert 'render.menus' not in sys.modules
 print('isolated simulation ok')
@@ -234,6 +374,8 @@ print('isolated simulation ok')
         self.assertEqual(report['state_sha256'], state_hash(gm.state))
         self.assertEqual(summarize(list(range(100)))['p99_ms'], 98)
         for kwargs in [dict(fixture='unknown'), dict(fixture='four-player-combat-v1', units=600),
+                       dict(fixture='four-player-stock-combat-v1', units=52),
+                       dict(fixture='four-player-stock-combat-v1', frames=300, warmup=1),
                        dict(fixture='four-player-combat-v1', frames=291, warmup=10),
                        dict(lan_checksum='yes')]:
             with self.assertRaises(ValueError):

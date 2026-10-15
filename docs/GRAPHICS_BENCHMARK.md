@@ -5,11 +5,12 @@
 M0 tooling and initial Mac measurements for `GRAPHICS_UPGRADE_PLAN.md`, collected
 2026-10-15 against parent commit `4a6a54e48338f87d10dd505c60afc49de3a21852`
 plus the benchmark additions in this PR. No new renderer/look implementation.
-**This is an over-capacity scale workload, not accepted ordinary gameplay.**
+**Sections 2–6 describe the original over-capacity stress workloads. Section 7
+adds separate stock-rule fleet workloads. Neither is final gameplay acceptance.**
 No frame-rate/resolution target has been approved. Windows graphics, packaged
 runtime, physical mixed-platform LAN and whole-tree integration remain pending.
 
-## 2. Versioned fixture recipes
+## 2. Original versioned stress fixture recipes
 
 Use `--fixture` with one of:
 
@@ -148,7 +149,78 @@ The archive excludes user saves/settings and unrelated prototype artifacts.
 The measured code/source manifest distinguishes mutable working-tree additions
 from the parent SHA; tests and benchmark state hashes are retained in evidence.
 
-Before art rollout: agree target resolution/frame budget; decide a constructible
-fleet/station mix or explicitly retain this as stress-only; profile the mixed
-scene; approve actual-renderer capital/escort/station slice with better framing.
+Before art rollout: agree target resolution/frame budget; profile the mixed
+scenes; approve actual-renderer capital/escort/station slice with better framing.
 Native Windows/active-GPU measurements and sustained live LAN remain hard gates.
+The approved separate stock-rule fleet workload is documented below.
+
+## 7. Separate stock-rule fleet workloads
+
+The owner approved keeping the original 150-combat-ships-per-player recipes as
+**stress workloads** and adding separate stock-rule fleet workloads without
+changing balance. Existing stress IDs and precise state contracts are retained.
+
+New IDs: `four-player-stock-distributed-v1` and
+`four-player-stock-combat-v1`. Each player has **8 corvettes, 4 frigates and
+1 cruiser** (Imperial, 13 combat ships); the infrastructure/colonies/satellites/
+transport quotas from section 2 are unchanged. Global initial inventory:
+**52 combat ships, 40 ordinary stations, 16 trade stations, 64 transports,
+8 planets and 32 satellites**, totaling **212 engine entities**.
+
+Command use is **40 fleet +26 infrastructure =66/78 per player**, leaving 12.
+Tests check use <=capacity every tick through both 300-tick scenarios. A real
+construction test removes the prebuilt combat hulls and successfully queues the
+entire fleet via `ConstructionSystem.start_ship` using the existing level-one
+shipyards, empty research and unchanged 10,000/resource starting grant. No tech,
+refit, capacity or balance override is involved. This proves fleet affordability,
+queue reservations and faction/type/level eligibility at the supplied economy.
+
+**Buildability limit:** this remains direct starting-state construction, not a
+replayed organic build history. Mine/relay terrain siting, infrastructure
+construction, colonization and resource gathering are not proved by the fleet
+queue test. The `stock` metadata class means the fleet meets stock command and
+shipyard constraints with the supplied infrastructure; it does not certify every
+prebuilt station site or historical economic progression. The smaller mix is a
+versioned tooling choice, not a replacement for the approved stress scale.
+
+### Native Mac baseline
+
+Same M4/GL/1280x800/actual 4x MSAA configuration and method as section 3:
+three serial fresh-process full runs, 10 warmup +60 measured ticks. Values are
+medians of the three per-trial summaries; **not interactive FPS**.
+
+| Scene | Sim mean ms | Camera mean ms | World mean ms | HUD mean ms | Frame mean ms | LAN checksum mean ms | Frame p95 ms | Frame p99 ms |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Stock distributed | 28.23 | 9.59 | 40.25 | 13.14 | 93.19 | 9.29 | 101.56 | 105.07 |
+| Stock combat | 29.79 | 9.97 | 55.59 | 12.03 | 109.01 | 9.74 | 117.26 | 118.49 |
+
+These results describe different inputs than the stress baseline, **not an
+optimization gain**. The stock-rule fleet scenes also exceed the proposed (not
+agreed) frame budgets. Profile their simulation, camera/world, HUD and checksum
+work before funding additional rendering; no renderer or simulation optimization
+is part of this change.
+
+The 70-tick combat sample records 128 visible shots from all four owners and all
+three ship classes. Both 70-tick views retain the initial transports; longer
+focused tests verify actual deliveries, orbital movement and income. All three
+full repetitions match their sim control's precise initial/final hashes and
+final LAN checksum. Stock/stress distinction and per-sample/final command budgets
+are in JSON; `units` now reports actual initial combat hull count.
+
+Parent reran **39 focused tests** (`test_graphics_benchmark`,
+`test_performance.BenchmarkContractTests`, `test_detmath`), all passed; compile
+and whitespace/security checks also passed. Legacy and original stress golden
+hashes are pinned. No full integration suite or native Windows GL run is claimed.
+
+Both actual captures were inspected: upright HUD shows 66/78; distributed view
+shows the local economy/colonies and only its 13 combat hulls; combat has 52
+detected/projected centres in a small central block with substantial empty space.
+Shield/marker overlap and rectangular fog boundaries remain visible. The existing
+fixed camera deliberately remains comparable, but this is not an art close-up,
+a natural battle formation or final graphics/readability approval.
+
+Use the commands in section 4 with the new fixture IDs and distinct output names.
+No `--units` for either stock ID. The separate `star-armada-graphics-stock-m0.zip`
+evidence contains raw reports/captures and source/catalogue fingerprints.
+Native Windows graphics, sustained LAN, frame-budget agreement and the visual
+slice remain separate gates.

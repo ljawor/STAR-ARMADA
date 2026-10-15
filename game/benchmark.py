@@ -150,7 +150,8 @@ def run_benchmark(*, units=200, frames=60, warmup=10, mode='full',
         environment=dict(platform=platform.platform(), machine=platform.machine(),
                          python=platform.python_version(), frozen=bool(getattr(sys, 'frozen', False))),
         fixture=fixture, seed=st.seed, tick_dt=TICK_DT,
-        mode=mode, units=units if scene is None else 600, frames=frames, warmup_frames=warmup,
+        mode=mode, units=units if scene is None else semantic_inventory(st)['total']['combat_ships'],
+        frames=frames, warmup_frames=warmup,
         initial_state_sha256=initial_hash, counts_initial=initial_counts,
         timing_semantics='perf_counter_ns; fixed 1/30 simulation tick; no pacing; '
             'full mode glFinish after camera/world/HUD; world includes Renderer camera.apply; '
@@ -159,7 +160,8 @@ def run_benchmark(*, units=200, frames=60, warmup=10, mode='full',
     activity = None
     if scene is not None:
         report.update(scene=scene.metadata(), inventory_initial=semantic_inventory(st),
-                      inventory_per_sample=[], visibility_per_sample=[], activity_per_sample=[])
+                      inventory_per_sample=[], visibility_per_sample=[], activity_per_sample=[],
+                      command_budget_per_sample=[])
         report['diagnostics_semantics'] = ('Read-only event callbacks included in sim timing; inventory/visibility/driver sampling '
             'outside stage/frame samples; frame is not end-to-end live gameplay pacing. AI/audio/input/network excluded.')
         activity = Activity(st)
@@ -284,6 +286,9 @@ def run_benchmark(*, units=200, frames=60, warmup=10, mode='full',
                     report['inventory_per_sample'].append(semantic_inventory(st))
                     report['visibility_per_sample'].append(visibility_sample(st, camera))
                     report['activity_per_sample'].append(activity.snapshot(activity.frame))
+                    report['command_budget_per_sample'].append({str(owner): dict(
+                        used=player.command_used(st.entities), capacity=player.command_capacity)
+                        for owner, player in sorted(st.players.items())})
                     if GL is not None:
                         report['graphics_per_sample'].append(dict(
                             drawable_size=reported_drawable_size(pygame),
@@ -299,7 +304,8 @@ def run_benchmark(*, units=200, frames=60, warmup=10, mode='full',
                       counts_per_sample=count_history, executed_ticks=st.tick,
                       game_over=st.game_over)
         if scene is not None:
-            report.update(inventory_final=semantic_inventory(st), activity_total=activity.snapshot(activity.total))
+            report.update(inventory_final=semantic_inventory(st), activity_total=activity.snapshot(activity.total),
+                          command_budget_final=report['command_budget_per_sample'][-1])
         return report
     except BaseException as exc:
         primary_error = exc
