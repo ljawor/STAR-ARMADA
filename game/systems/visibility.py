@@ -1,4 +1,7 @@
-"""Deterministic persistent exploration; current visibility is never cached.
+"""Deterministic persistent exploration; simulation visibility is never cached.
+
+Only an explicit synchronous read-only presentation scope batches sensor inputs;
+ordinary GameState queries always validate current state, even within one tick.
 
 Grid coordinates are world-origin floor(x/cell), floor(z/cell), clipped to the
 map square [-bounds/2, bounds/2]. A cell is explored when its XZ rectangle
@@ -8,6 +11,7 @@ detection: GameState queries use exact 3D center distances and current stats.
 from __future__ import annotations
 
 import copy
+from contextlib import contextmanager
 from game.core import detmath as math  # deterministic sim math, never the platform libm
 from ..data.store import DataStore
 from . import stats
@@ -95,6 +99,66 @@ class SensorQueries:
                 self._witnesses[player_id] = e
                 return True
         return False
+
+
+class _PresentationSensorQueries:
+    """Phase-local source/range snapshot, only for synchronous read-only views.
+
+    Entity references retain the sensor_sources API for fog geometry. Callers
+    must not mutate entities, modifiers or alliances until the scope exits.
+    No visibility answers or live-query witnesses are retained across scopes.
+    """
+    def __init__(self, state):
+        self.state = state
+        self._sources = {}
+        self._radii = {}
+        self._spheres = {}
+
+    def sources(self, player_id):
+        if player_id not in self._sources:
+            allies = self.state.allied_player_ids(player_id)
+            sources = []
+            for e in sorted(self.state.entities.values(), key=lambda e: e.id):
+                if SensorQueries._eligible(e, allies):
+                    if e.id not in self._radii:
+                        self._radii[e.id] = stats.effective_sensor_range(self.state, e)
+                    radius = self._radii[e.id]
+                    if radius > 0:
+                        sources.append((e, radius))
+            self._sources[player_id] = tuple(sources)
+            self._spheres[player_id] = tuple((e.pos.x, e.pos.y, e.pos.z, radius)
+                                             for e, radius in sources)
+        # Preserve the public list contract without exposing the stored batch.
+        return list(self._sources[player_id])
+
+    def visible(self, player_id, pos, allies=None):
+        if player_id not in self._sources:
+            self.sources(player_id)
+        for x, y, z, radius in self._spheres[player_id]:
+            dx, dy, dz = x-pos.x, y-pos.y, z-pos.z
+            if dx*dx + dy*dy + dz*dz <= radius*radius:
+                return True
+        return False
+
+
+@contextmanager
+def presentation_sensor_batch(state):
+    """Batch sensors only while a synchronous presentation phase is read-only.
+
+    Never span simulation or input handling. Sources are captured lazily per
+    viewer, with exact authoritative range arithmetic (no grid approximation).
+    Nested views share the same batch; even exceptional exits restore the exact
+    previous live-query object, including an uninitialized None.
+    """
+    previous = state._sensor_queries
+    if isinstance(previous, _PresentationSensorQueries):
+        yield
+        return
+    state._sensor_queries = _PresentationSensorQueries(state)
+    try:
+        yield
+    finally:
+        state._sensor_queries = previous
 
 
 class VisibilitySystem:

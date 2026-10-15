@@ -194,15 +194,22 @@ def visible_surface_slots(state, viewer, selection):
     return tuple(result)
 
 
+@lru_cache(maxsize=64)
+def _station_local_bounds(faction, data_id):
+    """Immutable model extrema; callers canonicalize visual IDs before lookup."""
+    from render.fleet_geometry import station_mesh
+    mesh = station_mesh(data_id, faction)
+    points = [p for role in mesh.values() for _, tri in role for p in tri]
+    return (tuple(min(p[i] for p in points) for i in range(3)),
+            tuple(max(p[i] for p in points) for i in range(3)))
+
+
 def station_camera_box(state, entity, station_angle=0.):
     """Conservative world AABB supported by the existing safe-eye slab solver."""
-    from render.fleet_geometry import station_mesh
-    from render.faction_visuals import owner_faction
+    from render.faction_visuals import owner_faction, normalize_station_key
     from itertools import product
-    mesh=station_mesh(entity.data_id,owner_faction(state,entity.owner))
-    points=[p for role in mesh.values() for _,tri in role for p in tri]
-    lo=tuple(min(p[i] for p in points) for i in range(3))
-    hi=tuple(max(p[i] for p in points) for i in range(3))
+    faction, data_id = normalize_station_key(entity.data_id, owner_faction(state, entity.owner))
+    lo, hi = _station_local_bounds(faction, data_id)
     frame=station_frame(state,entity,station_angle)
     points=[transform_point(p,frame) for p in product(*zip(lo,hi))]
     origin=frame[0]

@@ -411,6 +411,12 @@ class Renderer:
 
     # ------------------------------------------------------------------ per frame
     def draw(self, dt: float, selection: set, hover_id: int | None = None) -> None:
+        from game.systems.visibility import presentation_sensor_batch
+        with presentation_sensor_batch(self.state):
+            self._draw_read_only(dt, selection, hover_id)
+
+    def _draw_read_only(self, dt: float, selection: set,
+                        hover_id: int | None = None) -> None:
         # Probe/test hook: freeze the animation clock so consecutive frames are
         # otherwise identical. `self.time` drives the planet spin, station
         # rotation and starfield drift, so with it advancing every pixel of the

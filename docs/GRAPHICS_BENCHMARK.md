@@ -8,7 +8,9 @@ plus the benchmark additions in this PR. No new renderer/look implementation.
 **Sections 2–6 describe the original over-capacity stress workloads. Section 7
 adds separate stock-rule fleet workloads. Neither is final gameplay acceptance.**
 No frame-rate/resolution target has been approved. Windows graphics, packaged
-runtime, physical mixed-platform LAN and whole-tree integration remain pending.
+runtime and physical mixed-platform LAN remain pending. Later Mac integration
+acceptance and quality-preserving measured optimizations are recorded in
+`GRAPHICS_MAC_OPTIMIZATION.md`; the baseline tables below remain historical.
 
 ## 2. Original versioned stress fixture recipes
 
