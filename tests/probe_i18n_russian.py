@@ -92,7 +92,7 @@ def main():
                     if menu is not None:
                         menu.close()
                         menu = None
-        (args.out / 'report.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+        (args.out / 'report.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
         print(json.dumps(report, ensure_ascii=False, indent=2))
     finally:
         if menu is not None:
