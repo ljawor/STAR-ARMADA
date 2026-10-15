@@ -22,6 +22,7 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
+from render import i18n
 
 LANG_DIR = os.path.join(ROOT, 'assets', 'data', 'lang')
 
@@ -46,7 +47,10 @@ SKIP_PREFIXES = ('gl_', 'SDL_', 'K_', 'utf-', 'ascii', 'json', 'text/', 'image/'
 SKIP_SUFFIXES = ('.json', '.png', '.jpg', '.glsl', '.md', '.py', '.ttf', '.wav', '.ogg')
 SKIP_EXACT = {
     'utf-8', 'ascii', 'true', 'false', 'all', 'off', 'hostiles', 'standard', 'night',
-    'ON', 'OFF', 'left', 'right', 'center', 'top', 'bottom', 'none', 'en', 'de', 'pl',
+    'ON', 'OFF', 'left', 'right', 'center', 'top', 'bottom', 'none', 'en', 'de', 'pl', 'ru',
+    # Internal canonical handoff assertions, never presented as player-facing labels.
+    'Recovery requires a detached LAN manager',
+    'Recovered manager differs from the drained canonical barrier',
 }
 
 #: Strings the scanner cannot harvest, listed by hand. Both kinds would otherwise be
@@ -67,6 +71,13 @@ EXTRA_UI_KEYS = (
     '+{count} convoy',
     'hull', 'shields', 'regen', 'damage', 'output', 'cargo',
     '▲', '▼',
+    # Station tuning: format fields, lowercase unit words and the percent-bearing
+    # explanation deliberately fail the conservative literal heuristic below.
+    '+{count} per level', '+{percent}% per level',
+    'Gated hulls: {gated}', 'Retuned station types: {tuned}',
+    'The gain each refit level adds, as a share of the shipped value. 100% doubles it.',
+    'as shipped', 'convoys', 'extra shots', 'level {level}',
+    '{station} is back to the shipped balance.',
 )
 
 
@@ -181,11 +192,15 @@ def report(markdown: bool = False) -> int:
     rows = []
     total_translated = 0
     total = len(keys)
-    for code in ('de', 'pl'):
+    for code, _label in i18n.LANGUAGES:
+        if code == i18n.DEFAULT_LANGUAGE:
+            continue
         pack = load_json(os.path.join(LANG_DIR, f'{code}.json'))
         strings = {k: v for k, v in pack.items() if k != 'names'}
         names = pack.get('names', {}) if isinstance(pack.get('names'), dict) else {}
-        translated = sum(1 for key in keys if key in strings or key in names)
+        translated = sum(1 for key in keys
+                         if isinstance(value := strings.get(key, names.get(key)), str)
+                         and value.strip())
         total_translated += translated
         rows.append((code, translated, len(strings) + len(names), total - translated))
     if markdown:
@@ -195,7 +210,8 @@ def report(markdown: bool = False) -> int:
             pct = (100.0 * translated / total) if total else 0.0
             print(f'| {code} | {translated} | {entries} | {missing} | {pct:.1f}% |')
     else:
-        print(f'catalogue: {total} keys ({len(en)} in en.json, {len(missing_from_en)} not yet written)')
+        en_entries = len(en) - int('names' in en) + len(en.get('names', {}))
+        print(f'catalogue: {total} keys ({en_entries} in en.json, {len(missing_from_en)} not yet written)')
         for code, translated, entries, missing in rows:
             pct = (100.0 * translated / total) if total else 0.0
             print(f'  {code}: {translated}/{total} translated ({pct:.1f}%), '

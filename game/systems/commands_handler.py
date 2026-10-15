@@ -37,7 +37,7 @@ class CommandHandler:
         fn = getattr(self, "_do_" + t, None)
         if fn is None:
             return
-        if t == 'cancel_build' or t == 'upgrade_station':
+        if t in ('cancel_build', 'upgrade_station', 'collection_point'):
             # Cancelling queued work and buying a station refit are queue edits, not
             # new intent: they must never supersede the unit's other standing orders
             # the way a new order does (a payload naming a unit would otherwise strip
@@ -217,6 +217,16 @@ class CommandHandler:
     def _do_cancel_build(self, cmd: PlayerCommand) -> None:
         index = int(cmd.name) if cmd.name and cmd.name.isdigit() else 0
         self.construction.cancel_build(cmd.target_id, cmd.player, index)
+
+    def _do_collection_point(self, cmd: PlayerCommand) -> None:
+        from .collection_points import collection_capable, valid_point
+        target = self.state.entity(cmd.target_id) if type(cmd.target_id) is int else None
+        if (type(cmd.player) is not int or target is None
+                or target.owner != cmd.player or not collection_capable(target)):
+            return
+        if cmd.target_pos is not None and not valid_point(cmd.target_pos):
+            return
+        target.collection_point = Vec3(*cmd.target_pos) if cmd.target_pos is not None else None
 
     def _do_upgrade_station(self, cmd: PlayerCommand) -> None:
         # #77: the simulation re-checks ownership, the level cap, a pending refit and

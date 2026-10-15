@@ -864,6 +864,9 @@ class HUD:
         support_extra = (90 if builders else 0) + (64 if scouts else 0) + (112 if boarders else 0)
         panel = pygame.Rect(self.width - 330, 72, 320,
                             min(self.height - 270, (430 if contextual else (260 if transports else 124)) + support_extra))
+        if sel is not None and sel.is_station:
+            # The minimap starts at height - 222; leave a visible gap below actions.
+            panel.height = min(panel.height, self.height - 230 - panel.y)
         self.blocked_rects.append(panel)
         pygame.draw.rect(ov, PANEL_BG, panel, border_radius=8)
         pygame.draw.rect(ov, PANEL_EDGE, panel, 1, border_radius=8)
@@ -911,7 +914,7 @@ class HUD:
                                  self._row_build_station, sel)
         elif sel is not None and sel.is_station:
             std = self.ds.stations.get(sel.data_id)
-            y = self._refit_block(panel, y, sel, p)
+            y = self._station_details(panel, y, sel, p, bool(std and std.builds_ships))
             if std is not None and std.builds_ships:
                 self._label(panel.x + 12, y, "SHIP PRODUCTION", ACCENT,
                             self.font_big)
@@ -1098,6 +1101,75 @@ class HUD:
     def _row_build_station(self, d, yy, payload) -> None:
         self._build_row(self._cur_panel, yy, d, self._cur_player, payload,
                         "build_station_place")
+
+    def _station_details(self, panel, y, sel, player, production) -> int:
+        """Let long collection/refit readouts scroll, never starve the ship list.
+
+        Measure with the real fonts/wrapping (including translated upgrade effects).
+        Reserve two ship rows and the current queue before assigning header space.
+        Only fully visible controls participate in hit testing.
+        """
+        def draw(top):
+            from game.systems.collection_points import collection_capable
+            if collection_capable(sel):
+                self._label(panel.x + 12, top, 'COLLECTION POINT', ACCENT, self.font_small)
+                top += 18
+                self._label(panel.x + 12, top, 'Right-click space to set destination.', TXT_DIM, self.font_small)
+                top += 18
+                point = sel.collection_point
+                status = ('Not set · new units remain nearby' if point is None else
+                          f'X {point.x:.0f}  Y {point.y:.0f}  Z {point.z:.0f}')
+                self._label(panel.x + 12, top, status, TXT_DIM, self.font_small)
+                top += 18
+                if point is not None:
+                    self._fleet_button(pygame.Rect(panel.x + 12, top, 296, 24),
+                                       'Clear collection point', 'collection_clear', {'target_id': sel.id})
+                    top += 28
+            return self._refit_block(panel, top, sel, player)
+
+        if not production:
+            return draw(y)
+        old_clip = self.overlay.get_clip()
+        start = len(self.buttons)
+        self.overlay.set_clip(pygame.Rect(0, 0, 0, 0))
+        try:
+            bottom = draw(y)
+            control_tops = [b['rect'].top - y for b in self.buttons[start:]]
+        finally:
+            self.overlay.set_clip(old_clip)
+            del self.buttons[start:]
+        queue_height = min(3, len(sel.build_queue)) * 20 + (6 if sel.build_queue else 0)
+        height = min(bottom - y, panel.bottom - y - 28 - queue_height - 108 - 8)
+        if height >= bottom - y:
+            return draw(y)
+        viewport = pygame.Rect(panel.x + 4, y, panel.width - 8, max(28, height))
+        key = 'station_details'
+        overflow = bottom - y - viewport.height
+        # Keep readable text steps, but also stop at every measured control's top.
+        # An 18px-only grid can skip a 20/24px button in the minimum 28px viewport.
+        # Clamping a final control to overflow still exposes it fully at the end.
+        offsets = sorted({*range(0, overflow, 18), overflow,
+                          *(max(0, min(top, overflow)) for top in control_tops)})
+        maximum = len(offsets) - 1
+        self.scroll[key] = max(0, min(self.scroll.get(key, 0), maximum))
+        offset = offsets[self.scroll[key]]
+        self.scroll_rects.append((viewport, key))
+        self.overlay.set_clip(old_clip.clip(viewport))
+        try:
+            draw(y - offset)
+        finally:
+            self.overlay.set_clip(old_clip)
+        for button in self.buttons[start:]:
+            if not viewport.contains(button['rect']):
+                # A clipped affordance must not look clickable when its hit box
+                # is intentionally absent; wheel it fully into view instead.
+                self.overlay.fill(PANEL_BG, button['rect'].clip(viewport))
+        self.buttons[start:] = [b for b in self.buttons[start:] if viewport.contains(b['rect'])]
+        if offset:
+            self._label(panel.x + 2, y, '▲', TXT_DIM, self.font_small)
+        if offset < bottom - y - viewport.height:
+            self._label(panel.x + 2, viewport.bottom - 14, '▼', TXT_DIM, self.font_small)
+        return viewport.bottom
 
     def _refit_block(self, panel, y, sel, player) -> int:
         """Refit level, its accumulated effects and the button that buys the next (#77).

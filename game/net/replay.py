@@ -43,6 +43,11 @@ def state_checksum(state: GameState) -> str:
         # #77: a refit level changes hull, shields, firepower and output, so a peer
         # that disagreed about it must fail the digest, not merely diverge quietly.
         h.update(f"L{e.upgrade_level}|".encode())
+        # Preserve historical default digests; configured destinations affect
+        # future births and must not be invisible to replay verification.
+        if e.collection_point is not None:
+            h.update(b'collection:')
+            h.update(json.dumps(e.collection_point.to_dict(True), separators=(',', ':')).encode())
         h.update(json.dumps([e.crew, e.max_crew, e.crew_loss_accumulator,
                              e.crew_damage_accumulator, e.abandoned_attack_target,
                              e.subsystem_hp('life_support')], separators=(',', ':')).encode())
@@ -187,6 +192,11 @@ def validate_replay(data, check_compatibility=False) -> dict:
             if value is not None and (not isinstance(value, str) or len(value) > 512):
                 raise ValueError('Replay command text payload is invalid.')
         pid = integer(cmd.get('player'), 0, 15)
+        if cmd['type'] == 'collection_point':
+            # New commands have an explicit schema; omitted position means clear,
+            # not permission to omit the station or attach unrelated payload.
+            from .lan import _commands
+            _commands([cmd], pid)
         if str(pid) not in players and pid not in players:
             raise ValueError('Replay command player is invalid.')
         units = cmd.get('unit_ids', [])

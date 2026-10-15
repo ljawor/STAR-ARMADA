@@ -130,7 +130,9 @@ class SquadronSystem:
                 if away.length_sq() < 1.0:
                     away = Vec3(1, 0, 0)
                 e.pos.add_scaled(away.normalized(), hangar.radius + 120)
-                if e.order_type != 'explore':
+                # Reinforcement is not a new order. In particular, a newly
+                # built fighter travelling to its collection point must depart.
+                if e.order_type not in ('explore', 'move', 'attack_move', 'attack'):
                     e.order_type = "idle"
                     e.order_target_id = None
 

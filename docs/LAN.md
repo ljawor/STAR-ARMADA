@@ -31,21 +31,22 @@ Controlled in-match LAN failures and uncaught Python exceptions now have small, 
 
 ### Recovery status
 
-**Experimental, not production-ready or released.** The LAN host/join menus enable
-same-host reconnect before handshake. After all clients have received the launch,
-an unexpected socket interruption can pause all humans, retry the original host
+**Experimental same-host reconnect.** The LAN host/join menus enable it before
+handshake. An unexpected socket interruption can pause all humans, retry the original host
 and restore the delayed pipeline within one absolute 60-second grace. The paused
 overlay shows missing peers, deadline and phase; camera controls remain available,
 while world orders are blocked. **Escape / Cancel reconnect leaves the match.**
 Delivered shutdown, abort, protocol errors and desync remain terminal. There is no
 host migration or process-restart recovery; returning to Join starts a new session.
 
-Known unfixed blockers include unauthenticated admission starvation, loss of the
-initial start packet stranding a client in the lobby, and partial renderer
-construction leaking GL resources. The integrated suite and user-data-preservation
-gate failed; native mixed Mac/Windows physical-machine acceptance and original
-crash attribution remain open. Use only a trusted isolated LAN and protect user
-data before manual experiments. See [implemented scope, blockers and evidence](LAN_RECONNECT.md).
+The v0.15.0 source increment bounds unauthenticated admission independently of
+reserved human slots, recovers a ready original client that lost the initial
+launch, and rolls back partially constructed renderer resources. Historical
+integration failures remain recorded separately from fresh release verification.
+Native mixed Mac/Windows physical-machine acceptance, silent-blackhole behavior
+and original crash attribution remain open. Plaintext bearer credentials and the
+bounded admission pool are not Internet-facing security or flood protection.
+Use only a trusted isolated LAN. See [scope and verification limits](LAN_RECONNECT.md).
 
 ## Windows Firewall: host rule
 

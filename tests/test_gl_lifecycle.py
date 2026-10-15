@@ -149,13 +149,33 @@ class MainLifecycleTests(unittest.TestCase):
                                 hud=hud if started else None,
                                 presentation=presentation if started else None, pygame=pygame,
                                 save_settings=Mock(), SETTINGS={}, SMOKE=False,
-                                menu=Mock(), net_session=None))
+                                menu=Mock(), net_session=None, recovery_overlay=None))
                 self.assertEqual(events, ['renderer.close', 'hud.close', 'presentation.cleanup', 'quit']
                                  if started else ['quit'])
                 if started:
                     presentation.cleanup.assert_called_once_with()
                 else:
                     presentation.cleanup.assert_not_called()
+
+    def test_shutdown_releases_recovery_overlay_before_views_and_quit(self):
+        import ast
+        tree = self.source_tree()
+        loop_index = next(i for i, n in enumerate(tree.body) if isinstance(n, ast.While))
+        code = compile(ast.Module(body=tree.body[loop_index + 1:], type_ignores=[]), 'main.py', 'exec')
+        events = []
+        overlay, renderer, hud, presentation, pygame = (Mock() for _ in range(5))
+        overlay.cleanup.side_effect = lambda: events.append('overlay.cleanup')
+        renderer.close.side_effect = lambda: events.append('renderer.close')
+        hud.close.side_effect = lambda: events.append('hud.close')
+        presentation.cleanup.side_effect = lambda: events.append('presentation.cleanup')
+        pygame.quit.side_effect = lambda: events.append('quit')
+        exec(code, dict(audio=None, renderer=renderer, hud=hud,
+                        presentation=presentation, pygame=pygame,
+                        save_settings=Mock(), SETTINGS={}, SMOKE=False,
+                        menu=Mock(), net_session=None, recovery_overlay=overlay))
+        self.assertEqual(events, ['overlay.cleanup', 'renderer.close', 'hud.close',
+                                 'presentation.cleanup', 'quit'])
+        overlay.cleanup.assert_called_once_with()
 
 
 class SkyStateTests(unittest.TestCase):

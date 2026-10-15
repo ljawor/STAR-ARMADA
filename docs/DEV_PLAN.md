@@ -11,7 +11,17 @@ partly delivered; the remaining work is listed explicitly below.
 - **Pending**: missing deliverable, not merely an older roadmap label.
 - Recommendations below define the proposed finish order, not additional approved scope.
 
-## Current release — v0.14.0, October 14, 2026
+## Preparing v0.15.0 — Collection points, Russian and recovery hardening
+
+The requested source increment covers station collection points (#105), Russian
+localization (#108), the station-balance controls already merged after v0.14.0,
+and fixes for the inherited experimental reconnect admission, launch-delivery and
+renderer-construction cleanup defects. The owner explicitly requested fixing those
+defects before publication. Stable-tree tests, independent review, native builds
+and downloaded-package verification remain required gates; this section is not a
+claim that those gates have passed.
+
+## Current published release — v0.14.0, October 14, 2026
 
 The increment collects everything merged since v0.13.0: hyperspace transit travel and
 post-jump shield lockdown (#92, #78), the campaign returning to the campaign screen after a
@@ -203,12 +213,15 @@ paged browser and read-only playback with pause/speed/end controls and content/v
 validation. See [REPLAYS.md](REPLAYS.md). Experimental live same-host reconnect now
 adds distributed freeze/released-frame drain, target-tick input reconciliation,
 bounded authenticated transfer and application/UI/recorder handoff. LAN menus
-enable it before handshake; this is not a released or production-ready feature.
+enable it before handshake. The v0.15.0 source increment hardens admission, initial
+launch recovery and partial renderer rollback; physical mixed-machine acceptance
+remains open, distinct from local source and package verification.
 
-**Blocked:** unauthenticated admission starvation, initial start-packet loss, partial
-renderer-construction GL leaks, shutdown-fixture errors and failed user-data
-preservation. Physical mixed-platform acceptance and original crash attribution
-remain open. The earlier replay/source evidence in [PHASE78_ACCEPTANCE.md](PHASE78_ACCEPTANCE.md)
+**Historical failed gates:** the earlier experiment had admission/start-loss bugs,
+renderer-construction leaks, stale shutdown-fixture errors and unsafe fixture
+persistence. New source fixes and fresh protected integration are recorded separately.
+Physical mixed-platform acceptance and original crash attribution remain open.
+The earlier replay/source evidence in [PHASE78_ACCEPTANCE.md](PHASE78_ACCEPTANCE.md)
 does not override these failures. See [LAN_RECONNECT.md](LAN_RECONNECT.md).
 Eight-player capacity is a separate pending expansion: maps, UI/setup and load/network
 testing must all grow together. The existing LAN lobby is not a missing feature.
@@ -260,12 +273,13 @@ authorized merge and release with that limit disclosed. PR #43 is merged and bot
 published packages passed digest, code/data integrity and macOS frozen-smoke checks.
 See [PLANETARY_HARDWARE.md](PLANETARY_HARDWARE.md) for mechanics and evidence.
 
-## Localization — English, German, Polish (#93) ✅ delivered
+## Localization — English, German, Polish, Russian (#93, #108)
 
-Language packs (`assets/data/lang/{en,de,pl}.json`) with the English pack as the catalogue,
+Language packs (`assets/data/lang/{en,de,pl,ru}.json`) with the English pack as the catalogue,
 a `Settings → Language` selector, and lookups at the drawing edges only — the simulation
 never reads a pack, so a language cannot change `state_sha256`, a replay or a lockstep
-peer. Both packs are complete against the catalogue (326 UI strings + 96 data names) and
+peer. Russian joins the existing complete packs in the v0.15.0 source increment; catalogue
+coverage is checked by the language tooling and
 `tests/test_i18n.py` plus `tools/diag_i18n.py` pin the contract. See
 `docs/LOCALIZATION.md`. Deliberately left open: locale number formatting, and the
 runtime flash messages the input layer assembles from live values.
@@ -318,7 +332,7 @@ and any change to the mix/volume balance.
 - **§28 Objectives:** escort/hold/survival exist; expanded scripting belongs to Phase 7.
 - **§32 Saves:** quick save/load, rotating autosaves and campaign progress exist;
   player-facing replay workflow and exact future-state restoration are verified in v0.8.0 source;
-  live same-host LAN reconnect is experimental with known unfixed blockers.
+  live same-host LAN reconnect is experimental; v0.15.0 hardening does not close physical-machine acceptance.
 - **§46 Victory:** command-station/planet-majority/economic/timed modes and allied
   elimination exist. Regression-test new abandonment against each mode and campaign
   objective rules rather than assuming identical semantics.
@@ -362,9 +376,9 @@ choose a separate capture/destruction policy before expanding AI permissions.
    Short skippable cinematics are released in v0.9.0; full natural
    mission playthrough acceptance remains separate.
 4. **Close live multiplayer resilience blockers (Phase 8).** The experimental
-   freeze/drain, target-tick reconciliation and application handoff now exist. Fix
-   admission starvation, launch-delivery loss, constructor cleanup and the failing
-   shutdown/persistence gates before claiming readiness. Preserve deterministic
+   freeze/drain, target-tick reconciliation and application handoff now exist. Carry
+   the new admission, launch-delivery and constructor cleanup fixes through final
+   integration, native CI and physical-machine acceptance before claiming readiness. Preserve deterministic
    replay and test 2–4 human recovery on physical mixed Mac/Windows machines.
 5. **Complete faction gameplay and balance.** Resolve Syndicate scope/parity; run
    repeatable full-match economy/combat/AI benchmarks before scaling up player counts.

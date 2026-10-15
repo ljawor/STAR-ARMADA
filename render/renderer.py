@@ -187,6 +187,25 @@ def make_starfield(count: int = 1400, bounds: float = 30000.0, seed: int = 7):
 
 class Renderer:
     def __init__(self, state, camera):
+        # Establish cleanup ownership before any fallible initialization. A
+        # failed constructor never reaches the application's candidate variable.
+        self.materials = None
+        self.fog = None
+        self.ship_lists = {}
+        self._star_list = self._unit_sphere_tex = None
+        self._planet_tex_cache = {}
+        self._hull_tex = self._space_tex = self._star_tex = self._nebula_tex = None
+        try:
+            self._initialize(state, camera)
+        except BaseException:
+            try:
+                self.close()
+            except BaseException:
+                # Rollback must not replace the original construction error.
+                pass
+            raise
+
+    def _initialize(self, state, camera):
         self.state = state
         self.local_player = 0
         # Ownership marker verbosity: 'all' | 'hostiles' | 'off'. Read-only
@@ -195,7 +214,10 @@ class Renderer:
         self.fog = FogMask()
         self.camera = camera
         self.ds = DataStore.get()
-        self.materials = FleetMaterials()
+        # Keep the helper reachable even if its initialization raises after
+        # allocating programs but before its constructor would return.
+        self.materials = FleetMaterials.__new__(FleetMaterials)
+        self.materials.__init__()
         self.starfield = make_starfield()
         self.ship_lists: dict = {}       # (shape, scale, colorkey) -> display list id
         self._star_list = None
@@ -348,27 +370,44 @@ class Renderer:
         return cache["px_scale"] / dist
 
     def close(self):
-        """Release owned GL objects once, while their context is still current."""
-        self.materials.close()
+        """Release owned GL objects once, while their context is still current.
+
+        Attempt every independent release even if one cleanup raises. Constructor
+        rollback preserves its original error; explicit close reports the first
+        cleanup error after releasing the remaining resources.
+        """
+        releases = []
+        materials = getattr(self, "materials", None)
+        if materials is not None:
+            releases.append(materials.close)
         fog = getattr(self, "fog", None)
         if fog is not None:
-            fog.close()
+            releases.append(fog.close)
         lists = set(self.ship_lists.values())
         lists.update((self._star_list, self._unit_sphere_tex))
-        for list_id in lists:
-            if list_id:
-                _gl.glDeleteLists(list_id, 1)
         self.ship_lists.clear()
         self._star_list = self._unit_sphere_tex = None
+        for list_id in lists:
+            if list_id:
+                releases.append(lambda list_id=list_id: _gl.glDeleteLists(list_id, 1))
         textures = set(self._planet_tex_cache.values())
         textures.update((self._hull_tex, self._space_tex,
                          self._star_tex, self._nebula_tex))
         textures.discard(None)
         textures.discard(0)
-        if textures:
-            _gl.glDeleteTextures(sorted(textures))
         self._planet_tex_cache.clear()
         self._hull_tex = self._space_tex = self._star_tex = self._nebula_tex = None
+        if textures:
+            releases.append(lambda: _gl.glDeleteTextures(sorted(textures)))
+        error = None
+        for release in releases:
+            try:
+                release()
+            except BaseException as exc:
+                if error is None:
+                    error = exc
+        if error is not None:
+            raise error
 
     # ------------------------------------------------------------------ per frame
     def draw(self, dt: float, selection: set, hover_id: int | None = None) -> None:
@@ -432,7 +471,43 @@ class Renderer:
             self._draw_ownership_markers(cache)
         if "rings" not in self.skip:
             self._draw_selection_rings(selection, cache)
+            self._draw_collection_points(selection)
         glFlush()
+
+    def _draw_collection_points(self, selection):
+        """View-only destination links for selected, owned production stations."""
+        from game.systems.collection_points import collection_capable
+        stations = [self.state.entity(eid) for eid in sorted(selection)]
+        stations = [e for e in stations if collection_capable(e)
+                    and e.owner == self.local_player and e.collection_point is not None]
+        if not stations:
+            return
+        glDisable(GL_LIGHTING)
+        glDisable(GL_DEPTH_TEST)
+        glLineWidth(2.0)
+        glColor4f(0.35, 0.95, 0.8, 0.95)
+        glBegin(GL_LINES)
+        for station in stations:
+            point = station.collection_point
+            glVertex3f(*station.pos.to_dict(True))
+            glVertex3f(*point.to_dict(True))
+            # World-space diamond + cross make the endpoint legible from above.
+            radius = max(45.0, 9.0 / max(0.001, self._px_per_world(point.to_dict(True))))
+            corners = [(point.x + radius, point.y, point.z),
+                       (point.x, point.y, point.z + radius),
+                       (point.x - radius, point.y, point.z),
+                       (point.x, point.y, point.z - radius)]
+            for index, corner in enumerate(corners):
+                glVertex3f(*corner)
+                glVertex3f(*corners[(index + 1) % 4])
+            glVertex3f(point.x - radius * 0.5, point.y, point.z)
+            glVertex3f(point.x + radius * 0.5, point.y, point.z)
+            glVertex3f(point.x, point.y, point.z - radius * 0.5)
+            glVertex3f(point.x, point.y, point.z + radius * 0.5)
+        glEnd()
+        glLineWidth(1.0)
+        glEnable(GL_DEPTH_TEST)
+        glEnable(GL_LIGHTING)
 
     def _draw_surface_slots(self, selection):
         """Depth-tested surface pads: empty ticks, occupied rings, paid scaffolds."""
@@ -907,45 +982,63 @@ class Renderer:
     def _build_textured_sphere_list(self, lons=64, lats=40):
         """Unit-radius UV sphere display list (scaled per planet at draw)."""
         lst = _gl.glGenLists(1)
-        glNewList(lst, GL_COMPILE)
-        for i in range(lons):
-            lon0 = 2 * math.pi * i / lons
-            lon1 = 2 * math.pi * (i + 1) / lons
-            for j in range(lats):
-                lat0 = math.pi * j / lats - math.pi / 2
-                lat1 = math.pi * (j + 1) / lats - math.pi / 2
+        # Own the reserved name before compilation or helper return can fail.
+        self._unit_sphere_tex = lst
+        try:
+            glNewList(lst, GL_COMPILE)
+            for i in range(lons):
+                lon0 = 2 * math.pi * i / lons
+                lon1 = 2 * math.pi * (i + 1) / lons
+                for j in range(lats):
+                    lat0 = math.pi * j / lats - math.pi / 2
+                    lat1 = math.pi * (j + 1) / lats - math.pi / 2
 
-                def vert(lon, lat):
-                    return (math.cos(lat) * math.sin(lon),
-                            math.sin(lat),
-                            math.cos(lat) * math.cos(lon))
+                    def vert(lon, lat):
+                        return (math.cos(lat) * math.sin(lon),
+                                math.sin(lat),
+                                math.cos(lat) * math.cos(lon))
 
-                a, b = vert(lon0, lat0), vert(lon1, lat0)
-                c, d = vert(lon1, lat1), vert(lon0, lat1)
-                u0, u1 = i / lons, (i + 1) / lons
-                v0, v1 = j / lats, (j + 1) / lats
-                for tri, uvs in (((a, b, c), ((u0, v0), (u1, v0), (u1, v1))),
-                                 ((a, c, d), ((u0, v0), (u1, v1), (u0, v1)))):
-                    ax_, ay_, az_ = (tri[1][0] - tri[0][0], tri[1][1] - tri[0][1],
-                                     tri[1][2] - tri[0][2])
-                    bx_, by_, bz_ = (tri[2][0] - tri[0][0], tri[2][1] - tri[0][1],
-                                     tri[2][2] - tri[0][2])
-                    nx = ay_ * bz_ - az_ * by_
-                    ny = az_ * bx_ - ax_ * bz_
-                    nz = ax_ * by_ - ay_ * bx_
-                    centroid = (sum(v[k] for v in tri) / 3 for k in range(3))
-                    cx_, cy_, cz_ = centroid
-                    if nx * cx_ + ny * cy_ + nz * cz_ < 0:
-                        tri = (tri[0], tri[2], tri[1])
-                        uvs = (uvs[0], uvs[2], uvs[1])
-                    glBegin(GL_TRIANGLES)
-                    for v, (u, w_) in zip(tri, uvs):
-                        nn = math.sqrt(v[0] ** 2 + v[1] ** 2 + v[2] ** 2) or 1.0
-                        glNormal3f(v[0] / nn, v[1] / nn, v[2] / nn)
-                        glTexCoord2f(u, w_)
-                        glVertex3f(*v)
-                    glEnd()
-        glEndList()
+                    a, b = vert(lon0, lat0), vert(lon1, lat0)
+                    c, d = vert(lon1, lat1), vert(lon0, lat1)
+                    u0, u1 = i / lons, (i + 1) / lons
+                    v0, v1 = j / lats, (j + 1) / lats
+                    for tri, uvs in (((a, b, c), ((u0, v0), (u1, v0), (u1, v1))),
+                                     ((a, c, d), ((u0, v0), (u1, v1), (u0, v1)))):
+                        ax_, ay_, az_ = (tri[1][0] - tri[0][0], tri[1][1] - tri[0][1],
+                                         tri[1][2] - tri[0][2])
+                        bx_, by_, bz_ = (tri[2][0] - tri[0][0], tri[2][1] - tri[0][1],
+                                         tri[2][2] - tri[0][2])
+                        nx = ay_ * bz_ - az_ * by_
+                        ny = az_ * bx_ - ax_ * bz_
+                        nz = ax_ * by_ - ay_ * bx_
+                        centroid = (sum(v[k] for v in tri) / 3 for k in range(3))
+                        cx_, cy_, cz_ = centroid
+                        if nx * cx_ + ny * cy_ + nz * cz_ < 0:
+                            tri = (tri[0], tri[2], tri[1])
+                            uvs = (uvs[0], uvs[2], uvs[1])
+                        glBegin(GL_TRIANGLES)
+                        try:
+                            for v, (u, w_) in zip(tri, uvs):
+                                nn = math.sqrt(v[0] ** 2 + v[1] ** 2 + v[2] ** 2) or 1.0
+                                glNormal3f(v[0] / nn, v[1] / nn, v[2] / nn)
+                                glTexCoord2f(u, w_)
+                                glVertex3f(*v)
+                        except BaseException:
+                            try:
+                                glEnd()
+                            except BaseException:
+                                pass
+                            raise
+                        else:
+                            glEnd()
+            glEndList()
+        except BaseException:
+            try:
+                if int(_gl.glGetIntegerv(_gl.GL_LIST_INDEX)) == lst:
+                    _gl.glEndList()
+            except BaseException:
+                pass
+            raise
         return lst
 
     def _draw_asteroid_field(self, e):

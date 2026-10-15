@@ -59,6 +59,9 @@ def typed(value, hint, path):
         if base is Entity:
             require(value.get('crew_damage_accumulator', 0.0) >= 0,
                     path + '.crew_damage_accumulator')
+            if value.get('collection_point') is not None:
+                from game.systems.collection_points import valid_point
+                require(valid_point(value['collection_point']), path + '.collection_point')
     elif base in (list, tuple, set):
         require(type(value) in (list, tuple), path)
         if args:

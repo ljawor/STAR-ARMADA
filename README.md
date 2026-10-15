@@ -17,7 +17,21 @@ runs the packaged app's simulation benchmark and LAN diagnostic with a state has
 diagnostics/tests passed on a native CI runner; this does not prove frozen Windows gameplay or
 mixed-platform live LAN. Interactive Windows, trusted signing/Smart App Control, human
 listening/campaign and full-match balance remain open.
-## Unreleased — Station balance: retunable refit gains and per-level build gates (#106)
+## Preparing v0.15.0 — Collection points, Russian and LAN recovery hardening
+
+This source increment adds station collection points (#105), Russian (#108), and
+hardening for the experimental same-host reconnect implementation. Publication and
+package verification remain separate gates; the current published downloads above
+remain v0.14.0 until those gates pass.
+
+Production stations can send newly completed ships and fighter squadrons to a
+collection point without changing their safe spawn position. Select an owned
+production station and right-click empty space to set its destination; use
+**Clear collection point** in the station panel to restore nearby idle production.
+The point is sampled at completion, so changing it also affects already queued work.
+Existing units are not retasked. See [the collection-point contract](docs/COLLECTION_POINTS.md).
+
+### Station balance: retunable refit gains and per-level build gates (#106)
 
 The five-level station refit ladder is no longer fixed data. **Settings → Game Balance → Station
 upgrades** (page 5 of 5) picks a faction, lists every station type its builders can lay down, and
@@ -197,7 +211,7 @@ extract the entire ZIP and run `STAR ARMADA.exe` (unsigned).
 |---|---|
 | Left-drag | Box select |
 | Left-click | Select unit / station |
-| Right-click | Attack target / colonize planet; attack-move on empty ground |
+| Right-click | Attack target / colonize planet; attack-move on empty ground; selected production stations set a collection point on empty ground |
 | Right-drag | Rotate camera |
 | Backspace | Stop selected units and cancel pending orders |
 | H | Follow selection (legacy alias for Space) |
@@ -436,10 +450,12 @@ See [Phase 10 acceptance](docs/PHASE10_ACCEPTANCE.md) for evidence and limits.
 Both published downloads passed package verification; those checks do not close
 the human/platform acceptance gates above.
 
-## Localization — English, German, Polish (#93)
+## Localization — English, German, Polish, Russian (#93, #108)
 
-The game ships three languages. `Settings → Language` cycles them and applies immediately;
-the choice persists in `saves/settings.json` as `"language": "pl"`.
+The source ships four languages: English, Deutsch, Polski and Русский. `Settings → Language`
+cycles them and applies immediately; the choice persists in `saves/settings.json`, for
+example as `"language": "ru"`. Russian is part of the v0.15.0 source increment, not the
+older v0.14.0 downloads.
 
 A language is **presentation only**: packs are read at the drawing edges (the classic
 canvas, the menu helpers, `HUD._label` and the word-wrap helper), a pack that is missing a
@@ -456,7 +472,7 @@ for as a template, e.g. `t('{credits} cr · {materials} mt')`, and every data-dr
 | A hull | `Shipyard` | `Werft` | `Stocznia` |
 
 Packs live in `assets/data/lang/`; `tools/lang_coverage.py` extracts the catalogue from the
-source and reports coverage (currently **100%** for both packs: 326 UI strings + 96 names),
+source and reports coverage for every registered pack,
 and `tools/build_lang_packs.py` refuses to write a pack that is missing a key or carrying a
 dead one. See `docs/LOCALIZATION.md` and run `python tools/diag_i18n.py` to re-check that
 geometry, truncation and lookup coverage all hold.
@@ -612,7 +628,7 @@ friendly sensor can provide detection for another ship's longer-range weapons.
 | Procedural audio (original, no assets) | ✅ implemented; laser, turbolaser and plasma families re-voiced against reference recordings (#91) |
 | Minimap, fleet roster/ability union, rank inspector, build/research progress | ✅ implemented |
 | Title screen, main menu, settings menu (music/SFX volume, fullscreen, autosave, pan speed — persisted to `saves/settings.json`) | ✅ prototype; Clean Classic unified since v0.13.0; battle backgrounds on all non-replay screens |
-| Language packs: English, German, Polish with a `Settings → Language` selector | ✅ implemented (#93); 422/422 strings and names translated, presentation-only so a language cannot reach the simulation |
+| Language packs: English, German, Polish, Russian with a `Settings → Language` selector | ✅ implemented (#93/#108); complete registered catalogues, presentation-only so a language cannot reach the simulation; Russian added for v0.15.0 |
 | Campaign: ten combat missions plus recovery drill, persisted triggers/waves and staged capture/crew objectives | ✅ released since v0.8.0; recovery objective correction released in v0.12.0; natural full playthrough acceptance pending |
 | Victory conditions: annihilation, planet majority, economic, timed (data-driven) | ✅ prototype |
 | Trade convoys between trade stations + raiding (salvage loot) | ✅ prototype |
@@ -621,7 +637,7 @@ friendly sensor can provide detection for another ship's longer-range weapons.
 | LAN host/join, 2–4 humans, optional AI, configurable TCP port | ✅ implemented; matching version/content required |
 | Deterministic lockstep, serialized commands, replay infrastructure | ✅ implemented and tested |
 | Replay recording/browser/read-only playback | ✅ released in v0.8.0; timestamps, selection, bulk delete, metadata-only rendering since v0.13.0; strict version/content compatibility |
-| LAN reconnect/resync | 🟠 experimental same-host live integration; known unfixed blockers, not production-ready or released |
+| LAN reconnect/resync | 🟠 experimental same-host live integration; v0.15.0 hardens admission, initial launch loss and GL rollback; physical mixed-machine acceptance remains open |
 | Four skirmish maps, player factions/colors/teams, AI difficulty | ✅ implemented; 2–4 total players by map |
 | Boarding/capture, onboard crew/life support and abandoned hulls | ✅ merged in #37; released in v0.7.0 |
 | Base crew recruitment, field crew transports, proportional staffing, cautious boarding/recovery AI | ✅ merged in #38; released in v0.7.0; balance acceptance remains open |
@@ -749,9 +765,10 @@ in v0.8.0; package checks are recorded in release notes.
 See [campaign notes](docs/CAMPAIGN_SCRIPTING.md)
 and [replay notes](docs/REPLAYS.md). This source adds **experimental same-host LAN reconnect**
 with freeze/drain, delayed-input reconciliation and UI/recorder handoff. It is enabled
-by the LAN menus, but known admission, launch-delivery and resource-cleanup defects
-remain; the integrated suite and persistence-preservation gate failed. This is not
-a readiness or release claim; see [scope, blockers and evidence](docs/LAN_RECONNECT.md).
+by the LAN menus. The v0.15.0 source increment repairs admission, launch-delivery and
+resource-cleanup defects; historical failed integration evidence is preserved rather
+than relabeled. Physical mixed-machine and silent-blackhole acceptance remain open;
+see [scope and evidence](docs/LAN_RECONNECT.md).
 The Phase 10 audio/cinematic/help increment is packaged in v0.9.0; its acceptance limits
 are listed above. Eight-player matches, natural full campaign playthroughs, full faction parity,
 in-game mod management and further performance work remain pending. Current skirmish/LAN capacity is **2–4 total players**,
