@@ -11,17 +11,27 @@ partly delivered; the remaining work is listed explicitly below.
 - **Pending**: missing deliverable, not merely an older roadmap label.
 - Recommendations below define the proposed finish order, not additional approved scope.
 
-## Preparing v0.15.0 — Collection points, Russian and recovery hardening
+## Current published release — v0.15.0, October 15, 2026
 
-The requested source increment covers station collection points (#105), Russian
-localization (#108), the station-balance controls already merged after v0.14.0,
-and fixes for the inherited experimental reconnect admission, launch-delivery and
-renderer-construction cleanup defects. The owner explicitly requested fixing those
-defects before publication. Stable-tree tests, independent review, native builds
-and downloaded-package verification remain required gates; this section is not a
-claim that those gates have passed.
+PR #111 is merged; station collection points (#105) and Russian (#108) are closed
+and packaged, together with station-balance controls/build-level gates (#106) and
+experimental same-host reconnect hardening. Tag `v0.15.0` and branch
+`release/v0.15.0` identify verified source `df78eb7`.
 
-## Current published release — v0.14.0, October 14, 2026
+Final protected stable-tree acceptance passed **1,618 tests, zero failures/errors,
+8 existing skips** (7 Windows-kernel-only, 1 shield-fixture condition), with zero
+audit violations and unchanged user-data/source inventories. Independent feature,
+HUD and final networking reviews passed. Native Windows source CI and macOS,
+Windows and publication jobs passed. Downloaded DMG/ZIP hashes/integrity passed;
+30 inspected runtime modules and all 20 tracked assets on each platform match the
+immutable tag. A prior-release package fails the checker. Read-only mounted frozen
+macOS smoke produced a new PNG/replay under isolated HOME; both frozen benchmark
+modes executed 30 ticks with identical state hashes. Evidence is retained under
+`dist/release-v0.15.0/` on the verification machine and summarized in release notes.
+Frozen Windows interactive gameplay, physical mixed-platform LAN, silent-blackhole
+recovery, trusted signing and human campaign/audio/full-match balance remain open.
+
+## v0.14.0 — October 14, 2026 (historical release evidence)
 
 The increment collects everything merged since v0.13.0: hyperspace transit travel and
 post-jump shield lockdown (#92, #78), the campaign returning to the campaign screen after a
@@ -337,12 +347,12 @@ and any change to the mix/volume balance.
   elimination exist. Regression-test new abandonment against each mode and campaign
   objective rules rather than assuming identical semantics.
 
-## Immediate issue follow-ups (outside v0.12.0)
+## Former issue follow-ups — delivered; remaining policy work
 
-1. **#78 — Post-jump shields:** implement a persisted 15-second arrival lockout;
-   settle shield-drain/recovery semantics first and test crew-damage interaction.
-2. **#81 — Pulsar range:** clarify desired versus reported range before changing
-   weapon/sensor tuning; this is separate from closed #52 firing functionality.
+1. **#78 — Post-jump shields:** closed and packaged in v0.14.0: persisted
+   15-second arrival shield lockdown with transit/restore regressions.
+2. **#81 — Pulsar range:** closed and packaged in v0.14.0: weapon and sensor
+   reach reduced together to 6720, retaining the #52 firing guarantee.
 3. **#77 — Station upgrades:** the design contract is now written and implemented —
    eligible hardware, five-level numbering, paid costs/bonuses/timing and
    capture/AI policy are defined in `docs/STATION_UPGRADES.md`. #106 added the
@@ -377,8 +387,9 @@ choose a separate capture/destruction policy before expanding AI permissions.
    mission playthrough acceptance remains separate.
 4. **Close live multiplayer resilience blockers (Phase 8).** The experimental
    freeze/drain, target-tick reconciliation and application handoff now exist. Carry
-   the new admission, launch-delivery and constructor cleanup fixes through final
-   integration, native CI and physical-machine acceptance before claiming readiness. Preserve deterministic
+   the v0.15.0 admission, launch-delivery and constructor cleanup fixes through
+   physical-machine acceptance; local integration, native source CI and package
+   verification passed, not mixed-machine readiness. Preserve deterministic
    replay and test 2–4 human recovery on physical mixed Mac/Windows machines.
 5. **Complete faction gameplay and balance.** Resolve Syndicate scope/parity; run
    repeatable full-match economy/combat/AI benchmarks before scaling up player counts.

@@ -4,25 +4,22 @@
 classic space-fleet RTS titles (Armada II / Fleet Operations era). It runs entirely on
 Python 3 — deterministic simulation, AI, OpenGL rendering via pygame-ce and procedural audio.
 
-**Current release: [v0.14.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.14.0)**
-— published October 14, 2026, with verified macOS DMG and **unsigned Windows ZIP**.
-Adds hyperspace transit travel and post-jump shield lockdown, English/German/Polish language
-packs, laser and photon weapon voices rebuilt against reference recordings, five paid station
-refit levels, cancel refunds with cost-derived build times, family-shaped weapon fire with a
-6720 pulsar reach, and campaign return with COMPLETE wins. The final **1,404-test** suite and
-independent reviews passed. Both native builds are produced by GitHub Actions; the downloaded
-DMG was hashed and inspected here, passes `hdiutil verify`, ships the three language packs and
-runs the packaged app's simulation benchmark and LAN diagnostic with a state hash and
-60-tick/600-tick fingerprints identical to the source build. Windows-source LAN
-diagnostics/tests passed on a native CI runner; this does not prove frozen Windows gameplay or
-mixed-platform live LAN. Interactive Windows, trusted signing/Smart App Control, human
-listening/campaign and full-match balance remain open.
-## Preparing v0.15.0 — Collection points, Russian and LAN recovery hardening
+**Current release: [v0.15.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.15.0)**
+— published October 15, 2026, with a verified macOS DMG and **unsigned Windows ZIP**.
+Adds station collection points (#105), Russian (#108), retunable station refits/build-level
+gates (#106), and experimental same-host LAN recovery hardening. The final **1,618-test**
+suite passed with zero failures/errors and 8 existing skips; independent reviews and native
+Windows source CI passed. Both published downloads match GitHub SHA-256 digests, pass
+DMG/ZIP integrity checks, and match the immutable tag for **30 inspected runtime modules
+and all 20 tracked assets per platform**. The downloaded macOS app passed a read-only
+30-second frozen smoke and both benchmark modes with equal simulation hashes.
+Frozen Windows interactive gameplay, physical mixed-platform LAN, silent-blackhole recovery,
+trusted signing/Smart App Control, human listening/campaign and full-match balance remain open.
 
-This source increment adds station collection points (#105), Russian (#108), and
-hardening for the experimental same-host reconnect implementation. Publication and
-package verification remain separate gates; the current published downloads above
-remain v0.14.0 until those gates pass.
+## v0.15.0 — Collection points, Russian and LAN recovery hardening
+
+PR #111 is merged; #105 and #108 are closed. The immutable release tag and
+`release/v0.15.0` branch point to verified source `df78eb7`.
 
 Production stations can send newly completed ships and fighter squadrons to a
 collection point without changing their safe spawn position. Select an owned
@@ -685,6 +682,24 @@ observations and exact campaign restore regressions are recorded separately in
 not proof of statistical full-match balance.
 
 ## Releases
+
+**[Download v0.15.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.15.0)**
+(published October 15, 2026):
+
+- **macOS:** `STAR-ARMADA-v0.15.0-mac.dmg`
+- **Windows:** `STAR-ARMADA-v0.15.0-win.zip` (unsigned)
+
+Both published downloads match GitHub SHA-256 digests: DMG
+`3daa9fc75d6fa0b16ff074cfea763b3aeb37c707871f6adfc23c02267a7e7bb1`, ZIP
+`424c87f1c8b57386d11a3fe18af3392e29764a4ab8ff6dc75f0874679443ef42`.
+DMG verification and ZIP CRC passed. Thirty inspected runtime modules and all 20
+tracked assets per platform match the immutable tag; a prior-release package fails
+the same checker. The mounted downloaded macOS app reports 0.15.0 and passed a
+30-second frozen smoke plus simulation/real-GL benchmarks (30 ticks each, equal
+state hashes) under a fresh isolated HOME. New PNG/replay files were validated;
+real user data remained unchanged. Windows source CI passed, but its executable
+was not run here: frozen Windows gameplay and physical mixed-platform LAN remain open.
+Detailed evidence and installation/signing caveats are in the release notes.
 
 **[Download v0.14.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.14.0)**
 (published October 14, 2026):
