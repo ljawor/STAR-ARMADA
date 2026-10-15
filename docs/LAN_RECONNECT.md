@@ -2,11 +2,13 @@
 
 ## Status and scope
 
-**Implemented in this source, enabled by the LAN menus, not production-ready or
-released.** The user authorized an experimental merge despite known blockers,
-not stable release approval. The implementation targets same-host, same-build,
-same-content trusted-LAN skirmishes with 2–4 humans **after every participant has
-received the canonical launch**. Initial launch-packet loss is not recovered.
+**Experimental same-host recovery, enabled by the LAN menus.** The v0.15.0 source
+increment repairs the admission, initial-launch delivery and constructor-cleanup
+defects documented during the earlier experimental merge. The owner authorized
+those fixes and a new release; publication still requires the final integration,
+CI and downloaded-package gates. This is not physical mixed-machine acceptance.
+The scope is same-host, same-build, same-content trusted-LAN skirmishes with 2–4
+humans, including a ready original client losing the initial canonical launch.
 
 `LanSession` remains opt-in for programmatic callers: pass `recovery=True` to
 `host`/`join`, or call `enable_recovery()` before any handshake bytes are sent.
@@ -51,8 +53,10 @@ graph, then calls `acknowledge_install(manager)`. `main.py` validates the draine
 tick/hash and rebuilds camera, renderer, HUD and input references; transfers audio
 event ownership without reopening the mixer; transfers the existing recorder;
 retains valid selection/groups/follow target; clears accumulator debt; and ACKs
-only after rebinding. Partial renderer-constructor failure still leaks resources
-(see blockers); successful-path handoff is not exception-safety proof.
+only after rebinding. Renderer construction now owns its rollback, including
+shader programs and display lists allocated before a constructor returns. Real-GL
+fault regressions verify resource release, preservation of the original error,
+and survival of the active renderer; successful handoff alone is not that proof.
 
 The Clean Classic recovery overlay reports missing peers, remaining grace and
 actual phase/barrier progress. It blocks world orders, clears pending gestures,
@@ -102,46 +106,42 @@ script values do not have exhaustive gameplay/range/referential-integrity
 validation. A dishonest host can supply self-consistent state. Supported field
 schemas and checksums must evolve together as mutable simulation state changes.
 
-## Known unfixed blockers — experimental merge only
+## v0.15.0 hardening and historical failures
 
-1. **Admission starvation (high):** unauthenticated incomplete-frame sockets count
-   against the four-peer admission cap before authentication. Partial bytes renew
-   receive-idle time without completing authentication. An independent four-human
-   real-TCP probe occupied remaining capacity with two outsiders, rejected five
-   valid original-slot retries, then expired grace. Reserved-slot identity does not
-   guarantee reconnect availability. No absolute authentication deadline or
-   unauthenticated-pool displacement is implemented.
-2. **Initial start-packet loss (high):** if the host has entered running but a ready
-   client loses the socket before receiving `start`, the client is still lobby and
-   cannot enter recovery or construct a manager. Independent 2/3/4-human probes
-   reproduce client `Disconnected` while the host waits in recovering. Existing
-   startup tests wait for every launch first; they do not cover this boundary.
-3. **Partial Renderer construction:** failure after GL display-list/shader program
-   allocation can leak those resources because the constructor never returns the
-   object to `install_recovered_manager` for cleanup. Current injected-constructor
-   tests reject before partial allocation; they do not prove cleanup of that case.
-4. **Integrated suite fails:** 1478 tests, 0 failures, **2 errors**, 8 existing skips.
-   Both `test_gl_lifecycle.MainLifecycleTests.test_shutdown_closes_views_before_quit_and_handles_menu_only`
-   subtests (`started=False/True`) raise `NameError: recovery_overlay is not defined`
-   in the AST-extracted shutdown fixture. Immutable base `319250d` passes that
-   unchanged test. No guard, weakened assertion or new skip was added to hide it.
-5. **User-data preservation failed in that run:** three repository autosaves and
-   `campaign.json` changed; `match-8897608fad5c4e888acd33627c52591d.json` appeared in
-   replays. Attribution is unresolved despite an audit barrier reporting no
-   violations. Application Support files did not change. Original snapshots and
-   changed-file evidence are preserved; files were not restored/deleted. Do not
-   claim the whole run was persistence-safe or rerun it against real user data.
-6. **Acceptance gaps:** physical mixed Mac/Windows recovery and attribution of the
-   original crash remain unproven. Silent network blackholes can hit global
-   lockstep timeout before peer-loss recovery; EOF probes do not establish
-   blackhole recovery. Native Windows headless backend CI does not prove GL
-   handoff, frozen packages or interactive mixed-machine play.
+- **Admission:** authenticated humans and a bounded four-socket unauthenticated
+  pool are counted separately. New arrivals displace the oldest incomplete
+  admission when that pool is full. An absolute accept-time authentication
+  deadline is checked before parsing; partial bytes cannot renew it. Real-TCP
+  regressions cover 2/3/4-human original-slot recovery and partial-byte expiry.
+  This bounded pool is not protection against a sustained connection flood.
+- **Initial launch:** a ready lobby client with original credentials can retry
+  after EOF before receiving `start`. Authenticated original-slot recovery at
+  tick zero re-delivers the validated canonical launch; an existing graph is not
+  rebuilt. Host initial-flush EOF enters recovery. The initial checksum barrier
+  still waits for every human graph. Lost/partial-start tests cover 2/3/4 humans,
+  and a spawned client-process test verifies slot identity and the tick-8 hash.
+- **Constructor rollback:** post-allocation failures release candidate programs,
+  shaders and display lists, continue independent cleanup after an error, and
+  preserve the original constructor exception. Fourteen real-context tests cover
+  these paths and normal idempotent close.
+- **Shutdown fixture:** the AST fixture now supplies production's initialized
+  `recovery_overlay` local and verifies overlay cleanup before views/pygame quit;
+  it does not suppress the exception or weaken shutdown assertions.
 
-No version bump is made: `game/__init__.py` remains `0.14.0`. Repository release
-instructions require a feature-branch bump for a release, not every source merge;
-this request authorizes neither a stable increment, tag nor publication. Exact
-source commits/content, not the unchanged display version alone, identify this
-experiment. No release workflow is dispatched by this PR preparation.
+The earlier PR #107 integration run remains historical **FAIL**: 1,478 tests had
+2 shutdown-fixture errors and 8 skips; repository autosaves/campaign changed and
+a replay appeared despite its old Python audit reporting no violations. Those
+results are not retroactively relabeled. New acceptance uses all five temporary
+persistence paths (including balance), a native macOS descendant write sandbox,
+an independent Python audit and before/after hashes. Anonymous pipe/socket FDs
+are distinguished from filesystem FDs so the spawn test remains executable.
+Final whole-tree and package evidence must be read separately.
+
+**Remaining limits:** physical mixed Mac/Windows recovery, attribution of the
+original crash, silent-blackhole recovery, trusted signing and frozen Windows
+interactive GL/audio/input remain unproven. Silent blackholes can hit global
+lockstep timeout before peer-loss recovery; EOF tests do not establish otherwise.
+Plaintext bearer credentials require a trusted isolated LAN.
 
 ## Verification evidence and limits
 
@@ -162,8 +162,8 @@ evidence paths, not committed CI artifacts. Read their failures, not just passes
   31-tick future traces. Overlay measured at 640×480 and 1920×1080.
 - Recovery-enabled independent-process SDL Clock pacing: 300 ticks, 301 aligned
   hashes; host 29.303 TPS, client 29.290 TPS against an explicit 27 TPS floor.
-- Full integration remains **FAIL** for the shutdown and persistence gates above.
-  It is not rerun during experimental-merge preparation.
+- That historical integration remains **FAIL** for its shutdown and persistence
+  gates. Fresh v0.15.0 integration is recorded separately, not inferred from it.
 
 Windows signal retains every prior check and adds `test_lan_reconnect` and
 `test_lan_production_reconnect` to its explicit portable module list. The genuine

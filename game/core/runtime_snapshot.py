@@ -81,6 +81,8 @@ def migrate_saved_runtime(data):
                 # #77: saves that predate station refits load as an all-level-1
                 # fleet instead of failing the strict graph decode.
                 node[2].setdefault('upgrade_level', ['scalar', 1])
+                # #105: old saves retain the default, no collection destination.
+                node[2].setdefault('collection_point', ['scalar', None])
             pending.extend(node)
         elif type(node) is dict:
             pending.extend(node.values())

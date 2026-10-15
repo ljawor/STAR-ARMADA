@@ -473,6 +473,14 @@ class InputController:
                 elif kind == "build_ship":
                     st.queue_command(BuildShipCommand(
                         lp, pl["shipyard_id"], pl["ship_id"], 1))
+                elif kind == "collection_clear":
+                    from game.core.commands import CollectionPointCommand
+                    from game.systems.collection_points import collection_capable
+                    raw_id = pl.get('target_id')
+                    target = st.entity(raw_id) if type(raw_id) is int else None
+                    if (collection_capable(target) and target.owner == lp
+                            and target.id in self.selection):
+                        st.queue_command(CollectionPointCommand(lp, target.id))
                 elif kind == "cancel_build":
                     # Payload names the queue holder (station/constructor or
                     # colony planet) and the index inside its build_queue. A row
@@ -790,6 +798,10 @@ class InputController:
         self._prune_contacts()
         if not self.selection:
             return
+        # Minimap supports camera navigation (and explicit jump targeting), not
+        # ordinary orders. Never interpret its UI pixels as world ground.
+        if self.hud.minimap_rect and self.hud.minimap_rect.collidepoint(pos):
+            return
         st, lp = self.state, self.local_player
         ids = sorted(self.selection)
         # Resolve hardware targets before querying the ground GL matrices.
@@ -809,8 +821,17 @@ class InputController:
             st.queue_command(AttackCommand(lp, ids, e.id))
             self.app.flash(f"attack {DataStore.get().unit_name(e)}")
         elif (w := self.camera.screen_to_world(*pos)) is not None:
-            st.queue_command(AttackMoveCommand(lp, ids, w))
-            self.app.flash("attack-move")
+            from game.core.commands import CollectionPointCommand
+            from game.systems.collection_points import collection_capable
+            stations = [i for i in ids if (e := st.entity(i)) is not None
+                        and e.owner == lp and collection_capable(e)]
+            for station_id in stations:
+                st.queue_command(CollectionPointCommand(lp, station_id, w))
+            mobile = [i for i in ids if (e := st.entity(i)) is not None
+                      and e.owner == lp and not e.is_station and not e.is_planet]
+            if mobile:
+                st.queue_command(AttackMoveCommand(lp, mobile, w))
+            self.app.flash("collection point set" if stations else "attack-move")
 
     def _pick_target(self, pos: tuple):
         best, best_d = None, 30.0

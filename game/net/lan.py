@@ -191,7 +191,7 @@ INPUT_DELAY = 3  # 100 ms: pipeline network round trips, never wait on the frame
 COMMAND_TYPES = {'move', 'attack', 'attack_move', 'stop', 'hold', 'build_station',
                  'build_satellite', 'build_planet_building', 'build_ship', 'colonize', 'research', 'ability', 'fleet_create',
                  'fleet_stance', 'jump', 'trade_route', 'repair', 'explore', 'cancel_build',
-                 'upgrade_station', 'board', 'crew_load', 'crew_deliver', 'crew_cancel'}
+                 'upgrade_station', 'collection_point', 'board', 'crew_load', 'crew_deliver', 'crew_cancel'}
 # Human-only wire schemas. crew_recover is AI intent, never peer-submitted.
 HUMAN_CREW_FIELDS = {
     'board': {'type', 'player', 'unit_ids', 'target_id'},
@@ -264,6 +264,12 @@ def _commands(commands, owner):
         if d['type'] in HUMAN_CREW_FIELDS:
             if set(d) - HUMAN_CREW_FIELDS[d['type']] or not d.get('unit_ids'):
                 raise ValueError('Invalid human crew fields')
+        if d['type'] == 'collection_point':
+            if set(d) - {'type', 'player', 'target_id', 'target_pos'}:
+                raise ValueError('Invalid collection point fields')
+            from game.systems.collection_points import valid_point
+            if d.get('target_pos') is not None and not valid_point(d['target_pos']):
+                raise ValueError('Invalid collection point coordinates')
         required = {'board': ('target_id',), 'crew_deliver': ('target_id',),
                     'move': ('target_pos',), 'attack_move': ('target_pos',),
                     'jump': ('target_pos',), 'attack': ('target_id',),
@@ -273,7 +279,8 @@ def _commands(commands, owner):
                     'build_planet_building': ('station_kind', 'target_id'),
                     'build_ship': ('ship_id',), 'colonize': ('target_id',),
                     'research': ('tech_id',), 'ability': ('ability_id',),
-                    'cancel_build': ('target_id', 'name'), 'upgrade_station': ('target_id',)}
+                    'cancel_build': ('target_id', 'name'), 'upgrade_station': ('target_id',),
+                    'collection_point': ('target_id',)}
         if any(d.get(key) is None for key in required.get(d['type'], ())):
             raise ValueError('Missing required command fields')
         if d['type'] == 'build_ship' and 'name' in d:
@@ -335,6 +342,7 @@ class _Peer:
         self.slot = None
         self.next_tick = 0
         self.last = time.monotonic()
+        self.accepted_at = self.last  # Absolute budget, never renewed by bytes.
         self.connected = True
         self.target = None                      # (address, port) for outbound peers
 
@@ -365,7 +373,8 @@ class _Peer:
             data = self.sock.recv(IO_BUDGET)
             if not data:
                 raise ConnectionError('Disconnected')
-            self.last = time.monotonic()
+            if self.slot is not None or self.target is not None:
+                self.last = time.monotonic()
             self.rx.extend(data)
         except (ConnectionResetError, ConnectionAbortedError) as exc:
             raise ConnectionError(f'Disconnected: {exc}') from None
@@ -409,6 +418,7 @@ class LanSession:
         self._players = []
         self._options = {}
         self._revision = 0
+        self._ready_requested = False
         self._status = 'lobby' if is_host else 'connecting'
         self._error = ''
         self._failure_phase = 'transport'
@@ -626,6 +636,7 @@ class LanSession:
             self._players[0]['ready'] = ready
             self._lobby()
         else:
+            self._ready_requested = ready
             self._peers[0].send(dict(type='ready', ready=ready, revision=self._revision))
 
     def start(self):
@@ -643,9 +654,13 @@ class LanSession:
         # Do not leave launch queued while the frame thread builds renderer/audio.
         # One bounded nonblocking write; subsequent polls handle short writes.
         try:
-            for peer in self._peers:
+            for peer in list(self._peers):
                 if peer.slot is not None:
-                    peer.flush()
+                    try:
+                        peer.flush()
+                    except OSError:
+                        if not self._recovery or not self._recovery.lost(peer):
+                            raise
         except (OSError, ValueError) as exc:
             self._fail(str(exc))
 
@@ -677,11 +692,17 @@ class LanSession:
                 self._lobby()
                 if self._recovery:
                     self._recovery.admitted(peer)
-            elif kind == 'ready' and self._status == 'lobby' and type(m.get('ready')) is bool:
+            elif kind == 'ready' and type(m.get('ready')) is bool and (self._status == 'lobby' or
+                    (self._status == 'recovering' and self._recovery and self._launch is None)):
                 if type(m.get('revision')) is not int or m['revision'] != self._revision:
                     return  # Old consent must never apply to a changed configuration.
+                changed = self._players[peer.slot]['ready'] != m['ready']
                 self._players[peer.slot]['ready'] = m['ready']
-                self._lobby()
+                if self._status == 'recovering':
+                    if changed:
+                        self._recovery.begin()  # Re-prove consent without renewing grace.
+                else:
+                    self._lobby()
             else:
                 raise ValueError('Unexpected message')
         else:
@@ -701,11 +722,14 @@ class LanSession:
             elif kind == 'lobby' and self._status == 'lobby':
                 if type(m.get('revision')) is not int or m['revision'] < self._revision:
                     raise ValueError('Invalid configuration revision')
+                if m['revision'] != self._revision:
+                    self._ready_requested = False
                 self._revision = m['revision']
                 self._options = m['options']
                 build_lan_map(self._ds, self._options)
                 self._players = _players(m['players'], self._options, self.local_player)
-            elif kind == 'start' and self._status == 'lobby':
+            elif kind == 'start' and (self._status == 'lobby' or
+                    (self._status == 'recovering' and self._launch is None)):
                 expected = build_lan_map(self._ds, self._options)
                 if len(self._players) != self._options['human_count'] or not all(p['ready'] for p in self._players):
                     raise ValueError('Start requires all humans ready')
@@ -716,7 +740,8 @@ class LanSession:
                 self._launch = dict(map_def=m['map_def'], local_player=self.local_player)
                 self._progress = time.monotonic()
                 self._loading_started = self._progress
-                self._status = 'running'
+                if self._status != 'recovering':
+                    self._status = 'running'
             else:
                 raise ValueError('Unexpected message')
 
@@ -873,12 +898,19 @@ class LanSession:
                         sock, _ = self._listener.accept()
                     except BlockingIOError:
                         break
-                    if len(self._peers) >= 4:
-                        sock.close()
-                        continue
+                    # Admission sockets cannot occupy reserved human slots.
+                    # Rotate the bounded unauthenticated pool so incomplete
+                    # outsiders cannot exclude an original credential holder.
+                    pending = [p for p in self._peers if p.slot is None]
+                    if len(pending) >= 4:
+                        oldest = min(pending, key=lambda p: p.accepted_at)
+                        oldest.close()
+                        self._peers.remove(oldest)
                     self._peers.append(_Peer(sock))
             for peer in list(self._peers):
                 try:
+                    if self.is_host and peer.slot is None and time.monotonic() - peer.accepted_at > TIMEOUT:
+                        raise ConnectionError('Authentication timeout')
                     if not peer.connected:
                         if time.monotonic() - peer.last > TIMEOUT:
                             raise ConnectionError('Peer timeout')

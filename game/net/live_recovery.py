@@ -14,7 +14,7 @@ import socket
 import time
 
 from game.net.lan import (INPUT_DELAY, FIXED_DT, GAME_VERSION, PROTOCOL_VERSION,
-                         _Peer, _commands, _digest, _json, _unique_object,
+                         _Peer, _commands, _digest, _json, _unique_object, _players,
                          classify_connect_result, precise_checksum)
 from game.net.reconnect import (capture_snapshot, restore_snapshot, ChunkSender,
                                 ChunkReceiver, MAX_SNAPSHOT)
@@ -121,6 +121,8 @@ class LiveRecovery:
         self.reset()
         if self.s.is_host:
             self.epoch += 1
+            if self.s._launch is None:
+                self.phase = 'lobby_wait'
             self.s._broadcast(self.freeze_message())
 
     def freeze_message(self):
@@ -132,7 +134,12 @@ class LiveRecovery:
 
     def lost(self, peer):
         s = self.s
-        if s._status not in ('running', 'recovering') or (s.is_host and peer.slot is None):
+        ready_lobby = (s._status == 'lobby' and
+                       ((s.is_host and peer.slot in self.tokens) or
+                        (not s.is_host and self.credential is not None and s.local_player >= 0
+                         and (s._ready_requested or
+                              any(p['slot'] == s.local_player and p['ready'] for p in s._players)))))
+        if (s._status not in ('running', 'recovering') and not ready_lobby) or (s.is_host and peer.slot is None):
             return False
         if not s.is_host and self.credential is None:
             return False
@@ -168,6 +175,19 @@ class LiveRecovery:
         for peer, sender in list(self.senders.items()):
             if peer in s._peers:
                 sender.pump(peer)
+        if (s.is_host and self.phase == 'lobby_wait'
+                and {p.slot for p in s._peers if p.slot is not None} == set(range(1, len(s._players)))):
+            # No graph exists yet. Prove receipt of the canonical lobby and the
+            # staged credential before returning control to configure/start.
+            self.phase = 'lobby_install'
+            self.acks = {0}
+            if self.pending_tokens is None:
+                self.pending_tokens = {slot: secrets.token_hex(32) for slot in self.tokens}
+            for peer in s._peers:
+                if peer.slot is not None:
+                    self.private(peer, pending=True)
+                    peer.send(dict(type='recovery_lobby', epoch=self.epoch, players=s._players,
+                                   options=s._options, revision=s._revision))
         if s.is_host and self.phase == 'freeze' and len(self.reports) == s._options['human_count']:
             ticks = [r['tick'] for r in self.reports.values()]
             self.target = max(ticks)
@@ -214,7 +234,9 @@ class LiveRecovery:
             slot = m['slot']
             tokens = self.tokens if m['generation'] == self.generation else (
                 self.pending_tokens if m['generation'] == self.generation+1 else None)
-            if (peer.slot is not None or s._status != 'recovering' or type(slot) is not int
+            launch_pending = s._status == 'running' and s._tick == 0 and s._loading_started is not None
+            lobby_pending = s._status == 'lobby' and s._launch is None
+            if (peer.slot is not None or (s._status != 'recovering' and not launch_pending and not lobby_pending) or type(slot) is not int
                     or tokens is None or slot not in tokens or any(p.slot == slot for p in s._peers)
                     or m['session'] != self.session or type(m['generation']) is not int
                     or m['content'] != s._content
@@ -222,8 +244,58 @@ class LiveRecovery:
                     or m['protocol'] != PROTOCOL_VERSION or not _digest(m['token'])
                     or not hmac.compare_digest(m['token'], tokens[slot])):
                 raise ValueError('Invalid resume credentials')
+            if launch_pending or lobby_pending:
+                self.begin()
             peer.slot = slot
+            if s._tick == 0 and s._launch is not None:
+                # Replay canonical launch only to the original authenticated
+                # bearer. An already constructed graph is never built twice.
+                peer.send(dict(type='recovery_launch', map_def=s._launch['map_def'],
+                               players=s._players, options=s._options, revision=s._revision))
             peer.send(self.freeze_message())
+            return True
+        if kind == 'recovery_launch' and not s.is_host:
+            schema(m, 'type map_def players options revision')
+            self.check()
+            if s._status != 'recovering' or (s._launch is None and s._tick != 0):
+                raise ValueError('Unexpected recovery launch')
+            players = _players(m['players'], s._options, s.local_player)
+            if (m['options'] != s._options or type(m['revision']) is not int or m['revision'] != s._revision
+                    or [(p['slot'], p['name']) for p in players] !=
+                       [(p['slot'], p['name']) for p in s._players]
+                    or not all(p['ready'] for p in players)):
+                raise ValueError('Recovery launch configuration mismatch')
+            if s._launch is None:
+                s._players = players
+                s._receive(peer, dict(type='start', map_def=m['map_def']))
+            elif _json(m['map_def']) != _json(s._launch['map_def']):
+                raise ValueError('Recovery launch map mismatch')
+            return True
+        if kind == 'recovery_lobby' and not s.is_host:
+            schema(m, 'type epoch players options revision')
+            self.check()
+            if (s._status != 'recovering' or s._launch is not None or s._tick != 0
+                    or integer(m['epoch']) != self.epoch or type(m['revision']) is not int
+                    or m['revision'] < s._revision):
+                raise ValueError('Unexpected recovery lobby')
+            players = _players(m['players'], m['options'], s.local_player)
+            if ([(p['slot'], p['name']) for p in players] !=
+                    [(p['slot'], p['name']) for p in s._players]
+                    or (m['revision'] == s._revision and m['options'] != s._options)
+                    or (m['revision'] != s._revision and any(p['ready'] for p in players))):
+                raise ValueError('Recovery lobby configuration mismatch')
+            # Reuse normal lobby validation; changed configuration revokes old
+            # consent. No graph is constructed and no simulation report is sent.
+            s._status = 'lobby'
+            s._receive(peer, dict(type='lobby', players=players, options=m['options'], revision=m['revision']))
+            s._status = 'recovering'
+            if players[s.local_player]['ready'] != s._ready_requested:
+                # A ready/unready write may have been lost with the old socket.
+                # Do not ACK stale consent, even if the original revision agrees.
+                peer.send(dict(type='ready', ready=s._ready_requested, revision=s._revision))
+                return True
+            self.phase = 'lobby_install'
+            peer.send(dict(type='recovery_lobby_ack', epoch=self.epoch, revision=s._revision))
             return True
         if kind == 'recovery_freeze' and not s.is_host:
             schema(m, 'type epoch remaining')
@@ -253,6 +325,33 @@ class LiveRecovery:
             integer(m['tick'])
         if s._status != 'recovering' or (s.is_host and peer.slot is None):
             raise ValueError('Recovery message outside authenticated epoch')
+        if kind in ('recovery_lobby_ack', 'recovery_lobby_resume'):
+            schema(m, 'type epoch revision')
+            integer(m['revision'])
+            if 0 < m['epoch'] < self.epoch:
+                return True  # Bounded old authenticated work cannot resume us.
+            if (s._launch is not None or self.phase != 'lobby_install'
+                    or m['epoch'] != self.epoch or m['revision'] != s._revision):
+                raise ValueError('Recovery lobby acknowledgement mismatch')
+            if kind == 'recovery_lobby_ack' and s.is_host:
+                if peer.slot in self.acks:
+                    raise ValueError('Duplicate recovery lobby acknowledgement')
+                self.acks.add(peer.slot)
+                if self.acks == set(range(len(s._players))):
+                    self.generation += 1
+                    self.tokens = self.pending_tokens
+                    self.pending_tokens = None
+                    s._broadcast(dict(type='recovery_lobby_resume', epoch=self.epoch, revision=s._revision))
+                    s._status = 'lobby'
+                    self.phase = 'running'
+                    self.deadline = None
+                return True
+            if kind == 'recovery_lobby_resume' and not s.is_host:
+                s._status = 'lobby'
+                self.phase = 'running'
+                self.deadline = None
+                return True
+            raise ValueError('Invalid recovery lobby sender')
         if kind == 'recovery_report_begin' and s.is_host:
             schema(m, 'type epoch digest')
             if (not 0 < m['epoch'] <= self.epoch or not _digest(m['digest'])
@@ -425,7 +524,7 @@ class LiveRecovery:
         return True
 
     def step(self, gm):
-        if self.s._status != 'recovering':
+        if self.s._status != 'recovering' or self.s._launch is None:
             return False
         try:
             self.check()

@@ -1,6 +1,7 @@
-"""Build `assets/data/lang/{de,pl}.json` from the authored maps in `tools/lang_sources/`.
+"""Build registered translation packs from authored maps in `tools/lang_sources/`.
 
-The German and Polish packs are generated, never hand-edited, and this script refuses to
+Languages come from `render.i18n.LANGUAGES` (English is the catalogue).
+German, Polish and Russian packs are generated, never hand-edited; this script refuses to
 write anything unless every pack carries *exactly* the catalogue: a missing key would ship
 as a silent English fallback, and a key that is not in the catalogue would sit in the pack
 forever, unreachable. Both are build errors.
@@ -20,6 +21,8 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LANG_DIR = os.path.join(ROOT, 'assets', 'data', 'lang')
 SOURCES = os.path.join(ROOT, 'tools', 'lang_sources')
+sys.path.insert(0, ROOT)
+from render import i18n
 
 
 def load_source(code: str):
@@ -41,7 +44,9 @@ def main() -> int:
 
     loaded = {}
     problems = 0
-    for code in ('de', 'pl'):
+    for code, _label in i18n.LANGUAGES:
+        if code == i18n.DEFAULT_LANGUAGE:
+            continue
         strings, names = load_source(code)
         loaded[code] = (strings, names)
         missing = sorted(en_strings - set(strings))

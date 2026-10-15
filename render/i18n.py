@@ -26,7 +26,7 @@ from typing import Any
 
 #: Language codes shipped in `assets/data/lang/`. The first entry is the default and
 #: the catalogue of every string the UI can draw; every other pack may be partial.
-LANGUAGES = (('en', 'English'), ('de', 'Deutsch'), ('pl', 'Polski'))
+LANGUAGES = (('en', 'English'), ('de', 'Deutsch'), ('pl', 'Polski'), ('ru', 'Русский'))
 
 DEFAULT_LANGUAGE = 'en'
 

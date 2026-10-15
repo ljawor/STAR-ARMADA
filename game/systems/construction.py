@@ -758,6 +758,12 @@ class ConstructionSystem:
             spawn_pos = builder.pos + offset
             ship = self.factory.spawn_ship(ship_id, builder.owner, spawn_pos,
                                            yaw=st.rng().uniform(0, 6.28))
+            # Sample at completion, not queue time. Keep the normal seeded birth
+            # position; movement (including avoidance) takes the hull to the point.
+            if builder.is_station and builder.collection_point is not None:
+                ship.order_type = "move"
+                ship.order_target_pos = builder.collection_point.copy()
+                ship.order_target_id = None
             st.float_text(ship.pos, sd.display_name, (0.7, 0.9, 1))
             st.events.publish("ship_built", entity_id=ship.id, ship=ship_id,
                               owner=builder.owner)

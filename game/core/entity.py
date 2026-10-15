@@ -69,6 +69,7 @@ class Entity:
     order_type: str = "idle"        # idle|move|attack|attack_move|hold|follow|patrol
     order_target_pos: Vec3 | None = None
     order_target_id: int | None = None
+    collection_point: Vec3 | None = None  # station's destination for future completions
     patrol_a: Vec3 | None = None
     patrol_b: Vec3 | None = None
 

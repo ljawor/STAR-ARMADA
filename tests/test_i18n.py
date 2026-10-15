@@ -135,13 +135,15 @@ class LookupTests(unittest.TestCase):
     def test_cycle_walks_the_shipped_packs_and_wraps(self):
         self.assertEqual(i18n.cycle('en'), 'de')
         self.assertEqual(i18n.cycle('de'), 'pl')
-        self.assertEqual(i18n.cycle('pl'), 'en')
+        self.assertEqual(i18n.cycle('pl'), 'ru')
+        self.assertEqual(i18n.cycle('ru'), 'en')
+        self.assertEqual(i18n.cycle('ru', -1), 'pl')
         self.assertEqual(i18n.cycle('klingon'), 'en')
-        self.assertEqual(i18n.cycle('en', -1), 'pl')
+        self.assertEqual(i18n.cycle('en', -1), 'ru')
 
     def test_available_reports_only_packs_that_are_shipped(self):
         codes = [code for code, _label in i18n.available()]
-        self.assertEqual(codes, ['en', 'de', 'pl'])
+        self.assertEqual(codes, ['en', 'de', 'pl', 'ru'])
         self.assertEqual(i18n.label('pl'), 'Polski')
 
     def test_apply_from_settings_corrects_a_language_this_build_does_not_ship(self):
@@ -170,8 +172,9 @@ class SettingsIntegrationTests(unittest.TestCase):
         scope.start()
         self.addCleanup(scope.stop)
         self.addCleanup(i18n.set_language, i18n.DEFAULT_LANGUAGE)
-        pygame.display.init()
-        self.addCleanup(pygame.display.quit)
+        if not pygame.display.get_init():
+            pygame.display.init()
+            self.addCleanup(pygame.display.quit)
 
     def make_menu(self, width=1024, height=768):
         menu = menus.MenuStack(width, height)
@@ -221,13 +224,13 @@ class SettingsIntegrationTests(unittest.TestCase):
     def test_the_language_row_names_each_pack_in_its_own_language(self):
         menu = self.make_menu()
         seen = []
-        for expected in ('English', 'Deutsch', 'Polski'):
+        for expected in ('English', 'Deutsch', 'Polski', 'Русский'):
             texts = self.open_settings(menu, 3)
             seen.append(next(t for t in texts if t.endswith(expected + ' ›')))
             row = next(b for b in menu.buttons if b['action'] == 'cycle_language')
             menu.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1,
                                                  pos=row['rect'].center))
-        self.assertEqual(len(seen), 3)
+        self.assertEqual(len(seen), 4)
 
     def test_every_settings_row_stays_reachable_now_that_a_language_page_exists(self):
         menu = self.make_menu()
@@ -408,6 +411,7 @@ class PresentationOnlyTests(unittest.TestCase):
         self.assertEqual(de_first, first, 'the fixture is not deterministic')
         self.assertNotEqual(run('en'), '')
         self.assertEqual(run('de'), run('pl'))
+        self.assertEqual(run('en'), run('ru'))
 
 
 if __name__ == '__main__':

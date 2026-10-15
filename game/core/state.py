@@ -407,6 +407,8 @@ class GameState:
         }
         if e.order_target_pos:
             d["order_target_pos"] = e.order_target_pos.to_dict(precise)
+        if e.collection_point is not None:
+            d["collection_point"] = e.collection_point.to_dict(precise)
         if e.order_target_id is not None:
             d["order_target_id"] = e.order_target_id
         if e.build_queue:
@@ -523,6 +525,11 @@ class GameState:
         if "order_target_pos" in d:
             e.order_target_pos = Vec3.from_dict(d["order_target_pos"])
         e.order_target_id = d.get("order_target_id")
+        if d.get("collection_point") is not None:
+            from ..systems.collection_points import valid_point
+            if not valid_point(d['collection_point']):
+                raise ValueError('Invalid collection point')
+            e.collection_point = Vec3.from_dict(d['collection_point'])
         e.build_queue = list(d.get("build_queue", []))
         e.colonized_by = d.get("colonized_by")
         e.planet_id = d.get("planet_id")

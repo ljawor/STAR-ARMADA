@@ -152,6 +152,10 @@ def _validate_type(value, expected):
             _validate_type(getattr(value, name), _CONTAINER_TYPES.get(base, {}).get(name, hint))
         if base is Entity and value.crew_damage_accumulator < 0:
             raise ValueError('Snapshot crew_damage_accumulator schema mismatch')
+        if base is Entity and value.collection_point is not None:
+            from game.systems.collection_points import valid_point
+            if not valid_point(value.collection_point.to_dict(True)):
+                raise ValueError('Snapshot collection point schema mismatch')
         if base is Fleet and value.rally_point is not None and len(value.rally_point) != 3:
             raise ValueError('Snapshot rally coordinate schema mismatch')
     elif args and base is dict:
