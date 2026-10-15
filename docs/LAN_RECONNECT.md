@@ -5,8 +5,8 @@
 **Experimental same-host recovery, enabled by the LAN menus.** The v0.15.0 source
 increment repairs the admission, initial-launch delivery and constructor-cleanup
 defects documented during the earlier experimental merge. The owner authorized
-those fixes and a new release; publication still requires the final integration,
-CI and downloaded-package gates. This is not physical mixed-machine acceptance.
+those fixes and release v0.15.0; final protected integration, native source CI and
+downloaded-package gates passed. This is not physical mixed-machine acceptance.
 The scope is same-host, same-build, same-content trusted-LAN skirmishes with 2–4
 humans, including a ready original client losing the initial canonical launch.
 
@@ -128,6 +128,13 @@ schemas and checksums must evolve together as mutable simulation state changes.
   `recovery_overlay` local and verifies overlay cleanup before views/pygame quit;
   it does not suppress the exception or weaken shutdown assertions.
 
+- **Prelaunch lobby and skew:** host-detected EOF before `start()` retains original
+  slot credentials and revision-bound consent without inventing a graph. Authenticated
+  all-peer lobby/credential receipt gates resume; lost ready/unready writes are
+  reconciled. Both signs of released startup skew are covered for 2/3/4 humans;
+  identical launch re-delivery never rebuilds an already advanced graph. Paid
+  tick-3 commands remain once-only in control/peer traces and actual playback.
+
 The earlier PR #107 integration run remains historical **FAIL**: 1,478 tests had
 2 shutdown-fixture errors and 8 skips; repository autosaves/campaign changed and
 a replay appeared despite its old Python audit reporting no violations. Those
@@ -144,6 +151,16 @@ lockstep timeout before peer-loss recovery; EOF tests do not establish otherwise
 Plaintext bearer credentials require a trusted isolated LAN.
 
 ## Verification evidence and limits
+
+Fresh **v0.15.0** acceptance passed the full **1,618-test** protected suite (zero
+failures/errors, 8 existing skips), with native sandbox, zero audit violations and
+unchanged source/user-data inventories. Independent final network review and native
+Windows source CI passed, including admission/launch regressions. Both downloaded
+packages passed hashes/integrity and tagged code/data inspection; read-only frozen
+macOS smoke and both benchmark modes passed. Durable local evidence is in
+`dist/release-v0.15.0/`. These checks do not close native frozen Windows interactive,
+physical mixed-machine or silent-blackhole acceptance. The older evidence below is
+historical and retains its original failures.
 
 The completed native Cocoa/real-GL integration report and raw logs live at
 `~/.hermes/cache/scratch/star-armada-production-reconnect/integrated/REPORT.md`
