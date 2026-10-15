@@ -224,6 +224,9 @@ class ConstructionSystem:
             return False, 'invalid site coordinates'
         if abs(coords[0]) > st.map_info.bounds or abs(coords[2]) > st.map_info.bounds:
             return False, 'outside the map bounds'
+        # No terrain/gameplay mutations occur in this synchronous validation.
+        # Never share these numeric inputs with another call or an orbit update.
+        orbit_inputs = None
         for e in st.entities.values():
             if not e.alive or e is ignore_entity:
                 continue
@@ -231,10 +234,12 @@ class ConstructionSystem:
                 minimum = self.station_min_distance(station_id, e.data_id, e.radius, player_id, e.owner)
                 distance = math.dist(coords, (e.pos.x, e.pos.y, e.pos.z))
                 if e.satellite_slot is not None and e.planet_id is not None:
-                    from .satellite_orbits import orbit_geometry, ring_distance
+                    from .satellite_orbits import _orbit_geometry, _OrbitTerrainInputs, ring_distance
                     parent = st.entity(e.planet_id)
                     if parent is not None:
-                        plan = orbit_geometry(st, parent, e.radius, e.satellite_slot)
+                        if orbit_inputs is None:
+                            orbit_inputs = _OrbitTerrainInputs()
+                        plan = _orbit_geometry(st, parent, e.radius, e.satellite_slot, orbit_inputs)
                         if plan is not None:
                             distance = min(distance, ring_distance(parent.pos, *plan, Vec3(*coords)))
                 if distance < minimum:
@@ -264,8 +269,10 @@ class ConstructionSystem:
                 minimum = self.station_min_distance(station_id, other.id, other.radius, player_id)
                 distance = math.dist(coords, work['pos'])
                 if work['kind'] == 'satellite' and e.is_planet and type(work.get('slot')) is int:
-                    from .satellite_orbits import orbit_geometry, ring_distance
-                    plan = orbit_geometry(st, e, other.radius, work['slot'])
+                    from .satellite_orbits import _orbit_geometry, _OrbitTerrainInputs, ring_distance
+                    if orbit_inputs is None:
+                        orbit_inputs = _OrbitTerrainInputs()
+                    plan = _orbit_geometry(st, e, other.radius, work['slot'], orbit_inputs)
                     if plan is not None:
                         distance = min(distance, ring_distance(e.pos, *plan, Vec3(*coords)))
                 if distance < minimum:

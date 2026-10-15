@@ -68,7 +68,7 @@ jobs:
         # Collection-point commands and recovery admission/launch regressions are
         # portable real-TCP gates. Localization tests also exercise native Cyrillic
         # font rendering and settings persistence without requiring an OpenGL context.
-        run: python -m unittest test_netdiag test_netdiag_compare test_lan_state_diff test_sim_profiles test_lan test_multiplayer test_checksum_canonicalization test_lan_human_safety test_lan_failure_diagnostics test_lan_reconnect test_lan_production_reconnect test_lan_reconnect_admission test_lan_launch_recovery test_station_balance test_collection_points test_collection_points_lan test_i18n test_i18n_russian test_language_tools -v
+        run: python -m unittest test_netdiag test_netdiag_compare test_lan_state_diff test_sim_profiles test_lan test_multiplayer test_checksum_canonicalization test_orbit_spacing_batch test_lan_human_safety test_lan_failure_diagnostics test_lan_reconnect test_lan_production_reconnect test_lan_reconnect_admission test_lan_launch_recovery test_station_balance test_collection_points test_collection_points_lan test_i18n test_i18n_russian test_language_tools -v
       - name: Replay deletion on real Windows
         env:
           PYTHONPATH: tests
