@@ -1,0 +1,90 @@
+{
+  "views": [
+    {
+      "after_sha256": "05b2c7db381e",
+      "before_sha256": "878eaca3805a",
+      "changed_box": [
+        259,
+        374,
+        522,
+        903
+      ],
+      "changed_percent": 2.36,
+      "changed_pixels": 24193,
+      "view": "capital-detail"
+    },
+    {
+      "after_sha256": "312eb1e93e27",
+      "before_sha256": "10de5efda4f8",
+      "changed_box": [
+        274,
+        481,
+        505,
+        815
+      ],
+      "changed_percent": 1.26,
+      "changed_pixels": 12932,
+      "view": "capital-close"
+    },
+    {
+      "after_sha256": "c8e17152ba78",
+      "before_sha256": "d024216a0f70",
+      "changed_box": [
+        379,
+        589,
+        438,
+        660
+      ],
+      "changed_percent": 0.08,
+      "changed_pixels": 832,
+      "view": "tactical"
+    },
+    {
+      "after_sha256": "f8866b8ac6eb",
+      "before_sha256": "e3de76a39c79",
+      "changed_box": [
+        409,
+        599,
+        476,
+        682
+      ],
+      "changed_percent": 0.11,
+      "changed_pixels": 1092,
+      "view": "common-scale"
+    },
+    {
+      "after_sha256": "0ca325346557",
+      "before_sha256": "2e9e4607eacd",
+      "changed_box": [
+        356,
+        453,
+        417,
+        865
+      ],
+      "changed_percent": 0.89,
+      "changed_pixels": 9096,
+      "view": "capital-keel"
+    },
+    {
+      "after_sha256": "94041a68f221",
+      "before_sha256": "4698064f3b3b",
+      "changed_box": [
+        21,
+        1086,
+        167,
+        1279
+      ],
+      "changed_percent": 0.64,
+      "changed_pixels": 6530,
+      "view": "escort-close"
+    },
+    {
+      "after_sha256": "e1270673a70e",
+      "before_sha256": "e1270673a70e",
+      "changed_box": null,
+      "changed_percent": 0.0,
+      "changed_pixels": 0,
+      "view": "yard-close"
+    }
+  ]
+}

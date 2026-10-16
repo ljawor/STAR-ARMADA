@@ -5,7 +5,7 @@
   "authority": "script",
   "tool": "tools/art/model_pipeline.py",
   "tool_version": 1,
-  "recorded": "2026-10-16T10:43:57Z",
+  "recorded": "2026-10-16T11:19:12Z",
   "host": {
     "system": "Darwin",
     "release": "25.6.0",
@@ -19,21 +19,21 @@
   },
   "source": {
     "path": "art/blender/alliance_battleship.blend",
-    "sha256": "fd1550bab647b43ac1e9fabe79ec1068bd833c3fb408e6e5d351a5c2a701cde1"
+    "sha256": "59a1f8f4af0542b1be584508bff3c9c9fcb8f75cb2c561126075ecc314e71c5c"
   },
   "exporter": {
     "path": "tools/art/build_alliance_battleship.py",
-    "sha256": "7f449c547f97a5ef200e8ae23c0868c40ce3d32f6a79c9a11761cef28663485a"
+    "sha256": "52380040fd04c3370085c1815e68cb520d5e54f1f4af04ac53ec69d7233d0082"
   },
   "runtime": {
     "path": "assets/models/alliance_battleship.mesh.json",
-    "sha256": "57a5496c539a0252a237ef7a3671509f705308416da3f2afe0c9555ff17e9fec",
-    "bytes": 594859,
-    "triangles": 8701
+    "sha256": "0a4e397d5c0b60f70fbba35f3e4f4a5ac997ac4de079f821f8f29db9872c95cd",
+    "bytes": 743439,
+    "triangles": 11457
   },
   "approved_reference": {
     "record": "art/manifests/approved-trio-source-hashes.json",
-    "sha256": "57a5496c539a0252a237ef7a3671509f705308416da3f2afe0c9555ff17e9fec",
+    "sha256": "0a4e397d5c0b60f70fbba35f3e4f4a5ac997ac4de079f821f8f29db9872c95cd",
     "matches": true
   },
   "action": "export",
