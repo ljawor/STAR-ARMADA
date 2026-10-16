@@ -117,7 +117,60 @@ def _syndicate_small(h, bomber):
         h.plate('trim',(1,1,19),(-width*.8,2,15),.2)
 
 
+def _alliance_battleship_slice(h):
+    """Blender-authored pressure hull through the existing six-role pipeline.
+
+    Missing/corrupt optional art must not prevent a saved battle from loading.
+    The bounded faction cache means the diagnostic/fallback runs once, not per
+    ship/frame. Keep the prior hull below as the emergency geometry fallback.
+    """
+    from render.authored_mesh import battleship_mesh
+    try:
+        mesh = battleship_mesh()
+    except (OSError, ValueError, TypeError, KeyError, OverflowError) as exc:
+        import warnings
+        warnings.warn(f'Alliance battleship asset unavailable; using procedural hull: {exc}',
+                      RuntimeWarning, stacklevel=2)
+    else:
+        for role, triangles in mesh.items():
+            h.parts[role].extend(triangles)
+        return
+    # Original segmented pressure hull is retained only as a safe fallback.
+    h.loft('base', ((-135,19,11,-12),(-103,28,14,-14),(-48,27,14,-14),
+                    (-15,12,9,-11),(32,12,9,-11),(58,29,12,-12),
+                    (102,26,10,-10),(135,9,7,-8)), 4)
+    # A stepped service keel and command loft, not a uniformly scaled capsule.
+    h.loft('base', ((-94,12,-10,-22),(-56,15,-10,-28),
+                    (12,9,-9,-24),(45,6,-8,-16)), 2)
+    for y,w,l,z in ((22,19,76,-60),(37,12,45,-70)):
+        _capsule(h,'base',w,l,14,(0,y,z))
+    _capsule(h,'lit',8,26,.7,(0,44.8,-70))
+    h.plate('trim',(3,19,3),(0,53,-76),.6)
+    for side in (-1,1):
+        # Short aft drives leave broad background windows beside the waist.
+        _capsule(h,'base',16,112,20,(side*55,-2,-76))
+        _capsule(h,'accent',8,74,.8,(side*55,8.6,-76))
+        h.nozzle((side*55,-2,-137),5.5)
+        for z in (-103,-48):
+            h.plate('base',(42,8,14),(side*35,-4,z),1.5,yaw=side*12)
+            h.ring('trim',16.5,14.5,2,(side*55,-2,z),pitch=90,sides=16)
+        for z in (-100,-65,-30):
+            h.turret((side*55,9,z),1)
+        # Separate flight-service pods retain clear forward launch mouths.
+        _capsule(h,'base',13,76,14,(side*96,-8,12))
+        h.plate('base',(35,5,12),(side*78,-7,-8),1)
+        h.bay((side*96,-8,58),22,12,20)
+        h.nozzle((side*96,-8,-29),3.8)
+        h.vent((side*96,-.6,-4),15,17)
+        h.plate('accent',(12,.8,24),(side*18,13,76),.3)
+    for z in (50,84,112):
+        h.turret((0,13,z),1.1)
+    h.vent((0,14.6,-111),22,18)
+
+
 def _alliance_capital(h, flagship):
+    if not flagship:
+        return _alliance_battleship_slice(h)
     length, width, offset = (380,32,76) if flagship else (270,24,55)
     _capsule(h,'base',width,length,26 if flagship else 20)
     # Stepped command island follows the rounded fuselage rather than an
@@ -388,7 +441,45 @@ def _capsule(h, role, width, length, height, center=(0, 0, 0), yaw=0):
     h.loft(role, sections, min(width*.38, height*.30), center, yaw)
 
 
+def _alliance_frigate_slice(h):
+    """Compact armored prow, exposed waist, unequal aft pressure-drive pods."""
+    from render.authored_mesh import frigate_mesh
+    try:
+        mesh = frigate_mesh()
+    except (OSError, ValueError, TypeError, KeyError, OverflowError) as exc:
+        import warnings
+        warnings.warn(f'Alliance frigate asset unavailable; using procedural hull: {exc}',
+                      RuntimeWarning, stacklevel=2)
+    else:
+        for role, triangles in mesh.items():
+            h.parts[role].extend(triangles)
+        return
+    h.loft('base', ((-69,5,5,-6),(-31,8,7,-8),(-7,5,6,-6),
+                    (24,5,6,-6),(35,18,8,-8),(56,16,7,-7),(73,6,4,-5)), 2)
+    _capsule(h,'base',6,31,10,(0,11,-21))
+    _capsule(h,'lit',4,16,.6,(0,16.8,-20))
+    h.plate('base',(8,5,36),(0,-9,-9),1)
+    h.plate('accent',(14,.8,17),(0,8.6,45),.3)
+    for side in (-1,1):
+        length,z = (80,-35) if side<0 else (62,-32)
+        _capsule(h,'base',8,length,13,(side*28,0,z))
+        _capsule(h,'accent',4,length*.63,.8,(side*28,7.1,z))
+        h.nozzle((side*28,0,z-length/2-4),4)
+        # Both load-bearing swept ties survive base-only tactical LOD.
+        h.plate('base',(34,4,7),(side*14,-1,13),.8,yaw=side*45)
+        h.plate('base',(27,5,8),(side*15,-2,-31),1,yaw=-side*16)
+        for collar in (z-16,z+15):
+            h.ring('trim',8.4,7.2,1.5,(side*28,0,collar),pitch=90,sides=16)
+        # Maintenance access only: not fighter launch decks.
+        h.bay((side*28,0,z+length/2+10),13,10,14)
+        h.turret((side*28,8,z-9),.68)
+        h.vent((side*28,6.9,z+3),8,9)
+    h.plate('trim',(1.5,9,1.5),(0,21,-27),.3)
+
+
 def _alliance_line(h, level):
+    if level == 1:
+        return _alliance_frigate_slice(h)
     # Approved courier / escort / carrier studies: the twin nacelles stand proud
     # of the rounded center hull and retain clear gaps rather than wedge wings.
     length = (90, 145, 195)[level]

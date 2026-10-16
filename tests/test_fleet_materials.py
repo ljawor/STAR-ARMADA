@@ -40,7 +40,7 @@ class FleetMaterialTests(unittest.TestCase):
     def test_program_scope_restores_caller_even_on_exception(self):
         material = FleetMaterials.__new__(FleetMaterials)
         material.programs = {'hull': 99}
-        material.locations = {('hull', 'materialPass'): 3}
+        material.locations = {('hull', 'materialPass'): 3, ('hull', 'authoredSurface'): 4}
         for previous in (0, 7):
             with self.subTest(previous=previous), \
                  patch('render.fleet_materials.GL.glGetIntegerv', return_value=previous), \
@@ -50,7 +50,7 @@ class FleetMaterialTests(unittest.TestCase):
                     with material.use('hull', materialPass=0.0):
                         raise ValueError('draw failure')
                 self.assertEqual(use.call_args_list, [call(99), call(previous)])
-                uniform.assert_called_once_with(3, 0.0)
+                self.assertEqual(uniform.call_args_list, [call(4, 0.), call(3, 0.)])
 
 
 if __name__ == '__main__':

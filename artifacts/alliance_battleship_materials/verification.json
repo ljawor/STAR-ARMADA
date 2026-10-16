@@ -1,0 +1,90 @@
+{
+  "source_changed": [
+    "render/fleet_materials.py",
+    "render/renderer.py"
+  ],
+  "source_hashes": {
+    "render/renderer.py": {
+      "before": "d315f30912d554e68c77527a88bc79f7a4bfc7c87d7558c70b30b40f9c1d2469",
+      "after": "1eaa5caa01db6213de7e109360c09f3d03fc1dcfbbe03da8d5f12d59d8bc1477"
+    },
+    "render/fleet_materials.py": {
+      "before": "80f8c2e1fe3d8e19d78b77c66b5b8550df204046e6717f5ff3e3089c7b032f98",
+      "after": "a0a861739ab46b9173baffd9d7f36b4829e85b85b6b5765544b7f9d1ca7ce403"
+    }
+  },
+  "draw_local_optimization_exact": true,
+  "preserved_methods": [
+    "draw",
+    "_draw_view_geometry",
+    "_draw_read_only",
+    "_in_front",
+    "_ship_size",
+    "_px_per_world"
+  ],
+  "comparisons": [
+    {
+      "mode": "capture",
+      "per_tick_hashes_equal": true,
+      "hash_count": 181,
+      "same_cameras_quality": true
+    },
+    {
+      "mode": "motion",
+      "per_tick_hashes_equal": true,
+      "hash_count": 61,
+      "same_cameras_quality": true
+    }
+  ],
+  "native_sandbox": true,
+  "canary_denials_verified": true,
+  "user_data_byte_preserved": true,
+  "user_file_count": 660,
+  "live_matches_capture": true,
+  "no_geometry_gameplay_data_changes": true,
+  "MSAA": 4,
+  "limitations": [
+    "No full suite/LAN race, Windows-driver, performance or appearance approval is claimed.",
+    "Normal fog, shield/selection overlays and post-processing remain unchanged.",
+    "Low-aft view retains the existing normal-fog horizon band; high-aft views physically occlude recessed emitters."
+  ],
+  "test_runs": {
+    "focused": 57,
+    "lifecycle": 24,
+    "unique_test_ids": 78,
+    "new_real_GL_regressions": 2
+  },
+  "art_source_hashes_unchanged": {
+    "render/faction_ships.py": "e7ab89b6ba1e70179dba65151da7b8a73ea33e2ead77372b5dba08c148b191f3",
+    "render/faction_stations.py": "92d1f29111ded99dd99bed06ad750b0b1f61465a556188ff64b528bfda936762",
+    "render/authored_mesh.py": "9656582796012c1daf6ffafc7a21b592a0f8a498a5648aeacae39bd4cb85ad53",
+    "assets/models/alliance_battleship.mesh.json": "57a5496c539a0252a237ef7a3671509f705308416da3f2afe0c9555ff17e9fec",
+    "art/blender/README.md": "3036664972d8100d82f4ed87adba64fbc2998e177bf8053193865e840aa8bdf2",
+    "art/blender/alliance_battleship.blend": "7ddefbd5c4c0c815b50e97628e191e7377f0025d6f55f00e69bb04492e0ab352"
+  },
+  "sibling_bounded_surface_comparison": {
+    "escort-close": {
+      "changed_pixels": 1,
+      "max_delta": 1
+    },
+    "yard-close": {
+      "changed_pixels": 0,
+      "max_delta": 0
+    },
+    "baseline": {
+      "blue_paint_pixels": 3008,
+      "warm_window_pixels": 0,
+      "cyan_engine_pixels": 368
+    },
+    "statefix": {
+      "blue_paint_pixels": 3046,
+      "warm_window_pixels": 111,
+      "cyan_engine_pixels": 1467
+    },
+    "candidate": {
+      "blue_paint_pixels": 3269,
+      "warm_window_pixels": 111,
+      "cyan_engine_pixels": 1130
+    }
+  }
+}
