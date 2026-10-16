@@ -1,13 +1,14 @@
 # Handoff: S04 — generic opt-in model integration
 
-Status: **in-progress**. This is not a completion or model-approval record.
+Status: **review-ready**, published as draft PR #124. Not merged; not a model-approval transfer or S11 authorization.
 
 ## Base commit / branch
 
 Base: `5bddd7b67245ddff4b595bb3b477ca8ceede0a6c` (`origin/main`).
 Branch: `feat/s04-generic-model-integration`, isolated scratch worktree.
-PR and exact pushed head: **not published yet**. Read the final head from GitHub when published;
-do not bake a self-referential head into this file.
+PR: **#124**, draft and unmerged. Verified code commit: `45e4ed3b731fde6c376fdb894088a248abc774e9`.
+Read the exact final pushed head and remote blob receipt from the PR comment; it cannot be baked
+into this self-referential document.
 
 ## Prerequisites verified
 
@@ -75,7 +76,10 @@ SDL_VIDEODRIVER=cocoa PYTHONPATH=tests .venv/bin/python -m unittest \
 184 tests, 0 failures/errors, one skip (`not a git checkout`: the old frozen-path test expects a
 `.git` directory, not a worktree's `.git` file). Real context recreation, constructor rollback,
 additive-asset display-list compilation, revision-keyed GPU caches and CPU helper invalidation run.
-Fresh-clone supplemental validation is still pending publication. No full-suite claim.
+Fresh clone of code commit `45e4ed3b731fde6c376fdb894088a248abc774e9`: **184 tests, 0 failures/errors/skips**;
+contract 36 checks / 28 negative controls / 0 skipped; pipeline 34/34; nine metadata files reproduced.
+The supplemental run executes the worktree-skipped frozen-path test. Both original and fresh logs are
+retained, not retroactively combined. No full-suite claim.
 Durable output and retained failures: `artifacts/s04_generic_preview/`.
 
 ## Evidence / platform / packaging limitations
@@ -98,8 +102,11 @@ untracked local symlink and must never be committed. No merge, tag, release or c
 Runtime resolver, explicit preview/legacy boundary, generic geometry/material dispatch, bounded CPU
 caches, revision-keyed GPU lists, transactional envelope rejection, replacement/additive fixture
 integration, source/frozen discovery and reproducible shipped metadata are implemented and focused-green.
-Finish independent review, resolve findings, refresh final receipts, validate a fresh clone, publish a
-verified draft PR and retain its exact-head receipt. Do not call S04 complete before publication/review.
+Independent review initially rejected three logic defects; separate-context fixes and regression tests
+passed a scoped re-review. Initial and final verdicts are retained. Draft PR #124 publishes the code;
+its final receipt names the exact head, remote blob comparison and current CI status.
+Next owner gate: review S04 PR #124. After it is accepted, S05 executes the full approved-trio
+equivalence/approval-transfer matrix; do not start catalogue authoring or S11 from this handoff.
 
 Two owner questions remain open: authoring extent drift versus collision policy, and advisory draw-call/
 texture-byte columns. Neither has been answered by the pack-load envelope decision.

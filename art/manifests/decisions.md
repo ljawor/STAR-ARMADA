@@ -146,7 +146,7 @@ Open on this contract, in the order they bite:
 - This answers the pack-load envelope question only. It does not settle the authoring/collision
   drift policy or the draw-call/texture-byte columns, approve a model revision, authorize a
   production-default switch, or authorize merge/tag/release.
-- Status: owner-adopted policy, implemented and exercised by S04 transactional rejection tests; PR review/publication pending.
+- Status: owner-adopted policy, implemented and exercised by S04 transactional rejection tests; published for owner review in draft PR #124.
 
 ## Not decided here
 

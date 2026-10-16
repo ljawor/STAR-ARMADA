@@ -1,6 +1,6 @@
 # S04 — generic opt-in preview evidence
 
-Status: **engineering checks passing locally; independent review/publication pending**.
+Status: **review-ready, published as draft PR #124; independent review passed after one fix cycle**.
 No merge, tag, release, new model approval or S11 authorization is implied.
 
 ## Captures
@@ -48,8 +48,9 @@ runs `main.py`, writes user saves or mutates simulation.
 `focused-tests.txt` retains the actual 184-test run: no failures/errors, one skip. The skip is
 `test_frozen_paths.TestFrozenPaths.test_every_folder_a_dev_run_writes_into_the_repo_is_ignored`,
 reason `not a git checkout`: that legacy test treats a worktree's `.git` file as not a checkout.
-A fresh-clone supplemental run is still required before publication; do not reinterpret this skip
-as native package evidence. The exact command/module order is recorded in the handoff.
+The fresh clone at `45e4ed3b731fde6c376fdb894088a248abc774e9` passed **184/184 with no skips**;
+`fresh-clone-focused-tests.txt` and `fresh-clone-verification.json` retain that separate receipt.
+Do not reinterpret either run as native package evidence. Exact module order is in the handoff.
 
 Separately executed: contract validator **36 checks / 28 negative controls / 0 skipped**;
 `validate-models --all` **34/34, 0 failures/warnings**; runtime metadata synchronization check and
@@ -71,6 +72,10 @@ existing repository CI, so a future green CI result cannot substitute for them.
   pass. The final GPU test also compiles the actual additive fixture in a real context.
 - Resolver implementation and two review workers were interrupted by model-response timeouts.
   Their summaries were not treated as verification; parent reran tests and inspected source.
+
+Independent review initially found extreme-integer overflow, unbounded version conversion and an
+optional-facade fallback regression. Separate-context RED→GREEN fixes passed parent reruns and scoped
+independent re-review. Both verdicts and the fix receipt are retained; the initial failure is not erased.
 
 ## Preservation and deferred gates
 
