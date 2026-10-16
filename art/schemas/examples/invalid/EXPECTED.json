@@ -5,6 +5,7 @@
   "adds-without-entity-source-pack.json": "E_MISSING_GAMEPLAY_MOD",
   "adds-without-gameplay-mod-pack.json": "E_MISSING_GAMEPLAY_MOD",
   "approval-stale-manifest.json": "E_APPROVAL_STALE",
+  "budget-stale-manifest.json": "E_MEASUREMENT_STALE",
   "degenerate-bounds-manifest.json": "E_BOUNDS_DEGENERATE",
   "duplicate-binding-registry.json": "E_DUPLICATE_BINDING",
   "duplicate-pack-entry.json": "E_DUPLICATE_ID",
