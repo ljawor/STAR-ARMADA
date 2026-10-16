@@ -270,8 +270,12 @@ class SelectionLanguageTests(unittest.TestCase):
         catalogues = [f'assets/data/lang/{code}.json' for code, _ in i18n.LANGUAGES]
         runtime = ['assets/models/alliance_frigate.mesh.json',
                    'assets/models/registry.json',
-                   'assets/models/manifests/alliance_frigate.json']
-        controls = ['art/models/probe.blend', 'assets/data/ships/ships.json']
+                   'assets/models/manifests/alliance_frigate.json',
+                   'art/manifests/pipeline.json',
+                   'art/schemas/model-manifest.schema.json',
+                   'artifacts/alliance_visual_slice/probe.json',
+                   'tools/art/alliance_common.py']
+        controls = ['unrelated/probe.blend', 'assets/data/ships/ships.json']
         result = subprocess.run(
             ['git', '-c', f'core.attributesFile={os.devnull}', 'check-attr',
              'text', 'eol', '--', *catalogues, *runtime, *controls],

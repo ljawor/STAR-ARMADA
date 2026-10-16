@@ -1,0 +1,61 @@
+FFFF
+======================================================================
+FAIL: test_only_language_catalogues_force_lf_checkout (test_asset_selection.SelectionLanguageTests.test_only_language_catalogues_force_lf_checkout) (path='art/manifests/pipeline.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s04/tests/test_asset_selection.py", line 293, in test_only_language_catalogues_force_lf_checkout
+    self.assertEqual(attributes[path], {'text': 'unset', 'eol': 'unspecified'})
+AssertionError: {'text': 'unspecified', 'eol': 'unspecified'} != {'text': 'unset', 'eol': 'unspecified'}
+- {'eol': 'unspecified', 'text': 'unspecified'}
+?                                    - ^^^^^^
+
++ {'eol': 'unspecified', 'text': 'unset'}
+?                                     ^
+
+
+======================================================================
+FAIL: test_only_language_catalogues_force_lf_checkout (test_asset_selection.SelectionLanguageTests.test_only_language_catalogues_force_lf_checkout) (path='art/schemas/model-manifest.schema.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s04/tests/test_asset_selection.py", line 293, in test_only_language_catalogues_force_lf_checkout
+    self.assertEqual(attributes[path], {'text': 'unset', 'eol': 'unspecified'})
+AssertionError: {'text': 'unspecified', 'eol': 'unspecified'} != {'text': 'unset', 'eol': 'unspecified'}
+- {'eol': 'unspecified', 'text': 'unspecified'}
+?                                    - ^^^^^^
+
++ {'eol': 'unspecified', 'text': 'unset'}
+?                                     ^
+
+
+======================================================================
+FAIL: test_only_language_catalogues_force_lf_checkout (test_asset_selection.SelectionLanguageTests.test_only_language_catalogues_force_lf_checkout) (path='artifacts/alliance_visual_slice/probe.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s04/tests/test_asset_selection.py", line 293, in test_only_language_catalogues_force_lf_checkout
+    self.assertEqual(attributes[path], {'text': 'unset', 'eol': 'unspecified'})
+AssertionError: {'text': 'unspecified', 'eol': 'unspecified'} != {'text': 'unset', 'eol': 'unspecified'}
+- {'eol': 'unspecified', 'text': 'unspecified'}
+?                                    - ^^^^^^
+
++ {'eol': 'unspecified', 'text': 'unset'}
+?                                     ^
+
+
+======================================================================
+FAIL: test_only_language_catalogues_force_lf_checkout (test_asset_selection.SelectionLanguageTests.test_only_language_catalogues_force_lf_checkout) (path='tools/art/alliance_common.py')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s04/tests/test_asset_selection.py", line 293, in test_only_language_catalogues_force_lf_checkout
+    self.assertEqual(attributes[path], {'text': 'unset', 'eol': 'unspecified'})
+AssertionError: {'text': 'unspecified', 'eol': 'unspecified'} != {'text': 'unset', 'eol': 'unspecified'}
+- {'eol': 'unspecified', 'text': 'unspecified'}
+?                                    - ^^^^^^
+
++ {'eol': 'unspecified', 'text': 'unset'}
+?                                     ^
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.014s
+
+FAILED (failures=4)
