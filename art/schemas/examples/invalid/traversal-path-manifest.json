@@ -2,13 +2,13 @@
   "contract": "star-armada/model-manifest",
   "contract_major": 1,
   "asset": "core:alliance/battleship",
-  "revision": "58e9aaecc979fa37f2982e754af45d67aea925912a99bbe19bae2e787b8ccd18",
+  "revision": "7634f9edda51e6a87a50cfbcf697e914ae0f94ba16f0aab6eb59a939214ed7d9",
   "display_name": "Alliance battleship (approved)",
   "files": {
     "mesh": {
       "path": "../assets/models/alliance_battleship.mesh.json",
-      "sha256": "57a5496c539a0252a237ef7a3671509f705308416da3f2afe0c9555ff17e9fec",
-      "bytes": 594859
+      "sha256": "0a4e397d5c0b60f70fbba35f3e4f4a5ac997ac4de079f821f8f29db9872c95cd",
+      "bytes": 743439
     }
   },
   "export": {
@@ -24,12 +24,12 @@
   ],
   "bounds": {
     "min": [
-      -69.0,
+      -73.349998,
       -31.0,
       -143.5
     ],
     "max": [
-      69.0,
+      73.349998,
       61.0,
       135.0
     ]
@@ -62,14 +62,14 @@
   },
   "approval": {
     "status": "approved",
-    "decision_id": "approved-trio-2026-10-16",
+    "decision_id": "s06-battleship-hull-detail-2026-10-16",
     "decided_by": "owner",
     "decided_on": "2026-10-16",
-    "reviewed_revision": "58e9aaecc979fa37f2982e754af45d67aea925912a99bbe19bae2e787b8ccd18",
+    "reviewed_revision": "7634f9edda51e6a87a50cfbcf697e914ae0f94ba16f0aab6eb59a939214ed7d9",
     "reviewed_evidence": [
-      "artifacts/alliance_blender_trio/candidate/initial-escort-tactical.png",
-      "artifacts/alliance_blender_trio/candidate/initial-tactical.png",
-      "artifacts/alliance_blender_trio/candidate/initial-yard-tactical.png"
+      "artifacts/battleship_hull_detail/README.md",
+      "artifacts/battleship_hull_detail/before-after-review.png",
+      "artifacts/battleship_hull_detail/comparison.json"
     ]
   }
 }

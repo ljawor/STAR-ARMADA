@@ -2,13 +2,13 @@
   "contract": "star-armada/model-manifest",
   "contract_major": 1,
   "asset": "core:alliance/frigate",
-  "revision": "dea13cdf657eab3d23a5cf49841ec6057f5154cdee6c9b09e71149f41f34611e",
+  "revision": "60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df",
   "display_name": "Alliance frigate (approved)",
   "files": {
     "mesh": {
       "path": "assets/models/alliance_frigate.mesh.json",
-      "sha256": "045d1383ac8a774d0bb9733a598ca83777dfcdc26645e6900b9d23ee7392348c",
-      "bytes": 358072
+      "sha256": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+      "bytes": 493063
     }
   },
   "export": {
@@ -62,14 +62,16 @@
   },
   "approval": {
     "status": "approved",
-    "decision_id": "approved-trio-2026-10-16",
+    "decision_id": "s07-frigate-shipyard-hull-detail-2026-10-16",
     "decided_by": "owner",
     "decided_on": "2026-10-16",
-    "reviewed_revision": "dea13cdf657eab3d23a5cf49841ec6057f5154cdee6c9b09e71149f41f34611e",
+    "reviewed_revision": "60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df",
     "reviewed_evidence": [
-      "artifacts/alliance_blender_trio/before-after-aft-drives.jpg",
-      "artifacts/alliance_blender_trio/before-after-contact-sheet.jpg",
-      "artifacts/alliance_blender_trio/before-after-motion.mp4"
+      "artifacts/frigate_shipyard_hull_detail/README.md",
+      "artifacts/frigate_shipyard_hull_detail/frigate-shipyard-detail-review.png",
+      "artifacts/frigate_shipyard_hull_detail/frigate-shipyard-detail-comparison.json",
+      "art/manifests/provenance/rebel-frigate.json",
+      "art/manifests/provenance/rebel-shipyard.json"
     ]
   }
 }

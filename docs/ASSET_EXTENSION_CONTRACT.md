@@ -18,6 +18,7 @@ because they are the part a build can enforce; fix the document.
 | `art/schemas/visual-pack.schema.json` | v1 render-only pack: replaces core bindings, adds namespaced models |
 | `art/schemas/examples/` | Valid examples that must pass |
 | `art/schemas/examples/invalid/` + `EXPECTED.json` | Negative controls: each must be rejected with the declared code |
+| `tools/art/update_contract_examples.py` | Re-pins the examples to the payloads on disk after any approved asset revision (`--check` in CI) |
 | `tools/art/validate_contract.py` | Runs all of it; exit 0 only when both halves hold |
 | `art/manifests/decisions.md` | Why each choice was made, and what still needs the owner |
 
@@ -176,7 +177,10 @@ The three approved assets on `main` are migrated, not rewritten:
   `"schema": 1` during the migration window declared in `art/manifests/decisions.md` (D-07); the
   manifest pins them with their real hashes and records `export.legacy_schema_int: 1`.
 - The migrated manifests are the **specimen migration** for S05: they describe what is on `main`
-  today, and `art/schemas/examples/manifests/*.json` are their checked form.
+  today, and `art/schemas/examples/manifests/*.json` are their checked form. Because they describe
+the real files, an approved revision lands as a *staleness* here as well as in the S03 records: the
+examples are re-pinned by `tools/art/update_contract_examples.py`, and the contract refuses to pass
+until they are.
 - Existing saves and replays keep resolving: `legacy_identifiers` maps `alliance_battleship` →
   `rebel:battleship`, so a save naming the old export still finds a model.
 - Frozen builds: `star_armada.spec` bundles `assets/`, so discovery under `sys._MEIPASS` must be
@@ -220,9 +224,27 @@ Initial expectations, to be confirmed by measurement, not adopted as universal c
 | station | ≤ 16,000 | ≤ 10 | ≤ 16 MiB |
 | satellite / planet installation | ≤ 6,000 | ≤ 8 | ≤ 8 MiB |
 
-Measured against the approved trio: battleship 8,701 triangles / 6 roles, frigate 5,128, shipyard
-7,935 — all inside the table, which is a sanity check on the table and not a claim about the
-batches still to come.
+Measured against the approved trio, at the revisions now on `main`: battleship 11,457 triangles /
+6 roles, frigate 7,708, shipyard 10,767 — all inside the table, which is a sanity check on the table
+and not a claim about the batches still to come.
+
+**The table repeats the loader's hard limits rather than constraining them.** `combat hull ≤ 12,000`
+is exactly `render/authored_mesh.py`'s `MAX_TRIANGLES`, and `station ≤ 16,000` is above it, so neither
+number can ever fire: a mesh over the loader's cap is refused by the loader, not by the budget. Two
+consequences, both open on this PR: an advisory budget at or above a hard cap is documentation, not
+a budget, and the numbers below it (triangles *and* the extent of the mesh) are what actually shape
+authoring.
+
+**Extents are budgeted by nothing at all, and that is how a detail pass moves a silhouette.** The
+manifest's declared envelope is the contract's record of how big the asset is, and the validator
+requires the mesh to stay inside it. Detail is placed *from the frame it sits on* and stands proud of
+the surface, so an approved revision that adds a raised belt or a machinery bank widens the mesh:
+the battleship's detail revision took its beam from 69.0 to 73.349998 — 6.3 % wider — while its length
+extent stayed identical to the digit, and every other check in this contract still passed. The
+envelope is the field that goes stale in silence, so re-pinning it is automated:
+`tools/art/update_contract_examples.py` rewrites the size, hash, recomputed revision, envelope and
+approval binding of every example and control that names a real payload, keeps exactly one defect per
+negative control, and exits non-zero under `--check` when anything is stale.
 
 LOD expectations: every supported LOD keeps the silhouette the owner approved; LOD selection is
 presentation and may not change bounds, contacts or size. The specimen exports currently ship one

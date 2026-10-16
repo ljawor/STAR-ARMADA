@@ -25,6 +25,7 @@ and the validator is visible: if a decision has no code, nothing enforces it.
 | D-15 | Unknown contract ids and majors fail; newer exports are never reinterpreted | `E_UNKNOWN_CONTRACT` |
 | D-16 | `status` reuses the S01 inventory vocabulary so coverage is a join, not a third list | registry schema `enum` |
 | D-17 | Non-finite numbers are rejected at parse time | `E_NON_FINITE` |
+| D-18 | The examples pin the real payloads, so an approved revision re-pins them | `tools/art/update_contract_examples.py --check`, `E_FILE_SIZE`, `E_BOUNDS_MISMATCH` |
 
 ## Why, briefly
 
@@ -66,15 +67,36 @@ negative control the validator builds at runtime instead of committing as a fixt
 `SHIP_KEYS` with no data row; a registry that names a manifest nobody defines must fail the same
 way rather than rendering a fallback and calling it covered.
 
+**D-18.** The examples describe the three real exports, which is what lets the contract verify
+itself against the tree, so they are coupled to every approved revision by design. That coupling bit
+once, and usefully: the battleship's surface-detail revision (S06) took the mesh's beam from 69.0 to
+73.349998 while its length extent stayed identical, and the contract's envelope check was the only
+thing that noticed — every other check passed, and the approval record had described the revision as
+changing no silhouette. The size, hash, recomputed revision, envelope and approval binding are
+therefore re-derived by a tool rather than edited by hand, each negative control keeps exactly one
+defect, and `--check` makes staleness a failure instead of a surprise. Note what this does *not* fix:
+the contract has no rule about how far a revision may move an extent. That is the fourth question
+below.
+
 ## Needs the owner
 
-1. **Class budgets and LOD expectations** (contract §9). The table is proposed from the approved
-   trio's measurements, but it becomes a constraint on every later batch, so it needs agreement
-   before S06 authors against it.
-2. **The D-07 migration window.** When the trio is re-exported to the contract payload format, the
+1. **Class budgets, extents and LOD expectations** (contract §9). The table is proposed from the
+   approved trio's measurements, but it becomes a constraint on every later batch, so it needs
+   agreement before the next batch is authored against it. Two things about it are now known to be
+   wrong rather than merely unconfirmed: `combat hull <= 12,000` is exactly the loader's hard cap and
+   `station <= 16,000` is above it, so neither can ever fire; and nothing at all budgets the mesh's
+   extents, which is how the S06 detail pass widened the battleship's beam by 6.3 % without any check
+   objecting. Numbers at or above a hard cap are documentation; the question is whether the owner
+   wants real advisory budgets below the cap, and whether a revision should be allowed to move an
+   extent at all without a fresh approval.
+2. **Whether an extent change needs its own approval gate.** The battleship's beam moved 6.3 % inside
+   a revision the owner approved on appearance. The owner did approve the render, so the artifact is
+   not in doubt — but a rule such as "an extent may move at most N units / P % before the revision
+   needs re-approval" is a contract decision this PR cannot take on the owner's behalf.
+3. **The D-07 migration window.** When the trio is re-exported to the contract payload format, the
    approval has to be renewed. Re-exporting changes bytes of an approved asset; that is the
    owner's call, not a cleanup task.
-3. **Whether visual packs ship in S08's acceptance or only as examples.** This determines how much
+4. **Whether visual packs ship in S08's acceptance or only as examples.** This determines how much
    of section 5 has to be proven with a second real pack rather than a fixture.
 
 ## Not decided here
