@@ -1,7 +1,7 @@
 # Handoff: S03 — build a durable authoring pipeline
 
-Status: **implementation complete, evidence filled — waiting on the owner's D5 review and on S02's
-contract (PR #117) reaching `main`.** The policies and the definition of done were frozen first
+Status: **implementation complete, evidence filled, D5 closed by the owner — still waiting on S02's
+contract (PR #117) reaching `main` for the end-to-end contract check.** The policies and the definition of done were frozen first
 (`s03-pipeline-policy-2026-10-16`, `art/manifests/pipeline_policy.json`); this file now carries the
 receipts for what was actually run, including what could not be run here.
 
@@ -52,7 +52,7 @@ worktree. Every command is reproducible as written.
 | D2 | `validate-models` delegates to `tools/art/validate_contract.py` (D2 requires it to *be* that validator) | With #117's branch merged in: `validate-models: satisfied - 34/34 checks, 0 failures, 0 warnings` (exit 0) and `validate_contract.py` itself `contract satisfied: 33 checks, 25 negative controls, 0 skipped`. On this branch (before #117 reaches `main`) it **fails** with `E_NO_CONTRACT_VALIDATOR` rather than passing on its own checks — that is the intended behaviour, and the merge with #117 is clean |
 | D3 | Fresh clone, plain `python3` 3.11.8, no venv, no local state: `git clone --branch feat/s03-authoring-pipeline . /tmp/sa-fresh` then `build-model --batch approved-trio` | All three exports byte-identical to the approved record: `57a5496c…`, `045d1383…`, `67d4db64…`. A second build run on the working tree reproduces the same three hashes. The only thing a rebuild dirties is `art/manifests/provenance/*` (its `recorded` timestamp) |
 | D4 | `art/manifests/provenance/{rebel-battleship,rebel-frigate,rebel-shipyard}.json`, written by the commands and committed | Blender 5.0.1 and the pin, exporter path + hash, source `.blend` hash matching the approved record, runtime hash/bytes/triangles, coordinate policy, host, and the action taken (`build` vs `export`) with notes |
-| D5 | `git diff --name-only origin/main -- assets/` plus the owner's capture set | Machine half: **empty** — after every build, export and validate run above, all three `.mesh.json` and all three `.blend` hashes still equal the approved record. Owner half: outstanding, see below |
+| D5 | `git diff --name-only origin/main -- assets/` plus the owner's capture set | Machine half: **empty** — after every build, export and validate run above, all three `.mesh.json` and all three `.blend` hashes still equal the approved record. Owner half: **given** — the owner was shown the approved `trio-in-game.png` beside a fresh capture of today's `main` (same scene recipe, cameras, frozen view time and production default materials) and said "That looks good"; the two frames are byte-identical (`e3de76a39c79…`, 297,907 bytes, 0 differing channels). Recorded as `s03-d5-2026-10-16` in `art/manifests/approvals.json`, evidence in `artifacts/s03_d5_verification/verification.json` |
 | D6 | `validate-models` tree hygiene and packaging checks; branch inventory | No `.blend1`/autosave/temp file under `art/blender` or `assets/models`; `star_armada.spec` bundles `assets` only — no `art/`, no `tools/`, no `.blend`. `tests/test_model_pipeline.py` asserts the pipeline imports no `game`/`render` code and references no user-data path |
 
 ### What is *not* verified here, and must not be claimed
