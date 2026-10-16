@@ -39,13 +39,13 @@ Catalogue data currently contains 37 ship definitions (Imperial 10, Alliance/reb
 
 ### 2.1 Partial delivery checkpoint — October 16, 2026
 
-The observations and local-only warning above are the **historical document-creation baseline**, not the current storage status. The approved trio has since been durably published in **draft PR #114**, head `313f9683e9e7e4f376b05cedaeb28bb2dd300c9f`. All 38 checkpoint blobs were read back and verified against the preserved local inputs. Its sources, exports, authoring tools, runtime integration, selected evidence and `art/manifests/handoffs/S00-PRESERVATION.md` travel together. The original 23-source-asset preservation manifest remains retained separately; no model is discarded by the performance split.
+The observations and local-only warning above are the **historical document-creation baseline**, not the current storage status. The approved trio has since been durably published in **draft PR #114**, which was then reconciled with `main` and republished; its current head is `0f6531f4d14f649cbfed744c29b61b4537b0f5e8` on `feat/blender-approved-trio-checkpoint` (the earlier `313f9683e9e7e4f376b05cedaeb28bb2dd300c9f` is retained in its history). All published blobs were read back from the remote and verified byte-for-byte. Its sources, exports, authoring tools, runtime integration, selected evidence, `art/manifests/handoffs/S00-PRESERVATION.md` and the owner-bound `art/manifests/approvals.json` travel together. The original 23-source-asset preservation manifest remains retained separately; no model is discarded by the performance split.
 
-**S00 is in progress: draft published, not complete.** PR #114 remains draft and unmerged; publication is not broad engineering acceptance, a generic registry, or final default cutover. Read its exact head and handoff before continuing. Do not infer that `main` or this performance-only branch contains the trio.
+**S00 is complete on that draft PR and still unmerged, deliberately.** Publication is not broad engineering acceptance, a generic registry, or final default cutover, and the trio's activation inside the draft is still hardcoded, so S04 must restore an explicit gate before any broader rollout. Do not infer that `main` contains the trio: `render/authored_mesh.py` and the `*_slice` builders exist only on the checkpoint branch.
 
-PR #113 is the separate **performance-only partial integration planned for parent-controlled merge after verification**. It retains the first two performance passes and adds draw-local reuse, portable regressions, a feature-branch version bump to `0.15.1`, and `GRAPHICS_DRAW_SCOPE_REUSE.md` / `GRAPHICS_DRAW_SCOPE_EVIDENCE.json`. No art/model/material files enter that performance change. Its receipt explicitly distinguishes immutable performance-only suite results from the earlier art-integrated full-suite failure and retained stock-combat frozen-control nondeterminism. The exact pushed performance head and current CI are read back separately; the parent publishes the exact post-merge receipt only if authorized and completed.
+PR #113 is the separate **performance-only integration, now merged into `main`** as `16523bf0b06a39e3f77961d0c213b0af184a16b6`, version `0.15.1`, with the exact-head Windows CI run `38858140567` passed and the merge commit's tree verified identical to the reviewed head `a24a4ed32f0cec6c76b40c30640a61bee6f60a2b`. No art/model/material files entered that performance change. Its receipt explicitly distinguishes immutable performance-only suite results from the earlier art-integrated full-suite failure and retained stock-combat frozen-control nondeterminism.
 
-S01–S10 remain gated as below. **S11 is not done or authorized**: neither draft preservation nor a performance partial merge switches the catalogue default. No release or tag is part of this checkpoint.
+**S01 is review-ready** on `docs/s01-model-inventory`: `art/manifests/model_inventory.json`, `art/manifests/inventory_audit.json`, `art/manifests/reviews/S01-coverage-matrix.md` and `art/manifests/handoffs/S01-INVENTORY.md`. Its owner scope review is outstanding. S02–S10 remain gated as below. **S11 is not done or authorized**: neither draft preservation nor the performance merge switches the catalogue default. No release or tag is part of this checkpoint.
 
 ## 3. Scope and invariants
 
@@ -314,8 +314,8 @@ This table is the initial planning state, **not implementation completion**. Fut
 
 | Step | Initial status | Next action / blocking condition |
 |---|---|---|
-| S00 | Not started; local approved prototype exists | Publish a coherent prototype with all source/export dependencies and owner-bound evidence |
-| S01 | Not started | Inventory data plus every renderer/model dispatch and agree scope |
+| S00 | **Complete on draft PR #114** (`0f6531f4…`), unmerged by design; `main` has no trio | Owner review/integration of the checkpoint stay separate; S04 restores an explicit preview gate |
+| S01 | **Review-ready** on `docs/s01-model-inventory` (inventory + audit + coverage matrix + handoff) | Owner settles scope exceptions and batch priority, then S02 |
 | S02 | Not started | Decide and specify generic asset/mod contracts |
 | S03 | Not started | Standardize source authority, storage and reproducible exports |
 | S04 | Not started | Generic gated integration, resolver and frozen-path support |
@@ -335,9 +335,10 @@ The following sentence is retained as the initial next-task instruction, not cur
 
 | Workstream | Current state | Next gate |
 |---|---|---|
-| S00 preservation | **In progress; draft PR #114 published** at `313f9683e9e7e4f376b05cedaeb28bb2dd300c9f`; remote checkpoint blobs verified | Read `S00-PRESERVATION.md`, retain known art-integrated acceptance debt; review/integration remain separate |
-| Performance-only PR #113 | Third draw-local pass prepared separately; partial merge planned only after exact-head verification and parent authorization | Read draw-scope evidence and current CI; parent records actual merge receipt, never infer a merge from this plan |
-| S01–S10 | Not completed by either checkpoint | Follow dependencies, per-model owner approval and platform/package gates |
+| S00 preservation | **Complete and published; draft PR #114 unmerged** at `0f6531f4d14f649cbfed744c29b61b4537b0f5e8`, reconciled with `main`; remote blobs and the trios' approval records verified | Read `S00-PRESERVATION.md` and `approvals.json`; review/integration remain separate, and the hardcoded preview activation is still owed to S04 |
+| Performance-only PR #113 | **Merged into `main`** as `16523bf0b06a39e3f77961d0c213b0af184a16b6`; CI `38858140567` passed; merge tree identical to reviewed head; version `0.15.1` | None outstanding for this change; do not re-open it for art work |
+| S01 inventory | **Review-ready** on `docs/s01-model-inventory`: 119 bindings, 30 dispatch paths, 25 non-model elements, 3 scope decisions requested | Owner review of the coverage matrix; then S02 |
+| S02–S10 | Not completed | Follow dependencies, per-model owner approval and platform/package gates |
 | S11 | **Not started, not authorized, not done** | Final explicit owner-controlled catalogue switch only after S10 |
 
-**Current next task:** finish the bounded performance-only verification/delivery, keeping PR #114 draft and unmerged; then continue S00 from its durable checkpoint, not by reconstructing or deleting local models. No new catalogue batch, production cutover, tag or release is included.
+**Current next task:** the owner reviews `art/manifests/reviews/S01-coverage-matrix.md` and settles the three scope exceptions (planet body, asteroid/environment props, baked menu cinematic), the three unreachable registry keys and the batch order. S01 closes on that review, not on this document. Keep PR #114 draft and unmerged; do not start a catalogue batch, production cutover, tag or release.
