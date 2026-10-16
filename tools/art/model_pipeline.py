@@ -460,8 +460,9 @@ def _payload_sanity(repo, asset, report):
     budget = asset.get("advisory_budget_triangles")
     if budget and triangles and triangles > budget:
         report.warn("W_TRIANGLE_BUDGET",
-                     f"{asset['binding']}: {triangles} triangles over the advisory budget {budget} "
-                     "(the S02 section 9 budgets are still pending the owner's review)")
+                     f"{asset['binding']}: {triangles} triangles over the advisory budget {budget} for "
+                     f"its class ({asset.get('advisory_budget_class', 'unclassified')}), "
+                     "s02-section9-budgets-2026-10-16; the loader refuses a mesh over 12,000")
     return payload
 
 
