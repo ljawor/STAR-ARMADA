@@ -74,17 +74,46 @@ asteroid props and menu backdrop come **into** the catalogue, the three declared
 keys become planned hulls (battleships and capital ships at the shipyard, bombers at the fighter
 platform), and the five authoring batches are approved in the recommended order. That is scope and plan
 approval only: no individual model design is approved, and the broader catalogue default is still
-unswitched. S02 is next and is now review-ready; S03–S10 remain gated as below. **S11 is not done or authorized.** No
-release or tag is part of either delivery.
+unswitched. S02 and S03 have since closed and merged (below); S04–S10 remain gated. **S11 is not done or authorized.** No
+release or tag is part of any of these deliveries.
 
-**S02 freezes the extension contract, and implements nothing.** `docs/ASSET_EXTENSION_CONTRACT.md`
+**S02 is complete and merged, and still implements nothing in the game.** `docs/ASSET_EXTENSION_CONTRACT.md`
 with `art/schemas/` defines three versioned documents — model manifest, binding registry and
 render-only visual pack — migrates the three approved assets into specimen manifests, and ships
-`tools/art/validate_contract.py`, which is green on 8 examples and **25 negative controls**, so
-every rejection rule is exercised rather than asserted. The trio still resolves through the
-hardcoded identity checks; S04 implements the resolver this contract specifies, and the class
-budgets/LOD table and the legacy-payload migration window are parked for the owner in
-`art/manifests/decisions.md`.
+`tools/art/validate_contract.py`, green on **36 checks and 28 negative controls**, so every rejection
+rule is exercised rather than asserted. The owner answered the four questions this step left open on
+2026-10-16 and each answer is now an enforced rule with a control of its own: real class budgets sized
+below the loader's hard cap (capital 11,888 / escort 8,000 / station 11,500, with 12,000 kept as the
+loader's hard failure), an extent gate of 1 % of an axis or two units, whichever is smaller
+(`E_EXTENT_DRIFT`, D-19), `E_MEASUREMENT_STALE` so a declared triangle budget below its own mesh is a
+failure rather than a comment, the legacy `"schema": 1` window open until the S11 cutover (D-07), and the
+pack examples recorded as illustration rather than acceptance material. The trio still resolves through
+the hardcoded identity checks; S04 implements the resolver this contract specifies.
+
+**S03 is complete and merged: the authoring pipeline exists, with its acceptance frozen before it was
+built.** `art/manifests/pipeline_policy.json` (`s03-pipeline-policy-2026-10-16`) fixes ordinary Git with a
+declared 5 MiB per-file LFS threshold, blend-authoritative as the default for silhouette work and
+script-authoritative for repeated or modular pieces, and rebuilds from a fresh clone on macOS and Windows.
+`tools/art/model_pipeline.py` and the `build-model` / `export-model` / `validate-models` forwarders then
+implement it: a rebuild is compared against the approved byte record instead of trusted, export-only is
+enforced by scanning the script rather than intended, a script-authoritative generator runs inside a
+throwaway copy of the tree, and `validate-models` fails when the S02 contract validator is absent instead
+of passing on its own weaker checks. The owner's own half of that acceptance (D5) is a byte-identical
+in-game frame set against the committed reference (`s03-d5-2026-10-16`), so a visible change to the
+approved trio would have been a failure of that step, not a feature of it. `validate-models --all` is now
+green **34/34** on `main`, contract validator included. **One half stays open: no Windows machine has ever
+run this pipeline** (D3), which is an S09 gate, not an S03 receipt.
+
+**The trio's hull surface detail has since been authored and approved, one revision per binding.**
+`rebel:battleship` (PR #120 → `47b0161`) and `rebel:frigate` + `rebel:shipyard` (PR #121 → `047c380`), with
+the record correction in PR #122 → `96cd92e`. Detail is placed from the frame it sits on, costs
+11,457 / 7,708 / 10,767 triangles, and changes no silhouette, no catalogue length and no simulation
+field — the battleship's beam moved 69.0 → 73.349998 to cover flank detail standing proud of the widest
+section, which is exactly why the contract now carries an extent gate. The guard raise that made the pass
+possible is an owner decision, not a quiet edit (`s07-detail-budget-2026-10-16`: exporter ceiling 11,888
+triangles / 9,500 vertices), and every revision is bound in `art/manifests/approvals.json` to the exact
+`.blend`, builder and runtime bytes the owner approved. This is S06 work taken early on the three
+specimens; the remaining bindings keep their inventory status and are not covered by it.
 
 ## 3. Scope and invariants
 
@@ -193,8 +222,8 @@ Each step is a reviewable task/PR with a durable handoff. “Complete” require
 |---|---|---|---|
 | S00 | Preserve and publish approved prototype | This roadmap | Coherent tracked sources/exports/evidence and exact Git/PR receipt |
 | S01 | Inventory every model and approve scope | S00 | **Complete** 2026-10-16: owner-reviewed coverage matrix (`s01-scope-2026-10-16`); no silently omitted dispatch paths |
-| S02 | Specify asset, registry and mod contracts | S01 | Reviewed versioned schemas, examples, resolver/fallback/compatibility decisions |
-| S03 | Standardize Git authoring/export tools | S02 | Reproducible trio builds from a fresh clone, source ownership and storage policy |
+| S02 | Specify asset, registry and mod contracts | S01 | **Complete** 2026-10-16: contract validator with 36 checks and 28 negative controls, the owner's four answers implemented as rules (PR #117 → `b2b6b75c4f7d90b99e943bf74b79b811c09e3785`) |
+| S03 | Standardize Git authoring/export tools | S02 | **Complete** 2026-10-16: policies frozen before implementation (PR #118 → `fd08ac7`), pipeline green 34/34 from a fresh clone (PR #119 → `b5414b5`); D3's Windows half unproven |
 | S04 | Implement generic opt-in model integration | S02, S03 | Registry/pack resolver, source/frozen loading, lifecycle and mod replacement tests |
 | S05 | Revalidate the trio on the generic path | S04 | Same approved appearance in-game, parity and durable owner-bound approval records |
 | S06 | Author and approve remaining model batches | S01, S03; preview via S04 | Every in-scope asset/binding approved and tracked; exceptions explicitly signed off |
@@ -227,6 +256,19 @@ S06 may author batches while S04 is built, but only with disjoint files/ownershi
 - Define migration from the specimen schema/profile loader, immutable resource interfaces and schema upgrade policy. Unknown major schemas fail clearly; do not silently reinterpret exports.
 - Define failure diagnostics, pack ordering/root locations, security bounds, approval invalidation, render-only compatibility policy and cache/resource invalidation.
 - Agree class budgets and LOD expectations initially; revise only with measured evidence and owner approval when visual quality changes.
+
+#### S02 completion
+
+Merged 2026-10-16 as `b2b6b75c4f7d90b99e943bf74b79b811c09e3785` (PR #117). The owner answered the four
+questions this step left open, and each answer is enforced by a rule with its own negative control, so
+the contract now runs **36 checks over 28 negative controls**: class budgets sized below the loader's hard
+cap and recorded per asset in `art/manifests/pipeline.json` with the decision named in its `budget_policy`;
+an extent gate (`E_EXTENT_DRIFT`) where the approved extent is named by the binding itself
+(`envelope_decision`) and the re-pin tool refuses to widen it past the grace without `--accept-extent`;
+`E_MEASUREMENT_STALE`, which makes a declared budget below its own mesh a failure; the D-07 legacy window
+left open until S11; and the pack examples recorded as illustration. Decisions are numbered D-01…D-20 in
+`art/manifests/decisions.md`, with three questions still open for the owner at the end of that file. The
+step implements nothing in the game: the trio still resolves through the hardcoded facades.
 
 ### S03 — Build a durable authoring pipeline
 
@@ -272,6 +314,15 @@ The owner's review is therefore the unchanged-trio capture set (D5), the build/v
 including fresh-clone hashes (D1, D3), and a skim of the provenance record (D4). There is nothing new
 to judge visually here: a visible change to the approved trio is a failure of this step, not a feature
 of it.
+
+#### S03 completion
+
+Merged 2026-10-16 as `fd08ac7` (PR #118, the frozen policy) and `b5414b5` (PR #119, the implementation):
+`tools/art/model_pipeline.py`, the `build-model` / `export-model` / `validate-models` forwarders and 14
+focused tests. D1, D2, D4 and D6 are machine-checked and green. D3 is proven on macOS from a plain
+`python3` in a fresh clone with no local state, and **half-proven overall: no Windows machine has run this
+pipeline**, so that half moves to S09 rather than counting as an S03 receipt. D5 is the owner's
+unchanged-trio capture set. `validate-models --all` reports 34/34 with the S02 contract validator included.
 
 ### S04 — Generic preview integration
 
@@ -391,13 +442,13 @@ This table is the initial planning state, **not implementation completion**. Fut
 
 | Step | Initial status | Next action / blocking condition |
 |---|---|---|
-| S00 | **Complete and merged** — PR #114 landed as `c5b78eb2d4ceba909ffb7444a56b7dec1f35d1b4` (96 files) | S02/S04 must replace the hardcoded activation with an explicit preview gate; retain the known art-integrated acceptance debt |
-| S01 | **Complete** — PR #115 carries the inventory, audit, coverage matrix and handoff | Closed 2026-10-16 by the owner's scope decision; S02 is next |
-| S02 | **Review-ready** — contract frozen in `docs/ASSET_EXTENSION_CONTRACT.md` + `art/schemas/` (three versioned schemas, verified examples, 25 negative controls) | Owner reviews the contract, the class budgets/LOD table and the legacy-migration window; then S03 |
-| S03 | Not started | Standardize source authority, storage and reproducible exports |
+| S00 | **Complete and merged** — PR #114 landed as `c5b78eb2d4ceba909ffb7444a56b7dec1f35d1b4` (96 files) | S04 must replace the hardcoded activation with an explicit preview gate (S02 closed 2026-10-16); retain the known art-integrated acceptance debt |
+| S01 | **Complete** — PR #115 carries the inventory, audit, coverage matrix and handoff | Closed 2026-10-16 by the owner's scope decision; S02 and S03 have since closed, so S04 is next |
+| S02 | **Complete and merged** 2026-10-16 — PR #117 landed as `b2b6b75c4f7d90b99e943bf74b79b811c09e3785`; the validator reports 36 checks and 28 negative controls | Closed. The owner's four answers are enforced rules; nothing is implemented in the game until S04 |
+| S03 | **Complete and merged** 2026-10-16 — policies PR #118 `fd08ac7`, pipeline PR #119 `b5414b5`; D1/D2/D4/D6 machine-green, D5 signed by the owner | D3's Windows half is unproven: no Windows machine has run the pipeline. S09 owns that gate |
 | S04 | Not started | Generic gated integration, resolver and frozen-path support |
 | S05 | Not started | Transfer approved trio through the generic path |
-| S06 | Not started beyond the locally approved trio | Named small batches; explicit owner approval for every model |
+| S06 | **Started on the three specimens only** — the trio's hull detail is approved as `s06-battleship-hull-detail-2026-10-16` and `s07-frigate-shipyard-hull-detail-2026-10-16` (PRs #120 `47b0161`, #121 `047c380`, records #122 `96cd92e`) | The remaining 10 in-scope bindings still await authoring, each in its own named batch with per-asset approval |
 | S07 | Not started | Complete catalogue render-path integration |
 | S08 | Not started | Prove replacement packs, updates and cosmetic compatibility |
 | S09 | Not started | Integrated suite/performance/package/platform gates |
@@ -414,19 +465,24 @@ The following sentence is retained as the initial next-task instruction, not cur
 |---|---|---|
 | S00 preservation | **Merged into `main`** as `c5b78eb2d4ceba909ffb7444a56b7dec1f35d1b4` (PR #114, squashed, 2026-10-16, 96 files); branch delta art-only; earlier heads `313f968`/`0f6531f4` retained in history; blobs verified byte-for-byte before the merge | S02/S04 replace the hardcoded trio activation with an explicit preview gate. Retain the known art-integrated acceptance debt |
 | Performance PR #113 | **Merged** to `main` as `16523bf0b06a39e3f77961d0c213b0af184a16b6` (tree identical to tested head `a24a4ed`); version `0.15.1`; protected whole suite 1,668 tests, 0 failures/errors, 9 skips; Windows CI `38858140567` passed | Closed. Performance remains headroom, not an art upgrade. Measurement targets still need owner agreement |
-| S01 inventory | **Complete** in PR #115: 120 bindings, 30 dispatch paths, 25 non-model elements; owner decision `s01-scope-2026-10-16` answered all four scope questions and planned the three unreachable mesh keys | None outstanding; S02 is next, and no design or activation is approved by it |
-| S02 extension contract | **Review-ready** on `docs/s02-extension-contract`: manifest/registry/visual-pack schemas pinned to `contract`+`contract_major`, the three approved assets migrated as specimen manifests, `tools/art/validate_contract.py` green on 8 documents and 25 negative controls, decisions in `art/manifests/decisions.md` | Owner review of the contract, the class budgets/LOD table (contract §9) and the D-07 migration window. Nothing is implemented: the trio still resolves through the hardcoded facades |
-| S03–S10 | Not completed | Follow dependencies, per-model owner approval and platform/package gates |
+| S01 inventory | **Complete** in PR #115: 120 bindings, 30 dispatch paths, 25 non-model elements; owner decision `s01-scope-2026-10-16` answered all four scope questions and planned the three unreachable mesh keys | None outstanding; no design or activation is approved by it. S02 closed 2026-10-16 (#117); S04 is next |
+| S02 extension contract | **Complete and merged** 2026-10-16 as `b2b6b75c4f7d90b99e943bf74b79b811c09e3785` (PR #117): three versioned schemas, the three approved assets as specimen manifests, `tools/art/validate_contract.py` green on **36 checks and 28 negative controls**, decisions D-01…D-20 in `art/manifests/decisions.md`; the class budgets, the extent gate and the legacy window are the owner's answers as enforced rules | Closed. Nothing is implemented in the game: the trio still resolves through the hardcoded facades until S04 |
+| S03 authoring pipeline | **Complete and merged** 2026-10-16 — policies in PR #118 (`fd08ac7`), `tools/art/model_pipeline.py` with the three forwarders and 14 focused tests in PR #119 (`b5414b5`); D1/D2/D4/D6 machine-checked, D5 signed by the owner, D3 proven on macOS from a fresh clone with plain `python3` | D3's Windows half: no Windows machine has run the pipeline. S09 owns that gate |
+| Trio hull detail (S06, early) | **Approved and merged** — one revision per binding: battleship #120 `47b0161`, frigate + shipyard #121 `047c380`, record correction #122 `96cd92e`; 11,457 / 7,708 / 10,767 triangles, no silhouette, scale or simulation change; the guard raise is the owner decision `s07-detail-budget-2026-10-16` (11,888 tri / 9,500 verts) | None outstanding. Not a catalogue batch: the remaining bindings keep their inventory status |
+| S04–S10 | Not completed | Follow dependencies, per-model owner approval and platform/package gates |
 | S11 | **Not started, not authorized, not done** | Final explicit owner-controlled catalogue switch only after S10 |
 
-**Current next task: S03 — build a durable authoring pipeline, then S04.** S02's contract is frozen
-(`docs/ASSET_EXTENSION_CONTRACT.md`, `art/schemas/`, `art/manifests/decisions.md`) and needs the
-owner's review of the class budgets/LOD table and the legacy-migration window before S06 authors
-against it. S03 generalises the evaluated export and validation, declares source authority per
-asset, records toolchain versions and makes `build-model` / `export-model` / `validate-models`
-reproducible from a fresh clone on macOS and Windows. S04 then implements the resolver this
-contract specifies; until it lands, the trio keeps being selected by the hardcoded identity checks
-in `render/faction_ships.py` and `render/faction_stations.py`.
+**Current next task: S04 — implement the generic opt-in integration, then S05.** S02's contract is
+merged and frozen (`docs/ASSET_EXTENSION_CONTRACT.md`, `art/schemas/`, `art/manifests/decisions.md`, 20
+decisions) and S03's pipeline is merged with its acceptance frozen in `art/manifests/pipeline_policy.json`.
+S04 implements the resolver the contract specifies: registry lookup, bounded manifest and mesh loading, a
+persisted preview/default boundary that is visible in diagnostics and changes no save, pack ordering per
+D-08, and the source/frozen path discovery the loader needs, tested against a replacement mod and a new
+namespaced asset. Until it lands, the trio keeps being selected by the hardcoded identity checks in
+`render/faction_ships.py` and `render/faction_stations.py`, and no further model may be integrated that
+way. Three owner questions remain open on the contract, listed at the end of `art/manifests/decisions.md`:
+the class table's draw-call and texture-byte columns, what an extent move does to a collision radius, and
+whether the resolver re-checks the envelope at pack load.
 
 Superseded: S02 — specify the asset, registry and mod contracts.** Freeze the versioned
 extension contract before any further authoring: minimal core plus replacement and additive-pack
