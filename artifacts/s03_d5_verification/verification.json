@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "record_id": "s03-d5-2026-10-16",
+  "purpose": "Owner-side half of the S03 definition-of-done check D5: an engineering-only step must not change what the owner approved.",
+  "checked_revision": "origin/main at fd08ac7",
+  "owner_statement": "That looks good",
+  "owner_statement_context": "After being shown the approved trio-in-game capture next to a fresh in-game capture of today's main at the same camera, same frozen view time and production default materials.",
+  "method": "Both sides rendered from the S00 evidence harness's own scene recipe, placements, cameras and frozen view time (renderer.time = 3.0, dt = 0, no battle ticks), with production default materials; the capture ran in a detached scratch worktree, so the live checkout was not modified.",
+  "result": {
+    "verdict": "byte-identical",
+    "approved_frame": "artifacts/alliance_blender_trio/trio-in-game.png",
+    "approved_frame_sha256": "e3de76a39c795a1f659912254cc65c5dcc7b32d783d443bad8ac9af0130c947d",
+    "capture_frame_sha256": "e3de76a39c795a1f659912254cc65c5dcc7b32d783d443bad8ac9af0130c947d",
+    "bytes": 297907,
+    "differing_rgb_values": 0,
+    "note": "The approved reference is the S00 harness's own candidate-capture/initial-common-scale.png, so this is a re-render of that same frame rather than a similar-looking one."
+  },
+  "machine_half_cross_check": {
+    "git_diff_name_only_against_main_for_assets": "empty",
+    "approved_source_hashes_unchanged": true
+  },
+  "what_this_does_not_approve": [
+    "any change to the trio's approved appearance, which remains the revision recorded by approved-trio-2026-10-16",
+    "the S03 pipeline itself, which is reviewed as an engineering change",
+    "any later art revision of the trio, including hull-detail work"
+  ]
+}

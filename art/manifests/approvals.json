@@ -33,6 +33,23 @@
       ]
     },
     {
+      "id": "s03-d5-2026-10-16",
+      "date": "2026-10-16",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "confirmed",
+      "scope_statement": "Confirmed that the trio on main still looks like what was approved, which is the owner-side half of the S03 check: an engineering-only change must not move appearance. The owner's words were \"That looks good\", said after being shown the approved trio-in-game capture beside a fresh capture of today's main.",
+      "approval_kind": "engineering-gate-verification",
+      "confirms": "approved-trio-2026-10-16 (unchanged; this decision approves no new revision)",
+      "not_approved_by_this_decision": [
+        "any change to the approved trio revision, which stays the one recorded by approved-trio-2026-10-16",
+        "the S03 pipeline implementation, which is reviewed as an engineering change",
+        "any later art revision of the trio, including hull-detail work"
+      ],
+      "evidence_references": [
+        "artifacts/s03_d5_verification/verification.json"
+      ]
+    },
+    {
       "id": "s06-battleship-hull-detail-2026-10-16",
       "date": "2026-10-16",
       "owner": "owner (Lukasz Jawor)",
