@@ -95,3 +95,25 @@ Deliberately not done here:
   (frigate 5,128 used, shipyard 7,935 used) unless the class budgets are revisited.
 - no budget was raised: the loader still caps a mesh at 12,000 triangles and the generator
   guard at 11,888, and this revision lands at 11,457.
+
+## Pipeline receipt (after the approval record was updated)
+
+```
+python3 tools/art/build-model     --asset rebel:battleship
+# ok - 11457 triangles, runtime sha256 0a4e397d5c0b60f7... matches the approved bytes
+python3 tools/art/export-model    --asset rebel:battleship
+# ok - 11457 triangles, runtime sha256 0a4e397d5c0b60f7... matches the approved bytes
+#   (exported inside a throwaway copy; the declared .blend was not touched)
+python3 tools/art/validate-models --all
+# FAILED - 32/33 checks, 1 failures: E_NO_CONTRACT_VALIDATOR only
+#   (tools/art/validate_contract.py arrives with the S02 contract, PR #117)
+python3 tools/art/validate-models --all --no-contract
+# satisfied - 32/32 checks, 0 failures, 1 warning
+```
+
+`art/manifests/pipeline.json` and `art/manifests/provenance/rebel-battleship.json` were updated by the
+same commands: the registry's `expected_triangles` (8,701 -> 11,457) and approval `decision_id`, and a
+fresh provenance record whose `source` hash is the approved `.blend` (the pipeline regenerates the
+`.blend`, sees unchanged runtime bytes and restores it from Git, per policy). Until this update
+`validate-models` correctly failed the revision with `E_TRIANGLE_COUNT` and `E_PROVENANCE_STALE` - the
+artifact and the records have to move together, and the pipeline is what enforces that.

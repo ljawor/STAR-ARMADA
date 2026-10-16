@@ -12,16 +12,25 @@
     "env_var": "STAR_ARMADA_BLENDER",
     "note": "The pipeline never hardcodes an application path in code. Resolution order: --blender, $STAR_ARMADA_BLENDER, `blender` on PATH, then the per-platform candidates below. Add your install here rather than editing the tool.",
     "candidates": {
-      "darwin": ["/Applications/Blender.app/Contents/MacOS/Blender"],
+      "darwin": [
+        "/Applications/Blender.app/Contents/MacOS/Blender"
+      ],
       "win32": [
         "C:/Program Files/Blender Foundation/Blender 5.0/blender.exe",
         "C:/Program Files/Blender Foundation/Blender/blender.exe"
       ],
-      "linux": ["/usr/bin/blender", "/usr/local/bin/blender"]
+      "linux": [
+        "/usr/bin/blender",
+        "/usr/local/bin/blender"
+      ]
     }
   },
   "batches": {
-    "approved-trio": ["rebel:battleship", "rebel:frigate", "rebel:shipyard"]
+    "approved-trio": [
+      "rebel:battleship",
+      "rebel:frigate",
+      "rebel:shipyard"
+    ]
   },
   "assets": [
     {
@@ -34,12 +43,22 @@
       "export_script": null,
       "runtime": "assets/models/alliance_battleship.mesh.json",
       "expected_hashes": "art/manifests/approved-trio-source-hashes.json",
-      "expected_triangles": 8701,
+      "expected_triangles": 11457,
       "advisory_budget_triangles": 12000,
       "category": "combat_hull",
-      "roles": ["base", "dark", "trim", "accent", "lit", "cool"],
+      "roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ],
       "coordinates": "X beam; Y up; +Z forward; nominal game model units",
-      "approval": {"decision_id": "approved-trio-2026-10-16", "record": "art/manifests/approvals.json"}
+      "approval": {
+        "decision_id": "s06-battleship-hull-detail-2026-10-16",
+        "record": "art/manifests/approvals.json"
+      }
     },
     {
       "binding": "rebel:frigate",
@@ -54,9 +73,19 @@
       "expected_triangles": 5128,
       "advisory_budget_triangles": 12000,
       "category": "combat_hull",
-      "roles": ["base", "dark", "trim", "accent", "lit", "cool"],
+      "roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ],
       "coordinates": "X beam; Y up; +Z forward; nominal game model units",
-      "approval": {"decision_id": "approved-trio-2026-10-16", "record": "art/manifests/approvals.json"}
+      "approval": {
+        "decision_id": "approved-trio-2026-10-16",
+        "record": "art/manifests/approvals.json"
+      }
     },
     {
       "binding": "rebel:shipyard",
@@ -72,20 +101,45 @@
       "expected_triangles": 7935,
       "advisory_budget_triangles": 16000,
       "category": "station",
-      "roles": ["base", "dark", "trim", "accent", "lit", "cool"],
+      "roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ],
       "coordinates": "X beam; Y up; +Z forward; nominal game model units",
-      "approval": {"decision_id": "approved-trio-2026-10-16", "record": "art/manifests/approvals.json"}
+      "approval": {
+        "decision_id": "approved-trio-2026-10-16",
+        "record": "art/manifests/approvals.json"
+      }
     }
   ],
   "tree_hygiene": {
-    "source_roots": ["art/blender", "assets/models"],
-    "forbidden_patterns": ["*.blend1", "*.blend2", "*.blend@", "*.blend[0-9]", "*.tmp", "*~", ".DS_Store"],
+    "source_roots": [
+      "art/blender",
+      "assets/models"
+    ],
+    "forbidden_patterns": [
+      "*.blend1",
+      "*.blend2",
+      "*.blend@",
+      "*.blend[0-9]",
+      "*.tmp",
+      "*~",
+      ".DS_Store"
+    ],
     "note": "Autosaves and temporary renders must never be committed. Raw capture runs belong outside the repository."
   },
   "packaging": {
     "spec": "star_armada.spec",
     "bundled_root": "assets",
-    "must_not_bundle": ["art/", "tools/", ".blend"],
+    "must_not_bundle": [
+      "art/",
+      "tools/",
+      ".blend"
+    ],
     "note": "Runtime exports and manifests ship; editable sources and authoring tools do not."
   },
   "provenance": {
