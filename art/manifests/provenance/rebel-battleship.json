@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "rebel:battleship",
+  "asset_id": "core:alliance/battleship",
+  "authority": "script",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-16T10:43:57Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/alliance_battleship.blend",
+    "sha256": "fd1550bab647b43ac1e9fabe79ec1068bd833c3fb408e6e5d351a5c2a701cde1"
+  },
+  "exporter": {
+    "path": "tools/art/build_alliance_battleship.py",
+    "sha256": "7f449c547f97a5ef200e8ae23c0868c40ce3d32f6a79c9a11761cef28663485a"
+  },
+  "runtime": {
+    "path": "assets/models/alliance_battleship.mesh.json",
+    "sha256": "57a5496c539a0252a237ef7a3671509f705308416da3f2afe0c9555ff17e9fec",
+    "bytes": 594859,
+    "triangles": 8701
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-trio-source-hashes.json",
+    "sha256": "57a5496c539a0252a237ef7a3671509f705308416da3f2afe0c9555ff17e9fec",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported inside an isolated copy of the tree; the repository's declared source was not opened for writing"
+  ]
+}
