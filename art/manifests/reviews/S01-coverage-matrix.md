@@ -1,6 +1,6 @@
 # S01 — rendered-model inventory and coverage matrix
 
-Base: `16523bf0b06a39e3f77961d0c213b0af184a16b6` (`main`), roadmap step **S01**. Regenerate with `.venv/bin/python tools/art/build_model_inventory.py`; `--check` fails on drift.
+Base: `c5b78eb2d4ceba909ffb7444a56b7dec1f35d1b4` (`main`), roadmap step **S01**. Regenerate with `.venv/bin/python tools/art/build_model_inventory.py`; `--check` fails on drift.
 
 This document is generated from the tree, not transcribed. Every line reference below is measured by resolving the named symbol at the base commit, so a moved function re-bases instead of silently pointing at the wrong code. `art/manifests/model_inventory.json` is the machine-readable form of the same data.
 
@@ -39,15 +39,15 @@ Coverage comes from the data, not from a hand-written list: ships are enumerated
 
 | binding | label | category | mesh key | shared with | generator |
 |---|---|---|---|---|---|
-| `ship:confederacy:battleship` | Bulwark Bastion | combat_hull | `confederacy:battleship` | 0 | `render/faction_ships.py:_legions_capital:165` |
+| `ship:confederacy:battleship` | Bulwark Bastion | combat_hull | `confederacy:battleship` | 0 | `render/faction_ships.py:_legions_capital:218` |
 | `ship:confederacy:bomber_squadron` | Hyena Strike Wing | squadron | `confederacy:bomber` | 0 | `render/faction_ships.py:_legions_small:74` |
-| `ship:confederacy:colonizer` | Droid Foundry Barge | construction | `confederacy:colonizer` | 0 | `render/faction_ships.py:_legions_logistics:292` |
-| `ship:confederacy:constructor` | Homing Spider Droid Rig | construction | `confederacy:constructor` | 0 | `render/faction_ships.py:_legions_logistics:292` |
-| `ship:confederacy:corvette` | Droth Drone Corvette | combat_hull | `confederacy:corvette` | 0 | `render/faction_ships.py:_legions_line:421` |
-| `ship:confederacy:crew_transport` | Confederacy Crew Transport | logistics_hull | `confederacy:convoy` | 1 | `render/faction_ships.py:_legions_logistics:292` |
-| `ship:confederacy:cruiser` | Recusant Raider | combat_hull | `confederacy:cruiser` | 0 | `render/faction_ships.py:_legions_line:421` |
-| `ship:confederacy:frigate` | Cobalt Frigate | combat_hull | `confederacy:frigate` | 0 | `render/faction_ships.py:_legions_line:421` |
-| `ship:confederacy:supercapital` | Subjugator-class Sovereignty | combat_hull | `confederacy:supercapital` | 0 | `render/faction_ships.py:_legions_capital:165` |
+| `ship:confederacy:colonizer` | Droid Foundry Barge | construction | `confederacy:colonizer` | 0 | `render/faction_ships.py:_legions_logistics:345` |
+| `ship:confederacy:constructor` | Homing Spider Droid Rig | construction | `confederacy:constructor` | 0 | `render/faction_ships.py:_legions_logistics:345` |
+| `ship:confederacy:corvette` | Droth Drone Corvette | combat_hull | `confederacy:corvette` | 0 | `render/faction_ships.py:_legions_line:512` |
+| `ship:confederacy:crew_transport` | Confederacy Crew Transport | logistics_hull | `confederacy:convoy` | 1 | `render/faction_ships.py:_legions_logistics:345` |
+| `ship:confederacy:cruiser` | Recusant Raider | combat_hull | `confederacy:cruiser` | 0 | `render/faction_ships.py:_legions_line:512` |
+| `ship:confederacy:frigate` | Cobalt Frigate | combat_hull | `confederacy:frigate` | 0 | `render/faction_ships.py:_legions_line:512` |
+| `ship:confederacy:supercapital` | Subjugator-class Sovereignty | combat_hull | `confederacy:supercapital` | 0 | `render/faction_ships.py:_legions_capital:218` |
 | `ship:confederacy:vulture_squadron` | Vulture Drone Wing | squadron | `confederacy:fighter` | 0 | `render/faction_ships.py:_legions_small:74` |
 | `ship:imperial:battleship` | Executor-class Dreadnought | combat_hull | `dagger` | 1 | `render/fleet_geometry.py:_ship_mesh:170` |
 | `ship:imperial:colonizer` | Colonial Outreach Frigate | construction | `box` | 3 | `render/fleet_geometry.py:_ship_mesh:170` |
@@ -59,27 +59,27 @@ Coverage comes from the data, not from a hand-written list: ships are enumerated
 | `ship:imperial:supercapital` | Sovereign-class Star Dreadnought | combat_hull | `dagger` | 1 | `render/fleet_geometry.py:_ship_mesh:170` |
 | `ship:imperial:tie_bomber_squadron` | Hammer Torpedo Squadron | squadron | `wedge` | 1 | `render/fleet_geometry.py:_ship_mesh:170` |
 | `ship:imperial:tie_squadron` | Talon Interceptor Squadron | squadron | `wedge` | 1 | `render/fleet_geometry.py:_ship_mesh:170` |
-| `ship:rebel:battleship` | Hope-class Command Cruiser | combat_hull | `rebel:battleship` | 0 | `render/faction_ships.py:_alliance_capital:120` |
-| `ship:rebel:colonizer` | Freedom Colony Ship | construction | `rebel:colonizer` | 0 | `render/faction_ships.py:_alliance_logistics:240` |
-| `ship:rebel:constructor` | Alliance Engineering Sled | construction | `rebel:constructor` | 0 | `render/faction_ships.py:_alliance_logistics:240` |
-| `ship:rebel:corvette` | Blockade Runner | combat_hull | `rebel:corvette` | 0 | `render/faction_ships.py:_alliance_line:391` |
-| `ship:rebel:crew_transport` | Rebel Crew Transport | logistics_hull | `rebel:convoy` | 1 | `render/faction_ships.py:_alliance_logistics:240` |
-| `ship:rebel:cruiser` | Liberty Cruiser | combat_hull | `rebel:cruiser` | 0 | `render/faction_ships.py:_alliance_line:391` |
-| `ship:rebel:frigate` | Escort Frigate | combat_hull | `rebel:frigate` | 0 | `render/faction_ships.py:_alliance_line:391` |
-| `ship:rebel:supercapital` | Independence-class Fleet Carrier | combat_hull | `rebel:supercapital` | 0 | `render/faction_ships.py:_alliance_capital:120` |
+| `ship:rebel:battleship` | Hope-class Command Cruiser | combat_hull | `rebel:battleship` | 0 | `render/faction_ships.py:_alliance_capital:171` |
+| `ship:rebel:colonizer` | Freedom Colony Ship | construction | `rebel:colonizer` | 0 | `render/faction_ships.py:_alliance_logistics:293` |
+| `ship:rebel:constructor` | Alliance Engineering Sled | construction | `rebel:constructor` | 0 | `render/faction_ships.py:_alliance_logistics:293` |
+| `ship:rebel:corvette` | Blockade Runner | combat_hull | `rebel:corvette` | 0 | `render/faction_ships.py:_alliance_line:480` |
+| `ship:rebel:crew_transport` | Rebel Crew Transport | logistics_hull | `rebel:convoy` | 1 | `render/faction_ships.py:_alliance_logistics:293` |
+| `ship:rebel:cruiser` | Liberty Cruiser | combat_hull | `rebel:cruiser` | 0 | `render/faction_ships.py:_alliance_line:480` |
+| `ship:rebel:frigate` | Escort Frigate | combat_hull | `rebel:frigate` | 0 | `render/faction_ships.py:_alliance_line:480` |
+| `ship:rebel:supercapital` | Independence-class Fleet Carrier | combat_hull | `rebel:supercapital` | 0 | `render/faction_ships.py:_alliance_capital:171` |
 | `ship:rebel:x_squadron` | Falcon Fighter Squadron | squadron | `rebel:fighter` | 0 | `render/faction_ships.py:_alliance_small:48` |
 | `ship:rebel:y_squadron` | Bulwark Bomber Squadron | squadron | `rebel:bomber` | 0 | `render/faction_ships.py:_alliance_small:48` |
-| `ship:syndicate:colonizer` | Frontier Settlement Barge | construction | `syndicate:colonizer` | 0 | `render/faction_ships.py:_syndicate_logistics:334` |
-| `ship:syndicate:constructor` | Scrapyard Hauler | construction | `syndicate:constructor` | 0 | `render/faction_ships.py:_syndicate_logistics:334` |
-| `ship:syndicate:corvette` | Marauder Corvette | combat_hull | `syndicate:corvette` | 0 | `render/faction_ships.py:_syndicate_line:460` |
-| `ship:syndicate:crew_transport` | Syndicate Crew Transport | logistics_hull | `syndicate:convoy` | 1 | `render/faction_ships.py:_syndicate_logistics:334` |
-| `ship:syndicate:cruiser` | Reaver Assault Cruiser | combat_hull | `syndicate:cruiser` | 0 | `render/faction_ships.py:_syndicate_line:460` |
-| `ship:syndicate:frigate` | Cutlass Frigate | combat_hull | `syndicate:frigate` | 0 | `render/faction_ships.py:_syndicate_line:460` |
+| `ship:syndicate:colonizer` | Frontier Settlement Barge | construction | `syndicate:colonizer` | 0 | `render/faction_ships.py:_syndicate_logistics:387` |
+| `ship:syndicate:constructor` | Scrapyard Hauler | construction | `syndicate:constructor` | 0 | `render/faction_ships.py:_syndicate_logistics:387` |
+| `ship:syndicate:corvette` | Marauder Corvette | combat_hull | `syndicate:corvette` | 0 | `render/faction_ships.py:_syndicate_line:551` |
+| `ship:syndicate:crew_transport` | Syndicate Crew Transport | logistics_hull | `syndicate:convoy` | 1 | `render/faction_ships.py:_syndicate_logistics:387` |
+| `ship:syndicate:cruiser` | Reaver Assault Cruiser | combat_hull | `syndicate:cruiser` | 0 | `render/faction_ships.py:_syndicate_line:551` |
+| `ship:syndicate:frigate` | Cutlass Frigate | combat_hull | `syndicate:frigate` | 0 | `render/faction_ships.py:_syndicate_line:551` |
 | `ship:syndicate:raid_squadron` | Jackal Raid Wing | squadron | `syndicate:fighter` | 0 | `render/faction_ships.py:_syndicate_small:97` |
 | `ship:imperial:trade_convoy` | — | logistics_hull | `box` | 4 | `render/fleet_geometry.py:_ship_mesh:170` |
-| `ship:rebel:trade_convoy` | — | logistics_hull | `rebel:convoy` | 2 | `render/faction_ships.py:_alliance_logistics:240` |
-| `ship:confederacy:trade_convoy` | — | logistics_hull | `confederacy:convoy` | 2 | `render/faction_ships.py:_legions_logistics:292` |
-| `ship:syndicate:trade_convoy` | — | logistics_hull | `syndicate:convoy` | 2 | `render/faction_ships.py:_syndicate_logistics:334` |
+| `ship:rebel:trade_convoy` | — | logistics_hull | `rebel:convoy` | 2 | `render/faction_ships.py:_alliance_logistics:293` |
+| `ship:confederacy:trade_convoy` | — | logistics_hull | `confederacy:convoy` | 2 | `render/faction_ships.py:_legions_logistics:345` |
+| `ship:syndicate:trade_convoy` | — | logistics_hull | `syndicate:convoy` | 2 | `render/faction_ships.py:_syndicate_logistics:387` |
 
 41 bindings resolve to 32 distinct meshes, and every one of those keys is declared in `render.ship_sizes.SHIP_KEYS` (35 keys). That containment is the coverage proof for hulls: no hull can reach the renderer without landing on an inventoried key.
 
@@ -107,36 +107,36 @@ Coverage comes from the data, not from a hand-written list: ships are enumerated
 | `station:{faction}:fighter_platform` | Fighter Platform | station | `render/fleet_geometry.py:_station_mesh:290` | `render/fleet_geometry.py:station_mesh:249` |
 | `station:{faction}:repair_dock` | Repair Dock | station | `render/fleet_geometry.py:_station_mesh:290` | `render/fleet_geometry.py:station_mesh:249` |
 | `station:{faction}:energy_relay` | Energy Relay | station | `render/fleet_geometry.py:_station_mesh:290` | `render/fleet_geometry.py:station_mesh:249` |
-| `station:{faction}:command_station` | Command Station | station | `render/faction_stations.py:_alliance:103` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:mining_station` | Mining Station | station | `render/faction_stations.py:_alliance:103` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:shipyard` | Shipyard | station | `render/faction_stations.py:_alliance:103` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:research_station` | Research Station | station | `render/faction_stations.py:_alliance:103` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:defense_platform` | Defense Platform | station | `render/faction_stations.py:_alliance:103` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:sensor_station` | Sensor Station | station | `render/faction_stations.py:_alliance:103` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:trade_station` | Trade Station | station | `render/faction_stations.py:_alliance:103` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:fighter_platform` | Fighter Platform | station | `render/faction_stations.py:_alliance:103` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:repair_dock` | Repair Dock | station | `render/faction_stations.py:_alliance:103` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:energy_relay` | Energy Relay | station | `render/faction_stations.py:_alliance:103` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:command_station` | Command Station | station | `render/faction_stations.py:_legions:204` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:mining_station` | Mining Station | station | `render/faction_stations.py:_legions_roles:231` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:shipyard` | Shipyard | station | `render/faction_stations.py:_legions:204` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:research_station` | Research Station | station | `render/faction_stations.py:_legions_roles:231` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:defense_platform` | Defense Platform | station | `render/faction_stations.py:_legions_roles:231` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:sensor_station` | Sensor Station | station | `render/faction_stations.py:_legions_roles:231` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:trade_station` | Trade Station | station | `render/faction_stations.py:_legions_roles:231` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:fighter_platform` | Fighter Platform | station | `render/faction_stations.py:_legions_roles:231` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:repair_dock` | Repair Dock | station | `render/faction_stations.py:_legions_roles:231` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:energy_relay` | Energy Relay | station | `render/faction_stations.py:_legions_roles:231` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:command_station` | Command Station | station | `render/faction_stations.py:_syndicate:311` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:mining_station` | Mining Station | station | `render/faction_stations.py:_syndicate_roles:346` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:shipyard` | Shipyard | station | `render/faction_stations.py:_syndicate:311` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:research_station` | Research Station | station | `render/faction_stations.py:_syndicate_roles:346` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:defense_platform` | Defense Platform | station | `render/faction_stations.py:_syndicate_roles:346` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:sensor_station` | Sensor Station | station | `render/faction_stations.py:_syndicate_roles:346` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:trade_station` | Trade Station | station | `render/faction_stations.py:_syndicate_roles:346` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:fighter_platform` | Fighter Platform | station | `render/faction_stations.py:_syndicate_roles:346` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:repair_dock` | Repair Dock | station | `render/faction_stations.py:_syndicate_roles:346` | `render/faction_stations.py:_station_mesh:434` |
-| `station:{faction}:energy_relay` | Energy Relay | station | `render/faction_stations.py:_syndicate_roles:346` | `render/faction_stations.py:_station_mesh:434` |
+| `station:{faction}:command_station` | Command Station | station | `render/faction_stations.py:_alliance:136` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:mining_station` | Mining Station | station | `render/faction_stations.py:_alliance:136` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:shipyard` | Shipyard | station | `render/faction_stations.py:_alliance:136` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:research_station` | Research Station | station | `render/faction_stations.py:_alliance:136` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:defense_platform` | Defense Platform | station | `render/faction_stations.py:_alliance:136` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:sensor_station` | Sensor Station | station | `render/faction_stations.py:_alliance:136` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:trade_station` | Trade Station | station | `render/faction_stations.py:_alliance:136` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:fighter_platform` | Fighter Platform | station | `render/faction_stations.py:_alliance:136` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:repair_dock` | Repair Dock | station | `render/faction_stations.py:_alliance:136` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:energy_relay` | Energy Relay | station | `render/faction_stations.py:_alliance:136` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:command_station` | Command Station | station | `render/faction_stations.py:_legions:228` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:mining_station` | Mining Station | station | `render/faction_stations.py:_legions_roles:255` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:shipyard` | Shipyard | station | `render/faction_stations.py:_legions:228` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:research_station` | Research Station | station | `render/faction_stations.py:_legions_roles:255` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:defense_platform` | Defense Platform | station | `render/faction_stations.py:_legions_roles:255` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:sensor_station` | Sensor Station | station | `render/faction_stations.py:_legions_roles:255` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:trade_station` | Trade Station | station | `render/faction_stations.py:_legions_roles:255` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:fighter_platform` | Fighter Platform | station | `render/faction_stations.py:_legions_roles:255` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:repair_dock` | Repair Dock | station | `render/faction_stations.py:_legions_roles:255` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:energy_relay` | Energy Relay | station | `render/faction_stations.py:_legions_roles:255` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:command_station` | Command Station | station | `render/faction_stations.py:_syndicate:335` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:mining_station` | Mining Station | station | `render/faction_stations.py:_syndicate_roles:370` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:shipyard` | Shipyard | station | `render/faction_stations.py:_syndicate:335` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:research_station` | Research Station | station | `render/faction_stations.py:_syndicate_roles:370` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:defense_platform` | Defense Platform | station | `render/faction_stations.py:_syndicate_roles:370` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:sensor_station` | Sensor Station | station | `render/faction_stations.py:_syndicate_roles:370` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:trade_station` | Trade Station | station | `render/faction_stations.py:_syndicate_roles:370` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:fighter_platform` | Fighter Platform | station | `render/faction_stations.py:_syndicate_roles:370` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:repair_dock` | Repair Dock | station | `render/faction_stations.py:_syndicate_roles:370` | `render/faction_stations.py:_station_mesh:458` |
+| `station:{faction}:energy_relay` | Energy Relay | station | `render/faction_stations.py:_syndicate_roles:370` | `render/faction_stations.py:_station_mesh:458` |
 | `hardware:satellite:{faction}:defense_satellite` | Defense Satellite | satellite | `render/fleet_geometry.py:_satellite_mesh:266` | `render/fleet_geometry.py:_station_mesh:290` |
 | `hardware:satellite:{faction}:attack_satellite` | Attack Satellite | satellite | `render/fleet_geometry.py:_satellite_mesh:266` | `render/fleet_geometry.py:_station_mesh:290` |
 | `hardware:construction:{faction}:planet_extractor` | Resource Extractor | planet_installation | `render/planet_building_geometry.py:_building_mesh:59` | `render/planet_building_geometry.py:building_mesh:12` |
@@ -178,8 +178,10 @@ Every path through which the renderer obtains 3D geometry. The last column is me
 | `R04_satellite_hardware_mesh` | `render/fleet_geometry.py:_satellite_mesh` | L265-286 (lru_cache maxsize=8) | within_file_at_this_base | planetary satellites / orbital hardware: defense_satellite and attack_satellite, faction-specific side counts and silhouettes | `_Hardware().ring(...) -> h.finish() (procedural; sides = {imperial:6, rebel:12, confederacy:8, syndicate:5})` |
 | `R05_legacy_imperial_station_mesh` | `render/fleet_geometry.py:_station_mesh` | L289-427 (lru_cache maxsize=10) | within_file_at_this_base | stations: all 10 Imperial STATION_TYPES | `_Hardware() procedural build -> h.finish()` |
 | `R06_faction_ship_mesh` | `render/faction_ships.py:ship_mesh / _ship_mesh` | L15-46 (cache maxsize=30) | within_file_at_this_base | ships: rebel/confederacy/syndicate, 10 SHIP_ROLES x 3 factions (small craft, capital, logistics, line hulls) | `dispatch helpers _alliance*/_legions*/_syndicate* -> _Hardware.finish(); capital and line hulls route through the authored slices` |
-| `R09_faction_station_mesh` | `render/faction_stations.py:station_mesh / _station_mesh` | L17-27, L457-475 (cache maxsize=30) | range_extends_past_end_of_file_at_this_base | stations: rebel/confederacy/syndicate station variants; result normalised into the radius-50 material space | `{'rebel': _alliance, 'confederacy': _legions, 'syndicate': _syndicate}[faction](h, kind) -> MappingProxyType(... *0.8 fit)` |
-| `R10_authored_shipyard_branch` | `render/faction_stations.py:_station_mesh (rebel shipyard branch)` | L459-463 (authored); procedural fallbac… | range_extends_past_end_of_file_at_this_base | rebel shipyard (the Alliance-owned/rebel station) from assets/models/alliance_shipyard.mesh.json | `if faction == 'rebel' and kind == 'shipyard': from .authored_mesh import shipyard_mesh; return shipyard_mesh()` |
+| `R07_authored_battleship_slice` | `render/faction_ships.py:_alliance_battleship_slice (reached from _alliance_capital at L171-173)` | L120-168 (authored call L127-137; proce… | within_file_at_this_base | rebel:battleship hull from the Blender authored asset assets/models/alliance_battleship.mesh.json | `from render.authored_mesh import battleship_mesh; mesh = battleship_mesh() then h.parts[role].extend(triangles)` |
+| `R08_authored_frigate_slice` | `render/faction_ships.py:_alliance_frigate_slice (reached from _alliance_line at L480-482 for level==1)` | L444-477 (authored call L446-456; proce… | within_file_at_this_base | rebel:frigate hull from assets/models/alliance_frigate.mesh.json | `from render.authored_mesh import frigate_mesh; mesh = frigate_mesh()` |
+| `R09_faction_station_mesh` | `render/faction_stations.py:station_mesh / _station_mesh` | L17-27, L457-475 (cache maxsize=30) | within_file_at_this_base | stations: rebel/confederacy/syndicate station variants; result normalised into the radius-50 material space | `{'rebel': _alliance, 'confederacy': _legions, 'syndicate': _syndicate}[faction](h, kind) -> MappingProxyType(... *0.8 fit)` |
+| `R10_authored_shipyard_branch` | `render/faction_stations.py:_station_mesh (rebel shipyard branch)` | L459-463 (authored); procedural fallbac… | within_file_at_this_base | rebel shipyard (the Alliance-owned/rebel station) from assets/models/alliance_shipyard.mesh.json | `if faction == 'rebel' and kind == 'shipyard': from .authored_mesh import shipyard_mesh; return shipyard_mesh()` |
 | `R11_planet_building_mesh` | `render/planet_building_geometry.py:building_mesh / _building_mesh` | L12-17, L58-113 (cache maxsize=16) | within_file_at_this_base | colonized-planet surface hardware (BUILDING_TYPES incl. planet_shield_generator) | `_building_mesh(kind, faction) procedural (shared with _Hardware)` |
 | `R12_renderer_batched_role_emission` | `render/renderer.py:_draw_ship_role_batch (called from _draw_ships L1262)` | L1385-1492; ship call L1448; station ca… | within_file_at_this_base | ships + squadrons + stations, one material role per pass (base/dark/trim/accent/lit/cool) for every visible entity | `glCallList(self._ship_display_list(size.shape + suffix)) and glCallList(self._station_detail_list(e.data_id, role, faction))` |
 | `R13_renderer_per_ship_draw` | `render/renderer.py:_draw_ship` | L1943-2041; calls L1979, L1989-1991, L2… | within_file_at_this_base | one ship: six material roles plus an inlined engine-trail triangle | `lst = self._ship_display_list(vis['shape']) (+ '_dark'/'_trim'/'_lit'/'_accent'/'_cool' suffixes)` |
@@ -195,15 +197,6 @@ Every path through which the renderer obtains 3D geometry. The last column is me
 | `R23_planet_building_pick_and_frame` | `render/planet_building_geometry.py:station_world_mesh / _station_local_bounds / station_camera_box / station_pick_dista…` | L114-253; mesh call L149-156; bounds L1… | within_file_at_this_base | no GL - world-space mesh for click picking, per-building camera box, pick distance and surface contact point for planet installations | `station_mesh(entity.data_id, owner_faction(state, entity.owner)) triangles` |
 | `R24_renderer_inline_legacy_hull_emit` | `render/renderer.py:_emit_hull (with _emit_glazing L2290-2356, _armor_loft L2113-2121, _station_ring L2358-2400 and the …` | L2122-2288 (glazing L2290-2356; armor_l… | within_file_at_this_base | a COMPLETE second procedural ship hull generator inside the renderer for shapes wedge/needle/cruiser/dagger/box, plus its own emissive glazing pass | `self._lit_box(...) / self._out_pyr(...) / self._dome(...) / self._octa_tube(...) / self._capsule(...) / self._armor_loft(...) / self._emit_glazing(...) - it never calls ship_mesh()` |
 | `R25_renderer_inline_legacy_station_lit` | `render/renderer.py:_station_lit_list (with _emit_station_lit L2513-2669)` | L2490-2511 (calls _emit_station_lit at … | within_file_at_this_base | a second, unit-radius station emissive-detail geometry (windows / hangars / beacons / running lights) built from inline _lit_box calls per station type | `self._lit_box(...) chains keyed on data_id; does NOT call station_mesh` |
-
-### 5.1 Paths that exist only on the checkpoint branch
-
-These rows describe code in the unmerged trio checkpoint, not in this tree; the absent symbols are listed so the row is self-checking.
-
-| id | module:symbol | absent here | emits |
-|---|---|---|---|
-| `R07_authored_battleship_slice` | `render/faction_ships.py:_alliance_battleship_slice (reached from _alliance_capital at L171-173)` | `render/faction_ships.py:_alliance_battleship_slice` | rebel:battleship hull from the Blender authored asset assets/models/alliance_battleship.mesh.json |
-| `R08_authored_frigate_slice` | `render/faction_ships.py:_alliance_frigate_slice (reached from _alliance_line at L480-482 for level==1)` | `render/faction_ships.py:_alliance_frigate_slice` | rebel:frigate hull from assets/models/alliance_frigate.mesh.json |
 
 Tool-only paths (5), which cannot affect the shipped renderer:
 
@@ -278,9 +271,9 @@ Owner decision `approved-trio-2026-10-16`; preserved in draft PR #114 (feat/blen
 
 | binding | status | runtime asset | generator in this tree |
 |---|---|---|---|
-| `ship:rebel:battleship` | approved_blender_draft_unmerged | `assets/models/alliance_battleship.mesh.json` | `render/faction_ships.py:_alliance_capital:120` |
-| `ship:rebel:frigate` | approved_blender_draft_unmerged | `assets/models/alliance_frigate.mesh.json` | `render/faction_ships.py:_alliance_line:391` |
-| `station:rebel:shipyard` | approved_blender_draft_unmerged | `assets/models/alliance_shipyard.mesh.json` | `render/faction_stations.py:_alliance:103` |
+| `ship:rebel:battleship` | approved_blender_draft_unmerged | `assets/models/alliance_battleship.mesh.json` | `render/faction_ships.py:_alliance_capital:171` |
+| `ship:rebel:frigate` | approved_blender_draft_unmerged | `assets/models/alliance_frigate.mesh.json` | `render/faction_ships.py:_alliance_line:480` |
+| `station:rebel:shipyard` | approved_blender_draft_unmerged | `assets/models/alliance_shipyard.mesh.json` | `render/faction_stations.py:_alliance:136` |
 
 Approval does **not** cover:
 - any other hull, station, satellite or installation
