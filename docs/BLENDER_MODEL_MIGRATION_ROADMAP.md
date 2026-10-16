@@ -235,6 +235,44 @@ S06 may author batches while S04 is built, but only with disjoint files/ownershi
 - Provide commands for one asset, a batch and validation-only, with nonzero failure exits and no user-data writes. Names below are proposed interfaces, not existing commands: `build-model`, `export-model`, `validate-models`.
 - Test repeated byte-exact runtime exports, fresh-clone completeness, provenance and Git/LFS storage policy. Avoid requiring Blender for ordinary gameplay tests; use a dedicated asset-rebuild job/environment.
 
+#### S03 acceptance — frozen by the owner before implementation
+
+Decision record: `s03-pipeline-policy-2026-10-16` in `art/manifests/pipeline_policy.json` (owner's
+wording verbatim). The owner adopted all three proposed policies and the definition of done, so this
+step is reviewed against agreed criteria rather than against whatever gets built.
+
+**1. Storage policy.** Ordinary Git for current sources and evidence; declared Git LFS threshold
+**5 MiB per file**; LFS is *not* adopted until an asset actually crosses it. LFS early costs clone
+friction on the second machine for no current benefit (12 MiB of artifacts, ~1 MiB of sources), and a
+pointer without fetched content is not a valid asset delivery, so adoption must be atomic —
+attributes, build/test fetching and a fresh-clone check in the same change.
+
+**2. Source authority.** **Blend-authoritative is the default** for anything with real silhouette
+work: the `.blend` is the master and the exporter is export-only and must never overwrite hand edits.
+Script-authoritative remains for repeated or modular pieces (satellites, environment props, rails,
+hardware) and for the three already-approved assets, whose existing build scripts reproduce them. Every
+asset declares exactly one authority, recorded with its provenance entry.
+
+**3. Platform scope.** Rebuild and validation must work from a fresh clone on **macOS and Windows**:
+no `/Applications/Blender.app`, no `sandbox-exec`, no absolute home directories. Blender-side
+authoring tooling stays on macOS; Windows rebuilds and validates, it does not author.
+
+**Definition of done** (each item names who can check it):
+
+| Id | Claim | Checked by |
+|---|---|---|
+| D1 | `build-model`, `export-model` and `validate-models` work for one asset, a batch and validation-only; every failure path exits nonzero and no command writes user data | machine |
+| D2 | `validate-models` **is** the S02 contract validator, not a second, weaker opinion | machine |
+| D3 | a fresh clone reproduces the three approved runtime exports byte-identically, and a second export is byte-stable | machine |
+| D4 | provenance recorded per asset: Blender version, exporter version, source and runtime hashes, declared authority, coordinate/scale policy | machine + skim |
+| D5 | **the approved trio is unchanged**: nothing under `assets/models/` differs from `main`, and a before/after in-game capture shows the same silhouettes, worklights and aft emitters | **owner** |
+| D6 | no `.blend1`, autosave, temporary render or raw capture run committed; editable sources and authoring tools stay out of the packaged build | machine |
+
+The owner's review is therefore the unchanged-trio capture set (D5), the build/validate receipt
+including fresh-clone hashes (D1, D3), and a skim of the provenance record (D4). There is nothing new
+to judge visually here: a visible change to the approved trio is a failure of this step, not a feature
+of it.
+
 ### S04 — Generic preview integration
 
 - Implement registry, bounded manifest/mesh loading and render-only mod resolution outside authoritative simulation. Keep approved specimen rendering as a control.

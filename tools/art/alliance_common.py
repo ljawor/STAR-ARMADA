@@ -144,7 +144,15 @@ def export(identifier, design, features=None):
     asset=dict(schema=1,asset=identifier,authoring='Blender evaluated bevel mesh',
                coordinates='X beam; Y up; +Z forward',vertices=vertices,batches=batches,
                bounds=[lo,hi],parts=parts,triangle_count=sum(map(len,batches.values())))
-    assert 1800 < asset['triangle_count'] < 9000, asset['triangle_count']
+    # Authoring ceiling for a gameplay mesh. The hard limit is the runtime loader
+    # (render/authored_mesh.py: MAX_TRIANGLES 12,000, MAX_VERTICES 10,000, 2,000,000 bytes);
+    # a model over it is refused at load, so the build is wasted. The ceiling is a guard,
+    # not a target, and it sits deliberately just under the loader. Raised from 9,000, and a
+    # vertex ceiling added, by decision s07-detail-budget-2026-10-16 (art/manifests/
+    # pipeline_policy.json): surface detail costs 12 triangles and 8 vertices per block, so
+    # the old ceiling gave the shipyard roughly a quarter of the capital's detail.
+    assert 1800 < asset['triangle_count'] < 11888, asset['triangle_count']
+    assert len(asset['vertices']) < 9500, len(asset['vertices'])
     asset['features'] = features or {}
     EXPORT.write_text(json.dumps(asset,separators=(',',':'),allow_nan=False)+'\n',encoding='utf-8')
     print('GAME_EXPORT',json.dumps(dict(asset=identifier,vertices=len(vertices),triangles=asset['triangle_count'],bounds=asset['bounds'],roles={k:len(v) for k,v in batches.items()},blend=str(BLEND),mesh=str(EXPORT))))

@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "rebel:frigate",
+  "asset_id": "core:alliance/frigate",
+  "authority": "script",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-16T11:36:22Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/alliance_frigate.blend",
+    "sha256": "0e2ab24260b334511aac47917f8d9a63d13df1a3ef4a8171810d6726bb826deb"
+  },
+  "exporter": {
+    "path": "tools/art/build_alliance_frigate.py",
+    "sha256": "8a3822c0d39dca356a605f185a1feceaeaa8c2c97b827cee1d0a5265f84b0a28"
+  },
+  "runtime": {
+    "path": "assets/models/alliance_frigate.mesh.json",
+    "sha256": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+    "bytes": 493063,
+    "triangles": 7708
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-trio-source-hashes.json",
+    "sha256": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported inside an isolated copy of the tree; the repository's declared source was not opened for writing"
+  ]
+}
