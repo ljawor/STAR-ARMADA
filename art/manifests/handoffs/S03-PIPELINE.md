@@ -1,12 +1,12 @@
 # Handoff: S03 — build a durable authoring pipeline
 
-Status: **acceptance frozen, implementation not started.** The policies and the definition of done are
-agreed (`s03-pipeline-policy-2026-10-16`, `art/manifests/pipeline_policy.json`); every evidence slot
-below is still empty and must be filled with real output before S03 can be called complete. Do not mark
-this step done because the plan exists.
+Status: **implementation complete, evidence filled — waiting on the owner's D5 review and on S02's
+contract (PR #117) reaching `main`.** The policies and the definition of done were frozen first
+(`s03-pipeline-policy-2026-10-16`, `art/manifests/pipeline_policy.json`); this file now carries the
+receipts for what was actually run, including what could not be run here.
 
-Branch / base: `docs/s03-acceptance` off `main` `dfda83f2e67931873296e9d49acc4e62a2e63bcd`
-(`dfda83f`). The step itself should be implemented on a fresh branch off the then-current `main`.
+Branches: acceptance in `docs/s03-acceptance` (#118, merged as `fd08ac7`); implementation in
+`feat/s03-authoring-pipeline` off `fd08ac7`.
 
 Prerequisites:
 
@@ -41,16 +41,30 @@ Prerequisites:
 3. **Platform:** rebuild and validate from a fresh clone on macOS **and** Windows — no
    `/Applications/Blender.app`, no `sandbox-exec`, no absolute home directories. Authoring stays macOS.
 
-## Definition of done — evidence slots (fill with real output)
+## Definition of done — receipts
 
-| Id | Evidence to fill | Checked by |
+All runs below are from `feat/s03-authoring-pipeline`, Blender **5.0.1**, macOS, working in a scratch
+worktree. Every command is reproducible as written.
+
+| Id | Evidence | Result |
 |---|---|---|
-| D1 | transcript of `build-model` / `export-model` / `validate-models` for one asset, for a batch, and validation-only; plus one deliberate-failure run each, showing the nonzero exit and no user-data write | machine |
-| D2 | the command `validate-models` runs, and its output on the trio — it must invoke the S02 validator | machine |
-| D3 | `sha256` of `assets/models/alliance_{battleship,frigate,shipyard}.mesh.json` before/after a rebuild in a **fresh clone**, and after a second export run; must equal the recorded approved hashes | machine |
-| D4 | per-asset provenance record: Blender version, exporter version, source/runtime hashes, declared authority, coordinate/scale policy | machine + skim |
-| D5 | `git diff --name-only origin/main -- assets/` (must be empty) plus the before/after in-game capture set — same silhouettes, worklights, aft emitters | **owner** |
-| D6 | branch inventory showing no `.blend1`/autosave/temp renders/raw capture runs, and the packaging file list showing sources and tools excluded | machine |
+| D1 | `python3 tools/art/build-model --batch approved-trio`, `--asset rebel:battleship`, `python3 tools/art/export-model --batch approved-trio`, `python3 tools/art/validate-models --all` / `--asset rebel:battleship` — three commands, one asset, a batch, validation-only | exit 0 each; per-asset triangle counts and hashes printed. Failure paths: no selection → `E_NO_SELECTION` exit **2**; unknown binding → `E_UNKNOWN_BINDING` exit 1; `--blender /nope/blender` → `E_NO_BLENDER` exit 1; `--blender /bin/echo` → `E_BLENDER_VERSION` exit 1; a fake `Blender 9.9.9` → `E_BLENDER_MISMATCH` exit **2** and no build. The user-data directory was hashed before and after a full rebuild: 6 files, **byte-identical**, nothing written |
+| D2 | `validate-models` delegates to `tools/art/validate_contract.py` (D2 requires it to *be* that validator) | With #117's branch merged in: `validate-models: satisfied - 34/34 checks, 0 failures, 0 warnings` (exit 0) and `validate_contract.py` itself `contract satisfied: 33 checks, 25 negative controls, 0 skipped`. On this branch (before #117 reaches `main`) it **fails** with `E_NO_CONTRACT_VALIDATOR` rather than passing on its own checks — that is the intended behaviour, and the merge with #117 is clean |
+| D3 | Fresh clone, plain `python3` 3.11.8, no venv, no local state: `git clone --branch feat/s03-authoring-pipeline . /tmp/sa-fresh` then `build-model --batch approved-trio` | All three exports byte-identical to the approved record: `57a5496c…`, `045d1383…`, `67d4db64…`. A second build run on the working tree reproduces the same three hashes. The only thing a rebuild dirties is `art/manifests/provenance/*` (its `recorded` timestamp) |
+| D4 | `art/manifests/provenance/{rebel-battleship,rebel-frigate,rebel-shipyard}.json`, written by the commands and committed | Blender 5.0.1 and the pin, exporter path + hash, source `.blend` hash matching the approved record, runtime hash/bytes/triangles, coordinate policy, host, and the action taken (`build` vs `export`) with notes |
+| D5 | `git diff --name-only origin/main -- assets/` plus the owner's capture set | Machine half: **empty** — after every build, export and validate run above, all three `.mesh.json` and all three `.blend` hashes still equal the approved record. Owner half: outstanding, see below |
+| D6 | `validate-models` tree hygiene and packaging checks; branch inventory | No `.blend1`/autosave/temp file under `art/blender` or `assets/models`; `star_armada.spec` bundles `assets` only — no `art/`, no `tools/`, no `.blend`. `tests/test_model_pipeline.py` asserts the pipeline imports no `game`/`render` code and references no user-data path |
+
+### What is *not* verified here, and must not be claimed
+
+- **Windows rebuild.** The pipeline is structurally platform-neutral (pathlib, `subprocess` with a
+  list, no `sandbox-exec`, no application path in code, Blender found by flag/env/PATH/registry) and
+  its tests run inside the existing Windows CI job. But no rebuild has been executed on Windows, and
+  no Windows Blender has been used. D3's Windows half stays open until Filip's machine or CI does it.
+- **D2 end to end** depends on PR #117 reaching `main`; it was proven against that branch, not on
+  `main`.
+- **The `.blend` files are not byte-reproducible** between runs (Blender's own binary output). The
+  runtime export is, which is what the pipeline verifies and what the appearance gate rests on.
 
 ## Commands to be written (names are the roadmap's proposal, not existing tools)
 
