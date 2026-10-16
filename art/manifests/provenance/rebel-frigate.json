@@ -5,7 +5,7 @@
   "authority": "script",
   "tool": "tools/art/model_pipeline.py",
   "tool_version": 1,
-  "recorded": "2026-10-16T10:43:42Z",
+  "recorded": "2026-10-16T11:36:22Z",
   "host": {
     "system": "Darwin",
     "release": "25.6.0",
@@ -19,25 +19,25 @@
   },
   "source": {
     "path": "art/blender/alliance_frigate.blend",
-    "sha256": "098a440126da745f4e1e3dbbe4364746083846393f139414fd9921bd4910dfe1"
+    "sha256": "0e2ab24260b334511aac47917f8d9a63d13df1a3ef4a8171810d6726bb826deb"
   },
   "exporter": {
     "path": "tools/art/build_alliance_frigate.py",
-    "sha256": "b2a0bdce919c1bed8b5f726c5dbbef234db4b93c3baf801aa94ac58ad676dee9"
+    "sha256": "8a3822c0d39dca356a605f185a1feceaeaa8c2c97b827cee1d0a5265f84b0a28"
   },
   "runtime": {
     "path": "assets/models/alliance_frigate.mesh.json",
-    "sha256": "045d1383ac8a774d0bb9733a598ca83777dfcdc26645e6900b9d23ee7392348c",
-    "bytes": 358072,
-    "triangles": 5128
+    "sha256": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+    "bytes": 493063,
+    "triangles": 7708
   },
   "approved_reference": {
     "record": "art/manifests/approved-trio-source-hashes.json",
-    "sha256": "045d1383ac8a774d0bb9733a598ca83777dfcdc26645e6900b9d23ee7392348c",
+    "sha256": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
     "matches": true
   },
-  "action": "build",
+  "action": "export",
   "notes": [
-    "the .blend was regenerated from code with unchanged runtime bytes and restored from Git, so a rebuild never leaves an approved binary modified for no reason"
+    "exported inside an isolated copy of the tree; the repository's declared source was not opened for writing"
   ]
 }

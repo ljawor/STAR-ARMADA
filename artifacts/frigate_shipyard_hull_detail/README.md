@@ -84,34 +84,41 @@ cameras, same materials — the only difference is the two payloads.
   the two ships' diffs confined to their own surfaces, with no outline ring around either silhouette
   — the proof that the shape did not move (the identical bounding boxes above are the numeric half).
 
-## State of the records: this is a revision awaiting approval
+## Approved: `s07-frigate-shipyard-hull-detail-2026-10-16`
 
-This branch deliberately does **not** touch `art/manifests/approvals.json`, the pipeline registry or
-the provenance records. `validate-models --all --no-contract` therefore reports 8 failures (four per
-asset) and is right to: they all say the same thing, that the bytes on disk are not the bytes the
-owner approved, and `build-model` / `export-model` refuse to re-record over a live approval:
+The owner reviewed the sheet above and answered **"Models looking good approved"**, recorded verbatim
+as its own decision (`art/manifests/approvals.json`), bound to this revision's exact hashes:
+
+| | frigate | shipyard |
+|---|---|---|
+| `.blend` | `721693dce2de…` | `2b66ad339f75…` |
+| builder | `8a3822c0d39d…` | `22e98cf85620…` |
+| shared helper `alliance_common.py` | `bc5ef04dee22…` | `bc5ef04dee22…` |
+| shared detail module `hull_detail.py` | `aa6e8880b03e…` | `aa6e8880b03e…` |
+| runtime | `8562c3c85424…` | `b0ee2678ab42…` |
+| superseded runtime | `045d1383ac8a…` | `67d4db64c867…` |
+
+The guard raise moved `alliance_common.py`, which the earlier battleship record also names as an
+exporter, so that record's live binding is corrected to the current hash: the battleship's own
+`.blend` and runtime hashes are untouched and still validate, so nothing about its approved
+appearance changed. Its `decision_log` entry keeps the hash as recorded at that approval.
+
+The receipts, in the order the records move:
 
 ```
-E_RUNTIME_HASH: rebel:frigate: ... The bytes the owner approved are not on disk.
-E_SOURCE_DRIFT: rebel:frigate: ... rebuild with build-model ... or re-record it deliberately.
-E_TRIANGLE_COUNT: ... 7708 triangles, expected 5128
-E_PROVENANCE_STALE: ...
+tools/art/build-model  --asset rebel:frigate    # ok - 7708 triangles, runtime 8562c3c85424... matches the approved bytes
+tools/art/export-model --asset rebel:frigate    # ok - byte-identical from a throwaway copy: the revision is reproducible
+tools/art/build-model  --asset rebel:shipyard   # ok - 10767 triangles, runtime b0ee2678ab42... matches the approved bytes
+tools/art/export-model --asset rebel:shipyard   # ok - byte-identical from a throwaway copy
+tools/art/validate-models --all --no-contract   # satisfied - 32/32 checks, 0 failures
+tools/art/validate-models --all                 # 32/33: the only failure is E_NO_CONTRACT_VALIDATOR (PR #117)
 ```
 
-That is the intended pre-approval state, not a defect: an approval binds to a model revision, so the
-record must not move before the owner's sentence. When he approves, the sequence is
-
-```
-# 1. the approval record, by hand, bound to this revision's exact hashes, under a new decision id
-# 2. the pipeline re-records the registry and the provenance records from the real build
-tools/art/build-model --asset rebel:frigate
-tools/art/build-model --asset rebel:shipyard
-tools/art/export-model --asset rebel:frigate
-tools/art/export-model --asset rebel:shipyard
-tools/art/validate-models --all --no-contract        # expect 32/32 satisfied
-```
-
-`export-model` proves the revision is reproducible from the script alone, from a throwaway copy.
+**The one place a hand edit forgets is the registry.** `tools/art/pipeline.json` is never written by
+the pipeline — `expected_triangles` and `approval.decision_id` are updated by hand — and
+`validate-models` caught exactly those two fields still holding `5,128` / `7,935` and
+`approved-trio-2026-10-16` after everything else had moved. That is the guard earning its keep: the
+numbers above were only accepted once `--no-contract` came back satisfied with them in place.
 
 ## A finding: the 73-entry pin does not cover these two models
 
@@ -147,4 +154,5 @@ The captures come from `capture_views.py` (invoked with a tree, an output direct
 against the approved revision and against this branch; `review_sheet.py` builds the sheet and the
 comparison from those two sets.
 
-Nothing here is approved. This is one revision for the owner to look at.
+Nothing here is a production default: the revision is approved as an art revision, and switching
+either model on in the shipped game, tagging or releasing it is still the owner's separate call.

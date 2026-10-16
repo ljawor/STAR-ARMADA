@@ -92,6 +92,91 @@
         "artifacts/battleship_hull_detail/before-after-review.png",
         "artifacts/battleship_hull_detail/comparison.json"
       ]
+    },
+    {
+      "id": "s07-frigate-shipyard-hull-detail-2026-10-16",
+      "date": "2026-10-16",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved",
+      "scope_statement": "Approved the hull surface-detail revision of the Alliance escort (rebel_frigate) and the Alliance-owned (rebel) shipyard - the only two assets this revision changes, and the same two the authoring-ceiling decision s07-detail-budget-2026-10-16 was written for. The owner's words were \"Models looking good approved\", after reviewing the revision against the approved hulls at escort-close and yard-close with native-pixel crops of the frigate's flank and the yard's rails, at the shipped cameras, frozen view time and production default materials.",
+      "approval_kind": "appearance-revision",
+      "revision": {
+        "assets": [
+          {
+            "asset_id": "core:alliance/frigate",
+            "gameplay_binding": "rebel_frigate",
+            "shape_key": "rebel:frigate",
+            "change": "hull surface detail: aft deck transverse frame bands and machinery wells, longitudinal deck strakes, deck-edge rail posts and feet, raised bow-crown armour bands and strakes, flank armour belt with dark inter-plate trenches, a second lower belt row, machinery banks, vent louvres, keel frame ribs, drive-casing machinery banks clipped to the beam, bridge-base window bands with a dark inset, owner-colour prow chevron",
+            "source_authority": "script-authoritative",
+            "triangles": {
+              "before": 5128,
+              "after": 7708
+            },
+            "vertices": {
+              "before": 2704,
+              "after": 4424
+            },
+            "source": {
+              "art/blender/alliance_frigate.blend": "721693dce2de5919e941dd778129c409864e5b78499604b65e1f2e59bc17dd49"
+            },
+            "exporter": {
+              "tools/art/build_alliance_frigate.py": "8a3822c0d39dca356a605f185a1feceaeaa8c2c97b827cee1d0a5265f84b0a28",
+              "tools/art/alliance_common.py": "bc5ef04dee22d8e0133a29e9566536bdf0b64be6a96822ddc760bfe4dfe80e74",
+              "tools/art/hull_detail.py": "aa6e8880b03e32e3ffa2eaf2bc11a214972a186fc4c87cb4078a11ba6e3a6f74"
+            },
+            "runtime": {
+              "assets/models/alliance_frigate.mesh.json": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32"
+            }
+          },
+          {
+            "asset_id": "core:alliance/station/shipyard",
+            "gameplay_binding": "station:rebel:shipyard",
+            "shape_key": "rebel:shipyard",
+            "change": "station surface detail: rail crown frame bands, plating panels, strakes and access hatches; rail flank armour belt, inter-plate trenches, machinery banks, vent banks and service pads down the outer face; gantry pedestal collars and gussets; slip guide-shoe contact plates and wear strips; crosshead machinery banks with radiator fins and frame lines; operations-tower window bands with a dark inset and machinery ledges; under-keel tie ribs",
+            "source_authority": "script-authoritative",
+            "triangles": {
+              "before": 7935,
+              "after": 10767
+            },
+            "vertices": {
+              "before": 4269,
+              "after": 6157
+            },
+            "source": {
+              "art/blender/alliance_shipyard.blend": "2b66ad339f75a48e1daf547d5ea1654a5eab59e5ba7ce6a467f0ee98fe74e045"
+            },
+            "exporter": {
+              "tools/art/build_alliance_shipyard.py": "22e98cf85620959fb910e15c39e0eea64b1dca4df078decc150b04c9a351d70f",
+              "tools/art/alliance_common.py": "bc5ef04dee22d8e0133a29e9566536bdf0b64be6a96822ddc760bfe4dfe80e74",
+              "tools/art/hull_detail.py": "aa6e8880b03e32e3ffa2eaf2bc11a214972a186fc4c87cb4078a11ba6e3a6f74"
+            },
+            "runtime": {
+              "assets/models/alliance_shipyard.mesh.json": "b0ee2678ab42b9005e7ab9007eb6cb1464e878d9896a0104dd9ebad2142e3468"
+            }
+          }
+        ],
+        "silhouette_change": "none - every element stands 0.4 to 3 world units proud of the surface it sits on; both payload bounding boxes are identical before and after (frigate 68.0 x 35.35 x 153.699997, shipyard 111.400002 x 56.400002 x 97.5), so the frigate's in-game length 96.180525 and the station's 110.0 radius are unchanged, and no collision or simulation field moves. The frigate's drive-casing detail is clipped to the +/-34 beam that already set the ship's widest point.",
+        "supersedes": {
+          "assets/models/alliance_frigate.mesh.json": "045d1383ac8a774d0bb9733a598ca83777dfcdc26645e6900b9d23ee7392348c",
+          "assets/models/alliance_shipyard.mesh.json": "67d4db64c8677a8898f74d6e966a1b2476ffc721fd72c363ddbc992360630aaf"
+        },
+        "shared_toolchain_change": "The revision also raised the authoring ceiling (decision s07-detail-budget-2026-10-16), which moved the shared exporter tools/art/alliance_common.py, and added the shared detail module tools/art/hull_detail.py. Neither can change an approved byte: the battleship's .blend and runtime hashes in this file are untouched and validate-models still satisfies them. The live exporter binding of the earlier s06 entry is corrected to the current alliance_common.py hash for that reason; its decision_log entry keeps the hash as recorded at that approval, and nothing about the battleship's appearance changes."
+      },
+      "not_approved_by_this_decision": [
+        "the battleship, which this revision does not rebuild",
+        "any other ship, station, satellite, construction, planet or campaign asset",
+        "the class budgets or LOD table (S02 section 9, still open on #117)",
+        "a production default switch, merge, tag or release (S11)",
+        "Windows-native, packaged or frozen-build acceptance (S09)"
+      ],
+      "how_recorded": "Recorded from the owner's approval of the frigate/shipyard review sheet in the model-migration conversation. The durable evidence is this manifest, the pipeline receipts referenced below and the artifact directory; no timestamp is fabricated beyond the recorded conversation date.",
+      "evidence_references": [
+        "artifacts/frigate_shipyard_hull_detail/README.md",
+        "artifacts/frigate_shipyard_hull_detail/frigate-shipyard-detail-review.png",
+        "artifacts/frigate_shipyard_hull_detail/frigate-shipyard-detail-comparison.json",
+        "art/manifests/provenance/rebel-frigate.json",
+        "art/manifests/provenance/rebel-shipyard.json"
+      ]
     }
   ],
   "approved_assets": [
@@ -107,7 +192,7 @@
         "art/blender/alliance_battleship.blend": "a51b636fc83f1e13b3659440f93adbb68253a6f59a5b0416c4cedc81ca57a791"
       },
       "exporter": {
-        "tools/art/alliance_common.py": "7c79e480fe99b1e8950629dce9eeafcbb4e3562d3f9bbaac22d9525a19bfa057",
+        "tools/art/alliance_common.py": "bc5ef04dee22d8e0133a29e9566536bdf0b64be6a96822ddc760bfe4dfe80e74",
         "tools/art/build_alliance_battleship.py": "52380040fd04c3370085c1815e68cb520d5e54f1f4af04ac53ec69d7233d0082"
       },
       "runtime": {
@@ -136,7 +221,7 @@
       }
     },
     {
-      "approval_id": "approved-trio-2026-10-16",
+      "approval_id": "s07-frigate-shipyard-hull-detail-2026-10-16",
       "asset_id": "core:alliance/frigate",
       "gameplay_binding": "rebel_frigate",
       "shape_key": "rebel:frigate",
@@ -144,14 +229,15 @@
       "source_authority": "script-authoritative",
       "blender_version": "5.0.1",
       "source": {
-        "art/blender/alliance_frigate.blend": "098a440126da745f4e1e3dbbe4364746083846393f139414fd9921bd4910dfe1"
+        "art/blender/alliance_frigate.blend": "721693dce2de5919e941dd778129c409864e5b78499604b65e1f2e59bc17dd49"
       },
       "exporter": {
-        "tools/art/build_alliance_frigate.py": "b2a0bdce919c1bed8b5f726c5dbbef234db4b93c3baf801aa94ac58ad676dee9",
-        "tools/art/alliance_common.py": "7c79e480fe99b1e8950629dce9eeafcbb4e3562d3f9bbaac22d9525a19bfa057"
+        "tools/art/build_alliance_frigate.py": "8a3822c0d39dca356a605f185a1feceaeaa8c2c97b827cee1d0a5265f84b0a28",
+        "tools/art/alliance_common.py": "bc5ef04dee22d8e0133a29e9566536bdf0b64be6a96822ddc760bfe4dfe80e74",
+        "tools/art/hull_detail.py": "aa6e8880b03e32e3ffa2eaf2bc11a214972a186fc4c87cb4078a11ba6e3a6f74"
       },
       "runtime": {
-        "assets/models/alliance_frigate.mesh.json": "045d1383ac8a774d0bb9733a598ca83777dfcdc26645e6900b9d23ee7392348c"
+        "assets/models/alliance_frigate.mesh.json": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32"
       },
       "material_profile": {
         "roles": [
@@ -168,11 +254,15 @@
       },
       "catalogue_size_policy": {
         "in_game_length_world_units": 96.180525,
-        "note": "Renderer-only size policy scales the authored hull to the pre-existing catalogue length. Collision radii and simulation fields are unchanged."
+        "note": "Renderer-only size policy scales the authored hull to the pre-existing catalogue length; the hull-detail revision keeps the mesh bounding box identical to the digit, so this length is unchanged. Collision radii and simulation fields are unchanged."
+      },
+      "previous_approval_id": "approved-trio-2026-10-16",
+      "superseded_revision": {
+        "assets/models/alliance_frigate.mesh.json": "045d1383ac8a774d0bb9733a598ca83777dfcdc26645e6900b9d23ee7392348c"
       }
     },
     {
-      "approval_id": "approved-trio-2026-10-16",
+      "approval_id": "s07-frigate-shipyard-hull-detail-2026-10-16",
       "asset_id": "core:alliance/station/shipyard",
       "gameplay_binding": "station:rebel:shipyard",
       "shape_key": "rebel:shipyard",
@@ -181,14 +271,15 @@
       "source_authority": "script-authoritative",
       "blender_version": "5.0.1",
       "source": {
-        "art/blender/alliance_shipyard.blend": "7a59d05facb26ba68e82daed2a5a3274efa4172f40782c7b8bf63caebb1e045c"
+        "art/blender/alliance_shipyard.blend": "2b66ad339f75a48e1daf547d5ea1654a5eab59e5ba7ce6a467f0ee98fe74e045"
       },
       "exporter": {
-        "tools/art/build_alliance_shipyard.py": "99b27b08ccc75b54c183a93f2fecbd7729a15fc9ab8bb74fd2b74413943dadfb",
-        "tools/art/alliance_common.py": "7c79e480fe99b1e8950629dce9eeafcbb4e3562d3f9bbaac22d9525a19bfa057"
+        "tools/art/build_alliance_shipyard.py": "22e98cf85620959fb910e15c39e0eea64b1dca4df078decc150b04c9a351d70f",
+        "tools/art/alliance_common.py": "bc5ef04dee22d8e0133a29e9566536bdf0b64be6a96822ddc760bfe4dfe80e74",
+        "tools/art/hull_detail.py": "aa6e8880b03e32e3ffa2eaf2bc11a214972a186fc4c87cb4078a11ba6e3a6f74"
       },
       "runtime": {
-        "assets/models/alliance_shipyard.mesh.json": "67d4db64c8677a8898f74d6e966a1b2476ffc721fd72c363ddbc992360630aaf"
+        "assets/models/alliance_shipyard.mesh.json": "b0ee2678ab42b9005e7ab9007eb6cb1464e878d9896a0104dd9ebad2142e3468"
       },
       "material_profile": {
         "roles": [
@@ -205,11 +296,15 @@
       },
       "catalogue_size_policy": {
         "station_radius_world_units": 110.0,
-        "note": "Station radius is unchanged data; renderer station geometry is scaled by radius/50. No collision or simulation field changes."
+        "note": "Renderer-only size policy scales the authored hull to the pre-existing catalogue length; the hull-detail revision keeps the mesh bounding box identical to the digit, so this length is unchanged. Collision radii and simulation fields are unchanged."
       },
       "named_features": {
         "worklights": 4,
         "note": "Four individually removed-and-measured broad-face worklights. Evidence: artifacts/alliance_blender_trio/worklight-pixels.json and pixel-checks/."
+      },
+      "previous_approval_id": "approved-trio-2026-10-16",
+      "superseded_revision": {
+        "assets/models/alliance_shipyard.mesh.json": "67d4db64c8677a8898f74d6e966a1b2476ffc721fd72c363ddbc992360630aaf"
       }
     }
   ],
