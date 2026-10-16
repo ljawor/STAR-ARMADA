@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "rebel:shipyard",
+  "asset_id": "core:alliance/shipyard",
+  "authority": "script",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-16T10:43:43Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/alliance_shipyard.blend",
+    "sha256": "7a59d05facb26ba68e82daed2a5a3274efa4172f40782c7b8bf63caebb1e045c"
+  },
+  "exporter": {
+    "path": "tools/art/build_alliance_shipyard.py",
+    "sha256": "99b27b08ccc75b54c183a93f2fecbd7729a15fc9ab8bb74fd2b74413943dadfb"
+  },
+  "runtime": {
+    "path": "assets/models/alliance_shipyard.mesh.json",
+    "sha256": "67d4db64c8677a8898f74d6e966a1b2476ffc721fd72c363ddbc992360630aaf",
+    "bytes": 505314,
+    "triangles": 7935
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-trio-source-hashes.json",
+    "sha256": "67d4db64c8677a8898f74d6e966a1b2476ffc721fd72c363ddbc992360630aaf",
+    "matches": true
+  },
+  "action": "build",
+  "notes": [
+    "the .blend was regenerated from code with unchanged runtime bytes and restored from Git, so a rebuild never leaves an approved binary modified for no reason"
+  ]
+}

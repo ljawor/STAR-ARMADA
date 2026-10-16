@@ -1,0 +1,13 @@
+#!/usr/bin/env python3
+"""`build-model` - see tools/art/README.md and tools/art/model_pipeline.py.
+
+Works as `python3 tools/art/build-model ...` on macOS, Windows and Linux; the file name is the command
+the roadmap proposes, and the implementation is one module so the three cannot drift apart.
+"""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from model_pipeline import main
+
+raise SystemExit(main(["build-model", *sys.argv[1:]]))
