@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "purpose": "Owner policy decisions that constrain how the model catalogue is authored, exported and stored. Separate from approvals.json: an approval binds to a model revision, a policy constrains the pipeline. Any change to a policy here is a new decision record, not an edit.",
+  "decision_log": [
+    {
+      "id": "s03-pipeline-policy-2026-10-16",
+      "date": "2026-10-16",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved-as-proposed",
+      "applies_to": "S03 - build a durable authoring pipeline",
+      "owner_wording": "agree  + 1.) Agree 2.) agrre to poposal 3.) agree to popsal",
+      "how_recorded": "The three policies and the definition of done were proposed in the model-migration conversation and adopted by the owner's reply above. Recorded verbatim, including spelling, so the intent is not paraphrased away. The proposal itself is not committed in this file: it is stated in full as the decisions below and in docs/BLENDER_MODEL_MIGRATION_ROADMAP.md section S03.",
+      "decisions": [
+        {
+          "id": "storage-policy",
+          "decision": "Ordinary Git for current sources and evidence. Declared Git LFS threshold: 5 MiB per file. LFS is not adopted until an asset actually crosses that threshold; if it is ever adopted, the attributes, the build/test fetching and a fresh-clone check land in the same change.",
+          "why": "LFS early costs clone friction on the second machine for no current benefit (12 MiB of artifacts, ~1 MiB sources). A pointer without fetched content is not a valid asset delivery, so adoption must be atomic.",
+          "applies_from": "S03 onward; re-examine before the first batch that ships textures"
+        },
+        {
+          "id": "source-authority",
+          "decision": "Blend-authoritative is the default for anything with real silhouette work: the .blend is the master and the exporter is export-only and must never overwrite hand edits. Script-authoritative remains for repeated or modular pieces (satellites, environment props, rails, hardware) and for the three already-approved assets, whose existing build scripts reproduce them.",
+          "why": "Detailed art is authored by hand in Blender; forcing a generator between the artist and the mesh loses work. Repeated/modular pieces are the opposite: a generator is the only way to keep them consistent.",
+          "applies_from": "S03 onward; the three approved assets keep their current authority",
+          "requires": "Every asset declares exactly one authority, recorded with its provenance entry"
+        },
+        {
+          "id": "platform-scope",
+          "decision": "Rebuild and validation must work from a fresh clone on macOS and on Windows, with no hardcoded /Applications/Blender.app, no sandbox-exec and no absolute home directories. Blender-side authoring tooling stays on macOS; Windows does not have to author models, only rebuild and validate them.",
+          "why": "A fresh Windows clone that cannot verify the catalogue makes every later platform gate an act of faith. Authoring on one machine keeps the toolchain pinned.",
+          "applies_from": "S03 onward"
+        }
+      ],
+      "scope_statement": "Freezes S03's policies and its definition of done so the step is reviewed against agreed criteria rather than against whatever gets built. It authorizes implementing S03 on a feature branch under the normal PR gate.",
+      "not_approved_by_this_decision": [
+        "any model design, catalogue batch or binding beyond the three already-approved assets (S06)",
+        "implementing or merging the registry/resolver this pipeline feeds (S04)",
+        "a production default switch, activation of the trio in the shipped default, a tag or a release (S11)",
+        "adopting Git LFS now",
+        "authoring models on Windows"
+      ],
+      "binds_to": {
+        "roadmap_step": "S03",
+        "artifact": "docs/BLENDER_MODEL_MIGRATION_ROADMAP.md",
+        "reviewed_basis": "the S03 acceptance proposal put to the owner in the model-migration conversation",
+        "base_commit": "dfda83f2e67931873296e9d49acc4e62a2e63bcd"
+      },
+      "definition_of_done": [
+        {
+          "id": "D1",
+          "claim": "build-model, export-model and validate-models each work for one asset, for a batch, and for validation-only; every failure path exits nonzero and no command writes user data",
+          "checked_by": "machine",
+          "evidence": "command transcript plus a deliberate-failure run per command"
+        },
+        {
+          "id": "D2",
+          "claim": "validate-models IS the S02 contract validator (tools/art/validate_contract.py), not a second, weaker opinion",
+          "checked_by": "machine",
+          "evidence": "the command it runs, and its output on the trio"
+        },
+        {
+          "id": "D3",
+          "claim": "a fresh clone of the pushed branch reproduces the three approved runtime exports byte-identically, and a second export run is byte-stable",
+          "checked_by": "machine",
+          "evidence": "sha256 of assets/models/alliance_{battleship,frigate,shipyard}.mesh.json before and after, on a clone with no local state"
+        },
+        {
+          "id": "D4",
+          "claim": "provenance is recorded per asset: Blender version, exporter version, source and runtime hashes, declared source authority, coordinate/scale policy",
+          "checked_by": "machine+skim",
+          "evidence": "the per-asset provenance record"
+        },
+        {
+          "id": "D5",
+          "claim": "the approved trio is unchanged: no file under assets/models/ differs from main, and a before/after in-game capture shows the same silhouettes, worklights and aft emitters",
+          "checked_by": "owner",
+          "evidence": "git diff --name-only over assets/, plus the capture set"
+        },
+        {
+          "id": "D6",
+          "claim": "no .blend1, autosave, temporary render or raw capture run is committed, and editable sources or authoring tools never enter the packaged build",
+          "checked_by": "machine",
+          "evidence": "status/inventory of the branch plus the packaging file list"
+        }
+      ],
+      "owner_review_pack": [
+        "the unchanged-trio capture set (D5) - the only item the owner judges visually",
+        "the build and validate receipt, including the fresh-clone hashes (D3, D1)",
+        "the provenance record (D4), skimmed"
+      ],
+      "review_note": "There is nothing new to judge visually in S03: a visible change to the approved trio is a failure of this step, not a feature of it."
+    }
+  ]
+}
