@@ -179,5 +179,147 @@ class SelectionPreferencesTests(unittest.TestCase):
                 selection.configure({})
 
 
+class SelectionLanguageTests(unittest.TestCase):
+    LABELS = (
+        'Blender model preview (next session)',
+        'Enabled visual packs (saved order)',
+        '{count} enabled · settings.json',
+        'Preview is opt-in; OFF keeps stock legacy models.',
+        'Pack order: visual_packs in settings.json; later entries win.',
+        'Changes apply at the next session, never during a battle.',
+    )
+
+    def test_preview_labels_have_authored_translations_in_every_registered_pack(self):
+        import json
+        from render import i18n
+        from tools import build_lang_packs as builder, lang_coverage as coverage
+        root = Path(__file__).resolve().parents[1]
+        self.assertNotIn('Invalid visual pack preferences; using legacy models',
+                         coverage.catalogue())
+        for code, _ in i18n.LANGUAGES:
+            pack = json.loads((root / f'assets/data/lang/{code}.json').read_text(
+                encoding='utf-8'))
+            source = builder.load_source(code)[0] if code != 'en' else pack
+            for key in self.LABELS:
+                with self.subTest(code=code, key=key):
+                    self.assertIn(key, coverage.catalogue())
+                    self.assertIn(key, pack)
+                    self.assertEqual(pack[key], source[key])
+                    self.assertTrue(pack[key].strip())
+                    if code != 'en':
+                        self.assertNotEqual(pack[key], key)
+
+    def test_pack_count_is_localized_in_actual_settings_draw(self):
+        import game.core
+        import pygame
+        from render import menus, i18n, clean_classic
+        previous_language = i18n.language()
+        owned_font = not pygame.font.get_init()
+        owned_display = not pygame.display.get_init()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            saves = root / 'saves'
+            with patch.multiple(menus, USER_DIR=str(root), SAVES_DIR=str(saves),
+                                SETTINGS_PATH=str(saves / 'settings.json'),
+                                CAMPAIGN_PATH=str(saves / 'campaign.json'),
+                                BALANCE_PATH=str(saves / 'balance.json')):
+                if owned_display:
+                    pygame.display.init()
+                menu = None
+                try:
+                    menu = menus.MenuStack(800, 600)
+                    menu.screen = 'settings'
+                    for _ in range(3):
+                        menu.buttons = []
+                        menu.render(0)
+                        if any(b.get('action') == 'pack_order' for b in menu.buttons):
+                            break
+                        menu.handle_event(pygame.event.Event(
+                            pygame.KEYDOWN, key=pygame.K_PAGEDOWN))
+                    self.assertTrue(any(b.get('action') == 'pack_order'
+                                        for b in menu.buttons))
+                    for code, word in (('en', 'enabled'), ('de', 'aktiv'),
+                                       ('pl', 'włączone'), ('ru', 'вкл.')):
+                        i18n.set_language(code)
+                        for packs in ([], ['first', 'second']):
+                            with self.subTest(code=code, packs=packs):
+                                menu.settings['visual_packs'] = packs
+                                menu.buttons = []
+                                menu.render(0)
+                                self.assertIn(
+                                    f'{len(packs)} {word} · settings.json ›',
+                                    menu.settings_rendered_text)
+                finally:
+                    if menu is not None:
+                        menu.close()
+                    i18n.set_language(previous_language)
+                    if owned_font:
+                        clean_classic.font.cache_clear()
+                        pygame.font.quit()
+                    if owned_display:
+                        pygame.display.quit()
+
+    def test_only_language_catalogues_force_lf_checkout(self):
+        import os
+        import shutil
+        import subprocess
+        from render import i18n
+        if shutil.which('git') is None:
+            self.skipTest('git is required to inspect checkout attributes')
+        root = Path(__file__).resolve().parents[1]
+        catalogues = [f'assets/data/lang/{code}.json' for code, _ in i18n.LANGUAGES]
+        controls = ['assets/models/probe.mesh.json', 'art/models/probe.blend',
+                    'assets/data/ships/ships.json']
+        result = subprocess.run(
+            ['git', '-c', f'core.attributesFile={os.devnull}', 'check-attr',
+             'text', 'eol', '--', *catalogues, *controls],
+            cwd=root, env=dict(os.environ, GIT_ATTR_NOSYSTEM='1'),
+            check=True, capture_output=True, encoding='utf-8')
+        attributes = {}
+        for line in result.stdout.splitlines():
+            path, attribute, value = line.split(': ', 2)
+            attributes.setdefault(path, {})[attribute] = value
+        for path in catalogues:
+            with self.subTest(path=path):
+                self.assertEqual(attributes[path], {'text': 'set', 'eol': 'lf'})
+        for path in controls:
+            with self.subTest(path=path):
+                self.assertEqual(attributes[path],
+                                 {'text': 'unspecified', 'eol': 'unspecified'})
+
+    def test_preview_catalogue_pipeline_is_utf8_lf_even_with_windows_defaults(self):
+        import builtins
+        import contextlib
+        import io
+        from render import i18n
+        from tools import build_lang_packs as builder, lang_coverage as coverage
+        root = Path(__file__).resolve().parents[1]
+        real_open = builtins.open
+
+        def windows_open(file, mode='r', *args, **kwargs):
+            if 'w' in mode and 'b' not in mode:
+                kwargs.setdefault('newline', '\r\n')
+            return real_open(file, mode, *args, **kwargs)
+
+        with tempfile.TemporaryDirectory() as directory:
+            with patch.object(coverage, 'LANG_DIR', directory), \
+                    patch.object(builder, 'LANG_DIR', directory), \
+                    patch('builtins.open', windows_open), \
+                    contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(coverage.write_catalogue(), 0)
+                with self.subTest(writer='catalogue'):
+                    english = (Path(directory) / 'en.json').read_bytes()
+                    self.assertNotIn(b'\r', english)
+                    self.assertEqual(english, (root / 'assets/data/lang/en.json').read_bytes())
+                # Use the shipped catalogue to exercise pack writing independently.
+                (Path(directory) / 'en.json').write_bytes(
+                    (root / 'assets/data/lang/en.json').read_bytes())
+                self.assertEqual(builder.main(), 0)
+            for code, _ in i18n.LANGUAGES:
+                actual = (Path(directory) / f'{code}.json').read_bytes()
+                self.assertNotIn(b'\r', actual)
+                self.assertEqual(actual, (root / f'assets/data/lang/{code}.json').read_bytes())
+
+
 if __name__ == '__main__':
     unittest.main()

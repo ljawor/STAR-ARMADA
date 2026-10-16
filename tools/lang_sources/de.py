@@ -6,6 +6,12 @@ fall back to English here.
 """
 
 DE: dict[str, str] = {
+    "Blender model preview (next session)": "Blender-Modellvorschau (nächste Sitzung)",
+    "{count} enabled · settings.json": "{count} aktiv · settings.json",
+    "Enabled visual packs (saved order)": "Aktivierte Grafikpakete (gespeicherte Reihenfolge)",
+    "Preview is opt-in; OFF keeps stock legacy models.": "Vorschau nur bei Aktivierung; AUS behält die bisherigen Standardmodelle bei.",
+    "Pack order: visual_packs in settings.json; later entries win.": "Paketreihenfolge: visual_packs in settings.json; spätere Einträge haben Vorrang.",
+    "Changes apply at the next session, never during a battle.": "Änderungen gelten ab der nächsten Sitzung, niemals während einer Schlacht.",
     "1-9 control groups · F fleet menu": "1-9 Kontrollgruppen · F Flottenmenü",
     "ACTIONS / BUILD": "AKTIONEN / BAU",
     "AI": "KI",
@@ -145,7 +151,6 @@ DE: dict[str, str] = {
     "Goal: board and capture the hull.": "Ziel: den Rumpf entern und übernehmen.",
     "HULL": "RUMPF",
     "HUMAN": "MENSCH",
-    "High contrast applies to help / hint panels only.": "Hoher Kontrast gilt nur für Hilfe-/Hinweistafeln.",
     "High contrast panels": "Tafeln mit hohem Kontrast",
     "Host IPv4 address": "Host-IPv4-Adresse",
     "Host a game": "Spiel hosten",
@@ -223,8 +228,6 @@ DE: dict[str, str] = {
     "Not a managed saved game": "Kein verwalteter Spielstand",
     "Not a replay JSON file": "Keine Replay-JSON-Datei",
     "Not a supported game save": "Keine unterstützte Spielspeicherung",
-    "Not whole-game scaling or full colorblind compliance.":
-        "Keine Skalierung des ganzen Spiels und keine vollständige Farbenblindheits-Konformität.",
     "OBJECTIVES": "ZIELE",
     "OPEN SLOT": "FREIER PLATZ",
     "ORBITAL CONSTRUCTION": "ORBITALER BAU",
@@ -268,8 +271,6 @@ DE: dict[str, str] = {
     "Ready": "Bereit",
     "Reconnect": "Neu verbinden",
     "Reduced motion": "Reduzierte Bewegung",
-    "Reduced motion disables menu drift and cinematic motion.":
-        "Reduzierte Bewegung schaltet Menü-Drift und Film-Bewegung ab.",
     "Refresh": "Aktualisieren",
     "Refusing non-regular metadata source": "Nicht-reguläre Metadatenquelle wird abgelehnt",
     "Refusing non-regular save": "Nicht-reguläre Speicherung wird abgelehnt",

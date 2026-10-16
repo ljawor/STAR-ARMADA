@@ -244,7 +244,7 @@ def settings(menu):
             if action == 'cycle_language':
                 value = i18n.label(str(value))
             elif action == 'pack_order':
-                value = f'{len(value or [])} enabled · settings.json'
+                value = i18n.t('{count} enabled · settings.json', count=len(value or []))
             elif action == 'toggle':
                 value = 'ON' if value else 'OFF'
             else:
