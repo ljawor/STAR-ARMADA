@@ -76,7 +76,7 @@ def main() -> int:
         out = {key: strings[key] for key in sorted(en_strings)}
         out['names'] = {key: names[key] for key in sorted(en_names)}
         path = os.path.join(LANG_DIR, f'{code}.json')
-        with open(path, 'w', encoding='utf-8') as handle:
+        with open(path, 'w', encoding='utf-8', newline='\n') as handle:
             json.dump(out, handle, ensure_ascii=False, indent=1)
             handle.write('\n')
         print(f'wrote {path}: {len(out) - 1} strings, {len(out["names"])} names')

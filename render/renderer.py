@@ -33,6 +33,7 @@ from render import textures as tex
 from render import markers as mk
 from render.fleet_materials import FleetMaterials
 from render.fleet_geometry import armor_loft, ship_mesh, station_mesh, ROLES
+from render.asset_selection import is_authored, gpu_cache_key, selected_binding
 
 from game.core.entity import Entity, QUADRANTS
 from game.core.vectors import Vec3
@@ -195,6 +196,8 @@ class Renderer:
         self._star_list = self._unit_sphere_tex = None
         self._planet_tex_cache = {}
         self._hull_tex = self._space_tex = self._star_tex = self._nebula_tex = None
+        from render.asset_selection import attach_renderer
+        self._model_selection_owner = attach_renderer()
         try:
             self._initialize(state, camera)
         except BaseException:
@@ -406,6 +409,9 @@ class Renderer:
             except BaseException as exc:
                 if error is None:
                     error = exc
+        from render.asset_selection import release_renderer
+        release_renderer(getattr(self, '_model_selection_owner', None))
+        self._model_selection_owner = None
         if error is not None:
             raise error
 
@@ -1417,7 +1423,7 @@ class Renderer:
             if apparent < LOD_DETAIL and role in ("dark", "trim", "accent", "cool"):
                 continue
             size = entry["size"]
-            authored = size.shape in ("rebel:battleship", "rebel:frigate")
+            authored = is_authored(size.shape) if ":" in size.shape else False
             if material_pass is not None:
                 self.materials.hull_pass(material_pass, authored)
             color = col_cache.get(e.owner, (0.6, 0.6, 0.6))
@@ -1458,7 +1464,7 @@ class Renderer:
             from render.faction_visuals import owner_faction
             faction = owner_faction(self.state, e.owner)
             origin, basis, _ = station_frame(self.state, e, math.radians(self.time * 3.))
-            authored_station = faction == "rebel" and e.data_id == "shipyard"
+            authored_station = is_authored(f"{faction}:{e.data_id}")
             glPushMatrix()
             glTranslatef(*origin)
             _gl.glMultMatrixf([*basis[0], 0., *basis[1], 0., *basis[2], 0., 0., 0., 0., 1.])
@@ -1994,7 +2000,7 @@ class Renderer:
         # the highlight on normals that mostly are not there (0 visible px),
         # while 8 gives a wide sheen across many plates.
         self._material_metal(8.0, (0.42, 0.42, 0.42))
-        authored = size.shape in ("rebel:battleship", "rebel:frigate")
+        authored = is_authored(size.shape) if ":" in size.shape else False
         with self.materials.use("hull", materialPass=0.0,
                                 authoredSurface=float(authored)):
             glColor3f(*base)
@@ -2088,7 +2094,8 @@ class Renderer:
                 shape, requested_role = shape[:-len(role)-1], role
                 break
         shape = normalize_ship_key(shape)
-        key = shape if requested_role == "base" else shape + "_" + requested_role
+        key = gpu_cache_key(shape, requested_role,
+                            shape if requested_role == "base" else shape + "_" + requested_role)
         if key in self.ship_lists:
             return self.ship_lists[key]
         import OpenGL.GL as GL
@@ -2105,9 +2112,9 @@ class Renderer:
             self._emit_detail_hull(shape, pname)
             GL.glPopAttrib()
             glEndList()
-        self.ship_lists[shape] = passes["base"]
-        for pname in ROLES[1:]:
-            self.ship_lists[shape + "_" + pname] = passes[pname]
+        for pname in ROLES:
+            legacy = shape if pname == "base" else shape + "_" + pname
+            self.ship_lists[gpu_cache_key(shape, pname, legacy)] = passes[pname]
         return passes[requested_role]
 
     def _armor_loft(self, sections, bevel=2.0):
@@ -2405,7 +2412,7 @@ class Renderer:
         from render.faction_visuals import owner_faction
         faction = owner_faction(self.state, e.owner)
         color = self._owner_color(e.owner)
-        authored_station = faction == "rebel" and e.data_id == "shipyard"
+        authored_station = is_authored(f"{faction}:{e.data_id}")
         glPushMatrix()
         from render.planet_building_geometry import station_frame
         origin, basis, scale = station_frame(self.state, e, math.radians(self.time * 3.))
@@ -2464,7 +2471,8 @@ class Renderer:
         if data_id not in BUILDING_TYPES:
             faction, data_id = normalize_station_key(data_id, faction)
         role = role if role in ROLES else "base"
-        key = "station_detail:" + faction + ":" + data_id + ":" + role
+        legacy = "station_detail:" + faction + ":" + data_id + ":" + role
+        key = gpu_cache_key(f"{faction}:{data_id}", role, legacy)
         if key not in self.ship_lists:
             lst = _gl.glGenLists(1)
             glNewList(lst, GL_COMPILE)

@@ -32,6 +32,9 @@ def owner_faction(state, owner):
 
 
 def normalize_ship_key(key):
+    from render.asset_selection import selected_binding
+    if isinstance(key, str) and selected_binding(key):
+        return key
     return key if isinstance(key, str) and key in SHIP_KEYS else 'box'
 
 
@@ -43,6 +46,10 @@ def normalize_station_key(data_id, faction='imperial'):
 
 
 def ship_visual_key(ds, data_id, faction=None):
+    from render.asset_selection import ship_binding
+    selected = ship_binding(ds, data_id, faction)
+    if selected is not None:
+        return selected
     data = ds.ships.get(data_id)
     if data is None:
         if data_id == 'trade_convoy' and faction in FACTIONS[1:]:

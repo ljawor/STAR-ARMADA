@@ -48,6 +48,8 @@ SKIP_SUFFIXES = ('.json', '.png', '.jpg', '.glsl', '.md', '.py', '.ttf', '.wav',
 SKIP_EXACT = {
     'utf-8', 'ascii', 'true', 'false', 'all', 'off', 'hostiles', 'standard', 'night',
     'ON', 'OFF', 'left', 'right', 'center', 'top', 'bottom', 'none', 'en', 'de', 'pl', 'ru',
+    # Settings validation warning, never drawn as a player-facing label.
+    'Invalid visual pack preferences; using legacy models',
     # Internal canonical handoff assertions, never presented as player-facing labels.
     'Recovery requires a detached LAN manager',
     'Recovered manager differs from the drained canonical barrier',
@@ -61,6 +63,7 @@ EXTRA_UI_KEYS = (
     '{outcome} — {name}',
     '{label} +{percent}%',
     '{page} · Page {n}/{total}',
+    '{count} enabled · settings.json',
     '{credits} cr · {materials} mt',
     '{credits} cr · {materials} mt · {energy} EN',
     '{credits} cr · {materials} mt · {energy} EN · {time}s',
@@ -235,7 +238,7 @@ def write_catalogue() -> int:
     out: dict[str, object] = {key: key for key, group in sorted(keys.items()) if group == 'ui'}
     out['names'] = {key: key for key in sorted(names)}
     os.makedirs(LANG_DIR, exist_ok=True)
-    with open(os.path.join(LANG_DIR, 'en.json'), 'w', encoding='utf-8') as handle:
+    with open(os.path.join(LANG_DIR, 'en.json'), 'w', encoding='utf-8', newline='\n') as handle:
         json.dump(out, handle, ensure_ascii=False, indent=1)
         handle.write('\n')
     print(f'wrote {os.path.join(LANG_DIR, "en.json")}: '

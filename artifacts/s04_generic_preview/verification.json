@@ -1,0 +1,1227 @@
+{
+  "status": "passed",
+  "prototype_base": "5bddd7b67245ddff4b595bb3b477ca8ceede0a6c",
+  "measurements": [
+    {
+      "view": "common-scale",
+      "preview_differing_channels": 0,
+      "legacy_differing_channels": 51360
+    },
+    {
+      "view": "capital-close",
+      "preview_differing_channels": 0,
+      "legacy_differing_channels": 455901
+    },
+    {
+      "view": "escort-close",
+      "preview_differing_channels": 0,
+      "legacy_differing_channels": 424670
+    },
+    {
+      "view": "yard-close",
+      "preview_differing_channels": 0,
+      "legacy_differing_channels": 557545
+    },
+    {
+      "view": "capital-rear",
+      "preview_differing_channels": 0,
+      "legacy_differing_channels": 271919
+    },
+    {
+      "view": "escort-rear",
+      "preview_differing_channels": 0,
+      "legacy_differing_channels": 160705
+    },
+    {
+      "view": "yard-rear",
+      "preview_differing_channels": 0,
+      "legacy_differing_channels": 584100
+    },
+    {
+      "view": "tactical",
+      "preview_differing_channels": 0,
+      "legacy_differing_channels": 26720
+    }
+  ],
+  "state_sha256": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+  "inputs": {
+    "prototype": {
+      "selection": "prototype",
+      "source": "/Users/lukaszjawor/.hermes/cache/scratch/s04-prototype-baseline",
+      "captures": [
+        {
+          "name": "common-scale",
+          "view": {
+            "target": [
+              -4300,
+              0,
+              2100
+            ],
+            "distance": 1800.0,
+            "yaw": 48.0,
+            "pitch": 50.0
+          },
+          "image_sha256": "d4d451af69c1f50c7f31c945332162fb9efe8436ff780398208a87c259ef6dcf",
+          "pixels_sha256": "14f38227bd9861fa12040de4385f2afb0a6ce3da13001e3514369cb5b363b63c",
+          "repeat_equal": true,
+          "state_unchanged": true
+        },
+        {
+          "name": "capital-close",
+          "view": {
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "distance": 450.0,
+            "yaw": 48.0,
+            "pitch": 45.0
+          },
+          "image_sha256": "2831cccc4f78f2cf860773e5522f3b9a9b891aad38e64e383a7aafd3b09da1dd",
+          "pixels_sha256": "ed7c164d7c6c46371651925144befe3478e0173db78b7aae15733392a0b84ae4",
+          "repeat_equal": true,
+          "state_unchanged": true
+        },
+        {
+          "name": "escort-close",
+          "view": {
+            "target": [
+              -4200,
+              0,
+              2550
+            ],
+            "distance": 155.0,
+            "yaw": 48.0,
+            "pitch": 35.0
+          },
+          "image_sha256": "c041673de67cc1e746ac95270eefcccc0e74633f18c51959d134a3e2e473298f",
+          "pixels_sha256": "9c77abc2bf1d2d15899e6a8ddf6c40be33455f9f012570912f6688e7857b092e",
+          "repeat_equal": true,
+          "state_unchanged": true
+        },
+        {
+          "name": "yard-close",
+          "view": {
+            "target": [
+              -4200,
+              0,
+              1600
+            ],
+            "distance": 450.0,
+            "yaw": 48.0,
+            "pitch": 45.0
+          },
+          "image_sha256": "573ef8518ab65ac0f25dfe5a9cbfa7fe92ba3296410367d284e6d60c9b2e0cd3",
+          "pixels_sha256": "d00c6e61c772cf382b3da484d7aa6d2c5ba4ce9de3043a6f6134ae7dfdaca5c7",
+          "repeat_equal": true,
+          "state_unchanged": true
+        },
+        {
+          "name": "capital-rear",
+          "view": {
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "distance": 450.0,
+            "yaw": 155.0,
+            "pitch": 38.0
+          },
+          "image_sha256": "95bb2fe9ad776e30f304f2cea174c2c51b2a73801c1fb2cd67028135f88de165",
+          "pixels_sha256": "df8f6247900e2ed0fbf7a1e266751b037fd263ee1042aaeefc8577bc7d69f87f",
+          "repeat_equal": true,
+          "state_unchanged": true
+        },
+        {
+          "name": "escort-rear",
+          "view": {
+            "target": [
+              -4200,
+              0,
+              2550
+            ],
+            "distance": 180.0,
+            "yaw": 155.0,
+            "pitch": 25.0
+          },
+          "image_sha256": "43391617bcb6a370068da246e6dce9bffb49e9ceaa9ae6799904dedbc7827cfe",
+          "pixels_sha256": "bec5f60cf0bac0bffefb25abba5243a195742a3d7965e187832668f3ed261088",
+          "repeat_equal": true,
+          "state_unchanged": true
+        },
+        {
+          "name": "yard-rear",
+          "view": {
+            "target": [
+              -4200,
+              0,
+              1600
+            ],
+            "distance": 450.0,
+            "yaw": 155.0,
+            "pitch": 38.0
+          },
+          "image_sha256": "8940ede7a2628b187ce82ca4f60749cc389befd08e7c3f38f1843cc400929d07",
+          "pixels_sha256": "de3313a145a2a5f46d384da7c0fdaecfe84826854a6859d04adf8a200da14960",
+          "repeat_equal": true,
+          "state_unchanged": true
+        },
+        {
+          "name": "tactical",
+          "view": {
+            "target": [
+              -4200,
+              0,
+              2100
+            ],
+            "distance": 3100.0,
+            "yaw": 48.0,
+            "pitch": 55.0
+          },
+          "image_sha256": "1b3080d3bb2996b813fe16831a6625e09aaeca619b602de04b4613c123c145fc",
+          "pixels_sha256": "958dba2c887d9919ce63f2e4453f96f47f198291e9cb0c6d986d65a3c34d0dbf",
+          "repeat_equal": true,
+          "state_unchanged": true
+        }
+      ],
+      "render_sources_sha256": {
+        "render/__init__.py": "d9da25df69ef1847fbcb04b2dbcdc7f2f818b01a378b517efe59247af3fb0389",
+        "render/audio.py": "53817af7a368cffc5c1638ffcf3e0999f445821eb7449b89b7187bc28f471f16",
+        "render/authored_mesh.py": "9db5744ba97b9fbc5d53ec47141c3a17ddfa575048f7a2d08e5b4965adadd6ea",
+        "render/camera.py": "a023219dd009db45d95e900393cee99bbdc97fa490e04f6090c63efa7cfc7c8f",
+        "render/camera_geometry.py": "c5518efda07c06f23d8ff728fbfa95e8b379b5c0389a881ac740ba6cefd729fc",
+        "render/cinematics.py": "8fd91d2c2f00a5ba0127794b962dd01ea070212b549d04f7bc279b9ee85bebf2",
+        "render/classic_replays.py": "911d59db6cd5d8940223cf8aa092c001f8e6d56faefa0c5234ad89d89d9775a9",
+        "render/classic_saves.py": "3ef731ebae31f6581ddbe402a13cc52f97060da38c841f1ec75079a7207f7efa",
+        "render/classic_screens.py": "4c36b94c38de8681649e9e7cf63146dcc54060bba79f91d58310f55b8d1e835e",
+        "render/clean_classic.py": "de4b0db01b8c325e40d29edc159df85723450f00e4bbf67e972bfab3133e8e1f",
+        "render/faction_ships.py": "4ec1568339e0c42d7290a3b1ab2927b9fc324295d80877278e6b3104ae42eca3",
+        "render/faction_stations.py": "5e15919b04c58aac2daa9641e8d0e9377a1d28107c900e9fe99601bf3bf74eaa",
+        "render/faction_visuals.py": "0b75fd63f75b35ebf2b75e072c9e0108cc74d88870c5b1e88b8147be4e6b1af2",
+        "render/fleet_geometry.py": "5d276791c9f021b507f429b9bfd39b0afb7eb18140cb10d3cb68eeefba7d6fb8",
+        "render/fleet_materials.py": "a0a861739ab46b9173baffd9d7f36b4829e85b85b6b5765544b7f9d1ca7ce403",
+        "render/fog.py": "345c88675b41480708fd26606f3d881231cb3844791e15d325519b4cd34fcc0a",
+        "render/hit_effects.py": "5b739a59bc291cad24b05a478c8baea772050771a4991d011a3934d5f24be863",
+        "render/hud.py": "a27bb1080a617cf545d21b04c85b06f151d4e77cb8465eb7f7f43e7b4e9a2585",
+        "render/i18n.py": "7d09bdf77d854680d05eddb28ab2dc26c94ad9646569540d6f50a71e0421af1b",
+        "render/input.py": "ced35c967b479e25c74f6c09bacf788ee51d9e931f67585a317aa4b939a7c693",
+        "render/markers.py": "16c15b531dad5551ecd77bd4ce14a2a46c40632ffe484a6d79034650f1cf4436",
+        "render/menu_movie.py": "629825f4c61cb11ce87393152f89d91fc20334d9ccb836428a8025ae5380d890",
+        "render/menus.py": "6a7d9ef8eb04ec7523f073187048f26243d06a816cf0e7388d8ee53290b37bdb",
+        "render/planet_building_geometry.py": "f3b1a30e6d88181351ead686b1bae80dce04fcf5746c46f66a80cc046075dd7e",
+        "render/presentation.py": "9048c3bcd5381ffb44f25be7c55e97e9a5ed75c711ed905089e7b5982d240cef",
+        "render/recovery_overlay.py": "60702c717030ac63d7048c4b0a168741862319be577b07a3d43bf2a66a61d7fd",
+        "render/renderer.py": "5aa4cb3a8009577d58e448736296039f2f223d2a886b5bac383c9f1a8eb1face",
+        "render/replay_delete_windows.py": "a629ea64a236157d74c8f8de3e30b6d6820390837cbd7b349eb3d9966d902f48",
+        "render/replay_input.py": "3139349fb9060e2334bab8eb81dfedcaa1ff5b1c8820e34974ed8768afa6ebb8",
+        "render/replay_library.py": "d75488f9cdf0cdc1b72b455640d9d2b5ff2fe389603e5348d59cd2de9fca035e",
+        "render/save_library.py": "710976da90ab58aa4ce481fef563a7bf3c312616567d7d006fb57e15950aee2e",
+        "render/ship_sizes.py": "e407cc4d59aa67edebd28005176073cd1d13e132c4447f6bdf3944d4ca311a5f",
+        "render/textures.py": "5139acaaae7b4922b18c48a017a9f361fa9b1fbca6b818b65e0edbbb07641d84"
+      },
+      "mesh_sha256": {
+        "alliance_battleship.mesh.json": "0a4e397d5c0b60f70fbba35f3e4f4a5ac997ac4de079f821f8f29db9872c95cd",
+        "alliance_frigate.mesh.json": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+        "alliance_shipyard.mesh.json": "b0ee2678ab42b9005e7ab9007eb6cb1464e878d9896a0104dd9ebad2142e3468"
+      },
+      "display": {
+        "size": [
+          1280,
+          800
+        ],
+        "samples": 4,
+        "sample_buffers": 1,
+        "driver": "cocoa",
+        "vendor": "Apple",
+        "renderer": "Apple M4",
+        "version": "2.1 Metal - 90.5"
+      },
+      "recipe": {
+        "version": "alliance-visual-slice-v1",
+        "seed": 12345,
+        "dt": 0.03333333333333333,
+        "placements": [
+          [
+            "capital",
+            "ship",
+            "rebel_battleship",
+            0,
+            [
+              -4200,
+              0,
+              2200
+            ],
+            0.0
+          ],
+          [
+            "escort",
+            "ship",
+            "rebel_frigate",
+            0,
+            [
+              -4200,
+              0,
+              2550
+            ],
+            0.0
+          ],
+          [
+            "yard",
+            "station",
+            "shipyard",
+            0,
+            [
+              -4200,
+              0,
+              1600
+            ],
+            0.0
+          ],
+          [
+            "enemy_a",
+            "ship",
+            "imperial_frigate",
+            1,
+            [
+              -3500,
+              0,
+              2200
+            ],
+            -1.5707963267948966
+          ],
+          [
+            "enemy_b",
+            "ship",
+            "imperial_frigate",
+            1,
+            [
+              -3500,
+              0,
+              2550
+            ],
+            -1.5707963267948966
+          ]
+        ],
+        "planet_definition": {
+          "id": "planet_kel",
+          "name": "Kel Varn",
+          "pos": [
+            -5200,
+            0,
+            2200
+          ],
+          "radius": 700,
+          "type": "temperate",
+          "color": [
+            0.3,
+            0.6,
+            0.95
+          ]
+        },
+        "map_context": {
+          "bounds": 26000,
+          "star": {
+            "pos": [
+              0,
+              -3000,
+              0
+            ],
+            "size": 2600,
+            "color": [
+              1.0,
+              0.9,
+              0.6
+            ]
+          },
+          "nebulas": [
+            {
+              "pos": [
+                -12000,
+                0,
+                -9000
+              ],
+              "radius": 4200,
+              "color": [
+                0.4,
+                0.2,
+                0.55
+              ]
+            },
+            {
+              "pos": [
+                12000,
+                0,
+                9000
+              ],
+              "radius": 4200,
+              "color": [
+                0.15,
+                0.4,
+                0.55
+              ]
+            }
+          ],
+          "jump_points": [
+            {
+              "pos": [
+                -11000,
+                0,
+                0
+              ]
+            },
+            {
+              "pos": [
+                11000,
+                0,
+                0
+              ]
+            },
+            {
+              "pos": [
+                0,
+                0,
+                11000
+              ]
+            },
+            {
+              "pos": [
+                0,
+                0,
+                -11000
+              ]
+            }
+          ]
+        },
+        "entity_ids": {
+          "planet": 1,
+          "capital": 2,
+          "escort": 3,
+          "yard": 4,
+          "enemy_a": 5,
+          "enemy_b": 6
+        },
+        "players": [
+          {
+            "id": 0,
+            "faction": "rebel",
+            "team": 0,
+            "color": [
+              0.35,
+              0.65,
+              1.0
+            ],
+            "ai": false
+          },
+          {
+            "id": 1,
+            "faction": "imperial",
+            "team": 1,
+            "color": [
+              1.0,
+              0.35,
+              0.25
+            ],
+            "ai": false
+          }
+        ],
+        "command_schedule": "tick 1 and every 180 ticks: each side focus lowest-ID live opponent; real AttackCommand through state.command_queue",
+        "selection": [
+          2
+        ],
+        "direct_factory_setup": true,
+        "paid_construction_or_terrain_eligibility_proven": false
+      },
+      "state_sha256": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "status": "passed"
+    },
+    "preview": {
+      "selection": "preview",
+      "source": "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s04",
+      "captures": [
+        {
+          "name": "common-scale",
+          "view": {
+            "target": [
+              -4300,
+              0,
+              2100
+            ],
+            "distance": 1800.0,
+            "yaw": 48.0,
+            "pitch": 50.0
+          },
+          "image_sha256": "d4d451af69c1f50c7f31c945332162fb9efe8436ff780398208a87c259ef6dcf",
+          "pixels_sha256": "14f38227bd9861fa12040de4385f2afb0a6ce3da13001e3514369cb5b363b63c",
+          "repeat_equal": true,
+          "state_unchanged": true
+        },
+        {
+          "name": "capital-close",
+          "view": {
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "distance": 450.0,
+            "yaw": 48.0,
+            "pitch": 45.0
+          },
+          "image_sha256": "2831cccc4f78f2cf860773e5522f3b9a9b891aad38e64e383a7aafd3b09da1dd",
+          "pixels_sha256": "ed7c164d7c6c46371651925144befe3478e0173db78b7aae15733392a0b84ae4",
+          "repeat_equal": true,
+          "state_unchanged": true
+        },
+        {
+          "name": "escort-close",
+          "view": {
+            "target": [
+              -4200,
+              0,
+              2550
+            ],
+            "distance": 155.0,
+            "yaw": 48.0,
+            "pitch": 35.0
+          },
+          "image_sha256": "c041673de67cc1e746ac95270eefcccc0e74633f18c51959d134a3e2e473298f",
+          "pixels_sha256": "9c77abc2bf1d2d15899e6a8ddf6c40be33455f9f012570912f6688e7857b092e",
+          "repeat_equal": true,
+          "state_unchanged": true
+        },
+        {
+          "name": "yard-close",
+          "view": {
+            "target": [
+              -4200,
+              0,
+              1600
+            ],
+            "distance": 450.0,
+            "yaw": 48.0,
+            "pitch": 45.0
+          },
+          "image_sha256": "573ef8518ab65ac0f25dfe5a9cbfa7fe92ba3296410367d284e6d60c9b2e0cd3",
+          "pixels_sha256": "d00c6e61c772cf382b3da484d7aa6d2c5ba4ce9de3043a6f6134ae7dfdaca5c7",
+          "repeat_equal": true,
+          "state_unchanged": true
+        },
+        {
+          "name": "capital-rear",
+          "view": {
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "distance": 450.0,
+            "yaw": 155.0,
+            "pitch": 38.0
+          },
+          "image_sha256": "95bb2fe9ad776e30f304f2cea174c2c51b2a73801c1fb2cd67028135f88de165",
+          "pixels_sha256": "df8f6247900e2ed0fbf7a1e266751b037fd263ee1042aaeefc8577bc7d69f87f",
+          "repeat_equal": true,
+          "state_unchanged": true
+        },
+        {
+          "name": "escort-rear",
+          "view": {
+            "target": [
+              -4200,
+              0,
+              2550
+            ],
+            "distance": 180.0,
+            "yaw": 155.0,
+            "pitch": 25.0
+          },
+          "image_sha256": "43391617bcb6a370068da246e6dce9bffb49e9ceaa9ae6799904dedbc7827cfe",
+          "pixels_sha256": "bec5f60cf0bac0bffefb25abba5243a195742a3d7965e187832668f3ed261088",
+          "repeat_equal": true,
+          "state_unchanged": true
+        },
+        {
+          "name": "yard-rear",
+          "view": {
+            "target": [
+              -4200,
+              0,
+              1600
+            ],
+            "distance": 450.0,
+            "yaw": 155.0,
+            "pitch": 38.0
+          },
+          "image_sha256": "8940ede7a2628b187ce82ca4f60749cc389befd08e7c3f38f1843cc400929d07",
+          "pixels_sha256": "de3313a145a2a5f46d384da7c0fdaecfe84826854a6859d04adf8a200da14960",
+          "repeat_equal": true,
+          "state_unchanged": true
+        },
+        {
+          "name": "tactical",
+          "view": {
+            "target": [
+              -4200,
+              0,
+              2100
+            ],
+            "distance": 3100.0,
+            "yaw": 48.0,
+            "pitch": 55.0
+          },
+          "image_sha256": "1b3080d3bb2996b813fe16831a6625e09aaeca619b602de04b4613c123c145fc",
+          "pixels_sha256": "958dba2c887d9919ce63f2e4453f96f47f198291e9cb0c6d986d65a3c34d0dbf",
+          "repeat_equal": true,
+          "state_unchanged": true
+        }
+      ],
+      "render_sources_sha256": {
+        "render/__init__.py": "d9da25df69ef1847fbcb04b2dbcdc7f2f818b01a378b517efe59247af3fb0389",
+        "render/asset_registry.py": "b84ac50dc605c749f23fcf11115a163266571ae696c6212f6d9d48b59a58ce99",
+        "render/asset_selection.py": "af7c073d4da9f95879a235c85003081ac382c7c9ff04836442eb91d9bcf657b7",
+        "render/audio.py": "53817af7a368cffc5c1638ffcf3e0999f445821eb7449b89b7187bc28f471f16",
+        "render/authored_mesh.py": "9db5744ba97b9fbc5d53ec47141c3a17ddfa575048f7a2d08e5b4965adadd6ea",
+        "render/camera.py": "a023219dd009db45d95e900393cee99bbdc97fa490e04f6090c63efa7cfc7c8f",
+        "render/camera_geometry.py": "c5518efda07c06f23d8ff728fbfa95e8b379b5c0389a881ac740ba6cefd729fc",
+        "render/cinematics.py": "8fd91d2c2f00a5ba0127794b962dd01ea070212b549d04f7bc279b9ee85bebf2",
+        "render/classic_replays.py": "911d59db6cd5d8940223cf8aa092c001f8e6d56faefa0c5234ad89d89d9775a9",
+        "render/classic_saves.py": "3ef731ebae31f6581ddbe402a13cc52f97060da38c841f1ec75079a7207f7efa",
+        "render/classic_screens.py": "2b06881f9fe7e15821b5d608547d8b0ec476e7fcdeba5e4bdbf06931df22d642",
+        "render/clean_classic.py": "de4b0db01b8c325e40d29edc159df85723450f00e4bbf67e972bfab3133e8e1f",
+        "render/faction_ships.py": "9d34e7e056cbb9b9ed9de24a79593eb69cea4bc7076d68dff868abd11fff6c0b",
+        "render/faction_stations.py": "5e55638092824b2007b2689e3dde8bb99a66ceaf55b625569b77434571f07e3b",
+        "render/faction_visuals.py": "da9b236adb6c761acc3f2d15a318c0a5a17df324e4256586db3a14ce5a112e39",
+        "render/fleet_geometry.py": "10f725da24b58b9f8a0a78e442a4da45c8c95d86b2135695990d55b9945bde73",
+        "render/fleet_materials.py": "a0a861739ab46b9173baffd9d7f36b4829e85b85b6b5765544b7f9d1ca7ce403",
+        "render/fog.py": "345c88675b41480708fd26606f3d881231cb3844791e15d325519b4cd34fcc0a",
+        "render/hit_effects.py": "5b739a59bc291cad24b05a478c8baea772050771a4991d011a3934d5f24be863",
+        "render/hud.py": "a27bb1080a617cf545d21b04c85b06f151d4e77cb8465eb7f7f43e7b4e9a2585",
+        "render/i18n.py": "7d09bdf77d854680d05eddb28ab2dc26c94ad9646569540d6f50a71e0421af1b",
+        "render/input.py": "ced35c967b479e25c74f6c09bacf788ee51d9e931f67585a317aa4b939a7c693",
+        "render/markers.py": "16c15b531dad5551ecd77bd4ce14a2a46c40632ffe484a6d79034650f1cf4436",
+        "render/menu_movie.py": "629825f4c61cb11ce87393152f89d91fc20334d9ccb836428a8025ae5380d890",
+        "render/menus.py": "063d1f2c05a1382b4a0bc0b337443674e662382a679ae48014059b8bb3cc37e9",
+        "render/planet_building_geometry.py": "f3b1a30e6d88181351ead686b1bae80dce04fcf5746c46f66a80cc046075dd7e",
+        "render/presentation.py": "9048c3bcd5381ffb44f25be7c55e97e9a5ed75c711ed905089e7b5982d240cef",
+        "render/recovery_overlay.py": "60702c717030ac63d7048c4b0a168741862319be577b07a3d43bf2a66a61d7fd",
+        "render/renderer.py": "2788525bbcc08b8924a5a417082d23c65c1df9c42c4e2c46b554ae6cf8ed7ad8",
+        "render/replay_delete_windows.py": "a629ea64a236157d74c8f8de3e30b6d6820390837cbd7b349eb3d9966d902f48",
+        "render/replay_input.py": "3139349fb9060e2334bab8eb81dfedcaa1ff5b1c8820e34974ed8768afa6ebb8",
+        "render/replay_library.py": "d75488f9cdf0cdc1b72b455640d9d2b5ff2fe389603e5348d59cd2de9fca035e",
+        "render/save_library.py": "710976da90ab58aa4ce481fef563a7bf3c312616567d7d006fb57e15950aee2e",
+        "render/ship_sizes.py": "e407cc4d59aa67edebd28005176073cd1d13e132c4447f6bdf3944d4ca311a5f",
+        "render/textures.py": "5139acaaae7b4922b18c48a017a9f361fa9b1fbca6b818b65e0edbbb07641d84"
+      },
+      "mesh_sha256": {
+        "alliance_battleship.mesh.json": "0a4e397d5c0b60f70fbba35f3e4f4a5ac997ac4de079f821f8f29db9872c95cd",
+        "alliance_frigate.mesh.json": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+        "alliance_shipyard.mesh.json": "b0ee2678ab42b9005e7ab9007eb6cb1464e878d9896a0104dd9ebad2142e3468"
+      },
+      "display": {
+        "size": [
+          1280,
+          800
+        ],
+        "samples": 4,
+        "sample_buffers": 1,
+        "driver": "cocoa",
+        "vendor": "Apple",
+        "renderer": "Apple M4",
+        "version": "2.1 Metal - 90.5"
+      },
+      "recipe": {
+        "version": "alliance-visual-slice-v1",
+        "seed": 12345,
+        "dt": 0.03333333333333333,
+        "placements": [
+          [
+            "capital",
+            "ship",
+            "rebel_battleship",
+            0,
+            [
+              -4200,
+              0,
+              2200
+            ],
+            0.0
+          ],
+          [
+            "escort",
+            "ship",
+            "rebel_frigate",
+            0,
+            [
+              -4200,
+              0,
+              2550
+            ],
+            0.0
+          ],
+          [
+            "yard",
+            "station",
+            "shipyard",
+            0,
+            [
+              -4200,
+              0,
+              1600
+            ],
+            0.0
+          ],
+          [
+            "enemy_a",
+            "ship",
+            "imperial_frigate",
+            1,
+            [
+              -3500,
+              0,
+              2200
+            ],
+            -1.5707963267948966
+          ],
+          [
+            "enemy_b",
+            "ship",
+            "imperial_frigate",
+            1,
+            [
+              -3500,
+              0,
+              2550
+            ],
+            -1.5707963267948966
+          ]
+        ],
+        "planet_definition": {
+          "id": "planet_kel",
+          "name": "Kel Varn",
+          "pos": [
+            -5200,
+            0,
+            2200
+          ],
+          "radius": 700,
+          "type": "temperate",
+          "color": [
+            0.3,
+            0.6,
+            0.95
+          ]
+        },
+        "map_context": {
+          "bounds": 26000,
+          "star": {
+            "pos": [
+              0,
+              -3000,
+              0
+            ],
+            "size": 2600,
+            "color": [
+              1.0,
+              0.9,
+              0.6
+            ]
+          },
+          "nebulas": [
+            {
+              "pos": [
+                -12000,
+                0,
+                -9000
+              ],
+              "radius": 4200,
+              "color": [
+                0.4,
+                0.2,
+                0.55
+              ]
+            },
+            {
+              "pos": [
+                12000,
+                0,
+                9000
+              ],
+              "radius": 4200,
+              "color": [
+                0.15,
+                0.4,
+                0.55
+              ]
+            }
+          ],
+          "jump_points": [
+            {
+              "pos": [
+                -11000,
+                0,
+                0
+              ]
+            },
+            {
+              "pos": [
+                11000,
+                0,
+                0
+              ]
+            },
+            {
+              "pos": [
+                0,
+                0,
+                11000
+              ]
+            },
+            {
+              "pos": [
+                0,
+                0,
+                -11000
+              ]
+            }
+          ]
+        },
+        "entity_ids": {
+          "planet": 1,
+          "capital": 2,
+          "escort": 3,
+          "yard": 4,
+          "enemy_a": 5,
+          "enemy_b": 6
+        },
+        "players": [
+          {
+            "id": 0,
+            "faction": "rebel",
+            "team": 0,
+            "color": [
+              0.35,
+              0.65,
+              1.0
+            ],
+            "ai": false
+          },
+          {
+            "id": 1,
+            "faction": "imperial",
+            "team": 1,
+            "color": [
+              1.0,
+              0.35,
+              0.25
+            ],
+            "ai": false
+          }
+        ],
+        "command_schedule": "tick 1 and every 180 ticks: each side focus lowest-ID live opponent; real AttackCommand through state.command_queue",
+        "selection": [
+          2
+        ],
+        "direct_factory_setup": true,
+        "paid_construction_or_terrain_eligibility_proven": false
+      },
+      "state_sha256": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "status": "passed"
+    },
+    "legacy": {
+      "selection": "legacy",
+      "source": "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s04",
+      "captures": [
+        {
+          "name": "common-scale",
+          "view": {
+            "target": [
+              -4300,
+              0,
+              2100
+            ],
+            "distance": 1800.0,
+            "yaw": 48.0,
+            "pitch": 50.0
+          },
+          "image_sha256": "4935fcdbbc2377f640dec155a2d9fe71391d91a6c7b855d69b1aec7b34efae0d",
+          "pixels_sha256": "34e01b948d5420db1c0bc4b833edf69e708e512739e365ccb08f2f29e765730f",
+          "repeat_equal": true,
+          "state_unchanged": true
+        },
+        {
+          "name": "capital-close",
+          "view": {
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "distance": 450.0,
+            "yaw": 48.0,
+            "pitch": 45.0
+          },
+          "image_sha256": "0e7e9ecb4ef38c51f9f4a66d12cf51c23c851434e5734d7b6876dcbee399ecf4",
+          "pixels_sha256": "1ace5c8636f91b79f23e8441223064f6f74d381fa53c4622e0652e54013490cf",
+          "repeat_equal": true,
+          "state_unchanged": true
+        },
+        {
+          "name": "escort-close",
+          "view": {
+            "target": [
+              -4200,
+              0,
+              2550
+            ],
+            "distance": 155.0,
+            "yaw": 48.0,
+            "pitch": 35.0
+          },
+          "image_sha256": "df9eff573ac9f66d978852f1cee94f974bf60b137ea6bf66b92f88afd06411af",
+          "pixels_sha256": "4e46628bcbd6daa30e9b8bd53fcdc106de1361f16b3ea79dd5c1e06cfeb8db20",
+          "repeat_equal": true,
+          "state_unchanged": true
+        },
+        {
+          "name": "yard-close",
+          "view": {
+            "target": [
+              -4200,
+              0,
+              1600
+            ],
+            "distance": 450.0,
+            "yaw": 48.0,
+            "pitch": 45.0
+          },
+          "image_sha256": "e23dbc272e3f63bf0e740a0138bf44c15417c0bcc1b019c886a4dc49ba8db66a",
+          "pixels_sha256": "48d9abdecd9cf3ad94aa84eea4883fd0f75f837f295eeaff253e98dcc6025d24",
+          "repeat_equal": true,
+          "state_unchanged": true
+        },
+        {
+          "name": "capital-rear",
+          "view": {
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "distance": 450.0,
+            "yaw": 155.0,
+            "pitch": 38.0
+          },
+          "image_sha256": "e2351d3db7bddf137d0af504f367647ab1304db298a2f3c67abd715d2e773df7",
+          "pixels_sha256": "ae4108c220348164eb5239056c78f061b47b1051ad21a969bb5c8c19026147aa",
+          "repeat_equal": true,
+          "state_unchanged": true
+        },
+        {
+          "name": "escort-rear",
+          "view": {
+            "target": [
+              -4200,
+              0,
+              2550
+            ],
+            "distance": 180.0,
+            "yaw": 155.0,
+            "pitch": 25.0
+          },
+          "image_sha256": "4ed4598c9e3e73f4336c883d59cf29604c104160f2dcafbfb4cf93219b64e349",
+          "pixels_sha256": "be3c5dd0629be4f2d5ee7c8689f18c4b2fd1a375c40419773bf96bdaefaf82e5",
+          "repeat_equal": true,
+          "state_unchanged": true
+        },
+        {
+          "name": "yard-rear",
+          "view": {
+            "target": [
+              -4200,
+              0,
+              1600
+            ],
+            "distance": 450.0,
+            "yaw": 155.0,
+            "pitch": 38.0
+          },
+          "image_sha256": "ad21d1a755e762a6816d04ef00e03281287bd1b888f93df724eb81f88a7f81ea",
+          "pixels_sha256": "f4f5536f95b04d5971b3a1405726ef440dd4cb229cff4ac32ebdbcd136e3815e",
+          "repeat_equal": true,
+          "state_unchanged": true
+        },
+        {
+          "name": "tactical",
+          "view": {
+            "target": [
+              -4200,
+              0,
+              2100
+            ],
+            "distance": 3100.0,
+            "yaw": 48.0,
+            "pitch": 55.0
+          },
+          "image_sha256": "1c0dad2edb43c302a0312f3abeb538daac1fe6ee2e6806a9e9a14570e08ae95d",
+          "pixels_sha256": "672964598051bbddb2dff21de116efe129d0b53c339a740a6c34580e349c4255",
+          "repeat_equal": true,
+          "state_unchanged": true
+        }
+      ],
+      "render_sources_sha256": {
+        "render/__init__.py": "d9da25df69ef1847fbcb04b2dbcdc7f2f818b01a378b517efe59247af3fb0389",
+        "render/asset_registry.py": "b84ac50dc605c749f23fcf11115a163266571ae696c6212f6d9d48b59a58ce99",
+        "render/asset_selection.py": "af7c073d4da9f95879a235c85003081ac382c7c9ff04836442eb91d9bcf657b7",
+        "render/audio.py": "53817af7a368cffc5c1638ffcf3e0999f445821eb7449b89b7187bc28f471f16",
+        "render/authored_mesh.py": "9db5744ba97b9fbc5d53ec47141c3a17ddfa575048f7a2d08e5b4965adadd6ea",
+        "render/camera.py": "a023219dd009db45d95e900393cee99bbdc97fa490e04f6090c63efa7cfc7c8f",
+        "render/camera_geometry.py": "c5518efda07c06f23d8ff728fbfa95e8b379b5c0389a881ac740ba6cefd729fc",
+        "render/cinematics.py": "8fd91d2c2f00a5ba0127794b962dd01ea070212b549d04f7bc279b9ee85bebf2",
+        "render/classic_replays.py": "911d59db6cd5d8940223cf8aa092c001f8e6d56faefa0c5234ad89d89d9775a9",
+        "render/classic_saves.py": "3ef731ebae31f6581ddbe402a13cc52f97060da38c841f1ec75079a7207f7efa",
+        "render/classic_screens.py": "2b06881f9fe7e15821b5d608547d8b0ec476e7fcdeba5e4bdbf06931df22d642",
+        "render/clean_classic.py": "de4b0db01b8c325e40d29edc159df85723450f00e4bbf67e972bfab3133e8e1f",
+        "render/faction_ships.py": "9d34e7e056cbb9b9ed9de24a79593eb69cea4bc7076d68dff868abd11fff6c0b",
+        "render/faction_stations.py": "5e55638092824b2007b2689e3dde8bb99a66ceaf55b625569b77434571f07e3b",
+        "render/faction_visuals.py": "da9b236adb6c761acc3f2d15a318c0a5a17df324e4256586db3a14ce5a112e39",
+        "render/fleet_geometry.py": "10f725da24b58b9f8a0a78e442a4da45c8c95d86b2135695990d55b9945bde73",
+        "render/fleet_materials.py": "a0a861739ab46b9173baffd9d7f36b4829e85b85b6b5765544b7f9d1ca7ce403",
+        "render/fog.py": "345c88675b41480708fd26606f3d881231cb3844791e15d325519b4cd34fcc0a",
+        "render/hit_effects.py": "5b739a59bc291cad24b05a478c8baea772050771a4991d011a3934d5f24be863",
+        "render/hud.py": "a27bb1080a617cf545d21b04c85b06f151d4e77cb8465eb7f7f43e7b4e9a2585",
+        "render/i18n.py": "7d09bdf77d854680d05eddb28ab2dc26c94ad9646569540d6f50a71e0421af1b",
+        "render/input.py": "ced35c967b479e25c74f6c09bacf788ee51d9e931f67585a317aa4b939a7c693",
+        "render/markers.py": "16c15b531dad5551ecd77bd4ce14a2a46c40632ffe484a6d79034650f1cf4436",
+        "render/menu_movie.py": "629825f4c61cb11ce87393152f89d91fc20334d9ccb836428a8025ae5380d890",
+        "render/menus.py": "063d1f2c05a1382b4a0bc0b337443674e662382a679ae48014059b8bb3cc37e9",
+        "render/planet_building_geometry.py": "f3b1a30e6d88181351ead686b1bae80dce04fcf5746c46f66a80cc046075dd7e",
+        "render/presentation.py": "9048c3bcd5381ffb44f25be7c55e97e9a5ed75c711ed905089e7b5982d240cef",
+        "render/recovery_overlay.py": "60702c717030ac63d7048c4b0a168741862319be577b07a3d43bf2a66a61d7fd",
+        "render/renderer.py": "2788525bbcc08b8924a5a417082d23c65c1df9c42c4e2c46b554ae6cf8ed7ad8",
+        "render/replay_delete_windows.py": "a629ea64a236157d74c8f8de3e30b6d6820390837cbd7b349eb3d9966d902f48",
+        "render/replay_input.py": "3139349fb9060e2334bab8eb81dfedcaa1ff5b1c8820e34974ed8768afa6ebb8",
+        "render/replay_library.py": "d75488f9cdf0cdc1b72b455640d9d2b5ff2fe389603e5348d59cd2de9fca035e",
+        "render/save_library.py": "710976da90ab58aa4ce481fef563a7bf3c312616567d7d006fb57e15950aee2e",
+        "render/ship_sizes.py": "e407cc4d59aa67edebd28005176073cd1d13e132c4447f6bdf3944d4ca311a5f",
+        "render/textures.py": "5139acaaae7b4922b18c48a017a9f361fa9b1fbca6b818b65e0edbbb07641d84"
+      },
+      "mesh_sha256": {
+        "alliance_battleship.mesh.json": "0a4e397d5c0b60f70fbba35f3e4f4a5ac997ac4de079f821f8f29db9872c95cd",
+        "alliance_frigate.mesh.json": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+        "alliance_shipyard.mesh.json": "b0ee2678ab42b9005e7ab9007eb6cb1464e878d9896a0104dd9ebad2142e3468"
+      },
+      "display": {
+        "size": [
+          1280,
+          800
+        ],
+        "samples": 4,
+        "sample_buffers": 1,
+        "driver": "cocoa",
+        "vendor": "Apple",
+        "renderer": "Apple M4",
+        "version": "2.1 Metal - 90.5"
+      },
+      "recipe": {
+        "version": "alliance-visual-slice-v1",
+        "seed": 12345,
+        "dt": 0.03333333333333333,
+        "placements": [
+          [
+            "capital",
+            "ship",
+            "rebel_battleship",
+            0,
+            [
+              -4200,
+              0,
+              2200
+            ],
+            0.0
+          ],
+          [
+            "escort",
+            "ship",
+            "rebel_frigate",
+            0,
+            [
+              -4200,
+              0,
+              2550
+            ],
+            0.0
+          ],
+          [
+            "yard",
+            "station",
+            "shipyard",
+            0,
+            [
+              -4200,
+              0,
+              1600
+            ],
+            0.0
+          ],
+          [
+            "enemy_a",
+            "ship",
+            "imperial_frigate",
+            1,
+            [
+              -3500,
+              0,
+              2200
+            ],
+            -1.5707963267948966
+          ],
+          [
+            "enemy_b",
+            "ship",
+            "imperial_frigate",
+            1,
+            [
+              -3500,
+              0,
+              2550
+            ],
+            -1.5707963267948966
+          ]
+        ],
+        "planet_definition": {
+          "id": "planet_kel",
+          "name": "Kel Varn",
+          "pos": [
+            -5200,
+            0,
+            2200
+          ],
+          "radius": 700,
+          "type": "temperate",
+          "color": [
+            0.3,
+            0.6,
+            0.95
+          ]
+        },
+        "map_context": {
+          "bounds": 26000,
+          "star": {
+            "pos": [
+              0,
+              -3000,
+              0
+            ],
+            "size": 2600,
+            "color": [
+              1.0,
+              0.9,
+              0.6
+            ]
+          },
+          "nebulas": [
+            {
+              "pos": [
+                -12000,
+                0,
+                -9000
+              ],
+              "radius": 4200,
+              "color": [
+                0.4,
+                0.2,
+                0.55
+              ]
+            },
+            {
+              "pos": [
+                12000,
+                0,
+                9000
+              ],
+              "radius": 4200,
+              "color": [
+                0.15,
+                0.4,
+                0.55
+              ]
+            }
+          ],
+          "jump_points": [
+            {
+              "pos": [
+                -11000,
+                0,
+                0
+              ]
+            },
+            {
+              "pos": [
+                11000,
+                0,
+                0
+              ]
+            },
+            {
+              "pos": [
+                0,
+                0,
+                11000
+              ]
+            },
+            {
+              "pos": [
+                0,
+                0,
+                -11000
+              ]
+            }
+          ]
+        },
+        "entity_ids": {
+          "planet": 1,
+          "capital": 2,
+          "escort": 3,
+          "yard": 4,
+          "enemy_a": 5,
+          "enemy_b": 6
+        },
+        "players": [
+          {
+            "id": 0,
+            "faction": "rebel",
+            "team": 0,
+            "color": [
+              0.35,
+              0.65,
+              1.0
+            ],
+            "ai": false
+          },
+          {
+            "id": 1,
+            "faction": "imperial",
+            "team": 1,
+            "color": [
+              1.0,
+              0.35,
+              0.25
+            ],
+            "ai": false
+          }
+        ],
+        "command_schedule": "tick 1 and every 180 ticks: each side focus lowest-ID live opponent; real AttackCommand through state.command_queue",
+        "selection": [
+          2
+        ],
+        "direct_factory_setup": true,
+        "paid_construction_or_terrain_eligibility_proven": false
+      },
+      "state_sha256": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "status": "passed"
+    }
+  },
+  "scope": "S04 frozen-frame engineering parity; not full S05 motion/combat/owner review or S09 package acceptance"
+}

@@ -1,0 +1,34 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+........F.....................F....................F..
+======================================================================
+FAIL: test_packaged_receipts_replace_source_evidence_without_weakening_approval (test_asset_registry.ApprovalReceiptTests.test_packaged_receipts_replace_source_evidence_without_weakening_approval)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/s04-autocrlf-final/tests/test_asset_registry.py", line 457, in test_packaged_receipts_replace_source_evidence_without_weakening_approval
+    self.assertEqual(digest, hashlib.sha256((ROOT / rel).read_bytes()).hexdigest())
+AssertionError: '19e86bad5c44d61f8052728da1b7576ecbb8944ba884be2d694ff52286af00b5' != '5b766e531520deb0fe37406f9a4dd069edf47da880038786c1d2ffe3ef0f9d16'
+- 19e86bad5c44d61f8052728da1b7576ecbb8944ba884be2d694ff52286af00b5
++ 5b766e531520deb0fe37406f9a4dd069edf47da880038786c1d2ffe3ef0f9d16
+
+
+======================================================================
+FAIL: test_catalogue_pending_aliases_unknown_and_frozen_discovery (test_asset_registry.RegistryDiscoveryTests.test_catalogue_pending_aliases_unknown_and_frozen_discovery)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/s04-autocrlf-final/tests/test_asset_registry.py", line 178, in test_catalogue_pending_aliases_unknown_and_frozen_discovery
+    self.assertEqual((ROOT / f'assets/models/manifests/{name}.json').read_bytes(),
+AssertionError: b'{\n  "contract": "star-armada/model-manifes[2197 chars]n}\n' != b'{\r\n  "contract": "star-armada/model-manif[2351 chars]\r\n'
+
+======================================================================
+FAIL: test_shipped_metadata_matches_source_contract_and_inventory (test_runtime_asset_metadata.RuntimeMetadataTests.test_shipped_metadata_matches_source_contract_and_inventory)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/s04-autocrlf-final/tests/test_runtime_asset_metadata.py", line 14, in test_shipped_metadata_matches_source_contract_and_inventory
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: 1 != 0 : Runtime metadata drift: assets/models/schemas/binding-registry.schema.json, assets/models/schemas/model-manifest.schema.json, assets/models/schemas/visual-pack.schema.json, assets/models/manifests/alliance_battleship.json, assets/models/manifests/alliance_frigate.json, assets/models/manifests/alliance_shipyard.json, assets/models/approval-receipts.json
+
+
+----------------------------------------------------------------------
+Ran 54 tests in 3.875s
+
+FAILED (failures=3)

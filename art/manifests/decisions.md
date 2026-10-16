@@ -28,6 +28,7 @@ and the validator is visible: if a decision has no code, nothing enforces it.
 | D-16 | `status` reuses the S01 inventory vocabulary so coverage is a join, not a third list | registry schema `enum` |
 | D-17 | Non-finite numbers are rejected at parse time | `E_NON_FINITE` |
 | D-18 | The examples pin the real payloads, so an approved revision re-pins them | `tools/art/update_contract_examples.py --check`, `E_FILE_SIZE`, `E_BOUNDS_MISMATCH` |
+| D-21 | Validate each replacement against the approved binding envelope before activating its whole pack; never change collision radii | S04 resolver `E_EXTENT_DRIFT`, transactional pack tests |
 
 ## Why, briefly
 
@@ -128,9 +129,24 @@ Open on this contract, in the order they bite:
    grew by 6 % can therefore disagree with the radius the game collides on, and nothing checks it yet;
    whether the authoring pipeline should refuse that drift, or the data row should be re-derived from
    the mesh, is the owner's call and not this contract's.
-3. **Whether the resolver re-checks the envelope at pack load.** The contract checks the tree today;
-   a pack that ships a wider hull than the registry declares is S04's resolver to catch, and its rule
-   is not written yet.
+3. **Resolver envelope checks — answered for S04.** See D-21 below; implementation and
+   transactional rejection tests are still required.
+
+## S04 owner decision — D-21: pack-load envelope validation
+
+- Decision id: `s04-pack-envelope-2026-10-16`.
+- Owner: Lukasz Jawor.
+- Baseline reviewed: `5bddd7b67245ddff4b595bb3b477ca8ceede0a6c`.
+- Proposal put to the owner: **reject the whole visual pack if a replacement exceeds the
+  binding's approved envelope; keep collision radii unchanged.**
+- Owner's reply, verbatim: **"yes"**.
+- Parsed policy: before activation, validate every replacement mesh against the target binding's
+  approved visual envelope. Reject the entire offending pack transactionally and retain the
+  previous valid source. Visual metadata must not write or re-derive gameplay collision radii.
+- This answers the pack-load envelope question only. It does not settle the authoring/collision
+  drift policy or the draw-call/texture-byte columns, approve a model revision, authorize a
+  production-default switch, or authorize merge/tag/release.
+- Status: owner-adopted policy, implemented and exercised by S04 transactional rejection tests; published for owner review in draft PR #124.
 
 ## Not decided here
 

@@ -10,6 +10,11 @@ import warnings
 ROOT = Path(__file__).resolve().parents[1]
 
 class AuthoredTrioTests(unittest.TestCase):
+    def setUp(self):
+        from render.asset_selection import configure
+        configure({"model_preview": True}, asset_root=ROOT)
+        self.addCleanup(configure, {})
+
     def cases(self):
         from render import authored_mesh as a
         from render.faction_ships import ship_mesh
@@ -79,21 +84,26 @@ class AuthoredTrioTests(unittest.TestCase):
                 with self.assertRaises(ValueError):loader(p)
 
     def test_missing_and_corrupt_assets_use_bounded_fallback(self):
-        from render import authored_mesh as a, faction_ships as fs, faction_stations as ft
-        for name,_,cached,facade in self.cases():
-            facade_cache=fs._ship_mesh if name=='frigate' else ft._station_mesh
-            expected=facade()
-            try:
-                for error in [OSError('missing'),ValueError('corrupt')]:
-                    facade_cache.cache_clear()
-                    with patch.object(a,name+'_mesh',side_effect=error):
-                        with warnings.catch_warnings(record=True) as seen:
-                            warnings.simplefilter('always');fallback=facade();self.assertIs(fallback,facade())
-                        self.assertEqual(len(seen),1)
-                        self.assertTrue(all(fallback.values()))
-                        self.assertNotEqual(expected,fallback)
-            finally:
-                cached.cache_clear();facade_cache.cache_clear()
+        from render import asset_selection as selection
+        from test_asset_registry import isolated_assets
+        for name, _, _, facade in self.cases():
+            expected = facade()
+            for corrupt in (False, True):
+                root = isolated_assets(self)
+                path = root / f'assets/models/alliance_{name}.mesh.json'
+                if corrupt:
+                    path.write_bytes(b'{}')
+                else:
+                    path.unlink()
+                selection.configure({'model_preview': True}, asset_root=root)
+                fallback = facade()
+                self.assertIs(fallback, facade())
+                self.assertTrue(all(fallback.values()))
+                self.assertTrue(fallback != expected)
+                issues = selection.diagnostics()['issues']
+                self.assertEqual(len(issues), 1)
+                self.assertEqual(issues[0]['code'], 'E_FILE_SIZE' if corrupt else 'E_FILE_MISSING')
+                selection.configure({'model_preview': True}, asset_root=ROOT)
 
     def test_each_drive_emitter_has_unobstructed_aft_broad_face(self):
         # Shoot parallel aft rays through nine samples of each emitting disc.

@@ -1,0 +1,224 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://star-armada.invalid/schemas/visual-pack/v1",
+  "title": "STAR ARMADA visual pack v1",
+  "description": "A render-only pack. It replaces core bindings or adds namespaced models for entities a gameplay mod already defines. It cannot create units, make a faction playable, or carry executable content.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "contract_major",
+    "id",
+    "version",
+    "requires",
+    "content"
+  ],
+  "properties": {
+    "contract": {
+      "const": "star-armada/visual-pack"
+    },
+    "contract_major": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{1,31}:[a-z0-9_]+$"
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "requires": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "min_engine",
+        "contracts"
+      ],
+      "properties": {
+        "min_engine": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "contracts": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^star-armada/[a-z-]+/v[0-9]+$"
+          },
+          "description": "Contract ids this pack was written against. An unknown id fails validation instead of being skipped."
+        },
+        "gameplay_mod": {
+          "type": "string",
+          "maxLength": 40,
+          "description": "Required when the pack adds models for entities that do not exist in core: a model pack does not create units."
+        }
+      }
+    },
+    "content": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "replaces": {
+          "type": "array",
+          "maxItems": 512,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "binding",
+              "manifest"
+            ],
+            "properties": {
+              "binding": {
+                "$ref": "#/$defs/bindingKey"
+              },
+              "manifest": {
+                "$ref": "#/$defs/safePath"
+              },
+              "replace_of": {
+                "$ref": "#/$defs/assetId"
+              }
+            }
+          },
+          "description": "Replaces a binding core already defines. The later enabled pack wins; the same binding twice in one pack is an error."
+        },
+        "adds": {
+          "type": "array",
+          "maxItems": 512,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "binding",
+              "manifest"
+            ],
+            "properties": {
+              "binding": {
+                "$ref": "#/$defs/bindingKey"
+              },
+              "manifest": {
+                "$ref": "#/$defs/safePath"
+              },
+              "entity_source": {
+                "type": "string",
+                "maxLength": 40,
+                "description": "The gameplay mod that defines this entity id."
+              }
+            }
+          },
+          "description": "Adds a namespaced model for an entity a gameplay mod defines. Namespaced ids must not collide with core."
+        },
+        "material_profiles": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{1,31}:[a-z0-9_]+/[a-z0-9_]+$"
+          },
+          "description": "Presentation-only material profiles this pack supplies. No arbitrary shader code is a material profile."
+        }
+      }
+    },
+    "roots": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "assets": {
+          "const": "assets",
+          "description": "Fixed: a pack's files live under its own root."
+        }
+      }
+    },
+    "notes": {
+      "type": "string",
+      "maxLength": 400
+    }
+  },
+  "$defs": {
+    "assetId": {
+      "description": "Namespaced stable visual asset id: <ns>:<owner>/<name>. Never a gameplay entity id and never a translated display name.",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{1,31}:[a-z0-9_]+/[a-z0-9_]+$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "safePath": {
+      "description": "Relative path inside the pack root. No absolute path, no '..' segment, no backslash, no drive letter.",
+      "type": "string",
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9][A-Za-z0-9._/-]{0,180}$"
+    },
+    "vec3": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "bounds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "min",
+        "max"
+      ],
+      "description": "Conservative visual envelope in the shared X beam / Y up / +Z forward frame, in catalogue world units. Presentation only: it must not change collision or gameplay size.",
+      "properties": {
+        "min": {
+          "$ref": "#/$defs/vec3"
+        },
+        "max": {
+          "$ref": "#/$defs/vec3"
+        }
+      }
+    },
+    "role": {
+      "description": "The six-role material contract. A new role is a new major schema version with a declared fallback, not an extra string here.",
+      "enum": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ]
+    },
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "bytes"
+      ],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/safePath"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 67108864
+        }
+      }
+    },
+    "bindingKey": {
+      "description": "Canonical gameplay identity the renderer selects on: <faction>:<class-or-kind> (e.g. rebel:battleship). Stable ids only, never a display name.",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{1,31}:[a-z0-9_]+$"
+    }
+  }
+}

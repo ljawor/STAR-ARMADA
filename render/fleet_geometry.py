@@ -158,6 +158,11 @@ def _ring(outer, inner, height, sides):
 
 def ship_mesh(shape):
     """Immutable ship triangles. Unknown utility IDs share one canonical cache."""
+    from render.asset_selection import mesh_for
+    if isinstance(shape, str) and ':' in shape:
+        authored = mesh_for(shape)
+        if authored is not None:
+            return authored
     from render.faction_visuals import normalize_ship_key
     shape = normalize_ship_key(shape)
     if ':' in shape:
@@ -248,6 +253,11 @@ STATION_TYPES = ('command_station', 'shipyard', 'research_station', 'defense_pla
 
 def station_mesh(data_id, faction='imperial'):
     """Station mesh at radius 50, matching ship-scale material coordinates."""
+    from render.asset_selection import mesh_for
+    if isinstance(faction, str) and isinstance(data_id, str):
+        authored = mesh_for(f'{faction}:{data_id}')
+        if authored is not None:
+            return authored
     from game.systems.planet_buildings import BUILDING_TYPES
     if data_id in BUILDING_TYPES:
         from render.planet_building_geometry import building_mesh

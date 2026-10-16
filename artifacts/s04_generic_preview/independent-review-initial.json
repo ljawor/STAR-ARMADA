@@ -1,0 +1,31 @@
+{
+  "review_kind": "independent-precommit",
+  "reviewed_base": "5bddd7b67245ddff4b595bb3b477ca8ceede0a6c",
+  "passed": false,
+  "security_concerns": [],
+  "logic_errors": [
+    {
+      "id": "R1",
+      "severity": "medium",
+      "location": "render/asset_registry.py:_geometry",
+      "issue": "A hash-correct JSON vertex coordinate of 10**400 raises OverflowError in math.isfinite and escapes transactional pack rejection.",
+      "required_regression": "Previous valid override survives; offending pack is rejected; subsequent valid pack is processed."
+    },
+    {
+      "id": "R2",
+      "severity": "medium",
+      "location": "render/asset_registry.py:_version",
+      "issue": "A 5000-digit version component raises uncaught ValueError during int conversion.",
+      "required_regression": "Bound version components and record E_ENGINE_VERSION pack rejection."
+    },
+    {
+      "id": "R3",
+      "severity": "medium",
+      "location": "render/asset_selection.py:mesh_for and fleet facades",
+      "issue": "Preview lookup precedes legacy normalization, so unknown optional facade IDs raise instead of preserving existing procedural fallback.",
+      "required_regression": "Unknown facade IDs retain canonical fallback; direct AssetResolver.resolve remains strict."
+    }
+  ],
+  "reviewer_execution": "Read tracked changes, both new runtime modules, metadata, tests and evidence tooling; CPU reproductions; secret/injection scan found no matches. No writes, network, GL or full suite.",
+  "disposition": "Blocking. Separate fix context dispatched; no passing re-review is claimed by this record."
+}

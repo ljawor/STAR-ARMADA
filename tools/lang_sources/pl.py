@@ -1,6 +1,12 @@
 """Polish pack for STAR ARMADA (#93) — msgid (English UI string) -> translation."""
 
 PL: dict[str, str] = {
+    "Blender model preview (next session)": "Podgląd modeli Blendera (następna sesja)",
+    "{count} enabled · settings.json": "{count} włączone · settings.json",
+    "Enabled visual packs (saved order)": "Włączone pakiety graficzne (zapisana kolejność)",
+    "Preview is opt-in; OFF keeps stock legacy models.": "Podgląd wymaga włączenia; WYŁ. zachowuje dotychczasowe modele domyślne.",
+    "Pack order: visual_packs in settings.json; later entries win.": "Kolejność pakietów: visual_packs w settings.json; późniejsze wpisy mają pierwszeństwo.",
+    "Changes apply at the next session, never during a battle.": "Zmiany obowiązują od następnej sesji, nigdy w trakcie bitwy.",
     "1-9 control groups · F fleet menu": "1-9 grupy sterowania · F menu floty",
     "ACTIONS / BUILD": "AKCJE / BUDOWA",
     "AI": "SI",
@@ -142,8 +148,6 @@ PL: dict[str, str] = {
     "Goal: board and capture the hull.": "Cel: abordażuj i przejmij kadłub.",
     "HULL": "KADŁUB",
     "HUMAN": "CZŁOWIEK",
-    "High contrast applies to help / hint panels only.":
-        "Wysoki kontrast dotyczy tylko paneli pomocy / podpowiedzi.",
     "High contrast panels": "Panele o wysokim kontraście",
     "Host IPv4 address": "Adres IPv4 hosta",
     "Host a game": "Prowadź grę",
@@ -221,8 +225,6 @@ PL: dict[str, str] = {
     "Not a managed saved game": "To nie jest zarządzany zapis gry",
     "Not a replay JSON file": "To nie jest plik JSON powtórki",
     "Not a supported game save": "Nieobsługiwany zapis gry",
-    "Not whole-game scaling or full colorblind compliance.":
-        "To nie skalowanie całej gry ani pełna zgodność z daltonizmem.",
     "OBJECTIVES": "CELE",
     "OPEN SLOT": "WOLNE MIEJSCE",
     "ORBITAL CONSTRUCTION": "BUDOWA ORBITALNA",
@@ -266,8 +268,6 @@ PL: dict[str, str] = {
     "Ready": "Gotowy",
     "Reconnect": "Połącz ponownie",
     "Reduced motion": "Ograniczony ruch",
-    "Reduced motion disables menu drift and cinematic motion.":
-        "Ograniczony ruch wyłącza dryf menu i ruch przerywników.",
     "Refresh": "Odśwież",
     "Refusing non-regular metadata source": "Odmowa: źródło metadanych nie jest zwykłym plikiem",
     "Refusing non-regular save": "Odmowa: zapis nie jest zwykłym plikiem",

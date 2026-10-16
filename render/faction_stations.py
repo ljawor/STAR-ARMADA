@@ -24,6 +24,10 @@ def station_mesh(faction, data_id):
     if not isinstance(faction, str) or faction not in FACTIONS:
         from .fleet_geometry import _station_mesh as imperial_station
         return imperial_station(kind)
+    from render.asset_selection import mesh_for
+    authored = mesh_for(f'{faction}:{kind}')
+    if authored is not None:
+        return authored
     return _station_mesh(faction, kind)
 
 
@@ -456,15 +460,6 @@ def _syndicate_roles(h, kind):
 
 @lru_cache(maxsize=30)
 def _station_mesh(faction, kind):
-    if faction == 'rebel' and kind == 'shipyard':
-        from .authored_mesh import shipyard_mesh
-        try:
-            # Authored station is already in the final nominal-radius-50 space.
-            return shipyard_mesh()
-        except (OSError, ValueError, TypeError, KeyError, OverflowError) as exc:
-            import warnings
-            warnings.warn(f'Alliance shipyard asset unavailable; using procedural yard: {exc}',
-                          RuntimeWarning, stacklevel=2)
     from .fleet_geometry import _Hardware
     h = _Hardware()
     {'rebel': _alliance, 'confederacy': _legions, 'syndicate': _syndicate}[faction](h,kind)

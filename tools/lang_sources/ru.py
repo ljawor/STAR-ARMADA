@@ -1,6 +1,12 @@
 """Russian pack for STAR ARMADA (#108), authored UTF-8 maintenance source."""
 
 RU: dict[str, str] = {
+    "Blender model preview (next session)": "Предпросмотр моделей Blender (со следующей сессии)",
+    "{count} enabled · settings.json": "{count} вкл. · settings.json",
+    "Enabled visual packs (saved order)": "Включённые графические пакеты (сохранённый порядок)",
+    "Preview is opt-in; OFF keeps stock legacy models.": "Предпросмотр нужно включить вручную; ВЫКЛ. сохраняет прежние стандартные модели.",
+    "Pack order: visual_packs in settings.json; later entries win.": "Порядок пакетов: visual_packs в settings.json; более поздние записи имеют приоритет.",
+    "Changes apply at the next session, never during a battle.": "Изменения действуют со следующей сессии, но никогда во время боя.",
     "+{count} convoy": "+{count} конвоев",
     "+{count} per level": "+{count} за уровень",
     "+{count} shot/mount": "+{count} выстрелов на установку",
@@ -127,7 +133,6 @@ RU: dict[str, str] = {
     "Goal: board and capture the hull.": "Цель: взять корабль на абордаж и захватить.",
     "HULL": "КОРПУС",
     "HUMAN": "ИГРОК",
-    "High contrast applies to help / hint panels only.": "Высокая контрастность применяется только к панелям справки и подсказок.",
     "High contrast panels": "Контрастные панели",
     "Host IPv4 address": "IPv4-адрес сервера",
     "Host a game": "Создать игру",
@@ -198,7 +203,6 @@ RU: dict[str, str] = {
     "Not a managed saved game": "Не является управляемым сохранением",
     "Not a replay JSON file": "Не является JSON-файлом повтора",
     "Not a supported game save": "Не является поддерживаемым сохранением игры",
-    "Not whole-game scaling or full colorblind compliance.": "Не масштабирует весь интерфейс и не обеспечивает полную адаптацию для дальтонизма.",
     "OBJECTIVES": "ЦЕЛИ",
     "OPEN SLOT": "СВОБОДНОЕ МЕСТО",
     "ORBITAL CONSTRUCTION": "ОРБИТАЛЬНОЕ СТРОИТЕЛЬСТВО",
@@ -242,7 +246,6 @@ RU: dict[str, str] = {
     "Ready": "Готов",
     "Reconnect": "Переподключиться",
     "Reduced motion": "Меньше движения",
-    "Reduced motion disables menu drift and cinematic motion.": "Уменьшение движения отключает дрейф меню и движение кинематографических сцен.",
     "Refit level {level} required": "Требуется уровень модернизации {level}",
     "Refresh": "Обновить",
     "Refusing non-regular metadata source": "Недопустимый источник метаданных: не обычный файл",
