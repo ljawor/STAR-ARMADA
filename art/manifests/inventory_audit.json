@@ -1,0 +1,725 @@
+{
+ "schema": "s01-render-audit/v1",
+ "purpose": "Curated renderer-dispatch audit used as input by tools/art/build_model_inventory.py. It records where the renderer obtains 3D geometry, which of those paths can hide a second copy of a model, and which visual elements are not discrete model replacements and therefore need an explicit owner scope decision (roadmap 3.1).",
+ "audited_base": "16523bf0b06a39e3f77961d0c213b0af184a16b6",
+ "method": "Static read of render/ plus grep-verified call sites at the audited base; every row carries a real module:line. Line numbers are resolved against the audited base and are re-checked by the generator, which fails loudly if a cited symbol disappears.",
+ "dispatch_paths": [
+  {
+   "path_id": "R01_ship_mesh_facade",
+   "module_and_symbol": "render/fleet_geometry.py:ship_mesh",
+   "line_reference": "L159-166",
+   "what_it_emits": "ships: every SHIP_KEY - legacy Imperial shapes and all faction roles incl. squadron members (fighter/bomber), logistics (constructor/colonizer/convoy)",
+   "geometry_source_call": "faction_ships.ship_mesh(*shape.split(':'))  when ':' in shape, else  _ship_mesh(shape)",
+   "consumes_inventory_bindings": "SHIP_KEYS (LEGACY_SHAPES + '<faction>:<role>')",
+   "legacy_or_authored_aware": "yes, indirectly - routes to render/faction_ships.py, which hardcodes the three Blender authored loaders for rebel:battleship, rebel:frigate and the rebel shipyard. No flag, no registry lookup.",
+   "hidden_duplicate_risk": "no - pure dispatcher, stores no geometry of its own"
+  },
+  {
+   "path_id": "R02_legacy_imperial_ship_hull",
+   "module_and_symbol": "render/fleet_geometry.py:_ship_mesh",
+   "line_reference": "L169-241 (lru_cache maxsize=5)",
+   "what_it_emits": "ships: legacy Imperial/mod/neutral hulls - wedge, needle, cruiser, dagger, box (the 'box' utility hull also backs trade_convoy and unknown mods)",
+   "geometry_source_call": "_Hardware().loft(...)/plate(...)/turret(...)/nozzle(...)/vent(...)/bay(...) -> h.finish()  (fully procedural, no authored asset, no GL)",
+   "consumes_inventory_bindings": "LEGACY_SHAPES only",
+   "legacy_or_authored_aware": "no - has no knowledge of any authored asset",
+   "hidden_duplicate_risk": "YES - retains a complete private procedural hull library that is the protected Imperial/mod/neutral fallback. A catalogue migration that only rebinds faction roles leaves this second geometry authority live for every imperial ship, so imperial hulls would silently keep old geometry."
+  },
+  {
+   "path_id": "R03_station_mesh_facade",
+   "module_and_symbol": "render/fleet_geometry.py:station_mesh",
+   "line_reference": "L249-262",
+   "what_it_emits": "stations + satellites + planet surface buildings (the single entry the renderer, camera bounds and picking all use for station-family ids)",
+   "geometry_source_call": "building_mesh(data_id, faction) | _satellite_mesh(data_id, faction) | faction_stations.station_mesh(faction, data_id) | _station_mesh(data_id)",
+   "consumes_inventory_bindings": "BUILDING_TYPES, STATION_TYPES (incl. defense_satellite/attack_satellite), '<faction>' from normalize_station_key",
+   "legacy_or_authored_aware": "yes, indirectly - the 'imperial' branch is legacy procedural; the rebel shipyard branch reaches the authored loader",
+   "hidden_duplicate_risk": "no - pure dispatcher"
+  },
+  {
+   "path_id": "R04_satellite_hardware_mesh",
+   "module_and_symbol": "render/fleet_geometry.py:_satellite_mesh",
+   "line_reference": "L265-286 (lru_cache maxsize=8)",
+   "what_it_emits": "planetary satellites / orbital hardware: defense_satellite and attack_satellite, faction-specific side counts and silhouettes",
+   "geometry_source_call": "_Hardware().ring(...) -> h.finish()  (procedural; sides = {imperial:6, rebel:12, confederacy:8, syndicate:5})",
+   "consumes_inventory_bindings": "('defense_satellite','attack_satellite') x 4 factions",
+   "legacy_or_authored_aware": "no - procedural only",
+   "hidden_duplicate_risk": "no - single private generator, but note it has no catalogue binding of its own (reached only through station_mesh), so an S02 registry keyed on data_id alone must not drop it"
+  },
+  {
+   "path_id": "R05_legacy_imperial_station_mesh",
+   "module_and_symbol": "render/fleet_geometry.py:_station_mesh",
+   "line_reference": "L289-427 (lru_cache maxsize=10)",
+   "what_it_emits": "stations: all 10 Imperial STATION_TYPES",
+   "geometry_source_call": "_Hardware() procedural build -> h.finish()",
+   "consumes_inventory_bindings": "STATION_TYPES (imperial)",
+   "legacy_or_authored_aware": "no",
+   "hidden_duplicate_risk": "YES - a second private procedural station library retained as the protected Imperial fallback"
+  },
+  {
+   "path_id": "R06_faction_ship_mesh",
+   "module_and_symbol": "render/faction_ships.py:ship_mesh / _ship_mesh",
+   "line_reference": "L15-46 (cache maxsize=30)",
+   "what_it_emits": "ships: rebel/confederacy/syndicate, 10 SHIP_ROLES x 3 factions (small craft, capital, logistics, line hulls)",
+   "geometry_source_call": "dispatch helpers _alliance*/_legions*/_syndicate* -> _Hardware.finish(); capital and line hulls route through the authored slices",
+   "consumes_inventory_bindings": "'<faction>:<role>' for FACTIONS[1:] x SHIP_ROLES",
+   "legacy_or_authored_aware": "yes - the alliance (rebel) capital and line helpers call the Blender authored loaders unconditionally",
+   "hidden_duplicate_risk": "no store, but see R07/R08 for the in-function procedural fallbacks it owns"
+  },
+  {
+   "path_id": "R07_authored_battleship_slice",
+   "module_and_symbol": "render/faction_ships.py:_alliance_battleship_slice (reached from _alliance_capital at L171-173)",
+   "line_reference": "L120-168 (authored call L127-137; procedural fallback L139-168)",
+   "what_it_emits": "rebel:battleship hull from the Blender authored asset assets/models/alliance_battleship.mesh.json",
+   "geometry_source_call": "from render.authored_mesh import battleship_mesh; mesh = battleship_mesh()  then h.parts[role].extend(triangles)",
+   "consumes_inventory_bindings": "'rebel:battleship'",
+   "legacy_or_authored_aware": "YES - hardcoded active. No opt-in flag, no settings gate, no registry: any rebel battleship is drawn from the authored mesh. Only failure of the loader (OSError/ValueError/...) drops to the procedural hull (a RuntimeWarning is emitted).",
+   "hidden_duplicate_risk": "YES - the entire pre-Blender segmented pressure hull stays in the same function as the emergency fallback (L139-168). After a catalogue migration both the authored asset and this in-function copy exist, and the fallback is invisible to the registry."
+  },
+  {
+   "path_id": "R08_authored_frigate_slice",
+   "module_and_symbol": "render/faction_ships.py:_alliance_frigate_slice (reached from _alliance_line at L480-482 for level==1)",
+   "line_reference": "L444-477 (authored call L446-456; procedural fallback L457-477)",
+   "what_it_emits": "rebel:frigate hull from assets/models/alliance_frigate.mesh.json",
+   "geometry_source_call": "from render.authored_mesh import frigate_mesh; mesh = frigate_mesh()",
+   "consumes_inventory_bindings": "'rebel:frigate'",
+   "legacy_or_authored_aware": "YES - hardcoded active, identical pattern to R07 (warn + procedural fallback at L457-477)",
+   "hidden_duplicate_risk": "YES - second in-function copy of the pre-Blender frigate hull"
+  },
+  {
+   "path_id": "R09_faction_station_mesh",
+   "module_and_symbol": "render/faction_stations.py:station_mesh / _station_mesh",
+   "line_reference": "L17-27, L457-475 (cache maxsize=30)",
+   "what_it_emits": "stations: rebel/confederacy/syndicate station variants; result normalised into the radius-50 material space",
+   "geometry_source_call": "{'rebel': _alliance, 'confederacy': _legions, 'syndicate': _syndicate}[faction](h, kind) -> MappingProxyType(... *0.8 fit)",
+   "consumes_inventory_bindings": "STATION_TYPES x 3 factions",
+   "legacy_or_authored_aware": "yes - the rebel 'shipyard' kind short-circuits to the authored loader",
+   "hidden_duplicate_risk": "no store, but see R10"
+  },
+  {
+   "path_id": "R10_authored_shipyard_branch",
+   "module_and_symbol": "render/faction_stations.py:_station_mesh (rebel shipyard branch)",
+   "line_reference": "L459-463 (authored); procedural fallback _alliance_shipyard_slice L103-133 via _alliance L136",
+   "what_it_emits": "rebel shipyard (the Alliance-owned/rebel station) from assets/models/alliance_shipyard.mesh.json",
+   "geometry_source_call": "if faction == 'rebel' and kind == 'shipyard': from .authored_mesh import shipyard_mesh; return shipyard_mesh()",
+   "consumes_inventory_bindings": "binding 'rebel shipyard' (faction 'rebel' + data_id 'shipyard')",
+   "legacy_or_authored_aware": "YES - hardcoded active by a literal faction+kind test, no gate",
+   "hidden_duplicate_risk": "YES - procedural _alliance_shipyard_slice is retained as the fallback, plus this path also skips the *0.8 radius-fit that every other faction station goes through, so the authored and procedural branches are not even dimensionally equivalent (documented in the L462 comment)"
+  },
+  {
+   "path_id": "R11_planet_building_mesh",
+   "module_and_symbol": "render/planet_building_geometry.py:building_mesh / _building_mesh",
+   "line_reference": "L12-17, L58-113 (cache maxsize=16)",
+   "what_it_emits": "colonized-planet surface hardware (BUILDING_TYPES incl. planet_shield_generator)",
+   "geometry_source_call": "_building_mesh(kind, faction) procedural (shared with _Hardware)",
+   "consumes_inventory_bindings": "BUILDING_TYPES x factions",
+   "legacy_or_authored_aware": "no - fully procedural, no authored asset",
+   "hidden_duplicate_risk": "no - single generator"
+  },
+  {
+   "path_id": "R12_renderer_batched_role_emission",
+   "module_and_symbol": "render/renderer.py:_draw_ship_role_batch (called from _draw_ships L1262)",
+   "line_reference": "L1385-1492; ship call L1448; station calls L1479-1489; authored flags L1420 and L1461",
+   "what_it_emits": "ships + squadrons + stations, one material role per pass (base/dark/trim/accent/lit/cool) for every visible entity",
+   "geometry_source_call": "glCallList(self._ship_display_list(size.shape + suffix))  and  glCallList(self._station_detail_list(e.data_id, role, faction))",
+   "consumes_inventory_bindings": "every SHIP_KEY and STATION_TYPES / BUILDING_TYPES the sim can spawn",
+   "legacy_or_authored_aware": "YES - hardcoded at L1420 `authored = size.shape in (\"rebel:battleship\", \"rebel:frigate\")` and L1461 `authored_station = faction == \"rebel\" and e.data_id == \"shipyard\"`. These literals select the authored shader material pass (authoredSurface=float(...)) fed to render/fleet_materials.py.",
+   "hidden_duplicate_risk": "YES - geometry lives in self.ship_lists GL display lists keyed by shape/data_id string; a catalogue migration that changes the resolved mesh without invalidating ship_lists keeps drawing the old compiled geometry"
+  },
+  {
+   "path_id": "R13_renderer_per_ship_draw",
+   "module_and_symbol": "render/renderer.py:_draw_ship",
+   "line_reference": "L1943-2041; calls L1979, L1989-1991, L2012, L2023; authored flag L1997; inline trail L1966-1977",
+   "what_it_emits": "one ship: six material roles plus an inlined engine-trail triangle",
+   "geometry_source_call": "lst = self._ship_display_list(vis['shape'])  (+ '_dark'/'_trim'/'_lit'/'_accent'/'_cool' suffixes)",
+   "consumes_inventory_bindings": "size.shape from ship_size/ship_visual_key",
+   "legacy_or_authored_aware": "YES - hardcoded at L1997 `authored = size.shape in (\"rebel:battleship\", \"rebel:frigate\")`",
+   "hidden_duplicate_risk": "YES - a second call site into the same self.ship_lists cache as R12; both must be invalidated together"
+  },
+  {
+   "path_id": "R14_renderer_ship_display_list_builder",
+   "module_and_symbol": "render/renderer.py:_ship_display_list",
+   "line_reference": "L2074-2111 (emit at L2105); cache write L2108-2110",
+   "what_it_emits": "compiles six GL display lists per ship shape (base/dark/trim/accent/lit/cool)",
+   "geometry_source_call": "self._emit_detail_hull(shape, pname) -> self._emit_detail_mesh(ship_mesh(shape)[role])  (renderer.py:2486-2487)",
+   "consumes_inventory_bindings": "ship shape strings (SHIP_KEYS)",
+   "legacy_or_authored_aware": "yes, indirectly - ship_mesh reaches the authored trio",
+   "hidden_duplicate_risk": "YES - sole production caller of _emit_detail_hull, and the owner of self.ship_lists[shape]; the compiled list is a frozen copy of whatever geometry existed at first draw"
+  },
+  {
+   "path_id": "R15_renderer_station_detail_list_builder",
+   "module_and_symbol": "render/renderer.py:_station_detail_list",
+   "line_reference": "L2461-2474 (emit at L2471); cache write L2473",
+   "what_it_emits": "compiles one GL display list per (faction, data_id, role) for stations, satellites and planet buildings",
+   "geometry_source_call": "self._emit_detail_mesh(station_mesh(data_id, faction)[role])",
+   "consumes_inventory_bindings": "STATION_TYPES + BUILDING_TYPES",
+   "legacy_or_authored_aware": "yes, indirectly",
+   "hidden_duplicate_risk": "YES - owns self.ship_lists['station_detail:<faction>:<data_id>:<role>']; a frozen copy per catalogue revision"
+  },
+  {
+   "path_id": "R16_renderer_per_station_draw",
+   "module_and_symbol": "render/renderer.py:_draw_station",
+   "line_reference": "L2401-2459; calls L2430, L2436, L2440, L2442; authored flag L2408",
+   "what_it_emits": "one station / satellite / planet building: roles base, dark, trim (metal passes) + accent, lit, cool, under the station_frame transform",
+   "geometry_source_call": "glCallList(self._station_detail_list(e.data_id, role, faction))",
+   "consumes_inventory_bindings": "STATION_TYPES + BUILDING_TYPES",
+   "legacy_or_authored_aware": "YES - hardcoded at L2408 `authored_station = faction == \"rebel\" and e.data_id == \"shipyard\"`",
+   "hidden_duplicate_risk": "YES - shares the station_detail cache with R12 (batched) and R19 (planet slot preview)"
+  },
+  {
+   "path_id": "R17_renderer_station_outline_preview",
+   "module_and_symbol": "render/renderer.py:_draw_station_outline",
+   "line_reference": "L639-665; direct mesh call L643; emission L661-662",
+   "what_it_emits": "construction-stage / placement ghost: exact all-role hardware wireframe (GL_LINE polygon mode) at a candidate position",
+   "geometry_source_call": "mesh = station_mesh(data_id, faction)  then  for triangles in mesh.values(): self._emit_detail_mesh(triangles)",
+   "consumes_inventory_bindings": "any STATION_TYPES / BUILDING_TYPES data_id",
+   "legacy_or_authored_aware": "yes, indirectly - inherits the trio through station_mesh",
+   "hidden_duplicate_risk": "no stored geometry, BUT it is a second, independent, non-display-list dispatch straight into station_mesh that bypasses _station_detail_list entirely (L642 comment: 'list construction must never nest in a list'). A migration that only touches the display-list builder would silently leave construction ghosts and non-imperial construction sites on old geometry. This is exactly the class of path roadmap L164 forbids."
+  },
+  {
+   "path_id": "R18_renderer_placement_preview",
+   "module_and_symbol": "render/renderer.py:_draw_placement_preview",
+   "line_reference": "L619-637 (delegates at L637); invoked from _draw_read_only L498",
+   "what_it_emits": "live build-placement ghost outline for the local player's builder (green valid / red invalid)",
+   "geometry_source_call": "self._draw_station_outline(data_id, faction, pos, data.radius, color) -> station_mesh",
+   "consumes_inventory_bindings": "placement['station_kind'] (STATION_TYPES)",
+   "legacy_or_authored_aware": "yes, indirectly",
+   "hidden_duplicate_risk": "no own geometry; depends on R17 (listed separately because it is a distinct GL entry point with its own line reference)"
+  },
+  {
+   "path_id": "R19_renderer_surface_slot_preview",
+   "module_and_symbol": "render/renderer.py:_draw_surface_slots",
+   "line_reference": "L546-601; mesh call L589-590; pad rings L571-599",
+   "what_it_emits": "planet surface build pads: empty ticks, occupied rings, and a queued-building hardware wireframe (GL_LINE) plus progress arc",
+   "geometry_source_call": "glCallList(self._station_detail_list(pad['kind'], 'base', self.state.players[self.local_player].faction))",
+   "consumes_inventory_bindings": "BUILDING_TYPES",
+   "legacy_or_authored_aware": "yes, indirectly",
+   "hidden_duplicate_risk": "uses the shared station_detail cache; pads' own rings are procedural"
+  },
+  {
+   "path_id": "R20_renderer_construction_sites",
+   "module_and_symbol": "render/renderer.py:_draw_construction_sites",
+   "line_reference": "L667-739; station wireframe delegate L698; procedural scaffold L703-737",
+   "what_it_emits": "construction-site scaffold (ring + 8 posts + height ring + progress arc, procedural) and, for non-imperial factions only, the target station's hardware wireframe",
+   "geometry_source_call": "if faction != 'imperial': self._draw_station_outline(item['item'], faction, pos, r, color) -> station_mesh",
+   "consumes_inventory_bindings": "build_queue item id (STATION_TYPES)",
+   "legacy_or_authored_aware": "yes, indirectly; note the imperial branch deliberately draws no model wireframe",
+   "hidden_duplicate_risk": "no own geometry; scaffold is procedural by design"
+  },
+  {
+   "path_id": "R21_camera_keepout_bounds",
+   "module_and_symbol": "render/camera_geometry.py:station_bounds / _station_bounds / station_radius / _station_radius / scene_boxes",
+   "line_reference": "L12-27, L17-18 (cache 40), L27-35, L32-33 (cache 40), L38-85",
+   "what_it_emits": "no GL - camera keep-out world boxes and radii derived from station geometry, plus the readable-interval solve used by the tactical camera",
+   "geometry_source_call": "station_mesh(data_id, faction) -> min/max bounds",
+   "consumes_inventory_bindings": "STATION_TYPES + faction",
+   "legacy_or_authored_aware": "yes, indirectly - so the authored shipyard already changes camera keep-out",
+   "hidden_duplicate_risk": "no stored mesh, but the lru_cache(maxsize=40) means a catalogue revision must invalidate these bounds or the camera keeps the old envelope"
+  },
+  {
+   "path_id": "R22_ship_size_lod_and_contact_rays",
+   "module_and_symbol": "render/ship_sizes.py:_bounds / _canonical_bounds / _ray_mesh / _canonical_ray_mesh / hull_contact_distance / hull_contact_offset / station_contact_distance / station_contact_offset / _station_ray_mesh",
+   "line_reference": "L21-46, L79-101, L104-203; caches at L25-26, L83-84, L109-110",
+   "what_it_emits": "no GL - readable-size LOD policy polygons and hull/station contact-surface offsets and hit rays derived from the resolved meshes",
+   "geometry_source_call": "ship_mesh(shape) and station_mesh(...) triangles -> contact/ray arrays",
+   "consumes_inventory_bindings": "SHIP_KEYS and STATION_TYPES",
+   "legacy_or_authored_aware": "yes, indirectly - the authored trio already changes readable size and contact distance",
+   "hidden_duplicate_risk": "no stored mesh; caches keyed on canonical shape (len(SHIP_KEYS)) and (faction,data_id) must be invalidated on a catalogue revision, and contact behaviour is what decides where hit VFX land (see E17)"
+  },
+  {
+   "path_id": "R23_planet_building_pick_and_frame",
+   "module_and_symbol": "render/planet_building_geometry.py:station_world_mesh / _station_local_bounds / station_camera_box / station_pick_distance / attached_contact_point / surface_frame / station_frame",
+   "line_reference": "L114-253; mesh call L149-156; bounds L197-204 (cache 64)",
+   "what_it_emits": "no GL - world-space mesh for click picking, per-building camera box, pick distance and surface contact point for planet installations",
+   "geometry_source_call": "station_mesh(entity.data_id, owner_faction(state, entity.owner)) triangles",
+   "consumes_inventory_bindings": "BUILDING_TYPES + station ids",
+   "legacy_or_authored_aware": "yes, indirectly",
+   "hidden_duplicate_risk": "no stored mesh; lru_cache(maxsize=64) bounds must be invalidated with the catalogue"
+  },
+  {
+   "path_id": "R24_renderer_inline_legacy_hull_emit",
+   "module_and_symbol": "render/renderer.py:_emit_hull (with _emit_glazing L2290-2356, _armor_loft L2113-2121, _station_ring L2358-2400 and the inline primitives _lit_box/_out_pyr/_dome/_octa_tube/_capsule)",
+   "line_reference": "L2122-2288 (glazing L2290-2356; armor_loft L2113-2121; station_ring L2358-2400)",
+   "what_it_emits": "a COMPLETE second procedural ship hull generator inside the renderer for shapes wedge/needle/cruiser/dagger/box, plus its own emissive glazing pass",
+   "geometry_source_call": "self._lit_box(...) / self._out_pyr(...) / self._dome(...) / self._octa_tube(...) / self._capsule(...) / self._armor_loft(...) / self._emit_glazing(...) - it never calls ship_mesh()",
+   "consumes_inventory_bindings": "LEGACY_SHAPES only",
+   "legacy_or_authored_aware": "no",
+   "hidden_duplicate_risk": "YES - HIGHEST. Verified unreferenced by production code: the only caller is tests/test_modern_fleet.py:38 (which mocks _lit_box/_armor_loft and asserts >=2 armor loft calls). _station_ring has zero call sites anywhere. This is a full private geometry authority that survives a catalogue migration invisibly and is precisely the 'separate hidden dispatch path retaining old geometry' named in roadmap L164."
+  },
+  {
+   "path_id": "R25_renderer_inline_legacy_station_lit",
+   "module_and_symbol": "render/renderer.py:_station_lit_list (with _emit_station_lit L2513-2669)",
+   "line_reference": "L2490-2511 (calls _emit_station_lit at L2507); _emit_station_lit L2513-2669",
+   "what_it_emits": "a second, unit-radius station emissive-detail geometry (windows / hangars / beacons / running lights) built from inline _lit_box calls per station type",
+   "geometry_source_call": "self._lit_box(...) chains keyed on data_id; does NOT call station_mesh",
+   "consumes_inventory_bindings": "STATION_TYPES",
+   "legacy_or_authored_aware": "no",
+   "hidden_duplicate_risk": "YES - duplicate station emissive geometry. Production now takes the 'lit'/'cool' roles from station_mesh (R15/R16); this parallel generator has no production caller. tools/diag_gfx3.py:113 monkeypatches it to a no-op (`r._station_lit_list = lambda data_id: empty`), which is evidence it is understood as vestigial but still present in-tree."
+  }
+ ],
+ "tooling_dispatch_paths": [
+  {
+   "path_id": "T01_tool_build_menu_movie",
+   "module_and_symbol": "tools/build_menu_movie.py:build_movie / main",
+   "line_reference": "L1-320 (renders through the production Renderer)",
+   "what_it_emits": "the main-menu cinematic 3D background is authored offline by drawing a synthetic ship/station scene with the production renderer, then encoding it to assets/menu/battle.zip (the runtime blits frames only)",
+   "geometry_source_call": "renderer.draw(...) (production dispatch) + ship_size / hull_contact_offset from render.ship_sizes",
+   "consumes_inventory_bindings": "whatever the production dispatch resolves, so the trio's authored meshes are baked into the movie",
+   "legacy_or_authored_aware": "inherits - it uses the production path, so it already renders the authored trio",
+   "hidden_duplicate_risk": "YES (tooling): assets/menu/battle.zip is a frozen pixel copy of the trio's rendered scene. After a catalogue migration the menu backdrop still shows the old models until the movie is re-baked - a silently stale dispatch the runtime never reveals.",
+   "scope_label": "TOOLING-ONLY - not a runtime dispatch path"
+  },
+  {
+   "path_id": "T02_tool_diag_faction_hardware",
+   "module_and_symbol": "tools/diag_faction_hardware.py (committed_module + parity harness)",
+   "line_reference": "L29 import; L41-47 committed_module; L109-114 current vs old; L153 station_mesh; L173-175 ship_mesh parity asserts",
+   "what_it_emits": "diagnostic renders and exact-equality asserts comparing the current geometry against a BASELINE commit's render/fleet_geometry.py loaded from git",
+   "geometry_source_call": "ship_mesh(shape) / station_mesh(did, faction) vs old_geometry.ship_mesh / old_geometry.station_mesh",
+   "consumes_inventory_bindings": "all shape keys and station ids",
+   "legacy_or_authored_aware": "no - the control module is pre-Blender by construction",
+   "hidden_duplicate_risk": "YES (tooling): loads a second full copy of render/fleet_geometry.py from git and injects it as render._faction_control_geometry, i.e. a second geometry authority inside the test tooling. Any migration that keeps this parity assertion green is asserting equality with old geometry.",
+   "scope_label": "TOOLING-ONLY"
+  },
+  {
+   "path_id": "T03_tool_diag_ship_sizes",
+   "module_and_symbol": "tools/diag_ship_sizes.py",
+   "line_reference": "L26 import; L97, L181 ship_mesh triangles; L102/L134 current vs baseline Renderer",
+   "what_it_emits": "readable-size / LOD parity diagnostics computed directly from ship_mesh triangle point clouds",
+   "geometry_source_call": "ship_mesh(size.shape) -> [p for mesh in ... for _, tri in mesh for p in tri]",
+   "consumes_inventory_bindings": "SHIP_KEYS",
+   "legacy_or_authored_aware": "indirect",
+   "hidden_duplicate_risk": "no own geometry (compares current vs baseline renderer behaviour)",
+   "scope_label": "TOOLING-ONLY"
+  },
+  {
+   "path_id": "T04_tool_renderer_probe_harness",
+   "module_and_symbol": "tools/diag_models.py:79, tools/diag_detail.py:44, tools/diag_fleet_detail.py:61, tools/diag_station.py:41, tools/diag_corvette.py:51, tools/diag_close_zoom.py:87, tools/diag_planet_buildings.py:71, tools/diag_nebula_satellite_orbits.py:36, tools/diag_gfx3.py:100-113, tools/chk_selected_shield.py:56, tools/perf_shields.py:34 (70 tools/diag_*.py files exist in total)",
+   "line_reference": "as listed (one representative line per tool)",
+   "what_it_emits": "diagnostic captures / measurements that instantiate the production Renderer against synthetic GameStates and therefore exercise the same dispatch as gameplay",
+   "geometry_source_call": "Renderer(st, cam); renderer.draw(...)",
+   "consumes_inventory_bindings": "inherits whatever the fixtures spawn",
+   "legacy_or_authored_aware": "inherits",
+   "hidden_duplicate_risk": "no separate geometry, but these are unlisted runtime-equivalent paths: a coverage matrix built only from gameplay entry points would miss them. tools/diag_gfx3.py additionally monkeypatches Renderer._ship_display_list (L108-112) and _station_lit_list (L113).",
+   "scope_label": "TOOLING-ONLY"
+  },
+  {
+   "path_id": "T05_tool_inline_legacy_probe",
+   "module_and_symbol": "tools/probe_hull.py, tools/probe_inline.py, tools/diag_gl_lifecycle.py",
+   "line_reference": "probe_hull.py L37,L55; probe_inline.py L1,L48; diag_gl_lifecycle.py L34,L49",
+   "what_it_emits": "probes that call the renderer's legacy inline generator and display-list builder directly (rasterise _lit_box/_out_pyr with no display list; build _ship_display_list('needle'); exercise _ship_display_list('wedge') through a GL lifecycle)",
+   "geometry_source_call": "r._ship_display_list('needle') / r._ship_display_list('wedge') / r._lit_box(24, 10, 44, cz=-8) / r._out_pyr(...)",
+   "consumes_inventory_bindings": "LEGACY_SHAPES",
+   "legacy_or_authored_aware": "no",
+   "hidden_duplicate_risk": "YES (tooling): these tools pin the legacy inline generator (R24) as exercised-and-kept. Deleting R24 requires auditing these probes; leaving them means the legacy geometry authority stays 'used'. Note tools/capture_showcase.py named in the task does NOT exist in this repo (verified).",
+   "scope_label": "TOOLING-ONLY"
+  }
+ ],
+ "non_model_elements": [
+  {
+   "element_id": "E01_starfield_sky_dome",
+   "what_it_is": "eye-centred 40000-unit textured sphere used as the sky / deep-space background (angular parallax only, no translation)",
+   "where_implemented": "render/renderer.py:_draw_starfield L784-826 (glCallList at L802); display list built by _build_textured_sphere_list L1014-1027 (self._unit_sphere_tex)",
+   "why_not_a_model": "sky background / environment sphere, not a discrete asset",
+   "proposed_scope_decision": "keep procedural",
+   "notes": "Shares ONE display list (self._unit_sphere_tex) with the planet spheres (E05) - changing planet geometry must not disturb the sky sphere."
+  },
+  {
+   "element_id": "E02_nebula_billboards",
+   "what_it_is": "camera-facing textured billboards (two layers, 0.30/0.35 alpha) at map nebula positions, gated by exploration",
+   "where_implemented": "render/renderer.py:_draw_nebulas L827-846; _draw_textured_billboard L867-897",
+   "why_not_a_model": "procedural environment volume / screen-space billboard",
+   "proposed_scope_decision": "keep procedural",
+   "notes": "Texture generated procedurally in render/textures.py."
+  },
+  {
+   "element_id": "E03_star_billboard",
+   "what_it_is": "the system star: textured billboard plus a soft additive halo",
+   "where_implemented": "render/renderer.py:_draw_star L848-865 (billboard L861, glow L863)",
+   "why_not_a_model": "procedural environment object",
+   "proposed_scope_decision": "keep procedural",
+   "notes": "map_info.star geometry is defined by the map, not the catalogue."
+  },
+  {
+   "element_id": "E04_jump_point_rings",
+   "what_it_is": "two counter-rotating wireframe rings marking a jump point",
+   "where_implemented": "render/renderer.py:_draw_jump_points L899-920",
+   "why_not_a_model": "environment marker; no solid hull",
+   "proposed_scope_decision": "keep procedural",
+   "notes": "Gated by is_position_explored."
+  },
+  {
+   "element_id": "E05_planet_surface_sphere",
+   "what_it_is": "each planet/asteroid_field-excluded body: a unit sphere scaled to e.radius, textured with a procedural equirect texture per planet type, slow axial spin",
+   "where_implemented": "render/renderer.py:_draw_planets L962-1012 (sphere L983-984); _planet_texture_for L953-961; _build_textured_sphere_list L1014-1027",
+   "why_not_a_model": "planet surface / procedural variation - a planet is not a discrete Blender model replacement",
+   "proposed_scope_decision": "owner decision required",
+   "notes": "Roadmap 3.1 includes 'neutral/environment objects' and S01 lists 'planet installations'. The planet BODY is currently procedural and shared with the sky sphere (E01). There is no separate terrain system in the renderer - the planet surface IS this sphere; anything the roadmap means by 'terrain' has no other implementation. Owner must confirm planet bodies stay procedural while planet INSTALLATIONS (R11/R23) move to the catalogue."
+  },
+  {
+   "element_id": "E06_planet_atmosphere_shell",
+   "what_it_is": "thin translucent limb shell over a planet (air=0 for 'barren'), drawn via the same unit sphere with a shader pass",
+   "where_implemented": "render/renderer.py:_draw_planets L985-1012 (shell pass L995)",
+   "why_not_a_model": "screen-space / procedural atmosphere",
+   "proposed_scope_decision": "keep procedural",
+   "notes": "Controlled by materials.use('planet', atmosphere=..., shell=...)."
+  },
+  {
+   "element_id": "E07_asteroid_field_rocks",
+   "what_it_is": "asteroid_field entities: 40 deterministic lumpy rock clusters per field, 3-5 vertex-jittered faceted sub-rocks each, slow tumble",
+   "where_implemented": "render/renderer.py:_draw_asteroid_field L1076-1098; _draw_rock L1100-1116; _rock_facets L1118-1177",
+   "why_not_a_model": "procedural variation / environment props",
+   "proposed_scope_decision": "owner decision required",
+   "notes": "Roadmap 3.1 explicitly names 'neutral/environment objects'; S01 lists 'environment props'. These are the strongest non-model candidate for a real shared asset (one asteroid model re-instanced), but they are currently per-instance procedural with a private seeded RNG. Owner must decide keep-procedural vs replace-with-authored-instanced-prop. If replaced, they need a catalogue binding that does not currently exist."
+  },
+  {
+   "element_id": "E08_ship_engine_trail",
+   "what_it_is": "camera-facing additive triangle trail behind a moving ship",
+   "where_implemented": "render/renderer.py:_draw_ship_trail L1339-1364 - AND duplicated inline inside _draw_ship L1966-1977",
+   "why_not_a_model": "particle / motion effect",
+   "proposed_scope_decision": "keep procedural",
+   "notes": "DUPLICATE IMPLEMENTATION: the same trail geometry exists twice in renderer.py. Not a model-replacement risk, but it is a second copy of an effect that should be unified (and it means _draw_ship emits geometry the batched path does not)."
+  },
+  {
+   "element_id": "E09_ship_engine_glow",
+   "what_it_is": "additive billboard glow disc at a moving ship's stern",
+   "where_implemented": "render/renderer.py:_draw_ship_glow L1366-1383 (via _draw_glow L922-950)",
+   "why_not_a_model": "particle / VFX",
+   "proposed_scope_decision": "keep procedural",
+   "notes": ""
+  },
+  {
+   "element_id": "E10_station_build_progress_ring",
+   "what_it_is": "rotating green line-strip arc around a station with a build queue",
+   "where_implemented": "render/renderer.py:_draw_station_queue_ring L1494-1508",
+   "why_not_a_model": "world-space screen overlay / progress indicator",
+   "proposed_scope_decision": "keep procedural",
+   "notes": ""
+  },
+  {
+   "element_id": "E11_ownership_markers",
+   "what_it_is": "screen-clamped chevron (own/ally) or diamond (hostile) marker drawn on each currently-detected unit",
+   "where_implemented": "render/renderer.py:_draw_ownership_markers L1528-1646; shape/colour data in render/markers.py (marker_mode L30, shape_for L114, marker_color L127, hull_shade L143)",
+   "why_not_a_model": "screen-space marker / intelligence presentation",
+   "proposed_scope_decision": "keep procedural",
+   "notes": "render/markers.py is pure data (no GL); the renderer batches all markers into two immediate-mode calls."
+  },
+  {
+   "element_id": "E12_collection_point_links",
+   "what_it_is": "world-space diamond+cross endpoint and link lines from a selected collection-capable station to its collection point",
+   "where_implemented": "render/renderer.py:_draw_collection_points L511-544",
+   "why_not_a_model": "screen-space / wireframe marker",
+   "proposed_scope_decision": "keep procedural",
+   "notes": ""
+  },
+  {
+   "element_id": "E13_surface_slot_pad_rings",
+   "what_it_is": "line-loop pad rings and tick crosses marking empty/occupied/paid planet surface slots",
+   "where_implemented": "render/renderer.py:_draw_surface_slots L546-601 (rings L571-581, progress arc L593-599)",
+   "why_not_a_model": "screen-space / wireframe placement aid",
+   "proposed_scope_decision": "keep procedural",
+   "notes": "Distinct from the model wireframe in the same function (see R19)."
+  },
+  {
+   "element_id": "E14_surface_selection_box",
+   "what_it_is": "green line-loop box drawn on a selected planet building slot",
+   "where_implemented": "render/renderer.py:_draw_surface_selection L603-617 (invoked from _draw_selection_rings L3749-3751)",
+   "why_not_a_model": "screen-space marker",
+   "proposed_scope_decision": "keep procedural",
+   "notes": ""
+  },
+  {
+   "element_id": "E15_projectiles",
+   "what_it_is": "shaped weapon fire: thin elongated bolts for lasers, squares for torpedoes/missiles, additive glow + point-sprite core for ion/plasma/kinetic/beam; expanded into one GL_TRIANGLES batch",
+   "where_implemented": "render/renderer.py:_draw_projectiles L2671-2764; helpers projectile_shape L80, projectile_extents L89, projectile_quad_offsets L114",
+   "why_not_a_model": "particle / effect",
+   "proposed_scope_decision": "keep procedural",
+   "notes": ""
+  },
+  {
+   "element_id": "E16_explosions_beams_and_effect_geometry",
+   "what_it_is": "layered procedural detonation (lumpy rings, no per-particle state), beam ribbons, streaks, glow rings, shock shells, flat rings",
+   "where_implemented": "render/renderer.py:_draw_effects L2772-2857; _draw_explosion L3120-3273; _draw_glow_ring L2977; _draw_shock_shell L3060; _beam_ribbon L3275; _bb_ring L3314; _flat_ring L3330; _fx_ramp L2873, _fx_streak L2897, _fx_ring L2932, _ring_lookup L2973",
+   "why_not_a_model": "particle effect / screen-space",
+   "proposed_scope_decision": "keep procedural",
+   "notes": "Docstring is explicit that all of it derives from t and seed with no per-particle state."
+  },
+  {
+   "element_id": "E17_hit_contacts_vfx",
+   "what_it_is": "small damage-resolved contact markings on shields/hull/impacts (deterministic pure geometry function)",
+   "where_implemented": "render/hit_effects.py:hit_geometry L40 (+ _fragments L33, draw_hit); driven from render/renderer.py:_draw_hits L2859-2869",
+   "why_not_a_model": "particle / contact VFX",
+   "proposed_scope_decision": "keep procedural",
+   "notes": "IMPORTANT COUPLING: roadmap L164 requires contact VFX to use the same resolved model. The contact PLACEMENT comes from R22 (ship_sizes hull/station contact) and R23 (attached_contact_point), not from hit_effects.py itself - so the migration obligation lands on R22/R23, not on this effect. hit_effects.py never mutates sim state. _visual_hit (renderer L1873) maps a sim contact to a visual surface."
+  },
+  {
+   "element_id": "E18_shield_bubbles",
+   "what_it_is": "view-aligned unit-sphere shell with the rim Fresnel baked into per-vertex alpha; one list per strength bucket; per-quadrant flash faces",
+   "where_implemented": "render/renderer.py:_shield_shell_list L3346-3450; _shield_bubble L3478-3541; _shield_quadrant_glow L3542; _draw_shields L3681-3738; _shield_radius L3457",
+   "why_not_a_model": "screen-space effect",
+   "proposed_scope_decision": "keep procedural",
+   "notes": "Explicitly camera- and yaw-independent by design so exactly one list per bucket is shared. Must continue to scale from the resolved ship size (R22) to stay on the same model."
+  },
+  {
+   "element_id": "E19_planet_shield_dome",
+   "what_it_is": "additive view-aligned translucent dome over a colonized world whose planet_shield_generator is operational, with absorption flash",
+   "where_implemented": "render/renderer.py:_draw_planet_shields L3599-3642; _planet_shield_dome L3643-3679 (shell call L3676)",
+   "why_not_a_model": "screen-space effect",
+   "proposed_scope_decision": "keep procedural",
+   "notes": "Uses planet_shield_fields from render/planet_building_geometry.py:19-56; the generator itself is a BUILDING_TYPES model (R11). Dome radius must track the generator's model."
+  },
+  {
+   "element_id": "E20_selection_rings",
+   "what_it_is": "rotating line rings around selected units, colour-coded by hull fraction (red <0.35, amber <0.7)",
+   "where_implemented": "render/renderer.py:_draw_selection_rings L3739-3796",
+   "why_not_a_model": "screen-space marker",
+   "proposed_scope_decision": "keep procedural",
+   "notes": "Radius must follow the unit's readable size (R22)."
+  },
+  {
+   "element_id": "E21_fog_of_war_mask",
+   "what_it_is": "projected quads charting remembered terrain/explored space, composited after the planets and before planet shields",
+   "where_implemented": "render/fog.py:FogMask.surface L91-128, FogMask.draw L129-167 (GL_QUADS L159-163); invoked from renderer.py L478",
+   "why_not_a_model": "fog / visibility presentation (screen-space chart overlay)",
+   "proposed_scope_decision": "keep procedural",
+   "notes": "Also owns the visibility predicates (position L16, known_entities L25, effect_visible L32, segment_visible L44) that gate whether ANY model dispatch path is reached - so it indirectly controls what the catalogue must cover, but it draws no model geometry."
+  },
+  {
+   "element_id": "E22_floating_texts",
+   "what_it_is": "sim floating texts (e.g. build rejections) projected to screen coords and blitted by the HUD",
+   "where_implemented": "render/renderer.py:_draw_floating_texts L3797-3807 (deliberate no-op); floating_texts_screen L3809-3842",
+   "why_not_a_model": "screen-space text",
+   "proposed_scope_decision": "keep procedural",
+   "notes": "Renderer emits no GL for these - HUD draws them in 2D."
+  },
+  {
+   "element_id": "E23_menu_cinematic_3d_background",
+   "what_it_is": "the main menu / non-replay menu backdrop: a baked JPEG movie of a 3D battle scene, blitted as a full-screen textured quad",
+   "where_implemented": "runtime: render/menus.py:_draw_splash_movie L556-... (blit L440-446), render/menu_movie.py:MenuMovie.get_frame L49, cache_info L133; authored by tools/build_menu_movie.py (see T01)",
+   "why_not_a_model": "screen-space video asset - a frozen render, not a live model replacement",
+   "proposed_scope_decision": "owner decision required",
+   "notes": "This is the 'menus' item named in roadmap L164. At runtime NO live 3D geometry is drawn for the menu - the 3D content is frozen in assets/menu/battle.zip. So integrating a resolved model into menus means re-baking the movie (T01), and the owner must decide whether menus stay a baked movie or move to a live render. Replay browsing deliberately stays static (menus.py L384-385, L460)."
+  },
+  {
+   "element_id": "E24_presentation_campaign_overlay",
+   "what_it_is": "2D mission-brief / outcome overlay panels",
+   "where_implemented": "render/presentation.py:PresentationOverlay.draw_gl L240-327 (ortho panel blit); render/cinematics.py:CampaignCinematic.draw_gl L92-128",
+   "why_not_a_model": "screen-space UI",
+   "proposed_scope_decision": "keep procedural",
+   "notes": "Both composite pygame surfaces to a full-screen ortho quad; no 3D geometry."
+  },
+  {
+   "element_id": "E25_hud_and_menu_2d_layers",
+   "what_it_is": "the HUD overlay and menu chrome drawn as textured 2D quads",
+   "where_implemented": "render/hud.py:draw_gl L1677-1681; render/menus.py:draw_gl L440-446",
+   "why_not_a_model": "screen-space UI",
+   "proposed_scope_decision": "keep procedural",
+   "notes": "Verified: hud.py and menus.py contain no 3D geometry emission (only glBegin(GL_QUADS) 2D blits)."
+  }
+ ],
+ "hidden_duplicate_risk_paths": [
+  "R02_legacy_imperial_ship_hull - private procedural imperial/mod/neutral hull library that remains the fallback geometry authority",
+  "R05_legacy_imperial_station_mesh - private procedural imperial station library",
+  "R07_authored_battleship_slice - in-function copy of the pre-Blender battleship hull kept as emergency fallback (faction_ships.py:139-168) [draft PR #114 only: this fallback pair exists on the checkpoint branch, not in this tree]",
+  "R08_authored_frigate_slice - in-function copy of the pre-Blender frigate hull kept as emergency fallback (faction_ships.py:457-477) [draft PR #114 only: this fallback pair exists on the checkpoint branch, not in this tree]",
+  "R10_authored_shipyard_branch - procedural _alliance_shipyard_slice fallback retained, and the authored branch skips the *0.8 radius fit the procedural stations get [draft PR #114 only: this fallback pair exists on the checkpoint branch, not in this tree]",
+  "R12_renderer_batched_role_emission - geometry frozen in self.ship_lists GL display lists keyed by shape string",
+  "R13_renderer_per_ship_draw - second call site into the same self.ship_lists cache",
+  "R14_renderer_ship_display_list_builder - owns and never invalidates self.ship_lists[shape]",
+  "R15_renderer_station_detail_list_builder - owns self.ship_lists['station_detail:...']",
+  "R16_renderer_per_station_draw - shares the station_detail cache with R12 and R19",
+  "R17_renderer_station_outline_preview - a second, non-display-list, non-cached dispatch straight into station_mesh that a display-list-only migration would silently miss",
+  "R24_renderer_inline_legacy_hull_emit - a COMPLETE second inline ship-hull generator in renderer.py (_emit_hull/_emit_glazing/_armor_loft/_lit_box/_out_pyr/_dome/_octa_tube/_capsule, _station_ring has zero call sites) with NO production caller (only tests/test_modern_fleet.py:38). Highest-severity hidden dispatch path.",
+  "R25_renderer_inline_legacy_station_lit - duplicate station emissive-detail generator (_station_lit_list/_emit_station_lit) with no production caller; only referenced by a tools/diag_gfx3.py monkeypatch",
+  "T01_tool_build_menu_movie - bakes a frozen pixel copy of the current models into assets/menu/battle.zip",
+  "T02_tool_diag_faction_hardware - loads a second full copy of render/fleet_geometry.py from a git BASELINE commit as a geometry control",
+  "T05_tool_inline_legacy_probe - probe tools that pin the legacy inline generator (R24) as exercised"
+ ],
+ "non_model_elements_needing_owner_decision": [
+  "E05_planet_surface_sphere - are planet bodies (procedural equirect-textured spheres, shared display list with the sky dome) permanently out of the model catalogue, or in scope? Roadmap 3.1/S01 name 'planet installations' and 'environment objects' but the planet body is currently procedural and there is no separate terrain implementation.",
+  "E07_asteroid_field_rocks - asteroid/neutral environment props are per-instance procedural (seeded private RNG). Roadmap 3.1 explicitly includes 'neutral/environment objects' and S01 'environment props', so the owner must decide keep-procedural vs replace with a shared authored/instanced prop, which would need a catalogue binding that does not exist today.",
+  "E23_menu_cinematic_3d_background - the menu 3D backdrop is a baked JPEG movie (assets/menu/battle.zip) rather than a live render. Roadmap L164 requires menus to use the same resolved model; the owner must decide whether menus stay a baked movie (re-baked per catalog revision, see T01) or move to a live render, and whether the trio's baked look is an approved reference."
+ ],
+ "uncertain_or_unresolved": [
+  "R17/R18/R19/R20 all funnel into station_mesh but are kept as separate rows because each is a distinct GL emission site with its own line reference; roadmap L164 requires previews and construction stages to be migrated too, so merging them would hide work.",
+  "game/benchmark.py:199 instantiates Renderer but lives in game/ rather than tools/ - it is neither a pure runtime gameplay path nor a tools/diag_* path; treated as a measurement harness, not a dispatch path of its own.",
+  "The renderer's pass orchestrators (render/renderer.py:draw L413, _draw_read_only L439-509, _draw_ships L1262) are NOT listed as individual rows because they emit no geometry themselves; they are the authority for pass order and the 'skip' set (stars/nebulas/star/jumppoints/planets/planet_shields/effects/projectiles/ships/shields/sites/surface_slots/markers/rings), and every geometry-emitting path above is reachable through them.",
+  "Whether the roadmap intends asteroid fields (E07) as authored props is unknown; recorded as owner decision rather than assumed either way.",
+  "No 'terrain' system separate from the planet sphere (E05) was found in render/ - 'terrain' in the roadmap has no independent implementation to inventory today."
+ ],
+ "grep_evidence": [
+  {
+   "cmd": "grep -rn 'ship_mesh\\|station_mesh\\|armor_loft\\|_satellite_mesh\\|satellite_mesh' render/ game/ tools/ --include=*.py | grep -v __pycache__ | wc -l",
+   "raw_count": 56,
+   "note": "all mesh-symbol references (defs + call sites)"
+  },
+  {
+   "cmd": "grep -rn 'ship_mesh(\\|station_mesh(\\|armor_loft(\\|_satellite_mesh(\\|satellite_mesh(' render/ game/ tools/ --include=*.py | grep -v 'def ' | grep -v __pycache__ | wc -l",
+   "raw_count": 31,
+   "note": "call sites only; per-file: camera_geometry 2, faction_ships 2, faction_stations 1, fleet_geometry 6, planet_building_geometry 2, renderer 9, ship_sizes 3, tools/diag_faction_hardware 4, tools/diag_ship_sizes 2"
+  },
+  {
+   "cmd": "grep -rln 'ship_mesh\\|station_mesh\\|armor_loft\\|_satellite_mesh\\|satellite_mesh' render/ game/ tools/ --include=*.py | grep -v __pycache__ | wc -l",
+   "raw_count": 10,
+   "note": "distinct files touching mesh dispatch"
+  },
+  {
+   "cmd": "grep -n 'ship_mesh(\\|station_mesh(\\|_ship_display_list(\\|_station_detail_list(\\|_emit_detail_mesh(\\|_emit_detail_hull(' render/renderer.py",
+   "raw_count": 21,
+   "note": "exact renderer mesh call sites, incl. renderer.py:643 station_mesh, renderer.py:1448 _ship_display_list, renderer.py:1479-1489 _station_detail_list, renderer.py:1979-2023 _ship_display_list, renderer.py:2430-2442 _station_detail_list, renderer.py:2471 _emit_detail_mesh(station_mesh(...)), renderer.py:2487 _emit_detail_mesh(ship_mesh(...))"
+  },
+  {
+   "cmd": "grep -n 'self\\._lit_box(\\|self\\._out_pyr(\\|self\\._dome(\\|self\\._octa_tube(\\|self\\._capsule(\\|self\\._armor_loft(\\|self\\._station_ring(\\|self\\._emit_glazing(\\|self\\._emit_hull(\\|self\\._emit_station_lit(\\|self\\._station_lit_list(' render/renderer.py",
+   "raw_count": 130,
+   "note": "ALL 130 hits fall inside _emit_hull (L2130-2286), _emit_glazing (L2329-2355) and _emit_station_lit (L2528-2669). _station_ring and _armor_loft outside those ranges: zero. Confirms R24/R25 are self-contained legacy authorities."
+  },
+  {
+   "cmd": "grep -rn '_emit_hull\\|_emit_glazing\\|_station_lit_list\\|_emit_station_lit\\|_station_ring' tests/ tools/ --include=*.py",
+   "raw_count": 2,
+   "note": "tests/test_modern_fleet.py:38 calls renderer._emit_hull(shape,'base') (the ONLY caller anywhere); tools/diag_gfx3.py:113 stubs _station_lit_list. Zero production callers."
+  },
+  {
+   "cmd": "grep -rn 'battleship_mesh\\|frigate_mesh\\|shipyard_mesh\\|authored_mesh' render/ tools/ tests/ --include=*.py | wc -l",
+   "raw_count": 23,
+   "note": "render-side authored call sites: faction_ships.py:127/129/446/448, faction_stations.py:460/463, authored_mesh.py:94/99/104"
+  },
+  {
+   "cmd": "grep -rn 'rebel:battleship\\|\"shipyard\"\\|faction == \"rebel\"' render/ --include=*.py",
+   "raw_count": 6,
+   "note": "renderer.py:1420, 1461, 1997, 2408, 2547; faction_stations.py:459 - the hardcoded trio literals plus the dead _station_lit_list 'shipyard' branch"
+  },
+  {
+   "cmd": "grep -c 'glBegin\\|glCallList\\|glVertex3f\\|glDrawArrays\\|glNewList' render/*.py (per file)",
+   "raw_count": "renderer.py 77 symbol-bearing lines; hud.py 2; menus.py 2; fog.py 1; cinematics.py 1; presentation.py 1; hit_effects.py 0; clean_classic.py 0; classic_screens.py 0; recovery_overlay.py 0; replay_library.py 0; save_library.py 0",
+   "note": "only renderer.py emits 3D world geometry; hud/menus/fog/cinematics/presentation emit 2D ortho quads only"
+  },
+  {
+   "cmd": "grep -rn 'Renderer(' --include=*.py . | grep -v __pycache__ | grep -v /tools/ | grep -v /tests/",
+   "raw_count": 6,
+   "note": "main.py:292 (live), main.py:366 (prepared replay renderer), game/benchmark.py:199, plus artifacts/alliance_blender_trio/evidence/{worklight_probe,motion_trio,capture_slice}.py"
+  },
+  {
+   "cmd": "ls tools/diag_*.py | wc -l ; ls tools/probe_*.py | wc -l",
+   "raw_count": "70 diag tools, 11 probe tools",
+   "note": "large tooling surface; representative dispatch-bearing tools inventoried as T02-T05"
+  },
+  {
+   "cmd": "ls -la assets/models/",
+   "raw_count": 3,
+   "note": "exactly the three Blender trio meshes exist; no other authored mesh assets"
+  },
+  {
+   "cmd": "find . -name 'capture_showcase*'",
+   "raw_count": 0,
+   "note": "tools/capture_showcase.py named in the task does NOT exist in this repo"
+  }
+ ],
+ "explicitly_out_of_model_scope_recorded": [
+  "keep procedural: E01 starfield sky dome, E02 nebulas, E03 star billboard, E04 jump-point rings, E06 planet atmosphere shell, E08 engine trail (NOTE: implemented twice), E09 engine glow, E10 build-progress ring, E11 ownership markers, E12 collection-point links, E13 surface slot pad rings, E14 surface selection box, E15 projectiles, E16 explosions/beams/effect geometry, E17 hit contact VFX, E18 shield bubbles, E19 planet shield dome, E20 selection rings, E21 fog mask, E22 floating texts, E24 presentation/campaign overlays, E25 HUD/menu 2D"
+ ],
+ "reference_base_note": "Two reference bases appear in this file and they are not interchangeable. Sections marked '_draft_pr114' describe the unmerged checkpoint branch feat/blender-approved-trio-checkpoint: the symbols and line numbers there (render/authored_mesh.py and the *_slice builders) do NOT exist in this tree, so they cannot be re-measured here. Everything else is stated against the audited base and is re-checked by the generator, which records per row which symbols it could resolve.",
+ "hardcoded_trio_sites_draft_pr114": [
+  "[draft PR #114 base] render/authored_mesh.py:93-106 - the loader that defines the trio and its asset path: ASSET_PATH = assets/models/alliance_battleship.mesh.json (L13) plus @lru_cache frigate_mesh() (L93-95), shipyard_mesh() (L98-100), battleship_mesh() (L103-106). No opt-in flag, no registry, no settings gate anywhere in the module.",
+  "render/faction_ships.py:127-129 - `from render.authored_mesh import battleship_mesh; mesh = battleship_mesh()` inside _alliance_battleship_slice, reached unconditionally from _alliance_capital (L171-173) for the rebel:battleship binding.",
+  "render/faction_ships.py:446-448 - `from render.authored_mesh import frigate_mesh; mesh = frigate_mesh()` inside _alliance_frigate_slice, reached unconditionally from _alliance_line (L480-482) for the rebel:frigate binding.",
+  "render/faction_stations.py:459-463 - `if faction == 'rebel' and kind == 'shipyard': from .authored_mesh import shipyard_mesh; return shipyard_mesh()` - the rebel shipyard binding, a literal faction+kind test.",
+  "render/renderer.py:1420 - `authored = size.shape in (\"rebel:battleship\", \"rebel:frigate\")` in the batched role pass (_draw_ship_role_batch); the literal list selects the authored shader material pass.",
+  "render/renderer.py:1997 - `authored = size.shape in (\"rebel:battleship\", \"rebel:frigate\")` in the per-ship pass (_draw_ship); same literal list, second site.",
+  "render/renderer.py:1461 - `authored_station = faction == \"rebel\" and e.data_id == \"shipyard\"` in _draw_ship_role_batch's station branch.",
+  "render/renderer.py:2408 - `authored_station = faction == \"rebel\" and e.data_id == \"shipyard\"` in _draw_station; second site of the same literal.",
+  "render/fleet_materials.py - the material system consumes authoredSurface/material_pass (hull_pass(material_pass, authored)); it is told whether the mesh is authored by callers, so it is trio-aware only through the four renderer literals above."
+ ],
+ "owner_scope_decisions": {
+  "decision_id": "s01-scope-2026-10-16",
+  "decided_by": "owner (Lukasz Jawor), in chat; raw wording preserved below",
+  "binds_to": {
+   "branch": "docs/s01-model-inventory",
+   "pr": 115,
+   "reviewed_revision_commit": "9dd678570ab6e85878d34533625026e0ec1f63c5",
+   "reviewed_artifact": "art/manifests/reviews/S01-coverage-matrix.md",
+   "note": "Binds the scope questions asked in that matrix. It is a scope and plan approval, not an approval of any model design, and not authorization to merge, activate the trio or change the production default."
+  },
+  "answers": [
+   {
+    "question_id": "E05_planet_surface_sphere",
+    "question": "Are planet bodies (procedural equirect-textured spheres) permanently out of the model catalogue, or in scope?",
+    "answer": "in scope — bring into the catalogue",
+    "raw_owner_wording": "1.) scope exceptions: let bring them into catalog."
+   },
+   {
+    "question_id": "E07_asteroid_field_rocks",
+    "question": "Asteroid/neutral environment props are per-instance procedural; keep procedural or replace with a shared authored prop?",
+    "answer": "in scope — bring into the catalogue",
+    "raw_owner_wording": "(same answer)"
+   },
+   {
+    "question_id": "E23_menu_cinematic_3d_background",
+    "question": "Does the menu 3D backdrop stay a baked movie, or is it in the catalogue?",
+    "answer": "in scope — bring into the catalogue",
+    "raw_owner_wording": "(same answer)",
+    "open_sub_question": "Whether the menu scene is then drawn live or stays baked per catalogue revision is an S02/S04 implementation choice, not part of this scope answer. The baked path exists to avoid paying battle-scene cost behind every menu, so the bake-per-revision reading is recorded as the default unless the owner prefers a live menu."
+   },
+   {
+    "question_id": "s01-declared_unreachable_keys",
+    "question": "syndicate:bomber, syndicate:battleship, syndicate:supercapital are declared in SHIP_KEYS but no data row selects them. Keep or remove?",
+    "answer": "keep — plan the hulls",
+    "raw_owner_wording": "2.) plan the hulls . Battleshipo and capitol shoudl be buidl in ship yard, bomber in fighter yard.",
+    "see": "planned_hulls"
+   },
+   {
+    "question_id": "s01-batch_order",
+    "question": "Which batch order?",
+    "answer": "as recommended: B1 Alliance combat hulls, then B2 squadrons/logistics, B3 stations, B4 satellites and planet installations, B5 environment props",
+    "raw_owner_wording": "3.) as recomendet"
+   },
+   {
+    "question_id": "s01-batch_plan",
+    "question": "Approve the batch plan?",
+    "answer": "approved — as a plan and as scope. This does not approve any model design, and S06 still requires per-asset owner approval with an enumerated list.",
+    "raw_owner_wording": "4.) approved"
+   }
+  ],
+  "consequences": [
+   "Environment props move from 'scope decision required' to in-scope work. The planet kinds (E05) and the asteroid field (E07) become authoring targets in batch B5.",
+   "The menu backdrop (E23) gets its own inventory row so the decision is bound to a binding rather than to a sentence: menu:cinematic:backdrop.",
+   "The three unreachable SHIP_KEYS stay in the registry as planned hulls with a recorded production site.",
+   "The starfield sky dome, star, nebula and jump point were proposed keep-procedural and were not among the questions asked; they are carried as proposed, not as owner-approved."
+  ]
+ },
+ "planned_hulls": {
+  "decision_id": "s01-hull-plan-2026-10-16",
+  "owner_rule": "Battleships and capital ships build at the shipyard; bombers build at the fighter platform (the owner's 'fighter yard').",
+  "grounding": {
+   "mechanism": "game/systems/construction.py decides buildability from the station's builds_ships list: an exact ship id, or ['*'] for any ship",
+   "shipyard.builds_ships": "['*'] — already accepts every ship, so battleship/capital production at the shipyard holds today",
+   "fighter_platform.builds_ships": [
+    "imperial_tie_squadron",
+    "imperial_tie_bomber_squadron",
+    "rebel_x_squadron",
+    "rebel_y_squadron",
+    "confed_vulture_squadron",
+    "confed_bomber_squadron",
+    "syndicate_raid_squadron"
+   ],
+   "fighter_platform_consequence": "This list is explicit, so a new bomber hull is unbuildable until its data id is added to it. That is a data change S06 must make alongside the hull, not a model change."
+  },
+  "hulls": [
+   {
+    "mesh_key": "syndicate:battleship",
+    "data_row_today": null,
+    "production_site": "shipyard",
+    "status": "planned_owner_confirmed"
+   },
+   {
+    "mesh_key": "syndicate:supercapital",
+    "data_row_today": null,
+    "production_site": "shipyard",
+    "status": "planned_owner_confirmed"
+   },
+   {
+    "mesh_key": "syndicate:bomber",
+    "data_row_today": null,
+    "production_site": "fighter_platform",
+    "status": "planned_owner_confirmed",
+    "note": "the syndicate currently fields only raid_squadron, which resolves to syndicate:fighter; there is no syndicate bomber data row"
+   }
+  ]
+ }
+}

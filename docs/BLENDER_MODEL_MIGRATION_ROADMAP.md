@@ -49,21 +49,33 @@ is `0.15.1`. The protected whole suite ran 1,668 tests with zero failures/errors
 skips against an immutable performance-only archive, and the exact-head Windows CI run `38858140567`
 passed. No tag or release was created.
 
-**Art — published in an unmerged draft.** Draft PR #114 carries the approved trio's sources,
-exporters, runtime exports, loader, material fixes, focused tests, owner-bound approval records and
-selected evidence. It is now **reconciled with current `main`**: the branch delta contains art files
-only, and the merged draw-scope performance code is intact. Earlier preservation head
-`313f9683e9e7e4f376b05cedaeb28bb2dd300c9f` remains in that branch's history — the reconciliation is a
-merge, not a rewrite. Durable record: `art/manifests/handoffs/S00-PRESERVATION.md`; machine-readable
-decision: `art/manifests/approvals.json`. Read the exact pushed head, file list and CI from GitHub.
+**Art — S00 preserved, published and merged into `main`.** Draft PR #114 was marked ready and merged by
+the owner on 2026-10-16 as the single squashed commit `c5b78eb2d4ceba909ffb7444a56b7dec1f35d1b4`
+(96 files), after its branch was reconciled with `main` — branch delta art-only, the merged draw-scope
+performance code intact — and its published blobs were re-read and verified byte-for-byte. Earlier heads
+`313f9683e9e7e4f376b05cedaeb28bb2dd300c9f` and `0f6531f4d14f649cbfed744c29b61b4537b0f5e8` remain in that
+branch's history: the reconciliation was a merge, not a rewrite. `main` therefore now contains the trio's
+Blender sources, exporters, runtime exports, loader, material integration, focused tests, owner-bound
+approval records and selected evidence. Durable record: `art/manifests/handoffs/S00-PRESERVATION.md`;
+machine-readable decision: `art/manifests/approvals.json`.
 
-**S00's own deliverables are complete; the catalogue is not switched, and the draft stays draft.** The
-blocker is the activation boundary, not the preservation: the trio is currently selected by hardcoded
-identity checks with no persisted switch, so S02/S04 must provide the explicit gated path before any
-production art merge.
+**The activation boundary is now owed on `main`, not on a branch.** The trio is selected by hardcoded
+identity checks inside the faction facades (`render/faction_ships.py` and `render/faction_stations.py`)
+with no persisted switch, so merging #114 put that activation on `main`. It degrades safely — each site
+imports the loader in a guarded block and keeps the previous procedural hull as an emergency geometry
+fallback behind a bounded faction cache — but it is still an unconditional selection rather than a
+registry contract. S02/S04 owe the explicit gated path, and no further model may be integrated this way.
 
-S01–S10 remain gated as below. **S11 is not done or authorized**: neither the preservation checkpoint
-nor the performance merge changes the catalogue default. No release or tag is part of either delivery.
+**S01 is complete** in PR #115 (this change): `art/manifests/model_inventory.json` (120 bindings, every
+reference resolved at `main`), `art/manifests/inventory_audit.json` (dispatch audit plus the owner scope
+decision), `art/manifests/reviews/S01-coverage-matrix.md` and `art/manifests/handoffs/S01-INVENTORY.md`.
+The owner answered all four scope questions on 2026-10-16 (`s01-scope-2026-10-16`): the planet bodies,
+asteroid props and menu backdrop come **into** the catalogue, the three declared-but-unreachable mesh
+keys become planned hulls (battleships and capital ships at the shipyard, bombers at the fighter
+platform), and the five authoring batches are approved in the recommended order. That is scope and plan
+approval only: no individual model design is approved, and the broader catalogue default is still
+unswitched. S02 is the next step; S02–S10 remain gated as below. **S11 is not done or authorized.** No
+release or tag is part of either delivery.
 
 ## 3. Scope and invariants
 
@@ -171,7 +183,7 @@ Each step is a reviewable task/PR with a durable handoff. “Complete” require
 | Step | Work package | Depends on | Completion gate |
 |---|---|---|---|
 | S00 | Preserve and publish approved prototype | This roadmap | Coherent tracked sources/exports/evidence and exact Git/PR receipt |
-| S01 | Inventory every model and approve scope | S00 | Owner-reviewed coverage matrix; no silently omitted dispatch paths |
+| S01 | Inventory every model and approve scope | S00 | **Complete** 2026-10-16: owner-reviewed coverage matrix (`s01-scope-2026-10-16`); no silently omitted dispatch paths |
 | S02 | Specify asset, registry and mod contracts | S01 | Reviewed versioned schemas, examples, resolver/fallback/compatibility decisions |
 | S03 | Standardize Git authoring/export tools | S02 | Reproducible trio builds from a fresh clone, source ownership and storage policy |
 | S04 | Implement generic opt-in model integration | S02, S03 | Registry/pack resolver, source/frozen loading, lifecycle and mod replacement tests |
@@ -332,8 +344,8 @@ This table is the initial planning state, **not implementation completion**. Fut
 
 | Step | Initial status | Next action / blocking condition |
 |---|---|---|
-| S00 | **Complete on its branch** — draft PR #114, reconciled with `main`; review-ready | Read `S00-PRESERVATION.md` and the PR receipt. Keep the draft unmerged until S02/S04 replace the hardcoded activation with an explicit preview gate |
-| S01 | Not started | Inventory data plus every renderer/model dispatch and agree scope |
+| S00 | **Complete and merged** — PR #114 landed as `c5b78eb2d4ceba909ffb7444a56b7dec1f35d1b4` (96 files) | S02/S04 must replace the hardcoded activation with an explicit preview gate; retain the known art-integrated acceptance debt |
+| S01 | **Complete** — PR #115 carries the inventory, audit, coverage matrix and handoff | Closed 2026-10-16 by the owner's scope decision; S02 is next |
 | S02 | Not started | Decide and specify generic asset/mod contracts |
 | S03 | Not started | Standardize source authority, storage and reproducible exports |
 | S04 | Not started | Generic gated integration, resolver and frozen-path support |
@@ -353,12 +365,19 @@ The following sentence is retained as the initial next-task instruction, not cur
 
 | Workstream | Current state | Next gate |
 |---|---|---|
-| S00 preservation | **Deliverables complete on draft PR #114**, reconciled with `main` (`16523bf`); branch delta is art-only; earlier head `313f968` retained in history | Read `S00-PRESERVATION.md` and the PR receipt. Keep the draft unmerged until S02/S04 supply the explicit preview gate. Retain the known art-integrated acceptance debt |
+| S00 preservation | **Merged into `main`** as `c5b78eb2d4ceba909ffb7444a56b7dec1f35d1b4` (PR #114, squashed, 2026-10-16, 96 files); branch delta art-only; earlier heads `313f968`/`0f6531f4` retained in history; blobs verified byte-for-byte before the merge | S02/S04 replace the hardcoded trio activation with an explicit preview gate. Retain the known art-integrated acceptance debt |
 | Performance PR #113 | **Merged** to `main` as `16523bf0b06a39e3f77961d0c213b0af184a16b6` (tree identical to tested head `a24a4ed`); version `0.15.1`; protected whole suite 1,668 tests, 0 failures/errors, 9 skips; Windows CI `38858140567` passed | Closed. Performance remains headroom, not an art upgrade. Measurement targets still need owner agreement |
-| S01–S10 | Not completed by either delivery | Follow dependencies, per-model owner approval and platform/package gates |
+| S01 inventory | **Complete** in PR #115: 120 bindings, 30 dispatch paths, 25 non-model elements; owner decision `s01-scope-2026-10-16` answered all four scope questions and planned the three unreachable mesh keys | None outstanding; S02 is next, and no design or activation is approved by it |
+| S02–S10 | Not completed | Follow dependencies, per-model owner approval and platform/package gates |
 | S11 | **Not started, not authorized, not done** | Final explicit owner-controlled catalogue switch only after S10 |
 
-**Current next task: S01 — inventory and batch design.** Generate the rendered-model inventory from
-data plus every renderer dispatch, record a scope decision for non-model visuals, and put the coverage
-matrix in front of the owner. Do not start a new model batch, do not merge PR #114, and do not treat
-this checkpoint as a production cutover. No tag or release is included.
+**Current next task: S02 — specify the asset, registry and mod contracts.** Freeze the versioned
+extension contract before any further authoring: minimal core plus replacement and additive-pack
+examples, the migration path from the specimen schema and profile loader, resolver/fallback/compatibility
+decisions, failure diagnostics, pack ordering and roots, security bounds, approval and cache/resource
+invalidation, and the initial class budgets and LOD expectations. Write the decisions to
+`art/manifests/decisions.md`; the gate is *reviewed versioned schemas, examples,
+resolver/fallback/compatibility decisions*. S01 is closed, so do not re-open the inventory or re-derive
+it — read `art/manifests/model_inventory.json`. PR #114 is merged, so treat the trio's hardcoded
+selection as debt to be replaced by S04; do not extend that pattern to any further model, start a
+catalogue batch, cut over the catalogue default, tag or release.
