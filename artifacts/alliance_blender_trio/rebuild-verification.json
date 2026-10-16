@@ -1,0 +1,12 @@
+{
+  "frigate": {
+    "sha256": "045d1383ac8a774d0bb9733a598ca83777dfcdc26645e6900b9d23ee7392348c",
+    "bytes": 358072,
+    "runtime_rebuild_byte_exact": true
+  },
+  "shipyard": {
+    "sha256": "67d4db64c8677a8898f74d6e966a1b2476ffc721fd72c363ddbc992360630aaf",
+    "bytes": 505314,
+    "runtime_rebuild_byte_exact": true
+  }
+}

@@ -37,15 +37,33 @@ Read `art/blender/README.md` critically: its initial battleship-only notes preda
 
 Catalogue data currently contains 37 ship definitions (Imperial 10, Alliance/rebel 10, Confederacy 10, Syndicate 7), 16 station definitions and four faction records. Syndicate is currently non-playable. **These are data-entry counts, not a complete mesh workload.** Shared types, faction-specific station variants, squadrons, transports, planet hardware, previews and campaign props require a rendered-model inventory. Do not multiply these counts and invent a final asset total.
 
-### 2.1 Partial delivery checkpoint — October 16, 2026
+### 2.1 Delivery checkpoints — current state, October 16, 2026
 
-The observations and local-only warning above are the **historical document-creation baseline**, not the current storage status. The approved trio has since been durably published in **draft PR #114**, head `313f9683e9e7e4f376b05cedaeb28bb2dd300c9f`. All 38 checkpoint blobs were read back and verified against the preserved local inputs. Its sources, exports, authoring tools, runtime integration, selected evidence and `art/manifests/handoffs/S00-PRESERVATION.md` travel together. The original 23-source-asset preservation manifest remains retained separately; no model is discarded by the performance split.
+The observations and local-only warning above are the **historical document-creation baseline**, not the
+current storage status.
 
-**S00 is in progress: draft published, not complete.** PR #114 remains draft and unmerged; publication is not broad engineering acceptance, a generic registry, or final default cutover. Read its exact head and handoff before continuing. Do not infer that `main` or this performance-only branch contains the trio.
+**Performance — done and on `main`.** PR #113 landed as the single squashed commit
+`16523bf0b06a39e3f77961d0c213b0af184a16b6`, whose tree is identical to the tested head
+`a24a4ed32f0cec6c76b40c30640a61bee6f60a2b`. All three performance passes are integrated and the version
+is `0.15.1`. The protected whole suite ran 1,668 tests with zero failures/errors and nine documented
+skips against an immutable performance-only archive, and the exact-head Windows CI run `38858140567`
+passed. No tag or release was created.
 
-PR #113 is the separate **performance-only partial integration planned for parent-controlled merge after verification**. It retains the first two performance passes and adds draw-local reuse, portable regressions, a feature-branch version bump to `0.15.1`, and `GRAPHICS_DRAW_SCOPE_REUSE.md` / `GRAPHICS_DRAW_SCOPE_EVIDENCE.json`. No art/model/material files enter that performance change. Its receipt explicitly distinguishes immutable performance-only suite results from the earlier art-integrated full-suite failure and retained stock-combat frozen-control nondeterminism. The exact pushed performance head and current CI are read back separately; the parent publishes the exact post-merge receipt only if authorized and completed.
+**Art — published in an unmerged draft.** Draft PR #114 carries the approved trio's sources,
+exporters, runtime exports, loader, material fixes, focused tests, owner-bound approval records and
+selected evidence. It is now **reconciled with current `main`**: the branch delta contains art files
+only, and the merged draw-scope performance code is intact. Earlier preservation head
+`313f9683e9e7e4f376b05cedaeb28bb2dd300c9f` remains in that branch's history — the reconciliation is a
+merge, not a rewrite. Durable record: `art/manifests/handoffs/S00-PRESERVATION.md`; machine-readable
+decision: `art/manifests/approvals.json`. Read the exact pushed head, file list and CI from GitHub.
 
-S01–S10 remain gated as below. **S11 is not done or authorized**: neither draft preservation nor a performance partial merge switches the catalogue default. No release or tag is part of this checkpoint.
+**S00's own deliverables are complete; the catalogue is not switched, and the draft stays draft.** The
+blocker is the activation boundary, not the preservation: the trio is currently selected by hardcoded
+identity checks with no persisted switch, so S02/S04 must provide the explicit gated path before any
+production art merge.
+
+S01–S10 remain gated as below. **S11 is not done or authorized**: neither the preservation checkpoint
+nor the performance merge changes the catalogue default. No release or tag is part of either delivery.
 
 ## 3. Scope and invariants
 
@@ -314,7 +332,7 @@ This table is the initial planning state, **not implementation completion**. Fut
 
 | Step | Initial status | Next action / blocking condition |
 |---|---|---|
-| S00 | Not started; local approved prototype exists | Publish a coherent prototype with all source/export dependencies and owner-bound evidence |
+| S00 | **Complete on its branch** — draft PR #114, reconciled with `main`; review-ready | Read `S00-PRESERVATION.md` and the PR receipt. Keep the draft unmerged until S02/S04 replace the hardcoded activation with an explicit preview gate |
 | S01 | Not started | Inventory data plus every renderer/model dispatch and agree scope |
 | S02 | Not started | Decide and specify generic asset/mod contracts |
 | S03 | Not started | Standardize source authority, storage and reproducible exports |
@@ -331,13 +349,16 @@ The following sentence is retained as the initial next-task instruction, not cur
 
 **Next chat task: S00, not a new model batch and not S11.** Read the dirty working tree and approved trio evidence, publish the coherent sources without bundling unrelated work, and write the first durable handoff. The roadmap commit alone must remain documentation-only.
 
-### 8.1 Current partial-delivery ledger
+### 8.1 Current delivery ledger
 
 | Workstream | Current state | Next gate |
 |---|---|---|
-| S00 preservation | **In progress; draft PR #114 published** at `313f9683e9e7e4f376b05cedaeb28bb2dd300c9f`; remote checkpoint blobs verified | Read `S00-PRESERVATION.md`, retain known art-integrated acceptance debt; review/integration remain separate |
-| Performance-only PR #113 | Third draw-local pass prepared separately; partial merge planned only after exact-head verification and parent authorization | Read draw-scope evidence and current CI; parent records actual merge receipt, never infer a merge from this plan |
-| S01–S10 | Not completed by either checkpoint | Follow dependencies, per-model owner approval and platform/package gates |
+| S00 preservation | **Deliverables complete on draft PR #114**, reconciled with `main` (`16523bf`); branch delta is art-only; earlier head `313f968` retained in history | Read `S00-PRESERVATION.md` and the PR receipt. Keep the draft unmerged until S02/S04 supply the explicit preview gate. Retain the known art-integrated acceptance debt |
+| Performance PR #113 | **Merged** to `main` as `16523bf0b06a39e3f77961d0c213b0af184a16b6` (tree identical to tested head `a24a4ed`); version `0.15.1`; protected whole suite 1,668 tests, 0 failures/errors, 9 skips; Windows CI `38858140567` passed | Closed. Performance remains headroom, not an art upgrade. Measurement targets still need owner agreement |
+| S01–S10 | Not completed by either delivery | Follow dependencies, per-model owner approval and platform/package gates |
 | S11 | **Not started, not authorized, not done** | Final explicit owner-controlled catalogue switch only after S10 |
 
-**Current next task:** finish the bounded performance-only verification/delivery, keeping PR #114 draft and unmerged; then continue S00 from its durable checkpoint, not by reconstructing or deleting local models. No new catalogue batch, production cutover, tag or release is included.
+**Current next task: S01 — inventory and batch design.** Generate the rendered-model inventory from
+data plus every renderer dispatch, record a scope decision for non-model visuals, and put the coverage
+matrix in front of the owner. Do not start a new model batch, do not merge PR #114, and do not treat
+this checkpoint as a production cutover. No tag or release is included.

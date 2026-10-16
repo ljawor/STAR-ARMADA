@@ -1,0 +1,5 @@
+# Evidence logs inside recorded review artifacts are part of the durable record
+# (retained RED/GREEN runs, exporter rebuilds, protection-canary output), not
+# development noise. The repository-root `*.log` rule would otherwise drop them
+# silently while the handoffs cite them. This negation is scoped to artifacts/.
+!*.log

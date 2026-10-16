@@ -1,0 +1,208 @@
+{
+  "status": "review-ready-not-appearance-approved",
+  "modified_preexisting_files": [
+    "render/authored_mesh.py",
+    "render/faction_ships.py",
+    "render/faction_stations.py",
+    "render/renderer.py",
+    "tests/test_ship_material_passes.py"
+  ],
+  "deleted_preexisting_files": [],
+  "approved_battleship_files": {
+    "assets/models/alliance_battleship.mesh.json": "57a5496c539a0252a237ef7a3671509f705308416da3f2afe0c9555ff17e9fec",
+    "art/blender/alliance_battleship.blend": "7ddefbd5c4c0c815b50e97628e191e7377f0025d6f55f00e69bb04492e0ab352",
+    "tools/art/build_alliance_battleship.py": "7f449c547f97a5ef200e8ae23c0868c40ce3d32f6a79c9a11761cef28663485a",
+    "render/fleet_materials.py": "a0a861739ab46b9173baffd9d7f36b4829e85b85b6b5765544b7f9d1ca7ce403"
+  },
+  "approved_battleship_dispatch_byte_exact": true,
+  "unselected_catalogue_entries_pinned": 73,
+  "runtime_mesh_rebuilds": {
+    "frigate": {
+      "sha256": "045d1383ac8a774d0bb9733a598ca83777dfcdc26645e6900b9d23ee7392348c",
+      "bytes": 358072,
+      "runtime_rebuild_byte_exact": true
+    },
+    "shipyard": {
+      "sha256": "67d4db64c8677a8898f74d6e966a1b2476ffc721fd72c363ddbc992360630aaf",
+      "bytes": 505314,
+      "runtime_rebuild_byte_exact": true
+    }
+  },
+  "source_sha256": {
+    "baseline": "d2c9b57f93e653436c88d7c42f995332e037a799f52058a6836d63d333bda072",
+    "candidate": "47c6b3bbeab091c3725809b7b00b62843fe06c7cd8059410d56541dcc3ba3d27"
+  },
+  "deterministic_combat": {
+    "initial": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+    "final": "2a17e3a7454fc746b7323ff40e1acd9291c616d7b30573b2f7d34b652c35c607",
+    "ticks_compared": 181,
+    "all_per_tick_equal": true,
+    "baseline_weapon_fired": 37,
+    "candidate_weapon_fired": 37,
+    "damage_observed": true
+  },
+  "quality": {
+    "display": {
+      "drawable": [
+        1280,
+        800
+      ],
+      "driver": "cocoa",
+      "gl": {
+        "renderer": "Apple M4",
+        "vendor": "Apple",
+        "version": "2.1 Metal - 90.5"
+      },
+      "logical": [
+        1280,
+        800
+      ],
+      "sample_buffers": 1,
+      "samples": 4,
+      "sdl_requested_samples": 4,
+      "viewport": [
+        0,
+        0,
+        1280,
+        800
+      ]
+    },
+    "materials_available": true,
+    "fog": "normal",
+    "postfx": "unchanged",
+    "global_materials_byte_exact": true
+  },
+  "worklights": {
+    "display_samples": 4,
+    "lights": [
+      {
+        "bbox": [
+          11,
+          15,
+          32,
+          29
+        ],
+        "name": "Worklight exposed lens (-1, -9)",
+        "screen": [
+          576,
+          293
+        ],
+        "state_sha256": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+        "triangle_span": [
+          84,
+          112
+        ],
+        "visible_warm_pixels": 185
+      },
+      {
+        "bbox": [
+          10,
+          14,
+          34,
+          31
+        ],
+        "name": "Worklight exposed lens (-1, 34)",
+        "screen": [
+          457,
+          376
+        ],
+        "state_sha256": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+        "triangle_span": [
+          112,
+          140
+        ],
+        "visible_warm_pixels": 260
+      },
+      {
+        "bbox": [
+          9,
+          14,
+          34,
+          32
+        ],
+        "name": "Worklight exposed lens (1, -9)",
+        "screen": [
+          760,
+          388
+        ],
+        "state_sha256": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+        "triangle_span": [
+          140,
+          168
+        ],
+        "visible_warm_pixels": 276
+      },
+      {
+        "bbox": [
+          7,
+          11,
+          36,
+          34
+        ],
+        "name": "Worklight exposed lens (1, 34)",
+        "screen": [
+          649,
+          499
+        ],
+        "state_sha256": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+        "triangle_span": [
+          168,
+          196
+        ],
+        "visible_warm_pixels": 413
+      }
+    ],
+    "source_sha256": "47c6b3bbeab091c3725809b7b00b62843fe06c7cd8059410d56541dcc3ba3d27",
+    "state_sha256": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d"
+  },
+  "userdata": {
+    "before": 660,
+    "after": 660,
+    "preexisting_unchanged": true,
+    "added": [],
+    "deleted": []
+  },
+  "video": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "width": 2560,
+        "height": 840,
+        "duration": "6.000000",
+        "nb_frames": "180"
+      }
+    ]
+  },
+  "tests": {
+    "log": "protected-focused-tests.log",
+    "passed": 79,
+    "modules": [
+      "test_alliance_blender_trio",
+      "test_alliance_blender_battleship",
+      "test_alliance_visual_slice",
+      "test_ship_material_passes",
+      "test_fleet_materials",
+      "test_ship_sizes",
+      "test_detmath",
+      "test_faction_ships",
+      "test_faction_stations",
+      "test_faction_visuals"
+    ]
+  },
+  "limitations": [
+    "macOS real-driver evidence only; Windows not run",
+    "Direct factory specimen setup; not a paid construction walkthrough",
+    "No full suite or LAN investigation; known unrelated LAN timing result remains unresolved",
+    "Appearance approval remains with owner; no commit/push/merge/release"
+  ],
+  "authored_files": {
+    "art/blender/alliance_frigate.blend": "098a440126da745f4e1e3dbbe4364746083846393f139414fd9921bd4910dfe1",
+    "assets/models/alliance_frigate.mesh.json": "045d1383ac8a774d0bb9733a598ca83777dfcdc26645e6900b9d23ee7392348c",
+    "tools/art/build_alliance_frigate.py": "b2a0bdce919c1bed8b5f726c5dbbef234db4b93c3baf801aa94ac58ad676dee9",
+    "art/blender/alliance_shipyard.blend": "7a59d05facb26ba68e82daed2a5a3274efa4172f40782c7b8bf63caebb1e045c",
+    "assets/models/alliance_shipyard.mesh.json": "67d4db64c8677a8898f74d6e966a1b2476ffc721fd72c363ddbc992360630aaf",
+    "tools/art/build_alliance_shipyard.py": "99b27b08ccc75b54c183a93f2fecbd7729a15fc9ab8bb74fd2b74413943dadfb",
+    "tools/art/alliance_common.py": "7c79e480fe99b1e8950629dce9eeafcbb4e3562d3f9bbaac22d9525a19bfa057"
+  }
+}

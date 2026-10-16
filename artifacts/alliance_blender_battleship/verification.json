@@ -1,0 +1,76 @@
+{
+  "asset": "alliance_battleship",
+  "mesh_vertices": 4603,
+  "mesh_triangles": 8701,
+  "bounds": [
+    [
+      -69.0,
+      -31.0,
+      -143.5
+    ],
+    [
+      69.0,
+      61.0,
+      135.0
+    ]
+  ],
+  "roles": {
+    "base": 3329,
+    "dark": 2720,
+    "trim": 1740,
+    "accent": 600,
+    "lit": 112,
+    "cool": 200
+  },
+  "source_before": "d4339215fd2a52396224c710d151921de50cfc7c9f15ff9af0a634df115409e9",
+  "source_after": "55c4d69094c52273af0bb42c30881845b78623a024bd0d6fc7cf971b7dea6f06",
+  "initial_state_sha256": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+  "final_state_sha256": "2a17e3a7454fc746b7323ff40e1acd9291c616d7b30573b2f7d34b652c35c607",
+  "per_tick_hashes_identical": true,
+  "timeline_samples": 181,
+  "captures_per_variant": 11,
+  "repeated_frozen_captures_identical": true,
+  "normal_fog": true,
+  "render_quality_identical": true,
+  "shared_files_unchanged": {
+    "render/faction_stations.py": true,
+    "render/renderer.py": true
+  },
+  "changed_functions": [
+    "_alliance_battleship_slice"
+  ],
+  "blender_export_repeat_sha256": "57a5496c539a0252a237ef7a3671509f705308416da3f2afe0c9555ff17e9fec",
+  "files": {
+    "render/faction_ships.py": {
+      "bytes": 27444,
+      "sha256": "e7ab89b6ba1e70179dba65151da7b8a73ea33e2ead77372b5dba08c148b191f3"
+    },
+    "render/authored_mesh.py": {
+      "bytes": 4037,
+      "sha256": "9656582796012c1daf6ffafc7a21b592a0f8a498a5648aeacae39bd4cb85ad53"
+    },
+    "tools/art/build_alliance_battleship.py": {
+      "bytes": 13001,
+      "sha256": "7f449c547f97a5ef200e8ae23c0868c40ce3d32f6a79c9a11761cef28663485a"
+    },
+    "art/blender/alliance_battleship.blend": {
+      "bytes": 163806,
+      "sha256": "7ddefbd5c4c0c815b50e97628e191e7377f0025d6f55f00e69bb04492e0ab352"
+    },
+    "assets/models/alliance_battleship.mesh.json": {
+      "bytes": 594859,
+      "sha256": "57a5496c539a0252a237ef7a3671509f705308416da3f2afe0c9555ff17e9fec"
+    },
+    "tests/test_alliance_blender_battleship.py": {
+      "bytes": 5394,
+      "sha256": "98657bedaf961fb2b0a23d267209502862753fc95922046e9ddbe44f738708d2"
+    }
+  },
+  "limitations": [
+    "Not appearance approved.",
+    "The existing noisy hull material remains unchanged; accent/glazing/engine color separation is muted in these real-GL images. No renderer edits were made.",
+    "No full suite, Windows/native acceptance or frame-rate acceptance.",
+    "Factory specimen fixture is not a stock paid fleet construction proof.",
+    "Optional capital-keel view retains a pre-existing horizon bar; not used in contact sheet."
+  ]
+}

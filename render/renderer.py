@@ -1292,12 +1292,13 @@ class Renderer:
             #   3. lit/cool emissive (unlit, no texture)
             # This keeps per-entity transforms and owner colors while reducing
             # the number of GL state switches per ship from six to three.
-            for role, material_pass in (
-                    ("base", 0.0),
-                    ("dark", 1.0),
-                    ("trim", 2.0)):
-                self._draw_ship_role_batch(role, ships, stations, cache,
-                                           material_pass=material_pass)
+            with self.materials.use("hull", materialPass=0.0):
+                for role, material_pass in (
+                        ("base", 0.0),
+                        ("dark", 1.0),
+                        ("trim", 2.0)):
+                    self._draw_ship_role_batch(role, ships, stations, cache,
+                                               material_pass=material_pass)
             # Dedicated accent pass: lighting on, texturing off.
             if ships or stations:
                 glDisable(GL_TEXTURE_2D)
@@ -1404,13 +1405,6 @@ class Renderer:
             # base/dark/trim under hull shader
             self._material_metal(8.0 if role == "base" else 12.0 if role == "trim" else 8.0,
                                  (0.42, 0.42, 0.42) if role != "trim" else (0.85, 0.85, 0.85))
-            if self.materials.available:
-                _gl.glUseProgram(self.materials.programs["hull"])
-                self.materials.hull_pass(material_pass)
-        prev_program = None
-        if material_pass is not None and self.materials.available:
-            prev_program = int(_gl.glGetIntegerv(_gl.GL_CURRENT_PROGRAM))
-            _gl.glUseProgram(self.materials.programs["hull"])
             self.materials.hull_pass(material_pass)
         for e in ships:
             entry = cache.get(e.id)
@@ -1423,7 +1417,11 @@ class Renderer:
             if apparent < LOD_DETAIL and role in ("dark", "trim", "accent", "cool"):
                 continue
             size = entry["size"]
+            authored = size.shape in ("rebel:battleship", "rebel:frigate")
+            if material_pass is not None:
+                self.materials.hull_pass(material_pass, authored)
             color = col_cache.get(e.owner, (0.6, 0.6, 0.6))
+            paint = color
             color = mk.hull_shade(color, rel_cache.get(e.owner, "neutral"))
             glPushMatrix()
             glTranslatef(e.pos.x, e.pos.y, e.pos.z)
@@ -1438,7 +1436,10 @@ class Renderer:
                            min(1.0, color[1] * 1.4 + 0.25),
                            min(1.0, color[2] * 1.4 + 0.25))
             elif role == "accent":
-                glColor3f(*(min(1.0, c * 1.15 + .14) for c in color))
+                # Authored paint is already broad geometry: keep owner saturation,
+                # rather than lifting its color twice toward white.
+                glColor3f(*(paint if authored else
+                            tuple(min(1.0, c * 1.15 + .14) for c in color)))
             elif role == "lit":
                 glColor3f(1.0, 0.80, 0.52)
             elif role == "cool":
@@ -1457,6 +1458,7 @@ class Renderer:
             from render.faction_visuals import owner_faction
             faction = owner_faction(self.state, e.owner)
             origin, basis, _ = station_frame(self.state, e, math.radians(self.time * 3.))
+            authored_station = faction == "rebel" and e.data_id == "shipyard"
             glPushMatrix()
             glTranslatef(*origin)
             _gl.glMultMatrixf([*basis[0], 0., *basis[1], 0., *basis[2], 0., 0., 0., 0., 1.])
@@ -1473,10 +1475,11 @@ class Renderer:
                     tint = (0.68, 0.76, 0.84)
                 glColor3f(*tint)
                 if self.materials.available:
-                    self.materials.hull_pass(material_pass)
+                    self.materials.hull_pass(material_pass, authored_station)
                 glCallList(self._station_detail_list(e.data_id, role, faction))
             elif role == "accent":
-                glColor3f(*(min(1.0, c * 1.15 + .14) for c in color))
+                glColor3f(*(color if authored_station else
+                            tuple(min(1.0, c * 1.15 + .14) for c in color)))
                 glCallList(self._station_detail_list(e.data_id, "accent", faction))
             elif role == "lit":
                 glColor3f(1.0, 0.80, 0.52)
@@ -1485,14 +1488,8 @@ class Renderer:
                 glColor3f(0.38, 0.82, 1.0)
                 glCallList(self._station_detail_list(e.data_id, "cool", faction))
             glPopMatrix()
-        # Restore fixed-function state that the caller set up for this batch.
-        if role in ("lit", "cool"):
-            glEnable(GL_LIGHTING)
-            glEnable(GL_TEXTURE_2D)
-        elif role == "accent":
-            glEnable(GL_TEXTURE_2D)
-        if prev_program is not None:
-            _gl.glUseProgram(prev_program)
+        # The caller owns program, lighting and texture scopes across roles.
+        # In particular lit must not re-enable lighting before cool is emitted.
 
     def _draw_station_queue_ring(self, e):
         if not e.build_queue:
@@ -1997,18 +1994,21 @@ class Renderer:
         # the highlight on normals that mostly are not there (0 visible px),
         # while 8 gives a wide sheen across many plates.
         self._material_metal(8.0, (0.42, 0.42, 0.42))
-        with self.materials.use("hull", materialPass=0.0):
+        authored = size.shape in ("rebel:battleship", "rebel:frigate")
+        with self.materials.use("hull", materialPass=0.0,
+                                authoredSurface=float(authored)):
             glColor3f(*base)
             glCallList(lst)
-            self.materials.hull_pass(1.0)
+            self.materials.hull_pass(1.0, authored)
             glColor3f(*darkc)
             glCallList(dark_lst)
             self._material_metal(12.0, (0.85, 0.85, 0.85))
-            self.materials.hull_pass(2.0)
+            self.materials.hull_pass(2.0, authored)
             glColor3f(*trimc)
             glCallList(trim_lst)
         glDisable(GL_TEXTURE_2D)
-        glColor3f(*(min(1.0, c * 1.15 + .14) for c in color))
+        glColor3f(*(self._owner_color(e.owner) if authored else
+                    tuple(min(1.0, c * 1.15 + .14) for c in color)))
         glCallList(self._ship_display_list(vis["shape"] + "_accent"))
         self._material_matte()
         # emissive details: drawn UNLIT so they read as light sources rather
@@ -2405,6 +2405,7 @@ class Renderer:
         from render.faction_visuals import owner_faction
         faction = owner_faction(self.state, e.owner)
         color = self._owner_color(e.owner)
+        authored_station = faction == "rebel" and e.data_id == "shipyard"
         glPushMatrix()
         from render.planet_building_geometry import station_frame
         origin, basis, scale = station_frame(self.state, e, math.radians(self.time * 3.))
@@ -2416,12 +2417,13 @@ class Renderer:
         scale = e.radius / 50.0
         glScalef(scale, scale, scale)
         self._material_metal(8.0, (0.50, 0.55, 0.62))
-        with self.materials.use("hull", materialPass=0.0):
+        with self.materials.use("hull", materialPass=0.0,
+                                authoredSurface=float(authored_station)):
             for role, material_pass, tint in (
                     ("base", 0.0, color),
                     ("dark", 1.0, (0.20, 0.24, 0.30)),
                     ("trim", 2.0, (0.68, 0.76, 0.84))):
-                self.materials.hull_pass(material_pass)
+                self.materials.hull_pass(material_pass, authored_station)
                 if not self.materials.available and role == "base":
                     tint = tuple(.42 + .18*c for c in color)
                 glColor3f(*tint)
@@ -2429,7 +2431,8 @@ class Renderer:
         # Dedicated broad painted armor, not an overall owner tint. Draw outside
         # the alloy shader so faction saturation survives on the actual plates.
         glDisable(GL_TEXTURE_2D)
-        glColor3f(*(min(1.0, c*1.15+.14) for c in color))
+        glColor3f(*(color if authored_station else
+                    tuple(min(1.0, c*1.15+.14) for c in color)))
         glCallList(self._station_detail_list(e.data_id, "accent", faction))
         self._material_matte()
         glDisable(GL_LIGHTING)

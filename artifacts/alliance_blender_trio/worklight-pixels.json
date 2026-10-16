@@ -1,0 +1,83 @@
+{
+  "display_samples": 4,
+  "lights": [
+    {
+      "bbox": [
+        11,
+        15,
+        32,
+        29
+      ],
+      "name": "Worklight exposed lens (-1, -9)",
+      "screen": [
+        576,
+        293
+      ],
+      "state_sha256": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "triangle_span": [
+        84,
+        112
+      ],
+      "visible_warm_pixels": 185
+    },
+    {
+      "bbox": [
+        10,
+        14,
+        34,
+        31
+      ],
+      "name": "Worklight exposed lens (-1, 34)",
+      "screen": [
+        457,
+        376
+      ],
+      "state_sha256": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "triangle_span": [
+        112,
+        140
+      ],
+      "visible_warm_pixels": 260
+    },
+    {
+      "bbox": [
+        9,
+        14,
+        34,
+        32
+      ],
+      "name": "Worklight exposed lens (1, -9)",
+      "screen": [
+        760,
+        388
+      ],
+      "state_sha256": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "triangle_span": [
+        140,
+        168
+      ],
+      "visible_warm_pixels": 276
+    },
+    {
+      "bbox": [
+        7,
+        11,
+        36,
+        34
+      ],
+      "name": "Worklight exposed lens (1, 34)",
+      "screen": [
+        649,
+        499
+      ],
+      "state_sha256": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "triangle_span": [
+        168,
+        196
+      ],
+      "visible_warm_pixels": 413
+    }
+  ],
+  "source_sha256": "47c6b3bbeab091c3725809b7b00b62843fe06c7cd8059410d56541dcc3ba3d27",
+  "state_sha256": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d"
+}

@@ -1,0 +1,137 @@
+{
+  "schema": 1,
+  "purpose": "Owner decisions bound to specific model revisions. An approval is valid only for the exact source/export/material revisions listed here; any meaningful visual revision invalidates it until the owner reviews the change again.",
+  "decision_log": [
+    {
+      "id": "approved-trio-2026-10-16",
+      "date": "2026-10-16",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved",
+      "scope_statement": "Approved the shown Blender geometry and material direction for exactly three bindings: rebel_battleship, rebel_frigate and the Alliance-owned (rebel) shipyard. Approval does not extend to any other model, faction or catalogue entry.",
+      "approval_kind": "appearance-direction-and-specimen",
+      "not_approved_by_this_decision": [
+        "any other ship, station, satellite, construction, planet or campaign asset",
+        "Syndicate, Imperial or Confederacy catalogue entries",
+        "a generic asset registry or mod interface (S02/S04)",
+        "a production default switch, merge, tag or release (S11)",
+        "Windows-native, packaged or frozen-build acceptance (S09)"
+      ],
+      "how_recorded": "Recorded from the owner's approval of the battleship geometry/material captures and then of the frigate/shipyard comparisons in the model-migration conversation. The durable evidence is this manifest plus the receipts referenced below; no timestamp is fabricated beyond the recorded conversation date.",
+      "evidence_references": [
+        "artifacts/alliance_blender_trio/README.md",
+        "artifacts/alliance_blender_trio/three-asset-review.jpg",
+        "artifacts/alliance_blender_trio/trio-in-game.png",
+        "artifacts/alliance_blender_trio/before-after-contact-sheet.jpg",
+        "artifacts/alliance_blender_trio/before-after-aft-drives.jpg",
+        "artifacts/alliance_blender_trio/before-after-motion.mp4",
+        "artifacts/alliance_blender_trio/verification.json",
+        "artifacts/alliance_blender_trio/worklight-pixels.json",
+        "artifacts/alliance_blender_trio/pixel-checks/metrics.json",
+        "artifacts/alliance_battleship_materials/before-after-contact-sheet.jpg",
+        "artifacts/alliance_battleship_materials/verification.json",
+        "artifacts/alliance_blender_battleship/verification.json"
+      ]
+    }
+  ],
+  "approved_assets": [
+    {
+      "approval_id": "approved-trio-2026-10-16",
+      "asset_id": "core:alliance/battleship",
+      "gameplay_binding": "rebel_battleship",
+      "shape_key": "rebel:battleship",
+      "category": "combat_hull",
+      "source_authority": "script-authoritative",
+      "blender_version": "5.0.1",
+      "source": {
+        "art/blender/alliance_battleship.blend": "7ddefbd5c4c0c815b50e97628e191e7377f0025d6f55f00e69bb04492e0ab352"
+      },
+      "exporter": {
+        "tools/art/build_alliance_battleship.py": "7f449c547f97a5ef200e8ae23c0868c40ce3d32f6a79c9a11761cef28663485a"
+      },
+      "runtime": {
+        "assets/models/alliance_battleship.mesh.json": "57a5496c539a0252a237ef7a3671509f705308416da3f2afe0c9555ff17e9fec"
+      },
+      "material_profile": {
+        "roles": ["base", "dark", "trim", "accent", "lit", "cool"],
+        "profile_version": 1,
+        "authored_surface_profile": true,
+        "render/fleet_materials.py": "a0a861739ab46b9173baffd9d7f36b4829e85b85b6b5765544b7f9d1ca7ce403"
+      },
+      "catalogue_size_policy": {
+        "in_game_length_world_units": 224.421225,
+        "note": "Renderer-only size policy scales the authored hull to the pre-existing catalogue length. Collision radii and simulation fields are unchanged."
+      }
+    },
+    {
+      "approval_id": "approved-trio-2026-10-16",
+      "asset_id": "core:alliance/frigate",
+      "gameplay_binding": "rebel_frigate",
+      "shape_key": "rebel:frigate",
+      "category": "combat_hull",
+      "source_authority": "script-authoritative",
+      "blender_version": "5.0.1",
+      "source": {
+        "art/blender/alliance_frigate.blend": "098a440126da745f4e1e3dbbe4364746083846393f139414fd9921bd4910dfe1"
+      },
+      "exporter": {
+        "tools/art/build_alliance_frigate.py": "b2a0bdce919c1bed8b5f726c5dbbef234db4b93c3baf801aa94ac58ad676dee9",
+        "tools/art/alliance_common.py": "7c79e480fe99b1e8950629dce9eeafcbb4e3562d3f9bbaac22d9525a19bfa057"
+      },
+      "runtime": {
+        "assets/models/alliance_frigate.mesh.json": "045d1383ac8a774d0bb9733a598ca83777dfcdc26645e6900b9d23ee7392348c"
+      },
+      "material_profile": {
+        "roles": ["base", "dark", "trim", "accent", "lit", "cool"],
+        "profile_version": 1,
+        "authored_surface_profile": true,
+        "render/fleet_materials.py": "a0a861739ab46b9173baffd9d7f36b4829e85b85b6b5765544b7f9d1ca7ce403"
+      },
+      "catalogue_size_policy": {
+        "in_game_length_world_units": 96.180525,
+        "note": "Renderer-only size policy scales the authored hull to the pre-existing catalogue length. Collision radii and simulation fields are unchanged."
+      }
+    },
+    {
+      "approval_id": "approved-trio-2026-10-16",
+      "asset_id": "core:alliance/station/shipyard",
+      "gameplay_binding": "station:rebel:shipyard",
+      "shape_key": "rebel:shipyard",
+      "category": "station",
+      "faction": "rebel",
+      "source_authority": "script-authoritative",
+      "blender_version": "5.0.1",
+      "source": {
+        "art/blender/alliance_shipyard.blend": "7a59d05facb26ba68e82daed2a5a3274efa4172f40782c7b8bf63caebb1e045c"
+      },
+      "exporter": {
+        "tools/art/build_alliance_shipyard.py": "99b27b08ccc75b54c183a93f2fecbd7729a15fc9ab8bb74fd2b74413943dadfb",
+        "tools/art/alliance_common.py": "7c79e480fe99b1e8950629dce9eeafcbb4e3562d3f9bbaac22d9525a19bfa057"
+      },
+      "runtime": {
+        "assets/models/alliance_shipyard.mesh.json": "67d4db64c8677a8898f74d6e966a1b2476ffc721fd72c363ddbc992360630aaf"
+      },
+      "material_profile": {
+        "roles": ["base", "dark", "trim", "accent", "lit", "cool"],
+        "profile_version": 1,
+        "authored_surface_profile": true,
+        "render/fleet_materials.py": "a0a861739ab46b9173baffd9d7f36b4829e85b85b6b5765544b7f9d1ca7ce403"
+      },
+      "catalogue_size_policy": {
+        "station_radius_world_units": 110.0,
+        "note": "Station radius is unchanged data; renderer station geometry is scaled by radius/50. No collision or simulation field changes."
+      },
+      "named_features": {
+        "worklights": 4,
+        "note": "Four individually removed-and-measured broad-face worklights. Evidence: artifacts/alliance_blender_trio/worklight-pixels.json and pixel-checks/."
+      }
+    }
+  ],
+  "integration_state": {
+    "activation": "hardcoded-active-preview",
+    "detail": "The renderer currently selects the authored trio by hardcoded identity checks (shape key 'rebel:battleship' / 'rebel:frigate' in render/faction_ships.py, and faction=='rebel' and data_id=='shipyard' in render/faction_stations.py). There is no persisted preview/default switch.",
+    "required_before_broader_rollout": "S04 (plus the S02 contract) must replace this with an explicit, persisted, reversible opt-in preview selection before any production art merge or wider catalogue rollout.",
+    "production_default": "legacy",
+    "note": "The production default on main is unchanged: none of these three assets are on main at all."
+  },
+  "source_hash_manifest": "art/manifests/approved-trio-source-hashes.json"
+}

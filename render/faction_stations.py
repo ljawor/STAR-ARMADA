@@ -100,6 +100,39 @@ def _dish(h, x, y, z, radius=23, pitch=25):
     h.plate('lit',(3,1,3),(x,y+18.6,z),.3)
 
 
+def _alliance_shipyard_slice(h):
+    """Open-ended cradle with lateral work arms and an offset control loft."""
+    for side in (-1,1):
+        _capsule(h,'base',10,112,14,(side*50,-4,0))
+        h.plate('base',(12,9,100),(side*50,-17,0),1.5)
+        h.plate('accent',(7,1,84),(side*50,3.7,0),.3)
+        for z in (-33,33):
+            # Paired partial portals never span or roof the construction lane.
+            h.plate('base',(8,37,9),(side*45,12,z),1.2)
+            h.plate('base',(23,7,10),(side*36,29,z),1.2)
+            h.plate('dark',(8,10,9),(side*28,21,z),.8)
+            h.plate('cool',(7,.7,7),(side*28,26.5,z),.2)
+            h.plate('trim',(14,5,8),(side*57,-2,z),1)
+            _crew(h,side*63,0,z,7,26)
+        for z in (-14,14):
+            h.vent((side*50,3.5,z),10,12)
+            h.plate('trim',(5,18,6),(side*48,10,z),.7)
+            h.plate('base',(17,5,7),(side*40,19,z),.8)
+            h.plate('cool',(6,.6,5),(side*35,22,z),.2)
+        h.bay((side*50,-4,63),14,10,14)
+        # Docking plane and exposed lower spine cooling, outside central void.
+        h.plate('dark',(5,5,78),(side*41,-12,0),.6)
+        h.plate('cool',(1,.6,65),(side*42,-8.9,0),.2)
+    # Low end ties provide load paths without filling the working volume.
+    for z in (-48,48):
+        h.plate('base',(96,7,8),(0,-21,z),1)
+        h.plate('trim',(76,1,5),(0,-16.9,z),.3)
+    _capsule(h,'base',11,34,19,(48,38,-28))
+    _capsule(h,'lit',7,20,.8,(48,48.4,-28))
+    h.plate('base',(9,13,13),(48,25,-28),1)
+    h.plate('accent',(14,1,8),(48,48.1,-36),.3)
+
+
 def _alliance(h, kind):
     if kind == 'command_station':
         _ellipse(h,'base',40,33,8,1.15,.70)
@@ -113,16 +146,7 @@ def _alliance(h, kind):
         _capsule(h,'lit',8,22,1,(0,32.6,0))
         h.plate('dark',(9,3,17),(0,-4,0),1)
     elif kind == 'shipyard':
-        h.plate('dark',(20,8,115),(0,-17,0),2)
-        for z in (-33,33):
-            _ellipse(h,'base',36,30,7,1.35,1,(0,5,z),90)
-            _ellipse(h,'cool',31,30,1,1.35,1,(0,5,z-4.1),90)
-        for s in (-1,1):
-            _capsule(h,'base',9,112,12,(s*51,0,0))
-            _capsule(h,'accent',4,85,1,(s*51,6.8,0))
-            h.plate('trim',(5,12,6),(s*51,10,-33),1)
-        _capsule(h,'base',12,33,18,(0,41,-33))
-        _capsule(h,'lit',9,16,1,(0,50.6,-33))
+        _alliance_shipyard_slice(h)
     elif kind == 'research_station':
         # Two separated laboratories linked to a small observation habitat.
         _ellipse(h,'trim',27,24,3,1.25,.8,(0,-5,0))
@@ -432,6 +456,15 @@ def _syndicate_roles(h, kind):
 
 @lru_cache(maxsize=30)
 def _station_mesh(faction, kind):
+    if faction == 'rebel' and kind == 'shipyard':
+        from .authored_mesh import shipyard_mesh
+        try:
+            # Authored station is already in the final nominal-radius-50 space.
+            return shipyard_mesh()
+        except (OSError, ValueError, TypeError, KeyError, OverflowError) as exc:
+            import warnings
+            warnings.warn(f'Alliance shipyard asset unavailable; using procedural yard: {exc}',
+                          RuntimeWarning, stacklevel=2)
     from .fleet_geometry import _Hardware
     h = _Hardware()
     {'rebel': _alliance, 'confederacy': _legions, 'syndicate': _syndicate}[faction](h,kind)
