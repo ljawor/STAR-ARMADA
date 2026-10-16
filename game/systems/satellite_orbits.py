@@ -112,6 +112,26 @@ def orbit_geometry(state, planet, station_radius, slot):
     A shared small shell offset preserves separation between every slot.
     The cache is derived geometry only, excluded from save/replay state.
     """
+    return _orbit_geometry(state, planet, station_radius, slot)
+
+
+class _OrbitTerrainInputs:
+    """Lazy numeric terrain snapshot for ONE synchronous read-only spacing call."""
+    def __init__(self):
+        self._terrain = None
+
+    def bodies_for(self, state, planet):
+        if self._terrain is None:
+            terrain = sorted((e for e in state.entities.values()
+                              if e.alive and e.is_planet
+                              and e.data_id != 'asteroid_field'), key=lambda e: e.id)
+            # Retain identity only for parent exclusion; numeric input is frozen.
+            self._terrain = tuple((e, (e.id, e.pos.x, e.pos.y, e.pos.z, e.radius))
+                                  for e in terrain)
+        return tuple(body for e, body in self._terrain if e is not planet)
+
+
+def _orbit_geometry(state, planet, station_radius, slot, terrain_inputs=None):
     cfg = colony_rules()
     from ..data.store import DataStore
     hulls = (station_radius, *(DataStore.get().stations[k].radius for k in SATELLITE_TYPES))
@@ -126,9 +146,15 @@ def orbit_geometry(state, planet, station_radius, slot):
     # modded hull pair. Never weaken spacing or rescale a mod's hardware.
     if cfg['satellite_cap'] > 1 and cfg['orbit_shell_spacing'] < 3.2 * shell_radius + .001:
         return None
-    bodies = tuple((e.id, e.pos.x, e.pos.y, e.pos.z, e.radius)
-                   for e in sorted(state.entities.values(), key=lambda e: e.id)
-                   if e.alive and e.is_planet and e is not planet and e.data_id != 'asteroid_field')
+    if terrain_inputs is None:
+        # Standalone queries always read live terrain, retaining the original key.
+        terrain = sorted((e for e in state.entities.values()
+                          if e.alive and e.is_planet and e is not planet
+                          and e.data_id != 'asteroid_field'), key=lambda e: e.id)
+        bodies = tuple((e.id, e.pos.x, e.pos.y, e.pos.z, e.radius)
+                       for e in terrain)
+    else:
+        bodies = terrain_inputs.bodies_for(state, planet)
     plans = _terrain_plans(planet.id, planet.pos.to_tuple(), planet.radius, shell_radius,
                            tuple(sorted(cfg.items())), bodies, state.map_info.bounds)
     return plans[slot] if plans is not None and 0 <= slot < len(plans) else None

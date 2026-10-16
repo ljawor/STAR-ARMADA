@@ -411,6 +411,33 @@ class Renderer:
 
     # ------------------------------------------------------------------ per frame
     def draw(self, dt: float, selection: set, hover_id: int | None = None) -> None:
+        from game.systems.visibility import presentation_sensor_batch
+        # One synchronous, read-only draw only. Never borrow the persistent
+        # frame cache's lifetime: callers can edit entities/catalogues same tick.
+        had_scope = hasattr(self, '_draw_view')
+        previous = getattr(self, '_draw_view', None)
+        self._draw_view = {}
+        try:
+            with presentation_sensor_batch(self.state):
+                self._draw_read_only(dt, selection, hover_id)
+        finally:
+            if had_scope:
+                self._draw_view = previous
+            else:
+                del self._draw_view
+
+    def _draw_view_geometry(self):
+        """Lazy exact safe eye/basis; standalone helper calls remain live."""
+        scope = getattr(self, '_draw_view', None)
+        if scope is not None and 'geometry' in scope:
+            return scope['geometry']
+        geometry = (self.camera.eye_position(), self.camera.basis())
+        if scope is not None:
+            scope['geometry'] = geometry
+        return geometry
+
+    def _draw_read_only(self, dt: float, selection: set,
+                        hover_id: int | None = None) -> None:
         # Probe/test hook: freeze the animation clock so consecutive frames are
         # otherwise identical. `self.time` drives the planet spin, station
         # rotation and starfield drift, so with it advancing every pixel of the
@@ -424,6 +451,13 @@ class Renderer:
         cache = self._ensure_frame_cache(selection)
         glMatrixMode(GL_MODELVIEW)
         self.camera.apply()
+        # apply refreshes collision keep-outs even with the same camera key.
+        # Preserve legacy pre-apply frame metrics, but never reuse that eye or
+        # its readable sizes after a refresh moved the actual safe eye.
+        scope = getattr(self, '_draw_view', None)
+        if (scope is not None and 'geometry' in scope
+                and scope['geometry'][0] != self.camera.eye_position()):
+            scope.clear()
         # frame start: clear color+depth. Without this, frames accumulate
         # (smeared wedges, z-fight dither, HUD depth blocking the 3D scene).
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -740,9 +774,7 @@ class Renderer:
         Triangle fans crossing the near plane project with mirrored winding
         and smear giant shapes across the screen — this guard prevents that.
         """
-        cam = self.camera
-        eye = cam.eye_position()
-        _, _, fwd = cam.basis()
+        eye, (_, _, fwd) = self._draw_view_geometry()
         depth = ((pos[0] if hasattr(pos, "__len__") else pos.x) - eye[0]) * fwd[0] \
             + ((pos[1] if hasattr(pos, "__len__") else pos.y) - eye[1]) * fwd[1] \
             + ((pos[2] if hasattr(pos, "__len__") else pos.z) - eye[2]) * fwd[2]
@@ -1827,9 +1859,19 @@ class Renderer:
     def _ship_size(self, e):
         from render.ship_sizes import readable_size
         from render.faction_visuals import owner_faction
-        return readable_size(self.ds, e.data_id,
+        scope = getattr(self, '_draw_view', None)
+        if scope is not None:
+            sizes = scope.setdefault('sizes', {})
+            entry = sizes.get(id(e))
+            if entry is not None and entry[0] is e:
+                return entry[1]
+        size = readable_size(self.ds, e.data_id,
                              self._px_per_world((e.pos.x, e.pos.y, e.pos.z), camera_depth=True),
                              owner_faction(getattr(self, 'state', None), e.owner))
+        if scope is not None:
+            # Retain identity, not mutable/public entity IDs (or recycled ids).
+            scope['sizes'][id(e)] = (e, size)
+        return size
 
     def _visual_hit(self, fx):
         """Copy sim contacts onto visual surfaces; never modify effect/save data."""
@@ -3524,18 +3566,31 @@ class Renderer:
         """Screen pixels per world unit at `pos` (0.0 if behind the camera)."""
         if not self._in_front(pos, 0.0):
             return 0.0
-        eye = self.camera.eye_position()
+        scope = getattr(self, '_draw_view', None)
+        if scope is None:
+            eye = self.camera.eye_position()
+        else:
+            eye, (_, _, forward) = self._draw_view_geometry()
         if camera_depth:
             # Ship LOD must agree at equal camera depth, including off-axis hulls.
-            _, _, forward = self.camera.basis()
+            if scope is None:
+                _, _, forward = self.camera.basis()
             dist = sum((pos[i]-eye[i])*forward[i] for i in range(3))
         else:
             # Preserve the existing station/planet/general-effects appearance.
             dist = math.sqrt(sum((pos[i]-eye[i])**2 for i in range(3)))
         if dist <= 1e-6:
             return 0.0
-        return self.camera.height / (
-            2.0 * dist * math.tan(math.radians(self.camera.fov / 2)))
+        if scope is None:
+            return self.camera.height / (
+                2.0 * dist * math.tan(math.radians(self.camera.fov / 2)))
+        if 'projection' not in scope:
+            scope['projection'] = (self.camera.height,
+                math.tan(math.radians(self.camera.fov / 2)))
+        height, tangent = scope['projection']
+        # Keep the live formula's exact multiplication/division order. The
+        # older _px_per_world_cached's px_scale / dist is NOT equivalent.
+        return height / (2.0 * dist * tangent)
 
     # ------------------------------------------------------------ planet shields
     def _draw_planet_shields(self, dt: float) -> None:

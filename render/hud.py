@@ -279,6 +279,14 @@ class HUD:
     def render(self, selection: set, hover_id: int | None,
                local_player: int, paused: bool, flash_msg: str = "",
                flash_left: float = 0.0, fps: float = 0.0) -> None:
+        from game.systems.visibility import presentation_sensor_batch
+        with presentation_sensor_batch(self.state):
+            self._render_read_only(selection, hover_id, local_player, paused,
+                                   flash_msg, flash_left, fps)
+
+    def _render_read_only(self, selection: set, hover_id: int | None,
+                          local_player: int, paused: bool, flash_msg: str = "",
+                          flash_left: float = 0.0, fps: float = 0.0) -> None:
         self.local_player = local_player
         selection = {eid for eid in selection if self.state.can_see(local_player, eid)}
         ov = self.overlay

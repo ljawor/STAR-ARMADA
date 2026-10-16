@@ -64,13 +64,14 @@ def counts(st):
 
 
 def summarize(samples):
-    """Nearest-rank p95, all durations in ms; raw samples retained for auditing."""
+    """Nearest-rank p95/p99, all durations in ms; raw samples retained for auditing."""
     if not samples:
         raise ValueError('at least one timing sample is required')
     ordered = sorted(samples)
     return dict(count=len(samples), mean_ms=statistics.mean(samples),
                 median_ms=statistics.median(samples),
                 p95_ms=ordered[math.ceil(.95 * len(samples)) - 1],
+                p99_ms=ordered[math.ceil(.99 * len(samples)) - 1],
                 max_ms=max(samples), samples_ms=samples)
 
 
@@ -90,8 +91,33 @@ def reported_swap_interval(pygame):
         return None
 
 
+def reported_drawable_size(pygame):
+    """Ask the current SDL GL window, not the requested/logical window size.
+
+    The linked SDL symbols may not be exported through Windows pygame.base.
+    Unknown stays null; never label a requested size as observed pixels.
+    """
+    import ctypes
+    try:
+        library = ctypes.CDLL(pygame.base.__file__)
+        current = library.SDL_GL_GetCurrentWindow
+        current.argtypes, current.restype = [], ctypes.c_void_p
+        window = current()
+        if not window:
+            return None
+        getter = library.SDL_GL_GetDrawableSize
+        getter.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_int), ctypes.POINTER(ctypes.c_int)]
+        getter.restype = None
+        width, height = ctypes.c_int(), ctypes.c_int()
+        getter(window, ctypes.byref(width), ctypes.byref(height))
+        return [width.value, height.value] if width.value > 0 and height.value > 0 else None
+    except (OSError, AttributeError, TypeError):
+        return None
+
+
 def run_benchmark(*, units=200, frames=60, warmup=10, mode='full',
-                  width=1280, height=800, vsync=0, msaa=4, screenshot=None):
+                  width=1280, height=800, vsync=0, msaa=4, screenshot=None,
+                  fixture='corvette-combat-v1', lan_checksum=False):
     for name, value, low, high in (('units', units, 2, 2000),
             ('frames', frames, 1, 3600), ('warmup', warmup, 0, 300),
             ('width', width, 800, 7680), ('height', height, 600, 4320)):
@@ -101,24 +127,49 @@ def run_benchmark(*, units=200, frames=60, warmup=10, mode='full',
         raise ValueError('invalid mode, vsync or msaa')
     if mode == 'sim' and screenshot is not None:
         raise ValueError('screenshots require full mode')
+    from game.graphics_benchmark import FIXTURES, make_fixture, semantic_inventory, visibility_sample, Activity
+    if fixture not in ('corvette-combat-v1',) + FIXTURES:
+        raise ValueError(f'unknown fixture: {fixture}')
+    if type(lan_checksum) is not bool:
+        raise ValueError('lan_checksum must be a boolean')
+    if fixture != 'corvette-combat-v1':
+        if units != 200:
+            raise ValueError('units is only configurable for corvette-combat-v1; representative inventory is fixed')
+        if warmup + frames > 300:
+            raise ValueError('representative fixtures require warmup + frames <= 300 (10 simulated seconds)')
     if mode == 'full':
         for key in ('STAR_ARMADA_SKIP', 'STAR_ARMADA_NO_CULL'):
             if os.environ.get(key):
                 raise ValueError(f'{key} must be unset or empty for acceptance full mode')
     from game import __version__
-    gm = make_scene(units)
+    scene = None if fixture == 'corvette-combat-v1' else make_fixture(fixture)
+    gm = make_scene(units) if scene is None else scene.manager
     st = gm.state
     initial_hash, initial_counts = state_hash(st), counts(st)
-    report = dict(schema_version=SCHEMA_VERSION, status='ok', version=__version__,
+    report: dict = dict(schema_version=SCHEMA_VERSION, status='ok', version=__version__,
         environment=dict(platform=platform.platform(), machine=platform.machine(),
                          python=platform.python_version(), frozen=bool(getattr(sys, 'frozen', False))),
-        fixture='corvette-combat-v1', seed=st.seed, tick_dt=TICK_DT,
-        mode=mode, units=units, frames=frames, warmup_frames=warmup,
+        fixture=fixture, seed=st.seed, tick_dt=TICK_DT,
+        mode=mode, units=units if scene is None else semantic_inventory(st)['total']['combat_ships'],
+        frames=frames, warmup_frames=warmup,
         initial_state_sha256=initial_hash, counts_initial=initial_counts,
         timing_semantics='perf_counter_ns; fixed 1/30 simulation tick; no pacing; '
             'full mode glFinish after camera/world/HUD; world includes Renderer camera.apply; '
             'audio/input/menu/cinematic excluded; warmup excluded from samples')
     samples = {'sim': []}
+    activity = None
+    if scene is not None:
+        report.update(scene=scene.metadata(), inventory_initial=semantic_inventory(st),
+                      inventory_per_sample=[], visibility_per_sample=[], activity_per_sample=[],
+                      command_budget_per_sample=[])
+        report['diagnostics_semantics'] = ('Read-only event callbacks included in sim timing; inventory/visibility/driver sampling '
+            'outside stage/frame samples; frame is not end-to-end live gameplay pacing. AI/audio/input/network excluded.')
+        activity = Activity(st)
+    if lan_checksum:
+        from game.net.lan import precise_checksum
+        samples['lan_precise_checksum'] = []
+        report['lan_checksum_semantics'] = ('Separate precise_checksum(manager) cost after simulation/render/presentation; '
+            'excluded from sim and frame stages; no sockets/barrier/input delay; not real-network pacing')
     pygame = GL = camera = renderer = hud = None
     primary_error = None
     report['sample_exclusions'] = {}
@@ -135,10 +186,16 @@ def run_benchmark(*, units=200, frames=60, warmup=10, mode='full',
             pygame.display.gl_set_attribute(pygame.GL_MULTISAMPLEBUFFERS, int(msaa > 0))
             pygame.display.gl_set_attribute(pygame.GL_MULTISAMPLESAMPLES, msaa)
             pygame.display.set_mode((width, height), pygame.OPENGL | pygame.DOUBLEBUF, vsync=vsync)
+            requested_resolution = [width, height]
+            drawable = reported_drawable_size(pygame)
+            if scene is not None and drawable is not None:
+                width, height = drawable
             GL.glViewport(0, 0, width, height)
             pygame.event.pump()
             camera = Camera(width, height)
             camera.distance = 4500
+            if scene is not None:
+                scene.camera.apply(camera)
             renderer = Renderer(st, camera)
             hud = HUD(width, height, st)
             samples.update({name: [] for name in ('camera', 'world', 'hud', 'swap', 'frame')})
@@ -146,7 +203,9 @@ def run_benchmark(*, units=200, frames=60, warmup=10, mode='full',
                 raw = GL.glGetString(name)
                 return raw.decode('utf-8', errors='replace') if raw else None
             actual_vsync = reported_swap_interval(pygame)
-            report['graphics'] = dict(resolution=[width, height],
+            report['graphics'] = dict(resolution=requested_resolution, drawable_size=drawable,
+                render_size=[width, height],
+                drawable_note='Actual SDL_GL_GetDrawableSize, null when unavailable; render_size is the viewport/capture extent used.',
                 viewport=[int(x) for x in GL.glGetIntegerv(GL.GL_VIEWPORT)],
                 requested_vsync=vsync, reported_swap_interval=actual_vsync,
                 vsync_note='swap interval may be unavailable or overridden by driver; inspect swap samples',
@@ -155,14 +214,20 @@ def run_benchmark(*, units=200, frames=60, warmup=10, mode='full',
                 sdl=list(pygame.get_sdl_version()), vendor=gl_string(GL.GL_VENDOR),
                 gpu=gl_string(GL.GL_RENDERER), driver=gl_string(GL.GL_VERSION),
                 shader_enabled=renderer.materials.available)
+            if scene is not None:
+                report['graphics']['window_size'] = list(pygame.display.get_window_size())
+                report['graphics_per_sample'] = []
             report['sample_exclusions'] = dict(swap=[frames - 1], frame=[frames - 1])
             report['capture_timing_note'] = ('Final back-buffer capture preserves the frame hash; '
                 'capture-adjacent swap and frame samples excluded (zero-based measured indices). '
                 'One-frame runs have no swap/frame timing evidence.')
             GL.glFinish()
-        selection = {next(e.id for e in st.entities.values() if e.is_ship and e.owner == 0)}
+        selection = (set(scene.selection) if scene is not None else
+                     {next(e.id for e in st.entities.values() if e.is_ship and e.owner == 0)})
         count_history = []
         for frame in range(warmup + frames):
+            if activity is not None:
+                activity.frame.clear()
             if pygame is not None:
                 if any(ev.type == pygame.QUIT for ev in pygame.event.get()):
                     raise RuntimeError('benchmark cancelled; no complete acceptance result')
@@ -206,18 +271,41 @@ def run_benchmark(*, units=200, frames=60, warmup=10, mode='full',
                 pygame.display.flip()
                 durations['swap'] = (time.perf_counter_ns() - start) / 1e6
                 durations['frame'] = (time.perf_counter_ns() - frame_start - capture_ns) / 1e6
+            if lan_checksum:
+                start = time.perf_counter_ns()
+                checksum = precise_checksum(gm)
+                durations['lan_precise_checksum'] = (time.perf_counter_ns() - start) / 1e6
+                report['lan_precise_checksum_final'] = checksum
             if frame >= warmup:
                 for name, value in durations.items():
                     if frame - warmup in report['sample_exclusions'].get(name, []):
                         continue
                     samples[name].append(value)
                 count_history.append(counts(st))
+                if scene is not None:
+                    report['inventory_per_sample'].append(semantic_inventory(st))
+                    report['visibility_per_sample'].append(visibility_sample(st, camera))
+                    report['activity_per_sample'].append(activity.snapshot(activity.frame))
+                    report['command_budget_per_sample'].append({str(owner): dict(
+                        used=player.command_used(st.entities), capacity=player.command_capacity)
+                        for owner, player in sorted(st.players.items())})
+                    if GL is not None:
+                        report['graphics_per_sample'].append(dict(
+                            drawable_size=reported_drawable_size(pygame),
+                            viewport=[int(x) for x in GL.glGetIntegerv(GL.GL_VIEWPORT)],
+                            camera_target=list(camera.target), camera_eye=list(camera.eye_position()),
+                            camera_distance=camera.distance, camera_yaw=camera.yaw, camera_pitch=camera.pitch,
+                            sdl_driver=report['graphics']['sdl_driver'], gpu=report['graphics']['gpu'],
+                            driver=report['graphics']['driver']))
         report.update(stages={name: summarize(values) if values else dict(
-                          count=0, mean_ms=None, median_ms=None, p95_ms=None,
+                          count=0, mean_ms=None, median_ms=None, p95_ms=None, p99_ms=None,
                           max_ms=None, samples_ms=[]) for name, values in samples.items()},
                       state_sha256=state_hash(st), counts_final=counts(st),
                       counts_per_sample=count_history, executed_ticks=st.tick,
                       game_over=st.game_over)
+        if scene is not None:
+            report.update(inventory_final=semantic_inventory(st), activity_total=activity.snapshot(activity.total),
+                          command_budget_final=report['command_budget_per_sample'][-1])
         return report
     except BaseException as exc:
         primary_error = exc
@@ -277,7 +365,7 @@ def _write_report(path, result):
     # I/O, not measurement; incomplete JSON must never look like a valid run.
     temporary = None
     try:
-        with tempfile.NamedTemporaryFile(mode='w', encoding='utf-8',
+        with tempfile.NamedTemporaryFile(mode='w', encoding='utf-8', newline='\n',
                                          dir=path.parent, delete=False) as stream:
             temporary = Path(stream.name)
             stream.write(data)
@@ -305,6 +393,10 @@ def cli(argv=None):
         epilog=f'Help and errors are also saved as JSON. Default report: {default}')
     parser.add_argument('-h', '--help', action='store_true', help='write JSON help without measuring')
     parser.add_argument('--mode', choices=('full', 'sim'), default='full')
+    from game.graphics_benchmark import FIXTURES
+    parser.add_argument('--fixture', choices=('corvette-combat-v1',) + FIXTURES, default='corvette-combat-v1',
+                        help='versioned starting state; four-player fixtures fix inventory and require warmup + frames <= 300')
+    parser.add_argument('--lan-checksum', action='store_true', help='time LAN precise_checksum separately; no real-network pacing')
     parser.add_argument('--units', type=int, default=200)
     parser.add_argument('--frames', type=int, default=60)
     parser.add_argument('--warmup', type=int, default=10)
@@ -335,6 +427,8 @@ def cli(argv=None):
             result = dict(schema_version=SCHEMA_VERSION, status='help',
                           help=parser.format_help(), default_output=str(default))
         else:
+            if args.fixture != 'corvette-combat-v1' and any(token == '--units' or token.startswith('--units=') for token in argv):
+                raise ValueError('--units is only valid for corvette-combat-v1')
             result = run_benchmark(**{key: value for key, value in vars(args).items()
                                       if key not in ('output', 'help')})
     except Exception as exc:
