@@ -267,7 +267,7 @@ The elements listed in section 7 above that are **not** in section 7.1 keep thei
 
 ## 8. Approved scope and its limits
 
-Owner decision `approved-trio-2026-10-16`; preserved in draft PR #114 (feat/blender-approved-trio-checkpoint).
+Owner decision `approved-trio-2026-10-16`; preserved in PR #114, merged into main as c5b78eb2d4ceba909ffb7444a56b7dec1f35d1b4 (2026-10-16).
 
 | binding | status | runtime asset | generator in this tree |
 |---|---|---|---|
@@ -327,6 +327,12 @@ Ordered so that each batch settles a question before the next one spends effort 
 # inventory regeneration is stable (second run must not change the files)
 .venv/bin/python tools/art/build_model_inventory.py
 .venv/bin/python tools/art/build_model_inventory.py --check
+
+# the same check passes on a plain main checkout: base_commit names the newest
+# main commit that touched render/, game/, tests/ or assets/, so docs-only and
+# tooling-only commits cannot move the base and cannot fake a stale reference
+git worktree add --detach /tmp/main-verify origin/main
+cp tools/art/build_model_inventory.py art/manifests/model_inventory.json /tmp/main-verify/  # after fetching
 
 # every cited symbol still exists at the base
 python3 - <<'PY'

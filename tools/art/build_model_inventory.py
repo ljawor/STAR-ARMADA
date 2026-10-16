@@ -245,36 +245,44 @@ def git_head() -> str:
         return "unknown"
 
 
+CODE_PATHS = ("render/", "game/", "tests/", "assets/")
+
+
 def code_base_check() -> collections.OrderedDict:
     """Report whether any code the row references name differs from ``origin/main``.
 
-    The inventory is generated on a docs/tools branch, but its line references must be
-    true for a reader of main. That holds only while the branch changes no renderer,
-    gameplay or test file, so it is checked here instead of being asserted in prose.
+    The line references must be true for a reader of main, so the tree is compared with
+    main directly (two-dot, not three-dot: a newer main must not be mistaken for a clean
+    branch) over the paths the rows cite. ``base_commit`` is then the newest commit on
+    main that touched one of those paths, which is stable across later docs- or
+    tools-only commits — exactly the commits that cannot move a cited line — so
+    ``--check`` stays green on main until cited code genuinely changes.
     """
     def git(*args):
         return subprocess.run(["git", "-C", str(ROOT), *args],
                               capture_output=True, text=True)
 
-    base = git("merge-base", "HEAD", "origin/main")
-    if base.returncode != 0:
+    if git("rev-parse", "--verify", "--quiet", "origin/main").returncode != 0:
         return collections.OrderedDict([
             ("checked", False),
             ("note", "origin/main is not available in this clone; code base not verified")])
-    diff = git("diff", "--name-only", f"{base.stdout.strip()}...HEAD",
-               "--", "render/", "game/", "tests/", "assets/")
+    diff = git("diff", "--name-only", "HEAD", "origin/main", "--", *CODE_PATHS)
     if diff.returncode != 0:
         return collections.OrderedDict([("checked", False),
                                          ("note", "git diff failed; code base not verified")])
     changed = [line for line in diff.stdout.splitlines() if line.strip()]
+    newest = git("log", "-1", "--format=%H", "origin/main", "--", *CODE_PATHS)
+    base_commit = newest.stdout.strip() if newest.returncode == 0 else ""
     return collections.OrderedDict([
         ("checked", True),
-        ("merge_base", base.stdout.strip()),
+        ("base_commit", base_commit),
+        ("cited_paths", list(CODE_PATHS)),
         ("changed_code_paths", changed),
         ("note", ("no renderer, gameplay, test or asset file differs from main, so every line "
                   "reference in this inventory is valid for a reader of main"
                   if not changed else
-                  "code differs from main — row references describe this branch, not main")),
+                  "cited code differs from main — row references describe this tree, not main, "
+                  "and the inventory must be re-derived before it is trusted")),
     ])
 
 
@@ -647,19 +655,22 @@ def main() -> int:
         # The base is the code base the rows were measured in, not this branch's HEAD:
         # recording the live HEAD would make --check fail on every later commit, and the
         # rows genuinely describe main's code while this branch changes none of it.
-        ("base_commit", code_base.get("merge_base") or git_head()),
+        ("base_commit", code_base.get("base_commit") or git_head()),
         ("base_branch", "main"),
         ("code_base", code_base),
         ("generated_by", "tools/art/build_model_inventory.py"),
         ("scope", ("Every 3D model the renderer can draw from data, plus every renderer dispatch "
                    "path that can supply geometry and every visual element that is not a discrete "
-                   "model replacement. Environment props are included in the row set but carry "
-                   "status 'unknown_needs_owner_scope_decision': they are inventoried so the "
-                   "migration cannot silently omit them, not because they are in scope.")),
+                   "model replacement. Environment props and the baked menu backdrop are inventoried "
+                   "like everything else and, by the owner's decision of 2026-10-16, are in scope for "
+                   "authoring (status 'in_scope_authoring_pending'); the sky dome, star, nebula and "
+                   "jump point remain 'keep_procedural_proposed' because they were not among the "
+                   "questions put to the owner.")),
         ("owner_approved", {
             "decision": "approved-trio-2026-10-16",
             "bindings": sorted(APPROVED_TRIO),
-            "preserved_in": "draft PR #114 (feat/blender-approved-trio-checkpoint)",
+            "preserved_in": ("PR #114, merged into main as "
+                             "c5b78eb2d4ceba909ffb7444a56b7dec1f35d1b4 (2026-10-16)"),
             "does_not_cover": [
                 "any other hull, station, satellite or installation",
                 "any other faction",
@@ -949,6 +960,12 @@ def render_matrix(inventory, rows, stations, env_kinds, audit) -> str:
     add("# inventory regeneration is stable (second run must not change the files)")
     add(".venv/bin/python tools/art/build_model_inventory.py")
     add(".venv/bin/python tools/art/build_model_inventory.py --check")
+    add("")
+    add("# the same check passes on a plain main checkout: base_commit names the newest")
+    add("# main commit that touched render/, game/, tests/ or assets/, so docs-only and")
+    add("# tooling-only commits cannot move the base and cannot fake a stale reference")
+    add("git worktree add --detach /tmp/main-verify origin/main")
+    add("cp tools/art/build_model_inventory.py art/manifests/model_inventory.json /tmp/main-verify/  # after fetching")
     add("")
     add("# every cited symbol still exists at the base")
     add("python3 - <<'PY'")
