@@ -74,8 +74,17 @@ asteroid props and menu backdrop come **into** the catalogue, the three declared
 keys become planned hulls (battleships and capital ships at the shipyard, bombers at the fighter
 platform), and the five authoring batches are approved in the recommended order. That is scope and plan
 approval only: no individual model design is approved, and the broader catalogue default is still
-unswitched. S02 is the next step; S02–S10 remain gated as below. **S11 is not done or authorized.** No
+unswitched. S02 is next and is now review-ready; S03–S10 remain gated as below. **S11 is not done or authorized.** No
 release or tag is part of either delivery.
+
+**S02 freezes the extension contract, and implements nothing.** `docs/ASSET_EXTENSION_CONTRACT.md`
+with `art/schemas/` defines three versioned documents — model manifest, binding registry and
+render-only visual pack — migrates the three approved assets into specimen manifests, and ships
+`tools/art/validate_contract.py`, which is green on 8 examples and **25 negative controls**, so
+every rejection rule is exercised rather than asserted. The trio still resolves through the
+hardcoded identity checks; S04 implements the resolver this contract specifies, and the class
+budgets/LOD table and the legacy-payload migration window are parked for the owner in
+`art/manifests/decisions.md`.
 
 ## 3. Scope and invariants
 
@@ -384,7 +393,7 @@ This table is the initial planning state, **not implementation completion**. Fut
 |---|---|---|
 | S00 | **Complete and merged** — PR #114 landed as `c5b78eb2d4ceba909ffb7444a56b7dec1f35d1b4` (96 files) | S02/S04 must replace the hardcoded activation with an explicit preview gate; retain the known art-integrated acceptance debt |
 | S01 | **Complete** — PR #115 carries the inventory, audit, coverage matrix and handoff | Closed 2026-10-16 by the owner's scope decision; S02 is next |
-| S02 | Not started | Decide and specify generic asset/mod contracts |
+| S02 | **Review-ready** — contract frozen in `docs/ASSET_EXTENSION_CONTRACT.md` + `art/schemas/` (three versioned schemas, verified examples, 25 negative controls) | Owner reviews the contract, the class budgets/LOD table and the legacy-migration window; then S03 |
 | S03 | Not started | Standardize source authority, storage and reproducible exports |
 | S04 | Not started | Generic gated integration, resolver and frozen-path support |
 | S05 | Not started | Transfer approved trio through the generic path |
@@ -406,10 +415,20 @@ The following sentence is retained as the initial next-task instruction, not cur
 | S00 preservation | **Merged into `main`** as `c5b78eb2d4ceba909ffb7444a56b7dec1f35d1b4` (PR #114, squashed, 2026-10-16, 96 files); branch delta art-only; earlier heads `313f968`/`0f6531f4` retained in history; blobs verified byte-for-byte before the merge | S02/S04 replace the hardcoded trio activation with an explicit preview gate. Retain the known art-integrated acceptance debt |
 | Performance PR #113 | **Merged** to `main` as `16523bf0b06a39e3f77961d0c213b0af184a16b6` (tree identical to tested head `a24a4ed`); version `0.15.1`; protected whole suite 1,668 tests, 0 failures/errors, 9 skips; Windows CI `38858140567` passed | Closed. Performance remains headroom, not an art upgrade. Measurement targets still need owner agreement |
 | S01 inventory | **Complete** in PR #115: 120 bindings, 30 dispatch paths, 25 non-model elements; owner decision `s01-scope-2026-10-16` answered all four scope questions and planned the three unreachable mesh keys | None outstanding; S02 is next, and no design or activation is approved by it |
-| S02–S10 | Not completed | Follow dependencies, per-model owner approval and platform/package gates |
+| S02 extension contract | **Review-ready** on `docs/s02-extension-contract`: manifest/registry/visual-pack schemas pinned to `contract`+`contract_major`, the three approved assets migrated as specimen manifests, `tools/art/validate_contract.py` green on 8 documents and 25 negative controls, decisions in `art/manifests/decisions.md` | Owner review of the contract, the class budgets/LOD table (contract §9) and the D-07 migration window. Nothing is implemented: the trio still resolves through the hardcoded facades |
+| S03–S10 | Not completed | Follow dependencies, per-model owner approval and platform/package gates |
 | S11 | **Not started, not authorized, not done** | Final explicit owner-controlled catalogue switch only after S10 |
 
-**Current next task: S02 — specify the asset, registry and mod contracts.** Freeze the versioned
+**Current next task: S03 — build a durable authoring pipeline, then S04.** S02's contract is frozen
+(`docs/ASSET_EXTENSION_CONTRACT.md`, `art/schemas/`, `art/manifests/decisions.md`) and needs the
+owner's review of the class budgets/LOD table and the legacy-migration window before S06 authors
+against it. S03 generalises the evaluated export and validation, declares source authority per
+asset, records toolchain versions and makes `build-model` / `export-model` / `validate-models`
+reproducible from a fresh clone on macOS and Windows. S04 then implements the resolver this
+contract specifies; until it lands, the trio keeps being selected by the hardcoded identity checks
+in `render/faction_ships.py` and `render/faction_stations.py`.
+
+Superseded: S02 — specify the asset, registry and mod contracts.** Freeze the versioned
 extension contract before any further authoring: minimal core plus replacement and additive-pack
 examples, the migration path from the specimen schema and profile loader, resolver/fallback/compatibility
 decisions, failure diagnostics, pack ordering and roots, security bounds, approval and cache/resource
