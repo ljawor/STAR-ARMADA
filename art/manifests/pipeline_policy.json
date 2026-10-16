@@ -89,6 +89,30 @@
         "the provenance record (D4), skimmed"
       ],
       "review_note": "There is nothing new to judge visually in S03: a visible change to the approved trio is a failure of this step, not a feature of it."
+    },
+    {
+      "id": "s07-detail-budget-2026-10-16",
+      "date": "2026-10-16",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "raise-the-authoring-ceiling",
+      "applies_to": "S07 - surface-detail roll-out from the capital to the frigate and the shipyard",
+      "owner_wording": "do it",
+      "how_recorded": "The assistant reported that the frigate and the shipyard sat at 5,128 and 7,935 triangles against a 9,000-triangle authoring ceiling, that the shipyard therefore had about a thousand triangles of headroom and would receive roughly a quarter of the detail the capital had just been given, and proposed raising the guard with the reasoning written down rather than leaving it half-done. The owner replied as above. That reply endorses the proposal it answers, so the ceiling is raised here as its own decision record, and the reasoning below is the one that was proposed.",
+      "decisions": [
+        {
+          "id": "detail-budget",
+          "decision": "The authored-model triangle ceiling for the trio's non-capital assets rises from 9,000 to 11,888, and a vertex ceiling of 9,500 is added where there was none.",
+          "why": "9,000 was chosen when these two models were sculpted forms with no surface detail at all. Surface detail costs 12 triangles and 8 vertices per block, and at the shipped close camera a 12-triangle block is about four pixels, so a hull that reads as plating, machinery and vents rather than one grey plate costs a few thousand triangles. The capital already carries an 11,888 ceiling at 11,457 triangles, and using the same number for the same reason keeps the fleet consistent. The hard limit is the runtime loader (render/authored_mesh.py: 12,000 triangles, 10,000 vertices, 2,000,000 bytes): past it the loader refuses the model and the build is wasted, so both ceilings sit deliberately just under it. A ceiling is a guard, not a target, and the detail for each asset is placed for that asset's own scale.",
+          "applies_from": "S07 onward, and only for a revision whose approval record is updated with it",
+          "does_not_apply_to": "The approved capital revision s06-battleship-hull-detail-2026-10-16 keeps its own 4,400 to 11,888 bounds and is not rebuilt by this decision."
+        },
+        {
+          "id": "advisory-budget-inconsistency",
+          "decision": "Recorded, not changed: art/manifests/pipeline.json gives the shipyard an advisory budget of 16,000 triangles while the runtime loader that reads the same registry caps an authored mesh at 12,000, so that advisory can never fire a warning. The frigate's and the capital's 12,000 advisories sit exactly on the loader cap, where a warning is possible only for a model the loader would refuse anyway.",
+          "why": "These advisory numbers are the S02 section 9 class budgets that are still pending the owner's review (PR #117, question 1). Retuning them here would answer that question by accident, in a file the owner was not looking at.",
+          "applies_from": "until the class-budget question is answered; the ceiling raise above does not depend on it"
+        }
+      ]
     }
   ]
 }

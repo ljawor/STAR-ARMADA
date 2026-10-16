@@ -42,8 +42,11 @@ class AuthoredTrioTests(unittest.TestCase):
                 self.assertEqual(mesh,cached())
                 self.assertIs(cached(),cached())
                 self.assertEqual(cached.cache_info().maxsize,1)
-                self.assertLess(data['triangle_count'],9000)
+                # Ceiling raised from 9000 by s07-detail-budget-2026-10-16; the runtime
+                # loader caps an authored mesh at 12000 triangles and 10000 vertices.
+                self.assertLess(data['triangle_count'],11888)
                 self.assertGreater(data['triangle_count'],1800)
+                self.assertLess(len(data['vertices']),9500)
                 self.assertEqual(set(mesh),{'base','dark','trim','accent','lit','cool'})
                 for role,faces in data['batches'].items():
                     self.assertEqual(mesh[role],tuple((tuple(f[:3]),tuple(tuple(data['vertices'][i]) for i in f[3:])) for f in faces))
