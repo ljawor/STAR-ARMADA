@@ -111,3 +111,28 @@ equivalence/approval-transfer matrix; do not start catalogue authoring or S11 fr
 Two owner questions remain open: authoring extent drift versus collision policy, and advisory draw-call/
 texture-byte columns. Neither has been answered by the pack-load envelope decision.
 S05 owns the full approved-trio equivalence matrix; do not mark it complete from S04 unit tests.
+
+## CI integration repair and final fresh-clone receipt
+
+Windows runs `38952034998` and `38952529212` exposed an S04 catalogue reproducibility defect.
+The second also failed LAN recovery (tick 6 != 8); two immutable baseline and two immutable candidate
+local repetitions passed. This is **not reproduced locally**, not proven pre-existing. No deadline
+or assertion was relaxed. Both Windows logs and classifications are retained.
+
+All four language packs now reproducibly include the six preview strings (366 UI keys, 96 names),
+through authored translations and UTF-8/LF writers. The real settings pack-count row is localized.
+A real autocrlf checkout then exposed conversion of hash-pinned mesh JSON and its approval evidence.
+Scoped `-text` attributes now **disable conversion**, preserving committed runtime, authoring, schema
+and evidence bytes; no approved mesh, Blender or exporter content changed. The intermediate failures
+and RED controls are retained. This is not a broad LF normalization or a changed approval hash.
+
+Final code: `19d63f7d677cd2cdb5b5fd60e4a9e95c810c63d5`. A fresh clone with `core.autocrlf=true` passes
+**195 focused tests, no failures/errors/skips**, nine-file metadata reproduction and pipeline 34/34.
+Unprotected render source really contains CRLF in that clone; language catalogues remain LF and
+all eleven approved source/runtime hashes match baseline. Capture source hashes match this commit;
+eight views still have zero preview differences and equal simulation hashes.
+See `final-fresh-clone-tests.txt` and `final-fresh-clone-verification.json` in the evidence directory.
+The final focused command extends the original module list with `test_language_tools`.
+Independent review passed the language repair; parent additionally verified the byte-preserving
+attribute follow-up in the real clone. Native Windows CI must pass the next pushed head; this local
+checkout is not native Windows rendering/package acceptance. No full suite or S11 authorization.

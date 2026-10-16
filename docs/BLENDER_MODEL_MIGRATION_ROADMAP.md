@@ -334,6 +334,11 @@ unchanged-trio capture set. `validate-models --all` reports 34/34 with the S02 c
 
 #### S04 review-ready checkpoint
 
+Post-CI repair code `19d63f7`: fresh autocrlf checkout passes 195 focused tests with no skips,
+metadata 9/9 and pipeline 34/34. Catalogue and hash-pinned checkout failures are retained in
+the S04 evidence/handoff. Windows CI must pass the final pushed head before owner acceptance;
+the earlier 184-test code checkpoint below remains historical evidence, not the final count.
+
 Draft PR #124 publishes the generic resolver and explicit opt-in boundary; the verified code commit is
 `45e4ed3b731fde6c376fdb894088a248abc774e9`. It is **not merged**, and no default cutover is authorized.
 The fresh-clone receipt reports **184 focused tests, no failures/errors/skips**, contract **36 checks /
@@ -487,11 +492,11 @@ The following sentence is retained as the initial next-task instruction, not cur
 | S02 extension contract | **Complete and merged** 2026-10-16 as `b2b6b75c4f7d90b99e943bf74b79b811c09e3785` (PR #117): three versioned schemas, the three approved assets as specimen manifests, `tools/art/validate_contract.py` green on **36 checks and 28 negative controls**, decisions D-01…D-20 in `art/manifests/decisions.md`; the class budgets, the extent gate and the legacy window are the owner's answers as enforced rules | Closed. Nothing is implemented in the game: the trio still resolves through the hardcoded facades until S04 |
 | S03 authoring pipeline | **Complete and merged** 2026-10-16 — policies in PR #118 (`fd08ac7`), `tools/art/model_pipeline.py` with the three forwarders and 14 focused tests in PR #119 (`b5414b5`); D1/D2/D4/D6 machine-checked, D5 signed by the owner, D3 proven on macOS from a fresh clone with plain `python3` | D3's Windows half: no Windows machine has run the pipeline. S09 owns that gate |
 | Trio hull detail (S06, early) | **Approved and merged** — one revision per binding: battleship #120 `47b0161`, frigate + shipyard #121 `047c380`, record correction #122 `96cd92e`; 11,457 / 7,708 / 10,767 triangles, no silhouette, scale or simulation change; the guard raise is the owner decision `s07-detail-budget-2026-10-16` (11,888 tri / 9,500 verts) | None outstanding. Not a catalogue batch: the remaining bindings keep their inventory status |
-| S04 generic integration | **Review-ready**, draft PR #124; fresh clone 184/184 tests, no skips; contract 36/28; pipeline 34/34; eight pixel-identical preview/control views | Owner review. Not merged; S05 approval-transfer matrix remains open |
+| S04 generic integration | **Review-ready**, draft PR #124; autocrlf fresh clone 195/195 tests, no skips; contract 36/28; pipeline 34/34; eight pixel-identical preview/control views | Owner review. Not merged; S05 approval-transfer matrix remains open |
 | S05–S10 | Not completed | Follow dependencies, per-model owner approval and platform/package gates |
 | S11 | **Not started, not authorized, not done** | Final explicit owner-controlled catalogue switch only after S10 |
 
-**Current next task: owner review of draft PR #124 (S04); then S05, not a new catalogue batch or S11.**
+**Current next task: verify final Windows CI, then owner review of draft PR #124 (S04); then S05, not a new catalogue batch or S11.**
 S04 is implemented and review-ready, not merged. Read its committed handoff and evidence before
 re-running or extending it. S02's 20 contract decisions remain frozen, with D-21 recording only the
 owner's S04 pack-envelope answer. S03's frozen policy remains in `art/manifests/pipeline_policy.json`.
