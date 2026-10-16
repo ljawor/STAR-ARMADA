@@ -1,0 +1,138 @@
+{
+  "contract": "star-armada/binding-registry",
+  "contract_major": 1,
+  "bindings": [
+    {
+      "binding": "rebel:battleship",
+      "category": "combat_hull",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "battleship"
+      },
+      "manifest": "core:alliance/battleship",
+      "legacy_identifiers": [
+        "alliance_battleship"
+      ],
+      "envelope": {
+        "min": [
+          -69.0,
+          -31.0,
+          -143.5
+        ],
+        "max": [
+          69.0,
+          61.0,
+          135.0
+        ]
+      },
+      "status": "core",
+      "notes": "Approved trio binding, migrated from the specimen export."
+    },
+    {
+      "binding": "rebel:frigate",
+      "category": "combat_hull",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "frigate"
+      },
+      "manifest": "core:alliance/frigate",
+      "legacy_identifiers": [
+        "alliance_frigate"
+      ],
+      "envelope": {
+        "min": [
+          -34.0,
+          -10.0,
+          -80.699997
+        ],
+        "max": [
+          34.0,
+          25.35,
+          73.0
+        ]
+      },
+      "status": "core",
+      "notes": "Approved trio binding, migrated from the specimen export."
+    },
+    {
+      "binding": "rebel:shipyard",
+      "category": "station",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "shipyard"
+      },
+      "manifest": "core:alliance/shipyard",
+      "legacy_identifiers": [
+        "alliance_shipyard"
+      ],
+      "envelope": {
+        "min": [
+          -55.700001,
+          -17.0,
+          -46.5
+        ],
+        "max": [
+          55.700001,
+          39.400002,
+          51.0
+        ]
+      },
+      "status": "core",
+      "notes": "Approved trio binding, migrated from the specimen export."
+    },
+    {
+      "binding": "imperial:battleship",
+      "category": "combat_hull",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "battleship"
+      },
+      "manifest": "core:imperial/battleship",
+      "legacy_identifiers": [
+        "imperial_battleship"
+      ],
+      "status": "procedural_legacy",
+      "notes": "Rows like this exist so the coverage join with model_inventory.json has a target. No manifest exists yet."
+    },
+    {
+      "binding": "syndicate:bomber",
+      "category": "squadron",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "bomber"
+      },
+      "manifest": "core:syndicate/bomber",
+      "legacy_identifiers": [
+        "syndicate_bomber"
+      ],
+      "status": "authoring_pending",
+      "notes": "Planned hull (s01-hull-plan-2026-10-16). Its data id must also be added to fighter_platform.builds_ships or it exists but cannot be built."
+    },
+    {
+      "binding": "rebel:battleship",
+      "category": "combat_hull",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "battleship"
+      },
+      "manifest": "core:alliance/battleship",
+      "legacy_identifiers": [
+        "alliance_battleship"
+      ],
+      "envelope": {
+        "min": [
+          -69.0,
+          -31.0,
+          -143.5
+        ],
+        "max": [
+          69.0,
+          61.0,
+          135.0
+        ]
+      },
+      "status": "core",
+      "notes": "Approved trio binding, migrated from the specimen export."
+    }
+  ]
+}

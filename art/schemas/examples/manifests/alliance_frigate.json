@@ -1,0 +1,75 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:alliance/frigate",
+  "revision": "dea13cdf657eab3d23a5cf49841ec6057f5154cdee6c9b09e71149f41f34611e",
+  "display_name": "Alliance frigate (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/alliance_frigate.mesh.json",
+      "sha256": "045d1383ac8a774d0bb9733a598ca83777dfcdc26645e6900b9d23ee7392348c",
+      "bytes": 358072
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -34.0,
+      -10.0,
+      -80.699997
+    ],
+    "max": [
+      34.0,
+      25.35,
+      73.0
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/alliance_frigate.blend",
+    "notes": "Migrated from the specimen export that shipped in the S00 preservation checkpoint. The payload still declares the legacy integer 'schema': 1; the loader accepts it during the declared migration window (see art/manifests/decisions.md, D-07)."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 5128,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "approved-trio-2026-10-16",
+    "decided_by": "owner",
+    "decided_on": "2026-10-16",
+    "reviewed_revision": "dea13cdf657eab3d23a5cf49841ec6057f5154cdee6c9b09e71149f41f34611e",
+    "reviewed_evidence": [
+      "artifacts/alliance_blender_trio/before-after-aft-drives.jpg",
+      "artifacts/alliance_blender_trio/before-after-contact-sheet.jpg",
+      "artifacts/alliance_blender_trio/before-after-motion.mp4"
+    ]
+  }
+}

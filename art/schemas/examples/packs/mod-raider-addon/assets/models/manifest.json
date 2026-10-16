@@ -1,0 +1,60 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "example:raider_addon/raider",
+  "revision": "dd5ef1be6e094899f8f5425c9acc8388c788c320c6ab01f8fc5ef341158b7798",
+  "files": {
+    "mesh": {
+      "path": "assets/models/syndicate_raider.json",
+      "sha256": "62fcc060f127136395b1f4f6d04e5d203a81002f3264cb8745a744d6d59c9506",
+      "bytes": 1738
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -8.0,
+      -3.0,
+      -14.0
+    ],
+    "max": [
+      8.0,
+      6.0,
+      12.0
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "base",
+    "dark",
+    "trim",
+    "accent",
+    "lit",
+    "cool"
+  ],
+  "provenance": {
+    "author": "example",
+    "tool": "Blender",
+    "tool_version": "4.x",
+    "license": "original",
+    "notes": "example fixture manifest"
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 1200,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}
