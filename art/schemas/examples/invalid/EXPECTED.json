@@ -9,6 +9,8 @@
   "duplicate-binding-registry.json": "E_DUPLICATE_BINDING",
   "duplicate-pack-entry.json": "E_DUPLICATE_ID",
   "evidence-missing-manifest.json": "E_EVIDENCE_MISSING",
+  "extent-drift-registry.json": "E_EXTENT_DRIFT",
+  "extent-receipt-mismatch-registry.json": "E_EXTENT_DRIFT",
   "file-hash-mismatch-manifest.json": "E_FILE_HASH",
   "file-missing-manifest.json": "E_FILE_MISSING",
   "file-size-mismatch-manifest.json": "E_FILE_SIZE",

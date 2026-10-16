@@ -1,199 +1,204 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://star-armada.invalid/schemas/binding-registry/v1",
-  "title": "STAR ARMADA binding registry v1",
-  "description": "Maps a canonical gameplay identity to a visual asset manifest. This is the only place the renderer learns which model to draw for an entity: there is no per-model branch in the renderer and no filename convention is consulted.",
-  "type": "object",
-  "additionalProperties": false,
-  "required": [
-    "contract",
-    "contract_major",
-    "bindings"
-  ],
-  "properties": {
-    "contract": {
-      "const": "star-armada/binding-registry"
-    },
-    "contract_major": {
-      "const": 1
-    },
-    "bindings": {
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://star-armada.invalid/schemas/binding-registry/v1",
+ "title": "STAR ARMADA binding registry v1",
+ "description": "Maps a canonical gameplay identity to a visual asset manifest. This is the only place the renderer learns which model to draw for an entity: there is no per-model branch in the renderer and no filename convention is consulted.",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "contract",
+  "contract_major",
+  "bindings"
+ ],
+ "properties": {
+  "contract": {
+   "const": "star-armada/binding-registry"
+  },
+  "contract_major": {
+   "const": 1
+  },
+  "bindings": {
+   "type": "array",
+   "minItems": 1,
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "binding",
+     "category",
+     "identity",
+     "manifest"
+    ],
+    "properties": {
+     "binding": {
+      "$ref": "#/$defs/bindingKey"
+     },
+     "category": {
+      "enum": [
+       "combat_hull",
+       "squadron",
+       "construction",
+       "logistics_hull",
+       "station",
+       "satellite",
+       "planet_installation",
+       "environment_prop",
+       "menu_cinematic",
+       "campaign_prop"
+      ]
+     },
+     "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "faction"
+      ],
+      "properties": {
+       "faction": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]{1,31}$"
+       },
+       "class_or_kind": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]{1,31}$"
+       },
+       "variant": {
+        "type": "string",
+        "maxLength": 40
+       },
+       "station_faction": {
+        "type": "string",
+        "maxLength": 40,
+        "description": "Explicit for stations: a station's owner faction is not implied by its class name."
+       }
+      },
+      "description": "Identity is data. Convoy, squadron and station ownership must be stated, not inferred."
+     },
+     "manifest": {
+      "$ref": "#/$defs/assetId"
+     },
+     "shared_source_with": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+       "$ref": "#/$defs/bindingKey"
+      },
+      "description": "Other bindings resolving to the same asset revision. Reuse is recorded, never disguised as a second generator."
+     },
+     "envelope": {
+      "$ref": "#/$defs/bounds"
+     },
+     "status": {
+      "enum": [
+       "core",
+       "authoring_pending",
+       "procedural_legacy",
+       "keep_procedural_proposed",
+       "out_of_scope"
+      ],
+      "description": "Same vocabulary as art/manifests/model_inventory.json, so coverage can be built by joining the two."
+     },
+     "notes": {
+      "type": "string",
+      "maxLength": 400
+     },
+     "legacy_identifiers": {
       "type": "array",
       "minItems": 1,
+      "maxItems": 8,
+      "uniqueItems": true,
       "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "binding",
-          "category",
-          "identity",
-          "manifest"
-        ],
-        "properties": {
-          "binding": {
-            "$ref": "#/$defs/bindingKey"
-          },
-          "category": {
-            "enum": [
-              "combat_hull",
-              "squadron",
-              "construction",
-              "logistics_hull",
-              "station",
-              "satellite",
-              "planet_installation",
-              "environment_prop",
-              "menu_cinematic",
-              "campaign_prop"
-            ]
-          },
-          "identity": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "faction"
-            ],
-            "properties": {
-              "faction": {
-                "type": "string",
-                "pattern": "^[a-z][a-z0-9_]{1,31}$"
-              },
-              "class_or_kind": {
-                "type": "string",
-                "pattern": "^[a-z][a-z0-9_]{1,31}$"
-              },
-              "variant": {
-                "type": "string",
-                "maxLength": 40
-              },
-              "station_faction": {
-                "type": "string",
-                "maxLength": 40,
-                "description": "Explicit for stations: a station's owner faction is not implied by its class name."
-              }
-            },
-            "description": "Identity is data. Convoy, squadron and station ownership must be stated, not inferred."
-          },
-          "manifest": {
-            "$ref": "#/$defs/assetId"
-          },
-          "shared_source_with": {
-            "type": "array",
-            "maxItems": 8,
-            "items": {
-              "$ref": "#/$defs/bindingKey"
-            },
-            "description": "Other bindings resolving to the same asset revision. Reuse is recorded, never disguised as a second generator."
-          },
-          "envelope": {
-            "$ref": "#/$defs/bounds"
-          },
-          "status": {
-            "enum": [
-              "core",
-              "authoring_pending",
-              "procedural_legacy",
-              "keep_procedural_proposed",
-              "out_of_scope"
-            ],
-            "description": "Same vocabulary as art/manifests/model_inventory.json, so coverage can be built by joining the two."
-          },
-          "notes": {
-            "type": "string",
-            "maxLength": 400
-          },
-          "legacy_identifiers": {
-            "type": "array",
-            "minItems": 1,
-            "maxItems": 8,
-            "uniqueItems": true,
-            "items": {
-              "type": "string",
-              "pattern": "^[a-z][a-z0-9_]{1,63}$"
-            },
-            "description": "Pre-contract export identifiers this binding replaces (e.g. alliance_battleship). They exist so existing saves, replays and packaged exports resolve through the registry instead of requiring a save migration."
-          }
-        }
-      }
-    }
-  },
-  "$defs": {
-    "assetId": {
-      "description": "Namespaced stable visual asset id: <ns>:<owner>/<name>. Never a gameplay entity id and never a translated display name.",
+       "type": "string",
+       "pattern": "^[a-z][a-z0-9_]{1,63}$"
+      },
+      "description": "Pre-contract export identifiers this binding replaces (e.g. alliance_battleship). They exist so existing saves, replays and packaged exports resolve through the registry instead of requiring a save migration."
+     },
+     "envelope_decision": {
       "type": "string",
-      "pattern": "^[a-z][a-z0-9_]{1,31}:[a-z0-9_]+/[a-z0-9_]+$"
+      "maxLength": 80,
+      "description": "The approval that covers this envelope's extent, when the extent was widened past the section 9 grace. It must name the decision the manifest's own approval carries: a wider hull cannot be accepted by silence."
+     }
+    }
+   }
+  }
+ },
+ "$defs": {
+  "assetId": {
+   "description": "Namespaced stable visual asset id: <ns>:<owner>/<name>. Never a gameplay entity id and never a translated display name.",
+   "type": "string",
+   "pattern": "^[a-z][a-z0-9_]{1,31}:[a-z0-9_]+/[a-z0-9_]+$"
+  },
+  "sha256": {
+   "type": "string",
+   "pattern": "^[0-9a-f]{64}$"
+  },
+  "safePath": {
+   "description": "Relative path inside the pack root. No absolute path, no '..' segment, no backslash, no drive letter.",
+   "type": "string",
+   "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9][A-Za-z0-9._/-]{0,180}$"
+  },
+  "vec3": {
+   "type": "array",
+   "items": {
+    "type": "number"
+   },
+   "minItems": 3,
+   "maxItems": 3
+  },
+  "bounds": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "min",
+    "max"
+   ],
+   "description": "Conservative visual envelope in the shared X beam / Y up / +Z forward frame, in catalogue world units. Presentation only: it must not change collision or gameplay size.",
+   "properties": {
+    "min": {
+     "$ref": "#/$defs/vec3"
+    },
+    "max": {
+     "$ref": "#/$defs/vec3"
+    }
+   }
+  },
+  "role": {
+   "description": "The six-role material contract. A new role is a new major schema version with a declared fallback, not an extra string here.",
+   "enum": [
+    "base",
+    "dark",
+    "trim",
+    "accent",
+    "lit",
+    "cool"
+   ]
+  },
+  "file": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "path",
+    "sha256",
+    "bytes"
+   ],
+   "properties": {
+    "path": {
+     "$ref": "#/$defs/safePath"
     },
     "sha256": {
-      "type": "string",
-      "pattern": "^[0-9a-f]{64}$"
+     "$ref": "#/$defs/sha256"
     },
-    "safePath": {
-      "description": "Relative path inside the pack root. No absolute path, no '..' segment, no backslash, no drive letter.",
-      "type": "string",
-      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9][A-Za-z0-9._/-]{0,180}$"
-    },
-    "vec3": {
-      "type": "array",
-      "items": {
-        "type": "number"
-      },
-      "minItems": 3,
-      "maxItems": 3
-    },
-    "bounds": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "min",
-        "max"
-      ],
-      "description": "Conservative visual envelope in the shared X beam / Y up / +Z forward frame, in catalogue world units. Presentation only: it must not change collision or gameplay size.",
-      "properties": {
-        "min": {
-          "$ref": "#/$defs/vec3"
-        },
-        "max": {
-          "$ref": "#/$defs/vec3"
-        }
-      }
-    },
-    "role": {
-      "description": "The six-role material contract. A new role is a new major schema version with a declared fallback, not an extra string here.",
-      "enum": [
-        "base",
-        "dark",
-        "trim",
-        "accent",
-        "lit",
-        "cool"
-      ]
-    },
-    "file": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "path",
-        "sha256",
-        "bytes"
-      ],
-      "properties": {
-        "path": {
-          "$ref": "#/$defs/safePath"
-        },
-        "sha256": {
-          "$ref": "#/$defs/sha256"
-        },
-        "bytes": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 67108864
-        }
-      }
-    },
-    "bindingKey": {
-      "description": "Canonical gameplay identity the renderer selects on: <faction>:<class-or-kind> (e.g. rebel:battleship). Stable ids only, never a display name.",
-      "type": "string",
-      "pattern": "^[a-z][a-z0-9_]{1,31}:[a-z0-9_]+$"
+    "bytes": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 67108864
     }
+   }
+  },
+  "bindingKey": {
+   "description": "Canonical gameplay identity the renderer selects on: <faction>:<class-or-kind> (e.g. rebel:battleship). Stable ids only, never a display name.",
+   "type": "string",
+   "pattern": "^[a-z][a-z0-9_]{1,31}:[a-z0-9_]+$"
   }
+ }
 }

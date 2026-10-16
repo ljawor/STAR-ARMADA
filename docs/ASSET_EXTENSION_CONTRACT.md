@@ -168,14 +168,21 @@ Visual pack selection is separate from gameplay-mod selection. Pure visual packs
 authoritative state, compatibility hashes and lockstep checksums, so two peers with different
 visual packs must produce identical simulation. That has to be proven in S08, not asserted here.
 
+The packs under `art/schemas/examples/packs/` are **illustration**, not acceptance material: they show
+the shape of a pack, with token payloads. The acceptance controls are the three real exports, which the
+validator resolves against the payloads actually on disk — a pack is accepted on the strength of a
+second real pack, not on a fixture, so S08's separation proof is not smuggled in here.
+
 ## 6. Compatibility with what is already shipped
 
 The three approved assets on `main` are migrated, not rewritten:
 
 - `assets/models/alliance_{battleship,frigate,shipyard}.mesh.json` stay exactly where they are,
   byte-identical, and keep the exporter's legacy integer marker. The v1 payload format accepts
-  `"schema": 1` during the migration window declared in `art/manifests/decisions.md` (D-07); the
-  manifest pins them with their real hashes and records `export.legacy_schema_int: 1`.
+  `"schema": 1` during the migration window declared in `art/manifests/decisions.md` (D-07). The owner
+  kept that window open until the production cutover (S11): the trio ships as it is, and the re-export
+  and re-approval happen once, at the cutover, rather than as a byte change to files already approved.
+  The manifest pins them with their real hashes and records `export.legacy_schema_int: 1`.
 - The migrated manifests are the **specimen migration** for S05: they describe what is on `main`
   today, and `art/schemas/examples/manifests/*.json` are their checked form. Because they describe
 the real files, an approved revision lands as a *staleness* here as well as in the S03 records: the
@@ -215,43 +222,53 @@ later edit from leaving this document's approvals looking valid.
 
 ## 9. Budgets and LOD
 
-Initial expectations, to be confirmed by measurement, not adopted as universal ceilings:
+Class budgets are advisory: the numbers an author works against, sized from the approved trio and
+set **below** the loader's hard failure so that exceeding one is a mesh with a warning on it rather
+than a mesh the game refuses to load. The owner set them on 16 October 2026
+(`s02-section9-budgets-2026-10-16`, recorded in `art/manifests/decisions.md`):
 
-| Class | Triangles | Draw calls | Texture bytes |
-|---|---|---|---|
-| combat hull | ≤ 12,000 | ≤ 8 | ≤ 8 MiB |
-| squadron / small craft | ≤ 2,500 | ≤ 6 | ≤ 4 MiB |
-| station | ≤ 16,000 | ≤ 10 | ≤ 16 MiB |
-| satellite / planet installation | ≤ 6,000 | ≤ 8 | ≤ 8 MiB |
+| Class | Registry `category` | Advisory budget (triangles) | Draw calls | Texture bytes |
+|---|---|---|---|---|
+| capital hull | `combat_hull` | ≤ 11,888 | ≤ 8 | ≤ 8 MiB |
+| escort hull | `combat_hull` | ≤ 8,000 | ≤ 6 | ≤ 4 MiB |
+| squadron / small craft | `squadron` | ≤ 2,500 | ≤ 6 | ≤ 4 MiB |
+| station | `station` | ≤ 11,500 | ≤ 10 | ≤ 16 MiB |
+| satellite / planet installation | `satellite`, `planet_installation` | ≤ 6,000 | ≤ 8 | ≤ 8 MiB |
 
-Measured against the approved trio, at the revisions now on `main`: battleship 11,457 triangles /
-6 roles, frigate 7,708, shipyard 10,767 — all inside the table, which is a sanity check on the table
-and not a claim about the batches still to come.
+11,888 is the exporter's own ceiling — `tools/art/alliance_common.py` asserts
+`1,800 < triangles < 11,888` — and the approved battleship sits at 11,457 of it; the escort budget is
+8,000 against the frigate's 7,708, the station budget 11,500 against the shipyard's 10,767. The
+registry's vocabulary is coarser than these classes: the trio classifies battleship and frigate both
+as `combat_hull` and the shipyard as `station`, so where a class and a category disagree the operative
+number is the per-asset budget, and the class name is the size band the asset sits in.
 
-**The table repeats the loader's hard limits rather than constraining them.** `combat hull ≤ 12,000`
-is exactly `render/authored_mesh.py`'s `MAX_TRIANGLES`, and `station ≤ 16,000` is above it, so neither
-number can ever fire: a mesh over the loader's cap is refused by the loader, not by the budget. Two
-consequences, both open on this PR: an advisory budget at or above a hard cap is documentation, not
-a budget, and the numbers below it (triangles *and* the extent of the mesh) are what actually shape
-authoring.
+**These are budgets because something can weigh them.** The loader's hard failure is unchanged —
+`render/authored_mesh.py`: 12,000 triangles, 10,000 vertices, 2,000,000 bytes per file — and it is the
+loader, not this table, that refuses a mesh over it. The advisory numbers are enforced where a build
+can see them: `art/manifests/pipeline.json` carries a per-asset `advisory_budget_triangles` that
+`build-model` and `export-model` report as `W_TRIANGLE_BUDGET`. Before this decision the table instead
+repeated the loader's limits — `combat hull ≤ 12,000` *was* `MAX_TRIANGLES`, `station ≤ 16,000` sat
+above it — and a number at or above the hard cap cannot fire at all. Draw calls and texture bytes
+remain declarations: nothing weighs them yet, which is recorded here as debt rather than presented as
+a budget.
 
-**Extents are budgeted by nothing at all, and that is how a detail pass moves a silhouette.** The
-manifest's declared envelope is the contract's record of how big the asset is, and the validator
-requires the mesh to stay inside it. Detail is placed *from the frame it sits on* and stands proud of
-the surface, so an approved revision that adds a raised belt or a machinery bank widens the mesh:
-the battleship's detail revision took its beam from 69.0 to 73.349998 — 6.3 % wider — while its length
-extent stayed identical to the digit, and every other check in this contract still passed. The
-envelope is the field that goes stale in silence, so re-pinning it is automated:
-`tools/art/update_contract_examples.py` rewrites the size, hash, recomputed revision, envelope and
-approval binding of every example and control that names a real payload, keeps exactly one defect per
-negative control, and exits non-zero under `--check` when anything is stale.
+**Extents have their own rule** (`s02-extent-tolerance-2026-10-16`): a revision may move a bound by at
+most 1 % of that axis, or two world units, whichever is smaller, before it needs a fresh approval;
+beyond that the contract refuses (`E_EXTENT_DRIFT`). The grace exists because detail is placed *from
+the frame it sits on* and stands proud of the surface, so without one every raised belt would be a
+contract failure. The limit exists because the S06 detail pass took the battleship's beam from 69.0 to
+73.349998 — 6.3 % wider, inside a revision approved on appearance — while its length extent stayed
+identical to the digit and every other check in this contract still passed. The binding's `envelope`
+is the extent the asset was approved at; `envelope_decision` names the approval that accepted a
+widened one, and the validator requires it to be the approval the manifest itself carries, so a wider
+hull cannot be accepted by silence. `tools/art/update_contract_examples.py` refuses to widen an
+envelope past the grace unless it is given that id with `--accept-extent`, so the movement cannot be
+absorbed by a routine re-pin.
 
 LOD expectations: every supported LOD keeps the silhouette the owner approved; LOD selection is
-presentation and may not change bounds, contacts or size. The specimen exports currently ship one
-mesh with no lower-detail level, which is accepted debt recorded here rather than quietly ignored.
-These numbers need the owner's agreement before S06 batches are authored against them — changing
-them later changes visual quality, which is exactly the kind of change that needs a decision
-record.
+presentation and may not change bounds, contacts or size. The specimen exports currently ship one mesh
+with no lower-detail level, which is accepted debt recorded here rather than quietly ignored.
+
 
 ## 10. What this contract does not do
 

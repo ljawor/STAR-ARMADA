@@ -26,7 +26,8 @@
         ]
       },
       "status": "core",
-      "notes": "Approved trio binding, migrated from the specimen export."
+      "notes": "Approved trio binding, migrated from the specimen export. Its envelope was widened with the S06 surface-detail revision, whose flank detail stands proud of the widest section: the beam moved 69.0 to 73.349998 and the owner's answer to the section 9 question set the grace (1 percent or 2 units) that keeps a small proud detail legal and a six percent beam move visible.",
+      "envelope_decision": "s06-battleship-hull-detail-2026-10-16"
     },
     {
       "binding": "rebel:frigate",

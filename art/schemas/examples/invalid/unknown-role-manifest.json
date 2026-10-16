@@ -52,7 +52,7 @@
     "material_profile": "core:fleet/standard"
   },
   "budgets": {
-    "triangles": 8701,
+    "triangles": 11457,
     "draw_calls": 6,
     "texture_bytes": 0
   },

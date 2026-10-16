@@ -13,6 +13,8 @@ and the validator is visible: if a decision has no code, nothing enforces it.
 | D-03 | `revision` is a computed content hash over the pinned files | `E_REVISION_MISMATCH`, `E_FILE_HASH` |
 | D-04 | The pinned export is validated as geometry, including index bounds and `triangle_count` | `E_EXPORT_SHAPE` |
 | D-05 | The mesh must sit inside the declared envelope; the envelope is presentation only | `E_BOUNDS_MISMATCH`, `E_BOUNDS_DEGENERATE` |
+| D-19 | A revision may move an extent by at most 1 % of that axis, or 2 units, whichever is smaller, before it needs a fresh approval | `E_EXTENT_DRIFT`, `envelope_decision` |
+| D-20 | `budgets.triangles` is a declared cost, and a mesh that has outgrown it is a false claim | `E_MEASUREMENT_STALE` |
 | D-06 | Six material roles in v1; a seventh role or a shader is a new major version | `E_SCHEMA`, `E_ROLE_MISMATCH` |
 | D-07 | The legacy integer payload marker `"schema": 1` is accepted during a declared migration window | `E_EXPORT_SHAPE` accepts it explicitly |
 | D-08 | Pack order is the persisted, documented enabled list — no filesystem precedence | decision only (S04 implements, S08 proves) |
@@ -48,11 +50,11 @@ are the primary positive control in this PR and not invented fixtures.
 shields were sized for, and a role the mesh does not fill silently draws nothing. Both are silent
 failures in a game and loud failures here.
 
-**D-07. Needs owner attention at S03.** The trio already shipped with `"schema": 1` as a bare
-integer. Migrating them to `contract`/`contract_major` is a byte change to files the owner has
-approved, so this contract leaves them untouched and accepts both forms for now. The window has
-no end date yet: closing it is a decision for S03, and closing it means re-exporting and
-re-approving the trio. **Do not close it silently.**
+**D-07.** The trio already shipped with `"schema": 1` as a bare integer. Migrating them to
+`contract`/`contract_major` is a byte change to files the owner has approved, so this contract leaves
+them untouched and accepts both forms. The owner answered the window's question on 16 October 2026:
+it stays open **until the production cutover (S11)**, when the trio is re-exported and re-approved
+once. **Do not close it silently, and do not close it early.**
 
 **D-08.** Implicit precedence ("later directory wins") is how a cosmetic system becomes
 non-reproducible; two players with the same packs must get the same result, and diagnostics must
@@ -75,29 +77,60 @@ thing that noticed — every other check passed, and the approval record had des
 changing no silhouette. The size, hash, recomputed revision, envelope and approval binding are
 therefore re-derived by a tool rather than edited by hand, each negative control keeps exactly one
 defect, and `--check` makes staleness a failure instead of a surprise. Note what this does *not* fix:
-the contract has no rule about how far a revision may move an extent. That is the fourth question
-below.
+the contract has no rule about how far a revision may move an extent. The owner's answer to that
+question is D-19 below.
+
+**D-19.** An extent is what camera framing, picking, contact radii and shield placement were sized
+for, so moving one is a gameplay-adjacent change however it looks. A flat "any movement needs a fresh
+approval" rule would make every raised belt an approval event, because detail is placed from the frame
+it sits on and stands proud of the surface; a rule with no limit is how the S06 pass widened the
+battleship's beam by 6.3 % with nothing to say about it. The owner's answer — 1 % of that axis, or two
+units, whichever is smaller, then a fresh approval — is the middle. Mechanically the binding's
+`envelope` is the approved extent, `envelope_decision` names the approval that accepted a widened one
+and must be the approval its manifest carries, and the re-pin tool refuses to widen past the grace
+without being handed that id.
+
+**D-20.** `budgets.triangles` is described by its own schema as *measured, not aspirational*, and
+nothing read it — so it rotted: after S06 and S07 the three specimens still declared their pre-detail
+counts, 2,756 / 2,580 / 2,832 triangles short of the meshes they pinned. A declaration the mesh has
+outgrown is a claim about a file that no longer exists, so the contract now refuses it while still
+allowing a declared ceiling above the mesh (a pack may promise more room than its stub uses). Draw
+calls stay a declaration: their count depends on how the renderer batches roles, not on the payload,
+so nothing here can weigh them.
+
+## Decided by the owner
+
+Put to the owner on 16 October 2026. The words are his, verbatim, and each answer is the record the
+table, the validator and the registry implement.
+
+1. **Class budgets** (contract §9) — *"Set real advisory budgets below the loader's cap, sized from the
+   approved specimens (capital 11,888 — the exporter's ceiling —, escort 8,000, station 11,500), and
+   keep 12,000 as the loader's hard failure"*. The table carries those numbers; `advisory_budget_triangles`
+   in `art/manifests/pipeline.json` is where a build weighs them (S03 records); the loader's hard
+   failure is untouched.
+2. **An extent change gets its own gate** — *"A revision may move an extent by at most 1% on that axis
+   (or 2 units, whichever is smaller) before it needs a fresh approval; beyond that the contract
+   refuses"* → D-19.
+3. **The migration window** — *"Keep accepting \"schema\": 1 until the production cutover (S11), then
+   re-export and re-approve the trio once"* → D-07.
+4. **The example packs** — *"Examples stay illustrative — the three real exports are the acceptance
+   controls, as the validator already uses them"* → contract §5.
 
 ## Needs the owner
 
-1. **Class budgets, extents and LOD expectations** (contract §9). The table is proposed from the
-   approved trio's measurements, but it becomes a constraint on every later batch, so it needs
-   agreement before the next batch is authored against it. Two things about it are now known to be
-   wrong rather than merely unconfirmed: `combat hull <= 12,000` is exactly the loader's hard cap and
-   `station <= 16,000` is above it, so neither can ever fire; and nothing at all budgets the mesh's
-   extents, which is how the S06 detail pass widened the battleship's beam by 6.3 % without any check
-   objecting. Numbers at or above a hard cap are documentation; the question is whether the owner
-   wants real advisory budgets below the cap, and whether a revision should be allowed to move an
-   extent at all without a fresh approval.
-2. **Whether an extent change needs its own approval gate.** The battleship's beam moved 6.3 % inside
-   a revision the owner approved on appearance. The owner did approve the render, so the artifact is
-   not in doubt — but a rule such as "an extent may move at most N units / P % before the revision
-   needs re-approval" is a contract decision this PR cannot take on the owner's behalf.
-3. **The D-07 migration window.** When the trio is re-exported to the contract payload format, the
-   approval has to be renewed. Re-exporting changes bytes of an approved asset; that is the
-   owner's call, not a cleanup task.
-4. **Whether visual packs ship in S08's acceptance or only as examples.** This determines how much
-   of section 5 has to be proven with a second real pack rather than a fixture.
+Open on this contract, in the order they bite:
+
+1. **The class table's second and third columns.** Triangles are settled (above); draw calls and
+   texture bytes are still declarations with nothing to weigh them, so they are debt rather than
+   budgets.
+2. **What an extent move does to a collision.** D-19 governs authoring, and the game's radii come from
+   the data files, not the mesh (`game/data/store.py` reads `radius` per ship and station). A beam that
+   grew by 6 % can therefore disagree with the radius the game collides on, and nothing checks it yet;
+   whether the authoring pipeline should refuse that drift, or the data row should be re-derived from
+   the mesh, is the owner's call and not this contract's.
+3. **Whether the resolver re-checks the envelope at pack load.** The contract checks the tree today;
+   a pack that ships a wider hull than the registry declares is S04's resolver to catch, and its rule
+   is not written yet.
 
 ## Not decided here
 

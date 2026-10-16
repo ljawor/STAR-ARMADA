@@ -37,7 +37,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools" / "art"))
 
-from validate_contract import recompute_revision  # noqa: E402  (same directory, one implementation)
+from validate_contract import (  # noqa: E402  (same directory, one implementation each)
+    EXTENT_GRACE_UNITS,
+    recompute_revision,
+)
 
 EXAMPLES = ROOT / "art" / "schemas" / "examples"
 MANIFESTS = EXAMPLES / "manifests"
@@ -56,6 +59,7 @@ MUTABLE = (
     ("approval", "reviewed_evidence"),
     ("approval", "decision_id"),
     ("bounds",),
+    ("budgets", "triangles"),
 )
 GROUPS = {
     "file record": (("files", "mesh", "path"), ("files", "mesh", "bytes"), ("files", "mesh", "sha256")),
@@ -63,6 +67,7 @@ GROUPS = {
     "approval": (("approval", "reviewed_revision"), ("approval", "reviewed_evidence"),
                  ("approval", "decision_id")),
     "envelope": (("bounds",),),
+    "measurement": (("budgets", "triangles"),),
 }
 
 
@@ -120,6 +125,10 @@ def refresh_base(manifest: dict, approvals: dict) -> dict:
     # silence, because every other check still passes while the mesh quietly outgrows its envelope.
     payload_bounds = json.loads((ROOT / out["files"]["mesh"]["path"]).read_text())["bounds"]
     out["bounds"] = {"min": copy.deepcopy(payload_bounds[0]), "max": copy.deepcopy(payload_bounds[1])}
+    # budgets.triangles is the mesh's own count, not the class ceiling: the schema calls it
+    # "measured, not aspirational", and the ceiling lives in the section 9 table.
+    out.setdefault("budgets", {})["triangles"] = json.loads(
+        (ROOT / out["files"]["mesh"]["path"]).read_text())["triangle_count"]
     out["revision"] = recompute_revision(out["asset"], out["files"])
     # Match on the runtime path, not on the asset label: the approval record and the contract
     # examples are separate documents and have already disagreed once about how to spell an id.
@@ -139,27 +148,60 @@ def defect_groups(base: dict, control: dict) -> list[str]:
             if any(dig(base, f) != dig(control, f) for f in fields)]
 
 
-def repin_registry(bases: dict, check: bool, changes: list) -> None:
-    """The binding registry repeats each binding's envelope; it goes stale with the payload too."""
+def repin_registry(bases: dict, check: bool, changes: list, accept_extent: "str | None") -> bool:
+    """The binding registry declares each binding's extent. Widening one is an approval, not a re-pin.
+
+    The envelope is the extent the hull was approved at, so this pass compares the manifest's bounds
+    against it instead of copying them across. Inside the section 9 grace (1 % of that axis, or two
+    units, whichever is smaller) the envelope is left exactly as it was: a small proud detail is not an
+    approval event, and rewriting the envelope to hug the mesh would erase the baseline the next
+    revision is measured against. Past the grace the tool refuses unless the caller names, with
+    `--accept-extent <decision id>`, the approval that accepted the new extent; it then widens the
+    envelope and records that id in `envelope_decision`, which the validator checks against the
+    manifest's own approval. Returns True when it refused.
+    """
     path = EXAMPLES / "core-registry.json"
     registry = json.loads(path.read_text())
+    refused = False
     for entry in registry.get("bindings", []):
-        for asset, (_, new_base) in bases.items():
-            if entry.get("manifest") != asset or entry.get("envelope") is None:
-                continue
-            if entry["envelope"] != new_base["bounds"]:
-                changes.append(f"{path.relative_to(ROOT)}: {entry['binding']} envelope "
-                               f"{entry['envelope']['max']} -> {new_base['bounds']['max']}")
-                if not check:
-                    entry["envelope"] = copy.deepcopy(new_base["bounds"])
+        asset = entry.get("manifest")
+        if asset not in bases or entry.get("envelope") is None:
+            continue
+        envelope, bounds = entry["envelope"], bases[asset][1]["bounds"]
+        grace = [min(0.01 * (hi - lo), EXTENT_GRACE_UNITS)
+                 for lo, hi in zip(envelope["min"], envelope["max"])]
+        # How far the mesh reaches *past* the envelope on each axis; a mesh smaller than the
+        # envelope is inside it and scores zero.
+        over = {axis: max(0.0, envelope["min"][i] - bounds["min"][i], bounds["max"][i] - envelope["max"][i])
+                for i, axis in enumerate("xyz")}
+        worst = max(over, key=lambda axis: over[axis])
+        if over[worst] <= grace["xyz".index(worst)]:
+            continue
+        if accept_extent is None:
+            print(f"REFUSED {entry['binding']}: the mesh reaches {worst} "
+                  f"{round(bounds['min']['xyz'.index(worst)], 3)}..{round(bounds['max']['xyz'.index(worst)], 3)} "
+                  f"against a declared envelope of "
+                  f"{round(envelope['min']['xyz'.index(worst)], 3)}..{round(envelope['max']['xyz'.index(worst)], 3)}: "
+                  f"{round(over[worst], 3)} units past it, more than the "
+                  f"{round(grace['xyz'.index(worst)], 3)}-unit grace. That is a new extent, so it needs a "
+                  f"new approval - pass --accept-extent <decision id> once the owner has given one.")
+            refused = True
+            continue
+        changes.append(f"{path.relative_to(ROOT)}: {entry['binding']} envelope widened on {worst} to "
+                       f"{round(bounds['max']['xyz'.index(worst)], 3)} under {accept_extent}")
+        entry["envelope"] = copy.deepcopy(bounds)
+        entry["envelope_decision"] = accept_extent
     if not check:
         path.write_text(json.dumps(registry, indent=2) + "\n")
+    return refused
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Re-pin the S02 contract examples to the payloads that are actually on disk.")
     parser.add_argument("--check", action="store_true", help="report staleness instead of rewriting")
+    parser.add_argument("--accept-extent", metavar="DECISION_ID", default=None,
+                        help="record this approval as the one that accepted a widened envelope")
     args = parser.parse_args()
 
     approvals = json.loads(APPROVALS.read_text()) if APPROVALS.exists() else {}
@@ -202,15 +244,19 @@ def main() -> int:
         for field in MUTABLE:
             if dig(old_base, field) != dig(authored, field):  # this control's own defect, kept
                 put(new, field, copy.deepcopy(dig(authored, field)))
-            else:                                             # re-pinned to the payload on disk
-                put(new, field, copy.deepcopy(dig(new_base, field)))
+                continue
+            # A control authored in the same commit that moved the base reads as merely stale here,
+            # so its defect is erased: a declared budget below the mesh's count is both a defect and
+            # exactly what a refresh would have replaced. Author such a control in its own commit,
+            # after the re-pin has landed, and the committed base makes its defect visible.
+            put(new, field, copy.deepcopy(dig(new_base, field)))  # re-pinned to the payload on disk
         if new != control:
             label = groups[0] if groups else "re-pin only"
             changes.append(f"{str(path.relative_to(ROOT))}: re-pinned ({label})")
             if not args.check:
                 path.write_text(json.dumps(new, indent=2) + "\n")
 
-    repin_registry(bases, args.check, changes)
+    refused = repin_registry(bases, args.check, changes, args.accept_extent) or refused
 
     if not changes and not refused:
         print("contract examples: current - every example names the payloads on disk")

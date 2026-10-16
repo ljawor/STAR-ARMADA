@@ -63,6 +63,9 @@ CONTRACTS = {
 
 PATH_FIELDS = ("path", "source")
 PACK_PATH_FIELDS = ("manifest",)
+# The section 9 extent grace: see extent_grace().
+EXTENT_GRACE_UNITS = 2.0
+
 MAX_FILE_BYTES = 67108864
 
 
@@ -233,7 +236,7 @@ EXPORT_KEYS = ("vertices", "batches", "bounds", "triangle_count")
 SIX_ROLES = {"base", "dark", "trim", "accent", "lit", "cool"}
 
 
-def check_export_payload(target: Path, where: str, manifest_roles, manifest_bounds) -> None:
+def check_export_payload(target: Path, where: str, manifest_roles, manifest_bounds) -> dict:
     """Validate the pinned export itself, not just its hash.
 
     The manifest says *which* file; this says the file is a usable mesh: strict JSON
@@ -293,6 +296,7 @@ def check_export_payload(target: Path, where: str, manifest_roles, manifest_boun
         raise Rejected("E_BOUNDS_MISMATCH",
                        f"{where}: mesh bounds {lo}..{hi} escape the declared envelope "
                        f"{envelope['min']}..{envelope['max']}")
+    return payload
 
 
 def check_manifest_files(doc: Document) -> None:
@@ -312,7 +316,20 @@ def check_manifest_files(doc: Document) -> None:
         actual = hashlib.sha256(target.read_bytes()).hexdigest()
         if actual != entry["sha256"]:
             raise Rejected("E_FILE_HASH", f"files.{lod}: sha256 mismatch for {entry['path']}")
-        check_export_payload(target, f"files.{lod}", data["roles"], data["bounds"])
+        payload = check_export_payload(target, f"files.{lod}", data["roles"], data["bounds"])
+        # budgets.triangles is the asset's own declared cost, and the mesh must fit inside it: a
+        # manifest claiming less than the mesh it pins is a claim about a file that is gone. Nothing
+        # read this field, so it was free to rot - the three specimens still declared their
+        # pre-detail counts after S06/S07 added 2,756 / 2,580 / 2,832 triangles. Equality is not
+        # demanded (a declared ceiling is legal, and a pack may promise more room than its stub
+        # uses); draw calls stay a declaration, because the count depends on how the renderer
+        # batches roles, not on the payload.
+        declared = (data.get("budgets") or {}).get("triangles")
+        if declared is not None and declared < payload["triangle_count"]:
+            raise Rejected("E_MEASUREMENT_STALE",
+                           f"budgets.triangles says {declared}, the mesh has "
+                           f"{payload['triangle_count']}: the manifest declares a cost its own "
+                           "mesh has outgrown")
     expected = recompute_revision(data["asset"], data["files"])
     if data["revision"] != expected:
         raise Rejected("E_REVISION_MISMATCH",
@@ -338,6 +355,7 @@ def check_registry(doc: Document, manifests_by_asset: dict) -> None:
         seen.add(key)
     for i, binding in enumerate(doc.data["bindings"]):
         key = binding["binding"]
+        check_binding_extent(binding, i, manifests_by_asset)
         if binding["status"] == "core" and binding["manifest"] not in manifests_by_asset:
             raise Rejected("E_MANIFEST_UNRESOLVED",
                            f"bindings[{i}]: core binding '{key}' names {binding['manifest']}, "
@@ -345,6 +363,48 @@ def check_registry(doc: Document, manifests_by_asset: dict) -> None:
         for other in binding.get("shared_source_with", []):
             if other == key:
                 raise Rejected("E_SCHEMA", f"bindings[{i}]: shared_source_with itself")
+
+
+def extent_grace(envelope: dict) -> list:
+    """How far a mesh may move past its binding's declared envelope without a fresh approval.
+
+    The owner's rule (s02-extent-tolerance-2026-10-16): at most 1 % of that axis, or two world units,
+    whichever is smaller. Detail stands proud of the surface it is placed on, so without a grace
+    every raised belt would fail the contract; without a limit a detail pass can widen a hull by six
+    percent and nothing notices, which is exactly what happened to the battleship's beam.
+    """
+    return [min(0.01 * (hi - lo), EXTENT_GRACE_UNITS) for lo, hi in zip(envelope["min"], envelope["max"])]
+
+
+def check_binding_extent(binding: dict, index: int, manifests_by_asset: dict) -> None:
+    """The binding's envelope is the extent the hull was approved at, and it is checkable.
+
+    A manifest cannot move the envelope: it can only declare bounds, and the mesh must fit inside
+    them. So an authored revision that grows the mesh has to be met by a *new* envelope in the
+    registry — and that edit is the point of review. Widening it past the grace is what
+    `tools/art/update_contract_examples.py --accept-extent` records with an approval id, and a
+    receipt that names something other than the approval the manifest carries is a dangling claim.
+    """
+    envelope = binding.get("envelope")
+    manifest = manifests_by_asset.get(binding.get("manifest"))
+    if envelope is None or manifest is None:
+        return
+    bounds = manifest.data["bounds"]
+    grace = extent_grace(envelope)
+    for axis, name in enumerate("xyz"):
+        lo, hi = bounds["min"][axis], bounds["max"][axis]
+        if lo < envelope["min"][axis] - grace[axis] or hi > envelope["max"][axis] + grace[axis]:
+            raise Rejected("E_EXTENT_DRIFT",
+                           f"bindings[{index}] '{binding['binding']}': the manifest reaches {name} "
+                           f"{lo}..{hi}, past the declared envelope "
+                           f"{envelope['min'][axis]}..{envelope['max'][axis]} by more than the "
+                           f"{grace[axis]:.3f}-unit grace - that is a new extent, so it needs a new "
+                           "approval and a re-declared envelope")
+    decision = binding.get("envelope_decision")
+    if decision and decision != (manifest.data.get("approval") or {}).get("decision_id"):
+        raise Rejected("E_EXTENT_DRIFT",
+                       f"bindings[{index}] '{binding['binding']}': envelope_decision '{decision}' "
+                       "names no approval this manifest carries")
 
 
 def check_pack(doc: Document, core_bindings: set) -> None:
