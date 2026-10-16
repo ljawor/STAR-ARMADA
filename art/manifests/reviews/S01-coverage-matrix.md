@@ -6,11 +6,13 @@ This document is generated from the tree, not transcribed. Every line reference 
 
 What is measured here and what is merely reproduced: every `generator` and `dispatch_site` in the row tables is resolved to a real `def` at the base commit, and each dispatch path records whether the symbols it names exist in this tree. The audit was taken on the checkpoint tree, so the line ranges quoted inside its prose are reproduced, not re-measured — each row states whether that range still fits inside the file here, and a row whose symbols are absent from this tree is listed separately in section 5.1 instead of being blended into the live paths.
 
+Code base: no renderer, gameplay, test or asset file differs from main, so every line reference in this inventory is valid for a reader of main.
+
 ## 1. What this covers
 
 | item | count |
 |---|---|
-| total_bindings | 119 |
+| total_bindings | 120 |
 | ship_bindings | 41 |
 | distinct_ship_mesh_keys | 32 |
 | distinct_ship_mesh_keys_from_data_rows | 32 |
@@ -20,12 +22,15 @@ What is measured here and what is merely reproduced: every `generator` and `disp
 | satellite_bindings | 8 |
 | planet_installation_bindings | 16 |
 | environment_prop_bindings | 13 |
+| menu_cinematic_bindings | 1 |
 | campaign_prop_bindings | 0 |
+| campaign_only_models | 0 |
+| bindings_in_scope_by_owner_decision | 10 |
 | dispatch_paths | 25 |
 | tooling_dispatch_paths | 5 |
 | non_model_elements | 25 |
 | hidden_duplicate_risk_paths | 16 |
-| owner_scope_decisions_required | 3 |
+| scope_questions_asked_and_answered | 3 |
 | unresolved_items | 5 |
 
 Coverage comes from the data, not from a hand-written list: ships are enumerated from `game.data.store.DataStore().ships`, stations and hardware from `assets/data/stations/stations.json`, and environment props from the union of planet kinds across every file in `assets/data/maps/`, so a new map kind appears here automatically.
@@ -86,7 +91,7 @@ Coverage comes from the data, not from a hand-written list: ships are enumerated
 - `syndicate:battleship`
 - `syndicate:supercapital`
 
-No ship data row resolves to these keys today, so no authoring decision is pending on them; the owner question is whether they should be removed from the registry or kept for a planned hull.
+**Owner decision 2026-10-16: keep them and plan the hulls.** Battleships and capital ships build at the shipyard; bombers build at the fighter platform. `shipyard.builds_ships` is `['*']`, so capital production there already holds; `fighter_platform.builds_ships` is an explicit list, so a new bomber hull stays unbuildable until its data id is added to it — a data change to make alongside the hull, not a model change.
 
 ## 3. Stations, satellites and planet installations
 
@@ -159,7 +164,7 @@ No ship data row resolves to these keys today, so no authoring decision is pendi
 | `environment:nebula` | `render/renderer.py:_draw_nebulas:827` | `render/renderer.py:_draw_nebulas:827` |
 | `environment:jump_point` | `render/renderer.py:_draw_jump_points:899` | `render/renderer.py:_draw_jump_points:899` |
 
-Kinds discovered in the maps: `agricultural`, `asteroid_field`, `barren`, `gas_giant`, `industrial`, `military`, `research`, `temperate`, `trade`. All carry `unknown_needs_owner_scope_decision`: the roadmap requires a scope exception here rather than a silent exclusion, and none is authored yet.
+Kinds discovered in the maps: `agricultural`, `asteroid_field`, `barren`, `gas_giant`, `industrial`, `military`, `research`, `temperate`, `trade`. **Owner decision 2026-10-16: the planet bodies and the asteroid field are in scope** and carry `in_scope_authoring_pending`; they are authoring targets in batch B5. The sky dome, star, nebula and jump point were proposed `keep procedural` and were not among the questions asked, so they stay recorded as proposals.
 
 ## 5. Renderer dispatch paths
 
@@ -257,11 +262,15 @@ Tool-only paths (5), which cannot affect the shipped renderer:
 | `E24_presentation_campaign_overlay` | 2D mission-brief / outcome overlay panels | keep procedural |
 | `E25_hud_and_menu_2d_layers` | the HUD overlay and menu chrome drawn as textured 2D quads | keep procedural |
 
-### 7.1 Requiring an explicit owner decision
+### 7.1 Resolved by the owner, 2026-10-16
 
-- E05_planet_surface_sphere - are planet bodies (procedural equirect-textured spheres, shared display list with the sky dome) permanently out of the model catalogue, or in scope? Roadmap 3.1/S01 name 'planet installations' and 'environment objects' but the planet body is currently procedural and there is no separate terrain implementation.
-- E07_asteroid_field_rocks - asteroid/neutral environment props are per-instance procedural (seeded private RNG). Roadmap 3.1 explicitly includes 'neutral/environment objects' and S01 'environment props', so the owner must decide keep-procedural vs replace with a shared authored/instanced prop, which would need a catalogue binding that does not exist today.
-- E23_menu_cinematic_3d_background - the menu 3D backdrop is a baked JPEG movie (assets/menu/battle.zip) rather than a live render. Roadmap L164 requires menus to use the same resolved model; the owner must decide whether menus stay a baked movie (re-baked per catalog revision, see T01) or move to a live render, and whether the trio's baked look is an approved reference.
+| element | owner decision, 2026-10-16 |
+|---|---|
+| E05_planet_surface_sphere | in scope — bring into the catalogue (`- are planet bodies (procedural equirect-textured spheres, shared display list with the sky dome) permanently out of the model catalogue, o…`) |
+| E07_asteroid_field_rocks | in scope — bring into the catalogue (`- asteroid/neutral environment props are per-instance procedural (seeded private RNG). Roadmap 3.1 explicitly includes 'neutral/environment…`) |
+| E23_menu_cinematic_3d_background | in scope — bring into the catalogue (`- the menu 3D backdrop is a baked JPEG movie (assets/menu/battle.zip) rather than a live render. Roadmap L164 requires menus to use the sam…`) |
+
+The elements listed in section 7 above that are **not** in section 7.1 keep their `keep procedural` proposal. They were not put to the owner, so they are carried as proposals rather than presented as approved; say so if any of them should change.
 
 ## 8. Approved scope and its limits
 
@@ -283,7 +292,7 @@ The three approved bindings still draw the procedural generator above in this tr
 
 ## 9. Proposed review batches
 
-Ordered so that each batch settles a question before the next one spends effort on it; counts are current bindings.
+Ordered so that each batch settles a question before the next one spends effort on it; counts are current bindings. **Owner decision 2026-10-16: approved in this order** (`s01-batch-plan`), as a plan and as scope — not as approval of any model design, which S06 still requires per asset with an enumerated list.
 
 | batch | contents | bindings | question the owner answers |
 |---|---|---|---|
@@ -291,7 +300,7 @@ Ordered so that each batch settles a question before the next one spends effort 
 | B2 | squadrons and logistics hulls, all factions | 15 | are squadron members and transports authored individually or as shared props? |
 | B3 | stations, by faction | 40 | does the approved shipyard treatment extend to the other station kinds? |
 | B4 | satellites and planet installations | 24 | orbit/surface hardware in scope at all? |
-| B5 | environment props | 13 | keep procedural, or bring the listed kinds into the catalogue? |
+| B5 | environment props | 13 | in scope per the owner decision: planet bodies and the asteroid field are authored here; the sky/star/nebula/jump-point proposals still stand unless objected to |
 
 ## 10. Open items
 
@@ -338,3 +347,50 @@ for r in inv['rows']:
 print('all row references resolve')
 PY
 ```
+
+## 12. Owner decisions recorded
+
+`s01-scope-2026-10-16`, decided by owner (Lukasz Jawor), in chat; raw wording preserved below, bound to commit `9dd678570ab6e85878d34533625026e0ec1f63c5` (PR #115) and this document.
+
+| question | answer | owner's own wording |
+|---|---|---|
+| `E05_planet_surface_sphere` | in scope — bring into the catalogue | “1.) scope exceptions: let bring them into catalog.” |
+| `E07_asteroid_field_rocks` | in scope — bring into the catalogue | “(same answer)” |
+| `E23_menu_cinematic_3d_background` | in scope — bring into the catalogue | “(same answer)” |
+| `s01-declared_unreachable_keys` | keep — plan the hulls | “2.) plan the hulls . Battleshipo and capitol shoudl be buidl in ship yard, bomber in fighter yard.” |
+| `s01-batch_order` | as recommended: B1 Alliance combat hulls, then B2 squadrons/logistics, B3 stations, B4 satellites and planet installations, B5 environment props | “3.) as recomendet” |
+| `s01-batch_plan` | approved — as a plan and as scope. This does not approve any model design, and S06 still requires per-asset owner approval with an enumerated list. | “4.) approved” |
+
+What this does not authorize:
+- merging PR #114 or activating the trio in production
+- changing the production default (that is S11, and only after S10)
+- any specific model design — S06 requires per-asset owner approval with an enumerated list
+
+Consequences carried into the inventory:
+- Environment props move from 'scope decision required' to in-scope work. The planet kinds (E05) and the asteroid field (E07) become authoring targets in batch B5.
+- The menu backdrop (E23) gets its own inventory row so the decision is bound to a binding rather than to a sentence: menu:cinematic:backdrop.
+- The three unreachable SHIP_KEYS stay in the registry as planned hulls with a recorded production site.
+- The starfield sky dome, star, nebula and jump point were proposed keep-procedural and were not among the questions asked; they are carried as proposed, not as owner-approved.
+
+### 12.1 Planned hulls
+
+Battleships and capital ships build at the shipyard; bombers build at the fighter platform (the owner's 'fighter yard'). Mechanism: game/systems/construction.py decides buildability from the station's builds_ships list: an exact ship id, or ['*'] for any ship
+
+| mesh key | data row today | production site | status |
+|---|---|---|---|
+| `syndicate:battleship` | none | `shipyard` | planned_owner_confirmed |
+| `syndicate:supercapital` | none | `shipyard` | planned_owner_confirmed |
+| `syndicate:bomber` | none | `fighter_platform` | planned_owner_confirmed |
+
+`fighter_platform.builds_ships` today: `imperial_tie_squadron`, `imperial_tie_bomber_squadron`, `rebel_x_squadron`, `rebel_y_squadron`, `confed_vulture_squadron`, `confed_bomber_squadron`, `syndicate_raid_squadron`. This list is explicit, so a new bomber hull is unbuildable until its data id is added to it. That is a data change S06 must make alongside the hull, not a model change.
+
+## 13. Campaign coverage
+
+Read from assets/data/campaign/campaign.json: 11 missions, 11 distinct ship data ids and 2 station ids referenced; **0 campaign-only models**.
+
+- every ship and station the campaign references resolves to an inventoried binding
+- ship ids referenced: `imperial_battleship`, `imperial_corvette`, `imperial_crew_transport`, `imperial_cruiser`, `imperial_frigate`, `imperial_supercapital`, `imperial_tie_squadron`, `rebel_corvette`, `rebel_frigate`, `rebel_x_squadron`, `syndicate_corvette`
+- station ids referenced: `mining_station`, `trade_station`
+- unresolved model-shaped references: none
+
+`campaign_prop` is therefore empty because the campaign reuses existing bindings, not because campaign content was skipped.

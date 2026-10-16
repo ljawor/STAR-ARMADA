@@ -80,6 +80,8 @@ PREVIEW_BY_CATEGORY = {
     "planet_installation": "as station (outline ghost); surface slots are chosen from the "
                            "surface frame, not from model sockets",
     "environment_prop": "not buildable: no preview, no sockets",
+    "menu_cinematic": "not a gameplay entity: no preview, no sockets; it is a baked backdrop "
+                      "played behind the menus",
 }
 SATELLITE_KINDS = ("defense_satellite", "attack_satellite")
 PLANET_INSTALLATION_KINDS = ("planet_extractor", "planet_trade_hub",
@@ -139,7 +141,17 @@ SYMBOLS = {
     "emit_hull": ("render/renderer.py", "_emit_hull"),
     "station_ring": ("render/renderer.py", "_station_ring"),
     "draw_sphere": ("render/renderer.py", "_draw_sphere"),
+    # The menu backdrop, decided in scope by the owner on 2026-10-16.
+    "menu_movie_builder": ("tools/build_menu_movie.py", "build_movie"),
+    "menu_splash_draw": ("render/menus.py", "_draw_splash_movie"),
+    "menu_movie_frame": ("render/menu_movie.py", "get_frame"),
 }
+
+# Owner scope decisions, 2026-10-16 (art/manifests/inventory_audit.json:
+# owner_scope_decisions). Only the elements that were actually asked carry a decision;
+# the rest keep their proposal and are not presented as approved.
+IN_SCOPE_DECISION = "in_scope_owner_approved (s01-scope-2026-10-16)"
+KEEP_PROCEDURAL_PROPOSAL = "proposed_keep_procedural_not_asked"
 
 # Ships whose mesh the faction builders do not own: every Imperial data id still
 # resolves to the legacy inline shape builders.
@@ -231,6 +243,39 @@ def git_head() -> str:
                               capture_output=True, text=True, check=True).stdout.strip()
     except Exception:  # pragma: no cover - inventory still useful without git
         return "unknown"
+
+
+def code_base_check() -> collections.OrderedDict:
+    """Report whether any code the row references name differs from ``origin/main``.
+
+    The inventory is generated on a docs/tools branch, but its line references must be
+    true for a reader of main. That holds only while the branch changes no renderer,
+    gameplay or test file, so it is checked here instead of being asserted in prose.
+    """
+    def git(*args):
+        return subprocess.run(["git", "-C", str(ROOT), *args],
+                              capture_output=True, text=True)
+
+    base = git("merge-base", "HEAD", "origin/main")
+    if base.returncode != 0:
+        return collections.OrderedDict([
+            ("checked", False),
+            ("note", "origin/main is not available in this clone; code base not verified")])
+    diff = git("diff", "--name-only", f"{base.stdout.strip()}...HEAD",
+               "--", "render/", "game/", "tests/", "assets/")
+    if diff.returncode != 0:
+        return collections.OrderedDict([("checked", False),
+                                         ("note", "git diff failed; code base not verified")])
+    changed = [line for line in diff.stdout.splitlines() if line.strip()]
+    return collections.OrderedDict([
+        ("checked", True),
+        ("merge_base", base.stdout.strip()),
+        ("changed_code_paths", changed),
+        ("note", ("no renderer, gameplay, test or asset file differs from main, so every line "
+                  "reference in this inventory is valid for a reader of main"
+                  if not changed else
+                  "code differs from main — row references describe this branch, not main")),
+    ])
 
 
 def visual_keys():
@@ -396,7 +441,8 @@ def build_rows():
             binding=f"environment:{kind}", label=None, faction="shared",
             category="environment_prop", source=mapped or None,
             generator=generator, dispatch=dispatch, shared=[], shape=kind,
-            envelope=envelope, status="unknown_needs_owner_scope_decision",
+            envelope=envelope, status="in_scope_authoring_pending",
+            scope=IN_SCOPE_DECISION,
         ))
     for binding, gen_key, site_key, shape, envelope in (
         ("environment:deep_space_sky_dome", "starfield", "starfield", "deep_space",
@@ -413,8 +459,26 @@ def build_rows():
             binding=binding, label=None, faction="shared", category="environment_prop",
             source=None, generator=ref(gen_key), dispatch=site(site_key),
             shared=[], shape=shape, envelope=envelope,
-            status="unknown_needs_owner_scope_decision",
+            status="keep_procedural_proposed",
         ))
+
+    # ---- menu cinematic backdrop (owner decided in scope 2026-10-16) ------
+    rows.append(row(
+        binding="menu:cinematic:backdrop", label=None, faction="shared",
+        category="menu_cinematic", source=None,
+        generator=ref("menu_movie_builder"), dispatch=site("menu_splash_draw"),
+        shared=[], shape=None,
+        envelope=("baked 3D battle backdrop for the non-replay menus; re-baked from the "
+                  f"catalogue by {ref('menu_movie_builder')} and played back through "
+                  f"{ref('menu_movie_frame')}"),
+        status="in_scope_authoring_pending", scope=IN_SCOPE_DECISION,
+    ))
+    for entry in rows:
+        if entry["canonical_binding"] == "menu:cinematic:backdrop":
+            entry["notes"] = ("Owner decision s01-scope-2026-10-16: in scope. Whether the menu "
+                              "scene is drawn live or stays baked per catalogue revision is an "
+                              "S02/S04 implementation choice; the bake avoids paying battle "
+                              "cost behind every menu.")
 
     # ---- approved trio: retarget the three owner-approved bindings --------
     for entry in rows:
@@ -430,7 +494,7 @@ def build_rows():
     used_keys = {r["geometry_shape_string"] for r in rows
                  if r["canonical_binding"].startswith("ship:")}
     unreachable = [key for key in ship_keys if key not in used_keys]
-    return rows, ship_keys, station_kinds, kinds, unreachable
+    return rows, ship_keys, station_kinds, kinds, unreachable, store
 
 
 def _ratio(category: str) -> float:
@@ -462,8 +526,51 @@ def discover_environment_kinds():
     return sorted(maps_of), maps_of
 
 
+def check_campaign_coverage(store, rows):
+    """Prove the campaign introduces no 3D model the inventory does not already hold.
+
+    The roadmap asks for campaign-only objects explicitly. Counting them as zero is
+    only meaningful if every model-shaped reference in the campaign file was resolved,
+    so this walks the file and reports the unresolved ones rather than asserting a
+    number nobody can check.
+    """
+    path = ROOT / "assets" / "data" / "campaign" / "campaign.json"
+    data = json.loads(path.read_text(encoding="utf-8"))
+    tokens: set[str] = set()
+
+    def walk(node):
+        if isinstance(node, dict):
+            for value in node.values():
+                walk(value)
+        elif isinstance(node, list):
+            for value in node:
+                walk(value)
+        elif isinstance(node, str):
+            tokens.add(node)
+
+    walk(data)
+    station_ids = {r["canonical_binding"].split(":")[-1] for r in rows
+                   if r["category"] in ("station", "satellite", "planet_installation")}
+    ship_refs = sorted(t for t in tokens if t in store.ships)
+    station_refs = sorted(t for t in tokens if t in station_ids)
+    unresolved = sorted(t for t in tokens
+                        if re.fullmatch(r"(?:imperial|rebel|confed|syndicate)_[a-z_]+", t)
+                        and t not in store.ships and t not in station_ids)
+    return collections.OrderedDict([
+        ("source", "assets/data/campaign/campaign.json"),
+        ("missions", len(data.get("missions") or ())),
+        ("referenced_ship_data_ids", ship_refs),
+        ("referenced_station_ids", station_refs),
+        ("unresolved_model_references", unresolved),
+        ("campaign_only_models", 0 if not unresolved else len(unresolved)),
+        ("conclusion", ("every ship and station the campaign references resolves to an "
+                        "inventoried binding" if not unresolved
+                        else "unresolved references — investigate before closing S01")),
+    ])
+
+
 def row(*, binding, label, faction, category, source, generator, dispatch, shared,
-        shape, envelope, status) -> collections.OrderedDict:
+        shape, envelope, status, scope=KEEP_PROCEDURAL_PROPOSAL) -> collections.OrderedDict:
     return collections.OrderedDict([
         ("canonical_binding", binding),
         ("display_label", label),
@@ -476,6 +583,7 @@ def row(*, binding, label, faction, category, source, generator, dispatch, share
         ("geometry_shape_string", shape),
         ("scale_envelope", envelope),
         ("status", status),
+        ("scope_decision", scope),
         ("target_asset_id", None),
         ("authored_override", None),
         ("model_owner", "UNASSIGNED"),
@@ -491,7 +599,10 @@ def main() -> int:
     args = parser.parse_args()
 
     audit = annotate_references(json.loads(AUDIT_PATH.read_text(encoding="utf-8")))
-    rows, ship_keys, station_kinds, env_kinds, unreachable_ship_keys = build_rows()
+    (rows, ship_keys, station_kinds, env_kinds, unreachable_ship_keys,
+     store) = build_rows()
+    campaign = check_campaign_coverage(store, rows)
+    code_base = code_base_check()
 
     counts = collections.OrderedDict([
         ("total_bindings", len(rows)),
@@ -514,13 +625,18 @@ def main() -> int:
          sum(1 for r in rows if r["category"] == "planet_installation")),
         ("environment_prop_bindings",
          sum(1 for r in rows if r["category"] == "environment_prop")),
+        ("menu_cinematic_bindings",
+         sum(1 for r in rows if r["category"] == "menu_cinematic")),
         ("campaign_prop_bindings",
          sum(1 for r in rows if r["category"] == "campaign_prop")),
+        ("campaign_only_models", campaign["campaign_only_models"]),
+        ("bindings_in_scope_by_owner_decision",
+         sum(1 for r in rows if r["scope_decision"].startswith("in_scope_owner_approved"))),
         ("dispatch_paths", len(audit["dispatch_paths"])),
         ("tooling_dispatch_paths", len(audit["tooling_dispatch_paths"])),
         ("non_model_elements", len(audit["non_model_elements"])),
         ("hidden_duplicate_risk_paths", len(audit["hidden_duplicate_risk_paths"])),
-        ("owner_scope_decisions_required",
+        ("scope_questions_asked_and_answered",
          len(audit["non_model_elements_needing_owner_decision"])),
         ("unresolved_items", len(audit["uncertain_or_unresolved"])),
     ])
@@ -528,8 +644,12 @@ def main() -> int:
     inventory = collections.OrderedDict([
         ("schema", "s01-model-inventory/v2"),
         ("roadmap_step", "S01"),
-        ("base_commit", git_head()),
+        # The base is the code base the rows were measured in, not this branch's HEAD:
+        # recording the live HEAD would make --check fail on every later commit, and the
+        # rows genuinely describe main's code while this branch changes none of it.
+        ("base_commit", code_base.get("merge_base") or git_head()),
         ("base_branch", "main"),
+        ("code_base", code_base),
         ("generated_by", "tools/art/build_model_inventory.py"),
         ("scope", ("Every 3D model the renderer can draw from data, plus every renderer dispatch "
                    "path that can supply geometry and every visual element that is not a discrete "
@@ -549,6 +669,9 @@ def main() -> int:
         }),
         ("counts", counts),
         ("declared_ship_keys_without_a_data_row", unreachable_ship_keys),
+        ("owner_scope_decisions", audit["owner_scope_decisions"]),
+        ("planned_hulls", audit["planned_hulls"]),
+        ("campaign_coverage", campaign),
         ("rows", rows),
         ("dispatch_paths", audit["dispatch_paths"]),
         ("tooling_dispatch_paths", audit["tooling_dispatch_paths"]),
@@ -628,6 +751,7 @@ def render_matrix(inventory, rows, stations, env_kinds, audit) -> str:
         "are reproduced, not re-measured — each row states whether that range still fits "
         "inside the file here, and a row whose symbols are absent from this tree is listed "
         "separately in section 5.1 instead of being blended into the live paths.\n")
+    add(f"Code base: {inventory['code_base']['note']}.\n")
 
     add("## 1. What this covers\n")
     add("| item | count |")
@@ -667,9 +791,12 @@ def render_matrix(inventory, rows, stations, env_kinds, audit) -> str:
         for key in unreachable:
             add(f"- `{key}`")
         add("")
-        add("No ship data row resolves to these keys today, so no authoring decision is "
-            "pending on them; the owner question is whether they should be removed from the "
-            "registry or kept for a planned hull.\n")
+        add("**Owner decision 2026-10-16: keep them and plan the hulls.** Battleships and "
+            "capital ships build at the shipyard; bombers build at the fighter platform. "
+            "`shipyard.builds_ships` is `['*']`, so capital production there already holds; "
+            "`fighter_platform.builds_ships` is an explicit list, so a new bomber hull stays "
+            "unbuildable until its data id is added to it — a data change to make alongside "
+            "the hull, not a model change.\n")
 
     add("## 3. Stations, satellites and planet installations\n")
     add("| binding pattern | label | category | generator | dispatch |")
@@ -703,8 +830,10 @@ def render_matrix(inventory, rows, stations, env_kinds, audit) -> str:
             f"`{entry['dispatch_site']}` |")
     add("")
     add(f"Kinds discovered in the maps: {', '.join('`%s`' % k for k in env_kinds)}. "
-        "All carry `unknown_needs_owner_scope_decision`: the roadmap requires a scope "
-        "exception here rather than a silent exclusion, and none is authored yet.\n")
+        "**Owner decision 2026-10-16: the planet bodies and the asteroid field are in scope** "
+        "and carry `in_scope_authoring_pending`; they are authoring targets in batch B5. The "
+        "sky dome, star, nebula and jump point were proposed `keep procedural` and were not "
+        "among the questions asked, so they stay recorded as proposals.\n")
 
     add("## 5. Renderer dispatch paths\n")
     add("Every path through which the renderer obtains 3D geometry. The last column is measured "
@@ -751,10 +880,19 @@ def render_matrix(inventory, rows, stations, env_kinds, audit) -> str:
         add(f"| `{entry['element_id']}` | {_one_line(entry.get('what_it_is'))} | "
             f"{_one_line(entry.get('proposed_scope_decision'))} |")
     add("")
-    add("### 7.1 Requiring an explicit owner decision\n")
+    add("### 7.1 Resolved by the owner, 2026-10-16\n")
+    add("| element | owner decision, 2026-10-16 |")
+    add("|---|---|")
     for entry in audit["non_model_elements_needing_owner_decision"]:
-        add(_bullet(entry))
+        text = entry if isinstance(entry, str) else json.dumps(entry, ensure_ascii=False)
+        text = text.lstrip("-— ")
+        element = text.split(" ")[0].rstrip("-—")
+        add(f"| {_one_line(element, 60)} | in scope — bring into the catalogue "
+            f"(`{_one_line(_one_line(text).split(' ', 1)[-1], 140)}`) |")
     add("")
+    add("The elements listed in section 7 above that are **not** in section 7.1 keep their "
+        "`keep procedural` proposal. They were not put to the owner, so they are carried as "
+        "proposals rather than presented as approved; say so if any of them should change.\n")
 
     add("## 8. Approved scope and its limits\n")
     add(f"Owner decision `{inventory['owner_approved']['decision']}`; preserved in "
@@ -775,7 +913,9 @@ def render_matrix(inventory, rows, stations, env_kinds, audit) -> str:
 
     add("## 9. Proposed review batches\n")
     add("Ordered so that each batch settles a question before the next one spends effort on "
-        "it; counts are current bindings.\n")
+        "it; counts are current bindings. **Owner decision 2026-10-16: approved in this "
+        "order** (`s01-batch-plan`), as a plan and as scope — not as approval of any model "
+        "design, which S06 still requires per asset with an enumerated list.\n")
     add("| batch | contents | bindings | question the owner answers |")
     add("|---|---|---|---|")
     add(f"| B1 | combat hulls, one faction (`rebel`) | "
@@ -790,7 +930,8 @@ def render_matrix(inventory, rows, stations, env_kinds, audit) -> str:
         f"{counts['satellite_bindings'] + counts['planet_installation_bindings']} | "
         "orbit/surface hardware in scope at all? |")
     add(f"| B5 | environment props | {counts['environment_prop_bindings']} | "
-        "keep procedural, or bring the listed kinds into the catalogue? |")
+        "in scope per the owner decision: planet bodies and the asteroid field are authored "
+        "here; the sky/star/nebula/jump-point proposals still stand unless objected to |")
     add("")
     add("## 10. Open items\n")
     for entry in audit["uncertain_or_unresolved"]:
@@ -822,6 +963,58 @@ def render_matrix(inventory, rows, stations, env_kinds, audit) -> str:
     add("PY")
     add("```")
     add("")
+
+    add("## 12. Owner decisions recorded\n")
+    decisions = inventory["owner_scope_decisions"]
+    add(f"`{decisions['decision_id']}`, decided by {decisions['decided_by']}, bound to commit "
+        f"`{decisions['binds_to']['reviewed_revision_commit']}` "
+        f"(PR #{decisions['binds_to']['pr']}) and this document.\n")
+    add("| question | answer | owner's own wording |")
+    add("|---|---|---|")
+    for answer in decisions["answers"]:
+        add(f"| `{answer['question_id']}` | {_one_line(answer['answer'], 200)} | "
+            f"“{_one_line(answer.get('raw_owner_wording'), 120)}” |")
+    add("")
+    add("What this does not authorize:")
+    for item in ("merging PR #114 or activating the trio in production",
+                 "changing the production default (that is S11, and only after S10)",
+                 "any specific model design — S06 requires per-asset owner approval with an "
+                 "enumerated list"):
+        add(f"- {item}")
+    add("")
+    add("Consequences carried into the inventory:")
+    for item in decisions["consequences"]:
+        add(f"- {item}")
+    add("")
+    add("### 12.1 Planned hulls\n")
+    hulls = inventory["planned_hulls"]
+    add(f"{hulls['owner_rule']} Mechanism: {_one_line(hulls['grounding']['mechanism'])}\n")
+    add("| mesh key | data row today | production site | status |")
+    add("|---|---|---|---|")
+    for hull in hulls["hulls"]:
+        add(f"| `{hull['mesh_key']}` | {hull['data_row_today'] or 'none'} | "
+            f"`{hull['production_site']}` | {hull['status']} |")
+    add("")
+    add(f"`fighter_platform.builds_ships` today: "
+        f"{', '.join('`%s`' % s for s in hulls['grounding']['fighter_platform.builds_ships'])}. "
+        f"{hulls['grounding']['fighter_platform_consequence']}\n")
+
+    add("## 13. Campaign coverage\n")
+    campaign = inventory["campaign_coverage"]
+    add(f"Read from {campaign['source']}: {campaign['missions']} missions, "
+        f"{len(campaign['referenced_ship_data_ids'])} distinct ship data ids and "
+        f"{len(campaign['referenced_station_ids'])} station ids referenced; "
+        f"**{campaign['campaign_only_models']} campaign-only models**.\n")
+    add(f"- {campaign['conclusion']}")
+    add(f"- ship ids referenced: "
+        f"{', '.join('`%s`' % s for s in campaign['referenced_ship_data_ids'])}")
+    add(f"- station ids referenced: "
+        f"{', '.join('`%s`' % s for s in campaign['referenced_station_ids'])}")
+    add(f"- unresolved model-shaped references: "
+        f"{campaign['unresolved_model_references'] or 'none'}")
+    add("")
+    add("`campaign_prop` is therefore empty because the campaign reuses existing bindings, "
+        "not because campaign content was skipped.\n")
     return "\n".join(out)
 
 

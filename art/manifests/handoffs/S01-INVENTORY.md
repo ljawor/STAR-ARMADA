@@ -1,13 +1,15 @@
 # Handoff: S01 — inventory and batch design
 
-Status: **review-ready** (inventory and coverage matrix produced; owner scope review not yet given)
+Status: **complete** (owner scope review given 2026-10-16; see "Owner approval" below)
 
 Base commit / branch: `16523bf0b06a39e3f77961d0c213b0af184a16b6` (`main`, version `0.15.1`) on
 `docs/s01-model-inventory`
 
-PR and exact pushed head: this PR (head recorded in the receipt comment after push; the branch
-was created with `git worktree add -b docs/s01-model-inventory <scratch> origin/main`, so no
-work happened in the owner's live checkout)
+PR and exact pushed head: PR #115. The branch was created with
+`git worktree add -b docs/s01-model-inventory <scratch> origin/main`, so no work happened in the
+owner's live checkout. The head is read back in the receipt comment posted after each push;
+commit `9dd67857` was the revision the owner reviewed, and the decision record in
+`art/manifests/inventory_audit.json` (`owner_scope_decisions.binds_to`) names it.
 
 Prerequisites verified:
 
@@ -52,11 +54,29 @@ Nothing in the game: this PR is documentation plus a build tool. The visible out
 coverage matrix — counts, per-binding rows, every renderer dispatch path, the hidden
 second-copy risks and the batch proposal.
 
-Owner approval: **none sought or claimed.** The inventory records the existing owner decision
-`approved-trio-2026-10-16` (`rebel_battleship`, `rebel_frigate`, Alliance-owned/rebel `shipyard`)
-and its limits, and marks every other row `UNASSIGNED` / `procedural_legacy` or
-`unknown_needs_owner_scope_decision`. No approval timestamp is invented; the scope review this
-step requires is still outstanding.
+Owner approval: **given 2026-10-16, decision `s01-scope-2026-10-16`**, against the matrix at the
+revision the owner reviewed (`9dd67857`). The owner answered all four questions put to them, and
+their own wording is preserved in `art/manifests/inventory_audit.json`:
+
+1. Scope exceptions — "let bring them into catalog": the planet bodies (E05), the asteroid/
+   environment props (E07) and the menu cinematic backdrop (E23) are **in scope**. They now carry
+   `in_scope_authoring_pending` and an inventory binding (`menu:cinematic:backdrop` was added so
+   the decision is bound to a binding, not to a sentence).
+2. The three declared-but-unreachable mesh keys — "plan the hulls": kept as planned hulls, with
+   the production site recorded per hull (`s01-hull-plan-2026-10-16`).
+3. Batch order — "as recommended": B1 Alliance combat hulls, B2 squadrons/logistics, B3 stations,
+   B4 satellites and planet installations, B5 environment props.
+4. Batch plan — "approved", as a plan and as scope.
+
+Two honest boundaries on that approval. First, the elements in section 7 of the matrix that were
+**not** put to the owner (starfield sky dome, star, nebula, jump point) keep their
+`keep procedural` **proposal**; they are carried as proposals, not presented as approved. Second,
+this is scope and plan approval only: it does not approve any model design, does not merge PR
+#114, does not activate the trio, and does not change the production default.
+
+The separate trio decision `approved-trio-2026-10-16` (`rebel_battleship`, `rebel_frigate`,
+Alliance-owned/rebel `shipyard`) is recorded in `art/manifests/approvals.json` on PR #114 and is
+unchanged. Every other row stays `UNASSIGNED` for model owner.
 
 Tests and commands actually executed, counts and retained failed attempts:
 
@@ -117,27 +137,43 @@ credential or token appears in any committed file.
 
 Open issues, blockers and decisions required:
 
-1. **Owner scope review (the actual S01 gate).** Three elements need an explicit exception or
-   inclusion: the planet body sphere, asteroid/neutral environment props, and the baked
-   menu-cinematic backdrop. Until they are settled, `environment_prop` rows stay
-   `unknown_needs_owner_scope_decision` rather than being silently excluded.
-2. **Batch priority.** The matrix proposes five batches; the owner picks the order. The
-   roadmap's own recommendation (remaining Alliance combat hulls first) is preserved as B1.
-3. **Three declared-but-unreachable mesh keys** (`syndicate:bomber`, `syndicate:battleship`,
-   `syndicate:supercapital`): keep for a planned hull or remove from the registry?
-4. **Roadmap ledger text on `main` is stale**: §8.1 still describes #113 as an unmerged plan and
+None of the original blockers remains open; all four questions were answered (see "Owner
+approval"). What is carried forward rather than resolved:
+
+1. **Whether the menu backdrop is drawn live or baked per catalogue revision** is an S02/S04
+   implementation choice, not part of the scope answer. The bake exists to avoid paying
+   battle-scene cost behind every menu, so it is recorded as the default until the owner says
+   otherwise.
+2. **The starfield sky dome, star, nebula and jump point** keep their `keep procedural`
+   proposal: they were not among the questions put to the owner, so they are proposals, not
+   approvals. Raise them if that reading is wrong.
+3. **Roadmap ledger text on `main` is stale**: §8.1 still describes #113 as an unmerged plan and
    #114 as in-progress at `313f968`. This branch corrects those rows; PR #114 carries its own
    edit to the same rows, so expect one documentation conflict when the two land. Resolve it as
    a ledger merge: keep #114's S00 rows, add this branch's S01 row, keep a single "current next
    task" line.
-5. The audit's quoted line ranges are checkpoint-relative for rows `R09`/`R10`; each row states
+4. The audit's quoted line ranges are checkpoint-relative for rows `R09`/`R10`; each row states
    this in its `line_reference_base` column rather than silently pointing at the wrong code.
+5. No model design is approved and no authoring has started: S06 still requires per-asset owner
+   approval against an enumerated list.
 
 Next executable step and its acceptance criteria:
 
-**S01 owner review** — read `art/manifests/reviews/S01-coverage-matrix.md`, settle the three
-scope exceptions and the batch order, and amend `docs/BLENDER_MODEL_MIGRATION_ROADMAP.md` §8 if
-the ledger wording is wrong. S01 is complete when the owner has answered the scope questions
-and no dispatch path is silently omitted; the matrix is the evidence for that. **Then S02**, the
-extension contract, on its own branch — do not start authoring, do not merge or activate the
-trio, and do not treat this inventory as approval of any model design.
+**S02 — freeze the extension contract** (roadmap §6), on its own branch. Deliverable: versioned
+asset/registry/mod schemas with minimal core, replacement and additive-pack examples; the
+migration path from the specimen schema and profile loader; resolver, fallback and compatibility
+decisions; failure diagnostics, pack ordering and security bounds; approval invalidation and
+cache/resource invalidation rules; plus class budgets and LOD expectations agreed initially.
+Write the design choices to `art/manifests/decisions.md`. Gate: *reviewed versioned schemas,
+examples, resolver/fallback/compatibility decisions.*
+
+Why S02 is the right next step and not S06: the trio's activation inside PR #114 is still
+hardcoded and unconditional, and S04 cannot restore an explicit preview gate without S02's
+contract. Authoring batches (S06) can then run against a settled contract.
+
+Carry these forward into S02/S06:
+- `syndicate_bomber`'s data id must be added to `fighter_platform.builds_ships` when the hull is
+  created, or the hull will exist but be unbuildable.
+- B5 now contains real work: the planet bodies, the asteroid props and the menu backdrop.
+- The 30 dispatch paths and the R24/R25 hidden legacy generators are the S07 checklist; do not
+  rediscover them.

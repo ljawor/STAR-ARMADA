@@ -45,7 +45,7 @@ The observations and local-only warning above are the **historical document-crea
 
 PR #113 is the separate **performance-only integration, now merged into `main`** as `16523bf0b06a39e3f77961d0c213b0af184a16b6`, version `0.15.1`, with the exact-head Windows CI run `38858140567` passed and the merge commit's tree verified identical to the reviewed head `a24a4ed32f0cec6c76b40c30640a61bee6f60a2b`. No art/model/material files entered that performance change. Its receipt explicitly distinguishes immutable performance-only suite results from the earlier art-integrated full-suite failure and retained stock-combat frozen-control nondeterminism.
 
-**S01 is review-ready** on `docs/s01-model-inventory`: `art/manifests/model_inventory.json`, `art/manifests/inventory_audit.json`, `art/manifests/reviews/S01-coverage-matrix.md` and `art/manifests/handoffs/S01-INVENTORY.md`. Its owner scope review is outstanding. S02–S10 remain gated as below. **S11 is not done or authorized**: neither draft preservation nor the performance merge switches the catalogue default. No release or tag is part of this checkpoint.
+**S01 is complete** on `docs/s01-model-inventory` (PR #115): `art/manifests/model_inventory.json` (120 bindings, every reference resolved at `main`), `art/manifests/inventory_audit.json` (dispatch audit plus the owner scope decision), `art/manifests/reviews/S01-coverage-matrix.md` and `art/manifests/handoffs/S01-INVENTORY.md`. The owner answered all four scope questions on 2026-10-16 (`s01-scope-2026-10-16`): the planet bodies, asteroid props and menu backdrop come **into** the catalogue, the three declared-but-unreachable mesh keys become planned hulls (battleships and capital ships at the shipyard, bombers at the fighter platform), and the five authoring batches are approved in the recommended order. That is scope and plan approval only: no model design is approved, PR #114 is not merged, the trio is not activated and the production default does not change. S02 is the next step; S02–S10 remain gated as below. **S11 is not done or authorized.** No release or tag is part of this checkpoint.
 
 ## 3. Scope and invariants
 
@@ -153,7 +153,7 @@ Each step is a reviewable task/PR with a durable handoff. “Complete” require
 | Step | Work package | Depends on | Completion gate |
 |---|---|---|---|
 | S00 | Preserve and publish approved prototype | This roadmap | Coherent tracked sources/exports/evidence and exact Git/PR receipt |
-| S01 | Inventory every model and approve scope | S00 | Owner-reviewed coverage matrix; no silently omitted dispatch paths |
+| S01 | Inventory every model and approve scope | S00 | **Complete** 2026-10-16: owner-reviewed coverage matrix (`s01-scope-2026-10-16`); no silently omitted dispatch paths |
 | S02 | Specify asset, registry and mod contracts | S01 | Reviewed versioned schemas, examples, resolver/fallback/compatibility decisions |
 | S03 | Standardize Git authoring/export tools | S02 | Reproducible trio builds from a fresh clone, source ownership and storage policy |
 | S04 | Implement generic opt-in model integration | S02, S03 | Registry/pack resolver, source/frozen loading, lifecycle and mod replacement tests |
@@ -315,7 +315,7 @@ This table is the initial planning state, **not implementation completion**. Fut
 | Step | Initial status | Next action / blocking condition |
 |---|---|---|
 | S00 | **Complete on draft PR #114** (`0f6531f4…`), unmerged by design; `main` has no trio | Owner review/integration of the checkpoint stay separate; S04 restores an explicit preview gate |
-| S01 | **Review-ready** on `docs/s01-model-inventory` (inventory + audit + coverage matrix + handoff) | Owner settles scope exceptions and batch priority, then S02 |
+| S01 | **Complete** on `docs/s01-model-inventory`, PR #115 (inventory + audit + coverage matrix + handoff) | Closed 2026-10-16 by the owner's scope decision; S02 is next |
 | S02 | Not started | Decide and specify generic asset/mod contracts |
 | S03 | Not started | Standardize source authority, storage and reproducible exports |
 | S04 | Not started | Generic gated integration, resolver and frozen-path support |
@@ -337,8 +337,8 @@ The following sentence is retained as the initial next-task instruction, not cur
 |---|---|---|
 | S00 preservation | **Complete and published; draft PR #114 unmerged** at `0f6531f4d14f649cbfed744c29b61b4537b0f5e8`, reconciled with `main`; remote blobs and the trios' approval records verified | Read `S00-PRESERVATION.md` and `approvals.json`; review/integration remain separate, and the hardcoded preview activation is still owed to S04 |
 | Performance-only PR #113 | **Merged into `main`** as `16523bf0b06a39e3f77961d0c213b0af184a16b6`; CI `38858140567` passed; merge tree identical to reviewed head; version `0.15.1` | None outstanding for this change; do not re-open it for art work |
-| S01 inventory | **Review-ready** on `docs/s01-model-inventory`: 119 bindings, 30 dispatch paths, 25 non-model elements, 3 scope decisions requested | Owner review of the coverage matrix; then S02 |
+| S01 inventory | **Complete** on `docs/s01-model-inventory`, PR #115: 120 bindings, 30 dispatch paths, 25 non-model elements; owner decision `s01-scope-2026-10-16` answered all four scope questions and `s01-hull-plan-2026-10-16` planned the three unreachable mesh keys | None outstanding for this step; S02 is next, and no design, merge or activation is approved by it |
 | S02–S10 | Not completed | Follow dependencies, per-model owner approval and platform/package gates |
 | S11 | **Not started, not authorized, not done** | Final explicit owner-controlled catalogue switch only after S10 |
 
-**Current next task:** the owner reviews `art/manifests/reviews/S01-coverage-matrix.md` and settles the three scope exceptions (planet body, asteroid/environment props, baked menu cinematic), the three unreachable registry keys and the batch order. S01 closes on that review, not on this document. Keep PR #114 draft and unmerged; do not start a catalogue batch, production cutover, tag or release.
+**Current next task: S02 — specify the asset, registry and mod contracts.** Freeze the versioned extension contract before any further authoring: minimal core plus replacement and additive-pack examples, the migration path from the specimen schema and profile loader, resolver/fallback/compatibility decisions, failure diagnostics, pack ordering and roots, security bounds, approval and cache/resource invalidation, and the initial class budgets and LOD expectations. Write the decisions to `art/manifests/decisions.md`; the gate is *reviewed versioned schemas, examples, resolver/fallback/compatibility decisions*. S01 is closed, so do not re-open the inventory or re-derive it — read `art/manifests/model_inventory.json`. Keep PR #114 draft and unmerged; do not activate the trio, start a catalogue batch, cut over the production default, tag or release.

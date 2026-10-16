@@ -625,5 +625,101 @@
   "render/renderer.py:1461 - `authored_station = faction == \"rebel\" and e.data_id == \"shipyard\"` in _draw_ship_role_batch's station branch.",
   "render/renderer.py:2408 - `authored_station = faction == \"rebel\" and e.data_id == \"shipyard\"` in _draw_station; second site of the same literal.",
   "render/fleet_materials.py - the material system consumes authoredSurface/material_pass (hull_pass(material_pass, authored)); it is told whether the mesh is authored by callers, so it is trio-aware only through the four renderer literals above."
- ]
+ ],
+ "owner_scope_decisions": {
+  "decision_id": "s01-scope-2026-10-16",
+  "decided_by": "owner (Lukasz Jawor), in chat; raw wording preserved below",
+  "binds_to": {
+   "branch": "docs/s01-model-inventory",
+   "pr": 115,
+   "reviewed_revision_commit": "9dd678570ab6e85878d34533625026e0ec1f63c5",
+   "reviewed_artifact": "art/manifests/reviews/S01-coverage-matrix.md",
+   "note": "Binds the scope questions asked in that matrix. It is a scope and plan approval, not an approval of any model design, and not authorization to merge, activate the trio or change the production default."
+  },
+  "answers": [
+   {
+    "question_id": "E05_planet_surface_sphere",
+    "question": "Are planet bodies (procedural equirect-textured spheres) permanently out of the model catalogue, or in scope?",
+    "answer": "in scope — bring into the catalogue",
+    "raw_owner_wording": "1.) scope exceptions: let bring them into catalog."
+   },
+   {
+    "question_id": "E07_asteroid_field_rocks",
+    "question": "Asteroid/neutral environment props are per-instance procedural; keep procedural or replace with a shared authored prop?",
+    "answer": "in scope — bring into the catalogue",
+    "raw_owner_wording": "(same answer)"
+   },
+   {
+    "question_id": "E23_menu_cinematic_3d_background",
+    "question": "Does the menu 3D backdrop stay a baked movie, or is it in the catalogue?",
+    "answer": "in scope — bring into the catalogue",
+    "raw_owner_wording": "(same answer)",
+    "open_sub_question": "Whether the menu scene is then drawn live or stays baked per catalogue revision is an S02/S04 implementation choice, not part of this scope answer. The baked path exists to avoid paying battle-scene cost behind every menu, so the bake-per-revision reading is recorded as the default unless the owner prefers a live menu."
+   },
+   {
+    "question_id": "s01-declared_unreachable_keys",
+    "question": "syndicate:bomber, syndicate:battleship, syndicate:supercapital are declared in SHIP_KEYS but no data row selects them. Keep or remove?",
+    "answer": "keep — plan the hulls",
+    "raw_owner_wording": "2.) plan the hulls . Battleshipo and capitol shoudl be buidl in ship yard, bomber in fighter yard.",
+    "see": "planned_hulls"
+   },
+   {
+    "question_id": "s01-batch_order",
+    "question": "Which batch order?",
+    "answer": "as recommended: B1 Alliance combat hulls, then B2 squadrons/logistics, B3 stations, B4 satellites and planet installations, B5 environment props",
+    "raw_owner_wording": "3.) as recomendet"
+   },
+   {
+    "question_id": "s01-batch_plan",
+    "question": "Approve the batch plan?",
+    "answer": "approved — as a plan and as scope. This does not approve any model design, and S06 still requires per-asset owner approval with an enumerated list.",
+    "raw_owner_wording": "4.) approved"
+   }
+  ],
+  "consequences": [
+   "Environment props move from 'scope decision required' to in-scope work. The planet kinds (E05) and the asteroid field (E07) become authoring targets in batch B5.",
+   "The menu backdrop (E23) gets its own inventory row so the decision is bound to a binding rather than to a sentence: menu:cinematic:backdrop.",
+   "The three unreachable SHIP_KEYS stay in the registry as planned hulls with a recorded production site.",
+   "The starfield sky dome, star, nebula and jump point were proposed keep-procedural and were not among the questions asked; they are carried as proposed, not as owner-approved."
+  ]
+ },
+ "planned_hulls": {
+  "decision_id": "s01-hull-plan-2026-10-16",
+  "owner_rule": "Battleships and capital ships build at the shipyard; bombers build at the fighter platform (the owner's 'fighter yard').",
+  "grounding": {
+   "mechanism": "game/systems/construction.py decides buildability from the station's builds_ships list: an exact ship id, or ['*'] for any ship",
+   "shipyard.builds_ships": "['*'] — already accepts every ship, so battleship/capital production at the shipyard holds today",
+   "fighter_platform.builds_ships": [
+    "imperial_tie_squadron",
+    "imperial_tie_bomber_squadron",
+    "rebel_x_squadron",
+    "rebel_y_squadron",
+    "confed_vulture_squadron",
+    "confed_bomber_squadron",
+    "syndicate_raid_squadron"
+   ],
+   "fighter_platform_consequence": "This list is explicit, so a new bomber hull is unbuildable until its data id is added to it. That is a data change S06 must make alongside the hull, not a model change."
+  },
+  "hulls": [
+   {
+    "mesh_key": "syndicate:battleship",
+    "data_row_today": null,
+    "production_site": "shipyard",
+    "status": "planned_owner_confirmed"
+   },
+   {
+    "mesh_key": "syndicate:supercapital",
+    "data_row_today": null,
+    "production_site": "shipyard",
+    "status": "planned_owner_confirmed"
+   },
+   {
+    "mesh_key": "syndicate:bomber",
+    "data_row_today": null,
+    "production_site": "fighter_platform",
+    "status": "planned_owner_confirmed",
+    "note": "the syndicate currently fields only raid_squadron, which resolves to syndicate:fighter; there is no syndicate bomber data row"
+   }
+  ]
+ }
 }
