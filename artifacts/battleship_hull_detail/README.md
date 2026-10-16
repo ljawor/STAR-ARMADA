@@ -1,7 +1,9 @@
 # Alliance Pelagic — hull surface detail revision
 
-Status: **authoring revision, awaiting the owner's appearance approval.** Nothing here
-changes gameplay, silhouettes, scale or the other two trio assets.
+Status: **approved** — the owner approved this revision on 2026-10-16 ("This looks good"),
+recorded as `s06-battleship-hull-detail-2026-10-16` in `art/manifests/approvals.json`, which now
+binds the battleship's approved revision to these hashes. Nothing here changes gameplay,
+silhouettes, scale or the other two trio assets.
 
 ## What changed
 
@@ -78,15 +80,18 @@ migration cannot silently change hulls it does not own. Exactly one entry moved 
 `ship/rebel/battleship` (`46f3bf20…` → `c53f7f65…`); the other 72 were verified unchanged by
 recomputing all of them.
 
-## Open gate
+## Approval
 
-This is an artwork revision, so it needs the owner's appearance approval for **this**
-revision before it is treated as accepted. Deliberately not done here:
+Approved by the owner on 2026-10-16 and recorded as `s06-battleship-hull-detail-2026-10-16`.
+`art/manifests/approvals.json` now binds `core:alliance/battleship` to this revision's source,
+exporter and runtime hashes, and `art/manifests/approved-trio-source-hashes.json` carries the
+same numbers, so `tools/art/validate-models` reports the battleship as satisfying the approved
+record again. The superseded runtime hash is kept under `superseded_revision`.
 
-- `art/manifests/approvals.json` and `art/manifests/approved-trio-source-hashes.json` are
-  **not** updated. An approval binds to a revision; the records are rewritten with the
-  owner's sign-off, not before it. Until then `tools/art/validate-models` reports the
-  battleship as changed relative to the approved record — that is the designed behaviour,
-  not a defect.
-- the frigate and the shipyard are untouched; rolling the same treatment out to them is a
-  separate batch after this specimen is accepted.
+Deliberately not done here:
+
+- the frigate and the shipyard are untouched; the same treatment rolls out to them as a
+  separate batch, and that batch must fit the trio guard of 9,000 triangles per asset
+  (frigate 5,128 used, shipyard 7,935 used) unless the class budgets are revisited.
+- no budget was raised: the loader still caps a mesh at 12,000 triangles and the generator
+  guard at 11,888, and this revision lands at 11,457.

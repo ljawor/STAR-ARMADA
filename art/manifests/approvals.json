@@ -31,11 +31,55 @@
         "artifacts/alliance_battleship_materials/verification.json",
         "artifacts/alliance_blender_battleship/verification.json"
       ]
+    },
+    {
+      "id": "s06-battleship-hull-detail-2026-10-16",
+      "date": "2026-10-16",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved",
+      "scope_statement": "Approved the hull surface-detail revision of the Alliance Pelagic battleship - the only asset this revision changes. The owner's words were \"This looks good\", after reviewing the revision against the approved hull at capital-detail, capital-close and tactical cameras plus native-pixel crops of the bow deck and the aft machinery.",
+      "approval_kind": "appearance-revision",
+      "revision": {
+        "asset_id": "core:alliance/battleship",
+        "gameplay_binding": "rebel_battleship",
+        "change": "hull surface detail: raised deck plating with edge trenches, banded bow-crown armour with strakes and machinery wells, flank armour belt with dark gaps, machinery banks, vent banks, bridge-base window bands, drive housings, ram ribs, owner-colour prow chevron and deck centre stripe",
+        "source_authority": "script-authoritative",
+        "triangles": {
+          "before": 8701,
+          "after": 11457
+        },
+        "silhouette_change": "none - detail is 0.5 to 4 world units proud of the surfaces it sits on, the mesh Z extent is unchanged (-143.5 to 135.0) so the in-game length is unchanged, and no collision or simulation field moves",
+        "supersedes": {
+          "assets/models/alliance_battleship.mesh.json": "57a5496c539a0252a237ef7a3671509f705308416da3f2afe0c9555ff17e9fec"
+        },
+        "source": {
+          "art/blender/alliance_battleship.blend": "a51b636fc83f1e13b3659440f93adbb68253a6f59a5b0416c4cedc81ca57a791"
+        },
+        "exporter": {
+          "tools/art/alliance_common.py": "7c79e480fe99b1e8950629dce9eeafcbb4e3562d3f9bbaac22d9525a19bfa057",
+          "tools/art/build_alliance_battleship.py": "52380040fd04c3370085c1815e68cb520d5e54f1f4af04ac53ec69d7233d0082"
+        },
+        "runtime": {
+          "assets/models/alliance_battleship.mesh.json": "0a4e397d5c0b60f70fbba35f3e4f4a5ac997ac4de079f821f8f29db9872c95cd"
+        }
+      },
+      "not_approved_by_this_decision": [
+        "the frigate and the shipyard, which this revision does not touch",
+        "any other ship, station, satellite, construction, planet or campaign asset",
+        "raising any triangle or file budget, including for the frigate and shipyard rollout",
+        "a production default switch, registry activation, tag or release",
+        "Windows-native, packaged or frozen-build acceptance"
+      ],
+      "evidence_references": [
+        "artifacts/battleship_hull_detail/README.md",
+        "artifacts/battleship_hull_detail/before-after-review.png",
+        "artifacts/battleship_hull_detail/comparison.json"
+      ]
     }
   ],
   "approved_assets": [
     {
-      "approval_id": "approved-trio-2026-10-16",
+      "approval_id": "s06-battleship-hull-detail-2026-10-16",
       "asset_id": "core:alliance/battleship",
       "gameplay_binding": "rebel_battleship",
       "shape_key": "rebel:battleship",
@@ -43,23 +87,35 @@
       "source_authority": "script-authoritative",
       "blender_version": "5.0.1",
       "source": {
-        "art/blender/alliance_battleship.blend": "7ddefbd5c4c0c815b50e97628e191e7377f0025d6f55f00e69bb04492e0ab352"
+        "art/blender/alliance_battleship.blend": "a51b636fc83f1e13b3659440f93adbb68253a6f59a5b0416c4cedc81ca57a791"
       },
       "exporter": {
-        "tools/art/build_alliance_battleship.py": "7f449c547f97a5ef200e8ae23c0868c40ce3d32f6a79c9a11761cef28663485a"
+        "tools/art/alliance_common.py": "7c79e480fe99b1e8950629dce9eeafcbb4e3562d3f9bbaac22d9525a19bfa057",
+        "tools/art/build_alliance_battleship.py": "52380040fd04c3370085c1815e68cb520d5e54f1f4af04ac53ec69d7233d0082"
       },
       "runtime": {
-        "assets/models/alliance_battleship.mesh.json": "57a5496c539a0252a237ef7a3671509f705308416da3f2afe0c9555ff17e9fec"
+        "assets/models/alliance_battleship.mesh.json": "0a4e397d5c0b60f70fbba35f3e4f4a5ac997ac4de079f821f8f29db9872c95cd"
       },
       "material_profile": {
-        "roles": ["base", "dark", "trim", "accent", "lit", "cool"],
+        "roles": [
+          "base",
+          "dark",
+          "trim",
+          "accent",
+          "lit",
+          "cool"
+        ],
         "profile_version": 1,
         "authored_surface_profile": true,
         "render/fleet_materials.py": "a0a861739ab46b9173baffd9d7f36b4829e85b85b6b5765544b7f9d1ca7ce403"
       },
       "catalogue_size_policy": {
         "in_game_length_world_units": 224.421225,
-        "note": "Renderer-only size policy scales the authored hull to the pre-existing catalogue length. Collision radii and simulation fields are unchanged."
+        "note": "Renderer-only size policy scales the authored hull to the pre-existing catalogue length; the hull-detail revision keeps the mesh Z extent identical, so this length is unchanged. Collision radii and simulation fields are unchanged."
+      },
+      "previous_approval_id": "approved-trio-2026-10-16",
+      "superseded_revision": {
+        "assets/models/alliance_battleship.mesh.json": "57a5496c539a0252a237ef7a3671509f705308416da3f2afe0c9555ff17e9fec"
       }
     },
     {
@@ -81,7 +137,14 @@
         "assets/models/alliance_frigate.mesh.json": "045d1383ac8a774d0bb9733a598ca83777dfcdc26645e6900b9d23ee7392348c"
       },
       "material_profile": {
-        "roles": ["base", "dark", "trim", "accent", "lit", "cool"],
+        "roles": [
+          "base",
+          "dark",
+          "trim",
+          "accent",
+          "lit",
+          "cool"
+        ],
         "profile_version": 1,
         "authored_surface_profile": true,
         "render/fleet_materials.py": "a0a861739ab46b9173baffd9d7f36b4829e85b85b6b5765544b7f9d1ca7ce403"
@@ -111,7 +174,14 @@
         "assets/models/alliance_shipyard.mesh.json": "67d4db64c8677a8898f74d6e966a1b2476ffc721fd72c363ddbc992360630aaf"
       },
       "material_profile": {
-        "roles": ["base", "dark", "trim", "accent", "lit", "cool"],
+        "roles": [
+          "base",
+          "dark",
+          "trim",
+          "accent",
+          "lit",
+          "cool"
+        ],
         "profile_version": 1,
         "authored_surface_profile": true,
         "render/fleet_materials.py": "a0a861739ab46b9173baffd9d7f36b4829e85b85b6b5765544b7f9d1ca7ce403"
@@ -130,8 +200,8 @@
     "activation": "hardcoded-active-preview",
     "detail": "The renderer currently selects the authored trio by hardcoded identity checks (shape key 'rebel:battleship' / 'rebel:frigate' in render/faction_ships.py, and faction=='rebel' and data_id=='shipyard' in render/faction_stations.py). There is no persisted preview/default switch.",
     "required_before_broader_rollout": "S04 (plus the S02 contract) must replace this with an explicit, persisted, reversible opt-in preview selection before any production art merge or wider catalogue rollout.",
-    "production_default": "legacy",
-    "note": "The production default on main is unchanged: none of these three assets are on main at all."
+    "production_default": "hardcoded-preview-for-three-bindings; every other catalogue entry still resolves to the legacy procedural mesh",
+    "note": "All three authored assets are in main's tree and render through the hardcoded identity checks described above; what does not exist yet is a registry or resolver selection (S04) for them."
   },
   "source_hash_manifest": "art/manifests/approved-trio-source-hashes.json"
 }
