@@ -1,1 +1,4 @@
 assets/data/lang/*.json text eol=lf
+# Runtime assets are hash-pinned: preserve committed bytes on every checkout.
+# This disables conversion; it does not normalize or re-export approved meshes.
+assets/models/** -text

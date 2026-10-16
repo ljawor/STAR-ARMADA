@@ -268,11 +268,13 @@ class SelectionLanguageTests(unittest.TestCase):
             self.skipTest('git is required to inspect checkout attributes')
         root = Path(__file__).resolve().parents[1]
         catalogues = [f'assets/data/lang/{code}.json' for code, _ in i18n.LANGUAGES]
-        controls = ['assets/models/probe.mesh.json', 'art/models/probe.blend',
-                    'assets/data/ships/ships.json']
+        runtime = ['assets/models/alliance_frigate.mesh.json',
+                   'assets/models/registry.json',
+                   'assets/models/manifests/alliance_frigate.json']
+        controls = ['art/models/probe.blend', 'assets/data/ships/ships.json']
         result = subprocess.run(
             ['git', '-c', f'core.attributesFile={os.devnull}', 'check-attr',
-             'text', 'eol', '--', *catalogues, *controls],
+             'text', 'eol', '--', *catalogues, *runtime, *controls],
             cwd=root, env=dict(os.environ, GIT_ATTR_NOSYSTEM='1'),
             check=True, capture_output=True, encoding='utf-8')
         attributes = {}
@@ -282,6 +284,9 @@ class SelectionLanguageTests(unittest.TestCase):
         for path in catalogues:
             with self.subTest(path=path):
                 self.assertEqual(attributes[path], {'text': 'set', 'eol': 'lf'})
+        for path in runtime:
+            with self.subTest(path=path):
+                self.assertEqual(attributes[path], {'text': 'unset', 'eol': 'unspecified'})
         for path in controls:
             with self.subTest(path=path):
                 self.assertEqual(attributes[path],
