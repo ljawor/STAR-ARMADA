@@ -1,0 +1,23 @@
+{
+  "kind": "engineering-evidence-image-inspection-not-model-approval",
+  "images": {
+    "review-sheet.png": "d178af4881826f18b8a2a798c3bd93a8179ca837854d78c933d4dd3bc7760003",
+    "owner-palette-sheet.png": "11991853c5da3cd3a86b65bfec7ef1c512829ae757e6417daa1b9d5f6eb37d0f",
+    "video-2s.png": "508c10159cec9fc9091f8c9af6db160a7bcb286628159884e189792df9b35413",
+    "video-4s.png": "0dacc291f3be2adee3a5c6887fc8c6772bd0612f421f96712b102f1b8898ef18",
+    "candidate/features-shipyard.png": "573ef8518ab65ac0f25dfe5a9cbfa7fe92ba3296410367d284e6d60c9b2e0cd3",
+    "candidate/features-battleship.png": "168515e9b55b37ddbda877eae34ad70da9b96686037d618d96a2e1d18339ca60",
+    "candidate/features-frigate.png": "dffb651605a3011dd6f3fd284b29d5d9404eb9b6bf0f14f04e4615b78965f19a",
+    "candidate/initial-common-scale.png": "d4d451af69c1f50c7f31c945332162fb9efe8436ff780398208a87c259ef6dcf",
+    "candidate/initial-capital-close.png": "2831cccc4f78f2cf860773e5522f3b9a9b891aad38e64e383a7aafd3b09da1dd",
+    "candidate/motion-0186-escort-close.png": "08f3541564ae9eca07fbbad1fc24a68bc16c7ab30bb3cc482ab466fc0eacfb60"
+  },
+  "notes": [
+    "Control/generic close-view sheet matches visually; legacy visibly changes all three hulls.",
+    "Eight palette values visibly vary owner paint; production shader and normal fog remain enabled.",
+    "Four exposed warm yard lenses and two cyan recessed emitters per ship visible at feature-specific measured positions.",
+    "Low-rear horizon fog bands remain normal in both sources; not removed or repaired.",
+    "Decoded video panels carry correct source labels and orientation; yard translation is static, renderer station rotation/camera and surrounding real battle continue.",
+    "No source/model/artwork changes or model approval decisions made."
+  ]
+}

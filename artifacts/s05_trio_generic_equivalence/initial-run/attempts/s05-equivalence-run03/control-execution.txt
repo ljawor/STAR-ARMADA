@@ -1,0 +1,14 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s05/tools/diag_trio_generic_equivalence.py", line 374, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s05/tools/diag_trio_generic_equivalence.py", line 361, in main
+    else:child(args)
+         ^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s05/tools/diag_trio_generic_equivalence.py", line 272, in child
+    capture(f'motion-{tick:04d}-{name}',spec,3.+tick*recipe.DT,retain=tick in (6,96,186,276,360))
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s05/tools/diag_trio_generic_equivalence.py", line 152, in capture
+    assert np.array_equal(a,b), name+': unstable repeated frame'
+           ^^^^^^^^^^^^^^^^^^^
+AssertionError: motion-0042-common-scale: unstable repeated frame

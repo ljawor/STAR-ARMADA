@@ -1,0 +1,14 @@
+{
+  "pr": 124,
+  "reviewed_head": "311edc24c66084a3e145d07e23aad7b839487b5d",
+  "merge_commit": "7030dd252ddb4da3bb4f69fecb2f2028650ffe6c",
+  "merged_at": "2026-10-16T19:55:42Z",
+  "tree_sha": "e28b24faa1c1c6bc574635e481493f51490774fa",
+  "reviewed_and_merged_tree_equal": true,
+  "windows_run": 38955424960,
+  "windows_result": "success",
+  "manual_package_result": "skipped",
+  "owner_instruction_verbatim": "OK we can merge and continue with next step",
+  "authorized_next_step": "S05",
+  "release_or_S11_authorized": false
+}

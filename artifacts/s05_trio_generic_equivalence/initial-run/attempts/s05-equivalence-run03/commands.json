@@ -1,0 +1,13 @@
+[
+  [
+    "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s05/.venv/bin/python",
+    "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s05/tools/diag_trio_generic_equivalence.py",
+    "capture",
+    "--source",
+    "/Users/lukaszjawor/.hermes/cache/scratch/s05-equivalence-run03/sources/control",
+    "--output",
+    "/Users/lukaszjawor/.hermes/cache/scratch/s05-equivalence-run03/control",
+    "--selection",
+    "prototype"
+  ]
+]

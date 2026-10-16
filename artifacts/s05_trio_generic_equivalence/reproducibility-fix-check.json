@@ -1,0 +1,18 @@
+{
+  "original_harness_sha256": "18f8273d3b72ced54b8bfbffff085df96c5d783183ef1ddde100387a58dedd90",
+  "current_harness_sha256": "d116a6ebfc1d5393c7febebf12921118ac82d09fc71f624d65d26e599e51e1bb",
+  "unchanged_capture_and_measurement_functions": [
+    "child",
+    "part_spans",
+    "same_ticks",
+    "feature_metrics",
+    "pixel_metrics",
+    "snapshot_user"
+  ],
+  "current_head_coupling_removed": true,
+  "pins_loaded_from_archived_candidate": true,
+  "strict_rendering_gates_unchanged": true,
+  "focused_tests": 53,
+  "result": "OK",
+  "rendering_failure_fixed": false
+}

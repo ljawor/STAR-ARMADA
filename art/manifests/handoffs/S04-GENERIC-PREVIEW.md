@@ -1,12 +1,12 @@
 # Handoff: S04 — generic opt-in model integration
 
-Status: **review-ready**, published as draft PR #124. Not merged; not a model-approval transfer or S11 authorization.
+Status: **complete and merged** as `7030dd252ddb4da3bb4f69fecb2f2028650ffe6c` (PR #124). Not a model-approval transfer or S11 authorization. Historical review checkpoints below are retained.
 
 ## Base commit / branch
 
 Base: `5bddd7b67245ddff4b595bb3b477ca8ceede0a6c` (`origin/main`).
 Branch: `feat/s04-generic-model-integration`, isolated scratch worktree.
-PR: **#124**, draft and unmerged. Verified code commit: `45e4ed3b731fde6c376fdb894088a248abc774e9`.
+PR: **#124**, merged after owner authorization. Initial verified code commit: `45e4ed3b731fde6c376fdb894088a248abc774e9`.
 Read the exact final pushed head and remote blob receipt from the PR comment; it cannot be baked
 into this self-referential document.
 
@@ -136,3 +136,14 @@ The final focused command extends the original module list with `test_language_t
 Independent review passed the language repair; parent additionally verified the byte-preserving
 attribute follow-up in the real clone. Native Windows CI must pass the next pushed head; this local
 checkout is not native Windows rendering/package acceptance. No full suite or S11 authorization.
+
+## Merge completion and next step
+
+Owner instruction, verbatim: **"OK we can merge and continue with next step"**.
+Verified head `311edc24c66084a3e145d07e23aad7b839487b5d` passed Windows CI `38955424960`,
+including LAN and replay deletion; manual package job skipped. Squash merge
+`7030dd252ddb4da3bb4f69fecb2f2028650ffe6c` has exactly the same Git tree
+(`e28b24faa1c1c6bc574635e481493f51490774fa`) as that tested head.
+Read `art/manifests/equivalence/S04-MERGE.json` and the PR merge receipt.
+S05 is now in progress on its own branch, with criteria frozen in
+`art/manifests/equivalence/S05-CRITERIA.json`. No tag, release, new model revision or S11 activation.

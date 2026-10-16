@@ -1,0 +1,488 @@
+{
+  "status": "pending-image-inspection",
+  "gates": {
+    "E1": true,
+    "E2": true,
+    "E3": true,
+    "E4": true,
+    "E5": true,
+    "E6": false
+  },
+  "frames": 102,
+  "ticks": 361,
+  "sources": {
+    "control": {
+      "revision": "5bddd7b67245ddff4b595bb3b477ca8ceede0a6c",
+      "source": "/Users/lukaszjawor/.hermes/cache/scratch/s05-equivalence-run04/sources/control"
+    },
+    "candidate": {
+      "revision": "7030dd252ddb4da3bb4f69fecb2f2028650ffe6c",
+      "source": "/Users/lukaszjawor/.hermes/cache/scratch/s05-equivalence-run04/sources/candidate"
+    }
+  },
+  "features": [
+    {
+      "passed": true,
+      "visible_pixels": 185,
+      "bbox": [
+        11,
+        15,
+        32,
+        29
+      ],
+      "screen": [
+        576,
+        293
+      ],
+      "crop": [
+        554,
+        271,
+        599,
+        316
+      ],
+      "asset": "shipyard",
+      "name": "Worklight exposed lens (-1, -9)",
+      "role": "lit",
+      "span": [
+        156,
+        184
+      ],
+      "world": [
+        -4268.284832887076,
+        35.09,
+        1590.7684455488716
+      ],
+      "view": {
+        "target": [
+          -4200,
+          0,
+          1600
+        ],
+        "distance": 450.0,
+        "yaw": 48.0,
+        "pitch": 45.0
+      },
+      "global_difference": {
+        "changed_pixels": 202,
+        "changed_channels": 606,
+        "max_channel_delta": 204,
+        "mean_channel_delta": 0.014985026041666667
+      },
+      "restored_equal": true,
+      "full_pixels_sha256": "d00c6e61c772cf382b3da484d7aa6d2c5ba4ce9de3043a6f6134ae7dfdaca5c7",
+      "absent_pixels_sha256": "edc5c252af963abc42acd3f302925214a996639d22cedda2838995cb42424c6a",
+      "negative_control_fails": true
+    },
+    {
+      "passed": true,
+      "visible_pixels": 261,
+      "bbox": [
+        10,
+        13,
+        34,
+        31
+      ],
+      "screen": [
+        457,
+        376
+      ],
+      "crop": [
+        435,
+        354,
+        480,
+        399
+      ],
+      "asset": "shipyard",
+      "name": "Worklight exposed lens (-1, 34)",
+      "role": "lit",
+      "span": [
+        184,
+        212
+      ],
+      "world": [
+        -4253.486132494269,
+        35.09,
+        1684.2037625691717
+      ],
+      "view": {
+        "target": [
+          -4200,
+          0,
+          1600
+        ],
+        "distance": 450.0,
+        "yaw": 48.0,
+        "pitch": 45.0
+      },
+      "global_difference": {
+        "changed_pixels": 275,
+        "changed_channels": 820,
+        "max_channel_delta": 177,
+        "mean_channel_delta": 0.020369140625
+      },
+      "restored_equal": true,
+      "full_pixels_sha256": "d00c6e61c772cf382b3da484d7aa6d2c5ba4ce9de3043a6f6134ae7dfdaca5c7",
+      "absent_pixels_sha256": "08683dc586c881e910ede5fcf08d25c59004407de4f921d8f1d351ff540f8245",
+      "negative_control_fails": true
+    },
+    {
+      "passed": true,
+      "visible_pixels": 276,
+      "bbox": [
+        9,
+        14,
+        34,
+        32
+      ],
+      "screen": [
+        760,
+        388
+      ],
+      "crop": [
+        738,
+        366,
+        783,
+        411
+      ],
+      "asset": "shipyard",
+      "name": "Worklight exposed lens (1, -9)",
+      "role": "lit",
+      "span": [
+        212,
+        240
+      ],
+      "world": [
+        -4137.909971928518,
+        35.09,
+        1570.119096163561
+      ],
+      "view": {
+        "target": [
+          -4200,
+          0,
+          1600
+        ],
+        "distance": 450.0,
+        "yaw": 48.0,
+        "pitch": 45.0
+      },
+      "global_difference": {
+        "changed_pixels": 290,
+        "changed_channels": 870,
+        "max_channel_delta": 184,
+        "mean_channel_delta": 0.021338541666666665
+      },
+      "restored_equal": true,
+      "full_pixels_sha256": "d00c6e61c772cf382b3da484d7aa6d2c5ba4ce9de3043a6f6134ae7dfdaca5c7",
+      "absent_pixels_sha256": "18275ea4a07631695f392278cfbe3ab94874bd0bb7857c4cd1c21613e94d7380",
+      "negative_control_fails": true
+    },
+    {
+      "passed": true,
+      "visible_pixels": 413,
+      "bbox": [
+        7,
+        11,
+        36,
+        34
+      ],
+      "screen": [
+        649,
+        499
+      ],
+      "crop": [
+        627,
+        477,
+        672,
+        522
+      ],
+      "asset": "shipyard",
+      "name": "Worklight exposed lens (1, 34)",
+      "role": "lit",
+      "span": [
+        240,
+        268
+      ],
+      "world": [
+        -4123.111271535711,
+        35.09,
+        1663.554413183861
+      ],
+      "view": {
+        "target": [
+          -4200,
+          0,
+          1600
+        ],
+        "distance": 450.0,
+        "yaw": 48.0,
+        "pitch": 45.0
+      },
+      "global_difference": {
+        "changed_pixels": 421,
+        "changed_channels": 1259,
+        "max_channel_delta": 159,
+        "mean_channel_delta": 0.031030598958333332
+      },
+      "restored_equal": true,
+      "full_pixels_sha256": "d00c6e61c772cf382b3da484d7aa6d2c5ba4ce9de3043a6f6134ae7dfdaca5c7",
+      "absent_pixels_sha256": "28903f104d45e46edf5a97737397d9ce7ae76ab153c8daf02fb15440c06f9257",
+      "negative_control_fails": true
+    },
+    {
+      "passed": true,
+      "visible_pixels": 504,
+      "bbox": [
+        10,
+        12,
+        38,
+        37
+      ],
+      "screen": [
+        806,
+        471
+      ],
+      "crop": [
+        784,
+        449,
+        829,
+        494
+      ],
+      "asset": "battleship",
+      "name": "Port exposed ion emitter",
+      "role": "cool",
+      "span": [
+        0,
+        44
+      ],
+      "world": [
+        -4242.708527558349,
+        -2.4174638240574504,
+        2096.8548800635003
+      ],
+      "view": {
+        "target": [
+          -4200,
+          -3,
+          2200
+        ],
+        "distance": 310.0,
+        "yaw": 178.0,
+        "pitch": 8.0
+      },
+      "global_difference": {
+        "changed_pixels": 530,
+        "changed_channels": 1590,
+        "max_channel_delta": 225,
+        "mean_channel_delta": 0.049222005208333336
+      },
+      "restored_equal": true,
+      "full_pixels_sha256": "b259538319f8a0737ffa814eb60d55b8b0a32dc7f268bfe43aaf8822a1bd4037",
+      "absent_pixels_sha256": "afac0cb1d8525a3fdc9cdbb6e9125a773be61aabd8c1dbadae5d4795c6651858",
+      "negative_control_fails": true
+    },
+    {
+      "passed": true,
+      "visible_pixels": 618,
+      "bbox": [
+        5,
+        11,
+        37,
+        37
+      ],
+      "screen": [
+        498,
+        475
+      ],
+      "crop": [
+        476,
+        453,
+        521,
+        498
+      ],
+      "asset": "battleship",
+      "name": "Starboard exposed ion emitter",
+      "role": "cool",
+      "span": [
+        100,
+        144
+      ],
+      "world": [
+        -4157.291472441651,
+        -2.4174638240574504,
+        2096.8548800635003
+      ],
+      "view": {
+        "target": [
+          -4200,
+          -3,
+          2200
+        ],
+        "distance": 310.0,
+        "yaw": 178.0,
+        "pitch": 8.0
+      },
+      "global_difference": {
+        "changed_pixels": 643,
+        "changed_channels": 1929,
+        "max_channel_delta": 234,
+        "mean_channel_delta": 0.05767708333333333
+      },
+      "restored_equal": true,
+      "full_pixels_sha256": "b259538319f8a0737ffa814eb60d55b8b0a32dc7f268bfe43aaf8822a1bd4037",
+      "absent_pixels_sha256": "247130b771e87ae1f35eb708a34d38c5b7f26ba6053701f3ad63f00f786608b0",
+      "negative_control_fails": true
+    },
+    {
+      "passed": true,
+      "visible_pixels": 232,
+      "bbox": [
+        11,
+        17,
+        32,
+        31
+      ],
+      "screen": [
+        735,
+        477
+      ],
+      "crop": [
+        713,
+        455,
+        758,
+        500
+      ],
+      "asset": "frigate",
+      "name": "Recessed cyan ion emitter -1",
+      "role": "cool",
+      "span": [
+        0,
+        44
+      ],
+      "world": [
+        -4216.269965509498,
+        0.0,
+        2504.0060590404564
+      ],
+      "view": {
+        "target": [
+          -4200,
+          0,
+          2550
+        ],
+        "distance": 180.0,
+        "yaw": 178.0,
+        "pitch": 8.0
+      },
+      "global_difference": {
+        "changed_pixels": 246,
+        "changed_channels": 738,
+        "max_channel_delta": 200,
+        "mean_channel_delta": 0.019822265625
+      },
+      "restored_equal": true,
+      "full_pixels_sha256": "759de4fb93d5278c6d7ca014d5a9acca239f3d9d3984093d2a09d8038b200c57",
+      "absent_pixels_sha256": "1262415b496004a74519b680b2261d1882fd274cb4701fab75e95026e4e1a621",
+      "negative_control_fails": true
+    },
+    {
+      "passed": true,
+      "visible_pixels": 243,
+      "bbox": [
+        10,
+        17,
+        32,
+        31
+      ],
+      "screen": [
+        564,
+        466
+      ],
+      "crop": [
+        542,
+        444,
+        587,
+        489
+      ],
+      "asset": "frigate",
+      "name": "Recessed cyan ion emitter 1",
+      "role": "cool",
+      "span": [
+        44,
+        88
+      ],
+      "world": [
+        -4183.730034490502,
+        0.0,
+        2510.2637380825713
+      ],
+      "view": {
+        "target": [
+          -4200,
+          0,
+          2550
+        ],
+        "distance": 180.0,
+        "yaw": 178.0,
+        "pitch": 8.0
+      },
+      "global_difference": {
+        "changed_pixels": 253,
+        "changed_channels": 759,
+        "max_channel_delta": 205,
+        "mean_channel_delta": 0.019953776041666666
+      },
+      "restored_equal": true,
+      "full_pixels_sha256": "759de4fb93d5278c6d7ca014d5a9acca239f3d9d3984093d2a09d8038b200c57",
+      "absent_pixels_sha256": "ee2eebd80da69ed426161380bc8df77dc6270367df0734f3f28214fc7732a79d",
+      "negative_control_fails": true
+    }
+  ],
+  "activity": {
+    "weapon_fired": 70,
+    "commands": 4,
+    "projectiles_observed": true,
+    "movement_observed": true,
+    "damage_observed": true
+  },
+  "commands": [
+    [
+      "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s05/.venv/bin/python",
+      "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s05/tools/diag_trio_generic_equivalence.py",
+      "capture",
+      "--source",
+      "/Users/lukaszjawor/.hermes/cache/scratch/s05-equivalence-run04/sources/control",
+      "--output",
+      "/Users/lukaszjawor/.hermes/cache/scratch/s05-equivalence-run04/control",
+      "--selection",
+      "prototype"
+    ],
+    [
+      "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s05/.venv/bin/python",
+      "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s05/tools/diag_trio_generic_equivalence.py",
+      "capture",
+      "--source",
+      "/Users/lukaszjawor/.hermes/cache/scratch/s05-equivalence-run04/sources/candidate",
+      "--output",
+      "/Users/lukaszjawor/.hermes/cache/scratch/s05-equivalence-run04/candidate",
+      "--selection",
+      "preview",
+      "--peer",
+      "/Users/lukaszjawor/.hermes/cache/scratch/s05-equivalence-run04/control"
+    ],
+    [
+      "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s05/.venv/bin/python",
+      "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s05/tools/diag_trio_generic_equivalence.py",
+      "capture",
+      "--source",
+      "/Users/lukaszjawor/.hermes/cache/scratch/s05-equivalence-run04/sources/candidate",
+      "--output",
+      "/Users/lukaszjawor/.hermes/cache/scratch/s05-equivalence-run04/legacy",
+      "--selection",
+      "legacy",
+      "--peer",
+      "/Users/lukaszjawor/.hermes/cache/scratch/s05-equivalence-run04/control"
+    ]
+  ],
+  "inspection": "Pending independent inspection of exported selected captures; no approval recorded."
+}
