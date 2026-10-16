@@ -1,0 +1,56 @@
+EEEE
+======================================================================
+ERROR: test_each_worklight_is_a_named_exposed_broad_face (test_alliance_blender_trio.AuthoredTrioTests.test_each_worklight_is_a_named_exposed_broad_face)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_alliance_blender_trio.py", line 81, in test_each_worklight_is_a_named_exposed_broad_face
+    d=json.loads((ROOT/'assets/models/alliance_shipyard.mesh.json').read_text())
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/pathlib.py", line 1058, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/assets/models/alliance_shipyard.mesh.json'
+
+======================================================================
+ERROR: test_finite_bounds_normals_winding_indices_and_corruption (test_alliance_blender_trio.AuthoredTrioTests.test_finite_bounds_normals_winding_indices_and_corruption)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_alliance_blender_trio.py", line 41, in test_finite_bounds_normals_winding_indices_and_corruption
+    for name, loader, _, _ in self.cases():
+                              ^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_alliance_blender_trio.py", line 17, in cases
+    return [('frigate', a.load_frigate, a.frigate_mesh, lambda: ship_mesh('rebel','frigate')),
+                        ^^^^^^^^^^^^^^
+AttributeError: module 'render.authored_mesh' has no attribute 'load_frigate'
+
+======================================================================
+ERROR: test_live_export_and_deep_immutability (test_alliance_blender_trio.AuthoredTrioTests.test_live_export_and_deep_immutability)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_alliance_blender_trio.py", line 21, in test_live_export_and_deep_immutability
+    for name, loader, cached, facade in self.cases():
+                                        ^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_alliance_blender_trio.py", line 17, in cases
+    return [('frigate', a.load_frigate, a.frigate_mesh, lambda: ship_mesh('rebel','frigate')),
+                        ^^^^^^^^^^^^^^
+AttributeError: module 'render.authored_mesh' has no attribute 'load_frigate'
+
+======================================================================
+ERROR: test_missing_and_corrupt_assets_use_bounded_fallback (test_alliance_blender_trio.AuthoredTrioTests.test_missing_and_corrupt_assets_use_bounded_fallback)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_alliance_blender_trio.py", line 65, in test_missing_and_corrupt_assets_use_bounded_fallback
+    for name,_,cached,facade in self.cases():
+                                ^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_alliance_blender_trio.py", line 17, in cases
+    return [('frigate', a.load_frigate, a.frigate_mesh, lambda: ship_mesh('rebel','frigate')),
+                        ^^^^^^^^^^^^^^
+AttributeError: module 'render.authored_mesh' has no attribute 'load_frigate'
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.002s
+
+FAILED (errors=4)

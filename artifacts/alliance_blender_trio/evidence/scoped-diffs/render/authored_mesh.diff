@@ -1,0 +1,67 @@
+--- before/render/authored_mesh.py
++++ after/render/authored_mesh.py
+@@ -1,4 +1,4 @@
+-"""Bounded, GL-free loading of the single authored Alliance battleship asset.
++"""Bounded, GL-free loading of three authored Alliance specimen assets.
+ 
+ Only indexed triangle data/material roles cross this boundary. The editable
+ .blend and bpy exporter are development tools, never imported by the game.
+@@ -20,7 +20,7 @@
+     return type(value) in (int, float) and math.isfinite(value)
+ 
+ 
+-def load_battleship(path):
++def _load_profile(path, identifier, limits, min_length):
+     """Validate the entire payload before returning deeply immutable role batches.
+ 
+     Deliberately narrow bounds protect camera/contact code from malformed data;
+@@ -30,14 +30,13 @@
+     if path.stat().st_size > MAX_BYTES:
+         raise ValueError('authored battleship exceeds file budget')
+     asset = json.loads(path.read_text(encoding='utf-8'))
+-    if not isinstance(asset, dict) or asset.get('schema') != 1 or asset.get('asset') != 'alliance_battleship':
++    if not isinstance(asset, dict) or asset.get('schema') != 1 or asset.get('asset') != identifier:
+         raise ValueError('unsupported authored battleship schema or identifier')
+     vertices, batches = asset.get('vertices'), asset.get('batches')
+     if not isinstance(vertices, list) or not 3 <= len(vertices) <= MAX_VERTICES:
+         raise ValueError('authored battleship vertex budget')
+     if not isinstance(batches, dict) or set(batches) != set(ROLES):
+         raise ValueError('authored battleship material roles')
+-    limits = ((-110, 110), (-35, 70), (-150, 140))
+     for point in vertices:
+         if not isinstance(point, list) or len(point) != 3 or any(
+                 not _finite_number(c) or not lo <= c <= hi for c, (lo, hi) in zip(point, limits)):
+@@ -73,9 +72,32 @@
+         result[role] = tuple(triangles)
+     lo = tuple(min(p[i] for p in vertices) for i in range(3))
+     hi = tuple(max(p[i] for p in vertices) for i in range(3))
+-    if hi[2]-lo[2] < 240 or asset.get('triangle_count') != total or asset.get('bounds') != [list(lo), list(hi)]:
++    if hi[2]-lo[2] < min_length or asset.get('triangle_count') != total or asset.get('bounds') != [list(lo), list(hi)]:
+         raise ValueError('authored battleship metadata mismatch')
+     return MappingProxyType(result)
++
++
++def load_battleship(path):
++    """Approved battleship profile, unchanged limits and validation semantics."""
++    return _load_profile(path, 'alliance_battleship', ((-110, 110), (-35, 70), (-150, 140)), 240)
++
++
++def load_frigate(path):
++    return _load_profile(path, 'alliance_frigate', ((-37, 37), (-12, 27), (-82, 74)), 145)
++
++
++def load_shipyard(path):
++    return _load_profile(path, 'alliance_shipyard', ((-57, 57), (-20, 41), (-48, 52)), 90)
++
++
++@lru_cache(maxsize=1)
++def frigate_mesh():
++    return load_frigate(ASSET_PATH.with_name('alliance_frigate.mesh.json'))
++
++
++@lru_cache(maxsize=1)
++def shipyard_mesh():
++    return load_shipyard(ASSET_PATH.with_name('alliance_shipyard.mesh.json'))
+ 
+ 
+ @lru_cache(maxsize=1)

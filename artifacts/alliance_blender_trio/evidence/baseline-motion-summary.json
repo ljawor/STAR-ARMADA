@@ -1,0 +1,10 @@
+{
+  "cameras": "three explicit subject-relative 18 degree orbits, per frame in ticks.json",
+  "display_samples": 4,
+  "final_state_sha256": "2a17e3a7454fc746b7323ff40e1acd9291c616d7b30573b2f7d34b652c35c607",
+  "fps": 30,
+  "frames": 180,
+  "source_sha256": "d2c9b57f93e653436c88d7c42f995332e037a799f52058a6836d63d333bda072",
+  "state_hashes_match_still_combat": true,
+  "weapon_fired": 37
+}

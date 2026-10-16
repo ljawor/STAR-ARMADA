@@ -37,15 +37,45 @@ Read `art/blender/README.md` critically: its initial battleship-only notes preda
 
 Catalogue data currently contains 37 ship definitions (Imperial 10, Alliance/rebel 10, Confederacy 10, Syndicate 7), 16 station definitions and four faction records. Syndicate is currently non-playable. **These are data-entry counts, not a complete mesh workload.** Shared types, faction-specific station variants, squadrons, transports, planet hardware, previews and campaign props require a rendered-model inventory. Do not multiply these counts and invent a final asset total.
 
-### 2.1 Partial delivery checkpoint — October 16, 2026
+### 2.1 Delivery checkpoints — current state, October 16, 2026
 
-The observations and local-only warning above are the **historical document-creation baseline**, not the current storage status. The approved trio has since been durably published in **draft PR #114**, which was then reconciled with `main` and republished; its current head is `0f6531f4d14f649cbfed744c29b61b4537b0f5e8` on `feat/blender-approved-trio-checkpoint` (the earlier `313f9683e9e7e4f376b05cedaeb28bb2dd300c9f` is retained in its history). All published blobs were read back from the remote and verified byte-for-byte. Its sources, exports, authoring tools, runtime integration, selected evidence, `art/manifests/handoffs/S00-PRESERVATION.md` and the owner-bound `art/manifests/approvals.json` travel together. The original 23-source-asset preservation manifest remains retained separately; no model is discarded by the performance split.
+The observations and local-only warning above are the **historical document-creation baseline**, not the
+current storage status.
 
-**S00 is complete on that draft PR and still unmerged, deliberately.** Publication is not broad engineering acceptance, a generic registry, or final default cutover, and the trio's activation inside the draft is still hardcoded, so S04 must restore an explicit gate before any broader rollout. Do not infer that `main` contains the trio: `render/authored_mesh.py` and the `*_slice` builders exist only on the checkpoint branch.
+**Performance — done and on `main`.** PR #113 landed as the single squashed commit
+`16523bf0b06a39e3f77961d0c213b0af184a16b6`, whose tree is identical to the tested head
+`a24a4ed32f0cec6c76b40c30640a61bee6f60a2b`. All three performance passes are integrated and the version
+is `0.15.1`. The protected whole suite ran 1,668 tests with zero failures/errors and nine documented
+skips against an immutable performance-only archive, and the exact-head Windows CI run `38858140567`
+passed. No tag or release was created.
 
-PR #113 is the separate **performance-only integration, now merged into `main`** as `16523bf0b06a39e3f77961d0c213b0af184a16b6`, version `0.15.1`, with the exact-head Windows CI run `38858140567` passed and the merge commit's tree verified identical to the reviewed head `a24a4ed32f0cec6c76b40c30640a61bee6f60a2b`. No art/model/material files entered that performance change. Its receipt explicitly distinguishes immutable performance-only suite results from the earlier art-integrated full-suite failure and retained stock-combat frozen-control nondeterminism.
+**Art — S00 preserved, published and merged into `main`.** Draft PR #114 was marked ready and merged by
+the owner on 2026-10-16 as the single squashed commit `c5b78eb2d4ceba909ffb7444a56b7dec1f35d1b4`
+(96 files), after its branch was reconciled with `main` — branch delta art-only, the merged draw-scope
+performance code intact — and its published blobs were re-read and verified byte-for-byte. Earlier heads
+`313f9683e9e7e4f376b05cedaeb28bb2dd300c9f` and `0f6531f4d14f649cbfed744c29b61b4537b0f5e8` remain in that
+branch's history: the reconciliation was a merge, not a rewrite. `main` therefore now contains the trio's
+Blender sources, exporters, runtime exports, loader, material integration, focused tests, owner-bound
+approval records and selected evidence. Durable record: `art/manifests/handoffs/S00-PRESERVATION.md`;
+machine-readable decision: `art/manifests/approvals.json`.
 
-**S01 is complete** on `docs/s01-model-inventory` (PR #115): `art/manifests/model_inventory.json` (120 bindings, every reference resolved at `main`), `art/manifests/inventory_audit.json` (dispatch audit plus the owner scope decision), `art/manifests/reviews/S01-coverage-matrix.md` and `art/manifests/handoffs/S01-INVENTORY.md`. The owner answered all four scope questions on 2026-10-16 (`s01-scope-2026-10-16`): the planet bodies, asteroid props and menu backdrop come **into** the catalogue, the three declared-but-unreachable mesh keys become planned hulls (battleships and capital ships at the shipyard, bombers at the fighter platform), and the five authoring batches are approved in the recommended order. That is scope and plan approval only: no model design is approved, PR #114 is not merged, the trio is not activated and the production default does not change. S02 is the next step; S02–S10 remain gated as below. **S11 is not done or authorized.** No release or tag is part of this checkpoint.
+**The activation boundary is now owed on `main`, not on a branch.** The trio is selected by hardcoded
+identity checks inside the faction facades (`render/faction_ships.py` and `render/faction_stations.py`)
+with no persisted switch, so merging #114 put that activation on `main`. It degrades safely — each site
+imports the loader in a guarded block and keeps the previous procedural hull as an emergency geometry
+fallback behind a bounded faction cache — but it is still an unconditional selection rather than a
+registry contract. S02/S04 owe the explicit gated path, and no further model may be integrated this way.
+
+**S01 is complete** in PR #115 (this change): `art/manifests/model_inventory.json` (120 bindings, every
+reference resolved at `main`), `art/manifests/inventory_audit.json` (dispatch audit plus the owner scope
+decision), `art/manifests/reviews/S01-coverage-matrix.md` and `art/manifests/handoffs/S01-INVENTORY.md`.
+The owner answered all four scope questions on 2026-10-16 (`s01-scope-2026-10-16`): the planet bodies,
+asteroid props and menu backdrop come **into** the catalogue, the three declared-but-unreachable mesh
+keys become planned hulls (battleships and capital ships at the shipyard, bombers at the fighter
+platform), and the five authoring batches are approved in the recommended order. That is scope and plan
+approval only: no individual model design is approved, and the broader catalogue default is still
+unswitched. S02 is the next step; S02–S10 remain gated as below. **S11 is not done or authorized.** No
+release or tag is part of either delivery.
 
 ## 3. Scope and invariants
 
@@ -314,8 +344,8 @@ This table is the initial planning state, **not implementation completion**. Fut
 
 | Step | Initial status | Next action / blocking condition |
 |---|---|---|
-| S00 | **Complete on draft PR #114** (`0f6531f4…`), unmerged by design; `main` has no trio | Owner review/integration of the checkpoint stay separate; S04 restores an explicit preview gate |
-| S01 | **Complete** on `docs/s01-model-inventory`, PR #115 (inventory + audit + coverage matrix + handoff) | Closed 2026-10-16 by the owner's scope decision; S02 is next |
+| S00 | **Complete and merged** — PR #114 landed as `c5b78eb2d4ceba909ffb7444a56b7dec1f35d1b4` (96 files) | S02/S04 must replace the hardcoded activation with an explicit preview gate; retain the known art-integrated acceptance debt |
+| S01 | **Complete** — PR #115 carries the inventory, audit, coverage matrix and handoff | Closed 2026-10-16 by the owner's scope decision; S02 is next |
 | S02 | Not started | Decide and specify generic asset/mod contracts |
 | S03 | Not started | Standardize source authority, storage and reproducible exports |
 | S04 | Not started | Generic gated integration, resolver and frozen-path support |
@@ -331,14 +361,23 @@ The following sentence is retained as the initial next-task instruction, not cur
 
 **Next chat task: S00, not a new model batch and not S11.** Read the dirty working tree and approved trio evidence, publish the coherent sources without bundling unrelated work, and write the first durable handoff. The roadmap commit alone must remain documentation-only.
 
-### 8.1 Current partial-delivery ledger
+### 8.1 Current delivery ledger
 
 | Workstream | Current state | Next gate |
 |---|---|---|
-| S00 preservation | **Complete and published; draft PR #114 unmerged** at `0f6531f4d14f649cbfed744c29b61b4537b0f5e8`, reconciled with `main`; remote blobs and the trios' approval records verified | Read `S00-PRESERVATION.md` and `approvals.json`; review/integration remain separate, and the hardcoded preview activation is still owed to S04 |
-| Performance-only PR #113 | **Merged into `main`** as `16523bf0b06a39e3f77961d0c213b0af184a16b6`; CI `38858140567` passed; merge tree identical to reviewed head; version `0.15.1` | None outstanding for this change; do not re-open it for art work |
-| S01 inventory | **Complete** on `docs/s01-model-inventory`, PR #115: 120 bindings, 30 dispatch paths, 25 non-model elements; owner decision `s01-scope-2026-10-16` answered all four scope questions and `s01-hull-plan-2026-10-16` planned the three unreachable mesh keys | None outstanding for this step; S02 is next, and no design, merge or activation is approved by it |
+| S00 preservation | **Merged into `main`** as `c5b78eb2d4ceba909ffb7444a56b7dec1f35d1b4` (PR #114, squashed, 2026-10-16, 96 files); branch delta art-only; earlier heads `313f968`/`0f6531f4` retained in history; blobs verified byte-for-byte before the merge | S02/S04 replace the hardcoded trio activation with an explicit preview gate. Retain the known art-integrated acceptance debt |
+| Performance PR #113 | **Merged** to `main` as `16523bf0b06a39e3f77961d0c213b0af184a16b6` (tree identical to tested head `a24a4ed`); version `0.15.1`; protected whole suite 1,668 tests, 0 failures/errors, 9 skips; Windows CI `38858140567` passed | Closed. Performance remains headroom, not an art upgrade. Measurement targets still need owner agreement |
+| S01 inventory | **Complete** in PR #115: 120 bindings, 30 dispatch paths, 25 non-model elements; owner decision `s01-scope-2026-10-16` answered all four scope questions and planned the three unreachable mesh keys | None outstanding; S02 is next, and no design or activation is approved by it |
 | S02–S10 | Not completed | Follow dependencies, per-model owner approval and platform/package gates |
 | S11 | **Not started, not authorized, not done** | Final explicit owner-controlled catalogue switch only after S10 |
 
-**Current next task: S02 — specify the asset, registry and mod contracts.** Freeze the versioned extension contract before any further authoring: minimal core plus replacement and additive-pack examples, the migration path from the specimen schema and profile loader, resolver/fallback/compatibility decisions, failure diagnostics, pack ordering and roots, security bounds, approval and cache/resource invalidation, and the initial class budgets and LOD expectations. Write the decisions to `art/manifests/decisions.md`; the gate is *reviewed versioned schemas, examples, resolver/fallback/compatibility decisions*. S01 is closed, so do not re-open the inventory or re-derive it — read `art/manifests/model_inventory.json`. Keep PR #114 draft and unmerged; do not activate the trio, start a catalogue batch, cut over the production default, tag or release.
+**Current next task: S02 — specify the asset, registry and mod contracts.** Freeze the versioned
+extension contract before any further authoring: minimal core plus replacement and additive-pack
+examples, the migration path from the specimen schema and profile loader, resolver/fallback/compatibility
+decisions, failure diagnostics, pack ordering and roots, security bounds, approval and cache/resource
+invalidation, and the initial class budgets and LOD expectations. Write the decisions to
+`art/manifests/decisions.md`; the gate is *reviewed versioned schemas, examples,
+resolver/fallback/compatibility decisions*. S01 is closed, so do not re-open the inventory or re-derive
+it — read `art/manifests/model_inventory.json`. PR #114 is merged, so treat the trio's hardcoded
+selection as debt to be replaced by S04; do not extend that pattern to any further model, start a
+catalogue batch, cut over the catalogue default, tag or release.

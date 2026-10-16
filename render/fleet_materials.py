@@ -30,6 +30,8 @@ varying vec3 eyePos, eyeNormal, modelPos, modelNormal;
 varying vec4 color;
 varying vec2 uv;
 uniform float materialPass;
+// Only the Blender-authored Alliance battleship opts into this treatment.
+uniform float authoredSurface;
 float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453); }
 void main() {
     vec3 N = normalize(eyeNormal);
@@ -66,13 +68,32 @@ void main() {
     alloy *= .84 + .24 * panel;
     alloy *= 1.0 - .43 * seam - .30 * hatch - .20 * louvers;
     alloy += vec3(.055) * bevel * (1.0-seam);
+    if (authoredSurface > .5) {
+        // Geometry supplies armor seams, bevels and vents on the authored hull.
+        // Sparse low-contrast plate variation must not repaint them as hatching.
+        vec2 aq = p / vec2(22.0,32.0);
+        vec2 af = fract(aq);
+        vec2 aw = max(fwidth(aq),vec2(.001));
+        vec2 ae = min(af,1.0-af);
+        vec2 al = 1.0-smoothstep(vec2(.004),vec2(.004)+aw,ae);
+        seam = max(al.x,al.y)*(1.0-smoothstep(.12,.45,max(aw.x,aw.y)));
+        panel = hash(floor(aq));
+        alloy = mix(vec3(.43,.47,.52),color.rgb,.10);
+        if (materialPass > .5 && materialPass < 1.5)
+            alloy = mix(vec3(.055,.073,.095),color.rgb*.16,.18);
+        if (materialPass > 1.5)
+            alloy = mix(vec3(.55,.60,.65),color.rgb,.14);
+        alloy *= (.98+.04*panel)*(1.0-.12*seam);
+    }
     float ndl = max(dot(N,L), 0.0);
     float fresnel = pow(1.0-max(dot(N,V),0.0),4.0);
     float roughness = mix(48.0,18.0,panel);
     float spec = pow(max(dot(N,H),0.0),roughness) * ndl;
     vec3 ambient = vec3(.20,.26,.36) + vec3(.08,.10,.14)*max(N.y,0.0);
     vec3 result = alloy*(ambient+vec3(1.0,.92,.80)*ndl*.92);
-    result += vec3(.72,.81,.96)*spec*.62*(1.0-seam*.8);
+    float polish = authoredSurface > .5 ? .24 : .62;
+    if (authoredSurface > .5 && materialPass > .5 && materialPass < 1.5) polish = .08;
+    result += vec3(.72,.81,.96)*spec*polish*(1.0-seam*.8);
     result += vec3(.15,.23,.34)*fresnel*.32;
     // Mild display transfer: preserve black recesses, expose neutral armor.
     result = pow(max(result,vec3(0.0)),vec3(.84));
@@ -152,7 +173,7 @@ class FleetMaterials:
                     if program and name not in self.programs:
                         GL.glDeleteProgram(program)
             for name, program in self.programs.items():
-                for uniform in ('materialPass', 'surfaceMap', 'atmosphere', 'shell'):
+                for uniform in ('materialPass', 'authoredSurface', 'surfaceMap', 'atmosphere', 'shell'):
                     self.locations[name, uniform] = GL.glGetUniformLocation(program, uniform)
         except Exception as exc:
             self.error = str(exc)
@@ -173,18 +194,21 @@ class FleetMaterials:
         try:
             if name == 'planet':
                 GL.glUniform1i(self.locations[name, 'surfaceMap'], 0)
+            elif name == 'hull':
+                GL.glUniform1f(self.locations[name, 'authoredSurface'], 0.)
             for key, value in uniforms.items():
                 GL.glUniform1f(self.locations[name, key], value)
             yield
         finally:
             GL.glUseProgram(previous)
 
-    def hull_pass(self, value):
+    def hull_pass(self, value, authored=False):
         """No-op if no program is active; only safe inside `use('hull', ...)` scope."""
         if self.available and 'hull' in self.programs:
             program = int(GL.glGetIntegerv(GL.GL_CURRENT_PROGRAM))
             if program == self.programs['hull']:
                 GL.glUniform1f(self.locations['hull', 'materialPass'], value)
+                GL.glUniform1f(self.locations['hull', 'authoredSurface'], float(authored))
 
     def close(self):
         for program in self.programs.values():

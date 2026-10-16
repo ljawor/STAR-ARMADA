@@ -1,0 +1,1918 @@
+{
+  "activity": {
+    "events": [
+      {
+        "data": {
+          "attacker_id": 2,
+          "heavy": true,
+          "owner": 0,
+          "weapon": "turbolaser"
+        },
+        "tick": 1
+      },
+      {
+        "data": {
+          "attacker_id": 2,
+          "heavy": true,
+          "owner": 0,
+          "weapon": "missile_battery"
+        },
+        "tick": 1
+      },
+      {
+        "data": {
+          "attacker_id": 3,
+          "heavy": false,
+          "owner": 0,
+          "weapon": "laser_cannon"
+        },
+        "tick": 1
+      },
+      {
+        "data": {
+          "attacker_id": 5,
+          "heavy": false,
+          "owner": 1,
+          "weapon": "laser_cannon"
+        },
+        "tick": 1
+      },
+      {
+        "data": {
+          "attacker_id": 6,
+          "heavy": false,
+          "owner": 1,
+          "weapon": "laser_cannon"
+        },
+        "tick": 1
+      },
+      {
+        "data": {
+          "attacker_id": 3,
+          "heavy": false,
+          "owner": 0,
+          "weapon": "laser_cannon"
+        },
+        "tick": 19
+      },
+      {
+        "data": {
+          "attacker_id": 5,
+          "heavy": false,
+          "owner": 1,
+          "weapon": "laser_cannon"
+        },
+        "tick": 19
+      },
+      {
+        "data": {
+          "attacker_id": 6,
+          "heavy": false,
+          "owner": 1,
+          "weapon": "laser_cannon"
+        },
+        "tick": 19
+      },
+      {
+        "data": {
+          "attacker_id": 3,
+          "heavy": false,
+          "owner": 0,
+          "weapon": "laser_cannon"
+        },
+        "tick": 37
+      },
+      {
+        "data": {
+          "attacker_id": 5,
+          "heavy": false,
+          "owner": 1,
+          "weapon": "laser_cannon"
+        },
+        "tick": 37
+      },
+      {
+        "data": {
+          "attacker_id": 6,
+          "heavy": false,
+          "owner": 1,
+          "weapon": "laser_cannon"
+        },
+        "tick": 37
+      },
+      {
+        "data": {
+          "attacker_id": 2,
+          "heavy": true,
+          "owner": 0,
+          "weapon": "missile_battery"
+        },
+        "tick": 50
+      },
+      {
+        "data": {
+          "attacker_id": 3,
+          "heavy": false,
+          "owner": 0,
+          "weapon": "laser_cannon"
+        },
+        "tick": 55
+      },
+      {
+        "data": {
+          "attacker_id": 5,
+          "heavy": false,
+          "owner": 1,
+          "weapon": "laser_cannon"
+        },
+        "tick": 55
+      },
+      {
+        "data": {
+          "attacker_id": 6,
+          "heavy": false,
+          "owner": 1,
+          "weapon": "laser_cannon"
+        },
+        "tick": 55
+      },
+      {
+        "data": {
+          "attacker_id": 2,
+          "heavy": true,
+          "owner": 0,
+          "weapon": "turbolaser"
+        },
+        "tick": 68
+      },
+      {
+        "data": {
+          "attacker_id": 3,
+          "heavy": false,
+          "owner": 0,
+          "weapon": "laser_cannon"
+        },
+        "tick": 73
+      },
+      {
+        "data": {
+          "attacker_id": 5,
+          "heavy": false,
+          "owner": 1,
+          "weapon": "laser_cannon"
+        },
+        "tick": 73
+      },
+      {
+        "data": {
+          "attacker_id": 6,
+          "heavy": false,
+          "owner": 1,
+          "weapon": "laser_cannon"
+        },
+        "tick": 73
+      },
+      {
+        "data": {
+          "attacker_id": 3,
+          "heavy": false,
+          "owner": 0,
+          "weapon": "laser_cannon"
+        },
+        "tick": 91
+      },
+      {
+        "data": {
+          "attacker_id": 5,
+          "heavy": false,
+          "owner": 1,
+          "weapon": "laser_cannon"
+        },
+        "tick": 91
+      },
+      {
+        "data": {
+          "attacker_id": 6,
+          "heavy": false,
+          "owner": 1,
+          "weapon": "laser_cannon"
+        },
+        "tick": 91
+      },
+      {
+        "data": {
+          "attacker_id": 2,
+          "heavy": true,
+          "owner": 0,
+          "weapon": "missile_battery"
+        },
+        "tick": 99
+      },
+      {
+        "data": {
+          "attacker_id": 3,
+          "heavy": false,
+          "owner": 0,
+          "weapon": "laser_cannon"
+        },
+        "tick": 109
+      },
+      {
+        "data": {
+          "attacker_id": 5,
+          "heavy": false,
+          "owner": 1,
+          "weapon": "laser_cannon"
+        },
+        "tick": 109
+      },
+      {
+        "data": {
+          "attacker_id": 6,
+          "heavy": false,
+          "owner": 1,
+          "weapon": "laser_cannon"
+        },
+        "tick": 109
+      },
+      {
+        "data": {
+          "attacker_id": 3,
+          "heavy": false,
+          "owner": 0,
+          "weapon": "laser_cannon"
+        },
+        "tick": 127
+      },
+      {
+        "data": {
+          "attacker_id": 5,
+          "heavy": false,
+          "owner": 1,
+          "weapon": "laser_cannon"
+        },
+        "tick": 127
+      },
+      {
+        "data": {
+          "attacker_id": 6,
+          "heavy": false,
+          "owner": 1,
+          "weapon": "laser_cannon"
+        },
+        "tick": 127
+      },
+      {
+        "data": {
+          "attacker_id": 2,
+          "heavy": true,
+          "owner": 0,
+          "weapon": "turbolaser"
+        },
+        "tick": 135
+      },
+      {
+        "data": {
+          "attacker_id": 3,
+          "heavy": false,
+          "owner": 0,
+          "weapon": "laser_cannon"
+        },
+        "tick": 145
+      },
+      {
+        "data": {
+          "attacker_id": 5,
+          "heavy": false,
+          "owner": 1,
+          "weapon": "laser_cannon"
+        },
+        "tick": 145
+      },
+      {
+        "data": {
+          "attacker_id": 6,
+          "heavy": false,
+          "owner": 1,
+          "weapon": "laser_cannon"
+        },
+        "tick": 145
+      },
+      {
+        "data": {
+          "attacker_id": 2,
+          "heavy": true,
+          "owner": 0,
+          "weapon": "missile_battery"
+        },
+        "tick": 148
+      },
+      {
+        "data": {
+          "attacker_id": 3,
+          "heavy": false,
+          "owner": 0,
+          "weapon": "laser_cannon"
+        },
+        "tick": 163
+      },
+      {
+        "data": {
+          "attacker_id": 5,
+          "heavy": false,
+          "owner": 1,
+          "weapon": "laser_cannon"
+        },
+        "tick": 163
+      },
+      {
+        "data": {
+          "attacker_id": 6,
+          "heavy": false,
+          "owner": 1,
+          "weapon": "laser_cannon"
+        },
+        "tick": 163
+      }
+    ],
+    "final_entities": {
+      "capital": {
+        "alive": true,
+        "data_id": "rebel_battleship",
+        "hull": 25000.0,
+        "id": 2,
+        "operational": true,
+        "pos": [
+          -4286.721612981906,
+          0.0,
+          2242.6150965666175
+        ],
+        "shields": {
+          "front": 8167.799999999999,
+          "left": 7658.074703411428,
+          "rear": 8200.0,
+          "right": 8181.421935848712
+        },
+        "visible_to_local": true
+      },
+      "enemy_a": {
+        "alive": true,
+        "data_id": "imperial_frigate",
+        "hull": 1905.8909090909083,
+        "id": 5,
+        "operational": true,
+        "pos": [
+          -3572.794218451853,
+          0.0,
+          2001.4496404991107
+        ],
+        "shields": {
+          "front": 375.1999999999998,
+          "left": 0.0,
+          "rear": 900.0,
+          "right": 900.0
+        },
+        "visible_to_local": true
+      },
+      "enemy_b": {
+        "alive": true,
+        "data_id": "imperial_frigate",
+        "hull": 2600.0,
+        "id": 6,
+        "operational": true,
+        "pos": [
+          -3746.0441643870868,
+          0.0,
+          2740.914172458383
+        ],
+        "shields": {
+          "front": 900.0,
+          "left": 900.0,
+          "rear": 900.0,
+          "right": 900.0
+        },
+        "visible_to_local": true
+      },
+      "escort": {
+        "alive": true,
+        "data_id": "rebel_frigate",
+        "hull": 2400.0,
+        "id": 3,
+        "operational": true,
+        "pos": [
+          -3890.225039774257,
+          0.0,
+          2678.146471036813
+        ],
+        "shields": {
+          "front": 950.0,
+          "left": 950.0,
+          "rear": 950.0,
+          "right": 950.0
+        },
+        "visible_to_local": true
+      },
+      "planet": {
+        "alive": true,
+        "data_id": "temperate",
+        "hull": 1000000000.0,
+        "id": 1,
+        "operational": true,
+        "pos": [
+          -5200,
+          0,
+          2200
+        ],
+        "shields": {
+          "front": 0.0,
+          "left": 0.0,
+          "rear": 0.0,
+          "right": 0.0
+        },
+        "visible_to_local": true
+      },
+      "yard": {
+        "alive": true,
+        "data_id": "shipyard",
+        "hull": 14000.0,
+        "id": 4,
+        "operational": true,
+        "pos": [
+          -4200,
+          0,
+          1600
+        ],
+        "shields": {
+          "front": 4000.0,
+          "left": 4000.0,
+          "rear": 4000.0,
+          "right": 4000.0
+        },
+        "visible_to_local": true
+      }
+    },
+    "shield_or_hull_reduction_observed": true,
+    "weapon_fired": 37
+  },
+  "camera_plan_sha256": "d997a3b2c4aa30c826aa70becbedea8fa3dbd42fb3a0347258e32824338d1ee4",
+  "captures": [
+    {
+      "distance": 450.0,
+      "far": 60000.0,
+      "fov": 55.0,
+      "hud": false,
+      "image": "initial-capital-close.png",
+      "image_sha256": "7ac45b53e48625cbf0b3c75d350eeccb0fb503cabe3bc28644f0fae4b979c2ae",
+      "name": "initial-capital-close",
+      "near": 20.0,
+      "pitch": 45.0,
+      "pixels_sha256": "140c61ffc8351d22826b13a91c0a035099a77c7d9fa397020c57b9f837a9fab5",
+      "projection_matrix": [
+        [
+          1.2006138563156128,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.9209821224212646,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.000666856765747,
+          -1.0
+        ],
+        [
+          -0.0,
+          -0.0,
+          -40.013336181640625,
+          -0.0
+        ]
+      ],
+      "repeat_checked": true,
+      "requested_eye": [
+        -3963.5327645255584,
+        318.19805153394634,
+        2412.9160551651166
+      ],
+      "resolved_eye": [
+        -3963.5327645255584,
+        318.19805153394634,
+        2412.9160551651166
+      ],
+      "state_after": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "state_before": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "subjects": {
+        "capital": {
+          "center": [
+            639.9999999999997,
+            399.9999999999999
+          ],
+          "visible": true
+        },
+        "enemy_a": {
+          "center": null,
+          "visible": true
+        },
+        "enemy_b": {
+          "center": null,
+          "visible": true
+        },
+        "escort": {
+          "center": [
+            -62.74429322617749,
+            847.4245054377049
+          ],
+          "visible": true
+        },
+        "planet": {
+          "center": [
+            112.92232841390387,
+            -13.925501724269118
+          ],
+          "visible": true
+        },
+        "yard": {
+          "center": [
+            1106.8508931333545,
+            102.7645304461914
+          ],
+          "visible": true
+        }
+      },
+      "target": [
+        -4200,
+        0,
+        2200
+      ],
+      "tick": 0,
+      "union_eye": [
+        -3963.5327645255584,
+        318.19805153394634,
+        2412.9160551651166
+      ],
+      "view_matrix": [
+        [
+          0.6691306233406067,
+          -0.5254827737808228,
+          0.5254827737808228,
+          0.0
+        ],
+        [
+          -2.9069543415991027e-16,
+          0.7071067690849304,
+          0.7071067690849304,
+          0.0
+        ],
+        [
+          -0.7431448101997375,
+          -0.47314679622650146,
+          0.47314679622650146,
+          0.0
+        ],
+        [
+          4445.26708984375,
+          -1166.1046142578125,
+          716.104736328125,
+          1.0
+        ]
+      ],
+      "view_time": 3.0,
+      "yaw": 48.0
+    },
+    {
+      "distance": 310.0,
+      "far": 60000.0,
+      "fov": 55.0,
+      "hud": false,
+      "image": "initial-capital-detail.png",
+      "image_sha256": "cc3e22af49c17a1e3c998d2e8a53afdaae5e94b1d7ab32dc4b5fdfbbe32e1a34",
+      "name": "initial-capital-detail",
+      "near": 20.0,
+      "pitch": 35.0,
+      "pixels_sha256": "78c9d96f1c96e84dd88806717e071980f9fc544129a2445df69510d60d3c0c26",
+      "projection_matrix": [
+        [
+          1.2006138563156128,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.9209821224212646,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.000666856765747,
+          -1.0
+        ],
+        [
+          -0.0,
+          -0.0,
+          -40.013336181640625,
+          -0.0
+        ]
+      ],
+      "repeat_checked": true,
+      "requested_eye": [
+        -3991.9868777845213,
+        177.80869526882427,
+        2345.652356221816
+      ],
+      "resolved_eye": [
+        -3991.9868777845213,
+        177.80869526882427,
+        2345.652356221816
+      ],
+      "state_after": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "state_before": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "subjects": {
+        "capital": {
+          "center": [
+            640.0,
+            400.0
+          ],
+          "visible": true
+        },
+        "enemy_a": {
+          "center": null,
+          "visible": true
+        },
+        "enemy_b": {
+          "center": null,
+          "visible": true
+        },
+        "escort": {
+          "center": [
+            -873.5346116855285,
+            1007.8696218922851
+          ],
+          "visible": true
+        },
+        "planet": {
+          "center": [
+            190.7364849722503,
+            31.984873240560674
+          ],
+          "visible": true
+        },
+        "yard": {
+          "center": [
+            1278.0357777111917,
+            143.75044749116358
+          ],
+          "visible": true
+        }
+      },
+      "target": [
+        -4200,
+        0,
+        2200
+      ],
+      "tick": 0,
+      "union_eye": [
+        -3991.9868777845213,
+        177.80869526882427,
+        2345.652356221816
+      ],
+      "view_matrix": [
+        [
+          0.5735764503479004,
+          -0.46984630823135376,
+          0.6710100769996643,
+          0.0
+        ],
+        [
+          1.1118116415351769e-17,
+          0.8191520571708679,
+          0.5735764503479004,
+          0.0
+        ],
+        [
+          -0.8191520571708679,
+          -0.3289899230003357,
+          0.46984630823135376,
+          0.0
+        ],
+        [
+          4211.15576171875,
+          -1249.5765380859375,
+          1474.5804443359375,
+          1.0
+        ]
+      ],
+      "view_time": 3.0,
+      "yaw": 55.0
+    },
+    {
+      "distance": 400.0,
+      "far": 60000.0,
+      "fov": 55.0,
+      "hud": false,
+      "image": "initial-capital-keel.png",
+      "image_sha256": "79daa060ed1aa7404127775bc3063684bc4b416472e5e4fdb8457b03e0a3ef24",
+      "name": "initial-capital-keel",
+      "near": 20.0,
+      "pitch": -20.0,
+      "pixels_sha256": "cdcb3c2619dfaec296bc80445d123e9ddca1cf3dc2321c1a7cc3767e391da1c8",
+      "projection_matrix": [
+        [
+          1.2006138563156128,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.9209821224212646,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.000666856765747,
+          -1.0
+        ],
+        [
+          -0.0,
+          -0.0,
+          -40.013336181640625,
+          -0.0
+        ]
+      ],
+      "repeat_checked": true,
+      "requested_eye": [
+        -3846.7911113762043,
+        60.0,
+        2071.4424780626923
+      ],
+      "resolved_eye": [
+        -3846.7911113762043,
+        60.0,
+        2071.4424780626923
+      ],
+      "state_after": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "state_before": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "subjects": {
+        "capital": {
+          "center": [
+            640.0000000000005,
+            400.0
+          ],
+          "visible": true
+        },
+        "enemy_a": {
+          "center": null,
+          "visible": true
+        },
+        "enemy_b": {
+          "center": null,
+          "visible": true
+        },
+        "escort": {
+          "center": [
+            133.39379910042516,
+            370.93448166025433
+          ],
+          "visible": true
+        },
+        "planet": {
+          "center": [
+            840.8327772420746,
+            313.0217974182772
+          ],
+          "visible": true
+        },
+        "yard": {
+          "center": null,
+          "visible": true
+        }
+      },
+      "target": [
+        -4200,
+        0,
+        2200
+      ],
+      "tick": 0,
+      "union_eye": [
+        -3846.7911113762043,
+        60.0,
+        2071.4424780626923
+      ],
+      "view_matrix": [
+        [
+          -0.3420201539993286,
+          -0.14812470972537994,
+          0.9279446601867676,
+          0.0
+        ],
+        [
+          7.490876820619784e-17,
+          0.9874981045722961,
+          0.1576310247182846,
+          0.0
+        ],
+        [
+          -0.9396926164627075,
+          0.05391298606991768,
+          -0.33774423599243164,
+          0.0
+        ],
+        [
+          630.8390502929688,
+          -740.7323608398438,
+          4259.76904296875,
+          1.0
+        ]
+      ],
+      "view_time": 3.0,
+      "yaw": 110.0
+    },
+    {
+      "distance": 450.0,
+      "far": 60000.0,
+      "fov": 55.0,
+      "hud": false,
+      "image": "initial-capital-rear.png",
+      "image_sha256": "177e6bd7acbdd273c583536fb279c289d4b72a051dee0fab7cfae7d4d8133914",
+      "name": "initial-capital-rear",
+      "near": 20.0,
+      "pitch": 38.0,
+      "pixels_sha256": "31b8315375fa1e7f80bf8b74aeaeb193c1c3ad13265d7300aae14c74b2667096",
+      "projection_matrix": [
+        [
+          1.2006138563156128,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.9209821224212646,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.000666856765747,
+          -1.0
+        ],
+        [
+          -0.0,
+          -0.0,
+          -40.013336181640625,
+          -0.0
+        ]
+      ],
+      "repeat_checked": true,
+      "requested_eye": [
+        -4050.137519284987,
+        277.0476638965462,
+        1878.6188729819241
+      ],
+      "resolved_eye": [
+        -4050.137519284987,
+        277.0476638965462,
+        1878.6188729819241
+      ],
+      "state_after": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "state_before": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "subjects": {
+        "capital": {
+          "center": [
+            640.0,
+            400.0
+          ],
+          "visible": true
+        },
+        "enemy_a": {
+          "center": null,
+          "visible": true
+        },
+        "enemy_b": {
+          "center": [
+            -647.6648328011169,
+            378.3399848402806
+          ],
+          "visible": true
+        },
+        "escort": {
+          "center": [
+            477.6230146658463,
+            185.61524220876402
+          ],
+          "visible": true
+        },
+        "planet": {
+          "center": [
+            1529.3687836510985,
+            144.67319633497954
+          ],
+          "visible": true
+        },
+        "yard": {
+          "center": null,
+          "visible": true
+        }
+      },
+      "target": [
+        -4200,
+        0,
+        2200
+      ],
+      "tick": 0,
+      "union_eye": [
+        -4050.137519284987,
+        277.0476638965462,
+        1878.6188729819241
+      ],
+      "view_matrix": [
+        [
+          -0.9063078165054321,
+          -0.2601897716522217,
+          0.333027720451355,
+          0.0
+        ],
+        [
+          1.8787243709659585e-17,
+          0.7880107760429382,
+          0.6156615018844604,
+          0.0
+        ],
+        [
+          -0.4226182699203491,
+          0.5579788088798523,
+          -0.7141802906990051,
+          0.0
+        ],
+        [
+          -2876.732421875,
+          -2320.350341796875,
+          2519.9130859375,
+          1.0
+        ]
+      ],
+      "view_time": 3.0,
+      "yaw": 155.0
+    },
+    {
+      "distance": 1800.0,
+      "far": 60000.0,
+      "fov": 55.0,
+      "hud": false,
+      "image": "initial-common-scale.png",
+      "image_sha256": "63146c4a4d91256f7695d4b881916cb738f94c95878df2b23551196276c7ee54",
+      "name": "initial-common-scale",
+      "near": 20.0,
+      "pitch": 50.0,
+      "pixels_sha256": "ebc2445696ac3e22aeb4c4976fee7ddd0a6132c0452e15bc4c6573fd8e1a5e9a",
+      "projection_matrix": [
+        [
+          1.2006138563156128,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.9209821224212646,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.000666856765747,
+          -1.0
+        ],
+        [
+          -0.0,
+          -0.0,
+          -40.013336181640625,
+          -0.0
+        ]
+      ],
+      "repeat_checked": true,
+      "requested_eye": [
+        -3440.1682851648375,
+        1378.8799976141604,
+        2874.195953453127
+      ],
+      "resolved_eye": [
+        -3440.1682851648375,
+        1378.8799976141604,
+        2874.195953453127
+      ],
+      "state_after": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "state_before": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "subjects": {
+        "capital": {
+          "center": [
+            636.6726358203293,
+            448.6360779819302
+          ],
+          "visible": true
+        },
+        "enemy_a": {
+          "center": [
+            897.6452446353795,
+            683.1833866099867
+          ],
+          "visible": true
+        },
+        "enemy_b": {
+          "center": [
+            766.081402156366,
+            830.6001646163129
+          ],
+          "visible": true
+        },
+        "escort": {
+          "center": [
+            508.12792304923164,
+            541.7753639257074
+          ],
+          "visible": true
+        },
+        "planet": {
+          "center": [
+            402.29311254083416,
+            237.98911915993511
+          ],
+          "visible": true
+        },
+        "yard": {
+          "center": [
+            811.265948325135,
+            322.1314858699733
+          ],
+          "visible": true
+        }
+      },
+      "target": [
+        -4300,
+        0,
+        2100
+      ],
+      "tick": 0,
+      "union_eye": [
+        -3440.1682851648375,
+        1378.8799976141604,
+        2874.195953453127
+      ],
+      "view_matrix": [
+        [
+          0.6691306233406067,
+          -0.5692819356918335,
+          0.47768428921699524,
+          0.0
+        ],
+        [
+          -1.5747565393275042e-16,
+          0.6427876353263855,
+          0.7660444378852844,
+          0.0
+        ],
+        [
+          -0.7431448101997375,
+          -0.5125837922096252,
+          0.4301088750362396,
+          0.0
+        ],
+        [
+          4437.86572265625,
+          -1371.486328125,
+          -649.1862182617188,
+          1.0
+        ]
+      ],
+      "view_time": 3.0,
+      "yaw": 48.0
+    },
+    {
+      "distance": 300.0,
+      "far": 60000.0,
+      "fov": 55.0,
+      "hud": false,
+      "image": "initial-escort-close.png",
+      "image_sha256": "73d46095ef2aba303175b3219b72306c678ce16ed25d1ff4a3f47bbece201876",
+      "name": "initial-escort-close",
+      "near": 20.0,
+      "pitch": 45.0,
+      "pixels_sha256": "4173b3b95c7fc2c7d48fb3e34978f28b80dcdaafa3cfac29f94aa490d8a14aea",
+      "projection_matrix": [
+        [
+          1.2006138563156128,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.9209821224212646,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.000666856765747,
+          -1.0
+        ],
+        [
+          -0.0,
+          -0.0,
+          -40.013336181640625,
+          -0.0
+        ]
+      ],
+      "repeat_checked": true,
+      "requested_eye": [
+        -4042.3551763503724,
+        212.13203435596424,
+        2691.9440367767447
+      ],
+      "resolved_eye": [
+        -4042.3551763503724,
+        212.13203435596424,
+        2691.9440367767447
+      ],
+      "state_after": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "state_before": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "subjects": {
+        "capital": {
+          "center": [
+            1069.2502557944003,
+            126.70417211626574
+          ],
+          "visible": true
+        },
+        "enemy_a": {
+          "center": null,
+          "visible": true
+        },
+        "enemy_b": {
+          "center": null,
+          "visible": true
+        },
+        "escort": {
+          "center": [
+            640.0000000000006,
+            400.0
+          ],
+          "visible": true
+        },
+        "planet": {
+          "center": [
+            322.8769047680842,
+            -135.80123703904297
+          ],
+          "visible": true
+        },
+        "yard": {
+          "center": [
+            1363.7937940250074,
+            -60.826339611826086
+          ],
+          "visible": true
+        }
+      },
+      "target": [
+        -4200,
+        0,
+        2550
+      ],
+      "tick": 0,
+      "union_eye": [
+        -4042.3551763503724,
+        212.13203435596424,
+        2691.9440367767447
+      ],
+      "view_matrix": [
+        [
+          0.6691306233406067,
+          -0.5254827737808228,
+          0.5254827737808228,
+          0.0
+        ],
+        [
+          4.82905024053583e-16,
+          0.7071067690849304,
+          0.7071067690849304,
+          0.0
+        ],
+        [
+          -0.7431448101997375,
+          -0.47314679622650146,
+          0.47314679622650146,
+          0.0
+        ],
+        [
+          4705.3681640625,
+          -1000.5032958984375,
+          700.5032958984375,
+          1.0
+        ]
+      ],
+      "view_time": 3.0,
+      "yaw": 48.0
+    },
+    {
+      "distance": 300.0,
+      "far": 60000.0,
+      "fov": 55.0,
+      "hud": false,
+      "image": "initial-escort-rear.png",
+      "image_sha256": "f7d294054159b21185b7a7f2e6a35221fccea188f2cb77ede5c6de03cb694b9f",
+      "name": "initial-escort-rear",
+      "near": 20.0,
+      "pitch": 38.0,
+      "pixels_sha256": "a3f97a2d5d991cf47f1faf19aeca206c38a67eec309dc10d69565a0891e13363",
+      "projection_matrix": [
+        [
+          1.2006138563156128,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.9209821224212646,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.000666856765747,
+          -1.0
+        ],
+        [
+          -0.0,
+          -0.0,
+          -40.013336181640625,
+          -0.0
+        ]
+      ],
+      "repeat_checked": true,
+      "requested_eye": [
+        -4100.091679523324,
+        184.6984425976975,
+        2335.7459153212826
+      ],
+      "resolved_eye": [
+        -4100.091679523324,
+        184.6984425976975,
+        2335.7459153212826
+      ],
+      "state_after": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "state_before": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "subjects": {
+        "capital": {
+          "center": null,
+          "visible": true
+        },
+        "enemy_a": {
+          "center": null,
+          "visible": true
+        },
+        "enemy_b": {
+          "center": null,
+          "visible": true
+        },
+        "escort": {
+          "center": [
+            640.0000000000006,
+            400.0000000000001
+          ],
+          "visible": true
+        },
+        "planet": {
+          "center": null,
+          "visible": true
+        },
+        "yard": {
+          "center": null,
+          "visible": true
+        }
+      },
+      "target": [
+        -4200,
+        0,
+        2550
+      ],
+      "tick": 0,
+      "union_eye": [
+        -4100.091679523324,
+        184.6984425976975,
+        2335.7459153212826
+      ],
+      "view_matrix": [
+        [
+          -0.9063078165054321,
+          -0.2601897716522217,
+          0.333027720451355,
+          0.0
+        ],
+        [
+          4.441647546010459e-16,
+          0.7880107760429382,
+          0.6156615018844604,
+          0.0
+        ],
+        [
+          -0.4226182699203491,
+          0.5579788088798523,
+          -0.7141802906990051,
+          0.0
+        ],
+        [
+          -2728.81640625,
+          -2515.64306640625,
+          2919.876220703125,
+          1.0
+        ]
+      ],
+      "view_time": 3.0,
+      "yaw": 155.0
+    },
+    {
+      "distance": 3100.0,
+      "far": 60000.0,
+      "fov": 55.0,
+      "hud": true,
+      "image": "initial-tactical.png",
+      "image_sha256": "dda555ea982260302aba630c16e78b9100319be3fd846d190e79133f798f9e31",
+      "name": "initial-tactical",
+      "near": 20.0,
+      "pitch": 55.0,
+      "pixels_sha256": "90da79aa1fbc78ddedeee3e04fd368f779e21e9b393e721e5e80e92f46053015",
+      "projection_matrix": [
+        [
+          1.2006138563156128,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.9209821224212646,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.000666856765747,
+          -1.0
+        ],
+        [
+          -0.0,
+          -0.0,
+          -40.013336181640625,
+          -0.0
+        ]
+      ],
+      "repeat_checked": true,
+      "requested_eye": [
+        -2878.623881860864,
+        2539.3713372958746,
+        3289.772400811058
+      ],
+      "resolved_eye": [
+        -2878.623881860864,
+        2539.3713372958746,
+        3289.772400811058
+      ],
+      "state_after": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "state_before": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "subjects": {
+        "capital": {
+          "center": [
+            621.3488569686385,
+            413.7564827862721
+          ],
+          "visible": true
+        },
+        "enemy_a": {
+          "center": [
+            749.5834446907204,
+            533.7368851874777
+          ],
+          "visible": true
+        },
+        "enemy_b": {
+          "center": [
+            679.1592583481438,
+            596.6429316881096
+          ],
+          "visible": true
+        },
+        "escort": {
+          "center": [
+            552.218423826745,
+            464.7448652100688
+          ],
+          "visible": true
+        },
+        "planet": {
+          "center": [
+            476.2158589497113,
+            277.96538450830167
+          ],
+          "visible": true
+        },
+        "yard": {
+          "center": [
+            726.7321886461212,
+            336.0291292539096
+          ],
+          "visible": true
+        }
+      },
+      "target": [
+        -4200,
+        0,
+        2100
+      ],
+      "tick": 0,
+      "union_eye": [
+        -2878.623881860864,
+        2539.3713372958746,
+        3289.772400811058
+      ],
+      "view_matrix": [
+        [
+          0.6691306233406067,
+          -0.6087486147880554,
+          0.4262503683567047,
+          0.0
+        ],
+        [
+          -4.881403560295495e-17,
+          0.5735764503479004,
+          0.8191520571708679,
+          0.0
+        ],
+        [
+          -0.7431448101997375,
+          -0.5481197237968445,
+          0.3837975561618805,
+          0.0
+        ],
+        [
+          4370.95263671875,
+          -1405.692626953125,
+          -2115.7236328125,
+          1.0
+        ]
+      ],
+      "view_time": 3.0,
+      "yaw": 48.0
+    },
+    {
+      "distance": 650.0,
+      "far": 60000.0,
+      "fov": 55.0,
+      "hud": false,
+      "image": "initial-yard-close.png",
+      "image_sha256": "bfdd09defd353cc32ed38f72390f6a07c79a020912720a07da85ecc95025e19c",
+      "name": "initial-yard-close",
+      "near": 20.0,
+      "pitch": 45.0,
+      "pixels_sha256": "cf508c2bc1b14dd64479a93adbeb4463b6d9342ab0a6bba20ffbc974a23ddf07",
+      "projection_matrix": [
+        [
+          1.2006138563156128,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.9209821224212646,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.000666856765747,
+          -1.0
+        ],
+        [
+          -0.0,
+          -0.0,
+          -40.013336181640625,
+          -0.0
+        ]
+      ],
+      "repeat_checked": true,
+      "requested_eye": [
+        -3858.436215425807,
+        459.61940777125585,
+        1907.5454130162798
+      ],
+      "resolved_eye": [
+        -3858.436215425807,
+        459.61940777125585,
+        1907.5454130162798
+      ],
+      "state_after": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "state_before": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "subjects": {
+        "capital": {
+          "center": [
+            -295.8239321067836,
+            995.8220707526756
+          ],
+          "visible": true
+        },
+        "enemy_a": {
+          "center": null,
+          "visible": true
+        },
+        "enemy_b": {
+          "center": null,
+          "visible": true
+        },
+        "escort": {
+          "center": null,
+          "visible": true
+        },
+        "planet": {
+          "center": [
+            -320.94279578742714,
+            191.78922378898457
+          ],
+          "visible": true
+        },
+        "yard": {
+          "center": [
+            640.0000000000001,
+            400.0000000000001
+          ],
+          "visible": true
+        }
+      },
+      "target": [
+        -4200,
+        0,
+        1600
+      ],
+      "tick": 0,
+      "union_eye": [
+        -3858.436215425807,
+        459.61940777125585,
+        1907.5454130162798
+      ],
+      "view_matrix": [
+        [
+          0.6691306233406067,
+          -0.5254827737808228,
+          0.5254827737808228,
+          0.0
+        ],
+        [
+          1.5748534187208464e-16,
+          0.7071067690849304,
+          0.7071067690849304,
+          0.0
+        ],
+        [
+          -0.7431448101997375,
+          -0.47314679622650146,
+          0.47314679622650146,
+          0.0
+        ],
+        [
+          3999.38037109375,
+          -1449.9927978515625,
+          799.9927368164062,
+          1.0
+        ]
+      ],
+      "view_time": 3.0,
+      "yaw": 48.0
+    },
+    {
+      "distance": 650.0,
+      "far": 60000.0,
+      "fov": 55.0,
+      "hud": false,
+      "image": "initial-yard-rear.png",
+      "image_sha256": "577f5b5ed23082104f59fcf45e0e102d375c5af2937213ef10a2073d9209c757",
+      "name": "initial-yard-rear",
+      "near": 20.0,
+      "pitch": 38.0,
+      "pixels_sha256": "26e60a9dec02a441847ff46422c23c031bed957a097f5ba9423527e896519377",
+      "projection_matrix": [
+        [
+          1.2006138563156128,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.9209821224212646,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.000666856765747,
+          -1.0
+        ],
+        [
+          -0.0,
+          -0.0,
+          -40.013336181640625,
+          -0.0
+        ]
+      ],
+      "repeat_checked": true,
+      "requested_eye": [
+        -3983.5319723005364,
+        400.17995896167787,
+        1135.7828165294459
+      ],
+      "resolved_eye": [
+        -3983.5319723005364,
+        400.17995896167787,
+        1135.7828165294459
+      ],
+      "state_after": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "state_before": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+      "subjects": {
+        "capital": {
+          "center": [
+            459.3410897604916,
+            161.47779419095264
+          ],
+          "visible": true
+        },
+        "enemy_a": {
+          "center": [
+            -167.11081560657334,
+            261.24895944078287
+          ],
+          "visible": true
+        },
+        "enemy_b": {
+          "center": [
+            -86.68914798205847,
+            155.9140581956818
+          ],
+          "visible": true
+        },
+        "escort": {
+          "center": [
+            407.77818550997216,
+            93.39979215136705
+          ],
+          "visible": true
+        },
+        "planet": {
+          "center": [
+            995.3280593796188,
+            76.1144262141377
+          ],
+          "visible": true
+        },
+        "yard": {
+          "center": [
+            640.0000000000001,
+            400.0
+          ],
+          "visible": true
+        }
+      },
+      "target": [
+        -4200,
+        0,
+        1600
+      ],
+      "tick": 0,
+      "union_eye": [
+        -3983.5319723005364,
+        400.17995896167787,
+        1135.7828165294459
+      ],
+      "view_matrix": [
+        [
+          -0.9063078165054321,
+          -0.2601897716522217,
+          0.333027720451355,
+          0.0
+        ],
+        [
+          1.6945451298682894e-16,
+          0.7880107760429382,
+          0.6156615018844604,
+          0.0
+        ],
+        [
+          -0.4226182699203491,
+          0.5579788088798523,
+          -0.7141802906990051,
+          0.0
+        ],
+        [
+          -3130.303466796875,
+          -1985.563232421875,
+          1891.4049072265625,
+          1.0
+        ]
+      ],
+      "view_time": 3.0,
+      "yaw": 155.0
+    },
+    {
+      "distance": 3100.0,
+      "far": 60000.0,
+      "fov": 55.0,
+      "hud": true,
+      "image": "final-tactical.png",
+      "image_sha256": "8c6c58bac5d68408d7388df41634405e822922cf515b6516ed85752e477f1cc5",
+      "name": "final-tactical",
+      "near": 20.0,
+      "pitch": 55.0,
+      "pixels_sha256": "e71be7738fd6c94631f7cfa57f3f899c4d14f434f17816dc23907c2f4d264da1",
+      "projection_matrix": [
+        [
+          1.2006138563156128,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.9209821224212646,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.000666856765747,
+          -1.0
+        ],
+        [
+          -0.0,
+          -0.0,
+          -40.013336181640625,
+          -0.0
+        ]
+      ],
+      "repeat_checked": true,
+      "requested_eye": [
+        -2878.623881860864,
+        2539.3713372958746,
+        3289.772400811058
+      ],
+      "resolved_eye": [
+        -2878.623881860864,
+        2539.3713372958746,
+        3289.772400811058
+      ],
+      "state_after": "2a17e3a7454fc746b7323ff40e1acd9291c616d7b30573b2f7d34b652c35c607",
+      "state_before": "2a17e3a7454fc746b7323ff40e1acd9291c616d7b30573b2f7d34b652c35c607",
+      "subjects": {
+        "capital": {
+          "center": [
+            599.1122435478572,
+            406.32679806492786
+          ],
+          "visible": true
+        },
+        "enemy_a": {
+          "center": [
+            771.948826268203,
+            487.7463975790816
+          ],
+          "visible": true
+        },
+        "enemy_b": {
+          "center": [
+            590.169263395112,
+            581.2713910896649
+          ],
+          "visible": true
+        },
+        "escort": {
+          "center": [
+            577.7783068982285,
+            541.4380646000124
+          ],
+          "visible": true
+        },
+        "planet": {
+          "center": [
+            476.2158589497113,
+            277.96538450830167
+          ],
+          "visible": true
+        },
+        "yard": {
+          "center": [
+            726.7321886461212,
+            336.0291292539096
+          ],
+          "visible": true
+        }
+      },
+      "target": [
+        -4200,
+        0,
+        2100
+      ],
+      "tick": 180,
+      "union_eye": [
+        -2878.623881860864,
+        2539.3713372958746,
+        3289.772400811058
+      ],
+      "view_matrix": [
+        [
+          0.6691306233406067,
+          -0.6087486147880554,
+          0.4262503683567047,
+          0.0
+        ],
+        [
+          -4.881403560295495e-17,
+          0.5735764503479004,
+          0.8191520571708679,
+          0.0
+        ],
+        [
+          -0.7431448101997375,
+          -0.5481197237968445,
+          0.3837975561618805,
+          0.0
+        ],
+        [
+          4370.95263671875,
+          -1405.692626953125,
+          -2115.7236328125,
+          1.0
+        ]
+      ],
+      "view_time": 3.0,
+      "yaw": 48.0
+    }
+  ],
+  "cleanup_errors": [],
+  "display": {
+    "drawable": [
+      1280,
+      800
+    ],
+    "driver": "cocoa",
+    "gl": {
+      "renderer": "Apple M4",
+      "vendor": "Apple",
+      "version": "2.1 Metal - 90.5"
+    },
+    "logical": [
+      1280,
+      800
+    ],
+    "sample_buffers": 1,
+    "samples": 4,
+    "sdl_requested_samples": 4,
+    "viewport": [
+      0,
+      0,
+      1280,
+      800
+    ]
+  },
+  "final_state_sha256": "2a17e3a7454fc746b7323ff40e1acd9291c616d7b30573b2f7d34b652c35c607",
+  "fixed_materials_requested": false,
+  "initial_state_sha256": "549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d",
+  "materials_available": true,
+  "mode": "baseline-capture",
+  "paced_work_ms_excluding_clock_wait": {},
+  "pacing_note": "SDL Clock at fixed 30Hz simulation cadence; not an agreed FPS target. Costs include digest instrumentation and ordinary swap; no GPU synchronization in paced mode.",
+  "peer_source_sha256": "55c4d69094c52273af0bb42c30881845b78623a024bd0d6fc7cf971b7dea6f06",
+  "recipe_sha256": "ecc0a920bd262889bccf4dc32dcb36cbb1108c3c0b9f68b282194a658a7b47e0",
+  "source_sha256": "d4339215fd2a52396224c710d151921de50cfc7c9f15ff9af0a634df115409e9",
+  "status": "captured-not-appearance-approved",
+  "ticks": 180,
+  "warnings": [
+    "No appearance acceptance or performance target is inferred from this harness."
+  ]
+}
