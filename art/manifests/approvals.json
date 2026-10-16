@@ -65,7 +65,7 @@
           "before": 8701,
           "after": 11457
         },
-        "silhouette_change": "none - detail is 0.5 to 4 world units proud of the surfaces it sits on, the mesh Z extent is unchanged (-143.5 to 135.0) so the in-game length is unchanged, and no collision or simulation field moves",
+        "silhouette_change": "length unchanged, beam grown: every detail element stands 0.5 to 4 world units proud of the surface it sits on, and at the hull's widest section - the armour belt, its dark plate gaps and the flank machinery banks at z -105 to -69 - that proud detail is the mesh's X extent, so the beam moves from 69.0 to 73.349998 and the mesh is 6.3 percent wider. The Y and Z extents are unchanged to the digit (Z -143.5 to 135.0), so the in-game length, which the renderer takes from the catalogue size policy on Z, is unchanged, and no collision or simulation field moves: radii come from the data files, not from the mesh.",
         "supersedes": {
           "assets/models/alliance_battleship.mesh.json": "57a5496c539a0252a237ef7a3671509f705308416da3f2afe0c9555ff17e9fec"
         },
@@ -78,7 +78,8 @@
         },
         "runtime": {
           "assets/models/alliance_battleship.mesh.json": "0a4e397d5c0b60f70fbba35f3e4f4a5ac997ac4de079f821f8f29db9872c95cd"
-        }
+        },
+        "corrections": "This record first said the revision changed no silhouette. That held for the length and not for the beam: the mesh outgrew the envelope declared for the previous revision, and the S02 extension-contract validator noticed it while PR #117 was being made to pass again against main. The extents above are measured from the two payloads rather than reasoned from the Z extent, and the artifact itself is unchanged - this is the record catching up with the file the owner approved, not a new revision."
       },
       "not_approved_by_this_decision": [
         "the frigate and the shipyard, which this revision does not touch",
@@ -129,7 +130,7 @@
             }
           },
           {
-            "asset_id": "core:alliance/station/shipyard",
+            "asset_id": "core:alliance/shipyard",
             "gameplay_binding": "station:rebel:shipyard",
             "shape_key": "rebel:shipyard",
             "change": "station surface detail: rail crown frame bands, plating panels, strakes and access hatches; rail flank armour belt, inter-plate trenches, machinery banks, vent banks and service pads down the outer face; gantry pedestal collars and gussets; slip guide-shoe contact plates and wear strips; crosshead machinery banks with radiator fins and frame lines; operations-tower window bands with a dark inset and machinery ledges; under-keel tie ribs",
@@ -263,7 +264,7 @@
     },
     {
       "approval_id": "s07-frigate-shipyard-hull-detail-2026-10-16",
-      "asset_id": "core:alliance/station/shipyard",
+      "asset_id": "core:alliance/shipyard",
       "gameplay_binding": "station:rebel:shipyard",
       "shape_key": "rebel:shipyard",
       "category": "station",
@@ -305,7 +306,8 @@
       "previous_approval_id": "approved-trio-2026-10-16",
       "superseded_revision": {
         "assets/models/alliance_shipyard.mesh.json": "67d4db64c8677a8898f74d6e966a1b2476ffc721fd72c363ddbc992360630aaf"
-      }
+      },
+      "asset_id_note": "Recorded once as core:alliance/station/shipyard. The registry, the manifest example, the provenance record and the pipeline registry all call it core:alliance/shipyard, so the approval record was the odd one out and was corrected to match; nothing else about the approval changed."
     }
   ],
   "integration_state": {
