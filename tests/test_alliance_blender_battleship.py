@@ -8,6 +8,11 @@ ASSET = ROOT / 'assets/models/alliance_battleship.mesh.json'
 
 
 class AuthoredBattleshipTests(unittest.TestCase):
+    def setUp(self):
+        from render.asset_selection import configure
+        configure({"model_preview": True}, asset_root=ROOT)
+        self.addCleanup(configure, {})
+
     def test_evaluated_blender_mesh_is_the_live_battleship(self):
         self.assertTrue(ASSET.is_file(), 'missing Blender-exported gameplay mesh')
         from render.faction_ships import ship_mesh
@@ -72,27 +77,21 @@ class AuthoredBattleshipTests(unittest.TestCase):
                 load_battleship(p)
 
     def test_missing_asset_falls_back_once_without_affecting_other_hulls(self):
-        import warnings
-        from unittest.mock import patch
-        from render import authored_mesh, faction_ships
+        from render import asset_selection as selection, faction_ships
+        from test_asset_registry import isolated_assets
         expected = faction_ships.ship_mesh('rebel', 'battleship')
         frigate = faction_ships.ship_mesh('rebel', 'frigate')
-        try:
-            authored_mesh.battleship_mesh.cache_clear()
-            faction_ships._ship_mesh.cache_clear()
-            with patch.object(authored_mesh, 'ASSET_PATH', ASSET.with_suffix('.missing')):
-                with warnings.catch_warnings(record=True) as seen:
-                    warnings.simplefilter('always')
-                    fallback = faction_ships.ship_mesh('rebel', 'battleship')
-                    self.assertIs(fallback, faction_ships.ship_mesh('rebel', 'battleship'))
-                self.assertEqual(len(seen), 1)
-                self.assertIn('using procedural hull', str(seen[0].message))
-                self.assertTrue(all(fallback.values()))
-                self.assertNotEqual(fallback, expected)
-                self.assertEqual(frigate, faction_ships.ship_mesh('rebel', 'frigate'))
-        finally:
-            authored_mesh.battleship_mesh.cache_clear()
-            faction_ships._ship_mesh.cache_clear()
+        root = isolated_assets(self)
+        (root / 'assets/models/alliance_battleship.mesh.json').unlink()
+        selection.configure({'model_preview': True}, asset_root=root)
+        fallback = faction_ships.ship_mesh('rebel', 'battleship')
+        self.assertIs(fallback, faction_ships.ship_mesh('rebel', 'battleship'))
+        self.assertEqual(len(selection.diagnostics()['issues']), 1)
+        self.assertEqual(selection.diagnostics()['issues'][0]['code'], 'E_FILE_MISSING')
+        self.assertTrue(all(fallback.values()))
+        self.assertTrue(fallback != expected)
+        self.assertEqual(frigate, faction_ships.ship_mesh('rebel', 'frigate'))
+        selection.configure({'model_preview': True}, asset_root=ROOT)
         self.assertEqual(faction_ships.ship_mesh('rebel', 'battleship'), expected)
 
     def test_loaded_asset_is_deeply_immutable_with_single_bounded_cache(self):

@@ -1,0 +1,342 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://star-armada.invalid/schemas/model-manifest/v1",
+ "title": "STAR ARMADA model manifest v1",
+ "description": "One immutable description of a renderable model: the files that make it, where it sits, what material roles it fills and who approved it. Loading a manifest is the ONLY way the renderer obtains geometry; an unknown major version fails the load instead of being reinterpreted.",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "contract",
+  "contract_major",
+  "asset",
+  "revision",
+  "files",
+  "coordinates",
+  "pivot",
+  "bounds",
+  "nominal_scale",
+  "roles",
+  "provenance"
+ ],
+ "properties": {
+  "contract": {
+   "const": "star-armada/model-manifest"
+  },
+  "contract_major": {
+   "const": 1
+  },
+  "asset": {
+   "$ref": "#/$defs/assetId"
+  },
+  "revision": {
+   "description": "Content hash over the pinned files: sha256 of 'asset\\n' + 'lod:sha256' joined by '\\n' in ascending lod order. Recomputed by the validator; a mismatch is a hard error.",
+   "$ref": "#/$defs/sha256"
+  },
+  "display_name": {
+   "type": "string",
+   "maxLength": 80
+  },
+  "files": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "mesh"
+   ],
+   "properties": {
+    "mesh": {
+     "$ref": "#/$defs/file"
+    },
+    "lod1": {
+     "$ref": "#/$defs/file"
+    },
+    "lod2": {
+     "$ref": "#/$defs/file"
+    }
+   },
+   "description": "mesh is required; lod1/lod2 are optional lower-detail exports. Every supported LOD must keep the silhouette."
+  },
+  "coordinates": {
+   "const": "X beam; Y up; +Z forward"
+  },
+  "pivot": {
+   "$ref": "#/$defs/vec3"
+  },
+  "bounds": {
+   "$ref": "#/$defs/bounds"
+  },
+  "nominal_scale": {
+   "type": "number",
+   "exclusiveMinimum": 0
+  },
+  "roles": {
+   "type": "array",
+   "minItems": 1,
+   "uniqueItems": true,
+   "items": {
+    "$ref": "#/$defs/role"
+   },
+   "description": "Material roles this mesh actually fills. A role the material profile cannot supply is a load error, not a silent default."
+  },
+  "sockets": {
+   "type": "array",
+   "maxItems": 64,
+   "uniqueItems": true,
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "name",
+     "position"
+    ],
+    "properties": {
+     "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{0,31}$"
+     },
+     "position": {
+      "$ref": "#/$defs/vec3"
+     },
+     "purpose": {
+      "enum": [
+       "presentation",
+       "vfx",
+       "muzzle",
+       "hardpoint",
+       "docking"
+      ]
+     }
+    }
+   },
+   "description": "Presentation metadata only. A socket is never authority for a gameplay firing position."
+  },
+  "provenance": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "author",
+    "tool",
+    "tool_version",
+    "license"
+   ],
+   "properties": {
+    "author": {
+     "type": "string",
+     "maxLength": 80
+    },
+    "tool": {
+     "type": "string",
+     "maxLength": 40
+    },
+    "tool_version": {
+     "type": "string",
+     "maxLength": 40
+    },
+    "license": {
+     "enum": [
+      "original",
+      "cc0",
+      "cc-by",
+      "cc-by-sa"
+     ]
+    },
+    "source": {
+     "$ref": "#/$defs/safePath"
+    },
+    "notes": {
+     "type": "string",
+     "maxLength": 400
+    }
+   },
+   "description": "Original designs only; the source path, when given, points at the editable .blend that produced the runtime files."
+  },
+  "requires": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "min_engine"
+   ],
+   "properties": {
+    "min_engine": {
+     "type": "string",
+     "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "material_profile": {
+     "type": "string",
+     "pattern": "^core:[a-z0-9_]+/[a-z0-9_]+$"
+    },
+    "max_triangles": {
+     "type": "integer",
+     "minimum": 1
+    },
+    "max_texture_bytes": {
+     "type": "integer",
+     "minimum": 0
+    }
+   }
+  },
+  "budgets": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "triangles": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 400000
+    },
+    "draw_calls": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 64
+    },
+    "texture_bytes": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 268435456
+    }
+   },
+   "description": "What this asset costs. `triangles` is declared against the payload the manifest pins: it may be a ceiling above it, but a mesh that has outgrown its own declared budget fails the contract (E_MEASUREMENT_STALE). Class ceilings are agreed in art/manifests/decisions.md, section 9 of docs/ASSET_EXTENSION_CONTRACT.md."
+  },
+  "approval": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "status"
+   ],
+   "properties": {
+    "status": {
+     "enum": [
+      "approved",
+      "pending",
+      "not_required"
+     ]
+    },
+    "decision_id": {
+     "type": "string",
+     "pattern": "^[a-z0-9-]{3,48}$"
+    },
+    "decided_by": {
+     "type": "string",
+     "maxLength": 80
+    },
+    "decided_on": {
+     "type": "string",
+     "format": "date"
+    },
+    "reviewed_revision": {
+     "$ref": "#/$defs/sha256"
+    },
+    "reviewed_evidence": {
+     "type": "array",
+     "maxItems": 24,
+     "items": {
+      "$ref": "#/$defs/safePath"
+     }
+    }
+   },
+   "description": "Approval binds to this exact revision and to the evidence shown. Any change to the pinned files, the material profile or the exporter revision invalidates it until reviewed again."
+  },
+  "export": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "contract",
+    "contract_major"
+   ],
+   "description": "The exporter's payload format that files[].path points at, versioned independently of the manifest. legacy_schema_int records the pre-contract integer marker an older export carries, accepted only during the declared migration window.",
+   "properties": {
+    "contract": {
+     "const": "star-armada/mesh-export"
+    },
+    "contract_major": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 1
+    },
+    "legacy_schema_int": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 1
+    }
+   }
+  }
+ },
+ "$defs": {
+  "assetId": {
+   "description": "Namespaced stable visual asset id: <ns>:<owner>/<name>. Never a gameplay entity id and never a translated display name.",
+   "type": "string",
+   "pattern": "^[a-z][a-z0-9_]{1,31}:[a-z0-9_]+/[a-z0-9_]+$"
+  },
+  "sha256": {
+   "type": "string",
+   "pattern": "^[0-9a-f]{64}$"
+  },
+  "safePath": {
+   "description": "Relative path inside the pack root. No absolute path, no '..' segment, no backslash, no drive letter.",
+   "type": "string",
+   "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9][A-Za-z0-9._/-]{0,180}$"
+  },
+  "vec3": {
+   "type": "array",
+   "items": {
+    "type": "number"
+   },
+   "minItems": 3,
+   "maxItems": 3
+  },
+  "bounds": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "min",
+    "max"
+   ],
+   "description": "Conservative visual envelope in the shared X beam / Y up / +Z forward frame, in catalogue world units. Presentation only: it must not change collision or gameplay size.",
+   "properties": {
+    "min": {
+     "$ref": "#/$defs/vec3"
+    },
+    "max": {
+     "$ref": "#/$defs/vec3"
+    }
+   }
+  },
+  "role": {
+   "description": "The six-role material contract. A new role is a new major schema version with a declared fallback, not an extra string here.",
+   "enum": [
+    "base",
+    "dark",
+    "trim",
+    "accent",
+    "lit",
+    "cool"
+   ]
+  },
+  "file": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "path",
+    "sha256",
+    "bytes"
+   ],
+   "properties": {
+    "path": {
+     "$ref": "#/$defs/safePath"
+    },
+    "sha256": {
+     "$ref": "#/$defs/sha256"
+    },
+    "bytes": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 67108864
+    }
+   }
+  },
+  "bindingKey": {
+   "description": "Canonical gameplay identity the renderer selects on: <faction>:<class-or-kind> (e.g. rebel:battleship). Stable ids only, never a display name.",
+   "type": "string",
+   "pattern": "^[a-z][a-z0-9_]{1,31}:[a-z0-9_]+$"
+  }
+ }
+}

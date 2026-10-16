@@ -1,0 +1,77 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:alliance/frigate",
+  "revision": "60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df",
+  "display_name": "Alliance frigate (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/alliance_frigate.mesh.json",
+      "sha256": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+      "bytes": 493063
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -34.0,
+      -10.0,
+      -80.699997
+    ],
+    "max": [
+      34.0,
+      25.35,
+      73.0
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/alliance_frigate.blend",
+    "notes": "Migrated from the specimen export that shipped in the S00 preservation checkpoint. The payload still declares the legacy integer 'schema': 1; the loader accepts it during the declared migration window (see art/manifests/decisions.md, D-07)."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 7708,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "s07-frigate-shipyard-hull-detail-2026-10-16",
+    "decided_by": "owner",
+    "decided_on": "2026-10-16",
+    "reviewed_revision": "60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df",
+    "reviewed_evidence": [
+      "artifacts/frigate_shipyard_hull_detail/README.md",
+      "artifacts/frigate_shipyard_hull_detail/frigate-shipyard-detail-review.png",
+      "artifacts/frigate_shipyard_hull_detail/frigate-shipyard-detail-comparison.json",
+      "art/manifests/provenance/rebel-frigate.json",
+      "art/manifests/provenance/rebel-shipyard.json"
+    ]
+  }
+}

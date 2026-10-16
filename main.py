@@ -289,6 +289,8 @@ def start_game(load_path: str | None = None, mdef: dict | None = None,
         renderer.close()
     if hud is not None:
         hud.close()
+    from render.asset_selection import configure_from_settings
+    configure_from_settings(SETTINGS)
     renderer = Renderer(state, camera)
     renderer.local_player = local_player
     # Ownership-marker verbosity is view-only; Settings owns the value.

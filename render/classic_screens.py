@@ -200,11 +200,13 @@ def settings(menu):
         ('Audio & presentation', (('Dynamic range', 'audio_dynamic_range', 'cycle_range'),
             ('Mono audio', 'audio_mono', 'toggle'), ('Cinematics', 'cinematics_enabled', 'toggle'),
             ('Reduced motion', 'reduced_motion', 'toggle'), ('Tutorial hints', 'tutorial_hints', 'toggle')), ()),
-        ('Readability & help', (('High contrast panels', 'high_contrast_ui', 'toggle'),),
+        ('Readability & help', (('High contrast panels', 'high_contrast_ui', 'toggle'),
+            ('Blender model preview (next session)', 'model_preview', 'toggle'),
+            ('Enabled visual packs (saved order)', 'visual_packs', 'pack_order')),
             ('F1: keyboard and controls help during play.',
-             'High contrast applies to help / hint panels only.',
-             'Reduced motion disables menu drift and cinematic motion.',
-             'Not whole-game scaling or full colorblind compliance.')),
+             'Preview is opt-in; OFF keeps stock legacy models.',
+             'Pack order: visual_packs in settings.json; later entries win.',
+             'Changes apply at the next session, never during a battle.')),
         # #93: the language row sits on its own page with the rules it follows, so
         # the fallback behaviour is stated where the choice is made.
         ('Language', (('Language', 'language', 'cycle_language'),),
@@ -241,6 +243,8 @@ def settings(menu):
             # one: "Polski" has to be readable to someone stuck in a pack they cannot read.
             if action == 'cycle_language':
                 value = i18n.label(str(value))
+            elif action == 'pack_order':
+                value = f'{len(value or [])} enabled · settings.json'
             elif action == 'toggle':
                 value = 'ON' if value else 'OFF'
             else:
@@ -248,8 +252,9 @@ def settings(menu):
             c.text(value + ' ›', (788, r.y + 12, 264, 28), 18, ACCENT)
             payload = {'key': key}
         menu.buttons.append(dict(rect=r, action=action, payload=payload))
+    notes_top = max(246, 164 + len(rows) * 61 + 15)
     for index, line in enumerate(notes):
-        c.text(line, (68, 246 + index * 40, 968, 30), 18, MUTED)
+        c.text(line, (68, notes_top + index * 40, 968, 30), 18, MUTED)
     if menu.settings_page == BALANCE_PAGE:
         _balance_settings_body(menu, c)
     c.text('Tab / Up / Down: focus · Enter: toggle · Left / Right: volume', (52, 552, 1016, 24), 16, MUTED)

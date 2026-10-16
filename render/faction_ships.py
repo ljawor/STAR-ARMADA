@@ -22,6 +22,10 @@ def ship_mesh(faction, role):
     role = role.strip().lower() if isinstance(role, str) else ''
     if faction not in FACTIONS or role not in SHIP_ROLES:
         raise ValueError(f'unknown faction ship: {faction!r}:{role!r}')
+    from render.asset_selection import mesh_for
+    authored = mesh_for(f'{faction}:{role}')
+    if authored is not None:
+        return authored
     return _ship_mesh(faction, role)
 
 
@@ -124,17 +128,6 @@ def _alliance_battleship_slice(h):
     The bounded faction cache means the diagnostic/fallback runs once, not per
     ship/frame. Keep the prior hull below as the emergency geometry fallback.
     """
-    from render.authored_mesh import battleship_mesh
-    try:
-        mesh = battleship_mesh()
-    except (OSError, ValueError, TypeError, KeyError, OverflowError) as exc:
-        import warnings
-        warnings.warn(f'Alliance battleship asset unavailable; using procedural hull: {exc}',
-                      RuntimeWarning, stacklevel=2)
-    else:
-        for role, triangles in mesh.items():
-            h.parts[role].extend(triangles)
-        return
     # Original segmented pressure hull is retained only as a safe fallback.
     h.loft('base', ((-135,19,11,-12),(-103,28,14,-14),(-48,27,14,-14),
                     (-15,12,9,-11),(32,12,9,-11),(58,29,12,-12),
@@ -443,17 +436,6 @@ def _capsule(h, role, width, length, height, center=(0, 0, 0), yaw=0):
 
 def _alliance_frigate_slice(h):
     """Compact armored prow, exposed waist, unequal aft pressure-drive pods."""
-    from render.authored_mesh import frigate_mesh
-    try:
-        mesh = frigate_mesh()
-    except (OSError, ValueError, TypeError, KeyError, OverflowError) as exc:
-        import warnings
-        warnings.warn(f'Alliance frigate asset unavailable; using procedural hull: {exc}',
-                      RuntimeWarning, stacklevel=2)
-    else:
-        for role, triangles in mesh.items():
-            h.parts[role].extend(triangles)
-        return
     h.loft('base', ((-69,5,5,-6),(-31,8,7,-8),(-7,5,6,-6),
                     (24,5,6,-6),(35,18,8,-8),(56,16,7,-7),(73,6,4,-5)), 2)
     _capsule(h,'base',6,31,10,(0,11,-21))

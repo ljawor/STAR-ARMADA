@@ -1,0 +1,41 @@
+{
+  "contract": "star-armada/approval-receipts",
+  "contract_major": 1,
+  "purpose": "Build-time evidence attestation, not a signature or a new owner approval.",
+  "receipts": {
+    "core:alliance/battleship": {
+      "manifest_sha256": "42e29619eaee5dfd379f673a74be98110124a8142bde3364bd7dcd598568fadd",
+      "reviewed_revision": "7634f9edda51e6a87a50cfbcf697e914ae0f94ba16f0aab6eb59a939214ed7d9",
+      "decision_id": "s06-battleship-hull-detail-2026-10-16",
+      "evidence_sha256": {
+        "artifacts/battleship_hull_detail/README.md": "19e86bad5c44d61f8052728da1b7576ecbb8944ba884be2d694ff52286af00b5",
+        "artifacts/battleship_hull_detail/before-after-review.png": "7dd6ef12c279482f5cc58bcde6a375e16a9a34a97de51f3f160ad99641355488",
+        "artifacts/battleship_hull_detail/comparison.json": "de79f76ddf29c787eca1f01c4664501af7ef90f2e53948e9145b446fb99e1620"
+      }
+    },
+    "core:alliance/frigate": {
+      "manifest_sha256": "d0a185716f934ef8a1971cabf4df6086b7c6239a08e9100de9f891d9f1bd3e62",
+      "reviewed_revision": "60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df",
+      "decision_id": "s07-frigate-shipyard-hull-detail-2026-10-16",
+      "evidence_sha256": {
+        "artifacts/frigate_shipyard_hull_detail/README.md": "8af618f1496a569db25fae86157c7e51058d6d400dc0950a374bf6f7f354f897",
+        "artifacts/frigate_shipyard_hull_detail/frigate-shipyard-detail-review.png": "7c5d99061b9c8c013d8c02c6bf2726868c77c8ba2667961f698802ae78693bf0",
+        "artifacts/frigate_shipyard_hull_detail/frigate-shipyard-detail-comparison.json": "a50b90ffbbe56bc7edb5f2499399e80923a7ace9e031386c140f01cc2ca00afe",
+        "art/manifests/provenance/rebel-frigate.json": "5952841e6a84c9076fad76bcd078e3dd70aec181de18119962ec6ada3dc1d7ce",
+        "art/manifests/provenance/rebel-shipyard.json": "7ff23e8fbad496cd19cc993568805f958b2208d4503645f60a0a2004787f75f7"
+      }
+    },
+    "core:alliance/shipyard": {
+      "manifest_sha256": "c5dbaba2bbb714c0e6dba18109832a72fff086c5107b4b574798b85dbfd28d28",
+      "reviewed_revision": "d40edf48c3305cd39f5f0de69a96d28572128621b51da98e26656e4eabdb3630",
+      "decision_id": "s07-frigate-shipyard-hull-detail-2026-10-16",
+      "evidence_sha256": {
+        "artifacts/frigate_shipyard_hull_detail/README.md": "8af618f1496a569db25fae86157c7e51058d6d400dc0950a374bf6f7f354f897",
+        "artifacts/frigate_shipyard_hull_detail/frigate-shipyard-detail-review.png": "7c5d99061b9c8c013d8c02c6bf2726868c77c8ba2667961f698802ae78693bf0",
+        "artifacts/frigate_shipyard_hull_detail/frigate-shipyard-detail-comparison.json": "a50b90ffbbe56bc7edb5f2499399e80923a7ace9e031386c140f01cc2ca00afe",
+        "art/manifests/provenance/rebel-frigate.json": "5952841e6a84c9076fad76bcd078e3dd70aec181de18119962ec6ada3dc1d7ce",
+        "art/manifests/provenance/rebel-shipyard.json": "7ff23e8fbad496cd19cc993568805f958b2208d4503645f60a0a2004787f75f7"
+      }
+    }
+  }
+}

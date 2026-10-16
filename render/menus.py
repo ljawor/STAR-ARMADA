@@ -67,6 +67,9 @@ DEFAULT_SETTINGS = {
     # Presentation only: the language selects a pack of drawing strings, and the
     # simulation never reads it, so two peers may ship different languages.
     "language": "en",
+    # Render-only opt-in. S11 alone may change the legacy production default.
+    "model_preview": False,
+    "visual_packs": [],
 }
 
 
@@ -90,6 +93,13 @@ def validate_presentation_settings(settings: dict) -> dict:
     # say) must be rejected like any other bad value, not crash the loader.
     if result.get('language') not in tuple(code for code, _label in i18n.LANGUAGES):
         result['language'] = DEFAULT_SETTINGS['language']
+    from render.asset_selection import selection_preferences
+    try:
+        result.update(selection_preferences(result))
+    except ValueError:
+        import warnings
+        warnings.warn('Invalid visual pack preferences; using legacy models', RuntimeWarning)
+        result.update(model_preview=False, visual_packs=[])
     return result
 
 

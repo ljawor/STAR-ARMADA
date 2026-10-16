@@ -1,0 +1,1318 @@
+{
+  "contract": "star-armada/binding-registry",
+  "contract_major": 1,
+  "bindings": [
+    {
+      "binding": "confederacy:attack_satellite",
+      "category": "satellite",
+      "identity": {
+        "faction": "confederacy",
+        "class_or_kind": "attack_satellite",
+        "station_faction": "confederacy"
+      },
+      "manifest": "core:confederacy/attack_satellite",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "confederacy:battleship",
+      "category": "combat_hull",
+      "identity": {
+        "faction": "confederacy",
+        "class_or_kind": "battleship"
+      },
+      "manifest": "core:confederacy/battleship",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "confederacy:bomber",
+      "category": "squadron",
+      "identity": {
+        "faction": "confederacy",
+        "class_or_kind": "bomber"
+      },
+      "manifest": "core:confederacy/bomber",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "confederacy:colonizer",
+      "category": "construction",
+      "identity": {
+        "faction": "confederacy",
+        "class_or_kind": "colonizer"
+      },
+      "manifest": "core:confederacy/colonizer",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "confederacy:command_station",
+      "category": "station",
+      "identity": {
+        "faction": "confederacy",
+        "class_or_kind": "command_station",
+        "station_faction": "confederacy"
+      },
+      "manifest": "core:confederacy/command_station",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "confederacy:constructor",
+      "category": "construction",
+      "identity": {
+        "faction": "confederacy",
+        "class_or_kind": "constructor"
+      },
+      "manifest": "core:confederacy/constructor",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "confederacy:convoy",
+      "category": "logistics_hull",
+      "identity": {
+        "faction": "confederacy",
+        "class_or_kind": "convoy"
+      },
+      "manifest": "core:confederacy/convoy",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "confederacy:corvette",
+      "category": "combat_hull",
+      "identity": {
+        "faction": "confederacy",
+        "class_or_kind": "corvette"
+      },
+      "manifest": "core:confederacy/corvette",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "confederacy:cruiser",
+      "category": "combat_hull",
+      "identity": {
+        "faction": "confederacy",
+        "class_or_kind": "cruiser"
+      },
+      "manifest": "core:confederacy/cruiser",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "confederacy:defense_platform",
+      "category": "station",
+      "identity": {
+        "faction": "confederacy",
+        "class_or_kind": "defense_platform",
+        "station_faction": "confederacy"
+      },
+      "manifest": "core:confederacy/defense_platform",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "confederacy:defense_satellite",
+      "category": "satellite",
+      "identity": {
+        "faction": "confederacy",
+        "class_or_kind": "defense_satellite",
+        "station_faction": "confederacy"
+      },
+      "manifest": "core:confederacy/defense_satellite",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "confederacy:energy_relay",
+      "category": "station",
+      "identity": {
+        "faction": "confederacy",
+        "class_or_kind": "energy_relay",
+        "station_faction": "confederacy"
+      },
+      "manifest": "core:confederacy/energy_relay",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "confederacy:fighter",
+      "category": "squadron",
+      "identity": {
+        "faction": "confederacy",
+        "class_or_kind": "fighter"
+      },
+      "manifest": "core:confederacy/fighter",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "confederacy:fighter_platform",
+      "category": "station",
+      "identity": {
+        "faction": "confederacy",
+        "class_or_kind": "fighter_platform",
+        "station_faction": "confederacy"
+      },
+      "manifest": "core:confederacy/fighter_platform",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "confederacy:frigate",
+      "category": "combat_hull",
+      "identity": {
+        "faction": "confederacy",
+        "class_or_kind": "frigate"
+      },
+      "manifest": "core:confederacy/frigate",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "confederacy:mining_station",
+      "category": "station",
+      "identity": {
+        "faction": "confederacy",
+        "class_or_kind": "mining_station",
+        "station_faction": "confederacy"
+      },
+      "manifest": "core:confederacy/mining_station",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "confederacy:planet_extractor",
+      "category": "planet_installation",
+      "identity": {
+        "faction": "confederacy",
+        "class_or_kind": "planet_extractor",
+        "station_faction": "confederacy"
+      },
+      "manifest": "core:confederacy/planet_extractor",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "confederacy:planet_pulsar_cannon",
+      "category": "planet_installation",
+      "identity": {
+        "faction": "confederacy",
+        "class_or_kind": "planet_pulsar_cannon",
+        "station_faction": "confederacy"
+      },
+      "manifest": "core:confederacy/planet_pulsar_cannon",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "confederacy:planet_shield_generator",
+      "category": "planet_installation",
+      "identity": {
+        "faction": "confederacy",
+        "class_or_kind": "planet_shield_generator",
+        "station_faction": "confederacy"
+      },
+      "manifest": "core:confederacy/planet_shield_generator",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "confederacy:planet_trade_hub",
+      "category": "planet_installation",
+      "identity": {
+        "faction": "confederacy",
+        "class_or_kind": "planet_trade_hub",
+        "station_faction": "confederacy"
+      },
+      "manifest": "core:confederacy/planet_trade_hub",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "confederacy:repair_dock",
+      "category": "station",
+      "identity": {
+        "faction": "confederacy",
+        "class_or_kind": "repair_dock",
+        "station_faction": "confederacy"
+      },
+      "manifest": "core:confederacy/repair_dock",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "confederacy:research_station",
+      "category": "station",
+      "identity": {
+        "faction": "confederacy",
+        "class_or_kind": "research_station",
+        "station_faction": "confederacy"
+      },
+      "manifest": "core:confederacy/research_station",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "confederacy:sensor_station",
+      "category": "station",
+      "identity": {
+        "faction": "confederacy",
+        "class_or_kind": "sensor_station",
+        "station_faction": "confederacy"
+      },
+      "manifest": "core:confederacy/sensor_station",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "confederacy:shipyard",
+      "category": "station",
+      "identity": {
+        "faction": "confederacy",
+        "class_or_kind": "shipyard",
+        "station_faction": "confederacy"
+      },
+      "manifest": "core:confederacy/shipyard",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "confederacy:supercapital",
+      "category": "combat_hull",
+      "identity": {
+        "faction": "confederacy",
+        "class_or_kind": "supercapital"
+      },
+      "manifest": "core:confederacy/supercapital",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "confederacy:trade_station",
+      "category": "station",
+      "identity": {
+        "faction": "confederacy",
+        "class_or_kind": "trade_station",
+        "station_faction": "confederacy"
+      },
+      "manifest": "core:confederacy/trade_station",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "environment:agricultural",
+      "category": "environment_prop",
+      "identity": {
+        "faction": "environment",
+        "class_or_kind": "agricultural"
+      },
+      "manifest": "core:environment/agricultural",
+      "status": "authoring_pending"
+    },
+    {
+      "binding": "environment:asteroid_field",
+      "category": "environment_prop",
+      "identity": {
+        "faction": "environment",
+        "class_or_kind": "asteroid_field"
+      },
+      "manifest": "core:environment/asteroid_field",
+      "status": "authoring_pending"
+    },
+    {
+      "binding": "environment:barren",
+      "category": "environment_prop",
+      "identity": {
+        "faction": "environment",
+        "class_or_kind": "barren"
+      },
+      "manifest": "core:environment/barren",
+      "status": "authoring_pending"
+    },
+    {
+      "binding": "environment:deep_space_sky_dome",
+      "category": "environment_prop",
+      "identity": {
+        "faction": "environment",
+        "class_or_kind": "deep_space_sky_dome"
+      },
+      "manifest": "core:environment/deep_space_sky_dome",
+      "status": "keep_procedural_proposed"
+    },
+    {
+      "binding": "environment:gas_giant",
+      "category": "environment_prop",
+      "identity": {
+        "faction": "environment",
+        "class_or_kind": "gas_giant"
+      },
+      "manifest": "core:environment/gas_giant",
+      "status": "authoring_pending"
+    },
+    {
+      "binding": "environment:industrial",
+      "category": "environment_prop",
+      "identity": {
+        "faction": "environment",
+        "class_or_kind": "industrial"
+      },
+      "manifest": "core:environment/industrial",
+      "status": "authoring_pending"
+    },
+    {
+      "binding": "environment:jump_point",
+      "category": "environment_prop",
+      "identity": {
+        "faction": "environment",
+        "class_or_kind": "jump_point"
+      },
+      "manifest": "core:environment/jump_point",
+      "status": "keep_procedural_proposed"
+    },
+    {
+      "binding": "environment:military",
+      "category": "environment_prop",
+      "identity": {
+        "faction": "environment",
+        "class_or_kind": "military"
+      },
+      "manifest": "core:environment/military",
+      "status": "authoring_pending"
+    },
+    {
+      "binding": "environment:nebula",
+      "category": "environment_prop",
+      "identity": {
+        "faction": "environment",
+        "class_or_kind": "nebula"
+      },
+      "manifest": "core:environment/nebula",
+      "status": "keep_procedural_proposed"
+    },
+    {
+      "binding": "environment:research",
+      "category": "environment_prop",
+      "identity": {
+        "faction": "environment",
+        "class_or_kind": "research"
+      },
+      "manifest": "core:environment/research",
+      "status": "authoring_pending"
+    },
+    {
+      "binding": "environment:star",
+      "category": "environment_prop",
+      "identity": {
+        "faction": "environment",
+        "class_or_kind": "star"
+      },
+      "manifest": "core:environment/star",
+      "status": "keep_procedural_proposed"
+    },
+    {
+      "binding": "environment:temperate",
+      "category": "environment_prop",
+      "identity": {
+        "faction": "environment",
+        "class_or_kind": "temperate"
+      },
+      "manifest": "core:environment/temperate",
+      "status": "authoring_pending"
+    },
+    {
+      "binding": "environment:trade",
+      "category": "environment_prop",
+      "identity": {
+        "faction": "environment",
+        "class_or_kind": "trade"
+      },
+      "manifest": "core:environment/trade",
+      "status": "authoring_pending"
+    },
+    {
+      "binding": "imperial:attack_satellite",
+      "category": "satellite",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "attack_satellite",
+        "station_faction": "imperial"
+      },
+      "manifest": "core:imperial/attack_satellite",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "imperial:battleship",
+      "category": "combat_hull",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "battleship"
+      },
+      "manifest": "core:imperial/battleship",
+      "legacy_identifiers": [
+        "imperial_battleship"
+      ],
+      "status": "procedural_legacy",
+      "notes": "Rows like this exist so the coverage join with model_inventory.json has a target. No manifest exists yet."
+    },
+    {
+      "binding": "imperial:bomber",
+      "category": "squadron",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "bomber"
+      },
+      "manifest": "core:imperial/bomber",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "imperial:colonizer",
+      "category": "construction",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "colonizer"
+      },
+      "manifest": "core:imperial/colonizer",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "imperial:command_station",
+      "category": "station",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "command_station",
+        "station_faction": "imperial"
+      },
+      "manifest": "core:imperial/command_station",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "imperial:constructor",
+      "category": "construction",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "constructor"
+      },
+      "manifest": "core:imperial/constructor",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "imperial:convoy",
+      "category": "logistics_hull",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "convoy"
+      },
+      "manifest": "core:imperial/convoy",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "imperial:corvette",
+      "category": "combat_hull",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "corvette"
+      },
+      "manifest": "core:imperial/corvette",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "imperial:cruiser",
+      "category": "combat_hull",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "cruiser"
+      },
+      "manifest": "core:imperial/cruiser",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "imperial:defense_platform",
+      "category": "station",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "defense_platform",
+        "station_faction": "imperial"
+      },
+      "manifest": "core:imperial/defense_platform",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "imperial:defense_satellite",
+      "category": "satellite",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "defense_satellite",
+        "station_faction": "imperial"
+      },
+      "manifest": "core:imperial/defense_satellite",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "imperial:energy_relay",
+      "category": "station",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "energy_relay",
+        "station_faction": "imperial"
+      },
+      "manifest": "core:imperial/energy_relay",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "imperial:fighter",
+      "category": "squadron",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "fighter"
+      },
+      "manifest": "core:imperial/fighter",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "imperial:fighter_platform",
+      "category": "station",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "fighter_platform",
+        "station_faction": "imperial"
+      },
+      "manifest": "core:imperial/fighter_platform",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "imperial:frigate",
+      "category": "combat_hull",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "frigate"
+      },
+      "manifest": "core:imperial/frigate",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "imperial:mining_station",
+      "category": "station",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "mining_station",
+        "station_faction": "imperial"
+      },
+      "manifest": "core:imperial/mining_station",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "imperial:planet_extractor",
+      "category": "planet_installation",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "planet_extractor",
+        "station_faction": "imperial"
+      },
+      "manifest": "core:imperial/planet_extractor",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "imperial:planet_pulsar_cannon",
+      "category": "planet_installation",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "planet_pulsar_cannon",
+        "station_faction": "imperial"
+      },
+      "manifest": "core:imperial/planet_pulsar_cannon",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "imperial:planet_shield_generator",
+      "category": "planet_installation",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "planet_shield_generator",
+        "station_faction": "imperial"
+      },
+      "manifest": "core:imperial/planet_shield_generator",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "imperial:planet_trade_hub",
+      "category": "planet_installation",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "planet_trade_hub",
+        "station_faction": "imperial"
+      },
+      "manifest": "core:imperial/planet_trade_hub",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "imperial:repair_dock",
+      "category": "station",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "repair_dock",
+        "station_faction": "imperial"
+      },
+      "manifest": "core:imperial/repair_dock",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "imperial:research_station",
+      "category": "station",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "research_station",
+        "station_faction": "imperial"
+      },
+      "manifest": "core:imperial/research_station",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "imperial:sensor_station",
+      "category": "station",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "sensor_station",
+        "station_faction": "imperial"
+      },
+      "manifest": "core:imperial/sensor_station",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "imperial:shipyard",
+      "category": "station",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "shipyard",
+        "station_faction": "imperial"
+      },
+      "manifest": "core:imperial/shipyard",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "imperial:supercapital",
+      "category": "combat_hull",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "supercapital"
+      },
+      "manifest": "core:imperial/supercapital",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "imperial:trade_station",
+      "category": "station",
+      "identity": {
+        "faction": "imperial",
+        "class_or_kind": "trade_station",
+        "station_faction": "imperial"
+      },
+      "manifest": "core:imperial/trade_station",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "menu:cinematic_backdrop",
+      "category": "menu_cinematic",
+      "identity": {
+        "faction": "menu",
+        "class_or_kind": "cinematic_backdrop"
+      },
+      "manifest": "core:menu/cinematic_backdrop",
+      "status": "authoring_pending"
+    },
+    {
+      "binding": "rebel:attack_satellite",
+      "category": "satellite",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "attack_satellite",
+        "station_faction": "rebel"
+      },
+      "manifest": "core:rebel/attack_satellite",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "rebel:battleship",
+      "category": "combat_hull",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "battleship"
+      },
+      "manifest": "core:alliance/battleship",
+      "legacy_identifiers": [
+        "alliance_battleship"
+      ],
+      "envelope": {
+        "min": [
+          -73.349998,
+          -31.0,
+          -143.5
+        ],
+        "max": [
+          73.349998,
+          61.0,
+          135.0
+        ]
+      },
+      "status": "core",
+      "notes": "Approved trio binding, migrated from the specimen export. Its envelope was widened with the S06 surface-detail revision, whose flank detail stands proud of the widest section: the beam moved 69.0 to 73.349998 and the owner's answer to the section 9 question set the grace (1 percent or 2 units) that keeps a small proud detail legal and a six percent beam move visible.",
+      "envelope_decision": "s06-battleship-hull-detail-2026-10-16"
+    },
+    {
+      "binding": "rebel:bomber",
+      "category": "squadron",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "bomber"
+      },
+      "manifest": "core:rebel/bomber",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "rebel:colonizer",
+      "category": "construction",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "colonizer"
+      },
+      "manifest": "core:rebel/colonizer",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "rebel:command_station",
+      "category": "station",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "command_station",
+        "station_faction": "rebel"
+      },
+      "manifest": "core:rebel/command_station",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "rebel:constructor",
+      "category": "construction",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "constructor"
+      },
+      "manifest": "core:rebel/constructor",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "rebel:convoy",
+      "category": "logistics_hull",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "convoy"
+      },
+      "manifest": "core:rebel/convoy",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "rebel:corvette",
+      "category": "combat_hull",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "corvette"
+      },
+      "manifest": "core:rebel/corvette",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "rebel:cruiser",
+      "category": "combat_hull",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "cruiser"
+      },
+      "manifest": "core:rebel/cruiser",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "rebel:defense_platform",
+      "category": "station",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "defense_platform",
+        "station_faction": "rebel"
+      },
+      "manifest": "core:rebel/defense_platform",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "rebel:defense_satellite",
+      "category": "satellite",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "defense_satellite",
+        "station_faction": "rebel"
+      },
+      "manifest": "core:rebel/defense_satellite",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "rebel:energy_relay",
+      "category": "station",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "energy_relay",
+        "station_faction": "rebel"
+      },
+      "manifest": "core:rebel/energy_relay",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "rebel:fighter",
+      "category": "squadron",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "fighter"
+      },
+      "manifest": "core:rebel/fighter",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "rebel:fighter_platform",
+      "category": "station",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "fighter_platform",
+        "station_faction": "rebel"
+      },
+      "manifest": "core:rebel/fighter_platform",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "rebel:frigate",
+      "category": "combat_hull",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "frigate"
+      },
+      "manifest": "core:alliance/frigate",
+      "legacy_identifiers": [
+        "alliance_frigate"
+      ],
+      "envelope": {
+        "min": [
+          -34.0,
+          -10.0,
+          -80.699997
+        ],
+        "max": [
+          34.0,
+          25.35,
+          73.0
+        ]
+      },
+      "status": "core",
+      "notes": "Approved trio binding, migrated from the specimen export."
+    },
+    {
+      "binding": "rebel:mining_station",
+      "category": "station",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "mining_station",
+        "station_faction": "rebel"
+      },
+      "manifest": "core:rebel/mining_station",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "rebel:planet_extractor",
+      "category": "planet_installation",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "planet_extractor",
+        "station_faction": "rebel"
+      },
+      "manifest": "core:rebel/planet_extractor",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "rebel:planet_pulsar_cannon",
+      "category": "planet_installation",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "planet_pulsar_cannon",
+        "station_faction": "rebel"
+      },
+      "manifest": "core:rebel/planet_pulsar_cannon",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "rebel:planet_shield_generator",
+      "category": "planet_installation",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "planet_shield_generator",
+        "station_faction": "rebel"
+      },
+      "manifest": "core:rebel/planet_shield_generator",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "rebel:planet_trade_hub",
+      "category": "planet_installation",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "planet_trade_hub",
+        "station_faction": "rebel"
+      },
+      "manifest": "core:rebel/planet_trade_hub",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "rebel:repair_dock",
+      "category": "station",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "repair_dock",
+        "station_faction": "rebel"
+      },
+      "manifest": "core:rebel/repair_dock",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "rebel:research_station",
+      "category": "station",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "research_station",
+        "station_faction": "rebel"
+      },
+      "manifest": "core:rebel/research_station",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "rebel:sensor_station",
+      "category": "station",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "sensor_station",
+        "station_faction": "rebel"
+      },
+      "manifest": "core:rebel/sensor_station",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "rebel:shipyard",
+      "category": "station",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "shipyard"
+      },
+      "manifest": "core:alliance/shipyard",
+      "legacy_identifiers": [
+        "alliance_shipyard"
+      ],
+      "envelope": {
+        "min": [
+          -55.700001,
+          -17.0,
+          -46.5
+        ],
+        "max": [
+          55.700001,
+          39.400002,
+          51.0
+        ]
+      },
+      "status": "core",
+      "notes": "Approved trio binding, migrated from the specimen export."
+    },
+    {
+      "binding": "rebel:supercapital",
+      "category": "combat_hull",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "supercapital"
+      },
+      "manifest": "core:rebel/supercapital",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "rebel:trade_station",
+      "category": "station",
+      "identity": {
+        "faction": "rebel",
+        "class_or_kind": "trade_station",
+        "station_faction": "rebel"
+      },
+      "manifest": "core:rebel/trade_station",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "shared:construction_scaffold",
+      "category": "construction",
+      "identity": {
+        "faction": "shared",
+        "class_or_kind": "construction_scaffold"
+      },
+      "manifest": "core:shared/construction_scaffold",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "syndicate:attack_satellite",
+      "category": "satellite",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "attack_satellite",
+        "station_faction": "syndicate"
+      },
+      "manifest": "core:syndicate/attack_satellite",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "syndicate:battleship",
+      "category": "combat_hull",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "battleship"
+      },
+      "manifest": "core:syndicate/battleship",
+      "status": "authoring_pending",
+      "notes": "Planned hull; no gameplay entity or appearance approval is created here."
+    },
+    {
+      "binding": "syndicate:bomber",
+      "category": "squadron",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "bomber"
+      },
+      "manifest": "core:syndicate/bomber",
+      "legacy_identifiers": [
+        "syndicate_bomber"
+      ],
+      "status": "authoring_pending",
+      "notes": "Planned hull (s01-hull-plan-2026-10-16). Its data id must also be added to fighter_platform.builds_ships or it exists but cannot be built."
+    },
+    {
+      "binding": "syndicate:colonizer",
+      "category": "construction",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "colonizer"
+      },
+      "manifest": "core:syndicate/colonizer",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "syndicate:command_station",
+      "category": "station",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "command_station",
+        "station_faction": "syndicate"
+      },
+      "manifest": "core:syndicate/command_station",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "syndicate:constructor",
+      "category": "construction",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "constructor"
+      },
+      "manifest": "core:syndicate/constructor",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "syndicate:convoy",
+      "category": "logistics_hull",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "convoy"
+      },
+      "manifest": "core:syndicate/convoy",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "syndicate:corvette",
+      "category": "combat_hull",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "corvette"
+      },
+      "manifest": "core:syndicate/corvette",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "syndicate:cruiser",
+      "category": "combat_hull",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "cruiser"
+      },
+      "manifest": "core:syndicate/cruiser",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "syndicate:defense_platform",
+      "category": "station",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "defense_platform",
+        "station_faction": "syndicate"
+      },
+      "manifest": "core:syndicate/defense_platform",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "syndicate:defense_satellite",
+      "category": "satellite",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "defense_satellite",
+        "station_faction": "syndicate"
+      },
+      "manifest": "core:syndicate/defense_satellite",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "syndicate:energy_relay",
+      "category": "station",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "energy_relay",
+        "station_faction": "syndicate"
+      },
+      "manifest": "core:syndicate/energy_relay",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "syndicate:fighter",
+      "category": "squadron",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "fighter"
+      },
+      "manifest": "core:syndicate/fighter",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "syndicate:fighter_platform",
+      "category": "station",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "fighter_platform",
+        "station_faction": "syndicate"
+      },
+      "manifest": "core:syndicate/fighter_platform",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "syndicate:frigate",
+      "category": "combat_hull",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "frigate"
+      },
+      "manifest": "core:syndicate/frigate",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "syndicate:mining_station",
+      "category": "station",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "mining_station",
+        "station_faction": "syndicate"
+      },
+      "manifest": "core:syndicate/mining_station",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "syndicate:planet_extractor",
+      "category": "planet_installation",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "planet_extractor",
+        "station_faction": "syndicate"
+      },
+      "manifest": "core:syndicate/planet_extractor",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "syndicate:planet_pulsar_cannon",
+      "category": "planet_installation",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "planet_pulsar_cannon",
+        "station_faction": "syndicate"
+      },
+      "manifest": "core:syndicate/planet_pulsar_cannon",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "syndicate:planet_shield_generator",
+      "category": "planet_installation",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "planet_shield_generator",
+        "station_faction": "syndicate"
+      },
+      "manifest": "core:syndicate/planet_shield_generator",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "syndicate:planet_trade_hub",
+      "category": "planet_installation",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "planet_trade_hub",
+        "station_faction": "syndicate"
+      },
+      "manifest": "core:syndicate/planet_trade_hub",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "syndicate:repair_dock",
+      "category": "station",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "repair_dock",
+        "station_faction": "syndicate"
+      },
+      "manifest": "core:syndicate/repair_dock",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "syndicate:research_station",
+      "category": "station",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "research_station",
+        "station_faction": "syndicate"
+      },
+      "manifest": "core:syndicate/research_station",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "syndicate:sensor_station",
+      "category": "station",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "sensor_station",
+        "station_faction": "syndicate"
+      },
+      "manifest": "core:syndicate/sensor_station",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "syndicate:shipyard",
+      "category": "station",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "shipyard",
+        "station_faction": "syndicate"
+      },
+      "manifest": "core:syndicate/shipyard",
+      "status": "procedural_legacy"
+    },
+    {
+      "binding": "syndicate:supercapital",
+      "category": "combat_hull",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "supercapital"
+      },
+      "manifest": "core:syndicate/supercapital",
+      "status": "authoring_pending",
+      "notes": "Planned hull; no gameplay entity or appearance approval is created here."
+    },
+    {
+      "binding": "syndicate:trade_station",
+      "category": "station",
+      "identity": {
+        "faction": "syndicate",
+        "class_or_kind": "trade_station",
+        "station_faction": "syndicate"
+      },
+      "manifest": "core:syndicate/trade_station",
+      "status": "procedural_legacy"
+    }
+  ]
+}

@@ -10,6 +10,9 @@ from OpenGL import GL
 @unittest.skipIf(os.environ.get('SDL_VIDEODRIVER') == 'dummy', 'requires real OpenGL')
 class ShipMaterialPassTests(unittest.TestCase):
     def setUp(self):
+        from render.asset_selection import configure
+        configure({"model_preview": True})
+        self.addCleanup(configure, {})
         from game.core.manager import GameManager
         from game.core.state import PlayerState
         from game.core.vectors import Vec3
@@ -37,6 +40,21 @@ class ShipMaterialPassTests(unittest.TestCase):
         self.addCleanup(self.r.close)
         self.r.diff_render, self.r.time = True, 3.
         self.assertTrue(self.r.materials.available, self.r.materials.error)
+
+    def test_legacy_selection_never_claims_authored_material_treatment(self):
+        from render.asset_selection import configure
+        from render.renderer import Renderer
+        self.r.close()
+        configure({})
+        self.r = Renderer(self.st, self.cam)
+        self.addCleanup(self.r.close)
+        self.r.diff_render, self.r.time = True, 3.
+        with patch.object(self.r.materials, 'hull_pass', wraps=self.r.materials.hull_pass) as calls:
+            self.r.draw(0., set())
+        self.assertTrue(calls.call_args_list)
+        self.assertFalse(any(len(call.args) > 1 and call.args[1]
+                             for call in calls.call_args_list),
+                         'hardcoded identity still selects authored treatment in legacy mode')
 
     def test_authored_surface_removes_hatch_without_changing_default_material(self):
         """Rasterize the actual hull shader; baseline has identical noisy panels."""
