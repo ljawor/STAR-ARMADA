@@ -1,0 +1,20 @@
+--- before/render/faction_ships.py
++++ after/render/faction_ships.py
+@@ -443,6 +443,17 @@
+ 
+ def _alliance_frigate_slice(h):
+     """Compact armored prow, exposed waist, unequal aft pressure-drive pods."""
++    from render.authored_mesh import frigate_mesh
++    try:
++        mesh = frigate_mesh()
++    except (OSError, ValueError, TypeError, KeyError, OverflowError) as exc:
++        import warnings
++        warnings.warn(f'Alliance frigate asset unavailable; using procedural hull: {exc}',
++                      RuntimeWarning, stacklevel=2)
++    else:
++        for role, triangles in mesh.items():
++            h.parts[role].extend(triangles)
++        return
+     h.loft('base', ((-69,5,5,-6),(-31,8,7,-8),(-7,5,6,-6),
+                     (24,5,6,-6),(35,18,8,-8),(56,16,7,-7),(73,6,4,-5)), 2)
+     _capsule(h,'base',6,31,10,(0,11,-21))

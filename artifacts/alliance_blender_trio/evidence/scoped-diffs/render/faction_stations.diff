@@ -1,0 +1,18 @@
+--- before/render/faction_stations.py
++++ after/render/faction_stations.py
+@@ -456,6 +456,15 @@
+ 
+ @lru_cache(maxsize=30)
+ def _station_mesh(faction, kind):
++    if faction == 'rebel' and kind == 'shipyard':
++        from .authored_mesh import shipyard_mesh
++        try:
++            # Authored station is already in the final nominal-radius-50 space.
++            return shipyard_mesh()
++        except (OSError, ValueError, TypeError, KeyError, OverflowError) as exc:
++            import warnings
++            warnings.warn(f'Alliance shipyard asset unavailable; using procedural yard: {exc}',
++                          RuntimeWarning, stacklevel=2)
+     from .fleet_geometry import _Hardware
+     h = _Hardware()
+     {'rebel': _alliance, 'confederacy': _legions, 'syndicate': _syndicate}[faction](h,kind)

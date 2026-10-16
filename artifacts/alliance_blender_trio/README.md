@@ -2,7 +2,7 @@
 
 ## Review first
 
-- `before-after-contact-sheet.jpg` — large, same-camera frigate and shipyard comparisons. Identical crops on both variants; full uncropped originals are in `baseline/` and `candidate/`.
+- `before-after-contact-sheet.jpg` — large, same-camera frigate and shipyard comparisons, identical crops on both variants. The full uncropped per-frame sets are raw capture output and are deliberately **not** committed (see "Scope and limitations"); the crops carry the comparison.
 - `three-asset-review.jpg` — the approved Pelagic battleship, new Tern frigate and new Anchorage yard. Individual detail framing, **not common scale**.
 - `trio-in-game.png` — all three simultaneously in the actual game at common scale.
 - `before-after-aft-drives.jpg` — low aft comparison showing both recessed cyan frigate emitters.
@@ -46,7 +46,7 @@ Source seals:
 - Initial simulation: `549ae8fa52c544d00a46c2b01f35d9dcdffbecdb4b487abb52bcec23eeb2071d`
 - Final simulation: `2a17e3a7454fc746b7323ff40e1acd9291c616d7b30573b2f7d34b652c35c607`
 
-`verification.json` holds complete receipts and quality/context details. `evidence/` contains capture/probe workflows and build/test logs. Sealed source copies and complete capture intermediates remain in `/Users/lukaszjawor/.hermes/cache/scratch/graphics-blender-trio/` for immediate parent review; scratch is not permanent archival storage.
+`verification.json` holds complete receipts and quality/context details. `evidence/` contains the committed capture/probe workflows, the retained RED/GREEN logs, scoped source diffs and the per-tick motion records; `pixel-checks/` holds the per-worklight controls. Sealed source copies and the remaining capture intermediates are not part of the repository — they live only in an ephemeral local scratch directory and are **not** the source of truth for any claim above.
 
 ## Scope and limitations
 
@@ -54,4 +54,4 @@ Only pre-existing files changed during this task: `render/authored_mesh.py`, the
 
 An initial extra-view harness run omitted the final tactical camera key, and an isolated subprocess import test initially lacked inherited PYTHONPATH. These were harness defects, fixed without production changes; failed receipts were retained in scratch. Existing low-aft background/horizon artifacts were not altered.
 
-macOS real-driver evidence only; Windows not run. Specimens use actual factory entities and real combat commands, not a paid construction walkthrough. No LAN investigation, full-suite claim, catalogue rollout, commit, push, merge or release. Appearance approval remains with the owner.
+macOS real-driver evidence only; Windows not run. Specimens use actual factory entities and real combat commands, not a paid construction walkthrough. No LAN investigation, full-suite claim, catalogue rollout, merge or release. Appearance approval was subsequently recorded and this work preserved as the S00 checkpoint — see `art/manifests/handoffs/S00-PRESERVATION.md` and `art/manifests/approvals.json`; the no-merge/no-rollout statement still stands.

@@ -1,0 +1,2 @@
+child native write return=1; sentinel unchanged
+/bin/sh: /Users/lukaszjawor/.hermes/cache/scratch/graphics-blender-trio/sandbox-canary/protected: Operation not permitted
