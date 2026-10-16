@@ -37,6 +37,16 @@ Read `art/blender/README.md` critically: its initial battleship-only notes preda
 
 Catalogue data currently contains 37 ship definitions (Imperial 10, Alliance/rebel 10, Confederacy 10, Syndicate 7), 16 station definitions and four faction records. Syndicate is currently non-playable. **These are data-entry counts, not a complete mesh workload.** Shared types, faction-specific station variants, squadrons, transports, planet hardware, previews and campaign props require a rendered-model inventory. Do not multiply these counts and invent a final asset total.
 
+### 2.1 Partial delivery checkpoint — October 16, 2026
+
+The observations and local-only warning above are the **historical document-creation baseline**, not the current storage status. The approved trio has since been durably published in **draft PR #114**, head `313f9683e9e7e4f376b05cedaeb28bb2dd300c9f`. All 38 checkpoint blobs were read back and verified against the preserved local inputs. Its sources, exports, authoring tools, runtime integration, selected evidence and `art/manifests/handoffs/S00-PRESERVATION.md` travel together. The original 23-source-asset preservation manifest remains retained separately; no model is discarded by the performance split.
+
+**S00 is in progress: draft published, not complete.** PR #114 remains draft and unmerged; publication is not broad engineering acceptance, a generic registry, or final default cutover. Read its exact head and handoff before continuing. Do not infer that `main` or this performance-only branch contains the trio.
+
+PR #113 is the separate **performance-only partial integration planned for parent-controlled merge after verification**. It retains the first two performance passes and adds draw-local reuse, portable regressions, a feature-branch version bump to `0.15.1`, and `GRAPHICS_DRAW_SCOPE_REUSE.md` / `GRAPHICS_DRAW_SCOPE_EVIDENCE.json`. No art/model/material files enter that performance change. Its receipt explicitly distinguishes immutable performance-only suite results from the earlier art-integrated full-suite failure and retained stock-combat frozen-control nondeterminism. The exact pushed performance head and current CI are read back separately; the parent publishes the exact post-merge receipt only if authorized and completed.
+
+S01–S10 remain gated as below. **S11 is not done or authorized**: neither draft preservation nor a performance partial merge switches the catalogue default. No release or tag is part of this checkpoint.
+
 ## 3. Scope and invariants
 
 ### 3.1 What “all models” means
@@ -317,4 +327,17 @@ This table is the initial planning state, **not implementation completion**. Fut
 | S10 | Not started | Final owner asset lock and switch authorization |
 | S11 | Not started | Last step only: verified, reversible default switch |
 
+The following sentence is retained as the initial next-task instruction, not current local-only status:
+
 **Next chat task: S00, not a new model batch and not S11.** Read the dirty working tree and approved trio evidence, publish the coherent sources without bundling unrelated work, and write the first durable handoff. The roadmap commit alone must remain documentation-only.
+
+### 8.1 Current partial-delivery ledger
+
+| Workstream | Current state | Next gate |
+|---|---|---|
+| S00 preservation | **In progress; draft PR #114 published** at `313f9683e9e7e4f376b05cedaeb28bb2dd300c9f`; remote checkpoint blobs verified | Read `S00-PRESERVATION.md`, retain known art-integrated acceptance debt; review/integration remain separate |
+| Performance-only PR #113 | Third draw-local pass prepared separately; partial merge planned only after exact-head verification and parent authorization | Read draw-scope evidence and current CI; parent records actual merge receipt, never infer a merge from this plan |
+| S01–S10 | Not completed by either checkpoint | Follow dependencies, per-model owner approval and platform/package gates |
+| S11 | **Not started, not authorized, not done** | Final explicit owner-controlled catalogue switch only after S10 |
+
+**Current next task:** finish the bounded performance-only verification/delivery, keeping PR #114 draft and unmerged; then continue S00 from its durable checkpoint, not by reconstructing or deleting local models. No new catalogue batch, production cutover, tag or release is included.
