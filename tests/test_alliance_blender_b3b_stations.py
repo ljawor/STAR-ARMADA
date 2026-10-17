@@ -279,9 +279,20 @@ class GeometryContract(unittest.TestCase):
         with a bare `AssertionError: <count>`. The floor is what stops a hull shipping as a
         degenerate box, so the batch gained a real detail layer instead of a relaxed guard.
         """
-        template = (ROOT / 'tools/art/templates/export_wrapper.tmpl').read_text(encoding='utf-8')
-        self.assertIn(f'1_800 < asset[\'triangle_count\']', template,
+        # The floor is generated into each wrapper from the template's default expansion - the
+        # template itself carries a slot, so that a declared small prop can carry a floor of its own
+        # without moving this one. What matters here is that the wrapper these rows are exported by
+        # still refuses at 1,800.
+        generator = (ROOT / 'tools/art/gen_export_wrappers.py').read_text(encoding='utf-8')
+        self.assertIn("assert 1_800 < asset['triangle_count']", generator,
                       'the floor moved: re-check what this batch was authored against')
+        for asset in ASSETS:
+            with self.subTest(binding=asset['binding']):
+                wrapper = (ROOT / f"tools/art/export_{asset['binding'].split(':')[1]}.py")
+                if wrapper.exists():
+                    self.assertIn("assert 1_800 < asset['triangle_count']",
+                                  wrapper.read_text(encoding='utf-8'),
+                                  'this row is exported by a wrapper with a moved floor')
         for asset in ASSETS:
             with self.subTest(binding=asset['binding']):
                 payload = payload_of(asset)

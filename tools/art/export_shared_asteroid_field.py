@@ -23,8 +23,9 @@ IDENTIFIER = 'shared_asteroid_field'
 # the drawn length, camera framing and collision radius stay as they are today.
 ENVELOPE = ((-0.58, 0.58), (-0.46, 0.46), (-0.58, 0.58))
 MIN_LENGTH = 0.9
-# The asset's own floor. 1,800 for hulls and structures; a declared small prop - the renderer draws
-# it many times per frame - carries its own, per the owner decision `s06-small-prop-class-2026-10-17`.
+# A declared small prop (owner decision `s06-small-prop-class-2026-10-17`): the renderer
+# draws this asset many times per frame, so it is built with the surface density of the
+# thing it replaces rather than of a station. Its floor is 120 triangles.
 MIN_TRIANGLES = 120
 MAX_TRIANGLES = 600
 MAX_VERTICES = 500

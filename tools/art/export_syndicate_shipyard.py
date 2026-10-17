@@ -23,9 +23,6 @@ IDENTIFIER = 'syndicate_shipyard'
 # the drawn length, camera framing and collision radius stay as they are today.
 ENVELOPE = ((-52.1606, 46.9468), (-18.9928, 45.6), (-53.6606, 48.4056))
 MIN_LENGTH = 101.9
-# The asset's own floor. 1,800 for hulls and structures; a declared small prop - the renderer draws
-# it many times per frame - carries its own, per the owner decision `s06-small-prop-class-2026-10-17`.
-MIN_TRIANGLES = 1800
 MAX_TRIANGLES = 11500
 MAX_VERTICES = 8000
 MAX_BYTES = 2_000_000
@@ -80,7 +77,7 @@ def main():
                coordinates='X beam; Y up; +Z forward',vertices=vertices,batches=batches,
                bounds=[lo,hi],parts=parts,triangle_count=sum(map(len,batches.values())),
                features=json.loads(bpy.context.scene['features_json']))
-    assert MIN_TRIANGLES < asset['triangle_count'] <= MAX_TRIANGLES,asset['triangle_count']
+    assert 1_800 < asset['triangle_count'] <= MAX_TRIANGLES,asset['triangle_count']
     assert len(vertices)<=MAX_VERTICES,len(vertices)
     assert hi[2]-lo[2] >= MIN_LENGTH, (IDENTIFIER, hi[2]-lo[2])
     payload=json.dumps(asset,separators=(',',':'),allow_nan=False)+'\n'

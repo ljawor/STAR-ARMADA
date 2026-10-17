@@ -352,8 +352,10 @@ class GeometryContract(unittest.TestCase):
         below the station it replaces reads thin - so both bars are asserted, and the second
         one is measured against the live legacy mesh rather than a transcribed number.
         """
-        template = (ROOT / 'tools/art/templates/export_wrapper.tmpl').read_text(encoding='utf-8')
-        self.assertIn(f"1_800 < asset['triangle_count']", template,
+        # See the B3b module: the floor is generated into each wrapper from the template's default
+        # expansion, which is what this batch was authored against.
+        generator = (ROOT / 'tools/art/gen_export_wrappers.py').read_text(encoding='utf-8')
+        self.assertIn("assert 1_800 < asset['triangle_count']", generator,
                       'the floor moved: re-check what this batch was authored against')
         from render.faction_stations import station_mesh
         for asset in ASSETS:

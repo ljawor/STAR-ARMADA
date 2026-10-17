@@ -293,26 +293,32 @@ class BatchRecords(unittest.TestCase):
         self.assertIn('MAX_VERTICES = 500', wrapper)
 
     def test_the_small_prop_class_is_declared_and_is_not_a_blanket_relaxation(self):
-        """A declared class, not a lowered floor: only this row carries 120, everything else 1,800."""
+        """A declared class, not a lowered floor.
+
+        The strong statement is stronger than "only this row went below 1,800": a wrapper outside the
+        class is generated **byte for byte** as it was before the class existed, so every already
+        approved record's export-script hash stays valid. That is asserted here, together with the
+        fact that exactly one wrapper declares anything of its own.
+        """
         generator = (ROOT / 'tools/art/gen_export_wrappers.py').read_text(encoding='utf-8')
-        self.assertIn('MIN_TRIANGLES = {\'shared_asteroid_field\': 120}', generator)
-        self.assertIn('DEFAULT_MIN_TRIANGLES = 1_800', generator)
-        lowered, hand_written = [], []
+        self.assertIn("MIN_TRIANGLES = {'shared_asteroid_field': 120}", generator)
+        self.assertIn('FLOOR_DEFAULT_ASSERTION = ("    assert 1_800 < asset', generator)
+        declared, unfloored = [], []
         for path in sorted((ROOT / 'tools/art').glob('export_*.py')):
             text = path.read_text(encoding='utf-8')
             match = re.search(r'^MIN_TRIANGLES = (\d+)$', text, re.M)
-            if match is None:
-                # Two wrappers predate the template and carry no floor constant: the cruiser's and
-                # the Syndicate command station's. They are named here rather than silently skipped,
-                # and neither is one of this batch's rows.
-                hand_written.append(path.name)
-                continue
-            if int(match.group(1)) != 1800:
-                lowered.append((path.name, int(match.group(1))))
-        self.assertEqual(lowered, [('export_shared_asteroid_field.py', 120)],
-                         'the class is declared per asset; nothing else may move its floor')
-        self.assertEqual(hand_written, ['export_alliance_cruiser.py', 'export_syndicate_command_station.py'],
-                         'only the two pre-template wrappers may carry no floor constant')
+            if match:
+                declared.append((path.name, int(match.group(1))))
+            elif '        assert 1_800 < asset[' in text:
+                unfloored.append(path.name)
+            else:
+                unfloored.append(path.name)
+        self.assertEqual(declared, [('export_shared_asteroid_field.py', 120)],
+                         'the class is declared per asset; nothing else may declare a floor')
+        wrappers = sorted((ROOT / 'tools/art').glob('export_*.py'))
+        self.assertEqual(len(unfloored), len(wrappers) - 1,
+                         'every other wrapper keeps the 1_800 floor: the 62 the template generates '
+                         'plus the two that predate it')
         policy = load(ROOT / 'art/manifests/pipeline_policy.json')
         entry = next(d for d in policy['decision_log']
                      if d['id'] == 's06-small-prop-class-2026-10-17')

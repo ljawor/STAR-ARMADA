@@ -17,8 +17,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 TEMPLATE_PATH = ROOT / 'tools/art/templates/export_wrapper.tmpl'
 FIRST_LINE = '#!/usr/bin/env python3'
-SLOTS = ('@@IDENTIFIER@@', '@@LABEL@@', '@@ENVELOPE@@', '@@MIN_LENGTH@@', '@@MIN_TRIANGLES@@',
-         '@@MAX_TRIANGLES@@', '@@MAX_VERTICES@@', '@@MAX_BYTES@@')
+SLOTS = ('@@IDENTIFIER@@', '@@LABEL@@', '@@ENVELOPE@@', '@@MIN_LENGTH@@', '@@FLOOR_DECLARATION@@',
+         '@@FLOOR_ASSERTION@@', '@@MAX_TRIANGLES@@', '@@MAX_VERTICES@@', '@@MAX_BYTES@@')
+# A wrapper outside the small-prop class is generated **byte for byte** as it was before the class
+# existed: no new constant, the original assert. Only a row that declares a floor of its own differs,
+# which is what keeps every already-approved record's export-script hash valid.
+FLOOR_DEFAULT_ASSERTION = ("    assert 1_800 < asset['triangle_count'] <= MAX_TRIANGLES,"
+                           "asset['triangle_count']")
 # The floor is 1,800 triangles for hulls and structures. A *declared* small prop - one the renderer
 # draws many times per frame - carries its own floor instead; a unit rock drawn forty times per field
 # cannot be built with the surface density a station needs. Owner decision `s06-small-prop-class-2026-10-17`.
@@ -133,12 +138,22 @@ def template():
 
 def render(identifier):
     label, envelope, min_length, max_triangles, max_vertices, max_bytes = ASSETS[identifier]
+    floor = MIN_TRIANGLES.get(identifier)
+    if floor is None:
+        floor_declaration, floor_assertion = '', FLOOR_DEFAULT_ASSERTION
+    else:
+        floor_declaration = (
+            "# A declared small prop (owner decision `s06-small-prop-class-2026-10-17`): the renderer\n"
+            "# draws this asset many times per frame, so it is built with the surface density of the\n"
+            f"# thing it replaces rather than of a station. Its floor is {floor} triangles.\n"
+            f"MIN_TRIANGLES = {floor}\n")
+        floor_assertion = ("    assert MIN_TRIANGLES < asset['triangle_count'] <= MAX_TRIANGLES,"
+                           "asset['triangle_count']")
     text = template()
     for token, value in (('@@IDENTIFIER@@', identifier), ('@@LABEL@@', label),
                          ('@@ENVELOPE@@', repr(envelope)), ('@@MIN_LENGTH@@', repr(min_length)),
-                         ('@@MIN_TRIANGLES@@', repr(MIN_TRIANGLES.get(identifier,
-                                                                     DEFAULT_MIN_TRIANGLES))),
-                         ('@@MAX_TRIANGLES@@', repr(max_triangles)), ('@@MAX_VERTICES@@', repr(max_vertices)),
+                         ('@@FLOOR_DECLARATION@@', floor_declaration),
+                         ('@@FLOOR_ASSERTION@@', floor_assertion),                         ('@@MAX_TRIANGLES@@', repr(max_triangles)), ('@@MAX_VERTICES@@', repr(max_vertices)),
                          ('@@MAX_BYTES@@', '{:,}'.format(max_bytes).replace(',', '_'))):
         assert token in text, token
         text = text.replace(token, value)

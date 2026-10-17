@@ -21,8 +21,8 @@
   },
   "export_script": {
     "path": "tools/art/export_shared_asteroid_field.py",
-    "sha256": "dd51e9586ad1c97db972c27b98bea8deda5bee3ebf1f4d05699945f4ecbb7a62",
-    "bytes": 4988
+    "sha256": "f7bad0a2df2a47dbcab4ef547072a9c9f46e8da58b03db5d28cc88625616f9db",
+    "bytes": 5036
   },
   "runtime": {
     "path": "assets/models/shared_asteroid_field.mesh.json",
