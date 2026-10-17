@@ -325,7 +325,8 @@ def build_mining_station(limits, treatment):
     elif treatment == 'legion':
         torus('01 Keel hull', 'dark', float(lo[1] + 4.5), rz * .52, 4.4,
               sx=rx * .42 / (rz * .52), sz=1.0, cz=c[2], bevel=.4)
-        plate('02 Spine deck', 'trim', (rx * 1.06, 1.6, span[2] * .72), (0., -.6, 2.0), .3)
+        # The deck reaches the ram's rear face, in the keel's own frame.
+        plate('02 Spine deck', 'trim', (rx * 1.06, 1.6, span[2] * .9), (0., -.6, c[2]), .3)
         plate('03 Ore silo', 'dark', (13.0, span[1] * .44, 15.0),
               (0., lo[1] + 4.0 + span[1] * .22, -rz * .1), 1.0)
         plate('04 Silo belt', 'accent', (14.0, 1.6, 16.0),
@@ -351,10 +352,12 @@ def build_mining_station(limits, treatment):
               .3)
         bays(limits, rx * .5, rz * .6, .0, c[2], .04)
     else:  # syndicate
-        plate('01 Rig deck', 'trim', (span[0] * .78, 1.8, span[2] * .8), (c[0] * .2, .0, c[2]),
+        # The rig deck and its hardware sit on the keel rail, not at world Y=0.
+        rig_y = lo[1] + 5.0
+        plate('01 Rig deck', 'trim', (span[0] * .78, 1.8, span[2] * .8), (c[0] * .2, rig_y, c[2]),
               .3)
         plate('02 Deck plate', 'dark', (span[0] * .5, 1.2, span[2] * .46),
-              (c[0] * .2, -1.3, -2.0), .2)
+              (c[0] * .2, rig_y - 1.3, -2.0), .2)
         # The lateral outrigger is what reaches the footprint's wide axis: this legacy extent
         # is asymmetric (-33.93 .. 42.40), so it is centred on c[0], not on the origin.
         plate('02 Outrigger beam', 'trim', (span[0], 1.6, span[2] * .22), (c[0], lo[1] + 1.0, c[2]),
@@ -363,7 +366,7 @@ def build_mining_station(limits, treatment):
             plate(f'02 Beam pad {label}', 'dark', (3.6, 3.4, 3.6),
                   (c[0] + side * (span[0] / 2 - 1.9), lo[1] + 1.7, c[2]), .4)
         for side, label in ((-1, 'left'), (1, 'right')):
-            strut(f'03 Derrick leg {label}', 'trim', (side * 6.0, 1.0, -rz * .3),
+            strut(f'03 Derrick leg {label}', 'trim', (side * 6.0, rig_y + 1.0, -rz * .3),
                   (side * 9.6, hi[1] - 2.6, rz * .3), .9, .9, .2)
         plate('04 Derrick head', 'dark', (21.0, 3.0, 3.4), (0., hi[1] - 1.5, rz * .3), .5)
         plate('05 Drill string', 'trim', (1.6, 8.4, 1.6), (0., hi[1] - 11.0, rz * .3), .3)
@@ -371,19 +374,19 @@ def build_mining_station(limits, treatment):
         plate('07 Drill tip', 'cool', (1.4, 2.0, 1.4), (0., hi[1] - 19.6, rz * .3), .3)
         for side, label in ((-1, 'left'), (1, 'right')):
             plate(f'08 Ore drum {label}', 'dark', (7.0, 7.0, 8.6),
-                  (side * (span[0] * .3), 2.6, lo[2] + 5.4), .8)
+                  (side * (span[0] * .3), rig_y + 2.6, lo[2] + 5.4), .8)
             ringy(f'09 Drum band {label}', 'accent', side * (span[0] * .3), lo[2] + 5.4,
-                  5.6, 3.9, 3.0, 1.2, n=12)
-        strut('10 Hab arm', 'trim', (6.0, 2.0, -rz * .5), (rx - .8, 4.0, -rz * .62), .7, .7, .2)
-        plate('11 Hab cab', 'dark', (6.6, 5.0, 6.6), (rx - 1.6, 3.4, -rz * .62), .6)
-        plate('12 Cab lights', 'lit', (3.4, 1.2, 1.4), (rx - 1.6, 6.1, -rz * .62), .3)
-        bank('13 Cable run', 'cool', 5, (1.2, 1.2, 6.4), (-9.0, 2.4, -rz * .6), (4.6, 0., 0.))
+                  rig_y + 5.6, 3.9, 3.0, 1.2, n=12)
+        strut('10 Hab arm', 'trim', (6.0, rig_y + 2.0, -rz * .5), (rx - .8, rig_y + 4.0, -rz * .62), .7, .7, .2)
+        plate('11 Hab cab', 'dark', (6.6, 5.0, 6.6), (rx - 1.6, rig_y + 3.4, -rz * .62), .6)
+        plate('12 Cab lights', 'lit', (3.4, 1.2, 1.4), (rx - 1.6, rig_y + 6.1, -rz * .62), .3)
+        bank('13 Cable run', 'cool', 5, (1.2, 1.2, 6.4), (-9.0, rig_y + 2.4, -rz * .6), (4.6, 0., 0.))
         plate('14 Scaffold rail', 'trim', (span[0] * .34, .8, span[2]),
               (c[0] * .2, lo[1] + .5, c[2]), .2)
         for i in range(4):
             plate(f'15 Rail post {i}', 'trim', (.8, 4.4, .8),
                   (c[0] * .2 - 6.0 + i * 4.0, lo[1] + 2.8, c[2] - rz * .82), .2)
-        bays(limits, span[0] * .34, span[2] * .34, .0, c[2], .07)
+        bays(limits, span[0] * .34, span[2] * .34, rig_y, c[2], .07)
 
 
 # ---------------------------------------------------------------- sensor station
@@ -454,8 +457,11 @@ def build_sensor_station(limits, treatment):
             plate(f'05 Dish brace {i}', 'accent', (1.6, 4.4, 1.6),
                   (c[0] * .2 + side * (3.0 + i * 3.6), 8.4 + i * 1.4, -rz * .5 + i * rz * .46),
                   .3)
-        plate('06 Mast', 'trim', (1.8, hi[1] - 12.0, 1.8),
-              (c[0] * .2, (hi[1] - 12.0) / 2 + 4.0, hi[2] - 2.6), .3)
+        # One mast runs from its keel seat to the underside of its own head.
+        # The former origin-based mast stopped below the detached head cluster.
+        mast_bottom, mast_top = lo[1] + 1.6, hi[1] - 4.4
+        plate('06 Mast', 'trim', (1.8, mast_top - mast_bottom, 1.8),
+              (c[0] * .2, (mast_top + mast_bottom) / 2, hi[2] - 2.6), .3)
         plate('07 Mast head', 'dark', (4.6, 3.6, 4.6), (c[0] * .2, hi[1] - 2.6, hi[2] - 2.6), .5)
         plate('08 Head grid', 'lit', (3.2, 1.0, 3.2), (c[0] * .2, hi[1] - .8, hi[2] - 2.6), .3)
         plate('09 Keel spar', 'dark', (span[0] * .3, 1.6, span[2]), (c[0] * .2, lo[1] + .8, c[2]),
@@ -538,9 +544,10 @@ def build_energy_relay(limits, treatment):
             strut(f'08 Cable run {label}', 'cool', (side * 5.0, -1.0, -rz * .6),
                   (side * 5.0, 3.0, rz * .6), .6, .6, .2)
             plate(f'09 Relay pod {label}', 'dark', (5.4, 4.6, 5.4),
-                  (side * (rx - 3.6), -6.0, rz * .68 + c[2] * .3), .5)
+                  # Pods bolt under the transverse truss, whose centreline is Z=0.
+                  (side * (rx - 3.6), 1.2 - 1.6 / 2 - 4.6 / 2, 0.), .5)
             plate(f'10 Pod grid {label}', 'lit', (3.6, 1.0, 3.6),
-                  (side * (rx - 3.6), -8.4, rz * .68 + c[2] * .3), .3)
+                  (side * (rx - 3.6), 1.2 - 1.6 / 2 - 4.6 - .5, 0.), .3)
         plate('11 Keel spar', 'dark', (span[0] * .5, 1.4, span[2]), (c[0] * .2, lo[1] + .7, c[2]),
               .2)
         bank('12 Coolant drums', 'cool', 3, (4.6, 4.4, 4.6),

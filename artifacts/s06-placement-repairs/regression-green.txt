@@ -1,0 +1,7 @@
+test_five_assets_need_no_scaffold_to_reach_their_host (test_s06_placement_repairs.PlacementRepairs.test_five_assets_need_no_scaffold_to_reach_their_host) ... ok
+test_guard_rejects_displacement_even_with_a_weld_between_parts (test_s06_placement_repairs.PlacementRepairs.test_guard_rejects_displacement_even_with_a_weld_between_parts) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 4.076s
+
+OK

@@ -15,8 +15,8 @@
   },
   "initial_seed": {
     "path": "tools/art/build_b3b_stations.py",
-    "sha256": "5e183c56d12bfe11c18bdcfa2227c99fde1dfa9edd30f1d5ff72d8f68d8f92dc",
-    "bytes": 34801,
+    "sha256": "922fcabcafb207e312180e672d0a95001900618e231260d5a939815bcbf951d5",
+    "bytes": 35373,
     "selects": "--asset rebel:mining_station"
   },
   "export_script": {

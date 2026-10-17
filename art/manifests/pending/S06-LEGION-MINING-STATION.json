@@ -10,13 +10,13 @@
   "authority": "blend",
   "source": {
     "path": "art/blender/legion_mining_station.blend",
-    "sha256": "ebacae39583930f5b7d824a2f44734e7499db826ce52cd8baee50186495474b0",
-    "bytes": 147400
+    "sha256": "504982f86b6b6f078c1d69863d8bfec38e8eb1e003907bb704263a427cf3b9f5",
+    "bytes": 146958
   },
   "initial_seed": {
     "path": "tools/art/build_b3b_stations.py",
-    "sha256": "5e183c56d12bfe11c18bdcfa2227c99fde1dfa9edd30f1d5ff72d8f68d8f92dc",
-    "bytes": 34801,
+    "sha256": "922fcabcafb207e312180e672d0a95001900618e231260d5a939815bcbf951d5",
+    "bytes": 35373,
     "selects": "--asset confederacy:mining_station"
   },
   "export_script": {
@@ -26,10 +26,10 @@
   },
   "runtime": {
     "path": "assets/models/legion_mining_station.mesh.json",
-    "sha256": "c04d23d84ab8916e5fb4e6a6efffe454f148349844779557e241bee400236bfb",
-    "bytes": 290934,
-    "triangles": 4280,
-    "vertices": 2312,
+    "sha256": "32bb2c2b72ac9dacee83ae841d3e5ecf6b0e7c4246ee4e99f0548b28d9695d8f",
+    "bytes": 290352,
+    "triangles": 4268,
+    "vertices": 2304,
     "roles": [
       "accent",
       "base",

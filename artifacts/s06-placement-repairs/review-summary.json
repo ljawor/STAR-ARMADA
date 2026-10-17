@@ -1,0 +1,589 @@
+{
+  "b1-alliance-combat": {
+    "files": 37,
+    "source_preserved": true,
+    "protected_files_preserved": true,
+    "production_candidates_unselected_after_review": true,
+    "display": {
+      "gl": {
+        "renderer": "Apple M4",
+        "vendor": "Apple",
+        "version": "2.1 Metal - 90.5"
+      },
+      "samples": 4,
+      "viewport": [
+        0,
+        0,
+        1280,
+        800
+      ]
+    },
+    "overview_changed_pixels": 19342,
+    "captures": {
+      "rebel:corvette": {
+        "restored_changed_pixels": 0,
+        "close_changed_pixels": 91632,
+        "roles": {
+          "accent": {
+            "bbox": [
+              460,
+              267,
+              867,
+              476
+            ],
+            "camera": "close",
+            "changed_pixels": 2247
+          },
+          "cool": {
+            "bbox": [
+              516,
+              557,
+              783,
+              580
+            ],
+            "camera": "rear",
+            "changed_pixels": 705
+          },
+          "dark": {
+            "bbox": [
+              411,
+              257,
+              894,
+              531
+            ],
+            "camera": "close",
+            "changed_pixels": 6454
+          }
+        },
+        "motion": {
+          "after_video": "corvette-after-motion.mp4",
+          "before_video": "corvette-before-motion.mp4",
+          "final_state_sha256": "e17a4dd045b3ebc5000b6621d292bc09f8daf507755fe1aac6eb3674691fbcee",
+          "fps": 30,
+          "frames": 150,
+          "paired_samples_equal": true,
+          "seconds": 5
+        },
+        "repeat_changed_pixels": {
+          "after-close": 0,
+          "after-common-scale": 0,
+          "after-rear": 0,
+          "after-tactical": 0,
+          "before-close": 0,
+          "before-common-scale": 0,
+          "before-rear": 0,
+          "before-tactical": 0
+        }
+      },
+      "rebel:supercapital": {
+        "restored_changed_pixels": 0,
+        "close_changed_pixels": 179205,
+        "roles": {
+          "accent": {
+            "bbox": [
+              514,
+              265,
+              871,
+              425
+            ],
+            "camera": "close",
+            "changed_pixels": 577
+          },
+          "cool": {
+            "bbox": [
+              505,
+              440,
+              803,
+              464
+            ],
+            "camera": "rear",
+            "changed_pixels": 2443
+          },
+          "dark": {
+            "bbox": [
+              388,
+              262,
+              888,
+              538
+            ],
+            "camera": "close",
+            "changed_pixels": 14245
+          }
+        },
+        "motion": {
+          "after_video": "carrier-after-motion.mp4",
+          "before_video": "carrier-before-motion.mp4",
+          "final_state_sha256": "1c9118efa436ab8db33b64aac2d165136aa0e053b194bddd1dbc4418a165948f",
+          "fps": 30,
+          "frames": 150,
+          "paired_samples_equal": true,
+          "seconds": 5
+        },
+        "repeat_changed_pixels": {
+          "after-close": 0,
+          "after-common-scale": 0,
+          "after-rear": 0,
+          "after-tactical": 0,
+          "before-close": 0,
+          "before-common-scale": 0,
+          "before-rear": 0,
+          "before-tactical": 0
+        }
+      }
+    }
+  },
+  "b3b-stations": {
+    "files": 117,
+    "source_preserved": true,
+    "protected_files_preserved": true,
+    "production_candidates_unselected_after_review": true,
+    "display": {
+      "gl": {
+        "renderer": "Apple M4",
+        "vendor": "Apple",
+        "version": "2.1 Metal - 90.5"
+      },
+      "samples": 4,
+      "viewport": [
+        0,
+        0,
+        1280,
+        800
+      ]
+    },
+    "overview_changed_pixels": 23328,
+    "captures": {
+      "confederacy:energy_relay": {
+        "restored_changed_pixels": 0,
+        "close_changed_pixels": 284849,
+        "roles": {
+          "accent": {
+            "bbox": [
+              417,
+              177,
+              793,
+              557
+            ],
+            "camera": "close",
+            "changed_pixels": 15183
+          },
+          "cool": {
+            "bbox": [
+              514,
+              343,
+              794,
+              504
+            ],
+            "camera": "rear",
+            "changed_pixels": 5175
+          },
+          "dark": {
+            "bbox": [
+              340,
+              239,
+              848,
+              666
+            ],
+            "camera": "close",
+            "changed_pixels": 50886
+          }
+        },
+        "motion": null,
+        "repeat_changed_pixels": {
+          "after-close": 0,
+          "after-common-scale": 0,
+          "after-rear": 0,
+          "after-tactical": 0,
+          "before-close": 0,
+          "before-common-scale": 0,
+          "before-rear": 0,
+          "before-tactical": 0
+        }
+      },
+      "confederacy:mining_station": {
+        "restored_changed_pixels": 0,
+        "close_changed_pixels": 411278,
+        "roles": {
+          "accent": {
+            "bbox": [
+              277,
+              370,
+              785,
+              704
+            ],
+            "camera": "close",
+            "changed_pixels": 2813
+          },
+          "cool": {
+            "bbox": [
+              529,
+              318,
+              731,
+              396
+            ],
+            "camera": "rear",
+            "changed_pixels": 4689
+          },
+          "dark": {
+            "bbox": [
+              282,
+              303,
+              813,
+              799
+            ],
+            "camera": "close",
+            "changed_pixels": 58693
+          }
+        },
+        "motion": null,
+        "repeat_changed_pixels": {
+          "after-close": 0,
+          "after-common-scale": 0,
+          "after-rear": 0,
+          "after-tactical": 0,
+          "before-close": 0,
+          "before-common-scale": 0,
+          "before-rear": 0,
+          "before-tactical": 0
+        }
+      },
+      "confederacy:sensor_station": {
+        "restored_changed_pixels": 0,
+        "close_changed_pixels": 108434,
+        "roles": {
+          "accent": {
+            "bbox": [
+              442,
+              297,
+              714,
+              571
+            ],
+            "camera": "close",
+            "changed_pixels": 718
+          },
+          "cool": {
+            "bbox": [
+              575,
+              207,
+              710,
+              451
+            ],
+            "camera": "rear",
+            "changed_pixels": 3629
+          },
+          "dark": {
+            "bbox": [
+              456,
+              319,
+              743,
+              546
+            ],
+            "camera": "close",
+            "changed_pixels": 16195
+          }
+        },
+        "motion": null,
+        "repeat_changed_pixels": {
+          "after-close": 0,
+          "after-common-scale": 0,
+          "after-rear": 0,
+          "after-tactical": 0,
+          "before-close": 0,
+          "before-common-scale": 0,
+          "before-rear": 0,
+          "before-tactical": 0
+        }
+      },
+      "rebel:energy_relay": {
+        "restored_changed_pixels": 0,
+        "close_changed_pixels": 195873,
+        "roles": {
+          "accent": {
+            "bbox": [
+              537,
+              329,
+              774,
+              464
+            ],
+            "camera": "close",
+            "changed_pixels": 3761
+          },
+          "cool": {
+            "bbox": [
+              353,
+              322,
+              917,
+              421
+            ],
+            "camera": "rear",
+            "changed_pixels": 3808
+          },
+          "dark": {
+            "bbox": [
+              417,
+              276,
+              948,
+              594
+            ],
+            "camera": "close",
+            "changed_pixels": 26174
+          }
+        },
+        "motion": null,
+        "repeat_changed_pixels": {
+          "after-close": 0,
+          "after-common-scale": 0,
+          "after-rear": 0,
+          "after-tactical": 0,
+          "before-close": 0,
+          "before-common-scale": 0,
+          "before-rear": 0,
+          "before-tactical": 0
+        }
+      },
+      "rebel:mining_station": {
+        "restored_changed_pixels": 0,
+        "close_changed_pixels": 250947,
+        "roles": {
+          "accent": {
+            "bbox": [
+              582,
+              324,
+              773,
+              515
+            ],
+            "camera": "close",
+            "changed_pixels": 3753
+          },
+          "cool": {
+            "bbox": [
+              386,
+              333,
+              836,
+              433
+            ],
+            "camera": "rear",
+            "changed_pixels": 3393
+          },
+          "dark": {
+            "bbox": [
+              376,
+              321,
+              845,
+              663
+            ],
+            "camera": "close",
+            "changed_pixels": 26481
+          }
+        },
+        "motion": {
+          "after_video": "alliance mining station-after-motion.mp4",
+          "before_video": "alliance mining station-before-motion.mp4",
+          "final_state_sha256": "fc597515eca1a029934ca3e5473049d4ce6a92daff2a3f16157d6fad34bd0626",
+          "fps": 30,
+          "frames": 150,
+          "paired_samples_equal": true,
+          "seconds": 5
+        },
+        "repeat_changed_pixels": {
+          "after-close": 0,
+          "after-common-scale": 0,
+          "after-rear": 0,
+          "after-tactical": 0,
+          "before-close": 0,
+          "before-common-scale": 0,
+          "before-rear": 0,
+          "before-tactical": 0
+        }
+      },
+      "rebel:sensor_station": {
+        "restored_changed_pixels": 0,
+        "close_changed_pixels": 95128,
+        "roles": {
+          "accent": {
+            "bbox": [
+              571,
+              362,
+              732,
+              448
+            ],
+            "camera": "close",
+            "changed_pixels": 1625
+          },
+          "cool": {
+            "bbox": [
+              582,
+              340,
+              704,
+              413
+            ],
+            "camera": "rear",
+            "changed_pixels": 1037
+          },
+          "dark": {
+            "bbox": [
+              494,
+              256,
+              828,
+              542
+            ],
+            "camera": "close",
+            "changed_pixels": 9524
+          }
+        },
+        "motion": null,
+        "repeat_changed_pixels": {
+          "after-close": 0,
+          "after-common-scale": 0,
+          "after-rear": 0,
+          "after-tactical": 0,
+          "before-close": 0,
+          "before-common-scale": 0,
+          "before-rear": 0,
+          "before-tactical": 0
+        }
+      },
+      "syndicate:energy_relay": {
+        "restored_changed_pixels": 0,
+        "close_changed_pixels": 141231,
+        "roles": {
+          "accent": {
+            "bbox": [
+              515,
+              275,
+              748,
+              482
+            ],
+            "camera": "close",
+            "changed_pixels": 3044
+          },
+          "cool": {
+            "bbox": [
+              515,
+              338,
+              782,
+              487
+            ],
+            "camera": "rear",
+            "changed_pixels": 6523
+          },
+          "dark": {
+            "bbox": [
+              408,
+              259,
+              891,
+              630
+            ],
+            "camera": "close",
+            "changed_pixels": 66782
+          }
+        },
+        "motion": null,
+        "repeat_changed_pixels": {
+          "after-close": 0,
+          "after-common-scale": 0,
+          "after-rear": 0,
+          "after-tactical": 0,
+          "before-close": 0,
+          "before-common-scale": 0,
+          "before-rear": 0,
+          "before-tactical": 0
+        }
+      },
+      "syndicate:mining_station": {
+        "restored_changed_pixels": 0,
+        "close_changed_pixels": 350504,
+        "roles": {
+          "accent": {
+            "bbox": [
+              563,
+              256,
+              858,
+              528
+            ],
+            "camera": "close",
+            "changed_pixels": 1699
+          },
+          "cool": {
+            "bbox": [
+              505,
+              238,
+              746,
+              640
+            ],
+            "camera": "rear",
+            "changed_pixels": 4902
+          },
+          "dark": {
+            "bbox": [
+              454,
+              105,
+              948,
+              757
+            ],
+            "camera": "close",
+            "changed_pixels": 29023
+          }
+        },
+        "motion": null,
+        "repeat_changed_pixels": {
+          "after-close": 0,
+          "after-common-scale": 0,
+          "after-rear": 0,
+          "after-tactical": 0,
+          "before-close": 0,
+          "before-common-scale": 0,
+          "before-rear": 0,
+          "before-tactical": 0
+        }
+      },
+      "syndicate:sensor_station": {
+        "restored_changed_pixels": 0,
+        "close_changed_pixels": 150033,
+        "roles": {
+          "accent": {
+            "bbox": [
+              606,
+              331,
+              688,
+              404
+            ],
+            "camera": "close",
+            "changed_pixels": 787
+          },
+          "cool": {
+            "bbox": [
+              570,
+              339,
+              734,
+              435
+            ],
+            "camera": "rear",
+            "changed_pixels": 2833
+          },
+          "dark": {
+            "bbox": [
+              534,
+              234,
+              746,
+              529
+            ],
+            "camera": "close",
+            "changed_pixels": 15899
+          }
+        },
+        "motion": null,
+        "repeat_changed_pixels": {
+          "after-close": 0,
+          "after-common-scale": 0,
+          "after-rear": 0,
+          "after-tactical": 0,
+          "before-close": 0,
+          "before-common-scale": 0,
+          "before-rear": 0,
+          "before-tactical": 0
+        }
+      }
+    }
+  }
+}

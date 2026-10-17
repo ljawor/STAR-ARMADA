@@ -1,0 +1,14 @@
+WELD 07 Head vent (7.36 clear) -> 01 Power cell 0: braced with 95 Weld 1
+WELD 11 Keel spar (6.9 clear) -> 93 Base plating 0: braced with 95 Weld 2
+WELD 12 Coolant drums 0 (5.4 clear) -> 12 Coolant drums 2: braced with 95 Weld 3
+WELD 12 Coolant drums 1 (0.4 clear) -> 12 Coolant drums 2: grew 4 verts
+WELD 91 Bay machinery 15 (0.53 clear) -> 03 Truss spine: grew 8 verts
+WELD_TOTAL joints=5 tolerance=0.25 clusters_left=1
+TRIS syndicate_energy_relay 3720 OK
+BOUNDS syndicate_energy_relay lo=[-47.56, -11.2, -46.54] hi=[46.53, 23.36, 34.4]
+SELFCHECK syndicate_energy_relay breaches=0 tolerance=0.001
+Info: Saved as "syndicate_energy_relay.blend"
+SEED_OK syndicate:energy_relay -> syndicate_energy_relay.blend
+Blender 5.0.1 (hash a3db93c5b259 built 2025-12-16 01:51:40)
+
+Blender quit

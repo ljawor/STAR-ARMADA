@@ -1,0 +1,22 @@
+[
+  {
+    "path": "artifacts/s06_alliance_batch_review/b1-alliance-combat/carrier-before-ffmpeg.txt",
+    "raw_sha256": "ba856ecd02eff729dfa586e3df68a1b07162343182d44297ccfdebcb21b401c4",
+    "normalized_sha256": "59e22ecb708d4d6e07dbe933f8e57f074c31c744fcd7460b5925d6bbe4205aee"
+  },
+  {
+    "path": "artifacts/s06_alliance_batch_review/b1-alliance-combat/corvette-before-ffmpeg.txt",
+    "raw_sha256": "90ce098fe39cc998a4f51ad39a8ccb657253d22901684043b440b39e1d814ac1",
+    "normalized_sha256": "49cbcd3a27f97e51873ef6f85a5cac31676479a0b08b44776df0804ef51f631a"
+  },
+  {
+    "path": "artifacts/s06_alliance_batch_review/b1-alliance-combat/corvette-after-ffmpeg.txt",
+    "raw_sha256": "3d6bd904e3829a7b24ea3d58b7d6692221ea17c4b51e4bd79e6cd30f35201bf9",
+    "normalized_sha256": "30368b318c8db87986adfa6f6f88899e63bc0fc0d6b9d64e99df65ff2b0f0a26"
+  },
+  {
+    "path": "artifacts/s06_alliance_batch_review/b1-alliance-combat/carrier-after-ffmpeg.txt",
+    "raw_sha256": "c9818a308cd7bcce2e903f16d837593c07f1241e3f6417322bf460c0b619796d",
+    "normalized_sha256": "d254c6f2c365deb011d80e98c1e406d90cd6fcfd0885919d323268089c9424f7"
+  }
+]

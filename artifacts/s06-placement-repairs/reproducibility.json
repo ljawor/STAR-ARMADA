@@ -1,0 +1,192 @@
+[
+  {
+    "asset": "syndicate_sensor_station",
+    "seed_passes": 2,
+    "master_first_sha256": "b1a239254b48fb3175b06359b736c20e9501d2db5c74d5262f82bb0e9fd81853",
+    "master_final_sha256": "9238f17c16196ce938019f8b0263415261ae763b0f2e64f9d1df97442670f56b",
+    "runtime_first_sha256": "e35b084c73b2702ab12f0611730bb4f99b24eefd80925344300360f68bb7a947",
+    "runtime_reseed_sha256": "e35b084c73b2702ab12f0611730bb4f99b24eefd80925344300360f68bb7a947",
+    "runtime_repeat_sha256": "e35b084c73b2702ab12f0611730bb4f99b24eefd80925344300360f68bb7a947",
+    "runtime_identical": true,
+    "export_source_unchanged": true,
+    "bounds": [
+      [
+        -47.2,
+        -17.6,
+        -31.137
+      ],
+      [
+        26.3565,
+        43.556999,
+        21.1423
+      ]
+    ],
+    "baseline_bounds": [
+      [
+        -47.2,
+        -17.6,
+        -31.137
+      ],
+      [
+        26.3565,
+        43.556999,
+        21.1423
+      ]
+    ],
+    "exact_bounds": true,
+    "triangles": 3832,
+    "vertices": 2074
+  },
+  {
+    "asset": "syndicate_mining_station",
+    "seed_passes": 2,
+    "master_first_sha256": "d10b8c5e48af8aad30c7fa0998613cca23488716b2ebb951c51240bcb8433683",
+    "master_final_sha256": "8fd1b47493153584138da4c85fdbfdf3edea7cc61a91d6a9a9bfa11b1d540e7f",
+    "runtime_first_sha256": "6ce810fdf0be8ba5a3c7485fd9df4d6b3ff5fc5ae5e8a0f9a8fe4bc5b88692aa",
+    "runtime_reseed_sha256": "6ce810fdf0be8ba5a3c7485fd9df4d6b3ff5fc5ae5e8a0f9a8fe4bc5b88692aa",
+    "runtime_repeat_sha256": "6ce810fdf0be8ba5a3c7485fd9df4d6b3ff5fc5ae5e8a0f9a8fe4bc5b88692aa",
+    "runtime_identical": true,
+    "export_source_unchanged": true,
+    "bounds": [
+      [
+        -33.9322,
+        -32.4,
+        -25.0848
+      ],
+      [
+        42.4,
+        39.6,
+        41.4431
+      ]
+    ],
+    "baseline_bounds": [
+      [
+        -33.9322,
+        -32.4,
+        -25.0848
+      ],
+      [
+        42.4,
+        39.6,
+        41.4431
+      ]
+    ],
+    "exact_bounds": true,
+    "triangles": 3728,
+    "vertices": 2040
+  },
+  {
+    "asset": "syndicate_energy_relay",
+    "seed_passes": 2,
+    "master_first_sha256": "37c3c18c2b484bc83164344bb11ef0798ed34c475f8ead26d99e007e269ca60a",
+    "master_final_sha256": "3a286a1b79c740cfd15005319f126398fec18301f00edce80a5d119b5a553a13",
+    "runtime_first_sha256": "fabcb1e166385a6e0ae6c07fb3dd2fb040a309a332511aa8e19d638ff2f27af8",
+    "runtime_reseed_sha256": "fabcb1e166385a6e0ae6c07fb3dd2fb040a309a332511aa8e19d638ff2f27af8",
+    "runtime_repeat_sha256": "fabcb1e166385a6e0ae6c07fb3dd2fb040a309a332511aa8e19d638ff2f27af8",
+    "runtime_identical": true,
+    "export_source_unchanged": true,
+    "bounds": [
+      [
+        -47.5594,
+        -11.2,
+        -46.5402
+      ],
+      [
+        46.5284,
+        23.36,
+        34.4011
+      ]
+    ],
+    "baseline_bounds": [
+      [
+        -47.5594,
+        -11.2,
+        -46.5402
+      ],
+      [
+        46.5284,
+        23.36,
+        34.4011
+      ]
+    ],
+    "exact_bounds": true,
+    "triangles": 3720,
+    "vertices": 2024
+  },
+  {
+    "asset": "legion_mining_station",
+    "seed_passes": 2,
+    "master_first_sha256": "6c49c9913e79dacca3cea6be6f88389c13415c7b98efaac38e663f7e8a48d003",
+    "master_final_sha256": "504982f86b6b6f078c1d69863d8bfec38e8eb1e003907bb704263a427cf3b9f5",
+    "runtime_first_sha256": "32bb2c2b72ac9dacee83ae841d3e5ecf6b0e7c4246ee4e99f0548b28d9695d8f",
+    "runtime_reseed_sha256": "32bb2c2b72ac9dacee83ae841d3e5ecf6b0e7c4246ee4e99f0548b28d9695d8f",
+    "runtime_repeat_sha256": "32bb2c2b72ac9dacee83ae841d3e5ecf6b0e7c4246ee4e99f0548b28d9695d8f",
+    "runtime_identical": true,
+    "export_source_unchanged": true,
+    "bounds": [
+      [
+        -40.418598,
+        -31.44,
+        -29.36
+      ],
+      [
+        40.418598,
+        11.08,
+        46.96
+      ]
+    ],
+    "baseline_bounds": [
+      [
+        -40.418598,
+        -31.44,
+        -29.36
+      ],
+      [
+        40.418598,
+        11.08,
+        46.96
+      ]
+    ],
+    "exact_bounds": true,
+    "triangles": 4268,
+    "vertices": 2304
+  },
+  {
+    "asset": "alliance_carrier",
+    "seed_passes": 2,
+    "master_first_sha256": "341670addbdb4fe8568ceaae5f60c78780de59f85bb6a398ef5f7bea8c737d96",
+    "master_final_sha256": "362c1464acb36a530fa159cf0ac1bfe1361bd2f205cc2fc5e58aa4f6fe0ef201",
+    "runtime_first_sha256": "041cfa4d4013eb773a0f9b4cb88bee35847656d4735b398ad6e4e7a5d056ecee",
+    "runtime_reseed_sha256": "041cfa4d4013eb773a0f9b4cb88bee35847656d4735b398ad6e4e7a5d056ecee",
+    "runtime_repeat_sha256": "041cfa4d4013eb773a0f9b4cb88bee35847656d4735b398ad6e4e7a5d056ecee",
+    "runtime_identical": true,
+    "export_source_unchanged": true,
+    "bounds": [
+      [
+        -146.51,
+        -30.5,
+        -204.8
+      ],
+      [
+        146.51,
+        56.95528,
+        190.0
+      ]
+    ],
+    "baseline_bounds": [
+      [
+        -146.51,
+        -30.5,
+        -204.8
+      ],
+      [
+        146.51,
+        56.95528,
+        190.0
+      ]
+    ],
+    "exact_bounds": true,
+    "triangles": 8632,
+    "vertices": 5014
+  }
+]

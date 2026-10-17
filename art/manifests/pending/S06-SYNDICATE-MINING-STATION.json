@@ -10,13 +10,13 @@
   "authority": "blend",
   "source": {
     "path": "art/blender/syndicate_mining_station.blend",
-    "sha256": "54aa027886e7069e1edabcdac16372b4bb3f087cba6c164ef9f9766aa38ba8a0",
-    "bytes": 146249
+    "sha256": "8fd1b47493153584138da4c85fdbfdf3edea7cc61a91d6a9a9bfa11b1d540e7f",
+    "bytes": 145914
   },
   "initial_seed": {
     "path": "tools/art/build_b3b_stations.py",
-    "sha256": "5e183c56d12bfe11c18bdcfa2227c99fde1dfa9edd30f1d5ff72d8f68d8f92dc",
-    "bytes": 34801,
+    "sha256": "922fcabcafb207e312180e672d0a95001900618e231260d5a939815bcbf951d5",
+    "bytes": 35373,
     "selects": "--asset syndicate:mining_station"
   },
   "export_script": {
@@ -26,10 +26,10 @@
   },
   "runtime": {
     "path": "assets/models/syndicate_mining_station.mesh.json",
-    "sha256": "ee86f98eeae7e69c2c5d345a9aa2736dd62e9911b4673a28c3f5b459ce382872",
-    "bytes": 239907,
-    "triangles": 3740,
-    "vertices": 2048,
+    "sha256": "6ce810fdf0be8ba5a3c7485fd9df4d6b3ff5fc5ae5e8a0f9a8fe4bc5b88692aa",
+    "bytes": 244936,
+    "triangles": 3728,
+    "vertices": 2040,
     "roles": [
       "accent",
       "base",

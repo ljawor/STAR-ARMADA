@@ -1,0 +1,3 @@
+wrote art/manifests/pending/S06-ALLIANCE-CORVETTE.json
+wrote art/manifests/pending/S06-ALLIANCE-CARRIER.json
+0 stale sidecar(s)

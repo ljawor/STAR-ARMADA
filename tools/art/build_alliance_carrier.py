@@ -23,7 +23,7 @@ MASTER=ROOT/'art/blender/alliance_carrier.blend'
 if MASTER.exists() and '--replace-seed' not in sys.argv:
     raise RuntimeError('Editable blend is master. Use export_alliance_carrier.py; --replace-seed destroys edits.')
 sys.path.insert(0,str(Path(__file__).resolve().parent))
-from alliance_common import loft,plate,annulus,cylinder,weld_scene,bpy
+from alliance_common import loft,plate,annulus,cylinder,weld_scene,mesh_object,bpy
 from hull_detail import surface,deck_panel,deck_strake,flank_detail,louvre_bank,panel
 
 # Broad slab hull: the flight deck is the ship, so the beam stays wide to the stern.
@@ -112,10 +112,39 @@ for z in (-168,-136,-104,-72,-40,-8,24,56,88,120):
 for z in (-150,-110,-70,-30,10,50,90,130):
     plate(f'40 Ventral service window {z}','lit',(20.0,1.0,3.0),(0,-24.0,z))
     panel(f'41 Ventral crossbrace {z}','trim',(34.0,1.6,3.0),(0,-29.7,z))
-for i,z in enumerate((-92,-28,36,100)):
-    panel(f'42 Island window band {i}','lit',(1.2,2.2,22.0),(28.0,46.0,z))
+# Thin glazing straddles the external vertical flank, not its buried chamfer inset.
+# Each ring follows the same piecewise-linear frames as loft(); splitting at frame
+# boundaries avoids a straight panel cutting through the island's changing taper.
+def island_glazing(name, side, z0, z1, height, gap):
+    knots = [z0] + [f[0] for f in ISLAND if z0 < f[0] < z1] + [z1]
+    verts = []
+    for z in knots:
+        a, b = next((a, b) for a, b in zip(ISLAND, ISLAND[1:]) if a[0] <= z <= b[0])
+        t = (z - a[0]) / (b[0] - a[0])
+        wa, ta, _, ca = surface(ISLAND, a[0])
+        wb, tb, _, cb = surface(ISLAND, b[0])
+        w = wa + (wb - wa) * t
+        # Interpolate endpoint top-chamfer, NOT min() of interpolated dimensions:
+        # loft's chamfer limiting axis changes between its first two frames.
+        upper = ta - ca + ((tb - cb) - (ta - ca)) * t - gap
+        verts.extend(((side * (w - .2), upper - height, z),
+                      (side * (w + .35), upper - height, z),
+                      (side * (w + .35), upper, z),
+                      (side * (w - .2), upper, z)))
+    faces = [(3, 2, 1, 0), tuple(range(len(verts) - 4, len(verts)))]
+    for k in range(len(knots) - 1):
+        for i in range(4):
+            j = (i + 1) % 4
+            faces.append((k * 4 + i, k * 4 + j, (k + 1) * 4 + j, (k + 1) * 4 + i))
+    return mesh_object(name, 'lit', verts, faces)
+
+
+for i in range(4):
+    z = ISLAND[0][0] + 12.0 + i * (ISLAND[-1][0] - ISLAND[0][0] - 24.0) / 3
+    island_glazing(f'42 Island window band {i}', 1, z - 5, z + 5, 2.2, .5)
 for side in (-1,1):
-    panel(f'43 Island glazing {side}','lit',(1.2,3.0,34.0),(40.0+side*9.0,40.0,-8))
+    z = (ISLAND[0][0] + ISLAND[-1][0]) / 2
+    island_glazing(f'43 Island glazing {side}', side, z - 12, z + 12, 3.0, 3.0)
 for i,z in enumerate((-176,-132,-88,-44,0,44,88,132)):
     panel(f'44 Dorsal armour strake {i}','trim',(30.0,2.0,26.0),(0,31.0,z))
 deck_strake(DECK,'45 Deck strake',(-1,1),-150,150,steps=11,role='dark',lift=.3,inset=2.0)
