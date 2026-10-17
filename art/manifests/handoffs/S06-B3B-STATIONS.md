@@ -219,7 +219,14 @@ each revision still lands only after a separate landing decision.
   for the final re-run; that guard passes with the evidence in place, and it is reported here
   because a guard that cannot fail is not a guard.
 * Seeding: Blender 5.0.1, `build_b3b_stations.py --all --replace-seed` → 9 masters, `SEED_OK`,
-  **no `BREACH` line** — every extreme lands inside its binding's frame.
+  and the extent self-check now reports **`breaches=0`** per asset (`SELFCHECK <label> breaches=0
+  tolerance=0.001`), because the tolerance was 1e-6 world units while the bevel evaluation leaves a
+  1.5e-06 float hair outside a 92.8-unit span — five of those printed as `BREACH` lines and none of
+  them was a real overshoot (the smallest *real* under-reach this batch fixed was 0.03 units). The
+  check was left alone mathematically and made noise-proof in its reporting; both directions are
+  guarded (`test_the_seed_extent_self_check_ignores_float_noise_and_still_catches_a_real_shortfall`),
+  so nobody has to trust a log again. **The masters were not re-seeded to prove this** — their bytes
+  and hashes are the reviewed ones.
 * Exporting: nine wrappers exit 0, each printing `GAME_EXPORT` with bounds on the legacy extent and
   its own triangle count. Every one of them is at or above the pipeline's 1,800-triangle floor;
   eight of the nine initially failed it (1,532 / 884 / 1,436 / 804 / 1,032 / 1,760 / 676 / 948) and

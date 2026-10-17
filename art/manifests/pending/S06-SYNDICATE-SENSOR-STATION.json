@@ -15,8 +15,8 @@
   },
   "initial_seed": {
     "path": "tools/art/build_b3b_stations.py",
-    "sha256": "14be714fea48ff64693cb17049fcb31e8331afaab2c50a7dc1ac64b20f11f3eb",
-    "bytes": 32785,
+    "sha256": "c7b775b945decaeb9d5f7653dc01426abf405f9e11fdebee0c3e6b38c7608c53",
+    "bytes": 33752,
     "selects": "--asset syndicate:sensor_station"
   },
   "export_script": {

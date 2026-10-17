@@ -31,6 +31,29 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 
+# An extent error below this many world units is float noise, not a breach: the bevel
+# evaluation lands a part a hair outside a 92.8-unit span (1.5e-06 measured on
+# alliance_sensor_station's keel strake, 1.6e-08 relative) and the exporter's edge quantiser
+# snaps it to the declared edge. The smallest *real* under-reach this batch fixed was 0.03
+# units, thirty thousand times larger, so a tighter tolerance only prints false alarms - and a
+# self-check that cries wolf is one nobody reads. The count is printed either way, so a clean
+# extent states itself instead of being implied by silence.
+BREACH_TOLERANCE = 1e-3
+
+
+def breach_lines(label, lo, hi, limits, extreme, tolerance=BREACH_TOLERANCE):
+    """The extent self-check as a pure function, so a guard can drive it without Blender."""
+    out = []
+    for i, axis in enumerate('XYZ'):
+        if lo[i] < limits[i][0] - tolerance:
+            out.append(f'  BREACH {label} {axis} low {lo[i]:.7f} < {limits[i][0]} '
+                       f'from {extreme[i][0]}')
+        if hi[i] > limits[i][1] + tolerance:
+            out.append(f'  BREACH {label} {axis} high {hi[i]:.7f} > {limits[i][1]} '
+                       f'from {extreme[i][1]}')
+    return out
+
+
 # kind -> {binding: (identifier, limits per axis, drawn length, treatment)}
 SEEDS = {
     'rebel:mining_station': ('alliance_mining_station', 70,
@@ -249,16 +272,12 @@ def report_bounds(limits, label):
     # floor is a design that has not been authored yet, not a wrapper to be relaxed.
     print(f'TRIS {label} {tris} {"OK" if tris > 1800 else "LOW"}')
     print(f'BOUNDS {label} lo={[round(v, 2) for v in lo]} hi={[round(v, 2) for v in hi]}')
-    for i, axis in enumerate('XYZ'):
-        # Seven decimals: a part sized off the extent routinely lands a float hair outside it
-        # and the exporter's edge quantiser snaps that to the edge, so a report rounded to two
-        # decimals names a breach that is not there.
-        if lo[i] < limits[i][0] - 1e-6:
-            print(f'  BREACH {label} {axis} low {lo[i]:.7f} < {limits[i][0]} '
-                  f'from {extreme[i][0]}')
-        if hi[i] > limits[i][1] + 1e-6:
-            print(f'  BREACH {label} {axis} high {hi[i]:.7f} > {limits[i][1]} '
-                  f'from {extreme[i][1]}')
+    breaches = breach_lines(label, lo, hi, limits, extreme)
+    for line in breaches:
+        print(line)
+    # Print the count so a clean extent states itself; seven decimals keep a number that is
+    # still reported legible against the declared limit it missed by.
+    print(f'SELFCHECK {label} breaches={len(breaches)} tolerance={BREACH_TOLERANCE}')
 
 
 # ---------------------------------------------------------------- mining station

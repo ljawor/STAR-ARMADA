@@ -24,6 +24,7 @@ Three rules in here were paid for on this batch, so they are guards rather than 
   (`test_every_declared_ring_is_an_annulus_and_no_port_is_a_capped_disc`).
 """
 import ast
+import ast
 import importlib.util
 import json
 import os
@@ -40,6 +41,22 @@ ROOT = Path(__file__).resolve().parents[1]
 SPEC = ROOT / 'art/manifests/pending/S06-BATCH-B3B-STATIONS.json'
 BATCH = 's06-b3b-stations-slice-1'
 SEED = 'tools/art/build_b3b_stations.py'
+
+
+def seed_self_check():
+    """Load the seed's pure extent self-check without importing Blender.
+
+    The seed refuses an existing master at module level, so it cannot be exec'd whole; the
+    helper and its tolerance are taken from its AST and compiled on their own.
+    """
+    tree = ast.parse((ROOT / SEED).read_text(encoding='utf-8'))
+    keep = [node for node in tree.body
+            if (isinstance(node, ast.FunctionDef) and node.name == 'breach_lines')
+            or (isinstance(node, ast.Assign)
+                and any(getattr(t, 'id', '') == 'BREACH_TOLERANCE' for t in node.targets))]
+    namespace = {}
+    exec(compile(ast.Module(body=keep, type_ignores=[]), '<seed-self-check>', 'exec'), namespace)
+    return namespace['breach_lines'], namespace['BREACH_TOLERANCE']
 # Every binding this module guards. `envelope` is the binding's legacy extent as
 # `(low, high)` per axis; the spec carries the same numbers transposed, and
 # `test_batch_spec_lists_exactly_the_guarded_bindings` compares the two so neither can
@@ -390,6 +407,32 @@ class SourceSafety(unittest.TestCase):
                                      for n in ast.walk(tree)))
                 self.assertTrue((ROOT / f"art/blender/{asset['identifier']}.blend").is_file())
                 self.assertEqual(payload_of(asset)['features']['authority'], 'blend')
+
+    def test_the_seed_extent_self_check_ignores_float_noise_and_still_catches_a_real_shortfall(self):
+        """A self-check that cries wolf is one nobody reads.
+
+        The seed reports a breach when an authored extreme misses its declared limit, and the
+        tolerance was 1e-6 world units - below the float hair the bevel evaluation leaves outside
+        a 92.8-unit span (1.5e-06 measured on the keel strake, 1.6e-08 relative), which the
+        exporter's edge quantiser snaps to the edge. Five of those printed as breaches. The
+        smallest *real* under-reach this batch fixed was 0.03 units. Both directions are asserted
+        here, so a later tightening of the tolerance fails this test rather than the owner.
+        """
+        helper, tolerance = seed_self_check()
+        noise = ([-46.4000015, -32.4000015, -25.0848], [46.4000015, 39.6, 41.4431])
+        limits = [[-46.4, 46.4], [-32.4, 39.6], [-25.0848, 41.4431]]
+        extremes = (('10 Keel strake', '10 Keel strake'), ('02 Beam pad left', '02 Beam pad left'),
+                    ('03 Keel', '03 Keel'))
+        self.assertGreaterEqual(tolerance, 1e-3)
+        self.assertEqual([], helper('sensor', *noise, limits, extremes),
+                         'float noise must not print as a breach')
+        real = ([-46.4, -32.4, -25.0848 - 0.03], [46.4, 39.6, 41.4431])
+        caught = helper('relay', *real, limits, extremes)
+        self.assertEqual(1, len(caught), caught)
+        self.assertIn('BREACH', caught[0])
+        # and the tolerance is what removes the noise: at the old value the same row reports
+        self.assertEqual(3, len(helper('sensor', *noise, limits, extremes, tolerance=1e-6)),
+                         'the 1e-6 tolerance is the defect this guards against')
 
     def test_the_batch_seed_refuses_to_overwrite_an_existing_master(self):
         """One seed authors all nine masters, so one refusal guards the whole batch."""
