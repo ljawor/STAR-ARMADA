@@ -185,6 +185,35 @@
         "packaging and native-Windows acceptance"
       ],
       "correction": "The first draft of this record said the imperial station rows dispatch straight to _station_mesh with no mesh_for seam and that the seam change belongs in render/fleet_geometry.py::station_mesh. That was wrong, and it repeated a stale claim from the earlier handoffs: station_mesh consults the seam before its imperial branch, for every faction. Corrected the same day, against the code at render/fleet_geometry.py:254-272 and render/faction_visuals.py:34-64. The owner's wording and the scope of his answer are unchanged - only the engineering description of what migrating the imperial rows takes."
+    },
+    {
+      "id": "s06-large-evidence-accepted-2026-10-17",
+      "date": "2026-10-17",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved-as-asked",
+      "applies_to": "S03 storage policy - the size of committed review evidence",
+      "owner_wording": "2.) A policy flag: the B4 contact sheet is 12.7 MiB: accept bigger",
+      "how_recorded": "The owner was shown the measured sizes and the three ways out - accept larger binary evidence, split or re-encode the contact sheets, or adopt Git LFS atomically - and answered in favour of accepting. Recorded verbatim; this is a new record rather than an edit of s03-pipeline-policy-2026-10-16, because that file's own rule is that a policy change is a new decision record.",
+      "decisions": [
+        {
+          "id": "review-evidence-size-accepted",
+          "decision": "Committed review evidence is kept in ordinary Git however large it is, and the contact sheets are not split or re-encoded to fit a threshold. Measured at the time of the decision: B4 12.7 MiB, B3c 10.9 MiB, B3b 5.4 MiB.",
+          "why": "The evidence is what the appearance approvals are judged against and what the guards re-hash; splitting it changes the record a reviewer reads, and re-encoding it changes the bytes an approval is about.",
+          "applies_from": "this decision"
+        },
+        {
+          "id": "lfs-remains-unadopted",
+          "decision": "The S03 declaration \"Git LFS threshold: 5 MiB per file; LFS is not adopted until an asset actually crosses that threshold\" no longer triggers adoption for review evidence: evidence may cross it and stays in ordinary Git. If LFS is ever adopted it still lands in one change with its attributes, the build and test fetching, and a fresh-clone check.",
+          "why": "A threshold that fires on evidence would force LFS adoption to serve files no build or test reads.",
+          "applies_from": "this decision"
+        }
+      ],
+      "not_authorized": [
+        "adopting Git LFS, or rewriting, re-encoding, pruning or splitting any evidence already committed",
+        "relaxing the runtime loader caps (12,000 triangles / 10,000 vertices / 2,000,000 bytes) or any asset class budget",
+        "landing, registration, activation, merge, tag, release or a production-default switch",
+        "anything about asset sources crossing the threshold: that question was not put to the owner and the S03 wording stands"
+      ]
     }
   ]
 }

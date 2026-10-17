@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "batch": "s06-b3a-command-stations",
-  "status": "pending_owner_appearance_approval",
+  "status": "appearance_approved_pending_landing",
   "note": "Review-only batch sheet for the pending S06 B3a command-station specimens. This file is not an approval record, a registry entry or a runtime manifest, and it does not select any asset in production. The ten imperial station rows are deliberately absent: those bindings dispatch straight to render.fleet_geometry._station_mesh with no mesh_for seam, so authoring them is a renderer change and an owner decision rather than an asset batch. rebel:shipyard is also absent: it is already delivered as the approved trio's `core` asset alliance_shipyard. Each station is authored inside its binding's legacy procedural extent, so the station render, contact and camera helpers that read station_mesh derive the same footprint as the layout it would replace and the unchanged gameplay radius in assets/data/stations/stations.json still frames it. Correction (same day, against the code): the claim above that the imperial station rows dispatch straight to _station_mesh with no mesh_for seam was wrong - render/fleet_geometry.py::station_mesh consults mesh_for(f'{faction}:{data_id}') ahead of its imperial branch for every faction, so those rows are ordinary asset work once the imperial rows are in scope (owner decision s06-imperial-migration-2026-10-17). What imperial ships need is a per-binding key in render/faction_visuals.py::ship_visual_key, which today mints one only for the three non-imperial families.",
   "overview": {
     "first_x": -4200,
@@ -120,5 +120,6 @@
       "seed": "tools/art/build_b3_stations.py",
       "seed_arg": "--asset syndicate:command_station"
     }
-  ]
+  ],
+  "appearance_decision": "s06-b3a-command-stations-2026-10-17"
 }

@@ -19,21 +19,33 @@ PENDING = ROOT / 'art/manifests/pending'
 APPROVALS = ROOT / 'art/manifests/approvals.json'
 POLICY = ROOT / 'art/manifests/pipeline_policy.json'
 
-# The owner's words that record the S06 approvals of 2026-10-17, and the two scope decisions taken
-# in the same message. Verbatim, including the numbering he used.
-OWNER_APPROVAL_WORDS = "the Liberty Cruiser, B1 corvette + carrier, B2's eight, B3b's nine--> Approved"
+# The owner's words that record the S06 approvals of 2026-10-17, per decision, verbatim and
+# including the numbering he used. A batch answered on its own gets its own line here rather than
+# being folded into another batch's sentence.
+BATCH_APPROVAL_WORDS = "the Liberty Cruiser, B1 corvette + carrier, B2's eight, B3b's nine--> Approved"
+OWNER_WORDS = {
+    's06-cruiser-review-2026-10-17': BATCH_APPROVAL_WORDS,
+    's06-b1-alliance-combat-2026-10-17': BATCH_APPROVAL_WORDS,
+    's06-b2-squadron-logistics-2026-10-17': BATCH_APPROVAL_WORDS,
+    's06-b3b-stations-2026-10-17': BATCH_APPROVAL_WORDS,
+    's06-b3c-stations-2026-10-17': 'yes',
+    's06-b3a-command-stations-2026-10-17': '1.) B3a command stations: Approved',
+}
 EXPECTED_BATCHES = {
     's06-cruiser-review': 1,
     's06-b1-alliance-combat': 2,
     's06-b2-squadron-logistics': 8,
     's06-b3b-stations-slice-1': 9,
     's06-b3c-stations': 17,
+    's06-b3a-command-stations': 3,
 }
 # 37 specimens whose appearance the owner has approved, and the count the records must keep adding up
 # to until another decision changes it.
-APPROVED_SPECIMENS = 37
+APPROVED_SPECIMENS = 40
 SCOPE_DECISIONS = {'s06-b4-scope-2026-10-17': '1.) B4 authorized',
-                   's06-imperial-migration-2026-10-17': '4.) decision need also migration.'}
+                   's06-imperial-migration-2026-10-17': '4.) decision need also migration.',
+                   's06-large-evidence-accepted-2026-10-17':
+                       '2.) A policy flag: the B4 contact sheet is 12.7 MiB: accept bigger'}
 
 
 def load(path):
@@ -126,12 +138,11 @@ class RecordedApprovals(unittest.TestCase):
                          'the S06 specimens the records call approved are not the number on disk')
 
     def test_the_owner_words_are_verbatim_on_every_batch_decision(self):
+        self.assertEqual(sorted(d['id'] for d in appearance_decisions()), sorted(OWNER_WORDS))
         for decision in appearance_decisions():
-            if decision['id'] == 's06-b3c-stations-2026-10-17':
-                self.assertEqual(decision['owner_words_verbatim'], 'yes')
-                continue
             with self.subTest(decision=decision['id']):
-                self.assertEqual(decision['owner_words_verbatim'], OWNER_APPROVAL_WORDS)
+                self.assertEqual(decision['owner_words_verbatim'], OWNER_WORDS[decision['id']],
+                                 'the record must quote what was said for this batch, not another')
 
     def test_every_decision_says_what_it_does_not_approve(self):
         """An approval that reads as a landing is the expensive mistake."""
@@ -168,11 +179,10 @@ class RecordedScope(unittest.TestCase):
         self.assertEqual([d['id'] for d in approvals['decision_log'] if
                           d['id'] in SCOPE_DECISIONS], [])
 
-    def test_the_unapproved_batch_is_still_unapproved(self):
-        """The B3a command stations were never approved in so many words; the record must not claim
-        otherwise until the owner says so."""
+    def test_the_batch_still_awaiting_the_owner_is_not_recorded_as_approved(self):
+        """B4 is authored and captured but never answered; the record must not claim otherwise."""
         sheets = batch_sheets()
-        path, sheet = sheets['s06-b3a-command-stations']
+        path, sheet = sheets['s06-b4-hardware']
         self.assertEqual(sheet['status'], 'pending_owner_appearance_approval')
         self.assertNotIn('appearance_decision', sheet)
         decided = {a['identifier'] for d in appearance_decisions()

@@ -1297,6 +1297,95 @@
         "the specimens of any other batch, including the S06 B3a command stations and the ten imperial station rows"
       ],
       "how_recorded": "Parsed from the owner's own words in the session that answered four questions at once; recorded against the exact revision hashes below."
+    },
+    {
+      "id": "s06-b3a-command-stations-2026-10-17",
+      "date": "2026-10-17",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved",
+      "approval_kind": "appearance-batch-revisions",
+      "scope_statement": "Approved the appearance of the three S06 B3a command-station revisions listed below: the Alliance, Legion and Syndicate command stations at the revisions recorded here, whose reviewed frames are the ones the owner judged. This approves appearance only: it is not a landing, activation, merge, tag or release authorization for any of them, and it says nothing about the specimens of any other batch.",
+      "owner_words_verbatim": "1.) B3a command stations: Approved",
+      "question_answered": "Do the three B3a command stations look right? (asked as the open approval question after the B3c and B1/B2/B3b batches were recorded, next to the LFS policy flag)",
+      "revision": {
+        "batch": "s06-b3a-command-stations",
+        "pr": 127,
+        "source_authority": "blend-authoritative (the editable .blend is the source; the runtime export is derived from it)",
+        "registry_state_at_approval": "none of these bindings is registered, selectable or activated",
+        "evidence": "every reviewed frame in the B3a evidence directory carries the runtime mesh sha256 recorded here, so the frames the owner judged are the revisions recorded here",
+        "assets": [
+          {
+            "gameplay_binding": "rebel:command_station",
+            "shape_key": "rebel:command_station",
+            "identifier": "alliance_command_station",
+            "station_kind": "command_station",
+            "faction": "rebel",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/alliance_command_station.blend": "a2377c1d8f815258791345869c005e95efe13ca99c99c5ba90ede8598ff0fd4c"
+            },
+            "exporter": {
+              "tools/art/build_b3_stations.py": "7f84d8c60df8fe1d254a2bb05249f2467927621e105a6c4f57b5c55d0472c083",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_alliance_command_station.py": "413470bcd02250acbd379fef9cbc2fd818032d976ce6573536c800ee336fec38"
+            },
+            "runtime": {
+              "assets/models/alliance_command_station.mesh.json": "ee9790e6f95bdd2a5e0650fd4eb1d1d5496637b32956929a9c6d50df0ee8c93c"
+            },
+            "triangles": 3172,
+            "vertices": 1672
+          },
+          {
+            "gameplay_binding": "confederacy:command_station",
+            "shape_key": "confederacy:command_station",
+            "identifier": "legion_command_station",
+            "station_kind": "command_station",
+            "faction": "confederacy",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/legion_command_station.blend": "159e8288e6341e329046591475875e17a1446466eb23c1dcd1b3b456e880ec66"
+            },
+            "exporter": {
+              "tools/art/build_b3_stations.py": "7f84d8c60df8fe1d254a2bb05249f2467927621e105a6c4f57b5c55d0472c083",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_legion_command_station.py": "b8b5f6582bf3f9974cf0302a7a94ef106000a6f4d81c48484c24dbe7660fa974"
+            },
+            "runtime": {
+              "assets/models/legion_command_station.mesh.json": "a9f6bdb8259217f1649ee47b44809cef79ac4c3369c680325f8e5c874a0cd0d8"
+            },
+            "triangles": 2161,
+            "vertices": 1175
+          },
+          {
+            "gameplay_binding": "syndicate:command_station",
+            "shape_key": "syndicate:command_station",
+            "identifier": "syndicate_command_station",
+            "station_kind": "command_station",
+            "faction": "syndicate",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/syndicate_command_station.blend": "f3342e0ed63c8b730d91bafdca9c8d7d0bbf9bc0bfe7e54293bff792e27e4d17"
+            },
+            "exporter": {
+              "tools/art/build_b3_stations.py": "7f84d8c60df8fe1d254a2bb05249f2467927621e105a6c4f57b5c55d0472c083",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_syndicate_command_station.py": "b182eebfcd9a349f76ed37a7624cd03557918734538519d19229bde5a50ab3dc"
+            },
+            "runtime": {
+              "assets/models/syndicate_command_station.mesh.json": "edb2fc8369f6a0d8d4d40020ac538b553659a5066face5ef3b1273b6afea778a"
+            },
+            "triangles": 3208,
+            "vertices": 1708
+          }
+        ]
+      },
+      "not_approved_by_this_decision": [
+        "landing, registration, activation, merge, tag or release of any of these revisions",
+        "the S11 catalogue switch and any production-default switch",
+        "packaging and native-Windows acceptance",
+        "the twenty-four B4 rows and the ten imperial station rows, which are pending or unauthorized independently of this decision"
+      ],
+      "how_recorded": "The owner's answer to the outstanding approval question, recorded verbatim against the exact revision hashes below."
     }
   ],
   "approved_assets": [

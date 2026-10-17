@@ -1,8 +1,11 @@
 # Handoff: S06 B3a — faction command stations (3 stations)
 
-**Status: review-ready, pending owner appearance approval. Not an approval record, not a
-registry entry, not a runtime manifest, and no asset here is selected in production.**
-Nothing in this batch is merged, released or switched on by default; the PR stays a draft.
+**Status: appearance approved by the owner on 2026-10-17** (`s06-b3a-command-stations-2026-10-17`,
+his words: "1.) B3a command stations: Approved"), **and not landed**: the decision binds the exact
+source, exporter and runtime hashes of all three revisions, `activation` is false on every sidecar,
+the registry still reports `procedural_legacy`, and no asset here is selected in production. Not an
+approval record itself, not a registry entry, not a runtime manifest. Nothing in this batch is
+merged, released or switched on by default; the PR stays a draft.
 
 This is the first slice of the station chapter of S06 (B3). It authors the three faction
 **command stations** — the largest, most visible structure in each fleet — inside their
@@ -242,7 +245,7 @@ on the branch are the platform gate; no package acceptance is claimed from a gre
 |---|---|---|---|---|
 | B1 | Alliance combat (cruiser + corvette + carrier) | 3 | 3 | authored, exported, reviewed — pending approval |
 | B2 | Squadrons + logistics | 15 (8 modelled, 3 shared-source, 4 `trade_convoy`) | 8 | authored, exported, reviewed — pending approval |
-| B3a | Faction command stations | 3 | 3 | authored, exported, reviewed — pending approval |
+| B3a | Faction command stations | 3 | 3 | authored, exported, reviewed — **appearance approved** (`s06-b3a-command-stations-2026-10-17`); not landed |
 | B3b | Remaining faction stations + planet installations | 27 + 24 | 0 | not started |
 | B3c | Imperial stations | 10 | 0 | blocked on a renderer decision |
 | B4–B5 | Environment props, campaign props | — | 0 | not started |
