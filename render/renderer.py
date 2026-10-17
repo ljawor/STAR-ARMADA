@@ -33,7 +33,7 @@ from render import textures as tex
 from render import markers as mk
 from render.fleet_materials import FleetMaterials
 from render.fleet_geometry import armor_loft, ship_mesh, station_mesh, ROLES
-from render.asset_selection import is_authored, gpu_cache_key, mesh_for, selected_binding
+from render.asset_selection import is_authored, gpu_cache_key, selected_binding
 
 from game.core.entity import Entity, QUADRANTS
 from game.core.vectors import Vec3
@@ -1139,6 +1139,10 @@ class Renderer:
         explicit legacy fallback, and it is what an unselected row gets.
         """
         binding = 'environment:asteroid_field'
+        # Imported here, not at module scope: every other seam in this codebase reads it at call time,
+        # which is what lets the review harnesses serve a candidate and what makes the reference follow
+        # a reconfiguration.
+        from render.asset_selection import mesh_for
         authored = mesh_for(binding)
         if authored is None:
             return None
@@ -3887,8 +3891,8 @@ PLANET_COLORS = {
 
 # The authored asteroid prop's per-role tint, relative to the instance's own rock colour: the field's
 # palette variety still comes from `base`, and the roles only split light from shadow from mineral.
-ASTEROID_ROLE_TINTS = (('base', 1.00), ('dark', 0.62), ('trim', 1.18),
-                       ('accent', 0.86), ('lit', 1.30), ('cool', 1.05))
+ASTEROID_ROLE_TINTS = (('base', 1.00), ('dark', 0.58), ('trim', 1.26),
+                       ('accent', 0.90), ('lit', 1.38), ('cool', 1.02))
 
 
 def rock_params(s, rng):
