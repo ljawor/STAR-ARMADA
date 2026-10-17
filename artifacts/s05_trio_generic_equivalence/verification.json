@@ -1,19 +1,31 @@
 {
-  "status": "BLOCKED-S05-NOT-ACCEPTED",
-  "engineering_equivalence_accepted": false,
-  "approval_transferred": false,
-  "E2": "incomplete: original successful run not robustly reproduced; frozen-repeat failure retained",
-  "original_successful_execution": "initial-run/verification.json",
-  "original_successful_manifest": "initial-run/file-hashes.json",
-  "parent_failure": "parent-reproduction.json",
-  "repeat_diagnosis": "diagnosis/repeat-diagnosis/FINDINGS.md",
-  "fbo_experiment": "diagnosis/fbo-diagnosis/result.json",
-  "fbo_accepted_as_fix": false,
-  "no_tolerance_or_quality_change": true,
-  "original_source_revisions": {
-    "control": "5bddd7b67245ddff4b595bb3b477ca8ceede0a6c",
-    "candidate": "7030dd252ddb4da3bb4f69fecb2f2028650ffe6c"
+  "status": "CURRENT-MATRIX-PASS-REVIEW-READY-WITH-LIMITATIONS",
+  "engineering_equivalence_record": "art/manifests/equivalence/S05-TRIO-EQUIVALENCE.json",
+  "gates": {
+    "E1": true,
+    "E2": true,
+    "E3": true,
+    "E4": true,
+    "E5": true,
+    "E6": true
   },
-  "native_windows_or_full_suite_claimed": false,
+  "current_runs": 2,
+  "paired_frames_per_run": 102,
+  "candidate_source_differences": 0,
+  "nonzero_repeat_allowances_used": 0,
+  "known_failure_still_rejected": {
+    "changed_pixels": 96,
+    "protected_changes": 15,
+    "max_channel_delta": 1
+  },
+  "protected_regions_not_shrunk": true,
+  "historical_root_cause_fixed": false,
+  "initial_successful_execution": "initial-run/verification.json",
+  "original_blocked_verdict": "pre-policy-verification.json",
+  "policy_execution": "policy-run/summary.json",
+  "independent_reproduction": "policy-parent-run/parent-checks.json",
+  "image_inspection": "policy-parent-run/inspection.json",
+  "review": "policy-review.json",
+  "native_windows_graphics_or_full_suite_claimed": false,
   "merge_or_S11_authorized": false
 }

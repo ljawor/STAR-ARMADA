@@ -1,0 +1,66 @@
+{
+  "step": "S05",
+  "status": "engineering-equivalence-demonstrated-in-two-complete-current-runs-review-ready-with-limitations",
+  "scope": "Approved trio through generic preview; not a new model appearance approval or authorization to merge/release/activate S11",
+  "sources": {
+    "prototype": "5bddd7b67245ddff4b595bb3b477ca8ceede0a6c",
+    "generic": "7030dd252ddb4da3bb4f69fecb2f2028650ffe6c"
+  },
+  "policy_id": "s05-background-repeatability-2026-10-16",
+  "policy_sha256": "6446bb8bc60205aca16d4fced69ffcde7ff14a095d6cc45335d091746a63eb44",
+  "assets": [
+    {
+      "asset": "core:alliance/battleship",
+      "revision": "7634f9edda51e6a87a50cfbcf697e914ae0f94ba16f0aab6eb59a939214ed7d9",
+      "mesh": {
+        "path": "assets/models/alliance_battleship.mesh.json",
+        "sha256": "0a4e397d5c0b60f70fbba35f3e4f4a5ac997ac4de079f821f8f29db9872c95cd",
+        "bytes": 743439
+      },
+      "existing_owner_decision_id": "s06-battleship-hull-detail-2026-10-16",
+      "manifest_sha256": "7d50de7a492789bd7a317335e63db7954c28e8ac8c604b5a3591071b315b67f1",
+      "appearance_revision_changed": false
+    },
+    {
+      "asset": "core:alliance/frigate",
+      "revision": "60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df",
+      "mesh": {
+        "path": "assets/models/alliance_frigate.mesh.json",
+        "sha256": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+        "bytes": 493063
+      },
+      "existing_owner_decision_id": "s07-frigate-shipyard-hull-detail-2026-10-16",
+      "manifest_sha256": "2a4394117ce2770850639ab6559a386996010478c10f13dd5de9fe7374363e3a",
+      "appearance_revision_changed": false
+    },
+    {
+      "asset": "core:alliance/shipyard",
+      "revision": "d40edf48c3305cd39f5f0de69a96d28572128621b51da98e26656e4eabdb3630",
+      "mesh": {
+        "path": "assets/models/alliance_shipyard.mesh.json",
+        "sha256": "b0ee2678ab42b9005e7ab9007eb6cb1464e878d9896a0104dd9ebad2142e3468",
+        "bytes": 651853
+      },
+      "existing_owner_decision_id": "s07-frigate-shipyard-hull-detail-2026-10-16",
+      "manifest_sha256": "e3c308e5f9d5bd10ce55e07f271b276f72aa7999a9ae544aaafb4c3679c18ed4",
+      "appearance_revision_changed": false
+    }
+  ],
+  "paired_frames_per_run": 102,
+  "cross_source_pixel_equality": true,
+  "simulation_hashes_per_run": 361,
+  "simulation_ticks_per_run": 360,
+  "current_nonzero_repeats": 0,
+  "feature_gate_count": 8,
+  "all_feature_controls_pass": true,
+  "historical_failure_still_rejected": {
+    "pixels": 96,
+    "protected_pixels": 15,
+    "max_channel_delta": 1
+  },
+  "root_cause_fixed": false,
+  "limitation": "The historical failing pair is not admitted by the conservative protection mask. Two fresh full executions pass; this is not a cure or proof that the rare capture instability can never recur. Any future protected-region difference still fails.",
+  "evidence": "artifacts/s05_trio_generic_equivalence/policy-parent-run/parent-checks.json",
+  "approval_records_rewritten": false,
+  "merge_authorized": false
+}

@@ -1,0 +1,19 @@
+{
+  "status": "BLOCKED-S05-NOT-ACCEPTED",
+  "engineering_equivalence_accepted": false,
+  "approval_transferred": false,
+  "E2": "incomplete: original successful run not robustly reproduced; frozen-repeat failure retained",
+  "original_successful_execution": "initial-run/verification.json",
+  "original_successful_manifest": "initial-run/file-hashes.json",
+  "parent_failure": "parent-reproduction.json",
+  "repeat_diagnosis": "diagnosis/repeat-diagnosis/FINDINGS.md",
+  "fbo_experiment": "diagnosis/fbo-diagnosis/result.json",
+  "fbo_accepted_as_fix": false,
+  "no_tolerance_or_quality_change": true,
+  "original_source_revisions": {
+    "control": "5bddd7b67245ddff4b595bb3b477ca8ceede0a6c",
+    "candidate": "7030dd252ddb4da3bb4f69fecb2f2028650ffe6c"
+  },
+  "native_windows_or_full_suite_claimed": false,
+  "merge_or_S11_authorized": false
+}

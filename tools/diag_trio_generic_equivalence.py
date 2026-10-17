@@ -132,6 +132,24 @@ def child(args):
         report['production_materials'] = True
         report['normal_fog'] = type(r.fog).__module__+'.'+type(r.fog).__name__
         r.diff_render, r.time = True, 3.
+        from render.ship_sizes import ship_size
+        from render.planet_building_geometry import station_frame
+        from game.core import detmath as math
+        model_payloads = {label: json.loads((source/f'assets/models/alliance_{asset}.mesh.json').read_text())
+                          for label,asset in [('capital','battleship'),('escort','frigate'),('yard','shipyard')]}
+        report['repeat_policy'] = dict(policy_id=POLICY_ID, max_channel_delta=1, max_changed_pixels=128,
+                                      payload_sha256={label:file_hash(source/f'assets/models/alliance_{asset}.mesh.json') for label,asset in [('capital','battleship'),('escort','frigate'),('yard','shipyard')]})
+        def protected_region(time):
+            models = []
+            for label,data in model_payloads.items():
+                e = st.entities[ids[label]]
+                if label == 'yard':
+                    frame = station_frame(st,e,math.radians(time*3.))
+                else:
+                    ca,sa = math.cos(e.yaw),math.sin(e.yaw)
+                    frame = (e.pos.to_tuple(),((ca,0.,-sa),(0.,1.,0.),(sa,0.,ca)),ship_size(gm.ds,e.data_id,'rebel').scale)
+                models.append(dict(name=label, vertices=data['vertices'], frame=frame))
+            return conservative_model_mask(cam,models)
         def pixels(spec, time=3.):
             recipe.configure(cam,spec)
             r.time = time
@@ -150,12 +168,39 @@ def child(args):
             # Warm caches, require a repeated frozen frame under the same state.
             for _ in range(3): pixels(spec,time)
             a=pixels(spec,time); b=pixels(spec,time)
-            if not np.array_equal(a,b):
-                save('FAILED-'+name+'-first',a)
-                save('FAILED-'+name+'-repeat',b)
-                dump(output/('FAILED-'+name+'.json'),pixel_metrics(a,b))
-                raise AssertionError(name+': unstable repeated frame')
+            mask, proof = protected_region(time)
+            repeated = repeat_metrics(a,b,mask)
+            if repeated['changed_pixels']:
+                prefix = ('ALLOWED-' if repeated['passed'] else 'FAILED-')+name
+                save(prefix+'-first',a); save(prefix+'-repeat',b)
+                save(prefix+'-protected-mask',np.repeat((mask.astype(np.uint8)*255)[:,:,None],3,axis=2))
+                dump(output/(prefix+'.json'),dict(metrics=repeated,projection=proof))
+            enforce_repeat(a,b,mask)
+            if name == 'motion-0270-escort-close' and args.failure_pair:
+                original = [np.transpose(pygame.surfarray.array3d(pygame.image.load(str(p))), (1,0,2)).copy() for p in args.failure_pair]
+                diagnostic = dict(metrics=repeat_metrics(*original,mask), projection=proof, tick=st.tick,state=state_hash(st),view=spec,
+                                  inputs={str(p):file_hash(p) for p in args.failure_pair})
+                dump(output/'known-failure-replay.json',diagnostic)
+                save('known-failure-protected-mask',np.repeat((mask.astype(np.uint8)*255)[:,:,None],3,axis=2))
+            if not report['frames']:
+                # Exercise the actual acceptance gates on this real rendered image.
+                controls = {}
+                outside = np.argwhere(~mask); inside = np.argwhere(mask)
+                for key,coords,amplitude,count in [('background-1',outside,1,1),('background-2',outside,2,1),('background-129',outside,1,129),('protected-1',inside,1,1)]:
+                    assert len(coords) >= count
+                    modified = a.copy()
+                    for y,x in coords[:count]: modified[y,x,0] = int(a[y,x,0])+amplitude if a[y,x,0] <= 255-amplitude else int(a[y,x,0])-amplitude
+                    try: enforce_repeat(a,modified,mask); accepted=True
+                    except AssertionError: accepted=False
+                    controls[key]=dict(accepted=accepted,metrics=repeat_metrics(a,modified,mask))
+                    if key=='background-1':
+                        try: enforce_exact(a,modified); cross_accepted=True
+                        except AssertionError: cross_accepted=False
+                        controls['cross-source-1']=dict(accepted=cross_accepted)
+                assert {k:v['accepted'] for k,v in controls.items()} == {'background-1':True,'background-2':False,'background-129':False,'protected-1':False,'cross-source-1':False}
+                report['policy_negative_controls']=controls
             row=dict(name=name,view=spec,time=time,tick=st.tick,state=state_hash(st),pixels_sha256=hashlib.sha256(a.tobytes()).hexdigest(),
+                     repeat=repeated,protected_projection=proof,
                      actual_eye=list(cam.eye_position()),view_matrix=np.asarray(cam._view).tolist(),projection_matrix=np.asarray(cam._proj).tolist())
             index=len(report['frames'])
             if peer:
@@ -359,6 +404,7 @@ def orchestrate(args):
             if args.scratch_root is not None:
                 command+=['--scratch-root',str(args.scratch_root.resolve())]
             if variant!='control':command+=['--peer',str(output/'control')]
+            if getattr(args, 'failure_pair', None): command+=['--failure-pair', *[str(p.resolve()) for p in args.failure_pair]]
             commands.append(command)
             dump(output/'commands.json',commands)
             with (output/(variant+'-execution.txt')).open('wb') as log:
@@ -401,6 +447,7 @@ def main():
     parser.add_argument('--source',type=Path)
     parser.add_argument('--selection',choices=['prototype','preview','legacy'])
     parser.add_argument('--peer',type=Path)
+    parser.add_argument('--failure-pair',type=Path,nargs=2,help='immutable original failed repeat PNG pair, diagnostic only')
     parser.add_argument('--user-root',type=Path,action='append',default=[],
                         help='additional user-data root to inventory (repeatable)')
     parser.add_argument('--scratch-root',type=Path,
@@ -409,6 +456,104 @@ def main():
     args.output=guard_output(args.output,args.scratch_root)
     if args.mode=='run':orchestrate(args)
     else:child(args)
+
+
+POLICY_ID = 's05-background-repeatability-2026-10-16'
+
+
+def conservative_model_mask(cam, models):
+    """An unprojectable instance removes the allowance for the entire frame."""
+    import numpy as np
+    try:
+        return projected_model_mask(cam, models)
+    except ValueError as exc:
+        mask = np.ones((cam.height,cam.width), bool)
+        return mask, dict(fail_closed=True,reason=str(exc),protected_pixels=int(mask.sum()),
+                          model_names=[m['name'] for m in models],
+                          mask_sha256=hashlib.sha256(mask.tobytes()).hexdigest())
+
+
+def projected_model_mask(cam, models, padding=8):
+    """Project full immutable payload AABB corners, with all roles included.
+
+    Positive-depth perspective extrema of a convex box occur at its vertices.
+    Clip only after projection; near-plane intersections are refused, not omitted.
+    """
+    import numpy as np
+    import math
+    import itertools
+    try:
+        if type(cam.width) is not int or type(cam.height) is not int or min(cam.width, cam.height) <= 0:
+            raise ValueError('invalid image dimensions')
+        if type(padding) is not int or padding < 8 or not models:
+            raise ValueError('invalid protected region inputs')
+        eye = np.asarray(cam.eye_position(), dtype=float)
+        camera_basis = np.asarray(cam.basis(), dtype=float)
+        near, fov = float(cam.near), float(cam.fov)
+        if eye.shape != (3,) or camera_basis.shape != (3,3) or not np.isfinite(eye).all() or not np.isfinite(camera_basis).all() or not math.isfinite(near) or not math.isfinite(fov) or near <= 0 or not 0 < fov < 179:
+            raise ValueError('invalid camera')
+        mask = np.zeros((cam.height, cam.width), bool)
+        records = []
+        with np.errstate(all='raise'):
+            for model in models:
+                vertices = np.asarray(model['vertices'], dtype=float)
+                origin, basis, scale = model['frame']
+                origin, basis, scale = np.asarray(origin, dtype=float), np.asarray(basis, dtype=float), float(scale)
+                if vertices.ndim != 2 or vertices.shape[1] != 3 or not len(vertices) or origin.shape != (3,) or basis.shape != (3,3) or not all(np.isfinite(v).all() for v in (vertices,origin,basis)) or not math.isfinite(scale) or scale <= 0:
+                    raise ValueError('invalid model transform/vertices')
+                lo, hi = vertices.min(0), vertices.max(0)
+                corners = np.array(list(itertools.product(*zip(lo, hi))))
+                world = origin + scale * (corners @ basis)
+                relative = (world-eye) @ camera_basis.T
+                if not np.isfinite(relative).all() or np.any(relative[:,2] <= near):
+                    raise ValueError('protected geometry crosses near plane')
+                factor = cam.height/2 / math.tan(math.radians(fov)/2)
+                xy = np.column_stack((cam.width/2+relative[:,0]/relative[:,2]*factor,
+                                      cam.height/2-relative[:,1]/relative[:,2]*factor))
+                if not np.isfinite(xy).all(): raise ValueError('invalid projection')
+                x0,y0 = [int(math.floor(v))-padding for v in xy.min(0)]
+                x1,y1 = [int(math.ceil(v))+padding+1 for v in xy.max(0)]
+                clipped = [max(0,min(cam.width,x0)),max(0,min(cam.height,y0)),max(0,min(cam.width,x1)),max(0,min(cam.height,y1))]
+                a,b,c,d = clipped
+                mask[b:d,a:c] = True
+                records.append(dict(name=model['name'], local_bounds=[lo.tolist(),hi.tolist()],
+                                    frame=[origin.tolist(),basis.tolist(),scale], projected_corners=xy.tolist(),
+                                    unclipped_bbox=[x0,y0,x1,y1], clipped_bbox=clipped))
+        return mask, dict(padding_pixels=padding, models=records, protected_pixels=int(mask.sum()),
+                          mask_sha256=hashlib.sha256(mask.tobytes()).hexdigest())
+    except (TypeError, KeyError, IndexError, OverflowError, FloatingPointError) as exc:
+        raise ValueError('unusable protected projection') from exc
+
+
+def repeat_metrics(a, b, protected):
+    """Capture-only allowance; all other image comparisons remain exact."""
+    import numpy as np
+    for image in (a, b):
+        if not isinstance(image, np.ndarray) or image.dtype != np.uint8 or image.ndim != 3 or image.shape[2] != 3 or not image.size:
+            raise ValueError('nonempty uint8 RGB image required')
+    if not isinstance(protected, np.ndarray) or protected.dtype != np.bool_ or protected.shape != a.shape[:2]:
+        raise ValueError('boolean image-sized protected mask required')
+    result = pixel_metrics(a, b)
+    changed = np.any(a != b, axis=2)
+    yy, xx = np.nonzero(changed)
+    protected_changes = int(np.count_nonzero(changed & protected))
+    result.update(policy_id=POLICY_ID, max_allowed_channel_delta=1, max_allowed_changed_pixels=128,
+                  protected_changes=protected_changes,
+                  changed_bbox=[int(xx.min()), int(yy.min()), int(xx.max()), int(yy.max())] if len(xx) else None,
+                  passed=result['max_channel_delta'] <= 1 and result['changed_pixels'] <= 128 and protected_changes == 0)
+    return result
+
+
+def enforce_repeat(a, b, protected):
+    result = repeat_metrics(a, b, protected)
+    assert result['passed'], 'capture repeat policy failed: '+str(result)
+    return result
+
+
+def enforce_exact(a, b):
+    result = pixel_metrics(a, b)
+    assert result['changed_pixels'] == 0, 'strict cross-source pixel divergence: '+str(result)
+    return result
 
 
 def pixel_metrics(a, b):

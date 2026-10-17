@@ -1,59 +1,52 @@
-# S05 — blocked engineering checkpoint
+# S05 — current matrix passes; historical repeatability limitation retained
 
-**S05 is not accepted or complete. No model approval has been transferred.**
+**Review-ready under the owner-authorized capture-only policy. Not merged and not a new model approval.**
 
-The initial execution produced 102 exact prototype/generic frame pairs, all eight owner colours,
-361 matching simulation hashes over 360 ticks, real combat and individually measured lamps/emitters.
-That original publication is preserved byte-for-byte under `initial-run/`, including its original
-107-entry file manifest and exact original harness. Its passing result applies to that execution.
+Two complete current executions each have 102 exact prototype/generic frame pairs, all eight owner
+colours, 361 matching state hashes over 360 ticks, real combat and eight individual lamp/emitter
+controls. Both had **zero nonzero frozen repeats**: neither actually needed the allowance.
+The independent parent run matches the worker's frame hashes exactly. 57 focused tests pass,
+model validation is 34/34 and runtime metadata reproduces.
 
-The parent's full reproduction failed at `motion-0270-escort-close`: identical frozen draws differed
-by **96 pixels / 99 colour channels, maximum delta 1**. Evidence is under
-`attempts/parent-reproduction/`; `parent-reproduction.json` and the top-level `verification.json`
-are authoritative for current status. The passing scoped code review did not include this failure.
+## Authorized amendment and its limits
 
-## Bounded diagnosis
+Owner reply **"ok go"** approved the background-only repeatability amendment. The pre-implementation
+policy fixes maximum channel delta 1, at most 128 changed pixels and zero changes inside protected
+regions for all three approved models, lamps and emitters. The numeric cap is an engineering
+interpretation, not a quoted owner-selected value. Regions use complete immutable mesh bounds,
+actual transforms and safety padding. Invalid projections fail closed by protecting the whole frame.
+Source parity, simulation/source/mesh hashes and feature restoration remain exact.
+Injected controls prove delta 2, 129 pixels, protected-pixel changes and cross-source single-pixel
+changes are rejected. No retries, extra warmups, FBO substitution or quality change were introduced.
 
-- The exact scene, digest, camera and parent's first image were reproduced. 500 further draws and
-  500 immediate rereads remained identical; root cause remains unresolved.
-- A same-format, actual 4×MSAA offscreen/explicit-resolve experiment retained production shaders,
-  fog, dither and passes. Neither route reproduced the unstable pair.
-- Default and FBO routes differed by 10,170 pixels (maximum delta 63), despite their matching exposed
-  formats. **FBO capture is not accepted as a replacement, rebaseline or fix.**
-- No threshold, warmup, quality or production code change was made to get a pass.
+**The old failing pair is still rejected:** its 96 one-level differences include 15 pixels inside the
+conservative boxes. Protection was not shrunk to admit it. The new executions establish current
+matrix equivalence, **not a fix for the unidentified historical capture instability**. A future
+protected-region difference still fails. This limitation must accompany any owner review of S05.
 
-See `diagnosis/` for measured reports and frozen diagnostic-script records. Those scripts refer to
-historical scratch paths and are forensic records, not the maintained reproduction command.
+## Evidence and provenance
 
-## Reproduction and tests
+- `verification.json`: authoritative current verdict and limitations.
+- `policy-run/`: complete worker execution, capture sheet, movie and real-image negative controls.
+- `policy-parent-run/`: independent complete reproduction, matching frame hashes and known-pair replay.
+- `policy-review.json`: scoped independent audit and corrected/finalized publication-index receipt.
+- `initial-run/`: original 107-file successful publication, preserved byte-for-byte with its original harness.
+- `attempts/parent-reproduction/`: original failing pair and partial run.
+- `diagnosis/`: bounded repeat/FBO investigations; FBO is not an accepted replacement or cure.
+- `pre-policy-verification.json`: original blocked verdict, retained rather than erased.
 
-The maintained harness is `tools/diag_trio_generic_equivalence.py`. It now resolves pinned commits
-independently of live HEAD, reads approved pins from the archived candidate and accepts guarded
-`--scratch-root` / repeatable `--user-root`. Its capture logic and strict gates match the preserved
-original AST; `reproducibility-fix-check.json` records the comparison.
+The maintained command remains:
 
 ```sh
-PYTHONPATH=tests .venv/bin/python -m unittest test_trio_generic_equivalence \
-  test_alliance_blender_trio test_alliance_blender_battleship \
-  test_ship_material_passes test_asset_selection test_detmath
-
 .venv/bin/python tools/diag_trio_generic_equivalence.py run \
   --output "$HOME/.hermes/cache/scratch/s05-new-reproduction"
 ```
 
-The output must be a new directory. All **53 focused tests** pass; model validation is **34/34** and
-runtime metadata reproduces. These are not a strict real-GL repeatability pass, native Windows
-rendering/package acceptance, a full suite, or permission to merge/release/activate S11.
+Use a new output directory. It archives pinned revisions independently of live HEAD; scratch and
+extra user roots can be supplied explicitly. Publisher logs must be finalized before being indexed;
+never redirect an active publication stream into a file that is simultaneously hashed.
 
-## Selected evidence
-
-- `initial-run/review-sheet.png`: prototype / generic / legacy close views.
-- `initial-run/owner-palette-sheet.png`: all eight supported owner colours.
-- `initial-run/paired-motion.mp4`: five seconds containing 60 frames over twelve seconds of simulation.
-- `initial-run/candidate/features-*.png`: feature-specific lamp/drive views.
-- `initial-run/verification.json`: original successful run only, superseded for acceptance by the
-  top-level blocked status.
-
-Next gate: resolve the repeatability failure under the unchanged capture contract, or obtain an
-explicit owner decision about a revised acceptance contract. Do not quietly infer a tolerance from
-these measurements. Approved sources, runtime meshes, exporters, gameplay and renderer stay unchanged.
+Selected motion evidence: `policy-run/paired-motion.mp4` (five seconds/60 frames spanning twelve
+seconds of simulation, with static station translation truthfully labelled). Approved model bytes,
+gameplay and production rendering stay unchanged. No S05 merge, release, Windows graphics/package,
+full-suite/performance or S11 acceptance is authorized or inferred.

@@ -2,7 +2,8 @@
 
 ## 1. Status and authority
 
-**In progress; engineering-equivalence sign-off blocked by a parent reproduction failure.**
+**Review-ready with a recorded historical repeatability limitation.** The two current full matrices
+pass under the owner-authorized capture-only amendment; this is not a fix for the old capture failure.
 S04 PR #124 is merged as `7030dd252ddb4da3bb4f69fecb2f2028650ffe6c`, with the exact tested tree.
 Owner instruction, verbatim: **"OK we can merge and continue with next step"**.
 This authorizes S05 execution, not automatic S05 merge, new model appearance approval, release or S11.
@@ -80,3 +81,37 @@ The top-level evidence `verification.json` says **BLOCKED-S05-NOT-ACCEPTED**. Al
 107 publication-manifest files remain byte-identical under `initial-run/`; the original report is
 not the current acceptance verdict. The final pushed head and CI receipt belong on the draft PR,
 not in a self-referential commit field. No S05 merge is authorized.
+
+## 7. Owner-authorized repeatability amendment — implementation in progress
+
+Owner reply, verbatim: **"ok go"**, to the proposal for a bounded capture-only background
+repeatability allowance. Frozen before implementation in
+`art/manifests/equivalence/S05-REPEATABILITY-POLICY.json`: maximum one 8-bit colour level,
+maximum 128 changed pixels per frozen repeat, and zero changes inside conservative geometry-derived
+protected regions for all three approved models including worklights and emitters. The numeric cap
+is an engineering interpretation of the approved small fixed cap, not a quoted owner-selected value.
+
+Prototype/generic parity, simulation hashes, source/runtime hashes and feature ablation/restoration
+remain strict. No extra retries, warmups, FBO substitution, quality change or production renderer
+edit is authorized. Every nonzero tolerated pair must remain visible in evidence with its mask.
+Implementation and full matrix rerun are in progress; no amended-gate pass is claimed yet.
+The previous blocked verdict and original failure remain retained. No S05 merge is authorized.
+
+## 8. Amended current results and remaining limitation
+
+Two complete executions (`policy-run/` and independent `policy-parent-run/`) each pass all 102
+prototype/generic frame pairs with **zero** cross-source differences, 361 matching simulation hashes,
+all eight owner colours, real combat and eight individual feature controls. Both had zero nonzero
+frozen repeats, so neither consumed the background allowance. The extended invocation passes
+**57 tests**, pipeline 34/34 and nine-file metadata reproduction.
+
+The replay of the original failing pair remains **rejected**, including 15 differences inside
+conservative protected boxes. No box or padding was reduced to admit it. This must not be described
+as an eliminated rendering cause. Future protected differences still fail. This is current bounded
+engineering evidence, with historical instability explicitly retained for owner review.
+
+Independent code/gate review found only an actively written publication-log hash mismatch; the log
+was finalized and all 87 indexed entries then verified. The original failed verdict and current
+receipt are in `policy-review.json`. Current top-level verdict and scoped per-model engineering
+record are `verification.json` and `art/manifests/equivalence/S05-TRIO-EQUIVALENCE.json`. Existing owner
+approvals are referenced, not rewritten. Owner review/merge of S05 is still a separate gate.

@@ -1,0 +1,14 @@
+test_projected_geometry_rotations_clipping_and_fail_closed (test_trio_generic_equivalence.RepeatPolicyTests.test_projected_geometry_rotations_clipping_and_fail_closed) ... FAIL
+
+======================================================================
+FAIL: test_projected_geometry_rotations_clipping_and_fail_closed (test_trio_generic_equivalence.RepeatPolicyTests.test_projected_geometry_rotations_clipping_and_fail_closed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s05/tests/test_trio_generic_equivalence.py", line 161, in test_projected_geometry_rotations_clipping_and_fail_closed
+    self.assertTrue(callable(getattr(m, 'projected_model_mask', None)), 'geometry mask missing')
+AssertionError: False is not true : geometry mask missing
+
+----------------------------------------------------------------------
+Ran 1 test in 0.005s
+
+FAILED (failures=1)

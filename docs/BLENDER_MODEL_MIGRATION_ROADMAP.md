@@ -376,6 +376,14 @@ capture differed from the default route and is not accepted as a fix. S05 theref
 after commit, 53 focused tests pass, and all failures/diagnostics are retained in the draft checkpoint.
 Read `art/manifests/handoffs/S05-TRIO-EQUIVALENCE.md` and the top-level evidence verdict.
 
+**Subsequent owner-authorized amendment:** reply `"ok go"` permits only bounded background
+frozen-repeat variation, recorded before implementation in `S05-REPEATABILITY-POLICY.json`.
+Two new complete executions now pass 102 exact source pairs and 361 state hashes each; 57 focused
+tests pass. Neither run used a nonzero allowance. S05 is review-ready in PR #125, **not merged**.
+The old pair still fails the conservative mask (15 protected differences); no protection was shrunk
+and no rendering cause is claimed fixed. Read the per-model engineering-equivalence sidecar and
+retain that limitation during owner review. No new appearance approval or S11 activation is inferred.
+
 - Run identical cameras/quality through the specimen control and generic path. Recheck close, rear, tactical, owner colors and motion/combat, with state hashes and normal fog.
 - Verify Blender source/runtime files and authored material appearance match the approved captures. Recheck four individual shipyard worklights and recessed drive emitters; an “any emissive triangle exists” test is insufficient.
 - If unchanged, record engineering equivalence to the approved revision. If appearance changes, show the owner the change and obtain explicit renewed approval. Do not substitute another AI's visual judgement.
@@ -490,7 +498,7 @@ This table is the initial planning state, **not implementation completion**. Fut
 | S02 | **Complete and merged** 2026-10-16 — PR #117 landed as `b2b6b75c4f7d90b99e943bf74b79b811c09e3785`; the validator reports 36 checks and 28 negative controls | Closed. The owner's four answers are enforced rules; nothing is implemented in the game until S04 |
 | S03 | **Complete and merged** 2026-10-16 — policies PR #118 `fd08ac7`, pipeline PR #119 `b5414b5`; D1/D2/D4/D6 machine-green, D5 signed by the owner | D3's Windows half is unproven: no Windows machine has run the pipeline. S09 owns that gate |
 | S04 | **Complete and merged**, PR #124 → `7030dd2` | Closed by owner merge authorization; S05 next, no S11 authorization |
-| S05 | **In progress, blocked**: original complete matrix passed, but parent frozen-repeat reproduction failed; 53 focused tests pass | Resolve strict-repeatability gate; no approval transfer. See S05 handoff and top-level blocked evidence |
+| S05 | **Review-ready with limitations**, PR #125: two current complete amended-policy matrices pass, 57 focused tests | Owner review/merge; historical repeatability failure remains recorded and conservatively rejected; no root-cause fix claimed |
 | S06 | **Started on the three specimens only** — the trio's hull detail is approved as `s06-battleship-hull-detail-2026-10-16` and `s07-frigate-shipyard-hull-detail-2026-10-16` (PRs #120 `47b0161`, #121 `047c380`, records #122 `96cd92e`) | The remaining 10 in-scope bindings still await authoring, each in its own named batch with per-asset approval |
 | S07 | Not started | Complete catalogue render-path integration |
 | S08 | Not started | Prove replacement packs, updates and cosmetic compatibility |

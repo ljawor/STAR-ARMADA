@@ -153,6 +153,78 @@ class PathTests(unittest.TestCase):
                 m.guard_output(scratch/'run', explicit)
 
 
+class RepeatPolicyTests(unittest.TestCase):
+    def test_unusable_runtime_projection_protects_every_pixel(self):
+        from types import SimpleNamespace
+        m = harness()
+        self.assertTrue(callable(getattr(m, 'conservative_model_mask', None)), 'fail-closed runtime wrapper missing')
+        cam = SimpleNamespace(width=20,height=20,near=2.,fov=55.,eye_position=lambda:(0,0,0),basis=lambda:np.eye(3))
+        mask,proof = m.conservative_model_mask(cam,[dict(name='near',vertices=[[-1,-1,1],[1,1,3]],frame=((0,0,0),np.eye(3),1))])
+        self.assertTrue(mask.all()); self.assertTrue(proof['fail_closed'])
+        a=np.zeros((20,20,3),np.uint8); b=a.copy(); b[0,0,0]=1
+        with self.assertRaises(AssertionError): m.enforce_repeat(a,b,mask)
+
+    def test_runtime_gates_reject_mutated_real_pair_without_relaxing_cross_source(self):
+        m = harness()
+        self.assertTrue(callable(getattr(m, 'enforce_repeat', None)), 'runtime gate missing')
+        a = np.zeros((20,20,3), np.uint8); mask = np.zeros((20,20), bool); mask[10:,10:] = True
+        for position, amplitude in (((0,0),2), ((10,10),1)):
+            b = a.copy(); b[position[0],position[1],0] = amplitude
+            with self.assertRaises(AssertionError): m.enforce_repeat(a,b,mask)
+        b = a.copy(); b[:9,:15,0] = 1
+        with self.assertRaises(AssertionError): m.enforce_repeat(a,b,mask)
+        b = a.copy(); b[0,0,0] = 1
+        self.assertTrue(m.enforce_repeat(a,b,mask)['passed'])
+        with self.assertRaises(AssertionError): m.enforce_exact(a,b)
+        self.assertTrue(m.enforce_exact(a,a)['changed_pixels'] == 0)
+
+    def test_projected_geometry_rotations_clipping_and_fail_closed(self):
+        import math
+        from types import SimpleNamespace
+        m = harness()
+        self.assertTrue(callable(getattr(m, 'projected_model_mask', None)), 'geometry mask missing')
+        cam = SimpleNamespace(width=200, height=120, near=2., fov=55.,
+                              eye_position=lambda:(0.,0.,0.), basis=lambda:((1.,0.,0.),(0.,1.,0.),(0.,0.,1.)))
+        points = [[x,y,z] for x in (-5,5) for y in (-3,3) for z in (-4,4)]
+        for angle in (0., .7, 2.2):
+            c,s = math.cos(angle), math.sin(angle)
+            basis = ((c,0.,-s),(0.,1.,0.),(s,0.,c))
+            for distance in (30., 100., 1000.):
+                models = [dict(name=str(i), vertices=points, frame=((x,0.,distance),basis,1.)) for i,x in enumerate((-20.,0.,20.))]
+                mask, proof = m.projected_model_mask(cam, models)
+                self.assertEqual(len(proof['models']), 3)
+                for model in models:
+                    for p in points:
+                        world = np.array(model['frame'][0]) + np.array(p) @ np.array(basis)
+                        sx = 100 + world[0]/world[2]*60/math.tan(math.radians(55)/2)
+                        sy = 60 - world[1]/world[2]*60/math.tan(math.radians(55)/2)
+                        if 0 <= sx < 200 and 0 <= sy < 120: self.assertTrue(mask[int(sy),int(sx)])
+                self.assertEqual(proof['mask_sha256'], __import__('hashlib').sha256(mask.tobytes()).hexdigest())
+        for bad in (float('nan'), float('inf'), 10**1000):
+            with self.assertRaises(ValueError): m.projected_model_mask(cam, [dict(name='bad',vertices=points,frame=((bad,0,30),np.eye(3),1))])
+        with self.assertRaises(ValueError): m.projected_model_mask(cam, [dict(name='near',vertices=points,frame=((0,0,3),np.eye(3),1))])
+        with self.assertRaises(ValueError): m.projected_model_mask(cam, [])
+
+    def test_background_allowance_is_narrow_and_cross_source_stays_exact(self):
+        m = harness()
+        self.assertTrue(callable(getattr(m, 'repeat_metrics', None)), 'repeat policy missing')
+        a = np.zeros((20, 20, 3), np.uint8)
+        mask = np.zeros((20, 20), bool); mask[10:, 10:] = True
+        b = a.copy(); b[:8, :16, 0] = 1
+        self.assertTrue(m.repeat_metrics(a, b, mask)['passed'])
+        self.assertEqual(m.pixel_metrics(a, b)['changed_pixels'], 128)
+        b[8, 0, 0] = 1
+        self.assertFalse(m.repeat_metrics(a, b, mask)['passed'])
+        b = a.copy(); b[0, 0, 0] = 2
+        self.assertFalse(m.repeat_metrics(a, b, mask)['passed'])
+        b = a.copy(); b[10, 10, 0] = 1
+        self.assertFalse(m.repeat_metrics(a, b, mask)['passed'])
+        for bad in (a.astype(float), a[:0], np.zeros((20,20,4), np.uint8), [[1]], np.full((20,20,3), np.nan)):
+            with self.assertRaises(ValueError): m.repeat_metrics(bad, bad, mask)
+        for bad in (mask.astype(int), mask[:0], None):
+            with self.assertRaises(ValueError): m.repeat_metrics(a, a, bad)
+
+
 class MeasurementTests(unittest.TestCase):
     def test_exact_comparison_catches_single_channel_and_shape(self):
         m = harness()
