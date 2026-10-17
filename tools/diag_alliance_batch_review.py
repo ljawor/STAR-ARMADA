@@ -27,6 +27,22 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 W, H = 1280, 800
 VIEW_NAMES = ('close', 'rear', 'tactical', 'common-scale')
+FACTION_ORDER = ('rebel', 'imperial', 'confederacy', 'syndicate')
+FACTION_OWNER = {name: index for index, name in enumerate(FACTION_ORDER)}
+FACTION_COLOR = {'rebel': (.35, .65, 1.), 'imperial': (1., .35, .25),
+                 'confederacy': (.45, .95, .55), 'syndicate': (.95, .75, .3)}
+
+
+def players_for(factions):
+    """One real player per faction the scene needs, keyed by `FACTION_OWNER`.
+
+    The specimen's *owner* decides which faction's structure, so the scene has to hold a
+    player of that faction (see `build_review_scene`).
+    """
+    from game.core.state import PlayerState
+    return {FACTION_OWNER[name]: PlayerState(FACTION_OWNER[name], faction=name, team=index,
+                                             is_ai=False, color=FACTION_COLOR[name])
+            for index, name in enumerate(factions)}
 
 
 def load_spec(path):
@@ -42,13 +58,42 @@ def placements_for(asset):
     """The reviewed specimen plus the same fixed context group for every row.
 
     Slots are spaced further apart than the widest class pair in the batch so the
-    inherited non-overlap assertion holds for a 250-radius supercapital too.
+    inherited non-overlap assertion holds for a 250-radius supercapital too. A station
+    binding spawns a station, which the shared scene's `spawn_station` path already
+    supports, and `capture_slice.geometry` measures it with `station_bounds`.
     """
-    return [('capital', 'ship', asset['data_id'], 0, list(asset['slot']), 0.),
+    return [('capital', 'station' if asset.get('station_kind') else 'ship',
+             asset['data_id'], FACTION_OWNER[asset.get('faction', 'rebel')],
+             list(asset['slot']), 0.),
             ('escort', 'ship', 'rebel_frigate', 0, [-4200, 0, 2900], 0.),
             ('battleship', 'ship', 'rebel_battleship', 0, [-4200, 0, 1500], 0.),
             ('enemy_a', 'ship', 'imperial_frigate', 1, [-3500, 0, 2200], -1.5707963267948966),
             ('enemy_b', 'ship', 'imperial_frigate', 1, [-3500, 0, 2900], -1.5707963267948966)]
+
+
+def station_scale(asset):
+    """The game's own station scale: `assets/data/stations/stations.json` radius over the
+    nominal radius-50 space the station layout is authored in.
+
+    A station binding's union-safe camera is driven by this scaled footprint, not by the
+    raw mesh extent, so a 96-unit-wide station needs its `close` view three times further
+    out than a 96-unit-long ship does.
+    """
+    stations = json.loads((ROOT / 'assets/data/stations/stations.json')
+                          .read_text(encoding='utf-8'))['stations']
+    return stations[asset['station_kind']]['radius'] / 50.
+
+
+def station_span(kind, faction):
+    """The station's own footprint - the measure its render and contact helpers read.
+
+    `ship_size` would resolve a station binding's class from a ship key it does not have,
+    so a station is compared against the legacy *station* geometry instead: same envelope,
+    same footprint, same gameplay radius.
+    """
+    from render.camera_geometry import station_bounds
+    lo, hi = station_bounds(kind, faction)
+    return tuple(hi[i] - lo[i] for i in range(3))
 
 
 def views_for(asset, length):
@@ -59,7 +104,7 @@ def views_for(asset, length):
             'common-scale': dict(target=[-4300, 0, 2100], distance=1800., yaw=48., pitch=50.)}
 
 
-def build_row_scene(helper, placements):
+def build_row_scene(helper, placements, factions=('rebel', 'imperial')):
     """One clean single-scale row: the reviewed specimens only, no context group.
 
     The shared helper's scene carries a fixed context group and asserts that each side
@@ -67,7 +112,6 @@ def build_row_scene(helper, placements):
     minimal real setup is repeated here: same map, same players, same factory and grid.
     """
     from game.core.manager import GameManager
-    from game.core.state import PlayerState
     from game.core.vectors import Vec3
     from game.systems.economy import EconomySystem
     gm = GameManager()
@@ -80,10 +124,14 @@ def build_row_scene(helper, placements):
     st.map_info.star = dict(m['star'])
     st.map_info.nebulas = list(m.get('nebulas', []))
     st.map_info.jump_points = list(m.get('jump_points', []))
-    st.players = {0: PlayerState(0, faction='rebel', team=0, is_ai=False, color=(.35, .65, 1.)),
-                  1: PlayerState(1, faction='imperial', team=1, is_ai=False, color=(1., .35, .25))}
-    for _label, _kind, data_id, owner, pos, yaw in placements:
-        gm.factory.spawn_ship(data_id, owner, Vec3(*pos), yaw=yaw)
+    st.players = players_for(factions)
+    for _label, kind, data_id, owner, pos, yaw in placements:
+        # A station row spawns a station: the shared scene's `spawn_station` path draws it
+        # through `station_mesh`, which is the seam under review.
+        if kind == 'ship':
+            gm.factory.spawn_ship(data_id, owner, Vec3(*pos), yaw=yaw)
+        else:
+            gm.factory.spawn_station(data_id, owner, Vec3(*pos))
     entities = list(st.entities.values())
     for i, e in enumerate(entities):
         for other in entities[i + 1:]:
@@ -94,13 +142,32 @@ def build_row_scene(helper, placements):
     return gm, st
 
 
-def build_review_scene(helper):
+def build_review_scene(helper, faction='rebel'):
     """Keep the shared scene setup, but declare this orbit harness's actual intent.
 
     No helper.issue call is made and renderer/HUD receive empty selections; the
     inherited recipe describes the helper's separate combat harness.
+
+    The specimen is re-owned by a player of its own faction, and the shared scene's two
+    players are extended when that faction is neither of them, because the renderer
+    resolves a *station's* faction from its owner (`owner_faction(state, e.owner)` in the
+    renderer's station draw): a `confederacy:command_station` owned by the rebel player
+    draws the Alliance design, the seam is then queried as `rebel:command_station` — which
+    no candidate matches — and the row reports a 0.0-pixel change against a frame that was
+    never injected. (A ship's visual key comes from its ship data row, so ship rows are
+    unaffected.) Re-owning puts the specimen in the situation the binding describes: a
+    station built by a player of that faction.
     """
     gm, ids, recipe = helper.build_scene()
+    st = gm.state
+    if faction not in ('rebel', 'imperial'):
+        from game.core.state import PlayerState
+        owner = FACTION_OWNER[faction]
+        st.players[owner] = PlayerState(owner, faction=faction, team=2, is_ai=False,
+                                        color=FACTION_COLOR[faction])
+        st.entities[ids['capital']].owner = owner
+        from render import asset_selection as selection
+        selection.invalidate_geometry_helpers()
     return gm, ids, dict(recipe, command_schedule=[], selection=[])
 
 
@@ -190,10 +257,20 @@ def main():
             # the candidate must not change it beyond the recorded 1% review tolerance.
             active['enabled'] = False; selection.invalidate_geometry_helpers()
             faction = asset.get('faction', 'rebel')
-            length = ship_size(DataStore.get(), asset['data_id'], faction).length
+            station = asset.get('station_kind')
+            measure = station_span(station, faction) if station else None
+            length = (max(measure) * station_scale(asset) if station
+                      else ship_size(DataStore.get(), asset['data_id'], faction).length)
             active['enabled'] = True; selection.invalidate_geometry_helpers()
-            candidate_length = ship_size(DataStore.get(), asset['data_id'], faction).length
-            assert abs(candidate_length - length) <= length * .01, (binding, length, candidate_length)
+            if station:
+                candidate_measure = station_span(station, faction)
+                assert all(abs(a - b) <= max(a, b) * .01 for a, b in zip(measure, candidate_measure)), \
+                    (binding, measure, candidate_measure)
+                candidate_length = max(candidate_measure) * station_scale(asset)
+            else:
+                candidate_measure = None
+                candidate_length = ship_size(DataStore.get(), asset['data_id'], faction).length
+                assert abs(candidate_length - length) <= length * .01, (binding, length, candidate_length)
             views = views_for(asset, length)
             asset_path = ROOT / asset['mesh']
             payload = json.loads(asset_path.read_text(encoding='utf-8'))
@@ -203,9 +280,12 @@ def main():
                 bytes=asset_path.stat().st_size, bounds=payload['bounds'],
                 blender=payload.get('authoring'), roles=sorted(payload['batches']),
                 authority=payload['features'].get('authority'),
-                legacy_length=length, candidate_length=candidate_length)
-            gm, ids, recipe = build_review_scene(helper); st = gm.state
+                legacy_length=length, candidate_length=candidate_length,
+                legacy_footprint=measure, candidate_footprint=candidate_measure,
+                station_scale=station_scale(asset) if station else None)
+            gm, ids, recipe = build_review_scene(helper, faction); st = gm.state
             initial = state_hash(st)
+            active['enabled'] = False; selection.invalidate_geometry_helpers()
             baseline = helper.geometry(st)
             active['enabled'] = True; selection.invalidate_geometry_helpers()
             candidate_geometry = helper.geometry(st)
@@ -237,7 +317,7 @@ def main():
             for variant in ('before', 'after'):
                 active['enabled'] = variant == 'after'
                 selection.invalidate_geometry_helpers()
-                gm, ids, _ = build_review_scene(helper); st = gm.state
+                gm, ids, _ = build_review_scene(helper, faction); st = gm.state
                 assert state_hash(st) == initial
                 cam = Camera(W, H); cam.bind_scene(st, lambda: 0, lambda: 0.)
                 renderer = Renderer(st, cam); renderer.diff_render = True; renderer.time = 3.
@@ -302,7 +382,7 @@ def main():
                 for variant in ('before', 'after'):
                     active['enabled'] = variant == 'after'
                     selection.invalidate_geometry_helpers()
-                    gm, ids, _ = build_review_scene(helper); st = gm.state
+                    gm, ids, _ = build_review_scene(helper, faction); st = gm.state
                     assert state_hash(st) == initial
                     cam = Camera(W, H); cam.bind_scene(st, lambda: 0, lambda: 0.)
                     renderer = Renderer(st, cam); renderer.diff_render = True; renderer.time = 3.
@@ -337,7 +417,11 @@ def main():
 
         # One batch overview at a single scale: the only scale comparison in this sheet.
         # One batch overview at a single shared scale: the only scale comparison here.
-        row = [(f'spec{index}', 'ship', a['data_id'], 0,
+        row_factions = ['rebel', 'imperial'] + [f for f in FACTION_ORDER
+                                                if any(a.get('faction') == f
+                                                       for a in spec['assets'])]
+        row = [(f'spec{index}', 'station' if a.get('station_kind') else 'ship',
+                a['data_id'], FACTION_OWNER[a.get('faction', 'rebel')],
                 [spec['overview']['first_x'], 0,
                  spec['overview']['first_z'] + index * spec['overview']['spacing']], 0.)
                for index, a in enumerate(spec['assets'])]
@@ -350,7 +434,7 @@ def main():
             active['enabled'] = variant == 'after'
             active['binding'] = None
             selection.invalidate_geometry_helpers()
-            gm, st = build_row_scene(helper, row)
+            gm, st = build_row_scene(helper, row, row_factions)
             cam = Camera(W, H); cam.bind_scene(st, lambda: 0, lambda: 0.)
             helper.configure(cam, overview)
             helper.camera_check(cam, st, [helper.geometry(st)], 3.)

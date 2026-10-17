@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b3a-command-stations",
+  "binding": "syndicate:command_station",
+  "canonical_binding": "ship:syndicate:command_station",
+  "gameplay_entity": "command_station",
+  "class": "command_station",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/syndicate_command_station.blend",
+    "sha256": "f3342e0ed63c8b730d91bafdca9c8d7d0bbf9bc0bfe7e54293bff792e27e4d17",
+    "bytes": 123243
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b3_stations.py",
+    "sha256": "7f84d8c60df8fe1d254a2bb05249f2467927621e105a6c4f57b5c55d0472c083",
+    "bytes": 21849,
+    "selects": "--asset syndicate:command_station"
+  },
+  "export_script": {
+    "path": "tools/art/export_syndicate_command_station.py",
+    "sha256": "b182eebfcd9a349f76ed37a7624cd03557918734538519d19229bde5a50ab3dc",
+    "bytes": 4785
+  },
+  "runtime": {
+    "path": "assets/models/syndicate_command_station.mesh.json",
+    "sha256": "edb2fc8369f6a0d8d4d40020ac538b553659a5066face5ef3b1273b6afea778a",
+    "bytes": 221182,
+    "triangles": 3208,
+    "vertices": 1708,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -52.1606,
+      -15.2,
+      -53.6606
+    ],
+    [
+      48.0,
+      45.6,
+      38.4883
+    ]
+  ],
+  "bounds": [
+    [
+      -52.019135,
+      -15.2,
+      -53.66
+    ],
+    [
+      48.0,
+      45.6,
+      38.400002
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b3a-command-stations/contact-sheet.png",
+  "motion": null
+}

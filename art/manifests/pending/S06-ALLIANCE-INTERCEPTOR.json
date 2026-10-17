@@ -69,5 +69,5 @@
   "activation": false,
   "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
   "evidence": "artifacts/s06_alliance_batch_review/b2-squadron-logistics/contact-sheet.png",
-  "motion": "artifacts/s06_alliance_batch_review/b2-squadron-logistics/interceptor-before-motion.mp4"
+  "motion": "artifacts/s06_alliance_batch_review/b2-squadron-logistics/interceptor-after-motion.mp4"
 }

@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b3a-command-stations",
+  "binding": "confederacy:command_station",
+  "canonical_binding": "ship:confederacy:command_station",
+  "gameplay_entity": "command_station",
+  "class": "command_station",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/legion_command_station.blend",
+    "sha256": "159e8288e6341e329046591475875e17a1446466eb23c1dcd1b3b456e880ec66",
+    "bytes": 121993
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b3_stations.py",
+    "sha256": "7f84d8c60df8fe1d254a2bb05249f2467927621e105a6c4f57b5c55d0472c083",
+    "bytes": 21849,
+    "selects": "--asset confederacy:command_station"
+  },
+  "export_script": {
+    "path": "tools/art/export_legion_command_station.py",
+    "sha256": "b8b5f6582bf3f9974cf0302a7a94ef106000a6f4d81c48484c24dbe7660fa974",
+    "bytes": 4772
+  },
+  "runtime": {
+    "path": "assets/models/legion_command_station.mesh.json",
+    "sha256": "a9f6bdb8259217f1649ee47b44809cef79ac4c3369c680325f8e5c874a0cd0d8",
+    "bytes": 131317,
+    "triangles": 2161,
+    "vertices": 1175,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -53.8231,
+      -6.0,
+      -38.4
+    ],
+    [
+      53.8231,
+      41.6,
+      60.0
+    ]
+  ],
+  "bounds": [
+    [
+      -53.799999,
+      -6.0,
+      -38.0
+    ],
+    [
+      53.799999,
+      41.6,
+      60.0
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b3a-command-stations/contact-sheet.png",
+  "motion": null
+}

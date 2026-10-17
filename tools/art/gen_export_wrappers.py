@@ -34,6 +34,11 @@ ASSETS = {
     'alliance_convoy': ('Colony transport', ((-31.0, 31.0), (-9.0, 16.0), (-72.698, 59.5)), 132.1, 10000, 7000, 1_500_000),
     'legion_convoy': ('Legion hauler', ((-36.5, 36.5), (-7.0, 29.5), (-65.698, 57.6)), 123.2, 10000, 7000, 1_500_000),
     'syndicate_convoy': ('Syndicate bulk hauler', ((-27.786, 42.267), (-9.0, 36.5), (-76.912, 62.04)), 138.9, 10000, 7000, 1_500_000),
+    # S06 B3a - the three faction command stations. Stations carry the owner-set 11,500
+    # triangle advisory budget, under the loader's hard 12,000.
+    'alliance_command_station': ('Alliance command station', ((-48.0, 48.0), (-6.8, 26.48), (-29.6, 29.6)), 59.0, 11500, 8000, 2_000_000),
+    'legion_command_station': ('Legion command station', ((-53.8231, 53.8231), (-6.0, 41.6), (-38.4, 60.0)), 98.0, 11500, 8000, 2_000_000),
+    'syndicate_command_station': ('Syndicate command station', ((-52.1606, 48.0), (-15.2, 45.6), (-53.6606, 38.4883)), 91.8, 11500, 8000, 2_000_000),
 }
 
 
