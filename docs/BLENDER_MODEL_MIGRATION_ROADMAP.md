@@ -383,7 +383,7 @@ approved trio, so the refit pipeline refuses these bindings with `E_UNKNOWN_BIND
 | B3c stations | seventeen: research station, defense platform, trade station, fighter platform, repair dock across the three families, plus the Legion and Syndicate shipyards | Authored and **appearance-approved** (`s06-b3c-stations-2026-10-17`) |
 | B4 satellites/planet installations | twenty-four rows: `defense_satellite`, `attack_satellite`, `planet_extractor`, `planet_trade_hub`, `planet_shield_generator`, `planet_pulsar_cannon` × four families | **Authored, captured and guarded on the branch; pending owner approval** (authorized as `s06-b4-scope-2026-10-17`) |
 | Imperial rows | ten station rows, five combat hulls, the squadron and logistics rows | **Partly delivered**: B4's four families include imperial satellites and planet installations; the imperial *station* rows are ordinary asset work (the seam is faction-generic) and the imperial *ships* need a per-binding key in `ship_visual_key`; authorized as `s06-imperial-migration-2026-10-17` |
-| B5 environment | thirteen props and the menu backdrop | Not started |
+| B5 environment | thirteen props and the menu backdrop | **Resolved by scope probe: not meshes.** The planet surfaces are generated equirect textures on a shared unit sphere, the starfield is an effect and the backdrop is a baked movie; the asteroid field is the one geometry row and it is **authored and appearance-approved** (`shared_asteroid_field`, 216 tri under the declared small-prop class, `s06-b5-environment-2026-10-17`) |
 
 Coverage of the 120 inventory bindings at this head: **67 authored** (43 before B4, 24 in it). Stations 30 of 40 - every
 faction row, with the ten imperial rows waiting on the seam; combat hulls 5 of 18 (the rebel five);
@@ -524,7 +524,7 @@ This is the current progress ledger; initial planning and failed attempts remain
 | S03 | **Complete and merged** 2026-10-16 — policies PR #118 `fd08ac7`, pipeline PR #119 `b5414b5`; D1/D2/D4/D6 machine-green, D5 signed by the owner | D3's Windows half is unproven: no Windows machine has run the pipeline. S09 owns that gate |
 | S04 | **Complete and merged**, PR #124 → `7030dd2` | Closed; S05 subsequently merged. No S11 authorization |
 | S05 | **Complete and merged**, PR #125 → `f873a33`; 57 tests, two 102-frame current matrices, exact hashes and Windows CI | Closed by explicit owner merge authorization. Historical capture failure still rejected; no root-cause fix claimed |
-| S06 | **In progress on `feat/s06-next-model-batch` (draft PR #127)**, unmerged: B1, B2, B3a, B3b, B3c and B4 authored - 67 specimens including the merged trio detail. 40 appearance-approved per revision; B4 pending | Author B5 (environment) and the imperial ship rows (a per-binding key in `ship_visual_key`). Open: the landing/registration decision stays S10/S11 |
+| S06 | **In progress on `feat/s06-next-model-batch` (draft PR #127)**, unmerged: B1, B2, B3a, B3b, B3c, B4 and B5 authored - 68 specimens including the merged trio detail. 65 appearance-approved across 8 decisions, the latest being the B5 asteroid prop | The imperial **ship** rows (a per-binding key in `ship_visual_key`; the imperial stations and satellites were already ordinary asset work). Open: the landing/registration decision stays S10/S11 |
 | S07 | Not started | Complete catalogue render-path integration |
 | S08 | Not started | Prove replacement packs, updates and cosmetic compatibility |
 | S09 | Not started | Integrated suite/performance/package/platform gates |
@@ -545,11 +545,11 @@ The original S00-only kickoff is historical and retained in Git/handoff history;
 | Trio hull detail (S06, early) | **Approved and merged** — one revision per binding: battleship #120 `47b0161`, frigate + shipyard #121 `047c380`, record correction #122 `96cd92e`; 11,457 / 7,708 / 10,767 triangles, no silhouette, scale or simulation change; the guard raise is the owner decision `s07-detail-budget-2026-10-16` (11,888 tri / 9,500 verts) | None outstanding. Not a catalogue batch: the remaining bindings keep their inventory status |
 | S04 generic integration | **Complete and merged**, PR #124 → `7030dd2`; autocrlf clone 195/195; contract 36/28; pipeline 34/34; Windows CI passed | Closed. Manual package skipped; full S05 matrix subsequently completed under its recorded policy |
 | S05 trio equivalence | **Complete and merged**, PR #125 → `f873a33`, tree-identical to tested head `e74bf97`; Windows CI `39004868017` passed | Closed with historical capture limitation retained; manual package skipped, no native graphics/package claim |
-| S06 authoring | **In progress on an isolated branch**, nothing landed: draft PR #127 at `406d090` carries the placement repairs and the B1/B2/B3a/B3b/B3c/B4 batches with their evidence and guards; 40 specimens approved per revision on 2026-10-17, B4's twenty-four awaiting an answer | Per-model appearance approval; no blanket catalogue approval, no registration. Next batch: B5 environment |
+| S06 authoring | **In progress on an isolated branch**, nothing landed: draft PR #127 carries the placement repairs and the B1/B2/B3a/B3b/B3c/B4/B5 batches with their evidence and guards; 65 specimens approved across 8 decisions on 2026-10-17 | Per-model appearance approval; no blanket catalogue approval, no registration. Next: the imperial ship rows |
 | S07–S10 | Not completed | Follow integration/mod/platform/package/final-lock dependencies |
 | S11 | **Not started, not authorized, not done** | Final explicit owner-controlled catalogue switch only after S10 |
 
-**Current next task: S06 B5 — the environment props and the menu backdrop — and, behind it, the imperial ship rows.**
+**Current next task: the S06 imperial ship rows.** B5 closed out as one authored geometry row: the environment scope probe classified the other thirteen as textures, an effect and a baked movie, and the owner approved the asteroid prop on 2026-10-17. The landing/registration decision remains S10/S11 and is the only thing standing between these approvals and production.
 S00–S05 are merged. Read the current S05 handoff, equivalence record and recorded capture limitation,
 then the S01 inventory/scope decision and S03 source-authority/budget policy. The inventory's older
 implementation statuses and line references are historical; the actual merged tree and approval
