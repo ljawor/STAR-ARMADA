@@ -1,0 +1,6 @@
+test_recipe_declares_actual_empty_commands_and_selection (test_alliance_blender_cruiser.ReviewMetadata.test_recipe_declares_actual_empty_commands_and_selection) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.015s
+
+OK

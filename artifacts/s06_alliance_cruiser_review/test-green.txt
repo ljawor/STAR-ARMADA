@@ -1,0 +1,6 @@
+test_evaluated_mesh_contract (test_alliance_blender_cruiser.LibertyGeometry.test_evaluated_mesh_contract) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.021s
+
+OK

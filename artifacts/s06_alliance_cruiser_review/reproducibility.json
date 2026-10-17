@@ -1,0 +1,29 @@
+{
+  "blender": "5.0.1",
+  "commands": [
+    [
+      "/Applications/Blender.app/Contents/MacOS/Blender",
+      "--background",
+      "--python-exit-code",
+      "1",
+      "--python",
+      "tools/art/export_alliance_cruiser.py"
+    ],
+    [
+      "/Applications/Blender.app/Contents/MacOS/Blender",
+      "--background",
+      "--python-exit-code",
+      "1",
+      "--python",
+      "tools/art/export_alliance_cruiser.py"
+    ]
+  ],
+  "mesh_hashes": [
+    "38b4e9f92040e67ffc1655910de39c24de4156397a94c76c34f94738a383ba84",
+    "38b4e9f92040e67ffc1655910de39c24de4156397a94c76c34f94738a383ba84"
+  ],
+  "byte_identical": true,
+  "blend_before": "96cdcc024a304d317e7e95d6f096675322971c9671521338f248a140ddd77fd6",
+  "blend_after": "96cdcc024a304d317e7e95d6f096675322971c9671521338f248a140ddd77fd6",
+  "source_preserved": true
+}

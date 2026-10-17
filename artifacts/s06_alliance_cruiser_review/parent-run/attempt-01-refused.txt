@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/tools/diag_alliance_cruiser_review.py", line 203, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/tools/diag_alliance_cruiser_review.py", line 28, in main
+    helper.isolate(ROOT,out)
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/artifacts/alliance_blender_trio/evidence/capture_slice.py", line 123, in isolate
+    raise ValueError(f'unset {key}; normal real-renderer path required')
+ValueError: unset SDL_VIDEODRIVER; normal real-renderer path required
