@@ -414,7 +414,13 @@ def main():
                             for frame in range(150):
                                 gm.step(1 / 30)
                                 view = dict(views['close']); view['yaw'] = 48. + frame * .6
-                                view['distance'] = length * 1.52
+                                # The same near-camera clearance the still views take from the
+                                # sheet: a modular hardware row is short enough that 1.52 x its
+                                # length puts the eye inside a context hull, and the clearance is
+                                # inert for every earlier batch, whose rows are longer.
+                                view['distance'] = max(length * 1.52,
+                                                       spec['overview'].get('close_distance_floor')
+                                                       or 0.)
                                 renderer.time = 3. + frame / 30
                                 pixels, _ = draw(view)
                                 samples_seen.append(state_hash(st))

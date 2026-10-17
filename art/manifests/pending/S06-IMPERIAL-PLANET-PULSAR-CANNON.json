@@ -15,8 +15,8 @@
   },
   "initial_seed": {
     "path": "tools/art/build_b4_hardware.py",
-    "sha256": "4b241dec70986f56f2a275433868c81d8d0ea941d714d600b73c35a9e42ba816",
-    "bytes": 32227,
+    "sha256": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+    "bytes": 33018,
     "selects": "--asset imperial:planet_pulsar_cannon"
   },
   "export_script": {
@@ -42,14 +42,12 @@
   "envelope": [
     [
       -34.0,
-      34.0
-    ],
-    [
       0.0,
-      42.4
+      -32.0
     ],
     [
-      -32.0,
+      34.0,
+      42.4,
       46.0
     ]
   ],
@@ -70,6 +68,6 @@
   "owner_decision": null,
   "activation": false,
   "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
-  "evidence": null,
-  "motion": null
+  "evidence": "artifacts/s06_alliance_batch_review/b4-hardware/contact-sheet.png",
+  "motion": "artifacts/s06_alliance_batch_review/b4-hardware/imperial pulsar cannon-after-motion.mp4"
 }

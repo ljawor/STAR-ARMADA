@@ -21,13 +21,13 @@
   },
   "export_script": {
     "path": "tools/art/export_syndicate_defense_satellite.py",
-    "sha256": "3375afc0f12e198ba08c74d7ccbd9a664b87b4d06ec8c802766d88a85d97ee5f",
-    "bytes": 4787
+    "sha256": "15f7842bd630334f170112539e0cdd972d1658a5cf634713312a30cf8eb7d888",
+    "bytes": 4790
   },
   "runtime": {
     "path": "assets/models/syndicate_defense_satellite.mesh.json",
-    "sha256": "480bdd64b4e10d185510c550b5835d1f664ff0be8e422d8fa01c02f5ff088aba",
-    "bytes": 115752,
+    "sha256": "3fbe61b531055a10b3a269f07cf291ed779cce08396bf7d8a7367e8c5585b71f",
+    "bytes": 116184,
     "triangles": 2032,
     "vertices": 1142,
     "roles": [
@@ -55,7 +55,7 @@
     [
       -41.1051,
       -9.0,
-      -34.0
+      -27.5066
     ],
     [
       41.1051,
@@ -68,6 +68,6 @@
   "owner_decision": null,
   "activation": false,
   "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
-  "evidence": null,
+  "evidence": "artifacts/s06_alliance_batch_review/b4-hardware/contact-sheet.png",
   "motion": null
 }

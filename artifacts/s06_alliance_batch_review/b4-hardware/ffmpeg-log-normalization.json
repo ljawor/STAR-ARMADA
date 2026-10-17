@@ -1,0 +1,56 @@
+[
+  {
+    "path": "artifacts/s06_alliance_batch_review/b4-hardware/alliance defense satellite-after-ffmpeg.txt",
+    "raw_sha256": "65b24a36f9d4032a7133307d3330c7bafe345e2271bbd4341c71d0dfc158bf18",
+    "raw_bytes": 4448,
+    "normalized_sha256": "a14aa87e025e7ce07f2f7b0ccca5a811dce83d34e89371ed4dfd51ea116dbe2d",
+    "normalized_bytes": 4424,
+    "change": "trailing progress whitespace only",
+    "raw_preserved_at": "s06-b4-raw-ffmpeg/alliance defense satellite-after-ffmpeg.txt"
+  },
+  {
+    "path": "artifacts/s06_alliance_batch_review/b4-hardware/alliance defense satellite-before-ffmpeg.txt",
+    "raw_sha256": "a9e28115160a5b5a4c7a333c001f0367d51573298c763e31a9f82799bc57848e",
+    "raw_bytes": 4449,
+    "normalized_sha256": "2fdfc9ed4db80839495d02e8967fb0205d63c6f51affc3ac7d5b644b19fd589f",
+    "normalized_bytes": 4425,
+    "change": "trailing progress whitespace only",
+    "raw_preserved_at": "s06-b4-raw-ffmpeg/alliance defense satellite-before-ffmpeg.txt"
+  },
+  {
+    "path": "artifacts/s06_alliance_batch_review/b4-hardware/imperial pulsar cannon-after-ffmpeg.txt",
+    "raw_sha256": "7349ac5e137ac11e89790cb16704c7d86adcd2f03770cd39ac8b490418b7bcc8",
+    "raw_bytes": 4671,
+    "normalized_sha256": "44d567f2d6d7270356060d9d7360a6ade130b4b516cfdb016016255cb4bc52e2",
+    "normalized_bytes": 4639,
+    "change": "trailing progress whitespace only",
+    "raw_preserved_at": "s06-b4-raw-ffmpeg/imperial pulsar cannon-after-ffmpeg.txt"
+  },
+  {
+    "path": "artifacts/s06_alliance_batch_review/b4-hardware/imperial pulsar cannon-before-ffmpeg.txt",
+    "raw_sha256": "e3aeaa5f8ad6397876e5714b96ba1c6dc35142b666d1d132330e279f451a1a60",
+    "raw_bytes": 4674,
+    "normalized_sha256": "690e921cb2c7e2b10268477b1ca4432e75611f178a01330d66b28bff4bafaf30",
+    "normalized_bytes": 4642,
+    "change": "trailing progress whitespace only",
+    "raw_preserved_at": "s06-b4-raw-ffmpeg/imperial pulsar cannon-before-ffmpeg.txt"
+  },
+  {
+    "path": "artifacts/s06_alliance_batch_review/b4-hardware/legion attack satellite-after-ffmpeg.txt",
+    "raw_sha256": "fd9027b2cbac97d06442490c2a8c91c75cfe71047d57b0f4dad57b167041f67d",
+    "raw_bytes": 4554,
+    "normalized_sha256": "b92e67f3474dad160b96dcee32d039692ce750160636091b2077faf77c316cca",
+    "normalized_bytes": 4526,
+    "change": "trailing progress whitespace only",
+    "raw_preserved_at": "s06-b4-raw-ffmpeg/legion attack satellite-after-ffmpeg.txt"
+  },
+  {
+    "path": "artifacts/s06_alliance_batch_review/b4-hardware/legion attack satellite-before-ffmpeg.txt",
+    "raw_sha256": "569b0fe0e829724e234ac4c68b2d9212d293590231e8036845c69ecfb9f9fd27",
+    "raw_bytes": 4555,
+    "normalized_sha256": "e4fac4856b076c770a8a11709159c98eeada61e9512a3730e24c9402d079b2da",
+    "normalized_bytes": 4527,
+    "change": "trailing progress whitespace only",
+    "raw_preserved_at": "s06-b4-raw-ffmpeg/legion attack satellite-before-ffmpeg.txt"
+  }
+]

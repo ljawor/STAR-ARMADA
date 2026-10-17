@@ -15,8 +15,8 @@
   },
   "initial_seed": {
     "path": "tools/art/build_b4_hardware.py",
-    "sha256": "4b241dec70986f56f2a275433868c81d8d0ea941d714d600b73c35a9e42ba816",
-    "bytes": 32227,
+    "sha256": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+    "bytes": 33018,
     "selects": "--asset confederacy:defense_satellite"
   },
   "export_script": {
@@ -42,14 +42,12 @@
   "envelope": [
     [
       -41.1051,
-      41.1051
-    ],
-    [
       -9.0,
-      19.5
+      -34.0
     ],
     [
-      -34.0,
+      41.1051,
+      19.5,
       44.0
     ]
   ],
@@ -70,6 +68,6 @@
   "owner_decision": null,
   "activation": false,
   "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
-  "evidence": null,
+  "evidence": "artifacts/s06_alliance_batch_review/b4-hardware/contact-sheet.png",
   "motion": null
 }
