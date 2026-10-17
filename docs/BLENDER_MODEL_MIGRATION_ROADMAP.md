@@ -381,15 +381,24 @@ approved trio, so the refit pipeline refuses these bindings with `E_UNKNOWN_BIND
 | B3a command stations | three | Authored; **no approval in so many words is recorded** - the open question below |
 | B3b small stations | nine: mining station, sensor station, energy relay | Authored and **appearance-approved** (`s06-b3b-stations-2026-10-17`) |
 | B3c stations | seventeen: research station, defense platform, trade station, fighter platform, repair dock across the three families, plus the Legion and Syndicate shipyards | Authored and **appearance-approved** (`s06-b3c-stations-2026-10-17`) |
-| B4 satellites/planet installations | eighteen faction rows (`defense_satellite`, `attack_satellite`, `planet_extractor`, `planet_trade_hub`, `planet_shield_generator`, `planet_pulsar_cannon` × three families) | **Authorized, not started** (`s06-b4-scope-2026-10-17`) |
-| Imperial rows | ten station rows, two satellites, four planet installations, five combat hulls, the squadron and logistics rows | **Authorized, not started** (`s06-imperial-migration-2026-10-17`); needs the render-seam change first |
+| B4 satellites/planet installations | twenty-four rows: `defense_satellite`, `attack_satellite`, `planet_extractor`, `planet_trade_hub`, `planet_shield_generator`, `planet_pulsar_cannon` × four families | **Authored, captured and guarded on the branch; pending owner approval** (authorized as `s06-b4-scope-2026-10-17`) |
+| Imperial rows | ten station rows, five combat hulls, the squadron and logistics rows | **Partly delivered**: B4's four families include imperial satellites and planet installations; the imperial *station* rows are ordinary asset work (the seam is faction-generic) and the imperial *ships* need a per-binding key in `ship_visual_key`; authorized as `s06-imperial-migration-2026-10-17` |
 | B5 environment | thirteen props and the menu backdrop | Not started |
 
-Coverage of the 120 inventory bindings at this head: **43 authored**. Stations 30 of 40 - every
+Coverage of the 120 inventory bindings at this head: **67 authored** (43 before B4, 24 in it). Stations 30 of 40 - every
 faction row, with the ten imperial rows waiting on the seam; combat hulls 5 of 18 (the rebel five);
 the eight squadron/logistics meshes cover the three families, with the imperial rows and the four
 `trade_convoy` rows that share the crew-transport meshes still open; satellites and planet
-installations 0 of 24; environment 0 of 13; construction 0 of 9, which no ordered batch covers yet.
+installations 24 of 24 (B4, pending approval); environment 0 of 13; construction 0 of 9, which no
+ordered batch covers yet.
+
+B4's evidence commit is `406d090`: one seed authors all twenty-four rows, script-authoritative per the
+S03 policy for modular hardware, each built to its own binding's legacy extent - measured per row, not
+generalised, because the legacy satellite geometry is parameterised by the faction's ring side count
+and the Syndicate's five-sided ring stops short at the rear. The review harness reports a worst
+footprint error of 5.21e-05 % per axis, a drawn length unchanged to the same tolerance (so the class
+scale, camera framing and collision radius are untouched), and no zero-pixel per-role ablation on any
+row. 25 guards, RED first then green; the focused union of every batch module is 198 tests.
 
 Approvals are recorded per revision in `art/manifests/approvals.json`: **37 specimens** across five
 decisions, each naming the source, exporter and runtime hashes it covers, each stating what it does
@@ -540,21 +549,25 @@ The original S00-only kickoff is historical and retained in Git/handoff history;
 | S07–S10 | Not completed | Follow integration/mod/platform/package/final-lock dependencies |
 | S11 | **Not started, not authorized, not done** | Final explicit owner-controlled catalogue switch only after S10 |
 
-**Current next task: S06 B4 — author and review the satellite and planet-installation rows, then the imperial migration change.**
+**Current next task: S06 B5 — the environment props and the menu backdrop — and, behind it, the imperial ship rows.**
 S00–S05 are merged. Read the current S05 handoff, equivalence record and recorded capture limitation,
 then the S01 inventory/scope decision and S03 source-authority/budget policy. The inventory's older
 implementation statuses and line references are historical; the actual merged tree and approval
 records win. Do not silently rebase the generated inventory as part of artwork.
 
-B4 is authorized by `s06-b4-scope-2026-10-17` (eighteen faction rows; satellites and planet
+B4 is authored and captured under `s06-b4-scope-2026-10-17` (twenty-four rows across four families;
+satellites and planet
 installations are script-authoritative under the S03 policy) and the imperial migration by
 `s06-imperial-migration-2026-10-17` (sixteen station-family rows, five combat hulls, the squadron and
 logistics rows, and the seam change that brings the imperial station-family dispatch onto `mesh_for` -
-its own reviewed change, with the legacy fallback kept reachable). Three things are deliberately not
+its own reviewed change, with the legacy fallback kept reachable). Four things are deliberately not
 decided here: the **B3a command stations** have no recorded owner approval and stay pending until the
 owner says so; **landing/registration** of the 37 approved specimens is the S10/S11 decision and has
-not been authorized; and the four `trade_convoy` rows that share the crew-transport meshes need an
-envelope decision before they can be authored.
+not been authorized; the four `trade_convoy` rows that share the crew-transport meshes need an
+envelope decision before they can be authored; and the review contact sheets now exceed the 5 MiB
+per-file Git LFS threshold declared in the S03 storage policy (B4 12.7 MiB, B3c 10.9 MiB, B3b 5.4 MiB),
+which needs an owner decision - accept larger binary evidence, split or re-encode the sheets, or adopt
+LFS atomically with its attributes, fetching and fresh-clone check.
 
 Two owner policy questions remain open: authoring extent drift versus collision policy, and advisory
 draw-call/texture-byte columns. Do not answer them yourself. Public gameplay dependency discovery
