@@ -1,0 +1,17 @@
+{
+  "review_sheet_directly_inspected": true,
+  "captures_upright_populated_no_obvious_prototype_generic_difference": true,
+  "files": [
+    {
+      "path": "policy-run/review-sheet.png",
+      "sha256": "d178af4881826f18b8a2a798c3bd93a8179ca837854d78c933d4dd3bc7760003",
+      "matches_previously_inspected_initial": true
+    },
+    {
+      "path": "policy-run/video-2s.png",
+      "sha256": "508c10159cec9fc9091f8c9af6db160a7bcb286628159884e189792df9b35413",
+      "matches_previously_inspected_initial": true
+    }
+  ],
+  "new_owner_appearance_approval": false
+}

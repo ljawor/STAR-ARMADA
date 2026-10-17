@@ -1,0 +1,29 @@
+{
+  "status": "full-matrix-reproduced-review-pending",
+  "frames": 102,
+  "ticks": 360,
+  "state_hashes": 361,
+  "cross_source_changed_pixels": 0,
+  "worker_frame_hashes_match_parent": true,
+  "allowed_nonzero_repeats": 0,
+  "known_original_pair": {
+    "changed_pixels": 96,
+    "changed_channels": 99,
+    "max_channel_delta": 1,
+    "mean_channel_delta": 3.22265625e-05,
+    "policy_id": "s05-background-repeatability-2026-10-16",
+    "max_allowed_channel_delta": 1,
+    "max_allowed_changed_pixels": 128,
+    "protected_changes": 15,
+    "changed_bbox": [
+      21,
+      10,
+      861,
+      315
+    ],
+    "passed": false
+  },
+  "historical_capture_root_cause_fixed": false,
+  "protected_regions_not_shrunk": true,
+  "policy_sha256": "6446bb8bc60205aca16d4fced69ffcde7ff14a095d6cc45335d091746a63eb44"
+}

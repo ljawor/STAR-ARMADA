@@ -1,0 +1,8 @@
+{
+  "final_user_files_equal": true,
+  "worktree_game_render_assets_equal_candidate_archive": true,
+  "final_harness_matches_measured_hash": true,
+  "staged_paths": [],
+  "untouched_scope_diff": [],
+  "focused_test_receipt": "pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)\n...............................................\n----------------------------------------------------------------------\nRan 47 tests in 6.518s\n\nOK\n"
+}

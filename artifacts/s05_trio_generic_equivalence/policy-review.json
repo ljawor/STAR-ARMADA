@@ -1,0 +1,16 @@
+{
+  "independent_code_and_gate_audit": "scoped pass",
+  "initial_review_passed": false,
+  "blocking_finding": "publish-execution.txt indexed before publishing output finished",
+  "fix": "finalized log rehashed; all indexed files independently checked after finalization",
+  "index_entries_verified": 87,
+  "fixed_by_parent": true,
+  "known_failure_still_rejected": {
+    "changed_pixels": 96,
+    "max_channel_delta": 1,
+    "protected_changes": 15
+  },
+  "current_runs_nonzero_repeat_count": 0,
+  "policy_scope": "within-source background-only repeats; all other gates strict",
+  "rendering_root_cause_fixed": false
+}

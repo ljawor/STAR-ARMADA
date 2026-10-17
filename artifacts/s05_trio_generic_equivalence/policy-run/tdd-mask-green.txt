@@ -1,0 +1,7 @@
+test_background_allowance_is_narrow_and_cross_source_stays_exact (test_trio_generic_equivalence.RepeatPolicyTests.test_background_allowance_is_narrow_and_cross_source_stays_exact) ... ok
+test_projected_geometry_rotations_clipping_and_fail_closed (test_trio_generic_equivalence.RepeatPolicyTests.test_projected_geometry_rotations_clipping_and_fail_closed) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.008s
+
+OK

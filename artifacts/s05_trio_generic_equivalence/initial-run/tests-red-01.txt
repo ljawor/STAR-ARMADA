@@ -1,0 +1,16 @@
+F
+======================================================================
+FAIL: test_exact_comparison_catches_single_channel_and_shape (test_trio_generic_equivalence.MeasurementTests.test_exact_comparison_catches_single_channel_and_shape)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s05/tests/test_trio_generic_equivalence.py", line 20, in test_exact_comparison_catches_single_channel_and_shape
+    m = harness()
+        ^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s05/tests/test_trio_generic_equivalence.py", line 12, in harness
+    raise AssertionError('S05 measurement harness not implemented')
+AssertionError: S05 measurement harness not implemented
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (failures=1)

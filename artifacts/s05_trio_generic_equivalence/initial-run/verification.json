@@ -1,0 +1,128 @@
+{
+  "status": "all-requested-local-evidence-gates-passed-parent-decision-pending",
+  "gates": {
+    "E1": true,
+    "E2": true,
+    "E3": true,
+    "E4": true,
+    "E5": true,
+    "E6": true,
+    "E7": "not-triggered-no-prototype/generic-visible-difference"
+  },
+  "source_revisions": {
+    "control": "5bddd7b67245ddff4b595bb3b477ca8ceede0a6c",
+    "candidate": "7030dd252ddb4da3bb4f69fecb2f2028650ffe6c"
+  },
+  "harness_sha256": "18f8273d3b72ced54b8bfbffff085df96c5d783183ef1ddde100387a58dedd90",
+  "harness_current_sha256": "18f8273d3b72ced54b8bfbffff085df96c5d783183ef1ddde100387a58dedd90",
+  "paired_frames": 102,
+  "frozen_views": 10,
+  "palette_colors": 8,
+  "palette_frames": 32,
+  "motion_samples": 60,
+  "simulation_ticks": 360,
+  "per_tick_hashes": 361,
+  "exact_pixel_equality": true,
+  "legacy_differs_in_every_frame": true,
+  "feature_pixels": [
+    {
+      "name": "Worklight exposed lens (-1, -9)",
+      "pixels": 185,
+      "passed": true
+    },
+    {
+      "name": "Worklight exposed lens (-1, 34)",
+      "pixels": 261,
+      "passed": true
+    },
+    {
+      "name": "Worklight exposed lens (1, -9)",
+      "pixels": 276,
+      "passed": true
+    },
+    {
+      "name": "Worklight exposed lens (1, 34)",
+      "pixels": 413,
+      "passed": true
+    },
+    {
+      "name": "Port exposed ion emitter",
+      "pixels": 504,
+      "passed": true
+    },
+    {
+      "name": "Starboard exposed ion emitter",
+      "pixels": 618,
+      "passed": true
+    },
+    {
+      "name": "Recessed cyan ion emitter -1",
+      "pixels": 232,
+      "passed": true
+    },
+    {
+      "name": "Recessed cyan ion emitter 1",
+      "pixels": 243,
+      "passed": true
+    }
+  ],
+  "activity": {
+    "weapon_fired": 70,
+    "commands": 4,
+    "projectiles_observed": true,
+    "movement_observed": true,
+    "damage_observed": true
+  },
+  "state_hashes_equal": true,
+  "draw_invariance_checks": {
+    "control": 529,
+    "candidate": 529,
+    "legacy": 510
+  },
+  "user_files_preserved": true,
+  "source_manifests_preserved": true,
+  "video": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "width": 1280,
+        "height": 400,
+        "r_frame_rate": "12/1",
+        "duration": "5.000000",
+        "nb_read_frames": "60"
+      }
+    ]
+  },
+  "movie": "paired-motion.mp4",
+  "inspection": "inspection.json",
+  "raw_summary": "summary.json",
+  "raw_summary_note": "Raw automatic report intentionally leaves E6 pending; inspection.json and this verification complete the post-render evidence check.",
+  "focused_tests": {
+    "command": "PYTHONPATH=tests .venv/bin/python -m unittest test_trio_generic_equivalence test_alliance_blender_trio test_alliance_blender_battleship test_ship_material_passes test_asset_selection test_detmath",
+    "tests": 47,
+    "result": "OK",
+    "log": "focused-tests.txt"
+  },
+  "retained_attempts": [
+    {
+      "path": "attempts/s05-equivalence-run01",
+      "outcome": "control completed; candidate encoder blocked by inherited audit guard rejecting /dev/null; corrected encoder stdout to in-output file without weakening guard"
+    },
+    {
+      "path": "attempts/s05-equivalence-run02",
+      "outcome": "101 frames all E1-E5 passed; supplemental escort-engine paired view and stronger evidence added afterwards"
+    },
+    {
+      "path": "attempts/s05-equivalence-run03",
+      "outcome": "control frozen repeat unstable at motion tick42 under one-warmup recipe; original error retained. Final harness restores mandated three warmups and retains future failed pixel pairs; no pixel tolerance relaxation."
+    }
+  ],
+  "not_claimed": [
+    "model approval or approval transfer decision",
+    "native Windows/package acceptance",
+    "full suite or performance acceptance",
+    "S11 activation",
+    "merge/release"
+  ]
+}

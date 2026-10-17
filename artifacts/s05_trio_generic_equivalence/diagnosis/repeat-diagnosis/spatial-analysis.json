@@ -1,0 +1,38 @@
+{
+  "parent_bbox": [
+    21,
+    10,
+    861,
+    315
+  ],
+  "parent_changed_pixels": 96,
+  "stage_intersections": {
+    "_draw_nebulas": 0,
+    "_draw_star": 0,
+    "_draw_jump_points": 0,
+    "_draw_planets": 66,
+    "_draw_planet_shields": 0,
+    "_draw_effects": 0,
+    "_draw_projectiles": 0,
+    "_draw_ships": 28,
+    "_draw_shields": 86,
+    "_draw_hits": 0,
+    "_draw_selection_rings": 0
+  },
+  "last_touching_pass": {
+    "_draw_starfield": 0,
+    "_draw_nebulas": 0,
+    "_draw_star": 0,
+    "_draw_jump_points": 0,
+    "_draw_planets": 0,
+    "_draw_planet_shields": 0,
+    "_draw_effects": 0,
+    "_draw_projectiles": 0,
+    "_draw_ships": 10,
+    "_draw_shields": 86,
+    "_draw_hits": 0,
+    "_draw_selection_rings": 0
+  },
+  "run2_changed_draws": 0,
+  "run2_changed_rereads": 0
+}

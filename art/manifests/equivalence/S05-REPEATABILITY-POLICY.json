@@ -1,0 +1,22 @@
+{
+  "policy_id": "s05-background-repeatability-2026-10-16",
+  "status": "owner-authorized-before-implementation",
+  "owner_instruction_verbatim": "ok go",
+  "approved_proposal": "Use a narrowly defined capture-repeatability allowance: one colour-level variation in a small explicitly capped number of background pixels; exclude approved-model, worklight and emitter regions; keep prototype-versus-generic comparisons, source hashes and simulation hashes strict; add negative tests and rerun the full S05 matrix.",
+  "bounds": {
+    "max_absolute_8bit_channel_delta": 1,
+    "max_changed_pixels_per_frozen_repeat": 128,
+    "changed_pixels_inside_protected_regions": 0
+  },
+  "numeric_cap_selection": "Engineering interpretation of the approved small fixed cap, not a quoted owner-selected number. Fixed at 128 pixels before implementation; fail closed beyond it, never increase automatically to fit results.",
+  "protected_regions": "Conservative camera-projected regions covering all three approved model instances and their worklights/emitters, derived from immutable mesh geometry and actual entity transforms; include safety padding and fail closed for invalid projections.",
+  "scope": "Within-source repeated frozen frames only. Never cross-source prototype/generic comparison, feature ablation/restoration, simulation digest, source hash, mesh hash, or legacy discrimination.",
+  "required_evidence": [
+    "Fail amplitude > 1, changed pixels > 128, or any change inside protected regions",
+    "Fail closed for malformed images, invalid masks or unusable projections",
+    "Retain and report every tolerated nonzero repeated-frame difference and its mask",
+    "Prove cross-source parity stays exact and negative controls still fail",
+    "Run full original colour/motion/combat/per-feature matrix with unchanged production quality"
+  ],
+  "does_not_claim": ["root cause fixed", "driver defect proven", "new model appearance approval", "merge/release/S11 authorization"]
+}

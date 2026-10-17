@@ -1,0 +1,18 @@
+{
+  "review_kind": "independent-precommit-initial",
+  "passed_scoped_review": true,
+  "security_concerns": [],
+  "logic_errors": [],
+  "scope": "Code, provenance, published file/image hashes, tick records and individual-feature PNG measurements from the original successful run. Four CPU-only tests passed. No GL rerun.",
+  "verified": [
+    "107 original publication-manifest entries and inspection-image hashes matched",
+    "12 approved source/exporter/runtime pins agreed across the two revisions",
+    "102 paired retained frame hashes and 361-entry tick histories agreed",
+    "Eight individual feature measurements recomputed from actual PNGs"
+  ],
+  "parent_reproduction_overrides_completion_claim": true,
+  "parent_reproduction_status": "BLOCKED: candidate motion-0270-escort-close repeated-frame instability, 96 pixels / 99 channels, max channel delta 1",
+  "missed_steering": "Reviewer completed before parent reproduction failure and post-commit HEAD assertion concern could be delivered. Its verdict does not cover those findings.",
+  "engineering_equivalence_accepted": false,
+  "diagnosis_pending": true
+}

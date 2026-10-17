@@ -1,0 +1,57 @@
+{
+  "sources": {
+    "control": {
+      "revision": "5bddd7b67245ddff4b595bb3b477ca8ceede0a6c",
+      "source": "/Users/lukaszjawor/.hermes/cache/scratch/s05-equivalence-run04/sources/control"
+    },
+    "candidate": {
+      "revision": "7030dd252ddb4da3bb4f69fecb2f2028650ffe6c",
+      "source": "/Users/lukaszjawor/.hermes/cache/scratch/s05-equivalence-run04/sources/candidate"
+    }
+  },
+  "approved_pins": {
+    "art/blender/README.md": "8986c8e5475d29d463fd659ed5af00d7a164b6548df5793828e726e6001ef5a6",
+    "art/blender/alliance_battleship.blend": "a51b636fc83f1e13b3659440f93adbb68253a6f59a5b0416c4cedc81ca57a791",
+    "art/blender/alliance_frigate.blend": "721693dce2de5919e941dd778129c409864e5b78499604b65e1f2e59bc17dd49",
+    "art/blender/alliance_shipyard.blend": "2b66ad339f75a48e1daf547d5ea1654a5eab59e5ba7ce6a467f0ee98fe74e045",
+    "assets/models/alliance_battleship.mesh.json": "0a4e397d5c0b60f70fbba35f3e4f4a5ac997ac4de079f821f8f29db9872c95cd",
+    "assets/models/alliance_frigate.mesh.json": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+    "assets/models/alliance_shipyard.mesh.json": "b0ee2678ab42b9005e7ab9007eb6cb1464e878d9896a0104dd9ebad2142e3468",
+    "tools/art/alliance_common.py": "bc5ef04dee22d8e0133a29e9566536bdf0b64be6a96822ddc760bfe4dfe80e74",
+    "tools/art/build_alliance_battleship.py": "52380040fd04c3370085c1815e68cb520d5e54f1f4af04ac53ec69d7233d0082",
+    "tools/art/build_alliance_frigate.py": "8a3822c0d39dca356a605f185a1feceaeaa8c2c97b827cee1d0a5265f84b0a28",
+    "tools/art/build_alliance_shipyard.py": "22e98cf85620959fb910e15c39e0eea64b1dca4df078decc150b04c9a351d70f",
+    "tools/art/hull_detail.py": "aa6e8880b03e32e3ffa2eaf2bc11a214972a186fc4c87cb4078a11ba6e3a6f74"
+  },
+  "actual": {
+    "control": {
+      "art/blender/README.md": "8986c8e5475d29d463fd659ed5af00d7a164b6548df5793828e726e6001ef5a6",
+      "art/blender/alliance_battleship.blend": "a51b636fc83f1e13b3659440f93adbb68253a6f59a5b0416c4cedc81ca57a791",
+      "art/blender/alliance_frigate.blend": "721693dce2de5919e941dd778129c409864e5b78499604b65e1f2e59bc17dd49",
+      "art/blender/alliance_shipyard.blend": "2b66ad339f75a48e1daf547d5ea1654a5eab59e5ba7ce6a467f0ee98fe74e045",
+      "assets/models/alliance_battleship.mesh.json": "0a4e397d5c0b60f70fbba35f3e4f4a5ac997ac4de079f821f8f29db9872c95cd",
+      "assets/models/alliance_frigate.mesh.json": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+      "assets/models/alliance_shipyard.mesh.json": "b0ee2678ab42b9005e7ab9007eb6cb1464e878d9896a0104dd9ebad2142e3468",
+      "tools/art/alliance_common.py": "bc5ef04dee22d8e0133a29e9566536bdf0b64be6a96822ddc760bfe4dfe80e74",
+      "tools/art/build_alliance_battleship.py": "52380040fd04c3370085c1815e68cb520d5e54f1f4af04ac53ec69d7233d0082",
+      "tools/art/build_alliance_frigate.py": "8a3822c0d39dca356a605f185a1feceaeaa8c2c97b827cee1d0a5265f84b0a28",
+      "tools/art/build_alliance_shipyard.py": "22e98cf85620959fb910e15c39e0eea64b1dca4df078decc150b04c9a351d70f",
+      "tools/art/hull_detail.py": "aa6e8880b03e32e3ffa2eaf2bc11a214972a186fc4c87cb4078a11ba6e3a6f74"
+    },
+    "candidate": {
+      "art/blender/README.md": "8986c8e5475d29d463fd659ed5af00d7a164b6548df5793828e726e6001ef5a6",
+      "art/blender/alliance_battleship.blend": "a51b636fc83f1e13b3659440f93adbb68253a6f59a5b0416c4cedc81ca57a791",
+      "art/blender/alliance_frigate.blend": "721693dce2de5919e941dd778129c409864e5b78499604b65e1f2e59bc17dd49",
+      "art/blender/alliance_shipyard.blend": "2b66ad339f75a48e1daf547d5ea1654a5eab59e5ba7ce6a467f0ee98fe74e045",
+      "assets/models/alliance_battleship.mesh.json": "0a4e397d5c0b60f70fbba35f3e4f4a5ac997ac4de079f821f8f29db9872c95cd",
+      "assets/models/alliance_frigate.mesh.json": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+      "assets/models/alliance_shipyard.mesh.json": "b0ee2678ab42b9005e7ab9007eb6cb1464e878d9896a0104dd9ebad2142e3468",
+      "tools/art/alliance_common.py": "bc5ef04dee22d8e0133a29e9566536bdf0b64be6a96822ddc760bfe4dfe80e74",
+      "tools/art/build_alliance_battleship.py": "52380040fd04c3370085c1815e68cb520d5e54f1f4af04ac53ec69d7233d0082",
+      "tools/art/build_alliance_frigate.py": "8a3822c0d39dca356a605f185a1feceaeaa8c2c97b827cee1d0a5265f84b0a28",
+      "tools/art/build_alliance_shipyard.py": "22e98cf85620959fb910e15c39e0eea64b1dca4df078decc150b04c9a351d70f",
+      "tools/art/hull_detail.py": "aa6e8880b03e32e3ffa2eaf2bc11a214972a186fc4c87cb4078a11ba6e3a6f74"
+    }
+  },
+  "E1": true
+}

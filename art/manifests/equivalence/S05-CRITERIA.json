@@ -1,0 +1,18 @@
+{
+  "step": "S05",
+  "status": "criteria-frozen-before-implementation",
+  "base_commit": "7030dd252ddb4da3bb4f69fecb2f2028650ffe6c",
+  "prototype_control_commit": "5bddd7b67245ddff4b595bb3b477ca8ceede0a6c",
+  "owner_instruction_verbatim": "OK we can merge and continue with next step",
+  "authorization_scope": "Merge the reviewed S04 head 311edc24c66084a3e145d07e23aad7b839487b5d, then execute roadmap S05. No authorization to merge S05, release, expand catalogue, modify approved model bytes or activate S11.",
+  "criteria": [
+    {"id": "E1", "checked_by": "machine", "requirement": "Approved trio source, exporter and runtime hashes are unchanged from the approved prototype control."},
+    {"id": "E2", "checked_by": "machine", "requirement": "Identical explicit cameras, resolution, actual MSAA, production materials, normal fog and scene inputs compare prototype and generic preview at close, low rear, common-scale and tactical ranges."},
+    {"id": "E3", "checked_by": "machine", "requirement": "Exercise supported owner colours using actual palette values; require pixel equality per paired frame and retained discriminating legacy control."},
+    {"id": "E4", "checked_by": "machine", "requirement": "Exercise actual motion and combat with deterministic commands and per-tick simulation hashes; compare paired sampled frames and demonstrate motion/combat actually occur."},
+    {"id": "E5", "checked_by": "machine", "requirement": "Measure four individual shipyard worklights and recessed drive emitters in real GL. Whole-model emissive presence is insufficient; retain feature-specific negative controls."},
+    {"id": "E6", "checked_by": "machine plus visual inspection", "requirement": "Publish reproducible harness, focused tests, measured report, selected captures and motion evidence; inspect exported images. Record engineering equivalence only if every required gate passes."},
+    {"id": "E7", "checked_by": "owner if appearance differs", "requirement": "If any visible difference remains, present it and request renewed approval. Do not transfer model approval based on AI judgement. Unchanged bytes and measured equality support engineering equivalence to existing owner-bound revisions."}
+  ],
+  "not_claimed": ["new per-model appearance approval", "native Windows rendering or package acceptance", "full-suite/performance acceptance", "S11 default switch"]
+}
