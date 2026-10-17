@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b1-alliance-combat",
+  "binding": "rebel:supercapital",
+  "canonical_binding": "ship:rebel:supercapital",
+  "gameplay_entity": "rebel_supercapital",
+  "class": "supercapital",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/alliance_carrier.blend",
+    "sha256": "a4c1a577914fda920a6823315b91fb922a6b5903cb76fce74971d4e9fe1710a4",
+    "bytes": 233290
+  },
+  "initial_seed": {
+    "path": "tools/art/build_alliance_carrier.py",
+    "sha256": "0d0e6e90709069032e2eda14202ab1dc93a57e6488d48dd4c5221ec807a844a9",
+    "bytes": 8874
+  },
+  "export_script": {
+    "path": "tools/art/export_alliance_carrier.py",
+    "sha256": "b839bc9f7e41b635b116ffa54f3e8dcc425c46cd02de7c6dc2be7b8b82d0bb05",
+    "bytes": 4772
+  },
+  "runtime": {
+    "path": "assets/models/alliance_carrier.mesh.json",
+    "sha256": "4be599d3cfd7b8fdff80716d923c589b322996728b50424b1d6398f8eea3167f",
+    "bytes": 543887,
+    "triangles": 8632,
+    "vertices": 5014,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -146.51,
+      -30.5,
+      -204.8
+    ],
+    [
+      146.51,
+      57.0,
+      190.0
+    ]
+  ],
+  "bounds": [
+    [
+      -146.51,
+      -30.5,
+      -204.8
+    ],
+    [
+      146.51,
+      56.95528,
+      190.0
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b1-alliance-combat/contact-sheet.png",
+  "motion": "artifacts/s06_alliance_batch_review/b1-alliance-combat/carrier-after-motion.mp4"
+}

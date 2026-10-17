@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b1-alliance-combat",
+  "binding": "rebel:corvette",
+  "canonical_binding": "ship:rebel:corvette",
+  "gameplay_entity": "rebel_corvette",
+  "class": "corvette",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/alliance_corvette.blend",
+    "sha256": "b8ccd72faab4151a8a77b55f946ff800b61549c2759ab5f68fea4a4c788dbe72",
+    "bytes": 162844
+  },
+  "initial_seed": {
+    "path": "tools/art/build_alliance_corvette.py",
+    "sha256": "61838dc1f455de80821945d226d9c9c3fa995cb0af663554f85209b5f26e2381",
+    "bytes": 7298
+  },
+  "export_script": {
+    "path": "tools/art/export_alliance_corvette.py",
+    "sha256": "4c9cad303ee3990437e486d90bb0926c5ef016e344072e16dd1c6c66b1016b96",
+    "bytes": 4749
+  },
+  "runtime": {
+    "path": "assets/models/alliance_corvette.mesh.json",
+    "sha256": "bfa1751fd8574bda4145562067acb2e0340498be7ce74d387383079ab7a17c78",
+    "bytes": 274794,
+    "triangles": 4348,
+    "vertices": 2506,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -21.9,
+      -6.0,
+      -46.46
+    ],
+    [
+      21.9,
+      15.3,
+      45.0
+    ]
+  ],
+  "bounds": [
+    [
+      -21.9,
+      -6.0,
+      -46.46
+    ],
+    [
+      21.9,
+      15.3,
+      45.0
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b1-alliance-combat/contact-sheet.png",
+  "motion": "artifacts/s06_alliance_batch_review/b1-alliance-combat/corvette-after-motion.mp4"
+}
