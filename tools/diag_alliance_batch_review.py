@@ -96,10 +96,21 @@ def station_span(kind, faction):
     return tuple(hi[i] - lo[i] for i in range(3))
 
 
-def views_for(asset, length):
+def views_for(asset, length, close_floor=None):
+    """Camera plan for one row, framed by its own scaled footprint.
+
+    `close_floor` is the batch's optional minimum distance for the two near views and defaults
+    to None, which leaves an older batch's plan bit-for-bit unchanged. A *small* station needs
+    it: the shared scene carries a context group, so a station whose footprint scales down to
+    a 65-unit framing puts the near eye inside a context hull, `capture_slice.camera_check`
+    resolves the eye outwards and refuses the capture ("camera not outside union"). A floor
+    set for a batch that frames small stations - not a retuned multiplier, which would move
+    every earlier batch's committed frames - keeps the near views clear.
+    """
     x, y, z = asset['slot']
-    return {'close': dict(target=[x, y, z], distance=length * 1.37, yaw=48., pitch=35.),
-            'rear': dict(target=[x, y - length * .015, z], distance=length * 1.37, yaw=178., pitch=5.),
+    near = max(length * 1.37, close_floor) if close_floor else length * 1.37
+    return {'close': dict(target=[x, y, z], distance=near, yaw=48., pitch=35.),
+            'rear': dict(target=[x, y - length * .015, z], distance=near, yaw=178., pitch=5.),
             'tactical': dict(target=[x, y, z], distance=length * 5.57, yaw=48., pitch=55.),
             'common-scale': dict(target=[-4300, 0, 2100], distance=1800., yaw=48., pitch=50.)}
 
@@ -271,7 +282,7 @@ def main():
                 candidate_measure = None
                 candidate_length = ship_size(DataStore.get(), asset['data_id'], faction).length
                 assert abs(candidate_length - length) <= length * .01, (binding, length, candidate_length)
-            views = views_for(asset, length)
+            views = views_for(asset, length, spec['overview'].get('close_distance_floor'))
             asset_path = ROOT / asset['mesh']
             payload = json.loads(asset_path.read_text(encoding='utf-8'))
             report['mesh'][binding] = dict(

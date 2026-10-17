@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b3b-stations-slice-1",
+  "binding": "confederacy:sensor_station",
+  "canonical_binding": "ship:confederacy:sensor_station",
+  "gameplay_entity": "sensor_station",
+  "class": "sensor_station",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/legion_sensor_station.blend",
+    "sha256": "4e473fc6a7483bd0da5743ec7ca3a63e7fef0a17cd6fc4db0bfadd6c8e78c98d",
+    "bytes": 140915
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b3b_stations.py",
+    "sha256": "14be714fea48ff64693cb17049fcb31e8331afaab2c50a7dc1ac64b20f11f3eb",
+    "bytes": 32785,
+    "selects": "--asset confederacy:sensor_station"
+  },
+  "export_script": {
+    "path": "tools/art/export_legion_sensor_station.py",
+    "sha256": "f244443ab293f6d468875847d4fc6b1fc0b9cdb4449bf3cd5e1e5ac6fead10d9",
+    "bytes": 4773
+  },
+  "runtime": {
+    "path": "assets/models/legion_sensor_station.mesh.json",
+    "sha256": "8bad34f0a8b9faa608cb29e0e61766b1e391a35e97539d2f009c9abfc1d91098",
+    "bytes": 222525,
+    "triangles": 3428,
+    "vertices": 1864,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -36.1913,
+      -14.0,
+      -28.2851
+    ],
+    [
+      36.1913,
+      38.4,
+      34.8
+    ]
+  ],
+  "bounds": [
+    [
+      -36.1413,
+      -14.0,
+      -28.2851
+    ],
+    [
+      36.1413,
+      38.252628,
+      34.8
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b3b-stations/contact-sheet.png",
+  "motion": null
+}

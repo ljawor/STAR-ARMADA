@@ -38,7 +38,18 @@ ASSETS = {
     # triangle advisory budget, under the loader's hard 12,000.
     'alliance_command_station': ('Alliance command station', ((-48.0, 48.0), (-6.8, 26.48), (-29.6, 29.6)), 59.0, 11500, 8000, 2_000_000),
     'legion_command_station': ('Legion command station', ((-53.8231, 53.8231), (-6.0, 41.6), (-38.4, 60.0)), 98.0, 11500, 8000, 2_000_000),
-    'syndicate_command_station': ('Syndicate command station', ((-52.1606, 48.0), (-15.2, 45.6), (-53.6606, 38.4883)), 91.8, 11500, 8000, 2_000_000),
+    # S06 B3b slice 1 - the smaller station kinds across the three faction families. Same
+    # station budget policy as B3a; `min_length` is the binding's own footprint depth, which
+    # is what a station mesh is measured by rather than a hull's drawn length.
+    'alliance_mining_station': ('Alliance mining station', ((-44.8, 44.8), (-15.6, 10.12), (-26.0, 22.8294)), 48.6, 11500, 8000, 2_000_000),
+    'legion_mining_station': ('Legion mining station', ((-40.6686, 40.6686), (-31.44, 11.08), (-29.36, 46.96)), 76.1, 11500, 8000, 2_000_000),
+    'syndicate_mining_station': ('Syndicate mining station', ((-33.9322, 42.4), (-32.4, 39.6), (-25.0848, 41.4431)), 66.3, 11500, 8000, 2_000_000),
+    'alliance_sensor_station': ('Alliance sensor station', ((-46.4, 46.4), (-12.8, 30.48), (-24.8, 16.24)), 40.8, 11500, 8000, 2_000_000),
+    'legion_sensor_station': ('Legion sensor station', ((-36.1913, 36.1913), (-14.0, 38.4), (-28.2851, 34.8)), 62.9, 11500, 8000, 2_000_000),
+    'syndicate_sensor_station': ('Syndicate sensor station', ((-47.2, 26.3565), (-17.6, 43.857), (-31.137, 21.1423)), 52.1, 11500, 8000, 2_000_000),
+    'alliance_energy_relay': ('Alliance energy relay', ((-50.4, 50.4), (-8.4078, 13.2078), (-29.36, 20.9846)), 50.1, 11500, 8000, 2_000_000),
+    'legion_energy_relay': ('Legion energy relay', ((-41.4372, 41.4372), (-16.0, 31.6), (-25.7713, 46.4)), 71.9, 11500, 8000, 2_000_000),
+    'syndicate_energy_relay': ('Syndicate energy relay', ((-47.5594, 46.5284), (-11.2, 23.36), (-46.5402, 34.4011)), 80.7, 11500, 8000, 2_000_000),
 }
 
 

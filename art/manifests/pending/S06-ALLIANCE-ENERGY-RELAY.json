@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b3b-stations-slice-1",
+  "binding": "rebel:energy_relay",
+  "canonical_binding": "ship:rebel:energy_relay",
+  "gameplay_entity": "energy_relay",
+  "class": "energy_relay",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/alliance_energy_relay.blend",
+    "sha256": "2b46bbdcadf6a8a3b755c3aa17317c40041d1e2f063086412ed3c9db1f2fbc73",
+    "bytes": 145423
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b3b_stations.py",
+    "sha256": "14be714fea48ff64693cb17049fcb31e8331afaab2c50a7dc1ac64b20f11f3eb",
+    "bytes": 32785,
+    "selects": "--asset rebel:energy_relay"
+  },
+  "export_script": {
+    "path": "tools/art/export_alliance_energy_relay.py",
+    "sha256": "f41ccca376f382d6f0733827f400c3e013b392e8fe4f164da43926b7c39fd73b",
+    "bytes": 4773
+  },
+  "runtime": {
+    "path": "assets/models/alliance_energy_relay.mesh.json",
+    "sha256": "88bdfe64bc199694dd50b8bc2b29ea51ba27dedb4fb7818179214cbc3572a840",
+    "bytes": 304273,
+    "triangles": 4384,
+    "vertices": 2332,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -50.4,
+      -8.4078,
+      -29.36
+    ],
+    [
+      50.4,
+      13.2078,
+      20.9846
+    ]
+  ],
+  "bounds": [
+    [
+      -50.299999,
+      -8.4078,
+      -29.36
+    ],
+    [
+      50.299999,
+      13.2078,
+      20.9846
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b3b-stations/contact-sheet.png",
+  "motion": null
+}

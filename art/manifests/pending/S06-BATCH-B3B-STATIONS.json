@@ -1,0 +1,398 @@
+{
+  "schema": 1,
+  "batch": "s06-b3b-stations-slice-1",
+  "status": "pending_owner_appearance_approval",
+  "note": "Review-only batch sheet for the pending S06 B3b station specimens, slice 1: the mining station, sensor station and energy relay across the three families that have a mesh_for seam. This file is not an approval record, a registry entry or a runtime manifest, and it does not select any asset in production. Each station is authored *to* its binding's legacy procedural extent, not merely inside it, because the review harness compares the authored footprint against the legacy station mesh within 1 percent per axis and the legacy procedural station fills its declared box exactly. The ten imperial station rows are deliberately absent: those bindings dispatch straight to render.fleet_geometry._station_mesh with no mesh_for seam, so authoring them is a renderer change and an owner decision rather than an asset batch. rebel:shipyard is also absent: it is already delivered as the approved trio's `core` asset alliance_shipyard. The command stations are absent: they are the B3a batch and are already approved. The batch's overview spacing is 300, not the 600 the three-row B3a batch used: nine rows at 600 span 4800 units and the 1100-distance overview frame covers 1833, so the outer rows fell outside the frame and only the middle five were ever in the contact sheet. The batch's `overview.close_distance_floor` is 150: these stations frame at 65-146 units where the B3a command stations framed at 250, and the shared scene's context group put the near camera inside a context hull for the closest row - the harness refused it as `camera not outside union`. The floor lifts the two near views to a clearance the B3a frames already had, and it is inert for every earlier batch.",
+  "overview": {
+    "first_x": -4200,
+    "first_z": 1200,
+    "spacing": 300,
+    "distance": 1100,
+    "yaw": 48,
+    "pitch": 50,
+    "close_distance_floor": 150
+  },
+  "evidence": {
+    "rebel:mining_station": {
+      "sheet": "artifacts/s06_alliance_batch_review/b3b-stations/contact-sheet.png",
+      "close": "artifacts/s06_alliance_batch_review/b3b-stations/alliance mining station-after-close.png",
+      "tactical": "artifacts/s06_alliance_batch_review/b3b-stations/alliance mining station-after-tactical.png",
+      "ablated": [
+        "artifacts/s06_alliance_batch_review/b3b-stations/alliance mining station-ablated-accent.png",
+        "artifacts/s06_alliance_batch_review/b3b-stations/alliance mining station-ablated-cool.png",
+        "artifacts/s06_alliance_batch_review/b3b-stations/alliance mining station-ablated-dark.png"
+      ],
+      "restored": "artifacts/s06_alliance_batch_review/b3b-stations/alliance mining station-close-restored.png",
+      "motion": "artifacts/s06_alliance_batch_review/b3b-stations/alliance mining station-after-motion.mp4"
+    },
+    "confederacy:mining_station": {
+      "sheet": "artifacts/s06_alliance_batch_review/b3b-stations/contact-sheet.png",
+      "close": "artifacts/s06_alliance_batch_review/b3b-stations/legion mining station-after-close.png",
+      "tactical": "artifacts/s06_alliance_batch_review/b3b-stations/legion mining station-after-tactical.png",
+      "ablated": [
+        "artifacts/s06_alliance_batch_review/b3b-stations/legion mining station-ablated-accent.png",
+        "artifacts/s06_alliance_batch_review/b3b-stations/legion mining station-ablated-cool.png",
+        "artifacts/s06_alliance_batch_review/b3b-stations/legion mining station-ablated-dark.png"
+      ],
+      "restored": "artifacts/s06_alliance_batch_review/b3b-stations/legion mining station-close-restored.png"
+    },
+    "syndicate:mining_station": {
+      "sheet": "artifacts/s06_alliance_batch_review/b3b-stations/contact-sheet.png",
+      "close": "artifacts/s06_alliance_batch_review/b3b-stations/syndicate mining station-after-close.png",
+      "tactical": "artifacts/s06_alliance_batch_review/b3b-stations/syndicate mining station-after-tactical.png",
+      "ablated": [
+        "artifacts/s06_alliance_batch_review/b3b-stations/syndicate mining station-ablated-accent.png",
+        "artifacts/s06_alliance_batch_review/b3b-stations/syndicate mining station-ablated-cool.png",
+        "artifacts/s06_alliance_batch_review/b3b-stations/syndicate mining station-ablated-dark.png"
+      ],
+      "restored": "artifacts/s06_alliance_batch_review/b3b-stations/syndicate mining station-close-restored.png"
+    },
+    "rebel:sensor_station": {
+      "sheet": "artifacts/s06_alliance_batch_review/b3b-stations/contact-sheet.png",
+      "close": "artifacts/s06_alliance_batch_review/b3b-stations/alliance sensor station-after-close.png",
+      "tactical": "artifacts/s06_alliance_batch_review/b3b-stations/alliance sensor station-after-tactical.png",
+      "ablated": [
+        "artifacts/s06_alliance_batch_review/b3b-stations/alliance sensor station-ablated-accent.png",
+        "artifacts/s06_alliance_batch_review/b3b-stations/alliance sensor station-ablated-cool.png",
+        "artifacts/s06_alliance_batch_review/b3b-stations/alliance sensor station-ablated-dark.png"
+      ],
+      "restored": "artifacts/s06_alliance_batch_review/b3b-stations/alliance sensor station-close-restored.png"
+    },
+    "confederacy:sensor_station": {
+      "sheet": "artifacts/s06_alliance_batch_review/b3b-stations/contact-sheet.png",
+      "close": "artifacts/s06_alliance_batch_review/b3b-stations/legion sensor station-after-close.png",
+      "tactical": "artifacts/s06_alliance_batch_review/b3b-stations/legion sensor station-after-tactical.png",
+      "ablated": [
+        "artifacts/s06_alliance_batch_review/b3b-stations/legion sensor station-ablated-accent.png",
+        "artifacts/s06_alliance_batch_review/b3b-stations/legion sensor station-ablated-cool.png",
+        "artifacts/s06_alliance_batch_review/b3b-stations/legion sensor station-ablated-dark.png"
+      ],
+      "restored": "artifacts/s06_alliance_batch_review/b3b-stations/legion sensor station-close-restored.png"
+    },
+    "syndicate:sensor_station": {
+      "sheet": "artifacts/s06_alliance_batch_review/b3b-stations/contact-sheet.png",
+      "close": "artifacts/s06_alliance_batch_review/b3b-stations/syndicate sensor station-after-close.png",
+      "tactical": "artifacts/s06_alliance_batch_review/b3b-stations/syndicate sensor station-after-tactical.png",
+      "ablated": [
+        "artifacts/s06_alliance_batch_review/b3b-stations/syndicate sensor station-ablated-accent.png",
+        "artifacts/s06_alliance_batch_review/b3b-stations/syndicate sensor station-ablated-cool.png",
+        "artifacts/s06_alliance_batch_review/b3b-stations/syndicate sensor station-ablated-dark.png"
+      ],
+      "restored": "artifacts/s06_alliance_batch_review/b3b-stations/syndicate sensor station-close-restored.png"
+    },
+    "rebel:energy_relay": {
+      "sheet": "artifacts/s06_alliance_batch_review/b3b-stations/contact-sheet.png",
+      "close": "artifacts/s06_alliance_batch_review/b3b-stations/alliance energy relay-after-close.png",
+      "tactical": "artifacts/s06_alliance_batch_review/b3b-stations/alliance energy relay-after-tactical.png",
+      "ablated": [
+        "artifacts/s06_alliance_batch_review/b3b-stations/alliance energy relay-ablated-accent.png",
+        "artifacts/s06_alliance_batch_review/b3b-stations/alliance energy relay-ablated-cool.png",
+        "artifacts/s06_alliance_batch_review/b3b-stations/alliance energy relay-ablated-dark.png"
+      ],
+      "restored": "artifacts/s06_alliance_batch_review/b3b-stations/alliance energy relay-close-restored.png"
+    },
+    "confederacy:energy_relay": {
+      "sheet": "artifacts/s06_alliance_batch_review/b3b-stations/contact-sheet.png",
+      "close": "artifacts/s06_alliance_batch_review/b3b-stations/legion energy relay-after-close.png",
+      "tactical": "artifacts/s06_alliance_batch_review/b3b-stations/legion energy relay-after-tactical.png",
+      "ablated": [
+        "artifacts/s06_alliance_batch_review/b3b-stations/legion energy relay-ablated-accent.png",
+        "artifacts/s06_alliance_batch_review/b3b-stations/legion energy relay-ablated-cool.png",
+        "artifacts/s06_alliance_batch_review/b3b-stations/legion energy relay-ablated-dark.png"
+      ],
+      "restored": "artifacts/s06_alliance_batch_review/b3b-stations/legion energy relay-close-restored.png"
+    },
+    "syndicate:energy_relay": {
+      "sheet": "artifacts/s06_alliance_batch_review/b3b-stations/contact-sheet.png",
+      "close": "artifacts/s06_alliance_batch_review/b3b-stations/syndicate energy relay-after-close.png",
+      "tactical": "artifacts/s06_alliance_batch_review/b3b-stations/syndicate energy relay-after-tactical.png",
+      "ablated": [
+        "artifacts/s06_alliance_batch_review/b3b-stations/syndicate energy relay-ablated-accent.png",
+        "artifacts/s06_alliance_batch_review/b3b-stations/syndicate energy relay-ablated-cool.png",
+        "artifacts/s06_alliance_batch_review/b3b-stations/syndicate energy relay-ablated-dark.png"
+      ],
+      "restored": "artifacts/s06_alliance_batch_review/b3b-stations/syndicate energy relay-close-restored.png"
+    }
+  },
+  "assets": [
+    {
+      "binding": "rebel:mining_station",
+      "label": "alliance mining station",
+      "identifier": "alliance_mining_station",
+      "mesh": "assets/models/alliance_mining_station.mesh.json",
+      "envelope": [
+        [
+          -44.8,
+          -15.6,
+          -26.0
+        ],
+        [
+          44.8,
+          10.12,
+          22.8294
+        ]
+      ],
+      "min_length": 48.6,
+      "data_id": "mining_station",
+      "gameplay_entity": "mining_station",
+      "class": "mining_station",
+      "station_kind": "mining_station",
+      "faction": "rebel",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b3b_stations.py",
+      "seed_arg": "--asset rebel:mining_station"
+    },
+    {
+      "binding": "confederacy:mining_station",
+      "label": "legion mining station",
+      "identifier": "legion_mining_station",
+      "mesh": "assets/models/legion_mining_station.mesh.json",
+      "envelope": [
+        [
+          -40.6686,
+          -31.44,
+          -29.36
+        ],
+        [
+          40.6686,
+          11.08,
+          46.96
+        ]
+      ],
+      "min_length": 76.1,
+      "data_id": "mining_station",
+      "gameplay_entity": "mining_station",
+      "class": "mining_station",
+      "station_kind": "mining_station",
+      "faction": "confederacy",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b3b_stations.py",
+      "seed_arg": "--asset confederacy:mining_station"
+    },
+    {
+      "binding": "syndicate:mining_station",
+      "label": "syndicate mining station",
+      "identifier": "syndicate_mining_station",
+      "mesh": "assets/models/syndicate_mining_station.mesh.json",
+      "envelope": [
+        [
+          -33.9322,
+          -32.4,
+          -25.0848
+        ],
+        [
+          42.4,
+          39.6,
+          41.4431
+        ]
+      ],
+      "min_length": 66.3,
+      "data_id": "mining_station",
+      "gameplay_entity": "mining_station",
+      "class": "mining_station",
+      "station_kind": "mining_station",
+      "faction": "syndicate",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b3b_stations.py",
+      "seed_arg": "--asset syndicate:mining_station"
+    },
+    {
+      "binding": "rebel:sensor_station",
+      "label": "alliance sensor station",
+      "identifier": "alliance_sensor_station",
+      "mesh": "assets/models/alliance_sensor_station.mesh.json",
+      "envelope": [
+        [
+          -46.4,
+          -12.8,
+          -24.8
+        ],
+        [
+          46.4,
+          30.48,
+          16.24
+        ]
+      ],
+      "min_length": 40.8,
+      "data_id": "sensor_station",
+      "gameplay_entity": "sensor_station",
+      "class": "sensor_station",
+      "station_kind": "sensor_station",
+      "faction": "rebel",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b3b_stations.py",
+      "seed_arg": "--asset rebel:sensor_station"
+    },
+    {
+      "binding": "confederacy:sensor_station",
+      "label": "legion sensor station",
+      "identifier": "legion_sensor_station",
+      "mesh": "assets/models/legion_sensor_station.mesh.json",
+      "envelope": [
+        [
+          -36.1913,
+          -14.0,
+          -28.2851
+        ],
+        [
+          36.1913,
+          38.4,
+          34.8
+        ]
+      ],
+      "min_length": 62.9,
+      "data_id": "sensor_station",
+      "gameplay_entity": "sensor_station",
+      "class": "sensor_station",
+      "station_kind": "sensor_station",
+      "faction": "confederacy",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b3b_stations.py",
+      "seed_arg": "--asset confederacy:sensor_station"
+    },
+    {
+      "binding": "syndicate:sensor_station",
+      "label": "syndicate sensor station",
+      "identifier": "syndicate_sensor_station",
+      "mesh": "assets/models/syndicate_sensor_station.mesh.json",
+      "envelope": [
+        [
+          -47.2,
+          -17.6,
+          -31.137
+        ],
+        [
+          26.3565,
+          43.857,
+          21.1423
+        ]
+      ],
+      "min_length": 52.1,
+      "data_id": "sensor_station",
+      "gameplay_entity": "sensor_station",
+      "class": "sensor_station",
+      "station_kind": "sensor_station",
+      "faction": "syndicate",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b3b_stations.py",
+      "seed_arg": "--asset syndicate:sensor_station"
+    },
+    {
+      "binding": "rebel:energy_relay",
+      "label": "alliance energy relay",
+      "identifier": "alliance_energy_relay",
+      "mesh": "assets/models/alliance_energy_relay.mesh.json",
+      "envelope": [
+        [
+          -50.4,
+          -8.4078,
+          -29.36
+        ],
+        [
+          50.4,
+          13.2078,
+          20.9846
+        ]
+      ],
+      "min_length": 50.1,
+      "data_id": "energy_relay",
+      "gameplay_entity": "energy_relay",
+      "class": "energy_relay",
+      "station_kind": "energy_relay",
+      "faction": "rebel",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b3b_stations.py",
+      "seed_arg": "--asset rebel:energy_relay"
+    },
+    {
+      "binding": "confederacy:energy_relay",
+      "label": "legion energy relay",
+      "identifier": "legion_energy_relay",
+      "mesh": "assets/models/legion_energy_relay.mesh.json",
+      "envelope": [
+        [
+          -41.4372,
+          -16.0,
+          -25.7713
+        ],
+        [
+          41.4372,
+          31.6,
+          46.4
+        ]
+      ],
+      "min_length": 71.9,
+      "data_id": "energy_relay",
+      "gameplay_entity": "energy_relay",
+      "class": "energy_relay",
+      "station_kind": "energy_relay",
+      "faction": "confederacy",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b3b_stations.py",
+      "seed_arg": "--asset confederacy:energy_relay"
+    },
+    {
+      "binding": "syndicate:energy_relay",
+      "label": "syndicate energy relay",
+      "identifier": "syndicate_energy_relay",
+      "mesh": "assets/models/syndicate_energy_relay.mesh.json",
+      "envelope": [
+        [
+          -47.5594,
+          -11.2,
+          -46.5402
+        ],
+        [
+          46.5284,
+          23.36,
+          34.4011
+        ]
+      ],
+      "min_length": 80.7,
+      "data_id": "energy_relay",
+      "gameplay_entity": "energy_relay",
+      "class": "energy_relay",
+      "station_kind": "energy_relay",
+      "faction": "syndicate",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b3b_stations.py",
+      "seed_arg": "--asset syndicate:energy_relay"
+    }
+  ]
+}

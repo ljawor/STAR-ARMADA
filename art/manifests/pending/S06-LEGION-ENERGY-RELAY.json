@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b3b-stations-slice-1",
+  "binding": "confederacy:energy_relay",
+  "canonical_binding": "ship:confederacy:energy_relay",
+  "gameplay_entity": "energy_relay",
+  "class": "energy_relay",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/legion_energy_relay.blend",
+    "sha256": "502c992344652f74b3d81f94cad53bcb06904c183d9b4fa96501e6ac29d5b411",
+    "bytes": 140190
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b3b_stations.py",
+    "sha256": "14be714fea48ff64693cb17049fcb31e8331afaab2c50a7dc1ac64b20f11f3eb",
+    "bytes": 32785,
+    "selects": "--asset confederacy:energy_relay"
+  },
+  "export_script": {
+    "path": "tools/art/export_legion_energy_relay.py",
+    "sha256": "ad103fd6c63d5cd21f33b4246150130a9bc3b4978772db42e6a708e649da68d8",
+    "bytes": 4767
+  },
+  "runtime": {
+    "path": "assets/models/legion_energy_relay.mesh.json",
+    "sha256": "8949a2070706f989116e3b12507211b4b37591cd342471874271666a0938159f",
+    "bytes": 211418,
+    "triangles": 3300,
+    "vertices": 1808,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -41.4372,
+      -16.0,
+      -25.7713
+    ],
+    [
+      41.4372,
+      31.6,
+      46.4
+    ]
+  ],
+  "bounds": [
+    [
+      -41.287201,
+      -16.0,
+      -25.671301
+    ],
+    [
+      41.287201,
+      31.6,
+      46.299999
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b3b-stations/contact-sheet.png",
+  "motion": null
+}
