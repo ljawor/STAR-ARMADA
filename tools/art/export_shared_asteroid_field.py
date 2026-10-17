@@ -21,11 +21,14 @@ IDENTIFIER = 'shared_asteroid_field'
 # The binding's legacy procedural envelope. The authored mesh fills this box, so the
 # renderer's class scale (ship_size: drawn length / authored Z span) is unchanged and
 # the drawn length, camera framing and collision radius stay as they are today.
-ENVELOPE = ((-0.9, 0.9), (-0.7, 0.7), (-0.9, 0.9))
-MIN_LENGTH = 1.6
-MAX_TRIANGLES = 3500
-MAX_VERTICES = 2500
-MAX_BYTES = 400_000
+ENVELOPE = ((-0.58, 0.58), (-0.46, 0.46), (-0.58, 0.58))
+MIN_LENGTH = 0.9
+# The asset's own floor. 1,800 for hulls and structures; a declared small prop - the renderer draws
+# it many times per frame - carries its own, per the owner decision `s06-small-prop-class-2026-10-17`.
+MIN_TRIANGLES = 120
+MAX_TRIANGLES = 600
+MAX_VERTICES = 500
+MAX_BYTES = 120_000
 
 
 def main():
@@ -77,7 +80,7 @@ def main():
                coordinates='X beam; Y up; +Z forward',vertices=vertices,batches=batches,
                bounds=[lo,hi],parts=parts,triangle_count=sum(map(len,batches.values())),
                features=json.loads(bpy.context.scene['features_json']))
-    assert 1_800 < asset['triangle_count'] <= MAX_TRIANGLES,asset['triangle_count']
+    assert MIN_TRIANGLES < asset['triangle_count'] <= MAX_TRIANGLES,asset['triangle_count']
     assert len(vertices)<=MAX_VERTICES,len(vertices)
     assert hi[2]-lo[2] >= MIN_LENGTH, (IDENTIFIER, hi[2]-lo[2])
     payload=json.dumps(asset,separators=(',',':'),allow_nan=False)+'\n'

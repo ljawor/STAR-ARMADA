@@ -33,12 +33,20 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 
 BREACH_TOLERANCE = 1e-3
+# This asset is a declared small prop (owner decision `s06-small-prop-class-2026-10-17`): the renderer
+# draws it forty times per field, so it is built with the surface density of the thing it replaces
+# rather than of a station, and its own floor is the class's 120 triangles.
+MIN_TRIANGLES = 120
 
 IDENTIFIER = 'shared_asteroid_field'
 BINDING = 'environment:asteroid_field'
 RADIUS = 45          # the row's catalogue radius, read from assets/data/stations/stations.json
-# The legacy rock's worst-case reach at scale 1.0 (see the module docstring).
-LIMITS = [[-0.90, 0.90], [-0.70, 0.70], [-0.90, 0.90]]
+# What the prop is fitted to, and the ceiling it must never cross. The first revision fitted the
+# *worst* case the legacy jitter can reach, and the field then read as heavy and dense: every
+# instance was systematically bigger than a typical legacy rock. The fit is the mean rock; the
+# ceiling is the worst case, asserted rather than reached.
+LIMITS = [[-0.58, 0.58], [-0.46, 0.46], [-0.58, 0.58]]
+CEILING = [[-0.90, 0.90], [-0.70, 0.70], [-0.90, 0.90]]
 DESIGN = ('four overlapping jittered lumps with a rugged silhouette, a lit upper crust, a dark '
           'underside, a few mineral veins, glinting facets and two icy patches')
 # Deterministic, so the recipe reproduces the same rock: the legacy look rhymes with it, and a
@@ -93,14 +101,14 @@ def _hash(*parts):
     return (value % 100000) / 100000.
 
 
-def lump(name, centre, radii, grid=7, phase=0):
-    """One lump: six bulged faces, each a jittered grid, triangulated.
+def lump(name, centre, radii, grid=None, phase=0):
+    """One lump, built the way the renderer's own rock is built: eight jittered corners and six face
+    bulges, each face fanned through its bulge into four triangles with a flat normal.
 
-    The shape is the legacy hull's - eight jittered corners and six face bulges - but the faces are
-    gridded so the prop carries enough surface to read at close range, and every vertex is pushed
-    outward by a deterministic noise so the silhouette is rugged rather than faceted-uniform. Vertices
-    are clamped inside the envelope, and one vertex per axis is *placed* on each limit by the caller's
-    reach pass, so the prop reaches exactly what the legacy rock could.
+    No grid and no per-vertex noise, on purpose. The legacy rock reads as stone because each of its
+    facets is huge relative to the rock - two to four lumps of twenty-four triangles - and a finer
+    surface reads as noise at this size. That is why this asset needed the owner's small-prop class
+    (`s06-small-prop-class-2026-10-17`) instead of a surface dense enough for a station.
     """
     cx, cy, cz = centre
     rx, ry, rz = radii
@@ -109,47 +117,29 @@ def lump(name, centre, radii, grid=7, phase=0):
         for sy in (-1, 1):
             for sz in (-1, 1):
                 k = len(corners)
-                j = 0.86 + 0.28 * _hash(phase, k, 1)
+                j = 0.82 + 0.36 * _hash(phase, k, 1)
                 corners.append((sx * 0.72 * j, sy * 0.60 * j, sz * 0.72 * j))
     bulges = []
     for k, (dx, dy, dz) in enumerate(((0, 0, 1), (0, 0, -1), (0, 1, 0),
                                       (0, -1, 0), (1, 0, 0), (-1, 0, 0))):
-        j = 0.90 + 0.40 * _hash(phase, k, 2)
+        j = 0.88 + 0.42 * _hash(phase, k, 2)
         bulges.append((dx * j, dy * 0.80 * j, dz * j))
     faces = [((1, 3, 7, 5), 0), ((2, 6, 4, 0), 1), ((2, 3, 7, 6), 2),
              ((0, 4, 5, 1), 3), ((3, 1, 5, 7), 4), ((0, 2, 6, 4), 5)]
     verts, faces_out = [], []
 
-    def point(quad, bulge):
-        def sample(u, v):
-            a = tuple((1 - u) * (1 - v) * corners[quad[0]][i] + u * (1 - v) * corners[quad[1]][i]
-                      + u * v * corners[quad[2]][i] + (1 - u) * v * corners[quad[3]][i]
-                      for i in range(3))
-            b = bulges[bulge]
-            # bilinear across the face, then pulled toward the face bulge and noised outward
-            p = tuple((1 - (1 - u) * (1 - v)) * b[i] * 0.55 + a[i] * 0.85 for i in range(3))
-            n = 0.82 + 0.42 * _hash(phase, int(u * 97), int(v * 89), 3)
-            return (min(max(p[0] * n * rx, LIMITS[0][0]), LIMITS[0][1]),
-                    min(max(p[1] * n * ry, LIMITS[1][0]), LIMITS[1][1]),
-                    min(max(p[2] * n * rz, LIMITS[2][0]), LIMITS[2][1]))
-
-        idx = []
-        for i in range(grid + 1):
-            row = []
-            for j in range(grid + 1):
-                p = sample(i / grid, j / grid)
-                row.append(len(verts))
-                verts.append((p[0] + cx, p[1] + cy, p[2] + cz))
-            idx.append(row)
-        for i in range(grid):
-            for j in range(grid):
-                a, b, c, d = (idx[i][j], idx[i + 1][j], idx[i + 1][j + 1], idx[i][j + 1])
-                faces_out.append((a, b, c))
-                faces_out.append((a, c, d))
-        return idx
+    def point(p):
+        return (min(max(p[0] * rx + cx, LIMITS[0][0]), LIMITS[0][1]),
+                min(max(p[1] * ry + cy, LIMITS[1][0]), LIMITS[1][1]),
+                min(max(p[2] * rz + cz, LIMITS[2][0]), LIMITS[2][1]))
 
     for quad, bulge in faces:
-        point(quad, bulge)
+        a_, b_, c_, d_ = (point(corners[i]) for i in quad)
+        centre_point = point(bulges[bulge])
+        base = len(verts)
+        verts.extend((a_, b_, c_, d_, centre_point))
+        for tri in ((0, 1, 4), (1, 2, 4), (2, 3, 4), (3, 0, 4)):
+            faces_out.append((base + tri[0], base + tri[1], base + tri[2]))
     return verts, faces_out
 
 
@@ -180,10 +170,15 @@ def role_of(verts, tri, centre):
 def build():
     """Four overlapping lumps, the reach vertices, then the accent, glint and ice patches."""
     centre = (0.0, 0.0, 0.0)
-    lumps = (((-.16, .04, .12), (.62, .44, .60), 7, 3),
-             ((.22, -.03, -.14), (.52, .38, .50), 7, 11),
-             ((.06, .12, .26), (.40, .30, .38), 6, 19),
-             ((-.24, -.06, -.22), (.34, .26, .32), 6, 29))
+    # Seven overlapping lumps, each carrying flat plates: the vocabulary the legacy rock uses (a lump
+    # is eight jittered corners and six bulges) at the size the field's own scale reads as the rock it
+    # replaces, and enough of them to clear the exporter's floor without a finer surface.
+    # Four overlapping lumps the size of the legacy rock's own, plus three raised patches. An authored
+    # instance has to read as *one* rock, so the lumps are few and the facets on them are large.
+    lumps = (((-.10, .02, .08), (.58, .42, .54), 5, 3),
+             ((.17, -.04, -.12), (.50, .37, .46), 5, 11),
+             ((.02, .10, .18), (.40, .29, .36), 4, 19),
+             ((-.24, -.05, -.20), (.30, .22, .28), 4, 29))
     verts, faces, role_of_face = [], [], []
     for k, (c, r, grid, phase) in enumerate(lumps):
         lv, lf = lump(f'10 Lump {k}', c, r, grid=grid, phase=phase)
@@ -255,9 +250,12 @@ def report_bounds(label):
         mesh.calc_loop_triangles()
         tris += len(mesh.loop_triangles)
         evaluated.to_mesh_clear()
-    print(f'TRIS {label} {tris} {"OK" if tris > 1800 else "LOW"}')
+    print(f'TRIS {label} {tris} {"OK" if tris > MIN_TRIANGLES else "LOW"}')
     print(f'BOUNDS {label} lo={[round(v, 3) for v in lo]} hi={[round(v, 3) for v in hi]}')
     breaches = breach_lines(label, lo, hi, LIMITS, extreme)
+    # The ceiling is asserted separately: fitting to the mean rock is the point, but the prop must
+    # still never be larger than the legacy jitter can reach, or the field's outermost rocks grow.
+    breaches += breach_lines(label + ' ceiling', lo, hi, CEILING, extreme)
     for line in breaches:
         print(line)
     print(f'SELFCHECK {label} breaches={len(breaches)} tolerance={BREACH_TOLERANCE}')
@@ -296,6 +294,7 @@ def main():
                                 'source-authority policy for repeated modular hardware',
                     environment_kind='asteroid_field', station_radius=RADIUS, shared_prop=True,
                     field_instances=40, field_scale_range=[12, 46],
+                    min_triangles=MIN_TRIANGLES,
                     provenance='Original geometry generated by this recipe; no external mesh or '
                                'texture dependencies')
     bpy.context.scene['asset'] = IDENTIFIER

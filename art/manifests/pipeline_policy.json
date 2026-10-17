@@ -249,6 +249,41 @@
         "landing, registration, activation, merge, tag, release or a production-default switch",
         "any change to asteroid gameplay values: the row stays decorative, and the field's count, placement, scale range and tumble are untouched"
       ]
+    },
+    {
+      "id": "s06-small-prop-class-2026-10-17",
+      "date": "2026-10-17",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved-as-proposed",
+      "applies_to": "S03 authoring policy - the exporter's minimum triangle count",
+      "owner_wording": "option 1",
+      "how_recorded": "The B5 asteroid prop was shown to the owner three times against the procedural rock it replaces, and he judged the procedural rock better each time ('left one is better'). The cause was diagnosed and put to him with three ways out - open a small-prop class below the 1,800-triangle floor, accept a prop that is worse than what it replaces, or leave the row procedural - and he chose the first. Recorded verbatim.",
+      "decisions": [
+        {
+          "id": "small-prop-class-exists",
+          "decision": "A **small-prop class** exists for assets the renderer draws many times per frame: an asteroid rock, and any later prop of the same kind. Its floor is 120 triangles instead of 1,800, and its own ceiling is set per asset in the wrapper table, tighter than the loader's 12,000. The 1,800 floor stays exactly as it is for ships, stations, satellites, planet installations and every other asset already approved; nothing in this decision moves them.",
+          "why": "The floor was written for hull- and structure-scale assets. A unit rock is drawn forty times per field, so the floor forced a surface forty times finer than the rock it replaced - which reads as texture noise and spiky silhouette rather than stone, and costs a field 120,000 triangles instead of about 10,000. The class exists so a prop can be authored the way the thing it replaces is authored: a few very large facets.",
+          "applies_from": "this decision"
+        },
+        {
+          "id": "the-class-is-declared-per-asset",
+          "decision": "The class is declared where the caps already are: the wrapper template gains a minimum-triangle slot, the wrapper table sets it per asset, and the seed asserts its own floor. There is no implicit exemption and no global lowering - a small prop says so in its own file.",
+          "why": "A floor that can be waived silently is not a floor; a declared class is a record a reviewer can find.",
+          "applies_from": "this decision"
+        },
+        {
+          "id": "evidence-for-a-small-prop",
+          "decision": "A small-prop row is reviewed the same way as any other: actual-application captures with the legacy path, a per-role ablation, and a repeat frame that must be identical. The owner's judgement of the picture is the gate.",
+          "why": "The class changes what geometry is allowed, not what evidence is owed.",
+          "applies_from": "this decision"
+        }
+      ],
+      "not_authorized": [
+        "lowering the 1,800 floor for any asset outside the declared small-prop class",
+        "relaxing the runtime loader caps (12,000 triangles / 10,000 vertices / 2,000,000 bytes) or any owner class budget",
+        "landing, registration, activation, merge, tag, release or a production-default switch",
+        "any change to the field's gameplay values: 40 instances, placement, scale range and tumble stay as they are"
+      ]
     }
   ]
 }

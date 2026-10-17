@@ -31,9 +31,14 @@ SEED = 'tools/art/build_b5_asteroid.py'
 RENDERER = ROOT / 'render/renderer.py'
 BINDING = 'environment:asteroid_field'
 IDENTIFIER = 'shared_asteroid_field'
-ENVELOPE = ((-0.90, 0.90), (-0.70, 0.70), (-0.90, 0.90))
-MIN_LENGTH = 1.6
-OWN_CAPS = dict(triangles=3500, vertices=2500, bytes=400_000)
+ENVELOPE = ((-0.58, 0.58), (-0.46, 0.46), (-0.58, 0.58))
+MIN_LENGTH = 1.0
+# The legacy rock's worst-case reach, kept as a ceiling the prop must never cross.
+CEILING = ((-0.90, 0.90), (-0.70, 0.70), (-0.90, 0.90))
+# A declared small prop (owner decision `s06-small-prop-class-2026-10-17`): 120 triangles of floor
+# instead of 1,800, because the renderer draws it forty times per field, and its own tight ceiling.
+CLASS_FLOOR = 120
+OWN_CAPS = dict(triangles=600, vertices=500, bytes=120_000)
 LOADER_CAPS = dict(triangles=12000, vertices=10000, bytes=2_000_000)
 ROLES = ('base', 'dark', 'trim', 'accent', 'lit', 'cool')
 # The legacy rock's own geometry, quoted so the guard can compare against it rather than trust the
@@ -73,7 +78,8 @@ class PropContract(unittest.TestCase):
         data = mesh()
         self.assertEqual(data['asset'], IDENTIFIER)
         self.assertEqual(data['triangle_count'], sum(len(v) for v in data['batches'].values()))
-        self.assertGreater(data['triangle_count'], 1800, 'the exporter refuses at or under the floor')
+        self.assertGreater(data['triangle_count'], CLASS_FLOOR,
+                           'the exporter refuses at or under the class floor')
         self.assertLessEqual(data['triangle_count'], OWN_CAPS['triangles'])
         self.assertLessEqual(len(data['vertices']), OWN_CAPS['vertices'])
         self.assertLessEqual(SIDECAR.stat().st_size, OWN_CAPS['bytes'] + 400_000)
@@ -104,7 +110,7 @@ class PropContract(unittest.TestCase):
         body = function_source('_draw_rock')
         self.assertIn('glScalef(s, s, s)', body,
                       'the prop is unit scale and the instance scale is applied at draw time')
-        self.assertLessEqual(max(abs(v) for pair in ENVELOPE for v in pair), 0.9)
+        self.assertLessEqual(max(abs(v) for pair in ENVELOPE for v in pair), 0.58)
 
     def test_the_recipe_refuses_to_overwrite_an_existing_master(self):
         text = (ROOT / SEED).read_text(encoding='utf-8')
@@ -276,14 +282,42 @@ class BatchRecords(unittest.TestCase):
         entry = re.search(r"ASSETS\['shared_asteroid_field'\] = \((.*?)\)\n", text, re.S)
         self.assertTrue(entry, 'the wrapper table must carry the row')
         declaration = entry.group(1)
-        for token in ('(-0.90, 0.90)', '(-0.70, 0.70)', '(-0.90, 0.90)', '1.6', '3500', '2500',
-                      '400_000'):
+        for token in ('(-0.58, 0.58)', '(-0.46, 0.46)', '(-0.58, 0.58)', '0.9', '600', '500',
+                      '120_000'):
             self.assertIn(token, declaration, token)
         wrapper = (ROOT / f'tools/art/export_{IDENTIFIER}.py').read_text(encoding='utf-8')
-        self.assertIn('ENVELOPE = ((-0.9, 0.9), (-0.7, 0.7), (-0.9, 0.9))', wrapper)
-        self.assertIn('MIN_LENGTH = 1.6', wrapper)
-        self.assertIn('MAX_TRIANGLES = 3500', wrapper)
-        self.assertIn('MAX_VERTICES = 2500', wrapper)
+        self.assertIn('ENVELOPE = ((-0.58, 0.58), (-0.46, 0.46), (-0.58, 0.58))', wrapper)
+        self.assertIn('MIN_LENGTH = 0.9', wrapper)
+        self.assertIn('MIN_TRIANGLES = 120', wrapper)
+        self.assertIn('MAX_TRIANGLES = 600', wrapper)
+        self.assertIn('MAX_VERTICES = 500', wrapper)
+
+    def test_the_small_prop_class_is_declared_and_is_not_a_blanket_relaxation(self):
+        """A declared class, not a lowered floor: only this row carries 120, everything else 1,800."""
+        generator = (ROOT / 'tools/art/gen_export_wrappers.py').read_text(encoding='utf-8')
+        self.assertIn('MIN_TRIANGLES = {\'shared_asteroid_field\': 120}', generator)
+        self.assertIn('DEFAULT_MIN_TRIANGLES = 1_800', generator)
+        lowered, hand_written = [], []
+        for path in sorted((ROOT / 'tools/art').glob('export_*.py')):
+            text = path.read_text(encoding='utf-8')
+            match = re.search(r'^MIN_TRIANGLES = (\d+)$', text, re.M)
+            if match is None:
+                # Two wrappers predate the template and carry no floor constant: the cruiser's and
+                # the Syndicate command station's. They are named here rather than silently skipped,
+                # and neither is one of this batch's rows.
+                hand_written.append(path.name)
+                continue
+            if int(match.group(1)) != 1800:
+                lowered.append((path.name, int(match.group(1))))
+        self.assertEqual(lowered, [('export_shared_asteroid_field.py', 120)],
+                         'the class is declared per asset; nothing else may move its floor')
+        self.assertEqual(hand_written, ['export_alliance_cruiser.py', 'export_syndicate_command_station.py'],
+                         'only the two pre-template wrappers may carry no floor constant')
+        policy = load(ROOT / 'art/manifests/pipeline_policy.json')
+        entry = next(d for d in policy['decision_log']
+                     if d['id'] == 's06-small-prop-class-2026-10-17')
+        self.assertEqual(entry['owner_wording'], 'option 1')
+        self.assertTrue(entry['not_authorized'])
 
     def test_the_scope_decision_is_recorded_and_names_what_it_does_not_authorize(self):
         policy = load(ROOT / 'art/manifests/pipeline_policy.json')

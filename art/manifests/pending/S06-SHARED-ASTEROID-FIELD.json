@@ -10,26 +10,26 @@
   "authority": "script",
   "source": {
     "path": "art/blender/shared_asteroid_field.blend",
-    "sha256": "31f85069cbb6ac11d2cf19cc27a60bc2bcfbb1e2952418fc249d68668a33905b",
-    "bytes": 147137
+    "sha256": "23260a7f81a54e874325fcca802c66c94fbb1c7f1e90378b799e129b17d4ea0e",
+    "bytes": 93464
   },
   "initial_seed": {
     "path": "tools/art/build_b5_asteroid.py",
-    "sha256": "a0a889b6b1b80621361272d38c9d593215cbddfa25eb59692148ee4def94ea20",
-    "bytes": 15062,
+    "sha256": "eb6935400489de58df08e22effea006c5126838e2e927ab75f10db7d88ee6563",
+    "bytes": 15727,
     "selects": "--asset environment:asteroid_field"
   },
   "export_script": {
     "path": "tools/art/export_shared_asteroid_field.py",
-    "sha256": "a9518008f722d65ca8445159b2e1403f6eff79d9ada60b7e73d2afe4b1054696",
-    "bytes": 4753
+    "sha256": "dd51e9586ad1c97db972c27b98bea8deda5bee3ebf1f4d05699945f4ecbb7a62",
+    "bytes": 4988
   },
   "runtime": {
     "path": "assets/models/shared_asteroid_field.mesh.json",
-    "sha256": "887e9115c46cb18c6c1cda4fb2b658697283faf7443d0d7c8f3854512c3d41f0",
-    "bytes": 275787,
-    "triangles": 3000,
-    "vertices": 2088,
+    "sha256": "ad2b65483c330fecad28059fce9c489bc0bce2c050ebe38aa526e21f25c88ae7",
+    "bytes": 18854,
+    "triangles": 216,
+    "vertices": 126,
     "roles": [
       "accent",
       "base",
@@ -41,26 +41,26 @@
   },
   "envelope": [
     [
-      -0.9,
-      -0.7,
-      -0.9
+      -0.58,
+      -0.46,
+      -0.58
     ],
     [
-      0.9,
-      0.7,
-      0.9
+      0.58,
+      0.46,
+      0.58
     ]
   ],
   "bounds": [
     [
-      -0.9,
-      -0.7,
-      -0.9
+      -0.58,
+      -0.46,
+      -0.58
     ],
     [
-      0.9,
-      0.7,
-      0.9
+      0.58,
+      0.46,
+      0.58
     ]
   ],
   "authoring": "Blender evaluated bevel mesh",

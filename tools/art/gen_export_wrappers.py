@@ -17,8 +17,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 TEMPLATE_PATH = ROOT / 'tools/art/templates/export_wrapper.tmpl'
 FIRST_LINE = '#!/usr/bin/env python3'
-SLOTS = ('@@IDENTIFIER@@', '@@LABEL@@', '@@ENVELOPE@@', '@@MIN_LENGTH@@', '@@MAX_TRIANGLES@@',
-         '@@MAX_VERTICES@@', '@@MAX_BYTES@@')
+SLOTS = ('@@IDENTIFIER@@', '@@LABEL@@', '@@ENVELOPE@@', '@@MIN_LENGTH@@', '@@MIN_TRIANGLES@@',
+         '@@MAX_TRIANGLES@@', '@@MAX_VERTICES@@', '@@MAX_BYTES@@')
+# The floor is 1,800 triangles for hulls and structures. A *declared* small prop - one the renderer
+# draws many times per frame - carries its own floor instead; a unit rock drawn forty times per field
+# cannot be built with the surface density a station needs. Owner decision `s06-small-prop-class-2026-10-17`.
+MIN_TRIANGLES = {'shared_asteroid_field': 120}
+DEFAULT_MIN_TRIANGLES = 1_800
 
 # Master label, envelope (the binding's legacy procedural extent), minimum authored Z span,
 # and this asset's own export caps - each tighter than the runtime loader's 12,000 triangle
@@ -95,12 +100,14 @@ B4_KINDS = {
 B4_FACTION_Z_LOW = {('syndicate', 'defense_satellite'): -27.5066,
                     ('syndicate', 'attack_satellite'): -30.299}
 # S06 B5 - the one environment row that is geometry: the shared asteroid prop. The row is a *unit*
-# prop the field scales, so its envelope is the extent the legacy rock can reach at scale 1.0
-# (x and z within +-0.90, y within +-0.70). Its own caps are tighter than the station class on
+# prop the field scales, so its envelope is the extent a *typical* legacy rock reaches at scale 1.0
+# (x and z within +-0.58, y within +-0.46); the legacy jitter's worst case (+-0.90 / +-0.70) is the
+# ceiling the seed asserts against, not the fit - fitting the worst case made every instance bigger
+# than the rock it replaced. Its own caps are tighter than the station class on
 # purpose: the field draws it forty times, so the prop's budget is the field's budget divided by
 # forty, and `validate-models` reports a warning the moment it crosses its own.
-ASSETS['shared_asteroid_field'] = ('Shared asteroid prop', ((-0.90, 0.90), (-0.70, 0.70), (-0.90, 0.90)),
-                                  1.6, 3500, 2500, 400_000)
+ASSETS['shared_asteroid_field'] = ('Shared asteroid prop', ((-0.58, 0.58), (-0.46, 0.46), (-0.58, 0.58)),
+                                  0.9, 600, 500, 120_000)
 for _faction, _prefix, _family in (('rebel', 'alliance', 'Alliance'), ('confederacy', 'legion',
                                     'Legion'), ('syndicate', 'syndicate', 'Syndicate'),
                                    ('imperial', 'imperial', 'Imperial')):
@@ -129,6 +136,8 @@ def render(identifier):
     text = template()
     for token, value in (('@@IDENTIFIER@@', identifier), ('@@LABEL@@', label),
                          ('@@ENVELOPE@@', repr(envelope)), ('@@MIN_LENGTH@@', repr(min_length)),
+                         ('@@MIN_TRIANGLES@@', repr(MIN_TRIANGLES.get(identifier,
+                                                                     DEFAULT_MIN_TRIANGLES))),
                          ('@@MAX_TRIANGLES@@', repr(max_triangles)), ('@@MAX_VERTICES@@', repr(max_vertices)),
                          ('@@MAX_BYTES@@', '{:,}'.format(max_bytes).replace(',', '_'))):
         assert token in text, token

@@ -295,7 +295,10 @@ def export(identifier, design, features=None):
     # vertex ceiling added, by decision s07-detail-budget-2026-10-16 (art/manifests/
     # pipeline_policy.json): surface detail costs 12 triangles and 8 vertices per block, so
     # the old ceiling gave the shipyard roughly a quarter of the capital's detail.
-    assert 1800 < asset['triangle_count'] < 11888, asset['triangle_count']
+    # The floor is the caller's: a declared small prop (owner decision `s06-small-prop-class-2026-10-17`)
+    # may sit below the 1,800 a hull needs, and nothing else changes.
+    floor = int(features.get('min_triangles', 1800)) if features else 1800
+    assert floor < asset['triangle_count'] < 11888, asset['triangle_count']
     assert len(asset['vertices']) < 9500, len(asset['vertices'])
     asset['features'] = features or {}
     EXPORT.write_text(json.dumps(asset,separators=(',',':'),allow_nan=False)+'\n',encoding='utf-8')
