@@ -30,7 +30,9 @@ def record(path):
 def sidecar_for(batch, asset):
     mesh_path = ROOT / asset['mesh']
     payload = json.loads(mesh_path.read_text(encoding='utf-8'))
-    seed = ROOT / 'tools/art' / f"build_{asset['identifier']}.py"
+    # A batch that authors several meshes from one seed declares it (and the argument that
+    # selects this asset) instead of carrying a per-identifier builder.
+    seed = ROOT / asset['seed'] if 'seed' in asset else ROOT / 'tools/art' / f"build_{asset['identifier']}.py"
     exporter = ROOT / 'tools/art' / f"export_{asset['identifier']}.py"
     evidence = batch.get('evidence', {}).get(asset['binding'], {})
     return {
@@ -45,14 +47,14 @@ def sidecar_for(batch, asset):
         'class': asset['class'],
         'authority': payload['features']['authority'],
         'source': record(ROOT / f"art/blender/{asset['identifier']}.blend"),
-        'initial_seed': record(seed),
+        'initial_seed': dict(record(seed), selects=asset.get('seed_arg')),
         'export_script': record(exporter),
         'runtime': dict(record(mesh_path), triangles=payload['triangle_count'],
                         vertices=len(payload['vertices']), roles=sorted(payload['batches'])),
         'envelope': asset['envelope'],
         'bounds': payload['bounds'],
         'authoring': payload.get('authoring'),
-    'blender_pin': '5.0.1',
+        'blender_pin': '5.0.1',
         'owner_decision': None,
         'activation': False,
         'future_pipeline_registration':

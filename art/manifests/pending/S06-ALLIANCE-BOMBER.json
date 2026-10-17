@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b2-squadron-logistics",
+  "binding": "rebel:bomber",
+  "canonical_binding": "ship:rebel:bomber",
+  "gameplay_entity": "rebel_y_squadron",
+  "class": "fighter_squadron",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/alliance_bomber.blend",
+    "sha256": "2330083b7c6a3990c9822ca3b9cc2707542681bffe88f62be4bf8fe4d722caef",
+    "bytes": 119316
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b2_batch.py",
+    "sha256": "b5fab18bc2f1a7aa0d8e198820ec445a36c91e667206602467ab99e1b89c087e",
+    "bytes": 31584,
+    "selects": "--asset rebel:bomber"
+  },
+  "export_script": {
+    "path": "tools/art/export_alliance_bomber.py",
+    "sha256": "99c6cb8ad1016d7bdbdd4789e9d9c534d7453bb4ab40d8a8e99c114f07ebbd18",
+    "bytes": 4742
+  },
+  "runtime": {
+    "path": "assets/models/alliance_bomber.mesh.json",
+    "sha256": "9eb42e8c2f5467ca849536fa6e0e06aeb4c4b8bd0538cba419df0859f1d997c2",
+    "bytes": 179700,
+    "triangles": 2810,
+    "vertices": 1426,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -16.0,
+      -6.8,
+      -25.37
+    ],
+    [
+      16.0,
+      6.55,
+      23.0
+    ]
+  ],
+  "bounds": [
+    [
+      -14.316667,
+      -6.65,
+      -25.37
+    ],
+    [
+      14.316667,
+      6.440669,
+      23.0
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b2-squadron-logistics/contact-sheet.png",
+  "motion": null
+}

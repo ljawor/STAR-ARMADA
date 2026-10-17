@@ -16,7 +16,8 @@
   "initial_seed": {
     "path": "tools/art/build_alliance_corvette.py",
     "sha256": "61838dc1f455de80821945d226d9c9c3fa995cb0af663554f85209b5f26e2381",
-    "bytes": 7298
+    "bytes": 7298,
+    "selects": null
   },
   "export_script": {
     "path": "tools/art/export_alliance_corvette.py",

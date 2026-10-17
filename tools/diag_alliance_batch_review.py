@@ -189,9 +189,10 @@ def main():
             # Class length comes from the live class ratio, not a transcribed number:
             # the candidate must not change it beyond the recorded 1% review tolerance.
             active['enabled'] = False; selection.invalidate_geometry_helpers()
-            length = ship_size(DataStore.get(), asset['data_id'], 'rebel').length
+            faction = asset.get('faction', 'rebel')
+            length = ship_size(DataStore.get(), asset['data_id'], faction).length
             active['enabled'] = True; selection.invalidate_geometry_helpers()
-            candidate_length = ship_size(DataStore.get(), asset['data_id'], 'rebel').length
+            candidate_length = ship_size(DataStore.get(), asset['data_id'], faction).length
             assert abs(candidate_length - length) <= length * .01, (binding, length, candidate_length)
             views = views_for(asset, length)
             asset_path = ROOT / asset['mesh']

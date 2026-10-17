@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b2-squadron-logistics",
+  "binding": "confederacy:bomber",
+  "canonical_binding": "ship:confederacy:bomber",
+  "gameplay_entity": "confed_bomber_squadron",
+  "class": "fighter_squadron",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/legion_hyena.blend",
+    "sha256": "f4b9af5efb7e2d1d157a168c74b1b2936c2df2a39f9217155e4cafb5edc01f2e",
+    "bytes": 119150
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b2_batch.py",
+    "sha256": "b5fab18bc2f1a7aa0d8e198820ec445a36c91e667206602467ab99e1b89c087e",
+    "bytes": 31584,
+    "selects": "--asset confederacy:bomber"
+  },
+  "export_script": {
+    "path": "tools/art/export_legion_hyena.py",
+    "sha256": "63bf3affdb47f2fd55c1f180098a1208c270ebc20e23aebab37d085f110937cf",
+    "bytes": 4745
+  },
+  "runtime": {
+    "path": "assets/models/legion_hyena.mesh.json",
+    "sha256": "63d2544abdbebf9089c0fb48e34666f610d2876d8b8a8569892d588b263bb18d",
+    "bytes": 230115,
+    "triangles": 3516,
+    "vertices": 1538,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -17.531,
+      -7.0,
+      -21.65
+    ],
+    [
+      17.531,
+      13.0,
+      26.12
+    ]
+  ],
+  "bounds": [
+    [
+      -17.307274,
+      -6.9,
+      -21.65
+    ],
+    [
+      17.307274,
+      12.85,
+      26.12
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b2-squadron-logistics/contact-sheet.png",
+  "motion": null
+}

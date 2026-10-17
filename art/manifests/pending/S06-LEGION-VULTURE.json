@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b2-squadron-logistics",
+  "binding": "confederacy:fighter",
+  "canonical_binding": "ship:confederacy:fighter",
+  "gameplay_entity": "confed_vulture_squadron",
+  "class": "fighter_squadron",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/legion_vulture.blend",
+    "sha256": "932bba8532ba8d02e50fec774131477c43a383311aec500c1412b336a11d1ac8",
+    "bytes": 113034
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b2_batch.py",
+    "sha256": "b5fab18bc2f1a7aa0d8e198820ec445a36c91e667206602467ab99e1b89c087e",
+    "bytes": 31584,
+    "selects": "--asset confederacy:fighter"
+  },
+  "export_script": {
+    "path": "tools/art/export_legion_vulture.py",
+    "sha256": "8c02f83690317415f05c7f87b66cfb03f2be48d418d8d13394c17e26eab99eb3",
+    "bytes": 4742
+  },
+  "runtime": {
+    "path": "assets/models/legion_vulture.mesh.json",
+    "sha256": "c17733f45e1669a3c664726f2e72f18a1d3e1c1e09e18455e22abc7fb83c47dd",
+    "bytes": 164257,
+    "triangles": 2578,
+    "vertices": 1144,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -12.831,
+      -3.0,
+      -15.07
+    ],
+    [
+      12.831,
+      7.6,
+      19.4
+    ]
+  ],
+  "bounds": [
+    [
+      -12.36669,
+      -2.75,
+      -15.07
+    ],
+    [
+      12.36669,
+      6.877035,
+      19.4
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b2-squadron-logistics/contact-sheet.png",
+  "motion": null
+}

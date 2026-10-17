@@ -16,7 +16,8 @@
   "initial_seed": {
     "path": "tools/art/build_alliance_carrier.py",
     "sha256": "0d0e6e90709069032e2eda14202ab1dc93a57e6488d48dd4c5221ec807a844a9",
-    "bytes": 8874
+    "bytes": 8874,
+    "selects": null
   },
   "export_script": {
     "path": "tools/art/export_alliance_carrier.py",

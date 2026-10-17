@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b2-squadron-logistics",
+  "binding": "rebel:fighter",
+  "canonical_binding": "ship:rebel:fighter",
+  "gameplay_entity": "rebel_x_squadron",
+  "class": "fighter_squadron",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/alliance_interceptor.blend",
+    "sha256": "a2489d71f0ed3d47c6c695c22139d050b609552373adb39fe83d9068fdfbbea2",
+    "bytes": 114425
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b2_batch.py",
+    "sha256": "b5fab18bc2f1a7aa0d8e198820ec445a36c91e667206602467ab99e1b89c087e",
+    "bytes": 31584,
+    "selects": "--asset rebel:fighter"
+  },
+  "export_script": {
+    "path": "tools/art/export_alliance_interceptor.py",
+    "sha256": "7058f277b7d535aa6d05f7a25b8462cd40267ac7be18bf5e75bbd05ada92122e",
+    "bytes": 4757
+  },
+  "runtime": {
+    "path": "assets/models/alliance_interceptor.mesh.json",
+    "sha256": "483617ebb32a0378fee448dea5ff00eb560d13a6f711e2019e10419a24c3e4ef",
+    "bytes": 140200,
+    "triangles": 2214,
+    "vertices": 1124,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -12.0,
+      -3.0,
+      -19.77
+    ],
+    [
+      12.0,
+      8.471,
+      18.0
+    ]
+  ],
+  "bounds": [
+    [
+      -10.11875,
+      -2.85,
+      -19.77
+    ],
+    [
+      10.11875,
+      8.290814,
+      18.0
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b2-squadron-logistics/contact-sheet.png",
+  "motion": "artifacts/s06_alliance_batch_review/b2-squadron-logistics/interceptor-before-motion.mp4"
+}
