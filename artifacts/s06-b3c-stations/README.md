@@ -1,6 +1,7 @@
-# S06 B3c — the remaining seventeen faction station rows (pending owner appearance approval)
+# S06 B3c — the remaining seventeen faction station rows (appearance approved, not landed)
 
-Review-only evidence for batch `s06-b3c-stations`: the research station, defense platform, trade
+Review-only evidence for batch `s06-b3c-stations` (appearance approved by the owner on 2026-10-17
+under decision `s06-b3c-stations-2026-10-17`; not landed, nothing registered): the research station, defense platform, trade
 station, fighter platform and repair dock across Alliance, Legion and Syndicate, plus the Legion and
 Syndicate shipyards. **Nothing here is an approval record, a registry entry or a runtime manifest**,
 and no production binding was replaced. The durable record is

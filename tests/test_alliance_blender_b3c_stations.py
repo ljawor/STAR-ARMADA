@@ -30,6 +30,7 @@ Four rules in here were paid for on this batch, so they are guards rather than c
   (`test_every_declared_ring_is_an_annulus_and_no_port_is_a_capped_disc`).
 """
 import ast
+import hashlib
 import importlib.util
 import json
 import math
@@ -47,6 +48,10 @@ ROOT = Path(__file__).resolve().parents[1]
 SPEC = ROOT / 'art/manifests/pending/S06-BATCH-B3C-STATIONS.json'
 BATCH = 's06-b3c-stations'
 SEED = 'tools/art/build_b3c_stations.py'
+# The owner's appearance approval of this batch, recorded in art/manifests/approvals.json and bound
+# to the exact revisions below. It authorizes no landing: every binding stays unregistered.
+APPEARANCE_DECISION = 's06-b3c-stations-2026-10-17'
+BATCH_STATUS = 'appearance_approved_pending_landing'
 EARLIER_BATCHES = ('art/manifests/pending/S06-BATCH-B3A-COMMAND-STATIONS.json',
                    'art/manifests/pending/S06-BATCH-B3B-STATIONS.json')
 
@@ -676,7 +681,8 @@ class PendingRecords(unittest.TestCase):
         self.assertEqual(spec['batch'], BATCH)
         self.assertEqual([a['binding'] for a in spec['assets']],
                          [a['binding'] for a in ASSETS])
-        self.assertEqual(spec['status'], 'pending_owner_appearance_approval')
+        self.assertEqual(spec['status'], BATCH_STATUS)
+        self.assertEqual(spec['appearance_decision'], APPEARANCE_DECISION)
         self.assertIn('not an approval record', spec['note'])
         rows = {a['binding']: a for a in spec['assets']}
         for asset in ASSETS:
@@ -835,20 +841,28 @@ class PendingRecords(unittest.TestCase):
             self.assertIn(phrase, spec['note'])
 
     def test_no_pending_binding_is_registered_anywhere_in_production(self):
+        """Appearance approval is not registration: the record may name the binding, nothing else may.
+
+        The `approvals.json` check is structural rather than a substring search, because this
+        batch's decision legitimately names all seventeen bindings while binding none of them to
+        a registry asset: what must stay empty is the registry, the pipeline registry and the
+        `approved_assets` list.
+        """
         registry = json.loads((ROOT / 'assets/models/registry.json').read_text(encoding='utf-8'))
         status = {b['binding']: b['status'] for b in registry['bindings']}
         pipeline = json.loads((ROOT / 'art/manifests/pipeline.json').read_text(encoding='utf-8'))
         registered = {a['binding'] for a in pipeline['assets']}
-        approvals = json.dumps(json.loads((ROOT / 'art/manifests/approvals.json')
-                                          .read_text(encoding='utf-8')))
+        approvals = json.loads((ROOT / 'art/manifests/approvals.json').read_text(encoding='utf-8'))
+        bound = json.dumps([e for e in approvals['approved_assets']
+                            if isinstance(e, dict)])
         manifests = sorted(p.name for p in (ROOT / 'assets/models/manifests').glob('*.json'))
         for asset in ASSETS:
             with self.subTest(binding=asset['binding']):
                 self.assertEqual(status[asset['binding']], 'procedural_legacy',
-                                 'a pending specimen must not be selectable')
+                                 'an approved-appearance specimen must still not be selectable')
                 self.assertNotIn(asset['binding'], registered)
-                self.assertNotIn(asset['identifier'], approvals)
-                self.assertNotIn(asset['binding'], approvals)
+                self.assertNotIn(asset['binding'], bound)
+                self.assertNotIn(asset['identifier'], bound)
         self.assertEqual(manifests, ['alliance_battleship.json', 'alliance_frigate.json',
                                      'alliance_shipyard.json'],
                          'the approved runtime manifests are the only registered ones')
@@ -882,10 +896,13 @@ class PendingRecords(unittest.TestCase):
                 self.assertTrue(path.is_file(), f'no sidecar at {name}')
                 record = json.loads(path.read_text(encoding='utf-8'))
                 self.assertEqual(record['binding'], asset['binding'])
-                self.assertEqual(record['status'], 'pending_owner_appearance_approval')
+                self.assertEqual(record['status'], BATCH_STATUS)
                 self.assertEqual(record['batch'], BATCH)
-                self.assertFalse(record['activation'])
-                self.assertIsNone(record['owner_decision'])
+                self.assertEqual(record['appearance_decision'], APPEARANCE_DECISION)
+                self.assertFalse(record['activation'],
+                                 'appearance approval is not activation')
+                self.assertIsNone(record['owner_decision'],
+                                  'appearance approval is not a landing decision')
                 self.assertEqual(record['initial_seed']['selects'], f"--asset {asset['binding']}")
                 self.assertEqual(record['initial_seed']['path'], SEED)
                 for key, relative in (('source', f"art/blender/{asset['identifier']}.blend"),
@@ -896,6 +913,46 @@ class PendingRecords(unittest.TestCase):
                     self.assertEqual(record[key]['sha256'], digest,
                                      f'{key} hash drifted from the file on disk')
                 self.assertEqual(tuple(zip(*record['envelope'])), asset['envelope'])
+
+    def test_the_owner_appearance_approval_is_recorded_and_bound_to_these_revisions(self):
+        """An approval binds to a revision: every hash the decision names must still be the file.
+
+        The record is only worth reading if it is re-derivable. Touching any master, wrapper,
+        seed, shared primitive or runtime export after the approval invalidates it here rather
+        than in a reader's head - and the decision must also say, in the record, what it does
+        *not* approve, because an approval that reads as a landing is the expensive mistake.
+        """
+        approvals = json.loads((ROOT / 'art/manifests/approvals.json').read_text(encoding='utf-8'))
+        entries = [d for d in approvals['decision_log'] if d['id'] == APPEARANCE_DECISION]
+        self.assertEqual(len(entries), 1, 'the batch decision must be recorded exactly once')
+        decision = entries[0]
+        self.assertEqual(decision['decision'], 'approved')
+        self.assertEqual(decision['owner_words_verbatim'], 'yes')
+        self.assertIn('look like the right direction', decision['question_answered'])
+        self.assertIn('landing', ' '.join(decision['not_approved_by_this_decision']).lower(),
+                      'the record must say that no landing is authorized')
+        revisions = {row['gameplay_binding']: row for row in decision['revision']['assets']}
+        self.assertEqual(sorted(revisions), sorted(a['binding'] for a in ASSETS))
+        for asset in ASSETS:
+            with self.subTest(binding=asset['binding']):
+                row = revisions[asset['binding']]
+                self.assertEqual(row['identifier'], asset['identifier'])
+                self.assertEqual(row['faction'], asset['faction'])
+                self.assertEqual(row['station_kind'], asset['data_id'])
+                # the record stores the extent the way the batch sheet does ([lo, hi]),
+                # so the comparison is transposed, exactly as the spec comparison above is
+                self.assertEqual(tuple(zip(*row['legacy_extent'])), asset['envelope'])
+                declared = {}
+                for group in ('source', 'exporter', 'runtime'):
+                    declared.update(row[group])
+                self.assertIn(f"art/blender/{asset['identifier']}.blend", declared)
+                self.assertIn(SEED, declared)
+                self.assertIn(f"tools/art/export_{asset['identifier']}.py", declared)
+                for path, digest in declared.items():
+                    self.assertEqual(
+                        digest, hashlib.sha256((ROOT / path).read_bytes()).hexdigest(),
+                        f'{path} moved after the owner approved this revision: the approval no '
+                        f'longer covers the bytes on disk')
 
     def test_the_batch_sheet_is_labelled_unreviewed(self):
         text = (ROOT / 'tools/diag_alliance_batch_review.py').read_text(encoding='utf-8')

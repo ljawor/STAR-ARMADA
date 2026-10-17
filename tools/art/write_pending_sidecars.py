@@ -65,6 +65,21 @@ def sidecar_for(batch, asset):
     }
 
 
+def sidecar_record(batch, asset):
+    """`sidecar_for`, plus the appearance decision when the batch sheet declares one.
+
+    The key is added only for a batch that carries one, so every earlier batch's sidecar stays
+    byte-for-byte what it was: these records are what a later reader trusts, and a mechanical
+    re-emission of twenty-two of them would be a change nobody asked for. An appearance
+    decision is not a landing decision - `owner_decision` still records that, and `activation`
+    stays false until a landing is authorized and executed - so the two stay separate fields.
+    """
+    record = sidecar_for(batch, asset)
+    if batch.get('appearance_decision'):
+        record['appearance_decision'] = batch['appearance_decision']
+    return record
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--batch', default=None)
@@ -82,7 +97,7 @@ def main():
     for spec_path in specs:
         batch = json.loads(spec_path.read_text(encoding='utf-8'))
         for asset in batch['assets']:
-            text = json.dumps(sidecar_for(batch, asset), indent=2, sort_keys=False) + '\n'
+            text = json.dumps(sidecar_record(batch, asset), indent=2, sort_keys=False) + '\n'
             name = 'S06-' + asset['identifier'].upper().replace('_', '-') + '.json'
             out = (args.out_dir or PENDING) / name
             if args.check:

@@ -1,9 +1,11 @@
 # Handoff: S06 B3c — the remaining seventeen faction station rows
 
-Status: **review-ready** — authored, exported, guarded and captured; **nothing approved and
-nothing activated**. This is the last authorable faction station batch: research station, defense
-platform, trade station, fighter platform and repair dock across Alliance (`rebel`), Legion
-(`confederacy`) and Syndicate (`syndicate`), plus the Legion and Syndicate shipyards —
+Status: **appearance-approved by the owner for the revisions listed here** (`s06-b3c-stations-2026-10-17`,
+his words: "yes", answering "do these seventeen stations look like the right direction?"), and
+**not landed**: nothing is registered, `activation` is false, no merge, tag, release or
+production-default switch. This is the last authorable faction station batch: research station,
+defense platform, trade station, fighter platform and repair dock across Alliance (`rebel`),
+Legion (`confederacy`) and Syndicate (`syndicate`), plus the Legion and Syndicate shipyards —
 seventeen specimens in one batch (`s06-b3c-stations`).
 
 Base commit / branch: `89b9c7b4b5f5976c6f4920cbda1bbe062b9ecb0a` on `feat/s06-next-model-batch`
@@ -285,7 +287,10 @@ application, the candidate injected through `render.asset_selection` only:
 ## Tests and commands actually executed
 
 * `PYTHONPATH=tests .venv/bin/python -m unittest test_alliance_blender_b3c_stations` →
-  **Ran 31 tests, OK** (`Ran 31 tests in 1.1s`). This module is the batch's own guard set:
+  **Ran 32 tests, OK**. The thirty-second is
+  `test_the_owner_appearance_approval_is_recorded_and_bound_to_these_revisions`: it re-derives
+  every master, wrapper, seed, shared-primitive and runtime hash the decision record names, so a
+  later edit to any of them invalidates the approval here rather than in a reader's head. This module is the batch's own guard set:
   loader/envelope/budget contract, reaching the legacy extent per axis and side, the 1,800-triangle
   floor and the half-of-legacy bar, all six material roles, the distinct-design and shared-footprint
   guards, the ring-noun/annulus guard, export-only source safety (17 assets × 4 master aliases),
@@ -297,7 +302,7 @@ application, the candidate injected through `render.asset_selection` only:
 * The shared focused union (this module + `test_s06_placement_repairs` + the B1/B2/B3a/B3b batch
   modules + `test_alliance_blender_cruiser/_trio/_battleship` + `test_asset_contract`,
   `test_model_pipeline`, `test_generic_model_preview`, `test_model_context_lifecycle`) →
-  **Ran 163 tests in 12.070s / OK**.
+  **Ran 164 tests in 11.952s / OK**.
 * Seeding: Blender 5.0.1, `build_b3c_stations.py --asset <binding> --replace-seed` per specimen →
   17 masters, `SEED_OK`, and `SELFCHECK <label> breaches=0 tolerance=0.001` on every one. The first
   cut of this seed refused on eight specimens (`weld_scene`'s 10-unit brace rule) and printed the
@@ -352,8 +357,35 @@ the imperial seam and the owner's approvals — not more authoring of these kind
 slice in the approved order is B4 (satellites and planet installations), which the B3 handoff
 enumerates as `stations.json` keys minus the station kinds.
 
-## Owner approval
+## Owner approval — recorded
 
-One line is what this needs: **do these seventeen stations look like the right direction?** A yes
-approves appearance for the revisions whose hashes are listed here; it does not merge, tag, release,
-land or switch any production default, and each landing stays its own decision.
+The owner answered the batch sheet's one question with **"yes"** on 2026-10-17. The decision is
+recorded in `art/manifests/approvals.json` as **`s06-b3c-stations-2026-10-17`** (`decision:
+"approved"`, `owner_words_verbatim: "yes"`, `question_answered: "do these seventeen stations look
+like the right direction?"`), bound to the exact `source`, `exporter` and `runtime` hashes listed
+above for all seventeen revisions, with `not_approved_by_this_decision` naming what it does *not*
+cover: landing, merging, tagging, releasing, switching a production default, the S11 catalogue
+switch, packaging and native-Windows acceptance, every other S06 specimen, and the ten imperial
+station rows. `art/manifests/pending/S06-BATCH-B3C-STATIONS.json` and the seventeen sidecars now
+carry `status: appearance_approved_pending_landing` with `appearance_decision:
+s06-b3c-stations-2026-10-17`; `owner_decision` stays null and `activation` stays false, because
+an appearance approval is not a landing decision.
+
+What the pipeline says about that boundary, run against this revision:
+
+```
+$ python3 tools/art/build-model --asset rebel:research_station
+E_UNKNOWN_BINDING: unknown binding 'rebel:research_station'; known: rebel:battleship, rebel:frigate, rebel:shipyard
+$ python3 tools/art/validate-models --all --no-contract
+validate-models: satisfied - 33/33 checks, 0 failures, 0 warnings
+```
+
+The refit pipeline knows only the three registered bindings, so it cannot rebuild these seventeen
+until they are registered - and registering them is the landing/activation step the approval
+explicitly does not authorize. The registered trio validates unchanged.
+
+Guard note: the B2 module's "nothing pending is registered" check searched the whole approvals
+document as text, and `rebel:fighter` is a substring of `rebel:fighter_platform`, so this batch's
+own decision record - which names its bindings and says nothing about those hulls - read as a leak.
+That check is now structural (registry, pipeline registry, approved-asset list), as the B3c one
+always was.

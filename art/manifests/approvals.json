@@ -178,6 +178,603 @@
         "art/manifests/provenance/rebel-frigate.json",
         "art/manifests/provenance/rebel-shipyard.json"
       ]
+    },
+    {
+      "id": "s06-b3c-stations-2026-10-17",
+      "date": "2026-10-17",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved",
+      "scope_statement": "Approved the appearance of the seventeen S06 B3c station revisions listed below: the research station, defense platform, trade station, fighter platform and repair dock across Alliance (rebel), Legion (confederacy) and Syndicate (syndicate), plus the Legion and Syndicate shipyards. The question put to the owner was \"do these seventeen stations look like the right direction?\" and his answer was \"yes\", after the batch's own evidence sheet - before/after close, rear, tactical and common-scale frames per row, per-role ablation frames, the restored-simulation frames, three paired 150-frame motion clips and the one-scale overview, all rendered from the real application at the revisions recorded here. This approves appearance only: it is not a landing, activation, merge, tag or release authorization for any of them, and it says nothing about the specimens of any other batch.",
+      "approval_kind": "appearance-batch-revisions",
+      "owner_words_verbatim": "yes",
+      "question_answered": "do these seventeen stations look like the right direction?",
+      "revision": {
+        "batch": "s06-b3c-stations",
+        "pr": 127,
+        "head_at_review": "d2c2541eab27836439041cbd12a60a056219828c",
+        "source_authority": "blend-authoritative (the editable .blend is the source; the runtime export is derived from it)",
+        "registry_state_at_approval": "none of these bindings is registered, selectable or activated: assets/models/registry.json still reports procedural_legacy for all seventeen and art/manifests/pipeline.json does not carry them",
+        "assets": [
+          {
+            "gameplay_binding": "rebel:research_station",
+            "shape_key": "rebel:research_station",
+            "identifier": "alliance_research_station",
+            "station_kind": "research_station",
+            "faction": "rebel",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/alliance_research_station.blend": "2f2522c077460483fd6e201424f042ef36142c41850401b848a88de0a51f6a12"
+            },
+            "exporter": {
+              "tools/art/build_b3c_stations.py": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_alliance_research_station.py": "3d3e961ddbc399c5ff141083da666dfb12486d55b54caebc579d9d84f962b828"
+            },
+            "runtime": {
+              "assets/models/alliance_research_station.mesh.json": "1886a86b89cb1b0ef4a618a398216cccf44a0cd9dc84f950a0dce94b9892f870"
+            },
+            "triangles": 4812,
+            "vertices": 2580,
+            "legacy_extent": [
+              [
+                -40.0,
+                -9.6,
+                -25.6
+              ],
+              [
+                40.0,
+                39.28,
+                35.901
+              ]
+            ]
+          },
+          {
+            "gameplay_binding": "confederacy:research_station",
+            "shape_key": "confederacy:research_station",
+            "identifier": "legion_research_station",
+            "station_kind": "research_station",
+            "faction": "confederacy",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/legion_research_station.blend": "6766c3d7cdc1915b9952a432a6f429ac60c354611822c04d77041fcc1288382b"
+            },
+            "exporter": {
+              "tools/art/build_b3c_stations.py": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_legion_research_station.py": "c527ba7cb4e9d5de31d1dbd4c05c6c3439763c1df540fa5b0e8129711e8fa28c"
+            },
+            "runtime": {
+              "assets/models/legion_research_station.mesh.json": "01485bb472f239ab70779b1f1a5dabb381c18347b8b9d2350a3cb2e045b7fd72"
+            },
+            "triangles": 3680,
+            "vertices": 2008,
+            "legacy_extent": [
+              [
+                -46.3156,
+                -12.4,
+                -33.48
+              ],
+              [
+                46.3156,
+                13.88,
+                52.68
+              ]
+            ]
+          },
+          {
+            "gameplay_binding": "syndicate:research_station",
+            "shape_key": "syndicate:research_station",
+            "identifier": "syndicate_research_station",
+            "station_kind": "research_station",
+            "faction": "syndicate",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/syndicate_research_station.blend": "44ddb5b052fb1ad51a4c00f56a00cd59386e83241f8f404677ac505254f2b57d"
+            },
+            "exporter": {
+              "tools/art/build_b3c_stations.py": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_syndicate_research_station.py": "1b55314197508e6033caf79dec3e6913b90ea00d27a5e66127aa02e10666e5af"
+            },
+            "runtime": {
+              "assets/models/syndicate_research_station.mesh.json": "c2532f898553a4ff437be8f365d037551e4c1d1a5d5389f35e500c473c1b224c"
+            },
+            "triangles": 3904,
+            "vertices": 2118,
+            "legacy_extent": [
+              [
+                -40.0,
+                -7.2,
+                -27.572
+              ],
+              [
+                36.4,
+                37.68,
+                32.8
+              ]
+            ]
+          },
+          {
+            "gameplay_binding": "rebel:defense_platform",
+            "shape_key": "rebel:defense_platform",
+            "identifier": "alliance_defense_platform",
+            "station_kind": "defense_platform",
+            "faction": "rebel",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/alliance_defense_platform.blend": "8d4b53895400ffa40f355a3341f21b441032f0234792a858a51f610e7f2efb74"
+            },
+            "exporter": {
+              "tools/art/build_b3c_stations.py": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_alliance_defense_platform.py": "fe1db43b81d0276a7153dd352afc507a49cff49514a2869fa04b66c35f8ef183"
+            },
+            "runtime": {
+              "assets/models/alliance_defense_platform.mesh.json": "80b1f3daae8e73fdf050bde9ac6cff87364c987683d6570c475e57fc6e993fa1"
+            },
+            "triangles": 4248,
+            "vertices": 2288,
+            "legacy_extent": [
+              [
+                -45.92,
+                -4.8,
+                -44.32
+              ],
+              [
+                45.92,
+                11.166,
+                44.32
+              ]
+            ]
+          },
+          {
+            "gameplay_binding": "confederacy:defense_platform",
+            "shape_key": "confederacy:defense_platform",
+            "identifier": "legion_defense_platform",
+            "station_kind": "defense_platform",
+            "faction": "confederacy",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/legion_defense_platform.blend": "b3ae6919b48ddfd79c6f66ae90b4fbbcc9989278ba587e55253403a7bc99ba8f"
+            },
+            "exporter": {
+              "tools/art/build_b3c_stations.py": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_legion_defense_platform.py": "314209e79c0fcf0a8a71aa32e7b89ad460d80a52bd7baedb8bc825bf5158fd3c"
+            },
+            "runtime": {
+              "assets/models/legion_defense_platform.mesh.json": "637ca1293919ca6bf7667f5e1f60ad052b16d1adf08085196f8ec3adb4f4d983"
+            },
+            "triangles": 3640,
+            "vertices": 2008,
+            "legacy_extent": [
+              [
+                -50.2043,
+                -8.4,
+                -31.2764
+              ],
+              [
+                50.2043,
+                16.544,
+                55.68
+              ]
+            ]
+          },
+          {
+            "gameplay_binding": "syndicate:defense_platform",
+            "shape_key": "syndicate:defense_platform",
+            "identifier": "syndicate_defense_platform",
+            "station_kind": "defense_platform",
+            "faction": "syndicate",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/syndicate_defense_platform.blend": "9170ecf71c77b6eeaa6134c501fd2d842c6594f33f702bc80989c025aab85672"
+            },
+            "exporter": {
+              "tools/art/build_b3c_stations.py": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_syndicate_defense_platform.py": "21997bdbafc2fa40b69ee57a1c0c0722482831f2d6073a7f9b1208b1c98f6746"
+            },
+            "runtime": {
+              "assets/models/syndicate_defense_platform.mesh.json": "d74eb09809cc081177b3edb7cd542dc393812d00f151d70a0d5235aa49e1245b"
+            },
+            "triangles": 3520,
+            "vertices": 1936,
+            "legacy_extent": [
+              [
+                -45.9679,
+                -10.8,
+                -28.5448
+              ],
+              [
+                30.3691,
+                22.1,
+                28.0475
+              ]
+            ]
+          },
+          {
+            "gameplay_binding": "rebel:trade_station",
+            "shape_key": "rebel:trade_station",
+            "identifier": "alliance_trade_station",
+            "station_kind": "trade_station",
+            "faction": "rebel",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/alliance_trade_station.blend": "721cdde1a2937f7a5ae8f9a12a1357ed8ec2cc1d2d3a449b01b51b0fec37a7cc"
+            },
+            "exporter": {
+              "tools/art/build_b3c_stations.py": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_alliance_trade_station.py": "d80806da75da8468a1c99f800edf43e4b90b84a28b48fbfedb1113974cf04b71"
+            },
+            "runtime": {
+              "assets/models/alliance_trade_station.mesh.json": "07fc9d41e83f80b517d0faf8b3a7839a8f0348d5629442a42d02b447301d8422"
+            },
+            "triangles": 3916,
+            "vertices": 2128,
+            "legacy_extent": [
+              [
+                -44.0,
+                -5.948,
+                -38.736
+              ],
+              [
+                44.0,
+                6.12,
+                39.36
+              ]
+            ]
+          },
+          {
+            "gameplay_binding": "confederacy:trade_station",
+            "shape_key": "confederacy:trade_station",
+            "identifier": "legion_trade_station",
+            "station_kind": "trade_station",
+            "faction": "confederacy",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/legion_trade_station.blend": "1f218aff89e3fa9856627f66728ffab4388739047bf450c724a249830f976644"
+            },
+            "exporter": {
+              "tools/art/build_b3c_stations.py": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_legion_trade_station.py": "f1e0e5ab5798c8de996496005d962d4dc800db78684667edcdb6801c5cbb4478"
+            },
+            "runtime": {
+              "assets/models/legion_trade_station.mesh.json": "567416bb0c267c8896eccdaf3210e9e347fc60ab0e92f80b9227a66e7ee82d49"
+            },
+            "triangles": 3580,
+            "vertices": 1968,
+            "legacy_extent": [
+              [
+                -43.7668,
+                -6.552,
+                -46.0532
+              ],
+              [
+                43.7668,
+                18.28,
+                46.0532
+              ]
+            ]
+          },
+          {
+            "gameplay_binding": "syndicate:trade_station",
+            "shape_key": "syndicate:trade_station",
+            "identifier": "syndicate_trade_station",
+            "station_kind": "trade_station",
+            "faction": "syndicate",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/syndicate_trade_station.blend": "7b84c5e0f47928eee805a8acfc0e018c5cd31ee3255803c7c7134c3e5b145252"
+            },
+            "exporter": {
+              "tools/art/build_b3c_stations.py": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_syndicate_trade_station.py": "4861caf2c410de7e7c5fad67d39398b1784e794e66e1e929f7756e951cfd57f2"
+            },
+            "runtime": {
+              "assets/models/syndicate_trade_station.mesh.json": "6bae5343f97a9d1881d8b1b7bbf21270a1acddc26a6b58752e258dcb90bd9e1c"
+            },
+            "triangles": 3532,
+            "vertices": 1944,
+            "legacy_extent": [
+              [
+                -52.3122,
+                -8.8,
+                -48.6483
+              ],
+              [
+                45.2571,
+                24.5,
+                46.5606
+              ]
+            ]
+          },
+          {
+            "gameplay_binding": "rebel:fighter_platform",
+            "shape_key": "rebel:fighter_platform",
+            "identifier": "alliance_fighter_platform",
+            "station_kind": "fighter_platform",
+            "faction": "rebel",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/alliance_fighter_platform.blend": "d73a689a2b6146eca3d4f178e6c7b9ca1de57865b3e2486436867a0b4c82e394"
+            },
+            "exporter": {
+              "tools/art/build_b3c_stations.py": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_alliance_fighter_platform.py": "259da43033a89b2f042e8a54933629bcefc25802a4b547b7dd8b10d5c00fd50b"
+            },
+            "runtime": {
+              "assets/models/alliance_fighter_platform.mesh.json": "4f06b97c93cd05c3fb132b67d0a0f2a18bfc07847d16402c4ec18cdbe3b77d6f"
+            },
+            "triangles": 4288,
+            "vertices": 2312,
+            "legacy_extent": [
+              [
+                -48.0,
+                -9.2,
+                -39.2
+              ],
+              [
+                48.0,
+                6.92,
+                39.2
+              ]
+            ]
+          },
+          {
+            "gameplay_binding": "confederacy:fighter_platform",
+            "shape_key": "confederacy:fighter_platform",
+            "identifier": "legion_fighter_platform",
+            "station_kind": "fighter_platform",
+            "faction": "confederacy",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/legion_fighter_platform.blend": "399010c3d7ad781ecc75f733e3cbf060d1593ce66df1ad2b55f7ff72de776f50"
+            },
+            "exporter": {
+              "tools/art/build_b3c_stations.py": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_legion_fighter_platform.py": "39b06ad80f79b03b3165acaed26e8a27b6b990366847c0b9e8ac2b2a6f07bc6c"
+            },
+            "runtime": {
+              "assets/models/legion_fighter_platform.mesh.json": "b88dd8ee806fc3b8167cd93252a64b87683430fc19cb0f3a177423ef46a32f9c"
+            },
+            "triangles": 3620,
+            "vertices": 2000,
+            "legacy_extent": [
+              [
+                -42.4021,
+                -8.8,
+                -36.4
+              ],
+              [
+                42.4021,
+                11.88,
+                36.0
+              ]
+            ]
+          },
+          {
+            "gameplay_binding": "syndicate:fighter_platform",
+            "shape_key": "syndicate:fighter_platform",
+            "identifier": "syndicate_fighter_platform",
+            "station_kind": "fighter_platform",
+            "faction": "syndicate",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/syndicate_fighter_platform.blend": "66eca9908acfc277b24cd3cf71959a9b63de7b40daa2f905e5fdee55f4a262eb"
+            },
+            "exporter": {
+              "tools/art/build_b3c_stations.py": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_syndicate_fighter_platform.py": "67a6b0d463a9f4e55beed71872345c7f062a00420c542e4256b63a0967df5841"
+            },
+            "runtime": {
+              "assets/models/syndicate_fighter_platform.mesh.json": "d3c1cd6a88c5087519a93a5ae5ed2debf756832d6a4298c9d0d2fe851115d036"
+            },
+            "triangles": 3544,
+            "vertices": 1952,
+            "legacy_extent": [
+              [
+                -39.6,
+                -15.2,
+                -39.2
+              ],
+              [
+                32.1135,
+                30.8,
+                39.2
+              ]
+            ]
+          },
+          {
+            "gameplay_binding": "rebel:repair_dock",
+            "shape_key": "rebel:repair_dock",
+            "identifier": "alliance_repair_dock",
+            "station_kind": "repair_dock",
+            "faction": "rebel",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/alliance_repair_dock.blend": "5a5035a39251c5a9cacef545fb3ad7a6ecfef5f2256883872aa364a372b34f99"
+            },
+            "exporter": {
+              "tools/art/build_b3c_stations.py": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_alliance_repair_dock.py": "f7a36e72088c947d8c0fc1c757ecf6edbf138fc59c4d8ea656afe1cde1115334"
+            },
+            "runtime": {
+              "assets/models/alliance_repair_dock.mesh.json": "c7290bd9e1f51911c10bf5434de99d3294dd22ba6f6110f886c1677f46615d76"
+            },
+            "triangles": 4696,
+            "vertices": 2516,
+            "legacy_extent": [
+              [
+                -38.4,
+                -12.8,
+                -33.6
+              ],
+              [
+                38.4,
+                23.6,
+                39.6
+              ]
+            ]
+          },
+          {
+            "gameplay_binding": "confederacy:repair_dock",
+            "shape_key": "confederacy:repair_dock",
+            "identifier": "legion_repair_dock",
+            "station_kind": "repair_dock",
+            "faction": "confederacy",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/legion_repair_dock.blend": "e01b00e394eb894f9e18cf25e9e61efb94093b047d8deacc0b80490bcef385f4"
+            },
+            "exporter": {
+              "tools/art/build_b3c_stations.py": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_legion_repair_dock.py": "a0dada95930b58fdfaf213a16d481b4ffa9de626ff9930c16131597f2069a6da"
+            },
+            "runtime": {
+              "assets/models/legion_repair_dock.mesh.json": "3c865b62f82ce4b5d8053d022a481d992f96b69852d335fed6cc0cbde4079d76"
+            },
+            "triangles": 3356,
+            "vertices": 1840,
+            "legacy_extent": [
+              [
+                -40.1472,
+                -14.8,
+                -36.4
+              ],
+              [
+                40.1472,
+                26.4,
+                36.4
+              ]
+            ]
+          },
+          {
+            "gameplay_binding": "syndicate:repair_dock",
+            "shape_key": "syndicate:repair_dock",
+            "identifier": "syndicate_repair_dock",
+            "station_kind": "repair_dock",
+            "faction": "syndicate",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/syndicate_repair_dock.blend": "c608f2afebb2c1a56546441363d8ad24975c928353c35cce3a5cf669534c4770"
+            },
+            "exporter": {
+              "tools/art/build_b3c_stations.py": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_syndicate_repair_dock.py": "d3845ce81c4463058489fc8830bcc21ad41e8b1a6ed2d988683227b5d8619645"
+            },
+            "runtime": {
+              "assets/models/syndicate_repair_dock.mesh.json": "39c5ef2886f1c56c4d2702f5e07fb9eb0adc7245a6711ae34e4cdf73851b9faa"
+            },
+            "triangles": 3548,
+            "vertices": 1952,
+            "legacy_extent": [
+              [
+                -37.4318,
+                -16.8,
+                -38.931
+              ],
+              [
+                39.7528,
+                34.8,
+                37.9495
+              ]
+            ]
+          },
+          {
+            "gameplay_binding": "confederacy:shipyard",
+            "shape_key": "confederacy:shipyard",
+            "identifier": "legion_shipyard",
+            "station_kind": "shipyard",
+            "faction": "confederacy",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/legion_shipyard.blend": "3156021eef4c77f744ecdd1a25a8c1f96566e32761e88ee1ae7ac606a2741042"
+            },
+            "exporter": {
+              "tools/art/build_b3c_stations.py": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_legion_shipyard.py": "11e498efe68a8e2fa3c7dbab6f0819be212a89a7ac74e5c81c81aa75100bdf75"
+            },
+            "runtime": {
+              "assets/models/legion_shipyard.mesh.json": "748c48aa54266073f5b0773f3ef0748b2cf049cd51523d65f66083163d794f01"
+            },
+            "triangles": 3772,
+            "vertices": 2064,
+            "legacy_extent": [
+              [
+                -62.04,
+                -5.6,
+                -45.0564
+              ],
+              [
+                62.04,
+                41.6,
+                62.4
+              ]
+            ]
+          },
+          {
+            "gameplay_binding": "syndicate:shipyard",
+            "shape_key": "syndicate:shipyard",
+            "identifier": "syndicate_shipyard",
+            "station_kind": "shipyard",
+            "faction": "syndicate",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/syndicate_shipyard.blend": "420dedfee68a25da78f4831d93b2dbddb716ba94134a58f890c570cec9efb735"
+            },
+            "exporter": {
+              "tools/art/build_b3c_stations.py": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_syndicate_shipyard.py": "9dadeb8b073fc7791d8961363d58676a851eda4c923203a39348d32af035ad32"
+            },
+            "runtime": {
+              "assets/models/syndicate_shipyard.mesh.json": "c1a0aad3e30a013b95c704390ef925f8beeb024924ddd4a5d525dc60156c4670"
+            },
+            "triangles": 3784,
+            "vertices": 2072,
+            "legacy_extent": [
+              [
+                -52.1606,
+                -18.9928,
+                -53.6606
+              ],
+              [
+                46.9468,
+                45.6,
+                48.4056
+              ]
+            ]
+          }
+        ]
+      },
+      "not_approved_by_this_decision": [
+        "landing, merging, tagging, releasing or switching a production default for any of these seventeen revisions",
+        "the S11 catalogue switch, which stays not authorized",
+        "packaging, native-Windows graphics or frozen-build acceptance (S09)",
+        "any other S06 specimen - the B1 hulls, the B2 squadron/logistics hulls, the B3a command stations and the nine B3b small stations are approved or pending independently of this decision",
+        "the ten imperial station rows and the imperial station seam, which remain an owner/renderer scope decision",
+        "a generic asset registry entry, a runtime manifest or an approval of the catalogue as a whole"
+      ],
+      "evidence_references": [
+        "art/manifests/handoffs/S06-B3C-STATIONS.md",
+        "artifacts/s06_alliance_batch_review/b3c-stations/metrics.json",
+        "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/overview.png",
+        "artifacts/s06-b3c-stations/README.md",
+        "PR 127 comment: S06 B3c - the remaining seventeen faction station rows (exact head d2c2541)"
+      ],
+      "how_recorded": "The owner answered the batch sheet's single question in the model-migration conversation; the decision is recorded here bound to the exact source, exporter and runtime hashes above, which a guard re-checks against the files on disk. No timestamp is fabricated beyond the recorded conversation date."
     }
   ],
   "approved_assets": [
