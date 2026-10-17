@@ -1,0 +1,69 @@
+{
+  "note": "Written while the row was being authored and then WITHDRAWN from assets/models/manifests/: the shared test_no_pending_binding_is_registered_anywhere_in_production guard reads the set of manifest documents on disk as the set of registered assets, and it is right to. A pending row carries its mesh and no manifest; the manifest is the landing artifact and the batch review harness serves the candidate by patching selection. This is the draft that gets renamed into place at landing.",
+  "manifest": {
+    "contract": "star-armada/model-manifest",
+    "contract_major": 1,
+    "asset": "core:imperial/corvette",
+    "revision": "5b36e73aa2b6132fc035a418897806a04b2f4421704a33ecb87a6af752563011",
+    "display_name": "Vigil corvette (pending owner approval)",
+    "files": {
+      "mesh": {
+        "path": "assets/models/imperial_corvette.mesh.json",
+        "sha256": "be894218b84c00b4c6f78c96a46df1cf69441b627fa75155df02be41f6c30d05",
+        "bytes": 142216
+      }
+    },
+    "export": {
+      "contract": "star-armada/mesh-export",
+      "contract_major": 1,
+      "legacy_schema_int": 1
+    },
+    "coordinates": "X beam; Y up; +Z forward",
+    "pivot": [
+      0,
+      0,
+      0
+    ],
+    "bounds": {
+      "min": [
+        -16.0,
+        -5.0,
+        -43.601
+      ],
+      "max": [
+        16.0,
+        24.0,
+        48.0
+      ]
+    },
+    "nominal_scale": 1.0,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ],
+    "provenance": {
+      "author": "Lukasz Jawor",
+      "tool": "Blender",
+      "tool_version": "Blender evaluated bevel mesh",
+      "license": "original",
+      "source": "art/blender/imperial_corvette.blend",
+      "notes": "S06 batch B6 row 1, the Imperial corvette, authored inside the binding's legacy 'needle' envelope. Unapproved and unselected: no owner appearance decision covers it yet, and it is served only in an explicit model_preview session. The recipe is tools/art/build_b6_imperial_ships.py (script-authoritative per the S03 source-authority policy); the .blend is a derived artifact."
+    },
+    "requires": {
+      "min_engine": "0.15.1",
+      "material_profile": "core:fleet/standard"
+    },
+    "budgets": {
+      "triangles": 11888,
+      "draw_calls": 6,
+      "texture_bytes": 0
+    }
+  },
+  "withdrawn_because": "a manifest is registration",
+  "mesh_sha256": "be894218b84c00b4c6f78c96a46df1cf69441b627fa75155df02be41f6c30d05",
+  "mesh_bytes": 142216
+}

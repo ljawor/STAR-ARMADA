@@ -128,6 +128,15 @@ for _faction, _prefix, _family in (('rebel', 'alliance', 'Alliance'), ('confeder
                                         round(_lim[2][1] - _lim[2][0] - 0.2, 1),
                                         11500, 8000, 2_000_000)
 
+# S06 B6 - the Imperial ships, whose first row is the corvette. The envelope and `min_length` are
+# the row's own legacy extent, measured from `render/fleet_geometry.py::ship_mesh('needle')` by
+# `tools/art/probe_b6_scope.py`; the caps are the standard ship caps, and the row is above the
+# 1_800 hull floor, so it declares no floor of its own. Script-authoritative per the S03
+# source-authority policy (repeated modular hardware): `tools/art/build_b6_imperial_ships.py` is the
+# recipe and `art/blender/imperial_corvette.blend` is a derived artifact.
+ASSETS['imperial_corvette'] = ('Vigil Corvette', ((-16.0, 16.0), (-5.0, 24.0), (-43.601, 48.0)),
+                               91.4, 11888, 9450, 2_000_000)
+
 
 def template():
     """The template body, without its own header comment block."""
