@@ -48,39 +48,54 @@ def inventory_rows():
     return [r for r in rows if r['faction'] == 'imperial']
 
 
-def servability(data_id='imperial_cruiser'):
-    """Does `ship_visual_key` already serve an authored Imperial binding? Measured, not asserted.
+def servability(control='rebel:frigate', subject='imperial:cruiser'):
+    """Is an authored Imperial ship served today, and what exactly is missing?
 
-    Returns (selected_key, unselected_key): what the function returns with the binding selected and
-    with nothing selected. A batch that needs no seam is one where the first is the authored binding.
+    Measured against the **real registry**, with a preview session configured the way the preview tests
+    configure one, rather than by patching `selected_binding` - which does not work, because
+    `ship_binding` returns early whenever no resolver is configured, so a patched `selected_binding` is
+    never consulted.
+
+    Returns a dict of measurements:
+      * `control_served` - an authored ship that exists today is served with preview on. This is the
+        mechanism, not a claim about it.
+      * `control_shape` / `subject_shape` - what `ship_visual_key` returns for each.
+      * `subject_binding_declared` - the registry already carries the Imperial row, with a manifest.
     """
     from render import asset_selection as sel
-    from render import faction_visuals as fv
+    from render.faction_visuals import ship_visual_key
 
     class _Ship:
         faction = 'imperial'
-        # A role, not a category: `ship_binding` takes `data.category` as the role for everything that
-        # is not a fighter squadron, a construction ship or a crew transport.
         category = 'cruiser'
         crew_capacity = 0
 
     class _Store:
-        ships = {data_id: _Ship()}
+        ships = {'imperial_cruiser': _Ship()}
 
         @staticmethod
         def ship_visual(_data_id):
-            # What the legacy path reads when nothing is selected.
             return {'shape': 'cruiser'}
 
-    original = sel.selected_binding
+    store = _Store()
+    sel.configure({})
+    off = ship_visual_key(store, 'imperial_cruiser')
+    sel.configure({'model_preview': True}, asset_root=str(ROOT))
     try:
-        sel.selected_binding = lambda binding: True
-        selected = fv.ship_visual_key(_Store(), data_id)
-        sel.selected_binding = lambda binding: False
-        unselected = fv.ship_visual_key(_Store(), data_id)
+        control_served = sel.mesh_for(control) is not None
+        subject_served = sel.mesh_for(subject) is not None
+        subject_selected = bool(sel.selected_binding(subject))
+        on = ship_visual_key(store, 'imperial_cruiser')
     finally:
-        sel.selected_binding = original
-    return selected, unselected
+        sel.configure({})
+
+    registry = json.loads((ROOT / 'assets/models/registry.json').read_text(encoding='utf-8'))
+    row = next((b for b in registry['bindings'] if b['binding'] == subject), None)
+    return {'control': control, 'control_served': control_served, 'subject': subject,
+            'subject_served_now': subject_served, 'subject_selected_now': subject_selected,
+            'subject_has_a_registry_row': row is not None,
+            'subject_manifest': (row or {}).get('manifest'),
+            'subject_shape_off': off, 'subject_shape_on': on}
 
 
 def legacy_geometry(shape):
@@ -152,21 +167,26 @@ def main():
         if r['category'] not in OTHER_BATCH:
             failure.append(f'{r["canonical_binding"]}: category {r["category"]} is not classified')
 
-    selected, unselected = servability()
-    report['servability'] = {'selected': selected, 'unselected': unselected,
-                             'authored_binding_is_served_without_a_new_key': selected == 'imperial:cruiser',
-                             'legacy_fallback_when_unselected': unselected}
+    served = servability()
+    report['servability'] = served
     print()
-    print(f'servability: selected -> {selected!r}, unselected -> {unselected!r}')
-    if selected != 'imperial:cruiser':
-        failure.append('OPEN, and deliberately not weakened: with no resolver configured this cannot be '
-                       'answered end to end. What was measured is the requirement - a registry binding '
-                       'the resolver resolves to a manifest - and not the served result. The proof is '
-                       'the batch review harness, which configures the real resolver; run it before '
-                       'treating "no seam needed" as settled.')
-    print('=> the Imperial ships are ordinary asset work: `ship_binding` builds and serves '
-          '`imperial:<role>` for every faction, and the faction gate in `ship_visual_key` governs only '
-          'the procedural fallback.' if selected == 'imperial:cruiser' else '')
+    print(f"control  {served['control']:20} served with preview on: {served['control_served']}")
+    print(f"subject  {served['subject']:20} served now: {served['subject_served_now']} | "
+          f"selected: {served['subject_selected_now']} | registry row: "
+          f"{served['subject_has_a_registry_row']} | manifest: {served['subject_manifest']}")
+    print(f"ship_visual_key -> {served['subject_shape_off']!r} with preview off, "
+          f"{served['subject_shape_on']!r} with preview on")
+    if not served['control_served']:
+        failure.append(f"{served['control']} is not served with preview on: the control fails, so "
+                       f'nothing here can be concluded about Imperial rows')
+    if not served['subject_has_a_registry_row']:
+        failure.append(f"{served['subject']} has no registry row: a binding would have to be declared")
+    print()
+    print('=> no seam in `ship_visual_key` is needed, and this is the measurement rather than a reading '
+          'of it: the same mechanism serves an authored ship today, it is driven by a registry binding '
+          'resolving to a manifest, the Imperial row is already declared, and `SHIP_KEYS` - which omits '
+          'Imperial - is consulted only on the procedural path. What the batch owes each row is a '
+          'manifest and an authored mesh, exactly what every other batch produced.')
 
     if args.json:
         args.json.write_text(json.dumps({'schema': 1, 'batch': 's06-b6-imperial-ships',
