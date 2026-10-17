@@ -184,12 +184,14 @@ def build():
              ((.22, -.03, -.14), (.52, .38, .50), 7, 11),
              ((.06, .12, .26), (.40, .30, .38), 6, 19),
              ((-.24, -.06, -.22), (.34, .26, .32), 6, 29))
-    verts, faces = [], []
+    verts, faces, role_of_face = [], [], []
     for k, (c, r, grid, phase) in enumerate(lumps):
         lv, lf = lump(f'10 Lump {k}', c, r, grid=grid, phase=phase)
         base = len(verts)
         verts.extend(lv)
-        faces.extend((a + base, b + base, c_ + base) for a, b, c_ in lf)
+        for a, b, c_ in lf:
+            faces.append((a + base, b + base, c_ + base))
+            role_of_face.append(None)      # classified below, from the face's own facing
     # Accent veins, glint facets and two icy patches: raised slabs on the crust, still inside the box.
     patches = (('20 Vein', 'accent', (0.30, 0.30, 0.26), 0.34, 6),
                ('21 Vein', 'accent', (-0.30, 0.22, -0.24), 0.30, 10),
@@ -200,8 +202,14 @@ def build():
         lv, lf = lump(name, c, (grid_step, grid_step * 0.7, grid_step), grid=4, phase=phase)
         base = len(verts)
         verts.extend(lv)
-        faces.extend((a + base, b + base, c_ + base) for a, b, c_ in lf)
-    return fit(verts), faces
+        for a, b, c_ in lf:
+            faces.append((a + base, b + base, c_ + base))
+            role_of_face.append(role)      # the vein, glint and ice patches carry their own role
+    verts = fit(verts)
+    for index, role in enumerate(role_of_face):
+        if role is None:
+            role_of_face[index] = role_of(verts, faces[index], (0.0, 0.0, 0.0))
+    return verts, faces, role_of_face
 
 
 def fit(verts):
@@ -260,11 +268,10 @@ def main():
     master = ROOT / f'art/blender/{IDENTIFIER}.blend'
     for obj in list(bpy.data.objects):
         bpy.data.objects.remove(obj, do_unlink=True)
-    verts, faces = build()
+    verts, faces, role_of_face = build()
     roles = {}
-    centre = (0.0, 0.0, 0.0)
-    for tri in faces:
-        roles.setdefault(role_of(verts, tri, centre), []).append(tri)
+    for tri, role in zip(faces, role_of_face):
+        roles.setdefault(role, []).append(tri)
     for role, tris in sorted(roles.items()):
         mesh = bpy.data.meshes.new(f'{role} rock')
         mesh.from_pydata([verts[i] for tri in tris for i in tri], [],

@@ -33,7 +33,7 @@ from render import textures as tex
 from render import markers as mk
 from render.fleet_materials import FleetMaterials
 from render.fleet_geometry import armor_loft, ship_mesh, station_mesh, ROLES
-from render.asset_selection import is_authored, gpu_cache_key, selected_binding
+from render.asset_selection import is_authored, gpu_cache_key, mesh_for, selected_binding
 
 from game.core.entity import Entity, QUADRANTS
 from game.core.vectors import Vec3
@@ -1082,61 +1082,96 @@ class Renderer:
     def _draw_asteroid_field(self, e):
         """Irregular lit rock clusters: 3-5 lumpy sub-rocks per asteroid,
         facet-shaded with a warm gray-brown palette, slow tumble."""
-        rng = random.Random(int(e.pos.x) % 9973)
         glPushMatrix()
         glTranslatef(e.pos.x, e.pos.y, e.pos.z)
         spin = self.time * 0.15
-        n = 40
-        for i in range(n):
-            a = rng.uniform(0, 2 * math.pi)
-            r = e.radius * (0.15 + 0.85 * math.sqrt(rng.random()))
-            x = math.sin(a) * r
-            z = math.cos(a) * r
-            y = rng.uniform(-60, 60)
-            s = rng.uniform(12, 46)
+        # The authored prop, when the row is selected, is resolved once for the field and drawn per
+        # instance in place of the procedural facets. The placements come from their own pure
+        # function, so a guard can prove the field is the same field with a different rock in it.
+        prop = self._asteroid_prop_lists()
+        rng = random.Random(int(e.pos.x) % 9973)
+        for _ in range(40):
+            # Placement first, then the rock: the two alternate, so the field's layout depends on
+            # both streams in the order they have always been drawn in.
+            x, y, z, s, angle = field_placement(e.radius, rng)
             glPushMatrix()
             glTranslatef(x, y, z)
             # slow tumble (deterministic per asteroid)
-            glRotatef(spin * rng.uniform(0.4, 1.6) + rng.uniform(0, 360),
-                      0.3, 0.7, 0.2)
-            self._draw_rock(s, rng)
+            glRotatef(spin * angle, 0.3, 0.7, 0.2)
+            self._draw_rock(s, rng, prop)
             glPopMatrix()
         glPopMatrix()
 
-    def _draw_rock(self, s: float, rng):
-        """One asteroid: 3-5 overlapping lit sub-rocks with irregular
-        vertex-jittered facets. Palette: warm rock gray-brown, top lighter
-        via lighting; no flat unlit quads."""
-        base = (0.52 + rng.uniform(-0.08, 0.08),
-                0.48 + rng.uniform(-0.08, 0.06),
-                0.42 + rng.uniform(-0.06, 0.06))
-        m = rng.randint(2, 4)          # sub-rock count
-        for k in range(m):
-            # deterministic jitter per sub-rock
-            jx = rng.uniform(-0.25, 0.25) * s
-            jy = rng.uniform(-0.18, 0.18) * s
-            jz = rng.uniform(-0.25, 0.25) * s
-            ss = s * (0.55 if k else rng.uniform(0.6, 0.8))
+    def _draw_rock(self, s: float, rng, prop=None):
+        """One asteroid: the shared authored prop when the row is selected, else 3-5 overlapping
+        lit sub-rocks with irregular vertex-jittered facets.
+
+        Both paths take their parameters from `rock_params` *before* the branch, so the RNG is
+        advanced identically either way: every later rock's angle, radius, height, size and tumble -
+        and therefore the field's whole layout - is the same whichever path draws. That is what makes
+        a before/after capture an isolated change of shape rather than a rearranged field.
+        """
+        base, subs = rock_params(s, rng)
+        if prop is not None:
+            glPushMatrix()
+            # The prop is authored as a unit rock, where the procedural facets were generated *at*
+            # scale s: the instance's own scale is applied here and nothing else about it changes.
+            glScalef(s, s, s)
+            for role, tint in ASTEROID_ROLE_TINTS:
+                mesh = prop.get(role)
+                if mesh is None:
+                    continue
+                glColor3f(*[min(1.0, c * tint) for c in base])
+                glCallList(mesh)
+            glPopMatrix()
+            return
+        m = len(subs)
+        for k, (jx, jy, jz, ss, radii) in enumerate(subs):
             shade = 1.0 - 0.16 * k / max(1, m - 1)
             glColor3f(base[0] * shade, base[1] * shade, base[2] * shade)
-            self._rock_facets(ss, rng, jx, jy, jz)
+            self._rock_facets(ss, jx, jy, jz, radii)
 
-    def _rock_facets(self, s: float, rng, jx: float, jy: float, jz: float):
+    def _asteroid_prop_lists(self):
+        """The authored asteroid prop's per-role display lists, or None when none is selected.
+
+        Follows the station path exactly: one compiled list per role, cached under the resolver's
+        own content key so a revision change cannot leave a stale list behind. Returning None is the
+        explicit legacy fallback, and it is what an unselected row gets.
+        """
+        binding = 'environment:asteroid_field'
+        authored = mesh_for(binding)
+        if authored is None:
+            return None
+        lists = {}
+        for role in ('base', 'dark', 'trim', 'accent', 'lit', 'cool'):
+            mesh = authored.get(role)
+            if not mesh:
+                continue
+            key = gpu_cache_key(binding, role, 'asteroid_prop:' + role)
+            if key not in self.ship_lists:
+                lst = _gl.glGenLists(1)
+                glNewList(lst, GL_COMPILE)
+                self._emit_detail_mesh(mesh)
+                glEndList()
+                self.ship_lists[key] = lst
+            lists[role] = self.ship_lists[key]
+        return lists or None
+
+    def _rock_facets(self, s: float, jx: float, jy: float, jz: float, radii):
         """Faceted lump: an icosphere-ish hull via 8 corner + 6 face bulge
         points, jittered, emitted as GL_TRIANGLES with per-face normals."""
-        # 8 corners of a cube, jittered radially (deterministic from rng)
+        # 8 corners of a cube, jittered radially - the jitter itself comes from `rock_params`
         c = []
-        for sx in (-1, 1):
-            for sy in (-1, 1):
-                for sz in (-1, 1):
-                    rr = s * 0.5 * rng.uniform(0.75, 1.25)
-                    c.append((sx * rr * 0.72 + jx, sy * rr * 0.6 + jy,
-                              sz * rr * 0.72 + jz))
+        for k, (sx, sy, sz) in enumerate((a, b, c_) for a in (-1, 1) for b in (-1, 1)
+                                         for c_ in (-1, 1)):
+            rr = s * 0.5 * radii[k]
+            c.append((sx * rr * 0.72 + jx, sy * rr * 0.6 + jy,
+                      sz * rr * 0.72 + jz))
         # 6 face-bulge points for a lumpy silhouette
         f = []
-        for dx, dy, dz in ((0, 0, 1), (0, 0, -1), (0, 1, 0),
-                           (0, -1, 0), (1, 0, 0), (-1, 0, 0)):
-            rr = s * 0.5 * rng.uniform(0.9, 1.3)
+        for k, (dx, dy, dz) in enumerate(((0, 0, 1), (0, 0, -1), (0, 1, 0),
+                                          (0, -1, 0), (1, 0, 0), (-1, 0, 0))):
+            rr = s * 0.5 * radii[8 + k]
             f.append((dx * rr + jx, dy * rr * 0.8 + jy, dz * rr + jz))
         # explicit hull: each face is a quad of 4 jittered corners fanned
         # through its face-bulge point -> 4 lit triangles per face
@@ -3848,3 +3883,52 @@ PLANET_COLORS = {
     "barren": (0.55, 0.55, 0.60),
     "trade": (0.85, 0.75, 0.50),
 }
+
+
+# The authored asteroid prop's per-role tint, relative to the instance's own rock colour: the field's
+# palette variety still comes from `base`, and the roles only split light from shadow from mineral.
+ASTEROID_ROLE_TINTS = (('base', 1.00), ('dark', 0.62), ('trim', 1.18),
+                       ('accent', 0.86), ('lit', 1.30), ('cool', 1.05))
+
+
+def rock_params(s, rng):
+    """The RNG-drawn parameters of one asteroid, taken before either drawing path branches.
+
+    Module level on purpose: it is pure RNG and arithmetic, so a guard can drive it without a GL
+    context and assert that both paths consume the identical stream. The draw order and the draw
+    count are the legacy ones exactly - three for the instance colour, one for the sub-rock count,
+    then per sub-rock three jitters, one only for the first sub-rock's size, eight corner radii and
+    six bulge radii - so the field's layout is unchanged by which path draws.
+    """
+    base = (0.52 + rng.uniform(-0.08, 0.08),
+            0.48 + rng.uniform(-0.08, 0.06),
+            0.42 + rng.uniform(-0.06, 0.06))
+    m = rng.randint(2, 4)
+    subs = []
+    for k in range(m):
+        jx = rng.uniform(-0.25, 0.25) * s
+        jy = rng.uniform(-0.18, 0.18) * s
+        jz = rng.uniform(-0.25, 0.25) * s
+        ss = s * (0.55 if k else rng.uniform(0.6, 0.8))
+        radii = [rng.uniform(0.75, 1.25) for _ in range(8)]
+        radii += [rng.uniform(0.9, 1.3) for _ in range(6)]
+        subs.append((jx, jy, jz, ss, radii))
+    return base, subs
+
+
+def field_placement(radius, rng):
+    """One asteroid's placement, from the field's own seeded stream - the legacy sequence unchanged.
+
+    Angle, radius, height, size, then the tumble phase as its own draw: six draws, in the order the
+    field has always drawn them, and *one instance at a time* because the loop alternates this with
+    the rock's own draws. Keeping it a pure function of `radius` and an RNG is what lets a guard prove
+    that the layout is identical whichever drawing path the rock takes - the placement cannot see
+    which one it is.
+    """
+    a = rng.uniform(0, 2 * math.pi)
+    r = radius * (0.15 + 0.85 * math.sqrt(rng.random()))
+    x = math.sin(a) * r
+    z = math.cos(a) * r
+    y = rng.uniform(-60, 60)
+    s = rng.uniform(12, 46)
+    return (x, y, z, s, rng.uniform(0.4, 1.6) + rng.uniform(0, 360))

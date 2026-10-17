@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b5-environment",
+  "binding": "environment:asteroid_field",
+  "canonical_binding": "ship:environment:asteroid_field",
+  "gameplay_entity": "asteroid_field",
+  "class": "environment_prop",
+  "authority": "script",
+  "source": {
+    "path": "art/blender/shared_asteroid_field.blend",
+    "sha256": "31f85069cbb6ac11d2cf19cc27a60bc2bcfbb1e2952418fc249d68668a33905b",
+    "bytes": 147137
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b5_asteroid.py",
+    "sha256": "a0a889b6b1b80621361272d38c9d593215cbddfa25eb59692148ee4def94ea20",
+    "bytes": 15062,
+    "selects": "--asset environment:asteroid_field"
+  },
+  "export_script": {
+    "path": "tools/art/export_shared_asteroid_field.py",
+    "sha256": "a9518008f722d65ca8445159b2e1403f6eff79d9ada60b7e73d2afe4b1054696",
+    "bytes": 4753
+  },
+  "runtime": {
+    "path": "assets/models/shared_asteroid_field.mesh.json",
+    "sha256": "887e9115c46cb18c6c1cda4fb2b658697283faf7443d0d7c8f3854512c3d41f0",
+    "bytes": 275787,
+    "triangles": 3000,
+    "vertices": 2088,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -0.9,
+      -0.7,
+      -0.9
+    ],
+    [
+      0.9,
+      0.7,
+      0.9
+    ]
+  ],
+  "bounds": [
+    [
+      -0.9,
+      -0.7,
+      -0.9
+    ],
+    [
+      0.9,
+      0.7,
+      0.9
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": null,
+  "motion": null
+}

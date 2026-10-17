@@ -181,20 +181,33 @@ class RecordedScope(unittest.TestCase):
         self.assertEqual([d['id'] for d in approvals['decision_log'] if
                           d['id'] in SCOPE_DECISIONS], [])
 
-    def test_no_authored_batch_is_left_without_a_decision(self):
-        """Every sheet on disk is a batch someone authored and showed; a sheet without a decision is
-        either unrecorded work or an approval that was never written down."""
+    def test_every_sheet_is_either_approved_or_deliberately_pending(self):
+        """A sheet is approved or it is waiting; what must never appear is something in between.
+
+        A pending sheet is the point of a batch sheet - it is what the owner is asked to look at - so
+        the guard names the batches that are deliberately pending rather than pretending none is. A
+        new sheet, or a status that moves without a decision, therefore shows up as a diff here
+        instead of sliding through.
+        """
         sheets = batch_sheets()
         decided = {d['revision']['batch'] for d in appearance_decisions()}
-        self.assertTrue(set(sheets) <= decided,
-                        f'a batch sheet has no recorded decision: {sorted(set(sheets) - decided)}')
-        # The reverse is not symmetric on purpose: the cruiser was reviewed before the batch sheets
-        # existed, so it has a decision, a sidecar and no sheet - named here rather than assumed.
+        # The cruiser was reviewed before the batch sheets existed: it has a decision, a sidecar and
+        # no sheet - named here rather than assumed.
         self.assertEqual(sorted(decided - set(sheets)), ['s06-cruiser-review'])
+        pending = {batch for batch in sheets if batch not in decided}
+        self.assertEqual(sorted(pending), ['s06-b5-environment'],
+                         'a batch sheet is pending the owner\'s answer, or one has appeared')
         for batch, (path, sheet) in sheets.items():
             with self.subTest(batch=batch):
-                self.assertEqual(sheet['status'], 'appearance_approved_pending_landing')
-                self.assertIn('appearance_decision', sheet)
+                if batch in decided:
+                    self.assertEqual(sheet['status'], 'appearance_approved_pending_landing')
+                    self.assertIn('appearance_decision', sheet)
+                    self.assertEqual(sheet['appearance_decision'],
+                                     next(d['id'] for d in appearance_decisions()
+                                          if d['revision']['batch'] == batch))
+                else:
+                    self.assertEqual(sheet['status'], 'pending_owner_appearance_approval')
+                    self.assertNotIn('appearance_decision', sheet)
 
 
 if __name__ == '__main__':
