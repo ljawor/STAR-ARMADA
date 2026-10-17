@@ -166,9 +166,9 @@
           "applies_from": "this decision"
         },
         {
-          "id": "imperial-render-seam-is-its-own-change",
-          "decision": "The renderer change this needs lands as its own reviewed change with its own guards: render/fleet_geometry.py::station_mesh already consults the authored-model seam for the three families via mesh_for(f\"{faction}:{data_id}\") and falls back to the legacy builders for imperial, so the imperial path must be brought onto the same seam rather than special-cased at the call site. No legacy geometry is deleted in the same change: the fallback stays reachable until the imperial revisions are approved and registered.",
-          "why": "A renderer change that silently swaps a whole faction's geometry would be unreviewable; keeping the fallback reachable means activation is still the separate S10/S11 decision.",
+          "id": "imperial-per-binding-keys",
+          "decision": "Authoring the imperial rows needs one small, guardable renderer change, and it is not in station_mesh: that entry already consults mesh_for(f'{faction}:{data_id}') ahead of its imperial fallback, so the station, satellite and planet-installation rows are ordinary asset work. The change is in render/faction_visuals.py::ship_visual_key, which mints a per-binding key (faction:fighter, faction:convoy) for the three non-imperial families only and lets imperial hulls fall through normalize_ship_key(ds.ship_visual(data_id)['shape']) onto the shared legacy shapes 'wedge' and 'box'. Imperial ships, squadrons and convoys therefore need that function to mint an imperial per-binding key as well, with the shared shape kept as the fallback for every hull that has no approved revision.",
+          "why": "Two imperial hulls sharing one shape key cannot have two different models; today several imperial rows draw the same wedge or box. Making the key per-binding is what turns an imperial hull into an addressable revision, and keeping the old shape as fallback is what keeps activation a separate decision.",
           "applies_from": "this decision"
         },
         {
@@ -183,7 +183,8 @@
         "changing simulation values, hull stats, station behaviour, collision radii or balance",
         "removing the legacy procedural fallback or switching the catalogue to authored models (S11)",
         "packaging and native-Windows acceptance"
-      ]
+      ],
+      "correction": "The first draft of this record said the imperial station rows dispatch straight to _station_mesh with no mesh_for seam and that the seam change belongs in render/fleet_geometry.py::station_mesh. That was wrong, and it repeated a stale claim from the earlier handoffs: station_mesh consults the seam before its imperial branch, for every faction. Corrected the same day, against the code at render/fleet_geometry.py:254-272 and render/faction_visuals.py:34-64. The owner's wording and the scope of his answer are unchanged - only the engineering description of what migrating the imperial rows takes."
     }
   ]
 }
