@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "status": "pending_owner_appearance_approval",
+  "status": "appearance_approved_pending_landing",
   "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
   "batch": "s06-b4-hardware",
   "binding": "imperial:planet_shield_generator",
@@ -69,5 +69,6 @@
   "activation": false,
   "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
   "evidence": "artifacts/s06_alliance_batch_review/b4-hardware/contact-sheet.png",
-  "motion": null
+  "motion": null,
+  "appearance_decision": "s06-b4-hardware-2026-10-17"
 }

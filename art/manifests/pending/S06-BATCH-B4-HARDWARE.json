@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "batch": "s06-b4-hardware",
-  "status": "pending_owner_appearance_approval",
+  "status": "appearance_approved_pending_landing",
   "note": "Review-only batch sheet for the pending S06 B4 satellite and planet-installation specimens: the satellite and planet-installation kinds `assets/data/stations/stations.json` holds beside the station kinds, across all four factions - twenty-four rows. This file is not an approval record, a registry entry or a runtime manifest, and it does not select any asset in production. Every row is authored *to* its binding's legacy procedural extent - per axis and per side, not merely inside it - because the review harness compares the authored footprint against the legacy hardware mesh within 1 percent per axis and the legacy hardware fills its declared box exactly. The envelope is the legacy extent measured per row from the live code (`tools/art/probe_b4_scope.py`), and it is per kind except for the two syndicate satellite rows: the legacy satellite mesh is parameterised by the faction's ring side count and the syndicate's five-sided ring stops short at the rear (Z -27.5066 for the defense satellite, -30.299 for the attack satellite). These rows are script-authoritative per the S03 source-authority policy for repeated modular hardware, so `tools/art/build_b4_hardware.py` is the recipe and each `.blend` is a derived artifact. The station kinds are absent because B3a/B3b/B3c are earlier batches. No row here needs a renderer change, imperial included: `render.fleet_geometry.station_mesh` consults `mesh_for(f'{faction}:{data_id}')` ahead of every fallback. The imperial *ship* rows are the exception and are not part of this batch: they need a per-binding key minted in `render/faction_visuals.py::ship_visual_key`. The batch carries the station class budget (11,500 triangles / 8,000 vertices) because the owner has set no separate modular-hardware budget. overview.close_distance_floor is 150 and it bounds the motion camera as well as the still views: a modular hardware row is short enough that 1.52 x its drawn length puts the eye inside a context hull, which the harness refuses as `camera not outside union`; the floor is inert for every earlier batch. overview spacing is 150 and distance 2700: the widest row here is the 102-unit attack satellite, and at yaw 90 the row line is perpendicular to the view, so every row sits at one distance and inside the frame - a true single-scale lineup rather than a perspective spread.",
   "overview": {
     "first_x": -4200,
@@ -1031,5 +1031,6 @@
       "restored": "artifacts/s06_alliance_batch_review/b4-hardware/imperial pulsar cannon-close-restored.png",
       "motion": "artifacts/s06_alliance_batch_review/b4-hardware/imperial pulsar cannon-after-motion.mp4"
     }
-  }
+  },
+  "appearance_decision": "s06-b4-hardware-2026-10-17"
 }

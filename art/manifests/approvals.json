@@ -1386,6 +1386,825 @@
         "the twenty-four B4 rows and the ten imperial station rows, which are pending or unauthorized independently of this decision"
       ],
       "how_recorded": "The owner's answer to the outstanding approval question, recorded verbatim against the exact revision hashes below."
+    },
+    {
+      "id": "s06-b4-hardware-2026-10-17",
+      "date": "2026-10-17",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved",
+      "approval_kind": "appearance-batch-revisions",
+      "scope_statement": "Approved the appearance of the twenty-four S06 B4 satellite and planet-installation revisions listed below: the defense and attack satellites plus the planet extractor, trade hub, shield generator and pulsar cannon across Alliance, Legion, Syndicate and Imperial. The question put to the owner was whether the batch looked right and his answer was \"B4 looks good\", after the batch's own evidence sheet - a one-scale contact sheet, per-row before/after close, rear, tactical and common-scale frames, per-role ablation frames, the restored frames and three paired motion clips, all rendered from the real application at the revisions recorded here. This approves appearance only: it is not a landing, activation, merge, tag or release authorization for any of them, and it says nothing about the specimens of any other batch.",
+      "owner_words_verbatim": "B4 looks good",
+      "question_answered": "Does the B4 satellite and planet-installation batch look right? (asked as the open approval question next to the LFS policy flag)",
+      "revision": {
+        "batch": "s06-b4-hardware",
+        "pr": 127,
+        "head_at_review": "406d090aabe1950ed43acad5e96d1a2077ebfe6c",
+        "source_authority": "script-authoritative (the seed recipe is the master; the .blend is a derived artifact, per the S03 policy for repeated modular hardware)",
+        "registry_state_at_approval": "none of these bindings is registered, selectable or activated",
+        "evidence": "every reviewed frame in the b4-hardware evidence directory carries the runtime mesh sha256 recorded here, so the frames the owner judged are the revisions recorded here",
+        "assets": [
+          {
+            "gameplay_binding": "rebel:defense_satellite",
+            "shape_key": "rebel:defense_satellite",
+            "identifier": "alliance_defense_satellite",
+            "station_kind": "defense_satellite",
+            "faction": "rebel",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/alliance_defense_satellite.blend": "3efb7770c6d4cfe6e6f96f7b4c36ef5af7b7f996182087214f41da8847b4c14d"
+            },
+            "exporter": {
+              "tools/art/build_b4_hardware.py": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_alliance_defense_satellite.py": "192513acab1eff704537bb36365263f555a549143c868026beb9c779fd807775"
+            },
+            "runtime": {
+              "assets/models/alliance_defense_satellite.mesh.json": "d38b5549310b6a9a554e429254857f895a5d7852cdd2dce3999276406ad1241d"
+            },
+            "legacy_extent": [
+              [
+                -41.1051,
+                -9.0,
+                -34.0
+              ],
+              [
+                41.1051,
+                19.5,
+                44.0
+              ]
+            ],
+            "triangles": 2420,
+            "vertices": 1336
+          },
+          {
+            "gameplay_binding": "rebel:attack_satellite",
+            "shape_key": "rebel:attack_satellite",
+            "identifier": "alliance_attack_satellite",
+            "station_kind": "attack_satellite",
+            "faction": "rebel",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/alliance_attack_satellite.blend": "2e9de52301ecafdaefa0b057586c63140f9d0c1fae1507e6dc5bb451198c9455"
+            },
+            "exporter": {
+              "tools/art/build_b4_hardware.py": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_alliance_attack_satellite.py": "791bc3ce238a0eb89b5f5014cd50baedfe2d7e7156973967366700dcf3bd9949"
+            },
+            "runtime": {
+              "assets/models/alliance_attack_satellite.mesh.json": "c37dbc64cba78ee9f6a003645dea5630237da3558f7f1add3007f7c1197348d9"
+            },
+            "legacy_extent": [
+              [
+                -50.9795,
+                -9.0,
+                -34.0
+              ],
+              [
+                50.9795,
+                21.5,
+                58.0
+              ]
+            ],
+            "triangles": 2672,
+            "vertices": 1480
+          },
+          {
+            "gameplay_binding": "rebel:planet_extractor",
+            "shape_key": "rebel:planet_extractor",
+            "identifier": "alliance_planet_extractor",
+            "station_kind": "planet_extractor",
+            "faction": "rebel",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/alliance_planet_extractor.blend": "877976a0964b155485e83494c5f1d53ef07efa84e0888fc6f0409ed94c999238"
+            },
+            "exporter": {
+              "tools/art/build_b4_hardware.py": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_alliance_planet_extractor.py": "ba3e777d26fa806b15c6d90db088791b48597a69868bb5081a6567384558e73c"
+            },
+            "runtime": {
+              "assets/models/alliance_planet_extractor.mesh.json": "19354d7d4fc5264789fd7232993b48c5f80bf2a0567f8111c3b144030483c4fa"
+            },
+            "legacy_extent": [
+              [
+                -34.0,
+                0.0,
+                -32.0
+              ],
+              [
+                34.0,
+                43.0,
+                32.0
+              ]
+            ],
+            "triangles": 2788,
+            "vertices": 1552
+          },
+          {
+            "gameplay_binding": "rebel:planet_trade_hub",
+            "shape_key": "rebel:planet_trade_hub",
+            "identifier": "alliance_planet_trade_hub",
+            "station_kind": "planet_trade_hub",
+            "faction": "rebel",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/alliance_planet_trade_hub.blend": "09f941375e97c4327fa6e1f412e011ee2b04f9ecb3b37024ea0eb7a2fec05dff"
+            },
+            "exporter": {
+              "tools/art/build_b4_hardware.py": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_alliance_planet_trade_hub.py": "65eea60ba9e8f30a4557284fb42561d07dc9eed2b22e0bc9a1d6b44792080b41"
+            },
+            "runtime": {
+              "assets/models/alliance_planet_trade_hub.mesh.json": "cd317db1714dfc9e2d0759bec83f0c1851c9f3139ee67f0c6f04a391aa88d691"
+            },
+            "legacy_extent": [
+              [
+                -34.0,
+                0.0,
+                -32.0
+              ],
+              [
+                34.0,
+                49.5,
+                32.0
+              ]
+            ],
+            "triangles": 2536,
+            "vertices": 1408
+          },
+          {
+            "gameplay_binding": "rebel:planet_shield_generator",
+            "shape_key": "rebel:planet_shield_generator",
+            "identifier": "alliance_planet_shield_generator",
+            "station_kind": "planet_shield_generator",
+            "faction": "rebel",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/alliance_planet_shield_generator.blend": "22a6c3650fecfa6af0438b2fed2c580657d9d60254dd5eb2f1822fbba9caa6b7"
+            },
+            "exporter": {
+              "tools/art/build_b4_hardware.py": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_alliance_planet_shield_generator.py": "1ad461530a2ee60bbbcfd9c15ea873a7054f911850c0fc6f26dc14e0b80e4e3f"
+            },
+            "runtime": {
+              "assets/models/alliance_planet_shield_generator.mesh.json": "bf38721eb96bdfcffa962429a8a1cd3c830344936a521f3f03d197a05669df20"
+            },
+            "legacy_extent": [
+              [
+                -34.0,
+                0.0,
+                -32.0
+              ],
+              [
+                34.0,
+                46.5,
+                32.0
+              ]
+            ],
+            "triangles": 2992,
+            "vertices": 1632
+          },
+          {
+            "gameplay_binding": "rebel:planet_pulsar_cannon",
+            "shape_key": "rebel:planet_pulsar_cannon",
+            "identifier": "alliance_planet_pulsar_cannon",
+            "station_kind": "planet_pulsar_cannon",
+            "faction": "rebel",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/alliance_planet_pulsar_cannon.blend": "ae7e1f2e805cbf42c186d011f04061f67d29a037ed1c0b1ededb78fef9625a4f"
+            },
+            "exporter": {
+              "tools/art/build_b4_hardware.py": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_alliance_planet_pulsar_cannon.py": "6d1ea84bc4541855ecf1f18651480d886205e3e39da0bbccc39260bdd2124ccb"
+            },
+            "runtime": {
+              "assets/models/alliance_planet_pulsar_cannon.mesh.json": "676e8a5f09782b0bcec88cd3f89756db296f66e38fc0f543ed28eb2394304782"
+            },
+            "legacy_extent": [
+              [
+                -34.0,
+                0.0,
+                -32.0
+              ],
+              [
+                34.0,
+                42.4,
+                46.0
+              ]
+            ],
+            "triangles": 2588,
+            "vertices": 1440
+          },
+          {
+            "gameplay_binding": "confederacy:defense_satellite",
+            "shape_key": "confederacy:defense_satellite",
+            "identifier": "legion_defense_satellite",
+            "station_kind": "defense_satellite",
+            "faction": "confederacy",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/legion_defense_satellite.blend": "62c35450efce8b94bda50ad6bd37fbcab9fd3c25935c4b570c69815a33169611"
+            },
+            "exporter": {
+              "tools/art/build_b4_hardware.py": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_legion_defense_satellite.py": "1fe7ab28b7ce83d6391c55a50a85a2afbd7fe035d03bc757c4b89f6cf99b45d0"
+            },
+            "runtime": {
+              "assets/models/legion_defense_satellite.mesh.json": "8db782a326362e4e15d52090bd1dcd8039b96df4b2127d3c1bfd87ccb2b6ac9d"
+            },
+            "legacy_extent": [
+              [
+                -41.1051,
+                -9.0,
+                -34.0
+              ],
+              [
+                41.1051,
+                19.5,
+                44.0
+              ]
+            ],
+            "triangles": 2180,
+            "vertices": 1216
+          },
+          {
+            "gameplay_binding": "confederacy:attack_satellite",
+            "shape_key": "confederacy:attack_satellite",
+            "identifier": "legion_attack_satellite",
+            "station_kind": "attack_satellite",
+            "faction": "confederacy",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/legion_attack_satellite.blend": "a05b500ac667751bfb1a6124fbdcf4a13d4c3d0f2b9c1f7e7c832d3c5b5d6fd2"
+            },
+            "exporter": {
+              "tools/art/build_b4_hardware.py": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_legion_attack_satellite.py": "a72ff5cb7ac122dea026108983c2cb29e520c767d7108f2522afda9e97585498"
+            },
+            "runtime": {
+              "assets/models/legion_attack_satellite.mesh.json": "da4ad21c5c1a363054050169988d1ce0eab82d1c9fb31a5d1318c5f69eebaf64"
+            },
+            "legacy_extent": [
+              [
+                -50.9795,
+                -9.0,
+                -34.0
+              ],
+              [
+                50.9795,
+                21.5,
+                58.0
+              ]
+            ],
+            "triangles": 2432,
+            "vertices": 1360
+          },
+          {
+            "gameplay_binding": "confederacy:planet_extractor",
+            "shape_key": "confederacy:planet_extractor",
+            "identifier": "legion_planet_extractor",
+            "station_kind": "planet_extractor",
+            "faction": "confederacy",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/legion_planet_extractor.blend": "bb3210d94ff2aa48e61ff247a3ba2f302ead1096c40a18fecbcbefe3e1d1bf27"
+            },
+            "exporter": {
+              "tools/art/build_b4_hardware.py": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_legion_planet_extractor.py": "41b1cc7b7d6707273a4b77a315a88b0a451840ff9398bbd388dee611f1da2acd"
+            },
+            "runtime": {
+              "assets/models/legion_planet_extractor.mesh.json": "21ac55b4336a9a34b9cc6bdea34e2d9e989dd027e236f7b9eca730f0b382a039"
+            },
+            "legacy_extent": [
+              [
+                -34.0,
+                0.0,
+                -32.0
+              ],
+              [
+                34.0,
+                43.0,
+                32.0
+              ]
+            ],
+            "triangles": 2596,
+            "vertices": 1456
+          },
+          {
+            "gameplay_binding": "confederacy:planet_trade_hub",
+            "shape_key": "confederacy:planet_trade_hub",
+            "identifier": "legion_planet_trade_hub",
+            "station_kind": "planet_trade_hub",
+            "faction": "confederacy",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/legion_planet_trade_hub.blend": "86e2dd43f5d2797d61ebb0505d92747ffec3efe82e33850a53014cfedd60e85c"
+            },
+            "exporter": {
+              "tools/art/build_b4_hardware.py": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_legion_planet_trade_hub.py": "de7abf71be099a47fb7f5af8273c6ddcef7c40f9345580a7c474de3391568ea7"
+            },
+            "runtime": {
+              "assets/models/legion_planet_trade_hub.mesh.json": "b3bbb4ccfd292d695e73134d4bda12e1e83e25fc1ac93aade8ff96cc0bf0ea39"
+            },
+            "legacy_extent": [
+              [
+                -34.0,
+                0.0,
+                -32.0
+              ],
+              [
+                34.0,
+                49.5,
+                32.0
+              ]
+            ],
+            "triangles": 2344,
+            "vertices": 1312
+          },
+          {
+            "gameplay_binding": "confederacy:planet_shield_generator",
+            "shape_key": "confederacy:planet_shield_generator",
+            "identifier": "legion_planet_shield_generator",
+            "station_kind": "planet_shield_generator",
+            "faction": "confederacy",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/legion_planet_shield_generator.blend": "3e1c8f02a6f2ebc4647622078c0926081f3f5fa9ee39691f1c5d5b54db3e62e3"
+            },
+            "exporter": {
+              "tools/art/build_b4_hardware.py": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_legion_planet_shield_generator.py": "6c959436870831e3c80a7c5f46eeaf62b49da35ea00918a704c2b3aa7815832b"
+            },
+            "runtime": {
+              "assets/models/legion_planet_shield_generator.mesh.json": "7d8d1676d83461298d8efa08be75faa494452a71196952d6943377dedb4f1873"
+            },
+            "legacy_extent": [
+              [
+                -34.0,
+                0.0,
+                -32.0
+              ],
+              [
+                34.0,
+                46.5,
+                32.0
+              ]
+            ],
+            "triangles": 2608,
+            "vertices": 1440
+          },
+          {
+            "gameplay_binding": "confederacy:planet_pulsar_cannon",
+            "shape_key": "confederacy:planet_pulsar_cannon",
+            "identifier": "legion_planet_pulsar_cannon",
+            "station_kind": "planet_pulsar_cannon",
+            "faction": "confederacy",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/legion_planet_pulsar_cannon.blend": "9d96ebfb3b9bcda40db2015a67f873ccb4128238ea47f8f569f3144f5ef78546"
+            },
+            "exporter": {
+              "tools/art/build_b4_hardware.py": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_legion_planet_pulsar_cannon.py": "541d8d747e6af416d586cc16182e503afacb26fc54634ec3dc82e8d8f9177603"
+            },
+            "runtime": {
+              "assets/models/legion_planet_pulsar_cannon.mesh.json": "bd26fd608964a45f2ec3afd1bc7a66617d218cf6a69ef4fc0013331427ea8393"
+            },
+            "legacy_extent": [
+              [
+                -34.0,
+                0.0,
+                -32.0
+              ],
+              [
+                34.0,
+                42.4,
+                46.0
+              ]
+            ],
+            "triangles": 2396,
+            "vertices": 1344
+          },
+          {
+            "gameplay_binding": "syndicate:defense_satellite",
+            "shape_key": "syndicate:defense_satellite",
+            "identifier": "syndicate_defense_satellite",
+            "station_kind": "defense_satellite",
+            "faction": "syndicate",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/syndicate_defense_satellite.blend": "56abd8e0276e0949453d8ce2c73b24ca2611d3e2d1b61dccf00191fd969beab9"
+            },
+            "exporter": {
+              "tools/art/build_b4_hardware.py": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_syndicate_defense_satellite.py": "15f7842bd630334f170112539e0cdd972d1658a5cf634713312a30cf8eb7d888"
+            },
+            "runtime": {
+              "assets/models/syndicate_defense_satellite.mesh.json": "3fbe61b531055a10b3a269f07cf291ed779cce08396bf7d8a7367e8c5585b71f"
+            },
+            "legacy_extent": [
+              [
+                -41.1051,
+                -9.0,
+                -27.5066
+              ],
+              [
+                41.1051,
+                19.5,
+                44.0
+              ]
+            ],
+            "triangles": 2032,
+            "vertices": 1142
+          },
+          {
+            "gameplay_binding": "syndicate:attack_satellite",
+            "shape_key": "syndicate:attack_satellite",
+            "identifier": "syndicate_attack_satellite",
+            "station_kind": "attack_satellite",
+            "faction": "syndicate",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/syndicate_attack_satellite.blend": "f7bd5fb78aadc367ab39f17b34a9111d6dd43d97f5c1ddb88af4a6779a08ec08"
+            },
+            "exporter": {
+              "tools/art/build_b4_hardware.py": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_syndicate_attack_satellite.py": "948af751c14b97a0b73f2c071f84449a6645cb26a46877faf5b8a76309e66535"
+            },
+            "runtime": {
+              "assets/models/syndicate_attack_satellite.mesh.json": "007c331eb494d62ae49953d7c8a225d993b942a088e392869138c5f1fa219d2d"
+            },
+            "legacy_extent": [
+              [
+                -50.9795,
+                -9.0,
+                -30.299
+              ],
+              [
+                50.9795,
+                21.5,
+                58.0
+              ]
+            ],
+            "triangles": 2284,
+            "vertices": 1286
+          },
+          {
+            "gameplay_binding": "syndicate:planet_extractor",
+            "shape_key": "syndicate:planet_extractor",
+            "identifier": "syndicate_planet_extractor",
+            "station_kind": "planet_extractor",
+            "faction": "syndicate",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/syndicate_planet_extractor.blend": "0021f21a1a2e95dc015ac652345cbf564f826b9dc06c9b8824290222502a843a"
+            },
+            "exporter": {
+              "tools/art/build_b4_hardware.py": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_syndicate_planet_extractor.py": "72d3ea3fcc3a5b8e230b3c21e641d1e6b677db659aa55385106bca26dc3263ea"
+            },
+            "runtime": {
+              "assets/models/syndicate_planet_extractor.mesh.json": "388ba2aa4d5ebb3f33edc309cc4c177ce6d499c74d751c6573f8f5302dca4fa1"
+            },
+            "legacy_extent": [
+              [
+                -34.0,
+                0.0,
+                -32.0
+              ],
+              [
+                34.0,
+                43.0,
+                32.0
+              ]
+            ],
+            "triangles": 2484,
+            "vertices": 1400
+          },
+          {
+            "gameplay_binding": "syndicate:planet_trade_hub",
+            "shape_key": "syndicate:planet_trade_hub",
+            "identifier": "syndicate_planet_trade_hub",
+            "station_kind": "planet_trade_hub",
+            "faction": "syndicate",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/syndicate_planet_trade_hub.blend": "3f06156d5e2f5114b584d1377e199672ec893d9be64f9c6569a4a9fac4fa38f9"
+            },
+            "exporter": {
+              "tools/art/build_b4_hardware.py": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_syndicate_planet_trade_hub.py": "b7eca902c9add5f33c6edddc9c11539664369661640ba6e5aed0546f64e83eee"
+            },
+            "runtime": {
+              "assets/models/syndicate_planet_trade_hub.mesh.json": "e287675b6e86d7b5bb986169941179ff8cad49fa9c021182f7d279aa89be2aed"
+            },
+            "legacy_extent": [
+              [
+                -34.0,
+                0.0,
+                -32.0
+              ],
+              [
+                34.0,
+                49.5,
+                32.0
+              ]
+            ],
+            "triangles": 2232,
+            "vertices": 1256
+          },
+          {
+            "gameplay_binding": "syndicate:planet_shield_generator",
+            "shape_key": "syndicate:planet_shield_generator",
+            "identifier": "syndicate_planet_shield_generator",
+            "station_kind": "planet_shield_generator",
+            "faction": "syndicate",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/syndicate_planet_shield_generator.blend": "7207bf5218e9a964abc6176227b20ebadd621c35f919b54c0037b3a2a6e483ed"
+            },
+            "exporter": {
+              "tools/art/build_b4_hardware.py": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_syndicate_planet_shield_generator.py": "9cbc681124c08290400a776b108193016cff892f0982344afe092dbf620819e4"
+            },
+            "runtime": {
+              "assets/models/syndicate_planet_shield_generator.mesh.json": "f05eed613663d33ae5bad77d2489a4a8f986585374645e19cf8aefe1a98f939d"
+            },
+            "legacy_extent": [
+              [
+                -34.0,
+                0.0,
+                -32.0
+              ],
+              [
+                34.0,
+                46.5,
+                32.0
+              ]
+            ],
+            "triangles": 2352,
+            "vertices": 1312
+          },
+          {
+            "gameplay_binding": "syndicate:planet_pulsar_cannon",
+            "shape_key": "syndicate:planet_pulsar_cannon",
+            "identifier": "syndicate_planet_pulsar_cannon",
+            "station_kind": "planet_pulsar_cannon",
+            "faction": "syndicate",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/syndicate_planet_pulsar_cannon.blend": "f1279ceaeb7e549bcfa0bc8e48274960dba56e920aa25cd0788ff57cc4bac9f6"
+            },
+            "exporter": {
+              "tools/art/build_b4_hardware.py": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_syndicate_planet_pulsar_cannon.py": "de3f117a1e19d661b27ca683ccd521eda197cb910a9226dc5bb1af4f9f7d4826"
+            },
+            "runtime": {
+              "assets/models/syndicate_planet_pulsar_cannon.mesh.json": "498e6232ec385e903942da4a873f0153d951cc601e49df170b274a6863cecc55"
+            },
+            "legacy_extent": [
+              [
+                -34.0,
+                0.0,
+                -32.0
+              ],
+              [
+                34.0,
+                42.4,
+                46.0
+              ]
+            ],
+            "triangles": 2284,
+            "vertices": 1288
+          },
+          {
+            "gameplay_binding": "imperial:defense_satellite",
+            "shape_key": "imperial:defense_satellite",
+            "identifier": "imperial_defense_satellite",
+            "station_kind": "defense_satellite",
+            "faction": "imperial",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/imperial_defense_satellite.blend": "5afcdbad5c2ae99916571fa01817f44e4961b360c1f22e1d7f42f7afac5003bd"
+            },
+            "exporter": {
+              "tools/art/build_b4_hardware.py": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_imperial_defense_satellite.py": "13060096b4cb830e0d6fdc4d5d1b14ede3b7ef545779bd8f61565a1bf17b4185"
+            },
+            "runtime": {
+              "assets/models/imperial_defense_satellite.mesh.json": "ce8fae81cbcc80bd22316d4b70ca66a45171b6d32b36a87a6b7b1ded87161b0b"
+            },
+            "legacy_extent": [
+              [
+                -41.1051,
+                -9.0,
+                -34.0
+              ],
+              [
+                41.1051,
+                19.5,
+                44.0
+              ]
+            ],
+            "triangles": 2060,
+            "vertices": 1156
+          },
+          {
+            "gameplay_binding": "imperial:attack_satellite",
+            "shape_key": "imperial:attack_satellite",
+            "identifier": "imperial_attack_satellite",
+            "station_kind": "attack_satellite",
+            "faction": "imperial",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/imperial_attack_satellite.blend": "0164aed19829bfcc0aa93904faac1e5a3467b2d393733a519f52e345b613f6a4"
+            },
+            "exporter": {
+              "tools/art/build_b4_hardware.py": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_imperial_attack_satellite.py": "4360cac00bdc9b15e7a997066c0e89398640b4077832806b00549637a62215a2"
+            },
+            "runtime": {
+              "assets/models/imperial_attack_satellite.mesh.json": "5f12f2debb3f9cabf6e5f9f22890dbe78ef7ba436697d26591fa9e21fc05a7a1"
+            },
+            "legacy_extent": [
+              [
+                -50.9795,
+                -9.0,
+                -34.0
+              ],
+              [
+                50.9795,
+                21.5,
+                58.0
+              ]
+            ],
+            "triangles": 2312,
+            "vertices": 1300
+          },
+          {
+            "gameplay_binding": "imperial:planet_extractor",
+            "shape_key": "imperial:planet_extractor",
+            "identifier": "imperial_planet_extractor",
+            "station_kind": "planet_extractor",
+            "faction": "imperial",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/imperial_planet_extractor.blend": "da805658eae9b61b8dadaad407db78d1c855bb8944ac8090db1871beaa5f8523"
+            },
+            "exporter": {
+              "tools/art/build_b4_hardware.py": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_imperial_planet_extractor.py": "bf335ac493eecf1c9048d379fd04f8f4cf88aa42ae0e8464b7b6ab528de0dff3"
+            },
+            "runtime": {
+              "assets/models/imperial_planet_extractor.mesh.json": "7ace170ae089f00f31724eee0053ec84bdf259804b87ee64ee3be89e3f4de291"
+            },
+            "legacy_extent": [
+              [
+                -34.0,
+                0.0,
+                -32.0
+              ],
+              [
+                34.0,
+                43.0,
+                32.0
+              ]
+            ],
+            "triangles": 2500,
+            "vertices": 1408
+          },
+          {
+            "gameplay_binding": "imperial:planet_trade_hub",
+            "shape_key": "imperial:planet_trade_hub",
+            "identifier": "imperial_planet_trade_hub",
+            "station_kind": "planet_trade_hub",
+            "faction": "imperial",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/imperial_planet_trade_hub.blend": "88292f5a9f09a8541dbe8613166c4dda248dde014d6ff5c17339e9cd9975cc7a"
+            },
+            "exporter": {
+              "tools/art/build_b4_hardware.py": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_imperial_planet_trade_hub.py": "98a60854619e5a71857a26ace8b1fcc09ba051d1d483bf70c4f4a75781a9744f"
+            },
+            "runtime": {
+              "assets/models/imperial_planet_trade_hub.mesh.json": "d3d8afaa06b5ca99409147163f437b0530d42cff2707d6d5cd00baaf67a107e1"
+            },
+            "legacy_extent": [
+              [
+                -34.0,
+                0.0,
+                -32.0
+              ],
+              [
+                34.0,
+                49.5,
+                32.0
+              ]
+            ],
+            "triangles": 2248,
+            "vertices": 1264
+          },
+          {
+            "gameplay_binding": "imperial:planet_shield_generator",
+            "shape_key": "imperial:planet_shield_generator",
+            "identifier": "imperial_planet_shield_generator",
+            "station_kind": "planet_shield_generator",
+            "faction": "imperial",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/imperial_planet_shield_generator.blend": "5b8fe8b3a271cc96c9a07a8b836d6f108d6be9264d10715b25809a780d532119"
+            },
+            "exporter": {
+              "tools/art/build_b4_hardware.py": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_imperial_planet_shield_generator.py": "1cb3c97497c2ec5e371983210105416edec2b2f336c80539d337f9fbeb9ac2f4"
+            },
+            "runtime": {
+              "assets/models/imperial_planet_shield_generator.mesh.json": "f9979421cd15903222d40a837d5fdf961494a3d5861f8b74dfe82b0ebf6b2f75"
+            },
+            "legacy_extent": [
+              [
+                -34.0,
+                0.0,
+                -32.0
+              ],
+              [
+                34.0,
+                46.5,
+                32.0
+              ]
+            ],
+            "triangles": 2416,
+            "vertices": 1344
+          },
+          {
+            "gameplay_binding": "imperial:planet_pulsar_cannon",
+            "shape_key": "imperial:planet_pulsar_cannon",
+            "identifier": "imperial_planet_pulsar_cannon",
+            "station_kind": "planet_pulsar_cannon",
+            "faction": "imperial",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/imperial_planet_pulsar_cannon.blend": "5a75993a045513dfff1421624ff38ef95af21c93814fde4ac4610c418f6f2377"
+            },
+            "exporter": {
+              "tools/art/build_b4_hardware.py": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_imperial_planet_pulsar_cannon.py": "755621b87b38d2e1b70d719a6f65c9b146f0457a7b35f8dfda4fbe505374f4e2"
+            },
+            "runtime": {
+              "assets/models/imperial_planet_pulsar_cannon.mesh.json": "9a5e27a842b0fd32254291c06fc919f296d6153c0d759c0e2fcb48a013a837dd"
+            },
+            "legacy_extent": [
+              [
+                -34.0,
+                0.0,
+                -32.0
+              ],
+              [
+                34.0,
+                42.4,
+                46.0
+              ]
+            ],
+            "triangles": 2300,
+            "vertices": 1296
+          }
+        ]
+      },
+      "not_approved_by_this_decision": [
+        "landing, registration, activation, merge, tag or release of any of these revisions",
+        "the S11 catalogue switch and any production-default switch",
+        "packaging and native-Windows acceptance",
+        "the ten imperial station rows, the imperial ship rows and the B5 environment props, which are not part of this batch"
+      ],
+      "how_recorded": "The owner's answer to the open approval question after reviewing the B4 evidence, recorded verbatim against the exact revision hashes below."
     }
   ],
   "approved_assets": [

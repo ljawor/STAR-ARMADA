@@ -27,6 +27,10 @@ EVIDENCE = ROOT / 'artifacts/s06_alliance_batch_review/b4-hardware'
 BATCH = 's06-b4-hardware'
 SEED = 'tools/art/build_b4_hardware.py'
 SCENE = 'tools/art/probe_b4_scope.py'
+# The owner's approval of this batch, recorded in art/manifests/approvals.json and bound to the exact
+# revisions this module guards. It authorizes no landing: every binding stays unregistered.
+APPEARANCE_DECISION = 's06-b4-hardware-2026-10-17'
+BATCH_STATUS = 'appearance_approved_pending_landing'
 
 # The probe's measurements. Per kind and faction-independent: the legacy hardware differs in ring
 # side count, not extent.
@@ -307,7 +311,8 @@ class PendingRecords(unittest.TestCase):
     def test_batch_spec_lists_exactly_the_guarded_bindings(self):
         sheet = spec()
         self.assertEqual(sheet['batch'], BATCH)
-        self.assertEqual(sheet['status'], 'pending_owner_appearance_approval')
+        self.assertEqual(sheet['status'], BATCH_STATUS)
+        self.assertEqual(sheet['appearance_decision'], APPEARANCE_DECISION)
         self.assertIn('not an approval record', sheet['note'])
         rows = {a['binding']: a for a in sheet['assets']}
         self.assertEqual(sorted(rows), sorted(a['binding'] for a in ASSETS))
@@ -331,7 +336,8 @@ class PendingRecords(unittest.TestCase):
         bound = json.dumps([e for e in approvals['approved_assets'] if isinstance(e, dict)])
         for asset in ASSETS:
             with self.subTest(binding=asset['binding']):
-                self.assertEqual(status[asset['binding']], 'procedural_legacy')
+                self.assertEqual(status[asset['binding']], 'procedural_legacy',
+                                 'an approved-appearance specimen must still not be selectable')
                 self.assertNotIn(asset['binding'], registered)
                 self.assertNotIn(asset['identifier'], bound)
                 self.assertNotIn(asset['binding'], bound)
@@ -342,12 +348,12 @@ class PendingRecords(unittest.TestCase):
             with self.subTest(binding=asset['binding']):
                 record = load(sidecar)
                 self.assertEqual(record['binding'], asset['binding'])
-                self.assertEqual(record['status'], 'pending_owner_appearance_approval')
+                self.assertEqual(record['status'], BATCH_STATUS)
                 self.assertEqual(record['batch'], BATCH)
-                self.assertFalse(record['activation'])
-                self.assertIsNone(record['owner_decision'])
-                self.assertNotIn('appearance_decision', record,
-                                 'a pending batch carries no appearance decision to lose')
+                self.assertEqual(record['appearance_decision'], APPEARANCE_DECISION)
+                self.assertFalse(record['activation'], 'appearance approval is not activation')
+                self.assertIsNone(record['owner_decision'],
+                                  'appearance approval is not a landing decision')
 
     def test_every_evidence_path_the_sheet_points_at_exists(self):
         sheet = spec()

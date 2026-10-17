@@ -30,6 +30,7 @@ OWNER_WORDS = {
     's06-b3b-stations-2026-10-17': BATCH_APPROVAL_WORDS,
     's06-b3c-stations-2026-10-17': 'yes',
     's06-b3a-command-stations-2026-10-17': '1.) B3a command stations: Approved',
+    's06-b4-hardware-2026-10-17': 'B4 looks good',
 }
 EXPECTED_BATCHES = {
     's06-cruiser-review': 1,
@@ -38,10 +39,11 @@ EXPECTED_BATCHES = {
     's06-b3b-stations-slice-1': 9,
     's06-b3c-stations': 17,
     's06-b3a-command-stations': 3,
+    's06-b4-hardware': 24,
 }
 # 37 specimens whose appearance the owner has approved, and the count the records must keep adding up
 # to until another decision changes it.
-APPROVED_SPECIMENS = 40
+APPROVED_SPECIMENS = 64
 SCOPE_DECISIONS = {'s06-b4-scope-2026-10-17': '1.) B4 authorized',
                    's06-imperial-migration-2026-10-17': '4.) decision need also migration.',
                    's06-large-evidence-accepted-2026-10-17':
@@ -179,17 +181,20 @@ class RecordedScope(unittest.TestCase):
         self.assertEqual([d['id'] for d in approvals['decision_log'] if
                           d['id'] in SCOPE_DECISIONS], [])
 
-    def test_the_batch_still_awaiting_the_owner_is_not_recorded_as_approved(self):
-        """B4 is authored and captured but never answered; the record must not claim otherwise."""
+    def test_no_authored_batch_is_left_without_a_decision(self):
+        """Every sheet on disk is a batch someone authored and showed; a sheet without a decision is
+        either unrecorded work or an approval that was never written down."""
         sheets = batch_sheets()
-        path, sheet = sheets['s06-b4-hardware']
-        self.assertEqual(sheet['status'], 'pending_owner_appearance_approval')
-        self.assertNotIn('appearance_decision', sheet)
-        decided = {a['identifier'] for d in appearance_decisions()
-                   for a in d['revision']['assets']}
-        for asset in sheet['assets']:
-            with self.subTest(identifier=asset['identifier']):
-                self.assertNotIn(asset['identifier'], decided)
+        decided = {d['revision']['batch'] for d in appearance_decisions()}
+        self.assertTrue(set(sheets) <= decided,
+                        f'a batch sheet has no recorded decision: {sorted(set(sheets) - decided)}')
+        # The reverse is not symmetric on purpose: the cruiser was reviewed before the batch sheets
+        # existed, so it has a decision, a sidecar and no sheet - named here rather than assumed.
+        self.assertEqual(sorted(decided - set(sheets)), ['s06-cruiser-review'])
+        for batch, (path, sheet) in sheets.items():
+            with self.subTest(batch=batch):
+                self.assertEqual(sheet['status'], 'appearance_approved_pending_landing')
+                self.assertIn('appearance_decision', sheet)
 
 
 if __name__ == '__main__':
