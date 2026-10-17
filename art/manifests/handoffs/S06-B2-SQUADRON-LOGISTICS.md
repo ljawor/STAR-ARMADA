@@ -17,7 +17,7 @@ Eight bindings, one shared seed, eight generated exporters:
 
 | Binding | Label | Identifier | Class | Triangles | Bytes |
 |---|---|---|---|---|---|
-| `ship:rebel:fighter` | interceptor | `alliance_interceptor` | `fighter_squadron` | 2,214 | 140,200 |
+| `ship:rebel:fighter` | interceptor | `alliance_interceptor` | `fighter_squadron` | 2,214 | 140,290 |
 | `ship:rebel:bomber` | bomber | `alliance_bomber` | `fighter_squadron` | 2,810 | 179,700 |
 | `ship:rebel:convoy` | alliance-convoy | `alliance_convoy` | `crew_transport` | 4,512 | 260,749 |
 | `ship:confederacy:fighter` | vulture | `legion_vulture` | `fighter_squadron` | 2,578 | 164,257 |
@@ -61,14 +61,15 @@ not modified; the harness injects geometry through the existing `mesh_for` seam 
 Authority `blend` for all eight. Blender `5.0.1` (pinned in the seed). Contract schema 1;
 `render/authored_mesh.py` loader limits 12,000 triangles / 10,000 vertices / 2,000,000 bytes;
 `alliance_common.export()` asserts `1,800 < triangles < 11,888` and ≤ 9,500 vertices.
-Batch seed `build_b2_batch.py` sha256 `b5fab18bc2f1a7aa0d8e198820ec445a36c91e667206602467ab99e1b89c087e`
-(31,584 bytes), shared by every row below.
+Batch seed `build_b2_batch.py` sha256 `d8aa040c8bbff81baf836d193023ed6d21a2828f045e9fca6f18f422cfb6ea23`
+(31,704 bytes), shared by every row below. It calls `weld_scene()` from `tools/art/alliance_common.py`
+(sha256 `6f76c46eac87b79b7804cce68f7beb1dafff1c0d20786ec8154392c9d57852e1`) before it declares the mesh.
 
 ## Hashes of this revision
 
 | Asset | Master `.blend` sha256 | Exporter sha256 | Runtime sha256 |
 |---|---|---|---|
-| interceptor | `a2489d71f0ed3d47c6c695c22139d050b609552373adb39fe83d9068fdfbbea2` | `7058f277b7d535aa6d05f7a25b8462cd40267ac7be18bf5e75bbd05ada92122e` | `483617ebb32a0378fee448dea5ff00eb560d13a6f711e2019e10419a24c3e4ef` |
+| interceptor | `7021539d03e6a0ae0c15494370f5c09235708727c723ebe8add7d838d5200150` | `7058f277b7d535aa6d05f7a25b8462cd40267ac7be18bf5e75bbd05ada92122e` | `8d6dc397139d5fac871f1e74b48a6eb7fe2a9fc200871288ee2cc8d34a494df6` |
 | bomber | `2330083b7c6a3990c9822ca3b9cc2707542681bffe88f62be4bf8fe4d722caef` | `99c6cb8ad1016d7bdbdd4789e9d9c534d7453bb4ab40d8a8e99c114f07ebbd18` | `9eb42e8c2f5467ca849536fa6e0e06aeb4c4b8bd0538cba419df0859f1d997c2` |
 | alliance-convoy | `56b7cfb2dc1eecc7d3fc1094e2fdac99b67404759d4efeaae8ecaf418bf88e7a` | `794dc2f818b98545ceeaa0bf4720560c11587a0a69aa10b36c4fbc57fd44f01f` | `fa341b2ac6cd91c79ab113e47c9a76888728e5528c46d068ebde6e8e6141205c` |
 | vulture | `932bba8532ba8d02e50fec774131477c43a383311aec500c1412b336a11d1ac8` | `8c02f83690317415f05c7f87b66cfb03f2be48d418d8d13394c17e26eab99eb3` | `c17733f45e1669a3c664726f2e72f18a1d3e1c1e09e18455e22abc7fb83c47dd` |
@@ -120,6 +121,18 @@ The batch sheet's harness also gained per-asset `faction` (the convoys are not `
 `write_pending_sidecars.py` now honours a **declared shared seed** (`seed` + `seed_arg` in the spec)
 instead of assuming one builder per identifier.
 
+## What the weld pass changed after the first reviewed cut
+
+The interceptor was re-seeded in this revision: one part sat **0.48 units** clear of the spine it was
+meant to sit on — invisible at a fighter's framing but a genuine float, and the guard catches it
+because it measures the exported mesh rather than the master. `weld_scene()`
+(`tools/art/alliance_common.py`) now runs in the shared seed before it declares the mesh, so a part
+is grown onto its neighbour when the gap is at most 2.5 units and braced when it is larger; the
+fighter's worst part-to-nearest gap is now 0.00 against 0.48 in the reviewed mesh, its envelope and
+all 2,214 triangles are unchanged, and the other seven hulls were re-measured clean to the same
+0.25-unit standard rather than re-seeded. The remaining masters and hashes in this handoff are the
+reviewed ones.
+
 ## Owner approval
 
 **None.** No owner decision is recorded for any of the eight revisions in this handoff; the batch sheet is
@@ -128,13 +141,13 @@ unselected in production, with registry status `procedural_legacy`.
 
 ## Tests and commands actually executed
 
-`PYTHONPATH=tests .venv/bin/python -m unittest test_alliance_blender_b2_squadron -v` → **15 passed**:
+`PYTHONPATH=tests .venv/bin/python -m unittest test_alliance_blender_b2_squadron -v` → **16 passed**:
 geometry/normals/winding/roles/envelope and loader-budget per hull; legacy envelope + unchanged drawn
 length; named-feature presence; declared `emitter_centers` matching the exported emitter geometry
 (with negative controls); every emitter clear along −Z from its own face *and* enclosed by a host body
 fore of it; five corruption modes rejected by the production loader; master-alias refusals per exporter;
-export-only AST check; the shared seed refusing an existing master before Blender is imported; batch
-sheet and pending-registration guards.
+export-only AST check; the shared seed refusing an existing master before Blender is imported; the
+exported meshes carrying no part clear of the rest; and batch sheet and pending-registration guards.
 
 Rebuild and export, as one job: `SEED_OK count: 8`, then all eight `GAME_EXPORT` lines with the counts in
 the table above and no envelope assertion firing.
@@ -146,11 +159,12 @@ Reported by that run: 4 MSAA on an Apple M4 (Metal 2.1, version 90.5) with produ
 `restored_changed_pixels = 0` for every hull (removing the injected geometry reproduces the legacy frame
 exactly); `source_preserved`, `protected_files_preserved` (`saves/`, `replays/`, `art/blender/`, `tools/art/`
 hashed before and after) and `production_candidates_unselected_after_review` all true; paired motion state
-samples equal across all 150 frames of the interceptor pair.
+samples equal across all 150 frames of the interceptor pair; the batch overview 6,339 changed pixels
+across the eight-row line.
 
-Role ablations (changed pixels): interceptor 2,087 / 5,261 / 645 (accent/dark/cool); bomber 1,828 / 3,300 /
-768; alliance-convoy 471 / 6,152 / 461; vulture 1,642 / 5,113 / 889; hyena 1,171 / 3,233 / 529;
-legion-convoy 916 / 2,526 / 505; jackal 2,087 / 5,729 / 495; syndicate-convoy 2,646 / 3,413 / 519. **All 24
+Role ablations (changed pixels): interceptor 2,087 / 5,262 / 645 (accent/dark/cool); bomber 1,828 / 3,300 /
+768; alliance-convoy 471 / 6,152 / 461; vulture 1,642 / 5,091 / 889; hyena 1,171 / 3,233 / 529;
+legion-convoy 916 / 2,524 / 505; jackal 2,087 / 5,725 / 495; syndicate-convoy 2,646 / 3,432 / 519. **All 24
 nonzero** — each faction's accent, dark and drive-emission treatment is visible from the review cameras.
 
 Shared guard set re-run on this head — `test_alliance_blender_b1_combat`, `test_alliance_blender_cruiser`,

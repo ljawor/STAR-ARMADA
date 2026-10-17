@@ -175,6 +175,54 @@ def part_spans(payload, name_fragment):
         yield part, [payload['vertices'][i] for row in rows for i in row[3:]]
 
 
+def floating_parts(payload, tolerance=.25):
+    """Groups of welded parts that stand clear of every other group, with their daylight.
+
+    The exporter indexes vertices by quantised position, so parts that touch share vertices and
+    fall into one group; a group that is nowhere near another one is a part - or a cluster of
+    parts - floating in space. The S06 batch shipped a sensor-station dish 23.75 units clear of
+    its body and a marker-light ring 1.4 units above the deck of every station, and both read as
+    detached hardware in their own captures. This measures that without opening Blender, which
+    is what lets it be a gate instead of a habit.
+    """
+    parent = {}
+
+    def find(index):
+        root = index
+        while parent[root] != root:
+            root = parent[root]
+        while parent[index] != root:
+            parent[index], index = root, parent[index]
+        return root
+
+    for role in payload['batches'].values():
+        for triangle in role:
+            for a, b in ((triangle[3], triangle[4]), (triangle[4], triangle[5])):
+                parent.setdefault(a, a)
+                parent.setdefault(b, b)
+                ra, rb = find(a), find(b)
+                if ra != rb:
+                    parent[ra] = rb
+    groups = {}
+    for index in list(parent):
+        groups.setdefault(find(index), []).append(index)
+    entries = []
+    for members in groups.values():
+        points = [payload['vertices'][i] for i in members]
+        entries.append((len(members),
+                        [min(p[i] for p in points) for i in range(3)],
+                        [max(p[i] for p in points) for i in range(3)]))
+    floating = []
+    for index, (count, lo, hi) in enumerate(entries):
+        nearest = min((max(max(lo[k] - other_hi[k], other_lo[k] - hi[k]) for k in range(3))
+                       for other, (_, other_lo, other_hi) in enumerate(entries) if other != index),
+                      default=0.0)
+        if nearest > tolerance:
+            floating.append((round(nearest, 2), count,
+                             [round((lo[k] + hi[k]) / 2, 2) for k in range(3)]))
+    return floating
+
+
 class GeometryContract(unittest.TestCase):
     def test_each_pending_asset_satisfies_the_loader_contract(self):
         """The production loader, not this test, is the authority on the mesh."""
@@ -655,6 +703,29 @@ class PendingRecords(unittest.TestCase):
         text = (ROOT / 'tools/diag_alliance_batch_review.py').read_text(encoding='utf-8')
         self.assertIn('UNAPPROVED REVIEW ONLY', text)
         self.assertIn('pending_owner_approval', text)
+
+    def test_no_part_of_any_station_floats_clear_of_the_rest(self):
+        """A station is one piece of hardware, not a constellation.
+
+        Contact is not implied by authoring by centre and by reach. This batch first shipped a
+        legion sensor dish 23.75 units off its body and a marker-light ring 1.4 units above the
+        deck on all nine designs; the seed's weld pass closes both, and this measures the
+        exported meshes, so a design that floats is caught here rather than by eye.
+        """
+        for asset in ASSETS:
+            with self.subTest(binding=asset['binding']):
+                floating = floating_parts(payload_of(asset))
+                self.assertEqual(
+                    floating, [],
+                    f"{asset['identifier']} carries parts floating clear of their neighbours: "
+                    f"{floating}")
+
+    def test_the_seed_welds_the_scene_before_it_reports_the_extent(self):
+        """The order is the guarantee: a joint made after the self-check is an unmeasured one."""
+        seed = (ROOT / 'tools/art/build_b3b_stations.py').read_text(encoding='utf-8')
+        self.assertIn('weld_scene()', seed)
+        self.assertLess(seed.index('weld_scene()'),
+                        seed.index('report_bounds(limits, identifier)'))
 
 
 if __name__ == '__main__':

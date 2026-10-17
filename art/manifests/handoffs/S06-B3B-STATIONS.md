@@ -26,7 +26,7 @@ Supporting files: `tools/art/build_b3b_stations.py` (one seed, nine designs),
 `tools/art/export_<identifier>.py` ×9 (generated from `tools/art/templates/export_wrapper.tmpl` by
 `tools/art/gen_export_wrappers.py`), `art/manifests/pending/S06-BATCH-B3B-STATIONS.json` (the batch
 sheet), the nine per-asset sidecars `art/manifests/pending/S06-<FACTION>-<KIND>.json`,
-`tests/test_alliance_blender_b3b_stations.py` (24 guards) and the evidence under
+`tests/test_alliance_blender_b3b_stations.py` (27 guards) and the evidence under
 `artifacts/s06_alliance_batch_review/b3b-stations/`.
 
 ## What each station is
@@ -102,29 +102,29 @@ primitives inside the seed script.
 
 | specimen | master `.blend` sha256 | `mesh.json` sha256 |
 | --- | --- | --- |
-| `alliance_mining_station` | `b66b86994896c784543a0981a0d316347d6ccd1d447ad9023c215d77b3c4fcfd` | `7fc5d6791ac823fd521754ccc1c0e4c707e04b83e3db8a46849498cf64a9f08e` |
-| `legion_mining_station` | `aaf7e3c5617029a2b448cd5a1a9d2a9234225bbf796e25180345317723032bc3` | `ea91c014382efd3dd7871d750f5ae9e249f9b84e7208f63ce86ec2ca8466bb93` |
-| `syndicate_mining_station` | `878a16cfa90fa7bc849cb93149c4ffe5c9d17df19c50a97b4fe68b6913dfe6b1` | `ccfb7dd99ee912ac909a715fca820559a252efb21af26eeb54d8e30d8dfd04a5` |
-| `alliance_sensor_station` | `cd6975a883e762b9f053949aa6d15140ac9dcb284550f69c7048e37d977417a5` | `b487fa26703961c04b58b864fc01e6f26846fb317deae80906a8ac76c4ad0ef9` |
-| `legion_sensor_station` | `4e473fc6a7483bd0da5743ec7ca3a63e7fef0a17cd6fc4db0bfadd6c8e78c98d` | `8bad34f0a8b9faa608cb29e0e61766b1e391a35e97539d2f009c9abfc1d91098` |
-| `syndicate_sensor_station` | `23faffa404d19ae75f4df9267ba4ca21d6ef826a5f1434a25be41ce9539111df` | `3447c375d41b564f3caf0628afcc4f62cd3b7dc0b62eba08efd52f7d11f4093e` |
-| `alliance_energy_relay` | `2b46bbdcadf6a8a3b755c3aa17317c40041d1e2f063086412ed3c9db1f2fbc73` | `88bdfe64bc199694dd50b8bc2b29ea51ba27dedb4fb7818179214cbc3572a840` |
-| `legion_energy_relay` | `502c992344652f74b3d81f94cad53bcb06904c183d9b4fa96501e6ac29d5b411` | `8949a2070706f989116e3b12507211b4b37591cd342471874271666a0938159f` |
-| `syndicate_energy_relay` | `7db6eaf8b503a3060fb5fd9edec471af3e3752c1143688b1936dccc432b2fa3f` | `2f11b7459e09d7a5ba2b82d0c55e0f32b6a1fce35baa0c268b229b7f2341ba88` |
+| `alliance_mining_station` | `ab9a5c7e263fc7754e2b4abb8397cc40e87ea4794996246cca73e8c16f1bacef` | `ff14df049feaad5937326566ac8015a9d86dcf03671d7e3426f8952b7e53e9da` |
+| `legion_mining_station` | `ebacae39583930f5b7d824a2f44734e7499db826ce52cd8baee50186495474b0` | `c04d23d84ab8916e5fb4e6a6efffe454f148349844779557e241bee400236bfb` |
+| `syndicate_mining_station` | `54aa027886e7069e1edabcdac16372b4bb3f087cba6c164ef9f9766aa38ba8a0` | `ee86f98eeae7e69c2c5d345a9aa2736dd62e9911b4673a28c3f5b459ce382872` |
+| `alliance_sensor_station` | `6cd5fe3878340770a455da9945023d62b4ebdf5ecb0e1d814a84c4582cedba03` | `02e7447e185ea4b01ddddd8e605247e2c99704736c9e0b4784b95545c2bff24e` |
+| `legion_sensor_station` | `094ab52840c54cef032b5d0013d2cb4a2f0d25e0d1ce99796fa2e0a32c8015a4` | `4d9b0819b987ae48af105e721cd6e9fda525464bfd719339e66a44d960894ce0` |
+| `syndicate_sensor_station` | `dea77b42af5ec0450102fea28cc780b59ee154888ce96b249a097b7a6551e4aa` | `5240ed82fdd7f7385deb9143365aed20717d61f9d2550fa98b4fb7985bdbcbbb` |
+| `alliance_energy_relay` | `64482d7da075ba883c730f873a6a239120f953fab7241e0563fdb0d1209a9518` | `fea920827bc7c690d022ce614455dfad7da0ca6e053af0e5fde793c0fa6173f8` |
+| `legion_energy_relay` | `58bd7ca362e7336ca81387e65b193a2d6469dcf8bae851170743779d419548cc` | `8c260a988a6e0f66bb7a659832f8c289dcd797a82c4eab1f25725131086de7e0` |
+| `syndicate_energy_relay` | `efb7ae3adb8a6916f1faba86af9319c33482dfddc19a991f9831d68d9ecc0722` | `44e2cdee342e0419242a29f6f49f091a89f56889eeaf810d312691d30f1d2ebf` |
 
 ## Cost
 
 | kind | specimen | triangles (legacy procedural) | parts | bytes | verts |
 | --- | --- | --- | --- | --- | --- |
-| mining | `alliance_mining_station` | 4,800 (2,416) | 89 | 327,469 | 2,569 |
-| mining | `legion_mining_station` | 4,156 (2,032) | 83 | 284,152 | — |
-| mining | `syndicate_mining_station` | 3,592 (1,696) | 85 | 231,909 | — |
-| sensor | `alliance_sensor_station` | 4,060 (3,344) | 75 | 267,317 | — |
-| sensor | `legion_sensor_station` | 3,428 (1,200) | 77 | 222,525 | — |
-| sensor | `syndicate_sensor_station` | 3,684 (1,248) | 78 | 245,924 | — |
-| relay | `alliance_energy_relay` | 4,384 (2,208) | 74 | 304,273 | — |
-| relay | `legion_energy_relay` | 3,300 (976) | 80 | 211,418 | — |
-| relay | `syndicate_energy_relay` | 3,572 (2,144) | 80 | 230,616 | — |
+| mining | `alliance_mining_station` | 4,948 (2,416) | 96 | 335,435 | 2,657 |
+| mining | `legion_mining_station` | 4,280 (2,032) | 88 | 290,934 | 2,312 |
+| mining | `syndicate_mining_station` | 3,740 (1,696) | 92 | 239,907 | 2,048 |
+| sensor | `alliance_sensor_station` | 4,196 (3,344) | 81 | 274,873 | 2,158 |
+| sensor | `legion_sensor_station` | 3,576 (1,200) | 84 | 230,635 | 1,952 |
+| sensor | `syndicate_sensor_station` | 3,868 (1,248) | 88 | 255,665 | 2,098 |
+| relay | `alliance_energy_relay` | 4,496 (2,208) | 78 | 310,433 | 2,396 |
+| relay | `legion_energy_relay` | 3,484 (976) | 90 | 220,886 | 1,912 |
+| relay | `syndicate_energy_relay` | 3,744 (2,144) | 89 | 239,922 | 2,040 |
 
 Wrapper advisories are `MAX_TRIANGLES 11500`, `MAX_VERTICES 8000`, `MAX_BYTES 2_000_000`; the
 loader's hard caps are 12,000 / 10,000 / 2,000,000 in `render/authored_mesh.py`. The heaviest
@@ -138,21 +138,27 @@ that the accent, cool and dark roles are visible in the real renderer.
 At the close view each specimen is a solid, shaded structure with a distinct silhouette: the
 mining stations read as a processing deck with a cell ring, a mast and extractor booms carrying
 pods; the sensor stations as a disc or spine carrying a mast and dishes; the relays as a ring or
-column frame with cell rows, radiator panels and a powered core. No wireframe, no placeholder
-geometry and no floating parts in any of the twenty-four after-captures. The measured change
+column frame with cell rows, radiator panels and a powered core. No wireframe and no placeholder
+geometry in any of the twenty-four after-captures. Every part is welded to the rest. This revision
+was first cut with one hundred parts standing clear of everything else - the legion sensor station's
+forward dish floated 25 units above its body, 120 px of daylight in its own capture, and a shared
+marker-light ring sat 1.4 units above the deck of all nine designs. The seed now runs `weld_scene()`,
+the lights sit on the vent row they belong to, a guard measures the exported meshes for it, and
+the envelope did not move: the bounds of all nine are bit-identical to the revision reviewed before
+this one. Triangles are up 24 to 156 per station, all of it weld members and the extra light blocks. The measured change
 against the legacy procedural station in the same scene, at the same camera, is:
 
 | binding | close | rear | tactical | common-scale |
 | --- | --- | --- | --- | --- |
-| `rebel:mining_station` | 24.16 % | 19.08 % | 1.33 % | 0.131 % |
-| `confederacy:mining_station` | 39.81 % | 34.80 % | 1.75 % | 0.249 % |
-| `syndicate:mining_station` | 33.31 % | 24.56 % | 1.86 % | 0.231 % |
-| `rebel:sensor_station` | 9.27 % | 6.62 % | 0.85 % | 0.056 % |
-| `confederacy:sensor_station` | 13.34 % | 11.69 % | 2.29 % | 0.059 % |
-| `syndicate:sensor_station` | 14.65 % | 13.45 % | 3.43 % | 0.073 % |
+| `rebel:mining_station` | 24.51 % | 19.10 % | 1.36 % | 0.135 % |
+| `confederacy:mining_station` | 40.47 % | 34.83 % | 1.79 % | 0.254 % |
+| `syndicate:mining_station` | 33.32 % | 24.90 % | 1.86 % | 0.231 % |
+| `rebel:sensor_station` | 9.29 % | 6.65 % | 0.85 % | 0.056 % |
+| `confederacy:sensor_station` | 12.29 % | 9.91 % | 1.89 % | 0.051 % |
+| `syndicate:sensor_station` | 14.67 % | 13.66 % | 3.43 % | 0.073 % |
 | `rebel:energy_relay` | 19.13 % | 13.34 % | 1.04 % | 0.096 % |
-| `confederacy:energy_relay` | 27.59 % | 22.03 % | 1.66 % | 0.104 % |
-| `syndicate:energy_relay` | 22.11 % | 16.97 % | 1.31 % | 0.113 % |
+| `confederacy:energy_relay` | 27.82 % | 22.03 % | 1.69 % | 0.107 % |
+| `syndicate:energy_relay` | 22.95 % | 17.36 % | 1.35 % | 0.118 % |
 
 The close and rear views are the rows' own framing, so they are the honest appearance evidence;
 `tactical` is a 5.6× shot and `common-scale` is one shared camera for the whole batch. The sensor
@@ -176,7 +182,7 @@ bit-for-bit and no committed capture moves:
    every specimen.
 2. **Overview spacing 300, not 600.** Nine rows at 600 span 4,800 units while the 1,100-distance
    overview frame covers 1,833, so the outer rows fell outside the frame. At 300 the whole batch is
-   inside its own contact-sheet frame (overview change rose from 13,579 to 23,222 changed pixels).
+   inside its own contact-sheet frame (overview change rose from 13,579 to 23,280 changed pixels on this revision's frames).
 
 Neither correction touches the production renderer: `tools/diag_alliance_batch_review.py` is
 review tooling, and the batch's `integration` field still records
@@ -189,17 +195,33 @@ records`.
 --out artifacts/s06_alliance_batch_review/b3b-stations --motion rebel:mining_station`, one process,
 the real application, the candidate injected through `render.asset_selection` only:
 
-* 120 evidence files: 9 rows × (before + after) × 4 views, plus per-row role ablation and
+* 117 evidence files: 9 rows × (before + after) × 4 views, plus per-row role ablation and
   restored-simulation frames, the batch overview and the contact sheet.
 * `status: pending_owner_approval`; `production_shaders: true`; `source_preserved: true`;
   `protected_files_preserved: true`;
   `production_candidates_unselected_after_review: true`.
 * `restored_changed_pixels: 0` on all nine rows — the specimen does not perturb the restored
   simulation, so nothing here is a gameplay change.
-* Overview (`distance 1100`, `pitch 50`, `yaw 48`, target `[-4200, 0, 2400]`): 23,222 changed
+* Overview (`distance 1100`, `pitch 50`, `yaw 48`, target `[-4200, 0, 2400]`): 23,280 changed
   pixels across the nine-row line.
 * `warning`: offline orbit captures — production draw and real simulation ticks, not paced FPS,
   battle acceptance or native Windows graphics acceptance.
+
+## What the weld pass changed after the first reviewed cut
+
+This revision of the nine masters is not the one first put up for review, and the difference is a
+defect the review frames had already shipped: parts authored *by centre and by reach* never
+guarantee contact, and 100 of these stations' parts stood clear of everything else. The worst were
+visible — the legion sensor station's forward dish floated **25 units** above its body, about
+120 px of daylight in its own close frame, and a shared marker-light ring sat 1.4 units above the
+deck of all nine designs. `tools/art/probe_floating_parts.py` names such parts; the fix is
+`weld_scene()` in `tools/art/alliance_common.py`, called by the seed before it reports its extent,
+and the marker lights were moved onto the vent row they belong to.
+
+The envelope did not move — the bounds of all nine are unchanged from the reviewed revision, so the
+station scale and footprint comparison above are the same numbers — and every part now touches:
+the worst part-to-nearest gap is 0.10 units where the reviewed meshes had 1.43–23.75. Triangles are
+up 24–156 per station, all of it weld members and the extra light blocks.
 
 ## Owner approval
 
@@ -211,13 +233,19 @@ each revision still lands only after a separate landing decision.
 ## Tests and commands actually executed
 
 * `PYTHONPATH=tests .venv/bin/python -m unittest test_alliance_blender_b3b_stations` →
-  **Ran 24 tests, OK.**
+  **Ran 27 tests, OK.** The three that were added for the weld are
+  `test_no_part_of_any_station_floats_clear_of_the_rest` (the exported meshes are re-measured
+  for detached parts by union-find over shared vertex indices, with no Blender in the loop),
+  `test_the_seed_welds_the_scene_before_it_reports_the_extent` (the seed must call the weld
+  before its own bounds reporting, or the numbers measure a different scene) and
+  `test_every_evidence_path_the_sheet_points_at_exists`.
 * The shared guard set (`…_b3b_stations`, `…_b3_stations`, `…_b2_squadron`, `…_b1_combat`,
   `…_cruiser`, `…_trio`, `…_battleship`, `test_asset_contract`, `test_model_pipeline`,
-  `test_generic_model_preview`, `test_model_context_lifecycle`) → **Ran 117 tests**, all passing
-  except the 45 that are the new evidence-path guard firing while the review directory was deleted
-  for the final re-run; that guard passes with the evidence in place, and it is reported here
-  because a guard that cannot fail is not a guard.
+  `test_generic_model_preview`, `test_model_context_lifecycle`) → **Ran 125 tests, OK**
+  (`Ran 125 tests in 7.295s`). That set includes the evidence-path guard, which resolves every path
+  each sheet points at against the filesystem: run it while a review directory is deleted and it goes
+  red, which is the guard working rather than a regression — and it is what caught the B1 sheet
+  pointing at a corvette clip no run had produced.
 * Seeding: Blender 5.0.1, `build_b3b_stations.py --all --replace-seed` → 9 masters, `SEED_OK`,
   and the extent self-check now reports **`breaches=0`** per asset (`SELFCHECK <label> breaches=0
   tolerance=0.001`), because the tolerance was 1e-6 world units while the bevel evaluation leaves a
@@ -225,8 +253,9 @@ each revision still lands only after a separate landing decision.
   them was a real overshoot (the smallest *real* under-reach this batch fixed was 0.03 units). The
   check was left alone mathematically and made noise-proof in its reporting; both directions are
   guarded (`test_the_seed_extent_self_check_ignores_float_noise_and_still_catches_a_real_shortfall`),
-  so nobody has to trust a log again. **The masters were not re-seeded to prove this** — their bytes
-  and hashes are the reviewed ones.
+  so nobody has to trust a log again. **The masters were not re-seeded to prove this**; they were
+  re-seeded later for the weld pass below, and every hash in this handoff is of that
+  post-weld revision — the one the frames in this handoff were rendered from.
 * Exporting: nine wrappers exit 0, each printing `GAME_EXPORT` with bounds on the legacy extent and
   its own triangle count. Every one of them is at or above the pipeline's 1,800-triangle floor;
   eight of the nine initially failed it (1,532 / 884 / 1,436 / 804 / 1,032 / 1,760 / 676 / 948) and

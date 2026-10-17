@@ -186,12 +186,18 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--spec', type=Path, required=True)
     parser.add_argument('--out', type=Path, required=True)
-    parser.add_argument('--motion', default=None, help='binding that also gets the paired 5s clip')
+    parser.add_argument('--motion', default=None,
+                        help='binding(s) that also get the paired 5s clip, comma separated; every '
+                             'row the sheet claims a clip for must be listed, or the sheet points '
+                             'at a file no run ever wrote')
     parser.add_argument('--skip-motion', action='store_true')
     args = parser.parse_args()
     spec = load_spec(args.spec)
     out = args.out.resolve(); out.mkdir(parents=True, exist_ok=False)
-    motion_binding = args.motion or (None if args.skip_motion else spec['assets'][0]['binding'])
+    motion_bindings = [b for b in (args.motion or '').split(',') if b] or (
+        [] if args.skip_motion else [spec['assets'][0]['binding']])
+    for binding in motion_bindings:
+        assert any(a['binding'] == binding for a in spec['assets']), binding
 
     cap = importlib.util.spec_from_file_location(
         'capture_slice', ROOT / 'artifacts/alliance_blender_trio/evidence/capture_slice.py')
@@ -388,7 +394,7 @@ def main():
                     bbox=[int(xs.min()), int(ys.min()), int(xs.max()), int(ys.max())]
                     if len(xs) else None)
             # Paired motion: same cameras and same ticks on both variants.
-            if binding == motion_binding:
+            if binding in motion_bindings:
                 timeline = {}
                 for variant in ('before', 'after'):
                     active['enabled'] = variant == 'after'

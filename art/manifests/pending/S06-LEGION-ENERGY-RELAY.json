@@ -10,13 +10,13 @@
   "authority": "blend",
   "source": {
     "path": "art/blender/legion_energy_relay.blend",
-    "sha256": "502c992344652f74b3d81f94cad53bcb06904c183d9b4fa96501e6ac29d5b411",
-    "bytes": 140190
+    "sha256": "58bd7ca362e7336ca81387e65b193a2d6469dcf8bae851170743779d419548cc",
+    "bytes": 143947
   },
   "initial_seed": {
     "path": "tools/art/build_b3b_stations.py",
-    "sha256": "c7b775b945decaeb9d5f7653dc01426abf405f9e11fdebee0c3e6b38c7608c53",
-    "bytes": 33752,
+    "sha256": "6f97c0f9e7e84e81dece22078f7c49c32b461bb15e3ab734d0241fd9d2373fec",
+    "bytes": 34273,
     "selects": "--asset confederacy:energy_relay"
   },
   "export_script": {
@@ -26,10 +26,10 @@
   },
   "runtime": {
     "path": "assets/models/legion_energy_relay.mesh.json",
-    "sha256": "8949a2070706f989116e3b12507211b4b37591cd342471874271666a0938159f",
-    "bytes": 211418,
-    "triangles": 3300,
-    "vertices": 1808,
+    "sha256": "8c260a988a6e0f66bb7a659832f8c289dcd797a82c4eab1f25725131086de7e0",
+    "bytes": 220886,
+    "triangles": 3484,
+    "vertices": 1912,
     "roles": [
       "accent",
       "base",

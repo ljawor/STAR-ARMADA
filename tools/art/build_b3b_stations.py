@@ -122,7 +122,7 @@ def _refuse_existing_masters(argv):
 _refuse_existing_masters(_ARGV)
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from alliance_common import mesh_object, plate  # noqa: E402
+from alliance_common import mesh_object, plate, weld_scene  # noqa: E402
 import bpy  # noqa: E402,F401
 
 
@@ -222,8 +222,12 @@ def bays(limits, rx, rz, y, cz, phase=0.):
     # either - so the detail layer supplies a plating ring and a beacon ring on every station.
     ring_blocks('93 Base plating', 'base', 12, c[0] * .2, cz, float(y) - 2.2, rx * .7, rz * .7,
                 (6.0, 1.4, 4.2), phase + .05)
-    ring_blocks('94 Marker lights', 'lit', 12, c[0] * .2, cz, float(y) + 6.4, rx * .6, rz * .6,
-                (1.6, 1.2, 1.6), phase + .17)
+    # The lights used to sit at `y + 6.4`, which is 1.4 units of clear air above the vent row
+    # (`y + 3.7` plus its 1.4 height) - seven pixels of daylight in a close capture, on all
+    # nine stations. One light per vent, on the vent row's own radius and phase, so each is
+    # bolted to the vent under it.
+    ring_blocks('94 Marker lights', 'lit', 16, c[0] * .2, cz, float(y) + 5.0, rx * .74,
+                rz * .74, (1.6, 1.2, 1.6), phase + .11)
 
 
 def bank(name, role, count, size, start, step, bevel=.2):
@@ -555,6 +559,9 @@ def build(key):
         bpy.data.objects.remove(obj, do_unlink=True)
     kind = key.split(':')[1]
     BUILDERS[kind](limits, treatment)
+    # Nothing floats: a kit is authored by centre and by reach, so contact is not implied.
+    # The pass reports what it joined, and the extent self-check still runs after it.
+    weld_scene()
     report_bounds(limits, identifier)
     features = dict(
         authority='blend', approval='pending_owner_approval', binding=key,

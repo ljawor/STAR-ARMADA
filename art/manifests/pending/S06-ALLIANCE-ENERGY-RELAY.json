@@ -10,13 +10,13 @@
   "authority": "blend",
   "source": {
     "path": "art/blender/alliance_energy_relay.blend",
-    "sha256": "2b46bbdcadf6a8a3b755c3aa17317c40041d1e2f063086412ed3c9db1f2fbc73",
-    "bytes": 145423
+    "sha256": "64482d7da075ba883c730f873a6a239120f953fab7241e0563fdb0d1209a9518",
+    "bytes": 146945
   },
   "initial_seed": {
     "path": "tools/art/build_b3b_stations.py",
-    "sha256": "c7b775b945decaeb9d5f7653dc01426abf405f9e11fdebee0c3e6b38c7608c53",
-    "bytes": 33752,
+    "sha256": "6f97c0f9e7e84e81dece22078f7c49c32b461bb15e3ab734d0241fd9d2373fec",
+    "bytes": 34273,
     "selects": "--asset rebel:energy_relay"
   },
   "export_script": {
@@ -26,10 +26,10 @@
   },
   "runtime": {
     "path": "assets/models/alliance_energy_relay.mesh.json",
-    "sha256": "88bdfe64bc199694dd50b8bc2b29ea51ba27dedb4fb7818179214cbc3572a840",
-    "bytes": 304273,
-    "triangles": 4384,
-    "vertices": 2332,
+    "sha256": "fea920827bc7c690d022ce614455dfad7da0ca6e053af0e5fde793c0fa6173f8",
+    "bytes": 310433,
+    "triangles": 4496,
+    "vertices": 2396,
     "roles": [
       "accent",
       "base",

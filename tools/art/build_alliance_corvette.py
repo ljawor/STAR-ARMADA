@@ -21,7 +21,7 @@ MASTER=ROOT/'art/blender/alliance_corvette.blend'
 if MASTER.exists() and '--replace-seed' not in sys.argv:
     raise RuntimeError('Editable blend is master. Use export_alliance_corvette.py; --replace-seed destroys edits.')
 sys.path.insert(0,str(Path(__file__).resolve().parent))
-from alliance_common import loft,plate,annulus,cylinder,bpy
+from alliance_common import loft,plate,annulus,cylinder,weld_scene,bpy
 from hull_detail import surface,deck_panel,deck_strake,flank_detail,louvre_bank,panel
 
 # Pressure hull: knife-edge bow, flat sheer, deepest section just aft of amidships.
@@ -94,6 +94,10 @@ for z in (-38,-33,-28):
 plate('32 Bridge window band','lit',(1.0,1.0,7.0),(0,8.0,-33))
 loft('33 Bridge wing armor','trim',[(-39,4.4,7.2,5.6),(-33,5.6,8.8,6.6),(-27,4.6,7.6,6.0)],.1)
 
+# Nothing floats: the hull panels are placed by formula, so their contact with the
+# lofted hull is not implied. The pass grows a thin panel onto the surface it was
+# meant to sit on, or braces a bulky part, and keeps the envelope.
+weld_scene()
 features=dict(authority='blend',approval='pending_owner_approval',binding='rebel:corvette',data_id='rebel_corvette',
               original_design=True,design='Blockade Runner: spine-hulled courier with forward bastion mast and twin outboard drive nacelles',
               emitter_centers=[[s*17.9,0,-45.55] for s in (-1,1)],

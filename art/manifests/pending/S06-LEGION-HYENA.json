@@ -15,8 +15,8 @@
   },
   "initial_seed": {
     "path": "tools/art/build_b2_batch.py",
-    "sha256": "b5fab18bc2f1a7aa0d8e198820ec445a36c91e667206602467ab99e1b89c087e",
-    "bytes": 31584,
+    "sha256": "d8aa040c8bbff81baf836d193023ed6d21a2828f045e9fca6f18f422cfb6ea23",
+    "bytes": 31704,
     "selects": "--asset confederacy:bomber"
   },
   "export_script": {

@@ -13,9 +13,9 @@ Input #0, rawvideo, from 'fd:':
   Stream #0:0: Video: rawvideo (RGB[24] / 0x18424752), rgb24, 1280x800, 737280 kb/s, 30 tbr, 30 tbn
 Stream mapping:
   Stream #0:0 -> #0:0 (rawvideo (native) -> h264 (libx264))
-[libx264 @ 0x71cc20a80] using cpu capabilities: ARMv8 NEON DotProd I8MM
-[libx264 @ 0x71cc20a80] profile High, level 3.2, 4:2:0, 8-bit
-[libx264 @ 0x71cc20a80] 264 - core 165 r3222 b35605a - H.264/MPEG-4 AVC codec - Copyleft 2003-2025 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=15 lookahead_threads=2 sliced_threads=0 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=3 b_pyramid=2 b_adapt=1 b_bias=0 direct=1 weightb=1 open_gop=0 weightp=2 keyint=250 keyint_min=25 scenecut=40 intra_refresh=0 rc_lookahead=40 rc=crf mbtree=1 crf=19.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00
+[libx264 @ 0x85ec1ca80] using cpu capabilities: ARMv8 NEON DotProd I8MM
+[libx264 @ 0x85ec1ca80] profile High, level 3.2, 4:2:0, 8-bit
+[libx264 @ 0x85ec1ca80] 264 - core 165 r3222 b35605a - H.264/MPEG-4 AVC codec - Copyleft 2003-2025 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=15 lookahead_threads=2 sliced_threads=0 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=3 b_pyramid=2 b_adapt=1 b_bias=0 direct=1 weightb=1 open_gop=0 weightp=2 keyint=250 keyint_min=25 scenecut=40 intra_refresh=0 rc_lookahead=40 rc=crf mbtree=1 crf=19.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00
 Output #0, mp4, to '/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/artifacts/s06_alliance_batch_review/b3b-stations/alliance mining station-after-motion.mp4':
   Metadata:
     encoder         : Lavf63.1.101
@@ -24,23 +24,23 @@ Output #0, mp4, to '/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/art
       encoder         : Lavc63.1.101 libx264
     Side data:
       CPB properties: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: N/A
-frame=    0 fps=0.0 q=0.0 size=       0KiB time=N/A bitrate=N/A speed=N/A elapsed=0:00:00.51    frame=    0 fps=0.0 q=0.0 size=       0KiB time=N/A bitrate=N/A speed=N/A elapsed=0:00:01.01    frame=   24 fps= 16 q=25.0 size=       0KiB time=00:00:00.73 bitrate=   0.5kbits/s speed=0.48x elapsed=0:00:01.52    frame=   49 fps= 24 q=25.0 size=     256KiB time=00:00:01.56 bitrate=1338.9kbits/s speed=0.77x elapsed=0:00:02.03    frame=   77 fps= 30 q=25.0 size=     512KiB time=00:00:02.50 bitrate=1677.9kbits/s speed=0.982x elapsed=0:00:02.54    [out#0/mp4 @ 0x71d004840] video:1023KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.252998%
-frame=  150 fps= 51 q=-1.0 Lsize=    1026KiB time=00:00:04.93 bitrate=1703.5kbits/s speed=1.68x elapsed=0:00:02.93    
-[libx264 @ 0x71cc20a80] frame I:1     Avg QP:15.43  size: 36869
-[libx264 @ 0x71cc20a80] frame P:41    Avg QP:17.14  size: 13506
-[libx264 @ 0x71cc20a80] frame B:108   Avg QP:20.84  size:  4227
-[libx264 @ 0x71cc20a80] consecutive B-frames:  0.7%  9.3%  2.0% 88.0%
-[libx264 @ 0x71cc20a80] mb I  I16..4: 19.0% 63.0% 18.0%
-[libx264 @ 0x71cc20a80] mb P  I16..4:  2.3%  6.6%  1.1%  P16..4: 30.4% 10.2%  5.3%  0.0%  0.0%    skip:44.2%
-[libx264 @ 0x71cc20a80] mb B  I16..4:  0.1%  0.2%  0.1%  B16..8: 30.2%  3.6%  0.6%  direct: 1.8%  skip:63.4%  L0:43.0% L1:51.4% BI: 5.6%
-[libx264 @ 0x71cc20a80] 8x8 transform intra:63.7% inter:62.6%
-[libx264 @ 0x71cc20a80] coded y,uvDC,uvAC intra: 18.3% 41.6% 17.1% inter: 4.4% 7.0% 0.9%
-[libx264 @ 0x71cc20a80] i16 v,h,dc,p: 26% 28%  5% 41%
-[libx264 @ 0x71cc20a80] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu:  9% 15% 55%  3%  5%  3%  5%  2%  3%
-[libx264 @ 0x71cc20a80] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 16% 17% 48%  3%  6%  3%  4%  2%  2%
-[libx264 @ 0x71cc20a80] i8c dc,h,v,p: 62% 20% 10%  7%
-[libx264 @ 0x71cc20a80] Weighted P-Frames: Y:0.0% UV:0.0%
-[libx264 @ 0x71cc20a80] ref P L0: 75.1%  4.4% 16.0%  4.5%
-[libx264 @ 0x71cc20a80] ref B L0: 91.4%  7.4%  1.2%
-[libx264 @ 0x71cc20a80] ref B L1: 97.2%  2.8%
-[libx264 @ 0x71cc20a80] kb/s:1675.43
+frame=    0 fps=0.0 q=0.0 size=       0KiB time=N/A bitrate=N/A speed=N/A elapsed=0:00:00.50    frame=    0 fps=0.0 q=0.0 size=       0KiB time=N/A bitrate=N/A speed=N/A elapsed=0:00:01.01    frame=   27 fps= 18 q=25.0 size=       0KiB time=00:00:00.83 bitrate=   0.5kbits/s speed=0.55x elapsed=0:00:01.51    frame=   53 fps= 26 q=25.0 size=     256KiB time=00:00:01.70 bitrate=1233.8kbits/s speed=0.841x elapsed=0:00:02.02    frame=   81 fps= 32 q=25.0 size=     512KiB time=00:00:02.63 bitrate=1592.9kbits/s speed=1.04x elapsed=0:00:02.52    [out#0/mp4 @ 0x85ec20180] video:1030KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.252754%
+frame=  150 fps= 53 q=-1.0 Lsize=    1033KiB time=00:00:04.93 bitrate=1715.4kbits/s speed=1.74x elapsed=0:00:02.83    
+[libx264 @ 0x85ec1ca80] frame I:1     Avg QP:15.55  size: 37456
+[libx264 @ 0x85ec1ca80] frame P:41    Avg QP:17.23  size: 13658
+[libx264 @ 0x85ec1ca80] frame B:108   Avg QP:20.91  size:  4232
+[libx264 @ 0x85ec1ca80] consecutive B-frames:  0.7%  9.3%  2.0% 88.0%
+[libx264 @ 0x85ec1ca80] mb I  I16..4: 17.4% 63.5% 19.1%
+[libx264 @ 0x85ec1ca80] mb P  I16..4:  2.4%  6.6%  1.2%  P16..4: 30.2% 10.4%  5.5%  0.0%  0.0%    skip:43.8%
+[libx264 @ 0x85ec1ca80] mb B  I16..4:  0.1%  0.2%  0.1%  B16..8: 30.4%  3.7%  0.6%  direct: 1.7%  skip:63.1%  L0:43.8% L1:50.5% BI: 5.7%
+[libx264 @ 0x85ec1ca80] 8x8 transform intra:63.1% inter:62.2%
+[libx264 @ 0x85ec1ca80] coded y,uvDC,uvAC intra: 18.3% 41.8% 17.4% inter: 4.4% 6.9% 0.9%
+[libx264 @ 0x85ec1ca80] i16 v,h,dc,p: 28% 29%  5% 38%
+[libx264 @ 0x85ec1ca80] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu: 10% 15% 55%  2%  5%  3%  5%  2%  3%
+[libx264 @ 0x85ec1ca80] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 17% 17% 46%  3%  5%  3%  4%  2%  2%
+[libx264 @ 0x85ec1ca80] i8c dc,h,v,p: 63% 20% 11%  7%
+[libx264 @ 0x85ec1ca80] Weighted P-Frames: Y:0.0% UV:0.0%
+[libx264 @ 0x85ec1ca80] ref P L0: 74.8%  4.4% 16.1%  4.6%
+[libx264 @ 0x85ec1ca80] ref B L0: 91.3%  7.5%  1.2%
+[libx264 @ 0x85ec1ca80] ref B L1: 97.2%  2.8%
+[libx264 @ 0x85ec1ca80] kb/s:1687.18

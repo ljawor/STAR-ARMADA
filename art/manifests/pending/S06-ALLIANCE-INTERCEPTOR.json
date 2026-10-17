@@ -10,13 +10,13 @@
   "authority": "blend",
   "source": {
     "path": "art/blender/alliance_interceptor.blend",
-    "sha256": "a2489d71f0ed3d47c6c695c22139d050b609552373adb39fe83d9068fdfbbea2",
-    "bytes": 114425
+    "sha256": "7021539d03e6a0ae0c15494370f5c09235708727c723ebe8add7d838d5200150",
+    "bytes": 113956
   },
   "initial_seed": {
     "path": "tools/art/build_b2_batch.py",
-    "sha256": "b5fab18bc2f1a7aa0d8e198820ec445a36c91e667206602467ab99e1b89c087e",
-    "bytes": 31584,
+    "sha256": "d8aa040c8bbff81baf836d193023ed6d21a2828f045e9fca6f18f422cfb6ea23",
+    "bytes": 31704,
     "selects": "--asset rebel:fighter"
   },
   "export_script": {
@@ -26,8 +26,8 @@
   },
   "runtime": {
     "path": "assets/models/alliance_interceptor.mesh.json",
-    "sha256": "483617ebb32a0378fee448dea5ff00eb560d13a6f711e2019e10419a24c3e4ef",
-    "bytes": 140200,
+    "sha256": "8d6dc397139d5fac871f1e74b48a6eb7fe2a9fc200871288ee2cc8d34a494df6",
+    "bytes": 140290,
     "triangles": 2214,
     "vertices": 1124,
     "roles": [

@@ -10,13 +10,13 @@
   "authority": "blend",
   "source": {
     "path": "art/blender/alliance_carrier.blend",
-    "sha256": "a4c1a577914fda920a6823315b91fb922a6b5903cb76fce74971d4e9fe1710a4",
-    "bytes": 233290
+    "sha256": "1209d504e2f6b92880824a611b5de14395d1ba64f72829dbe07c4a6b1c5fb9bb",
+    "bytes": 235649
   },
   "initial_seed": {
     "path": "tools/art/build_alliance_carrier.py",
-    "sha256": "0d0e6e90709069032e2eda14202ab1dc93a57e6488d48dd4c5221ec807a844a9",
-    "bytes": 8874,
+    "sha256": "3f6d0258c87be7ebc2752e42ef4c20a812a2023dc3b0527413626283771cdf94",
+    "bytes": 9130,
     "selects": null
   },
   "export_script": {
@@ -26,10 +26,10 @@
   },
   "runtime": {
     "path": "assets/models/alliance_carrier.mesh.json",
-    "sha256": "4be599d3cfd7b8fdff80716d923c589b322996728b50424b1d6398f8eea3167f",
-    "bytes": 543887,
-    "triangles": 8632,
-    "vertices": 5014,
+    "sha256": "01c63dd3788af7ff573cbe5b7e375b7c37d41159db0513828ec0c12f6eff32e1",
+    "bytes": 547645,
+    "triangles": 8704,
+    "vertices": 5062,
     "roles": [
       "accent",
       "base",

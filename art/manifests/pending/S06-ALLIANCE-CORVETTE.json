@@ -10,13 +10,13 @@
   "authority": "blend",
   "source": {
     "path": "art/blender/alliance_corvette.blend",
-    "sha256": "b8ccd72faab4151a8a77b55f946ff800b61549c2759ab5f68fea4a4c788dbe72",
-    "bytes": 162844
+    "sha256": "94b4e9033abd141e14bc1a3e42e9ce2821d38138868d560d86bf1c9483c6ae1c",
+    "bytes": 163679
   },
   "initial_seed": {
     "path": "tools/art/build_alliance_corvette.py",
-    "sha256": "61838dc1f455de80821945d226d9c9c3fa995cb0af663554f85209b5f26e2381",
-    "bytes": 7298,
+    "sha256": "df4781bc45692ead8935e2ccd48f3fd2c922fb49aee25bac27524c44468790a1",
+    "bytes": 7554,
     "selects": null
   },
   "export_script": {
@@ -26,10 +26,10 @@
   },
   "runtime": {
     "path": "assets/models/alliance_corvette.mesh.json",
-    "sha256": "bfa1751fd8574bda4145562067acb2e0340498be7ce74d387383079ab7a17c78",
-    "bytes": 274794,
-    "triangles": 4348,
-    "vertices": 2506,
+    "sha256": "48d0a815af978976f3eda77ec2378353eb5191a7cdc72cddb931483a0df8571b",
+    "bytes": 276014,
+    "triangles": 4372,
+    "vertices": 2522,
     "roles": [
       "accent",
       "base",

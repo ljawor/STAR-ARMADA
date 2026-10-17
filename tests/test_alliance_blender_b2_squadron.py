@@ -191,6 +191,54 @@ def obstruction_tester(asset, direction):
     return obstructed
 
 
+def floating_parts(payload, tolerance=.25):
+    """Groups of welded parts that stand clear of every other group, with their daylight.
+
+    The exporter indexes vertices by quantised position, so parts that touch share vertices and
+    fall into one group; a group that is nowhere near another one is a part - or a cluster of
+    parts - floating in space. The S06 batch shipped a sensor-station dish 23.75 units clear of
+    its body and a marker-light ring 1.4 units above the deck of every station, and both read as
+    detached hardware in their own captures. This measures that without opening Blender, which
+    is what lets it be a gate instead of a habit.
+    """
+    parent = {}
+
+    def find(index):
+        root = index
+        while parent[root] != root:
+            root = parent[root]
+        while parent[index] != root:
+            parent[index], index = root, parent[index]
+        return root
+
+    for role in payload['batches'].values():
+        for triangle in role:
+            for a, b in ((triangle[3], triangle[4]), (triangle[4], triangle[5])):
+                parent.setdefault(a, a)
+                parent.setdefault(b, b)
+                ra, rb = find(a), find(b)
+                if ra != rb:
+                    parent[ra] = rb
+    groups = {}
+    for index in list(parent):
+        groups.setdefault(find(index), []).append(index)
+    entries = []
+    for members in groups.values():
+        points = [payload['vertices'][i] for i in members]
+        entries.append((len(members),
+                        [min(p[i] for p in points) for i in range(3)],
+                        [max(p[i] for p in points) for i in range(3)]))
+    floating = []
+    for index, (count, lo, hi) in enumerate(entries):
+        nearest = min((max(max(lo[k] - other_hi[k], other_lo[k] - hi[k]) for k in range(3))
+                       for other, (_, other_lo, other_hi) in enumerate(entries) if other != index),
+                      default=0.0)
+        if nearest > tolerance:
+            floating.append((round(nearest, 2), count,
+                             [round((lo[k] + hi[k]) / 2, 2) for k in range(3)]))
+    return floating
+
+
 class GeometryContract(unittest.TestCase):
     def test_each_pending_asset_satisfies_the_loader_contract(self):
         for asset in ASSETS:
@@ -441,6 +489,23 @@ class PendingRecords(unittest.TestCase):
         text = (ROOT / 'tools/diag_alliance_batch_review.py').read_text(encoding='utf-8')
         self.assertIn('UNAPPROVED REVIEW ONLY', text)
         self.assertIn('pending_owner_approval', text)
+
+    def test_no_part_of_any_hull_floats_clear_of_the_rest(self):
+        """A hull is one piece of hardware, not a constellation.
+
+        This is what keeps them so: a kit is authored by centre and by reach, and contact is not
+        implied. The two B1 ships needed the pass for 42 parts between them and the nine stations
+        for 100, and this hull for 1 - a 0.48-unit gap under a spine part, which the coarser
+        master probe had waved through at its half-unit tolerance.
+        """
+        for asset in ASSETS:
+            with self.subTest(binding=asset['binding']):
+                payload = json.loads(asset_mesh(asset).read_text(encoding='utf-8'))
+                floating = floating_parts(payload)
+                self.assertEqual(
+                    floating, [],
+                    f"{asset['identifier']} carries parts floating clear of their neighbours: "
+                    f"{floating}")
 
 
 if __name__ == '__main__':

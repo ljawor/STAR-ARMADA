@@ -10,13 +10,13 @@
   "authority": "blend",
   "source": {
     "path": "art/blender/alliance_sensor_station.blend",
-    "sha256": "cd6975a883e762b9f053949aa6d15140ac9dcb284550f69c7048e37d977417a5",
-    "bytes": 144987
+    "sha256": "6cd5fe3878340770a455da9945023d62b4ebdf5ecb0e1d814a84c4582cedba03",
+    "bytes": 147387
   },
   "initial_seed": {
     "path": "tools/art/build_b3b_stations.py",
-    "sha256": "c7b775b945decaeb9d5f7653dc01426abf405f9e11fdebee0c3e6b38c7608c53",
-    "bytes": 33752,
+    "sha256": "6f97c0f9e7e84e81dece22078f7c49c32b461bb15e3ab734d0241fd9d2373fec",
+    "bytes": 34273,
     "selects": "--asset rebel:sensor_station"
   },
   "export_script": {
@@ -26,10 +26,10 @@
   },
   "runtime": {
     "path": "assets/models/alliance_sensor_station.mesh.json",
-    "sha256": "b487fa26703961c04b58b864fc01e6f26846fb317deae80906a8ac76c4ad0ef9",
-    "bytes": 267317,
-    "triangles": 4060,
-    "vertices": 2078,
+    "sha256": "02e7447e185ea4b01ddddd8e605247e2c99704736c9e0b4784b95545c2bff24e",
+    "bytes": 274873,
+    "triangles": 4196,
+    "vertices": 2158,
     "roles": [
       "accent",
       "base",

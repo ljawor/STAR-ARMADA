@@ -699,8 +699,8 @@
             1012,
             772
           ],
-          "changed_percent": 27.5902,
-          "changed_pixels_gt3": 282524
+          "changed_percent": 27.8173,
+          "changed_pixels_gt3": 284849
         },
         "common-scale": {
           "bbox": [
@@ -709,8 +709,8 @@
             659,
             470
           ],
-          "changed_percent": 0.1045,
-          "changed_pixels_gt3": 1070
+          "changed_percent": 0.1068,
+          "changed_pixels_gt3": 1094
         },
         "rear": {
           "bbox": [
@@ -719,8 +719,8 @@
             981,
             734
           ],
-          "changed_percent": 22.0302,
-          "changed_pixels_gt3": 225589
+          "changed_percent": 22.0326,
+          "changed_pixels_gt3": 225614
         },
         "tactical": {
           "bbox": [
@@ -729,8 +729,8 @@
             739,
             499
           ],
-          "changed_percent": 1.6613,
-          "changed_pixels_gt3": 17012
+          "changed_percent": 1.6875,
+          "changed_pixels_gt3": 17280
         }
       },
       "features": {
@@ -747,12 +747,12 @@
         "cool": {
           "bbox": [
             514,
-            342,
+            343,
             794,
             504
           ],
           "camera": "rear",
-          "changed_pixels": 5185
+          "changed_pixels": 5175
         },
         "dark": {
           "bbox": [
@@ -762,7 +762,7 @@
             666
           ],
           "camera": "close",
-          "changed_pixels": 51197
+          "changed_pixels": 50886
         }
       },
       "initial_state_sha256": "0a872516cb022098a6c2f037158e5772b309895fb1b946c1190679216a877c6a",
@@ -1227,8 +1227,8 @@
             1152,
             799
           ],
-          "changed_percent": 39.8139,
-          "changed_pixels_gt3": 407694
+          "changed_percent": 40.473,
+          "changed_pixels_gt3": 414444
         },
         "common-scale": {
           "bbox": [
@@ -1237,8 +1237,8 @@
             675,
             487
           ],
-          "changed_percent": 0.2489,
-          "changed_pixels_gt3": 2549
+          "changed_percent": 0.254,
+          "changed_pixels_gt3": 2601
         },
         "rear": {
           "bbox": [
@@ -1247,8 +1247,8 @@
             1106,
             799
           ],
-          "changed_percent": 34.8045,
-          "changed_pixels_gt3": 356398
+          "changed_percent": 34.8309,
+          "changed_pixels_gt3": 356668
         },
         "tactical": {
           "bbox": [
@@ -1257,8 +1257,8 @@
             745,
             505
           ],
-          "changed_percent": 1.751,
-          "changed_pixels_gt3": 17930
+          "changed_percent": 1.795,
+          "changed_pixels_gt3": 18381
         }
       },
       "features": {
@@ -1270,7 +1270,7 @@
             704
           ],
           "camera": "close",
-          "changed_pixels": 2635
+          "changed_pixels": 2813
         },
         "cool": {
           "bbox": [
@@ -1280,7 +1280,7 @@
             396
           ],
           "camera": "rear",
-          "changed_pixels": 4948
+          "changed_pixels": 4689
         },
         "dark": {
           "bbox": [
@@ -1290,7 +1290,7 @@
             799
           ],
           "camera": "close",
-          "changed_pixels": 73352
+          "changed_pixels": 72378
         }
       },
       "initial_state_sha256": "5c4e35d5a96e7d19d68943199a1fc28e7161632c1a214b1226de2bc8abb0b547",
@@ -1755,18 +1755,18 @@
             920,
             680
           ],
-          "changed_percent": 13.3352,
-          "changed_pixels_gt3": 136552
+          "changed_percent": 12.2857,
+          "changed_pixels_gt3": 125806
         },
         "common-scale": {
           "bbox": [
-            599,
-            411,
-            673,
-            485
+            618,
+            427,
+            651,
+            464
           ],
-          "changed_percent": 0.0595,
-          "changed_pixels_gt3": 609
+          "changed_percent": 0.0512,
+          "changed_pixels_gt3": 524
         },
         "rear": {
           "bbox": [
@@ -1775,8 +1775,8 @@
             898,
             654
           ],
-          "changed_percent": 11.6901,
-          "changed_pixels_gt3": 119707
+          "changed_percent": 9.9126,
+          "changed_pixels_gt3": 101505
         },
         "tactical": {
           "bbox": [
@@ -1785,20 +1785,20 @@
             749,
             509
           ],
-          "changed_percent": 2.2876,
-          "changed_pixels_gt3": 23425
+          "changed_percent": 1.8947,
+          "changed_pixels_gt3": 19402
         }
       },
       "features": {
         "accent": {
           "bbox": [
             442,
-            309,
+            312,
             714,
             571
           ],
           "camera": "close",
-          "changed_pixels": 1010
+          "changed_pixels": 1061
         },
         "cool": {
           "bbox": [
@@ -1808,7 +1808,7 @@
             451
           ],
           "camera": "rear",
-          "changed_pixels": 3951
+          "changed_pixels": 3773
         },
         "dark": {
           "bbox": [
@@ -1818,7 +1818,7 @@
             546
           ],
           "camera": "close",
-          "changed_pixels": 16319
+          "changed_pixels": 14018
         }
       },
       "initial_state_sha256": "565302fd62e21001209e5e1f1e15f5ae21db8f2611db4892369906a1a293ca36",
@@ -2283,8 +2283,8 @@
             986,
             746
           ],
-          "changed_percent": 19.1283,
-          "changed_pixels_gt3": 195874
+          "changed_percent": 19.1282,
+          "changed_pixels_gt3": 195873
         },
         "common-scale": {
           "bbox": [
@@ -2303,8 +2303,8 @@
             958,
             710
           ],
-          "changed_percent": 13.3355,
-          "changed_pixels_gt3": 136556
+          "changed_percent": 13.337,
+          "changed_pixels_gt3": 136571
         },
         "tactical": {
           "bbox": [
@@ -2313,8 +2313,8 @@
             717,
             477
           ],
-          "changed_percent": 1.0446,
-          "changed_pixels_gt3": 10697
+          "changed_percent": 1.0442,
+          "changed_pixels_gt3": 10693
         }
       },
       "features": {
@@ -2326,7 +2326,7 @@
             464
           ],
           "camera": "close",
-          "changed_pixels": 3727
+          "changed_pixels": 3761
         },
         "cool": {
           "bbox": [
@@ -2336,7 +2336,7 @@
             421
           ],
           "camera": "rear",
-          "changed_pixels": 4265
+          "changed_pixels": 3808
         },
         "dark": {
           "bbox": [
@@ -2346,7 +2346,7 @@
             594
           ],
           "camera": "close",
-          "changed_pixels": 26267
+          "changed_pixels": 26174
         }
       },
       "initial_state_sha256": "5cf719ad94f584c8d15e871553d62a627aa3064290dbd52f7843e29fe67af34a",
@@ -2811,8 +2811,8 @@
             1010,
             770
           ],
-          "changed_percent": 24.1649,
-          "changed_pixels_gt3": 247449
+          "changed_percent": 24.5065,
+          "changed_pixels_gt3": 250947
         },
         "common-scale": {
           "bbox": [
@@ -2821,8 +2821,8 @@
             663,
             473
           ],
-          "changed_percent": 0.1311,
-          "changed_pixels_gt3": 1342
+          "changed_percent": 0.1353,
+          "changed_pixels_gt3": 1385
         },
         "rear": {
           "bbox": [
@@ -2831,8 +2831,8 @@
             986,
             737
           ],
-          "changed_percent": 19.0836,
-          "changed_pixels_gt3": 195416
+          "changed_percent": 19.1009,
+          "changed_pixels_gt3": 195593
         },
         "tactical": {
           "bbox": [
@@ -2841,8 +2841,8 @@
             722,
             482
           ],
-          "changed_percent": 1.3312,
-          "changed_pixels_gt3": 13631
+          "changed_percent": 1.356,
+          "changed_pixels_gt3": 13885
         }
       },
       "features": {
@@ -2854,7 +2854,7 @@
             515
           ],
           "camera": "close",
-          "changed_pixels": 3756
+          "changed_pixels": 3753
         },
         "cool": {
           "bbox": [
@@ -2864,7 +2864,7 @@
             433
           ],
           "camera": "rear",
-          "changed_pixels": 3863
+          "changed_pixels": 3393
         },
         "dark": {
           "bbox": [
@@ -2874,7 +2874,7 @@
             663
           ],
           "camera": "close",
-          "changed_pixels": 27052
+          "changed_pixels": 26481
         }
       },
       "initial_state_sha256": "a732cb3e900f1747eb1f41cf7384e7ab93643a05fec00a728b92797fee469551",
@@ -3348,8 +3348,8 @@
             900,
             660
           ],
-          "changed_percent": 9.27,
-          "changed_pixels_gt3": 94925
+          "changed_percent": 9.2898,
+          "changed_pixels_gt3": 95128
         },
         "common-scale": {
           "bbox": [
@@ -3358,8 +3358,8 @@
             673,
             485
           ],
-          "changed_percent": 0.0558,
-          "changed_pixels_gt3": 571
+          "changed_percent": 0.0557,
+          "changed_pixels_gt3": 570
         },
         "rear": {
           "bbox": [
@@ -3368,8 +3368,8 @@
             880,
             634
           ],
-          "changed_percent": 6.6238,
-          "changed_pixels_gt3": 67828
+          "changed_percent": 6.6518,
+          "changed_pixels_gt3": 68114
         },
         "tactical": {
           "bbox": [
@@ -3378,8 +3378,8 @@
             719,
             479
           ],
-          "changed_percent": 0.846,
-          "changed_pixels_gt3": 8663
+          "changed_percent": 0.8454,
+          "changed_pixels_gt3": 8657
         }
       },
       "features": {
@@ -3391,7 +3391,7 @@
             448
           ],
           "camera": "close",
-          "changed_pixels": 1644
+          "changed_pixels": 1625
         },
         "cool": {
           "bbox": [
@@ -3401,7 +3401,7 @@
             413
           ],
           "camera": "rear",
-          "changed_pixels": 1168
+          "changed_pixels": 1037
         },
         "dark": {
           "bbox": [
@@ -3411,7 +3411,7 @@
             542
           ],
           "camera": "close",
-          "changed_pixels": 10294
+          "changed_pixels": 9524
         }
       },
       "initial_state_sha256": "79469c13ee50d0307f1d5f94423ee1fb662433e19c9254e186067ff28736377b",
@@ -3876,8 +3876,8 @@
             1009,
             769
           ],
-          "changed_percent": 22.1132,
-          "changed_pixels_gt3": 226439
+          "changed_percent": 22.95,
+          "changed_pixels_gt3": 235008
         },
         "common-scale": {
           "bbox": [
@@ -3886,8 +3886,8 @@
             659,
             471
           ],
-          "changed_percent": 0.1133,
-          "changed_pixels_gt3": 1160
+          "changed_percent": 0.1176,
+          "changed_pixels_gt3": 1204
         },
         "rear": {
           "bbox": [
@@ -3896,8 +3896,8 @@
             978,
             729
           ],
-          "changed_percent": 16.9674,
-          "changed_pixels_gt3": 173746
+          "changed_percent": 17.3574,
+          "changed_pixels_gt3": 177740
         },
         "tactical": {
           "bbox": [
@@ -3906,8 +3906,8 @@
             726,
             486
           ],
-          "changed_percent": 1.3074,
-          "changed_pixels_gt3": 13388
+          "changed_percent": 1.3501,
+          "changed_pixels_gt3": 13825
         }
       },
       "features": {
@@ -3919,7 +3919,7 @@
             482
           ],
           "camera": "close",
-          "changed_pixels": 3197
+          "changed_pixels": 2740
         },
         "cool": {
           "bbox": [
@@ -3929,7 +3929,7 @@
             487
           ],
           "camera": "rear",
-          "changed_pixels": 6938
+          "changed_pixels": 5921
         },
         "dark": {
           "bbox": [
@@ -3939,7 +3939,7 @@
             676
           ],
           "camera": "close",
-          "changed_pixels": 69029
+          "changed_pixels": 54403
         }
       },
       "initial_state_sha256": "7644e4411b2fcc56105b8a2769a90e368a2a2cb86fef8fe98328a7f69faea634",
@@ -4404,8 +4404,8 @@
             1169,
             799
           ],
-          "changed_percent": 33.3127,
-          "changed_pixels_gt3": 341122
+          "changed_percent": 33.3218,
+          "changed_pixels_gt3": 341215
         },
         "common-scale": {
           "bbox": [
@@ -4415,7 +4415,7 @@
             486
           ],
           "changed_percent": 0.2312,
-          "changed_pixels_gt3": 2368
+          "changed_pixels_gt3": 2367
         },
         "rear": {
           "bbox": [
@@ -4424,8 +4424,8 @@
             1116,
             799
           ],
-          "changed_percent": 24.5582,
-          "changed_pixels_gt3": 251476
+          "changed_percent": 24.8988,
+          "changed_pixels_gt3": 254964
         },
         "tactical": {
           "bbox": [
@@ -4434,8 +4434,8 @@
             750,
             510
           ],
-          "changed_percent": 1.8554,
-          "changed_pixels_gt3": 18999
+          "changed_percent": 1.8555,
+          "changed_pixels_gt3": 19000
         }
       },
       "features": {
@@ -4447,17 +4447,17 @@
             379
           ],
           "camera": "close",
-          "changed_pixels": 1826
+          "changed_pixels": 1597
         },
         "cool": {
           "bbox": [
             493,
-            238,
+            316,
             756,
-            455
+            456
           ],
           "camera": "rear",
-          "changed_pixels": 5097
+          "changed_pixels": 5003
         },
         "dark": {
           "bbox": [
@@ -4467,7 +4467,7 @@
             757
           ],
           "camera": "close",
-          "changed_pixels": 34608
+          "changed_pixels": 33592
         }
       },
       "initial_state_sha256": "60c0208fd10c86ff61dd9e08b6dffd710b116115b8ba37a4da1bf9a55b09cc9f",
@@ -4932,8 +4932,8 @@
             958,
             718
           ],
-          "changed_percent": 14.6512,
-          "changed_pixels_gt3": 150028
+          "changed_percent": 14.6744,
+          "changed_pixels_gt3": 150266
         },
         "common-scale": {
           "bbox": [
@@ -4952,8 +4952,8 @@
             934,
             689
           ],
-          "changed_percent": 13.4494,
-          "changed_pixels_gt3": 137722
+          "changed_percent": 13.6558,
+          "changed_pixels_gt3": 139835
         },
         "tactical": {
           "bbox": [
@@ -4962,20 +4962,20 @@
             761,
             521
           ],
-          "changed_percent": 3.4323,
-          "changed_pixels_gt3": 35147
+          "changed_percent": 3.4328,
+          "changed_pixels_gt3": 35152
         }
       },
       "features": {
         "accent": {
           "bbox": [
-            606,
-            333,
-            685,
+            631,
+            331,
+            688,
             404
           ],
           "camera": "close",
-          "changed_pixels": 678
+          "changed_pixels": 560
         },
         "cool": {
           "bbox": [
@@ -4985,7 +4985,7 @@
             435
           ],
           "camera": "rear",
-          "changed_pixels": 3116
+          "changed_pixels": 2402
         },
         "dark": {
           "bbox": [
@@ -4995,7 +4995,7 @@
             529
           ],
           "camera": "close",
-          "changed_pixels": 16156
+          "changed_pixels": 12087
         }
       },
       "initial_state_sha256": "4f2e2909c08c8d58ad83601943ddcd5cd914e045abcf5875a23f7bc990f32415",
@@ -5077,7 +5077,7 @@
           46.299999
         ]
       ],
-      "bytes": 211418,
+      "bytes": 220886,
       "candidate_footprint": [
         82.574402,
         47.6,
@@ -5098,10 +5098,10 @@
         "lit",
         "trim"
       ],
-      "sha256": "8949a2070706f989116e3b12507211b4b37591cd342471874271666a0938159f",
+      "sha256": "8c260a988a6e0f66bb7a659832f8c289dcd797a82c4eab1f25725131086de7e0",
       "station_scale": 1.1,
-      "triangles": 3300,
-      "vertices": 1808
+      "triangles": 3484,
+      "vertices": 1912
     },
     "confederacy:mining_station": {
       "authority": "blend",
@@ -5118,7 +5118,7 @@
           46.96
         ]
       ],
-      "bytes": 284152,
+      "bytes": 290934,
       "candidate_footprint": [
         80.837196,
         42.52,
@@ -5139,10 +5139,10 @@
         "lit",
         "trim"
       ],
-      "sha256": "ea91c014382efd3dd7871d750f5ae9e249f9b84e7208f63ce86ec2ca8466bb93",
+      "sha256": "c04d23d84ab8916e5fb4e6a6efffe454f148349844779557e241bee400236bfb",
       "station_scale": 1.4,
-      "triangles": 4156,
-      "vertices": 2240
+      "triangles": 4280,
+      "vertices": 2312
     },
     "confederacy:sensor_station": {
       "authority": "blend",
@@ -5159,7 +5159,7 @@
           34.8
         ]
       ],
-      "bytes": 222525,
+      "bytes": 230635,
       "candidate_footprint": [
         72.2826,
         52.252628,
@@ -5180,10 +5180,10 @@
         "lit",
         "trim"
       ],
-      "sha256": "8bad34f0a8b9faa608cb29e0e61766b1e391a35e97539d2f009c9abfc1d91098",
+      "sha256": "4d9b0819b987ae48af105e721cd6e9fda525464bfd719339e66a44d960894ce0",
       "station_scale": 0.9,
-      "triangles": 3428,
-      "vertices": 1864
+      "triangles": 3576,
+      "vertices": 1952
     },
     "rebel:energy_relay": {
       "authority": "blend",
@@ -5200,7 +5200,7 @@
           20.9846
         ]
       ],
-      "bytes": 304273,
+      "bytes": 310433,
       "candidate_footprint": [
         100.599998,
         21.6156,
@@ -5221,10 +5221,10 @@
         "lit",
         "trim"
       ],
-      "sha256": "88bdfe64bc199694dd50b8bc2b29ea51ba27dedb4fb7818179214cbc3572a840",
+      "sha256": "fea920827bc7c690d022ce614455dfad7da0ca6e053af0e5fde793c0fa6173f8",
       "station_scale": 1.1,
-      "triangles": 4384,
-      "vertices": 2332
+      "triangles": 4496,
+      "vertices": 2396
     },
     "rebel:mining_station": {
       "authority": "blend",
@@ -5241,7 +5241,7 @@
           22.8294
         ]
       ],
-      "bytes": 327469,
+      "bytes": 335435,
       "candidate_footprint": [
         89.5,
         25.52,
@@ -5262,10 +5262,10 @@
         "lit",
         "trim"
       ],
-      "sha256": "7fc5d6791ac823fd521754ccc1c0e4c707e04b83e3db8a46849498cf64a9f08e",
+      "sha256": "ff14df049feaad5937326566ac8015a9d86dcf03671d7e3426f8952b7e53e9da",
       "station_scale": 1.4,
-      "triangles": 4800,
-      "vertices": 2569
+      "triangles": 4948,
+      "vertices": 2657
     },
     "rebel:sensor_station": {
       "authority": "blend",
@@ -5282,7 +5282,7 @@
           16.24
         ]
       ],
-      "bytes": 267317,
+      "bytes": 274873,
       "candidate_footprint": [
         92.8,
         43.28,
@@ -5303,10 +5303,10 @@
         "lit",
         "trim"
       ],
-      "sha256": "b487fa26703961c04b58b864fc01e6f26846fb317deae80906a8ac76c4ad0ef9",
+      "sha256": "02e7447e185ea4b01ddddd8e605247e2c99704736c9e0b4784b95545c2bff24e",
       "station_scale": 0.9,
-      "triangles": 4060,
-      "vertices": 2078
+      "triangles": 4196,
+      "vertices": 2158
     },
     "syndicate:energy_relay": {
       "authority": "blend",
@@ -5323,7 +5323,7 @@
           34.4011
         ]
       ],
-      "bytes": 230616,
+      "bytes": 239922,
       "candidate_footprint": [
         94.08779999999999,
         34.56,
@@ -5344,10 +5344,10 @@
         "lit",
         "trim"
       ],
-      "sha256": "2f11b7459e09d7a5ba2b82d0c55e0f32b6a1fce35baa0c268b229b7f2341ba88",
+      "sha256": "44e2cdee342e0419242a29f6f49f091a89f56889eeaf810d312691d30f1d2ebf",
       "station_scale": 1.1,
-      "triangles": 3572,
-      "vertices": 1936
+      "triangles": 3744,
+      "vertices": 2040
     },
     "syndicate:mining_station": {
       "authority": "blend",
@@ -5364,7 +5364,7 @@
           41.4431
         ]
       ],
-      "bytes": 231909,
+      "bytes": 239907,
       "candidate_footprint": [
         76.3322,
         72.0,
@@ -5385,10 +5385,10 @@
         "lit",
         "trim"
       ],
-      "sha256": "ccfb7dd99ee912ac909a715fca820559a252efb21af26eeb54d8e30d8dfd04a5",
+      "sha256": "ee86f98eeae7e69c2c5d345a9aa2736dd62e9911b4673a28c3f5b459ce382872",
       "station_scale": 1.4,
-      "triangles": 3592,
-      "vertices": 1960
+      "triangles": 3740,
+      "vertices": 2048
     },
     "syndicate:sensor_station": {
       "authority": "blend",
@@ -5405,7 +5405,7 @@
           21.1423
         ]
       ],
-      "bytes": 245924,
+      "bytes": 255665,
       "candidate_footprint": [
         73.5565,
         61.156999,
@@ -5426,10 +5426,10 @@
         "lit",
         "trim"
       ],
-      "sha256": "3447c375d41b564f3caf0628afcc4f62cd3b7dc0b62eba08efd52f7d11f4093e",
+      "sha256": "5240ed82fdd7f7385deb9143365aed20717d61f9d2550fa98b4fb7985bdbcbbb",
       "station_scale": 0.9,
-      "triangles": 3684,
-      "vertices": 1990
+      "triangles": 3868,
+      "vertices": 2098
     }
   },
   "motion": {},
@@ -5444,7 +5444,7 @@
       ],
       "yaw": 48
     },
-    "changed_pixels_gt3": 23222,
+    "changed_pixels_gt3": 23280,
     "placements": [
       [
         "spec0",
@@ -5563,42 +5563,42 @@
     "art/blender/README.md": "8986c8e5475d29d463fd659ed5af00d7a164b6548df5793828e726e6001ef5a6",
     "art/blender/alliance_battleship.blend": "a51b636fc83f1e13b3659440f93adbb68253a6f59a5b0416c4cedc81ca57a791",
     "art/blender/alliance_bomber.blend": "2330083b7c6a3990c9822ca3b9cc2707542681bffe88f62be4bf8fe4d722caef",
-    "art/blender/alliance_carrier.blend": "a4c1a577914fda920a6823315b91fb922a6b5903cb76fce74971d4e9fe1710a4",
+    "art/blender/alliance_carrier.blend": "1209d504e2f6b92880824a611b5de14395d1ba64f72829dbe07c4a6b1c5fb9bb",
     "art/blender/alliance_command_station.blend": "a2377c1d8f815258791345869c005e95efe13ca99c99c5ba90ede8598ff0fd4c",
     "art/blender/alliance_convoy.blend": "56b7cfb2dc1eecc7d3fc1094e2fdac99b67404759d4efeaae8ecaf418bf88e7a",
-    "art/blender/alliance_corvette.blend": "b8ccd72faab4151a8a77b55f946ff800b61549c2759ab5f68fea4a4c788dbe72",
+    "art/blender/alliance_corvette.blend": "94b4e9033abd141e14bc1a3e42e9ce2821d38138868d560d86bf1c9483c6ae1c",
     "art/blender/alliance_cruiser.blend": "96cdcc024a304d317e7e95d6f096675322971c9671521338f248a140ddd77fd6",
-    "art/blender/alliance_energy_relay.blend": "2b46bbdcadf6a8a3b755c3aa17317c40041d1e2f063086412ed3c9db1f2fbc73",
+    "art/blender/alliance_energy_relay.blend": "64482d7da075ba883c730f873a6a239120f953fab7241e0563fdb0d1209a9518",
     "art/blender/alliance_frigate.blend": "721693dce2de5919e941dd778129c409864e5b78499604b65e1f2e59bc17dd49",
-    "art/blender/alliance_interceptor.blend": "a2489d71f0ed3d47c6c695c22139d050b609552373adb39fe83d9068fdfbbea2",
-    "art/blender/alliance_mining_station.blend": "b66b86994896c784543a0981a0d316347d6ccd1d447ad9023c215d77b3c4fcfd",
-    "art/blender/alliance_sensor_station.blend": "cd6975a883e762b9f053949aa6d15140ac9dcb284550f69c7048e37d977417a5",
+    "art/blender/alliance_interceptor.blend": "7021539d03e6a0ae0c15494370f5c09235708727c723ebe8add7d838d5200150",
+    "art/blender/alliance_mining_station.blend": "ab9a5c7e263fc7754e2b4abb8397cc40e87ea4794996246cca73e8c16f1bacef",
+    "art/blender/alliance_sensor_station.blend": "6cd5fe3878340770a455da9945023d62b4ebdf5ecb0e1d814a84c4582cedba03",
     "art/blender/alliance_shipyard.blend": "2b66ad339f75a48e1daf547d5ea1654a5eab59e5ba7ce6a467f0ee98fe74e045",
     "art/blender/legion_command_station.blend": "159e8288e6341e329046591475875e17a1446466eb23c1dcd1b3b456e880ec66",
     "art/blender/legion_convoy.blend": "57d619a699cb85257131c4c212e0c58b9aea2e3199caf261d3948757446eabaa",
-    "art/blender/legion_energy_relay.blend": "502c992344652f74b3d81f94cad53bcb06904c183d9b4fa96501e6ac29d5b411",
+    "art/blender/legion_energy_relay.blend": "58bd7ca362e7336ca81387e65b193a2d6469dcf8bae851170743779d419548cc",
     "art/blender/legion_hyena.blend": "f4b9af5efb7e2d1d157a168c74b1b2936c2df2a39f9217155e4cafb5edc01f2e",
-    "art/blender/legion_mining_station.blend": "aaf7e3c5617029a2b448cd5a1a9d2a9234225bbf796e25180345317723032bc3",
-    "art/blender/legion_sensor_station.blend": "4e473fc6a7483bd0da5743ec7ca3a63e7fef0a17cd6fc4db0bfadd6c8e78c98d",
+    "art/blender/legion_mining_station.blend": "ebacae39583930f5b7d824a2f44734e7499db826ce52cd8baee50186495474b0",
+    "art/blender/legion_sensor_station.blend": "094ab52840c54cef032b5d0013d2cb4a2f0d25e0d1ce99796fa2e0a32c8015a4",
     "art/blender/legion_vulture.blend": "932bba8532ba8d02e50fec774131477c43a383311aec500c1412b336a11d1ac8",
     "art/blender/syndicate_command_station.blend": "f3342e0ed63c8b730d91bafdca9c8d7d0bbf9bc0bfe7e54293bff792e27e4d17",
     "art/blender/syndicate_convoy.blend": "4d93545d957166eb25ee139df346395dab3f6b48ac7294a319de0e714e0b2d3b",
-    "art/blender/syndicate_energy_relay.blend": "7db6eaf8b503a3060fb5fd9edec471af3e3752c1143688b1936dccc432b2fa3f",
+    "art/blender/syndicate_energy_relay.blend": "efb7ae3adb8a6916f1faba86af9319c33482dfddc19a991f9831d68d9ecc0722",
     "art/blender/syndicate_jackal.blend": "ca21a457dc3a8349ef6ed87a64e6c2d6e810316ae73a4d9ce2351f54d3081de6",
-    "art/blender/syndicate_mining_station.blend": "878a16cfa90fa7bc849cb93149c4ffe5c9d17df19c50a97b4fe68b6913dfe6b1",
-    "art/blender/syndicate_sensor_station.blend": "23faffa404d19ae75f4df9267ba4ca21d6ef826a5f1434a25be41ce9539111df",
+    "art/blender/syndicate_mining_station.blend": "54aa027886e7069e1edabcdac16372b4bb3f087cba6c164ef9f9766aa38ba8a0",
+    "art/blender/syndicate_sensor_station.blend": "dea77b42af5ec0450102fea28cc780b59ee154888ce96b249a097b7a6551e4aa",
     "tools/art/README.md": "9eced7500077a89ca8d4a5d29f9e6f963f547acfa49b651b0f687b82d9c0efa1",
-    "tools/art/alliance_common.py": "bc5ef04dee22d8e0133a29e9566536bdf0b64be6a96822ddc760bfe4dfe80e74",
+    "tools/art/alliance_common.py": "6f76c46eac87b79b7804cce68f7beb1dafff1c0d20786ec8154392c9d57852e1",
     "tools/art/build-model": "a0824bc96fcdfac16e007e1d0d9e2a9acdc2d9203e05f2f40c52b2f10cd12090",
     "tools/art/build_alliance_battleship.py": "52380040fd04c3370085c1815e68cb520d5e54f1f4af04ac53ec69d7233d0082",
-    "tools/art/build_alliance_carrier.py": "0d0e6e90709069032e2eda14202ab1dc93a57e6488d48dd4c5221ec807a844a9",
-    "tools/art/build_alliance_corvette.py": "61838dc1f455de80821945d226d9c9c3fa995cb0af663554f85209b5f26e2381",
+    "tools/art/build_alliance_carrier.py": "3f6d0258c87be7ebc2752e42ef4c20a812a2023dc3b0527413626283771cdf94",
+    "tools/art/build_alliance_corvette.py": "df4781bc45692ead8935e2ccd48f3fd2c922fb49aee25bac27524c44468790a1",
     "tools/art/build_alliance_cruiser.py": "34b3543378213aea87a0a35a30e2ef1127b98372bdfd4b9d9c56f3ec0e9a6672",
     "tools/art/build_alliance_frigate.py": "8a3822c0d39dca356a605f185a1feceaeaa8c2c97b827cee1d0a5265f84b0a28",
     "tools/art/build_alliance_shipyard.py": "22e98cf85620959fb910e15c39e0eea64b1dca4df078decc150b04c9a351d70f",
-    "tools/art/build_b2_batch.py": "b5fab18bc2f1a7aa0d8e198820ec445a36c91e667206602467ab99e1b89c087e",
+    "tools/art/build_b2_batch.py": "d8aa040c8bbff81baf836d193023ed6d21a2828f045e9fca6f18f422cfb6ea23",
     "tools/art/build_b3_stations.py": "7f84d8c60df8fe1d254a2bb05249f2467927621e105a6c4f57b5c55d0472c083",
-    "tools/art/build_b3b_stations.py": "14be714fea48ff64693cb17049fcb31e8331afaab2c50a7dc1ac64b20f11f3eb",
+    "tools/art/build_b3b_stations.py": "6f97c0f9e7e84e81dece22078f7c49c32b461bb15e3ab734d0241fd9d2373fec",
     "tools/art/build_model_inventory.py": "a86408b348468ef5d4adfa0a20a40a12ff6bbdc586f0f056aaf28dcb49d9ccba",
     "tools/art/export-model": "9498cf59db089ad1bb25eac2862e3b5887ea827a9ba4f32a552a1525ca0ae303",
     "tools/art/export_alliance_bomber.py": "99c6cb8ad1016d7bdbdd4789e9d9c534d7453bb4ab40d8a8e99c114f07ebbd18",
@@ -5629,6 +5629,7 @@
     "tools/art/model_pipeline.py": "a78363754215def9d0c39e474f90be84de96a67c3a130e749975230c6257ce11",
     "tools/art/probe_b2_scope.py": "11edbf87e027c0904f1510e2e956e98abd1eaecead1092fa0945c58ba3f02d16",
     "tools/art/probe_b3_scope.py": "cf0b32b0db6bec76f3df670cf6a9fbf9a8a98ce8c3f6037974a25a4a6661a507",
+    "tools/art/probe_floating_parts.py": "543991ba7334c360587f0acff16301b6e2e4ffb15d28f97e27f0e014cb800ebc",
     "tools/art/probe_master_bounds.py": "3e9300eb47cabc4296c562d3b74d9a1717d048734710a711a89f571294b50f9a",
     "tools/art/sync_runtime_metadata.py": "066ab4c20d78f143603ccae9dd9c1360c4d06d4b9ddfa48db4e68a44ffc6132c",
     "tools/art/templates/export_wrapper.tmpl": "82d7a0c8d423500cce7bb4ec72d30584d3d29666530753596cbf42db0d125bb2",
@@ -5641,7 +5642,7 @@
   "protected_files_preserved": true,
   "schema": 1,
   "source_preserved": true,
-  "source_sha256": "46f6a56a6ed4f293ecf2067ee8164e6e2c93bd6150ae61b5e2c815425a9ff537",
+  "source_sha256": "1421a5a0d64dc39e82b3803bcbf74d8ec53677cd34094e1ecc0172a5937f39be",
   "status": "pending_owner_approval",
   "warning": "Offline orbit captures: production draw and real simulation ticks; not paced FPS, battle acceptance or native Windows graphics acceptance"
 }

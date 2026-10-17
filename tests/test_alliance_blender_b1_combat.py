@@ -96,6 +96,54 @@ def assert_emitter_centers_match_export(test, asset):
             test.assertAlmostEqual(a, b, places=5)
 
 
+def floating_parts(payload, tolerance=.25):
+    """Groups of welded parts that stand clear of every other group, with their daylight.
+
+    The exporter indexes vertices by quantised position, so parts that touch share vertices and
+    fall into one group; a group that is nowhere near another one is a part - or a cluster of
+    parts - floating in space. The S06 batch shipped a sensor-station dish 23.75 units clear of
+    its body and a marker-light ring 1.4 units above the deck of every station, and both read as
+    detached hardware in their own captures. This measures that without opening Blender, which
+    is what lets it be a gate instead of a habit.
+    """
+    parent = {}
+
+    def find(index):
+        root = index
+        while parent[root] != root:
+            root = parent[root]
+        while parent[index] != root:
+            parent[index], index = root, parent[index]
+        return root
+
+    for role in payload['batches'].values():
+        for triangle in role:
+            for a, b in ((triangle[3], triangle[4]), (triangle[4], triangle[5])):
+                parent.setdefault(a, a)
+                parent.setdefault(b, b)
+                ra, rb = find(a), find(b)
+                if ra != rb:
+                    parent[ra] = rb
+    groups = {}
+    for index in list(parent):
+        groups.setdefault(find(index), []).append(index)
+    entries = []
+    for members in groups.values():
+        points = [payload['vertices'][i] for i in members]
+        entries.append((len(members),
+                        [min(p[i] for p in points) for i in range(3)],
+                        [max(p[i] for p in points) for i in range(3)]))
+    floating = []
+    for index, (count, lo, hi) in enumerate(entries):
+        nearest = min((max(max(lo[k] - other_hi[k], other_lo[k] - hi[k]) for k in range(3))
+                       for other, (_, other_lo, other_hi) in enumerate(entries) if other != index),
+                      default=0.0)
+        if nearest > tolerance:
+            floating.append((round(nearest, 2), count,
+                             [round((lo[k] + hi[k]) / 2, 2) for k in range(3)]))
+    return floating
+
+
 class GeometryContract(unittest.TestCase):
     def test_each_pending_asset_satisfies_the_loader_contract(self):
         for asset in ASSETS:
@@ -321,6 +369,52 @@ class PendingRecords(unittest.TestCase):
         self.assertIn('UNAPPROVED REVIEW ONLY', text)
         self.assertIn('pending_owner_approval', (ROOT / 'tools/diag_alliance_batch_review.py')
                       .read_text(encoding='utf-8'))
+
+    def test_no_part_of_either_hull_floats_clear_of_the_rest(self):
+        """A hull is one piece of hardware, not a constellation.
+
+        The carrier first shipped 38 parts standing clear of everything else and the corvette 4,
+        because a kit is authored by centre and by reach and contact is not implied. The seeds
+        weld the scene; this measures the exported meshes.
+        """
+        for asset in ASSETS:
+            with self.subTest(binding=asset['binding']):
+                payload = json.loads(asset_mesh(asset).read_text(encoding='utf-8'))
+                floating = floating_parts(payload)
+                self.assertEqual(
+                    floating, [],
+                    f"{asset['identifier']} carries parts floating clear of their neighbours: "
+                    f"{floating}")
+
+    def test_both_ship_seeds_weld_the_scene_before_they_declare_the_asset(self):
+        """The order is the guarantee: a joint made after the export is an unmeasured one."""
+        for name in ('build_alliance_corvette.py', 'build_alliance_carrier.py'):
+            seed = (ROOT / 'tools/art' / name).read_text(encoding='utf-8')
+            self.assertIn('weld_scene()', seed)
+            self.assertLess(seed.index('weld_scene()'), seed.index('features=dict('),
+                            f'{name} welds after it declares the asset features')
+
+    def test_every_evidence_path_the_sheet_points_at_exists(self):
+        """A pointer to a file that is not there is worse than no pointer.
+
+        The sheet is what the owner opens to judge the specimens, so every path in its
+        `evidence` block is resolved here. This batch had the defect: the corvette row claimed
+        `corvette-after-motion.mp4` while the only run had been given `--motion rebel:supercapital`,
+        so the file was never written; the harness now takes every claimed row as a comma
+        separated list, and the claim is checked rather than trusted.
+        """
+        spec = self.batch_spec()
+        evidence = spec['evidence']
+        self.assertEqual({row['binding'] for row in spec['assets']}, set(evidence),
+                         'every row needs an evidence entry of its own')
+        clips = [b for b, entry in evidence.items() if 'motion' in entry]
+        self.assertEqual(clips, ['rebel:corvette', 'rebel:supercapital'],
+                         'both B1 specimens claim a paired clip, so both must be produced')
+        for binding, entry in evidence.items():
+            for kind, value in entry.items():
+                for path in ([value] if isinstance(value, str) else value):
+                    with self.subTest(binding=binding, kind=kind, path=path):
+                        self.assertTrue((ROOT / path).is_file(), f'missing evidence file: {path}')
 
 
 if __name__ == '__main__':

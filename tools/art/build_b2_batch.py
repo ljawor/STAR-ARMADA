@@ -63,7 +63,7 @@ def _refuse_existing_masters(argv):
 _refuse_existing_masters(_ARGV)
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from alliance_common import loft, plate, annulus, cylinder  # noqa: E402
+from alliance_common import loft, plate, annulus, cylinder, weld_scene  # noqa: E402
 from hull_detail import surface, deck_panel, deck_strake, flank_detail, louvre_bank, panel  # noqa: E402
 import bpy  # noqa: E402,F401
 
@@ -458,6 +458,8 @@ def build(key):
     for obj in list(bpy.data.objects):
         bpy.data.objects.remove(obj, do_unlink=True)
     spec['builder']()
+    # Nothing floats: a kit is authored by centre and by reach, so contact is not implied.
+    weld_scene()
     features = dict(
         authority='blend', approval='pending_owner_approval', binding=key,
         data_id=spec['data_id'], original_design=True, design=spec['design'],

@@ -23,7 +23,7 @@ MASTER=ROOT/'art/blender/alliance_carrier.blend'
 if MASTER.exists() and '--replace-seed' not in sys.argv:
     raise RuntimeError('Editable blend is master. Use export_alliance_carrier.py; --replace-seed destroys edits.')
 sys.path.insert(0,str(Path(__file__).resolve().parent))
-from alliance_common import loft,plate,annulus,cylinder,bpy
+from alliance_common import loft,plate,annulus,cylinder,weld_scene,bpy
 from hull_detail import surface,deck_panel,deck_strake,flank_detail,louvre_bank,panel
 
 # Broad slab hull: the flight deck is the ship, so the beam stays wide to the stern.
@@ -123,6 +123,10 @@ for z in (-70,10,90):
     w,top,_,_=surface(DECK,z)
     panel(f'46 Deck recognition flash {z}','accent',(5.0,.5,22.0),(0,top+2.4,z))
 
+# Nothing floats: the hull panels are placed by formula, so their contact with the
+# lofted hull is not implied. The pass grows a thin panel onto the surface it was
+# meant to sit on, or braces a bulky part, and keeps the envelope.
+weld_scene()
 features=dict(authority='blend',approval='pending_owner_approval',binding='rebel:supercapital',
               data_id='rebel_supercapital',original_design=True,
               design='Independence-class Fleet Carrier: flight-deck capital with outboard deck wings, offset island and twin outboard drive banks',

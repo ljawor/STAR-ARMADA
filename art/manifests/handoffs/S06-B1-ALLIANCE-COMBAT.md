@@ -48,8 +48,8 @@ Authority `blend` for both. Blender `5.0.1` (pinned in the seed/export scripts).
 
 | Asset | Master `.blend` sha256 | Seed sha256 | Exporter sha256 | Runtime sha256 | Triangles | Vertices | Bytes |
 |---|---|---|---|---|---|---|---|
-| Blockade Runner | `b8ccd72faab4151a8a77b55f946ff800b61549c2759ab5f68fea4a4c788dbe72` | `61838dc1f455de80821945d226d9c9c3fa995cb0af663554f85209b5f26e2381` | `4c9cad303ee3990437e486d90bb0926c5ef016e344072e16dd1c6c66b1016b96` | `bfa1751fd8574bda4145562067acb2e0340498be7ce74d387383079ab7a17c78` | 4,348 | 2,506 | 274,794 |
-| Fleet Carrier | `a4c1a577914fda920a6823315b91fb922a6b5903cb76fce74971d4e9fe1710a4` | `0d0e6e90709069032e2eda14202ab1dc93a57e6488d48dd4c5221ec807a844a9` | `b839bc9f7e41b635b116ffa54f3e8dcc425c46cd02de7c6dc2be7b8b82d0bb05` | `4be599d3cfd7b8fdff80716d923c589b322996728b50424b1d6398f8eea3167f` | 8,632 | 5,014 | 543,887 |
+| Blockade Runner | `94b4e9033abd141e14bc1a3e42e9ce2821d38138868d560d86bf1c9483c6ae1c` | `df4781bc45692ead8935e2ccd48f3fd2c922fb49aee25bac27524c44468790a1` | `4c9cad303ee3990437e486d90bb0926c5ef016e344072e16dd1c6c66b1016b96` | `48d0a815af978976f3eda77ec2378353eb5191a7cdc72cddb931483a0df8571b` | 4,372 | 2,522 | 276,014 |
+| Fleet Carrier | `1209d504e2f6b92880824a611b5de14395d1ba64f72829dbe07c4a6b1c5fb9bb` | `3f6d0258c87be7ebc2752e42ef4c20a812a2023dc3b0527413626283771cdf94` | `b839bc9f7e41b635b116ffa54f3e8dcc425c46cd02de7c6dc2be7b8b82d0bb05` | `01c63dd3788af7ff573cbe5b7e375b7c37d41159db0513828ec0c12f6eff32e1` | 8,704 | 5,062 | 547,645 |
 
 Both meshes fill their binding's legacy procedural envelope exactly
 (`corvette [[-21.9,-6.0,-46.46],[21.9,15.3,45.0]]`, `supercapital [[-146.51,-30.5,-204.8],[146.51,57.0,190.0]]`
@@ -86,6 +86,18 @@ a clean re-implementation of the same ray test and the rendered ablations agree 
 six drives are fully visible). **A declared `emitter_centers` that does not match the exported
 emitter geometry is now a failing test**, which is what caught the stale metadata after the move.
 
+## What the weld pass changed after the first reviewed cut
+
+Forty-two parts across these two hulls were authored *by centre and by reach* and stood clear of
+everything else — 38 on the carrier alone, the worst 11.5 units — and they read as detached hardware
+in the captures. Both seeds now call `weld_scene()` (`tools/art/alliance_common.py`) before they
+report their extent: a gap of at most 2.5 units is closed by growing the panel onto the hull it was
+meant to sit on, and a larger one by a member run between the two nearest centres. The envelope is
+untouched — both meshes keep their legacy bounds bit-for-bit, so the drawn lengths above are the
+same numbers — and the worst part-to-nearest gap is now 0.05 units on the carrier and 0.00 on the
+corvette, against 11.50 and 1.50 in the reviewed meshes. Triangles are up 24 on the corvette and 72
+on the carrier, all of it weld members.
+
 ## Owner approval
 
 **None.** No owner decision is recorded for either revision in this handoff; the batch sheet is
@@ -95,26 +107,30 @@ unselected in production. `rebel:corvette` and `rebel:supercapital` keep registr
 
 ## Tests and commands actually executed
 
-`PYTHONPATH=tests .venv/bin/python -m unittest test_alliance_blender_b1_combat -v` → **13 passed**
+`PYTHONPATH=tests .venv/bin/python -m unittest test_alliance_blender_b1_combat -v` → **16 passed**
 (geometry/loader contract and budget; legacy envelope + unchanged drawn length; named-feature
 presence; declared emitter centres matching exported emitter geometry with five negative controls;
 clear-aft-ray plus a discriminating buried control per emitter; five corruption modes rejected by the
 production loader; four master-alias refusals per exporter; export-only AST check; seed refuses an
-existing master; batch spec/pending-registration guards).
+existing master; batch spec/pending-registration guards; the exported meshes carrying no part
+clear of the rest; both seeds welding the scene before they declare the asset; and every evidence
+path the sheet points at resolving to a file that exists).
 
-Shared guard set re-run on this head — `test_alliance_blender_cruiser`, `test_alliance_blender_trio`,
-`test_alliance_blender_battleship`, `test_asset_contract`, `test_model_pipeline`,
-`test_generic_model_preview`, `test_model_context_lifecycle` together with the 13 new B1 guards:
-**59 tests, OK** (`Ran 59 tests in 4.423s`), no failures or errors.
+Shared guard set re-run on this head — the four batch files (`…_b1_combat`, `…_b2_squadron`,
+`…_b3_stations`, `…_b3b_stations`) together with `test_alliance_blender_cruiser`,
+`test_alliance_blender_trio`, `test_alliance_blender_battleship`, `test_asset_contract`,
+`test_model_pipeline`, `test_generic_model_preview` and `test_model_context_lifecycle`:
+**125 tests, OK** (`Ran 125 tests in 7.295s`), no failures or errors.
 
 Evidence run: `.venv/bin/python tools/diag_alliance_batch_review.py --spec
 art/manifests/pending/S06-BATCH-B1-ALLIANCE-COMBAT.json --out artifacts/s06_alliance_batch_review/b1-alliance-combat
---motion rebel:supercapital` → rc=0. Reported by that run: 4 MSAA on an Apple M4 with production
+--motion rebel:corvette,rebel:supercapital` → rc=0. Reported by that run: 4 MSAA on an Apple M4 with production
 shaders available; repeat-capture delta 0 pixels on every view of both specimens; paired-motion
 state samples equal across all 150 frames; `source_preserved`, `protected_files_preserved`
 (`saves/`, `replays/`, `art/blender/`, `tools/art/` hashed before and after) and
-`production_candidates_unselected_after_review` all true; role ablations accent 2,043 / dark 6,701 /
-cool 705 (corvette) and 577 / 14,278 / 2,443 (carrier).
+`production_candidates_unselected_after_review` all true; role ablations accent 2,247 / dark 6,454 /
+cool 705 (corvette) and 451 / 13,023 / 2,443 (carrier); the batch overview 19,341 changed pixels
+across the two-row line; `restored_changed_pixels = 0` on both specimens.
 
 Not run, and not claimed: the full suite, performance/benchmark modes, native Windows graphics,
 packaging, and any Blender-free fresh-clone rebuild of these two assets. **The cruiser's deep
@@ -126,14 +142,14 @@ acceptance matrix was deliberately not repeated** for these hulls, per the owner
 `contact-sheet.png` (batch sheet), `overview-before/after.png` (one shared-scale row),
 `{corvette,carrier}-{before,after}-{close,rear,tactical,common-scale}.png`,
 `{corvette,carrier}-ablated-{accent,dark,cool}.png`, `{corvette,carrier}-close-restored.png`,
-`corvette-after-motion.mp4` and `carrier-{before,after}-motion.mp4`, `metrics.json`.
+`{corvette,carrier}-{before,after}-motion.mp4` (150 frames each), `metrics.json`.
 
 Recipe: production `Renderer`/`Camera`/`HUD` on a real-driver 1280×800 4MSAA context, normal fog and
 production shaders, real 1/30 s `gm.step` ticks, identical union-safe cameras for both variants,
 1280×800 raw frames piped to ffmpeg (150 frames, 5 s). Each specimen is shown beside the same
 camera on the legacy procedural hull, so the pairs are look comparisons, **not** scale comparisons;
-`common-scale` and the batch overview are the scale views. The carrier's motion is captured because
-its geometry/scale warrants it.
+`common-scale` and the batch overview are the scale views. Both rows carry a paired clip, so no row
+in this sheet points at a clip no run ever produced.
 
 ## Performance / packaging / platform
 
