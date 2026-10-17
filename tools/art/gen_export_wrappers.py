@@ -75,8 +75,9 @@ ASSETS = {
 }
 
 # S06 B4 - the satellite and planet-installation rows. Envelopes and minimum authored depth are
-# the live-code measurements in `tools/art/probe_b4_scope.py`; they are per kind and
-# faction-independent, because the legacy hardware differs in ring side count, not extent. These
+# the live-code measurements in `tools/art/probe_b4_scope.py`; they are per kind, and the two
+# syndicate satellite rows differ because the legacy satellite mesh is parameterised by the
+# faction's ring side count and the syndicate's five-sided ring stops short at the rear. These
 # rows are script-authoritative per the S03 source-authority policy (repeated modular hardware),
 # so `tools/art/build_b4_hardware.py` is the master recipe and the `.blend` is a derived artifact.
 # No separate owner class budget exists for modular hardware, so they carry the station class
@@ -89,12 +90,23 @@ B4_KINDS = {
     'planet_shield_generator': ('shield generator', ((-34.0, 34.0), (0.0, 46.5), (-32.0, 32.0))),
     'planet_pulsar_cannon': ('pulsar cannon', ((-34.0, 34.0), (0.0, 42.4), (-32.0, 46.0))),
 }
+# The two syndicate satellite rows are not faction-independent: the legacy satellite mesh is
+# parameterised by the faction's ring side count, so its five-sided ring stops short at the rear.
+B4_FACTION_Z_LOW = {('syndicate', 'defense_satellite'): -27.5066,
+                    ('syndicate', 'attack_satellite'): -30.299}
 for _faction, _prefix, _family in (('rebel', 'alliance', 'Alliance'), ('confederacy', 'legion',
                                     'Legion'), ('syndicate', 'syndicate', 'Syndicate'),
                                    ('imperial', 'imperial', 'Imperial')):
     for _kind, (_label, _limits) in B4_KINDS.items():
-        ASSETS[f'{_prefix}_{_kind}'] = (f'{_family} {_label}', _limits,
-                                        round(_limits[2][1] - _limits[2][0] - 0.2, 1),
+        # The wrapper declares the loader's per-axis pairs - the template walks ENVELOPE[axis] as
+        # (low, high) - while a sheet and a sidecar carry [lo, hi] vectors. Two spellings of the
+        # same box, and the syndicate override applies to the Z pair.
+        _lim = [tuple(a) for a in _limits]
+        if (_faction, _kind) in B4_FACTION_Z_LOW:
+            _lim[2] = (B4_FACTION_Z_LOW[(_faction, _kind)], _lim[2][1])
+        _lim = tuple(_lim)
+        ASSETS[f'{_prefix}_{_kind}'] = (f'{_family} {_label}', _lim,
+                                        round(_lim[2][1] - _lim[2][0] - 0.2, 1),
                                         11500, 8000, 2_000_000)
 
 

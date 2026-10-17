@@ -21,8 +21,8 @@ IDENTIFIER = 'syndicate_defense_satellite'
 # The binding's legacy procedural envelope. The authored mesh fills this box, so the
 # renderer's class scale (ship_size: drawn length / authored Z span) is unchanged and
 # the drawn length, camera framing and collision radius stay as they are today.
-ENVELOPE = ((-41.1051, 41.1051), (-9.0, 19.5), (-34.0, 44.0))
-MIN_LENGTH = 77.8
+ENVELOPE = ((-41.1051, 41.1051), (-9.0, 19.5), (-27.5066, 44.0))
+MIN_LENGTH = 71.3
 MAX_TRIANGLES = 11500
 MAX_VERTICES = 8000
 MAX_BYTES = 2_000_000

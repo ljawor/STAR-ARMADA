@@ -40,7 +40,8 @@ ROOT = Path(__file__).resolve().parents[2]
 BREACH_TOLERANCE = 1e-3
 
 # The legacy extents, measured by `tools/art/probe_b4_scope.py` from the live code. They are per
-# kind and identical across factions: the legacy hardware differs in ring side count, not extent.
+# kind, and identical across factions except where FACTION_Z_LOW records otherwise: the legacy
+# hardware differs in ring side count, and the syndicate's five-sided ring is shorter at the rear.
 LIMITS = {
     'defense_satellite': [[-41.1051, 41.1051], [-9.0, 19.5], [-34.0, 44.0]],
     'attack_satellite': [[-50.9795, 50.9795], [-9.0, 21.5], [-34.0, 58.0]],
@@ -90,10 +91,20 @@ DESIGNS = {
     ('planet_pulsar_cannon', 'syndicate'): 'scaffold breech with a lashed projector barrel',
     ('planet_pulsar_cannon', 'imperial'): 'angular breech tower with a faceted long barrel',
 }
+# Two rows are *not* faction-independent: the legacy satellite mesh is parameterised by the
+# faction's ring side count, and the syndicate's five-sided ring stops its rear structure short of
+# the other families' Z minimum. Measured by `tools/art/probe_b4_scope.py`; the harness compares each
+# authored footprint against the legacy mesh it replaces, so a sheet that generalised here would be
+# wrong about both rows.
+FACTION_Z_LOW = {('syndicate', 'defense_satellite'): -27.5066,
+                 ('syndicate', 'attack_satellite'): -30.299}
 SEEDS = {}
 for _faction, _prefix in FACTION_PREFIX.items():
     for _kind in KINDS:
-        SEEDS[f'{_faction}:{_kind}'] = (f'{_prefix}_{_kind}', RADIUS, LIMITS[_kind], _faction)
+        _limits = [list(a) for a in LIMITS[_kind]]
+        if (_faction, _kind) in FACTION_Z_LOW:
+            _limits[2][0] = FACTION_Z_LOW[(_faction, _kind)]
+        SEEDS[f'{_faction}:{_kind}'] = (f'{_prefix}_{_kind}', RADIUS, _limits, _faction)
 
 _ARGV = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
 

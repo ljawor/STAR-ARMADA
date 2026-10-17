@@ -10,13 +10,13 @@
   "authority": "script",
   "source": {
     "path": "art/blender/syndicate_attack_satellite.blend",
-    "sha256": "e68a2497f5d60ad644c0c7590fb07fd444a8037ce50003614429a3b547495011",
-    "bytes": 128889
+    "sha256": "f7bd5fb78aadc367ab39f17b34a9111d6dd43d97f5c1ddb88af4a6779a08ec08",
+    "bytes": 128846
   },
   "initial_seed": {
     "path": "tools/art/build_b4_hardware.py",
-    "sha256": "4b241dec70986f56f2a275433868c81d8d0ea941d714d600b73c35a9e42ba816",
-    "bytes": 32227,
+    "sha256": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+    "bytes": 33018,
     "selects": "--asset syndicate:attack_satellite"
   },
   "export_script": {
@@ -42,14 +42,12 @@
   "envelope": [
     [
       -50.9795,
-      50.9795
-    ],
-    [
       -9.0,
-      21.5
+      -30.299
     ],
     [
-      -34.0,
+      50.9795,
+      21.5,
       58.0
     ]
   ],

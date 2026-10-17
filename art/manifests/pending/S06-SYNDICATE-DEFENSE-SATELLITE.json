@@ -10,13 +10,13 @@
   "authority": "script",
   "source": {
     "path": "art/blender/syndicate_defense_satellite.blend",
-    "sha256": "d1c8e2ee19b52a5114f7d064a84704c79d1aa06d359040d090160a035e607525",
-    "bytes": 125368
+    "sha256": "56abd8e0276e0949453d8ce2c73b24ca2611d3e2d1b61dccf00191fd969beab9",
+    "bytes": 125379
   },
   "initial_seed": {
     "path": "tools/art/build_b4_hardware.py",
-    "sha256": "4b241dec70986f56f2a275433868c81d8d0ea941d714d600b73c35a9e42ba816",
-    "bytes": 32227,
+    "sha256": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+    "bytes": 33018,
     "selects": "--asset syndicate:defense_satellite"
   },
   "export_script": {
@@ -42,14 +42,12 @@
   "envelope": [
     [
       -41.1051,
-      41.1051
-    ],
-    [
       -9.0,
-      19.5
+      -27.5066
     ],
     [
-      -34.0,
+      41.1051,
+      19.5,
       44.0
     ]
   ],
