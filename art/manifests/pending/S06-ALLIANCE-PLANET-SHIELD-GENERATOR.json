@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b4-hardware",
+  "binding": "rebel:planet_shield_generator",
+  "canonical_binding": "ship:rebel:planet_shield_generator",
+  "gameplay_entity": "planet_shield_generator",
+  "class": "planet_shield_generator",
+  "authority": "script",
+  "source": {
+    "path": "art/blender/alliance_planet_shield_generator.blend",
+    "sha256": "22a6c3650fecfa6af0438b2fed2c580657d9d60254dd5eb2f1822fbba9caa6b7",
+    "bytes": 131518
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b4_hardware.py",
+    "sha256": "4b241dec70986f56f2a275433868c81d8d0ea941d714d600b73c35a9e42ba816",
+    "bytes": 32227,
+    "selects": "--asset rebel:planet_shield_generator"
+  },
+  "export_script": {
+    "path": "tools/art/export_alliance_planet_shield_generator.py",
+    "sha256": "1ad461530a2ee60bbbcfd9c15ea873a7054f911850c0fc6f26dc14e0b80e4e3f",
+    "bytes": 4788
+  },
+  "runtime": {
+    "path": "assets/models/alliance_planet_shield_generator.mesh.json",
+    "sha256": "bf38721eb96bdfcffa962429a8a1cd3c830344936a521f3f03d197a05669df20",
+    "bytes": 189744,
+    "triangles": 2992,
+    "vertices": 1632,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -34.0,
+      34.0
+    ],
+    [
+      0.0,
+      46.5
+    ],
+    [
+      -32.0,
+      32.0
+    ]
+  ],
+  "bounds": [
+    [
+      -34.0,
+      0.0,
+      -32.0
+    ],
+    [
+      34.0,
+      46.5,
+      32.0
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": null,
+  "motion": null
+}

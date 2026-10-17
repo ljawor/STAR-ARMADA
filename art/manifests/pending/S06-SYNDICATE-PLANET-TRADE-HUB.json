@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b4-hardware",
+  "binding": "syndicate:planet_trade_hub",
+  "canonical_binding": "ship:syndicate:planet_trade_hub",
+  "gameplay_entity": "planet_trade_hub",
+  "class": "planet_trade_hub",
+  "authority": "script",
+  "source": {
+    "path": "art/blender/syndicate_planet_trade_hub.blend",
+    "sha256": "3f06156d5e2f5114b584d1377e199672ec893d9be64f9c6569a4a9fac4fa38f9",
+    "bytes": 126875
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b4_hardware.py",
+    "sha256": "4b241dec70986f56f2a275433868c81d8d0ea941d714d600b73c35a9e42ba816",
+    "bytes": 32227,
+    "selects": "--asset syndicate:planet_trade_hub"
+  },
+  "export_script": {
+    "path": "tools/art/export_syndicate_planet_trade_hub.py",
+    "sha256": "b7eca902c9add5f33c6edddc9c11539664369661640ba6e5aed0546f64e83eee",
+    "bytes": 4770
+  },
+  "runtime": {
+    "path": "assets/models/syndicate_planet_trade_hub.mesh.json",
+    "sha256": "e287675b6e86d7b5bb986169941179ff8cad49fa9c021182f7d279aa89be2aed",
+    "bytes": 123191,
+    "triangles": 2232,
+    "vertices": 1256,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -34.0,
+      34.0
+    ],
+    [
+      0.0,
+      49.5
+    ],
+    [
+      -32.0,
+      32.0
+    ]
+  ],
+  "bounds": [
+    [
+      -34.0,
+      0.0,
+      -32.0
+    ],
+    [
+      34.0,
+      49.5,
+      32.0
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": null,
+  "motion": null
+}

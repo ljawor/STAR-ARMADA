@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b4-hardware",
+  "binding": "syndicate:attack_satellite",
+  "canonical_binding": "ship:syndicate:attack_satellite",
+  "gameplay_entity": "attack_satellite",
+  "class": "attack_satellite",
+  "authority": "script",
+  "source": {
+    "path": "art/blender/syndicate_attack_satellite.blend",
+    "sha256": "e68a2497f5d60ad644c0c7590fb07fd444a8037ce50003614429a3b547495011",
+    "bytes": 128889
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b4_hardware.py",
+    "sha256": "4b241dec70986f56f2a275433868c81d8d0ea941d714d600b73c35a9e42ba816",
+    "bytes": 32227,
+    "selects": "--asset syndicate:attack_satellite"
+  },
+  "export_script": {
+    "path": "tools/art/export_syndicate_attack_satellite.py",
+    "sha256": "8fda8631520e75ad3f804fc6cb1ecaf55e18560f50e12d192b2bcdd1d992e463",
+    "bytes": 4784
+  },
+  "runtime": {
+    "path": "assets/models/syndicate_attack_satellite.mesh.json",
+    "sha256": "a7ff05db18c69f3aaa47d15b9bb07afaff173ffde94b91327d6acef9dce6763e",
+    "bytes": 129701,
+    "triangles": 2284,
+    "vertices": 1286,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -50.9795,
+      50.9795
+    ],
+    [
+      -9.0,
+      21.5
+    ],
+    [
+      -34.0,
+      58.0
+    ]
+  ],
+  "bounds": [
+    [
+      -50.9795,
+      -9.0,
+      -34.0
+    ],
+    [
+      50.9795,
+      21.5,
+      58.0
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": null,
+  "motion": null
+}

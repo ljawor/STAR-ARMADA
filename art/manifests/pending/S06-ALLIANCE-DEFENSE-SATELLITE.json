@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b4-hardware",
+  "binding": "rebel:defense_satellite",
+  "canonical_binding": "ship:rebel:defense_satellite",
+  "gameplay_entity": "defense_satellite",
+  "class": "defense_satellite",
+  "authority": "script",
+  "source": {
+    "path": "art/blender/alliance_defense_satellite.blend",
+    "sha256": "3efb7770c6d4cfe6e6f96f7b4c36ef5af7b7f996182087214f41da8847b4c14d",
+    "bytes": 128832
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b4_hardware.py",
+    "sha256": "4b241dec70986f56f2a275433868c81d8d0ea941d714d600b73c35a9e42ba816",
+    "bytes": 32227,
+    "selects": "--asset rebel:defense_satellite"
+  },
+  "export_script": {
+    "path": "tools/art/export_alliance_defense_satellite.py",
+    "sha256": "192513acab1eff704537bb36365263f555a549143c868026beb9c779fd807775",
+    "bytes": 4784
+  },
+  "runtime": {
+    "path": "assets/models/alliance_defense_satellite.mesh.json",
+    "sha256": "d38b5549310b6a9a554e429254857f895a5d7852cdd2dce3999276406ad1241d",
+    "bytes": 146073,
+    "triangles": 2420,
+    "vertices": 1336,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -41.1051,
+      41.1051
+    ],
+    [
+      -9.0,
+      19.5
+    ],
+    [
+      -34.0,
+      44.0
+    ]
+  ],
+  "bounds": [
+    [
+      -41.1051,
+      -9.0,
+      -34.0
+    ],
+    [
+      41.1051,
+      19.5,
+      44.0
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": null,
+  "motion": null
+}

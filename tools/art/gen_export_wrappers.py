@@ -74,6 +74,29 @@ ASSETS = {
     'syndicate_shipyard': ('Syndicate shipyard', ((-52.1606, 46.9468), (-18.9928, 45.6), (-53.6606, 48.4056)), 101.9, 11500, 8000, 2_000_000),
 }
 
+# S06 B4 - the satellite and planet-installation rows. Envelopes and minimum authored depth are
+# the live-code measurements in `tools/art/probe_b4_scope.py`; they are per kind and
+# faction-independent, because the legacy hardware differs in ring side count, not extent. These
+# rows are script-authoritative per the S03 source-authority policy (repeated modular hardware),
+# so `tools/art/build_b4_hardware.py` is the master recipe and the `.blend` is a derived artifact.
+# No separate owner class budget exists for modular hardware, so they carry the station class
+# budget (11,500 tri / 8,000 vert) rather than a number invented here.
+B4_KINDS = {
+    'defense_satellite': ('defense satellite', ((-41.1051, 41.1051), (-9.0, 19.5), (-34.0, 44.0))),
+    'attack_satellite': ('attack satellite', ((-50.9795, 50.9795), (-9.0, 21.5), (-34.0, 58.0))),
+    'planet_extractor': ('planet extractor', ((-34.0, 34.0), (0.0, 43.0), (-32.0, 32.0))),
+    'planet_trade_hub': ('trade hub', ((-34.0, 34.0), (0.0, 49.5), (-32.0, 32.0))),
+    'planet_shield_generator': ('shield generator', ((-34.0, 34.0), (0.0, 46.5), (-32.0, 32.0))),
+    'planet_pulsar_cannon': ('pulsar cannon', ((-34.0, 34.0), (0.0, 42.4), (-32.0, 46.0))),
+}
+for _faction, _prefix, _family in (('rebel', 'alliance', 'Alliance'), ('confederacy', 'legion',
+                                    'Legion'), ('syndicate', 'syndicate', 'Syndicate'),
+                                   ('imperial', 'imperial', 'Imperial')):
+    for _kind, (_label, _limits) in B4_KINDS.items():
+        ASSETS[f'{_prefix}_{_kind}'] = (f'{_family} {_label}', _limits,
+                                        round(_limits[2][1] - _limits[2][0] - 0.2, 1),
+                                        11500, 8000, 2_000_000)
+
 
 def template():
     """The template body, without its own header comment block."""

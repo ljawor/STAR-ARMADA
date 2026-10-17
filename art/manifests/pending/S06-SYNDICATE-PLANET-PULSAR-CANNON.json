@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b4-hardware",
+  "binding": "syndicate:planet_pulsar_cannon",
+  "canonical_binding": "ship:syndicate:planet_pulsar_cannon",
+  "gameplay_entity": "planet_pulsar_cannon",
+  "class": "planet_pulsar_cannon",
+  "authority": "script",
+  "source": {
+    "path": "art/blender/syndicate_planet_pulsar_cannon.blend",
+    "sha256": "f1279ceaeb7e549bcfa0bc8e48274960dba56e920aa25cd0788ff57cc4bac9f6",
+    "bytes": 127473
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b4_hardware.py",
+    "sha256": "4b241dec70986f56f2a275433868c81d8d0ea941d714d600b73c35a9e42ba816",
+    "bytes": 32227,
+    "selects": "--asset syndicate:planet_pulsar_cannon"
+  },
+  "export_script": {
+    "path": "tools/art/export_syndicate_planet_pulsar_cannon.py",
+    "sha256": "de3f117a1e19d661b27ca683ccd521eda197cb910a9226dc5bb1af4f9f7d4826",
+    "bytes": 4782
+  },
+  "runtime": {
+    "path": "assets/models/syndicate_planet_pulsar_cannon.mesh.json",
+    "sha256": "498e6232ec385e903942da4a873f0153d951cc601e49df170b274a6863cecc55",
+    "bytes": 127078,
+    "triangles": 2284,
+    "vertices": 1288,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -34.0,
+      34.0
+    ],
+    [
+      0.0,
+      42.4
+    ],
+    [
+      -32.0,
+      46.0
+    ]
+  ],
+  "bounds": [
+    [
+      -34.0,
+      0.0,
+      -32.0
+    ],
+    [
+      34.0,
+      42.4,
+      46.0
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": null,
+  "motion": null
+}

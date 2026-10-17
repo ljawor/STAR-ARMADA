@@ -1,0 +1,814 @@
+{
+  "schema": 1,
+  "batch": "s06-b4-hardware",
+  "status": "pending_owner_appearance_approval",
+  "note": "Review-only batch sheet for the pending S06 B4 satellite and planet-installation specimens: the satellite and planet-installation kinds `assets/data/stations/stations.json` holds beside the station kinds, across all four factions - twenty-four rows. This file is not an approval record, a registry entry or a runtime manifest, and it does not select any asset in production. Every row is authored *to* its binding's legacy procedural extent - per axis and per side, not merely inside it - because the review harness compares the authored footprint against the legacy hardware mesh within 1 percent per axis and the legacy hardware fills its declared box exactly. The envelope is per kind and identical across factions: the legacy satellites and buildings differ in ring side count, not in extent (`tools/art/probe_b4_scope.py` measures it from the live code). These rows are script-authoritative per the S03 source-authority policy for repeated modular hardware, so `tools/art/build_b4_hardware.py` is the recipe and each `.blend` is a derived artifact. The station kinds are absent because B3a/B3b/B3c are earlier batches. No row here needs a renderer change, imperial included: `render.fleet_geometry.station_mesh` consults `mesh_for(f'{faction}:{data_id}')` ahead of every fallback. The imperial *ship* rows are the exception and are not part of this batch: they need a per-binding key minted in `render/faction_visuals.py::ship_visual_key`. The batch carries the station class budget (11,500 triangles / 8,000 vertices) because the owner has set no separate modular-hardware budget. overview spacing is 150 and distance 2700: the widest row here is the 102-unit attack satellite, and at yaw 90 the row line is perpendicular to the view, so every row sits at one distance and inside the frame - a true single-scale lineup rather than a perspective spread.",
+  "overview": {
+    "first_x": -4200,
+    "first_z": 1200,
+    "spacing": 150,
+    "yaw": 90,
+    "pitch": 40,
+    "distance": 2700,
+    "close_distance_floor": 150
+  },
+  "assets": [
+    {
+      "binding": "rebel:defense_satellite",
+      "label": "alliance defense satellite",
+      "identifier": "alliance_defense_satellite",
+      "mesh": "assets/models/alliance_defense_satellite.mesh.json",
+      "envelope": [
+        [
+          -41.1051,
+          41.1051
+        ],
+        [
+          -9.0,
+          19.5
+        ],
+        [
+          -34.0,
+          44.0
+        ]
+      ],
+      "min_length": 77.8,
+      "data_id": "defense_satellite",
+      "gameplay_entity": "defense_satellite",
+      "class": "defense_satellite",
+      "station_kind": "defense_satellite",
+      "faction": "rebel",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b4_hardware.py",
+      "seed_arg": "--asset rebel:defense_satellite"
+    },
+    {
+      "binding": "rebel:attack_satellite",
+      "label": "alliance attack satellite",
+      "identifier": "alliance_attack_satellite",
+      "mesh": "assets/models/alliance_attack_satellite.mesh.json",
+      "envelope": [
+        [
+          -50.9795,
+          50.9795
+        ],
+        [
+          -9.0,
+          21.5
+        ],
+        [
+          -34.0,
+          58.0
+        ]
+      ],
+      "min_length": 91.8,
+      "data_id": "attack_satellite",
+      "gameplay_entity": "attack_satellite",
+      "class": "attack_satellite",
+      "station_kind": "attack_satellite",
+      "faction": "rebel",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b4_hardware.py",
+      "seed_arg": "--asset rebel:attack_satellite"
+    },
+    {
+      "binding": "rebel:planet_extractor",
+      "label": "alliance planet extractor",
+      "identifier": "alliance_planet_extractor",
+      "mesh": "assets/models/alliance_planet_extractor.mesh.json",
+      "envelope": [
+        [
+          -34.0,
+          34.0
+        ],
+        [
+          0.0,
+          43.0
+        ],
+        [
+          -32.0,
+          32.0
+        ]
+      ],
+      "min_length": 63.8,
+      "data_id": "planet_extractor",
+      "gameplay_entity": "planet_extractor",
+      "class": "planet_extractor",
+      "station_kind": "planet_extractor",
+      "faction": "rebel",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b4_hardware.py",
+      "seed_arg": "--asset rebel:planet_extractor"
+    },
+    {
+      "binding": "rebel:planet_trade_hub",
+      "label": "alliance trade hub",
+      "identifier": "alliance_planet_trade_hub",
+      "mesh": "assets/models/alliance_planet_trade_hub.mesh.json",
+      "envelope": [
+        [
+          -34.0,
+          34.0
+        ],
+        [
+          0.0,
+          49.5
+        ],
+        [
+          -32.0,
+          32.0
+        ]
+      ],
+      "min_length": 63.8,
+      "data_id": "planet_trade_hub",
+      "gameplay_entity": "planet_trade_hub",
+      "class": "planet_trade_hub",
+      "station_kind": "planet_trade_hub",
+      "faction": "rebel",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b4_hardware.py",
+      "seed_arg": "--asset rebel:planet_trade_hub"
+    },
+    {
+      "binding": "rebel:planet_shield_generator",
+      "label": "alliance shield generator",
+      "identifier": "alliance_planet_shield_generator",
+      "mesh": "assets/models/alliance_planet_shield_generator.mesh.json",
+      "envelope": [
+        [
+          -34.0,
+          34.0
+        ],
+        [
+          0.0,
+          46.5
+        ],
+        [
+          -32.0,
+          32.0
+        ]
+      ],
+      "min_length": 63.8,
+      "data_id": "planet_shield_generator",
+      "gameplay_entity": "planet_shield_generator",
+      "class": "planet_shield_generator",
+      "station_kind": "planet_shield_generator",
+      "faction": "rebel",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b4_hardware.py",
+      "seed_arg": "--asset rebel:planet_shield_generator"
+    },
+    {
+      "binding": "rebel:planet_pulsar_cannon",
+      "label": "alliance pulsar cannon",
+      "identifier": "alliance_planet_pulsar_cannon",
+      "mesh": "assets/models/alliance_planet_pulsar_cannon.mesh.json",
+      "envelope": [
+        [
+          -34.0,
+          34.0
+        ],
+        [
+          0.0,
+          42.4
+        ],
+        [
+          -32.0,
+          46.0
+        ]
+      ],
+      "min_length": 77.8,
+      "data_id": "planet_pulsar_cannon",
+      "gameplay_entity": "planet_pulsar_cannon",
+      "class": "planet_pulsar_cannon",
+      "station_kind": "planet_pulsar_cannon",
+      "faction": "rebel",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b4_hardware.py",
+      "seed_arg": "--asset rebel:planet_pulsar_cannon"
+    },
+    {
+      "binding": "confederacy:defense_satellite",
+      "label": "legion defense satellite",
+      "identifier": "legion_defense_satellite",
+      "mesh": "assets/models/legion_defense_satellite.mesh.json",
+      "envelope": [
+        [
+          -41.1051,
+          41.1051
+        ],
+        [
+          -9.0,
+          19.5
+        ],
+        [
+          -34.0,
+          44.0
+        ]
+      ],
+      "min_length": 77.8,
+      "data_id": "defense_satellite",
+      "gameplay_entity": "defense_satellite",
+      "class": "defense_satellite",
+      "station_kind": "defense_satellite",
+      "faction": "confederacy",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b4_hardware.py",
+      "seed_arg": "--asset confederacy:defense_satellite"
+    },
+    {
+      "binding": "confederacy:attack_satellite",
+      "label": "legion attack satellite",
+      "identifier": "legion_attack_satellite",
+      "mesh": "assets/models/legion_attack_satellite.mesh.json",
+      "envelope": [
+        [
+          -50.9795,
+          50.9795
+        ],
+        [
+          -9.0,
+          21.5
+        ],
+        [
+          -34.0,
+          58.0
+        ]
+      ],
+      "min_length": 91.8,
+      "data_id": "attack_satellite",
+      "gameplay_entity": "attack_satellite",
+      "class": "attack_satellite",
+      "station_kind": "attack_satellite",
+      "faction": "confederacy",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b4_hardware.py",
+      "seed_arg": "--asset confederacy:attack_satellite"
+    },
+    {
+      "binding": "confederacy:planet_extractor",
+      "label": "legion planet extractor",
+      "identifier": "legion_planet_extractor",
+      "mesh": "assets/models/legion_planet_extractor.mesh.json",
+      "envelope": [
+        [
+          -34.0,
+          34.0
+        ],
+        [
+          0.0,
+          43.0
+        ],
+        [
+          -32.0,
+          32.0
+        ]
+      ],
+      "min_length": 63.8,
+      "data_id": "planet_extractor",
+      "gameplay_entity": "planet_extractor",
+      "class": "planet_extractor",
+      "station_kind": "planet_extractor",
+      "faction": "confederacy",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b4_hardware.py",
+      "seed_arg": "--asset confederacy:planet_extractor"
+    },
+    {
+      "binding": "confederacy:planet_trade_hub",
+      "label": "legion trade hub",
+      "identifier": "legion_planet_trade_hub",
+      "mesh": "assets/models/legion_planet_trade_hub.mesh.json",
+      "envelope": [
+        [
+          -34.0,
+          34.0
+        ],
+        [
+          0.0,
+          49.5
+        ],
+        [
+          -32.0,
+          32.0
+        ]
+      ],
+      "min_length": 63.8,
+      "data_id": "planet_trade_hub",
+      "gameplay_entity": "planet_trade_hub",
+      "class": "planet_trade_hub",
+      "station_kind": "planet_trade_hub",
+      "faction": "confederacy",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b4_hardware.py",
+      "seed_arg": "--asset confederacy:planet_trade_hub"
+    },
+    {
+      "binding": "confederacy:planet_shield_generator",
+      "label": "legion shield generator",
+      "identifier": "legion_planet_shield_generator",
+      "mesh": "assets/models/legion_planet_shield_generator.mesh.json",
+      "envelope": [
+        [
+          -34.0,
+          34.0
+        ],
+        [
+          0.0,
+          46.5
+        ],
+        [
+          -32.0,
+          32.0
+        ]
+      ],
+      "min_length": 63.8,
+      "data_id": "planet_shield_generator",
+      "gameplay_entity": "planet_shield_generator",
+      "class": "planet_shield_generator",
+      "station_kind": "planet_shield_generator",
+      "faction": "confederacy",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b4_hardware.py",
+      "seed_arg": "--asset confederacy:planet_shield_generator"
+    },
+    {
+      "binding": "confederacy:planet_pulsar_cannon",
+      "label": "legion pulsar cannon",
+      "identifier": "legion_planet_pulsar_cannon",
+      "mesh": "assets/models/legion_planet_pulsar_cannon.mesh.json",
+      "envelope": [
+        [
+          -34.0,
+          34.0
+        ],
+        [
+          0.0,
+          42.4
+        ],
+        [
+          -32.0,
+          46.0
+        ]
+      ],
+      "min_length": 77.8,
+      "data_id": "planet_pulsar_cannon",
+      "gameplay_entity": "planet_pulsar_cannon",
+      "class": "planet_pulsar_cannon",
+      "station_kind": "planet_pulsar_cannon",
+      "faction": "confederacy",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b4_hardware.py",
+      "seed_arg": "--asset confederacy:planet_pulsar_cannon"
+    },
+    {
+      "binding": "syndicate:defense_satellite",
+      "label": "syndicate defense satellite",
+      "identifier": "syndicate_defense_satellite",
+      "mesh": "assets/models/syndicate_defense_satellite.mesh.json",
+      "envelope": [
+        [
+          -41.1051,
+          41.1051
+        ],
+        [
+          -9.0,
+          19.5
+        ],
+        [
+          -34.0,
+          44.0
+        ]
+      ],
+      "min_length": 77.8,
+      "data_id": "defense_satellite",
+      "gameplay_entity": "defense_satellite",
+      "class": "defense_satellite",
+      "station_kind": "defense_satellite",
+      "faction": "syndicate",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b4_hardware.py",
+      "seed_arg": "--asset syndicate:defense_satellite"
+    },
+    {
+      "binding": "syndicate:attack_satellite",
+      "label": "syndicate attack satellite",
+      "identifier": "syndicate_attack_satellite",
+      "mesh": "assets/models/syndicate_attack_satellite.mesh.json",
+      "envelope": [
+        [
+          -50.9795,
+          50.9795
+        ],
+        [
+          -9.0,
+          21.5
+        ],
+        [
+          -34.0,
+          58.0
+        ]
+      ],
+      "min_length": 91.8,
+      "data_id": "attack_satellite",
+      "gameplay_entity": "attack_satellite",
+      "class": "attack_satellite",
+      "station_kind": "attack_satellite",
+      "faction": "syndicate",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b4_hardware.py",
+      "seed_arg": "--asset syndicate:attack_satellite"
+    },
+    {
+      "binding": "syndicate:planet_extractor",
+      "label": "syndicate planet extractor",
+      "identifier": "syndicate_planet_extractor",
+      "mesh": "assets/models/syndicate_planet_extractor.mesh.json",
+      "envelope": [
+        [
+          -34.0,
+          34.0
+        ],
+        [
+          0.0,
+          43.0
+        ],
+        [
+          -32.0,
+          32.0
+        ]
+      ],
+      "min_length": 63.8,
+      "data_id": "planet_extractor",
+      "gameplay_entity": "planet_extractor",
+      "class": "planet_extractor",
+      "station_kind": "planet_extractor",
+      "faction": "syndicate",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b4_hardware.py",
+      "seed_arg": "--asset syndicate:planet_extractor"
+    },
+    {
+      "binding": "syndicate:planet_trade_hub",
+      "label": "syndicate trade hub",
+      "identifier": "syndicate_planet_trade_hub",
+      "mesh": "assets/models/syndicate_planet_trade_hub.mesh.json",
+      "envelope": [
+        [
+          -34.0,
+          34.0
+        ],
+        [
+          0.0,
+          49.5
+        ],
+        [
+          -32.0,
+          32.0
+        ]
+      ],
+      "min_length": 63.8,
+      "data_id": "planet_trade_hub",
+      "gameplay_entity": "planet_trade_hub",
+      "class": "planet_trade_hub",
+      "station_kind": "planet_trade_hub",
+      "faction": "syndicate",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b4_hardware.py",
+      "seed_arg": "--asset syndicate:planet_trade_hub"
+    },
+    {
+      "binding": "syndicate:planet_shield_generator",
+      "label": "syndicate shield generator",
+      "identifier": "syndicate_planet_shield_generator",
+      "mesh": "assets/models/syndicate_planet_shield_generator.mesh.json",
+      "envelope": [
+        [
+          -34.0,
+          34.0
+        ],
+        [
+          0.0,
+          46.5
+        ],
+        [
+          -32.0,
+          32.0
+        ]
+      ],
+      "min_length": 63.8,
+      "data_id": "planet_shield_generator",
+      "gameplay_entity": "planet_shield_generator",
+      "class": "planet_shield_generator",
+      "station_kind": "planet_shield_generator",
+      "faction": "syndicate",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b4_hardware.py",
+      "seed_arg": "--asset syndicate:planet_shield_generator"
+    },
+    {
+      "binding": "syndicate:planet_pulsar_cannon",
+      "label": "syndicate pulsar cannon",
+      "identifier": "syndicate_planet_pulsar_cannon",
+      "mesh": "assets/models/syndicate_planet_pulsar_cannon.mesh.json",
+      "envelope": [
+        [
+          -34.0,
+          34.0
+        ],
+        [
+          0.0,
+          42.4
+        ],
+        [
+          -32.0,
+          46.0
+        ]
+      ],
+      "min_length": 77.8,
+      "data_id": "planet_pulsar_cannon",
+      "gameplay_entity": "planet_pulsar_cannon",
+      "class": "planet_pulsar_cannon",
+      "station_kind": "planet_pulsar_cannon",
+      "faction": "syndicate",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b4_hardware.py",
+      "seed_arg": "--asset syndicate:planet_pulsar_cannon"
+    },
+    {
+      "binding": "imperial:defense_satellite",
+      "label": "imperial defense satellite",
+      "identifier": "imperial_defense_satellite",
+      "mesh": "assets/models/imperial_defense_satellite.mesh.json",
+      "envelope": [
+        [
+          -41.1051,
+          41.1051
+        ],
+        [
+          -9.0,
+          19.5
+        ],
+        [
+          -34.0,
+          44.0
+        ]
+      ],
+      "min_length": 77.8,
+      "data_id": "defense_satellite",
+      "gameplay_entity": "defense_satellite",
+      "class": "defense_satellite",
+      "station_kind": "defense_satellite",
+      "faction": "imperial",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b4_hardware.py",
+      "seed_arg": "--asset imperial:defense_satellite"
+    },
+    {
+      "binding": "imperial:attack_satellite",
+      "label": "imperial attack satellite",
+      "identifier": "imperial_attack_satellite",
+      "mesh": "assets/models/imperial_attack_satellite.mesh.json",
+      "envelope": [
+        [
+          -50.9795,
+          50.9795
+        ],
+        [
+          -9.0,
+          21.5
+        ],
+        [
+          -34.0,
+          58.0
+        ]
+      ],
+      "min_length": 91.8,
+      "data_id": "attack_satellite",
+      "gameplay_entity": "attack_satellite",
+      "class": "attack_satellite",
+      "station_kind": "attack_satellite",
+      "faction": "imperial",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b4_hardware.py",
+      "seed_arg": "--asset imperial:attack_satellite"
+    },
+    {
+      "binding": "imperial:planet_extractor",
+      "label": "imperial planet extractor",
+      "identifier": "imperial_planet_extractor",
+      "mesh": "assets/models/imperial_planet_extractor.mesh.json",
+      "envelope": [
+        [
+          -34.0,
+          34.0
+        ],
+        [
+          0.0,
+          43.0
+        ],
+        [
+          -32.0,
+          32.0
+        ]
+      ],
+      "min_length": 63.8,
+      "data_id": "planet_extractor",
+      "gameplay_entity": "planet_extractor",
+      "class": "planet_extractor",
+      "station_kind": "planet_extractor",
+      "faction": "imperial",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b4_hardware.py",
+      "seed_arg": "--asset imperial:planet_extractor"
+    },
+    {
+      "binding": "imperial:planet_trade_hub",
+      "label": "imperial trade hub",
+      "identifier": "imperial_planet_trade_hub",
+      "mesh": "assets/models/imperial_planet_trade_hub.mesh.json",
+      "envelope": [
+        [
+          -34.0,
+          34.0
+        ],
+        [
+          0.0,
+          49.5
+        ],
+        [
+          -32.0,
+          32.0
+        ]
+      ],
+      "min_length": 63.8,
+      "data_id": "planet_trade_hub",
+      "gameplay_entity": "planet_trade_hub",
+      "class": "planet_trade_hub",
+      "station_kind": "planet_trade_hub",
+      "faction": "imperial",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b4_hardware.py",
+      "seed_arg": "--asset imperial:planet_trade_hub"
+    },
+    {
+      "binding": "imperial:planet_shield_generator",
+      "label": "imperial shield generator",
+      "identifier": "imperial_planet_shield_generator",
+      "mesh": "assets/models/imperial_planet_shield_generator.mesh.json",
+      "envelope": [
+        [
+          -34.0,
+          34.0
+        ],
+        [
+          0.0,
+          46.5
+        ],
+        [
+          -32.0,
+          32.0
+        ]
+      ],
+      "min_length": 63.8,
+      "data_id": "planet_shield_generator",
+      "gameplay_entity": "planet_shield_generator",
+      "class": "planet_shield_generator",
+      "station_kind": "planet_shield_generator",
+      "faction": "imperial",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b4_hardware.py",
+      "seed_arg": "--asset imperial:planet_shield_generator"
+    },
+    {
+      "binding": "imperial:planet_pulsar_cannon",
+      "label": "imperial pulsar cannon",
+      "identifier": "imperial_planet_pulsar_cannon",
+      "mesh": "assets/models/imperial_planet_pulsar_cannon.mesh.json",
+      "envelope": [
+        [
+          -34.0,
+          34.0
+        ],
+        [
+          0.0,
+          42.4
+        ],
+        [
+          -32.0,
+          46.0
+        ]
+      ],
+      "min_length": 77.8,
+      "data_id": "planet_pulsar_cannon",
+      "gameplay_entity": "planet_pulsar_cannon",
+      "class": "planet_pulsar_cannon",
+      "station_kind": "planet_pulsar_cannon",
+      "faction": "imperial",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b4_hardware.py",
+      "seed_arg": "--asset imperial:planet_pulsar_cannon"
+    }
+  ],
+  "motion": [
+    "rebel:defense_satellite",
+    "confederacy:attack_satellite",
+    "imperial:planet_pulsar_cannon"
+  ]
+}
