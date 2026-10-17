@@ -106,7 +106,7 @@ primitives inside the seed script.
 | `legion_mining_station` | `ebacae39583930f5b7d824a2f44734e7499db826ce52cd8baee50186495474b0` | `c04d23d84ab8916e5fb4e6a6efffe454f148349844779557e241bee400236bfb` |
 | `syndicate_mining_station` | `54aa027886e7069e1edabcdac16372b4bb3f087cba6c164ef9f9766aa38ba8a0` | `ee86f98eeae7e69c2c5d345a9aa2736dd62e9911b4673a28c3f5b459ce382872` |
 | `alliance_sensor_station` | `6cd5fe3878340770a455da9945023d62b4ebdf5ecb0e1d814a84c4582cedba03` | `02e7447e185ea4b01ddddd8e605247e2c99704736c9e0b4784b95545c2bff24e` |
-| `legion_sensor_station` | `094ab52840c54cef032b5d0013d2cb4a2f0d25e0d1ce99796fa2e0a32c8015a4` | `4d9b0819b987ae48af105e721cd6e9fda525464bfd719339e66a44d960894ce0` |
+| `legion_sensor_station` | `a5d7d33d83326573165a7505aa8e6f1b29ba09864521657dcea0396e990002d1` | `27d3b5803c10a386b8ed74f8574acb0f8d0a6eb5f7509ad4bd2726ac33163755` |
 | `syndicate_sensor_station` | `dea77b42af5ec0450102fea28cc780b59ee154888ce96b249a097b7a6551e4aa` | `5240ed82fdd7f7385deb9143365aed20717d61f9d2550fa98b4fb7985bdbcbbb` |
 | `alliance_energy_relay` | `64482d7da075ba883c730f873a6a239120f953fab7241e0563fdb0d1209a9518` | `fea920827bc7c690d022ce614455dfad7da0ca6e053af0e5fde793c0fa6173f8` |
 | `legion_energy_relay` | `58bd7ca362e7336ca81387e65b193a2d6469dcf8bae851170743779d419548cc` | `8c260a988a6e0f66bb7a659832f8c289dcd797a82c4eab1f25725131086de7e0` |
@@ -120,7 +120,7 @@ primitives inside the seed script.
 | mining | `legion_mining_station` | 4,280 (2,032) | 88 | 290,934 | 2,312 |
 | mining | `syndicate_mining_station` | 3,740 (1,696) | 92 | 239,907 | 2,048 |
 | sensor | `alliance_sensor_station` | 4,196 (3,344) | 81 | 274,873 | 2,158 |
-| sensor | `legion_sensor_station` | 3,576 (1,200) | 84 | 230,635 | 1,952 |
+| sensor | `legion_sensor_station` | 3,564 (1,200) | 83 | 230,217 | 1,944 |
 | sensor | `syndicate_sensor_station` | 3,868 (1,248) | 88 | 255,665 | 2,098 |
 | relay | `alliance_energy_relay` | 4,496 (2,208) | 78 | 310,433 | 2,396 |
 | relay | `legion_energy_relay` | 3,484 (976) | 90 | 220,886 | 1,912 |
@@ -182,7 +182,7 @@ bit-for-bit and no committed capture moves:
    every specimen.
 2. **Overview spacing 300, not 600.** Nine rows at 600 span 4,800 units while the 1,100-distance
    overview frame covers 1,833, so the outer rows fell outside the frame. At 300 the whole batch is
-   inside its own contact-sheet frame (overview change rose from 13,579 to 23,280 changed pixels on this revision's frames).
+   inside its own contact-sheet frame (overview change rose from 13,579 to 20,838 changed pixels on this revision's frames).
 
 Neither correction touches the production renderer: `tools/diag_alliance_batch_review.py` is
 review tooling, and the batch's `integration` field still records
@@ -202,7 +202,7 @@ the real application, the candidate injected through `render.asset_selection` on
   `production_candidates_unselected_after_review: true`.
 * `restored_changed_pixels: 0` on all nine rows — the specimen does not perturb the restored
   simulation, so nothing here is a gameplay change.
-* Overview (`distance 1100`, `pitch 50`, `yaw 48`, target `[-4200, 0, 2400]`): 23,280 changed
+* Overview (`distance 1100`, `pitch 50`, `yaw 48`, target `[-4200, 0, 2400]`): 20,838 changed
   pixels across the nine-row line.
 * `warning`: offline orbit captures — production draw and real simulation ticks, not paced FPS,
   battle acceptance or native Windows graphics acceptance.
@@ -222,6 +222,41 @@ The envelope did not move — the bounds of all nine are unchanged from the revi
 station scale and footprint comparison above are the same numbers — and every part now touches:
 the worst part-to-nearest gap is 0.10 units where the reviewed meshes had 1.43–23.75. Triangles are
 up 24–156 per station, all of it weld members and the extra light blocks.
+
+**Welding is not the same as scaffolding, and the first cut of this pass confused the two.** It
+braced `legion_sensor_station`'s forward dish — authored at the station's origin while its mast head
+sits 31 units forward — with three long booms spanning the distance, and in the capture those booms
+read as an extra grey panel welded across the hull. A brace that long is not a weld. So:
+
+* `weld_scene(max_brace=10.0)` now **refuses** a joint whose two clusters have more than 10 units of
+  clear space between them, naming the pair: that is a design fault, and the part gets placed where
+  it belongs instead. A refusal leaves the master untouched, because the pass runs before the save.
+* A member now spans the **gap** — from one box's facing face to the other's — and never from centre
+  to centre. Two long parts that almost touch used to get a member as long as the parts themselves,
+  which is exactly how the booms appeared.
+* `legion_sensor_station` was re-placed rather than braced: the dish now sits on its hub at the mast
+  head, the hub on the mast, and the whole chain welds with four sub-unit fits (`06 Forward dish`
+  grew 40 vertices onto its hub, 0.35 units of clear space) and two short brackets of 2.6 and
+  4.21 units between neighbouring parts. Its bounds are the legacy extent to the digit, its
+  triangle count went 3,576 → 3,564 and it carries two weld members instead of three booms.
+
+**Outstanding, measured rather than asserted.** Measuring the committed meshes for the clear space
+each existing weld member bridged — the member's box contains its two endpoints, so their mutual gap
+is what the new rule judges — five designs still carry a joint over the 10-unit line, and their
+*seeds* will therefore refuse until the part is placed where it belongs:
+
+| specimen | clear space a member bridged |
+| --- | --- |
+| `syndicate_sensor_station` | 33.86 |
+| `syndicate_mining_station` | 24.50 |
+| `syndicate_energy_relay` | 20.01 |
+| `legion_mining_station` | 17.18 |
+| `alliance_carrier` | 12.90 |
+
+Their committed meshes are welded — the frames in this handoff are the ones reviewed — but each
+needs the same placement pass `legion_sensor_station` just had before its next rebuild. The seven
+other specimens are inside the line; `legion_sensor_station` is now the cleanest of the nine at
+0.00.
 
 ## Owner approval
 

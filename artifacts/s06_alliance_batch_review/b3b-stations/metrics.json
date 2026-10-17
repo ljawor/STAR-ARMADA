@@ -1755,8 +1755,8 @@
             920,
             680
           ],
-          "changed_percent": 12.2857,
-          "changed_pixels_gt3": 125806
+          "changed_percent": 10.5893,
+          "changed_pixels_gt3": 108434
         },
         "common-scale": {
           "bbox": [
@@ -1765,8 +1765,8 @@
             651,
             464
           ],
-          "changed_percent": 0.0512,
-          "changed_pixels_gt3": 524
+          "changed_percent": 0.0483,
+          "changed_pixels_gt3": 495
         },
         "rear": {
           "bbox": [
@@ -1775,8 +1775,8 @@
             898,
             654
           ],
-          "changed_percent": 9.9126,
-          "changed_pixels_gt3": 101505
+          "changed_percent": 8.6965,
+          "changed_pixels_gt3": 89052
         },
         "tactical": {
           "bbox": [
@@ -1785,30 +1785,30 @@
             749,
             509
           ],
-          "changed_percent": 1.8947,
-          "changed_pixels_gt3": 19402
+          "changed_percent": 1.465,
+          "changed_pixels_gt3": 15002
         }
       },
       "features": {
         "accent": {
           "bbox": [
             442,
-            312,
+            297,
             714,
             571
           ],
           "camera": "close",
-          "changed_pixels": 1061
+          "changed_pixels": 718
         },
         "cool": {
           "bbox": [
             575,
-            226,
+            207,
             710,
             451
           ],
           "camera": "rear",
-          "changed_pixels": 3773
+          "changed_pixels": 3629
         },
         "dark": {
           "bbox": [
@@ -1818,7 +1818,7 @@
             546
           ],
           "camera": "close",
-          "changed_pixels": 14018
+          "changed_pixels": 16195
         }
       },
       "initial_state_sha256": "565302fd62e21001209e5e1f1e15f5ae21db8f2611db4892369906a1a293ca36",
@@ -5159,7 +5159,7 @@
           34.8
         ]
       ],
-      "bytes": 230635,
+      "bytes": 230217,
       "candidate_footprint": [
         72.2826,
         52.252628,
@@ -5180,10 +5180,10 @@
         "lit",
         "trim"
       ],
-      "sha256": "4d9b0819b987ae48af105e721cd6e9fda525464bfd719339e66a44d960894ce0",
+      "sha256": "27d3b5803c10a386b8ed74f8574acb0f8d0a6eb5f7509ad4bd2726ac33163755",
       "station_scale": 0.9,
-      "triangles": 3576,
-      "vertices": 1952
+      "triangles": 3564,
+      "vertices": 1944
     },
     "rebel:energy_relay": {
       "authority": "blend",
@@ -5444,7 +5444,7 @@
       ],
       "yaw": 48
     },
-    "changed_pixels_gt3": 23280,
+    "changed_pixels_gt3": 23238,
     "placements": [
       [
         "spec0",
@@ -5579,7 +5579,7 @@
     "art/blender/legion_energy_relay.blend": "58bd7ca362e7336ca81387e65b193a2d6469dcf8bae851170743779d419548cc",
     "art/blender/legion_hyena.blend": "f4b9af5efb7e2d1d157a168c74b1b2936c2df2a39f9217155e4cafb5edc01f2e",
     "art/blender/legion_mining_station.blend": "ebacae39583930f5b7d824a2f44734e7499db826ce52cd8baee50186495474b0",
-    "art/blender/legion_sensor_station.blend": "094ab52840c54cef032b5d0013d2cb4a2f0d25e0d1ce99796fa2e0a32c8015a4",
+    "art/blender/legion_sensor_station.blend": "a5d7d33d83326573165a7505aa8e6f1b29ba09864521657dcea0396e990002d1",
     "art/blender/legion_vulture.blend": "932bba8532ba8d02e50fec774131477c43a383311aec500c1412b336a11d1ac8",
     "art/blender/syndicate_command_station.blend": "f3342e0ed63c8b730d91bafdca9c8d7d0bbf9bc0bfe7e54293bff792e27e4d17",
     "art/blender/syndicate_convoy.blend": "4d93545d957166eb25ee139df346395dab3f6b48ac7294a319de0e714e0b2d3b",
@@ -5588,7 +5588,7 @@
     "art/blender/syndicate_mining_station.blend": "54aa027886e7069e1edabcdac16372b4bb3f087cba6c164ef9f9766aa38ba8a0",
     "art/blender/syndicate_sensor_station.blend": "dea77b42af5ec0450102fea28cc780b59ee154888ce96b249a097b7a6551e4aa",
     "tools/art/README.md": "9eced7500077a89ca8d4a5d29f9e6f963f547acfa49b651b0f687b82d9c0efa1",
-    "tools/art/alliance_common.py": "6f76c46eac87b79b7804cce68f7beb1dafff1c0d20786ec8154392c9d57852e1",
+    "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
     "tools/art/build-model": "a0824bc96fcdfac16e007e1d0d9e2a9acdc2d9203e05f2f40c52b2f10cd12090",
     "tools/art/build_alliance_battleship.py": "52380040fd04c3370085c1815e68cb520d5e54f1f4af04ac53ec69d7233d0082",
     "tools/art/build_alliance_carrier.py": "3f6d0258c87be7ebc2752e42ef4c20a812a2023dc3b0527413626283771cdf94",
@@ -5598,7 +5598,7 @@
     "tools/art/build_alliance_shipyard.py": "22e98cf85620959fb910e15c39e0eea64b1dca4df078decc150b04c9a351d70f",
     "tools/art/build_b2_batch.py": "d8aa040c8bbff81baf836d193023ed6d21a2828f045e9fca6f18f422cfb6ea23",
     "tools/art/build_b3_stations.py": "7f84d8c60df8fe1d254a2bb05249f2467927621e105a6c4f57b5c55d0472c083",
-    "tools/art/build_b3b_stations.py": "6f97c0f9e7e84e81dece22078f7c49c32b461bb15e3ab734d0241fd9d2373fec",
+    "tools/art/build_b3b_stations.py": "5e183c56d12bfe11c18bdcfa2227c99fde1dfa9edd30f1d5ff72d8f68d8f92dc",
     "tools/art/build_model_inventory.py": "a86408b348468ef5d4adfa0a20a40a12ff6bbdc586f0f056aaf28dcb49d9ccba",
     "tools/art/export-model": "9498cf59db089ad1bb25eac2862e3b5887ea827a9ba4f32a552a1525ca0ae303",
     "tools/art/export_alliance_bomber.py": "99c6cb8ad1016d7bdbdd4789e9d9c534d7453bb4ab40d8a8e99c114f07ebbd18",
@@ -5642,7 +5642,7 @@
   "protected_files_preserved": true,
   "schema": 1,
   "source_preserved": true,
-  "source_sha256": "1421a5a0d64dc39e82b3803bcbf74d8ec53677cd34094e1ecc0172a5937f39be",
+  "source_sha256": "0aac5be0a08a6f24a8a5f99a7000dfca2418e657485adc49984430a4b2705547",
   "status": "pending_owner_approval",
   "warning": "Offline orbit captures: production draw and real simulation ticks; not paced FPS, battle acceptance or native Windows graphics acceptance"
 }

@@ -421,10 +421,16 @@ def build_sensor_station(limits, treatment):
                   (c[0] * .2, 5.6 + i * 2.2, -rz * .5 + i * rz * .42), .4)
             plate(f'04 Step window {i}', 'cool', (rx * .6 - i * 2.4, 1.2, 3.4),
                   (c[0] * .2, 7.6 + i * 2.2, -rz * .5 + i * rz * .42), .3)
-        plate('05 Mast', 'trim', (2.2, hi[1] - 9.0, 2.2), (c[0] * .2, (hi[1] - 9.0) / 2 + 2.0,
+        plate('05 Mast', 'trim', (2.2, hi[1] - 7.0, 2.2), (c[0] * .2, (hi[1] - 7.0) / 2 + 2.0,
                                                            hi[2] - 3.6), .3)
-        torus('06 Forward dish', 'cool', hi[1] - 1.1, 5.4, 1.1, m=20, n=6, sz=.7)
-        plate('07 Dish hub', 'accent', (2.6, 2.6, 3.0), (c[0] * .2, hi[1] - 5.4, hi[2] - 3.6),
+        # The dish belongs on the hub at the head of the mast: authored at the station origin it
+        # floated 23.75 units - 120 px of daylight in its own capture - and only a scaffold boom
+        # could have reached it. It keeps its height, which is what sets the legacy extent.
+        torus('06 Forward dish', 'cool', hi[1] - 1.1, 5.4, 1.1, m=20, n=6, sz=.7,
+              cx=c[0] * .2, cz=hi[2] - 5.0)
+        # The hub sits at the mast head and the dish sits on the hub, so the three parts are one
+        # piece by placement rather than by a brace; the dish keeps the height that sets the extent.
+        plate('07 Dish hub', 'accent', (2.6, 2.6, 3.0), (c[0] * .2, hi[1] - 3.7, hi[2] - 5.0),
               .3)
         for side, label in ((-1, 'left'), (1, 'right')):
             strut(f'08 Fin {label}', 'dark', (side * rx * .2, 0., rz * .3),

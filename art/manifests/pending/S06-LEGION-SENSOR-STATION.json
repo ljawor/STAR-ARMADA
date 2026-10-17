@@ -10,13 +10,13 @@
   "authority": "blend",
   "source": {
     "path": "art/blender/legion_sensor_station.blend",
-    "sha256": "094ab52840c54cef032b5d0013d2cb4a2f0d25e0d1ce99796fa2e0a32c8015a4",
-    "bytes": 143733
+    "sha256": "a5d7d33d83326573165a7505aa8e6f1b29ba09864521657dcea0396e990002d1",
+    "bytes": 143468
   },
   "initial_seed": {
     "path": "tools/art/build_b3b_stations.py",
-    "sha256": "6f97c0f9e7e84e81dece22078f7c49c32b461bb15e3ab734d0241fd9d2373fec",
-    "bytes": 34273,
+    "sha256": "5e183c56d12bfe11c18bdcfa2227c99fde1dfa9edd30f1d5ff72d8f68d8f92dc",
+    "bytes": 34801,
     "selects": "--asset confederacy:sensor_station"
   },
   "export_script": {
@@ -26,10 +26,10 @@
   },
   "runtime": {
     "path": "assets/models/legion_sensor_station.mesh.json",
-    "sha256": "4d9b0819b987ae48af105e721cd6e9fda525464bfd719339e66a44d960894ce0",
-    "bytes": 230635,
-    "triangles": 3576,
-    "vertices": 1952,
+    "sha256": "27d3b5803c10a386b8ed74f8574acb0f8d0a6eb5f7509ad4bd2726ac33163755",
+    "bytes": 230217,
+    "triangles": 3564,
+    "vertices": 1944,
     "roles": [
       "accent",
       "base",

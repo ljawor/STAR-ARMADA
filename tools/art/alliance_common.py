@@ -114,7 +114,7 @@ def _box_gap(a, b):  # noqa: D401
 
 
 def weld_scene(tolerance=.25, role='trim', grow_max=2.5, min_half=.3, max_half=.9,
-               overlap=.05, max_members=90):
+               overlap=.05, max_members=90, max_brace=10.0):
     """Weld every part of the scene into one piece, so nothing floats in space.
 
     A kit is authored part by part, by centre and by reach, and nothing in that process
@@ -126,8 +126,16 @@ def weld_scene(tolerance=.25, role='trim', grow_max=2.5, min_half=.3, max_half=.
     A gap of at most `grow_max` is closed by growing the part: the face that looks at its
     neighbour is pushed out until the two overlap, which thickens a panel onto the hull it was
     always meant to sit on. A larger gap is closed with a member run between the two nearest
-    centres, because thickening a part by many times its own size is a different shape rather
-    than a fit - a sensor dish 25 units off its mast wants a boom, not a fatter dish. Either way
+ centres, because thickening a part by many times its own size is a different shape rather
+ than a fit - a sensor dish 2 units off its mast wants a short bracket, not a fatter dish.
+ A pair of parts whose centres are further apart than `max_brace` is a *design* fault, not a
+ fitting one: the first cut of this pass braced `legion_sensor_station`'s forward dish, which
+ had been authored at the station's origin while its mast sits 31 units forward, with three
+ long booms that read in the capture as an extra grey panel welded across the hull. Scaffold
+ is not a weld, so that case now refuses with the pair named, and the part gets placed where
+ it belongs instead. `max_brace` is 10 units of *clear space* - about a ninth of the smallest
+ of these stations - so a bracket across a small fit is fine and a hole you could see is not.
+ Either way
     the asset's extent is kept, because the face that moves is the one facing the neighbour,
     never the one that set the envelope - so the build's extent self-check stays a check on the
     design rather than on this pass. Every joint is reported; the caller asserts the count, so
@@ -190,13 +198,31 @@ def weld_scene(tolerance=.25, role='trim', grow_max=2.5, min_half=.3, max_half=.
                 parts[x] = _world_box(obj)
                 joints.append((round(_box_gap(bx, by), 2), x, y, f'grew {moved} verts'))
             else:
+                gap = _box_gap(bx, by)
+                if gap > max_brace:
+                    raise RuntimeError(
+                        f'{x} and {y} are one cluster with {gap:.2f} units of clear space '
+                        f'between them. A brace that long is scaffold, not a weld: place one of '
+                        f'them so it touches, or raise max_brace deliberately.')
                 smaller = min(bx, by, key=lambda box: min(box[1][i] - box[0][i] for i in range(3)))
                 half = min(max(.35 * min(smaller[1][i] - smaller[0][i] for i in range(3)),
                                min_half), max_half)
-                cx = [(bx[0][i] + bx[1][i]) / 2 for i in range(3)]
-                cy = [(by[0][i] + by[1][i]) / 2 for i in range(3)]
-                lo = [min(cx[i], cy[i]) - half for i in range(3)]
-                hi = [max(cx[i], cy[i]) + half for i in range(3)]
+                # The member spans the *gap*, from one part's facing face to the other's, never
+                # from centre to centre: two long parts that almost touch would otherwise get a
+                # member as long as the parts themselves, which is how the first cut of this pass
+                # drew three booms across legion_sensor_station that read as an added hull panel.
+                lo, hi = [], []
+                for i in range(3):
+                    if bx[1][i] < by[0][i]:
+                        lo.append(bx[1][i] - overlap)
+                        hi.append(by[0][i] + overlap)
+                    elif by[1][i] < bx[0][i]:
+                        lo.append(by[1][i] - overlap)
+                        hi.append(bx[0][i] + overlap)
+                    else:
+                        mid = (max(bx[0][i], by[0][i]) + min(bx[1][i], by[1][i])) / 2
+                        lo.append(mid - half)
+                        hi.append(mid + half)
                 verts = [(lo[0], lo[1], lo[2]), (hi[0], lo[1], lo[2]), (hi[0], hi[1], lo[2]),
                          (lo[0], hi[1], lo[2]), (lo[0], lo[1], hi[2]), (hi[0], lo[1], hi[2]),
                          (hi[0], hi[1], hi[2]), (lo[0], hi[1], hi[2])]
