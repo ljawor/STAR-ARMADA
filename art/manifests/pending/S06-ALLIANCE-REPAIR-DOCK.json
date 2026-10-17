@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b3c-stations",
+  "binding": "rebel:repair_dock",
+  "canonical_binding": "ship:rebel:repair_dock",
+  "gameplay_entity": "repair_dock",
+  "class": "repair_dock",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/alliance_repair_dock.blend",
+    "sha256": "5a5035a39251c5a9cacef545fb3ad7a6ecfef5f2256883872aa364a372b34f99",
+    "bytes": 153442
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b3c_stations.py",
+    "sha256": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+    "bytes": 58285,
+    "selects": "--asset rebel:repair_dock"
+  },
+  "export_script": {
+    "path": "tools/art/export_alliance_repair_dock.py",
+    "sha256": "f7a36e72088c947d8c0fc1c757ecf6edbf138fc59c4d8ea656afe1cde1115334",
+    "bytes": 4761
+  },
+  "runtime": {
+    "path": "assets/models/alliance_repair_dock.mesh.json",
+    "sha256": "c7290bd9e1f51911c10bf5434de99d3294dd22ba6f6110f886c1677f46615d76",
+    "bytes": 316320,
+    "triangles": 4696,
+    "vertices": 2516,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -38.4,
+      -12.8,
+      -33.6
+    ],
+    [
+      38.4,
+      23.6,
+      39.6
+    ]
+  ],
+  "bounds": [
+    [
+      -38.4,
+      -12.8,
+      -33.6
+    ],
+    [
+      38.4,
+      23.6,
+      39.6
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+  "motion": null
+}

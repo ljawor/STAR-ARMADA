@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b3c-stations",
+  "binding": "syndicate:trade_station",
+  "canonical_binding": "ship:syndicate:trade_station",
+  "gameplay_entity": "trade_station",
+  "class": "trade_station",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/syndicate_trade_station.blend",
+    "sha256": "7b84c5e0f47928eee805a8acfc0e018c5cd31ee3255803c7c7134c3e5b145252",
+    "bytes": 143849
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b3c_stations.py",
+    "sha256": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+    "bytes": 58285,
+    "selects": "--asset syndicate:trade_station"
+  },
+  "export_script": {
+    "path": "tools/art/export_syndicate_trade_station.py",
+    "sha256": "4861caf2c410de7e7c5fad67d39398b1784e794e66e1e929f7756e951cfd57f2",
+    "bytes": 4781
+  },
+  "runtime": {
+    "path": "assets/models/syndicate_trade_station.mesh.json",
+    "sha256": "6bae5343f97a9d1881d8b1b7bbf21270a1acddc26a6b58752e258dcb90bd9e1c",
+    "bytes": 223717,
+    "triangles": 3532,
+    "vertices": 1944,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -52.3122,
+      -8.8,
+      -48.6483
+    ],
+    [
+      45.2571,
+      24.5,
+      46.5606
+    ]
+  ],
+  "bounds": [
+    [
+      -52.3122,
+      -8.8,
+      -48.6483
+    ],
+    [
+      45.2571,
+      24.5,
+      46.5606
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+  "motion": null
+}

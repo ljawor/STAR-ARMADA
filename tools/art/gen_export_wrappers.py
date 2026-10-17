@@ -50,6 +50,28 @@ ASSETS = {
     'alliance_energy_relay': ('Alliance energy relay', ((-50.4, 50.4), (-8.4078, 13.2078), (-29.36, 20.9846)), 50.1, 11500, 8000, 2_000_000),
     'legion_energy_relay': ('Legion energy relay', ((-41.4372, 41.4372), (-16.0, 31.6), (-25.7713, 46.4)), 71.9, 11500, 8000, 2_000_000),
     'syndicate_energy_relay': ('Syndicate energy relay', ((-47.5594, 46.5284), (-11.2, 23.36), (-46.5402, 34.4011)), 80.7, 11500, 8000, 2_000_000),
+    # S06 B3c - the remaining seventeen faction station rows: research / defense / trade /
+    # fighter / repair across the three families plus the two Legion and Syndicate shipyards.
+    # Same station budget policy as B3a/B3b; `min_length` is the binding's own authored depth
+    # (the legacy Z span), which is what a station mesh is measured by rather than a hull's
+    # drawn length.
+    'alliance_research_station': ('Alliance research station', ((-40.0, 40.0), (-9.6, 39.28), (-25.6, 35.901)), 61.4, 11500, 8000, 2_000_000),
+    'legion_research_station': ('Legion research station', ((-46.3156, 46.3156), (-12.4, 13.88), (-33.48, 52.68)), 86.0, 11500, 8000, 2_000_000),
+    'syndicate_research_station': ('Syndicate research station', ((-40.0, 36.4), (-7.2, 37.68), (-27.572, 32.8)), 60.2, 11500, 8000, 2_000_000),
+    'alliance_defense_platform': ('Alliance defense platform', ((-45.92, 45.92), (-4.8, 11.166), (-44.32, 44.32)), 88.5, 11500, 8000, 2_000_000),
+    'legion_defense_platform': ('Legion defense platform', ((-50.2043, 50.2043), (-8.4, 16.544), (-31.2764, 55.68)), 86.8, 11500, 8000, 2_000_000),
+    'syndicate_defense_platform': ('Syndicate defense platform', ((-45.9679, 30.3691), (-10.8, 22.1), (-28.5448, 28.0475)), 56.4, 11500, 8000, 2_000_000),
+    'alliance_trade_station': ('Alliance trade station', ((-44.0, 44.0), (-5.948, 6.12), (-38.736, 39.36)), 77.9, 11500, 8000, 2_000_000),
+    'legion_trade_station': ('Legion trade station', ((-43.7668, 43.7668), (-6.552, 18.28), (-46.0532, 46.0532)), 91.9, 11500, 8000, 2_000_000),
+    'syndicate_trade_station': ('Syndicate trade station', ((-52.3122, 45.2571), (-8.8, 24.5), (-48.6483, 46.5606)), 95.0, 11500, 8000, 2_000_000),
+    'alliance_fighter_platform': ('Alliance fighter platform', ((-48.0, 48.0), (-9.2, 6.92), (-39.2, 39.2)), 78.2, 11500, 8000, 2_000_000),
+    'legion_fighter_platform': ('Legion fighter platform', ((-42.4021, 42.4021), (-8.8, 11.88), (-36.4, 36.0)), 72.2, 11500, 8000, 2_000_000),
+    'syndicate_fighter_platform': ('Syndicate fighter platform', ((-39.6, 32.1135), (-15.2, 30.8), (-39.2, 39.2)), 78.2, 11500, 8000, 2_000_000),
+    'alliance_repair_dock': ('Alliance repair dock', ((-38.4, 38.4), (-12.8, 23.6), (-33.6, 39.6)), 73.0, 11500, 8000, 2_000_000),
+    'legion_repair_dock': ('Legion repair dock', ((-40.1472, 40.1472), (-14.8, 26.4), (-36.4, 36.4)), 72.6, 11500, 8000, 2_000_000),
+    'syndicate_repair_dock': ('Syndicate repair dock', ((-37.4318, 39.7528), (-16.8, 34.8), (-38.931, 37.9495)), 76.7, 11500, 8000, 2_000_000),
+    'legion_shipyard': ('Legion shipyard', ((-62.04, 62.04), (-5.6, 41.6), (-45.0564, 62.4)), 107.3, 11500, 8000, 2_000_000),
+    'syndicate_shipyard': ('Syndicate shipyard', ((-52.1606, 46.9468), (-18.9928, 45.6), (-53.6606, 48.4056)), 101.9, 11500, 8000, 2_000_000),
 }
 
 

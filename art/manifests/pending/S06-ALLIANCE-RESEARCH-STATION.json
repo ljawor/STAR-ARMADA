@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b3c-stations",
+  "binding": "rebel:research_station",
+  "canonical_binding": "ship:rebel:research_station",
+  "gameplay_entity": "research_station",
+  "class": "research_station",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/alliance_research_station.blend",
+    "sha256": "2f2522c077460483fd6e201424f042ef36142c41850401b848a88de0a51f6a12",
+    "bytes": 154953
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b3c_stations.py",
+    "sha256": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+    "bytes": 58285,
+    "selects": "--asset rebel:research_station"
+  },
+  "export_script": {
+    "path": "tools/art/export_alliance_research_station.py",
+    "sha256": "3d3e961ddbc399c5ff141083da666dfb12486d55b54caebc579d9d84f962b828",
+    "bytes": 4778
+  },
+  "runtime": {
+    "path": "assets/models/alliance_research_station.mesh.json",
+    "sha256": "1886a86b89cb1b0ef4a618a398216cccf44a0cd9dc84f950a0dce94b9892f870",
+    "bytes": 321940,
+    "triangles": 4812,
+    "vertices": 2580,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -40.0,
+      -9.6,
+      -25.6
+    ],
+    [
+      40.0,
+      39.28,
+      35.901
+    ]
+  ],
+  "bounds": [
+    [
+      -40.0,
+      -9.6,
+      -25.6
+    ],
+    [
+      40.0,
+      39.28,
+      35.901
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+  "motion": "artifacts/s06_alliance_batch_review/b3c-stations/alliance research station-after-motion.mp4"
+}

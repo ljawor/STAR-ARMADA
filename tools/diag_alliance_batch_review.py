@@ -447,6 +447,7 @@ def main():
                                 + (len(spec['assets']) - 1) * spec['overview']['spacing'] / 2],
                     'distance': spec['overview']['distance'], 'yaw': spec['overview']['yaw'],
                     'pitch': spec['overview']['pitch']}
+        overview_frames = {}
         for variant in ('before', 'after'):
             active['enabled'] = variant == 'after'
             active['binding'] = None
@@ -463,6 +464,7 @@ def main():
             renderer.close(); renderer = None
             pygame.image.save(pygame.image.frombuffer(pixels.tobytes(), (W, H), 'RGB'),
                               str(out / f'overview-{variant}.png'))
+            overview_frames[variant] = pixels
             images['overview', variant, 'common-scale'] = pixels
         diff = np.abs(images['overview', 'before', 'common-scale'].astype(int)
                       - images['overview', 'after', 'common-scale'].astype(int))
@@ -503,8 +505,12 @@ def main():
                                + ' - Blender masters - 4MSAA / production shaders / normal fog',
                                True, (200, 220, 240)), (12, 20))
         pygame.image.save(sheet, str(out / 'contact-sheet.png'))
-        pygame.image.save(pygame.image.frombuffer(pixels.tobytes(), (W, H), 'RGB'),
-                          str(out / 'overview.png'))
+        # `overview.png` used to be saved from the `pixels` left over by the last row's last
+        # draw, so the file that reads as "the batch overview" was a duplicate of one row's
+        # capture - it did not move when the overview camera moved, which is how a framing
+        # check came to be run against the wrong frame. Save the frame the overview draw made.
+        pygame.image.save(pygame.image.frombuffer(overview_frames['after'].tobytes(),
+                                                 (W, H), 'RGB'), str(out / 'overview.png'))
         helper.dump(out / 'metrics.json', report)
         print(json.dumps({b: dict(comparison=report['captures'][b]['comparison'],
                                   features=report['captures'][b]['features'],

@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b3c-stations",
+  "binding": "confederacy:fighter_platform",
+  "canonical_binding": "ship:confederacy:fighter_platform",
+  "gameplay_entity": "fighter_platform",
+  "class": "fighter_platform",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/legion_fighter_platform.blend",
+    "sha256": "399010c3d7ad781ecc75f733e3cbf060d1593ce66df1ad2b55f7ff72de776f50",
+    "bytes": 145889
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b3c_stations.py",
+    "sha256": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+    "bytes": 58285,
+    "selects": "--asset confederacy:fighter_platform"
+  },
+  "export_script": {
+    "path": "tools/art/export_legion_fighter_platform.py",
+    "sha256": "39b06ad80f79b03b3165acaed26e8a27b6b990366847c0b9e8ac2b2a6f07bc6c",
+    "bytes": 4776
+  },
+  "runtime": {
+    "path": "assets/models/legion_fighter_platform.mesh.json",
+    "sha256": "b88dd8ee806fc3b8167cd93252a64b87683430fc19cb0f3a177423ef46a32f9c",
+    "bytes": 229697,
+    "triangles": 3620,
+    "vertices": 2000,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -42.4021,
+      -8.8,
+      -36.4
+    ],
+    [
+      42.4021,
+      11.88,
+      36.0
+    ]
+  ],
+  "bounds": [
+    [
+      -42.4021,
+      -8.8,
+      -36.4
+    ],
+    [
+      42.4021,
+      11.88,
+      36.0
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+  "motion": null
+}

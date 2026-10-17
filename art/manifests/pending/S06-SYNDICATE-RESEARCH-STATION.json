@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b3c-stations",
+  "binding": "syndicate:research_station",
+  "canonical_binding": "ship:syndicate:research_station",
+  "gameplay_entity": "research_station",
+  "class": "research_station",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/syndicate_research_station.blend",
+    "sha256": "44ddb5b052fb1ad51a4c00f56a00cd59386e83241f8f404677ac505254f2b57d",
+    "bytes": 145675
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b3c_stations.py",
+    "sha256": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+    "bytes": 58285,
+    "selects": "--asset syndicate:research_station"
+  },
+  "export_script": {
+    "path": "tools/art/export_syndicate_research_station.py",
+    "sha256": "1b55314197508e6033caf79dec3e6913b90ea00d27a5e66127aa02e10666e5af",
+    "bytes": 4781
+  },
+  "runtime": {
+    "path": "assets/models/syndicate_research_station.mesh.json",
+    "sha256": "c2532f898553a4ff437be8f365d037551e4c1d1a5d5389f35e500c473c1b224c",
+    "bytes": 259774,
+    "triangles": 3904,
+    "vertices": 2118,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -40.0,
+      -7.2,
+      -27.572
+    ],
+    [
+      36.4,
+      37.68,
+      32.8
+    ]
+  ],
+  "bounds": [
+    [
+      -40.0,
+      -7.2,
+      -27.572
+    ],
+    [
+      36.4,
+      37.68,
+      32.8
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+  "motion": null
+}

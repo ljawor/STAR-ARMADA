@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b3c-stations",
+  "binding": "rebel:fighter_platform",
+  "canonical_binding": "ship:rebel:fighter_platform",
+  "gameplay_entity": "fighter_platform",
+  "class": "fighter_platform",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/alliance_fighter_platform.blend",
+    "sha256": "d73a689a2b6146eca3d4f178e6c7b9ca1de57865b3e2486436867a0b4c82e394",
+    "bytes": 149034
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b3c_stations.py",
+    "sha256": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+    "bytes": 58285,
+    "selects": "--asset rebel:fighter_platform"
+  },
+  "export_script": {
+    "path": "tools/art/export_alliance_fighter_platform.py",
+    "sha256": "259da43033a89b2f042e8a54933629bcefc25802a4b547b7dd8b10d5c00fd50b",
+    "bytes": 4775
+  },
+  "runtime": {
+    "path": "assets/models/alliance_fighter_platform.mesh.json",
+    "sha256": "4f06b97c93cd05c3fb132b67d0a0f2a18bfc07847d16402c4ec18cdbe3b77d6f",
+    "bytes": 286581,
+    "triangles": 4288,
+    "vertices": 2312,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -48.0,
+      -9.2,
+      -39.2
+    ],
+    [
+      48.0,
+      6.92,
+      39.2
+    ]
+  ],
+  "bounds": [
+    [
+      -48.0,
+      -9.2,
+      -39.2
+    ],
+    [
+      48.0,
+      6.92,
+      39.2
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+  "motion": null
+}

@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b3c-stations",
+  "binding": "confederacy:repair_dock",
+  "canonical_binding": "ship:confederacy:repair_dock",
+  "gameplay_entity": "repair_dock",
+  "class": "repair_dock",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/legion_repair_dock.blend",
+    "sha256": "e01b00e394eb894f9e18cf25e9e61efb94093b047d8deacc0b80490bcef385f4",
+    "bytes": 140744
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b3c_stations.py",
+    "sha256": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+    "bytes": 58285,
+    "selects": "--asset confederacy:repair_dock"
+  },
+  "export_script": {
+    "path": "tools/art/export_legion_repair_dock.py",
+    "sha256": "a0dada95930b58fdfaf213a16d481b4ffa9de626ff9930c16131597f2069a6da",
+    "bytes": 4761
+  },
+  "runtime": {
+    "path": "assets/models/legion_repair_dock.mesh.json",
+    "sha256": "3c865b62f82ce4b5d8053d022a481d992f96b69852d335fed6cc0cbde4079d76",
+    "bytes": 215949,
+    "triangles": 3356,
+    "vertices": 1840,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -40.1472,
+      -14.8,
+      -36.4
+    ],
+    [
+      40.1472,
+      26.4,
+      36.4
+    ]
+  ],
+  "bounds": [
+    [
+      -40.1472,
+      -14.8,
+      -36.4
+    ],
+    [
+      40.1472,
+      26.4,
+      36.4
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+  "motion": null
+}

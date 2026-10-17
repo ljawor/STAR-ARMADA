@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b3c-stations",
+  "binding": "syndicate:repair_dock",
+  "canonical_binding": "ship:syndicate:repair_dock",
+  "gameplay_entity": "repair_dock",
+  "class": "repair_dock",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/syndicate_repair_dock.blend",
+    "sha256": "c608f2afebb2c1a56546441363d8ad24975c928353c35cce3a5cf669534c4770",
+    "bytes": 144106
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b3c_stations.py",
+    "sha256": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+    "bytes": 58285,
+    "selects": "--asset syndicate:repair_dock"
+  },
+  "export_script": {
+    "path": "tools/art/export_syndicate_repair_dock.py",
+    "sha256": "d3845ce81c4463058489fc8830bcc21ad41e8b1a6ed2d988683227b5d8619645",
+    "bytes": 4775
+  },
+  "runtime": {
+    "path": "assets/models/syndicate_repair_dock.mesh.json",
+    "sha256": "39c5ef2886f1c56c4d2702f5e07fb9eb0adc7245a6711ae34e4cdf73851b9faa",
+    "bytes": 226350,
+    "triangles": 3548,
+    "vertices": 1952,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -37.4318,
+      -16.8,
+      -38.931
+    ],
+    [
+      39.7528,
+      34.8,
+      37.9495
+    ]
+  ],
+  "bounds": [
+    [
+      -37.4318,
+      -16.8,
+      -38.931
+    ],
+    [
+      39.7528,
+      34.8,
+      37.9495
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+  "motion": null
+}

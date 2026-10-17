@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b3c-stations",
+  "binding": "syndicate:fighter_platform",
+  "canonical_binding": "ship:syndicate:fighter_platform",
+  "gameplay_entity": "fighter_platform",
+  "class": "fighter_platform",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/syndicate_fighter_platform.blend",
+    "sha256": "66eca9908acfc277b24cd3cf71959a9b63de7b40daa2f905e5fdee55f4a262eb",
+    "bytes": 143876
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b3c_stations.py",
+    "sha256": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+    "bytes": 58285,
+    "selects": "--asset syndicate:fighter_platform"
+  },
+  "export_script": {
+    "path": "tools/art/export_syndicate_fighter_platform.py",
+    "sha256": "67a6b0d463a9f4e55beed71872345c7f062a00420c542e4256b63a0967df5841",
+    "bytes": 4782
+  },
+  "runtime": {
+    "path": "assets/models/syndicate_fighter_platform.mesh.json",
+    "sha256": "d3c1cd6a88c5087519a93a5ae5ed2debf756832d6a4298c9d0d2fe851115d036",
+    "bytes": 222560,
+    "triangles": 3544,
+    "vertices": 1952,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -39.6,
+      -15.2,
+      -39.2
+    ],
+    [
+      32.1135,
+      30.8,
+      39.2
+    ]
+  ],
+  "bounds": [
+    [
+      -39.6,
+      -15.2,
+      -39.2
+    ],
+    [
+      32.1135,
+      30.8,
+      39.2
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+  "motion": null
+}
