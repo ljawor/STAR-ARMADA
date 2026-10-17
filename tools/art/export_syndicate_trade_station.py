@@ -23,6 +23,9 @@ IDENTIFIER = 'syndicate_trade_station'
 # the drawn length, camera framing and collision radius stay as they are today.
 ENVELOPE = ((-52.3122, 45.2571), (-8.8, 24.5), (-48.6483, 46.5606))
 MIN_LENGTH = 95.0
+# The asset's own floor. 1,800 for hulls and structures; a declared small prop - the renderer draws
+# it many times per frame - carries its own, per the owner decision `s06-small-prop-class-2026-10-17`.
+MIN_TRIANGLES = 1800
 MAX_TRIANGLES = 11500
 MAX_VERTICES = 8000
 MAX_BYTES = 2_000_000
@@ -77,7 +80,7 @@ def main():
                coordinates='X beam; Y up; +Z forward',vertices=vertices,batches=batches,
                bounds=[lo,hi],parts=parts,triangle_count=sum(map(len,batches.values())),
                features=json.loads(bpy.context.scene['features_json']))
-    assert 1_800 < asset['triangle_count'] <= MAX_TRIANGLES,asset['triangle_count']
+    assert MIN_TRIANGLES < asset['triangle_count'] <= MAX_TRIANGLES,asset['triangle_count']
     assert len(vertices)<=MAX_VERTICES,len(vertices)
     assert hi[2]-lo[2] >= MIN_LENGTH, (IDENTIFIER, hi[2]-lo[2])
     payload=json.dumps(asset,separators=(',',':'),allow_nan=False)+'\n'
