@@ -60,5 +60,11 @@
     "open a small-prop class below the 1,800-triangle floor (200-400 triangles), which lets the prop be built the way the legacy rock is and cost a field 4-10x less; a policy decision, not an engineering one",
     "keep the floor and accept the authored prop as it stands - not recommended: it is worse than what it replaces",
     "leave this row procedural and record that the asteroid field is already at the bar, which is a legitimate outcome for a decorative row"
-  ]
+  ],
+  "code_binding": {
+    "seam": "render/renderer.py",
+    "renderer_blob_before_this_revision": "5bfcb4966e6211fad7631e363ab3537f42e3e7ad",
+    "what_the_first_cut_shipped": "The seam read `mesh_for` at module scope and the role tints were the ones written with the 3,000-triangle prop. Both were changed while producing the revisions above - the lazy import is what lets a review harness serve a candidate at all, and the tints are part of what the owner was shown - and both were still uncommitted when the revisions were shown, so the committed head did not yet carry the rock in the pictures. They are committed with the code binding recorded here rather than left as working-tree state: a picture that cannot be reproduced from the branch it is described on is not evidence.",
+    "authored_mesh_sha256_the_pictures_show": "ad2b65483c330fecad28059fce9c489bc0bce2c050ebe38aa526e21f25c88ae7"
+  }
 }

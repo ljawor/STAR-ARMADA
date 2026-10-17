@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "batch": "s06-b5-environment",
-  "status": "pending_owner_appearance_approval",
+  "status": "appearance_approved_pending_landing",
   "note": "Review-only batch sheet for the pending S06 B5 environment work. This file is not an approval record, a registry entry or a runtime manifest, and it does not select any asset in production. **The batch is one row, not thirteen**, because the environment rows are four asset classes and the owner adopted the recommendation that followed the scope probe (`s06-b5-scope-2026-10-17`, `art/manifests/handoffs/S06-B5-SCOPE.md`): the ten texture rows - eight planet surfaces and the two billboards (star, nebula) - stay on their generated-texture pipeline until a texture class is opened as its own decision, and the star dome, the jump glyph and the baked menu backdrop are recorded as deliberately outside the mesh catalogue. This row is the one that is geometry: `render/renderer.py::_draw_asteroid_field` draws forty per-instance procedural rocks, and the owner's S01 scope answer chose the shared-authored-prop reading for exactly it. **The prop is a unit rock.** The field keeps its 40 instances, placement, per-instance scale (12-46 units), tumble and seeding; the prop replaces only the shape drawn inside `_draw_rock`, which the field scales, so the envelope here is the extent the legacy rock can reach at scale 1.0 (x and z within +-0.90, y within +-0.70) and the prop lands on it per axis and per side. **Its triangle count multiplies by forty**: the legacy rock is 48-96 triangles and a field is two to four thousand, this prop is 3,000, and a field is therefore about 120,000 triangles across forty display-list calls. That is stated rather than discovered, and the prop's own export caps (3,500 / 2,500 / 400 KB) are tighter than the station class for the same reason. The row is script-authoritative per the S03 source-authority policy for repeated modular hardware.",
   "overview": {
     "first_x": -4200,
@@ -45,5 +45,6 @@
       "seed_arg": "--asset environment:asteroid_field"
     }
   ],
-  "motion": []
+  "motion": [],
+  "appearance_decision": "s06-b5-environment-2026-10-17"
 }

@@ -31,6 +31,8 @@ OWNER_WORDS = {
     's06-b3c-stations-2026-10-17': 'yes',
     's06-b3a-command-stations-2026-10-17': '1.) B3a command stations: Approved',
     's06-b4-hardware-2026-10-17': 'B4 looks good',
+    # One word, recorded next to the choice it was clarified into rather than in place of it.
+    's06-b5-environment-2026-10-17': 'passed',
 }
 EXPECTED_BATCHES = {
     's06-cruiser-review': 1,
@@ -40,10 +42,11 @@ EXPECTED_BATCHES = {
     's06-b3c-stations': 17,
     's06-b3a-command-stations': 3,
     's06-b4-hardware': 24,
+    's06-b5-environment': 1,
 }
 # 37 specimens whose appearance the owner has approved, and the count the records must keep adding up
 # to until another decision changes it.
-APPROVED_SPECIMENS = 64
+APPROVED_SPECIMENS = 65
 SCOPE_DECISIONS = {'s06-b4-scope-2026-10-17': '1.) B4 authorized',
                    's06-imperial-migration-2026-10-17': '4.) decision need also migration.',
                    's06-large-evidence-accepted-2026-10-17':
@@ -98,8 +101,13 @@ class RecordedApprovals(unittest.TestCase):
         for decision in appearance_decisions():
             for asset in decision['revision']['assets']:
                 with self.subTest(decision=decision['id'], binding=asset['gameplay_binding']):
-                    self.assertEqual(status.get(asset['gameplay_binding']), 'procedural_legacy',
-                                     'an appearance-approved specimen must still not be selectable')
+                    # Two statuses mean "not selectable": `procedural_legacy`, which is a binding the
+                    # runtime knows and serves the old mesh for, and `authoring_pending`, which is a row
+                    # the inventory declares as an authoring target. Anything else - `authored`, a pack,
+                    # a preview - would mean the approval had become a selection.
+                    self.assertIn(status.get(asset['gameplay_binding']),
+                                  ('procedural_legacy', 'authoring_pending'),
+                                  'an appearance-approved specimen must still not be selectable')
                     self.assertNotIn(asset['gameplay_binding'], registered)
                     self.assertNotIn(asset['gameplay_binding'], approved_assets)
                     self.assertNotIn(asset['identifier'], approved_assets)
@@ -195,8 +203,9 @@ class RecordedScope(unittest.TestCase):
         # no sheet - named here rather than assumed.
         self.assertEqual(sorted(decided - set(sheets)), ['s06-cruiser-review'])
         pending = {batch for batch in sheets if batch not in decided}
-        self.assertEqual(sorted(pending), ['s06-b5-environment'],
-                         'a batch sheet is pending the owner\'s answer, or one has appeared')
+        self.assertEqual(sorted(pending), [],
+                         'every batch sheet now carries a decision: a new one, or a status that moved '
+                         'without a decision, shows up here')
         for batch, (path, sheet) in sheets.items():
             with self.subTest(batch=batch):
                 if batch in decided:

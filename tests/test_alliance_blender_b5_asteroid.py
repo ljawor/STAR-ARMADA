@@ -37,6 +37,10 @@ MIN_LENGTH = 1.0
 CEILING = ((-0.90, 0.90), (-0.70, 0.70), (-0.90, 0.90))
 # A declared small prop (owner decision `s06-small-prop-class-2026-10-17`): 120 triangles of floor
 # instead of 1,800, because the renderer draws it forty times per field, and its own tight ceiling.
+# The owner's appearance decision for this row (`s06-b5-environment-2026-10-17`). Appearance only:
+# the row is not registered, not selectable and not activated by it.
+APPEARANCE_DECISION = 's06-b5-environment-2026-10-17'
+BATCH_STATUS = 'appearance_approved_pending_landing'
 CLASS_FLOOR = 120
 OWN_CAPS = dict(triangles=600, vertices=500, bytes=120_000)
 LOADER_CAPS = dict(triangles=12000, vertices=10000, bytes=2_000_000)
@@ -247,7 +251,8 @@ class BatchRecords(unittest.TestCase):
     def test_the_sheet_carries_exactly_the_one_row_and_its_own_numbers(self):
         spec = load(SPEC)
         self.assertEqual(spec['batch'], 's06-b5-environment')
-        self.assertEqual(spec['status'], 'pending_owner_appearance_approval')
+        self.assertEqual(spec['status'], BATCH_STATUS)
+        self.assertEqual(spec['appearance_decision'], APPEARANCE_DECISION)
         self.assertIn('not an approval record', spec['note'])
         self.assertEqual([a['binding'] for a in spec['assets']], [BINDING])
         row = spec['assets'][0]
@@ -262,7 +267,11 @@ class BatchRecords(unittest.TestCase):
     def test_the_sidecar_agrees_and_the_row_is_not_selectable(self):
         record = load(SIDECAR)
         self.assertEqual(record['binding'], BINDING)
-        self.assertEqual(record['status'], 'pending_owner_appearance_approval')
+        self.assertEqual(record['status'], BATCH_STATUS)
+        self.assertEqual(record['appearance_decision'], APPEARANCE_DECISION)
+        # An appearance approval is not a landing: these two stay untouched by it.
+        self.assertIsNone(record['owner_decision'])
+        self.assertIs(record['activation'], False)
         self.assertFalse(record['activation'])
         self.assertIsNone(record['owner_decision'])
         registry = load(ROOT / 'assets/models/registry.json')
