@@ -94,6 +94,13 @@ B4_KINDS = {
 # parameterised by the faction's ring side count, so its five-sided ring stops short at the rear.
 B4_FACTION_Z_LOW = {('syndicate', 'defense_satellite'): -27.5066,
                     ('syndicate', 'attack_satellite'): -30.299}
+# S06 B5 - the one environment row that is geometry: the shared asteroid prop. The row is a *unit*
+# prop the field scales, so its envelope is the extent the legacy rock can reach at scale 1.0
+# (x and z within +-0.90, y within +-0.70). Its own caps are tighter than the station class on
+# purpose: the field draws it forty times, so the prop's budget is the field's budget divided by
+# forty, and `validate-models` reports a warning the moment it crosses its own.
+ASSETS['shared_asteroid_field'] = ('Shared asteroid prop', ((-0.90, 0.90), (-0.70, 0.70), (-0.90, 0.90)),
+                                  1.6, 3500, 2500, 400_000)
 for _faction, _prefix, _family in (('rebel', 'alliance', 'Alliance'), ('confederacy', 'legion',
                                     'Legion'), ('syndicate', 'syndicate', 'Syndicate'),
                                    ('imperial', 'imperial', 'Imperial')):
