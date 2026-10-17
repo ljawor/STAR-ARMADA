@@ -4,10 +4,12 @@ triangle count, using the live code (never a transcribed table).
 
     PYTHONPATH=tests .venv/bin/python tools/art/probe_b3_scope.py
 
-Imperial stations are reported separately: `render/fleet_geometry.station_mesh` dispatches
-them straight to `_station_mesh(did)` with no `mesh_for` seam, so an authored imperial
-station needs a renderer change and is therefore an owner/renderer decision, not an asset
-in this batch - the same shape as the shared imperial ship shapes.
+Imperial stations are reported separately, and *not* because they lack a seam: `station_mesh`
+consults `mesh_for(f'{faction}:{data_id}')` ahead of its imperial branch for every faction,
+imperial included. They were held out of B3a/B3b/B3c because they were not in scope then; the owner
+put them in scope on 2026-10-17 (`s06-imperial-migration-2026-10-17`). What imperial *ships* need is
+a per-binding key minted in `render/faction_visuals.py::ship_visual_key`, which today mints one only
+for the three non-imperial families and lets imperial hulls fall onto the shared 'wedge'/'box' shapes.
 """
 import json
 import math
@@ -50,7 +52,7 @@ for faction in FACTIONS:
         print(f"{key:30s} {str(seam is None):9s} {stations[kind]['radius']:6d} {length:8.3f} {tris:6d}  "
               f"{lo} .. {hi}")
 print()
-print('imperial (no seam - renderer change required):')
+print('imperial (in scope since s06-imperial-migration-2026-10-17; the seam is faction-generic):')
 for kind in STATION_TYPES:
     legacy = imperial_station_mesh(kind)
     lo, hi, tris = bounds_of(legacy)
