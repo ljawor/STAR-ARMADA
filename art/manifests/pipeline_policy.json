@@ -113,6 +113,77 @@
           "applies_from": "until the class-budget question is answered; the ceiling raise above does not depend on it"
         }
       ]
+    },
+    {
+      "id": "s06-b4-scope-2026-10-17",
+      "date": "2026-10-17",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "authorized",
+      "applies_to": "S06 B4 - satellites and planet installations",
+      "owner_wording": "1.) B4 authorized",
+      "how_recorded": "Parsed from the owner's own words in the session that answered four questions at once (B4 authorization, the appearance approvals of the pending specimens, the roadmap catch-up and the imperial migration). Recorded verbatim, including the numbering, so the intent is not paraphrased away.",
+      "decisions": [
+        {
+          "id": "b4-authoring-scope",
+          "decision": "Author the satellite and planet-installation rows as the next catalogue batch: defense_satellite, attack_satellite, planet_extractor, planet_trade_hub, planet_shield_generator and planet_pulsar_cannon across the three families whose station-family dispatch already consults the authored-model seam (rebel, confederacy, syndicate) - eighteen rows, all at the catalogue radius of 45.",
+          "why": "B3 finished the station rows and the owner-approved order (s01-scope-2026-10-16) lists B4 next; the sixteen imperial rows of the same kinds are covered by the separate imperial-migration decision.",
+          "applies_from": "this decision"
+        },
+        {
+          "id": "b4-recipe-and-authority",
+          "decision": "B4 follows the same recipe as B3: one seed that builds every row, generated per-asset export wrappers, one batch sheet, a guard module, and real-application evidence (per-row close/rear/tactical/common-scale frames, per-role ablations, restored-simulation frames, paired motion clips and a one-scale overview). Satellites and planet installations are script-authoritative under the S03 source-authority policy, so the seed is the master and the .blend is a derived artifact.",
+          "why": "Repeated modular pieces are exactly the class the S03 policy keeps script-authoritative; the station recipes already proved the surrounding pipeline.",
+          "applies_from": "this decision"
+        },
+        {
+          "id": "b4-is-not-an-appearance-approval",
+          "decision": "Authoring authorization only. Each authored revision needs its own appearance approval before any landing, and this decision approves no revision, no landing, no registration, no tag or release, and no production-default switch.",
+          "why": "An approval binds to a revision; a scope decision binds to work about to be done. Conflating them is what makes an unapproved asset look approved.",
+          "applies_from": "this decision"
+        }
+      ],
+      "not_authorized": [
+        "landing, registration, activation, merge, tag or release of any B4 revision",
+        "the S11 catalogue switch or any production-default switch",
+        "packaging and native-Windows acceptance",
+        "changing simulation values, ship or structure stats, collision radii or gameplay balance in the name of authoring",
+        "the ten imperial station rows, the six imperial satellite and planet-installation rows and the imperial ship rows, which the imperial-migration decision covers separately"
+      ]
+    },
+    {
+      "id": "s06-imperial-migration-2026-10-17",
+      "date": "2026-10-17",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "authorized",
+      "applies_to": "S06 - the imperial rows of the model catalogue",
+      "owner_wording": "4.) decision need also migration.",
+      "how_recorded": "Parsed from the owner's own words in the session that answered four questions at once; the fourth answer settles the imperial seam question that had been left open, in favour of migrating the imperial rows rather than leaving them procedural.",
+      "decisions": [
+        {
+          "id": "imperial-rows-in-scope",
+          "decision": "The imperial rows are in scope for migration: the ten imperial station rows (command station, shipyard, research station, defense platform, trade station, fighter platform, repair dock, mining station, sensor station, energy relay), the two satellite rows, the four planet-installation rows, the five imperial combat hulls and the imperial squadron and logistics rows.",
+          "why": "Leaving them procedural would make the imperial faction the one faction whose stations and capitals still render placeholder geometry after the migration; the owner chose migration.",
+          "applies_from": "this decision"
+        },
+        {
+          "id": "imperial-render-seam-is-its-own-change",
+          "decision": "The renderer change this needs lands as its own reviewed change with its own guards: render/fleet_geometry.py::station_mesh already consults the authored-model seam for the three families via mesh_for(f\"{faction}:{data_id}\") and falls back to the legacy builders for imperial, so the imperial path must be brought onto the same seam rather than special-cased at the call site. No legacy geometry is deleted in the same change: the fallback stays reachable until the imperial revisions are approved and registered.",
+          "why": "A renderer change that silently swaps a whole faction's geometry would be unreviewable; keeping the fallback reachable means activation is still the separate S10/S11 decision.",
+          "applies_from": "this decision"
+        },
+        {
+          "id": "imperial-is-not-an-appearance-approval",
+          "decision": "Authoring and seam authorization only. Every imperial revision needs its own appearance approval before landing, and nothing here authorizes a landing, a registration, a tag, a release or a production-default switch. The imperial rows are also not exempt from the envelope rule: their authored bounds must stay inside the legacy extents the simulation already uses.",
+          "why": "The same rule as every other batch: approval binds to a revision, and the simulation envelope is not an artwork decision.",
+          "applies_from": "this decision"
+        }
+      ],
+      "not_authorized": [
+        "landing, registration, activation, merge, tag or release of any imperial revision",
+        "changing simulation values, hull stats, station behaviour, collision radii or balance",
+        "removing the legacy procedural fallback or switching the catalogue to authored models (S11)",
+        "packaging and native-Windows acceptance"
+      ]
     }
   ]
 }

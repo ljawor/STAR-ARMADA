@@ -22,6 +22,10 @@ from unittest.mock import Mock, patch
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = ROOT / 'art/manifests/pending/S06-BATCH-B1-ALLIANCE-COMBAT.json'
 BATCH = 's06-b1-alliance-combat'
+# The owner's appearance approval of this batch, recorded in art/manifests/approvals.json and
+# bound to the exact revisions this module guards. It authorizes no landing.
+APPEARANCE_DECISION = 's06-b1-alliance-combat-2026-10-17'
+BATCH_STATUS = 'appearance_approved_pending_landing'
 # Every binding this module guards, with the loader contract its export must satisfy.
 ASSETS = (
     dict(binding='rebel:corvette', identifier='alliance_corvette', data_id='rebel_corvette',
@@ -342,7 +346,8 @@ class PendingRecords(unittest.TestCase):
         self.assertEqual(spec['batch'], BATCH)
         self.assertEqual({a['binding'] for a in spec['assets']},
                          {a['binding'] for a in ASSETS})
-        self.assertEqual(spec['status'], 'pending_owner_appearance_approval')
+        self.assertEqual(spec['status'], BATCH_STATUS)
+        self.assertEqual(spec['appearance_decision'], APPEARANCE_DECISION)
         self.assertIn('not an approval record', spec['note'])
 
     def test_no_pending_binding_is_registered_anywhere_in_production(self):
@@ -351,15 +356,17 @@ class PendingRecords(unittest.TestCase):
         pipeline = json.loads((ROOT / 'art/manifests/pipeline.json').read_text(encoding='utf-8'))
         registered = {a['binding']: a for a in pipeline['assets']}
         approvals = json.loads((ROOT / 'art/manifests/approvals.json').read_text(encoding='utf-8'))
-        approved = json.dumps(approvals)
+        # Registration, not mention: this batch's own appearance decision names both bindings and
+        # still registers neither, so the check is structural rather than a substring search.
+        bound = json.dumps([e for e in approvals['approved_assets'] if isinstance(e, dict)])
         manifests = sorted(p.name for p in (ROOT / 'assets/models/manifests').glob('*.json'))
         for asset in ASSETS:
             with self.subTest(binding=asset['binding']):
                 self.assertEqual(status[asset['binding']], 'procedural_legacy',
-                                 'a pending specimen must not be selectable')
+                                 'an approved-appearance specimen must still not be selectable')
                 self.assertNotIn(asset['binding'], registered)
-                self.assertNotIn(asset['identifier'], approved)
-                self.assertNotIn(asset['binding'], approved)
+                self.assertNotIn(asset['identifier'], bound)
+                self.assertNotIn(asset['binding'], bound)
         self.assertEqual(manifests, ['alliance_battleship.json', 'alliance_frigate.json',
                                      'alliance_shipyard.json'],
                          'the approved runtime manifests are the only registered ones')

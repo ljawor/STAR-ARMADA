@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "status": "pending_owner_appearance_approval",
+  "status": "appearance_approved_pending_landing",
   "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
   "binding": "rebel:cruiser",
   "canonical_binding": "ship:rebel:cruiser",
@@ -54,5 +54,7 @@
   "activation": false,
   "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; seed must not overwrite master. Do not use this sidecar as expected_hashes approval.",
   "evidence": "artifacts/s06_alliance_cruiser_review/fixed-review/capture/review-sheet.png",
-  "motion": "artifacts/s06_alliance_cruiser_review/fixed-review/capture/paired-motion.mp4"
+  "motion": "artifacts/s06_alliance_cruiser_review/fixed-review/capture/paired-motion.mp4",
+  "appearance_decision": "s06-cruiser-review-2026-10-17",
+  "note_on_status": "This sidecar predates the spec-driven writer (the cruiser was reviewed before the batch sheets existed), so the two fields above are set here rather than generated."
 }

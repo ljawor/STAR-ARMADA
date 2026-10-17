@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "batch": "s06-b3b-stations-slice-1",
-  "status": "pending_owner_appearance_approval",
+  "status": "appearance_approved_pending_landing",
   "note": "Review-only batch sheet for the pending S06 B3b station specimens, slice 1: the mining station, sensor station and energy relay across the three families that have a mesh_for seam. This file is not an approval record, a registry entry or a runtime manifest, and it does not select any asset in production. Each station is authored *to* its binding's legacy procedural extent, not merely inside it, because the review harness compares the authored footprint against the legacy station mesh within 1 percent per axis and the legacy procedural station fills its declared box exactly. The ten imperial station rows are deliberately absent: those bindings dispatch straight to render.fleet_geometry._station_mesh with no mesh_for seam, so authoring them is a renderer change and an owner decision rather than an asset batch. rebel:shipyard is also absent: it is already delivered as the approved trio's `core` asset alliance_shipyard. The command stations are absent: they are the B3a batch and are already approved. The batch's overview spacing is 300, not the 600 the three-row B3a batch used: nine rows at 600 span 4800 units and the 1100-distance overview frame covers 1833, so the outer rows fell outside the frame and only the middle five were ever in the contact sheet. The batch's `overview.close_distance_floor` is 150: these stations frame at 65-146 units where the B3a command stations framed at 250, and the shared scene's context group put the near camera inside a context hull for the closest row - the harness refused it as `camera not outside union`. The floor lifts the two near views to a clearance the B3a frames already had, and it is inert for every earlier batch.",
   "overview": {
     "first_x": -4200,
@@ -394,5 +394,6 @@
       "seed": "tools/art/build_b3b_stations.py",
       "seed_arg": "--asset syndicate:energy_relay"
     }
-  ]
+  ],
+  "appearance_decision": "s06-b3b-stations-2026-10-17"
 }

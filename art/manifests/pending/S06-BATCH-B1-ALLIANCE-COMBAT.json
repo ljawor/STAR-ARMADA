@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "batch": "s06-b1-alliance-combat",
-  "status": "pending_owner_appearance_approval",
+  "status": "appearance_approved_pending_landing",
   "note": "Review-only batch sheet for the pending S06 B1 Alliance specimens. This file is not an approval record, a registry entry or a runtime manifest, and it does not select any asset in production.",
   "overview": {
     "first_x": -4200,
@@ -76,5 +76,6 @@
       "sheet": "artifacts/s06_alliance_batch_review/b1-alliance-combat/contact-sheet.png",
       "motion": "artifacts/s06_alliance_batch_review/b1-alliance-combat/carrier-after-motion.mp4"
     }
-  }
+  },
+  "appearance_decision": "s06-b1-alliance-combat-2026-10-17"
 }

@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "batch": "s06-b2-squadron-logistics",
-  "status": "pending_owner_appearance_approval",
+  "status": "appearance_approved_pending_landing",
   "note": "Review-only batch sheet for the pending S06 B2 squadron and logistics specimens. This file is not an approval record, a registry entry or a runtime manifest, and it does not select any asset in production. The four imperial rows of this batch are deliberately absent: those bindings resolve to the shared legacy generic shapes 'wedge' and 'box', which other imperial hulls also draw, so authoring them is a shared-source change for the owner to scope, not a per-binding model. The four trade_convoy rows share the crew-transport meshes below and carry no ShipData row of their own.",
   "overview": {
     "first_x": -4200,
@@ -279,5 +279,6 @@
       "seed": "tools/art/build_b2_batch.py",
       "seed_arg": "--asset syndicate:convoy"
     }
-  ]
+  ],
+  "appearance_decision": "s06-b2-squadron-logistics-2026-10-17"
 }

@@ -32,6 +32,10 @@ from unittest.mock import Mock, patch
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = ROOT / 'art/manifests/pending/S06-BATCH-B2-SQUADRON-LOGISTICS.json'
 BATCH = 's06-b2-squadron-logistics'
+# The owner's appearance approval of this batch, recorded in art/manifests/approvals.json and
+# bound to the exact revisions this module guards. It authorizes no landing.
+APPEARANCE_DECISION = 's06-b2-squadron-logistics-2026-10-17'
+BATCH_STATUS = 'appearance_approved_pending_landing'
 SEED = 'tools/art/build_b2_batch.py'
 # Every binding this module guards, with the loader contract its export must satisfy.
 # `envelope` is the binding's legacy extent as `(low, high)` per axis; the spec carries the
@@ -443,7 +447,8 @@ class PendingRecords(unittest.TestCase):
         self.assertEqual(spec['batch'], BATCH)
         self.assertEqual([a['binding'] for a in spec['assets']],
                          [a['binding'] for a in ASSETS])
-        self.assertEqual(spec['status'], 'pending_owner_appearance_approval')
+        self.assertEqual(spec['status'], BATCH_STATUS)
+        self.assertEqual(spec['appearance_decision'], APPEARANCE_DECISION)
         self.assertIn('not an approval record', spec['note'])
         rows = {a['binding']: a for a in spec['assets']}
         for asset in ASSETS:

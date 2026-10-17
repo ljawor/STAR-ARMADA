@@ -40,6 +40,10 @@ from unittest.mock import Mock, patch
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = ROOT / 'art/manifests/pending/S06-BATCH-B3B-STATIONS.json'
 BATCH = 's06-b3b-stations-slice-1'
+# The owner's appearance approval of this batch, recorded in art/manifests/approvals.json and
+# bound to the exact revisions this module guards. It authorizes no landing.
+APPEARANCE_DECISION = 's06-b3b-stations-2026-10-17'
+BATCH_STATUS = 'appearance_approved_pending_landing'
 SEED = 'tools/art/build_b3b_stations.py'
 
 
@@ -542,7 +546,8 @@ class PendingRecords(unittest.TestCase):
         self.assertEqual(spec['batch'], BATCH)
         self.assertEqual([a['binding'] for a in spec['assets']],
                          [a['binding'] for a in ASSETS])
-        self.assertEqual(spec['status'], 'pending_owner_appearance_approval')
+        self.assertEqual(spec['status'], BATCH_STATUS)
+        self.assertEqual(spec['appearance_decision'], APPEARANCE_DECISION)
         self.assertIn('not an approval record', spec['note'])
         rows = {a['binding']: a for a in spec['assets']}
         for asset in ASSETS:
@@ -637,16 +642,18 @@ class PendingRecords(unittest.TestCase):
         status = {b['binding']: b['status'] for b in registry['bindings']}
         pipeline = json.loads((ROOT / 'art/manifests/pipeline.json').read_text(encoding='utf-8'))
         registered = {a['binding']: a for a in pipeline['assets']}
-        approvals = json.dumps(json.loads((ROOT / 'art/manifests/approvals.json')
-                                          .read_text(encoding='utf-8')))
+        approvals = json.loads((ROOT / 'art/manifests/approvals.json').read_text(encoding='utf-8'))
+        # Registration, not mention: this batch's own appearance decision names all nine bindings
+        # and still registers none of them, so the check is structural, not a substring search.
+        bound = json.dumps([e for e in approvals['approved_assets'] if isinstance(e, dict)])
         manifests = sorted(p.name for p in (ROOT / 'assets/models/manifests').glob('*.json'))
         for asset in ASSETS:
             with self.subTest(binding=asset['binding']):
                 self.assertEqual(status[asset['binding']], 'procedural_legacy',
-                                 'a pending specimen must not be selectable')
+                                 'an approved-appearance specimen must still not be selectable')
                 self.assertNotIn(asset['binding'], registered)
-                self.assertNotIn(asset['identifier'], approvals)
-                self.assertNotIn(asset['binding'], approvals)
+                self.assertNotIn(asset['identifier'], bound)
+                self.assertNotIn(asset['binding'], bound)
         self.assertEqual(manifests, ['alliance_battleship.json', 'alliance_frigate.json',
                                      'alliance_shipyard.json'],
                          'the approved runtime manifests are the only registered ones')
@@ -684,10 +691,12 @@ class PendingRecords(unittest.TestCase):
                 self.assertTrue(path.is_file(), f'no sidecar at {path.name}')
                 record = json.loads(path.read_text(encoding='utf-8'))
                 self.assertEqual(record['binding'], asset['binding'])
-                self.assertEqual(record['status'], 'pending_owner_appearance_approval')
+                self.assertEqual(record['status'], BATCH_STATUS)
                 self.assertEqual(record['batch'], BATCH)
-                self.assertFalse(record['activation'])
-                self.assertIsNone(record['owner_decision'])
+                self.assertEqual(record['appearance_decision'], APPEARANCE_DECISION)
+                self.assertFalse(record['activation'], 'appearance approval is not activation')
+                self.assertIsNone(record['owner_decision'],
+                                  'appearance approval is not a landing decision')
                 self.assertEqual(record['initial_seed']['selects'], f"--asset {asset['binding']}")
                 self.assertEqual(record['initial_seed']['path'], SEED)
                 for key, relative in (('source', f"art/blender/{asset['identifier']}.blend"),
