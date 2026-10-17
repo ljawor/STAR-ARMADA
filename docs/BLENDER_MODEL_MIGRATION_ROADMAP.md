@@ -378,7 +378,7 @@ approved trio, so the refit pipeline refuses these bindings with `E_UNKNOWN_BIND
 | Trio hull detail (early) | `rebel:battleship`, `rebel:frigate`, `rebel:shipyard` | **Approved and merged** (#120/#121/#122) |
 | B1 Alliance combat | `rebel:cruiser`, `rebel:corvette`, `rebel:supercapital` | Authored and **appearance-approved** 2026-10-17 (`s06-cruiser-review-2026-10-17`, `s06-b1-alliance-combat-2026-10-17`), after the placement-repair step |
 | B2 squadrons/logistics | eight hulls: fighter, bomber and crew-transport convoy across Alliance, Legion and Syndicate | Authored and **appearance-approved** (`s06-b2-squadron-logistics-2026-10-17`) |
-| B3a command stations | three | Authored; **no approval in so many words is recorded** - the open question below |
+| B3a command stations | three | Authored and **appearance-approved** (`s06-b3a-command-stations-2026-10-17`) |
 | B3b small stations | nine: mining station, sensor station, energy relay | Authored and **appearance-approved** (`s06-b3b-stations-2026-10-17`) |
 | B3c stations | seventeen: research station, defense platform, trade station, fighter platform, repair dock across the three families, plus the Legion and Syndicate shipyards | Authored and **appearance-approved** (`s06-b3c-stations-2026-10-17`) |
 | B4 satellites/planet installations | twenty-four rows: `defense_satellite`, `attack_satellite`, `planet_extractor`, `planet_trade_hub`, `planet_shield_generator`, `planet_pulsar_cannon` × four families | **Authored, captured and guarded on the branch; pending owner approval** (authorized as `s06-b4-scope-2026-10-17`) |
@@ -400,7 +400,7 @@ footprint error of 5.21e-05 % per axis, a drawn length unchanged to the same tol
 scale, camera framing and collision radius are untouched), and no zero-pixel per-role ablation on any
 row. 25 guards, RED first then green; the focused union of every batch module is 198 tests.
 
-Approvals are recorded per revision in `art/manifests/approvals.json`: **37 specimens** across five
+Approvals are recorded per revision in `art/manifests/approvals.json`: **40 specimens** across six
 decisions, each naming the source, exporter and runtime hashes it covers, each stating what it does
 *not* approve (landing, registration, activation, merge, tag, release, the S11 switch, packaging),
 and each re-derivable - `tests/test_s06_appearance_records.py` re-hashes every file a decision names.
@@ -524,7 +524,7 @@ This is the current progress ledger; initial planning and failed attempts remain
 | S03 | **Complete and merged** 2026-10-16 — policies PR #118 `fd08ac7`, pipeline PR #119 `b5414b5`; D1/D2/D4/D6 machine-green, D5 signed by the owner | D3's Windows half is unproven: no Windows machine has run the pipeline. S09 owns that gate |
 | S04 | **Complete and merged**, PR #124 → `7030dd2` | Closed; S05 subsequently merged. No S11 authorization |
 | S05 | **Complete and merged**, PR #125 → `f873a33`; 57 tests, two 102-frame current matrices, exact hashes and Windows CI | Closed by explicit owner merge authorization. Historical capture failure still rejected; no root-cause fix claimed |
-| S06 | **In progress on `feat/s06-next-model-batch` (draft PR #127)**, unmerged: B1 (cruiser, corvette, carrier), B2 (eight hulls), B3a (three command stations), B3b (nine small stations) and B3c (seventeen station rows) authored - 43 specimens including the merged trio detail. 37 appearance-approved per revision; B3a not approved in so many words | Author B4 (`s06-b4-scope-2026-10-17`) and the imperial migration (`s06-imperial-migration-2026-10-17`, render seam first). Open: the B3a approval question; the landing/registration decision stays S10/S11 |
+| S06 | **In progress on `feat/s06-next-model-batch` (draft PR #127)**, unmerged: B1, B2, B3a, B3b, B3c and B4 authored - 67 specimens including the merged trio detail. 40 appearance-approved per revision; B4 pending | Author B5 (environment) and the imperial ship rows (a per-binding key in `ship_visual_key`). Open: the landing/registration decision stays S10/S11 |
 | S07 | Not started | Complete catalogue render-path integration |
 | S08 | Not started | Prove replacement packs, updates and cosmetic compatibility |
 | S09 | Not started | Integrated suite/performance/package/platform gates |
@@ -545,7 +545,7 @@ The original S00-only kickoff is historical and retained in Git/handoff history;
 | Trio hull detail (S06, early) | **Approved and merged** — one revision per binding: battleship #120 `47b0161`, frigate + shipyard #121 `047c380`, record correction #122 `96cd92e`; 11,457 / 7,708 / 10,767 triangles, no silhouette, scale or simulation change; the guard raise is the owner decision `s07-detail-budget-2026-10-16` (11,888 tri / 9,500 verts) | None outstanding. Not a catalogue batch: the remaining bindings keep their inventory status |
 | S04 generic integration | **Complete and merged**, PR #124 → `7030dd2`; autocrlf clone 195/195; contract 36/28; pipeline 34/34; Windows CI passed | Closed. Manual package skipped; full S05 matrix subsequently completed under its recorded policy |
 | S05 trio equivalence | **Complete and merged**, PR #125 → `f873a33`, tree-identical to tested head `e74bf97`; Windows CI `39004868017` passed | Closed with historical capture limitation retained; manual package skipped, no native graphics/package claim |
-| S06 authoring | **In progress on an isolated branch**, nothing landed: draft PR #127 at `be6c2d5` carries the placement repairs, B1/B2/B3a/B3b/B3c batches, their evidence and their guards; 37 specimens approved per revision on 2026-10-17 | Per-model appearance approval; no blanket catalogue approval, no registration. Next batch: B4, authorized |
+| S06 authoring | **In progress on an isolated branch**, nothing landed: draft PR #127 at `406d090` carries the placement repairs and the B1/B2/B3a/B3b/B3c/B4 batches with their evidence and guards; 40 specimens approved per revision on 2026-10-17, B4's twenty-four awaiting an answer | Per-model appearance approval; no blanket catalogue approval, no registration. Next batch: B5 environment |
 | S07–S10 | Not completed | Follow integration/mod/platform/package/final-lock dependencies |
 | S11 | **Not started, not authorized, not done** | Final explicit owner-controlled catalogue switch only after S10 |
 
@@ -560,14 +560,17 @@ satellites and planet
 installations are script-authoritative under the S03 policy) and the imperial migration by
 `s06-imperial-migration-2026-10-17` (sixteen station-family rows, five combat hulls, the squadron and
 logistics rows, and the seam change that brings the imperial station-family dispatch onto `mesh_for` -
-its own reviewed change, with the legacy fallback kept reachable). Four things are deliberately not
-decided here: the **B3a command stations** have no recorded owner approval and stay pending until the
-owner says so; **landing/registration** of the 37 approved specimens is the S10/S11 decision and has
-not been authorized; the four `trade_convoy` rows that share the crew-transport meshes need an
-envelope decision before they can be authored; and the review contact sheets now exceed the 5 MiB
-per-file Git LFS threshold declared in the S03 storage policy (B4 12.7 MiB, B3c 10.9 MiB, B3b 5.4 MiB),
-which needs an owner decision - accept larger binary evidence, split or re-encode the sheets, or adopt
-LFS atomically with its attributes, fetching and fresh-clone check.
+its own reviewed change, with the legacy fallback kept reachable). Two things are still deliberately not decided
+here: **landing/registration** of the 40 approved specimens, which is the S10/S11 decision and has not
+been authorized; and the four `trade_convoy` rows that share the crew-transport meshes, which need an
+envelope decision before they can be authored.
+
+Two open questions were settled by the owner on 2026-10-17, both recorded rather than absorbed:
+the **B3a command stations are approved** (`s06-b3a-command-stations-2026-10-17`), and **larger binary
+evidence is accepted** in ordinary Git - the contact sheets cross the 5 MiB per-file threshold the S03
+storage policy declared (B4 12.7 MiB, B3c 10.9 MiB, B3b 5.4 MiB), and LFS stays unadopted
+(`s06-large-evidence-accepted-2026-10-17` in `art/manifests/pipeline_policy.json`). The B4 batch is the
+one still awaiting an answer.
 
 Two owner policy questions remain open: authoring extent drift versus collision policy, and advisory
 draw-call/texture-byte columns. Do not answer them yourself. Public gameplay dependency discovery
