@@ -1,0 +1,6 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/artifacts/s07-runtime-acceptance/lod-native-probe.py", line 35, in <module>
+    r._reset_frame_cache();actual=r._ensure_frame_cache(set())[e.id]['apparent'];assert abs(actual-px)<1e-4,(actual,px)
+                                                                                        ^^^^^^^^^^^^^^^^^^^
+AssertionError: (142.16679196238593, 120.0)

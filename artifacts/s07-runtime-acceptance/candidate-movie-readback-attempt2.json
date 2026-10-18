@@ -1,0 +1,10 @@
+{
+  "candidate_zip_sha256": "27cd992fd13a2b0eb39fe23ee011e9ca15402fc9c947bc42e895c077e85d40d0",
+  "frames": 360,
+  "model_instances": 7,
+  "provenance_matches_current_code_and_meshes": true,
+  "protected_files": 327,
+  "protected_changed": [],
+  "shipped_movie_matches_head": true,
+  "arbitrary_parent_verified": true
+}

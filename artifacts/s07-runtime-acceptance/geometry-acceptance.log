@@ -1,0 +1,15 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+test_102_registered_bindings_have_complete_live_consumer_applicability (test_s07_selected_geometry_matrix.SelectedGeometryMatrixTests.test_102_registered_bindings_have_complete_live_consumer_applicability) ... ok
+test_40_station_current_owner_rotated_contact_camera_scale_and_pick (test_s07_selected_geometry_matrix.SelectedGeometryMatrixTests.test_40_station_current_owner_rotated_contact_camera_scale_and_pick) ... ok
+test_all_role_bounds_are_raw_payload_extrema (test_s07_selected_geometry_matrix.SelectedGeometryMatrixTests.test_all_role_bounds_are_raw_payload_extrema) ... ok
+test_attached_16_installations_all_six_slots_and_8_satellites_all_eight_placements (test_s07_selected_geometry_matrix.SelectedGeometryMatrixTests.test_attached_16_installations_all_six_slots_and_8_satellites_all_eight_placements) ... ok
+test_convoy_aliases_share_revision_but_not_crew_trade_scale (test_s07_selected_geometry_matrix.SelectedGeometryMatrixTests.test_convoy_aliases_share_revision_but_not_crew_trade_scale) ... ok
+test_selected_revision_payload_and_actual_dispatch_closure (test_s07_selected_geometry_matrix.SelectedGeometryMatrixTests.test_selected_revision_payload_and_actual_dispatch_closure) ... ok
+test_ship_consumers_capture_scale_rotated_contact_camera_and_pick (test_s07_selected_geometry_matrix.SelectedGeometryMatrixTests.test_ship_consumers_capture_scale_rotated_contact_camera_and_pick) ... ok
+test_stations_change_selected_family_with_current_owner_not_origin (test_s07_selected_geometry_matrix.SelectedGeometryMatrixTests.test_stations_change_selected_family_with_current_owner_not_origin) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 12.487s
+
+OK
+RUN_SUMMARY {"categories": {"combat_hull": 18, "construction": 8, "environment_prop": 1, "logistics_hull": 4, "planet_installation": 16, "satellite": 8, "squadron": 7, "station": 40}, "consumers": 106, "core_bindings": 102, "errors": 0, "failed_subtests": 0, "failures": 0, "head": "8b3f03b9ec6371ac7a469123741e130af03d983b", "isolation": {"datastore_identity_restored": true, "datastore_ship_rows_restored": true, "datastore_station_rows_restored": true, "generation_restored": true, "protected_bytes_unchanged": true, "resolver_identity_restored": true, "selection_preferences_identity_restored": true}, "mode": "positive", "protected_file_count": 214, "seconds": 12.487063667038456, "subtests": 899, "test_module_sha256": "9df1c2dd8d58c818ca637a97a7fc7484188f58f88efc031d1c035392514dddd4", "tests_run": 8}

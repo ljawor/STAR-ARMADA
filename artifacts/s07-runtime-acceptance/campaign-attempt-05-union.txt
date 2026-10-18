@@ -1,0 +1,31 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+test_campaign_launch_preview_on_off_preserves_authoritative_state (test_s07_campaign_preview_entry.CampaignPreviewEntryTests.test_campaign_launch_preview_on_off_preserves_authoritative_state) ... campaign-entry {"preview": true, "events": ["old-close", "new-renderer"], "revision": "60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df", "state_hash": "4cbf9ac99eea8a5bdd1a19fd2160994cbedcd18558a437419d13ca68f1101d6b"}
+campaign-entry {"preview": false, "events": ["old-close", "new-renderer"], "revision": null, "state_hash": "4cbf9ac99eea8a5bdd1a19fd2160994cbedcd18558a437419d13ca68f1101d6b"}
+ok
+test_negative_ordering_control_refuses_live_old_renderer (test_s07_campaign_preview_entry.CampaignPreviewEntryTests.test_negative_ordering_control_refuses_live_old_renderer) ... campaign-negative-ordering: real configure refused unreleased old owner
+ok
+test_negative_selection_control_detects_wrong_preview (test_s07_campaign_preview_entry.CampaignPreviewEntryTests.test_negative_selection_control_detects_wrong_preview) ... campaign-negative-selection: renderer observation caught wrong preview mode
+ok
+test_load_and_quickload_use_restored_campaign_for_hud_and_progression (test_campaign_main.CampaignMainTests.test_load_and_quickload_use_restored_campaign_for_hud_and_progression) ... Replay saved: match-0159b62ec3c54c5db861508e700a5d99.json
+Replay saved: match-4c9fc95305c845f1b3ceb34a9c7cbecd.json
+ok
+test_audio_victory_uses_client_slot_and_alliance_not_player_zero (test_lan_main.LanMainTests.test_audio_victory_uses_client_slot_and_alliance_not_player_zero) ... ok
+test_canonical_launch_builds_client_view_and_human_hook (test_lan_main.LanMainTests.test_canonical_launch_builds_client_view_and_human_hook) ... ok
+test_decided_lan_match_releases_its_session_on_escape (test_lan_main.LanMainTests.test_decided_lan_match_releases_its_session_on_escape)
+#69: a finished LAN match must still close its socket on Escape. ... ok
+test_high_fps_sustained_success_is_thirty_hz (test_lan_main.LanMainTests.test_high_fps_sustained_success_is_thirty_hz) ... ok
+test_lan_respects_fixed_rate_at_faster_render_rate (test_lan_main.LanMainTests.test_lan_respects_fixed_rate_at_faster_render_rate) ... ok
+test_network_controls_leave_cleanup_and_error_recovery (test_lan_main.LanMainTests.test_network_controls_leave_cleanup_and_error_recovery) ... ok
+test_network_input_failure_returns_to_menu_instead_of_crashing (test_lan_main.LanMainTests.test_network_input_failure_returns_to_menu_instead_of_crashing) ... ok
+test_network_step_waits_without_catchup_and_never_double_steps (test_lan_main.LanMainTests.test_network_step_waits_without_catchup_and_never_double_steps) ... ok
+test_real_tcp_gl_menu_main_diagnostic_exists (test_lan_main.LanMainTests.test_real_tcp_gl_menu_main_diagnostic_exists) ... ok
+test_restart_releases_previous_audio_before_replacing_graph (test_lan_main.LanMainTests.test_restart_releases_previous_audio_before_replacing_graph) ... ok
+test_running_match_escape_never_leaves_on_its_own (test_lan_main.LanMainTests.test_running_match_escape_never_leaves_on_its_own)
+#69: the decided-result shortcut must not fire during play. ... ok
+test_success_keeps_fraction_but_network_wait_resets_it (test_lan_main.LanMainTests.test_success_keeps_fraction_but_network_wait_resets_it) ... ok
+test_successful_lan_ticks_preserve_quantized_frame_remainder (test_lan_main.LanMainTests.test_successful_lan_ticks_preserve_quantized_frame_remainder) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.401s
+
+OK

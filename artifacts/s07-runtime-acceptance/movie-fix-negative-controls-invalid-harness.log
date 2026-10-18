@@ -1,0 +1,128 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+predictable-alias-staging
+test_predictable_symlink_canary_is_untouched (test_s07_movie_provenance.MoviePublicationTests.test_predictable_symlink_canary_is_untouched) ... ERROR
+test_predictable_hardlink_canary_is_untouched (test_s07_movie_provenance.MoviePublicationTests.test_predictable_hardlink_canary_is_untouched) ... ERROR
+
+======================================================================
+ERROR: test_predictable_symlink_canary_is_untouched (test_s07_movie_provenance.MoviePublicationTests.test_predictable_symlink_canary_is_untouched)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_movie_provenance.py", line 125, in test_predictable_symlink_canary_is_untouched
+    self.exercise_publication(alias='symlink')
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_movie_provenance.py", line 106, in exercise_publication
+    baker.build_movie(None, None, None, args, report)
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tools/build_menu_movie.py", line 19, in build_movie
+    """
+        
+pygame.error: video system not initialized
+
+======================================================================
+ERROR: test_predictable_hardlink_canary_is_untouched (test_s07_movie_provenance.MoviePublicationTests.test_predictable_hardlink_canary_is_untouched)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_movie_provenance.py", line 128, in test_predictable_hardlink_canary_is_untouched
+    self.exercise_publication(alias='hardlink')
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_movie_provenance.py", line 106, in exercise_publication
+    baker.build_movie(None, None, None, args, report)
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tools/build_menu_movie.py", line 19, in build_movie
+    """
+        
+pygame.error: video system not initialized
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.062s
+
+FAILED (errors=2)
+
+decode-wrong-directory
+test_success_verifies_exact_staged_zip_before_atomic_publication (test_s07_movie_provenance.MoviePublicationTests.test_success_verifies_exact_staged_zip_before_atomic_publication) ... ERROR
+
+======================================================================
+ERROR: test_success_verifies_exact_staged_zip_before_atomic_publication (test_s07_movie_provenance.MoviePublicationTests.test_success_verifies_exact_staged_zip_before_atomic_publication)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_movie_provenance.py", line 131, in test_success_verifies_exact_staged_zip_before_atomic_publication
+    first = self.exercise_publication()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_movie_provenance.py", line 106, in exercise_publication
+    baker.build_movie(None, None, None, args, report)
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tools/build_menu_movie.py", line 19, in build_movie
+    """
+        
+pygame.error: video system not initialized
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (errors=1)
+
+skip-last-decode
+test_decode_failure_preserves_previous_bytes_and_cleans_staging (test_s07_movie_provenance.MoviePublicationTests.test_decode_failure_preserves_previous_bytes_and_cleans_staging) ... FAIL
+
+======================================================================
+FAIL: test_decode_failure_preserves_previous_bytes_and_cleans_staging (test_s07_movie_provenance.MoviePublicationTests.test_decode_failure_preserves_previous_bytes_and_cleans_staging)
+----------------------------------------------------------------------
+pygame.error: video system not initialized
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_movie_provenance.py", line 122, in test_decode_failure_preserves_previous_bytes_and_cleans_staging
+    self.exercise_publication(corrupt=True)
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_movie_provenance.py", line 102, in exercise_publication
+    with self.assertRaisesRegex(RuntimeError, 'decode verification failed'):
+AssertionError: "decode verification failed" does not match "video system not initialized"
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)
+
+leak-staging
+test_decode_failure_preserves_previous_bytes_and_cleans_staging (test_s07_movie_provenance.MoviePublicationTests.test_decode_failure_preserves_previous_bytes_and_cleans_staging) ... FAIL
+
+======================================================================
+FAIL: test_decode_failure_preserves_previous_bytes_and_cleans_staging (test_s07_movie_provenance.MoviePublicationTests.test_decode_failure_preserves_previous_bytes_and_cleans_staging)
+----------------------------------------------------------------------
+pygame.error: video system not initialized
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_movie_provenance.py", line 122, in test_decode_failure_preserves_previous_bytes_and_cleans_staging
+    self.exercise_publication(corrupt=True)
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_movie_provenance.py", line 102, in exercise_publication
+    with self.assertRaisesRegex(RuntimeError, 'decode verification failed'):
+AssertionError: "decode verification failed" does not match "video system not initialized"
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)
+
+[
+  {
+    "control": "predictable-alias-staging",
+    "tests": 2,
+    "failures": 0,
+    "errors": 2
+  },
+  {
+    "control": "decode-wrong-directory",
+    "tests": 1,
+    "failures": 0,
+    "errors": 1
+  },
+  {
+    "control": "skip-last-decode",
+    "tests": 1,
+    "failures": 1,
+    "errors": 0
+  },
+  {
+    "control": "leak-staging",
+    "tests": 1,
+    "failures": 1,
+    "errors": 0
+  }
+]

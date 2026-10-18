@@ -1,0 +1,80 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+test_candidate_requires_explicit_external_asset_before_gl (test_s07_movie_provenance.MovieCLITests.test_candidate_requires_explicit_external_asset_before_gl) ... usage: python -m unittest [-h] [--preview-only] [--model-preview] --output-dir
+                          OUTPUT_DIR [--asset ASSET] [--ffmpeg FFMPEG]
+python -m unittest: error: Preview candidate bake requires an explicit external --asset outside shipped assets
+usage: python -m unittest [-h] [--preview-only] [--model-preview] --output-dir
+                          OUTPUT_DIR [--asset ASSET] [--ffmpeg FFMPEG]
+python -m unittest: error: Preview candidate bake requires an explicit external --asset outside shipped assets
+ok
+test_default_legacy_does_not_inherit_preview (test_s07_movie_provenance.MovieCLITests.test_default_legacy_does_not_inherit_preview) ... FAIL
+test_display_init_failure_preserves_callers_font_and_audio (test_s07_movie_provenance.MovieCLITests.test_display_init_failure_preserves_callers_font_and_audio) ... FAIL
+test_existing_live_owner_never_initializes_or_quits_pygame (test_s07_movie_provenance.MovieCLITests.test_existing_live_owner_never_initializes_or_quits_pygame) ... ok
+test_failure_closes_before_quit_and_restores_selection (test_s07_movie_provenance.MovieCLITests.test_failure_closes_before_quit_and_restores_selection) ... 
+  test_failure_closes_before_quit_and_restores_selection (test_s07_movie_provenance.MovieCLITests.test_failure_closes_before_quit_and_restores_selection) (failure='draw') ... FAIL
+  test_failure_closes_before_quit_and_restores_selection (test_s07_movie_provenance.MovieCLITests.test_failure_closes_before_quit_and_restores_selection) (failure='close') ... FAIL
+test_preview_opt_in_precedes_fixture_and_report_is_stills_only (test_s07_movie_provenance.MovieCLITests.test_preview_opt_in_precedes_fixture_and_report_is_stills_only) ... FAIL
+
+======================================================================
+FAIL: test_default_legacy_does_not_inherit_preview (test_s07_movie_provenance.MovieCLITests.test_default_legacy_does_not_inherit_preview)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_movie_provenance.py", line 312, in test_default_legacy_does_not_inherit_preview
+    self.run_cli(['--preview-only'])
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_movie_provenance.py", line 274, in run_cli
+    global_quit.assert_not_called()
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/unittest/mock.py", line 900, in assert_not_called
+    raise AssertionError(msg)
+AssertionError: Expected 'quit' to not have been called. Called 1 times.
+Calls: [call()].
+
+======================================================================
+FAIL: test_display_init_failure_preserves_callers_font_and_audio (test_s07_movie_provenance.MovieCLITests.test_display_init_failure_preserves_callers_font_and_audio)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_movie_provenance.py", line 299, in test_display_init_failure_preserves_callers_font_and_audio
+    self.assertTrue(pygame.font.get_init(), 'caller font subsystem was shut down')
+AssertionError: False is not true : caller font subsystem was shut down
+
+======================================================================
+FAIL: test_failure_closes_before_quit_and_restores_selection (test_s07_movie_provenance.MovieCLITests.test_failure_closes_before_quit_and_restores_selection) (failure='draw')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_movie_provenance.py", line 320, in test_failure_closes_before_quit_and_restores_selection
+    self.run_cli(['--preview-only', '--model-preview'],
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_movie_provenance.py", line 274, in run_cli
+    global_quit.assert_not_called()
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/unittest/mock.py", line 900, in assert_not_called
+    raise AssertionError(msg)
+AssertionError: Expected 'quit' to not have been called. Called 1 times.
+Calls: [call()].
+
+======================================================================
+FAIL: test_failure_closes_before_quit_and_restores_selection (test_s07_movie_provenance.MovieCLITests.test_failure_closes_before_quit_and_restores_selection) (failure='close')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_movie_provenance.py", line 320, in test_failure_closes_before_quit_and_restores_selection
+    self.run_cli(['--preview-only', '--model-preview'],
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_movie_provenance.py", line 274, in run_cli
+    global_quit.assert_not_called()
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/unittest/mock.py", line 900, in assert_not_called
+    raise AssertionError(msg)
+AssertionError: Expected 'quit' to not have been called. Called 1 times.
+Calls: [call()].
+
+======================================================================
+FAIL: test_preview_opt_in_precedes_fixture_and_report_is_stills_only (test_s07_movie_provenance.MovieCLITests.test_preview_opt_in_precedes_fixture_and_report_is_stills_only)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_movie_provenance.py", line 315, in test_preview_opt_in_precedes_fixture_and_report_is_stills_only
+    self.run_cli(['--preview-only', '--model-preview'], expected_preview=True)
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_movie_provenance.py", line 274, in run_cli
+    global_quit.assert_not_called()
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/unittest/mock.py", line 900, in assert_not_called
+    raise AssertionError(msg)
+AssertionError: Expected 'quit' to not have been called. Called 1 times.
+Calls: [call()].
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.956s
+
+FAILED (failures=5)

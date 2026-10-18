@@ -1,0 +1,17 @@
+{
+  "review_id": "deleg_93ae5fec",
+  "previous_failed_review": "deleg_4f32d94c",
+  "scope": "S07 runtime acceptance fixes in dirty worktree based on 8b3f03b9ec6371ac7a469123741e130af03d983b; not S07 closure, release or default activation",
+  "passed": true,
+  "security_concerns": [],
+  "logic_errors": [],
+  "suggestions": [],
+  "sha256": {
+    "tools/build_menu_movie.py": "ee9fc9783ebe62a4afc3fee9f9b7ea0d79dfe5118cab325b82a32e549fe31b8b",
+    "tests/test_s07_movie_provenance.py": "8119fa46a0039204d969f198b4751f0abb8797dcd0518872b040c215d872ea22",
+    "tests/test_model_context_lifecycle.py": "3f7184f158b2115245581f5765b8c9472024eaabb08931ac8dfe405eaa17dc79",
+    "tests/test_s07_context_fixture_isolation.py": "2a199817bc0459331a428b60f5b1c12095da2bd04a9b05cea02e7f7ec9f9e821"
+  },
+  "summary": "No remaining actionable introduced issues in reviewed fixes: exclusive unique staging, exact staged playback before atomic replacement, preservation on failure, owned-display-only cleanup, fixture boundary refusal and independent restoration even when close raises.",
+  "limitations": "Read-only review and syntax/hash checks; reviewer did not rerun GL or suites. Parent execution is separately retained in review-fix-parent-attempt1.txt, parent-runtime-union-attempt2.txt, candidate-movie-attempt2 and candidate-movie-readback-attempt2.json. Earlier failed review and attempts remain historical evidence."
+}

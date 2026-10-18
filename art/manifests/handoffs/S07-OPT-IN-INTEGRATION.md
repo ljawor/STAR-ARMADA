@@ -4,6 +4,32 @@ Status: IN PROGRESS, not S07 acceptance. Parent: PR #130 approval head
 `65661e4a9fbde7e37da0bae0881e372c3dc21e59`. Working branch:
 `feat/s07-opt-in-catalogue`. No production-default switch, merge or release.
 
+## Runtime acceptance checkpoint (after published registration)
+
+On top of registration head `8b3f03b9ec6371ac7a469123741e130af03d983b`, the
+parent verified **181 focused tests**, including an independent selected CPU
+geometry matrix over 102 core bindings/106 consumers, actual 102-asset native GL
+resource lifecycle, material-role controls and natural campaign-entry routing.
+A native campaign frame includes production world/HUD rendering with unchanged
+precise state hashes. A fresh explicitly selected candidate movie renders 384
+source frames, bakes 360 frames, and verifies the exact staged ZIP before atomic
+publication outside shipped assets. Its metadata binds model revisions and code.
+The shipped menu movie and all 327 protected inputs remain byte-identical.
+
+Independent review `deleg_4f32d94c` found staging/publication/ownership defects;
+fixes retain RED controls and passed follow-up `deleg_93ae5fec`. See
+`artifacts/s07-runtime-acceptance/RUNTIME-FOLLOWUP-REVIEW.json` and
+`artifacts/s07-runtime-acceptance/LOCAL-CHECKPOINT.md` for exact evidence, limits,
+raw failed attempts and the distinction between CPU semantics and rasterization.
+
+**Still partial S07**: catalogue-wide visual ownership/motion/contact-VFX,
+historical hidden-contact and construction-preview acceptance remain to close.
+A fighter probe measures the reachable 34px role transition; it is not cached /
+uncached pixel parity or a natural 16px acceptance claim. No production renderer,
+approved mesh, default selection, scaffold registration, merge or release change.
+Read the PR for the published checkpoint head and exact-head CI; packaging and
+native platform/performance gates remain S08/S09 work.
+
 ## Fixes locally verified; independent follow-up review passed
 
 The three blockers from `deleg_f45c7347` now have tested fixes. Wrapper exports run

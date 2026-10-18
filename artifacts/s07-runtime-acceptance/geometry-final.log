@@ -1,0 +1,14 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+test_102_registered_bindings_have_complete_live_consumer_applicability (test_s07_selected_geometry_matrix.SelectedGeometryMatrixTests.test_102_registered_bindings_have_complete_live_consumer_applicability) ... ok
+test_40_station_current_owner_rotated_contact_camera_scale_and_pick (test_s07_selected_geometry_matrix.SelectedGeometryMatrixTests.test_40_station_current_owner_rotated_contact_camera_scale_and_pick) ... ok
+test_all_role_bounds_are_raw_payload_extrema (test_s07_selected_geometry_matrix.SelectedGeometryMatrixTests.test_all_role_bounds_are_raw_payload_extrema) ... ok
+test_attached_16_installations_all_six_slots_and_8_satellites_all_eight_placements (test_s07_selected_geometry_matrix.SelectedGeometryMatrixTests.test_attached_16_installations_all_six_slots_and_8_satellites_all_eight_placements) ... ok
+test_convoy_aliases_share_revision_but_not_crew_trade_scale (test_s07_selected_geometry_matrix.SelectedGeometryMatrixTests.test_convoy_aliases_share_revision_but_not_crew_trade_scale) ... ok
+test_selected_revision_payload_and_actual_dispatch_closure (test_s07_selected_geometry_matrix.SelectedGeometryMatrixTests.test_selected_revision_payload_and_actual_dispatch_closure) ... ok
+test_ship_consumers_capture_scale_rotated_contact_camera_and_pick (test_s07_selected_geometry_matrix.SelectedGeometryMatrixTests.test_ship_consumers_capture_scale_rotated_contact_camera_and_pick) ... ok
+test_stations_change_selected_family_with_current_owner_not_origin (test_s07_selected_geometry_matrix.SelectedGeometryMatrixTests.test_stations_change_selected_family_with_current_owner_not_origin) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 12.306s
+
+OK

@@ -1,0 +1,58 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+test_campaign_launch_preview_on_off_preserves_authoritative_state (test_s07_campaign_preview_entry.CampaignPreviewEntryTests.test_campaign_launch_preview_on_off_preserves_authoritative_state) ... ERROR
+test_negative_ordering_control_refuses_live_old_renderer (test_s07_campaign_preview_entry.CampaignPreviewEntryTests.test_negative_ordering_control_refuses_live_old_renderer) ... FAIL
+test_negative_selection_control_detects_wrong_preview (test_s07_campaign_preview_entry.CampaignPreviewEntryTests.test_negative_selection_control_detects_wrong_preview) ... ERROR
+
+======================================================================
+ERROR: test_campaign_launch_preview_on_off_preserves_authoritative_state (test_s07_campaign_preview_entry.CampaignPreviewEntryTests.test_campaign_launch_preview_on_off_preserves_authoritative_state)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_campaign_preview_entry.py", line 142, in test_campaign_launch_preview_on_off_preserves_authoritative_state
+    self.assertEqual(self.launch(True), self.launch(False))
+                     ^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_campaign_preview_entry.py", line 78, in launch
+    self.menu._screen_campaign()
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/render/menus.py", line 842, in _screen_campaign
+    campaign(self, load_campaign_unlocks(), load_campaign_completed())
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/render/classic_screens.py", line 167, in campaign
+    fill = (28, 48, 53) if _hot(c, r) else (14, 24, 33)
+                           ^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/render/classic_screens.py", line 118, in _hot
+    return _map_rect(c.menu, rect).collidepoint(pygame.mouse.get_pos())
+                                                ^^^^^^^^^^^^^^^^^^^^^^
+pygame.error: video system not initialized
+
+======================================================================
+ERROR: test_negative_selection_control_detects_wrong_preview (test_s07_campaign_preview_entry.CampaignPreviewEntryTests.test_negative_selection_control_detects_wrong_preview)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_campaign_preview_entry.py", line 151, in test_negative_selection_control_detects_wrong_preview
+    self.launch(True, wrong_selection=True)
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_campaign_preview_entry.py", line 78, in launch
+    self.menu._screen_campaign()
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/render/menus.py", line 842, in _screen_campaign
+    campaign(self, load_campaign_unlocks(), load_campaign_completed())
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/render/classic_screens.py", line 167, in campaign
+    fill = (28, 48, 53) if _hot(c, r) else (14, 24, 33)
+                           ^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/render/classic_screens.py", line 118, in _hot
+    return _map_rect(c.menu, rect).collidepoint(pygame.mouse.get_pos())
+                                                ^^^^^^^^^^^^^^^^^^^^^^
+pygame.error: video system not initialized
+
+======================================================================
+FAIL: test_negative_ordering_control_refuses_live_old_renderer (test_s07_campaign_preview_entry.CampaignPreviewEntryTests.test_negative_ordering_control_refuses_live_old_renderer)
+----------------------------------------------------------------------
+pygame.error: video system not initialized
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_campaign_preview_entry.py", line 145, in test_negative_ordering_control_refuses_live_old_renderer
+    with self.assertRaisesRegex(RuntimeError, 'renderers closed'):
+AssertionError: "renderers closed" does not match "video system not initialized"
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.043s
+
+FAILED (failures=1, errors=2)

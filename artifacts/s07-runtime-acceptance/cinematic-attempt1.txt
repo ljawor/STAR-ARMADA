@@ -1,0 +1,191 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+{
+  "scope": "Offline synthetic presentation through production renderer, explicit legacy/preview configuration. Not a candidate movie ZIP, campaign launch, FPS, or full S07 acceptance.",
+  "head": "8b3f03b9ec6371ac7a469123741e130af03d983b",
+  "probe_sha256": "2e67594acf89b536c913a3c24d1870e577bbdc79139f8043c34317a78c4ef2bd",
+  "variants": {
+    "legacy": {
+      "selection": {
+        "mode": "legacy",
+        "enabled_order": [],
+        "generation": 1,
+        "pack_order": [],
+        "issues": []
+      },
+      "models": [
+        {
+          "data_id": "imperial_supercapital",
+          "owner": 0,
+          "binding": null,
+          "revision": null
+        },
+        {
+          "data_id": "imperial_battleship",
+          "owner": 0,
+          "binding": null,
+          "revision": null
+        },
+        {
+          "data_id": "imperial_frigate",
+          "owner": 0,
+          "binding": null,
+          "revision": null
+        },
+        {
+          "data_id": "imperial_frigate",
+          "owner": 0,
+          "binding": null,
+          "revision": null
+        },
+        {
+          "data_id": "rebel_battleship",
+          "owner": 1,
+          "binding": null,
+          "revision": null
+        },
+        {
+          "data_id": "rebel_frigate",
+          "owner": 1,
+          "binding": null,
+          "revision": null
+        },
+        {
+          "data_id": "rebel_frigate",
+          "owner": 1,
+          "binding": null,
+          "revision": null
+        }
+      ],
+      "frames": [
+        {
+          "file": "legacy-start.png",
+          "sha256": "400f844ba34d8f6f4df9df3018f847cb491b5a269e1612d9020fafd728f5be17",
+          "time": 1.0,
+          "state_sha256": "9e955e049ba1cf98c8ebb874bd69cf92c5ddba8296ad2ecfd626bcef754240b4",
+          "repeat_changed_pixels": 0,
+          "visible_centers": 7
+        },
+        {
+          "file": "legacy-middle.png",
+          "sha256": "e44e7a63815d078dee6b039d90c739bca5f46ef438c37893f0928221d7add757",
+          "time": 8.5,
+          "state_sha256": "15ac08469d204327f0d686e185cde9e97bc865c902c7492e9d2e37b4c3a1ef0e",
+          "repeat_changed_pixels": 0,
+          "visible_centers": 7
+        },
+        {
+          "file": "legacy-end.png",
+          "sha256": "abf6ecdcc19569888dc01a69082fcfe551233a757f2bb689315db637c943dff3",
+          "time": 15.9583333333,
+          "state_sha256": "56fc8141c46cebe9593aa44535badbf4e5564498798801a61d3b0259d3e12ae8",
+          "repeat_changed_pixels": 0,
+          "visible_centers": 7
+        }
+      ]
+    },
+    "preview": {
+      "selection": {
+        "mode": "preview",
+        "enabled_order": [],
+        "generation": 2,
+        "pack_order": [],
+        "issues": []
+      },
+      "models": [
+        {
+          "data_id": "imperial_supercapital",
+          "owner": 0,
+          "binding": "imperial:supercapital",
+          "revision": "6eb500499505e10b6609db34472dddf03275952894a8a608ca4414b76a0114b0"
+        },
+        {
+          "data_id": "imperial_battleship",
+          "owner": 0,
+          "binding": "imperial:battleship",
+          "revision": "974d00963c452f85a870ae02a6f9f19e5778e8ea53f9f0998b3c34b0ab6580d4"
+        },
+        {
+          "data_id": "imperial_frigate",
+          "owner": 0,
+          "binding": "imperial:frigate",
+          "revision": "c0cf348ad0163a52a10eb9140c1c43abf2a6e3ed2d7fd113d6bc95746aa03109"
+        },
+        {
+          "data_id": "imperial_frigate",
+          "owner": 0,
+          "binding": "imperial:frigate",
+          "revision": "c0cf348ad0163a52a10eb9140c1c43abf2a6e3ed2d7fd113d6bc95746aa03109"
+        },
+        {
+          "data_id": "rebel_battleship",
+          "owner": 1,
+          "binding": "rebel:battleship",
+          "revision": "7634f9edda51e6a87a50cfbcf697e914ae0f94ba16f0aab6eb59a939214ed7d9"
+        },
+        {
+          "data_id": "rebel_frigate",
+          "owner": 1,
+          "binding": "rebel:frigate",
+          "revision": "60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df"
+        },
+        {
+          "data_id": "rebel_frigate",
+          "owner": 1,
+          "binding": "rebel:frigate",
+          "revision": "60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df"
+        }
+      ],
+      "frames": [
+        {
+          "file": "preview-start.png",
+          "sha256": "18f152005c41d5a412596711c77475e7d34dfeeda49d7390f00ff93a95084f57",
+          "time": 1.0,
+          "state_sha256": "a62c8ef758e362a440f940b75f07e68a05643204400ade53d3aa4536655d1743",
+          "repeat_changed_pixels": 0,
+          "visible_centers": 7
+        },
+        {
+          "file": "preview-middle.png",
+          "sha256": "86e0bb9b68f0f93c193b731dadcdc147187eb1f4d0df3ca2aeb6cca59146bed0",
+          "time": 8.5,
+          "state_sha256": "050a8bbc4e2dafa0c7f3ae3db231a54eab36c4e4a1ae2415a5997c7be85a1e7b",
+          "repeat_changed_pixels": 0,
+          "visible_centers": 7
+        },
+        {
+          "file": "preview-end.png",
+          "sha256": "502a36307ab5d48247040c71bfe5ef303979020fe3b3635ca1e9c121eb98fc2f",
+          "time": 15.9583333333,
+          "state_sha256": "d4e9a46d3038696d71bbd1b88fde6fc18b2812b5a9eeb30eedfa354ec13bbcfe",
+          "repeat_changed_pixels": 0,
+          "visible_centers": 7
+        }
+      ]
+    }
+  },
+  "comparisons": {
+    "start": {
+      "changed_pixels": 152276
+    },
+    "middle": {
+      "changed_pixels": 156687
+    },
+    "end": {
+      "changed_pixels": 157917
+    }
+  },
+  "gl": {
+    "vendor": "Apple",
+    "renderer": "Apple M4",
+    "version": "2.1 Metal - 90.5"
+  },
+  "samples": 4,
+  "motion": {
+    "file": "candidate-motion.mp4",
+    "frames": 48,
+    "fps": 24,
+    "sha256": "b8f5d4056c707d8e26e9420f575bf10a1b3d6075ddfb2db1111ce03c7cff1e62",
+    "scope": "2-second offline synthetic fixture; rendering preserves each sampled state"
+  },
+  "protected_inputs_changed": []
+}
