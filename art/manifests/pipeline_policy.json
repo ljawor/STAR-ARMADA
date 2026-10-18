@@ -284,6 +284,37 @@
         "landing, registration, activation, merge, tag, release or a production-default switch",
         "any change to the field's gameplay values: 40 instances, placement, scale range and tumble stay as they are"
       ]
+    },
+    {
+      "id": "s06-imperial-convoy-parity-2026-10-18",
+      "date": "2026-10-18",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved-as-proposed",
+      "applies_to": "the two remaining Imperial rows of S06 batch B6, and the convoy gate that reaches them",
+      "owner_wording": "other factions' convoys settled",
+      "how_recorded": "Put to him as the choice it was - author the Imperial convoy rows as hulls of their own, or follow whatever the other three factions' convoys settled on - and he chose the second. What that means is measured rather than assumed, below.",
+      "what_the_siblings_settled_on": {
+        "decision": "s06-b2-squadron-logistics-2026-10-17",
+        "rows": [
+          "rebel:convoy / alliance_convoy",
+          "confederacy:convoy / legion_convoy",
+          "syndicate:convoy / syndicate_convoy"
+        ],
+        "status": "appearance_approved_pending_landing, owner_decision null, activation false, registry procedural_legacy",
+        "mesh_sizes": "4,512 / 4,584 / 4,756 triangles - roughly twice the single-hull rows, because a convoy is a cluster",
+        "envelope_convention": "the sidecar's envelope is the binding's declared box, a little larger than the mesh's own bounds: rebel:convoy declares [-31,-9,-72.698]..[31,16,59.5] around mesh bounds of [-30.3,-6,-72.698]..[30.3,14.776,59.5]",
+        "evidence": "the same review sheets and per-row sidecars the rest of S06 uses"
+      },
+      "what_this_authorizes": [
+        "authoring an Imperial convoy row that follows the siblings: binding imperial:convoy (already in the registry with manifest core:imperial/convoy), a cluster-scale mesh around 4,500 triangles, an envelope in the siblings' style, a sidecar, a review picture, and an appearance decision when the owner has seen it"
+      ],
+      "what_it_does_not_authorize": [
+        "landing, registration, activation, merge, tag or release of anything",
+        "a blanket change to the convoy gate: extending it for Imperial is a seam change and is to be written, guarded and reviewed like any other",
+        "any change to the other three factions' convoys, which are already approved",
+        "packaging of any kind, an LFS conversion or a size policy"
+      ],
+      "finding_to_carry": "Both convoy paths exclude Imperial from the faction gate that maps a data row to a <faction>:convoy key - `data_id == 'trade_convoy' and faction in FACTIONS[1:]`, and the crew-transport branch beside it, where FACTIONS is (imperial, rebel, confederacy, syndicate). So an Imperial convoy hull cannot be reached until that gate is extended for Imperial; this is a real one-branch seam, unlike the ship rows, whose authored bindings are served through ship_binding without any key change."
     }
   ]
 }
