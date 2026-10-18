@@ -152,6 +152,29 @@ ASSETS['imperial_tie_bomber_squadron'] = ('Hammer Torpedo Squadron',
                                           ((-31.25, 31.25), (-3.24, 14.0), (-28.996, 35.0)),
                                           63.8, 11888, 9450, 2_000_000)
 
+# S06 B6 rows 4 to 7 - the two dagger capitals, the cruiser and the frigate. The envelope and
+# `min_length` are each row's own legacy extent, measured from `render/fleet_geometry.py` through
+# the row's shape string (`dagger`, `cruiser`, `needle`) by `tools/art/probe_b6_scope.py`. The
+# battleship and the supercapital share the same measured dagger box but are distinct hulls - the
+# supercapital's deeper, wider pressure hull and its extra superstructure tier are row data in the
+# seed, not a scale - and the frigate is a heavier hull than the corvette it shares a box with. The
+# caps are the standard ship caps and every row is above the 1_800 hull floor, so none declares a
+# floor of its own. Script-authoritative per the S03 source-authority policy (repeated modular
+# hardware): `tools/art/build_b6_imperial_ships.py` is the recipe and the `.blend` is a derived
+# artifact.
+ASSETS['imperial_battleship'] = ('Executor-class Dreadnought',
+                                 ((-38.45, 38.45), (-10.0, 39.5), (-80.183, 108.0)),
+                                 188.0, 11888, 9450, 2_000_000)
+ASSETS['imperial_supercapital'] = ('Sovereign-class Star Dreadnought',
+                                   ((-38.45, 38.45), (-10.0, 39.5), (-80.183, 108.0)),
+                                   188.0, 11888, 9450, 2_000_000)
+ASSETS['imperial_cruiser'] = ('Gladiator Cruiser',
+                              ((-29.45, 29.45), (-7.0, 31.5), (-62.94, 78.0)),
+                              140.7, 11888, 9450, 2_000_000)
+ASSETS['imperial_frigate'] = ('Lancer Frigate',
+                              ((-16.0, 16.0), (-5.0, 24.0), (-43.601, 48.0)),
+                              91.4, 11888, 9450, 2_000_000)
+
 
 def template():
     """The template body, without its own header comment block."""

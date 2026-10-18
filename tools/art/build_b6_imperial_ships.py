@@ -119,6 +119,168 @@ ROWS = {
                 'between two large flat hexagonal wing panels, two munition cylinders under the '
                 'pylon, doubled bright rim banding, a lit engine bank and a cool-toned sensor ring'),
     ),
+    # ---- rows 4 to 7: the two dagger capitals, the cruiser and the frigate ----
+    # The two dagger rows are the same legacy shape (`dagger`) at the same measured extent, so their
+    # *shape* tables are row data: the supercapital declares a deeper hull (`hull_sections` bottoms on
+    # the keel across four frames and is wider) and one more superstructure tier, which is what keeps
+    # the pair from being one mesh scaled. Every reach is a row value: the hull carries the bow (Z max)
+    # and the keel (Y min), the outboard hangar sponsons the beam (both X extremes), the dorsal comm
+    # mast the ship's highest point (Y max) and the engine bells the stern (Z min).
+    'ship:imperial:battleship': dict(
+        identifier='imperial_battleship',
+        data_id='imperial_battleship',
+        label='Executor-class Dreadnought',
+        ship_kind='capital',
+        faction='imperial',
+        legacy_shape='dagger',
+        limits=[[-38.45, 38.45], [-10.0, 39.5], [-80.183, 108.0]],
+        legacy_triangles=3296,
+        legacy_vertices=1814,
+        station_radius=150.0,
+        hull_sections=((-78, 15.0, 6.0, -6.0), (-58, 21.0, 9.0, -10.0),
+                       (-24, 25.0, 10.0, -10.0), (16, 24.0, 10.0, -9.0),
+                       (62, 15.0, 8.0, -8.0), (108, 1.3, 3.0, -3.0)),
+        hull_bevel=0.9,
+        tiers=((((-60, 12.0, 16.0, 9.0), (-28, 13.0, 18.0, 9.0), (-4, 8.0, 12.0, 9.0)), 0.5),),
+        tower=(((-34, 6.5, 33.0, 16.0), (-22, 6.5, 33.0, 16.0), (-15, 4.0, 26.0, 16.0)), 0.35),
+        mast=(6.0, 1.4, -30.0, 4.5),
+        sponson=((-72, 5.0, 5.0, -6.0), (-52, 6.0, 6.0, -6.5), (-30, 7.0, 6.5, -7.0),
+                 (-6, 6.0, 6.0, -7.0), (8, 4.0, 4.5, -5.0)),
+        sponson_bevel=0.6,
+        keel=((-58, 3.2, -5.0, -10.0), (-40, 3.6, -5.0, -10.0), (-18, 2.8, -5.0, -9.0)),
+        keel_bevel=0.3,
+        skirt=((-79, 8.0, 4.0, -4.0), (-74, 12.0, 6.0, -5.0), (-68, 15.0, 8.0, -6.0)),
+        skirt_bevel=0.4,
+        prow=(5.0, 3.0, 10.0),
+        deck_top=10.0,
+        turrets=(-50.0, -8.0, 44.0),
+        turret_scale=1.5,
+        engines=(-16.0, -5.5, 5.5, 16.0),
+        engine_radius=3.4,
+        engine_depth=6.0,
+        engine_y=-1.0,
+        design=('Imperial grey dagger dreadnought: a broad armoured pressure hull with outboard '
+                'hangar sponsons carrying the beam, a tiered bridge superstructure under a dorsal '
+                'comm mast, triple gun turrets, recessed dark hangar mouths and panels, bright trim '
+                'banding, red identification striping, a bank of lit engine bells and cool '
+                'radiator fins'),
+    ),
+    'ship:imperial:supercapital': dict(
+        identifier='imperial_supercapital',
+        data_id='imperial_supercapital',
+        label='Sovereign-class Star Dreadnought',
+        ship_kind='capital',
+        faction='imperial',
+        legacy_shape='dagger',
+        limits=[[-38.45, 38.45], [-10.0, 39.5], [-80.183, 108.0]],
+        legacy_triangles=3296,
+        legacy_vertices=1814,
+        station_radius=260.0,
+        # Heavier than the battleship: a deeper, wider pressure hull and an extra superstructure tier.
+        hull_sections=((-79, 17.0, 8.0, -10.0), (-60, 24.0, 10.0, -10.0),
+                       (-26, 28.0, 11.0, -10.0), (12, 28.0, 11.0, -10.0),
+                       (58, 18.0, 9.0, -9.0), (108, 1.5, 3.0, -3.0)),
+        hull_bevel=1.0,
+        tiers=((((-62, 14.0, 20.0, 10.0), (-28, 15.0, 22.0, 10.0), (-2, 9.0, 15.0, 10.0)), 0.5),
+               (((-54, 11.0, 30.0, 20.0), (-30, 11.0, 30.0, 20.0), (-16, 7.0, 24.0, 20.0)), 0.45)),
+        tower=(((-34, 6.0, 34.0, 28.0), (-22, 6.0, 34.0, 28.0), (-15, 3.5, 27.0, 28.0)), 0.3),
+        mast=(6.0, 1.6, -30.0, 5.0),
+        sponson=((-74, 5.5, 6.0, -7.0), (-54, 6.5, 7.0, -7.5), (-32, 7.5, 7.5, -8.0),
+                 (-6, 6.5, 7.0, -8.0), (10, 4.5, 5.0, -6.0)),
+        sponson_bevel=0.6,
+        keel=((-58, 3.6, -5.0, -10.0), (-40, 4.0, -5.0, -10.0), (-18, 3.0, -5.0, -10.0)),
+        keel_bevel=0.3,
+        skirt=((-79, 9.0, 5.0, -5.0), (-74, 13.0, 7.0, -6.0), (-68, 16.0, 9.0, -7.0)),
+        skirt_bevel=0.4,
+        prow=(5.5, 3.5, 11.0),
+        deck_top=11.0,
+        turrets=(-52.0, -10.0, 48.0),
+        turret_scale=1.7,
+        engines=(-18.0, -6.0, 6.0, 18.0),
+        engine_radius=3.8,
+        engine_depth=6.5,
+        engine_y=-1.5,
+        design=('Imperial grey star dreadnought: a deep broad armoured hull with outboard hangar '
+                'sponsons carrying the beam, a two-tier bridge superstructure under a dorsal comm '
+                'mast, three heavy gun turrets, recessed dark hangar mouths and panels, bright trim '
+                'banding, red identification striping, a bank of lit engine bells and cool radiator '
+                'fins'),
+    ),
+    'ship:imperial:cruiser': dict(
+        identifier='imperial_cruiser',
+        data_id='imperial_cruiser',
+        label='Gladiator Cruiser',
+        ship_kind='capital',
+        faction='imperial',
+        legacy_shape='cruiser',
+        limits=[[-29.45, 29.45], [-7.0, 31.5], [-62.94, 78.0]],
+        legacy_triangles=2800,
+        legacy_vertices=1542,
+        station_radius=90.0,
+        hull_sections=((-61, 12.0, 5.0, -5.0), (-46, 15.0, 6.0, -7.0), (-20, 17.0, 7.0, -7.0),
+                       (6, 16.0, 7.0, -6.0), (78, 1.2, 2.5, -2.5)),
+        hull_bevel=0.75,
+        tiers=((((-50, 9.0, 13.0, 7.0), (-22, 10.0, 14.0, 7.0), (-4, 6.0, 10.0, 7.0)), 0.45),),
+        tower=(((-28, 5.0, 27.0, 12.0), (-18, 5.0, 27.0, 12.0), (-12, 3.0, 22.0, 12.0)), 0.3),
+        mast=(5.0, 1.3, -24.0, 3.5),
+        sponson=((-58, 4.0, 4.0, -5.0), (-44, 4.6, 5.0, -5.5), (-26, 5.5, 5.5, -6.0),
+                 (-6, 4.8, 5.0, -6.0), (6, 3.4, 3.6, -4.5)),
+        sponson_bevel=0.5,
+        keel=((-44, 2.6, -4.0, -7.0), (-30, 3.0, -4.0, -7.0), (-14, 2.2, -4.0, -6.5)),
+        keel_bevel=0.25,
+        skirt=((-61, 6.5, 3.5, -3.5), (-57, 9.5, 5.0, -4.5), (-52, 12.0, 6.5, -5.5)),
+        skirt_bevel=0.35,
+        prow=(4.0, 2.6, 8.0),
+        deck_top=7.0,
+        turrets=(-36.0, 0.0, 38.0),
+        turret_scale=1.1,
+        engines=(-11.0, 0.0, 11.0),
+        engine_radius=2.8,
+        engine_depth=5.0,
+        engine_y=-0.5,
+        design=('Imperial grey cruiser: an armoured hull with outboard hangar sponsons carrying the '
+                'beam, a two-tier bridge superstructure under a dorsal comm mast, three gun turrets, '
+                'recessed dark hangar mouths and panels, bright trim banding, red identification '
+                'striping, a bank of lit engine bells and cool radiator fins'),
+    ),
+    'ship:imperial:frigate': dict(
+        identifier='imperial_frigate',
+        data_id='imperial_frigate',
+        label='Lancer Frigate',
+        ship_kind='frigate',
+        faction='imperial',
+        legacy_shape='needle',
+        limits=[[-16.0, 16.0], [-5.0, 24.0], [-43.601, 48.0]],
+        legacy_triangles=1552,
+        legacy_vertices=858,
+        station_radius=55.0,
+        # The corvette's legacy shape and box, but its own heavier hull: a fuller pressure hull and a
+        # deeper sponson pair than the corvette's, a raised battery deck, six gun turrets rather than
+        # the corvette's two and a four-bell engine bank.
+        hull_sections=((-41, 8.0, 6.0, -4.6), (-34, 10.4, 7.0, -5.0), (-12, 12.2, 7.6, -4.8),
+                       (0, 11.4, 7.4, -4.6), (14, 9.4, 7.0, -4.2), (48, 1.2, 2.2, -1.3)),
+        hull_bevel=0.5,
+        house=(((-36, 6.0, 13.0, 6.6), (-20, 7.0, 14.4, 6.6), (-4, 4.0, 10.0, 6.6)), 0.4),
+        sponson=((-30, 4.0, 4.4, -4.4), (-24, 5.4, 5.0, -5.0), (8, 3.0, 3.4, -3.6)),
+        sponson_bevel=0.4,
+        keel=((-28, 2.4, -3.0, -5.0), (-20, 2.6, -3.2, -5.0), (-8, 2.0, -3.0, -4.6)),
+        keel_bevel=0.25,
+        skirt=((-42.5, 6.5, 3.4, -3.2), (-39, 8.4, 4.4, -4.0), (-34, 9.6, 5.2, -4.4)),
+        skirt_bevel=0.3,
+        prow=(4.6, 2.4, 9.0),
+        deck_top=7.0,
+        turrets=(-30.0, -16.0, -2.0, 22.0, 34.0),
+        turret_scale=0.8,
+        engines=(-7.0, -2.5, 2.5, 7.0),
+        engine_radius=2.2,
+        engine_depth=5.601,
+        engine_y=-0.5,
+        fin=(6.5, 0.5, -20.0, 10.0),
+        design=('Imperial grey needle frigate: a fuller pressure hull with a raised battery deck '
+                'and outboard hangar sponsons carrying the beam, six gun turrets, recessed dark '
+                'hangar mouths and panels, bright trim banding, red identification striping, a '
+                'four-bell lit engine bank and a tall cool dorsal radiator fin'),
+    ),
 }
 
 # The weld pass at this asset's scale. The station defaults (tolerance .25, grow up to 2.5 units,
@@ -180,6 +342,22 @@ def frame(limits):
     lo = [a[0] for a in limits]
     hi = [a[1] for a in limits]
     return lo, hi, [(lo[i] + hi[i]) / 2 for i in range(3)], [hi[i] - lo[i] for i in range(3)]
+
+
+def hull_at(sections, z):
+    """The loft's own frame at `z`: `(half-width, top, bottom)`, linearly interpolated.
+
+    A detail placed from a hand-copied height floats off a tapered deck or sinks into a flank; this
+    reads the same section list the loft is built from, so a flank panel lands on the hull the row
+    actually authors. A pure function of the sections, so a guard can drive it without Blender.
+    """
+    if z <= sections[0][0]:
+        return sections[0][1], sections[0][2], sections[0][3]
+    for (z0, w0, t0, b0), (z1, w1, t1, b1) in zip(sections, sections[1:]):
+        if z <= z1:
+            f = (z - z0) / (z1 - z0)
+            return (w0 + f * (w1 - w0), t0 + f * (t1 - t0), b0 + f * (b1 - b0))
+    return sections[-1][1], sections[-1][2], sections[-1][3]
 
 
 # --------------------------------------------------------------- the TIE wing panel, as pure data
@@ -511,9 +689,212 @@ def build_imperial_tie(kit, row):
     kit.plate('43 Pod dorsal fin', 'cool', (0.8, 5.0, 6.0), (0, cy + pod_r * 0.72, cz - 2.0))
 
 
+def build_imperial_capital(kit, row):
+    """The dagger/cruiser capital hull: grey plating, recessed dark panels, bright trim banding, red
+    identification striping, a lit engine bank and a cool sensor/radiator fit.
+
+    Every reach is stated against the row's own extent: the pressure hull is the bow (Z max) and the
+    keel (Y min), the outboard hangar sponsons are the beam (both X extremes), the dorsal comm mast
+    is the ship's highest point (Y max) and the engine bells are the stern (Z min). The hull, the
+    tiers, the tower and the sponsons are row data, which is what makes the supercapital a deeper
+    hull with an extra tier rather than the battleship scaled. Detail is placed from the loft it
+    sits on (`hull_at`), never from a hand-copied height, so it lands on a tapered deck or flank.
+    """
+    lo, hi, centre, span = frame(row['limits'])
+    deck = row['deck_top']
+    scale = row['turret_scale']
+    hull = row['hull_sections']
+    sp_z0 = min(s[0] for s in row['sponson'])
+    sp_z1 = max(s[0] for s in row['sponson'])
+    sp_mid = (sp_z0 + sp_z1) / 2.0
+    sp_len = sp_z1 - sp_z0
+    sw = max(s[1] for s in row['sponson'])
+    spon_x = hi[0] - sw                       # the sponson's outer plane IS the beam extreme
+    mid_w, mid_t = hull_at(hull, sp_mid)[0], hull_at(hull, sp_mid)[1]
+
+    # 01-05  The hull and the block above it: the hull is the bow and the keel, the sponsons the
+    # beam, the tiers and the tower the superstructure.
+    kit.loft('01 Pressure hull', 'base', hull, row['hull_bevel'])
+    for i, (sections, bevel) in enumerate(row['tiers']):
+        kit.loft(f'02 Superstructure tier {i}', 'base', sections, bevel)
+    kit.loft('03 Bridge tower', 'base', row['tower'][0], row['tower'][1])
+    for side in (-1, 1):
+        kit.loft(f'04 Hangar sponson {side}', 'base', row['sponson'], row['sponson_bevel'],
+                 (side * spon_x, 0, 0))
+    kit.loft('05 Ventral keel fin', 'base', row['keel'], row['keel_bevel'])
+    kit.loft('06 Aft hull skirt', 'base', row['skirt'], row['skirt_bevel'])
+    pw, ph, pl = row['prow']
+    kit.plate('07 Bow prow plate', 'base', (pw, ph, pl), (0, lo[1] + ph * 0.5, hi[2] - pl / 2))
+
+    # Recessed dark panels: the hangar mouths on the broadside, panels in the shadow of the plating.
+    kit.plate('10 Ventral recess panel', 'dark', (sw * 2.0, 1.0, sp_len * 0.55),
+              (0, lo[1] + 0.5, sp_mid - 6.0))
+    kit.plate('11 Engine housing recess', 'dark', (sw * 2.4, 4.4, 6.0), (0, 0.6, lo[2] + 4.5))
+    pz = hi[2] - 14.0
+    kit.plate('12 Prow sensor housing', 'dark', (4.6, 2.6, 7.0),
+              (0, hull_at(hull, pz)[1] - 0.3, pz))
+    kit.plate('13 Dorsal cable run', 'dark', (2.6, 0.9, sp_len * 0.5), (0, deck + 0.4, sp_mid + 8.0))
+    for side in (-1, 1):
+        kit.plate(f'14 Hangar mouth {side}', 'dark', (1.2, 6.0, sp_len * 0.55),
+                  (side * (hi[0] - 0.6), -0.5, sp_mid - 2.0))
+        az = max(sp_z0 - 10.0, hull[0][0] + 7.0)   # the recess stays inside the hull's own stern
+        kit.plate(f'15 Aft flank recess {side}', 'dark', (1.4, 4.0, 12.0),
+                  (side * hull_at(hull, az)[0], 0.0, az))
+
+    # Bright trim: the sheer banding, the gun battery, the bow collar and the comm mast (Y max).
+    for side in (-1, 1):
+        kit.plate(f'20 Sheer edge band {side}', 'trim', (1.4, 1.2, sp_len * 0.85),
+                  (side * mid_w, mid_t - 0.8, sp_mid))
+    for k, z in enumerate(row['turrets']):
+        top = hull_at(hull, z)[1]
+        kit.cylinder(f'22 Turret body {k}', 'trim', (0, top + 0.2 * scale, z), 1.2 * scale,
+                     2.6 * scale, 'Y', 12)
+        kit.plate(f'23 Turret barbette {k}', 'trim', (4.6 * scale, 1.6, 5.0 * scale),
+                  (0, top - 0.1, z))
+        kit.plate(f'24 Turret barrels {k}', 'trim', (2.6 * scale, 0.9 * scale, 9.0 * scale),
+                  (0, top + 0.2 * scale, z + 4.5 * scale))
+    kit.plate('26 Bow collar', 'trim', (pw * 1.1, 1.4, 3.0),
+              (0, hull_at(hull, hi[2] - 16.0)[1], hi[2] - 16.0))
+    mh, mw, mz, mz1 = row['mast']
+    kit.plate('28 Dorsal comm mast', 'trim', (mw * 2.0, mh * 2.0, mz1 * 2.0),
+              (0, hi[1] - mh, mz))
+
+    # Red identification striping, raised so the review cameras read it.
+    for side in (-1, 1):
+        fz = sp_z1 + 20.0
+        kit.plate(f'30 Flank stripe {side}', 'accent', (1.0, 2.6, 16.0),
+                  (side * hull_at(hull, fz)[0], 3.0, fz))
+        kit.plate(f'32 Sponson stripe {side}', 'accent', (1.0, 2.0, 6.0),
+                  (side * (hi[0] - 0.5), -2.0, sp_mid + 6.0))
+    cz = hi[2] - 22.0
+    kit.plate('34 Prow chevron', 'accent', (2.4, 2.0, 7.0), (0, hull_at(hull, cz)[1] - 0.5, cz))
+
+    # The drive and the ship's lighting.
+    e_r, e_d, e_y = row['engine_radius'], row['engine_depth'], row['engine_y']
+    for k, x in enumerate(row['engines']):
+        kit.cylinder(f'40 Engine bell {k}', 'lit', (x, e_y, lo[2] + e_d / 2.0), e_r, e_d, 'Z', 14)
+    kit.plate('41 Stern lamp band', 'lit', (sw * 1.8, 1.0, 1.2), (0, 1.0, lo[2] + 1.5))
+    kit.plate('43 Bridge visor slit', 'lit', (3.0, 0.8, 5.0), (0, hi[1] - 9.0, sp_mid + 6.0))
+    for side in (-1, 1):
+        kit.plate(f'45 Hangar glow {side}', 'lit', (1.0, 4.6, sp_len * 0.5),
+                  (side * (hi[0] - 0.5), -0.5, sp_mid + 2.0))
+
+    # Cool sensor and radiator fit; the dorsal fin reaches the ship's highest point.
+    kit.plate('50 Dorsal radiator fin', 'cool', (1.2, 12.0, 18.0), (0, hi[1] - 12.0, sp_mid - 4.0))
+    for side in (-1, 1):
+        sz = sp_mid - 14.0
+        kit.plate(f'51 Side radiator fin {side}', 'cool', (1.0, 5.0, 11.0),
+                  (side * (hull_at(hull, sz)[0] * 0.6), hull_at(hull, sz)[1], sz))
+        pvz = hi[2] - 8.0
+        kit.plate(f'52 Prow sensor vane {side}', 'cool', (0.9, 3.6, 8.0),
+                  (side * max(hull_at(hull, pvz)[0] * 0.6, 0.9), hull_at(hull, pvz)[1], pvz))
+    kit.plate('54 Ventral radiator plate', 'cool', (sw * 1.4, 1.0, 12.0),
+              (0, lo[1] + 1.3, sp_mid + 8.0))
+    for side in (-1, 1):
+        sz = sp_mid + 34.0
+        kit.cylinder(f'55 Sensor array {side}', 'cool', (side * 4.4, hull_at(hull, sz)[1], sz),
+                     1.2, 3.6, 'Z', 10)
+
+
+def build_imperial_frigate(kit, row):
+    """The Lancer frigate: a heavier needle hull than the corvette, and more heavily armed.
+
+    It shares the legacy `needle` box with the corvette - both draw the same legacy mesh today - but
+    is its own hull: a fuller pressure hull with a raised battery deck, deeper outboard sponsons and
+    five gun turrets against the corvette's two, on a four-bell engine bank. The envelope carriers
+    are stated against the row's own extent: the hull is the bow (Z max) and the keel (Y min), the
+    sponsons the beam (both X extremes), the dorsal radiator fin the ship's highest point (Y max)
+    and the engine bells the stern (Z min).
+    """
+    lo, hi, centre, span = frame(row['limits'])
+    hull = row['hull_sections']
+    scale = row['turret_scale']
+    sp_z0 = min(s[0] for s in row['sponson'])
+    sp_z1 = max(s[0] for s in row['sponson'])
+    sp_mid = (sp_z0 + sp_z1) / 2.0
+    sp_len = sp_z1 - sp_z0
+    sw = max(s[1] for s in row['sponson'])
+    spon_x = hi[0] - sw
+
+    kit.loft('01 Pressure hull', 'base', hull, row['hull_bevel'])
+    kit.loft('02 Dorsal battery deck', 'base', row['house'][0], row['house'][1])
+    kit.loft('03 Aft hull skirt', 'base', row['skirt'], row['skirt_bevel'])
+    for side in (-1, 1):
+        kit.loft(f'04 Hangar sponson {side}', 'base', row['sponson'], row['sponson_bevel'],
+                 (side * spon_x, 0, 0))
+    kit.loft('05 Ventral keel fin', 'base', row['keel'], row['keel_bevel'])
+    pw, ph, pl = row['prow']
+    kit.plate('06 Bow prow plate', 'base', (pw, ph, pl), (0, lo[1] + ph * 0.5, hi[2] - pl / 2))
+    kit.plate('07 Forward deck housing', 'base', (5.0, 2.4, 9.0), (0, hull_at(hull, 26.0)[1], 26.0))
+
+    # Recessed dark panels.
+    kit.plate('10 Ventral recess panel', 'dark', (sw * 2.0, 1.0, 20.0), (0, lo[1] + 0.5, -18.0))
+    kit.plate('11 Engine housing recess', 'dark', (sw * 2.2, 4.0, 5.0), (0, 0.4, lo[2] + 4.0))
+    pz = hi[2] - 14.0
+    kit.plate('12 Prow sensor housing', 'dark', (3.4, 2.2, 5.0),
+              (0, hull_at(hull, pz)[1] - 0.3, pz))
+    kit.plate('13 Dorsal cable run', 'dark', (2.4, 0.8, 16.0), (0, hull_at(hull, 6.0)[1], 6.0))
+    for side in (-1, 1):
+        kit.plate(f'14 Hangar mouth {side}', 'dark', (1.2, 5.0, sp_len * 0.5),
+                  (side * (hi[0] - 0.6), -0.8, sp_mid - 2.0))
+        az = max(sp_z0 - 8.0, hull[0][0] + 5.0)
+        kit.plate(f'15 Aft flank recess {side}', 'dark', (1.2, 3.2, 9.0),
+                  (side * hull_at(hull, az)[0], 0.0, az))
+
+    # Bright trim: sheer banding, the five-gun battery and the collars.
+    for side in (-1, 1):
+        kit.plate(f'20 Sheer edge band {side}', 'trim', (1.2, 1.0, sp_len * 0.8),
+                  (side * hull_at(hull, sp_mid)[0], hull_at(hull, sp_mid)[1] - 0.8, sp_mid))
+    for k, z in enumerate(row['turrets']):
+        top = hull_at(hull, z)[1]
+        kit.cylinder(f'22 Turret body {k}', 'trim', (0, top + 0.2 * scale, z), 1.2 * scale,
+                     2.6 * scale, 'Y', 12)
+        kit.plate(f'23 Turret barbette {k}', 'trim', (4.0 * scale, 1.4, 4.4 * scale),
+                  (0, top - 0.1, z))
+        kit.plate(f'24 Turret barrels {k}', 'trim', (2.4 * scale, 0.8 * scale, 8.0 * scale),
+                  (0, top + 0.2 * scale, z + 4.0 * scale))
+    kit.plate('25 Dorsal spine collar', 'trim', (4.4, 1.4, 2.6), (0, hull_at(hull, -2.0)[1], -2.0))
+    kit.plate('26 Bow collar', 'trim', (pw * 1.1, 1.2, 2.6),
+              (0, hull_at(hull, hi[2] - 14.0)[1], hi[2] - 14.0))
+    kit.plate('27 Stern transom band', 'trim', (sw * 2.0, 1.4, 1.8), (0, 2.4, lo[2] + 2.0))
+
+    # Red identification striping.
+    for side in (-1, 1):
+        kit.plate(f'30 Flank stripe {side}', 'accent', (1.0, 2.2, 12.0),
+                  (side * hull_at(hull, 24.0)[0], 2.6, 24.0))
+        kit.plate(f'32 Sponson stripe {side}', 'accent', (1.0, 1.6, 5.0),
+                  (side * (hi[0] - 0.5), -1.6, sp_mid + 4.0))
+    kit.plate('34 Prow chevron', 'accent', (2.2, 1.8, 6.0),
+              (0, hull_at(hull, 38.0)[1] - 0.6, 38.0))
+
+    # The drive and the ship's lighting.
+    e_r, e_d, e_y = row['engine_radius'], row['engine_depth'], row['engine_y']
+    for k, x in enumerate(row['engines']):
+        kit.cylinder(f'40 Engine bell {k}', 'lit', (x, e_y, lo[2] + e_d / 2.0), e_r, e_d, 'Z', 14)
+    kit.plate('41 Stern lamp band', 'lit', (sw * 1.6, 0.9, 1.1), (0, 0.8, lo[2] + 1.4))
+    for side in (-1, 1):
+        kit.plate(f'45 Hangar glow {side}', 'lit', (0.9, 4.0, sp_len * 0.45),
+                  (side * (hi[0] - 0.5), -0.8, sp_mid + 2.0))
+
+    # Cool sensor and radiator fit; the dorsal fin reaches the ship's highest point (Y max).
+    fh, fw, fz2, fz3 = row['fin']
+    kit.plate('50 Dorsal radiator fin', 'cool', (fw * 2.0, fh * 2.0, fz3 * 2.0),
+              (0, hi[1] - fh, fz2))
+    for side in (-1, 1):
+        kit.plate(f'51 Side radiator vane {side}', 'cool', (0.9, 4.2, 9.0),
+                  (side * (hull_at(hull, -20.0)[0] * 0.7), hull_at(hull, -20.0)[1], -20.0))
+        kit.plate(f'52 Prow sensor vane {side}', 'cool', (0.8, 3.2, 7.0),
+                  (side * 2.6, hull_at(hull, 30.0)[1], 30.0))
+        kit.plate(f'53 Ventral radiator vane {side}', 'cool', (0.9, 2.4, 6.0),
+                  (side * (sw * 1.4), lo[1] + 1.6, sp_mid))
+    kit.plate('54 Ventral radiator plate', 'cool', (sw * 1.2, 0.9, 10.0), (0, lo[1] + 1.2, 6.0))
+
+
 BUILDERS = {'corvette': build_imperial_corvette,
             'tie_squadron': build_imperial_tie,
-            'tie_bomber_squadron': build_imperial_tie}
+            'tie_bomber_squadron': build_imperial_tie,
+            'capital': build_imperial_capital,
+            'frigate': build_imperial_frigate}
 # The kit's per-part boxes, published by `build()` so `main()` can run the contact check before the
 # parts are grouped into role objects and lose their names.
 PART_BOXES = {}

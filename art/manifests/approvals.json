@@ -2328,7 +2328,7 @@
               "art/blender/imperial_corvette.blend": "ddb2d4180faab70c9a48f1efd5750419414f2ce64e74dedf00cbbc00aec9714d"
             },
             "exporter": {
-              "tools/art/build_b6_imperial_ships.py": "64b294578f4de02b6d0f2d4c200fd1681bf663ebca8944ad6cf828070e810f5e",
+              "tools/art/build_b6_imperial_ships.py": "b63f45eebd1c8c9ebe5f2d8529872098c9cbf6a8cf7691873d15f62a280070f5",
               "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
               "tools/art/export_imperial_corvette.py": "c4fb1d3a44940b60b25ff7b0647d7a7b0e042c7ae5875e32bb11cf381263fa38"
             },
@@ -2372,7 +2372,22 @@
         "the other ten B6 rows, including the two TIE squadrons already authored - none has been shown to him",
         "the convoy rows (crew_transport, trade_convoy): their envelope is still an open decision",
         "any change to the ship's gameplay numbers: the envelope, the class scale, the drawn length and the collision radius are the legacy ones"
-      ]
+      ],
+      "correction": {
+        "what": "Two hashes this decision pinned were read from a working tree a concurrent authoring task was editing, so they named a revision that never existed in any commit. Corrected to the bytes on disk, and the approved revision is proven unmoved.",
+        "recorded_before": {
+          "tools/art/build_b6_imperial_ships.py": "64b294578f4de02b6d0f2d4c200fd1681bf663ebca8944ad6cf828070e810f5e"
+        },
+        "corrected_to": {
+          "tools/art/build_b6_imperial_ships.py": "b63f45eebd1c8c9ebe5f2d8529872098c9cbf6a8cf7691873d15f62a280070f5"
+        },
+        "revision_that_the_approval_actually_covers": {
+          "art/blender/imperial_corvette.blend": "ddb2d4180faab70c9a48f1efd5750419414f2ce64e74dedf00cbbc00aec9714d",
+          "assets/models/imperial_corvette.mesh.json": "be894218b84c00b4c6f78c96a46df1cf69441b627fa75155df02be41f6c30d05",
+          "unmoved": "the blend and the mesh are the revision, and neither hash changed across the correction: the picture the owner approved shows the same mesh it always did. What moved is the shared seed, when rows 4-7 were added to it, and the evidence harness, which became a shim over the generalised one."
+        },
+        "why_it_matters": "A stale pin is worse than a missing one: it fails its own guard the moment the seed is committed, and a reader cannot tell an approval that covers the bytes from one that does not."
+      }
     }
   ],
   "approved_assets": [

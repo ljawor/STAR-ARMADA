@@ -29,6 +29,7 @@ import math
 import os
 import re
 import subprocess
+import sys
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
@@ -668,3 +669,361 @@ class SquadronFlip(unittest.TestCase):
                 self.assertEqual(probe.returncode, 0)
                 self.assertIn("stock      -> 'box'", probe.stdout)
                 self.assertIn(f"review     -> '{binding}'", probe.stdout)
+
+# ----------------------------------------------------------------------------------- rows 4 to 7
+# The two dagger capitals, the cruiser and the frigate. They are the same batch as the corvette and
+# the TIE squadrons and are held to the same contract, plus the things that are theirs alone:
+#
+# * the two dagger rows draw the *same* legacy shape at the same measured extent, so the seed has to
+#   author them as two hulls rather than one hull at two scales. The supercapital's deeper, wider
+#   pressure hull and its extra superstructure tier are row data, and the two shape fingerprints
+#   differ even once each is normalised into the box it fills.
+# * the frigate shares the corvette's `needle` box and has to be its own heavier hull.
+# * every row lands inside the stated B6 triangle band (1,900-2,600), the two daggers are the
+#   heaviest pair, and the supercapital is the heavier of the two.
+#
+# Two things are *measured here rather than transcribed*: each row's declared `limits` is compared
+# against the live renderer's own `ship_mesh` for that row's shape string, and "not the legacy mesh
+# restated" is a shape fingerprint of the authored mesh against that same live legacy mesh - a
+# count comparison cannot say it for a row whose legacy hull is larger than the stated band.
+CAPITAL_TARGET = (1900, 2600)      # the batch's stated band for these four rows
+CAPITAL_ROWS = (
+    dict(binding='ship:imperial:battleship', registry_key='imperial:battleship',
+         identifier='imperial_battleship', label='Executor-class Dreadnought',
+         legacy_shape='dagger', ship_kind='capital', station_radius=150.0,
+         envelope=((-38.45, 38.45), (-10.0, 39.5), (-80.183, 108.0)),
+         legacy_triangles=3296, legacy_vertices=1814, min_length=188.0),
+    dict(binding='ship:imperial:supercapital', registry_key='imperial:supercapital',
+         identifier='imperial_supercapital', label='Sovereign-class Star Dreadnought',
+         legacy_shape='dagger', ship_kind='capital', station_radius=260.0,
+         envelope=((-38.45, 38.45), (-10.0, 39.5), (-80.183, 108.0)),
+         legacy_triangles=3296, legacy_vertices=1814, min_length=188.0),
+    dict(binding='ship:imperial:cruiser', registry_key='imperial:cruiser',
+         identifier='imperial_cruiser', label='Gladiator Cruiser',
+         legacy_shape='cruiser', ship_kind='capital', station_radius=90.0,
+         envelope=((-29.45, 29.45), (-7.0, 31.5), (-62.94, 78.0)),
+         legacy_triangles=2800, legacy_vertices=1542, min_length=140.7),
+    dict(binding='ship:imperial:frigate', registry_key='imperial:frigate',
+         identifier='imperial_frigate', label='Lancer Frigate',
+         legacy_shape='needle', ship_kind='frigate', station_radius=55.0,
+         envelope=((-16.0, 16.0), (-5.0, 24.0), (-43.601, 48.0)),
+         legacy_triangles=1552, legacy_vertices=858, min_length=91.4),
+)
+for _row in CAPITAL_ROWS:
+    _row['mesh'] = ROOT / f'assets/models/{_row["identifier"]}.mesh.json'
+    _row['manifest'] = ROOT / f'assets/models/manifests/{_row["identifier"]}.json'
+    _row['wrapper'] = ROOT / f'tools/art/export_{_row["identifier"]}.py'
+CAPITAL_ASSET_IDS = {row['identifier']: f'core:imperial/{row["registry_key"].split(":", 1)[1]}'
+                     for row in CAPITAL_ROWS}
+
+
+def legacy_geometry(shape):
+    """The legacy mesh this row draws today, through the renderer's own public `ship_mesh`.
+
+    `ship_mesh('imperial:cruiser')` normalises an unknown key to `box`, so the row's *shape string*
+    from the inventory is what gets measured - the shape `ship_visual_key` actually resolves and
+    passes down. Batches are role -> triangles, each triangle `(normal, (a, b, c))`.
+    """
+    sys.path.insert(0, str(ROOT))
+    from render import fleet_geometry as fg
+    mesh = fg.ship_mesh(shape)
+    points = [corner for role in mesh.values() for _normal, corners in role for corner in corners]
+    triangles = sum(len(role) for role in mesh.values())
+    lo = [min(p[i] for p in points) for i in range(3)]
+    hi = [max(p[i] for p in points) for i in range(3)]
+    return lo, hi, points, triangles
+
+
+def fingerprint(points, lo, hi):
+    """A point set in its own bounds' unit cube, quantised - a shape fingerprint.
+
+    A scaled copy normalised into its own box is the same set; a difference in proportions, part
+    count or detail is not. Comparing raw coordinates would pass a uniform scale, which is exactly
+    what "not a scaled copy" has to exclude.
+    """
+    span = [max(hi[i] - lo[i], 1e-9) for i in range(3)]
+    return sorted({tuple(round((p[i] - lo[i]) / span[i], 3) for i in range(3)) for p in points})
+
+
+def authored_mesh(row):
+    return load(row['mesh'])
+
+
+def authored_fingerprint(row):
+    data = authored_mesh(row)
+    lo, hi = data['bounds']
+    return fingerprint(data['vertices'], lo, hi)
+
+
+class CapitalSeedContract(unittest.TestCase):
+    def test_the_seed_carries_the_four_rows_as_data(self):
+        rows = _rows_table()
+        for row in CAPITAL_ROWS:
+            with self.subTest(binding=row['binding']):
+                self.assertIn(row['binding'], rows,
+                              'the batch seed must carry this row as data')
+                seed_row = rows[row['binding']]
+                self.assertEqual(seed_row['identifier'], row['identifier'])
+                self.assertEqual(seed_row['data_id'], row['identifier'])
+                self.assertEqual(seed_row['label'], row['label'])
+                self.assertEqual(seed_row['legacy_shape'], row['legacy_shape'])
+                self.assertEqual(tuple(tuple(a) for a in seed_row['limits']), row['envelope'])
+                self.assertEqual(seed_row['station_radius'], row['station_radius'])
+                self.assertEqual(seed_row['ship_kind'], row['ship_kind'])
+                self.assertEqual(seed_row['faction'], 'imperial')
+                self.assertEqual(seed_row['legacy_triangles'], row['legacy_triangles'])
+                self.assertEqual(seed_row['legacy_vertices'], row['legacy_vertices'])
+                # The shape itself is data: a later Imperial capital is a row, not a second kit.
+                for key in ('hull_sections', 'sponson', 'keel', 'skirt', 'turrets', 'engines'):
+                    self.assertIn(key, seed_row, f'{row["binding"]} must carry its {key} as data')
+        text = seed_text()
+        self.assertEqual(text.count('def build('), 1)
+        self.assertIn('def build_imperial_capital', text)
+        self.assertIn('def build_imperial_frigate', text)
+        self.assertIn("'capital': build_imperial_capital", text)
+        self.assertIn("'frigate': build_imperial_frigate", text)
+
+    def test_the_declared_envelopes_are_what_the_live_renderer_measures(self):
+        """The envelope is measured, not transcribed: the renderer's own mesh is the reference.
+
+        This is the property the whole batch turns on - `render/ship_sizes.ship_size` derives the
+        class scale and every review camera from the drawn length - so a row whose declared box is
+        not the box the renderer draws would silently resize the ship in game.
+        """
+        for row in CAPITAL_ROWS:
+            with self.subTest(binding=row['binding']):
+                lo, hi, points, triangles = legacy_geometry(row['legacy_shape'])
+                self.assertTrue(points)
+                self.assertEqual(triangles, row['legacy_triangles'])
+                self.assertEqual(len(set(points)), row['legacy_vertices'])
+                for axis in range(3):
+                    for measured, declared in ((lo[axis], row['envelope'][axis][0]),
+                                               (hi[axis], row['envelope'][axis][1])):
+                        # The inventory states these boxes to three decimals; the renderer carries
+                        # the unrounded float. Anything past that rounding is a different ship.
+                        self.assertLessEqual(abs(measured - declared), 1e-3,
+                                             f'axis {axis}: the renderer draws {measured}, the row '
+                                             f'declares {declared}')
+
+    def test_the_dagger_pair_is_two_hulls_and_not_one_mesh_at_two_scales(self):
+        """Both daggers draw one legacy shape at one extent, so the *seed* has to split them."""
+        rows = _rows_table()
+        battle, heavy = rows[CAPITAL_ROWS[0]['binding']], rows[CAPITAL_ROWS[1]['binding']]
+        self.assertEqual(tuple(tuple(a) for a in battle['limits']),
+                         tuple(tuple(a) for a in heavy['limits']),
+                         'the two dagger rows share one measured legacy box')
+        self.assertEqual(battle['legacy_shape'], heavy['legacy_shape'])
+        keel_b = min(s[3] for s in battle['hull_sections'])
+        keel_h = min(s[3] for s in heavy['hull_sections'])
+        self.assertEqual(keel_h, keel_b,
+                         'both fill the same legacy box, so their keels reach the same floor')
+        # "Deeper" here is depth over the *length*: the supercapital runs its hull along the keel
+        # for four frames where the battleship only touches it amidships.
+        self.assertGreaterEqual(sum(1 for s in heavy['hull_sections'] if s[3] == keel_h), 4,
+                                'the supercapital bottoms on its keel across four frames')
+        self.assertLess(sum(1 for s in battle['hull_sections'] if s[3] == keel_b), 4,
+                        'where the battleship only meets it over part of its length')
+        profile = lambda sections: sum(s[1] * (s[2] - s[3]) for s in sections)
+        self.assertGreater(profile(heavy['hull_sections']), profile(battle['hull_sections']) * 1.1,
+                           'and it displaces a materially bigger pressure hull')
+        self.assertGreater(max(s[1] for s in heavy['hull_sections']),
+                           max(s[1] for s in battle['hull_sections']),
+                           'and it is the wider hull')
+        self.assertEqual(len(heavy['tiers']), len(battle['tiers']) + 1,
+                         'and it carries one more superstructure tier')
+        self.assertNotEqual(battle['identifier'], heavy['identifier'])
+        self.assertNotEqual(battle['station_radius'], heavy['station_radius'])
+
+
+class CapitalMeshContract(unittest.TestCase):
+    def contract(self, row):
+        data = authored_mesh(row)
+        self.assertEqual(data['asset'], row['identifier'])
+        self.assertEqual(data['coordinates'], 'X beam; Y up; +Z forward')
+        self.assertEqual(data['triangle_count'], sum(len(v) for v in data['batches'].values()))
+        # The loader contract and the stated B6 band for these rows.
+        self.assertGreater(data['triangle_count'], FLOOR, 'the exporter refuses at or under 1,800')
+        self.assertGreaterEqual(data['triangle_count'], CAPITAL_TARGET[0])
+        self.assertLessEqual(data['triangle_count'], CAPITAL_TARGET[1])
+        self.assertLessEqual(data['triangle_count'], CAPS['triangles'])
+        self.assertLessEqual(len(data['vertices']), CAPS['vertices'])
+        self.assertLessEqual(row['mesh'].stat().st_size, CAPS['bytes'])
+        # Envelope per axis and per side: the authored hull fills the legacy box exactly.
+        lo, hi = data['bounds']
+        for axis in range(3):
+            low, high = row['envelope'][axis]
+            self.assertLessEqual(abs(lo[axis] - low), 1e-6, f'axis {axis} low {lo[axis]} != {low}')
+            self.assertLessEqual(abs(hi[axis] - high), 1e-6,
+                                 f'axis {axis} high {hi[axis]} != {high}')
+        self.assertGreaterEqual(hi[2] - lo[2], row['min_length'])
+        # Every loader role is a surface, not a token: the appearance review ablates roles.
+        counts = {role: len(rows) for role, rows in data['batches'].items()}
+        self.assertEqual({role for role, n in counts.items() if n}, set(ROLES),
+                         'every loader role has to be filled by real geometry')
+        for role in ROLES:
+            self.assertGreaterEqual(counts[role], ROLE_FLOOR,
+                                    f'{role} carries {counts[role]} triangles; the ablation needs '
+                                    f'a surface, not a token')
+        for role, rows in data['batches'].items():
+            self.assertIn(role, ROLES)
+            for triangle in rows:
+                self.assertEqual(len(triangle), 6)
+                self.assertAlmostEqual(math.sqrt(sum(c * c for c in triangle[:3])), 1.0, places=9)
+                for index in triangle[3:]:
+                    self.assertLess(index, len(data['vertices']))
+        self.assertEqual(data['features']['legacy_shape'], row['legacy_shape'])
+        self.assertEqual(data['features']['authority'], 'script')
+        self.assertEqual(data['features']['binding'], row['binding'])
+        self.assertEqual(data['features']['station_radius'], row['station_radius'])
+        self.assertEqual(data['features']['approval'], 'pending_owner_approval')
+        self.assertEqual(data['features']['seed_recipe'].split(';')[0], SEED)
+        self.assertIn('no external mesh or texture dependencies', data['features']['provenance'])
+        return data
+
+    def test_each_authored_hull_is_not_the_legacy_mesh_restated(self):
+        """Behavioural: the authored shape is fingerprinted against the live legacy mesh.
+
+        A count comparison is what the corvette's guard used, and it cannot say this for a row whose
+        legacy hull (3,296 and 2,800 triangles) is larger than the stated 1,900-2,600 band. The
+        fingerprint can: a restated legacy mesh reduces to the legacy set.
+        """
+        for row in CAPITAL_ROWS:
+            with self.subTest(binding=row['binding']):
+                data = self.contract(row)
+                lo, hi, points, _triangles = legacy_geometry(row['legacy_shape'])
+                self.assertNotEqual(authored_fingerprint(row), fingerprint(points, lo, hi),
+                                    'the authored hull must not be the legacy shape restated')
+                self.assertNotEqual(data['triangle_count'], row['legacy_triangles'])
+                self.assertNotEqual(len(data['vertices']), row['legacy_vertices'])
+
+    def test_neither_dagger_is_a_scaled_copy_of_the_other(self):
+        """The pair shares a legacy box, so a scaled copy is exactly the failure mode to exclude."""
+        battle, heavy = CAPITAL_ROWS[0], CAPITAL_ROWS[1]
+        a, b = self.contract(battle), self.contract(heavy)
+        self.assertGreater(b['triangle_count'], a['triangle_count'],
+                           'the supercapital is the heavier hull of the pair')
+        self.assertGreater(abs(a['triangle_count'] - b['triangle_count']), 40,
+                           'the two hulls must not be one builder run twice')
+        self.assertNotEqual(authored_fingerprint(battle), authored_fingerprint(heavy),
+                            'the two rows must not be a scaled copy of one another')
+        self.assertNotEqual({r: len(v) for r, v in a['batches'].items()},
+                            {r: len(v) for r, v in b['batches'].items()},
+                            'the role distribution must differ too')
+
+    def test_the_frigate_is_a_heavier_hull_than_the_corvette_it_shares_a_box_with(self):
+        """Both draw the legacy `needle` mesh today; the authored frigate has to be its own hull."""
+        frigate = CAPITAL_ROWS[3]
+        rows = _rows_table()
+        self.assertEqual(tuple(tuple(x) for x in rows[frigate['binding']]['limits']),
+                         tuple(tuple(x) for x in ENVELOPE),
+                         "the frigate shares the corvette's measured legacy box")
+        self.assertEqual(frigate['legacy_triangles'], LEGACY_TRIANGLES)
+        mine, theirs = self.contract(frigate), mesh()
+        self.assertGreater(mine['triangle_count'], theirs['triangle_count'],
+                           'the frigate must be the heavier hull of the two needle ships')
+        self.assertGreater(len(rows[frigate['binding']]['turrets']), 2,
+                           "the frigate carries more gun turrets than the corvette's pair")
+        self.assertGreater(len(mine['batches']['trim']), len(theirs['batches']['trim']),
+                           'and more gun on the trim role the loader draws them from')
+        lo, hi, points, _ = legacy_geometry('needle')
+        self.assertNotEqual(authored_fingerprint(frigate), fingerprint(points, lo, hi),
+                            'the frigate is its own hull, not the legacy needle restated')
+
+
+class CapitalWrappers(unittest.TestCase):
+    def test_the_generator_declares_the_four_rows_and_their_wrappers(self):
+        text = GENERATOR.read_text(encoding='utf-8')
+        for row in CAPITAL_ROWS:
+            with self.subTest(identifier=row['identifier']):
+                entry = re.search(rf"ASSETS\['{row['identifier']}'\] = \((.*?)\)\n", text, re.S)
+                self.assertTrue(entry, f'the wrapper table must carry {row["identifier"]}')
+                declaration = entry.group(1)
+                self.assertIn(row['label'], declaration)
+                (x0, x1), (y0, y1), (z0, z1) = row['envelope']
+                for token in (f'({x0}, {x1})', f'({y0}, {y1})', f'({z0}, {z1})',
+                              repr(row['min_length']), '11888', '9450', '2_000_000'):
+                    self.assertIn(token, declaration, f'{row["identifier"]}: {token}')
+                self.assertTrue(row['wrapper'].exists(),
+                                f'{row["wrapper"].name} must be generated')
+                body = row['wrapper'].read_text(encoding='utf-8')
+                for token in (f'ENVELOPE = {row["envelope"]!r}',
+                              f'MIN_LENGTH = {row["min_length"]}',
+                              'MAX_TRIANGLES = 11888', 'MAX_VERTICES = 9450',
+                              'MAX_BYTES = 2_000_000'):
+                    self.assertIn(token, body, token)
+                self.assertIn('open_mainfile', body)
+                self.assertIn('Never reconstructs or saves source', body)
+
+    def test_each_capital_row_declares_no_floor_of_its_own(self):
+        """These are hulls: the 1,800 floor is the template's, not theirs."""
+        for row in CAPITAL_ROWS:
+            self.assertNotIn('MIN_TRIANGLES =', row['wrapper'].read_text(encoding='utf-8'))
+
+    def test_the_four_new_wrappers_are_the_only_ones_that_moved(self):
+        """Regenerating must not rewrite any other row's wrapper: an approval hashes it."""
+        generator = subprocess.run([str(ROOT / '.venv/bin/python'),
+                                    str(ROOT / 'tools/art/gen_export_wrappers.py'), '--check'],
+                                   cwd=ROOT, capture_output=True, text=True)
+        self.assertIn('0 written', generator.stdout,
+                      f'the generator rewrote wrappers: {generator.stdout.strip()}')
+
+
+class CapitalNotLanded(unittest.TestCase):
+    def test_the_four_rows_are_absent_from_the_pipeline_and_from_every_approval(self):
+        pipeline = load(ROOT / 'art/manifests/pipeline.json')
+        approvals = json.dumps([e for e in load(ROOT / 'art/manifests/approvals.json')
+                                ['approved_assets'] if isinstance(e, dict)])
+        receipts = load(ROOT / 'assets/models/approval-receipts.json')['receipts']
+        for row in CAPITAL_ROWS:
+            with self.subTest(binding=row['binding']):
+                self.assertNotIn(row['registry_key'], {a['binding'] for a in pipeline['assets']})
+                self.assertNotIn(row['registry_key'], approvals)
+                self.assertNotIn(row['identifier'], approvals)
+                self.assertNotIn(CAPITAL_ASSET_IDS[row['identifier']], receipts)
+                for sidecar in (ROOT / 'art/manifests/pending').glob(
+                        f'S06-{row["identifier"].upper()}.json'):
+                    self.fail(f'{sidecar.name} claims a landing record for an unapproved row')
+
+    def test_no_capital_row_carries_a_manifest_before_it_is_landed(self):
+        """A manifest is the landing artifact, and a landing is what turns five shared guards red."""
+        for row in CAPITAL_ROWS:
+            with self.subTest(binding=row['binding']):
+                self.assertFalse(row['manifest'].exists(),
+                                 f'{row["manifest"].name} would be a landing, not a review')
+                self.assertEqual(authored_mesh(row)['asset'], row['identifier'])
+
+    def test_the_registry_rows_the_flip_needs_are_declared_and_undecided(self):
+        """The rows are *declared*, not registered: the manifest id is there, the decision is not."""
+        registry = json.loads((ROOT / 'assets/models/registry.json').read_text())
+        for row in CAPITAL_ROWS:
+            with self.subTest(binding=row['binding']):
+                entry = next(b for b in registry['bindings'] if b['binding'] == row['registry_key'])
+                self.assertEqual(entry['manifest'], CAPITAL_ASSET_IDS[row['identifier']])
+                self.assertEqual(entry['category'], 'combat_hull')
+                self.assertIn(entry.get('status'), ('procedural_legacy', 'authoring_pending'),
+                              'a pending row must not carry an authored status')
+                for key in ('approval', 'owner_decision', 'envelope_decision',
+                            'appearance_decision'):
+                    self.assertNotIn(key, entry)
+
+
+class CapitalFlip(unittest.TestCase):
+    """The batch's acceptance test for the four rows, run through the real probe."""
+
+    def probe(self, binding):
+        return subprocess.run([str(ROOT / '.venv/bin/python'),
+                               str(ROOT / 'tools/art/probe_b6_servability.py'), binding],
+                              cwd=ROOT, capture_output=True, text=True,
+                              env={'PYTHONPATH': 'tests', 'PATH': os.environ.get('PATH', ''),
+                                   'HOME': os.environ.get('HOME', '')})
+
+    def test_the_flip_serves_all_four_in_preview_and_nothing_in_stock(self):
+        for row in CAPITAL_ROWS:
+            with self.subTest(binding=row['registry_key']):
+                probe = self.probe(row['registry_key'])
+                self.assertIn('SERVING_OK', probe.stdout,
+                              f'{probe.stdout.strip()} / {probe.stderr.strip()[-300:]}')
+                self.assertEqual(probe.returncode, 0,
+                                 'the probe refuses a proof that did not happen')
+                self.assertIn('stock      ->', probe.stdout)
+                self.assertIn(f"review     -> '{row['registry_key']}'", probe.stdout)
