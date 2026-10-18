@@ -38,7 +38,7 @@ class ConstructionAuthoringTests(unittest.TestCase):
         self.assertEqual(set(module.ROWS), set(expected))
         self.assertEqual(sheet['schema'], 1)
         self.assertEqual(sheet['batch'], 's06-b9-construction')
-        self.assertEqual(sheet['status'], 'pending_owner_appearance_approval')
+        self.assertEqual(sheet['status'], 'partially_appearance_approved_pending_landing')
         self.assertEqual(len(sheet['assets']), 9)
         self.assertEqual({r['binding'] for r in sheet['assets']}, set(expected))
         for row in sheet['assets']:

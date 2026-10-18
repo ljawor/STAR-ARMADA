@@ -2828,6 +2828,1743 @@
           "why_it_matters": "Same class as the earlier corrections and now predictable: a per-row decision that pins a file the batch keeps editing will go stale every time a row lands. The approved revisions are the blends and the meshes; the seven are unmoved, as the map above asserts rather than claims."
         }
       }
+    },
+    {
+      "id": "s06-b7-imperial-stations-2026-10-18",
+      "date": "2026-10-18",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved",
+      "approval_kind": "appearance-batch-revisions",
+      "scope_statement": "Appearance approval of exactly the 10 pictured B7 revisions enumerated here. B9 scaffold is unpictured and excluded. No activation or landing authorized.",
+      "owner_words_verbatim": "approved",
+      "question_answered": "Pending from you: review these appearances. Reply “approve B7/B8/B9 pictured models”, or name the models you want changed. That approves only the pictured revisions—not activation or release.",
+      "how_recorded": "Direct owner response to the three actual-renderer B7/B8/B9 image grids shown in desktop chat; interpreted only as appearance approval for the 26 pictured rows, as explicitly requested.",
+      "revision": {
+        "batch": "s06-b7-imperial-stations",
+        "pr": 130,
+        "head_at_review": "e9d78bcf684c2128b2e76af30f3e61cd3e952083",
+        "source_authority": "blend-authoritative",
+        "registry_state_at_approval": {
+          "imperial:command_station": "procedural_legacy",
+          "imperial:shipyard": "procedural_legacy",
+          "imperial:research_station": "procedural_legacy",
+          "imperial:defense_platform": "procedural_legacy",
+          "imperial:mining_station": "procedural_legacy",
+          "imperial:sensor_station": "procedural_legacy",
+          "imperial:trade_station": "procedural_legacy",
+          "imperial:fighter_platform": "procedural_legacy",
+          "imperial:repair_dock": "procedural_legacy",
+          "imperial:energy_relay": "procedural_legacy"
+        },
+        "evidence": {
+          "review_receipt": "artifacts/s06-completion/COMPLETION-REVIEW.json",
+          "review_receipt_at_review_commit": "e9d78bcf684c2128b2e76af30f3e61cd3e952083",
+          "grid": "artifacts/s06-completion/B7-appearance-grid.jpg"
+        },
+        "assets": [
+          {
+            "gameplay_binding": "imperial:command_station",
+            "shape_key": "imperial:command_station",
+            "identifier": "imperial_command_station",
+            "faction": "imperial",
+            "class": "station",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/imperial_command_station.blend": "dffe86f1678f084cd6bdfb5f8ab7d5139a2cf40ef6d2ea4f0f14d825065190a4"
+            },
+            "exporter": {
+              "tools/art/build_b7_imperial_stations.py": "40a814cdf3c36b468896147dd98eafdf5af9be11af833907b1ba5603c1f91baa",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_imperial_command_station.py": "891100d240f2d2c14eb32d2efe218e34be77e38b466d3008baae084d04839b86"
+            },
+            "runtime": {
+              "assets/models/imperial_command_station.mesh.json": "ae2faebf598832b30b6e64e1d485603e4721e45ac7e648c1b3768d4af8e48f50"
+            },
+            "legacy_extent": [
+              [
+                -62.0,
+                -8.0,
+                -62.0
+              ],
+              [
+                62.0,
+                55.0,
+                62.0
+              ]
+            ],
+            "authored_extent": [
+              [
+                -62.0,
+                -8.0,
+                -62.0
+              ],
+              [
+                62.0,
+                55.0,
+                62.0
+              ]
+            ],
+            "triangle_count": 2184,
+            "vertex_count": 1248,
+            "evidence": {
+              "dir": "artifacts/s06-completion/review-b7-attempt2/render",
+              "sheet": "artifacts/s06-completion/review-b7-attempt2/render/contact-sheet.png",
+              "close": "artifacts/s06-completion/review-b7-attempt2/render/imperial-command_station-after-close.png",
+              "sha256": {
+                "artifacts/s06-completion/review-b7-attempt2/render/contact-sheet.png": "acceda4539025d068b3c46805e038b00f16f4f3e74a5211c2e8563a8766faee3",
+                "artifacts/s06-completion/review-b7-attempt2/render/imperial-command_station-after-close.png": "114045f0516b0432f2dab114d188b2290057062cbfa9446c21351d3e9f52a992",
+                "artifacts/s06-completion/review-b7-attempt2/render/metrics.json": "140a9117ee79376d7f80ee5328fd1d141b882054b49b84b04c457476bba502c4",
+                "artifacts/s06-completion/B7-appearance-grid.jpg": "baa3ff27797f4a81094a4be784501a0b5f75955e3593728de28f3f585231f691"
+              },
+              "capture_code_commit": "eb1b5be04463da071f29bba80d892d95f70e7ac5",
+              "renderer_blob": "36fa4be74c08a1a683489097d87b10aa3e086db9",
+              "measured": {
+                "close_changed_pixels_gt3": 112005,
+                "tactical_changed_pixels_gt3": 11920
+              }
+            }
+          },
+          {
+            "gameplay_binding": "imperial:shipyard",
+            "shape_key": "imperial:shipyard",
+            "identifier": "imperial_shipyard",
+            "faction": "imperial",
+            "class": "station",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/imperial_shipyard.blend": "6412dad860b6a968e1783218ee5fbaa0a6d1025f6c6056039a2a968acbcc2e9f"
+            },
+            "exporter": {
+              "tools/art/build_b7_imperial_stations.py": "40a814cdf3c36b468896147dd98eafdf5af9be11af833907b1ba5603c1f91baa",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_imperial_shipyard.py": "5d3b512eccdd2e39a3665c43bb67660051be99eb93f857ba6d7c8dc2625e05c7"
+            },
+            "runtime": {
+              "assets/models/imperial_shipyard.mesh.json": "73ca3736a5bfacf3a74edbe343f0d1faf20f426536c359794644cef7ad5819b5"
+            },
+            "legacy_extent": [
+              [
+                -43.65,
+                -10.0,
+                -45.0
+              ],
+              [
+                43.65,
+                34.225,
+                55.507
+              ]
+            ],
+            "authored_extent": [
+              [
+                -43.65,
+                -10.0,
+                -45.0
+              ],
+              [
+                43.65,
+                34.225,
+                55.507
+              ]
+            ],
+            "triangle_count": 2268,
+            "vertex_count": 1296,
+            "evidence": {
+              "dir": "artifacts/s06-completion/review-b7-attempt2/render",
+              "sheet": "artifacts/s06-completion/review-b7-attempt2/render/contact-sheet.png",
+              "close": "artifacts/s06-completion/review-b7-attempt2/render/imperial-shipyard-after-close.png",
+              "sha256": {
+                "artifacts/s06-completion/review-b7-attempt2/render/contact-sheet.png": "acceda4539025d068b3c46805e038b00f16f4f3e74a5211c2e8563a8766faee3",
+                "artifacts/s06-completion/review-b7-attempt2/render/imperial-shipyard-after-close.png": "8a9e2e7a9eea3f968866fd42077d266d48b3eeea964ac65dc6cdc40226bbcb4c",
+                "artifacts/s06-completion/review-b7-attempt2/render/metrics.json": "140a9117ee79376d7f80ee5328fd1d141b882054b49b84b04c457476bba502c4",
+                "artifacts/s06-completion/B7-appearance-grid.jpg": "baa3ff27797f4a81094a4be784501a0b5f75955e3593728de28f3f585231f691"
+              },
+              "capture_code_commit": "eb1b5be04463da071f29bba80d892d95f70e7ac5",
+              "renderer_blob": "36fa4be74c08a1a683489097d87b10aa3e086db9",
+              "measured": {
+                "close_changed_pixels_gt3": 174320,
+                "tactical_changed_pixels_gt3": 15127
+              }
+            }
+          },
+          {
+            "gameplay_binding": "imperial:research_station",
+            "shape_key": "imperial:research_station",
+            "identifier": "imperial_research_station",
+            "faction": "imperial",
+            "class": "station",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/imperial_research_station.blend": "2bcf4d51593872ec72f11ac6973da48436b98178654d51a40520e42dd5829a28"
+            },
+            "exporter": {
+              "tools/art/build_b7_imperial_stations.py": "40a814cdf3c36b468896147dd98eafdf5af9be11af833907b1ba5603c1f91baa",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_imperial_research_station.py": "00bb8f810fadf4074bcd18dfa1f71598ab3aca026d71e37f36e24a90ed41a0db"
+            },
+            "runtime": {
+              "assets/models/imperial_research_station.mesh.json": "4b4ea1ac3f85c95bc457f6f2de43423b4a1ac7d63a843a41c209fbffe1b4d1a0"
+            },
+            "legacy_extent": [
+              [
+                -60.925626,
+                -15.0,
+                -41.526279
+              ],
+              [
+                60.925626,
+                40.305438,
+                64.0
+              ]
+            ],
+            "authored_extent": [
+              [
+                -60.925626,
+                -15.0,
+                -41.526279
+              ],
+              [
+                60.925626,
+                40.305438,
+                64.0
+              ]
+            ],
+            "triangle_count": 2364,
+            "vertex_count": 1264,
+            "evidence": {
+              "dir": "artifacts/s06-completion/review-b7-attempt2/render",
+              "sheet": "artifacts/s06-completion/review-b7-attempt2/render/contact-sheet.png",
+              "close": "artifacts/s06-completion/review-b7-attempt2/render/imperial-research_station-after-close.png",
+              "sha256": {
+                "artifacts/s06-completion/review-b7-attempt2/render/contact-sheet.png": "acceda4539025d068b3c46805e038b00f16f4f3e74a5211c2e8563a8766faee3",
+                "artifacts/s06-completion/review-b7-attempt2/render/imperial-research_station-after-close.png": "6cffab37c00688b67081e5404d6eed3308eb2b67bd1e71384d6b44dabd1c0961",
+                "artifacts/s06-completion/review-b7-attempt2/render/metrics.json": "140a9117ee79376d7f80ee5328fd1d141b882054b49b84b04c457476bba502c4",
+                "artifacts/s06-completion/B7-appearance-grid.jpg": "baa3ff27797f4a81094a4be784501a0b5f75955e3593728de28f3f585231f691"
+              },
+              "capture_code_commit": "eb1b5be04463da071f29bba80d892d95f70e7ac5",
+              "renderer_blob": "36fa4be74c08a1a683489097d87b10aa3e086db9",
+              "measured": {
+                "close_changed_pixels_gt3": 105349,
+                "tactical_changed_pixels_gt3": 9817
+              }
+            }
+          },
+          {
+            "gameplay_binding": "imperial:defense_platform",
+            "shape_key": "imperial:defense_platform",
+            "identifier": "imperial_defense_platform",
+            "faction": "imperial",
+            "class": "station",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/imperial_defense_platform.blend": "a86595d8f2697b4f964003c3614edc53b919c98c533a15b5a2a07469a772c6a1"
+            },
+            "exporter": {
+              "tools/art/build_b7_imperial_stations.py": "40a814cdf3c36b468896147dd98eafdf5af9be11af833907b1ba5603c1f91baa",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_imperial_defense_platform.py": "144a5792f9b6a631252c2b15d0ae868d05d35113edc2af2a670e69190376d4c0"
+            },
+            "runtime": {
+              "assets/models/imperial_defense_platform.mesh.json": "b0600256c84c6bf949e52831dd0af0f6a278054ca7378028a92acaba44df7999"
+            },
+            "legacy_extent": [
+              [
+                -44.258609,
+                -13.5,
+                -44.258609
+              ],
+              [
+                44.258609,
+                21.0,
+                44.258609
+              ]
+            ],
+            "authored_extent": [
+              [
+                -44.258609,
+                -13.5,
+                -44.258609
+              ],
+              [
+                44.258609,
+                21.0,
+                44.258609
+              ]
+            ],
+            "triangle_count": 2516,
+            "vertex_count": 1416,
+            "evidence": {
+              "dir": "artifacts/s06-completion/review-b7-attempt2/render",
+              "sheet": "artifacts/s06-completion/review-b7-attempt2/render/contact-sheet.png",
+              "close": "artifacts/s06-completion/review-b7-attempt2/render/imperial-defense_platform-after-close.png",
+              "sha256": {
+                "artifacts/s06-completion/review-b7-attempt2/render/contact-sheet.png": "acceda4539025d068b3c46805e038b00f16f4f3e74a5211c2e8563a8766faee3",
+                "artifacts/s06-completion/review-b7-attempt2/render/imperial-defense_platform-after-close.png": "9d64b179131bdbcdbdfc156360a0c72cbb7234fb7219625079b5290f32480b0e",
+                "artifacts/s06-completion/review-b7-attempt2/render/metrics.json": "140a9117ee79376d7f80ee5328fd1d141b882054b49b84b04c457476bba502c4",
+                "artifacts/s06-completion/B7-appearance-grid.jpg": "baa3ff27797f4a81094a4be784501a0b5f75955e3593728de28f3f585231f691"
+              },
+              "capture_code_commit": "eb1b5be04463da071f29bba80d892d95f70e7ac5",
+              "renderer_blob": "36fa4be74c08a1a683489097d87b10aa3e086db9",
+              "measured": {
+                "close_changed_pixels_gt3": 147524,
+                "tactical_changed_pixels_gt3": 15563
+              }
+            }
+          },
+          {
+            "gameplay_binding": "imperial:mining_station",
+            "shape_key": "imperial:mining_station",
+            "identifier": "imperial_mining_station",
+            "faction": "imperial",
+            "class": "station",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/imperial_mining_station.blend": "3860141cbfa13cedfe685c397a212932463a45ec6ef8a9bee172603a4da57db3"
+            },
+            "exporter": {
+              "tools/art/build_b7_imperial_stations.py": "40a814cdf3c36b468896147dd98eafdf5af9be11af833907b1ba5603c1f91baa",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_imperial_mining_station.py": "778759234018758ce6dda1fed9186b24aa5774704a3670516b556d4d09c867fb"
+            },
+            "runtime": {
+              "assets/models/imperial_mining_station.mesh.json": "a446d4963b60e4a4cb9d9256ad033287b1aa31f631dc078082a91bcb2feff568"
+            },
+            "legacy_extent": [
+              [
+                -39.0,
+                -54.0,
+                -28.0
+              ],
+              [
+                39.0,
+                41.0,
+                35.507
+              ]
+            ],
+            "authored_extent": [
+              [
+                -39.0,
+                -54.0,
+                -28.0
+              ],
+              [
+                39.0,
+                41.0,
+                35.507
+              ]
+            ],
+            "triangle_count": 2196,
+            "vertex_count": 1248,
+            "evidence": {
+              "dir": "artifacts/s06-completion/review-b7-attempt2/render",
+              "sheet": "artifacts/s06-completion/review-b7-attempt2/render/contact-sheet.png",
+              "close": "artifacts/s06-completion/review-b7-attempt2/render/imperial-mining_station-after-close.png",
+              "sha256": {
+                "artifacts/s06-completion/review-b7-attempt2/render/contact-sheet.png": "acceda4539025d068b3c46805e038b00f16f4f3e74a5211c2e8563a8766faee3",
+                "artifacts/s06-completion/review-b7-attempt2/render/imperial-mining_station-after-close.png": "7ddedd40ed0a16488242422656ada5c782a7cbfe451860a33b4d832b46993f42",
+                "artifacts/s06-completion/review-b7-attempt2/render/metrics.json": "140a9117ee79376d7f80ee5328fd1d141b882054b49b84b04c457476bba502c4",
+                "artifacts/s06-completion/B7-appearance-grid.jpg": "baa3ff27797f4a81094a4be784501a0b5f75955e3593728de28f3f585231f691"
+              },
+              "capture_code_commit": "eb1b5be04463da071f29bba80d892d95f70e7ac5",
+              "renderer_blob": "36fa4be74c08a1a683489097d87b10aa3e086db9",
+              "measured": {
+                "close_changed_pixels_gt3": 162098,
+                "tactical_changed_pixels_gt3": 12943
+              }
+            }
+          },
+          {
+            "gameplay_binding": "imperial:sensor_station",
+            "shape_key": "imperial:sensor_station",
+            "identifier": "imperial_sensor_station",
+            "faction": "imperial",
+            "class": "station",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/imperial_sensor_station.blend": "af18203bd6c41c9c6d531c501f3d598d6c16aaf6d680ee8ca497f69ad27d3623"
+            },
+            "exporter": {
+              "tools/art/build_b7_imperial_stations.py": "40a814cdf3c36b468896147dd98eafdf5af9be11af833907b1ba5603c1f91baa",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_imperial_sensor_station.py": "bed8296abc995942d87f712bc75b678aa290418134f707aca21552d4c18ad0db"
+            },
+            "runtime": {
+              "assets/models/imperial_sensor_station.mesh.json": "0b853ca6a6d894e40a8b460be69e40447299b931d1c8a84b477ce6e7b8258de5"
+            },
+            "legacy_extent": [
+              [
+                -37.0,
+                -23.0,
+                -30.387721
+              ],
+              [
+                37.0,
+                62.355496,
+                30.387721
+              ]
+            ],
+            "authored_extent": [
+              [
+                -37.0,
+                -23.0,
+                -30.387721
+              ],
+              [
+                37.0,
+                62.355496,
+                30.387721
+              ]
+            ],
+            "triangle_count": 2308,
+            "vertex_count": 1264,
+            "evidence": {
+              "dir": "artifacts/s06-completion/review-b7-attempt2/render",
+              "sheet": "artifacts/s06-completion/review-b7-attempt2/render/contact-sheet.png",
+              "close": "artifacts/s06-completion/review-b7-attempt2/render/imperial-sensor_station-after-close.png",
+              "sha256": {
+                "artifacts/s06-completion/review-b7-attempt2/render/contact-sheet.png": "acceda4539025d068b3c46805e038b00f16f4f3e74a5211c2e8563a8766faee3",
+                "artifacts/s06-completion/review-b7-attempt2/render/imperial-sensor_station-after-close.png": "db5c2eb148a2ef823e5c40839b77a2f231022a0a25b5c9dd9a2d8923d0cea957",
+                "artifacts/s06-completion/review-b7-attempt2/render/metrics.json": "140a9117ee79376d7f80ee5328fd1d141b882054b49b84b04c457476bba502c4",
+                "artifacts/s06-completion/B7-appearance-grid.jpg": "baa3ff27797f4a81094a4be784501a0b5f75955e3593728de28f3f585231f691"
+              },
+              "capture_code_commit": "eb1b5be04463da071f29bba80d892d95f70e7ac5",
+              "renderer_blob": "36fa4be74c08a1a683489097d87b10aa3e086db9",
+              "measured": {
+                "close_changed_pixels_gt3": 127163,
+                "tactical_changed_pixels_gt3": 15802
+              }
+            }
+          },
+          {
+            "gameplay_binding": "imperial:trade_station",
+            "shape_key": "imperial:trade_station",
+            "identifier": "imperial_trade_station",
+            "faction": "imperial",
+            "class": "station",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/imperial_trade_station.blend": "504242ca50725916f883d6ac5386d299d972537ed9e187826b8b4cecdf6583e5"
+            },
+            "exporter": {
+              "tools/art/build_b7_imperial_stations.py": "40a814cdf3c36b468896147dd98eafdf5af9be11af833907b1ba5603c1f91baa",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_imperial_trade_station.py": "5c438cdd28794b729d290ca6927e3d174ee4398bdddd0f7820986d8d68ad7253"
+            },
+            "runtime": {
+              "assets/models/imperial_trade_station.mesh.json": "058f6b8963921544c31213d669558d009ea043f24d4d4865f7dcc7ddec8103fc"
+            },
+            "legacy_extent": [
+              [
+                -63.53675,
+                -8.605,
+                -63.53675
+              ],
+              [
+                63.53675,
+                51.5,
+                63.53675
+              ]
+            ],
+            "authored_extent": [
+              [
+                -63.53675,
+                -8.605,
+                -63.53675
+              ],
+              [
+                63.53675,
+                51.5,
+                63.53675
+              ]
+            ],
+            "triangle_count": 2100,
+            "vertex_count": 1200,
+            "evidence": {
+              "dir": "artifacts/s06-completion/review-b7-attempt2/render",
+              "sheet": "artifacts/s06-completion/review-b7-attempt2/render/contact-sheet.png",
+              "close": "artifacts/s06-completion/review-b7-attempt2/render/imperial-trade_station-after-close.png",
+              "sha256": {
+                "artifacts/s06-completion/review-b7-attempt2/render/contact-sheet.png": "acceda4539025d068b3c46805e038b00f16f4f3e74a5211c2e8563a8766faee3",
+                "artifacts/s06-completion/review-b7-attempt2/render/imperial-trade_station-after-close.png": "2dcf056a936b11afabc9bf09e834930d2bb087ba15457bce28fa400a60b6d78f",
+                "artifacts/s06-completion/review-b7-attempt2/render/metrics.json": "140a9117ee79376d7f80ee5328fd1d141b882054b49b84b04c457476bba502c4",
+                "artifacts/s06-completion/B7-appearance-grid.jpg": "baa3ff27797f4a81094a4be784501a0b5f75955e3593728de28f3f585231f691"
+              },
+              "capture_code_commit": "eb1b5be04463da071f29bba80d892d95f70e7ac5",
+              "renderer_blob": "36fa4be74c08a1a683489097d87b10aa3e086db9",
+              "measured": {
+                "close_changed_pixels_gt3": 98158,
+                "tactical_changed_pixels_gt3": 10474
+              }
+            }
+          },
+          {
+            "gameplay_binding": "imperial:fighter_platform",
+            "shape_key": "imperial:fighter_platform",
+            "identifier": "imperial_fighter_platform",
+            "faction": "imperial",
+            "class": "station",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/imperial_fighter_platform.blend": "aac36857b6830aa0bbb5bc5748a8c927d6646cd1cfec33f8204be12c0d9d99fe"
+            },
+            "exporter": {
+              "tools/art/build_b7_imperial_stations.py": "40a814cdf3c36b468896147dd98eafdf5af9be11af833907b1ba5603c1f91baa",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_imperial_fighter_platform.py": "d6add16a84d192390b3c434b324ae4b9496c376acf3b2676ab4270c2eaeabd1f"
+            },
+            "runtime": {
+              "assets/models/imperial_fighter_platform.mesh.json": "076093e7f6b37c4151954428a95168084ba86d7edfbb36ae1dc44ce0132b462b"
+            },
+            "legacy_extent": [
+              [
+                -33.0,
+                -11.5,
+                -42.0
+              ],
+              [
+                33.0,
+                53.5,
+                44.0
+              ]
+            ],
+            "authored_extent": [
+              [
+                -33.0,
+                -11.5,
+                -42.0
+              ],
+              [
+                33.0,
+                53.5,
+                44.0
+              ]
+            ],
+            "triangle_count": 2240,
+            "vertex_count": 1264,
+            "evidence": {
+              "dir": "artifacts/s06-completion/review-b7-attempt2/render",
+              "sheet": "artifacts/s06-completion/review-b7-attempt2/render/contact-sheet.png",
+              "close": "artifacts/s06-completion/review-b7-attempt2/render/imperial-fighter_platform-after-close.png",
+              "sha256": {
+                "artifacts/s06-completion/review-b7-attempt2/render/contact-sheet.png": "acceda4539025d068b3c46805e038b00f16f4f3e74a5211c2e8563a8766faee3",
+                "artifacts/s06-completion/review-b7-attempt2/render/imperial-fighter_platform-after-close.png": "517843a791d21f31c1a9c06a10b2a4ff7ad22f4d17d859a3c1a2a71bb7bdc13b",
+                "artifacts/s06-completion/review-b7-attempt2/render/metrics.json": "140a9117ee79376d7f80ee5328fd1d141b882054b49b84b04c457476bba502c4",
+                "artifacts/s06-completion/B7-appearance-grid.jpg": "baa3ff27797f4a81094a4be784501a0b5f75955e3593728de28f3f585231f691"
+              },
+              "capture_code_commit": "eb1b5be04463da071f29bba80d892d95f70e7ac5",
+              "renderer_blob": "36fa4be74c08a1a683489097d87b10aa3e086db9",
+              "measured": {
+                "close_changed_pixels_gt3": 219317,
+                "tactical_changed_pixels_gt3": 21487
+              }
+            }
+          },
+          {
+            "gameplay_binding": "imperial:repair_dock",
+            "shape_key": "imperial:repair_dock",
+            "identifier": "imperial_repair_dock",
+            "faction": "imperial",
+            "class": "station",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/imperial_repair_dock.blend": "c796357e9d55c7954d5d021884c7971c0b8806192aedd83dc274ec5223cab512"
+            },
+            "exporter": {
+              "tools/art/build_b7_imperial_stations.py": "40a814cdf3c36b468896147dd98eafdf5af9be11af833907b1ba5603c1f91baa",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_imperial_repair_dock.py": "4343b1543ddb82358dddf96a071f8aa5a30d9bc08ce45202088caafe58292b9c"
+            },
+            "runtime": {
+              "assets/models/imperial_repair_dock.mesh.json": "0d2a2018344f5a034130e1e4ea3da85c62b658e37651260b03e3ab742a6e0469"
+            },
+            "legacy_extent": [
+              [
+                -34.5,
+                -20.0,
+                -42.5
+              ],
+              [
+                34.5,
+                29.0,
+                42.5
+              ]
+            ],
+            "authored_extent": [
+              [
+                -34.5,
+                -20.0,
+                -42.5
+              ],
+              [
+                34.5,
+                29.0,
+                42.5
+              ]
+            ],
+            "triangle_count": 2352,
+            "vertex_count": 1344,
+            "evidence": {
+              "dir": "artifacts/s06-completion/review-b7-attempt2/render",
+              "sheet": "artifacts/s06-completion/review-b7-attempt2/render/contact-sheet.png",
+              "close": "artifacts/s06-completion/review-b7-attempt2/render/imperial-repair_dock-after-close.png",
+              "sha256": {
+                "artifacts/s06-completion/review-b7-attempt2/render/contact-sheet.png": "acceda4539025d068b3c46805e038b00f16f4f3e74a5211c2e8563a8766faee3",
+                "artifacts/s06-completion/review-b7-attempt2/render/imperial-repair_dock-after-close.png": "8cdefb6519a9675720b8b5577b2bc6819ed579583e1412afd9235dbb0166dfcc",
+                "artifacts/s06-completion/review-b7-attempt2/render/metrics.json": "140a9117ee79376d7f80ee5328fd1d141b882054b49b84b04c457476bba502c4",
+                "artifacts/s06-completion/B7-appearance-grid.jpg": "baa3ff27797f4a81094a4be784501a0b5f75955e3593728de28f3f585231f691"
+              },
+              "capture_code_commit": "eb1b5be04463da071f29bba80d892d95f70e7ac5",
+              "renderer_blob": "36fa4be74c08a1a683489097d87b10aa3e086db9",
+              "measured": {
+                "close_changed_pixels_gt3": 174066,
+                "tactical_changed_pixels_gt3": 16308
+              }
+            }
+          },
+          {
+            "gameplay_binding": "imperial:energy_relay",
+            "shape_key": "imperial:energy_relay",
+            "identifier": "imperial_energy_relay",
+            "faction": "imperial",
+            "class": "station",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/imperial_energy_relay.blend": "e8e0a405bd1ea0670522c9f90f7a2fa37277541f69bc26b962d7fee750f7dc99"
+            },
+            "exporter": {
+              "tools/art/build_b7_imperial_stations.py": "40a814cdf3c36b468896147dd98eafdf5af9be11af833907b1ba5603c1f91baa",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_imperial_energy_relay.py": "5e35ebe9e8140b3f70937c8b6e4ebc952d04d1f785e20c9e6cd9a911a855d55f"
+            },
+            "runtime": {
+              "assets/models/imperial_energy_relay.mesh.json": "56b573963cd5878122fb61d83cc7e45ab723bbf50bad7ff4db4e1c71a2b9238f"
+            },
+            "legacy_extent": [
+              [
+                -41.736688,
+                -20.5,
+                -28.0
+              ],
+              [
+                41.736688,
+                38.0,
+                46.75
+              ]
+            ],
+            "authored_extent": [
+              [
+                -41.736688,
+                -20.5,
+                -28.0
+              ],
+              [
+                41.736688,
+                38.0,
+                46.75
+              ]
+            ],
+            "triangle_count": 2776,
+            "vertex_count": 1552,
+            "evidence": {
+              "dir": "artifacts/s06-completion/review-b7-attempt2/render",
+              "sheet": "artifacts/s06-completion/review-b7-attempt2/render/contact-sheet.png",
+              "close": "artifacts/s06-completion/review-b7-attempt2/render/imperial-energy_relay-after-close.png",
+              "sha256": {
+                "artifacts/s06-completion/review-b7-attempt2/render/contact-sheet.png": "acceda4539025d068b3c46805e038b00f16f4f3e74a5211c2e8563a8766faee3",
+                "artifacts/s06-completion/review-b7-attempt2/render/imperial-energy_relay-after-close.png": "9150a7f8ceea9d26b2bad6e48633269a45b663c0eef229ac3b17da7431fa2f84",
+                "artifacts/s06-completion/review-b7-attempt2/render/metrics.json": "140a9117ee79376d7f80ee5328fd1d141b882054b49b84b04c457476bba502c4",
+                "artifacts/s06-completion/B7-appearance-grid.jpg": "baa3ff27797f4a81094a4be784501a0b5f75955e3593728de28f3f585231f691"
+              },
+              "capture_code_commit": "eb1b5be04463da071f29bba80d892d95f70e7ac5",
+              "renderer_blob": "36fa4be74c08a1a683489097d87b10aa3e086db9",
+              "measured": {
+                "close_changed_pixels_gt3": 198444,
+                "tactical_changed_pixels_gt3": 17493
+              }
+            }
+          }
+        ]
+      },
+      "not_approved_by_this_decision": [
+        "landing, registration or activation",
+        "merge, tag or release",
+        "S11 catalogue switch or any production-default switch",
+        "packaging or S08/S09 platform/performance acceptance",
+        "unpictured shared construction scaffold or invented gameplay data"
+      ]
+    },
+    {
+      "id": "s06-b8-remaining-combat-2026-10-18",
+      "date": "2026-10-18",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved",
+      "approval_kind": "appearance-batch-revisions",
+      "scope_statement": "Appearance approval of exactly the 8 pictured B8 revisions enumerated here. B9 scaffold is unpictured and excluded. No activation or landing authorized.",
+      "owner_words_verbatim": "approved",
+      "question_answered": "Pending from you: review these appearances. Reply “approve B7/B8/B9 pictured models”, or name the models you want changed. That approves only the pictured revisions—not activation or release.",
+      "how_recorded": "Direct owner response to the three actual-renderer B7/B8/B9 image grids shown in desktop chat; interpreted only as appearance approval for the 26 pictured rows, as explicitly requested.",
+      "revision": {
+        "batch": "s06-b8-remaining-combat",
+        "pr": 130,
+        "head_at_review": "e9d78bcf684c2128b2e76af30f3e61cd3e952083",
+        "source_authority": "blend-authoritative",
+        "registry_state_at_approval": {
+          "confederacy:corvette": "procedural_legacy",
+          "confederacy:frigate": "procedural_legacy",
+          "confederacy:cruiser": "procedural_legacy",
+          "confederacy:battleship": "procedural_legacy",
+          "confederacy:supercapital": "procedural_legacy",
+          "syndicate:corvette": "procedural_legacy",
+          "syndicate:frigate": "procedural_legacy",
+          "syndicate:cruiser": "procedural_legacy"
+        },
+        "evidence": {
+          "review_receipt": "artifacts/s06-completion/COMPLETION-REVIEW.json",
+          "review_receipt_at_review_commit": "e9d78bcf684c2128b2e76af30f3e61cd3e952083",
+          "grid": "artifacts/s06-completion/B8-appearance-grid.jpg"
+        },
+        "assets": [
+          {
+            "gameplay_binding": "confederacy:corvette",
+            "shape_key": "confederacy:corvette",
+            "identifier": "confed_corvette",
+            "faction": "confederacy",
+            "class": "combat_hull",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/confed_corvette.blend": "a664930cf3778158833e24dde66f1399139ade846890cefb5eae3d9eb44aca9c"
+            },
+            "exporter": {
+              "tools/art/build_b8_remaining_combat.py": "6df5ae4bee054c551ca60c981acadeddbdbce6502bf24f20dc25ad416163b606",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_confed_corvette.py": "611cc7dbc9022f5059b9637ff6683cfc436a6e601ac7acb7d4746dc41dbb436d"
+            },
+            "runtime": {
+              "assets/models/confed_corvette.mesh.json": "921f8dd4afd759ea0d39c21c3bd3c4e6f7e1c3f8eaee18240371d9a96f101958"
+            },
+            "legacy_extent": [
+              [
+                -31.713844,
+                -7.0,
+                -38.49
+              ],
+              [
+                31.713844,
+                15.1,
+                48.06775
+              ]
+            ],
+            "authored_extent": [
+              [
+                -31.713844,
+                -7.0,
+                -38.489994
+              ],
+              [
+                31.713844,
+                15.1,
+                48.06775
+              ]
+            ],
+            "triangle_count": 1852,
+            "vertex_count": 1036,
+            "evidence": {
+              "dir": "artifacts/s06-completion/review-b8-attempt1/render",
+              "sheet": "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png",
+              "close": "artifacts/s06-completion/review-b8-attempt1/render/confederacy-corvette-after-close.png",
+              "sha256": {
+                "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png": "4f7139f13bd37265dd0327d06da878bb1799dfb83fa3d2d60387278c68cc6c94",
+                "artifacts/s06-completion/review-b8-attempt1/render/confederacy-corvette-after-close.png": "302c671b58d6ee55d56b3dfe9af1ea6d3b4f75eafd0a6a2225907d6abb3bb3f0",
+                "artifacts/s06-completion/review-b8-attempt1/render/metrics.json": "ee1f0fb949909b55ced2724c9a0b069e1e94a838b83a4c29d28fe09ecb21174e",
+                "artifacts/s06-completion/B8-appearance-grid.jpg": "906afb98f94b7f548c8e81afbd928e5f33835b64bf3ae3f7e34bb73f765d40b9"
+              },
+              "capture_code_commit": "8182d5a616f11ddc7083f31d92ba0c2ab36cddf7",
+              "renderer_blob": "36fa4be74c08a1a683489097d87b10aa3e086db9",
+              "measured": {
+                "close_changed_pixels_gt3": 79335,
+                "tactical_changed_pixels_gt3": 14788
+              }
+            }
+          },
+          {
+            "gameplay_binding": "confederacy:frigate",
+            "shape_key": "confederacy:frigate",
+            "identifier": "confed_frigate",
+            "faction": "confederacy",
+            "class": "combat_hull",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/confed_frigate.blend": "cfb8a6433bc380f8d5e689e7098c70bbd2a027cb1102b6d9517f86267f18acd9"
+            },
+            "exporter": {
+              "tools/art/build_b8_remaining_combat.py": "6df5ae4bee054c551ca60c981acadeddbdbce6502bf24f20dc25ad416163b606",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_confed_frigate.py": "1ea9653c3e29c520e90cf243fb197ccb4d8f7ca86a0349a55e98ed4a32cb6737"
+            },
+            "runtime": {
+              "assets/models/confed_frigate.mesh.json": "96fd45471049b92aede194cf851e801e022579ee1a84c61daf3cbe088c8ed268"
+            },
+            "legacy_extent": [
+              [
+                -48.070766,
+                -8.5,
+                -60.475
+              ],
+              [
+                48.070766,
+                15.1,
+                72.56775
+              ]
+            ],
+            "authored_extent": [
+              [
+                -48.070759,
+                -8.5,
+                -60.475
+              ],
+              [
+                48.070759,
+                15.1,
+                72.56775
+              ]
+            ],
+            "triangle_count": 2152,
+            "vertex_count": 1204,
+            "evidence": {
+              "dir": "artifacts/s06-completion/review-b8-attempt1/render",
+              "sheet": "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png",
+              "close": "artifacts/s06-completion/review-b8-attempt1/render/confederacy-frigate-after-close.png",
+              "sha256": {
+                "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png": "4f7139f13bd37265dd0327d06da878bb1799dfb83fa3d2d60387278c68cc6c94",
+                "artifacts/s06-completion/review-b8-attempt1/render/confederacy-frigate-after-close.png": "855c5cadb7c239b37acaff74dcf461ca78b4aee302568f994b7575d436407092",
+                "artifacts/s06-completion/review-b8-attempt1/render/metrics.json": "ee1f0fb949909b55ced2724c9a0b069e1e94a838b83a4c29d28fe09ecb21174e",
+                "artifacts/s06-completion/B8-appearance-grid.jpg": "906afb98f94b7f548c8e81afbd928e5f33835b64bf3ae3f7e34bb73f765d40b9"
+              },
+              "capture_code_commit": "8182d5a616f11ddc7083f31d92ba0c2ab36cddf7",
+              "renderer_blob": "36fa4be74c08a1a683489097d87b10aa3e086db9",
+              "measured": {
+                "close_changed_pixels_gt3": 224824,
+                "tactical_changed_pixels_gt3": 15208
+              }
+            }
+          },
+          {
+            "gameplay_binding": "confederacy:cruiser",
+            "shape_key": "confederacy:cruiser",
+            "identifier": "confed_cruiser",
+            "faction": "confederacy",
+            "class": "combat_hull",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/confed_cruiser.blend": "036b0eb729beda4df2bc810e1362f6b7acd96d03cc7801d51256462fb960795d"
+            },
+            "exporter": {
+              "tools/art/build_b8_remaining_combat.py": "6df5ae4bee054c551ca60c981acadeddbdbce6502bf24f20dc25ad416163b606",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_confed_cruiser.py": "99678fb1bbbf76c2199f47525045589fa57f3c1d38df1ffc03657ca5a32b2b39"
+            },
+            "runtime": {
+              "assets/models/confed_cruiser.mesh.json": "2866559ed742dd4f2f5a22937baa8021b8c0154a105cd4903c273d972ab00814"
+            },
+            "legacy_extent": [
+              [
+                -75.392305,
+                -10.0,
+                -80.31
+              ],
+              [
+                75.392305,
+                15.655,
+                94.61775
+              ]
+            ],
+            "authored_extent": [
+              [
+                -75.392305,
+                -10.0,
+                -80.31
+              ],
+              [
+                75.392305,
+                15.655,
+                94.617737
+              ]
+            ],
+            "triangle_count": 2688,
+            "vertex_count": 1508,
+            "evidence": {
+              "dir": "artifacts/s06-completion/review-b8-attempt1/render",
+              "sheet": "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png",
+              "close": "artifacts/s06-completion/review-b8-attempt1/render/confederacy-cruiser-after-close.png",
+              "sha256": {
+                "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png": "4f7139f13bd37265dd0327d06da878bb1799dfb83fa3d2d60387278c68cc6c94",
+                "artifacts/s06-completion/review-b8-attempt1/render/confederacy-cruiser-after-close.png": "3bee7ce0b4f8caf64f1bf581edf34f6f0421b93130ee14253a07556241055bb1",
+                "artifacts/s06-completion/review-b8-attempt1/render/metrics.json": "ee1f0fb949909b55ced2724c9a0b069e1e94a838b83a4c29d28fe09ecb21174e",
+                "artifacts/s06-completion/B8-appearance-grid.jpg": "906afb98f94b7f548c8e81afbd928e5f33835b64bf3ae3f7e34bb73f765d40b9"
+              },
+              "capture_code_commit": "8182d5a616f11ddc7083f31d92ba0c2ab36cddf7",
+              "renderer_blob": "36fa4be74c08a1a683489097d87b10aa3e086db9",
+              "measured": {
+                "close_changed_pixels_gt3": 274702,
+                "tactical_changed_pixels_gt3": 14997
+              }
+            }
+          },
+          {
+            "gameplay_binding": "confederacy:battleship",
+            "shape_key": "confederacy:battleship",
+            "identifier": "confed_battleship",
+            "faction": "confederacy",
+            "class": "combat_hull",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/confed_battleship.blend": "c4ddf82cd05dfeed8161440b2e73abc65c77ea5220cdea9b8e97ed14ee29e806"
+            },
+            "exporter": {
+              "tools/art/build_b8_remaining_combat.py": "6df5ae4bee054c551ca60c981acadeddbdbce6502bf24f20dc25ad416163b606",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_confed_battleship.py": "9087d732adfb520d6634fb356f3a59ec1be07f7b9d6e0b98f728fba1f301c314"
+            },
+            "runtime": {
+              "assets/models/confed_battleship.mesh.json": "0b04ca0ea42c2ea2fd670cfdbe0d4c0a047cbf65071101ba7d6927bf172df363"
+            },
+            "legacy_extent": [
+              [
+                -109.856406,
+                -14.0,
+                -129.825
+              ],
+              [
+                109.856406,
+                49.5,
+                138.05575
+              ]
+            ],
+            "authored_extent": [
+              [
+                -109.856392,
+                -14.0,
+                -129.825
+              ],
+              [
+                109.856392,
+                49.5,
+                138.05574
+              ]
+            ],
+            "triangle_count": 3212,
+            "vertex_count": 1804,
+            "evidence": {
+              "dir": "artifacts/s06-completion/review-b8-attempt1/render",
+              "sheet": "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png",
+              "close": "artifacts/s06-completion/review-b8-attempt1/render/confederacy-battleship-after-close.png",
+              "sha256": {
+                "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png": "4f7139f13bd37265dd0327d06da878bb1799dfb83fa3d2d60387278c68cc6c94",
+                "artifacts/s06-completion/review-b8-attempt1/render/confederacy-battleship-after-close.png": "813c42380b662c9a51aca15626f507a99fad18bcc7b646864f3d488bd27fd9b6",
+                "artifacts/s06-completion/review-b8-attempt1/render/metrics.json": "ee1f0fb949909b55ced2724c9a0b069e1e94a838b83a4c29d28fe09ecb21174e",
+                "artifacts/s06-completion/B8-appearance-grid.jpg": "906afb98f94b7f548c8e81afbd928e5f33835b64bf3ae3f7e34bb73f765d40b9"
+              },
+              "capture_code_commit": "8182d5a616f11ddc7083f31d92ba0c2ab36cddf7",
+              "renderer_blob": "36fa4be74c08a1a683489097d87b10aa3e086db9",
+              "measured": {
+                "close_changed_pixels_gt3": 300334,
+                "tactical_changed_pixels_gt3": 15187
+              }
+            }
+          },
+          {
+            "gameplay_binding": "confederacy:supercapital",
+            "shape_key": "confederacy:supercapital",
+            "identifier": "confed_supercapital",
+            "faction": "confederacy",
+            "class": "combat_hull",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/confed_supercapital.blend": "df5acae8ef5c89eef503392398e423dc439d21277748fe1d02d25ff69234d50d"
+            },
+            "exporter": {
+              "tools/art/build_b8_remaining_combat.py": "6df5ae4bee054c551ca60c981acadeddbdbce6502bf24f20dc25ad416163b606",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_confed_supercapital.py": "452002bc1ccf3961d9c2fba72f257290cb68bd4697333606af5829e8e5293caf"
+            },
+            "runtime": {
+              "assets/models/confed_supercapital.mesh.json": "f33b0f79430130cf5d1c8524f618f2ce5c541a5571edf28e6a4d84284c357c4f"
+            },
+            "legacy_extent": [
+              [
+                -147.0,
+                -29.605,
+                -178.825
+              ],
+              [
+                147.0,
+                49.5,
+                187.05575
+              ]
+            ],
+            "authored_extent": [
+              [
+                -147.0,
+                -29.605,
+                -178.825
+              ],
+              [
+                147.0,
+                49.5,
+                187.055725
+              ]
+            ],
+            "triangle_count": 3916,
+            "vertex_count": 2204,
+            "evidence": {
+              "dir": "artifacts/s06-completion/review-b8-attempt1/render",
+              "sheet": "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png",
+              "close": "artifacts/s06-completion/review-b8-attempt1/render/confederacy-supercapital-after-close.png",
+              "sha256": {
+                "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png": "4f7139f13bd37265dd0327d06da878bb1799dfb83fa3d2d60387278c68cc6c94",
+                "artifacts/s06-completion/review-b8-attempt1/render/confederacy-supercapital-after-close.png": "d44fdd1561d6bc8523d072c689ca49bfb27e517a9d31bec442bcd68c27ac3ba3",
+                "artifacts/s06-completion/review-b8-attempt1/render/metrics.json": "ee1f0fb949909b55ced2724c9a0b069e1e94a838b83a4c29d28fe09ecb21174e",
+                "artifacts/s06-completion/B8-appearance-grid.jpg": "906afb98f94b7f548c8e81afbd928e5f33835b64bf3ae3f7e34bb73f765d40b9"
+              },
+              "capture_code_commit": "8182d5a616f11ddc7083f31d92ba0c2ab36cddf7",
+              "renderer_blob": "36fa4be74c08a1a683489097d87b10aa3e086db9",
+              "measured": {
+                "close_changed_pixels_gt3": 287647,
+                "tactical_changed_pixels_gt3": 14585
+              }
+            }
+          },
+          {
+            "gameplay_binding": "syndicate:corvette",
+            "shape_key": "syndicate:corvette",
+            "identifier": "syndicate_corvette",
+            "faction": "syndicate",
+            "class": "combat_hull",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/syndicate_corvette.blend": "c47b2b4320a636bdf4f44a675bc773525c830f56d0f0c98df4986fb3790e45be"
+            },
+            "exporter": {
+              "tools/art/build_b8_remaining_combat.py": "6df5ae4bee054c551ca60c981acadeddbdbce6502bf24f20dc25ad416163b606",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_syndicate_corvette.py": "78ce6104cbfaf69163631c72e2b6d73bcbc97281a85fe5a0b80cdeeabaedd0b6"
+            },
+            "runtime": {
+              "assets/models/syndicate_corvette.mesh.json": "fb321326eaf5390d40bbe559d7340695deb27ae33b086864360bedab2f3b3b49"
+            },
+            "legacy_extent": [
+              [
+                -22.36926,
+                -9.0,
+                -44.025
+              ],
+              [
+                30.672491,
+                44.0,
+                38.4
+              ]
+            ],
+            "authored_extent": [
+              [
+                -22.36926,
+                -9.0,
+                -44.024994
+              ],
+              [
+                30.672491,
+                44.0,
+                38.399994
+              ]
+            ],
+            "triangle_count": 2176,
+            "vertex_count": 1220,
+            "evidence": {
+              "dir": "artifacts/s06-completion/review-b8-attempt1/render",
+              "sheet": "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png",
+              "close": "artifacts/s06-completion/review-b8-attempt1/render/syndicate-corvette-after-close.png",
+              "sha256": {
+                "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png": "4f7139f13bd37265dd0327d06da878bb1799dfb83fa3d2d60387278c68cc6c94",
+                "artifacts/s06-completion/review-b8-attempt1/render/syndicate-corvette-after-close.png": "493504be71411c0d66cee3d3b8ac308e63a54e832956b24935e9ab3b4d17a97c",
+                "artifacts/s06-completion/review-b8-attempt1/render/metrics.json": "ee1f0fb949909b55ced2724c9a0b069e1e94a838b83a4c29d28fe09ecb21174e",
+                "artifacts/s06-completion/B8-appearance-grid.jpg": "906afb98f94b7f548c8e81afbd928e5f33835b64bf3ae3f7e34bb73f765d40b9"
+              },
+              "capture_code_commit": "8182d5a616f11ddc7083f31d92ba0c2ab36cddf7",
+              "renderer_blob": "36fa4be74c08a1a683489097d87b10aa3e086db9",
+              "measured": {
+                "close_changed_pixels_gt3": 113568,
+                "tactical_changed_pixels_gt3": 19680
+              }
+            }
+          },
+          {
+            "gameplay_binding": "syndicate:frigate",
+            "shape_key": "syndicate:frigate",
+            "identifier": "syndicate_frigate",
+            "faction": "syndicate",
+            "class": "combat_hull",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/syndicate_frigate.blend": "33da22340efb63286772f4651f6824e4fdab1e9981d8e03b3bd3137160f0397f"
+            },
+            "exporter": {
+              "tools/art/build_b8_remaining_combat.py": "6df5ae4bee054c551ca60c981acadeddbdbce6502bf24f20dc25ad416163b606",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_syndicate_frigate.py": "bc0feeae07a2c0b2298189af1755a7a94fe427dea9d68d775d169c0ea284a0b2"
+            },
+            "runtime": {
+              "assets/models/syndicate_frigate.mesh.json": "9563c320fb164133b7731aa398f41653e25844da72644e0b438d3b10aeba1471"
+            },
+            "legacy_extent": [
+              [
+                -31.829605,
+                -9.0,
+                -70.51
+              ],
+              [
+                43.872131,
+                44.0,
+                62.4
+              ]
+            ],
+            "authored_extent": [
+              [
+                -31.829605,
+                -9.0,
+                -70.509995
+              ],
+              [
+                43.872131,
+                44.0,
+                62.399994
+              ]
+            ],
+            "triangle_count": 2644,
+            "vertex_count": 1484,
+            "evidence": {
+              "dir": "artifacts/s06-completion/review-b8-attempt1/render",
+              "sheet": "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png",
+              "close": "artifacts/s06-completion/review-b8-attempt1/render/syndicate-frigate-after-close.png",
+              "sha256": {
+                "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png": "4f7139f13bd37265dd0327d06da878bb1799dfb83fa3d2d60387278c68cc6c94",
+                "artifacts/s06-completion/review-b8-attempt1/render/syndicate-frigate-after-close.png": "3d952a6f01d9f218fa3e58735ec247f0a78dc36fa6a59853104b73683667740f",
+                "artifacts/s06-completion/review-b8-attempt1/render/metrics.json": "ee1f0fb949909b55ced2724c9a0b069e1e94a838b83a4c29d28fe09ecb21174e",
+                "artifacts/s06-completion/B8-appearance-grid.jpg": "906afb98f94b7f548c8e81afbd928e5f33835b64bf3ae3f7e34bb73f765d40b9"
+              },
+              "capture_code_commit": "8182d5a616f11ddc7083f31d92ba0c2ab36cddf7",
+              "renderer_blob": "36fa4be74c08a1a683489097d87b10aa3e086db9",
+              "measured": {
+                "close_changed_pixels_gt3": 113339,
+                "tactical_changed_pixels_gt3": 9715
+              }
+            }
+          },
+          {
+            "gameplay_binding": "syndicate:cruiser",
+            "shape_key": "syndicate:cruiser",
+            "identifier": "syndicate_cruiser",
+            "faction": "syndicate",
+            "class": "combat_hull",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/syndicate_cruiser.blend": "01b5efd863406c9ab9c880d0d209742431cce74e61d02441af30a4238de6af5c"
+            },
+            "exporter": {
+              "tools/art/build_b8_remaining_combat.py": "6df5ae4bee054c551ca60c981acadeddbdbce6502bf24f20dc25ad416163b606",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_syndicate_cruiser.py": "1c20d382ef95bb3e71e5cc462d4869a1d0da5b9e8b2dfbebaf496071bb71969e"
+            },
+            "runtime": {
+              "assets/models/syndicate_cruiser.mesh.json": "121608999dd39710a35322e7689f5af855fc848b7305242221d3702a35e8c223"
+            },
+            "legacy_extent": [
+              [
+                -42.463847,
+                -11.02,
+                -94.395
+              ],
+              [
+                58.551844,
+                44.0,
+                84.0
+              ]
+            ],
+            "authored_extent": [
+              [
+                -42.46384,
+                -11.02,
+                -94.395
+              ],
+              [
+                58.551838,
+                44.0,
+                84.0
+              ]
+            ],
+            "triangle_count": 3184,
+            "vertex_count": 1788,
+            "evidence": {
+              "dir": "artifacts/s06-completion/review-b8-attempt1/render",
+              "sheet": "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png",
+              "close": "artifacts/s06-completion/review-b8-attempt1/render/syndicate-cruiser-after-close.png",
+              "sha256": {
+                "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png": "4f7139f13bd37265dd0327d06da878bb1799dfb83fa3d2d60387278c68cc6c94",
+                "artifacts/s06-completion/review-b8-attempt1/render/syndicate-cruiser-after-close.png": "393dd69d32cf4a85dc9d851524bc3db590cbfb30e561f8b8336cfa740c301cad",
+                "artifacts/s06-completion/review-b8-attempt1/render/metrics.json": "ee1f0fb949909b55ced2724c9a0b069e1e94a838b83a4c29d28fe09ecb21174e",
+                "artifacts/s06-completion/B8-appearance-grid.jpg": "906afb98f94b7f548c8e81afbd928e5f33835b64bf3ae3f7e34bb73f765d40b9"
+              },
+              "capture_code_commit": "8182d5a616f11ddc7083f31d92ba0c2ab36cddf7",
+              "renderer_blob": "36fa4be74c08a1a683489097d87b10aa3e086db9",
+              "measured": {
+                "close_changed_pixels_gt3": 155836,
+                "tactical_changed_pixels_gt3": 9848
+              }
+            }
+          }
+        ]
+      },
+      "not_approved_by_this_decision": [
+        "landing, registration or activation",
+        "merge, tag or release",
+        "S11 catalogue switch or any production-default switch",
+        "packaging or S08/S09 platform/performance acceptance",
+        "unpictured shared construction scaffold or invented gameplay data"
+      ]
+    },
+    {
+      "id": "s06-b9-construction-2026-10-18",
+      "date": "2026-10-18",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved",
+      "approval_kind": "appearance-batch-revisions",
+      "scope_statement": "Appearance approval of exactly the 8 pictured B9 revisions enumerated here. B9 scaffold is unpictured and excluded. No activation or landing authorized.",
+      "owner_words_verbatim": "approved",
+      "question_answered": "Pending from you: review these appearances. Reply “approve B7/B8/B9 pictured models”, or name the models you want changed. That approves only the pictured revisions—not activation or release.",
+      "how_recorded": "Direct owner response to the three actual-renderer B7/B8/B9 image grids shown in desktop chat; interpreted only as appearance approval for the 26 pictured rows, as explicitly requested.",
+      "revision": {
+        "batch": "s06-b9-construction",
+        "pr": 130,
+        "head_at_review": "e9d78bcf684c2128b2e76af30f3e61cd3e952083",
+        "source_authority": "blend-authoritative",
+        "registry_state_at_approval": {
+          "imperial:constructor": "procedural_legacy",
+          "imperial:colonizer": "procedural_legacy",
+          "rebel:constructor": "procedural_legacy",
+          "rebel:colonizer": "procedural_legacy",
+          "confederacy:constructor": "procedural_legacy",
+          "confederacy:colonizer": "procedural_legacy",
+          "syndicate:constructor": "procedural_legacy",
+          "syndicate:colonizer": "procedural_legacy"
+        },
+        "evidence": {
+          "review_receipt": "artifacts/s06-completion/COMPLETION-REVIEW.json",
+          "review_receipt_at_review_commit": "e9d78bcf684c2128b2e76af30f3e61cd3e952083",
+          "grid": "artifacts/s06-completion/B9-appearance-grid.jpg"
+        },
+        "assets": [
+          {
+            "gameplay_binding": "imperial:constructor",
+            "shape_key": "imperial:constructor",
+            "identifier": "imperial_constructor",
+            "faction": "imperial",
+            "class": "construction",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/imperial_constructor.blend": "4400900064d28c0d0b79b9e80d4c545d2ffc71b1b2317967604b5eb92ade46fe"
+            },
+            "exporter": {
+              "tools/art/build_b9_construction.py": "79e092578df188ef02d4128e5d74425d7951fddd3075cd0ef3aacda484e4501a",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_imperial_constructor.py": "598a5562f9a630a40f04c804c7148fdad939b60fedea7fb9cb6c1f7cd019a24e"
+            },
+            "runtime": {
+              "assets/models/imperial_constructor.mesh.json": "32fc71942015d171695fc9a6f150a402235ff62c480d29288def84fe03340cdb"
+            },
+            "legacy_extent": [
+              [
+                -20.0,
+                -7.0,
+                -24.6975
+              ],
+              [
+                20.0,
+                26.5,
+                24.35825
+              ]
+            ],
+            "authored_extent": [
+              [
+                -20.0,
+                -7.0,
+                -24.6975
+              ],
+              [
+                20.0,
+                26.5,
+                24.35825
+              ]
+            ],
+            "triangle_count": 3120,
+            "vertex_count": 1730,
+            "evidence": {
+              "dir": "artifacts/s06-completion/review-b9-attempt1/render",
+              "sheet": "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png",
+              "close": "artifacts/s06-completion/review-b9-attempt1/render/imperial-constructor-after-close.png",
+              "sha256": {
+                "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png": "aa8e69ecbf84428fa5b8fa890492dd211d80a29bf6c91d8d781dcb8bb7859799",
+                "artifacts/s06-completion/review-b9-attempt1/render/imperial-constructor-after-close.png": "874c04ba61d617fad6f151ba74a073ef68bfa5e465991d19fea9914a6ec1cb78",
+                "artifacts/s06-completion/review-b9-attempt1/render/metrics.json": "11c5b5b55212621a3a66d73c268ff03d18078c287a950409668c63f7d6cf8bed",
+                "artifacts/s06-completion/B9-appearance-grid.jpg": "dec0e3607153ed2c4ce98e6141ac61a2616ab7e70832e79e8e2c1c640e0e8be4"
+              },
+              "capture_code_commit": "8182d5a616f11ddc7083f31d92ba0c2ab36cddf7",
+              "renderer_blob": "36fa4be74c08a1a683489097d87b10aa3e086db9",
+              "measured": {
+                "close_changed_pixels_gt3": 78739,
+                "tactical_changed_pixels_gt3": 14582
+              }
+            }
+          },
+          {
+            "gameplay_binding": "imperial:colonizer",
+            "shape_key": "imperial:colonizer",
+            "identifier": "imperial_colonizer",
+            "faction": "imperial",
+            "class": "construction",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/imperial_colonizer.blend": "5d65d5b376ee2c92eab8c14708b586eac9e2620624c4af0a61cdeb20ba0e640d"
+            },
+            "exporter": {
+              "tools/art/build_b9_construction.py": "79e092578df188ef02d4128e5d74425d7951fddd3075cd0ef3aacda484e4501a",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_imperial_colonizer.py": "f30ab86915e953603a4ffb4b7e486aa3cf4e61b62525398cf5f7c112bd57bc03"
+            },
+            "runtime": {
+              "assets/models/imperial_colonizer.mesh.json": "a1076d24d95137ec3c086e46cd32d2555e1c374284994a250938fb7d790f8dae"
+            },
+            "legacy_extent": [
+              [
+                -20.0,
+                -7.0,
+                -24.6975
+              ],
+              [
+                20.0,
+                26.5,
+                24.35825
+              ]
+            ],
+            "authored_extent": [
+              [
+                -20.0,
+                -7.0,
+                -24.6975
+              ],
+              [
+                20.0,
+                26.5,
+                24.35825
+              ]
+            ],
+            "triangle_count": 3472,
+            "vertex_count": 1906,
+            "evidence": {
+              "dir": "artifacts/s06-completion/review-b9-attempt1/render",
+              "sheet": "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png",
+              "close": "artifacts/s06-completion/review-b9-attempt1/render/imperial-colonizer-after-close.png",
+              "sha256": {
+                "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png": "aa8e69ecbf84428fa5b8fa890492dd211d80a29bf6c91d8d781dcb8bb7859799",
+                "artifacts/s06-completion/review-b9-attempt1/render/imperial-colonizer-after-close.png": "c12f2384f7c62a15db95f3364e496d3e019a2c564166bb476f70ad8b4cbebe47",
+                "artifacts/s06-completion/review-b9-attempt1/render/metrics.json": "11c5b5b55212621a3a66d73c268ff03d18078c287a950409668c63f7d6cf8bed",
+                "artifacts/s06-completion/B9-appearance-grid.jpg": "dec0e3607153ed2c4ce98e6141ac61a2616ab7e70832e79e8e2c1c640e0e8be4"
+              },
+              "capture_code_commit": "8182d5a616f11ddc7083f31d92ba0c2ab36cddf7",
+              "renderer_blob": "36fa4be74c08a1a683489097d87b10aa3e086db9",
+              "measured": {
+                "close_changed_pixels_gt3": 96074,
+                "tactical_changed_pixels_gt3": 16387
+              }
+            }
+          },
+          {
+            "gameplay_binding": "rebel:constructor",
+            "shape_key": "rebel:constructor",
+            "identifier": "rebel_constructor",
+            "faction": "rebel",
+            "class": "construction",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/rebel_constructor.blend": "e143b758d84877fdb4127a19bdca48a37bb3897cf403dde1cca608065bb7c74d"
+            },
+            "exporter": {
+              "tools/art/build_b9_construction.py": "79e092578df188ef02d4128e5d74425d7951fddd3075cd0ef3aacda484e4501a",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_rebel_constructor.py": "378830e27f982cb6db4fcecf9934d9e4eb53121b533963a2d78ef3322c73147d"
+            },
+            "runtime": {
+              "assets/models/rebel_constructor.mesh.json": "441cb0bb04afac29e8d1bcd4f704858988abb1226681e216796f33e5b0aae780"
+            },
+            "legacy_extent": [
+              [
+                -25.0,
+                -7.0,
+                -38.455
+              ],
+              [
+                25.0,
+                32.451235,
+                35.5
+              ]
+            ],
+            "authored_extent": [
+              [
+                -25.0,
+                -7.0,
+                -38.455
+              ],
+              [
+                25.0,
+                32.451235,
+                35.5
+              ]
+            ],
+            "triangle_count": 2512,
+            "vertex_count": 1402,
+            "evidence": {
+              "dir": "artifacts/s06-completion/review-b9-attempt1/render",
+              "sheet": "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png",
+              "close": "artifacts/s06-completion/review-b9-attempt1/render/rebel-constructor-after-close.png",
+              "sha256": {
+                "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png": "aa8e69ecbf84428fa5b8fa890492dd211d80a29bf6c91d8d781dcb8bb7859799",
+                "artifacts/s06-completion/review-b9-attempt1/render/rebel-constructor-after-close.png": "5af098eadd159a1ecb7d43771c4438a00a5da15455253d6cc80147a3a8032894",
+                "artifacts/s06-completion/review-b9-attempt1/render/metrics.json": "11c5b5b55212621a3a66d73c268ff03d18078c287a950409668c63f7d6cf8bed",
+                "artifacts/s06-completion/B9-appearance-grid.jpg": "dec0e3607153ed2c4ce98e6141ac61a2616ab7e70832e79e8e2c1c640e0e8be4"
+              },
+              "capture_code_commit": "8182d5a616f11ddc7083f31d92ba0c2ab36cddf7",
+              "renderer_blob": "36fa4be74c08a1a683489097d87b10aa3e086db9",
+              "measured": {
+                "close_changed_pixels_gt3": 120389,
+                "tactical_changed_pixels_gt3": 26051
+              }
+            }
+          },
+          {
+            "gameplay_binding": "rebel:colonizer",
+            "shape_key": "rebel:colonizer",
+            "identifier": "rebel_colonizer",
+            "faction": "rebel",
+            "class": "construction",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/rebel_colonizer.blend": "eeb2a6e7547b9d4d1c40c7acded337a0a30089b222107a6067611cec1e42d02b"
+            },
+            "exporter": {
+              "tools/art/build_b9_construction.py": "79e092578df188ef02d4128e5d74425d7951fddd3075cd0ef3aacda484e4501a",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_rebel_colonizer.py": "97c0a96ba7fab5ca57a0c5bb1d85efb2b9c6d6e88fa0a185d8bdaf62f4350d2d"
+            },
+            "runtime": {
+              "assets/models/rebel_colonizer.mesh.json": "0afb0eddcd4180f6fae0523eac4dcb086c65093a59983714e2298691bdf15fae"
+            },
+            "legacy_extent": [
+              [
+                -42.5,
+                -13.5,
+                -46.94
+              ],
+              [
+                42.5,
+                36.5,
+                48.507
+              ]
+            ],
+            "authored_extent": [
+              [
+                -42.5,
+                -13.5,
+                -46.94
+              ],
+              [
+                42.5,
+                36.5,
+                48.507
+              ]
+            ],
+            "triangle_count": 3560,
+            "vertex_count": 1962,
+            "evidence": {
+              "dir": "artifacts/s06-completion/review-b9-attempt1/render",
+              "sheet": "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png",
+              "close": "artifacts/s06-completion/review-b9-attempt1/render/rebel-colonizer-after-close.png",
+              "sha256": {
+                "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png": "aa8e69ecbf84428fa5b8fa890492dd211d80a29bf6c91d8d781dcb8bb7859799",
+                "artifacts/s06-completion/review-b9-attempt1/render/rebel-colonizer-after-close.png": "5518e02396cfa7cde7935578eb08f7e6e46d8cafa868ef232c1be7d344534c0e",
+                "artifacts/s06-completion/review-b9-attempt1/render/metrics.json": "11c5b5b55212621a3a66d73c268ff03d18078c287a950409668c63f7d6cf8bed",
+                "artifacts/s06-completion/B9-appearance-grid.jpg": "dec0e3607153ed2c4ce98e6141ac61a2616ab7e70832e79e8e2c1c640e0e8be4"
+              },
+              "capture_code_commit": "8182d5a616f11ddc7083f31d92ba0c2ab36cddf7",
+              "renderer_blob": "36fa4be74c08a1a683489097d87b10aa3e086db9",
+              "measured": {
+                "close_changed_pixels_gt3": 108516,
+                "tactical_changed_pixels_gt3": 18484
+              }
+            }
+          },
+          {
+            "gameplay_binding": "confederacy:constructor",
+            "shape_key": "confederacy:constructor",
+            "identifier": "confed_constructor",
+            "faction": "confederacy",
+            "class": "construction",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/confed_constructor.blend": "eb64c61ec81512584eae1ac0946fadea0485ab0c9b09cc505238bc2c49cbc8c6"
+            },
+            "exporter": {
+              "tools/art/build_b9_construction.py": "79e092578df188ef02d4128e5d74425d7951fddd3075cd0ef3aacda484e4501a",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_confed_constructor.py": "4facaacd806a36dbc1f35c5cb6fe2e80538b1d1c385a320f3e8e5cb5bd35099d"
+            },
+            "runtime": {
+              "assets/models/confed_constructor.mesh.json": "cce3fd0e2a02b4e745efeec9ff6873869b17fec65f6aa0f9f08238226a40b14c"
+            },
+            "legacy_extent": [
+              [
+                -37.794229,
+                -8.265,
+                -34.6975
+              ],
+              [
+                37.794229,
+                33.0,
+                34.0
+              ]
+            ],
+            "authored_extent": [
+              [
+                -37.794229,
+                -8.265,
+                -34.6975
+              ],
+              [
+                37.794229,
+                33.0,
+                34.0
+              ]
+            ],
+            "triangle_count": 3932,
+            "vertex_count": 2196,
+            "evidence": {
+              "dir": "artifacts/s06-completion/review-b9-attempt1/render",
+              "sheet": "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png",
+              "close": "artifacts/s06-completion/review-b9-attempt1/render/confederacy-constructor-after-close.png",
+              "sha256": {
+                "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png": "aa8e69ecbf84428fa5b8fa890492dd211d80a29bf6c91d8d781dcb8bb7859799",
+                "artifacts/s06-completion/review-b9-attempt1/render/confederacy-constructor-after-close.png": "2905c531ecaf8d7ab585133c8570d3338e1a01bd29ba1e6905d42d52207a094f",
+                "artifacts/s06-completion/review-b9-attempt1/render/metrics.json": "11c5b5b55212621a3a66d73c268ff03d18078c287a950409668c63f7d6cf8bed",
+                "artifacts/s06-completion/B9-appearance-grid.jpg": "dec0e3607153ed2c4ce98e6141ac61a2616ab7e70832e79e8e2c1c640e0e8be4"
+              },
+              "capture_code_commit": "8182d5a616f11ddc7083f31d92ba0c2ab36cddf7",
+              "renderer_blob": "36fa4be74c08a1a683489097d87b10aa3e086db9",
+              "measured": {
+                "close_changed_pixels_gt3": 141467,
+                "tactical_changed_pixels_gt3": 27063
+              }
+            }
+          },
+          {
+            "gameplay_binding": "confederacy:colonizer",
+            "shape_key": "confederacy:colonizer",
+            "identifier": "confed_colonizer",
+            "faction": "confederacy",
+            "class": "construction",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/confed_colonizer.blend": "a5b012382109e6f9854a7608a88ef20c2363835d3c49c5cdbd9b9598921497a2"
+            },
+            "exporter": {
+              "tools/art/build_b9_construction.py": "79e092578df188ef02d4128e5d74425d7951fddd3075cd0ef3aacda484e4501a",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_confed_colonizer.py": "d416255bffa41cd7fcd3313964c920de5bba85cd3c88a0c81ea727f75054847d"
+            },
+            "runtime": {
+              "assets/models/confed_colonizer.mesh.json": "7c8a7b31847896526b67d9daa7fe4ea866ff03f8c4da3acd31fe9401ef0fd08d"
+            },
+            "legacy_extent": [
+              [
+                -52.856406,
+                -7.0,
+                -51.6975
+              ],
+              [
+                52.856406,
+                43.5,
+                55.4475
+              ]
+            ],
+            "authored_extent": [
+              [
+                -52.856406,
+                -7.0,
+                -51.6975
+              ],
+              [
+                52.856406,
+                43.5,
+                55.4475
+              ]
+            ],
+            "triangle_count": 4156,
+            "vertex_count": 2292,
+            "evidence": {
+              "dir": "artifacts/s06-completion/review-b9-attempt1/render",
+              "sheet": "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png",
+              "close": "artifacts/s06-completion/review-b9-attempt1/render/confederacy-colonizer-after-close.png",
+              "sha256": {
+                "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png": "aa8e69ecbf84428fa5b8fa890492dd211d80a29bf6c91d8d781dcb8bb7859799",
+                "artifacts/s06-completion/review-b9-attempt1/render/confederacy-colonizer-after-close.png": "101fd143bbcbb0698d5a75acdd1f39333d4b37ab6e097cffd6ad34c56cdf3b98",
+                "artifacts/s06-completion/review-b9-attempt1/render/metrics.json": "11c5b5b55212621a3a66d73c268ff03d18078c287a950409668c63f7d6cf8bed",
+                "artifacts/s06-completion/B9-appearance-grid.jpg": "dec0e3607153ed2c4ce98e6141ac61a2616ab7e70832e79e8e2c1c640e0e8be4"
+              },
+              "capture_code_commit": "8182d5a616f11ddc7083f31d92ba0c2ab36cddf7",
+              "renderer_blob": "36fa4be74c08a1a683489097d87b10aa3e086db9",
+              "measured": {
+                "close_changed_pixels_gt3": 145093,
+                "tactical_changed_pixels_gt3": 30170
+              }
+            }
+          },
+          {
+            "gameplay_binding": "syndicate:constructor",
+            "shape_key": "syndicate:constructor",
+            "identifier": "syndicate_constructor",
+            "faction": "syndicate",
+            "class": "construction",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/syndicate_constructor.blend": "0a928f05ec1648e74706da5c70a251f084d78639398117bab94c6b7c60f00a01"
+            },
+            "exporter": {
+              "tools/art/build_b9_construction.py": "79e092578df188ef02d4128e5d74425d7951fddd3075cd0ef3aacda484e4501a",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_syndicate_constructor.py": "1764e36015a9fcd48205e515032604d08c24dd16fc8e43a1bdcea77d3db00bf2"
+            },
+            "runtime": {
+              "assets/models/syndicate_constructor.mesh.json": "b3d4946de75d41f6b02c591e3275ea3627ffdf010d83bd925b16c4d7d3a532c3"
+            },
+            "legacy_extent": [
+              [
+                -25.714157,
+                -9.0,
+                -40.8725
+              ],
+              [
+                29.98,
+                36.5,
+                32.388
+              ]
+            ],
+            "authored_extent": [
+              [
+                -25.714157,
+                -9.0,
+                -40.8725
+              ],
+              [
+                29.98,
+                36.5,
+                32.388
+              ]
+            ],
+            "triangle_count": 3240,
+            "vertex_count": 1804,
+            "evidence": {
+              "dir": "artifacts/s06-completion/review-b9-attempt1/render",
+              "sheet": "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png",
+              "close": "artifacts/s06-completion/review-b9-attempt1/render/syndicate-constructor-after-close.png",
+              "sha256": {
+                "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png": "aa8e69ecbf84428fa5b8fa890492dd211d80a29bf6c91d8d781dcb8bb7859799",
+                "artifacts/s06-completion/review-b9-attempt1/render/syndicate-constructor-after-close.png": "d34eff30f4b55bd16407f814a75eae0dc0ef4ae7ba6b6ad9c18704304a467eb3",
+                "artifacts/s06-completion/review-b9-attempt1/render/metrics.json": "11c5b5b55212621a3a66d73c268ff03d18078c287a950409668c63f7d6cf8bed",
+                "artifacts/s06-completion/B9-appearance-grid.jpg": "dec0e3607153ed2c4ce98e6141ac61a2616ab7e70832e79e8e2c1c640e0e8be4"
+              },
+              "capture_code_commit": "8182d5a616f11ddc7083f31d92ba0c2ab36cddf7",
+              "renderer_blob": "36fa4be74c08a1a683489097d87b10aa3e086db9",
+              "measured": {
+                "close_changed_pixels_gt3": 94980,
+                "tactical_changed_pixels_gt3": 15555
+              }
+            }
+          },
+          {
+            "gameplay_binding": "syndicate:colonizer",
+            "shape_key": "syndicate:colonizer",
+            "identifier": "syndicate_colonizer",
+            "faction": "syndicate",
+            "class": "construction",
+            "source_authority": "blend-authoritative",
+            "source": {
+              "art/blender/syndicate_colonizer.blend": "6f9f13895386c97c20736aacb8a69fe51bf3b1a03e06d11c8f2beaafdae45147"
+            },
+            "exporter": {
+              "tools/art/build_b9_construction.py": "79e092578df188ef02d4128e5d74425d7951fddd3075cd0ef3aacda484e4501a",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_syndicate_colonizer.py": "5ace7bd6fd302a024a98b310ef1d80402115f0a5cb0d6d1d9a2ac1bced7677e1"
+            },
+            "runtime": {
+              "assets/models/syndicate_colonizer.mesh.json": "d5c59777eb31515745f5085246247e86dd14ede2bc5325d89c72530fd2944841"
+            },
+            "legacy_extent": [
+              [
+                -35.961081,
+                -11.0,
+                -57.8325
+              ],
+              [
+                47.4,
+                36.5,
+                57.4475
+              ]
+            ],
+            "authored_extent": [
+              [
+                -35.961081,
+                -11.0,
+                -57.8325
+              ],
+              [
+                47.4,
+                36.5,
+                57.4475
+              ]
+            ],
+            "triangle_count": 3528,
+            "vertex_count": 1940,
+            "evidence": {
+              "dir": "artifacts/s06-completion/review-b9-attempt1/render",
+              "sheet": "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png",
+              "close": "artifacts/s06-completion/review-b9-attempt1/render/syndicate-colonizer-after-close.png",
+              "sha256": {
+                "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png": "aa8e69ecbf84428fa5b8fa890492dd211d80a29bf6c91d8d781dcb8bb7859799",
+                "artifacts/s06-completion/review-b9-attempt1/render/syndicate-colonizer-after-close.png": "6f6bcf724b38f961f1ac6e73da441e83f6a7a588f5bbaf59037439b7b164da12",
+                "artifacts/s06-completion/review-b9-attempt1/render/metrics.json": "11c5b5b55212621a3a66d73c268ff03d18078c287a950409668c63f7d6cf8bed",
+                "artifacts/s06-completion/B9-appearance-grid.jpg": "dec0e3607153ed2c4ce98e6141ac61a2616ab7e70832e79e8e2c1c640e0e8be4"
+              },
+              "capture_code_commit": "8182d5a616f11ddc7083f31d92ba0c2ab36cddf7",
+              "renderer_blob": "36fa4be74c08a1a683489097d87b10aa3e086db9",
+              "measured": {
+                "close_changed_pixels_gt3": 105762,
+                "tactical_changed_pixels_gt3": 20568
+              }
+            }
+          }
+        ]
+      },
+      "not_approved_by_this_decision": [
+        "landing, registration or activation",
+        "merge, tag or release",
+        "S11 catalogue switch or any production-default switch",
+        "packaging or S08/S09 platform/performance acceptance",
+        "unpictured shared construction scaffold or invented gameplay data"
+      ]
     }
   ],
   "approved_assets": [

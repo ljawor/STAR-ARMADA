@@ -40,6 +40,9 @@ OWNER_WORDS = {
         'Picture approved (the corvette); picture approved. Continue (the two TIE squadrons); '
         'picture approved, continue (the two dagger capitals, the cruiser and the frigate); '
         'Pictures approved (the Imperial convoy)',
+    's06-b7-imperial-stations-2026-10-18': 'approved',
+    's06-b8-remaining-combat-2026-10-18': 'approved',
+    's06-b9-construction-2026-10-18': 'approved',
 }
 EXPECTED_BATCHES = {
     's06-cruiser-review': 1,
@@ -51,10 +54,12 @@ EXPECTED_BATCHES = {
     's06-b4-hardware': 24,
     's06-b5-environment': 1,
     's06-b6-imperial-ships': 8,
+    's06-b7-imperial-stations': 10,
+    's06-b8-remaining-combat': 8,
+    's06-b9-construction': 8,
 }
-# 37 specimens whose appearance the owner has approved, and the count the records must keep adding up
-# to until another decision changes it.
-APPROVED_SPECIMENS = 73
+# Exact enumerated appearance approvals, not registrations.
+APPROVED_SPECIMENS = 99
 SCOPE_DECISIONS = {'s06-b4-scope-2026-10-17': '1.) B4 authorized',
                    's06-imperial-migration-2026-10-17': '4.) decision need also migration.',
                    's06-large-evidence-accepted-2026-10-17':
@@ -134,9 +139,12 @@ class RecordedApprovals(unittest.TestCase):
                 else:
                     self.assertIn(batch, sheets, f'{batch} has a decision but no batch sheet')
                     path, sheet = sheets[batch]
-                    self.assertEqual(sheet['status'], 'appearance_approved_pending_landing')
+                    partial = batch == 's06-b9-construction'
+                    self.assertEqual(sheet['status'], 'partially_appearance_approved_pending_landing'
+                                     if partial else 'appearance_approved_pending_landing')
                     self.assertEqual(sheet['appearance_decision'], decision['id'])
-                    identifiers = {a['identifier'] for a in sheet['assets']}
+                    identifiers = {a['identifier'] for a in sheet['assets']
+                                   if not partial or a.get('appearance_decision') == decision['id']}
                     self.assertEqual(sorted(identifiers),
                                      sorted(a['identifier'] for a in decision['revision']['assets']),
                                      f'the decision and the sheet disagree about {batch}')
@@ -211,14 +219,13 @@ class RecordedScope(unittest.TestCase):
         # no sheet - named here rather than assumed.
         self.assertEqual(sorted(decided - set(sheets)), ['s06-cruiser-review'])
         pending = {batch for batch in sheets if batch not in decided}
-        self.assertEqual(sorted(pending), ['s06-b7-imperial-stations',
-                                           's06-b8-remaining-combat',
-                                           's06-b9-construction'],
-                         'only the explicitly authorized completion batches remain appearance-pending')
+        self.assertEqual(sorted(pending), [], 'all batch sheets now have appearance decisions; B9 is partial')
         for batch, (path, sheet) in sheets.items():
             with self.subTest(batch=batch):
                 if batch in decided:
-                    self.assertEqual(sheet['status'], 'appearance_approved_pending_landing')
+                    expected = ('partially_appearance_approved_pending_landing' if batch ==
+                                's06-b9-construction' else 'appearance_approved_pending_landing')
+                    self.assertEqual(sheet['status'], expected)
                     self.assertIn('appearance_decision', sheet)
                     self.assertEqual(sheet['appearance_decision'],
                                      next(d['id'] for d in appearance_decisions()

@@ -1,0 +1,27 @@
+test_only_the_26_pictured_exact_revisions_are_approved (test_completion_approval.CompletionApproval.test_only_the_26_pictured_exact_revisions_are_approved) ... FAIL
+test_partial_sheet_sidecars_do_not_approve_unpictured_rows (test_completion_approval.CompletionApproval.test_partial_sheet_sidecars_do_not_approve_unpictured_rows) ... FAIL
+
+======================================================================
+FAIL: test_only_the_26_pictured_exact_revisions_are_approved (test_completion_approval.CompletionApproval.test_only_the_26_pictured_exact_revisions_are_approved)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_completion_approval.py", line 39, in test_only_the_26_pictured_exact_revisions_are_approved
+    self.assertEqual(len(decisions), 3)
+AssertionError: 0 != 3
+
+======================================================================
+FAIL: test_partial_sheet_sidecars_do_not_approve_unpictured_rows (test_completion_approval.CompletionApproval.test_partial_sheet_sidecars_do_not_approve_unpictured_rows)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_completion_approval.py", line 29, in test_partial_sheet_sidecars_do_not_approve_unpictured_rows
+    self.assertEqual(sidecar['status'], row['status'])
+AssertionError: 'partially_appearance_approved_pending_landing' != 'appearance_approved_pending_landing'
+- partially_appearance_approved_pending_landing
+? ----------
++ appearance_approved_pending_landing
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.004s
+
+FAILED (failures=2)

@@ -26,14 +26,14 @@ This increment stops before S07 integration/registration. Appearance approval, m
 - All 27 editable Blender masters and runtime meshes exist. Blender 5.0.1 built each source. Every mesh was exported twice with identical runtime bytes and unchanged master hashes.
 - All 27 payloads pass the production immutable loader at their exact declared envelopes, with all six populated roles.
 - 26 ships/stations have real production-renderer close, rear, tactical and common-scale paired still evidence. No motion acceptance claimed.
-- Review candidates are patched only in the diagnostic process; no manifests, registry entries, runtime pipeline selections, rendering/gameplay changes, appearance approvals or activation were introduced.
-- All earlier approval pins continue to pass. The coverage reconciler now separates the 27 `pending_appearance` rows from missing meshes; this does not increase approved counts or close S06.
+- Review candidates are patched only in the diagnostic process; no manifests, registry entries, runtime pipeline selections, rendering/gameplay changes or activation were introduced. The later owner response adds appearance records only.
+- All earlier approval pins continue to pass. After owner approval, reconciliation reports 102 unique approved assets (99 S06 specimens plus the trio), four shared candidates and one pending appearance (scaffold). S06 is still open.
 
 Machine receipt: `artifacts/s06-completion/COMPLETION-REVIEW.json`. It pins runtime meshes, capture-code commits, renderer blobs, per-row metrics and the two export-reproduction receipts.
 
 ## 4. Honest remaining gates
 
-- **Owner appearance review:** the 26 pictured rows remain unapproved. No owner response has been recorded.
+- **Owner appearance review recorded:** owner replied `approved` to the B7/B8/B9 grids at review head `e9d78bcf684c2128b2e76af30f3e61cd3e952083`. Three revision-bound decisions cover exactly 26 pictured rows (10/8/8); B9 is partial and the scaffold remains unapproved.
 - **Scaffold:** authored/exported/loader-validated, but requires the separate S07 scaffold selection seam for honest in-game review. It is excluded explicitly; do not claim 27 reviewed models.
 - **Three planned Syndicate hulls:** no gameplay data exists for them. They remain separate data/model work; no statistics or production eligibility were invented.
 - S07 integration and S08/S09 compatibility/platform/performance/package acceptance have not been performed here.
@@ -72,4 +72,4 @@ env -u SDL_VIDEODRIVER .venv/bin/python tools/diag_completion_review.py --spec a
 env -u SDL_VIDEODRIVER .venv/bin/python tools/diag_completion_review.py --spec art/manifests/pending/S06-BATCH-B9-CONSTRUCTION.json --out <fresh-directory>
 ```
 
-Inspect the three `B*-appearance-grid.jpg` images and the full-size paired contact sheets. Bind any later owner approval only to the enumerated current runtime/source hashes and exact reviewed captures. Do not infer approval from test results.
+The three `B*-appearance-grid.jpg` images and full-size paired contact sheets bind the owner's `approved` response to exactly 26 current source/runtime revisions. The unpictured scaffold remains pending; no tests imply approval, activation or landing. B9 sidecars use explicit per-row status so the sheet's partial decision cannot leak to the scaffold.

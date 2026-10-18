@@ -58,7 +58,7 @@ class B8AuthoringTests(unittest.TestCase):
         sheet = json.loads(SHEET.read_text())
         self.assertEqual(sheet['schema'], 1)
         self.assertEqual(sheet['batch'], 's06-b8-remaining-combat')
-        self.assertEqual(sheet['status'], 'pending_owner_appearance_approval')
+        self.assertEqual(sheet['status'], 'appearance_approved_pending_landing')
         self.assertEqual(sheet['overview_camera'], dict(yaw=90, pitch=40, distance=4000))
         self.assertEqual(sheet['close_distance_floor'], 150)
         assets = {r['binding']: r for r in sheet['assets']}

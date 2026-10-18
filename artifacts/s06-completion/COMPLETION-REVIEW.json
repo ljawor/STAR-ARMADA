@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "status": "pending_owner_appearance_approval",
+  "status": "pictured_revisions_appearance_approved_pending_landing",
   "authoring_assets": 27,
   "actual_renderer_review_rows": 26,
   "export_repeat_receipts": [
@@ -657,6 +657,13 @@
     "station-framing-green.txt: new test used arbitrary length and mock lacked real view helper; fixture corrected; station-framing-verified.txt passes",
     "B7 attempt1 had fighter mast cropped; attempt2 recentres station visual envelope and increases camera clearance; both retained"
   ],
-  "appearance_decision": null,
-  "activation": false
+  "appearance_decision": [
+    "s06-b7-imperial-stations-2026-10-18",
+    "s06-b8-remaining-combat-2026-10-18",
+    "s06-b9-construction-2026-10-18"
+  ],
+  "activation": false,
+  "owner_words_verbatim": "approved",
+  "appearance_approved_rows": 26,
+  "scaffold_appearance_approved": false
 }

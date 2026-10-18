@@ -34,7 +34,7 @@ class ImperialStationAuthoringTests(unittest.TestCase):
         self.assertEqual(len(sheet['assets']), 10)
         self.assertEqual(sheet['schema'], 1)
         self.assertEqual(sheet['batch'], 's06-b7-imperial-stations')
-        self.assertEqual(sheet['status'], 'pending_owner_appearance_approval')
+        self.assertEqual(sheet['status'], 'appearance_approved_pending_landing')
         self.assertFalse(sheet['activation'])
         self.assertIsNone(sheet['owner_decision'])
         by_binding = {r['binding']: r for r in sheet['assets']}

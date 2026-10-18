@@ -69,9 +69,10 @@ def build_report(root):
     pending_assets = {}
     for sheet_path in sorted((root / 'art/manifests/pending').glob('S06-BATCH-*.json')):
         sheet = load(sheet_path.relative_to(root).as_posix())
-        if sheet['status'] != 'pending_owner_appearance_approval':
-            continue
         for candidate in sheet['assets']:
+            status = candidate.get('status', sheet['status'])
+            if status != 'pending_owner_appearance_approval':
+                continue
             binding = candidate['binding']
             if binding in assets or binding in pending_assets:
                 errors.append('duplicate pending binding: ' + binding)

@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "batch": "s06-b9-construction",
-  "status": "pending_owner_appearance_approval",
-  "note": "Authoring-only pending batch. Eight editable blend-authoritative hulls and one script-authoritative modular scaffold. No appearance approval, runtime registration, activation, export or rendered proof is asserted. Scaffold requires a separate renderer seam and review path.",
+  "status": "partially_appearance_approved_pending_landing",
+  "note": "Blender authoring/exports complete. Owner approved the pictured exact revisions on 2026-10-18; see appearance_decision. No landing, registration or activation. Only eight constructor/colonizer rows approved. Scaffold remains pending: requires S07 seam and an actual-renderer review.",
   "assets": [
     {
       "binding": "imperial:constructor",
@@ -41,7 +41,9 @@
         "accent",
         "lit",
         "cool"
-      ]
+      ],
+      "status": "appearance_approved_pending_landing",
+      "appearance_decision": "s06-b9-construction-2026-10-18"
     },
     {
       "binding": "imperial:colonizer",
@@ -80,7 +82,9 @@
         "accent",
         "lit",
         "cool"
-      ]
+      ],
+      "status": "appearance_approved_pending_landing",
+      "appearance_decision": "s06-b9-construction-2026-10-18"
     },
     {
       "binding": "rebel:constructor",
@@ -119,7 +123,9 @@
         "accent",
         "lit",
         "cool"
-      ]
+      ],
+      "status": "appearance_approved_pending_landing",
+      "appearance_decision": "s06-b9-construction-2026-10-18"
     },
     {
       "binding": "rebel:colonizer",
@@ -158,7 +164,9 @@
         "accent",
         "lit",
         "cool"
-      ]
+      ],
+      "status": "appearance_approved_pending_landing",
+      "appearance_decision": "s06-b9-construction-2026-10-18"
     },
     {
       "binding": "confederacy:constructor",
@@ -197,7 +205,9 @@
         "accent",
         "lit",
         "cool"
-      ]
+      ],
+      "status": "appearance_approved_pending_landing",
+      "appearance_decision": "s06-b9-construction-2026-10-18"
     },
     {
       "binding": "confederacy:colonizer",
@@ -236,7 +246,9 @@
         "accent",
         "lit",
         "cool"
-      ]
+      ],
+      "status": "appearance_approved_pending_landing",
+      "appearance_decision": "s06-b9-construction-2026-10-18"
     },
     {
       "binding": "syndicate:constructor",
@@ -275,7 +287,9 @@
         "accent",
         "lit",
         "cool"
-      ]
+      ],
+      "status": "appearance_approved_pending_landing",
+      "appearance_decision": "s06-b9-construction-2026-10-18"
     },
     {
       "binding": "syndicate:colonizer",
@@ -314,7 +328,9 @@
         "accent",
         "lit",
         "cool"
-      ]
+      ],
+      "status": "appearance_approved_pending_landing",
+      "appearance_decision": "s06-b9-construction-2026-10-18"
     },
     {
       "binding": "shared:construction_scaffold",
@@ -355,8 +371,36 @@
         "cool"
       ],
       "review_requires_scaffold_seam": true,
-      "envelope_basis": "renderer._draw_construction_sites structural ring/posts at nominal r=50, frac=1; progress arc is retained effect outside mesh"
+      "envelope_basis": "renderer._draw_construction_sites structural ring/posts at nominal r=50, frac=1; progress arc is retained effect outside mesh",
+      "status": "pending_owner_appearance_approval"
     }
   ],
-  "motion": []
+  "motion": [],
+  "appearance_decision": "s06-b9-construction-2026-10-18",
+  "evidence": {
+    "imperial:constructor": {
+      "sheet": "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png"
+    },
+    "imperial:colonizer": {
+      "sheet": "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png"
+    },
+    "rebel:constructor": {
+      "sheet": "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png"
+    },
+    "rebel:colonizer": {
+      "sheet": "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png"
+    },
+    "confederacy:constructor": {
+      "sheet": "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png"
+    },
+    "confederacy:colonizer": {
+      "sheet": "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png"
+    },
+    "syndicate:constructor": {
+      "sheet": "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png"
+    },
+    "syndicate:colonizer": {
+      "sheet": "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png"
+    }
+  }
 }

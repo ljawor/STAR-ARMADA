@@ -11,25 +11,25 @@
   ],
   "counts": {
     "inventory_rows": 120,
-    "unique_approved_assets": 76,
-    "appearance_batch_decisions": 9,
-    "appearance_batch_specimens": 73,
+    "unique_approved_assets": 102,
+    "appearance_batch_decisions": 12,
+    "appearance_batch_specimens": 99,
     "pipeline_assets": 3,
     "registry_bindings": 119,
     "dispositions": {
-      "approved_asset": 76,
+      "approved_asset": 102,
       "approved_shared_candidate": 4,
       "deferred_texture_pipeline": 10,
       "outside_mesh_catalogue": 3,
-      "pending_appearance": 27
+      "pending_appearance": 1
     },
     "by_category": {
       "combat_hull": {
-        "approved_asset": 10,
-        "pending_appearance": 8
+        "approved_asset": 18
       },
       "construction": {
-        "pending_appearance": 9
+        "approved_asset": 8,
+        "pending_appearance": 1
       },
       "environment_prop": {
         "approved_asset": 1,
@@ -53,8 +53,7 @@
         "approved_asset": 7
       },
       "station": {
-        "approved_asset": 30,
-        "pending_appearance": 10
+        "approved_asset": 40
       }
     }
   },
@@ -66,15 +65,14 @@
       "faction": "confederacy",
       "runtime_binding": "confederacy:battleship",
       "mapping_basis": "current ship-data role; not the historical legacy shape",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s06-b8-remaining-combat-2026-10-18",
         "mesh": "assets/models/confed_battleship.mesh.json",
         "sha256": "0b04ca0ea42c2ea2fd670cfdbe0d4c0a047cbf65071101ba7d6927bf172df363",
-        "pending_registration": true,
-        "batch": "s06-b8-remaining-combat"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -101,15 +99,14 @@
       "faction": "confederacy",
       "runtime_binding": "confederacy:colonizer",
       "mapping_basis": "current ship-data role; not the historical legacy shape",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s06-b9-construction-2026-10-18",
         "mesh": "assets/models/confed_colonizer.mesh.json",
         "sha256": "7c8a7b31847896526b67d9daa7fe4ea866ff03f8c4da3acd31fe9401ef0fd08d",
-        "pending_registration": true,
-        "batch": "s06-b9-construction"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -119,15 +116,14 @@
       "faction": "confederacy",
       "runtime_binding": "confederacy:constructor",
       "mapping_basis": "current ship-data role; not the historical legacy shape",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s06-b9-construction-2026-10-18",
         "mesh": "assets/models/confed_constructor.mesh.json",
         "sha256": "cce3fd0e2a02b4e745efeec9ff6873869b17fec65f6aa0f9f08238226a40b14c",
-        "pending_registration": true,
-        "batch": "s06-b9-construction"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -137,15 +133,14 @@
       "faction": "confederacy",
       "runtime_binding": "confederacy:corvette",
       "mapping_basis": "current ship-data role; not the historical legacy shape",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s06-b8-remaining-combat-2026-10-18",
         "mesh": "assets/models/confed_corvette.mesh.json",
         "sha256": "921f8dd4afd759ea0d39c21c3bd3c4e6f7e1c3f8eaee18240371d9a96f101958",
-        "pending_registration": true,
-        "batch": "s06-b8-remaining-combat"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -172,15 +167,14 @@
       "faction": "confederacy",
       "runtime_binding": "confederacy:cruiser",
       "mapping_basis": "current ship-data role; not the historical legacy shape",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s06-b8-remaining-combat-2026-10-18",
         "mesh": "assets/models/confed_cruiser.mesh.json",
         "sha256": "2866559ed742dd4f2f5a22937baa8021b8c0154a105cd4903c273d972ab00814",
-        "pending_registration": true,
-        "batch": "s06-b8-remaining-combat"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -190,15 +184,14 @@
       "faction": "confederacy",
       "runtime_binding": "confederacy:frigate",
       "mapping_basis": "current ship-data role; not the historical legacy shape",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s06-b8-remaining-combat-2026-10-18",
         "mesh": "assets/models/confed_frigate.mesh.json",
         "sha256": "96fd45471049b92aede194cf851e801e022579ee1a84c61daf3cbe088c8ed268",
-        "pending_registration": true,
-        "batch": "s06-b8-remaining-combat"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -208,15 +201,14 @@
       "faction": "confederacy",
       "runtime_binding": "confederacy:supercapital",
       "mapping_basis": "current ship-data role; not the historical legacy shape",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s06-b8-remaining-combat-2026-10-18",
         "mesh": "assets/models/confed_supercapital.mesh.json",
         "sha256": "f33b0f79430130cf5d1c8524f618f2ce5c541a5571edf28e6a4d84284c357c4f",
-        "pending_registration": true,
-        "batch": "s06-b8-remaining-combat"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -260,15 +252,14 @@
       "faction": "imperial",
       "runtime_binding": "imperial:colonizer",
       "mapping_basis": "current ship-data role; not the historical legacy shape",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s06-b9-construction-2026-10-18",
         "mesh": "assets/models/imperial_colonizer.mesh.json",
         "sha256": "a1076d24d95137ec3c086e46cd32d2555e1c374284994a250938fb7d790f8dae",
-        "pending_registration": true,
-        "batch": "s06-b9-construction"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -278,15 +269,14 @@
       "faction": "imperial",
       "runtime_binding": "imperial:constructor",
       "mapping_basis": "current ship-data role; not the historical legacy shape",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s06-b9-construction-2026-10-18",
         "mesh": "assets/models/imperial_constructor.mesh.json",
         "sha256": "32fc71942015d171695fc9a6f150a402235ff62c480d29288def84fe03340cdb",
-        "pending_registration": true,
-        "batch": "s06-b9-construction"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -432,15 +422,14 @@
       "faction": "rebel",
       "runtime_binding": "rebel:colonizer",
       "mapping_basis": "current ship-data role; not the historical legacy shape",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s06-b9-construction-2026-10-18",
         "mesh": "assets/models/rebel_colonizer.mesh.json",
         "sha256": "0afb0eddcd4180f6fae0523eac4dcb086c65093a59983714e2298691bdf15fae",
-        "pending_registration": true,
-        "batch": "s06-b9-construction"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -450,15 +439,14 @@
       "faction": "rebel",
       "runtime_binding": "rebel:constructor",
       "mapping_basis": "current ship-data role; not the historical legacy shape",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s06-b9-construction-2026-10-18",
         "mesh": "assets/models/rebel_constructor.mesh.json",
         "sha256": "441cb0bb04afac29e8d1bcd4f704858988abb1226681e216796f33e5b0aae780",
-        "pending_registration": true,
-        "batch": "s06-b9-construction"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -587,15 +575,14 @@
       "faction": "syndicate",
       "runtime_binding": "syndicate:colonizer",
       "mapping_basis": "current ship-data role; not the historical legacy shape",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s06-b9-construction-2026-10-18",
         "mesh": "assets/models/syndicate_colonizer.mesh.json",
         "sha256": "d5c59777eb31515745f5085246247e86dd14ede2bc5325d89c72530fd2944841",
-        "pending_registration": true,
-        "batch": "s06-b9-construction"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -605,15 +592,14 @@
       "faction": "syndicate",
       "runtime_binding": "syndicate:constructor",
       "mapping_basis": "current ship-data role; not the historical legacy shape",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s06-b9-construction-2026-10-18",
         "mesh": "assets/models/syndicate_constructor.mesh.json",
         "sha256": "b3d4946de75d41f6b02c591e3275ea3627ffdf010d83bd925b16c4d7d3a532c3",
-        "pending_registration": true,
-        "batch": "s06-b9-construction"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -623,15 +609,14 @@
       "faction": "syndicate",
       "runtime_binding": "syndicate:corvette",
       "mapping_basis": "current ship-data role; not the historical legacy shape",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s06-b8-remaining-combat-2026-10-18",
         "mesh": "assets/models/syndicate_corvette.mesh.json",
         "sha256": "fb321326eaf5390d40bbe559d7340695deb27ae33b086864360bedab2f3b3b49",
-        "pending_registration": true,
-        "batch": "s06-b8-remaining-combat"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -658,15 +643,14 @@
       "faction": "syndicate",
       "runtime_binding": "syndicate:cruiser",
       "mapping_basis": "current ship-data role; not the historical legacy shape",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s06-b8-remaining-combat-2026-10-18",
         "mesh": "assets/models/syndicate_cruiser.mesh.json",
         "sha256": "121608999dd39710a35322e7689f5af855fc848b7305242221d3702a35e8c223",
-        "pending_registration": true,
-        "batch": "s06-b8-remaining-combat"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -676,15 +660,14 @@
       "faction": "syndicate",
       "runtime_binding": "syndicate:frigate",
       "mapping_basis": "current ship-data role; not the historical legacy shape",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s06-b8-remaining-combat-2026-10-18",
         "mesh": "assets/models/syndicate_frigate.mesh.json",
         "sha256": "9563c320fb164133b7731aa398f41653e25844da72644e0b438d3b10aeba1471",
-        "pending_registration": true,
-        "batch": "s06-b8-remaining-combat"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -779,15 +762,14 @@
       "faction": "imperial",
       "runtime_binding": "imperial:command_station",
       "mapping_basis": "station/hardware binding uses owner faction and kind",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s06-b7-imperial-stations-2026-10-18",
         "mesh": "assets/models/imperial_command_station.mesh.json",
         "sha256": "ae2faebf598832b30b6e64e1d485603e4721e45ac7e648c1b3768d4af8e48f50",
-        "pending_registration": true,
-        "batch": "s06-b7-imperial-stations"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -797,15 +779,14 @@
       "faction": "imperial",
       "runtime_binding": "imperial:mining_station",
       "mapping_basis": "station/hardware binding uses owner faction and kind",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s06-b7-imperial-stations-2026-10-18",
         "mesh": "assets/models/imperial_mining_station.mesh.json",
         "sha256": "a446d4963b60e4a4cb9d9256ad033287b1aa31f631dc078082a91bcb2feff568",
-        "pending_registration": true,
-        "batch": "s06-b7-imperial-stations"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -815,15 +796,14 @@
       "faction": "imperial",
       "runtime_binding": "imperial:shipyard",
       "mapping_basis": "station/hardware binding uses owner faction and kind",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s06-b7-imperial-stations-2026-10-18",
         "mesh": "assets/models/imperial_shipyard.mesh.json",
         "sha256": "73ca3736a5bfacf3a74edbe343f0d1faf20f426536c359794644cef7ad5819b5",
-        "pending_registration": true,
-        "batch": "s06-b7-imperial-stations"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -833,15 +813,14 @@
       "faction": "imperial",
       "runtime_binding": "imperial:research_station",
       "mapping_basis": "station/hardware binding uses owner faction and kind",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s06-b7-imperial-stations-2026-10-18",
         "mesh": "assets/models/imperial_research_station.mesh.json",
         "sha256": "4b4ea1ac3f85c95bc457f6f2de43423b4a1ac7d63a843a41c209fbffe1b4d1a0",
-        "pending_registration": true,
-        "batch": "s06-b7-imperial-stations"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -851,15 +830,14 @@
       "faction": "imperial",
       "runtime_binding": "imperial:defense_platform",
       "mapping_basis": "station/hardware binding uses owner faction and kind",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s06-b7-imperial-stations-2026-10-18",
         "mesh": "assets/models/imperial_defense_platform.mesh.json",
         "sha256": "b0600256c84c6bf949e52831dd0af0f6a278054ca7378028a92acaba44df7999",
-        "pending_registration": true,
-        "batch": "s06-b7-imperial-stations"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -869,15 +847,14 @@
       "faction": "imperial",
       "runtime_binding": "imperial:sensor_station",
       "mapping_basis": "station/hardware binding uses owner faction and kind",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s06-b7-imperial-stations-2026-10-18",
         "mesh": "assets/models/imperial_sensor_station.mesh.json",
         "sha256": "0b853ca6a6d894e40a8b460be69e40447299b931d1c8a84b477ce6e7b8258de5",
-        "pending_registration": true,
-        "batch": "s06-b7-imperial-stations"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -887,15 +864,14 @@
       "faction": "imperial",
       "runtime_binding": "imperial:trade_station",
       "mapping_basis": "station/hardware binding uses owner faction and kind",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s06-b7-imperial-stations-2026-10-18",
         "mesh": "assets/models/imperial_trade_station.mesh.json",
         "sha256": "058f6b8963921544c31213d669558d009ea043f24d4d4865f7dcc7ddec8103fc",
-        "pending_registration": true,
-        "batch": "s06-b7-imperial-stations"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -905,15 +881,14 @@
       "faction": "imperial",
       "runtime_binding": "imperial:fighter_platform",
       "mapping_basis": "station/hardware binding uses owner faction and kind",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s06-b7-imperial-stations-2026-10-18",
         "mesh": "assets/models/imperial_fighter_platform.mesh.json",
         "sha256": "076093e7f6b37c4151954428a95168084ba86d7edfbb36ae1dc44ce0132b462b",
-        "pending_registration": true,
-        "batch": "s06-b7-imperial-stations"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -923,15 +898,14 @@
       "faction": "imperial",
       "runtime_binding": "imperial:repair_dock",
       "mapping_basis": "station/hardware binding uses owner faction and kind",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s06-b7-imperial-stations-2026-10-18",
         "mesh": "assets/models/imperial_repair_dock.mesh.json",
         "sha256": "0d2a2018344f5a034130e1e4ea3da85c62b658e37651260b03e3ab742a6e0469",
-        "pending_registration": true,
-        "batch": "s06-b7-imperial-stations"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -941,15 +915,14 @@
       "faction": "imperial",
       "runtime_binding": "imperial:energy_relay",
       "mapping_basis": "station/hardware binding uses owner faction and kind",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s06-b7-imperial-stations-2026-10-18",
         "mesh": "assets/models/imperial_energy_relay.mesh.json",
         "sha256": "56b573963cd5878122fb61d83cc7e45ab723bbf50bad7ff4db4e1c71a2b9238f",
-        "pending_registration": true,
-        "batch": "s06-b7-imperial-stations"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -2194,7 +2167,7 @@
     "art/blender/syndicate_sensor_station.blend": "9238f17c16196ce938019f8b0263415261ae763b0f2e64f9d1df97442670f56b",
     "art/blender/syndicate_shipyard.blend": "420dedfee68a25da78f4831d93b2dbddb716ba94134a58f890c570cec9efb735",
     "art/blender/syndicate_trade_station.blend": "7b84c5e0f47928eee805a8acfc0e018c5cd31ee3255803c7c7134c3e5b145252",
-    "art/manifests/approvals.json": "02dde30e6006f2b9487234f7fd7009ce71d1bc057199580283530a027f8a8f78",
+    "art/manifests/approvals.json": "8f0cf60278ec250d32c21efb95ee86c433ae3d9007dc8a4600224f8cb665b700",
     "art/manifests/model_inventory.json": "6db0c7e517ee6519ffa5cef67c7d34b5368a99a835eafeeb86f5c50f3dbb3a61",
     "art/manifests/pending/S06-BATCH-B1-ALLIANCE-COMBAT.json": "a61af224b5f3a27bd28eb9e95e21e5c9fd3883dde6ea2d360186e83ebff0d0a3",
     "art/manifests/pending/S06-BATCH-B2-SQUADRON-LOGISTICS.json": "3ba280ca12b2d4b5240585b834478d921642d78893e9b6e219bc0e32c416af3e",
@@ -2204,9 +2177,9 @@
     "art/manifests/pending/S06-BATCH-B4-HARDWARE.json": "317b98bef20450a5bfb1adc5cf39d935bbc532e6d7ed3420d58cb895a05c1496",
     "art/manifests/pending/S06-BATCH-B5-ENVIRONMENT.json": "b4bfb3a33043f92ae712aaf69f7d54dc10c040a969697b37385e078117e9c82b",
     "art/manifests/pending/S06-BATCH-B6-IMPERIAL-SHIPS.json": "daff42208ab71a8f641c4c5f7ed6e4b2bd092d8a52623a00a99886fb1f70091a",
-    "art/manifests/pending/S06-BATCH-B7-IMPERIAL-STATIONS.json": "7df8c636f00cda63a14cccec70b16251ce5b9c54e58e60cf0316297879200cf6",
-    "art/manifests/pending/S06-BATCH-B8-REMAINING-COMBAT.json": "0508f011e0dca453c9e0472ffbedfaffcca00c10501c58434048e94ff36d8054",
-    "art/manifests/pending/S06-BATCH-B9-CONSTRUCTION.json": "b978ef0d57f91b5572032e96e2f092314ad09ab68d1a3d32a7a9145f9f7db1e7",
+    "art/manifests/pending/S06-BATCH-B7-IMPERIAL-STATIONS.json": "ee2a9f65cb9acb77efaf53d8ffc41bc1227a534500e7f43a1ba48b0a52b79815",
+    "art/manifests/pending/S06-BATCH-B8-REMAINING-COMBAT.json": "fb87cc1648d31b3b9c5f7eac763c26d124eca85bfd96c91ed5b2df215a3fec72",
+    "art/manifests/pending/S06-BATCH-B9-CONSTRUCTION.json": "79966c2ef2c9810d6ea6a1446add0389160639ed52d2e173d1a2a4ee58674d40",
     "art/manifests/pipeline.json": "728364cf1046cb3ca0cf10fb5a19abda1bdbbb219c3249cf12de3c4bc58e4f68",
     "art/manifests/pipeline_policy.json": "f15f572e3b5a3e1f74c4ca0cf74e176263738387c872710d46c78969f55492a2",
     "assets/data/ships/confederacy.json": "0f92b2b5551d162d5805401bb49b62346c8a6ba1048bbce7b49d1908b4203a0c",
@@ -2329,6 +2302,9 @@
     "tools/art/build_b4_hardware.py": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
     "tools/art/build_b5_asteroid.py": "eb6935400489de58df08e22effea006c5126838e2e927ab75f10db7d88ee6563",
     "tools/art/build_b6_imperial_ships.py": "1d8e1e62ae73ff23412ef412d579aa12a59725185a6ee0f0b43f125ae74e3ced",
+    "tools/art/build_b7_imperial_stations.py": "40a814cdf3c36b468896147dd98eafdf5af9be11af833907b1ba5603c1f91baa",
+    "tools/art/build_b8_remaining_combat.py": "6df5ae4bee054c551ca60c981acadeddbdbce6502bf24f20dc25ad416163b606",
+    "tools/art/build_b9_construction.py": "79e092578df188ef02d4128e5d74425d7951fddd3075cd0ef3aacda484e4501a",
     "tools/art/export_alliance_attack_satellite.py": "791bc3ce238a0eb89b5f5014cd50baedfe2d7e7156973967366700dcf3bd9949",
     "tools/art/export_alliance_bomber.py": "99c6cb8ad1016d7bdbdd4789e9d9c534d7453bb4ab40d8a8e99c114f07ebbd18",
     "tools/art/export_alliance_carrier.py": "b839bc9f7e41b635b116ffa54f3e8dcc425c46cd02de7c6dc2be7b8b82d0bb05",
@@ -2350,20 +2326,39 @@
     "tools/art/export_alliance_research_station.py": "3d3e961ddbc399c5ff141083da666dfb12486d55b54caebc579d9d84f962b828",
     "tools/art/export_alliance_sensor_station.py": "a77746fd5514a16b81e9d193f3f39bf7f2c1a05814ccf77bd9dd9e02691bc386",
     "tools/art/export_alliance_trade_station.py": "d80806da75da8468a1c99f800edf43e4b90b84a28b48fbfedb1113974cf04b71",
+    "tools/art/export_confed_battleship.py": "9087d732adfb520d6634fb356f3a59ec1be07f7b9d6e0b98f728fba1f301c314",
+    "tools/art/export_confed_colonizer.py": "d416255bffa41cd7fcd3313964c920de5bba85cd3c88a0c81ea727f75054847d",
+    "tools/art/export_confed_constructor.py": "4facaacd806a36dbc1f35c5cb6fe2e80538b1d1c385a320f3e8e5cb5bd35099d",
+    "tools/art/export_confed_corvette.py": "611cc7dbc9022f5059b9637ff6683cfc436a6e601ac7acb7d4746dc41dbb436d",
+    "tools/art/export_confed_cruiser.py": "99678fb1bbbf76c2199f47525045589fa57f3c1d38df1ffc03657ca5a32b2b39",
+    "tools/art/export_confed_frigate.py": "1ea9653c3e29c520e90cf243fb197ccb4d8f7ca86a0349a55e98ed4a32cb6737",
+    "tools/art/export_confed_supercapital.py": "452002bc1ccf3961d9c2fba72f257290cb68bd4697333606af5829e8e5293caf",
     "tools/art/export_imperial_attack_satellite.py": "4360cac00bdc9b15e7a997066c0e89398640b4077832806b00549637a62215a2",
     "tools/art/export_imperial_battleship.py": "033089b0254bdf15f2b6751d460089a7b0b808b68d63f1e4e3503aa4e8a05ad4",
+    "tools/art/export_imperial_colonizer.py": "f30ab86915e953603a4ffb4b7e486aa3cf4e61b62525398cf5f7c112bd57bc03",
+    "tools/art/export_imperial_command_station.py": "891100d240f2d2c14eb32d2efe218e34be77e38b466d3008baae084d04839b86",
+    "tools/art/export_imperial_constructor.py": "598a5562f9a630a40f04c804c7148fdad939b60fedea7fb9cb6c1f7cd019a24e",
     "tools/art/export_imperial_convoy.py": "683452ad69f6b695490cff466f530204012354a2a6912939ddd785ae6a5a7131",
     "tools/art/export_imperial_corvette.py": "c4fb1d3a44940b60b25ff7b0647d7a7b0e042c7ae5875e32bb11cf381263fa38",
     "tools/art/export_imperial_cruiser.py": "a648e015477647e1e37288cd80acc98e00393a2e9ec8ffc3df531dba21b2a408",
+    "tools/art/export_imperial_defense_platform.py": "144a5792f9b6a631252c2b15d0ae868d05d35113edc2af2a670e69190376d4c0",
     "tools/art/export_imperial_defense_satellite.py": "13060096b4cb830e0d6fdc4d5d1b14ede3b7ef545779bd8f61565a1bf17b4185",
+    "tools/art/export_imperial_energy_relay.py": "5e35ebe9e8140b3f70937c8b6e4ebc952d04d1f785e20c9e6cd9a911a855d55f",
+    "tools/art/export_imperial_fighter_platform.py": "d6add16a84d192390b3c434b324ae4b9496c376acf3b2676ab4270c2eaeabd1f",
     "tools/art/export_imperial_frigate.py": "72156e3a182f75611234e11f413f55f79c6321fb9d41bb8e1c20df7bd7e6d869",
+    "tools/art/export_imperial_mining_station.py": "778759234018758ce6dda1fed9186b24aa5774704a3670516b556d4d09c867fb",
     "tools/art/export_imperial_planet_extractor.py": "bf335ac493eecf1c9048d379fd04f8f4cf88aa42ae0e8464b7b6ab528de0dff3",
     "tools/art/export_imperial_planet_pulsar_cannon.py": "755621b87b38d2e1b70d719a6f65c9b146f0457a7b35f8dfda4fbe505374f4e2",
     "tools/art/export_imperial_planet_shield_generator.py": "1cb3c97497c2ec5e371983210105416edec2b2f336c80539d337f9fbeb9ac2f4",
     "tools/art/export_imperial_planet_trade_hub.py": "98a60854619e5a71857a26ace8b1fcc09ba051d1d483bf70c4f4a75781a9744f",
+    "tools/art/export_imperial_repair_dock.py": "4343b1543ddb82358dddf96a071f8aa5a30d9bc08ce45202088caafe58292b9c",
+    "tools/art/export_imperial_research_station.py": "00bb8f810fadf4074bcd18dfa1f71598ab3aca026d71e37f36e24a90ed41a0db",
+    "tools/art/export_imperial_sensor_station.py": "bed8296abc995942d87f712bc75b678aa290418134f707aca21552d4c18ad0db",
+    "tools/art/export_imperial_shipyard.py": "5d3b512eccdd2e39a3665c43bb67660051be99eb93f857ba6d7c8dc2625e05c7",
     "tools/art/export_imperial_supercapital.py": "22deafd7462c6745bdb8c498aad00a9f0d4b89d980b512e1c9ac1105bdcd2ba4",
     "tools/art/export_imperial_tie_bomber_squadron.py": "342dd4afe448f51767b0f46962b5283368a4a8c974b2c0c4c83519b3b2a35b91",
     "tools/art/export_imperial_tie_squadron.py": "fdff5cfdac484c070ea8859d3b861fcb4780b7eff905482548c692c9da101629",
+    "tools/art/export_imperial_trade_station.py": "5c438cdd28794b729d290ca6927e3d174ee4398bdddd0f7820986d8d68ad7253",
     "tools/art/export_legion_attack_satellite.py": "a72ff5cb7ac122dea026108983c2cb29e520c767d7108f2522afda9e97585498",
     "tools/art/export_legion_command_station.py": "b8b5f6582bf3f9974cf0302a7a94ef106000a6f4d81c48484c24dbe7660fa974",
     "tools/art/export_legion_convoy.py": "34806d3bd776a52e4ae738eff844a1929451e9bcdc0ecd8929fa174b2e511ec4",
@@ -2383,14 +2378,21 @@
     "tools/art/export_legion_shipyard.py": "11e498efe68a8e2fa3c7dbab6f0819be212a89a7ac74e5c81c81aa75100bdf75",
     "tools/art/export_legion_trade_station.py": "f1e0e5ab5798c8de996496005d962d4dc800db78684667edcdb6801c5cbb4478",
     "tools/art/export_legion_vulture.py": "8c02f83690317415f05c7f87b66cfb03f2be48d418d8d13394c17e26eab99eb3",
+    "tools/art/export_rebel_colonizer.py": "97c0a96ba7fab5ca57a0c5bb1d85efb2b9c6d6e88fa0a185d8bdaf62f4350d2d",
+    "tools/art/export_rebel_constructor.py": "378830e27f982cb6db4fcecf9934d9e4eb53121b533963a2d78ef3322c73147d",
     "tools/art/export_shared_asteroid_field.py": "f7bad0a2df2a47dbcab4ef547072a9c9f46e8da58b03db5d28cc88625616f9db",
     "tools/art/export_syndicate_attack_satellite.py": "948af751c14b97a0b73f2c071f84449a6645cb26a46877faf5b8a76309e66535",
+    "tools/art/export_syndicate_colonizer.py": "5ace7bd6fd302a024a98b310ef1d80402115f0a5cb0d6d1d9a2ac1bced7677e1",
     "tools/art/export_syndicate_command_station.py": "b182eebfcd9a349f76ed37a7624cd03557918734538519d19229bde5a50ab3dc",
+    "tools/art/export_syndicate_constructor.py": "1764e36015a9fcd48205e515032604d08c24dd16fc8e43a1bdcea77d3db00bf2",
     "tools/art/export_syndicate_convoy.py": "099d11b103ff750c2628bfc06a3c17eb50a58959c7d2a1f2039130e14bbcc404",
+    "tools/art/export_syndicate_corvette.py": "78ce6104cbfaf69163631c72e2b6d73bcbc97281a85fe5a0b80cdeeabaedd0b6",
+    "tools/art/export_syndicate_cruiser.py": "1c20d382ef95bb3e71e5cc462d4869a1d0da5b9e8b2dfbebaf496071bb71969e",
     "tools/art/export_syndicate_defense_platform.py": "21997bdbafc2fa40b69ee57a1c0c0722482831f2d6073a7f9b1208b1c98f6746",
     "tools/art/export_syndicate_defense_satellite.py": "15f7842bd630334f170112539e0cdd972d1658a5cf634713312a30cf8eb7d888",
     "tools/art/export_syndicate_energy_relay.py": "a6f9ca12a17fb103a3663c75b0131b8152b6eb354e06589942a6390cffb787e0",
     "tools/art/export_syndicate_fighter_platform.py": "67a6b0d463a9f4e55beed71872345c7f062a00420c542e4256b63a0967df5841",
+    "tools/art/export_syndicate_frigate.py": "bc0feeae07a2c0b2298189af1755a7a94fe427dea9d68d775d169c0ea284a0b2",
     "tools/art/export_syndicate_jackal.py": "68c99ff92da8cfb0cb3d298d315de1e0ecae53ad2c5473ca98d01ad6c1c66ee2",
     "tools/art/export_syndicate_mining_station.py": "74dedf58d950b96223ac0522449091ffaafbabf993f54a6a58648a926e0b0bf9",
     "tools/art/export_syndicate_planet_extractor.py": "72d3ea3fcc3a5b8e230b3c21e641d1e6b677db659aa55385106bca26dc3263ea",

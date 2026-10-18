@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "status": "pending_owner_appearance_approval",
+  "status": "appearance_approved_pending_landing",
   "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
   "batch": "s06-b8-remaining-combat",
   "binding": "syndicate:frigate",
@@ -68,6 +68,7 @@
   "owner_decision": null,
   "activation": false,
   "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
-  "evidence": null,
-  "motion": null
+  "evidence": "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png",
+  "motion": null,
+  "appearance_decision": "s06-b8-remaining-combat-2026-10-18"
 }
