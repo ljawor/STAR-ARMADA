@@ -33,6 +33,8 @@ OWNER_WORDS = {
     's06-b4-hardware-2026-10-17': 'B4 looks good',
     # One word, recorded next to the choice it was clarified into rather than in place of it.
     's06-b5-environment-2026-10-17': 'passed',
+    # The first B6 row, approved on the picture rather than on a word: one hull, not the batch.
+    's06-b6-corvette-2026-10-18': 'Picture approved',
 }
 EXPECTED_BATCHES = {
     's06-cruiser-review': 1,
@@ -43,10 +45,11 @@ EXPECTED_BATCHES = {
     's06-b3a-command-stations': 3,
     's06-b4-hardware': 24,
     's06-b5-environment': 1,
+    's06-b6-imperial-ships': 1,
 }
 # 37 specimens whose appearance the owner has approved, and the count the records must keep adding up
 # to until another decision changes it.
-APPROVED_SPECIMENS = 65
+APPROVED_SPECIMENS = 66
 SCOPE_DECISIONS = {'s06-b4-scope-2026-10-17': '1.) B4 authorized',
                    's06-imperial-migration-2026-10-17': '4.) decision need also migration.',
                    's06-large-evidence-accepted-2026-10-17':

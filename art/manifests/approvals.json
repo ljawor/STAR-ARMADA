@@ -2285,6 +2285,94 @@
         "any change to the field's gameplay values: forty instances, placement, scale range and tumble",
         "packaging of any kind, including a package candidate, an LFS conversion or a size policy"
       ]
+    },
+    {
+      "id": "s06-b6-corvette-2026-10-18",
+      "date": "2026-10-18",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved",
+      "approval_kind": "appearance-batch-revisions",
+      "scope_statement": "Approved the appearance of ONE specimen of the S06 B6 Imperial-ship batch: `ship:imperial:corvette`, at the revision recorded here. The question was put with the batch's first review picture - the legacy `needle` hull against the authored mesh, one camera, same tick, production shaders, close and wide, in artifacts/s06_alliance_batch_review/b6-corvette/ - and his answer was \"Picture approved\". This approves the appearance of that one hull. It does not approve the other ten rows of the batch, none of which he has been shown, and it is not a landing, activation, merge, tag or release authorization.",
+      "owner_words_verbatim": "Picture approved",
+      "question_answered": "Does the Imperial corvette hull look right, next to the procedural needle it replaces?",
+      "how_recorded": "Recorded against the picture he looked at, and against one row only. Every hash below was re-derived from disk at the moment of writing, including the evidence harness itself, so the capture named here is the capture that produced the picture.",
+      "revision": {
+        "batch": "s06-b6-imperial-ships",
+        "pr": 127,
+        "head_at_review": "dcc337880ea00ba3f20b26a54a4e307f6d1bcd86",
+        "source_authority": "script-authoritative",
+        "registry_state_at_approval": {
+          "imperial:corvette": "procedural_legacy",
+          "note": "not selectable anywhere; the renderer serves the procedural needle in stock"
+        },
+        "evidence": {
+          "dir": "artifacts/s06_alliance_batch_review/b6-corvette",
+          "sheet": "imperial-corvette-comparison.png",
+          "frames": 6,
+          "measured": {
+            "close_changed_percent": 5.3787,
+            "wide_changed_percent": 0.4005,
+            "legacy_repeat_changed_pixels": 0
+          }
+        },
+        "assets": [
+          {
+            "gameplay_binding": "imperial:corvette",
+            "shape_key": "imperial:corvette",
+            "identifier": "imperial_corvette",
+            "station_kind": "corvette",
+            "faction": "imperial",
+            "class": "combat_hull",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/imperial_corvette.blend": "ddb2d4180faab70c9a48f1efd5750419414f2ce64e74dedf00cbbc00aec9714d"
+            },
+            "exporter": {
+              "tools/art/build_b6_imperial_ships.py": "64b294578f4de02b6d0f2d4c200fd1681bf663ebca8944ad6cf828070e810f5e",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_imperial_corvette.py": "c4fb1d3a44940b60b25ff7b0647d7a7b0e042c7ae5875e32bb11cf381263fa38"
+            },
+            "runtime": {
+              "assets/models/imperial_corvette.mesh.json": "be894218b84c00b4c6f78c96a46df1cf69441b627fa75155df02be41f6c30d05",
+              "tools/diag_imperial_corvette.py": "68273bf45d6114e39b870e4e983d5dca873806d6172a06b09050ebd6305d9cb7"
+            },
+            "legacy_extent": [
+              [
+                -16.0,
+                -5.0,
+                -43.601
+              ],
+              [
+                16.0,
+                24.0,
+                48.0
+              ]
+            ],
+            "authored_extent": [
+              [
+                -16.0,
+                -5.0,
+                -43.601
+              ],
+              [
+                16.0,
+                24.0,
+                48.0
+              ]
+            ],
+            "triangle_count": 2348,
+            "vertex_count": 1272
+          }
+        ]
+      },
+      "not_approved_by_this_decision": [
+        "landing, registration, activation, merge, tag or release of this revision",
+        "the S11 catalogue switch and any production-default switch",
+        "packaging of any kind, including a package candidate, an LFS conversion or a size policy",
+        "the other ten B6 rows, including the two TIE squadrons already authored - none has been shown to him",
+        "the convoy rows (crew_transport, trade_convoy): their envelope is still an open decision",
+        "any change to the ship's gameplay numbers: the envelope, the class scale, the drawn length and the collision radius are the legacy ones"
+      ]
     }
   ],
   "approved_assets": [
