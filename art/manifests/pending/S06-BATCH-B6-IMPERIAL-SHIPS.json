@@ -2,11 +2,12 @@
   "schema": 1,
   "batch": "s06-b6-imperial-ships",
   "status": "appearance_approved_pending_landing",
-  "note": "Review-only batch sheet for the S06 B6 Imperial ships - the row the owner has been shown, and the only one this sheet covers. Not an approval record, a registry entry or a runtime manifest, and it selects nothing in production. The batch is eleven rows: three are authored (this corvette and the two TIE squadrons), eight are not, and the sheet lists the approved row because a sheet and its decision name the same rows. The TIE rows are authored and waiting to be shown; the remaining six are the two dagger capitals, the cruiser, the frigate and two construction hulls. The convoy rows are held back: their envelope is still an open decision.",
-  "overview": "artifacts/s06_alliance_batch_review/b6-corvette/imperial-corvette-comparison.png",
+  "appearance_decision": "s06-b6-imperial-ships-2026-10-18",
+  "note": "Review-only batch sheet for the S06 B6 Imperial ships - the three rows the owner has been shown and approved, which are the rows this sheet and its decision name. Not an approval record, a registry entry or a runtime manifest, and it selects nothing in production. The batch is eleven rows: these three are approved, four more are authored and have no picture yet, two are unauthored, and the two convoy rows are held back on an open envelope decision.",
+  "overview": "artifacts/s06_alliance_batch_review/b6-imperial-ships-overview.png",
   "assets": [
     {
-      "binding": "ship:imperial:corvette",
+      "binding": "imperial:corvette",
       "label": "corvette",
       "identifier": "imperial_corvette",
       "mesh": "assets/models/imperial_corvette.mesh.json",
@@ -23,17 +24,69 @@
         ]
       ],
       "min_length": 91.4,
-      "data_id": "ship:imperial:corvette",
-      "gameplay_entity": "ship:imperial:corvette",
-      "class": "corvette",
+      "data_id": "imperial_corvette",
+      "gameplay_entity": "imperial_corvette",
+      "class": "combat_hull",
       "slot": [
         -4200,
         0,
         2200
+      ]
+    },
+    {
+      "binding": "imperial:fighter",
+      "label": "tie squadron",
+      "identifier": "imperial_tie_squadron",
+      "mesh": "assets/models/imperial_tie_squadron.mesh.json",
+      "envelope": [
+        [
+          -31.25,
+          -3.24,
+          -28.996
+        ],
+        [
+          31.25,
+          14.0,
+          35.0
+        ]
       ],
-      "status": "appearance_approved_pending_landing"
+      "min_length": 63.8,
+      "data_id": "imperial_tie_squadron",
+      "gameplay_entity": "imperial_tie_squadron",
+      "class": "squadron",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ]
+    },
+    {
+      "binding": "imperial:bomber",
+      "label": "tie bomber squadron",
+      "identifier": "imperial_tie_bomber_squadron",
+      "mesh": "assets/models/imperial_tie_bomber_squadron.mesh.json",
+      "envelope": [
+        [
+          -31.25,
+          -3.24,
+          -28.996
+        ],
+        [
+          31.25,
+          14.0,
+          35.0
+        ]
+      ],
+      "min_length": 63.8,
+      "data_id": "imperial_tie_bomber_squadron",
+      "gameplay_entity": "imperial_tie_bomber_squadron",
+      "class": "squadron",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ]
     }
   ],
-  "motion": [],
-  "appearance_decision": "s06-b6-corvette-2026-10-18"
+  "motion": []
 }

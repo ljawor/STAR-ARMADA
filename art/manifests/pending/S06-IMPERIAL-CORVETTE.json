@@ -67,7 +67,7 @@
   "blender_pin": "see tools/art (the pinned Blender version recorded with the batch)",
   "owner_decision": null,
   "activation": false,
-  "appearance_decision": "s06-b6-corvette-2026-10-18",
+  "appearance_decision": "s06-b6-imperial-ships-2026-10-18",
   "future_pipeline_registration": "Not registered anywhere. A later landing step is what would add a pipeline entry; this sidecar records appearance only.",
   "evidence": "artifacts/s06_alliance_batch_review/b6-corvette/imperial-corvette-comparison.png",
   "motion": []

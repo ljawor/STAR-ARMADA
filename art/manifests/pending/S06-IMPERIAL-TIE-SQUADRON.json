@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b6-imperial-ships",
+  "binding": "imperial:fighter",
+  "canonical_binding": "ship:imperial:tie_squadron",
+  "gameplay_entity": "imperial_tie_squadron",
+  "class": "squadron",
+  "authority": "script",
+  "source": {
+    "path": "art/blender/imperial_tie_squadron.blend",
+    "sha256": "09e974692c2c4c69e9dcbd6d97c62d16b33874a7f3f986ec2b7d71239e8958b4",
+    "bytes": 121002
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b6_imperial_ships.py",
+    "sha256": "b63f45eebd1c8c9ebe5f2d8529872098c9cbf6a8cf7691873d15f62a280070f5",
+    "bytes": 56133,
+    "selects": "--asset ship:imperial:tie_squadron"
+  },
+  "export_script": {
+    "path": "tools/art/export_imperial_tie_squadron.py",
+    "sha256": "fdff5cfdac484c070ea8859d3b861fcb4780b7eff905482548c692c9da101629",
+    "bytes": 4773
+  },
+  "runtime": {
+    "path": "assets/models/imperial_tie_squadron.mesh.json",
+    "sha256": "5bc984c2ad3c2f649bf75265d3326d914a419659538360917b9c2217dcadd1cc",
+    "bytes": 122909,
+    "triangles": 2136,
+    "vertices": 1136,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -31.25,
+      -3.24,
+      -28.996
+    ],
+    [
+      31.25,
+      14.0,
+      35.0
+    ]
+  ],
+  "bounds": [
+    [
+      -31.25,
+      -3.24,
+      -28.996
+    ],
+    [
+      31.25,
+      14.0,
+      35.0
+    ]
+  ],
+  "authoring": "Script-authored by the B6 seed (script-authoritative per the S03 source-authority policy)",
+  "blender_pin": "see tools/art",
+  "owner_decision": null,
+  "activation": false,
+  "appearance_decision": "s06-b6-imperial-ships-2026-10-18",
+  "future_pipeline_registration": "Not registered anywhere; a later landing step is what would add a pipeline entry.",
+  "evidence": "artifacts/s06_alliance_batch_review/b6-tie-squadron/imperial-tie-squadron-comparison.png",
+  "motion": []
+}
