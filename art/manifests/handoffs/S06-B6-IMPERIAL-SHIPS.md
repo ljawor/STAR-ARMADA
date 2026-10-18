@@ -1,5 +1,10 @@
 # S06 B6 — the Imperial ships
 
+> **Batch complete.** Eleven of eleven rows authored, eight approved on their own review pictures.
+> Everything below is the scope as settled before authoring; the outcome and the standing rules are in
+> `S06-B6-IMPERIAL-SHIPS` → approvals.json (decision `s06-b6-imperial-ships-2026-10-18`) and the close-out
+> prompt at `~/.hermes/cache/scratch/star-armada-s10-landing-handover-prompt.md`.
+
 Handoff for the batch that follows B5. Everything here was **measured from the live code and the live
 registry** while the scope was settled; nothing is transcribed from a plan. Probe:
 `tools/art/probe_b6_scope.py` (exits 0 when the scope is settled).
@@ -79,3 +84,35 @@ preview off it returns the legacy shape, and nothing is selected by default.
 Traps this session paid for: a generated file that changes for assets outside the change; a shared
 helper that an approval names; a guard grepping the template for text that became a slot; and a green
 focused union that is not a green CI (the two process-spawning LAN tests flake on Windows).
+
+## Outcome — the batch as it landed
+
+| row | runtime key | triangles | state |
+|---|---|---|---|
+| corvette | `imperial:corvette` | 2,348 | approved |
+| TIE squadron | `imperial:fighter` | 2,136 | approved |
+| TIE bomber squadron | `imperial:bomber` | 2,536 | approved |
+| battleship | `imperial:battleship` | 2,468 | approved |
+| supercapital | `imperial:supercapital` | 2,592 | approved |
+| cruiser | `imperial:cruiser` | 2,384 | approved |
+| frigate | `imperial:frigate` | 2,416 | approved |
+| convoy | `imperial:convoy` | 4,748 | approved (follows the three sibling convoys) |
+| constructor, colonizer | — | — | not authored; not requested |
+
+**No seam was needed for the ships.** `ship_binding` builds `f'{faction}:{role}'` for every faction and
+`ship_visual_key` asks it first, so an authored Imperial binding is served with no key change; `SHIP_KEYS`,
+which omits Imperial, is consulted only on the procedural path. The **convoy** was the one real seam: both
+convoy branches carried `faction in FACTIONS[1:]` and `FACTIONS` starts with `imperial`, so the gate was
+extended for the convoy branches only (`6f1e5ad`) - widening the general gate would send every Imperial
+hull to a key `normalize_ship_key` collapses to `box`. That trap is demonstrated, not asserted, in
+`tests/test_imperial_convoy_gate.py`.
+
+Every row carries a labelled review sheet under `artifacts/s06_alliance_batch_review/b6-*/`, each captured
+with the harness's own assertions: per-pass MSAA sample and viewport, a zero-pixel legacy repeat leg,
+`changed_pixels > 0`, and the subject measured on screen.
+
+**Traps this batch paid for, in the order they were paid:** a job with an empty step list is a billing
+block and not a test result; six heads were called flaky on reruns nobody read, and the real cause was a
+test barrier that waited on one session index and then consumed three; recreating the GL context per pass
+silently drops MSAA and fakes a sub-pixel edge diff; a guard that spawns a subprocess inside the suite is
+not evidence for a red LAN job; and pins taken at write time go stale every time the row after them lands.
