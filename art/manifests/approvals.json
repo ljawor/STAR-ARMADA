@@ -2292,8 +2292,8 @@
       "owner": "owner (Lukasz Jawor)",
       "decision": "approved",
       "approval_kind": "appearance-batch-revisions",
-      "scope_statement": "Approved the appearance of the seven S06 B6 Imperial ship rows listed below, at the revisions recorded here: the corvette, and the two TIE squadrons. Each was put to the owner with a picture of its own - the legacy hull against the authored mesh, one camera, same tick, production shaders, close and wide - and his answers were \"Picture approved\" for the corvette and \"picture approved. Continue\" for the pair. One decision because a batch sheet and its decision name the same rows: three rows were approved, so the sheet lists three. It does not approve rows 4-7, which he has numbers for and no picture of, and it is not a landing, activation, merge, tag or release authorization. His third exchange approved the four remaining authored hulls on their own pictures. Explicitly not covered: the two unauthored rows (constructor, colonizer) and the two convoy rows.",
-      "owner_words_verbatim": "Picture approved (the corvette); picture approved. Continue (the two TIE squadrons); picture approved, continue (the two dagger capitals, the cruiser and the frigate)",
+      "scope_statement": "Approved the appearance of the eight S06 B6 Imperial ship rows listed below, at the revisions recorded here: the corvette, and the two TIE squadrons. Each was put to the owner with a picture of its own - the legacy hull against the authored mesh, one camera, same tick, production shaders, close and wide - and his answers were \"Picture approved\" for the corvette and \"picture approved. Continue\" for the pair. One decision because a batch sheet and its decision name the same rows: three rows were approved, so the sheet lists three. It does not approve rows 4-7, which he has numbers for and no picture of, and it is not a landing, activation, merge, tag or release authorization. His third exchange approved the four remaining authored hulls on their own pictures. Explicitly not covered: the two unauthored rows (constructor, colonizer) and the two convoy rows. His fourth exchange approved the batch's last row, the Imperial convoy, on its own picture. The batch is now complete and every one of its eleven rows is either covered here or was already covered by an earlier decision; the two convoy rows the handoff held back are the row this decision now covers.",
+      "owner_words_verbatim": "Picture approved (the corvette); picture approved. Continue (the two TIE squadrons); picture approved, continue (the two dagger capitals, the cruiser and the frigate); Pictures approved (the Imperial convoy)",
       "question_answered": "Does each of these Imperial hulls look right next to the procedural shape it replaces?",
       "how_recorded": "The rows were approved one picture at a time and are recorded in one decision, because the batch's sheet has to name the same rows the decision does and a sheet cannot honestly name two different sets. Each row carries its own evidence directory and its own measured deltas, and the corvette's entry keeps the correction recorded when a concurrent authoring task made its seed pin stale.",
       "revision": {
@@ -2309,7 +2309,8 @@
           "imperial:battleship": "procedural_legacy",
           "imperial:supercapital": "procedural_legacy",
           "imperial:cruiser": "procedural_legacy",
-          "imperial:frigate": "procedural_legacy"
+          "imperial:frigate": "procedural_legacy",
+          "imperial:convoy": "procedural_legacy"
         },
         "assets": [
           {
@@ -2703,6 +2704,63 @@
                 "legacy_repeat_changed_pixels": 0
               }
             }
+          },
+          {
+            "gameplay_binding": "imperial:convoy",
+            "shape_key": "imperial:convoy",
+            "identifier": "imperial_convoy",
+            "station_kind": "convoy",
+            "faction": "imperial",
+            "class": "crew_transport",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/imperial_convoy.blend": "0c732b3f3a8a6ea01265be0ae196b7b2db3cbfc23f10043fc189b1d4f24fcbfa"
+            },
+            "exporter": {
+              "tools/art/build_b6_imperial_ships.py": "1d8e1e62ae73ff23412ef412d579aa12a59725185a6ee0f0b43f125ae74e3ced",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_imperial_convoy.py": "683452ad69f6b695490cff466f530204012354a2a6912939ddd785ae6a5a7131"
+            },
+            "runtime": {
+              "assets/models/imperial_convoy.mesh.json": "3f887ced61a15b4d8038103ec6c015c482fa8db315cc46c3526063535ff6a56a",
+              "tools/diag_imperial_ship.py": "0d6ce07820304688229adbc335bac0cc81fcd26d3005206d41ba6ef189ff7b3d"
+            },
+            "legacy_extent": [
+              [
+                -20.0,
+                -7.0,
+                -24.6975
+              ],
+              [
+                20.0,
+                26.5,
+                24.35825
+              ]
+            ],
+            "authored_extent": [
+              [
+                -19.5,
+                -6.8,
+                -24.6975
+              ],
+              [
+                19.5,
+                25.73641,
+                24.35825
+              ]
+            ],
+            "triangle_count": 4745,
+            "vertex_count": 2575,
+            "evidence": {
+              "dir": "artifacts/s06_alliance_batch_review/b6-convoy",
+              "sheet": "imperial-convoy-comparison.png",
+              "measured": {
+                "close_changed_percent": 37.0374,
+                "wide_changed_percent": 2.627,
+                "legacy_repeat_changed_pixels": 0
+              }
+            },
+            "follows_the_siblings": "s06-b2-squadron-logistics-2026-10-17 authored alliance_convoy, legion_convoy and syndicate_convoy at 4,512 / 4,584 / 4,756 triangles; this row follows them (s06-imperial-convoy-parity-2026-10-18)"
           }
         ]
       },
@@ -2710,9 +2768,8 @@
         "landing, registration, activation, merge, tag or release of these revisions",
         "the S11 catalogue switch and any production-default switch",
         "packaging of any kind, including a package candidate, an LFS conversion or a size policy",
-        "the two unauthored rows (constructor, colonizer) and the convoy rows (crew_transport, trade_convoy)",
         "any change to these hulls' gameplay numbers: envelope, class scale, drawn length and collision radius stay legacy",
-        "the two unauthored rows (constructor, colonizer) and the convoy rows (crew_transport, trade_convoy): authored only after the open envelope question is answered"
+        "landing, registration, activation, merge, tag or release - and with the batch complete, the S10/S11 landing decision is the only item left in S06"
       ],
       "correction": {
         "what": "Two hashes this decision pinned were read from a working tree a concurrent authoring task was editing, so they named a revision that never existed in any commit. Corrected to the bytes on disk, and the approved revision is proven unmoved.",

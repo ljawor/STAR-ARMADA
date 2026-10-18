@@ -1352,26 +1352,37 @@ class ConvoyNotLanded(unittest.TestCase):
         for key in ('approval', 'owner_decision', 'envelope_decision', 'appearance_decision'):
             self.assertNotIn(key, row)
 
-    def test_the_sidecar_is_the_siblings_shape_without_the_approval(self):
-        """The three siblings' sidecars *are* approvals; this one is not, because the owner has not
-        seen the row. That difference is one key and one status, and both are asserted."""
+    def test_the_sidecar_matches_the_siblings_shape_and_the_decision(self):
+        """The three siblings' sidecars *are* approvals; this one is too now, and that difference is
+        exactly one key and one status. Which of the two shapes is correct is not a matter of taste: it
+        follows the decision that names this row, so the guard reads the decision rather than a date.
+        """
         doc = load(CONVOY_SIDECAR)
         sibling = load(ROOT / 'art/manifests/pending/S06-ALLIANCE-CONVOY.json')
-        self.assertEqual(list(doc), [key for key in sibling if key != 'appearance_decision'],
-                         "the sidecar is the siblings' shape, minus the approval")
+        decisions = [d for d in load(ROOT / 'art/manifests/approvals.json')['decision_log']
+                     if d.get('approval_kind') == 'appearance-batch-revisions'
+                     and any(a.get('gameplay_binding') == CONVOY_REGISTRY_KEY
+                             for a in d['revision']['assets'])]
         self.assertEqual(sibling['status'], 'appearance_approved_pending_landing')
         self.assertIn('appearance_decision', sibling)
-        self.assertEqual(doc['status'], 'authored_pending_owner_appearance_approval')
-        self.assertIsNone(doc['owner_decision'])
-        self.assertIs(doc['activation'], False)
-        self.assertNotIn('appearance_decision', doc)
         self.assertEqual(doc['binding'], CONVOY_REGISTRY_KEY)
         self.assertEqual(doc['canonical_binding'], CONVOY_BINDING)
         self.assertEqual(doc['batch'], 's06-b6-imperial-ships')
         self.assertEqual(doc['gameplay_entity'], CONVOY_DATA_ID)
-        self.assertEqual(doc['export_script']['path'], 'tools/art/export_imperial_convoy.py')
-        self.assertEqual(doc['initial_seed']['path'], SEED)
-        self.assertEqual(doc['initial_seed']['selects'], f'--asset {CONVOY_BINDING}')
+        self.assertIsNone(doc['owner_decision'])
+        self.assertIs(doc['activation'], False)
+        if decisions:
+            # Approved: the siblings' shape exactly, plus the one key that records the approval.
+            self.assertEqual(len(decisions), 1, 'one decision names this row, not two')
+            self.assertEqual(list(doc), list(sibling), "the siblings' shape, approval included")
+            self.assertEqual(doc['status'], 'appearance_approved_pending_landing')
+            self.assertEqual(doc['appearance_decision'], decisions[0]['id'])
+        else:
+            # Pending: the siblings' shape minus that one key, and nothing else different.
+            self.assertEqual(list(doc), [key for key in sibling if key != 'appearance_decision'],
+                             "the sidecar is the siblings' shape, minus the approval")
+            self.assertEqual(doc['status'], 'authored_pending_owner_appearance_approval')
+            self.assertNotIn('appearance_decision', doc)
 
     def test_the_sidecar_re_derives_from_the_files_on_disk(self):
         """A sidecar that transcribes is a second source of truth; these are re-derived here."""

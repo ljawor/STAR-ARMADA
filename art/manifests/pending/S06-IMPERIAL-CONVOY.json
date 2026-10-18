@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "status": "authored_pending_owner_appearance_approval",
+  "status": "appearance_approved_pending_landing",
   "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
   "batch": "s06-b6-imperial-ships",
   "binding": "imperial:convoy",
@@ -69,5 +69,6 @@
   "activation": false,
   "future_pipeline_registration": "Not registered anywhere; a later landing step is what would add a pipeline entry.",
   "evidence": "artifacts/s06_alliance_batch_review/b6-convoy/imperial-convoy-comparison.png",
-  "motion": []
+  "motion": [],
+  "appearance_decision": "s06-b6-imperial-ships-2026-10-18"
 }

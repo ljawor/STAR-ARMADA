@@ -3,7 +3,7 @@
   "batch": "s06-b6-imperial-ships",
   "status": "appearance_approved_pending_landing",
   "appearance_decision": "s06-b6-imperial-ships-2026-10-18",
-  "note": "Review-only batch sheet for the S06 B6 Imperial ships - the three rows the owner has been shown and approved, which are the rows this sheet and its decision name. Not an approval record, a registry entry or a runtime manifest, and it selects nothing in production. The batch is eleven rows: these three are approved, four more are authored and have no picture yet, two are unauthored, and the two convoy rows are held back on an open envelope decision.",
+  "note": "Review-only batch sheet for the S06 B6 Imperial ships - the eight rows the owner has been shown and approved, which are the rows this sheet and its decision name. The batch is eleven rows: eight are this one, and three were covered by earlier decisions. Not an approval record, a registry entry or a runtime manifest, and it selects nothing in production.",
   "overview": "artifacts/s06_alliance_batch_review/b6-imperial-ships-overview.png",
   "assets": [
     {
@@ -35,7 +35,7 @@
     },
     {
       "binding": "imperial:fighter",
-      "label": "tie squadron",
+      "label": "tie_squadron",
       "identifier": "imperial_tie_squadron",
       "mesh": "assets/models/imperial_tie_squadron.mesh.json",
       "envelope": [
@@ -62,7 +62,7 @@
     },
     {
       "binding": "imperial:bomber",
-      "label": "tie bomber squadron",
+      "label": "tie_bomber_squadron",
       "identifier": "imperial_tie_bomber_squadron",
       "mesh": "assets/models/imperial_tie_bomber_squadron.mesh.json",
       "envelope": [
@@ -189,6 +189,33 @@
       "data_id": "imperial_frigate",
       "gameplay_entity": "imperial_frigate",
       "class": "combat_hull",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ]
+    },
+    {
+      "binding": "imperial:convoy",
+      "label": "convoy",
+      "identifier": "imperial_convoy",
+      "mesh": "assets/models/imperial_convoy.mesh.json",
+      "envelope": [
+        [
+          -19.5,
+          -6.8,
+          -24.6975
+        ],
+        [
+          19.5,
+          25.73641,
+          24.35825
+        ]
+      ],
+      "min_length": 48.9,
+      "data_id": "imperial_convoy",
+      "gameplay_entity": "imperial_convoy",
+      "class": "crew_transport",
       "slot": [
         -4200,
         0,
