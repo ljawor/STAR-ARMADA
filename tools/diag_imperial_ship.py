@@ -112,6 +112,35 @@ ROWS = {
         legacy_shape='wedge', mesh='assets/models/imperial_tie_bomber_squadron.mesh.json',
         envelope=((-31.25, 31.25), (-3.24, 14.0), (-28.996, 35.0)), min_length=63.796,
         label='imperial-tie-bomber-squadron', directory='b6-tie-bomber-squadron'),
+    # ---- rows 4 to 7: the two dagger capitals, the cruiser and the frigate ----
+    # These are warship rows: the ship path reads the data row's own category, so the runtime key is
+    # `imperial:<role>` directly (still *measured* below, not transcribed). The two dagger rows share
+    # one legacy `dagger` mesh at one measured extent and the frigate shares the corvette's `needle`
+    # box, which is why each row carries its own envelope and hull rather than a shape alias.
+    'imperial:battleship': dict(
+        row='ship:imperial:battleship', registry_key='imperial:battleship',
+        identifier='imperial_battleship', data_id='imperial_battleship',
+        legacy_shape='dagger', mesh='assets/models/imperial_battleship.mesh.json',
+        envelope=((-38.45, 38.45), (-10.0, 39.5), (-80.183, 108.0)), min_length=188.0,
+        label='imperial-battleship', directory='b6-battleship'),
+    'imperial:supercapital': dict(
+        row='ship:imperial:supercapital', registry_key='imperial:supercapital',
+        identifier='imperial_supercapital', data_id='imperial_supercapital',
+        legacy_shape='dagger', mesh='assets/models/imperial_supercapital.mesh.json',
+        envelope=((-38.45, 38.45), (-10.0, 39.5), (-80.183, 108.0)), min_length=188.0,
+        label='imperial-supercapital', directory='b6-supercapital'),
+    'imperial:cruiser': dict(
+        row='ship:imperial:cruiser', registry_key='imperial:cruiser',
+        identifier='imperial_cruiser', data_id='imperial_cruiser',
+        legacy_shape='cruiser', mesh='assets/models/imperial_cruiser.mesh.json',
+        envelope=((-29.45, 29.45), (-7.0, 31.5), (-62.94, 78.0)), min_length=140.7,
+        label='imperial-cruiser', directory='b6-cruiser'),
+    'imperial:frigate': dict(
+        row='ship:imperial:frigate', registry_key='imperial:frigate',
+        identifier='imperial_frigate', data_id='imperial_frigate',
+        legacy_shape='needle', mesh='assets/models/imperial_frigate.mesh.json',
+        envelope=((-16.0, 16.0), (-5.0, 24.0), (-43.601, 48.0)), min_length=91.4,
+        label='imperial-frigate', directory='b6-frigate'),
 }
 
 # A row answers to its own spelling, the inventory spelling, its mesh identifier and its runtime

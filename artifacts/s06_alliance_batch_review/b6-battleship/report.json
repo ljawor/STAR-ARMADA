@@ -1,0 +1,879 @@
+{
+  "schema": 1,
+  "batch": "s06-b6-imperial-ships",
+  "row": "ship:imperial:battleship",
+  "row_argument": "imperial:battleship",
+  "registry_key": "imperial:battleship",
+  "identifier": "imperial_battleship",
+  "status": "review_only_not_registered",
+  "integration": "UNAPPROVED review-only monkeypatch of render.asset_selection.selected_binding and render.asset_selection.mesh_for for this one binding, inside an explicit model_preview session. The renderer's ship path serves ship:imperial:battleship as imperial:battleship (measured: the data row's category goes through the fighter/bomber role mapping), so that measured key - and only that key - is patched. The registry row stays procedural_legacy, no manifest exists for the row and nothing in production selects it; both patches and the preview session are torn down at the end of this run.",
+  "warning": "Offline orbit captures from the real production draw path: not paced FPS, not a battle-acceptance or native-Windows-graphics acceptance, and not an owner appearance decision.",
+  "registration": {
+    "registry_binding": "imperial:battleship",
+    "registry_status": "procedural_legacy",
+    "registry_manifest": "core:imperial/battleship",
+    "manifest_exists": false,
+    "in_production_pipeline": false,
+    "registry_envelope_present": false
+  },
+  "legacy": {
+    "shape": "dagger",
+    "source": "render/fleet_geometry.py::_ship_mesh",
+    "triangles": 3296,
+    "vertices": 1814,
+    "drawn_length": 224.421225,
+    "drawn_scale": 1.1925722370571121
+  },
+  "serving": {
+    "declared_runtime_key": "imperial:battleship",
+    "measured_runtime_key": "imperial:battleship",
+    "legacy_shape_from_data": "dagger",
+    "stock_visual_key": "dagger",
+    "review_visual_key": "imperial:battleship",
+    "selected_binding_in_production": false,
+    "mesh_in_production": null,
+    "note": "stock = the preview session with nothing patched; review = the same session with this row's measured runtime key served"
+  },
+  "authored": {
+    "path": "assets/models/imperial_battleship.mesh.json",
+    "sha256": "3c69c3db9d0f55aba714d1af4bafbebc7493afb5da3a80d7bd59fccc7be8ac79",
+    "bytes": 154414,
+    "triangles": 2468,
+    "vertices": 1334,
+    "bounds": [
+      [
+        -38.45,
+        -10.0,
+        -80.183
+      ],
+      [
+        38.45,
+        39.5,
+        108.0
+      ]
+    ],
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ],
+    "authority": "script",
+    "approval": "pending_owner_approval"
+  },
+  "envelope": [
+    [
+      -38.45,
+      38.45
+    ],
+    [
+      -10.0,
+      39.5
+    ],
+    [
+      -80.183,
+      108.0
+    ]
+  ],
+  "min_authored_length": 188.0,
+  "drawn_size": {
+    "legacy": {
+      "shape": "dagger",
+      "scale": 1.1925722370571121,
+      "length": 224.421225,
+      "radius": 128.89125049935674
+    },
+    "candidate": {
+      "shape": "imperial:battleship",
+      "scale": 1.1925690684068169,
+      "length": 224.421225,
+      "radius": 129.36772255366574
+    }
+  },
+  "placement": [
+    [
+      "capital",
+      "ship",
+      "imperial_battleship",
+      1,
+      [
+        -4200,
+        0,
+        2200
+      ],
+      0.0
+    ],
+    [
+      "escort",
+      "ship",
+      "rebel_frigate",
+      0,
+      [
+        -4200,
+        0,
+        2900
+      ],
+      0.0
+    ],
+    [
+      "battleship",
+      "ship",
+      "rebel_battleship",
+      0,
+      [
+        -4200,
+        0,
+        1500
+      ],
+      0.0
+    ],
+    [
+      "enemy_a",
+      "ship",
+      "imperial_frigate",
+      1,
+      [
+        -3500,
+        0,
+        2200
+      ],
+      -1.5707963267948966
+    ],
+    [
+      "enemy_b",
+      "ship",
+      "imperial_frigate",
+      1,
+      [
+        -3500,
+        0,
+        2900
+      ],
+      -1.5707963267948966
+    ]
+  ],
+  "initial_state_sha256": "94255f3712638658be0887a0ab3316e7c1387701a1452e90d4bfc3be13bcbb46",
+  "views": {
+    "close": {
+      "legacy": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4012.835933135128,
+            176.3501352735397,
+            2368.5232827523623
+          ],
+          "resolved_eye": [
+            -4012.835933135128,
+            176.3501352735397,
+            2368.5232827523623
+          ],
+          "union_eye": [
+            -4012.835933135128,
+            176.3501352735397,
+            2368.5232827523623
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 307.45707825,
+          "yaw": 48.0,
+          "pitch": 35.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "94255f3712638658be0887a0ab3316e7c1387701a1452e90d4bfc3be13bcbb46",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            231.5,
+            198.02,
+            896.38,
+            680.41
+          ],
+          "visible_px": [
+            664.88,
+            482.39
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            231.5,
+            198.02,
+            896.38,
+            680.41
+          ],
+          "visible_px": [
+            664.88,
+            482.39
+          ]
+        },
+        "image": "imperial-battleship-legacy-close.png",
+        "image_sha256": "8384ba6a97853c7bef4cd3faff997a9246bd1f8565bc204d09f46f006ca8c736"
+      },
+      "authored": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4012.835933135128,
+            176.3501352735397,
+            2368.5232827523623
+          ],
+          "resolved_eye": [
+            -4012.835933135128,
+            176.3501352735397,
+            2368.5232827523623
+          ],
+          "union_eye": [
+            -4012.835933135128,
+            176.3501352735397,
+            2368.5232827523623
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 307.45707825,
+          "yaw": 48.0,
+          "pitch": 35.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "94255f3712638658be0887a0ab3316e7c1387701a1452e90d4bfc3be13bcbb46",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            231.5,
+            198.02,
+            896.38,
+            680.41
+          ],
+          "visible_px": [
+            664.88,
+            482.39
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            231.5,
+            198.02,
+            896.38,
+            680.41
+          ],
+          "visible_px": [
+            664.88,
+            482.39
+          ]
+        },
+        "image": "imperial-battleship-authored-close.png",
+        "image_sha256": "061c6ecaa12df86e29a09aec3cf665ecb08c4296eddf419d51730eb9b648b328"
+      },
+      "legacy-repeat": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4012.835933135128,
+            176.3501352735397,
+            2368.5232827523623
+          ],
+          "resolved_eye": [
+            -4012.835933135128,
+            176.3501352735397,
+            2368.5232827523623
+          ],
+          "union_eye": [
+            -4012.835933135128,
+            176.3501352735397,
+            2368.5232827523623
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 307.45707825,
+          "yaw": 48.0,
+          "pitch": 35.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "94255f3712638658be0887a0ab3316e7c1387701a1452e90d4bfc3be13bcbb46",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            231.5,
+            198.02,
+            896.38,
+            680.41
+          ],
+          "visible_px": [
+            664.88,
+            482.39
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            231.5,
+            198.02,
+            896.38,
+            680.41
+          ],
+          "visible_px": [
+            664.88,
+            482.39
+          ]
+        },
+        "image": "imperial-battleship-legacy-repeat-close.png",
+        "image_sha256": "8384ba6a97853c7bef4cd3faff997a9246bd1f8565bc204d09f46f006ca8c736"
+      }
+    },
+    "wide": {
+      "legacy": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -3667.1758714676744,
+            1023.9615361900851,
+            2679.757000229978
+          ],
+          "resolved_eye": [
+            -3667.1758714676744,
+            1023.9615361900851,
+            2679.757000229978
+          ],
+          "union_eye": [
+            -3667.1758714676744,
+            1023.9615361900851,
+            2679.757000229978
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 1250.02622325,
+          "yaw": 48.0,
+          "pitch": 55.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "94255f3712638658be0887a0ab3316e7c1387701a1452e90d4bfc3be13bcbb46",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            557.8,
+            334.93,
+            703.63,
+            467.98
+          ],
+          "visible_px": [
+            145.83,
+            133.05
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            557.8,
+            334.93,
+            703.63,
+            467.98
+          ],
+          "visible_px": [
+            145.83,
+            133.05
+          ]
+        },
+        "image": "imperial-battleship-legacy-wide.png",
+        "image_sha256": "66728c5c024507ad4bfcebe3f659737ffd347082c176edca396a52d35cfba131"
+      },
+      "authored": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -3667.1758714676744,
+            1023.9615361900851,
+            2679.757000229978
+          ],
+          "resolved_eye": [
+            -3667.1758714676744,
+            1023.9615361900851,
+            2679.757000229978
+          ],
+          "union_eye": [
+            -3667.1758714676744,
+            1023.9615361900851,
+            2679.757000229978
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 1250.02622325,
+          "yaw": 48.0,
+          "pitch": 55.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "94255f3712638658be0887a0ab3316e7c1387701a1452e90d4bfc3be13bcbb46",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            557.8,
+            334.93,
+            703.63,
+            467.98
+          ],
+          "visible_px": [
+            145.83,
+            133.05
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            557.8,
+            334.93,
+            703.63,
+            467.98
+          ],
+          "visible_px": [
+            145.83,
+            133.05
+          ]
+        },
+        "image": "imperial-battleship-authored-wide.png",
+        "image_sha256": "263773a4fc2bba0681af788d24f8b68089232db71bbcccbfc2888db473db2256"
+      },
+      "legacy-repeat": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -3667.1758714676744,
+            1023.9615361900851,
+            2679.757000229978
+          ],
+          "resolved_eye": [
+            -3667.1758714676744,
+            1023.9615361900851,
+            2679.757000229978
+          ],
+          "union_eye": [
+            -3667.1758714676744,
+            1023.9615361900851,
+            2679.757000229978
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 1250.02622325,
+          "yaw": 48.0,
+          "pitch": 55.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "94255f3712638658be0887a0ab3316e7c1387701a1452e90d4bfc3be13bcbb46",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            557.8,
+            334.93,
+            703.63,
+            467.98
+          ],
+          "visible_px": [
+            145.83,
+            133.05
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            557.8,
+            334.93,
+            703.63,
+            467.98
+          ],
+          "visible_px": [
+            145.83,
+            133.05
+          ]
+        },
+        "image": "imperial-battleship-legacy-repeat-wide.png",
+        "image_sha256": "66728c5c024507ad4bfcebe3f659737ffd347082c176edca396a52d35cfba131"
+      }
+    }
+  },
+  "captures": {
+    "close": {
+      "legacy": "imperial-battleship-legacy-close.png",
+      "authored": "imperial-battleship-authored-close.png",
+      "legacy_repeat": "imperial-battleship-legacy-repeat-close.png"
+    },
+    "wide": {
+      "legacy": "imperial-battleship-legacy-wide.png",
+      "authored": "imperial-battleship-authored-wide.png",
+      "legacy_repeat": "imperial-battleship-legacy-repeat-wide.png"
+    }
+  },
+  "comparison": {
+    "close": {
+      "changed_pixels": 76593,
+      "changed_percent": 7.4798,
+      "bbox": [
+        248,
+        8,
+        1031,
+        791
+      ],
+      "repeat_changed_pixels": 0,
+      "repeat_max_delta": 0,
+      "repeat_bbox": null,
+      "repeat_cells": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "per_pass_vs_first": {
+        "legacy": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        },
+        "authored": {
+          "changed_pixels": 76593,
+          "changed_percent": 7.4798,
+          "max_delta": 244,
+          "bbox": [
+            248,
+            8,
+            1031,
+            791
+          ]
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        }
+      },
+      "in_pass_repeats": {
+        "legacy": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "authored": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        }
+      },
+      "first_variant": "legacy",
+      "per_variant_repeat_changed_pixels": {
+        "legacy": 0,
+        "authored": 0
+      }
+    },
+    "wide": {
+      "changed_pixels": 5407,
+      "changed_percent": 0.528,
+      "bbox": [
+        553,
+        313,
+        726,
+        486
+      ],
+      "repeat_changed_pixels": 0,
+      "repeat_max_delta": 0,
+      "repeat_bbox": null,
+      "repeat_cells": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "per_pass_vs_first": {
+        "legacy": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        },
+        "authored": {
+          "changed_pixels": 5407,
+          "changed_percent": 0.528,
+          "max_delta": 216,
+          "bbox": [
+            553,
+            313,
+            726,
+            486
+          ]
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        }
+      },
+      "in_pass_repeats": {
+        "legacy": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "authored": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        }
+      },
+      "first_variant": "legacy",
+      "per_variant_repeat_changed_pixels": {
+        "legacy": 0,
+        "authored": 0
+      }
+    }
+  },
+  "display": {
+    "samples": 4,
+    "viewport": [
+      0,
+      0,
+      1280,
+      800
+    ],
+    "per_pass": {
+      "legacy": {
+        "samples": 4,
+        "viewport": [
+          0,
+          0,
+          1280,
+          800
+        ]
+      },
+      "authored": {
+        "samples": 4,
+        "viewport": [
+          0,
+          0,
+          1280,
+          800
+        ]
+      },
+      "legacy-repeat": {
+        "samples": 4,
+        "viewport": [
+          0,
+          0,
+          1280,
+          800
+        ]
+      }
+    },
+    "gl": {
+      "vendor": "Apple",
+      "renderer": "Apple M4",
+      "version": "2.1 Metal - 90.5"
+    }
+  },
+  "production_candidate_unselected_after_review": true,
+  "one_camera_per_view": true,
+  "sheet": {
+    "image": "imperial-battleship-comparison.png",
+    "bytes": 376196,
+    "sha256": "263dce8d1df3df82010f5fffc9703423b15a22140a0a8edb4ebc2f0fcf35cb85",
+    "row": "ship:imperial:battleship",
+    "runtime_key": "imperial:battleship",
+    "label_band": [
+      "UNAPPROVED REVIEW ONLY - ship:imperial:battleship - legacy `dagger` hull vs authored mesh",
+      "served as runtime key imperial:battleship - one camera, same tick, 4MSAA / production shaders - drawn length 224.42"
+    ],
+    "layout": "top row the close pair, bottom row the wide pair, legacy left and authored right"
+  }
+}

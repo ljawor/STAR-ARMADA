@@ -1,0 +1,879 @@
+{
+  "schema": 1,
+  "batch": "s06-b6-imperial-ships",
+  "row": "ship:imperial:supercapital",
+  "row_argument": "imperial:supercapital",
+  "registry_key": "imperial:supercapital",
+  "identifier": "imperial_supercapital",
+  "status": "review_only_not_registered",
+  "integration": "UNAPPROVED review-only monkeypatch of render.asset_selection.selected_binding and render.asset_selection.mesh_for for this one binding, inside an explicit model_preview session. The renderer's ship path serves ship:imperial:supercapital as imperial:supercapital (measured: the data row's category goes through the fighter/bomber role mapping), so that measured key - and only that key - is patched. The registry row stays procedural_legacy, no manifest exists for the row and nothing in production selects it; both patches and the preview session are torn down at the end of this run.",
+  "warning": "Offline orbit captures from the real production draw path: not paced FPS, not a battle-acceptance or native-Windows-graphics acceptance, and not an owner appearance decision.",
+  "registration": {
+    "registry_binding": "imperial:supercapital",
+    "registry_status": "procedural_legacy",
+    "registry_manifest": "core:imperial/supercapital",
+    "manifest_exists": false,
+    "in_production_pipeline": false,
+    "registry_envelope_present": false
+  },
+  "legacy": {
+    "shape": "dagger",
+    "source": "render/fleet_geometry.py::_ship_mesh",
+    "triangles": 3296,
+    "vertices": 1814,
+    "drawn_length": 320.60175000000004,
+    "drawn_scale": 1.703674624367303
+  },
+  "serving": {
+    "declared_runtime_key": "imperial:supercapital",
+    "measured_runtime_key": "imperial:supercapital",
+    "legacy_shape_from_data": "dagger",
+    "stock_visual_key": "dagger",
+    "review_visual_key": "imperial:supercapital",
+    "selected_binding_in_production": false,
+    "mesh_in_production": null,
+    "note": "stock = the preview session with nothing patched; review = the same session with this row's measured runtime key served"
+  },
+  "authored": {
+    "path": "assets/models/imperial_supercapital.mesh.json",
+    "sha256": "1c44c3e7a78241b5048a9aefe23549b8578c0a21081ad797ce640e8ad9a98dbf",
+    "bytes": 163563,
+    "triangles": 2592,
+    "vertices": 1398,
+    "bounds": [
+      [
+        -38.45,
+        -10.0,
+        -80.183
+      ],
+      [
+        38.45,
+        39.5,
+        108.0
+      ]
+    ],
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ],
+    "authority": "script",
+    "approval": "pending_owner_approval"
+  },
+  "envelope": [
+    [
+      -38.45,
+      38.45
+    ],
+    [
+      -10.0,
+      39.5
+    ],
+    [
+      -80.183,
+      108.0
+    ]
+  ],
+  "min_authored_length": 188.0,
+  "drawn_size": {
+    "legacy": {
+      "shape": "dagger",
+      "scale": 1.703674624367303,
+      "length": 320.60175000000004,
+      "radius": 184.13035785622392
+    },
+    "candidate": {
+      "shape": "imperial:supercapital",
+      "scale": 1.7036700977240242,
+      "length": 320.60175000000004,
+      "radius": 184.8168295511017
+    }
+  },
+  "placement": [
+    [
+      "capital",
+      "ship",
+      "imperial_supercapital",
+      1,
+      [
+        -4200,
+        0,
+        2200
+      ],
+      0.0
+    ],
+    [
+      "escort",
+      "ship",
+      "rebel_frigate",
+      0,
+      [
+        -4200,
+        0,
+        2900
+      ],
+      0.0
+    ],
+    [
+      "battleship",
+      "ship",
+      "rebel_battleship",
+      0,
+      [
+        -4200,
+        0,
+        1500
+      ],
+      0.0
+    ],
+    [
+      "enemy_a",
+      "ship",
+      "imperial_frigate",
+      1,
+      [
+        -3500,
+        0,
+        2200
+      ],
+      -1.5707963267948966
+    ],
+    [
+      "enemy_b",
+      "ship",
+      "imperial_frigate",
+      1,
+      [
+        -3500,
+        0,
+        2900
+      ],
+      -1.5707963267948966
+    ]
+  ],
+  "initial_state_sha256": "cb240d16fe302df722579fd0630b26ee5f68282cf7c6295b4b0f22a8b6532b1b",
+  "views": {
+    "close": {
+      "legacy": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -3932.6227616216115,
+            251.92876467648534,
+            2440.7475467890886
+          ],
+          "resolved_eye": [
+            -3932.6227616216115,
+            251.92876467648534,
+            2440.7475467890886
+          ],
+          "union_eye": [
+            -3932.6227616216115,
+            251.92876467648534,
+            2440.7475467890886
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 439.22439750000007,
+          "yaw": 48.0,
+          "pitch": 35.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "cb240d16fe302df722579fd0630b26ee5f68282cf7c6295b4b0f22a8b6532b1b",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            231.5,
+            198.02,
+            896.38,
+            680.41
+          ],
+          "visible_px": [
+            664.88,
+            482.39
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            231.5,
+            198.02,
+            896.38,
+            680.41
+          ],
+          "visible_px": [
+            664.88,
+            482.39
+          ]
+        },
+        "image": "imperial-supercapital-legacy-close.png",
+        "image_sha256": "7da05c1b321a04a83f4e422dd022993af6b1a7e5513858e5972a9a1ef938cb56"
+      },
+      "authored": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -3932.6227616216115,
+            251.92876467648534,
+            2440.7475467890886
+          ],
+          "resolved_eye": [
+            -3932.6227616216115,
+            251.92876467648534,
+            2440.7475467890886
+          ],
+          "union_eye": [
+            -3932.6227616216115,
+            251.92876467648534,
+            2440.7475467890886
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 439.22439750000007,
+          "yaw": 48.0,
+          "pitch": 35.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "cb240d16fe302df722579fd0630b26ee5f68282cf7c6295b4b0f22a8b6532b1b",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            231.5,
+            198.02,
+            896.38,
+            680.41
+          ],
+          "visible_px": [
+            664.88,
+            482.39
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            231.5,
+            198.02,
+            896.38,
+            680.41
+          ],
+          "visible_px": [
+            664.88,
+            482.39
+          ]
+        },
+        "image": "imperial-supercapital-authored-close.png",
+        "image_sha256": "9dba998815b25e69d729a9b943681474c6ab6c4809e7a6280ae4368440e428c4"
+      },
+      "legacy-repeat": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -3932.6227616216115,
+            251.92876467648534,
+            2440.7475467890886
+          ],
+          "resolved_eye": [
+            -3932.6227616216115,
+            251.92876467648534,
+            2440.7475467890886
+          ],
+          "union_eye": [
+            -3932.6227616216115,
+            251.92876467648534,
+            2440.7475467890886
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 439.22439750000007,
+          "yaw": 48.0,
+          "pitch": 35.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "cb240d16fe302df722579fd0630b26ee5f68282cf7c6295b4b0f22a8b6532b1b",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            231.5,
+            198.02,
+            896.38,
+            680.41
+          ],
+          "visible_px": [
+            664.88,
+            482.39
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            231.5,
+            198.02,
+            896.38,
+            680.41
+          ],
+          "visible_px": [
+            664.88,
+            482.39
+          ]
+        },
+        "image": "imperial-supercapital-legacy-repeat-close.png",
+        "image_sha256": "7da05c1b321a04a83f4e422dd022993af6b1a7e5513858e5972a9a1ef938cb56"
+      }
+    },
+    "wide": {
+      "legacy": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -3438.822673525249,
+            1462.8021945572646,
+            2885.3671431856833
+          ],
+          "resolved_eye": [
+            -3438.822673525249,
+            1462.8021945572646,
+            2885.3671431856833
+          ],
+          "union_eye": [
+            -3438.822673525249,
+            1462.8021945572646,
+            2885.3671431856833
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 1785.7517475000002,
+          "yaw": 48.0,
+          "pitch": 55.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "cb240d16fe302df722579fd0630b26ee5f68282cf7c6295b4b0f22a8b6532b1b",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            557.8,
+            334.93,
+            703.63,
+            467.98
+          ],
+          "visible_px": [
+            145.83,
+            133.05
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            557.8,
+            334.93,
+            703.63,
+            467.98
+          ],
+          "visible_px": [
+            145.83,
+            133.05
+          ]
+        },
+        "image": "imperial-supercapital-legacy-wide.png",
+        "image_sha256": "885f56a39e8af64b7c53706e75ae66466094b55afa5df2139ded3e90f4bf3c29"
+      },
+      "authored": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -3438.822673525249,
+            1462.8021945572646,
+            2885.3671431856833
+          ],
+          "resolved_eye": [
+            -3438.822673525249,
+            1462.8021945572646,
+            2885.3671431856833
+          ],
+          "union_eye": [
+            -3438.822673525249,
+            1462.8021945572646,
+            2885.3671431856833
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 1785.7517475000002,
+          "yaw": 48.0,
+          "pitch": 55.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "cb240d16fe302df722579fd0630b26ee5f68282cf7c6295b4b0f22a8b6532b1b",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            557.8,
+            334.93,
+            703.63,
+            467.98
+          ],
+          "visible_px": [
+            145.83,
+            133.05
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            557.8,
+            334.93,
+            703.63,
+            467.98
+          ],
+          "visible_px": [
+            145.83,
+            133.05
+          ]
+        },
+        "image": "imperial-supercapital-authored-wide.png",
+        "image_sha256": "68ac0672dd3130e00a6c7aa730cecc8f837eb600e198f5cd5977d1dbbaca70af"
+      },
+      "legacy-repeat": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -3438.822673525249,
+            1462.8021945572646,
+            2885.3671431856833
+          ],
+          "resolved_eye": [
+            -3438.822673525249,
+            1462.8021945572646,
+            2885.3671431856833
+          ],
+          "union_eye": [
+            -3438.822673525249,
+            1462.8021945572646,
+            2885.3671431856833
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 1785.7517475000002,
+          "yaw": 48.0,
+          "pitch": 55.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "cb240d16fe302df722579fd0630b26ee5f68282cf7c6295b4b0f22a8b6532b1b",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            557.8,
+            334.93,
+            703.63,
+            467.98
+          ],
+          "visible_px": [
+            145.83,
+            133.05
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            557.8,
+            334.93,
+            703.63,
+            467.98
+          ],
+          "visible_px": [
+            145.83,
+            133.05
+          ]
+        },
+        "image": "imperial-supercapital-legacy-repeat-wide.png",
+        "image_sha256": "885f56a39e8af64b7c53706e75ae66466094b55afa5df2139ded3e90f4bf3c29"
+      }
+    }
+  },
+  "captures": {
+    "close": {
+      "legacy": "imperial-supercapital-legacy-close.png",
+      "authored": "imperial-supercapital-authored-close.png",
+      "legacy_repeat": "imperial-supercapital-legacy-repeat-close.png"
+    },
+    "wide": {
+      "legacy": "imperial-supercapital-legacy-wide.png",
+      "authored": "imperial-supercapital-authored-wide.png",
+      "legacy_repeat": "imperial-supercapital-legacy-repeat-wide.png"
+    }
+  },
+  "comparison": {
+    "close": {
+      "changed_pixels": 78761,
+      "changed_percent": 7.6915,
+      "bbox": [
+        248,
+        8,
+        1031,
+        791
+      ],
+      "repeat_changed_pixels": 0,
+      "repeat_max_delta": 0,
+      "repeat_bbox": null,
+      "repeat_cells": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "per_pass_vs_first": {
+        "legacy": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        },
+        "authored": {
+          "changed_pixels": 78761,
+          "changed_percent": 7.6915,
+          "max_delta": 244,
+          "bbox": [
+            248,
+            8,
+            1031,
+            791
+          ]
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        }
+      },
+      "in_pass_repeats": {
+        "legacy": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "authored": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        }
+      },
+      "first_variant": "legacy",
+      "per_variant_repeat_changed_pixels": {
+        "legacy": 0,
+        "authored": 0
+      }
+    },
+    "wide": {
+      "changed_pixels": 5565,
+      "changed_percent": 0.5435,
+      "bbox": [
+        553,
+        313,
+        726,
+        486
+      ],
+      "repeat_changed_pixels": 0,
+      "repeat_max_delta": 0,
+      "repeat_bbox": null,
+      "repeat_cells": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "per_pass_vs_first": {
+        "legacy": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        },
+        "authored": {
+          "changed_pixels": 5565,
+          "changed_percent": 0.5435,
+          "max_delta": 252,
+          "bbox": [
+            553,
+            313,
+            726,
+            486
+          ]
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        }
+      },
+      "in_pass_repeats": {
+        "legacy": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "authored": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        }
+      },
+      "first_variant": "legacy",
+      "per_variant_repeat_changed_pixels": {
+        "legacy": 0,
+        "authored": 0
+      }
+    }
+  },
+  "display": {
+    "samples": 4,
+    "viewport": [
+      0,
+      0,
+      1280,
+      800
+    ],
+    "per_pass": {
+      "legacy": {
+        "samples": 4,
+        "viewport": [
+          0,
+          0,
+          1280,
+          800
+        ]
+      },
+      "authored": {
+        "samples": 4,
+        "viewport": [
+          0,
+          0,
+          1280,
+          800
+        ]
+      },
+      "legacy-repeat": {
+        "samples": 4,
+        "viewport": [
+          0,
+          0,
+          1280,
+          800
+        ]
+      }
+    },
+    "gl": {
+      "vendor": "Apple",
+      "renderer": "Apple M4",
+      "version": "2.1 Metal - 90.5"
+    }
+  },
+  "production_candidate_unselected_after_review": true,
+  "one_camera_per_view": true,
+  "sheet": {
+    "image": "imperial-supercapital-comparison.png",
+    "bytes": 368682,
+    "sha256": "befeb5d9a34b85c47e4b1ec584a9df1e2d632e5124525ee3a1374eebed0f92f1",
+    "row": "ship:imperial:supercapital",
+    "runtime_key": "imperial:supercapital",
+    "label_band": [
+      "UNAPPROVED REVIEW ONLY - ship:imperial:supercapital - legacy `dagger` hull vs authored mesh",
+      "served as runtime key imperial:supercapital - one camera, same tick, 4MSAA / production shaders - drawn length 320.60"
+    ],
+    "layout": "top row the close pair, bottom row the wide pair, legacy left and authored right"
+  }
+}
