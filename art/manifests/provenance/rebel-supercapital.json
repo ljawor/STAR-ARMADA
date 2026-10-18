@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "rebel:supercapital",
+  "asset_id": "core:alliance/supercapital",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:23Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/alliance_carrier.blend",
+    "sha256": "ac25a832ab26aabb5aff2797738661153ccd3145f34948bfa476407d0fa2053e"
+  },
+  "exporter": {
+    "path": "tools/art/export_alliance_carrier.py",
+    "sha256": "b839bc9f7e41b635b116ffa54f3e8dcc425c46cd02de7c6dc2be7b8b82d0bb05"
+  },
+  "runtime": {
+    "path": "assets/models/alliance_carrier.mesh.json",
+    "sha256": "44e64c9ceed6d01d4e25eab1b4b0afec909bdc10d293af7d0d43a043dad64891",
+    "bytes": 547192,
+    "triangles": 8656
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "44e64c9ceed6d01d4e25eab1b4b0afec909bdc10d293af7d0d43a043dad64891",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

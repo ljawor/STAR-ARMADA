@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "rebel:energy_relay",
+  "asset_id": "core:alliance/energy_relay",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:19Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/alliance_energy_relay.blend",
+    "sha256": "64482d7da075ba883c730f873a6a239120f953fab7241e0563fdb0d1209a9518"
+  },
+  "exporter": {
+    "path": "tools/art/export_alliance_energy_relay.py",
+    "sha256": "f41ccca376f382d6f0733827f400c3e013b392e8fe4f164da43926b7c39fd73b"
+  },
+  "runtime": {
+    "path": "assets/models/alliance_energy_relay.mesh.json",
+    "sha256": "fea920827bc7c690d022ce614455dfad7da0ca6e053af0e5fde793c0fa6173f8",
+    "bytes": 310433,
+    "triangles": 4496
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "fea920827bc7c690d022ce614455dfad7da0ca6e053af0e5fde793c0fa6173f8",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

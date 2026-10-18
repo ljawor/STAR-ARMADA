@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "syndicate:shipyard",
+  "asset_id": "core:syndicate/shipyard",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:33Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/syndicate_shipyard.blend",
+    "sha256": "420dedfee68a25da78f4831d93b2dbddb716ba94134a58f890c570cec9efb735"
+  },
+  "exporter": {
+    "path": "tools/art/export_syndicate_shipyard.py",
+    "sha256": "9dadeb8b073fc7791d8961363d58676a851eda4c923203a39348d32af035ad32"
+  },
+  "runtime": {
+    "path": "assets/models/syndicate_shipyard.mesh.json",
+    "sha256": "c1a0aad3e30a013b95c704390ef925f8beeb024924ddd4a5d525dc60156c4670",
+    "bytes": 241812,
+    "triangles": 3784
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "c1a0aad3e30a013b95c704390ef925f8beeb024924ddd4a5d525dc60156c4670",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

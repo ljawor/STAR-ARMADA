@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "imperial:convoy",
+  "asset_id": "core:imperial/convoy",
+  "authority": "script",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:07Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/imperial_convoy.blend",
+    "sha256": "0c732b3f3a8a6ea01265be0ae196b7b2db3cbfc23f10043fc189b1d4f24fcbfa"
+  },
+  "exporter": {
+    "path": "tools/art/export_imperial_convoy.py",
+    "sha256": "683452ad69f6b695490cff466f530204012354a2a6912939ddd785ae6a5a7131"
+  },
+  "runtime": {
+    "path": "assets/models/imperial_convoy.mesh.json",
+    "sha256": "3f887ced61a15b4d8038103ec6c015c482fa8db315cc46c3526063535ff6a56a",
+    "bytes": 292448,
+    "triangles": 4745
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "3f887ced61a15b4d8038103ec6c015c482fa8db315cc46c3526063535ff6a56a",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

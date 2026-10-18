@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "rebel:repair_dock",
+  "asset_id": "core:alliance/repair_dock",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:22Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/alliance_repair_dock.blend",
+    "sha256": "5a5035a39251c5a9cacef545fb3ad7a6ecfef5f2256883872aa364a372b34f99"
+  },
+  "exporter": {
+    "path": "tools/art/export_alliance_repair_dock.py",
+    "sha256": "f7a36e72088c947d8c0fc1c757ecf6edbf138fc59c4d8ea656afe1cde1115334"
+  },
+  "runtime": {
+    "path": "assets/models/alliance_repair_dock.mesh.json",
+    "sha256": "c7290bd9e1f51911c10bf5434de99d3294dd22ba6f6110f886c1677f46615d76",
+    "bytes": 316320,
+    "triangles": 4696
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "c7290bd9e1f51911c10bf5434de99d3294dd22ba6f6110f886c1677f46615d76",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

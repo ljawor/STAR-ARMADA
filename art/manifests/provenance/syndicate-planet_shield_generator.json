@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "syndicate:planet_shield_generator",
+  "asset_id": "core:syndicate/planet_shield_generator",
+  "authority": "script",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:31Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/syndicate_planet_shield_generator.blend",
+    "sha256": "7207bf5218e9a964abc6176227b20ebadd621c35f919b54c0037b3a2a6e483ed"
+  },
+  "exporter": {
+    "path": "tools/art/export_syndicate_planet_shield_generator.py",
+    "sha256": "9cbc681124c08290400a776b108193016cff892f0982344afe092dbf620819e4"
+  },
+  "runtime": {
+    "path": "assets/models/syndicate_planet_shield_generator.mesh.json",
+    "sha256": "f05eed613663d33ae5bad77d2489a4a8f986585374645e19cf8aefe1a98f939d",
+    "bytes": 138031,
+    "triangles": 2352
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "f05eed613663d33ae5bad77d2489a4a8f986585374645e19cf8aefe1a98f939d",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

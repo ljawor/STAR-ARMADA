@@ -65,7 +65,11 @@ class CompletionReviewTests(unittest.TestCase):
                 self.assertEqual(excluded['asset']['binding'], 'shared:construction_scaffold')
                 self.assertIn('assets/models/shared_construction_scaffold.mesh.json', excluded['proof'])
                 self.assertIn('art/blender/shared_construction_scaffold.blend', excluded['proof'])
-            review.assert_unregistered(derived)
+            from s07_registration_assertions import assert_opt_in_registration
+            assert_opt_in_registration(self, ROOT, [row['binding'] for row in derived['assets']])
+            # The pre-registration capture tool must refuse already-published rows.
+            with self.assertRaises(AssertionError):
+                review.assert_unregistered(derived)
         self.assertEqual(counts, [10, 8, 8])
         self.assertEqual(len(set(labels)), 26)
 
@@ -138,11 +142,29 @@ class CompletionReviewTests(unittest.TestCase):
         real_harness = review.load_harness()
         fake_harness = types.SimpleNamespace(main=main, views_for=real_harness.views_for,
                                              station_scale=real_harness.station_scale)
-        with tempfile.TemporaryDirectory() as tmp, \
-                patch.object(review, 'load_harness', return_value=fake_harness), \
-                patch.dict(sys.modules, {'render': types.SimpleNamespace(asset_selection=selection)}):
-            self.assertEqual(review.main(['--spec', str(source), '--out', str(Path(tmp) / 'review')]), 0)
-            self.assertTrue((Path(tmp) / 'review/review-spec.json').exists())
+        # Exercise the historical authoring CLI against explicit pending fixture
+        # metadata, never by pretending the now-published stock B9 rows are pending.
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = Path(tmp) / 'pending-root'
+            registry = json.loads((ROOT / 'assets/models/registry.json').read_bytes())
+            pending = {row['binding'] for row in review.derive_spec(source)['assets']}
+            for row in registry['bindings']:
+                if row['binding'] in pending:
+                    row['status'] = 'authoring_pending'
+            pipeline = json.loads((ROOT / 'art/manifests/pipeline.json').read_bytes())
+            pipeline['assets'] = [row for row in pipeline['assets'] if row['binding'] not in pending]
+            for relative, data in [('assets/models/registry.json', json.dumps(registry).encode()),
+                                   ('art/manifests/pipeline.json', json.dumps(pipeline).encode()),
+                                   ('tools/diag_alliance_batch_review.py',
+                                    (ROOT / 'tools/diag_alliance_batch_review.py').read_bytes())]:
+                target = fixture / relative
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(data)
+            with patch.object(review, 'ROOT', fixture), \
+                    patch.object(review, 'load_harness', return_value=fake_harness), \
+                    patch.dict(sys.modules, {'render': types.SimpleNamespace(asset_selection=selection)}):
+                self.assertEqual(review.main(['--spec', str(source), '--out', str(Path(tmp) / 'review')]), 0)
+                self.assertTrue((Path(tmp) / 'review/review-spec.json').exists())
         self.assertEqual(len(calls), 1)
 
 

@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "confederacy:fighter",
+  "asset_id": "core:confederacy/fighter",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:24:58Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/legion_vulture.blend",
+    "sha256": "932bba8532ba8d02e50fec774131477c43a383311aec500c1412b336a11d1ac8"
+  },
+  "exporter": {
+    "path": "tools/art/export_legion_vulture.py",
+    "sha256": "8c02f83690317415f05c7f87b66cfb03f2be48d418d8d13394c17e26eab99eb3"
+  },
+  "runtime": {
+    "path": "assets/models/legion_vulture.mesh.json",
+    "sha256": "c17733f45e1669a3c664726f2e72f18a1d3e1c1e09e18455e22abc7fb83c47dd",
+    "bytes": 164257,
+    "triangles": 2578
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "c17733f45e1669a3c664726f2e72f18a1d3e1c1e09e18455e22abc7fb83c47dd",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

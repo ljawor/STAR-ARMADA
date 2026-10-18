@@ -1,0 +1,74 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:alliance/supercapital",
+  "revision": "5b3a9ddb77312b7fffbdba76925e2e49de6bda48a3fb8ccf4b5d948e7f73c173",
+  "display_name": "alliance carrier (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/alliance_carrier.mesh.json",
+      "sha256": "44e64c9ceed6d01d4e25eab1b4b0afec909bdc10d293af7d0d43a043dad64891",
+      "bytes": 547192
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -146.51,
+      -30.5,
+      -204.8
+    ],
+    "max": [
+      146.51,
+      56.95528,
+      190.0
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/alliance_carrier.blend",
+    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 8656,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "s06-b1-alliance-combat-2026-10-17",
+    "decided_by": "owner",
+    "decided_on": "2026-10-17",
+    "reviewed_revision": "5b3a9ddb77312b7fffbdba76925e2e49de6bda48a3fb8ccf4b5d948e7f73c173",
+    "reviewed_evidence": [
+      "artifacts/s06_alliance_batch_review/b1-alliance-combat/contact-sheet.png",
+      "artifacts/s06_alliance_batch_review/b1-alliance-combat/metrics.json"
+    ]
+  }
+}

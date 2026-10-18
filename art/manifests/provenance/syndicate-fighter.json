@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "syndicate:fighter",
+  "asset_id": "core:syndicate/fighter",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:28Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/syndicate_jackal.blend",
+    "sha256": "ca21a457dc3a8349ef6ed87a64e6c2d6e810316ae73a4d9ce2351f54d3081de6"
+  },
+  "exporter": {
+    "path": "tools/art/export_syndicate_jackal.py",
+    "sha256": "68c99ff92da8cfb0cb3d298d315de1e0ecae53ad2c5473ca98d01ad6c1c66ee2"
+  },
+  "runtime": {
+    "path": "assets/models/syndicate_jackal.mesh.json",
+    "sha256": "829f5a14e3dfae79437c3a3fb9749d4bd8c5fd5a0117ad00cc3665d1cd2fe126",
+    "bytes": 146531,
+    "triangles": 2316
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "829f5a14e3dfae79437c3a3fb9749d4bd8c5fd5a0117ad00cc3665d1cd2fe126",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

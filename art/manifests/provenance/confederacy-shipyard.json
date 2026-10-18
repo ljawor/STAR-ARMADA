@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "confederacy:shipyard",
+  "asset_id": "core:confederacy/shipyard",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:03Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/legion_shipyard.blend",
+    "sha256": "3156021eef4c77f744ecdd1a25a8c1f96566e32761e88ee1ae7ac606a2741042"
+  },
+  "exporter": {
+    "path": "tools/art/export_legion_shipyard.py",
+    "sha256": "11e498efe68a8e2fa3c7dbab6f0819be212a89a7ac74e5c81c81aa75100bdf75"
+  },
+  "runtime": {
+    "path": "assets/models/legion_shipyard.mesh.json",
+    "sha256": "748c48aa54266073f5b0773f3ef0748b2cf049cd51523d65f66083163d794f01",
+    "bytes": 236690,
+    "triangles": 3772
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "748c48aa54266073f5b0773f3ef0748b2cf049cd51523d65f66083163d794f01",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

@@ -1,0 +1,21 @@
+test_all_historical_identities_have_deterministic_current_routes (test_s07_binding_routes.BindingRouteAuditTests.test_all_historical_identities_have_deterministic_current_routes) ... FAIL
+
+======================================================================
+FAIL: test_all_historical_identities_have_deterministic_current_routes (test_s07_binding_routes.BindingRouteAuditTests.test_all_historical_identities_have_deterministic_current_routes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_binding_routes.py", line 34, in test_all_historical_identities_have_deterministic_current_routes
+    self.assertEqual(report['errors'], [])
+AssertionError: Lists differ: ['s06-b5-environment-2026-10-17: runtime hash mismatch: render/renderer.py'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'s06-b5-environment-2026-10-17: runtime hash mismatch: render/renderer.py'
+
+- ['s06-b5-environment-2026-10-17: runtime hash mismatch: render/renderer.py']
++ []
+
+----------------------------------------------------------------------
+Ran 1 test in 0.164s
+
+FAILED (failures=1)

@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "imperial:bomber",
+  "asset_id": "core:imperial/bomber",
+  "authority": "script",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:05Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/imperial_tie_bomber_squadron.blend",
+    "sha256": "89e797d421478348a0d924bfbd0b516e210c5dd84920646cbabd49002d1b40fc"
+  },
+  "exporter": {
+    "path": "tools/art/export_imperial_tie_bomber_squadron.py",
+    "sha256": "342dd4afe448f51767b0f46962b5283368a4a8c974b2c0c4c83519b3b2a35b91"
+  },
+  "runtime": {
+    "path": "assets/models/imperial_tie_bomber_squadron.mesh.json",
+    "sha256": "b0d03f0d0045e79653098a4a7d3c3e8769b0b1fc14d47c577195c635a862c826",
+    "bytes": 146776,
+    "triangles": 2536
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "b0d03f0d0045e79653098a4a7d3c3e8769b0b1fc14d47c577195c635a862c826",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

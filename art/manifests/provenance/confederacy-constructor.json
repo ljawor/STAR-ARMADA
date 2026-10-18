@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "confederacy:constructor",
+  "asset_id": "core:confederacy/constructor",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:24:56Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/confed_constructor.blend",
+    "sha256": "eb64c61ec81512584eae1ac0946fadea0485ab0c9b09cc505238bc2c49cbc8c6"
+  },
+  "exporter": {
+    "path": "tools/art/export_confed_constructor.py",
+    "sha256": "4facaacd806a36dbc1f35c5cb6fe2e80538b1d1c385a320f3e8e5cb5bd35099d"
+  },
+  "runtime": {
+    "path": "assets/models/confed_constructor.mesh.json",
+    "sha256": "cce3fd0e2a02b4e745efeec9ff6873869b17fec65f6aa0f9f08238226a40b14c",
+    "bytes": 231316,
+    "triangles": 3932
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "cce3fd0e2a02b4e745efeec9ff6873869b17fec65f6aa0f9f08238226a40b14c",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

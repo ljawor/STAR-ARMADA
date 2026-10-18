@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "imperial:repair_dock",
+  "asset_id": "core:imperial/repair_dock",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:12Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/imperial_repair_dock.blend",
+    "sha256": "c796357e9d55c7954d5d021884c7971c0b8806192aedd83dc274ec5223cab512"
+  },
+  "exporter": {
+    "path": "tools/art/export_imperial_repair_dock.py",
+    "sha256": "4343b1543ddb82358dddf96a071f8aa5a30d9bc08ce45202088caafe58292b9c"
+  },
+  "runtime": {
+    "path": "assets/models/imperial_repair_dock.mesh.json",
+    "sha256": "0d2a2018344f5a034130e1e4ea3da85c62b658e37651260b03e3ab742a6e0469",
+    "bytes": 129338,
+    "triangles": 2352
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "0d2a2018344f5a034130e1e4ea3da85c62b658e37651260b03e3ab742a6e0469",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

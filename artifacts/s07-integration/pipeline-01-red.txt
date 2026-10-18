@@ -1,0 +1,132 @@
+test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) ... 
+  test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='build_args', bad=None) ... FAIL
+  test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='build_args', bad='--asset imperial:corvette') ... FAIL
+  test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='build_args', bad={}) ... FAIL
+  test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='build_args', bad=7) ... FAIL
+  test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='build_args', bad=[1]) ... FAIL
+  test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='build_args', bad=[False]) ... FAIL
+  test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='build_args', bad=[['--all']]) ... FAIL
+  test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='export_args', bad=None) ... FAIL
+  test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='export_args', bad='--asset imperial:corvette') ... FAIL
+  test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='export_args', bad={}) ... FAIL
+  test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='export_args', bad=7) ... FAIL
+  test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='export_args', bad=[1]) ... FAIL
+  test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='export_args', bad=[False]) ... FAIL
+  test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='export_args', bad=[['--all']]) ... FAIL
+
+======================================================================
+FAIL: test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='build_args', bad=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_pipeline_execution.py", line 55, in test_argument_arrays_reject_non_string_lists
+    with self.assertRaises(pipeline.PipelineError) as caught:
+AssertionError: PipelineError not raised
+
+======================================================================
+FAIL: test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='build_args', bad='--asset imperial:corvette')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_pipeline_execution.py", line 55, in test_argument_arrays_reject_non_string_lists
+    with self.assertRaises(pipeline.PipelineError) as caught:
+AssertionError: PipelineError not raised
+
+======================================================================
+FAIL: test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='build_args', bad={})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_pipeline_execution.py", line 55, in test_argument_arrays_reject_non_string_lists
+    with self.assertRaises(pipeline.PipelineError) as caught:
+AssertionError: PipelineError not raised
+
+======================================================================
+FAIL: test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='build_args', bad=7)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_pipeline_execution.py", line 55, in test_argument_arrays_reject_non_string_lists
+    with self.assertRaises(pipeline.PipelineError) as caught:
+AssertionError: PipelineError not raised
+
+======================================================================
+FAIL: test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='build_args', bad=[1])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_pipeline_execution.py", line 55, in test_argument_arrays_reject_non_string_lists
+    with self.assertRaises(pipeline.PipelineError) as caught:
+AssertionError: PipelineError not raised
+
+======================================================================
+FAIL: test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='build_args', bad=[False])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_pipeline_execution.py", line 55, in test_argument_arrays_reject_non_string_lists
+    with self.assertRaises(pipeline.PipelineError) as caught:
+AssertionError: PipelineError not raised
+
+======================================================================
+FAIL: test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='build_args', bad=[['--all']])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_pipeline_execution.py", line 55, in test_argument_arrays_reject_non_string_lists
+    with self.assertRaises(pipeline.PipelineError) as caught:
+AssertionError: PipelineError not raised
+
+======================================================================
+FAIL: test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='export_args', bad=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_pipeline_execution.py", line 55, in test_argument_arrays_reject_non_string_lists
+    with self.assertRaises(pipeline.PipelineError) as caught:
+AssertionError: PipelineError not raised
+
+======================================================================
+FAIL: test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='export_args', bad='--asset imperial:corvette')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_pipeline_execution.py", line 55, in test_argument_arrays_reject_non_string_lists
+    with self.assertRaises(pipeline.PipelineError) as caught:
+AssertionError: PipelineError not raised
+
+======================================================================
+FAIL: test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='export_args', bad={})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_pipeline_execution.py", line 55, in test_argument_arrays_reject_non_string_lists
+    with self.assertRaises(pipeline.PipelineError) as caught:
+AssertionError: PipelineError not raised
+
+======================================================================
+FAIL: test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='export_args', bad=7)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_pipeline_execution.py", line 55, in test_argument_arrays_reject_non_string_lists
+    with self.assertRaises(pipeline.PipelineError) as caught:
+AssertionError: PipelineError not raised
+
+======================================================================
+FAIL: test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='export_args', bad=[1])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_pipeline_execution.py", line 55, in test_argument_arrays_reject_non_string_lists
+    with self.assertRaises(pipeline.PipelineError) as caught:
+AssertionError: PipelineError not raised
+
+======================================================================
+FAIL: test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='export_args', bad=[False])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_pipeline_execution.py", line 55, in test_argument_arrays_reject_non_string_lists
+    with self.assertRaises(pipeline.PipelineError) as caught:
+AssertionError: PipelineError not raised
+
+======================================================================
+FAIL: test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) (key='export_args', bad=[['--all']])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_pipeline_execution.py", line 55, in test_argument_arrays_reject_non_string_lists
+    with self.assertRaises(pipeline.PipelineError) as caught:
+AssertionError: PipelineError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.004s
+
+FAILED (failures=14)

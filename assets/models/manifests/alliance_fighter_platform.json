@@ -1,0 +1,74 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:alliance/fighter_platform",
+  "revision": "b6b893628c49816968e92cf485b98774b41c7fc73b0e0fe7facdd4a328fb91de",
+  "display_name": "alliance fighter platform (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/alliance_fighter_platform.mesh.json",
+      "sha256": "4f06b97c93cd05c3fb132b67d0a0f2a18bfc07847d16402c4ec18cdbe3b77d6f",
+      "bytes": 286581
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -48.0,
+      -9.2,
+      -39.2
+    ],
+    "max": [
+      48.0,
+      6.92,
+      39.2
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/alliance_fighter_platform.blend",
+    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 4288,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "s06-b3c-stations-2026-10-17",
+    "decided_by": "owner",
+    "decided_on": "2026-10-17",
+    "reviewed_revision": "b6b893628c49816968e92cf485b98774b41c7fc73b0e0fe7facdd4a328fb91de",
+    "reviewed_evidence": [
+      "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+      "artifacts/s06_alliance_batch_review/b3c-stations/metrics.json"
+    ]
+  }
+}

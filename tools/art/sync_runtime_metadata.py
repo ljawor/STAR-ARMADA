@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Publish/check runtime-only metadata; never rebuild or modify approved meshes.
+"""Publish/check registration metadata; never rebuild or modify approved meshes.
 
-Source contract/examples and the S01 inventory remain authoritative. The runtime
-registry deduplicates crew-transport/trade-convoy bindings sharing today's mesh;
-the separate catalogue map preserves every inventory identity without claiming
-that a future authored reuse has received appearance approval.
+The source contract examples preserve the trio. Original enumerated S06 revision
+approvals, sidecars, capture reports and current ship data drive the bounded
+99-row increment. Runtime assets ship without build tools or source evidence;
+receipts attest the validated original evidence relationship at publication.
 """
 import argparse
 from collections import defaultdict
@@ -19,14 +19,21 @@ def encoded(value):
     return (json.dumps(value, indent=2, ensure_ascii=False) + '\n').encode('utf-8')
 
 
-def binding_for(row):
+def binding_for(row, ships=None):
     key = row['canonical_binding']
     parts = key.split(':')
     if parts[0] == 'ship':
         faction, kind = parts[1:]
-        shape = row['geometry_shape_string']
-        if ':' in shape:
-            return shape
+        if ships is not None and kind != 'trade_convoy':
+            data_id, data = ships[(faction, kind)]
+            role = data['category']
+            if role == 'fighter_squadron':
+                role = 'bomber' if 'bomber' in data_id or data_id == 'rebel_y_squadron' else 'fighter'
+            elif role == 'construction':
+                role = 'colonizer' if data_id.endswith('_colonizer') else 'constructor'
+            elif role == 'crew_transport' and data.get('crew_capacity', 0) > 0:
+                role = 'convoy'
+            return f'{faction}:{role}'
         if kind in ('crew_transport', 'trade_convoy'):
             kind = 'convoy'
         elif 'bomber' in kind:
@@ -51,12 +58,19 @@ def outputs(root):
     def load(relative):
         return json.loads((root / relative).read_text(encoding='utf-8'))
     inventory = load('art/manifests/model_inventory.json')
+    ships = {}
+    for path in sorted((root / 'assets/data/ships').glob('*.json')):
+        for data_id, data in json.loads(path.read_bytes()).get('ships', {}).items():
+            identity = (data['faction'], data_id.split('_', 1)[-1])
+            if identity in ships:
+                raise ValueError('duplicate current ship identity: ' + str(identity))
+            ships[identity] = (data_id, data)
     registry = load('art/schemas/examples/core-registry.json')
     rows = {row['binding']: row for row in registry['bindings']}
     mapping, legacy_shapes = {}, {}
     variants = defaultdict(list)
     for row in inventory['rows']:
-        binding = binding_for(row)
+        binding = binding_for(row, ships)
         mapping[row['canonical_binding']] = binding
         variants[binding].append(row['canonical_binding'])
         faction, kind = binding.split(':')
@@ -106,11 +120,117 @@ def outputs(root):
                 'reviewed_revision': manifest['revision'], 'decision_id': approval['decision_id'],
                 'evidence_sha256': {relative: hashlib.sha256((root / relative).read_bytes()).hexdigest()
                                     for relative in approval['reviewed_evidence']}}
+    try:
+        from .s07_registration import publish
+    except ImportError:
+        from s07_registration import publish
+    categories = {mapping[row['canonical_binding']]: row['category'] for row in inventory['rows']}
+    registered, new_receipts = publish(root, rows, mapping, categories)
+    result.update(registered)
+    result['assets/models/registry.json'] = encoded(registry)
+    receipts.update(new_receipts)
     result['assets/models/approval-receipts.json'] = encoded({
         'contract': 'star-armada/approval-receipts', 'contract_major': 1,
         'purpose': 'Build-time evidence attestation, not a signature or a new owner approval.',
         'receipts': receipts})
     return result
+
+
+def output_destinations(root, expected):
+    """Preflight the whole set, including unchanged files, before any writes.
+
+    Reject symlink components rather than following aliases, even within root.
+    The publisher assumes an exclusively owned tree (not hostile concurrent edits).
+    """
+    import re
+    root = Path(root).resolve()
+    destinations, names, inodes = {}, set(), set()
+    for relative in expected:
+        if (not isinstance(relative, str)
+                or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._/-]{0,240}', relative)
+                or any(part in ('', '.', '..') for part in relative.split('/'))):
+            raise ValueError('unsafe metadata output path: ' + str(relative))
+        name = relative.casefold()
+        if name in names:
+            raise ValueError('conflicting metadata output alias: ' + relative)
+        names.add(name)
+        target = root / relative
+        for component in (*reversed(target.parents), target):
+            if component == root or not component.is_relative_to(root):
+                continue
+            if component.is_symlink():
+                raise ValueError('unsafe metadata output symlink: ' + relative)
+            if component.exists() and not (component.is_file() if component == target else component.is_dir()):
+                raise ValueError('unsafe metadata output type: ' + relative)
+        if not target.resolve().is_relative_to(root):
+            raise ValueError('unsafe metadata output escape: ' + relative)
+        if target.exists():
+            info = target.stat()
+            inode = (info.st_dev, info.st_ino)
+            if inode in inodes:
+                raise ValueError('conflicting metadata output inode: ' + relative)
+            inodes.add(inode)
+        destinations[relative] = target
+    for name in names:
+        if any(parent.as_posix() in names for parent in Path(name).parents if parent != Path('.')):
+            raise ValueError('conflicting metadata output parent: ' + name)
+    return destinations
+
+
+def publish_outputs(destinations, expected, drift):
+    """Stage all bytes, then replace per file; roll back ordinary IO failures.
+
+    This is not a crash-consistent multi-file transaction or a concurrent-writer
+    sandbox. A rollback IO failure is surfaced and its backup files are retained.
+    """
+    import os
+    import tempfile
+    staged, backups, temporary, created, published = {}, {}, set(), [], []
+
+    def stage(target, data, mode):
+        fd, name = tempfile.mkstemp(prefix='.s07-metadata-', dir=target.parent)
+        os.close(fd)
+        path = Path(name)
+        temporary.add(path)
+        path.write_bytes(data)
+        path.chmod(mode)
+        return path
+
+    try:
+        for relative in drift:
+            target = destinations[relative]
+            missing = []
+            parent = target.parent
+            while not parent.exists():
+                missing.append(parent)
+                parent = parent.parent
+            for directory in reversed(missing):
+                directory.mkdir()
+                created.append(directory)
+            mode = target.stat().st_mode & 0o777 if target.exists() else 0o644
+            backups[relative] = stage(target, target.read_bytes(), mode) if target.exists() else None
+            staged[relative] = stage(target, expected[relative], mode)
+        for relative in drift:
+            os.replace(staged[relative], destinations[relative])
+            published.append(relative)
+    except BaseException:
+        try:
+            for relative in reversed(published):
+                if backups[relative] is None:
+                    destinations[relative].unlink()
+                else:
+                    os.replace(backups[relative], destinations[relative])
+        except OSError:
+            temporary.difference_update(p for p in backups.values() if p is not None)
+            raise
+        raise
+    finally:
+        for path in temporary:
+            path.unlink(missing_ok=True)
+        for directory in reversed(created):
+            # Successful publication leaves nonempty directories in place.
+            if not any(directory.iterdir()):
+                directory.rmdir()
 
 
 def main():
@@ -120,13 +240,11 @@ def main():
     mode.add_argument('--write', action='store_true')
     args = parser.parse_args()
     expected = outputs(ROOT)
+    destinations = output_destinations(ROOT, expected)
     drift = [path for path, data in expected.items()
-             if not (ROOT / path).is_file() or (ROOT / path).read_bytes() != data]
+             if not destinations[path].is_file() or destinations[path].read_bytes() != data]
     if args.write:
-        for path in drift:
-            target = ROOT / path
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(expected[path])
+        publish_outputs(destinations, expected, drift)
         print(f'Published {len(expected)} metadata files; {len(drift)} updated; no mesh writes')
         return 0
     if drift:

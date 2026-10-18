@@ -1,0 +1,76 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:imperial/constructor",
+  "revision": "151d90676335556a67e6c80b0503086ec1d1d92af78835862a5dd47be19f0ebd",
+  "display_name": "imperial constructor (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/imperial_constructor.mesh.json",
+      "sha256": "32fc71942015d171695fc9a6f150a402235ff62c480d29288def84fe03340cdb",
+      "bytes": 183564
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -20.0,
+      -7.0,
+      -24.6975
+    ],
+    "max": [
+      20.0,
+      26.5,
+      24.35825
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/imperial_constructor.blend",
+    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 3120,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "s06-b9-construction-2026-10-18",
+    "decided_by": "owner",
+    "decided_on": "2026-10-18",
+    "reviewed_revision": "151d90676335556a67e6c80b0503086ec1d1d92af78835862a5dd47be19f0ebd",
+    "reviewed_evidence": [
+      "artifacts/s06-completion/B9-appearance-grid.jpg",
+      "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png",
+      "artifacts/s06-completion/review-b9-attempt1/render/imperial-constructor-after-close.png",
+      "artifacts/s06-completion/review-b9-attempt1/render/metrics.json"
+    ]
+  }
+}

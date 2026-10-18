@@ -2208,6 +2208,29 @@
     },
     {
       "id": "s06-b5-environment-2026-10-17",
+      "s07_renderer_pin_correction": {
+        "authority": "s07-opt-in-continuation-2026-10-18",
+        "reason": "The S07 station/scaffold integration changes unrelated Renderer methods. B5 originally pinned the entire renderer file as runtime. This engineering-only pin correction retains the original renderer pin and complete original asset pin groups below; it is not a new appearance approval. Asteroid drawing, tint table, lazy seam import and emitter methods are AST-identical to the approved baseline.",
+        "previous_renderer_sha256": "e264230fd0eeb5522e86d5527d7fa7c2ff9eddbd2d2eba05a1ab0cccbef0d378",
+        "previous_runtime": {
+          "assets/models/shared_asteroid_field.mesh.json": "ad2b65483c330fecad28059fce9c489bc0bce2c050ebe38aa526e21f25c88ae7",
+          "render/renderer.py": "e264230fd0eeb5522e86d5527d7fa7c2ff9eddbd2d2eba05a1ab0cccbef0d378"
+        },
+        "previous_source": {
+          "art/blender/shared_asteroid_field.blend": "23260a7f81a54e874325fcca802c66c94fbb1c7f1e90378b799e129b17d4ea0e"
+        },
+        "previous_exporter": {
+          "tools/art/build_b5_asteroid.py": "eb6935400489de58df08e22effea006c5126838e2e927ab75f10db7d88ee6563",
+          "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+          "tools/art/export_shared_asteroid_field.py": "f7bad0a2df2a47dbcab4ef547072a9c9f46e8da58b03db5d28cc88625616f9db"
+        },
+        "appearance_approval_unchanged": true,
+        "unchanged_method_ast_sha256": {
+          "_draw_asteroid_field": "6de116386c59f15ac66f7500610edfdb8875ee478aa2b1807d58b3c80a5d4c47",
+          "_asteroid_prop_lists": "fd81cfcbb70f6fc29d3952014774e17cf76c9fdb5ef5d5590348cc20017c3b24",
+          "_emit_detail_mesh": "5aa4a034276c74d49fdabcf62375e679b6cb92b8bb8f9723d5012791e9195802"
+        }
+      },
       "date": "2026-10-17",
       "owner": "owner (Lukasz Jawor)",
       "decision": "approved",
@@ -2256,7 +2279,7 @@
             },
             "runtime": {
               "assets/models/shared_asteroid_field.mesh.json": "ad2b65483c330fecad28059fce9c489bc0bce2c050ebe38aa526e21f25c88ae7",
-              "render/renderer.py": "e264230fd0eeb5522e86d5527d7fa7c2ff9eddbd2d2eba05a1ab0cccbef0d378"
+              "render/renderer.py": "9a9d19c949d9cf2dec09ab083d79fc3053a61ef81fafdae216653446bb6c337a"
             },
             "declared_floor_triangles": 120,
             "legacy_extent": [
@@ -4564,6 +4587,215 @@
         "S11 catalogue switch or any production-default switch",
         "packaging or S08/S09 platform/performance acceptance",
         "unpictured shared construction scaffold or invented gameplay data"
+      ]
+    },
+    {
+      "id": "s07-scaffold-appearance-2026-10-18",
+      "date": "2026-10-18",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved",
+      "approval_kind": "appearance-scaffold-revision",
+      "owner_words_verbatim": "Pictures approved",
+      "question_answered": "The latest delivered production construction-seam scaffold grid: legacy left/authored right, three Imperial progress stages and four owner colors.",
+      "scope_statement": "Appearance approval of only the exact pictured shared construction scaffold revision, in the shown progress/color variants. Separate from the eight earlier B9 ships. No runtime acceptance, default activation, merge or release.",
+      "how_recorded": "Direct owner response in desktop chat after delivery of scaffold-review-attempt1/scaffold-appearance-grid.jpg.",
+      "activation": false,
+      "runtime_acceptance": false,
+      "revision": {
+        "batch": "s07-shared-construction-scaffold",
+        "source_authority": "script-authoritative",
+        "working_tree_base": "65661e4a9fbde7e37da0bae0881e372c3dc21e59",
+        "registry_state_at_approval": {
+          "shared:construction_scaffold": "procedural_legacy"
+        },
+        "assets": [
+          {
+            "gameplay_binding": "shared:construction_scaffold",
+            "shape_key": "shared:construction_scaffold",
+            "identifier": "shared_construction_scaffold",
+            "faction": "shared",
+            "class": "scaffold",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/shared_construction_scaffold.blend": "8a632fbdf0bba8c43b8c22d40ae1732938cfebe1d02fbf70cdf65b1f78ee2c39",
+              "tools/art/build_b9_construction.py": "79e092578df188ef02d4128e5d74425d7951fddd3075cd0ef3aacda484e4501a"
+            },
+            "exporter": {
+              "tools/art/export_shared_construction_scaffold.py": "1396b7fc3e175e852454a23e37ef05b59a24d7e05953bca14bb276f5a405d2c9",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753"
+            },
+            "runtime": {
+              "assets/models/shared_construction_scaffold.mesh.json": "1643a7e19731cb6dac7bcce5e4876a0eead1337690418d7897c7b206901e3a0b"
+            },
+            "legacy_extent": [
+              [
+                -50.0,
+                0.0,
+                -50.0
+              ],
+              [
+                50.0,
+                50.0,
+                50.0
+              ]
+            ],
+            "authored_extent": [
+              [
+                -50.0,
+                0.0,
+                -50.0
+              ],
+              [
+                50.0,
+                50.0,
+                50.0
+              ]
+            ],
+            "triangle_count": 3104,
+            "vertex_count": 1664,
+            "evidence": {
+              "grid": "artifacts/s07-integration/scaffold-review-attempt1/scaffold-appearance-grid.jpg",
+              "sheet": "artifacts/s07-integration/scaffold-review-attempt1/scaffold-appearance-grid.jpg",
+              "metrics": "artifacts/s07-integration/scaffold-review-attempt1/metrics.json",
+              "sha256": {
+                "artifacts/s07-integration/scaffold-review-attempt1/confederacy-0.5-after-close.png": "a36cbd398247b718abe55bbb2d933b57b11ccbb2922f4956def494f58bae71d3",
+                "artifacts/s07-integration/scaffold-review-attempt1/confederacy-0.5-after-tactical.png": "80d3efecaf0e64b8607d750cb4177da8d12167df3c0cabc4dd8bf69b3f16f269",
+                "artifacts/s07-integration/scaffold-review-attempt1/confederacy-0.5-before-close.png": "8a9c7e46683a811f64788332631446fdc1102c1b1f60f22a37ff9cee3d87698b",
+                "artifacts/s07-integration/scaffold-review-attempt1/confederacy-0.5-before-tactical.png": "a2b426bee84a141be7287f4ff65bcc4bab6708f8924559842e8fce6a2d556cd5",
+                "artifacts/s07-integration/scaffold-review-attempt1/imperial-0.1-after-close.png": "2b26f6cf9abe8f7acf7144e2ccd3a86d20d8ed7cf6e5dfeb0aa95db809f45fae",
+                "artifacts/s07-integration/scaffold-review-attempt1/imperial-0.1-after-tactical.png": "9a9f9822269eccaa175ad8050641b1e54709859759a93395c7a02b9c50d9dee3",
+                "artifacts/s07-integration/scaffold-review-attempt1/imperial-0.1-before-close.png": "60fbcadb6cb9d9c3598862e5551ff8729d179e739a3a0c81a94c036048c6bc57",
+                "artifacts/s07-integration/scaffold-review-attempt1/imperial-0.1-before-tactical.png": "b740d4bf7f7d342880b83bb5112fe6f3d4c774648a3e2ebc4d48469da7869176",
+                "artifacts/s07-integration/scaffold-review-attempt1/imperial-0.5-ablated-accent.png": "b9f99e6831b7612f9bdae1bf6e5957b52f785f1c55761de3732154b33dc627a3",
+                "artifacts/s07-integration/scaffold-review-attempt1/imperial-0.5-ablated-cool.png": "fb2d59473c98567acd8096d9fa0b23b3b3713d35413461ebc068effb2d2a3e8c",
+                "artifacts/s07-integration/scaffold-review-attempt1/imperial-0.5-ablated-dark.png": "6e197ad4987992f25e1cb7b6e987d85014ab6b072a63cc1ebcffc609c00d18c1",
+                "artifacts/s07-integration/scaffold-review-attempt1/imperial-0.5-after-close.png": "d27c46541d651c1288dc15cb84b87a0820768dc8d9d6153f51f1e9bd8fc8aef1",
+                "artifacts/s07-integration/scaffold-review-attempt1/imperial-0.5-after-tactical.png": "7ae282935f2339723e66a4919ad6c10b7d19cca874f4e6d27dca3c0ba600fd05",
+                "artifacts/s07-integration/scaffold-review-attempt1/imperial-0.5-before-close.png": "46e98356486ccb791cbfbe31bc33c2686ef8b1fc6d69e5925b7f5aa349f39f22",
+                "artifacts/s07-integration/scaffold-review-attempt1/imperial-0.5-before-tactical.png": "32d757f7e6c3a2dc2c3a170ea41b4766c6797e6d455bae2352f9abe09cc5cacc",
+                "artifacts/s07-integration/scaffold-review-attempt1/imperial-0.9-after-close.png": "55f6f3f35d7f17f3e8f3378947edf361c3e7313ac738ec2db4ade3a30d365e92",
+                "artifacts/s07-integration/scaffold-review-attempt1/imperial-0.9-after-tactical.png": "f8513f7709d866b5dac95280e37d44a13f259cefe724dd8c0bce02daca139d77",
+                "artifacts/s07-integration/scaffold-review-attempt1/imperial-0.9-before-close.png": "35964290a5f43ea8b527384d235778416c323ef17361ad76b81171bf189d2fe4",
+                "artifacts/s07-integration/scaffold-review-attempt1/imperial-0.9-before-tactical.png": "8fd632c6e66a2e9613cd37f135d94911d772d4d3489d39efb467294e997bdcd0",
+                "artifacts/s07-integration/scaffold-review-attempt1/metrics.json": "a9f442df20298d8f510a6e95475e92f9debfd82724721927425fbfb6a677227e",
+                "artifacts/s07-integration/scaffold-review-attempt1/rebel-0.5-after-close.png": "57a428a85f3ff8e74437b1408efbde21b992ea459c5837dbd78c06b561fd0ec4",
+                "artifacts/s07-integration/scaffold-review-attempt1/rebel-0.5-after-tactical.png": "269f203ce824d61004e0abff8ab6471f587cd63cfd16e45b14f87ef9c5148b1b",
+                "artifacts/s07-integration/scaffold-review-attempt1/rebel-0.5-before-close.png": "925b66c651060897b6acee6ce595c040097164e0bfa763c9832dd1ca3ebc8cfc",
+                "artifacts/s07-integration/scaffold-review-attempt1/rebel-0.5-before-tactical.png": "59fcada0e0762ae013f1a494b345401dace4b1d167398070c1a68eed3b074d26",
+                "artifacts/s07-integration/scaffold-review-attempt1/scaffold-appearance-grid.jpg": "17c80e6309c7da2de78a615d7f069a7c8b4a191aa7b3e566f0a104f6e0b9a703",
+                "artifacts/s07-integration/scaffold-review-attempt1/syndicate-0.5-after-close.png": "00af7cb851c3142b56735a646de2fec994441c38c9d9b9dc471f1f18997462da",
+                "artifacts/s07-integration/scaffold-review-attempt1/syndicate-0.5-after-tactical.png": "4d40fb37226fa0443992f9dd136da2dec391a0df87243fbd0ee697ec9e6b152a",
+                "artifacts/s07-integration/scaffold-review-attempt1/syndicate-0.5-before-close.png": "0c715e67ca9ec8754f7e2d2381e06e72c7a9cb5b1f06a68aa60afbdfa62e7df9",
+                "artifacts/s07-integration/scaffold-review-attempt1/syndicate-0.5-before-tactical.png": "335633d08cf3ebeff720de4844a3ea1f91953ec4f6ec79cc87b3830662924bd4"
+              },
+              "captured_runtime_sha256": "1643a7e19731cb6dac7bcce5e4876a0eead1337690418d7897c7b206901e3a0b",
+              "capture_code_sha256": {
+                "game/benchmark.py": "e980d523c3e9463268a928e0b8190b040ed69c0ffecf7b3d7f01a1bd196f2d8f",
+                "game/graphics_benchmark.py": "9596aa423c8df2cb7a7cff916d5a578b389d54d085ae8370cddac7313ab9e86c",
+                "game/__init__.py": "18a2d353a7e8804d0102a7177c3cb4b0d8652073a86fbaf4378b4e19f7946f24",
+                "game/net/reconnect.py": "601b2122d59489907c9bd3fc3310f37cb54da9bce80fde840668fa1841438e95",
+                "game/net/lockstep.py": "0404b12f96d3922aa2e6c750aaddd4f711ce729dcefa2430146f9399b36334fe",
+                "game/net/diagnostics.py": "962c55f3eee7e7fd9e1156b99174a839f3b4e49cc7ad8c938bc20c5f647d71b3",
+                "game/net/live_recovery.py": "9172647c55f950b6916122d91815b011ffa3de29d3f2a76fa7f89e734cfc5a9e",
+                "game/net/__init__.py": "ecf0466cc197759af3ed3cc6c78ae0aff172af918f1fd3287966c52672018c3a",
+                "game/net/lan.py": "65c5c6a5c4a8d0b619664f5ed5d62d8ca7d546ce89301b5f6439ca44f8ea0e28",
+                "game/net/replay.py": "846b89c02e4896d89046cc6ee13c2d169bd399ab47186814e96bfaabebff2b42",
+                "game/net/diag.py": "2352cec14c0711b9676503c27a8cf38950eba1bcad145026e05e42be354c1b8c",
+                "game/net/replay_validation.py": "dc5468f348e22cd1c8404337d5feadff9ba9ac38eb7ef4668854a5e6c482ac99",
+                "game/core/vectors.py": "92a5f830b4070960007dce5b0fbd924cde453025bf0d8cc1d1ddc3acb76b03e7",
+                "game/core/world.py": "17d92522f23a5a4d8b1a9bea898fd12ead19dd948f3a78b64a366a62348a210c",
+                "game/core/events.py": "813ba32913f82aaf96cbcb448720358b0ec8ce2eb4eba6d5885b39c99584c138",
+                "game/core/runtime_snapshot.py": "b4d1e822ae3f7aa1ba498c10c51d3d6c48973edf2d83d3fbab4b41d0e3f6aac6",
+                "game/core/__init__.py": "931880463db2742198582aad1a343b108784cbaf2465b5d3ddfaee5408d1a10c",
+                "game/core/skirmish.py": "3750ff81c8d70b5cf347c478c590408f6e92e2edfeee06b7ed1209eb0b5dd73e",
+                "game/core/entity.py": "d01624888ffc402cc510c0be4f80660cd2dc39153ede5ea8ea2e01efec44da6f",
+                "game/core/commands.py": "ec80df8243d50e664df1bd3056add375b9cf462364d644f84319ca0699d3597f",
+                "game/core/manager.py": "ba14f2e137ab8b4b2c056ac4cb91fad0857f5d5cc77b7e68e39dfabfe8476664",
+                "game/core/detmath.py": "c01f5ac87aada4f666f48eac157826d4d85f2f4924055e68251206d817c47eeb",
+                "game/core/state.py": "184c6dacafc7385d0f275fd5a42fff81b24a05cbafb2dccdc426b3de9ab57edb",
+                "game/ai/ai.py": "dca439d55a6cf9f6340eb0040483858f9652b5eaa6158be74c8e0efa4f070f67",
+                "game/ai/__init__.py": "0286e06f05222e409bd8e1e0b609a1bf62b1a6b89ca0225d36c0c1304234f39f",
+                "game/systems/separation.py": "978ce3ffb830761e1dc18f92562c9d700ad06cdaf762f8733373a6f47d164293",
+                "game/systems/campaign_validation.py": "535b19b4435c1cade9938c963e533a6370fc7afe64724f3bdf713e48fe3f37b8",
+                "game/systems/economy.py": "22906c1e800f27bb300735c7f48ec10accf8e6377d203028289a4d9190aafea6",
+                "game/systems/colonies.py": "b39870e583eb0682caa1227efa97f7a078f136564ee6e9a864244c3f5f1f3900",
+                "game/systems/research.py": "8acac09342d79123dc9b6f894fa897dc5c993baf6f871c5fc2c4d61463a2c65e",
+                "game/systems/construction.py": "b25483a358d31fdb71821b788d712d76ea029dedcf7177e070c898683583c4b9",
+                "game/systems/exploration.py": "94ac465bc7c1d59a23b1dc3f92edd78bcb53a4ccf73c93b76716770f410312a3",
+                "game/systems/missions.py": "c9c4d49dde047c3fbd4b3c21a5264e211af1a50824c9f30137653240519c428f",
+                "game/systems/experience.py": "6be836eb846696252cf0789d540644bef78da09cf95ef9cf4161ebbf090c9042",
+                "game/systems/jump.py": "a907583f643cd61b6439eae592aa385dcec598e3d68f0c0d9cd58ab3b6630def",
+                "game/systems/__init__.py": "1b2d678f93e8107bce59a40c63ff7664f9984f8e3d808ec39f511786e5f7d00e",
+                "game/systems/trading.py": "b6d004d91ffcfb8e03e5ce5d063acf3a85a11fa8fc303f46ee983dece5b4c55b",
+                "game/systems/abilities.py": "e58414489f4849b49394d5828d599861d82f04b6202826735016003b9dee9c5f",
+                "game/systems/commands_handler.py": "14c105c4f2b875fd40add6d9dbfdd309d12a32cf774419493d874259368eeb80",
+                "game/systems/planet_buildings.py": "734105bf7d9ddff54f8285cfa52dd34d664ca34d6722e750be98ac94fa0508dc",
+                "game/systems/movement.py": "4b3f1f0a10230a5f6039a6d25c84e988d87648056ec06133bc3e9b06d492ee72",
+                "game/systems/formations.py": "792c51d6aeac573bc5d984f315022e8c962403e08d9aedec59ab31800def512b",
+                "game/systems/squadrons.py": "63f7550f15ea95b5b47377cbd6d2f4452b92fbb0e95951db0f63f1c12ddebf36",
+                "game/systems/campaign_script.py": "36c74d405935b75bf46ecb70547ebd650444511dfeb9c5331a43d3a7476a931c",
+                "game/systems/damage.py": "b38e71dbf1a875c728c9aec35faba8af4cc7219679078c0a357ce971e577e674",
+                "game/systems/repairs.py": "dc7485cc2afc67cd857cb200942242c245bbdcc9647fee220ffe22d412baf695",
+                "game/systems/victory.py": "1544c0b8949fd1355e0b59c28863047710a0cc661c354267f91cc9a4234ede9c",
+                "game/systems/crew.py": "112e4a37920b682e6cc9904dc75c6da9a41aaabb99e3e7c9827e6ef297e5c6a4",
+                "game/systems/stats.py": "7329f9c74e70372fa4b6ed82e6242cfb80eb920871891f6bb157cdac33e3d3d1",
+                "game/systems/satellite_orbits.py": "4444e6f0521e57e5db15614e4fd7dff6d191d8ee7fe09bcf031c32d9afbbe660",
+                "game/systems/visibility.py": "f7009f8703cdf789658774d9354d34624682aed8856ec386bbec0ece549ebbb9",
+                "game/systems/crew_recovery.py": "a27a863cb8be739bcced4fdc67ee70e1faacd119e24b36b1e9bd6fb04740c04e",
+                "game/systems/weapons.py": "f43c93dcf657f15f76684fe9da775ce3268a570c97476dee77564ad06d891a45",
+                "game/systems/upgrades.py": "818395c275b35eae7354a0ddd90b96662616fc980598a7c79d6c223271ee9c88",
+                "game/systems/boarding.py": "5b1f19d6f4aa578bf36a99ffe9161eee821850d8b8003f78f25843d4b2e5056a",
+                "game/systems/unit_factory.py": "a044800e817f11714f093075e3f1662b22d5357300425a28706fae4ed76d1d12",
+                "game/systems/collection_points.py": "5d66378cbac6a1d671b8079d010d6f32699a407cc98159c8a3b29e60b55fd475",
+                "game/systems/projectiles.py": "ef37b04b12b2e9227e2d17f353b22c7e1cc2d4140c12bc2b6b10a893516807bc",
+                "game/data/store.py": "92e6b1fd8746bdc0424af3ebbc2c9e2fa253e522d17f2c8bb43267a8a7ca8589",
+                "game/data/__init__.py": "533ec7d32e6796d7747c60fa5255f35bd9b0d50c9591a39107bfd88f89de3cdb",
+                "game/data/balance.py": "d096ebbe28ccc1ad90c3336df659eefcfd0d5aa74caced7a2163d19c9b5c82c5",
+                "render/planet_building_geometry.py": "f3b1a30e6d88181351ead686b1bae80dce04fcf5746c46f66a80cc046075dd7e",
+                "render/camera_geometry.py": "c5518efda07c06f23d8ff728fbfa95e8b379b5c0389a881ac740ba6cefd729fc",
+                "render/faction_visuals.py": "d7a259a4a9a6b4412e18cf1dd9deb082555c03659558dc11c76d3ec19483af42",
+                "render/faction_ships.py": "9d34e7e056cbb9b9ed9de24a79593eb69cea4bc7076d68dff868abd11fff6c0b",
+                "render/hit_effects.py": "5b739a59bc291cad24b05a478c8baea772050771a4991d011a3934d5f24be863",
+                "render/classic_saves.py": "3ef731ebae31f6581ddbe402a13cc52f97060da38c841f1ec75079a7207f7efa",
+                "render/renderer.py": "9a9d19c949d9cf2dec09ab083d79fc3053a61ef81fafdae216653446bb6c337a",
+                "render/asset_selection.py": "a75247314dc410289b616a34d807be27d9eece37a478bde81582c249bfe55eba",
+                "render/classic_screens.py": "2b06881f9fe7e15821b5d608547d8b0ec476e7fcdeba5e4bdbf06931df22d642",
+                "render/ship_sizes.py": "e407cc4d59aa67edebd28005176073cd1d13e132c4447f6bdf3944d4ca311a5f",
+                "render/replay_delete_windows.py": "a629ea64a236157d74c8f8de3e30b6d6820390837cbd7b349eb3d9966d902f48",
+                "render/fleet_materials.py": "a0a861739ab46b9173baffd9d7f36b4829e85b85b6b5765544b7f9d1ca7ce403",
+                "render/replay_library.py": "d75488f9cdf0cdc1b72b455640d9d2b5ff2fe389603e5348d59cd2de9fca035e",
+                "render/faction_stations.py": "5e55638092824b2007b2689e3dde8bb99a66ceaf55b625569b77434571f07e3b",
+                "render/__init__.py": "d9da25df69ef1847fbcb04b2dbcdc7f2f818b01a378b517efe59247af3fb0389",
+                "render/recovery_overlay.py": "60702c717030ac63d7048c4b0a168741862319be577b07a3d43bf2a66a61d7fd",
+                "render/fog.py": "345c88675b41480708fd26606f3d881231cb3844791e15d325519b4cd34fcc0a",
+                "render/menu_movie.py": "629825f4c61cb11ce87393152f89d91fc20334d9ccb836428a8025ae5380d890",
+                "render/cinematics.py": "8fd91d2c2f00a5ba0127794b962dd01ea070212b549d04f7bc279b9ee85bebf2",
+                "render/presentation.py": "9048c3bcd5381ffb44f25be7c55e97e9a5ed75c711ed905089e7b5982d240cef",
+                "render/camera.py": "a023219dd009db45d95e900393cee99bbdc97fa490e04f6090c63efa7cfc7c8f",
+                "render/asset_registry.py": "b84ac50dc605c749f23fcf11115a163266571ae696c6212f6d9d48b59a58ce99",
+                "render/save_library.py": "710976da90ab58aa4ce481fef563a7bf3c312616567d7d006fb57e15950aee2e",
+                "render/replay_input.py": "3139349fb9060e2334bab8eb81dfedcaa1ff5b1c8820e34974ed8768afa6ebb8",
+                "render/input.py": "6a0732425196daac756cda489d268f0b0846f1e367011828f2f4cde01a70fee5",
+                "render/authored_mesh.py": "9db5744ba97b9fbc5d53ec47141c3a17ddfa575048f7a2d08e5b4965adadd6ea",
+                "render/markers.py": "16c15b531dad5551ecd77bd4ce14a2a46c40632ffe484a6d79034650f1cf4436",
+                "render/i18n.py": "7d09bdf77d854680d05eddb28ab2dc26c94ad9646569540d6f50a71e0421af1b",
+                "render/hud.py": "a27bb1080a617cf545d21b04c85b06f151d4e77cb8465eb7f7f43e7b4e9a2585",
+                "render/audio.py": "53817af7a368cffc5c1638ffcf3e0999f445821eb7449b89b7187bc28f471f16",
+                "render/clean_classic.py": "de4b0db01b8c325e40d29edc159df85723450f00e4bbf67e972bfab3133e8e1f",
+                "render/menus.py": "063d1f2c05a1382b4a0bc0b337443674e662382a679ae48014059b8bb3cc37e9",
+                "render/fleet_geometry.py": "10f725da24b58b9f8a0a78e442a4da45c8c95d86b2135695990d55b9945bde73",
+                "render/classic_replays.py": "911d59db6cd5d8940223cf8aa092c001f8e6d56faefa0c5234ad89d89d9775a9",
+                "render/textures.py": "5139acaaae7b4922b18c48a017a9f361fa9b1fbca6b818b65e0edbbb07641d84"
+              }
+            }
+          }
+        ]
+      },
+      "not_approved_by_this_decision": [
+        "runtime integration acceptance",
+        "production-default activation",
+        "merge, tag or release",
+        "S08/S09 platform, performance or packaging acceptance"
       ]
     }
   ],

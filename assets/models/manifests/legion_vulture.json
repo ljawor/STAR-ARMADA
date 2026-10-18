@@ -1,0 +1,74 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:confederacy/fighter",
+  "revision": "113ddfb37f8db32603a9cc278cc4827ff7b0c64f59f955d8377cae4cfedc3c72",
+  "display_name": "legion vulture (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/legion_vulture.mesh.json",
+      "sha256": "c17733f45e1669a3c664726f2e72f18a1d3e1c1e09e18455e22abc7fb83c47dd",
+      "bytes": 164257
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -12.36669,
+      -2.75,
+      -15.07
+    ],
+    "max": [
+      12.36669,
+      6.877035,
+      19.4
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/legion_vulture.blend",
+    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 2578,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "s06-b2-squadron-logistics-2026-10-17",
+    "decided_by": "owner",
+    "decided_on": "2026-10-17",
+    "reviewed_revision": "113ddfb37f8db32603a9cc278cc4827ff7b0c64f59f955d8377cae4cfedc3c72",
+    "reviewed_evidence": [
+      "artifacts/s06_alliance_batch_review/b2-squadron-logistics/contact-sheet.png",
+      "artifacts/s06_alliance_batch_review/b2-squadron-logistics/metrics.json"
+    ]
+  }
+}

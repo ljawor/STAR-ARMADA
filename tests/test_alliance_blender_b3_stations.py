@@ -36,7 +36,7 @@ SPEC = ROOT / 'art/manifests/pending/S06-BATCH-B3A-COMMAND-STATIONS.json'
 BATCH = 's06-b3a-command-stations'
 SEED = 'tools/art/build_b3_stations.py'
 # The owner's approval of this batch, recorded in art/manifests/approvals.json and bound to the exact
-# revisions this module guards. It authorizes no landing: every binding stays unregistered.
+# revisions this module guards. It authorizes no landing: S07 registration needs separate execution authority.
 APPEARANCE_DECISION = 's06-b3a-command-stations-2026-10-17'
 BATCH_STATUS = 'appearance_approved_pending_landing'
 # Every binding this module guards. `envelope` is the binding's legacy extent as
@@ -470,26 +470,12 @@ class PendingRecords(unittest.TestCase):
         self.assertIn('alliance_shipyard', spec['note'])
         self.assertIn('no mesh_for seam', spec['note'])
 
-    def test_no_pending_binding_is_registered_anywhere_in_production(self):
-        registry = json.loads((ROOT / 'assets/models/registry.json').read_text(encoding='utf-8'))
-        status = {b['binding']: b['status'] for b in registry['bindings']}
-        pipeline = json.loads((ROOT / 'art/manifests/pipeline.json').read_text(encoding='utf-8'))
-        registered = {a['binding']: a for a in pipeline['assets']}
-        approvals = json.loads((ROOT / 'art/manifests/approvals.json').read_text(encoding='utf-8'))
-        # Registration, not mention: this batch's own appearance decision names all three bindings
-        # and still registers none of them, so the check is structural, not a substring search.
-        bound = json.dumps([e for e in approvals['approved_assets'] if isinstance(e, dict)])
-        manifests = sorted(p.name for p in (ROOT / 'assets/models/manifests').glob('*.json'))
-        for asset in ASSETS:
-            with self.subTest(binding=asset['binding']):
-                self.assertEqual(status[asset['binding']], 'procedural_legacy',
-                                 'an approved-appearance specimen must still not be selectable')
-                self.assertNotIn(asset['binding'], registered)
-                self.assertNotIn(asset['identifier'], bound)
-                self.assertNotIn(asset['binding'], bound)
-        self.assertEqual(manifests, ['alliance_battleship.json', 'alliance_frigate.json',
-                                     'alliance_shipyard.json'],
-                         'the approved runtime manifests are the only registered ones')
+    def test_only_authorized_s06_specimens_register_with_legacy_default(self):
+        """S07 execution authority registers exact approved revisions, not pending rows."""
+        from s07_registration_assertions import assert_opt_in_registration, assert_preview_boundary
+        bindings = [asset['binding'] for asset in ASSETS]
+        assert_opt_in_registration(self, ROOT, bindings)
+        assert_preview_boundary(self, ROOT, bindings)
 
     def test_the_batch_sheet_is_labelled_unreviewed(self):
         text = (ROOT / 'tools/diag_alliance_batch_review.py').read_text(encoding='utf-8')

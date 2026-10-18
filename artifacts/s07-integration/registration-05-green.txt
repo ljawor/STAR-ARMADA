@@ -1,0 +1,17 @@
+test_exact_approved_set_and_deterministic_outputs (test_s07_registration.RegistrationTests.test_exact_approved_set_and_deterministic_outputs) ... ok
+test_pipeline_authorities_and_existing_trio_are_preserved (test_s07_registration.RegistrationTests.test_pipeline_authorities_and_existing_trio_are_preserved) ... ok
+test_refuses_registration_without_explicit_execution_authority (test_s07_registration.RegistrationTests.test_refuses_registration_without_explicit_execution_authority) ... ok
+test_regeneration_after_publication_is_idempotent_and_preserves_inputs (test_s07_registration.RegistrationTests.test_regeneration_after_publication_is_idempotent_and_preserves_inputs) ... ok
+test_rejects_arbitrary_cruiser_evidence_beside_real_report (test_s07_registration.RegistrationTests.test_rejects_arbitrary_cruiser_evidence_beside_real_report) ... ok
+test_rejects_corrupt_approved_pin (test_s07_registration.RegistrationTests.test_rejects_corrupt_approved_pin) ... ok
+test_rejects_corrupt_pinned_evidence (test_s07_registration.RegistrationTests.test_rejects_corrupt_pinned_evidence) ... ok
+test_rejects_missing_evidence (test_s07_registration.RegistrationTests.test_rejects_missing_evidence) ... ok
+test_rejects_noncanonical_safe_evidence_paths_without_normalizing (test_s07_registration.RegistrationTests.test_rejects_noncanonical_safe_evidence_paths_without_normalizing) ... ok
+test_rejects_rehashed_evidence_from_a_different_runtime (test_s07_registration.RegistrationTests.test_rejects_rehashed_evidence_from_a_different_runtime) ... ok
+test_rejects_wrong_real_script_selector (test_s07_registration.RegistrationTests.test_rejects_wrong_real_script_selector) ... ok
+test_resolver_loads_exact_102_in_assets_only_frozen_root (test_s07_registration.RegistrationTests.test_resolver_loads_exact_102_in_assets_only_frozen_root) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 7.849s
+
+OK

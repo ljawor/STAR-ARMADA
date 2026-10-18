@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "syndicate:defense_satellite",
+  "asset_id": "core:syndicate/defense_satellite",
+  "authority": "script",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:27Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/syndicate_defense_satellite.blend",
+    "sha256": "56abd8e0276e0949453d8ce2c73b24ca2611d3e2d1b61dccf00191fd969beab9"
+  },
+  "exporter": {
+    "path": "tools/art/export_syndicate_defense_satellite.py",
+    "sha256": "15f7842bd630334f170112539e0cdd972d1658a5cf634713312a30cf8eb7d888"
+  },
+  "runtime": {
+    "path": "assets/models/syndicate_defense_satellite.mesh.json",
+    "sha256": "3fbe61b531055a10b3a269f07cf291ed779cce08396bf7d8a7367e8c5585b71f",
+    "bytes": 116184,
+    "triangles": 2032
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "3fbe61b531055a10b3a269f07cf291ed779cce08396bf7d8a7367e8c5585b71f",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

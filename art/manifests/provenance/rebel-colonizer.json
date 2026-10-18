@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "rebel:colonizer",
+  "asset_id": "core:alliance/colonizer",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:16Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/rebel_colonizer.blend",
+    "sha256": "eeb2a6e7547b9d4d1c40c7acded337a0a30089b222107a6067611cec1e42d02b"
+  },
+  "exporter": {
+    "path": "tools/art/export_rebel_colonizer.py",
+    "sha256": "97c0a96ba7fab5ca57a0c5bb1d85efb2b9c6d6e88fa0a185d8bdaf62f4350d2d"
+  },
+  "runtime": {
+    "path": "assets/models/rebel_colonizer.mesh.json",
+    "sha256": "0afb0eddcd4180f6fae0523eac4dcb086c65093a59983714e2298691bdf15fae",
+    "bytes": 213254,
+    "triangles": 3560
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "0afb0eddcd4180f6fae0523eac4dcb086c65093a59983714e2298691bdf15fae",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

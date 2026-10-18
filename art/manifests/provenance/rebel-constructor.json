@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "rebel:constructor",
+  "asset_id": "core:alliance/constructor",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:16Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/rebel_constructor.blend",
+    "sha256": "e143b758d84877fdb4127a19bdca48a37bb3897cf403dde1cca608065bb7c74d"
+  },
+  "exporter": {
+    "path": "tools/art/export_rebel_constructor.py",
+    "sha256": "378830e27f982cb6db4fcecf9934d9e4eb53121b533963a2d78ef3322c73147d"
+  },
+  "runtime": {
+    "path": "assets/models/rebel_constructor.mesh.json",
+    "sha256": "441cb0bb04afac29e8d1bcd4f704858988abb1226681e216796f33e5b0aae780",
+    "bytes": 146906,
+    "triangles": 2512
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "441cb0bb04afac29e8d1bcd4f704858988abb1226681e216796f33e5b0aae780",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

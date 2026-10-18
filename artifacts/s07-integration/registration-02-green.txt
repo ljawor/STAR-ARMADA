@@ -1,0 +1,8 @@
+test_exact_approved_set_and_deterministic_outputs (test_s07_registration.RegistrationTests.test_exact_approved_set_and_deterministic_outputs) ... ok
+test_pipeline_authorities_and_existing_trio_are_preserved (test_s07_registration.RegistrationTests.test_pipeline_authorities_and_existing_trio_are_preserved) ... ok
+test_rejects_wrong_real_script_selector (test_s07_registration.RegistrationTests.test_rejects_wrong_real_script_selector) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 2.590s
+
+OK

@@ -1,0 +1,25 @@
+test_exact_approved_set_and_deterministic_outputs (test_s07_registration.RegistrationTests.test_exact_approved_set_and_deterministic_outputs) ... ERROR
+
+======================================================================
+ERROR: test_exact_approved_set_and_deterministic_outputs (test_s07_registration.RegistrationTests.test_exact_approved_set_and_deterministic_outputs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_registration.py", line 13, in test_exact_approved_set_and_deterministic_outputs
+    generated = outputs(ROOT)
+                ^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tools/art/sync_runtime_metadata.py", line 128, in outputs
+    registered, new_receipts = publish(root, rows, mapping, categories)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tools/art/s07_registration.py", line 151, in publish
+    evidence = evidence_for(root, decision, asset, sidecar, sheet)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tools/art/s07_registration.py", line 98, in evidence_for
+    safe_file(root, relative)
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tools/art/s07_registration.py", line 29, in safe_file
+    raise ValueError('missing/unsafe registration file: ' + relative)
+ValueError: missing/unsafe registration file: artifacts/s06_alliance_batch_review/b6-tie-bomber-squadron/imperial-tie-bomber-comparison.png
+
+----------------------------------------------------------------------
+Ran 1 test in 0.273s
+
+FAILED (errors=1)

@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "confederacy:cruiser",
+  "asset_id": "core:confederacy/cruiser",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:24:57Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/confed_cruiser.blend",
+    "sha256": "036b0eb729beda4df2bc810e1362f6b7acd96d03cc7801d51256462fb960795d"
+  },
+  "exporter": {
+    "path": "tools/art/export_confed_cruiser.py",
+    "sha256": "99678fb1bbbf76c2199f47525045589fa57f3c1d38df1ffc03657ca5a32b2b39"
+  },
+  "runtime": {
+    "path": "assets/models/confed_cruiser.mesh.json",
+    "sha256": "2866559ed742dd4f2f5a22937baa8021b8c0154a105cd4903c273d972ab00814",
+    "bytes": 157430,
+    "triangles": 2688
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "2866559ed742dd4f2f5a22937baa8021b8c0154a105cd4903c273d972ab00814",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

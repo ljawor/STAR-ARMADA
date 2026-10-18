@@ -1,0 +1,17 @@
+test_all_historical_identities_have_deterministic_current_routes (test_s07_binding_routes.BindingRouteAuditTests.test_all_historical_identities_have_deterministic_current_routes) ... FAIL
+
+======================================================================
+FAIL: test_all_historical_identities_have_deterministic_current_routes (test_s07_binding_routes.BindingRouteAuditTests.test_all_historical_identities_have_deterministic_current_routes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_binding_routes.py", line 18, in test_all_historical_identities_have_deterministic_current_routes
+    tool = self.audit()
+           ^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_binding_routes.py", line 14, in audit
+    self.assertIsNotNone(importlib.util.find_spec(name), 'S07 route audit is not implemented')
+AssertionError: unexpectedly None : S07 route audit is not implemented
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)

@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "imperial:corvette",
+  "asset_id": "core:imperial/corvette",
+  "authority": "script",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:07Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/imperial_corvette.blend",
+    "sha256": "ddb2d4180faab70c9a48f1efd5750419414f2ce64e74dedf00cbbc00aec9714d"
+  },
+  "exporter": {
+    "path": "tools/art/export_imperial_corvette.py",
+    "sha256": "c4fb1d3a44940b60b25ff7b0647d7a7b0e042c7ae5875e32bb11cf381263fa38"
+  },
+  "runtime": {
+    "path": "assets/models/imperial_corvette.mesh.json",
+    "sha256": "be894218b84c00b4c6f78c96a46df1cf69441b627fa75155df02be41f6c30d05",
+    "bytes": 142216,
+    "triangles": 2348
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "be894218b84c00b4c6f78c96a46df1cf69441b627fa75155df02be41f6c30d05",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

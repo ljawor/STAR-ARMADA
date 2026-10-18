@@ -1,0 +1,76 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:imperial/repair_dock",
+  "revision": "2005ee722fb2ff43fe550b31dc3ff604c67a600870197bb68e9bf60454a5a775",
+  "display_name": "imperial repair dock (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/imperial_repair_dock.mesh.json",
+      "sha256": "0d2a2018344f5a034130e1e4ea3da85c62b658e37651260b03e3ab742a6e0469",
+      "bytes": 129338
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -34.5,
+      -20.0,
+      -42.5
+    ],
+    "max": [
+      34.5,
+      29.0,
+      42.5
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/imperial_repair_dock.blend",
+    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 2352,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "s06-b7-imperial-stations-2026-10-18",
+    "decided_by": "owner",
+    "decided_on": "2026-10-18",
+    "reviewed_revision": "2005ee722fb2ff43fe550b31dc3ff604c67a600870197bb68e9bf60454a5a775",
+    "reviewed_evidence": [
+      "artifacts/s06-completion/B7-appearance-grid.jpg",
+      "artifacts/s06-completion/review-b7-attempt2/render/contact-sheet.png",
+      "artifacts/s06-completion/review-b7-attempt2/render/imperial-repair_dock-after-close.png",
+      "artifacts/s06-completion/review-b7-attempt2/render/metrics.json"
+    ]
+  }
+}

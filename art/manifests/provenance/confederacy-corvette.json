@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "confederacy:corvette",
+  "asset_id": "core:confederacy/corvette",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:24:56Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/confed_corvette.blend",
+    "sha256": "a664930cf3778158833e24dde66f1399139ade846890cefb5eae3d9eb44aca9c"
+  },
+  "exporter": {
+    "path": "tools/art/export_confed_corvette.py",
+    "sha256": "611cc7dbc9022f5059b9637ff6683cfc436a6e601ac7acb7d4746dc41dbb436d"
+  },
+  "runtime": {
+    "path": "assets/models/confed_corvette.mesh.json",
+    "sha256": "921f8dd4afd759ea0d39c21c3bd3c4e6f7e1c3f8eaee18240371d9a96f101958",
+    "bytes": 107340,
+    "triangles": 1852
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "921f8dd4afd759ea0d39c21c3bd3c4e6f7e1c3f8eaee18240371d9a96f101958",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

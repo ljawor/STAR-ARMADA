@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "imperial:frigate",
+  "asset_id": "core:imperial/frigate",
+  "authority": "script",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:10Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/imperial_frigate.blend",
+    "sha256": "058195c275f7967e912c0f6a3e4f9ac205167a50aa035614a41c4b52e39b5d50"
+  },
+  "exporter": {
+    "path": "tools/art/export_imperial_frigate.py",
+    "sha256": "72156e3a182f75611234e11f413f55f79c6321fb9d41bb8e1c20df7bd7e6d869"
+  },
+  "runtime": {
+    "path": "assets/models/imperial_frigate.mesh.json",
+    "sha256": "6c5d925bcd67bd655aae5f7e4bbdfa178257a4d0a6897f52b8664dda3f94752d",
+    "bytes": 144668,
+    "triangles": 2416
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "6c5d925bcd67bd655aae5f7e4bbdfa178257a4d0a6897f52b8664dda3f94752d",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

@@ -25,15 +25,15 @@ toolchain provenance. Rebuilding and real-renderer acceptance are not claimed he
 
 | Inventory disposition | Rows | Meaning |
 |---|---:|---|
-| Approved asset | 102 | 99 S06 appearance-approved pending-registration specimens plus the original three integrated preview specimens |
+| Approved asset | 103 | 99 S06 batch specimens, one separately pictured S07 scaffold revision, and the original three integrated preview specimens |
 | Shared convoy candidate | 4 | Each trade convoy maps to its faction's approved convoy candidate; not a new mesh or independently proven alias |
-| Pending appearance | 1 | Shared construction scaffold: authored/exported but not pictured or approved; S07 review seam remains required |
+| Pending appearance | 0 | Scaffold subsequently pictured through the S07 seam and separately approved; runtime acceptance remains open |
 | Deferred texture pipeline | 10 | Eight planet surfaces and star/nebula billboards retained on their existing pipeline under the B5 scope decision |
 | Outside mesh catalogue | 3 | Sky dome, jump glyph and baked menu backdrop under that same decision |
 | **Total** | **120** | Every historical inventory row appears exactly once |
 
 There are **12** `appearance-batch-revisions` decisions covering the **99** S06 specimens.
-Other historical/revision/engineering decisions in the log are different kinds.
+The separate `appearance-scaffold-revision` decision `s07-scaffold-appearance-2026-10-18` covers one further specimen, without rewriting the original B9 eight-ship approval. Other historical/revision/engineering decisions in the log are different kinds.
 The runtime registry has **119** rows and the authoring pipeline **three** assets; registry
 row count is not coverage. Normalized identities and planned keys do not have a 1:1 relation
 to the historical inventory. The owner's `approved` response records 26 additional pictured revisions; earlier approvals and runtime selection remain unchanged.
@@ -46,7 +46,7 @@ to the historical inventory. The owner's `approved` response records 26 addition
 | Station | 40 | 0 | 0 | 0 |
 | Satellite | 8 | 0 | 0 | 0 |
 | Planet installation | 16 | 0 | 0 | 0 |
-| Construction | 8 | 0 | 1 | 0 |
+| Construction | 9 | 0 | 0 | 0 |
 | Environment prop | 1 | 0 | 0 | 12 |
 | Menu cinematic | 0 | 0 | 0 | 1 |
 
@@ -56,7 +56,7 @@ checks at S07. An existing approval is not invalidated merely because its integr
 
 ## 3. Required inventory meshes authored; 26 pictured appearances approved
 
-All 27 rows below have Blender masters and loader-validated exports. The owner answered `approved` to the three B7/B8/B9 grids on 2026-10-18, approving exactly the 26 pictured revisions at `e9d78bcf684c2128b2e76af30f3e61cd3e952083`. The scaffold remains unpictured and unapproved, awaiting its S07 review seam. None of these 27 rows is newly registered or integrated.
+All 27 rows below have Blender masters and loader-validated exports. The owner answered `approved` to the three B7/B8/B9 grids on 2026-10-18, approving exactly the 26 pictured revisions at `e9d78bcf684c2128b2e76af30f3e61cd3e952083`. The scaffold was subsequently pictured through the S07 production construction seam; the owner answered `Pictures approved` on 2026-10-18. Its separately pinned approval is `s07-scaffold-appearance-2026-10-18`, preserving the original 26-picture scope. None of these 27 rows is newly registered or runtime-accepted.
 
 1. **Eight combat hulls:** Confederacy `battleship`, `supercapital`, `cruiser`, `frigate`,
    `corvette`; Syndicate `cruiser`, `frigate`, `corvette`.

@@ -13,12 +13,12 @@ Contract (S03 decision `s03-pipeline-policy-2026-10-16`, `art/manifests/pipeline
 
 * Nothing here writes user data, and nothing here imports the game or the renderer. It only runs
   Blender on the declared exporter and hashes the result.
-* ``build-model`` regenerates a script-authoritative asset's source and runtime export from code,
-  then *verifies* the runtime export against the approved byte record. A rebuild that would change
-  what the owner approved fails instead of silently landing.
+* ``build-model`` regenerates a script-authoritative asset in an isolated dependency workspace,
+  then *verifies* the runtime export against the approved byte record. Existing derived .blends
+  stay untouched unless --keep-blend is explicit. Appearance changes fail instead of landing.
 * ``export-model`` produces the runtime export without ever touching the declared source: a
-  script-authoritative asset is exported inside a throwaway copy of the tree, and a
-  blend-authoritative asset's export script is refused unless it is genuinely export-only.
+  declared wrapper must be genuinely export-only; legacy script-authoritative assets without
+  wrappers are reconstructed inside a throwaway dependency workspace.
 * ``validate-models`` is the S02 contract validator plus the build-side checks (approved hashes,
   payload sanity, provenance, tree hygiene, packaging). If the contract validator is missing it
   fails: it is not a second opinion.
@@ -102,6 +102,11 @@ def load_pipeline(repo=REPO_ROOT):
                     "expected_hashes", "expected_triangles", "roles"):
             if key not in asset:
                 raise PipelineError(f"{asset.get('binding', '?')}: missing key {key!r}",
+                                    "E_PIPELINE_SHAPE")
+        for key in ("build_args", "export_args"):
+            if key in asset and (not isinstance(asset[key], list)
+                                 or not all(isinstance(arg, str) for arg in asset[key])):
+                raise PipelineError(f"{asset['binding']}: {key} must be a list of strings",
                                     "E_PIPELINE_SHAPE")
         if asset["authority"] not in ("script", "blend"):
             raise PipelineError(f"{asset['binding']}: unknown authority {asset['authority']!r}",
@@ -304,11 +309,26 @@ def provenance_state(repo, cfg, asset) -> dict | None:
 def _run_and_verify(repo, cfg, asset, executable, script_rel, opts, action, workdir=None):
     """Run one exporter, then verify the runtime export against the approved bytes."""
     root = Path(workdir or repo)
-    runtime = root / asset["runtime"]
-    source = root / asset["source"]
-    before_runtime = sha256_file(runtime) if runtime.is_file() else None
-    before_source = sha256_file(source) if source.is_file() else None
-    result = run_blender(executable, root / script_rel, cwd=root)
+    runtime = repo_path(root, asset["runtime"])
+    source = repo_path(root, asset["source"])
+    script = repo_path(root, script_rel)
+
+    # New catalogue recipes only save a .blend; their export-only wrapper produces runtime
+    # bytes. Legacy trio builders do both themselves and deliberately declare no wrapper.
+    wrapper = asset.get("export_script")
+    if asset["authority"] == "script" and wrapper and script_rel == asset["exporter"]:
+        export_script = assert_export_only(root, asset, wrapper)
+        rc, output = run_blender(executable, script, argv=asset.get("build_args", []), cwd=root)
+        if rc != 0:
+            raise PipelineError(f"{asset['binding']}: Blender seed exited {rc}\n"
+                                + "\n".join(output.strip().splitlines()[-25:]), "E_BUILD_FAILED")
+        if not source.is_file():
+            raise PipelineError(f"{asset['binding']}: the script produced no derived source",
+                                "E_BUILD_NO_SOURCE")
+        script_rel, script = wrapper, export_script
+    # Keep tokens byte-for-byte: B6's ship: prefix is a recipe selector, not a binding typo.
+    argv = asset.get("export_args" if wrapper and script_rel == wrapper else "build_args", [])
+    result = run_blender(executable, script, argv=argv, cwd=root)
     rc, output = result
     if rc != 0 or not runtime.is_file():
         tail = "\n".join(output.strip().splitlines()[-25:])
@@ -328,20 +348,14 @@ def _run_and_verify(repo, cfg, asset, executable, script_rel, opts, action, work
             "  The appearance the owner approved changed. Do NOT commit this; review the export and "
             "re-approve the revision deliberately.", "E_RUNTIME_HASH")
     payload = json.loads(runtime.read_text(encoding="utf-8"))
-    restored = False
-    if action == "build" and after_source != before_source and after_runtime == before_runtime \
-            and not opts.keep_blend:
-        subprocess.run(["git", "-C", str(repo), "checkout", "--", asset["source"]],
-                       capture_output=True, text=True)
-        restored = True
-        after_source = before_source
+
     record = {
         "action": action,
         "blender": str(executable),
         "blender_version": opts.blender_version,
         "source_sha256": after_source,
         "exporter": script_rel,
-        "exporter_sha256": sha256_file(root / script_rel),
+        "exporter_sha256": sha256_file(script),
         "runtime_sha256": after_runtime,
         "runtime_bytes": runtime.stat().st_size,
         "runtime_triangles": payload.get("triangle_count"),
@@ -349,13 +363,7 @@ def _run_and_verify(repo, cfg, asset, executable, script_rel, opts, action, work
         "matches_approved": after_runtime == approved,
         "notes": [],
     }
-    if restored:
-        record["notes"].append(
-            "the .blend was regenerated from code with unchanged runtime bytes and restored from "
-            "Git, so a rebuild never leaves an approved binary modified for no reason")
-    if action == "export" and workdir:
-        record["notes"].append("exported inside an isolated copy of the tree; the repository's "
-                              "declared source was not opened for writing")
+
     return record, payload
 
 
@@ -369,18 +377,58 @@ def build_asset(repo, cfg, asset, executable, opts):
     if not exporter.is_file():
         raise PipelineError(f"{asset['binding']}: missing exporter {asset['exporter']}",
                             "E_NO_EXPORTER")
-    return _run_and_verify(repo, cfg, asset, executable, asset["exporter"], opts, "build")
+    return _reconstruct_script(repo, cfg, asset, executable, opts, "build")
 
 
 def export_asset(repo, cfg, asset, executable, opts):
     """Produce the runtime export without touching the declared source."""
-    if asset["authority"] == "blend":
-        script_rel = assert_export_only(repo, asset, asset["export_script"])
-        return _run_and_verify(repo, cfg, asset, executable,
-                               str(script_rel.relative_to(repo)), opts, "export")
-    # Script-authoritative: the generator is the source, and it writes its own .blend on the way.
-    # Run it in a throwaway copy of the tree so the approved source is never the one written.
-    scratch = Path(tempfile.mkdtemp(prefix="sa-export-"))
+    if asset["authority"] == "blend" or asset.get("export_script"):
+        script = assert_export_only(repo, asset, asset["export_script"])
+        script_rel = str(script.relative_to(Path(repo).resolve()))
+        source = repo_path(repo, asset["source"])
+        approved_source = expected_hashes(repo, asset).get(asset["source"])
+        if (not source.is_file() or approved_source is None
+                or sha256_file(source) != approved_source):
+            raise PipelineError(f"{asset['binding']}: the declared source is missing or differs "
+                                "from its approved record; local edits are preserved",
+                                "E_SOURCE_DRIFT")
+        scratch = Path(tempfile.mkdtemp(prefix="sa-model-export-"))
+        try:
+            (scratch / "tools").mkdir(parents=True)
+            shutil.copytree(repo_path(repo, "tools/art"), scratch / "tools/art")
+            source = repo_path(repo, asset["source"])
+            isolated_source = repo_path(scratch, asset["source"])
+            isolated_source.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, isolated_source)
+            # No repository runtime is copied: a zero-exit no-op cannot verify old bytes.
+            record, payload = _run_and_verify(repo, cfg, asset, executable, script_rel,
+                                              opts, "export", workdir=scratch)
+            if (not isolated_source.is_file()
+                    or sha256_file(isolated_source) != approved_source
+                    or not source.is_file() or sha256_file(source) != approved_source):
+                raise PipelineError(f"{asset['binding']}: source changed during export; "
+                                    "refusing to publish runtime bytes", "E_SOURCE_DRIFT")
+            target = repo_path(repo, asset["runtime"])
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(repo_path(scratch, asset["runtime"]), target)
+            record["notes"].append("exported from an exact master copy in an isolated "
+                                   "tools/art dependency workspace; repository source preserved")
+            return record, payload
+        finally:
+            shutil.rmtree(scratch, ignore_errors=True)
+    return _reconstruct_script(repo, cfg, asset, executable, opts, "export")
+
+
+def _reconstruct_script(repo, cfg, asset, executable, opts, action):
+    # The current recipes depend only on their tools/art siblings. Copy that dependency
+    # workspace (dereferencing links), NOT the editable masters or old runtime exports.
+    # A seed's existing-master preflight remains intact and needs no --replace-seed.
+    source = repo_path(repo, asset["source"])
+    approved_source = expected_hashes(repo, asset).get(asset["source"])
+    if source.is_file() and approved_source is not None and sha256_file(source) != approved_source:
+        raise PipelineError(f"{asset['binding']}: the declared source differs from its approved "
+                            "record; refusing to replace or conceal local edits", "E_SOURCE_DRIFT")
+    scratch = Path(tempfile.mkdtemp(prefix="sa-model-"))
     try:
         (scratch / "tools").mkdir(parents=True)
         shutil.copytree(repo_path(repo, "tools/art"), scratch / "tools/art")
@@ -391,12 +439,25 @@ def export_asset(repo, cfg, asset, executable, opts):
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(repo_path(repo, relative), target)
         record, payload = _run_and_verify(repo, cfg, asset, executable, asset["exporter"], opts,
-                                          "export", workdir=scratch)
+                                          action, workdir=scratch)
+        if not (scratch / asset["source"]).is_file():
+            raise PipelineError(f"{asset['binding']}: the script produced no derived source",
+                                "E_BUILD_NO_SOURCE")
         produced = scratch / asset["runtime"]
         target = repo_path(repo, asset["runtime"])
         if not target.is_file() or sha256_file(target) != record["runtime_sha256"]:
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(produced, target)
+        source = repo_path(repo, asset["source"])
+        retain_source = action == "build" and (opts.keep_blend or not source.is_file())
+        if retain_source:
+            source.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(scratch / asset["source"], source)
+        record["source_sha256"] = sha256_file(source) if source.is_file() else None
+        record["notes"].append("reconstructed in an isolated tools/art dependency workspace; "
+                              + ("verified derived source retained (missing or --keep-blend)"
+                                 if retain_source
+                                 else "the repository's declared source was preserved"))
     finally:
         shutil.rmtree(scratch, ignore_errors=True)
     return record, payload
@@ -624,7 +685,7 @@ def add_common(parser):
     parser.add_argument("--allow-blender-mismatch", action="store_true",
                        help="run a Blender other than the pinned version")
     parser.add_argument("--keep-blend", action="store_true",
-                       help="do not restore a regenerated .blend whose runtime bytes are unchanged")
+                       help="retain the isolated script build's verified regenerated .blend")
     parser.add_argument("--json", action="store_true", help="machine-readable output")
 
 

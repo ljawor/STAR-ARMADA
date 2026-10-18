@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "status": "fixes-locally-verified-awaiting-independent-followup-review",
+  "base": "65661e4a9fbde7e37da0bae0881e372c3dc21e59",
+  "branch": "feat/s07-opt-in-catalogue",
+  "original_failed_review": "deleg_f45c7347",
+  "fix_batch": "deleg_074d0f7a",
+  "followup_review": "deleg_2c66bab0",
+  "isolated_exports": {
+    "count": 99,
+    "blender_version": "5.0.1",
+    "log": "artifacts/s07-integration/exports-approved-s06-isolated-attempt1.txt"
+  },
+  "tests": {
+    "count": 431,
+    "log": "artifacts/s07-integration/integration-review-fixes-union.txt"
+  },
+  "model_checks": 1024,
+  "protected_input_paths_unchanged": 327,
+  "verified_code_sha256": {
+    "tools/art/model_pipeline.py": "f1f22135c72f51385e1270c494945a3344d5fcde5fad2db0b82d35fd88615191",
+    "tools/art/s07_registration.py": "7071e885197f1f95323f2c0513954391191e882498fe84b6a246ee6219c502d7",
+    "tools/art/sync_runtime_metadata.py": "ac55a9072b89628a09c8d94db4919fed0eedbbb12e5bb4dc612e34bb11305d8a",
+    "tests/test_s07_registration.py": "2366a0c6e639d00833487fc76e5a7abd95c2d22857547ee4c40e7f5c857187d6",
+    "tests/test_s07_pipeline_execution.py": "5dd42561a82f94f31724cdcb976ede1aada8201c480597d9bb304308835ddf4b",
+    "tests/s07_registration_assertions.py": "f9f0f135f250fec6d1d65e5a5837f9894664c268e3e771ce356864aa9f7509a3"
+  },
+  "metadata_files": 110,
+  "metadata_republish_changes": 0,
+  "legacy_default_preserved": true,
+  "committed": false,
+  "pushed": false,
+  "limitations": [
+    "Independent follow-up review is still pending; do not infer approval from tests.",
+    "Earlier failed review and test attempts retained.",
+    "Rollback handles ordinary IO failures, not a crash-consistent multi-file transaction.",
+    "Scaffold is separately appearance-approved but not registered in this increment.",
+    "S07 runtime GL/LOD/menu/motion acceptance and S08/S09 remain open.",
+    "No merge, release or default activation."
+  ]
+}

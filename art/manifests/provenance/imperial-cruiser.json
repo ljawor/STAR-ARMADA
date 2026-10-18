@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "imperial:cruiser",
+  "asset_id": "core:imperial/cruiser",
+  "authority": "script",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:08Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/imperial_cruiser.blend",
+    "sha256": "aad9345c8d5aac5f0cb7a287a482c67d707e4b448aff0c93df96043c2509324e"
+  },
+  "exporter": {
+    "path": "tools/art/export_imperial_cruiser.py",
+    "sha256": "a648e015477647e1e37288cd80acc98e00393a2e9ec8ffc3df531dba21b2a408"
+  },
+  "runtime": {
+    "path": "assets/models/imperial_cruiser.mesh.json",
+    "sha256": "125f37cf927840f5ccd452bfe8ec5998c0e6e644c0965932399b716d8fedd130",
+    "bytes": 147861,
+    "triangles": 2384
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "125f37cf927840f5ccd452bfe8ec5998c0e6e644c0965932399b716d8fedd130",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

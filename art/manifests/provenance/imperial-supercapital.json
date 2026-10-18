@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "imperial:supercapital",
+  "asset_id": "core:imperial/supercapital",
+  "authority": "script",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:14Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/imperial_supercapital.blend",
+    "sha256": "1bc6ceb9d30698b27440023b2bc9098837e0775866a0a8046b29d656845f1f14"
+  },
+  "exporter": {
+    "path": "tools/art/export_imperial_supercapital.py",
+    "sha256": "22deafd7462c6745bdb8c498aad00a9f0d4b89d980b512e1c9ac1105bdcd2ba4"
+  },
+  "runtime": {
+    "path": "assets/models/imperial_supercapital.mesh.json",
+    "sha256": "1c44c3e7a78241b5048a9aefe23549b8578c0a21081ad797ce640e8ad9a98dbf",
+    "bytes": 163563,
+    "triangles": 2592
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "1c44c3e7a78241b5048a9aefe23549b8578c0a21081ad797ce640e8ad9a98dbf",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

@@ -1,0 +1,9 @@
+test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) ... ok
+test_execution_forwards_exact_arguments_for_the_script_being_run (test_s07_pipeline_execution.PipelineExecutionTest.test_execution_forwards_exact_arguments_for_the_script_being_run) ... ok
+test_omitted_and_empty_argument_arrays_keep_legacy_execution (test_s07_pipeline_execution.PipelineExecutionTest.test_omitted_and_empty_argument_arrays_keep_legacy_execution) ... ok
+test_script_build_reconstructs_in_isolation_preserving_approved_master (test_s07_pipeline_execution.PipelineExecutionTest.test_script_build_reconstructs_in_isolation_preserving_approved_master) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.036s
+
+OK

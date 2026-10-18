@@ -1,0 +1,8 @@
+test_exact_approved_set_and_deterministic_outputs (test_s07_registration.RegistrationTests.test_exact_approved_set_and_deterministic_outputs) ... /Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tools/art/s07_registration.py:199: DeprecationWarning: Passing None for 's' to shlex.split() is deprecated.
+  'build_args': shlex.split(sidecar['initial_seed'].get('selects', '')),
+ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.550s
+
+OK

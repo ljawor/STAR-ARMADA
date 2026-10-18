@@ -1,0 +1,76 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:confederacy/supercapital",
+  "revision": "ef932f769dc475900ebd4dfbdd21698fe4d6eb6a96c6e1d9e82e458a6ec50d80",
+  "display_name": "confed supercapital (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/confed_supercapital.mesh.json",
+      "sha256": "f33b0f79430130cf5d1c8524f618f2ce5c541a5571edf28e6a4d84284c357c4f",
+      "bytes": 233638
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -147.0,
+      -29.605,
+      -178.825
+    ],
+    "max": [
+      147.0,
+      49.5,
+      187.055725
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/confed_supercapital.blend",
+    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 3916,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "s06-b8-remaining-combat-2026-10-18",
+    "decided_by": "owner",
+    "decided_on": "2026-10-18",
+    "reviewed_revision": "ef932f769dc475900ebd4dfbdd21698fe4d6eb6a96c6e1d9e82e458a6ec50d80",
+    "reviewed_evidence": [
+      "artifacts/s06-completion/B8-appearance-grid.jpg",
+      "artifacts/s06-completion/review-b8-attempt1/render/confederacy-supercapital-after-close.png",
+      "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png",
+      "artifacts/s06-completion/review-b8-attempt1/render/metrics.json"
+    ]
+  }
+}

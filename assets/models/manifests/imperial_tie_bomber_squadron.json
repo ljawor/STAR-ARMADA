@@ -1,0 +1,74 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:imperial/bomber",
+  "revision": "b4718873f7055f127edc9299a012d45d033789a77580b0c5718fd1bc9b3dc046",
+  "display_name": "imperial tie bomber squadron (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/imperial_tie_bomber_squadron.mesh.json",
+      "sha256": "b0d03f0d0045e79653098a4a7d3c3e8769b0b1fc14d47c577195c635a862c826",
+      "bytes": 146776
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -31.25,
+      -3.24,
+      -28.996
+    ],
+    "max": [
+      31.25,
+      14.0,
+      35.0
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/imperial_tie_bomber_squadron.blend",
+    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 2536,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "s06-b6-imperial-ships-2026-10-18",
+    "decided_by": "owner",
+    "decided_on": "2026-10-18",
+    "reviewed_revision": "b4718873f7055f127edc9299a012d45d033789a77580b0c5718fd1bc9b3dc046",
+    "reviewed_evidence": [
+      "artifacts/s06_alliance_batch_review/b6-tie-bomber-squadron/imperial-tie-bomber-squadron-comparison.png",
+      "artifacts/s06_alliance_batch_review/b6-tie-bomber-squadron/report.json"
+    ]
+  }
+}

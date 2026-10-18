@@ -103,27 +103,11 @@ class RecordedApprovals(unittest.TestCase):
                                 f'{path} moved after {decision["id"]}: the approval no longer '
                                 f'covers the bytes on disk')
 
-    def test_approved_specimens_stay_unregistered_and_unactivated(self):
-        """Appearance approval is not activation: nothing approved here may become selectable."""
-        registry = load(ROOT / 'assets/models/registry.json')
-        status = {b['binding']: b['status'] for b in registry['bindings']}
-        pipeline = load(ROOT / 'art/manifests/pipeline.json')
-        registered = {a['binding'] for a in pipeline['assets']}
-        approved_assets = json.dumps([e for e in load(APPROVALS)['approved_assets']
-                                      if isinstance(e, dict)])
-        for decision in appearance_decisions():
-            for asset in decision['revision']['assets']:
-                with self.subTest(decision=decision['id'], binding=asset['gameplay_binding']):
-                    # Two statuses mean "not selectable": `procedural_legacy`, which is a binding the
-                    # runtime knows and serves the old mesh for, and `authoring_pending`, which is a row
-                    # the inventory declares as an authoring target. Anything else - `authored`, a pack,
-                    # a preview - would mean the approval had become a selection.
-                    self.assertIn(status.get(asset['gameplay_binding']),
-                                  ('procedural_legacy', 'authoring_pending'),
-                                  'an appearance-approved specimen must still not be selectable')
-                    self.assertNotIn(asset['gameplay_binding'], registered)
-                    self.assertNotIn(asset['gameplay_binding'], approved_assets)
-                    self.assertNotIn(asset['identifier'], approved_assets)
+    def test_only_authorized_s06_specimens_register_with_legacy_default(self):
+        """S07 execution authority registers exact approved revisions, not pending rows."""
+        from s07_registration_assertions import assert_opt_in_registration, assert_preview_boundary
+        approved = assert_opt_in_registration(self, ROOT)
+        assert_preview_boundary(self, ROOT, sorted(approved))
 
     def test_batch_sheets_and_sidecars_agree_with_the_decisions(self):
         """The sheet and the sidecar are what a reader sees first; they must not disagree."""
@@ -182,6 +166,89 @@ class RecordedApprovals(unittest.TestCase):
                 self.assertIn('production', text)
                 self.assertIn('packaging', text,
                               f'{decision["id"]} does not rule out packaging in writing')
+
+
+class RegistrationGuardControls(unittest.TestCase):
+    """Prove the migrated shared assertions still reject unauthorized publication."""
+
+    def reject_document_change(self, relative, mutate):
+        from unittest.mock import patch
+        import s07_registration_assertions as guards
+        original_load = guards.load
+        changed = original_load(ROOT, relative)
+        mutate(changed)
+
+        def controlled_load(root, path):
+            return changed if path == relative else original_load(root, path)
+
+        # A fresh TestCase has no running subTest outcome to absorb the assertion.
+        with patch.object(guards, 'load', side_effect=controlled_load):
+            with self.assertRaises(AssertionError):
+                guards.assert_opt_in_registration(unittest.TestCase(), ROOT, ['rebel:corvette'])
+
+    def test_guard_rejects_missing_execution_authority(self):
+        def remove(doc):
+            doc['decision_log'] = [d for d in doc['decision_log']
+                                   if d['id'] != 's07-opt-in-continuation-2026-10-18']
+        self.reject_document_change('art/manifests/pipeline_policy.json', remove)
+
+    def test_guard_rejects_substring_only_authority(self):
+        def rename(doc):
+            for decision in doc['decision_log']:
+                if decision['id'] == 's07-opt-in-continuation-2026-10-18':
+                    decision['id'] += '-not-authorized'
+        self.reject_document_change('art/manifests/pipeline_policy.json', rename)
+
+    def test_guard_rejects_substring_only_appearance_decision(self):
+        def rename(doc):
+            for decision in doc['decision_log']:
+                if decision['id'] == 's06-b1-alliance-combat-2026-10-17':
+                    decision['id'] += '-unapproved'
+        self.reject_document_change('art/manifests/approvals.json', rename)
+
+    def test_guard_rejects_separately_approved_scaffold_registration(self):
+        def activate(doc):
+            next(r for r in doc['bindings']
+                 if r['binding'] == 'shared:construction_scaffold')['status'] = 'core'
+        self.reject_document_change('assets/models/registry.json', activate)
+
+    def test_guard_rejects_planned_unapproved_syndicate_hull_registration(self):
+        def activate(doc):
+            next(r for r in doc['bindings'] if r['binding'] == 'syndicate:bomber')['status'] = 'core'
+        self.reject_document_change('assets/models/registry.json', activate)
+
+    def test_guard_rejects_missing_original_approval_receipt(self):
+        self.reject_document_change('assets/models/approval-receipts.json',
+                                    lambda doc: doc['receipts'].pop('core:alliance/corvette'))
+
+    def test_guard_rejects_receipt_from_a_different_revision(self):
+        def corrupt(doc):
+            doc['receipts']['core:alliance/corvette']['reviewed_revision'] = '0' * 64
+        self.reject_document_change('assets/models/approval-receipts.json', corrupt)
+
+    def test_guard_rejects_corrupt_approved_source_pin(self):
+        def corrupt(doc):
+            doc['tools/art/build_alliance_corvette.py'] = '0' * 64
+        self.reject_document_change('art/manifests/approved-s06-source-hashes.json', corrupt)
+
+    def test_guard_rejects_corrupt_original_evidence_receipt(self):
+        def corrupt(doc):
+            evidence = doc['receipts']['core:alliance/corvette']['evidence_sha256']
+            evidence[next(iter(evidence))] = '0' * 64
+        self.reject_document_change('assets/models/approval-receipts.json', corrupt)
+
+    def test_guard_rejects_silent_production_default_activation(self):
+        from unittest.mock import patch
+        from render import asset_selection as selection
+        from s07_registration_assertions import assert_preview_boundary
+        configure = selection.configure
+
+        def force_preview(settings, **kwargs):
+            return configure(dict(settings, model_preview=True), **kwargs)
+
+        with patch.object(selection, 'configure', side_effect=force_preview):
+            with self.assertRaises(AssertionError):
+                assert_preview_boundary(unittest.TestCase(), ROOT, ['rebel:corvette'])
 
 
 class RecordedScope(unittest.TestCase):

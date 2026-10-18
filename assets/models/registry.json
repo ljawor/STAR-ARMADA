@@ -11,7 +11,23 @@
         "station_faction": "confederacy"
       },
       "manifest": "core:confederacy/attack_satellite",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "legion_attack_satellite"
+      ],
+      "envelope": {
+        "min": [
+          -50.9795,
+          -9.0,
+          -34.0
+        ],
+        "max": [
+          50.9795,
+          21.5,
+          58.0
+        ]
+      },
+      "envelope_decision": "s06-b4-hardware-2026-10-17"
     },
     {
       "binding": "confederacy:battleship",
@@ -21,7 +37,23 @@
         "class_or_kind": "battleship"
       },
       "manifest": "core:confederacy/battleship",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "confed_battleship"
+      ],
+      "envelope": {
+        "min": [
+          -109.856392,
+          -14.0,
+          -129.825
+        ],
+        "max": [
+          109.856392,
+          49.5,
+          138.05574
+        ]
+      },
+      "envelope_decision": "s06-b8-remaining-combat-2026-10-18"
     },
     {
       "binding": "confederacy:bomber",
@@ -31,7 +63,23 @@
         "class_or_kind": "bomber"
       },
       "manifest": "core:confederacy/bomber",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "legion_hyena"
+      ],
+      "envelope": {
+        "min": [
+          -17.307274,
+          -6.9,
+          -21.65
+        ],
+        "max": [
+          17.307274,
+          12.85,
+          26.12
+        ]
+      },
+      "envelope_decision": "s06-b2-squadron-logistics-2026-10-17"
     },
     {
       "binding": "confederacy:colonizer",
@@ -41,7 +89,23 @@
         "class_or_kind": "colonizer"
       },
       "manifest": "core:confederacy/colonizer",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "confed_colonizer"
+      ],
+      "envelope": {
+        "min": [
+          -52.856406,
+          -7.0,
+          -51.6975
+        ],
+        "max": [
+          52.856406,
+          43.5,
+          55.4475
+        ]
+      },
+      "envelope_decision": "s06-b9-construction-2026-10-18"
     },
     {
       "binding": "confederacy:command_station",
@@ -52,7 +116,23 @@
         "station_faction": "confederacy"
       },
       "manifest": "core:confederacy/command_station",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "legion_command_station"
+      ],
+      "envelope": {
+        "min": [
+          -53.799999,
+          -6.0,
+          -38.0
+        ],
+        "max": [
+          53.799999,
+          41.6,
+          60.0
+        ]
+      },
+      "envelope_decision": "s06-b3a-command-stations-2026-10-17"
     },
     {
       "binding": "confederacy:constructor",
@@ -62,7 +142,23 @@
         "class_or_kind": "constructor"
       },
       "manifest": "core:confederacy/constructor",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "confed_constructor"
+      ],
+      "envelope": {
+        "min": [
+          -37.794229,
+          -8.265,
+          -34.6975
+        ],
+        "max": [
+          37.794229,
+          33.0,
+          34.0
+        ]
+      },
+      "envelope_decision": "s06-b9-construction-2026-10-18"
     },
     {
       "binding": "confederacy:convoy",
@@ -72,7 +168,23 @@
         "class_or_kind": "convoy"
       },
       "manifest": "core:confederacy/convoy",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "legion_convoy"
+      ],
+      "envelope": {
+        "min": [
+          -24.700001,
+          -6.3,
+          -65.698
+        ],
+        "max": [
+          24.700001,
+          29.4,
+          57.6
+        ]
+      },
+      "envelope_decision": "s06-b2-squadron-logistics-2026-10-17"
     },
     {
       "binding": "confederacy:corvette",
@@ -82,7 +194,23 @@
         "class_or_kind": "corvette"
       },
       "manifest": "core:confederacy/corvette",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "confed_corvette"
+      ],
+      "envelope": {
+        "min": [
+          -31.713844,
+          -7.0,
+          -38.489994
+        ],
+        "max": [
+          31.713844,
+          15.1,
+          48.06775
+        ]
+      },
+      "envelope_decision": "s06-b8-remaining-combat-2026-10-18"
     },
     {
       "binding": "confederacy:cruiser",
@@ -92,7 +220,23 @@
         "class_or_kind": "cruiser"
       },
       "manifest": "core:confederacy/cruiser",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "confed_cruiser"
+      ],
+      "envelope": {
+        "min": [
+          -75.392305,
+          -10.0,
+          -80.31
+        ],
+        "max": [
+          75.392305,
+          15.655,
+          94.617737
+        ]
+      },
+      "envelope_decision": "s06-b8-remaining-combat-2026-10-18"
     },
     {
       "binding": "confederacy:defense_platform",
@@ -103,7 +247,23 @@
         "station_faction": "confederacy"
       },
       "manifest": "core:confederacy/defense_platform",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "legion_defense_platform"
+      ],
+      "envelope": {
+        "min": [
+          -50.2043,
+          -8.4,
+          -31.2764
+        ],
+        "max": [
+          50.2043,
+          16.544,
+          55.68
+        ]
+      },
+      "envelope_decision": "s06-b3c-stations-2026-10-17"
     },
     {
       "binding": "confederacy:defense_satellite",
@@ -114,7 +274,23 @@
         "station_faction": "confederacy"
       },
       "manifest": "core:confederacy/defense_satellite",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "legion_defense_satellite"
+      ],
+      "envelope": {
+        "min": [
+          -41.1051,
+          -9.0,
+          -34.0
+        ],
+        "max": [
+          41.1051,
+          19.5,
+          44.0
+        ]
+      },
+      "envelope_decision": "s06-b4-hardware-2026-10-17"
     },
     {
       "binding": "confederacy:energy_relay",
@@ -125,7 +301,23 @@
         "station_faction": "confederacy"
       },
       "manifest": "core:confederacy/energy_relay",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "legion_energy_relay"
+      ],
+      "envelope": {
+        "min": [
+          -41.287201,
+          -16.0,
+          -25.671301
+        ],
+        "max": [
+          41.287201,
+          31.6,
+          46.299999
+        ]
+      },
+      "envelope_decision": "s06-b3b-stations-2026-10-17"
     },
     {
       "binding": "confederacy:fighter",
@@ -135,7 +327,23 @@
         "class_or_kind": "fighter"
       },
       "manifest": "core:confederacy/fighter",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "legion_vulture"
+      ],
+      "envelope": {
+        "min": [
+          -12.36669,
+          -2.75,
+          -15.07
+        ],
+        "max": [
+          12.36669,
+          6.877035,
+          19.4
+        ]
+      },
+      "envelope_decision": "s06-b2-squadron-logistics-2026-10-17"
     },
     {
       "binding": "confederacy:fighter_platform",
@@ -146,7 +354,23 @@
         "station_faction": "confederacy"
       },
       "manifest": "core:confederacy/fighter_platform",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "legion_fighter_platform"
+      ],
+      "envelope": {
+        "min": [
+          -42.4021,
+          -8.8,
+          -36.4
+        ],
+        "max": [
+          42.4021,
+          11.88,
+          36.0
+        ]
+      },
+      "envelope_decision": "s06-b3c-stations-2026-10-17"
     },
     {
       "binding": "confederacy:frigate",
@@ -156,7 +380,23 @@
         "class_or_kind": "frigate"
       },
       "manifest": "core:confederacy/frigate",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "confed_frigate"
+      ],
+      "envelope": {
+        "min": [
+          -48.070759,
+          -8.5,
+          -60.475
+        ],
+        "max": [
+          48.070759,
+          15.1,
+          72.56775
+        ]
+      },
+      "envelope_decision": "s06-b8-remaining-combat-2026-10-18"
     },
     {
       "binding": "confederacy:mining_station",
@@ -167,7 +407,23 @@
         "station_faction": "confederacy"
       },
       "manifest": "core:confederacy/mining_station",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "legion_mining_station"
+      ],
+      "envelope": {
+        "min": [
+          -40.418598,
+          -31.44,
+          -29.36
+        ],
+        "max": [
+          40.418598,
+          11.08,
+          46.96
+        ]
+      },
+      "envelope_decision": "s06-b3b-stations-2026-10-17"
     },
     {
       "binding": "confederacy:planet_extractor",
@@ -178,7 +434,23 @@
         "station_faction": "confederacy"
       },
       "manifest": "core:confederacy/planet_extractor",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "legion_planet_extractor"
+      ],
+      "envelope": {
+        "min": [
+          -34.0,
+          0.0,
+          -32.0
+        ],
+        "max": [
+          34.0,
+          43.0,
+          32.0
+        ]
+      },
+      "envelope_decision": "s06-b4-hardware-2026-10-17"
     },
     {
       "binding": "confederacy:planet_pulsar_cannon",
@@ -189,7 +461,23 @@
         "station_faction": "confederacy"
       },
       "manifest": "core:confederacy/planet_pulsar_cannon",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "legion_planet_pulsar_cannon"
+      ],
+      "envelope": {
+        "min": [
+          -34.0,
+          0.0,
+          -32.0
+        ],
+        "max": [
+          34.0,
+          42.4,
+          46.0
+        ]
+      },
+      "envelope_decision": "s06-b4-hardware-2026-10-17"
     },
     {
       "binding": "confederacy:planet_shield_generator",
@@ -200,7 +488,23 @@
         "station_faction": "confederacy"
       },
       "manifest": "core:confederacy/planet_shield_generator",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "legion_planet_shield_generator"
+      ],
+      "envelope": {
+        "min": [
+          -34.0,
+          0.0,
+          -32.0
+        ],
+        "max": [
+          34.0,
+          46.5,
+          32.0
+        ]
+      },
+      "envelope_decision": "s06-b4-hardware-2026-10-17"
     },
     {
       "binding": "confederacy:planet_trade_hub",
@@ -211,7 +515,23 @@
         "station_faction": "confederacy"
       },
       "manifest": "core:confederacy/planet_trade_hub",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "legion_planet_trade_hub"
+      ],
+      "envelope": {
+        "min": [
+          -34.0,
+          0.0,
+          -32.0
+        ],
+        "max": [
+          34.0,
+          49.5,
+          32.0
+        ]
+      },
+      "envelope_decision": "s06-b4-hardware-2026-10-17"
     },
     {
       "binding": "confederacy:repair_dock",
@@ -222,7 +542,23 @@
         "station_faction": "confederacy"
       },
       "manifest": "core:confederacy/repair_dock",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "legion_repair_dock"
+      ],
+      "envelope": {
+        "min": [
+          -40.1472,
+          -14.8,
+          -36.4
+        ],
+        "max": [
+          40.1472,
+          26.4,
+          36.4
+        ]
+      },
+      "envelope_decision": "s06-b3c-stations-2026-10-17"
     },
     {
       "binding": "confederacy:research_station",
@@ -233,7 +569,23 @@
         "station_faction": "confederacy"
       },
       "manifest": "core:confederacy/research_station",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "legion_research_station"
+      ],
+      "envelope": {
+        "min": [
+          -46.3156,
+          -12.4,
+          -33.48
+        ],
+        "max": [
+          46.3156,
+          13.88,
+          52.68
+        ]
+      },
+      "envelope_decision": "s06-b3c-stations-2026-10-17"
     },
     {
       "binding": "confederacy:sensor_station",
@@ -244,7 +596,23 @@
         "station_faction": "confederacy"
       },
       "manifest": "core:confederacy/sensor_station",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "legion_sensor_station"
+      ],
+      "envelope": {
+        "min": [
+          -36.1413,
+          -14.0,
+          -28.2851
+        ],
+        "max": [
+          36.1413,
+          38.252628,
+          34.8
+        ]
+      },
+      "envelope_decision": "s06-b3b-stations-2026-10-17"
     },
     {
       "binding": "confederacy:shipyard",
@@ -255,7 +623,23 @@
         "station_faction": "confederacy"
       },
       "manifest": "core:confederacy/shipyard",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "legion_shipyard"
+      ],
+      "envelope": {
+        "min": [
+          -62.04,
+          -5.6,
+          -45.0564
+        ],
+        "max": [
+          62.04,
+          41.6,
+          62.4
+        ]
+      },
+      "envelope_decision": "s06-b3c-stations-2026-10-17"
     },
     {
       "binding": "confederacy:supercapital",
@@ -265,7 +649,23 @@
         "class_or_kind": "supercapital"
       },
       "manifest": "core:confederacy/supercapital",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "confed_supercapital"
+      ],
+      "envelope": {
+        "min": [
+          -147.0,
+          -29.605,
+          -178.825
+        ],
+        "max": [
+          147.0,
+          49.5,
+          187.055725
+        ]
+      },
+      "envelope_decision": "s06-b8-remaining-combat-2026-10-18"
     },
     {
       "binding": "confederacy:trade_station",
@@ -276,7 +676,23 @@
         "station_faction": "confederacy"
       },
       "manifest": "core:confederacy/trade_station",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "legion_trade_station"
+      ],
+      "envelope": {
+        "min": [
+          -43.7668,
+          -6.552,
+          -46.0532
+        ],
+        "max": [
+          43.7668,
+          18.28,
+          46.0532
+        ]
+      },
+      "envelope_decision": "s06-b3c-stations-2026-10-17"
     },
     {
       "binding": "environment:agricultural",
@@ -296,7 +712,23 @@
         "class_or_kind": "asteroid_field"
       },
       "manifest": "core:environment/asteroid_field",
-      "status": "authoring_pending"
+      "status": "core",
+      "legacy_identifiers": [
+        "shared_asteroid_field"
+      ],
+      "envelope": {
+        "min": [
+          -0.58,
+          -0.46,
+          -0.58
+        ],
+        "max": [
+          0.58,
+          0.46,
+          0.58
+        ]
+      },
+      "envelope_decision": "s06-b5-environment-2026-10-17"
     },
     {
       "binding": "environment:barren",
@@ -417,7 +849,23 @@
         "station_faction": "imperial"
       },
       "manifest": "core:imperial/attack_satellite",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "imperial_attack_satellite"
+      ],
+      "envelope": {
+        "min": [
+          -50.9795,
+          -9.0,
+          -34.0
+        ],
+        "max": [
+          50.9795,
+          21.5,
+          58.0
+        ]
+      },
+      "envelope_decision": "s06-b4-hardware-2026-10-17"
     },
     {
       "binding": "imperial:battleship",
@@ -430,8 +878,20 @@
       "legacy_identifiers": [
         "imperial_battleship"
       ],
-      "status": "procedural_legacy",
-      "notes": "Rows like this exist so the coverage join with model_inventory.json has a target. No manifest exists yet."
+      "status": "core",
+      "envelope": {
+        "min": [
+          -38.45,
+          -10.0,
+          -80.183
+        ],
+        "max": [
+          38.45,
+          39.5,
+          108.0
+        ]
+      },
+      "envelope_decision": "s06-b6-imperial-ships-2026-10-18"
     },
     {
       "binding": "imperial:bomber",
@@ -441,7 +901,23 @@
         "class_or_kind": "bomber"
       },
       "manifest": "core:imperial/bomber",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "imperial_tie_bomber_squadron"
+      ],
+      "envelope": {
+        "min": [
+          -31.25,
+          -3.24,
+          -28.996
+        ],
+        "max": [
+          31.25,
+          14.0,
+          35.0
+        ]
+      },
+      "envelope_decision": "s06-b6-imperial-ships-2026-10-18"
     },
     {
       "binding": "imperial:colonizer",
@@ -451,7 +927,23 @@
         "class_or_kind": "colonizer"
       },
       "manifest": "core:imperial/colonizer",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "imperial_colonizer"
+      ],
+      "envelope": {
+        "min": [
+          -20.0,
+          -7.0,
+          -24.6975
+        ],
+        "max": [
+          20.0,
+          26.5,
+          24.35825
+        ]
+      },
+      "envelope_decision": "s06-b9-construction-2026-10-18"
     },
     {
       "binding": "imperial:command_station",
@@ -462,7 +954,23 @@
         "station_faction": "imperial"
       },
       "manifest": "core:imperial/command_station",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "imperial_command_station"
+      ],
+      "envelope": {
+        "min": [
+          -62.0,
+          -8.0,
+          -62.0
+        ],
+        "max": [
+          62.0,
+          55.0,
+          62.0
+        ]
+      },
+      "envelope_decision": "s06-b7-imperial-stations-2026-10-18"
     },
     {
       "binding": "imperial:constructor",
@@ -472,7 +980,23 @@
         "class_or_kind": "constructor"
       },
       "manifest": "core:imperial/constructor",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "imperial_constructor"
+      ],
+      "envelope": {
+        "min": [
+          -20.0,
+          -7.0,
+          -24.6975
+        ],
+        "max": [
+          20.0,
+          26.5,
+          24.35825
+        ]
+      },
+      "envelope_decision": "s06-b9-construction-2026-10-18"
     },
     {
       "binding": "imperial:convoy",
@@ -482,7 +1006,23 @@
         "class_or_kind": "convoy"
       },
       "manifest": "core:imperial/convoy",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "imperial_convoy"
+      ],
+      "envelope": {
+        "min": [
+          -19.5,
+          -6.8,
+          -24.6975
+        ],
+        "max": [
+          19.5,
+          25.73641,
+          24.35825
+        ]
+      },
+      "envelope_decision": "s06-b6-imperial-ships-2026-10-18"
     },
     {
       "binding": "imperial:corvette",
@@ -492,6 +1032,7 @@
         "class_or_kind": "corvette"
       },
       "manifest": "core:imperial/corvette",
+      "status": "core",
       "legacy_identifiers": [
         "imperial_corvette"
       ],
@@ -507,8 +1048,7 @@
           48.0
         ]
       },
-      "status": "procedural_legacy",
-      "notes": "S06 B6 row 1, the Imperial corvette, authored inside the legacy needle envelope. Pending the owner's decision and NOT registered: status stays procedural_legacy, no pipeline entry, stock draws the procedural needle. The manifest and mesh exist for a review session, shown by the review harness patching selection."
+      "envelope_decision": "s06-b6-imperial-ships-2026-10-18"
     },
     {
       "binding": "imperial:cruiser",
@@ -518,7 +1058,23 @@
         "class_or_kind": "cruiser"
       },
       "manifest": "core:imperial/cruiser",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "imperial_cruiser"
+      ],
+      "envelope": {
+        "min": [
+          -29.45,
+          -7.0,
+          -62.94
+        ],
+        "max": [
+          29.45,
+          31.5,
+          78.0
+        ]
+      },
+      "envelope_decision": "s06-b6-imperial-ships-2026-10-18"
     },
     {
       "binding": "imperial:defense_platform",
@@ -529,7 +1085,23 @@
         "station_faction": "imperial"
       },
       "manifest": "core:imperial/defense_platform",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "imperial_defense_platform"
+      ],
+      "envelope": {
+        "min": [
+          -44.258609,
+          -13.5,
+          -44.258609
+        ],
+        "max": [
+          44.258609,
+          21.0,
+          44.258609
+        ]
+      },
+      "envelope_decision": "s06-b7-imperial-stations-2026-10-18"
     },
     {
       "binding": "imperial:defense_satellite",
@@ -540,7 +1112,23 @@
         "station_faction": "imperial"
       },
       "manifest": "core:imperial/defense_satellite",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "imperial_defense_satellite"
+      ],
+      "envelope": {
+        "min": [
+          -41.1051,
+          -9.0,
+          -34.0
+        ],
+        "max": [
+          41.1051,
+          19.5,
+          44.0
+        ]
+      },
+      "envelope_decision": "s06-b4-hardware-2026-10-17"
     },
     {
       "binding": "imperial:energy_relay",
@@ -551,7 +1139,23 @@
         "station_faction": "imperial"
       },
       "manifest": "core:imperial/energy_relay",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "imperial_energy_relay"
+      ],
+      "envelope": {
+        "min": [
+          -41.736688,
+          -20.5,
+          -28.0
+        ],
+        "max": [
+          41.736688,
+          38.0,
+          46.75
+        ]
+      },
+      "envelope_decision": "s06-b7-imperial-stations-2026-10-18"
     },
     {
       "binding": "imperial:fighter",
@@ -561,7 +1165,23 @@
         "class_or_kind": "fighter"
       },
       "manifest": "core:imperial/fighter",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "imperial_tie_squadron"
+      ],
+      "envelope": {
+        "min": [
+          -31.25,
+          -3.24,
+          -28.996
+        ],
+        "max": [
+          31.25,
+          14.0,
+          35.0
+        ]
+      },
+      "envelope_decision": "s06-b6-imperial-ships-2026-10-18"
     },
     {
       "binding": "imperial:fighter_platform",
@@ -572,7 +1192,23 @@
         "station_faction": "imperial"
       },
       "manifest": "core:imperial/fighter_platform",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "imperial_fighter_platform"
+      ],
+      "envelope": {
+        "min": [
+          -33.0,
+          -11.5,
+          -42.0
+        ],
+        "max": [
+          33.0,
+          53.5,
+          44.0
+        ]
+      },
+      "envelope_decision": "s06-b7-imperial-stations-2026-10-18"
     },
     {
       "binding": "imperial:frigate",
@@ -582,7 +1218,23 @@
         "class_or_kind": "frigate"
       },
       "manifest": "core:imperial/frigate",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "imperial_frigate"
+      ],
+      "envelope": {
+        "min": [
+          -16.0,
+          -5.0,
+          -43.601
+        ],
+        "max": [
+          16.0,
+          24.0,
+          48.0
+        ]
+      },
+      "envelope_decision": "s06-b6-imperial-ships-2026-10-18"
     },
     {
       "binding": "imperial:mining_station",
@@ -593,7 +1245,23 @@
         "station_faction": "imperial"
       },
       "manifest": "core:imperial/mining_station",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "imperial_mining_station"
+      ],
+      "envelope": {
+        "min": [
+          -39.0,
+          -54.0,
+          -28.0
+        ],
+        "max": [
+          39.0,
+          41.0,
+          35.507
+        ]
+      },
+      "envelope_decision": "s06-b7-imperial-stations-2026-10-18"
     },
     {
       "binding": "imperial:planet_extractor",
@@ -604,7 +1272,23 @@
         "station_faction": "imperial"
       },
       "manifest": "core:imperial/planet_extractor",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "imperial_planet_extractor"
+      ],
+      "envelope": {
+        "min": [
+          -34.0,
+          0.0,
+          -32.0
+        ],
+        "max": [
+          34.0,
+          43.0,
+          32.0
+        ]
+      },
+      "envelope_decision": "s06-b4-hardware-2026-10-17"
     },
     {
       "binding": "imperial:planet_pulsar_cannon",
@@ -615,7 +1299,23 @@
         "station_faction": "imperial"
       },
       "manifest": "core:imperial/planet_pulsar_cannon",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "imperial_planet_pulsar_cannon"
+      ],
+      "envelope": {
+        "min": [
+          -34.0,
+          0.0,
+          -32.0
+        ],
+        "max": [
+          34.0,
+          42.4,
+          46.0
+        ]
+      },
+      "envelope_decision": "s06-b4-hardware-2026-10-17"
     },
     {
       "binding": "imperial:planet_shield_generator",
@@ -626,7 +1326,23 @@
         "station_faction": "imperial"
       },
       "manifest": "core:imperial/planet_shield_generator",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "imperial_planet_shield_generator"
+      ],
+      "envelope": {
+        "min": [
+          -34.0,
+          0.0,
+          -32.0
+        ],
+        "max": [
+          34.0,
+          46.5,
+          32.0
+        ]
+      },
+      "envelope_decision": "s06-b4-hardware-2026-10-17"
     },
     {
       "binding": "imperial:planet_trade_hub",
@@ -637,7 +1353,23 @@
         "station_faction": "imperial"
       },
       "manifest": "core:imperial/planet_trade_hub",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "imperial_planet_trade_hub"
+      ],
+      "envelope": {
+        "min": [
+          -34.0,
+          0.0,
+          -32.0
+        ],
+        "max": [
+          34.0,
+          49.5,
+          32.0
+        ]
+      },
+      "envelope_decision": "s06-b4-hardware-2026-10-17"
     },
     {
       "binding": "imperial:repair_dock",
@@ -648,7 +1380,23 @@
         "station_faction": "imperial"
       },
       "manifest": "core:imperial/repair_dock",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "imperial_repair_dock"
+      ],
+      "envelope": {
+        "min": [
+          -34.5,
+          -20.0,
+          -42.5
+        ],
+        "max": [
+          34.5,
+          29.0,
+          42.5
+        ]
+      },
+      "envelope_decision": "s06-b7-imperial-stations-2026-10-18"
     },
     {
       "binding": "imperial:research_station",
@@ -659,7 +1407,23 @@
         "station_faction": "imperial"
       },
       "manifest": "core:imperial/research_station",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "imperial_research_station"
+      ],
+      "envelope": {
+        "min": [
+          -60.925626,
+          -15.0,
+          -41.526279
+        ],
+        "max": [
+          60.925626,
+          40.305438,
+          64.0
+        ]
+      },
+      "envelope_decision": "s06-b7-imperial-stations-2026-10-18"
     },
     {
       "binding": "imperial:sensor_station",
@@ -670,7 +1434,23 @@
         "station_faction": "imperial"
       },
       "manifest": "core:imperial/sensor_station",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "imperial_sensor_station"
+      ],
+      "envelope": {
+        "min": [
+          -37.0,
+          -23.0,
+          -30.387721
+        ],
+        "max": [
+          37.0,
+          62.355496,
+          30.387721
+        ]
+      },
+      "envelope_decision": "s06-b7-imperial-stations-2026-10-18"
     },
     {
       "binding": "imperial:shipyard",
@@ -681,7 +1461,23 @@
         "station_faction": "imperial"
       },
       "manifest": "core:imperial/shipyard",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "imperial_shipyard"
+      ],
+      "envelope": {
+        "min": [
+          -43.65,
+          -10.0,
+          -45.0
+        ],
+        "max": [
+          43.65,
+          34.225,
+          55.507
+        ]
+      },
+      "envelope_decision": "s06-b7-imperial-stations-2026-10-18"
     },
     {
       "binding": "imperial:supercapital",
@@ -691,7 +1487,23 @@
         "class_or_kind": "supercapital"
       },
       "manifest": "core:imperial/supercapital",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "imperial_supercapital"
+      ],
+      "envelope": {
+        "min": [
+          -38.45,
+          -10.0,
+          -80.183
+        ],
+        "max": [
+          38.45,
+          39.5,
+          108.0
+        ]
+      },
+      "envelope_decision": "s06-b6-imperial-ships-2026-10-18"
     },
     {
       "binding": "imperial:trade_station",
@@ -702,7 +1514,23 @@
         "station_faction": "imperial"
       },
       "manifest": "core:imperial/trade_station",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "imperial_trade_station"
+      ],
+      "envelope": {
+        "min": [
+          -63.53675,
+          -8.605,
+          -63.53675
+        ],
+        "max": [
+          63.53675,
+          51.5,
+          63.53675
+        ]
+      },
+      "envelope_decision": "s06-b7-imperial-stations-2026-10-18"
     },
     {
       "binding": "menu:cinematic_backdrop",
@@ -722,8 +1550,24 @@
         "class_or_kind": "attack_satellite",
         "station_faction": "rebel"
       },
-      "manifest": "core:rebel/attack_satellite",
-      "status": "procedural_legacy"
+      "manifest": "core:alliance/attack_satellite",
+      "status": "core",
+      "legacy_identifiers": [
+        "alliance_attack_satellite"
+      ],
+      "envelope": {
+        "min": [
+          -50.9795,
+          -9.0,
+          -34.0
+        ],
+        "max": [
+          50.9795,
+          21.5,
+          58.0
+        ]
+      },
+      "envelope_decision": "s06-b4-hardware-2026-10-17"
     },
     {
       "binding": "rebel:battleship",
@@ -759,8 +1603,24 @@
         "faction": "rebel",
         "class_or_kind": "bomber"
       },
-      "manifest": "core:rebel/bomber",
-      "status": "procedural_legacy"
+      "manifest": "core:alliance/bomber",
+      "status": "core",
+      "legacy_identifiers": [
+        "alliance_bomber"
+      ],
+      "envelope": {
+        "min": [
+          -14.316667,
+          -6.65,
+          -25.37
+        ],
+        "max": [
+          14.316667,
+          6.440669,
+          23.0
+        ]
+      },
+      "envelope_decision": "s06-b2-squadron-logistics-2026-10-17"
     },
     {
       "binding": "rebel:colonizer",
@@ -769,8 +1629,24 @@
         "faction": "rebel",
         "class_or_kind": "colonizer"
       },
-      "manifest": "core:rebel/colonizer",
-      "status": "procedural_legacy"
+      "manifest": "core:alliance/colonizer",
+      "status": "core",
+      "legacy_identifiers": [
+        "rebel_colonizer"
+      ],
+      "envelope": {
+        "min": [
+          -42.5,
+          -13.5,
+          -46.94
+        ],
+        "max": [
+          42.5,
+          36.5,
+          48.507
+        ]
+      },
+      "envelope_decision": "s06-b9-construction-2026-10-18"
     },
     {
       "binding": "rebel:command_station",
@@ -780,8 +1656,24 @@
         "class_or_kind": "command_station",
         "station_faction": "rebel"
       },
-      "manifest": "core:rebel/command_station",
-      "status": "procedural_legacy"
+      "manifest": "core:alliance/command_station",
+      "status": "core",
+      "legacy_identifiers": [
+        "alliance_command_station"
+      ],
+      "envelope": {
+        "min": [
+          -48.0,
+          -6.8,
+          -29.6
+        ],
+        "max": [
+          48.0,
+          26.48,
+          29.6
+        ]
+      },
+      "envelope_decision": "s06-b3a-command-stations-2026-10-17"
     },
     {
       "binding": "rebel:constructor",
@@ -790,8 +1682,24 @@
         "faction": "rebel",
         "class_or_kind": "constructor"
       },
-      "manifest": "core:rebel/constructor",
-      "status": "procedural_legacy"
+      "manifest": "core:alliance/constructor",
+      "status": "core",
+      "legacy_identifiers": [
+        "rebel_constructor"
+      ],
+      "envelope": {
+        "min": [
+          -25.0,
+          -7.0,
+          -38.455
+        ],
+        "max": [
+          25.0,
+          32.451235,
+          35.5
+        ]
+      },
+      "envelope_decision": "s06-b9-construction-2026-10-18"
     },
     {
       "binding": "rebel:convoy",
@@ -800,8 +1708,24 @@
         "faction": "rebel",
         "class_or_kind": "convoy"
       },
-      "manifest": "core:rebel/convoy",
-      "status": "procedural_legacy"
+      "manifest": "core:alliance/convoy",
+      "status": "core",
+      "legacy_identifiers": [
+        "alliance_convoy"
+      ],
+      "envelope": {
+        "min": [
+          -30.299999,
+          -6.0,
+          -72.698
+        ],
+        "max": [
+          30.299999,
+          14.776171,
+          59.5
+        ]
+      },
+      "envelope_decision": "s06-b2-squadron-logistics-2026-10-17"
     },
     {
       "binding": "rebel:corvette",
@@ -810,8 +1734,24 @@
         "faction": "rebel",
         "class_or_kind": "corvette"
       },
-      "manifest": "core:rebel/corvette",
-      "status": "procedural_legacy"
+      "manifest": "core:alliance/corvette",
+      "status": "core",
+      "legacy_identifiers": [
+        "alliance_corvette"
+      ],
+      "envelope": {
+        "min": [
+          -21.9,
+          -6.0,
+          -46.46
+        ],
+        "max": [
+          21.9,
+          15.3,
+          45.0
+        ]
+      },
+      "envelope_decision": "s06-b1-alliance-combat-2026-10-17"
     },
     {
       "binding": "rebel:cruiser",
@@ -820,8 +1760,24 @@
         "faction": "rebel",
         "class_or_kind": "cruiser"
       },
-      "manifest": "core:rebel/cruiser",
-      "status": "procedural_legacy"
+      "manifest": "core:alliance/cruiser",
+      "status": "core",
+      "legacy_identifiers": [
+        "alliance_cruiser"
+      ],
+      "envelope": {
+        "min": [
+          -66.0,
+          -11.265,
+          -99.925
+        ],
+        "max": [
+          66.0,
+          19.3,
+          97.5
+        ]
+      },
+      "envelope_decision": "s06-cruiser-review-2026-10-17"
     },
     {
       "binding": "rebel:defense_platform",
@@ -831,8 +1787,24 @@
         "class_or_kind": "defense_platform",
         "station_faction": "rebel"
       },
-      "manifest": "core:rebel/defense_platform",
-      "status": "procedural_legacy"
+      "manifest": "core:alliance/defense_platform",
+      "status": "core",
+      "legacy_identifiers": [
+        "alliance_defense_platform"
+      ],
+      "envelope": {
+        "min": [
+          -45.92,
+          -4.8,
+          -44.32
+        ],
+        "max": [
+          45.92,
+          11.166,
+          44.32
+        ]
+      },
+      "envelope_decision": "s06-b3c-stations-2026-10-17"
     },
     {
       "binding": "rebel:defense_satellite",
@@ -842,8 +1814,24 @@
         "class_or_kind": "defense_satellite",
         "station_faction": "rebel"
       },
-      "manifest": "core:rebel/defense_satellite",
-      "status": "procedural_legacy"
+      "manifest": "core:alliance/defense_satellite",
+      "status": "core",
+      "legacy_identifiers": [
+        "alliance_defense_satellite"
+      ],
+      "envelope": {
+        "min": [
+          -41.1051,
+          -9.0,
+          -34.0
+        ],
+        "max": [
+          41.1051,
+          19.5,
+          44.0
+        ]
+      },
+      "envelope_decision": "s06-b4-hardware-2026-10-17"
     },
     {
       "binding": "rebel:energy_relay",
@@ -853,8 +1841,24 @@
         "class_or_kind": "energy_relay",
         "station_faction": "rebel"
       },
-      "manifest": "core:rebel/energy_relay",
-      "status": "procedural_legacy"
+      "manifest": "core:alliance/energy_relay",
+      "status": "core",
+      "legacy_identifiers": [
+        "alliance_energy_relay"
+      ],
+      "envelope": {
+        "min": [
+          -50.299999,
+          -8.4078,
+          -29.36
+        ],
+        "max": [
+          50.299999,
+          13.2078,
+          20.9846
+        ]
+      },
+      "envelope_decision": "s06-b3b-stations-2026-10-17"
     },
     {
       "binding": "rebel:fighter",
@@ -863,8 +1867,24 @@
         "faction": "rebel",
         "class_or_kind": "fighter"
       },
-      "manifest": "core:rebel/fighter",
-      "status": "procedural_legacy"
+      "manifest": "core:alliance/fighter",
+      "status": "core",
+      "legacy_identifiers": [
+        "alliance_interceptor"
+      ],
+      "envelope": {
+        "min": [
+          -10.11875,
+          -2.85,
+          -19.77
+        ],
+        "max": [
+          10.11875,
+          8.290814,
+          18.0
+        ]
+      },
+      "envelope_decision": "s06-b2-squadron-logistics-2026-10-17"
     },
     {
       "binding": "rebel:fighter_platform",
@@ -874,8 +1894,24 @@
         "class_or_kind": "fighter_platform",
         "station_faction": "rebel"
       },
-      "manifest": "core:rebel/fighter_platform",
-      "status": "procedural_legacy"
+      "manifest": "core:alliance/fighter_platform",
+      "status": "core",
+      "legacy_identifiers": [
+        "alliance_fighter_platform"
+      ],
+      "envelope": {
+        "min": [
+          -48.0,
+          -9.2,
+          -39.2
+        ],
+        "max": [
+          48.0,
+          6.92,
+          39.2
+        ]
+      },
+      "envelope_decision": "s06-b3c-stations-2026-10-17"
     },
     {
       "binding": "rebel:frigate",
@@ -911,8 +1947,24 @@
         "class_or_kind": "mining_station",
         "station_faction": "rebel"
       },
-      "manifest": "core:rebel/mining_station",
-      "status": "procedural_legacy"
+      "manifest": "core:alliance/mining_station",
+      "status": "core",
+      "legacy_identifiers": [
+        "alliance_mining_station"
+      ],
+      "envelope": {
+        "min": [
+          -44.75,
+          -15.6,
+          -26.0
+        ],
+        "max": [
+          44.75,
+          9.92,
+          22.8294
+        ]
+      },
+      "envelope_decision": "s06-b3b-stations-2026-10-17"
     },
     {
       "binding": "rebel:planet_extractor",
@@ -922,8 +1974,24 @@
         "class_or_kind": "planet_extractor",
         "station_faction": "rebel"
       },
-      "manifest": "core:rebel/planet_extractor",
-      "status": "procedural_legacy"
+      "manifest": "core:alliance/planet_extractor",
+      "status": "core",
+      "legacy_identifiers": [
+        "alliance_planet_extractor"
+      ],
+      "envelope": {
+        "min": [
+          -34.0,
+          0.0,
+          -32.0
+        ],
+        "max": [
+          34.0,
+          43.0,
+          32.0
+        ]
+      },
+      "envelope_decision": "s06-b4-hardware-2026-10-17"
     },
     {
       "binding": "rebel:planet_pulsar_cannon",
@@ -933,8 +2001,24 @@
         "class_or_kind": "planet_pulsar_cannon",
         "station_faction": "rebel"
       },
-      "manifest": "core:rebel/planet_pulsar_cannon",
-      "status": "procedural_legacy"
+      "manifest": "core:alliance/planet_pulsar_cannon",
+      "status": "core",
+      "legacy_identifiers": [
+        "alliance_planet_pulsar_cannon"
+      ],
+      "envelope": {
+        "min": [
+          -34.0,
+          0.0,
+          -32.0
+        ],
+        "max": [
+          34.0,
+          42.4,
+          46.0
+        ]
+      },
+      "envelope_decision": "s06-b4-hardware-2026-10-17"
     },
     {
       "binding": "rebel:planet_shield_generator",
@@ -944,8 +2028,24 @@
         "class_or_kind": "planet_shield_generator",
         "station_faction": "rebel"
       },
-      "manifest": "core:rebel/planet_shield_generator",
-      "status": "procedural_legacy"
+      "manifest": "core:alliance/planet_shield_generator",
+      "status": "core",
+      "legacy_identifiers": [
+        "alliance_planet_shield_generator"
+      ],
+      "envelope": {
+        "min": [
+          -34.0,
+          0.0,
+          -32.0
+        ],
+        "max": [
+          34.0,
+          46.5,
+          32.0
+        ]
+      },
+      "envelope_decision": "s06-b4-hardware-2026-10-17"
     },
     {
       "binding": "rebel:planet_trade_hub",
@@ -955,8 +2055,24 @@
         "class_or_kind": "planet_trade_hub",
         "station_faction": "rebel"
       },
-      "manifest": "core:rebel/planet_trade_hub",
-      "status": "procedural_legacy"
+      "manifest": "core:alliance/planet_trade_hub",
+      "status": "core",
+      "legacy_identifiers": [
+        "alliance_planet_trade_hub"
+      ],
+      "envelope": {
+        "min": [
+          -34.0,
+          0.0,
+          -32.0
+        ],
+        "max": [
+          34.0,
+          49.5,
+          32.0
+        ]
+      },
+      "envelope_decision": "s06-b4-hardware-2026-10-17"
     },
     {
       "binding": "rebel:repair_dock",
@@ -966,8 +2082,24 @@
         "class_or_kind": "repair_dock",
         "station_faction": "rebel"
       },
-      "manifest": "core:rebel/repair_dock",
-      "status": "procedural_legacy"
+      "manifest": "core:alliance/repair_dock",
+      "status": "core",
+      "legacy_identifiers": [
+        "alliance_repair_dock"
+      ],
+      "envelope": {
+        "min": [
+          -38.4,
+          -12.8,
+          -33.6
+        ],
+        "max": [
+          38.4,
+          23.6,
+          39.6
+        ]
+      },
+      "envelope_decision": "s06-b3c-stations-2026-10-17"
     },
     {
       "binding": "rebel:research_station",
@@ -977,8 +2109,24 @@
         "class_or_kind": "research_station",
         "station_faction": "rebel"
       },
-      "manifest": "core:rebel/research_station",
-      "status": "procedural_legacy"
+      "manifest": "core:alliance/research_station",
+      "status": "core",
+      "legacy_identifiers": [
+        "alliance_research_station"
+      ],
+      "envelope": {
+        "min": [
+          -40.0,
+          -9.6,
+          -25.6
+        ],
+        "max": [
+          40.0,
+          39.28,
+          35.901
+        ]
+      },
+      "envelope_decision": "s06-b3c-stations-2026-10-17"
     },
     {
       "binding": "rebel:sensor_station",
@@ -988,8 +2136,24 @@
         "class_or_kind": "sensor_station",
         "station_faction": "rebel"
       },
-      "manifest": "core:rebel/sensor_station",
-      "status": "procedural_legacy"
+      "manifest": "core:alliance/sensor_station",
+      "status": "core",
+      "legacy_identifiers": [
+        "alliance_sensor_station"
+      ],
+      "envelope": {
+        "min": [
+          -46.4,
+          -12.8,
+          -24.8
+        ],
+        "max": [
+          46.4,
+          30.48,
+          16.24
+        ]
+      },
+      "envelope_decision": "s06-b3b-stations-2026-10-17"
     },
     {
       "binding": "rebel:shipyard",
@@ -1024,8 +2188,24 @@
         "faction": "rebel",
         "class_or_kind": "supercapital"
       },
-      "manifest": "core:rebel/supercapital",
-      "status": "procedural_legacy"
+      "manifest": "core:alliance/supercapital",
+      "status": "core",
+      "legacy_identifiers": [
+        "alliance_carrier"
+      ],
+      "envelope": {
+        "min": [
+          -146.51,
+          -30.5,
+          -204.8
+        ],
+        "max": [
+          146.51,
+          56.95528,
+          190.0
+        ]
+      },
+      "envelope_decision": "s06-b1-alliance-combat-2026-10-17"
     },
     {
       "binding": "rebel:trade_station",
@@ -1035,8 +2215,24 @@
         "class_or_kind": "trade_station",
         "station_faction": "rebel"
       },
-      "manifest": "core:rebel/trade_station",
-      "status": "procedural_legacy"
+      "manifest": "core:alliance/trade_station",
+      "status": "core",
+      "legacy_identifiers": [
+        "alliance_trade_station"
+      ],
+      "envelope": {
+        "min": [
+          -44.0,
+          -5.948,
+          -38.736
+        ],
+        "max": [
+          44.0,
+          6.12,
+          39.36
+        ]
+      },
+      "envelope_decision": "s06-b3c-stations-2026-10-17"
     },
     {
       "binding": "shared:construction_scaffold",
@@ -1057,7 +2253,23 @@
         "station_faction": "syndicate"
       },
       "manifest": "core:syndicate/attack_satellite",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "syndicate_attack_satellite"
+      ],
+      "envelope": {
+        "min": [
+          -50.9795,
+          -9.0,
+          -30.299
+        ],
+        "max": [
+          50.9795,
+          21.5,
+          58.0
+        ]
+      },
+      "envelope_decision": "s06-b4-hardware-2026-10-17"
     },
     {
       "binding": "syndicate:battleship",
@@ -1092,7 +2304,23 @@
         "class_or_kind": "colonizer"
       },
       "manifest": "core:syndicate/colonizer",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "syndicate_colonizer"
+      ],
+      "envelope": {
+        "min": [
+          -35.961081,
+          -11.0,
+          -57.8325
+        ],
+        "max": [
+          47.4,
+          36.5,
+          57.4475
+        ]
+      },
+      "envelope_decision": "s06-b9-construction-2026-10-18"
     },
     {
       "binding": "syndicate:command_station",
@@ -1103,7 +2331,23 @@
         "station_faction": "syndicate"
       },
       "manifest": "core:syndicate/command_station",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "syndicate_command_station"
+      ],
+      "envelope": {
+        "min": [
+          -52.019135,
+          -15.2,
+          -53.66
+        ],
+        "max": [
+          48.0,
+          45.6,
+          38.400002
+        ]
+      },
+      "envelope_decision": "s06-b3a-command-stations-2026-10-17"
     },
     {
       "binding": "syndicate:constructor",
@@ -1113,7 +2357,23 @@
         "class_or_kind": "constructor"
       },
       "manifest": "core:syndicate/constructor",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "syndicate_constructor"
+      ],
+      "envelope": {
+        "min": [
+          -25.714157,
+          -9.0,
+          -40.8725
+        ],
+        "max": [
+          29.98,
+          36.5,
+          32.388
+        ]
+      },
+      "envelope_decision": "s06-b9-construction-2026-10-18"
     },
     {
       "binding": "syndicate:convoy",
@@ -1123,7 +2383,23 @@
         "class_or_kind": "convoy"
       },
       "manifest": "core:syndicate/convoy",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "syndicate_convoy"
+      ],
+      "envelope": {
+        "min": [
+          -26.139999,
+          -6.5,
+          -76.912
+        ],
+        "max": [
+          27.9,
+          36.299999,
+          62.04
+        ]
+      },
+      "envelope_decision": "s06-b2-squadron-logistics-2026-10-17"
     },
     {
       "binding": "syndicate:corvette",
@@ -1133,7 +2409,23 @@
         "class_or_kind": "corvette"
       },
       "manifest": "core:syndicate/corvette",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "syndicate_corvette"
+      ],
+      "envelope": {
+        "min": [
+          -22.36926,
+          -9.0,
+          -44.024994
+        ],
+        "max": [
+          30.672491,
+          44.0,
+          38.399994
+        ]
+      },
+      "envelope_decision": "s06-b8-remaining-combat-2026-10-18"
     },
     {
       "binding": "syndicate:cruiser",
@@ -1143,7 +2435,23 @@
         "class_or_kind": "cruiser"
       },
       "manifest": "core:syndicate/cruiser",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "syndicate_cruiser"
+      ],
+      "envelope": {
+        "min": [
+          -42.46384,
+          -11.02,
+          -94.395
+        ],
+        "max": [
+          58.551838,
+          44.0,
+          84.0
+        ]
+      },
+      "envelope_decision": "s06-b8-remaining-combat-2026-10-18"
     },
     {
       "binding": "syndicate:defense_platform",
@@ -1154,7 +2462,23 @@
         "station_faction": "syndicate"
       },
       "manifest": "core:syndicate/defense_platform",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "syndicate_defense_platform"
+      ],
+      "envelope": {
+        "min": [
+          -45.9679,
+          -10.8,
+          -28.5448
+        ],
+        "max": [
+          30.3691,
+          22.1,
+          28.0475
+        ]
+      },
+      "envelope_decision": "s06-b3c-stations-2026-10-17"
     },
     {
       "binding": "syndicate:defense_satellite",
@@ -1165,7 +2489,23 @@
         "station_faction": "syndicate"
       },
       "manifest": "core:syndicate/defense_satellite",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "syndicate_defense_satellite"
+      ],
+      "envelope": {
+        "min": [
+          -41.1051,
+          -9.0,
+          -27.5066
+        ],
+        "max": [
+          41.1051,
+          19.5,
+          44.0
+        ]
+      },
+      "envelope_decision": "s06-b4-hardware-2026-10-17"
     },
     {
       "binding": "syndicate:energy_relay",
@@ -1176,7 +2516,23 @@
         "station_faction": "syndicate"
       },
       "manifest": "core:syndicate/energy_relay",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "syndicate_energy_relay"
+      ],
+      "envelope": {
+        "min": [
+          -47.5594,
+          -11.2,
+          -46.5402
+        ],
+        "max": [
+          46.5284,
+          23.36,
+          34.4011
+        ]
+      },
+      "envelope_decision": "s06-b3b-stations-2026-10-17"
     },
     {
       "binding": "syndicate:fighter",
@@ -1186,7 +2542,23 @@
         "class_or_kind": "fighter"
       },
       "manifest": "core:syndicate/fighter",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "syndicate_jackal"
+      ],
+      "envelope": {
+        "min": [
+          -7.85,
+          -3.95,
+          -17.258
+        ],
+        "max": [
+          8.0,
+          11.85,
+          24.5
+        ]
+      },
+      "envelope_decision": "s06-b2-squadron-logistics-2026-10-17"
     },
     {
       "binding": "syndicate:fighter_platform",
@@ -1197,7 +2569,23 @@
         "station_faction": "syndicate"
       },
       "manifest": "core:syndicate/fighter_platform",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "syndicate_fighter_platform"
+      ],
+      "envelope": {
+        "min": [
+          -39.6,
+          -15.2,
+          -39.2
+        ],
+        "max": [
+          32.1135,
+          30.8,
+          39.2
+        ]
+      },
+      "envelope_decision": "s06-b3c-stations-2026-10-17"
     },
     {
       "binding": "syndicate:frigate",
@@ -1207,7 +2595,23 @@
         "class_or_kind": "frigate"
       },
       "manifest": "core:syndicate/frigate",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "syndicate_frigate"
+      ],
+      "envelope": {
+        "min": [
+          -31.829605,
+          -9.0,
+          -70.509995
+        ],
+        "max": [
+          43.872131,
+          44.0,
+          62.399994
+        ]
+      },
+      "envelope_decision": "s06-b8-remaining-combat-2026-10-18"
     },
     {
       "binding": "syndicate:mining_station",
@@ -1218,7 +2622,23 @@
         "station_faction": "syndicate"
       },
       "manifest": "core:syndicate/mining_station",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "syndicate_mining_station"
+      ],
+      "envelope": {
+        "min": [
+          -33.9322,
+          -32.4,
+          -25.0848
+        ],
+        "max": [
+          42.4,
+          39.6,
+          41.4431
+        ]
+      },
+      "envelope_decision": "s06-b3b-stations-2026-10-17"
     },
     {
       "binding": "syndicate:planet_extractor",
@@ -1229,7 +2649,23 @@
         "station_faction": "syndicate"
       },
       "manifest": "core:syndicate/planet_extractor",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "syndicate_planet_extractor"
+      ],
+      "envelope": {
+        "min": [
+          -34.0,
+          0.0,
+          -32.0
+        ],
+        "max": [
+          34.0,
+          43.0,
+          32.0
+        ]
+      },
+      "envelope_decision": "s06-b4-hardware-2026-10-17"
     },
     {
       "binding": "syndicate:planet_pulsar_cannon",
@@ -1240,7 +2676,23 @@
         "station_faction": "syndicate"
       },
       "manifest": "core:syndicate/planet_pulsar_cannon",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "syndicate_planet_pulsar_cannon"
+      ],
+      "envelope": {
+        "min": [
+          -34.0,
+          0.0,
+          -32.0
+        ],
+        "max": [
+          34.0,
+          42.4,
+          46.0
+        ]
+      },
+      "envelope_decision": "s06-b4-hardware-2026-10-17"
     },
     {
       "binding": "syndicate:planet_shield_generator",
@@ -1251,7 +2703,23 @@
         "station_faction": "syndicate"
       },
       "manifest": "core:syndicate/planet_shield_generator",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "syndicate_planet_shield_generator"
+      ],
+      "envelope": {
+        "min": [
+          -34.0,
+          0.0,
+          -32.0
+        ],
+        "max": [
+          34.0,
+          46.5,
+          32.0
+        ]
+      },
+      "envelope_decision": "s06-b4-hardware-2026-10-17"
     },
     {
       "binding": "syndicate:planet_trade_hub",
@@ -1262,7 +2730,23 @@
         "station_faction": "syndicate"
       },
       "manifest": "core:syndicate/planet_trade_hub",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "syndicate_planet_trade_hub"
+      ],
+      "envelope": {
+        "min": [
+          -34.0,
+          0.0,
+          -32.0
+        ],
+        "max": [
+          34.0,
+          49.5,
+          32.0
+        ]
+      },
+      "envelope_decision": "s06-b4-hardware-2026-10-17"
     },
     {
       "binding": "syndicate:repair_dock",
@@ -1273,7 +2757,23 @@
         "station_faction": "syndicate"
       },
       "manifest": "core:syndicate/repair_dock",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "syndicate_repair_dock"
+      ],
+      "envelope": {
+        "min": [
+          -37.4318,
+          -16.8,
+          -38.931
+        ],
+        "max": [
+          39.7528,
+          34.8,
+          37.9495
+        ]
+      },
+      "envelope_decision": "s06-b3c-stations-2026-10-17"
     },
     {
       "binding": "syndicate:research_station",
@@ -1284,7 +2784,23 @@
         "station_faction": "syndicate"
       },
       "manifest": "core:syndicate/research_station",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "syndicate_research_station"
+      ],
+      "envelope": {
+        "min": [
+          -40.0,
+          -7.2,
+          -27.572
+        ],
+        "max": [
+          36.4,
+          37.68,
+          32.8
+        ]
+      },
+      "envelope_decision": "s06-b3c-stations-2026-10-17"
     },
     {
       "binding": "syndicate:sensor_station",
@@ -1295,7 +2811,23 @@
         "station_faction": "syndicate"
       },
       "manifest": "core:syndicate/sensor_station",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "syndicate_sensor_station"
+      ],
+      "envelope": {
+        "min": [
+          -47.2,
+          -17.6,
+          -31.137
+        ],
+        "max": [
+          26.3565,
+          43.556999,
+          21.1423
+        ]
+      },
+      "envelope_decision": "s06-b3b-stations-2026-10-17"
     },
     {
       "binding": "syndicate:shipyard",
@@ -1306,7 +2838,23 @@
         "station_faction": "syndicate"
       },
       "manifest": "core:syndicate/shipyard",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "syndicate_shipyard"
+      ],
+      "envelope": {
+        "min": [
+          -52.1606,
+          -18.9928,
+          -53.6606
+        ],
+        "max": [
+          46.9468,
+          45.6,
+          48.4056
+        ]
+      },
+      "envelope_decision": "s06-b3c-stations-2026-10-17"
     },
     {
       "binding": "syndicate:supercapital",
@@ -1328,7 +2876,23 @@
         "station_faction": "syndicate"
       },
       "manifest": "core:syndicate/trade_station",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "syndicate_trade_station"
+      ],
+      "envelope": {
+        "min": [
+          -52.3122,
+          -8.8,
+          -48.6483
+        ],
+        "max": [
+          45.2571,
+          24.5,
+          46.5606
+        ]
+      },
+      "envelope_decision": "s06-b3c-stations-2026-10-17"
     }
   ]
 }

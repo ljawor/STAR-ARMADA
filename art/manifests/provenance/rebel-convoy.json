@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "rebel:convoy",
+  "asset_id": "core:alliance/convoy",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:17Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/alliance_convoy.blend",
+    "sha256": "56b7cfb2dc1eecc7d3fc1094e2fdac99b67404759d4efeaae8ecaf418bf88e7a"
+  },
+  "exporter": {
+    "path": "tools/art/export_alliance_convoy.py",
+    "sha256": "794dc2f818b98545ceeaa0bf4720560c11587a0a69aa10b36c4fbc57fd44f01f"
+  },
+  "runtime": {
+    "path": "assets/models/alliance_convoy.mesh.json",
+    "sha256": "fa341b2ac6cd91c79ab113e47c9a76888728e5528c46d068ebde6e8e6141205c",
+    "bytes": 260749,
+    "triangles": 4512
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "fa341b2ac6cd91c79ab113e47c9a76888728e5528c46d068ebde6e8e6141205c",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

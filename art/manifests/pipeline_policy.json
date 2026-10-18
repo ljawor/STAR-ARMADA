@@ -371,6 +371,28 @@
         "S07 completeness remains open while required art lacks appearance approval",
         "S08/S09 complete-candidate acceptance depends on S07; no final S10/S11 switch here"
       ]
+    },
+    {
+      "id": "s07-opt-in-continuation-2026-10-18",
+      "date": "2026-10-18",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "authorized-execution-not-appearance",
+      "owner_wording": "ok continue",
+      "question_answered": "Part 3: opt-in integration, including the scaffold review path.",
+      "applies_to": "S07 opt-in integration, superseding the temporary part-2-only current_increment of s06-catalogue-completion-execution-2026-10-18; prior appearance approvals remain revision-bound.",
+      "how_recorded": "After the 26 pictured B7/B8/B9 approvals were recorded, the assistant explicitly proposed Part 3 opt-in integration including scaffold review. The owner replied as quoted. This records progression of authorized engineering work, not a new appearance decision.",
+      "authorized": [
+        "Guard and repair selected/unselected runtime consumers, including Imperial stations and shared scaffold construction drawing",
+        "Audit live identities and register only exact previously appearance-approved models into the existing explicit preview path",
+        "Capture the unapproved shared scaffold through the real build-queue renderer for owner review",
+        "Run later S08/S09 engineering gates when prerequisites are satisfied"
+      ],
+      "not_authorized": [
+        "appearance approval or registration of the still-unapproved scaffold",
+        "changing any approved model source, exporter, seed or runtime payload revision",
+        "production-default activation, merge, tag or release",
+        "new gameplay statistics, collision, balance, or native-platform waivers"
+      ]
     }
   ]
 }

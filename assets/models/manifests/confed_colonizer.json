@@ -1,0 +1,76 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:confederacy/colonizer",
+  "revision": "92cd4789d4776b75eb3f42e968396e5e44c52a2aa9186d77f6b30d02168fbeb4",
+  "display_name": "confed colonizer (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/confed_colonizer.mesh.json",
+      "sha256": "7c8a7b31847896526b67d9daa7fe4ea866ff03f8c4da3acd31fe9401ef0fd08d",
+      "bytes": 249476
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -52.856406,
+      -7.0,
+      -51.6975
+    ],
+    "max": [
+      52.856406,
+      43.5,
+      55.4475
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/confed_colonizer.blend",
+    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 4156,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "s06-b9-construction-2026-10-18",
+    "decided_by": "owner",
+    "decided_on": "2026-10-18",
+    "reviewed_revision": "92cd4789d4776b75eb3f42e968396e5e44c52a2aa9186d77f6b30d02168fbeb4",
+    "reviewed_evidence": [
+      "artifacts/s06-completion/B9-appearance-grid.jpg",
+      "artifacts/s06-completion/review-b9-attempt1/render/confederacy-colonizer-after-close.png",
+      "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png",
+      "artifacts/s06-completion/review-b9-attempt1/render/metrics.json"
+    ]
+  }
+}

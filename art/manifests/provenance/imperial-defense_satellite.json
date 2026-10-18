@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "imperial:defense_satellite",
+  "asset_id": "core:imperial/defense_satellite",
+  "authority": "script",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:08Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/imperial_defense_satellite.blend",
+    "sha256": "5afcdbad5c2ae99916571fa01817f44e4961b360c1f22e1d7f42f7afac5003bd"
+  },
+  "exporter": {
+    "path": "tools/art/export_imperial_defense_satellite.py",
+    "sha256": "13060096b4cb830e0d6fdc4d5d1b14ede3b7ef545779bd8f61565a1bf17b4185"
+  },
+  "runtime": {
+    "path": "assets/models/imperial_defense_satellite.mesh.json",
+    "sha256": "ce8fae81cbcc80bd22316d4b70ca66a45171b6d32b36a87a6b7b1ded87161b0b",
+    "bytes": 117249,
+    "triangles": 2060
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "ce8fae81cbcc80bd22316d4b70ca66a45171b6d32b36a87a6b7b1ded87161b0b",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

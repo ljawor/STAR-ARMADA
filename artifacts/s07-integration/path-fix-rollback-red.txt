@@ -1,0 +1,36 @@
+test_publication_failure_restores_entire_output_set (test_s07_registration.RegistrationTests.test_publication_failure_restores_entire_output_set) ... 
+  test_publication_failure_restores_entire_output_set (test_s07_registration.RegistrationTests.test_publication_failure_restores_entire_output_set) (failure='stage') ... FAIL
+Published 3 metadata files; 3 updated; no mesh writes
+  test_publication_failure_restores_entire_output_set (test_s07_registration.RegistrationTests.test_publication_failure_restores_entire_output_set) (failure='replace') ... FAIL
+
+======================================================================
+FAIL: test_publication_failure_restores_entire_output_set (test_s07_registration.RegistrationTests.test_publication_failure_restores_entire_output_set) (failure='stage')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_registration.py", line 145, in test_publication_failure_restores_entire_output_set
+    self.assertEqual(sorted(p.relative_to(root).as_posix() for p in root.rglob('*')), ['old.json'])
+AssertionError: Lists differ: ['new', 'new/sub', 'new/sub/file.json', 'old.json'] != ['old.json']
+
+First differing element 0:
+'new'
+'old.json'
+
+First list contains 3 additional elements.
+First extra element 1:
+'new/sub'
+
+- ['new', 'new/sub', 'new/sub/file.json', 'old.json']
++ ['old.json']
+
+======================================================================
+FAIL: test_publication_failure_restores_entire_output_set (test_s07_registration.RegistrationTests.test_publication_failure_restores_entire_output_set) (failure='replace')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_registration.py", line 142, in test_publication_failure_restores_entire_output_set
+    with self.assertRaisesRegex(OSError, 'injected'):
+AssertionError: OSError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.637s
+
+FAILED (failures=2)

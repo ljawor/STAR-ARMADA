@@ -24,12 +24,12 @@ class CoverageReconciliation(unittest.TestCase):
         inventory = json.loads((ROOT / 'art/manifests/model_inventory.json').read_text())
         self.assertEqual(set(rows), {r['canonical_binding'] for r in inventory['rows']})
         self.assertEqual(report['counts']['inventory_rows'], 120)
-        self.assertEqual(report['counts']['unique_approved_assets'], 102)
+        self.assertEqual(report['counts']['unique_approved_assets'], 103)
         self.assertEqual(report['counts']['appearance_batch_decisions'], 12)
         self.assertEqual(report['counts']['appearance_batch_specimens'], 99)
         self.assertEqual(report['counts']['dispositions'], {
-            'approved_asset': 102, 'approved_shared_candidate': 4,
-            'pending_appearance': 1, 'deferred_texture_pipeline': 10,
+            'approved_asset': 103, 'approved_shared_candidate': 4,
+            'deferred_texture_pipeline': 10,
             'outside_mesh_catalogue': 3})
         for faction in ('imperial', 'rebel', 'confederacy', 'syndicate'):
             crew = rows[f'ship:{faction}:crew_transport']
@@ -40,7 +40,7 @@ class CoverageReconciliation(unittest.TestCase):
             self.assertFalse(trade['runtime_integration_proven'])
         self.assertEqual(rows['ship:imperial:constructor']['disposition'], 'approved_asset')
         self.assertEqual(rows['station:imperial:shipyard']['disposition'], 'approved_asset')
-        self.assertEqual(rows['construction:site:scaffold']['disposition'], 'pending_appearance')
+        self.assertEqual(rows['construction:site:scaffold']['disposition'], 'approved_asset')
         for row in rows.values():
             if row['disposition'] == 'pending_appearance':
                 self.assertIsNone(row['asset'].get('approval_id'))

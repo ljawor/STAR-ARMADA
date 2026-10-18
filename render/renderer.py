@@ -670,6 +670,54 @@ class Renderer:
             glPopMatrix()
             GL.glPopAttrib()
 
+    def _draw_authored_construction_scaffold(self, pos, radius, fraction, color):
+        """Draw only a selected scaffold; otherwise retain the exact legacy lattice.
+
+        Nominal source height and radius are 50. Progress changes only visual height,
+        never collision, build costs, timers, or any serialized state.
+        """
+        from render.asset_selection import mesh_for
+        mesh = mesh_for('shared:construction_scaffold')
+        if mesh is None:
+            return False
+        from OpenGL import GL
+        groups = (GL.GL_ENABLE_BIT | GL.GL_CURRENT_BIT | GL.GL_LIGHTING_BIT |
+                  GL.GL_DEPTH_BUFFER_BIT | GL.GL_POLYGON_BIT | GL.GL_TEXTURE_BIT)
+        GL.glPushAttrib(groups)
+        glPushMatrix()
+        try:
+            GL.glEnable(GL.GL_DEPTH_TEST)
+            GL.glEnable(GL.GL_LIGHTING)
+            GL.glDisable(GL.GL_TEXTURE_2D)
+            GL.glDepthMask(True)
+            glTranslatef(pos[0], 0., pos[2])
+            scale = radius / 50.
+            height = .4 + .6 * max(0., min(1., fraction))
+            glScalef(scale, scale * height, scale)
+            self._material_metal(8.0, (0.50, 0.55, 0.62))
+            with self.materials.use('hull', materialPass=0.0, authoredSurface=1.0):
+                for role, material_pass, tint in (
+                        ('base', 0.0, color),
+                        ('dark', 1.0, (0.20, 0.24, 0.30)),
+                        ('trim', 2.0, (0.68, 0.76, 0.84))):
+                    self.materials.hull_pass(material_pass, True)
+                    if not self.materials.available and role == 'base':
+                        tint = tuple(.42 + .18*c for c in color)
+                    glColor3f(*tint)
+                    self._emit_detail_mesh(mesh[role])
+            glDisable(GL_TEXTURE_2D)
+            glColor3f(*color)
+            self._emit_detail_mesh(mesh['accent'])
+            self._material_matte()
+            glDisable(GL_LIGHTING)
+            for role, tint in (('lit', (1., .80, .52)), ('cool', (.38, .82, 1.))):
+                glColor3f(*tint)
+                self._emit_detail_mesh(mesh[role])
+        finally:
+            glPopMatrix()
+            GL.glPopAttrib()
+        return True
+
     def _draw_construction_sites(self):
         """Wireframe scaffold + progress ring at each queued station site.
 
@@ -700,38 +748,41 @@ class Renderer:
             color = self._owner_color(e.owner)
             from render.faction_visuals import owner_faction
             faction = owner_faction(st, e.owner)
-            if faction != 'imperial':
-                self._draw_station_outline(item['item'], faction, pos, r, color)
+            from render.faction_visuals import normalize_station_key
+            faction, station_id = normalize_station_key(item['item'], faction)
+            if faction != 'imperial' or is_authored(f'{faction}:{station_id}'):
+                self._draw_station_outline(station_id, faction, pos, r, color)
             import OpenGL.GL as GL
             GL.glPushAttrib(GL.GL_ENABLE_BIT | GL.GL_LIGHTING_BIT |
                             GL.GL_CURRENT_BIT | GL.GL_DEPTH_BUFFER_BIT)
             GL.glDisable(GL.GL_LIGHTING)
             glDisable(GL_DEPTH_TEST)
             glLineWidth(2.0)
-            # scaffold ring on the ground plane
-            glColor4f(color[0], color[1], color[2], 0.85)
-            glBegin(GL_LINE_LOOP)
-            for i in range(24):
-                a = i / 24 * 2 * math.pi
-                glVertex3f(pos[0] + math.sin(a) * r, 0,
-                           pos[2] + math.cos(a) * r)
-            glEnd()
-            # lattice: 8 vertical posts + height ring (grows with progress)
-            glBegin(GL_LINES)
-            for i in range(8):
-                a = i / 8 * 2 * math.pi
-                sa, ca = math.sin(a) * r * 0.85, math.cos(a) * r * 0.85
-                glVertex3f(pos[0] + sa, 0, pos[2] + ca)
-                glVertex3f(pos[0] + sa, r * (0.4 + 0.6 * frac),
-                           pos[2] + ca)
-            glEnd()
-            h = r * (0.4 + 0.6 * frac)
-            glBegin(GL_LINE_LOOP)
-            for i in range(24):
-                a = i / 24 * 2 * math.pi
-                glVertex3f(pos[0] + math.sin(a) * r * 0.85, h,
-                           pos[2] + math.cos(a) * r * 0.85)
-            glEnd()
+            if not self._draw_authored_construction_scaffold(pos, r, frac, color):
+                # scaffold ring on the ground plane
+                glColor4f(color[0], color[1], color[2], 0.85)
+                glBegin(GL_LINE_LOOP)
+                for i in range(24):
+                    a = i / 24 * 2 * math.pi
+                    glVertex3f(pos[0] + math.sin(a) * r, 0,
+                               pos[2] + math.cos(a) * r)
+                glEnd()
+                # lattice: 8 vertical posts + height ring (grows with progress)
+                glBegin(GL_LINES)
+                for i in range(8):
+                    a = i / 8 * 2 * math.pi
+                    sa, ca = math.sin(a) * r * 0.85, math.cos(a) * r * 0.85
+                    glVertex3f(pos[0] + sa, 0, pos[2] + ca)
+                    glVertex3f(pos[0] + sa, r * (0.4 + 0.6 * frac),
+                               pos[2] + ca)
+                glEnd()
+                h = r * (0.4 + 0.6 * frac)
+                glBegin(GL_LINE_LOOP)
+                for i in range(24):
+                    a = i / 24 * 2 * math.pi
+                    glVertex3f(pos[0] + math.sin(a) * r * 0.85, h,
+                               pos[2] + math.cos(a) * r * 0.85)
+                glEnd()
             # green progress arc
             glColor3f(0.4, 1.0, 0.5)
             glLineWidth(3.0)
@@ -1893,7 +1944,7 @@ class Renderer:
         from render.faction_visuals import owner_faction, normalize_station_key
         faction, data_id = normalize_station_key(e.data_id,
                             owner_faction(getattr(self, 'state', None), e.owner))
-        if faction == 'imperial':
+        if faction == 'imperial' and not is_authored(f'{faction}:{data_id}'):
             return e.radius
         from render.camera_geometry import station_radius
         return station_radius(data_id, faction) * (e.radius / 50.)
@@ -1938,9 +1989,9 @@ class Renderer:
                 return dict(fx, center=center, pos=point,
                             radius=math.dist(center, point), visual_contact=True)
             from render.faction_visuals import owner_faction, normalize_station_key
-            faction, _ = normalize_station_key(e.data_id, owner_faction(self.state, e.owner))
-            if faction == "imperial":
-                return fx  # protected legacy station effect path
+            faction, data_id = normalize_station_key(e.data_id, owner_faction(self.state, e.owner))
+            if faction == "imperial" and not is_authored(f"{faction}:{data_id}"):
+                return fx  # protected unselected legacy station effect path
             from render.ship_sizes import station_contact_offset
             n = tuple(fx.get("normal", (0., 0., 1.)))
             length = math.sqrt(sum(x*x for x in n)) or 1.
@@ -3512,8 +3563,8 @@ class Renderer:
         r = e.radius * 1.35
         if e.is_station:
             from render.faction_visuals import owner_faction, normalize_station_key
-            faction, _ = normalize_station_key(e.data_id, owner_faction(getattr(self, "state", None), e.owner))
-            if faction != "imperial":
+            faction, data_id = normalize_station_key(e.data_id, owner_faction(getattr(self, "state", None), e.owner))
+            if faction != "imperial" or is_authored(f"{faction}:{data_id}"):
                 r = self._station_visual_radius(e) * 1.08
         ppw = self._px_per_world((e.pos.x, e.pos.y, e.pos.z))
         if ppw > 0.0:

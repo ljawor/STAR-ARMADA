@@ -1,0 +1,27 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+test_authored_scaffold_draws_six_roles_at_progress_height_and_preserves_queue (test_s07_construction_seam.ConstructionSelection.test_authored_scaffold_draws_six_roles_at_progress_height_and_preserves_queue) ... FAIL
+test_selected_imperial_station_construction_outline_uses_candidate (test_s07_construction_seam.ConstructionSelection.test_selected_imperial_station_construction_outline_uses_candidate) ... FAIL
+test_stock_scaffold_is_still_legacy_and_unselected_imperial_outline_absent (test_s07_construction_seam.ConstructionSelection.test_stock_scaffold_is_still_legacy_and_unselected_imperial_outline_absent) ... ok
+
+======================================================================
+FAIL: test_authored_scaffold_draws_six_roles_at_progress_height_and_preserves_queue (test_s07_construction_seam.ConstructionSelection.test_authored_scaffold_draws_six_roles_at_progress_height_and_preserves_queue)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_construction_seam.py", line 62, in test_authored_scaffold_draws_six_roles_at_progress_height_and_preserves_queue
+    self.assertEqual(r._emit_detail_mesh.call_count,6)
+AssertionError: 0 != 6
+
+======================================================================
+FAIL: test_selected_imperial_station_construction_outline_uses_candidate (test_s07_construction_seam.ConstructionSelection.test_selected_imperial_station_construction_outline_uses_candidate)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_construction_seam.py", line 50, in test_selected_imperial_station_construction_outline_uses_candidate
+    r._draw_station_outline.assert_called_once()
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/unittest/mock.py", line 918, in assert_called_once
+    raise AssertionError(msg)
+AssertionError: Expected 'mock' to have been called once. Called 0 times.
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.025s
+
+FAILED (failures=2)

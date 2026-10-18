@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "rebel:research_station",
+  "asset_id": "core:alliance/research_station",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:23Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/alliance_research_station.blend",
+    "sha256": "2f2522c077460483fd6e201424f042ef36142c41850401b848a88de0a51f6a12"
+  },
+  "exporter": {
+    "path": "tools/art/export_alliance_research_station.py",
+    "sha256": "3d3e961ddbc399c5ff141083da666dfb12486d55b54caebc579d9d84f962b828"
+  },
+  "runtime": {
+    "path": "assets/models/alliance_research_station.mesh.json",
+    "sha256": "1886a86b89cb1b0ef4a618a398216cccf44a0cd9dc84f950a0dce94b9892f870",
+    "bytes": 321940,
+    "triangles": 4812
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "1886a86b89cb1b0ef4a618a398216cccf44a0cd9dc84f950a0dce94b9892f870",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

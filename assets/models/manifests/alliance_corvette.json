@@ -1,0 +1,74 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:alliance/corvette",
+  "revision": "5037e555e4a9d7704d285f42b491ff3d4c4391c2c87dce2196c52300f5c616cf",
+  "display_name": "alliance corvette (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/alliance_corvette.mesh.json",
+      "sha256": "48d0a815af978976f3eda77ec2378353eb5191a7cdc72cddb931483a0df8571b",
+      "bytes": 276014
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -21.9,
+      -6.0,
+      -46.46
+    ],
+    "max": [
+      21.9,
+      15.3,
+      45.0
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/alliance_corvette.blend",
+    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 4372,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "s06-b1-alliance-combat-2026-10-17",
+    "decided_by": "owner",
+    "decided_on": "2026-10-17",
+    "reviewed_revision": "5037e555e4a9d7704d285f42b491ff3d4c4391c2c87dce2196c52300f5c616cf",
+    "reviewed_evidence": [
+      "artifacts/s06_alliance_batch_review/b1-alliance-combat/contact-sheet.png",
+      "artifacts/s06_alliance_batch_review/b1-alliance-combat/metrics.json"
+    ]
+  }
+}

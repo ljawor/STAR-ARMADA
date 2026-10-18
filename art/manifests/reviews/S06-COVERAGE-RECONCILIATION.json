@@ -11,25 +11,24 @@
   ],
   "counts": {
     "inventory_rows": 120,
-    "unique_approved_assets": 102,
+    "unique_approved_assets": 103,
     "appearance_batch_decisions": 12,
     "appearance_batch_specimens": 99,
-    "pipeline_assets": 3,
+    "scaffold_appearance_specimens": 1,
+    "pipeline_assets": 102,
     "registry_bindings": 119,
     "dispositions": {
-      "approved_asset": 102,
+      "approved_asset": 103,
       "approved_shared_candidate": 4,
       "deferred_texture_pipeline": 10,
-      "outside_mesh_catalogue": 3,
-      "pending_appearance": 1
+      "outside_mesh_catalogue": 3
     },
     "by_category": {
       "combat_hull": {
         "approved_asset": 18
       },
       "construction": {
-        "approved_asset": 8,
-        "pending_appearance": 1
+        "approved_asset": 9
       },
       "environment_prop": {
         "approved_asset": 1,
@@ -73,7 +72,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -90,7 +89,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -107,7 +106,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -124,7 +123,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -141,7 +140,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -158,7 +157,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -175,7 +174,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -192,7 +191,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -209,7 +208,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -226,7 +225,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -243,7 +242,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -260,7 +259,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -277,7 +276,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -294,7 +293,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -311,7 +310,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -328,7 +327,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -345,7 +344,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -362,7 +361,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -379,7 +378,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -396,7 +395,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -430,7 +429,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -447,7 +446,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -464,7 +463,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -481,7 +480,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -498,7 +497,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -532,7 +531,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -549,7 +548,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -566,7 +565,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -583,7 +582,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -600,7 +599,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -617,7 +616,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -634,7 +633,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -651,7 +650,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -668,7 +667,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -685,7 +684,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -702,7 +701,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -719,7 +718,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -736,7 +735,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -753,7 +752,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -770,7 +769,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -787,7 +786,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -804,7 +803,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -821,7 +820,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -838,7 +837,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -855,7 +854,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -872,7 +871,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -889,7 +888,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -906,7 +905,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -923,7 +922,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -940,7 +939,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -957,7 +956,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -991,7 +990,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1008,7 +1007,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1025,7 +1024,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1042,7 +1041,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1059,7 +1058,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1076,7 +1075,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1093,7 +1092,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1110,7 +1109,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1127,7 +1126,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1144,7 +1143,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1161,7 +1160,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1178,7 +1177,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1195,7 +1194,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1212,7 +1211,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1229,7 +1228,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1246,7 +1245,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1263,7 +1262,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1280,7 +1279,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1297,7 +1296,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1314,7 +1313,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1331,7 +1330,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1348,7 +1347,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1365,7 +1364,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1382,7 +1381,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1399,7 +1398,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1416,7 +1415,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1433,7 +1432,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1450,7 +1449,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1467,7 +1466,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1484,7 +1483,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1501,7 +1500,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1518,7 +1517,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1535,7 +1534,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1552,7 +1551,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1569,7 +1568,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1586,7 +1585,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1603,7 +1602,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1620,7 +1619,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1637,7 +1636,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1654,7 +1653,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1671,7 +1670,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1688,7 +1687,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1705,7 +1704,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1722,7 +1721,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1739,7 +1738,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1756,7 +1755,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1773,7 +1772,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1790,7 +1789,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1807,7 +1806,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1824,7 +1823,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1841,7 +1840,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "procedural_legacy",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -1850,15 +1849,14 @@
       "faction": "shared",
       "runtime_binding": "shared:construction_scaffold",
       "mapping_basis": "shared construction scaffold",
-      "disposition": "pending_appearance",
+      "disposition": "approved_asset",
       "asset": {
-        "approval_id": null,
+        "approval_id": "s07-scaffold-appearance-2026-10-18",
         "mesh": "assets/models/shared_construction_scaffold.mesh.json",
         "sha256": "1643a7e19731cb6dac7bcce5e4876a0eead1337690418d7897c7b206901e3a0b",
-        "pending_registration": true,
-        "batch": "s06-b9-construction"
+        "pending_registration": true
       },
-      "scope_policy": "s06-catalogue-completion-execution-2026-10-18",
+      "scope_policy": null,
       "registry_status": "procedural_legacy",
       "runtime_integration_proven": false
     },
@@ -1888,7 +1886,7 @@
         "pending_registration": true
       },
       "scope_policy": null,
-      "registry_status": "authoring_pending",
+      "registry_status": "core",
       "runtime_integration_proven": false
     },
     {
@@ -2167,7 +2165,7 @@
     "art/blender/syndicate_sensor_station.blend": "9238f17c16196ce938019f8b0263415261ae763b0f2e64f9d1df97442670f56b",
     "art/blender/syndicate_shipyard.blend": "420dedfee68a25da78f4831d93b2dbddb716ba94134a58f890c570cec9efb735",
     "art/blender/syndicate_trade_station.blend": "7b84c5e0f47928eee805a8acfc0e018c5cd31ee3255803c7c7134c3e5b145252",
-    "art/manifests/approvals.json": "8f0cf60278ec250d32c21efb95ee86c433ae3d9007dc8a4600224f8cb665b700",
+    "art/manifests/approvals.json": "1d2934a39e2270619a81ae4935e02488765a3de4d0be95b67c42a35c606fa325",
     "art/manifests/model_inventory.json": "6db0c7e517ee6519ffa5cef67c7d34b5368a99a835eafeeb86f5c50f3dbb3a61",
     "art/manifests/pending/S06-BATCH-B1-ALLIANCE-COMBAT.json": "a61af224b5f3a27bd28eb9e95e21e5c9fd3883dde6ea2d360186e83ebff0d0a3",
     "art/manifests/pending/S06-BATCH-B2-SQUADRON-LOGISTICS.json": "3ba280ca12b2d4b5240585b834478d921642d78893e9b6e219bc0e32c416af3e",
@@ -2179,9 +2177,9 @@
     "art/manifests/pending/S06-BATCH-B6-IMPERIAL-SHIPS.json": "daff42208ab71a8f641c4c5f7ed6e4b2bd092d8a52623a00a99886fb1f70091a",
     "art/manifests/pending/S06-BATCH-B7-IMPERIAL-STATIONS.json": "ee2a9f65cb9acb77efaf53d8ffc41bc1227a534500e7f43a1ba48b0a52b79815",
     "art/manifests/pending/S06-BATCH-B8-REMAINING-COMBAT.json": "fb87cc1648d31b3b9c5f7eac763c26d124eca85bfd96c91ed5b2df215a3fec72",
-    "art/manifests/pending/S06-BATCH-B9-CONSTRUCTION.json": "79966c2ef2c9810d6ea6a1446add0389160639ed52d2e173d1a2a4ee58674d40",
-    "art/manifests/pipeline.json": "728364cf1046cb3ca0cf10fb5a19abda1bdbbb219c3249cf12de3c4bc58e4f68",
-    "art/manifests/pipeline_policy.json": "f15f572e3b5a3e1f74c4ca0cf74e176263738387c872710d46c78969f55492a2",
+    "art/manifests/pending/S06-BATCH-B9-CONSTRUCTION.json": "2af90e4cb78d5923f3535c61ddc064c5f85ec30ed89021a56bee111af9216eff",
+    "art/manifests/pipeline.json": "efc5d9fd6c725ad2239b6244c30aeccb9bdda90b5e8c90807d69bd3c8b8ba95e",
+    "art/manifests/pipeline_policy.json": "4ece4cc5472084dba799583ea4fe27d63fbae7993ca2d13223d2169d178436f4",
     "assets/data/ships/confederacy.json": "0f92b2b5551d162d5805401bb49b62346c8a6ba1048bbce7b49d1908b4203a0c",
     "assets/data/ships/imperial.json": "32e2953df4e9ce1e86b83085a8d01886b53fd63b6410289ec594ab3a075adcf9",
     "assets/data/ships/rebel.json": "c6537c9f8e302b8a425d9ac38b1b1be94a33c9670765e32fc3650f0461e2e4ae",
@@ -2264,7 +2262,7 @@
     "assets/models/legion_vulture.mesh.json": "c17733f45e1669a3c664726f2e72f18a1d3e1c1e09e18455e22abc7fb83c47dd",
     "assets/models/rebel_colonizer.mesh.json": "0afb0eddcd4180f6fae0523eac4dcb086c65093a59983714e2298691bdf15fae",
     "assets/models/rebel_constructor.mesh.json": "441cb0bb04afac29e8d1bcd4f704858988abb1226681e216796f33e5b0aae780",
-    "assets/models/registry.json": "5c73f244b4b3702be6b603f815eb1788eb219814d32c33c3b92a0761b93c81d3",
+    "assets/models/registry.json": "a7178cd667f69f47f43bec2f975b9b451ade159008ef05ad26e084ed9ae88d8b",
     "assets/models/shared_asteroid_field.mesh.json": "ad2b65483c330fecad28059fce9c489bc0bce2c050ebe38aa526e21f25c88ae7",
     "assets/models/shared_construction_scaffold.mesh.json": "1643a7e19731cb6dac7bcce5e4876a0eead1337690418d7897c7b206901e3a0b",
     "assets/models/syndicate_attack_satellite.mesh.json": "007c331eb494d62ae49953d7c8a225d993b942a088e392869138c5f1fa219d2d",
@@ -2290,7 +2288,7 @@
     "assets/models/syndicate_sensor_station.mesh.json": "e35b084c73b2702ab12f0611730bb4f99b24eefd80925344300360f68bb7a947",
     "assets/models/syndicate_shipyard.mesh.json": "c1a0aad3e30a013b95c704390ef925f8beeb024924ddd4a5d525dc60156c4670",
     "assets/models/syndicate_trade_station.mesh.json": "6bae5343f97a9d1881d8b1b7bbf21270a1acddc26a6b58752e258dcb90bd9e1c",
-    "render/renderer.py": "e264230fd0eeb5522e86d5527d7fa7c2ff9eddbd2d2eba05a1ab0cccbef0d378",
+    "render/renderer.py": "9a9d19c949d9cf2dec09ab083d79fc3053a61ef81fafdae216653446bb6c337a",
     "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
     "tools/art/build_alliance_carrier.py": "73fe3afa6e16e1ebf3b070e917bd4e8145e54c94fd6f60d771c9839783fcce32",
     "tools/art/build_alliance_corvette.py": "df4781bc45692ead8935e2ccd48f3fd2c922fb49aee25bac27524c44468790a1",
@@ -2381,6 +2379,7 @@
     "tools/art/export_rebel_colonizer.py": "97c0a96ba7fab5ca57a0c5bb1d85efb2b9c6d6e88fa0a185d8bdaf62f4350d2d",
     "tools/art/export_rebel_constructor.py": "378830e27f982cb6db4fcecf9934d9e4eb53121b533963a2d78ef3322c73147d",
     "tools/art/export_shared_asteroid_field.py": "f7bad0a2df2a47dbcab4ef547072a9c9f46e8da58b03db5d28cc88625616f9db",
+    "tools/art/export_shared_construction_scaffold.py": "1396b7fc3e175e852454a23e37ef05b59a24d7e05953bca14bb276f5a405d2c9",
     "tools/art/export_syndicate_attack_satellite.py": "948af751c14b97a0b73f2c071f84449a6645cb26a46877faf5b8a76309e66535",
     "tools/art/export_syndicate_colonizer.py": "5ace7bd6fd302a024a98b310ef1d80402115f0a5cb0d6d1d9a2ac1bced7677e1",
     "tools/art/export_syndicate_command_station.py": "b182eebfcd9a349f76ed37a7624cd03557918734538519d19229bde5a50ab3dc",

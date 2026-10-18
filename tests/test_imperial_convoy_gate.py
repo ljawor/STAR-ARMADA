@@ -288,18 +288,30 @@ class ImperialConvoyKeyConstruction(unittest.TestCase):
         self.assertEqual(visuals.ship_visual_key(ds, 'trade_convoy'), 'box',
                          'no faction at all keeps the same fallback')
 
-    def test_nothing_authored_is_served_by_the_real_registry(self):
-        """The seam extends a gate; it does not author or activate a hull for Imperial."""
+    def test_registered_convoys_are_opt_in_and_default_stays_legacy(self):
+        """The authorized S07 catalogue resolves only in an explicit preview session."""
         ds = store()
-        for data_id, faction in (('trade_convoy', f) for f in ('imperial',) + SIBLINGS):
-            with self.subTest(data_id=data_id, faction=faction):
-                binding = f'{faction}:convoy'
-                self.assertFalse(selection.selected_binding(binding))
-                self.assertIsNone(selection.mesh_for(binding))
-                self.assertIsNone(selection.ship_binding(ds, data_id, faction))
+        selection.configure({})
+        for faction in ('imperial',) + SIBLINGS:
+            binding = f'{faction}:convoy'
+            self.assertFalse(selection.selected_binding(binding))
+            self.assertIsNone(selection.mesh_for(binding))
+            self.assertIsNone(selection.ship_binding(ds, 'trade_convoy', faction))
         self.assertIsNone(selection.ship_binding(ds, 'imperial_crew_transport'))
-        self.assertIsNone(selection.ship_binding(ds, 'trade_convoy'),
-                          'a row that names no faction is served nothing either')
+        try:
+            selection.configure({'model_preview': True}, asset_root=ROOT)
+            for faction in ('imperial',) + SIBLINGS:
+                with self.subTest(faction=faction):
+                    binding = f'{faction}:convoy'
+                    self.assertTrue(selection.selected_binding(binding))
+                    self.assertIsNotNone(selection.mesh_for(binding))
+                    self.assertEqual(selection.ship_binding(ds, 'trade_convoy', faction), binding)
+            self.assertEqual(selection.ship_binding(ds, 'imperial_crew_transport'), 'imperial:convoy')
+            self.assertIsNone(selection.ship_binding(ds, 'trade_convoy'),
+                              'an anonymous convoy still needs an owner faction')
+        finally:
+            selection.configure({})
+        self.assertIsNone(selection.mesh_for('imperial:convoy'))
 
 
 class ApprovedFactionsUnchanged(unittest.TestCase):

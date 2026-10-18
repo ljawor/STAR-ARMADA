@@ -1,0 +1,74 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:confederacy/planet_pulsar_cannon",
+  "revision": "a54aa5be13a4c2acec628433d7cbb1d7f6b0d8751c0a2ec1a4f3f3e05309f8a2",
+  "display_name": "legion planet pulsar cannon (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/legion_planet_pulsar_cannon.mesh.json",
+      "sha256": "bd26fd608964a45f2ec3afd1bc7a66617d218cf6a69ef4fc0013331427ea8393",
+      "bytes": 136137
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -34.0,
+      0.0,
+      -32.0
+    ],
+    "max": [
+      34.0,
+      42.4,
+      46.0
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/legion_planet_pulsar_cannon.blend",
+    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 2396,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "s06-b4-hardware-2026-10-17",
+    "decided_by": "owner",
+    "decided_on": "2026-10-17",
+    "reviewed_revision": "a54aa5be13a4c2acec628433d7cbb1d7f6b0d8751c0a2ec1a4f3f3e05309f8a2",
+    "reviewed_evidence": [
+      "artifacts/s06_alliance_batch_review/b4-hardware/contact-sheet.png",
+      "artifacts/s06_alliance_batch_review/b4-hardware/metrics.json"
+    ]
+  }
+}

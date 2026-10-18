@@ -22,8 +22,13 @@ class AuthoredTrioTests(unittest.TestCase):
         return [('frigate', a.load_frigate, a.frigate_mesh, lambda: ship_mesh('rebel','frigate')),
                 ('shipyard', a.load_shipyard, a.shipyard_mesh, lambda: station_mesh('rebel','shipyard'))]
 
-    def test_all_unselected_catalogue_entries_are_byte_identical(self):
+    def test_historical_unselected_catalogue_entries_are_byte_identical(self):
         import hashlib
+        from render.asset_selection import configure
+        # This 73-entry historical fixture predates the escort/yard: it pins
+        # the approved battleship plus otherwise-legacy rows. S07 registration
+        # must not turn its legacy comparisons into full-catalogue preview.
+        configure({})
         from render.faction_ships import ship_mesh
         from render.faction_stations import station_mesh
         expected=json.loads((ROOT/'tests/fixtures/alliance_trio_unselected.sha256.json').read_text())
@@ -31,6 +36,7 @@ class AuthoredTrioTests(unittest.TestCase):
         self.assertEqual(len(expected),73)
         for key,digest in expected.items():
             kind,faction,role=key.split('/')
+            configure({'model_preview': key == 'ship/rebel/battleship'}, asset_root=ROOT)
             if kind=='legacy_ship':mesh=legacy_ship_mesh(role)
             elif faction=='imperial':mesh=legacy_station_mesh(role)
             else:mesh=(ship_mesh if kind=='ship' else station_mesh)(faction,role)

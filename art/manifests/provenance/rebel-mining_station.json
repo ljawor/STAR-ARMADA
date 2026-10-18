@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "rebel:mining_station",
+  "asset_id": "core:alliance/mining_station",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:20Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/alliance_mining_station.blend",
+    "sha256": "ab9a5c7e263fc7754e2b4abb8397cc40e87ea4794996246cca73e8c16f1bacef"
+  },
+  "exporter": {
+    "path": "tools/art/export_alliance_mining_station.py",
+    "sha256": "6e54e3dada65cab4c0571a533e93bfab5cea95ce552b80150f73f96d2b9ade01"
+  },
+  "runtime": {
+    "path": "assets/models/alliance_mining_station.mesh.json",
+    "sha256": "ff14df049feaad5937326566ac8015a9d86dcf03671d7e3426f8952b7e53e9da",
+    "bytes": 335435,
+    "triangles": 4948
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "ff14df049feaad5937326566ac8015a9d86dcf03671d7e3426f8952b7e53e9da",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "confederacy:fighter_platform",
+  "asset_id": "core:confederacy/fighter_platform",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:24:59Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/legion_fighter_platform.blend",
+    "sha256": "399010c3d7ad781ecc75f733e3cbf060d1593ce66df1ad2b55f7ff72de776f50"
+  },
+  "exporter": {
+    "path": "tools/art/export_legion_fighter_platform.py",
+    "sha256": "39b06ad80f79b03b3165acaed26e8a27b6b990366847c0b9e8ac2b2a6f07bc6c"
+  },
+  "runtime": {
+    "path": "assets/models/legion_fighter_platform.mesh.json",
+    "sha256": "b88dd8ee806fc3b8167cd93252a64b87683430fc19cb0f3a177423ef46a32f9c",
+    "bytes": 229697,
+    "triangles": 3620
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "b88dd8ee806fc3b8167cd93252a64b87683430fc19cb0f3a177423ef46a32f9c",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

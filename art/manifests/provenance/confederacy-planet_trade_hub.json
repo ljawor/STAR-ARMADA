@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "confederacy:planet_trade_hub",
+  "asset_id": "core:confederacy/planet_trade_hub",
+  "authority": "script",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:01Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/legion_planet_trade_hub.blend",
+    "sha256": "86e2dd43f5d2797d61ebb0505d92747ffec3efe82e33850a53014cfedd60e85c"
+  },
+  "exporter": {
+    "path": "tools/art/export_legion_planet_trade_hub.py",
+    "sha256": "de7abf71be099a47fb7f5af8273c6ddcef7c40f9345580a7c474de3391568ea7"
+  },
+  "runtime": {
+    "path": "assets/models/legion_planet_trade_hub.mesh.json",
+    "sha256": "b3bbb4ccfd292d695e73134d4bda12e1e83e25fc1ac93aade8ff96cc0bf0ea39",
+    "bytes": 132236,
+    "triangles": 2344
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "b3bbb4ccfd292d695e73134d4bda12e1e83e25fc1ac93aade8ff96cc0bf0ea39",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

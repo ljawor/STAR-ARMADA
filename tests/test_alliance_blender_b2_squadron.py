@@ -471,32 +471,12 @@ class PendingRecords(unittest.TestCase):
         self.assertIn('shared legacy generic shapes', spec['note'])
         self.assertIn('trade_convoy', spec['note'])
 
-    def test_no_pending_binding_is_registered_anywhere_in_production(self):
-        """Registration, not mention: a later batch's appearance decision may name a binding.
-
-        This used to search the whole approvals document as text, and `rebel:fighter` is a
-        substring of `rebel:fighter_platform` - so the B3c station batch's own approval record,
-        which legitimately names its bindings and says nothing about these hulls, read as a
-        leak. What must stay empty for a pending specimen is the registry, the pipeline registry
-        and the approved-asset list.
-        """
-        registry = json.loads((ROOT / 'assets/models/registry.json').read_text(encoding='utf-8'))
-        status = {b['binding']: b['status'] for b in registry['bindings']}
-        pipeline = json.loads((ROOT / 'art/manifests/pipeline.json').read_text(encoding='utf-8'))
-        registered = {a['binding']: a for a in pipeline['assets']}
-        approvals = json.loads((ROOT / 'art/manifests/approvals.json').read_text(encoding='utf-8'))
-        bound = json.dumps([e for e in approvals['approved_assets'] if isinstance(e, dict)])
-        manifests = sorted(p.name for p in (ROOT / 'assets/models/manifests').glob('*.json'))
-        for asset in ASSETS:
-            with self.subTest(binding=asset['binding']):
-                self.assertEqual(status[asset['binding']], 'procedural_legacy',
-                                 'a pending specimen must not be selectable')
-                self.assertNotIn(asset['binding'], registered)
-                self.assertNotIn(asset['identifier'], bound)
-                self.assertNotIn(asset['binding'], bound)
-        self.assertEqual(manifests, ['alliance_battleship.json', 'alliance_frigate.json',
-                                     'alliance_shipyard.json'],
-                         'the approved runtime manifests are the only registered ones')
+    def test_only_authorized_s06_specimens_register_with_legacy_default(self):
+        """S07 execution authority registers exact approved revisions, not pending rows."""
+        from s07_registration_assertions import assert_opt_in_registration, assert_preview_boundary
+        bindings = [asset['binding'] for asset in ASSETS]
+        assert_opt_in_registration(self, ROOT, bindings)
+        assert_preview_boundary(self, ROOT, bindings)
 
     def test_the_batch_sheet_is_labelled_unreviewed(self):
         text = (ROOT / 'tools/diag_alliance_batch_review.py').read_text(encoding='utf-8')

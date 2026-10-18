@@ -1,0 +1,76 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:imperial/sensor_station",
+  "revision": "8be797b6fbb4e7743ccd7a33146d89be30dea147eb9c553ad7f1866178a3959e",
+  "display_name": "imperial sensor station (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/imperial_sensor_station.mesh.json",
+      "sha256": "0b853ca6a6d894e40a8b460be69e40447299b931d1c8a84b477ce6e7b8258de5",
+      "bytes": 128161
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -37.0,
+      -23.0,
+      -30.387721
+    ],
+    "max": [
+      37.0,
+      62.355496,
+      30.387721
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/imperial_sensor_station.blend",
+    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 2308,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "s06-b7-imperial-stations-2026-10-18",
+    "decided_by": "owner",
+    "decided_on": "2026-10-18",
+    "reviewed_revision": "8be797b6fbb4e7743ccd7a33146d89be30dea147eb9c553ad7f1866178a3959e",
+    "reviewed_evidence": [
+      "artifacts/s06-completion/B7-appearance-grid.jpg",
+      "artifacts/s06-completion/review-b7-attempt2/render/contact-sheet.png",
+      "artifacts/s06-completion/review-b7-attempt2/render/imperial-sensor_station-after-close.png",
+      "artifacts/s06-completion/review-b7-attempt2/render/metrics.json"
+    ]
+  }
+}

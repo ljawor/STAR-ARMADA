@@ -1,0 +1,8 @@
+test_all_historical_identities_have_deterministic_current_routes (test_s07_binding_routes.BindingRouteAuditTests.test_all_historical_identities_have_deterministic_current_routes) ... ok
+test_live_data_role_overrides_historical_identity_and_shape (test_s07_binding_routes.BindingRouteAuditTests.test_live_data_role_overrides_historical_identity_and_shape) ... ok
+test_selection_is_separate_from_actual_geometry_dispatch (test_s07_binding_routes.BindingRouteAuditTests.test_selection_is_separate_from_actual_geometry_dispatch) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.354s
+
+OK

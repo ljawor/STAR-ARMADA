@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "rebel:defense_platform",
+  "asset_id": "core:alliance/defense_platform",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:18Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/alliance_defense_platform.blend",
+    "sha256": "8d4b53895400ffa40f355a3341f21b441032f0234792a858a51f610e7f2efb74"
+  },
+  "exporter": {
+    "path": "tools/art/export_alliance_defense_platform.py",
+    "sha256": "fe1db43b81d0276a7153dd352afc507a49cff49514a2869fa04b66c35f8ef183"
+  },
+  "runtime": {
+    "path": "assets/models/alliance_defense_platform.mesh.json",
+    "sha256": "80b1f3daae8e73fdf050bde9ac6cff87364c987683d6570c475e57fc6e993fa1",
+    "bytes": 285563,
+    "triangles": 4248
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "80b1f3daae8e73fdf050bde9ac6cff87364c987683d6570c475e57fc6e993fa1",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

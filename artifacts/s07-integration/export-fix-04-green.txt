@@ -1,0 +1,6 @@
+test_wrapper_rejects_source_edits_without_publishing_or_provenance (test_s07_pipeline_execution.PipelineExecutionTest.test_wrapper_rejects_source_edits_without_publishing_or_provenance) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.048s
+
+OK

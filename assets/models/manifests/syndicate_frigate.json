@@ -1,0 +1,76 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:syndicate/frigate",
+  "revision": "db352a8ffcd56d47687e15ce69bad0e685f2e6c9bfb668277160dcd3d55ac422",
+  "display_name": "syndicate frigate (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/syndicate_frigate.mesh.json",
+      "sha256": "9563c320fb164133b7731aa398f41653e25844da72644e0b438d3b10aeba1471",
+      "bytes": 155568
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -31.829605,
+      -9.0,
+      -70.509995
+    ],
+    "max": [
+      43.872131,
+      44.0,
+      62.399994
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/syndicate_frigate.blend",
+    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 2644,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "s06-b8-remaining-combat-2026-10-18",
+    "decided_by": "owner",
+    "decided_on": "2026-10-18",
+    "reviewed_revision": "db352a8ffcd56d47687e15ce69bad0e685f2e6c9bfb668277160dcd3d55ac422",
+    "reviewed_evidence": [
+      "artifacts/s06-completion/B8-appearance-grid.jpg",
+      "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png",
+      "artifacts/s06-completion/review-b8-attempt1/render/metrics.json",
+      "artifacts/s06-completion/review-b8-attempt1/render/syndicate-frigate-after-close.png"
+    ]
+  }
+}

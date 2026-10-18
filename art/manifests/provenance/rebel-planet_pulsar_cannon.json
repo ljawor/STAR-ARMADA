@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "rebel:planet_pulsar_cannon",
+  "asset_id": "core:alliance/planet_pulsar_cannon",
+  "authority": "script",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:21Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/alliance_planet_pulsar_cannon.blend",
+    "sha256": "ae7e1f2e805cbf42c186d011f04061f67d29a037ed1c0b1ededb78fef9625a4f"
+  },
+  "exporter": {
+    "path": "tools/art/export_alliance_planet_pulsar_cannon.py",
+    "sha256": "6d1ea84bc4541855ecf1f18651480d886205e3e39da0bbccc39260bdd2124ccb"
+  },
+  "runtime": {
+    "path": "assets/models/alliance_planet_pulsar_cannon.mesh.json",
+    "sha256": "676e8a5f09782b0bcec88cd3f89756db296f66e38fc0f543ed28eb2394304782",
+    "bytes": 151386,
+    "triangles": 2588
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "676e8a5f09782b0bcec88cd3f89756db296f66e38fc0f543ed28eb2394304782",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

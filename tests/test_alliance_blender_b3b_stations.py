@@ -648,26 +648,12 @@ class PendingRecords(unittest.TestCase):
         self.assertIn('no mesh_for seam', spec['note'])
         self.assertIn('command stations are absent', spec['note'])
 
-    def test_no_pending_binding_is_registered_anywhere_in_production(self):
-        registry = json.loads((ROOT / 'assets/models/registry.json').read_text(encoding='utf-8'))
-        status = {b['binding']: b['status'] for b in registry['bindings']}
-        pipeline = json.loads((ROOT / 'art/manifests/pipeline.json').read_text(encoding='utf-8'))
-        registered = {a['binding']: a for a in pipeline['assets']}
-        approvals = json.loads((ROOT / 'art/manifests/approvals.json').read_text(encoding='utf-8'))
-        # Registration, not mention: this batch's own appearance decision names all nine bindings
-        # and still registers none of them, so the check is structural, not a substring search.
-        bound = json.dumps([e for e in approvals['approved_assets'] if isinstance(e, dict)])
-        manifests = sorted(p.name for p in (ROOT / 'assets/models/manifests').glob('*.json'))
-        for asset in ASSETS:
-            with self.subTest(binding=asset['binding']):
-                self.assertEqual(status[asset['binding']], 'procedural_legacy',
-                                 'an approved-appearance specimen must still not be selectable')
-                self.assertNotIn(asset['binding'], registered)
-                self.assertNotIn(asset['identifier'], bound)
-                self.assertNotIn(asset['binding'], bound)
-        self.assertEqual(manifests, ['alliance_battleship.json', 'alliance_frigate.json',
-                                     'alliance_shipyard.json'],
-                         'the approved runtime manifests are the only registered ones')
+    def test_only_authorized_s06_specimens_register_with_legacy_default(self):
+        """S07 execution authority registers exact approved revisions, not pending rows."""
+        from s07_registration_assertions import assert_opt_in_registration, assert_preview_boundary
+        bindings = [asset['binding'] for asset in ASSETS]
+        assert_opt_in_registration(self, ROOT, bindings)
+        assert_preview_boundary(self, ROOT, bindings)
 
     def test_every_evidence_path_the_sheet_points_at_exists(self):
         """A pointer to a file that is not there is worse than no pointer.

@@ -1,0 +1,271 @@
+build-model confederacy:attack_satellite: ok - 2432 triangles, runtime sha256 da4ad21c5c1a3630... matches the approved bytes
+build-model confederacy:defense_satellite: ok - 2180 triangles, runtime sha256 8db782a326362e4e... matches the approved bytes
+build-model confederacy:planet_extractor: ok - 2596 triangles, runtime sha256 21ac55b4336a9a34... matches the approved bytes
+build-model confederacy:planet_pulsar_cannon: ok - 2396 triangles, runtime sha256 bd26fd608964a45f... matches the approved bytes
+build-model confederacy:planet_shield_generator: ok - 2608 triangles, runtime sha256 7d8d1676d8346129... matches the approved bytes
+build-model confederacy:planet_trade_hub: ok - 2344 triangles, runtime sha256 b3bbb4ccfd292d69... matches the approved bytes
+build-model environment:asteroid_field: ok - 216 triangles, runtime sha256 ad2b65483c330fec... matches the approved bytes
+build-model imperial:attack_satellite: ok - 2312 triangles, runtime sha256 5f12f2debb3f9cab... matches the approved bytes
+build-model imperial:battleship: ok - 2468 triangles, runtime sha256 3c69c3db9d0f55ab... matches the approved bytes
+build-model imperial:bomber: ok - 2536 triangles, runtime sha256 b0d03f0d0045e796... matches the approved bytes
+build-model imperial:convoy: ok - 4745 triangles, runtime sha256 3f887ced61a15b4d... matches the approved bytes
+build-model imperial:corvette: ok - 2348 triangles, runtime sha256 be894218b84c00b4... matches the approved bytes
+build-model imperial:cruiser: ok - 2384 triangles, runtime sha256 125f37cf927840f5... matches the approved bytes
+build-model imperial:defense_satellite: ok - 2060 triangles, runtime sha256 ce8fae81cbcc80bd... matches the approved bytes
+build-model imperial:fighter: ok - 2136 triangles, runtime sha256 5bc984c2ad3c2f64... matches the approved bytes
+build-model imperial:frigate: ok - 2416 triangles, runtime sha256 6c5d925bcd67bd65... matches the approved bytes
+build-model imperial:planet_extractor: ok - 2500 triangles, runtime sha256 7ace170ae089f00f... matches the approved bytes
+build-model imperial:planet_pulsar_cannon: ok - 2300 triangles, runtime sha256 9a5e27a842b0fd32... matches the approved bytes
+build-model imperial:planet_shield_generator: ok - 2416 triangles, runtime sha256 f9979421cd159032... matches the approved bytes
+build-model imperial:planet_trade_hub: ok - 2248 triangles, runtime sha256 d3d8afaa06b5ca99... matches the approved bytes
+build-model imperial:supercapital: ok - 2592 triangles, runtime sha256 1c44c3e7a78241b5... matches the approved bytes
+build-model rebel:attack_satellite: ok - 2672 triangles, runtime sha256 c37dbc64cba78ee9... matches the approved bytes
+build-model rebel:defense_satellite: ok - 2420 triangles, runtime sha256 d38b5549310b6a9a... matches the approved bytes
+build-model rebel:planet_extractor: ok - 2788 triangles, runtime sha256 19354d7d4fc52647... matches the approved bytes
+build-model rebel:planet_pulsar_cannon: ok - 2588 triangles, runtime sha256 676e8a5f09782b0b... matches the approved bytes
+build-model rebel:planet_shield_generator: ok - 2992 triangles, runtime sha256 bf38721eb96bdfcf... matches the approved bytes
+build-model rebel:planet_trade_hub: ok - 2536 triangles, runtime sha256 cd317db1714dfc9e... matches the approved bytes
+build-model syndicate:attack_satellite: ok - 2284 triangles, runtime sha256 007c331eb494d62a... matches the approved bytes
+build-model syndicate:defense_satellite: ok - 2032 triangles, runtime sha256 3fbe61b531055a10... matches the approved bytes
+build-model syndicate:planet_extractor: ok - 2484 triangles, runtime sha256 388ba2aa4d5ebb3f... matches the approved bytes
+build-model syndicate:planet_pulsar_cannon: ok - 2284 triangles, runtime sha256 498e6232ec385e90... matches the approved bytes
+build-model syndicate:planet_shield_generator: ok - 2352 triangles, runtime sha256 f05eed613663d33a... matches the approved bytes
+build-model syndicate:planet_trade_hub: ok - 2232 triangles, runtime sha256 e287675b6e86d7b5... matches the approved bytes
+{
+  "ok": true,
+  "blender": "/Applications/Blender.app/Contents/MacOS/Blender",
+  "blender_version": "5.0.1",
+  "results": [
+    {
+      "binding": "confederacy:attack_satellite",
+      "runtime": "assets/models/legion_attack_satellite.mesh.json",
+      "sha256": "da4ad21c5c1a363054050169988d1ce0eab82d1c9fb31a5d1318c5f69eebaf64",
+      "triangles": 2432,
+      "provenance": "art/manifests/provenance/confederacy-attack_satellite.json"
+    },
+    {
+      "binding": "confederacy:defense_satellite",
+      "runtime": "assets/models/legion_defense_satellite.mesh.json",
+      "sha256": "8db782a326362e4e15d52090bd1dcd8039b96df4b2127d3c1bfd87ccb2b6ac9d",
+      "triangles": 2180,
+      "provenance": "art/manifests/provenance/confederacy-defense_satellite.json"
+    },
+    {
+      "binding": "confederacy:planet_extractor",
+      "runtime": "assets/models/legion_planet_extractor.mesh.json",
+      "sha256": "21ac55b4336a9a34b9cc6bdea34e2d9e989dd027e236f7b9eca730f0b382a039",
+      "triangles": 2596,
+      "provenance": "art/manifests/provenance/confederacy-planet_extractor.json"
+    },
+    {
+      "binding": "confederacy:planet_pulsar_cannon",
+      "runtime": "assets/models/legion_planet_pulsar_cannon.mesh.json",
+      "sha256": "bd26fd608964a45f2ec3afd1bc7a66617d218cf6a69ef4fc0013331427ea8393",
+      "triangles": 2396,
+      "provenance": "art/manifests/provenance/confederacy-planet_pulsar_cannon.json"
+    },
+    {
+      "binding": "confederacy:planet_shield_generator",
+      "runtime": "assets/models/legion_planet_shield_generator.mesh.json",
+      "sha256": "7d8d1676d83461298d8efa08be75faa494452a71196952d6943377dedb4f1873",
+      "triangles": 2608,
+      "provenance": "art/manifests/provenance/confederacy-planet_shield_generator.json"
+    },
+    {
+      "binding": "confederacy:planet_trade_hub",
+      "runtime": "assets/models/legion_planet_trade_hub.mesh.json",
+      "sha256": "b3bbb4ccfd292d695e73134d4bda12e1e83e25fc1ac93aade8ff96cc0bf0ea39",
+      "triangles": 2344,
+      "provenance": "art/manifests/provenance/confederacy-planet_trade_hub.json"
+    },
+    {
+      "binding": "environment:asteroid_field",
+      "runtime": "assets/models/shared_asteroid_field.mesh.json",
+      "sha256": "ad2b65483c330fecad28059fce9c489bc0bce2c050ebe38aa526e21f25c88ae7",
+      "triangles": 216,
+      "provenance": "art/manifests/provenance/environment-asteroid_field.json"
+    },
+    {
+      "binding": "imperial:attack_satellite",
+      "runtime": "assets/models/imperial_attack_satellite.mesh.json",
+      "sha256": "5f12f2debb3f9cabf6e5f9f22890dbe78ef7ba436697d26591fa9e21fc05a7a1",
+      "triangles": 2312,
+      "provenance": "art/manifests/provenance/imperial-attack_satellite.json"
+    },
+    {
+      "binding": "imperial:battleship",
+      "runtime": "assets/models/imperial_battleship.mesh.json",
+      "sha256": "3c69c3db9d0f55aba714d1af4bafbebc7493afb5da3a80d7bd59fccc7be8ac79",
+      "triangles": 2468,
+      "provenance": "art/manifests/provenance/imperial-battleship.json"
+    },
+    {
+      "binding": "imperial:bomber",
+      "runtime": "assets/models/imperial_tie_bomber_squadron.mesh.json",
+      "sha256": "b0d03f0d0045e79653098a4a7d3c3e8769b0b1fc14d47c577195c635a862c826",
+      "triangles": 2536,
+      "provenance": "art/manifests/provenance/imperial-bomber.json"
+    },
+    {
+      "binding": "imperial:convoy",
+      "runtime": "assets/models/imperial_convoy.mesh.json",
+      "sha256": "3f887ced61a15b4d8038103ec6c015c482fa8db315cc46c3526063535ff6a56a",
+      "triangles": 4745,
+      "provenance": "art/manifests/provenance/imperial-convoy.json"
+    },
+    {
+      "binding": "imperial:corvette",
+      "runtime": "assets/models/imperial_corvette.mesh.json",
+      "sha256": "be894218b84c00b4c6f78c96a46df1cf69441b627fa75155df02be41f6c30d05",
+      "triangles": 2348,
+      "provenance": "art/manifests/provenance/imperial-corvette.json"
+    },
+    {
+      "binding": "imperial:cruiser",
+      "runtime": "assets/models/imperial_cruiser.mesh.json",
+      "sha256": "125f37cf927840f5ccd452bfe8ec5998c0e6e644c0965932399b716d8fedd130",
+      "triangles": 2384,
+      "provenance": "art/manifests/provenance/imperial-cruiser.json"
+    },
+    {
+      "binding": "imperial:defense_satellite",
+      "runtime": "assets/models/imperial_defense_satellite.mesh.json",
+      "sha256": "ce8fae81cbcc80bd22316d4b70ca66a45171b6d32b36a87a6b7b1ded87161b0b",
+      "triangles": 2060,
+      "provenance": "art/manifests/provenance/imperial-defense_satellite.json"
+    },
+    {
+      "binding": "imperial:fighter",
+      "runtime": "assets/models/imperial_tie_squadron.mesh.json",
+      "sha256": "5bc984c2ad3c2f649bf75265d3326d914a419659538360917b9c2217dcadd1cc",
+      "triangles": 2136,
+      "provenance": "art/manifests/provenance/imperial-fighter.json"
+    },
+    {
+      "binding": "imperial:frigate",
+      "runtime": "assets/models/imperial_frigate.mesh.json",
+      "sha256": "6c5d925bcd67bd655aae5f7e4bbdfa178257a4d0a6897f52b8664dda3f94752d",
+      "triangles": 2416,
+      "provenance": "art/manifests/provenance/imperial-frigate.json"
+    },
+    {
+      "binding": "imperial:planet_extractor",
+      "runtime": "assets/models/imperial_planet_extractor.mesh.json",
+      "sha256": "7ace170ae089f00f31724eee0053ec84bdf259804b87ee64ee3be89e3f4de291",
+      "triangles": 2500,
+      "provenance": "art/manifests/provenance/imperial-planet_extractor.json"
+    },
+    {
+      "binding": "imperial:planet_pulsar_cannon",
+      "runtime": "assets/models/imperial_planet_pulsar_cannon.mesh.json",
+      "sha256": "9a5e27a842b0fd32254291c06fc919f296d6153c0d759c0e2fcb48a013a837dd",
+      "triangles": 2300,
+      "provenance": "art/manifests/provenance/imperial-planet_pulsar_cannon.json"
+    },
+    {
+      "binding": "imperial:planet_shield_generator",
+      "runtime": "assets/models/imperial_planet_shield_generator.mesh.json",
+      "sha256": "f9979421cd15903222d40a837d5fdf961494a3d5861f8b74dfe82b0ebf6b2f75",
+      "triangles": 2416,
+      "provenance": "art/manifests/provenance/imperial-planet_shield_generator.json"
+    },
+    {
+      "binding": "imperial:planet_trade_hub",
+      "runtime": "assets/models/imperial_planet_trade_hub.mesh.json",
+      "sha256": "d3d8afaa06b5ca99409147163f437b0530d42cff2707d6d5cd00baaf67a107e1",
+      "triangles": 2248,
+      "provenance": "art/manifests/provenance/imperial-planet_trade_hub.json"
+    },
+    {
+      "binding": "imperial:supercapital",
+      "runtime": "assets/models/imperial_supercapital.mesh.json",
+      "sha256": "1c44c3e7a78241b5048a9aefe23549b8578c0a21081ad797ce640e8ad9a98dbf",
+      "triangles": 2592,
+      "provenance": "art/manifests/provenance/imperial-supercapital.json"
+    },
+    {
+      "binding": "rebel:attack_satellite",
+      "runtime": "assets/models/alliance_attack_satellite.mesh.json",
+      "sha256": "c37dbc64cba78ee9f6a003645dea5630237da3558f7f1add3007f7c1197348d9",
+      "triangles": 2672,
+      "provenance": "art/manifests/provenance/rebel-attack_satellite.json"
+    },
+    {
+      "binding": "rebel:defense_satellite",
+      "runtime": "assets/models/alliance_defense_satellite.mesh.json",
+      "sha256": "d38b5549310b6a9a554e429254857f895a5d7852cdd2dce3999276406ad1241d",
+      "triangles": 2420,
+      "provenance": "art/manifests/provenance/rebel-defense_satellite.json"
+    },
+    {
+      "binding": "rebel:planet_extractor",
+      "runtime": "assets/models/alliance_planet_extractor.mesh.json",
+      "sha256": "19354d7d4fc5264789fd7232993b48c5f80bf2a0567f8111c3b144030483c4fa",
+      "triangles": 2788,
+      "provenance": "art/manifests/provenance/rebel-planet_extractor.json"
+    },
+    {
+      "binding": "rebel:planet_pulsar_cannon",
+      "runtime": "assets/models/alliance_planet_pulsar_cannon.mesh.json",
+      "sha256": "676e8a5f09782b0bcec88cd3f89756db296f66e38fc0f543ed28eb2394304782",
+      "triangles": 2588,
+      "provenance": "art/manifests/provenance/rebel-planet_pulsar_cannon.json"
+    },
+    {
+      "binding": "rebel:planet_shield_generator",
+      "runtime": "assets/models/alliance_planet_shield_generator.mesh.json",
+      "sha256": "bf38721eb96bdfcffa962429a8a1cd3c830344936a521f3f03d197a05669df20",
+      "triangles": 2992,
+      "provenance": "art/manifests/provenance/rebel-planet_shield_generator.json"
+    },
+    {
+      "binding": "rebel:planet_trade_hub",
+      "runtime": "assets/models/alliance_planet_trade_hub.mesh.json",
+      "sha256": "cd317db1714dfc9e2d0759bec83f0c1851c9f3139ee67f0c6f04a391aa88d691",
+      "triangles": 2536,
+      "provenance": "art/manifests/provenance/rebel-planet_trade_hub.json"
+    },
+    {
+      "binding": "syndicate:attack_satellite",
+      "runtime": "assets/models/syndicate_attack_satellite.mesh.json",
+      "sha256": "007c331eb494d62ae49953d7c8a225d993b942a088e392869138c5f1fa219d2d",
+      "triangles": 2284,
+      "provenance": "art/manifests/provenance/syndicate-attack_satellite.json"
+    },
+    {
+      "binding": "syndicate:defense_satellite",
+      "runtime": "assets/models/syndicate_defense_satellite.mesh.json",
+      "sha256": "3fbe61b531055a10b3a269f07cf291ed779cce08396bf7d8a7367e8c5585b71f",
+      "triangles": 2032,
+      "provenance": "art/manifests/provenance/syndicate-defense_satellite.json"
+    },
+    {
+      "binding": "syndicate:planet_extractor",
+      "runtime": "assets/models/syndicate_planet_extractor.mesh.json",
+      "sha256": "388ba2aa4d5ebb3f33edc309cc4c177ce6d499c74d751c6573f8f5302dca4fa1",
+      "triangles": 2484,
+      "provenance": "art/manifests/provenance/syndicate-planet_extractor.json"
+    },
+    {
+      "binding": "syndicate:planet_pulsar_cannon",
+      "runtime": "assets/models/syndicate_planet_pulsar_cannon.mesh.json",
+      "sha256": "498e6232ec385e903942da4a873f0153d951cc601e49df170b274a6863cecc55",
+      "triangles": 2284,
+      "provenance": "art/manifests/provenance/syndicate-planet_pulsar_cannon.json"
+    },
+    {
+      "binding": "syndicate:planet_shield_generator",
+      "runtime": "assets/models/syndicate_planet_shield_generator.mesh.json",
+      "sha256": "f05eed613663d33ae5bad77d2489a4a8f986585374645e19cf8aefe1a98f939d",
+      "triangles": 2352,
+      "provenance": "art/manifests/provenance/syndicate-planet_shield_generator.json"
+    },
+    {
+      "binding": "syndicate:planet_trade_hub",
+      "runtime": "assets/models/syndicate_planet_trade_hub.mesh.json",
+      "sha256": "e287675b6e86d7b5bb986169941179ff8cad49fa9c021182f7d279aa89be2aed",
+      "triangles": 2232,
+      "provenance": "art/manifests/provenance/syndicate-planet_trade_hub.json"
+    }
+  ]
+}

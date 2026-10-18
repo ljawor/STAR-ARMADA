@@ -1,0 +1,6 @@
+test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+OK
