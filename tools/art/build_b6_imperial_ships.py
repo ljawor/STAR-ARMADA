@@ -3,14 +3,25 @@
 
 S06 batch B6 - the Imperial ships. Eleven Imperial bindings are ships
 (`art/manifests/handoffs/S06-B6-IMPERIAL-SHIPS.md`); this seed is their recipe, and it carries the
-batch's first row, `ship:imperial:corvette`.
+batch's first three rows: `ship:imperial:corvette`, `ship:imperial:tie_squadron` and
+`ship:imperial:tie_bomber_squadron`.
 
-The row is the legacy `needle` archetype: a slender pointed combat hull, drawn today by
-`render/fleet_geometry.py::_ship_mesh` at 1,552 triangles and 858 vertices inside the measured
-envelope -16.000,-5.000,-43.601 .. 16.000,24.000,48.000 (`ShipData.radius=34.0`). The Imperial
-corvette is that shape in grey: a faceted pressure hull with a dorsal armour run and turret deck, a
-pair of outboard sponsons that carry the beam, a keel fin, two engine bells, identification
-striping, and a tall radiator fin whose tip is the ship's highest point.
+`ship:imperial:corvette` is the legacy `needle` archetype: a slender pointed combat hull, drawn
+today by `render/fleet_geometry.py::_ship_mesh` at 1,552 triangles and 858 vertices inside the
+measured envelope -16.000,-5.000,-43.601 .. 16.000,24.000,48.000 (`ShipData.radius=34.0`). The
+Imperial corvette is that shape in grey: a faceted pressure hull with a dorsal armour run and
+turret deck, a pair of outboard sponsons that carry the beam, a keel fin, two engine bells,
+identification striping, and a tall radiator fin whose tip is the ship's highest point.
+
+`ship:imperial:tie_squadron` and `ship:imperial:tie_bomber_squadron` are the legacy `wedge`
+archetype: 1,456 triangles and 792 vertices of flat squadron wing inside the measured envelope
+-31.250,-3.240,-28.996 .. 31.250,14.000,35.000 (`ShipData.radius=22.0` and `24.0`). A squadron row
+is an Imperial TIE rather than a wedge: a faceted cockpit globe on a short pylon between two large
+flat hexagonal wing panels. The panel's rim ring carries the whole measured box - its outer plane is
+the beam extreme and its hexagonal rim walls carry the Y and Z extremes - the pod sits on the box
+centreline, the engine bells sit at the pod's stern, and a forward sensor mast, a sensor ring and
+wing vanes carry the cool role. The bomber is its own hull, not the fighter scaled: a heavier pod,
+thicker pylons, a doubled wing rim and a pair of munition cylinders, all of it row data.
 
 **Script-authoritative per the S03 source-authority policy** (repeated modular hardware): the recipe
 is the master and the `.blend` is a derived artifact. Every dimension below is derived from the
@@ -18,10 +29,10 @@ binding's own legacy extent, because `render/ship_sizes.ship_size` derives the c
 drawn length, the review cameras and the collision radius from the drawn length: a hull that filled
 less of the box would change the ship's size in game.
 
-**The row is data.** `ROWS` is a table keyed by binding, and the ten Imperial rows after this one
-are added as rows rather than as a second copy of this file.
+**The rows are data.** `ROWS` is a table keyed by binding, `build(key)` authors one row, and the
+eight Imperial rows after these are added as rows rather than as a second copy of this file.
 
-`build()` returns `(verts, faces, role_of_face)` and `main()` groups the kit into one object per
+`build(key)` returns `(verts, faces, role_of_face)` and `main()` groups the kit into one object per
 loader role, as the B5 environment seed does, so the export's six material-role batches are authored
 rather than derived. Each part is still made by `alliance_common`'s own primitives - the same ring,
 chamfer and evaluated bevel as every other asset in the batch - and harvested back into data.
@@ -29,10 +40,11 @@ chamfer and evaluated bevel as every other asset in the batch - and harvested ba
 Refuses overwriting an existing editable master unless `--replace-seed` is explicit.
 
     Blender --background --python-exit-code 1 --python tools/art/build_b6_imperial_ships.py \
-        -- --asset ship:imperial:corvette
+        -- --asset ship:imperial:tie_squadron
 """
 
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -63,6 +75,49 @@ ROWS = {
         design=('Imperial grey combat corvette: a faceted needle hull with a dorsal armour run and '
                 'turret deck, outboard sponsons carrying the beam, twin engine bells, identification '
                 'striping and a tall radiator fin'),
+    ),
+    'ship:imperial:tie_squadron': dict(
+        identifier='imperial_tie_squadron',
+        data_id='imperial_tie_squadron',
+        label='Talon Interceptor Squadron',
+        ship_kind='tie_squadron',
+        faction='imperial',
+        legacy_shape='wedge',
+        limits=[[-31.25, 31.25], [-3.24, 14.0], [-28.996, 35.0]],
+        legacy_triangles=1456,
+        legacy_vertices=792,
+        station_radius=22.0,
+        pod_radius=5.6,
+        pod_rings=9,
+        spar_thickness=2.2,
+        panel_thickness=0.9,
+        panel_frames=2,
+        ordnance=0,
+        design=('Imperial TIE interceptor squadron: a faceted spherical cockpit pod on a short '
+                'pylon between two large flat hexagonal wing panels, dark panel fields inside '
+                'bright rim banding, a lit engine bank at the pod stern and a cool-toned forward '
+                'sensor mast'),
+    ),
+    'ship:imperial:tie_bomber_squadron': dict(
+        identifier='imperial_tie_bomber_squadron',
+        data_id='imperial_tie_bomber_squadron',
+        label='Hammer Torpedo Squadron',
+        ship_kind='tie_bomber_squadron',
+        faction='imperial',
+        legacy_shape='wedge',
+        limits=[[-31.25, 31.25], [-3.24, 14.0], [-28.996, 35.0]],
+        legacy_triangles=1456,
+        legacy_vertices=792,
+        station_radius=24.0,
+        pod_radius=6.8,
+        pod_rings=13,
+        spar_thickness=3.6,
+        panel_thickness=1.3,
+        panel_frames=4,
+        ordnance=2,
+        design=('Imperial TIE bomber squadron: a heavier faceted cockpit globe on thick pylons '
+                'between two large flat hexagonal wing panels, two munition cylinders under the '
+                'pylon, doubled bright rim banding, a lit engine bank and a cool-toned sensor ring'),
     ),
 }
 
@@ -125,6 +180,107 @@ def frame(limits):
     lo = [a[0] for a in limits]
     hi = [a[1] for a in limits]
     return lo, hi, [(lo[i] + hi[i]) / 2 for i in range(3)], [hi[i] - lo[i] for i in range(3)]
+
+
+# --------------------------------------------------------------- the TIE wing panel, as pure data
+# The panel's frame is a pure function of the row's own measured extent, so a guard can drive it
+# without Blender (`tests/test_alliance_blender_b6_imperial_ships.py`,
+# `test_the_tie_panel_pair_fills_the_legacy_box_per_axis_and_per_side`) and a later squadron row is
+# a row rather than a second kit. Both functions below are self-contained - no module constant, no
+# helper - so that extraction really does evaluate the shape the seed authors.
+def hex_frame(limits):
+    """The TIE panel's hexagonal frame, divided out of the binding's own legacy extent.
+
+    The panel is elongated along Z and its six vertices sit at 30/90/150/210/270/330 degrees. That
+    puts the two Z extremes on corner vertices and the two Y extremes on the *vertical rim edges*
+    between the 30/330 and 150/210 pairs, so both Y extremes are edges rather than corners and no
+    chamfer can round them off; the flat faces carry the beam. Every number is derived, never
+    transcribed.
+    """
+    lo, hi, centre, span = frame(limits)
+    return {'centre': tuple(centre),
+            'half_y': (hi[1] - lo[1]) / (2 * math.cos(math.pi / 6)),
+            'half_z': (hi[2] - lo[2]) / 2,
+            'lo': tuple(lo),
+            'hi': tuple(hi)}
+
+
+def hex_face_geometry(limits, side, scale, depth, offset=0.0, shift=(0.0, 0.0)):
+    """A flat hexagonal face on one wing panel, as `(verts, faces)` in the row's own frame.
+
+    `side` is -1 (port) or +1 (starboard). The outermost plane is exactly `offset` inside that
+    side's beam extreme - never outside it, because a detail that protruded would breach the legacy
+    box the row is measured against - and the face extends `depth` further in. `scale` shrinks the
+    hexagon inside the panel's own hexagon; `shift` moves it in (y, z).
+    """
+    hx = hex_frame(limits)
+    _, cy, cz = hx['centre']
+    cy, cz = cy + shift[0], cz + shift[1]
+    face = hx['hi'][0] if side > 0 else hx['lo'][0]
+    xs = (face - side * offset, face - side * (offset + depth))
+    profile = [(cy + scale * hx['half_y'] * math.cos(math.pi * (0.5 + i / 3.0)),
+                cz + scale * hx['half_z'] * math.sin(math.pi * (0.5 + i / 3.0))) for i in range(6)]
+    verts = [(x, y, z) for x in xs for (y, z) in profile]
+    faces = [tuple(range(6)), tuple(reversed(range(6, 12)))]
+    faces.extend((i, (i + 1) % 6, 6 + (i + 1) % 6, 6 + i) for i in range(6))
+    return verts, faces
+
+
+def hex_ring_geometry(limits, side, outer, inner, depth, offset=0.0, shift=(0.0, 0.0)):
+    """A flat hexagonal frame on one wing panel, as `(verts, faces)` in the row's own frame.
+
+    This is the panel's rim: `outer` is the panel's whole hexagon, so the ring's outer walls carry
+    the four Y/Z extremes, and its outermost plane carries the beam extreme on that side. `inner`
+    cuts the aperture the dark field shows through.
+    """
+    hx = hex_frame(limits)
+    _, cy, cz = hx['centre']
+    cy, cz = cy + shift[0], cz + shift[1]
+    face = hx['hi'][0] if side > 0 else hx['lo'][0]
+    xs = (face - side * offset, face - side * (offset + depth))
+    profile = []
+    for scale in (outer, inner):
+        profile.extend((cy + scale * hx['half_y'] * math.cos(math.pi * (0.5 + i / 3.0)),
+                        cz + scale * hx['half_z'] * math.sin(math.pi * (0.5 + i / 3.0)))
+                       for i in range(6))
+    verts = [(x, y, z) for x in xs for (y, z) in profile]
+    faces = []
+    for i in range(6):
+        j = (i + 1) % 6
+        faces.append((i, j, 6 + j, 6 + i))                    # outer wall
+        faces.append((12 + i, 12 + j, 18 + j, 18 + i))        # inner wall
+        faces.append((i, 12 + i, 12 + j, j))                  # rim at the outermost plane
+        faces.append((6 + i, 18 + i, 18 + j, 6 + j))          # rim at the inner plane
+    return verts, faces
+
+
+def tie_pod_sections(limits, radius, rings):
+    """The cockpit globe's loft frames, as `(z, w, top, bottom)` in the row's own frame.
+
+    `radius` and `rings` are row data, so the bomber's heavier pod is a row and not a second
+    builder. The globe is placed on the box centreline and its half-height is at most `radius`, so
+    it never carries the envelope - the wing panels do - and it clears the panels' inner faces.
+    """
+    lo, hi, centre, span = frame(limits)
+    _, cy, cz = centre
+    sections = []
+    for k in range(rings):
+        angle = math.pi * ((k + 0.5) / rings - 0.5)          # just inside -pi/2 .. +pi/2
+        r = radius * math.cos(angle)
+        sections.append((cz + radius * math.sin(angle), r, cy + r, cy - r))
+    return tuple(sections)
+
+
+# ------------------------------------------------------- the same panel and globe as scene objects
+def hex_face(name, role, limits, side, scale, depth, offset=0.0, shift=(0.0, 0.0), bevel=0.0):
+    verts, faces = hex_face_geometry(limits, side, scale, depth, offset, shift)
+    return mesh_object(name, role, verts, faces, bevel)
+
+
+def hex_ring(name, role, limits, side, outer, inner, depth, offset=0.0, shift=(0.0, 0.0),
+             bevel=0.0):
+    verts, faces = hex_ring_geometry(limits, side, outer, inner, depth, offset, shift)
+    return mesh_object(name, role, verts, faces, bevel)
 
 
 class Kit:
@@ -254,18 +410,120 @@ def build_imperial_corvette(kit, row):
     kit.plate('54 Ventral radiator plate', 'cool', (5.0, 1.0, 10.0), (0, -4.4, -22))
 
 
-BUILDERS = {'corvette': build_imperial_corvette}
+def build_imperial_tie(kit, row):
+    """The TIE squadron row: a cockpit globe on a pylon between two hexagonal wing panels.
+
+    Every reach is stated against the row's own extent. The two wing panels carry the whole measured
+    box - the rim ring's outer plane is the beam extreme and its outer walls are the panel's whole
+    hexagon, so the Y and Z extremes ride on rim *edges* a chamfer cannot round - while the pod, the
+    pylon, the engine bank, the viewscreen and the sensor array all sit strictly inside. The row's
+    own numbers - pod radius, ring count, pylon thickness, panel thickness, rim count and payload -
+    are what make the bomber a heavier hull rather than a scaled fighter.
+    """
+    lo, hi, centre, span = frame(row['limits'])
+    cx, cy, cz = centre
+    pod_r = row['pod_radius']
+    rings = row['pod_rings']
+    spar_t = row['spar_thickness']
+    panel_t = row['panel_thickness']
+    frames = row['panel_frames']
+    # The pylon's outer end reaches into both panels (the panel stack starts 0.55 in from the beam
+    # extreme) but never through the beam extreme itself.
+    half_x = abs(hi[0]) - 0.4
+
+    # 01-09  The wing panels. The rim ring carries the whole measured box; the field, the body and
+    # every fitting sit strictly inside it, so the envelope is authored rather than approached.
+    for side in (-1, 1):
+        kit.add(hex_ring, f'01 Wing rim {side}', 'trim', row['limits'], side, 1.0, 0.885, 0.7)
+        kit.add(hex_face, f'02 Wing field {side}', 'dark', row['limits'], side, 0.90, 0.8, 0.10)
+        kit.add(hex_face, f'03 Wing body {side}', 'base', row['limits'], side, 0.86, panel_t, 0.18)
+        kit.add(hex_face, f'04 Wing hub {side}', 'trim', row['limits'], side, 0.30, 0.45, 0.06)
+        kit.add(hex_face, f'05 Wing marking {side}', 'accent', row['limits'], side, 0.34, 0.3,
+                0.06, (0.0, 10.0))
+        kit.add(hex_face, f'06 Wing sensor boss {side}', 'cool', row['limits'], side, 0.20, 0.35,
+                0.06, (0.0, -9.0))
+        kit.add(hex_face, f'07 Wing lamp {side}', 'lit', row['limits'], side, 0.12, 0.25, 0.06,
+                (0.0, -16.0))
+        # The rim count is row data: the bomber's wing carries a doubled inner frame.
+        for k in range(1, frames):
+            kit.add(hex_ring, f'08 Wing inner rim {k} {side}', 'trim', row['limits'], side,
+                    0.84 - 0.06 * k, 0.74 - 0.06 * k, 0.5, 0.12)
+
+    # 10-11  The cockpit globe, on the box centreline, and the pylon that joins it to both wings.
+    kit.loft('10 Cockpit pod', 'base', tie_pod_sections(row['limits'], pod_r, rings), .25)
+    kit.loft('11 Wing pylon', 'base',
+             ((cz - spar_t / 2, half_x, cy + spar_t / 2, cy - spar_t / 2),
+              (cz + spar_t / 2, half_x, cy + spar_t / 2, cy - spar_t / 2)), .2)
+
+    # 15-19  The pod's banding: the collars and the sensor ring that break up the globe.
+    kit.annulus('15 Pod collar', 'trim', cx, cy,
+                ((cz - 0.55, pod_r + 0.30, pod_r - 0.50),
+                 (cz + 0.55, pod_r + 0.30, pod_r - 0.50)), 16)
+    kit.annulus('16 Pod shadow band', 'dark', cx, cy,
+                ((cz + 1.00, pod_r + 0.22, pod_r - 0.70),
+                 (cz + 1.90, pod_r + 0.22, pod_r - 0.70)), 16)
+    kit.annulus('17 Pod aft collar', 'trim', cx, cy,
+                ((cz - 1.90, pod_r + 0.30, pod_r - 0.50),
+                 (cz - 1.00, pod_r + 0.30, pod_r - 0.50)), 16)
+    kit.annulus('18 Pod accent band', 'accent', cx, cy,
+                ((cz + 2.40, pod_r + 0.20, pod_r - 0.80),
+                 (cz + 3.10, pod_r + 0.20, pod_r - 0.80)), 16)
+    kit.annulus('19 Pod sensor ring', 'cool', cx, cy,
+                ((cz + 3.60, pod_r + 0.25, pod_r - 0.90),
+                 (cz + 4.20, pod_r + 0.25, pod_r - 0.90)), 12)
+
+    # 20-25  The viewscreen, the dorsal hatch and the engine bank at the pod's stern.
+    kit.plate('20 Viewscreen frame', 'dark', (3.4, 2.2, 1.3), (0, cy + 1.5, cz + pod_r * 0.80))
+    kit.plate('21 Viewscreen pane', 'lit', (2.4, 1.4, 1.3), (0, cy + 1.5, cz + pod_r * 0.84))
+    kit.plate('22 Dorsal hatch', 'trim', (2.6, 1.2, 3.0), (0, cy + pod_r * 0.86, cz - 0.6))
+    for side in (-1, 1):
+        kit.cylinder(f'23 Engine bell {side}', 'lit', (side * 2.6, cy, cz - pod_r * 0.86 - 2.4),
+                     1.9, 5.0, 'Z', 14)
+        kit.plate(f'24 Marker light {side}', 'lit', (0.7, 1.4, 0.7),
+                  (side * (pod_r + 0.20), cy + 1.2, cz - 1.0))
+    kit.plate('25 Ventral pylon plate', 'dark', (18.0, 0.8, spar_t + 0.5), (0, cy - spar_t / 2, cz))
+
+    # 26-29  The pylon's own fittings: bands, lamps, shadows and the bomber's payload.
+    for side in (-1, 1):
+        kit.plate(f'26 Pylon band {side}', 'trim', (1.2, spar_t + 0.7, spar_t + 0.7),
+                  (side * 17.0, cy, cz))
+        kit.plate(f'27 Pylon shadow {side}', 'dark', (1.2, spar_t + 0.4, spar_t + 0.4),
+                  (side * 24.0, cy, cz))
+        kit.plate(f'28 Pylon lamp {side}', 'lit', (1.0, 0.8, 1.0),
+                  (side * 22.0, cy + spar_t / 2, cz))
+    for k in range(row['ordnance']):
+        side = -1 if k == 0 else 1
+        kit.cylinder(f'29 Ordnance {k}', 'accent', (side * 8.0, cy - pod_r * 0.45, cz - 2.0),
+                     1.7, 11.0, 'Z', 10)
+        kit.plate(f'29 Ordnance band {k}', 'trim', (2.2, 2.2, 1.4),
+                  (side * 8.0, cy - pod_r * 0.45, cz - 2.0))
+
+    # 40-43  The sensor and radiator fit: a forward mast, wing vanes and a pod radiator pair.
+    kit.loft('40 Forward sensor mast', 'cool',
+             ((cz + pod_r * 0.55, 1.5, cy + 1.5, cy - 1.5),
+              (cz + pod_r * 0.95 + 3.0, 1.1, cy + 1.0, cy - 1.0),
+              (cz + pod_r * 0.95 + 6.0, 0.5, cy + 0.5, cy - 0.5)), .2)
+    for side in (-1, 1):
+        kit.plate(f'41 Pod radiator vane {side}', 'cool', (0.7, 3.4, 7.0),
+                  (side * (pod_r * 0.55), cy + pod_r * 0.55, cz - 3.0))
+        kit.plate(f'42 Pod keel vane {side}', 'cool', (0.7, 2.6, 5.0),
+                  (side * (pod_r * 0.45), cy - pod_r * 0.55, cz + 1.0))
+    kit.plate('43 Pod dorsal fin', 'cool', (0.8, 5.0, 6.0), (0, cy + pod_r * 0.72, cz - 2.0))
+
+
+BUILDERS = {'corvette': build_imperial_corvette,
+            'tie_squadron': build_imperial_tie,
+            'tie_bomber_squadron': build_imperial_tie}
 # The kit's per-part boxes, published by `build()` so `main()` can run the contact check before the
 # parts are grouped into role objects and lose their names.
 PART_BOXES = {}
 
 
 # ------------------------------------------------------------------------------------------- build
-def build():
-    """Every authored part, plus the role each of its triangles carries."""
+def build(key):
+    """One row's authored parts, plus the role each of its triangles carries."""
     kit = Kit()
-    for key in sorted(ROWS):
-        BUILDERS[ROWS[key]['ship_kind']](kit, ROWS[key])
+    BUILDERS[ROWS[key]['ship_kind']](kit, ROWS[key])
     PART_BOXES.clear()
     PART_BOXES.update(kit.parts)
     return kit.verts, kit.faces, kit.roles
@@ -372,7 +630,7 @@ def main():
         identifier, limits = row['identifier'], row['limits']
         master = ROOT / f'art/blender/{identifier}.blend'
         cleared()
-        verts, faces, role_of_face = build()
+        verts, faces, role_of_face = build(key)
         role_objects(verts, faces, role_of_face)
         floating = contact_report(PART_BOXES)
         # The hull is welded before it is declared, so nothing floats: a kit is authored by centre

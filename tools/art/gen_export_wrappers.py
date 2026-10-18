@@ -136,6 +136,21 @@ for _faction, _prefix, _family in (('rebel', 'alliance', 'Alliance'), ('confeder
 # recipe and `art/blender/imperial_corvette.blend` is a derived artifact.
 ASSETS['imperial_corvette'] = ('Vigil Corvette', ((-16.0, 16.0), (-5.0, 24.0), (-43.601, 48.0)),
                                91.4, 11888, 9450, 2_000_000)
+# S06 B6 rows 2 and 3 - the two TIE squadron rows. Both are the legacy `wedge` squadron
+# archetype, measured from `render/fleet_geometry.py::ship_mesh('wedge')` by
+# `tools/art/probe_b6_scope.py` at the same extent -31.250,-3.240,-28.996 .. 31.250,14.000,35.000
+# (ShipData.radius=22.0 for the fighter, 24.0 for the bomber), so they share the envelope and the
+# Z-span min_length; they are distinct hulls because the seed carries the bomber's heavier pod,
+# thicker pylons, doubled wing rim and munition cylinders as row data. The caps are the standard
+# ship caps and both rows sit above the 1,800 hull floor, so neither declares a floor of its own.
+# Script-authoritative per the S03 source-authority policy (repeated modular hardware):
+# `tools/art/build_b6_imperial_ships.py` is the recipe and the `.blend` is a derived artifact.
+ASSETS['imperial_tie_squadron'] = ('Talon Interceptor Squadron',
+                                   ((-31.25, 31.25), (-3.24, 14.0), (-28.996, 35.0)),
+                                   63.8, 11888, 9450, 2_000_000)
+ASSETS['imperial_tie_bomber_squadron'] = ('Hammer Torpedo Squadron',
+                                          ((-31.25, 31.25), (-3.24, 14.0), (-28.996, 35.0)),
+                                          63.8, 11888, 9450, 2_000_000)
 
 
 def template():

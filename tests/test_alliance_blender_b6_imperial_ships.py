@@ -356,3 +356,315 @@ class NotLanded(unittest.TestCase):
                 declared.append((path.name, int(match.group(1))))
         self.assertEqual(declared, [('export_shared_asteroid_field.py', 120)],
                          'only the declared small prop may carry a floor of its own')
+
+
+# ------------------------------------------------------------------------------------- rows 2 and 3
+# The two TIE squadron rows. They are the same batch as the corvette and are held to the same
+# contract, plus the two things that are theirs alone: a hexagonal wing panel that fills the
+# measured box, and a pair of rows that must not be a scaled copy of one another.
+TIE_BINDING = 'ship:imperial:tie_squadron'
+TIE_REGISTRY_KEY = 'imperial:fighter'      # the runtime key: `ship_binding` mints faction:category
+TIE_IDENTIFIER = 'imperial_tie_squadron'
+TIE_DATA_ID = 'imperial_tie_squadron'
+TIE_ASSET_ID = 'core:imperial/fighter'
+TIE_RADIUS = 22.0
+TIE_MESH = ROOT / 'assets/models/imperial_tie_squadron.mesh.json'
+TIE_WRAPPER = ROOT / 'tools/art/export_imperial_tie_squadron.py'
+TIE_LABEL = 'Talon Interceptor Squadron'
+
+BOMBER_BINDING = 'ship:imperial:tie_bomber_squadron'
+BOMBER_REGISTRY_KEY = 'imperial:bomber'
+BOMBER_IDENTIFIER = 'imperial_tie_bomber_squadron'
+BOMBER_DATA_ID = 'imperial_tie_bomber_squadron'
+BOMBER_ASSET_ID = 'core:imperial/bomber'
+BOMBER_RADIUS = 24.0
+BOMBER_MESH = ROOT / 'assets/models/imperial_tie_bomber_squadron.mesh.json'
+BOMBER_WRAPPER = ROOT / 'tools/art/export_imperial_tie_bomber_squadron.py'
+BOMBER_LABEL = 'Hammer Torpedo Squadron'
+
+# The legacy `wedge` squadron extent, measured from `render/fleet_geometry.py::ship_mesh('wedge')`
+# by `tools/art/probe_b6_scope.py`: -31.250,-3.240,-28.996 .. 31.250,14.000,35.000 at 1,456
+# triangles and 792 vertices, for both rows. The authored TIE fills this box exactly.
+SQUADRON_ENVELOPE = ((-31.25, 31.25), (-3.24, 14.0), (-28.996, 35.0))
+SQUADRON_LEGACY_SHAPE = 'wedge'
+SQUADRON_LEGACY_TRIANGLES = 1456
+# Z span 63.996 minus 0.2, to one decimal - the house min_length for a hull.
+SQUADRON_MIN_LENGTH = 63.8
+SQUADRON_TARGET = (1900, 2600)
+# The seed's own extent tolerance: the authored hull may sit this far *inside* a box face and
+# still count as reaching it; the exporter's quantiser snaps the face itself onto the edge.
+REACH_TOLERANCE = 1e-3
+# What each row's own export wrapper declares, spelled the way the template renders it.
+SQUADRON_WRAPPER_TOKENS = ('ENVELOPE = ((-31.25, 31.25), (-3.24, 14.0), (-28.996, 35.0))',
+                           'MIN_LENGTH = 63.8', 'MAX_TRIANGLES = 11888', 'MAX_VERTICES = 9450',
+                           'MAX_BYTES = 2_000_000')
+
+
+def _pure_functions(*names):
+    """Top-level `frame`/geometry functions from the seed, evaluated without Blender.
+
+    The TIE panel's own frame is a pure function of the measured limits, so it can be driven
+    here rather than asserted by matching text in the seed: a text match passes on a stale
+    string and says nothing about the shape the seed actually authors.
+    """
+    wanted = {'frame', *names}
+    tree = ast.parse(seed_text())
+    nodes = [n for n in tree.body if isinstance(n, (ast.FunctionDef, ast.Assign))
+             and getattr(n, 'name', None) in wanted or
+             (isinstance(n, ast.Assign) and getattr(n.targets[0], 'id', '') in wanted)]
+    namespace = {'math': math}
+    exec(compile(ast.fix_missing_locations(ast.Module(body=nodes, type_ignores=[])),
+                 '<seed>', 'exec'), namespace)
+    missing = wanted - set(namespace)
+    assert not missing, f'the seed no longer defines {sorted(missing)}'
+    return namespace
+
+
+def hex_union(limits):
+    """Every vertex the seed's panel authoring emits, from the seed's own pure functions.
+
+    These are exactly the calls `build_imperial_tie` makes for one side's panel - no more: adding
+    a full-size face to the union would keep the reach test green after the rim ring shrank.
+    """
+    ns = _pure_functions('hex_frame', 'hex_face_geometry', 'hex_ring_geometry')
+    points = []
+    for side in (-1, 1):
+        for call in (lambda: ns['hex_ring_geometry'](limits, side, 1.0, 0.885, 0.7),
+                     lambda: ns['hex_face_geometry'](limits, side, 0.90, 0.8, 0.10),
+                     lambda: ns['hex_face_geometry'](limits, side, 0.86, 0.9, 0.18)):
+            verts, _faces = call()
+            points.extend(verts)
+    return points
+
+
+def normalised_vertices(path):
+    """A mesh's vertices in its own bounds' unit cube, quantised - a shape fingerprint.
+
+    Two rows that are a scaled copy of one another reduce to the same set; a difference in
+    proportions, count or detail does not. Comparing raw coordinates would pass a uniform
+    scale, which is exactly what "not a scaled copy" has to exclude.
+    """
+    data = load(path)
+    lo, hi = data['bounds']
+    span = [max(hi[i] - lo[i], 1e-9) for i in range(3)]
+    return sorted({tuple(round((p[i] - lo[i]) / span[i], 3) for i in range(3))
+                   for p in data['vertices']})
+
+
+class SquadronSeedContract(unittest.TestCase):
+    def test_the_seed_carries_both_squadron_rows_as_data(self):
+        rows = _rows_table()
+        for binding, identifier, data_id, radius, kind in (
+                (TIE_BINDING, TIE_IDENTIFIER, TIE_DATA_ID, TIE_RADIUS, 'tie_squadron'),
+                (BOMBER_BINDING, BOMBER_IDENTIFIER, BOMBER_DATA_ID, BOMBER_RADIUS,
+                 'tie_bomber_squadron')):
+            with self.subTest(binding=binding):
+                self.assertIn(binding, rows, 'the batch seed must carry this row as data')
+                row = rows[binding]
+                self.assertEqual(row['identifier'], identifier)
+                self.assertEqual(row['data_id'], data_id)
+                self.assertEqual(row['legacy_shape'], SQUADRON_LEGACY_SHAPE)
+                self.assertEqual(tuple(tuple(a) for a in row['limits']), SQUADRON_ENVELOPE)
+                self.assertEqual(row['station_radius'], radius)
+                self.assertEqual(row['ship_kind'], kind)
+                self.assertEqual(row['faction'], 'imperial')
+        # One seed authors every row of the batch, and a squadron row is not the corvette's
+        # builder with a different constant: the two squadrons share a builder the corvette
+        # does not, and the rows carry it as data.
+        self.assertEqual(seed_text().count('def build('), 1)
+
+    def test_the_tie_panel_pair_fills_the_legacy_box_per_axis_and_per_side(self):
+        """The panel is the row's defining element, and the pair fills the measured extent.
+
+        Behavioural: the seed's own geometry function is driven here, not grepped. The rim
+        ring's outer plane is the beam extreme and its outer walls are the full hexagon, so
+        all six faces of the legacy box are reached by geometry that is actually authored.
+        """
+        points = hex_union(SQUADRON_ENVELOPE)
+        self.assertTrue(points)
+        for axis in range(3):
+            low, high = SQUADRON_ENVELOPE[axis]
+            values = [p[axis] for p in points]
+            self.assertLessEqual(max(values), high + 1e-9, f'axis {axis} exceeds the box')
+            self.assertGreaterEqual(min(values), low - 1e-9, f'axis {axis} exceeds the box')
+            self.assertLessEqual(abs(min(values) - low), REACH_TOLERANCE,
+                                 f'axis {axis} low {min(values)} does not reach {low}')
+            self.assertLessEqual(abs(max(values) - high), REACH_TOLERANCE,
+                                 f'axis {axis} high {max(values)} does not reach {high}')
+
+    def test_the_tie_pod_stays_inside_the_measured_box(self):
+        """The cockpit globe is on the centreline and never carries the envelope itself."""
+        ns = _pure_functions('tie_pod_sections')
+        for binding, radius, rings in ((TIE_BINDING, 5.6, 9), (BOMBER_BINDING, 6.8, 13)):
+            with self.subTest(binding=binding):
+                sections = ns['tie_pod_sections'](SQUADRON_ENVELOPE, radius, rings)
+                self.assertGreaterEqual(len(sections), 5)
+                for z, w, top, bottom in sections:
+                    self.assertLessEqual(top, SQUADRON_ENVELOPE[1][1] + 1e-9)
+                    self.assertGreaterEqual(bottom, SQUADRON_ENVELOPE[1][0] - 1e-9)
+                    self.assertLessEqual(z, SQUADRON_ENVELOPE[2][1] + 1e-9)
+                    self.assertGreaterEqual(z, SQUADRON_ENVELOPE[2][0] - 1e-9)
+                    self.assertLessEqual(w, 31.25 - 1.0, 'the pod must clear the panels')
+
+
+class SquadronMeshContract(unittest.TestCase):
+    def contract(self, path, binding, identifier, legacy_vertices):
+        data = load(path)
+        self.assertEqual(data['asset'], identifier)
+        self.assertEqual(data['coordinates'], 'X beam; Y up; +Z forward')
+        self.assertEqual(data['triangle_count'], sum(len(v) for v in data['batches'].values()))
+        self.assertGreater(data['triangle_count'], SQUADRON_LEGACY_TRIANGLES,
+                           'the authored hull must add detail over the legacy wedge')
+        self.assertGreaterEqual(data['triangle_count'], SQUADRON_TARGET[0])
+        self.assertLessEqual(data['triangle_count'], SQUADRON_TARGET[1])
+        self.assertLessEqual(len(data['vertices']), CAPS['vertices'])
+        self.assertLessEqual(path.stat().st_size, CAPS['bytes'])
+        lo, hi = data['bounds']
+        for axis in range(3):
+            low, high = SQUADRON_ENVELOPE[axis]
+            self.assertGreaterEqual(lo[axis], low - 1e-6, f'axis {axis} lower breach')
+            self.assertLessEqual(hi[axis], high + 1e-6, f'axis {axis} upper breach')
+            self.assertLessEqual(abs(lo[axis] - low), REACH_TOLERANCE,
+                                 f'axis {axis} low {lo[axis]} does not reach {low}')
+            self.assertLessEqual(abs(hi[axis] - high), REACH_TOLERANCE,
+                                 f'axis {axis} high {hi[axis]} does not reach {high}')
+        self.assertGreaterEqual(hi[2] - lo[2], SQUADRON_MIN_LENGTH)
+        counts = {role: len(rows) for role, rows in data['batches'].items()}
+        self.assertEqual({r for r, n in counts.items() if n}, set(ROLES))
+        for role in ROLES:
+            self.assertGreaterEqual(counts[role], ROLE_FLOOR,
+                                    f'{role} carries {counts[role]} triangles')
+        for role, rows in data['batches'].items():
+            for row in rows:
+                self.assertEqual(len(row), 6)
+                self.assertAlmostEqual(math.sqrt(sum(c * c for c in row[:3])), 1.0, places=9)
+                for index in row[3:]:
+                    self.assertLess(index, len(data['vertices']))
+        self.assertEqual(data['features']['legacy_shape'], SQUADRON_LEGACY_SHAPE)
+        self.assertEqual(data['features']['authority'], 'script')
+        self.assertEqual(data['features']['binding'], binding)
+        self.assertEqual(data['features']['approval'], 'pending_owner_approval')
+        self.assertEqual(data['features']['seed_recipe'].split(';')[0], SEED)
+        self.assertIn('no external mesh or texture dependencies', data['features']['provenance'])
+        self.assertEqual(data['features']['station_radius'], legacy_vertices)
+        return data
+
+    def test_the_authored_tie_is_not_the_legacy_wedge_restated(self):
+        self.contract(TIE_MESH, TIE_BINDING, TIE_IDENTIFIER, TIE_RADIUS)
+
+    def test_the_authored_tie_bomber_is_not_the_legacy_wedge_restated(self):
+        self.contract(BOMBER_MESH, BOMBER_BINDING, BOMBER_IDENTIFIER, BOMBER_RADIUS)
+
+    def test_neither_squadron_is_a_scaled_copy_of_the_other(self):
+        """The two rows must differ in shape, not only in size.
+
+        A scaled copy normalised into its own bounding box is the same point set; different
+        proportions, part counts and detail are not. The seed also has to carry the bomber's
+        heavier pod and thicker pylon as row data, because that is what makes them different.
+        """
+        rows = _rows_table()
+        tie, bomber = rows[TIE_BINDING], rows[BOMBER_BINDING]
+        self.assertGreater(bomber['pod_radius'], tie['pod_radius'],
+                           'the bomber carries a heavier pod')
+        self.assertGreater(bomber['spar_thickness'], tie['spar_thickness'],
+                           'the bomber carries thicker pylons')
+        self.assertNotEqual(tie['identifier'], bomber['identifier'])
+        a, b = load(TIE_MESH), load(BOMBER_MESH)
+        self.assertNotEqual(a['triangle_count'], b['triangle_count'])
+        self.assertGreater(abs(a['triangle_count'] - b['triangle_count']), 40,
+                           'the two hulls must not be one builder run twice')
+        self.assertNotEqual(normalised_vertices(TIE_MESH), normalised_vertices(BOMBER_MESH),
+                            'the two rows must not be a scaled copy of one another')
+        self.assertNotEqual({r: len(v) for r, v in a['batches'].items()},
+                            {r: len(v) for r, v in b['batches'].items()},
+                            'the role distribution must differ too')
+
+
+class SquadronWrappers(unittest.TestCase):
+    def test_the_generator_declares_both_squadron_rows(self):
+        text = GENERATOR.read_text(encoding='utf-8')
+        for identifier, label in ((TIE_IDENTIFIER, TIE_LABEL),
+                                  (BOMBER_IDENTIFIER, BOMBER_LABEL)):
+            with self.subTest(identifier=identifier):
+                entry = re.search(rf"ASSETS\['{identifier}'\] = \((.*?)\)\n", text, re.S)
+                self.assertTrue(entry, f'the wrapper table must carry {identifier}')
+                declaration = entry.group(1)
+                self.assertIn(label, declaration)
+                for token in ('(-31.25, 31.25)', '(-3.24, 14.0)', '(-28.996, 35.0)', '63.8',
+                              '11888', '9450', '2_000_000'):
+                    self.assertIn(token, declaration, token)
+                wrapper = (ROOT / f'tools/art/export_{identifier}.py')
+                self.assertTrue(wrapper.exists(), f'{wrapper.name} must be generated')
+                body = wrapper.read_text(encoding='utf-8')
+                for token in SQUADRON_WRAPPER_TOKENS:
+                    self.assertIn(token, body, token)
+                self.assertIn('open_mainfile', body)
+                self.assertIn('Never reconstructs or saves source', body)
+
+    def test_a_squadron_row_declares_no_floor_of_its_own(self):
+        """Both squadrons are hulls: the 1,800 floor is the template's, not theirs."""
+        for identifier in (TIE_IDENTIFIER, BOMBER_IDENTIFIER):
+            path = ROOT / f'tools/art/export_{identifier}.py'
+            self.assertNotIn('MIN_TRIANGLES =', path.read_text(encoding='utf-8'))
+
+
+class SquadronNotLanded(unittest.TestCase):
+    def test_the_rows_are_absent_from_the_production_pipeline_and_from_every_approval(self):
+        pipeline = load(ROOT / 'art/manifests/pipeline.json')
+        approvals = json.dumps([e for e in load(ROOT / 'art/manifests/approvals.json')
+                                ['approved_assets'] if isinstance(e, dict)])
+        receipts = load(ROOT / 'assets/models/approval-receipts.json')['receipts']
+        for registry_key, identifier, asset_id, sidecar in (
+                (TIE_REGISTRY_KEY, TIE_IDENTIFIER, TIE_ASSET_ID, 'S06-IMPERIAL_TIE_SQUADRON'),
+                (BOMBER_REGISTRY_KEY, BOMBER_IDENTIFIER, BOMBER_ASSET_ID,
+                 'S06-IMPERIAL_TIE_BOMBER_SQUADRON')):
+            with self.subTest(binding=registry_key):
+                self.assertNotIn(registry_key, {a['binding'] for a in pipeline['assets']})
+                self.assertNotIn(registry_key, approvals)
+                self.assertNotIn(identifier, approvals)
+                self.assertNotIn(asset_id, receipts)
+                for path in (ROOT / 'art/manifests/pending').glob(f'{sidecar}.json'):
+                    self.fail(f'{path.name} claims a landing record for an unapproved row')
+        # A manifest is the landing artifact: neither pending row may carry one.
+        for name in (f'{TIE_IDENTIFIER}.json', f'{BOMBER_IDENTIFIER}.json'):
+            self.assertFalse((ROOT / 'assets/models/manifests' / name).exists())
+
+    def test_the_registry_rows_the_flip_needs_are_what_they_were(self):
+        """The rows are *declared*, not registered: the manifest id is there, the status is not.
+
+        Their runtime keys are `imperial:fighter` and `imperial:bomber` - `ship_binding` mints
+        `f'{faction}:{category role}'`, and a squadron's category is `fighter_squadron`.
+        """
+        registry = json.loads((ROOT / 'assets/models/registry.json').read_text())
+        for registry_key, manifest in ((TIE_REGISTRY_KEY, TIE_ASSET_ID),
+                                       (BOMBER_REGISTRY_KEY, BOMBER_ASSET_ID)):
+            with self.subTest(binding=registry_key):
+                row = next(b for b in registry['bindings'] if b['binding'] == registry_key)
+                self.assertEqual(row['manifest'], manifest)
+                self.assertEqual(row['category'], 'squadron')
+                self.assertIn(row.get('status'), ('procedural_legacy', 'authoring_pending'),
+                              'a pending row must not carry an authored status')
+                for key in ('approval', 'owner_decision', 'envelope_decision',
+                            'appearance_decision'):
+                    self.assertNotIn(key, row)
+
+
+class SquadronFlip(unittest.TestCase):
+    """The batch's acceptance test for both squadron rows, run through the real probe."""
+
+    def probe(self, binding):
+        return subprocess.run([str(ROOT / '.venv/bin/python'),
+                               str(ROOT / 'tools/art/probe_b6_servability.py'), binding],
+                              cwd=ROOT, capture_output=True, text=True,
+                              env={'PYTHONPATH': 'tests', 'PATH': os.environ.get('PATH', ''),
+                                   'HOME': os.environ.get('HOME', '')})
+
+    def test_the_flip_serves_both_squadrons_in_preview_and_nothing_in_stock(self):
+        for binding in (TIE_REGISTRY_KEY, BOMBER_REGISTRY_KEY):
+            with self.subTest(binding=binding):
+                probe = self.probe(binding)
+                self.assertIn('SERVING_OK', probe.stdout,
+                              f'{probe.stdout.strip()} / {probe.stderr.strip()[-300:]}')
+                self.assertEqual(probe.returncode, 0)
+                self.assertIn("stock      -> 'box'", probe.stdout)
+                self.assertIn(f"review     -> '{binding}'", probe.stdout)
