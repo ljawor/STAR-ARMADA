@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b6-imperial-ships",
+  "binding": "imperial:frigate",
+  "canonical_binding": "ship:imperial:frigate",
+  "gameplay_entity": "imperial_frigate",
+  "class": "combat_hull",
+  "authority": "script",
+  "source": {
+    "path": "art/blender/imperial_frigate.blend",
+    "sha256": "058195c275f7967e912c0f6a3e4f9ac205167a50aa035614a41c4b52e39b5d50",
+    "bytes": 133109
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b6_imperial_ships.py",
+    "sha256": "b63f45eebd1c8c9ebe5f2d8529872098c9cbf6a8cf7691873d15f62a280070f5",
+    "bytes": 56133,
+    "selects": "--asset ship:imperial:frigate"
+  },
+  "export_script": {
+    "path": "tools/art/export_imperial_frigate.py",
+    "sha256": "72156e3a182f75611234e11f413f55f79c6321fb9d41bb8e1c20df7bd7e6d869",
+    "bytes": 4748
+  },
+  "runtime": {
+    "path": "assets/models/imperial_frigate.mesh.json",
+    "sha256": "6c5d925bcd67bd655aae5f7e4bbdfa178257a4d0a6897f52b8664dda3f94752d",
+    "bytes": 144668,
+    "triangles": 2416,
+    "vertices": 1320,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -16.0,
+      -5.0,
+      -43.601
+    ],
+    [
+      16.0,
+      24.0,
+      48.0
+    ]
+  ],
+  "bounds": [
+    [
+      -16.0,
+      -5.0,
+      -43.601
+    ],
+    [
+      16.0,
+      24.0,
+      48.0
+    ]
+  ],
+  "authoring": "Script-authored by the B6 seed (script-authoritative per the S03 source-authority policy)",
+  "blender_pin": "see tools/art",
+  "owner_decision": null,
+  "activation": false,
+  "appearance_decision": "s06-b6-imperial-ships-2026-10-18",
+  "future_pipeline_registration": "Not registered anywhere; a later landing step is what would add a pipeline entry.",
+  "evidence": "artifacts/s06_alliance_batch_review/b6-frigate/imperial-frigate-comparison.png",
+  "motion": []
+}

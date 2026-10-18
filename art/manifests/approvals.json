@@ -2292,8 +2292,8 @@
       "owner": "owner (Lukasz Jawor)",
       "decision": "approved",
       "approval_kind": "appearance-batch-revisions",
-      "scope_statement": "Approved the appearance of the three S06 B6 Imperial ship rows listed below, at the revisions recorded here: the corvette, and the two TIE squadrons. Each was put to the owner with a picture of its own - the legacy hull against the authored mesh, one camera, same tick, production shaders, close and wide - and his answers were \"Picture approved\" for the corvette and \"picture approved. Continue\" for the pair. One decision because a batch sheet and its decision name the same rows: three rows were approved, so the sheet lists three. It does not approve rows 4-7, which he has numbers for and no picture of, and it is not a landing, activation, merge, tag or release authorization.",
-      "owner_words_verbatim": "Picture approved (the corvette); picture approved. Continue (the two TIE squadrons)",
+      "scope_statement": "Approved the appearance of the seven S06 B6 Imperial ship rows listed below, at the revisions recorded here: the corvette, and the two TIE squadrons. Each was put to the owner with a picture of its own - the legacy hull against the authored mesh, one camera, same tick, production shaders, close and wide - and his answers were \"Picture approved\" for the corvette and \"picture approved. Continue\" for the pair. One decision because a batch sheet and its decision name the same rows: three rows were approved, so the sheet lists three. It does not approve rows 4-7, which he has numbers for and no picture of, and it is not a landing, activation, merge, tag or release authorization. His third exchange approved the four remaining authored hulls on their own pictures. Explicitly not covered: the two unauthored rows (constructor, colonizer) and the two convoy rows.",
+      "owner_words_verbatim": "Picture approved (the corvette); picture approved. Continue (the two TIE squadrons); picture approved, continue (the two dagger capitals, the cruiser and the frigate)",
       "question_answered": "Does each of these Imperial hulls look right next to the procedural shape it replaces?",
       "how_recorded": "The rows were approved one picture at a time and are recorded in one decision, because the batch's sheet has to name the same rows the decision does and a sheet cannot honestly name two different sets. Each row carries its own evidence directory and its own measured deltas, and the corvette's entry keeps the correction recorded when a concurrent authoring task made its seed pin stale.",
       "revision": {
@@ -2305,7 +2305,11 @@
           "imperial:corvette": "procedural_legacy",
           "imperial:fighter": "procedural_legacy",
           "imperial:bomber": "procedural_legacy",
-          "note": "none selectable; stock draws the procedural needle and wedge"
+          "note": "none selectable; stock draws the procedural needle and wedge",
+          "imperial:battleship": "procedural_legacy",
+          "imperial:supercapital": "procedural_legacy",
+          "imperial:cruiser": "procedural_legacy",
+          "imperial:frigate": "procedural_legacy"
         },
         "assets": [
           {
@@ -2382,7 +2386,7 @@
             },
             "runtime": {
               "assets/models/imperial_tie_squadron.mesh.json": "5bc984c2ad3c2f649bf75265d3326d914a419659538360917b9c2217dcadd1cc",
-              "tools/diag_imperial_ship.py": "fc8958ea80578e8f37ec21ebcecb30e6c04b1f73fd506b0d71420fb365b0c564"
+              "tools/diag_imperial_ship.py": "89562071db07d7c72826123c0f911b6e5bd9847cf4002ec27fbf3b87c843db88"
             },
             "legacy_extent": [
               [
@@ -2438,7 +2442,7 @@
             },
             "runtime": {
               "assets/models/imperial_tie_bomber_squadron.mesh.json": "b0d03f0d0045e79653098a4a7d3c3e8769b0b1fc14d47c577195c635a862c826",
-              "tools/diag_imperial_ship.py": "fc8958ea80578e8f37ec21ebcecb30e6c04b1f73fd506b0d71420fb365b0c564"
+              "tools/diag_imperial_ship.py": "89562071db07d7c72826123c0f911b6e5bd9847cf4002ec27fbf3b87c843db88"
             },
             "legacy_extent": [
               [
@@ -2475,6 +2479,230 @@
                 "legacy_repeat_changed_pixels": 0
               }
             }
+          },
+          {
+            "gameplay_binding": "imperial:battleship",
+            "shape_key": "imperial:battleship",
+            "identifier": "imperial_battleship",
+            "station_kind": "battleship",
+            "faction": "imperial",
+            "class": "combat_hull",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/imperial_battleship.blend": "c2ec3a65b986cee9726997820d2aae0f4380824e5e6ce2aabfa78c92b2cb65d1"
+            },
+            "exporter": {
+              "tools/art/build_b6_imperial_ships.py": "b63f45eebd1c8c9ebe5f2d8529872098c9cbf6a8cf7691873d15f62a280070f5",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_imperial_battleship.py": "033089b0254bdf15f2b6751d460089a7b0b808b68d63f1e4e3503aa4e8a05ad4"
+            },
+            "runtime": {
+              "assets/models/imperial_battleship.mesh.json": "3c69c3db9d0f55aba714d1af4bafbebc7493afb5da3a80d7bd59fccc7be8ac79",
+              "tools/diag_imperial_ship.py": "89562071db07d7c72826123c0f911b6e5bd9847cf4002ec27fbf3b87c843db88"
+            },
+            "legacy_extent": [
+              [
+                -38.45,
+                -10.0,
+                -80.183
+              ],
+              [
+                38.45,
+                39.5,
+                108.0
+              ]
+            ],
+            "authored_extent": [
+              [
+                -38.45,
+                -10.0,
+                -80.183
+              ],
+              [
+                38.45,
+                39.5,
+                108.0
+              ]
+            ],
+            "triangle_count": 2468,
+            "vertex_count": 1334,
+            "evidence": {
+              "dir": "artifacts/s06_alliance_batch_review/b6-battleship",
+              "sheet": "imperial-battleship-comparison.png",
+              "measured": {
+                "close_changed_percent": 7.4798,
+                "wide_changed_percent": 0.528,
+                "legacy_repeat_changed_pixels": 0
+              }
+            }
+          },
+          {
+            "gameplay_binding": "imperial:supercapital",
+            "shape_key": "imperial:supercapital",
+            "identifier": "imperial_supercapital",
+            "station_kind": "supercapital",
+            "faction": "imperial",
+            "class": "combat_hull",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/imperial_supercapital.blend": "1bc6ceb9d30698b27440023b2bc9098837e0775866a0a8046b29d656845f1f14"
+            },
+            "exporter": {
+              "tools/art/build_b6_imperial_ships.py": "b63f45eebd1c8c9ebe5f2d8529872098c9cbf6a8cf7691873d15f62a280070f5",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_imperial_supercapital.py": "22deafd7462c6745bdb8c498aad00a9f0d4b89d980b512e1c9ac1105bdcd2ba4"
+            },
+            "runtime": {
+              "assets/models/imperial_supercapital.mesh.json": "1c44c3e7a78241b5048a9aefe23549b8578c0a21081ad797ce640e8ad9a98dbf",
+              "tools/diag_imperial_ship.py": "89562071db07d7c72826123c0f911b6e5bd9847cf4002ec27fbf3b87c843db88"
+            },
+            "legacy_extent": [
+              [
+                -38.45,
+                -10.0,
+                -80.183
+              ],
+              [
+                38.45,
+                39.5,
+                108.0
+              ]
+            ],
+            "authored_extent": [
+              [
+                -38.45,
+                -10.0,
+                -80.183
+              ],
+              [
+                38.45,
+                39.5,
+                108.0
+              ]
+            ],
+            "triangle_count": 2592,
+            "vertex_count": 1398,
+            "evidence": {
+              "dir": "artifacts/s06_alliance_batch_review/b6-supercapital",
+              "sheet": "imperial-supercapital-comparison.png",
+              "measured": {
+                "close_changed_percent": 7.6915,
+                "wide_changed_percent": 0.5435,
+                "legacy_repeat_changed_pixels": 0
+              }
+            }
+          },
+          {
+            "gameplay_binding": "imperial:cruiser",
+            "shape_key": "imperial:cruiser",
+            "identifier": "imperial_cruiser",
+            "station_kind": "cruiser",
+            "faction": "imperial",
+            "class": "combat_hull",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/imperial_cruiser.blend": "aad9345c8d5aac5f0cb7a287a482c67d707e4b448aff0c93df96043c2509324e"
+            },
+            "exporter": {
+              "tools/art/build_b6_imperial_ships.py": "b63f45eebd1c8c9ebe5f2d8529872098c9cbf6a8cf7691873d15f62a280070f5",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_imperial_cruiser.py": "a648e015477647e1e37288cd80acc98e00393a2e9ec8ffc3df531dba21b2a408"
+            },
+            "runtime": {
+              "assets/models/imperial_cruiser.mesh.json": "125f37cf927840f5ccd452bfe8ec5998c0e6e644c0965932399b716d8fedd130",
+              "tools/diag_imperial_ship.py": "89562071db07d7c72826123c0f911b6e5bd9847cf4002ec27fbf3b87c843db88"
+            },
+            "legacy_extent": [
+              [
+                -29.45,
+                -7.0,
+                -62.94
+              ],
+              [
+                29.45,
+                31.5,
+                78.0
+              ]
+            ],
+            "authored_extent": [
+              [
+                -29.45,
+                -7.0,
+                -62.94
+              ],
+              [
+                29.45,
+                31.5,
+                78.0
+              ]
+            ],
+            "triangle_count": 2384,
+            "vertex_count": 1290,
+            "evidence": {
+              "dir": "artifacts/s06_alliance_batch_review/b6-cruiser",
+              "sheet": "imperial-cruiser-comparison.png",
+              "measured": {
+                "close_changed_percent": 7.476,
+                "wide_changed_percent": 0.5342,
+                "legacy_repeat_changed_pixels": 0
+              }
+            }
+          },
+          {
+            "gameplay_binding": "imperial:frigate",
+            "shape_key": "imperial:frigate",
+            "identifier": "imperial_frigate",
+            "station_kind": "frigate",
+            "faction": "imperial",
+            "class": "combat_hull",
+            "source_authority": "script-authoritative",
+            "source": {
+              "art/blender/imperial_frigate.blend": "058195c275f7967e912c0f6a3e4f9ac205167a50aa035614a41c4b52e39b5d50"
+            },
+            "exporter": {
+              "tools/art/build_b6_imperial_ships.py": "b63f45eebd1c8c9ebe5f2d8529872098c9cbf6a8cf7691873d15f62a280070f5",
+              "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+              "tools/art/export_imperial_frigate.py": "72156e3a182f75611234e11f413f55f79c6321fb9d41bb8e1c20df7bd7e6d869"
+            },
+            "runtime": {
+              "assets/models/imperial_frigate.mesh.json": "6c5d925bcd67bd655aae5f7e4bbdfa178257a4d0a6897f52b8664dda3f94752d",
+              "tools/diag_imperial_ship.py": "89562071db07d7c72826123c0f911b6e5bd9847cf4002ec27fbf3b87c843db88"
+            },
+            "legacy_extent": [
+              [
+                -16.0,
+                -5.0,
+                -43.601
+              ],
+              [
+                16.0,
+                24.0,
+                48.0
+              ]
+            ],
+            "authored_extent": [
+              [
+                -16.0,
+                -5.0,
+                -43.601
+              ],
+              [
+                16.0,
+                24.0,
+                48.0
+              ]
+            ],
+            "triangle_count": 2416,
+            "vertex_count": 1320,
+            "evidence": {
+              "dir": "artifacts/s06_alliance_batch_review/b6-frigate",
+              "sheet": "imperial-frigate-comparison.png",
+              "measured": {
+                "close_changed_percent": 7.5146,
+                "wide_changed_percent": 0.4729,
+                "legacy_repeat_changed_pixels": 0
+              }
+            }
           }
         ]
       },
@@ -2482,9 +2710,9 @@
         "landing, registration, activation, merge, tag or release of these revisions",
         "the S11 catalogue switch and any production-default switch",
         "packaging of any kind, including a package candidate, an LFS conversion or a size policy",
-        "the S06 B6 rows 4-7 (battleship, supercapital, cruiser, frigate): numbers and serving proofs exist, no picture does",
         "the two unauthored rows (constructor, colonizer) and the convoy rows (crew_transport, trade_convoy)",
-        "any change to these hulls' gameplay numbers: envelope, class scale, drawn length and collision radius stay legacy"
+        "any change to these hulls' gameplay numbers: envelope, class scale, drawn length and collision radius stay legacy",
+        "the two unauthored rows (constructor, colonizer) and the convoy rows (crew_transport, trade_convoy): authored only after the open envelope question is answered"
       ],
       "correction": {
         "what": "Two hashes this decision pinned were read from a working tree a concurrent authoring task was editing, so they named a revision that never existed in any commit. Corrected to the bytes on disk, and the approved revision is proven unmoved.",
@@ -2499,7 +2727,26 @@
           "assets/models/imperial_corvette.mesh.json": "be894218b84c00b4c6f78c96a46df1cf69441b627fa75155df02be41f6c30d05",
           "unmoved": "the blend and the mesh are the revision, and neither hash changed across the correction: the picture the owner approved shows the same mesh it always did. What moved is the shared seed, when rows 4-7 were added to it, and the evidence harness, which became a shim over the generalised one."
         },
-        "why_it_matters": "A stale pin is worse than a missing one: it fails its own guard the moment the seed is committed, and a reader cannot tell an approval that covers the bytes from one that does not."
+        "why_it_matters": "A stale pin is worse than a missing one: it fails its own guard the moment the seed is committed, and a reader cannot tell an approval that covers the bytes from one that does not.",
+        "harness_moved_again": {
+          "what": "The evidence harness moved after the TIE pins were taken, when rows 4-7 were added to its ROWS table and their pictures were captured with it. Re-pinned here, with the same statement as before: the approved revisions are the blends and the meshes, and none of them moved.",
+          "affected_rows": [
+            "imperial:corvette",
+            "imperial:fighter",
+            "imperial:bomber"
+          ],
+          "harness": "tools/diag_imperial_ship.py",
+          "corrected_to": "89562071db07d7c72826123c0f911b6e5bd9847cf4002ec27fbf3b87c843db88",
+          "unchanged_revisions": {
+            "imperial_corvette": true,
+            "imperial_tie_squadron": true,
+            "imperial_tie_bomber_squadron": true,
+            "imperial_battleship": true,
+            "imperial_supercapital": true,
+            "imperial_cruiser": true,
+            "imperial_frigate": true
+          }
+        }
       }
     }
   ],

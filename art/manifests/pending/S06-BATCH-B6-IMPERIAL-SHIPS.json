@@ -86,6 +86,114 @@
         0,
         2200
       ]
+    },
+    {
+      "binding": "imperial:battleship",
+      "label": "battleship",
+      "identifier": "imperial_battleship",
+      "mesh": "assets/models/imperial_battleship.mesh.json",
+      "envelope": [
+        [
+          -38.45,
+          -10.0,
+          -80.183
+        ],
+        [
+          38.45,
+          39.5,
+          108.0
+        ]
+      ],
+      "min_length": 188.0,
+      "data_id": "imperial_battleship",
+      "gameplay_entity": "imperial_battleship",
+      "class": "combat_hull",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ]
+    },
+    {
+      "binding": "imperial:supercapital",
+      "label": "supercapital",
+      "identifier": "imperial_supercapital",
+      "mesh": "assets/models/imperial_supercapital.mesh.json",
+      "envelope": [
+        [
+          -38.45,
+          -10.0,
+          -80.183
+        ],
+        [
+          38.45,
+          39.5,
+          108.0
+        ]
+      ],
+      "min_length": 188.0,
+      "data_id": "imperial_supercapital",
+      "gameplay_entity": "imperial_supercapital",
+      "class": "combat_hull",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ]
+    },
+    {
+      "binding": "imperial:cruiser",
+      "label": "cruiser",
+      "identifier": "imperial_cruiser",
+      "mesh": "assets/models/imperial_cruiser.mesh.json",
+      "envelope": [
+        [
+          -29.45,
+          -7.0,
+          -62.94
+        ],
+        [
+          29.45,
+          31.5,
+          78.0
+        ]
+      ],
+      "min_length": 140.7,
+      "data_id": "imperial_cruiser",
+      "gameplay_entity": "imperial_cruiser",
+      "class": "combat_hull",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ]
+    },
+    {
+      "binding": "imperial:frigate",
+      "label": "frigate",
+      "identifier": "imperial_frigate",
+      "mesh": "assets/models/imperial_frigate.mesh.json",
+      "envelope": [
+        [
+          -16.0,
+          -5.0,
+          -43.601
+        ],
+        [
+          16.0,
+          24.0,
+          48.0
+        ]
+      ],
+      "min_length": 91.4,
+      "data_id": "imperial_frigate",
+      "gameplay_entity": "imperial_frigate",
+      "class": "combat_hull",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ]
     }
   ],
   "motion": []

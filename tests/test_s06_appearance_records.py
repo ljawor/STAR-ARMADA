@@ -37,7 +37,8 @@ OWNER_WORDS = {
     # Three rows, approved one picture at a time and recorded in one decision: both exchanges are in the
     # string, because a batch sheet and its decision have to name the same rows.
     's06-b6-imperial-ships-2026-10-18':
-        'Picture approved (the corvette); picture approved. Continue (the two TIE squadrons)',
+        'Picture approved (the corvette); picture approved. Continue (the two TIE squadrons); '
+        'picture approved, continue (the two dagger capitals, the cruiser and the frigate)',
 }
 EXPECTED_BATCHES = {
     's06-cruiser-review': 1,
@@ -48,11 +49,11 @@ EXPECTED_BATCHES = {
     's06-b3a-command-stations': 3,
     's06-b4-hardware': 24,
     's06-b5-environment': 1,
-    's06-b6-imperial-ships': 3,
+    's06-b6-imperial-ships': 7,
 }
 # 37 specimens whose appearance the owner has approved, and the count the records must keep adding up
 # to until another decision changes it.
-APPROVED_SPECIMENS = 68
+APPROVED_SPECIMENS = 72
 SCOPE_DECISIONS = {'s06-b4-scope-2026-10-17': '1.) B4 authorized',
                    's06-imperial-migration-2026-10-17': '4.) decision need also migration.',
                    's06-large-evidence-accepted-2026-10-17':
