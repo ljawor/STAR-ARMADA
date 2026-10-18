@@ -1,96 +1,93 @@
-# Handover prompt — STAR ARMADA, S06 complete, S10/S11 landing is the only open item
-
-Paste this as the first message of a new chat (or point the new chat at this file and say "continue here").
-
----
+# Handover — S06 coverage reconciliation; S07 is next after remaining art
 
 ## What you are picking up
 
-The S06 model migration is **complete as batch work** and nothing has been landed. Eleven of eleven Imperial
-rows are authored, eight of them carry the owner's appearance approval, every earlier faction's rows were
-approved in B1–B5, and the branch's CI is green. The single remaining item is a decision the owner has not
-made: **the S10/S11 landing/registration decision** — moving approved revisions from `pending` records into
-`art/manifests/pipeline.json` and the runtime registry.
+**Correction of the previous handover, October 18, 2026.** Its title and assertions that
+S06 was complete, eleven Imperial rows were authored, ten batch appearance decisions existed,
+and only an S10/S11 landing decision remained were wrong. The previous version is retained in
+Git at `4ffdc600306ecdf4f35265fca689b495e35dd3fe`; the owner's approvals are not rewritten.
+This correction follows the owner's `agree. Let do this`, accepting the bounded reconciliation
+and S07-planning task. It is not registration/default-switch/merge/release authorization.
 
-Read these first, in this order:
-1. `art/manifests/handoffs/S06-B6-IMPERIAL-SHIPS.md` — the batch's scope and what it settled.
-2. `art/manifests/approvals.json` — the decision log. Ten appearance decisions, 73 specimens, each bound by
-   hash to the blend, the mesh, the seed, the shared helper, the wrapper and (where a picture was made) the
-   evidence harness. Read the `correction` blocks: three of them record honest repairs.
-3. `art/manifests/pipeline_policy.json` — the standing decisions, including `s06-small-prop-class-2026-10-17`,
-   `s06-imperial-convoy-parity-2026-10-18` and `s06-large-evidence-accepted-2026-10-17`.
-4. `docs/BLENDER_MODEL_MIGRATION_ROADMAP.md` (in the `star-armada-docs` worktree, PR #128) — the ledger.
+Read first:
+1. Project skill and roadmap sections 6 and 8 (the corrected roadmap is in draft PR #128).
+2. `art/manifests/reviews/S06-COVERAGE-RECONCILIATION.md` and `.json` on this branch.
+3. `docs/BLENDER_MODEL_S07_PLAN.md` — bounded prerequisites, ownership and acceptance gates.
+4. `art/manifests/approvals.json`, `pipeline_policy.json`, `pipeline.json` and the runtime registry.
+5. `S06-B6-IMPERIAL-SHIPS.md`, the S01 inventory/scope record, S02 contract and S03 authority policy.
+
+The tree and revision-bound approvals win over historical ledger prose. S00–S05 are closed;
+do not rerun completed model reviews while the approved bytes remain unchanged.
 
 ## Where the work is
 
-- Code worktree: `/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06`, branch
-  `feat/s06-next-model-batch`, **draft PR #127**. Head at handover: `5cc3a25` (remote-verified).
-- Docs worktree: `/Users/lukaszjawor/.hermes/cache/scratch/star-armada-docs`, branch
-  `docs/s06-ledger-catchup`, **draft PR #128**.
-- The owner's live checkout is untouched; all work has been in these scratch worktrees.
-- Environment: `.venv/bin/python`; tests with `PYTHONPATH=tests`; GL runs with `env -u SDL_VIDEODRIVER`;
-  Blender at `/Applications/Blender.app/Contents/MacOS/Blender`.
+- Implementation: `~/.hermes/cache/scratch/star-armada-s06`, `feat/s06-next-model-batch`,
+  draft PR #127; audited exact head `4ffdc600306ecdf4f35265fca689b495e35dd3fe`, clean.
+- Reconciliation: `~/.hermes/cache/scratch/star-armada-s07-plan`,
+  `docs/s06-coverage-s07-plan`, based exactly on that implementation head. This branch owns
+  coverage tool/tests/report, the S07 plan and these corrections; no assets or runtime move.
+- Roadmap: `~/.hermes/cache/scratch/star-armada-docs`, `docs/s06-ledger-catchup`, draft PR #128;
+  starting head `8c67396950e3a8ba3afe728656ca54beb295dde0`. Only the roadmap changes there.
+- Fetch/read each PR's exact pushed head before resuming. Publication receipts live in PR bodies
+  and `S06-COVERAGE-S07-PLAN.md`; do not copy a later SHA into an approval record.
+- The owner's live checkout is untouched and stale. Tests: `PYTHONPATH=tests .venv/bin/python
+  -m unittest ...`; no pytest. Scratch worktrees may use the owner's venv by absolute path.
+  Blender is pinned to 5.0.1; no Blender or GL is needed for this audit.
 
-## The two open items
+## The open work
 
-1. **S10/S11 landing decision (owner's, blocks production).** Nothing is registered: every approved row's
-   registry entry still reads `procedural_legacy` (or `authoring_pending`), no manifest exists for any
-   pending row, and `art/manifests/pipeline.json` does not name them. Landing means writing manifests,
-   flipping registry status, adding pipeline entries and a release — in that order, with the owner's word.
-2. **An intermittent in the LAN suite (optional).** `test_lan_launch_recovery` →
-   `test_lost_or_partial_start_recovers_original_slots_before_tick_zero` (`humans=4, partial=True`) fails
-   at `assertFalse(session.advance(manager, 600.0))` roughly 1 in 30 standalone and 1 in 4 in-suite, 0 in 12
-   against a pristine `origin/main`. Not caused by this branch; same shape as the barrier bug fixed in
-   `eacee7c`. Evidence: `artifacts/ci-local/`.
+1. **Finish S06 catalogue coverage.** 73 new appearance-approved specimens across nine batch
+   decisions plus the original trio = 76 unique assets. Four additional trade-convoy inventory
+   identities map to those candidates but are not integration-approved by this report.
+2. **27 required inventory meshes lack approved assets:** eight combat hulls (five Confederacy,
+   three Syndicate), ten Imperial orbital stations, eight faction constructor/colonizer hulls
+   and the shared construction scaffold. Three additional planned Syndicate hulls are outside
+   the historical inventory's 120 rows and lack data/model definitions. Do not infer their stats.
+3. Ten texture rows are deferred to their current pipeline and three effect/movie rows are outside
+   the mesh catalogue under `s06-b5-scope-2026-10-17`. These are not authored Blender meshes.
+4. **S07–S09 remain open.** S07 closes opt-in integration after S06 coverage closure; S08 validates
+   mods/updates/save/replay/peer compatibility; S09 owns integrated suite/performance/packages/platforms.
+   Only then do S10 asset-lock/rollback review and separately authorized S11 default activation follow.
+
+Preview registration may be separately authorized without a release. The original trio is already
+registered for preview; no new S06 specimen is registered. Existing pending guards remain intact.
+The next owner decision should name a bounded remaining-art batch, not a production switch.
 
 ## Verify the state before you touch anything
 
 ```bash
-cd /Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06
-env -u SDL_VIDEODRIVER PYTHONPATH=tests .venv/bin/python -m unittest \
-  test_alliance_blender_b6_imperial_ships test_imperial_convoy_gate test_s06_appearance_records \
-  test_faction_visuals test_lan_production_reconnect test_alliance_blender_b5_asteroid \
-  test_alliance_blender_b4_hardware test_alliance_blender_b3c_stations test_s06_placement_repairs \
-  test_alliance_blender_b3b_stations test_alliance_blender_b3_stations test_alliance_blender_b2_squadron \
-  test_alliance_blender_b1_combat test_alliance_blender_cruiser test_alliance_blender_trio \
-  test_alliance_blender_battleship test_asset_contract test_model_pipeline test_generic_model_preview \
-  test_model_context_lifecycle            # 342 tests, OK at 5cc3a25
-PYTHONPATH=tests .venv/bin/python tools/art/validate-models --all --no-contract   # 33/33
-PYTHONPATH=tests .venv/bin/python tools/art/write_pending_sidecars.py --check     # 0 stale
-.venv/bin/python tools/art/gen_export_wrappers.py --check                          # 0 written
-.venv/bin/python tools/ci_local.py                        # local stand-in for the CI job
-PYTHONPATH=tests .venv/bin/python tools/art/probe_b6_servability.py imperial:convoy   # SERVING_OK
+python3 tools/art/reconcile_model_coverage.py --check
+PYTHONPATH=tests .venv/bin/python -m unittest test_model_coverage_reconciliation test_s06_appearance_records
+PYTHONPATH=tests .venv/bin/python tools/art/write_pending_sidecars.py --check
+.venv/bin/python tools/art/gen_export_wrappers.py --check
+PYTHONPATH=tests .venv/bin/python tools/art/validate-models --all
 ```
 
-## The rules this work is held to — do not relearn them
+**Known blocker:** the sidecar check above currently raises `FileNotFoundError` for
+`tools/art/build_imperial_corvette.py` on clean audited S06 head and this branch. B6 lacks the
+per-row seed declarations consumed by the generator. It is recorded, not repaired in this task.
 
-- **Appearance approval is not landing.** A decision records that the owner looked at a picture and said
-  yes. It keeps `owner_decision` null, `activation` false, the registry row `procedural_legacy`, and adds
-  only an `appearance_decision` key. Never infer authorization from anything else.
-- **Nothing gets approved without a picture.** Every approval in the log followed a legacy-vs-authored
-  review sheet from the real application. Numbers, serving proofs and green tests are not approval.
-- **A batch sheet and its decision name the same rows.** A sheet cannot honestly name two sets, which is
-  why the B6 batch carries one decision covering all eight approved rows rather than one per picture.
-- **A pending row carries a mesh and no manifest.** A manifest is the landing artifact; writing one early
-  turns five shared guards red, and they are right. Reviewers are shown a candidate by patching selection
-  in a preview session, never by registering anything.
-- **Never edit `tools/art/alliance_common.py`,** not even one line: every approval record names it as
-  `source`. Put per-row behaviour in the row's own seed or its generated wrapper.
-- **A change to a generated file must be byte-identical for every file outside the change.** Approval
-  records hash the generated wrapper they name. `gen_export_wrappers.py --check` must print `0 written`.
-- **Take approval pins at commit time, not write time.** A decision that pins a shared file the batch
-  keeps editing goes stale every time a row lands. Three corrections exist because of this.
-- **Read CI the moment a head fails**; GitHub purges job logs within hours. A job with an empty step list
-  and a failure conclusion is a billing block, not a test result.
-- **Never weaken a guard to make it pass.** If a guard fails on geometry, change the geometry. The guard is
-  the specification: several of them caught real defects, including a regression the convoy seam landed.
-- **Work in the scratch worktree, never the owner's live checkout**, and never commit to `main` — deliver
-  through the draft PRs.
+The coverage report checks files/approval hashes, not new in-game captures. Preserve old focused
+and broad-suite receipts without claiming they ran again. PR #127 workflow `39102141681` is successful
+on audited head `4ffdc60`; its manual Windows package job was skipped. A later PR needs its own check.
+
+## The rules this work is held to
+
+- Appearance approval, opt-in registration, merge, default switch and release are separate gates.
+- Preserve all approved blend/mesh/exporter bytes and owner words. No new approval is created here.
+- Use inventory category/live ship data for canonical mapping, not generated sidecar `ship:` labels.
+- Imperial station and ship generic consults already exist; lack of selection is not lack of a seam.
+- Never edit approval-bound shared `alliance_common.py` or wrappers merely to prepare this plan.
+- Keep new models pending until revision-bound appearance approval and separately authorized registration.
+- Never weaken pending-registration guards; S07 must deliberately migrate them with an authorized record.
+- Scratch feature branches/PRs only; explicit staging; no stash/reset/cleanup of the owner's tree/data.
+- Before push: exact intended file delta, no tracked `.venv` or symlink, approvals/hash report unchanged,
+  wrappers/sidecars reproduce; after push read back exact remote head/blobs and CI.
+- Retain reported LAN observations (1/30 standalone, 1/4 suite, 0/12 control). Their cause is unproven;
+  the old handover's categorical "not caused by this branch" was unsupported.
 
 ## How the owner works
 
-Terse messages, often with a screenshot: "left one is better", "picture approved", "option 1", "continue".
-Treat them as intent, diagnose from the image, and when a one-word message could mean two opposite things
-("passed" meant the CI result *or* the prop clearing the bar), put it back as an explicit choice rather
-than guessing — that is exactly what happened for the B5 asteroid prop. He approves on pictures, one row
-at a time, and expects the record to say what he was shown and what he said, verbatim.
+Keep chat summaries short. Ask one gate at a time, with an enumerated bounded scope. Ambiguous words
+are not approval until clarified. Existing approved pictures need no repeat review merely because
+registration is not yet done. No deferred platform waiver, art exception or gameplay stat is inferred.
