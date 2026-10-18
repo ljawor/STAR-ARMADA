@@ -225,7 +225,7 @@ Each step is a reviewable task/PR with a durable handoff. “Complete” require
 | S03 | Standardize Git authoring/export tools | S02 | **Complete** 2026-10-16: policies frozen before implementation (PR #118 → `fd08ac7`), pipeline green 34/34 from a fresh clone (PR #119 → `b5414b5`); D3's Windows half unproven |
 | S04 | Implement generic opt-in model integration | S02, S03 | **Complete and merged**, PR #124 → `7030dd2`; tested head/tree preserved, Windows CI passed |
 | S05 | Revalidate the trio on the generic path | S04 | **Complete and merged**, PR #125 → `f873a33`; two exact current matrices, owner-authorized repeat policy, retained historical limitation |
-| S06 | Author and approve remaining model batches | S01, S03; preview via S04 | **In progress on a branch**: 43 specimens authored, 37 appearance-approved per revision, none landed; B4 and the imperial migration authorized; every new revision still requires explicit owner approval |
+| S06 | Author and approve remaining model batches | S01, S03; preview via S04 | **Incomplete catalogue**: 73 new specimens appearance-approved across nine batch decisions, plus the merged trio; 27 inventory meshes and three planned Syndicate hulls remain. Completed reviews preserved; no new batch registered |
 | S07 | Complete catalogue integration and LOD/contact behavior | S05, S06 | All render paths use opt-in registry consistently; no unexplained legacy usage |
 | S08 | Validate visual mods and asset-update compatibility | S07 | Replacement/example packs, safe failure, revision/caches and save/replay tests |
 | S09 | Performance, package and platform acceptance | S07, S08 | Measured complete candidate; source/frozen packages and required test gates pass |
@@ -362,59 +362,62 @@ full-suite/performance, native Windows graphics/package acceptance, or an S11 sw
 
 ### S06 — Produce, show and approve every remaining batch
 
-#### Current S06 work — batch ledger
+#### Current S06 work — reconciled batch ledger, October 18, 2026
 
-The owner-approved order is B1 Alliance combat, B2 squadrons/logistics, B3 stations, B4 satellites/
-planet installations, then B5 environment (`s01-scope-2026-10-16`), and the owner has since
-authorized B4 and the imperial migration (`s06-b4-scope-2026-10-17`,
-`s06-imperial-migration-2026-10-17` in `art/manifests/pipeline_policy.json`). Every S06 batch is
-**unmerged and unlanded**: it all lives on the isolated branch `feat/s06-next-model-batch` and its
-open draft PR. Nothing below is registered, selected or activated - the registry still reports
-`procedural_legacy` for every one of them and `art/manifests/pipeline.json` still carries only the
-approved trio, so the refit pipeline refuses these bindings with `E_UNKNOWN_BINDING`.
+This status is derived from published S06 head `4ffdc600306ecdf4f35265fca689b495e35dd3fe`
+(draft PR #127), not from the owner's live checkout. The coverage reconciliation and S07 plan
+are on `docs/s06-coverage-s07-plan`, stacked on that exact implementation head. The supporting
+report is `art/manifests/reviews/S06-COVERAGE-RECONCILIATION.json`; regenerate/check it with
+`python3 tools/art/reconcile_model_coverage.py --check` on that branch. The historical S01
+inventory stays unchanged; old implementation statuses are not a live completion ledger.
 
-| Batch | Rows | State at PR head |
+**Correction:** the earlier ledger/handoff incorrectly declared S06 complete and S10/S11 the
+only remaining gate. It also mixed old counts, claimed eleven B6 models when only eight runtime
+bindings were authored, and described an absent Imperial station seam that already exists.
+The dependency table remains authoritative: S07, S08 and S09 have not been completed.
+
+| Batch | Delivered revisions | Current state |
 |---|---|---|
-| Trio hull detail (early) | `rebel:battleship`, `rebel:frigate`, `rebel:shipyard` | **Approved and merged** (#120/#121/#122) |
-| B1 Alliance combat | `rebel:cruiser`, `rebel:corvette`, `rebel:supercapital` | Authored and **appearance-approved** 2026-10-17 (`s06-cruiser-review-2026-10-17`, `s06-b1-alliance-combat-2026-10-17`), after the placement-repair step |
-| B2 squadrons/logistics | eight hulls: fighter, bomber and crew-transport convoy across Alliance, Legion and Syndicate | Authored and **appearance-approved** (`s06-b2-squadron-logistics-2026-10-17`) |
-| B3a command stations | three | Authored and **appearance-approved** (`s06-b3a-command-stations-2026-10-17`) |
-| B3b small stations | nine: mining station, sensor station, energy relay | Authored and **appearance-approved** (`s06-b3b-stations-2026-10-17`) |
-| B3c stations | seventeen: research station, defense platform, trade station, fighter platform, repair dock across the three families, plus the Legion and Syndicate shipyards | Authored and **appearance-approved** (`s06-b3c-stations-2026-10-17`) |
-| B4 satellites/planet installations | twenty-four rows: `defense_satellite`, `attack_satellite`, `planet_extractor`, `planet_trade_hub`, `planet_shield_generator`, `planet_pulsar_cannon` × four families | **Authored, captured and guarded on the branch; pending owner approval** (authorized as `s06-b4-scope-2026-10-17`) |
-| Imperial rows | ten station rows, five combat hulls, the squadron and logistics rows | **Partly delivered**: B4's four families include imperial satellites and planet installations; the imperial *station* rows are ordinary asset work (the seam is faction-generic) and the imperial *ships* need a per-binding key in `ship_visual_key`; authorized as `s06-imperial-migration-2026-10-17` |
-| B6 Imperial ships | eleven rows | **Complete and approved.** Eight authored and approved on their own review pictures (corvette, both TIE squadrons, both dagger capitals, cruiser, frigate, convoy); the constructor and colonizer rows were not requested. The convoy needed the one real seam of the batch - the convoy gate excluded Imperial - and the ships needed none. Every row has a labelled legacy-vs-authored review sheet under `artifacts/s06_alliance_batch_review/b6-*/` |
-| B5 environment | thirteen props and the menu backdrop | **Resolved by scope probe: not meshes.** The planet surfaces are generated equirect textures on a shared unit sphere, the starfield is an effect and the backdrop is a baked movie; the asteroid field is the one geometry row and it is **authored and appearance-approved** (`shared_asteroid_field`, 216 tri under the declared small-prop class, `s06-b5-environment-2026-10-17`) |
+| Trio hull detail (early) | Alliance battleship, frigate, shipyard | Approved and merged (#120/#121/#122), registered for opt-in preview |
+| B1 Alliance combat | Cruiser, corvette, supercapital | Three appearance-approved; cruiser has its own decision, pair shares another |
+| B2 squadrons/logistics | Eight meshes across Alliance, Confederacy and Syndicate | Appearance-approved; four total faction convoy candidates including B6 need explicit trade-alias integration proof |
+| B3a/B3b/B3c orbital stations | Three command, nine small, seventeen remaining station meshes | All 29 appearance-approved; with the trio shipyard, 30 of 40 orbital station inventory rows have approved meshes |
+| B4 hardware | Eight satellites and sixteen planet installations across four factions | All 24 appearance-approved (`s06-b4-hardware-2026-10-17`); not awaiting appearance approval |
+| B5 environment | One shared asteroid prop | Appearance-approved; ten texture rows deferred to their existing pipeline and two effects plus menu movie outside the mesh catalogue under `s06-b5-scope-2026-10-17` |
+| B6 Imperial ships | Five combat hulls, two squadrons, one convoy mesh | Eight appearance-approved; constructor/colonizer remain unbuilt, trade convoy is a shared candidate, not another model |
 
-Coverage of the 120 inventory bindings at this head: **67 authored** (43 before B4, 24 in it). Stations 30 of 40 - every
-faction row, with the ten imperial rows waiting on the seam; combat hulls 5 of 18 (the rebel five);
-the eight squadron/logistics meshes cover the three families, with the imperial rows and the four
-`trade_convoy` rows that share the crew-transport meshes still open; satellites and planet
-installations 24 of 24 (B4, pending approval); environment 0 of 13; construction 0 of 9, which no
-ordered batch covers yet.
+There are **73 new approved specimens across nine `appearance-batch-revisions` decisions**,
+plus the original three approved assets: **76 unique approved assets**. All new batch specimens
+remain unregistered and unactivated (`procedural_legacy` or `authoring_pending`); the authoring
+pipeline still contains only the original trio. Appearance approval is not preview-registration,
+merge, production-default activation, packaging or release authorization.
 
-B4's evidence commit is `406d090`: one seed authors all twenty-four rows, script-authoritative per the
-S03 policy for modular hardware, each built to its own binding's legacy extent - measured per row, not
-generalised, because the legacy satellite geometry is parameterised by the faction's ring side count
-and the Syndicate's five-sided ring stops short at the rear. The review harness reports a worst
-footprint error of 5.21e-05 % per axis, a drawn length unchanged to the same tolerance (so the class
-scale, camera framing and collision radius are untouched), and no zero-pixel per-role ablation on any
-row. 25 guards, RED first then green; the focused union of every batch module is 198 tests.
+Every one of the **120 historical inventory rows** is accounted for:
 
-Approvals are recorded per revision in `art/manifests/approvals.json`: **40 specimens** across six
-decisions, each naming the source, exporter and runtime hashes it covers, each stating what it does
-*not* approve (landing, registration, activation, merge, tag, release, the S11 switch, packaging),
-and each re-derivable - `tests/test_s06_appearance_records.py` re-hashes every file a decision names.
-Appearance approval is not landing: `owner_decision` stays null and `activation` stays false on every
-sidecar, and registration remains the S10/S11 decision.
+| Disposition | Rows | What remains |
+|---|---|---|
+| Approved asset | 76 | Preserve existing revision approvals; integrate new assets only after registration authorization |
+| Shared convoy candidate | 4 | Both crew/trade paths, owner mapping and envelopes/scale require S07 proof; not claimed as accepted integration |
+| Missing mesh | 27 | Eight combat hulls, ten Imperial orbital stations, eight constructor/colonizer hulls and one shared construction scaffold |
+| Deferred texture pipeline | 10 | Owner B5 scope decision; not Blender meshes or authorization to open a texture class |
+| Outside mesh catalogue | 3 | Sky dome, jump glyph, baked menu backdrop under that decision |
 
-Liberty Cruiser first was an engineering choice within the approved B1 order, not an owner approval
-of that design; that approval came later, in the same message that approved the other nineteen
-pending specimens. Work started from verified merge `f873a33` on isolated branch
-`feat/s06-next-model-batch`. The frozen source-authority policy applies: a new silhouette asset
-defaults to **blend-authoritative** with export-only rebuilding that preserves the editable master,
-while satellites and planet installations are script-authoritative per the S03 policy.
+The eight missing combat hulls are Confederacy battleship/supercapital/cruiser/frigate/corvette
+and Syndicate cruiser/frigate/corvette. **Three additional planned Syndicate keys** — bomber,
+battleship and supercapital — sit outside that historical 120-row denominator, with neither
+ship-data definitions nor approved meshes. Their production sites were owner-confirmed in S01;
+their stats/data implementation boundary is not invented by this reconciliation. The fighter
+platform's explicit build list will need the bomber id alongside an authorized data change.
 
+The ten Imperial orbital station rows are missing art, **not a missing seam**:
+`fleet_geometry.station_mesh` already consults the generic registry before falling back.
+Imperial ships also use the generic `ship_binding` consult. The convoy-only gate correction
+must not be generalized to the stock Imperial procedural key gate.
+
+Existing appearance records and reviewed bytes are preserved. Do not rerun completed model
+reviews unless a meaningful revision changes their appearance. The B1–B6 delivered sheets being
+approved does not discharge uncovered inventory rows or imply an owner-approved exception.
+The source-authority, class budget, small-prop and per-binding envelope policies remain in force.
 
 For **each** batch:
 
@@ -429,6 +432,11 @@ For **each** batch:
 Every meaningful improved/replaced model revision repeats the relevant export, capture and approval gate, including revisions after the eventual rollout.
 
 ### S07 — Close integration gaps
+
+**Planning only, not complete:** `docs/BLENDER_MODEL_S07_PLAN.md` on the reconciliation
+branch defines route identity, selected Imperial station consumers, bounds/contact/ownership,
+LOD semantics, retained non-mesh scope and the integrated preview receipt. S06 gaps remain
+prerequisites; no registration, renderer implementation or default switch is authorized by that plan.
 
 - Validate all inventory bindings across gameplay, main-menu cinematics, build icons/previews where 3D is used, construction, squadron/member rendering, convoys, satellites, campaign encounters, fog/contact remapping, picking and VFX.
 - Exercise all LOD transitions, near/far views, bounds under rotation and faction/owner remaps. Keep collision and simulation fields unchanged.
@@ -525,8 +533,8 @@ This is the current progress ledger; initial planning and failed attempts remain
 | S03 | **Complete and merged** 2026-10-16 — policies PR #118 `fd08ac7`, pipeline PR #119 `b5414b5`; D1/D2/D4/D6 machine-green, D5 signed by the owner | D3's Windows half is unproven: no Windows machine has run the pipeline. S09 owns that gate |
 | S04 | **Complete and merged**, PR #124 → `7030dd2` | Closed; S05 subsequently merged. No S11 authorization |
 | S05 | **Complete and merged**, PR #125 → `f873a33`; 57 tests, two 102-frame current matrices, exact hashes and Windows CI | Closed by explicit owner merge authorization. Historical capture failure still rejected; no root-cause fix claimed |
-| S06 | **Complete as batch work on `feat/s06-next-model-batch` (draft PR #127)**, unmerged: B1-B6 authored - **76 of 120 catalogue rows**, including the merged trio detail; **73 specimens appearance-approved across 10 decisions**. CI green on the head | Nothing is registered, activated, merged or tagged: every approved row's registry entry still reads `procedural_legacy` and no manifest exists for a pending row. The only open item is the **S10/S11 landing decision**. An intermittent in the LAN suite (1 in 30 standalone, 0 in 12 against a pristine `origin/main`) is recorded in `artifacts/ci-local/` and not caused by this branch |
-| S07 | Not started | Complete catalogue render-path integration |
+| S06 | **Incomplete catalogue; delivered revisions preserved** on draft PR #127: 73 new specimens approved across nine batch decisions, plus the merged trio | 27 required inventory meshes and three planned Syndicate hulls remain; four trade-convoy shared candidates need integration proof. No new registration or activation |
+| S07 | **Planned, not implemented**; depends on full S06 coverage closure | Opt-in registration requires explicit authorization; prove dispatch, bounds/contact/LOD, ownership, construction and shared aliases; keep legacy default |
 | S08 | Not started | Prove replacement packs, updates and cosmetic compatibility |
 | S09 | Not started | Integrated suite/performance/package/platform gates |
 | S10 | Not started | Final owner asset lock and switch authorization |
@@ -546,37 +554,39 @@ The original S00-only kickoff is historical and retained in Git/handoff history;
 | Trio hull detail (S06, early) | **Approved and merged** — one revision per binding: battleship #120 `47b0161`, frigate + shipyard #121 `047c380`, record correction #122 `96cd92e`; 11,457 / 7,708 / 10,767 triangles, no silhouette, scale or simulation change; the guard raise is the owner decision `s07-detail-budget-2026-10-16` (11,888 tri / 9,500 verts) | None outstanding. Not a catalogue batch: the remaining bindings keep their inventory status |
 | S04 generic integration | **Complete and merged**, PR #124 → `7030dd2`; autocrlf clone 195/195; contract 36/28; pipeline 34/34; Windows CI passed | Closed. Manual package skipped; full S05 matrix subsequently completed under its recorded policy |
 | S05 trio equivalence | **Complete and merged**, PR #125 → `f873a33`, tree-identical to tested head `e74bf97`; Windows CI `39004868017` passed | Closed with historical capture limitation retained; manual package skipped, no native graphics/package claim |
-| S06 authoring | **In progress on an isolated branch**, nothing landed: draft PR #127 carries the placement repairs and the B1/B2/B3a/B3b/B3c/B4/B5 batches with their evidence and guards; 65 specimens approved across 8 decisions on 2026-10-17 | Per-model appearance approval; no blanket catalogue approval, no registration. Next: the imperial ship rows |
-| S07–S10 | Not completed | Follow integration/mod/platform/package/final-lock dependencies |
+| S06 authoring | **Incomplete**: 76 unique approved assets including the trio; nine batch decisions cover 73 new specimens on PR #127 | Remaining art/data/scope closure before S07 can close; completed approvals preserved |
+| S07–S10 | **Not completed**; S07 plan prepared on the reconciliation branch | Integration → mod/update compatibility → broad performance/package/platform gates → owner asset-lock/rollback review |
 | S11 | **Not started, not authorized, not done** | Final explicit owner-controlled catalogue switch only after S10 |
 
-**Current next task: none in the batches - S06's batch work is complete.** The handover for the next session is `art/manifests/handoffs/S06-TO-S10-HANDOVER.md`: the landing/registration decision (S10/S11) is the one item between 73 approved specimens and production, and it is the owner's to make. When GitHub cannot run the checks at all, `tools/ci_local.py` reproduces every step that runs on macOS and names each step it skips with the reason.
-S00–S05 are merged. Read the current S05 handoff, equivalence record and recorded capture limitation,
-then the S01 inventory/scope decision and S03 source-authority/budget policy. The inventory's older
-implementation statuses and line references are historical; the actual merged tree and approval
-records win. Do not silently rebase the generated inventory as part of artwork.
+**Current next task: close the reconciled S06 gaps, then execute the bounded S07 integration plan.**
+The old `S06-TO-S10-HANDOVER.md` claim that only landing remains is explicitly corrected on
+`docs/s06-coverage-s07-plan`. Read its coverage report and `docs/BLENDER_MODEL_S07_PLAN.md` first.
+S00–S05 remain closed: do not restart those reviews. No remaining model approval is inferred.
 
-B4 is authored and captured under `s06-b4-scope-2026-10-17` (twenty-four rows across four families;
-satellites and planet
-installations are script-authoritative under the S03 policy) and the imperial migration by
-`s06-imperial-migration-2026-10-17` (sixteen station-family rows, five combat hulls, the squadron and
-logistics rows, and the seam change that brings the imperial station-family dispatch onto `mesh_for` -
-its own reviewed change, with the legacy fallback kept reachable). Two things are still deliberately not decided
-here: **landing/registration** of the 40 approved specimens, which is the S10/S11 decision and has not
-been authorized; and the four `trade_convoy` rows that share the crew-transport meshes, which need an
-envelope decision before they can be authored.
+The owner accepted the reconciliation/S07-planning proposal with **"agree. Let do this"**.
+That authorizes this audit and plan, not new model designs, registry/pipeline activation,
+merge, default switch, tag, release, gameplay-stat changes or an engineering/platform waiver.
 
-Two open questions were settled by the owner on 2026-10-17, both recorded rather than absorbed:
-the **B3a command stations are approved** (`s06-b3a-command-stations-2026-10-17`), and **larger binary
-evidence is accepted** in ordinary Git - the contact sheets cross the 5 MiB per-file threshold the S03
-storage policy declared (B4 12.7 MiB, B3c 10.9 MiB, B3b 5.4 MiB), and LFS stays unadopted
-(`s06-large-evidence-accepted-2026-10-17` in `art/manifests/pipeline_policy.json`). The B4 batch is the
-one still awaiting an answer.
+Recommended remaining-art order: ten Imperial orbital stations; eight existing Confederacy/
+Syndicate combat hulls; eight constructor/colonizer hulls plus the shared scaffold. Keep the
+three planned Syndicate hulls visible as additional work requiring the data/stat boundary to be
+settled. This order is a recommendation, not a new owner-approved scope exception or design.
 
-Two owner policy questions remain open: authoring extent drift versus collision policy, and advisory
+S07 may be prepared while remaining artwork is completed, but **cannot be declared complete**
+with required missing meshes. When authorized, registering approved revisions for **opt-in**
+preview is separate from S10's final release lock and S11's default switch. Registration does
+not itself require or authorize a release. Preserve the production legacy default throughout.
+
+Two owner policy questions remain: authoring extent drift versus collision policy and advisory
 draw-call/texture-byte columns. Do not answer them yourself. Public gameplay dependency discovery
-stays S08; native Windows/package, broad-suite and performance gates stay S09. S11 is not authorized.
-Every new model revision needs explicit appearance approval; the current instruction authorizes S05
-merge, this progress update and S06 work, not automatic merge/release of new model revisions.
+stays S08; Windows rebuild/native graphics/package, broad-suite and performance gates stay S09.
+Deferred hardware acceptance needs evidence or an explicit owner waiver, never an assumed pass.
 
-Historical S00/S02 kickoff instructions remain in Git and their handoffs; they do not override this current S06 task.
+The reported LAN observations (1/30 standalone, 1/4 suite, 0/12 pristine control) remain retained
+acceptance debt; they do not prove either a branch regression or a baseline defect. Do not repeat
+the previous handoff's unsupported causal dismissal. PR #127 head `4ffdc60` now has a successful
+Windows workflow `39102141681`; the manual Windows package job was **skipped**, not passed.
+That CI receipt does not establish catalogue art validation or S09 acceptance.
+
+Historical kickoff instructions remain in Git and their handoffs; they do not override this
+reconciled next task or the dependency gates in section 6.
