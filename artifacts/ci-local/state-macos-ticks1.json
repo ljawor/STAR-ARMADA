@@ -1,0 +1,4149 @@
+{
+ "checksum": "3c69f9695c2f266d46b08e5611752419d7d376afbcf2d9cdd20953f311a29769",
+ "scene": "canonical",
+ "state": {
+  "ai": {},
+  "capacity_timer": 0.03333333333333333,
+  "state": {
+   "capacity_timer": 0.03333333333333333,
+   "command_queue": [],
+   "damage_queue": [],
+   "dead_ids": [],
+   "discovered_planets": {
+    "0": {
+     "15": {
+      "_last_damage_state": -1,
+      "abandoned_attack_target": null,
+      "ability_active": {},
+      "ability_cooldowns": {},
+      "alive": true,
+      "boarding": {},
+      "boarding_party_id": null,
+      "build_queue": [],
+      "cargo_credits": 0.0,
+      "cargo_loss_accumulator": 0.0,
+      "collection_point": null,
+      "colonized_by": null,
+      "convoy_dest": null,
+      "convoy_source": null,
+      "crew": 1,
+      "crew_cargo": 0,
+      "crew_damage_accumulator": 0.0,
+      "crew_loss_accumulator": 0.0,
+      "crew_mission": {},
+      "current_target": null,
+      "data_id": "trade",
+      "energy": 100.0,
+      "fighter_count": 0,
+      "fleet_id": null,
+      "formation_slot": 0,
+      "hangar_id": null,
+      "hull": 100.0,
+      "id": 15,
+      "is_construction": false,
+      "is_planet": true,
+      "is_ship": false,
+      "is_squadron": false,
+      "is_station": false,
+      "jump_charge": 0.0,
+      "jump_origin": null,
+      "jump_target": null,
+      "jump_transit_total": 0.0,
+      "jump_travelling": false,
+      "kind": "planet",
+      "last_hit_time": -999.0,
+      "launched_from": null,
+      "level": 1,
+      "max_crew": 1,
+      "max_energy": 100.0,
+      "max_fighters": 0,
+      "max_hull": 100.0,
+      "max_shield_quad": 0.0,
+      "name_override": "Ovel",
+      "order_target_id": null,
+      "order_target_pos": null,
+      "order_type": "idle",
+      "owner": -1,
+      "patrol_a": null,
+      "patrol_b": null,
+      "planet_building_slot": null,
+      "planet_id": null,
+      "pos": {
+       "x": -9800,
+       "y": 0,
+       "z": 0
+      },
+      "radius": 650.0,
+      "recruitment_progress": 0.0,
+      "retarget_cooldown": 0.0,
+      "satellite_locks": {},
+      "satellite_orbit_phase": null,
+      "satellite_slot": null,
+      "sensor_range": 0.0,
+      "shield_regen": 0.0,
+      "shields": {
+       "front": 0.0,
+       "left": 0.0,
+       "rear": 0.0,
+       "right": 0.0
+      },
+      "spawn_time": 0.0,
+      "systems": {},
+      "upgrade_level": 1,
+      "vel": {
+       "x": 0.0,
+       "y": 0.0,
+       "z": 0.0
+      },
+      "weapon_cooldowns": {},
+      "xp": 0.0,
+      "yaw": 0.0
+     }
+    },
+    "1": {
+     "14": {
+      "_last_damage_state": -1,
+      "abandoned_attack_target": null,
+      "ability_active": {},
+      "ability_cooldowns": {},
+      "alive": true,
+      "boarding": {},
+      "boarding_party_id": null,
+      "build_queue": [],
+      "cargo_credits": 0.0,
+      "cargo_loss_accumulator": 0.0,
+      "collection_point": null,
+      "colonized_by": null,
+      "convoy_dest": null,
+      "convoy_source": null,
+      "crew": 1,
+      "crew_cargo": 0,
+      "crew_damage_accumulator": 0.0,
+      "crew_loss_accumulator": 0.0,
+      "crew_mission": {},
+      "current_target": null,
+      "data_id": "barren",
+      "energy": 100.0,
+      "fighter_count": 0,
+      "fleet_id": null,
+      "formation_slot": 0,
+      "hangar_id": null,
+      "hull": 100.0,
+      "id": 14,
+      "is_construction": false,
+      "is_planet": true,
+      "is_ship": false,
+      "is_squadron": false,
+      "is_station": false,
+      "jump_charge": 0.0,
+      "jump_origin": null,
+      "jump_target": null,
+      "jump_transit_total": 0.0,
+      "jump_travelling": false,
+      "kind": "planet",
+      "last_hit_time": -999.0,
+      "launched_from": null,
+      "level": 1,
+      "max_crew": 1,
+      "max_energy": 100.0,
+      "max_fighters": 0,
+      "max_hull": 100.0,
+      "max_shield_quad": 0.0,
+      "name_override": "Skarn",
+      "order_target_id": null,
+      "order_target_pos": null,
+      "order_type": "idle",
+      "owner": -1,
+      "patrol_a": null,
+      "patrol_b": null,
+      "planet_building_slot": null,
+      "planet_id": null,
+      "pos": {
+       "x": 9800,
+       "y": 0,
+       "z": 0
+      },
+      "radius": 650.0,
+      "recruitment_progress": 0.0,
+      "retarget_cooldown": 0.0,
+      "satellite_locks": {},
+      "satellite_orbit_phase": null,
+      "satellite_slot": null,
+      "sensor_range": 0.0,
+      "shield_regen": 0.0,
+      "shields": {
+       "front": 0.0,
+       "left": 0.0,
+       "rear": 0.0,
+       "right": 0.0
+      },
+      "spawn_time": 0.0,
+      "systems": {},
+      "upgrade_level": 1,
+      "vel": {
+       "x": 0.0,
+       "y": 0.0,
+       "z": 0.0
+      },
+      "weapon_cooldowns": {},
+      "xp": 0.0,
+      "yaw": 0.0
+     }
+    }
+   },
+   "entities": {
+    "1": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 1,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "asteroid_field",
+     "energy": 100.0,
+     "fighter_count": 0,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": null,
+     "hull": 1000000000.0,
+     "id": 1,
+     "is_construction": false,
+     "is_planet": true,
+     "is_ship": false,
+     "is_squadron": false,
+     "is_station": false,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "planet",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 1,
+     "max_energy": 100.0,
+     "max_fighters": 0,
+     "max_hull": 1000000000.0,
+     "max_shield_quad": 0.0,
+     "name_override": "Ast Home",
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": -1,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": -7000,
+      "y": 0,
+      "z": 3200
+     },
+     "radius": 1400.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.0,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 0.0,
+     "shield_regen": 0.0,
+     "shields": {
+      "front": 0.0,
+      "left": 0.0,
+      "rear": 0.0,
+      "right": 0.0
+     },
+     "spawn_time": 0.0,
+     "systems": {},
+     "upgrade_level": 1,
+     "vel": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": 0.0
+    },
+    "10": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 1,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "agricultural",
+     "energy": 100.0,
+     "fighter_count": 0,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": null,
+     "hull": 1000000000.0,
+     "id": 10,
+     "is_construction": false,
+     "is_planet": true,
+     "is_ship": false,
+     "is_squadron": false,
+     "is_station": false,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "planet",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 1,
+     "max_energy": 100.0,
+     "max_fighters": 0,
+     "max_hull": 1000000000.0,
+     "max_shield_quad": 0.0,
+     "name_override": "Solis Minor",
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": -1,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": -2200,
+      "y": 0,
+      "z": -5200
+     },
+     "radius": 620.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.0,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 0.0,
+     "shield_regen": 0.0,
+     "shields": {
+      "front": 0.0,
+      "left": 0.0,
+      "rear": 0.0,
+      "right": 0.0
+     },
+     "spawn_time": 0.0,
+     "systems": {},
+     "upgrade_level": 1,
+     "vel": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": 0.0
+    },
+    "11": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 1,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "military",
+     "energy": 100.0,
+     "fighter_count": 0,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": null,
+     "hull": 1000000000.0,
+     "id": 11,
+     "is_construction": false,
+     "is_planet": true,
+     "is_ship": false,
+     "is_squadron": false,
+     "is_station": false,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "planet",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 1,
+     "max_energy": 100.0,
+     "max_fighters": 0,
+     "max_hull": 1000000000.0,
+     "max_shield_quad": 0.0,
+     "name_override": "Vorex",
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": -1,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": 2200,
+      "y": 0,
+      "z": 5200
+     },
+     "radius": 620.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.0,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 0.0,
+     "shield_regen": 0.0,
+     "shields": {
+      "front": 0.0,
+      "left": 0.0,
+      "rear": 0.0,
+      "right": 0.0
+     },
+     "spawn_time": 0.0,
+     "systems": {},
+     "upgrade_level": 1,
+     "vel": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": 0.0
+    },
+    "12": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 1,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "gas_giant",
+     "energy": 100.0,
+     "fighter_count": 0,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": null,
+     "hull": 1000000000.0,
+     "id": 12,
+     "is_construction": false,
+     "is_planet": true,
+     "is_ship": false,
+     "is_squadron": false,
+     "is_station": false,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "planet",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 1,
+     "max_energy": 100.0,
+     "max_fighters": 0,
+     "max_hull": 1000000000.0,
+     "max_shield_quad": 0.0,
+     "name_override": "Tarlis",
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": -1,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": 0,
+      "y": 0,
+      "z": 9800
+     },
+     "radius": 800.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.0,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 0.0,
+     "shield_regen": 0.0,
+     "shields": {
+      "front": 0.0,
+      "left": 0.0,
+      "rear": 0.0,
+      "right": 0.0
+     },
+     "spawn_time": 0.0,
+     "systems": {},
+     "upgrade_level": 1,
+     "vel": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": 0.0
+    },
+    "13": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 1,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "research",
+     "energy": 100.0,
+     "fighter_count": 0,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": null,
+     "hull": 1000000000.0,
+     "id": 13,
+     "is_construction": false,
+     "is_planet": true,
+     "is_ship": false,
+     "is_squadron": false,
+     "is_station": false,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "planet",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 1,
+     "max_energy": 100.0,
+     "max_fighters": 0,
+     "max_hull": 1000000000.0,
+     "max_shield_quad": 0.0,
+     "name_override": "Myr Station World",
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": -1,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": 0,
+      "y": 0,
+      "z": -9800
+     },
+     "radius": 800.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.0,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 0.0,
+     "shield_regen": 0.0,
+     "shields": {
+      "front": 0.0,
+      "left": 0.0,
+      "rear": 0.0,
+      "right": 0.0
+     },
+     "spawn_time": 0.0,
+     "systems": {},
+     "upgrade_level": 1,
+     "vel": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": 0.0
+    },
+    "14": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 1,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "barren",
+     "energy": 100.0,
+     "fighter_count": 0,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": null,
+     "hull": 1000000000.0,
+     "id": 14,
+     "is_construction": false,
+     "is_planet": true,
+     "is_ship": false,
+     "is_squadron": false,
+     "is_station": false,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "planet",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 1,
+     "max_energy": 100.0,
+     "max_fighters": 0,
+     "max_hull": 1000000000.0,
+     "max_shield_quad": 0.0,
+     "name_override": "Skarn",
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": -1,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": 9800,
+      "y": 0,
+      "z": 0
+     },
+     "radius": 650.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.0,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 0.0,
+     "shield_regen": 0.0,
+     "shields": {
+      "front": 0.0,
+      "left": 0.0,
+      "rear": 0.0,
+      "right": 0.0
+     },
+     "spawn_time": 0.0,
+     "systems": {},
+     "upgrade_level": 1,
+     "vel": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": 0.0
+    },
+    "15": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 1,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "trade",
+     "energy": 100.0,
+     "fighter_count": 0,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": null,
+     "hull": 1000000000.0,
+     "id": 15,
+     "is_construction": false,
+     "is_planet": true,
+     "is_ship": false,
+     "is_squadron": false,
+     "is_station": false,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "planet",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 1,
+     "max_energy": 100.0,
+     "max_fighters": 0,
+     "max_hull": 1000000000.0,
+     "max_shield_quad": 0.0,
+     "name_override": "Ovel",
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": -1,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": -9800,
+      "y": 0,
+      "z": 0
+     },
+     "radius": 650.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.0,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 0.0,
+     "shield_regen": 0.0,
+     "shields": {
+      "front": 0.0,
+      "left": 0.0,
+      "rear": 0.0,
+      "right": 0.0
+     },
+     "spawn_time": 0.0,
+     "systems": {},
+     "upgrade_level": 1,
+     "vel": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": 0.0
+    },
+    "16": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 800,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "command_station",
+     "energy": 100.0,
+     "fighter_count": 0,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": null,
+     "hull": 30000.0,
+     "id": 16,
+     "is_construction": false,
+     "is_planet": false,
+     "is_ship": false,
+     "is_squadron": false,
+     "is_station": true,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "station",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 800,
+     "max_energy": 100.0,
+     "max_fighters": 0,
+     "max_hull": 30000.0,
+     "max_shield_quad": 9000.0,
+     "name_override": null,
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": 0,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": -11000,
+      "y": 0,
+      "z": 800
+     },
+     "radius": 130.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.5,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 3000.0,
+     "shield_regen": 30.0,
+     "shields": {
+      "front": 9000.0,
+      "left": 9000.0,
+      "rear": 9000.0,
+      "right": 9000.0
+     },
+     "spawn_time": 0.0,
+     "systems": {
+      "hangar": {
+       "hp": 400.0,
+       "max_hp": 400.0
+      },
+      "life_support": {
+       "hp": 100.0,
+       "max_hp": 100.0
+      },
+      "sensors": {
+       "hp": 700.0,
+       "max_hp": 700.0
+      },
+      "shield_gen": {
+       "hp": 1500.0,
+       "max_hp": 1500.0
+      },
+      "weapons": {
+       "hp": 1200.0,
+       "max_hp": 1200.0
+      }
+     },
+     "upgrade_level": 1,
+     "vel": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": 0.0
+    },
+    "17": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 500,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "shipyard",
+     "energy": 100.0,
+     "fighter_count": 0,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": null,
+     "hull": 14000.0,
+     "id": 17,
+     "is_construction": false,
+     "is_planet": false,
+     "is_ship": false,
+     "is_squadron": false,
+     "is_station": true,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "station",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 500,
+     "max_energy": 100.0,
+     "max_fighters": 0,
+     "max_hull": 14000.0,
+     "max_shield_quad": 4000.0,
+     "name_override": null,
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": 0,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": -11496.363787673816,
+      "y": 0,
+      "z": -21.71953261809699
+     },
+     "radius": 110.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.5,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 1500.0,
+     "shield_regen": 20.0,
+     "shields": {
+      "front": 4000.0,
+      "left": 4000.0,
+      "rear": 4000.0,
+      "right": 4000.0
+     },
+     "spawn_time": 0.0,
+     "systems": {
+      "hangar": {
+       "hp": 300.0,
+       "max_hp": 300.0
+      },
+      "life_support": {
+       "hp": 100.0,
+       "max_hp": 100.0
+      },
+      "sensors": {
+       "hp": 250.0,
+       "max_hp": 250.0
+      },
+      "shield_gen": {
+       "hp": 600.0,
+       "max_hp": 600.0
+      },
+      "weapons": {
+       "hp": 300.0,
+       "max_hp": 300.0
+      }
+     },
+     "upgrade_level": 1,
+     "vel": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": 0.0
+    },
+    "18": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 30,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "imperial_constructor",
+     "energy": 100.0,
+     "fighter_count": 0,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": null,
+     "hull": 700.0,
+     "id": 18,
+     "is_construction": true,
+     "is_planet": false,
+     "is_ship": true,
+     "is_squadron": false,
+     "is_station": false,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "ship",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 30,
+     "max_energy": 100.0,
+     "max_fighters": 0,
+     "max_hull": 700.0,
+     "max_shield_quad": 300.0,
+     "name_override": null,
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": 0,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": -11905.956144211403,
+      "y": 0.0,
+      "z": 331.3386459653331
+     },
+     "radius": 30.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.5,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 1200.0,
+     "shield_regen": 10.0,
+     "shields": {
+      "front": 300.0,
+      "left": 300.0,
+      "rear": 300.0,
+      "right": 300.0
+     },
+     "spawn_time": 0.0,
+     "systems": {
+      "engines": {
+       "hp": 100.0,
+       "max_hp": 100.0
+      },
+      "life_support": {
+       "hp": 100.0,
+       "max_hp": 100.0
+      },
+      "sensors": {
+       "hp": 80.0,
+       "max_hp": 80.0
+      },
+      "shield_gen": {
+       "hp": 60.0,
+       "max_hp": 60.0
+      }
+     },
+     "upgrade_level": 1,
+     "vel": {
+      "x": -0.0,
+      "y": 0.0,
+      "z": -0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": -2.048196873064402
+    },
+    "19": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 12,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "imperial_tie_squadron",
+     "energy": 100.0,
+     "fighter_count": 6,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": 17,
+     "hull": 60.0,
+     "id": 19,
+     "is_construction": false,
+     "is_planet": false,
+     "is_ship": false,
+     "is_squadron": true,
+     "is_station": false,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "squadron",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 12,
+     "max_energy": 100.0,
+     "max_fighters": 6,
+     "max_hull": 60.0,
+     "max_shield_quad": 0.0,
+     "name_override": null,
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": 0,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": -12077.155082315498,
+      "y": 0.0,
+      "z": 878.3385514411272
+     },
+     "radius": 22.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.5,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 900.0,
+     "shield_regen": 0.0,
+     "shields": {
+      "front": 0.0,
+      "left": 0.0,
+      "rear": 0.0,
+      "right": 0.0
+     },
+     "spawn_time": 0.0,
+     "systems": {
+      "engines": {
+       "hp": 30.0,
+       "max_hp": 30.0
+      },
+      "life_support": {
+       "hp": 100.0,
+       "max_hp": 100.0
+      },
+      "sensors": {
+       "hp": 20.0,
+       "max_hp": 20.0
+      },
+      "weapons": {
+       "hp": 25.0,
+       "max_hp": 25.0
+      }
+     },
+     "upgrade_level": 1,
+     "vel": {
+      "x": -0.0,
+      "y": 0.0,
+      "z": 0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": -1.498196873064402
+    },
+    "2": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 1,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "asteroid_field",
+     "energy": 100.0,
+     "fighter_count": 0,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": null,
+     "hull": 1000000000.0,
+     "id": 2,
+     "is_construction": false,
+     "is_planet": true,
+     "is_ship": false,
+     "is_squadron": false,
+     "is_station": false,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "planet",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 1,
+     "max_energy": 100.0,
+     "max_fighters": 0,
+     "max_hull": 1000000000.0,
+     "max_shield_quad": 0.0,
+     "name_override": "Ast Enemy",
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": -1,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": 7000,
+      "y": 0,
+      "z": -3200
+     },
+     "radius": 1400.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.0,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 0.0,
+     "shield_regen": 0.0,
+     "shields": {
+      "front": 0.0,
+      "left": 0.0,
+      "rear": 0.0,
+      "right": 0.0
+     },
+     "spawn_time": 0.0,
+     "systems": {},
+     "upgrade_level": 1,
+     "vel": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": 0.0
+    },
+    "20": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 12,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "imperial_tie_squadron",
+     "energy": 100.0,
+     "fighter_count": 6,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": 16,
+     "hull": 60.0,
+     "id": 20,
+     "is_construction": false,
+     "is_planet": false,
+     "is_ship": false,
+     "is_squadron": true,
+     "is_station": false,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "squadron",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 12,
+     "max_energy": 100.0,
+     "max_fighters": 6,
+     "max_hull": 60.0,
+     "max_shield_quad": 0.0,
+     "name_override": null,
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": 0,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": -11926.096481439548,
+      "y": 0.0,
+      "z": 1464.7896712985912
+     },
+     "radius": 22.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.5,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 900.0,
+     "shield_regen": 0.0,
+     "shields": {
+      "front": 0.0,
+      "left": 0.0,
+      "rear": 0.0,
+      "right": 0.0
+     },
+     "spawn_time": 0.0,
+     "systems": {
+      "engines": {
+       "hp": 30.0,
+       "max_hp": 30.0
+      },
+      "life_support": {
+       "hp": 100.0,
+       "max_hp": 100.0
+      },
+      "sensors": {
+       "hp": 20.0,
+       "max_hp": 20.0
+      },
+      "weapons": {
+       "hp": 25.0,
+       "max_hp": 25.0
+      }
+     },
+     "upgrade_level": 1,
+     "vel": {
+      "x": -0.0,
+      "y": 0.0,
+      "z": 0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": -0.9481968730644019
+    },
+    "21": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 40,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "imperial_corvette",
+     "energy": 100.0,
+     "fighter_count": 0,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": null,
+     "hull": 900.0,
+     "id": 21,
+     "is_construction": false,
+     "is_planet": false,
+     "is_ship": true,
+     "is_squadron": false,
+     "is_station": false,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "ship",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 40,
+     "max_energy": 100.0,
+     "max_fighters": 0,
+     "max_hull": 900.0,
+     "max_shield_quad": 350.0,
+     "name_override": null,
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": 0,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": -11465.308304323638,
+      "y": 0.0,
+      "z": 1906.114000421051
+     },
+     "radius": 34.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.5,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 1500.0,
+     "shield_regen": 12.0,
+     "shields": {
+      "front": 350.0,
+      "left": 350.0,
+      "rear": 350.0,
+      "right": 350.0
+     },
+     "spawn_time": 0.0,
+     "systems": {
+      "engines": {
+       "hp": 120.0,
+       "max_hp": 120.0
+      },
+      "life_support": {
+       "hp": 100.0,
+       "max_hp": 100.0
+      },
+      "sensors": {
+       "hp": 80.0,
+       "max_hp": 80.0
+      },
+      "shield_gen": {
+       "hp": 90.0,
+       "max_hp": 90.0
+      },
+      "weapons": {
+       "hp": 100.0,
+       "max_hp": 100.0
+      }
+     },
+     "upgrade_level": 1,
+     "vel": {
+      "x": -0.0,
+      "y": 0.0,
+      "z": 0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": -0.3981968730644019
+    },
+    "22": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 40,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "imperial_corvette",
+     "energy": 100.0,
+     "fighter_count": 0,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": null,
+     "hull": 900.0,
+     "id": 22,
+     "is_construction": false,
+     "is_planet": false,
+     "is_ship": true,
+     "is_squadron": false,
+     "is_station": false,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "ship",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 40,
+     "max_energy": 100.0,
+     "max_fighters": 0,
+     "max_hull": 900.0,
+     "max_shield_quad": 350.0,
+     "name_override": null,
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": 0,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": -10809.46183189196,
+      "y": 0.0,
+      "z": 2045.5100186245122
+     },
+     "radius": 34.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.5,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 1500.0,
+     "shield_regen": 12.0,
+     "shields": {
+      "front": 350.0,
+      "left": 350.0,
+      "rear": 350.0,
+      "right": 350.0
+     },
+     "spawn_time": 0.0,
+     "systems": {
+      "engines": {
+       "hp": 120.0,
+       "max_hp": 120.0
+      },
+      "life_support": {
+       "hp": 100.0,
+       "max_hp": 100.0
+      },
+      "sensors": {
+       "hp": 80.0,
+       "max_hp": 80.0
+      },
+      "shield_gen": {
+       "hp": 90.0,
+       "max_hp": 90.0
+      },
+      "weapons": {
+       "hp": 100.0,
+       "max_hp": 100.0
+      }
+     },
+     "upgrade_level": 1,
+     "vel": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": 0.15180312693559816
+    },
+    "23": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 800,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "command_station",
+     "energy": 100.0,
+     "fighter_count": 0,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": null,
+     "hull": 30000.0,
+     "id": 23,
+     "is_construction": false,
+     "is_planet": false,
+     "is_ship": false,
+     "is_squadron": false,
+     "is_station": true,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "station",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 800,
+     "max_energy": 100.0,
+     "max_fighters": 0,
+     "max_hull": 30000.0,
+     "max_shield_quad": 9000.0,
+     "name_override": null,
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": 1,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": 11000,
+      "y": 0,
+      "z": -800
+     },
+     "radius": 130.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.5,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 3000.0,
+     "shield_regen": 30.0,
+     "shields": {
+      "front": 9000.0,
+      "left": 9000.0,
+      "rear": 9000.0,
+      "right": 9000.0
+     },
+     "spawn_time": 0.0,
+     "systems": {
+      "hangar": {
+       "hp": 400.0,
+       "max_hp": 400.0
+      },
+      "life_support": {
+       "hp": 100.0,
+       "max_hp": 100.0
+      },
+      "sensors": {
+       "hp": 700.0,
+       "max_hp": 700.0
+      },
+      "shield_gen": {
+       "hp": 1500.0,
+       "max_hp": 1500.0
+      },
+      "weapons": {
+       "hp": 1200.0,
+       "max_hp": 1200.0
+      }
+     },
+     "upgrade_level": 1,
+     "vel": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": 0.0
+    },
+    "24": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 500,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "shipyard",
+     "energy": 100.0,
+     "fighter_count": 0,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": null,
+     "hull": 14000.0,
+     "id": 24,
+     "is_construction": false,
+     "is_planet": false,
+     "is_ship": false,
+     "is_squadron": false,
+     "is_station": true,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "station",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 500,
+     "max_energy": 100.0,
+     "max_fighters": 0,
+     "max_hull": 14000.0,
+     "max_shield_quad": 4000.0,
+     "name_override": null,
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": 1,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": 11496.363787673816,
+      "y": 0,
+      "z": 21.71953261809699
+     },
+     "radius": 110.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.5,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 1500.0,
+     "shield_regen": 20.0,
+     "shields": {
+      "front": 4000.0,
+      "left": 4000.0,
+      "rear": 4000.0,
+      "right": 4000.0
+     },
+     "spawn_time": 0.0,
+     "systems": {
+      "hangar": {
+       "hp": 300.0,
+       "max_hp": 300.0
+      },
+      "life_support": {
+       "hp": 100.0,
+       "max_hp": 100.0
+      },
+      "sensors": {
+       "hp": 250.0,
+       "max_hp": 250.0
+      },
+      "shield_gen": {
+       "hp": 600.0,
+       "max_hp": 600.0
+      },
+      "weapons": {
+       "hp": 300.0,
+       "max_hp": 300.0
+      }
+     },
+     "upgrade_level": 1,
+     "vel": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": 0.0
+    },
+    "25": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 30,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "imperial_constructor",
+     "energy": 100.0,
+     "fighter_count": 0,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": null,
+     "hull": 700.0,
+     "id": 25,
+     "is_construction": true,
+     "is_planet": false,
+     "is_ship": true,
+     "is_squadron": false,
+     "is_station": false,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "ship",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 30,
+     "max_energy": 100.0,
+     "max_fighters": 0,
+     "max_hull": 700.0,
+     "max_shield_quad": 300.0,
+     "name_override": null,
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": 1,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": 11905.956144211403,
+      "y": 0.0,
+      "z": -331.33864596533306
+     },
+     "radius": 30.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.5,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 1200.0,
+     "shield_regen": 10.0,
+     "shields": {
+      "front": 300.0,
+      "left": 300.0,
+      "rear": 300.0,
+      "right": 300.0
+     },
+     "spawn_time": 0.0,
+     "systems": {
+      "engines": {
+       "hp": 100.0,
+       "max_hp": 100.0
+      },
+      "life_support": {
+       "hp": 100.0,
+       "max_hp": 100.0
+      },
+      "sensors": {
+       "hp": 80.0,
+       "max_hp": 80.0
+      },
+      "shield_gen": {
+       "hp": 60.0,
+       "max_hp": 60.0
+      }
+     },
+     "upgrade_level": 1,
+     "vel": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": 1.093395780525391
+    },
+    "26": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 12,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "imperial_tie_squadron",
+     "energy": 100.0,
+     "fighter_count": 6,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": 24,
+     "hull": 60.0,
+     "id": 26,
+     "is_construction": false,
+     "is_planet": false,
+     "is_ship": false,
+     "is_squadron": true,
+     "is_station": false,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "squadron",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 12,
+     "max_energy": 100.0,
+     "max_fighters": 6,
+     "max_hull": 60.0,
+     "max_shield_quad": 0.0,
+     "name_override": null,
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": 1,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": 12077.155082315498,
+      "y": 0.0,
+      "z": -878.338551441127
+     },
+     "radius": 22.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.5,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 900.0,
+     "shield_regen": 0.0,
+     "shields": {
+      "front": 0.0,
+      "left": 0.0,
+      "rear": 0.0,
+      "right": 0.0
+     },
+     "spawn_time": 0.0,
+     "systems": {
+      "engines": {
+       "hp": 30.0,
+       "max_hp": 30.0
+      },
+      "life_support": {
+       "hp": 100.0,
+       "max_hp": 100.0
+      },
+      "sensors": {
+       "hp": 20.0,
+       "max_hp": 20.0
+      },
+      "weapons": {
+       "hp": 25.0,
+       "max_hp": 25.0
+      }
+     },
+     "upgrade_level": 1,
+     "vel": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": -0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": 1.6433957805253911
+    },
+    "27": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 12,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "imperial_tie_squadron",
+     "energy": 100.0,
+     "fighter_count": 6,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": 23,
+     "hull": 60.0,
+     "id": 27,
+     "is_construction": false,
+     "is_planet": false,
+     "is_ship": false,
+     "is_squadron": true,
+     "is_station": false,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "squadron",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 12,
+     "max_energy": 100.0,
+     "max_fighters": 6,
+     "max_hull": 60.0,
+     "max_shield_quad": 0.0,
+     "name_override": null,
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": 1,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": 11926.096481439548,
+      "y": 0.0,
+      "z": -1464.789671298591
+     },
+     "radius": 22.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.5,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 900.0,
+     "shield_regen": 0.0,
+     "shields": {
+      "front": 0.0,
+      "left": 0.0,
+      "rear": 0.0,
+      "right": 0.0
+     },
+     "spawn_time": 0.0,
+     "systems": {
+      "engines": {
+       "hp": 30.0,
+       "max_hp": 30.0
+      },
+      "life_support": {
+       "hp": 100.0,
+       "max_hp": 100.0
+      },
+      "sensors": {
+       "hp": 20.0,
+       "max_hp": 20.0
+      },
+      "weapons": {
+       "hp": 25.0,
+       "max_hp": 25.0
+      }
+     },
+     "upgrade_level": 1,
+     "vel": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": -0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": 2.193395780525391
+    },
+    "28": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 40,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "imperial_corvette",
+     "energy": 100.0,
+     "fighter_count": 0,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": null,
+     "hull": 900.0,
+     "id": 28,
+     "is_construction": false,
+     "is_planet": false,
+     "is_ship": true,
+     "is_squadron": false,
+     "is_station": false,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "ship",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 40,
+     "max_energy": 100.0,
+     "max_fighters": 0,
+     "max_hull": 900.0,
+     "max_shield_quad": 350.0,
+     "name_override": null,
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": 1,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": 11465.308304323638,
+      "y": 0.0,
+      "z": -1906.114000421051
+     },
+     "radius": 34.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.5,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 1500.0,
+     "shield_regen": 12.0,
+     "shields": {
+      "front": 350.0,
+      "left": 350.0,
+      "rear": 350.0,
+      "right": 350.0
+     },
+     "spawn_time": 0.0,
+     "systems": {
+      "engines": {
+       "hp": 120.0,
+       "max_hp": 120.0
+      },
+      "life_support": {
+       "hp": 100.0,
+       "max_hp": 100.0
+      },
+      "sensors": {
+       "hp": 80.0,
+       "max_hp": 80.0
+      },
+      "shield_gen": {
+       "hp": 90.0,
+       "max_hp": 90.0
+      },
+      "weapons": {
+       "hp": 100.0,
+       "max_hp": 100.0
+      }
+     },
+     "upgrade_level": 1,
+     "vel": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": -0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": 2.7433957805253915
+    },
+    "29": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 40,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "imperial_corvette",
+     "energy": 100.0,
+     "fighter_count": 0,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": null,
+     "hull": 900.0,
+     "id": 29,
+     "is_construction": false,
+     "is_planet": false,
+     "is_ship": true,
+     "is_squadron": false,
+     "is_station": false,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "ship",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 40,
+     "max_energy": 100.0,
+     "max_fighters": 0,
+     "max_hull": 900.0,
+     "max_shield_quad": 350.0,
+     "name_override": null,
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": 1,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": 10809.46183189196,
+      "y": 0.0,
+      "z": -2045.5100186245122
+     },
+     "radius": 34.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.5,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 1500.0,
+     "shield_regen": 12.0,
+     "shields": {
+      "front": 350.0,
+      "left": 350.0,
+      "rear": 350.0,
+      "right": 350.0
+     },
+     "spawn_time": 0.0,
+     "systems": {
+      "engines": {
+       "hp": 120.0,
+       "max_hp": 120.0
+      },
+      "life_support": {
+       "hp": 100.0,
+       "max_hp": 100.0
+      },
+      "sensors": {
+       "hp": 80.0,
+       "max_hp": 80.0
+      },
+      "shield_gen": {
+       "hp": 90.0,
+       "max_hp": 90.0
+      },
+      "weapons": {
+       "hp": 100.0,
+       "max_hp": 100.0
+      }
+     },
+     "upgrade_level": 1,
+     "vel": {
+      "x": -0.0,
+      "y": 0.0,
+      "z": -0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": 3.2933957805253913
+    },
+    "3": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 1,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "asteroid_field",
+     "energy": 100.0,
+     "fighter_count": 0,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": null,
+     "hull": 1000000000.0,
+     "id": 3,
+     "is_construction": false,
+     "is_planet": true,
+     "is_ship": false,
+     "is_squadron": false,
+     "is_station": false,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "planet",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 1,
+     "max_energy": 100.0,
+     "max_fighters": 0,
+     "max_hull": 1000000000.0,
+     "max_shield_quad": 0.0,
+     "name_override": "Ast North",
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": -1,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": 0,
+      "y": 0,
+      "z": 6800
+     },
+     "radius": 1600.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.0,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 0.0,
+     "shield_regen": 0.0,
+     "shields": {
+      "front": 0.0,
+      "left": 0.0,
+      "rear": 0.0,
+      "right": 0.0
+     },
+     "spawn_time": 0.0,
+     "systems": {},
+     "upgrade_level": 1,
+     "vel": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": 0.0
+    },
+    "4": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 1,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "asteroid_field",
+     "energy": 100.0,
+     "fighter_count": 0,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": null,
+     "hull": 1000000000.0,
+     "id": 4,
+     "is_construction": false,
+     "is_planet": true,
+     "is_ship": false,
+     "is_squadron": false,
+     "is_station": false,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "planet",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 1,
+     "max_energy": 100.0,
+     "max_fighters": 0,
+     "max_hull": 1000000000.0,
+     "max_shield_quad": 0.0,
+     "name_override": "Ast South",
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": -1,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": 0,
+      "y": 0,
+      "z": -6800
+     },
+     "radius": 1600.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.0,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 0.0,
+     "shield_regen": 0.0,
+     "shields": {
+      "front": 0.0,
+      "left": 0.0,
+      "rear": 0.0,
+      "right": 0.0
+     },
+     "spawn_time": 0.0,
+     "systems": {},
+     "upgrade_level": 1,
+     "vel": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": 0.0
+    },
+    "5": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 1,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "asteroid_field",
+     "energy": 100.0,
+     "fighter_count": 0,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": null,
+     "hull": 1000000000.0,
+     "id": 5,
+     "is_construction": false,
+     "is_planet": true,
+     "is_ship": false,
+     "is_squadron": false,
+     "is_station": false,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "planet",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 1,
+     "max_energy": 100.0,
+     "max_fighters": 0,
+     "max_hull": 1000000000.0,
+     "max_shield_quad": 0.0,
+     "name_override": "Ast Center",
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": -1,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+     },
+     "radius": 1800.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.0,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 0.0,
+     "shield_regen": 0.0,
+     "shields": {
+      "front": 0.0,
+      "left": 0.0,
+      "rear": 0.0,
+      "right": 0.0
+     },
+     "spawn_time": 0.0,
+     "systems": {},
+     "upgrade_level": 1,
+     "vel": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": 0.0
+    },
+    "6": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 1,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "gas_giant",
+     "energy": 100.0,
+     "fighter_count": 0,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": null,
+     "hull": 1000000000.0,
+     "id": 6,
+     "is_construction": false,
+     "is_planet": true,
+     "is_ship": false,
+     "is_squadron": false,
+     "is_station": false,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "planet",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 1,
+     "max_energy": 100.0,
+     "max_fighters": 0,
+     "max_hull": 1000000000.0,
+     "max_shield_quad": 0.0,
+     "name_override": "Gas Nw",
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": -1,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": -8500,
+      "y": 0,
+      "z": -6000
+     },
+     "radius": 2200.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.0,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 0.0,
+     "shield_regen": 0.0,
+     "shields": {
+      "front": 0.0,
+      "left": 0.0,
+      "rear": 0.0,
+      "right": 0.0
+     },
+     "spawn_time": 0.0,
+     "systems": {},
+     "upgrade_level": 1,
+     "vel": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": 0.0
+    },
+    "7": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 1,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "gas_giant",
+     "energy": 100.0,
+     "fighter_count": 0,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": null,
+     "hull": 1000000000.0,
+     "id": 7,
+     "is_construction": false,
+     "is_planet": true,
+     "is_ship": false,
+     "is_squadron": false,
+     "is_station": false,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "planet",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 1,
+     "max_energy": 100.0,
+     "max_fighters": 0,
+     "max_hull": 1000000000.0,
+     "max_shield_quad": 0.0,
+     "name_override": "Gas Se",
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": -1,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": 8500,
+      "y": 0,
+      "z": 6000
+     },
+     "radius": 2200.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.0,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 0.0,
+     "shield_regen": 0.0,
+     "shields": {
+      "front": 0.0,
+      "left": 0.0,
+      "rear": 0.0,
+      "right": 0.0
+     },
+     "spawn_time": 0.0,
+     "systems": {},
+     "upgrade_level": 1,
+     "vel": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": 0.0
+    },
+    "8": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 1,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "temperate",
+     "energy": 100.0,
+     "fighter_count": 0,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": null,
+     "hull": 1000000000.0,
+     "id": 8,
+     "is_construction": false,
+     "is_planet": true,
+     "is_ship": false,
+     "is_squadron": false,
+     "is_station": false,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "planet",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 1,
+     "max_energy": 100.0,
+     "max_fighters": 0,
+     "max_hull": 1000000000.0,
+     "max_shield_quad": 0.0,
+     "name_override": "Kel Varn",
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": -1,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": -5200,
+      "y": 0,
+      "z": 2200
+     },
+     "radius": 700.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.0,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 0.0,
+     "shield_regen": 0.0,
+     "shields": {
+      "front": 0.0,
+      "left": 0.0,
+      "rear": 0.0,
+      "right": 0.0
+     },
+     "spawn_time": 0.0,
+     "systems": {},
+     "upgrade_level": 1,
+     "vel": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": 0.0
+    },
+    "9": {
+     "_last_damage_state": -1,
+     "abandoned_attack_target": null,
+     "ability_active": {},
+     "ability_cooldowns": {},
+     "alive": true,
+     "boarding": {},
+     "boarding_party_id": null,
+     "build_queue": [],
+     "cargo_credits": 0.0,
+     "cargo_loss_accumulator": 0.0,
+     "collection_point": null,
+     "colonized_by": null,
+     "convoy_dest": null,
+     "convoy_source": null,
+     "crew": 1,
+     "crew_cargo": 0,
+     "crew_damage_accumulator": 0.0,
+     "crew_loss_accumulator": 0.0,
+     "crew_mission": {},
+     "current_target": null,
+     "data_id": "industrial",
+     "energy": 100.0,
+     "fighter_count": 0,
+     "fleet_id": null,
+     "formation_slot": 0,
+     "hangar_id": null,
+     "hull": 1000000000.0,
+     "id": 9,
+     "is_construction": false,
+     "is_planet": true,
+     "is_ship": false,
+     "is_squadron": false,
+     "is_station": false,
+     "jump_charge": 0.0,
+     "jump_origin": null,
+     "jump_target": null,
+     "jump_transit_total": 0.0,
+     "jump_travelling": false,
+     "kind": "planet",
+     "last_hit_time": -999.0,
+     "launched_from": null,
+     "level": 1,
+     "max_crew": 1,
+     "max_energy": 100.0,
+     "max_fighters": 0,
+     "max_hull": 1000000000.0,
+     "max_shield_quad": 0.0,
+     "name_override": "Doran III",
+     "order_target_id": null,
+     "order_target_pos": null,
+     "order_type": "idle",
+     "owner": -1,
+     "patrol_a": null,
+     "patrol_b": null,
+     "planet_building_slot": null,
+     "planet_id": null,
+     "pos": {
+      "x": 5200,
+      "y": 0,
+      "z": -2200
+     },
+     "radius": 700.0,
+     "recruitment_progress": 0.0,
+     "retarget_cooldown": 0.0,
+     "satellite_locks": {},
+     "satellite_orbit_phase": null,
+     "satellite_slot": null,
+     "sensor_range": 0.0,
+     "shield_regen": 0.0,
+     "shields": {
+      "front": 0.0,
+      "left": 0.0,
+      "rear": 0.0,
+      "right": 0.0
+     },
+     "spawn_time": 0.0,
+     "systems": {},
+     "upgrade_level": 1,
+     "vel": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+     },
+     "weapon_cooldowns": {},
+     "xp": 0.0,
+     "yaw": 0.0
+    }
+   },
+   "explored_cells": {
+    "0": [
+     [
+      -16,
+      1
+     ],
+     [
+      -17,
+      -1
+     ],
+     [
+      -17,
+      -2
+     ],
+     [
+      -17,
+      0
+     ],
+     [
+      -17,
+      1
+     ],
+     [
+      -17,
+      2
+     ],
+     [
+      -17,
+      3
+     ],
+     [
+      -17,
+      4
+     ],
+     [
+      -18,
+      -1
+     ],
+     [
+      -18,
+      -2
+     ],
+     [
+      -18,
+      -3
+     ],
+     [
+      -18,
+      0
+     ],
+     [
+      -18,
+      1
+     ],
+     [
+      -18,
+      2
+     ],
+     [
+      -18,
+      3
+     ],
+     [
+      -18,
+      4
+     ],
+     [
+      -18,
+      5
+     ],
+     [
+      -18,
+      6
+     ],
+     [
+      -19,
+      -1
+     ],
+     [
+      -19,
+      -2
+     ],
+     [
+      -19,
+      -3
+     ],
+     [
+      -19,
+      -4
+     ],
+     [
+      -19,
+      0
+     ],
+     [
+      -19,
+      1
+     ],
+     [
+      -19,
+      2
+     ],
+     [
+      -19,
+      3
+     ],
+     [
+      -19,
+      4
+     ],
+     [
+      -19,
+      5
+     ],
+     [
+      -19,
+      6
+     ],
+     [
+      -20,
+      -1
+     ],
+     [
+      -20,
+      -2
+     ],
+     [
+      -20,
+      -3
+     ],
+     [
+      -20,
+      -4
+     ],
+     [
+      -20,
+      -5
+     ],
+     [
+      -20,
+      0
+     ],
+     [
+      -20,
+      1
+     ],
+     [
+      -20,
+      2
+     ],
+     [
+      -20,
+      3
+     ],
+     [
+      -20,
+      4
+     ],
+     [
+      -20,
+      5
+     ],
+     [
+      -20,
+      6
+     ],
+     [
+      -20,
+      7
+     ],
+     [
+      -21,
+      -1
+     ],
+     [
+      -21,
+      -2
+     ],
+     [
+      -21,
+      -3
+     ],
+     [
+      -21,
+      -4
+     ],
+     [
+      -21,
+      -5
+     ],
+     [
+      -21,
+      0
+     ],
+     [
+      -21,
+      1
+     ],
+     [
+      -21,
+      2
+     ],
+     [
+      -21,
+      3
+     ],
+     [
+      -21,
+      4
+     ],
+     [
+      -21,
+      5
+     ],
+     [
+      -21,
+      6
+     ],
+     [
+      -21,
+      7
+     ],
+     [
+      -22,
+      -1
+     ],
+     [
+      -22,
+      -2
+     ],
+     [
+      -22,
+      -3
+     ],
+     [
+      -22,
+      -4
+     ],
+     [
+      -22,
+      -5
+     ],
+     [
+      -22,
+      0
+     ],
+     [
+      -22,
+      1
+     ],
+     [
+      -22,
+      2
+     ],
+     [
+      -22,
+      3
+     ],
+     [
+      -22,
+      4
+     ],
+     [
+      -22,
+      5
+     ],
+     [
+      -22,
+      6
+     ],
+     [
+      -22,
+      7
+     ],
+     [
+      -23,
+      -1
+     ],
+     [
+      -23,
+      -2
+     ],
+     [
+      -23,
+      -3
+     ],
+     [
+      -23,
+      -4
+     ],
+     [
+      -23,
+      -5
+     ],
+     [
+      -23,
+      0
+     ],
+     [
+      -23,
+      1
+     ],
+     [
+      -23,
+      2
+     ],
+     [
+      -23,
+      3
+     ],
+     [
+      -23,
+      4
+     ],
+     [
+      -23,
+      5
+     ],
+     [
+      -23,
+      6
+     ],
+     [
+      -23,
+      7
+     ],
+     [
+      -24,
+      -1
+     ],
+     [
+      -24,
+      -2
+     ],
+     [
+      -24,
+      -3
+     ],
+     [
+      -24,
+      -4
+     ],
+     [
+      -24,
+      -5
+     ],
+     [
+      -24,
+      0
+     ],
+     [
+      -24,
+      1
+     ],
+     [
+      -24,
+      2
+     ],
+     [
+      -24,
+      3
+     ],
+     [
+      -24,
+      4
+     ],
+     [
+      -24,
+      5
+     ],
+     [
+      -24,
+      6
+     ],
+     [
+      -24,
+      7
+     ],
+     [
+      -25,
+      -1
+     ],
+     [
+      -25,
+      -2
+     ],
+     [
+      -25,
+      -3
+     ],
+     [
+      -25,
+      -4
+     ],
+     [
+      -25,
+      -5
+     ],
+     [
+      -25,
+      0
+     ],
+     [
+      -25,
+      1
+     ],
+     [
+      -25,
+      2
+     ],
+     [
+      -25,
+      3
+     ],
+     [
+      -25,
+      4
+     ],
+     [
+      -25,
+      5
+     ],
+     [
+      -25,
+      6
+     ],
+     [
+      -25,
+      7
+     ],
+     [
+      -26,
+      -1
+     ],
+     [
+      -26,
+      -2
+     ],
+     [
+      -26,
+      -3
+     ],
+     [
+      -26,
+      -4
+     ],
+     [
+      -26,
+      0
+     ],
+     [
+      -26,
+      1
+     ],
+     [
+      -26,
+      2
+     ],
+     [
+      -26,
+      3
+     ],
+     [
+      -26,
+      4
+     ],
+     [
+      -26,
+      5
+     ],
+     [
+      -26,
+      6
+     ]
+    ],
+    "1": [
+     [
+      16,
+      -1
+     ],
+     [
+      16,
+      -2
+     ],
+     [
+      16,
+      -3
+     ],
+     [
+      16,
+      -4
+     ],
+     [
+      16,
+      -5
+     ],
+     [
+      16,
+      0
+     ],
+     [
+      16,
+      1
+     ],
+     [
+      17,
+      -1
+     ],
+     [
+      17,
+      -2
+     ],
+     [
+      17,
+      -3
+     ],
+     [
+      17,
+      -4
+     ],
+     [
+      17,
+      -5
+     ],
+     [
+      17,
+      -6
+     ],
+     [
+      17,
+      -7
+     ],
+     [
+      17,
+      0
+     ],
+     [
+      17,
+      1
+     ],
+     [
+      17,
+      2
+     ],
+     [
+      18,
+      -1
+     ],
+     [
+      18,
+      -2
+     ],
+     [
+      18,
+      -3
+     ],
+     [
+      18,
+      -4
+     ],
+     [
+      18,
+      -5
+     ],
+     [
+      18,
+      -6
+     ],
+     [
+      18,
+      -7
+     ],
+     [
+      18,
+      0
+     ],
+     [
+      18,
+      1
+     ],
+     [
+      18,
+      2
+     ],
+     [
+      18,
+      3
+     ],
+     [
+      19,
+      -1
+     ],
+     [
+      19,
+      -2
+     ],
+     [
+      19,
+      -3
+     ],
+     [
+      19,
+      -4
+     ],
+     [
+      19,
+      -5
+     ],
+     [
+      19,
+      -6
+     ],
+     [
+      19,
+      -7
+     ],
+     [
+      19,
+      -8
+     ],
+     [
+      19,
+      0
+     ],
+     [
+      19,
+      1
+     ],
+     [
+      19,
+      2
+     ],
+     [
+      19,
+      3
+     ],
+     [
+      19,
+      4
+     ],
+     [
+      20,
+      -1
+     ],
+     [
+      20,
+      -2
+     ],
+     [
+      20,
+      -3
+     ],
+     [
+      20,
+      -4
+     ],
+     [
+      20,
+      -5
+     ],
+     [
+      20,
+      -6
+     ],
+     [
+      20,
+      -7
+     ],
+     [
+      20,
+      -8
+     ],
+     [
+      20,
+      0
+     ],
+     [
+      20,
+      1
+     ],
+     [
+      20,
+      2
+     ],
+     [
+      20,
+      3
+     ],
+     [
+      20,
+      4
+     ],
+     [
+      21,
+      -1
+     ],
+     [
+      21,
+      -2
+     ],
+     [
+      21,
+      -3
+     ],
+     [
+      21,
+      -4
+     ],
+     [
+      21,
+      -5
+     ],
+     [
+      21,
+      -6
+     ],
+     [
+      21,
+      -7
+     ],
+     [
+      21,
+      -8
+     ],
+     [
+      21,
+      0
+     ],
+     [
+      21,
+      1
+     ],
+     [
+      21,
+      2
+     ],
+     [
+      21,
+      3
+     ],
+     [
+      21,
+      4
+     ],
+     [
+      22,
+      -1
+     ],
+     [
+      22,
+      -2
+     ],
+     [
+      22,
+      -3
+     ],
+     [
+      22,
+      -4
+     ],
+     [
+      22,
+      -5
+     ],
+     [
+      22,
+      -6
+     ],
+     [
+      22,
+      -7
+     ],
+     [
+      22,
+      -8
+     ],
+     [
+      22,
+      0
+     ],
+     [
+      22,
+      1
+     ],
+     [
+      22,
+      2
+     ],
+     [
+      22,
+      3
+     ],
+     [
+      22,
+      4
+     ],
+     [
+      23,
+      -1
+     ],
+     [
+      23,
+      -2
+     ],
+     [
+      23,
+      -3
+     ],
+     [
+      23,
+      -4
+     ],
+     [
+      23,
+      -5
+     ],
+     [
+      23,
+      -6
+     ],
+     [
+      23,
+      -7
+     ],
+     [
+      23,
+      -8
+     ],
+     [
+      23,
+      0
+     ],
+     [
+      23,
+      1
+     ],
+     [
+      23,
+      2
+     ],
+     [
+      23,
+      3
+     ],
+     [
+      23,
+      4
+     ],
+     [
+      24,
+      -1
+     ],
+     [
+      24,
+      -2
+     ],
+     [
+      24,
+      -3
+     ],
+     [
+      24,
+      -4
+     ],
+     [
+      24,
+      -5
+     ],
+     [
+      24,
+      -6
+     ],
+     [
+      24,
+      -7
+     ],
+     [
+      24,
+      -8
+     ],
+     [
+      24,
+      0
+     ],
+     [
+      24,
+      1
+     ],
+     [
+      24,
+      2
+     ],
+     [
+      24,
+      3
+     ],
+     [
+      24,
+      4
+     ],
+     [
+      25,
+      -1
+     ],
+     [
+      25,
+      -2
+     ],
+     [
+      25,
+      -3
+     ],
+     [
+      25,
+      -4
+     ],
+     [
+      25,
+      -5
+     ],
+     [
+      25,
+      -6
+     ],
+     [
+      25,
+      -7
+     ],
+     [
+      25,
+      0
+     ],
+     [
+      25,
+      1
+     ],
+     [
+      25,
+      2
+     ],
+     [
+      25,
+      3
+     ]
+    ]
+   },
+   "fleets": {},
+   "game_over": false,
+   "game_over_reason": "",
+   "game_type": "skirmish",
+   "map_info": {
+    "bounds": 26000.0,
+    "jump_points": [
+     {
+      "pos": [
+       -11000,
+       0,
+       0
+      ]
+     },
+     {
+      "pos": [
+       11000,
+       0,
+       0
+      ]
+     },
+     {
+      "pos": [
+       0,
+       0,
+       11000
+      ]
+     },
+     {
+      "pos": [
+       0,
+       0,
+       -11000
+      ]
+     }
+    ],
+    "name": "skirmish01",
+    "nebulas": [
+     {
+      "color": [
+       0.4,
+       0.2,
+       0.55
+      ],
+      "pos": [
+       -12000,
+       0,
+       -9000
+      ],
+      "radius": 4200
+     },
+     {
+      "color": [
+       0.15,
+       0.4,
+       0.55
+      ],
+      "pos": [
+       12000,
+       0,
+       9000
+      ],
+      "radius": 4200
+     }
+    ],
+    "star": {
+     "color": [
+      1.0,
+      0.9,
+      0.6
+     ],
+     "pos": [
+      0,
+      -3000,
+      0
+     ],
+     "size": 2600
+    },
+    "victory_mode": "elimination"
+   },
+   "mission_id": null,
+   "mission_state": null,
+   "next_entity_id": 30,
+   "next_fleet_id": 1,
+   "next_projectile_id": 1,
+   "players": {
+    "0": {
+     "ai_difficulty": "normal",
+     "color": [
+      0.25,
+      0.55,
+      1.0
+     ],
+     "command_capacity": 34,
+     "credits": 8000.033333333334,
+     "crew": 4000.05,
+     "energy": 2000.0,
+     "faction": "imperial",
+     "id": 0,
+     "income_frame": {
+      "credits": 1.0,
+      "crew": 1.5,
+      "energy": 0.0,
+      "materials": 0.0
+     },
+     "is_ai": false,
+     "materials": 4000.0,
+     "name": "Player 1",
+     "researched": [],
+     "researching": {},
+     "team": 0
+    },
+    "1": {
+     "ai_difficulty": "normal",
+     "color": [
+      1.0,
+      0.25,
+      0.2
+     ],
+     "command_capacity": 34,
+     "credits": 8000.033333333334,
+     "crew": 4000.05,
+     "energy": 2000.0,
+     "faction": "imperial",
+     "id": 1,
+     "income_frame": {
+      "credits": 1.0,
+      "crew": 1.5,
+      "energy": 0.0,
+      "materials": 0.0
+     },
+     "is_ai": false,
+     "materials": 4000.0,
+     "name": "Player 2",
+     "researched": [],
+     "researching": {},
+     "team": 1
+    }
+   },
+   "projectiles": {},
+   "runtime_state": null,
+   "seed": 12345,
+   "stats": {},
+   "tick": 1,
+   "time": 0.03333333333333333,
+   "visibility_cell_size": 500.0,
+   "winner": null
+  },
+  "systems": {
+   "mission": {
+    "_escort_hooked": false,
+    "_escorted_id": null,
+    "completed": false,
+    "failed": false,
+    "mission": null,
+    "objectives": [],
+    "script": {
+     "progress": {
+      "events": {},
+      "fired": [],
+      "spawned": {}
+     },
+     "triggers": []
+    }
+   },
+   "squadrons": {
+    "_tactical_timer": 0.03333333333333333
+   },
+   "trading": {
+    "_timer": 0.03333333333333333,
+    "cfg": {
+     "cargo_credits": 150.0,
+     "hull": 250.0,
+     "loot_fraction": 0.5,
+     "reward_owner": "destination",
+     "spawn_interval": 45.0,
+     "speed": 95.0
+    }
+   },
+   "victory": {
+    "_timer": 0.03333333333333333
+   }
+  }
+ },
+ "ticks": 1
+}
