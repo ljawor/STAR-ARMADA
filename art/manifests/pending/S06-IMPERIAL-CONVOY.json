@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "authored_pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b6-imperial-ships",
+  "binding": "imperial:convoy",
+  "canonical_binding": "ship:imperial:convoy",
+  "gameplay_entity": "imperial_crew_transport",
+  "class": "crew_transport",
+  "authority": "script",
+  "source": {
+    "path": "art/blender/imperial_convoy.blend",
+    "sha256": "0c732b3f3a8a6ea01265be0ae196b7b2db3cbfc23f10043fc189b1d4f24fcbfa",
+    "bytes": 203171
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b6_imperial_ships.py",
+    "sha256": "1d8e1e62ae73ff23412ef412d579aa12a59725185a6ee0f0b43f125ae74e3ced",
+    "bytes": 71020,
+    "selects": "--asset ship:imperial:convoy"
+  },
+  "export_script": {
+    "path": "tools/art/export_imperial_convoy.py",
+    "sha256": "683452ad69f6b695490cff466f530204012354a2a6912939ddd785ae6a5a7131",
+    "bytes": 4758
+  },
+  "runtime": {
+    "path": "assets/models/imperial_convoy.mesh.json",
+    "sha256": "3f887ced61a15b4d8038103ec6c015c482fa8db315cc46c3526063535ff6a56a",
+    "bytes": 292448,
+    "triangles": 4745,
+    "vertices": 2575,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -20.0,
+      -7.0,
+      -24.6975
+    ],
+    [
+      20.0,
+      26.5,
+      24.35825
+    ]
+  ],
+  "bounds": [
+    [
+      -19.5,
+      -6.8,
+      -24.6975
+    ],
+    [
+      19.5,
+      25.73641,
+      24.35825
+    ]
+  ],
+  "authoring": "Script-authored by the B6 seed (script-authoritative per the S03 source-authority policy)",
+  "blender_pin": "see tools/art",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "Not registered anywhere; a later landing step is what would add a pipeline entry.",
+  "evidence": "artifacts/s06_alliance_batch_review/b6-convoy/imperial-convoy-comparison.png",
+  "motion": []
+}

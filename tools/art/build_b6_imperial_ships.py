@@ -281,6 +281,49 @@ ROWS = {
                 'hangar mouths and panels, bright trim banding, red identification striping, a '
                 'four-bell lit engine bank and a tall cool dorsal radiator fin'),
     ),
+    # ---- the last row of the batch: the convoy, the cluster the owner settled follows the siblings
+    # `imperial:convoy` is the one Imperial binding whose hull could not be reached at all: both
+    # convoy branches of the ship path gated on `FACTIONS[1:]`, so the one faction that needed the
+    # branch was the one it excluded (finding in `art/manifests/pipeline_policy.json`,
+    # `s06-imperial-convoy-parity-2026-10-18`, and the seam that now admits it is guarded by
+    # `tests/test_imperial_convoy_gate.py`). The owner settled at the same time that the row
+    # *follows the other three factions* rather than being authored as a hull of its own: a cluster
+    # at roughly twice a single-hull row's triangles, in the binding's own legacy box.
+    #
+    # The envelope is measured, not chosen: the binding draws the legacy `box` today
+    # (`ship_mesh('box')` = -20.000,-7.000,-24.697 .. 20.000,26.500,24.358 at 1,536 triangles), and
+    # `render/ship_sizes.ship_size` derives the class scale from the drawn shape's *Z span*, so the
+    # authored mesh fills that box's Z extent and is authored a little inside it in X and Y, which
+    # is exactly the convention the three sibling sidecars carry: `rebel:convoy` declares
+    # [-31,-9,-72.698]..[31,16,59.5] around mesh bounds of [-30.3,-6,-72.698]..[30.3,14.776,59.5] -
+    # larger on X and Y, the same in Z.
+    'ship:imperial:convoy': dict(
+        identifier='imperial_convoy',
+        data_id='imperial_crew_transport',
+        label='Imperial Convoy Barge',
+        ship_kind='convoy',
+        faction='imperial',
+        legacy_shape='box',
+        limits=[[-20.0, 20.0], [-7.0, 26.5], [-24.6975, 24.35825]],
+        legacy_triangles=1536,
+        legacy_vertices=840,
+        station_radius=32.0,
+        # The cluster's own counts, as row data: the two freight rows, each as
+        # `(host, outboard centre, radius, count)` - the drums are spread across the deck their own
+        # host carries, so a row of freight never overhangs the hull it is lashed to - and the
+        # four-bell engine bank, whose mouths are the stern. The Imperial reading of the siblings'
+        # clusters is authored from this rather than from a second copy of the kit.
+        drum_length=10.6,
+        drum_rows=(('spine', 4.8, 3.0, 4), ('module', 13.0, 3.0, 3)),
+        engines=(-8.6, -2.9, 2.9, 8.6),
+        engine_radius=2.8,
+        engine_depth=5.0,
+        design=('Imperial grey convoy barge: a broad armoured freight spine with outboard cargo '
+                'hulls carrying the beam, two rows of armoured freight drums per side clamped under '
+                'dark cargo gantries, a tiered bridge superstructure under a dorsal comm mast, a '
+                'forward sensor prow, recessed dark hangar mouths and panels, bright trim banding, '
+                'red identification striping, a four-bell lit engine bank and a cool radiator fit'),
+    ),
 }
 
 # The weld pass at this asset's scale. The station defaults (tolerance .25, grow up to 2.5 units,
@@ -890,11 +933,191 @@ def build_imperial_frigate(kit, row):
     kit.plate('54 Ventral radiator plate', 'cool', (sw * 1.2, 0.9, 10.0), (0, lo[1] + 1.2, 6.0))
 
 
+# --------------------------------------------------------------- the convoy cluster, as pure data
+# The cluster's own reaches are a pure function of the row's measured extent, so a guard can drive
+# them without Blender (`tests/test_alliance_blender_b6_imperial_ships.py`) and a second convoy row
+# is a row rather than a second kit - the same shape the corvette and frigate rows carry.
+#
+# The convention is the three siblings': the authored mesh fills the declared box in Z *exactly* and
+# stands inside it on the other two axes, by a stated clearance, because Z is the axis
+# `render/ship_sizes.ship_size` derives the class scale from. `rebel:convoy` declares
+# [-31,-9,-72.698]..[31,16,59.5] around mesh bounds of [-30.3,-6,-72.698]..[30.3,14.776,59.5]:
+# 0.7 larger on X, 2.0 and 1.224 on Y, identical on Z. So this row reaches its bow and its stern
+# exactly and stands `CONVOY_CLEARANCE` inside the declared beam, keel and mast.
+CONVOY_CLEARANCE = dict(beam=0.5, keel=0.2, mast=0.7, module=0.7)
+# The outboard cargo hulls' centreline, inside the declared beam by `CONVOY_CLEARANCE['module']`:
+# their outer faces carry the beam, and the raised stripes on them are the mesh's own X extreme.
+CONVOY_MODULE_X = 13.4
+# The convoy's own transverse frames, as `(z, half-width, top, bottom)` - the same shape
+# `alliance_common.loft` takes - so a detail is placed on the deck the row actually authors
+# (`hull_at`) rather than on a hand-copied height: the freight spine that carries the whole cluster,
+# and the outboard cargo hull. Every Z is stated inside the declared box.
+CONVOY_SPINE = ((-20.6, 5.4, 5.6, -4.8), (-13.0, 7.0, 7.0, -5.8), (-1.0, 8.0, 7.8, -6.2),
+                (10.0, 7.4, 7.4, -5.8), (19.0, 5.4, 5.8, -4.6), (22.4, 2.6, 3.4, -2.8))
+CONVOY_MODULE = ((-16.6, 4.6, 5.6, -4.2), (-9.0, 5.9, 6.8, -5.0), (5.0, 5.9, 6.8, -5.0),
+                 (15.4, 4.6, 5.6, -4.2))
+
+
+def convoy_anchors(row) -> dict:
+    """The convoy's own reach numbers, divided out of the binding's own legacy box.
+
+    `bow`, `stern`, `beam`, `keel` and `mast` are the numbers the row's envelope is stated in, and
+    every one of them is derived from the box rather than transcribed; the freight drums are placed
+    on the deck the spine's own sections carry at their own Z, so a tapered deck does not leave a
+    drum standing off it. A pure function of `row`, so the guard drives the same numbers.
+    """
+    lo, hi, centre, span = frame(row['limits'])
+    half = row['drum_length'] / 2.0
+    drums, gantry = [], []
+    for host, x, radius, count in row['drum_rows']:
+        sections = CONVOY_SPINE if host == 'spine' else CONVOY_MODULE
+        # The drums are spread across the deck their own host carries, a stated margin in from each
+        # end, so a row of freight sits on the hull rather than overhanging it.
+        z0 = sections[0][0] + half + .8
+        z1 = sections[-1][0] - half - .8
+        pitch = (z1 - z0) / (count - 1) if count > 1 else 0.0
+        for k in range(count):
+            z = z0 + k * pitch
+            y = hull_at(sections, z)[1] + radius * .5
+            drums.extend(((side * x), y, z, radius) for side in (-1, 1))
+            if host == 'spine':
+                gantry.append((y, z, radius, x))
+    return dict(lo=tuple(lo), hi=tuple(hi), centre=tuple(centre), span=tuple(span),
+                bow=hi[2], stern=lo[2],
+                beam=hi[0] - CONVOY_CLEARANCE['beam'],
+                keel=lo[1] + CONVOY_CLEARANCE['keel'],
+                mast=hi[1] - CONVOY_CLEARANCE['mast'],
+                module=hi[0] - CONVOY_CLEARANCE['module'],
+                module_x=CONVOY_MODULE_X, spine=CONVOY_SPINE, hull=CONVOY_MODULE,
+                drums=tuple(sorted(drums)), gantry=tuple(gantry))
+
+
+def build_imperial_convoy(kit, row):
+    """The last row of the batch: the Imperial convoy, authored in the three siblings' convention.
+
+    A cluster rather than a single hull, which is what the siblings are and what the owner settled
+    this row follows: a broad armoured freight spine carrying two rows of armoured freight drums per
+    side over outboard cargo hulls, under a tiered bridge block with a dorsal comm mast, over a
+    four-bell stern engine bank - in the Imperial fleet's language, so Imperial grey plating, dark
+    recessed panels and cargo gantries, bright trim banding, red identification striping, lit drives
+    and a cool radiator fit.
+
+    Every reach is stated against the row's own extent: the bridge pod's forward cap is the bow
+    (Z max, and the axis the class scale is derived from), the engine bells' mouths the stern
+    (Z min), the striped outboard cargo hulls the beam (both X extremes), the keel girders the
+    Y minimum and the comm mast the ship's highest point (Y max) - each a stated `CONVOY_CLEARANCE`
+    inside the declared box, exactly as the siblings are.
+    """
+    a = convoy_anchors(row)
+    bow, stern = a['bow'], a['stern']
+    mast, keel = a['mast'], a['keel']
+    mx = a['module_x']
+    mw = a['module'] - mx
+    drums = a['drums']
+
+    # ---- the hull, in Imperial grey: the freight spine, the forward bridge block it carries, the
+    # outboard cargo hulls that carry the beam, and the stern engine housing.
+    kit.loft('01 Armoured freight spine', 'base', a['spine'], .34)
+    kit.loft('02 Forward bridge pod', 'base',
+             ((19.4, 3.6, 11.2, 4.2), (21.8, 4.8, 14.4, 4.2), (bow, 2.4, 10.4, 3.8)), .26)
+    kit.loft('03 Bridge command tier', 'base',
+             ((20.2, 3.0, 17.4, 13.8), (22.0, 3.8, 19.6, 14.0), (bow - .5, 2.0, 15.8, 13.6)), .22)
+    kit.loft('04 Bridge tower', 'base',
+             ((20.6, 2.6, 22.2, 19.2), (22.2, 3.2, 23.4, 19.4), (23.2, 1.8, 20.8, 19.2)), .2)
+    # The comm mast's tip is the ship's highest point (Y max), inside the declared mast clearance.
+    kit.loft('05 Dorsal comm mast', 'base',
+             ((21.4, .9, 25.0, 23.2), (22.6, 1.1, mast, 23.2), (23.6, .7, 24.2, 23.0)), .16)
+    for side in (-1, 1):
+        # w = the module's own half-width at its deepest frame, so its outer face is the beam.
+        kit.loft(f'06 Outboard freight hull {side}', 'base', a['hull'], .28, (side * mx, 0, 0))
+    kit.loft('07 Stern engine housing', 'base',
+             ((-20.6, 9.4, 6.4, -4.6), (-17.6, 10.2, 7.0, -5.0), (-14.4, 8.8, 6.2, -4.4)), .28)
+    kit.plate('08 Forward deck block', 'base', (7.0, 3.6, 9.0), (0, 7.8, 16.0))
+    for side in (-1, 1):
+        # The keel girders' undersides are the ship's lowest point (Y min).
+        kit.plate(f'09 Ventral keel girder {side}', 'base', (1.4, 1.2, 38.0),
+                  (side * 4.4, keel + .6, -1.0))
+        kit.plate(f'10 Deck cargo rail {side}', 'base', (1.6, 1.0, 30.0), (side * 16.4, 6.8, 1.0))
+        kit.loft(f'11 Ventral cargo pod {side}', 'base',
+                 ((-9.0, 4.0, -4.6, -6.2), (2.0, 4.6, -4.8, -6.6), (12.0, 4.0, -4.6, -6.2)),
+                 .24, (side * mx, 0, 0))
+        kit.loft(f'12 Aft cargo platform {side}', 'base',
+                 ((15.0, 4.4, 8.6, 4.4), (19.0, 5.0, 9.2, 4.8), (22.0, 3.4, 7.4, 3.6)),
+                 .22, (side * mx, 0, 0))
+    # The freight itself: two rows of armoured drums per side, each seated on the deck the spine
+    # (or the outboard cargo hull) authors at its own Z.
+    for k, (x, y, z, radius) in enumerate(a['drums']):
+        kit.cylinder(f'13 Freight drum {k}', 'base', (x, y, z), radius, row['drum_length'], 'Z', 14)
+
+    # ---- recessed dark panels, and the cargo gantries clamped over the drums.
+    kit.plate('20 Ventral recess panel', 'dark', (7.4, 1.2, 24.0), (0, keel + 1.2, -2.0))
+    kit.plate('21 Engine housing recess', 'dark', (11.2, 4.0, 5.0), (0, .6, stern + 4.0))
+    kit.plate('22 Prow sensor housing', 'dark', (3.4, 2.2, 5.0), (0, 12.4, 20.0))
+    kit.plate('23 Dorsal cable run', 'dark', (2.4, .8, 16.0), (0, 7.6, 4.0))
+    for side in (-1, 1):
+        # The hangar mouth is recessed into the cargo hull's flank, a stated clearance inside the
+        # beam rather than on it, because the raised stripe is what carries the beam.
+        kit.plate(f'24 Hangar mouth {side}', 'dark', (1.2, 4.0, 12.0), (side * (a['beam'] - .7), -1.4, 1.0))
+        kit.plate(f'25 Aft flank recess {side}', 'dark', (1.2, 3.2, 9.0), (side * 6.4, .0, -17.0))
+        kit.plate(f'26 Cargo hatch {side}', 'dark', (3.6, 1.0, 5.0), (side * 2.6, 7.6, -8.0))
+    # The gantries are clamped over the spine's own drums, from the drums' own seats, so a gantry
+    # is never a beam hung over a deck it misses.
+    for k, (y, z, radius, x) in enumerate(a['gantry']):
+        kit.plate(f'27 Cargo gantry {k}', 'dark', (2 * (x + radius) + 3.0, 1.0, 1.6),
+                  (0, y + radius - .3, z))
+
+    # ---- bright trim banding: the sheer bands, the collars, the drum straps and the drum hoops.
+    for side in (-1, 1):
+        kit.plate(f'30 Sheer edge band {side}', 'trim', (1.2, 1.0, 30.0), (side * 7.4, 7.2, -2.0))
+        kit.plate(f'31 Cargo rail collar {side}', 'trim', (1.0, 1.4, 3.0), (side * 16.4, 7.2, -10.0))
+    for k, (y, z, radius, x) in enumerate(a['gantry'][::2]):
+        kit.plate(f'32 Drum hoop {k}', 'trim', (2 * (x + radius) + 4.0, 1.0, 1.4),
+                  (0, y + radius - .1, z))
+    for k, (x, y, z, radius) in enumerate(a['drums']):
+        kit.plate(f'33 Drum strap {k}', 'trim', (radius * 2.3, 1.2, 1.6), (x, y + radius - .4, z))
+    kit.plate('34 Mast cap', 'trim', (1.6, 1.2, 1.6), (0, mast - .7, 22.6))
+    kit.plate('35 Stern transom band', 'trim', (15.0, 1.4, 1.8), (0, 2.0, stern + 3.4))
+    kit.plate('36 Bow collar', 'trim', (6.0, 1.2, 2.6), (0, 15.4, 21.4))
+
+    # ---- identification striping: raised bands the ablation guard can see from any camera. The
+    # outboard stripes are the mesh's own X extreme, a stated clearance inside the declared beam.
+    for side in (-1, 1):
+        kit.plate(f'40 Flank stripe {side}', 'accent', (1.0, 2.2, 12.0), (side * 7.2, 2.6, 8.0))
+        kit.plate(f'41 Outboard stripe {side}', 'accent', (.8, 2.0, 12.0),
+                  (side * (a['beam'] - .4), .4, 1.0))
+        kit.plate(f'42 Keel stripe {side}', 'accent', (.8, 1.0, 6.0), (side * 4.4, keel + 1.0, -14.0))
+        kit.plate(f'43 Sponson stripe {side}', 'accent', (7.0, 1.4, 3.0), (side * mx, 6.4, -12.0))
+        kit.plate(f'44 Aft flank stripe {side}', 'accent', (1.0, 1.6, 8.0), (side * 8.0, 1.0, -16.0))
+    kit.plate('45 Prow chevron', 'accent', (2.2, 1.8, 1.6), (0, 7.2, bow - 1.4))
+
+    # ---- the drive, and the ship's lighting. The bells' mouths are the stern (Z min).
+    for k, x in enumerate(row['engines']):
+        kit.cylinder(f'50 Engine bell {k}', 'lit', (x, -1.2, stern + row['engine_depth'] / 2.0),
+                     row['engine_radius'], row['engine_depth'], 'Z', 14)
+    kit.plate('51 Stern lamp band', 'lit', (15.0, 1.4, 1.1), (0, 2.2, stern + 2.0))
+    for side in (-1, 1):
+        kit.plate(f'52 Marker light {side}', 'lit', (.7, 1.6, .7), (side * 3.4, 22.0, 21.8))
+        kit.plate(f'53 Hangar glow {side}', 'lit', (1.0, 3.4, 10.0), (side * (a['beam'] - .6), -1.4, 1.0))
+        kit.plate(f'54 Deck luminaire {side}', 'lit', (3.0, 1.0, 3.0), (side * 9.0, 11.4, -16.0))
+    kit.plate('55 Bridge visor slit', 'lit', (2.6, .6, 1.6), (0, 16.4, 23.4))
+
+    # ---- cool sensor and radiator fit. The dorsal fin stands on the spine's deck and its tip is
+    # just under the mast, which is the ship's highest point.
+    kit.plate('60 Dorsal radiator fin', 'cool', (.9, 18.8, 14.0), (0, 15.4, -14.0))
+    for side in (-1, 1):
+        kit.plate(f'61 Side radiator vane {side}', 'cool', (.9, 3.4, 7.0), (side * 7.0, 8.4, -17.0))
+        kit.plate(f'62 Prow sensor vane {side}', 'cool', (.8, 3.2, 7.0), (side * 2.6, 12.0, 20.0))
+        kit.plate(f'63 Aft radiator vane {side}', 'cool', (.9, 2.6, 6.0), (side * 10.4, 5.0, -18.0))
+        kit.plate(f'64 Mast sensor array {side}', 'cool', (.7, 2.0, 3.0), (side * 1.8, 24.0, 22.6))
+    kit.plate('65 Ventral radiator plate', 'cool', (5.0, .9, 10.0), (0, keel + 1.4, 6.0))
+
+
 BUILDERS = {'corvette': build_imperial_corvette,
             'tie_squadron': build_imperial_tie,
             'tie_bomber_squadron': build_imperial_tie,
             'capital': build_imperial_capital,
-            'frigate': build_imperial_frigate}
+            'frigate': build_imperial_frigate,
+            'convoy': build_imperial_convoy}
 # The kit's per-part boxes, published by `build()` so `main()` can run the contact check before the
 # parts are grouped into role objects and lose their names.
 PART_BOXES = {}

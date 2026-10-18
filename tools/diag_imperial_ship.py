@@ -141,6 +141,18 @@ ROWS = {
         legacy_shape='needle', mesh='assets/models/imperial_frigate.mesh.json',
         envelope=((-16.0, 16.0), (-5.0, 24.0), (-43.601, 48.0)), min_length=91.4,
         label='imperial-frigate', directory='b6-frigate'),
+    # ---- the last row of the batch: the convoy, the cluster the owner settled follows the siblings
+    # It is the one row whose *legacy* visual key is a convoy key: `faction_visuals.ship_visual_key`
+    # admits Imperial in the convoy branches, so with nothing patched the facade answers
+    # `imperial:convoy` and `fleet_geometry.ship_mesh` normalises it back to the legacy `box` this row
+    # draws today. So the legacy frame below is the legacy crate, and the row's `min_length` is that
+    # crate's own Z extent less the seed's 0.2 world-unit float-noise allowance.
+    'imperial:convoy': dict(
+        row='ship:imperial:convoy', registry_key='imperial:convoy',
+        identifier='imperial_convoy', data_id='imperial_crew_transport',
+        legacy_shape='box', mesh='assets/models/imperial_convoy.mesh.json',
+        envelope=((-20.0, 20.0), (-7.0, 26.5), (-24.6975, 24.35825)), min_length=48.85575,
+        label='imperial-convoy', directory='b6-convoy'),
 }
 
 # A row answers to its own spelling, the inventory spelling, its mesh identifier and its runtime
@@ -243,7 +255,7 @@ def main(argv=None):
     from render import asset_selection as selection
     from render.authored_mesh import _load_profile
     from render.camera import Camera
-    from render.faction_visuals import ship_visual_key
+    from render.faction_visuals import normalize_ship_key, ship_visual_key
     from render.fleet_geometry import ship_mesh
     from render.renderer import Renderer
     from render.ship_sizes import ship_size
@@ -301,7 +313,15 @@ def main(argv=None):
     active['enabled'] = True
     review_visual_key = ship_visual_key(DataStore.get(), DATA_ID, 'imperial')
     active['enabled'] = False
-    assert stock_visual_key == LEGACY_SHAPE, (stock_visual_key, LEGACY_SHAPE)
+    # The legacy frame draws whatever the mesh path reads out of the facade's answer, and for a row
+    # whose legacy branch is the convoy gate that answer is a convoy *key* rather than a shape string:
+    # `<faction>:convoy` has no Imperial entry outside a preview session, so
+    # `fleet_geometry.ship_mesh` normalises it back to the legacy shape the row draws today. The
+    # normalised comparison is the same statement for every other row of the batch and a stronger one
+    # for this row than comparing the strings would be, because it measures what is drawn rather than
+    # what is named.
+    stock_shape = normalize_ship_key(stock_visual_key)
+    assert stock_shape == LEGACY_SHAPE, (stock_visual_key, stock_shape, LEGACY_SHAPE)
     assert review_visual_key == REGISTRY_KEY, (review_visual_key, REGISTRY_KEY)
 
     def scene():
@@ -322,7 +342,7 @@ def main(argv=None):
     candidate_size = ship_size(DataStore.get(), DATA_ID, 'imperial')
     active['enabled'] = False
     selection.invalidate_geometry_helpers()
-    assert legacy_size.shape == LEGACY_SHAPE, legacy_size
+    assert normalize_ship_key(legacy_size.shape) == LEGACY_SHAPE, legacy_size
     assert candidate_size.shape == REGISTRY_KEY, candidate_size
     assert abs(candidate_size.length - legacy_size.length) <= legacy_size.length * .01, (
         legacy_size, candidate_size)

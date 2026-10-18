@@ -2324,7 +2324,7 @@
               "art/blender/imperial_corvette.blend": "ddb2d4180faab70c9a48f1efd5750419414f2ce64e74dedf00cbbc00aec9714d"
             },
             "exporter": {
-              "tools/art/build_b6_imperial_ships.py": "b63f45eebd1c8c9ebe5f2d8529872098c9cbf6a8cf7691873d15f62a280070f5",
+              "tools/art/build_b6_imperial_ships.py": "1d8e1e62ae73ff23412ef412d579aa12a59725185a6ee0f0b43f125ae74e3ced",
               "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
               "tools/art/export_imperial_corvette.py": "c4fb1d3a44940b60b25ff7b0647d7a7b0e042c7ae5875e32bb11cf381263fa38"
             },
@@ -2380,13 +2380,13 @@
               "art/blender/imperial_tie_squadron.blend": "09e974692c2c4c69e9dcbd6d97c62d16b33874a7f3f986ec2b7d71239e8958b4"
             },
             "exporter": {
-              "tools/art/build_b6_imperial_ships.py": "b63f45eebd1c8c9ebe5f2d8529872098c9cbf6a8cf7691873d15f62a280070f5",
+              "tools/art/build_b6_imperial_ships.py": "1d8e1e62ae73ff23412ef412d579aa12a59725185a6ee0f0b43f125ae74e3ced",
               "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
               "tools/art/export_imperial_tie_squadron.py": "fdff5cfdac484c070ea8859d3b861fcb4780b7eff905482548c692c9da101629"
             },
             "runtime": {
               "assets/models/imperial_tie_squadron.mesh.json": "5bc984c2ad3c2f649bf75265d3326d914a419659538360917b9c2217dcadd1cc",
-              "tools/diag_imperial_ship.py": "89562071db07d7c72826123c0f911b6e5bd9847cf4002ec27fbf3b87c843db88"
+              "tools/diag_imperial_ship.py": "0d6ce07820304688229adbc335bac0cc81fcd26d3005206d41ba6ef189ff7b3d"
             },
             "legacy_extent": [
               [
@@ -2436,13 +2436,13 @@
               "art/blender/imperial_tie_bomber_squadron.blend": "89e797d421478348a0d924bfbd0b516e210c5dd84920646cbabd49002d1b40fc"
             },
             "exporter": {
-              "tools/art/build_b6_imperial_ships.py": "b63f45eebd1c8c9ebe5f2d8529872098c9cbf6a8cf7691873d15f62a280070f5",
+              "tools/art/build_b6_imperial_ships.py": "1d8e1e62ae73ff23412ef412d579aa12a59725185a6ee0f0b43f125ae74e3ced",
               "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
               "tools/art/export_imperial_tie_bomber_squadron.py": "342dd4afe448f51767b0f46962b5283368a4a8c974b2c0c4c83519b3b2a35b91"
             },
             "runtime": {
               "assets/models/imperial_tie_bomber_squadron.mesh.json": "b0d03f0d0045e79653098a4a7d3c3e8769b0b1fc14d47c577195c635a862c826",
-              "tools/diag_imperial_ship.py": "89562071db07d7c72826123c0f911b6e5bd9847cf4002ec27fbf3b87c843db88"
+              "tools/diag_imperial_ship.py": "0d6ce07820304688229adbc335bac0cc81fcd26d3005206d41ba6ef189ff7b3d"
             },
             "legacy_extent": [
               [
@@ -2492,13 +2492,13 @@
               "art/blender/imperial_battleship.blend": "c2ec3a65b986cee9726997820d2aae0f4380824e5e6ce2aabfa78c92b2cb65d1"
             },
             "exporter": {
-              "tools/art/build_b6_imperial_ships.py": "b63f45eebd1c8c9ebe5f2d8529872098c9cbf6a8cf7691873d15f62a280070f5",
+              "tools/art/build_b6_imperial_ships.py": "1d8e1e62ae73ff23412ef412d579aa12a59725185a6ee0f0b43f125ae74e3ced",
               "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
               "tools/art/export_imperial_battleship.py": "033089b0254bdf15f2b6751d460089a7b0b808b68d63f1e4e3503aa4e8a05ad4"
             },
             "runtime": {
               "assets/models/imperial_battleship.mesh.json": "3c69c3db9d0f55aba714d1af4bafbebc7493afb5da3a80d7bd59fccc7be8ac79",
-              "tools/diag_imperial_ship.py": "89562071db07d7c72826123c0f911b6e5bd9847cf4002ec27fbf3b87c843db88"
+              "tools/diag_imperial_ship.py": "0d6ce07820304688229adbc335bac0cc81fcd26d3005206d41ba6ef189ff7b3d"
             },
             "legacy_extent": [
               [
@@ -2548,13 +2548,13 @@
               "art/blender/imperial_supercapital.blend": "1bc6ceb9d30698b27440023b2bc9098837e0775866a0a8046b29d656845f1f14"
             },
             "exporter": {
-              "tools/art/build_b6_imperial_ships.py": "b63f45eebd1c8c9ebe5f2d8529872098c9cbf6a8cf7691873d15f62a280070f5",
+              "tools/art/build_b6_imperial_ships.py": "1d8e1e62ae73ff23412ef412d579aa12a59725185a6ee0f0b43f125ae74e3ced",
               "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
               "tools/art/export_imperial_supercapital.py": "22deafd7462c6745bdb8c498aad00a9f0d4b89d980b512e1c9ac1105bdcd2ba4"
             },
             "runtime": {
               "assets/models/imperial_supercapital.mesh.json": "1c44c3e7a78241b5048a9aefe23549b8578c0a21081ad797ce640e8ad9a98dbf",
-              "tools/diag_imperial_ship.py": "89562071db07d7c72826123c0f911b6e5bd9847cf4002ec27fbf3b87c843db88"
+              "tools/diag_imperial_ship.py": "0d6ce07820304688229adbc335bac0cc81fcd26d3005206d41ba6ef189ff7b3d"
             },
             "legacy_extent": [
               [
@@ -2604,13 +2604,13 @@
               "art/blender/imperial_cruiser.blend": "aad9345c8d5aac5f0cb7a287a482c67d707e4b448aff0c93df96043c2509324e"
             },
             "exporter": {
-              "tools/art/build_b6_imperial_ships.py": "b63f45eebd1c8c9ebe5f2d8529872098c9cbf6a8cf7691873d15f62a280070f5",
+              "tools/art/build_b6_imperial_ships.py": "1d8e1e62ae73ff23412ef412d579aa12a59725185a6ee0f0b43f125ae74e3ced",
               "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
               "tools/art/export_imperial_cruiser.py": "a648e015477647e1e37288cd80acc98e00393a2e9ec8ffc3df531dba21b2a408"
             },
             "runtime": {
               "assets/models/imperial_cruiser.mesh.json": "125f37cf927840f5ccd452bfe8ec5998c0e6e644c0965932399b716d8fedd130",
-              "tools/diag_imperial_ship.py": "89562071db07d7c72826123c0f911b6e5bd9847cf4002ec27fbf3b87c843db88"
+              "tools/diag_imperial_ship.py": "0d6ce07820304688229adbc335bac0cc81fcd26d3005206d41ba6ef189ff7b3d"
             },
             "legacy_extent": [
               [
@@ -2660,13 +2660,13 @@
               "art/blender/imperial_frigate.blend": "058195c275f7967e912c0f6a3e4f9ac205167a50aa035614a41c4b52e39b5d50"
             },
             "exporter": {
-              "tools/art/build_b6_imperial_ships.py": "b63f45eebd1c8c9ebe5f2d8529872098c9cbf6a8cf7691873d15f62a280070f5",
+              "tools/art/build_b6_imperial_ships.py": "1d8e1e62ae73ff23412ef412d579aa12a59725185a6ee0f0b43f125ae74e3ced",
               "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
               "tools/art/export_imperial_frigate.py": "72156e3a182f75611234e11f413f55f79c6321fb9d41bb8e1c20df7bd7e6d869"
             },
             "runtime": {
               "assets/models/imperial_frigate.mesh.json": "6c5d925bcd67bd655aae5f7e4bbdfa178257a4d0a6897f52b8664dda3f94752d",
-              "tools/diag_imperial_ship.py": "89562071db07d7c72826123c0f911b6e5bd9847cf4002ec27fbf3b87c843db88"
+              "tools/diag_imperial_ship.py": "0d6ce07820304688229adbc335bac0cc81fcd26d3005206d41ba6ef189ff7b3d"
             },
             "legacy_extent": [
               [
@@ -2746,6 +2746,29 @@
             "imperial_cruiser": true,
             "imperial_frigate": true
           }
+        },
+        "shared_files_moved_when_the_last_row_landed": {
+          "what": "The last row of this batch - the Imperial convoy - required extending exactly the two shared files this decision pins: the seed that authors every row and the harness that captures every picture. Both hashes were re-derived from disk and re-pinned here.",
+          "paths_moved": {
+            "tools/art/build_b6_imperial_ships.py": {
+              "recorded": "b63f45eebd1c8c9ebe5f2d8529872098c9cbf6a8cf7691873d15f62a280070f5",
+              "now": "1d8e1e62ae73ff23412ef412d579aa12a59725185a6ee0f0b43f125ae74e3ced"
+            },
+            "tools/diag_imperial_ship.py": {
+              "recorded": "89562071db07d7c72826123c0f911b6e5bd9847cf4002ec27fbf3b87c843db88",
+              "now": "0d6ce07820304688229adbc335bac0cc81fcd26d3005206d41ba6ef189ff7b3d"
+            }
+          },
+          "revision_that_the_approval_actually_covers": {
+            "imperial_corvette": true,
+            "imperial_tie_squadron": true,
+            "imperial_tie_bomber_squadron": true,
+            "imperial_battleship": true,
+            "imperial_supercapital": true,
+            "imperial_cruiser": true,
+            "imperial_frigate": true
+          },
+          "why_it_matters": "Same class as the earlier corrections and now predictable: a per-row decision that pins a file the batch keeps editing will go stale every time a row lands. The approved revisions are the blends and the meshes; the seven are unmoved, as the map above asserts rather than claims."
         }
       }
     }

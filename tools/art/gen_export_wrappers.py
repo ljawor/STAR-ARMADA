@@ -175,6 +175,23 @@ ASSETS['imperial_frigate'] = ('Lancer Frigate',
                               ((-16.0, 16.0), (-5.0, 24.0), (-43.601, 48.0)),
                               91.4, 11888, 9450, 2_000_000)
 
+# S06 B6's last row - the convoy. It is the one Imperial binding the ship path could not reach at
+# all: both convoy branches gated on `FACTIONS[1:]`, so the faction that needed them was the one they
+# excluded (`s06-imperial-convoy-parity-2026-10-18` in `art/manifests/pipeline_policy.json`; the seam
+# that now admits it is guarded by `tests/test_imperial_convoy_gate.py`). The owner settled that the
+# row *follows the three authored sibling convoys* rather than being authored as a hull of its own, so
+# the envelope and `min_length` are the binding's own legacy extent, measured from
+# `render/fleet_geometry.py::ship_mesh('box')` - -20.000,-7.000,-24.697 .. 20.000,26.500,24.358 at
+# 1,536 triangles and 840 vertices - and the authored cluster fills that box's Z extent exactly while
+# standing a stated clearance inside it on X and Y, which is exactly the convention `rebel:convoy`,
+# `confederacy:convoy` and `syndicate:convoy` carry. The caps are the standard ship caps and the row
+# is above the 1_800 hull floor, so it declares no floor of its own. Script-authoritative per the S03
+# source-authority policy (repeated modular hardware): `tools/art/build_b6_imperial_ships.py` is the
+# recipe and `art/blender/imperial_convoy.blend` is a derived artifact.
+ASSETS['imperial_convoy'] = ('Imperial Convoy Barge',
+                             ((-20.0, 20.0), (-7.0, 26.5), (-24.6975, 24.35825)),
+                             48.9, 11888, 9450, 2_000_000)
+
 
 def template():
     """The template body, without its own header comment block."""

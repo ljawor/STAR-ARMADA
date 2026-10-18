@@ -76,6 +76,46 @@ DESIGN = ('Imperial grey combat corvette with a faceted needle hull, a dorsal ar
 WRAPPER_TOKENS = ('ENVELOPE = ((-16.0, 16.0), (-5.0, 24.0), (-43.601, 48.0))', 'MIN_LENGTH = 91.4',
                   'MAX_TRIANGLES = 11888', 'MAX_VERTICES = 9450', 'MAX_BYTES = 2_000_000')
 
+# ---- the batch's last row: `ship:imperial:convoy` -------------------------------------------------
+# A convoy is a *cluster* rather than one hull, and this row follows the three authored siblings
+# (`rebel:convoy`, `confederacy:convoy`, `syndicate:convoy`) rather than inventing a convention of its
+# own: the authored cluster reaches the binding's own declared box exactly in Z and stands a stated
+# clearance inside it on X and Y. Z is the axis `render/ship_sizes.py::ship_size` divides the drawn
+# length by (`scale = length / (hi[2] - lo[2])`), so reaching it exactly is what keeps the class scale,
+# the drawn length, the collision radius and every review camera answering what they answered before.
+# The three siblings carry the same relation in their own sidecars and meshes, and the guards below
+# measure it there rather than restating it as a comment.
+CONVOY_BINDING = 'ship:imperial:convoy'
+CONVOY_REGISTRY_KEY = 'imperial:convoy'
+CONVOY_IDENTIFIER = 'imperial_convoy'
+CONVOY_DATA_ID = 'imperial_crew_transport'
+CONVOY_ASSET_ID = 'core:imperial/convoy'
+CONVOY_LEGACY_SHAPE = 'box'
+CONVOY_LABEL = 'Imperial Convoy Barge'
+CONVOY_MESH = ROOT / 'assets/models/imperial_convoy.mesh.json'
+CONVOY_MANIFEST = ROOT / 'assets/models/manifests/imperial_convoy.json'
+CONVOY_WRAPPER = ROOT / 'tools/art/export_imperial_convoy.py'
+CONVOY_SIDECAR = ROOT / 'art/manifests/pending/S06-IMPERIAL-CONVOY.json'
+CONVOY_BLEND = ROOT / 'art/blender/imperial_convoy.blend'
+# The binding's own legacy `box` extent, from `art/manifests/model_inventory.json`, measured through
+# `render/fleet_geometry.py::ship_mesh('box')` by `tools/art/probe_b6_scope.py`: this row's declared box
+# and the box its wrapper declares, at 1,536 triangles and 840 vertices.
+CONVOY_ENVELOPE = ((-20.0, 20.0), (-7.0, 26.5), (-24.6975, 24.35825))
+CONVOY_LEGACY_TRIANGLES = 1536
+CONVOY_LEGACY_VERTICES = 840
+# Z span 49.05575 minus 0.2, the house min_length for a hull; the wrapper declares 48.9.
+CONVOY_MIN_LENGTH = 48.85575
+# The Imperial reading of the cluster: the siblings stand at 4,512 / 4,584 / 4,756 triangles.
+CONVOY_TARGET = (4400, 4900)
+# The clearance the cluster stands inside its own declared box - the seed's `CONVOY_CLEARANCE`.
+CONVOY_CLEARANCE = dict(beam=0.5, keel=0.2, mast=0.7, module=0.7)
+# The three authored siblings whose convention this row follows, by mesh identifier.
+CONVOY_SIBLINGS = ('alliance_convoy', 'legion_convoy', 'syndicate_convoy')
+# What this row's own wrapper declares, spelled the way the template renders it.
+CONVOY_WRAPPER_TOKENS = ('ENVELOPE = ((-20.0, 20.0), (-7.0, 26.5), (-24.6975, 24.35825))',
+                         'MIN_LENGTH = 48.9', 'MAX_TRIANGLES = 11888', 'MAX_VERTICES = 9450',
+                         'MAX_BYTES = 2_000_000')
+
 
 def load(path):
     return json.loads(Path(path).read_text(encoding='utf-8'))
@@ -1027,3 +1067,411 @@ class CapitalFlip(unittest.TestCase):
                                  'the probe refuses a proof that did not happen')
                 self.assertIn('stock      ->', probe.stdout)
                 self.assertIn(f"review     -> '{row['registry_key']}'", probe.stdout)
+
+
+# ==================================================================================================
+# The batch's last row: `ship:imperial:convoy`. The convention is the three siblings' - the cluster
+# reaches the binding's own declared box exactly in Z and stands a stated clearance inside it on X and
+# Y - and it is *measured* here: the reach numbers are driven out of the seed's own pure function, the
+# siblings' relation is read out of their committed sidecars and meshes, and the class scale the
+# renderer derives is compared against the live legacy `box` through the renderer's own `ship_mesh`.
+
+
+def convoy_row():
+    rows = _rows_table()
+    assert CONVOY_BINDING in rows, 'the batch seed must carry the convoy row as data'
+    return rows[CONVOY_BINDING]
+
+
+def convoy_anchors(row=None):
+    """The row's reach numbers, driven out of the seed's pure function rather than text-matched.
+
+    A text match passes on a stale string and says nothing about the cluster the seed authors, so the
+    functions are evaluated here - `convoy_anchors` and the two pure helpers it divides its numbers out
+    of: the box splitter and the loft's own frame at a Z.
+    """
+    namespace = _pure_functions('convoy_anchors', 'hull_at', 'CONVOY_CLEARANCE', 'CONVOY_SPINE',
+                                'CONVOY_MODULE', 'CONVOY_MODULE_X')
+    return namespace['convoy_anchors'](convoy_row() if row is None else row)
+
+
+def convoy_mesh():
+    return load(CONVOY_MESH)
+
+
+class ConvoySeedContract(unittest.TestCase):
+    """The row is one row of the batch's own table, and its cluster is a function of that row."""
+
+    def test_the_row_is_one_row_of_the_batch_table(self):
+        row = convoy_row()
+        self.assertEqual(row['identifier'], CONVOY_IDENTIFIER)
+        self.assertEqual(row['data_id'], CONVOY_DATA_ID)
+        self.assertEqual(row['label'], CONVOY_LABEL)
+        self.assertEqual(row['legacy_shape'], CONVOY_LEGACY_SHAPE)
+        self.assertEqual(tuple(tuple(a) for a in row['limits']), CONVOY_ENVELOPE)
+        self.assertEqual(row['ship_kind'], 'convoy')
+        self.assertEqual(row['faction'], 'imperial')
+        self.assertEqual(row['station_radius'], 32.0)
+        text = seed_text()
+        self.assertEqual(text.count('def build('), 1, 'one kit, and the batch table drives it')
+        self.assertIn("'convoy': build_imperial_convoy", text,
+                      'the table has to dispatch this row to its own builder')
+        self.assertIn('ROWS[key]', text, 'the build must read the row rather than restate it')
+
+    def test_the_reach_numbers_are_divided_out_of_the_rows_own_declared_box(self):
+        anchor = convoy_anchors()
+        box = CONVOY_ENVELOPE
+        self.assertEqual(anchor['bow'], box[2][1])
+        self.assertEqual(anchor['stern'], box[2][0])
+        self.assertAlmostEqual(anchor['beam'], box[0][1] - CONVOY_CLEARANCE['beam'], places=9)
+        self.assertAlmostEqual(anchor['module'], box[0][1] - CONVOY_CLEARANCE['module'], places=9)
+        self.assertAlmostEqual(anchor['keel'], box[1][0] + CONVOY_CLEARANCE['keel'], places=9)
+        self.assertAlmostEqual(anchor['mast'], box[1][1] - CONVOY_CLEARANCE['mast'], places=9)
+        self.assertLess(anchor['module_x'], anchor['beam'],
+                        'the outboard cargo hulls sit inside the beam their own stripes carry')
+        for z, _half_width, top, bottom in anchor['spine']:
+            self.assertTrue(box[2][0] <= z <= box[2][1], 'a spine frame is stated inside the box')
+            self.assertLess(bottom, top)
+
+    def test_the_freight_drums_are_spread_on_the_deck_their_own_host_carries(self):
+        """A drum placed from a hand-copied height floats off a tapered deck or sinks into the flank."""
+        anchor = convoy_anchors()
+        row = convoy_row()
+        hull_at = _pure_functions('hull_at')['hull_at']
+        half = row['drum_length'] / 2.0
+        self.assertEqual(len(anchor['drums']),
+                         2 * sum(count for _host, _x, _radius, count in row['drum_rows']),
+                         'both sides of every freight row are laid down')
+        hosts = {'spine': anchor['spine'], 'module': anchor['hull']}
+        for host, x, _radius, count in row['drum_rows']:
+            sections = hosts[host]
+            placed = [d for d in anchor['drums'] if abs(abs(d[0]) - x) < 1e-12]
+            self.assertEqual(len(placed), 2 * count, f'the {host} rows carry {count} drums per side')
+            self.assertEqual(len({d[2] for d in placed}), count, 'a drum row sits at its own stations')
+            self.assertGreaterEqual(min(d[2] for d in placed), sections[0][0] + half + .8 - 1e-9)
+            self.assertLessEqual(max(d[2] for d in placed), sections[-1][0] - half - .8 + 1e-9)
+            for _x, y, z, radius in placed:
+                self.assertAlmostEqual(y, hull_at(sections, z)[1] + radius * .5, places=9,
+                                       msg='the drum is seated on the deck its own host carries')
+        for x, y, z, radius in anchor['drums']:
+            self.assertTrue(anchor['stern'] <= z <= anchor['bow'], 'a drum is inside the box in Z')
+            self.assertLessEqual(abs(x) + radius, anchor['beam'] + 1e-9,
+                                 'a drum row carries the beam but does not pass it')
+            self.assertLessEqual(y + radius, anchor['mast'] + 1e-9,
+                                 'a drum row is clamped under the mast line')
+
+    def test_a_second_convoy_row_would_be_a_row_and_not_a_second_kit(self):
+        """Driven with a box that is not this row's: the placement is a function of the row."""
+        wider = dict(convoy_row())
+        wider['limits'] = [[-24.0, 24.0], [-8.0, 30.0], [-30.0, 30.0]]
+        anchor = convoy_anchors(wider)
+        self.assertEqual(anchor['bow'], 30.0)
+        self.assertEqual(anchor['stern'], -30.0)
+        self.assertAlmostEqual(anchor['beam'], 24.0 - CONVOY_CLEARANCE['beam'], places=9)
+        self.assertAlmostEqual(anchor['keel'], -8.0 + CONVOY_CLEARANCE['keel'], places=9)
+        self.assertAlmostEqual(anchor['mast'], 30.0 - CONVOY_CLEARANCE['mast'], places=9)
+        self.assertEqual(len(anchor['drums']), len(convoy_anchors()['drums']))
+
+
+class ConvoyMeshContract(unittest.TestCase):
+    """The authored cluster against the box it declares, and against the crate the row draws today."""
+
+    def test_the_cluster_reaches_the_box_in_z_and_stands_inside_it_on_x_and_y(self):
+        lo, hi = convoy_mesh()['bounds']
+        anchor = convoy_anchors()
+        box = CONVOY_ENVELOPE
+        for axis in range(3):
+            self.assertGreaterEqual(lo[axis], box[axis][0] - 1e-6)
+            self.assertLessEqual(hi[axis], box[axis][1] + 1e-6)
+        self.assertAlmostEqual(lo[2], box[2][0], places=6, msg='the stern reaches the box')
+        self.assertAlmostEqual(hi[2], box[2][1], places=6, msg='the bow reaches the box')
+        self.assertAlmostEqual(hi[0], anchor['beam'], places=6)
+        self.assertAlmostEqual(lo[0], -anchor['beam'], places=6)
+        self.assertAlmostEqual(lo[1], anchor['keel'], places=6)
+        self.assertLessEqual(hi[1], anchor['mast'] + 1e-9)
+        self.assertGreater(hi[1], anchor['mast'] - 0.1,
+                           'the mast is authored on the mast line and bevelled, not cut short')
+        self.assertGreaterEqual(hi[2] - lo[2], CONVOY_MIN_LENGTH)
+
+    def test_the_class_scale_the_renderer_derives_is_unchanged(self):
+        """`scale = length / (hi[2] - lo[2])`, so the authored span has to be the legacy span.
+
+        Both sides are measured: the live legacy crate through the renderer's own `ship_mesh`, the
+        candidate through the mesh the exporter wrote. Equal spans mean equal class scale, drawn length,
+        collision radius and camera framing - which is the whole reason the cluster reaches the box in Z
+        exactly and stands inside it on the other two axes.
+        """
+        legacy_lo, legacy_hi, _points, _triangles = legacy_geometry(CONVOY_LEGACY_SHAPE)
+        mesh_lo, mesh_hi = convoy_mesh()['bounds']
+        self.assertAlmostEqual(mesh_lo[2], legacy_lo[2], places=5)
+        self.assertAlmostEqual(mesh_hi[2], legacy_hi[2], places=5)
+        self.assertAlmostEqual(mesh_hi[2] - mesh_lo[2], legacy_hi[2] - legacy_lo[2], places=5,
+                               msg='a different Z span would resize every class scale this row is in')
+
+    def test_the_three_siblings_carry_the_same_convention_in_their_own_files(self):
+        """Read out of the approved siblings' sidecars and meshes, not restated here."""
+        for identifier in CONVOY_SIBLINGS:
+            with self.subTest(sibling=identifier):
+                name = identifier.replace('_', '-').upper()
+                sidecar = load(ROOT / 'art/manifests/pending' / f'S06-{name}.json')
+                data = load(ROOT / f'assets/models/{identifier}.mesh.json')
+                slo, shi = sidecar['envelope']
+                blo, bhi = data['bounds']
+                for axis in range(3):
+                    self.assertGreaterEqual(blo[axis], slo[axis] - 1e-6)
+                    self.assertLessEqual(bhi[axis], shi[axis] + 1e-6)
+                self.assertAlmostEqual(blo[2], slo[2], places=6, msg='the stern reaches the box')
+                self.assertAlmostEqual(bhi[2], shi[2], places=6, msg='the bow reaches the box')
+                for axis in (0, 1):
+                    self.assertTrue(blo[axis] > slo[axis] or bhi[axis] < shi[axis],
+                                    f'{identifier} stands inside the declared box on axis {axis}')
+                self.assertEqual(sidecar['runtime']['triangles'], data['triangle_count'])
+
+    def test_this_rows_sidecar_carries_the_same_relation_as_its_siblings(self):
+        doc = load(CONVOY_SIDECAR)
+        mesh = convoy_mesh()
+        lo = [axis[0] for axis in CONVOY_ENVELOPE]
+        hi = [axis[1] for axis in CONVOY_ENVELOPE]
+        self.assertEqual(doc['envelope'], [lo, hi])
+        self.assertEqual(doc['bounds'], mesh['bounds'])
+        self.assertEqual(doc['runtime']['triangles'], mesh['triangle_count'])
+        self.assertEqual(doc['runtime']['vertices'], len(mesh['vertices']))
+        self.assertEqual(doc['runtime']['roles'], sorted(ROLES))
+
+    def test_the_cluster_is_the_loader_contract_in_the_ship_caps_and_the_convoys_band(self):
+        data = convoy_mesh()
+        self.assertEqual(data['asset'], CONVOY_IDENTIFIER)
+        self.assertEqual(data['coordinates'], 'X beam; Y up; +Z forward')
+        self.assertEqual(data['triangle_count'], sum(len(v) for v in data['batches'].values()))
+        self.assertGreaterEqual(data['triangle_count'], CONVOY_TARGET[0],
+                                'the Imperial reading of the cluster is a capital-ship hull')
+        self.assertLessEqual(data['triangle_count'], CONVOY_TARGET[1])
+        self.assertGreater(data['triangle_count'], CONVOY_LEGACY_TRIANGLES,
+                           'the cluster adds detail over the 1,536-triangle crate it replaces')
+        self.assertLessEqual(data['triangle_count'], CAPS['triangles'])
+        self.assertLessEqual(len(data['vertices']), CAPS['vertices'])
+        self.assertLessEqual(CONVOY_MESH.stat().st_size, CAPS['bytes'])
+        for role, rows in data['batches'].items():
+            self.assertIn(role, ROLES)
+            for row in rows:
+                self.assertEqual(len(row), 6)
+                self.assertAlmostEqual(math.sqrt(sum(c * c for c in row[:3])), 1.0, places=9)
+                for index in row[3:]:
+                    self.assertLess(index, len(data['vertices']))
+
+    def test_every_role_carries_real_geometry(self):
+        """A later per-role ablation measures pixels changed by removing each role."""
+        data = convoy_mesh()
+        counts = {role: len(rows) for role, rows in data['batches'].items()}
+        self.assertEqual({r for r, n in counts.items() if n}, set(ROLES),
+                         'every loader role has to be filled by real geometry')
+        for role in ROLES:
+            self.assertGreaterEqual(counts[role], ROLE_FLOOR,
+                                    f'{role} carries {counts[role]} triangles; the ablation needs a '
+                                    f'surface, not a token')
+
+    def test_the_cluster_is_not_the_legacy_crate_restated(self):
+        """A count comparison is not enough on its own, so the shapes are fingerprinted.
+
+        The crate is 1,536 triangles and the cluster 4,745, but a restated legacy mesh in a larger batch
+        would pass a count. Normalised into its own bounds the cluster has to reduce to a different set.
+        """
+        data = convoy_mesh()
+        self.assertEqual(data['features']['legacy_shape'], CONVOY_LEGACY_SHAPE)
+        self.assertEqual(data['features']['ship_kind'], 'convoy')
+        self.assertEqual(data['features']['station_radius'], 32.0)
+        self.assertEqual(data['features']['authority'], 'script')
+        self.assertEqual(data['features']['binding'], CONVOY_BINDING)
+        self.assertEqual(data['features']['data_id'], CONVOY_DATA_ID)
+        self.assertEqual(data['features']['approval'], 'pending_owner_approval')
+        self.assertEqual(data['features']['seed_recipe'].split(';')[0], SEED)
+        self.assertEqual(data['features']['legacy_envelope'],
+                         [list(axis) for axis in CONVOY_ENVELOPE])
+        self.assertIn('no external mesh or texture dependencies', data['features']['provenance'])
+        # Measured against the live legacy crate, not against a transcribed vertex list. The corner
+        # count is the probe's own convention (`len(set(verts))` over the raw corners, not rounded):
+        # four of the crate's corners differ only below the exporter's 5e-6 quantiser.
+        lo, hi, points, triangles = legacy_geometry(CONVOY_LEGACY_SHAPE)
+        self.assertEqual(triangles, CONVOY_LEGACY_TRIANGLES)
+        self.assertEqual(len({tuple(p) for p in points}), CONVOY_LEGACY_VERTICES)
+        self.assertNotEqual(authored_fingerprint(dict(mesh=CONVOY_MESH)), fingerprint(points, lo, hi),
+                            'a restated legacy hull reduces to the legacy shape set')
+
+
+class ConvoyWrapperContract(unittest.TestCase):
+    def test_the_generator_declares_the_row_and_its_own_wrapper_carries_it(self):
+        text = GENERATOR.read_text(encoding='utf-8')
+        entry = re.search(r"ASSETS\['imperial_convoy'\] = \((.*?)\)\n", text, re.S)
+        self.assertTrue(entry, 'the wrapper table must carry the row')
+        block = entry.group(1)
+        self.assertIn(CONVOY_LABEL, block)
+        self.assertIn('48.9', block)
+        for token in ('((-20.0, 20.0), (-7.0, 26.5), (-24.6975, 24.35825))', '11888', '9450',
+                      '2_000_000'):
+            self.assertIn(token, block, f'the generated entry declares {token}')
+        written = CONVOY_WRAPPER.read_text(encoding='utf-8')
+        for token in CONVOY_WRAPPER_TOKENS:
+            self.assertIn(token, written, token)
+
+    def test_the_row_declares_no_floor_of_its_own(self):
+        """The row is above the 1,800 hull floor, so it carries the standard ship caps and no floor."""
+        self.assertNotIn('MIN_TRIANGLES =', CONVOY_WRAPPER.read_text(encoding='utf-8'))
+
+    def test_regenerating_the_wrappers_writes_nothing(self):
+        """Regenerating must not rewrite any other row's wrapper: an approval hashes it."""
+        generator = subprocess.run([str(ROOT / '.venv/bin/python'),
+                                    str(ROOT / 'tools/art/gen_export_wrappers.py'), '--check'],
+                                   cwd=ROOT, capture_output=True, text=True)
+        self.assertIn('0 written', generator.stdout,
+                      f'the generator rewrote wrappers: {generator.stdout.strip()}')
+
+
+class ConvoyNotLanded(unittest.TestCase):
+    def test_no_manifest_exists_because_a_manifest_is_the_landing_artifact(self):
+        self.assertFalse(CONVOY_MANIFEST.exists(),
+                         'a pending row may not carry a manifest: the manifest is the landing artifact')
+        self.assertEqual(convoy_mesh()['asset'], CONVOY_IDENTIFIER)
+
+    def test_the_row_is_absent_from_the_production_pipeline_and_from_every_approval(self):
+        pipeline = load(ROOT / 'art/manifests/pipeline.json')
+        approvals = json.dumps([e for e in load(ROOT / 'art/manifests/approvals.json')
+                                ['approved_assets'] if isinstance(e, dict)])
+        receipts = load(ROOT / 'assets/models/approval-receipts.json')['receipts']
+        self.assertNotIn(CONVOY_REGISTRY_KEY, {a['binding'] for a in pipeline['assets']})
+        self.assertNotIn(CONVOY_BINDING, approvals)
+        self.assertNotIn(CONVOY_IDENTIFIER, approvals)
+        self.assertNotIn(CONVOY_ASSET_ID, receipts)
+
+    def test_the_registry_row_is_declared_and_carries_no_decision(self):
+        """The row is *declared*, not registered: the manifest id is there, the decision is not."""
+        registry = json.loads((ROOT / 'assets/models/registry.json').read_text())
+        row = next(b for b in registry['bindings'] if b['binding'] == CONVOY_REGISTRY_KEY)
+        self.assertEqual(row['manifest'], CONVOY_ASSET_ID)
+        self.assertEqual(row['category'], 'logistics_hull')
+        self.assertEqual(row['status'], 'procedural_legacy')
+        for key in ('approval', 'owner_decision', 'envelope_decision', 'appearance_decision'):
+            self.assertNotIn(key, row)
+
+    def test_the_sidecar_is_the_siblings_shape_without_the_approval(self):
+        """The three siblings' sidecars *are* approvals; this one is not, because the owner has not
+        seen the row. That difference is one key and one status, and both are asserted."""
+        doc = load(CONVOY_SIDECAR)
+        sibling = load(ROOT / 'art/manifests/pending/S06-ALLIANCE-CONVOY.json')
+        self.assertEqual(list(doc), [key for key in sibling if key != 'appearance_decision'],
+                         "the sidecar is the siblings' shape, minus the approval")
+        self.assertEqual(sibling['status'], 'appearance_approved_pending_landing')
+        self.assertIn('appearance_decision', sibling)
+        self.assertEqual(doc['status'], 'authored_pending_owner_appearance_approval')
+        self.assertIsNone(doc['owner_decision'])
+        self.assertIs(doc['activation'], False)
+        self.assertNotIn('appearance_decision', doc)
+        self.assertEqual(doc['binding'], CONVOY_REGISTRY_KEY)
+        self.assertEqual(doc['canonical_binding'], CONVOY_BINDING)
+        self.assertEqual(doc['batch'], 's06-b6-imperial-ships')
+        self.assertEqual(doc['gameplay_entity'], CONVOY_DATA_ID)
+        self.assertEqual(doc['export_script']['path'], 'tools/art/export_imperial_convoy.py')
+        self.assertEqual(doc['initial_seed']['path'], SEED)
+        self.assertEqual(doc['initial_seed']['selects'], f'--asset {CONVOY_BINDING}')
+
+    def test_the_sidecar_re_derives_from_the_files_on_disk(self):
+        """A sidecar that transcribes is a second source of truth; these are re-derived here."""
+        doc = load(CONVOY_SIDECAR)
+        for key, path in (('source', CONVOY_BLEND), ('initial_seed', ROOT / SEED),
+                          ('export_script', CONVOY_WRAPPER), ('runtime', CONVOY_MESH)):
+            with self.subTest(field=key):
+                payload = Path(path).read_bytes()
+                self.assertEqual(doc[key]['sha256'], hashlib.sha256(payload).hexdigest())
+                self.assertEqual(doc[key]['bytes'], len(payload))
+
+    def test_the_evidence_is_the_picture_the_owner_is_asked_to_judge(self):
+        """The review record points at the capture, and the capture carries its own measurements."""
+        doc = load(CONVOY_SIDECAR)
+        picture = ROOT / doc['evidence']
+        self.assertTrue(picture.exists(), f'{doc["evidence"]} is what this row is reviewed from')
+        report = load(picture.parent / 'report.json')
+        self.assertEqual(report['row'], CONVOY_BINDING)
+        self.assertEqual(report['registry_key'], CONVOY_REGISTRY_KEY)
+        self.assertEqual(report['sheet']['image'], picture.name)
+        self.assertEqual(report['sheet']['sha256'], hashlib.sha256(picture.read_bytes()).hexdigest())
+        self.assertTrue(report['one_camera_per_view'])
+        self.assertTrue(report['production_candidate_unselected_after_review'])
+        self.assertEqual(report['legacy']['triangles'], CONVOY_LEGACY_TRIANGLES)
+        self.assertAlmostEqual(report['drawn_size']['legacy']['scale'],
+                               report['drawn_size']['candidate']['scale'], places=9,
+                               msg='the class scale is the same on both sides of the flip')
+        for view in ('close', 'wide'):
+            with self.subTest(view=view):
+                entry = report['comparison'][view]
+                self.assertGreater(entry['changed_pixels'], 0, 'the pair has to differ')
+                self.assertEqual(entry['repeat_changed_pixels'], 0,
+                                 'the legacy variant has to be repeatable, or the pair is not one tick')
+                self.assertEqual(entry['repeat_max_delta'], 0)
+                for variant in ('legacy', 'authored', 'legacy-repeat'):
+                    self.assertEqual(report['display']['per_pass'][variant]['samples'], 4,
+                                     'every pass is 4x MSAA')
+                    shot = report['views'][view][variant]
+                    self.assertEqual(shot['framing']['corners_on_screen'], 8)
+                    self.assertGreaterEqual(min(shot['framing']['visible_px']), 20)
+                    self.assertEqual(shot['state_sha256'], report['initial_state_sha256'],
+                                     'every variant of a view is the same tick')
+        band = report['sheet']['label_band']
+        self.assertTrue(band and all(CONVOY_REGISTRY_KEY in line or 'legacy' in line for line in band))
+
+
+class ConvoyGate(unittest.TestCase):
+    """The row reached through the seam this batch needed, and nothing served without a session.
+
+    `ship_visual_key` is the facade the review capture goes through, and its two convoy branches are the
+    only place an Imperial convoy row can name `imperial:convoy` at all - the seam and its own regression
+    guard are `tests/test_imperial_convoy_gate.py`, and this class measures it from this row's side.
+    """
+
+    def facade(self):
+        sys.path.insert(0, str(ROOT))
+        import game.core  # noqa: F401  (initialises the data layer the store reads)
+        from game.data.store import DataStore
+        from render import asset_selection as selection
+        from render import faction_visuals as visuals
+        return DataStore.get(), selection, visuals
+
+    def test_an_imperial_trade_convoy_row_reaches_this_rows_key(self):
+        ds, _selection, visuals = self.facade()
+        self.assertEqual(visuals.ship_visual_key(ds, 'trade_convoy', 'imperial'),
+                         CONVOY_REGISTRY_KEY)
+
+    def test_an_imperial_crew_transport_with_crew_space_reaches_the_same_key(self):
+        ds, _selection, visuals = self.facade()
+        data = ds.ships[CONVOY_DATA_ID]
+        self.assertEqual(data.category, 'crew_transport')
+        self.assertGreater(data.crew_capacity, 0)
+        self.assertEqual(visuals.ship_visual_key(ds, CONVOY_DATA_ID), CONVOY_REGISTRY_KEY)
+
+    def test_nothing_at_all_is_served_without_a_preview_session(self):
+        """The key is minted in production as well; what is not is a selection, a mesh, or a new hull.
+
+        Measured, not asserted: with no resolver configured the row's binding is not selected, there is
+        no mesh for it, and the renderer's own mesh path still hands back the legacy crate - which is
+        what the legacy half of the review picture shows.
+        """
+        ds, selection, visuals = self.facade()
+        from render.fleet_geometry import ship_mesh
+        selection.configure({})
+        self.addCleanup(selection.configure, {})
+        self.assertIsNone(selection.ship_binding(ds, 'trade_convoy', 'imperial'))
+        self.assertFalse(selection.selected_binding(CONVOY_REGISTRY_KEY))
+        self.assertIsNone(selection.mesh_for(CONVOY_REGISTRY_KEY))
+        self.assertEqual(visuals.normalize_ship_key(CONVOY_REGISTRY_KEY), CONVOY_LEGACY_SHAPE)
+        self.assertEqual(ship_mesh(CONVOY_REGISTRY_KEY), ship_mesh(CONVOY_LEGACY_SHAPE),
+                         'with nothing served the row still draws the crate it draws today')
+
+    def test_the_probe_serves_it_in_preview_and_nothing_in_stock(self):
+        probe = subprocess.run([str(ROOT / '.venv/bin/python'), str(ROOT / PROBE),
+                                CONVOY_REGISTRY_KEY],
+                               cwd=ROOT, capture_output=True, text=True,
+                               env={'PYTHONPATH': 'tests', 'PATH': os.environ.get('PATH', ''),
+                                    'HOME': os.environ.get('HOME', '')})
+        self.assertIn('SERVING_OK', probe.stdout,
+                      f'{probe.stdout.strip()} / {probe.stderr.strip()[-300:]}')
+        self.assertEqual(probe.returncode, 0, 'the probe refuses a proof that did not happen')
+        self.assertIn("stock      -> 'box'", probe.stdout)
+        self.assertIn(f"review     -> '{CONVOY_REGISTRY_KEY}'", probe.stdout)
