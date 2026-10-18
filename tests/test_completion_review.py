@@ -22,6 +22,18 @@ def adapter():
 
 
 class CompletionReviewTests(unittest.TestCase):
+    def test_station_views_centre_positive_y_hardware_with_extra_clearance(self):
+        review = adapter()
+        self.assertTrue(hasattr(review, 'framed_views'))
+        harness = review.load_harness()
+        path = next((ROOT/'art/manifests/pending').glob('S06-BATCH-B7-*.json'))
+        row = next(a for a in review.derive_spec(path)['assets'] if a['station_kind']=='fighter_platform')
+        original = harness.views_for(row, 200., 150.)
+        result = review.framed_views(harness, row, 200., 150.)
+        self.assertGreater(result['close']['target'][1], original['close']['target'][1])
+        self.assertGreater(result['close']['distance'], original['close']['distance'])
+        self.assertEqual(result['tactical'], original['tactical'])
+
     def test_all_rows_station_roles_unique_labels_and_scaffold_proof(self):
         review = adapter()
         counts = []

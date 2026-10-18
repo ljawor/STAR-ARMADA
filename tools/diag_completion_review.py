@@ -83,6 +83,20 @@ def load_harness():
     return module
 
 
+def framed_views(harness, asset, length, close_floor=None):
+    """Frame tall positive-Y stations around their actual visual-envelope centre."""
+    views = harness.views_for(asset, length, close_floor)
+    if asset.get('station_kind'):
+        scale = harness.station_scale(asset)
+        low, high = asset['envelope']
+        centre_y = (low[1]+high[1]) * .5 * scale
+        span = max(high[i]-low[i] for i in range(3)) * scale
+        for name in ('close', 'rear'):
+            views[name]['target'][1] += centre_y
+            views[name]['distance'] = max(views[name]['distance'], span*1.7)
+    return views
+
+
 def check_report(spec, report):
     for flag in ('source_preserved', 'protected_files_preserved',
                  'production_candidates_unselected_after_review'):
@@ -110,12 +124,18 @@ def main(argv=None):
     sys.path.insert(0, str(ROOT))
     from render import asset_selection as selection
     harness, previous = load_harness(), sys.argv
+    from types import SimpleNamespace
+    original_views = harness.views_for
+    view_helpers = SimpleNamespace(views_for=original_views, station_scale=harness.station_scale)
+    harness.views_for = lambda asset, length, close_floor=None: framed_views(
+        view_helpers, asset, length, close_floor)
     try:
         with selected_seam(selection, {a['binding'] for a in spec['assets']}):
             sys.argv = [str(ROOT / 'tools/diag_alliance_batch_review.py'), '--spec', str(derived),
                         '--out', str(out / 'render'), '--skip-motion']
             harness.main()
     finally:
+        harness.views_for = original_views
         sys.argv = previous
         selection.configure({})
         assert before == {p: sha256(p) for p in protected}, 'protected source changed'
