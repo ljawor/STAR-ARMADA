@@ -1,0 +1,25 @@
+test_every_inventory_row_is_accounted_for_without_inventing_approval (test_model_coverage_reconciliation.CoverageReconciliation.test_every_inventory_row_is_accounted_for_without_inventing_approval) ... FAIL
+
+======================================================================
+FAIL: test_every_inventory_row_is_accounted_for_without_inventing_approval (test_model_coverage_reconciliation.CoverageReconciliation.test_every_inventory_row_is_accounted_for_without_inventing_approval)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_model_coverage_reconciliation.py", line 30, in test_every_inventory_row_is_accounted_for_without_inventing_approval
+    self.assertEqual(report['counts']['dispositions'], {
+AssertionError: {'app[46 chars] 4, 'deferred_texture_pipeline': 10, 'missing_[34 chars]': 3} != {'app[46 chars] 4, 'pending_appearance': 27, 'deferred_textur[40 chars]': 3}
+  {'approved_asset': 76,
+   'approved_shared_candidate': 4,
+   'deferred_texture_pipeline': 10,
+-  'missing_mesh': 27,
+-  'outside_mesh_catalogue': 3}
+?                             ^
+
++  'outside_mesh_catalogue': 3,
+?                             ^
+
++  'pending_appearance': 27}
+
+----------------------------------------------------------------------
+Ran 1 test in 0.025s
+
+FAILED (failures=1)

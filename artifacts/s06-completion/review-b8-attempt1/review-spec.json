@@ -1,0 +1,354 @@
+{
+  "schema": 1,
+  "batch": "s06-b8-remaining-combat",
+  "status": "pending_owner_appearance_approval",
+  "owner_decision": null,
+  "activation": false,
+  "note": "Initial seed recipes only. Five original Confederacy twin-prong industrial hulls and three asymmetric Syndicate salvage hulls. Editable blends are authoritative after initial seeding. No build, export, measured geometry, rendering, appearance approval, registration or activation is asserted by this sheet.",
+  "overview_camera": {
+    "yaw": 90,
+    "pitch": 40,
+    "distance": 4000
+  },
+  "close_distance_floor": 150,
+  "assets": [
+    {
+      "binding": "confederacy:corvette",
+      "label": "confederacy-corvette",
+      "identifier": "confed_corvette",
+      "data_id": "confed_corvette",
+      "gameplay_entity": "confed_corvette",
+      "faction": "confederacy",
+      "class": "combat_hull",
+      "authority": "blend",
+      "seed": "tools/art/build_b8_remaining_combat.py",
+      "seed_arg": "--asset confederacy:corvette",
+      "mesh": "assets/models/confed_corvette.mesh.json",
+      "envelope": [
+        [
+          -31.713844,
+          -7.0,
+          -38.49
+        ],
+        [
+          31.713844,
+          15.1,
+          48.06775
+        ]
+      ],
+      "min_length": 86.35775,
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ],
+      "design": "Compact twin-prong patrol hammer with a transverse stern drive block"
+    },
+    {
+      "binding": "confederacy:frigate",
+      "label": "confederacy-frigate",
+      "identifier": "confed_frigate",
+      "data_id": "confed_frigate",
+      "gameplay_entity": "confed_frigate",
+      "faction": "confederacy",
+      "class": "combat_hull",
+      "authority": "blend",
+      "seed": "tools/art/build_b8_remaining_combat.py",
+      "seed_arg": "--asset confederacy:frigate",
+      "mesh": "assets/models/confed_frigate.mesh.json",
+      "envelope": [
+        [
+          -48.070766,
+          -8.5,
+          -60.475
+        ],
+        [
+          48.070766,
+          15.1,
+          72.56775
+        ]
+      ],
+      "min_length": 132.84275000000002,
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ],
+      "design": "Long split-rail escort with narrow parallel forward gun prongs"
+    },
+    {
+      "binding": "confederacy:cruiser",
+      "label": "confederacy-cruiser",
+      "identifier": "confed_cruiser",
+      "data_id": "confed_cruiser",
+      "gameplay_entity": "confed_cruiser",
+      "faction": "confederacy",
+      "class": "combat_hull",
+      "authority": "blend",
+      "seed": "tools/art/build_b8_remaining_combat.py",
+      "seed_arg": "--asset confederacy:cruiser",
+      "mesh": "assets/models/confed_cruiser.mesh.json",
+      "envelope": [
+        [
+          -75.392305,
+          -10.0,
+          -80.31
+        ],
+        [
+          75.392305,
+          15.655,
+          94.61775
+        ]
+      ],
+      "min_length": 174.72775000000001,
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ],
+      "design": "Broad shouldered twin-prong cruiser with armoured wing batteries"
+    },
+    {
+      "binding": "confederacy:battleship",
+      "label": "confederacy-battleship",
+      "identifier": "confed_battleship",
+      "data_id": "confed_battleship",
+      "gameplay_entity": "confed_battleship",
+      "faction": "confederacy",
+      "class": "combat_hull",
+      "authority": "blend",
+      "seed": "tools/art/build_b8_remaining_combat.py",
+      "seed_arg": "--asset confederacy:battleship",
+      "mesh": "assets/models/confed_battleship.mesh.json",
+      "envelope": [
+        [
+          -109.856406,
+          -14.0,
+          -129.825
+        ],
+        [
+          109.856406,
+          49.5,
+          138.05575
+        ]
+      ],
+      "min_length": 267.68075,
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ],
+      "design": "Double-deck industrial battleship with deep fork and four broadside casemates"
+    },
+    {
+      "binding": "confederacy:supercapital",
+      "label": "confederacy-supercapital",
+      "identifier": "confed_supercapital",
+      "data_id": "confed_supercapital",
+      "gameplay_entity": "confed_supercapital",
+      "faction": "confederacy",
+      "class": "combat_hull",
+      "authority": "blend",
+      "seed": "tools/art/build_b8_remaining_combat.py",
+      "seed_arg": "--asset confederacy:supercapital",
+      "mesh": "assets/models/confed_supercapital.mesh.json",
+      "envelope": [
+        [
+          -147.0,
+          -29.605,
+          -178.825
+        ],
+        [
+          147.0,
+          49.5,
+          187.05575
+        ]
+      ],
+      "min_length": 365.68075,
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ],
+      "design": "Fortress carrier with twin heavy prongs, stepped command citadel and outboard hangars"
+    },
+    {
+      "binding": "syndicate:corvette",
+      "label": "syndicate-corvette",
+      "identifier": "syndicate_corvette",
+      "data_id": "syndicate_corvette",
+      "gameplay_entity": "syndicate_corvette",
+      "faction": "syndicate",
+      "class": "combat_hull",
+      "authority": "blend",
+      "seed": "tools/art/build_b8_remaining_combat.py",
+      "seed_arg": "--asset syndicate:corvette",
+      "mesh": "assets/models/syndicate_corvette.mesh.json",
+      "envelope": [
+        [
+          -22.36926,
+          -9.0,
+          -44.025
+        ],
+        [
+          30.672491,
+          44.0,
+          38.4
+        ]
+      ],
+      "min_length": 82.225,
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ],
+      "design": "Offset salvage cutter with one long gun spine and short port engine pod"
+    },
+    {
+      "binding": "syndicate:frigate",
+      "label": "syndicate-frigate",
+      "identifier": "syndicate_frigate",
+      "data_id": "syndicate_frigate",
+      "gameplay_entity": "syndicate_frigate",
+      "faction": "syndicate",
+      "class": "combat_hull",
+      "authority": "blend",
+      "seed": "tools/art/build_b8_remaining_combat.py",
+      "seed_arg": "--asset syndicate:frigate",
+      "mesh": "assets/models/syndicate_frigate.mesh.json",
+      "envelope": [
+        [
+          -31.829605,
+          -9.0,
+          -70.51
+        ],
+        [
+          43.872131,
+          44.0,
+          62.4
+        ]
+      ],
+      "min_length": 132.71,
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ],
+      "design": "Asymmetric raider with high salvage tower and starboard freight sponson"
+    },
+    {
+      "binding": "syndicate:cruiser",
+      "label": "syndicate-cruiser",
+      "identifier": "syndicate_cruiser",
+      "data_id": "syndicate_cruiser",
+      "gameplay_entity": "syndicate_cruiser",
+      "faction": "syndicate",
+      "class": "combat_hull",
+      "authority": "blend",
+      "seed": "tools/art/build_b8_remaining_combat.py",
+      "seed_arg": "--asset syndicate:cruiser",
+      "mesh": "assets/models/syndicate_cruiser.mesh.json",
+      "envelope": [
+        [
+          -42.463847,
+          -11.02,
+          -94.395
+        ],
+        [
+          58.551844,
+          44.0,
+          84.0
+        ]
+      ],
+      "min_length": 178.195,
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ],
+      "design": "Salvage arsenal cruiser with unequal broadside stacks and exposed dorsal machinery"
+    }
+  ],
+  "excluded": [],
+  "overview": {
+    "first_x": -4200,
+    "first_z": 0,
+    "spacing": 700,
+    "distance": 4000,
+    "yaw": 90,
+    "pitch": 40,
+    "close_distance_floor": 150
+  },
+  "provenance": {
+    "source": "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/art/manifests/pending/S06-BATCH-B8-REMAINING-COMBAT.json",
+    "source_sha256": "0508f011e0dca453c9e0472ffbedfaffcca00c10501c58434048e94ff36d8054",
+    "adapter": "tools/diag_completion_review.py",
+    "harness": "tools/diag_alliance_batch_review.py",
+    "harness_sha256": "fa45ac7adf1212af7ad84d95bb9a63c75d44e21d35fd69b9fcf4d9554884b044",
+    "note": "In-memory camera schema defaults and binding-unique labels; sheets unchanged."
+  }
+}

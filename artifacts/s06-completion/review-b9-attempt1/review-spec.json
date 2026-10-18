@@ -1,0 +1,392 @@
+{
+  "schema": 1,
+  "batch": "s06-b9-construction",
+  "status": "pending_owner_appearance_approval",
+  "note": "Authoring-only pending batch. Eight editable blend-authoritative hulls and one script-authoritative modular scaffold. No appearance approval, runtime registration, activation, export or rendered proof is asserted. Scaffold requires a separate renderer seam and review path.",
+  "assets": [
+    {
+      "binding": "imperial:constructor",
+      "label": "imperial-constructor",
+      "identifier": "imperial_constructor",
+      "data_id": "imperial_constructor",
+      "gameplay_entity": "imperial_constructor",
+      "faction": "imperial",
+      "class": "construction",
+      "authority": "blend",
+      "seed": "tools/art/build_b9_construction.py",
+      "seed_arg": "--asset imperial:constructor",
+      "mesh": "assets/models/imperial_constructor.mesh.json",
+      "envelope": [
+        [
+          -20.0,
+          -7.0,
+          -24.6975
+        ],
+        [
+          20.0,
+          26.5,
+          24.35825
+        ]
+      ],
+      "min_length": 48.85575,
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ]
+    },
+    {
+      "binding": "imperial:colonizer",
+      "label": "imperial-colonizer",
+      "identifier": "imperial_colonizer",
+      "data_id": "imperial_colonizer",
+      "gameplay_entity": "imperial_colonizer",
+      "faction": "imperial",
+      "class": "construction",
+      "authority": "blend",
+      "seed": "tools/art/build_b9_construction.py",
+      "seed_arg": "--asset imperial:colonizer",
+      "mesh": "assets/models/imperial_colonizer.mesh.json",
+      "envelope": [
+        [
+          -20.0,
+          -7.0,
+          -24.6975
+        ],
+        [
+          20.0,
+          26.5,
+          24.35825
+        ]
+      ],
+      "min_length": 48.85575,
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ]
+    },
+    {
+      "binding": "rebel:constructor",
+      "label": "rebel-constructor",
+      "identifier": "rebel_constructor",
+      "data_id": "rebel_constructor",
+      "gameplay_entity": "rebel_constructor",
+      "faction": "rebel",
+      "class": "construction",
+      "authority": "blend",
+      "seed": "tools/art/build_b9_construction.py",
+      "seed_arg": "--asset rebel:constructor",
+      "mesh": "assets/models/rebel_constructor.mesh.json",
+      "envelope": [
+        [
+          -25.0,
+          -7.0,
+          -38.455
+        ],
+        [
+          25.0,
+          32.451235,
+          35.5
+        ]
+      ],
+      "min_length": 73.755,
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ]
+    },
+    {
+      "binding": "rebel:colonizer",
+      "label": "rebel-colonizer",
+      "identifier": "rebel_colonizer",
+      "data_id": "rebel_colonizer",
+      "gameplay_entity": "rebel_colonizer",
+      "faction": "rebel",
+      "class": "construction",
+      "authority": "blend",
+      "seed": "tools/art/build_b9_construction.py",
+      "seed_arg": "--asset rebel:colonizer",
+      "mesh": "assets/models/rebel_colonizer.mesh.json",
+      "envelope": [
+        [
+          -42.5,
+          -13.5,
+          -46.94
+        ],
+        [
+          42.5,
+          36.5,
+          48.507
+        ]
+      ],
+      "min_length": 95.247,
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ]
+    },
+    {
+      "binding": "confederacy:constructor",
+      "label": "confederacy-constructor",
+      "identifier": "confed_constructor",
+      "data_id": "confed_constructor",
+      "gameplay_entity": "confed_constructor",
+      "faction": "confederacy",
+      "class": "construction",
+      "authority": "blend",
+      "seed": "tools/art/build_b9_construction.py",
+      "seed_arg": "--asset confederacy:constructor",
+      "mesh": "assets/models/confed_constructor.mesh.json",
+      "envelope": [
+        [
+          -37.794229,
+          -8.265,
+          -34.6975
+        ],
+        [
+          37.794229,
+          33.0,
+          34.0
+        ]
+      ],
+      "min_length": 68.4975,
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ]
+    },
+    {
+      "binding": "confederacy:colonizer",
+      "label": "confederacy-colonizer",
+      "identifier": "confed_colonizer",
+      "data_id": "confed_colonizer",
+      "gameplay_entity": "confed_colonizer",
+      "faction": "confederacy",
+      "class": "construction",
+      "authority": "blend",
+      "seed": "tools/art/build_b9_construction.py",
+      "seed_arg": "--asset confederacy:colonizer",
+      "mesh": "assets/models/confed_colonizer.mesh.json",
+      "envelope": [
+        [
+          -52.856406,
+          -7.0,
+          -51.6975
+        ],
+        [
+          52.856406,
+          43.5,
+          55.4475
+        ]
+      ],
+      "min_length": 106.945,
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ]
+    },
+    {
+      "binding": "syndicate:constructor",
+      "label": "syndicate-constructor",
+      "identifier": "syndicate_constructor",
+      "data_id": "syndicate_constructor",
+      "gameplay_entity": "syndicate_constructor",
+      "faction": "syndicate",
+      "class": "construction",
+      "authority": "blend",
+      "seed": "tools/art/build_b9_construction.py",
+      "seed_arg": "--asset syndicate:constructor",
+      "mesh": "assets/models/syndicate_constructor.mesh.json",
+      "envelope": [
+        [
+          -25.714157,
+          -9.0,
+          -40.8725
+        ],
+        [
+          29.98,
+          36.5,
+          32.388
+        ]
+      ],
+      "min_length": 73.0605,
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ]
+    },
+    {
+      "binding": "syndicate:colonizer",
+      "label": "syndicate-colonizer",
+      "identifier": "syndicate_colonizer",
+      "data_id": "syndicate_colonizer",
+      "gameplay_entity": "syndicate_colonizer",
+      "faction": "syndicate",
+      "class": "construction",
+      "authority": "blend",
+      "seed": "tools/art/build_b9_construction.py",
+      "seed_arg": "--asset syndicate:colonizer",
+      "mesh": "assets/models/syndicate_colonizer.mesh.json",
+      "envelope": [
+        [
+          -35.961081,
+          -11.0,
+          -57.8325
+        ],
+        [
+          47.4,
+          36.5,
+          57.4475
+        ]
+      ],
+      "min_length": 115.08,
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ]
+    }
+  ],
+  "motion": [],
+  "excluded": [
+    {
+      "asset": {
+        "binding": "shared:construction_scaffold",
+        "label": "construction_scaffold",
+        "identifier": "shared_construction_scaffold",
+        "data_id": null,
+        "gameplay_entity": "construction:site:scaffold",
+        "faction": "shared",
+        "class": "scaffold",
+        "authority": "script",
+        "seed": "tools/art/build_b9_construction.py",
+        "seed_arg": "--asset shared:construction_scaffold",
+        "mesh": "assets/models/shared_construction_scaffold.mesh.json",
+        "envelope": [
+          [
+            -50.0,
+            0.0,
+            -50.0
+          ],
+          [
+            50.0,
+            50.0,
+            50.0
+          ]
+        ],
+        "min_length": 99.8,
+        "slot": [
+          -4200,
+          0,
+          2200
+        ],
+        "material_roles": [
+          "base",
+          "dark",
+          "trim",
+          "accent",
+          "lit",
+          "cool"
+        ],
+        "review_requires_scaffold_seam": true,
+        "envelope_basis": "renderer._draw_construction_sites structural ring/posts at nominal r=50, frac=1; progress arc is retained effect outside mesh"
+      },
+      "reason": "requires S07 scaffold seam",
+      "proof": {
+        "tools/art/build_b9_construction.py": "79e092578df188ef02d4128e5d74425d7951fddd3075cd0ef3aacda484e4501a",
+        "assets/models/shared_construction_scaffold.mesh.json": "1643a7e19731cb6dac7bcce5e4876a0eead1337690418d7897c7b206901e3a0b",
+        "art/blender/shared_construction_scaffold.blend": "8a632fbdf0bba8c43b8c22d40ae1732938cfebe1d02fbf70cdf65b1f78ee2c39",
+        "tools/art/export_shared_construction_scaffold.py": "1396b7fc3e175e852454a23e37ef05b59a24d7e05953bca14bb276f5a405d2c9",
+        "artifacts/s06-completion/shared_construction_scaffold-export-1.txt": "ec741a410b48888f9b1f1dc341c62e085ff3962bdc8e06271637b3aab7e59c63",
+        "artifacts/s06-completion/shared_construction_scaffold-export-2.txt": "f4b406ac29eb6bc31b1a7115f9c5105f969f0bca47d0c84d9fb96e5ce71fc2b3"
+      }
+    }
+  ],
+  "overview": {
+    "first_x": -4200,
+    "first_z": 0,
+    "spacing": 700,
+    "distance": 5600,
+    "yaw": 90,
+    "pitch": 40,
+    "close_distance_floor": 150
+  },
+  "provenance": {
+    "source": "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/art/manifests/pending/S06-BATCH-B9-CONSTRUCTION.json",
+    "source_sha256": "b978ef0d57f91b5572032e96e2f092314ad09ab68d1a3d32a7a9145f9f7db1e7",
+    "adapter": "tools/diag_completion_review.py",
+    "harness": "tools/diag_alliance_batch_review.py",
+    "harness_sha256": "fa45ac7adf1212af7ad84d95bb9a63c75d44e21d35fd69b9fcf4d9554884b044",
+    "note": "In-memory camera schema defaults and binding-unique labels; sheets unchanged."
+  }
+}

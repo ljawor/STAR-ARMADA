@@ -28,8 +28,9 @@ class CompletionReviewTests(unittest.TestCase):
         harness = review.load_harness()
         path = next((ROOT/'art/manifests/pending').glob('S06-BATCH-B7-*.json'))
         row = next(a for a in review.derive_spec(path)['assets'] if a['station_kind']=='fighter_platform')
-        original = harness.views_for(row, 200., 150.)
-        result = review.framed_views(harness, row, 200., 150.)
+        length = max(hi-lo for lo, hi in zip(*row['envelope'])) * harness.station_scale(row)
+        original = harness.views_for(row, length, 150.)
+        result = review.framed_views(harness, row, length, 150.)
         self.assertGreater(result['close']['target'][1], original['close']['target'][1])
         self.assertGreater(result['close']['distance'], original['close']['distance'])
         self.assertEqual(result['tactical'], original['tactical'])
@@ -134,8 +135,11 @@ class CompletionReviewTests(unittest.TestCase):
                 report['captures'][row['binding']] = {'comparison': {
                     name: {'changed_pixels_gt3': 1} for name in ('close', 'tactical')}}
             (out / 'metrics.json').write_text(json.dumps(report))
+        real_harness = review.load_harness()
+        fake_harness = types.SimpleNamespace(main=main, views_for=real_harness.views_for,
+                                             station_scale=real_harness.station_scale)
         with tempfile.TemporaryDirectory() as tmp, \
-                patch.object(review, 'load_harness', return_value=types.SimpleNamespace(main=main)), \
+                patch.object(review, 'load_harness', return_value=fake_harness), \
                 patch.dict(sys.modules, {'render': types.SimpleNamespace(asset_selection=selection)}):
             self.assertEqual(review.main(['--spec', str(source), '--out', str(Path(tmp) / 'review')]), 0)
             self.assertTrue((Path(tmp) / 'review/review-spec.json').exists())

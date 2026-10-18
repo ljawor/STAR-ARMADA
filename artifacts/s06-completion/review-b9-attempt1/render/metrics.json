@@ -1,0 +1,5193 @@
+{
+  "assets": [
+    {
+      "authority": "blend",
+      "binding": "imperial:constructor",
+      "class": "construction",
+      "data_id": "imperial_constructor",
+      "envelope": [
+        [
+          -20.0,
+          -7.0,
+          -24.6975
+        ],
+        [
+          20.0,
+          26.5,
+          24.35825
+        ]
+      ],
+      "faction": "imperial",
+      "gameplay_entity": "imperial_constructor",
+      "identifier": "imperial_constructor",
+      "label": "imperial-constructor",
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ],
+      "mesh": "assets/models/imperial_constructor.mesh.json",
+      "min_length": 48.85575,
+      "seed": "tools/art/build_b9_construction.py",
+      "seed_arg": "--asset imperial:constructor",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ]
+    },
+    {
+      "authority": "blend",
+      "binding": "imperial:colonizer",
+      "class": "construction",
+      "data_id": "imperial_colonizer",
+      "envelope": [
+        [
+          -20.0,
+          -7.0,
+          -24.6975
+        ],
+        [
+          20.0,
+          26.5,
+          24.35825
+        ]
+      ],
+      "faction": "imperial",
+      "gameplay_entity": "imperial_colonizer",
+      "identifier": "imperial_colonizer",
+      "label": "imperial-colonizer",
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ],
+      "mesh": "assets/models/imperial_colonizer.mesh.json",
+      "min_length": 48.85575,
+      "seed": "tools/art/build_b9_construction.py",
+      "seed_arg": "--asset imperial:colonizer",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ]
+    },
+    {
+      "authority": "blend",
+      "binding": "rebel:constructor",
+      "class": "construction",
+      "data_id": "rebel_constructor",
+      "envelope": [
+        [
+          -25.0,
+          -7.0,
+          -38.455
+        ],
+        [
+          25.0,
+          32.451235,
+          35.5
+        ]
+      ],
+      "faction": "rebel",
+      "gameplay_entity": "rebel_constructor",
+      "identifier": "rebel_constructor",
+      "label": "rebel-constructor",
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ],
+      "mesh": "assets/models/rebel_constructor.mesh.json",
+      "min_length": 73.755,
+      "seed": "tools/art/build_b9_construction.py",
+      "seed_arg": "--asset rebel:constructor",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ]
+    },
+    {
+      "authority": "blend",
+      "binding": "rebel:colonizer",
+      "class": "construction",
+      "data_id": "rebel_colonizer",
+      "envelope": [
+        [
+          -42.5,
+          -13.5,
+          -46.94
+        ],
+        [
+          42.5,
+          36.5,
+          48.507
+        ]
+      ],
+      "faction": "rebel",
+      "gameplay_entity": "rebel_colonizer",
+      "identifier": "rebel_colonizer",
+      "label": "rebel-colonizer",
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ],
+      "mesh": "assets/models/rebel_colonizer.mesh.json",
+      "min_length": 95.247,
+      "seed": "tools/art/build_b9_construction.py",
+      "seed_arg": "--asset rebel:colonizer",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ]
+    },
+    {
+      "authority": "blend",
+      "binding": "confederacy:constructor",
+      "class": "construction",
+      "data_id": "confed_constructor",
+      "envelope": [
+        [
+          -37.794229,
+          -8.265,
+          -34.6975
+        ],
+        [
+          37.794229,
+          33.0,
+          34.0
+        ]
+      ],
+      "faction": "confederacy",
+      "gameplay_entity": "confed_constructor",
+      "identifier": "confed_constructor",
+      "label": "confederacy-constructor",
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ],
+      "mesh": "assets/models/confed_constructor.mesh.json",
+      "min_length": 68.4975,
+      "seed": "tools/art/build_b9_construction.py",
+      "seed_arg": "--asset confederacy:constructor",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ]
+    },
+    {
+      "authority": "blend",
+      "binding": "confederacy:colonizer",
+      "class": "construction",
+      "data_id": "confed_colonizer",
+      "envelope": [
+        [
+          -52.856406,
+          -7.0,
+          -51.6975
+        ],
+        [
+          52.856406,
+          43.5,
+          55.4475
+        ]
+      ],
+      "faction": "confederacy",
+      "gameplay_entity": "confed_colonizer",
+      "identifier": "confed_colonizer",
+      "label": "confederacy-colonizer",
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ],
+      "mesh": "assets/models/confed_colonizer.mesh.json",
+      "min_length": 106.945,
+      "seed": "tools/art/build_b9_construction.py",
+      "seed_arg": "--asset confederacy:colonizer",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ]
+    },
+    {
+      "authority": "blend",
+      "binding": "syndicate:constructor",
+      "class": "construction",
+      "data_id": "syndicate_constructor",
+      "envelope": [
+        [
+          -25.714157,
+          -9.0,
+          -40.8725
+        ],
+        [
+          29.98,
+          36.5,
+          32.388
+        ]
+      ],
+      "faction": "syndicate",
+      "gameplay_entity": "syndicate_constructor",
+      "identifier": "syndicate_constructor",
+      "label": "syndicate-constructor",
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ],
+      "mesh": "assets/models/syndicate_constructor.mesh.json",
+      "min_length": 73.0605,
+      "seed": "tools/art/build_b9_construction.py",
+      "seed_arg": "--asset syndicate:constructor",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ]
+    },
+    {
+      "authority": "blend",
+      "binding": "syndicate:colonizer",
+      "class": "construction",
+      "data_id": "syndicate_colonizer",
+      "envelope": [
+        [
+          -35.961081,
+          -11.0,
+          -57.8325
+        ],
+        [
+          47.4,
+          36.5,
+          57.4475
+        ]
+      ],
+      "faction": "syndicate",
+      "gameplay_entity": "syndicate_colonizer",
+      "identifier": "syndicate_colonizer",
+      "label": "syndicate-colonizer",
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ],
+      "mesh": "assets/models/syndicate_colonizer.mesh.json",
+      "min_length": 115.08,
+      "seed": "tools/art/build_b9_construction.py",
+      "seed_arg": "--asset syndicate:colonizer",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ]
+    }
+  ],
+  "batch": "s06-b9-construction",
+  "captures": {
+    "confederacy:colonizer": {
+      "baseline_geometry": {
+        "1": {
+          "kind": "sphere",
+          "radius": 712.6
+        },
+        "2": {
+          "hi": [
+            31.631632665946082,
+            26.03234145317094,
+            33.18225868332633
+          ],
+          "kind": "ship",
+          "lo": [
+            -31.63163266594608,
+            -4.1891124177516454,
+            -30.938091316673667
+          ]
+        },
+        "3": {
+          "hi": [
+            21.276108743190154,
+            15.863216371760895,
+            45.68105700743768
+          ],
+          "kind": "ship",
+          "lo": [
+            -21.276108743190154,
+            -6.257679042114751,
+            -50.49946799256232
+          ]
+        },
+        "4": {
+          "hi": [
+            59.10698888656212,
+            49.15509775583483,
+            108.78587208258529
+          ],
+          "kind": "ship",
+          "lo": [
+            -59.10698888656212,
+            -24.980459515260325,
+            -115.63535291741472
+          ]
+        },
+        "5": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        },
+        "6": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        }
+      },
+      "candidate_geometry": {
+        "1": {
+          "kind": "sphere",
+          "radius": 712.6
+        },
+        "2": {
+          "hi": [
+            31.631632390331795,
+            26.03234145317094,
+            33.18225868332633
+          ],
+          "kind": "ship",
+          "lo": [
+            -31.631632390331795,
+            -4.1891124177516454,
+            -30.938091316673667
+          ]
+        },
+        "3": {
+          "hi": [
+            21.276108743190154,
+            15.863216371760895,
+            45.68105700743768
+          ],
+          "kind": "ship",
+          "lo": [
+            -21.276108743190154,
+            -6.257679042114751,
+            -50.49946799256232
+          ]
+        },
+        "4": {
+          "hi": [
+            59.10698888656212,
+            49.15509775583483,
+            108.78587208258529
+          ],
+          "kind": "ship",
+          "lo": [
+            -59.10698888656212,
+            -24.980459515260325,
+            -115.63535291741472
+          ]
+        },
+        "5": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        },
+        "6": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        }
+      },
+      "captures": {
+        "after-close": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 35.0,
+            "requested_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "resolved_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "596808581d7d8a32a56812fa100b7b9a55957141be98a3998132d197fc13388f"
+        },
+        "after-common-scale": {
+          "camera": {
+            "distance": 1800.0,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 50.0,
+            "requested_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "resolved_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "target": [
+              -4300,
+              0,
+              2100
+            ],
+            "union_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "596808581d7d8a32a56812fa100b7b9a55957141be98a3998132d197fc13388f"
+        },
+        "after-rear": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 5.0,
+            "requested_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "resolved_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "target": [
+              -4200,
+              -0.96180525,
+              2200
+            ],
+            "union_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "yaw": 178.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "596808581d7d8a32a56812fa100b7b9a55957141be98a3998132d197fc13388f"
+        },
+        "after-tactical": {
+          "camera": {
+            "distance": 357.1503495,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 55.0,
+            "requested_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "resolved_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "596808581d7d8a32a56812fa100b7b9a55957141be98a3998132d197fc13388f"
+        },
+        "before-close": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 35.0,
+            "requested_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "resolved_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "596808581d7d8a32a56812fa100b7b9a55957141be98a3998132d197fc13388f"
+        },
+        "before-common-scale": {
+          "camera": {
+            "distance": 1800.0,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 50.0,
+            "requested_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "resolved_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "target": [
+              -4300,
+              0,
+              2100
+            ],
+            "union_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "596808581d7d8a32a56812fa100b7b9a55957141be98a3998132d197fc13388f"
+        },
+        "before-rear": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 5.0,
+            "requested_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "resolved_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "target": [
+              -4200,
+              -0.96180525,
+              2200
+            ],
+            "union_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "yaw": 178.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "596808581d7d8a32a56812fa100b7b9a55957141be98a3998132d197fc13388f"
+        },
+        "before-tactical": {
+          "camera": {
+            "distance": 357.1503495,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 55.0,
+            "requested_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "resolved_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "596808581d7d8a32a56812fa100b7b9a55957141be98a3998132d197fc13388f"
+        }
+      },
+      "comparison": {
+        "close": {
+          "bbox": [
+            379,
+            139,
+            900,
+            660
+          ],
+          "changed_percent": 14.1692,
+          "changed_pixels_gt3": 145093
+        },
+        "common-scale": {
+          "bbox": [
+            599,
+            411,
+            673,
+            485
+          ],
+          "changed_percent": 0.0776,
+          "changed_pixels_gt3": 795
+        },
+        "rear": {
+          "bbox": [
+            399,
+            154,
+            880,
+            635
+          ],
+          "changed_percent": 11.0451,
+          "changed_pixels_gt3": 113102
+        },
+        "tactical": {
+          "bbox": [
+            535,
+            295,
+            744,
+            504
+          ],
+          "changed_percent": 2.9463,
+          "changed_pixels_gt3": 30170
+        }
+      },
+      "features": {
+        "accent": {
+          "bbox": [
+            488,
+            250,
+            825,
+            472
+          ],
+          "camera": "close",
+          "changed_pixels": 3889
+        },
+        "cool": {
+          "bbox": [
+            638,
+            284,
+            647,
+            340
+          ],
+          "camera": "rear",
+          "changed_pixels": 550
+        },
+        "dark": {
+          "bbox": [
+            414,
+            388,
+            835,
+            587
+          ],
+          "camera": "close",
+          "changed_pixels": 3916
+        }
+      },
+      "initial_state_sha256": "596808581d7d8a32a56812fa100b7b9a55957141be98a3998132d197fc13388f",
+      "restored_changed_pixels": 0,
+      "views": {
+        "close": {
+          "distance": 150,
+          "pitch": 35.0,
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "yaw": 48.0
+        },
+        "common-scale": {
+          "distance": 1800.0,
+          "pitch": 50.0,
+          "target": [
+            -4300,
+            0,
+            2100
+          ],
+          "yaw": 48.0
+        },
+        "rear": {
+          "distance": 150,
+          "pitch": 5.0,
+          "target": [
+            -4200,
+            -0.96180525,
+            2200
+          ],
+          "yaw": 178.0
+        },
+        "tactical": {
+          "distance": 357.1503495,
+          "pitch": 55.0,
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "yaw": 48.0
+        }
+      }
+    },
+    "confederacy:constructor": {
+      "baseline_geometry": {
+        "1": {
+          "kind": "sphere",
+          "radius": 712.6
+        },
+        "2": {
+          "hi": [
+            35.27608963930196,
+            30.801288984315303,
+            31.734661377779403
+          ],
+          "kind": "ship",
+          "lo": [
+            -35.27608963930196,
+            -7.7143228319807875,
+            -32.38568862222061
+          ]
+        },
+        "3": {
+          "hi": [
+            21.276108743190154,
+            15.863216371760895,
+            45.68105700743768
+          ],
+          "kind": "ship",
+          "lo": [
+            -21.276108743190154,
+            -6.257679042114751,
+            -50.49946799256232
+          ]
+        },
+        "4": {
+          "hi": [
+            59.10698888656212,
+            49.15509775583483,
+            108.78587208258529
+          ],
+          "kind": "ship",
+          "lo": [
+            -59.10698888656212,
+            -24.980459515260325,
+            -115.63535291741472
+          ]
+        },
+        "5": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        },
+        "6": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        }
+      },
+      "candidate_geometry": {
+        "1": {
+          "kind": "sphere",
+          "radius": 712.6
+        },
+        "2": {
+          "hi": [
+            35.276089980860306,
+            30.801288984315303,
+            31.734661377779403
+          ],
+          "kind": "ship",
+          "lo": [
+            -35.276089980860306,
+            -7.7143228319807875,
+            -32.38568862222061
+          ]
+        },
+        "3": {
+          "hi": [
+            21.276108743190154,
+            15.863216371760895,
+            45.68105700743768
+          ],
+          "kind": "ship",
+          "lo": [
+            -21.276108743190154,
+            -6.257679042114751,
+            -50.49946799256232
+          ]
+        },
+        "4": {
+          "hi": [
+            59.10698888656212,
+            49.15509775583483,
+            108.78587208258529
+          ],
+          "kind": "ship",
+          "lo": [
+            -59.10698888656212,
+            -24.980459515260325,
+            -115.63535291741472
+          ]
+        },
+        "5": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        },
+        "6": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        }
+      },
+      "captures": {
+        "after-close": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 35.0,
+            "requested_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "resolved_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "f068d438156c59e389ac3f9cc21daa73e0977d3f7726954e0fb010961e96e6d4"
+        },
+        "after-common-scale": {
+          "camera": {
+            "distance": 1800.0,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 50.0,
+            "requested_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "resolved_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "target": [
+              -4300,
+              0,
+              2100
+            ],
+            "union_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "f068d438156c59e389ac3f9cc21daa73e0977d3f7726954e0fb010961e96e6d4"
+        },
+        "after-rear": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 5.0,
+            "requested_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "resolved_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "target": [
+              -4200,
+              -0.96180525,
+              2200
+            ],
+            "union_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "yaw": 178.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "f068d438156c59e389ac3f9cc21daa73e0977d3f7726954e0fb010961e96e6d4"
+        },
+        "after-tactical": {
+          "camera": {
+            "distance": 357.1503495,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 55.0,
+            "requested_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "resolved_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "f068d438156c59e389ac3f9cc21daa73e0977d3f7726954e0fb010961e96e6d4"
+        },
+        "before-close": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 35.0,
+            "requested_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "resolved_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "f068d438156c59e389ac3f9cc21daa73e0977d3f7726954e0fb010961e96e6d4"
+        },
+        "before-common-scale": {
+          "camera": {
+            "distance": 1800.0,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 50.0,
+            "requested_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "resolved_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "target": [
+              -4300,
+              0,
+              2100
+            ],
+            "union_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "f068d438156c59e389ac3f9cc21daa73e0977d3f7726954e0fb010961e96e6d4"
+        },
+        "before-rear": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 5.0,
+            "requested_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "resolved_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "target": [
+              -4200,
+              -0.96180525,
+              2200
+            ],
+            "union_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "yaw": 178.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "f068d438156c59e389ac3f9cc21daa73e0977d3f7726954e0fb010961e96e6d4"
+        },
+        "before-tactical": {
+          "camera": {
+            "distance": 357.1503495,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 55.0,
+            "requested_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "resolved_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "f068d438156c59e389ac3f9cc21daa73e0977d3f7726954e0fb010961e96e6d4"
+        }
+      },
+      "comparison": {
+        "close": {
+          "bbox": [
+            368,
+            128,
+            911,
+            671
+          ],
+          "changed_percent": 13.8151,
+          "changed_pixels_gt3": 141467
+        },
+        "common-scale": {
+          "bbox": [
+            599,
+            411,
+            673,
+            485
+          ],
+          "changed_percent": 0.077,
+          "changed_pixels_gt3": 788
+        },
+        "rear": {
+          "bbox": [
+            388,
+            144,
+            891,
+            646
+          ],
+          "changed_percent": 11.1593,
+          "changed_pixels_gt3": 114271
+        },
+        "tactical": {
+          "bbox": [
+            531,
+            291,
+            748,
+            508
+          ],
+          "changed_percent": 2.6429,
+          "changed_pixels_gt3": 27063
+        }
+      },
+      "features": {
+        "accent": {
+          "bbox": [
+            458,
+            285,
+            847,
+            527
+          ],
+          "camera": "close",
+          "changed_pixels": 3757
+        },
+        "cool": {
+          "bbox": [
+            524,
+            263,
+            760,
+            389
+          ],
+          "camera": "rear",
+          "changed_pixels": 1211
+        },
+        "dark": {
+          "bbox": [
+            441,
+            378,
+            856,
+            540
+          ],
+          "camera": "close",
+          "changed_pixels": 7062
+        }
+      },
+      "initial_state_sha256": "f068d438156c59e389ac3f9cc21daa73e0977d3f7726954e0fb010961e96e6d4",
+      "restored_changed_pixels": 0,
+      "views": {
+        "close": {
+          "distance": 150,
+          "pitch": 35.0,
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "yaw": 48.0
+        },
+        "common-scale": {
+          "distance": 1800.0,
+          "pitch": 50.0,
+          "target": [
+            -4300,
+            0,
+            2100
+          ],
+          "yaw": 48.0
+        },
+        "rear": {
+          "distance": 150,
+          "pitch": 5.0,
+          "target": [
+            -4200,
+            -0.96180525,
+            2200
+          ],
+          "yaw": 178.0
+        },
+        "tactical": {
+          "distance": 357.1503495,
+          "pitch": 55.0,
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "yaw": 48.0
+        }
+      }
+    },
+    "imperial:colonizer": {
+      "baseline_geometry": {
+        "1": {
+          "kind": "sphere",
+          "radius": 712.6
+        },
+        "2": {
+          "hi": [
+            26.141828429898638,
+            34.63792266961569,
+            31.83845961762892
+          ],
+          "kind": "ship",
+          "lo": [
+            -26.141828429898638,
+            -9.149639950464524,
+            -32.281890382371074
+          ]
+        },
+        "3": {
+          "hi": [
+            21.276108743190154,
+            15.863216371760895,
+            45.68105700743768
+          ],
+          "kind": "ship",
+          "lo": [
+            -21.276108743190154,
+            -6.257679042114751,
+            -50.49946799256232
+          ]
+        },
+        "4": {
+          "hi": [
+            59.10698888656212,
+            49.15509775583483,
+            108.78587208258529
+          ],
+          "kind": "ship",
+          "lo": [
+            -59.10698888656212,
+            -24.980459515260325,
+            -115.63535291741472
+          ]
+        },
+        "5": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        },
+        "6": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        }
+      },
+      "candidate_geometry": {
+        "1": {
+          "kind": "sphere",
+          "radius": 712.6
+        },
+        "2": {
+          "hi": [
+            26.141828429898638,
+            34.63792266961569,
+            31.838459617628924
+          ],
+          "kind": "ship",
+          "lo": [
+            -26.141828429898638,
+            -9.149639950464524,
+            -32.28189038237108
+          ]
+        },
+        "3": {
+          "hi": [
+            21.276108743190154,
+            15.863216371760895,
+            45.68105700743768
+          ],
+          "kind": "ship",
+          "lo": [
+            -21.276108743190154,
+            -6.257679042114751,
+            -50.49946799256232
+          ]
+        },
+        "4": {
+          "hi": [
+            59.10698888656212,
+            49.15509775583483,
+            108.78587208258529
+          ],
+          "kind": "ship",
+          "lo": [
+            -59.10698888656212,
+            -24.980459515260325,
+            -115.63535291741472
+          ]
+        },
+        "5": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        },
+        "6": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        }
+      },
+      "captures": {
+        "after-close": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 35.0,
+            "requested_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "resolved_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "8a778f224c7b785820f89af87f30de25bf21cb0118e8a227a9317b38a72b2942"
+        },
+        "after-common-scale": {
+          "camera": {
+            "distance": 1800.0,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 50.0,
+            "requested_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "resolved_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "target": [
+              -4300,
+              0,
+              2100
+            ],
+            "union_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "8a778f224c7b785820f89af87f30de25bf21cb0118e8a227a9317b38a72b2942"
+        },
+        "after-rear": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 5.0,
+            "requested_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "resolved_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "target": [
+              -4200,
+              -0.96180525,
+              2200
+            ],
+            "union_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "yaw": 178.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "8a778f224c7b785820f89af87f30de25bf21cb0118e8a227a9317b38a72b2942"
+        },
+        "after-tactical": {
+          "camera": {
+            "distance": 357.1503495,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 55.0,
+            "requested_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "resolved_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "8a778f224c7b785820f89af87f30de25bf21cb0118e8a227a9317b38a72b2942"
+        },
+        "before-close": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 35.0,
+            "requested_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "resolved_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "8a778f224c7b785820f89af87f30de25bf21cb0118e8a227a9317b38a72b2942"
+        },
+        "before-common-scale": {
+          "camera": {
+            "distance": 1800.0,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 50.0,
+            "requested_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "resolved_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "target": [
+              -4300,
+              0,
+              2100
+            ],
+            "union_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "8a778f224c7b785820f89af87f30de25bf21cb0118e8a227a9317b38a72b2942"
+        },
+        "before-rear": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 5.0,
+            "requested_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "resolved_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "target": [
+              -4200,
+              -0.96180525,
+              2200
+            ],
+            "union_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "yaw": 178.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "8a778f224c7b785820f89af87f30de25bf21cb0118e8a227a9317b38a72b2942"
+        },
+        "before-tactical": {
+          "camera": {
+            "distance": 357.1503495,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 55.0,
+            "requested_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "resolved_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "8a778f224c7b785820f89af87f30de25bf21cb0118e8a227a9317b38a72b2942"
+        }
+      },
+      "comparison": {
+        "close": {
+          "bbox": [
+            401,
+            161,
+            878,
+            638
+          ],
+          "changed_percent": 9.3822,
+          "changed_pixels_gt3": 96074
+        },
+        "common-scale": {
+          "bbox": [
+            619,
+            432,
+            654,
+            464
+          ],
+          "changed_percent": 0.0641,
+          "changed_pixels_gt3": 656
+        },
+        "rear": {
+          "bbox": [
+            419,
+            174,
+            860,
+            616
+          ],
+          "changed_percent": 6.7876,
+          "changed_pixels_gt3": 69505
+        },
+        "tactical": {
+          "bbox": [
+            543,
+            303,
+            736,
+            496
+          ],
+          "changed_percent": 1.6003,
+          "changed_pixels_gt3": 16387
+        }
+      },
+      "features": {
+        "accent": {
+          "bbox": [
+            496,
+            230,
+            810,
+            479
+          ],
+          "camera": "close",
+          "changed_pixels": 3696
+        },
+        "cool": {
+          "bbox": [
+            638,
+            239,
+            648,
+            320
+          ],
+          "camera": "rear",
+          "changed_pixels": 811
+        },
+        "dark": {
+          "bbox": [
+            436,
+            370,
+            818,
+            586
+          ],
+          "camera": "close",
+          "changed_pixels": 3921
+        }
+      },
+      "initial_state_sha256": "8a778f224c7b785820f89af87f30de25bf21cb0118e8a227a9317b38a72b2942",
+      "restored_changed_pixels": 0,
+      "views": {
+        "close": {
+          "distance": 150,
+          "pitch": 35.0,
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "yaw": 48.0
+        },
+        "common-scale": {
+          "distance": 1800.0,
+          "pitch": 50.0,
+          "target": [
+            -4300,
+            0,
+            2100
+          ],
+          "yaw": 48.0
+        },
+        "rear": {
+          "distance": 150,
+          "pitch": 5.0,
+          "target": [
+            -4200,
+            -0.96180525,
+            2200
+          ],
+          "yaw": 178.0
+        },
+        "tactical": {
+          "distance": 357.1503495,
+          "pitch": 55.0,
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "yaw": 48.0
+        }
+      }
+    },
+    "imperial:constructor": {
+      "baseline_geometry": {
+        "1": {
+          "kind": "sphere",
+          "radius": 712.6
+        },
+        "2": {
+          "hi": [
+            26.141828429898638,
+            34.63792266961569,
+            31.83845961762892
+          ],
+          "kind": "ship",
+          "lo": [
+            -26.141828429898638,
+            -9.149639950464524,
+            -32.281890382371074
+          ]
+        },
+        "3": {
+          "hi": [
+            21.276108743190154,
+            15.863216371760895,
+            45.68105700743768
+          ],
+          "kind": "ship",
+          "lo": [
+            -21.276108743190154,
+            -6.257679042114751,
+            -50.49946799256232
+          ]
+        },
+        "4": {
+          "hi": [
+            59.10698888656212,
+            49.15509775583483,
+            108.78587208258529
+          ],
+          "kind": "ship",
+          "lo": [
+            -59.10698888656212,
+            -24.980459515260325,
+            -115.63535291741472
+          ]
+        },
+        "5": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        },
+        "6": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        }
+      },
+      "candidate_geometry": {
+        "1": {
+          "kind": "sphere",
+          "radius": 712.6
+        },
+        "2": {
+          "hi": [
+            26.141828429898638,
+            34.63792266961569,
+            31.838459617628924
+          ],
+          "kind": "ship",
+          "lo": [
+            -26.141828429898638,
+            -9.149639950464524,
+            -32.28189038237108
+          ]
+        },
+        "3": {
+          "hi": [
+            21.276108743190154,
+            15.863216371760895,
+            45.68105700743768
+          ],
+          "kind": "ship",
+          "lo": [
+            -21.276108743190154,
+            -6.257679042114751,
+            -50.49946799256232
+          ]
+        },
+        "4": {
+          "hi": [
+            59.10698888656212,
+            49.15509775583483,
+            108.78587208258529
+          ],
+          "kind": "ship",
+          "lo": [
+            -59.10698888656212,
+            -24.980459515260325,
+            -115.63535291741472
+          ]
+        },
+        "5": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        },
+        "6": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        }
+      },
+      "captures": {
+        "after-close": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 35.0,
+            "requested_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "resolved_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "9ce60afd2a61947819e979bfc3e4999a248418062ec3394f97dd771a2af1dae3"
+        },
+        "after-common-scale": {
+          "camera": {
+            "distance": 1800.0,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 50.0,
+            "requested_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "resolved_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "target": [
+              -4300,
+              0,
+              2100
+            ],
+            "union_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "9ce60afd2a61947819e979bfc3e4999a248418062ec3394f97dd771a2af1dae3"
+        },
+        "after-rear": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 5.0,
+            "requested_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "resolved_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "target": [
+              -4200,
+              -0.96180525,
+              2200
+            ],
+            "union_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "yaw": 178.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "9ce60afd2a61947819e979bfc3e4999a248418062ec3394f97dd771a2af1dae3"
+        },
+        "after-tactical": {
+          "camera": {
+            "distance": 357.1503495,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 55.0,
+            "requested_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "resolved_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "9ce60afd2a61947819e979bfc3e4999a248418062ec3394f97dd771a2af1dae3"
+        },
+        "before-close": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 35.0,
+            "requested_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "resolved_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "9ce60afd2a61947819e979bfc3e4999a248418062ec3394f97dd771a2af1dae3"
+        },
+        "before-common-scale": {
+          "camera": {
+            "distance": 1800.0,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 50.0,
+            "requested_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "resolved_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "target": [
+              -4300,
+              0,
+              2100
+            ],
+            "union_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "9ce60afd2a61947819e979bfc3e4999a248418062ec3394f97dd771a2af1dae3"
+        },
+        "before-rear": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 5.0,
+            "requested_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "resolved_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "target": [
+              -4200,
+              -0.96180525,
+              2200
+            ],
+            "union_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "yaw": 178.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "9ce60afd2a61947819e979bfc3e4999a248418062ec3394f97dd771a2af1dae3"
+        },
+        "before-tactical": {
+          "camera": {
+            "distance": 357.1503495,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 55.0,
+            "requested_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "resolved_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "9ce60afd2a61947819e979bfc3e4999a248418062ec3394f97dd771a2af1dae3"
+        }
+      },
+      "comparison": {
+        "close": {
+          "bbox": [
+            403,
+            163,
+            876,
+            636
+          ],
+          "changed_percent": 7.6894,
+          "changed_pixels_gt3": 78739
+        },
+        "common-scale": {
+          "bbox": [
+            622,
+            432,
+            654,
+            460
+          ],
+          "changed_percent": 0.057,
+          "changed_pixels_gt3": 584
+        },
+        "rear": {
+          "bbox": [
+            421,
+            176,
+            858,
+            613
+          ],
+          "changed_percent": 5.9828,
+          "changed_pixels_gt3": 61264
+        },
+        "tactical": {
+          "bbox": [
+            544,
+            304,
+            735,
+            495
+          ],
+          "changed_percent": 1.424,
+          "changed_pixels_gt3": 14582
+        }
+      },
+      "features": {
+        "accent": {
+          "bbox": [
+            494,
+            298,
+            810,
+            494
+          ],
+          "camera": "close",
+          "changed_pixels": 3075
+        },
+        "cool": {
+          "bbox": [
+            554,
+            241,
+            730,
+            388
+          ],
+          "camera": "rear",
+          "changed_pixels": 2133
+        },
+        "dark": {
+          "bbox": [
+            477,
+            396,
+            818,
+            506
+          ],
+          "camera": "close",
+          "changed_pixels": 3995
+        }
+      },
+      "initial_state_sha256": "9ce60afd2a61947819e979bfc3e4999a248418062ec3394f97dd771a2af1dae3",
+      "restored_changed_pixels": 0,
+      "views": {
+        "close": {
+          "distance": 150,
+          "pitch": 35.0,
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "yaw": 48.0
+        },
+        "common-scale": {
+          "distance": 1800.0,
+          "pitch": 50.0,
+          "target": [
+            -4300,
+            0,
+            2100
+          ],
+          "yaw": 48.0
+        },
+        "rear": {
+          "distance": 150,
+          "pitch": 5.0,
+          "target": [
+            -4200,
+            -0.96180525,
+            2200
+          ],
+          "yaw": 178.0
+        },
+        "tactical": {
+          "distance": 357.1503495,
+          "pitch": 55.0,
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "yaw": 48.0
+        }
+      }
+    },
+    "rebel:colonizer": {
+      "baseline_geometry": {
+        "1": {
+          "kind": "sphere",
+          "radius": 712.6
+        },
+        "2": {
+          "hi": [
+            28.5510793948474,
+            24.520338774398354,
+            32.5865225460203
+          ],
+          "kind": "ship",
+          "lo": [
+            -28.5510793948474,
+            -9.06916639601035,
+            -31.533827453979697
+          ]
+        },
+        "3": {
+          "hi": [
+            21.276108743190154,
+            15.863216371760895,
+            45.68105700743768
+          ],
+          "kind": "ship",
+          "lo": [
+            -21.276108743190154,
+            -6.257679042114751,
+            -50.49946799256232
+          ]
+        },
+        "4": {
+          "hi": [
+            59.10698888656212,
+            49.15509775583483,
+            108.78587208258529
+          ],
+          "kind": "ship",
+          "lo": [
+            -59.10698888656212,
+            -24.980459515260325,
+            -115.63535291741472
+          ]
+        },
+        "5": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        },
+        "6": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        }
+      },
+      "candidate_geometry": {
+        "1": {
+          "kind": "sphere",
+          "radius": 712.6
+        },
+        "2": {
+          "hi": [
+            28.5510793948474,
+            24.520338774398354,
+            32.5865225460203
+          ],
+          "kind": "ship",
+          "lo": [
+            -28.5510793948474,
+            -9.06916639601035,
+            -31.533827453979693
+          ]
+        },
+        "3": {
+          "hi": [
+            21.276108743190154,
+            15.863216371760895,
+            45.68105700743768
+          ],
+          "kind": "ship",
+          "lo": [
+            -21.276108743190154,
+            -6.257679042114751,
+            -50.49946799256232
+          ]
+        },
+        "4": {
+          "hi": [
+            59.10698888656212,
+            49.15509775583483,
+            108.78587208258529
+          ],
+          "kind": "ship",
+          "lo": [
+            -59.10698888656212,
+            -24.980459515260325,
+            -115.63535291741472
+          ]
+        },
+        "5": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        },
+        "6": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        }
+      },
+      "captures": {
+        "after-close": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 35.0,
+            "requested_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "resolved_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "59fcdf830ff54eba06ba8cbb0faff4259fd2ae2c5ef21d1722396e0e50c6392a"
+        },
+        "after-common-scale": {
+          "camera": {
+            "distance": 1800.0,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 50.0,
+            "requested_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "resolved_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "target": [
+              -4300,
+              0,
+              2100
+            ],
+            "union_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "59fcdf830ff54eba06ba8cbb0faff4259fd2ae2c5ef21d1722396e0e50c6392a"
+        },
+        "after-rear": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 5.0,
+            "requested_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "resolved_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "target": [
+              -4200,
+              -0.96180525,
+              2200
+            ],
+            "union_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "yaw": 178.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "59fcdf830ff54eba06ba8cbb0faff4259fd2ae2c5ef21d1722396e0e50c6392a"
+        },
+        "after-tactical": {
+          "camera": {
+            "distance": 357.1503495,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 55.0,
+            "requested_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "resolved_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "59fcdf830ff54eba06ba8cbb0faff4259fd2ae2c5ef21d1722396e0e50c6392a"
+        },
+        "before-close": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 35.0,
+            "requested_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "resolved_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "59fcdf830ff54eba06ba8cbb0faff4259fd2ae2c5ef21d1722396e0e50c6392a"
+        },
+        "before-common-scale": {
+          "camera": {
+            "distance": 1800.0,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 50.0,
+            "requested_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "resolved_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "target": [
+              -4300,
+              0,
+              2100
+            ],
+            "union_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "59fcdf830ff54eba06ba8cbb0faff4259fd2ae2c5ef21d1722396e0e50c6392a"
+        },
+        "before-rear": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 5.0,
+            "requested_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "resolved_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "target": [
+              -4200,
+              -0.96180525,
+              2200
+            ],
+            "union_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "yaw": 178.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "59fcdf830ff54eba06ba8cbb0faff4259fd2ae2c5ef21d1722396e0e50c6392a"
+        },
+        "before-tactical": {
+          "camera": {
+            "distance": 357.1503495,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 55.0,
+            "requested_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "resolved_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "59fcdf830ff54eba06ba8cbb0faff4259fd2ae2c5ef21d1722396e0e50c6392a"
+        }
+      },
+      "comparison": {
+        "close": {
+          "bbox": [
+            391,
+            151,
+            888,
+            648
+          ],
+          "changed_percent": 10.5973,
+          "changed_pixels_gt3": 108516
+        },
+        "common-scale": {
+          "bbox": [
+            618,
+            433,
+            653,
+            465
+          ],
+          "changed_percent": 0.0643,
+          "changed_pixels_gt3": 658
+        },
+        "rear": {
+          "bbox": [
+            410,
+            165,
+            869,
+            625
+          ],
+          "changed_percent": 6.8729,
+          "changed_pixels_gt3": 70379
+        },
+        "tactical": {
+          "bbox": [
+            540,
+            300,
+            739,
+            499
+          ],
+          "changed_percent": 1.8051,
+          "changed_pixels_gt3": 18484
+        }
+      },
+      "features": {
+        "accent": {
+          "bbox": [
+            487,
+            255,
+            811,
+            495
+          ],
+          "camera": "close",
+          "changed_pixels": 6040
+        },
+        "cool": {
+          "bbox": [
+            636,
+            293,
+            650,
+            347
+          ],
+          "camera": "rear",
+          "changed_pixels": 769
+        },
+        "dark": {
+          "bbox": [
+            429,
+            392,
+            824,
+            594
+          ],
+          "camera": "close",
+          "changed_pixels": 5084
+        }
+      },
+      "initial_state_sha256": "59fcdf830ff54eba06ba8cbb0faff4259fd2ae2c5ef21d1722396e0e50c6392a",
+      "restored_changed_pixels": 0,
+      "views": {
+        "close": {
+          "distance": 150,
+          "pitch": 35.0,
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "yaw": 48.0
+        },
+        "common-scale": {
+          "distance": 1800.0,
+          "pitch": 50.0,
+          "target": [
+            -4300,
+            0,
+            2100
+          ],
+          "yaw": 48.0
+        },
+        "rear": {
+          "distance": 150,
+          "pitch": 5.0,
+          "target": [
+            -4200,
+            -0.96180525,
+            2200
+          ],
+          "yaw": 178.0
+        },
+        "tactical": {
+          "distance": 357.1503495,
+          "pitch": 55.0,
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "yaw": 48.0
+        }
+      }
+    },
+    "rebel:constructor": {
+      "baseline_geometry": {
+        "1": {
+          "kind": "sphere",
+          "radius": 712.6
+        },
+        "2": {
+          "hi": [
+            21.675461429247513,
+            28.135820128907334,
+            30.779155229531465
+          ],
+          "kind": "ship",
+          "lo": [
+            -21.675461429247513,
+            -6.069129200189304,
+            -33.341194770468526
+          ]
+        },
+        "3": {
+          "hi": [
+            21.276108743190154,
+            15.863216371760895,
+            45.68105700743768
+          ],
+          "kind": "ship",
+          "lo": [
+            -21.276108743190154,
+            -6.257679042114751,
+            -50.49946799256232
+          ]
+        },
+        "4": {
+          "hi": [
+            59.10698888656212,
+            49.15509775583483,
+            108.78587208258529
+          ],
+          "kind": "ship",
+          "lo": [
+            -59.10698888656212,
+            -24.980459515260325,
+            -115.63535291741472
+          ]
+        },
+        "5": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        },
+        "6": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        }
+      },
+      "candidate_geometry": {
+        "1": {
+          "kind": "sphere",
+          "radius": 712.6
+        },
+        "2": {
+          "hi": [
+            21.675461429247516,
+            28.13581970295788,
+            30.779155229531472
+          ],
+          "kind": "ship",
+          "lo": [
+            -21.675461429247516,
+            -6.0691292001893045,
+            -33.341194770468526
+          ]
+        },
+        "3": {
+          "hi": [
+            21.276108743190154,
+            15.863216371760895,
+            45.68105700743768
+          ],
+          "kind": "ship",
+          "lo": [
+            -21.276108743190154,
+            -6.257679042114751,
+            -50.49946799256232
+          ]
+        },
+        "4": {
+          "hi": [
+            59.10698888656212,
+            49.15509775583483,
+            108.78587208258529
+          ],
+          "kind": "ship",
+          "lo": [
+            -59.10698888656212,
+            -24.980459515260325,
+            -115.63535291741472
+          ]
+        },
+        "5": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        },
+        "6": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        }
+      },
+      "captures": {
+        "after-close": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 35.0,
+            "requested_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "resolved_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "c58be86ac08607bf8c174a2679c6b946fb46e01b5b810fe5901a167e55fc2ecc"
+        },
+        "after-common-scale": {
+          "camera": {
+            "distance": 1800.0,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 50.0,
+            "requested_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "resolved_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "target": [
+              -4300,
+              0,
+              2100
+            ],
+            "union_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "c58be86ac08607bf8c174a2679c6b946fb46e01b5b810fe5901a167e55fc2ecc"
+        },
+        "after-rear": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 5.0,
+            "requested_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "resolved_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "target": [
+              -4200,
+              -0.96180525,
+              2200
+            ],
+            "union_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "yaw": 178.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "c58be86ac08607bf8c174a2679c6b946fb46e01b5b810fe5901a167e55fc2ecc"
+        },
+        "after-tactical": {
+          "camera": {
+            "distance": 357.1503495,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 55.0,
+            "requested_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "resolved_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "c58be86ac08607bf8c174a2679c6b946fb46e01b5b810fe5901a167e55fc2ecc"
+        },
+        "before-close": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 35.0,
+            "requested_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "resolved_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "c58be86ac08607bf8c174a2679c6b946fb46e01b5b810fe5901a167e55fc2ecc"
+        },
+        "before-common-scale": {
+          "camera": {
+            "distance": 1800.0,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 50.0,
+            "requested_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "resolved_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "target": [
+              -4300,
+              0,
+              2100
+            ],
+            "union_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "c58be86ac08607bf8c174a2679c6b946fb46e01b5b810fe5901a167e55fc2ecc"
+        },
+        "before-rear": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 5.0,
+            "requested_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "resolved_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "target": [
+              -4200,
+              -0.96180525,
+              2200
+            ],
+            "union_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "yaw": 178.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "c58be86ac08607bf8c174a2679c6b946fb46e01b5b810fe5901a167e55fc2ecc"
+        },
+        "before-tactical": {
+          "camera": {
+            "distance": 357.1503495,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 55.0,
+            "requested_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "resolved_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "c58be86ac08607bf8c174a2679c6b946fb46e01b5b810fe5901a167e55fc2ecc"
+        }
+      },
+      "comparison": {
+        "close": {
+          "bbox": [
+            388,
+            148,
+            891,
+            651
+          ],
+          "changed_percent": 11.7567,
+          "changed_pixels_gt3": 120389
+        },
+        "common-scale": {
+          "bbox": [
+            620,
+            433,
+            653,
+            458
+          ],
+          "changed_percent": 0.0491,
+          "changed_pixels_gt3": 503
+        },
+        "rear": {
+          "bbox": [
+            407,
+            162,
+            872,
+            628
+          ],
+          "changed_percent": 9.6553,
+          "changed_pixels_gt3": 98870
+        },
+        "tactical": {
+          "bbox": [
+            538,
+            298,
+            741,
+            501
+          ],
+          "changed_percent": 2.544,
+          "changed_pixels_gt3": 26051
+        }
+      },
+      "features": {
+        "accent": {
+          "bbox": [
+            497,
+            298,
+            795,
+            482
+          ],
+          "camera": "close",
+          "changed_pixels": 2533
+        },
+        "cool": {
+          "bbox": [
+            572,
+            279,
+            713,
+            388
+          ],
+          "camera": "rear",
+          "changed_pixels": 1697
+        },
+        "dark": {
+          "bbox": [
+            480,
+            322,
+            804,
+            493
+          ],
+          "camera": "close",
+          "changed_pixels": 3836
+        }
+      },
+      "initial_state_sha256": "c58be86ac08607bf8c174a2679c6b946fb46e01b5b810fe5901a167e55fc2ecc",
+      "restored_changed_pixels": 0,
+      "views": {
+        "close": {
+          "distance": 150,
+          "pitch": 35.0,
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "yaw": 48.0
+        },
+        "common-scale": {
+          "distance": 1800.0,
+          "pitch": 50.0,
+          "target": [
+            -4300,
+            0,
+            2100
+          ],
+          "yaw": 48.0
+        },
+        "rear": {
+          "distance": 150,
+          "pitch": 5.0,
+          "target": [
+            -4200,
+            -0.96180525,
+            2200
+          ],
+          "yaw": 178.0
+        },
+        "tactical": {
+          "distance": 357.1503495,
+          "pitch": 55.0,
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "yaw": 48.0
+        }
+      }
+    },
+    "syndicate:colonizer": {
+      "baseline_geometry": {
+        "1": {
+          "kind": "sphere",
+          "radius": 712.6
+        },
+        "2": {
+          "hi": [
+            26.364543632893827,
+            20.301811025329634,
+            31.953103804866412
+          ],
+          "kind": "ship",
+          "lo": [
+            -20.00205690873711,
+            -6.118354007633588,
+            -32.16724619513359
+          ]
+        },
+        "3": {
+          "hi": [
+            21.276108743190154,
+            15.863216371760895,
+            45.68105700743768
+          ],
+          "kind": "ship",
+          "lo": [
+            -21.276108743190154,
+            -6.257679042114751,
+            -50.49946799256232
+          ]
+        },
+        "4": {
+          "hi": [
+            59.10698888656212,
+            49.15509775583483,
+            108.78587208258529
+          ],
+          "kind": "ship",
+          "lo": [
+            -59.10698888656212,
+            -24.980459515260325,
+            -115.63535291741472
+          ]
+        },
+        "5": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        },
+        "6": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        }
+      },
+      "candidate_geometry": {
+        "1": {
+          "kind": "sphere",
+          "radius": 712.6
+        },
+        "2": {
+          "hi": [
+            26.364543632893824,
+            20.301811025329634,
+            31.953103804866412
+          ],
+          "kind": "ship",
+          "lo": [
+            -20.002056732289642,
+            -6.118354007633588,
+            -32.16724619513359
+          ]
+        },
+        "3": {
+          "hi": [
+            21.276108743190154,
+            15.863216371760895,
+            45.68105700743768
+          ],
+          "kind": "ship",
+          "lo": [
+            -21.276108743190154,
+            -6.257679042114751,
+            -50.49946799256232
+          ]
+        },
+        "4": {
+          "hi": [
+            59.10698888656212,
+            49.15509775583483,
+            108.78587208258529
+          ],
+          "kind": "ship",
+          "lo": [
+            -59.10698888656212,
+            -24.980459515260325,
+            -115.63535291741472
+          ]
+        },
+        "5": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        },
+        "6": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        }
+      },
+      "captures": {
+        "after-close": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 35.0,
+            "requested_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "resolved_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "9bc4da27a315b6c85aceaf654d21c73305223070cc85edf6dbca6bcbf5d11041"
+        },
+        "after-common-scale": {
+          "camera": {
+            "distance": 1800.0,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 50.0,
+            "requested_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "resolved_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "target": [
+              -4300,
+              0,
+              2100
+            ],
+            "union_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "9bc4da27a315b6c85aceaf654d21c73305223070cc85edf6dbca6bcbf5d11041"
+        },
+        "after-rear": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 5.0,
+            "requested_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "resolved_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "target": [
+              -4200,
+              -0.96180525,
+              2200
+            ],
+            "union_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "yaw": 178.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "9bc4da27a315b6c85aceaf654d21c73305223070cc85edf6dbca6bcbf5d11041"
+        },
+        "after-tactical": {
+          "camera": {
+            "distance": 357.1503495,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 55.0,
+            "requested_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "resolved_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "9bc4da27a315b6c85aceaf654d21c73305223070cc85edf6dbca6bcbf5d11041"
+        },
+        "before-close": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 35.0,
+            "requested_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "resolved_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "9bc4da27a315b6c85aceaf654d21c73305223070cc85edf6dbca6bcbf5d11041"
+        },
+        "before-common-scale": {
+          "camera": {
+            "distance": 1800.0,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 50.0,
+            "requested_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "resolved_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "target": [
+              -4300,
+              0,
+              2100
+            ],
+            "union_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "9bc4da27a315b6c85aceaf654d21c73305223070cc85edf6dbca6bcbf5d11041"
+        },
+        "before-rear": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 5.0,
+            "requested_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "resolved_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "target": [
+              -4200,
+              -0.96180525,
+              2200
+            ],
+            "union_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "yaw": 178.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "9bc4da27a315b6c85aceaf654d21c73305223070cc85edf6dbca6bcbf5d11041"
+        },
+        "before-tactical": {
+          "camera": {
+            "distance": 357.1503495,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 55.0,
+            "requested_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "resolved_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "9bc4da27a315b6c85aceaf654d21c73305223070cc85edf6dbca6bcbf5d11041"
+        }
+      },
+      "comparison": {
+        "close": {
+          "bbox": [
+            418,
+            178,
+            861,
+            621
+          ],
+          "changed_percent": 10.3283,
+          "changed_pixels_gt3": 105762
+        },
+        "common-scale": {
+          "bbox": [
+            621,
+            432,
+            651,
+            463
+          ],
+          "changed_percent": 0.0474,
+          "changed_pixels_gt3": 485
+        },
+        "rear": {
+          "bbox": [
+            434,
+            190,
+            845,
+            600
+          ],
+          "changed_percent": 7.9147,
+          "changed_pixels_gt3": 81047
+        },
+        "tactical": {
+          "bbox": [
+            550,
+            310,
+            729,
+            489
+          ],
+          "changed_percent": 2.0086,
+          "changed_pixels_gt3": 20568
+        }
+      },
+      "features": {
+        "accent": {
+          "bbox": [
+            500,
+            291,
+            806,
+            486
+          ],
+          "camera": "close",
+          "changed_pixels": 3184
+        },
+        "cool": {
+          "bbox": [
+            632,
+            316,
+            641,
+            377
+          ],
+          "camera": "rear",
+          "changed_pixels": 589
+        },
+        "dark": {
+          "bbox": [
+            450,
+            325,
+            815,
+            560
+          ],
+          "camera": "close",
+          "changed_pixels": 2612
+        }
+      },
+      "initial_state_sha256": "9bc4da27a315b6c85aceaf654d21c73305223070cc85edf6dbca6bcbf5d11041",
+      "restored_changed_pixels": 0,
+      "views": {
+        "close": {
+          "distance": 150,
+          "pitch": 35.0,
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "yaw": 48.0
+        },
+        "common-scale": {
+          "distance": 1800.0,
+          "pitch": 50.0,
+          "target": [
+            -4300,
+            0,
+            2100
+          ],
+          "yaw": 48.0
+        },
+        "rear": {
+          "distance": 150,
+          "pitch": 5.0,
+          "target": [
+            -4200,
+            -0.96180525,
+            2200
+          ],
+          "yaw": 178.0
+        },
+        "tactical": {
+          "distance": 357.1503495,
+          "pitch": 55.0,
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "yaw": 48.0
+        }
+      }
+    },
+    "syndicate:constructor": {
+      "baseline_geometry": {
+        "1": {
+          "kind": "sphere",
+          "radius": 712.6
+        },
+        "2": {
+          "hi": [
+            26.239625623630737,
+            31.94617529227892,
+            28.347197955241906
+          ],
+          "kind": "ship",
+          "lo": [
+            -22.505999151760584,
+            -7.877139113164665,
+            -35.773152044758085
+          ]
+        },
+        "3": {
+          "hi": [
+            21.276108743190154,
+            15.863216371760895,
+            45.68105700743768
+          ],
+          "kind": "ship",
+          "lo": [
+            -21.276108743190154,
+            -6.257679042114751,
+            -50.49946799256232
+          ]
+        },
+        "4": {
+          "hi": [
+            59.10698888656212,
+            49.15509775583483,
+            108.78587208258529
+          ],
+          "kind": "ship",
+          "lo": [
+            -59.10698888656212,
+            -24.980459515260325,
+            -115.63535291741472
+          ]
+        },
+        "5": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        },
+        "6": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        }
+      },
+      "candidate_geometry": {
+        "1": {
+          "kind": "sphere",
+          "radius": 712.6
+        },
+        "2": {
+          "hi": [
+            26.23962562363074,
+            31.94617529227892,
+            28.347197955241906
+          ],
+          "kind": "ship",
+          "lo": [
+            -22.50599909630633,
+            -7.877139113164665,
+            -35.773152044758085
+          ]
+        },
+        "3": {
+          "hi": [
+            21.276108743190154,
+            15.863216371760895,
+            45.68105700743768
+          ],
+          "kind": "ship",
+          "lo": [
+            -21.276108743190154,
+            -6.257679042114751,
+            -50.49946799256232
+          ]
+        },
+        "4": {
+          "hi": [
+            59.10698888656212,
+            49.15509775583483,
+            108.78587208258529
+          ],
+          "kind": "ship",
+          "lo": [
+            -59.10698888656212,
+            -24.980459515260325,
+            -115.63535291741472
+          ]
+        },
+        "5": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        },
+        "6": {
+          "hi": [
+            16.799999999999997,
+            25.199999999999996,
+            50.39999999999999
+          ],
+          "kind": "ship",
+          "lo": [
+            -16.799999999999997,
+            -5.249999999999999,
+            -45.780525
+          ]
+        }
+      },
+      "captures": {
+        "after-close": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 35.0,
+            "requested_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "resolved_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "fb115ae1e246d5f31f045de33674b9f8aa19044fbd469092cbd7317209741ba7"
+        },
+        "after-common-scale": {
+          "camera": {
+            "distance": 1800.0,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 50.0,
+            "requested_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "resolved_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "target": [
+              -4300,
+              0,
+              2100
+            ],
+            "union_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "fb115ae1e246d5f31f045de33674b9f8aa19044fbd469092cbd7317209741ba7"
+        },
+        "after-rear": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 5.0,
+            "requested_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "resolved_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "target": [
+              -4200,
+              -0.96180525,
+              2200
+            ],
+            "union_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "yaw": 178.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "fb115ae1e246d5f31f045de33674b9f8aa19044fbd469092cbd7317209741ba7"
+        },
+        "after-tactical": {
+          "camera": {
+            "distance": 357.1503495,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 55.0,
+            "requested_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "resolved_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "fb115ae1e246d5f31f045de33674b9f8aa19044fbd469092cbd7317209741ba7"
+        },
+        "before-close": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 35.0,
+            "requested_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "resolved_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4108.687709551111,
+              86.03646545265691,
+              2282.2179556142787
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "fb115ae1e246d5f31f045de33674b9f8aa19044fbd469092cbd7317209741ba7"
+        },
+        "before-common-scale": {
+          "camera": {
+            "distance": 1800.0,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 50.0,
+            "requested_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "resolved_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "target": [
+              -4300,
+              0,
+              2100
+            ],
+            "union_eye": [
+              -3440.1682851648375,
+              1378.8799976141604,
+              2874.195953453127
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "fb115ae1e246d5f31f045de33674b9f8aa19044fbd469092cbd7317209741ba7"
+        },
+        "before-rear": {
+          "camera": {
+            "distance": 150,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 5.0,
+            "requested_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "resolved_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "target": [
+              -4200,
+              -0.96180525,
+              2200
+            ],
+            "union_eye": [
+              -4194.784995962835,
+              60.0,
+              2050.6618235203077
+            ],
+            "yaw": 178.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "fb115ae1e246d5f31f045de33674b9f8aa19044fbd469092cbd7317209741ba7"
+        },
+        "before-tactical": {
+          "camera": {
+            "distance": 357.1503495,
+            "far": 60000.0,
+            "fov": 55.0,
+            "near": 20.0,
+            "pitch": 55.0,
+            "requested_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "resolved_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "target": [
+              -4200,
+              0,
+              2200
+            ],
+            "union_eye": [
+              -4047.7645347050498,
+              292.5604389114529,
+              2337.0734286371367
+            ],
+            "yaw": 48.0
+          },
+          "repeat_changed_pixels": 0,
+          "repeat_max_delta": 0,
+          "state_sha256": "fb115ae1e246d5f31f045de33674b9f8aa19044fbd469092cbd7317209741ba7"
+        }
+      },
+      "comparison": {
+        "close": {
+          "bbox": [
+            399,
+            159,
+            880,
+            640
+          ],
+          "changed_percent": 9.2754,
+          "changed_pixels_gt3": 94980
+        },
+        "common-scale": {
+          "bbox": [
+            622,
+            431,
+            653,
+            464
+          ],
+          "changed_percent": 0.0556,
+          "changed_pixels_gt3": 569
+        },
+        "rear": {
+          "bbox": [
+            417,
+            173,
+            862,
+            617
+          ],
+          "changed_percent": 6.6616,
+          "changed_pixels_gt3": 68215
+        },
+        "tactical": {
+          "bbox": [
+            543,
+            303,
+            736,
+            496
+          ],
+          "changed_percent": 1.519,
+          "changed_pixels_gt3": 15555
+        }
+      },
+      "features": {
+        "accent": {
+          "bbox": [
+            494,
+            296,
+            822,
+            480
+          ],
+          "camera": "close",
+          "changed_pixels": 3317
+        },
+        "cool": {
+          "bbox": [
+            570,
+            261,
+            719,
+            401
+          ],
+          "camera": "rear",
+          "changed_pixels": 2059
+        },
+        "dark": {
+          "bbox": [
+            478,
+            332,
+            829,
+            490
+          ],
+          "camera": "close",
+          "changed_pixels": 4033
+        }
+      },
+      "initial_state_sha256": "fb115ae1e246d5f31f045de33674b9f8aa19044fbd469092cbd7317209741ba7",
+      "restored_changed_pixels": 0,
+      "views": {
+        "close": {
+          "distance": 150,
+          "pitch": 35.0,
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "yaw": 48.0
+        },
+        "common-scale": {
+          "distance": 1800.0,
+          "pitch": 50.0,
+          "target": [
+            -4300,
+            0,
+            2100
+          ],
+          "yaw": 48.0
+        },
+        "rear": {
+          "distance": 150,
+          "pitch": 5.0,
+          "target": [
+            -4200,
+            -0.96180525,
+            2200
+          ],
+          "yaw": 178.0
+        },
+        "tactical": {
+          "distance": 357.1503495,
+          "pitch": 55.0,
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "yaw": 48.0
+        }
+      }
+    }
+  },
+  "comparison": {},
+  "display": {
+    "gl": {
+      "renderer": "Apple M4",
+      "vendor": "Apple",
+      "version": "2.1 Metal - 90.5"
+    },
+    "samples": 4,
+    "viewport": [
+      0,
+      0,
+      1280,
+      800
+    ]
+  },
+  "features": {},
+  "integration": "UNAPPROVED REVIEW-ONLY harness monkeypatch of mesh_for; no production activation or approval records",
+  "mesh": {
+    "confederacy:colonizer": {
+      "authority": "blend",
+      "blender": "Blender evaluated bevel mesh",
+      "bounds": [
+        [
+          -52.856406,
+          -7.0,
+          -51.6975
+        ],
+        [
+          52.856406,
+          43.5,
+          55.4475
+        ]
+      ],
+      "bytes": 249476,
+      "candidate_footprint": null,
+      "candidate_length": 64.12035,
+      "legacy_footprint": null,
+      "legacy_length": 64.12035,
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "sha256": "7c8a7b31847896526b67d9daa7fe4ea866ff03f8c4da3acd31fe9401ef0fd08d",
+      "station_scale": null,
+      "triangles": 4156,
+      "vertices": 2292
+    },
+    "confederacy:constructor": {
+      "authority": "blend",
+      "blender": "Blender evaluated bevel mesh",
+      "bounds": [
+        [
+          -37.794229,
+          -8.265,
+          -34.6975
+        ],
+        [
+          37.794229,
+          33.0,
+          34.0
+        ]
+      ],
+      "bytes": 231316,
+      "candidate_footprint": null,
+      "candidate_length": 64.12035,
+      "legacy_footprint": null,
+      "legacy_length": 64.12035,
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "sha256": "cce3fd0e2a02b4e745efeec9ff6873869b17fec65f6aa0f9f08238226a40b14c",
+      "station_scale": null,
+      "triangles": 3932,
+      "vertices": 2196
+    },
+    "imperial:colonizer": {
+      "authority": "blend",
+      "blender": "Blender evaluated bevel mesh",
+      "bounds": [
+        [
+          -20.0,
+          -7.0,
+          -24.6975
+        ],
+        [
+          20.0,
+          26.5,
+          24.35825
+        ]
+      ],
+      "bytes": 206525,
+      "candidate_footprint": null,
+      "candidate_length": 64.12035,
+      "legacy_footprint": null,
+      "legacy_length": 64.12035,
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "sha256": "a1076d24d95137ec3c086e46cd32d2555e1c374284994a250938fb7d790f8dae",
+      "station_scale": null,
+      "triangles": 3472,
+      "vertices": 1906
+    },
+    "imperial:constructor": {
+      "authority": "blend",
+      "blender": "Blender evaluated bevel mesh",
+      "bounds": [
+        [
+          -20.0,
+          -7.0,
+          -24.6975
+        ],
+        [
+          20.0,
+          26.5,
+          24.35825
+        ]
+      ],
+      "bytes": 183564,
+      "candidate_footprint": null,
+      "candidate_length": 64.12035,
+      "legacy_footprint": null,
+      "legacy_length": 64.12035,
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "sha256": "32fc71942015d171695fc9a6f150a402235ff62c480d29288def84fe03340cdb",
+      "station_scale": null,
+      "triangles": 3120,
+      "vertices": 1730
+    },
+    "rebel:colonizer": {
+      "authority": "blend",
+      "blender": "Blender evaluated bevel mesh",
+      "bounds": [
+        [
+          -42.5,
+          -13.5,
+          -46.94
+        ],
+        [
+          42.5,
+          36.5,
+          48.507
+        ]
+      ],
+      "bytes": 213254,
+      "candidate_footprint": null,
+      "candidate_length": 64.12035,
+      "legacy_footprint": null,
+      "legacy_length": 64.12035,
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "sha256": "0afb0eddcd4180f6fae0523eac4dcb086c65093a59983714e2298691bdf15fae",
+      "station_scale": null,
+      "triangles": 3560,
+      "vertices": 1962
+    },
+    "rebel:constructor": {
+      "authority": "blend",
+      "blender": "Blender evaluated bevel mesh",
+      "bounds": [
+        [
+          -25.0,
+          -7.0,
+          -38.455
+        ],
+        [
+          25.0,
+          32.451235,
+          35.5
+        ]
+      ],
+      "bytes": 146906,
+      "candidate_footprint": null,
+      "candidate_length": 64.12035,
+      "legacy_footprint": null,
+      "legacy_length": 64.12035,
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "sha256": "441cb0bb04afac29e8d1bcd4f704858988abb1226681e216796f33e5b0aae780",
+      "station_scale": null,
+      "triangles": 2512,
+      "vertices": 1402
+    },
+    "syndicate:colonizer": {
+      "authority": "blend",
+      "blender": "Blender evaluated bevel mesh",
+      "bounds": [
+        [
+          -35.961081,
+          -11.0,
+          -57.8325
+        ],
+        [
+          47.4,
+          36.5,
+          57.4475
+        ]
+      ],
+      "bytes": 208615,
+      "candidate_footprint": null,
+      "candidate_length": 64.12035,
+      "legacy_footprint": null,
+      "legacy_length": 64.12035,
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "sha256": "d5c59777eb31515745f5085246247e86dd14ede2bc5325d89c72530fd2944841",
+      "station_scale": null,
+      "triangles": 3528,
+      "vertices": 1940
+    },
+    "syndicate:constructor": {
+      "authority": "blend",
+      "blender": "Blender evaluated bevel mesh",
+      "bounds": [
+        [
+          -25.714157,
+          -9.0,
+          -40.8725
+        ],
+        [
+          29.98,
+          36.5,
+          32.388
+        ]
+      ],
+      "bytes": 191074,
+      "candidate_footprint": null,
+      "candidate_length": 64.12035,
+      "legacy_footprint": null,
+      "legacy_length": 64.12035,
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "sha256": "b3d4946de75d41f6b02c591e3275ea3627ffdf010d83bd925b16c4d7d3a532c3",
+      "station_scale": null,
+      "triangles": 3240,
+      "vertices": 1804
+    }
+  },
+  "motion": {},
+  "overview": {
+    "cameras": {
+      "distance": 5600,
+      "pitch": 40,
+      "target": [
+        -4200,
+        0,
+        2450.0
+      ],
+      "yaw": 90
+    },
+    "changed_pixels_gt3": 2116,
+    "placements": [
+      [
+        "spec0",
+        "ship",
+        "imperial_constructor",
+        1,
+        [
+          -4200,
+          0,
+          0
+        ],
+        0.0
+      ],
+      [
+        "spec1",
+        "ship",
+        "imperial_colonizer",
+        1,
+        [
+          -4200,
+          0,
+          700
+        ],
+        0.0
+      ],
+      [
+        "spec2",
+        "ship",
+        "rebel_constructor",
+        0,
+        [
+          -4200,
+          0,
+          1400
+        ],
+        0.0
+      ],
+      [
+        "spec3",
+        "ship",
+        "rebel_colonizer",
+        0,
+        [
+          -4200,
+          0,
+          2100
+        ],
+        0.0
+      ],
+      [
+        "spec4",
+        "ship",
+        "confed_constructor",
+        2,
+        [
+          -4200,
+          0,
+          2800
+        ],
+        0.0
+      ],
+      [
+        "spec5",
+        "ship",
+        "confed_colonizer",
+        2,
+        [
+          -4200,
+          0,
+          3500
+        ],
+        0.0
+      ],
+      [
+        "spec6",
+        "ship",
+        "syndicate_constructor",
+        3,
+        [
+          -4200,
+          0,
+          4200
+        ],
+        0.0
+      ],
+      [
+        "spec7",
+        "ship",
+        "syndicate_colonizer",
+        3,
+        [
+          -4200,
+          0,
+          4900
+        ],
+        0.0
+      ]
+    ],
+    "state_sha256": "cd43a5030a83adf54e4bb37ad8ca52c69d617f923eab6633bf5057a4a0e1d688"
+  },
+  "production_candidates_unselected_after_review": true,
+  "production_shaders": true,
+  "protected_file_hashes": {
+    "art/blender/README.md": "8986c8e5475d29d463fd659ed5af00d7a164b6548df5793828e726e6001ef5a6",
+    "art/blender/alliance_attack_satellite.blend": "2e9de52301ecafdaefa0b057586c63140f9d0c1fae1507e6dc5bb451198c9455",
+    "art/blender/alliance_battleship.blend": "a51b636fc83f1e13b3659440f93adbb68253a6f59a5b0416c4cedc81ca57a791",
+    "art/blender/alliance_bomber.blend": "2330083b7c6a3990c9822ca3b9cc2707542681bffe88f62be4bf8fe4d722caef",
+    "art/blender/alliance_carrier.blend": "ac25a832ab26aabb5aff2797738661153ccd3145f34948bfa476407d0fa2053e",
+    "art/blender/alliance_command_station.blend": "a2377c1d8f815258791345869c005e95efe13ca99c99c5ba90ede8598ff0fd4c",
+    "art/blender/alliance_convoy.blend": "56b7cfb2dc1eecc7d3fc1094e2fdac99b67404759d4efeaae8ecaf418bf88e7a",
+    "art/blender/alliance_corvette.blend": "94b4e9033abd141e14bc1a3e42e9ce2821d38138868d560d86bf1c9483c6ae1c",
+    "art/blender/alliance_cruiser.blend": "96cdcc024a304d317e7e95d6f096675322971c9671521338f248a140ddd77fd6",
+    "art/blender/alliance_defense_platform.blend": "8d4b53895400ffa40f355a3341f21b441032f0234792a858a51f610e7f2efb74",
+    "art/blender/alliance_defense_satellite.blend": "3efb7770c6d4cfe6e6f96f7b4c36ef5af7b7f996182087214f41da8847b4c14d",
+    "art/blender/alliance_energy_relay.blend": "64482d7da075ba883c730f873a6a239120f953fab7241e0563fdb0d1209a9518",
+    "art/blender/alliance_fighter_platform.blend": "d73a689a2b6146eca3d4f178e6c7b9ca1de57865b3e2486436867a0b4c82e394",
+    "art/blender/alliance_frigate.blend": "721693dce2de5919e941dd778129c409864e5b78499604b65e1f2e59bc17dd49",
+    "art/blender/alliance_interceptor.blend": "7021539d03e6a0ae0c15494370f5c09235708727c723ebe8add7d838d5200150",
+    "art/blender/alliance_mining_station.blend": "ab9a5c7e263fc7754e2b4abb8397cc40e87ea4794996246cca73e8c16f1bacef",
+    "art/blender/alliance_planet_extractor.blend": "877976a0964b155485e83494c5f1d53ef07efa84e0888fc6f0409ed94c999238",
+    "art/blender/alliance_planet_pulsar_cannon.blend": "ae7e1f2e805cbf42c186d011f04061f67d29a037ed1c0b1ededb78fef9625a4f",
+    "art/blender/alliance_planet_shield_generator.blend": "22a6c3650fecfa6af0438b2fed2c580657d9d60254dd5eb2f1822fbba9caa6b7",
+    "art/blender/alliance_planet_trade_hub.blend": "09f941375e97c4327fa6e1f412e011ee2b04f9ecb3b37024ea0eb7a2fec05dff",
+    "art/blender/alliance_repair_dock.blend": "5a5035a39251c5a9cacef545fb3ad7a6ecfef5f2256883872aa364a372b34f99",
+    "art/blender/alliance_research_station.blend": "2f2522c077460483fd6e201424f042ef36142c41850401b848a88de0a51f6a12",
+    "art/blender/alliance_sensor_station.blend": "6cd5fe3878340770a455da9945023d62b4ebdf5ecb0e1d814a84c4582cedba03",
+    "art/blender/alliance_shipyard.blend": "2b66ad339f75a48e1daf547d5ea1654a5eab59e5ba7ce6a467f0ee98fe74e045",
+    "art/blender/alliance_trade_station.blend": "721cdde1a2937f7a5ae8f9a12a1357ed8ec2cc1d2d3a449b01b51b0fec37a7cc",
+    "art/blender/confed_battleship.blend": "c4ddf82cd05dfeed8161440b2e73abc65c77ea5220cdea9b8e97ed14ee29e806",
+    "art/blender/confed_colonizer.blend": "a5b012382109e6f9854a7608a88ef20c2363835d3c49c5cdbd9b9598921497a2",
+    "art/blender/confed_constructor.blend": "eb64c61ec81512584eae1ac0946fadea0485ab0c9b09cc505238bc2c49cbc8c6",
+    "art/blender/confed_corvette.blend": "a664930cf3778158833e24dde66f1399139ade846890cefb5eae3d9eb44aca9c",
+    "art/blender/confed_cruiser.blend": "036b0eb729beda4df2bc810e1362f6b7acd96d03cc7801d51256462fb960795d",
+    "art/blender/confed_frigate.blend": "cfb8a6433bc380f8d5e689e7098c70bbd2a027cb1102b6d9517f86267f18acd9",
+    "art/blender/confed_supercapital.blend": "df5acae8ef5c89eef503392398e423dc439d21277748fe1d02d25ff69234d50d",
+    "art/blender/imperial_attack_satellite.blend": "0164aed19829bfcc0aa93904faac1e5a3467b2d393733a519f52e345b613f6a4",
+    "art/blender/imperial_battleship.blend": "c2ec3a65b986cee9726997820d2aae0f4380824e5e6ce2aabfa78c92b2cb65d1",
+    "art/blender/imperial_colonizer.blend": "5d65d5b376ee2c92eab8c14708b586eac9e2620624c4af0a61cdeb20ba0e640d",
+    "art/blender/imperial_command_station.blend": "dffe86f1678f084cd6bdfb5f8ab7d5139a2cf40ef6d2ea4f0f14d825065190a4",
+    "art/blender/imperial_constructor.blend": "4400900064d28c0d0b79b9e80d4c545d2ffc71b1b2317967604b5eb92ade46fe",
+    "art/blender/imperial_convoy.blend": "0c732b3f3a8a6ea01265be0ae196b7b2db3cbfc23f10043fc189b1d4f24fcbfa",
+    "art/blender/imperial_corvette.blend": "ddb2d4180faab70c9a48f1efd5750419414f2ce64e74dedf00cbbc00aec9714d",
+    "art/blender/imperial_cruiser.blend": "aad9345c8d5aac5f0cb7a287a482c67d707e4b448aff0c93df96043c2509324e",
+    "art/blender/imperial_defense_platform.blend": "a86595d8f2697b4f964003c3614edc53b919c98c533a15b5a2a07469a772c6a1",
+    "art/blender/imperial_defense_satellite.blend": "5afcdbad5c2ae99916571fa01817f44e4961b360c1f22e1d7f42f7afac5003bd",
+    "art/blender/imperial_energy_relay.blend": "e8e0a405bd1ea0670522c9f90f7a2fa37277541f69bc26b962d7fee750f7dc99",
+    "art/blender/imperial_fighter_platform.blend": "aac36857b6830aa0bbb5bc5748a8c927d6646cd1cfec33f8204be12c0d9d99fe",
+    "art/blender/imperial_frigate.blend": "058195c275f7967e912c0f6a3e4f9ac205167a50aa035614a41c4b52e39b5d50",
+    "art/blender/imperial_mining_station.blend": "3860141cbfa13cedfe685c397a212932463a45ec6ef8a9bee172603a4da57db3",
+    "art/blender/imperial_planet_extractor.blend": "da805658eae9b61b8dadaad407db78d1c855bb8944ac8090db1871beaa5f8523",
+    "art/blender/imperial_planet_pulsar_cannon.blend": "5a75993a045513dfff1421624ff38ef95af21c93814fde4ac4610c418f6f2377",
+    "art/blender/imperial_planet_shield_generator.blend": "5b8fe8b3a271cc96c9a07a8b836d6f108d6be9264d10715b25809a780d532119",
+    "art/blender/imperial_planet_trade_hub.blend": "88292f5a9f09a8541dbe8613166c4dda248dde014d6ff5c17339e9cd9975cc7a",
+    "art/blender/imperial_repair_dock.blend": "c796357e9d55c7954d5d021884c7971c0b8806192aedd83dc274ec5223cab512",
+    "art/blender/imperial_research_station.blend": "2bcf4d51593872ec72f11ac6973da48436b98178654d51a40520e42dd5829a28",
+    "art/blender/imperial_sensor_station.blend": "af18203bd6c41c9c6d531c501f3d598d6c16aaf6d680ee8ca497f69ad27d3623",
+    "art/blender/imperial_shipyard.blend": "6412dad860b6a968e1783218ee5fbaa0a6d1025f6c6056039a2a968acbcc2e9f",
+    "art/blender/imperial_supercapital.blend": "1bc6ceb9d30698b27440023b2bc9098837e0775866a0a8046b29d656845f1f14",
+    "art/blender/imperial_tie_bomber_squadron.blend": "89e797d421478348a0d924bfbd0b516e210c5dd84920646cbabd49002d1b40fc",
+    "art/blender/imperial_tie_squadron.blend": "09e974692c2c4c69e9dcbd6d97c62d16b33874a7f3f986ec2b7d71239e8958b4",
+    "art/blender/imperial_trade_station.blend": "504242ca50725916f883d6ac5386d299d972537ed9e187826b8b4cecdf6583e5",
+    "art/blender/legion_attack_satellite.blend": "a05b500ac667751bfb1a6124fbdcf4a13d4c3d0f2b9c1f7e7c832d3c5b5d6fd2",
+    "art/blender/legion_command_station.blend": "159e8288e6341e329046591475875e17a1446466eb23c1dcd1b3b456e880ec66",
+    "art/blender/legion_convoy.blend": "57d619a699cb85257131c4c212e0c58b9aea2e3199caf261d3948757446eabaa",
+    "art/blender/legion_defense_platform.blend": "b3ae6919b48ddfd79c6f66ae90b4fbbcc9989278ba587e55253403a7bc99ba8f",
+    "art/blender/legion_defense_satellite.blend": "62c35450efce8b94bda50ad6bd37fbcab9fd3c25935c4b570c69815a33169611",
+    "art/blender/legion_energy_relay.blend": "58bd7ca362e7336ca81387e65b193a2d6469dcf8bae851170743779d419548cc",
+    "art/blender/legion_fighter_platform.blend": "399010c3d7ad781ecc75f733e3cbf060d1593ce66df1ad2b55f7ff72de776f50",
+    "art/blender/legion_hyena.blend": "f4b9af5efb7e2d1d157a168c74b1b2936c2df2a39f9217155e4cafb5edc01f2e",
+    "art/blender/legion_mining_station.blend": "504982f86b6b6f078c1d69863d8bfec38e8eb1e003907bb704263a427cf3b9f5",
+    "art/blender/legion_planet_extractor.blend": "bb3210d94ff2aa48e61ff247a3ba2f302ead1096c40a18fecbcbefe3e1d1bf27",
+    "art/blender/legion_planet_pulsar_cannon.blend": "9d96ebfb3b9bcda40db2015a67f873ccb4128238ea47f8f569f3144f5ef78546",
+    "art/blender/legion_planet_shield_generator.blend": "3e1c8f02a6f2ebc4647622078c0926081f3f5fa9ee39691f1c5d5b54db3e62e3",
+    "art/blender/legion_planet_trade_hub.blend": "86e2dd43f5d2797d61ebb0505d92747ffec3efe82e33850a53014cfedd60e85c",
+    "art/blender/legion_repair_dock.blend": "e01b00e394eb894f9e18cf25e9e61efb94093b047d8deacc0b80490bcef385f4",
+    "art/blender/legion_research_station.blend": "6766c3d7cdc1915b9952a432a6f429ac60c354611822c04d77041fcc1288382b",
+    "art/blender/legion_sensor_station.blend": "a5d7d33d83326573165a7505aa8e6f1b29ba09864521657dcea0396e990002d1",
+    "art/blender/legion_shipyard.blend": "3156021eef4c77f744ecdd1a25a8c1f96566e32761e88ee1ae7ac606a2741042",
+    "art/blender/legion_trade_station.blend": "1f218aff89e3fa9856627f66728ffab4388739047bf450c724a249830f976644",
+    "art/blender/legion_vulture.blend": "932bba8532ba8d02e50fec774131477c43a383311aec500c1412b336a11d1ac8",
+    "art/blender/rebel_colonizer.blend": "eeb2a6e7547b9d4d1c40c7acded337a0a30089b222107a6067611cec1e42d02b",
+    "art/blender/rebel_constructor.blend": "e143b758d84877fdb4127a19bdca48a37bb3897cf403dde1cca608065bb7c74d",
+    "art/blender/shared_asteroid_field.blend": "23260a7f81a54e874325fcca802c66c94fbb1c7f1e90378b799e129b17d4ea0e",
+    "art/blender/shared_construction_scaffold.blend": "8a632fbdf0bba8c43b8c22d40ae1732938cfebe1d02fbf70cdf65b1f78ee2c39",
+    "art/blender/syndicate_attack_satellite.blend": "f7bd5fb78aadc367ab39f17b34a9111d6dd43d97f5c1ddb88af4a6779a08ec08",
+    "art/blender/syndicate_colonizer.blend": "6f9f13895386c97c20736aacb8a69fe51bf3b1a03e06d11c8f2beaafdae45147",
+    "art/blender/syndicate_command_station.blend": "f3342e0ed63c8b730d91bafdca9c8d7d0bbf9bc0bfe7e54293bff792e27e4d17",
+    "art/blender/syndicate_constructor.blend": "0a928f05ec1648e74706da5c70a251f084d78639398117bab94c6b7c60f00a01",
+    "art/blender/syndicate_convoy.blend": "4d93545d957166eb25ee139df346395dab3f6b48ac7294a319de0e714e0b2d3b",
+    "art/blender/syndicate_corvette.blend": "c47b2b4320a636bdf4f44a675bc773525c830f56d0f0c98df4986fb3790e45be",
+    "art/blender/syndicate_cruiser.blend": "01b5efd863406c9ab9c880d0d209742431cce74e61d02441af30a4238de6af5c",
+    "art/blender/syndicate_defense_platform.blend": "9170ecf71c77b6eeaa6134c501fd2d842c6594f33f702bc80989c025aab85672",
+    "art/blender/syndicate_defense_satellite.blend": "56abd8e0276e0949453d8ce2c73b24ca2611d3e2d1b61dccf00191fd969beab9",
+    "art/blender/syndicate_energy_relay.blend": "3a286a1b79c740cfd15005319f126398fec18301f00edce80a5d119b5a553a13",
+    "art/blender/syndicate_fighter_platform.blend": "66eca9908acfc277b24cd3cf71959a9b63de7b40daa2f905e5fdee55f4a262eb",
+    "art/blender/syndicate_frigate.blend": "33da22340efb63286772f4651f6824e4fdab1e9981d8e03b3bd3137160f0397f",
+    "art/blender/syndicate_jackal.blend": "ca21a457dc3a8349ef6ed87a64e6c2d6e810316ae73a4d9ce2351f54d3081de6",
+    "art/blender/syndicate_mining_station.blend": "8fd1b47493153584138da4c85fdbfdf3edea7cc61a91d6a9a9bfa11b1d540e7f",
+    "art/blender/syndicate_planet_extractor.blend": "0021f21a1a2e95dc015ac652345cbf564f826b9dc06c9b8824290222502a843a",
+    "art/blender/syndicate_planet_pulsar_cannon.blend": "f1279ceaeb7e549bcfa0bc8e48274960dba56e920aa25cd0788ff57cc4bac9f6",
+    "art/blender/syndicate_planet_shield_generator.blend": "7207bf5218e9a964abc6176227b20ebadd621c35f919b54c0037b3a2a6e483ed",
+    "art/blender/syndicate_planet_trade_hub.blend": "3f06156d5e2f5114b584d1377e199672ec893d9be64f9c6569a4a9fac4fa38f9",
+    "art/blender/syndicate_repair_dock.blend": "c608f2afebb2c1a56546441363d8ad24975c928353c35cce3a5cf669534c4770",
+    "art/blender/syndicate_research_station.blend": "44ddb5b052fb1ad51a4c00f56a00cd59386e83241f8f404677ac505254f2b57d",
+    "art/blender/syndicate_sensor_station.blend": "9238f17c16196ce938019f8b0263415261ae763b0f2e64f9d1df97442670f56b",
+    "art/blender/syndicate_shipyard.blend": "420dedfee68a25da78f4831d93b2dbddb716ba94134a58f890c570cec9efb735",
+    "art/blender/syndicate_trade_station.blend": "7b84c5e0f47928eee805a8acfc0e018c5cd31ee3255803c7c7134c3e5b145252",
+    "tools/art/README.md": "9eced7500077a89ca8d4a5d29f9e6f963f547acfa49b651b0f687b82d9c0efa1",
+    "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+    "tools/art/build-model": "a0824bc96fcdfac16e007e1d0d9e2a9acdc2d9203e05f2f40c52b2f10cd12090",
+    "tools/art/build_alliance_battleship.py": "52380040fd04c3370085c1815e68cb520d5e54f1f4af04ac53ec69d7233d0082",
+    "tools/art/build_alliance_carrier.py": "73fe3afa6e16e1ebf3b070e917bd4e8145e54c94fd6f60d771c9839783fcce32",
+    "tools/art/build_alliance_corvette.py": "df4781bc45692ead8935e2ccd48f3fd2c922fb49aee25bac27524c44468790a1",
+    "tools/art/build_alliance_cruiser.py": "34b3543378213aea87a0a35a30e2ef1127b98372bdfd4b9d9c56f3ec0e9a6672",
+    "tools/art/build_alliance_frigate.py": "8a3822c0d39dca356a605f185a1feceaeaa8c2c97b827cee1d0a5265f84b0a28",
+    "tools/art/build_alliance_shipyard.py": "22e98cf85620959fb910e15c39e0eea64b1dca4df078decc150b04c9a351d70f",
+    "tools/art/build_b2_batch.py": "d8aa040c8bbff81baf836d193023ed6d21a2828f045e9fca6f18f422cfb6ea23",
+    "tools/art/build_b3_stations.py": "7f84d8c60df8fe1d254a2bb05249f2467927621e105a6c4f57b5c55d0472c083",
+    "tools/art/build_b3b_stations.py": "922fcabcafb207e312180e672d0a95001900618e231260d5a939815bcbf951d5",
+    "tools/art/build_b3c_stations.py": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+    "tools/art/build_b4_hardware.py": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+    "tools/art/build_b5_asteroid.py": "eb6935400489de58df08e22effea006c5126838e2e927ab75f10db7d88ee6563",
+    "tools/art/build_b6_imperial_ships.py": "1d8e1e62ae73ff23412ef412d579aa12a59725185a6ee0f0b43f125ae74e3ced",
+    "tools/art/build_b7_imperial_stations.py": "40a814cdf3c36b468896147dd98eafdf5af9be11af833907b1ba5603c1f91baa",
+    "tools/art/build_b8_remaining_combat.py": "6df5ae4bee054c551ca60c981acadeddbdbce6502bf24f20dc25ad416163b606",
+    "tools/art/build_b9_construction.py": "79e092578df188ef02d4128e5d74425d7951fddd3075cd0ef3aacda484e4501a",
+    "tools/art/build_model_inventory.py": "a86408b348468ef5d4adfa0a20a40a12ff6bbdc586f0f056aaf28dcb49d9ccba",
+    "tools/art/export-model": "9498cf59db089ad1bb25eac2862e3b5887ea827a9ba4f32a552a1525ca0ae303",
+    "tools/art/export_alliance_attack_satellite.py": "791bc3ce238a0eb89b5f5014cd50baedfe2d7e7156973967366700dcf3bd9949",
+    "tools/art/export_alliance_bomber.py": "99c6cb8ad1016d7bdbdd4789e9d9c534d7453bb4ab40d8a8e99c114f07ebbd18",
+    "tools/art/export_alliance_carrier.py": "b839bc9f7e41b635b116ffa54f3e8dcc425c46cd02de7c6dc2be7b8b82d0bb05",
+    "tools/art/export_alliance_command_station.py": "413470bcd02250acbd379fef9cbc2fd818032d976ce6573536c800ee336fec38",
+    "tools/art/export_alliance_convoy.py": "794dc2f818b98545ceeaa0bf4720560c11587a0a69aa10b36c4fbc57fd44f01f",
+    "tools/art/export_alliance_corvette.py": "4c9cad303ee3990437e486d90bb0926c5ef016e344072e16dd1c6c66b1016b96",
+    "tools/art/export_alliance_cruiser.py": "315ad0d20f99114cefd57e347b21687207541b843d3b128670dece1c0c85c16d",
+    "tools/art/export_alliance_defense_platform.py": "fe1db43b81d0276a7153dd352afc507a49cff49514a2869fa04b66c35f8ef183",
+    "tools/art/export_alliance_defense_satellite.py": "192513acab1eff704537bb36365263f555a549143c868026beb9c779fd807775",
+    "tools/art/export_alliance_energy_relay.py": "f41ccca376f382d6f0733827f400c3e013b392e8fe4f164da43926b7c39fd73b",
+    "tools/art/export_alliance_fighter_platform.py": "259da43033a89b2f042e8a54933629bcefc25802a4b547b7dd8b10d5c00fd50b",
+    "tools/art/export_alliance_interceptor.py": "7058f277b7d535aa6d05f7a25b8462cd40267ac7be18bf5e75bbd05ada92122e",
+    "tools/art/export_alliance_mining_station.py": "6e54e3dada65cab4c0571a533e93bfab5cea95ce552b80150f73f96d2b9ade01",
+    "tools/art/export_alliance_planet_extractor.py": "ba3e777d26fa806b15c6d90db088791b48597a69868bb5081a6567384558e73c",
+    "tools/art/export_alliance_planet_pulsar_cannon.py": "6d1ea84bc4541855ecf1f18651480d886205e3e39da0bbccc39260bdd2124ccb",
+    "tools/art/export_alliance_planet_shield_generator.py": "1ad461530a2ee60bbbcfd9c15ea873a7054f911850c0fc6f26dc14e0b80e4e3f",
+    "tools/art/export_alliance_planet_trade_hub.py": "65eea60ba9e8f30a4557284fb42561d07dc9eed2b22e0bc9a1d6b44792080b41",
+    "tools/art/export_alliance_repair_dock.py": "f7a36e72088c947d8c0fc1c757ecf6edbf138fc59c4d8ea656afe1cde1115334",
+    "tools/art/export_alliance_research_station.py": "3d3e961ddbc399c5ff141083da666dfb12486d55b54caebc579d9d84f962b828",
+    "tools/art/export_alliance_sensor_station.py": "a77746fd5514a16b81e9d193f3f39bf7f2c1a05814ccf77bd9dd9e02691bc386",
+    "tools/art/export_alliance_trade_station.py": "d80806da75da8468a1c99f800edf43e4b90b84a28b48fbfedb1113974cf04b71",
+    "tools/art/export_confed_battleship.py": "9087d732adfb520d6634fb356f3a59ec1be07f7b9d6e0b98f728fba1f301c314",
+    "tools/art/export_confed_colonizer.py": "d416255bffa41cd7fcd3313964c920de5bba85cd3c88a0c81ea727f75054847d",
+    "tools/art/export_confed_constructor.py": "4facaacd806a36dbc1f35c5cb6fe2e80538b1d1c385a320f3e8e5cb5bd35099d",
+    "tools/art/export_confed_corvette.py": "611cc7dbc9022f5059b9637ff6683cfc436a6e601ac7acb7d4746dc41dbb436d",
+    "tools/art/export_confed_cruiser.py": "99678fb1bbbf76c2199f47525045589fa57f3c1d38df1ffc03657ca5a32b2b39",
+    "tools/art/export_confed_frigate.py": "1ea9653c3e29c520e90cf243fb197ccb4d8f7ca86a0349a55e98ed4a32cb6737",
+    "tools/art/export_confed_supercapital.py": "452002bc1ccf3961d9c2fba72f257290cb68bd4697333606af5829e8e5293caf",
+    "tools/art/export_imperial_attack_satellite.py": "4360cac00bdc9b15e7a997066c0e89398640b4077832806b00549637a62215a2",
+    "tools/art/export_imperial_battleship.py": "033089b0254bdf15f2b6751d460089a7b0b808b68d63f1e4e3503aa4e8a05ad4",
+    "tools/art/export_imperial_colonizer.py": "f30ab86915e953603a4ffb4b7e486aa3cf4e61b62525398cf5f7c112bd57bc03",
+    "tools/art/export_imperial_command_station.py": "891100d240f2d2c14eb32d2efe218e34be77e38b466d3008baae084d04839b86",
+    "tools/art/export_imperial_constructor.py": "598a5562f9a630a40f04c804c7148fdad939b60fedea7fb9cb6c1f7cd019a24e",
+    "tools/art/export_imperial_convoy.py": "683452ad69f6b695490cff466f530204012354a2a6912939ddd785ae6a5a7131",
+    "tools/art/export_imperial_corvette.py": "c4fb1d3a44940b60b25ff7b0647d7a7b0e042c7ae5875e32bb11cf381263fa38",
+    "tools/art/export_imperial_cruiser.py": "a648e015477647e1e37288cd80acc98e00393a2e9ec8ffc3df531dba21b2a408",
+    "tools/art/export_imperial_defense_platform.py": "144a5792f9b6a631252c2b15d0ae868d05d35113edc2af2a670e69190376d4c0",
+    "tools/art/export_imperial_defense_satellite.py": "13060096b4cb830e0d6fdc4d5d1b14ede3b7ef545779bd8f61565a1bf17b4185",
+    "tools/art/export_imperial_energy_relay.py": "5e35ebe9e8140b3f70937c8b6e4ebc952d04d1f785e20c9e6cd9a911a855d55f",
+    "tools/art/export_imperial_fighter_platform.py": "d6add16a84d192390b3c434b324ae4b9496c376acf3b2676ab4270c2eaeabd1f",
+    "tools/art/export_imperial_frigate.py": "72156e3a182f75611234e11f413f55f79c6321fb9d41bb8e1c20df7bd7e6d869",
+    "tools/art/export_imperial_mining_station.py": "778759234018758ce6dda1fed9186b24aa5774704a3670516b556d4d09c867fb",
+    "tools/art/export_imperial_planet_extractor.py": "bf335ac493eecf1c9048d379fd04f8f4cf88aa42ae0e8464b7b6ab528de0dff3",
+    "tools/art/export_imperial_planet_pulsar_cannon.py": "755621b87b38d2e1b70d719a6f65c9b146f0457a7b35f8dfda4fbe505374f4e2",
+    "tools/art/export_imperial_planet_shield_generator.py": "1cb3c97497c2ec5e371983210105416edec2b2f336c80539d337f9fbeb9ac2f4",
+    "tools/art/export_imperial_planet_trade_hub.py": "98a60854619e5a71857a26ace8b1fcc09ba051d1d483bf70c4f4a75781a9744f",
+    "tools/art/export_imperial_repair_dock.py": "4343b1543ddb82358dddf96a071f8aa5a30d9bc08ce45202088caafe58292b9c",
+    "tools/art/export_imperial_research_station.py": "00bb8f810fadf4074bcd18dfa1f71598ab3aca026d71e37f36e24a90ed41a0db",
+    "tools/art/export_imperial_sensor_station.py": "bed8296abc995942d87f712bc75b678aa290418134f707aca21552d4c18ad0db",
+    "tools/art/export_imperial_shipyard.py": "5d3b512eccdd2e39a3665c43bb67660051be99eb93f857ba6d7c8dc2625e05c7",
+    "tools/art/export_imperial_supercapital.py": "22deafd7462c6745bdb8c498aad00a9f0d4b89d980b512e1c9ac1105bdcd2ba4",
+    "tools/art/export_imperial_tie_bomber_squadron.py": "342dd4afe448f51767b0f46962b5283368a4a8c974b2c0c4c83519b3b2a35b91",
+    "tools/art/export_imperial_tie_squadron.py": "fdff5cfdac484c070ea8859d3b861fcb4780b7eff905482548c692c9da101629",
+    "tools/art/export_imperial_trade_station.py": "5c438cdd28794b729d290ca6927e3d174ee4398bdddd0f7820986d8d68ad7253",
+    "tools/art/export_legion_attack_satellite.py": "a72ff5cb7ac122dea026108983c2cb29e520c767d7108f2522afda9e97585498",
+    "tools/art/export_legion_command_station.py": "b8b5f6582bf3f9974cf0302a7a94ef106000a6f4d81c48484c24dbe7660fa974",
+    "tools/art/export_legion_convoy.py": "34806d3bd776a52e4ae738eff844a1929451e9bcdc0ecd8929fa174b2e511ec4",
+    "tools/art/export_legion_defense_platform.py": "314209e79c0fcf0a8a71aa32e7b89ad460d80a52bd7baedb8bc825bf5158fd3c",
+    "tools/art/export_legion_defense_satellite.py": "1fe7ab28b7ce83d6391c55a50a85a2afbd7fe035d03bc757c4b89f6cf99b45d0",
+    "tools/art/export_legion_energy_relay.py": "ad103fd6c63d5cd21f33b4246150130a9bc3b4978772db42e6a708e649da68d8",
+    "tools/art/export_legion_fighter_platform.py": "39b06ad80f79b03b3165acaed26e8a27b6b990366847c0b9e8ac2b2a6f07bc6c",
+    "tools/art/export_legion_hyena.py": "63bf3affdb47f2fd55c1f180098a1208c270ebc20e23aebab37d085f110937cf",
+    "tools/art/export_legion_mining_station.py": "89147a3218ab841b655c84aa43b11a55ab12be015be6e57d221931ccdedf4e1f",
+    "tools/art/export_legion_planet_extractor.py": "41b1cc7b7d6707273a4b77a315a88b0a451840ff9398bbd388dee611f1da2acd",
+    "tools/art/export_legion_planet_pulsar_cannon.py": "541d8d747e6af416d586cc16182e503afacb26fc54634ec3dc82e8d8f9177603",
+    "tools/art/export_legion_planet_shield_generator.py": "6c959436870831e3c80a7c5f46eeaf62b49da35ea00918a704c2b3aa7815832b",
+    "tools/art/export_legion_planet_trade_hub.py": "de7abf71be099a47fb7f5af8273c6ddcef7c40f9345580a7c474de3391568ea7",
+    "tools/art/export_legion_repair_dock.py": "a0dada95930b58fdfaf213a16d481b4ffa9de626ff9930c16131597f2069a6da",
+    "tools/art/export_legion_research_station.py": "c527ba7cb4e9d5de31d1dbd4c05c6c3439763c1df540fa5b0e8129711e8fa28c",
+    "tools/art/export_legion_sensor_station.py": "f244443ab293f6d468875847d4fc6b1fc0b9cdb4449bf3cd5e1e5ac6fead10d9",
+    "tools/art/export_legion_shipyard.py": "11e498efe68a8e2fa3c7dbab6f0819be212a89a7ac74e5c81c81aa75100bdf75",
+    "tools/art/export_legion_trade_station.py": "f1e0e5ab5798c8de996496005d962d4dc800db78684667edcdb6801c5cbb4478",
+    "tools/art/export_legion_vulture.py": "8c02f83690317415f05c7f87b66cfb03f2be48d418d8d13394c17e26eab99eb3",
+    "tools/art/export_rebel_colonizer.py": "97c0a96ba7fab5ca57a0c5bb1d85efb2b9c6d6e88fa0a185d8bdaf62f4350d2d",
+    "tools/art/export_rebel_constructor.py": "378830e27f982cb6db4fcecf9934d9e4eb53121b533963a2d78ef3322c73147d",
+    "tools/art/export_shared_asteroid_field.py": "f7bad0a2df2a47dbcab4ef547072a9c9f46e8da58b03db5d28cc88625616f9db",
+    "tools/art/export_shared_construction_scaffold.py": "1396b7fc3e175e852454a23e37ef05b59a24d7e05953bca14bb276f5a405d2c9",
+    "tools/art/export_syndicate_attack_satellite.py": "948af751c14b97a0b73f2c071f84449a6645cb26a46877faf5b8a76309e66535",
+    "tools/art/export_syndicate_colonizer.py": "5ace7bd6fd302a024a98b310ef1d80402115f0a5cb0d6d1d9a2ac1bced7677e1",
+    "tools/art/export_syndicate_command_station.py": "b182eebfcd9a349f76ed37a7624cd03557918734538519d19229bde5a50ab3dc",
+    "tools/art/export_syndicate_constructor.py": "1764e36015a9fcd48205e515032604d08c24dd16fc8e43a1bdcea77d3db00bf2",
+    "tools/art/export_syndicate_convoy.py": "099d11b103ff750c2628bfc06a3c17eb50a58959c7d2a1f2039130e14bbcc404",
+    "tools/art/export_syndicate_corvette.py": "78ce6104cbfaf69163631c72e2b6d73bcbc97281a85fe5a0b80cdeeabaedd0b6",
+    "tools/art/export_syndicate_cruiser.py": "1c20d382ef95bb3e71e5cc462d4869a1d0da5b9e8b2dfbebaf496071bb71969e",
+    "tools/art/export_syndicate_defense_platform.py": "21997bdbafc2fa40b69ee57a1c0c0722482831f2d6073a7f9b1208b1c98f6746",
+    "tools/art/export_syndicate_defense_satellite.py": "15f7842bd630334f170112539e0cdd972d1658a5cf634713312a30cf8eb7d888",
+    "tools/art/export_syndicate_energy_relay.py": "a6f9ca12a17fb103a3663c75b0131b8152b6eb354e06589942a6390cffb787e0",
+    "tools/art/export_syndicate_fighter_platform.py": "67a6b0d463a9f4e55beed71872345c7f062a00420c542e4256b63a0967df5841",
+    "tools/art/export_syndicate_frigate.py": "bc0feeae07a2c0b2298189af1755a7a94fe427dea9d68d775d169c0ea284a0b2",
+    "tools/art/export_syndicate_jackal.py": "68c99ff92da8cfb0cb3d298d315de1e0ecae53ad2c5473ca98d01ad6c1c66ee2",
+    "tools/art/export_syndicate_mining_station.py": "74dedf58d950b96223ac0522449091ffaafbabf993f54a6a58648a926e0b0bf9",
+    "tools/art/export_syndicate_planet_extractor.py": "72d3ea3fcc3a5b8e230b3c21e641d1e6b677db659aa55385106bca26dc3263ea",
+    "tools/art/export_syndicate_planet_pulsar_cannon.py": "de3f117a1e19d661b27ca683ccd521eda197cb910a9226dc5bb1af4f9f7d4826",
+    "tools/art/export_syndicate_planet_shield_generator.py": "9cbc681124c08290400a776b108193016cff892f0982344afe092dbf620819e4",
+    "tools/art/export_syndicate_planet_trade_hub.py": "b7eca902c9add5f33c6edddc9c11539664369661640ba6e5aed0546f64e83eee",
+    "tools/art/export_syndicate_repair_dock.py": "d3845ce81c4463058489fc8830bcc21ad41e8b1a6ed2d988683227b5d8619645",
+    "tools/art/export_syndicate_research_station.py": "1b55314197508e6033caf79dec3e6913b90ea00d27a5e66127aa02e10666e5af",
+    "tools/art/export_syndicate_sensor_station.py": "ef4ddc6ed3d9507ffa0606d52341438edede17cf36e02bf39c62393966a8bfd5",
+    "tools/art/export_syndicate_shipyard.py": "9dadeb8b073fc7791d8961363d58676a851eda4c923203a39348d32af035ad32",
+    "tools/art/export_syndicate_trade_station.py": "4861caf2c410de7e7c5fad67d39398b1784e794e66e1e929f7756e951cfd57f2",
+    "tools/art/gen_export_wrappers.py": "c88a82e3c3b585057c44017a93fe676e916eaf8f789fa262a2e35abdf6887d20",
+    "tools/art/hull_detail.py": "aa6e8880b03e32e3ffa2eaf2bc11a214972a186fc4c87cb4078a11ba6e3a6f74",
+    "tools/art/model_pipeline.py": "a78363754215def9d0c39e474f90be84de96a67c3a130e749975230c6257ce11",
+    "tools/art/probe_b2_scope.py": "11edbf87e027c0904f1510e2e956e98abd1eaecead1092fa0945c58ba3f02d16",
+    "tools/art/probe_b3_scope.py": "4c19f46dfcd006403d897d5290bfb9d9a61e451056825ca1b9073fe68384857c",
+    "tools/art/probe_b4_scope.py": "0e25af7e84d5aa38d3121e4790fb3d5878d5d7c6b21eaf3cef75d7fa8f8b8738",
+    "tools/art/probe_b5_scope.py": "25a321f269befd1a62ea7b0d4e7e1c6b9a5d52d4b3afe6d2b5b00875dda01379",
+    "tools/art/probe_b6_scope.py": "b07e76575906d1a9abe72c235dde84d39a3bc18904a61ddda9fdf0791d1bd6bd",
+    "tools/art/probe_b6_servability.py": "1d043b021e2ddc01872a2894e76dfc1fb1b60f45d40a8c5dc67504a409d64c9e",
+    "tools/art/probe_floating_parts.py": "543991ba7334c360587f0acff16301b6e2e4ffb15d28f97e27f0e014cb800ebc",
+    "tools/art/probe_master_bounds.py": "3e9300eb47cabc4296c562d3b74d9a1717d048734710a711a89f571294b50f9a",
+    "tools/art/reconcile_model_coverage.py": "03ab6af5047948a218135cef8848bf661e68defbb3e5103a436452431354417f",
+    "tools/art/sync_runtime_metadata.py": "066ab4c20d78f143603ccae9dd9c1360c4d06d4b9ddfa48db4e68a44ffc6132c",
+    "tools/art/templates/export_wrapper.tmpl": "7598f5ae43fe7ea2d984bd9150946761b2a15eeaf12cd3b057512e6485327895",
+    "tools/art/update_contract_examples.py": "81fb084797fa475683a2299aff3166ed0a4b20aa4e0f2f2e80243bd29bc460d6",
+    "tools/art/update_unselected_fixture.py": "704646b0cfcd3b6e6935b2b9465a1a92e287586d9ddba728b0e78d22b212db67",
+    "tools/art/validate-models": "a5ffbf8bf9867a9866b8e4d3e5e9abf3ccf091a2a0d1a72933c053e9565b2a56",
+    "tools/art/validate_contract.py": "e2cb66e76c1a770aff338eaf484caa4183192e5ec77d7a787b0e13559ee72c04",
+    "tools/art/write_pending_sidecars.py": "b748e7e404f379d71d2eca4ff2853b503e82e710d49d553a1fd73f99c4ba5354"
+  },
+  "protected_files_preserved": true,
+  "schema": 1,
+  "source_preserved": true,
+  "source_sha256": "55ea22907c4b95364b07707d291a7ea66779b59ecfad26dc61ae756c0ae5cf7a",
+  "status": "pending_owner_approval",
+  "warning": "Offline orbit captures: production draw and real simulation ticks; not paced FPS, battle acceptance or native Windows graphics acceptance"
+}

@@ -2,8 +2,9 @@
 
 ## 1. Authority and reproducibility
 
-Audit of the published S06 implementation at `4ffdc600306ecdf4f35265fca689b495e35dd3fe`
-(PR #127), not the owner's stale live checkout. The original S01 inventory is a historical
+Audit originally taken of the published S06 implementation at `4ffdc600306ecdf4f35265fca689b495e35dd3fe`
+(PR #127), subsequently refreshed by the B7/B8/B9 authoring checkpoint; see
+`../handoffs/S06-CATALOGUE-COMPLETION.md`. The original S01 inventory is a historical
 snapshot and is **not rewritten**. `S06-COVERAGE-RECONCILIATION.json` beside this document
 joins every inventory identity to current ship data, approval records, registry and pipeline.
 Its inputs are content-addressed; it does not embed live HEAD or register anything.
@@ -26,7 +27,7 @@ toolchain provenance. Rebuilding and real-renderer acceptance are not claimed he
 |---|---:|---|
 | Approved asset | 76 | 73 S06 pending-registration specimens plus the original three integrated preview specimens |
 | Shared convoy candidate | 4 | Each trade convoy maps to its faction's approved convoy candidate; not a new mesh or independently proven alias |
-| Missing mesh | 27 | No approved revision supplies this required inventory row |
+| Pending appearance | 27 | B7/B8/B9 masters and exports now exist; no owner appearance approval or runtime integration is inferred |
 | Deferred texture pipeline | 10 | Eight planet surfaces and star/nebula billboards retained on their existing pipeline under the B5 scope decision |
 | Outside mesh catalogue | 3 | Sky dome, jump glyph and baked menu backdrop under that same decision |
 | **Total** | **120** | Every historical inventory row appears exactly once |
@@ -37,7 +38,7 @@ The runtime registry has **119** rows and the authoring pipeline **three** asset
 row count is not coverage. Normalized identities and planned keys do not have a 1:1 relation
 to the historical inventory. Existing guards, manifests and approval records are unchanged.
 
-| Category | Approved assets | Shared candidates | Missing meshes | Deferred/outside mesh |
+| Category | Approved assets | Shared candidates | Pending appearance | Deferred/outside mesh |
 |---|---:|---:|---:|---:|
 | Combat hull | 10 | 0 | 8 | 0 |
 | Squadron | 7 | 0 | 0 | 0 |
@@ -53,7 +54,9 @@ These are file/approval dispositions, **not proof that 80 rows are runtime-integ
 The four shared candidates require both real selection paths, bounds/scale and ownership
 checks at S07. An existing approval is not invalidated merely because its integration is pending.
 
-## 3. Remaining required inventory meshes
+## 3. Required inventory meshes now awaiting appearance approval
+
+All 27 rows below now have Blender masters and loader-validated exports. The scaffold still lacks its S07 in-game review seam; the other 26 have paired production-renderer still evidence. They are not appearance-approved or integrated.
 
 1. **Eight combat hulls:** Confederacy `battleship`, `supercapital`, `cruiser`, `frigate`,
    `corvette`; Syndicate `cruiser`, `frigate`, `corvette`.
@@ -100,7 +103,7 @@ The delivered B1–B6 sheets and their approved revisions are preserved and thei
 reviews need not be repeated while their bytes remain unchanged. **The full S06 catalogue is
 not complete.** The B6 sheet contains eight approved runtime bindings, not eleven distinct
 models. Its eleven inventory identities include the separate trade-convoy alias and the
-unbuilt constructor/colonizer. No approval authorizes silently dropping those construction rows.
+then-unbuilt constructor/colonizer (now authored in pending B9). No approval authorizes silently dropping those construction rows.
 
 The former "S10/S11 landing is the only open item" handoff is superseded. Dependencies remain:
 remaining S06 art/scope closure → S07 complete opt-in integration → S08 mod/update compatibility
@@ -108,20 +111,23 @@ remaining S06 art/scope closure → S07 complete opt-in integration → S08 mod/
 authorized default switch. Preview registration, merge, default activation and release are
 separate actions; **a release is not part of registering an opt-in model**.
 
-Current task authorization is the owner's `agree. Let do this`, answering the bounded proposal
-for this reconciliation and an S07 plan. It authorizes no new appearance decision, registration,
-merge, tag, release, default switch, platform waiver or gameplay-stat change.
+The original reconciliation authorization was `agree. Let do this`. The owner then authorized
+`Agree execute 1 , 2 and 3` and most recently requested `please continue part2. Anything pending from my end for this?`.
+This increment delivers authoring/export/review evidence and stops before S07 integration.
+No wording supplies appearance approval, merge, release, default activation or invented gameplay statistics.
 
 ## 7. Evidence limits
 
 The handover's categorical "LAN failure not caused by this branch" is not established by the
 recorded 1/30 standalone, 1/4 suite and 0/12 control observations. Keep those receipts; do not
-convert a small sample or unchanged subsystem bytes into proof of cause. This task does not
-rerun timing-sensitive LAN, Blender, GL, broad-suite or platform acceptance. CI status must be
+convert a small sample or unchanged subsystem bytes into proof of cause. The original planning task did not
+rerun timing-sensitive LAN, Blender, GL, broad-suite or platform acceptance. The B7/B8/B9 checkpoint adds
+Blender/export and diagnostic GL still evidence only; no S08/S09 acceptance follows. CI status must be
 read on each published head; an older green head is not a receipt for its successor.
 
-A cheap reproducibility blocker was reproduced on the clean audited implementation as well as
-the reconciliation tree: `python3 tools/art/write_pending_sidecars.py --check` raises
-`FileNotFoundError` for `tools/art/build_imperial_corvette.py`. B6 lacks per-row seed declarations
-expected by the generator. No sidecar or approved input is changed here; repair belongs to a
-bounded follow-up, with source/export/mesh preservation controls.
+The original reproducibility blocker was reproduced on the clean audited implementation and
+planning tree: the sidecar checker could not find `tools/art/build_imperial_corvette.py`.
+**Resolved in the completion checkpoint:** B6 now declares its real shared seed and executable
+per-row argument; the real checker reports zero stale sidecars. Approved source/exporter/runtime
+bytes and appearance decisions remain unchanged. Failed baseline and RED/GREEN evidence are retained
+under `artifacts/s06-completion/`.

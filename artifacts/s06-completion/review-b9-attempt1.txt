@@ -1,0 +1,875 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+{
+  "imperial:constructor": {
+    "comparison": {
+      "close": {
+        "changed_pixels_gt3": 78739,
+        "changed_percent": 7.6894,
+        "bbox": [
+          403,
+          163,
+          876,
+          636
+        ]
+      },
+      "rear": {
+        "changed_pixels_gt3": 61264,
+        "changed_percent": 5.9828,
+        "bbox": [
+          421,
+          176,
+          858,
+          613
+        ]
+      },
+      "tactical": {
+        "changed_pixels_gt3": 14582,
+        "changed_percent": 1.424,
+        "bbox": [
+          544,
+          304,
+          735,
+          495
+        ]
+      },
+      "common-scale": {
+        "changed_pixels_gt3": 584,
+        "changed_percent": 0.057,
+        "bbox": [
+          622,
+          432,
+          654,
+          460
+        ]
+      }
+    },
+    "features": {
+      "accent": {
+        "camera": "close",
+        "changed_pixels": 3075,
+        "bbox": [
+          494,
+          298,
+          810,
+          494
+        ]
+      },
+      "dark": {
+        "camera": "close",
+        "changed_pixels": 3995,
+        "bbox": [
+          477,
+          396,
+          818,
+          506
+        ]
+      },
+      "cool": {
+        "camera": "rear",
+        "changed_pixels": 2133,
+        "bbox": [
+          554,
+          241,
+          730,
+          388
+        ]
+      }
+    },
+    "mesh": {
+      "sha256": "32fc71942015d171695fc9a6f150a402235ff62c480d29288def84fe03340cdb",
+      "triangles": 3120,
+      "vertices": 1730,
+      "bytes": 183564,
+      "bounds": [
+        [
+          -20.0,
+          -7.0,
+          -24.6975
+        ],
+        [
+          20.0,
+          26.5,
+          24.35825
+        ]
+      ],
+      "blender": "Blender evaluated bevel mesh",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "authority": "blend",
+      "legacy_length": 64.12035,
+      "candidate_length": 64.12035,
+      "legacy_footprint": null,
+      "candidate_footprint": null,
+      "station_scale": null
+    }
+  },
+  "imperial:colonizer": {
+    "comparison": {
+      "close": {
+        "changed_pixels_gt3": 96074,
+        "changed_percent": 9.3822,
+        "bbox": [
+          401,
+          161,
+          878,
+          638
+        ]
+      },
+      "rear": {
+        "changed_pixels_gt3": 69505,
+        "changed_percent": 6.7876,
+        "bbox": [
+          419,
+          174,
+          860,
+          616
+        ]
+      },
+      "tactical": {
+        "changed_pixels_gt3": 16387,
+        "changed_percent": 1.6003,
+        "bbox": [
+          543,
+          303,
+          736,
+          496
+        ]
+      },
+      "common-scale": {
+        "changed_pixels_gt3": 656,
+        "changed_percent": 0.0641,
+        "bbox": [
+          619,
+          432,
+          654,
+          464
+        ]
+      }
+    },
+    "features": {
+      "accent": {
+        "camera": "close",
+        "changed_pixels": 3696,
+        "bbox": [
+          496,
+          230,
+          810,
+          479
+        ]
+      },
+      "dark": {
+        "camera": "close",
+        "changed_pixels": 3921,
+        "bbox": [
+          436,
+          370,
+          818,
+          586
+        ]
+      },
+      "cool": {
+        "camera": "rear",
+        "changed_pixels": 811,
+        "bbox": [
+          638,
+          239,
+          648,
+          320
+        ]
+      }
+    },
+    "mesh": {
+      "sha256": "a1076d24d95137ec3c086e46cd32d2555e1c374284994a250938fb7d790f8dae",
+      "triangles": 3472,
+      "vertices": 1906,
+      "bytes": 206525,
+      "bounds": [
+        [
+          -20.0,
+          -7.0,
+          -24.6975
+        ],
+        [
+          20.0,
+          26.5,
+          24.35825
+        ]
+      ],
+      "blender": "Blender evaluated bevel mesh",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "authority": "blend",
+      "legacy_length": 64.12035,
+      "candidate_length": 64.12035,
+      "legacy_footprint": null,
+      "candidate_footprint": null,
+      "station_scale": null
+    }
+  },
+  "rebel:constructor": {
+    "comparison": {
+      "close": {
+        "changed_pixels_gt3": 120389,
+        "changed_percent": 11.7567,
+        "bbox": [
+          388,
+          148,
+          891,
+          651
+        ]
+      },
+      "rear": {
+        "changed_pixels_gt3": 98870,
+        "changed_percent": 9.6553,
+        "bbox": [
+          407,
+          162,
+          872,
+          628
+        ]
+      },
+      "tactical": {
+        "changed_pixels_gt3": 26051,
+        "changed_percent": 2.544,
+        "bbox": [
+          538,
+          298,
+          741,
+          501
+        ]
+      },
+      "common-scale": {
+        "changed_pixels_gt3": 503,
+        "changed_percent": 0.0491,
+        "bbox": [
+          620,
+          433,
+          653,
+          458
+        ]
+      }
+    },
+    "features": {
+      "accent": {
+        "camera": "close",
+        "changed_pixels": 2533,
+        "bbox": [
+          497,
+          298,
+          795,
+          482
+        ]
+      },
+      "dark": {
+        "camera": "close",
+        "changed_pixels": 3836,
+        "bbox": [
+          480,
+          322,
+          804,
+          493
+        ]
+      },
+      "cool": {
+        "camera": "rear",
+        "changed_pixels": 1697,
+        "bbox": [
+          572,
+          279,
+          713,
+          388
+        ]
+      }
+    },
+    "mesh": {
+      "sha256": "441cb0bb04afac29e8d1bcd4f704858988abb1226681e216796f33e5b0aae780",
+      "triangles": 2512,
+      "vertices": 1402,
+      "bytes": 146906,
+      "bounds": [
+        [
+          -25.0,
+          -7.0,
+          -38.455
+        ],
+        [
+          25.0,
+          32.451235,
+          35.5
+        ]
+      ],
+      "blender": "Blender evaluated bevel mesh",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "authority": "blend",
+      "legacy_length": 64.12035,
+      "candidate_length": 64.12035,
+      "legacy_footprint": null,
+      "candidate_footprint": null,
+      "station_scale": null
+    }
+  },
+  "rebel:colonizer": {
+    "comparison": {
+      "close": {
+        "changed_pixels_gt3": 108516,
+        "changed_percent": 10.5973,
+        "bbox": [
+          391,
+          151,
+          888,
+          648
+        ]
+      },
+      "rear": {
+        "changed_pixels_gt3": 70379,
+        "changed_percent": 6.8729,
+        "bbox": [
+          410,
+          165,
+          869,
+          625
+        ]
+      },
+      "tactical": {
+        "changed_pixels_gt3": 18484,
+        "changed_percent": 1.8051,
+        "bbox": [
+          540,
+          300,
+          739,
+          499
+        ]
+      },
+      "common-scale": {
+        "changed_pixels_gt3": 658,
+        "changed_percent": 0.0643,
+        "bbox": [
+          618,
+          433,
+          653,
+          465
+        ]
+      }
+    },
+    "features": {
+      "accent": {
+        "camera": "close",
+        "changed_pixels": 6040,
+        "bbox": [
+          487,
+          255,
+          811,
+          495
+        ]
+      },
+      "dark": {
+        "camera": "close",
+        "changed_pixels": 5084,
+        "bbox": [
+          429,
+          392,
+          824,
+          594
+        ]
+      },
+      "cool": {
+        "camera": "rear",
+        "changed_pixels": 769,
+        "bbox": [
+          636,
+          293,
+          650,
+          347
+        ]
+      }
+    },
+    "mesh": {
+      "sha256": "0afb0eddcd4180f6fae0523eac4dcb086c65093a59983714e2298691bdf15fae",
+      "triangles": 3560,
+      "vertices": 1962,
+      "bytes": 213254,
+      "bounds": [
+        [
+          -42.5,
+          -13.5,
+          -46.94
+        ],
+        [
+          42.5,
+          36.5,
+          48.507
+        ]
+      ],
+      "blender": "Blender evaluated bevel mesh",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "authority": "blend",
+      "legacy_length": 64.12035,
+      "candidate_length": 64.12035,
+      "legacy_footprint": null,
+      "candidate_footprint": null,
+      "station_scale": null
+    }
+  },
+  "confederacy:constructor": {
+    "comparison": {
+      "close": {
+        "changed_pixels_gt3": 141467,
+        "changed_percent": 13.8151,
+        "bbox": [
+          368,
+          128,
+          911,
+          671
+        ]
+      },
+      "rear": {
+        "changed_pixels_gt3": 114271,
+        "changed_percent": 11.1593,
+        "bbox": [
+          388,
+          144,
+          891,
+          646
+        ]
+      },
+      "tactical": {
+        "changed_pixels_gt3": 27063,
+        "changed_percent": 2.6429,
+        "bbox": [
+          531,
+          291,
+          748,
+          508
+        ]
+      },
+      "common-scale": {
+        "changed_pixels_gt3": 788,
+        "changed_percent": 0.077,
+        "bbox": [
+          599,
+          411,
+          673,
+          485
+        ]
+      }
+    },
+    "features": {
+      "accent": {
+        "camera": "close",
+        "changed_pixels": 3757,
+        "bbox": [
+          458,
+          285,
+          847,
+          527
+        ]
+      },
+      "dark": {
+        "camera": "close",
+        "changed_pixels": 7062,
+        "bbox": [
+          441,
+          378,
+          856,
+          540
+        ]
+      },
+      "cool": {
+        "camera": "rear",
+        "changed_pixels": 1211,
+        "bbox": [
+          524,
+          263,
+          760,
+          389
+        ]
+      }
+    },
+    "mesh": {
+      "sha256": "cce3fd0e2a02b4e745efeec9ff6873869b17fec65f6aa0f9f08238226a40b14c",
+      "triangles": 3932,
+      "vertices": 2196,
+      "bytes": 231316,
+      "bounds": [
+        [
+          -37.794229,
+          -8.265,
+          -34.6975
+        ],
+        [
+          37.794229,
+          33.0,
+          34.0
+        ]
+      ],
+      "blender": "Blender evaluated bevel mesh",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "authority": "blend",
+      "legacy_length": 64.12035,
+      "candidate_length": 64.12035,
+      "legacy_footprint": null,
+      "candidate_footprint": null,
+      "station_scale": null
+    }
+  },
+  "confederacy:colonizer": {
+    "comparison": {
+      "close": {
+        "changed_pixels_gt3": 145093,
+        "changed_percent": 14.1692,
+        "bbox": [
+          379,
+          139,
+          900,
+          660
+        ]
+      },
+      "rear": {
+        "changed_pixels_gt3": 113102,
+        "changed_percent": 11.0451,
+        "bbox": [
+          399,
+          154,
+          880,
+          635
+        ]
+      },
+      "tactical": {
+        "changed_pixels_gt3": 30170,
+        "changed_percent": 2.9463,
+        "bbox": [
+          535,
+          295,
+          744,
+          504
+        ]
+      },
+      "common-scale": {
+        "changed_pixels_gt3": 795,
+        "changed_percent": 0.0776,
+        "bbox": [
+          599,
+          411,
+          673,
+          485
+        ]
+      }
+    },
+    "features": {
+      "accent": {
+        "camera": "close",
+        "changed_pixels": 3889,
+        "bbox": [
+          488,
+          250,
+          825,
+          472
+        ]
+      },
+      "dark": {
+        "camera": "close",
+        "changed_pixels": 3916,
+        "bbox": [
+          414,
+          388,
+          835,
+          587
+        ]
+      },
+      "cool": {
+        "camera": "rear",
+        "changed_pixels": 550,
+        "bbox": [
+          638,
+          284,
+          647,
+          340
+        ]
+      }
+    },
+    "mesh": {
+      "sha256": "7c8a7b31847896526b67d9daa7fe4ea866ff03f8c4da3acd31fe9401ef0fd08d",
+      "triangles": 4156,
+      "vertices": 2292,
+      "bytes": 249476,
+      "bounds": [
+        [
+          -52.856406,
+          -7.0,
+          -51.6975
+        ],
+        [
+          52.856406,
+          43.5,
+          55.4475
+        ]
+      ],
+      "blender": "Blender evaluated bevel mesh",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "authority": "blend",
+      "legacy_length": 64.12035,
+      "candidate_length": 64.12035,
+      "legacy_footprint": null,
+      "candidate_footprint": null,
+      "station_scale": null
+    }
+  },
+  "syndicate:constructor": {
+    "comparison": {
+      "close": {
+        "changed_pixels_gt3": 94980,
+        "changed_percent": 9.2754,
+        "bbox": [
+          399,
+          159,
+          880,
+          640
+        ]
+      },
+      "rear": {
+        "changed_pixels_gt3": 68215,
+        "changed_percent": 6.6616,
+        "bbox": [
+          417,
+          173,
+          862,
+          617
+        ]
+      },
+      "tactical": {
+        "changed_pixels_gt3": 15555,
+        "changed_percent": 1.519,
+        "bbox": [
+          543,
+          303,
+          736,
+          496
+        ]
+      },
+      "common-scale": {
+        "changed_pixels_gt3": 569,
+        "changed_percent": 0.0556,
+        "bbox": [
+          622,
+          431,
+          653,
+          464
+        ]
+      }
+    },
+    "features": {
+      "accent": {
+        "camera": "close",
+        "changed_pixels": 3317,
+        "bbox": [
+          494,
+          296,
+          822,
+          480
+        ]
+      },
+      "dark": {
+        "camera": "close",
+        "changed_pixels": 4033,
+        "bbox": [
+          478,
+          332,
+          829,
+          490
+        ]
+      },
+      "cool": {
+        "camera": "rear",
+        "changed_pixels": 2059,
+        "bbox": [
+          570,
+          261,
+          719,
+          401
+        ]
+      }
+    },
+    "mesh": {
+      "sha256": "b3d4946de75d41f6b02c591e3275ea3627ffdf010d83bd925b16c4d7d3a532c3",
+      "triangles": 3240,
+      "vertices": 1804,
+      "bytes": 191074,
+      "bounds": [
+        [
+          -25.714157,
+          -9.0,
+          -40.8725
+        ],
+        [
+          29.98,
+          36.5,
+          32.388
+        ]
+      ],
+      "blender": "Blender evaluated bevel mesh",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "authority": "blend",
+      "legacy_length": 64.12035,
+      "candidate_length": 64.12035,
+      "legacy_footprint": null,
+      "candidate_footprint": null,
+      "station_scale": null
+    }
+  },
+  "syndicate:colonizer": {
+    "comparison": {
+      "close": {
+        "changed_pixels_gt3": 105762,
+        "changed_percent": 10.3283,
+        "bbox": [
+          418,
+          178,
+          861,
+          621
+        ]
+      },
+      "rear": {
+        "changed_pixels_gt3": 81047,
+        "changed_percent": 7.9147,
+        "bbox": [
+          434,
+          190,
+          845,
+          600
+        ]
+      },
+      "tactical": {
+        "changed_pixels_gt3": 20568,
+        "changed_percent": 2.0086,
+        "bbox": [
+          550,
+          310,
+          729,
+          489
+        ]
+      },
+      "common-scale": {
+        "changed_pixels_gt3": 485,
+        "changed_percent": 0.0474,
+        "bbox": [
+          621,
+          432,
+          651,
+          463
+        ]
+      }
+    },
+    "features": {
+      "accent": {
+        "camera": "close",
+        "changed_pixels": 3184,
+        "bbox": [
+          500,
+          291,
+          806,
+          486
+        ]
+      },
+      "dark": {
+        "camera": "close",
+        "changed_pixels": 2612,
+        "bbox": [
+          450,
+          325,
+          815,
+          560
+        ]
+      },
+      "cool": {
+        "camera": "rear",
+        "changed_pixels": 589,
+        "bbox": [
+          632,
+          316,
+          641,
+          377
+        ]
+      }
+    },
+    "mesh": {
+      "sha256": "d5c59777eb31515745f5085246247e86dd14ede2bc5325d89c72530fd2944841",
+      "triangles": 3528,
+      "vertices": 1940,
+      "bytes": 208615,
+      "bounds": [
+        [
+          -35.961081,
+          -11.0,
+          -57.8325
+        ],
+        [
+          47.4,
+          36.5,
+          57.4475
+        ]
+      ],
+      "blender": "Blender evaluated bevel mesh",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "authority": "blend",
+      "legacy_length": 64.12035,
+      "candidate_length": 64.12035,
+      "legacy_footprint": null,
+      "candidate_footprint": null,
+      "station_scale": null
+    }
+  }
+}
