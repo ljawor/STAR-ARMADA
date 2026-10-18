@@ -24,6 +24,27 @@ turns into ``box`` - every Imperial corvette, cruiser, battleship and squadron i
 drawing the crate it does not draw today. Test (4) below is the regression guard for exactly that,
 and it fails if the general gate is widened.
 
+That last sentence is measured, not asserted. Each wrong fix below was applied to the module source
+in memory and this file was run against it (raw ``unittest`` counts, failing tests named in full):
+
+    gate widened (`data.faction not in FACTIONS[1:]` -> `not in FACTIONS`)   27 failures
+    the same, with `SHIP_KEYS` rebuilt from the widened `FACTIONS`           38 failures, 1 error
+    `FACTIONS` rotated so its slice contains imperial                        40 failures, 1 error
+    `imperial:convoy` added to `SHIP_KEYS` (the other obvious fix)            2 failures, 1 error
+    the seam itself reverted to `faction in FACTIONS[1:]`                     3 failures
+
+Under the first, all nine Imperial rows move to ``imperial:<role>`` - ``imperial:corvette``,
+``imperial:cruiser``, ``imperial:battleship``, ``imperial:fighter`` for the TIE squadron - none of
+which is in ``SHIP_KEYS``, so ``ship_mesh`` collapses each to the ``box`` the row does not draw
+today; the failures land in ``test_every_imperial_ship_row_keeps_its_stock_key``,
+``test_every_imperial_key_is_a_legacy_shape_or_the_authorized_convoy`` and the stock-key test of
+``NothingSelectedServesNothing``. The second and third raise
+``ValueError: unknown faction ship: 'imperial':'corvette'`` instead, one layer further down. Two
+defects in the same seam were silently green here before this file was reviewed and are now red:
+the data-less branch rebuilding the literal ``None:convoy`` (2 failures, ``ship_binding`` half) and
+the convoy branch dropping its ``role == 'crew_transport'`` half so that any crew-space row is a
+convoy (1 failure).
+
 Driving the functions without a game
 ------------------------------------
 ``ship_binding`` returns early and ``None`` when no resolver is configured, and a resolver serves a
@@ -80,16 +101,42 @@ SIBLING_ROWS = {'rebel_corvette': 'rebel:corvette',
                 'syndicate_frigate': 'syndicate:frigate',
                 'syndicate_raid_squadron': 'syndicate:fighter'}
 
+# Every row of the catalogue that carries crew space. Measured, not assumed: these four are the
+# only rows in the store with ``crew_capacity > 0``, which is why the scope of the branch needs a
+# fixture of its own to pin it (see ``test_only_a_crew_transport_row_with_crew_space_...``).
+CREW_TRANSPORTS = ('confed_crew_transport', 'imperial_crew_transport',
+                   'rebel_crew_transport', 'syndicate_crew_transport')
+
 
 def store():
     return DataStore.get()
 
 
+def shimmed(rows):
+    """A store holding exactly ``rows`` - ``(data_id, overrides)`` pairs over catalogue rows.
+
+    The catalogue cannot produce every state the gate has to survive - a crew-space row that is not
+    a crew transport, a hull of a faction outside ``FACTIONS`` - so those controls are built at
+    runtime here, as a schema's negative controls are.
+    """
+    ds = store()
+    return SimpleNamespace(ships={data_id: replace(ds.ships[data_id], **overrides)
+                                  for data_id, overrides in rows},
+                           ship_visual=ds.ship_visual)
+
+
+def with_crew_space(data_id, capacity):
+    """The same catalogue row with its crew space set: the gate's own test, run from a fixture.
+
+    Only the four crew transports carry crew space, so a fixture is the only thing that can tell a
+    branch scoped by ``data.category`` from one that admits any row with crew space.
+    """
+    return shimmed([(data_id, {'crew_capacity': capacity})])
+
+
 def no_capacity(data_id):
     """The same catalogue row with the crew space taken out: not a convoy, by the gate's own test."""
-    ds = store()
-    return SimpleNamespace(ships={data_id: replace(ds.ships[data_id], crew_capacity=0)},
-                           ship_visual=ds.ship_visual)
+    return with_crew_space(data_id, 0)
 
 
 def stubbed():
@@ -104,7 +151,9 @@ class ImperialConvoyKeyConstruction(unittest.TestCase):
     constructs and then answers "not authored" - so the branch is exercised without anything being
     served - and with the accept-all stub, which is the only way to see the key come back out of a
     function that hands it to the resolver. ``ship_visual_key``'s branch is observed where it has
-    to answer for itself: no resolver at all, and a preview session in which nothing is authored.
+    to answer for itself, with no resolver configured at all; the live preview session ``setUp``
+    opens is where ``ship_binding`` is seen declining to serve a hull nothing has authored
+    (``test_nothing_authored_is_served_by_the_real_registry``).
     """
 
     def setUp(self):
@@ -154,6 +203,12 @@ class ImperialConvoyKeyConstruction(unittest.TestCase):
                              'imperial:convoy')
             self.assertEqual(visuals.ship_visual_key(ds, 'imperial_crew_transport'),
                              'imperial:convoy')
+        with stubbed():
+            # Catalogue identity wins for ships, including captured ones: the owner's faction is an
+            # argument, not a veto, so a syndicate owner asking for this row still reaches the
+            # Imperial convoy hull, because the branch follows ``data.faction``.
+            self.assertEqual(visuals.ship_visual_key(ds, 'imperial_crew_transport', 'syndicate'),
+                             'imperial:convoy')
         selection.configure({})
         self.assertEqual(visuals.ship_visual_key(ds, 'imperial_crew_transport'),
                          'imperial:convoy')
@@ -170,6 +225,69 @@ class ImperialConvoyKeyConstruction(unittest.TestCase):
             self.assertNotEqual(visuals.ship_visual_key(empty, 'imperial_crew_transport'),
                                 'imperial:convoy')
 
+    def test_only_a_crew_transport_row_with_crew_space_reaches_the_convoy_key(self):
+        """The other half of the branch's scope, which no stock row can tell apart.
+
+        The branch is scoped twice, by category and by crew space, and the catalogue exercises
+        only the second: the four crew transports are the only rows that carry crew space, so a
+        rewrite that dropped ``role == 'crew_transport'`` would leave every test above green while
+        serving the convoy hull for any crew-space row in any data-only mod. The control is built
+        at runtime, as ``no_capacity`` is, by giving a cruiser the crew space of a transport.
+        """
+        ds = store()
+        cruiser = with_crew_space('imperial_cruiser', 5)
+        self.assertEqual(cruiser.ships['imperial_cruiser'].crew_capacity, 5)
+        with stubbed():
+            self.assertEqual(selection.ship_binding(cruiser, 'imperial_cruiser'),
+                             'imperial:cruiser',
+                             'crew space alone does not make a combat row a convoy')
+        catalogue = {data_id: data for data_id, data in ds.ships.items()
+                     if data.faction in visuals.FACTIONS}
+        with stubbed():
+            built = {data_id: selection.ship_binding(ds, data_id) for data_id in catalogue}
+        self.assertEqual(sorted(built), sorted(catalogue))
+        self.assertTrue(all(isinstance(binding, str) for binding in built.values()),
+                        'every stock row builds a key under an accept-all session')
+        expected = {data_id for data_id, data in catalogue.items()
+                    if data.category == 'crew_transport' and data.crew_capacity > 0}
+        self.assertEqual({data_id for data_id, binding in built.items()
+                          if isinstance(binding, str) and binding.endswith(':convoy')},
+                         expected,
+                         'the convoy hull is built for a crew transport with crew space, and '
+                         'nothing else')
+        self.assertTrue(set(CREW_TRANSPORTS) <= set(expected),
+                        'the four catalogue crew transports are rows of this store')
+
+    def test_a_row_with_no_faction_constructs_no_key_at_all(self):
+        """The literal ``None:convoy`` this seam removed: naming no faction must build nothing.
+
+        The data-less branch built ``f'{faction}:convoy'`` before it, which for a caller that named
+        no faction produced the string key ``None:convoy``; ``convoy_key`` answers ``None`` for
+        anything outside the four factions instead. The recorder is the only instrument that can
+        see the difference: with the key answered "not authored", building nothing and building a
+        key that nothing serves are otherwise the same ``None``.
+        """
+        ds = store()
+        cases = ((None, []), ('raiders', []), ('imperial', ['imperial:convoy']))
+        for faction, expected in cases:
+            with self.subTest(faction=faction):
+                result, asked = self.recorded(
+                    lambda: selection.ship_binding(ds, 'trade_convoy', faction))
+                self.assertIsNone(result, 'nothing is authored for the convoy hull yet')
+                self.assertEqual([key for key in asked if isinstance(key, str)], expected,
+                                 'a faction outside the gate must construct no key at all')
+                self.assertNotIn('None:convoy', asked)
+        self.assertIsNone(visuals.convoy_key(None), 'no faction is not a convoy faction')
+        self.assertIsNone(visuals.convoy_key('raiders'), 'a mod faction is not a convoy faction')
+        self.assertEqual(visuals.convoy_key('imperial'), 'imperial:convoy')
+        self.assertEqual(visuals.CONVOY_FACTIONS, visuals.FACTIONS,
+                         'the declared gate names the four catalogue factions, no more')
+        selection.configure({})
+        self.assertEqual(visuals.ship_visual_key(ds, 'trade_convoy', 'raiders'), 'box',
+                         'a faction outside the gate keeps the protected legacy fallback')
+        self.assertEqual(visuals.ship_visual_key(ds, 'trade_convoy'), 'box',
+                         'no faction at all keeps the same fallback')
+
     def test_nothing_authored_is_served_by_the_real_registry(self):
         """The seam extends a gate; it does not author or activate a hull for Imperial."""
         ds = store()
@@ -180,6 +298,8 @@ class ImperialConvoyKeyConstruction(unittest.TestCase):
                 self.assertIsNone(selection.mesh_for(binding))
                 self.assertIsNone(selection.ship_binding(ds, data_id, faction))
         self.assertIsNone(selection.ship_binding(ds, 'imperial_crew_transport'))
+        self.assertIsNone(selection.ship_binding(ds, 'trade_convoy'),
+                          'a row that names no faction is served nothing either')
 
 
 class ApprovedFactionsUnchanged(unittest.TestCase):
@@ -214,13 +334,22 @@ class ApprovedFactionsUnchanged(unittest.TestCase):
                          'syndicate:convoy')
         self.assertEqual(visuals.ship_visual_key(no_capacity('rebel_crew_transport'),
                                                  'rebel_crew_transport'), 'box')
-        # Nothing of the three factions lost its faction prefix to the seam.
+        # Nothing of the three factions lost its faction prefix to the seam. The three only: a
+        # faction outside FACTIONS keeps the protected legacy fallback by design, so a mod row
+        # another suite has left in the shared store is not a regression here.
+        swept = 0
         for data_id, data in ds.ships.items():
-            if data.faction == 'imperial':
+            if data.faction not in SIBLINGS:
                 continue
+            swept += 1
             with self.subTest(data_id=data_id):
                 self.assertTrue(visuals.ship_visual_key(ds, data_id)
                                 .startswith(data.faction + ':'))
+        self.assertGreaterEqual(swept, len(SIBLING_ROWS) + len(CREW_TRANSPORTS),
+                                'the sweep found the rows it is meant to cover')
+        unknown = shimmed([('rebel_frigate', {'faction': 'raiders'})])
+        self.assertIn(visuals.ship_visual_key(unknown, 'rebel_frigate'), visuals.LEGACY_SHAPES,
+                      'a hull of a faction outside FACTIONS keeps the legacy fallback')
 
 
 class ImperialShipRowsUnchanged(unittest.TestCase):
@@ -245,6 +374,33 @@ class ImperialShipRowsUnchanged(unittest.TestCase):
                 self.assertEqual(visuals.ship_visual_key(ds, data_id),
                                  ds.ship_visual(data_id)['shape'])
 
+    def test_every_imperial_key_is_a_legacy_shape_or_the_authorized_convoy(self):
+        """The trap stated as containment, so a *new* Imperial row cannot slip past the table.
+
+        The row-by-row table above pins the nine rows that exist today. This pins the property
+        behind it: an Imperial row resolves either to one of the five legacy shapes or to the one
+        convoy hull the owner's decision authorizes, and nothing else. The widened general gate
+        returns ``imperial:corvette``, ``imperial:cruiser``, ``imperial:battleship``,
+        ``imperial:fighter`` and so on for the nine rows - none of which is in this set - while
+        ``ship_visual_key`` still returns them un-normalized, so the failure lands here as well as
+        in the table.
+        """
+        ds = store()
+        selection.configure({})
+        allowed = set(visuals.LEGACY_SHAPES) | {'imperial:convoy'}
+        imperial_rows = [data_id for data_id, data in ds.ships.items()
+                         if data.faction == 'imperial']
+        # A subset, not an equality: the store is shared with every other suite in the run, and
+        # an imperial row another suite has left behind is still held to the containment below.
+        self.assertTrue(set(SHIP_ROWS) <= set(imperial_rows),
+                        'the nine rows the table above pins are catalogue rows')
+        for data_id in imperial_rows:
+            with self.subTest(data_id=data_id):
+                key = visuals.ship_visual_key(ds, data_id)
+                self.assertIn(key, allowed,
+                              f'{data_id} resolved to {key!r}, neither a legacy shape nor the '
+                              'authorized convoy hull')
+
     def test_the_general_faction_gate_still_excludes_imperial(self):
         self.assertNotIn('imperial', visuals.FACTIONS[1:])
         for role in visuals.SHIP_ROLES:
@@ -266,7 +422,8 @@ class ImperialShipRowsUnchanged(unittest.TestCase):
         """
         self.assertNotIn('imperial:convoy', visuals.SHIP_KEYS)
         self.assertEqual(visuals.normalize_ship_key('imperial:convoy'), 'box')
-        self.assertEqual(ship_mesh('imperial:convoy'), ship_mesh('box'))
+        self.assertIs(ship_mesh('imperial:convoy'), ship_mesh('box'),
+                      'the row must draw the very stock mesh, not merely a mesh equal to it')
         with patch.object(visuals, 'SHIP_KEYS', visuals.SHIP_KEYS + ('imperial:convoy',)):
             self.assertEqual(visuals.normalize_ship_key('imperial:convoy'), 'imperial:convoy')
             with self.assertRaises(ValueError):
@@ -297,10 +454,13 @@ class NothingSelectedServesNothing(unittest.TestCase):
         """The seam changes which key the row resolves to, not the geometry available for it."""
         ds = store()
         selection.configure({})
+        stock = ds.ship_visual('trade_convoy')['shape']
+        self.assertEqual(stock, 'box', 'the stock shape this row draws is the box')
         self.assertEqual(visuals.ship_visual_key(ds, 'trade_convoy', 'imperial'),
                          'imperial:convoy')
-        self.assertEqual(ship_mesh(visuals.ship_visual_key(ds, 'trade_convoy', 'imperial')),
-                         ship_mesh(ds.ship_visual('trade_convoy')['shape']))
+        self.assertIs(ship_mesh(visuals.ship_visual_key(ds, 'trade_convoy', 'imperial')),
+                      ship_mesh(stock),
+                      'the key the seam reaches normalizes to the stock mesh itself')
 
 
 class TheGateIsDeclaredInWriting(unittest.TestCase):
@@ -314,14 +474,18 @@ class TheGateIsDeclaredInWriting(unittest.TestCase):
 
     def test_the_decision_exists_and_points_at_the_convoy_gate(self):
         entry = self.decision()
-        self.assertIn('convoy', entry['applies_to'])
+        self.assertIn('convoy gate', entry['applies_to'],
+                      'the decision must name the gate it authorizes a change to')
         self.assertTrue(any('imperial:convoy' in text for text in entry['what_this_authorizes']),
                         'the decision does not authorize the imperial:convoy hull')
         siblings = entry['what_the_siblings_settled_on']
         self.assertEqual(len(siblings['rows']), 3)
         for row in siblings['rows']:
             with self.subTest(row=row):
-                self.assertTrue(row.split(':')[0] in SIBLINGS)
+                faction = row.split(':')[0]
+                self.assertIn(faction, SIBLINGS)
+                self.assertTrue(row.startswith(faction + ':convoy'),
+                                'a sibling row must name the convoy binding itself')
 
     def test_the_decision_still_refuses_a_blanket_change_to_the_gate(self):
         entry = self.decision()
