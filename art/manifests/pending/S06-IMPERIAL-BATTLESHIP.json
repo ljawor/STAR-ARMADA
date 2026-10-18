@@ -15,8 +15,8 @@
   },
   "initial_seed": {
     "path": "tools/art/build_b6_imperial_ships.py",
-    "sha256": "b63f45eebd1c8c9ebe5f2d8529872098c9cbf6a8cf7691873d15f62a280070f5",
-    "bytes": 56133,
+    "sha256": "1d8e1e62ae73ff23412ef412d579aa12a59725185a6ee0f0b43f125ae74e3ced",
+    "bytes": 71020,
     "selects": "--asset ship:imperial:battleship"
   },
   "export_script": {
@@ -63,12 +63,12 @@
       108.0
     ]
   ],
-  "authoring": "Script-authored by the B6 seed (script-authoritative per the S03 source-authority policy)",
-  "blender_pin": "see tools/art",
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
   "owner_decision": null,
   "activation": false,
-  "appearance_decision": "s06-b6-imperial-ships-2026-10-18",
-  "future_pipeline_registration": "Not registered anywhere; a later landing step is what would add a pipeline entry.",
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
   "evidence": "artifacts/s06_alliance_batch_review/b6-battleship/imperial-battleship-comparison.png",
-  "motion": []
+  "motion": [],
+  "appearance_decision": "s06-b6-imperial-ships-2026-10-18"
 }

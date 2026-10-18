@@ -1,0 +1,625 @@
+{
+  "base": "dc16a88c52cdc72d7f9cb81675969cc6e3d8786c",
+  "rows": [
+    {
+      "binding": "imperial:command_station",
+      "identifier": "imperial_command_station",
+      "data_id": "command_station",
+      "faction": "imperial",
+      "station_kind": "command_station",
+      "gameplay_entity": "command_station",
+      "asset_class": "station",
+      "radius": 130.0,
+      "envelope": [
+        [
+          -62.0,
+          -8.0,
+          -62.0
+        ],
+        [
+          62.0,
+          55.0,
+          62.0
+        ]
+      ],
+      "legacy_triangles": 2672
+    },
+    {
+      "binding": "imperial:shipyard",
+      "identifier": "imperial_shipyard",
+      "data_id": "shipyard",
+      "faction": "imperial",
+      "station_kind": "shipyard",
+      "gameplay_entity": "shipyard",
+      "asset_class": "station",
+      "radius": 110.0,
+      "envelope": [
+        [
+          -43.65,
+          -10.0,
+          -45.0
+        ],
+        [
+          43.65,
+          34.225,
+          55.507
+        ]
+      ],
+      "legacy_triangles": 1584
+    },
+    {
+      "binding": "imperial:research_station",
+      "identifier": "imperial_research_station",
+      "data_id": "research_station",
+      "faction": "imperial",
+      "station_kind": "research_station",
+      "gameplay_entity": "research_station",
+      "asset_class": "station",
+      "radius": 85.0,
+      "envelope": [
+        [
+          -60.925626,
+          -15.0,
+          -41.526279
+        ],
+        [
+          60.925626,
+          40.305438,
+          64.0
+        ]
+      ],
+      "legacy_triangles": 1104
+    },
+    {
+      "binding": "imperial:defense_platform",
+      "identifier": "imperial_defense_platform",
+      "data_id": "defense_platform",
+      "faction": "imperial",
+      "station_kind": "defense_platform",
+      "gameplay_entity": "defense_platform",
+      "asset_class": "station",
+      "radius": 60.0,
+      "envelope": [
+        [
+          -44.258609,
+          -13.5,
+          -44.258609
+        ],
+        [
+          44.258609,
+          21.0,
+          44.258609
+        ]
+      ],
+      "legacy_triangles": 1584
+    },
+    {
+      "binding": "imperial:mining_station",
+      "identifier": "imperial_mining_station",
+      "data_id": "mining_station",
+      "faction": "imperial",
+      "station_kind": "mining_station",
+      "gameplay_entity": "mining_station",
+      "asset_class": "station",
+      "radius": 70.0,
+      "envelope": [
+        [
+          -39.0,
+          -54.0,
+          -28.0
+        ],
+        [
+          39.0,
+          41.0,
+          35.507
+        ]
+      ],
+      "legacy_triangles": 1536
+    },
+    {
+      "binding": "imperial:sensor_station",
+      "identifier": "imperial_sensor_station",
+      "data_id": "sensor_station",
+      "faction": "imperial",
+      "station_kind": "sensor_station",
+      "gameplay_entity": "sensor_station",
+      "asset_class": "station",
+      "radius": 45.0,
+      "envelope": [
+        [
+          -37.0,
+          -23.0,
+          -30.387721
+        ],
+        [
+          37.0,
+          62.355496,
+          30.387721
+        ]
+      ],
+      "legacy_triangles": 976
+    },
+    {
+      "binding": "imperial:trade_station",
+      "identifier": "imperial_trade_station",
+      "data_id": "trade_station",
+      "faction": "imperial",
+      "station_kind": "trade_station",
+      "gameplay_entity": "trade_station",
+      "asset_class": "station",
+      "radius": 65.0,
+      "envelope": [
+        [
+          -63.53675,
+          -8.605,
+          -63.53675
+        ],
+        [
+          63.53675,
+          51.5,
+          63.53675
+        ]
+      ],
+      "legacy_triangles": 2288
+    },
+    {
+      "binding": "imperial:fighter_platform",
+      "identifier": "imperial_fighter_platform",
+      "data_id": "fighter_platform",
+      "faction": "imperial",
+      "station_kind": "fighter_platform",
+      "gameplay_entity": "fighter_platform",
+      "asset_class": "station",
+      "radius": 75.0,
+      "envelope": [
+        [
+          -33.0,
+          -11.5,
+          -42.0
+        ],
+        [
+          33.0,
+          53.5,
+          44.0
+        ]
+      ],
+      "legacy_triangles": 864
+    },
+    {
+      "binding": "imperial:repair_dock",
+      "identifier": "imperial_repair_dock",
+      "data_id": "repair_dock",
+      "faction": "imperial",
+      "station_kind": "repair_dock",
+      "gameplay_entity": "repair_dock",
+      "asset_class": "station",
+      "radius": 70.0,
+      "envelope": [
+        [
+          -34.5,
+          -20.0,
+          -42.5
+        ],
+        [
+          34.5,
+          29.0,
+          42.5
+        ]
+      ],
+      "legacy_triangles": 816
+    },
+    {
+      "binding": "imperial:energy_relay",
+      "identifier": "imperial_energy_relay",
+      "data_id": "energy_relay",
+      "faction": "imperial",
+      "station_kind": "energy_relay",
+      "gameplay_entity": "energy_relay",
+      "asset_class": "station",
+      "radius": 55.0,
+      "envelope": [
+        [
+          -41.736688,
+          -20.5,
+          -28.0
+        ],
+        [
+          41.736688,
+          38.0,
+          46.75
+        ]
+      ],
+      "legacy_triangles": 928
+    },
+    {
+      "binding": "imperial:constructor",
+      "identifier": "imperial_constructor",
+      "data_id": "imperial_constructor",
+      "faction": "imperial",
+      "gameplay_entity": "imperial_constructor",
+      "asset_class": "construction",
+      "radius": 30.0,
+      "legacy_key": "box",
+      "envelope": [
+        [
+          -20.0,
+          -7.0,
+          -24.6975
+        ],
+        [
+          20.0,
+          26.5,
+          24.35825
+        ]
+      ],
+      "legacy_triangles": 1536
+    },
+    {
+      "binding": "imperial:colonizer",
+      "identifier": "imperial_colonizer",
+      "data_id": "imperial_colonizer",
+      "faction": "imperial",
+      "gameplay_entity": "imperial_colonizer",
+      "asset_class": "construction",
+      "radius": 40.0,
+      "legacy_key": "box",
+      "envelope": [
+        [
+          -20.0,
+          -7.0,
+          -24.6975
+        ],
+        [
+          20.0,
+          26.5,
+          24.35825
+        ]
+      ],
+      "legacy_triangles": 1536
+    },
+    {
+      "binding": "rebel:constructor",
+      "identifier": "rebel_constructor",
+      "data_id": "rebel_constructor",
+      "faction": "rebel",
+      "gameplay_entity": "rebel_constructor",
+      "asset_class": "construction",
+      "radius": 30.0,
+      "legacy_key": "rebel:constructor",
+      "envelope": [
+        [
+          -25.0,
+          -7.0,
+          -38.455
+        ],
+        [
+          25.0,
+          32.451235,
+          35.5
+        ]
+      ],
+      "legacy_triangles": 2352
+    },
+    {
+      "binding": "rebel:colonizer",
+      "identifier": "rebel_colonizer",
+      "data_id": "rebel_colonizer",
+      "faction": "rebel",
+      "gameplay_entity": "rebel_colonizer",
+      "asset_class": "construction",
+      "radius": 40.0,
+      "legacy_key": "rebel:colonizer",
+      "envelope": [
+        [
+          -42.5,
+          -13.5,
+          -46.94
+        ],
+        [
+          42.5,
+          36.5,
+          48.507
+        ]
+      ],
+      "legacy_triangles": 3504
+    },
+    {
+      "binding": "confederacy:corvette",
+      "identifier": "confed_corvette",
+      "data_id": "confed_corvette",
+      "faction": "confederacy",
+      "gameplay_entity": "confed_corvette",
+      "asset_class": "combat_hull",
+      "radius": 32.0,
+      "legacy_key": "confederacy:corvette",
+      "envelope": [
+        [
+          -31.713844,
+          -7.0,
+          -38.49
+        ],
+        [
+          31.713844,
+          15.1,
+          48.06775
+        ]
+      ],
+      "legacy_triangles": 1632
+    },
+    {
+      "binding": "confederacy:frigate",
+      "identifier": "confed_frigate",
+      "data_id": "confed_frigate",
+      "faction": "confederacy",
+      "gameplay_entity": "confed_frigate",
+      "asset_class": "combat_hull",
+      "radius": 52.0,
+      "legacy_key": "confederacy:frigate",
+      "envelope": [
+        [
+          -48.070766,
+          -8.5,
+          -60.475
+        ],
+        [
+          48.070766,
+          15.1,
+          72.56775
+        ]
+      ],
+      "legacy_triangles": 2080
+    },
+    {
+      "binding": "confederacy:cruiser",
+      "identifier": "confed_cruiser",
+      "data_id": "confed_cruiser",
+      "faction": "confederacy",
+      "gameplay_entity": "confed_cruiser",
+      "asset_class": "combat_hull",
+      "radius": 85.0,
+      "legacy_key": "confederacy:cruiser",
+      "envelope": [
+        [
+          -75.392305,
+          -10.0,
+          -80.31
+        ],
+        [
+          75.392305,
+          15.655,
+          94.61775
+        ]
+      ],
+      "legacy_triangles": 2848
+    },
+    {
+      "binding": "confederacy:battleship",
+      "identifier": "confed_battleship",
+      "data_id": "confed_battleship",
+      "faction": "confederacy",
+      "gameplay_entity": "confed_battleship",
+      "asset_class": "combat_hull",
+      "radius": 135.0,
+      "legacy_key": "confederacy:battleship",
+      "envelope": [
+        [
+          -109.856406,
+          -14.0,
+          -129.825
+        ],
+        [
+          109.856406,
+          49.5,
+          138.05575
+        ]
+      ],
+      "legacy_triangles": 5216
+    },
+    {
+      "binding": "confederacy:supercapital",
+      "identifier": "confed_supercapital",
+      "data_id": "confed_supercapital",
+      "faction": "confederacy",
+      "gameplay_entity": "confed_supercapital",
+      "asset_class": "combat_hull",
+      "radius": 255.0,
+      "legacy_key": "confederacy:supercapital",
+      "envelope": [
+        [
+          -147.0,
+          -29.605,
+          -178.825
+        ],
+        [
+          147.0,
+          49.5,
+          187.05575
+        ]
+      ],
+      "legacy_triangles": 7168
+    },
+    {
+      "binding": "confederacy:constructor",
+      "identifier": "confed_constructor",
+      "data_id": "confed_constructor",
+      "faction": "confederacy",
+      "gameplay_entity": "confed_constructor",
+      "asset_class": "construction",
+      "radius": 30.0,
+      "legacy_key": "confederacy:constructor",
+      "envelope": [
+        [
+          -37.794229,
+          -8.265,
+          -34.6975
+        ],
+        [
+          37.794229,
+          33.0,
+          34.0
+        ]
+      ],
+      "legacy_triangles": 1632
+    },
+    {
+      "binding": "confederacy:colonizer",
+      "identifier": "confed_colonizer",
+      "data_id": "confed_colonizer",
+      "faction": "confederacy",
+      "gameplay_entity": "confed_colonizer",
+      "asset_class": "construction",
+      "radius": 40.0,
+      "legacy_key": "confederacy:colonizer",
+      "envelope": [
+        [
+          -52.856406,
+          -7.0,
+          -51.6975
+        ],
+        [
+          52.856406,
+          43.5,
+          55.4475
+        ]
+      ],
+      "legacy_triangles": 2272
+    },
+    {
+      "binding": "syndicate:corvette",
+      "identifier": "syndicate_corvette",
+      "data_id": "syndicate_corvette",
+      "faction": "syndicate",
+      "gameplay_entity": "syndicate_corvette",
+      "asset_class": "combat_hull",
+      "radius": 32.0,
+      "legacy_key": "syndicate:corvette",
+      "envelope": [
+        [
+          -22.36926,
+          -9.0,
+          -44.025
+        ],
+        [
+          30.672491,
+          44.0,
+          38.4
+        ]
+      ],
+      "legacy_triangles": 1440
+    },
+    {
+      "binding": "syndicate:frigate",
+      "identifier": "syndicate_frigate",
+      "data_id": "syndicate_frigate",
+      "faction": "syndicate",
+      "gameplay_entity": "syndicate_frigate",
+      "asset_class": "combat_hull",
+      "radius": 50.0,
+      "legacy_key": "syndicate:frigate",
+      "envelope": [
+        [
+          -31.829605,
+          -9.0,
+          -70.51
+        ],
+        [
+          43.872131,
+          44.0,
+          62.4
+        ]
+      ],
+      "legacy_triangles": 1984
+    },
+    {
+      "binding": "syndicate:cruiser",
+      "identifier": "syndicate_cruiser",
+      "data_id": "syndicate_cruiser",
+      "faction": "syndicate",
+      "gameplay_entity": "syndicate_cruiser",
+      "asset_class": "combat_hull",
+      "radius": 86.0,
+      "legacy_key": "syndicate:cruiser",
+      "envelope": [
+        [
+          -42.463847,
+          -11.02,
+          -94.395
+        ],
+        [
+          58.551844,
+          44.0,
+          84.0
+        ]
+      ],
+      "legacy_triangles": 2176
+    },
+    {
+      "binding": "syndicate:constructor",
+      "identifier": "syndicate_constructor",
+      "data_id": "syndicate_constructor",
+      "faction": "syndicate",
+      "gameplay_entity": "syndicate_constructor",
+      "asset_class": "construction",
+      "radius": 30.0,
+      "legacy_key": "syndicate:constructor",
+      "envelope": [
+        [
+          -25.714157,
+          -9.0,
+          -40.8725
+        ],
+        [
+          29.98,
+          36.5,
+          32.388
+        ]
+      ],
+      "legacy_triangles": 1584
+    },
+    {
+      "binding": "syndicate:colonizer",
+      "identifier": "syndicate_colonizer",
+      "data_id": "syndicate_colonizer",
+      "faction": "syndicate",
+      "gameplay_entity": "syndicate_colonizer",
+      "asset_class": "construction",
+      "radius": 40.0,
+      "legacy_key": "syndicate:colonizer",
+      "envelope": [
+        [
+          -35.961081,
+          -11.0,
+          -57.8325
+        ],
+        [
+          47.4,
+          36.5,
+          57.4475
+        ]
+      ],
+      "legacy_triangles": 1680
+    },
+    {
+      "binding": "shared:construction_scaffold",
+      "identifier": "shared_construction_scaffold",
+      "data_id": null,
+      "gameplay_entity": "construction:site:scaffold",
+      "asset_class": "scaffold",
+      "faction": "shared",
+      "envelope": [
+        [
+          -50.0,
+          0.0,
+          -50.0
+        ],
+        [
+          50.0,
+          50.0,
+          50.0
+        ]
+      ],
+      "legacy_triangles": 0,
+      "envelope_basis": "renderer._draw_construction_sites structural ring/posts at nominal r=50, frac=1; progress arc is retained effect outside mesh"
+    }
+  ]
+}

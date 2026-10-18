@@ -211,9 +211,10 @@ class RecordedScope(unittest.TestCase):
         # no sheet - named here rather than assumed.
         self.assertEqual(sorted(decided - set(sheets)), ['s06-cruiser-review'])
         pending = {batch for batch in sheets if batch not in decided}
-        self.assertEqual(sorted(pending), [],
-                         'every batch sheet now carries a decision: a new one, or a status that moved '
-                         'without a decision, shows up here')
+        self.assertEqual(sorted(pending), ['s06-b7-imperial-stations',
+                                           's06-b8-remaining-combat',
+                                           's06-b9-construction'],
+                         'only the explicitly authorized completion batches remain appearance-pending')
         for batch, (path, sheet) in sheets.items():
             with self.subTest(batch=batch):
                 if batch in decided:

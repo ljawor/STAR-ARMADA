@@ -1,0 +1,369 @@
+test_b6_sidecars_reproduce_from_the_real_batch_check (test_b6_sidecar_reproduction.B6SidecarReproductionTests.test_b6_sidecars_reproduce_from_the_real_batch_check) ... ok
+test_declared_seed_arguments_reach_real_existing_master_refusal (test_b6_sidecar_reproduction.B6SidecarReproductionTests.test_declared_seed_arguments_reach_real_existing_master_refusal) ... ok
+test_stale_check_reports_without_repairing_or_creating_files (test_b6_sidecar_reproduction.B6SidecarReproductionTests.test_stale_check_reports_without_repairing_or_creating_files) ... ok
+test_successful_check_does_not_write_pending_records (test_b6_sidecar_reproduction.B6SidecarReproductionTests.test_successful_check_does_not_write_pending_records) ... ok
+test_approved_specimens_stay_unregistered_and_unactivated (test_s06_appearance_records.RecordedApprovals.test_approved_specimens_stay_unregistered_and_unactivated)
+Appearance approval is not activation: nothing approved here may become selectable. ... ok
+test_batch_sheets_and_sidecars_agree_with_the_decisions (test_s06_appearance_records.RecordedApprovals.test_batch_sheets_and_sidecars_agree_with_the_decisions)
+The sheet and the sidecar are what a reader sees first; they must not disagree. ... ok
+test_every_decision_says_what_it_does_not_approve (test_s06_appearance_records.RecordedApprovals.test_every_decision_says_what_it_does_not_approve)
+An approval that reads as a landing is the expensive mistake. ... ok
+test_every_decision_still_names_the_revision_hashes_on_disk (test_s06_appearance_records.RecordedApprovals.test_every_decision_still_names_the_revision_hashes_on_disk)
+A decision is only worth reading if it can be re-derived from the tree. ... ok
+test_the_count_the_records_claim_is_the_count_on_disk (test_s06_appearance_records.RecordedApprovals.test_the_count_the_records_claim_is_the_count_on_disk) ... ok
+test_the_owner_words_are_verbatim_on_every_batch_decision (test_s06_appearance_records.RecordedApprovals.test_the_owner_words_are_verbatim_on_every_batch_decision) ... ok
+test_every_sheet_is_either_approved_or_deliberately_pending (test_s06_appearance_records.RecordedScope.test_every_sheet_is_either_approved_or_deliberately_pending)
+A sheet is approved or it is waiting; what must never appear is something in between. ... FAIL
+test_scope_decisions_do_not_masquerade_as_appearance_approvals (test_s06_appearance_records.RecordedScope.test_scope_decisions_do_not_masquerade_as_appearance_approvals) ... ok
+test_the_scope_decisions_are_recorded_in_the_owners_wording (test_s06_appearance_records.RecordedScope.test_the_scope_decisions_are_recorded_in_the_owners_wording) ... ok
+test_the_flip_serves_all_four_in_preview_and_nothing_in_stock (test_alliance_blender_b6_imperial_ships.CapitalFlip.test_the_flip_serves_all_four_in_preview_and_nothing_in_stock) ... 
+  test_the_flip_serves_all_four_in_preview_and_nothing_in_stock (test_alliance_blender_b6_imperial_ships.CapitalFlip.test_the_flip_serves_all_four_in_preview_and_nothing_in_stock) (binding='imperial:battleship') ... ERROR
+  test_the_flip_serves_all_four_in_preview_and_nothing_in_stock (test_alliance_blender_b6_imperial_ships.CapitalFlip.test_the_flip_serves_all_four_in_preview_and_nothing_in_stock) (binding='imperial:supercapital') ... ERROR
+  test_the_flip_serves_all_four_in_preview_and_nothing_in_stock (test_alliance_blender_b6_imperial_ships.CapitalFlip.test_the_flip_serves_all_four_in_preview_and_nothing_in_stock) (binding='imperial:cruiser') ... ERROR
+  test_the_flip_serves_all_four_in_preview_and_nothing_in_stock (test_alliance_blender_b6_imperial_ships.CapitalFlip.test_the_flip_serves_all_four_in_preview_and_nothing_in_stock) (binding='imperial:frigate') ... ERROR
+test_each_authored_hull_is_not_the_legacy_mesh_restated (test_alliance_blender_b6_imperial_ships.CapitalMeshContract.test_each_authored_hull_is_not_the_legacy_mesh_restated)
+Behavioural: the authored shape is fingerprinted against the live legacy mesh. ... ok
+test_neither_dagger_is_a_scaled_copy_of_the_other (test_alliance_blender_b6_imperial_ships.CapitalMeshContract.test_neither_dagger_is_a_scaled_copy_of_the_other)
+The pair shares a legacy box, so a scaled copy is exactly the failure mode to exclude. ... ok
+test_the_frigate_is_a_heavier_hull_than_the_corvette_it_shares_a_box_with (test_alliance_blender_b6_imperial_ships.CapitalMeshContract.test_the_frigate_is_a_heavier_hull_than_the_corvette_it_shares_a_box_with)
+Both draw the legacy `needle` mesh today; the authored frigate has to be its own hull. ... ok
+test_no_capital_row_carries_a_manifest_before_it_is_landed (test_alliance_blender_b6_imperial_ships.CapitalNotLanded.test_no_capital_row_carries_a_manifest_before_it_is_landed)
+A manifest is the landing artifact, and a landing is what turns five shared guards red. ... ok
+test_the_four_rows_are_absent_from_the_pipeline_and_from_every_approval (test_alliance_blender_b6_imperial_ships.CapitalNotLanded.test_the_four_rows_are_absent_from_the_pipeline_and_from_every_approval) ... ok
+test_the_registry_rows_the_flip_needs_are_declared_and_undecided (test_alliance_blender_b6_imperial_ships.CapitalNotLanded.test_the_registry_rows_the_flip_needs_are_declared_and_undecided)
+The rows are *declared*, not registered: the manifest id is there, the decision is not. ... ok
+test_the_dagger_pair_is_two_hulls_and_not_one_mesh_at_two_scales (test_alliance_blender_b6_imperial_ships.CapitalSeedContract.test_the_dagger_pair_is_two_hulls_and_not_one_mesh_at_two_scales)
+Both daggers draw one legacy shape at one extent, so the *seed* has to split them. ... ok
+test_the_declared_envelopes_are_what_the_live_renderer_measures (test_alliance_blender_b6_imperial_ships.CapitalSeedContract.test_the_declared_envelopes_are_what_the_live_renderer_measures)
+The envelope is measured, not transcribed: the renderer's own mesh is the reference. ... ok
+test_the_seed_carries_the_four_rows_as_data (test_alliance_blender_b6_imperial_ships.CapitalSeedContract.test_the_seed_carries_the_four_rows_as_data) ... ok
+test_each_capital_row_declares_no_floor_of_its_own (test_alliance_blender_b6_imperial_ships.CapitalWrappers.test_each_capital_row_declares_no_floor_of_its_own)
+These are hulls: the 1,800 floor is the template's, not theirs. ... ok
+test_the_four_new_wrappers_are_the_only_ones_that_moved (test_alliance_blender_b6_imperial_ships.CapitalWrappers.test_the_four_new_wrappers_are_the_only_ones_that_moved)
+Regenerating must not rewrite any other row's wrapper: an approval hashes it. ... ERROR
+test_the_generator_declares_the_four_rows_and_their_wrappers (test_alliance_blender_b6_imperial_ships.CapitalWrappers.test_the_generator_declares_the_four_rows_and_their_wrappers) ... ok
+test_an_imperial_crew_transport_with_crew_space_reaches_the_same_key (test_alliance_blender_b6_imperial_ships.ConvoyGate.test_an_imperial_crew_transport_with_crew_space_reaches_the_same_key) ... ok
+test_an_imperial_trade_convoy_row_reaches_this_rows_key (test_alliance_blender_b6_imperial_ships.ConvoyGate.test_an_imperial_trade_convoy_row_reaches_this_rows_key) ... ok
+test_nothing_at_all_is_served_without_a_preview_session (test_alliance_blender_b6_imperial_ships.ConvoyGate.test_nothing_at_all_is_served_without_a_preview_session)
+The key is minted in production as well; what is not is a selection, a mesh, or a new hull. ... ok
+test_the_probe_serves_it_in_preview_and_nothing_in_stock (test_alliance_blender_b6_imperial_ships.ConvoyGate.test_the_probe_serves_it_in_preview_and_nothing_in_stock) ... ERROR
+test_every_role_carries_real_geometry (test_alliance_blender_b6_imperial_ships.ConvoyMeshContract.test_every_role_carries_real_geometry)
+A later per-role ablation measures pixels changed by removing each role. ... ok
+test_the_class_scale_the_renderer_derives_is_unchanged (test_alliance_blender_b6_imperial_ships.ConvoyMeshContract.test_the_class_scale_the_renderer_derives_is_unchanged)
+`scale = length / (hi[2] - lo[2])`, so the authored span has to be the legacy span. ... ok
+test_the_cluster_is_not_the_legacy_crate_restated (test_alliance_blender_b6_imperial_ships.ConvoyMeshContract.test_the_cluster_is_not_the_legacy_crate_restated)
+A count comparison is not enough on its own, so the shapes are fingerprinted. ... ok
+test_the_cluster_is_the_loader_contract_in_the_ship_caps_and_the_convoys_band (test_alliance_blender_b6_imperial_ships.ConvoyMeshContract.test_the_cluster_is_the_loader_contract_in_the_ship_caps_and_the_convoys_band) ... ok
+test_the_cluster_reaches_the_box_in_z_and_stands_inside_it_on_x_and_y (test_alliance_blender_b6_imperial_ships.ConvoyMeshContract.test_the_cluster_reaches_the_box_in_z_and_stands_inside_it_on_x_and_y) ... ok
+test_the_three_siblings_carry_the_same_convention_in_their_own_files (test_alliance_blender_b6_imperial_ships.ConvoyMeshContract.test_the_three_siblings_carry_the_same_convention_in_their_own_files)
+Read out of the approved siblings' sidecars and meshes, not restated here. ... ok
+test_this_rows_sidecar_carries_the_same_relation_as_its_siblings (test_alliance_blender_b6_imperial_ships.ConvoyMeshContract.test_this_rows_sidecar_carries_the_same_relation_as_its_siblings) ... FAIL
+test_no_manifest_exists_because_a_manifest_is_the_landing_artifact (test_alliance_blender_b6_imperial_ships.ConvoyNotLanded.test_no_manifest_exists_because_a_manifest_is_the_landing_artifact) ... ok
+test_the_evidence_is_the_picture_the_owner_is_asked_to_judge (test_alliance_blender_b6_imperial_ships.ConvoyNotLanded.test_the_evidence_is_the_picture_the_owner_is_asked_to_judge)
+The review record points at the capture, and the capture carries its own measurements. ... ok
+test_the_registry_row_is_declared_and_carries_no_decision (test_alliance_blender_b6_imperial_ships.ConvoyNotLanded.test_the_registry_row_is_declared_and_carries_no_decision)
+The row is *declared*, not registered: the manifest id is there, the decision is not. ... ok
+test_the_row_is_absent_from_the_production_pipeline_and_from_every_approval (test_alliance_blender_b6_imperial_ships.ConvoyNotLanded.test_the_row_is_absent_from_the_production_pipeline_and_from_every_approval) ... ok
+test_the_sidecar_matches_the_siblings_shape_and_the_decision (test_alliance_blender_b6_imperial_ships.ConvoyNotLanded.test_the_sidecar_matches_the_siblings_shape_and_the_decision)
+The three siblings' sidecars *are* approvals; this one is too now, and that difference is ... FAIL
+test_the_sidecar_re_derives_from_the_files_on_disk (test_alliance_blender_b6_imperial_ships.ConvoyNotLanded.test_the_sidecar_re_derives_from_the_files_on_disk)
+A sidecar that transcribes is a second source of truth; these are re-derived here. ... ok
+test_a_second_convoy_row_would_be_a_row_and_not_a_second_kit (test_alliance_blender_b6_imperial_ships.ConvoySeedContract.test_a_second_convoy_row_would_be_a_row_and_not_a_second_kit)
+Driven with a box that is not this row's: the placement is a function of the row. ... ok
+test_the_freight_drums_are_spread_on_the_deck_their_own_host_carries (test_alliance_blender_b6_imperial_ships.ConvoySeedContract.test_the_freight_drums_are_spread_on_the_deck_their_own_host_carries)
+A drum placed from a hand-copied height floats off a tapered deck or sinks into the flank. ... ok
+test_the_reach_numbers_are_divided_out_of_the_rows_own_declared_box (test_alliance_blender_b6_imperial_ships.ConvoySeedContract.test_the_reach_numbers_are_divided_out_of_the_rows_own_declared_box) ... ok
+test_the_row_is_one_row_of_the_batch_table (test_alliance_blender_b6_imperial_ships.ConvoySeedContract.test_the_row_is_one_row_of_the_batch_table) ... ok
+test_regenerating_the_wrappers_writes_nothing (test_alliance_blender_b6_imperial_ships.ConvoyWrapperContract.test_regenerating_the_wrappers_writes_nothing)
+Regenerating must not rewrite any other row's wrapper: an approval hashes it. ... ERROR
+test_the_generator_declares_the_row_and_its_own_wrapper_carries_it (test_alliance_blender_b6_imperial_ships.ConvoyWrapperContract.test_the_generator_declares_the_row_and_its_own_wrapper_carries_it) ... ok
+test_the_row_declares_no_floor_of_its_own (test_alliance_blender_b6_imperial_ships.ConvoyWrapperContract.test_the_row_declares_no_floor_of_its_own)
+The row is above the 1,800 hull floor, so it carries the standard ship caps and no floor. ... ok
+test_no_manifest_exists_yet_because_a_manifest_is_the_landing_artifact (test_alliance_blender_b6_imperial_ships.ManifestContract.test_no_manifest_exists_yet_because_a_manifest_is_the_landing_artifact)
+A manifest for this row would be a landing, not a review: the mesh stands alone. ... ok
+test_the_landing_manifest_would_carry_no_approval_of_its_own (test_alliance_blender_b6_imperial_ships.ManifestContract.test_the_landing_manifest_would_carry_no_approval_of_its_own)
+A manifest for this row would be a landing, not a review: the mesh stands alone. ... ok
+test_every_role_carries_real_geometry (test_alliance_blender_b6_imperial_ships.MeshContract.test_every_role_carries_real_geometry)
+A later per-role ablation measures pixels changed by removing each role. ... ok
+test_the_authored_hull_is_not_the_legacy_mesh_restated (test_alliance_blender_b6_imperial_ships.MeshContract.test_the_authored_hull_is_not_the_legacy_mesh_restated) ... ok
+test_the_mesh_reaches_the_declared_legacy_envelope_per_axis_and_per_side (test_alliance_blender_b6_imperial_ships.MeshContract.test_the_mesh_reaches_the_declared_legacy_envelope_per_axis_and_per_side)
+The authored hull fills the legacy box, so the class scale and drawn length are unchanged. ... ok
+test_the_mesh_satisfies_the_loader_contract_and_the_ship_caps (test_alliance_blender_b6_imperial_ships.MeshContract.test_the_mesh_satisfies_the_loader_contract_and_the_ship_caps) ... ok
+test_no_other_wrapper_moved (test_alliance_blender_b6_imperial_ships.NotLanded.test_no_other_wrapper_moved)
+Authoring a row must not rewrite any other row's wrapper. ... ERROR
+test_the_registry_row_is_what_the_flip_needs_and_carries_no_decision (test_alliance_blender_b6_imperial_ships.NotLanded.test_the_registry_row_is_what_the_flip_needs_and_carries_no_decision)
+The row is *declared*, not registered: the manifest id is there, the decision is not. ... ok
+test_the_row_is_absent_from_the_production_pipeline_and_from_every_approval (test_alliance_blender_b6_imperial_ships.NotLanded.test_the_row_is_absent_from_the_production_pipeline_and_from_every_approval) ... ok
+test_the_wrapper_carries_the_legacy_envelope_and_the_standard_ship_caps (test_alliance_blender_b6_imperial_ships.NotLanded.test_the_wrapper_carries_the_legacy_envelope_and_the_standard_ship_caps) ... ok
+test_the_flip_serves_the_authored_corvette_in_preview_and_nothing_in_stock (test_alliance_blender_b6_imperial_ships.PrevieFlip.test_the_flip_serves_the_authored_corvette_in_preview_and_nothing_in_stock)
+The batch's acceptance test, run: stock keeps the legacy hull, a review session is served. ... ERROR
+test_the_probe_measures_the_serving_it_claims (test_alliance_blender_b6_imperial_ships.PrevieFlip.test_the_probe_measures_the_serving_it_claims)
+A probe that describes a session without configuring one proves nothing. ... ok
+test_the_seed_extent_check_catches_a_real_overrun_and_ignores_float_noise (test_alliance_blender_b6_imperial_ships.SeedContract.test_the_seed_extent_check_catches_a_real_overrun_and_ignores_float_noise) ... ok
+test_the_seed_is_script_authoritative_and_a_data_table_keyed_by_binding (test_alliance_blender_b6_imperial_ships.SeedContract.test_the_seed_is_script_authoritative_and_a_data_table_keyed_by_binding) ... ok
+test_the_seed_refuses_to_overwrite_an_existing_master (test_alliance_blender_b6_imperial_ships.SeedContract.test_the_seed_refuses_to_overwrite_an_existing_master) ... ok
+test_the_seed_saves_a_blend_that_the_wrapper_exports_from (test_alliance_blender_b6_imperial_ships.SeedContract.test_the_seed_saves_a_blend_that_the_wrapper_exports_from) ... ok
+test_the_flip_serves_both_squadrons_in_preview_and_nothing_in_stock (test_alliance_blender_b6_imperial_ships.SquadronFlip.test_the_flip_serves_both_squadrons_in_preview_and_nothing_in_stock) ... 
+  test_the_flip_serves_both_squadrons_in_preview_and_nothing_in_stock (test_alliance_blender_b6_imperial_ships.SquadronFlip.test_the_flip_serves_both_squadrons_in_preview_and_nothing_in_stock) (binding='imperial:fighter') ... ERROR
+  test_the_flip_serves_both_squadrons_in_preview_and_nothing_in_stock (test_alliance_blender_b6_imperial_ships.SquadronFlip.test_the_flip_serves_both_squadrons_in_preview_and_nothing_in_stock) (binding='imperial:bomber') ... ERROR
+test_neither_squadron_is_a_scaled_copy_of_the_other (test_alliance_blender_b6_imperial_ships.SquadronMeshContract.test_neither_squadron_is_a_scaled_copy_of_the_other)
+The two rows must differ in shape, not only in size. ... ok
+test_the_authored_tie_bomber_is_not_the_legacy_wedge_restated (test_alliance_blender_b6_imperial_ships.SquadronMeshContract.test_the_authored_tie_bomber_is_not_the_legacy_wedge_restated) ... ok
+test_the_authored_tie_is_not_the_legacy_wedge_restated (test_alliance_blender_b6_imperial_ships.SquadronMeshContract.test_the_authored_tie_is_not_the_legacy_wedge_restated) ... ok
+test_the_registry_rows_the_flip_needs_are_what_they_were (test_alliance_blender_b6_imperial_ships.SquadronNotLanded.test_the_registry_rows_the_flip_needs_are_what_they_were)
+The rows are *declared*, not registered: the manifest id is there, the status is not. ... ok
+test_the_rows_are_absent_from_the_production_pipeline_and_from_every_approval (test_alliance_blender_b6_imperial_ships.SquadronNotLanded.test_the_rows_are_absent_from_the_production_pipeline_and_from_every_approval) ... ok
+test_the_seed_carries_both_squadron_rows_as_data (test_alliance_blender_b6_imperial_ships.SquadronSeedContract.test_the_seed_carries_both_squadron_rows_as_data) ... ok
+test_the_tie_panel_pair_fills_the_legacy_box_per_axis_and_per_side (test_alliance_blender_b6_imperial_ships.SquadronSeedContract.test_the_tie_panel_pair_fills_the_legacy_box_per_axis_and_per_side)
+The panel is the row's defining element, and the pair fills the measured extent. ... ok
+test_the_tie_pod_stays_inside_the_measured_box (test_alliance_blender_b6_imperial_ships.SquadronSeedContract.test_the_tie_pod_stays_inside_the_measured_box)
+The cockpit globe is on the centreline and never carries the envelope itself. ... ok
+test_a_squadron_row_declares_no_floor_of_its_own (test_alliance_blender_b6_imperial_ships.SquadronWrappers.test_a_squadron_row_declares_no_floor_of_its_own)
+Both squadrons are hulls: the 1,800 floor is the template's, not theirs. ... ok
+test_the_generator_declares_both_squadron_rows (test_alliance_blender_b6_imperial_ships.SquadronWrappers.test_the_generator_declares_both_squadron_rows) ... ok
+
+======================================================================
+ERROR: test_the_flip_serves_all_four_in_preview_and_nothing_in_stock (test_alliance_blender_b6_imperial_ships.CapitalFlip.test_the_flip_serves_all_four_in_preview_and_nothing_in_stock) (binding='imperial:battleship')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_alliance_blender_b6_imperial_ships.py", line 1063, in test_the_flip_serves_all_four_in_preview_and_nothing_in_stock
+    probe = self.probe(row['registry_key'])
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_alliance_blender_b6_imperial_ships.py", line 1054, in probe
+    return subprocess.run([str(ROOT / '.venv/bin/python'),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/.venv/bin/python'
+
+======================================================================
+ERROR: test_the_flip_serves_all_four_in_preview_and_nothing_in_stock (test_alliance_blender_b6_imperial_ships.CapitalFlip.test_the_flip_serves_all_four_in_preview_and_nothing_in_stock) (binding='imperial:supercapital')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_alliance_blender_b6_imperial_ships.py", line 1063, in test_the_flip_serves_all_four_in_preview_and_nothing_in_stock
+    probe = self.probe(row['registry_key'])
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_alliance_blender_b6_imperial_ships.py", line 1054, in probe
+    return subprocess.run([str(ROOT / '.venv/bin/python'),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/.venv/bin/python'
+
+======================================================================
+ERROR: test_the_flip_serves_all_four_in_preview_and_nothing_in_stock (test_alliance_blender_b6_imperial_ships.CapitalFlip.test_the_flip_serves_all_four_in_preview_and_nothing_in_stock) (binding='imperial:cruiser')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_alliance_blender_b6_imperial_ships.py", line 1063, in test_the_flip_serves_all_four_in_preview_and_nothing_in_stock
+    probe = self.probe(row['registry_key'])
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_alliance_blender_b6_imperial_ships.py", line 1054, in probe
+    return subprocess.run([str(ROOT / '.venv/bin/python'),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/.venv/bin/python'
+
+======================================================================
+ERROR: test_the_flip_serves_all_four_in_preview_and_nothing_in_stock (test_alliance_blender_b6_imperial_ships.CapitalFlip.test_the_flip_serves_all_four_in_preview_and_nothing_in_stock) (binding='imperial:frigate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_alliance_blender_b6_imperial_ships.py", line 1063, in test_the_flip_serves_all_four_in_preview_and_nothing_in_stock
+    probe = self.probe(row['registry_key'])
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_alliance_blender_b6_imperial_ships.py", line 1054, in probe
+    return subprocess.run([str(ROOT / '.venv/bin/python'),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/.venv/bin/python'
+
+======================================================================
+ERROR: test_the_four_new_wrappers_are_the_only_ones_that_moved (test_alliance_blender_b6_imperial_ships.CapitalWrappers.test_the_four_new_wrappers_are_the_only_ones_that_moved)
+Regenerating must not rewrite any other row's wrapper: an approval hashes it.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_alliance_blender_b6_imperial_ships.py", line 1004, in test_the_four_new_wrappers_are_the_only_ones_that_moved
+    generator = subprocess.run([str(ROOT / '.venv/bin/python'),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/.venv/bin/python'
+
+======================================================================
+ERROR: test_the_probe_serves_it_in_preview_and_nothing_in_stock (test_alliance_blender_b6_imperial_ships.ConvoyGate.test_the_probe_serves_it_in_preview_and_nothing_in_stock)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_alliance_blender_b6_imperial_ships.py", line 1479, in test_the_probe_serves_it_in_preview_and_nothing_in_stock
+    probe = subprocess.run([str(ROOT / '.venv/bin/python'), str(ROOT / PROBE),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/.venv/bin/python'
+
+======================================================================
+ERROR: test_regenerating_the_wrappers_writes_nothing (test_alliance_blender_b6_imperial_ships.ConvoyWrapperContract.test_regenerating_the_wrappers_writes_nothing)
+Regenerating must not rewrite any other row's wrapper: an approval hashes it.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_alliance_blender_b6_imperial_ships.py", line 1322, in test_regenerating_the_wrappers_writes_nothing
+    generator = subprocess.run([str(ROOT / '.venv/bin/python'),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/.venv/bin/python'
+
+======================================================================
+ERROR: test_no_other_wrapper_moved (test_alliance_blender_b6_imperial_ships.NotLanded.test_no_other_wrapper_moved)
+Authoring a row must not rewrite any other row's wrapper.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_alliance_blender_b6_imperial_ships.py", line 388, in test_no_other_wrapper_moved
+    generator = subprocess.run([str(ROOT / '.venv/bin/python'),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/.venv/bin/python'
+
+======================================================================
+ERROR: test_the_flip_serves_the_authored_corvette_in_preview_and_nothing_in_stock (test_alliance_blender_b6_imperial_ships.PrevieFlip.test_the_flip_serves_the_authored_corvette_in_preview_and_nothing_in_stock)
+The batch's acceptance test, run: stock keeps the legacy hull, a review session is served.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_alliance_blender_b6_imperial_ships.py", line 320, in test_the_flip_serves_the_authored_corvette_in_preview_and_nothing_in_stock
+    probe = subprocess.run([str(ROOT / '.venv/bin/python'),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/.venv/bin/python'
+
+======================================================================
+ERROR: test_the_flip_serves_both_squadrons_in_preview_and_nothing_in_stock (test_alliance_blender_b6_imperial_ships.SquadronFlip.test_the_flip_serves_both_squadrons_in_preview_and_nothing_in_stock) (binding='imperial:fighter')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_alliance_blender_b6_imperial_ships.py", line 706, in test_the_flip_serves_both_squadrons_in_preview_and_nothing_in_stock
+    probe = self.probe(binding)
+            ^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_alliance_blender_b6_imperial_ships.py", line 697, in probe
+    return subprocess.run([str(ROOT / '.venv/bin/python'),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/.venv/bin/python'
+
+======================================================================
+ERROR: test_the_flip_serves_both_squadrons_in_preview_and_nothing_in_stock (test_alliance_blender_b6_imperial_ships.SquadronFlip.test_the_flip_serves_both_squadrons_in_preview_and_nothing_in_stock) (binding='imperial:bomber')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_alliance_blender_b6_imperial_ships.py", line 706, in test_the_flip_serves_both_squadrons_in_preview_and_nothing_in_stock
+    probe = self.probe(binding)
+            ^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_alliance_blender_b6_imperial_ships.py", line 697, in probe
+    return subprocess.run([str(ROOT / '.venv/bin/python'),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/.venv/bin/python'
+
+======================================================================
+FAIL: test_every_sheet_is_either_approved_or_deliberately_pending (test_s06_appearance_records.RecordedScope.test_every_sheet_is_either_approved_or_deliberately_pending)
+A sheet is approved or it is waiting; what must never appear is something in between.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_s06_appearance_records.py", line 214, in test_every_sheet_is_either_approved_or_deliberately_pending
+    self.assertEqual(sorted(pending), [],
+AssertionError: Lists differ: ['s06-b9-construction'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'s06-b9-construction'
+
+- ['s06-b9-construction']
++ [] : every batch sheet now carries a decision: a new one, or a status that moved without a decision, shows up here
+
+======================================================================
+FAIL: test_this_rows_sidecar_carries_the_same_relation_as_its_siblings (test_alliance_blender_b6_imperial_ships.ConvoyMeshContract.test_this_rows_sidecar_carries_the_same_relation_as_its_siblings)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_alliance_blender_b6_imperial_ships.py", line 1235, in test_this_rows_sidecar_carries_the_same_relation_as_its_siblings
+    self.assertEqual(doc['envelope'], [lo, hi])
+AssertionError: Lists differ: [[-19.5, -6.8, -24.6975], [19.5, 25.73641, 24.35825]] != [[-20.0, -7.0, -24.6975], [20.0, 26.5, 24.35825]]
+
+First differing element 0:
+[-19.5, -6.8, -24.6975]
+[-20.0, -7.0, -24.6975]
+
+- [[-19.5, -6.8, -24.6975], [19.5, 25.73641, 24.35825]]
++ [[-20.0, -7.0, -24.6975], [20.0, 26.5, 24.35825]]
+
+======================================================================
+FAIL: test_the_sidecar_matches_the_siblings_shape_and_the_decision (test_alliance_blender_b6_imperial_ships.ConvoyNotLanded.test_the_sidecar_matches_the_siblings_shape_and_the_decision)
+The three siblings' sidecars *are* approvals; this one is too now, and that difference is
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_alliance_blender_b6_imperial_ships.py", line 1371, in test_the_sidecar_matches_the_siblings_shape_and_the_decision
+    self.assertEqual(doc['gameplay_entity'], CONVOY_DATA_ID)
+AssertionError: 'imperial_convoy' != 'imperial_crew_transport'
+- imperial_convoy
++ imperial_crew_transport
+
+
+----------------------------------------------------------------------
+Ran 77 tests in 0.788s
+
+FAILED (failures=3, errors=11)

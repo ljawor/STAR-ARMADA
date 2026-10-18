@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b9-construction",
+  "binding": "confederacy:constructor",
+  "canonical_binding": "ship:confederacy:constructor",
+  "gameplay_entity": "confed_constructor",
+  "class": "construction",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/confed_constructor.blend",
+    "sha256": "eb64c61ec81512584eae1ac0946fadea0485ab0c9b09cc505238bc2c49cbc8c6",
+    "bytes": 143705
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b9_construction.py",
+    "sha256": "79e092578df188ef02d4128e5d74425d7951fddd3075cd0ef3aacda484e4501a",
+    "bytes": 20748,
+    "selects": "--asset confederacy:constructor"
+  },
+  "export_script": {
+    "path": "tools/art/export_confed_constructor.py",
+    "sha256": "4facaacd806a36dbc1f35c5cb6fe2e80538b1d1c385a320f3e8e5cb5bd35099d",
+    "bytes": 4764
+  },
+  "runtime": {
+    "path": "assets/models/confed_constructor.mesh.json",
+    "sha256": "cce3fd0e2a02b4e745efeec9ff6873869b17fec65f6aa0f9f08238226a40b14c",
+    "bytes": 231316,
+    "triangles": 3932,
+    "vertices": 2196,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -37.794229,
+      -8.265,
+      -34.6975
+    ],
+    [
+      37.794229,
+      33.0,
+      34.0
+    ]
+  ],
+  "bounds": [
+    [
+      -37.794229,
+      -8.265,
+      -34.6975
+    ],
+    [
+      37.794229,
+      33.0,
+      34.0
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": null,
+  "motion": null
+}

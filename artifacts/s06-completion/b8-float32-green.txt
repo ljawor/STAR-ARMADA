@@ -1,0 +1,12 @@
+test_all_preflights_last_row_before_importing_blender (test_blender_b8_remaining_combat.B8AuthoringTests.test_all_preflights_last_row_before_importing_blender) ... ok
+test_blender_separator_and_no_selection (test_blender_b8_remaining_combat.B8AuthoringTests.test_blender_separator_and_no_selection) ... ok
+test_float32_fitting_stays_inside_strict_export_bounds (test_blender_b8_remaining_combat.B8AuthoringTests.test_float32_fitting_stays_inside_strict_export_bounds) ... ok
+test_real_preflight_refuses_each_existing_master_before_blender (test_blender_b8_remaining_combat.B8AuthoringTests.test_real_preflight_refuses_each_existing_master_before_blender) ... ok
+test_replace_seed_is_explicit_opt_in (test_blender_b8_remaining_combat.B8AuthoringTests.test_replace_seed_is_explicit_opt_in) ... ok
+test_seed_path_and_exact_eight_row_coverage (test_blender_b8_remaining_combat.B8AuthoringTests.test_seed_path_and_exact_eight_row_coverage) ... ok
+test_sheet_is_pending_and_preserves_scope (test_blender_b8_remaining_combat.B8AuthoringTests.test_sheet_is_pending_and_preserves_scope) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.341s
+
+OK

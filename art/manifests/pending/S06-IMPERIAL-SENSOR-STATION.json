@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b7-imperial-stations",
+  "binding": "imperial:sensor_station",
+  "canonical_binding": "ship:imperial:sensor_station",
+  "gameplay_entity": "sensor_station",
+  "class": "station",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/imperial_sensor_station.blend",
+    "sha256": "af18203bd6c41c9c6d531c501f3d598d6c16aaf6d680ee8ca497f69ad27d3623",
+    "bytes": 125579
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b7_imperial_stations.py",
+    "sha256": "40a814cdf3c36b468896147dd98eafdf5af9be11af833907b1ba5603c1f91baa",
+    "bytes": 12812,
+    "selects": "--asset imperial:sensor_station"
+  },
+  "export_script": {
+    "path": "tools/art/export_imperial_sensor_station.py",
+    "sha256": "bed8296abc995942d87f712bc75b678aa290418134f707aca21552d4c18ad0db",
+    "bytes": 4790
+  },
+  "runtime": {
+    "path": "assets/models/imperial_sensor_station.mesh.json",
+    "sha256": "0b853ca6a6d894e40a8b460be69e40447299b931d1c8a84b477ce6e7b8258de5",
+    "bytes": 128161,
+    "triangles": 2308,
+    "vertices": 1264,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -37.0,
+      -23.0,
+      -30.387721
+    ],
+    [
+      37.0,
+      62.355496,
+      30.387721
+    ]
+  ],
+  "bounds": [
+    [
+      -37.0,
+      -23.0,
+      -30.387721
+    ],
+    [
+      37.0,
+      62.355496,
+      30.387721
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": null,
+  "motion": null
+}

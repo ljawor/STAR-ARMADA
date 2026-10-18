@@ -1,0 +1,5 @@
+00:00.171  blend            | Read blend: "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/art/blender/imperial_energy_relay.blend"
+GAME_EXPORT {"asset": "imperial_energy_relay", "triangles": 2776, "vertices": 1552, "bounds": [[-41.736688, -20.5, -28.0], [41.736688, 38.0, 46.75]], "bytes": 159714}
+Blender 5.0.1 (hash a3db93c5b259 built 2025-12-16 01:51:40)
+
+Blender quit

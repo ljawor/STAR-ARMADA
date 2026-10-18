@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b7-imperial-stations",
+  "binding": "imperial:energy_relay",
+  "canonical_binding": "ship:imperial:energy_relay",
+  "gameplay_entity": "energy_relay",
+  "class": "station",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/imperial_energy_relay.blend",
+    "sha256": "e8e0a405bd1ea0670522c9f90f7a2fa37277541f69bc26b962d7fee750f7dc99",
+    "bytes": 129201
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b7_imperial_stations.py",
+    "sha256": "40a814cdf3c36b468896147dd98eafdf5af9be11af833907b1ba5603c1f91baa",
+    "bytes": 12812,
+    "selects": "--asset imperial:energy_relay"
+  },
+  "export_script": {
+    "path": "tools/art/export_imperial_energy_relay.py",
+    "sha256": "5e35ebe9e8140b3f70937c8b6e4ebc952d04d1f785e20c9e6cd9a911a855d55f",
+    "bytes": 4767
+  },
+  "runtime": {
+    "path": "assets/models/imperial_energy_relay.mesh.json",
+    "sha256": "56b573963cd5878122fb61d83cc7e45ab723bbf50bad7ff4db4e1c71a2b9238f",
+    "bytes": 159714,
+    "triangles": 2776,
+    "vertices": 1552,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -41.736688,
+      -20.5,
+      -28.0
+    ],
+    [
+      41.736688,
+      38.0,
+      46.75
+    ]
+  ],
+  "bounds": [
+    [
+      -41.736688,
+      -20.5,
+      -28.0
+    ],
+    [
+      41.736688,
+      38.0,
+      46.75
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": null,
+  "motion": null
+}

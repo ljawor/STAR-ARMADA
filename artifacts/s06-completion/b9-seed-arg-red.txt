@@ -1,0 +1,123 @@
+test_scope_coverage_and_paths (test_blender_b9_construction.ConstructionAuthoringTests.test_scope_coverage_and_paths) ... 
+  test_scope_coverage_and_paths (test_blender_b9_construction.ConstructionAuthoringTests.test_scope_coverage_and_paths) (binding='imperial:constructor') ... FAIL
+  test_scope_coverage_and_paths (test_blender_b9_construction.ConstructionAuthoringTests.test_scope_coverage_and_paths) (binding='imperial:colonizer') ... FAIL
+  test_scope_coverage_and_paths (test_blender_b9_construction.ConstructionAuthoringTests.test_scope_coverage_and_paths) (binding='rebel:constructor') ... FAIL
+  test_scope_coverage_and_paths (test_blender_b9_construction.ConstructionAuthoringTests.test_scope_coverage_and_paths) (binding='rebel:colonizer') ... FAIL
+  test_scope_coverage_and_paths (test_blender_b9_construction.ConstructionAuthoringTests.test_scope_coverage_and_paths) (binding='confederacy:constructor') ... FAIL
+  test_scope_coverage_and_paths (test_blender_b9_construction.ConstructionAuthoringTests.test_scope_coverage_and_paths) (binding='confederacy:colonizer') ... FAIL
+  test_scope_coverage_and_paths (test_blender_b9_construction.ConstructionAuthoringTests.test_scope_coverage_and_paths) (binding='syndicate:constructor') ... FAIL
+  test_scope_coverage_and_paths (test_blender_b9_construction.ConstructionAuthoringTests.test_scope_coverage_and_paths) (binding='syndicate:colonizer') ... FAIL
+  test_scope_coverage_and_paths (test_blender_b9_construction.ConstructionAuthoringTests.test_scope_coverage_and_paths) (binding='shared:construction_scaffold') ... FAIL
+
+======================================================================
+FAIL: test_scope_coverage_and_paths (test_blender_b9_construction.ConstructionAuthoringTests.test_scope_coverage_and_paths) (binding='imperial:constructor')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b9_construction.py", line 52, in test_scope_coverage_and_paths
+    self.assertEqual(row['seed_arg'], '--asset ' + row['binding'])
+AssertionError: 'imperial:constructor' != '--asset imperial:constructor'
+- imperial:constructor
++ --asset imperial:constructor
+? ++++++++
+
+
+======================================================================
+FAIL: test_scope_coverage_and_paths (test_blender_b9_construction.ConstructionAuthoringTests.test_scope_coverage_and_paths) (binding='imperial:colonizer')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b9_construction.py", line 52, in test_scope_coverage_and_paths
+    self.assertEqual(row['seed_arg'], '--asset ' + row['binding'])
+AssertionError: 'imperial:colonizer' != '--asset imperial:colonizer'
+- imperial:colonizer
++ --asset imperial:colonizer
+? ++++++++
+
+
+======================================================================
+FAIL: test_scope_coverage_and_paths (test_blender_b9_construction.ConstructionAuthoringTests.test_scope_coverage_and_paths) (binding='rebel:constructor')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b9_construction.py", line 52, in test_scope_coverage_and_paths
+    self.assertEqual(row['seed_arg'], '--asset ' + row['binding'])
+AssertionError: 'rebel:constructor' != '--asset rebel:constructor'
+- rebel:constructor
++ --asset rebel:constructor
+? ++++++++
+
+
+======================================================================
+FAIL: test_scope_coverage_and_paths (test_blender_b9_construction.ConstructionAuthoringTests.test_scope_coverage_and_paths) (binding='rebel:colonizer')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b9_construction.py", line 52, in test_scope_coverage_and_paths
+    self.assertEqual(row['seed_arg'], '--asset ' + row['binding'])
+AssertionError: 'rebel:colonizer' != '--asset rebel:colonizer'
+- rebel:colonizer
++ --asset rebel:colonizer
+? ++++++++
+
+
+======================================================================
+FAIL: test_scope_coverage_and_paths (test_blender_b9_construction.ConstructionAuthoringTests.test_scope_coverage_and_paths) (binding='confederacy:constructor')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b9_construction.py", line 52, in test_scope_coverage_and_paths
+    self.assertEqual(row['seed_arg'], '--asset ' + row['binding'])
+AssertionError: 'confederacy:constructor' != '--asset confederacy:constructor'
+- confederacy:constructor
++ --asset confederacy:constructor
+? ++++++++
+
+
+======================================================================
+FAIL: test_scope_coverage_and_paths (test_blender_b9_construction.ConstructionAuthoringTests.test_scope_coverage_and_paths) (binding='confederacy:colonizer')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b9_construction.py", line 52, in test_scope_coverage_and_paths
+    self.assertEqual(row['seed_arg'], '--asset ' + row['binding'])
+AssertionError: 'confederacy:colonizer' != '--asset confederacy:colonizer'
+- confederacy:colonizer
++ --asset confederacy:colonizer
+? ++++++++
+
+
+======================================================================
+FAIL: test_scope_coverage_and_paths (test_blender_b9_construction.ConstructionAuthoringTests.test_scope_coverage_and_paths) (binding='syndicate:constructor')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b9_construction.py", line 52, in test_scope_coverage_and_paths
+    self.assertEqual(row['seed_arg'], '--asset ' + row['binding'])
+AssertionError: 'syndicate:constructor' != '--asset syndicate:constructor'
+- syndicate:constructor
++ --asset syndicate:constructor
+? ++++++++
+
+
+======================================================================
+FAIL: test_scope_coverage_and_paths (test_blender_b9_construction.ConstructionAuthoringTests.test_scope_coverage_and_paths) (binding='syndicate:colonizer')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b9_construction.py", line 52, in test_scope_coverage_and_paths
+    self.assertEqual(row['seed_arg'], '--asset ' + row['binding'])
+AssertionError: 'syndicate:colonizer' != '--asset syndicate:colonizer'
+- syndicate:colonizer
++ --asset syndicate:colonizer
+? ++++++++
+
+
+======================================================================
+FAIL: test_scope_coverage_and_paths (test_blender_b9_construction.ConstructionAuthoringTests.test_scope_coverage_and_paths) (binding='shared:construction_scaffold')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b9_construction.py", line 52, in test_scope_coverage_and_paths
+    self.assertEqual(row['seed_arg'], '--asset ' + row['binding'])
+AssertionError: 'shared:construction_scaffold' != '--asset shared:construction_scaffold'
+- shared:construction_scaffold
++ --asset shared:construction_scaffold
+? ++++++++
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+FAILED (failures=9)

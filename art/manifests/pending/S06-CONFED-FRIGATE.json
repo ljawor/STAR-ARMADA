@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b8-remaining-combat",
+  "binding": "confederacy:frigate",
+  "canonical_binding": "ship:confederacy:frigate",
+  "gameplay_entity": "confed_frigate",
+  "class": "combat_hull",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/confed_frigate.blend",
+    "sha256": "cfb8a6433bc380f8d5e689e7098c70bbd2a027cb1102b6d9517f86267f18acd9",
+    "bytes": 121963
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b8_remaining_combat.py",
+    "sha256": "6df5ae4bee054c551ca60c981acadeddbdbce6502bf24f20dc25ad416163b606",
+    "bytes": 16727,
+    "selects": "--asset confederacy:frigate"
+  },
+  "export_script": {
+    "path": "tools/art/export_confed_frigate.py",
+    "sha256": "1ea9653c3e29c520e90cf243fb197ccb4d8f7ca86a0349a55e98ed4a32cb6737",
+    "bytes": 4765
+  },
+  "runtime": {
+    "path": "assets/models/confed_frigate.mesh.json",
+    "sha256": "96fd45471049b92aede194cf851e801e022579ee1a84c61daf3cbe088c8ed268",
+    "bytes": 121379,
+    "triangles": 2152,
+    "vertices": 1204,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -48.070766,
+      -8.5,
+      -60.475
+    ],
+    [
+      48.070766,
+      15.1,
+      72.56775
+    ]
+  ],
+  "bounds": [
+    [
+      -48.070759,
+      -8.5,
+      -60.475
+    ],
+    [
+      48.070759,
+      15.1,
+      72.56775
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": null,
+  "motion": null
+}

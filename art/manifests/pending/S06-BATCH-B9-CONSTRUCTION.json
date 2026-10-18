@@ -1,0 +1,362 @@
+{
+  "schema": 1,
+  "batch": "s06-b9-construction",
+  "status": "pending_owner_appearance_approval",
+  "note": "Authoring-only pending batch. Eight editable blend-authoritative hulls and one script-authoritative modular scaffold. No appearance approval, runtime registration, activation, export or rendered proof is asserted. Scaffold requires a separate renderer seam and review path.",
+  "assets": [
+    {
+      "binding": "imperial:constructor",
+      "label": "constructor",
+      "identifier": "imperial_constructor",
+      "data_id": "imperial_constructor",
+      "gameplay_entity": "imperial_constructor",
+      "faction": "imperial",
+      "class": "construction",
+      "authority": "blend",
+      "seed": "tools/art/build_b9_construction.py",
+      "seed_arg": "--asset imperial:constructor",
+      "mesh": "assets/models/imperial_constructor.mesh.json",
+      "envelope": [
+        [
+          -20.0,
+          -7.0,
+          -24.6975
+        ],
+        [
+          20.0,
+          26.5,
+          24.35825
+        ]
+      ],
+      "min_length": 48.85575,
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ]
+    },
+    {
+      "binding": "imperial:colonizer",
+      "label": "colonizer",
+      "identifier": "imperial_colonizer",
+      "data_id": "imperial_colonizer",
+      "gameplay_entity": "imperial_colonizer",
+      "faction": "imperial",
+      "class": "construction",
+      "authority": "blend",
+      "seed": "tools/art/build_b9_construction.py",
+      "seed_arg": "--asset imperial:colonizer",
+      "mesh": "assets/models/imperial_colonizer.mesh.json",
+      "envelope": [
+        [
+          -20.0,
+          -7.0,
+          -24.6975
+        ],
+        [
+          20.0,
+          26.5,
+          24.35825
+        ]
+      ],
+      "min_length": 48.85575,
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ]
+    },
+    {
+      "binding": "rebel:constructor",
+      "label": "constructor",
+      "identifier": "rebel_constructor",
+      "data_id": "rebel_constructor",
+      "gameplay_entity": "rebel_constructor",
+      "faction": "rebel",
+      "class": "construction",
+      "authority": "blend",
+      "seed": "tools/art/build_b9_construction.py",
+      "seed_arg": "--asset rebel:constructor",
+      "mesh": "assets/models/rebel_constructor.mesh.json",
+      "envelope": [
+        [
+          -25.0,
+          -7.0,
+          -38.455
+        ],
+        [
+          25.0,
+          32.451235,
+          35.5
+        ]
+      ],
+      "min_length": 73.755,
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ]
+    },
+    {
+      "binding": "rebel:colonizer",
+      "label": "colonizer",
+      "identifier": "rebel_colonizer",
+      "data_id": "rebel_colonizer",
+      "gameplay_entity": "rebel_colonizer",
+      "faction": "rebel",
+      "class": "construction",
+      "authority": "blend",
+      "seed": "tools/art/build_b9_construction.py",
+      "seed_arg": "--asset rebel:colonizer",
+      "mesh": "assets/models/rebel_colonizer.mesh.json",
+      "envelope": [
+        [
+          -42.5,
+          -13.5,
+          -46.94
+        ],
+        [
+          42.5,
+          36.5,
+          48.507
+        ]
+      ],
+      "min_length": 95.247,
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ]
+    },
+    {
+      "binding": "confederacy:constructor",
+      "label": "constructor",
+      "identifier": "confed_constructor",
+      "data_id": "confed_constructor",
+      "gameplay_entity": "confed_constructor",
+      "faction": "confederacy",
+      "class": "construction",
+      "authority": "blend",
+      "seed": "tools/art/build_b9_construction.py",
+      "seed_arg": "--asset confederacy:constructor",
+      "mesh": "assets/models/confed_constructor.mesh.json",
+      "envelope": [
+        [
+          -37.794229,
+          -8.265,
+          -34.6975
+        ],
+        [
+          37.794229,
+          33.0,
+          34.0
+        ]
+      ],
+      "min_length": 68.4975,
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ]
+    },
+    {
+      "binding": "confederacy:colonizer",
+      "label": "colonizer",
+      "identifier": "confed_colonizer",
+      "data_id": "confed_colonizer",
+      "gameplay_entity": "confed_colonizer",
+      "faction": "confederacy",
+      "class": "construction",
+      "authority": "blend",
+      "seed": "tools/art/build_b9_construction.py",
+      "seed_arg": "--asset confederacy:colonizer",
+      "mesh": "assets/models/confed_colonizer.mesh.json",
+      "envelope": [
+        [
+          -52.856406,
+          -7.0,
+          -51.6975
+        ],
+        [
+          52.856406,
+          43.5,
+          55.4475
+        ]
+      ],
+      "min_length": 106.945,
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ]
+    },
+    {
+      "binding": "syndicate:constructor",
+      "label": "constructor",
+      "identifier": "syndicate_constructor",
+      "data_id": "syndicate_constructor",
+      "gameplay_entity": "syndicate_constructor",
+      "faction": "syndicate",
+      "class": "construction",
+      "authority": "blend",
+      "seed": "tools/art/build_b9_construction.py",
+      "seed_arg": "--asset syndicate:constructor",
+      "mesh": "assets/models/syndicate_constructor.mesh.json",
+      "envelope": [
+        [
+          -25.714157,
+          -9.0,
+          -40.8725
+        ],
+        [
+          29.98,
+          36.5,
+          32.388
+        ]
+      ],
+      "min_length": 73.0605,
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ]
+    },
+    {
+      "binding": "syndicate:colonizer",
+      "label": "colonizer",
+      "identifier": "syndicate_colonizer",
+      "data_id": "syndicate_colonizer",
+      "gameplay_entity": "syndicate_colonizer",
+      "faction": "syndicate",
+      "class": "construction",
+      "authority": "blend",
+      "seed": "tools/art/build_b9_construction.py",
+      "seed_arg": "--asset syndicate:colonizer",
+      "mesh": "assets/models/syndicate_colonizer.mesh.json",
+      "envelope": [
+        [
+          -35.961081,
+          -11.0,
+          -57.8325
+        ],
+        [
+          47.4,
+          36.5,
+          57.4475
+        ]
+      ],
+      "min_length": 115.08,
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ]
+    },
+    {
+      "binding": "shared:construction_scaffold",
+      "label": "construction_scaffold",
+      "identifier": "shared_construction_scaffold",
+      "data_id": null,
+      "gameplay_entity": "construction:site:scaffold",
+      "faction": "shared",
+      "class": "scaffold",
+      "authority": "script",
+      "seed": "tools/art/build_b9_construction.py",
+      "seed_arg": "--asset shared:construction_scaffold",
+      "mesh": "assets/models/shared_construction_scaffold.mesh.json",
+      "envelope": [
+        [
+          -50.0,
+          0.0,
+          -50.0
+        ],
+        [
+          50.0,
+          50.0,
+          50.0
+        ]
+      ],
+      "min_length": 99.8,
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "material_roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ],
+      "review_requires_scaffold_seam": true,
+      "envelope_basis": "renderer._draw_construction_sites structural ring/posts at nominal r=50, frac=1; progress arc is retained effect outside mesh"
+    }
+  ],
+  "motion": []
+}

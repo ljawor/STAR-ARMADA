@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b8-remaining-combat",
+  "binding": "syndicate:corvette",
+  "canonical_binding": "ship:syndicate:corvette",
+  "gameplay_entity": "syndicate_corvette",
+  "class": "combat_hull",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/syndicate_corvette.blend",
+    "sha256": "c47b2b4320a636bdf4f44a675bc773525c830f56d0f0c98df4986fb3790e45be",
+    "bytes": 123791
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b8_remaining_combat.py",
+    "sha256": "6df5ae4bee054c551ca60c981acadeddbdbce6502bf24f20dc25ad416163b606",
+    "bytes": 16727,
+    "selects": "--asset syndicate:corvette"
+  },
+  "export_script": {
+    "path": "tools/art/export_syndicate_corvette.py",
+    "sha256": "78ce6104cbfaf69163631c72e2b6d73bcbc97281a85fe5a0b80cdeeabaedd0b6",
+    "bytes": 4757
+  },
+  "runtime": {
+    "path": "assets/models/syndicate_corvette.mesh.json",
+    "sha256": "fb321326eaf5390d40bbe559d7340695deb27ae33b086864360bedab2f3b3b49",
+    "bytes": 126752,
+    "triangles": 2176,
+    "vertices": 1220,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -22.36926,
+      -9.0,
+      -44.025
+    ],
+    [
+      30.672491,
+      44.0,
+      38.4
+    ]
+  ],
+  "bounds": [
+    [
+      -22.36926,
+      -9.0,
+      -44.024994
+    ],
+    [
+      30.672491,
+      44.0,
+      38.399994
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": null,
+  "motion": null
+}

@@ -1,0 +1,5 @@
+00:00.172  blend            | Read blend: "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/art/blender/syndicate_frigate.blend"
+GAME_EXPORT {"asset": "syndicate_frigate", "triangles": 2644, "vertices": 1484, "bounds": [[-31.829605, -9.0, -70.509995], [43.872131, 44.0, 62.399994]], "bytes": 155568}
+Blender 5.0.1 (hash a3db93c5b259 built 2025-12-16 01:51:40)
+
+Blender quit

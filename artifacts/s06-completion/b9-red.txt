@@ -1,0 +1,62 @@
+test_real_all_preflights_last_target_before_any_import (test_blender_b9_construction.ConstructionAuthoringTests.test_real_all_preflights_last_target_before_any_import) ... FAIL
+test_real_single_target_refuses_before_blender_import (test_blender_b9_construction.ConstructionAuthoringTests.test_real_single_target_refuses_before_blender_import) ... FAIL
+test_replace_seed_explicitly_reaches_blender_import (test_blender_b9_construction.ConstructionAuthoringTests.test_replace_seed_explicitly_reaches_blender_import) ... FAIL
+test_scope_coverage_and_paths (test_blender_b9_construction.ConstructionAuthoringTests.test_scope_coverage_and_paths) ... FAIL
+test_unknown_binding_rejected_without_import (test_blender_b9_construction.ConstructionAuthoringTests.test_unknown_binding_rejected_without_import) ... FAIL
+
+======================================================================
+FAIL: test_real_all_preflights_last_target_before_any_import (test_blender_b9_construction.ConstructionAuthoringTests.test_real_all_preflights_last_target_before_any_import)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b9_construction.py", line 90, in test_real_all_preflights_last_target_before_any_import
+    result = self.run_seed(['--all'], 'shared_construction_scaffold')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b9_construction.py", line 66, in run_seed
+    self.assertTrue((ROOT / SEED).is_file(), 'B9 seed missing')
+AssertionError: False is not true : B9 seed missing
+
+======================================================================
+FAIL: test_real_single_target_refuses_before_blender_import (test_blender_b9_construction.ConstructionAuthoringTests.test_real_single_target_refuses_before_blender_import)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b9_construction.py", line 84, in test_real_single_target_refuses_before_blender_import
+    result = self.run_seed(['--asset', 'rebel:constructor'], 'rebel_constructor')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b9_construction.py", line 66, in run_seed
+    self.assertTrue((ROOT / SEED).is_file(), 'B9 seed missing')
+AssertionError: False is not true : B9 seed missing
+
+======================================================================
+FAIL: test_replace_seed_explicitly_reaches_blender_import (test_blender_b9_construction.ConstructionAuthoringTests.test_replace_seed_explicitly_reaches_blender_import)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b9_construction.py", line 96, in test_replace_seed_explicitly_reaches_blender_import
+    result = self.run_seed(['--asset', 'rebel:constructor', '--replace-seed'], 'rebel_constructor')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b9_construction.py", line 66, in run_seed
+    self.assertTrue((ROOT / SEED).is_file(), 'B9 seed missing')
+AssertionError: False is not true : B9 seed missing
+
+======================================================================
+FAIL: test_scope_coverage_and_paths (test_blender_b9_construction.ConstructionAuthoringTests.test_scope_coverage_and_paths)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b9_construction.py", line 31, in test_scope_coverage_and_paths
+    self.assertTrue((ROOT / SEED).is_file(), 'B9 seed missing')
+AssertionError: False is not true : B9 seed missing
+
+======================================================================
+FAIL: test_unknown_binding_rejected_without_import (test_blender_b9_construction.ConstructionAuthoringTests.test_unknown_binding_rejected_without_import)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b9_construction.py", line 102, in test_unknown_binding_rejected_without_import
+    result = self.run_seed(['--asset', 'not:a-model'])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b9_construction.py", line 66, in run_seed
+    self.assertTrue((ROOT / SEED).is_file(), 'B9 seed missing')
+AssertionError: False is not true : B9 seed missing
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.001s
+
+FAILED (failures=5)

@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b8-remaining-combat",
+  "binding": "confederacy:cruiser",
+  "canonical_binding": "ship:confederacy:cruiser",
+  "gameplay_entity": "confed_cruiser",
+  "class": "combat_hull",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/confed_cruiser.blend",
+    "sha256": "036b0eb729beda4df2bc810e1362f6b7acd96d03cc7801d51256462fb960795d",
+    "bytes": 128707
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b8_remaining_combat.py",
+    "sha256": "6df5ae4bee054c551ca60c981acadeddbdbce6502bf24f20dc25ad416163b606",
+    "bytes": 16727,
+    "selects": "--asset confederacy:cruiser"
+  },
+  "export_script": {
+    "path": "tools/art/export_confed_cruiser.py",
+    "sha256": "99678fb1bbbf76c2199f47525045589fa57f3c1d38df1ffc03657ca5a32b2b39",
+    "bytes": 4767
+  },
+  "runtime": {
+    "path": "assets/models/confed_cruiser.mesh.json",
+    "sha256": "2866559ed742dd4f2f5a22937baa8021b8c0154a105cd4903c273d972ab00814",
+    "bytes": 157430,
+    "triangles": 2688,
+    "vertices": 1508,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -75.392305,
+      -10.0,
+      -80.31
+    ],
+    [
+      75.392305,
+      15.655,
+      94.61775
+    ]
+  ],
+  "bounds": [
+    [
+      -75.392305,
+      -10.0,
+      -80.31
+    ],
+    [
+      75.392305,
+      15.655,
+      94.617737
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": null,
+  "motion": null
+}

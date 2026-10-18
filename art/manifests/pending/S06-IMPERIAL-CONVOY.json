@@ -63,11 +63,11 @@
       24.35825
     ]
   ],
-  "authoring": "Script-authored by the B6 seed (script-authoritative per the S03 source-authority policy)",
-  "blender_pin": "see tools/art",
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
   "owner_decision": null,
   "activation": false,
-  "future_pipeline_registration": "Not registered anywhere; a later landing step is what would add a pipeline entry.",
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
   "evidence": "artifacts/s06_alliance_batch_review/b6-convoy/imperial-convoy-comparison.png",
   "motion": [],
   "appearance_decision": "s06-b6-imperial-ships-2026-10-18"
