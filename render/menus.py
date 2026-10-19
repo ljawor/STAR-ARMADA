@@ -25,7 +25,26 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # lives in /Applications (or runs straight off a read-only DMG), so ROOT is not
 # ours to write into — and when it was, every update wiped the user's settings
 # and campaign progress. Frozen builds keep user data in Application Support.
-ASSET_ROOT = getattr(sys, "_MEIPASS", ROOT)
+def _frozen_asset_root(meipass):
+    """The directory that actually owns ``assets`` when running frozen.
+
+    PyInstaller's macOS .app sets ``_MEIPASS`` to ``Contents/Frameworks`` and
+    keeps the data in ``Contents/Resources``, exposing it through a symlink
+    (``Frameworks/assets -> ../Resources/assets``). The asset resolver refuses any
+    path whose realpath leaves its root, so handing it ``Frameworks`` makes it
+    reject the bundle's own assets with E_SYMLINK_ESCAPE and the app dies in
+    start_game before the first frame. Resolve the real tree and return its
+    parent instead. A one-folder build (Windows, or an unpacked mac build) has
+    ``assets`` directly inside ``_MEIPASS``, where this is a no-op.
+    """
+    assets = os.path.realpath(os.path.join(meipass, "assets"))
+    if os.path.isdir(assets):
+        return os.path.dirname(assets)
+    return meipass
+
+
+_MEIPASS = getattr(sys, "_MEIPASS", None)
+ASSET_ROOT = _frozen_asset_root(_MEIPASS) if _MEIPASS is not None else ROOT
 if getattr(sys, "frozen", False):
     if sys.platform == "darwin":
         USER_DIR = os.path.join(

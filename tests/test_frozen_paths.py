@@ -21,6 +21,7 @@ import importlib
 import os
 import subprocess
 import sys
+import tempfile
 import types
 import unittest
 
@@ -70,15 +71,53 @@ class TestFrozenPaths(unittest.TestCase):
         self.assertEqual(m.SAVES_DIR, os.path.join(m.ROOT, "saves"))
 
     def test_frozen_macos_never_writes_inside_the_bundle(self):
-        bundle = "/Applications/STAR ARMADA.app/Contents/Frameworks"
-        m = paths_as_frozen(True, "darwin", bundle)
-        # assets come from the bundle ...
-        self.assertEqual(m.ASSET_ROOT, bundle)
-        # ... but nothing writable may live there
-        for field in ("SAVES_DIR", "SETTINGS_PATH", "CAMPAIGN_PATH", "BALANCE_PATH"):
-            self.assertFalse(getattr(m, field).startswith(bundle),
-                             f"{field} must not be inside the app bundle")
-        self.assertIn("Application Support", m.USER_DIR)
+        # A bundle path must not collide with a real install on this machine: an
+        # /Applications/... fake silently resolved against the shipped app the first
+        # time, so every frozen case here builds its own temporary bundle.
+        with tempfile.TemporaryDirectory() as bundle:
+            bundle = os.path.realpath(bundle)
+            m = paths_as_frozen(True, "darwin", bundle)
+            # with no assets tree in the bundle the root falls back to _MEIPASS
+            self.assertEqual(m.ASSET_ROOT, bundle)
+            # ... but nothing writable may live there
+            for field in ("SAVES_DIR", "SETTINGS_PATH", "CAMPAIGN_PATH", "BALANCE_PATH"):
+                self.assertFalse(getattr(m, field).startswith(bundle),
+                                 f"{field} must not be inside the app bundle")
+            self.assertIn("Application Support", m.USER_DIR)
+
+    def test_frozen_macos_resolves_the_symlinked_assets_tree(self):
+        """Real PyInstaller 6 layout: data lives in Resources, _MEIPASS is Frameworks.
+
+        Frameworks/assets is a symlink to ../Resources/assets, and the asset resolver
+        refuses any path whose realpath leaves its root — so a root of Frameworks made
+        it reject the bundle's own assets (E_SYMLINK_ESCAPE) and the frozen app died in
+        start_game. ASSET_ROOT must be the directory that really owns assets/.
+        """
+        with tempfile.TemporaryDirectory() as top:
+            top = os.path.realpath(top)   # /var -> /private/var on macOS
+            resources = os.path.join(top, "Contents", "Resources")
+            frameworks = os.path.join(top, "Contents", "Frameworks")
+            os.makedirs(os.path.join(resources, "assets", "models", "schemas"))
+            os.makedirs(frameworks)
+            with open(os.path.join(resources, "assets", "marker.txt"), "w") as f:
+                f.write("data\n")
+            os.symlink(os.path.join("..", "Resources", "assets"),
+                       os.path.join(frameworks, "assets"))
+            m = paths_as_frozen(True, "darwin", frameworks)
+            self.assertEqual(m.ASSET_ROOT, os.path.realpath(resources))
+            self.assertNotEqual(m.ASSET_ROOT, frameworks)
+            # the root the resolver is handed must contain the real tree, not a link out
+            self.assertEqual(os.path.realpath(os.path.join(m.ASSET_ROOT, "assets")),
+                             os.path.realpath(os.path.join(resources, "assets")))
+            self.assertTrue(os.path.isfile(os.path.join(m.ASSET_ROOT, "assets", "marker.txt")))
+
+    def test_one_folder_layout_keeps_meipass_as_the_root(self):
+        """Windows/unpacked builds put assets directly inside _MEIPASS: unchanged."""
+        with tempfile.TemporaryDirectory() as top:
+            top = os.path.realpath(top)   # /var -> /private/var on macOS
+            os.makedirs(os.path.join(top, "assets", "models"))
+            m = paths_as_frozen(True, "win32", top)
+            self.assertEqual(m.ASSET_ROOT, os.path.realpath(top))
 
     def test_frozen_windows_uses_appdata(self):
         m = paths_as_frozen(True, "win32", r"C:\bundle")
@@ -91,12 +130,22 @@ class TestFrozenPaths(unittest.TestCase):
         self.assertIn("STAR ARMADA", m.USER_DIR)
 
     def test_campaign_briefing_reads_from_the_bundle(self):
-        """The campaign asset is read-only and must resolve from _MEIPASS."""
-        bundle = "/Applications/STAR ARMADA.app/Contents/Frameworks"
-        m = paths_as_frozen(True, "darwin", bundle)
-        self.assertEqual(
-            os.path.join(m.ASSET_ROOT, "assets", "data", "campaign", "campaign.json"),
-            os.path.join(bundle, "assets", "data", "campaign", "campaign.json"))
+        """The campaign asset is read-only and must resolve from inside the bundle."""
+        with tempfile.TemporaryDirectory() as top:
+            top = os.path.realpath(top)
+            resources = os.path.join(top, "Contents", "Resources")
+            frameworks = os.path.join(top, "Contents", "Frameworks")
+            campaign = os.path.join(resources, "assets", "data", "campaign")
+            os.makedirs(campaign)
+            os.makedirs(frameworks)
+            with open(os.path.join(campaign, "campaign.json"), "w") as f:
+                f.write("{}\n")
+            os.symlink(os.path.join("..", "Resources", "assets"),
+                       os.path.join(frameworks, "assets"))
+            m = paths_as_frozen(True, "darwin", frameworks)
+            resolved = os.path.join(m.ASSET_ROOT, "assets", "data", "campaign", "campaign.json")
+            self.assertEqual(resolved, os.path.join(resources, "assets", "data", "campaign", "campaign.json"))
+            self.assertTrue(os.path.isfile(resolved))
 
     def test_main_and_menus_agree_on_the_saves_dir(self):
         """main.py imports USER_DIR from menus — they must not diverge."""
