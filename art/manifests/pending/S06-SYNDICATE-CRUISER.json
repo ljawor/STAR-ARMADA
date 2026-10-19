@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b8-remaining-combat",
+  "binding": "syndicate:cruiser",
+  "canonical_binding": "ship:syndicate:cruiser",
+  "gameplay_entity": "syndicate_cruiser",
+  "class": "combat_hull",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/syndicate_cruiser.blend",
+    "sha256": "01b5efd863406c9ab9c880d0d209742431cce74e61d02441af30a4238de6af5c",
+    "bytes": 135903
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b8_remaining_combat.py",
+    "sha256": "6df5ae4bee054c551ca60c981acadeddbdbce6502bf24f20dc25ad416163b606",
+    "bytes": 16727,
+    "selects": "--asset syndicate:cruiser"
+  },
+  "export_script": {
+    "path": "tools/art/export_syndicate_cruiser.py",
+    "sha256": "1c20d382ef95bb3e71e5cc462d4869a1d0da5b9e8b2dfbebaf496071bb71969e",
+    "bytes": 4758
+  },
+  "runtime": {
+    "path": "assets/models/syndicate_cruiser.mesh.json",
+    "sha256": "121608999dd39710a35322e7689f5af855fc848b7305242221d3702a35e8c223",
+    "bytes": 186853,
+    "triangles": 3184,
+    "vertices": 1788,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -42.463847,
+      -11.02,
+      -94.395
+    ],
+    [
+      58.551844,
+      44.0,
+      84.0
+    ]
+  ],
+  "bounds": [
+    [
+      -42.46384,
+      -11.02,
+      -94.395
+    ],
+    [
+      58.551838,
+      44.0,
+      84.0
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png",
+  "motion": null,
+  "appearance_decision": "s06-b8-remaining-combat-2026-10-18"
+}

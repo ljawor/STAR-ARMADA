@@ -1,0 +1,159 @@
+test_all_preflights_last_row_before_importing_blender (test_blender_b8_remaining_combat.B8AuthoringTests.test_all_preflights_last_row_before_importing_blender) ... FAIL
+test_blender_separator_and_no_selection (test_blender_b8_remaining_combat.B8AuthoringTests.test_blender_separator_and_no_selection) ... FAIL
+test_real_preflight_refuses_each_existing_master_before_blender (test_blender_b8_remaining_combat.B8AuthoringTests.test_real_preflight_refuses_each_existing_master_before_blender) ... 
+  test_real_preflight_refuses_each_existing_master_before_blender (test_blender_b8_remaining_combat.B8AuthoringTests.test_real_preflight_refuses_each_existing_master_before_blender) (key='confederacy:corvette') ... FAIL
+  test_real_preflight_refuses_each_existing_master_before_blender (test_blender_b8_remaining_combat.B8AuthoringTests.test_real_preflight_refuses_each_existing_master_before_blender) (key='confederacy:frigate') ... FAIL
+  test_real_preflight_refuses_each_existing_master_before_blender (test_blender_b8_remaining_combat.B8AuthoringTests.test_real_preflight_refuses_each_existing_master_before_blender) (key='confederacy:cruiser') ... FAIL
+  test_real_preflight_refuses_each_existing_master_before_blender (test_blender_b8_remaining_combat.B8AuthoringTests.test_real_preflight_refuses_each_existing_master_before_blender) (key='confederacy:battleship') ... FAIL
+  test_real_preflight_refuses_each_existing_master_before_blender (test_blender_b8_remaining_combat.B8AuthoringTests.test_real_preflight_refuses_each_existing_master_before_blender) (key='confederacy:supercapital') ... FAIL
+  test_real_preflight_refuses_each_existing_master_before_blender (test_blender_b8_remaining_combat.B8AuthoringTests.test_real_preflight_refuses_each_existing_master_before_blender) (key='syndicate:corvette') ... FAIL
+  test_real_preflight_refuses_each_existing_master_before_blender (test_blender_b8_remaining_combat.B8AuthoringTests.test_real_preflight_refuses_each_existing_master_before_blender) (key='syndicate:frigate') ... FAIL
+  test_real_preflight_refuses_each_existing_master_before_blender (test_blender_b8_remaining_combat.B8AuthoringTests.test_real_preflight_refuses_each_existing_master_before_blender) (key='syndicate:cruiser') ... FAIL
+test_replace_seed_is_explicit_opt_in (test_blender_b8_remaining_combat.B8AuthoringTests.test_replace_seed_is_explicit_opt_in) ... FAIL
+test_seed_path_and_exact_eight_row_coverage (test_blender_b8_remaining_combat.B8AuthoringTests.test_seed_path_and_exact_eight_row_coverage) ... FAIL
+test_sheet_is_pending_and_preserves_scope (test_blender_b8_remaining_combat.B8AuthoringTests.test_sheet_is_pending_and_preserves_scope) ... FAIL
+
+======================================================================
+FAIL: test_all_preflights_last_row_before_importing_blender (test_blender_b8_remaining_combat.B8AuthoringTests.test_all_preflights_last_row_before_importing_blender)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b8_remaining_combat.py", line 97, in test_all_preflights_last_row_before_importing_blender
+    result, touched = self.probe(['--all'], ['syndicate_cruiser'])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b8_remaining_combat.py", line 64, in probe
+    self.assertTrue(SEED.is_file(), 'cannot exercise missing B8 seed')
+AssertionError: False is not true : cannot exercise missing B8 seed
+
+======================================================================
+FAIL: test_blender_separator_and_no_selection (test_blender_b8_remaining_combat.B8AuthoringTests.test_blender_separator_and_no_selection)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b8_remaining_combat.py", line 109, in test_blender_separator_and_no_selection
+    result, touched = self.probe(['--', '--asset', 'confederacy:corvette'], ['confed_corvette'])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b8_remaining_combat.py", line 64, in probe
+    self.assertTrue(SEED.is_file(), 'cannot exercise missing B8 seed')
+AssertionError: False is not true : cannot exercise missing B8 seed
+
+======================================================================
+FAIL: test_real_preflight_refuses_each_existing_master_before_blender (test_blender_b8_remaining_combat.B8AuthoringTests.test_real_preflight_refuses_each_existing_master_before_blender) (key='confederacy:corvette')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b8_remaining_combat.py", line 91, in test_real_preflight_refuses_each_existing_master_before_blender
+    result, touched = self.probe(['--asset', key], [row['identifier']])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b8_remaining_combat.py", line 64, in probe
+    self.assertTrue(SEED.is_file(), 'cannot exercise missing B8 seed')
+AssertionError: False is not true : cannot exercise missing B8 seed
+
+======================================================================
+FAIL: test_real_preflight_refuses_each_existing_master_before_blender (test_blender_b8_remaining_combat.B8AuthoringTests.test_real_preflight_refuses_each_existing_master_before_blender) (key='confederacy:frigate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b8_remaining_combat.py", line 91, in test_real_preflight_refuses_each_existing_master_before_blender
+    result, touched = self.probe(['--asset', key], [row['identifier']])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b8_remaining_combat.py", line 64, in probe
+    self.assertTrue(SEED.is_file(), 'cannot exercise missing B8 seed')
+AssertionError: False is not true : cannot exercise missing B8 seed
+
+======================================================================
+FAIL: test_real_preflight_refuses_each_existing_master_before_blender (test_blender_b8_remaining_combat.B8AuthoringTests.test_real_preflight_refuses_each_existing_master_before_blender) (key='confederacy:cruiser')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b8_remaining_combat.py", line 91, in test_real_preflight_refuses_each_existing_master_before_blender
+    result, touched = self.probe(['--asset', key], [row['identifier']])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b8_remaining_combat.py", line 64, in probe
+    self.assertTrue(SEED.is_file(), 'cannot exercise missing B8 seed')
+AssertionError: False is not true : cannot exercise missing B8 seed
+
+======================================================================
+FAIL: test_real_preflight_refuses_each_existing_master_before_blender (test_blender_b8_remaining_combat.B8AuthoringTests.test_real_preflight_refuses_each_existing_master_before_blender) (key='confederacy:battleship')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b8_remaining_combat.py", line 91, in test_real_preflight_refuses_each_existing_master_before_blender
+    result, touched = self.probe(['--asset', key], [row['identifier']])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b8_remaining_combat.py", line 64, in probe
+    self.assertTrue(SEED.is_file(), 'cannot exercise missing B8 seed')
+AssertionError: False is not true : cannot exercise missing B8 seed
+
+======================================================================
+FAIL: test_real_preflight_refuses_each_existing_master_before_blender (test_blender_b8_remaining_combat.B8AuthoringTests.test_real_preflight_refuses_each_existing_master_before_blender) (key='confederacy:supercapital')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b8_remaining_combat.py", line 91, in test_real_preflight_refuses_each_existing_master_before_blender
+    result, touched = self.probe(['--asset', key], [row['identifier']])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b8_remaining_combat.py", line 64, in probe
+    self.assertTrue(SEED.is_file(), 'cannot exercise missing B8 seed')
+AssertionError: False is not true : cannot exercise missing B8 seed
+
+======================================================================
+FAIL: test_real_preflight_refuses_each_existing_master_before_blender (test_blender_b8_remaining_combat.B8AuthoringTests.test_real_preflight_refuses_each_existing_master_before_blender) (key='syndicate:corvette')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b8_remaining_combat.py", line 91, in test_real_preflight_refuses_each_existing_master_before_blender
+    result, touched = self.probe(['--asset', key], [row['identifier']])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b8_remaining_combat.py", line 64, in probe
+    self.assertTrue(SEED.is_file(), 'cannot exercise missing B8 seed')
+AssertionError: False is not true : cannot exercise missing B8 seed
+
+======================================================================
+FAIL: test_real_preflight_refuses_each_existing_master_before_blender (test_blender_b8_remaining_combat.B8AuthoringTests.test_real_preflight_refuses_each_existing_master_before_blender) (key='syndicate:frigate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b8_remaining_combat.py", line 91, in test_real_preflight_refuses_each_existing_master_before_blender
+    result, touched = self.probe(['--asset', key], [row['identifier']])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b8_remaining_combat.py", line 64, in probe
+    self.assertTrue(SEED.is_file(), 'cannot exercise missing B8 seed')
+AssertionError: False is not true : cannot exercise missing B8 seed
+
+======================================================================
+FAIL: test_real_preflight_refuses_each_existing_master_before_blender (test_blender_b8_remaining_combat.B8AuthoringTests.test_real_preflight_refuses_each_existing_master_before_blender) (key='syndicate:cruiser')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b8_remaining_combat.py", line 91, in test_real_preflight_refuses_each_existing_master_before_blender
+    result, touched = self.probe(['--asset', key], [row['identifier']])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b8_remaining_combat.py", line 64, in probe
+    self.assertTrue(SEED.is_file(), 'cannot exercise missing B8 seed')
+AssertionError: False is not true : cannot exercise missing B8 seed
+
+======================================================================
+FAIL: test_replace_seed_is_explicit_opt_in (test_blender_b8_remaining_combat.B8AuthoringTests.test_replace_seed_is_explicit_opt_in)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b8_remaining_combat.py", line 103, in test_replace_seed_is_explicit_opt_in
+    result, touched = self.probe(['--asset', 'syndicate:cruiser', '--replace-seed'],
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b8_remaining_combat.py", line 64, in probe
+    self.assertTrue(SEED.is_file(), 'cannot exercise missing B8 seed')
+AssertionError: False is not true : cannot exercise missing B8 seed
+
+======================================================================
+FAIL: test_seed_path_and_exact_eight_row_coverage (test_blender_b8_remaining_combat.B8AuthoringTests.test_seed_path_and_exact_eight_row_coverage)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b8_remaining_combat.py", line 30, in test_seed_path_and_exact_eight_row_coverage
+    seed = self.seed()
+           ^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b8_remaining_combat.py", line 23, in seed
+    self.assertTrue(SEED.is_file(), 'B8 initial-authoring seed is missing')
+AssertionError: False is not true : B8 initial-authoring seed is missing
+
+======================================================================
+FAIL: test_sheet_is_pending_and_preserves_scope (test_blender_b8_remaining_combat.B8AuthoringTests.test_sheet_is_pending_and_preserves_scope)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b8_remaining_combat.py", line 41, in test_sheet_is_pending_and_preserves_scope
+    self.assertTrue(SHEET.is_file(), 'B8 pending review sheet is missing')
+AssertionError: False is not true : B8 pending review sheet is missing
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.001s
+
+FAILED (failures=13)

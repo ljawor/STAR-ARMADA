@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b9-construction",
+  "binding": "syndicate:constructor",
+  "canonical_binding": "ship:syndicate:constructor",
+  "gameplay_entity": "syndicate_constructor",
+  "class": "construction",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/syndicate_constructor.blend",
+    "sha256": "0a928f05ec1648e74706da5c70a251f084d78639398117bab94c6b7c60f00a01",
+    "bytes": 135477
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b9_construction.py",
+    "sha256": "79e092578df188ef02d4128e5d74425d7951fddd3075cd0ef3aacda484e4501a",
+    "bytes": 20748,
+    "selects": "--asset syndicate:constructor"
+  },
+  "export_script": {
+    "path": "tools/art/export_syndicate_constructor.py",
+    "sha256": "1764e36015a9fcd48205e515032604d08c24dd16fc8e43a1bdcea77d3db00bf2",
+    "bytes": 4766
+  },
+  "runtime": {
+    "path": "assets/models/syndicate_constructor.mesh.json",
+    "sha256": "b3d4946de75d41f6b02c591e3275ea3627ffdf010d83bd925b16c4d7d3a532c3",
+    "bytes": 191074,
+    "triangles": 3240,
+    "vertices": 1804,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -25.714157,
+      -9.0,
+      -40.8725
+    ],
+    [
+      29.98,
+      36.5,
+      32.388
+    ]
+  ],
+  "bounds": [
+    [
+      -25.714157,
+      -9.0,
+      -40.8725
+    ],
+    [
+      29.98,
+      36.5,
+      32.388
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png",
+  "motion": null,
+  "appearance_decision": "s06-b9-construction-2026-10-18"
+}

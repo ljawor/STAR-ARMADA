@@ -1,0 +1,5 @@
+00:00.169  blend            | Read blend: "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/art/blender/confed_battleship.blend"
+GAME_EXPORT {"asset": "confed_battleship", "triangles": 3212, "vertices": 1804, "bounds": [[-109.856392, -14.0, -129.825], [109.856392, 49.5, 138.05574]], "bytes": 190414}
+Blender 5.0.1 (hash a3db93c5b259 built 2025-12-16 01:51:40)
+
+Blender quit

@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b9-construction",
+  "binding": "imperial:constructor",
+  "canonical_binding": "ship:imperial:constructor",
+  "gameplay_entity": "imperial_constructor",
+  "class": "construction",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/imperial_constructor.blend",
+    "sha256": "4400900064d28c0d0b79b9e80d4c545d2ffc71b1b2317967604b5eb92ade46fe",
+    "bytes": 132994
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b9_construction.py",
+    "sha256": "79e092578df188ef02d4128e5d74425d7951fddd3075cd0ef3aacda484e4501a",
+    "bytes": 20748,
+    "selects": "--asset imperial:constructor"
+  },
+  "export_script": {
+    "path": "tools/art/export_imperial_constructor.py",
+    "sha256": "598a5562f9a630a40f04c804c7148fdad939b60fedea7fb9cb6c1f7cd019a24e",
+    "bytes": 4761
+  },
+  "runtime": {
+    "path": "assets/models/imperial_constructor.mesh.json",
+    "sha256": "32fc71942015d171695fc9a6f150a402235ff62c480d29288def84fe03340cdb",
+    "bytes": 183564,
+    "triangles": 3120,
+    "vertices": 1730,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -20.0,
+      -7.0,
+      -24.6975
+    ],
+    [
+      20.0,
+      26.5,
+      24.35825
+    ]
+  ],
+  "bounds": [
+    [
+      -20.0,
+      -7.0,
+      -24.6975
+    ],
+    [
+      20.0,
+      26.5,
+      24.35825
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png",
+  "motion": null,
+  "appearance_decision": "s06-b9-construction-2026-10-18"
+}

@@ -193,6 +193,27 @@ ASSETS['imperial_convoy'] = ('Imperial Convoy Barge',
                              48.9, 11888, 9450, 2_000_000)
 
 
+def completion_assets(root):
+    """Read pending completion sheets; preserve every earlier wrapper expansion."""
+    import json
+    result = {}
+    for batch in ('B7', 'B8', 'B9'):
+        for path in sorted((root / 'art/manifests/pending').glob(f'S06-BATCH-{batch}-*.json')):
+            for row in json.loads(path.read_text(encoding='utf-8'))['assets']:
+                identifier = row['identifier']
+                if identifier in result or identifier in ASSETS:
+                    raise ValueError(f'duplicate wrapper identifier: {identifier}')
+                envelope = tuple(tuple(pair) for pair in zip(*row['envelope']))
+                if len(envelope) != 3 or any(len(pair) != 2 or pair[0] >= pair[1] for pair in envelope):
+                    raise ValueError(f'invalid envelope: {identifier}')
+                caps = ((11500, 8000, 2000000) if row['class'] == 'station' else
+                        (8000, 6000, 1200000) if row['class'] in ('construction', 'scaffold') else
+                        (11888, 9450, 2000000))
+                result[identifier] = (row.get('label', identifier.replace('_', ' ').title()),
+                                      envelope, row['min_length'], *caps)
+    return result
+
+
 def template():
     """The template body, without its own header comment block."""
     text = TEMPLATE_PATH.read_text(encoding='utf-8')
@@ -230,6 +251,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true', help='report drift and exit 1')
     args = parser.parse_args()
+    ASSETS.update(completion_assets(ROOT))
     stale, written = [], []
     for identifier in ASSETS:
         path = ROOT / f'tools/art/export_{identifier}.py'

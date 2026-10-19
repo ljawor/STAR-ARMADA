@@ -1,0 +1,11 @@
+test_all_rows_station_roles_unique_labels_and_scaffold_proof (test_completion_review.CompletionReviewTests.test_all_rows_station_roles_unique_labels_and_scaffold_proof) ... ok
+test_cli_runs_unchanged_batch_with_derived_spec_not_original (test_completion_review.CompletionReviewTests.test_cli_runs_unchanged_batch_with_derived_spec_not_original) ... ok
+test_rejects_zero_pixel_reports (test_completion_review.CompletionReviewTests.test_rejects_zero_pixel_reports) ... ok
+test_selected_seam_tracks_only_current_mesh_and_restores_on_failure (test_completion_review.CompletionReviewTests.test_selected_seam_tracks_only_current_mesh_and_restores_on_failure) ... ok
+test_ship_roles_use_the_production_binding_function (test_completion_review.CompletionReviewTests.test_ship_roles_use_the_production_binding_function) ... ok
+test_station_views_centre_positive_y_hardware_with_extra_clearance (test_completion_review.CompletionReviewTests.test_station_views_centre_positive_y_hardware_with_extra_clearance) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.019s
+
+OK

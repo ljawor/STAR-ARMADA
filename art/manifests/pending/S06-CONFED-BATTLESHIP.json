@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b8-remaining-combat",
+  "binding": "confederacy:battleship",
+  "canonical_binding": "ship:confederacy:battleship",
+  "gameplay_entity": "confed_battleship",
+  "class": "combat_hull",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/confed_battleship.blend",
+    "sha256": "c4ddf82cd05dfeed8161440b2e73abc65c77ea5220cdea9b8e97ed14ee29e806",
+    "bytes": 135311
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b8_remaining_combat.py",
+    "sha256": "6df5ae4bee054c551ca60c981acadeddbdbce6502bf24f20dc25ad416163b606",
+    "bytes": 16727,
+    "selects": "--asset confederacy:battleship"
+  },
+  "export_script": {
+    "path": "tools/art/export_confed_battleship.py",
+    "sha256": "9087d732adfb520d6634fb356f3a59ec1be07f7b9d6e0b98f728fba1f301c314",
+    "bytes": 4770
+  },
+  "runtime": {
+    "path": "assets/models/confed_battleship.mesh.json",
+    "sha256": "0b04ca0ea42c2ea2fd670cfdbe0d4c0a047cbf65071101ba7d6927bf172df363",
+    "bytes": 190414,
+    "triangles": 3212,
+    "vertices": 1804,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -109.856406,
+      -14.0,
+      -129.825
+    ],
+    [
+      109.856406,
+      49.5,
+      138.05575
+    ]
+  ],
+  "bounds": [
+    [
+      -109.856392,
+      -14.0,
+      -129.825
+    ],
+    [
+      109.856392,
+      49.5,
+      138.05574
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png",
+  "motion": null,
+  "appearance_decision": "s06-b8-remaining-combat-2026-10-18"
+}

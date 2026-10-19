@@ -15,8 +15,8 @@
   },
   "initial_seed": {
     "path": "tools/art/build_b6_imperial_ships.py",
-    "sha256": "64b294578f4de02b6d0f2d4c200fd1681bf663ebca8944ad6cf828070e810f5e",
-    "bytes": 59461,
+    "sha256": "1d8e1e62ae73ff23412ef412d579aa12a59725185a6ee0f0b43f125ae74e3ced",
+    "bytes": 71020,
     "selects": "--asset ship:imperial:corvette"
   },
   "export_script": {
@@ -63,12 +63,12 @@
       48.0
     ]
   ],
-  "authoring": "Script-authored by the B6 seed (script-authoritative per the S03 source-authority policy)",
-  "blender_pin": "see tools/art (the pinned Blender version recorded with the batch)",
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
   "owner_decision": null,
   "activation": false,
-  "appearance_decision": "s06-b6-imperial-ships-2026-10-18",
-  "future_pipeline_registration": "Not registered anywhere. A later landing step is what would add a pipeline entry; this sidecar records appearance only.",
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
   "evidence": "artifacts/s06_alliance_batch_review/b6-corvette/imperial-corvette-comparison.png",
-  "motion": []
+  "motion": [],
+  "appearance_decision": "s06-b6-imperial-ships-2026-10-18"
 }

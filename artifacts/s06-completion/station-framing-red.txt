@@ -1,0 +1,14 @@
+test_station_views_centre_positive_y_hardware_with_extra_clearance (test_completion_review.CompletionReviewTests.test_station_views_centre_positive_y_hardware_with_extra_clearance) ... FAIL
+
+======================================================================
+FAIL: test_station_views_centre_positive_y_hardware_with_extra_clearance (test_completion_review.CompletionReviewTests.test_station_views_centre_positive_y_hardware_with_extra_clearance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_completion_review.py", line 27, in test_station_views_centre_positive_y_hardware_with_extra_clearance
+    self.assertTrue(hasattr(review, 'framed_views'))
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (failures=1)

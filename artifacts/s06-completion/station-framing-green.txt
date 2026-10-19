@@ -1,0 +1,31 @@
+test_all_rows_station_roles_unique_labels_and_scaffold_proof (test_completion_review.CompletionReviewTests.test_all_rows_station_roles_unique_labels_and_scaffold_proof) ... ok
+test_cli_runs_unchanged_batch_with_derived_spec_not_original (test_completion_review.CompletionReviewTests.test_cli_runs_unchanged_batch_with_derived_spec_not_original) ... ERROR
+test_rejects_zero_pixel_reports (test_completion_review.CompletionReviewTests.test_rejects_zero_pixel_reports) ... ok
+test_selected_seam_tracks_only_current_mesh_and_restores_on_failure (test_completion_review.CompletionReviewTests.test_selected_seam_tracks_only_current_mesh_and_restores_on_failure) ... ok
+test_ship_roles_use_the_production_binding_function (test_completion_review.CompletionReviewTests.test_ship_roles_use_the_production_binding_function) ... ok
+test_station_views_centre_positive_y_hardware_with_extra_clearance (test_completion_review.CompletionReviewTests.test_station_views_centre_positive_y_hardware_with_extra_clearance) ... FAIL
+
+======================================================================
+ERROR: test_cli_runs_unchanged_batch_with_derived_spec_not_original (test_completion_review.CompletionReviewTests.test_cli_runs_unchanged_batch_with_derived_spec_not_original)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_completion_review.py", line 140, in test_cli_runs_unchanged_batch_with_derived_spec_not_original
+    self.assertEqual(review.main(['--spec', str(source), '--out', str(Path(tmp) / 'review')]), 0)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tools/diag_completion_review.py", line 128, in main
+    original_views = harness.views_for
+                     ^^^^^^^^^^^^^^^^^
+AttributeError: 'types.SimpleNamespace' object has no attribute 'views_for'
+
+======================================================================
+FAIL: test_station_views_centre_positive_y_hardware_with_extra_clearance (test_completion_review.CompletionReviewTests.test_station_views_centre_positive_y_hardware_with_extra_clearance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_completion_review.py", line 34, in test_station_views_centre_positive_y_hardware_with_extra_clearance
+    self.assertGreater(result['close']['distance'], original['close']['distance'])
+AssertionError: 274.0 not greater than 274.0
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.024s
+
+FAILED (failures=1, errors=1)

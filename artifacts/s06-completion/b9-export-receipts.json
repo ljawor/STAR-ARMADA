@@ -1,0 +1,74 @@
+[
+  {
+    "binding": "imperial:constructor",
+    "source_sha256": "4400900064d28c0d0b79b9e80d4c545d2ffc71b1b2317967604b5eb92ade46fe",
+    "runtime_sha256": "32fc71942015d171695fc9a6f150a402235ff62c480d29288def84fe03340cdb",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 3120
+  },
+  {
+    "binding": "imperial:colonizer",
+    "source_sha256": "5d65d5b376ee2c92eab8c14708b586eac9e2620624c4af0a61cdeb20ba0e640d",
+    "runtime_sha256": "a1076d24d95137ec3c086e46cd32d2555e1c374284994a250938fb7d790f8dae",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 3472
+  },
+  {
+    "binding": "rebel:constructor",
+    "source_sha256": "e143b758d84877fdb4127a19bdca48a37bb3897cf403dde1cca608065bb7c74d",
+    "runtime_sha256": "441cb0bb04afac29e8d1bcd4f704858988abb1226681e216796f33e5b0aae780",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 2512
+  },
+  {
+    "binding": "rebel:colonizer",
+    "source_sha256": "eeb2a6e7547b9d4d1c40c7acded337a0a30089b222107a6067611cec1e42d02b",
+    "runtime_sha256": "0afb0eddcd4180f6fae0523eac4dcb086c65093a59983714e2298691bdf15fae",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 3560
+  },
+  {
+    "binding": "confederacy:constructor",
+    "source_sha256": "eb64c61ec81512584eae1ac0946fadea0485ab0c9b09cc505238bc2c49cbc8c6",
+    "runtime_sha256": "cce3fd0e2a02b4e745efeec9ff6873869b17fec65f6aa0f9f08238226a40b14c",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 3932
+  },
+  {
+    "binding": "confederacy:colonizer",
+    "source_sha256": "a5b012382109e6f9854a7608a88ef20c2363835d3c49c5cdbd9b9598921497a2",
+    "runtime_sha256": "7c8a7b31847896526b67d9daa7fe4ea866ff03f8c4da3acd31fe9401ef0fd08d",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 4156
+  },
+  {
+    "binding": "syndicate:constructor",
+    "source_sha256": "0a928f05ec1648e74706da5c70a251f084d78639398117bab94c6b7c60f00a01",
+    "runtime_sha256": "b3d4946de75d41f6b02c591e3275ea3627ffdf010d83bd925b16c4d7d3a532c3",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 3240
+  },
+  {
+    "binding": "syndicate:colonizer",
+    "source_sha256": "6f9f13895386c97c20736aacb8a69fe51bf3b1a03e06d11c8f2beaafdae45147",
+    "runtime_sha256": "d5c59777eb31515745f5085246247e86dd14ede2bc5325d89c72530fd2944841",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 3528
+  },
+  {
+    "binding": "shared:construction_scaffold",
+    "source_sha256": "8a632fbdf0bba8c43b8c22d40ae1732938cfebe1d02fbf70cdf65b1f78ee2c39",
+    "runtime_sha256": "1643a7e19731cb6dac7bcce5e4876a0eead1337690418d7897c7b206901e3a0b",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 3104
+  }
+]

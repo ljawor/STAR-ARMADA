@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "pending_owner_appearance_approval",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b9-construction",
+  "binding": "shared:construction_scaffold",
+  "canonical_binding": "ship:shared:construction_scaffold",
+  "gameplay_entity": "construction:site:scaffold",
+  "class": "scaffold",
+  "authority": "script",
+  "source": {
+    "path": "art/blender/shared_construction_scaffold.blend",
+    "sha256": "8a632fbdf0bba8c43b8c22d40ae1732938cfebe1d02fbf70cdf65b1f78ee2c39",
+    "bytes": 124941
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b9_construction.py",
+    "sha256": "79e092578df188ef02d4128e5d74425d7951fddd3075cd0ef3aacda484e4501a",
+    "bytes": 20748,
+    "selects": "--asset shared:construction_scaffold"
+  },
+  "export_script": {
+    "path": "tools/art/export_shared_construction_scaffold.py",
+    "sha256": "1396b7fc3e175e852454a23e37ef05b59a24d7e05953bca14bb276f5a405d2c9",
+    "bytes": 4775
+  },
+  "runtime": {
+    "path": "assets/models/shared_construction_scaffold.mesh.json",
+    "sha256": "1643a7e19731cb6dac7bcce5e4876a0eead1337690418d7897c7b206901e3a0b",
+    "bytes": 193034,
+    "triangles": 3104,
+    "vertices": 1664,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -50.0,
+      0.0,
+      -50.0
+    ],
+    [
+      50.0,
+      50.0,
+      50.0
+    ]
+  ],
+  "bounds": [
+    [
+      -50.0,
+      0.0,
+      -50.0
+    ],
+    [
+      50.0,
+      50.0,
+      50.0
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": null,
+  "motion": null
+}

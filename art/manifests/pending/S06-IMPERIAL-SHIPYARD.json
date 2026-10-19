@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b7-imperial-stations",
+  "binding": "imperial:shipyard",
+  "canonical_binding": "ship:imperial:shipyard",
+  "gameplay_entity": "shipyard",
+  "class": "station",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/imperial_shipyard.blend",
+    "sha256": "6412dad860b6a968e1783218ee5fbaa0a6d1025f6c6056039a2a968acbcc2e9f",
+    "bytes": 124716
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b7_imperial_stations.py",
+    "sha256": "40a814cdf3c36b468896147dd98eafdf5af9be11af833907b1ba5603c1f91baa",
+    "bytes": 12812,
+    "selects": "--asset imperial:shipyard"
+  },
+  "export_script": {
+    "path": "tools/art/export_imperial_shipyard.py",
+    "sha256": "5d3b512eccdd2e39a3665c43bb67660051be99eb93f857ba6d7c8dc2625e05c7",
+    "bytes": 4752
+  },
+  "runtime": {
+    "path": "assets/models/imperial_shipyard.mesh.json",
+    "sha256": "73ca3736a5bfacf3a74edbe343f0d1faf20f426536c359794644cef7ad5819b5",
+    "bytes": 126506,
+    "triangles": 2268,
+    "vertices": 1296,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -43.65,
+      -10.0,
+      -45.0
+    ],
+    [
+      43.65,
+      34.225,
+      55.507
+    ]
+  ],
+  "bounds": [
+    [
+      -43.65,
+      -10.0,
+      -45.0
+    ],
+    [
+      43.65,
+      34.225,
+      55.507
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06-completion/review-b7-attempt2/render/contact-sheet.png",
+  "motion": null,
+  "appearance_decision": "s06-b7-imperial-stations-2026-10-18"
+}

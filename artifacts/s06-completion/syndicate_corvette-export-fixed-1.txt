@@ -1,0 +1,5 @@
+00:00.169  blend            | Read blend: "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/art/blender/syndicate_corvette.blend"
+GAME_EXPORT {"asset": "syndicate_corvette", "triangles": 2176, "vertices": 1220, "bounds": [[-22.36926, -9.0, -44.024994], [30.672491, 44.0, 38.399994]], "bytes": 126752}
+Blender 5.0.1 (hash a3db93c5b259 built 2025-12-16 01:51:40)
+
+Blender quit

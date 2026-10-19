@@ -315,6 +315,62 @@
         "packaging of any kind, an LFS conversion or a size policy"
       ],
       "finding_to_carry": "Both convoy paths exclude Imperial from the faction gate that maps a data row to a <faction>:convoy key - `data_id == 'trade_convoy' and faction in FACTIONS[1:]`, and the crew-transport branch beside it, where FACTIONS is (imperial, rebel, confederacy, syndicate). So an Imperial convoy hull cannot be reached until that gate is extended for Imperial; this is a real one-branch seam, unlike the ship rows, whose authored bindings are served through ship_binding without any key change."
+    },
+    {
+      "id": "s06-catalogue-completion-execution-2026-10-18",
+      "date": "2026-10-18",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved-execution-not-appearance",
+      "current_increment": {
+        "owner_words_verbatim": "please continue part2. Anything pending from my end for this?",
+        "scope": "Continue part 2 authoring, export verification and review evidence only in this increment; stop before S07 integration or registration. Earlier 1/2/3 authorization is retained as history, not a claim of completion."
+      },
+      "owner_wording": "Agree execute 1 , 2 and 3",
+      "question_answered": "Execute the B6 sidecar repair; complete Imperial stations, remaining combat hulls and construction; then S07 opt-in integration followed by S08/S09 acceptance, not the final switch.",
+      "authorized": [
+        "B6 sidecar reproducibility repair preserving approved source/export/runtime bytes",
+        "author remaining 27 historical inventory meshes in B7 Imperial stations, B8 existing combat hulls, B9 construction batches",
+        "implement and test S07 opt-in paths; register only exact appearance-approved revisions",
+        "execute S08/S09 engineering gates when prerequisites are met; report unavailable native-platform acceptance as blocked"
+      ],
+      "not_authorized": [
+        "appearance approval of any new or revised model",
+        "inventing gameplay statistics for three planned Syndicate hulls",
+        "merge, tag, release or production-default activation",
+        "weakening tests, budgets, collision/extent policy or platform waivers"
+      ],
+      "acceptance_criteria": [
+        {
+          "id": "C1",
+          "checker": "machine",
+          "criterion": "B6 generator check reproduces sidecars; all existing approved sources/exporters/runtime hashes unchanged"
+        },
+        {
+          "id": "C2",
+          "checker": "machine",
+          "criterion": "27 authored models preserve live per-row envelopes, six roles, current budgets; masters and export-only reproduction retained; existing approved assets unchanged"
+        },
+        {
+          "id": "C3",
+          "checker": "owner",
+          "criterion": "Explicit approval of enumerated new model revisions on committed actual-renderer batch evidence"
+        },
+        {
+          "id": "C4",
+          "checker": "machine",
+          "criterion": "S07 selected/unselected routes, contact/picking/bounds/ownership/LOD and lifecycle proved for approved candidate, legacy remains default"
+        },
+        {
+          "id": "C5",
+          "checker": "machine",
+          "criterion": "S08/S09 gates only closed with exact-candidate receipts; unavailable native hardware remains blocked, never inferred"
+        }
+      ],
+      "prerequisites_and_stops": [
+        "New models remain pending and unregistered until C3",
+        "S07 completeness remains open while required art lacks appearance approval",
+        "S08/S09 complete-candidate acceptance depends on S07; no final S10/S11 switch here"
+      ]
     }
   ]
 }

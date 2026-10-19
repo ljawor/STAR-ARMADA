@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b8-remaining-combat",
+  "binding": "confederacy:corvette",
+  "canonical_binding": "ship:confederacy:corvette",
+  "gameplay_entity": "confed_corvette",
+  "class": "combat_hull",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/confed_corvette.blend",
+    "sha256": "a664930cf3778158833e24dde66f1399139ade846890cefb5eae3d9eb44aca9c",
+    "bytes": 118450
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b8_remaining_combat.py",
+    "sha256": "6df5ae4bee054c551ca60c981acadeddbdbce6502bf24f20dc25ad416163b606",
+    "bytes": 16727,
+    "selects": "--asset confederacy:corvette"
+  },
+  "export_script": {
+    "path": "tools/art/export_confed_corvette.py",
+    "sha256": "611cc7dbc9022f5059b9637ff6683cfc436a6e601ac7acb7d4746dc41dbb436d",
+    "bytes": 4757
+  },
+  "runtime": {
+    "path": "assets/models/confed_corvette.mesh.json",
+    "sha256": "921f8dd4afd759ea0d39c21c3bd3c4e6f7e1c3f8eaee18240371d9a96f101958",
+    "bytes": 107340,
+    "triangles": 1852,
+    "vertices": 1036,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -31.713844,
+      -7.0,
+      -38.49
+    ],
+    [
+      31.713844,
+      15.1,
+      48.06775
+    ]
+  ],
+  "bounds": [
+    [
+      -31.713844,
+      -7.0,
+      -38.489994
+    ],
+    [
+      31.713844,
+      15.1,
+      48.06775
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png",
+  "motion": null,
+  "appearance_decision": "s06-b8-remaining-combat-2026-10-18"
+}

@@ -1,0 +1,5 @@
+00:00.153  blend            | Read blend: "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/art/blender/imperial_repair_dock.blend"
+GAME_EXPORT {"asset": "imperial_repair_dock", "triangles": 2352, "vertices": 1344, "bounds": [[-34.5, -20.0, -42.5], [34.5, 29.0, 42.5]], "bytes": 129338}
+Blender 5.0.1 (hash a3db93c5b259 built 2025-12-16 01:51:40)
+
+Blender quit

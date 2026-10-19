@@ -66,6 +66,27 @@ def build_report(root):
         for asset in decision['revision']['assets']:
             add(asset, decision['id'], True)
 
+    pending_assets = {}
+    for sheet_path in sorted((root / 'art/manifests/pending').glob('S06-BATCH-*.json')):
+        sheet = load(sheet_path.relative_to(root).as_posix())
+        for candidate in sheet['assets']:
+            status = candidate.get('status', sheet['status'])
+            if status != 'pending_owner_appearance_approval':
+                continue
+            binding = candidate['binding']
+            if binding in assets or binding in pending_assets:
+                errors.append('duplicate pending binding: ' + binding)
+            mesh = candidate['mesh']
+            source = f"art/blender/{candidate['identifier']}.blend"
+            for path in (mesh, source):
+                file = root / path
+                if not file.is_file():
+                    errors.append('pending asset missing: ' + path)
+                inputs[path] = hashlib.sha256(file.read_bytes()).hexdigest() if file.is_file() else None
+            pending_assets[binding] = {'approval_id': None, 'mesh': mesh,
+                                       'sha256': inputs[mesh], 'pending_registration': True,
+                                       'batch': sheet['batch']}
+
     ships = {}
     for relative in sorted((root / 'assets/data/ships').glob('*.json')):
         for data_id, data in load(relative.relative_to(root).as_posix()).get('ships', {}).items():
@@ -114,6 +135,10 @@ def build_report(root):
             disposition = ('approved_shared_candidate' if canonical.endswith(':trade_convoy')
                            else 'approved_asset')
             scope_policy = None
+        elif binding in pending_assets:
+            asset = pending_assets[binding]
+            disposition = 'pending_appearance'
+            scope_policy = 's06-catalogue-completion-execution-2026-10-18'
         elif canonical.startswith('environment:') and canonical.split(':')[1] in TEXTURES:
             disposition = 'deferred_texture_pipeline'
             scope_policy = 's06-b5-scope-2026-10-17'
@@ -163,7 +188,7 @@ def build_report(root):
                    'pipeline_assets': len(pipeline['assets']),
                    'registry_bindings': len(registry),
                    'dispositions': dict(sorted(count.items())), 'by_category': category_counts},
-        's06_catalogue_complete': count['missing_mesh'] == 0 and all(
+        's06_catalogue_complete': count['missing_mesh'] == 0 and count['pending_appearance'] == 0 and all(
             p['approved_asset'] and p['data_ids_present'] for p in planned),
         'rows': rows, 'planned_hulls_outside_inventory': planned,
         'integrity_errors': errors, 'input_sha256': dict(sorted(inputs.items()))}

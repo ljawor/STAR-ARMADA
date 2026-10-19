@@ -3,13 +3,15 @@
   "batch": "s06-b6-imperial-ships",
   "status": "appearance_approved_pending_landing",
   "appearance_decision": "s06-b6-imperial-ships-2026-10-18",
-  "note": "Review-only batch sheet for the S06 B6 Imperial ships - the eight rows the owner has been shown and approved, which are the rows this sheet and its decision name. The batch is eleven rows: eight are this one, and three were covered by earlier decisions. Not an approval record, a registry entry or a runtime manifest, and it selects nothing in production.",
+  "note": "Review-only batch sheet for the S06 B6 Imperial ships - the eight rows the owner has been shown and approved, which are the rows this sheet and its decision name. This sheet records eight authored bindings; constructor and colonizer remain pending future models. The historical eleven/three-earlier claim confused inventory identities with authored bindings. Not an approval record, a registry entry or a runtime manifest, and it selects nothing in production.",
   "overview": "artifacts/s06_alliance_batch_review/b6-imperial-ships-overview.png",
   "assets": [
     {
       "binding": "imperial:corvette",
       "label": "corvette",
       "identifier": "imperial_corvette",
+      "seed": "tools/art/build_b6_imperial_ships.py",
+      "seed_arg": "--asset ship:imperial:corvette",
       "mesh": "assets/models/imperial_corvette.mesh.json",
       "envelope": [
         [
@@ -37,6 +39,8 @@
       "binding": "imperial:fighter",
       "label": "tie_squadron",
       "identifier": "imperial_tie_squadron",
+      "seed": "tools/art/build_b6_imperial_ships.py",
+      "seed_arg": "--asset ship:imperial:tie_squadron",
       "mesh": "assets/models/imperial_tie_squadron.mesh.json",
       "envelope": [
         [
@@ -64,6 +68,8 @@
       "binding": "imperial:bomber",
       "label": "tie_bomber_squadron",
       "identifier": "imperial_tie_bomber_squadron",
+      "seed": "tools/art/build_b6_imperial_ships.py",
+      "seed_arg": "--asset ship:imperial:tie_bomber_squadron",
       "mesh": "assets/models/imperial_tie_bomber_squadron.mesh.json",
       "envelope": [
         [
@@ -91,6 +97,8 @@
       "binding": "imperial:battleship",
       "label": "battleship",
       "identifier": "imperial_battleship",
+      "seed": "tools/art/build_b6_imperial_ships.py",
+      "seed_arg": "--asset ship:imperial:battleship",
       "mesh": "assets/models/imperial_battleship.mesh.json",
       "envelope": [
         [
@@ -118,6 +126,8 @@
       "binding": "imperial:supercapital",
       "label": "supercapital",
       "identifier": "imperial_supercapital",
+      "seed": "tools/art/build_b6_imperial_ships.py",
+      "seed_arg": "--asset ship:imperial:supercapital",
       "mesh": "assets/models/imperial_supercapital.mesh.json",
       "envelope": [
         [
@@ -145,6 +155,8 @@
       "binding": "imperial:cruiser",
       "label": "cruiser",
       "identifier": "imperial_cruiser",
+      "seed": "tools/art/build_b6_imperial_ships.py",
+      "seed_arg": "--asset ship:imperial:cruiser",
       "mesh": "assets/models/imperial_cruiser.mesh.json",
       "envelope": [
         [
@@ -172,6 +184,8 @@
       "binding": "imperial:frigate",
       "label": "frigate",
       "identifier": "imperial_frigate",
+      "seed": "tools/art/build_b6_imperial_ships.py",
+      "seed_arg": "--asset ship:imperial:frigate",
       "mesh": "assets/models/imperial_frigate.mesh.json",
       "envelope": [
         [
@@ -199,22 +213,24 @@
       "binding": "imperial:convoy",
       "label": "convoy",
       "identifier": "imperial_convoy",
+      "seed": "tools/art/build_b6_imperial_ships.py",
+      "seed_arg": "--asset ship:imperial:convoy",
       "mesh": "assets/models/imperial_convoy.mesh.json",
       "envelope": [
         [
-          -19.5,
-          -6.8,
+          -20.0,
+          -7.0,
           -24.6975
         ],
         [
-          19.5,
-          25.73641,
+          20.0,
+          26.5,
           24.35825
         ]
       ],
       "min_length": 48.9,
       "data_id": "imperial_convoy",
-      "gameplay_entity": "imperial_convoy",
+      "gameplay_entity": "imperial_crew_transport",
       "class": "crew_transport",
       "slot": [
         -4200,
@@ -223,5 +239,39 @@
       ]
     }
   ],
+  "evidence": {
+    "imperial:corvette": {
+      "sheet": "artifacts/s06_alliance_batch_review/b6-corvette/imperial-corvette-comparison.png",
+      "motion": []
+    },
+    "imperial:fighter": {
+      "sheet": "artifacts/s06_alliance_batch_review/b6-tie-squadron/imperial-tie-squadron-comparison.png",
+      "motion": []
+    },
+    "imperial:bomber": {
+      "sheet": "artifacts/s06_alliance_batch_review/b6-tie-bomber-squadron/imperial-tie-bomber-squadron-comparison.png",
+      "motion": []
+    },
+    "imperial:battleship": {
+      "sheet": "artifacts/s06_alliance_batch_review/b6-battleship/imperial-battleship-comparison.png",
+      "motion": []
+    },
+    "imperial:supercapital": {
+      "sheet": "artifacts/s06_alliance_batch_review/b6-supercapital/imperial-supercapital-comparison.png",
+      "motion": []
+    },
+    "imperial:cruiser": {
+      "sheet": "artifacts/s06_alliance_batch_review/b6-cruiser/imperial-cruiser-comparison.png",
+      "motion": []
+    },
+    "imperial:frigate": {
+      "sheet": "artifacts/s06_alliance_batch_review/b6-frigate/imperial-frigate-comparison.png",
+      "motion": []
+    },
+    "imperial:convoy": {
+      "sheet": "artifacts/s06_alliance_batch_review/b6-convoy/imperial-convoy-comparison.png",
+      "motion": []
+    }
+  },
   "motion": []
 }

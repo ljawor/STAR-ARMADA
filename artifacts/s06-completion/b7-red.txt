@@ -1,0 +1,138 @@
+test_affine_fit_reaches_every_asymmetric_side (test_blender_b7_imperial_stations.ImperialStationAuthoringTests.test_affine_fit_reaches_every_asymmetric_side) ... FAIL
+test_all_refuses_last_existing_master_before_blender_import (test_blender_b7_imperial_stations.ImperialStationAuthoringTests.test_all_refuses_last_existing_master_before_blender_import) ... FAIL
+test_explicit_replacement_preflight_is_allowed_without_blender (test_blender_b7_imperial_stations.ImperialStationAuthoringTests.test_explicit_replacement_preflight_is_allowed_without_blender) ... FAIL
+test_seed_and_sheet_exist (test_blender_b7_imperial_stations.ImperialStationAuthoringTests.test_seed_and_sheet_exist) ... FAIL
+test_selected_target_ignores_unselected_existing_master (test_blender_b7_imperial_stations.ImperialStationAuthoringTests.test_selected_target_ignores_unselected_existing_master) ... FAIL
+test_single_target_refuses_existing_master (test_blender_b7_imperial_stations.ImperialStationAuthoringTests.test_single_target_refuses_existing_master) ... FAIL
+test_ten_station_rows_match_measured_scope (test_blender_b7_imperial_stations.ImperialStationAuthoringTests.test_ten_station_rows_match_measured_scope) ... FAIL
+test_unique_functional_builders_and_no_export_dependency (test_blender_b7_imperial_stations.ImperialStationAuthoringTests.test_unique_functional_builders_and_no_export_dependency) ... FAIL
+test_unknown_or_missing_selection_refused_without_import (test_blender_b7_imperial_stations.ImperialStationAuthoringTests.test_unknown_or_missing_selection_refused_without_import) ... 
+  test_unknown_or_missing_selection_refused_without_import (test_blender_b7_imperial_stations.ImperialStationAuthoringTests.test_unknown_or_missing_selection_refused_without_import) (args=[]) ... FAIL
+  test_unknown_or_missing_selection_refused_without_import (test_blender_b7_imperial_stations.ImperialStationAuthoringTests.test_unknown_or_missing_selection_refused_without_import) (args=['--asset', 'imperial:not_a_kind']) ... FAIL
+  test_unknown_or_missing_selection_refused_without_import (test_blender_b7_imperial_stations.ImperialStationAuthoringTests.test_unknown_or_missing_selection_refused_without_import) (args=['--asset']) ... FAIL
+  test_unknown_or_missing_selection_refused_without_import (test_blender_b7_imperial_stations.ImperialStationAuthoringTests.test_unknown_or_missing_selection_refused_without_import) (args=['--all', '--asset', 'imperial:shipyard']) ... FAIL
+
+======================================================================
+FAIL: test_affine_fit_reaches_every_asymmetric_side (test_blender_b7_imperial_stations.ImperialStationAuthoringTests.test_affine_fit_reaches_every_asymmetric_side)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b7_imperial_stations.py", line 106, in test_affine_fit_reaches_every_asymmetric_side
+    self.assertTrue(SEED.is_file(), 'B7 initial-only seed is missing')
+AssertionError: False is not true : B7 initial-only seed is missing
+
+======================================================================
+FAIL: test_all_refuses_last_existing_master_before_blender_import (test_blender_b7_imperial_stations.ImperialStationAuthoringTests.test_all_refuses_last_existing_master_before_blender_import)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b7_imperial_stations.py", line 76, in test_all_refuses_last_existing_master_before_blender_import
+    result = self.run_isolated(['--all'], ['imperial_energy_relay'])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b7_imperial_stations.py", line 58, in run_isolated
+    self.assertTrue(SEED.is_file(), 'B7 initial-only seed is missing')
+AssertionError: False is not true : B7 initial-only seed is missing
+
+======================================================================
+FAIL: test_explicit_replacement_preflight_is_allowed_without_blender (test_blender_b7_imperial_stations.ImperialStationAuthoringTests.test_explicit_replacement_preflight_is_allowed_without_blender)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b7_imperial_stations.py", line 89, in test_explicit_replacement_preflight_is_allowed_without_blender
+    result = self.run_isolated(['--all','--replace-seed','--preflight-only'], ['imperial_energy_relay'])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b7_imperial_stations.py", line 58, in run_isolated
+    self.assertTrue(SEED.is_file(), 'B7 initial-only seed is missing')
+AssertionError: False is not true : B7 initial-only seed is missing
+
+======================================================================
+FAIL: test_seed_and_sheet_exist (test_blender_b7_imperial_stations.ImperialStationAuthoringTests.test_seed_and_sheet_exist)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b7_imperial_stations.py", line 26, in test_seed_and_sheet_exist
+    self.assertTrue(SEED.is_file(), 'B7 initial-only seed is missing')
+AssertionError: False is not true : B7 initial-only seed is missing
+
+======================================================================
+FAIL: test_selected_target_ignores_unselected_existing_master (test_blender_b7_imperial_stations.ImperialStationAuthoringTests.test_selected_target_ignores_unselected_existing_master)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b7_imperial_stations.py", line 94, in test_selected_target_ignores_unselected_existing_master
+    result = self.run_isolated(['--asset','imperial:shipyard','--preflight-only'], ['imperial_energy_relay'])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b7_imperial_stations.py", line 58, in run_isolated
+    self.assertTrue(SEED.is_file(), 'B7 initial-only seed is missing')
+AssertionError: False is not true : B7 initial-only seed is missing
+
+======================================================================
+FAIL: test_single_target_refuses_existing_master (test_blender_b7_imperial_stations.ImperialStationAuthoringTests.test_single_target_refuses_existing_master)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b7_imperial_stations.py", line 83, in test_single_target_refuses_existing_master
+    result = self.run_isolated(['--', '--asset', 'imperial:command_station'], ['imperial_command_station'])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b7_imperial_stations.py", line 58, in run_isolated
+    self.assertTrue(SEED.is_file(), 'B7 initial-only seed is missing')
+AssertionError: False is not true : B7 initial-only seed is missing
+
+======================================================================
+FAIL: test_ten_station_rows_match_measured_scope (test_blender_b7_imperial_stations.ImperialStationAuthoringTests.test_ten_station_rows_match_measured_scope)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b7_imperial_stations.py", line 30, in test_ten_station_rows_match_measured_scope
+    self.assertTrue(SHEET.is_file(), 'B7 pending sheet is missing')
+AssertionError: False is not true : B7 pending sheet is missing
+
+======================================================================
+FAIL: test_unique_functional_builders_and_no_export_dependency (test_blender_b7_imperial_stations.ImperialStationAuthoringTests.test_unique_functional_builders_and_no_export_dependency)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b7_imperial_stations.py", line 117, in test_unique_functional_builders_and_no_export_dependency
+    self.assertTrue(SEED.is_file(), 'B7 initial-only seed is missing')
+AssertionError: False is not true : B7 initial-only seed is missing
+
+======================================================================
+FAIL: test_unknown_or_missing_selection_refused_without_import (test_blender_b7_imperial_stations.ImperialStationAuthoringTests.test_unknown_or_missing_selection_refused_without_import) (args=[])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b7_imperial_stations.py", line 101, in test_unknown_or_missing_selection_refused_without_import
+    result = self.run_isolated(args)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b7_imperial_stations.py", line 58, in run_isolated
+    self.assertTrue(SEED.is_file(), 'B7 initial-only seed is missing')
+AssertionError: False is not true : B7 initial-only seed is missing
+
+======================================================================
+FAIL: test_unknown_or_missing_selection_refused_without_import (test_blender_b7_imperial_stations.ImperialStationAuthoringTests.test_unknown_or_missing_selection_refused_without_import) (args=['--asset', 'imperial:not_a_kind'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b7_imperial_stations.py", line 101, in test_unknown_or_missing_selection_refused_without_import
+    result = self.run_isolated(args)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b7_imperial_stations.py", line 58, in run_isolated
+    self.assertTrue(SEED.is_file(), 'B7 initial-only seed is missing')
+AssertionError: False is not true : B7 initial-only seed is missing
+
+======================================================================
+FAIL: test_unknown_or_missing_selection_refused_without_import (test_blender_b7_imperial_stations.ImperialStationAuthoringTests.test_unknown_or_missing_selection_refused_without_import) (args=['--asset'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b7_imperial_stations.py", line 101, in test_unknown_or_missing_selection_refused_without_import
+    result = self.run_isolated(args)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b7_imperial_stations.py", line 58, in run_isolated
+    self.assertTrue(SEED.is_file(), 'B7 initial-only seed is missing')
+AssertionError: False is not true : B7 initial-only seed is missing
+
+======================================================================
+FAIL: test_unknown_or_missing_selection_refused_without_import (test_blender_b7_imperial_stations.ImperialStationAuthoringTests.test_unknown_or_missing_selection_refused_without_import) (args=['--all', '--asset', 'imperial:shipyard'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b7_imperial_stations.py", line 101, in test_unknown_or_missing_selection_refused_without_import
+    result = self.run_isolated(args)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_blender_b7_imperial_stations.py", line 58, in run_isolated
+    self.assertTrue(SEED.is_file(), 'B7 initial-only seed is missing')
+AssertionError: False is not true : B7 initial-only seed is missing
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.001s
+
+FAILED (failures=12)

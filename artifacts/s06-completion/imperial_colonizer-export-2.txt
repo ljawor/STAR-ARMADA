@@ -1,0 +1,5 @@
+00:00.173  blend            | Read blend: "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/art/blender/imperial_colonizer.blend"
+GAME_EXPORT {"asset": "imperial_colonizer", "triangles": 3472, "vertices": 1906, "bounds": [[-20.0, -7.0, -24.6975], [20.0, 26.5, 24.35825]], "bytes": 206525}
+Blender 5.0.1 (hash a3db93c5b259 built 2025-12-16 01:51:40)
+
+Blender quit

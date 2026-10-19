@@ -1,0 +1,47 @@
+Blender 5.0.1 (hash a3db93c5b259 built 2025-12-16 01:51:40)
+WELD_TOTAL joints=0 tolerance=0.25 clusters_left=1
+AUTHORING_GEOMETRY {"identifier": "imperial_command_station", "bounds": [[-62.0, -8.0, -62.0], [62.0, 55.0, 62.0]], "triangles": 2184, "vertices": 1248, "roles": {"base": 756, "dark": 168, "trim": 420, "accent": 168, "lit": 168, "cool": 504}}
+Info: Saved as "imperial_command_station.blend"
+SEED_OK imperial:command_station -> imperial_command_station.blend; authority=blend
+WELD_TOTAL joints=0 tolerance=0.25 clusters_left=1
+AUTHORING_GEOMETRY {"identifier": "imperial_shipyard", "bounds": [[-43.650001525878906, -10.0, -45.0], [43.650001525878906, 34.224998474121094, 55.50699996948242]], "triangles": 2268, "vertices": 1296, "roles": {"base": 588, "dark": 336, "trim": 504, "accent": 168, "lit": 168, "cool": 504}}
+Info: Saved as "imperial_shipyard.blend"
+SEED_OK imperial:shipyard -> imperial_shipyard.blend; authority=blend
+WELD_TOTAL joints=0 tolerance=0.25 clusters_left=1
+AUTHORING_GEOMETRY {"identifier": "imperial_research_station", "bounds": [[-60.92562484741211, -15.0, -41.52627944946289], [60.92562484741211, 40.30543899536133, 64.0]], "triangles": 2364, "vertices": 1336, "roles": {"base": 728, "dark": 196, "trim": 600, "accent": 168, "lit": 168, "cool": 504}}
+Info: Saved as "imperial_research_station.blend"
+SEED_OK imperial:research_station -> imperial_research_station.blend; authority=blend
+WELD_TOTAL joints=0 tolerance=0.25 clusters_left=1
+AUTHORING_GEOMETRY {"identifier": "imperial_defense_platform", "bounds": [[-44.258609771728516, -13.5, -44.258609771728516], [44.258609771728516, 21.0, 44.258609771728516]], "triangles": 2516, "vertices": 1424, "roles": {"base": 644, "dark": 520, "trim": 512, "accent": 168, "lit": 168, "cool": 504}}
+Info: Saved as "imperial_defense_platform.blend"
+SEED_OK imperial:defense_platform -> imperial_defense_platform.blend; authority=blend
+WELD_TOTAL joints=0 tolerance=0.25 clusters_left=1
+AUTHORING_GEOMETRY {"identifier": "imperial_mining_station", "bounds": [[-39.0, -54.0, -28.0], [39.0, 41.0, 35.50699996948242]], "triangles": 2196, "vertices": 1248, "roles": {"base": 676, "dark": 228, "trim": 452, "accent": 168, "lit": 168, "cool": 504}}
+Info: Saved as "imperial_mining_station.blend"
+SEED_OK imperial:mining_station -> imperial_mining_station.blend; authority=blend
+WELD_TOTAL joints=0 tolerance=0.25 clusters_left=1
+AUTHORING_GEOMETRY {"identifier": "imperial_sensor_station", "bounds": [[-37.0, -23.0, -30.387720108032227], [37.0, 62.35549545288086, 30.387720108032227]], "triangles": 2308, "vertices": 1296, "roles": {"base": 680, "dark": 196, "trim": 592, "accent": 168, "lit": 168, "cool": 504}}
+Info: Saved as "imperial_sensor_station.blend"
+SEED_OK imperial:sensor_station -> imperial_sensor_station.blend; authority=blend
+WELD_TOTAL joints=0 tolerance=0.25 clusters_left=1
+AUTHORING_GEOMETRY {"identifier": "imperial_trade_station", "bounds": [[-63.53675079345703, -8.604999542236328, -63.53675079345703], [63.53675079345703, 51.5, 63.53675079345703]], "triangles": 2100, "vertices": 1200, "roles": {"base": 644, "dark": 168, "trim": 448, "accent": 168, "lit": 168, "cool": 504}}
+Info: Saved as "imperial_trade_station.blend"
+SEED_OK imperial:trade_station -> imperial_trade_station.blend; authority=blend
+WELD_TOTAL joints=0 tolerance=0.25 clusters_left=1
+AUTHORING_GEOMETRY {"identifier": "imperial_fighter_platform", "bounds": [[-33.0, -11.5, -42.0], [33.0, 53.5, 44.0]], "triangles": 2240, "vertices": 1280, "roles": {"base": 644, "dark": 252, "trim": 504, "accent": 168, "lit": 168, "cool": 504}}
+Info: Saved as "imperial_fighter_platform.blend"
+SEED_OK imperial:fighter_platform -> imperial_fighter_platform.blend; authority=blend
+WELD_TOTAL joints=0 tolerance=0.25 clusters_left=1
+AUTHORING_GEOMETRY {"identifier": "imperial_repair_dock", "bounds": [[-34.5, -20.0, -42.5], [34.5, 29.0, 42.5]], "triangles": 2352, "vertices": 1344, "roles": {"base": 756, "dark": 168, "trim": 588, "accent": 168, "lit": 168, "cool": 504}}
+Info: Saved as "imperial_repair_dock.blend"
+SEED_OK imperial:repair_dock -> imperial_repair_dock.blend; authority=blend
+WELD Panel 0 (0.5 clear) -> Capacitor terminal: grew 4 verts
+WELD Panel 1 (0.5 clear) -> Capacitor terminal.001: grew 4 verts
+WELD Panel 2 (0.5 clear) -> Capacitor terminal.002: grew 4 verts
+WELD Panel 3 (0.5 clear) -> Capacitor terminal.003: grew 4 verts
+WELD Panel 4 (0.5 clear) -> Capacitor terminal.004: grew 4 verts
+WELD Panel 5 (0.5 clear) -> Capacitor terminal.005: grew 4 verts
+WELD_TOTAL joints=6 tolerance=0.25 clusters_left=1
+AUTHORING_GEOMETRY {"identifier": "imperial_energy_relay", "bounds": [[-41.73668670654297, -20.5, -28.0], [41.73668670654297, 38.0, 46.75]], "triangles": 2776, "vertices": 1552, "roles": {"base": 892, "dark": 196, "trim": 584, "accent": 168, "lit": 168, "cool": 768}}
+Info: Saved as "imperial_energy_relay.blend"
+SEED_OK imperial:energy_relay -> imperial_energy_relay.blend; authority=blend

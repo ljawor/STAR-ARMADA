@@ -1,0 +1,146 @@
+[
+  {
+    "binding": "imperial:command_station",
+    "source_sha256": "dffe86f1678f084cd6bdfb5f8ab7d5139a2cf40ef6d2ea4f0f14d825065190a4",
+    "runtime_sha256": "ae2faebf598832b30b6e64e1d485603e4721e45ac7e648c1b3768d4af8e48f50",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 2184
+  },
+  {
+    "binding": "imperial:shipyard",
+    "source_sha256": "6412dad860b6a968e1783218ee5fbaa0a6d1025f6c6056039a2a968acbcc2e9f",
+    "runtime_sha256": "73ca3736a5bfacf3a74edbe343f0d1faf20f426536c359794644cef7ad5819b5",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 2268
+  },
+  {
+    "binding": "imperial:research_station",
+    "source_sha256": "2bcf4d51593872ec72f11ac6973da48436b98178654d51a40520e42dd5829a28",
+    "runtime_sha256": "4b4ea1ac3f85c95bc457f6f2de43423b4a1ac7d63a843a41c209fbffe1b4d1a0",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 2364
+  },
+  {
+    "binding": "imperial:defense_platform",
+    "source_sha256": "a86595d8f2697b4f964003c3614edc53b919c98c533a15b5a2a07469a772c6a1",
+    "runtime_sha256": "b0600256c84c6bf949e52831dd0af0f6a278054ca7378028a92acaba44df7999",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 2516
+  },
+  {
+    "binding": "imperial:mining_station",
+    "source_sha256": "3860141cbfa13cedfe685c397a212932463a45ec6ef8a9bee172603a4da57db3",
+    "runtime_sha256": "a446d4963b60e4a4cb9d9256ad033287b1aa31f631dc078082a91bcb2feff568",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 2196
+  },
+  {
+    "binding": "imperial:sensor_station",
+    "source_sha256": "af18203bd6c41c9c6d531c501f3d598d6c16aaf6d680ee8ca497f69ad27d3623",
+    "runtime_sha256": "0b853ca6a6d894e40a8b460be69e40447299b931d1c8a84b477ce6e7b8258de5",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 2308
+  },
+  {
+    "binding": "imperial:trade_station",
+    "source_sha256": "504242ca50725916f883d6ac5386d299d972537ed9e187826b8b4cecdf6583e5",
+    "runtime_sha256": "058f6b8963921544c31213d669558d009ea043f24d4d4865f7dcc7ddec8103fc",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 2100
+  },
+  {
+    "binding": "imperial:fighter_platform",
+    "source_sha256": "aac36857b6830aa0bbb5bc5748a8c927d6646cd1cfec33f8204be12c0d9d99fe",
+    "runtime_sha256": "076093e7f6b37c4151954428a95168084ba86d7edfbb36ae1dc44ce0132b462b",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 2240
+  },
+  {
+    "binding": "imperial:repair_dock",
+    "source_sha256": "c796357e9d55c7954d5d021884c7971c0b8806192aedd83dc274ec5223cab512",
+    "runtime_sha256": "0d2a2018344f5a034130e1e4ea3da85c62b658e37651260b03e3ab742a6e0469",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 2352
+  },
+  {
+    "binding": "imperial:energy_relay",
+    "source_sha256": "e8e0a405bd1ea0670522c9f90f7a2fa37277541f69bc26b962d7fee750f7dc99",
+    "runtime_sha256": "56b573963cd5878122fb61d83cc7e45ab723bbf50bad7ff4db4e1c71a2b9238f",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 2776
+  },
+  {
+    "binding": "confederacy:corvette",
+    "source_sha256": "a664930cf3778158833e24dde66f1399139ade846890cefb5eae3d9eb44aca9c",
+    "runtime_sha256": "921f8dd4afd759ea0d39c21c3bd3c4e6f7e1c3f8eaee18240371d9a96f101958",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 1852
+  },
+  {
+    "binding": "confederacy:frigate",
+    "source_sha256": "cfb8a6433bc380f8d5e689e7098c70bbd2a027cb1102b6d9517f86267f18acd9",
+    "runtime_sha256": "96fd45471049b92aede194cf851e801e022579ee1a84c61daf3cbe088c8ed268",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 2152
+  },
+  {
+    "binding": "confederacy:cruiser",
+    "source_sha256": "036b0eb729beda4df2bc810e1362f6b7acd96d03cc7801d51256462fb960795d",
+    "runtime_sha256": "2866559ed742dd4f2f5a22937baa8021b8c0154a105cd4903c273d972ab00814",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 2688
+  },
+  {
+    "binding": "confederacy:battleship",
+    "source_sha256": "c4ddf82cd05dfeed8161440b2e73abc65c77ea5220cdea9b8e97ed14ee29e806",
+    "runtime_sha256": "0b04ca0ea42c2ea2fd670cfdbe0d4c0a047cbf65071101ba7d6927bf172df363",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 3212
+  },
+  {
+    "binding": "confederacy:supercapital",
+    "source_sha256": "df5acae8ef5c89eef503392398e423dc439d21277748fe1d02d25ff69234d50d",
+    "runtime_sha256": "f33b0f79430130cf5d1c8524f618f2ce5c541a5571edf28e6a4d84284c357c4f",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 3916
+  },
+  {
+    "binding": "syndicate:corvette",
+    "source_sha256": "c47b2b4320a636bdf4f44a675bc773525c830f56d0f0c98df4986fb3790e45be",
+    "runtime_sha256": "fb321326eaf5390d40bbe559d7340695deb27ae33b086864360bedab2f3b3b49",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 2176
+  },
+  {
+    "binding": "syndicate:frigate",
+    "source_sha256": "33da22340efb63286772f4651f6824e4fdab1e9981d8e03b3bd3137160f0397f",
+    "runtime_sha256": "9563c320fb164133b7731aa398f41653e25844da72644e0b438d3b10aeba1471",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 2644
+  },
+  {
+    "binding": "syndicate:cruiser",
+    "source_sha256": "01b5efd863406c9ab9c880d0d209742431cce74e61d02441af30a4238de6af5c",
+    "runtime_sha256": "121608999dd39710a35322e7689f5af855fc848b7305242221d3702a35e8c223",
+    "repeated_export_identical": true,
+    "source_unchanged": true,
+    "triangles": 3184
+  }
+]

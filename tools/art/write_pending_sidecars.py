@@ -75,8 +75,18 @@ def sidecar_record(batch, asset):
     stays false until a landing is authorized and executed - so the two stay separate fields.
     """
     record = sidecar_for(batch, asset)
-    if batch.get('appearance_decision'):
-        record['appearance_decision'] = batch['appearance_decision']
+    # A partial batch declares each row explicitly; never inherit its decision onto
+    # an unpictured row (the B9 scaffold is still awaiting a review seam).
+    if batch['status'] == 'partially_appearance_approved_pending_landing':
+        record['status'] = asset['status']
+        decision = asset.get('appearance_decision')
+        approved = record['status'] == 'appearance_approved_pending_landing'
+        if approved != bool(decision):
+            raise ValueError('partial batch row status/decision mismatch: ' + asset['binding'])
+    else:
+        decision = batch.get('appearance_decision')
+    if decision:
+        record['appearance_decision'] = decision
     return record
 
 

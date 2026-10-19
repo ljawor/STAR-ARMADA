@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b9-construction",
+  "binding": "imperial:colonizer",
+  "canonical_binding": "ship:imperial:colonizer",
+  "gameplay_entity": "imperial_colonizer",
+  "class": "construction",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/imperial_colonizer.blend",
+    "sha256": "5d65d5b376ee2c92eab8c14708b586eac9e2620624c4af0a61cdeb20ba0e640d",
+    "bytes": 133019
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b9_construction.py",
+    "sha256": "79e092578df188ef02d4128e5d74425d7951fddd3075cd0ef3aacda484e4501a",
+    "bytes": 20748,
+    "selects": "--asset imperial:colonizer"
+  },
+  "export_script": {
+    "path": "tools/art/export_imperial_colonizer.py",
+    "sha256": "f30ab86915e953603a4ffb4b7e486aa3cf4e61b62525398cf5f7c112bd57bc03",
+    "bytes": 4755
+  },
+  "runtime": {
+    "path": "assets/models/imperial_colonizer.mesh.json",
+    "sha256": "a1076d24d95137ec3c086e46cd32d2555e1c374284994a250938fb7d790f8dae",
+    "bytes": 206525,
+    "triangles": 3472,
+    "vertices": 1906,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -20.0,
+      -7.0,
+      -24.6975
+    ],
+    [
+      20.0,
+      26.5,
+      24.35825
+    ]
+  ],
+  "bounds": [
+    [
+      -20.0,
+      -7.0,
+      -24.6975
+    ],
+    [
+      20.0,
+      26.5,
+      24.35825
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png",
+  "motion": null,
+  "appearance_decision": "s06-b9-construction-2026-10-18"
+}

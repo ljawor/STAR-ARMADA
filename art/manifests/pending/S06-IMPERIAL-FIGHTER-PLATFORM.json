@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b7-imperial-stations",
+  "binding": "imperial:fighter_platform",
+  "canonical_binding": "ship:imperial:fighter_platform",
+  "gameplay_entity": "fighter_platform",
+  "class": "station",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/imperial_fighter_platform.blend",
+    "sha256": "aac36857b6830aa0bbb5bc5748a8c927d6646cd1cfec33f8204be12c0d9d99fe",
+    "bytes": 124473
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b7_imperial_stations.py",
+    "sha256": "40a814cdf3c36b468896147dd98eafdf5af9be11af833907b1ba5603c1f91baa",
+    "bytes": 12812,
+    "selects": "--asset imperial:fighter_platform"
+  },
+  "export_script": {
+    "path": "tools/art/export_imperial_fighter_platform.py",
+    "sha256": "d6add16a84d192390b3c434b324ae4b9496c376acf3b2676ab4270c2eaeabd1f",
+    "bytes": 4767
+  },
+  "runtime": {
+    "path": "assets/models/imperial_fighter_platform.mesh.json",
+    "sha256": "076093e7f6b37c4151954428a95168084ba86d7edfbb36ae1dc44ce0132b462b",
+    "bytes": 123582,
+    "triangles": 2240,
+    "vertices": 1264,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -33.0,
+      -11.5,
+      -42.0
+    ],
+    [
+      33.0,
+      53.5,
+      44.0
+    ]
+  ],
+  "bounds": [
+    [
+      -33.0,
+      -11.5,
+      -42.0
+    ],
+    [
+      33.0,
+      53.5,
+      44.0
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06-completion/review-b7-attempt2/render/contact-sheet.png",
+  "motion": null,
+  "appearance_decision": "s06-b7-imperial-stations-2026-10-18"
+}

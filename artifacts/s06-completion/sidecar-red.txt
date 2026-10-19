@@ -1,0 +1,40 @@
+test_b6_sidecars_reproduce_from_the_real_batch_check (test_b6_sidecar_reproduction.B6SidecarReproductionTests.test_b6_sidecars_reproduce_from_the_real_batch_check) ... FAIL
+
+======================================================================
+FAIL: test_b6_sidecars_reproduce_from_the_real_batch_check (test_b6_sidecar_reproduction.B6SidecarReproductionTests.test_b6_sidecars_reproduce_from_the_real_batch_check)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tests/test_b6_sidecar_reproduction.py", line 16, in test_b6_sidecars_reproduce_from_the_real_batch_check
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: 1 != 0 : Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tools/art/write_pending_sidecars.py", line 118, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tools/art/write_pending_sidecars.py", line 100, in main
+    text = json.dumps(sidecar_record(batch, asset), indent=2, sort_keys=False) + '\n'
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tools/art/write_pending_sidecars.py", line 77, in sidecar_record
+    record = sidecar_for(batch, asset)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tools/art/write_pending_sidecars.py", line 50, in sidecar_for
+    'initial_seed': dict(record(seed), selects=asset.get('seed_arg')),
+                         ^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tools/art/write_pending_sidecars.py", line 27, in record
+    return dict(path=str(path.relative_to(ROOT)), sha256=digest(path), bytes=path.stat().st_size)
+                                                         ^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tools/art/write_pending_sidecars.py", line 23, in digest
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+                          ^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/pathlib.py", line 1050, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/tools/art/build_imperial_corvette.py'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.028s
+
+FAILED (failures=1)
