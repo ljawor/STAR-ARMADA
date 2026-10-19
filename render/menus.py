@@ -90,12 +90,14 @@ DEFAULT_SETTINGS = {
     # Blender catalogue; the legacy procedural renderer stays available as the
     # rollback control and is never deleted by this step.
     "model_preview": True,
-    # True only once the player has chosen the selector themselves. A settings file
-    # written before the switch carries the old `model_preview: false` default,
-    # which is a default and not a decision, so it must not pin anyone to legacy.
-    "model_preview_explicit": False,
     "visual_packs": [],
 }
+
+
+# Settings that record *when* a player chose something rather than *what* they chose.
+# They live in settings.json beside the preferences but have no row of their own, and
+# `DEFAULT_SETTINGS` stays exactly the set of rows a settings page can reach.
+BOOKKEEPING_SETTINGS = ('model_preview_explicit',)
 
 
 def validate_presentation_settings(settings: dict) -> dict:
@@ -110,6 +112,12 @@ def validate_presentation_settings(settings: dict) -> dict:
                 'reduced_motion', 'tutorial_hints', 'high_contrast_ui'):
         if type(result.get(key)) is not bool:
             result[key] = DEFAULT_SETTINGS[key]
+    # Only normalise the marker when the file actually carries it: a session that never
+    # touched the selector must still load exactly DEFAULT_SETTINGS, and that equality is
+    # what the settings screens are tested against.
+    for key in BOOKKEEPING_SETTINGS:
+        if key in result and type(result[key]) is not bool:
+            result[key] = False
     if result.get('markers') not in ('all', 'hostiles', 'off'):
         result['markers'] = DEFAULT_SETTINGS['markers']
     if result.get('audio_dynamic_range') not in ('standard', 'night'):

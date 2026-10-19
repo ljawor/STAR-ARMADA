@@ -116,7 +116,7 @@ def _coverage_for_session():
         _coverage_report, _coverage_generation = None, -1
         return None
     if _coverage_report is None or _coverage_generation != _generation:
-        _coverage_report = _resolver.coverage()
+        _coverage_report = _resolver.coverage(record=False)
         _coverage_generation = _generation
     return _coverage_report
 

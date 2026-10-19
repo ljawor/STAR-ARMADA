@@ -23,7 +23,8 @@ class DefaultSelectionTests(unittest.TestCase):
         import game.core  # noqa: F401  (registers the package before menus imports it)
         from render import menus
         self.assertIs(menus.DEFAULT_SETTINGS['model_preview'], True)
-        self.assertIs(menus.DEFAULT_SETTINGS['model_preview_explicit'], False)
+        self.assertNotIn('model_preview_explicit', menus.DEFAULT_SETTINGS)
+        self.assertIn('model_preview_explicit', menus.BOOKKEEPING_SETTINGS)
 
     def test_pre_switch_settings_file_migrates_to_the_authored_default(self):
         """`model_preview: false` in an old file was a default, not a decision."""

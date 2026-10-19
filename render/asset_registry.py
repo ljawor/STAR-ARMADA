@@ -468,7 +468,7 @@ class AssetResolver:
             _fail('E_EXTENT_DRIFT', binding, 'envelope decision differs from manifest approval')
         return manifest
 
-    def coverage(self, *, full=False):
+    def coverage(self, *, full=False, record=True):
         """Report broken required core separately; an override cannot hide it.
 
         The default is a *structural* verdict: manifest document and revision, plus every
@@ -504,7 +504,12 @@ class AssetResolver:
                     authored.append(key)
                 except AssetError as exc:
                     failures.append(key)
-                    self.diagnostics.append({'binding': key, 'code': exc.code, 'message': str(exc), 'source': 'core'})
+                    if record:
+                        # Resolve-time reports keep this entry; a configuration-time sweep is
+                        # already carried by diagnostics()['coverage'] and must not double-count
+                        # an issue the failing resolution will record anyway.
+                        self.diagnostics.append({'binding': key, 'code': exc.code,
+                                                 'message': str(exc), 'source': 'core'})
         return {'ok': not failures, 'required_core_failures': tuple(failures),
                 'authored': tuple(authored),
                 'procedural': tuple(k for k, r in self._bindings.items() if r.get('status') != 'core'),

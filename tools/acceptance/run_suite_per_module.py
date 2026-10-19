@@ -129,6 +129,7 @@ def summarise(results):
 def main(argv):
     only = None
     merge_path = None
+    out_path = None
     args = list(argv[1:])
     while args:
         flag = args.pop(0)
@@ -136,6 +137,8 @@ def main(argv):
             only = set(args.pop(0).split(','))
         elif flag == '--merge':
             merge_path = Path(args.pop(0))
+        elif flag == '--out':
+            out_path = Path(args.pop(0))
         else:
             raise SystemExit(f'unknown argument {flag}')
 
