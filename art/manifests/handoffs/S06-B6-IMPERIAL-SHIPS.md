@@ -1,9 +1,12 @@
 # S06 B6 — the Imperial ships
 
-> **Batch complete.** Eleven of eleven rows authored, eight approved on their own review pictures.
-> Everything below is the scope as settled before authoring; the outcome and the standing rules are in
-> `S06-B6-IMPERIAL-SHIPS` → approvals.json (decision `s06-b6-imperial-ships-2026-10-18`) and the close-out
-> prompt at `~/.hermes/cache/scratch/star-armada-s10-landing-handover-prompt.md`.
+> **Eight runtime bindings authored and appearance-approved. Full catalogue incomplete.**
+> Correction (October 18, 2026): the former "eleven of eleven authored" claim confused inventory
+> identities with distinct models. Constructor/colonizer are unbuilt; crew and trade convoy map
+> to one approved convoy candidate whose shared integration remains to be proved.
+> See `reviews/S06-COVERAGE-RECONCILIATION.md` (under `art/manifests/`) and
+> `S06-TO-S10-HANDOVER.md`, now corrected. Existing appearance decision
+> `s06-b6-imperial-ships-2026-10-18` and its approved bytes are unchanged.
 
 Handoff for the batch that follows B5. Everything here was **measured from the live code and the live
 registry** while the scope was settled; nothing is transcribed from a plan. Probe:
@@ -11,8 +14,10 @@ registry** while the scope was settled; nothing is transcribed from a plan. Prob
 
 ## 1. The rows
 
-Eleven Imperial bindings are ships. The other sixteen Imperial rows are B3 stations and B4 satellites
-and planet installations, already authored — they are not this batch.
+Eleven Imperial inventory identities are ships. The other sixteen Imperial identities comprise
+ten orbital stations (still unbuilt at this audit) and six B4 satellites/planet installations
+(authored and approved). They are not this batch. The earlier claim that all sixteen were
+already authored was incorrect.
 
 Legacy geometry is what each row draws **today**, read out of `render/fleet_geometry.py` through the
 row's own shape string, with the probe's own measurement:
@@ -34,10 +39,9 @@ row's own shape string, with the probe's own measurement:
 Five legacy archetypes cover all eleven: `dagger` (the wedge-shaped capital), `cruiser`, `needle`
 (the small combat hulls), `box` (construction and logistics) and `wedge` (the TIE squadrons).
 
-**Open before authoring the convoy rows:** `crew_transport` and `trade_convoy` are the minted convoy
-rows, not ShipData hulls. The four `trade_convoy` rows' envelope is already an open decision from the
-earlier batches, so check how B2 treated the other factions' convoy rows before treating these two the
-same way as the nine real hulls.
+**Convoy identity correction:** `crew_transport` has a ShipData row; `trade_convoy` is minted
+without one. Both reach `<faction>:convoy` through distinct branches. The single approved convoy
+mesh is not two authored models, and both paths need the S07 envelope/scale/ownership proof.
 
 ## 2. What each row owes — and the seam question, answered
 
@@ -54,7 +58,9 @@ Measured, not read:
   `f'{faction}:{role}'` for every faction; it returns early and `None` when no resolver is configured,
   which is why patching `selected_binding` proves nothing.
 
-So each row owes exactly what every other batch produced:
+For later **separately authorized opt-in registration**, each row needs the following. Only the
+mesh is an S06 authoring output; manifests below are future S07 work, not permission to create
+one while the row is pending:
 
 * `assets/models/<identifier>.mesh.json` — the authored mesh;
 * `assets/models/manifests/<identifier>.json` — the manifest: `contract: star-armada/model-manifest`,
@@ -85,7 +91,7 @@ Traps this session paid for: a generated file that changes for assets outside th
 helper that an approval names; a guard grepping the template for text that became a slot; and a green
 focused union that is not a green CI (the two process-spawning LAN tests flake on Windows).
 
-## Outcome — the batch as it landed
+## Outcome — approved revisions, not landed or registered
 
 | row | runtime key | triangles | state |
 |---|---|---|---|
@@ -97,7 +103,7 @@ focused union that is not a green CI (the two process-spawning LAN tests flake o
 | cruiser | `imperial:cruiser` | 2,384 | approved |
 | frigate | `imperial:frigate` | 2,416 | approved |
 | convoy | `imperial:convoy` | 4,748 | approved (follows the three sibling convoys) |
-| constructor, colonizer | — | — | not authored; not requested |
+| constructor, colonizer | — | — | Not authored in this batch; still required inventory work, no scope exception recorded |
 
 **No seam was needed for the ships.** `ship_binding` builds `f'{faction}:{role}'` for every faction and
 `ship_visual_key` asks it first, so an authored Imperial binding is served with no key change; `SHIP_KEYS`,
@@ -107,7 +113,7 @@ extended for the convoy branches only (`6f1e5ad`) - widening the general gate wo
 hull to a key `normalize_ship_key` collapses to `box`. That trap is demonstrated, not asserted, in
 `tests/test_imperial_convoy_gate.py`.
 
-Every row carries a labelled review sheet under `artifacts/s06_alliance_batch_review/b6-*/`, each captured
+Each of the eight authored bindings carries a labelled review sheet under `artifacts/s06_alliance_batch_review/b6-*/`, each captured
 with the harness's own assertions: per-pass MSAA sample and viewport, a zero-pixel legacy repeat leg,
 `changed_pixels > 0`, and the subject measured on screen.
 
