@@ -18,7 +18,14 @@
     "quality": "requested_msaa 4 / actual_msaa 4, 1280x800 drawable and viewport, requested vsync 0, reported swap interval 0, shader on",
     "machine": "Apple M4, macOS 26.6.2 arm64, GL 2.1 Metal - 90.5, pygame-ce 2.5.8 / SDL 2.32.10",
     "semantics": "synchronized diagnostic frame cost with glFinish stage boundaries, NOT interactive FPS",
-    "harness": "tools/acceptance/measure_catalogue_cost.py configures the real selection seam then calls the real benchmark CLI; no product, fixture or quality parameter changed"
+    "harness": "tools/acceptance/measure_catalogue_cost.py configures the real selection seam then calls the real benchmark CLI; no product, fixture or quality parameter changed",
+    "discarded_trials": "2 of the 24 trials were discarded and re-run: the benchmark CLI does not expose --screenshot (it is a run_benchmark() keyword, not a parser argument), so the two preview trials that asked for captures exited 1 with 'unrecognized arguments'. They were re-run with the identical measurement flags and no capture. No preview screenshot is therefore part of this record; the frozen-package capture in artifacts/s09/package/ is a separate --smoke artifact.",
+    "trial_count": {
+      "requested": 24,
+      "discarded": 2,
+      "reported": 24,
+      "note": "every reported trial is a completed run of the committed harness; the two discarded attempts measured nothing"
+    }
   },
   "reference": {
     "source": "art/manifests/pipeline_policy.json s09-performance-target-2026-10-19",
