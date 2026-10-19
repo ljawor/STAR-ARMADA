@@ -1,0 +1,10 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+test_display_lists_are_content_keyed_for_additive_assets (test_model_context_lifecycle.ModelContextLifecycleTests.test_display_lists_are_content_keyed_for_additive_assets) ... ok
+test_real_renderer_blocks_switch_until_teardown_and_context_recreation (test_model_context_lifecycle.ModelContextLifecycleTests.test_real_renderer_blocks_switch_until_teardown_and_context_recreation) ... ok
+test_registered_catalogue_lists_close_and_rebuild_across_preview_cycles (test_model_context_lifecycle.ModelContextLifecycleTests.test_registered_catalogue_lists_close_and_rebuild_across_preview_cycles)
+Actual 103-revision GPU closure, including the separate scaffold increment. ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 5.014s
+
+OK

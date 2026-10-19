@@ -9,6 +9,8 @@ from datetime import date
 import hashlib
 import json
 import math
+import os
+import stat
 from pathlib import Path
 from itertools import islice
 from typing import NoReturn
@@ -51,16 +53,41 @@ def _safe(root, relative):
     if (not isinstance(relative, str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._/-]{0,180}', relative)
             or any(p in ('', '.', '..') for p in relative.split('/'))):
         _fail('E_UNSAFE_PATH', 'path', repr(relative))
-    root = Path(root).resolve()
-    target = (root / relative).resolve()
+    try:
+        root = Path(root).resolve()
+        target = (root / relative).resolve()
+    except (OSError, RuntimeError) as exc:
+        _fail('E_UNSAFE_PATH', 'path', str(exc))
     if not target.is_relative_to(root):
         _fail('E_SYMLINK_ESCAPE', 'path', relative)
     return target
 
 
+def _pack_files(root):
+    """Lazy non-symlink-following walk; unreadable subtrees fail closed."""
+    pending = [root]
+    while pending:
+        directory = pending.pop()
+        try:
+            with os.scandir(directory) as entries:
+                for entry in entries:
+                    child = Path(entry.path)
+                    yield child
+                    if entry.is_dir(follow_symlinks=False):
+                        pending.append(child)
+        except OSError as exc:
+            _fail('E_FILE_MISSING', str(directory), str(exc))
+
+
 def _read(path):
     try:
-        with Path(path).open('rb') as stream:
+        if not stat.S_ISREG(Path(path).stat().st_mode):
+            _fail('E_FILE_TYPE', str(path), 'expected a regular data file')
+        # Nonblocking open plus fstat also closes a regular-file -> FIFO swap.
+        fd = os.open(path, os.O_RDONLY | getattr(os, 'O_NONBLOCK', 0) | getattr(os, 'O_BINARY', 0))
+        with os.fdopen(fd, 'rb') as stream:
+            if not stat.S_ISREG(os.fstat(stream.fileno()).st_mode):
+                _fail('E_FILE_TYPE', str(path), 'expected a regular data file')
             raw = stream.read(MAX_BYTES + 1)
     except OSError as exc:
         _fail('E_FILE_MISSING', str(path), str(exc))
@@ -129,6 +156,19 @@ def _version(value):
 ROLES = ('base', 'dark', 'trim', 'accent', 'lit', 'cool')
 MAX_VERTICES = 10_000
 MAX_TRIANGLES = 12_000
+# Session-retained optional geometry, across all bindings and LODs. This is
+# separate from the disposable LRU and prevents many small valid files exhausting RAM.
+MAX_PACK_SNAPSHOT_TRIANGLES = 240_000
+MAX_PACK_SNAPSHOT_BYTES = 32_000_000
+
+
+def _snapshot_bytes(manifest):
+    return (len(json.dumps(manifest, sort_keys=True, separators=(',', ':')).encode())
+            + sum(entry['bytes'] for entry in manifest['files'].values()))
+
+
+def _snapshot_triangles(snapshot):
+    return sum(len(faces) for mesh in snapshot.values() for faces in mesh.values())
 
 
 def _geometry(payload, manifest, legacy_identifiers=()):
@@ -310,7 +350,8 @@ class AssetResolver:
             if any(a >= b for a, b in zip(lo, hi)):
                 _fail('E_BOUNDS_DEGENERATE', 'bounds', 'non-positive axis')
 
-    def _load(self, manifest, root, lod, *, pack_id=None, pack_revision='', envelope=None):
+    def _load(self, manifest, root, lod, *, pack_id=None, pack_revision='', envelope=None,
+              snapshot=None):
         self._document(manifest, root, 'star-armada/model-manifest')
         body = '\n'.join(f"{key}:{manifest['files'][key]['sha256']}" for key in sorted(manifest['files']))
         revision = hashlib.sha256(f"{manifest['asset']}\n{body}".encode()).hexdigest()
@@ -340,6 +381,8 @@ class AssetResolver:
         self._approval(manifest, root)
         if lod not in meshes:
             _fail('E_LOD', 'lod', lod)
+        if snapshot is not None:
+            snapshot.update(meshes)
         return ResolvedAsset(meshes[lod], revision, manifest['asset'],
                              manifest.get('requires', {}).get('material_profile', 'core:fleet/standard'),
                              'core' if pack_id is None else str(root), pack_id, pack_revision, lod)
@@ -441,6 +484,16 @@ class AssetResolver:
                 'procedural': tuple(k for k, r in self._bindings.items() if r.get('status') != 'core'),
                 'active_order': self.active_order}
 
+    def pack_bindings(self):
+        """Effective optional origins only; bounded by enabled pack/entry ceilings.
+
+        Fresh metadata copies avoid disk I/O, core catalogue loading and exposing
+        the resolver's mutable internal manifest/staging records to callers.
+        """
+        return [{'binding': key, 'asset': manifest['asset'], 'source': str(root),
+                 'pack_id': identity, 'pack_revision': revision}
+                for key, (manifest, root, identity, revision, _, _) in sorted(self._overrides.items())]
+
     def activate_packs(self, pack_paths, *, gameplay_entities=None, pack_root=None):
         """Reset to core, then validate/activate each pack atomically in caller order.
 
@@ -458,7 +511,10 @@ class AssetResolver:
             path = Path(requested).absolute()
             outcome = {'path': str(path), 'accepted': False, 'code': None}
             try:
-                canonical = path.resolve()
+                try:
+                    canonical = path.resolve()
+                except (OSError, RuntimeError) as exc:
+                    _fail('E_UNSAFE_PATH', str(path), str(exc))
                 if pack_root is not None and not canonical.is_relative_to(Path(pack_root).resolve()):
                     _fail('E_SYMLINK_ESCAPE', str(path), 'enabled directory escapes external pack root')
                 if getattr(sys, 'frozen', False) and canonical.is_relative_to(self.root):
@@ -472,16 +528,21 @@ class AssetResolver:
                 prohibited = {'.py', '.pyc', '.pyo', '.pyd', '.so', '.dll', '.dylib', '.exe',
                               '.blend', '.pickle', '.pkl', '.glsl', '.vert', '.frag', '.sh',
                               '.bat', '.cmd', '.js', '.wasm'}
-                for index, child in enumerate(root.rglob('*')):
+                for index, child in enumerate(_pack_files(root)):
                     if index >= 4096:
                         _fail('E_FILE_SIZE', str(root), 'pack file-count limit exceeded')
-                    _safe(root, child.relative_to(root).as_posix())
+                    target = _safe(root, child.relative_to(root).as_posix())
+                    if not (target.is_file() or target.is_dir()):
+                        _fail('E_FILE_TYPE', str(child), 'expected a regular file or directory')
                     if child.suffix.lower() in prohibited:
                         _fail('E_EXECUTABLE_CONTENT', str(child), 'not a data-only visual pack')
                 if data['id'] in ids:
                     _fail('E_DUPLICATE_ID', data['id'], 'duplicate enabled pack id')
-                ids.add(data['id'])
                 staged = {}
+                staged_triangles = staged_bytes = 0
+                active_triangles = sum(_snapshot_triangles(item[-1]) for item in self._overrides.values())
+                active_bytes = sum(_snapshot_bytes(item[0]) for item in self._overrides.values())
+                asset_ids = set()
                 digest = hashlib.sha256(json.dumps(data, sort_keys=True, separators=(',', ':')).encode())
                 for kind in ('replaces', 'adds'):
                     for entry in data['content'].get(kind, []):
@@ -507,19 +568,45 @@ class AssetResolver:
                             _fail('E_ASSET_COLLISION', key, 'replace_of differs from core asset identity')
                         manifest_path = _safe(root, entry['manifest'])
                         manifest = _json(_read(manifest_path))
+                        self._document(manifest, root, 'star-armada/model-manifest')
                         envelope = row.get('envelope')
                         if kind == 'replaces' and envelope is None:
                             _fail('E_EXTENT_DRIFT', key, 'core binding has no approved replacement envelope')
                         if kind == 'adds' and manifest.get('asset') in {r['manifest'] for r in self._bindings.values()}:
                             _fail('E_ASSET_COLLISION', key, 'additive asset id collides with core')
-                        self._load(manifest, root, 'mesh', pack_id=data['id'], envelope=envelope)
+                        if kind == 'adds' and manifest.get('asset') in {
+                                m['asset'] for m, *_ in self._overrides.values()}:
+                            _fail('E_ASSET_COLLISION', key, 'additive asset id already supplied by an enabled pack')
+                        snapshot = {}
+                        self._load(manifest, root, 'mesh', pack_id=data['id'], envelope=envelope,
+                                   snapshot=snapshot)
+                        if manifest['asset'] in asset_ids:
+                            _fail('E_DUPLICATE_ID', manifest['asset'], 'duplicate asset identity inside pack')
+                        asset_ids.add(manifest['asset'])
                         digest.update(key.encode())
                         digest.update(json.dumps(manifest, sort_keys=True, separators=(',', ':')).encode())
-                        staged[key] = (manifest, root, data['id'], '', envelope)
+                        staged_triangles += _snapshot_triangles(snapshot)
+                        staged_bytes += _snapshot_bytes(manifest)
+                        if key in self._overrides:
+                            active_triangles -= _snapshot_triangles(self._overrides[key][-1])
+                            active_bytes -= _snapshot_bytes(self._overrides[key][0])
+                        if (active_triangles + staged_triangles > MAX_PACK_SNAPSHOT_TRIANGLES
+                                or active_bytes + staged_bytes > MAX_PACK_SNAPSHOT_BYTES):
+                            _fail('E_PACK_RESOURCE', data['id'], 'session snapshot byte/triangle ceiling exceeded')
+                        staged[key] = (manifest, root, data['id'], '', envelope, MappingProxyType(snapshot))
                 revision = digest.hexdigest()
-                staged = {key: (m, r, identity, revision, envelope)
-                          for key, (m, r, identity, _, envelope) in staged.items()}
+                staged = {key: (m, r, identity, revision, envelope, snapshot)
+                          for key, (m, r, identity, _, envelope, snapshot) in staged.items()}
+                for key, item in staged.items():
+                    if key in self._overrides:
+                        previous = self._overrides[key]
+                        self.diagnostics.append({'code': 'I_BINDING_OVERRIDE', 'binding': key,
+                                                 'previous_pack_id': previous[2],
+                                                 'previous_pack_revision': previous[3],
+                                                 'pack_id': data['id'], 'pack_revision': revision,
+                                                 'source': str(item[1])})
                 self._overrides.update(staged)
+                ids.add(data['id'])
                 outcome.update(accepted=True, pack_id=data['id'], revision=revision)
             except AssetError as exc:
                 outcome.update(code=exc.code, message=str(exc))
@@ -539,7 +626,7 @@ class AssetResolver:
             return None
         row = self._bindings.get(binding)
         if binding in self._overrides:
-            manifest, root, pack_id, pack_revision, envelope = self._overrides[binding]
+            manifest, root, pack_id, pack_revision, envelope, snapshot = self._overrides[binding]
         elif row.get('status') == 'core':
             manifest, root, pack_id, pack_revision, envelope = self._manifests.get(row['manifest']), self.root, None, '', None
         else:
@@ -547,15 +634,21 @@ class AssetResolver:
         try:
             if pack_id is None:
                 manifest = self._core_manifest(binding)
-            else:
-                self._document(manifest, root, 'star-armada/model-manifest')
+            # Optional packs are session snapshots: never mix cached old entries
+            # with disk changes after transactional activation (including other LODs).
             key = (manifest['revision'], pack_revision, manifest.get('requires', {}).get('material_profile', 'core:fleet/standard'), lod)
             if key in self._cache:
                 self._hits += 1
                 self._cache.move_to_end(key)
                 return self._cache[key]
             self._misses += 1
-            result = self._load(manifest, root, lod, pack_id=pack_id, pack_revision=pack_revision, envelope=envelope)
+            if pack_id is None:
+                result = self._load(manifest, root, lod)
+            else:
+                if lod not in snapshot:
+                    _fail('E_LOD', 'lod', lod)
+                result = ResolvedAsset(snapshot[lod], manifest['revision'], manifest['asset'],
+                                       key[2], str(root), pack_id, pack_revision, lod)
             if self._max_cache_entries:
                 self._cache[key] = result
                 while len(self._cache) > self._max_cache_entries:

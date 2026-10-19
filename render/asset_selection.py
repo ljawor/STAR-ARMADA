@@ -63,12 +63,13 @@ def configure(settings, *, asset_root=None, pack_root=None, gameplay_entities=No
     return diagnostics()
 
 
-def configure_from_settings(settings):
-    """Application session seam: assets in bundle, visual packs in writable user storage."""
+def configure_from_settings(settings, *, data_store=None):
+    """Application session seam: bundle assets plus verified loaded gameplay data."""
     from pathlib import Path
     from render import menus
     result = configure(settings, asset_root=menus.ASSET_ROOT,
-                       pack_root=Path(menus.USER_DIR) / 'visual_packs')
+                       pack_root=Path(menus.USER_DIR) / 'visual_packs',
+                       gameplay_entities=active_gameplay_entities(data_store))
     import logging
     logging.getLogger(__name__).info('Model selection: %s', result)
     return result
@@ -95,6 +96,7 @@ def diagnostics():
             'enabled_order': list(_selection['visual_packs']),
             'generation': _generation,
             'pack_order': [dict(entry) for entry in _resolver.active_order] if _resolver else [],
+            'effective_bindings': _resolver.pack_bindings() if _resolver else [],
             'issues': json.loads(json.dumps(_resolver.diagnostics, default=dict)) if _resolver else []}
 
 
@@ -120,9 +122,29 @@ def selected_binding(binding):
             and _resolver.is_authored(binding))
 
 
+def active_gameplay_entities(data_store):
+    """Only ship IDs actually loaded by a gameplay mod satisfy an additive pack.
+
+    Provenance is captured by DataStore's loader, not inferred from files merely
+    present on disk or from a visual pack's own declarations. Effective last
+    gameplay writer wins. This metadata never enters saves/replays/checksums.
+    """
+    result = {}
+    for data_id, mod_name in getattr(data_store, 'ship_mod_sources', {}).items():
+        if data_id in data_store.ships:
+            key = _ship_binding(data_store, data_id)
+            result.setdefault('gameplay:' + mod_name, set()).add(key)
+    return result
+
+
 def ship_binding(ds, data_id, faction=None):
     if _resolver is None:
         return None
+    binding = _ship_binding(ds, data_id, faction)
+    return binding if selected_binding(binding) else None
+
+
+def _ship_binding(ds, data_id, faction=None):
     from render.faction_visuals import convoy_key
     data = ds.ships.get(data_id)
     if data is None:
@@ -138,7 +160,7 @@ def ship_binding(ds, data_id, faction=None):
             # ship_visual_key's convoy branches (s06-imperial-convoy-parity-2026-10-18).
             role = 'convoy'
         binding = convoy_key(data.faction) if role == 'convoy' else f'{data.faction}:{role}'
-    return binding if selected_binding(binding) else None
+    return binding
 
 
 def is_authored(binding):

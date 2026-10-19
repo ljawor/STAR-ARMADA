@@ -1,0 +1,22 @@
+{
+  "art/blender/alliance_frigate.blend": {
+    "equals_HEAD": true,
+    "sha256": "721693dce2de5919e941dd778129c409864e5b78499604b65e1f2e59bc17dd49"
+  },
+  "art/manifests/provenance/rebel-frigate.json": {
+    "equals_HEAD": true,
+    "sha256": "5952841e6a84c9076fad76bcd078e3dd70aec181de18119962ec6ada3dc1d7ce"
+  },
+  "assets/models/alliance_frigate.mesh.json": {
+    "equals_HEAD": true,
+    "sha256": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32"
+  },
+  "assets/models/manifests/alliance_frigate.json": {
+    "equals_HEAD": true,
+    "sha256": "2a4394117ce2770850639ab6559a386996010478c10f13dd5de9fe7374363e3a"
+  },
+  "tools/art/build_alliance_frigate.py": {
+    "equals_HEAD": true,
+    "sha256": "8a3822c0d39dca356a605f185a1feceaeaa8c2c97b827cee1d0a5265f84b0a28"
+  }
+}

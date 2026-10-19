@@ -1,0 +1,9 @@
+test_application_selection_uses_loaded_store_without_changing_preferences (test_s08_gameplay_dependencies.GameplayDependencyTests.test_application_selection_uses_loaded_store_without_changing_preferences) ... pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+ok
+test_loaded_ship_provenance_is_explicit_and_last_gameplay_writer_wins (test_s08_gameplay_dependencies.GameplayDependencyTests.test_loaded_ship_provenance_is_explicit_and_last_gameplay_writer_wins) ... ok
+test_only_effectively_loaded_ship_bindings_satisfy_visual_dependency (test_s08_gameplay_dependencies.GameplayDependencyTests.test_only_effectively_loaded_ship_bindings_satisfy_visual_dependency) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.058s
+
+OK

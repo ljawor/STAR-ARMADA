@@ -1,0 +1,28 @@
+test_addition_asset_identity_cannot_collide_with_active_pack (test_s08_pack_safety.PackSafetyTests.test_addition_asset_identity_cannot_collide_with_active_pack) ... ok
+test_distinct_bindings_cannot_hide_duplicate_asset_ids (test_s08_pack_safety.PackSafetyTests.test_distinct_bindings_cannot_hide_duplicate_asset_ids) ... ok
+test_rejected_pack_does_not_reserve_identity_for_later_valid_pack (test_s08_pack_safety.PackSafetyTests.test_rejected_pack_does_not_reserve_identity_for_later_valid_pack) ... ok
+test_session_uses_complete_validated_snapshot_after_disk_corruption (test_s08_pack_safety.PackSafetyTests.test_session_uses_complete_validated_snapshot_after_disk_corruption) ... 
+  test_session_uses_complete_validated_snapshot_after_disk_corruption (test_s08_pack_safety.PackSafetyTests.test_session_uses_complete_validated_snapshot_after_disk_corruption) (cache_limit=0) ... FAIL
+  test_session_uses_complete_validated_snapshot_after_disk_corruption (test_s08_pack_safety.PackSafetyTests.test_session_uses_complete_validated_snapshot_after_disk_corruption) (cache_limit=1) ... FAIL
+test_symlink_loops_reject_without_aborting_following_packs (test_s08_pack_safety.PackSafetyTests.test_symlink_loops_reject_without_aborting_following_packs) ... ok
+
+======================================================================
+FAIL: test_session_uses_complete_validated_snapshot_after_disk_corruption (test_s08_pack_safety.PackSafetyTests.test_session_uses_complete_validated_snapshot_after_disk_corruption) (cache_limit=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s08/tests/test_s08_pack_safety.py", line 160, in test_session_uses_complete_validated_snapshot_after_disk_corruption
+    self.assertIsNotNone(second, 'one broken disk entry must not split a session pack')
+AssertionError: unexpectedly None : one broken disk entry must not split a session pack
+
+======================================================================
+FAIL: test_session_uses_complete_validated_snapshot_after_disk_corruption (test_s08_pack_safety.PackSafetyTests.test_session_uses_complete_validated_snapshot_after_disk_corruption) (cache_limit=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s08/tests/test_s08_pack_safety.py", line 160, in test_session_uses_complete_validated_snapshot_after_disk_corruption
+    self.assertIsNotNone(second, 'one broken disk entry must not split a session pack')
+AssertionError: unexpectedly None : one broken disk entry must not split a session pack
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.349s
+
+FAILED (failures=2)

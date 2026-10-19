@@ -1,0 +1,23 @@
+test_addition_asset_identity_cannot_collide_with_active_pack (test_s08_pack_safety.PackSafetyTests.test_addition_asset_identity_cannot_collide_with_active_pack) ... ok
+test_distinct_bindings_cannot_hide_duplicate_asset_ids (test_s08_pack_safety.PackSafetyTests.test_distinct_bindings_cannot_hide_duplicate_asset_ids) ... ok
+test_rejected_pack_does_not_reserve_identity_for_later_valid_pack (test_s08_pack_safety.PackSafetyTests.test_rejected_pack_does_not_reserve_identity_for_later_valid_pack) ... FAIL
+
+======================================================================
+FAIL: test_rejected_pack_does_not_reserve_identity_for_later_valid_pack (test_s08_pack_safety.PackSafetyTests.test_rejected_pack_does_not_reserve_identity_for_later_valid_pack)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s08/tests/test_s08_pack_safety.py", line 113, in test_rejected_pack_does_not_reserve_identity_for_later_valid_pack
+    self.assertEqual(resolver.activate_packs([first, bad, later]), ('test:first', 'test:later'))
+AssertionError: Tuples differ: ('test:first',) != ('test:first', 'test:later')
+
+Second tuple contains 1 additional elements.
+First extra element 1:
+'test:later'
+
+- ('test:first',)
++ ('test:first', 'test:later')
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.075s
+
+FAILED (failures=1)

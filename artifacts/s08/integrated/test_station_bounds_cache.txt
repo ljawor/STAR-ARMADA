@@ -1,0 +1,9 @@
+test_all_station_families_match_legacy_extrema_exactly (test_station_bounds_cache.StationBoundsTests.test_all_station_families_match_legacy_extrema_exactly) ... ok
+test_faction_changes_select_current_geometry (test_station_bounds_cache.StationBoundsTests.test_faction_changes_select_current_geometry) ... ok
+test_unchanged_mesh_is_scanned_once_while_transform_stays_live (test_station_bounds_cache.StationBoundsTests.test_unchanged_mesh_is_scanned_once_while_transform_stays_live) ... ok
+test_unknown_identifiers_canonicalize_before_bounded_cache (test_station_bounds_cache.StationBoundsTests.test_unknown_identifiers_canonicalize_before_bounded_cache) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.625s
+
+OK

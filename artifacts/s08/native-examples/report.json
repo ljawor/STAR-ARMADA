@@ -1,0 +1,110 @@
+{
+  "renderer_sha256": "9aff34140aa3d458eec358a2d87e64d4d4277c924ca198d507e4d29983350f3c",
+  "selection_sha256": "11b1c84ffc9258c3f19b2b53881cd45588eb66d6b514e4ffb09d0161ad239328",
+  "resolver_sha256": "9cc5c030415ea5485634c74249d6569f636403c319b016de3f1bb48894908c4c",
+  "harness_sha256": "9ea92a61673012397c6703801c75756f646058b843cd4d221ee19b3000032fe0",
+  "initial_state_sha256": "512faa729d54516cb28b8f86375d75183fc1dc33cc2db0a6171c2a30abb004db",
+  "gl": {
+    "vendor": "Apple",
+    "renderer": "Apple M4",
+    "version": "2.1 Metal - 90.5"
+  },
+  "samples": 4,
+  "captures": [
+    {
+      "file": "core-close.png",
+      "sha256": "475b6e2af1a7e360384879bbaf17c727ecf52498f1af44c11d43271a482b15f0",
+      "view": "close",
+      "distance": 185.0,
+      "yaw": 48.0,
+      "pitch": 35.0,
+      "asset": "core:alliance/frigate",
+      "revision": "60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df",
+      "pack_revision": "",
+      "pack_id": null,
+      "repeat_equal": true,
+      "state_sha256": "512faa729d54516cb28b8f86375d75183fc1dc33cc2db0a6171c2a30abb004db"
+    },
+    {
+      "file": "core-tactical.png",
+      "sha256": "c32017f1360f9b71c7c84dd980c8ca1b67f27e46d67516da99db8f5be1db4cff",
+      "view": "tactical",
+      "distance": 700.0,
+      "yaw": 48.0,
+      "pitch": 35.0,
+      "asset": "core:alliance/frigate",
+      "revision": "60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df",
+      "pack_revision": "",
+      "pack_id": null,
+      "repeat_equal": true,
+      "state_sha256": "512faa729d54516cb28b8f86375d75183fc1dc33cc2db0a6171c2a30abb004db"
+    },
+    {
+      "file": "pack-close.png",
+      "sha256": "8154453f7981492e96e8a02729b3b7fcaf2c2e033ac03e470c7f00b5b81eb4dd",
+      "view": "close",
+      "distance": 185.0,
+      "yaw": 48.0,
+      "pitch": 35.0,
+      "asset": "example:alliance/frigate",
+      "revision": "e43df6b6a0c5b087b7d91f1c9ebf7e71d5c1dc94c02f455b6a232e0904af98a6",
+      "pack_revision": "234c431e3d4f72690bdd5bddd9d43565359c9865760f94ac6acfe0d4b3c92eba",
+      "pack_id": "example:core_frigate",
+      "repeat_equal": true,
+      "state_sha256": "512faa729d54516cb28b8f86375d75183fc1dc33cc2db0a6171c2a30abb004db"
+    },
+    {
+      "file": "pack-tactical.png",
+      "sha256": "af6fd55e24d1ac244e8d33df4c27eb069be1e190caa82853fd3abda7809213b0",
+      "view": "tactical",
+      "distance": 700.0,
+      "yaw": 48.0,
+      "pitch": 35.0,
+      "asset": "example:alliance/frigate",
+      "revision": "e43df6b6a0c5b087b7d91f1c9ebf7e71d5c1dc94c02f455b6a232e0904af98a6",
+      "pack_revision": "234c431e3d4f72690bdd5bddd9d43565359c9865760f94ac6acfe0d4b3c92eba",
+      "pack_id": "example:core_frigate",
+      "repeat_equal": true,
+      "state_sha256": "512faa729d54516cb28b8f86375d75183fc1dc33cc2db0a6171c2a30abb004db"
+    },
+    {
+      "file": "disabled-close.png",
+      "sha256": "475b6e2af1a7e360384879bbaf17c727ecf52498f1af44c11d43271a482b15f0",
+      "view": "close",
+      "distance": 185.0,
+      "yaw": 48.0,
+      "pitch": 35.0,
+      "asset": "core:alliance/frigate",
+      "revision": "60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df",
+      "pack_revision": "",
+      "pack_id": null,
+      "repeat_equal": true,
+      "state_sha256": "512faa729d54516cb28b8f86375d75183fc1dc33cc2db0a6171c2a30abb004db"
+    },
+    {
+      "file": "disabled-tactical.png",
+      "sha256": "c32017f1360f9b71c7c84dd980c8ca1b67f27e46d67516da99db8f5be1db4cff",
+      "view": "tactical",
+      "distance": 700.0,
+      "yaw": 48.0,
+      "pitch": 35.0,
+      "asset": "core:alliance/frigate",
+      "revision": "60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df",
+      "pack_revision": "",
+      "pack_id": null,
+      "repeat_equal": true,
+      "state_sha256": "512faa729d54516cb28b8f86375d75183fc1dc33cc2db0a6171c2a30abb004db"
+    }
+  ],
+  "comparisons": {
+    "close": {
+      "changed_pixels_gt3": 9141,
+      "disabled_equal": true
+    },
+    "tactical": {
+      "changed_pixels_gt3": 776,
+      "disabled_equal": true
+    }
+  },
+  "ok": true
+}

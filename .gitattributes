@@ -9,3 +9,31 @@ tools/art/** -text
 # S06 review tooling is source-hash attested; preserve its exact checkout bytes.
 tools/diag_alliance_cruiser_review.py -text
 tests/test_alliance_blender_cruiser.py -text
+# S08 packs and reviewed code are byte-attested, including Windows checkouts.
+examples/visual_packs/** -text
+mods/s08_raiders_fixture/** -text
+game/data/store.py -text
+main.py -text
+render/asset_registry.py -text
+render/asset_selection.py -text
+# Metadata regeneration pins this existing renderer; preserve its source bytes too.
+render/renderer.py -text
+tests/test_s08_*.py -text
+tests/test_generic_model_preview.py -text
+docs/BLENDER_MODEL_S08_PLAN.md -text
+docs/VISUAL_MODEL_PACKS.md -text
+
+# Remaining existing source pins required by S07 metadata reproduction.
+tools/diag_imperial_corvette.py -text
+tools/diag_imperial_ship.py -text
+render/authored_mesh.py -text
+render/faction_ships.py -text
+render/faction_stations.py -text
+render/fleet_materials.py -text
+tests/fixtures/alliance_trio_unselected.sha256.json -text
+tests/test_alliance_blender_battleship.py -text
+tests/test_alliance_blender_trio.py -text
+tests/test_alliance_visual_slice.py -text
+tests/test_draw_view_scope.py -text
+tests/test_fleet_materials.py -text
+tests/test_ship_material_passes.py -text

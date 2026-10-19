@@ -1,0 +1,18 @@
+{
+  "command": [
+    "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/.venv/bin/python",
+    "-m",
+    "unittest",
+    "test_s08_gameplay_dependencies",
+    "test_s08_asset_updates",
+    "test_generic_model_preview",
+    "test_detmath",
+    "-v"
+  ],
+  "pid": 22083,
+  "exit_code": 0,
+  "timed_out": false,
+  "deadline_seconds": 180.0,
+  "elapsed_seconds": 2.059,
+  "log": "artifacts/s08/session-selection-tests.txt"
+}

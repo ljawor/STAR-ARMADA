@@ -177,6 +177,8 @@ class DataStore:
         self.balance: dict = {}             # the overlay this catalogue was built with
         self.campaign: dict = {}
         self.mod_files: dict[str, str] = {}      # relative path -> file content (mod loader)
+        # Effective loaded data provenance only; never part of GameState/checksums.
+        self.ship_mod_sources: dict[str, str] = {}
         self._load_all(mods or [], balance)
         DataStore._instance = self
 
@@ -453,7 +455,8 @@ class DataStore:
                         if loader is not None:
                             loader()
                         elif rel.startswith("ships/"):
-                            self._load_ship_file(p)
+                            for ship_id in self._load_ship_file(p):
+                                self.ship_mod_sources[ship_id] = mod_name
                         else:
                             with open(p, encoding="utf-8") as f:
                                 self.rules = json.load(f)
@@ -471,7 +474,7 @@ class DataStore:
         # re-validate after mod merge
         self._validate()
 
-    def _load_ship_file(self, path: str) -> None:
+    def _load_ship_file(self, path: str) -> tuple[str, ...]:
         with open(path, "r", encoding="utf-8") as f:
             data = json.load(f)
         for sid, s in data["ships"].items():
@@ -501,6 +504,7 @@ class DataStore:
                 veteran_xp=float(s.get("veteran_xp", 100)),
                 max_rank=s.get("max_rank", 5),
                 crew_capacity=s.get("crew_capacity", 0))
+        return tuple(data["ships"])
 
     # ------------------------------------------------------------- validation
     def _validate(self) -> None:

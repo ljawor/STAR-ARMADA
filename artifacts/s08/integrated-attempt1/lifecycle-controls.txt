@@ -1,0 +1,52 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+{
+  "ok": true,
+  "controls": {
+    "stale_cpu_helpers": {
+      "ran": 1,
+      "failures": 1,
+      "errors": 0,
+      "skips": 0,
+      "assertions": [
+        "Traceback (most recent call last):\n  File \"/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s08/tests/test_s08_asset_updates.py\", line 84, in test_same_path_revision_update_invalidates_all_bounds_and_contact_helpers\n    self.assertNotEqual(a[0], b[0])\nAssertionError: ((-27.200000000000003, -8.0, -64.5599976), (27.200000000000003, 20.28, 58.400000000000006), 69.42091680547014) == ((-27.200000000000003, -8.0, -64.5599976), (27.200000000000003, 20.28, 58.400000000000006), 69.42091680547014)\n"
+      ],
+      "unexpected_errors": []
+    },
+    "path_only_gpu_key": {
+      "ran": 1,
+      "failures": 1,
+      "errors": 0,
+      "skips": 0,
+      "assertions": [
+        "Traceback (most recent call last):\n  File \"/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s08/tests/test_s08_asset_updates.py\", line 82, in test_same_path_revision_update_invalidates_all_bounds_and_contact_helpers\n    self.assertNotEqual(key, selection.gpu_cache_key('rebel:frigate', 'base', 'legacy'))\nAssertionError: 'legacy' == 'legacy'\n"
+      ],
+      "unexpected_errors": []
+    },
+    "undeleted_gl_lists": {
+      "ran": 1,
+      "failures": 1,
+      "errors": 0,
+      "skips": 0,
+      "assertions": [
+        "Traceback (most recent call last):\n  File \"/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s08/tests/test_s08_asset_updates.py\", line 139, in test_native_lists_are_deleted_and_recompiled_after_update_and_context_recreation\n    self.assertFalse(any(GL.glIsList(value) for value in lists))\nAssertionError: True is not false\n"
+      ],
+      "unexpected_errors": []
+    },
+    "restored_cpu": {
+      "ran": 1,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "assertions": [],
+      "unexpected_errors": []
+    },
+    "restored_native_gl": {
+      "ran": 1,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "assertions": [],
+      "unexpected_errors": []
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "command": [
+    "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/.venv/bin/python",
+    "tools/art/verify_s08_controls.py"
+  ],
+  "pid": 21619,
+  "exit_code": 0,
+  "timed_out": false,
+  "deadline_seconds": 120.0,
+  "elapsed_seconds": 2.016,
+  "log": "artifacts/s08/lifecycle-controls.txt"
+}
