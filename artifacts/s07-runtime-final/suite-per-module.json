@@ -2,31 +2,33 @@
   "schema": 1,
   "method": "one process per test module, real SDL video driver (SDL_VIDEODRIVER unset)",
   "prelude": "import game.core (declared: works around a pre-existing circular import in game/systems/__init__.py <-> game/core/manager.py; identical on 56906ea)",
+  "pytest_fallback": "unittest yields zero tests for test_classic_replays_gl, test_classic_screens and test_menu_movie; the first two run under pytest, and test_classic_replays_gl has no test cases at all and runs as a script (CLASSIC_REPLAYS_GL_OK captures=14)",
   "why_not_one_process": "tests/test_weapon_sfx.py sets SDL_VIDEODRIVER=dummy at import, process-wide; in a single process every later GL test errors or hangs. Observed: 18 errors and one 28-minute non-completion, all of which pass in seconds per process.",
   "timeout_seconds_per_module": 300,
   "modules": 205,
-  "tests_ran": 2245,
+  "tests_ran": 2246,
   "tally": {
     "pass": 204,
     "fail": 1
   },
-  "wall_seconds": 969.4,
+  "wall_seconds": 967.9,
   "not_passing": [
     {
       "module": "test_crew_recovery_ui",
+      "runner": "unittest",
       "outcome": "fail",
       "exit_code": 1,
       "wall_seconds": 0.2,
       "unittest": {
         "ran": 3,
-        "seconds": 0.064
+        "seconds": 0.056
       },
       "failing": [
         "FAIL: test_faction_transports_have_small_known_solid_visuals (test_crew_recovery_ui.RecoveryUITests.test_faction_transports_have_small_known_solid_visuals)"
       ],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 3 tests in 0.064s",
+        "Ran 3 tests in 0.056s",
         "",
         "FAILED (failures=1)"
       ]
@@ -35,438 +37,439 @@
   "results": [
     {
       "module": "test_ai_construction_spacing",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
       "unittest": {
         "ran": 3,
-        "seconds": 0.01
+        "seconds": 0.021
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 3 tests in 0.010s",
+        "Ran 3 tests in 0.021s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_alliance_blender_b1_combat",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 1.0,
+      "wall_seconds": 0.9,
       "unittest": {
         "ran": 16,
-        "seconds": 0.966
+        "seconds": 0.825
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 16 tests in 0.966s",
+        "Ran 16 tests in 0.825s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_alliance_blender_b2_squadron",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 2.2,
+      "wall_seconds": 1.7,
       "unittest": {
         "ran": 16,
-        "seconds": 2.121
+        "seconds": 1.599
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 16 tests in 2.121s",
+        "Ran 16 tests in 1.599s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_alliance_blender_b3_stations",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 0.3,
+      "wall_seconds": 0.2,
       "unittest": {
         "ran": 20,
-        "seconds": 0.215
+        "seconds": 0.197
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 20 tests in 0.215s",
+        "Ran 20 tests in 0.197s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_alliance_blender_b3b_stations",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 1.1,
+      "wall_seconds": 0.8,
       "unittest": {
         "ran": 27,
-        "seconds": 1.051
+        "seconds": 0.778
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 27 tests in 1.051s",
+        "Ran 27 tests in 0.778s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_alliance_blender_b3c_stations",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 1.5,
+      "wall_seconds": 1.6,
       "unittest": {
         "ran": 32,
-        "seconds": 1.48
+        "seconds": 1.575
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 32 tests in 1.480s",
+        "Ran 32 tests in 1.575s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_alliance_blender_b4_hardware",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 0.7,
+      "wall_seconds": 0.6,
       "unittest": {
         "ran": 25,
-        "seconds": 0.674
+        "seconds": 0.604
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 25 tests in 0.674s",
+        "Ran 25 tests in 0.604s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_alliance_blender_b5_asteroid",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.3,
       "unittest": {
         "ran": 16,
-        "seconds": 0.196
+        "seconds": 0.222
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 16 tests in 0.196s",
+        "Ran 16 tests in 0.222s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_alliance_blender_b6_imperial_ships",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.7,
       "unittest": {
         "ran": 64,
-        "seconds": 0.658
+        "seconds": 0.675
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 64 tests in 0.658s",
+        "Ran 64 tests in 0.675s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_alliance_blender_battleship",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 0.7,
+      "wall_seconds": 0.8,
       "unittest": {
         "ran": 5,
-        "seconds": 0.701
+        "seconds": 0.732
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 5 tests in 0.701s",
+        "Ran 5 tests in 0.732s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_alliance_blender_cruiser",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.3,
       "unittest": {
         "ran": 11,
-        "seconds": 0.234
+        "seconds": 0.249
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 11 tests in 0.234s",
+        "Ran 11 tests in 0.249s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_alliance_blender_trio",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 2.7,
       "unittest": {
         "ran": 6,
-        "seconds": 2.591
+        "seconds": 2.57
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 6 tests in 2.591s",
+        "Ran 6 tests in 2.570s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_alliance_combat_trade",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 13.6,
+      "wall_seconds": 13.7,
       "unittest": {
         "ran": 27,
-        "seconds": 13.531
+        "seconds": 13.642
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 27 tests in 13.531s",
+        "Ran 27 tests in 13.642s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_alliance_victory",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.2,
       "unittest": {
         "ran": 13,
-        "seconds": 0.164
+        "seconds": 0.17
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 13 tests in 0.164s",
+        "Ran 13 tests in 0.170s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_alliance_visibility",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.2,
       "unittest": {
         "ran": 4,
-        "seconds": 0.046
+        "seconds": 0.045
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 4 tests in 0.046s",
+        "Ran 4 tests in 0.045s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_alliance_visual_slice",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
       "unittest": {
         "ran": 3,
-        "seconds": 0.06
+        "seconds": 0.061
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 3 tests in 0.060s",
+        "Ran 3 tests in 0.061s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_asset_contract",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
       "unittest": {
         "ran": 4,
-        "seconds": 0.103
+        "seconds": 0.102
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 4 tests in 0.103s",
+        "Ran 4 tests in 0.102s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_asset_registry",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 9.1,
       "unittest": {
         "ran": 25,
-        "seconds": 9.099
+        "seconds": 9.036
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 25 tests in 9.099s",
+        "Ran 25 tests in 9.036s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_asset_selection",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 2.2,
+      "wall_seconds": 2.1,
       "unittest": {
         "ran": 15,
-        "seconds": 2.15
+        "seconds": 2.071
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 15 tests in 2.150s",
+        "Ran 15 tests in 2.071s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_audio",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 9.6,
+      "wall_seconds": 9.5,
       "unittest": {
         "ran": 34,
-        "seconds": 9.426
+        "seconds": 9.366
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 34 tests in 9.426s",
+        "Ran 34 tests in 9.366s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_audio_mix",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 2.3,
       "unittest": {
         "ran": 16,
-        "seconds": 2.184
+        "seconds": 2.175
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 16 tests in 2.184s",
+        "Ran 16 tests in 2.175s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_b6_sidecar_reproduction",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.3,
       "unittest": {
         "ran": 4,
-        "seconds": 0.294
+        "seconds": 0.282
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 4 tests in 0.294s",
+        "Ran 4 tests in 0.282s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_blender_b7_imperial_stations",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.2,
       "unittest": {
         "ran": 9,
-        "seconds": 0.176
+        "seconds": 0.171
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 9 tests in 0.176s",
+        "Ran 9 tests in 0.171s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_blender_b8_remaining_combat",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.3,
       "unittest": {
         "ran": 7,
-        "seconds": 0.3
+        "seconds": 0.295
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 7 tests in 0.300s",
+        "Ran 7 tests in 0.295s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_blender_b9_construction",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
@@ -480,119 +483,119 @@
         "Ran 5 tests in 0.087s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_boarding",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 18.1,
+      "wall_seconds": 18.0,
       "unittest": {
         "ran": 14,
-        "seconds": 18.028
+        "seconds": 17.975
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 14 tests in 18.028s",
+        "Ran 14 tests in 17.975s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_boarding_cleanup",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.4,
       "unittest": {
         "ran": 4,
-        "seconds": 0.373
+        "seconds": 0.352
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 4 tests in 0.373s",
+        "Ran 4 tests in 0.352s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_boarding_ui",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.2,
       "unittest": {
         "ran": 6,
-        "seconds": 0.083
+        "seconds": 0.075
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 6 tests in 0.083s",
+        "Ran 6 tests in 0.075s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_build_cancel",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 1.1,
       "unittest": {
         "ran": 20,
-        "seconds": 0.989
+        "seconds": 1.003
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 20 tests in 0.989s",
+        "Ran 20 tests in 1.003s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_builder_repairs",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.9,
       "unittest": {
         "ran": 11,
-        "seconds": 0.886
+        "seconds": 0.849
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 11 tests in 0.886s",
+        "Ran 11 tests in 0.849s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_camera_safety",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.5,
       "unittest": {
         "ran": 20,
-        "seconds": 0.382
+        "seconds": 0.395
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 20 tests in 0.382s",
+        "Ran 20 tests in 0.395s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_campaign_completion_flow",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.2,
@@ -606,29 +609,29 @@
         "Ran 17 tests in 0.059s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_campaign_lifecycle",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.7,
       "unittest": {
         "ran": 12,
-        "seconds": 0.701
+        "seconds": 0.707
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 12 tests in 0.701s",
+        "Ran 12 tests in 0.707s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_campaign_main",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.2,
@@ -642,105 +645,104 @@
         "Ran 1 test in 0.146s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_campaign_phase7_progress",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.2,
       "unittest": {
         "ran": 11,
-        "seconds": 0.096
+        "seconds": 0.097
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 11 tests in 0.096s",
+        "Ran 11 tests in 0.097s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_campaign_phase7_script",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 2.5,
+      "wall_seconds": 2.6,
       "unittest": {
         "ran": 10,
-        "seconds": 2.439
+        "seconds": 2.517
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 10 tests in 2.439s",
+        "Ran 10 tests in 2.517s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_checksum_canonicalization",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.5,
       "unittest": {
         "ran": 6,
-        "seconds": 0.444
+        "seconds": 0.462
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 6 tests in 0.444s",
+        "Ran 6 tests in 0.462s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_cinematics",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 0.1,
+      "wall_seconds": 0.2,
       "unittest": {
         "ran": 7,
-        "seconds": 0.038
+        "seconds": 0.04
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 7 tests in 0.038s",
+        "Ran 7 tests in 0.040s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_classic_replays",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 2.2,
+      "wall_seconds": 2.7,
       "unittest": {
         "ran": 8,
-        "seconds": 2.082
+        "seconds": 2.552
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 8 tests in 2.082s",
+        "Ran 8 tests in 2.552s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_classic_replays_gl",
       "runner": "script",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 1.2,
+      "wall_seconds": 1.5,
       "unittest": {},
       "script_markers": [
         "CLASSIC_REPLAYS_GL_OK captures=14 output=/Users/lukaszjawor/.hermes/cache/scratch/classic-replays-gl"
@@ -766,281 +768,282 @@
       "failing": [],
       "tail": [
         "......                                                                   [100%]",
-        "6 passed in 0.88s"
+        "6 passed in 0.93s"
       ]
     },
     {
       "module": "test_clean_classic_menu",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.2,
       "unittest": {
         "ran": 5,
-        "seconds": 0.087
+        "seconds": 0.089
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 5 tests in 0.087s",
+        "Ran 5 tests in 0.089s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_collapsible_hud",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.2,
       "unittest": {
         "ran": 5,
-        "seconds": 0.077
+        "seconds": 0.08
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 5 tests in 0.077s",
+        "Ran 5 tests in 0.080s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_collection_point_layout",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 1.4,
       "unittest": {
         "ran": 3,
-        "seconds": 1.276
+        "seconds": 1.304
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 3 tests in 1.276s",
+        "Ran 3 tests in 1.304s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_collection_points",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 1.1,
+      "wall_seconds": 1.2,
       "unittest": {
         "ran": 23,
-        "seconds": 1.051
+        "seconds": 1.155
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 23 tests in 1.051s",
+        "Ran 23 tests in 1.155s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_collection_points_lan",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 7.9,
+      "wall_seconds": 7.8,
       "unittest": {
         "ran": 1,
-        "seconds": 7.715
+        "seconds": 7.692
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 1 test in 7.715s",
+        "Ran 1 test in 7.692s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_colonies",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 21.8,
+      "wall_seconds": 20.0,
       "unittest": {
         "ran": 28,
-        "seconds": 21.795
+        "seconds": 19.942
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 28 tests in 21.795s",
+        "Ran 28 tests in 19.942s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_colonies_ui",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 0.3,
+      "wall_seconds": 0.2,
       "unittest": {
         "ran": 9,
-        "seconds": 0.148
+        "seconds": 0.141
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 9 tests in 0.148s",
+        "Ran 9 tests in 0.141s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_colony_ai",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 0.2,
+      "wall_seconds": 0.1,
       "unittest": {
         "ran": 8,
-        "seconds": 0.135
+        "seconds": 0.113
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 8 tests in 0.135s",
+        "Ran 8 tests in 0.113s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_colony_factions",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.3,
       "unittest": {
         "ran": 2,
-        "seconds": 0.235
+        "seconds": 0.236
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 2 tests in 0.235s",
+        "Ran 2 tests in 0.236s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_colony_income_balance",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.4,
       "unittest": {
         "ran": 8,
-        "seconds": 0.305
+        "seconds": 0.313
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 8 tests in 0.305s",
+        "Ran 8 tests in 0.313s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_colony_visibility",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.4,
       "unittest": {
         "ran": 2,
-        "seconds": 0.41
+        "seconds": 0.412
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 2 tests in 0.410s",
+        "Ran 2 tests in 0.412s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_combat_standoff",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 2.6,
+      "wall_seconds": 2.7,
       "unittest": {
         "ran": 17,
-        "seconds": 2.524
+        "seconds": 2.651
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 17 tests in 2.524s",
+        "Ran 17 tests in 2.651s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_completion_approval",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 0.2,
+      "wall_seconds": 0.1,
       "unittest": {
         "ran": 2,
-        "seconds": 0.117
+        "seconds": 0.109
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 2 tests in 0.117s",
+        "Ran 2 tests in 0.109s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_completion_payloads",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.3,
       "unittest": {
         "ran": 1,
-        "seconds": 0.214
+        "seconds": 0.219
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 1 test in 0.214s",
+        "Ran 1 test in 0.219s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_completion_review",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.2,
       "unittest": {
         "ran": 6,
-        "seconds": 0.103
+        "seconds": 0.111
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 6 tests in 0.103s",
+        "Ran 6 tests in 0.111s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_completion_wrapper_generation",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.0,
@@ -1054,65 +1057,65 @@
         "Ran 1 test in 0.001s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_construction_exclusions",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
       "unittest": {
         "ran": 19,
-        "seconds": 0.054
+        "seconds": 0.058
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 19 tests in 0.054s",
+        "Ran 19 tests in 0.058s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_construction_range",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 61.1,
+      "wall_seconds": 60.8,
       "unittest": {
         "ran": 10,
-        "seconds": 61.073
+        "seconds": 60.751
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 10 tests in 61.073s",
+        "Ran 10 tests in 60.751s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_core",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 2.4,
       "unittest": {
         "ran": 15,
-        "seconds": 2.392
+        "seconds": 2.409
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 15 tests in 2.392s",
+        "Ran 15 tests in 2.409s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_crew",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
@@ -1126,29 +1129,29 @@
         "Ran 10 tests in 0.033s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_crew_damage",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 2.9,
+      "wall_seconds": 2.8,
       "unittest": {
         "ran": 31,
-        "seconds": 2.821
+        "seconds": 2.756
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 31 tests in 2.821s",
+        "Ran 31 tests in 2.756s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_crew_recovery",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
@@ -1162,11 +1165,11 @@
         "Ran 7 tests in 0.016s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_crew_recovery_ai",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.0,
@@ -1180,103 +1183,103 @@
         "Ran 6 tests in 0.011s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_crew_recovery_ai_regressions",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 19.6,
+      "wall_seconds": 19.3,
       "unittest": {
         "ran": 10,
-        "seconds": 19.614
+        "seconds": 19.275
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 10 tests in 19.614s",
+        "Ran 10 tests in 19.275s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_crew_recovery_lifecycle",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 6.6,
+      "wall_seconds": 6.3,
       "unittest": {
         "ran": 14,
-        "seconds": 6.503
+        "seconds": 6.244
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 14 tests in 6.503s",
+        "Ran 14 tests in 6.244s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_crew_recovery_ui",
+      "runner": "unittest",
       "outcome": "fail",
       "exit_code": 1,
       "wall_seconds": 0.2,
       "unittest": {
         "ran": 3,
-        "seconds": 0.064
+        "seconds": 0.056
       },
       "failing": [
         "FAIL: test_faction_transports_have_small_known_solid_visuals (test_crew_recovery_ui.RecoveryUITests.test_faction_transports_have_small_known_solid_visuals)"
       ],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 3 tests in 0.064s",
+        "Ran 3 tests in 0.056s",
         "",
         "FAILED (failures=1)"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_detmath",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.2,
       "unittest": {
         "ran": 14,
-        "seconds": 0.129
+        "seconds": 0.122
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 14 tests in 0.129s",
+        "Ran 14 tests in 0.122s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_draw_view_scope",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 0.9,
+      "wall_seconds": 0.8,
       "unittest": {
         "ran": 8,
-        "seconds": 0.69
+        "seconds": 0.656
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 8 tests in 0.690s",
+        "Ran 8 tests in 0.656s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_effect_geometry",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
@@ -1290,101 +1293,101 @@
         "Ran 4 tests in 0.001s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_effects",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.2,
       "unittest": {
         "ran": 7,
-        "seconds": 0.104
+        "seconds": 0.105
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 7 tests in 0.104s",
+        "Ran 7 tests in 0.105s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_faction_ships",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 2.9,
       "unittest": {
         "ran": 9,
-        "seconds": 2.847
+        "seconds": 2.811
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 9 tests in 2.847s",
+        "Ran 9 tests in 2.811s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_faction_stations",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 1.9,
+      "wall_seconds": 1.8,
       "unittest": {
         "ran": 8,
-        "seconds": 1.826
+        "seconds": 1.699
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 8 tests in 1.826s",
+        "Ran 8 tests in 1.699s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_faction_visuals",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 14.6,
+      "wall_seconds": 14.1,
       "unittest": {
         "ran": 16,
-        "seconds": 14.537
+        "seconds": 14.028
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 16 tests in 14.537s",
+        "Ran 16 tests in 14.028s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_fighter_exploration",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 4.2,
+      "wall_seconds": 3.9,
       "unittest": {
         "ran": 17,
-        "seconds": 4.107
+        "seconds": 3.902
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 17 tests in 4.107s",
+        "Ran 17 tests in 3.902s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_fire_arcs",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.2,
@@ -1398,209 +1401,209 @@
         "Ran 11 tests in 0.196s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_fleet_detail",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 0.2,
+      "wall_seconds": 0.1,
       "unittest": {
         "ran": 2,
-        "seconds": 0.112
+        "seconds": 0.111
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 2 tests in 0.112s",
+        "Ran 2 tests in 0.111s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_fleet_materials",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
       "unittest": {
         "ran": 3,
-        "seconds": 0.004
+        "seconds": 0.003
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 3 tests in 0.004s",
+        "Ran 3 tests in 0.003s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_fleet_panel",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.2,
       "unittest": {
         "ran": 5,
-        "seconds": 0.069
+        "seconds": 0.061
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 5 tests in 0.069s",
+        "Ran 5 tests in 0.061s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_fog_render",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
       "unittest": {
         "ran": 10,
-        "seconds": 0.078
+        "seconds": 0.075
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 10 tests in 0.078s",
+        "Ran 10 tests in 0.075s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_frozen_paths",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
       "unittest": {
         "ran": 8,
-        "seconds": 0.046
+        "seconds": 0.045
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 8 tests in 0.046s",
+        "Ran 8 tests in 0.045s",
         "",
         "OK (skipped=1)"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_gameplay",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 62.1,
+      "wall_seconds": 61.3,
       "unittest": {
         "ran": 14,
-        "seconds": 62.035
+        "seconds": 61.274
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 14 tests in 62.035s",
+        "Ran 14 tests in 61.274s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_gameplay_acceptance_diagnostic",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
       "unittest": {
         "ran": 2,
-        "seconds": 0.069
+        "seconds": 0.065
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 2 tests in 0.069s",
+        "Ran 2 tests in 0.065s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_generic_model_preview",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 0.6,
+      "wall_seconds": 0.5,
       "unittest": {
         "ran": 4,
-        "seconds": 0.53
+        "seconds": 0.488
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 4 tests in 0.530s",
+        "Ran 4 tests in 0.488s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_gl_lifecycle",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.2,
       "unittest": {
         "ran": 7,
-        "seconds": 0.085
+        "seconds": 0.08
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 7 tests in 0.085s",
+        "Ran 7 tests in 0.080s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_graphics_benchmark",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 90.5,
+      "wall_seconds": 88.5,
       "unittest": {
         "ran": 15,
-        "seconds": 90.424
+        "seconds": 88.455
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 15 tests in 90.424s",
+        "Ran 15 tests in 88.455s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_hit_effects",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
       "unittest": {
         "ran": 7,
-        "seconds": 0.026
+        "seconds": 0.019
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 7 tests in 0.026s",
+        "Ran 7 tests in 0.019s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_hit_geometry_performance",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
@@ -1614,317 +1617,317 @@
         "Ran 2 tests in 0.030s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_hud_compact",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
       "unittest": {
         "ran": 5,
-        "seconds": 0.022
+        "seconds": 0.019
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 5 tests in 0.022s",
+        "Ran 5 tests in 0.019s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_i18n",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.5,
       "unittest": {
         "ran": 27,
-        "seconds": 0.388
+        "seconds": 0.371
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 27 tests in 0.388s",
+        "Ran 27 tests in 0.371s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_i18n_russian",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.3,
       "unittest": {
         "ran": 7,
-        "seconds": 0.21
+        "seconds": 0.186
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 7 tests in 0.210s",
+        "Ran 7 tests in 0.186s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_imperial_convoy_gate",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.2,
       "unittest": {
         "ran": 16,
-        "seconds": 0.175
+        "seconds": 0.174
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 16 tests in 0.175s",
+        "Ran 16 tests in 0.174s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_infrastructure_command",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 2.2,
       "unittest": {
         "ran": 8,
-        "seconds": 2.132
+        "seconds": 2.191
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 8 tests in 2.132s",
+        "Ran 8 tests in 2.191s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_input_controls",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 0.2,
+      "wall_seconds": 0.3,
       "unittest": {
         "ran": 24,
-        "seconds": 0.139
+        "seconds": 0.142
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 24 tests in 0.139s",
+        "Ran 24 tests in 0.142s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_jump_input",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.3,
       "unittest": {
         "ran": 20,
-        "seconds": 0.145
+        "seconds": 0.146
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 20 tests in 0.145s",
+        "Ran 20 tests in 0.146s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_jump_sim",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 2.6,
+      "wall_seconds": 2.8,
       "unittest": {
         "ran": 25,
-        "seconds": 2.553
+        "seconds": 2.76
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 25 tests in 2.553s",
+        "Ran 25 tests in 2.760s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_jump_travel",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 1.8,
+      "wall_seconds": 1.9,
       "unittest": {
         "ran": 14,
-        "seconds": 1.796
+        "seconds": 1.826
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 14 tests in 1.796s",
+        "Ran 14 tests in 1.826s",
         "",
         "OK (skipped=1)"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_lan",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 10.5,
+      "wall_seconds": 10.8,
       "unittest": {
         "ran": 28,
-        "seconds": 10.5
+        "seconds": 10.742
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 28 tests in 10.500s",
+        "Ran 28 tests in 10.742s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_lan_failure_diagnostics",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 0.2,
+      "wall_seconds": 0.3,
       "unittest": {
         "ran": 11,
-        "seconds": 0.155
+        "seconds": 0.199
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 11 tests in 0.155s",
+        "Ran 11 tests in 0.199s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_lan_human_safety",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 29.2,
+      "wall_seconds": 29.7,
       "unittest": {
         "ran": 9,
-        "seconds": 29.161
+        "seconds": 29.587
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 9 tests in 29.161s",
+        "Ran 9 tests in 29.587s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_lan_launch_recovery",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 7.0,
+      "wall_seconds": 6.9,
       "unittest": {
-        "ran": 15,
-        "seconds": 6.914
+        "ran": 16,
+        "seconds": 6.798
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 15 tests in 6.914s",
+        "Ran 16 tests in 6.798s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_lan_main",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.2,
       "unittest": {
         "ran": 13,
-        "seconds": 0.139
+        "seconds": 0.157
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 13 tests in 0.139s",
+        "Ran 13 tests in 0.157s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_lan_menu",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.3,
       "unittest": {
         "ran": 7,
-        "seconds": 0.172
+        "seconds": 0.193
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 7 tests in 0.172s",
+        "Ran 7 tests in 0.193s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_lan_ownership",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 6.9,
+      "wall_seconds": 7.0,
       "unittest": {
         "ran": 8,
-        "seconds": 6.9
+        "seconds": 6.917
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 8 tests in 6.900s",
+        "Ran 8 tests in 6.917s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_lan_production_reconnect",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 22.5,
+      "wall_seconds": 22.8,
       "unittest": {
         "ran": 32,
-        "seconds": 22.419
+        "seconds": 22.786
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 32 tests in 22.419s",
+        "Ran 32 tests in 22.786s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_lan_queue",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.0,
@@ -1938,116 +1941,115 @@
         "Ran 3 tests in 0.000s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_lan_reconnect",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 3.6,
       "unittest": {
         "ran": 21,
-        "seconds": 3.591
+        "seconds": 3.543
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 21 tests in 3.591s",
+        "Ran 21 tests in 3.543s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_lan_reconnect_admission",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 1.1,
+      "wall_seconds": 1.2,
       "unittest": {
         "ran": 3,
-        "seconds": 1.054
+        "seconds": 1.097
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 3 tests in 1.054s",
+        "Ran 3 tests in 1.097s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_lan_recovery_handoff",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 12.4,
+      "wall_seconds": 12.6,
       "unittest": {
         "ran": 8,
-        "seconds": 12.322
+        "seconds": 12.522
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 8 tests in 12.322s",
+        "Ran 8 tests in 12.522s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_lan_recovery_ui",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 1.3,
       "unittest": {
         "ran": 8,
-        "seconds": 1.268
+        "seconds": 1.265
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 8 tests in 1.268s",
+        "Ran 8 tests in 1.265s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_lan_state_diff",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.3,
       "unittest": {
         "ran": 12,
-        "seconds": 0.22
+        "seconds": 0.213
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 12 tests in 0.220s",
+        "Ran 12 tests in 0.213s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_language_tools",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.3,
       "unittest": {
         "ran": 7,
-        "seconds": 0.24
+        "seconds": 0.255
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 7 tests in 0.240s",
+        "Ran 7 tests in 0.255s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_menu_movie",
@@ -2070,240 +2072,241 @@
     },
     {
       "module": "test_mission_hud_layout",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.2,
       "unittest": {
         "ran": 2,
-        "seconds": 0.058
+        "seconds": 0.059
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 2 tests in 0.058s",
+        "Ran 2 tests in 0.059s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_model_context_lifecycle",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 4.9,
+      "wall_seconds": 5.2,
       "unittest": {
         "ran": 3,
-        "seconds": 4.778
+        "seconds": 5.029
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 3 tests in 4.778s",
+        "Ran 3 tests in 5.029s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_model_coverage_reconciliation",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 0.3,
+      "wall_seconds": 0.4,
       "unittest": {
         "ran": 2,
-        "seconds": 0.287
+        "seconds": 0.323
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 2 tests in 0.287s",
+        "Ran 2 tests in 0.323s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_model_pipeline",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.7,
       "unittest": {
         "ran": 14,
-        "seconds": 0.658
+        "seconds": 0.664
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 14 tests in 0.658s",
+        "Ran 14 tests in 0.664s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_modern_fleet",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.2,
       "unittest": {
         "ran": 5,
-        "seconds": 0.109
+        "seconds": 0.11
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 5 tests in 0.109s",
+        "Ran 5 tests in 0.110s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_multiplayer",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.5,
       "unittest": {
         "ran": 8,
-        "seconds": 0.491
+        "seconds": 0.486
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 8 tests in 0.491s",
+        "Ran 8 tests in 0.486s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_multiselect_hud",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.3,
       "unittest": {
         "ran": 15,
-        "seconds": 0.189
+        "seconds": 0.19
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 15 tests in 0.189s",
+        "Ran 15 tests in 0.190s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_nebula_altitude",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 1.8,
       "unittest": {
         "ran": 6,
-        "seconds": 1.786
+        "seconds": 1.789
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 6 tests in 1.786s",
+        "Ran 6 tests in 1.789s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_nebula_satellite_orbits",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 130.1,
+      "wall_seconds": 132.8,
       "unittest": {
         "ran": 5,
-        "seconds": 130.019
+        "seconds": 132.8
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 5 tests in 130.019s",
+        "Ran 5 tests in 132.800s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_netdiag",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 16.2,
+      "wall_seconds": 15.9,
       "unittest": {
         "ran": 22,
-        "seconds": 16.077
+        "seconds": 15.825
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 22 tests in 16.077s",
+        "Ran 22 tests in 15.825s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_netdiag_compare",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
       "unittest": {
         "ran": 10,
-        "seconds": 0.097
+        "seconds": 0.1
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 10 tests in 0.097s",
+        "Ran 10 tests in 0.100s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_objectives",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.9,
       "unittest": {
         "ran": 5,
-        "seconds": 0.839
+        "seconds": 0.826
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 5 tests in 0.839s",
+        "Ran 5 tests in 0.826s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_orbit_spacing_batch",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 1.4,
+      "wall_seconds": 1.5,
       "unittest": {
         "ran": 15,
-        "seconds": 1.372
+        "seconds": 1.432
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 15 tests in 1.372s",
+        "Ran 15 tests in 1.432s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_orbit_terrain_scan",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
@@ -2317,11 +2320,11 @@
         "Ran 2 tests in 0.032s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_ownership_markers",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.0,
@@ -2335,191 +2338,191 @@
         "Ran 19 tests in 0.000s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_performance",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 1.1,
       "unittest": {
         "ran": 16,
-        "seconds": 1.021
+        "seconds": 1.04
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 16 tests in 1.021s",
+        "Ran 16 tests in 1.040s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_persistence",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
       "unittest": {
         "ran": 4,
-        "seconds": 0.044
+        "seconds": 0.045
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 4 tests in 0.044s",
+        "Ran 4 tests in 0.045s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_planet_building_visuals",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
       "unittest": {
         "ran": 5,
-        "seconds": 0.104
+        "seconds": 0.102
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 5 tests in 0.104s",
+        "Ran 5 tests in 0.102s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_planet_buildings",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 8.0,
       "unittest": {
         "ran": 10,
-        "seconds": 7.989
+        "seconds": 7.951
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 10 tests in 7.989s",
+        "Ran 10 tests in 7.951s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_planet_buildings_ui",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.2,
       "unittest": {
         "ran": 6,
-        "seconds": 0.084
+        "seconds": 0.082
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 6 tests in 0.084s",
+        "Ran 6 tests in 0.082s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_planet_economy",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 39.2,
       "unittest": {
         "ran": 13,
-        "seconds": 39.156
+        "seconds": 39.175
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 13 tests in 39.156s",
+        "Ran 13 tests in 39.175s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_planet_replay_validation",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.7,
       "unittest": {
         "ran": 7,
-        "seconds": 0.618
+        "seconds": 0.619
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 7 tests in 0.618s",
+        "Ran 7 tests in 0.619s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_presentation_main",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.3,
       "unittest": {
         "ran": 9,
-        "seconds": 0.151
+        "seconds": 0.152
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 9 tests in 0.151s",
+        "Ran 9 tests in 0.152s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_presentation_sensor_batch",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.2,
       "unittest": {
         "ran": 6,
-        "seconds": 0.103
+        "seconds": 0.105
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 6 tests in 0.103s",
+        "Ran 6 tests in 0.105s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_presentation_ux",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 0.4,
+      "wall_seconds": 0.3,
       "unittest": {
         "ran": 13,
-        "seconds": 0.261
+        "seconds": 0.244
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 13 tests in 0.261s",
+        "Ran 13 tests in 0.244s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_preview_fog",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
@@ -2533,29 +2536,29 @@
         "Ran 7 tests in 0.026s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_projectile_aim",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 6.4,
       "unittest": {
         "ran": 5,
-        "seconds": 6.391
+        "seconds": 6.402
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 5 tests in 6.391s",
+        "Ran 5 tests in 6.402s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_projectile_fire_look",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
@@ -2569,65 +2572,65 @@
         "Ran 23 tests in 0.001s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_recovery_drill",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 5.0,
       "unittest": {
         "ran": 6,
-        "seconds": 4.996
+        "seconds": 4.97
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 6 tests in 4.996s",
+        "Ran 6 tests in 4.970s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_recovery_drill_replay",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 7.8,
+      "wall_seconds": 7.7,
       "unittest": {
         "ran": 6,
-        "seconds": 7.726
+        "seconds": 7.704
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 6 tests in 7.726s",
+        "Ran 6 tests in 7.704s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_renderer_constructor_cleanup",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 5.5,
+      "wall_seconds": 5.4,
       "unittest": {
         "ran": 14,
-        "seconds": 5.362
+        "seconds": 5.256
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 14 tests in 5.362s",
+        "Ran 14 tests in 5.256s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_replay_deletion_windows",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
@@ -2641,281 +2644,281 @@
         "Ran 20 tests in 0.005s",
         "",
         "OK (skipped=7)"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_replay_future_state",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 39.0,
+      "wall_seconds": 39.1,
       "unittest": {
         "ran": 6,
-        "seconds": 38.973
+        "seconds": 39.047
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 6 tests in 38.973s",
+        "Ran 6 tests in 39.047s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_replay_library",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 0.5,
+      "wall_seconds": 0.6,
       "unittest": {
         "ran": 15,
-        "seconds": 0.391
+        "seconds": 0.398
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 15 tests in 0.391s",
+        "Ran 15 tests in 0.398s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_replay_typed_validation",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 1.0,
       "unittest": {
         "ran": 6,
-        "seconds": 0.921
+        "seconds": 0.918
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 6 tests in 0.921s",
+        "Ran 6 tests in 0.918s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_replay_workflow",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 5.2,
       "unittest": {
         "ran": 12,
-        "seconds": 5.107
+        "seconds": 5.147
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 12 tests in 5.107s",
+        "Ran 12 tests in 5.147s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_research_ui",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.3,
       "unittest": {
         "ran": 4,
-        "seconds": 0.183
+        "seconds": 0.181
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 4 tests in 0.183s",
+        "Ran 4 tests in 0.181s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_review_campaign_replay",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.3,
       "unittest": {
         "ran": 5,
-        "seconds": 0.218
+        "seconds": 0.216
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 5 tests in 0.218s",
+        "Ran 5 tests in 0.216s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_runtime_asset_metadata",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.9,
       "unittest": {
         "ran": 1,
-        "seconds": 0.819
+        "seconds": 0.813
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 1 test in 0.819s",
+        "Ran 1 test in 0.813s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_s06_appearance_records",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 1.6,
       "unittest": {
         "ran": 20,
-        "seconds": 1.507
+        "seconds": 1.509
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 20 tests in 1.507s",
+        "Ran 20 tests in 1.509s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_s06_placement_repairs",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 4.2,
+      "wall_seconds": 4.1,
       "unittest": {
         "ran": 7,
-        "seconds": 4.164
+        "seconds": 4.093
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 7 tests in 4.164s",
+        "Ran 7 tests in 4.093s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_s07_approval_preservation",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
       "unittest": {
         "ran": 1,
-        "seconds": 0.02
+        "seconds": 0.021
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 1 test in 0.020s",
+        "Ran 1 test in 0.021s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_s07_authored_lod_parity",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.2,
       "unittest": {
         "ran": 3,
-        "seconds": 0.131
+        "seconds": 0.136
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 3 tests in 0.131s",
+        "Ran 3 tests in 0.136s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_s07_binding_routes",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 9.8,
+      "wall_seconds": 9.9,
       "unittest": {
         "ran": 7,
-        "seconds": 9.749
+        "seconds": 9.88
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 7 tests in 9.749s",
+        "Ran 7 tests in 9.880s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_s07_campaign_preview_entry",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.3,
       "unittest": {
         "ran": 3,
-        "seconds": 0.179
+        "seconds": 0.18
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 3 tests in 0.179s",
+        "Ran 3 tests in 0.180s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_s07_capture_transition",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 13.5,
+      "wall_seconds": 13.4,
       "unittest": {
         "ran": 11,
-        "seconds": 13.308
+        "seconds": 13.228
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 11 tests in 13.308s",
+        "Ran 11 tests in 13.228s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_s07_construction_runtime",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 2.7,
       "unittest": {
         "ran": 9,
-        "seconds": 2.546
+        "seconds": 2.552
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 9 tests in 2.546s",
+        "Ran 9 tests in 2.552s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_s07_construction_seam",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.2,
@@ -2929,137 +2932,137 @@
         "Ran 3 tests in 0.019s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_s07_context_fixture_isolation",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.2,
       "unittest": {
         "ran": 5,
-        "seconds": 0.013
+        "seconds": 0.014
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 5 tests in 0.013s",
+        "Ran 5 tests in 0.014s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_s07_fixture_isolation",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
       "unittest": {
         "ran": 1,
-        "seconds": 0.075
+        "seconds": 0.074
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 1 test in 0.075s",
+        "Ran 1 test in 0.074s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_s07_hidden_contact_acceptance",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.3,
       "unittest": {
         "ran": 4,
-        "seconds": 0.114
+        "seconds": 0.111
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 4 tests in 0.114s",
+        "Ran 4 tests in 0.111s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_s07_lod_environment",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.6,
       "unittest": {
         "ran": 5,
-        "seconds": 0.575
+        "seconds": 0.57
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 5 tests in 0.575s",
+        "Ran 5 tests in 0.570s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_s07_material_parity",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.6,
       "unittest": {
         "ran": 4,
-        "seconds": 0.584
+        "seconds": 0.571
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 4 tests in 0.584s",
+        "Ran 4 tests in 0.571s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_s07_motion_order",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 1.4,
+      "wall_seconds": 1.5,
       "unittest": {
         "ran": 4,
-        "seconds": 1.4
+        "seconds": 1.403
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 4 tests in 1.400s",
+        "Ran 4 tests in 1.403s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_s07_movie_provenance",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 1.6,
       "unittest": {
         "ran": 15,
-        "seconds": 1.499
+        "seconds": 1.502
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 15 tests in 1.499s",
+        "Ran 15 tests in 1.502s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_s07_pipeline_execution",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.5,
@@ -3073,29 +3076,29 @@
         "Ran 18 tests in 0.467s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_s07_registration",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 10.2,
+      "wall_seconds": 10.3,
       "unittest": {
         "ran": 17,
-        "seconds": 10.141
+        "seconds": 10.288
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 17 tests in 10.141s",
+        "Ran 17 tests in 10.288s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_s07_scaffold_approval",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
@@ -3109,47 +3112,47 @@
         "Ran 1 test in 0.034s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_s07_scaffold_registration",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 7.2,
+      "wall_seconds": 7.3,
       "unittest": {
         "ran": 9,
-        "seconds": 7.183
+        "seconds": 7.251
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 9 tests in 7.183s",
+        "Ran 9 tests in 7.251s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_s07_selected_geometry_matrix",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 12.5,
       "unittest": {
         "ran": 9,
-        "seconds": 12.38
+        "seconds": 12.371
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 9 tests in 12.380s",
+        "Ran 9 tests in 12.371s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_s07_station_consumers",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.2,
@@ -3163,299 +3166,299 @@
         "Ran 4 tests in 0.038s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_satellite_orbits",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 20.1,
+      "wall_seconds": 19.7,
       "unittest": {
         "ran": 6,
-        "seconds": 20.037
+        "seconds": 19.615
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 6 tests in 20.037s",
+        "Ran 6 tests in 19.615s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_satellite_penalty",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 7.3,
       "unittest": {
         "ran": 7,
-        "seconds": 7.202
+        "seconds": 7.155
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 7 tests in 7.202s",
+        "Ran 7 tests in 7.155s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_satellite_ring_clearance",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.3,
       "unittest": {
         "ran": 8,
-        "seconds": 0.23
+        "seconds": 0.232
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 8 tests in 0.230s",
+        "Ran 8 tests in 0.232s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_satellite_velocity",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 42.5,
+      "wall_seconds": 43.1,
       "unittest": {
         "ran": 6,
-        "seconds": 42.477
+        "seconds": 43.073
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 6 tests in 42.477s",
+        "Ran 6 tests in 43.073s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_saved_games",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 2.4,
+      "wall_seconds": 2.5,
       "unittest": {
         "ran": 19,
-        "seconds": 2.373
+        "seconds": 2.404
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 19 tests in 2.373s",
+        "Ran 19 tests in 2.404s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_sensor_combat",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
       "unittest": {
         "ran": 31,
-        "seconds": 0.044
+        "seconds": 0.046
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 31 tests in 0.044s",
+        "Ran 31 tests in 0.046s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_separation_performance",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.8,
       "unittest": {
         "ran": 3,
-        "seconds": 0.75
+        "seconds": 0.745
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 3 tests in 0.750s",
+        "Ran 3 tests in 0.745s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_ship_experience",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 0.5,
+      "wall_seconds": 0.6,
       "unittest": {
         "ran": 14,
-        "seconds": 0.462
+        "seconds": 0.514
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 14 tests in 0.462s",
+        "Ran 14 tests in 0.514s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_ship_material_passes",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 2.2,
+      "wall_seconds": 2.3,
       "unittest": {
         "ran": 4,
-        "seconds": 2.123
+        "seconds": 2.168
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 4 tests in 2.123s",
+        "Ran 4 tests in 2.168s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_ship_rank_hud",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 0.1,
+      "wall_seconds": 0.2,
       "unittest": {
         "ran": 10,
-        "seconds": 0.03
+        "seconds": 0.035
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 10 tests in 0.030s",
+        "Ran 10 tests in 0.035s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_ship_sizes",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.6,
       "unittest": {
         "ran": 13,
-        "seconds": 0.544
+        "seconds": 0.562
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 13 tests in 0.544s",
+        "Ran 13 tests in 0.562s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_sim_profiles",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 2.0,
+      "wall_seconds": 2.1,
       "unittest": {
         "ran": 12,
-        "seconds": 1.973
+        "seconds": 2.063
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 12 tests in 1.973s",
+        "Ran 12 tests in 2.063s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_skirmish_main",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
       "unittest": {
         "ran": 3,
-        "seconds": 0.018
+        "seconds": 0.017
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 3 tests in 0.018s",
+        "Ran 3 tests in 0.017s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_skirmish_maps",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.7,
       "unittest": {
         "ran": 5,
-        "seconds": 0.668
+        "seconds": 0.672
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 5 tests in 0.668s",
+        "Ran 5 tests in 0.672s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_skirmish_menu",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.6,
       "unittest": {
         "ran": 14,
-        "seconds": 0.511
+        "seconds": 0.499
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 14 tests in 0.511s",
+        "Ran 14 tests in 0.499s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_skirmish_setup",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.5,
       "unittest": {
         "ran": 9,
-        "seconds": 0.507
+        "seconds": 0.509
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 9 tests in 0.507s",
+        "Ran 9 tests in 0.509s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_skirmish_teams",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.0,
@@ -3469,267 +3472,265 @@
         "Ran 4 tests in 0.011s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_splash_movie_integration",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.3,
       "unittest": {
         "ran": 7,
-        "seconds": 0.152
+        "seconds": 0.154
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 7 tests in 0.152s",
+        "Ran 7 tests in 0.154s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_staffing",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.0,
       "unittest": {
         "ran": 4,
-        "seconds": 0.007
+        "seconds": 0.008
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 4 tests in 0.007s",
+        "Ran 4 tests in 0.008s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_station_balance",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 1.3,
       "unittest": {
         "ran": 63,
-        "seconds": 1.179
+        "seconds": 1.19
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 63 tests in 1.179s",
+        "Ran 63 tests in 1.190s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_station_bounds_cache",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.7,
       "unittest": {
         "ran": 4,
-        "seconds": 0.594
+        "seconds": 0.611
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 4 tests in 0.594s",
+        "Ran 4 tests in 0.611s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_station_upgrades",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 5.4,
+      "wall_seconds": 5.6,
       "unittest": {
         "ran": 58,
-        "seconds": 5.323
+        "seconds": 5.481
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 58 tests in 5.323s",
+        "Ran 58 tests in 5.481s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_support_orders_ui",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 0.2,
+      "wall_seconds": 0.3,
       "unittest": {
         "ran": 12,
-        "seconds": 0.118
+        "seconds": 0.151
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 12 tests in 0.118s",
+        "Ran 12 tests in 0.151s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_support_review",
-      "outcome": "pass",
-      "exit_code": 0,
-      "wall_seconds": 0.0,
-      "unittest": {
-        "ran": 2,
-        "seconds": 0.003
-      },
-      "failing": [],
-      "tail": [
-        "----------------------------------------------------------------------",
-        "Ran 2 tests in 0.003s",
-        "",
-        "OK"
-      ],
-      "runner": "unittest"
-    },
-    {
-      "module": "test_surface_geometry_integration",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
       "unittest": {
-        "ran": 4,
-        "seconds": 0.042
+        "ran": 2,
+        "seconds": 0.004
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 4 tests in 0.042s",
+        "Ran 2 tests in 0.004s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
+    },
+    {
+      "module": "test_surface_geometry_integration",
+      "runner": "unittest",
+      "outcome": "pass",
+      "exit_code": 0,
+      "wall_seconds": 0.2,
+      "unittest": {
+        "ran": 4,
+        "seconds": 0.054
+      },
+      "failing": [],
+      "tail": [
+        "----------------------------------------------------------------------",
+        "Ran 4 tests in 0.054s",
+        "",
+        "OK"
+      ]
     },
     {
       "module": "test_trading",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
-      "wall_seconds": 32.1,
+      "wall_seconds": 32.8,
       "unittest": {
         "ran": 18,
-        "seconds": 32.038
+        "seconds": 32.755
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 18 tests in 32.038s",
+        "Ran 18 tests in 32.755s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_trio_generic_equivalence",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.9,
       "unittest": {
         "ran": 14,
-        "seconds": 0.814
+        "seconds": 0.784
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 14 tests in 0.814s",
+        "Ran 14 tests in 0.784s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_victory_modes",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.3,
       "unittest": {
         "ran": 6,
-        "seconds": 0.218
+        "seconds": 0.214
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 6 tests in 0.218s",
+        "Ran 6 tests in 0.214s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_visibility",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.1,
       "unittest": {
         "ran": 13,
-        "seconds": 0.099
+        "seconds": 0.096
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 13 tests in 0.099s",
+        "Ran 13 tests in 0.096s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_weapon_audio",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 2.9,
       "unittest": {
         "ran": 10,
-        "seconds": 2.742
+        "seconds": 2.734
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 10 tests in 2.742s",
+        "Ran 10 tests in 2.734s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     },
     {
       "module": "test_weapon_sfx",
+      "runner": "unittest",
       "outcome": "pass",
       "exit_code": 0,
       "wall_seconds": 0.2,
       "unittest": {
         "ran": 7,
-        "seconds": 0.121
+        "seconds": 0.112
       },
       "failing": [],
       "tail": [
         "----------------------------------------------------------------------",
-        "Ran 7 tests in 0.121s",
+        "Ran 7 tests in 0.112s",
         "",
         "OK"
-      ],
-      "runner": "unittest"
+      ]
     }
   ],
-  "merge_note": "rows re-run under the pytest fallback merged into the original sweep",
-  "pytest_fallback": "unittest yields zero tests for test_classic_replays_gl, test_classic_screens and test_menu_movie; the first two names were re-run under pytest, and test_classic_replays_gl has no test cases at all and runs as a script",
   "runner_counts": {
     "unittest": 202,
     "script": 1,
     "pytest": 2
-  }
+  },
+  "merge_note": "single sweep after policy decision s07-s06-coverage-exception-2026-10-19; tests_ran is 2246 because the launch-recovery harness gained one regression test in #133"
 }
