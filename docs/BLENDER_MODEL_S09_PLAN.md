@@ -164,9 +164,43 @@ An S09 package must be built from this exact candidate and inspected, not merely
 runtime assets, manifests and hashes present inside the frozen product; `sys._MEIPASS` lookup
 working; read-only bundle behaviour; an external writable mod root; no `art/blender/` sources or
 `tools/art` authoring tools inside the bundle; and smoke runs without Blender or a source
-checkout on a clean install and over a copied existing-user-data profile. `star_armada.spec`
-bundles `assets` only, which is the right shape, but **no S09 package exists yet** and the
-workflow's manual package job is skipped, not passed.
+checkout on a clean install and over a copied existing-user-data profile.
+
+### 7.1 Measured — the gate fails
+
+Built from this candidate with PyInstaller 6.22.3 (`star_armada.spec --noconfirm`): 422 files,
+133 MB, `assets` only. Bundle closure is **complete** — 103 selectable bindings, 103 bundled
+manifests, 103 mesh payloads hash-verified against their manifest pins (21 MB), all three schemas
+present, and no `tools/`, `tests/`, handoffs or `.blend` inside. `artifacts/s09/package/PACKAGE.json`
+and `frozen-closure.json`.
+
+The frozen package runs with the **legacy** default: `--smoke` under an isolated `HOME` reaches
+`SMOKE_OK` at t=30 s and writes a real in-game capture (`frozen-smoke-legacy.png`).
+
+The frozen package **cannot start with the authored catalogue selected**:
+
+```
+render.asset_registry.AssetError: E_SYMLINK_ESCAPE: path: assets/models/schemas/model-manifest.schema.json
+  main.py:293 start_game -> asset_selection.configure_from_settings -> asset_registry.AssetResolver.__init__ -> _safe()
+[PYI-38430:ERROR] Failed to execute script 'main' due to unhandled exception
+```
+
+Cause, isolated with a read-only probe against the built bundle: PyInstaller 6 lays a macOS
+`.app` out with `Contents/Frameworks` as `sys._MEIPASS` and `Contents/Frameworks/assets` as a
+symlink to `../Resources/assets`. `render/menus.py:28` sets `ASSET_ROOT = sys._MEIPASS`, so the
+resolver's root is `Frameworks` while every real asset lives in `Resources`; `_safe()` resolves
+symlinks and refuses any path whose realpath leaves the root, so the resolver rejects its own
+bundled assets. `AssetResolver(Contents/Frameworks)` raises `E_SYMLINK_ESCAPE`;
+`AssetResolver(Contents/Resources)` loads 119 bindings and 103 manifests without complaint. The
+shipped data is correct — the root is wrong.
+
+This is a **pre-existing packaging defect**, not an S09 regression: the default never constructs
+the resolver, which is why it has been invisible until a package was built with selection enabled.
+It blocks S11 outright — a default switch would ship a macOS build that raises an unhandled
+exception in `start_game` before the first frame. The fix is product code and therefore outside
+this step's authorization; the shape that the probe supports is resolving `ASSET_ROOT` to the
+directory owning the real assets tree when frozen, with the escaping-symlink alternative rejected
+because it weakens the containment check S08 hardened. **The fix has not been applied or run.**
 
 ## 8. Platform gate
 
@@ -187,7 +221,8 @@ successor:
    *Status: measured (§6.1) with a recorded reference; the reference is **not met**, so this
    criterion is open, not satisfied.*
 3. Exact-candidate Mac and Windows packages inspected inside the bundle and smoke-run in clean
-   and existing-user-data scenarios.
+   and existing-user-data scenarios. *Status: the Mac package builds, closes over its assets and
+   smoke-runs legacy, but crashes on the authored selection (§7.1); Windows unbuilt. Open.*
 4. Native graphics evidence on the required platforms, or an explicit owner waiver naming what is
    waived.
 5. Outstanding blockers listed with who owns them: the two recorded test failures, the
