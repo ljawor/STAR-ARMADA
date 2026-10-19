@@ -1,0 +1,83 @@
+{
+  "passed": true,
+  "security_concerns": [],
+  "logic_errors": [],
+  "suggestions": [
+    {
+      "file": "tests/test_s08_cosmetic_compatibility.py:370-379; tools/art/verify_s08_controls.py:52-55",
+      "message": "For durable standalone receipts, include the harness and reviewed production SHA256 map directly in cosmetic/lifecycle evidence. The current native capture receipt does this, while cosmetic and lifecycle receipts rely on surrounding provenance. This review binds the current sources separately."
+    },
+    {
+      "file": "tests/test_s08_pack_safety.py:220-229,428-436",
+      "message": "Consider explicit boundary-equality and replacement-accounting cases for both aggregate snapshot caps: exactly-at-limit acceptance, one-over rejection, and a later replacement freeing an earlier snapshot budget. Existing lowered-cap tests already prove transactional rejection."
+    }
+  ],
+  "summary": "Passed independent S08-only diff/new-file review: no blocking security or logic defect found; 35 bounded headless focused tests passed with zero failures/errors/skips. No implementation edited, no commit/push, and no GL or full-suite execution performed.",
+  "reviewed_sha256": {
+    "docs/BLENDER_MODEL_S08_PLAN.md": "101f72645f9189f0a61d316630492d779d85b944730886e55f72e1a0405466fb",
+    "docs/VISUAL_MODEL_PACKS.md": "12c72d385f0a4ac90429ca5e68f37569f371347df763eb4ea2d5f38460ea28b9",
+    "examples/visual_packs/core-frigate/SOURCE.md": "182bdbc2d574cd96dd89377586a9c93f77138f22ecb4c22767b4c1cd31132832",
+    "examples/visual_packs/core-frigate/assets/models/frigate.mesh.json": "0c7814a1e8c789ea632141ba516f41224ab93981b6fddd61c110f0978c8c8d9f",
+    "examples/visual_packs/core-frigate/assets/models/manifests/frigate.json": "f1d35f57d3ce528bbc4ea69ec5d7d0c1199cc25867f0fd93b0b071beb746b165",
+    "examples/visual_packs/core-frigate/visual-pack.json": "7d93d7d2af8aebb57b5494a85540c38a50556df97bf7e21fcd4c50bc65907abf",
+    "examples/visual_packs/raider-addon/SOURCE.md": "747923c22be81f7967217a5a769b28710695331cd2690d41e23d425567beef74",
+    "examples/visual_packs/raider-addon/assets/models/manifests/scout.json": "307979bf60a4ca7ab1504da2fa8165129138bc348a33e82bfd87fbbdaa537a43",
+    "examples/visual_packs/raider-addon/assets/models/scout.mesh.json": "6067ce4a92804d118af2edabb9b5fa66eab4b8e7b720b983fd0339b03c05ad77",
+    "examples/visual_packs/raider-addon/visual-pack.json": "85aed77a05a03755bcf6b8e2e7d57871d07f5596842d3f1534cf7523873940f5",
+    "game/data/store.py": "be8152549e30e2f2e85ff3b14b8ecfc66aaf7d34b1b4405ab4f65c68610b605c",
+    "main.py": "c962373ac1ff218dbe7e821f20d07092ec78f89eca4421be72584d8903df6314",
+    "mods/s08_raiders_fixture/README.md": "e5b91e758a8dddbc42f2338462a345c2ec0be08c050f7bdb870aa08a109f4ead",
+    "mods/s08_raiders_fixture/data/ships/rebel.json": "a9d1707ae426546ae24682b3ebd61e6d547e0a03eee5bf68ee1a9cfe364d3d04",
+    "render/asset_registry.py": "9cc5c030415ea5485634c74249d6569f636403c319b016de3f1bb48894908c4c",
+    "render/asset_selection.py": "11b1c84ffc9258c3f19b2b53881cd45588eb66d6b514e4ffb09d0161ad239328",
+    "tests/test_generic_model_preview.py": "4ea2029883e84c26eade9d2ced468fe2c1be7222992eae0a4b03232925dcfef3",
+    "tests/test_s08_asset_updates.py": "8b37c7dadd91651edbd5bacc1fb557ec0310aa2a889c6075faafb784059dfe0a",
+    "tests/test_s08_cosmetic_compatibility.py": "6ca3893c684ec1389dac366826dc6f51c55fc54d604f53d75d3dc56605557666",
+    "tests/test_s08_example_packs.py": "9decd91f390d6eba12be17340e37791b91b9bbb33366944daac69f761a9902ba",
+    "tests/test_s08_gameplay_dependencies.py": "2dae0c70f3865ab6c72360476aaae3cdf6c8531787143a769518dcfef88f9fb4",
+    "tests/test_s08_pack_safety.py": "6a981f2fdbf731f0ef4a6d305cd4bf1e5dc616187f233dd04610c3b9266e451b",
+    "tools/art/build_s08_examples.py": "52c94bb866a4e2568bd287a40b2e5e3aa124714e951baaa5712d285ecacd5864",
+    "tools/art/capture_s08_examples.py": "9ea92a61673012397c6703801c75756f646058b843cd4d221ee19b3000032fe0",
+    "tools/art/run_s08_gates.py": "12efbbe96cd00da91c9c33a0d1a70cef033a5076d44938e060d81af80471bac6",
+    "tools/art/verify_s08_controls.py": "aff87c31cc3fd12fcac095e5320d5211fdeefd80587a32e33f28d7e41f07c25e"
+  },
+  "review_scope": {
+    "base_head": "5517ad4d642e72f7a9a8c886e9946b5f49ea8490",
+    "file_count": 26,
+    "method": "Reviewed git diff HEAD, complete changed production modules, all new S08 test/tool source, both docs, both complete example packs and the separate gameplay fixture. Parsed example payloads and exercised exact reproducibility, geometry preservation and install/provenance assertions. Also reviewed newly added tools/art/run_s08_gates.py: fresh-process serial modules, nonzero test/skip checks, process-group timeout and before/after input hashes.",
+    "checked": [
+      "Contained path and symlink-loop/escape validation; special-file/nonblocking binary reads; bounded scans and payload reads; unsupported texture/material/executable content rejection.",
+      "Per-pack staging/rollback, committed identity/conflict bookkeeping, immutable all-LOD session snapshots, 240000-triangle and 32000000-encoded-byte aggregate limits.",
+      "Mesh/pack/material/LOD cache identities, session reset and CPU helper invalidation; renderer ownership and native lifecycle harness source reviewed without acquiring GL.",
+      "Effective loader-owned last-writer ship provenance, session gm.ds integration, explicit legacy default, no simulation/save/replay/checksum schema or compatibility-rule changes.",
+      "Test discovery/counts, exact per-tick full snapshots and checksum comparisons, nonvacuous commands and mesh differences, subprocess deadlines and cleanup; existing generic-preview assertions updated rather than weakened."
+    ],
+    "limitations": [
+      "No independent native GL, screenshot visual assessment, live LAN/cosmetic worker rerun or full-suite run in this review; those remain owned by the parent.",
+      "Hostile concurrent filesystem races beyond documented containment/special-file protections were not treated as a new threat-model requirement.",
+      "No S09 native Windows, physical mixed-machine, packaging, performance, release, owner-art approval or default-activation acceptance is implied."
+    ]
+  },
+  "verification": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tests:. /Users/lukaszjawor/Downloads/Project/STAR-ARMADA/.venv/bin/python -m unittest test_s08_pack_safety test_s08_example_packs test_s08_gameplay_dependencies test_s08_asset_updates.SessionAssetUpdates test_generic_model_preview -v",
+    "exit_code": 0,
+    "tests_run": 35,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "duration_seconds": 5.177,
+    "existing_evidence_checks": {
+      "static_scan_findings": 0,
+      "cosmetic_completed_gates": [
+        "gameplay_mod_negative_control",
+        "history",
+        "live_lan"
+      ],
+      "cosmetic_history_reports": 16,
+      "cosmetic_lan_snapshots": 181,
+      "lifecycle_receipt_ok": true,
+      "native_capture_source_and_image_hashes_match": true
+    },
+    "existing_evidence_note": "Receipts were read/checked, not independently rerun; no claim that stored green results replace parent final acceptance."
+  }
+}

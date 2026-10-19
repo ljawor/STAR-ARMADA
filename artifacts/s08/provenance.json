@@ -1,0 +1,26 @@
+{
+  "binding_time": "parent publication seal after final native integrated execution; not retroactively invented execution-time hashes",
+  "final_input_sha256": {
+    "game/data/store.py": "be8152549e30e2f2e85ff3b14b8ecfc66aaf7d34b1b4405ab4f65c68610b605c",
+    "main.py": "c962373ac1ff218dbe7e821f20d07092ec78f89eca4421be72584d8903df6314",
+    "render/asset_registry.py": "9cc5c030415ea5485634c74249d6569f636403c319b016de3f1bb48894908c4c",
+    "render/asset_selection.py": "11b1c84ffc9258c3f19b2b53881cd45588eb66d6b514e4ffb09d0161ad239328",
+    "render/renderer.py": "9aff34140aa3d458eec358a2d87e64d4d4277c924ca198d507e4d29983350f3c",
+    "tests/test_s08_asset_updates.py": "8b37c7dadd91651edbd5bacc1fb557ec0310aa2a889c6075faafb784059dfe0a",
+    "tests/test_s08_cosmetic_compatibility.py": "0f07ad3fdd99a0f05b6acc82b58a1e9a1b0cc598aad54a5c95ec75bc1f6f65bd",
+    "tools/art/verify_s08_controls.py": "aff87c31cc3fd12fcac095e5320d5211fdeefd80587a32e33f28d7e41f07c25e",
+    "tools/art/run_s08_gates.py": "12efbbe96cd00da91c9c33a0d1a70cef033a5076d44938e060d81af80471bac6"
+  },
+  "bound_evidence_sha256": {
+    "artifacts/s08/cosmetic/summary.json": "091737d432aea9a36dfa9a97bb316e68a915b47281838d8adc2e109797ce28d7",
+    "artifacts/s08/cosmetic/tick-checksums.json": "dc27efa7a2d3d1050f906f8a68203583a3057cfdc3ab03aa83de2a83fa3263f4",
+    "artifacts/s08/cosmetic/test-output.txt": "5bcca273deca81931a9d0c264c3143d6f8471457a9ed3265246217dad7cb91ca",
+    "artifacts/s08/lifecycle-controls.txt": "44f9e2ab74dde5243523c972c6d3f81514686e9363b0c3b27e9032788576091a",
+    "artifacts/s08/integrated/cosmetic/summary.json": "be77b8386b3dc2d5ee79d7e2c6753e8c755a456e5289516a4f3c9f8f30368473",
+    "artifacts/s08/integrated/cosmetic/tick-checksums.json": "dc27efa7a2d3d1050f906f8a68203583a3057cfdc3ab03aa83de2a83fa3263f4",
+    "artifacts/s08/integrated/lifecycle-controls.txt": "44f9e2ab74dde5243523c972c6d3f81514686e9363b0c3b27e9032788576091a"
+  },
+  "earlier_standalone_cosmetic_test_sha256": "6ca3893c684ec1389dac366826dc6f51c55fc54d604f53d75d3dc56605557666",
+  "difference_from_standalone": "Exactly two PYTHONPATH hardcoded-colon fstrings changed to os.pathsep.join; production and lifecycle harness bytes unchanged. Final integrated native run reran all cosmetic/lifecycle assertions on final hashes. Original standalone receipt remains separate.",
+  "integrated_receipt_sha256": "180e9c9188c7cb65edea705fd52812c772a96e5c2d92848f602655b86b4a1852"
+}

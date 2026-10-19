@@ -1,0 +1,21 @@
+test_only_language_catalogues_force_lf_checkout (test_asset_selection.SelectionLanguageTests.test_only_language_catalogues_force_lf_checkout) ... ok
+test_pack_count_is_localized_in_actual_settings_draw (test_asset_selection.SelectionLanguageTests.test_pack_count_is_localized_in_actual_settings_draw) ... pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+ok
+test_preview_catalogue_pipeline_is_utf8_lf_even_with_windows_defaults (test_asset_selection.SelectionLanguageTests.test_preview_catalogue_pipeline_is_utf8_lf_even_with_windows_defaults) ... ok
+test_preview_labels_have_authored_translations_in_every_registered_pack (test_asset_selection.SelectionLanguageTests.test_preview_labels_have_authored_translations_in_every_registered_pack) ... ok
+test_absent_preference_stays_legacy (test_asset_selection.SelectionPreferencesTests.test_absent_preference_stays_legacy) ... ok
+test_enabled_pack_directory_symlink_cannot_escape_external_root (test_asset_selection.SelectionPreferencesTests.test_enabled_pack_directory_symlink_cannot_escape_external_root) ... ok
+test_explicit_preview_and_enabled_order_survive_settings_roundtrip (test_asset_selection.SelectionPreferencesTests.test_explicit_preview_and_enabled_order_survive_settings_roundtrip) ... ok
+test_legacy_boundary_has_visible_diagnostics_and_no_resolver_io (test_asset_selection.SelectionPreferencesTests.test_legacy_boundary_has_visible_diagnostics_and_no_resolver_io) ... ok
+test_menu_defaults_and_bad_pack_list_are_safe (test_asset_selection.SelectionPreferencesTests.test_menu_defaults_and_bad_pack_list_are_safe) ... ok
+test_pack_preferences_reject_duplicates_and_unsafe_names (test_asset_selection.SelectionPreferencesTests.test_pack_preferences_reject_duplicates_and_unsafe_names) ... ok
+test_persisted_pack_order_drives_resolver_without_touching_settings (test_asset_selection.SelectionPreferencesTests.test_persisted_pack_order_drives_resolver_without_touching_settings) ... ok
+test_preview_control_is_reachable_and_persists_from_natural_input (test_asset_selection.SelectionPreferencesTests.test_preview_control_is_reachable_and_persists_from_natural_input) ... ok
+test_preview_uses_generic_resolver_and_can_return_to_legacy (test_asset_selection.SelectionPreferencesTests.test_preview_uses_generic_resolver_and_can_return_to_legacy) ... ok
+test_selection_cannot_change_with_live_renderer_ownership (test_asset_selection.SelectionPreferencesTests.test_selection_cannot_change_with_live_renderer_ownership) ... ok
+test_session_boundary_invalidates_bounds_and_contact_helpers (test_asset_selection.SelectionPreferencesTests.test_session_boundary_invalidates_bounds_and_contact_helpers) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 2.343s
+
+OK

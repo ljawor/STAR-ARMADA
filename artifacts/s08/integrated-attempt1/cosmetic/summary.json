@@ -1,0 +1,1176 @@
+{
+  "all_gates_completed": true,
+  "completed_gates": [
+    "gameplay_mod_negative_control",
+    "history",
+    "live_lan"
+  ],
+  "fixture": {
+    "fields_removed": [
+      "sensor_range",
+      "collection_point",
+      "upgrade_level",
+      "crew",
+      "max_crew",
+      "crew_loss_accumulator",
+      "crew_damage_accumulator",
+      "crew_cargo",
+      "crew_mission",
+      "cargo_loss_accumulator",
+      "boarding",
+      "boarding_party_id",
+      "recruitment_progress",
+      "abandoned_attack_target"
+    ],
+    "generated_not_historical_user_file": true,
+    "ship_id": 30,
+    "start_tick": 37
+  },
+  "history": [
+    {
+      "content_hash": "645f609ba76de37bb75374cacec0e3f14faede2c449f640ee3321f008b912507",
+      "exact_every_tick": true,
+      "final_order": "idle",
+      "final_position": [
+        -5751.156137951061,
+        0.0,
+        -4356.037292235818
+      ],
+      "kind": "modern-save",
+      "mode": "legacy",
+      "replay_content_digest": "2860a5e2eb53d8e9cd5787f8c8504107127b96dc4d5da3d19af2821f701fe743",
+      "start_position": [
+        -6000.0,
+        0.0,
+        -4500.0
+      ],
+      "ticks_compared": 181,
+      "visual": {
+        "mesh_sha256": null,
+        "payload_sha256": null,
+        "selection": {
+          "effective_bindings": [],
+          "enabled_order": [],
+          "generation": 1,
+          "issues": [],
+          "mode": "legacy",
+          "pack_order": []
+        }
+      },
+      "warning": null
+    },
+    {
+      "content_hash": "645f609ba76de37bb75374cacec0e3f14faede2c449f640ee3321f008b912507",
+      "exact_every_tick": true,
+      "final_order": "idle",
+      "final_position": [
+        -5751.156137951061,
+        0.0,
+        -4356.037292235818
+      ],
+      "kind": "modern-replay",
+      "mode": "legacy",
+      "replay_content_digest": "2860a5e2eb53d8e9cd5787f8c8504107127b96dc4d5da3d19af2821f701fe743",
+      "start_position": [
+        -6000.0,
+        0.0,
+        -4500.0
+      ],
+      "ticks_compared": 181,
+      "visual": {
+        "mesh_sha256": null,
+        "payload_sha256": null,
+        "selection": {
+          "effective_bindings": [],
+          "enabled_order": [],
+          "generation": 1,
+          "issues": [],
+          "mode": "legacy",
+          "pack_order": []
+        }
+      },
+      "warning": null
+    },
+    {
+      "content_hash": "645f609ba76de37bb75374cacec0e3f14faede2c449f640ee3321f008b912507",
+      "exact_every_tick": true,
+      "final_order": "idle",
+      "final_position": [
+        -5751.156137951061,
+        0.0,
+        -4356.037292235818
+      ],
+      "kind": "legacy-save",
+      "mode": "legacy",
+      "replay_content_digest": "2860a5e2eb53d8e9cd5787f8c8504107127b96dc4d5da3d19af2821f701fe743",
+      "start_position": [
+        -6000.0,
+        0.0,
+        -4500.0
+      ],
+      "ticks_compared": 181,
+      "visual": {
+        "mesh_sha256": null,
+        "payload_sha256": null,
+        "selection": {
+          "effective_bindings": [],
+          "enabled_order": [],
+          "generation": 1,
+          "issues": [],
+          "mode": "legacy",
+          "pack_order": []
+        }
+      },
+      "warning": null
+    },
+    {
+      "content_hash": "645f609ba76de37bb75374cacec0e3f14faede2c449f640ee3321f008b912507",
+      "exact_every_tick": true,
+      "final_order": "idle",
+      "final_position": [
+        -5751.156137951061,
+        0.0,
+        -4356.037292235818
+      ],
+      "kind": "legacy-replay",
+      "mode": "legacy",
+      "replay_content_digest": "2860a5e2eb53d8e9cd5787f8c8504107127b96dc4d5da3d19af2821f701fe743",
+      "start_position": [
+        -6000.0,
+        0.0,
+        -4500.0
+      ],
+      "ticks_compared": 181,
+      "visual": {
+        "mesh_sha256": null,
+        "payload_sha256": null,
+        "selection": {
+          "effective_bindings": [],
+          "enabled_order": [],
+          "generation": 1,
+          "issues": [],
+          "mode": "legacy",
+          "pack_order": []
+        }
+      },
+      "warning": "Legacy v1: duration is unknown; playback ends after the last command. Original game/content compatibility cannot be verified. Persistent future AI/system state is unavailable: fresh brains and reset system timers are used; exact mid-match continuation cannot be guaranteed."
+    },
+    {
+      "content_hash": "645f609ba76de37bb75374cacec0e3f14faede2c449f640ee3321f008b912507",
+      "exact_every_tick": true,
+      "final_order": "idle",
+      "final_position": [
+        -5751.156137951061,
+        0.0,
+        -4356.037292235818
+      ],
+      "kind": "modern-save",
+      "mode": "core",
+      "replay_content_digest": "2860a5e2eb53d8e9cd5787f8c8504107127b96dc4d5da3d19af2821f701fe743",
+      "start_position": [
+        -6000.0,
+        0.0,
+        -4500.0
+      ],
+      "ticks_compared": 181,
+      "visual": {
+        "asset": "core:alliance/frigate",
+        "mesh_sha256": "7b7c7e5cd1ae160fc535e6792f32266f0e3a7e9b2bef24440ef8923e69efe138",
+        "payload_sha256": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+        "revision": "60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df",
+        "selection": {
+          "effective_bindings": [],
+          "enabled_order": [],
+          "generation": 1,
+          "issues": [],
+          "mode": "preview",
+          "pack_order": []
+        },
+        "triangles": 7708
+      },
+      "warning": null
+    },
+    {
+      "content_hash": "645f609ba76de37bb75374cacec0e3f14faede2c449f640ee3321f008b912507",
+      "exact_every_tick": true,
+      "final_order": "idle",
+      "final_position": [
+        -5751.156137951061,
+        0.0,
+        -4356.037292235818
+      ],
+      "kind": "modern-replay",
+      "mode": "core",
+      "replay_content_digest": "2860a5e2eb53d8e9cd5787f8c8504107127b96dc4d5da3d19af2821f701fe743",
+      "start_position": [
+        -6000.0,
+        0.0,
+        -4500.0
+      ],
+      "ticks_compared": 181,
+      "visual": {
+        "asset": "core:alliance/frigate",
+        "mesh_sha256": "7b7c7e5cd1ae160fc535e6792f32266f0e3a7e9b2bef24440ef8923e69efe138",
+        "payload_sha256": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+        "revision": "60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df",
+        "selection": {
+          "effective_bindings": [],
+          "enabled_order": [],
+          "generation": 1,
+          "issues": [],
+          "mode": "preview",
+          "pack_order": []
+        },
+        "triangles": 7708
+      },
+      "warning": null
+    },
+    {
+      "content_hash": "645f609ba76de37bb75374cacec0e3f14faede2c449f640ee3321f008b912507",
+      "exact_every_tick": true,
+      "final_order": "idle",
+      "final_position": [
+        -5751.156137951061,
+        0.0,
+        -4356.037292235818
+      ],
+      "kind": "legacy-save",
+      "mode": "core",
+      "replay_content_digest": "2860a5e2eb53d8e9cd5787f8c8504107127b96dc4d5da3d19af2821f701fe743",
+      "start_position": [
+        -6000.0,
+        0.0,
+        -4500.0
+      ],
+      "ticks_compared": 181,
+      "visual": {
+        "asset": "core:alliance/frigate",
+        "mesh_sha256": "7b7c7e5cd1ae160fc535e6792f32266f0e3a7e9b2bef24440ef8923e69efe138",
+        "payload_sha256": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+        "revision": "60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df",
+        "selection": {
+          "effective_bindings": [],
+          "enabled_order": [],
+          "generation": 1,
+          "issues": [],
+          "mode": "preview",
+          "pack_order": []
+        },
+        "triangles": 7708
+      },
+      "warning": null
+    },
+    {
+      "content_hash": "645f609ba76de37bb75374cacec0e3f14faede2c449f640ee3321f008b912507",
+      "exact_every_tick": true,
+      "final_order": "idle",
+      "final_position": [
+        -5751.156137951061,
+        0.0,
+        -4356.037292235818
+      ],
+      "kind": "legacy-replay",
+      "mode": "core",
+      "replay_content_digest": "2860a5e2eb53d8e9cd5787f8c8504107127b96dc4d5da3d19af2821f701fe743",
+      "start_position": [
+        -6000.0,
+        0.0,
+        -4500.0
+      ],
+      "ticks_compared": 181,
+      "visual": {
+        "asset": "core:alliance/frigate",
+        "mesh_sha256": "7b7c7e5cd1ae160fc535e6792f32266f0e3a7e9b2bef24440ef8923e69efe138",
+        "payload_sha256": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+        "revision": "60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df",
+        "selection": {
+          "effective_bindings": [],
+          "enabled_order": [],
+          "generation": 1,
+          "issues": [],
+          "mode": "preview",
+          "pack_order": []
+        },
+        "triangles": 7708
+      },
+      "warning": "Legacy v1: duration is unknown; playback ends after the last command. Original game/content compatibility cannot be verified. Persistent future AI/system state is unavailable: fresh brains and reset system timers are used; exact mid-match continuation cannot be guaranteed."
+    },
+    {
+      "content_hash": "645f609ba76de37bb75374cacec0e3f14faede2c449f640ee3321f008b912507",
+      "exact_every_tick": true,
+      "final_order": "idle",
+      "final_position": [
+        -5751.156137951061,
+        0.0,
+        -4356.037292235818
+      ],
+      "kind": "modern-save",
+      "mode": "amber",
+      "replay_content_digest": "2860a5e2eb53d8e9cd5787f8c8504107127b96dc4d5da3d19af2821f701fe743",
+      "start_position": [
+        -6000.0,
+        0.0,
+        -4500.0
+      ],
+      "ticks_compared": 181,
+      "visual": {
+        "asset": "s08test:amber/frigate",
+        "mesh_sha256": "2beedc72b19ddc8bb08b2ddab8faf9014dbeae3556ed4995e087c7283758b4ad",
+        "payload_sha256": "caa9d178a3dd60e4901bf71943fdcce893d05a0a401fd5c2cc61f2d991899e57",
+        "revision": "c69865cbd11a8d18ad9be18263eceed61b389b37dcb6376c1e5bcdefd16c9371",
+        "selection": {
+          "effective_bindings": [
+            {
+              "asset": "s08test:amber/frigate",
+              "binding": "rebel:frigate",
+              "pack_id": "s08test:amber",
+              "pack_revision": "f82c7d81c334916e11e70c45608feec460fa49ca1d2a2b6fb92bcae91673f949",
+              "source": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/amber"
+            }
+          ],
+          "enabled_order": [
+            "amber"
+          ],
+          "generation": 1,
+          "issues": [
+            {
+              "active_order": [
+                {
+                  "accepted": true,
+                  "code": null,
+                  "pack_id": "s08test:amber",
+                  "path": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/amber/visual-pack.json",
+                  "revision": "f82c7d81c334916e11e70c45608feec460fa49ca1d2a2b6fb92bcae91673f949"
+                }
+              ],
+              "code": "I_PACK_ORDER"
+            }
+          ],
+          "mode": "preview",
+          "pack_order": [
+            {
+              "accepted": true,
+              "code": null,
+              "pack_id": "s08test:amber",
+              "path": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/amber/visual-pack.json",
+              "revision": "f82c7d81c334916e11e70c45608feec460fa49ca1d2a2b6fb92bcae91673f949"
+            }
+          ]
+        },
+        "triangles": 7708
+      },
+      "warning": null
+    },
+    {
+      "content_hash": "645f609ba76de37bb75374cacec0e3f14faede2c449f640ee3321f008b912507",
+      "exact_every_tick": true,
+      "final_order": "idle",
+      "final_position": [
+        -5751.156137951061,
+        0.0,
+        -4356.037292235818
+      ],
+      "kind": "modern-replay",
+      "mode": "amber",
+      "replay_content_digest": "2860a5e2eb53d8e9cd5787f8c8504107127b96dc4d5da3d19af2821f701fe743",
+      "start_position": [
+        -6000.0,
+        0.0,
+        -4500.0
+      ],
+      "ticks_compared": 181,
+      "visual": {
+        "asset": "s08test:amber/frigate",
+        "mesh_sha256": "2beedc72b19ddc8bb08b2ddab8faf9014dbeae3556ed4995e087c7283758b4ad",
+        "payload_sha256": "caa9d178a3dd60e4901bf71943fdcce893d05a0a401fd5c2cc61f2d991899e57",
+        "revision": "c69865cbd11a8d18ad9be18263eceed61b389b37dcb6376c1e5bcdefd16c9371",
+        "selection": {
+          "effective_bindings": [
+            {
+              "asset": "s08test:amber/frigate",
+              "binding": "rebel:frigate",
+              "pack_id": "s08test:amber",
+              "pack_revision": "f82c7d81c334916e11e70c45608feec460fa49ca1d2a2b6fb92bcae91673f949",
+              "source": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/amber"
+            }
+          ],
+          "enabled_order": [
+            "amber"
+          ],
+          "generation": 1,
+          "issues": [
+            {
+              "active_order": [
+                {
+                  "accepted": true,
+                  "code": null,
+                  "pack_id": "s08test:amber",
+                  "path": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/amber/visual-pack.json",
+                  "revision": "f82c7d81c334916e11e70c45608feec460fa49ca1d2a2b6fb92bcae91673f949"
+                }
+              ],
+              "code": "I_PACK_ORDER"
+            }
+          ],
+          "mode": "preview",
+          "pack_order": [
+            {
+              "accepted": true,
+              "code": null,
+              "pack_id": "s08test:amber",
+              "path": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/amber/visual-pack.json",
+              "revision": "f82c7d81c334916e11e70c45608feec460fa49ca1d2a2b6fb92bcae91673f949"
+            }
+          ]
+        },
+        "triangles": 7708
+      },
+      "warning": null
+    },
+    {
+      "content_hash": "645f609ba76de37bb75374cacec0e3f14faede2c449f640ee3321f008b912507",
+      "exact_every_tick": true,
+      "final_order": "idle",
+      "final_position": [
+        -5751.156137951061,
+        0.0,
+        -4356.037292235818
+      ],
+      "kind": "legacy-save",
+      "mode": "amber",
+      "replay_content_digest": "2860a5e2eb53d8e9cd5787f8c8504107127b96dc4d5da3d19af2821f701fe743",
+      "start_position": [
+        -6000.0,
+        0.0,
+        -4500.0
+      ],
+      "ticks_compared": 181,
+      "visual": {
+        "asset": "s08test:amber/frigate",
+        "mesh_sha256": "2beedc72b19ddc8bb08b2ddab8faf9014dbeae3556ed4995e087c7283758b4ad",
+        "payload_sha256": "caa9d178a3dd60e4901bf71943fdcce893d05a0a401fd5c2cc61f2d991899e57",
+        "revision": "c69865cbd11a8d18ad9be18263eceed61b389b37dcb6376c1e5bcdefd16c9371",
+        "selection": {
+          "effective_bindings": [
+            {
+              "asset": "s08test:amber/frigate",
+              "binding": "rebel:frigate",
+              "pack_id": "s08test:amber",
+              "pack_revision": "f82c7d81c334916e11e70c45608feec460fa49ca1d2a2b6fb92bcae91673f949",
+              "source": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/amber"
+            }
+          ],
+          "enabled_order": [
+            "amber"
+          ],
+          "generation": 1,
+          "issues": [
+            {
+              "active_order": [
+                {
+                  "accepted": true,
+                  "code": null,
+                  "pack_id": "s08test:amber",
+                  "path": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/amber/visual-pack.json",
+                  "revision": "f82c7d81c334916e11e70c45608feec460fa49ca1d2a2b6fb92bcae91673f949"
+                }
+              ],
+              "code": "I_PACK_ORDER"
+            }
+          ],
+          "mode": "preview",
+          "pack_order": [
+            {
+              "accepted": true,
+              "code": null,
+              "pack_id": "s08test:amber",
+              "path": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/amber/visual-pack.json",
+              "revision": "f82c7d81c334916e11e70c45608feec460fa49ca1d2a2b6fb92bcae91673f949"
+            }
+          ]
+        },
+        "triangles": 7708
+      },
+      "warning": null
+    },
+    {
+      "content_hash": "645f609ba76de37bb75374cacec0e3f14faede2c449f640ee3321f008b912507",
+      "exact_every_tick": true,
+      "final_order": "idle",
+      "final_position": [
+        -5751.156137951061,
+        0.0,
+        -4356.037292235818
+      ],
+      "kind": "legacy-replay",
+      "mode": "amber",
+      "replay_content_digest": "2860a5e2eb53d8e9cd5787f8c8504107127b96dc4d5da3d19af2821f701fe743",
+      "start_position": [
+        -6000.0,
+        0.0,
+        -4500.0
+      ],
+      "ticks_compared": 181,
+      "visual": {
+        "asset": "s08test:amber/frigate",
+        "mesh_sha256": "2beedc72b19ddc8bb08b2ddab8faf9014dbeae3556ed4995e087c7283758b4ad",
+        "payload_sha256": "caa9d178a3dd60e4901bf71943fdcce893d05a0a401fd5c2cc61f2d991899e57",
+        "revision": "c69865cbd11a8d18ad9be18263eceed61b389b37dcb6376c1e5bcdefd16c9371",
+        "selection": {
+          "effective_bindings": [
+            {
+              "asset": "s08test:amber/frigate",
+              "binding": "rebel:frigate",
+              "pack_id": "s08test:amber",
+              "pack_revision": "f82c7d81c334916e11e70c45608feec460fa49ca1d2a2b6fb92bcae91673f949",
+              "source": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/amber"
+            }
+          ],
+          "enabled_order": [
+            "amber"
+          ],
+          "generation": 1,
+          "issues": [
+            {
+              "active_order": [
+                {
+                  "accepted": true,
+                  "code": null,
+                  "pack_id": "s08test:amber",
+                  "path": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/amber/visual-pack.json",
+                  "revision": "f82c7d81c334916e11e70c45608feec460fa49ca1d2a2b6fb92bcae91673f949"
+                }
+              ],
+              "code": "I_PACK_ORDER"
+            }
+          ],
+          "mode": "preview",
+          "pack_order": [
+            {
+              "accepted": true,
+              "code": null,
+              "pack_id": "s08test:amber",
+              "path": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/amber/visual-pack.json",
+              "revision": "f82c7d81c334916e11e70c45608feec460fa49ca1d2a2b6fb92bcae91673f949"
+            }
+          ]
+        },
+        "triangles": 7708
+      },
+      "warning": "Legacy v1: duration is unknown; playback ends after the last command. Original game/content compatibility cannot be verified. Persistent future AI/system state is unavailable: fresh brains and reset system timers are used; exact mid-match continuation cannot be guaranteed."
+    },
+    {
+      "content_hash": "645f609ba76de37bb75374cacec0e3f14faede2c449f640ee3321f008b912507",
+      "exact_every_tick": true,
+      "final_order": "idle",
+      "final_position": [
+        -5751.156137951061,
+        0.0,
+        -4356.037292235818
+      ],
+      "kind": "modern-save",
+      "mode": "blue",
+      "replay_content_digest": "2860a5e2eb53d8e9cd5787f8c8504107127b96dc4d5da3d19af2821f701fe743",
+      "start_position": [
+        -6000.0,
+        0.0,
+        -4500.0
+      ],
+      "ticks_compared": 181,
+      "visual": {
+        "asset": "s08test:blue/frigate",
+        "mesh_sha256": "2cf1ffc5a2fa276317db4462ff4860b68abdc4ddf82443200938a753161e2eb0",
+        "payload_sha256": "69eebf6255b30bd929a125316af83ff15608138495f14ce5c4567658bc876fa9",
+        "revision": "eb2eadc0add599262ecf79aad1202deb2dc21fea343a1f260926c236ebb306be",
+        "selection": {
+          "effective_bindings": [
+            {
+              "asset": "s08test:blue/frigate",
+              "binding": "rebel:frigate",
+              "pack_id": "s08test:blue",
+              "pack_revision": "360d6916be9b6384943ff42f1d1943f586342ad8202ff31099c9598a0d8b5592",
+              "source": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/blue"
+            }
+          ],
+          "enabled_order": [
+            "blue"
+          ],
+          "generation": 1,
+          "issues": [
+            {
+              "active_order": [
+                {
+                  "accepted": true,
+                  "code": null,
+                  "pack_id": "s08test:blue",
+                  "path": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/blue/visual-pack.json",
+                  "revision": "360d6916be9b6384943ff42f1d1943f586342ad8202ff31099c9598a0d8b5592"
+                }
+              ],
+              "code": "I_PACK_ORDER"
+            }
+          ],
+          "mode": "preview",
+          "pack_order": [
+            {
+              "accepted": true,
+              "code": null,
+              "pack_id": "s08test:blue",
+              "path": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/blue/visual-pack.json",
+              "revision": "360d6916be9b6384943ff42f1d1943f586342ad8202ff31099c9598a0d8b5592"
+            }
+          ]
+        },
+        "triangles": 7708
+      },
+      "warning": null
+    },
+    {
+      "content_hash": "645f609ba76de37bb75374cacec0e3f14faede2c449f640ee3321f008b912507",
+      "exact_every_tick": true,
+      "final_order": "idle",
+      "final_position": [
+        -5751.156137951061,
+        0.0,
+        -4356.037292235818
+      ],
+      "kind": "modern-replay",
+      "mode": "blue",
+      "replay_content_digest": "2860a5e2eb53d8e9cd5787f8c8504107127b96dc4d5da3d19af2821f701fe743",
+      "start_position": [
+        -6000.0,
+        0.0,
+        -4500.0
+      ],
+      "ticks_compared": 181,
+      "visual": {
+        "asset": "s08test:blue/frigate",
+        "mesh_sha256": "2cf1ffc5a2fa276317db4462ff4860b68abdc4ddf82443200938a753161e2eb0",
+        "payload_sha256": "69eebf6255b30bd929a125316af83ff15608138495f14ce5c4567658bc876fa9",
+        "revision": "eb2eadc0add599262ecf79aad1202deb2dc21fea343a1f260926c236ebb306be",
+        "selection": {
+          "effective_bindings": [
+            {
+              "asset": "s08test:blue/frigate",
+              "binding": "rebel:frigate",
+              "pack_id": "s08test:blue",
+              "pack_revision": "360d6916be9b6384943ff42f1d1943f586342ad8202ff31099c9598a0d8b5592",
+              "source": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/blue"
+            }
+          ],
+          "enabled_order": [
+            "blue"
+          ],
+          "generation": 1,
+          "issues": [
+            {
+              "active_order": [
+                {
+                  "accepted": true,
+                  "code": null,
+                  "pack_id": "s08test:blue",
+                  "path": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/blue/visual-pack.json",
+                  "revision": "360d6916be9b6384943ff42f1d1943f586342ad8202ff31099c9598a0d8b5592"
+                }
+              ],
+              "code": "I_PACK_ORDER"
+            }
+          ],
+          "mode": "preview",
+          "pack_order": [
+            {
+              "accepted": true,
+              "code": null,
+              "pack_id": "s08test:blue",
+              "path": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/blue/visual-pack.json",
+              "revision": "360d6916be9b6384943ff42f1d1943f586342ad8202ff31099c9598a0d8b5592"
+            }
+          ]
+        },
+        "triangles": 7708
+      },
+      "warning": null
+    },
+    {
+      "content_hash": "645f609ba76de37bb75374cacec0e3f14faede2c449f640ee3321f008b912507",
+      "exact_every_tick": true,
+      "final_order": "idle",
+      "final_position": [
+        -5751.156137951061,
+        0.0,
+        -4356.037292235818
+      ],
+      "kind": "legacy-save",
+      "mode": "blue",
+      "replay_content_digest": "2860a5e2eb53d8e9cd5787f8c8504107127b96dc4d5da3d19af2821f701fe743",
+      "start_position": [
+        -6000.0,
+        0.0,
+        -4500.0
+      ],
+      "ticks_compared": 181,
+      "visual": {
+        "asset": "s08test:blue/frigate",
+        "mesh_sha256": "2cf1ffc5a2fa276317db4462ff4860b68abdc4ddf82443200938a753161e2eb0",
+        "payload_sha256": "69eebf6255b30bd929a125316af83ff15608138495f14ce5c4567658bc876fa9",
+        "revision": "eb2eadc0add599262ecf79aad1202deb2dc21fea343a1f260926c236ebb306be",
+        "selection": {
+          "effective_bindings": [
+            {
+              "asset": "s08test:blue/frigate",
+              "binding": "rebel:frigate",
+              "pack_id": "s08test:blue",
+              "pack_revision": "360d6916be9b6384943ff42f1d1943f586342ad8202ff31099c9598a0d8b5592",
+              "source": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/blue"
+            }
+          ],
+          "enabled_order": [
+            "blue"
+          ],
+          "generation": 1,
+          "issues": [
+            {
+              "active_order": [
+                {
+                  "accepted": true,
+                  "code": null,
+                  "pack_id": "s08test:blue",
+                  "path": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/blue/visual-pack.json",
+                  "revision": "360d6916be9b6384943ff42f1d1943f586342ad8202ff31099c9598a0d8b5592"
+                }
+              ],
+              "code": "I_PACK_ORDER"
+            }
+          ],
+          "mode": "preview",
+          "pack_order": [
+            {
+              "accepted": true,
+              "code": null,
+              "pack_id": "s08test:blue",
+              "path": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/blue/visual-pack.json",
+              "revision": "360d6916be9b6384943ff42f1d1943f586342ad8202ff31099c9598a0d8b5592"
+            }
+          ]
+        },
+        "triangles": 7708
+      },
+      "warning": null
+    },
+    {
+      "content_hash": "645f609ba76de37bb75374cacec0e3f14faede2c449f640ee3321f008b912507",
+      "exact_every_tick": true,
+      "final_order": "idle",
+      "final_position": [
+        -5751.156137951061,
+        0.0,
+        -4356.037292235818
+      ],
+      "kind": "legacy-replay",
+      "mode": "blue",
+      "replay_content_digest": "2860a5e2eb53d8e9cd5787f8c8504107127b96dc4d5da3d19af2821f701fe743",
+      "start_position": [
+        -6000.0,
+        0.0,
+        -4500.0
+      ],
+      "ticks_compared": 181,
+      "visual": {
+        "asset": "s08test:blue/frigate",
+        "mesh_sha256": "2cf1ffc5a2fa276317db4462ff4860b68abdc4ddf82443200938a753161e2eb0",
+        "payload_sha256": "69eebf6255b30bd929a125316af83ff15608138495f14ce5c4567658bc876fa9",
+        "revision": "eb2eadc0add599262ecf79aad1202deb2dc21fea343a1f260926c236ebb306be",
+        "selection": {
+          "effective_bindings": [
+            {
+              "asset": "s08test:blue/frigate",
+              "binding": "rebel:frigate",
+              "pack_id": "s08test:blue",
+              "pack_revision": "360d6916be9b6384943ff42f1d1943f586342ad8202ff31099c9598a0d8b5592",
+              "source": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/blue"
+            }
+          ],
+          "enabled_order": [
+            "blue"
+          ],
+          "generation": 1,
+          "issues": [
+            {
+              "active_order": [
+                {
+                  "accepted": true,
+                  "code": null,
+                  "pack_id": "s08test:blue",
+                  "path": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/blue/visual-pack.json",
+                  "revision": "360d6916be9b6384943ff42f1d1943f586342ad8202ff31099c9598a0d8b5592"
+                }
+              ],
+              "code": "I_PACK_ORDER"
+            }
+          ],
+          "mode": "preview",
+          "pack_order": [
+            {
+              "accepted": true,
+              "code": null,
+              "pack_id": "s08test:blue",
+              "path": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/blue/visual-pack.json",
+              "revision": "360d6916be9b6384943ff42f1d1943f586342ad8202ff31099c9598a0d8b5592"
+            }
+          ]
+        },
+        "triangles": 7708
+      },
+      "warning": "Legacy v1: duration is unknown; playback ends after the last command. Original game/content compatibility cannot be verified. Persistent future AI/system state is unavailable: fresh brains and reset system timers are used; exact mid-match continuation cannot be guaranteed."
+    }
+  ],
+  "lan": {
+    "client": {
+      "commands": [
+        {
+          "cmd": {
+            "player": 0,
+            "target_pos": [
+              -5650,
+              0,
+              -4375
+            ],
+            "type": "move",
+            "unit_ids": [
+              38
+            ]
+          },
+          "tick": 3
+        },
+        {
+          "cmd": {
+            "player": 1,
+            "target_pos": [
+              5650,
+              0,
+              -4375
+            ],
+            "type": "move",
+            "unit_ids": [
+              39
+            ]
+          },
+          "tick": 3
+        },
+        {
+          "cmd": {
+            "player": 0,
+            "type": "hold",
+            "unit_ids": [
+              38
+            ]
+          },
+          "tick": 48
+        },
+        {
+          "cmd": {
+            "player": 1,
+            "type": "hold",
+            "unit_ids": [
+              39
+            ]
+          },
+          "tick": 48
+        },
+        {
+          "cmd": {
+            "player": 0,
+            "target_pos": [
+              -5557.361459203039,
+              0.0,
+              -4287.740707790979
+            ],
+            "type": "move",
+            "unit_ids": [
+              38
+            ]
+          },
+          "tick": 93
+        },
+        {
+          "cmd": {
+            "player": 1,
+            "target_pos": [
+              5557.361459203039,
+              0.0,
+              -4287.740707790979
+            ],
+            "type": "move",
+            "unit_ids": [
+              39
+            ]
+          },
+          "tick": 93
+        },
+        {
+          "cmd": {
+            "player": 0,
+            "type": "stop",
+            "unit_ids": [
+              38
+            ]
+          },
+          "tick": 153
+        },
+        {
+          "cmd": {
+            "player": 1,
+            "type": "stop",
+            "unit_ids": [
+              39
+            ]
+          },
+          "tick": 153
+        }
+      ],
+      "content_hash": "645f609ba76de37bb75374cacec0e3f14faede2c449f640ee3321f008b912507",
+      "final_order": "idle",
+      "final_position": [
+        5760.8349698186685,
+        0.0,
+        -4350.352227586454
+      ],
+      "pid": 23582,
+      "replay_content_digest": "2860a5e2eb53d8e9cd5787f8c8504107127b96dc4d5da3d19af2821f701fe743",
+      "role": "client",
+      "start_position": [
+        6000,
+        0,
+        -4500
+      ],
+      "status": "running",
+      "ticks_compared": 181,
+      "visual": {
+        "asset": "s08test:blue/frigate",
+        "mesh_sha256": "2cf1ffc5a2fa276317db4462ff4860b68abdc4ddf82443200938a753161e2eb0",
+        "payload_sha256": "69eebf6255b30bd929a125316af83ff15608138495f14ce5c4567658bc876fa9",
+        "revision": "eb2eadc0add599262ecf79aad1202deb2dc21fea343a1f260926c236ebb306be",
+        "selection": {
+          "effective_bindings": [
+            {
+              "asset": "s08test:blue/frigate",
+              "binding": "rebel:frigate",
+              "pack_id": "s08test:blue",
+              "pack_revision": "360d6916be9b6384943ff42f1d1943f586342ad8202ff31099c9598a0d8b5592",
+              "source": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/blue"
+            }
+          ],
+          "enabled_order": [
+            "blue"
+          ],
+          "generation": 1,
+          "issues": [
+            {
+              "active_order": [
+                {
+                  "accepted": true,
+                  "code": null,
+                  "pack_id": "s08test:blue",
+                  "path": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/blue/visual-pack.json",
+                  "revision": "360d6916be9b6384943ff42f1d1943f586342ad8202ff31099c9598a0d8b5592"
+                }
+              ],
+              "code": "I_PACK_ORDER"
+            }
+          ],
+          "mode": "preview",
+          "pack_order": [
+            {
+              "accepted": true,
+              "code": null,
+              "pack_id": "s08test:blue",
+              "path": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/blue/visual-pack.json",
+              "revision": "360d6916be9b6384943ff42f1d1943f586342ad8202ff31099c9598a0d8b5592"
+            }
+          ]
+        },
+        "triangles": 7708
+      }
+    },
+    "compared_snapshots": 181,
+    "exact_every_tick": true,
+    "host": {
+      "commands": [
+        {
+          "cmd": {
+            "player": 0,
+            "target_pos": [
+              -5650,
+              0,
+              -4375
+            ],
+            "type": "move",
+            "unit_ids": [
+              38
+            ]
+          },
+          "tick": 3
+        },
+        {
+          "cmd": {
+            "player": 1,
+            "target_pos": [
+              5650,
+              0,
+              -4375
+            ],
+            "type": "move",
+            "unit_ids": [
+              39
+            ]
+          },
+          "tick": 3
+        },
+        {
+          "cmd": {
+            "player": 0,
+            "type": "hold",
+            "unit_ids": [
+              38
+            ]
+          },
+          "tick": 48
+        },
+        {
+          "cmd": {
+            "player": 1,
+            "type": "hold",
+            "unit_ids": [
+              39
+            ]
+          },
+          "tick": 48
+        },
+        {
+          "cmd": {
+            "player": 0,
+            "target_pos": [
+              -5557.361459203039,
+              0.0,
+              -4287.740707790979
+            ],
+            "type": "move",
+            "unit_ids": [
+              38
+            ]
+          },
+          "tick": 93
+        },
+        {
+          "cmd": {
+            "player": 1,
+            "target_pos": [
+              5557.361459203039,
+              0.0,
+              -4287.740707790979
+            ],
+            "type": "move",
+            "unit_ids": [
+              39
+            ]
+          },
+          "tick": 93
+        },
+        {
+          "cmd": {
+            "player": 0,
+            "type": "stop",
+            "unit_ids": [
+              38
+            ]
+          },
+          "tick": 153
+        },
+        {
+          "cmd": {
+            "player": 1,
+            "type": "stop",
+            "unit_ids": [
+              39
+            ]
+          },
+          "tick": 153
+        }
+      ],
+      "content_hash": "645f609ba76de37bb75374cacec0e3f14faede2c449f640ee3321f008b912507",
+      "final_order": "idle",
+      "final_position": [
+        -5760.8349698186685,
+        0.0,
+        -4350.352227586454
+      ],
+      "pid": 23581,
+      "replay_content_digest": "2860a5e2eb53d8e9cd5787f8c8504107127b96dc4d5da3d19af2821f701fe743",
+      "role": "host",
+      "start_position": [
+        -6000,
+        0,
+        -4500
+      ],
+      "status": "running",
+      "ticks_compared": 181,
+      "visual": {
+        "asset": "s08test:amber/frigate",
+        "mesh_sha256": "2beedc72b19ddc8bb08b2ddab8faf9014dbeae3556ed4995e087c7283758b4ad",
+        "payload_sha256": "caa9d178a3dd60e4901bf71943fdcce893d05a0a401fd5c2cc61f2d991899e57",
+        "revision": "c69865cbd11a8d18ad9be18263eceed61b389b37dcb6376c1e5bcdefd16c9371",
+        "selection": {
+          "effective_bindings": [
+            {
+              "asset": "s08test:amber/frigate",
+              "binding": "rebel:frigate",
+              "pack_id": "s08test:amber",
+              "pack_revision": "f82c7d81c334916e11e70c45608feec460fa49ca1d2a2b6fb92bcae91673f949",
+              "source": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/amber"
+            }
+          ],
+          "enabled_order": [
+            "amber"
+          ],
+          "generation": 1,
+          "issues": [
+            {
+              "active_order": [
+                {
+                  "accepted": true,
+                  "code": null,
+                  "pack_id": "s08test:amber",
+                  "path": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/amber/visual-pack.json",
+                  "revision": "f82c7d81c334916e11e70c45608feec460fa49ca1d2a2b6fb92bcae91673f949"
+                }
+              ],
+              "code": "I_PACK_ORDER"
+            }
+          ],
+          "mode": "preview",
+          "pack_order": [
+            {
+              "accepted": true,
+              "code": null,
+              "pack_id": "s08test:amber",
+              "path": "/Users/lukaszjawor/.hermes/cache/scratch/s08-cosmetic-w7xl6do3/packs/amber/visual-pack.json",
+              "revision": "f82c7d81c334916e11e70c45608feec460fa49ca1d2a2b6fb92bcae91673f949"
+            }
+          ]
+        },
+        "triangles": 7708
+      }
+    },
+    "transport": "production TCP loopback"
+  },
+  "limits": "S08 headless cosmetic compatibility evidence, not historical-user-file claims.\n\nRun with PYTHONPATH=tests:. <venv-python> -m unittest\n    test_s08_cosmetic_compatibility -v\nOptional S08_COSMETIC_EVIDENCE names a disposable evidence output directory.\nAll persistence and peer traces otherwise live in TemporaryDirectory under scratch.\n\nThe legacy fixture is deliberately generated from the current production codec,\nthen loses runtime_state BEFORE historical projection fields. It exercises the\nsupported missing sensor/crew/collection/upgrade defaults, not a recovered old\nuser save. Fresh brains/reset timers cannot reproduce unrecorded historical AI.\nThe equality claim is between identical migrated inputs under different visuals.\nLegacy v1 playback cannot validate original content or unknown commandless tails.\n",
+  "negative_control": {
+    "changed_mod_hull": 2856,
+    "lan_rejection": "LAN does not support mods",
+    "original_hull": 2400,
+    "recorded_mod_hull": 2523,
+    "replay_rejection": "Replay content/mods are incompatible.",
+    "same_mod_replay_accepted": true
+  },
+  "trajectory_file": "tick-checksums.json"
+}

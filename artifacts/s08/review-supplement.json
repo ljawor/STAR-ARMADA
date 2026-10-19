@@ -1,0 +1,116 @@
+{
+  "passed": true,
+  "security_concerns": [],
+  "logic_errors": [],
+  "suggestions": [
+    {
+      "file": "docs/BLENDER_MODEL_S08_PLAN.md; docs/BLENDER_MODEL_MIGRATION_ROADMAP.md; art/manifests/handoffs/s08.md; artifacts/s08/README.md",
+      "message": "Final sealed receipt remains parent-pending. The final integrated receipt appeared during this review but was not independently evaluated here. Their references are publication requirements, not independently verified completed seals. Before publication, parent must finish/read back both receipts, verify documented 18-module/150-test/four-tool totals, zero skips and final hashes, and attach provenance. If those gates fail, do not publish the present passed-gate/final-source wording."
+    }
+  ],
+  "summary": "Passed bounded independent final-delta review. All 24 unaffected original pins match; exact inverse of the only two portability substitutions restores the original reviewed test hash. Recovered scaffold record exactly regenerates and all five current/base pins match. Documentation preserves legacy default and S09-S11/owner/platform exclusions. This verdict accepts only the reviewed delta, not parent-pending final execution, sealing, publication or activation.",
+  "reviewed_sha256": {
+    ".gitattributes": "c14e143489fbc987017e83d0c81674cc48c559692b15983e4fe5f6d970099544",
+    "docs/BLENDER_MODEL_S08_PLAN.md": "ba6a7e095c3ffd990188dfdb176ad3571e82cc41d15da9926c0df0f37c960128",
+    "tests/test_s08_cosmetic_compatibility.py": "0f07ad3fdd99a0f05b6acc82b58a1e9a1b0cc598aad54a5c95ec75bc1f6f65bd",
+    "docs/BLENDER_MODEL_MIGRATION_ROADMAP.md": "c145555f410f48462eaf688e6d0a03d0535f63cf418754c6d81d9150d93d5d81",
+    "art/manifests/handoffs/s08.md": "37c7029258065184c58f3a2f0b24bb78b4d7f2d13052e4a07f0ef4e88fbe2538",
+    "artifacts/s08/README.md": "42800809c82204f5564e5603622f2c54eaba11f9b0cab48145bd74ba9f6821f9",
+    "art/manifests/approved-s07-scaffold-source-hashes.json": "bda9dca664be79de059e88643f7dccf5491a30f9885b83ebc528148aab2ba99c",
+    "artifacts/s08/review.json": "dba421e840287b24c3112c080e94c53e47f82a632aac231468bf80dc606d4a1e",
+    "artifacts/s08/prerequisite-control/metadata.txt": "17729554c79549d3a54646bd22244d582a012ae77b8f1e0770ad8050d9631b95",
+    "artifacts/s08/prerequisite-control/pipeline.txt": "28648e05c7cbbd28bbea494722a95417df53563191d863285e73faa7d3862a1c",
+    "artifacts/s08/prerequisite-control/receipt.json": "56a4982e06b53daa2e1938087ce796210a8d0142825dec0ee904d46e173d3503"
+  },
+  "verification": {
+    "original_pins": {
+      "checked": 26,
+      "unchanged": 24,
+      "superseded_only": [
+        "docs/BLENDER_MODEL_S08_PLAN.md",
+        "tests/test_s08_cosmetic_compatibility.py"
+      ],
+      "expected_exceptions_only": true
+    },
+    "portability": {
+      "replacement_count": 2,
+      "inverse_original_sha256": "6ca3893c684ec1389dac366826dc6f51c55fc54d604f53d75d3dc56605557666",
+      "inverse_matches_original_review": true,
+      "mac_separator": ":",
+      "mac_value_equal": true,
+      "windows_separator_semantics": "os.pathsep is semicolon on Windows; join retains the same two ordered absolute entries, without changing tests/assertions",
+      "syntax_valid": true
+    },
+    "attributes": {
+      "original_review_closure_all_text_unset": true,
+      "meaning": "Disable text/EOL checkout conversion, not executable permissions or security validation."
+    },
+    "recovered_record": {
+      "sha256": "bda9dca664be79de059e88643f7dccf5491a30f9885b83ebc528148aab2ba99c",
+      "exact_outputs_root_bytes": true,
+      "actual_pins": {
+        "art/blender/shared_construction_scaffold.blend": {
+          "sha256": "8a632fbdf0bba8c43b8c22d40ae1732938cfebe1d02fbf70cdf65b1f78ee2c39",
+          "matches": true,
+          "base_matches": true
+        },
+        "assets/models/shared_construction_scaffold.mesh.json": {
+          "sha256": "1643a7e19731cb6dac7bcce5e4876a0eead1337690418d7897c7b206901e3a0b",
+          "matches": true,
+          "base_matches": true
+        },
+        "tools/art/alliance_common.py": {
+          "sha256": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+          "matches": true,
+          "base_matches": true
+        },
+        "tools/art/build_b9_construction.py": {
+          "sha256": "79e092578df188ef02d4128e5d74425d7951fddd3075cd0ef3aacda484e4501a",
+          "matches": true,
+          "base_matches": true
+        },
+        "tools/art/export_shared_construction_scaffold.py": {
+          "sha256": "1396b7fc3e175e852454a23e37ef05b59a24d7e05953bca14bb276f5a405d2c9",
+          "matches": true,
+          "base_matches": true
+        }
+      },
+      "base_absent": true
+    },
+    "pristine_control": {
+      "base": "5517ad4d642e72f7a9a8c886e9946b5f49ea8490",
+      "exit_codes": [
+        1,
+        1
+      ],
+      "metadata_output": "Runtime metadata drift: art/manifests/approved-s07-scaffold-source-hashes.json",
+      "pipeline_output": "E_NO_APPROVED_RECORD: shared:construction_scaffold: missing approved-hash record art/manifests/approved-s07-scaffold-source-hashes.json",
+      "outputs_match_receipt": true,
+      "independently_rerun": false
+    },
+    "existing_intermediate_gate": {
+      "path": "artifacts/s08/integrated-attempt2/receipt.json",
+      "ok": true,
+      "modules": 18,
+      "tests": 150,
+      "tool_gates": 4,
+      "all_results_ok": true,
+      "source_changed": [],
+      "note": "Read retained pre-portability evidence only; not substituted for parent final rerun."
+    },
+    "parent_pending_at_review": {
+      "sealed_receipt": true,
+      "final_integrated_receipt": false
+    }
+  },
+  "scope": {
+    "base_review": "artifacts/s08/review.json",
+    "method": "Independent SHA256 checks, exact two-substitution inverse, in-memory metadata regeneration, five current/base content checks, Git attributes evaluation, retained pristine failure and intermediate receipt reads, full final documentation and roadmap diff review.",
+    "limitations": [
+      "No GL, suite, cosmetic peers, native rerun, commit, push or implementation edits.",
+      "Original review remains unchanged; its 35 tests were not rerun by this supplement.",
+      "Retained pristine diagnostics were read, not rerun; original-base absence and five original-base file contents independently checked.",
+      "No new approval, merge, performance/package/native-Windows or physical mixed-machine acceptance."
+    ]
+  }
+}

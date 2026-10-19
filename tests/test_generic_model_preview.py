@@ -24,9 +24,9 @@ class GenericPreviewIntegrationTests(unittest.TestCase):
         start = next(n for n in ast.parse(source).body
                      if isinstance(n, ast.FunctionDef) and n.name == 'start_game')
         text = ast.unparse(start)
-        self.assertIn('configure_from_settings(SETTINGS)', text)
-        self.assertLess(text.index('renderer.close()'), text.index('configure_from_settings(SETTINGS)'))
-        self.assertLess(text.index('configure_from_settings(SETTINGS)'), text.index('renderer = Renderer('))
+        self.assertIn('configure_from_settings(SETTINGS, data_store=gm.ds)', text)
+        self.assertLess(text.index('renderer.close()'), text.index('configure_from_settings(SETTINGS, data_store=gm.ds)'))
+        self.assertLess(text.index('configure_from_settings(SETTINGS, data_store=gm.ds)'), text.index('renderer = Renderer('))
         # Execute the same boundary helper against disposable menu preferences.
         from render.asset_selection import configure_from_settings
         from render import menus

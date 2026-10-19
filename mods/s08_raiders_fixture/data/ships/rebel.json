@@ -1,0 +1,29 @@
+{
+  "ships": {
+    "s08_raiders_scout": {
+      "name": "S08 Raider Scout (compatibility fixture)",
+      "faction": "raiders",
+      "category": "scout",
+      "cost": {"credits": 880, "materials": 400, "energy": 120},
+      "crew_cost": 110,
+      "command_cost": 4,
+      "build_time": 17,
+      "hull": 2400,
+      "shield_quad": 950,
+      "shield_regen": 26,
+      "speed": 62,
+      "turn_rate": 40,
+      "radius": 52,
+      "sensor_range": 1900,
+      "weapons": [
+        {"weapon": "laser_cannon", "count": 2, "arcs": ["all"]},
+        {"weapon": "point_defense", "count": 2, "arcs": ["all"]}
+      ],
+      "abilities": ["repair_drones"],
+      "systems": {"engines": 250, "weapons": 220, "sensors": 170, "shield_gen": 230, "hangar": 60},
+      "hangar_capacity": 0,
+      "max_rank": 5,
+      "veteran_xp": 100
+    }
+  }
+}
