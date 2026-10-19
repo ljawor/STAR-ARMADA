@@ -206,9 +206,14 @@ because it weakens the containment check S08 hardened. **The fix has not been ap
 
 Native Windows graphics, the Windows half of the S03 pipeline (D3: a fresh-clone rebuild with
 repeated byte-stable approved exports), and native Windows package smoke remain unproven. Hosted
-Windows LAN CI is a different, narrower check. Filip's laptop and physical mixed-machine play
-stay deferred unless the owner reauthorizes that hardware. A missing platform result is a
-blocker or an explicitly attributable owner waiver — never an inferred pass.
+Windows LAN CI is a different, narrower check.
+
+On 2026-10-19 the owner recorded **`s09-platform-waiver-2026-10-19`**, which covers **native
+Windows graphics evidence and native Windows package smoke only**. Everything else named above —
+D3's Windows half, the native-Windows skip rows, mixed-machine play, the Mac package and the suite
+— remains a requirement or a blocker. A waiver is a recorded absence of evidence with a scope, not
+a pass: nothing in this receipt may be read as Windows graphics or Windows packaging acceptance.
+Filip's laptop and physical mixed-machine play stay deferred unless the owner reauthorizes it.
 
 ## 9. Exit criteria
 
