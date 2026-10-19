@@ -25,7 +25,9 @@
       "discarded": 2,
       "reported": 24,
       "note": "every reported trial is a completed run of the committed harness; the two discarded attempts measured nothing"
-    }
+    },
+    "environment": "A leaked process tree from the earlier protected single-process suite (protected_suite.py, started 14:04) wrote its result at 14:24 but never exited; it held a live SDL/GL context and averaged ~62% CPU until it was reaped at ~19:5x. Both the per-module gate and this sweep therefore ran beside a competitor, not on an idle machine.",
+    "contention_check": "The legacy medians here (41.97 / 56.87 ms) sit ~8-10% above the post-optimization reference in GRAPHICS_DRAW_SCOPE_REUSE.md (38.84 / 51.22 ms), which is the size of drift mild contention would produce. The authored-vs-legacy ratios (4.5-6.2x) are far larger than that margin, so the verdict is unaffected; the absolute milliseconds should be re-measured on an idle machine before any optimization work is planned against them."
   },
   "reference": {
     "source": "art/manifests/pipeline_policy.json s09-performance-target-2026-10-19",
