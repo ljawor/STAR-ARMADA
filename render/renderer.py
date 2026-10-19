@@ -1417,17 +1417,35 @@ class Renderer:
             for e in stations:
                 self._draw_station_queue_ring(e)
         else:
-            for e in st.entities.values():
-                if not e.alive or not st.can_see(self.local_player, e.id):
-                    continue
-                if e.is_planet or e.jump_travelling:
-                    # in hyperspace: no fixed-function hull either (#92)
-                    continue
+            visible = [e for e in st.entities.values()
+                       if e.alive and st.can_see(self.local_player, e.id)
+                       and not e.is_planet and not e.jump_travelling]
+            ships = [e for e in visible
+                     if (e.is_ship and "ships" not in self.skip) or
+                        (e.is_squadron and "squadrons" not in self.skip)]
+            # Opt-in moving scenes use the cached motion ordering, including
+            # mixed legacy hulls: all trails, independent per-entity hulls,
+            # then all glows. No role batching/suppression is borrowed here.
+            # Legacy-only and motionless scenes retain per-entity submission.
+            phased_motion = any(
+                ":" in self._ship_size(e).shape and
+                is_authored(self._ship_size(e).shape) for e in ships
+            ) and any(e.vel.length() > 2 for e in ships)
+            if phased_motion:
+                for e in ships:
+                    self._draw_ship_trail(e)
+            for e in visible:
                 if (e.is_ship and "ships" not in self.skip) or \
                         (e.is_squadron and "squadrons" not in self.skip):
-                    self._draw_ship(e)
+                    if phased_motion:
+                        self._draw_ship(e, draw_motion=False)
+                    else:
+                        self._draw_ship(e)
                 elif e.is_station and "stations" not in self.skip:
                     self._draw_station(e)
+            if phased_motion:
+                for e in ships:
+                    self._draw_ship_glow(e)
         if self.materials.available:
             _gl.glUseProgram(0)
         GL.glPopAttrib()
@@ -1482,9 +1500,9 @@ class Renderer:
         """Draw one material role for all visible ships/squadrons and stations.
 
         Uses the cached transform matrices per entity; color is computed from
-        the cached owner color and relation.  Ships below the configured LOD
-        thresholds skip detail roles to save per-entity GL work without changing
-        the silhouette or owner color.
+        the cached owner color and relation. Legacy ships retain configured LOD
+        role suppression. Authored ships submit every role at every size, as
+        the uncached path does, preserving their approved surface detail.
         """
         rel_cache = cache["relation"]
         col_cache = cache["owner_color"]
@@ -1507,13 +1525,13 @@ class Renderer:
             if entry is None:
                 continue
             apparent = entry["apparent"]
-            # LOD: skip detail and emissive roles for very small/on-screen ships.
-            if apparent < LOD_BASE_ONLY and role != "base":
-                continue
-            if apparent < LOD_DETAIL and role in ("dark", "trim", "accent", "cool"):
-                continue
             size = entry["size"]
             authored = is_authored(size.shape) if ":" in size.shape else False
+            # Only procedural legacy hulls suppress roles at small screen sizes.
+            if not authored and apparent < LOD_BASE_ONLY and role != "base":
+                continue
+            if not authored and apparent < LOD_DETAIL and role in ("dark", "trim", "accent", "cool"):
+                continue
             if material_pass is not None:
                 self.materials.hull_pass(material_pass, authored)
             color = col_cache.get(e.owner, (0.6, 0.6, 0.6))
@@ -2036,7 +2054,7 @@ class Renderer:
                     size=min(float(fx.get('size', 5.)), size.length*.12),
                     visual_contact=True)
 
-    def _draw_ship(self, e: Entity):
+    def _draw_ship(self, e: Entity, draw_motion=True):
         ds = self.ds
         # NOTE: deliberately NO bail-out when there is no ShipData entry.
         # ``trade_convoy`` is minted by TradingSystem with no ShipData by
@@ -2059,7 +2077,7 @@ class Renderer:
         tail_offset = size.stern - trail_length
         tail = Vec3(e.pos.x + tail_offset * math.sin(e.yaw), e.pos.y,
                     e.pos.z + tail_offset * math.cos(e.yaw))
-        if spd > 2 and segment_visible(self.state, self.local_player, e.pos, tail):
+        if draw_motion and spd > 2 and segment_visible(self.state, self.local_player, e.pos, tail):
             glEnable(GL_BLEND)
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
             glDepthMask(False)
@@ -2103,6 +2121,9 @@ class Renderer:
             glColor3f(*trimc)
             glCallList(trim_lst)
         glDisable(GL_TEXTURE_2D)
+        if authored:
+            # Match the cached authored accent material without changing legacy.
+            self._material_matte()
         glColor3f(*(self._owner_color(e.owner) if authored else
                     tuple(min(1.0, c * 1.15 + .14) for c in color)))
         glCallList(self._ship_display_list(vis["shape"] + "_accent"))
@@ -2121,7 +2142,7 @@ class Renderer:
         GL.glEnable(GL.GL_LIGHTING)
         glPopMatrix()
         # engine glow: additive billboard at the ship's tail (world space)
-        if spd > 8:
+        if draw_motion and spd > 8:
             L = -size.stern
             rear = (e.pos.x - L * math.sin(e.yaw),
                     e.pos.y,
@@ -2520,6 +2541,10 @@ class Renderer:
                     ("base", 0.0, color),
                     ("dark", 1.0, (0.20, 0.24, 0.30)),
                     ("trim", 2.0, (0.68, 0.76, 0.84))):
+                if authored_station:
+                    # Match the cached role material; preserve legacy alloy.
+                    self._material_metal(12.0 if role == "trim" else 8.0,
+                                         (0.85, 0.85, 0.85) if role == "trim" else (0.42, 0.42, 0.42))
                 self.materials.hull_pass(material_pass, authored_station)
                 if not self.materials.available and role == "base":
                     tint = tuple(.42 + .18*c for c in color)
@@ -2528,6 +2553,8 @@ class Renderer:
         # Dedicated broad painted armor, not an overall owner tint. Draw outside
         # the alloy shader so faction saturation survives on the actual plates.
         glDisable(GL_TEXTURE_2D)
+        if authored_station:
+            self._material_matte()
         glColor3f(*(color if authored_station else
                     tuple(min(1.0, c*1.15+.14) for c in color)))
         glCallList(self._station_detail_list(e.data_id, "accent", faction))
