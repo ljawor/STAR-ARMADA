@@ -137,6 +137,9 @@
       "syndicate:sensor_station",
       "syndicate:shipyard",
       "syndicate:trade_station"
+    ],
+    "approved-s07-scaffold": [
+      "shared:construction_scaffold"
     ]
   },
   "assets": [
@@ -3381,6 +3384,38 @@
       "coordinates": "X beam; Y up; +Z forward; nominal game model units",
       "approval": {
         "decision_id": "s06-b3c-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "shared:construction_scaffold",
+      "asset_id": "core:shared/construction_scaffold",
+      "gameplay_entity": "construction:site:scaffold",
+      "authority": "script",
+      "source": "art/blender/shared_construction_scaffold.blend",
+      "exporter": "tools/art/build_b9_construction.py",
+      "export_script": "tools/art/export_shared_construction_scaffold.py",
+      "build_args": [
+        "--asset",
+        "shared:construction_scaffold"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/shared_construction_scaffold.mesh.json",
+      "expected_hashes": "art/manifests/approved-s07-scaffold-source-hashes.json",
+      "expected_triangles": 3104,
+      "advisory_budget_triangles": 11888,
+      "category": "construction",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s07-scaffold-appearance-2026-10-18",
         "record": "art/manifests/approvals.json"
       }
     }

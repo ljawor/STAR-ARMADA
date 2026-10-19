@@ -393,6 +393,54 @@
         "production-default activation, merge, tag or release",
         "new gameplay statistics, collision, balance, or native-platform waivers"
       ]
+    },
+    {
+      "id": "s07-scaffold-registration-2026-10-19",
+      "date": "2026-10-19",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "authorized-execution-not-appearance",
+      "owner_wording": "Work down the 4 points, please.",
+      "question_answered": "Complete the four S07 closure actions, including separately resolving the appearance-approved but unregistered scaffold instead of omitting it from full closure.",
+      "how_recorded": "The owner authorized the four closure actions after separately choosing 'Fix the opt-in rendering paths to match'. This is the separate scaffold registration increment; the original 99-row S06 increment and its authority remain unchanged.",
+      "appearance_authority": "s07-scaffold-appearance-2026-10-18",
+      "authorized": [
+        "Register exactly shared:construction_scaffold at its separately approved revision into the explicit opt-in preview path",
+        "Validate provenance, assets-only resolution, normal construction rendering, cache lifecycle and state preservation",
+        "Publish reviewed evidence and check CI at the final commit"
+      ],
+      "not_authorized": [
+        "new appearance approval or any modification of approved geometry, source, seed, exporter or evidence",
+        "expansion of the original approved-s06 batch or production-default activation",
+        "merge, tag, release, gameplay or balance changes",
+        "waiving S08/S09 compatibility, performance or real native packaged-build gates"
+      ]
+    },
+    {
+      "id": "s07-authored-lod-cost-2026-10-19",
+      "date": "2026-10-19",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "accepted-as-acceptable",
+      "owner_wording": "Yes acceptable",
+      "question_answered": "The authored-hull LOD suppression change in _draw_ship_role_batch makes authored hulls submit all six role batches down to sub-pixel apparent size, costing five extra display-list calls plus push/pop, colour and two shader uniform updates per authored ship per frame at zoom-out. Is that cost acceptable?",
+      "how_recorded": "Put to the owner as a single yes/no after the independent review flagged it as the only player-facing consequence of the motion/ownership repair, and after measurement showed the other two changed draw methods (_draw_ships phased branch, _draw_station) have no production call path: _draw_ships is called once at render/renderer.py:495 with a cache that _ensure_frame_cache always returns as a dict, and _draw_station has one call site (1445) inside that same uncached branch. Answer recorded verbatim; no bound was fitted to it.",
+      "binds_to": {
+        "reviewed_renderer_sha256": "9aff34140aa3d458eec358a2d87e64d4d4277c924ca198d507e4d29983350f3c",
+        "reviewed_commit": "56906ea7c73c219fbdc91c68176104b23d0f7712",
+        "pull_request": 131,
+        "review_artifact": "artifacts/s07-runtime-final/INDEPENDENT-MOTION-REVIEW.json",
+        "finding": "Authored hulls now submit all six roles at every apparent size, including sub-pixel; the LOD cut exists to avoid per-entity GL work at zoom-out.",
+        "measured_pixel_effect": "none: 870/870 native captures and 360/360 candidate-movie frames are byte-identical to the pre-repair sets"
+      },
+      "scope_statement": "Accepts the per-ship draw cost of authored hulls at zoom-out as the price of unmixed authored LOD treatment. It does not authorize removing an existing visual pass, lowering MSAA, reducing geometry, changing gameplay, or any further LOD change.",
+      "not_approved_by_this_decision": [
+        "merge",
+        "default activation",
+        "release or tag",
+        "a new appearance approval",
+        "S08/S09 compatibility, performance or packaged-build gates",
+        "any further renderer performance change"
+      ],
+      "review_note": "A later performance workstream may revisit authored LOD suppression as its own measured change; this decision is the current baseline, not a permanent ceiling on the workstream."
     }
   ]
 }
