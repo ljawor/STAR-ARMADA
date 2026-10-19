@@ -14,7 +14,7 @@ from render.renderer import Renderer
 
 class ModelContextLifecycleTests(unittest.TestCase):
     def test_registered_catalogue_lists_close_and_rebuild_across_preview_cycles(self):
-        """Actual 102-revision GPU closure, not a pixel/LOD acceptance claim."""
+        """Actual 103-revision GPU closure, including the separate scaffold increment."""
         # set_mode replaces even an initialized caller display/context. This
         # native probe must run at an exclusive display AND renderer boundary.
         if pygame.display.get_init() or asset_selection._renderer_owners:
@@ -25,7 +25,9 @@ class ModelContextLifecycleTests(unittest.TestCase):
         rows = [row for row in json.loads((Path(__file__).resolve().parents[1] /
                 'assets/models/registry.json').read_text())['bindings']
                 if row['status'] == 'core']
-        self.assertEqual(len(rows), 102)
+        self.assertEqual(len(rows), 103)
+        scaffold = next(row for row in rows if row['binding'] == 'shared:construction_scaffold')
+        self.assertEqual(scaffold['envelope_decision'], 's07-scaffold-appearance-2026-10-18')
         previous_store = DataStore._instance
         previous_selection = asset_selection._selection
         previous_resolver = asset_selection._resolver

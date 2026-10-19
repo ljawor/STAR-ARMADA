@@ -979,6 +979,30 @@
         "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png": "42dad16e8c6f53c5c2ad01ad25d4b1bf33c48cfc51f2226753ebe6bd057e4ec1",
         "artifacts/s06_alliance_batch_review/b3c-stations/metrics.json": "293abb3db1ed58c94a530afde8846f57f070c04c75dafc3fc3dd47dfc2911493"
       }
+    },
+    "core:shared/construction_scaffold": {
+      "manifest_sha256": "c503efb0c66b5ddf28baf1f9114d130c2d7d7769b82809e41a5824b8f1e342bf",
+      "reviewed_revision": "12959d2518899469d7deb165124243bdfc8a45cbd1a306fca1bef12a8d084b70",
+      "decision_id": "s07-scaffold-appearance-2026-10-18",
+      "evidence_sha256": {
+        "artifacts/s07-integration/scaffold-review-attempt1/confederacy-0.5-after-close.png": "a36cbd398247b718abe55bbb2d933b57b11ccbb2922f4956def494f58bae71d3",
+        "artifacts/s07-integration/scaffold-review-attempt1/confederacy-0.5-after-tactical.png": "80d3efecaf0e64b8607d750cb4177da8d12167df3c0cabc4dd8bf69b3f16f269",
+        "artifacts/s07-integration/scaffold-review-attempt1/imperial-0.1-after-close.png": "2b26f6cf9abe8f7acf7144e2ccd3a86d20d8ed7cf6e5dfeb0aa95db809f45fae",
+        "artifacts/s07-integration/scaffold-review-attempt1/imperial-0.1-after-tactical.png": "9a9f9822269eccaa175ad8050641b1e54709859759a93395c7a02b9c50d9dee3",
+        "artifacts/s07-integration/scaffold-review-attempt1/imperial-0.5-ablated-accent.png": "b9f99e6831b7612f9bdae1bf6e5957b52f785f1c55761de3732154b33dc627a3",
+        "artifacts/s07-integration/scaffold-review-attempt1/imperial-0.5-ablated-cool.png": "fb2d59473c98567acd8096d9fa0b23b3b3713d35413461ebc068effb2d2a3e8c",
+        "artifacts/s07-integration/scaffold-review-attempt1/imperial-0.5-ablated-dark.png": "6e197ad4987992f25e1cb7b6e987d85014ab6b072a63cc1ebcffc609c00d18c1",
+        "artifacts/s07-integration/scaffold-review-attempt1/imperial-0.5-after-close.png": "d27c46541d651c1288dc15cb84b87a0820768dc8d9d6153f51f1e9bd8fc8aef1",
+        "artifacts/s07-integration/scaffold-review-attempt1/imperial-0.5-after-tactical.png": "7ae282935f2339723e66a4919ad6c10b7d19cca874f4e6d27dca3c0ba600fd05",
+        "artifacts/s07-integration/scaffold-review-attempt1/imperial-0.9-after-close.png": "55f6f3f35d7f17f3e8f3378947edf361c3e7313ac738ec2db4ade3a30d365e92",
+        "artifacts/s07-integration/scaffold-review-attempt1/imperial-0.9-after-tactical.png": "f8513f7709d866b5dac95280e37d44a13f259cefe724dd8c0bce02daca139d77",
+        "artifacts/s07-integration/scaffold-review-attempt1/metrics.json": "a9f442df20298d8f510a6e95475e92f9debfd82724721927425fbfb6a677227e",
+        "artifacts/s07-integration/scaffold-review-attempt1/rebel-0.5-after-close.png": "57a428a85f3ff8e74437b1408efbde21b992ea459c5837dbd78c06b561fd0ec4",
+        "artifacts/s07-integration/scaffold-review-attempt1/rebel-0.5-after-tactical.png": "269f203ce824d61004e0abff8ab6471f587cd63cfd16e45b14f87ef9c5148b1b",
+        "artifacts/s07-integration/scaffold-review-attempt1/scaffold-appearance-grid.jpg": "17c80e6309c7da2de78a615d7f069a7c8b4a191aa7b3e566f0a104f6e0b9a703",
+        "artifacts/s07-integration/scaffold-review-attempt1/syndicate-0.5-after-close.png": "00af7cb851c3142b56735a646de2fec994441c38c9d9b9dc471f1f18997462da",
+        "artifacts/s07-integration/scaffold-review-attempt1/syndicate-0.5-after-tactical.png": "4d40fb37226fa0443992f9dd136da2dec391a0df87243fbd0ee697ec9e6b152a"
+      }
     }
   }
 }

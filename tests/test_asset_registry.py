@@ -163,10 +163,11 @@ class RegistryDiscoveryTests(unittest.TestCase):
         self.assertEqual(resolver.resolve('alliance_frigate').revision,
                          resolver.resolve('rebel:frigate').revision)
         for key in ('rebel:corvette', 'imperial:shipyard',
-                    'rebel:attack_satellite', 'rebel:planet_extractor'):
+                    'rebel:attack_satellite', 'rebel:planet_extractor',
+                    'shared:construction_scaffold'):
             with self.subTest(approved_binding=key):
                 self.assertIsNotNone(resolver.resolve(key))
-        for key in ('syndicate:bomber', 'shared:construction_scaffold',
+        for key in ('syndicate:bomber',
                     'environment:temperate', 'menu:cinematic_backdrop'):
             with self.subTest(binding=key):
                 self.assertIsNone(resolver.resolve(key))
@@ -182,8 +183,8 @@ class RegistryDiscoveryTests(unittest.TestCase):
                              (ROOT / f'art/schemas/examples/manifests/{name}.json').read_bytes())
         self.assertTrue(resolver.coverage()['ok'])
         coverage = resolver.coverage()
-        self.assertEqual(len(coverage['authored']), 102)
-        self.assertEqual(len(coverage['procedural']), 17)
+        self.assertEqual(len(coverage['authored']), 103)
+        self.assertEqual(len(coverage['procedural']), 16)
 
     def test_registry_duplicate_bindings_are_not_silently_overwritten(self):
         from render.asset_registry import AssetResolver, AssetError

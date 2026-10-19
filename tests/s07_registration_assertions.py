@@ -13,6 +13,13 @@ S06_DECISIONS = frozenset({
     's06-b8-remaining-combat-2026-10-18', 's06-b9-construction-2026-10-18',
 })
 TRIO = {'rebel:battleship', 'rebel:frigate', 'rebel:shipyard'}
+# The scaffold is registered by a separate, later increment. These are its own two
+# decisions; S06 never inherits them, and this guard proves both exist before it
+# excludes that single row from the S06 counts.
+SCAFFOLD = 'shared:construction_scaffold'
+SCAFFOLD_APPEARANCE = 's07-scaffold-appearance-2026-10-18'
+SCAFFOLD_EXECUTION = 's07-scaffold-registration-2026-10-19'
+SCAFFOLD_BATCH = 'approved-s07-scaffold'
 
 
 def load(root, relative):
@@ -27,7 +34,8 @@ def assert_opt_in_registration(test, root, bindings=None):
     """Check real authority, exact membership, immutable pins and publication receipts.
 
     Appearance approval alone never grants registration. Only the twelve original
-    decisions supply the 99-row increment; later scaffold approval is not inherited.
+    decisions supply the 99-row increment; the later scaffold increment is separate
+    and is proven from its own two decisions before its single row is excluded.
     No substring search over JSON is used for identity or decision membership.
     """
     policy = load(root, 'art/manifests/pipeline_policy.json')
@@ -51,24 +59,40 @@ def assert_opt_in_registration(test, root, bindings=None):
     test.assertEqual({a['shape_key'] for a in approvals['approved_assets']}, TRIO,
                      'registration must not rewrite the historical trio approval list')
     expected = set(approved) | TRIO
+    # Prove the scaffold's own authority before excluding it: the exclusion must
+    # never become a blank cheque for an unrelated row.
+    scaffold_decisions = [d for d in approvals['decision_log'] if d['id'] == SCAFFOLD_APPEARANCE]
+    test.assertEqual(len(scaffold_decisions), 1, 'missing/ambiguous scaffold appearance decision')
+    test.assertEqual(scaffold_decisions[0]['approval_kind'], 'appearance-scaffold-revision')
+    test.assertEqual(scaffold_decisions[0]['owner_words_verbatim'], 'Pictures approved')
+    test.assertEqual([a['gameplay_binding'] for a in scaffold_decisions[0]['revision']['assets']],
+                     [SCAFFOLD], 'the scaffold decision approves exactly the scaffold')
+    executions = [d for d in policy['decision_log'] if d['id'] == SCAFFOLD_EXECUTION]
+    test.assertEqual(len(executions), 1, 'missing/ambiguous scaffold execution authority')
+    test.assertEqual(executions[0]['decision'], 'authorized-execution-not-appearance')
+    separate = {SCAFFOLD}
     registry = load(root, 'assets/models/registry.json')
     rows = {r['binding']: r for r in registry['bindings']}
     test.assertEqual(len(rows), len(registry['bindings']))
-    test.assertEqual({b for b, r in rows.items() if r['status'] == 'core'}, expected,
-                     'only the trio and exact original approved 99 may be core')
+    core = {b for b, r in rows.items() if r['status'] == 'core'}
+    test.assertEqual(core - separate, expected,
+                     'only the trio, the exact original approved 99 and the separately '
+                     'approved scaffold may be core')
+    test.assertTrue(separate <= core, 'the separately approved scaffold is core, not pending')
     pipeline = load(root, 'art/manifests/pipeline.json')
     entries = {a['binding']: a for a in pipeline['assets']}
-    test.assertEqual(set(entries), expected)
-    test.assertEqual(len(pipeline['assets']), 102)
+    test.assertEqual(set(entries) - separate, expected)
+    test.assertEqual(len(pipeline['assets']), 103)
     test.assertEqual(set(pipeline['batches']['approved-s06']), set(approved))
     test.assertEqual(len(pipeline['batches']['approved-s06']), 99)
     manifests = {p.name: load(root, str(p.relative_to(root)))
                  for p in (root / 'assets/models/manifests').glob('*.json')}
     names = {a['identifier'] + '.json' for _, a in approved.values()}
     names.update(('alliance_battleship.json', 'alliance_frigate.json', 'alliance_shipyard.json'))
+    names.update(a['identifier'] + '.json' for a in scaffold_decisions[0]['revision']['assets'])
     test.assertEqual(set(manifests), names)
     test.assertEqual({m['asset'] for m in manifests.values()}, {r['manifest'] for b, r in rows.items()
-                                                            if b in expected})
+                                                            if b in expected | separate})
     receipts = load(root, 'assets/models/approval-receipts.json')['receipts']
     test.assertEqual(set(receipts), {m['asset'] for m in manifests.values()})
     hashes = load(root, 'art/manifests/approved-s06-source-hashes.json')
@@ -106,11 +130,13 @@ def assert_opt_in_registration(test, root, bindings=None):
             for relative, digest in receipt['evidence_sha256'].items():
                 test.assertEqual(sha256(root / relative), digest)
     # Negative controls cover all remaining rows, including later appearance approvals.
-    scaffold = 'shared:construction_scaffold'
-    test.assertEqual(rows[scaffold]['status'], 'procedural_legacy')
-    test.assertNotIn(scaffold, entries)
+    # The scaffold is the one row this guard expects to be registered outside S06, and
+    # only through its own decisions and its own batch.
+    test.assertEqual(rows[SCAFFOLD]['status'], 'core')
+    test.assertEqual(pipeline['batches'][SCAFFOLD_BATCH], [SCAFFOLD])
+    test.assertEqual(entries[SCAFFOLD]['approval']['decision_id'], SCAFFOLD_APPEARANCE)
     for binding, row in rows.items():
-        if binding not in expected:
+        if binding not in expected | separate:
             test.assertIn(row['status'], ('procedural_legacy', 'authoring_pending',
                                          'keep_procedural_proposed', 'out_of_scope'))
             test.assertNotIn(binding, entries)
@@ -131,8 +157,12 @@ def assert_preview_boundary(test, root, bindings):
         selection.configure({'model_preview': True}, asset_root=root)
         for binding in bindings:
             test.assertIsNotNone(selection.mesh_for(binding), selection.diagnostics())
-        for binding in ('shared:construction_scaffold', 'syndicate:bomber', 'syndicate:battleship'):
+        # The separately approved scaffold shares this opt-in path; unregistered
+        # planned hulls still must not resolve.
+        test.assertIsNotNone(selection.mesh_for(SCAFFOLD), selection.diagnostics())
+        for binding in ('syndicate:bomber', 'syndicate:battleship'):
             test.assertIsNone(selection.mesh_for(binding))
         selection.configure({})
         for binding in bindings:
             test.assertIsNone(selection.mesh_for(binding))
+        test.assertIsNone(selection.mesh_for(SCAFFOLD))

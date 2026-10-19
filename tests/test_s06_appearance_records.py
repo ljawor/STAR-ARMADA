@@ -206,11 +206,18 @@ class RegistrationGuardControls(unittest.TestCase):
                     decision['id'] += '-unapproved'
         self.reject_document_change('art/manifests/approvals.json', rename)
 
-    def test_guard_rejects_separately_approved_scaffold_registration(self):
-        def activate(doc):
-            next(r for r in doc['bindings']
-                 if r['binding'] == 'shared:construction_scaffold')['status'] = 'core'
-        self.reject_document_change('assets/models/registry.json', activate)
+    def test_guard_rejects_scaffold_registration_without_its_execution_authority(self):
+        def withdraw(doc):
+            doc['decision_log'] = [d for d in doc['decision_log']
+                                   if d['id'] != 's07-scaffold-registration-2026-10-19']
+        self.reject_document_change('art/manifests/pipeline_policy.json', withdraw)
+
+    def test_guard_rejects_scaffold_registration_under_a_renamed_appearance_decision(self):
+        def rename(doc):
+            for decision in doc['decision_log']:
+                if decision['id'] == 's07-scaffold-appearance-2026-10-18':
+                    decision['id'] += '-unapproved'
+        self.reject_document_change('art/manifests/approvals.json', rename)
 
     def test_guard_rejects_planned_unapproved_syndicate_hull_registration(self):
         def activate(doc):

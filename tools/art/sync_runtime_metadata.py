@@ -54,7 +54,7 @@ def binding_for(row, ships=None):
     raise ValueError(f'Inventory identity has no explicit runtime mapping: {key}')
 
 
-def outputs(root):
+def outputs(root, *, include_scaffold=False):
     def load(relative):
         return json.loads((root / relative).read_text(encoding='utf-8'))
     inventory = load('art/manifests/model_inventory.json')
@@ -121,11 +121,23 @@ def outputs(root):
                 'evidence_sha256': {relative: hashlib.sha256((root / relative).read_bytes()).hexdigest()
                                     for relative in approval['reviewed_evidence']}}
     try:
-        from .s07_registration import publish
+        from .s07_registration import publish, publish_scaffold
     except ImportError:
-        from s07_registration import publish
+        from s07_registration import publish, publish_scaffold
     categories = {mapping[row['canonical_binding']]: row['category'] for row in inventory['rows']}
     registered, new_receipts = publish(root, rows, mapping, categories)
+    # Initial opt-in is explicit; an already published separate batch must not
+    # disappear when ordinary regeneration/CI invokes the historical command.
+    pipeline = json.loads(registered['art/manifests/pipeline.json'])
+    if 'approved-s07-scaffold' in pipeline['batches']:
+        if pipeline['batches']['approved-s07-scaffold'] != ['shared:construction_scaffold']:
+            raise ValueError('invalid separate scaffold registration batch')
+        include_scaffold = True
+    if include_scaffold:
+        scaffold, scaffold_receipts = publish_scaffold(
+            root, rows, mapping, categories, pipeline=pipeline)
+        registered.update(scaffold)
+        new_receipts.update(scaffold_receipts)
     result.update(registered)
     result['assets/models/registry.json'] = encoded(registry)
     receipts.update(new_receipts)
@@ -238,8 +250,10 @@ def main():
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument('--check', action='store_true')
     mode.add_argument('--write', action='store_true')
+    parser.add_argument('--include-scaffold', action='store_true',
+                        help='Explicit separate increment for the approved S07 scaffold; not default activation')
     args = parser.parse_args()
-    expected = outputs(ROOT)
+    expected = outputs(ROOT, include_scaffold=True) if args.include_scaffold else outputs(ROOT)
     destinations = output_destinations(ROOT, expected)
     drift = [path for path, data in expected.items()
              if not destinations[path].is_file() or destinations[path].read_bytes() != data]

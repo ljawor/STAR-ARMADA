@@ -2,7 +2,10 @@
 
 The oracle reads approval-pinned mesh payloads independently of geometry helpers.
 All 102 core bindings have an explicit applicability row; four convoy rows have
-both real consumers. Visibility is real GameState visibility of owned entities.
+both real consumers. The separately registered scaffold is a render-only queue
+prop: selected-payload closure here, native queue/progress/all-role geometry in
+test_s07_construction_runtime.py, not selectable-unit geometry applicability.
+Visibility is real GameState visibility of owned entities.
 No settings, user data, approved bytes or runtime production code are written.
 """
 from collections import Counter
@@ -37,6 +40,23 @@ from tools.art.audit_s07_routes import route_identity
 ROOT = Path(__file__).resolve().parents[1]
 COUNTS = dict(combat_hull=18, squadron=7, construction=8, logistics_hull=4,
               station=40, satellite=8, planet_installation=16, environment_prop=1)
+SCAFFOLD_BINDING = 'shared:construction_scaffold'
+# Frozen original scope: do not derive this set from the current registry.
+ORIGINAL_ROLES = '''attack_satellite battleship bomber colonizer command_station
+constructor convoy corvette cruiser defense_platform defense_satellite energy_relay
+fighter fighter_platform frigate mining_station planet_extractor planet_pulsar_cannon
+planet_shield_generator planet_trade_hub repair_dock research_station sensor_station
+shipyard supercapital trade_station'''.split()
+ORIGINAL_BINDINGS = frozenset(
+    f'{faction}:{role}' for faction in ('confederacy', 'imperial', 'rebel', 'syndicate')
+    for role in ORIGINAL_ROLES
+    if faction != 'syndicate' or role not in ('battleship', 'bomber', 'supercapital')
+) | {'environment:asteroid_field'}
+SCAFFOLD_COVERAGE = (
+    'Render-only construction queue prop, not a selectable unit: no unit bounds, '
+    'contact, camera, scale or picking claim here. Native queue, CPU all-role '
+    'geometry and progress are covered separately by test_s07_construction_runtime.py.'
+)
 RATIOS = dict(fighter_squadron=.6, corvette=1., frigate=1.5, cruiser=2.5,
               battleship=3.5, supercapital=5., construction=1., crew_transport=.8)
 # Unchanged procedural needle's committed all-role Z extrema, not _bounds().
@@ -54,18 +74,23 @@ def catalogue_rows(ds):
     for item in inventory['rows']:
         binding, data_id, entry = route_identity(ds, item['canonical_binding'])
         if binding in core:
+            if binding == SCAFFOLD_BINDING:
+                # Historical route_identity has no unit-data route for this prop.
+                entry = 'render.renderer:Renderer._draw_authored_construction_scaffold'
             consumers[binding].append(dict(canonical=item['canonical_binding'],
                                           data_id=data_id, entry=entry))
     rows = []
     for binding, item in sorted(core.items()):
-        ship = item['category'] in ('combat_hull', 'squadron', 'construction', 'logistics_hull')
+        scaffold = binding == SCAFFOLD_BINDING
+        ship = not scaffold and item['category'] in ('combat_hull', 'squadron', 'construction', 'logistics_hull')
         station = item['category'] in ('station', 'satellite', 'planet_installation')
         rows.append(dict(binding=binding, category=item['category'],
+                         render_only_queue_prop=scaffold,
                          consumers=consumers[binding], manifest=item['manifest'],
                          applicability=dict(selected_mesh=True, all_role_bounds=ship or station,
                                             scale=ship or station, contact=ship or station,
                                             camera_refresh=ship or station, input_pick=ship or station),
-                         exclusions=[] if ship or station else [
+                         exclusions=[SCAFFOLD_COVERAGE] if scaffold else [] if ship or station else [
                              'Asteroid field prop: selected payload closure only; per-instance field '
                              'draw transforms, contact, selection and camera are not ship/station consumers.']))
     return rows
@@ -153,6 +178,7 @@ class SelectedGeometryMatrixTests(unittest.TestCase):
         cls.raw = {r['binding']: raw_geometry(cls.manifests[r['manifest']]) for r in cls.rows}
 
     def fixture(self, row, data_id, *, captured=False):
+        self.assertFalse(row['render_only_queue_prop'], 'Queue prop has no ship/station entity fixture')
         faction = row['binding'].split(':')[0]
         owner = FACTIONS[(FACTIONS.index(faction)+1) % 4] if captured else faction
         state = GameState(players={0: PlayerState(0, faction=owner)})
@@ -253,15 +279,39 @@ class SelectedGeometryMatrixTests(unittest.TestCase):
         self.assertEqual(effect, original)
 
     def test_102_registered_bindings_have_complete_live_consumer_applicability(self):
-        self.assertEqual(len(self.rows), 102)
-        self.assertEqual(Counter(r['category'] for r in self.rows), COUNTS)
-        self.assertEqual(sum(len(r['consumers']) for r in self.rows), 106)
+        self.assertEqual(len(self.rows), 103)
+        self.assertEqual({r['binding'] for r in self.rows}, ORIGINAL_BINDINGS | {SCAFFOLD_BINDING})
+        original = [r for r in self.rows if r['binding'] != SCAFFOLD_BINDING]
+        self.assertEqual(len(original), 102)
+        self.assertEqual({r['binding'] for r in original}, ORIGINAL_BINDINGS)
+        self.assertEqual(Counter(r['category'] for r in original), COUNTS)
+        self.assertEqual(sum(len(r['consumers']) for r in original), 106)
+        self.assertEqual(sum(len(r['consumers']) for r in self.rows), 107)
         for row in self.rows:
             with self.subTest(binding=row['binding']):
                 self.assertTrue(row['consumers'])
+                if row['binding'] in ORIGINAL_BINDINGS:
+                    self.assertFalse(row['render_only_queue_prop'])
+                    if row['binding'] != 'environment:asteroid_field':
+                        self.assertTrue(all(row['applicability'].values()))
+                        self.assertEqual(row['exclusions'], [])
                 self.assertTrue(all(row['applicability'].values()) or row['exclusions'])
                 expected = 2 if row['category'] == 'logistics_hull' else 1
                 self.assertEqual(len(row['consumers']), expected)
+
+    def test_separately_registered_scaffold_has_explicit_render_only_applicability(self):
+        props = [r for r in self.rows if r['render_only_queue_prop']]
+        self.assertEqual([r['binding'] for r in props], [SCAFFOLD_BINDING])
+        row = props[0]
+        self.assertEqual(row['category'], 'construction')
+        self.assertEqual(row['consumers'], [dict(
+            canonical='construction:site:scaffold', data_id=None,
+            entry='render.renderer:Renderer._draw_authored_construction_scaffold')])
+        self.assertEqual(row['applicability'], dict(
+            selected_mesh=True, all_role_bounds=False, scale=False, contact=False,
+            camera_refresh=False, input_pick=False))
+        self.assertEqual(row['exclusions'], [SCAFFOLD_COVERAGE])
+        self.assertTrue(callable(Renderer._draw_authored_construction_scaffold))
 
     def test_selected_revision_payload_and_actual_dispatch_closure(self):
         from render.faction_stations import station_mesh as faction_station_mesh
@@ -283,7 +333,10 @@ class SelectedGeometryMatrixTests(unittest.TestCase):
                 self.assertTrue(mesh is resolved.mesh, binding + ': selected geometry absent/mismatched')
                 self.assert_mesh(mesh, batches)
                 for consumer in row['consumers']:
-                    if consumer['canonical'].startswith('ship:'):
+                    if row['render_only_queue_prop']:
+                        # Real queue dispatch/progress is exercised in construction_runtime.
+                        self.assertEqual(consumer['data_id'], None)
+                    elif consumer['canonical'].startswith('ship:'):
                         faction = binding.split(':')[0]
                         key = ship_visual_key(self.ds, consumer['data_id'], faction)
                         self.assertEqual(key, binding)
@@ -318,6 +371,8 @@ class SelectedGeometryMatrixTests(unittest.TestCase):
 
     def test_ship_consumers_capture_scale_rotated_contact_camera_and_pick(self):
         for row in self.rows:
+            if row['render_only_queue_prop']:
+                continue
             if not row['consumers'][0]['canonical'].startswith('ship:'):
                 continue
             binding = row['binding']

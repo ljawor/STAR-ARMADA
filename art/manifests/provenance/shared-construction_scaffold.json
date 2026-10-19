@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "shared:construction_scaffold",
+  "asset_id": "core:shared/construction_scaffold",
+  "authority": "script",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-19T05:26:19Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/shared_construction_scaffold.blend",
+    "sha256": "8a632fbdf0bba8c43b8c22d40ae1732938cfebe1d02fbf70cdf65b1f78ee2c39"
+  },
+  "exporter": {
+    "path": "tools/art/export_shared_construction_scaffold.py",
+    "sha256": "1396b7fc3e175e852454a23e37ef05b59a24d7e05953bca14bb276f5a405d2c9"
+  },
+  "runtime": {
+    "path": "assets/models/shared_construction_scaffold.mesh.json",
+    "sha256": "1643a7e19731cb6dac7bcce5e4876a0eead1337690418d7897c7b206901e3a0b",
+    "bytes": 193034,
+    "triangles": 3104
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s07-scaffold-source-hashes.json",
+    "sha256": "1643a7e19731cb6dac7bcce5e4876a0eead1337690418d7897c7b206901e3a0b",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

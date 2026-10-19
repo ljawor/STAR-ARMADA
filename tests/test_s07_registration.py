@@ -23,9 +23,15 @@ class RegistrationTests(unittest.TestCase):
         temporary = tempfile.TemporaryDirectory(prefix='s07-registration-')
         self.addCleanup(temporary.cleanup)
         root = Path(temporary.name)
-        paths = set(json.loads(self.generated['art/manifests/approved-s06-source-hashes.json']))
+        paths = set()
+        for name in ('approved-s06-source-hashes.json', 'approved-s07-scaffold-source-hashes.json'):
+            paths.update(json.loads(self.generated['art/manifests/' + name]))
         for receipt in json.loads(self.generated['assets/models/approval-receipts.json'])['receipts'].values():
             paths.update(receipt['evidence_sha256'])
+        approvals = json.loads((ROOT / 'art/manifests/approvals.json').read_bytes())
+        scaffold = next(d for d in approvals['decision_log']
+                        if d['id'] == 's07-scaffold-appearance-2026-10-18')
+        paths.update(scaffold['revision']['assets'][0]['evidence']['sha256'])
         paths.update(['art/manifests/approvals.json', 'art/manifests/pipeline.json',
                       'art/manifests/pipeline_policy.json', 'art/manifests/model_inventory.json'])
         for directory in ['art/manifests/pending', 'art/schemas', 'assets/data/ships']:
@@ -205,7 +211,20 @@ class RegistrationTests(unittest.TestCase):
         trio = original['batches']['approved-trio']
         self.assertEqual([a for a in pipeline['assets'] if a['binding'] in trio],
                          [a for a in original['assets'] if a['binding'] in trio])
-        new = [a for a in pipeline['assets'] if a['binding'] not in trio]
+        original99 = set(pipeline['batches']['approved-s06'])
+        decisions = json.loads((ROOT / 'art/manifests/approvals.json').read_bytes())
+        approved99 = {a['gameplay_binding'] for d in decisions['decision_log']
+                      if d.get('approval_kind') == 'appearance-batch-revisions'
+                      for a in d['revision']['assets']}
+        self.assertEqual(original99, approved99)
+        self.assertEqual(len(original99), 99)
+        self.assertNotIn('shared:construction_scaffold', original99)
+        new = [a for a in pipeline['assets'] if a['binding'] in original99]
+        self.assertEqual({a['binding'] for a in new}, original99)
+        self.assertEqual(pipeline['batches']['approved-s07-scaffold'], ['shared:construction_scaffold'])
+        scaffold = [a for a in pipeline['assets'] if a['binding'] == 'shared:construction_scaffold']
+        self.assertEqual(Counter(a['authority'] for a in scaffold), {'script': 1})
+        self.assertEqual(len(pipeline['assets']), 103)
         self.assertEqual(Counter(a['authority'] for a in new), {'blend': 66, 'script': 33})
         by_binding = {a['binding']: a for a in new}
         self.assertEqual(by_binding['imperial:corvette']['build_args'], ['--asset', 'ship:imperial:corvette'])
@@ -225,7 +244,7 @@ class RegistrationTests(unittest.TestCase):
             self.assertEqual(receipts[asset], original_receipts[asset])
         self.assertFalse(any('/provenance/' in p for p in generated))
 
-    def test_resolver_loads_exact_102_in_assets_only_frozen_root(self):
+    def test_resolver_loads_original_102_plus_separate_scaffold_in_assets_only_frozen_root(self):
         from render.asset_registry import AssetResolver
         from render import asset_selection as selection
         temporary = tempfile.TemporaryDirectory(prefix='s07-frozen-')
@@ -257,8 +276,14 @@ class RegistrationTests(unittest.TestCase):
                 for alias in row.get('legacy_identifiers', []):
                     self.assertEqual(resolver.resolve(alias).revision, resolved.revision)
                 loaded += 1
-        self.assertEqual(loaded, 102)
-        self.assertIsNone(resolver.resolve('shared:construction_scaffold'))
+        self.assertEqual(loaded, 103)
+        pipeline = json.loads(generated['art/manifests/pipeline.json'])
+        original102 = set(pipeline['batches']['approved-s06']) | set(pipeline['batches']['approved-trio'])
+        self.assertEqual(len(original102), 102)
+        self.assertNotIn('shared:construction_scaffold', original102)
+        self.assertEqual({r['binding'] for r in registry['bindings'] if r['status'] == 'core'},
+                         original102 | {'shared:construction_scaffold'})
+        self.assertIsNotNone(resolver.resolve('shared:construction_scaffold'))
         self.assertIsNone(resolver.resolve('syndicate:bomber'))
         inventory = json.loads((ROOT / 'art/manifests/model_inventory.json').read_bytes())
         for planned in inventory['planned_hulls']['hulls']:
@@ -281,7 +306,7 @@ class RegistrationTests(unittest.TestCase):
             selection.configure({'model_preview': True}, asset_root=root)
             self.assertIsNotNone(selection.mesh_for('rebel:corvette'))
             self.assertIsNotNone(selection.mesh_for('imperial:command_station'))
-            self.assertIsNone(selection.mesh_for('shared:construction_scaffold'))
+            self.assertIsNotNone(selection.mesh_for('shared:construction_scaffold'))
             selection.configure({'model_preview': False}, asset_root=root)
             self.assertIsNone(selection.mesh_for('rebel:corvette'))
 
@@ -342,15 +367,15 @@ class RegistrationTests(unittest.TestCase):
                         if d.get('approval_kind') == 'appearance-batch-revisions'
                         for a in d['revision']['assets'])
         self.assertEqual(len(expected), 102)
-        self.assertEqual(approved, expected)
-        self.assertNotIn('shared:construction_scaffold', approved)
+        self.assertNotIn('shared:construction_scaffold', expected)
+        self.assertEqual(approved, expected | {'shared:construction_scaffold'})
         self.assertNotIn('syndicate:bomber', approved)
         self.assertNotIn('confederacy:supercarrier', approved)
         self.assertEqual(generated, outputs(ROOT))
         manifests = [json.loads(v) for k, v in generated.items()
                      if k.startswith('assets/models/manifests/')]
-        self.assertEqual(len(manifests), 102)
-        self.assertEqual(len(json.loads(generated['assets/models/approval-receipts.json'])['receipts']), 102)
+        self.assertEqual(len(manifests), 103)
+        self.assertEqual(len(json.loads(generated['assets/models/approval-receipts.json'])['receipts']), 103)
 
 
 if __name__ == '__main__':

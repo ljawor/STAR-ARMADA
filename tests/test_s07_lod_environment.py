@@ -2,8 +2,8 @@
 
 AST extraction executes unchanged production bodies without importing/constructing
 Renderer or opening GL. GL entry points and display-list lookup are recording
-seams, not rasterization. This pins existing cached/uncached differences; it is
-neither visual parity nor mesh LOD acceptance.
+seams, not rasterization. Authored ships keep all roles; legacy ships retain
+cached role suppression. This is neither pixel parity nor mesh LOD acceptance.
 """
 import ast
 from contextlib import nullcontext
@@ -170,23 +170,26 @@ def remove_rock_rng_before_selected(nodes):
 
 
 class S07LodEnvironmentTests(unittest.TestCase):
-    def test_registered_representatives_cached_thresholds_and_uncached_difference(self):
+    def test_registered_representatives_authored_parity_and_legacy_thresholds(self):
         registry = json.loads((ROOT / 'assets/models/registry.json').read_text(encoding='utf-8'))
         rows = {row['binding']: row for row in registry['bindings']}
         ns = production_namespace()
         evidence = []
         for binding in SHIP_BINDINGS:
             self.assertEqual(rows[binding]['status'], 'core')
-            for px in PIXELS:
-                with self.subTest(binding=binding, apparent=px):
-                    cached = observed_roles(ns, binding, px)
-                    uncached = observed_roles(ns, binding, px, uncached=True)
-                    self.assertEqual(cached, expected_roles(px))
-                    self.assertEqual(uncached, ROLES)
-                    self.assertEqual(cached == uncached, px >= 34.)
-                    evidence.append({'binding': binding, 'apparent': px,
-                                     'cached': cached, 'uncached': uncached})
-        print('LOD_EXISTING_SEMANTICS_NOT_PARITY_OR_MESH_LOD ' + json.dumps(evidence))
+            for authored in (True, False):
+                ns['is_authored'] = lambda key, selected=authored: selected
+                for px in PIXELS:
+                    with self.subTest(binding=binding, authored=authored, apparent=px):
+                        cached = observed_roles(ns, binding, px)
+                        uncached = observed_roles(ns, binding, px, uncached=True)
+                        self.assertEqual(cached, ROLES if authored else expected_roles(px))
+                        self.assertEqual(uncached, ROLES)
+                        self.assertEqual(cached == uncached, authored or px >= 34.)
+                        evidence.append({'binding': binding, 'authored': authored,
+                                         'apparent': px, 'cached': cached,
+                                         'uncached': uncached})
+        print('LOD_ROLE_SUBMISSION_NOT_PIXEL_PARITY_OR_MESH_LOD ' + json.dumps(evidence))
 
     def test_registered_station_controls_keep_all_roles_at_every_threshold(self):
         rows = {r['binding']: r for r in json.loads(
@@ -244,7 +247,9 @@ class S07LodEnvironmentTests(unittest.TestCase):
                 raise AssertionError('threshold control target is no longer unique')
             loop.body = [n for n in loop.body if n not in removed]
             return nodes
-        observed = observed_roles(production_namespace(defix), SHIP_BINDINGS[0], 16. - EPS)
+        ns = production_namespace(defix)
+        ns['is_authored'] = lambda binding: False
+        observed = observed_roles(ns, SHIP_BINDINGS[0], 16. - EPS)
         with self.assertRaises(AssertionError):
             self.assertEqual(observed, expected_roles(16. - EPS))
         print('NEGATIVE_CONTROL_CAUGHT removed_actual_role_suppression')

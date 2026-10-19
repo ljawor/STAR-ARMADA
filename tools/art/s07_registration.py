@@ -42,6 +42,8 @@ def pin(root, relative, expected):
 
 def evidence_for(root, decision, asset, sidecar, sheet):
     """Validate the original capture relationship, not arbitrary newly hashed files."""
+    if decision.get('approval_kind') == 'appearance-scaffold-revision':
+        return scaffold_evidence(root, asset, sidecar)
     binding = asset['gameplay_binding']
     mesh_path, mesh_sha = next((p, h) for p, h in asset['runtime'].items() if p.endswith('.mesh.json'))
     record = asset.get('evidence') or decision['revision'].get('evidence')
@@ -127,7 +129,14 @@ def publish(root, registry_rows, mapping, categories):
     specimens = [(d, a) for d in decisions for a in d['revision']['assets']]
     if len(specimens) != 99 or len({a['gameplay_binding'] for _, a in specimens}) != 99:
         raise ValueError('expected exactly 99 unique S06 approved specimens')
+    return _publish_specimens(root, registry_rows, categories, specimens, HASHES, 'approved-s06',
+                              'Registered from original S06 revision approval.')
+
+
+def _publish_specimens(root, registry_rows, categories, specimens, hash_path, batch, notes,
+                       pipeline=None, reserved_identifiers=()):
     identifiers = {p.stem.casefold() for p in (root / 'art/schemas/examples/manifests').glob('*.json')}
+    identifiers.update(reserved_identifiers)
     for _, asset in specimens:
         identifier = asset.get('identifier')
         if (not isinstance(identifier, str)
@@ -165,7 +174,8 @@ def publish(root, registry_rows, mapping, categories):
         sidecar = sidecars[runtime]
         if sidecar.get('appearance_decision') != decision['id']:
             raise ValueError('sidecar approval mismatch: ' + binding)
-        for group, approved in [('source', 'source'), ('initial_seed', 'exporter'),
+        scaffold = batch == 'approved-s07-scaffold'
+        for group, approved in [('source', 'source'), ('initial_seed', 'source' if scaffold else 'exporter'),
                                 ('export_script', 'exporter'), ('runtime', 'runtime')]:
             record = sidecar[group]
             if asset[approved].get(record['path']) != record['sha256']:
@@ -173,11 +183,14 @@ def publish(root, registry_rows, mapping, categories):
         authority = asset['source_authority'].split('-', 1)[0]
         if sidecar['authority'] != authority:
             raise ValueError('sidecar authority mismatch: ' + binding)
-        sheet = sheets.get(binding)
+        sheet = None if scaffold else sheets.get(binding)
         if sheet and sheet.get('appearance_decision') != decision['id']:
             raise ValueError('batch approval mismatch: ' + binding)
         build_args = shlex.split(sidecar['initial_seed'].get('selects') or '')
-        if sheet:
+        if scaffold:
+            if build_args != ['--asset', 'shared:construction_scaffold']:
+                raise ValueError('original scaffold seed selector mismatch')
+        elif sheet:
             specimen = next(a for a in sheet['assets'] if a['binding'] == binding)
             expected_args = shlex.split(specimen.get('seed_arg') or '')
             if build_args != expected_args or '--replace-seed' in build_args:
@@ -204,7 +217,7 @@ def publish(root, registry_rows, mapping, categories):
             'provenance': {'author': 'Lukasz Jawor', 'tool': 'Blender',
                            'tool_version': sidecar.get('authoring', 'Blender evaluated bevel mesh'),
                            'license': 'original', 'source': sidecar['source']['path'],
-                           'notes': 'Registered from original S06 revision approval. No rebuild or fresh export is attested.'},
+                           'notes': notes + ' No rebuild or fresh export is attested.'},
             'requires': {'min_engine': '0.15.1', 'material_profile': 'core:fleet/standard'},
             'budgets': {'triangles': payload['triangle_count'], 'draw_calls': len(payload['batches']), 'texture_bytes': 0},
             'approval': {'status': 'approved', 'decision_id': decision['id'], 'decided_by': 'owner',
@@ -227,15 +240,110 @@ def publish(root, registry_rows, mapping, categories):
                         'source': sidecar['source']['path'], 'exporter': sidecar['initial_seed']['path'],
                         'export_script': sidecar['export_script']['path'],
                         'build_args': build_args,
-                        'export_args': [], 'runtime': runtime, 'expected_hashes': HASHES,
+                        'export_args': [], 'runtime': runtime, 'expected_hashes': hash_path,
                         'expected_triangles': payload['triangle_count'],
                         'advisory_budget_triangles': 11888, 'category': categories[binding],
                         'roles': sorted(payload['batches']), 'coordinates': 'X beam; Y up; +Z forward; nominal game model units',
                         'approval': {'decision_id': decision['id'], 'record': 'art/manifests/approvals.json'}})
-    pipeline = load(root, 'art/manifests/pipeline.json')
+    if pipeline is None:
+        pipeline = load(root, 'art/manifests/pipeline.json')
     registered = {e['binding'] for e in entries}
     pipeline['assets'] = [e for e in pipeline['assets'] if e['binding'] not in registered] + entries
-    pipeline['batches']['approved-s06'] = sorted(registered)
+    pipeline['batches'][batch] = sorted(registered)
     result['art/manifests/pipeline.json'] = encoded(pipeline)
-    result[HASHES] = encoded(dict(sorted(hashes.items())))
+    result[hash_path] = encoded(dict(sorted(hashes.items())))
+    return result, receipts
+
+
+def scaffold_evidence(root, asset, sidecar):
+    """Attest the pinned production-seam review, not a newly generated capture."""
+    record = asset['evidence']
+    paths = record['sha256']
+    if (not paths or record['grid'] != record['sheet']
+            or sidecar.get('evidence') != record['sheet']
+            or not {record['sheet'], record['metrics']} <= paths.keys()):
+        raise ValueError('scaffold original evidence relationship mismatch')
+    for relative, expected in paths.items():
+        pin(root, relative, expected)
+    metrics = load(root, record['metrics'])
+    sha = asset['runtime']['assets/models/shared_construction_scaffold.mesh.json']
+    if (record['captured_runtime_sha256'] != sha
+            or metrics.get('runtime_sha256') != sha
+            or metrics.get('binding') != 'shared:construction_scaffold'
+            or metrics.get('source') != record['capture_code_sha256']):
+        raise ValueError('scaffold original evidence/runtime provenance mismatch')
+    # The manifest's reviewed_evidence list has a 24-item contract ceiling.
+    # Keep the sheet, report, all approved after-frames and role ablations there;
+    # the original approval record separately retains ALL pinned evidence.
+    return sorted(p for p in paths if p in (record['sheet'], record['metrics'])
+                  or '-after-' in Path(p).name or '-ablated-' in Path(p).name)
+
+
+def publish_scaffold(root, registry_rows, mapping, categories, *, pipeline=None):
+    """Explicit, separate increment; appearance is not runtime/default acceptance.
+
+    The continuation policy permits opt-in registration of appearance-approved
+    revisions. Its still-unapproved-scaffold exclusion is not an approval: require
+    the later independent scaffold decision, never the original B9 ship decision.
+    Callers must explicitly request this increment; it does not enlarge S06.
+    """
+    root = Path(root)
+    policy = load(root, 'art/manifests/pipeline_policy.json')
+    authorities = [d for d in policy['decision_log']
+                   if d['id'] == 's07-opt-in-continuation-2026-10-18'
+                   and d.get('decision') == 'authorized-execution-not-appearance']
+    if len(authorities) != 1:
+        raise ValueError('S07 scaffold registration requires explicit opt-in execution authority')
+    separate = [d for d in policy['decision_log']
+                if d['id'] == 's07-scaffold-registration-2026-10-19'
+                and d.get('decision') == 'authorized-execution-not-appearance'
+                and d.get('appearance_authority') == 's07-scaffold-appearance-2026-10-18']
+    if len(separate) != 1:
+        raise ValueError('separate scaffold execution authority required')
+    approvals = load(root, 'art/manifests/approvals.json')
+    decisions = [d for d in approvals['decision_log']
+                 if d['id'] == 's07-scaffold-appearance-2026-10-18']
+    if (len(decisions) != 1 or decisions[0].get('decision') != 'approved'
+            or decisions[0].get('approval_kind') != 'appearance-scaffold-revision'):
+        raise ValueError('separate scaffold appearance approval required')
+    decision = decisions[0]
+    specimens = decision['revision']['assets']
+    if (len(specimens) != 1
+            or specimens[0].get('gameplay_binding') != 'shared:construction_scaffold'
+            or specimens[0].get('identifier') != 'shared_construction_scaffold'
+            or specimens[0].get('source_authority') != 'script-authoritative'):
+        raise ValueError('expected exactly the separately approved scaffold revision')
+    if (mapping.get('construction:site:scaffold') != 'shared:construction_scaffold'
+            or categories.get('shared:construction_scaffold') != 'construction'):
+        raise ValueError('scaffold current inventory relationship mismatch')
+    asset = specimens[0]
+    paths = {'art/manifests/approvals.json', 'art/manifests/pipeline_policy.json',
+             'art/manifests/pending/S06-SHARED-CONSTRUCTION-SCAFFOLD.json'}
+    for group in ('source', 'exporter', 'runtime'):
+        paths.update(asset[group])
+    paths.update(asset['evidence']['sha256'])
+    names, inodes = set(), set()
+    base = root.resolve()
+    for relative in sorted(paths):
+        target = safe_file(base, relative)
+        if any(component.is_symlink() for component in (target, *target.parents)
+               if component != base and component.is_relative_to(base)):
+            raise ValueError('unsafe scaffold input symlink: ' + relative)
+        info = target.stat()
+        inode = (info.st_dev, info.st_ino)
+        if relative.casefold() in names or inode in inodes:
+            raise ValueError('conflicting scaffold input alias: ' + relative)
+        names.add(relative.casefold())
+        inodes.add(inode)
+    reserved = {a['identifier'] for d in approvals['decision_log']
+                if d.get('approval_kind') == 'appearance-batch-revisions'
+                for a in d['revision']['assets']}
+    result, receipts = _publish_specimens(root, registry_rows, categories, [(decision, specimens[0])],
+                              'art/manifests/approved-s07-scaffold-source-hashes.json',
+                              'approved-s07-scaffold',
+                              'Registered from separate S07 scaffold revision approval.',
+                              pipeline=pipeline, reserved_identifiers=reserved)
+    # The build validates every original evidence pin above and approvals.json
+    # retains that complete map. Runtime receipts must match exactly the bounded
+    # reviewed_evidence identities in their manifest (the resolver enforces it).
     return result, receipts

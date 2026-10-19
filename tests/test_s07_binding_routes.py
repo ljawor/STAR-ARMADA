@@ -31,6 +31,8 @@ class BindingRouteAuditTests(unittest.TestCase):
         self.assertEqual(rows['station:imperial:shipyard']['runtime_binding'], 'imperial:shipyard')
         self.assertEqual(rows['hardware:construction:rebel:planet_extractor']['data_id'],
                          'planet_extractor')
+        self.assertEqual(report['counts'], {'selected': 107, 'deferred_texture_pipeline': 10,
+                                             'outside_mesh_catalogue': 3})
         self.assertEqual(report['errors'], [])
         self.assertTrue(all(not r['runtime_integration_proven'] for r in report['rows']))
 
@@ -46,7 +48,13 @@ class BindingRouteAuditTests(unittest.TestCase):
         self.assertTrue(selected['geometry_dispatch_proven'])
         self.assertEqual(selected['geometry_dispatch_identity'], 'rebel:frigate')
         self.assertGreater(selected['triangles'], 0)
-        self.assertEqual(rows['construction:site:scaffold']['disposition'], 'approved_not_registered')
+        scaffold = rows['construction:site:scaffold']
+        self.assertEqual(scaffold['disposition'], 'selected')
+        # This CPU audit does not exercise the construction renderer's dispatch.
+        self.assertFalse(scaffold['geometry_dispatch_proven'])
+        self.assertFalse(scaffold['cpu_dispatch_exercised'])
+        self.assertIsNone(scaffold['geometry_dispatch_identity'])
+        self.assertTrue(scaffold['approval_mesh_match'])
         self.assertEqual(rows['environment:temperate']['disposition'], 'deferred_texture_pipeline')
         self.assertEqual(rows['menu:cinematic:backdrop']['disposition'], 'outside_mesh_catalogue')
         # Deliberately break the real consumer, not the selection predicate.

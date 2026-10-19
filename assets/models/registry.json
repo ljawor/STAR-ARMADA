@@ -2242,7 +2242,23 @@
         "class_or_kind": "construction_scaffold"
       },
       "manifest": "core:shared/construction_scaffold",
-      "status": "procedural_legacy"
+      "status": "core",
+      "legacy_identifiers": [
+        "shared_construction_scaffold"
+      ],
+      "envelope": {
+        "min": [
+          -50.0,
+          0.0,
+          -50.0
+        ],
+        "max": [
+          50.0,
+          50.0,
+          50.0
+        ]
+      },
+      "envelope_decision": "s07-scaffold-appearance-2026-10-18"
     },
     {
       "binding": "syndicate:attack_satellite",
