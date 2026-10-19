@@ -1,0 +1,15 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_menu_movie.py"
+  ],
+  "pid": 88221,
+  "exit_code": 0,
+  "timed_out": false,
+  "deadline_seconds": 45.0,
+  "elapsed_seconds": 0.348,
+  "log": "artifacts/s07-runtime-final/movie-pytest-final.txt"
+}

@@ -1,0 +1,7 @@
+test_authored_station_roles_submit_identical_material_state (test_s07_material_parity.MaterialParityTests.test_authored_station_roles_submit_identical_material_state) ... ok
+test_legacy_station_accent_retains_original_alloy_material (test_s07_material_parity.MaterialParityTests.test_legacy_station_accent_retains_original_alloy_material) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.385s
+
+OK

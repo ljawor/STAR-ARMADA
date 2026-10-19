@@ -1,0 +1,17 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "tools/build_menu_movie.py",
+    "--model-preview",
+    "--output-dir",
+    "artifacts/s07-runtime-final/candidate-movie-final-attempt1",
+    "--asset",
+    "artifacts/s07-runtime-final/candidate-movie-final-attempt1/review/candidate.zip"
+  ],
+  "pid": 87263,
+  "exit_code": 0,
+  "timed_out": false,
+  "deadline_seconds": 180.0,
+  "elapsed_seconds": 27.867,
+  "log": "artifacts/s07-runtime-final/candidate-movie-final-attempt1.txt"
+}

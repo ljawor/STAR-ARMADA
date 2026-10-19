@@ -1,0 +1,17 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "unittest",
+    "-v",
+    "test_s07_registration",
+    "test_s07_scaffold_registration",
+    "test_s07_binding_routes"
+  ],
+  "pid": 86472,
+  "exit_code": 0,
+  "timed_out": false,
+  "deadline_seconds": 90.0,
+  "elapsed_seconds": 27.381,
+  "log": "artifacts/s07-runtime-final/scaffold-fixture-attempt4.txt"
+}

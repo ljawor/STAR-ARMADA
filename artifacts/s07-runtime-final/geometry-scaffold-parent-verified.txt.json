@@ -1,0 +1,16 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "unittest",
+    "-v",
+    "test_s07_selected_geometry_matrix",
+    "test_s07_construction_runtime"
+  ],
+  "pid": 87534,
+  "exit_code": 0,
+  "timed_out": false,
+  "deadline_seconds": 90.0,
+  "elapsed_seconds": 15.822,
+  "log": "artifacts/s07-runtime-final/geometry-scaffold-parent-verified.txt"
+}

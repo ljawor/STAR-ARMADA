@@ -1,0 +1,10 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) ... ok
+test_stale_removed_targets_and_unsensed_historical_positions (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_stale_removed_targets_and_unsensed_historical_positions) ... ok
+test_visibility_gate_defixed_negative_control_fails_real_guard (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_visibility_gate_defixed_negative_control_fails_real_guard) ... ok
+test_visible_selected_hulls_use_raw_mesh_and_copy_effects (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_visible_selected_hulls_use_raw_mesh_and_copy_effects) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.128s
+
+OK

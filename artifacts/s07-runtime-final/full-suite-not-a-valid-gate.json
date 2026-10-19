@@ -1,0 +1,38 @@
+{
+  "suite": "single-process full suite (unittest discover)",
+  "valid_gate": false,
+  "validity_problem": "tests/test_weapon_sfx.py sets SDL_VIDEODRIVER=dummy at module import, process-wide; later GL modules then cannot create a context and either error or hang. This predates the branch and is the documented mixed-driver hazard.",
+  "aborted_at_completed": 1910,
+  "of_total": 2206,
+  "ok": 1879,
+  "failures": [
+    "test_audio.TestShutdown.test_the_exit_probe_reproduces_and_clears_the_crash",
+    "test_crew_recovery_ui.RecoveryUITests.test_faction_transports_have_small_known_solid_visuals",
+    "test_model_coverage_reconciliation.CoverageReconciliation.test_cli_rejects_stale_report_and_approval_corruption_without_writing"
+  ],
+  "errors": [
+    "test_lan_recovery_handoff.HandoffTests.test_application_install_validates_then_rebuilds_real_graph",
+    "test_lan_recovery_ui.RecoveryUITests.test_registered_fixture_cleanups_do_not_destroy_shared_font_ownership",
+    "test_model_context_lifecycle.ModelContextLifecycleTests.test_display_lists_are_content_keyed_for_additive_assets",
+    "test_model_context_lifecycle.ModelContextLifecycleTests.test_real_renderer_blocks_switch_until_teardown_and_context_recreation",
+    "test_renderer_constructor_cleanup.ConstructorCleanupTests.test_cleanup_error_does_not_stop_other_resource_release",
+    "test_renderer_constructor_cleanup.ConstructorCleanupTests.test_failure_after_geometry_primitive_begins",
+    "test_renderer_constructor_cleanup.ConstructorCleanupTests.test_failure_after_list_compilation_begins",
+    "test_renderer_constructor_cleanup.ConstructorCleanupTests.test_failure_after_list_compilation_ends",
+    "test_renderer_constructor_cleanup.ConstructorCleanupTests.test_failure_before_geometry_primitive_ends",
+    "test_renderer_constructor_cleanup.ConstructorCleanupTests.test_failure_inside_sphere_geometry",
+    "test_renderer_constructor_cleanup.ConstructorCleanupTests.test_geometry_cleanup_error_preserves_original_failure",
+    "test_renderer_constructor_cleanup.ConstructorCleanupTests.test_late_constructor_failure_releases_all_allocations",
+    "test_renderer_constructor_cleanup.ConstructorCleanupTests.test_material_helper_failure_after_allocation_releases_programs",
+    "test_renderer_constructor_cleanup.ConstructorCleanupTests.test_normal_close_releases_real_lazy_textures_and_lists_once",
+    "test_renderer_constructor_cleanup.ConstructorCleanupTests.test_program_only_stages_release_allocations",
+    "test_renderer_constructor_cleanup.ConstructorCleanupTests.test_real_installer_partial_constructor_failure_keeps_live_graph",
+    "test_renderer_constructor_cleanup.ConstructorCleanupTests.test_real_shader_stage_failures_keep_fixed_pipeline_fallback_leak_free",
+    "test_renderer_constructor_cleanup.ConstructorCleanupTests.test_sphere_helper_failure_after_return_value_allocated"
+  ],
+  "skipped": 10,
+  "hung_test": "test_ship_material_passes.ShipMaterialPassTests.test_authored_surface_removes_hatch_without_changing_default_material",
+  "hung_seconds_before_kill": 1688.6,
+  "log": "artifacts/s07-runtime-final/full-suite-bounded.log",
+  "next": "run GL-dependent modules individually with a real driver, and classify the three failures against pristine 56906ea"
+}

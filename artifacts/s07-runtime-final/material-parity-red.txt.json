@@ -1,0 +1,15 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "unittest",
+    "-v",
+    "test_s07_material_parity"
+  ],
+  "pid": 84558,
+  "exit_code": 1,
+  "timed_out": false,
+  "deadline_seconds": 20.0,
+  "elapsed_seconds": 0.306,
+  "log": "artifacts/s07-runtime-final/material-parity-red.txt"
+}

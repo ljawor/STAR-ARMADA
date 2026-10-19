@@ -1,0 +1,23 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "unittest",
+    "-v",
+    "test_model_context_lifecycle",
+    "test_ship_material_passes",
+    "test_s07_construction_runtime",
+    "test_s07_construction_seam",
+    "test_s07_scaffold_approval",
+    "test_s07_hidden_contact_acceptance",
+    "test_s07_material_parity",
+    "test_s07_authored_lod_parity",
+    "test_s07_lod_environment"
+  ],
+  "pid": 86401,
+  "exit_code": 1,
+  "timed_out": false,
+  "deadline_seconds": 90.0,
+  "elapsed_seconds": 10.294,
+  "log": "artifacts/s07-runtime-final/lifecycle-material-scaffold-attempt2.txt"
+}

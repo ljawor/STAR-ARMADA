@@ -1,0 +1,39 @@
+test_authored_roles_submit_identical_material_shader_and_enable_state (test_s07_material_parity.MaterialParityTests.test_authored_roles_submit_identical_material_shader_and_enable_state) ... ok
+test_authored_station_roles_submit_identical_material_state (test_s07_material_parity.MaterialParityTests.test_authored_station_roles_submit_identical_material_state) ... 
+  test_authored_station_roles_submit_identical_material_state (test_s07_material_parity.MaterialParityTests.test_authored_station_roles_submit_identical_material_state) (shader_available=True) ... FAIL
+  test_authored_station_roles_submit_identical_material_state (test_s07_material_parity.MaterialParityTests.test_authored_station_roles_submit_identical_material_state) (shader_available=False) ... FAIL
+test_legacy_station_accent_retains_original_alloy_material (test_s07_material_parity.MaterialParityTests.test_legacy_station_accent_retains_original_alloy_material) ... ok
+test_legacy_uncached_accent_retains_original_trim_metal (test_s07_material_parity.MaterialParityTests.test_legacy_uncached_accent_retains_original_trim_metal) ... ok
+
+======================================================================
+FAIL: test_authored_station_roles_submit_identical_material_state (test_s07_material_parity.MaterialParityTests.test_authored_station_roles_submit_identical_material_state) (shader_available=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_material_parity.py", line 62, in test_authored_station_roles_submit_identical_material_state
+    self.assertEqual(cached, uncached)
+AssertionError: Lists differ: [{'ke[64 chars]: (0.42, 0.42, 0.42)}, 'shader': {'materialPas[859 chars]lse}] != [{'ke[64 chars]: (0.5, 0.55, 0.62)}, 'shader': {'materialPass[857 chars]lse}]
+
+First differing element 0:
+{'key[63 chars]: (0.42, 0.42, 0.42)}, 'shader': {'materialPas[63 chars]True}
+{'key[63 chars]: (0.5, 0.55, 0.62)}, 'shader': {'materialPass[62 chars]True}
+
+Diff is 1831 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_authored_station_roles_submit_identical_material_state (test_s07_material_parity.MaterialParityTests.test_authored_station_roles_submit_identical_material_state) (shader_available=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_material_parity.py", line 62, in test_authored_station_roles_submit_identical_material_state
+    self.assertEqual(cached, uncached)
+AssertionError: Lists differ: [{'ke[64 chars]: (0.42, 0.42, 0.42)}, 'shader': None, 'lighti[736 chars]lse}] != [{'ke[64 chars]: (0.5, 0.55, 0.62)}, 'shader': None, 'lightin[734 chars]lse}]
+
+First differing element 0:
+{'key[63 chars]: (0.42, 0.42, 0.42)}, 'shader': None, 'lighti[22 chars]True}
+{'key[63 chars]: (0.5, 0.55, 0.62)}, 'shader': None, 'lightin[21 chars]True}
+
+Diff is 1708 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.650s
+
+FAILED (failures=2)

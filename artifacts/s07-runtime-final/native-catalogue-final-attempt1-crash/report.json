@@ -1,0 +1,4019 @@
+{
+  "schema": 1,
+  "status": "running",
+  "renderer_sha256": "9aff34140aa3d458eec358a2d87e64d4d4277c924ca198d507e4d29983350f3c",
+  "harness_sha256": "ad653a04785abe4dd97eef8ff8baadd5d183d2011231495b6b07c61b66758112",
+  "expected_bindings": [
+    "confederacy:attack_satellite",
+    "confederacy:battleship",
+    "confederacy:bomber",
+    "confederacy:colonizer",
+    "confederacy:command_station",
+    "confederacy:constructor",
+    "confederacy:convoy",
+    "confederacy:corvette",
+    "confederacy:cruiser",
+    "confederacy:defense_platform",
+    "confederacy:defense_satellite",
+    "confederacy:energy_relay",
+    "confederacy:fighter",
+    "confederacy:fighter_platform",
+    "confederacy:frigate",
+    "confederacy:mining_station",
+    "confederacy:planet_extractor",
+    "confederacy:planet_pulsar_cannon",
+    "confederacy:planet_shield_generator",
+    "confederacy:planet_trade_hub",
+    "confederacy:repair_dock",
+    "confederacy:research_station",
+    "confederacy:sensor_station",
+    "confederacy:shipyard",
+    "confederacy:supercapital",
+    "confederacy:trade_station",
+    "imperial:attack_satellite",
+    "imperial:battleship",
+    "imperial:bomber",
+    "imperial:colonizer",
+    "imperial:command_station",
+    "imperial:constructor",
+    "imperial:convoy",
+    "imperial:corvette",
+    "imperial:cruiser",
+    "imperial:defense_platform",
+    "imperial:defense_satellite",
+    "imperial:energy_relay",
+    "imperial:fighter",
+    "imperial:fighter_platform",
+    "imperial:frigate",
+    "imperial:mining_station",
+    "imperial:planet_extractor",
+    "imperial:planet_pulsar_cannon",
+    "imperial:planet_shield_generator",
+    "imperial:planet_trade_hub",
+    "imperial:repair_dock",
+    "imperial:research_station",
+    "imperial:sensor_station",
+    "imperial:shipyard",
+    "imperial:supercapital",
+    "imperial:trade_station",
+    "rebel:attack_satellite",
+    "rebel:battleship",
+    "rebel:bomber",
+    "rebel:colonizer",
+    "rebel:command_station",
+    "rebel:constructor",
+    "rebel:convoy",
+    "rebel:corvette",
+    "rebel:cruiser",
+    "rebel:defense_platform",
+    "rebel:defense_satellite",
+    "rebel:energy_relay",
+    "rebel:fighter",
+    "rebel:fighter_platform",
+    "rebel:frigate",
+    "rebel:mining_station",
+    "rebel:planet_extractor",
+    "rebel:planet_pulsar_cannon",
+    "rebel:planet_shield_generator",
+    "rebel:planet_trade_hub",
+    "rebel:repair_dock",
+    "rebel:research_station",
+    "rebel:sensor_station",
+    "rebel:shipyard",
+    "rebel:supercapital",
+    "rebel:trade_station",
+    "shared:construction_scaffold",
+    "syndicate:attack_satellite",
+    "syndicate:colonizer",
+    "syndicate:command_station",
+    "syndicate:constructor",
+    "syndicate:convoy",
+    "syndicate:corvette",
+    "syndicate:cruiser",
+    "syndicate:defense_platform",
+    "syndicate:defense_satellite",
+    "syndicate:energy_relay",
+    "syndicate:fighter",
+    "syndicate:fighter_platform",
+    "syndicate:frigate",
+    "syndicate:mining_station",
+    "syndicate:planet_extractor",
+    "syndicate:planet_pulsar_cannon",
+    "syndicate:planet_shield_generator",
+    "syndicate:planet_trade_hub",
+    "syndicate:repair_dock",
+    "syndicate:research_station",
+    "syndicate:sensor_station",
+    "syndicate:shipyard",
+    "syndicate:trade_station"
+  ],
+  "rows": [
+    {
+      "binding": "confederacy:attack_satellite",
+      "category": "satellite",
+      "data_id": "attack_satellite",
+      "revision": "3c9ced4b176aad3188e338d21ff199246bd15c289078de5a01ee32333cfb1426",
+      "captures": {
+        "red": {
+          "file": "confederacy-attack_satellite-red.png",
+          "sha256": "651d877db049830770301df751bb466500aa8ca533412f64a6db73a83d4f1a0d",
+          "state_sha256": "72ca23947fad9a14c757ddf215be1d66e8a0a4177448ca3db48dd212de78e041",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "confederacy-attack_satellite-blue.png",
+          "sha256": "83ec3b2da1eead8b6ce5c620ce80cd68b0ae0c0a5c87e8c4f49961d6073e9afa",
+          "state_sha256": "dbc1935f651a692d2b69db6650c7ade0d4050e4f09e39ab0cafc1bb276557b8b",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "confederacy-attack_satellite-subject-disabled.png",
+          "sha256": "f8e109488dae33b665f380fd25fc5868f21cdd83a8adf430c0221297fe17fe38",
+          "state_sha256": "07691ce2bdc478448e747b58fedd7100b4a9d56949699180a08e15bcf2b5f89b",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "confederacy-attack_satellite-restored.png",
+          "sha256": "83ec3b2da1eead8b6ce5c620ce80cd68b0ae0c0a5c87e8c4f49961d6073e9afa",
+          "state_sha256": "88a1d1cc0ff5cc2f1a434e9786c119824aa2d68c3e4c8995fac2e863ff55eb73",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "confederacy-attack_satellite-orbit-0.png",
+          "sha256": "a70e5ea7dd12ed6a2c0082c3fd9cccf0d3215bb69a86d86fbdd33bfb9af60871",
+          "state_sha256": "88a1d1cc0ff5cc2f1a434e9786c119824aa2d68c3e4c8995fac2e863ff55eb73",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "confederacy-attack_satellite-orbit-1.png",
+          "sha256": "5e2725deec3ce74b3663e7a77cb3481acffabbe737d654f3594c5f21da8b5555",
+          "state_sha256": "88a1d1cc0ff5cc2f1a434e9786c119824aa2d68c3e4c8995fac2e863ff55eb73",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 12369,
+        "subject_changed_pixels_gt3": 31460,
+        "orbit_0_changed_pixels_gt3": 34844,
+        "orbit_1_changed_pixels_gt3": 36687
+      }
+    },
+    {
+      "binding": "confederacy:battleship",
+      "category": "combat_hull",
+      "data_id": "confed_battleship",
+      "revision": "e96c95da532b221753d793e11be4d4f8c5b087c0bb8377a024f573912e84f4a2",
+      "captures": {
+        "red": {
+          "file": "confederacy-battleship-red.png",
+          "sha256": "993e8f03ac5105e61fa97fdd4b316fc03a1132e9c0937e6c3282323fb864709c",
+          "state_sha256": "65c67fee0e7b888769fb07e543f335b3b951c3aa0281121c5c58e7d36899e49a",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "confederacy-battleship-blue.png",
+          "sha256": "f6692c67d09234b27739e7a15918315f467607dbc996b2b18261f940218a1cd7",
+          "state_sha256": "7f53c54e7789cc452560cba1ee785e25577806eaf233e58b38a127944a7055d1",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "confederacy-battleship-subject-disabled.png",
+          "sha256": "4850e16ff8b55cddaf95327e8f49ceef021162b7f16f9a3100db6d91ad24597f",
+          "state_sha256": "421d9c6e2d03bf517037a78d66b5d5c8d9c365442c4fc77a19e8b463504bfe22",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "confederacy-battleship-restored.png",
+          "sha256": "f6692c67d09234b27739e7a15918315f467607dbc996b2b18261f940218a1cd7",
+          "state_sha256": "7f53c54e7789cc452560cba1ee785e25577806eaf233e58b38a127944a7055d1",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "confederacy-battleship-orbit-0.png",
+          "sha256": "79263d7752ab70cc15c0371191a9e7ea3a25103c4d749d4507911054106e8bcb",
+          "state_sha256": "7f53c54e7789cc452560cba1ee785e25577806eaf233e58b38a127944a7055d1",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "confederacy-battleship-orbit-1.png",
+          "sha256": "ccedf56daa4caddadbab09afb464c7e093974d2d4c153ad7f491089f3bad7a00",
+          "state_sha256": "7f53c54e7789cc452560cba1ee785e25577806eaf233e58b38a127944a7055d1",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 20295,
+        "subject_changed_pixels_gt3": 40061,
+        "orbit_0_changed_pixels_gt3": 35403,
+        "orbit_1_changed_pixels_gt3": 35561
+      }
+    },
+    {
+      "binding": "confederacy:bomber",
+      "category": "squadron",
+      "data_id": "confed_bomber_squadron",
+      "revision": "eee9dfda9792388f4af35e2c45fc40e38a88faf4e66122553be1a59b27ad97a9",
+      "captures": {
+        "red": {
+          "file": "confederacy-bomber-red.png",
+          "sha256": "c1dbb78accc9b8d8a2d3250076144f1031f2bb2c8e04bd897f05d9cdd5eff6e9",
+          "state_sha256": "3925a8f296bef62212fa089801d6773f0347cdeebe0fd37d5f70727a5729b33b",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "confederacy-bomber-blue.png",
+          "sha256": "d5e5b805b043cf43ad8d35d555a80b0ddc8939fa373500a972bd58588fc5214a",
+          "state_sha256": "9aa1796550387e2b4d742821d13a475c65429d2248c0ceb7b126e1adb56f727d",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "confederacy-bomber-subject-disabled.png",
+          "sha256": "250662e4809ddc1794c394baa87354ed09d221152f1203ca891fc3f7ee17ecc2",
+          "state_sha256": "f9e7320041ae61568545e75733b685bdc1f3c021a3f1b74218a41e50c7398d95",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "confederacy-bomber-restored.png",
+          "sha256": "d5e5b805b043cf43ad8d35d555a80b0ddc8939fa373500a972bd58588fc5214a",
+          "state_sha256": "9aa1796550387e2b4d742821d13a475c65429d2248c0ceb7b126e1adb56f727d",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "confederacy-bomber-orbit-0.png",
+          "sha256": "b28251ec00e34232055fbb6080eb6a6ee61f7aca23d3c6640eb4aeaf88cf8c43",
+          "state_sha256": "9aa1796550387e2b4d742821d13a475c65429d2248c0ceb7b126e1adb56f727d",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "confederacy-bomber-orbit-1.png",
+          "sha256": "13cafc6f109f1d64ac75229020178680b8539e6047e11627aa9665222de0bc72",
+          "state_sha256": "9aa1796550387e2b4d742821d13a475c65429d2248c0ceb7b126e1adb56f727d",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 3019,
+        "subject_changed_pixels_gt3": 3709,
+        "orbit_0_changed_pixels_gt3": 12046,
+        "orbit_1_changed_pixels_gt3": 12264
+      }
+    },
+    {
+      "binding": "confederacy:colonizer",
+      "category": "construction",
+      "data_id": "confed_colonizer",
+      "revision": "92cd4789d4776b75eb3f42e968396e5e44c52a2aa9186d77f6b30d02168fbeb4",
+      "captures": {
+        "red": {
+          "file": "confederacy-colonizer-red.png",
+          "sha256": "f55fb52f0db3517a185b792a3707705464cd98cf6004cdf1b43dd759b3c80866",
+          "state_sha256": "5ba44c536944bd2fbeb636968a0d63f7f0f033dc6fa17509b006ed7706c78f0d",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "confederacy-colonizer-blue.png",
+          "sha256": "591507aead5e4feb8359059758de96a352aa85a6973bc86bf25eb90fb97037ec",
+          "state_sha256": "4e2f890484a913927dedabb2b9d17d13c249d6ad24a62c38a54c251bf7c9b558",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "confederacy-colonizer-subject-disabled.png",
+          "sha256": "0fcb88cb9aa5a5726eb8d3dd446115aef06e8def5d15878cda01fe1048d7b083",
+          "state_sha256": "f9d50bfded04830bfd074dd984386031af8e6380c41b497876f5989a2fdf8ee2",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "confederacy-colonizer-restored.png",
+          "sha256": "591507aead5e4feb8359059758de96a352aa85a6973bc86bf25eb90fb97037ec",
+          "state_sha256": "4e2f890484a913927dedabb2b9d17d13c249d6ad24a62c38a54c251bf7c9b558",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "confederacy-colonizer-orbit-0.png",
+          "sha256": "1d64b3e0ba98d553bff0ed4bfb60e84ebcdcb466c13ae2b47c52c478cdb9ed68",
+          "state_sha256": "4e2f890484a913927dedabb2b9d17d13c249d6ad24a62c38a54c251bf7c9b558",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "confederacy-colonizer-orbit-1.png",
+          "sha256": "d514a494b7fdbe295655ccb5811867f49c1a5d6beaba23929cde4344162cdd37",
+          "state_sha256": "4e2f890484a913927dedabb2b9d17d13c249d6ad24a62c38a54c251bf7c9b558",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 18717,
+        "subject_changed_pixels_gt3": 39944,
+        "orbit_0_changed_pixels_gt3": 28766,
+        "orbit_1_changed_pixels_gt3": 30131
+      }
+    },
+    {
+      "binding": "confederacy:command_station",
+      "category": "station",
+      "data_id": "command_station",
+      "revision": "d9929fc7ae51ed790979cdb952b903aa9fb197097cddc6940234699bd26a08cb",
+      "captures": {
+        "red": {
+          "file": "confederacy-command_station-red.png",
+          "sha256": "7790c40998ec82704ae52ee1b60df9883531ede9c03718537058fdfe9714e23c",
+          "state_sha256": "b19ea22d3176657b1a46e7b58a6bbab24cc9afd2ff6954bb24037862754f02b7",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "confederacy-command_station-blue.png",
+          "sha256": "d0cca88166bc3adeb6c4c0457db7dd7429db285c2fd2ed593ae4fbcf67e2cfa6",
+          "state_sha256": "24b212347bc93be1976a5db677c26a36f3bede2645593bb0a8cd73456e9d99f2",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "confederacy-command_station-subject-disabled.png",
+          "sha256": "45328671812127f33846b26d472f71ee17a7e7a91727ab47d94bbc95e0ac7914",
+          "state_sha256": "927cbc8fcb8142dbe6246adc984bd2268ca5466c9b4356618f4fb60388f506f7",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "confederacy-command_station-restored.png",
+          "sha256": "d0cca88166bc3adeb6c4c0457db7dd7429db285c2fd2ed593ae4fbcf67e2cfa6",
+          "state_sha256": "24b212347bc93be1976a5db677c26a36f3bede2645593bb0a8cd73456e9d99f2",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "confederacy-command_station-orbit-0.png",
+          "sha256": "34e10f3f1994ee917830da65d2107f8475210993e85adce79eb6abc673097f8d",
+          "state_sha256": "24b212347bc93be1976a5db677c26a36f3bede2645593bb0a8cd73456e9d99f2",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "confederacy-command_station-orbit-1.png",
+          "sha256": "f428d9f0d9e2dce275d8727831ceb8debe1ae25c5ea72069470d4f03772a8d71",
+          "state_sha256": "24b212347bc93be1976a5db677c26a36f3bede2645593bb0a8cd73456e9d99f2",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 12622,
+        "subject_changed_pixels_gt3": 36680,
+        "orbit_0_changed_pixels_gt3": 39024,
+        "orbit_1_changed_pixels_gt3": 43055
+      }
+    },
+    {
+      "binding": "confederacy:constructor",
+      "category": "construction",
+      "data_id": "confed_constructor",
+      "revision": "c4b2b8153583c15e25e199a42b31978553e29a7734fa0f5c0a813763f8fd3cc6",
+      "captures": {
+        "red": {
+          "file": "confederacy-constructor-red.png",
+          "sha256": "23fcb01385ce6e6082c70875da4be3367bd9150c441508201716b98625e48a99",
+          "state_sha256": "9a320b817767997b0359d9d8457ea5969eeec697f22c093403185ed5b31c4b46",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "confederacy-constructor-blue.png",
+          "sha256": "161015400039811b0e7f747667ec53a4459a8cff728e4361f371f9291a18230d",
+          "state_sha256": "fd49c5b5bb7a9ae074ee5855a1167fdeb8e4098050e402747367e51cab4b95d9",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "confederacy-constructor-subject-disabled.png",
+          "sha256": "2950b75e33f4c60b8262df75ec8b5b3aca2920de3e021c8507f3905e9975d3f6",
+          "state_sha256": "f9d50bfded04830bfd074dd984386031af8e6380c41b497876f5989a2fdf8ee2",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "confederacy-constructor-restored.png",
+          "sha256": "161015400039811b0e7f747667ec53a4459a8cff728e4361f371f9291a18230d",
+          "state_sha256": "fd49c5b5bb7a9ae074ee5855a1167fdeb8e4098050e402747367e51cab4b95d9",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "confederacy-constructor-orbit-0.png",
+          "sha256": "e6b2581c9489ae674192996fa4e3102f46e5358bc115f9a0fd872702a1d60885",
+          "state_sha256": "fd49c5b5bb7a9ae074ee5855a1167fdeb8e4098050e402747367e51cab4b95d9",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "confederacy-constructor-orbit-1.png",
+          "sha256": "c32bfa22af1fe2654e357d88cd76e32be08243f3b177b8cd75d387dda3d9c74d",
+          "state_sha256": "fd49c5b5bb7a9ae074ee5855a1167fdeb8e4098050e402747367e51cab4b95d9",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 21242,
+        "subject_changed_pixels_gt3": 42236,
+        "orbit_0_changed_pixels_gt3": 31169,
+        "orbit_1_changed_pixels_gt3": 34092
+      }
+    },
+    {
+      "binding": "confederacy:convoy",
+      "category": "logistics_hull",
+      "data_id": "confed_crew_transport",
+      "revision": "63076e2fe68ca43baaaa0bcd646f4249eb091d763844164eb81c1f8b198d0af4",
+      "captures": {
+        "red": {
+          "file": "confederacy-convoy-red.png",
+          "sha256": "18c73d79c033fb49477ccc260e0fcaa533c67507c5331b08f8f42302e5a75b60",
+          "state_sha256": "d7431f01b27b3475381ba616463a9e7625dd00e72942d4ff003fa28a17734f74",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "confederacy-convoy-blue.png",
+          "sha256": "11dbce892a9afc6ae84e5c29bc66a2f12ed1b8d5065299b9515aa9b1c76ba6bb",
+          "state_sha256": "13e7301fce01ebd6220429f4c3c24e2c50dcd7ed61f844270b8a62c29c82556c",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "confederacy-convoy-subject-disabled.png",
+          "sha256": "f74be0b30dc82a0d8246c54548f769c8fe90253d2db679496050cee77c578744",
+          "state_sha256": "f9d50bfded04830bfd074dd984386031af8e6380c41b497876f5989a2fdf8ee2",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "confederacy-convoy-restored.png",
+          "sha256": "11dbce892a9afc6ae84e5c29bc66a2f12ed1b8d5065299b9515aa9b1c76ba6bb",
+          "state_sha256": "13e7301fce01ebd6220429f4c3c24e2c50dcd7ed61f844270b8a62c29c82556c",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "confederacy-convoy-orbit-0.png",
+          "sha256": "7a0de0526e2f37a24cb4685bdbdf6b78e91f80b4b36eff2dfaeaec15abcacc5c",
+          "state_sha256": "13e7301fce01ebd6220429f4c3c24e2c50dcd7ed61f844270b8a62c29c82556c",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "confederacy-convoy-orbit-1.png",
+          "sha256": "d33b5b1f6d6e87029de19a6ee4ad661d099738fc5233dfbcc61ff4098fabb92f",
+          "state_sha256": "13e7301fce01ebd6220429f4c3c24e2c50dcd7ed61f844270b8a62c29c82556c",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 5644,
+        "subject_changed_pixels_gt3": 15533,
+        "orbit_0_changed_pixels_gt3": 13471,
+        "orbit_1_changed_pixels_gt3": 20506
+      }
+    },
+    {
+      "binding": "confederacy:corvette",
+      "category": "combat_hull",
+      "data_id": "confed_corvette",
+      "revision": "3acc40a1eb58fb8b994b20097306a8901be448e90a3d1d2b84c2b00541c059c1",
+      "captures": {
+        "red": {
+          "file": "confederacy-corvette-red.png",
+          "sha256": "01bd4bf266ada7bb9c97d3f9747c9dc5adf95c39b63cdd4d8fa6bdc325ee2ed7",
+          "state_sha256": "1ad8fb0e76a458c480925021b2bf9a5d89e28544eb33008d8df52c46a1e9e9c0",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "confederacy-corvette-blue.png",
+          "sha256": "2b9546d7fc893db4eea006925b9ea121ce72e7ee80489b1c570f486da89c1717",
+          "state_sha256": "81f78dc72543a18a356782a6e2c7b640def045ac4c168c3a7da561384933b05f",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "confederacy-corvette-subject-disabled.png",
+          "sha256": "cda4238ea43d6dfec741899c40b80788faf59974ac9ab99793ab0595314d2ba3",
+          "state_sha256": "3ee64c59e387b7a981a5b601ed9ed78813785b5165ca5d50706a7671a47bd525",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "confederacy-corvette-restored.png",
+          "sha256": "2b9546d7fc893db4eea006925b9ea121ce72e7ee80489b1c570f486da89c1717",
+          "state_sha256": "81f78dc72543a18a356782a6e2c7b640def045ac4c168c3a7da561384933b05f",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "confederacy-corvette-orbit-0.png",
+          "sha256": "c8db57bfd9ade1ad9d32a47273e8f8b3a7f26ef76ce420e69f94cd26cd01c13d",
+          "state_sha256": "81f78dc72543a18a356782a6e2c7b640def045ac4c168c3a7da561384933b05f",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "confederacy-corvette-orbit-1.png",
+          "sha256": "f8216e2a4a25da190264ddad772bd99c4b7e2199bcae6384b831e9acf13123a6",
+          "state_sha256": "81f78dc72543a18a356782a6e2c7b640def045ac4c168c3a7da561384933b05f",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 17608,
+        "subject_changed_pixels_gt3": 37528,
+        "orbit_0_changed_pixels_gt3": 34969,
+        "orbit_1_changed_pixels_gt3": 33416
+      }
+    },
+    {
+      "binding": "confederacy:cruiser",
+      "category": "combat_hull",
+      "data_id": "confed_cruiser",
+      "revision": "186d469dc17071e6d55b4bcb4c7a58551204083caaa8e4bf78c6e2c74fe93355",
+      "captures": {
+        "red": {
+          "file": "confederacy-cruiser-red.png",
+          "sha256": "2505dc5a59b146d79c959fb57ff9252b5253a16aaecb58ef056b35735a041fb4",
+          "state_sha256": "910ef6d828d0a02ceee1b78b13d3c43ee7395fe5d526df0f4bc858a041512f3e",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "confederacy-cruiser-blue.png",
+          "sha256": "004115eeedc7e665d87e858b4fc4d6567cf6561207476078bf52130fba5c1c44",
+          "state_sha256": "90cfd3e2ed91a3f4b802fae7745a9358a6376c239fcff54355cc978db022f85c",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "confederacy-cruiser-subject-disabled.png",
+          "sha256": "560b53ed5dbdec5df2aabfa335492c96d4e4cd7c3990c58d5573a7d34ed121e8",
+          "state_sha256": "c7de07931e6d4d4563fd929777b46f25c717f94c0250be948adca0d0827b1676",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "confederacy-cruiser-restored.png",
+          "sha256": "004115eeedc7e665d87e858b4fc4d6567cf6561207476078bf52130fba5c1c44",
+          "state_sha256": "90cfd3e2ed91a3f4b802fae7745a9358a6376c239fcff54355cc978db022f85c",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "confederacy-cruiser-orbit-0.png",
+          "sha256": "00b19eee2fb47543bc73fcb54212573bbc76b86a4bdf6638938fb517df864a36",
+          "state_sha256": "90cfd3e2ed91a3f4b802fae7745a9358a6376c239fcff54355cc978db022f85c",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "confederacy-cruiser-orbit-1.png",
+          "sha256": "e944c46c677d46b4768839246855ba8d5ccf08bad8731cec90ad4b247c8969e4",
+          "state_sha256": "90cfd3e2ed91a3f4b802fae7745a9358a6376c239fcff54355cc978db022f85c",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 17094,
+        "subject_changed_pixels_gt3": 45839,
+        "orbit_0_changed_pixels_gt3": 33754,
+        "orbit_1_changed_pixels_gt3": 31096
+      }
+    },
+    {
+      "binding": "confederacy:defense_platform",
+      "category": "station",
+      "data_id": "defense_platform",
+      "revision": "97fdc26de2d0b2c07505d46b1ed279d302df2108cb0cdd1bc8191e95ced968c7",
+      "captures": {
+        "red": {
+          "file": "confederacy-defense_platform-red.png",
+          "sha256": "6ca9c6709f1d45f47f800839231ff1799d5e127038b918fadbf355f5a992c6d7",
+          "state_sha256": "bed2a6825662db77566761f491a86af86b8a364b8ff4deefd72babc6d7f0ed2f",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "confederacy-defense_platform-blue.png",
+          "sha256": "0d7d52486bb7ce6e1a04a3f0897e83793fd10ac6dd7f17912adc72dea9143572",
+          "state_sha256": "6fbbe892fd09a451528988ace57bc56ca44a8418973b28a7132e17e1972c97ff",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "confederacy-defense_platform-subject-disabled.png",
+          "sha256": "eed687fdc2d799a62026a3bd5ac45111cb6ec60db87db9bf9a7c53823180a593",
+          "state_sha256": "0b69882fc0a386c31d5feae375c07bc74ebb7d27065a953cd052bd349e7cf880",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "confederacy-defense_platform-restored.png",
+          "sha256": "0d7d52486bb7ce6e1a04a3f0897e83793fd10ac6dd7f17912adc72dea9143572",
+          "state_sha256": "6fbbe892fd09a451528988ace57bc56ca44a8418973b28a7132e17e1972c97ff",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "confederacy-defense_platform-orbit-0.png",
+          "sha256": "3079111e475093f0b6fff04b5dccdb31e43dec4941ffbb7c08406b2cc30576b0",
+          "state_sha256": "6fbbe892fd09a451528988ace57bc56ca44a8418973b28a7132e17e1972c97ff",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "confederacy-defense_platform-orbit-1.png",
+          "sha256": "b60fe35c298dd31645f76c4fa1e05357bf122a2e7cd19c688cd1ccf30ff81499",
+          "state_sha256": "6fbbe892fd09a451528988ace57bc56ca44a8418973b28a7132e17e1972c97ff",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 1728,
+        "subject_changed_pixels_gt3": 31548,
+        "orbit_0_changed_pixels_gt3": 31499,
+        "orbit_1_changed_pixels_gt3": 37643
+      }
+    },
+    {
+      "binding": "confederacy:defense_satellite",
+      "category": "satellite",
+      "data_id": "defense_satellite",
+      "revision": "ade58350e2212d24602a57d0d196eb6d2af79472732c0e214f7b6ce123dc4172",
+      "captures": {
+        "red": {
+          "file": "confederacy-defense_satellite-red.png",
+          "sha256": "fa7e7953a3adb9c16940658dcbfaee96f04dcb5c5322efa2e239036be3859d52",
+          "state_sha256": "9c9c98a674422c757510f8ef1f456b743561d0f812d9af06cea90a349d689363",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "confederacy-defense_satellite-blue.png",
+          "sha256": "111e123729ac57fe86524707ebb7a74c15873d7efa9d7bafd243bb2f3ef38129",
+          "state_sha256": "c580e1ee91164423c10114c189d278318abca9e85a7d61cff5df4559a805c51d",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "confederacy-defense_satellite-subject-disabled.png",
+          "sha256": "da8ad68c8a5bb6e67893afd93cf1bd55a8202af0b39b1d33b603363a0ab72c7f",
+          "state_sha256": "07691ce2bdc478448e747b58fedd7100b4a9d56949699180a08e15bcf2b5f89b",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "confederacy-defense_satellite-restored.png",
+          "sha256": "111e123729ac57fe86524707ebb7a74c15873d7efa9d7bafd243bb2f3ef38129",
+          "state_sha256": "7bba4d05f843f7a8d2a6a565d88b800f8ec0d9edfdbb0552319ec01b76c43f06",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "confederacy-defense_satellite-orbit-0.png",
+          "sha256": "98031a462d032bc8fa1286f826f5622c279153940fae32ef493ee0d3d57369a2",
+          "state_sha256": "7bba4d05f843f7a8d2a6a565d88b800f8ec0d9edfdbb0552319ec01b76c43f06",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "confederacy-defense_satellite-orbit-1.png",
+          "sha256": "0bce621a950550cb8be6134bf10bb58153862bffd5e7fc5bc17b54e19f7e4fef",
+          "state_sha256": "7bba4d05f843f7a8d2a6a565d88b800f8ec0d9edfdbb0552319ec01b76c43f06",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 16223,
+        "subject_changed_pixels_gt3": 36179,
+        "orbit_0_changed_pixels_gt3": 39186,
+        "orbit_1_changed_pixels_gt3": 41861
+      }
+    },
+    {
+      "binding": "confederacy:energy_relay",
+      "category": "station",
+      "data_id": "energy_relay",
+      "revision": "9cbf3294a568781617593b4b4ead51075609316a8ddcaef3f67e6245c681b7fa",
+      "captures": {
+        "red": {
+          "file": "confederacy-energy_relay-red.png",
+          "sha256": "95d403182cd4feaebb39d7736a12434f78e1c964cd265874e2fd85c99e3a8c2f",
+          "state_sha256": "235d2fcf829c98b383f480f73d21a7e5c2606d598f09ce9ebfdfaeba639dba9d",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "confederacy-energy_relay-blue.png",
+          "sha256": "7d435223f40346bfdfed44e8d6ddd3e0d036fb49e591de21954d2dc8bf889393",
+          "state_sha256": "45cef557f505c1305f1bd87aa461e4755a7969e2b59f686bb43f54469c13cbf9",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "confederacy-energy_relay-subject-disabled.png",
+          "sha256": "df50d3d7ce0f9bea628c3c0c707cc15503925124abcc66316af23b5d5c7d997a",
+          "state_sha256": "b4dc44b9802af7feda508f342760bb8df6ea8c6ffb99117ea1341f1cacb6299f",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "confederacy-energy_relay-restored.png",
+          "sha256": "7d435223f40346bfdfed44e8d6ddd3e0d036fb49e591de21954d2dc8bf889393",
+          "state_sha256": "45cef557f505c1305f1bd87aa461e4755a7969e2b59f686bb43f54469c13cbf9",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "confederacy-energy_relay-orbit-0.png",
+          "sha256": "8f2214840613b5212876442a1cf2cfd5bd0ff7bb419d008862fcba0ba0121f4c",
+          "state_sha256": "45cef557f505c1305f1bd87aa461e4755a7969e2b59f686bb43f54469c13cbf9",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "confederacy-energy_relay-orbit-1.png",
+          "sha256": "9e104a7ee41254d0e60fc0db30a6967ba07a5d9922b5414511e15b43b9d9126e",
+          "state_sha256": "45cef557f505c1305f1bd87aa461e4755a7969e2b59f686bb43f54469c13cbf9",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 4514,
+        "subject_changed_pixels_gt3": 34151,
+        "orbit_0_changed_pixels_gt3": 26177,
+        "orbit_1_changed_pixels_gt3": 26753
+      }
+    },
+    {
+      "binding": "confederacy:fighter",
+      "category": "squadron",
+      "data_id": "confed_vulture_squadron",
+      "revision": "113ddfb37f8db32603a9cc278cc4827ff7b0c64f59f955d8377cae4cfedc3c72",
+      "captures": {
+        "red": {
+          "file": "confederacy-fighter-red.png",
+          "sha256": "ab54af5b433ee12ba384d422716e81a6cddb6fc3680959858cf753304548553e",
+          "state_sha256": "35985c8d69360dda22235e742fd5bfb501636b9160a313391f64458b7d8fcefa",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "confederacy-fighter-blue.png",
+          "sha256": "66f272faa774d84225a501742576782d2e1a6cd25b29198b3a654fe506372af7",
+          "state_sha256": "8b77651b6db91827b73fa05b3b265163561715a5ea8b94d9cc7788aba8bf393c",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "confederacy-fighter-subject-disabled.png",
+          "sha256": "250662e4809ddc1794c394baa87354ed09d221152f1203ca891fc3f7ee17ecc2",
+          "state_sha256": "f9e7320041ae61568545e75733b685bdc1f3c021a3f1b74218a41e50c7398d95",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "confederacy-fighter-restored.png",
+          "sha256": "66f272faa774d84225a501742576782d2e1a6cd25b29198b3a654fe506372af7",
+          "state_sha256": "8b77651b6db91827b73fa05b3b265163561715a5ea8b94d9cc7788aba8bf393c",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "confederacy-fighter-orbit-0.png",
+          "sha256": "94735dd14a710d84ccf75b50e00a171c55a70d9f7b4fd3455f7f74fc8ce17692",
+          "state_sha256": "8b77651b6db91827b73fa05b3b265163561715a5ea8b94d9cc7788aba8bf393c",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "confederacy-fighter-orbit-1.png",
+          "sha256": "bf7298f04ce73e4faf123c618681dc5ac53ab85670cd57bb6b796ba90851ff50",
+          "state_sha256": "8b77651b6db91827b73fa05b3b265163561715a5ea8b94d9cc7788aba8bf393c",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 2916,
+        "subject_changed_pixels_gt3": 3511,
+        "orbit_0_changed_pixels_gt3": 11806,
+        "orbit_1_changed_pixels_gt3": 12416
+      }
+    },
+    {
+      "binding": "confederacy:fighter_platform",
+      "category": "station",
+      "data_id": "fighter_platform",
+      "revision": "d9e90c90462b36b85d15d943148b7548074683e33ed002efe13d699c67762e74",
+      "captures": {
+        "red": {
+          "file": "confederacy-fighter_platform-red.png",
+          "sha256": "0b382d304c44f05c4e7fc67bc4372775494b1ea71a7ecc3a9d5bced857cd0859",
+          "state_sha256": "914736d6ca0690b9318978d29bb2f1ce75ff3875ad733c19257112366f902c83",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "confederacy-fighter_platform-blue.png",
+          "sha256": "cd41c1c1a0a19237b58fabde38619ba496a994c44b4332f7d4de3bd250f6549f",
+          "state_sha256": "146bfeda9b815c03f97ecbed0f9020444c327af49db1f60124dfc7a7abf8a9d4",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "confederacy-fighter_platform-subject-disabled.png",
+          "sha256": "248d5b39499257afeb75a64dab5760c52f90112ca4dd2b7af2274512b8fc0869",
+          "state_sha256": "f9d50bfded04830bfd074dd984386031af8e6380c41b497876f5989a2fdf8ee2",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "confederacy-fighter_platform-restored.png",
+          "sha256": "cd41c1c1a0a19237b58fabde38619ba496a994c44b4332f7d4de3bd250f6549f",
+          "state_sha256": "146bfeda9b815c03f97ecbed0f9020444c327af49db1f60124dfc7a7abf8a9d4",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "confederacy-fighter_platform-orbit-0.png",
+          "sha256": "2a0f3e216aaed9874f3b32ef99177c3d33e8f1ad061c353c792f54e988cb14db",
+          "state_sha256": "146bfeda9b815c03f97ecbed0f9020444c327af49db1f60124dfc7a7abf8a9d4",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "confederacy-fighter_platform-orbit-1.png",
+          "sha256": "1714e2c3b8aacebef74392a03d8669bda52444fa340976e70d7fc5fc570f6ac4",
+          "state_sha256": "146bfeda9b815c03f97ecbed0f9020444c327af49db1f60124dfc7a7abf8a9d4",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 1017,
+        "subject_changed_pixels_gt3": 35923,
+        "orbit_0_changed_pixels_gt3": 25281,
+        "orbit_1_changed_pixels_gt3": 27590
+      }
+    },
+    {
+      "binding": "confederacy:frigate",
+      "category": "combat_hull",
+      "data_id": "confed_frigate",
+      "revision": "a1cc67106a8f0988a0ebd7b6ee39899a64c3858e8b1a2c1a759c6cb95d49206d",
+      "captures": {
+        "red": {
+          "file": "confederacy-frigate-red.png",
+          "sha256": "79d04a0abe8a689ad63b24eae07bc36dc9ccb95511451951b7b049404d94020c",
+          "state_sha256": "52505b5a9983d7d52f2babcab279052f3070d7ec7714f705350ae93cc933ffdf",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "confederacy-frigate-blue.png",
+          "sha256": "d8d3ddf256adbef29aeb8a0eeef53254ab2646323c2fa887dc2d3690a70beac8",
+          "state_sha256": "5db1e06386471206ca86466a9cb1c8a2dd75e05394a0baacc52965e24367241e",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "confederacy-frigate-subject-disabled.png",
+          "sha256": "1f056ff207bcdf6138046ad5b7d3ac718c12222e24b4571ab1472a577577779f",
+          "state_sha256": "a7aaf56536b2a96f234cd451128ea13d38cb427393eace61e3287796dab6d375",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "confederacy-frigate-restored.png",
+          "sha256": "d8d3ddf256adbef29aeb8a0eeef53254ab2646323c2fa887dc2d3690a70beac8",
+          "state_sha256": "5db1e06386471206ca86466a9cb1c8a2dd75e05394a0baacc52965e24367241e",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "confederacy-frigate-orbit-0.png",
+          "sha256": "8ff95d463d6eeaba5074fc11bb115723865e4d47ad7463945e396c15073cea41",
+          "state_sha256": "5db1e06386471206ca86466a9cb1c8a2dd75e05394a0baacc52965e24367241e",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "confederacy-frigate-orbit-1.png",
+          "sha256": "941d275309487ed501c3c0d5671ddb968eca4b67d3817f0d185441f11e0ab8da",
+          "state_sha256": "5db1e06386471206ca86466a9cb1c8a2dd75e05394a0baacc52965e24367241e",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 16890,
+        "subject_changed_pixels_gt3": 36813,
+        "orbit_0_changed_pixels_gt3": 30608,
+        "orbit_1_changed_pixels_gt3": 29108
+      }
+    },
+    {
+      "binding": "confederacy:mining_station",
+      "category": "station",
+      "data_id": "mining_station",
+      "revision": "c99392774db060abc23c1504b1f22cd09baf7973f19468970e8588d9c7a3e58b",
+      "captures": {
+        "red": {
+          "file": "confederacy-mining_station-red.png",
+          "sha256": "150a3fed97a0f397b6a4c8cfa9bd88b54f1d9ab5fb581ab644b0c4705d5fcddb",
+          "state_sha256": "a34690f1397fdb47dc3cb0023f7035c425506363a7a0c2d52e41a6ff180053ba",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "confederacy-mining_station-blue.png",
+          "sha256": "267609b6c7e853bb320b0e54e86817e22730ccd1c11de79dcc3dad442a068805",
+          "state_sha256": "ec57c8aeebbdbb9bf7f63189eaf871c5656abeba16dffb54066849c4f7496ef7",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "confederacy-mining_station-subject-disabled.png",
+          "sha256": "f0b61b2eceed97952074e072473aeef05319297aa7049c6b43684ebda7ceb4c5",
+          "state_sha256": "4e8498b174ffed63a3a225bb97485e73f5c331c5d21e9a41c6eb730cb5d514fa",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "confederacy-mining_station-restored.png",
+          "sha256": "267609b6c7e853bb320b0e54e86817e22730ccd1c11de79dcc3dad442a068805",
+          "state_sha256": "ec57c8aeebbdbb9bf7f63189eaf871c5656abeba16dffb54066849c4f7496ef7",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "confederacy-mining_station-orbit-0.png",
+          "sha256": "6ebc7fda4ada62005d79e058608cbdf1f6451eb86feb80fdd563a50815e872a9",
+          "state_sha256": "ec57c8aeebbdbb9bf7f63189eaf871c5656abeba16dffb54066849c4f7496ef7",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "confederacy-mining_station-orbit-1.png",
+          "sha256": "7855c186c49a6c7618316e4086c1b2885ea619512ebf4ace49d62bd7bb2b0b58",
+          "state_sha256": "ec57c8aeebbdbb9bf7f63189eaf871c5656abeba16dffb54066849c4f7496ef7",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 294,
+        "subject_changed_pixels_gt3": 31165,
+        "orbit_0_changed_pixels_gt3": 20351,
+        "orbit_1_changed_pixels_gt3": 25974
+      }
+    },
+    {
+      "binding": "confederacy:planet_extractor",
+      "category": "planet_installation",
+      "data_id": "planet_extractor",
+      "revision": "db25f7f947c571c599b70e06d5a5a53102470d988be77f664059603b1c9c6f37",
+      "captures": {
+        "red": {
+          "file": "confederacy-planet_extractor-red.png",
+          "sha256": "ef2c0a3874d1328bad6a4d944a38f8b5a53d19aedd9d01da94a05e29a45763ce",
+          "state_sha256": "2bafa74dccc2dc4650968b5aba3e75793085b0ad1f4c3b63a177d95fad8d5d8c",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "confederacy-planet_extractor-blue.png",
+          "sha256": "f96438e4a7be71f42c9b58fa1994b475d1fe74435826895df271019b61cf9471",
+          "state_sha256": "c9092dda81025671d362222b31cefdf58497032ef29f556f50ec19008a5f1cd9",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "confederacy-planet_extractor-subject-disabled.png",
+          "sha256": "884f55972215af722a1786895a8aaca93a5dcde5c7844e75f7a19ba3bc41dd28",
+          "state_sha256": "f92bb30de7c1bd1a63329ef94c3b20bdb3b06fde89b95528b1a5ce2afd166c58",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "confederacy-planet_extractor-restored.png",
+          "sha256": "f96438e4a7be71f42c9b58fa1994b475d1fe74435826895df271019b61cf9471",
+          "state_sha256": "def78eae8af826ee5c30c8a57461fa1aa486f4e8370f0c1d5113707fd7ea4cc1",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "confederacy-planet_extractor-orbit-0.png",
+          "sha256": "9e22c12a507dba6d79838ac48cd605c2107be176c798e80b0eae8dd7f5676f2d",
+          "state_sha256": "def78eae8af826ee5c30c8a57461fa1aa486f4e8370f0c1d5113707fd7ea4cc1",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "confederacy-planet_extractor-orbit-1.png",
+          "sha256": "24773ec57f50b04f4cbbc4b2568592900562bf0852d43644ac7850a08d920c5b",
+          "state_sha256": "def78eae8af826ee5c30c8a57461fa1aa486f4e8370f0c1d5113707fd7ea4cc1",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 13377,
+        "subject_changed_pixels_gt3": 27178,
+        "orbit_0_changed_pixels_gt3": 42401,
+        "orbit_1_changed_pixels_gt3": 40960
+      }
+    },
+    {
+      "binding": "confederacy:planet_pulsar_cannon",
+      "category": "planet_installation",
+      "data_id": "planet_pulsar_cannon",
+      "revision": "a54aa5be13a4c2acec628433d7cbb1d7f6b0d8751c0a2ec1a4f3f3e05309f8a2",
+      "captures": {
+        "red": {
+          "file": "confederacy-planet_pulsar_cannon-red.png",
+          "sha256": "2a2d2205fb237d9fac34b4a5fb012e33a4334f882986efeb9efcec2665f38363",
+          "state_sha256": "8413905a0cee879e6e55784d868f55acc7ada0b7fc4003ced011fabb66402b4c",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "confederacy-planet_pulsar_cannon-blue.png",
+          "sha256": "13c98652e86c863ca80d850c66a111fd4cb261d85ed65f117d5b13c19993e9bb",
+          "state_sha256": "4dcc6efe3842f0d35eabb552ee803cfd56c914c882bbf2b43b3424f8e18d05d4",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "confederacy-planet_pulsar_cannon-subject-disabled.png",
+          "sha256": "a5219ee90c6e92ad2f53e538e106e43befc676319576a3804fac0960369cb7b1",
+          "state_sha256": "a9397969578a4485a18d0aeb78f03ff1c1b82b88ea725a2516e3c05dcabd761b",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "confederacy-planet_pulsar_cannon-restored.png",
+          "sha256": "13c98652e86c863ca80d850c66a111fd4cb261d85ed65f117d5b13c19993e9bb",
+          "state_sha256": "3456f0d94260810e7ebd30ccc179095f4fde038ca5a3e69cad9b6e2b67cea1d0",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "confederacy-planet_pulsar_cannon-orbit-0.png",
+          "sha256": "441669ce77e42d534acc7e1c2351d5eca4a1ffb7192881e212022b7fc838deb2",
+          "state_sha256": "3456f0d94260810e7ebd30ccc179095f4fde038ca5a3e69cad9b6e2b67cea1d0",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "confederacy-planet_pulsar_cannon-orbit-1.png",
+          "sha256": "c16484e6226c563d380ee4dfb67000ceb3e97bfb4280068bf81bad63370b76e7",
+          "state_sha256": "3456f0d94260810e7ebd30ccc179095f4fde038ca5a3e69cad9b6e2b67cea1d0",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 16141,
+        "subject_changed_pixels_gt3": 306529,
+        "orbit_0_changed_pixels_gt3": 93276,
+        "orbit_1_changed_pixels_gt3": 134739
+      }
+    },
+    {
+      "binding": "confederacy:planet_shield_generator",
+      "category": "planet_installation",
+      "data_id": "planet_shield_generator",
+      "revision": "37899eb4b375ff010ca878eb3105bb0e891fdae48f6fc2f4e4542ac437ce8f42",
+      "captures": {
+        "red": {
+          "file": "confederacy-planet_shield_generator-red.png",
+          "sha256": "a7ced70d2f1b70dabf5ab69d3cd5e2d45d1371d43e9cc929564169e492f0796f",
+          "state_sha256": "7759dbe33aacd70e75b523e54493d5b2acbb013b2a6cb1c6a7a3d370b5ab18f9",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "confederacy-planet_shield_generator-blue.png",
+          "sha256": "d1219e4132c3fffa1f72135abf81d80015c2dfa9f6265dc195d23d00c132840d",
+          "state_sha256": "bb6f03707934180034cd2694723d8df9f8615d568e1b712d551eaecd772fb912",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "confederacy-planet_shield_generator-subject-disabled.png",
+          "sha256": "6e0a4e31405b6d8b0e856850882d641eac5978e6c69521de7058d346cbeec7fd",
+          "state_sha256": "f92bb30de7c1bd1a63329ef94c3b20bdb3b06fde89b95528b1a5ce2afd166c58",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "confederacy-planet_shield_generator-restored.png",
+          "sha256": "d1219e4132c3fffa1f72135abf81d80015c2dfa9f6265dc195d23d00c132840d",
+          "state_sha256": "1d3e5c1a794e424a5bf9ca42e7569cbd0c802639090e3f866a66d13b8298148d",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "confederacy-planet_shield_generator-orbit-0.png",
+          "sha256": "7398e0194e51f437050a011a5113779551ce6f3d932ed1655a6cea68abd0415a",
+          "state_sha256": "1d3e5c1a794e424a5bf9ca42e7569cbd0c802639090e3f866a66d13b8298148d",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "confederacy-planet_shield_generator-orbit-1.png",
+          "sha256": "901234a62632729ac1e929728d494c7a1c67b38b26b96eb5f24736d81f3ecad2",
+          "state_sha256": "1d3e5c1a794e424a5bf9ca42e7569cbd0c802639090e3f866a66d13b8298148d",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 15194,
+        "subject_changed_pixels_gt3": 25726,
+        "orbit_0_changed_pixels_gt3": 38714,
+        "orbit_1_changed_pixels_gt3": 37686
+      }
+    },
+    {
+      "binding": "confederacy:planet_trade_hub",
+      "category": "planet_installation",
+      "data_id": "planet_trade_hub",
+      "revision": "d1bf5fac71fdd6ef27b662a137d81e338966044a2744a3eb577cf4bbe08f906b",
+      "captures": {
+        "red": {
+          "file": "confederacy-planet_trade_hub-red.png",
+          "sha256": "aceab613b67dcc01ffd988f600bdcfd07623a5f471562214fc4a30aa9112dd59",
+          "state_sha256": "037d92a908d162399b1c1c304255f27c667f7f8e891bd349948008f634f411fe",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "confederacy-planet_trade_hub-blue.png",
+          "sha256": "81da0d8c13188899ce30f23b32e378c1050f61dda6b8bfb3faa921fa758dce59",
+          "state_sha256": "1a4033ba09de73cca1d9b9feb20529828f53eae39d36d4dcb60a016cb74d1700",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "confederacy-planet_trade_hub-subject-disabled.png",
+          "sha256": "61035e24e07cd2350ea84cbb073f90f938a7d90462cbe7bbbaff30263b7549e6",
+          "state_sha256": "f92bb30de7c1bd1a63329ef94c3b20bdb3b06fde89b95528b1a5ce2afd166c58",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "confederacy-planet_trade_hub-restored.png",
+          "sha256": "81da0d8c13188899ce30f23b32e378c1050f61dda6b8bfb3faa921fa758dce59",
+          "state_sha256": "5eb332d26e86e4a6088f81102e8a6a96f285ecc745cdd99cee88d8125e266694",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "confederacy-planet_trade_hub-orbit-0.png",
+          "sha256": "ce558586ba0a831b7d4b5855d8a4187d3c2f876e5c5c4185c6448a11d2a89ee6",
+          "state_sha256": "5eb332d26e86e4a6088f81102e8a6a96f285ecc745cdd99cee88d8125e266694",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "confederacy-planet_trade_hub-orbit-1.png",
+          "sha256": "c28a64a470f1f256f40770669703a457b8d19ea8647a6461ff85de01c6169b72",
+          "state_sha256": "5eb332d26e86e4a6088f81102e8a6a96f285ecc745cdd99cee88d8125e266694",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 15823,
+        "subject_changed_pixels_gt3": 23409,
+        "orbit_0_changed_pixels_gt3": 38684,
+        "orbit_1_changed_pixels_gt3": 39553
+      }
+    },
+    {
+      "binding": "confederacy:repair_dock",
+      "category": "station",
+      "data_id": "repair_dock",
+      "revision": "eb1b9ea8c8a8e17695db5133273254a53ffb54e3b1bff32b7d029ffc5c2da199",
+      "captures": {
+        "red": {
+          "file": "confederacy-repair_dock-red.png",
+          "sha256": "afef7bc285ac2c227b128b532ada9d4045260fc85bc5be7cc3c6cad869d4b37d",
+          "state_sha256": "97a30f464e0287de733e0834de7ab11efccd44e312cc0d8e74041e4dac0f4fe9",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "confederacy-repair_dock-blue.png",
+          "sha256": "47822e12bba7b738836dac4f7ca2d19f835eed4730f3222c5f83956040edbc3f",
+          "state_sha256": "1145ab77a212af1558c475339ea39747789b80ec311710e3aa3d9ee5127e1ffc",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "confederacy-repair_dock-subject-disabled.png",
+          "sha256": "a4c642bc503781e1cc0ac410d31002bf21599fb1b0efabfe62eb2fdfcd57f570",
+          "state_sha256": "b4dc44b9802af7feda508f342760bb8df6ea8c6ffb99117ea1341f1cacb6299f",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "confederacy-repair_dock-restored.png",
+          "sha256": "47822e12bba7b738836dac4f7ca2d19f835eed4730f3222c5f83956040edbc3f",
+          "state_sha256": "1145ab77a212af1558c475339ea39747789b80ec311710e3aa3d9ee5127e1ffc",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "confederacy-repair_dock-orbit-0.png",
+          "sha256": "4f43bb4b0d06414be1b869a6d8bd6eaf954f72a784993a311230d0521b813bc4",
+          "state_sha256": "1145ab77a212af1558c475339ea39747789b80ec311710e3aa3d9ee5127e1ffc",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "confederacy-repair_dock-orbit-1.png",
+          "sha256": "a616b7ad9de58d51eb0fff0faa5f6e4ae0f5c6caee5adbff317e0d67cb00c566",
+          "state_sha256": "1145ab77a212af1558c475339ea39747789b80ec311710e3aa3d9ee5127e1ffc",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 2549,
+        "subject_changed_pixels_gt3": 39003,
+        "orbit_0_changed_pixels_gt3": 35342,
+        "orbit_1_changed_pixels_gt3": 36047
+      }
+    },
+    {
+      "binding": "confederacy:research_station",
+      "category": "station",
+      "data_id": "research_station",
+      "revision": "c465dd2b1ec7af13ac0eb3cf2d3c6d5f3077d4f83e65348969f50bb006704753",
+      "captures": {
+        "red": {
+          "file": "confederacy-research_station-red.png",
+          "sha256": "6dd7b0e58234a5d9e025d28668827a34a0df2beeda1c7ec352ed67a6b76a66b1",
+          "state_sha256": "7aacd8f022a4795ad4ab965201425bf00cd535abc9d99e2eef6c5235346e821b",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "confederacy-research_station-blue.png",
+          "sha256": "9b1f3c6c14c32cbf4ea0faaf8c554bcfcae27213d54a1eb1ecc4caec9840038e",
+          "state_sha256": "0abacb1756f0ec0c10d2c44576f70d3173054746e80f5025fd9ad24428b82a12",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "confederacy-research_station-subject-disabled.png",
+          "sha256": "40160abe04eb50e752d174e9d27dcc02852c2c67addd14ea8dbb0152ffe7eda0",
+          "state_sha256": "a7aaf56536b2a96f234cd451128ea13d38cb427393eace61e3287796dab6d375",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "confederacy-research_station-restored.png",
+          "sha256": "9b1f3c6c14c32cbf4ea0faaf8c554bcfcae27213d54a1eb1ecc4caec9840038e",
+          "state_sha256": "0abacb1756f0ec0c10d2c44576f70d3173054746e80f5025fd9ad24428b82a12",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "confederacy-research_station-orbit-0.png",
+          "sha256": "f2820709e7829a5a0469ab43adf958c76711a98805bb319bde8a42d51e325e5d",
+          "state_sha256": "0abacb1756f0ec0c10d2c44576f70d3173054746e80f5025fd9ad24428b82a12",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "confederacy-research_station-orbit-1.png",
+          "sha256": "ead25e295833626a2bbea633691a00cd875d1297e5c773d163bd2e136e8b809c",
+          "state_sha256": "0abacb1756f0ec0c10d2c44576f70d3173054746e80f5025fd9ad24428b82a12",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 665,
+        "subject_changed_pixels_gt3": 27937,
+        "orbit_0_changed_pixels_gt3": 23848,
+        "orbit_1_changed_pixels_gt3": 25896
+      }
+    },
+    {
+      "binding": "confederacy:sensor_station",
+      "category": "station",
+      "data_id": "sensor_station",
+      "revision": "26d7fe84e755569a44a732cfc8ee36d5b34366764de4db0ddb4d3af45b3d0349",
+      "captures": {
+        "red": {
+          "file": "confederacy-sensor_station-red.png",
+          "sha256": "3bd9a46e828aa34bafdc4134ede940d53ca1e666767d9f7d3fda2a0306073097",
+          "state_sha256": "91806852e57ef9d2475e7c80d0bbe064b5de206359906b011287b903c61a9fee",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "confederacy-sensor_station-blue.png",
+          "sha256": "eea76b7e0dfc70a6ede910b5d88541aca29864d1f5bed8166157b2064193e548",
+          "state_sha256": "5c2b2afa5e0d33c2840614c4a061b2093862e78d40ec7c65f6636b4f36c4a2b3",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "confederacy-sensor_station-subject-disabled.png",
+          "sha256": "684422e9229eb77778626e99be93d95ecdac45d2b3bead85ccaec04880228c3a",
+          "state_sha256": "387c04ba792c3a6d4c80836db3ee473ca1e56e00a10680159c4de0524d3b3489",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "confederacy-sensor_station-restored.png",
+          "sha256": "eea76b7e0dfc70a6ede910b5d88541aca29864d1f5bed8166157b2064193e548",
+          "state_sha256": "5c2b2afa5e0d33c2840614c4a061b2093862e78d40ec7c65f6636b4f36c4a2b3",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "confederacy-sensor_station-orbit-0.png",
+          "sha256": "9426bc3c1ea69942bd8001dff69cee548e44875b71a7d0b2367c1591de59beca",
+          "state_sha256": "5c2b2afa5e0d33c2840614c4a061b2093862e78d40ec7c65f6636b4f36c4a2b3",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "confederacy-sensor_station-orbit-1.png",
+          "sha256": "f59544025a35b0147dc14e100cdc8456cfdec47dc466fd7dfd6e5adcb2bce5c5",
+          "state_sha256": "5c2b2afa5e0d33c2840614c4a061b2093862e78d40ec7c65f6636b4f36c4a2b3",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 400,
+        "subject_changed_pixels_gt3": 54912,
+        "orbit_0_changed_pixels_gt3": 33357,
+        "orbit_1_changed_pixels_gt3": 37686
+      }
+    },
+    {
+      "binding": "confederacy:shipyard",
+      "category": "station",
+      "data_id": "shipyard",
+      "revision": "c9d3c789c026c1043e52ff59789c83e11fa72655de863031eefb8732ef9e19e8",
+      "captures": {
+        "red": {
+          "file": "confederacy-shipyard-red.png",
+          "sha256": "1ba449ef25566ac3de573b3dae25fe96317afe34d1a764904d66fae41e8f808d",
+          "state_sha256": "dffa103a128e5b3bd674816bb331b67a5f7454b4c9257790135972425eacbc1c",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "confederacy-shipyard-blue.png",
+          "sha256": "2185a8bc8ef6825d1500fd1526896dcc56ed09b4caf2b10c278e78bea0d7af4a",
+          "state_sha256": "a63677b129f4fd610250ce4dd77086d44bf044f028a0d1eb2e4d44451eb74545",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "confederacy-shipyard-subject-disabled.png",
+          "sha256": "554870948be39d946f806c123fdaadcb17f1b85ab8ada94163526235734ec7e3",
+          "state_sha256": "f4d173ba7578b717f4b34bb088fd01d630307dc6bc8aeb982432408da1d5e2cd",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "confederacy-shipyard-restored.png",
+          "sha256": "2185a8bc8ef6825d1500fd1526896dcc56ed09b4caf2b10c278e78bea0d7af4a",
+          "state_sha256": "a63677b129f4fd610250ce4dd77086d44bf044f028a0d1eb2e4d44451eb74545",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "confederacy-shipyard-orbit-0.png",
+          "sha256": "7f6dc513b211de88f0d506ec60250d884c89c2a7490649ca795314cc27544ab6",
+          "state_sha256": "a63677b129f4fd610250ce4dd77086d44bf044f028a0d1eb2e4d44451eb74545",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "confederacy-shipyard-orbit-1.png",
+          "sha256": "e6f8a052a93f00fd7759a69351c8a0f4a3bcbda956328dfc4d53dce5fd54a6de",
+          "state_sha256": "a63677b129f4fd610250ce4dd77086d44bf044f028a0d1eb2e4d44451eb74545",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 7545,
+        "subject_changed_pixels_gt3": 37381,
+        "orbit_0_changed_pixels_gt3": 35435,
+        "orbit_1_changed_pixels_gt3": 40693
+      }
+    },
+    {
+      "binding": "confederacy:supercapital",
+      "category": "combat_hull",
+      "data_id": "confed_supercapital",
+      "revision": "ef932f769dc475900ebd4dfbdd21698fe4d6eb6a96c6e1d9e82e458a6ec50d80",
+      "captures": {
+        "red": {
+          "file": "confederacy-supercapital-red.png",
+          "sha256": "0f2d4b56a3a58455af448c61d79d555645fcd4ff260fb8de6b10e7837b7e1913",
+          "state_sha256": "5db02439821f040a21ae50ac0615634f4ef61ff586dca2316bb592fc523b2c65",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "confederacy-supercapital-blue.png",
+          "sha256": "eb72ffd34d39ffa2cdc6153bb8e9e5ce5856e95168c28f8e58c8019106ec1954",
+          "state_sha256": "f57a9508735f0e431d6ef03332831a4672aeac06f2b3b06ae73b15725902a7c6",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "confederacy-supercapital-subject-disabled.png",
+          "sha256": "c2686b9b3ac71979080945b6ac3a054602e85abb1b46988b8f0dbe8bbc2ac63d",
+          "state_sha256": "76d934f94bfeea56db9662abaf61a13c72a30b2c04a5a74b3492cb301e125aae",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "confederacy-supercapital-restored.png",
+          "sha256": "eb72ffd34d39ffa2cdc6153bb8e9e5ce5856e95168c28f8e58c8019106ec1954",
+          "state_sha256": "f57a9508735f0e431d6ef03332831a4672aeac06f2b3b06ae73b15725902a7c6",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "confederacy-supercapital-orbit-0.png",
+          "sha256": "618f69ab6b396fd1d0361854506c29f196619f290ed6df5cd55ff155397de4c4",
+          "state_sha256": "f57a9508735f0e431d6ef03332831a4672aeac06f2b3b06ae73b15725902a7c6",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "confederacy-supercapital-orbit-1.png",
+          "sha256": "75fe60f20aba7e97501505a692093339aab15d48b1e2d43d31a9dd6b5bbac9cc",
+          "state_sha256": "f57a9508735f0e431d6ef03332831a4672aeac06f2b3b06ae73b15725902a7c6",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 18848,
+        "subject_changed_pixels_gt3": 38253,
+        "orbit_0_changed_pixels_gt3": 39795,
+        "orbit_1_changed_pixels_gt3": 41371
+      }
+    },
+    {
+      "binding": "confederacy:trade_station",
+      "category": "station",
+      "data_id": "trade_station",
+      "revision": "e745cc70bbd59b6f0706e61c10acc3ca0040e8d9e444e4972c6a14e85e49382a",
+      "captures": {
+        "red": {
+          "file": "confederacy-trade_station-red.png",
+          "sha256": "52248582f5aee09b6faab9d30375e6945ba8518be7a6d46f1f63d366779cbda3",
+          "state_sha256": "8c26b24f0660dd64bde0fd9c784b56aa56452019258050778879a3d6efe30a91",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "confederacy-trade_station-blue.png",
+          "sha256": "e3dd4f43caeaeedd5a25a6f81b3cb451e8430d99452dee25322dd5d1d77768ca",
+          "state_sha256": "dcc1239f14075b5f79ab7df958fd363fff87dfdd1c54a106742653ce46b05ed1",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "confederacy-trade_station-subject-disabled.png",
+          "sha256": "288bfdb7e211e76e32cb5c5803d6226882fad26ceebf50e5351b6f88956b7f74",
+          "state_sha256": "f9d50bfded04830bfd074dd984386031af8e6380c41b497876f5989a2fdf8ee2",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "confederacy-trade_station-restored.png",
+          "sha256": "e3dd4f43caeaeedd5a25a6f81b3cb451e8430d99452dee25322dd5d1d77768ca",
+          "state_sha256": "dcc1239f14075b5f79ab7df958fd363fff87dfdd1c54a106742653ce46b05ed1",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "confederacy-trade_station-orbit-0.png",
+          "sha256": "2e4342ef1920a01242df3bcd01790114a77779eb4ed47913b3a1cd5b264ea764",
+          "state_sha256": "dcc1239f14075b5f79ab7df958fd363fff87dfdd1c54a106742653ce46b05ed1",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "confederacy-trade_station-orbit-1.png",
+          "sha256": "9442de4251d25b769cf634211a0839e6822216d5241cd57118b5fd563538f290",
+          "state_sha256": "dcc1239f14075b5f79ab7df958fd363fff87dfdd1c54a106742653ce46b05ed1",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 3156,
+        "subject_changed_pixels_gt3": 35686,
+        "orbit_0_changed_pixels_gt3": 26407,
+        "orbit_1_changed_pixels_gt3": 29871
+      }
+    },
+    {
+      "binding": "imperial:attack_satellite",
+      "category": "satellite",
+      "data_id": "attack_satellite",
+      "revision": "ee9cf42ede11a7c04a708ded716f841cbb1e5344e11aaa3dacc258c98762535e",
+      "captures": {
+        "red": {
+          "file": "imperial-attack_satellite-red.png",
+          "sha256": "ffb7f422766b2569b47dcc3b42542b6b51d373d7ba23cbe506a3a6906af93b32",
+          "state_sha256": "899f284e7cf28c88c3318980faa7be369fb6e3ee14f38dc0478a6825bfb4337a",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "imperial-attack_satellite-blue.png",
+          "sha256": "d7962498994b1c514dc20474c79b5dd2ba16e9ab5c41d981519a27a2f09927b9",
+          "state_sha256": "119dc02fd3d8f19d1517d1003b0cdf73ad2496bab02fa2a37181579ddac4eff4",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "imperial-attack_satellite-subject-disabled.png",
+          "sha256": "f8e109488dae33b665f380fd25fc5868f21cdd83a8adf430c0221297fe17fe38",
+          "state_sha256": "79ce0f77bb71ae078a3775b5754ccde69cc89e7e313e09d254b80f20c72f6ff3",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "imperial-attack_satellite-restored.png",
+          "sha256": "d7962498994b1c514dc20474c79b5dd2ba16e9ab5c41d981519a27a2f09927b9",
+          "state_sha256": "a60e664e2e5d54858cf9f1a7840a5fa10b6e5515ca82346bd0b22b123d570c8d",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "imperial-attack_satellite-orbit-0.png",
+          "sha256": "b41c44b62882dee15df8ea04bda5f204b9764e1d86bba1fd5ebef8e8f8093ed3",
+          "state_sha256": "a60e664e2e5d54858cf9f1a7840a5fa10b6e5515ca82346bd0b22b123d570c8d",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "imperial-attack_satellite-orbit-1.png",
+          "sha256": "b0484972098bd4a48e476898d6543d50641c39daa38d3c9706e8e3fbca217d79",
+          "state_sha256": "a60e664e2e5d54858cf9f1a7840a5fa10b6e5515ca82346bd0b22b123d570c8d",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 12074,
+        "subject_changed_pixels_gt3": 31151,
+        "orbit_0_changed_pixels_gt3": 34803,
+        "orbit_1_changed_pixels_gt3": 36659
+      }
+    },
+    {
+      "binding": "imperial:battleship",
+      "category": "combat_hull",
+      "data_id": "imperial_battleship",
+      "revision": "974d00963c452f85a870ae02a6f9f19e5778e8ea53f9f0998b3c34b0ab6580d4",
+      "captures": {
+        "red": {
+          "file": "imperial-battleship-red.png",
+          "sha256": "b0de2fe540ff2367accb543095404560ce98efb66ef020b6b12083c3c7e22a50",
+          "state_sha256": "75c6bf92a77a5554a4d23153d6e0df085010340a4883345176dca0c7c2bc6cbb",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "imperial-battleship-blue.png",
+          "sha256": "3fcc07f1780bdaa69af2e1361d60806742dac7b2a1cf5ebc75647bf07485147d",
+          "state_sha256": "dcabb34286f1dec789096e3ca74e8aa78416fb838feecfb0847b83819e314da5",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "imperial-battleship-subject-disabled.png",
+          "sha256": "5135d6312973e8678cb074c1aa37b0a98bef6898c064b173382f27de80cd8b3c",
+          "state_sha256": "f772c5697d5e79b15332a73326afca4d084fc142137055e0208cc0e003a1a2e3",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "imperial-battleship-restored.png",
+          "sha256": "3fcc07f1780bdaa69af2e1361d60806742dac7b2a1cf5ebc75647bf07485147d",
+          "state_sha256": "dcabb34286f1dec789096e3ca74e8aa78416fb838feecfb0847b83819e314da5",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "imperial-battleship-orbit-0.png",
+          "sha256": "23dd39605fefb80fef684016e5152760952b4455157dc7f598e90fa913c95d35",
+          "state_sha256": "dcabb34286f1dec789096e3ca74e8aa78416fb838feecfb0847b83819e314da5",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "imperial-battleship-orbit-1.png",
+          "sha256": "5b2e1fc6f880abdd5d28bb928f7e0b94e9a632255aff51221e713f16fbd664de",
+          "state_sha256": "dcabb34286f1dec789096e3ca74e8aa78416fb838feecfb0847b83819e314da5",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 10002,
+        "subject_changed_pixels_gt3": 27434,
+        "orbit_0_changed_pixels_gt3": 24645,
+        "orbit_1_changed_pixels_gt3": 40334
+      }
+    },
+    {
+      "binding": "imperial:bomber",
+      "category": "squadron",
+      "data_id": "imperial_tie_bomber_squadron",
+      "revision": "b4718873f7055f127edc9299a012d45d033789a77580b0c5718fd1bc9b3dc046",
+      "captures": {
+        "red": {
+          "file": "imperial-bomber-red.png",
+          "sha256": "e51de63c18a69b6c08fed2010938c14aed265730600ae8d97463033bd26ac2cb",
+          "state_sha256": "487de183f3bb2e3d2511a3deb8edc7a0040b184fa5bf2683991b4b0377d614e9",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "imperial-bomber-blue.png",
+          "sha256": "6b84912af35be02966a31d2c1dc3d8d4e24465d53cc5fffa6d56d7a4c0a8adb0",
+          "state_sha256": "121ac52eebae568ab1adaecd05d9fa3526808e8f89bb66cd55b119b7e00cfb25",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "imperial-bomber-subject-disabled.png",
+          "sha256": "e7e4e4103d8cfe7b65c1f9b86d1f1979455aa9b166a621b766727b95cff0e662",
+          "state_sha256": "f535d98cab28238aa8bee105f59ce36f819b3f3beefe0db51874b634e3176577",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "imperial-bomber-restored.png",
+          "sha256": "6b84912af35be02966a31d2c1dc3d8d4e24465d53cc5fffa6d56d7a4c0a8adb0",
+          "state_sha256": "121ac52eebae568ab1adaecd05d9fa3526808e8f89bb66cd55b119b7e00cfb25",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "imperial-bomber-orbit-0.png",
+          "sha256": "fd68549a0926643ac6cea87a034b2401f08b2da68623d262643feea60853ce1d",
+          "state_sha256": "121ac52eebae568ab1adaecd05d9fa3526808e8f89bb66cd55b119b7e00cfb25",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "imperial-bomber-orbit-1.png",
+          "sha256": "f2025e7c32b85d78303b09794330be965d1a59f5b0c3d7ad66c02e8fabcfc230",
+          "state_sha256": "121ac52eebae568ab1adaecd05d9fa3526808e8f89bb66cd55b119b7e00cfb25",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 2644,
+        "subject_changed_pixels_gt3": 4412,
+        "orbit_0_changed_pixels_gt3": 14232,
+        "orbit_1_changed_pixels_gt3": 14497
+      }
+    },
+    {
+      "binding": "imperial:colonizer",
+      "category": "construction",
+      "data_id": "imperial_colonizer",
+      "revision": "bc2191ba99e29ec507df735fd0bfcd73c0144bcec582f9893eeb4ea97c2f823c",
+      "captures": {
+        "red": {
+          "file": "imperial-colonizer-red.png",
+          "sha256": "fa9eb7bcfcc8eea64bc21bb82cf48c092fa462e8a9d455ca9d40fd3547a73f62",
+          "state_sha256": "6b41001085ae71881cf03884029da6e2edfd1c7589aaa23451bbc6c6d58db89e",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "imperial-colonizer-blue.png",
+          "sha256": "b7635e388e9fc2b41ce18ee44c07d8733c424c74f313001f21d3783260ccc2da",
+          "state_sha256": "b910b3044de1c47bfcc1ee6d5202ed05b24cd07646e20d6575fdc661ee1973d0",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "imperial-colonizer-subject-disabled.png",
+          "sha256": "9af74be4c655b6947fb4122e4faf160ee672e4f6c0acb2b6b063da92dbe600c7",
+          "state_sha256": "f2db96a1e6076f66b19a3f35905fc77fde0d49ae99df2c3d3095fc12db8d0b80",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "imperial-colonizer-restored.png",
+          "sha256": "b7635e388e9fc2b41ce18ee44c07d8733c424c74f313001f21d3783260ccc2da",
+          "state_sha256": "b910b3044de1c47bfcc1ee6d5202ed05b24cd07646e20d6575fdc661ee1973d0",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "imperial-colonizer-orbit-0.png",
+          "sha256": "fa13743675202a67c355df0affd1462351e36dc9f4e39b48515c0568fab3b338",
+          "state_sha256": "b910b3044de1c47bfcc1ee6d5202ed05b24cd07646e20d6575fdc661ee1973d0",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "imperial-colonizer-orbit-1.png",
+          "sha256": "227d24a781873fa2812778c6d0c37452a972cd3b931a9206ab5788d4c566be0e",
+          "state_sha256": "b910b3044de1c47bfcc1ee6d5202ed05b24cd07646e20d6575fdc661ee1973d0",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 20523,
+        "subject_changed_pixels_gt3": 41343,
+        "orbit_0_changed_pixels_gt3": 29488,
+        "orbit_1_changed_pixels_gt3": 31598
+      }
+    },
+    {
+      "binding": "imperial:command_station",
+      "category": "station",
+      "data_id": "command_station",
+      "revision": "90862067642e4939e5eadbf3d8262e703d8157afd38308a44fb93faa1a164926",
+      "captures": {
+        "red": {
+          "file": "imperial-command_station-red.png",
+          "sha256": "add4c4b99dfb0df38a9d0f9bd48ae92f8d27fd7160561b36122170f5cd32df40",
+          "state_sha256": "d34660c5d5f0ba70f6ae3f18380b0f06aff373bae318a086bb85e4881b8c6fac",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "imperial-command_station-blue.png",
+          "sha256": "80397ccf4a05a612bbc31a7c892d21e1f0986da461b1db1aa111e13cf54d6ecb",
+          "state_sha256": "0710c5c187779a02e2a479998ec5c4e8cd20432ac8ee33138d89cf3cdcead6ac",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "imperial-command_station-subject-disabled.png",
+          "sha256": "d9036282eec85e2773b4568b082a761462711ccb2e0110f6126b1071ed3587d2",
+          "state_sha256": "f82b21292b59c3e2b591c0ef957aee6a8927f10a0f3a7f8edee27460daf96d9c",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "imperial-command_station-restored.png",
+          "sha256": "80397ccf4a05a612bbc31a7c892d21e1f0986da461b1db1aa111e13cf54d6ecb",
+          "state_sha256": "0710c5c187779a02e2a479998ec5c4e8cd20432ac8ee33138d89cf3cdcead6ac",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "imperial-command_station-orbit-0.png",
+          "sha256": "87298c941746b99c004ad824213a00dae7f659f7793aa5dc272e9ccc51304638",
+          "state_sha256": "0710c5c187779a02e2a479998ec5c4e8cd20432ac8ee33138d89cf3cdcead6ac",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "imperial-command_station-orbit-1.png",
+          "sha256": "6d2d7dfa60933bec17916c9318c4b3405a147a4f4588aa3deab97e0c08beb4e5",
+          "state_sha256": "0710c5c187779a02e2a479998ec5c4e8cd20432ac8ee33138d89cf3cdcead6ac",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 20052,
+        "subject_changed_pixels_gt3": 45920,
+        "orbit_0_changed_pixels_gt3": 49829,
+        "orbit_1_changed_pixels_gt3": 51599
+      }
+    },
+    {
+      "binding": "imperial:constructor",
+      "category": "construction",
+      "data_id": "imperial_constructor",
+      "revision": "151d90676335556a67e6c80b0503086ec1d1d92af78835862a5dd47be19f0ebd",
+      "captures": {
+        "red": {
+          "file": "imperial-constructor-red.png",
+          "sha256": "b8d4d74957d325654831dccf37ec5eee9deeefbb0817da516bb493dab106108f",
+          "state_sha256": "c0020d5154ab850b92bbbc89d7595d055bbae2e0e50644a4928c8aeffc169b6d",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "imperial-constructor-blue.png",
+          "sha256": "3eb3b41264350b012526dd121d46f6cdd628bd7524eda4ac345c5ddda0457ec2",
+          "state_sha256": "9ce0e5646b3b6a65117f0f566ae887de9f143ec7a0a9634be166b7a219e129e8",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "imperial-constructor-subject-disabled.png",
+          "sha256": "bf8de34946b18996623e2bc64683da368b46884f855002d4821d7e5037095c40",
+          "state_sha256": "f2db96a1e6076f66b19a3f35905fc77fde0d49ae99df2c3d3095fc12db8d0b80",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "imperial-constructor-restored.png",
+          "sha256": "3eb3b41264350b012526dd121d46f6cdd628bd7524eda4ac345c5ddda0457ec2",
+          "state_sha256": "9ce0e5646b3b6a65117f0f566ae887de9f143ec7a0a9634be166b7a219e129e8",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "imperial-constructor-orbit-0.png",
+          "sha256": "c6c942ae14a29c5a84c075072d9020a0339b57f7f8e780eae37fc513a102115f",
+          "state_sha256": "9ce0e5646b3b6a65117f0f566ae887de9f143ec7a0a9634be166b7a219e129e8",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "imperial-constructor-orbit-1.png",
+          "sha256": "426ca9ae79013c162f4dd63acb807605663f7fe681cb4b726ee225acc82130f7",
+          "state_sha256": "9ce0e5646b3b6a65117f0f566ae887de9f143ec7a0a9634be166b7a219e129e8",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 15909,
+        "subject_changed_pixels_gt3": 36717,
+        "orbit_0_changed_pixels_gt3": 25415,
+        "orbit_1_changed_pixels_gt3": 28845
+      }
+    },
+    {
+      "binding": "imperial:convoy",
+      "category": "logistics_hull",
+      "data_id": "imperial_crew_transport",
+      "revision": "17a911a674fac07bad31ca51c9debaa38a22160e3350d8a7c6456804c16854bd",
+      "captures": {
+        "red": {
+          "file": "imperial-convoy-red.png",
+          "sha256": "5cdba254331237e56d2397af46e2ae41707a0cc688907f7c0509f5b72712dafd",
+          "state_sha256": "9ba7561311561d9ebbd1ec3769669bdc0f409389b5c7170ce974d9914b5afd7c",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "imperial-convoy-blue.png",
+          "sha256": "a2d532dbc574028632f3f9c5c9a15b9a62bd9bc8ee473c56f89715ee17cf3c3f",
+          "state_sha256": "c7f0c58c1109686cd0eb1e7a6d85005c2b38bc419fcb77307bf8eb94a20864b2",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "imperial-convoy-subject-disabled.png",
+          "sha256": "786451f7fdf5aecb8cb337aec5c2531828860c6db2a93a1d366f6a4fbb36d32a",
+          "state_sha256": "f2db96a1e6076f66b19a3f35905fc77fde0d49ae99df2c3d3095fc12db8d0b80",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "imperial-convoy-restored.png",
+          "sha256": "a2d532dbc574028632f3f9c5c9a15b9a62bd9bc8ee473c56f89715ee17cf3c3f",
+          "state_sha256": "c7f0c58c1109686cd0eb1e7a6d85005c2b38bc419fcb77307bf8eb94a20864b2",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "imperial-convoy-orbit-0.png",
+          "sha256": "4dbbd7a34012b5251f8411cedee18e84afaf85192fbcdcd3efd567f1474e7cdc",
+          "state_sha256": "c7f0c58c1109686cd0eb1e7a6d85005c2b38bc419fcb77307bf8eb94a20864b2",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "imperial-convoy-orbit-1.png",
+          "sha256": "73b988e5c6154a147dac314c9a1dcc20dd7b8c69f4815e8a7d69194ecf10a372",
+          "state_sha256": "c7f0c58c1109686cd0eb1e7a6d85005c2b38bc419fcb77307bf8eb94a20864b2",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 13426,
+        "subject_changed_pixels_gt3": 31271,
+        "orbit_0_changed_pixels_gt3": 22067,
+        "orbit_1_changed_pixels_gt3": 24020
+      }
+    },
+    {
+      "binding": "imperial:corvette",
+      "category": "combat_hull",
+      "data_id": "imperial_corvette",
+      "revision": "5b36e73aa2b6132fc035a418897806a04b2f4421704a33ecb87a6af752563011",
+      "captures": {
+        "red": {
+          "file": "imperial-corvette-red.png",
+          "sha256": "9a06ef59be4380090d80812f576c5f75244072bb0a5203b666787a9881b1a535",
+          "state_sha256": "2805b00396b86e4f84737d1740a5384ba000f97a5ac3dfe1b7c06facba4511a8",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "imperial-corvette-blue.png",
+          "sha256": "afae65eab79550e8cf13c778c15d848bb0e61bf426e803d6a81d1f65b90928e7",
+          "state_sha256": "201808b2a7713126888604182c1cc0234898a9ed0eaf56e018f97d31790acc1a",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "imperial-corvette-subject-disabled.png",
+          "sha256": "ce0aa63b022a295046a23fc24376846febff080b30745d1e8d0305d57e6be35c",
+          "state_sha256": "748f4caeef0c5dfce673a1568d1ca7854db4d3af6e2732cd2d5a8059da227090",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "imperial-corvette-restored.png",
+          "sha256": "afae65eab79550e8cf13c778c15d848bb0e61bf426e803d6a81d1f65b90928e7",
+          "state_sha256": "201808b2a7713126888604182c1cc0234898a9ed0eaf56e018f97d31790acc1a",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "imperial-corvette-orbit-0.png",
+          "sha256": "37a8f08d7eb38bf6f91fadc7572cf88effe67d4fefb000a00a1fcb0db1d37c7f",
+          "state_sha256": "201808b2a7713126888604182c1cc0234898a9ed0eaf56e018f97d31790acc1a",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "imperial-corvette-orbit-1.png",
+          "sha256": "69b57070b71e12645513286f8e4001c9f6bb1171d0343861acf6b83b29fda909",
+          "state_sha256": "201808b2a7713126888604182c1cc0234898a9ed0eaf56e018f97d31790acc1a",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 7140,
+        "subject_changed_pixels_gt3": 21175,
+        "orbit_0_changed_pixels_gt3": 25402,
+        "orbit_1_changed_pixels_gt3": 30170
+      }
+    },
+    {
+      "binding": "imperial:cruiser",
+      "category": "combat_hull",
+      "data_id": "imperial_cruiser",
+      "revision": "bdf2d383b5054696a86cd8b08aa155191fba4214354ef86bc12c28c44d5fc5f1",
+      "captures": {
+        "red": {
+          "file": "imperial-cruiser-red.png",
+          "sha256": "b322b40ab77b846b59623ac6088ed9d39cb2c923124b2a3198d18cc1aa0a5c41",
+          "state_sha256": "e7097433c77774d1930951fa60cebad71477f9e7374f33464c60e6a911d3e158",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "imperial-cruiser-blue.png",
+          "sha256": "5f3f36e83f868ab3f9ebfca4327cbe4dc6630d72ecbc796f3748dd37d0558054",
+          "state_sha256": "22a10a9618b71ccb277798bf5de6665e057fe81979c982973778611a2873a1cc",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "imperial-cruiser-subject-disabled.png",
+          "sha256": "b38d70041561202b120cd5f76e4b2050a7b96105089b7481c5a3eccefc022e27",
+          "state_sha256": "483934cffa2193ad2183aa8f8f4bd2ec15a9c759f5e26bd4ea5f0101c1337b52",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "imperial-cruiser-restored.png",
+          "sha256": "5f3f36e83f868ab3f9ebfca4327cbe4dc6630d72ecbc796f3748dd37d0558054",
+          "state_sha256": "22a10a9618b71ccb277798bf5de6665e057fe81979c982973778611a2873a1cc",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "imperial-cruiser-orbit-0.png",
+          "sha256": "0f63abe59c05e8a449909624d6014cb185033613451f2363c8c5c45704d929a1",
+          "state_sha256": "22a10a9618b71ccb277798bf5de6665e057fe81979c982973778611a2873a1cc",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "imperial-cruiser-orbit-1.png",
+          "sha256": "014d9ff5b48f6b22ecced25564aec01d67c4c1c3079ec7ad919c1db30a908fe1",
+          "state_sha256": "22a10a9618b71ccb277798bf5de6665e057fe81979c982973778611a2873a1cc",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 10120,
+        "subject_changed_pixels_gt3": 27828,
+        "orbit_0_changed_pixels_gt3": 21946,
+        "orbit_1_changed_pixels_gt3": 38777
+      }
+    },
+    {
+      "binding": "imperial:defense_platform",
+      "category": "station",
+      "data_id": "defense_platform",
+      "revision": "2774ed599b6c727b2ce4e07c58083408f2fb34ebb14b15320cc8d4025c44e0a8",
+      "captures": {
+        "red": {
+          "file": "imperial-defense_platform-red.png",
+          "sha256": "b9ced4557c79706a4535c5a7f2bc11bad440c40b354b2800037d83a85b6bf731",
+          "state_sha256": "05a69c9879e20c4ebd0ea818c41046f511c0482d1d145f59d288038fe197d8ac",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "imperial-defense_platform-blue.png",
+          "sha256": "7c3469e303f62bbb6ac55823b3984189f81c864169fe2a53171d97c78ee8aeda",
+          "state_sha256": "f1f718fb306c7afe0e44b46c8601b4fa5ca76a155d838fad036bbf7e45afa806",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "imperial-defense_platform-subject-disabled.png",
+          "sha256": "7654eb6d7725bf6b267515ce08242b26e0c68862bdeeb36985d6e8125465fcfb",
+          "state_sha256": "e668a7b0b8c445f5f6a32328a458b4f46b030d07f5902e597fff825e6e9562cd",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "imperial-defense_platform-restored.png",
+          "sha256": "7c3469e303f62bbb6ac55823b3984189f81c864169fe2a53171d97c78ee8aeda",
+          "state_sha256": "f1f718fb306c7afe0e44b46c8601b4fa5ca76a155d838fad036bbf7e45afa806",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "imperial-defense_platform-orbit-0.png",
+          "sha256": "0b9c09a0b65d3fa179f87e26ccf8ec52b141c752ec83cce145e0eb2b9b6bc75b",
+          "state_sha256": "f1f718fb306c7afe0e44b46c8601b4fa5ca76a155d838fad036bbf7e45afa806",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "imperial-defense_platform-orbit-1.png",
+          "sha256": "b9bc5f9626f5405d33a3bb2c9b636d00c4496aede8279a0470db1d54184a61fb",
+          "state_sha256": "f1f718fb306c7afe0e44b46c8601b4fa5ca76a155d838fad036bbf7e45afa806",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 19506,
+        "subject_changed_pixels_gt3": 43139,
+        "orbit_0_changed_pixels_gt3": 41258,
+        "orbit_1_changed_pixels_gt3": 46113
+      }
+    },
+    {
+      "binding": "imperial:defense_satellite",
+      "category": "satellite",
+      "data_id": "defense_satellite",
+      "revision": "0eb778bb1f6c95fcab5dc329085f05f2f060979bdaa179709943e14d4c779635",
+      "captures": {
+        "red": {
+          "file": "imperial-defense_satellite-red.png",
+          "sha256": "2ce04180797a9918b65323ada94a189baf2e1b12869d3a41425a69702feebc2b",
+          "state_sha256": "3bc20edf93e5e31c99de088f60a8649a1e47f817314008b397dc54caf6c84b9a",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "imperial-defense_satellite-blue.png",
+          "sha256": "ca67a04cce811cdcd12b813bae55249d0d7a39d87db06859494209d68d1759e6",
+          "state_sha256": "61cf3ac1cfb3b920fc60cde5a2cbff1199cf275111e6e56102980a9222325ca0",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "imperial-defense_satellite-subject-disabled.png",
+          "sha256": "da8ad68c8a5bb6e67893afd93cf1bd55a8202af0b39b1d33b603363a0ab72c7f",
+          "state_sha256": "79ce0f77bb71ae078a3775b5754ccde69cc89e7e313e09d254b80f20c72f6ff3",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "imperial-defense_satellite-restored.png",
+          "sha256": "ca67a04cce811cdcd12b813bae55249d0d7a39d87db06859494209d68d1759e6",
+          "state_sha256": "e6a2589c8aee374390a41c3bec5a3cd0c8e3c140a41dd7fd583b575c3c7e20b1",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "imperial-defense_satellite-orbit-0.png",
+          "sha256": "9ca90562cc0700e3d3f0c1448072a5f5135ec5e32ecd7519154525062a7ed0e1",
+          "state_sha256": "e6a2589c8aee374390a41c3bec5a3cd0c8e3c140a41dd7fd583b575c3c7e20b1",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "imperial-defense_satellite-orbit-1.png",
+          "sha256": "985c6fd6d07b5072536cc61303bf654d51ee5a7f144fa57b9ee09610f01835e7",
+          "state_sha256": "e6a2589c8aee374390a41c3bec5a3cd0c8e3c140a41dd7fd583b575c3c7e20b1",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 15670,
+        "subject_changed_pixels_gt3": 35708,
+        "orbit_0_changed_pixels_gt3": 39286,
+        "orbit_1_changed_pixels_gt3": 41591
+      }
+    },
+    {
+      "binding": "imperial:energy_relay",
+      "category": "station",
+      "data_id": "energy_relay",
+      "revision": "740bbe635e3d99a87c6ddb2ddda60296187e06edc8b517364f5757b616f35f1f",
+      "captures": {
+        "red": {
+          "file": "imperial-energy_relay-red.png",
+          "sha256": "6f3df9683fcd25ff037e292cfe41e125e390b3883b3e5d4ca38b81a3a23524a0",
+          "state_sha256": "7ef2ed63a5ea6abda350f347d232f7802ca33a6530057b67045141bba06c8026",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "imperial-energy_relay-blue.png",
+          "sha256": "1b7172ce692c48a8a0aa54683a373b36e3269bda87e6de522b1354ceada930ee",
+          "state_sha256": "9d00ce19700615c47a3c126185cbdeee6ea880c17e36c073e0506104e2b0a948",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "imperial-energy_relay-subject-disabled.png",
+          "sha256": "9043fdf1d9561b825f0498adad0ae956758ae54ba95dcb08493553cdc01cca46",
+          "state_sha256": "c7929f1ee233ea4f35ab5a13f7c1657af625171a74ecde11a8cd73fd0f50f09c",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "imperial-energy_relay-restored.png",
+          "sha256": "1b7172ce692c48a8a0aa54683a373b36e3269bda87e6de522b1354ceada930ee",
+          "state_sha256": "9d00ce19700615c47a3c126185cbdeee6ea880c17e36c073e0506104e2b0a948",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "imperial-energy_relay-orbit-0.png",
+          "sha256": "56f357c08d1a9279be4f36fe8b2f6a5cd63cbe4f55df6b994861a6c61a74a97b",
+          "state_sha256": "9d00ce19700615c47a3c126185cbdeee6ea880c17e36c073e0506104e2b0a948",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "imperial-energy_relay-orbit-1.png",
+          "sha256": "44f6c6962af03430b208271173884fa38d17bdb09b290f60d0889c8e8f014543",
+          "state_sha256": "9d00ce19700615c47a3c126185cbdeee6ea880c17e36c073e0506104e2b0a948",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 14889,
+        "subject_changed_pixels_gt3": 40828,
+        "orbit_0_changed_pixels_gt3": 31033,
+        "orbit_1_changed_pixels_gt3": 35278
+      }
+    },
+    {
+      "binding": "imperial:fighter",
+      "category": "squadron",
+      "data_id": "imperial_tie_squadron",
+      "revision": "0793fed46bab419e7005ed3b2abea1dcd91cd6153b2c7f4d592efacedbd33f6a",
+      "captures": {
+        "red": {
+          "file": "imperial-fighter-red.png",
+          "sha256": "788330080dd9ef6eaa2844cc329f3505e7f225d074b75a751368a553bc8d9f05",
+          "state_sha256": "351d1f1e183f2324caca972483bd152969037ea1b6900ef0c2f55d8c50b3b6cd",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "imperial-fighter-blue.png",
+          "sha256": "4b6857ab974e694f60079839b97432263707089a69c584f0e9f1701928f08eb0",
+          "state_sha256": "53a06466156ca6ce8b740a644f370cc42cd52c4d9577b60ff818c1fd16764559",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "imperial-fighter-subject-disabled.png",
+          "sha256": "e7e4e4103d8cfe7b65c1f9b86d1f1979455aa9b166a621b766727b95cff0e662",
+          "state_sha256": "f535d98cab28238aa8bee105f59ce36f819b3f3beefe0db51874b634e3176577",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "imperial-fighter-restored.png",
+          "sha256": "4b6857ab974e694f60079839b97432263707089a69c584f0e9f1701928f08eb0",
+          "state_sha256": "53a06466156ca6ce8b740a644f370cc42cd52c4d9577b60ff818c1fd16764559",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "imperial-fighter-orbit-0.png",
+          "sha256": "ebac64189bb659006893c5b5dfd1e55eec1a077e96a0f9e0141acab1e8851fdf",
+          "state_sha256": "53a06466156ca6ce8b740a644f370cc42cd52c4d9577b60ff818c1fd16764559",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "imperial-fighter-orbit-1.png",
+          "sha256": "de894b10912f7f00bb90f2c2e8d5e899cbb1e0384f3e0a22fd7ac873e3c98d91",
+          "state_sha256": "53a06466156ca6ce8b740a644f370cc42cd52c4d9577b60ff818c1fd16764559",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 2108,
+        "subject_changed_pixels_gt3": 3973,
+        "orbit_0_changed_pixels_gt3": 13739,
+        "orbit_1_changed_pixels_gt3": 14016
+      }
+    },
+    {
+      "binding": "imperial:fighter_platform",
+      "category": "station",
+      "data_id": "fighter_platform",
+      "revision": "300e49b7b95520a083bbfa187a87467721e5a96e9608dd63d525dcaf17c26bdb",
+      "captures": {
+        "red": {
+          "file": "imperial-fighter_platform-red.png",
+          "sha256": "03dad8d503ccecab342b216f21950630974504db57d9dcafc35b9c81cc5f5196",
+          "state_sha256": "c2fa0bf785cee28decf80f80976e2174ea3634f69c6e27ee6abc28fcdeeb1cc2",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "imperial-fighter_platform-blue.png",
+          "sha256": "e3460155b72a4b62a0e5ac5942c7ecf3a5935e8974ffa77c89c0ba8360b88d46",
+          "state_sha256": "7115e7756652ea61f46ddda0e182f240581b71046a9dff11e704f954358a831e",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "imperial-fighter_platform-subject-disabled.png",
+          "sha256": "2168c3b5fa875280c344e1645cc72f7ebd4644f629204f5bfd28563034f00d78",
+          "state_sha256": "f2db96a1e6076f66b19a3f35905fc77fde0d49ae99df2c3d3095fc12db8d0b80",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "imperial-fighter_platform-restored.png",
+          "sha256": "e3460155b72a4b62a0e5ac5942c7ecf3a5935e8974ffa77c89c0ba8360b88d46",
+          "state_sha256": "7115e7756652ea61f46ddda0e182f240581b71046a9dff11e704f954358a831e",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "imperial-fighter_platform-orbit-0.png",
+          "sha256": "60fdfd2f57c0e34153949823882e6f8ad451f604ed81e321ee3abff4868d7e8e",
+          "state_sha256": "7115e7756652ea61f46ddda0e182f240581b71046a9dff11e704f954358a831e",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "imperial-fighter_platform-orbit-1.png",
+          "sha256": "568feafdd0fac8e47980f1d9158d0e1305d368f7a7e20ab28b83bbbaf6439a1f",
+          "state_sha256": "7115e7756652ea61f46ddda0e182f240581b71046a9dff11e704f954358a831e",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 15669,
+        "subject_changed_pixels_gt3": 42498,
+        "orbit_0_changed_pixels_gt3": 30074,
+        "orbit_1_changed_pixels_gt3": 32930
+      }
+    },
+    {
+      "binding": "imperial:frigate",
+      "category": "combat_hull",
+      "data_id": "imperial_frigate",
+      "revision": "c0cf348ad0163a52a10eb9140c1c43abf2a6e3ed2d7fd113d6bc95746aa03109",
+      "captures": {
+        "red": {
+          "file": "imperial-frigate-red.png",
+          "sha256": "2921834efd0363f64aa4c190af5e098bd725b28f7a45754d1f0cfcb53e45ac72",
+          "state_sha256": "4f9e39940078362b5981e101b7b405c20ff043ee4b1d3190916f3359d733725b",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "imperial-frigate-blue.png",
+          "sha256": "5da84a64103cedcf5006b79918cd3f482c68f2b3c98616a69599303369685637",
+          "state_sha256": "b63834d286a0a6f2f99bc9215c201810650116b6241afd436e292001276870d7",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "imperial-frigate-subject-disabled.png",
+          "sha256": "c7fffd2a90e017ae952727483ba63f1947ccad29759adc4f146ec5a8f22919fb",
+          "state_sha256": "78d15e5b4e93fb7d207810a7184f246ac931a599e1d5be347a5d7e05aa90cd12",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "imperial-frigate-restored.png",
+          "sha256": "5da84a64103cedcf5006b79918cd3f482c68f2b3c98616a69599303369685637",
+          "state_sha256": "b63834d286a0a6f2f99bc9215c201810650116b6241afd436e292001276870d7",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "imperial-frigate-orbit-0.png",
+          "sha256": "12ffbff42b899ec2f8c71f0ec7aacee5a9ac74fd6e5aafa0094de0c1b7c122c5",
+          "state_sha256": "b63834d286a0a6f2f99bc9215c201810650116b6241afd436e292001276870d7",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "imperial-frigate-orbit-1.png",
+          "sha256": "4285b98736abb0363095e3783ef82e8a8c7503ed9208863dcdf99f8a2a061d19",
+          "state_sha256": "b63834d286a0a6f2f99bc9215c201810650116b6241afd436e292001276870d7",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 9932,
+        "subject_changed_pixels_gt3": 28585,
+        "orbit_0_changed_pixels_gt3": 24733,
+        "orbit_1_changed_pixels_gt3": 28363
+      }
+    },
+    {
+      "binding": "imperial:mining_station",
+      "category": "station",
+      "data_id": "mining_station",
+      "revision": "5f57cc2e276b78e99acc22754c9b5e52ab0dcfffa16cec4f72fec4d568961337",
+      "captures": {
+        "red": {
+          "file": "imperial-mining_station-red.png",
+          "sha256": "bf32399bfe87b1f3cb8a8bec521f803ca31c6415e79b7426c773a13e4ad2eebc",
+          "state_sha256": "f91fad8a45bab41562f742c1ca355afcd7a9a4e88638ebbb62556b08789fd636",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "imperial-mining_station-blue.png",
+          "sha256": "5d8ab74478d1532eb6049de712d64eee518ae5a6c3090b39ee9a34f90f52a31b",
+          "state_sha256": "6ace38f27fda6b536abee68dd85b757664d11c25683b6f2565afe3b28f2f8468",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "imperial-mining_station-subject-disabled.png",
+          "sha256": "3c9984985fd5e79400735f330446a3e6f63db0ee39de75ea8f911a021b61e297",
+          "state_sha256": "4decc0a9cfb9405a2c2197babfa9d05410fa81223ec5676fbc938a4165a55f12",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "imperial-mining_station-restored.png",
+          "sha256": "5d8ab74478d1532eb6049de712d64eee518ae5a6c3090b39ee9a34f90f52a31b",
+          "state_sha256": "6ace38f27fda6b536abee68dd85b757664d11c25683b6f2565afe3b28f2f8468",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "imperial-mining_station-orbit-0.png",
+          "sha256": "d69d44762d86b5ffff58bcf071d853d932d8de216432ecb4afdb7c1713b36d35",
+          "state_sha256": "6ace38f27fda6b536abee68dd85b757664d11c25683b6f2565afe3b28f2f8468",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "imperial-mining_station-orbit-1.png",
+          "sha256": "2c40316f7cdb6e0959c3e00e75af1c02264647852fca10bdec977497a5bbb87b",
+          "state_sha256": "6ace38f27fda6b536abee68dd85b757664d11c25683b6f2565afe3b28f2f8468",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 22602,
+        "subject_changed_pixels_gt3": 42250,
+        "orbit_0_changed_pixels_gt3": 30228,
+        "orbit_1_changed_pixels_gt3": 36611
+      }
+    },
+    {
+      "binding": "imperial:planet_extractor",
+      "category": "planet_installation",
+      "data_id": "planet_extractor",
+      "revision": "62b1cefa72f80e22dc6bcb76da67575dd24f5f56df284893a699c3a18b615004",
+      "captures": {
+        "red": {
+          "file": "imperial-planet_extractor-red.png",
+          "sha256": "f30943459ea661cb17e1ed4e07686840179e7c14cc4d3afaddbe1f90b32d4818",
+          "state_sha256": "55b820c2e301b1204021f9d20f8d8132066cba83661852e0455f146eab1fcccb",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "imperial-planet_extractor-blue.png",
+          "sha256": "4fbd9a92c38f9b7af54c40b20cb88369f7ac81c2714a0537414de7bd849cadd7",
+          "state_sha256": "2098d6940b50bd5fa35274fc45f99cfcd78781b8b7409d63ab44f17a86f0a548",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "imperial-planet_extractor-subject-disabled.png",
+          "sha256": "884f55972215af722a1786895a8aaca93a5dcde5c7844e75f7a19ba3bc41dd28",
+          "state_sha256": "be820d35c4cdf759dcedea9e9d490bb6cad19ce5507420c6c3c240d0f8238a30",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "imperial-planet_extractor-restored.png",
+          "sha256": "4fbd9a92c38f9b7af54c40b20cb88369f7ac81c2714a0537414de7bd849cadd7",
+          "state_sha256": "3527a6939a9b276918c6dfea2913a361d4146737f7a7d42a261cd5b483c1c5ec",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "imperial-planet_extractor-orbit-0.png",
+          "sha256": "2029bebbcffaac357837183481dd31866d14374a8e549d286fea61b482e7313e",
+          "state_sha256": "3527a6939a9b276918c6dfea2913a361d4146737f7a7d42a261cd5b483c1c5ec",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "imperial-planet_extractor-orbit-1.png",
+          "sha256": "97d812ab2d91a486c952f971fd0f6967ca1af52a7cd2bf956cee5c38aa318dab",
+          "state_sha256": "3527a6939a9b276918c6dfea2913a361d4146737f7a7d42a261cd5b483c1c5ec",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 13436,
+        "subject_changed_pixels_gt3": 27115,
+        "orbit_0_changed_pixels_gt3": 42502,
+        "orbit_1_changed_pixels_gt3": 41024
+      }
+    },
+    {
+      "binding": "imperial:planet_pulsar_cannon",
+      "category": "planet_installation",
+      "data_id": "planet_pulsar_cannon",
+      "revision": "785ec6dc5454e7fe6aa14050acd9a12869c9a1d46227ef91c8482b165da9a382",
+      "captures": {
+        "red": {
+          "file": "imperial-planet_pulsar_cannon-red.png",
+          "sha256": "46e67303985f5f36dbd0a5fe90a1432abc5b359e2f46c9eddf3e383e1e03c3f3",
+          "state_sha256": "635820f598e818fa8632e3affc7491523856c8ffd33a708a819f486b9fec32c8",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "imperial-planet_pulsar_cannon-blue.png",
+          "sha256": "fb682962418de78b5d7d75c170cb6ac1f1a9b8ecc0ded25a765e7f2131770588",
+          "state_sha256": "a5452502dca9df3750c3a94de1daccbb8ee1ec540b4026eac9afc890b3778d91",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "imperial-planet_pulsar_cannon-subject-disabled.png",
+          "sha256": "a5219ee90c6e92ad2f53e538e106e43befc676319576a3804fac0960369cb7b1",
+          "state_sha256": "b4c49ed821c16ffb3113b207110010353cc45b9610608ccbde47e8b05fb1c87b",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "imperial-planet_pulsar_cannon-restored.png",
+          "sha256": "fb682962418de78b5d7d75c170cb6ac1f1a9b8ecc0ded25a765e7f2131770588",
+          "state_sha256": "89dbc51252f2242d2dc16f4f6e06ea52175b681ae40a5b8ae4799ffacd32ac02",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "imperial-planet_pulsar_cannon-orbit-0.png",
+          "sha256": "8f8ea2b6219442ed4375b7508726e0aa88b4cbf24267a51045b7ce4dd98bf6ea",
+          "state_sha256": "89dbc51252f2242d2dc16f4f6e06ea52175b681ae40a5b8ae4799ffacd32ac02",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "imperial-planet_pulsar_cannon-orbit-1.png",
+          "sha256": "5ffee0ead8b46f643c6ec22971bd5e85f17b8f6b4dae4978b97ab569d7f1e37d",
+          "state_sha256": "89dbc51252f2242d2dc16f4f6e06ea52175b681ae40a5b8ae4799ffacd32ac02",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 16186,
+        "subject_changed_pixels_gt3": 306529,
+        "orbit_0_changed_pixels_gt3": 93268,
+        "orbit_1_changed_pixels_gt3": 134795
+      }
+    },
+    {
+      "binding": "imperial:planet_shield_generator",
+      "category": "planet_installation",
+      "data_id": "planet_shield_generator",
+      "revision": "e07d19a1a9645132fd6ae43fc81151f6ca8f1b0b591adcc7cdfbe26ea541731d",
+      "captures": {
+        "red": {
+          "file": "imperial-planet_shield_generator-red.png",
+          "sha256": "ac1a5630d0d23bca2af33509704c29f4630e62c995bd632685a3fec1d458e4a6",
+          "state_sha256": "38ca63627ebfeec62e82a9bf7b7d722456639cb2521197cffd457eab79367514",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "imperial-planet_shield_generator-blue.png",
+          "sha256": "af9429536ca99cfd987d036096e971452fb889e2d99a75342ce8d6ccc1ca6ce2",
+          "state_sha256": "8b0b2f7ab0cf88425be948877ab18ac1508afe4141dba78d90b92eb69701b49b",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "imperial-planet_shield_generator-subject-disabled.png",
+          "sha256": "6e0a4e31405b6d8b0e856850882d641eac5978e6c69521de7058d346cbeec7fd",
+          "state_sha256": "be820d35c4cdf759dcedea9e9d490bb6cad19ce5507420c6c3c240d0f8238a30",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "imperial-planet_shield_generator-restored.png",
+          "sha256": "af9429536ca99cfd987d036096e971452fb889e2d99a75342ce8d6ccc1ca6ce2",
+          "state_sha256": "6b53a719323980ee5666af13f6278ad75911f42c4c6e4e4df2f47bd1c554e42a",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "imperial-planet_shield_generator-orbit-0.png",
+          "sha256": "d35cf62051edd427d9a3e3d8ad056d61aa17522d7b4d01afe546848edae9402c",
+          "state_sha256": "6b53a719323980ee5666af13f6278ad75911f42c4c6e4e4df2f47bd1c554e42a",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "imperial-planet_shield_generator-orbit-1.png",
+          "sha256": "469fc43c9291ebc269fc753c9215c6a3f53b000b9ead64662fbcda821125266f",
+          "state_sha256": "6b53a719323980ee5666af13f6278ad75911f42c4c6e4e4df2f47bd1c554e42a",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 15357,
+        "subject_changed_pixels_gt3": 25656,
+        "orbit_0_changed_pixels_gt3": 38541,
+        "orbit_1_changed_pixels_gt3": 37734
+      }
+    },
+    {
+      "binding": "imperial:planet_trade_hub",
+      "category": "planet_installation",
+      "data_id": "planet_trade_hub",
+      "revision": "554b99ef2e257195dfb5c66e2310a063496917e59452a6c8a71b3018817fc777",
+      "captures": {
+        "red": {
+          "file": "imperial-planet_trade_hub-red.png",
+          "sha256": "28ab400ee19161c0e77e4470c08280edcad9be24b5cdbe9bd6133efecff94dfb",
+          "state_sha256": "3ddcff944f2ac89abdf9835241ba5e61a5bc8902790ca9b07db8d256aba0d670",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "imperial-planet_trade_hub-blue.png",
+          "sha256": "81f6a5798bb20aa68fd7b88f739dfbe81954c8a71597237c2080736d21ade531",
+          "state_sha256": "8d9f44d1b730404b87344155c3f0132e53d956da6c060c14bd850698398f8179",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "imperial-planet_trade_hub-subject-disabled.png",
+          "sha256": "61035e24e07cd2350ea84cbb073f90f938a7d90462cbe7bbbaff30263b7549e6",
+          "state_sha256": "be820d35c4cdf759dcedea9e9d490bb6cad19ce5507420c6c3c240d0f8238a30",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "imperial-planet_trade_hub-restored.png",
+          "sha256": "81f6a5798bb20aa68fd7b88f739dfbe81954c8a71597237c2080736d21ade531",
+          "state_sha256": "0f4c5f74acf66c82bbd9038e3aff28bf11f87d8fa49ce232037733c50c24af07",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "imperial-planet_trade_hub-orbit-0.png",
+          "sha256": "8cb7b0ffe404eaffaed4b230587df7e974a03b6af63d5db653b693e5654f12c1",
+          "state_sha256": "0f4c5f74acf66c82bbd9038e3aff28bf11f87d8fa49ce232037733c50c24af07",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "imperial-planet_trade_hub-orbit-1.png",
+          "sha256": "5927a5b09f4abd4cd7b9c85bcd456b6d515aa56784c27f7b312d67802479aa49",
+          "state_sha256": "0f4c5f74acf66c82bbd9038e3aff28bf11f87d8fa49ce232037733c50c24af07",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 15898,
+        "subject_changed_pixels_gt3": 23383,
+        "orbit_0_changed_pixels_gt3": 38770,
+        "orbit_1_changed_pixels_gt3": 39764
+      }
+    },
+    {
+      "binding": "imperial:repair_dock",
+      "category": "station",
+      "data_id": "repair_dock",
+      "revision": "2005ee722fb2ff43fe550b31dc3ff604c67a600870197bb68e9bf60454a5a775",
+      "captures": {
+        "red": {
+          "file": "imperial-repair_dock-red.png",
+          "sha256": "3d0f22d8c969ac6fe71c8e996d7ea1331ee650e88a3ca430108783f720cb3df8",
+          "state_sha256": "e72fcea666986623bbbdc93d35fa5b24b26024cda56fe21a3e83cbaedcac696a",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "imperial-repair_dock-blue.png",
+          "sha256": "54f32354e691b9a257f7ffae043e692bf789d2c58796bcd0964212581ed39ae4",
+          "state_sha256": "cc52425b6e429ebbd1ffa81b16f5abfc14e6ee54e5980e7a686fc4e340723c4d",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "imperial-repair_dock-subject-disabled.png",
+          "sha256": "1e00036ece0df8ef3d265c41b7b5c5a2e060a0f15983a0d5ae12daff5ef08969",
+          "state_sha256": "c7929f1ee233ea4f35ab5a13f7c1657af625171a74ecde11a8cd73fd0f50f09c",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "imperial-repair_dock-restored.png",
+          "sha256": "54f32354e691b9a257f7ffae043e692bf789d2c58796bcd0964212581ed39ae4",
+          "state_sha256": "cc52425b6e429ebbd1ffa81b16f5abfc14e6ee54e5980e7a686fc4e340723c4d",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "imperial-repair_dock-orbit-0.png",
+          "sha256": "94392ea6186242494a171b875f2631e49baf3f3327d573511d508b37d8c044f1",
+          "state_sha256": "cc52425b6e429ebbd1ffa81b16f5abfc14e6ee54e5980e7a686fc4e340723c4d",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "imperial-repair_dock-orbit-1.png",
+          "sha256": "c6f72c8564a4115fee72b3e4b9bc2c810c71c50729fda9969c52589cfdf93d1e",
+          "state_sha256": "cc52425b6e429ebbd1ffa81b16f5abfc14e6ee54e5980e7a686fc4e340723c4d",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 17188,
+        "subject_changed_pixels_gt3": 43882,
+        "orbit_0_changed_pixels_gt3": 39879,
+        "orbit_1_changed_pixels_gt3": 40775
+      }
+    },
+    {
+      "binding": "imperial:research_station",
+      "category": "station",
+      "data_id": "research_station",
+      "revision": "8cfcddd5046e7e246c90e8f7dd5f2f9338f8c79087b4a6329f6e68938bd5b807",
+      "captures": {
+        "red": {
+          "file": "imperial-research_station-red.png",
+          "sha256": "e278905a4e6b2616cb275369f66595175467b8f61a8cb5385fb18de4dab8e901",
+          "state_sha256": "18cdf9ffad45311df5bb0d41e1d263eb4fa9f07ec4aa22c993b7fbb6bffa1303",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "imperial-research_station-blue.png",
+          "sha256": "08fd1258c23018132ab117f3b78da23a22135c6b0faf86a3b5da10b375840e2e",
+          "state_sha256": "12cc79c913d40247eb153f07c242ddb6e67ec749d5f81d131bff99ffe01b4993",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "imperial-research_station-subject-disabled.png",
+          "sha256": "b91ec8bad868d19016ef5d83435c4f71cd7c8db5cc037f66301bf762d1292edc",
+          "state_sha256": "78d15e5b4e93fb7d207810a7184f246ac931a599e1d5be347a5d7e05aa90cd12",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "imperial-research_station-restored.png",
+          "sha256": "08fd1258c23018132ab117f3b78da23a22135c6b0faf86a3b5da10b375840e2e",
+          "state_sha256": "12cc79c913d40247eb153f07c242ddb6e67ec749d5f81d131bff99ffe01b4993",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "imperial-research_station-orbit-0.png",
+          "sha256": "856c602191026cb689c7b37b8fa406c83c3f2b69f6b09c069e9f982117779275",
+          "state_sha256": "12cc79c913d40247eb153f07c242ddb6e67ec749d5f81d131bff99ffe01b4993",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "imperial-research_station-orbit-1.png",
+          "sha256": "69d6355d401a3de9d7820cada20d85cb0b3c0e51790682bb14cf205d472fefb9",
+          "state_sha256": "12cc79c913d40247eb153f07c242ddb6e67ec749d5f81d131bff99ffe01b4993",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 10602,
+        "subject_changed_pixels_gt3": 36417,
+        "orbit_0_changed_pixels_gt3": 31826,
+        "orbit_1_changed_pixels_gt3": 38061
+      }
+    },
+    {
+      "binding": "imperial:sensor_station",
+      "category": "station",
+      "data_id": "sensor_station",
+      "revision": "8be797b6fbb4e7743ccd7a33146d89be30dea147eb9c553ad7f1866178a3959e",
+      "captures": {
+        "red": {
+          "file": "imperial-sensor_station-red.png",
+          "sha256": "13cd335db7c1de87d1e293becefaca90ee32a652345c06e39ffcde17e983bd85",
+          "state_sha256": "33e5ebf70b3fdbdf919ded702816ad361bbc9163a9899fcaca065fd2b443efe6",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "imperial-sensor_station-blue.png",
+          "sha256": "e88bca738a35a3b627ba65d16ff629f072274aa83653b608ef102f2748a48bcf",
+          "state_sha256": "8439b2bbcb3f7cb91a99c8ada918ba36994b9f46a9338abc7a67a5498d4688f7",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "imperial-sensor_station-subject-disabled.png",
+          "sha256": "c654db4060310214e51c874cf128da4e98330b33946c2bc3f209af9b1d80ce1a",
+          "state_sha256": "a2b8e54bdec3e4da57bcd6430f1b28f3a8283724ab3c6d27f7d23eddf43a3211",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "imperial-sensor_station-restored.png",
+          "sha256": "e88bca738a35a3b627ba65d16ff629f072274aa83653b608ef102f2748a48bcf",
+          "state_sha256": "8439b2bbcb3f7cb91a99c8ada918ba36994b9f46a9338abc7a67a5498d4688f7",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "imperial-sensor_station-orbit-0.png",
+          "sha256": "0cd7bc07b6b61f2a875346ffce9d008992fe03fd738469cc57065299023be385",
+          "state_sha256": "8439b2bbcb3f7cb91a99c8ada918ba36994b9f46a9338abc7a67a5498d4688f7",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "imperial-sensor_station-orbit-1.png",
+          "sha256": "4fded04cf341110dec046fced45c3830189f4f45fe037015170347f6df73217d",
+          "state_sha256": "8439b2bbcb3f7cb91a99c8ada918ba36994b9f46a9338abc7a67a5498d4688f7",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 10135,
+        "subject_changed_pixels_gt3": 64851,
+        "orbit_0_changed_pixels_gt3": 38402,
+        "orbit_1_changed_pixels_gt3": 43867
+      }
+    },
+    {
+      "binding": "imperial:shipyard",
+      "category": "station",
+      "data_id": "shipyard",
+      "revision": "a2396e57aae0c019c3621b32921a61aa4efa3c1ed24788640eca39aa63c731e0",
+      "captures": {
+        "red": {
+          "file": "imperial-shipyard-red.png",
+          "sha256": "56ee13dc8e9fb8b5286176dd8a285962e287f3029d2f84fadf6fea2b512dec76",
+          "state_sha256": "d9206fe26238d9ba5f9c4d3af921a7b67057c85d5c0d6312d21e6cfa148bf3fc",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "imperial-shipyard-blue.png",
+          "sha256": "3fc552e27c866eed23f76d1f4a39aae5c945b3019efbedc5f7708d2964887507",
+          "state_sha256": "edd461ac75050b4f5afc645d4b83f6cc5b124404732791a655380be2d763322c",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "imperial-shipyard-subject-disabled.png",
+          "sha256": "29bd3b00acf2ea658cc612de9f3cc922039ff0afd7233adfb17792c55401056c",
+          "state_sha256": "748f4caeef0c5dfce673a1568d1ca7854db4d3af6e2732cd2d5a8059da227090",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "imperial-shipyard-restored.png",
+          "sha256": "3fc552e27c866eed23f76d1f4a39aae5c945b3019efbedc5f7708d2964887507",
+          "state_sha256": "edd461ac75050b4f5afc645d4b83f6cc5b124404732791a655380be2d763322c",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "imperial-shipyard-orbit-0.png",
+          "sha256": "367e9d778d6e1f5b07464303ce6bcc53381819450bfa86a71e23fb053577ee56",
+          "state_sha256": "edd461ac75050b4f5afc645d4b83f6cc5b124404732791a655380be2d763322c",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "imperial-shipyard-orbit-1.png",
+          "sha256": "8bd3190a0d2f4f0fd88977f6f47b3aefbf8d0f47b354609101a2baff74ff0054",
+          "state_sha256": "edd461ac75050b4f5afc645d4b83f6cc5b124404732791a655380be2d763322c",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 15501,
+        "subject_changed_pixels_gt3": 37448,
+        "orbit_0_changed_pixels_gt3": 40405,
+        "orbit_1_changed_pixels_gt3": 44169
+      }
+    },
+    {
+      "binding": "imperial:supercapital",
+      "category": "combat_hull",
+      "data_id": "imperial_supercapital",
+      "revision": "6eb500499505e10b6609db34472dddf03275952894a8a608ca4414b76a0114b0",
+      "captures": {
+        "red": {
+          "file": "imperial-supercapital-red.png",
+          "sha256": "bcddc17a16e752c094590e498f04e3a65978298753d6c237c2800592fed125ea",
+          "state_sha256": "f98bfdbae26658800709b028f1cde7b23a09100115d4ab645b97778c463b7975",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "imperial-supercapital-blue.png",
+          "sha256": "cc460d1765d6c310738a59434c5006b3b42e3efbe09fd5d291bf5af3ba321352",
+          "state_sha256": "54fa1c52f830171d36944313e8bc69e797d517e93770f25bfba4ca51b1a18786",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "imperial-supercapital-subject-disabled.png",
+          "sha256": "f0edd62fba047639c0d66b390347e9faaebfd58d555bcc2fcc3bbc6c2d3ce848",
+          "state_sha256": "d1b4ebacad98824ad51b5cef86533f71c3ba06a2e3eb8c3c99ea60cda1ab9331",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "imperial-supercapital-restored.png",
+          "sha256": "cc460d1765d6c310738a59434c5006b3b42e3efbe09fd5d291bf5af3ba321352",
+          "state_sha256": "54fa1c52f830171d36944313e8bc69e797d517e93770f25bfba4ca51b1a18786",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "imperial-supercapital-orbit-0.png",
+          "sha256": "e4b9701f6f4aa58d8cff5bdaaf6ceab97e27f2b6db9bef2392041440ed02ec0f",
+          "state_sha256": "54fa1c52f830171d36944313e8bc69e797d517e93770f25bfba4ca51b1a18786",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "imperial-supercapital-orbit-1.png",
+          "sha256": "4908016a60f12a9b9132709ac7bee2aa02c01639834c958b08e8b098cc9e9a31",
+          "state_sha256": "54fa1c52f830171d36944313e8bc69e797d517e93770f25bfba4ca51b1a18786",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 10853,
+        "subject_changed_pixels_gt3": 28231,
+        "orbit_0_changed_pixels_gt3": 33401,
+        "orbit_1_changed_pixels_gt3": 46726
+      }
+    },
+    {
+      "binding": "imperial:trade_station",
+      "category": "station",
+      "data_id": "trade_station",
+      "revision": "cdda1a1a0214f26260fb07b15a90c74d2562f07a2a5d115aeb26236963cc025d",
+      "captures": {
+        "red": {
+          "file": "imperial-trade_station-red.png",
+          "sha256": "bc072c8f0080f82c94816fe53ffc718a4a8e8dcbde594119cf086cad643745b3",
+          "state_sha256": "43e35d07f0d436debbf12290c3d9d15d5dad094cf4076f8882d3a0c401e0d5d7",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "imperial-trade_station-blue.png",
+          "sha256": "a757f5986140a405587fc6ae77baf2be51540a10f8424c3c8fe845243d1e5df7",
+          "state_sha256": "7f923e007239b487b59636020c000bc9630d20682fda2a1d26dd39169a5f1cd0",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "imperial-trade_station-subject-disabled.png",
+          "sha256": "ab7715e8270a72a70233944aa9238a401055782913baa9d8e7a2d5f892a82e06",
+          "state_sha256": "f2db96a1e6076f66b19a3f35905fc77fde0d49ae99df2c3d3095fc12db8d0b80",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "imperial-trade_station-restored.png",
+          "sha256": "a757f5986140a405587fc6ae77baf2be51540a10f8424c3c8fe845243d1e5df7",
+          "state_sha256": "7f923e007239b487b59636020c000bc9630d20682fda2a1d26dd39169a5f1cd0",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "imperial-trade_station-orbit-0.png",
+          "sha256": "9b3f3ef2c3383d720262f6a20664943079971daa9fb025a259321e8bdde5c338",
+          "state_sha256": "7f923e007239b487b59636020c000bc9630d20682fda2a1d26dd39169a5f1cd0",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "imperial-trade_station-orbit-1.png",
+          "sha256": "7d954b5ba0e8ecb1eb9616e8fc8b6d6766490ae749299ffcea1eab790d9b9118",
+          "state_sha256": "7f923e007239b487b59636020c000bc9630d20682fda2a1d26dd39169a5f1cd0",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 14117,
+        "subject_changed_pixels_gt3": 35333,
+        "orbit_0_changed_pixels_gt3": 25188,
+        "orbit_1_changed_pixels_gt3": 26059
+      }
+    },
+    {
+      "binding": "rebel:attack_satellite",
+      "category": "satellite",
+      "data_id": "attack_satellite",
+      "revision": "bc672cc226dc568ef9146b2dcb88488972df32cfba14deb1ed694211833332f4",
+      "captures": {
+        "red": {
+          "file": "rebel-attack_satellite-red.png",
+          "sha256": "6f92c5780b547b4b6c98b96b8fa67a48dc1a162866c48ae18f24a0b03df3e2c3",
+          "state_sha256": "fc0da466c14101ce39e1683f93a551f98d30104609597bd3483df5e902da4e79",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "rebel-attack_satellite-blue.png",
+          "sha256": "b003f9953c1be382a88c84fa4c934b00bb877d328c6461252982d519c1e0da85",
+          "state_sha256": "f2ae3eb6b79659eebed20e5ac1110cbd3fa0e9a001daa8c3f6a1ac218cffdcdd",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "rebel-attack_satellite-subject-disabled.png",
+          "sha256": "f8e109488dae33b665f380fd25fc5868f21cdd83a8adf430c0221297fe17fe38",
+          "state_sha256": "18570327d0246d6baecd652229090554c9ecfa08e505747d857820ee5b3014c8",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "rebel-attack_satellite-restored.png",
+          "sha256": "b003f9953c1be382a88c84fa4c934b00bb877d328c6461252982d519c1e0da85",
+          "state_sha256": "29d6d318b0a642739075da39e2ffb08a7b76958d3fa6bb40f60bbce002a8d88a",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "rebel-attack_satellite-orbit-0.png",
+          "sha256": "4774edb0b92cac0985dca4002df44d69260a0c1342489e229ca643f99b120278",
+          "state_sha256": "29d6d318b0a642739075da39e2ffb08a7b76958d3fa6bb40f60bbce002a8d88a",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "rebel-attack_satellite-orbit-1.png",
+          "sha256": "37c7b6d1e2b545c0e9fad28b3a7a1198dc07772e006102b1bf491a131873b85c",
+          "state_sha256": "29d6d318b0a642739075da39e2ffb08a7b76958d3fa6bb40f60bbce002a8d88a",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 11835,
+        "subject_changed_pixels_gt3": 31476,
+        "orbit_0_changed_pixels_gt3": 34640,
+        "orbit_1_changed_pixels_gt3": 36574
+      }
+    },
+    {
+      "binding": "rebel:battleship",
+      "category": "combat_hull",
+      "data_id": "rebel_battleship",
+      "revision": "7634f9edda51e6a87a50cfbcf697e914ae0f94ba16f0aab6eb59a939214ed7d9",
+      "captures": {
+        "red": {
+          "file": "rebel-battleship-red.png",
+          "sha256": "942db1f8298dfad2f9bf23767e46efd111acdf584ef1a076971c76bd8cf1f5a1",
+          "state_sha256": "90b5819da31a687c9f123cb5fc72465ea65bf6f59bcb2c4e77ccda8c6ce213b0",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "rebel-battleship-blue.png",
+          "sha256": "a5dc3727a69bc1031654bc60c59514321fd9b01a2889184cc7ea63954c9d794e",
+          "state_sha256": "25970bf3cb21b7ed0b09c36d25c3110628e97a985bb605e47df533bf45893320",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "rebel-battleship-subject-disabled.png",
+          "sha256": "fbda94d1c478b6bdf7ffeac1e80c731f499218ad7b564a6ada5ab915e2e1db15",
+          "state_sha256": "6a3319d7ba609099fab801f12e8adc047ea2ea03868b7255a53d730184cd5f19",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "rebel-battleship-restored.png",
+          "sha256": "a5dc3727a69bc1031654bc60c59514321fd9b01a2889184cc7ea63954c9d794e",
+          "state_sha256": "25970bf3cb21b7ed0b09c36d25c3110628e97a985bb605e47df533bf45893320",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "rebel-battleship-orbit-0.png",
+          "sha256": "98161439f7920fdf5d001e26278016969dec49712a98cdaf9fb8ed8928ecf763",
+          "state_sha256": "25970bf3cb21b7ed0b09c36d25c3110628e97a985bb605e47df533bf45893320",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "rebel-battleship-orbit-1.png",
+          "sha256": "ee97bbdfacfdb174438f7bfefa89b87b53c25b48e740d4b2e1653eb60ea002cf",
+          "state_sha256": "25970bf3cb21b7ed0b09c36d25c3110628e97a985bb605e47df533bf45893320",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 9690,
+        "subject_changed_pixels_gt3": 29593,
+        "orbit_0_changed_pixels_gt3": 30511,
+        "orbit_1_changed_pixels_gt3": 37538
+      }
+    },
+    {
+      "binding": "rebel:bomber",
+      "category": "squadron",
+      "data_id": "rebel_y_squadron",
+      "revision": "4bb7a6a02043f10a83edd15d960c1a570b139565f826599f0b0e3102f5ec3f7f",
+      "captures": {
+        "red": {
+          "file": "rebel-bomber-red.png",
+          "sha256": "3e66f581acd53043b285c00b80c6fa65c995c5109dbfebc594255f3db7fd3cdd",
+          "state_sha256": "c9e12592014e0a1ffa31572a8d331d85bc6632b730e1360e182c973e2f500b7c",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "rebel-bomber-blue.png",
+          "sha256": "53803e0594038f688a8026f6b76e3dfc0e27cdfd6d58be9fcabd1334ba59f7ce",
+          "state_sha256": "3a22a9bea4e8f33f4a78d56ed68af094ef2a355a7198617a0d55b6575dfee035",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "rebel-bomber-subject-disabled.png",
+          "sha256": "250662e4809ddc1794c394baa87354ed09d221152f1203ca891fc3f7ee17ecc2",
+          "state_sha256": "42213719db0592a24d8cbf708833f94cade47ffe7ccd64df0d368664ca5d74a9",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "rebel-bomber-restored.png",
+          "sha256": "53803e0594038f688a8026f6b76e3dfc0e27cdfd6d58be9fcabd1334ba59f7ce",
+          "state_sha256": "3a22a9bea4e8f33f4a78d56ed68af094ef2a355a7198617a0d55b6575dfee035",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "rebel-bomber-orbit-0.png",
+          "sha256": "0734e3774f4e2377a3e9b7f1a70e34f37e2bf559158698e4ddfb48985f252468",
+          "state_sha256": "3a22a9bea4e8f33f4a78d56ed68af094ef2a355a7198617a0d55b6575dfee035",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "rebel-bomber-orbit-1.png",
+          "sha256": "05e8ac6c36a32b1587c9d064d571229a22059d080c80990e662ad8df29cf7077",
+          "state_sha256": "3a22a9bea4e8f33f4a78d56ed68af094ef2a355a7198617a0d55b6575dfee035",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 3887,
+        "subject_changed_pixels_gt3": 10198,
+        "orbit_0_changed_pixels_gt3": 12947,
+        "orbit_1_changed_pixels_gt3": 12631
+      }
+    },
+    {
+      "binding": "rebel:colonizer",
+      "category": "construction",
+      "data_id": "rebel_colonizer",
+      "revision": "e450f839aef54e754240ec119df34aff4b8c64ef3273b3a712d9e6e42a0cce94",
+      "captures": {
+        "red": {
+          "file": "rebel-colonizer-red.png",
+          "sha256": "9390a068c6786732bbcda5ad003beb63b5b21f39f0227078589c62fc2814a03e",
+          "state_sha256": "7b089a0b547a51830991220e00f2ebcca74683f8547ccc21b73af49de13cd0dd",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "rebel-colonizer-blue.png",
+          "sha256": "7a3202b1df1046f45a11265558e2808aafce9084566e7eff455ee4d3e310bef0",
+          "state_sha256": "fd5e7a161276345c1782329219dcf298516e9da2bb1f7a7eb0f669c9225fea87",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "rebel-colonizer-subject-disabled.png",
+          "sha256": "2202bf67708f4f67f6052858e7492463ef5a1cabf0d83e776ca34cff8506866f",
+          "state_sha256": "2e3ba38ad171cffba0174ed5e7a75a826e3b9dd60c1cf453b7f7ab8b7d0038f9",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "rebel-colonizer-restored.png",
+          "sha256": "7a3202b1df1046f45a11265558e2808aafce9084566e7eff455ee4d3e310bef0",
+          "state_sha256": "fd5e7a161276345c1782329219dcf298516e9da2bb1f7a7eb0f669c9225fea87",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "rebel-colonizer-orbit-0.png",
+          "sha256": "5154e007491d083835a752bde3b22602d5542f1ed519106c02856527ccbda7d9",
+          "state_sha256": "fd5e7a161276345c1782329219dcf298516e9da2bb1f7a7eb0f669c9225fea87",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "rebel-colonizer-orbit-1.png",
+          "sha256": "20465846b74856673de7d7e4ed584c27abf9fa8a3b6ea69d91c9348826414e95",
+          "state_sha256": "fd5e7a161276345c1782329219dcf298516e9da2bb1f7a7eb0f669c9225fea87",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 17646,
+        "subject_changed_pixels_gt3": 40209,
+        "orbit_0_changed_pixels_gt3": 30285,
+        "orbit_1_changed_pixels_gt3": 30864
+      }
+    },
+    {
+      "binding": "rebel:command_station",
+      "category": "station",
+      "data_id": "command_station",
+      "revision": "5edf23bf94cf085f129233c0e9c00fca245617416b5999cde63a3986826f6473",
+      "captures": {
+        "red": {
+          "file": "rebel-command_station-red.png",
+          "sha256": "da72063b120d953e473d81c39a2ae8c5dc85268164789584a69598c7410316c6",
+          "state_sha256": "b68f0f52ffe407b2ae96d3049260ce6fa30bffebd1e2639a197b57edde6fe001",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "rebel-command_station-blue.png",
+          "sha256": "f94c5066a62939cbac6e5a505e4f3683e2681ce8397bc04035342bf06df3a900",
+          "state_sha256": "7eb7d69b10701b80ff9d60551cb5fca120507381de37c6a77841ebdc67055ebe",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "rebel-command_station-subject-disabled.png",
+          "sha256": "91bdbd4f791117a6f19d26dcf0fafaf160a5b6f91bd00735dddd1735847d73e2",
+          "state_sha256": "986465a113302de8e689ba47e57b228ddafc6cab0838dde0b081fbcf99b8202a",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "rebel-command_station-restored.png",
+          "sha256": "f94c5066a62939cbac6e5a505e4f3683e2681ce8397bc04035342bf06df3a900",
+          "state_sha256": "7eb7d69b10701b80ff9d60551cb5fca120507381de37c6a77841ebdc67055ebe",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "rebel-command_station-orbit-0.png",
+          "sha256": "a284c62f3940a7e5d9cd0fbfca07719d99c811d13e18967f34b18b01c8741d21",
+          "state_sha256": "7eb7d69b10701b80ff9d60551cb5fca120507381de37c6a77841ebdc67055ebe",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "rebel-command_station-orbit-1.png",
+          "sha256": "ac5aa7e1cfd6f38858f0e871466fe4ef826d965c3f85f31b941e1936c5c5dd55",
+          "state_sha256": "7eb7d69b10701b80ff9d60551cb5fca120507381de37c6a77841ebdc67055ebe",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 16128,
+        "subject_changed_pixels_gt3": 43273,
+        "orbit_0_changed_pixels_gt3": 46413,
+        "orbit_1_changed_pixels_gt3": 49854
+      }
+    },
+    {
+      "binding": "rebel:constructor",
+      "category": "construction",
+      "data_id": "rebel_constructor",
+      "revision": "020e6652594b2a572992be1fa51a46e8b9278f33230e18eb4363afcd2c5db807",
+      "captures": {
+        "red": {
+          "file": "rebel-constructor-red.png",
+          "sha256": "4dd177fda33cce7fd5db77c4325ec18f607891871c8e07c4ebdd8e82b45a0f02",
+          "state_sha256": "0b27242985f4b82fdaf5ebaaae8ba8ccc595eaba6f4d6f7e11c388111781f243",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "rebel-constructor-blue.png",
+          "sha256": "b34fe2750185124d39ad6021e22e22cc87a2a92abfd03b0932a9bc0418aba366",
+          "state_sha256": "2240c32fa38164e100db8e8ce59544485348c2741985e552d7257b296b4ff51d",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "rebel-constructor-subject-disabled.png",
+          "sha256": "27fb4a6c05f14aa10f5c93563f8ddb9d4d1f249ef597a99c4f5c1cbc577bdab6",
+          "state_sha256": "2e3ba38ad171cffba0174ed5e7a75a826e3b9dd60c1cf453b7f7ab8b7d0038f9",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "rebel-constructor-restored.png",
+          "sha256": "b34fe2750185124d39ad6021e22e22cc87a2a92abfd03b0932a9bc0418aba366",
+          "state_sha256": "2240c32fa38164e100db8e8ce59544485348c2741985e552d7257b296b4ff51d",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "rebel-constructor-orbit-0.png",
+          "sha256": "cd5714b96fab345fb26928ba56f7cc1fd8408d1a5048308cd9ddd453a4651e9b",
+          "state_sha256": "2240c32fa38164e100db8e8ce59544485348c2741985e552d7257b296b4ff51d",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "rebel-constructor-orbit-1.png",
+          "sha256": "d9bc3cba64d1a0671ef7123ed295a60a585d0d848c347584005bb53967736010",
+          "state_sha256": "2240c32fa38164e100db8e8ce59544485348c2741985e552d7257b296b4ff51d",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 12556,
+        "subject_changed_pixels_gt3": 30662,
+        "orbit_0_changed_pixels_gt3": 23935,
+        "orbit_1_changed_pixels_gt3": 26649
+      }
+    },
+    {
+      "binding": "rebel:convoy",
+      "category": "logistics_hull",
+      "data_id": "rebel_crew_transport",
+      "revision": "9b3897d8c6165bb9a3517996409a280b9d6e71fd6fb8a8efc2c1d150c63b8f84",
+      "captures": {
+        "red": {
+          "file": "rebel-convoy-red.png",
+          "sha256": "9181ded15986309ebf0e37a34b49e38440583adefc067c8eab4babe50f980e4e",
+          "state_sha256": "3d552b1510eed573c7967a5940400e17b2d11791b6d9ccca938713253e5316a4",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "rebel-convoy-blue.png",
+          "sha256": "b3ce8de0205b50832ae5e07e57693cbfe5385ff18e8d3535d45e01dc158b89d1",
+          "state_sha256": "0e952fe58b2101be2d084fdc0fdf3ce34484be3a7563bb420e44a2597197339d",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "rebel-convoy-subject-disabled.png",
+          "sha256": "f74be0b30dc82a0d8246c54548f769c8fe90253d2db679496050cee77c578744",
+          "state_sha256": "2e3ba38ad171cffba0174ed5e7a75a826e3b9dd60c1cf453b7f7ab8b7d0038f9",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "rebel-convoy-restored.png",
+          "sha256": "b3ce8de0205b50832ae5e07e57693cbfe5385ff18e8d3535d45e01dc158b89d1",
+          "state_sha256": "0e952fe58b2101be2d084fdc0fdf3ce34484be3a7563bb420e44a2597197339d",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "rebel-convoy-orbit-0.png",
+          "sha256": "647da14b31bb2f26cbd09715856ffddc8dbee7ef9da8b847b79b7f8e4967df52",
+          "state_sha256": "0e952fe58b2101be2d084fdc0fdf3ce34484be3a7563bb420e44a2597197339d",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "rebel-convoy-orbit-1.png",
+          "sha256": "4aa5e4118032e5a0eb98196229adfc72de26f35a37c55f6382db4a68e06b4006",
+          "state_sha256": "0e952fe58b2101be2d084fdc0fdf3ce34484be3a7563bb420e44a2597197339d",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 6773,
+        "subject_changed_pixels_gt3": 17433,
+        "orbit_0_changed_pixels_gt3": 14968,
+        "orbit_1_changed_pixels_gt3": 21618
+      }
+    },
+    {
+      "binding": "rebel:corvette",
+      "category": "combat_hull",
+      "data_id": "rebel_corvette",
+      "revision": "5037e555e4a9d7704d285f42b491ff3d4c4391c2c87dce2196c52300f5c616cf",
+      "captures": {
+        "red": {
+          "file": "rebel-corvette-red.png",
+          "sha256": "3db1d46952696987c74c8b52a0a41352cbff36eba0555d31c1527e35e12aa968",
+          "state_sha256": "06df6aabaff88bf3b44f04aa35bcf1f96cefa54f9fe2934e798c819631ad9b82",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "rebel-corvette-blue.png",
+          "sha256": "4973c0e8cce8645bff18c8620ed4079980d855db31e5c3ad131cf37d8369bd75",
+          "state_sha256": "8b337f40f231ba1b472b05b20890ecb94d8bdc7cd7950222cd1f09e856cb741a",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "rebel-corvette-subject-disabled.png",
+          "sha256": "990c0ed39d765fcd3a5bfb7b4d4979a2c8f18ad0aabdabcf25d462387520ef8b",
+          "state_sha256": "c3bbc8e40ceab7ea1f4408e55c24b6be9f81658af2f9ef5db9c5fc666f98d7b1",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "rebel-corvette-restored.png",
+          "sha256": "4973c0e8cce8645bff18c8620ed4079980d855db31e5c3ad131cf37d8369bd75",
+          "state_sha256": "8b337f40f231ba1b472b05b20890ecb94d8bdc7cd7950222cd1f09e856cb741a",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "rebel-corvette-orbit-0.png",
+          "sha256": "cb452c625f148597334365cc4d4fa7a15d181caef7ca1a990b8b7ea005c8ef8c",
+          "state_sha256": "8b337f40f231ba1b472b05b20890ecb94d8bdc7cd7950222cd1f09e856cb741a",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "rebel-corvette-orbit-1.png",
+          "sha256": "e8f4b7b77c9bea8f906640b564f21bf55c69cbfd3a378af2eed71cd3b429ebc9",
+          "state_sha256": "8b337f40f231ba1b472b05b20890ecb94d8bdc7cd7950222cd1f09e856cb741a",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 6798,
+        "subject_changed_pixels_gt3": 22905,
+        "orbit_0_changed_pixels_gt3": 21818,
+        "orbit_1_changed_pixels_gt3": 33394
+      }
+    },
+    {
+      "binding": "rebel:cruiser",
+      "category": "combat_hull",
+      "data_id": "rebel_cruiser",
+      "revision": "34ef93d5cc2f37ac54286c11e0b375f64c2281ac595afac07a04fd7b1ca49662",
+      "captures": {
+        "red": {
+          "file": "rebel-cruiser-red.png",
+          "sha256": "960139b0c07fae403397225a6b8bc64f727dbe907956b4ace4446aa0de412c3b",
+          "state_sha256": "5986772c6ed27385d3d02ee12dbd71e3c6f54d3efacd3e4a86617c2496d6ad19",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "rebel-cruiser-blue.png",
+          "sha256": "2108f00c0da9bb69f7f2e03540667d01817a42a33c0bcb294a8b36e9c46edf11",
+          "state_sha256": "d2c87eba3e4bbd07d4cbe075e79d438770af9de2aae088a6eeca87509ed7bafd",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "rebel-cruiser-subject-disabled.png",
+          "sha256": "d5286c57077f89c4919c7e21915b0d7661c7a911818b6f43970078d4103fa139",
+          "state_sha256": "0775b51a5e03879f87c5fbf4aa04a7a749527b0b7f2ea727a2eb64521944af1e",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "rebel-cruiser-restored.png",
+          "sha256": "2108f00c0da9bb69f7f2e03540667d01817a42a33c0bcb294a8b36e9c46edf11",
+          "state_sha256": "d2c87eba3e4bbd07d4cbe075e79d438770af9de2aae088a6eeca87509ed7bafd",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "rebel-cruiser-orbit-0.png",
+          "sha256": "c7811c1bdf8f7d791598b7db2555753e6b4a1f1797f40176988db901ee48a015",
+          "state_sha256": "d2c87eba3e4bbd07d4cbe075e79d438770af9de2aae088a6eeca87509ed7bafd",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "rebel-cruiser-orbit-1.png",
+          "sha256": "6e79a3bd3095b2478638aac938bff9e22410a413136faa1e5ef51833a7f62f7d",
+          "state_sha256": "d2c87eba3e4bbd07d4cbe075e79d438770af9de2aae088a6eeca87509ed7bafd",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 11372,
+        "subject_changed_pixels_gt3": 30121,
+        "orbit_0_changed_pixels_gt3": 30726,
+        "orbit_1_changed_pixels_gt3": 52749
+      }
+    },
+    {
+      "binding": "rebel:defense_platform",
+      "category": "station",
+      "data_id": "defense_platform",
+      "revision": "3fe8be5ae5113209c14b0dc0227d2959cee024fd687cfef13aa6731e0f50c8aa",
+      "captures": {
+        "red": {
+          "file": "rebel-defense_platform-red.png",
+          "sha256": "52d84f6b8e9a038dec8b69b8eb85a7d3dc69bd7649f2ba0fd7ff87b182a4c425",
+          "state_sha256": "f92b930c728cebbd853e21ed809b80569f40a046491f00b2041cc4800f681924",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "rebel-defense_platform-blue.png",
+          "sha256": "998dba023e7403d723059a682b08d2daf8fb62e18d6e08c6f935d5c132a5fb08",
+          "state_sha256": "b8eaabb392f0615a94a3954b3e5a6c851afa1f5b85dd6274d815c6e231d2cb89",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "rebel-defense_platform-subject-disabled.png",
+          "sha256": "2271875ed18a6dc74a59a5b19f18f194eb93e4e0fb105302a245625fa79f02ee",
+          "state_sha256": "e1f920e0f6b9429b1dbb401f667279f70984ffa66e84846d63bea9f00056881a",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "rebel-defense_platform-restored.png",
+          "sha256": "998dba023e7403d723059a682b08d2daf8fb62e18d6e08c6f935d5c132a5fb08",
+          "state_sha256": "b8eaabb392f0615a94a3954b3e5a6c851afa1f5b85dd6274d815c6e231d2cb89",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "rebel-defense_platform-orbit-0.png",
+          "sha256": "c6d52f269b3172285b5af5f38d33cd2b111eef0355f31ec3c12f581af3c730be",
+          "state_sha256": "b8eaabb392f0615a94a3954b3e5a6c851afa1f5b85dd6274d815c6e231d2cb89",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "rebel-defense_platform-orbit-1.png",
+          "sha256": "6e0dae08d86175984a1dda9882bd73f1661f25bc2b9c005a36dc7b559f1b6fa8",
+          "state_sha256": "b8eaabb392f0615a94a3954b3e5a6c851afa1f5b85dd6274d815c6e231d2cb89",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 21792,
+        "subject_changed_pixels_gt3": 47566,
+        "orbit_0_changed_pixels_gt3": 32452,
+        "orbit_1_changed_pixels_gt3": 38927
+      }
+    },
+    {
+      "binding": "rebel:defense_satellite",
+      "category": "satellite",
+      "data_id": "defense_satellite",
+      "revision": "595ef30d38d231eaa94c90040d98fe301f6bf8ba41325e48614ea6568af90813",
+      "captures": {
+        "red": {
+          "file": "rebel-defense_satellite-red.png",
+          "sha256": "9fc5caa25109a9477d8cc7cd50d59bd34783a6aac7a1bc22c4a419353d91a194",
+          "state_sha256": "952d365cc4db51bba80ec8f0e84a09aac0801ec76c85d784eb2b871ca0d5687d",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "rebel-defense_satellite-blue.png",
+          "sha256": "fe7e85e2fe3eef3908acc69693c71473fe053583e37adee7866ca3320c0ca7bb",
+          "state_sha256": "eb3261cc96b0b722a1647271bb06590a6062d8c5c073a66be3de21646cd7e2e5",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "rebel-defense_satellite-subject-disabled.png",
+          "sha256": "da8ad68c8a5bb6e67893afd93cf1bd55a8202af0b39b1d33b603363a0ab72c7f",
+          "state_sha256": "18570327d0246d6baecd652229090554c9ecfa08e505747d857820ee5b3014c8",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "rebel-defense_satellite-restored.png",
+          "sha256": "fe7e85e2fe3eef3908acc69693c71473fe053583e37adee7866ca3320c0ca7bb",
+          "state_sha256": "9a05546a9257f482b63fd5932e637b375c143c530a5da3ef9d501a8ebecfa142",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "rebel-defense_satellite-orbit-0.png",
+          "sha256": "e67d01aac62fb91242147a1b81108f8f90527591920861fc54882452720d330a",
+          "state_sha256": "9a05546a9257f482b63fd5932e637b375c143c530a5da3ef9d501a8ebecfa142",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "rebel-defense_satellite-orbit-1.png",
+          "sha256": "ebd64856ec0c0164754d51a1b8a164d5a83377356e8f0847d3ea0f5155f5d434",
+          "state_sha256": "9a05546a9257f482b63fd5932e637b375c143c530a5da3ef9d501a8ebecfa142",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 14971,
+        "subject_changed_pixels_gt3": 36086,
+        "orbit_0_changed_pixels_gt3": 38877,
+        "orbit_1_changed_pixels_gt3": 41606
+      }
+    },
+    {
+      "binding": "rebel:energy_relay",
+      "category": "station",
+      "data_id": "energy_relay",
+      "revision": "0299976db6456a8b932ec4ccd3902d2fa0cf4cc199681570d37b3a27d9bf9854",
+      "captures": {
+        "red": {
+          "file": "rebel-energy_relay-red.png",
+          "sha256": "f6d38a583e4aa766c85ff0a2098cc19a63ba7be7d338da9165822bc9dd8fba6e",
+          "state_sha256": "06be218bf137b5e758b939f579a0662ffc3ca51084262ba674f74c8be0316d50",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "rebel-energy_relay-blue.png",
+          "sha256": "4c9da423d20e5e6efd379d52d0300608558de625521efd5f079614b3acee427f",
+          "state_sha256": "764e0171550addfefd62e0131397fda0fe25915d31b8ab95f5b7f7ea8687ad36",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "rebel-energy_relay-subject-disabled.png",
+          "sha256": "b160c292c88a6e0a032ce20377bac359f7d3b70c111913319a586d9bef1616fb",
+          "state_sha256": "7a134293bf8aa0e935f9b3a8319377bcc1863dfa09dd83c2776820db1563d5ae",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "rebel-energy_relay-restored.png",
+          "sha256": "4c9da423d20e5e6efd379d52d0300608558de625521efd5f079614b3acee427f",
+          "state_sha256": "764e0171550addfefd62e0131397fda0fe25915d31b8ab95f5b7f7ea8687ad36",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "rebel-energy_relay-orbit-0.png",
+          "sha256": "5050dd31bdc8d69249adf47d9b17359dc3fd33d91d721ce5eb4d54d018df88ef",
+          "state_sha256": "764e0171550addfefd62e0131397fda0fe25915d31b8ab95f5b7f7ea8687ad36",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "rebel-energy_relay-orbit-1.png",
+          "sha256": "62cc50cca0d7574dc3d5a3d984eae93d015f1e6150b92c17a7e22f046d6216e5",
+          "state_sha256": "764e0171550addfefd62e0131397fda0fe25915d31b8ab95f5b7f7ea8687ad36",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 1528,
+        "subject_changed_pixels_gt3": 34047,
+        "orbit_0_changed_pixels_gt3": 27593,
+        "orbit_1_changed_pixels_gt3": 30448
+      }
+    },
+    {
+      "binding": "rebel:fighter",
+      "category": "squadron",
+      "data_id": "rebel_x_squadron",
+      "revision": "09a1954405f17eb9f144eb0cdb126878c2d6fe89995b3c755b21aaf9bfde56b1",
+      "captures": {
+        "red": {
+          "file": "rebel-fighter-red.png",
+          "sha256": "b14072b96aa2a089a937afde212acb09d28b3b3d7fa66dcd7530d9a7d14825ad",
+          "state_sha256": "bdebcf058c995c38c84f7e6def331a879ba116fdd459b1503a496a9471fed987",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "rebel-fighter-blue.png",
+          "sha256": "0cb307ef19190e9d12ddd71408f741ced0eba64c3fe22c6114148bdaf117fb68",
+          "state_sha256": "3af9647797b4bf1a11e7f2e51426a7e5d2bd4e3ebd85ab13869cf89b0252db6c",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "rebel-fighter-subject-disabled.png",
+          "sha256": "250662e4809ddc1794c394baa87354ed09d221152f1203ca891fc3f7ee17ecc2",
+          "state_sha256": "42213719db0592a24d8cbf708833f94cade47ffe7ccd64df0d368664ca5d74a9",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "rebel-fighter-restored.png",
+          "sha256": "0cb307ef19190e9d12ddd71408f741ced0eba64c3fe22c6114148bdaf117fb68",
+          "state_sha256": "3af9647797b4bf1a11e7f2e51426a7e5d2bd4e3ebd85ab13869cf89b0252db6c",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "rebel-fighter-orbit-0.png",
+          "sha256": "58e606278b5d5119e711d42e370da9b32356038f93cd66241f115f2467cf0d98",
+          "state_sha256": "3af9647797b4bf1a11e7f2e51426a7e5d2bd4e3ebd85ab13869cf89b0252db6c",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "rebel-fighter-orbit-1.png",
+          "sha256": "4f1303dde6f95fd5c17749929760c5bd71e471ffc3add409bc1e3c06c10538ae",
+          "state_sha256": "3af9647797b4bf1a11e7f2e51426a7e5d2bd4e3ebd85ab13869cf89b0252db6c",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 2936,
+        "subject_changed_pixels_gt3": 9205,
+        "orbit_0_changed_pixels_gt3": 12270,
+        "orbit_1_changed_pixels_gt3": 12257
+      }
+    },
+    {
+      "binding": "rebel:fighter_platform",
+      "category": "station",
+      "data_id": "fighter_platform",
+      "revision": "b6b893628c49816968e92cf485b98774b41c7fc73b0e0fe7facdd4a328fb91de",
+      "captures": {
+        "red": {
+          "file": "rebel-fighter_platform-red.png",
+          "sha256": "1dd915f1db922ffdcfef5c52f0026ffa0647128635d879b68223518aab340e3b",
+          "state_sha256": "7b79003c2e36777326b346aafdce8df6be16f33a9472c7fdc3835eb03499eedc",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "rebel-fighter_platform-blue.png",
+          "sha256": "d2869fa6daa446cca16fac0caaf45da7987dcc79b64429929f225b23e743ec37",
+          "state_sha256": "48a43dd9dc6a01fe7b243d53467e1f057eaa23b9f7f82d290d49ee570a06b82f",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "rebel-fighter_platform-subject-disabled.png",
+          "sha256": "76a6505ccc3119d1f4c7e5761517f3cdbaecb56817df692cbc0a4b5ef18415fe",
+          "state_sha256": "2e3ba38ad171cffba0174ed5e7a75a826e3b9dd60c1cf453b7f7ab8b7d0038f9",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "rebel-fighter_platform-restored.png",
+          "sha256": "d2869fa6daa446cca16fac0caaf45da7987dcc79b64429929f225b23e743ec37",
+          "state_sha256": "48a43dd9dc6a01fe7b243d53467e1f057eaa23b9f7f82d290d49ee570a06b82f",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "rebel-fighter_platform-orbit-0.png",
+          "sha256": "d60aaace5650dc608e6b3df87ba66bd8e8a79153a0e3d0326e45e9a4d42d777f",
+          "state_sha256": "48a43dd9dc6a01fe7b243d53467e1f057eaa23b9f7f82d290d49ee570a06b82f",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "rebel-fighter_platform-orbit-1.png",
+          "sha256": "7d26bb2e5f506d7314118ff15ace331ca36fafb94ad150ad805e8b0b661b6504",
+          "state_sha256": "48a43dd9dc6a01fe7b243d53467e1f057eaa23b9f7f82d290d49ee570a06b82f",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 14045,
+        "subject_changed_pixels_gt3": 41306,
+        "orbit_0_changed_pixels_gt3": 21460,
+        "orbit_1_changed_pixels_gt3": 24164
+      }
+    },
+    {
+      "binding": "rebel:frigate",
+      "category": "combat_hull",
+      "data_id": "rebel_frigate",
+      "revision": "60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df",
+      "captures": {
+        "red": {
+          "file": "rebel-frigate-red.png",
+          "sha256": "7000b901b90851b917c0d26b8cc675d7d456dc4d86ddc1c5d59f5a6bcf0818d0",
+          "state_sha256": "e2154e3c38ab8f17e4969ce4d2799f82a4c4d2d64c275d9bc64140d012fd8aa1",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "rebel-frigate-blue.png",
+          "sha256": "f09a7107d0ae5346a9b7427ee2895d5b2c9e298bdb50f0f2a078fcee38fc0cba",
+          "state_sha256": "a337e5986f9bcd4fe8289794145fae514a2864fb2152a34088f8d105b2dda01d",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "rebel-frigate-subject-disabled.png",
+          "sha256": "6df8a2fb5b317d37acdc2667c4665ae47b5dae8d2d736c47523ce299bbdf8d78",
+          "state_sha256": "b26c041140a026cc5448f46bf102e1755a27204137efa525691093dde7d61a3d",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "rebel-frigate-restored.png",
+          "sha256": "f09a7107d0ae5346a9b7427ee2895d5b2c9e298bdb50f0f2a078fcee38fc0cba",
+          "state_sha256": "a337e5986f9bcd4fe8289794145fae514a2864fb2152a34088f8d105b2dda01d",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "rebel-frigate-orbit-0.png",
+          "sha256": "c1afa164e516d2e0831b61048e33eae97efb3af03c345fcd07fc5794942719d9",
+          "state_sha256": "a337e5986f9bcd4fe8289794145fae514a2864fb2152a34088f8d105b2dda01d",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "rebel-frigate-orbit-1.png",
+          "sha256": "c4bfc2c8b1535939675b8f595dd2bdd610c140e4971558523df4a956888eb18b",
+          "state_sha256": "a337e5986f9bcd4fe8289794145fae514a2864fb2152a34088f8d105b2dda01d",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 7007,
+        "subject_changed_pixels_gt3": 26720,
+        "orbit_0_changed_pixels_gt3": 29650,
+        "orbit_1_changed_pixels_gt3": 47718
+      }
+    },
+    {
+      "binding": "rebel:mining_station",
+      "category": "station",
+      "data_id": "mining_station",
+      "revision": "7a04287535bed4e1e0d4865d336ec63e56ec0d756f04085c822b32c529935d8b",
+      "captures": {
+        "red": {
+          "file": "rebel-mining_station-red.png",
+          "sha256": "5b2b5421f9f4378bbef6e6879a66f85560500eb0a912a0285a06088020fe063c",
+          "state_sha256": "41785a768f54cbad8da64dea0e97d6f7becceef81db0bd0f71633c9004c90eb1",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "rebel-mining_station-blue.png",
+          "sha256": "188a0ab8e748318851eae494a60c0a2b107c5caf09c784ac02cf7e547591c9de",
+          "state_sha256": "ce3b57a3b649aa0fc0a1beb495514a8549743d237a623d1349b7a28fd6a911dd",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "rebel-mining_station-subject-disabled.png",
+          "sha256": "19cef1facb6049088784385c6730ef44b620a22bedc39c50606e53dcb3d01067",
+          "state_sha256": "f2db4315fd4cd233432d86c330e720c0d1e63a8644a6c788e3a12f84157761c6",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "rebel-mining_station-restored.png",
+          "sha256": "188a0ab8e748318851eae494a60c0a2b107c5caf09c784ac02cf7e547591c9de",
+          "state_sha256": "ce3b57a3b649aa0fc0a1beb495514a8549743d237a623d1349b7a28fd6a911dd",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "rebel-mining_station-orbit-0.png",
+          "sha256": "2c216ee1909f462fd9a019e6ebf76b4824139da7d3fed1eca8f85911f8ab118f",
+          "state_sha256": "ce3b57a3b649aa0fc0a1beb495514a8549743d237a623d1349b7a28fd6a911dd",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "rebel-mining_station-orbit-1.png",
+          "sha256": "0b50cb9533d0fb2c4634087df6f9d2637d4168db7850dcdbfcf95c07b43b642f",
+          "state_sha256": "ce3b57a3b649aa0fc0a1beb495514a8549743d237a623d1349b7a28fd6a911dd",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 795,
+        "subject_changed_pixels_gt3": 29364,
+        "orbit_0_changed_pixels_gt3": 19585,
+        "orbit_1_changed_pixels_gt3": 23864
+      }
+    },
+    {
+      "binding": "rebel:planet_extractor",
+      "category": "planet_installation",
+      "data_id": "planet_extractor",
+      "revision": "52e27dab5ebbef95243e162a38b299f8f7f525d1c202cd9cbee4de7f714e9077",
+      "captures": {
+        "red": {
+          "file": "rebel-planet_extractor-red.png",
+          "sha256": "0cbb6317a55f9b10f1b87a0e195a86382405737e4dbb50d8d9162b36ed0d6fb1",
+          "state_sha256": "06b8baddc96e6f7796559ac021ca873740c5b2fe292f40761532c3f2948eefc7",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "rebel-planet_extractor-blue.png",
+          "sha256": "40ff52dcc0a44bf8bbdca11b7c5445b508958d4de6a8d9c0a017f71c0ea2c392",
+          "state_sha256": "47b3a921ce7b654ce9d82cc3c3ce9a720178dd6572757dbfe7a0168c73918588",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "rebel-planet_extractor-subject-disabled.png",
+          "sha256": "884f55972215af722a1786895a8aaca93a5dcde5c7844e75f7a19ba3bc41dd28",
+          "state_sha256": "2d97831caa00e09f8066137e3613b80366a4c617b853a930e2b35f5b4624c601",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "rebel-planet_extractor-restored.png",
+          "sha256": "40ff52dcc0a44bf8bbdca11b7c5445b508958d4de6a8d9c0a017f71c0ea2c392",
+          "state_sha256": "4a46aaa58dbe14c2529d732cb32cef3f1a06ca8d7a84f775d5d69766df7ff639",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "rebel-planet_extractor-orbit-0.png",
+          "sha256": "075539fb010038290bb3871d27850634c4157a4ab626a9750d789a9d377c4ccb",
+          "state_sha256": "4a46aaa58dbe14c2529d732cb32cef3f1a06ca8d7a84f775d5d69766df7ff639",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "rebel-planet_extractor-orbit-1.png",
+          "sha256": "43e98c847a3e57f9eb3d1f780e0201d6b62cad83fec708cf5c4b9c18091d2ef9",
+          "state_sha256": "4a46aaa58dbe14c2529d732cb32cef3f1a06ca8d7a84f775d5d69766df7ff639",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 13342,
+        "subject_changed_pixels_gt3": 27217,
+        "orbit_0_changed_pixels_gt3": 42273,
+        "orbit_1_changed_pixels_gt3": 40831
+      }
+    },
+    {
+      "binding": "rebel:planet_pulsar_cannon",
+      "category": "planet_installation",
+      "data_id": "planet_pulsar_cannon",
+      "revision": "35248518ed7ec8ed6918b47df0b2c5f0edf5924b416b98cd9b9760c18dc5c46e",
+      "captures": {
+        "red": {
+          "file": "rebel-planet_pulsar_cannon-red.png",
+          "sha256": "8e8764fa286124be0ecc4255343f6dcbe7c5a5b7d33b5f76a849ebecb47a32d8",
+          "state_sha256": "3dbf3ce3b0076173b030af62f2b2119f321a3c4bccdccdfc3ccdeea1c2a36d2b",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "rebel-planet_pulsar_cannon-blue.png",
+          "sha256": "e9865030bf99d6aa0d25c856ef8af23907be377db0fd3f23a59a7aea5f188564",
+          "state_sha256": "1f05e9edef6325c895eae35c2bd1932b5b66be70fcf6f6c8a2b3aa58db64152f",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "rebel-planet_pulsar_cannon-subject-disabled.png",
+          "sha256": "a5219ee90c6e92ad2f53e538e106e43befc676319576a3804fac0960369cb7b1",
+          "state_sha256": "36a421881ce4031485b39f150a01dd0a1a40bc46bdfcfcbc42691a400d5bc7ae",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "rebel-planet_pulsar_cannon-restored.png",
+          "sha256": "e9865030bf99d6aa0d25c856ef8af23907be377db0fd3f23a59a7aea5f188564",
+          "state_sha256": "dfd547cff9a9a5be96cc3247eae49b7d351c2f2a5df3222f63c721343590920e",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "rebel-planet_pulsar_cannon-orbit-0.png",
+          "sha256": "14909b217ac88ad40029b98e9d463bc87a2b906ba78b4f552ae78ab2fd508924",
+          "state_sha256": "dfd547cff9a9a5be96cc3247eae49b7d351c2f2a5df3222f63c721343590920e",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "rebel-planet_pulsar_cannon-orbit-1.png",
+          "sha256": "54158836f1cafea5ec37f135ffcedbc5f7162c973fffed0045b29ed35c35a991",
+          "state_sha256": "dfd547cff9a9a5be96cc3247eae49b7d351c2f2a5df3222f63c721343590920e",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 16085,
+        "subject_changed_pixels_gt3": 306529,
+        "orbit_0_changed_pixels_gt3": 93311,
+        "orbit_1_changed_pixels_gt3": 134710
+      }
+    },
+    {
+      "binding": "rebel:planet_shield_generator",
+      "category": "planet_installation",
+      "data_id": "planet_shield_generator",
+      "revision": "04aee3b6db70d0fdb0def68395f6f9f25bf46b0f658901d2220fc95b5e7003bd",
+      "captures": {
+        "red": {
+          "file": "rebel-planet_shield_generator-red.png",
+          "sha256": "73703f52b1da3d2e80cbb4bc73873fcb611ad671571b8941162cb1c5e2d81082",
+          "state_sha256": "29d609a8845ced136c7997f5905f22e26bc53310833cec439018846b5f5bc46e",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "rebel-planet_shield_generator-blue.png",
+          "sha256": "9e5bf5300ed3688ca48a03af6f8f5a9456d7b3895e684b32b4337afa9b700814",
+          "state_sha256": "19e3887264dd69e86d50ca7da7cd40866f397ac6969309da2f1205a461aad6a2",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "rebel-planet_shield_generator-subject-disabled.png",
+          "sha256": "6e0a4e31405b6d8b0e856850882d641eac5978e6c69521de7058d346cbeec7fd",
+          "state_sha256": "2d97831caa00e09f8066137e3613b80366a4c617b853a930e2b35f5b4624c601",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "rebel-planet_shield_generator-restored.png",
+          "sha256": "9e5bf5300ed3688ca48a03af6f8f5a9456d7b3895e684b32b4337afa9b700814",
+          "state_sha256": "a6470725eb72c3a932b06dce047a6bd65bf649518780b79664382855474dee0f",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "rebel-planet_shield_generator-orbit-0.png",
+          "sha256": "4f234aa7d396677637a771f54d3152dee4238dc924ac3fa835080be5662c8a8f",
+          "state_sha256": "a6470725eb72c3a932b06dce047a6bd65bf649518780b79664382855474dee0f",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "rebel-planet_shield_generator-orbit-1.png",
+          "sha256": "ba06d93ff4b870147791f939c669ae9983f129882e3d1b64909ac83e7c53cebb",
+          "state_sha256": "a6470725eb72c3a932b06dce047a6bd65bf649518780b79664382855474dee0f",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 15091,
+        "subject_changed_pixels_gt3": 25767,
+        "orbit_0_changed_pixels_gt3": 38529,
+        "orbit_1_changed_pixels_gt3": 37430
+      }
+    },
+    {
+      "binding": "rebel:planet_trade_hub",
+      "category": "planet_installation",
+      "data_id": "planet_trade_hub",
+      "revision": "4928826335f7e006c12094f06fcb2450d0eb911d73103e71b83350e51cb96720",
+      "captures": {
+        "red": {
+          "file": "rebel-planet_trade_hub-red.png",
+          "sha256": "810a2c5c4e3e1e855e1e7c133ee3120a5d10af7b381392c75e097289d0738ba1",
+          "state_sha256": "bb5b709eec73559929af494f48e76332ce7c797a9b474cb04ee9302513906c39",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "rebel-planet_trade_hub-blue.png",
+          "sha256": "94b3bb1f30b5c34bf92be8fb8e4aa8266577fea48ceb414b67bb0ad3a8315ccd",
+          "state_sha256": "e27c7609e5d917b07cc4f9ef95aceec98199c0838a1a0ec429cec2c47c298d58",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "rebel-planet_trade_hub-subject-disabled.png",
+          "sha256": "61035e24e07cd2350ea84cbb073f90f938a7d90462cbe7bbbaff30263b7549e6",
+          "state_sha256": "2d97831caa00e09f8066137e3613b80366a4c617b853a930e2b35f5b4624c601",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "rebel-planet_trade_hub-restored.png",
+          "sha256": "94b3bb1f30b5c34bf92be8fb8e4aa8266577fea48ceb414b67bb0ad3a8315ccd",
+          "state_sha256": "59d72879c1136cf1170d42001b283a9fd0c3da36b0147eae7996b0b95cf4c21e",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "rebel-planet_trade_hub-orbit-0.png",
+          "sha256": "e100beffb914e2a788be1a540d063ff2b4b463141c4d86ef42947e4880bafe0f",
+          "state_sha256": "59d72879c1136cf1170d42001b283a9fd0c3da36b0147eae7996b0b95cf4c21e",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "rebel-planet_trade_hub-orbit-1.png",
+          "sha256": "89ce32d7f015197c670057953a7545f56c41d56be92d772c60190e8fec2a62e8",
+          "state_sha256": "59d72879c1136cf1170d42001b283a9fd0c3da36b0147eae7996b0b95cf4c21e",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 15799,
+        "subject_changed_pixels_gt3": 23420,
+        "orbit_0_changed_pixels_gt3": 38558,
+        "orbit_1_changed_pixels_gt3": 39413
+      }
+    },
+    {
+      "binding": "rebel:repair_dock",
+      "category": "station",
+      "data_id": "repair_dock",
+      "revision": "9683eae3a24225f5c597d54bd523c618598869668dc41de7215312d5d3b9ffa2",
+      "captures": {
+        "red": {
+          "file": "rebel-repair_dock-red.png",
+          "sha256": "1f31ce685fee7cf98a910037d49ea6fea9f15cd01d6875e87e3a30ebcfca6505",
+          "state_sha256": "8509dd5fdb912f238b8d8722a57bdb9a79625b9155c798fd800cc7d06ddd4c3b",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "rebel-repair_dock-blue.png",
+          "sha256": "b56540bf24025b9d0b4c31b06aa46b8f36b900846a4685912354d2a74b9af759",
+          "state_sha256": "787be6eb7a94f2361d3378dab15d6fdf0df886120a7051f0f64a8bc5fa1faf59",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "rebel-repair_dock-subject-disabled.png",
+          "sha256": "0197ce22ae6791edf06fc36e16be25169eac59d8ea610eef327314fa0ccb28ce",
+          "state_sha256": "7a134293bf8aa0e935f9b3a8319377bcc1863dfa09dd83c2776820db1563d5ae",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "rebel-repair_dock-restored.png",
+          "sha256": "b56540bf24025b9d0b4c31b06aa46b8f36b900846a4685912354d2a74b9af759",
+          "state_sha256": "787be6eb7a94f2361d3378dab15d6fdf0df886120a7051f0f64a8bc5fa1faf59",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "rebel-repair_dock-orbit-0.png",
+          "sha256": "4461e1dd492d38e42dcaf24d85f5c2bbd221b154f2cad10ca0382284addba2e9",
+          "state_sha256": "787be6eb7a94f2361d3378dab15d6fdf0df886120a7051f0f64a8bc5fa1faf59",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "rebel-repair_dock-orbit-1.png",
+          "sha256": "5910c7b41c71a6c9ff82da58c37da703a68e1824ebc192460aa1edd500a7706d",
+          "state_sha256": "787be6eb7a94f2361d3378dab15d6fdf0df886120a7051f0f64a8bc5fa1faf59",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 9688,
+        "subject_changed_pixels_gt3": 40323,
+        "orbit_0_changed_pixels_gt3": 28630,
+        "orbit_1_changed_pixels_gt3": 31506
+      }
+    },
+    {
+      "binding": "rebel:research_station",
+      "category": "station",
+      "data_id": "research_station",
+      "revision": "f30bef3143b5241b0e6b9f777f3cc0388f478d301c5b4c9159414e7a6167529c",
+      "captures": {
+        "red": {
+          "file": "rebel-research_station-red.png",
+          "sha256": "671da7123029aac59aa772279f338d8632005df40acd0a65012b343a04318503",
+          "state_sha256": "83f2392c611df3f1981c2d18f026a834a86ee37ca39a91de5459a64bfd6bb9ae",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "rebel-research_station-blue.png",
+          "sha256": "9151a0dc2b8896bd7894c7d3d19bc7183212ea649fa934128832a6c7a5ac74a2",
+          "state_sha256": "9e780c976286f61aea287ea7c7a3d2d354ed5d68b46534d8301830d346622f33",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "rebel-research_station-subject-disabled.png",
+          "sha256": "ef7d7233efd0257117bec9633bd6d9daa1105c8c24da5df604c0e0eb59d8af6d",
+          "state_sha256": "c3bbc8e40ceab7ea1f4408e55c24b6be9f81658af2f9ef5db9c5fc666f98d7b1",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "rebel-research_station-restored.png",
+          "sha256": "9151a0dc2b8896bd7894c7d3d19bc7183212ea649fa934128832a6c7a5ac74a2",
+          "state_sha256": "9e780c976286f61aea287ea7c7a3d2d354ed5d68b46534d8301830d346622f33",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "rebel-research_station-orbit-0.png",
+          "sha256": "0eab6476ec8df0308f54938b39ac9a10f67ceace54c1303d6bbd26ff388d180e",
+          "state_sha256": "9e780c976286f61aea287ea7c7a3d2d354ed5d68b46534d8301830d346622f33",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "rebel-research_station-orbit-1.png",
+          "sha256": "b2d07301f7e83912878e75bdcb929d8885200dbfcf09e4d4bb61ce5598581ade",
+          "state_sha256": "9e780c976286f61aea287ea7c7a3d2d354ed5d68b46534d8301830d346622f33",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 2194,
+        "subject_changed_pixels_gt3": 30448,
+        "orbit_0_changed_pixels_gt3": 25030,
+        "orbit_1_changed_pixels_gt3": 27170
+      }
+    },
+    {
+      "binding": "rebel:sensor_station",
+      "category": "station",
+      "data_id": "sensor_station",
+      "revision": "bf00de14c4ae8938e43bbce385f4e7a5c5732ec2d44f976f0e7abdccb03768b7",
+      "captures": {
+        "red": {
+          "file": "rebel-sensor_station-red.png",
+          "sha256": "3d331adc00c0844c74dca65a30716596be22458e26a972e67ae197966f31a64f",
+          "state_sha256": "bb308849d071ab5d0bec75e95cbf5ca8efb00e558edd3419906ac7cc21b1c34d",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "rebel-sensor_station-blue.png",
+          "sha256": "ab54234fba0b65cad5b528478809fb7254e80d402d47bdc10dbcfdc2cdbf8e91",
+          "state_sha256": "d48952566212100b0e6c22a503badf30cdb157a7cfedb0d6b1cace6344d1da03",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "rebel-sensor_station-subject-disabled.png",
+          "sha256": "d1ebf6945016db7c724da7b497fcb06ebcd1923fb0e324a5c245075bede61acf",
+          "state_sha256": "5c145670cf3e02de695d90d2405b90a73362a959dc4c175dd2bc5f9c4645e6ba",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "rebel-sensor_station-restored.png",
+          "sha256": "ab54234fba0b65cad5b528478809fb7254e80d402d47bdc10dbcfdc2cdbf8e91",
+          "state_sha256": "d48952566212100b0e6c22a503badf30cdb157a7cfedb0d6b1cace6344d1da03",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "rebel-sensor_station-orbit-0.png",
+          "sha256": "c0a78de2d22aa63e1978ab832291c2247a7fe7c997e7e1b63b1988028c0311c0",
+          "state_sha256": "d48952566212100b0e6c22a503badf30cdb157a7cfedb0d6b1cace6344d1da03",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "rebel-sensor_station-orbit-1.png",
+          "sha256": "0d598810cb1da85995891cfdb6d17af5047d6253182579b2e0cdb864a8d7684a",
+          "state_sha256": "d48952566212100b0e6c22a503badf30cdb157a7cfedb0d6b1cace6344d1da03",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 850,
+        "subject_changed_pixels_gt3": 52550,
+        "orbit_0_changed_pixels_gt3": 30478,
+        "orbit_1_changed_pixels_gt3": 34019
+      }
+    },
+    {
+      "binding": "rebel:shipyard",
+      "category": "station",
+      "data_id": "shipyard",
+      "revision": "d40edf48c3305cd39f5f0de69a96d28572128621b51da98e26656e4eabdb3630",
+      "captures": {
+        "red": {
+          "file": "rebel-shipyard-red.png",
+          "sha256": "0268de3ec605bf0a5aa0eb214c30cb0d2d66bdd045e0c93f8c25ad4bf1d7036f",
+          "state_sha256": "598f55a0aa292207dc9c12e2d8bd51bc6359fb07a2666e3878383eb7439a3929",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "rebel-shipyard-blue.png",
+          "sha256": "7afb8fb944edfe07a4429ef0258e043cf5867dbe8a02e9a8f4892755efbe3e97",
+          "state_sha256": "32e168786b3247ba13ded487f5612525eec4803428f9bb1f000175ca5d697f4f",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "rebel-shipyard-subject-disabled.png",
+          "sha256": "d7c25fb79d9d16dee44c8855325ca4120c2157df60dbe3964f9ce366b8a21647",
+          "state_sha256": "70b054ce9e0b891972657c201edaab73fac8f9ee58dcc759abcdab7185597f69",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "rebel-shipyard-restored.png",
+          "sha256": "7afb8fb944edfe07a4429ef0258e043cf5867dbe8a02e9a8f4892755efbe3e97",
+          "state_sha256": "32e168786b3247ba13ded487f5612525eec4803428f9bb1f000175ca5d697f4f",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "rebel-shipyard-orbit-0.png",
+          "sha256": "bb78e3b64f251cd5b51534249cb2bbca4021f1fd6ae1bbc2c7e1303c38683637",
+          "state_sha256": "32e168786b3247ba13ded487f5612525eec4803428f9bb1f000175ca5d697f4f",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "rebel-shipyard-orbit-1.png",
+          "sha256": "cd50f4691e8386e088114567f47828e59b764deed208997e66477082ab06f0ea",
+          "state_sha256": "32e168786b3247ba13ded487f5612525eec4803428f9bb1f000175ca5d697f4f",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 12148,
+        "subject_changed_pixels_gt3": 37071,
+        "orbit_0_changed_pixels_gt3": 38385,
+        "orbit_1_changed_pixels_gt3": 42686
+      }
+    },
+    {
+      "binding": "rebel:supercapital",
+      "category": "combat_hull",
+      "data_id": "rebel_supercapital",
+      "revision": "5b3a9ddb77312b7fffbdba76925e2e49de6bda48a3fb8ccf4b5d948e7f73c173",
+      "captures": {
+        "red": {
+          "file": "rebel-supercapital-red.png",
+          "sha256": "060a17f9a232941c0e216234b8b59d82b25c35e2d5092dfea9e8cced870a0a51",
+          "state_sha256": "5e918b1415fbf0bf6060dbb85cb8c84acee1f300db6f009ee6a1bc5fb04446c7",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "rebel-supercapital-blue.png",
+          "sha256": "e11e3898fd56b19b536ee73549a716de543f325619cfcafd21e32d423b947fbb",
+          "state_sha256": "274383f9b4a4d72027decb8093aee338aecfc38858054527c218c9dbbe58402c",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "rebel-supercapital-subject-disabled.png",
+          "sha256": "b4bf2224576c884939363a795f7cd5fdb21411245a38a4fb4e4da4b258139ec8",
+          "state_sha256": "436159f178b03283d823451d55d4c5f436d92ca69be659242c87d0408051c66b",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "rebel-supercapital-restored.png",
+          "sha256": "e11e3898fd56b19b536ee73549a716de543f325619cfcafd21e32d423b947fbb",
+          "state_sha256": "274383f9b4a4d72027decb8093aee338aecfc38858054527c218c9dbbe58402c",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "rebel-supercapital-orbit-0.png",
+          "sha256": "53c272a1a5667e135bbbf61a1c5ac011236e5380c12312f659f7bf54557ba94c",
+          "state_sha256": "274383f9b4a4d72027decb8093aee338aecfc38858054527c218c9dbbe58402c",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "rebel-supercapital-orbit-1.png",
+          "sha256": "49d0b51d42882a7f67e90e84940f9349cd6c4d977dc070f3b0c5ac7fa89927bf",
+          "state_sha256": "274383f9b4a4d72027decb8093aee338aecfc38858054527c218c9dbbe58402c",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 18849,
+        "subject_changed_pixels_gt3": 41555,
+        "orbit_0_changed_pixels_gt3": 41332,
+        "orbit_1_changed_pixels_gt3": 60856
+      }
+    },
+    {
+      "binding": "rebel:trade_station",
+      "category": "station",
+      "data_id": "trade_station",
+      "revision": "8c0d2f19f85f1b3c0ca4689e35842ae2d6ee146731822925b6f2b45c8b8e70f0",
+      "captures": {
+        "red": {
+          "file": "rebel-trade_station-red.png",
+          "sha256": "0abe8d6899ed93e03cbd0da563c28c86bf70fe4811e88289d596afb58132e0bd",
+          "state_sha256": "770f68205693f38b3b0f2b3592abb8848b69d2fa1ceece1c5c888ac523c56810",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "rebel-trade_station-blue.png",
+          "sha256": "ed40c8778d254641668bfb957e479f647732ee2c2a54fcb4d764bc30c64435d1",
+          "state_sha256": "c9525a3a063593c8aca14989c3e36c8d5fb9aca73d6eafc1fff96e641735b377",
+          "repeat_equal": true
+        },
+        "subject-disabled": {
+          "file": "rebel-trade_station-subject-disabled.png",
+          "sha256": "a6fae54463b7b7bdb2cdb2fa46d647b9307294f12dde1a89452b7f914fcdee66",
+          "state_sha256": "2e3ba38ad171cffba0174ed5e7a75a826e3b9dd60c1cf453b7f7ab8b7d0038f9",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "rebel-trade_station-restored.png",
+          "sha256": "ed40c8778d254641668bfb957e479f647732ee2c2a54fcb4d764bc30c64435d1",
+          "state_sha256": "c9525a3a063593c8aca14989c3e36c8d5fb9aca73d6eafc1fff96e641735b377",
+          "repeat_equal": true
+        },
+        "orbit-0": {
+          "file": "rebel-trade_station-orbit-0.png",
+          "sha256": "2f27374e707e32f0328e692d0cb8060c9dc4c7b55d6d4eb57eef0305e3180074",
+          "state_sha256": "c9525a3a063593c8aca14989c3e36c8d5fb9aca73d6eafc1fff96e641735b377",
+          "repeat_equal": true
+        },
+        "orbit-1": {
+          "file": "rebel-trade_station-orbit-1.png",
+          "sha256": "1e8eb934e01e08cb1177dbc73ff024dd3f0f83cc78dd9af60ca9659948c38c38",
+          "state_sha256": "c9525a3a063593c8aca14989c3e36c8d5fb9aca73d6eafc1fff96e641735b377",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 17921,
+        "subject_changed_pixels_gt3": 44938,
+        "orbit_0_changed_pixels_gt3": 24497,
+        "orbit_1_changed_pixels_gt3": 26681
+      }
+    }
+  ],
+  "limits": "Native presentation orbit samples, not simulation progression, full OS campaign, native Windows, FPS or packaging. Neutral prop and construction scaffold use separately scoped production routes.",
+  "gl": {
+    "vendor": "Apple",
+    "renderer": "Apple M4",
+    "version": "2.1 Metal - 90.5"
+  },
+  "samples": 4
+}

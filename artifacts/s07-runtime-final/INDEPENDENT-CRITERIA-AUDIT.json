@@ -1,0 +1,169 @@
+{
+  "geometry_review_passed": true,
+  "blocking_defects": [
+    {
+      "id": "S07-MOTION-PROOF",
+      "kind": "acceptance_evidence_gap_not_demonstrated_product_defect",
+      "requirement_ref": "docs/BLENDER_MODEL_S07_PLAN.md:47,116-118,124-126",
+      "description": "Inspected motion acceptance is not established by the audited receipts. Catalogue evidence supplies two additional camera/time snapshots per binding, not continuous motion inspection. The 360-frame movie is a verified seven-instance offline presentation fixture, not catalogue-wide gameplay motion, capture transitions, or moving/overlapping cached-versus-uncached material parity.",
+      "remaining": "Retain and inspect bounded actual-renderer motion for the required representative ship/station/attached/convoy consumers, including ownership transition and moving/overlapping cached-versus-uncached behavior where applicable; bind the inspection and captures to exact code and model revisions. Do not rename orbit snapshots into inspected motion."
+    },
+    {
+      "id": "S07-OWNERSHIP-TRANSITION-PROOF",
+      "kind": "acceptance_evidence_gap_not_demonstrated_product_defect",
+      "requirement_ref": "docs/BLENDER_MODEL_S07_PLAN.md:47,82,116-118",
+      "description": "All catalogue subjects have native red/blue paint evidence, but paint substitution is not station-family capture. The geometry matrix proves ship data-faction retention and station current-owner radius changes; its station contact/pick/camera matrices run each family separately, not those consumers across one capture transition. No audited native receipt establishes the captured station/attached family transition and associated refreshed contact/camera/pick behavior.",
+      "remaining": "Provide a bounded integrated ownership-transition receipt for representative ship, station, attached hardware and convoy alias consumers, asserting correct identity/paint plus post-transition contact, pick and refreshed camera behavior without simulation mutation by rendering. Existing per-family coverage need not be repeated exhaustively."
+    },
+    {
+      "id": "S07-FINAL-RECEIPT-PROVENANCE",
+      "kind": "closure_record_gap",
+      "requirement_ref": "docs/BLENDER_MODEL_S07_PLAN.md:50,124-126",
+      "description": "Current work is an uncommitted delta atop 56906ea. Older native campaign and representative-contact receipts are legitimate historical scoped evidence, but they are not fresh executions of the final renderer. A final full-stage receipt must explicitly bind the accepted candidate and distinguish unchanged-method carry-forward from final-renderer native results.",
+      "remaining": "After evidence gaps are settled, produce a coherent candidate-bound S07 receipt enumerating route coverage, exact code/model hashes, retained failed attempts, scoped historical evidence and remaining later-stage gates. Publication, merge, default activation and release remain outside this audit's authority."
+    }
+  ],
+  "criteria": [
+    {
+      "id": "GEOMETRY-MIGRATION",
+      "requirement_ref": "WP1/WP3; tests/test_s07_selected_geometry_matrix.py:40-59,281-314",
+      "status": "PASS",
+      "evidence": [
+        "Independent AST-only extraction of ORIGINAL_BINDINGS equals the exact 102 core registry bindings read from git show HEAD:assets/models/registry.json; not merely equal counts.",
+        "Diff retains the original 106 consumer scope, asserts 107 total consumers for 103 bindings, and adds only shared:construction_scaffold as a separately identified render-only queue prop.",
+        "Original station/attached bounds/contact/camera/pick and ownership-radius test methods, raw geometry oracles, convoy scale test and geometric assertion helpers are AST-identical to HEAD. Ship matrix adds only an explicit scaffold skip; original ship consumers retain their assertions.",
+        "artifacts/s07-runtime-final/geometry-scaffold-parent-verified.txt: 18 tests OK; companion JSON exit_code 0, timed_out false, 90-second external deadline, 15.822 seconds elapsed. This is parent execution read by the reviewer, not independent execution.",
+        "Reviewed geometry test SHA256 eec7d17d58a0df216c72919373a40209345b61d5c72e75d9f5766a8505703fa6."
+      ],
+      "limitations": [
+        "PASS is for the fixture migration, not full WP3 or S07 visual acceptance.",
+        "Scaffold exception is an applicability classification: no selectable-unit bounds/contact/camera/scale/pick claim. Actual queue geometry and progress are separately exercised; no original unit criterion is waived."
+      ]
+    },
+    {
+      "id": "WP1-IDENTITY-ROUTES",
+      "requirement_ref": "Plan WP1, lines 45,76-90",
+      "status": "PASS",
+      "evidence": [
+        "Exact original binding membership independently reconciled as above; source scope 102 original plus separate scaffold, with 106 original historical consumers plus one queue-prop consumer.",
+        "INDEPENDENT-CODE-REVIEW.json records bounded independent registration/route execution, separate scaffold authority and assets-only frozen-root resolution. Existing production review is incorporated, not repeated.",
+        "Geometry payload dispatch assertions remain active for original ship/station/attached rows; scaffold dispatch is delegated explicitly to real queue tests."
+      ],
+      "limitations": ["Frozen-root metadata resolution is not a packaged-build test. Historical inventory is not rewritten; deferred textures and outside-mesh dispositions retain their existing scopes."]
+    },
+    {
+      "id": "WP2-SELECTED-STATION-CONSTRUCTION",
+      "requirement_ref": "Plan WP2, lines 46,59-60,116-118",
+      "status": "PASS",
+      "evidence": [
+        "geometry-scaffold-parent-verified.txt exercises all 40 selected placement outlines, valid/invalid placements, actual queue progress, selected scaffold all-role emission and negative controls.",
+        "native-construction-attempt3-selected-scaffold/report.json: 24 captures through production Renderer.draw, selected scaffold revision 12959d2518899469d7deb165124243bdfc8a45cbd1a306fca1bef12a8d084b70; final renderer SHA256 7d05d28bb1ac57d42ef9966eff0fab3c22f3078a2bf22bd7a024b36e68e3f5e7.",
+        "Independent read-only hash verification found all 24 reported construction PNG hashes match their files."
+      ],
+      "limitations": [
+        "Native fixtures do not themselves establish paid command acceptance. CPU queue/state preservation and placement controls are separate evidence.",
+        "Attempts 1 and 2 were fallback-only, not selected-scaffold proof.",
+        "Pre-existing queue line-width/depth-state restoration limit is explicitly retained; no fix or blanket GL-state-restoration claim is made."
+      ]
+    },
+    {
+      "id": "WP3-GEOMETRY-CAMERA",
+      "requirement_ref": "Plan WP3, lines 47,82,116-118",
+      "status": "PASS",
+      "evidence": [
+        "Parent geometry receipt proves raw all-role extrema; rotated hull contact, pick and camera boxes; near-plane safety; distinct convoy scales; all six installation slots and eight satellite placements; unchanged authoritative state digests.",
+        "Existing geometry methods remain unchanged apart from explicit scaffold handling and membership assertions."
+      ],
+      "limitations": [
+        "This PASS is the bounded CPU geometric criterion, not native moving-camera acceptance or ownership-transition closure.",
+        "Eye/near-plane assertions are conservative geometric oracles; no claim they measure temporal clipping or inspect a motion sequence.",
+        "Station capture test checks family radius before/after owner change, not all consumers across that transition; see S07-OWNERSHIP-TRANSITION-PROOF."
+      ]
+    },
+    {
+      "id": "WP3-HIDDEN-HISTORICAL-CONTACTS",
+      "requirement_ref": "Plan WP3, line 47",
+      "status": "PASS",
+      "evidence": [
+        "hidden-focused-verified.txt and hidden-report.json: four tests pass on actual selected Imperial combat hull, station, satellite and installation consumers.",
+        "Real visibility, stale/removed targets, historical ballistic positions and draw suppression when the historical location leaves sensors are exercised. Visibility-gate removal yields 12 expected assertion failures, zero errors.",
+        "Tests call real _visual_hit and _draw_hits with only the GL hit endpoint intercepted; effect/state preservation is asserted."
+      ],
+      "limitations": [
+        "Representative behavioral coverage, not exhaustive factions or hidden-contact rasterization.",
+        "No fabricated last-seen ship/station snapshots: GameState remembers static planets, while this criterion concerns real transient historical ballistic contacts.",
+        "This scoped CPU gate is legitimately proven without inventing a separate hidden-raster requirement."
+      ]
+    },
+    {
+      "id": "WP3-NATIVE-OWNER-CONTACT-REPRESENTATIVES",
+      "requirement_ref": "Plan WP2/WP3, lines 46-47,116-118",
+      "status": "PASS",
+      "evidence": [
+        "native-attempt3/report.json and readback.json: 24 representative legacy/preview rows, 216 captures; all 216 capture file hashes independently verified during this audit.",
+        "Discriminating owner paint, accent, standing shell and hull/shield-hit ablations have nonzero differences; repeat captures and protected input preservation are recorded.",
+        "Independent Renderer AST comparison against HEAD identifies exactly _draw_ship_role_batch and _draw_ship as changed methods."
+      ],
+      "limitations": [
+        "Historical representative receipt predates the two authored-ship parity repairs; it is not re-labelled as a final-renderer capture.",
+        "Unchanged contact/shell methods support narrowly scoped carry-forward of their behavior, not a claim that old authored-ship material pixels equal the final renderer.",
+        "Paint changes are not ownership/family capture transitions."
+      ]
+    },
+    {
+      "id": "WP4-LOD-MATERIAL-PARITY",
+      "requirement_ref": "Plan WP4, lines 48,61-64,116-118",
+      "status": "PARTIAL",
+      "evidence": [
+        "INDEPENDENT-CODE-REVIEW.json accepts the opt-in authored role-submission and matte-accent repairs. CPU coverage records all 37 ship bindings and exact threshold neighborhoods, keeping legacy suppression unchanged.",
+        "native-parity-attempt1/report.json records seven exact cached/uncached samples with zero changed pixels and nonzero subject pixels, pinned to the final renderer.",
+        "Actual seven samples are fighter at 24, 33.99, 34.01 and 60 apparent pixels, plus rebel frigate, confederacy frigate and Syndicate constructor close views. The report prose saying 'four close-range authored ships' is imprecise: there are three additional non-fighter samples, not four."
+      ],
+      "limitations": [
+        "No natural 16px visual acceptance is claimed; CPU threshold coverage is not native pixel proof, and renderer mesh-LOD selection is not established by resolver support.",
+        "Stationary isolated samples do not establish moving/overlapping role-major versus entity-major order, engine/trail interleaving, temporal readability or inspected motion. See S07-MOTION-PROOF.",
+        "Exact seven-sample native parity is a PASS for its measured scope, not all-catalogue/all-scene material parity."
+      ]
+    },
+    {
+      "id": "WP5-MENU-ENVIRONMENT",
+      "requirement_ref": "Plan WP5, lines 49,67-72",
+      "status": "PASS",
+      "evidence": [
+        "candidate-movie-final-readback.json: 360 decoded frames, 36 code pins and seven model instances verified; renderer pin matches reviewed final renderer; candidate ZIP af9d8f050a201fbe1c6bb8febfaa06e882b9e7d8c48699d1c48d39b3227d48e7; shipped movie unchanged.",
+        "candidate-movie-final-attempt1/render-report.json records explicit preview selection, exact resolved model revisions, zero render GL errors and bounded playback verification.",
+        "Older lod-environment-summary.json is valid only for its unchanged asteroid placement/RNG methods. Current production AST comparison confirms those methods remain unchanged; its obsolete pre-fix authored LOD behavior is not accepted as current parity."
+      ],
+      "limitations": [
+        "Movie is an offline presentation fixture, not gameplay simulation or full-catalogue motion approval.",
+        "Asteroid selected/fallback placement and RNG controls do not migrate planet textures; retained texture/effect exceptions remain explicit.",
+        "Final movie readback is retained parent evidence, not independently decoded again by this read-only audit."
+      ]
+    },
+    {
+      "id": "WP6-INTEGRATED-PREVIEW",
+      "requirement_ref": "Plan WP6, lines 50,116-129",
+      "status": "PARTIAL",
+      "evidence": [
+        "native-catalogue-attempt1/report.json: exact 101 unit bindings, six captures each, final renderer pinned; independent audit verified 606 PNG hashes with zero mismatches.",
+        "Neutral asteroid and render-only scaffold have separate applicable routes rather than being silently omitted from the unit capture table.",
+        "Existing independent production review records 103-revision GPU lifecycle closure and assets-only frozen-root metadata closure; no repeat production review was performed.",
+        "artifacts/s07-runtime-acceptance/campaign-native-attempt2.txt records natural campaign/briefing clicks, actual main START_MISSION/start_game, real Camera/Renderer/HUD/InputController, matched legacy/preview initial digest, selected Imperial cruiser revision and repeated native frames."
+      ],
+      "limitations": [
+        "Historical campaign entry is legitimate bounded entry evidence with stub audio and no simulation advance/OS event loop. Entry methods are unchanged; its old frame hash is not asserted to represent final ship-material pixels.",
+        "101-unit paint/orbit table does not prove capture transitions or inspected motion.",
+        "Full S07 closure remains blocked by the named evidence gaps and final receipt provenance. S08/S09 compatibility/platform/performance/packaging are later gates, not extra CPU/full-suite requirements imposed here."
+      ]
+    }
+  ],
+  "overall_status": "PARTIAL_EVIDENCE_NOT_FULL_S07_CLOSURE",
+  "scope": {
+    "base_head": "56906ea7c73c219fbdc91c68176104b23d0f7712",
+    "renderer_sha256": "7d05d28bb1ac57d42ef9966eff0fab3c22f3078a2bf22bd7a024b36e68e3f5e7",
+    "method": "Read-only diff, AST, exact-set and retained-evidence/hash audit. No GL, CPU suite, production/art/test/docs edits or commits. Only this audit JSON was created.",
+    "production_review": "Existing INDEPENDENT-CODE-REVIEW.json PASS incorporated within its stated scope, not repeated.",
+    "authorization": "No criterion waiver, natural-16px claim, merge, default activation, release or later-stage acceptance.",
+    "status_meaning": "PASS applies only to the requirement and evidence explicitly bounded in that criterion. PARTIAL denotes a named unproven part, not a known product defect or rejection of legitimate historical evidence."
+  }
+}

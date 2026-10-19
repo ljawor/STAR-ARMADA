@@ -1,0 +1,15 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "unittest",
+    "-v",
+    "test_s07_construction_runtime.ConstructionRuntimeTests.test_negative_control_nonlocal_queue_gate_removal_is_caught"
+  ],
+  "pid": 82656,
+  "exit_code": 1,
+  "timed_out": false,
+  "deadline_seconds": 25.0,
+  "elapsed_seconds": 0.511,
+  "log": "artifacts/s07-runtime-final/harness-namespace-red.txt"
+}

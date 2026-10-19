@@ -1,0 +1,8 @@
+test_explicit_increment_preserves_original_99_and_trio (test_s07_scaffold_registration.ScaffoldRegistrationTests.test_explicit_increment_preserves_original_99_and_trio) ... ok
+test_published_separate_increment_is_preserved_without_repeating_flag (test_s07_scaffold_registration.ScaffoldRegistrationTests.test_published_separate_increment_is_preserved_without_repeating_flag) ... ok
+test_scaffold_rejects_symlinked_approved_input_even_inside_root (test_s07_scaffold_registration.ScaffoldRegistrationTests.test_scaffold_rejects_symlinked_approved_input_even_inside_root) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 4.000s
+
+OK

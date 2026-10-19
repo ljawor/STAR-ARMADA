@@ -1,0 +1,16 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "unittest",
+    "-v",
+    "test_s07_construction_runtime",
+    "test_s07_hidden_contact_acceptance"
+  ],
+  "pid": 82745,
+  "exit_code": 0,
+  "timed_out": false,
+  "deadline_seconds": 90.0,
+  "elapsed_seconds": 2.327,
+  "log": "artifacts/s07-runtime-final/construction-hidden-fixed.txt"
+}

@@ -1,0 +1,70 @@
+{
+  "passed": true,
+  "security_concerns": [],
+  "logic_errors": [],
+  "suggestions": [
+    "Keep tests/test_s07_selected_geometry_matrix.py explicitly pending and outside this frozen review: a sibling owns its 103-binding applicability migration. Re-review that file and rerun its focused checks after its writer settles.",
+    "Add a source-mutant negative control for removal of the authored-only _material_matte call. The current exact material-state equality assertion is useful, but its mutation sensitivity is not separately recorded here.",
+    "Do not interpret this scoped pre-publication review or its CPU reproduction as full S07 acceptance, natural 16px visual acceptance, packaged-build/native-platform compatibility, performance acceptance, default activation, or authorization to merge/tag/release."
+  ],
+  "summary": "PASS for the inspected local production delta and separate scaffold metadata increment: no blocking security or logic defect found; independent bounded CPU reproduction passed 38 tests. Full S07 acceptance remains outside this verdict.",
+  "evidence_paths": [
+    "artifacts/s07-runtime-final/independent-review-cpu.txt",
+    "artifacts/s07-runtime-final/independent-review-cpu.txt.json",
+    "artifacts/s07-runtime-final/native-parity-attempt1/report.json",
+    "artifacts/s07-runtime-final/lifecycle-material-scaffold-attempt3.txt",
+    "artifacts/s07-runtime-final/native-construction-attempt3-selected-scaffold/report.json",
+    "artifacts/s07-runtime-final/registration-union-attempt1.txt",
+    "art/manifests/pipeline_policy.json",
+    "art/manifests/approvals.json",
+    "art/manifests/approved-s06-source-hashes.json",
+    "art/manifests/approved-s07-scaffold-source-hashes.json",
+    "assets/models/manifests/shared_construction_scaffold.json",
+    "assets/models/approval-receipts.json",
+    "assets/models/registry.json"
+  ],
+  "review_scope": {
+    "base_head": "56906ea7c73c219fbdc91c68176104b23d0f7712",
+    "renderer_sha256": "7d05d28bb1ac57d42ef9966eff0fab3c22f3078a2bf22bd7a024b36e68e3f5e7",
+    "production": ["render/renderer.py:_draw_ship_role_batch", "render/renderer.py:_draw_ship", "tools/art/s07_registration.py", "tools/art/sync_runtime_metadata.py"],
+    "tests": ["tests/test_s07_authored_lod_parity.py", "tests/test_s07_material_parity.py", "tests/test_s07_scaffold_registration.py", "tests/test_s07_registration.py", "tests/test_s07_binding_routes.py", "tests/test_s07_lod_environment.py", "tests/test_s07_construction_runtime.py", "tests/test_model_context_lifecycle.py"],
+    "excluded_concurrent_file": "tests/test_s07_selected_geometry_matrix.py",
+    "method": "Read-only code and metadata review against HEAD; no GL execution, full suite, source edits, commits, asset writes, default changes or publication actions. Only review artifacts and bounded CPU logs were written."
+  },
+  "checks": {
+    "renderer_ast_delta": "Programmatic AST comparison found exactly _draw_ship_role_batch and _draw_ship changed; construction and asteroid methods remain unchanged.",
+    "lod": "Authored role submission bypasses both cached legacy suppression thresholds. Legacy namespaced/unregistered/procedural shapes retain suppression. Production-AST tests exercise thresholds and deliberately restore old authored suppression as a negative control. This is role-submission coverage, not pixel or mesh-LOD acceptance.",
+    "material": "Uncached authored accent now explicitly uses the cached path's matte material; conditional leaves legacy accent's original trim-metal material intact. CPU trace compares all six roles' shader, material, lighting and texture state with shaders available and unavailable.",
+    "authority": "Separate execution decision s07-scaffold-registration-2026-10-19 and separate appearance decision s07-scaffold-appearance-2026-10-18 are both required. Original 99-row S06 batch and trio remain distinct; scaffold is a separate one-row script-authoritative batch. Initial inclusion is explicit and an already published batch regenerates idempotently without repeating the flag.",
+    "evidence": "Original scaffold appearance decision equals HEAD byte-semantically. All 29 original evidence pins remain in the decision and are validated before publication, including pins omitted from runtime metadata. Manifest carries 17 curated identities within the unchanged 24-item maximum, and receipt keys match those manifest identities exactly. Resolver exact-key enforcement at render/asset_registry.py:384-387 is unchanged. Independent focused tests include corruption of an omitted original evidence pin.",
+    "b5_correction": "Only the broad renderer runtime pin changes in B5's revision assets. A separate engineering-only correction retains previous runtime identities, authority words, protected-method AST comparisons and preservation records. Existing evidence maps and original correction are preserved; this is not a new appearance approval or a tolerance amendment.",
+    "paths_and_pins": "Scaffold publication validates original source/export/runtime pins, seed selector, sidecar identity, capture-code/runtime provenance, inventory category, filename-safe identifiers, symlink components and case/inode input aliases. Existing whole-output preflight and staged ordinary-I/O rollback remain unchanged; protection is explicitly non-crash-atomic and assumes exclusive writers.",
+    "source_frozen_closure": "star_armada.spec bundles assets. Metadata and receipt live under assets/models; runtime resolver does not gain authoring-tool dependencies. Independently executed registration tests cover the original 102 plus separate scaffold in an assets-only frozen root, aliases, off/on/off preview, pin failures, output alias handling and rollback.",
+    "preservation": "git diff HEAD restricted to game/, assets/data/, art/blender/, shared authoring helper and runtime *.mesh.json paths was empty. No simulation/default-selection source changes were found in the production delta.",
+    "construction_lifecycle": "Reviewed CPU construction guards use real production methods with GL endpoints intercepted, raw selected mesh identity, queue/state preservation, selected scaffold progress transforms and explicit legacy fallback control. The namespace safety guard prevents source mutants bypassing recording seams. Existing queue line-width/depth-state limitations are documented, not asserted fixed. Lifecycle diff adds separate scaffold membership to existing resource closure rather than claiming visual acceptance."
+  },
+  "static_security_scan": {
+    "scope": "Added production lines only, git diff HEAD",
+    "added_lines_by_file": {"render/renderer.py": 11, "tools/art/s07_registration.py": 116, "tools/art/sync_runtime_metadata.py": 18},
+    "checks": ["hardcoded credentials/secrets", "os.system and shell=True", "eval/exec", "pickle deserialization", "formatted SQL", "manual review of path construction and execution boundaries"],
+    "matches": [],
+    "qualification": "Pattern scan plus manual inspection, not a general security audit; exec used by CPU test AST/mutation harnesses is outside the production additions."
+  },
+  "independent_reproduction": {
+    "modules": ["test_s07_scaffold_registration", "test_s07_registration", "test_s07_authored_lod_parity", "test_s07_material_parity", "test_s07_binding_routes"],
+    "runner": "artifacts/s07-runtime-final/run-bounded.py",
+    "deadline_seconds": 55,
+    "elapsed_seconds": 28.575,
+    "tests_run": 38,
+    "exit_code": 0,
+    "timed_out": false,
+    "native_gl_executed": false,
+    "full_suite_executed": false
+  },
+  "parent_evidence_read_not_reproduced": {
+    "native_parity": "Report records exactly seven samples with zero cached/uncached changed pixels and nonzero subject coverage, bound to the inspected renderer hash. Its scope explicitly excludes natural 16px acceptance.",
+    "lifecycle_focused": "Raw lifecycle-material-scaffold-attempt3.txt reports Ran 34 tests and OK, including the 103-revision GPU closure; not independently rerun with GL here.",
+    "construction": "Attempt3-selected-scaffold report is bound to the inspected renderer hash and records the selected scaffold revision. Attempts1/2 were fallback-only and must not be described as selected-scaffold evidence.",
+    "retained_failures": "registration-union-attempt1.txt is genuinely FAILED (6 failures, 2 errors), including an over-24 evidence schema failure and stale fixture scope. It is retained historical evidence, not a pass. Current independent 38-test run exercises corrected registration, receipt and route code. Filenames containing green are not verdicts."
+  }
+}

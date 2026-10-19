@@ -1,0 +1,15 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "unittest",
+    "-v",
+    "test_s07_capture_transition"
+  ],
+  "pid": 89314,
+  "exit_code": 0,
+  "timed_out": false,
+  "deadline_seconds": 30.0,
+  "elapsed_seconds": 14.273,
+  "log": "artifacts/s07-runtime-final/capture-transition-parent-verified.txt"
+}

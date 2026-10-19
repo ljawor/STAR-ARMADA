@@ -1,0 +1,172 @@
+{
+  "schema": 1,
+  "reviewer": "hermes-independent-subagent (disjoint from the implementer; read-only review of HEAD 56906ea + uncommitted working tree)",
+  "reviewed_head": "56906ea7c73c219fbdc91c68176104b23d0f7712",
+  "renderer_sha256": "9aff34140aa3d458eec358a2d87e64d4d4277c924ca198d507e4d29983350f3c",
+  "reviewed_paths": [
+    "render/renderer.py",
+    "render/fleet_materials.py",
+    "render/ship_sizes.py",
+    "tests/test_s07_motion_order.py",
+    "tests/test_s07_material_parity.py",
+    "tests/test_s07_capture_transition.py",
+    "tests/test_s07_lod_environment.py",
+    "tests/test_s07_authored_lod_parity.py",
+    "tests/s07_registration_assertions.py",
+    "tests/test_s06_appearance_records.py",
+    "tests/test_s07_scaffold_registration.py",
+    "art/manifests/approvals.json",
+    "art/manifests/pipeline_policy.json",
+    "art/manifests/pipeline.json",
+    "assets/models/registry.json",
+    "artifacts/s07-runtime-final/reconcile-parity-pin.py",
+    "artifacts/s07-runtime-final/parity-pin-reconciliation-v2.json",
+    "artifacts/s07-runtime-final/native-motion-transition.py",
+    "artifacts/s07-runtime-final/native-motion-transition-attempt3/report.json",
+    "artifacts/s07-runtime-final/native-parity-attempt1/report.json"
+  ],
+  "changed_methods": [
+    "_draw_ships",
+    "_draw_ship_role_batch",
+    "_draw_ship",
+    "_draw_station"
+  ],
+  "checks": [
+    {
+      "id": "C1_phased_motion_and_gl_state",
+      "question": "Is the phased-motion reordering in _draw_ships correct and free of GL-state leakage between the trail, hull and glow phases?",
+      "verdict": "pass",
+      "evidence": "render/renderer.py:1430-1448. Trail phase is a self-contained helper (1453-1478: enables blend, sets SRC_ALPHA/ONE_MINUS_SRC_ALPHA, depth mask false, push/translate/rotate/begin/end/pop, depth mask true, blend disabled). Hull phase reuses the unchanged _draw_ship, which is matrix-balanced (glPushMatrix 2068 / glPopMatrix 2143) and restores texture+lighting (2141-2142). Glow phase (1446-1448) uses _draw_ship_glow (1480-1497), which restores depth mask and blend and defers blend-func reset to _draw_glow (1007). Independent in-memory command-stream oracle (compiled HEAD and worktree draw methods, recorded glEnable/glDisable/glDepthMask/glBlendFunc/glPushMatrix/glPopMatrix/glCallList): net GL state at end of the pass is identical to HEAD in all 8 scenes (blend enabled/disabled, depth mask, matrix depth 0, final material), e.g. mixed authored+legacy moving head={'blend': False,'depth_mask': True,'pushpop': 0,'mat': ('matte',)} new=identical. Trail/glow vertex data, colour and radius are line-for-line the same as the gated blocks they replace (2075-2091 vs 1453-1478; 2145-2158 vs 1480-1497).",
+      "notes": "One real semantic consequence of hoisting trails: trails are alpha-blended with depth writes off, so a trail drawn before another ship's hull is overpainted by that (even farther) hull, and the trail also inherits a different leftover texture coordinate (GL_TEXTURE_2D + GL_MODULATE is bound with no glTexCoord2f) and a different fixed-function specular state than in the old per-entity order. This ordering already exists in the cached production path (1383-1397), so the change makes the uncached path match it rather than introducing a new production artifact; see finding F1."
+    },
+    {
+      "id": "C2_legacy_and_mixed_paths",
+      "question": "Do legacy-only scenes and mixed legacy/authored fleets take exactly the previous per-entity path (no new material calls, no suppression change, no reordering)?",
+      "verdict": "fail",
+      "evidence": "Legacy-only: PASS. Command-stream diff of the pre-delta code (git show HEAD:render/renderer.py) against the working tree, both compiled from real AST bodies: 'legacy-only moving x2' 91 events identical, 'legacy-only motionless' 59 identical, 'legacy station alone' 35 identical, 'legacy ships + station' 80 identical (uncached), and 157/117/67/138 identical (cached). No material calls, suppression or ordering change on those paths, and the added predicate only calls _ship_size() earlier (renderer-local memo, no GL effect). Mixed: FAIL AS STATED. 'mixed authored+legacy moving' head=91 vs new=100 events: both ships' trails are hoisted ahead of all hulls and both glows deferred; the legacy hull's trail is now emitted before the authored hull. 'mixed authored moveless + legacy moving' shows the scene-wide predicate moving a legacy ship's trail even though the authored ship is stationary (head=75 vs new=80). The reordering is deliberate and documented in the new comment (1426-1429), and legacy hull/role/material submission itself is unchanged.",
+      "notes": "This branch is not reachable from the production draw loop: render/renderer.py:495 is the only call site and always passes a frame cache from _ensure_frame_cache, which never returns None, so mixed-scene reordering affects only harnesses that call _draw_ships(selection, None) (native-parity.py 'uncached' mode, parity-state-probe.py, tests). If 'byte-identical mixed fleets' is a hard requirement, the predicate would have to be per-entity, which defeats the stated goal of matching the cached ordering."
+    },
+    {
+      "id": "C3_authored_only_lod_suppression",
+      "question": "Is the authored-only LOD suppression change in _draw_ship_role_batch correct, and is legacy suppression unchanged?",
+      "verdict": "pass",
+      "evidence": "render/renderer.py:1529-1534: `authored = is_authored(size.shape) if ':' in size.shape else False`, then both cuts are guarded by `not authored`, so for authored=False the predicates are textually identical to HEAD. Legacy retention is measured, not assumed: tests/test_s07_authored_lod_parity.py:60-77 drives the real role batch for 'rebel:battleship', 'unregistered:custom' (colon, not authored) and 'needle' at 0/1/16±eps/34±eps/60 px and asserts base-only <16, base+lit <34, all roles >=34. Authored non-suppression is measured at apparent=8 px: tests/test_s07_motion_order.py:79-86 asserts 6 glCallList for the authored ship and 1 for the legacy ship (hulls=7 cached / 12 uncached). tests/test_s07_authored_lod_parity.py:14-35 mutates the compiled AST to restore the old unconditional suppression and asserts the old behaviour is detected (changed==2 guards), which is a live negative control that the change is load-bearing.",
+      "notes": "Authored hulls now lose the LOD optimisation entirely, down to apparent 0 px (see finding F2: 5 extra display-list submissions plus shader uniform updates per authored ship per frame at zoom-out)."
+    },
+    {
+      "id": "C4_draw_motion_gating",
+      "question": "Can the draw_motion gate in _draw_ship suppress motion for legacy callers (default value), and does the authored accent material call leak to legacy?",
+      "verdict": "pass",
+      "evidence": "Signature is `def _draw_ship(self, e: Entity, draw_motion=True)` (2057); the only call passing False is the phased branch (1441). The other caller, tests/test_ship_sizes.py:61/73, calls r._draw_ship(e) positionally, so it keeps both trail (2080) and glow (2145). Accent material: the new `if authored: self._material_matte()` (2124-2126) is guarded, and tests/test_s07_material_parity.py:75-80 pins the legacy uncached accent at {'shininess': 12.0, 'spec': (0.85,0.85,0.85)} - the trim metal value that HEAD also leaves in place - so an unguarded matte would turn the test red. My command-stream diff of an authored ship shows exactly one added ('matte',) event and of a legacy ship shows none.",
+      "notes": "Gate thresholds are identical to the helpers: trail spd>2 (2080 vs 1456), glow spd>8 (2145 vs 1483), same segment_visible/_in_front/is_position_visible calls. _draw_ship still computes spd/trail_length/tail when draw_motion is False (dead arithmetic, no GL)."
+    },
+    {
+      "id": "C5_station_authored_materials",
+      "question": "Do the _draw_station authored material additions leave the legacy alloy path untouched?",
+      "verdict": "pass",
+      "evidence": "render/renderer.py:2544-2547 adds per-role _material_metal only under `if authored_station`, and 2556-2557 adds a guarded matte before the accent. Command-stream diff (real _draw_station AST, HEAD vs worktree): 'legacy station uncached' 35 events identical, including metal(8.0,(0.5,0.55,0.62)) before base/dark/trim and no matte before the accent. 'authored station uncached' adds exactly four events and nothing else: metal(8.0,(0.42,0.42,0.42)) before base, metal(8.0,(0.42,0.42,0.42)) before dark, metal(12.0,(0.85,0.85,0.85)) before trim, matte before accent. Cached authored station is unchanged (67 events identical pre/post). tests/test_s07_material_parity.py:55-63 asserts cached vs uncached per-glCallList state (key + material + lighting + texture + shader uniforms) is equal for both shader-available and fixed-function fallback, and 64-72 pins the legacy accent at the alloy 8.0/(0.50,0.55,0.62) value.",
+      "notes": "Two honest qualifications. (a) The authored path still emits the pre-existing alloy metal(8.0,(0.50,0.55,0.62)) at 2537, immediately overwritten by the first per-role call with no draw in between - harmless but redundant, so authored stations issue 5 material calls and legacy 2. (b) With the hull program bound, glMaterial is inert: HULL in render/fleet_materials.py computes its own specular (`spec`, `polish`) from uniforms and never reads gl_FrontMaterial, so only the accent matte (drawn outside `materials.use`, 2556-2560) is visually effective; the parity achieved for base/dark/trim is command-level, not appearance-level."
+    },
+    {
+      "id": "C6_oracle_independence",
+      "question": "Are the tests honest oracles that trace real production AST or drive real code rather than restating the implementation?",
+      "verdict": "pass",
+      "evidence": "test_s07_motion_order.py:15-70 does ast.parse(render/renderer.py), compiles the real _draw_ships/_draw_ship/_draw_ship_trail/_draw_ship_glow bodies, and asserts `ns[name].__globals__ is ns` plus `__globals__['glCallList'] is ns['glCallList']` (67-69) so recorders are not shadowed by stale copies; assertions are on observed call order/counts, not on source text. test_s07_material_parity.py:9-59 drives the real _draw_ships/_draw_station bodies and records the GL state at each glCallList (key, material, shader uniforms, lighting, texture); its two legacy tests would fail on exactly the two plausible mistakes (unguarded matte in _draw_ship, unguarded metal in _draw_station). test_s07_capture_transition.py:41-105 drives real Renderer/Camera/InputController, patches every gl* in render.renderer and render.camera to raise (fail closed, 125-135), builds expected bounds independently from the manifest raw mesh and frame_oracle, and asserts camera._camera_boxes contains them plus state_hash unchanged. test_s07_authored_lod_parity.py:14-35 is an in-memory AST mutation control.",
+      "notes": "Gaps, not dishonesty. (i) test_s07_motion_order.py:75-78 uses shape 'needle' (no colon) for its legacy control, so deleting the `is_authored(...)` clause from phased_motion (leaving `':' in self._ship_size(e).shape`) would leave all four motion-order tests green - the colon-but-unregistered case is untested for the motion predicate (finding F5). (ii) test_s07_capture_transition.py never calls the four changed methods; it exercises _ship_size/_visual_hit/picking, so it is honest but orthogonal to this delta. (iii) test_s07_material_parity.py records no matrix, blend or depth state, so it cannot detect that class of leak (my C1 evidence comes from an independent oracle, not from it)."
+    },
+    {
+      "id": "C7_state_read_only",
+      "question": "Does any changed path mutate entity, state, queue or simulation fields?",
+      "verdict": "pass",
+      "evidence": "Read of 1419-1448, 1499-1534, 2057-2158 and 2519-2583: every entity attribute is read (e.alive, e.is_planet, e.is_station, e.pos, e.yaw, e.vel.length(), e.owner, e.data_id, e.radius, e.build_queue / build_queue[0].get); no assignment targets e.*, state.*, tick, queue or selection. The only writes reachable are renderer-local: _ship_size memoises scope['sizes'] (1974-1985), _px_per_world memoises scope['projection'] (3715-3717), and the ship/station display-list caches (ship_lists) - all pre-existing and render-only. test_s07_capture_transition.py asserts state_hash(state) == before and selection._generation unchanged across the consumers it exercises (94-99).",
+      "notes": "The phased predicate calls _ship_size() earlier than before, which populates the same renderer-local caches earlier; no GL or simulation effect. The native harness also asserts state_hash(st) == before per frame, but that is implementer-produced evidence I did not re-run."
+    },
+    {
+      "id": "C8_pin_record_consistency",
+      "question": "Is the pin-reconciliation record internally consistent (four changed methods, protected methods, retained earlier corrections) against the actual renderer bytes?",
+      "verdict": "pass",
+      "evidence": "Independent AST method diff HEAD vs working tree: changed == ['_draw_ship','_draw_ship_role_batch','_draw_ships','_draw_station'] (exactly four, matching EXPECTED_CHANGED in reconcile-parity-pin.py:24 and the record). Protected: _draw_asteroid_field, _asteroid_prop_lists, _emit_detail_mesh, _draw_construction_sites are AST-equal to HEAD; three are also AST-equal to the B5 baseline blob e264230f (found at b0ca626), and _draw_construction_sites differs from B5 but equals HEAD exactly as `protected_methods_moved_before_this_correction` states. Pin: approvals.json B5 runtime['render/renderer.py'] == 9aff3414 (measured); HEAD's pin was 9a9d19c9 which is HEAD's own renderer sha256; the replaced pin 7d05d28b equals renderer_sha256 in native-parity-attempt1/report.json. Retained: canonical json sha256 of s07_renderer_pin_correction and of s07_authored_parity_pin_correction (excluding superseded_by) reproduce the recorded retained_corrections hashes exactly, and superseded_by is the only delta on the authored_parity block; s07_renderer_pin_correction has no added/removed keys. Both authority ids exist exactly once in pipeline_policy.decision_log with decision 'authorized-execution-not-appearance'. git diff --stat: 45 insertions, 18 deletions.",
+      "notes": "`previous_approvals_sha256` = 7866c814 refers to an intermediate uncommitted approvals.json and cannot be recomputed now (the committed HEAD file hashes 1d2934a3 and already carries s07_renderer_pin_correction with pin 9a9d19c9), so that one field is consistent-but-unproven. 'approved_revisions_preserved' includes tools/art/alliance_common.py with historical_pin_matches_current false, i.e. 'preserved' means equal to the published checkpoint, not equal to the approved pin (finding F8). The record's own wording says this explicitly and says it is not an appearance approval."
+    }
+  ],
+  "findings": [
+    {
+      "severity": "minor",
+      "path": "render/renderer.py:1426-1448",
+      "detail": "In a mixed legacy/authored fleet with any ship moving faster than 2 units/s, the scene-wide predicate reorders legacy hulls too: all trails are hoisted ahead of all hulls and all glows deferred. This is documented intent, but it means mixed scenes are not command-identical to the pre-delta uncached path, contrary to a literal 'byte-identical mixed fleet' requirement. Beyond ordering, a hoisted trail is alpha-blended with depth writes off and inherits a different leftover texture coordinate (GL_TEXTURE_2D + GL_MODULATE is bound and the trail sets no glTexCoord) and a different fixed-function specular state, so trail colour can shift slightly in overlap cases. Production never reaches this branch (only call site 495 always passes a cache), and the cached path already had this ordering; no test measures either effect."
+    },
+    {
+      "severity": "minor",
+      "path": "render/renderer.py:1530-1534",
+      "detail": "Authored hulls now submit all six roles at every apparent size, including sub-pixel. The LOD cut exists to avoid per-entity GL work at zoom-out, so every authored ship now costs 5 extra display-list calls plus push/pop, colour and two shader uniform updates per frame regardless of how small it is. Intended for parity with the uncached path, but there is no absolute floor (e.g. apparent < 1 px) and no performance evidence in the delta."
+    },
+    {
+      "severity": "minor",
+      "path": "render/renderer.py:2537-2557",
+      "detail": "The authored station path keeps the pre-existing alloy _material_metal(8.0, (0.50,0.55,0.62)) at 2537 and immediately overwrites it with metal(8.0,(0.42,...)) before the base draw, so it issues 5 material calls where legacy issues 2, with one entirely redundant. More importantly, while the hull program is bound (the production case) all four role-material calls are inert because HULL computes specular from `materialPass`/`authoredSurface` and never reads gl_FrontMaterial; only the accent matte is visually effective. The 'matches the cached role materials' claim is therefore command-level, not appearance-level, and the native parity harness cannot distinguish the two."
+    },
+    {
+      "severity": "minor",
+      "path": "render/renderer.py:1453-1497 vs 2068-2158",
+      "detail": "Trail and glow logic is now duplicated: _draw_ship keeps inline copies (2075-2091, 2145-2158) of _draw_ship_trail (1453-1478) and _draw_ship_glow (1480-1497). They agree today (verified line by line: same trail_length, tail, colour, alpha, three vertices; same glow radius/colour), but nothing in the CPU suite compares them - test_s07_material_parity noops trail/glow and test_s07_motion_order records only event kind. Having _draw_ship delegate to the helpers (or having the helpers call back) would make drift impossible."
+    },
+    {
+      "severity": "minor",
+      "path": "tests/test_s07_motion_order.py:75-78",
+      "detail": "The legacy control sets selected=False so _ship_size returns 'needle' (no colon). Mutating phased_motion to `':' in self._ship_size(e).shape` (dropping the is_authored clause) would still yield False for that control and True for the authored cases, so all four tests stay green while a namespaced-but-unregistered hull (e.g. 'unregistered:custom') would silently trigger phased motion in legacy scenes. A control with a colon-bearing, non-authored shape would close this."
+    },
+    {
+      "severity": "minor",
+      "path": "tests/test_s07_material_parity.py:55-80",
+      "detail": "The parity oracle compares the state recorded at each glCallList, which cannot see matrix-stack, blend or depth-mask leaks, and it only compares cached vs uncached for authored rows. The pre-existing legacy divergence is preserved and pinned rather than closed: cached legacy accent is drawn with matte (0.0/0,0,0) while uncached legacy accent is drawn with 12.0/(0.85,0.85,0.85) for ships and 8.0/(0.50,0.55,0.62) for stations. A reader should not conclude from these tests that the uncached capture path is appearance-faithful for legacy rows."
+    },
+    {
+      "severity": "suggestion",
+      "path": "tests/s07_registration_assertions.py:60-137",
+      "detail": "The scaffold exclusion is not a blank cheque: the row's own appearance decision is asserted (exactly one, approval_kind 'appearance-scaffold-revision', assets == ['shared:construction_scaffold'], owner words), its execution authority is asserted (exactly one, 'authorized-execution-not-appearance'), the exclusion is by literal identity (`separate = {SCAFFOLD}`) and is bounded by `len(pipeline['assets']) == 103`, `core - separate == expected` and `set(entries) - separate == expected`, and every other non-S06 row is still asserted unregistered with an allowed legacy status. assert_preview_boundary also proves mesh_for(SCAFFOLD) is None with preview OFF (start and after configure({})) and non-None only with preview ON. Residual gaps: the guard never asserts rows[SCAFFOLD]['envelope_decision'] == its appearance decision (the registry does carry that value), and its hash loop is restricted to S06 `requested`, so approved-s07-scaffold-source-hashes.json is verified elsewhere (tests/test_s07_scaffold_registration.py), not here. Both registered controls (test_s06_appearance_records.py:209 and :215) still raise AssertionError and are sensitive: neither removed decision is referenced by any other guard assertion."
+    },
+    {
+      "severity": "suggestion",
+      "path": "artifacts/s07-runtime-final/parity-pin-reconciliation-v2.json",
+      "detail": "`previous_approvals_sha256` (7866c814) describes an uncommitted intermediate approvals.json and cannot be recomputed from any committed state, so it is plausible but unverifiable. `approved_revisions_preserved` mixes two meanings: entries with historical_pin_matches_current false (tools/art/alliance_common.py, twice) are preserved against the published checkpoint, not against the B5 approval pin. The field names state this and no claim is overstated, but a reader scanning only `preserved_against_published_checkpoint: true` could infer the approved bytes are unchanged."
+    }
+  ],
+  "independent_reproduction": {
+    "commands": [
+      "shasum -a 256 render/renderer.py  (before review and again after: 9aff34140aa3d458eec358a2d87e64d4d4277c924ca198d507e4d29983350f3c, git rev-parse HEAD = 56906ea7c73c219fbdc91c68176104b23d0f7712)",
+      "git diff render/renderer.py  (45 insertions / 18 deletions)",
+      "PYTHONPATH=tests .venv/bin/python -m unittest test_s07_motion_order test_s07_capture_transition test_s07_material_parity",
+      "PYTHONPATH=tests .venv/bin/python -m unittest -v test_s06_appearance_records.RegistrationGuardControls",
+      "python3 ast method diff: ast.parse(git show HEAD:render/renderer.py) vs working tree; changed-method set, protected-method equality, sha256",
+      "python3 approvals/pipeline/registry consistency reads (B5 runtime pin, decision blocks, canonical retained-correction hashes, 103 asset count)",
+      ".venv/bin/python /tmp/s07_cmd_diff.py  (in-memory compile of the six real draw-method AST bodies from HEAD and from the working tree; recorded GL command stream for 8 scenes x cached/uncached, net end-of-pass GL state, authored/legacy station material sequences, push/pop balance)"
+    ],
+    "result": "19 tests OK (exit 0) and 11 registration-guard controls OK (exit 0). AST diff: exactly the four named methods changed; protected methods AST-equal; B5 runtime pin equals the measured 9aff3414. Command-stream oracle: legacy-only scenes byte-identical pre/post (uncached 91/59/35/80 events, cached 157/117/67/138); mixed moving scenes differ only by motion phasing plus the authored matte; net GL state at end of pass identical to HEAD in all 8 scenes with matrix depth 0; authored station adds exactly 3 metal calls and 1 matte and legacy station adds none.",
+    "tests_run": 30,
+    "exit_codes": [
+      0,
+      0
+    ]
+  },
+  "limitations": [
+    "The camera exposes no native snapshot-generation field (render/camera.py contains no 'snapshot' or '_generation' at all), so tests/test_s07_capture_transition.py reports the selection generation captured before camera.refresh_scene() as `snapshot_generation`. It is the selection generation at explicit refresh, not a native snapshot counter; the measurement cannot prove the camera froze the same snapshot the renderer consumed.",
+    "No native GL or pixel execution was performed by this review (prohibited, and a concurrent native capture process shares the machine). native-motion-transition-attempt3/report.json claims status passed, renderer_sha256 9aff3414 and exact cached/uncached parity on 6 rows, but it is implementer-produced, I did not reproduce it, every captured subject is asserted to resolve in the registry (so no legacy-only and no mixed legacy/authored scene is covered), and it compares the two post-change paths with each other rather than against the pre-change uncached appearance.",
+    "The command-stream oracle compiles only the six draw functions and fakes the materials/shader, display-list, glow and material helpers; it proves call order and fixed-function state, not rasterised pixels or shader output.",
+    "tests/test_s07_scaffold_registration.py was read but not run, so the scaffold-only provenance/hash coverage it delegates to is unverified here.",
+    "`previous_approvals_sha256` in parity-pin-reconciliation-v2.json refers to an uncommitted intermediate file and is unverifiable.",
+    "Only the four changed methods, their immediate helpers, the named tests and the B5 pin record were audited; the wider S06/S07 approval corpus, the capture harnesses themselves and the rest of renderer.py were not re-reviewed.",
+    "Performance claims (LOD cost of always-on authored roles) are reasoned from the code, not measured."
+  ],
+  "not_approved_by_this_review": [
+    "merge of PR #131 or any other PR state change",
+    "default activation (model_preview or any production-default switch)",
+    "release, tag or packaging",
+    "a new appearance approval or any extension of the B5/S06 appearance approval",
+    "S08 gates",
+    "S09 gates",
+    "acceptance of the S07 step or of the four-method repair as correct beyond the checks recorded here",
+    "any claim of pixel parity for legacy-only or mixed legacy/authored fleets",
+    "the scaffold's own manifest/receipt/source-hash chain"
+  ],
+  "overall": "pass_with_findings"
+}

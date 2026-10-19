@@ -1,0 +1,11 @@
+{
+  "identical_frames": 360,
+  "total": 360,
+  "differing_indices": [],
+  "provenance_paths_differing": [
+    "render/renderer.py"
+  ],
+  "old_renderer": "7d05d28bb1ac57d42ef9966eff0fab3c22f3078a2bf22bd7a024b36e68e3f5e7",
+  "new_renderer": "9aff34140aa3d458eec358a2d87e64d4d4277c924ca198d507e4d29983350f3c",
+  "models_identical": true
+}

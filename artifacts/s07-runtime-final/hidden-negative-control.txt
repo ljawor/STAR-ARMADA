@@ -1,0 +1,114 @@
+test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) ... 
+  test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:battleship', kind='hull_hit') ... FAIL
+  test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:battleship', kind='shield_hit') ... FAIL
+  test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:battleship', kind='impact') ... FAIL
+  test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:command_station', kind='hull_hit') ... FAIL
+  test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:command_station', kind='shield_hit') ... FAIL
+  test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:command_station', kind='impact') ... FAIL
+  test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:attack_satellite', kind='hull_hit') ... FAIL
+  test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:attack_satellite', kind='shield_hit') ... FAIL
+  test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:attack_satellite', kind='impact') ... FAIL
+  test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:planet_extractor', kind='hull_hit') ... FAIL
+  test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:planet_extractor', kind='shield_hit') ... FAIL
+  test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:planet_extractor', kind='impact') ... FAIL
+
+======================================================================
+FAIL: test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:battleship', kind='hull_hit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_hidden_contact_acceptance.py", line 135, in test_hidden_historical_contacts_do_not_follow_current_transform
+    self.assertIs(renderer._visual_hit(effect), effect,
+AssertionError: {'kind': 'hull_hit', 'target_id': 2, 'pos': (30000.0, 9013.088445525766, -5000.0), 'normal': (0.0, 1.0, 0.0), 'center': (30000.0, 9000.0, -5000.0), 'radius': 13.088445525764815, 'size': 5.0, 't': 0.0, 'visual_contact': True} is not {'kind': 'hull_hit', 'target_id': 2, 'pos': (np.float64(27.770340298962115), np.float64(5007.0206028252405), np.float64(-59.94022836298205)), 'normal': (0.0, 1.0, 0.0), 'center': (100.0, 5000.0, 0.0), 'radius': 150.0, 'size': 5.0, 't': 0.0} : hidden current geometry must not remap historical contact
+
+======================================================================
+FAIL: test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:battleship', kind='shield_hit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_hidden_contact_acceptance.py", line 135, in test_hidden_historical_contacts_do_not_follow_current_transform
+    self.assertIs(renderer._visual_hit(effect), effect,
+AssertionError: {'kind': 'shield_hit', 'target_id': 2, 'pos': (30000.0, 9139.71714035796, -5000.0), 'normal': (0.0, 1.0, 0.0), 'center': (30000.0, 9000.0, -5000.0), 'radius': 139.717140357959, 'size': 5.0, 't': 0.0, 'visual_contact': True} is not {'kind': 'shield_hit', 'target_id': 2, 'pos': (np.float64(27.770340298962115), np.float64(5007.0206028252405), np.float64(-59.94022836298205)), 'normal': (0.0, 1.0, 0.0), 'center': (100.0, 5000.0, 0.0), 'radius': 150.0, 'size': 5.0, 't': 0.0} : hidden current geometry must not remap historical contact
+
+======================================================================
+FAIL: test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:battleship', kind='impact')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_hidden_contact_acceptance.py", line 135, in test_hidden_historical_contacts_do_not_follow_current_transform
+    self.assertIs(renderer._visual_hit(effect), effect,
+AssertionError: {'kind': 'impact', 'target_id': 2, 'pos': (30000.0, 9013.088445525766, -5000.0), 'normal': (0.0, 1.0, 0.0), 'center': (30000.0, 9000.0, -5000.0), 'radius': 13.088445525764815, 'size': 5.0, 't': 0.0, 'visual_contact': True} is not {'kind': 'impact', 'target_id': 2, 'pos': (np.float64(27.770340298962115), np.float64(5007.0206028252405), np.float64(-59.94022836298205)), 'normal': (0.0, 1.0, 0.0), 'center': (100.0, 5000.0, 0.0), 'radius': 150.0, 'size': 5.0, 't': 0.0} : hidden current geometry must not remap historical contact
+
+======================================================================
+FAIL: test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:command_station', kind='hull_hit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_hidden_contact_acceptance.py", line 135, in test_hidden_historical_contacts_do_not_follow_current_transform
+    self.assertIs(renderer._visual_hit(effect), effect,
+AssertionError: {'kind': 'hull_hit', 'target_id': 2, 'pos': (30000.0, 9200.2, -5000.0), 'normal': (np.float64(0.0), np.float64(1.0), np.float64(0.0)), 'center': (30000.0, 9000.0, -5000.0), 'radius': 200.20000000000002, 'size': 5.0, 't': 0.0, 'visual_contact': True} is not {'kind': 'hull_hit', 'target_id': 2, 'pos': (np.float64(24.919539522351716), np.float64(4988.0540556), np.float64(48.989220567131724)), 'normal': (np.float64(0.0), np.float64(1.0), np.float64(0.0)), 'center': (100.0, 5000.0, 0.0), 'radius': 130.0, 'size': 5.0, 't': 0.0} : hidden current geometry must not remap historical contact
+
+======================================================================
+FAIL: test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:command_station', kind='shield_hit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_hidden_contact_acceptance.py", line 135, in test_hidden_historical_contacts_do_not_follow_current_transform
+    self.assertIs(renderer._visual_hit(effect), effect,
+AssertionError: {'kind': 'shield_hit', 'target_id': 2, 'pos': (np.float64(30000.0), np.float64(9259.487827727906), np.float64(-5000.0)), 'normal': (np.float64(0.0), np.float64(1.0), np.float64(0.0)), 'center': (30000.0, 9000.0, -5000.0), 'radius': 259.4878277279049, 'size': 5.0, 't': 0.0, 'visual_contact': True} is not {'kind': 'shield_hit', 'target_id': 2, 'pos': (np.float64(24.919539522351716), np.float64(4988.0540556), np.float64(48.989220567131724)), 'normal': (np.float64(0.0), np.float64(1.0), np.float64(0.0)), 'center': (100.0, 5000.0, 0.0), 'radius': 130.0, 'size': 5.0, 't': 0.0} : hidden current geometry must not remap historical contact
+
+======================================================================
+FAIL: test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:command_station', kind='impact')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_hidden_contact_acceptance.py", line 135, in test_hidden_historical_contacts_do_not_follow_current_transform
+    self.assertIs(renderer._visual_hit(effect), effect,
+AssertionError: {'kind': 'impact', 'target_id': 2, 'pos': (30000.0, 9200.2, -5000.0), 'normal': (np.float64(0.0), np.float64(1.0), np.float64(0.0)), 'center': (30000.0, 9000.0, -5000.0), 'radius': 200.20000000000002, 'size': 5.0, 't': 0.0, 'visual_contact': True} is not {'kind': 'impact', 'target_id': 2, 'pos': (np.float64(24.919539522351716), np.float64(4988.0540556), np.float64(48.989220567131724)), 'normal': (np.float64(0.0), np.float64(1.0), np.float64(0.0)), 'center': (100.0, 5000.0, 0.0), 'radius': 130.0, 'size': 5.0, 't': 0.0} : hidden current geometry must not remap historical contact
+
+======================================================================
+FAIL: test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:attack_satellite', kind='hull_hit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_hidden_contact_acceptance.py", line 135, in test_hidden_historical_contacts_do_not_follow_current_transform
+    self.assertIs(renderer._visual_hit(effect), effect,
+AssertionError: {'kind': 'hull_hit', 'target_id': 2, 'pos': (30000.0, 9009.3996, -5000.0), 'normal': (np.float64(0.0), np.float64(1.0), np.float64(0.0)), 'center': (30000.0, 9000.0, -5000.0), 'radius': 9.399600000000646, 'size': 5.0, 't': 0.0, 'visual_contact': True} is not {'kind': 'hull_hit', 'target_id': 2, 'pos': (np.float64(122.03584502242637), np.float64(4998.4586150000005), np.float64(-10.56462460644227)), 'normal': (np.float64(0.0), np.float64(1.0), np.float64(0.0)), 'center': (100.0, 5000.0, 0.0), 'radius': 45.0, 'size': 5.0, 't': 0.0} : hidden current geometry must not remap historical contact
+
+======================================================================
+FAIL: test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:attack_satellite', kind='shield_hit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_hidden_contact_acceptance.py", line 135, in test_hidden_historical_contacts_do_not_follow_current_transform
+    self.assertIs(renderer._visual_hit(effect), effect,
+AssertionError: {'kind': 'shield_hit', 'target_id': 2, 'pos': (30000.0, 9009.3996, -5000.0), 'normal': (np.float64(0.0), np.float64(1.0), np.float64(0.0)), 'center': (30000.0, 9000.0, -5000.0), 'radius': 9.399600000000646, 'size': 5.0, 't': 0.0, 'visual_contact': True} is not {'kind': 'shield_hit', 'target_id': 2, 'pos': (np.float64(122.03584502242637), np.float64(4998.4586150000005), np.float64(-10.56462460644227)), 'normal': (np.float64(0.0), np.float64(1.0), np.float64(0.0)), 'center': (100.0, 5000.0, 0.0), 'radius': 45.0, 'size': 5.0, 't': 0.0} : hidden current geometry must not remap historical contact
+
+======================================================================
+FAIL: test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:attack_satellite', kind='impact')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_hidden_contact_acceptance.py", line 135, in test_hidden_historical_contacts_do_not_follow_current_transform
+    self.assertIs(renderer._visual_hit(effect), effect,
+AssertionError: {'kind': 'impact', 'target_id': 2, 'pos': (30000.0, 9009.3996, -5000.0), 'normal': (np.float64(0.0), np.float64(1.0), np.float64(0.0)), 'center': (30000.0, 9000.0, -5000.0), 'radius': 9.399600000000646, 'size': 5.0, 't': 0.0, 'visual_contact': True} is not {'kind': 'impact', 'target_id': 2, 'pos': (np.float64(122.03584502242637), np.float64(4998.4586150000005), np.float64(-10.56462460644227)), 'normal': (np.float64(0.0), np.float64(1.0), np.float64(0.0)), 'center': (100.0, 5000.0, 0.0), 'radius': 45.0, 'size': 5.0, 't': 0.0} : hidden current geometry must not remap historical contact
+
+======================================================================
+FAIL: test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:planet_extractor', kind='hull_hit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_hidden_contact_acceptance.py", line 135, in test_hidden_historical_contacts_do_not_follow_current_transform
+    self.assertIs(renderer._visual_hit(effect), effect,
+AssertionError: {'kind': 'hull_hit', 'target_id': 2, 'pos': (30000.0, 9005.18, -5000.0), 'normal': (np.float64(0.0), np.float64(1.0), np.float64(0.0)), 'center': (30000.0, 9000.0, -5000.0), 'radius': 5.180000000000291, 'size': 5.0, 't': 0.0, 'visual_contact': True} is not {'kind': 'hull_hit', 'target_id': 2, 'pos': (np.float64(71.7416803), np.float64(4955.512), np.float64(-25.919999100000002)), 'normal': (np.float64(0.0), np.float64(1.0), np.float64(0.0)), 'center': (100.0, 4951.0, 0.0), 'radius': 45.0, 'size': 5.0, 't': 0.0} : hidden current geometry must not remap historical contact
+
+======================================================================
+FAIL: test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:planet_extractor', kind='shield_hit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_hidden_contact_acceptance.py", line 135, in test_hidden_historical_contacts_do_not_follow_current_transform
+    self.assertIs(renderer._visual_hit(effect), effect,
+AssertionError: {'kind': 'shield_hit', 'target_id': 2, 'pos': (30000.0, 9005.18, -5000.0), 'normal': (np.float64(0.0), np.float64(1.0), np.float64(0.0)), 'center': (30000.0, 9000.0, -5000.0), 'radius': 5.180000000000291, 'size': 5.0, 't': 0.0, 'visual_contact': True} is not {'kind': 'shield_hit', 'target_id': 2, 'pos': (np.float64(71.7416803), np.float64(4955.512), np.float64(-25.919999100000002)), 'normal': (np.float64(0.0), np.float64(1.0), np.float64(0.0)), 'center': (100.0, 4951.0, 0.0), 'radius': 45.0, 'size': 5.0, 't': 0.0} : hidden current geometry must not remap historical contact
+
+======================================================================
+FAIL: test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:planet_extractor', kind='impact')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_hidden_contact_acceptance.py", line 135, in test_hidden_historical_contacts_do_not_follow_current_transform
+    self.assertIs(renderer._visual_hit(effect), effect,
+AssertionError: {'kind': 'impact', 'target_id': 2, 'pos': (30000.0, 9005.18, -5000.0), 'normal': (np.float64(0.0), np.float64(1.0), np.float64(0.0)), 'center': (30000.0, 9000.0, -5000.0), 'radius': 5.180000000000291, 'size': 5.0, 't': 0.0, 'visual_contact': True} is not {'kind': 'impact', 'target_id': 2, 'pos': (np.float64(71.7416803), np.float64(4955.512), np.float64(-25.919999100000002)), 'normal': (np.float64(0.0), np.float64(1.0), np.float64(0.0)), 'center': (100.0, 4951.0, 0.0), 'radius': 45.0, 'size': 5.0, 't': 0.0} : hidden current geometry must not remap historical contact
+
+----------------------------------------------------------------------
+Ran 1 test in 0.053s
+
+FAILED (failures=12)

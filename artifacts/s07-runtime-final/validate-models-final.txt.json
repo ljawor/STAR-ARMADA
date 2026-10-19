@@ -1,0 +1,13 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "tools/art/validate-models",
+    "--all"
+  ],
+  "pid": 88192,
+  "exit_code": 1,
+  "timed_out": false,
+  "deadline_seconds": 90.0,
+  "elapsed_seconds": 0.399,
+  "log": "artifacts/s07-runtime-final/validate-models-final.txt"
+}

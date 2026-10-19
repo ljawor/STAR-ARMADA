@@ -1,0 +1,15 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "unittest",
+    "-v",
+    "test_model_context_lifecycle.ModelContextLifecycleTests.test_registered_catalogue_lists_close_and_rebuild_across_preview_cycles"
+  ],
+  "pid": 86100,
+  "exit_code": 1,
+  "timed_out": false,
+  "deadline_seconds": 20.0,
+  "elapsed_seconds": 0.201,
+  "log": "artifacts/s07-runtime-final/lifecycle-scaffold-scope-red.txt"
+}

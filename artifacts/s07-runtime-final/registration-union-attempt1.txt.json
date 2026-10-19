@@ -1,0 +1,25 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "unittest",
+    "-v",
+    "test_s07_scaffold_registration",
+    "test_s07_registration",
+    "test_s07_binding_routes",
+    "test_s07_construction_runtime",
+    "test_s07_construction_seam",
+    "test_s07_scaffold_approval",
+    "test_s07_pipeline_execution",
+    "test_s07_authored_lod_parity",
+    "test_s07_lod_environment",
+    "test_s07_material_parity",
+    "test_s07_hidden_contact_acceptance"
+  ],
+  "pid": 85842,
+  "exit_code": 1,
+  "timed_out": false,
+  "deadline_seconds": 90.0,
+  "elapsed_seconds": 23.7,
+  "log": "artifacts/s07-runtime-final/registration-union-attempt1.txt"
+}

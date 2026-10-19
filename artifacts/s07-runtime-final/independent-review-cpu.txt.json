@@ -1,0 +1,19 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "unittest",
+    "-v",
+    "test_s07_scaffold_registration",
+    "test_s07_registration",
+    "test_s07_authored_lod_parity",
+    "test_s07_material_parity",
+    "test_s07_binding_routes"
+  ],
+  "pid": 87083,
+  "exit_code": 0,
+  "timed_out": false,
+  "deadline_seconds": 55.0,
+  "elapsed_seconds": 28.575,
+  "log": "artifacts/s07-runtime-final/independent-review-cpu.txt"
+}

@@ -1,0 +1,92 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+{"binding": "confederacy:attack_satellite", "metrics": {"owner_changed_pixels_gt3": 12369, "subject_changed_pixels_gt3": 31460, "orbit_0_changed_pixels_gt3": 34844, "orbit_1_changed_pixels_gt3": 36687}}
+{"binding": "confederacy:battleship", "metrics": {"owner_changed_pixels_gt3": 20295, "subject_changed_pixels_gt3": 40061, "orbit_0_changed_pixels_gt3": 35403, "orbit_1_changed_pixels_gt3": 35561}}
+{"binding": "confederacy:bomber", "metrics": {"owner_changed_pixels_gt3": 3019, "subject_changed_pixels_gt3": 3709, "orbit_0_changed_pixels_gt3": 12046, "orbit_1_changed_pixels_gt3": 12264}}
+{"binding": "confederacy:colonizer", "metrics": {"owner_changed_pixels_gt3": 18717, "subject_changed_pixels_gt3": 39944, "orbit_0_changed_pixels_gt3": 28766, "orbit_1_changed_pixels_gt3": 30131}}
+{"binding": "confederacy:command_station", "metrics": {"owner_changed_pixels_gt3": 12622, "subject_changed_pixels_gt3": 36680, "orbit_0_changed_pixels_gt3": 39024, "orbit_1_changed_pixels_gt3": 43055}}
+{"binding": "confederacy:constructor", "metrics": {"owner_changed_pixels_gt3": 21242, "subject_changed_pixels_gt3": 42236, "orbit_0_changed_pixels_gt3": 31169, "orbit_1_changed_pixels_gt3": 34092}}
+{"binding": "confederacy:convoy", "metrics": {"owner_changed_pixels_gt3": 5644, "subject_changed_pixels_gt3": 15533, "orbit_0_changed_pixels_gt3": 13471, "orbit_1_changed_pixels_gt3": 20506}}
+{"binding": "confederacy:corvette", "metrics": {"owner_changed_pixels_gt3": 17608, "subject_changed_pixels_gt3": 37528, "orbit_0_changed_pixels_gt3": 34969, "orbit_1_changed_pixels_gt3": 33416}}
+{"binding": "confederacy:cruiser", "metrics": {"owner_changed_pixels_gt3": 17094, "subject_changed_pixels_gt3": 45839, "orbit_0_changed_pixels_gt3": 33754, "orbit_1_changed_pixels_gt3": 31096}}
+{"binding": "confederacy:defense_platform", "metrics": {"owner_changed_pixels_gt3": 1728, "subject_changed_pixels_gt3": 31548, "orbit_0_changed_pixels_gt3": 31499, "orbit_1_changed_pixels_gt3": 37643}}
+{"binding": "confederacy:defense_satellite", "metrics": {"owner_changed_pixels_gt3": 16223, "subject_changed_pixels_gt3": 36179, "orbit_0_changed_pixels_gt3": 39186, "orbit_1_changed_pixels_gt3": 41861}}
+{"binding": "confederacy:energy_relay", "metrics": {"owner_changed_pixels_gt3": 4514, "subject_changed_pixels_gt3": 34151, "orbit_0_changed_pixels_gt3": 26177, "orbit_1_changed_pixels_gt3": 26753}}
+{"binding": "confederacy:fighter", "metrics": {"owner_changed_pixels_gt3": 2916, "subject_changed_pixels_gt3": 3511, "orbit_0_changed_pixels_gt3": 11806, "orbit_1_changed_pixels_gt3": 12416}}
+{"binding": "confederacy:fighter_platform", "metrics": {"owner_changed_pixels_gt3": 1017, "subject_changed_pixels_gt3": 35923, "orbit_0_changed_pixels_gt3": 25281, "orbit_1_changed_pixels_gt3": 27590}}
+{"binding": "confederacy:frigate", "metrics": {"owner_changed_pixels_gt3": 16890, "subject_changed_pixels_gt3": 36813, "orbit_0_changed_pixels_gt3": 30608, "orbit_1_changed_pixels_gt3": 29108}}
+{"binding": "confederacy:mining_station", "metrics": {"owner_changed_pixels_gt3": 294, "subject_changed_pixels_gt3": 31165, "orbit_0_changed_pixels_gt3": 20351, "orbit_1_changed_pixels_gt3": 25974}}
+{"binding": "confederacy:planet_extractor", "metrics": {"owner_changed_pixels_gt3": 13377, "subject_changed_pixels_gt3": 27178, "orbit_0_changed_pixels_gt3": 42401, "orbit_1_changed_pixels_gt3": 40960}}
+{"binding": "confederacy:planet_pulsar_cannon", "metrics": {"owner_changed_pixels_gt3": 16141, "subject_changed_pixels_gt3": 306529, "orbit_0_changed_pixels_gt3": 93276, "orbit_1_changed_pixels_gt3": 134739}}
+{"binding": "confederacy:planet_shield_generator", "metrics": {"owner_changed_pixels_gt3": 15194, "subject_changed_pixels_gt3": 25726, "orbit_0_changed_pixels_gt3": 38714, "orbit_1_changed_pixels_gt3": 37686}}
+{"binding": "confederacy:planet_trade_hub", "metrics": {"owner_changed_pixels_gt3": 15823, "subject_changed_pixels_gt3": 23409, "orbit_0_changed_pixels_gt3": 38684, "orbit_1_changed_pixels_gt3": 39553}}
+{"binding": "confederacy:repair_dock", "metrics": {"owner_changed_pixels_gt3": 2549, "subject_changed_pixels_gt3": 39003, "orbit_0_changed_pixels_gt3": 35342, "orbit_1_changed_pixels_gt3": 36047}}
+{"binding": "confederacy:research_station", "metrics": {"owner_changed_pixels_gt3": 665, "subject_changed_pixels_gt3": 27937, "orbit_0_changed_pixels_gt3": 23848, "orbit_1_changed_pixels_gt3": 25896}}
+{"binding": "confederacy:sensor_station", "metrics": {"owner_changed_pixels_gt3": 400, "subject_changed_pixels_gt3": 54912, "orbit_0_changed_pixels_gt3": 33357, "orbit_1_changed_pixels_gt3": 37686}}
+{"binding": "confederacy:shipyard", "metrics": {"owner_changed_pixels_gt3": 7545, "subject_changed_pixels_gt3": 37381, "orbit_0_changed_pixels_gt3": 35435, "orbit_1_changed_pixels_gt3": 40693}}
+{"binding": "confederacy:supercapital", "metrics": {"owner_changed_pixels_gt3": 18848, "subject_changed_pixels_gt3": 38253, "orbit_0_changed_pixels_gt3": 39795, "orbit_1_changed_pixels_gt3": 41371}}
+{"binding": "confederacy:trade_station", "metrics": {"owner_changed_pixels_gt3": 3156, "subject_changed_pixels_gt3": 35686, "orbit_0_changed_pixels_gt3": 26407, "orbit_1_changed_pixels_gt3": 29871}}
+{"binding": "imperial:attack_satellite", "metrics": {"owner_changed_pixels_gt3": 12074, "subject_changed_pixels_gt3": 31151, "orbit_0_changed_pixels_gt3": 34803, "orbit_1_changed_pixels_gt3": 36659}}
+{"binding": "imperial:battleship", "metrics": {"owner_changed_pixels_gt3": 10002, "subject_changed_pixels_gt3": 27434, "orbit_0_changed_pixels_gt3": 24645, "orbit_1_changed_pixels_gt3": 40334}}
+{"binding": "imperial:bomber", "metrics": {"owner_changed_pixels_gt3": 2644, "subject_changed_pixels_gt3": 4412, "orbit_0_changed_pixels_gt3": 14232, "orbit_1_changed_pixels_gt3": 14497}}
+{"binding": "imperial:colonizer", "metrics": {"owner_changed_pixels_gt3": 20523, "subject_changed_pixels_gt3": 41343, "orbit_0_changed_pixels_gt3": 29488, "orbit_1_changed_pixels_gt3": 31598}}
+{"binding": "imperial:command_station", "metrics": {"owner_changed_pixels_gt3": 20052, "subject_changed_pixels_gt3": 45920, "orbit_0_changed_pixels_gt3": 49829, "orbit_1_changed_pixels_gt3": 51599}}
+{"binding": "imperial:constructor", "metrics": {"owner_changed_pixels_gt3": 15909, "subject_changed_pixels_gt3": 36717, "orbit_0_changed_pixels_gt3": 25415, "orbit_1_changed_pixels_gt3": 28845}}
+{"binding": "imperial:convoy", "metrics": {"owner_changed_pixels_gt3": 13426, "subject_changed_pixels_gt3": 31271, "orbit_0_changed_pixels_gt3": 22067, "orbit_1_changed_pixels_gt3": 24020}}
+{"binding": "imperial:corvette", "metrics": {"owner_changed_pixels_gt3": 7140, "subject_changed_pixels_gt3": 21175, "orbit_0_changed_pixels_gt3": 25402, "orbit_1_changed_pixels_gt3": 30170}}
+{"binding": "imperial:cruiser", "metrics": {"owner_changed_pixels_gt3": 10120, "subject_changed_pixels_gt3": 27828, "orbit_0_changed_pixels_gt3": 21946, "orbit_1_changed_pixels_gt3": 38777}}
+{"binding": "imperial:defense_platform", "metrics": {"owner_changed_pixels_gt3": 19506, "subject_changed_pixels_gt3": 43139, "orbit_0_changed_pixels_gt3": 41258, "orbit_1_changed_pixels_gt3": 46113}}
+{"binding": "imperial:defense_satellite", "metrics": {"owner_changed_pixels_gt3": 15670, "subject_changed_pixels_gt3": 35708, "orbit_0_changed_pixels_gt3": 39286, "orbit_1_changed_pixels_gt3": 41591}}
+{"binding": "imperial:energy_relay", "metrics": {"owner_changed_pixels_gt3": 14889, "subject_changed_pixels_gt3": 40828, "orbit_0_changed_pixels_gt3": 31033, "orbit_1_changed_pixels_gt3": 35278}}
+{"binding": "imperial:fighter", "metrics": {"owner_changed_pixels_gt3": 2108, "subject_changed_pixels_gt3": 3973, "orbit_0_changed_pixels_gt3": 13739, "orbit_1_changed_pixels_gt3": 14016}}
+{"binding": "imperial:fighter_platform", "metrics": {"owner_changed_pixels_gt3": 15669, "subject_changed_pixels_gt3": 42498, "orbit_0_changed_pixels_gt3": 30074, "orbit_1_changed_pixels_gt3": 32930}}
+{"binding": "imperial:frigate", "metrics": {"owner_changed_pixels_gt3": 9932, "subject_changed_pixels_gt3": 28585, "orbit_0_changed_pixels_gt3": 24733, "orbit_1_changed_pixels_gt3": 28363}}
+{"binding": "imperial:mining_station", "metrics": {"owner_changed_pixels_gt3": 22602, "subject_changed_pixels_gt3": 42250, "orbit_0_changed_pixels_gt3": 30228, "orbit_1_changed_pixels_gt3": 36611}}
+{"binding": "imperial:planet_extractor", "metrics": {"owner_changed_pixels_gt3": 13436, "subject_changed_pixels_gt3": 27115, "orbit_0_changed_pixels_gt3": 42502, "orbit_1_changed_pixels_gt3": 41024}}
+{"binding": "imperial:planet_pulsar_cannon", "metrics": {"owner_changed_pixels_gt3": 16186, "subject_changed_pixels_gt3": 306529, "orbit_0_changed_pixels_gt3": 93268, "orbit_1_changed_pixels_gt3": 134795}}
+{"binding": "imperial:planet_shield_generator", "metrics": {"owner_changed_pixels_gt3": 15357, "subject_changed_pixels_gt3": 25656, "orbit_0_changed_pixels_gt3": 38541, "orbit_1_changed_pixels_gt3": 37734}}
+{"binding": "imperial:planet_trade_hub", "metrics": {"owner_changed_pixels_gt3": 15898, "subject_changed_pixels_gt3": 23383, "orbit_0_changed_pixels_gt3": 38770, "orbit_1_changed_pixels_gt3": 39764}}
+{"binding": "imperial:repair_dock", "metrics": {"owner_changed_pixels_gt3": 17188, "subject_changed_pixels_gt3": 43882, "orbit_0_changed_pixels_gt3": 39879, "orbit_1_changed_pixels_gt3": 40775}}
+{"binding": "imperial:research_station", "metrics": {"owner_changed_pixels_gt3": 10602, "subject_changed_pixels_gt3": 36417, "orbit_0_changed_pixels_gt3": 31826, "orbit_1_changed_pixels_gt3": 38061}}
+{"binding": "imperial:sensor_station", "metrics": {"owner_changed_pixels_gt3": 10135, "subject_changed_pixels_gt3": 64851, "orbit_0_changed_pixels_gt3": 38402, "orbit_1_changed_pixels_gt3": 43867}}
+{"binding": "imperial:shipyard", "metrics": {"owner_changed_pixels_gt3": 15501, "subject_changed_pixels_gt3": 37448, "orbit_0_changed_pixels_gt3": 40405, "orbit_1_changed_pixels_gt3": 44169}}
+{"binding": "imperial:supercapital", "metrics": {"owner_changed_pixels_gt3": 10853, "subject_changed_pixels_gt3": 28231, "orbit_0_changed_pixels_gt3": 33401, "orbit_1_changed_pixels_gt3": 46726}}
+{"binding": "imperial:trade_station", "metrics": {"owner_changed_pixels_gt3": 14117, "subject_changed_pixels_gt3": 35333, "orbit_0_changed_pixels_gt3": 25188, "orbit_1_changed_pixels_gt3": 26059}}
+{"binding": "rebel:attack_satellite", "metrics": {"owner_changed_pixels_gt3": 11835, "subject_changed_pixels_gt3": 31476, "orbit_0_changed_pixels_gt3": 34640, "orbit_1_changed_pixels_gt3": 36574}}
+{"binding": "rebel:battleship", "metrics": {"owner_changed_pixels_gt3": 9690, "subject_changed_pixels_gt3": 29593, "orbit_0_changed_pixels_gt3": 30511, "orbit_1_changed_pixels_gt3": 37538}}
+{"binding": "rebel:bomber", "metrics": {"owner_changed_pixels_gt3": 3887, "subject_changed_pixels_gt3": 10198, "orbit_0_changed_pixels_gt3": 12947, "orbit_1_changed_pixels_gt3": 12631}}
+{"binding": "rebel:colonizer", "metrics": {"owner_changed_pixels_gt3": 17646, "subject_changed_pixels_gt3": 40209, "orbit_0_changed_pixels_gt3": 30285, "orbit_1_changed_pixels_gt3": 30864}}
+{"binding": "rebel:command_station", "metrics": {"owner_changed_pixels_gt3": 16128, "subject_changed_pixels_gt3": 43273, "orbit_0_changed_pixels_gt3": 46413, "orbit_1_changed_pixels_gt3": 49854}}
+{"binding": "rebel:constructor", "metrics": {"owner_changed_pixels_gt3": 12556, "subject_changed_pixels_gt3": 30662, "orbit_0_changed_pixels_gt3": 23935, "orbit_1_changed_pixels_gt3": 26649}}
+{"binding": "rebel:convoy", "metrics": {"owner_changed_pixels_gt3": 6773, "subject_changed_pixels_gt3": 17433, "orbit_0_changed_pixels_gt3": 14968, "orbit_1_changed_pixels_gt3": 21618}}
+{"binding": "rebel:corvette", "metrics": {"owner_changed_pixels_gt3": 6798, "subject_changed_pixels_gt3": 22905, "orbit_0_changed_pixels_gt3": 21818, "orbit_1_changed_pixels_gt3": 33394}}
+{"binding": "rebel:cruiser", "metrics": {"owner_changed_pixels_gt3": 11372, "subject_changed_pixels_gt3": 30121, "orbit_0_changed_pixels_gt3": 30726, "orbit_1_changed_pixels_gt3": 52749}}
+{"binding": "rebel:defense_platform", "metrics": {"owner_changed_pixels_gt3": 21792, "subject_changed_pixels_gt3": 47566, "orbit_0_changed_pixels_gt3": 32452, "orbit_1_changed_pixels_gt3": 38927}}
+{"binding": "rebel:defense_satellite", "metrics": {"owner_changed_pixels_gt3": 14971, "subject_changed_pixels_gt3": 36086, "orbit_0_changed_pixels_gt3": 38877, "orbit_1_changed_pixels_gt3": 41606}}
+{"binding": "rebel:energy_relay", "metrics": {"owner_changed_pixels_gt3": 1528, "subject_changed_pixels_gt3": 34047, "orbit_0_changed_pixels_gt3": 27593, "orbit_1_changed_pixels_gt3": 30448}}
+{"binding": "rebel:fighter", "metrics": {"owner_changed_pixels_gt3": 2936, "subject_changed_pixels_gt3": 9205, "orbit_0_changed_pixels_gt3": 12270, "orbit_1_changed_pixels_gt3": 12257}}
+{"binding": "rebel:fighter_platform", "metrics": {"owner_changed_pixels_gt3": 14045, "subject_changed_pixels_gt3": 41306, "orbit_0_changed_pixels_gt3": 21460, "orbit_1_changed_pixels_gt3": 24164}}
+{"binding": "rebel:frigate", "metrics": {"owner_changed_pixels_gt3": 7007, "subject_changed_pixels_gt3": 26720, "orbit_0_changed_pixels_gt3": 29650, "orbit_1_changed_pixels_gt3": 47718}}
+{"binding": "rebel:mining_station", "metrics": {"owner_changed_pixels_gt3": 795, "subject_changed_pixels_gt3": 29364, "orbit_0_changed_pixels_gt3": 19585, "orbit_1_changed_pixels_gt3": 23864}}
+{"binding": "rebel:planet_extractor", "metrics": {"owner_changed_pixels_gt3": 13342, "subject_changed_pixels_gt3": 27217, "orbit_0_changed_pixels_gt3": 42273, "orbit_1_changed_pixels_gt3": 40831}}
+{"binding": "rebel:planet_pulsar_cannon", "metrics": {"owner_changed_pixels_gt3": 16085, "subject_changed_pixels_gt3": 306529, "orbit_0_changed_pixels_gt3": 93311, "orbit_1_changed_pixels_gt3": 134710}}
+{"binding": "rebel:planet_shield_generator", "metrics": {"owner_changed_pixels_gt3": 15091, "subject_changed_pixels_gt3": 25767, "orbit_0_changed_pixels_gt3": 38529, "orbit_1_changed_pixels_gt3": 37430}}
+{"binding": "rebel:planet_trade_hub", "metrics": {"owner_changed_pixels_gt3": 15799, "subject_changed_pixels_gt3": 23420, "orbit_0_changed_pixels_gt3": 38558, "orbit_1_changed_pixels_gt3": 39413}}
+{"binding": "rebel:repair_dock", "metrics": {"owner_changed_pixels_gt3": 9688, "subject_changed_pixels_gt3": 40323, "orbit_0_changed_pixels_gt3": 28630, "orbit_1_changed_pixels_gt3": 31506}}
+{"binding": "rebel:research_station", "metrics": {"owner_changed_pixels_gt3": 2194, "subject_changed_pixels_gt3": 30448, "orbit_0_changed_pixels_gt3": 25030, "orbit_1_changed_pixels_gt3": 27170}}
+{"binding": "rebel:sensor_station", "metrics": {"owner_changed_pixels_gt3": 850, "subject_changed_pixels_gt3": 52550, "orbit_0_changed_pixels_gt3": 30478, "orbit_1_changed_pixels_gt3": 34019}}
+{"binding": "rebel:shipyard", "metrics": {"owner_changed_pixels_gt3": 12148, "subject_changed_pixels_gt3": 37071, "orbit_0_changed_pixels_gt3": 38385, "orbit_1_changed_pixels_gt3": 42686}}
+{"binding": "rebel:supercapital", "metrics": {"owner_changed_pixels_gt3": 18849, "subject_changed_pixels_gt3": 41555, "orbit_0_changed_pixels_gt3": 41332, "orbit_1_changed_pixels_gt3": 60856}}
+{"binding": "rebel:trade_station", "metrics": {"owner_changed_pixels_gt3": 17921, "subject_changed_pixels_gt3": 44938, "orbit_0_changed_pixels_gt3": 24497, "orbit_1_changed_pixels_gt3": 26681}}
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/artifacts/s07-runtime-final/native-catalogue.py", line 90, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/artifacts/s07-runtime-final/native-catalogue.py", line 46, in main
+    else:e=gm.factory.spawn_ship(data_id,0,pos)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/game/systems/unit_factory.py", line 17, in spawn_ship
+    sd = ds.resolve_ship(ship_id)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/game/data/store.py", line 203, in resolve_ship
+    raise KeyError(f"Unknown ship id '{sid}'")
+KeyError: "Unknown ship id 'None'"
