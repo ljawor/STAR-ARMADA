@@ -1,0 +1,45 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+test_each_negative_control_is_rejected_with_its_declared_code (test_asset_contract.AssetContractTest.test_each_negative_control_is_rejected_with_its_declared_code) ... ok
+test_every_valid_example_was_actually_checked (test_asset_contract.AssetContractTest.test_every_valid_example_was_actually_checked)
+A report with nothing in it is not a pass. ... ok
+test_validator_is_not_trivially_satisfied (test_asset_contract.AssetContractTest.test_validator_is_not_trivially_satisfied)
+Every rejection rule has a control that actually exercises it. ... ok
+test_validator_passes (test_asset_contract.AssetContractTest.test_validator_passes) ... ok
+test_b6_sidecars_reproduce_from_the_real_batch_check (test_b6_sidecar_reproduction.B6SidecarReproductionTests.test_b6_sidecars_reproduce_from_the_real_batch_check) ... ok
+test_faction_transports_have_small_known_solid_visuals (test_crew_recovery_ui.RecoveryUITests.test_faction_transports_have_small_known_solid_visuals) ... FAIL
+test_start_game_closes_old_views_before_replacement (test_gl_lifecycle.MainLifecycleTests.test_start_game_closes_old_views_before_replacement) ... ERROR
+test_cli_is_read_only_and_runs_without_pythonpath (test_s07_binding_routes.BindingRouteAuditTests.test_cli_is_read_only_and_runs_without_pythonpath) ... ok
+test_authored_surface_removes_hatch_without_changing_default_material (test_ship_material_passes.ShipMaterialPassTests.test_authored_surface_removes_hatch_without_changing_default_material)
+Rasterize the actual hull shader; baseline has identical noisy panels. ... ok
+test_cached_roles_preserve_explicit_unselected_sibling (test_ship_material_passes.ShipMaterialPassTests.test_cached_roles_preserve_explicit_unselected_sibling) ... ok
+test_cached_roles_use_their_actual_shader_and_emissive_state (test_ship_material_passes.ShipMaterialPassTests.test_cached_roles_use_their_actual_shader_and_emissive_state) ... ok
+test_legacy_selection_never_claims_authored_material_treatment (test_ship_material_passes.ShipMaterialPassTests.test_legacy_selection_never_claims_authored_material_treatment) ... ok
+test_session_uses_complete_validated_snapshot_after_disk_corruption (test_s08_pack_safety.PackSafetyTests.test_session_uses_complete_validated_snapshot_after_disk_corruption) ... ok
+test_symlink_loops_reject_without_aborting_following_packs (test_s08_pack_safety.PackSafetyTests.test_symlink_loops_reject_without_aborting_following_packs) ... ok
+
+======================================================================
+ERROR: test_start_game_closes_old_views_before_replacement (test_gl_lifecycle.MainLifecycleTests.test_start_game_closes_old_views_before_replacement)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s09/tests/test_gl_lifecycle.py", line 132, in test_start_game_closes_old_views_before_replacement
+    ns['start_game']()
+  File "main.py", line 293, in start_game
+    configure_from_settings(SETTINGS, data_store=gm.ds)
+                                                 ^^^^^
+AttributeError: 'types.SimpleNamespace' object has no attribute 'ds'
+
+======================================================================
+FAIL: test_faction_transports_have_small_known_solid_visuals (test_crew_recovery_ui.RecoveryUITests.test_faction_transports_have_small_known_solid_visuals)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s09/tests/test_crew_recovery_ui.py", line 63, in test_faction_transports_have_small_known_solid_visuals
+    self.assertEqual(shape, 'box' if faction == 'imperial' else faction + ':convoy')
+AssertionError: 'imperial:convoy' != 'box'
+- imperial:convoy
++ box
+
+
+----------------------------------------------------------------------
+Ran 14 tests in 5.528s
+
+FAILED (failures=1, errors=1)
