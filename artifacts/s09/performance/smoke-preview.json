@@ -1,0 +1,1728 @@
+{
+  "schema_version": 1,
+  "status": "ok",
+  "version": "0.15.1",
+  "environment": {
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "machine": "arm64",
+    "python": "3.11.16",
+    "frozen": false
+  },
+  "fixture": "four-player-stock-distributed-v1",
+  "seed": 12345,
+  "tick_dt": 0.03333333333333333,
+  "mode": "full",
+  "units": 52,
+  "frames": 5,
+  "warmup_frames": 2,
+  "initial_state_sha256": "aa6cf00baafcfdac8404fbae1bee22058e3e48e6d3e5bc1ce17050967545e533",
+  "counts_initial": {
+    "entities": 212,
+    "alive": 212,
+    "ships": 116,
+    "stations": 88,
+    "projectiles": 0,
+    "effects": 0
+  },
+  "timing_semantics": "perf_counter_ns; fixed 1/30 simulation tick; no pacing; full mode glFinish after camera/world/HUD; world includes Renderer camera.apply; audio/input/menu/cinematic excluded; warmup excluded from samples",
+  "scene": {
+    "name": "four-player-stock-distributed-v1",
+    "players": 4,
+    "factions": [
+      "imperial",
+      "imperial",
+      "imperial",
+      "imperial"
+    ],
+    "teams": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "ai": false,
+    "local_player": 0,
+    "workload_class": "stock",
+    "combat_mix_per_player": {
+      "imperial_corvette": 8,
+      "imperial_frigate": 4,
+      "imperial_cruiser": 1
+    },
+    "ordinary_station_mix_per_player": {
+      "command_station": 1,
+      "mining_station": 2,
+      "shipyard": 1,
+      "research_station": 1,
+      "defense_platform": 1,
+      "sensor_station": 1,
+      "fighter_platform": 1,
+      "repair_dock": 1,
+      "energy_relay": 1
+    },
+    "planet_mix_per_player": {
+      "temperate": 1,
+      "industrial": 1
+    },
+    "satellite_mix_per_planet": {
+      "defense_satellite": 2,
+      "attack_satellite": 2
+    },
+    "camera": {
+      "target": [
+        0.0,
+        0.0,
+        16000.0
+      ],
+      "distance": 23000.0,
+      "yaw": 0.0,
+      "pitch": 65.0,
+      "fov": 55.0
+    },
+    "selection": [
+      53
+    ],
+    "command_budget_initial": {
+      "0": {
+        "used": 66,
+        "capacity": 78
+      },
+      "1": {
+        "used": 66,
+        "capacity": 78
+      },
+      "2": {
+        "used": 66,
+        "capacity": 78
+      },
+      "3": {
+        "used": 66,
+        "capacity": 78
+      }
+    },
+    "max_ticks": 300,
+    "assumptions": [
+      "Four human slots, same Imperial faction, distinct colours, hostile teams; no strategic AI.",
+      "Direct factory setup of completed hardware, colonies and staggered convoys; not a replay of paid construction, resource gathering, colonization or station-site validation; no build queues.",
+      "Stock fleet: 8 corvettes, 4 frigates, 1 cruiser per player; 40 fleet + 26 infrastructure CMD = 66 / 78. All selected hulls queue at the existing level-one stock shipyard with empty research and the existing resource grant; no tech, refit or balance overrides.",
+      "Ten ordinary stations include the command station; two eligible colonies supply stock command capacity. Infrastructure sites are prebuilt, not proof of an organic build history (mines/relay require suitable terrain when constructed).",
+      "Four extra trade stations per player; four pre-existing convoys per source, nearest own market.",
+      "Convoys start at staggered route progress; deliveries remove hulls normally, never respawned by fixture.",
+      "At most 300 fixed 30 Hz ticks (10 simulated seconds), below the stock 45s convoy spawn interval.",
+      "Player 0 live fog/sensors, not an omniscient all-map graphics load; visibility reported per sample.",
+      "Close inspection uses the distributed world with a fixed flagship camera; not all assets are on screen.",
+      "Versioned class mix is a benchmark assumption, not an approved gameplay distribution.",
+      "Combat is an established interleaved four-way melee, held stock hulls with automatic targeting; no forced damage or godmode."
+    ]
+  },
+  "inventory_initial": {
+    "total": {
+      "combat_ships": 52,
+      "ordinary_stations": 40,
+      "trade_stations": 16,
+      "transports": 64,
+      "planets": 8,
+      "satellites": 32
+    },
+    "players": {
+      "0": {
+        "combat_ships": 13,
+        "ordinary_stations": 10,
+        "trade_stations": 4,
+        "transports": 16,
+        "planets": 2,
+        "satellites": 8
+      },
+      "1": {
+        "combat_ships": 13,
+        "ordinary_stations": 10,
+        "trade_stations": 4,
+        "transports": 16,
+        "planets": 2,
+        "satellites": 8
+      },
+      "2": {
+        "combat_ships": 13,
+        "ordinary_stations": 10,
+        "trade_stations": 4,
+        "transports": 16,
+        "planets": 2,
+        "satellites": 8
+      },
+      "3": {
+        "combat_ships": 13,
+        "ordinary_stations": 10,
+        "trade_stations": 4,
+        "transports": 16,
+        "planets": 2,
+        "satellites": 8
+      }
+    },
+    "classes": {
+      "attack_satellite": 16,
+      "command_station": 4,
+      "defense_platform": 4,
+      "defense_satellite": 16,
+      "energy_relay": 4,
+      "fighter_platform": 4,
+      "imperial_corvette": 32,
+      "imperial_cruiser": 4,
+      "imperial_frigate": 16,
+      "industrial": 4,
+      "mining_station": 8,
+      "repair_dock": 4,
+      "research_station": 4,
+      "sensor_station": 4,
+      "shipyard": 4,
+      "temperate": 4,
+      "trade_convoy": 64,
+      "trade_station": 16
+    }
+  },
+  "inventory_per_sample": [
+    {
+      "total": {
+        "combat_ships": 52,
+        "ordinary_stations": 40,
+        "trade_stations": 16,
+        "transports": 64,
+        "planets": 8,
+        "satellites": 32
+      },
+      "players": {
+        "0": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        },
+        "1": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        },
+        "2": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        },
+        "3": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        }
+      },
+      "classes": {
+        "attack_satellite": 16,
+        "command_station": 4,
+        "defense_platform": 4,
+        "defense_satellite": 16,
+        "energy_relay": 4,
+        "fighter_platform": 4,
+        "imperial_corvette": 32,
+        "imperial_cruiser": 4,
+        "imperial_frigate": 16,
+        "industrial": 4,
+        "mining_station": 8,
+        "repair_dock": 4,
+        "research_station": 4,
+        "sensor_station": 4,
+        "shipyard": 4,
+        "temperate": 4,
+        "trade_convoy": 64,
+        "trade_station": 16
+      }
+    },
+    {
+      "total": {
+        "combat_ships": 52,
+        "ordinary_stations": 40,
+        "trade_stations": 16,
+        "transports": 64,
+        "planets": 8,
+        "satellites": 32
+      },
+      "players": {
+        "0": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        },
+        "1": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        },
+        "2": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        },
+        "3": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        }
+      },
+      "classes": {
+        "attack_satellite": 16,
+        "command_station": 4,
+        "defense_platform": 4,
+        "defense_satellite": 16,
+        "energy_relay": 4,
+        "fighter_platform": 4,
+        "imperial_corvette": 32,
+        "imperial_cruiser": 4,
+        "imperial_frigate": 16,
+        "industrial": 4,
+        "mining_station": 8,
+        "repair_dock": 4,
+        "research_station": 4,
+        "sensor_station": 4,
+        "shipyard": 4,
+        "temperate": 4,
+        "trade_convoy": 64,
+        "trade_station": 16
+      }
+    },
+    {
+      "total": {
+        "combat_ships": 52,
+        "ordinary_stations": 40,
+        "trade_stations": 16,
+        "transports": 64,
+        "planets": 8,
+        "satellites": 32
+      },
+      "players": {
+        "0": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        },
+        "1": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        },
+        "2": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        },
+        "3": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        }
+      },
+      "classes": {
+        "attack_satellite": 16,
+        "command_station": 4,
+        "defense_platform": 4,
+        "defense_satellite": 16,
+        "energy_relay": 4,
+        "fighter_platform": 4,
+        "imperial_corvette": 32,
+        "imperial_cruiser": 4,
+        "imperial_frigate": 16,
+        "industrial": 4,
+        "mining_station": 8,
+        "repair_dock": 4,
+        "research_station": 4,
+        "sensor_station": 4,
+        "shipyard": 4,
+        "temperate": 4,
+        "trade_convoy": 64,
+        "trade_station": 16
+      }
+    },
+    {
+      "total": {
+        "combat_ships": 52,
+        "ordinary_stations": 40,
+        "trade_stations": 16,
+        "transports": 64,
+        "planets": 8,
+        "satellites": 32
+      },
+      "players": {
+        "0": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        },
+        "1": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        },
+        "2": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        },
+        "3": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        }
+      },
+      "classes": {
+        "attack_satellite": 16,
+        "command_station": 4,
+        "defense_platform": 4,
+        "defense_satellite": 16,
+        "energy_relay": 4,
+        "fighter_platform": 4,
+        "imperial_corvette": 32,
+        "imperial_cruiser": 4,
+        "imperial_frigate": 16,
+        "industrial": 4,
+        "mining_station": 8,
+        "repair_dock": 4,
+        "research_station": 4,
+        "sensor_station": 4,
+        "shipyard": 4,
+        "temperate": 4,
+        "trade_convoy": 64,
+        "trade_station": 16
+      }
+    },
+    {
+      "total": {
+        "combat_ships": 52,
+        "ordinary_stations": 40,
+        "trade_stations": 16,
+        "transports": 64,
+        "planets": 8,
+        "satellites": 32
+      },
+      "players": {
+        "0": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        },
+        "1": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        },
+        "2": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        },
+        "3": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        }
+      },
+      "classes": {
+        "attack_satellite": 16,
+        "command_station": 4,
+        "defense_platform": 4,
+        "defense_satellite": 16,
+        "energy_relay": 4,
+        "fighter_platform": 4,
+        "imperial_corvette": 32,
+        "imperial_cruiser": 4,
+        "imperial_frigate": 16,
+        "industrial": 4,
+        "mining_station": 8,
+        "repair_dock": 4,
+        "research_station": 4,
+        "sensor_station": 4,
+        "shipyard": 4,
+        "temperate": 4,
+        "trade_convoy": 64,
+        "trade_station": 16
+      }
+    }
+  ],
+  "visibility_per_sample": [
+    {
+      "detected": {
+        "total": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        },
+        "players": {
+          "0": {
+            "combat_ships": 13,
+            "ordinary_stations": 10,
+            "trade_stations": 4,
+            "transports": 16,
+            "planets": 2,
+            "satellites": 8
+          },
+          "1": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          },
+          "2": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          },
+          "3": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          }
+        },
+        "classes": {
+          "attack_satellite": 4,
+          "command_station": 1,
+          "defense_platform": 1,
+          "defense_satellite": 4,
+          "energy_relay": 1,
+          "fighter_platform": 1,
+          "imperial_corvette": 8,
+          "imperial_cruiser": 1,
+          "imperial_frigate": 4,
+          "industrial": 1,
+          "mining_station": 2,
+          "repair_dock": 1,
+          "research_station": 1,
+          "sensor_station": 1,
+          "shipyard": 1,
+          "temperate": 1,
+          "trade_convoy": 16,
+          "trade_station": 4
+        }
+      },
+      "centres_in_viewport": {
+        "total": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        },
+        "players": {
+          "0": {
+            "combat_ships": 13,
+            "ordinary_stations": 10,
+            "trade_stations": 4,
+            "transports": 16,
+            "planets": 2,
+            "satellites": 8
+          },
+          "1": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          },
+          "2": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          },
+          "3": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          }
+        },
+        "classes": {
+          "attack_satellite": 4,
+          "command_station": 1,
+          "defense_platform": 1,
+          "defense_satellite": 4,
+          "energy_relay": 1,
+          "fighter_platform": 1,
+          "imperial_corvette": 8,
+          "imperial_cruiser": 1,
+          "imperial_frigate": 4,
+          "industrial": 1,
+          "mining_station": 2,
+          "repair_dock": 1,
+          "research_station": 1,
+          "sensor_station": 1,
+          "shipyard": 1,
+          "temperate": 1,
+          "trade_convoy": 16,
+          "trade_station": 4
+        }
+      },
+      "note": "Player 0 live detection; projected centres only, not occlusion or exact renderer draw counts"
+    },
+    {
+      "detected": {
+        "total": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        },
+        "players": {
+          "0": {
+            "combat_ships": 13,
+            "ordinary_stations": 10,
+            "trade_stations": 4,
+            "transports": 16,
+            "planets": 2,
+            "satellites": 8
+          },
+          "1": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          },
+          "2": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          },
+          "3": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          }
+        },
+        "classes": {
+          "attack_satellite": 4,
+          "command_station": 1,
+          "defense_platform": 1,
+          "defense_satellite": 4,
+          "energy_relay": 1,
+          "fighter_platform": 1,
+          "imperial_corvette": 8,
+          "imperial_cruiser": 1,
+          "imperial_frigate": 4,
+          "industrial": 1,
+          "mining_station": 2,
+          "repair_dock": 1,
+          "research_station": 1,
+          "sensor_station": 1,
+          "shipyard": 1,
+          "temperate": 1,
+          "trade_convoy": 16,
+          "trade_station": 4
+        }
+      },
+      "centres_in_viewport": {
+        "total": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        },
+        "players": {
+          "0": {
+            "combat_ships": 13,
+            "ordinary_stations": 10,
+            "trade_stations": 4,
+            "transports": 16,
+            "planets": 2,
+            "satellites": 8
+          },
+          "1": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          },
+          "2": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          },
+          "3": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          }
+        },
+        "classes": {
+          "attack_satellite": 4,
+          "command_station": 1,
+          "defense_platform": 1,
+          "defense_satellite": 4,
+          "energy_relay": 1,
+          "fighter_platform": 1,
+          "imperial_corvette": 8,
+          "imperial_cruiser": 1,
+          "imperial_frigate": 4,
+          "industrial": 1,
+          "mining_station": 2,
+          "repair_dock": 1,
+          "research_station": 1,
+          "sensor_station": 1,
+          "shipyard": 1,
+          "temperate": 1,
+          "trade_convoy": 16,
+          "trade_station": 4
+        }
+      },
+      "note": "Player 0 live detection; projected centres only, not occlusion or exact renderer draw counts"
+    },
+    {
+      "detected": {
+        "total": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        },
+        "players": {
+          "0": {
+            "combat_ships": 13,
+            "ordinary_stations": 10,
+            "trade_stations": 4,
+            "transports": 16,
+            "planets": 2,
+            "satellites": 8
+          },
+          "1": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          },
+          "2": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          },
+          "3": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          }
+        },
+        "classes": {
+          "attack_satellite": 4,
+          "command_station": 1,
+          "defense_platform": 1,
+          "defense_satellite": 4,
+          "energy_relay": 1,
+          "fighter_platform": 1,
+          "imperial_corvette": 8,
+          "imperial_cruiser": 1,
+          "imperial_frigate": 4,
+          "industrial": 1,
+          "mining_station": 2,
+          "repair_dock": 1,
+          "research_station": 1,
+          "sensor_station": 1,
+          "shipyard": 1,
+          "temperate": 1,
+          "trade_convoy": 16,
+          "trade_station": 4
+        }
+      },
+      "centres_in_viewport": {
+        "total": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        },
+        "players": {
+          "0": {
+            "combat_ships": 13,
+            "ordinary_stations": 10,
+            "trade_stations": 4,
+            "transports": 16,
+            "planets": 2,
+            "satellites": 8
+          },
+          "1": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          },
+          "2": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          },
+          "3": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          }
+        },
+        "classes": {
+          "attack_satellite": 4,
+          "command_station": 1,
+          "defense_platform": 1,
+          "defense_satellite": 4,
+          "energy_relay": 1,
+          "fighter_platform": 1,
+          "imperial_corvette": 8,
+          "imperial_cruiser": 1,
+          "imperial_frigate": 4,
+          "industrial": 1,
+          "mining_station": 2,
+          "repair_dock": 1,
+          "research_station": 1,
+          "sensor_station": 1,
+          "shipyard": 1,
+          "temperate": 1,
+          "trade_convoy": 16,
+          "trade_station": 4
+        }
+      },
+      "note": "Player 0 live detection; projected centres only, not occlusion or exact renderer draw counts"
+    },
+    {
+      "detected": {
+        "total": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        },
+        "players": {
+          "0": {
+            "combat_ships": 13,
+            "ordinary_stations": 10,
+            "trade_stations": 4,
+            "transports": 16,
+            "planets": 2,
+            "satellites": 8
+          },
+          "1": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          },
+          "2": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          },
+          "3": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          }
+        },
+        "classes": {
+          "attack_satellite": 4,
+          "command_station": 1,
+          "defense_platform": 1,
+          "defense_satellite": 4,
+          "energy_relay": 1,
+          "fighter_platform": 1,
+          "imperial_corvette": 8,
+          "imperial_cruiser": 1,
+          "imperial_frigate": 4,
+          "industrial": 1,
+          "mining_station": 2,
+          "repair_dock": 1,
+          "research_station": 1,
+          "sensor_station": 1,
+          "shipyard": 1,
+          "temperate": 1,
+          "trade_convoy": 16,
+          "trade_station": 4
+        }
+      },
+      "centres_in_viewport": {
+        "total": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        },
+        "players": {
+          "0": {
+            "combat_ships": 13,
+            "ordinary_stations": 10,
+            "trade_stations": 4,
+            "transports": 16,
+            "planets": 2,
+            "satellites": 8
+          },
+          "1": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          },
+          "2": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          },
+          "3": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          }
+        },
+        "classes": {
+          "attack_satellite": 4,
+          "command_station": 1,
+          "defense_platform": 1,
+          "defense_satellite": 4,
+          "energy_relay": 1,
+          "fighter_platform": 1,
+          "imperial_corvette": 8,
+          "imperial_cruiser": 1,
+          "imperial_frigate": 4,
+          "industrial": 1,
+          "mining_station": 2,
+          "repair_dock": 1,
+          "research_station": 1,
+          "sensor_station": 1,
+          "shipyard": 1,
+          "temperate": 1,
+          "trade_convoy": 16,
+          "trade_station": 4
+        }
+      },
+      "note": "Player 0 live detection; projected centres only, not occlusion or exact renderer draw counts"
+    },
+    {
+      "detected": {
+        "total": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        },
+        "players": {
+          "0": {
+            "combat_ships": 13,
+            "ordinary_stations": 10,
+            "trade_stations": 4,
+            "transports": 16,
+            "planets": 2,
+            "satellites": 8
+          },
+          "1": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          },
+          "2": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          },
+          "3": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          }
+        },
+        "classes": {
+          "attack_satellite": 4,
+          "command_station": 1,
+          "defense_platform": 1,
+          "defense_satellite": 4,
+          "energy_relay": 1,
+          "fighter_platform": 1,
+          "imperial_corvette": 8,
+          "imperial_cruiser": 1,
+          "imperial_frigate": 4,
+          "industrial": 1,
+          "mining_station": 2,
+          "repair_dock": 1,
+          "research_station": 1,
+          "sensor_station": 1,
+          "shipyard": 1,
+          "temperate": 1,
+          "trade_convoy": 16,
+          "trade_station": 4
+        }
+      },
+      "centres_in_viewport": {
+        "total": {
+          "combat_ships": 13,
+          "ordinary_stations": 10,
+          "trade_stations": 4,
+          "transports": 16,
+          "planets": 2,
+          "satellites": 8
+        },
+        "players": {
+          "0": {
+            "combat_ships": 13,
+            "ordinary_stations": 10,
+            "trade_stations": 4,
+            "transports": 16,
+            "planets": 2,
+            "satellites": 8
+          },
+          "1": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          },
+          "2": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          },
+          "3": {
+            "combat_ships": 0,
+            "ordinary_stations": 0,
+            "trade_stations": 0,
+            "transports": 0,
+            "planets": 0,
+            "satellites": 0
+          }
+        },
+        "classes": {
+          "attack_satellite": 4,
+          "command_station": 1,
+          "defense_platform": 1,
+          "defense_satellite": 4,
+          "energy_relay": 1,
+          "fighter_platform": 1,
+          "imperial_corvette": 8,
+          "imperial_cruiser": 1,
+          "imperial_frigate": 4,
+          "industrial": 1,
+          "mining_station": 2,
+          "repair_dock": 1,
+          "research_station": 1,
+          "sensor_station": 1,
+          "shipyard": 1,
+          "temperate": 1,
+          "trade_convoy": 16,
+          "trade_station": 4
+        }
+      },
+      "note": "Player 0 live detection; projected centres only, not occlusion or exact renderer draw counts"
+    }
+  ],
+  "activity_per_sample": [
+    {
+      "shots_by_owner": {},
+      "shots_by_class": {},
+      "visible_shots": 0,
+      "deliveries": 0
+    },
+    {
+      "shots_by_owner": {},
+      "shots_by_class": {},
+      "visible_shots": 0,
+      "deliveries": 0
+    },
+    {
+      "shots_by_owner": {},
+      "shots_by_class": {},
+      "visible_shots": 0,
+      "deliveries": 0
+    },
+    {
+      "shots_by_owner": {},
+      "shots_by_class": {},
+      "visible_shots": 0,
+      "deliveries": 0
+    },
+    {
+      "shots_by_owner": {},
+      "shots_by_class": {},
+      "visible_shots": 0,
+      "deliveries": 0
+    }
+  ],
+  "command_budget_per_sample": [
+    {
+      "0": {
+        "used": 66,
+        "capacity": 78
+      },
+      "1": {
+        "used": 66,
+        "capacity": 78
+      },
+      "2": {
+        "used": 66,
+        "capacity": 78
+      },
+      "3": {
+        "used": 66,
+        "capacity": 78
+      }
+    },
+    {
+      "0": {
+        "used": 66,
+        "capacity": 78
+      },
+      "1": {
+        "used": 66,
+        "capacity": 78
+      },
+      "2": {
+        "used": 66,
+        "capacity": 78
+      },
+      "3": {
+        "used": 66,
+        "capacity": 78
+      }
+    },
+    {
+      "0": {
+        "used": 66,
+        "capacity": 78
+      },
+      "1": {
+        "used": 66,
+        "capacity": 78
+      },
+      "2": {
+        "used": 66,
+        "capacity": 78
+      },
+      "3": {
+        "used": 66,
+        "capacity": 78
+      }
+    },
+    {
+      "0": {
+        "used": 66,
+        "capacity": 78
+      },
+      "1": {
+        "used": 66,
+        "capacity": 78
+      },
+      "2": {
+        "used": 66,
+        "capacity": 78
+      },
+      "3": {
+        "used": 66,
+        "capacity": 78
+      }
+    },
+    {
+      "0": {
+        "used": 66,
+        "capacity": 78
+      },
+      "1": {
+        "used": 66,
+        "capacity": 78
+      },
+      "2": {
+        "used": 66,
+        "capacity": 78
+      },
+      "3": {
+        "used": 66,
+        "capacity": 78
+      }
+    }
+  ],
+  "diagnostics_semantics": "Read-only event callbacks included in sim timing; inventory/visibility/driver sampling outside stage/frame samples; frame is not end-to-end live gameplay pacing. AI/audio/input/network excluded.",
+  "lan_checksum_semantics": "Separate precise_checksum(manager) cost after simulation/render/presentation; excluded from sim and frame stages; no sockets/barrier/input delay; not real-network pacing",
+  "sample_exclusions": {
+    "swap": [
+      4
+    ],
+    "frame": [
+      4
+    ]
+  },
+  "graphics": {
+    "resolution": [
+      1280,
+      800
+    ],
+    "drawable_size": [
+      1280,
+      800
+    ],
+    "render_size": [
+      1280,
+      800
+    ],
+    "drawable_note": "Actual SDL_GL_GetDrawableSize, null when unavailable; render_size is the viewport/capture extent used.",
+    "viewport": [
+      0,
+      0,
+      1280,
+      800
+    ],
+    "requested_vsync": 0,
+    "reported_swap_interval": 0,
+    "vsync_note": "swap interval may be unavailable or overridden by driver; inspect swap samples",
+    "requested_msaa": 4,
+    "actual_msaa": 4,
+    "sdl_driver": "cocoa",
+    "pygame": "2.5.8",
+    "sdl": [
+      2,
+      32,
+      10
+    ],
+    "vendor": "Apple",
+    "gpu": "Apple M4",
+    "driver": "2.1 Metal - 90.5",
+    "shader_enabled": true,
+    "window_size": [
+      1280,
+      800
+    ]
+  },
+  "graphics_per_sample": [
+    {
+      "drawable_size": [
+        1280,
+        800
+      ],
+      "viewport": [
+        0,
+        0,
+        1280,
+        800
+      ],
+      "camera_target": [
+        0.0,
+        0.0,
+        16000.0
+      ],
+      "camera_eye": [
+        0.0,
+        20845.079101842948,
+        25720.22002003609
+      ],
+      "camera_distance": 23000.0,
+      "camera_yaw": 0.0,
+      "camera_pitch": 65.0,
+      "sdl_driver": "cocoa",
+      "gpu": "Apple M4",
+      "driver": "2.1 Metal - 90.5"
+    },
+    {
+      "drawable_size": [
+        1280,
+        800
+      ],
+      "viewport": [
+        0,
+        0,
+        1280,
+        800
+      ],
+      "camera_target": [
+        0.0,
+        0.0,
+        16000.0
+      ],
+      "camera_eye": [
+        0.0,
+        20845.079101842948,
+        25720.22002003609
+      ],
+      "camera_distance": 23000.0,
+      "camera_yaw": 0.0,
+      "camera_pitch": 65.0,
+      "sdl_driver": "cocoa",
+      "gpu": "Apple M4",
+      "driver": "2.1 Metal - 90.5"
+    },
+    {
+      "drawable_size": [
+        1280,
+        800
+      ],
+      "viewport": [
+        0,
+        0,
+        1280,
+        800
+      ],
+      "camera_target": [
+        0.0,
+        0.0,
+        16000.0
+      ],
+      "camera_eye": [
+        0.0,
+        20845.079101842948,
+        25720.22002003609
+      ],
+      "camera_distance": 23000.0,
+      "camera_yaw": 0.0,
+      "camera_pitch": 65.0,
+      "sdl_driver": "cocoa",
+      "gpu": "Apple M4",
+      "driver": "2.1 Metal - 90.5"
+    },
+    {
+      "drawable_size": [
+        1280,
+        800
+      ],
+      "viewport": [
+        0,
+        0,
+        1280,
+        800
+      ],
+      "camera_target": [
+        0.0,
+        0.0,
+        16000.0
+      ],
+      "camera_eye": [
+        0.0,
+        20845.079101842948,
+        25720.22002003609
+      ],
+      "camera_distance": 23000.0,
+      "camera_yaw": 0.0,
+      "camera_pitch": 65.0,
+      "sdl_driver": "cocoa",
+      "gpu": "Apple M4",
+      "driver": "2.1 Metal - 90.5"
+    },
+    {
+      "drawable_size": [
+        1280,
+        800
+      ],
+      "viewport": [
+        0,
+        0,
+        1280,
+        800
+      ],
+      "camera_target": [
+        0.0,
+        0.0,
+        16000.0
+      ],
+      "camera_eye": [
+        0.0,
+        20845.079101842948,
+        25720.22002003609
+      ],
+      "camera_distance": 23000.0,
+      "camera_yaw": 0.0,
+      "camera_pitch": 65.0,
+      "sdl_driver": "cocoa",
+      "gpu": "Apple M4",
+      "driver": "2.1 Metal - 90.5"
+    }
+  ],
+  "capture_timing_note": "Final back-buffer capture preserves the frame hash; capture-adjacent swap and frame samples excluded (zero-based measured indices). One-frame runs have no swap/frame timing evidence.",
+  "lan_precise_checksum_final": "64160bb809ab15479f4776ffe7169039293d0a328f5dffa6d8792ea0a83852e9",
+  "framebuffer_sha256": "4961d2d80efa30c788948c1605b6c92c43ca8479ecc556b705a9a705894278ef",
+  "framebuffer_nonuniform": true,
+  "framebuffer_evidence_note": "RGB spatial nonuniformity only; not world/combat acceptance (HUD/background can be nonuniform).",
+  "stages": {
+    "sim": {
+      "count": 5,
+      "mean_ms": 20.176658200000002,
+      "median_ms": 20.219083,
+      "p95_ms": 20.653,
+      "p99_ms": 20.653,
+      "max_ms": 20.653,
+      "samples_ms": [
+        20.219083,
+        20.653,
+        20.1,
+        20.556208,
+        19.355
+      ]
+    },
+    "lan_precise_checksum": {
+      "count": 5,
+      "mean_ms": 8.7904502,
+      "median_ms": 8.803584,
+      "p95_ms": 8.849125,
+      "p99_ms": 8.849125,
+      "max_ms": 8.849125,
+      "samples_ms": [
+        8.803584,
+        8.848917,
+        8.849125,
+        8.671625,
+        8.779
+      ]
+    },
+    "camera": {
+      "count": 5,
+      "mean_ms": 17.1730334,
+      "median_ms": 17.137834,
+      "p95_ms": 17.582,
+      "p99_ms": 17.582,
+      "max_ms": 17.582,
+      "samples_ms": [
+        17.137834,
+        17.582,
+        17.2155,
+        16.882625,
+        17.047208
+      ]
+    },
+    "world": {
+      "count": 5,
+      "mean_ms": 146.1957332,
+      "median_ms": 144.426,
+      "p95_ms": 149.873417,
+      "p99_ms": 149.873417,
+      "max_ms": 149.873417,
+      "samples_ms": [
+        148.764958,
+        144.426,
+        149.873417,
+        144.3825,
+        143.531791
+      ]
+    },
+    "hud": {
+      "count": 5,
+      "mean_ms": 5.6619916,
+      "median_ms": 5.528333,
+      "p95_ms": 6.932,
+      "p99_ms": 6.932,
+      "max_ms": 6.932,
+      "samples_ms": [
+        6.932,
+        4.960125,
+        5.776,
+        5.528333,
+        5.1135
+      ]
+    },
+    "swap": {
+      "count": 4,
+      "mean_ms": 0.29819775,
+      "median_ms": 0.2623955,
+      "p95_ms": 0.417792,
+      "p99_ms": 0.417792,
+      "max_ms": 0.417792,
+      "samples_ms": [
+        0.417792,
+        0.259833,
+        0.250208,
+        0.264958
+      ]
+    },
+    "frame": {
+      "count": 4,
+      "mean_ms": 190.55312475,
+      "median_ms": 190.555208,
+      "p95_ms": 193.48025,
+      "p99_ms": 193.48025,
+      "max_ms": 193.48025,
+      "samples_ms": [
+        193.48025,
+        187.8875,
+        193.222916,
+        187.621833
+      ]
+    }
+  },
+  "state_sha256": "72eab84232d18dad29ca7f80b77521b3c3ea282389acbcc7eabdc88b78c2ed05",
+  "counts_final": {
+    "entities": 212,
+    "alive": 212,
+    "ships": 116,
+    "stations": 88,
+    "projectiles": 0,
+    "effects": 0
+  },
+  "counts_per_sample": [
+    {
+      "entities": 212,
+      "alive": 212,
+      "ships": 116,
+      "stations": 88,
+      "projectiles": 0,
+      "effects": 0
+    },
+    {
+      "entities": 212,
+      "alive": 212,
+      "ships": 116,
+      "stations": 88,
+      "projectiles": 0,
+      "effects": 0
+    },
+    {
+      "entities": 212,
+      "alive": 212,
+      "ships": 116,
+      "stations": 88,
+      "projectiles": 0,
+      "effects": 0
+    },
+    {
+      "entities": 212,
+      "alive": 212,
+      "ships": 116,
+      "stations": 88,
+      "projectiles": 0,
+      "effects": 0
+    },
+    {
+      "entities": 212,
+      "alive": 212,
+      "ships": 116,
+      "stations": 88,
+      "projectiles": 0,
+      "effects": 0
+    }
+  ],
+  "executed_ticks": 7,
+  "game_over": false,
+  "inventory_final": {
+    "total": {
+      "combat_ships": 52,
+      "ordinary_stations": 40,
+      "trade_stations": 16,
+      "transports": 64,
+      "planets": 8,
+      "satellites": 32
+    },
+    "players": {
+      "0": {
+        "combat_ships": 13,
+        "ordinary_stations": 10,
+        "trade_stations": 4,
+        "transports": 16,
+        "planets": 2,
+        "satellites": 8
+      },
+      "1": {
+        "combat_ships": 13,
+        "ordinary_stations": 10,
+        "trade_stations": 4,
+        "transports": 16,
+        "planets": 2,
+        "satellites": 8
+      },
+      "2": {
+        "combat_ships": 13,
+        "ordinary_stations": 10,
+        "trade_stations": 4,
+        "transports": 16,
+        "planets": 2,
+        "satellites": 8
+      },
+      "3": {
+        "combat_ships": 13,
+        "ordinary_stations": 10,
+        "trade_stations": 4,
+        "transports": 16,
+        "planets": 2,
+        "satellites": 8
+      }
+    },
+    "classes": {
+      "attack_satellite": 16,
+      "command_station": 4,
+      "defense_platform": 4,
+      "defense_satellite": 16,
+      "energy_relay": 4,
+      "fighter_platform": 4,
+      "imperial_corvette": 32,
+      "imperial_cruiser": 4,
+      "imperial_frigate": 16,
+      "industrial": 4,
+      "mining_station": 8,
+      "repair_dock": 4,
+      "research_station": 4,
+      "sensor_station": 4,
+      "shipyard": 4,
+      "temperate": 4,
+      "trade_convoy": 64,
+      "trade_station": 16
+    }
+  },
+  "activity_total": {
+    "shots_by_owner": {},
+    "shots_by_class": {},
+    "visible_shots": 0,
+    "deliveries": 0
+  },
+  "command_budget_final": {
+    "0": {
+      "used": 66,
+      "capacity": 78
+    },
+    "1": {
+      "used": 66,
+      "capacity": 78
+    },
+    "2": {
+      "used": 66,
+      "capacity": 78
+    },
+    "3": {
+      "used": 66,
+      "capacity": 78
+    }
+  }
+}
