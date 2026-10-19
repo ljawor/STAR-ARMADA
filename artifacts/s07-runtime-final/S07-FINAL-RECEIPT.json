@@ -873,15 +873,19 @@
       "applicability": "in_scope",
       "status": "pass",
       "commands": [
-        "PYTHONPATH=tests .venv/bin/python -m unittest <13-module guard family>"
+        "env -u SDL_VIDEODRIVER -u STAR_ARMADA_FIXED_MATERIALS PYTHONPATH=tests .venv/bin/python -m unittest test_s07_approval_preservation test_s07_registration test_s07_scaffold_registration test_s06_appearance_records test_s07_motion_order test_s07_material_parity test_s07_authored_lod_parity test_s07_capture_transition test_s07_construction_runtime test_s07_hidden_contact_acceptance test_s07_binding_routes test_s07_lod_environment test_s07_selected_geometry_matrix"
       ],
       "exit_codes": [
         0
       ],
       "evidence_paths_and_hashes": [
         {
-          "path": "artifacts/s07-runtime-final/step1-guard-family.log",
-          "sha256": "e144deed11d8ed2d42db63ee55f3ea95c03b1ef331988bab259a7d94430e4e97"
+          "path": "artifacts/s07-runtime-final/guard-family-final.log",
+          "sha256": "947e156fb7962fcf9e95ec992caabe8838c4db1fcb6d96597f30a7476e461e56"
+        },
+        {
+          "path": "artifacts/s07-runtime-final/suite-per-module.json",
+          "sha256": "a05588b0281f313dc3549562a9ddfc9ed7eff87d63663a602c189ee58acb4664"
         },
         {
           "path": "tests/s07_registration_assertions.py",
@@ -894,10 +898,12 @@
       ],
       "negative_controls": [
         "the scaffold is excluded only after proving its own appearance decision and its separate execution authority",
-        "two negative controls withdraw that authority and must be refused by the guard"
+        "two negative controls withdraw that authority and must be refused by the guard",
+        "the command names all thirteen modules, so the result is reproducible from the receipt"
       ],
       "limitations": [
-        "the 269-test figure is the guard family, not the whole suite"
+        "103 tests across the named guard modules, and every module also appears in the per-module gate",
+        "an earlier union run recorded 269 tests in a single process but logged no module names, so that figure is superseded rather than cited"
       ],
       "blocking_decision_id": null
     },

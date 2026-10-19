@@ -169,14 +169,22 @@ criteria = [
               note='overall pass_with_findings, no blocking findings; two record findings fixed in place, one coverage finding left open and labelled'),
     criterion('C8', 'S07-step1/5', 'registration and approval guards migrated to the scaffold authority without weakening',
               'pass',
-              ['PYTHONPATH=tests .venv/bin/python -m unittest <13-module guard family>'],
+              ['env -u SDL_VIDEODRIVER -u STAR_ARMADA_FIXED_MATERIALS PYTHONPATH=tests .venv/bin/python -m unittest '
+               'test_s07_approval_preservation test_s07_registration test_s07_scaffold_registration '
+               'test_s06_appearance_records test_s07_motion_order test_s07_material_parity '
+               'test_s07_authored_lod_parity test_s07_capture_transition test_s07_construction_runtime '
+               'test_s07_hidden_contact_acceptance test_s07_binding_routes test_s07_lod_environment '
+               'test_s07_selected_geometry_matrix'],
               [0],
-              ['artifacts/s07-runtime-final/step1-guard-family.log',
+              ['artifacts/s07-runtime-final/guard-family-final.log',
+               'artifacts/s07-runtime-final/suite-per-module.json',
                'tests/s07_registration_assertions.py',
                'tests/test_s06_appearance_records.py'],
               ['the scaffold is excluded only after proving its own appearance decision and its separate execution authority',
-               'two negative controls withdraw that authority and must be refused by the guard'],
-              ['the 269-test figure is the guard family, not the whole suite']),
+               'two negative controls withdraw that authority and must be refused by the guard',
+               'the command names all thirteen modules, so the result is reproducible from the receipt'],
+              ['103 tests across the named guard modules, and every module also appears in the per-module gate',
+               'an earlier union run recorded 269 tests in a single process but logged no module names, so that figure is superseded rather than cited']),
     criterion('C9', 'S07-step5', 'generated metadata, wrappers and sidecars reproduce',
               'pass',
               ['.venv/bin/python tools/art/sync_runtime_metadata.py --check',
