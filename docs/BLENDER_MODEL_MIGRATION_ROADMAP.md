@@ -1,5 +1,11 @@
 # STAR ARMADA — Blender model migration roadmap
 
+> **Delivered 2026-10-19, engine `0.16.0`.** S00–S11 are complete: every required binding is
+> authored, approved and pinned in `art/manifests/release-asset-lock.json`, and the shipped
+> default is that catalogue (decision `s11-default-switch-2026-10-19`). The 60/30 FPS reference
+> is **not met** and is carried into a separate performance engagement; native Windows graphics
+> and package smoke remain waived. Read §6 for the ledger and §2.1 for the evidence.
+
 ## 1. Purpose, authority and owner decisions
 
 **Deliverable: replace the existing in-game 3D model catalogue with owner-approved Blender-authored assets through a versioned, moddable asset pipeline.** This is an implementation roadmap for separate chats and potentially different AI agents, not permission to replace the whole catalogue in one task.
@@ -258,10 +264,24 @@ Each step is a reviewable task/PR with a durable handoff. “Complete” require
 | S06 | Author and approve remaining model batches | S01, S03; preview via S04 | **Closed for this milestone**: 103 of 119 registry bindings authored and approved — 98 under eleven `s06-b*` batch decisions, five approved outside them — merged in PR #127 → `cdb1d53` and #130 → `ab62d6d`; the remaining 16 rows are covered by the explicit exception `s07-s06-coverage-exception-2026-10-19` (12 `authoring_pending`, 4 `keep_procedural_proposed`) |
 | S07 | Complete catalogue integration and LOD/contact behavior | S05, S06 | **Complete and merged**, PR #129 → `4ab1472` and #131 → `d427f66`: every registered path resolves through the opt-in registry, renderer `9aff3414`, `S07-FINAL-RECEIPT.json` 15/15 criteria; legacy default retained |
 | S08 | Validate visual mods and asset-update compatibility | S07 | Replacement/example packs, safe failure, revision/caches and save/replay tests |
-| S09 | Performance, package and platform acceptance | S07, S08 | Measured complete candidate; source/frozen packages and required test gates pass |
-| S10 | Final owner catalogue review and cutover readiness | S09 | Exact release asset lock approved, coverage complete, rollback rehearsed |
-| S11 | **Switch the game default to Blender models** | S10 + explicit switch authorization | Clean-install and upgraded-install verification; legacy recovery retained, PR verified |
+| S09 | Performance, package and platform acceptance | S07, S08 | **Merged**, PR #136 → `62f11d0`; the measured cost is recorded and the accepted 60/30 FPS reference is **not met** (`s09-performance-target-2026-10-19`); the frozen authored package crashed on its own symlinked assets, fixed by PR #137 → `2f74430`; native Windows graphics and package smoke waived (`s09-platform-waiver-2026-10-19`) |
+| S10 | Final owner catalogue review and cutover readiness | S09 | **Complete** with the switch: `art/manifests/release-asset-lock.json` pins 103 required bindings / 21,126,346 payload bytes with hashes checked against disk; rollback rehearsed in `RollbackRehearsalTests` and in the frozen legacy run; owner sign-off `s11-default-switch-2026-10-19` |
+| S11 | **Switch the game default to Blender models** | S10 + explicit switch authorization | **Delivered**: default is the approved catalogue at engine `0.16.0`; fresh, pre-switch-upgrade and explicit-legacy frozen smokes pass (upgrade pixel-identical to fresh at 0.014 %, authored vs legacy 2.774 %); legacy fallback retained and documented |
 
+
+**The migration is closed as of engine `0.16.0`.** Every required binding is authored, approved and
+locked; the shipped default is that catalogue; returning to legacy is a settings change. What this
+does **not** claim, and what the next engagement owns:
+
+- **Performance.** The authored catalogue costs 4.5–6.2× the legacy frame time (188.22 ms stock
+  distributed, 292.73 ms stock combat at 1280×800 / 4× MSAA), so the 60 FPS reference S09 adopted is
+  unmet; legacy itself is 2.5–3.4× over the 60 FPS budget. Measurement and optimisation are a
+  separate stream by the owner's decision `s11-default-switch-2026-10-19`.
+- **Windows platform evidence.** Still covered only by the scoped waiver.
+- **Cosmetic label.** The settings row still reads "preview"; correcting it is a language-pack
+  revision, not part of the switch.
+- **Two pre-existing test-fixture defects** and **two unrun pristine-checkout controls** remain
+  recorded as debt, not as passes.
 S06 may author batches while S04 is built, but only with disjoint files/ownership and an agreed S02/S03 contract. Never run heavy Blender/GL/profile/full-suite jobs concurrently. Catalogue expansion is now planned, not blanket approval of model designs.
 
 ### S00 — Publish the approved prototype without losing work

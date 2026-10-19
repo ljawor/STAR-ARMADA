@@ -86,8 +86,14 @@ DEFAULT_SETTINGS = {
     # Presentation only: the language selects a pack of drawing strings, and the
     # simulation never reads it, so two peers may ship different languages.
     "language": "en",
-    # Render-only opt-in. S11 alone may change the legacy production default.
-    "model_preview": False,
+    # Render-only selection. S11 switched the production default to the approved
+    # Blender catalogue; the legacy procedural renderer stays available as the
+    # rollback control and is never deleted by this step.
+    "model_preview": True,
+    # True only once the player has chosen the selector themselves. A settings file
+    # written before the switch carries the old `model_preview: false` default,
+    # which is a default and not a decision, so it must not pin anyone to legacy.
+    "model_preview_explicit": False,
     "visual_packs": [],
 }
 
@@ -124,6 +130,7 @@ def validate_presentation_settings(settings: dict) -> dict:
 
 def load_settings() -> dict:
     s = dict(DEFAULT_SETTINGS)
+    saved = None
     try:
         with open(SETTINGS_PATH) as f:
             saved = json.load(f)
@@ -131,6 +138,13 @@ def load_settings() -> dict:
             s.update(saved)
     except (OSError, ValueError):
         pass
+    # The S11 migration. Before the switch every saved file carried
+    # `model_preview: false` because that was the default, so the stored value
+    # cannot distinguish "chose legacy" from "never chose". Honour the stored
+    # value only when the player actually moved the selector; otherwise the new
+    # production default applies and the next save records the choice as explicit.
+    if not (isinstance(saved, dict) and saved.get("model_preview_explicit") is True):
+        s["model_preview"] = DEFAULT_SETTINGS["model_preview"]
     return validate_presentation_settings(s)
 
 
@@ -1269,6 +1283,10 @@ class MenuStack:
                 elif act == "toggle":
                     key = b["payload"]["key"]
                     self.settings[key] = not self.settings.get(key)
+                    if key == "model_preview":
+                        # Record that this is the player's decision, so the S11
+                        # migration can tell it apart from the old default.
+                        self.settings["model_preview_explicit"] = True
                     self._dirty_settings = True
                     if key == "fullscreen":
                         self.result = "toggle_fullscreen"

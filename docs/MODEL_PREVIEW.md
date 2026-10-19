@@ -1,16 +1,28 @@
-# Model preview and visual-pack selection
+# Model selection and visual packs
 
 ## 1. Activation boundary
 
-The stock default is **legacy procedural models**. Settings → Readability & help →
-**Blender model preview (next session)** is an explicit opt-in. The choice is persisted in
-`saves/settings.json` beside the other presentation preferences. It is not stored in game saves,
-replays, gameplay-mod compatibility hashes or simulation state.
+Since S11 (engine `0.16.0`) the stock default is **the approved Blender catalogue** — decision
+`s11-default-switch-2026-10-19`. Settings → Readability & help → the model row switches a session
+back to the **legacy procedural renderer**, which is kept as the rollback control and is not on a
+deprecation clock. The choice is persisted in `saves/settings.json` beside the other presentation
+preferences. It is not stored in game saves, replays, gameplay-mod compatibility hashes or
+simulation state.
 
-The application applies selection after the old renderer closes and before constructing the next
-session renderer. Switching with any live renderer is refused, including while current and candidate
-renderers coexist during recovery. This is not in-battle hot reload. Disabling preview returns to
-legacy without changing a save. S11 remains a separate, owner-authorized catalogue-default switch.
+The selection is applied after the old renderer closes and before the next session renderer is
+built. Switching with any live renderer is refused, including while current and candidate renderers
+coexist during recovery. This is not in-battle hot reload. Choosing legacy changes no save, replay,
+balance file or installed pack.
+
+**Migration.** Settings files written before S11 carry `model_preview: false` because that was the
+old default; the stored value cannot distinguish "chose legacy" from "never chose". `load_settings`
+therefore honours that value only when `model_preview_explicit` is `true`, which the menu writes the
+first time the player moves the row. A pre-switch file otherwise starts on the authored catalogue.
+
+**Completeness.** `render.asset_selection.diagnostics()['coverage']` reports `ok`,
+`required_core_failures`, `authored` and `procedural` for the session, and a configuration whose
+required core bindings do not all load logs an error naming them. A damaged install therefore reads
+as incomplete instead of looking like a finished catalogue with some objects quietly left procedural.
 
 ## 2. Enabled pack order and writable paths
 
