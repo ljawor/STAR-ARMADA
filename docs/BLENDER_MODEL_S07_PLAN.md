@@ -1,5 +1,13 @@
 # Blender model migration — S07 integration plan
 
+> **Status: executed and merged 2026-10-19.** PR #129 → `4ab1472` carried this plan,
+> PR #131 → `d427f66` executed it: 103 bindings registered for opt-in preview, the four-method
+> renderer repair at `9aff3414`, the refreshed B5 pin, and `S07-FINAL-RECEIPT.json` (15 criteria,
+> overall pass). The state and counts below describe the planning base `4ffdc600`; the current
+> disposition is 103 registered and approved against 16 explicitly excepted rows. The legacy
+> default is unchanged and S11 remains unauthorized. Retained as the acceptance criteria this
+> step was delivered against.
+
 ## 1. Authority, state and limits
 
 Read-only planning against published S06 head `4ffdc600306ecdf4f35265fca689b495e35dd3fe`
