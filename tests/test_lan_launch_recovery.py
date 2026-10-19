@@ -1,6 +1,7 @@
 """Launch loss exercises lobby-to-graph recovery over real TCP."""
 import socket
 import multiprocessing
+from types import SimpleNamespace
 import os
 import time
 import unittest
@@ -390,6 +391,48 @@ class LaunchRecoveryTests(unittest.TestCase):
     def test_ready_lobby_loss_recovers_in_distinct_processes(self):
         self.independent_loss(prelaunch=True)
 
+    def test_drive_to_tick_finishes_its_own_tick_after_the_peer_reports_done(self):
+        """The peer's 'done' is not proof the parent finished driving.
+
+        On a loaded Windows runner the recovery handshake consumed enough loop
+        iterations that the isolated peer posted 'done' at tick eight while the
+        parent had only advanced to six. Breaking on that message asserted the
+        lagged tick, so identical bytes went red on a slow machine and green on a
+        fast one. The loop must finish driving its own manager to the target
+        before it compares checksums.
+        """
+        class FakeParent:
+            def __init__(self):
+                self.queued = [('done', 1, 8, 'peer-checksum', 1)]
+            def poll(self):
+                return bool(self.queued)
+            def recv(self):
+                return self.queued.pop(0)
+        class FakeHost:
+            def __init__(self):
+                self.snapshot = {'status': 'lobby'}
+                self.advances = 0
+            def poll(self):
+                return None
+            def recovery_step(self, manager):
+                return None
+            def take_restored_manager(self):
+                return None
+            def acknowledge_install(self, manager):
+                return None
+            def advance(self, manager, dt):
+                self.advances += 1
+                manager.state.tick += 1
+        class FakeManager:
+            def __init__(self):
+                self.state = SimpleNamespace(tick=6)
+        host, manager, parent = FakeHost(), FakeManager(), FakeParent()
+        manager, installed, result = self.drive_to_tick(host, manager, parent)
+        self.assertIsNotNone(result)
+        assert result is not None
+        self.assertEqual((manager.state.tick, installed, result[0]), (8, False, 'done'))
+        self.assertEqual(host.advances, 2)
+
     def independent_loss(self, prelaunch):
         options = default_lan_options()
         options.update(human_count=2, ai_count=0, map_id='skirmish04')
@@ -427,26 +470,7 @@ class LaunchRecoveryTests(unittest.TestCase):
             host.start()
         manager = GameManager.start_skirmish(host.launch['map_def'])
         manager.state._net_session = host
-        installed = False
-        end = time.monotonic() + 15
-        result = None
-        while time.monotonic() < end:
-            host.poll()
-            self.assertNotEqual(host.snapshot['status'], 'error', host.snapshot)
-            if host.snapshot['status'] == 'recovering':
-                host.recovery_step(manager)
-                candidate = host.take_restored_manager()
-                if candidate is not None:
-                    manager = candidate
-                    manager.state._net_session = host
-                    host.acknowledge_install(manager)
-                    installed = True
-            elif manager.state.tick < 8:
-                host.advance(manager, FIXED_DT)
-            if parent.poll():
-                result = parent.recv()
-                break
-            time.sleep(.001)
+        manager, installed, result = self.drive_to_tick(host, manager, parent)
         self.assertIsNotNone(result)
         self.assertEqual(result[0], 'done', result)
         self.assertEqual(installed, not prelaunch)
@@ -455,6 +479,41 @@ class LaunchRecoveryTests(unittest.TestCase):
         parent.send('close')
         process.join(5)
         self.assertEqual(process.exitcode, 0)
+
+    def drive_to_tick(self, host, manager, parent, target=8, seconds=15):
+        """Drive the host's own manager to ``target`` before believing the peer.
+
+        The isolated peer reports when *it* reached the target; on a slow runner
+        that can happen while this process is still short of it, because recovery
+        steps consumed the loop's iterations. Breaking on the peer's message
+        therefore asserted a lagged tick, so identical bytes passed on a fast
+        machine and failed on a slow one. Keep advancing after the message until
+        this side reaches the target, then let the caller compare checksums.
+        """
+        installed = False
+        result = None
+        end = time.monotonic() + seconds
+        while time.monotonic() < end:
+            host.poll()
+            status = host.snapshot['status']
+            if status == 'error':
+                raise AssertionError(host.snapshot)
+            if status == 'recovering':
+                host.recovery_step(manager)
+                candidate = host.take_restored_manager()
+                if candidate is not None:
+                    manager = candidate
+                    manager.state._net_session = host
+                    host.acknowledge_install(manager)
+                    installed = True
+            elif manager.state.tick < target:
+                host.advance(manager, FIXED_DT)
+            if parent.poll():
+                result = parent.recv()
+            if result is not None and manager.state.tick >= target:
+                break
+            time.sleep(.001)
+        return manager, installed, result
 
     def lobby(self, humans):
         options = default_lan_options()
