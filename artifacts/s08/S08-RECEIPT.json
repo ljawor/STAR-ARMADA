@@ -1323,7 +1323,7 @@
     "artifacts/s08/prerequisite-control/receipt.json": "56a4982e06b53daa2e1938087ce796210a8d0142825dec0ee904d46e173d3503"
   },
   "changed_source_and_docs_sha256": {
-    ".gitattributes": "87a78aae48a2f017ac7b09ad6998fcaac43eaec96d8bbe52fc7c73adb99ee144",
+    ".gitattributes": "8b4c6fd983cd4a7914695f93c9832a85ba5b478fae46eb16f3fee447e87f2aca",
     "art/manifests/approved-s07-scaffold-source-hashes.json": "bda9dca664be79de059e88643f7dccf5491a30f9885b83ebc528148aab2ba99c",
     "art/manifests/handoffs/s08.md": "37c7029258065184c58f3a2f0b24bb78b4d7f2d13052e4a07f0ef4e88fbe2538",
     "docs/BLENDER_MODEL_MIGRATION_ROADMAP.md": "c145555f410f48462eaf688e6d0a03d0535f63cf418754c6d81d9150d93d5d81",
@@ -1511,13 +1511,15 @@
     "artifacts/s08/session-selection-tests.txt.json": "af621facaacae72dee35756a6c4b3496ce9da439fbf430875bd3a65e283fe2b4",
     "artifacts/s08/static-scan.json": "febd7db3df75a5456a6b31aec50e382f50ecbd22cc8d84321d8adb1df60132dd",
     "artifacts/s08/publication-autocrlf/metadata-red.txt": "0b72759362e1c44f22b22d5865f2a76e3d98438e84c497e2c2cb2ce2829e1b5f",
-    "artifacts/s08/publication-autocrlf/README.md": "3db2cd2a41570a56ffa57ff4d7230422662317b8c2d61c3f196982fd28c5c195"
+    "artifacts/s08/publication-autocrlf/README.md": "1cafef85eaa8110a28cc01d06d158bf2947bf012f86bf87eba3dfd48d2fa7c66",
+    "artifacts/s08/publication-autocrlf/metadata-second-red.txt": "ae89c81510fea84ba0b6bece2b7f58e300ebf184c65f07cb858fd7505cee189c",
+    "artifacts/s08/publication-autocrlf/metadata-green-control.txt": "5407806a37ea9eeae82a6ff875a8bbf4a112b3e89d37e47a96b1d84b08f4a701"
   },
   "post_review_normalization": {
     ".gitattributes": {
       "reviewed_sha256": "c14e143489fbc987017e83d0c81674cc48c559692b15983e4fe5f6d970099544",
-      "final_sha256": "87a78aae48a2f017ac7b09ad6998fcaac43eaec96d8bbe52fc7c73adb99ee144",
-      "change": "Removed trailing blank line and added only comment plus render/renderer.py -text after real autocrlf clone metadata RED. Removing exactly that addition and restoring one LF reproduces independently reviewed attribute bytes. Renderer source and every final gate input remain unchanged; pure configuration fix."
+      "final_sha256": "8b4c6fd983cd4a7914695f93c9832a85ba5b478fae46eb16f3fee447e87f2aca",
+      "change": "Pure attributes followups after actual autocrlf metadata REDs: add -text to renderer and all 13 other previously unprotected paths among 339 existing approved source pins; no pinned file bytes changed. Removing the two added blocks and restoring one trailing LF exactly reconstructs independently reviewed attributes."
     },
     "docs/BLENDER_MODEL_S08_PLAN.md": {
       "reviewed_sha256": "ba6a7e095c3ffd990188dfdb176ad3571e82cc41d15da9926c0df0f37c960128",

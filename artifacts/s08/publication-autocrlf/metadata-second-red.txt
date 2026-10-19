@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s08-fresh-final/tools/art/sync_runtime_metadata.py", line 272, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s08-fresh-final/tools/art/sync_runtime_metadata.py", line 256, in main
+    expected = outputs(ROOT, include_scaffold=True) if args.include_scaffold else outputs(ROOT)
+                                                                                  ^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s08-fresh-final/tools/art/sync_runtime_metadata.py", line 128, in outputs
+    registered, new_receipts = publish(root, rows, mapping, categories)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s08-fresh-final/tools/art/s07_registration.py", line 132, in publish
+    return _publish_specimens(root, registry_rows, categories, specimens, HASHES, 'approved-s06',
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s08-fresh-final/tools/art/s07_registration.py", line 166, in _publish_specimens
+    pin(root, relative, expected)
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s08-fresh-final/tools/art/s07_registration.py", line 40, in pin
+    raise ValueError('approved pin mismatch: ' + relative)
+ValueError: approved pin mismatch: tools/diag_imperial_ship.py
