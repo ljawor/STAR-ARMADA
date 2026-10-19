@@ -920,7 +920,7 @@
         },
         {
           "path": "artifacts/s07-runtime-final/suite-per-module.json",
-          "sha256": "a05588b0281f313dc3549562a9ddfc9ed7eff87d63663a602c189ee58acb4664"
+          "sha256": "d74baa8bcee0b6e48baf7d6721cd893081b1c511f747b370c4c839a88e7ecdbb"
         },
         {
           "path": "tests/s07_registration_assertions.py",
@@ -1015,7 +1015,7 @@
       "evidence_paths_and_hashes": [
         {
           "path": "artifacts/s07-runtime-final/suite-per-module.json",
-          "sha256": "a05588b0281f313dc3549562a9ddfc9ed7eff87d63663a602c189ee58acb4664"
+          "sha256": "d74baa8bcee0b6e48baf7d6721cd893081b1c511f747b370c4c839a88e7ecdbb"
         }
       ],
       "negative_controls": [
@@ -1044,7 +1044,7 @@
       "evidence_paths_and_hashes": [
         {
           "path": "artifacts/s07-runtime-final/suite-per-module.json",
-          "sha256": "a05588b0281f313dc3549562a9ddfc9ed7eff87d63663a602c189ee58acb4664"
+          "sha256": "d74baa8bcee0b6e48baf7d6721cd893081b1c511f747b370c4c839a88e7ecdbb"
         },
         {
           "path": "artifacts/s07-runtime-final/pre-existing-failures.json",
@@ -1061,7 +1061,7 @@
         "the three modules that fail only under cold import are resolved by a declared prelude, and the unflattering isolation-only numbers are retained beside the resolved ones"
       ],
       "limitations": [
-        "205 modules, 2245 tests, 969s wall",
+        "205 modules, 2246 tests, 968s wall",
         "the single-process run is recorded as not a valid gate: SDL_VIDEODRIVER=dummy is set process-wide at import, producing 18 GL errors and one test that did not complete in ~28 minutes; it was abandoned at 1910/2206",
         "the exit code 1 is expected and is the recorded pre-existing failure, not a crash"
       ],
@@ -1244,14 +1244,14 @@
   "suite_gate": {
     "method": "one process per test module, real SDL video driver (SDL_VIDEODRIVER unset)",
     "prelude": "import game.core (declared: works around a pre-existing circular import in game/systems/__init__.py <-> game/core/manager.py; identical on 56906ea)",
-    "pytest_fallback": "unittest yields zero tests for test_classic_replays_gl, test_classic_screens and test_menu_movie; the first two names were re-run under pytest, and test_classic_replays_gl has no test cases at all and runs as a script",
+    "pytest_fallback": "unittest yields zero tests for test_classic_replays_gl, test_classic_screens and test_menu_movie; the first two run under pytest, and test_classic_replays_gl has no test cases at all and runs as a script (CLASSIC_REPLAYS_GL_OK captures=14)",
     "modules": 205,
-    "tests_ran": 2245,
+    "tests_ran": 2246,
     "tally": {
       "pass": 204,
       "fail": 1
     },
-    "wall_seconds": 969.4,
+    "wall_seconds": 967.9,
     "not_passing_modules": [
       "test_crew_recovery_ui"
     ],
