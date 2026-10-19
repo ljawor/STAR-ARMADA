@@ -1,0 +1,293 @@
+{
+  "msaa_samples": 4,
+  "samples": [
+    {
+      "name": "start",
+      "time": 1.0,
+      "gl_error": 0,
+      "lit_pixels": 271080,
+      "red_pixels": 3312,
+      "blue_pixels": 183347,
+      "visible_centers": 7,
+      "centers": [
+        [
+          495.2776333130929,
+          310.9560894203133
+        ],
+        [
+          332.88589810798607,
+          384.2418929938467
+        ],
+        [
+          452.28791725698727,
+          535.522031129926
+        ],
+        [
+          638.7439420872902,
+          233.79702682623292
+        ],
+        [
+          909.1696000927097,
+          373.50923500195165
+        ],
+        [
+          747.2751927889691,
+          570.3104314565759
+        ],
+        [
+          867.2711743409376,
+          259.3466542585842
+        ]
+      ],
+      "weapon_effect_pixels": 11058,
+      "shield_hit_pixels": 373
+    },
+    {
+      "name": "middle",
+      "time": 8.5,
+      "gl_error": 0,
+      "lit_pixels": 295422,
+      "red_pixels": 3719,
+      "blue_pixels": 195995,
+      "visible_centers": 7,
+      "centers": [
+        [
+          480.7917284630398,
+          320.96949959625573
+        ],
+        [
+          322.7079123057565,
+          386.07819946867625
+        ],
+        [
+          463.67782381856017,
+          535.6175829125099
+        ],
+        [
+          638.9515845488213,
+          246.71734397096347
+        ],
+        [
+          924.8303909207395,
+          370.8850778227934
+        ],
+        [
+          769.9080479979604,
+          556.898887286179
+        ],
+        [
+          844.2536341561901,
+          261.679397182982
+        ]
+      ],
+      "weapon_effect_pixels": 15020,
+      "shield_hit_pixels": 971
+    },
+    {
+      "name": "end",
+      "time": 15.9583333333,
+      "gl_error": 0,
+      "lit_pixels": 273859,
+      "red_pixels": 5092,
+      "blue_pixels": 181925,
+      "visible_centers": 7,
+      "centers": [
+        [
+          486.49261461968206,
+          313.5562845796676
+        ],
+        [
+          327.8656872293164,
+          392.54876070782166
+        ],
+        [
+          459.9339335879803,
+          546.5969403469578
+        ],
+        [
+          632.250137600669,
+          232.56643334556648
+        ],
+        [
+          907.2495063586501,
+          369.21264085314937
+        ],
+        [
+          757.9061811432891,
+          571.6214130281508
+        ],
+        [
+          859.9277706589561,
+          255.7892696071332
+        ]
+      ],
+      "weapon_effect_pixels": 12032,
+      "shield_hit_pixels": 612
+    }
+  ],
+  "provenance": {
+    "version": 1,
+    "selection_policy": "preview",
+    "visual_packs": [],
+    "models": [
+      {
+        "entity_id": 1,
+        "data_id": "imperial_supercapital",
+        "owner": 0,
+        "faction": "imperial",
+        "binding": "imperial:supercapital",
+        "resolved_binding": "imperial:supercapital",
+        "asset": "core:imperial/supercapital",
+        "revision": "6eb500499505e10b6609db34472dddf03275952894a8a608ca4414b76a0114b0",
+        "runtime_path": "assets/models/imperial_supercapital.mesh.json",
+        "runtime_sha256": "1c44c3e7a78241b5048a9aefe23549b8578c0a21081ad797ce640e8ad9a98dbf",
+        "legacy_visual_key": null,
+        "legacy_fallback": null
+      },
+      {
+        "entity_id": 2,
+        "data_id": "imperial_battleship",
+        "owner": 0,
+        "faction": "imperial",
+        "binding": "imperial:battleship",
+        "resolved_binding": "imperial:battleship",
+        "asset": "core:imperial/battleship",
+        "revision": "974d00963c452f85a870ae02a6f9f19e5778e8ea53f9f0998b3c34b0ab6580d4",
+        "runtime_path": "assets/models/imperial_battleship.mesh.json",
+        "runtime_sha256": "3c69c3db9d0f55aba714d1af4bafbebc7493afb5da3a80d7bd59fccc7be8ac79",
+        "legacy_visual_key": null,
+        "legacy_fallback": null
+      },
+      {
+        "entity_id": 3,
+        "data_id": "imperial_frigate",
+        "owner": 0,
+        "faction": "imperial",
+        "binding": "imperial:frigate",
+        "resolved_binding": "imperial:frigate",
+        "asset": "core:imperial/frigate",
+        "revision": "c0cf348ad0163a52a10eb9140c1c43abf2a6e3ed2d7fd113d6bc95746aa03109",
+        "runtime_path": "assets/models/imperial_frigate.mesh.json",
+        "runtime_sha256": "6c5d925bcd67bd655aae5f7e4bbdfa178257a4d0a6897f52b8664dda3f94752d",
+        "legacy_visual_key": null,
+        "legacy_fallback": null
+      },
+      {
+        "entity_id": 4,
+        "data_id": "imperial_frigate",
+        "owner": 0,
+        "faction": "imperial",
+        "binding": "imperial:frigate",
+        "resolved_binding": "imperial:frigate",
+        "asset": "core:imperial/frigate",
+        "revision": "c0cf348ad0163a52a10eb9140c1c43abf2a6e3ed2d7fd113d6bc95746aa03109",
+        "runtime_path": "assets/models/imperial_frigate.mesh.json",
+        "runtime_sha256": "6c5d925bcd67bd655aae5f7e4bbdfa178257a4d0a6897f52b8664dda3f94752d",
+        "legacy_visual_key": null,
+        "legacy_fallback": null
+      },
+      {
+        "entity_id": 5,
+        "data_id": "rebel_battleship",
+        "owner": 1,
+        "faction": "rebel",
+        "binding": "rebel:battleship",
+        "resolved_binding": "rebel:battleship",
+        "asset": "core:alliance/battleship",
+        "revision": "7634f9edda51e6a87a50cfbcf697e914ae0f94ba16f0aab6eb59a939214ed7d9",
+        "runtime_path": "assets/models/alliance_battleship.mesh.json",
+        "runtime_sha256": "0a4e397d5c0b60f70fbba35f3e4f4a5ac997ac4de079f821f8f29db9872c95cd",
+        "legacy_visual_key": null,
+        "legacy_fallback": null
+      },
+      {
+        "entity_id": 6,
+        "data_id": "rebel_frigate",
+        "owner": 1,
+        "faction": "rebel",
+        "binding": "rebel:frigate",
+        "resolved_binding": "rebel:frigate",
+        "asset": "core:alliance/frigate",
+        "revision": "60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df",
+        "runtime_path": "assets/models/alliance_frigate.mesh.json",
+        "runtime_sha256": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+        "legacy_visual_key": null,
+        "legacy_fallback": null
+      },
+      {
+        "entity_id": 7,
+        "data_id": "rebel_frigate",
+        "owner": 1,
+        "faction": "rebel",
+        "binding": "rebel:frigate",
+        "resolved_binding": "rebel:frigate",
+        "asset": "core:alliance/frigate",
+        "revision": "60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df",
+        "runtime_path": "assets/models/alliance_frigate.mesh.json",
+        "runtime_sha256": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+        "legacy_visual_key": null,
+        "legacy_fallback": null
+      }
+    ],
+    "code_sha256": {
+      "tools/build_menu_movie.py": "6733ed5b0ee8b97dce2fa3f76a6bad4ce9cf160f6244bf2b82af8ad94bf2df92",
+      "render/__init__.py": "d9da25df69ef1847fbcb04b2dbcdc7f2f818b01a378b517efe59247af3fb0389",
+      "render/asset_registry.py": "b84ac50dc605c749f23fcf11115a163266571ae696c6212f6d9d48b59a58ce99",
+      "render/asset_selection.py": "a75247314dc410289b616a34d807be27d9eece37a478bde81582c249bfe55eba",
+      "render/audio.py": "53817af7a368cffc5c1638ffcf3e0999f445821eb7449b89b7187bc28f471f16",
+      "render/authored_mesh.py": "9db5744ba97b9fbc5d53ec47141c3a17ddfa575048f7a2d08e5b4965adadd6ea",
+      "render/camera.py": "a023219dd009db45d95e900393cee99bbdc97fa490e04f6090c63efa7cfc7c8f",
+      "render/camera_geometry.py": "c5518efda07c06f23d8ff728fbfa95e8b379b5c0389a881ac740ba6cefd729fc",
+      "render/cinematics.py": "8fd91d2c2f00a5ba0127794b962dd01ea070212b549d04f7bc279b9ee85bebf2",
+      "render/classic_replays.py": "911d59db6cd5d8940223cf8aa092c001f8e6d56faefa0c5234ad89d89d9775a9",
+      "render/classic_saves.py": "3ef731ebae31f6581ddbe402a13cc52f97060da38c841f1ec75079a7207f7efa",
+      "render/classic_screens.py": "2b06881f9fe7e15821b5d608547d8b0ec476e7fcdeba5e4bdbf06931df22d642",
+      "render/clean_classic.py": "de4b0db01b8c325e40d29edc159df85723450f00e4bbf67e972bfab3133e8e1f",
+      "render/faction_ships.py": "9d34e7e056cbb9b9ed9de24a79593eb69cea4bc7076d68dff868abd11fff6c0b",
+      "render/faction_stations.py": "5e55638092824b2007b2689e3dde8bb99a66ceaf55b625569b77434571f07e3b",
+      "render/faction_visuals.py": "d7a259a4a9a6b4412e18cf1dd9deb082555c03659558dc11c76d3ec19483af42",
+      "render/fleet_geometry.py": "10f725da24b58b9f8a0a78e442a4da45c8c95d86b2135695990d55b9945bde73",
+      "render/fleet_materials.py": "a0a861739ab46b9173baffd9d7f36b4829e85b85b6b5765544b7f9d1ca7ce403",
+      "render/fog.py": "345c88675b41480708fd26606f3d881231cb3844791e15d325519b4cd34fcc0a",
+      "render/hit_effects.py": "5b739a59bc291cad24b05a478c8baea772050771a4991d011a3934d5f24be863",
+      "render/hud.py": "a27bb1080a617cf545d21b04c85b06f151d4e77cb8465eb7f7f43e7b4e9a2585",
+      "render/i18n.py": "7d09bdf77d854680d05eddb28ab2dc26c94ad9646569540d6f50a71e0421af1b",
+      "render/input.py": "6a0732425196daac756cda489d268f0b0846f1e367011828f2f4cde01a70fee5",
+      "render/markers.py": "16c15b531dad5551ecd77bd4ce14a2a46c40632ffe484a6d79034650f1cf4436",
+      "render/menu_movie.py": "629825f4c61cb11ce87393152f89d91fc20334d9ccb836428a8025ae5380d890",
+      "render/menus.py": "063d1f2c05a1382b4a0bc0b337443674e662382a679ae48014059b8bb3cc37e9",
+      "render/planet_building_geometry.py": "f3b1a30e6d88181351ead686b1bae80dce04fcf5746c46f66a80cc046075dd7e",
+      "render/presentation.py": "9048c3bcd5381ffb44f25be7c55e97e9a5ed75c711ed905089e7b5982d240cef",
+      "render/recovery_overlay.py": "60702c717030ac63d7048c4b0a168741862319be577b07a3d43bf2a66a61d7fd",
+      "render/renderer.py": "9a9d19c949d9cf2dec09ab083d79fc3053a61ef81fafdae216653446bb6c337a",
+      "render/replay_delete_windows.py": "a629ea64a236157d74c8f8de3e30b6d6820390837cbd7b349eb3d9966d902f48",
+      "render/replay_input.py": "3139349fb9060e2334bab8eb81dfedcaa1ff5b1c8820e34974ed8768afa6ebb8",
+      "render/replay_library.py": "d75488f9cdf0cdc1b72b455640d9d2b5ff2fe389603e5348d59cd2de9fca035e",
+      "render/save_library.py": "710976da90ab58aa4ce481fef563a7bf3c312616567d7d006fb57e15950aee2e",
+      "render/ship_sizes.py": "e407cc4d59aa67edebd28005176073cd1d13e132c4447f6bdf3944d4ca311a5f",
+      "render/textures.py": "5139acaaae7b4922b18c48a017a9f361fa9b1fbca6b818b65e0edbbb07641d84"
+    },
+    "scope": "offline presentation only; runtime menus decode the baked ZIP, not the registry"
+  },
+  "candidate_zip_baked": true,
+  "output_kind": "movie-bake",
+  "full_render_gl_errors": 0,
+  "asset_bytes": 23919980,
+  "render_encode_seconds": 26.129988834029064,
+  "playback": {
+    "decode_scale_mean_ms": 2.3049195394075164,
+    "decode_scale_p95_ms": 2.6491209282539785,
+    "decode_scale_max_ms": 4.130583023652434,
+    "output_size": [
+      1440,
+      810
+    ],
+    "cache": {
+      "frames": 2,
+      "bytes": 6998400
+    },
+    "frames_verified": 360
+  },
+  "loop_seam_mean_abs_rgb": 1.3922706886574074,
+  "loop_seam_changed_fraction": 0.02915256076388889
+}

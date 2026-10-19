@@ -1,0 +1,55 @@
+S07 pipeline execution implementation (no real Blender run, no commits)
+
+Owned code:
+  tools/art/model_pipeline.py
+  tests/test_s07_pipeline_execution.py
+
+All TDD cycles used this exact command from the integration worktree:
+  PYTHONPATH=tests .venv/bin/python -m unittest -v test_s07_pipeline_execution
+stdout/stderr retained as pipeline-01-red.txt / pipeline-01-green.txt through
+pipeline-10-red.txt / pipeline-10-green.txt. Cycle 04 initially exposed an
+incomplete mock (ValueError unpacking); pipeline-04-red-corrected.txt is its
+proper failing assertion before the implementation. Both attempts retained.
+
+Additional regression commands:
+  PYTHONPATH=tests .venv/bin/python -m unittest -v test_s07_pipeline_execution test_model_pipeline
+  pipeline-regression-01.txt: 27 tests, one existing /var -> /private/var path
+  canonicalization bug exposed in export_asset by the new blend-authority
+  fixture; fixed in the owned pipeline file, not hidden by changing the fixture.
+  pipeline-regression-02.txt: 27 tests passed.
+
+Final exact command:
+  PYTHONPATH=tests .venv/bin/python -m unittest -v test_s07_pipeline_execution test_model_pipeline test_asset_selection test_alliance_blender_trio
+  pipeline-final-union.txt: 51 tests passed (includes 16 new execution tests).
+
+Preservation:
+  pipeline-preservation.txt: all 327 entries from S07-PROTECTED-INPUTS.json
+  unchanged. No approved master, seed, exporter, asset, approval, registry or
+  metadata was written by this worker. No real Blender or provenance generation.
+  git diff --check -- tools/art/model_pipeline.py tests/test_s07_pipeline_execution.py
+  passed; reported trailing whitespace removed.
+
+Design/registration integration facts:
+  - build_args / export_args are optional JSON lists of strings; explicit null
+    and non-string members are rejected. Absent fields preserve legacy defaults.
+  - B6 selectors retain ship:imperial:corvette exactly; B4 selectors retain
+    rebel:defense_satellite. No --replace-seed is appended.
+  - B4/B6 recipes only save a .blend, not a runtime mesh. Script build therefore
+    runs the seed with build_args and then its guarded export_script with
+    export_args in the same isolated tools/art dependency workspace.
+  - A declared export-only wrapper exports the existing master directly for
+    export-model, regardless of source authority. Legacy trio rows without a
+    wrapper retain the combined generator/export path, now isolated for build
+    as well as export.
+  - Approved runtime hashes are checked before publishing reconstructed outputs.
+    Derived binary .blend bytes need not reproduce byte-for-byte. Existing pinned
+    sources are preserved by default, local drift is rejected before rebuilding,
+    and returned source provenance identifies the actual retained source.
+  - Existing explicit --keep-blend behavior remains for script builds only,
+    after runtime verification. Missing script-derived sources may be recreated.
+    Export never publishes a source, even with --keep-blend.
+  - Existing-master refusal guards are unchanged and exercised using exact
+    production B4/B6 preflight prefixes without importing Blender.
+
+Real Blender exports and catalogue registration/provenance remain the parent's
+separate authorized next step. Unit fixture output is not Blender evidence.

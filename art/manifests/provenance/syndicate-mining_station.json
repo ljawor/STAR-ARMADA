@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "syndicate:mining_station",
+  "asset_id": "core:syndicate/mining_station",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:30Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/syndicate_mining_station.blend",
+    "sha256": "8fd1b47493153584138da4c85fdbfdf3edea7cc61a91d6a9a9bfa11b1d540e7f"
+  },
+  "exporter": {
+    "path": "tools/art/export_syndicate_mining_station.py",
+    "sha256": "74dedf58d950b96223ac0522449091ffaafbabf993f54a6a58648a926e0b0bf9"
+  },
+  "runtime": {
+    "path": "assets/models/syndicate_mining_station.mesh.json",
+    "sha256": "6ce810fdf0be8ba5a3c7485fd9df4d6b3ff5fc5ae5e8a0f9a8fe4bc5b88692aa",
+    "bytes": 244936,
+    "triangles": 3728
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "6ce810fdf0be8ba5a3c7485fd9df4d6b3ff5fc5ae5e8a0f9a8fe4bc5b88692aa",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

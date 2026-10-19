@@ -1,0 +1,14 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "artifacts/s07-runtime-final/native-motion-transition.py",
+    "--out",
+    "artifacts/s07-runtime-final/native-motion-transition-attempt1"
+  ],
+  "pid": 88398,
+  "exit_code": 1,
+  "timed_out": false,
+  "deadline_seconds": 90.0,
+  "elapsed_seconds": 0.776,
+  "log": "artifacts/s07-runtime-final/native-motion-transition-attempt1.txt"
+}

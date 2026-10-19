@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "rebel:sensor_station",
+  "asset_id": "core:alliance/sensor_station",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:23Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/alliance_sensor_station.blend",
+    "sha256": "6cd5fe3878340770a455da9945023d62b4ebdf5ecb0e1d814a84c4582cedba03"
+  },
+  "exporter": {
+    "path": "tools/art/export_alliance_sensor_station.py",
+    "sha256": "a77746fd5514a16b81e9d193f3f39bf7f2c1a05814ccf77bd9dd9e02691bc386"
+  },
+  "runtime": {
+    "path": "assets/models/alliance_sensor_station.mesh.json",
+    "sha256": "02e7447e185ea4b01ddddd8e605247e2c99704736c9e0b4784b95545c2bff24e",
+    "bytes": 274873,
+    "triangles": 4196
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "02e7447e185ea4b01ddddd8e605247e2c99704736c9e0b4784b95545c2bff24e",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

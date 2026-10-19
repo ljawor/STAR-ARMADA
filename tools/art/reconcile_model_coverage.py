@@ -37,7 +37,7 @@ def build_report(root):
     errors = []
     assets = {}
     decisions = [d for d in approvals['decision_log']
-                 if d.get('approval_kind') == 'appearance-batch-revisions']
+                 if d.get('approval_kind') in ('appearance-batch-revisions', 'appearance-scaffold-revision')]
 
     def add(asset, decision_id, pending):
         binding = asset['gameplay_binding'] if pending else asset['shape_key']
@@ -183,8 +183,11 @@ def build_report(root):
                    'Trio source/runtime checked; historical trio exporter pins belong to pipeline validation.',
                    'Deferred textures stay on their existing pipeline; they are not authored meshes.'],
         'counts': {'inventory_rows': len(rows), 'unique_approved_assets': len(assets),
-                   'appearance_batch_decisions': len(decisions),
-                   'appearance_batch_specimens': sum(len(d['revision']['assets']) for d in decisions),
+                   'appearance_batch_decisions': sum(d['approval_kind'] == 'appearance-batch-revisions' for d in decisions),
+                   'appearance_batch_specimens': sum(len(d['revision']['assets']) for d in decisions
+                                                     if d['approval_kind'] == 'appearance-batch-revisions'),
+                   'scaffold_appearance_specimens': sum(len(d['revision']['assets']) for d in decisions
+                                                        if d['approval_kind'] == 'appearance-scaffold-revision'),
                    'pipeline_assets': len(pipeline['assets']),
                    'registry_bindings': len(registry),
                    'dispositions': dict(sorted(count.items())), 'by_category': category_counts},

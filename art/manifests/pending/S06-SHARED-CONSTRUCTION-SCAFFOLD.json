@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "status": "pending_owner_appearance_approval",
+  "status": "appearance_approved_pending_landing",
   "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
   "batch": "s06-b9-construction",
   "binding": "shared:construction_scaffold",
@@ -68,6 +68,7 @@
   "owner_decision": null,
   "activation": false,
   "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
-  "evidence": null,
-  "motion": null
+  "evidence": "artifacts/s07-integration/scaffold-review-attempt1/scaffold-appearance-grid.jpg",
+  "motion": null,
+  "appearance_decision": "s07-scaffold-appearance-2026-10-18"
 }

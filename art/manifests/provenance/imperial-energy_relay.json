@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "imperial:energy_relay",
+  "asset_id": "core:imperial/energy_relay",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:09Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/imperial_energy_relay.blend",
+    "sha256": "e8e0a405bd1ea0670522c9f90f7a2fa37277541f69bc26b962d7fee750f7dc99"
+  },
+  "exporter": {
+    "path": "tools/art/export_imperial_energy_relay.py",
+    "sha256": "5e35ebe9e8140b3f70937c8b6e4ebc952d04d1f785e20c9e6cd9a911a855d55f"
+  },
+  "runtime": {
+    "path": "assets/models/imperial_energy_relay.mesh.json",
+    "sha256": "56b573963cd5878122fb61d83cc7e45ab723bbf50bad7ff4db4e1c71a2b9238f",
+    "bytes": 159714,
+    "triangles": 2776
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "56b573963cd5878122fb61d83cc7e45ab723bbf50bad7ff4db4e1c71a2b9238f",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

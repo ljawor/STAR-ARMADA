@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "syndicate:colonizer",
+  "asset_id": "core:syndicate/colonizer",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:25Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/syndicate_colonizer.blend",
+    "sha256": "6f9f13895386c97c20736aacb8a69fe51bf3b1a03e06d11c8f2beaafdae45147"
+  },
+  "exporter": {
+    "path": "tools/art/export_syndicate_colonizer.py",
+    "sha256": "5ace7bd6fd302a024a98b310ef1d80402115f0a5cb0d6d1d9a2ac1bced7677e1"
+  },
+  "runtime": {
+    "path": "assets/models/syndicate_colonizer.mesh.json",
+    "sha256": "d5c59777eb31515745f5085246247e86dd14ede2bc5325d89c72530fd2944841",
+    "bytes": 208615,
+    "triangles": 3528
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "d5c59777eb31515745f5085246247e86dd14ede2bc5325d89c72530fd2944841",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

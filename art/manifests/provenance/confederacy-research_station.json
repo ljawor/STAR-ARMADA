@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "confederacy:research_station",
+  "asset_id": "core:confederacy/research_station",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:02Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/legion_research_station.blend",
+    "sha256": "6766c3d7cdc1915b9952a432a6f429ac60c354611822c04d77041fcc1288382b"
+  },
+  "exporter": {
+    "path": "tools/art/export_legion_research_station.py",
+    "sha256": "c527ba7cb4e9d5de31d1dbd4c05c6c3439763c1df540fa5b0e8129711e8fa28c"
+  },
+  "runtime": {
+    "path": "assets/models/legion_research_station.mesh.json",
+    "sha256": "01485bb472f239ab70779b1f1a5dabb381c18347b8b9d2350a3cb2e045b7fd72",
+    "bytes": 240463,
+    "triangles": 3680
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "01485bb472f239ab70779b1f1a5dabb381c18347b8b9d2350a3cb2e045b7fd72",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

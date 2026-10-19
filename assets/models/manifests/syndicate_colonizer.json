@@ -1,0 +1,76 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:syndicate/colonizer",
+  "revision": "b7ab1a0e2821aa89dbeb086deb21b1e68159d4d39f0f3013184e0f1a916c6474",
+  "display_name": "syndicate colonizer (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/syndicate_colonizer.mesh.json",
+      "sha256": "d5c59777eb31515745f5085246247e86dd14ede2bc5325d89c72530fd2944841",
+      "bytes": 208615
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -35.961081,
+      -11.0,
+      -57.8325
+    ],
+    "max": [
+      47.4,
+      36.5,
+      57.4475
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/syndicate_colonizer.blend",
+    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 3528,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "s06-b9-construction-2026-10-18",
+    "decided_by": "owner",
+    "decided_on": "2026-10-18",
+    "reviewed_revision": "b7ab1a0e2821aa89dbeb086deb21b1e68159d4d39f0f3013184e0f1a916c6474",
+    "reviewed_evidence": [
+      "artifacts/s06-completion/B9-appearance-grid.jpg",
+      "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png",
+      "artifacts/s06-completion/review-b9-attempt1/render/metrics.json",
+      "artifacts/s06-completion/review-b9-attempt1/render/syndicate-colonizer-after-close.png"
+    ]
+  }
+}

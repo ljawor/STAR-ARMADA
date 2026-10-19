@@ -1,0 +1,14 @@
+{
+  "approval_integrity_errors": [
+    "s06-b5-environment-2026-10-17: runtime hash mismatch: render/renderer.py"
+  ],
+  "counts": {
+    "approved_not_registered": 103,
+    "deferred_texture_pipeline": 10,
+    "outside_mesh_catalogue": 3,
+    "pending_appearance": 1,
+    "selected": 3
+  },
+  "errors": [],
+  "inventory_rows": 120
+}

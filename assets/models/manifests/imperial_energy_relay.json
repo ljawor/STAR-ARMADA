@@ -1,0 +1,76 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:imperial/energy_relay",
+  "revision": "740bbe635e3d99a87c6ddb2ddda60296187e06edc8b517364f5757b616f35f1f",
+  "display_name": "imperial energy relay (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/imperial_energy_relay.mesh.json",
+      "sha256": "56b573963cd5878122fb61d83cc7e45ab723bbf50bad7ff4db4e1c71a2b9238f",
+      "bytes": 159714
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -41.736688,
+      -20.5,
+      -28.0
+    ],
+    "max": [
+      41.736688,
+      38.0,
+      46.75
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/imperial_energy_relay.blend",
+    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 2776,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "s06-b7-imperial-stations-2026-10-18",
+    "decided_by": "owner",
+    "decided_on": "2026-10-18",
+    "reviewed_revision": "740bbe635e3d99a87c6ddb2ddda60296187e06edc8b517364f5757b616f35f1f",
+    "reviewed_evidence": [
+      "artifacts/s06-completion/B7-appearance-grid.jpg",
+      "artifacts/s06-completion/review-b7-attempt2/render/contact-sheet.png",
+      "artifacts/s06-completion/review-b7-attempt2/render/imperial-energy_relay-after-close.png",
+      "artifacts/s06-completion/review-b7-attempt2/render/metrics.json"
+    ]
+  }
+}

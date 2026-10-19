@@ -1,0 +1,27 @@
+test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) ... ok
+test_execution_forwards_exact_arguments_for_the_script_being_run (test_s07_pipeline_execution.PipelineExecutionTest.test_execution_forwards_exact_arguments_for_the_script_being_run) ... ok
+test_omitted_and_empty_argument_arrays_keep_legacy_execution (test_s07_pipeline_execution.PipelineExecutionTest.test_omitted_and_empty_argument_arrays_keep_legacy_execution) ... ok
+test_script_build_reconstructs_in_isolation_preserving_approved_master (test_s07_pipeline_execution.PipelineExecutionTest.test_script_build_reconstructs_in_isolation_preserving_approved_master) ... ERROR
+
+======================================================================
+ERROR: test_script_build_reconstructs_in_isolation_preserving_approved_master (test_s07_pipeline_execution.PipelineExecutionTest.test_script_build_reconstructs_in_isolation_preserving_approved_master)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_pipeline_execution.py", line 115, in test_script_build_reconstructs_in_isolation_preserving_approved_master
+    record, payload = pipeline.build_asset(self.repo, self.cfg, self.asset,
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tools/art/model_pipeline.py", line 380, in build_asset
+    return _run_and_verify(repo, cfg, asset, executable, asset["exporter"], opts, "build")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tools/art/model_pipeline.py", line 323, in _run_and_verify
+    raise PipelineError(f"{asset['binding']}: Blender exited {rc} without a runtime export\n"
+model_pipeline.PipelineError: imperial:corvette: Blender exited 1 without a runtime export
+Traceback (most recent call last):
+  File "/var/folders/17/72kb0scd4vq464hz3536cw0r0000gn/T/tmp6vry8tde/tools/art/build_test.py", line 8, in <module>
+    raise RuntimeError("editable master exists: refusing to overwrite")
+RuntimeError: editable master exists: refusing to overwrite
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.032s
+
+FAILED (errors=1)

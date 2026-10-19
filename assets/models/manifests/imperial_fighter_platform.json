@@ -1,0 +1,76 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:imperial/fighter_platform",
+  "revision": "300e49b7b95520a083bbfa187a87467721e5a96e9608dd63d525dcaf17c26bdb",
+  "display_name": "imperial fighter platform (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/imperial_fighter_platform.mesh.json",
+      "sha256": "076093e7f6b37c4151954428a95168084ba86d7edfbb36ae1dc44ce0132b462b",
+      "bytes": 123582
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -33.0,
+      -11.5,
+      -42.0
+    ],
+    "max": [
+      33.0,
+      53.5,
+      44.0
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/imperial_fighter_platform.blend",
+    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 2240,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "s06-b7-imperial-stations-2026-10-18",
+    "decided_by": "owner",
+    "decided_on": "2026-10-18",
+    "reviewed_revision": "300e49b7b95520a083bbfa187a87467721e5a96e9608dd63d525dcaf17c26bdb",
+    "reviewed_evidence": [
+      "artifacts/s06-completion/B7-appearance-grid.jpg",
+      "artifacts/s06-completion/review-b7-attempt2/render/contact-sheet.png",
+      "artifacts/s06-completion/review-b7-attempt2/render/imperial-fighter_platform-after-close.png",
+      "artifacts/s06-completion/review-b7-attempt2/render/metrics.json"
+    ]
+  }
+}

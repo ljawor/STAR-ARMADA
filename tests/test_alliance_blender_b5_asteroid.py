@@ -264,7 +264,7 @@ class BatchRecords(unittest.TestCase):
         self.assertEqual(row['seed'], SEED)
         self.assertEqual(row['seed_arg'], f'--asset {BINDING}')
 
-    def test_the_sidecar_agrees_and_the_row_is_not_selectable(self):
+    def test_the_sidecar_agrees_and_the_row_is_only_selectable_in_preview(self):
         record = load(SIDECAR)
         self.assertEqual(record['binding'], BINDING)
         self.assertEqual(record['status'], BATCH_STATUS)
@@ -274,17 +274,9 @@ class BatchRecords(unittest.TestCase):
         self.assertIs(record['activation'], False)
         self.assertFalse(record['activation'])
         self.assertIsNone(record['owner_decision'])
-        registry = load(ROOT / 'assets/models/registry.json')
-        status = {b['binding']: b['status'] for b in registry['bindings']}
-        # The registry does carry this row, and says `authoring_pending`: the environment rows were
-        # listed by the S01 inventory as a family, not invented here. Authored is not selected, so
-        # what the guard checks is that the status is still the pending one and that nothing selects
-        # it in production.
-        self.assertEqual(status[BINDING], 'authoring_pending')
-        pipeline = load(ROOT / 'art/manifests/pipeline.json')
-        self.assertNotIn(BINDING, {a['binding'] for a in pipeline['assets']})
-        approvals = load(ROOT / 'art/manifests/approvals.json')
-        self.assertNotIn(IDENTIFIER, json.dumps(approvals['approved_assets']))
+        from s07_registration_assertions import assert_opt_in_registration, assert_preview_boundary
+        assert_opt_in_registration(self, ROOT, [BINDING])
+        assert_preview_boundary(self, ROOT, [BINDING])
 
     def test_the_wrapper_carries_the_unit_envelope_and_the_props_own_tighter_caps(self):
         text = (ROOT / 'tools/art/gen_export_wrappers.py').read_text(encoding='utf-8')

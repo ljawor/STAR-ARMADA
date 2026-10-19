@@ -1,0 +1,16 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "unittest",
+    "test_s07_authored_lod_parity",
+    "test_s07_lod_environment",
+    "-v"
+  ],
+  "pid": 83942,
+  "exit_code": 0,
+  "timed_out": false,
+  "deadline_seconds": 60.0,
+  "elapsed_seconds": 0.771,
+  "log": "artifacts/s07-runtime-final/parity-green-union.log"
+}

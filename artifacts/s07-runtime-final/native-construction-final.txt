@@ -1,0 +1,4 @@
+{"command": [".venv/bin/python", "artifacts/s07-runtime-final/native-construction.py", "--out", "artifacts/s07-runtime-final/native-construction-final"], "pid": 95639, "exit_code": 0, "timed_out": false, "deadline_seconds": 1200.0, "elapsed_seconds": 5.376, "log": "artifacts/s07-runtime-final/native-construction-final.log"}
+real 5.39
+user 4.55
+sys 0.36

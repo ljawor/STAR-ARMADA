@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "confederacy:defense_satellite",
+  "asset_id": "core:confederacy/defense_satellite",
+  "authority": "script",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:24:58Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/legion_defense_satellite.blend",
+    "sha256": "62c35450efce8b94bda50ad6bd37fbcab9fd3c25935c4b570c69815a33169611"
+  },
+  "exporter": {
+    "path": "tools/art/export_legion_defense_satellite.py",
+    "sha256": "1fe7ab28b7ce83d6391c55a50a85a2afbd7fe035d03bc757c4b89f6cf99b45d0"
+  },
+  "runtime": {
+    "path": "assets/models/legion_defense_satellite.mesh.json",
+    "sha256": "8db782a326362e4e15d52090bd1dcd8039b96df4b2127d3c1bfd87ccb2b6ac9d",
+    "bytes": 127275,
+    "triangles": 2180
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "8db782a326362e4e15d52090bd1dcd8039b96df4b2127d3c1bfd87ccb2b6ac9d",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

@@ -1,0 +1,28 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+test_legacy_explicit_fallback_and_wrong_pin_negative_control (test_s07_movie_provenance.MovieProvenanceTests.test_legacy_explicit_fallback_and_wrong_pin_negative_control) ... ERROR
+test_real_fixture_preview_pins_every_entity_and_candidate_metadata (test_s07_movie_provenance.MovieProvenanceTests.test_real_fixture_preview_pins_every_entity_and_candidate_metadata) ... ERROR
+test_explicit_legacy_and_preview_restore_exact_prior_selection (test_s07_movie_provenance.MovieSelectionTests.test_explicit_legacy_and_preview_restore_exact_prior_selection) ... ok
+test_live_renderer_owner_refuses_without_mutating_selection (test_s07_movie_provenance.MovieSelectionTests.test_live_renderer_owner_refuses_without_mutating_selection) ... ok
+
+======================================================================
+ERROR: test_legacy_explicit_fallback_and_wrong_pin_negative_control (test_s07_movie_provenance.MovieProvenanceTests.test_legacy_explicit_fallback_and_wrong_pin_negative_control)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_movie_provenance.py", line 65, in test_legacy_explicit_fallback_and_wrong_pin_negative_control
+    provenance = baker.movie_provenance(fixture)
+                 ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'tools.build_menu_movie' has no attribute 'movie_provenance'
+
+======================================================================
+ERROR: test_real_fixture_preview_pins_every_entity_and_candidate_metadata (test_s07_movie_provenance.MovieProvenanceTests.test_real_fixture_preview_pins_every_entity_and_candidate_metadata)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_movie_provenance.py", line 39, in test_real_fixture_preview_pins_every_entity_and_candidate_metadata
+    provenance = baker.movie_provenance(fixture)
+                 ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'tools.build_menu_movie' has no attribute 'movie_provenance'
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.242s
+
+FAILED (errors=2)

@@ -1,0 +1,1841 @@
+{
+  "schema": 1,
+  "source_commit": "56906ea7c73c219fbdc91c68176104b23d0f7712",
+  "harness_sha256": "eb6d818c934ff010dc95561164aaf6a6e9f2a05a60382d4a794e02c35c53eb9a",
+  "status": "passed",
+  "scope": "Representative production-frame owner paint, standing shells and hull/shield contact rasterization. No simulation advance, full campaign/audio, packaging or scaffold registration.",
+  "rows": [
+    {
+      "key": "0-rebel-rebel_frigate",
+      "binding": null,
+      "preview": false,
+      "radius": 54.453313074081535,
+      "distance": 350.0,
+      "captures": {
+        "red": {
+          "file": "0-rebel-rebel_frigate-red.png",
+          "sha256": "be0594193036d64acf17badf3bc951395c45c77b3af564df89af694a144ff63a",
+          "state_sha256": "341f15279b363ac89ebd5b743780047cbf880f7a0c7b3b43d406bd1226e7b12b",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "0-rebel-rebel_frigate-blue.png",
+          "sha256": "a8a282b2c10c59e419f6d005dc94285c35cb1ed7bf3f6c9bcd72e14f2c3f4b7e",
+          "state_sha256": "f3973fae44829a0ae930c2d504322b05f6220d4c95fb1eb4456d04aaf1009be2",
+          "repeat_equal": true
+        },
+        "accent-disabled": {
+          "file": "0-rebel-rebel_frigate-accent-disabled.png",
+          "sha256": "ae4202baaa6f950c23a52c1b4f6f25c365b95d9d165cbbb64e60721179fca4ca",
+          "state_sha256": "f3973fae44829a0ae930c2d504322b05f6220d4c95fb1eb4456d04aaf1009be2",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "0-rebel-rebel_frigate-restored.png",
+          "sha256": "a8a282b2c10c59e419f6d005dc94285c35cb1ed7bf3f6c9bcd72e14f2c3f4b7e",
+          "state_sha256": "f3973fae44829a0ae930c2d504322b05f6220d4c95fb1eb4456d04aaf1009be2",
+          "repeat_equal": true
+        },
+        "shell-disabled": {
+          "file": "0-rebel-rebel_frigate-shell-disabled.png",
+          "sha256": "4e33137a28a8f17693b71dfcd2c6fdb513c316bff11f1357e87ea1a6fa1a0aea",
+          "state_sha256": "f3973fae44829a0ae930c2d504322b05f6220d4c95fb1eb4456d04aaf1009be2",
+          "repeat_equal": true
+        },
+        "shield_hit": {
+          "file": "0-rebel-rebel_frigate-shield_hit.png",
+          "sha256": "9aab05fda453e769e89138abf11f3b3a73eeda248b21fbd76ef4c1624257611a",
+          "state_sha256": "f3973fae44829a0ae930c2d504322b05f6220d4c95fb1eb4456d04aaf1009be2",
+          "repeat_equal": true
+        },
+        "shield_hit-disabled": {
+          "file": "0-rebel-rebel_frigate-shield_hit-disabled.png",
+          "sha256": "a8a282b2c10c59e419f6d005dc94285c35cb1ed7bf3f6c9bcd72e14f2c3f4b7e",
+          "state_sha256": "f3973fae44829a0ae930c2d504322b05f6220d4c95fb1eb4456d04aaf1009be2",
+          "repeat_equal": true
+        },
+        "hull_hit": {
+          "file": "0-rebel-rebel_frigate-hull_hit.png",
+          "sha256": "70f631220978038b8bb8c18fdafb77501ab7e549946f923954ff81e6c3a96004",
+          "state_sha256": "f3973fae44829a0ae930c2d504322b05f6220d4c95fb1eb4456d04aaf1009be2",
+          "repeat_equal": true
+        },
+        "hull_hit-disabled": {
+          "file": "0-rebel-rebel_frigate-hull_hit-disabled.png",
+          "sha256": "a8a282b2c10c59e419f6d005dc94285c35cb1ed7bf3f6c9bcd72e14f2c3f4b7e",
+          "state_sha256": "f3973fae44829a0ae930c2d504322b05f6220d4c95fb1eb4456d04aaf1009be2",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 9204,
+        "accent_changed_pixels_gt3": 1080,
+        "shell_changed_pixels_gt3": 17840,
+        "shield_hit_changed_pixels_gt3": 1054,
+        "hull_hit_changed_pixels_gt3": 72
+      },
+      "shield_pools": {
+        "front": 950.0,
+        "rear": 950.0,
+        "left": 950.0,
+        "right": 950.0
+      }
+    },
+    {
+      "key": "0-rebel-rebel_constructor",
+      "binding": null,
+      "preview": false,
+      "radius": 43.25839995618314,
+      "distance": 350.0,
+      "captures": {
+        "red": {
+          "file": "0-rebel-rebel_constructor-red.png",
+          "sha256": "21234b3542e58963eb54ae150ff09eac5c09d3d902e0d81d04b73495f5beef9c",
+          "state_sha256": "8d125bab89802a9a3a950273c4ddb0050a14bd8753f9a7ac702b3907e9a0fdfc",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "0-rebel-rebel_constructor-blue.png",
+          "sha256": "f9fb14bee5aa7e97a06bcf4bab6eba4aa98fcc080920ae936beb1c5659670946",
+          "state_sha256": "90f501b77b9f78ecbd4798f77cc99e6fffa2bc3e9c20abd4f90d88ee427cff20",
+          "repeat_equal": true
+        },
+        "accent-disabled": {
+          "file": "0-rebel-rebel_constructor-accent-disabled.png",
+          "sha256": "f43fe34ea64b8ddaf277625cf0c3e48ebfe283a85b67f0b17a72a4ed3cff3b6b",
+          "state_sha256": "90f501b77b9f78ecbd4798f77cc99e6fffa2bc3e9c20abd4f90d88ee427cff20",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "0-rebel-rebel_constructor-restored.png",
+          "sha256": "f9fb14bee5aa7e97a06bcf4bab6eba4aa98fcc080920ae936beb1c5659670946",
+          "state_sha256": "90f501b77b9f78ecbd4798f77cc99e6fffa2bc3e9c20abd4f90d88ee427cff20",
+          "repeat_equal": true
+        },
+        "shell-disabled": {
+          "file": "0-rebel-rebel_constructor-shell-disabled.png",
+          "sha256": "494aa0f5efccffa3db91c68f2a6299f2bd01935eedaa98d68fcd688ec3fc9261",
+          "state_sha256": "90f501b77b9f78ecbd4798f77cc99e6fffa2bc3e9c20abd4f90d88ee427cff20",
+          "repeat_equal": true
+        },
+        "shield_hit": {
+          "file": "0-rebel-rebel_constructor-shield_hit.png",
+          "sha256": "853de1b9e5200509c98aa6599022633489f602ce26344f727f334bf86e154c4b",
+          "state_sha256": "90f501b77b9f78ecbd4798f77cc99e6fffa2bc3e9c20abd4f90d88ee427cff20",
+          "repeat_equal": true
+        },
+        "shield_hit-disabled": {
+          "file": "0-rebel-rebel_constructor-shield_hit-disabled.png",
+          "sha256": "f9fb14bee5aa7e97a06bcf4bab6eba4aa98fcc080920ae936beb1c5659670946",
+          "state_sha256": "90f501b77b9f78ecbd4798f77cc99e6fffa2bc3e9c20abd4f90d88ee427cff20",
+          "repeat_equal": true
+        },
+        "hull_hit": {
+          "file": "0-rebel-rebel_constructor-hull_hit.png",
+          "sha256": "d7fffcf3c3982bf12a01a7f5ee476ef8e492f82b7c79fd07eef086c97de62db4",
+          "state_sha256": "90f501b77b9f78ecbd4798f77cc99e6fffa2bc3e9c20abd4f90d88ee427cff20",
+          "repeat_equal": true
+        },
+        "hull_hit-disabled": {
+          "file": "0-rebel-rebel_constructor-hull_hit-disabled.png",
+          "sha256": "f9fb14bee5aa7e97a06bcf4bab6eba4aa98fcc080920ae936beb1c5659670946",
+          "state_sha256": "90f501b77b9f78ecbd4798f77cc99e6fffa2bc3e9c20abd4f90d88ee427cff20",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 7492,
+        "accent_changed_pixels_gt3": 852,
+        "shell_changed_pixels_gt3": 12073,
+        "shield_hit_changed_pixels_gt3": 430,
+        "hull_hit_changed_pixels_gt3": 38
+      },
+      "shield_pools": {
+        "front": 310.0,
+        "rear": 310.0,
+        "left": 310.0,
+        "right": 310.0
+      }
+    },
+    {
+      "key": "0-rebel-shipyard",
+      "binding": "rebel:shipyard",
+      "preview": false,
+      "radius": 151.43015964648524,
+      "distance": 757.1507982324262,
+      "captures": {
+        "red": {
+          "file": "0-rebel-shipyard-red.png",
+          "sha256": "d833c05fa22760a1f93a4864089fe76644c14c29e01dc53d264df7fdfdb6435a",
+          "state_sha256": "f93c37039ab6b88a605bdf901c46518d0156037e01f614b23fe1cab62f2bd62e",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "0-rebel-shipyard-blue.png",
+          "sha256": "a77b9df78a639d8364b6dc831709f7a0e810e8ac0786e88f21b0a657d779b5ac",
+          "state_sha256": "646f077e7efc958d280bc1dfe388eaf63969348d082c57c6b3a1f1fe08de9678",
+          "repeat_equal": true
+        },
+        "accent-disabled": {
+          "file": "0-rebel-shipyard-accent-disabled.png",
+          "sha256": "93cfe6cc8e91df5b0a17b7888e746ad2289371fa819245b0d4a960dd670f05bd",
+          "state_sha256": "646f077e7efc958d280bc1dfe388eaf63969348d082c57c6b3a1f1fe08de9678",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "0-rebel-shipyard-restored.png",
+          "sha256": "a77b9df78a639d8364b6dc831709f7a0e810e8ac0786e88f21b0a657d779b5ac",
+          "state_sha256": "646f077e7efc958d280bc1dfe388eaf63969348d082c57c6b3a1f1fe08de9678",
+          "repeat_equal": true
+        },
+        "shell-disabled": {
+          "file": "0-rebel-shipyard-shell-disabled.png",
+          "sha256": "659461820bd2a16fd10920e541bd9927d35f4aa2dc32248425800e41a610ea68",
+          "state_sha256": "646f077e7efc958d280bc1dfe388eaf63969348d082c57c6b3a1f1fe08de9678",
+          "repeat_equal": true
+        },
+        "shield_hit": {
+          "file": "0-rebel-shipyard-shield_hit.png",
+          "sha256": "1f88df8a254e8bff2c5326709da69f96885f639d97af5e32eb75b9a82379a443",
+          "state_sha256": "646f077e7efc958d280bc1dfe388eaf63969348d082c57c6b3a1f1fe08de9678",
+          "repeat_equal": true
+        },
+        "shield_hit-disabled": {
+          "file": "0-rebel-shipyard-shield_hit-disabled.png",
+          "sha256": "a77b9df78a639d8364b6dc831709f7a0e810e8ac0786e88f21b0a657d779b5ac",
+          "state_sha256": "646f077e7efc958d280bc1dfe388eaf63969348d082c57c6b3a1f1fe08de9678",
+          "repeat_equal": true
+        },
+        "hull_hit": {
+          "file": "0-rebel-shipyard-hull_hit.png",
+          "sha256": "75631147702979a6e915f1faa659d4f8a1966abed8b4a593cbd773425afe06c6",
+          "state_sha256": "646f077e7efc958d280bc1dfe388eaf63969348d082c57c6b3a1f1fe08de9678",
+          "repeat_equal": true
+        },
+        "hull_hit-disabled": {
+          "file": "0-rebel-shipyard-hull_hit-disabled.png",
+          "sha256": "a77b9df78a639d8364b6dc831709f7a0e810e8ac0786e88f21b0a657d779b5ac",
+          "state_sha256": "646f077e7efc958d280bc1dfe388eaf63969348d082c57c6b3a1f1fe08de9678",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 19953,
+        "accent_changed_pixels_gt3": 3471,
+        "shell_changed_pixels_gt3": 26101,
+        "shield_hit_changed_pixels_gt3": 927,
+        "hull_hit_changed_pixels_gt3": 29
+      },
+      "shield_pools": {
+        "front": 4000.0,
+        "rear": 4000.0,
+        "left": 4000.0,
+        "right": 4000.0
+      }
+    },
+    {
+      "key": "0-imperial-imperial_frigate",
+      "binding": null,
+      "preview": false,
+      "radius": 50.44773079695953,
+      "distance": 350.0,
+      "captures": {
+        "red": {
+          "file": "0-imperial-imperial_frigate-red.png",
+          "sha256": "ad2a1c2ce36357d5beb46c2c589dade9241a5d96d739371e8e93fe12c47656a3",
+          "state_sha256": "7c0fc085c3044cee413f47e4981b5c28e649cafb4fb0ac34805b07f5f1cf7a37",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "0-imperial-imperial_frigate-blue.png",
+          "sha256": "83c4caed8b31cef3eeb37fbd200fbd81723e4adfb4d3acd4ee330a2edbb78015",
+          "state_sha256": "3de4e5dd0df7d57ab241a55f07c67e41c6795958f46a09506696fcb1d5a214e5",
+          "repeat_equal": true
+        },
+        "accent-disabled": {
+          "file": "0-imperial-imperial_frigate-accent-disabled.png",
+          "sha256": "5b3b91c40d8856df03dd3ad3083922b2f61b663b920618db60a778bbc8715e2b",
+          "state_sha256": "3de4e5dd0df7d57ab241a55f07c67e41c6795958f46a09506696fcb1d5a214e5",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "0-imperial-imperial_frigate-restored.png",
+          "sha256": "83c4caed8b31cef3eeb37fbd200fbd81723e4adfb4d3acd4ee330a2edbb78015",
+          "state_sha256": "3de4e5dd0df7d57ab241a55f07c67e41c6795958f46a09506696fcb1d5a214e5",
+          "repeat_equal": true
+        },
+        "shell-disabled": {
+          "file": "0-imperial-imperial_frigate-shell-disabled.png",
+          "sha256": "7498bd3dd7043687e02fc7d062322d3337e08b1c62b2bf4265188625118bbf8b",
+          "state_sha256": "3de4e5dd0df7d57ab241a55f07c67e41c6795958f46a09506696fcb1d5a214e5",
+          "repeat_equal": true
+        },
+        "shield_hit": {
+          "file": "0-imperial-imperial_frigate-shield_hit.png",
+          "sha256": "4cb54218261ac74cc5ab4af86b3c12b11011637b6157180d6ea860fcca19f068",
+          "state_sha256": "3de4e5dd0df7d57ab241a55f07c67e41c6795958f46a09506696fcb1d5a214e5",
+          "repeat_equal": true
+        },
+        "shield_hit-disabled": {
+          "file": "0-imperial-imperial_frigate-shield_hit-disabled.png",
+          "sha256": "83c4caed8b31cef3eeb37fbd200fbd81723e4adfb4d3acd4ee330a2edbb78015",
+          "state_sha256": "3de4e5dd0df7d57ab241a55f07c67e41c6795958f46a09506696fcb1d5a214e5",
+          "repeat_equal": true
+        },
+        "hull_hit": {
+          "file": "0-imperial-imperial_frigate-hull_hit.png",
+          "sha256": "90bd1d7014d475baf5107db72190103915959d7fd4bdd95122abb5816a9b5342",
+          "state_sha256": "3de4e5dd0df7d57ab241a55f07c67e41c6795958f46a09506696fcb1d5a214e5",
+          "repeat_equal": true
+        },
+        "hull_hit-disabled": {
+          "file": "0-imperial-imperial_frigate-hull_hit-disabled.png",
+          "sha256": "83c4caed8b31cef3eeb37fbd200fbd81723e4adfb4d3acd4ee330a2edbb78015",
+          "state_sha256": "3de4e5dd0df7d57ab241a55f07c67e41c6795958f46a09506696fcb1d5a214e5",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 7538,
+        "accent_changed_pixels_gt3": 875,
+        "shell_changed_pixels_gt3": 15697,
+        "shield_hit_changed_pixels_gt3": 778,
+        "hull_hit_changed_pixels_gt3": 70
+      },
+      "shield_pools": {
+        "front": 900.0,
+        "rear": 900.0,
+        "left": 900.0,
+        "right": 900.0
+      }
+    },
+    {
+      "key": "0-imperial-imperial_constructor",
+      "binding": null,
+      "preview": false,
+      "radius": 40.82815969617305,
+      "distance": 350.0,
+      "captures": {
+        "red": {
+          "file": "0-imperial-imperial_constructor-red.png",
+          "sha256": "13c9db62818c601a43ee4fbb35d15c7d1f5542d3ba361063de1b0aa89c692856",
+          "state_sha256": "83aaca49c32dfb34bf0afde0ebce400feb5b36ec7653ea31425fd0506633c1ab",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "0-imperial-imperial_constructor-blue.png",
+          "sha256": "2955cff3cde9ffad177968b086156f52b400fb0c825aa502b8f7c6f13aa6b8d1",
+          "state_sha256": "61920286a28107a8e86fb12fea33f4e09d47d6e4ecd81e7267b9eccd11b763aa",
+          "repeat_equal": true
+        },
+        "accent-disabled": {
+          "file": "0-imperial-imperial_constructor-accent-disabled.png",
+          "sha256": "092d216072ca957514193ca87edf2b05c99e4c9063794866645fbac8dccdda7d",
+          "state_sha256": "61920286a28107a8e86fb12fea33f4e09d47d6e4ecd81e7267b9eccd11b763aa",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "0-imperial-imperial_constructor-restored.png",
+          "sha256": "2955cff3cde9ffad177968b086156f52b400fb0c825aa502b8f7c6f13aa6b8d1",
+          "state_sha256": "61920286a28107a8e86fb12fea33f4e09d47d6e4ecd81e7267b9eccd11b763aa",
+          "repeat_equal": true
+        },
+        "shell-disabled": {
+          "file": "0-imperial-imperial_constructor-shell-disabled.png",
+          "sha256": "2e23cfdba5c0ce77073f9b89d0411e151436e835a97323ff24d15bd42c9f68bc",
+          "state_sha256": "61920286a28107a8e86fb12fea33f4e09d47d6e4ecd81e7267b9eccd11b763aa",
+          "repeat_equal": true
+        },
+        "shield_hit": {
+          "file": "0-imperial-imperial_constructor-shield_hit.png",
+          "sha256": "5e9197e19eaca13c335d80db7e6660096d12d960ecf8e1691751104f1e7f0b85",
+          "state_sha256": "61920286a28107a8e86fb12fea33f4e09d47d6e4ecd81e7267b9eccd11b763aa",
+          "repeat_equal": true
+        },
+        "shield_hit-disabled": {
+          "file": "0-imperial-imperial_constructor-shield_hit-disabled.png",
+          "sha256": "2955cff3cde9ffad177968b086156f52b400fb0c825aa502b8f7c6f13aa6b8d1",
+          "state_sha256": "61920286a28107a8e86fb12fea33f4e09d47d6e4ecd81e7267b9eccd11b763aa",
+          "repeat_equal": true
+        },
+        "hull_hit": {
+          "file": "0-imperial-imperial_constructor-hull_hit.png",
+          "sha256": "39e45244d795cd4f0bdc5de8c3400f5b42e52eed69057f6d5eabff60fb0dbc20",
+          "state_sha256": "61920286a28107a8e86fb12fea33f4e09d47d6e4ecd81e7267b9eccd11b763aa",
+          "repeat_equal": true
+        },
+        "hull_hit-disabled": {
+          "file": "0-imperial-imperial_constructor-hull_hit-disabled.png",
+          "sha256": "2955cff3cde9ffad177968b086156f52b400fb0c825aa502b8f7c6f13aa6b8d1",
+          "state_sha256": "61920286a28107a8e86fb12fea33f4e09d47d6e4ecd81e7267b9eccd11b763aa",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 12261,
+        "accent_changed_pixels_gt3": 2465,
+        "shell_changed_pixels_gt3": 10888,
+        "shield_hit_changed_pixels_gt3": 399,
+        "hull_hit_changed_pixels_gt3": 38
+      },
+      "shield_pools": {
+        "front": 300.0,
+        "rear": 300.0,
+        "left": 300.0,
+        "right": 300.0
+      }
+    },
+    {
+      "key": "0-imperial-shipyard",
+      "binding": "imperial:shipyard",
+      "preview": false,
+      "radius": 110.0,
+      "distance": 550.0,
+      "captures": {
+        "red": {
+          "file": "0-imperial-shipyard-red.png",
+          "sha256": "375d920d32946cdbad5b9d3b44e305a831283200c1a5f6edc0ad4808dddccfc7",
+          "state_sha256": "74e03be822fcc46c1a1c0100b149dccaa51e41e3d978b1696fa56df3dd977692",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "0-imperial-shipyard-blue.png",
+          "sha256": "b487ad3277fb3d0a83af971741ec23f9b757c9e946c30b9bdb771573e1a5d7e3",
+          "state_sha256": "0b49c285bd70372246a59ca3510c7aa11263ea9a3a3dc5e5749732a11456608f",
+          "repeat_equal": true
+        },
+        "accent-disabled": {
+          "file": "0-imperial-shipyard-accent-disabled.png",
+          "sha256": "d76f436349a609f3f5c664740d926b5bd3ae5b674edd6a9f345211d70e2c3696",
+          "state_sha256": "0b49c285bd70372246a59ca3510c7aa11263ea9a3a3dc5e5749732a11456608f",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "0-imperial-shipyard-restored.png",
+          "sha256": "b487ad3277fb3d0a83af971741ec23f9b757c9e946c30b9bdb771573e1a5d7e3",
+          "state_sha256": "0b49c285bd70372246a59ca3510c7aa11263ea9a3a3dc5e5749732a11456608f",
+          "repeat_equal": true
+        },
+        "shell-disabled": {
+          "file": "0-imperial-shipyard-shell-disabled.png",
+          "sha256": "48c1000f99859c92f37d8034121c559e9e90fcf8b7530799cd9678850d3687db",
+          "state_sha256": "0b49c285bd70372246a59ca3510c7aa11263ea9a3a3dc5e5749732a11456608f",
+          "repeat_equal": true
+        },
+        "shield_hit": {
+          "file": "0-imperial-shipyard-shield_hit.png",
+          "sha256": "33e3454af443cbfcb31ac93dd4fe8ffdf29009b577502a5fbcd3047ce39dbd5c",
+          "state_sha256": "0b49c285bd70372246a59ca3510c7aa11263ea9a3a3dc5e5749732a11456608f",
+          "repeat_equal": true
+        },
+        "shield_hit-disabled": {
+          "file": "0-imperial-shipyard-shield_hit-disabled.png",
+          "sha256": "b487ad3277fb3d0a83af971741ec23f9b757c9e946c30b9bdb771573e1a5d7e3",
+          "state_sha256": "0b49c285bd70372246a59ca3510c7aa11263ea9a3a3dc5e5749732a11456608f",
+          "repeat_equal": true
+        },
+        "hull_hit": {
+          "file": "0-imperial-shipyard-hull_hit.png",
+          "sha256": "304007a2eea8dfc1d8dfc8199bb911362849aeee83376ff14ae5f33218b5ff87",
+          "state_sha256": "0b49c285bd70372246a59ca3510c7aa11263ea9a3a3dc5e5749732a11456608f",
+          "repeat_equal": true
+        },
+        "hull_hit-disabled": {
+          "file": "0-imperial-shipyard-hull_hit-disabled.png",
+          "sha256": "b487ad3277fb3d0a83af971741ec23f9b757c9e946c30b9bdb771573e1a5d7e3",
+          "state_sha256": "0b49c285bd70372246a59ca3510c7aa11263ea9a3a3dc5e5749732a11456608f",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 27745,
+        "accent_changed_pixels_gt3": 7590,
+        "shell_changed_pixels_gt3": 35818,
+        "shield_hit_changed_pixels_gt3": 95,
+        "hull_hit_changed_pixels_gt3": 33
+      },
+      "shield_pools": {
+        "front": 4000.0,
+        "rear": 4000.0,
+        "left": 4000.0,
+        "right": 4000.0
+      }
+    },
+    {
+      "key": "0-confederacy-confed_frigate",
+      "binding": null,
+      "preview": false,
+      "radius": 57.66264367173172,
+      "distance": 350.0,
+      "captures": {
+        "red": {
+          "file": "0-confederacy-confed_frigate-red.png",
+          "sha256": "74222b11f33c9e129f7c6469634ba6c4be03fb7938e7edf7b2e8d13a372ec0e9",
+          "state_sha256": "911e0d3be91f82838ae41ff1a90abc1aa47db34cea3528cf09c64d27e34a208d",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "0-confederacy-confed_frigate-blue.png",
+          "sha256": "1e920274a6be2b20bc192c79efeba5caf3464c1cad5a6298bda118ee0dcf9a38",
+          "state_sha256": "958f623e16a467fc101aa12993196faa083152f44890d340ff750de021b116d2",
+          "repeat_equal": true
+        },
+        "accent-disabled": {
+          "file": "0-confederacy-confed_frigate-accent-disabled.png",
+          "sha256": "2296bf02075960e66be0bb4d6f4bba9c355b7b9ec06f035d2b9e15323eae10ff",
+          "state_sha256": "958f623e16a467fc101aa12993196faa083152f44890d340ff750de021b116d2",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "0-confederacy-confed_frigate-restored.png",
+          "sha256": "1e920274a6be2b20bc192c79efeba5caf3464c1cad5a6298bda118ee0dcf9a38",
+          "state_sha256": "958f623e16a467fc101aa12993196faa083152f44890d340ff750de021b116d2",
+          "repeat_equal": true
+        },
+        "shell-disabled": {
+          "file": "0-confederacy-confed_frigate-shell-disabled.png",
+          "sha256": "485f941310bc1a465eb1ed4f6466efeecf9f5f1c4dc770a969dbb10b6160bc32",
+          "state_sha256": "958f623e16a467fc101aa12993196faa083152f44890d340ff750de021b116d2",
+          "repeat_equal": true
+        },
+        "shield_hit": {
+          "file": "0-confederacy-confed_frigate-shield_hit.png",
+          "sha256": "d1ee46edcb41e4ddbb8f51d8189f105a4ca0324d3b4f73646c77aef359a2934c",
+          "state_sha256": "958f623e16a467fc101aa12993196faa083152f44890d340ff750de021b116d2",
+          "repeat_equal": true
+        },
+        "shield_hit-disabled": {
+          "file": "0-confederacy-confed_frigate-shield_hit-disabled.png",
+          "sha256": "1e920274a6be2b20bc192c79efeba5caf3464c1cad5a6298bda118ee0dcf9a38",
+          "state_sha256": "958f623e16a467fc101aa12993196faa083152f44890d340ff750de021b116d2",
+          "repeat_equal": true
+        },
+        "hull_hit": {
+          "file": "0-confederacy-confed_frigate-hull_hit.png",
+          "sha256": "9d7c84ae5b5a1a7dfb327091ae2b121175f7fb535b9e5d006b329a394dc5e2bd",
+          "state_sha256": "958f623e16a467fc101aa12993196faa083152f44890d340ff750de021b116d2",
+          "repeat_equal": true
+        },
+        "hull_hit-disabled": {
+          "file": "0-confederacy-confed_frigate-hull_hit-disabled.png",
+          "sha256": "1e920274a6be2b20bc192c79efeba5caf3464c1cad5a6298bda118ee0dcf9a38",
+          "state_sha256": "958f623e16a467fc101aa12993196faa083152f44890d340ff750de021b116d2",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 16677,
+        "accent_changed_pixels_gt3": 5013,
+        "shell_changed_pixels_gt3": 19452,
+        "shield_hit_changed_pixels_gt3": 1101,
+        "hull_hit_changed_pixels_gt3": 65
+      },
+      "shield_pools": {
+        "front": 820.0,
+        "rear": 820.0,
+        "left": 820.0,
+        "right": 820.0
+      }
+    },
+    {
+      "key": "0-confederacy-confed_constructor",
+      "binding": null,
+      "preview": false,
+      "radius": 46.35765573987198,
+      "distance": 350.0,
+      "captures": {
+        "red": {
+          "file": "0-confederacy-confed_constructor-red.png",
+          "sha256": "b3bf6a498bfbfe1271a27d4efe9ec6439f3ca62ba59cb8c11c4e8d36042088ae",
+          "state_sha256": "a4167ded1372a2865a17e22be00247038e4c19a2ded373dad919efc97f39a16b",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "0-confederacy-confed_constructor-blue.png",
+          "sha256": "5c54ca4872a715abcdfd290def59c31b82baaca5c766e7e246960bcfe1def4c7",
+          "state_sha256": "a973c3da0d400d5c12c0e7b4974c25e5c8ab90f5d30b7d4504b2e605fc6b8266",
+          "repeat_equal": true
+        },
+        "accent-disabled": {
+          "file": "0-confederacy-confed_constructor-accent-disabled.png",
+          "sha256": "4a76eb7ef0c6e2eb8cd9a348a1e48a4821302972da19d5ee6956aa758b9b6f13",
+          "state_sha256": "a973c3da0d400d5c12c0e7b4974c25e5c8ab90f5d30b7d4504b2e605fc6b8266",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "0-confederacy-confed_constructor-restored.png",
+          "sha256": "5c54ca4872a715abcdfd290def59c31b82baaca5c766e7e246960bcfe1def4c7",
+          "state_sha256": "a973c3da0d400d5c12c0e7b4974c25e5c8ab90f5d30b7d4504b2e605fc6b8266",
+          "repeat_equal": true
+        },
+        "shell-disabled": {
+          "file": "0-confederacy-confed_constructor-shell-disabled.png",
+          "sha256": "44e3a60aa0711507f3a172219ebc83c33931e8e69b9fd376528f5a542886a58f",
+          "state_sha256": "a973c3da0d400d5c12c0e7b4974c25e5c8ab90f5d30b7d4504b2e605fc6b8266",
+          "repeat_equal": true
+        },
+        "shield_hit": {
+          "file": "0-confederacy-confed_constructor-shield_hit.png",
+          "sha256": "2e84dc1621ae35fb7e7c0036d2001b8d350f1f6c54d9bc377769b99059d50149",
+          "state_sha256": "a973c3da0d400d5c12c0e7b4974c25e5c8ab90f5d30b7d4504b2e605fc6b8266",
+          "repeat_equal": true
+        },
+        "shield_hit-disabled": {
+          "file": "0-confederacy-confed_constructor-shield_hit-disabled.png",
+          "sha256": "5c54ca4872a715abcdfd290def59c31b82baaca5c766e7e246960bcfe1def4c7",
+          "state_sha256": "a973c3da0d400d5c12c0e7b4974c25e5c8ab90f5d30b7d4504b2e605fc6b8266",
+          "repeat_equal": true
+        },
+        "hull_hit": {
+          "file": "0-confederacy-confed_constructor-hull_hit.png",
+          "sha256": "92f7475d5c20f45099436229bd5f3e2e0b295a1cb29b39fbc002e075925b0a2b",
+          "state_sha256": "a973c3da0d400d5c12c0e7b4974c25e5c8ab90f5d30b7d4504b2e605fc6b8266",
+          "repeat_equal": true
+        },
+        "hull_hit-disabled": {
+          "file": "0-confederacy-confed_constructor-hull_hit-disabled.png",
+          "sha256": "5c54ca4872a715abcdfd290def59c31b82baaca5c766e7e246960bcfe1def4c7",
+          "state_sha256": "a973c3da0d400d5c12c0e7b4974c25e5c8ab90f5d30b7d4504b2e605fc6b8266",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 9925,
+        "accent_changed_pixels_gt3": 2031,
+        "shell_changed_pixels_gt3": 13546,
+        "shield_hit_changed_pixels_gt3": 655,
+        "hull_hit_changed_pixels_gt3": 31
+      },
+      "shield_pools": {
+        "front": 280.0,
+        "rear": 280.0,
+        "left": 280.0,
+        "right": 280.0
+      }
+    },
+    {
+      "key": "0-confederacy-shipyard",
+      "binding": "confederacy:shipyard",
+      "preview": false,
+      "radius": 142.01618747171045,
+      "distance": 710.0809373585523,
+      "captures": {
+        "red": {
+          "file": "0-confederacy-shipyard-red.png",
+          "sha256": "9961d2d347b8738ac939c9b8333f794020548a1cc0c38b131477a3c79eeeffbd",
+          "state_sha256": "a34f125921213e36d2024468687794783ec83de74cd33f62671493572fa0ba86",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "0-confederacy-shipyard-blue.png",
+          "sha256": "fcfee0dcbe7c200fa198eade613d0f7185c7e4844adb31cf5110b9e13aeb8fe8",
+          "state_sha256": "afd8fa77ec31f9494b92ac52a1ae3c0ce4ed8c55ee9ed9bb51dcc41130b4fc97",
+          "repeat_equal": true
+        },
+        "accent-disabled": {
+          "file": "0-confederacy-shipyard-accent-disabled.png",
+          "sha256": "959875a9ee6b5bba93db225f01812cae0c45b36709b662d4383411c0a149fc44",
+          "state_sha256": "afd8fa77ec31f9494b92ac52a1ae3c0ce4ed8c55ee9ed9bb51dcc41130b4fc97",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "0-confederacy-shipyard-restored.png",
+          "sha256": "fcfee0dcbe7c200fa198eade613d0f7185c7e4844adb31cf5110b9e13aeb8fe8",
+          "state_sha256": "afd8fa77ec31f9494b92ac52a1ae3c0ce4ed8c55ee9ed9bb51dcc41130b4fc97",
+          "repeat_equal": true
+        },
+        "shell-disabled": {
+          "file": "0-confederacy-shipyard-shell-disabled.png",
+          "sha256": "8576bace3a9e7b4604e23eeb74b0e9bab35f6b4af5f21a3f660c0dab4bc57bfb",
+          "state_sha256": "afd8fa77ec31f9494b92ac52a1ae3c0ce4ed8c55ee9ed9bb51dcc41130b4fc97",
+          "repeat_equal": true
+        },
+        "shield_hit": {
+          "file": "0-confederacy-shipyard-shield_hit.png",
+          "sha256": "def15311c1d8af0bf8a95ab27f103dee0847696fb293b80fce0e39bf5db968b4",
+          "state_sha256": "afd8fa77ec31f9494b92ac52a1ae3c0ce4ed8c55ee9ed9bb51dcc41130b4fc97",
+          "repeat_equal": true
+        },
+        "shield_hit-disabled": {
+          "file": "0-confederacy-shipyard-shield_hit-disabled.png",
+          "sha256": "fcfee0dcbe7c200fa198eade613d0f7185c7e4844adb31cf5110b9e13aeb8fe8",
+          "state_sha256": "afd8fa77ec31f9494b92ac52a1ae3c0ce4ed8c55ee9ed9bb51dcc41130b4fc97",
+          "repeat_equal": true
+        },
+        "hull_hit": {
+          "file": "0-confederacy-shipyard-hull_hit.png",
+          "sha256": "529cae769f875ab0034135320809f8f3a8d7048ee3e56eb207af95d075155156",
+          "state_sha256": "afd8fa77ec31f9494b92ac52a1ae3c0ce4ed8c55ee9ed9bb51dcc41130b4fc97",
+          "repeat_equal": true
+        },
+        "hull_hit-disabled": {
+          "file": "0-confederacy-shipyard-hull_hit-disabled.png",
+          "sha256": "fcfee0dcbe7c200fa198eade613d0f7185c7e4844adb31cf5110b9e13aeb8fe8",
+          "state_sha256": "afd8fa77ec31f9494b92ac52a1ae3c0ce4ed8c55ee9ed9bb51dcc41130b4fc97",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 16342,
+        "accent_changed_pixels_gt3": 3673,
+        "shell_changed_pixels_gt3": 26172,
+        "shield_hit_changed_pixels_gt3": 738,
+        "hull_hit_changed_pixels_gt3": 28
+      },
+      "shield_pools": {
+        "front": 4000.0,
+        "rear": 4000.0,
+        "left": 4000.0,
+        "right": 4000.0
+      }
+    },
+    {
+      "key": "0-syndicate-syndicate_frigate",
+      "binding": null,
+      "preview": false,
+      "radius": 52.994630135363,
+      "distance": 350.0,
+      "captures": {
+        "red": {
+          "file": "0-syndicate-syndicate_frigate-red.png",
+          "sha256": "784561ef51e1feaeeb8d3d090900a76f8721d90eca16d8f4494c58a04f9d3942",
+          "state_sha256": "35c4e8a6cbe5da95a37d435f522c75a984b8594338801218a65a5d16ea5ae9bc",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "0-syndicate-syndicate_frigate-blue.png",
+          "sha256": "20214446fe52cf9c978463fba700d2d80c1286981b2f69a14f360838c792239f",
+          "state_sha256": "56276021f55b16228ee2c6de4ff3b0eb31fe8cb44a2ec483a4a6ac5121a8409b",
+          "repeat_equal": true
+        },
+        "accent-disabled": {
+          "file": "0-syndicate-syndicate_frigate-accent-disabled.png",
+          "sha256": "b56da0dd17421dbb6fe45d743fa606e9af3369b9a2b63e24950b05fb63ba7823",
+          "state_sha256": "56276021f55b16228ee2c6de4ff3b0eb31fe8cb44a2ec483a4a6ac5121a8409b",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "0-syndicate-syndicate_frigate-restored.png",
+          "sha256": "20214446fe52cf9c978463fba700d2d80c1286981b2f69a14f360838c792239f",
+          "state_sha256": "56276021f55b16228ee2c6de4ff3b0eb31fe8cb44a2ec483a4a6ac5121a8409b",
+          "repeat_equal": true
+        },
+        "shell-disabled": {
+          "file": "0-syndicate-syndicate_frigate-shell-disabled.png",
+          "sha256": "ceef5722fdf762022c5f666c49c037cbcc200df43899bc5f5d166b71afc9a0a7",
+          "state_sha256": "56276021f55b16228ee2c6de4ff3b0eb31fe8cb44a2ec483a4a6ac5121a8409b",
+          "repeat_equal": true
+        },
+        "shield_hit": {
+          "file": "0-syndicate-syndicate_frigate-shield_hit.png",
+          "sha256": "c64997c76054d129ec5850587c74b8815ea20c20d25de96358b5779b2bd84e5d",
+          "state_sha256": "56276021f55b16228ee2c6de4ff3b0eb31fe8cb44a2ec483a4a6ac5121a8409b",
+          "repeat_equal": true
+        },
+        "shield_hit-disabled": {
+          "file": "0-syndicate-syndicate_frigate-shield_hit-disabled.png",
+          "sha256": "20214446fe52cf9c978463fba700d2d80c1286981b2f69a14f360838c792239f",
+          "state_sha256": "56276021f55b16228ee2c6de4ff3b0eb31fe8cb44a2ec483a4a6ac5121a8409b",
+          "repeat_equal": true
+        },
+        "hull_hit": {
+          "file": "0-syndicate-syndicate_frigate-hull_hit.png",
+          "sha256": "9fa85dde89b63db5ffc2ec39562258142550d78032bc52ae85125b5ec824c114",
+          "state_sha256": "56276021f55b16228ee2c6de4ff3b0eb31fe8cb44a2ec483a4a6ac5121a8409b",
+          "repeat_equal": true
+        },
+        "hull_hit-disabled": {
+          "file": "0-syndicate-syndicate_frigate-hull_hit-disabled.png",
+          "sha256": "20214446fe52cf9c978463fba700d2d80c1286981b2f69a14f360838c792239f",
+          "state_sha256": "56276021f55b16228ee2c6de4ff3b0eb31fe8cb44a2ec483a4a6ac5121a8409b",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 14023,
+        "accent_changed_pixels_gt3": 2054,
+        "shell_changed_pixels_gt3": 17056,
+        "shield_hit_changed_pixels_gt3": 973,
+        "hull_hit_changed_pixels_gt3": 65
+      },
+      "shield_pools": {
+        "front": 860.0,
+        "rear": 860.0,
+        "left": 860.0,
+        "right": 860.0
+      }
+    },
+    {
+      "key": "0-syndicate-syndicate_constructor",
+      "binding": null,
+      "preview": false,
+      "radius": 41.445259124500474,
+      "distance": 350.0,
+      "captures": {
+        "red": {
+          "file": "0-syndicate-syndicate_constructor-red.png",
+          "sha256": "84900e5a9df7f390351cc6bad05f36d83bc6fc05089d0d13edba0ed1866e8c85",
+          "state_sha256": "656b9f6050165abb54e2d4a2445e2ef57913e6116f4473689ae1554dea00abfc",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "0-syndicate-syndicate_constructor-blue.png",
+          "sha256": "681a817a3f154566c54b802b33e93339c9e14883fc9eb52a45a7f1b8cb8083d4",
+          "state_sha256": "b70608f9d39425f3ba5f75fe8da2406c48fd8e0b1bc7e203a27a519655b8e294",
+          "repeat_equal": true
+        },
+        "accent-disabled": {
+          "file": "0-syndicate-syndicate_constructor-accent-disabled.png",
+          "sha256": "f9cb18dccad045f18698b6e986cae14c87dae0d343710c6954ec032307344638",
+          "state_sha256": "b70608f9d39425f3ba5f75fe8da2406c48fd8e0b1bc7e203a27a519655b8e294",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "0-syndicate-syndicate_constructor-restored.png",
+          "sha256": "681a817a3f154566c54b802b33e93339c9e14883fc9eb52a45a7f1b8cb8083d4",
+          "state_sha256": "b70608f9d39425f3ba5f75fe8da2406c48fd8e0b1bc7e203a27a519655b8e294",
+          "repeat_equal": true
+        },
+        "shell-disabled": {
+          "file": "0-syndicate-syndicate_constructor-shell-disabled.png",
+          "sha256": "c2eacb21edfac1db4f4b02273c98f3cd700d2ee69a35ac372efbfd98bb6f08b2",
+          "state_sha256": "b70608f9d39425f3ba5f75fe8da2406c48fd8e0b1bc7e203a27a519655b8e294",
+          "repeat_equal": true
+        },
+        "shield_hit": {
+          "file": "0-syndicate-syndicate_constructor-shield_hit.png",
+          "sha256": "ecf82322b6a44c678a3dd3baa0b4bd34c8da914680d055919c88cb8257a2a657",
+          "state_sha256": "b70608f9d39425f3ba5f75fe8da2406c48fd8e0b1bc7e203a27a519655b8e294",
+          "repeat_equal": true
+        },
+        "shield_hit-disabled": {
+          "file": "0-syndicate-syndicate_constructor-shield_hit-disabled.png",
+          "sha256": "681a817a3f154566c54b802b33e93339c9e14883fc9eb52a45a7f1b8cb8083d4",
+          "state_sha256": "b70608f9d39425f3ba5f75fe8da2406c48fd8e0b1bc7e203a27a519655b8e294",
+          "repeat_equal": true
+        },
+        "hull_hit": {
+          "file": "0-syndicate-syndicate_constructor-hull_hit.png",
+          "sha256": "66f364872a10c85c8c9a9b80df6315aac9fb94f2cde1a6d6a7f8c93639e8c04b",
+          "state_sha256": "b70608f9d39425f3ba5f75fe8da2406c48fd8e0b1bc7e203a27a519655b8e294",
+          "repeat_equal": true
+        },
+        "hull_hit-disabled": {
+          "file": "0-syndicate-syndicate_constructor-hull_hit-disabled.png",
+          "sha256": "681a817a3f154566c54b802b33e93339c9e14883fc9eb52a45a7f1b8cb8083d4",
+          "state_sha256": "b70608f9d39425f3ba5f75fe8da2406c48fd8e0b1bc7e203a27a519655b8e294",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 10804,
+        "accent_changed_pixels_gt3": 977,
+        "shell_changed_pixels_gt3": 11192,
+        "shield_hit_changed_pixels_gt3": 474,
+        "hull_hit_changed_pixels_gt3": 36
+      },
+      "shield_pools": {
+        "front": 290.0,
+        "rear": 290.0,
+        "left": 290.0,
+        "right": 290.0
+      }
+    },
+    {
+      "key": "0-syndicate-shipyard",
+      "binding": "syndicate:shipyard",
+      "preview": false,
+      "radius": 144.44364996055174,
+      "distance": 722.2182498027587,
+      "captures": {
+        "red": {
+          "file": "0-syndicate-shipyard-red.png",
+          "sha256": "a72e376f45a9220b8a1e91ae46f0f03f598d7dc6a83bb74b46a7648331656ed1",
+          "state_sha256": "4422ca6d6d932d4d7ba7893da0f862d58de756179db1388371bbf356f0485853",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "0-syndicate-shipyard-blue.png",
+          "sha256": "9ea268c0fac40262662296bd6437c4c84ca351c777203cc3563d6673c80a5f89",
+          "state_sha256": "a3ee27d6b1b35c6a9c9479a1217ef7185939cd5736553111a86b1d2230e6747e",
+          "repeat_equal": true
+        },
+        "accent-disabled": {
+          "file": "0-syndicate-shipyard-accent-disabled.png",
+          "sha256": "f605fff921cc1d9988dff1d721d6646d69e99cd018d6e400e4d84adca7de12d3",
+          "state_sha256": "a3ee27d6b1b35c6a9c9479a1217ef7185939cd5736553111a86b1d2230e6747e",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "0-syndicate-shipyard-restored.png",
+          "sha256": "9ea268c0fac40262662296bd6437c4c84ca351c777203cc3563d6673c80a5f89",
+          "state_sha256": "a3ee27d6b1b35c6a9c9479a1217ef7185939cd5736553111a86b1d2230e6747e",
+          "repeat_equal": true
+        },
+        "shell-disabled": {
+          "file": "0-syndicate-shipyard-shell-disabled.png",
+          "sha256": "1987d71177e8588e2998770ea5ce105221b6a394496e8196a6242b5657cc0624",
+          "state_sha256": "a3ee27d6b1b35c6a9c9479a1217ef7185939cd5736553111a86b1d2230e6747e",
+          "repeat_equal": true
+        },
+        "shield_hit": {
+          "file": "0-syndicate-shipyard-shield_hit.png",
+          "sha256": "a21546290bf20e2671b3ab3e9bba98f8fdec348dc11efced82ed3ab03591631a",
+          "state_sha256": "a3ee27d6b1b35c6a9c9479a1217ef7185939cd5736553111a86b1d2230e6747e",
+          "repeat_equal": true
+        },
+        "shield_hit-disabled": {
+          "file": "0-syndicate-shipyard-shield_hit-disabled.png",
+          "sha256": "9ea268c0fac40262662296bd6437c4c84ca351c777203cc3563d6673c80a5f89",
+          "state_sha256": "a3ee27d6b1b35c6a9c9479a1217ef7185939cd5736553111a86b1d2230e6747e",
+          "repeat_equal": true
+        },
+        "hull_hit": {
+          "file": "0-syndicate-shipyard-hull_hit.png",
+          "sha256": "f0b81116d53ae114a302d748bb7856066915b17f306450ccffdf69c75ea946fd",
+          "state_sha256": "a3ee27d6b1b35c6a9c9479a1217ef7185939cd5736553111a86b1d2230e6747e",
+          "repeat_equal": true
+        },
+        "hull_hit-disabled": {
+          "file": "0-syndicate-shipyard-hull_hit-disabled.png",
+          "sha256": "9ea268c0fac40262662296bd6437c4c84ca351c777203cc3563d6673c80a5f89",
+          "state_sha256": "a3ee27d6b1b35c6a9c9479a1217ef7185939cd5736553111a86b1d2230e6747e",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 15029,
+        "accent_changed_pixels_gt3": 744,
+        "shell_changed_pixels_gt3": 26172,
+        "shield_hit_changed_pixels_gt3": 808,
+        "hull_hit_changed_pixels_gt3": 29
+      },
+      "shield_pools": {
+        "front": 4000.0,
+        "rear": 4000.0,
+        "left": 4000.0,
+        "right": 4000.0
+      }
+    },
+    {
+      "key": "1-rebel-rebel_frigate",
+      "binding": "rebel:frigate",
+      "preview": true,
+      "radius": 54.30172702224777,
+      "distance": 350.0,
+      "captures": {
+        "red": {
+          "file": "1-rebel-rebel_frigate-red.png",
+          "sha256": "3744c863bf908b82c96bac0498101fa2f1213a5c0510d6262357bb0013a624f6",
+          "state_sha256": "341f15279b363ac89ebd5b743780047cbf880f7a0c7b3b43d406bd1226e7b12b",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "1-rebel-rebel_frigate-blue.png",
+          "sha256": "cc1415de42c4415d854e1b1f5f011f81189116d560102f7f5a9e24a3753e962b",
+          "state_sha256": "f3973fae44829a0ae930c2d504322b05f6220d4c95fb1eb4456d04aaf1009be2",
+          "repeat_equal": true
+        },
+        "accent-disabled": {
+          "file": "1-rebel-rebel_frigate-accent-disabled.png",
+          "sha256": "26cb35cf5563c8fcf5863a889880d27a011d8ed96433cc2f6b86201b8a753b4c",
+          "state_sha256": "f3973fae44829a0ae930c2d504322b05f6220d4c95fb1eb4456d04aaf1009be2",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "1-rebel-rebel_frigate-restored.png",
+          "sha256": "cc1415de42c4415d854e1b1f5f011f81189116d560102f7f5a9e24a3753e962b",
+          "state_sha256": "f3973fae44829a0ae930c2d504322b05f6220d4c95fb1eb4456d04aaf1009be2",
+          "repeat_equal": true
+        },
+        "shell-disabled": {
+          "file": "1-rebel-rebel_frigate-shell-disabled.png",
+          "sha256": "a0df8c8ed4fedb8205fd98aca6d7095be36ef8a6a75920a7477977a0e899b9d2",
+          "state_sha256": "f3973fae44829a0ae930c2d504322b05f6220d4c95fb1eb4456d04aaf1009be2",
+          "repeat_equal": true
+        },
+        "shield_hit": {
+          "file": "1-rebel-rebel_frigate-shield_hit.png",
+          "sha256": "a4940c2db1073e63f918b78f68c41739a0200a367f33b9bf61370f6ebd4d7b98",
+          "state_sha256": "f3973fae44829a0ae930c2d504322b05f6220d4c95fb1eb4456d04aaf1009be2",
+          "repeat_equal": true
+        },
+        "shield_hit-disabled": {
+          "file": "1-rebel-rebel_frigate-shield_hit-disabled.png",
+          "sha256": "cc1415de42c4415d854e1b1f5f011f81189116d560102f7f5a9e24a3753e962b",
+          "state_sha256": "f3973fae44829a0ae930c2d504322b05f6220d4c95fb1eb4456d04aaf1009be2",
+          "repeat_equal": true
+        },
+        "hull_hit": {
+          "file": "1-rebel-rebel_frigate-hull_hit.png",
+          "sha256": "84b4c399bf66bf98e26d1fdb419bef28d69ed11e2de20af8aa84f3f1da8acdb9",
+          "state_sha256": "f3973fae44829a0ae930c2d504322b05f6220d4c95fb1eb4456d04aaf1009be2",
+          "repeat_equal": true
+        },
+        "hull_hit-disabled": {
+          "file": "1-rebel-rebel_frigate-hull_hit-disabled.png",
+          "sha256": "cc1415de42c4415d854e1b1f5f011f81189116d560102f7f5a9e24a3753e962b",
+          "state_sha256": "f3973fae44829a0ae930c2d504322b05f6220d4c95fb1eb4456d04aaf1009be2",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 6068,
+        "accent_changed_pixels_gt3": 734,
+        "shell_changed_pixels_gt3": 17740,
+        "shield_hit_changed_pixels_gt3": 1139,
+        "hull_hit_changed_pixels_gt3": 66
+      },
+      "shield_pools": {
+        "front": 950.0,
+        "rear": 950.0,
+        "left": 950.0,
+        "right": 950.0
+      }
+    },
+    {
+      "key": "1-rebel-rebel_constructor",
+      "binding": "rebel:constructor",
+      "preview": true,
+      "radius": 35.95514861047781,
+      "distance": 350.0,
+      "captures": {
+        "red": {
+          "file": "1-rebel-rebel_constructor-red.png",
+          "sha256": "364092bdbdc2246c8fa10eeca795627f58ca309ec0acc76e1992fb34440b2510",
+          "state_sha256": "8d125bab89802a9a3a950273c4ddb0050a14bd8753f9a7ac702b3907e9a0fdfc",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "1-rebel-rebel_constructor-blue.png",
+          "sha256": "6b63ff567ba02a8d448b10cdac795a4112bfef3c3ba4276a0dcb864a568dc8c0",
+          "state_sha256": "90f501b77b9f78ecbd4798f77cc99e6fffa2bc3e9c20abd4f90d88ee427cff20",
+          "repeat_equal": true
+        },
+        "accent-disabled": {
+          "file": "1-rebel-rebel_constructor-accent-disabled.png",
+          "sha256": "48af935525ff7da52fc61a1e1d17681dc9603a52c8534c2223b4bc3ccc37973f",
+          "state_sha256": "90f501b77b9f78ecbd4798f77cc99e6fffa2bc3e9c20abd4f90d88ee427cff20",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "1-rebel-rebel_constructor-restored.png",
+          "sha256": "6b63ff567ba02a8d448b10cdac795a4112bfef3c3ba4276a0dcb864a568dc8c0",
+          "state_sha256": "90f501b77b9f78ecbd4798f77cc99e6fffa2bc3e9c20abd4f90d88ee427cff20",
+          "repeat_equal": true
+        },
+        "shell-disabled": {
+          "file": "1-rebel-rebel_constructor-shell-disabled.png",
+          "sha256": "f2a9f1da349c230675fd1748a41d7d2b1f80f6619c21c3ff89cab7918ea87b1d",
+          "state_sha256": "90f501b77b9f78ecbd4798f77cc99e6fffa2bc3e9c20abd4f90d88ee427cff20",
+          "repeat_equal": true
+        },
+        "shield_hit": {
+          "file": "1-rebel-rebel_constructor-shield_hit.png",
+          "sha256": "0f0bcdeb70b3da5cdc5a23fa920b296fcdfc2392c66776338c109f8bfc3e80e4",
+          "state_sha256": "90f501b77b9f78ecbd4798f77cc99e6fffa2bc3e9c20abd4f90d88ee427cff20",
+          "repeat_equal": true
+        },
+        "shield_hit-disabled": {
+          "file": "1-rebel-rebel_constructor-shield_hit-disabled.png",
+          "sha256": "6b63ff567ba02a8d448b10cdac795a4112bfef3c3ba4276a0dcb864a568dc8c0",
+          "state_sha256": "90f501b77b9f78ecbd4798f77cc99e6fffa2bc3e9c20abd4f90d88ee427cff20",
+          "repeat_equal": true
+        },
+        "hull_hit": {
+          "file": "1-rebel-rebel_constructor-hull_hit.png",
+          "sha256": "4b3b32b9cf9d1593936f3dbf47e82b79d017df56aba188f777f414453a6a46ff",
+          "state_sha256": "90f501b77b9f78ecbd4798f77cc99e6fffa2bc3e9c20abd4f90d88ee427cff20",
+          "repeat_equal": true
+        },
+        "hull_hit-disabled": {
+          "file": "1-rebel-rebel_constructor-hull_hit-disabled.png",
+          "sha256": "6b63ff567ba02a8d448b10cdac795a4112bfef3c3ba4276a0dcb864a568dc8c0",
+          "state_sha256": "90f501b77b9f78ecbd4798f77cc99e6fffa2bc3e9c20abd4f90d88ee427cff20",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 4789,
+        "accent_changed_pixels_gt3": 801,
+        "shell_changed_pixels_gt3": 8594,
+        "shield_hit_changed_pixels_gt3": 482,
+        "hull_hit_changed_pixels_gt3": 34
+      },
+      "shield_pools": {
+        "front": 310.0,
+        "rear": 310.0,
+        "left": 310.0,
+        "right": 310.0
+      }
+    },
+    {
+      "key": "1-rebel-shipyard",
+      "binding": "rebel:shipyard",
+      "preview": true,
+      "radius": 154.46378614657186,
+      "distance": 772.3189307328594,
+      "captures": {
+        "red": {
+          "file": "1-rebel-shipyard-red.png",
+          "sha256": "d760ac50fbd86ca117c5684dd025ccdd3664584cbe6091d8c144d10a86ce09f2",
+          "state_sha256": "f93c37039ab6b88a605bdf901c46518d0156037e01f614b23fe1cab62f2bd62e",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "1-rebel-shipyard-blue.png",
+          "sha256": "26d40ea5c3178538206802d1d3cf9761666ce10e7cae641f5efe2177ab420ede",
+          "state_sha256": "646f077e7efc958d280bc1dfe388eaf63969348d082c57c6b3a1f1fe08de9678",
+          "repeat_equal": true
+        },
+        "accent-disabled": {
+          "file": "1-rebel-shipyard-accent-disabled.png",
+          "sha256": "2be866de55ba6b8052339bad89a0c77a788caba925556f6004bb20ed067acdad",
+          "state_sha256": "646f077e7efc958d280bc1dfe388eaf63969348d082c57c6b3a1f1fe08de9678",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "1-rebel-shipyard-restored.png",
+          "sha256": "26d40ea5c3178538206802d1d3cf9761666ce10e7cae641f5efe2177ab420ede",
+          "state_sha256": "646f077e7efc958d280bc1dfe388eaf63969348d082c57c6b3a1f1fe08de9678",
+          "repeat_equal": true
+        },
+        "shell-disabled": {
+          "file": "1-rebel-shipyard-shell-disabled.png",
+          "sha256": "7195dc2e4aaa1276a034d4dbb9f6332e80a49965e05d4cbbed334b2a5cb84d56",
+          "state_sha256": "646f077e7efc958d280bc1dfe388eaf63969348d082c57c6b3a1f1fe08de9678",
+          "repeat_equal": true
+        },
+        "shield_hit": {
+          "file": "1-rebel-shipyard-shield_hit.png",
+          "sha256": "88c11c893a3c747aba082a72159d617bc1feff9ad5875fae500a711c08d1909c",
+          "state_sha256": "646f077e7efc958d280bc1dfe388eaf63969348d082c57c6b3a1f1fe08de9678",
+          "repeat_equal": true
+        },
+        "shield_hit-disabled": {
+          "file": "1-rebel-shipyard-shield_hit-disabled.png",
+          "sha256": "26d40ea5c3178538206802d1d3cf9761666ce10e7cae641f5efe2177ab420ede",
+          "state_sha256": "646f077e7efc958d280bc1dfe388eaf63969348d082c57c6b3a1f1fe08de9678",
+          "repeat_equal": true
+        },
+        "hull_hit": {
+          "file": "1-rebel-shipyard-hull_hit.png",
+          "sha256": "859e6aa11d0569353f3198747a27f4389b8ad2cdcf09e2b9894adf211747c828",
+          "state_sha256": "646f077e7efc958d280bc1dfe388eaf63969348d082c57c6b3a1f1fe08de9678",
+          "repeat_equal": true
+        },
+        "hull_hit-disabled": {
+          "file": "1-rebel-shipyard-hull_hit-disabled.png",
+          "sha256": "26d40ea5c3178538206802d1d3cf9761666ce10e7cae641f5efe2177ab420ede",
+          "state_sha256": "646f077e7efc958d280bc1dfe388eaf63969348d082c57c6b3a1f1fe08de9678",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 14824,
+        "accent_changed_pixels_gt3": 3247,
+        "shell_changed_pixels_gt3": 26173,
+        "shield_hit_changed_pixels_gt3": 846,
+        "hull_hit_changed_pixels_gt3": 22
+      },
+      "shield_pools": {
+        "front": 4000.0,
+        "rear": 4000.0,
+        "left": 4000.0,
+        "right": 4000.0
+      }
+    },
+    {
+      "key": "1-imperial-imperial_frigate",
+      "binding": "imperial:frigate",
+      "preview": true,
+      "radius": 50.70478339590647,
+      "distance": 350.0,
+      "captures": {
+        "red": {
+          "file": "1-imperial-imperial_frigate-red.png",
+          "sha256": "e18d3a98329dfa7869ace5738e30579c8411fda02f8f844d5378fa44d4f665e7",
+          "state_sha256": "7c0fc085c3044cee413f47e4981b5c28e649cafb4fb0ac34805b07f5f1cf7a37",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "1-imperial-imperial_frigate-blue.png",
+          "sha256": "7a5805da7ff747ad488716064415cac102ccc9a06f1b8b5e3b0281847805004c",
+          "state_sha256": "3de4e5dd0df7d57ab241a55f07c67e41c6795958f46a09506696fcb1d5a214e5",
+          "repeat_equal": true
+        },
+        "accent-disabled": {
+          "file": "1-imperial-imperial_frigate-accent-disabled.png",
+          "sha256": "79819a7bdd2cc28445c34e1d299b7e32248b4e7c7f2a682ff5ff800da18b976e",
+          "state_sha256": "3de4e5dd0df7d57ab241a55f07c67e41c6795958f46a09506696fcb1d5a214e5",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "1-imperial-imperial_frigate-restored.png",
+          "sha256": "7a5805da7ff747ad488716064415cac102ccc9a06f1b8b5e3b0281847805004c",
+          "state_sha256": "3de4e5dd0df7d57ab241a55f07c67e41c6795958f46a09506696fcb1d5a214e5",
+          "repeat_equal": true
+        },
+        "shell-disabled": {
+          "file": "1-imperial-imperial_frigate-shell-disabled.png",
+          "sha256": "c64ac2c244b099f696158a04a15bc998690fe2d3315da42b5f5eb80b1e6956bf",
+          "state_sha256": "3de4e5dd0df7d57ab241a55f07c67e41c6795958f46a09506696fcb1d5a214e5",
+          "repeat_equal": true
+        },
+        "shield_hit": {
+          "file": "1-imperial-imperial_frigate-shield_hit.png",
+          "sha256": "417675b196835f624cafdcf19efe46299249e18447155602030c0b2e5d7d32ab",
+          "state_sha256": "3de4e5dd0df7d57ab241a55f07c67e41c6795958f46a09506696fcb1d5a214e5",
+          "repeat_equal": true
+        },
+        "shield_hit-disabled": {
+          "file": "1-imperial-imperial_frigate-shield_hit-disabled.png",
+          "sha256": "7a5805da7ff747ad488716064415cac102ccc9a06f1b8b5e3b0281847805004c",
+          "state_sha256": "3de4e5dd0df7d57ab241a55f07c67e41c6795958f46a09506696fcb1d5a214e5",
+          "repeat_equal": true
+        },
+        "hull_hit": {
+          "file": "1-imperial-imperial_frigate-hull_hit.png",
+          "sha256": "9a714d7418ba478948f6e8394377600e7f1afc5032be8ca31427913c594e3416",
+          "state_sha256": "3de4e5dd0df7d57ab241a55f07c67e41c6795958f46a09506696fcb1d5a214e5",
+          "repeat_equal": true
+        },
+        "hull_hit-disabled": {
+          "file": "1-imperial-imperial_frigate-hull_hit-disabled.png",
+          "sha256": "7a5805da7ff747ad488716064415cac102ccc9a06f1b8b5e3b0281847805004c",
+          "state_sha256": "3de4e5dd0df7d57ab241a55f07c67e41c6795958f46a09506696fcb1d5a214e5",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 5650,
+        "accent_changed_pixels_gt3": 396,
+        "shell_changed_pixels_gt3": 15845,
+        "shield_hit_changed_pixels_gt3": 781,
+        "hull_hit_changed_pixels_gt3": 80
+      },
+      "shield_pools": {
+        "front": 900.0,
+        "rear": 900.0,
+        "left": 900.0,
+        "right": 900.0
+      }
+    },
+    {
+      "key": "1-imperial-imperial_constructor",
+      "binding": "imperial:constructor",
+      "preview": true,
+      "radius": 40.677021750760154,
+      "distance": 350.0,
+      "captures": {
+        "red": {
+          "file": "1-imperial-imperial_constructor-red.png",
+          "sha256": "4b689bf4c0040fd651c7370d223c9e97fd92d17fe6060904c28491a34591a32f",
+          "state_sha256": "83aaca49c32dfb34bf0afde0ebce400feb5b36ec7653ea31425fd0506633c1ab",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "1-imperial-imperial_constructor-blue.png",
+          "sha256": "f39b28123160b9a798dc632b70c646eabb755874820aac91f44c01fdc07746f0",
+          "state_sha256": "61920286a28107a8e86fb12fea33f4e09d47d6e4ecd81e7267b9eccd11b763aa",
+          "repeat_equal": true
+        },
+        "accent-disabled": {
+          "file": "1-imperial-imperial_constructor-accent-disabled.png",
+          "sha256": "41fee0ef19b6ff55e01d4c1828e9f4161c12f24099e45ecf3a20b29dc15d3429",
+          "state_sha256": "61920286a28107a8e86fb12fea33f4e09d47d6e4ecd81e7267b9eccd11b763aa",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "1-imperial-imperial_constructor-restored.png",
+          "sha256": "f39b28123160b9a798dc632b70c646eabb755874820aac91f44c01fdc07746f0",
+          "state_sha256": "61920286a28107a8e86fb12fea33f4e09d47d6e4ecd81e7267b9eccd11b763aa",
+          "repeat_equal": true
+        },
+        "shell-disabled": {
+          "file": "1-imperial-imperial_constructor-shell-disabled.png",
+          "sha256": "a8aa8244a9c56eea33e4447ce97c0cf6fb818dae23e1d6659865dca6e7adae59",
+          "state_sha256": "61920286a28107a8e86fb12fea33f4e09d47d6e4ecd81e7267b9eccd11b763aa",
+          "repeat_equal": true
+        },
+        "shield_hit": {
+          "file": "1-imperial-imperial_constructor-shield_hit.png",
+          "sha256": "285c93f5d7fba8390b0cc3e52e4f4e3a3c781113ee5ee2a334685817dadf3577",
+          "state_sha256": "61920286a28107a8e86fb12fea33f4e09d47d6e4ecd81e7267b9eccd11b763aa",
+          "repeat_equal": true
+        },
+        "shield_hit-disabled": {
+          "file": "1-imperial-imperial_constructor-shield_hit-disabled.png",
+          "sha256": "f39b28123160b9a798dc632b70c646eabb755874820aac91f44c01fdc07746f0",
+          "state_sha256": "61920286a28107a8e86fb12fea33f4e09d47d6e4ecd81e7267b9eccd11b763aa",
+          "repeat_equal": true
+        },
+        "hull_hit": {
+          "file": "1-imperial-imperial_constructor-hull_hit.png",
+          "sha256": "8026d6981b05b1f7b64a10519eed16845083ba9e6d376beee43148ae241034d7",
+          "state_sha256": "61920286a28107a8e86fb12fea33f4e09d47d6e4ecd81e7267b9eccd11b763aa",
+          "repeat_equal": true
+        },
+        "hull_hit-disabled": {
+          "file": "1-imperial-imperial_constructor-hull_hit-disabled.png",
+          "sha256": "f39b28123160b9a798dc632b70c646eabb755874820aac91f44c01fdc07746f0",
+          "state_sha256": "61920286a28107a8e86fb12fea33f4e09d47d6e4ecd81e7267b9eccd11b763aa",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 5945,
+        "accent_changed_pixels_gt3": 972,
+        "shell_changed_pixels_gt3": 10717,
+        "shield_hit_changed_pixels_gt3": 579,
+        "hull_hit_changed_pixels_gt3": 32
+      },
+      "shield_pools": {
+        "front": 300.0,
+        "rear": 300.0,
+        "left": 300.0,
+        "right": 300.0
+      }
+    },
+    {
+      "key": "1-imperial-shipyard",
+      "binding": "imperial:shipyard",
+      "preview": true,
+      "radius": 165.46717497536778,
+      "distance": 827.335874876839,
+      "captures": {
+        "red": {
+          "file": "1-imperial-shipyard-red.png",
+          "sha256": "3173de73503ae58f40e330bf04302dd57c58c27db002027463c4ae422f04e4c6",
+          "state_sha256": "74e03be822fcc46c1a1c0100b149dccaa51e41e3d978b1696fa56df3dd977692",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "1-imperial-shipyard-blue.png",
+          "sha256": "66c134966403b41df40999aa34d665ec14a7d844a060baf7690ab001c71621ad",
+          "state_sha256": "0b49c285bd70372246a59ca3510c7aa11263ea9a3a3dc5e5749732a11456608f",
+          "repeat_equal": true
+        },
+        "accent-disabled": {
+          "file": "1-imperial-shipyard-accent-disabled.png",
+          "sha256": "ce2726886a8ddbf4454296952f3cc9ebcff27101f8260b9e35cacf834ef7b330",
+          "state_sha256": "0b49c285bd70372246a59ca3510c7aa11263ea9a3a3dc5e5749732a11456608f",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "1-imperial-shipyard-restored.png",
+          "sha256": "66c134966403b41df40999aa34d665ec14a7d844a060baf7690ab001c71621ad",
+          "state_sha256": "0b49c285bd70372246a59ca3510c7aa11263ea9a3a3dc5e5749732a11456608f",
+          "repeat_equal": true
+        },
+        "shell-disabled": {
+          "file": "1-imperial-shipyard-shell-disabled.png",
+          "sha256": "2c4262543bb2d3fc785755ccfe4c5a7ab81d14ded037aa4c312128dff529ee3f",
+          "state_sha256": "0b49c285bd70372246a59ca3510c7aa11263ea9a3a3dc5e5749732a11456608f",
+          "repeat_equal": true
+        },
+        "shield_hit": {
+          "file": "1-imperial-shipyard-shield_hit.png",
+          "sha256": "76861ba9ce4dcee0eee4676e62f52e4d034532a5ab219b23ce13c052b9a2e588",
+          "state_sha256": "0b49c285bd70372246a59ca3510c7aa11263ea9a3a3dc5e5749732a11456608f",
+          "repeat_equal": true
+        },
+        "shield_hit-disabled": {
+          "file": "1-imperial-shipyard-shield_hit-disabled.png",
+          "sha256": "66c134966403b41df40999aa34d665ec14a7d844a060baf7690ab001c71621ad",
+          "state_sha256": "0b49c285bd70372246a59ca3510c7aa11263ea9a3a3dc5e5749732a11456608f",
+          "repeat_equal": true
+        },
+        "hull_hit": {
+          "file": "1-imperial-shipyard-hull_hit.png",
+          "sha256": "d2a1893dc11626cd5443f47666ef14c9ccfa446888dcbf26bc8381a67c17e3c9",
+          "state_sha256": "0b49c285bd70372246a59ca3510c7aa11263ea9a3a3dc5e5749732a11456608f",
+          "repeat_equal": true
+        },
+        "hull_hit-disabled": {
+          "file": "1-imperial-shipyard-hull_hit-disabled.png",
+          "sha256": "66c134966403b41df40999aa34d665ec14a7d844a060baf7690ab001c71621ad",
+          "state_sha256": "0b49c285bd70372246a59ca3510c7aa11263ea9a3a3dc5e5749732a11456608f",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 21088,
+        "accent_changed_pixels_gt3": 681,
+        "shell_changed_pixels_gt3": 26174,
+        "shield_hit_changed_pixels_gt3": 792,
+        "hull_hit_changed_pixels_gt3": 28
+      },
+      "shield_pools": {
+        "front": 4000.0,
+        "rear": 4000.0,
+        "left": 4000.0,
+        "right": 4000.0
+      }
+    },
+    {
+      "key": "1-confederacy-confed_frigate",
+      "binding": "confederacy:frigate",
+      "preview": true,
+      "radius": 59.89417805118635,
+      "distance": 350.0,
+      "captures": {
+        "red": {
+          "file": "1-confederacy-confed_frigate-red.png",
+          "sha256": "9644983ab53b741edd49b1c52204752044249d9a49daf4f03d038f9619645fa7",
+          "state_sha256": "911e0d3be91f82838ae41ff1a90abc1aa47db34cea3528cf09c64d27e34a208d",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "1-confederacy-confed_frigate-blue.png",
+          "sha256": "44077c8a3f09289d332702cbdf6ff5ca0aa37e4255df5f05f433b2c2c979a00b",
+          "state_sha256": "958f623e16a467fc101aa12993196faa083152f44890d340ff750de021b116d2",
+          "repeat_equal": true
+        },
+        "accent-disabled": {
+          "file": "1-confederacy-confed_frigate-accent-disabled.png",
+          "sha256": "01890e867f9e2842aeca15458aafeec98b719c4a7a41a631b220fb56aed2d650",
+          "state_sha256": "958f623e16a467fc101aa12993196faa083152f44890d340ff750de021b116d2",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "1-confederacy-confed_frigate-restored.png",
+          "sha256": "44077c8a3f09289d332702cbdf6ff5ca0aa37e4255df5f05f433b2c2c979a00b",
+          "state_sha256": "958f623e16a467fc101aa12993196faa083152f44890d340ff750de021b116d2",
+          "repeat_equal": true
+        },
+        "shell-disabled": {
+          "file": "1-confederacy-confed_frigate-shell-disabled.png",
+          "sha256": "12ce735359c82cb0dfde1ea6326059b4f486dd61f985d92259c3a5398b025451",
+          "state_sha256": "958f623e16a467fc101aa12993196faa083152f44890d340ff750de021b116d2",
+          "repeat_equal": true
+        },
+        "shield_hit": {
+          "file": "1-confederacy-confed_frigate-shield_hit.png",
+          "sha256": "646714f1f37105707d95426e73d54bf96b6ea3b892ceed87e1616f74153f8992",
+          "state_sha256": "958f623e16a467fc101aa12993196faa083152f44890d340ff750de021b116d2",
+          "repeat_equal": true
+        },
+        "shield_hit-disabled": {
+          "file": "1-confederacy-confed_frigate-shield_hit-disabled.png",
+          "sha256": "44077c8a3f09289d332702cbdf6ff5ca0aa37e4255df5f05f433b2c2c979a00b",
+          "state_sha256": "958f623e16a467fc101aa12993196faa083152f44890d340ff750de021b116d2",
+          "repeat_equal": true
+        },
+        "hull_hit": {
+          "file": "1-confederacy-confed_frigate-hull_hit.png",
+          "sha256": "74a14d78e331588f1185dcd229800fe9885cd42d5ac11599708f55e33b516624",
+          "state_sha256": "958f623e16a467fc101aa12993196faa083152f44890d340ff750de021b116d2",
+          "repeat_equal": true
+        },
+        "hull_hit-disabled": {
+          "file": "1-confederacy-confed_frigate-hull_hit-disabled.png",
+          "sha256": "44077c8a3f09289d332702cbdf6ff5ca0aa37e4255df5f05f433b2c2c979a00b",
+          "state_sha256": "958f623e16a467fc101aa12993196faa083152f44890d340ff750de021b116d2",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 14454,
+        "accent_changed_pixels_gt3": 1477,
+        "shell_changed_pixels_gt3": 20760,
+        "shield_hit_changed_pixels_gt3": 1235,
+        "hull_hit_changed_pixels_gt3": 66
+      },
+      "shield_pools": {
+        "front": 820.0,
+        "rear": 820.0,
+        "left": 820.0,
+        "right": 820.0
+      }
+    },
+    {
+      "key": "1-confederacy-confed_constructor",
+      "binding": "confederacy:constructor",
+      "preview": true,
+      "radius": 42.449323932927115,
+      "distance": 350.0,
+      "captures": {
+        "red": {
+          "file": "1-confederacy-confed_constructor-red.png",
+          "sha256": "d34bb36312a4acfe894ecd6f48e058606f4111cdda1992e431c40d0ce57f4b59",
+          "state_sha256": "a4167ded1372a2865a17e22be00247038e4c19a2ded373dad919efc97f39a16b",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "1-confederacy-confed_constructor-blue.png",
+          "sha256": "140cd9ae3b6a5b851ad4de93f7b2229716e7344cdf455faa922d142a586a2361",
+          "state_sha256": "a973c3da0d400d5c12c0e7b4974c25e5c8ab90f5d30b7d4504b2e605fc6b8266",
+          "repeat_equal": true
+        },
+        "accent-disabled": {
+          "file": "1-confederacy-confed_constructor-accent-disabled.png",
+          "sha256": "63d6fe3aa3e04d73172ed101e3f863e7a068e6038313843989f1b73e78d8a531",
+          "state_sha256": "a973c3da0d400d5c12c0e7b4974c25e5c8ab90f5d30b7d4504b2e605fc6b8266",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "1-confederacy-confed_constructor-restored.png",
+          "sha256": "140cd9ae3b6a5b851ad4de93f7b2229716e7344cdf455faa922d142a586a2361",
+          "state_sha256": "a973c3da0d400d5c12c0e7b4974c25e5c8ab90f5d30b7d4504b2e605fc6b8266",
+          "repeat_equal": true
+        },
+        "shell-disabled": {
+          "file": "1-confederacy-confed_constructor-shell-disabled.png",
+          "sha256": "aad49e7db5cb741b72bcc7cdfded5c74183236d24308ef491266e41abb2ed6db",
+          "state_sha256": "a973c3da0d400d5c12c0e7b4974c25e5c8ab90f5d30b7d4504b2e605fc6b8266",
+          "repeat_equal": true
+        },
+        "shield_hit": {
+          "file": "1-confederacy-confed_constructor-shield_hit.png",
+          "sha256": "7f40389495dd043d07a54f2c153e75397801c19f072e0e35f4282180962e555a",
+          "state_sha256": "a973c3da0d400d5c12c0e7b4974c25e5c8ab90f5d30b7d4504b2e605fc6b8266",
+          "repeat_equal": true
+        },
+        "shield_hit-disabled": {
+          "file": "1-confederacy-confed_constructor-shield_hit-disabled.png",
+          "sha256": "140cd9ae3b6a5b851ad4de93f7b2229716e7344cdf455faa922d142a586a2361",
+          "state_sha256": "a973c3da0d400d5c12c0e7b4974c25e5c8ab90f5d30b7d4504b2e605fc6b8266",
+          "repeat_equal": true
+        },
+        "hull_hit": {
+          "file": "1-confederacy-confed_constructor-hull_hit.png",
+          "sha256": "32c06587db2bbdb2e17a7f322fb19d2cf652c3f463e1a2bb52194b70ee1e13db",
+          "state_sha256": "a973c3da0d400d5c12c0e7b4974c25e5c8ab90f5d30b7d4504b2e605fc6b8266",
+          "repeat_equal": true
+        },
+        "hull_hit-disabled": {
+          "file": "1-confederacy-confed_constructor-hull_hit-disabled.png",
+          "sha256": "140cd9ae3b6a5b851ad4de93f7b2229716e7344cdf455faa922d142a586a2361",
+          "state_sha256": "a973c3da0d400d5c12c0e7b4974c25e5c8ab90f5d30b7d4504b2e605fc6b8266",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 8824,
+        "accent_changed_pixels_gt3": 1635,
+        "shell_changed_pixels_gt3": 11665,
+        "shield_hit_changed_pixels_gt3": 620,
+        "hull_hit_changed_pixels_gt3": 32
+      },
+      "shield_pools": {
+        "front": 280.0,
+        "rear": 280.0,
+        "left": 280.0,
+        "right": 280.0
+      }
+    },
+    {
+      "key": "1-confederacy-shipyard",
+      "binding": "confederacy:shipyard",
+      "preview": true,
+      "radius": 177.34121421454597,
+      "distance": 886.7060710727299,
+      "captures": {
+        "red": {
+          "file": "1-confederacy-shipyard-red.png",
+          "sha256": "69452eccc704bb1c9a3acaf57fc2287dbf5402301ad42cf4408a7cc8b8de851f",
+          "state_sha256": "a34f125921213e36d2024468687794783ec83de74cd33f62671493572fa0ba86",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "1-confederacy-shipyard-blue.png",
+          "sha256": "3abeb61d9c7865214a0bd2ecfa56d99a1c5c744f3b5b04faefd42e782d26c43e",
+          "state_sha256": "afd8fa77ec31f9494b92ac52a1ae3c0ce4ed8c55ee9ed9bb51dcc41130b4fc97",
+          "repeat_equal": true
+        },
+        "accent-disabled": {
+          "file": "1-confederacy-shipyard-accent-disabled.png",
+          "sha256": "dffda8155783ab6eb8dd7c7fda5cedd066b2605e844db9f825c55ceafa0fea20",
+          "state_sha256": "afd8fa77ec31f9494b92ac52a1ae3c0ce4ed8c55ee9ed9bb51dcc41130b4fc97",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "1-confederacy-shipyard-restored.png",
+          "sha256": "3abeb61d9c7865214a0bd2ecfa56d99a1c5c744f3b5b04faefd42e782d26c43e",
+          "state_sha256": "afd8fa77ec31f9494b92ac52a1ae3c0ce4ed8c55ee9ed9bb51dcc41130b4fc97",
+          "repeat_equal": true
+        },
+        "shell-disabled": {
+          "file": "1-confederacy-shipyard-shell-disabled.png",
+          "sha256": "6dda36a9e90128b9172c30761a48cfb5a11424dc2dd54baeb612bae42baf2fb6",
+          "state_sha256": "afd8fa77ec31f9494b92ac52a1ae3c0ce4ed8c55ee9ed9bb51dcc41130b4fc97",
+          "repeat_equal": true
+        },
+        "shield_hit": {
+          "file": "1-confederacy-shipyard-shield_hit.png",
+          "sha256": "f6835f3afb74255788b0a682f706a2d54c92e986a3e6e04336c86b5f4739b806",
+          "state_sha256": "afd8fa77ec31f9494b92ac52a1ae3c0ce4ed8c55ee9ed9bb51dcc41130b4fc97",
+          "repeat_equal": true
+        },
+        "shield_hit-disabled": {
+          "file": "1-confederacy-shipyard-shield_hit-disabled.png",
+          "sha256": "3abeb61d9c7865214a0bd2ecfa56d99a1c5c744f3b5b04faefd42e782d26c43e",
+          "state_sha256": "afd8fa77ec31f9494b92ac52a1ae3c0ce4ed8c55ee9ed9bb51dcc41130b4fc97",
+          "repeat_equal": true
+        },
+        "hull_hit": {
+          "file": "1-confederacy-shipyard-hull_hit.png",
+          "sha256": "9dc20617d94cfb305b8401e268dfe8ec7701838551231e00f3dff408361f331c",
+          "state_sha256": "afd8fa77ec31f9494b92ac52a1ae3c0ce4ed8c55ee9ed9bb51dcc41130b4fc97",
+          "repeat_equal": true
+        },
+        "hull_hit-disabled": {
+          "file": "1-confederacy-shipyard-hull_hit-disabled.png",
+          "sha256": "3abeb61d9c7865214a0bd2ecfa56d99a1c5c744f3b5b04faefd42e782d26c43e",
+          "state_sha256": "afd8fa77ec31f9494b92ac52a1ae3c0ce4ed8c55ee9ed9bb51dcc41130b4fc97",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 4826,
+        "accent_changed_pixels_gt3": 4334,
+        "shell_changed_pixels_gt3": 26172,
+        "shield_hit_changed_pixels_gt3": 760,
+        "hull_hit_changed_pixels_gt3": 25
+      },
+      "shield_pools": {
+        "front": 4000.0,
+        "rear": 4000.0,
+        "left": 4000.0,
+        "right": 4000.0
+      }
+    },
+    {
+      "key": "1-syndicate-syndicate_frigate",
+      "binding": "syndicate:frigate",
+      "preview": true,
+      "radius": 53.108512608638,
+      "distance": 350.0,
+      "captures": {
+        "red": {
+          "file": "1-syndicate-syndicate_frigate-red.png",
+          "sha256": "bf6e04c5fac4675c5b2f888347781e03f5b7d03ecafb68ee24c456d8eda06f9a",
+          "state_sha256": "35c4e8a6cbe5da95a37d435f522c75a984b8594338801218a65a5d16ea5ae9bc",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "1-syndicate-syndicate_frigate-blue.png",
+          "sha256": "aa63def55de2a4b851861c983ffeeb94ba24e086b6a07ff9f9a950c0f3779e55",
+          "state_sha256": "56276021f55b16228ee2c6de4ff3b0eb31fe8cb44a2ec483a4a6ac5121a8409b",
+          "repeat_equal": true
+        },
+        "accent-disabled": {
+          "file": "1-syndicate-syndicate_frigate-accent-disabled.png",
+          "sha256": "335932ca0d5b7196ac168a4af66e0c152a0aef281f26b02aa3bd135cc30f2986",
+          "state_sha256": "56276021f55b16228ee2c6de4ff3b0eb31fe8cb44a2ec483a4a6ac5121a8409b",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "1-syndicate-syndicate_frigate-restored.png",
+          "sha256": "aa63def55de2a4b851861c983ffeeb94ba24e086b6a07ff9f9a950c0f3779e55",
+          "state_sha256": "56276021f55b16228ee2c6de4ff3b0eb31fe8cb44a2ec483a4a6ac5121a8409b",
+          "repeat_equal": true
+        },
+        "shell-disabled": {
+          "file": "1-syndicate-syndicate_frigate-shell-disabled.png",
+          "sha256": "7801e119ba97545872c4d86e33691e3c164e4ac48f4450300d0ff2a35e522f10",
+          "state_sha256": "56276021f55b16228ee2c6de4ff3b0eb31fe8cb44a2ec483a4a6ac5121a8409b",
+          "repeat_equal": true
+        },
+        "shield_hit": {
+          "file": "1-syndicate-syndicate_frigate-shield_hit.png",
+          "sha256": "3a5d4a394b83c4b603d9785ccbe3ae06efddef08fa2fbdb7a84fa397eaa3ee89",
+          "state_sha256": "56276021f55b16228ee2c6de4ff3b0eb31fe8cb44a2ec483a4a6ac5121a8409b",
+          "repeat_equal": true
+        },
+        "shield_hit-disabled": {
+          "file": "1-syndicate-syndicate_frigate-shield_hit-disabled.png",
+          "sha256": "aa63def55de2a4b851861c983ffeeb94ba24e086b6a07ff9f9a950c0f3779e55",
+          "state_sha256": "56276021f55b16228ee2c6de4ff3b0eb31fe8cb44a2ec483a4a6ac5121a8409b",
+          "repeat_equal": true
+        },
+        "hull_hit": {
+          "file": "1-syndicate-syndicate_frigate-hull_hit.png",
+          "sha256": "522c10e3034d36a73c2afe35a793bf99288d226ebc3dca15cf63be44630f04dd",
+          "state_sha256": "56276021f55b16228ee2c6de4ff3b0eb31fe8cb44a2ec483a4a6ac5121a8409b",
+          "repeat_equal": true
+        },
+        "hull_hit-disabled": {
+          "file": "1-syndicate-syndicate_frigate-hull_hit-disabled.png",
+          "sha256": "aa63def55de2a4b851861c983ffeeb94ba24e086b6a07ff9f9a950c0f3779e55",
+          "state_sha256": "56276021f55b16228ee2c6de4ff3b0eb31fe8cb44a2ec483a4a6ac5121a8409b",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 9449,
+        "accent_changed_pixels_gt3": 1474,
+        "shell_changed_pixels_gt3": 17120,
+        "shield_hit_changed_pixels_gt3": 866,
+        "hull_hit_changed_pixels_gt3": 83
+      },
+      "shield_pools": {
+        "front": 860.0,
+        "rear": 860.0,
+        "left": 860.0,
+        "right": 860.0
+      }
+    },
+    {
+      "key": "1-syndicate-syndicate_constructor",
+      "binding": "syndicate:constructor",
+      "preview": true,
+      "radius": 40.45676893026816,
+      "distance": 350.0,
+      "captures": {
+        "red": {
+          "file": "1-syndicate-syndicate_constructor-red.png",
+          "sha256": "c4970a0efaf1e4b179a01d85d107c52a793c008b6de1d5413f078a6a54111c2c",
+          "state_sha256": "656b9f6050165abb54e2d4a2445e2ef57913e6116f4473689ae1554dea00abfc",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "1-syndicate-syndicate_constructor-blue.png",
+          "sha256": "a14d4341131845d6a5ef3ec788939d7b21ee90c706b157d5298e1ab334ffc83d",
+          "state_sha256": "b70608f9d39425f3ba5f75fe8da2406c48fd8e0b1bc7e203a27a519655b8e294",
+          "repeat_equal": true
+        },
+        "accent-disabled": {
+          "file": "1-syndicate-syndicate_constructor-accent-disabled.png",
+          "sha256": "b1919ee208b51c0818c1fc69e6e5ce3323e60fd2c70a7f97cdd7021686a9590c",
+          "state_sha256": "b70608f9d39425f3ba5f75fe8da2406c48fd8e0b1bc7e203a27a519655b8e294",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "1-syndicate-syndicate_constructor-restored.png",
+          "sha256": "a14d4341131845d6a5ef3ec788939d7b21ee90c706b157d5298e1ab334ffc83d",
+          "state_sha256": "b70608f9d39425f3ba5f75fe8da2406c48fd8e0b1bc7e203a27a519655b8e294",
+          "repeat_equal": true
+        },
+        "shell-disabled": {
+          "file": "1-syndicate-syndicate_constructor-shell-disabled.png",
+          "sha256": "d4f031b420e3125758da59ec87d749c6cd30c8df983faa19e647b120e53a88af",
+          "state_sha256": "b70608f9d39425f3ba5f75fe8da2406c48fd8e0b1bc7e203a27a519655b8e294",
+          "repeat_equal": true
+        },
+        "shield_hit": {
+          "file": "1-syndicate-syndicate_constructor-shield_hit.png",
+          "sha256": "e73367cd46b40122ee96573d6056c4e5a749b02aa1b28f51d6fd6d3290dc554b",
+          "state_sha256": "b70608f9d39425f3ba5f75fe8da2406c48fd8e0b1bc7e203a27a519655b8e294",
+          "repeat_equal": true
+        },
+        "shield_hit-disabled": {
+          "file": "1-syndicate-syndicate_constructor-shield_hit-disabled.png",
+          "sha256": "a14d4341131845d6a5ef3ec788939d7b21ee90c706b157d5298e1ab334ffc83d",
+          "state_sha256": "b70608f9d39425f3ba5f75fe8da2406c48fd8e0b1bc7e203a27a519655b8e294",
+          "repeat_equal": true
+        },
+        "hull_hit": {
+          "file": "1-syndicate-syndicate_constructor-hull_hit.png",
+          "sha256": "a9dd4ee7880112b65da82b0459dda8c685acb6ad2b8542d3985ef870dade10e4",
+          "state_sha256": "b70608f9d39425f3ba5f75fe8da2406c48fd8e0b1bc7e203a27a519655b8e294",
+          "repeat_equal": true
+        },
+        "hull_hit-disabled": {
+          "file": "1-syndicate-syndicate_constructor-hull_hit-disabled.png",
+          "sha256": "a14d4341131845d6a5ef3ec788939d7b21ee90c706b157d5298e1ab334ffc83d",
+          "state_sha256": "b70608f9d39425f3ba5f75fe8da2406c48fd8e0b1bc7e203a27a519655b8e294",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 5279,
+        "accent_changed_pixels_gt3": 1094,
+        "shell_changed_pixels_gt3": 10606,
+        "shield_hit_changed_pixels_gt3": 541,
+        "hull_hit_changed_pixels_gt3": 34
+      },
+      "shield_pools": {
+        "front": 290.0,
+        "rear": 290.0,
+        "left": 290.0,
+        "right": 290.0
+      }
+    },
+    {
+      "key": "1-syndicate-shipyard",
+      "binding": "syndicate:shipyard",
+      "preview": true,
+      "radius": 153.42772540057575,
+      "distance": 767.1386270028788,
+      "captures": {
+        "red": {
+          "file": "1-syndicate-shipyard-red.png",
+          "sha256": "d942f8c6d70d49fe4eeff3851c9101c03970614a9e40dbff3642063061c29f3c",
+          "state_sha256": "4422ca6d6d932d4d7ba7893da0f862d58de756179db1388371bbf356f0485853",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "1-syndicate-shipyard-blue.png",
+          "sha256": "99e3234b778fb6e31617087ae12e4b2107996ea550cd401a2e5b7550a7e30e1c",
+          "state_sha256": "a3ee27d6b1b35c6a9c9479a1217ef7185939cd5736553111a86b1d2230e6747e",
+          "repeat_equal": true
+        },
+        "accent-disabled": {
+          "file": "1-syndicate-shipyard-accent-disabled.png",
+          "sha256": "d81db83a3e8c2f00fab3218ce3084da8ee3488fe8339519a6a01730004a7ebef",
+          "state_sha256": "a3ee27d6b1b35c6a9c9479a1217ef7185939cd5736553111a86b1d2230e6747e",
+          "repeat_equal": true
+        },
+        "restored": {
+          "file": "1-syndicate-shipyard-restored.png",
+          "sha256": "99e3234b778fb6e31617087ae12e4b2107996ea550cd401a2e5b7550a7e30e1c",
+          "state_sha256": "a3ee27d6b1b35c6a9c9479a1217ef7185939cd5736553111a86b1d2230e6747e",
+          "repeat_equal": true
+        },
+        "shell-disabled": {
+          "file": "1-syndicate-shipyard-shell-disabled.png",
+          "sha256": "bbcf421d9bdb813760b4667c0d4584674ab4221bc770198b3b8c0146bbfe6919",
+          "state_sha256": "a3ee27d6b1b35c6a9c9479a1217ef7185939cd5736553111a86b1d2230e6747e",
+          "repeat_equal": true
+        },
+        "shield_hit": {
+          "file": "1-syndicate-shipyard-shield_hit.png",
+          "sha256": "0124a8701bfeab1e0d4d5f77af0e3a0dfeaedf2ed135102dc4a1f9159456cd19",
+          "state_sha256": "a3ee27d6b1b35c6a9c9479a1217ef7185939cd5736553111a86b1d2230e6747e",
+          "repeat_equal": true
+        },
+        "shield_hit-disabled": {
+          "file": "1-syndicate-shipyard-shield_hit-disabled.png",
+          "sha256": "99e3234b778fb6e31617087ae12e4b2107996ea550cd401a2e5b7550a7e30e1c",
+          "state_sha256": "a3ee27d6b1b35c6a9c9479a1217ef7185939cd5736553111a86b1d2230e6747e",
+          "repeat_equal": true
+        },
+        "hull_hit": {
+          "file": "1-syndicate-shipyard-hull_hit.png",
+          "sha256": "1c06d32a6f4498853ea3dd41ed418f9a4e6d47d915379868b28aade4b5eeb81f",
+          "state_sha256": "a3ee27d6b1b35c6a9c9479a1217ef7185939cd5736553111a86b1d2230e6747e",
+          "repeat_equal": true
+        },
+        "hull_hit-disabled": {
+          "file": "1-syndicate-shipyard-hull_hit-disabled.png",
+          "sha256": "99e3234b778fb6e31617087ae12e4b2107996ea550cd401a2e5b7550a7e30e1c",
+          "state_sha256": "a3ee27d6b1b35c6a9c9479a1217ef7185939cd5736553111a86b1d2230e6747e",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 7044,
+        "accent_changed_pixels_gt3": 3796,
+        "shell_changed_pixels_gt3": 26173,
+        "shield_hit_changed_pixels_gt3": 847,
+        "hull_hit_changed_pixels_gt3": 25
+      },
+      "shield_pools": {
+        "front": 4000.0,
+        "rear": 4000.0,
+        "left": 4000.0,
+        "right": 4000.0
+      }
+    }
+  ],
+  "gl": {
+    "vendor": "Apple",
+    "renderer": "Apple M4",
+    "version": "2.1 Metal - 90.5"
+  },
+  "msaa": 4,
+  "protected_changed": [],
+  "shipped_movie_unchanged": true
+}

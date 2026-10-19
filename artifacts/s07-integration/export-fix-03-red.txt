@@ -1,0 +1,48 @@
+test_wrapper_rejects_source_edits_without_publishing_or_provenance (test_s07_pipeline_execution.PipelineExecutionTest.test_wrapper_rejects_source_edits_without_publishing_or_provenance) ... 
+  test_wrapper_rejects_source_edits_without_publishing_or_provenance (test_s07_pipeline_execution.PipelineExecutionTest.test_wrapper_rejects_source_edits_without_publishing_or_provenance) (authority='script', failure='local-edit') ... FAIL
+  test_wrapper_rejects_source_edits_without_publishing_or_provenance (test_s07_pipeline_execution.PipelineExecutionTest.test_wrapper_rejects_source_edits_without_publishing_or_provenance) (authority='script', failure='wrapper-edit') ... FAIL
+  test_wrapper_rejects_source_edits_without_publishing_or_provenance (test_s07_pipeline_execution.PipelineExecutionTest.test_wrapper_rejects_source_edits_without_publishing_or_provenance) (authority='blend', failure='local-edit') ... FAIL
+  test_wrapper_rejects_source_edits_without_publishing_or_provenance (test_s07_pipeline_execution.PipelineExecutionTest.test_wrapper_rejects_source_edits_without_publishing_or_provenance) (authority='blend', failure='wrapper-edit') ... FAIL
+
+======================================================================
+FAIL: test_wrapper_rejects_source_edits_without_publishing_or_provenance (test_s07_pipeline_execution.PipelineExecutionTest.test_wrapper_rejects_source_edits_without_publishing_or_provenance) (authority='script', failure='local-edit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_pipeline_execution.py", line 123, in test_wrapper_rejects_source_edits_without_publishing_or_provenance
+    self.assertEqual(caught.exception.code, "E_SOURCE_DRIFT")
+AssertionError: 'E_BUILD_FAILED' != 'E_SOURCE_DRIFT'
+- E_BUILD_FAILED
++ E_SOURCE_DRIFT
+
+
+======================================================================
+FAIL: test_wrapper_rejects_source_edits_without_publishing_or_provenance (test_s07_pipeline_execution.PipelineExecutionTest.test_wrapper_rejects_source_edits_without_publishing_or_provenance) (authority='script', failure='wrapper-edit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_pipeline_execution.py", line 121, in test_wrapper_rejects_source_edits_without_publishing_or_provenance
+    with self.assertRaises(pipeline.PipelineError) as caught:
+AssertionError: PipelineError not raised
+
+======================================================================
+FAIL: test_wrapper_rejects_source_edits_without_publishing_or_provenance (test_s07_pipeline_execution.PipelineExecutionTest.test_wrapper_rejects_source_edits_without_publishing_or_provenance) (authority='blend', failure='local-edit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_pipeline_execution.py", line 123, in test_wrapper_rejects_source_edits_without_publishing_or_provenance
+    self.assertEqual(caught.exception.code, "E_SOURCE_DRIFT")
+AssertionError: 'E_BUILD_FAILED' != 'E_SOURCE_DRIFT'
+- E_BUILD_FAILED
++ E_SOURCE_DRIFT
+
+
+======================================================================
+FAIL: test_wrapper_rejects_source_edits_without_publishing_or_provenance (test_s07_pipeline_execution.PipelineExecutionTest.test_wrapper_rejects_source_edits_without_publishing_or_provenance) (authority='blend', failure='wrapper-edit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_pipeline_execution.py", line 121, in test_wrapper_rejects_source_edits_without_publishing_or_provenance
+    with self.assertRaises(pipeline.PipelineError) as caught:
+AssertionError: PipelineError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.116s
+
+FAILED (failures=4)

@@ -1,0 +1,13 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-c",
+    "import time; time.sleep(30)"
+  ],
+  "pid": 84120,
+  "exit_code": -9,
+  "timed_out": true,
+  "deadline_seconds": 0.25,
+  "elapsed_seconds": 0.256,
+  "log": "artifacts/s07-runtime-final/parity-watchdog-control.log"
+}

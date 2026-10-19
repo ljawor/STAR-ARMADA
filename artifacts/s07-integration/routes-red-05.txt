@@ -1,0 +1,20 @@
+test_all_historical_identities_have_deterministic_current_routes (test_s07_binding_routes.BindingRouteAuditTests.test_all_historical_identities_have_deterministic_current_routes) ... ok
+test_cli_is_read_only_and_runs_without_pythonpath (test_s07_binding_routes.BindingRouteAuditTests.test_cli_is_read_only_and_runs_without_pythonpath) ... ok
+test_live_data_role_overrides_historical_identity_and_shape (test_s07_binding_routes.BindingRouteAuditTests.test_live_data_role_overrides_historical_identity_and_shape) ... ok
+test_real_configured_resolver_routes_convoy_aliases_and_imperial_station (test_s07_binding_routes.BindingRouteAuditTests.test_real_configured_resolver_routes_convoy_aliases_and_imperial_station)
+Synthetic pack validates seam behavior, NOT candidate revision/appearance acceptance. ... ok
+test_selected_revision_must_match_approved_runtime_bytes (test_s07_binding_routes.BindingRouteAuditTests.test_selected_revision_must_match_approved_runtime_bytes) ... FAIL
+test_selection_is_separate_from_actual_geometry_dispatch (test_s07_binding_routes.BindingRouteAuditTests.test_selection_is_separate_from_actual_geometry_dispatch) ... ok
+
+======================================================================
+FAIL: test_selected_revision_must_match_approved_runtime_bytes (test_s07_binding_routes.BindingRouteAuditTests.test_selected_revision_must_match_approved_runtime_bytes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_binding_routes.py", line 158, in test_selected_revision_must_match_approved_runtime_bytes
+    self.assertIn('rebel:frigate: selected mesh differs from approved revision', report['errors'])
+AssertionError: 'rebel:frigate: selected mesh differs from approved revision' not found in []
+
+----------------------------------------------------------------------
+Ran 6 tests in 2.612s
+
+FAILED (failures=1)

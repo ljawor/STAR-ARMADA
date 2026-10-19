@@ -670,6 +670,54 @@ class Renderer:
             glPopMatrix()
             GL.glPopAttrib()
 
+    def _draw_authored_construction_scaffold(self, pos, radius, fraction, color):
+        """Draw only a selected scaffold; otherwise retain the exact legacy lattice.
+
+        Nominal source height and radius are 50. Progress changes only visual height,
+        never collision, build costs, timers, or any serialized state.
+        """
+        from render.asset_selection import mesh_for
+        mesh = mesh_for('shared:construction_scaffold')
+        if mesh is None:
+            return False
+        from OpenGL import GL
+        groups = (GL.GL_ENABLE_BIT | GL.GL_CURRENT_BIT | GL.GL_LIGHTING_BIT |
+                  GL.GL_DEPTH_BUFFER_BIT | GL.GL_POLYGON_BIT | GL.GL_TEXTURE_BIT)
+        GL.glPushAttrib(groups)
+        glPushMatrix()
+        try:
+            GL.glEnable(GL.GL_DEPTH_TEST)
+            GL.glEnable(GL.GL_LIGHTING)
+            GL.glDisable(GL.GL_TEXTURE_2D)
+            GL.glDepthMask(True)
+            glTranslatef(pos[0], 0., pos[2])
+            scale = radius / 50.
+            height = .4 + .6 * max(0., min(1., fraction))
+            glScalef(scale, scale * height, scale)
+            self._material_metal(8.0, (0.50, 0.55, 0.62))
+            with self.materials.use('hull', materialPass=0.0, authoredSurface=1.0):
+                for role, material_pass, tint in (
+                        ('base', 0.0, color),
+                        ('dark', 1.0, (0.20, 0.24, 0.30)),
+                        ('trim', 2.0, (0.68, 0.76, 0.84))):
+                    self.materials.hull_pass(material_pass, True)
+                    if not self.materials.available and role == 'base':
+                        tint = tuple(.42 + .18*c for c in color)
+                    glColor3f(*tint)
+                    self._emit_detail_mesh(mesh[role])
+            glDisable(GL_TEXTURE_2D)
+            glColor3f(*color)
+            self._emit_detail_mesh(mesh['accent'])
+            self._material_matte()
+            glDisable(GL_LIGHTING)
+            for role, tint in (('lit', (1., .80, .52)), ('cool', (.38, .82, 1.))):
+                glColor3f(*tint)
+                self._emit_detail_mesh(mesh[role])
+        finally:
+            glPopMatrix()
+            GL.glPopAttrib()
+        return True
+
     def _draw_construction_sites(self):
         """Wireframe scaffold + progress ring at each queued station site.
 
@@ -700,38 +748,41 @@ class Renderer:
             color = self._owner_color(e.owner)
             from render.faction_visuals import owner_faction
             faction = owner_faction(st, e.owner)
-            if faction != 'imperial':
-                self._draw_station_outline(item['item'], faction, pos, r, color)
+            from render.faction_visuals import normalize_station_key
+            faction, station_id = normalize_station_key(item['item'], faction)
+            if faction != 'imperial' or is_authored(f'{faction}:{station_id}'):
+                self._draw_station_outline(station_id, faction, pos, r, color)
             import OpenGL.GL as GL
             GL.glPushAttrib(GL.GL_ENABLE_BIT | GL.GL_LIGHTING_BIT |
                             GL.GL_CURRENT_BIT | GL.GL_DEPTH_BUFFER_BIT)
             GL.glDisable(GL.GL_LIGHTING)
             glDisable(GL_DEPTH_TEST)
             glLineWidth(2.0)
-            # scaffold ring on the ground plane
-            glColor4f(color[0], color[1], color[2], 0.85)
-            glBegin(GL_LINE_LOOP)
-            for i in range(24):
-                a = i / 24 * 2 * math.pi
-                glVertex3f(pos[0] + math.sin(a) * r, 0,
-                           pos[2] + math.cos(a) * r)
-            glEnd()
-            # lattice: 8 vertical posts + height ring (grows with progress)
-            glBegin(GL_LINES)
-            for i in range(8):
-                a = i / 8 * 2 * math.pi
-                sa, ca = math.sin(a) * r * 0.85, math.cos(a) * r * 0.85
-                glVertex3f(pos[0] + sa, 0, pos[2] + ca)
-                glVertex3f(pos[0] + sa, r * (0.4 + 0.6 * frac),
-                           pos[2] + ca)
-            glEnd()
-            h = r * (0.4 + 0.6 * frac)
-            glBegin(GL_LINE_LOOP)
-            for i in range(24):
-                a = i / 24 * 2 * math.pi
-                glVertex3f(pos[0] + math.sin(a) * r * 0.85, h,
-                           pos[2] + math.cos(a) * r * 0.85)
-            glEnd()
+            if not self._draw_authored_construction_scaffold(pos, r, frac, color):
+                # scaffold ring on the ground plane
+                glColor4f(color[0], color[1], color[2], 0.85)
+                glBegin(GL_LINE_LOOP)
+                for i in range(24):
+                    a = i / 24 * 2 * math.pi
+                    glVertex3f(pos[0] + math.sin(a) * r, 0,
+                               pos[2] + math.cos(a) * r)
+                glEnd()
+                # lattice: 8 vertical posts + height ring (grows with progress)
+                glBegin(GL_LINES)
+                for i in range(8):
+                    a = i / 8 * 2 * math.pi
+                    sa, ca = math.sin(a) * r * 0.85, math.cos(a) * r * 0.85
+                    glVertex3f(pos[0] + sa, 0, pos[2] + ca)
+                    glVertex3f(pos[0] + sa, r * (0.4 + 0.6 * frac),
+                               pos[2] + ca)
+                glEnd()
+                h = r * (0.4 + 0.6 * frac)
+                glBegin(GL_LINE_LOOP)
+                for i in range(24):
+                    a = i / 24 * 2 * math.pi
+                    glVertex3f(pos[0] + math.sin(a) * r * 0.85, h,
+                               pos[2] + math.cos(a) * r * 0.85)
+                glEnd()
             # green progress arc
             glColor3f(0.4, 1.0, 0.5)
             glLineWidth(3.0)
@@ -1366,17 +1417,35 @@ class Renderer:
             for e in stations:
                 self._draw_station_queue_ring(e)
         else:
-            for e in st.entities.values():
-                if not e.alive or not st.can_see(self.local_player, e.id):
-                    continue
-                if e.is_planet or e.jump_travelling:
-                    # in hyperspace: no fixed-function hull either (#92)
-                    continue
+            visible = [e for e in st.entities.values()
+                       if e.alive and st.can_see(self.local_player, e.id)
+                       and not e.is_planet and not e.jump_travelling]
+            ships = [e for e in visible
+                     if (e.is_ship and "ships" not in self.skip) or
+                        (e.is_squadron and "squadrons" not in self.skip)]
+            # Opt-in moving scenes use the cached motion ordering, including
+            # mixed legacy hulls: all trails, independent per-entity hulls,
+            # then all glows. No role batching/suppression is borrowed here.
+            # Legacy-only and motionless scenes retain per-entity submission.
+            phased_motion = any(
+                ":" in self._ship_size(e).shape and
+                is_authored(self._ship_size(e).shape) for e in ships
+            ) and any(e.vel.length() > 2 for e in ships)
+            if phased_motion:
+                for e in ships:
+                    self._draw_ship_trail(e)
+            for e in visible:
                 if (e.is_ship and "ships" not in self.skip) or \
                         (e.is_squadron and "squadrons" not in self.skip):
-                    self._draw_ship(e)
+                    if phased_motion:
+                        self._draw_ship(e, draw_motion=False)
+                    else:
+                        self._draw_ship(e)
                 elif e.is_station and "stations" not in self.skip:
                     self._draw_station(e)
+            if phased_motion:
+                for e in ships:
+                    self._draw_ship_glow(e)
         if self.materials.available:
             _gl.glUseProgram(0)
         GL.glPopAttrib()
@@ -1431,9 +1500,9 @@ class Renderer:
         """Draw one material role for all visible ships/squadrons and stations.
 
         Uses the cached transform matrices per entity; color is computed from
-        the cached owner color and relation.  Ships below the configured LOD
-        thresholds skip detail roles to save per-entity GL work without changing
-        the silhouette or owner color.
+        the cached owner color and relation. Legacy ships retain configured LOD
+        role suppression. Authored ships submit every role at every size, as
+        the uncached path does, preserving their approved surface detail.
         """
         rel_cache = cache["relation"]
         col_cache = cache["owner_color"]
@@ -1456,13 +1525,13 @@ class Renderer:
             if entry is None:
                 continue
             apparent = entry["apparent"]
-            # LOD: skip detail and emissive roles for very small/on-screen ships.
-            if apparent < LOD_BASE_ONLY and role != "base":
-                continue
-            if apparent < LOD_DETAIL and role in ("dark", "trim", "accent", "cool"):
-                continue
             size = entry["size"]
             authored = is_authored(size.shape) if ":" in size.shape else False
+            # Only procedural legacy hulls suppress roles at small screen sizes.
+            if not authored and apparent < LOD_BASE_ONLY and role != "base":
+                continue
+            if not authored and apparent < LOD_DETAIL and role in ("dark", "trim", "accent", "cool"):
+                continue
             if material_pass is not None:
                 self.materials.hull_pass(material_pass, authored)
             color = col_cache.get(e.owner, (0.6, 0.6, 0.6))
@@ -1893,7 +1962,7 @@ class Renderer:
         from render.faction_visuals import owner_faction, normalize_station_key
         faction, data_id = normalize_station_key(e.data_id,
                             owner_faction(getattr(self, 'state', None), e.owner))
-        if faction == 'imperial':
+        if faction == 'imperial' and not is_authored(f'{faction}:{data_id}'):
             return e.radius
         from render.camera_geometry import station_radius
         return station_radius(data_id, faction) * (e.radius / 50.)
@@ -1938,9 +2007,9 @@ class Renderer:
                 return dict(fx, center=center, pos=point,
                             radius=math.dist(center, point), visual_contact=True)
             from render.faction_visuals import owner_faction, normalize_station_key
-            faction, _ = normalize_station_key(e.data_id, owner_faction(self.state, e.owner))
-            if faction == "imperial":
-                return fx  # protected legacy station effect path
+            faction, data_id = normalize_station_key(e.data_id, owner_faction(self.state, e.owner))
+            if faction == "imperial" and not is_authored(f"{faction}:{data_id}"):
+                return fx  # protected unselected legacy station effect path
             from render.ship_sizes import station_contact_offset
             n = tuple(fx.get("normal", (0., 0., 1.)))
             length = math.sqrt(sum(x*x for x in n)) or 1.
@@ -1985,7 +2054,7 @@ class Renderer:
                     size=min(float(fx.get('size', 5.)), size.length*.12),
                     visual_contact=True)
 
-    def _draw_ship(self, e: Entity):
+    def _draw_ship(self, e: Entity, draw_motion=True):
         ds = self.ds
         # NOTE: deliberately NO bail-out when there is no ShipData entry.
         # ``trade_convoy`` is minted by TradingSystem with no ShipData by
@@ -2008,7 +2077,7 @@ class Renderer:
         tail_offset = size.stern - trail_length
         tail = Vec3(e.pos.x + tail_offset * math.sin(e.yaw), e.pos.y,
                     e.pos.z + tail_offset * math.cos(e.yaw))
-        if spd > 2 and segment_visible(self.state, self.local_player, e.pos, tail):
+        if draw_motion and spd > 2 and segment_visible(self.state, self.local_player, e.pos, tail):
             glEnable(GL_BLEND)
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
             glDepthMask(False)
@@ -2052,6 +2121,9 @@ class Renderer:
             glColor3f(*trimc)
             glCallList(trim_lst)
         glDisable(GL_TEXTURE_2D)
+        if authored:
+            # Match the cached authored accent material without changing legacy.
+            self._material_matte()
         glColor3f(*(self._owner_color(e.owner) if authored else
                     tuple(min(1.0, c * 1.15 + .14) for c in color)))
         glCallList(self._ship_display_list(vis["shape"] + "_accent"))
@@ -2070,7 +2142,7 @@ class Renderer:
         GL.glEnable(GL.GL_LIGHTING)
         glPopMatrix()
         # engine glow: additive billboard at the ship's tail (world space)
-        if spd > 8:
+        if draw_motion and spd > 8:
             L = -size.stern
             rear = (e.pos.x - L * math.sin(e.yaw),
                     e.pos.y,
@@ -2469,6 +2541,10 @@ class Renderer:
                     ("base", 0.0, color),
                     ("dark", 1.0, (0.20, 0.24, 0.30)),
                     ("trim", 2.0, (0.68, 0.76, 0.84))):
+                if authored_station:
+                    # Match the cached role material; preserve legacy alloy.
+                    self._material_metal(12.0 if role == "trim" else 8.0,
+                                         (0.85, 0.85, 0.85) if role == "trim" else (0.42, 0.42, 0.42))
                 self.materials.hull_pass(material_pass, authored_station)
                 if not self.materials.available and role == "base":
                     tint = tuple(.42 + .18*c for c in color)
@@ -2477,6 +2553,8 @@ class Renderer:
         # Dedicated broad painted armor, not an overall owner tint. Draw outside
         # the alloy shader so faction saturation survives on the actual plates.
         glDisable(GL_TEXTURE_2D)
+        if authored_station:
+            self._material_matte()
         glColor3f(*(color if authored_station else
                     tuple(min(1.0, c*1.15+.14) for c in color)))
         glCallList(self._station_detail_list(e.data_id, "accent", faction))
@@ -3512,8 +3590,8 @@ class Renderer:
         r = e.radius * 1.35
         if e.is_station:
             from render.faction_visuals import owner_faction, normalize_station_key
-            faction, _ = normalize_station_key(e.data_id, owner_faction(getattr(self, "state", None), e.owner))
-            if faction != "imperial":
+            faction, data_id = normalize_station_key(e.data_id, owner_faction(getattr(self, "state", None), e.owner))
+            if faction != "imperial" or is_authored(f"{faction}:{data_id}"):
                 r = self._station_visual_radius(e) * 1.08
         ppw = self._px_per_world((e.pos.x, e.pos.y, e.pos.z))
         if ppw > 0.0:

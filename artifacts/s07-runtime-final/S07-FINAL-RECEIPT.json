@@ -1,0 +1,1306 @@
+{
+  "schema": 1,
+  "candidate_commit": "56906ea7c73c219fbdc91c68176104b23d0f7712",
+  "candidate_state": "published HEAD plus an uncommitted working-tree increment; the renderer bytes this receipt is bound to are the working-tree bytes, hashed above",
+  "renderer_sha256": "9aff34140aa3d458eec358a2d87e64d4d4277c924ca198d507e4d29983350f3c",
+  "scope": "S07 opt-in catalogue closure: motion/ownership repair of four renderer methods, the pin record, native runtime evidence at the final bytes, the candidate movie, one independent review, and the owner decision accepting the only player-facing consequence",
+  "authority_decision_ids": [
+    "s07-opt-in-continuation-2026-10-18",
+    "s07-scaffold-registration-2026-10-19",
+    "s07-authored-lod-cost-2026-10-19",
+    "s07-s06-coverage-exception-2026-10-19"
+  ],
+  "s06_coverage": {
+    "decision_id": "s07-s06-coverage-exception-2026-10-19",
+    "classification": "explicit_exception",
+    "registered_and_approved": 103,
+    "excepted": 16,
+    "by_class": {
+      "authoring_pending": 12,
+      "keep_procedural_proposed": 4
+    },
+    "approval_decision_ids": [
+      "s06-b1-alliance-combat-2026-10-17",
+      "s06-b2-squadron-logistics-2026-10-17",
+      "s06-b3a-command-stations-2026-10-17",
+      "s06-b3b-stations-2026-10-17",
+      "s06-b3c-stations-2026-10-17",
+      "s06-b4-hardware-2026-10-17",
+      "s06-b5-environment-2026-10-17",
+      "s06-b6-imperial-ships-2026-10-18",
+      "s06-b7-imperial-stations-2026-10-18",
+      "s06-b8-remaining-combat-2026-10-18",
+      "s06-b9-construction-2026-10-18",
+      "s06-battleship-hull-detail-2026-10-16",
+      "s06-cruiser-review-2026-10-17",
+      "s07-frigate-shipyard-hull-detail-2026-10-16",
+      "s07-scaffold-appearance-2026-10-18"
+    ],
+    "owner_wording": "OK let's do it : 1st a) than b) than merging rest.",
+    "wording_source": "implementer draft under that authorization; the enumerated rows are machine-derived from the registry, and this text is not attributed to the owner",
+    "not_approved_by_this_record": [
+      "any appearance, model revision or approval for the excepted bindings",
+      "a default switch: the shipped default stays legacy",
+      "merge, release or packaging authorization, which remain separate owner gates"
+    ]
+  },
+  "candidate_binding_count": 103,
+  "candidate_bindings": [
+    {
+      "binding": "rebel:battleship",
+      "runtime": "assets/models/alliance_battleship.mesh.json",
+      "mesh_sha256": "0a4e397d5c0b60f70fbba35f3e4f4a5ac997ac4de079f821f8f29db9872c95cd",
+      "revision_binding": "s06-battleship-hull-detail-2026-10-16"
+    },
+    {
+      "binding": "rebel:frigate",
+      "runtime": "assets/models/alliance_frigate.mesh.json",
+      "mesh_sha256": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+      "revision_binding": "s07-frigate-shipyard-hull-detail-2026-10-16"
+    },
+    {
+      "binding": "rebel:shipyard",
+      "runtime": "assets/models/alliance_shipyard.mesh.json",
+      "mesh_sha256": "b0ee2678ab42b9005e7ab9007eb6cb1464e878d9896a0104dd9ebad2142e3468",
+      "revision_binding": "s07-frigate-shipyard-hull-detail-2026-10-16"
+    },
+    {
+      "binding": "confederacy:attack_satellite",
+      "runtime": "assets/models/legion_attack_satellite.mesh.json",
+      "mesh_sha256": "da4ad21c5c1a363054050169988d1ce0eab82d1c9fb31a5d1318c5f69eebaf64",
+      "revision_binding": "s06-b4-hardware-2026-10-17"
+    },
+    {
+      "binding": "confederacy:battleship",
+      "runtime": "assets/models/confed_battleship.mesh.json",
+      "mesh_sha256": "0b04ca0ea42c2ea2fd670cfdbe0d4c0a047cbf65071101ba7d6927bf172df363",
+      "revision_binding": "s06-b8-remaining-combat-2026-10-18"
+    },
+    {
+      "binding": "confederacy:bomber",
+      "runtime": "assets/models/legion_hyena.mesh.json",
+      "mesh_sha256": "63d2544abdbebf9089c0fb48e34666f610d2876d8b8a8569892d588b263bb18d",
+      "revision_binding": "s06-b2-squadron-logistics-2026-10-17"
+    },
+    {
+      "binding": "confederacy:colonizer",
+      "runtime": "assets/models/confed_colonizer.mesh.json",
+      "mesh_sha256": "7c8a7b31847896526b67d9daa7fe4ea866ff03f8c4da3acd31fe9401ef0fd08d",
+      "revision_binding": "s06-b9-construction-2026-10-18"
+    },
+    {
+      "binding": "confederacy:command_station",
+      "runtime": "assets/models/legion_command_station.mesh.json",
+      "mesh_sha256": "a9f6bdb8259217f1649ee47b44809cef79ac4c3369c680325f8e5c874a0cd0d8",
+      "revision_binding": "s06-b3a-command-stations-2026-10-17"
+    },
+    {
+      "binding": "confederacy:constructor",
+      "runtime": "assets/models/confed_constructor.mesh.json",
+      "mesh_sha256": "cce3fd0e2a02b4e745efeec9ff6873869b17fec65f6aa0f9f08238226a40b14c",
+      "revision_binding": "s06-b9-construction-2026-10-18"
+    },
+    {
+      "binding": "confederacy:convoy",
+      "runtime": "assets/models/legion_convoy.mesh.json",
+      "mesh_sha256": "78f864ab6a742b10596c3af75430744a31d5a77dfc5c7af3851dff7804c13041",
+      "revision_binding": "s06-b2-squadron-logistics-2026-10-17"
+    },
+    {
+      "binding": "confederacy:corvette",
+      "runtime": "assets/models/confed_corvette.mesh.json",
+      "mesh_sha256": "921f8dd4afd759ea0d39c21c3bd3c4e6f7e1c3f8eaee18240371d9a96f101958",
+      "revision_binding": "s06-b8-remaining-combat-2026-10-18"
+    },
+    {
+      "binding": "confederacy:cruiser",
+      "runtime": "assets/models/confed_cruiser.mesh.json",
+      "mesh_sha256": "2866559ed742dd4f2f5a22937baa8021b8c0154a105cd4903c273d972ab00814",
+      "revision_binding": "s06-b8-remaining-combat-2026-10-18"
+    },
+    {
+      "binding": "confederacy:defense_platform",
+      "runtime": "assets/models/legion_defense_platform.mesh.json",
+      "mesh_sha256": "637ca1293919ca6bf7667f5e1f60ad052b16d1adf08085196f8ec3adb4f4d983",
+      "revision_binding": "s06-b3c-stations-2026-10-17"
+    },
+    {
+      "binding": "confederacy:defense_satellite",
+      "runtime": "assets/models/legion_defense_satellite.mesh.json",
+      "mesh_sha256": "8db782a326362e4e15d52090bd1dcd8039b96df4b2127d3c1bfd87ccb2b6ac9d",
+      "revision_binding": "s06-b4-hardware-2026-10-17"
+    },
+    {
+      "binding": "confederacy:energy_relay",
+      "runtime": "assets/models/legion_energy_relay.mesh.json",
+      "mesh_sha256": "8c260a988a6e0f66bb7a659832f8c289dcd797a82c4eab1f25725131086de7e0",
+      "revision_binding": "s06-b3b-stations-2026-10-17"
+    },
+    {
+      "binding": "confederacy:fighter",
+      "runtime": "assets/models/legion_vulture.mesh.json",
+      "mesh_sha256": "c17733f45e1669a3c664726f2e72f18a1d3e1c1e09e18455e22abc7fb83c47dd",
+      "revision_binding": "s06-b2-squadron-logistics-2026-10-17"
+    },
+    {
+      "binding": "confederacy:fighter_platform",
+      "runtime": "assets/models/legion_fighter_platform.mesh.json",
+      "mesh_sha256": "b88dd8ee806fc3b8167cd93252a64b87683430fc19cb0f3a177423ef46a32f9c",
+      "revision_binding": "s06-b3c-stations-2026-10-17"
+    },
+    {
+      "binding": "confederacy:frigate",
+      "runtime": "assets/models/confed_frigate.mesh.json",
+      "mesh_sha256": "96fd45471049b92aede194cf851e801e022579ee1a84c61daf3cbe088c8ed268",
+      "revision_binding": "s06-b8-remaining-combat-2026-10-18"
+    },
+    {
+      "binding": "confederacy:mining_station",
+      "runtime": "assets/models/legion_mining_station.mesh.json",
+      "mesh_sha256": "32bb2c2b72ac9dacee83ae841d3e5ecf6b0e7c4246ee4e99f0548b28d9695d8f",
+      "revision_binding": "s06-b3b-stations-2026-10-17"
+    },
+    {
+      "binding": "confederacy:planet_extractor",
+      "runtime": "assets/models/legion_planet_extractor.mesh.json",
+      "mesh_sha256": "21ac55b4336a9a34b9cc6bdea34e2d9e989dd027e236f7b9eca730f0b382a039",
+      "revision_binding": "s06-b4-hardware-2026-10-17"
+    },
+    {
+      "binding": "confederacy:planet_pulsar_cannon",
+      "runtime": "assets/models/legion_planet_pulsar_cannon.mesh.json",
+      "mesh_sha256": "bd26fd608964a45f2ec3afd1bc7a66617d218cf6a69ef4fc0013331427ea8393",
+      "revision_binding": "s06-b4-hardware-2026-10-17"
+    },
+    {
+      "binding": "confederacy:planet_shield_generator",
+      "runtime": "assets/models/legion_planet_shield_generator.mesh.json",
+      "mesh_sha256": "7d8d1676d83461298d8efa08be75faa494452a71196952d6943377dedb4f1873",
+      "revision_binding": "s06-b4-hardware-2026-10-17"
+    },
+    {
+      "binding": "confederacy:planet_trade_hub",
+      "runtime": "assets/models/legion_planet_trade_hub.mesh.json",
+      "mesh_sha256": "b3bbb4ccfd292d695e73134d4bda12e1e83e25fc1ac93aade8ff96cc0bf0ea39",
+      "revision_binding": "s06-b4-hardware-2026-10-17"
+    },
+    {
+      "binding": "confederacy:repair_dock",
+      "runtime": "assets/models/legion_repair_dock.mesh.json",
+      "mesh_sha256": "3c865b62f82ce4b5d8053d022a481d992f96b69852d335fed6cc0cbde4079d76",
+      "revision_binding": "s06-b3c-stations-2026-10-17"
+    },
+    {
+      "binding": "confederacy:research_station",
+      "runtime": "assets/models/legion_research_station.mesh.json",
+      "mesh_sha256": "01485bb472f239ab70779b1f1a5dabb381c18347b8b9d2350a3cb2e045b7fd72",
+      "revision_binding": "s06-b3c-stations-2026-10-17"
+    },
+    {
+      "binding": "confederacy:sensor_station",
+      "runtime": "assets/models/legion_sensor_station.mesh.json",
+      "mesh_sha256": "27d3b5803c10a386b8ed74f8574acb0f8d0a6eb5f7509ad4bd2726ac33163755",
+      "revision_binding": "s06-b3b-stations-2026-10-17"
+    },
+    {
+      "binding": "confederacy:shipyard",
+      "runtime": "assets/models/legion_shipyard.mesh.json",
+      "mesh_sha256": "748c48aa54266073f5b0773f3ef0748b2cf049cd51523d65f66083163d794f01",
+      "revision_binding": "s06-b3c-stations-2026-10-17"
+    },
+    {
+      "binding": "confederacy:supercapital",
+      "runtime": "assets/models/confed_supercapital.mesh.json",
+      "mesh_sha256": "f33b0f79430130cf5d1c8524f618f2ce5c541a5571edf28e6a4d84284c357c4f",
+      "revision_binding": "s06-b8-remaining-combat-2026-10-18"
+    },
+    {
+      "binding": "confederacy:trade_station",
+      "runtime": "assets/models/legion_trade_station.mesh.json",
+      "mesh_sha256": "567416bb0c267c8896eccdaf3210e9e347fc60ab0e92f80b9227a66e7ee82d49",
+      "revision_binding": "s06-b3c-stations-2026-10-17"
+    },
+    {
+      "binding": "environment:asteroid_field",
+      "runtime": "assets/models/shared_asteroid_field.mesh.json",
+      "mesh_sha256": "ad2b65483c330fecad28059fce9c489bc0bce2c050ebe38aa526e21f25c88ae7",
+      "revision_binding": "s06-b5-environment-2026-10-17"
+    },
+    {
+      "binding": "imperial:attack_satellite",
+      "runtime": "assets/models/imperial_attack_satellite.mesh.json",
+      "mesh_sha256": "5f12f2debb3f9cabf6e5f9f22890dbe78ef7ba436697d26591fa9e21fc05a7a1",
+      "revision_binding": "s06-b4-hardware-2026-10-17"
+    },
+    {
+      "binding": "imperial:battleship",
+      "runtime": "assets/models/imperial_battleship.mesh.json",
+      "mesh_sha256": "3c69c3db9d0f55aba714d1af4bafbebc7493afb5da3a80d7bd59fccc7be8ac79",
+      "revision_binding": "s06-b6-imperial-ships-2026-10-18"
+    },
+    {
+      "binding": "imperial:bomber",
+      "runtime": "assets/models/imperial_tie_bomber_squadron.mesh.json",
+      "mesh_sha256": "b0d03f0d0045e79653098a4a7d3c3e8769b0b1fc14d47c577195c635a862c826",
+      "revision_binding": "s06-b6-imperial-ships-2026-10-18"
+    },
+    {
+      "binding": "imperial:colonizer",
+      "runtime": "assets/models/imperial_colonizer.mesh.json",
+      "mesh_sha256": "a1076d24d95137ec3c086e46cd32d2555e1c374284994a250938fb7d790f8dae",
+      "revision_binding": "s06-b9-construction-2026-10-18"
+    },
+    {
+      "binding": "imperial:command_station",
+      "runtime": "assets/models/imperial_command_station.mesh.json",
+      "mesh_sha256": "ae2faebf598832b30b6e64e1d485603e4721e45ac7e648c1b3768d4af8e48f50",
+      "revision_binding": "s06-b7-imperial-stations-2026-10-18"
+    },
+    {
+      "binding": "imperial:constructor",
+      "runtime": "assets/models/imperial_constructor.mesh.json",
+      "mesh_sha256": "32fc71942015d171695fc9a6f150a402235ff62c480d29288def84fe03340cdb",
+      "revision_binding": "s06-b9-construction-2026-10-18"
+    },
+    {
+      "binding": "imperial:convoy",
+      "runtime": "assets/models/imperial_convoy.mesh.json",
+      "mesh_sha256": "3f887ced61a15b4d8038103ec6c015c482fa8db315cc46c3526063535ff6a56a",
+      "revision_binding": "s06-b6-imperial-ships-2026-10-18"
+    },
+    {
+      "binding": "imperial:corvette",
+      "runtime": "assets/models/imperial_corvette.mesh.json",
+      "mesh_sha256": "be894218b84c00b4c6f78c96a46df1cf69441b627fa75155df02be41f6c30d05",
+      "revision_binding": "s06-b6-imperial-ships-2026-10-18"
+    },
+    {
+      "binding": "imperial:cruiser",
+      "runtime": "assets/models/imperial_cruiser.mesh.json",
+      "mesh_sha256": "125f37cf927840f5ccd452bfe8ec5998c0e6e644c0965932399b716d8fedd130",
+      "revision_binding": "s06-b6-imperial-ships-2026-10-18"
+    },
+    {
+      "binding": "imperial:defense_platform",
+      "runtime": "assets/models/imperial_defense_platform.mesh.json",
+      "mesh_sha256": "b0600256c84c6bf949e52831dd0af0f6a278054ca7378028a92acaba44df7999",
+      "revision_binding": "s06-b7-imperial-stations-2026-10-18"
+    },
+    {
+      "binding": "imperial:defense_satellite",
+      "runtime": "assets/models/imperial_defense_satellite.mesh.json",
+      "mesh_sha256": "ce8fae81cbcc80bd22316d4b70ca66a45171b6d32b36a87a6b7b1ded87161b0b",
+      "revision_binding": "s06-b4-hardware-2026-10-17"
+    },
+    {
+      "binding": "imperial:energy_relay",
+      "runtime": "assets/models/imperial_energy_relay.mesh.json",
+      "mesh_sha256": "56b573963cd5878122fb61d83cc7e45ab723bbf50bad7ff4db4e1c71a2b9238f",
+      "revision_binding": "s06-b7-imperial-stations-2026-10-18"
+    },
+    {
+      "binding": "imperial:fighter",
+      "runtime": "assets/models/imperial_tie_squadron.mesh.json",
+      "mesh_sha256": "5bc984c2ad3c2f649bf75265d3326d914a419659538360917b9c2217dcadd1cc",
+      "revision_binding": "s06-b6-imperial-ships-2026-10-18"
+    },
+    {
+      "binding": "imperial:fighter_platform",
+      "runtime": "assets/models/imperial_fighter_platform.mesh.json",
+      "mesh_sha256": "076093e7f6b37c4151954428a95168084ba86d7edfbb36ae1dc44ce0132b462b",
+      "revision_binding": "s06-b7-imperial-stations-2026-10-18"
+    },
+    {
+      "binding": "imperial:frigate",
+      "runtime": "assets/models/imperial_frigate.mesh.json",
+      "mesh_sha256": "6c5d925bcd67bd655aae5f7e4bbdfa178257a4d0a6897f52b8664dda3f94752d",
+      "revision_binding": "s06-b6-imperial-ships-2026-10-18"
+    },
+    {
+      "binding": "imperial:mining_station",
+      "runtime": "assets/models/imperial_mining_station.mesh.json",
+      "mesh_sha256": "a446d4963b60e4a4cb9d9256ad033287b1aa31f631dc078082a91bcb2feff568",
+      "revision_binding": "s06-b7-imperial-stations-2026-10-18"
+    },
+    {
+      "binding": "imperial:planet_extractor",
+      "runtime": "assets/models/imperial_planet_extractor.mesh.json",
+      "mesh_sha256": "7ace170ae089f00f31724eee0053ec84bdf259804b87ee64ee3be89e3f4de291",
+      "revision_binding": "s06-b4-hardware-2026-10-17"
+    },
+    {
+      "binding": "imperial:planet_pulsar_cannon",
+      "runtime": "assets/models/imperial_planet_pulsar_cannon.mesh.json",
+      "mesh_sha256": "9a5e27a842b0fd32254291c06fc919f296d6153c0d759c0e2fcb48a013a837dd",
+      "revision_binding": "s06-b4-hardware-2026-10-17"
+    },
+    {
+      "binding": "imperial:planet_shield_generator",
+      "runtime": "assets/models/imperial_planet_shield_generator.mesh.json",
+      "mesh_sha256": "f9979421cd15903222d40a837d5fdf961494a3d5861f8b74dfe82b0ebf6b2f75",
+      "revision_binding": "s06-b4-hardware-2026-10-17"
+    },
+    {
+      "binding": "imperial:planet_trade_hub",
+      "runtime": "assets/models/imperial_planet_trade_hub.mesh.json",
+      "mesh_sha256": "d3d8afaa06b5ca99409147163f437b0530d42cff2707d6d5cd00baaf67a107e1",
+      "revision_binding": "s06-b4-hardware-2026-10-17"
+    },
+    {
+      "binding": "imperial:repair_dock",
+      "runtime": "assets/models/imperial_repair_dock.mesh.json",
+      "mesh_sha256": "0d2a2018344f5a034130e1e4ea3da85c62b658e37651260b03e3ab742a6e0469",
+      "revision_binding": "s06-b7-imperial-stations-2026-10-18"
+    },
+    {
+      "binding": "imperial:research_station",
+      "runtime": "assets/models/imperial_research_station.mesh.json",
+      "mesh_sha256": "4b4ea1ac3f85c95bc457f6f2de43423b4a1ac7d63a843a41c209fbffe1b4d1a0",
+      "revision_binding": "s06-b7-imperial-stations-2026-10-18"
+    },
+    {
+      "binding": "imperial:sensor_station",
+      "runtime": "assets/models/imperial_sensor_station.mesh.json",
+      "mesh_sha256": "0b853ca6a6d894e40a8b460be69e40447299b931d1c8a84b477ce6e7b8258de5",
+      "revision_binding": "s06-b7-imperial-stations-2026-10-18"
+    },
+    {
+      "binding": "imperial:shipyard",
+      "runtime": "assets/models/imperial_shipyard.mesh.json",
+      "mesh_sha256": "73ca3736a5bfacf3a74edbe343f0d1faf20f426536c359794644cef7ad5819b5",
+      "revision_binding": "s06-b7-imperial-stations-2026-10-18"
+    },
+    {
+      "binding": "imperial:supercapital",
+      "runtime": "assets/models/imperial_supercapital.mesh.json",
+      "mesh_sha256": "1c44c3e7a78241b5048a9aefe23549b8578c0a21081ad797ce640e8ad9a98dbf",
+      "revision_binding": "s06-b6-imperial-ships-2026-10-18"
+    },
+    {
+      "binding": "imperial:trade_station",
+      "runtime": "assets/models/imperial_trade_station.mesh.json",
+      "mesh_sha256": "058f6b8963921544c31213d669558d009ea043f24d4d4865f7dcc7ddec8103fc",
+      "revision_binding": "s06-b7-imperial-stations-2026-10-18"
+    },
+    {
+      "binding": "rebel:attack_satellite",
+      "runtime": "assets/models/alliance_attack_satellite.mesh.json",
+      "mesh_sha256": "c37dbc64cba78ee9f6a003645dea5630237da3558f7f1add3007f7c1197348d9",
+      "revision_binding": "s06-b4-hardware-2026-10-17"
+    },
+    {
+      "binding": "rebel:bomber",
+      "runtime": "assets/models/alliance_bomber.mesh.json",
+      "mesh_sha256": "9eb42e8c2f5467ca849536fa6e0e06aeb4c4b8bd0538cba419df0859f1d997c2",
+      "revision_binding": "s06-b2-squadron-logistics-2026-10-17"
+    },
+    {
+      "binding": "rebel:colonizer",
+      "runtime": "assets/models/rebel_colonizer.mesh.json",
+      "mesh_sha256": "0afb0eddcd4180f6fae0523eac4dcb086c65093a59983714e2298691bdf15fae",
+      "revision_binding": "s06-b9-construction-2026-10-18"
+    },
+    {
+      "binding": "rebel:command_station",
+      "runtime": "assets/models/alliance_command_station.mesh.json",
+      "mesh_sha256": "ee9790e6f95bdd2a5e0650fd4eb1d1d5496637b32956929a9c6d50df0ee8c93c",
+      "revision_binding": "s06-b3a-command-stations-2026-10-17"
+    },
+    {
+      "binding": "rebel:constructor",
+      "runtime": "assets/models/rebel_constructor.mesh.json",
+      "mesh_sha256": "441cb0bb04afac29e8d1bcd4f704858988abb1226681e216796f33e5b0aae780",
+      "revision_binding": "s06-b9-construction-2026-10-18"
+    },
+    {
+      "binding": "rebel:convoy",
+      "runtime": "assets/models/alliance_convoy.mesh.json",
+      "mesh_sha256": "fa341b2ac6cd91c79ab113e47c9a76888728e5528c46d068ebde6e8e6141205c",
+      "revision_binding": "s06-b2-squadron-logistics-2026-10-17"
+    },
+    {
+      "binding": "rebel:corvette",
+      "runtime": "assets/models/alliance_corvette.mesh.json",
+      "mesh_sha256": "48d0a815af978976f3eda77ec2378353eb5191a7cdc72cddb931483a0df8571b",
+      "revision_binding": "s06-b1-alliance-combat-2026-10-17"
+    },
+    {
+      "binding": "rebel:cruiser",
+      "runtime": "assets/models/alliance_cruiser.mesh.json",
+      "mesh_sha256": "38b4e9f92040e67ffc1655910de39c24de4156397a94c76c34f94738a383ba84",
+      "revision_binding": "s06-cruiser-review-2026-10-17"
+    },
+    {
+      "binding": "rebel:defense_platform",
+      "runtime": "assets/models/alliance_defense_platform.mesh.json",
+      "mesh_sha256": "80b1f3daae8e73fdf050bde9ac6cff87364c987683d6570c475e57fc6e993fa1",
+      "revision_binding": "s06-b3c-stations-2026-10-17"
+    },
+    {
+      "binding": "rebel:defense_satellite",
+      "runtime": "assets/models/alliance_defense_satellite.mesh.json",
+      "mesh_sha256": "d38b5549310b6a9a554e429254857f895a5d7852cdd2dce3999276406ad1241d",
+      "revision_binding": "s06-b4-hardware-2026-10-17"
+    },
+    {
+      "binding": "rebel:energy_relay",
+      "runtime": "assets/models/alliance_energy_relay.mesh.json",
+      "mesh_sha256": "fea920827bc7c690d022ce614455dfad7da0ca6e053af0e5fde793c0fa6173f8",
+      "revision_binding": "s06-b3b-stations-2026-10-17"
+    },
+    {
+      "binding": "rebel:fighter",
+      "runtime": "assets/models/alliance_interceptor.mesh.json",
+      "mesh_sha256": "8d6dc397139d5fac871f1e74b48a6eb7fe2a9fc200871288ee2cc8d34a494df6",
+      "revision_binding": "s06-b2-squadron-logistics-2026-10-17"
+    },
+    {
+      "binding": "rebel:fighter_platform",
+      "runtime": "assets/models/alliance_fighter_platform.mesh.json",
+      "mesh_sha256": "4f06b97c93cd05c3fb132b67d0a0f2a18bfc07847d16402c4ec18cdbe3b77d6f",
+      "revision_binding": "s06-b3c-stations-2026-10-17"
+    },
+    {
+      "binding": "rebel:mining_station",
+      "runtime": "assets/models/alliance_mining_station.mesh.json",
+      "mesh_sha256": "ff14df049feaad5937326566ac8015a9d86dcf03671d7e3426f8952b7e53e9da",
+      "revision_binding": "s06-b3b-stations-2026-10-17"
+    },
+    {
+      "binding": "rebel:planet_extractor",
+      "runtime": "assets/models/alliance_planet_extractor.mesh.json",
+      "mesh_sha256": "19354d7d4fc5264789fd7232993b48c5f80bf2a0567f8111c3b144030483c4fa",
+      "revision_binding": "s06-b4-hardware-2026-10-17"
+    },
+    {
+      "binding": "rebel:planet_pulsar_cannon",
+      "runtime": "assets/models/alliance_planet_pulsar_cannon.mesh.json",
+      "mesh_sha256": "676e8a5f09782b0bcec88cd3f89756db296f66e38fc0f543ed28eb2394304782",
+      "revision_binding": "s06-b4-hardware-2026-10-17"
+    },
+    {
+      "binding": "rebel:planet_shield_generator",
+      "runtime": "assets/models/alliance_planet_shield_generator.mesh.json",
+      "mesh_sha256": "bf38721eb96bdfcffa962429a8a1cd3c830344936a521f3f03d197a05669df20",
+      "revision_binding": "s06-b4-hardware-2026-10-17"
+    },
+    {
+      "binding": "rebel:planet_trade_hub",
+      "runtime": "assets/models/alliance_planet_trade_hub.mesh.json",
+      "mesh_sha256": "cd317db1714dfc9e2d0759bec83f0c1851c9f3139ee67f0c6f04a391aa88d691",
+      "revision_binding": "s06-b4-hardware-2026-10-17"
+    },
+    {
+      "binding": "rebel:repair_dock",
+      "runtime": "assets/models/alliance_repair_dock.mesh.json",
+      "mesh_sha256": "c7290bd9e1f51911c10bf5434de99d3294dd22ba6f6110f886c1677f46615d76",
+      "revision_binding": "s06-b3c-stations-2026-10-17"
+    },
+    {
+      "binding": "rebel:research_station",
+      "runtime": "assets/models/alliance_research_station.mesh.json",
+      "mesh_sha256": "1886a86b89cb1b0ef4a618a398216cccf44a0cd9dc84f950a0dce94b9892f870",
+      "revision_binding": "s06-b3c-stations-2026-10-17"
+    },
+    {
+      "binding": "rebel:sensor_station",
+      "runtime": "assets/models/alliance_sensor_station.mesh.json",
+      "mesh_sha256": "02e7447e185ea4b01ddddd8e605247e2c99704736c9e0b4784b95545c2bff24e",
+      "revision_binding": "s06-b3b-stations-2026-10-17"
+    },
+    {
+      "binding": "rebel:supercapital",
+      "runtime": "assets/models/alliance_carrier.mesh.json",
+      "mesh_sha256": "44e64c9ceed6d01d4e25eab1b4b0afec909bdc10d293af7d0d43a043dad64891",
+      "revision_binding": "s06-b1-alliance-combat-2026-10-17"
+    },
+    {
+      "binding": "rebel:trade_station",
+      "runtime": "assets/models/alliance_trade_station.mesh.json",
+      "mesh_sha256": "07fc9d41e83f80b517d0faf8b3a7839a8f0348d5629442a42d02b447301d8422",
+      "revision_binding": "s06-b3c-stations-2026-10-17"
+    },
+    {
+      "binding": "syndicate:attack_satellite",
+      "runtime": "assets/models/syndicate_attack_satellite.mesh.json",
+      "mesh_sha256": "007c331eb494d62ae49953d7c8a225d993b942a088e392869138c5f1fa219d2d",
+      "revision_binding": "s06-b4-hardware-2026-10-17"
+    },
+    {
+      "binding": "syndicate:colonizer",
+      "runtime": "assets/models/syndicate_colonizer.mesh.json",
+      "mesh_sha256": "d5c59777eb31515745f5085246247e86dd14ede2bc5325d89c72530fd2944841",
+      "revision_binding": "s06-b9-construction-2026-10-18"
+    },
+    {
+      "binding": "syndicate:command_station",
+      "runtime": "assets/models/syndicate_command_station.mesh.json",
+      "mesh_sha256": "edb2fc8369f6a0d8d4d40020ac538b553659a5066face5ef3b1273b6afea778a",
+      "revision_binding": "s06-b3a-command-stations-2026-10-17"
+    },
+    {
+      "binding": "syndicate:constructor",
+      "runtime": "assets/models/syndicate_constructor.mesh.json",
+      "mesh_sha256": "b3d4946de75d41f6b02c591e3275ea3627ffdf010d83bd925b16c4d7d3a532c3",
+      "revision_binding": "s06-b9-construction-2026-10-18"
+    },
+    {
+      "binding": "syndicate:convoy",
+      "runtime": "assets/models/syndicate_convoy.mesh.json",
+      "mesh_sha256": "8e64349746f4818c9f1ba0024275949f1454847c4e1348cb77ee92cf521f5aea",
+      "revision_binding": "s06-b2-squadron-logistics-2026-10-17"
+    },
+    {
+      "binding": "syndicate:corvette",
+      "runtime": "assets/models/syndicate_corvette.mesh.json",
+      "mesh_sha256": "fb321326eaf5390d40bbe559d7340695deb27ae33b086864360bedab2f3b3b49",
+      "revision_binding": "s06-b8-remaining-combat-2026-10-18"
+    },
+    {
+      "binding": "syndicate:cruiser",
+      "runtime": "assets/models/syndicate_cruiser.mesh.json",
+      "mesh_sha256": "121608999dd39710a35322e7689f5af855fc848b7305242221d3702a35e8c223",
+      "revision_binding": "s06-b8-remaining-combat-2026-10-18"
+    },
+    {
+      "binding": "syndicate:defense_platform",
+      "runtime": "assets/models/syndicate_defense_platform.mesh.json",
+      "mesh_sha256": "d74eb09809cc081177b3edb7cd542dc393812d00f151d70a0d5235aa49e1245b",
+      "revision_binding": "s06-b3c-stations-2026-10-17"
+    },
+    {
+      "binding": "syndicate:defense_satellite",
+      "runtime": "assets/models/syndicate_defense_satellite.mesh.json",
+      "mesh_sha256": "3fbe61b531055a10b3a269f07cf291ed779cce08396bf7d8a7367e8c5585b71f",
+      "revision_binding": "s06-b4-hardware-2026-10-17"
+    },
+    {
+      "binding": "syndicate:energy_relay",
+      "runtime": "assets/models/syndicate_energy_relay.mesh.json",
+      "mesh_sha256": "fabcb1e166385a6e0ae6c07fb3dd2fb040a309a332511aa8e19d638ff2f27af8",
+      "revision_binding": "s06-b3b-stations-2026-10-17"
+    },
+    {
+      "binding": "syndicate:fighter",
+      "runtime": "assets/models/syndicate_jackal.mesh.json",
+      "mesh_sha256": "829f5a14e3dfae79437c3a3fb9749d4bd8c5fd5a0117ad00cc3665d1cd2fe126",
+      "revision_binding": "s06-b2-squadron-logistics-2026-10-17"
+    },
+    {
+      "binding": "syndicate:fighter_platform",
+      "runtime": "assets/models/syndicate_fighter_platform.mesh.json",
+      "mesh_sha256": "d3c1cd6a88c5087519a93a5ae5ed2debf756832d6a4298c9d0d2fe851115d036",
+      "revision_binding": "s06-b3c-stations-2026-10-17"
+    },
+    {
+      "binding": "syndicate:frigate",
+      "runtime": "assets/models/syndicate_frigate.mesh.json",
+      "mesh_sha256": "9563c320fb164133b7731aa398f41653e25844da72644e0b438d3b10aeba1471",
+      "revision_binding": "s06-b8-remaining-combat-2026-10-18"
+    },
+    {
+      "binding": "syndicate:mining_station",
+      "runtime": "assets/models/syndicate_mining_station.mesh.json",
+      "mesh_sha256": "6ce810fdf0be8ba5a3c7485fd9df4d6b3ff5fc5ae5e8a0f9a8fe4bc5b88692aa",
+      "revision_binding": "s06-b3b-stations-2026-10-17"
+    },
+    {
+      "binding": "syndicate:planet_extractor",
+      "runtime": "assets/models/syndicate_planet_extractor.mesh.json",
+      "mesh_sha256": "388ba2aa4d5ebb3f33edc309cc4c177ce6d499c74d751c6573f8f5302dca4fa1",
+      "revision_binding": "s06-b4-hardware-2026-10-17"
+    },
+    {
+      "binding": "syndicate:planet_pulsar_cannon",
+      "runtime": "assets/models/syndicate_planet_pulsar_cannon.mesh.json",
+      "mesh_sha256": "498e6232ec385e903942da4a873f0153d951cc601e49df170b274a6863cecc55",
+      "revision_binding": "s06-b4-hardware-2026-10-17"
+    },
+    {
+      "binding": "syndicate:planet_shield_generator",
+      "runtime": "assets/models/syndicate_planet_shield_generator.mesh.json",
+      "mesh_sha256": "f05eed613663d33ae5bad77d2489a4a8f986585374645e19cf8aefe1a98f939d",
+      "revision_binding": "s06-b4-hardware-2026-10-17"
+    },
+    {
+      "binding": "syndicate:planet_trade_hub",
+      "runtime": "assets/models/syndicate_planet_trade_hub.mesh.json",
+      "mesh_sha256": "e287675b6e86d7b5bb986169941179ff8cad49fa9c021182f7d279aa89be2aed",
+      "revision_binding": "s06-b4-hardware-2026-10-17"
+    },
+    {
+      "binding": "syndicate:repair_dock",
+      "runtime": "assets/models/syndicate_repair_dock.mesh.json",
+      "mesh_sha256": "39c5ef2886f1c56c4d2702f5e07fb9eb0adc7245a6711ae34e4cdf73851b9faa",
+      "revision_binding": "s06-b3c-stations-2026-10-17"
+    },
+    {
+      "binding": "syndicate:research_station",
+      "runtime": "assets/models/syndicate_research_station.mesh.json",
+      "mesh_sha256": "c2532f898553a4ff437be8f365d037551e4c1d1a5d5389f35e500c473c1b224c",
+      "revision_binding": "s06-b3c-stations-2026-10-17"
+    },
+    {
+      "binding": "syndicate:sensor_station",
+      "runtime": "assets/models/syndicate_sensor_station.mesh.json",
+      "mesh_sha256": "e35b084c73b2702ab12f0611730bb4f99b24eefd80925344300360f68bb7a947",
+      "revision_binding": "s06-b3b-stations-2026-10-17"
+    },
+    {
+      "binding": "syndicate:shipyard",
+      "runtime": "assets/models/syndicate_shipyard.mesh.json",
+      "mesh_sha256": "c1a0aad3e30a013b95c704390ef925f8beeb024924ddd4a5d525dc60156c4670",
+      "revision_binding": "s06-b3c-stations-2026-10-17"
+    },
+    {
+      "binding": "syndicate:trade_station",
+      "runtime": "assets/models/syndicate_trade_station.mesh.json",
+      "mesh_sha256": "6bae5343f97a9d1881d8b1b7bbf21270a1acddc26a6b58752e258dcb90bd9e1c",
+      "revision_binding": "s06-b3c-stations-2026-10-17"
+    },
+    {
+      "binding": "shared:construction_scaffold",
+      "runtime": "assets/models/shared_construction_scaffold.mesh.json",
+      "mesh_sha256": "1643a7e19731cb6dac7bcce5e4876a0eead1337690418d7897c7b206901e3a0b",
+      "revision_binding": "s07-scaffold-appearance-2026-10-18"
+    }
+  ],
+  "criteria": [
+    {
+      "id": "C1",
+      "wp": "S07-step1",
+      "requirement_ref": "B5 runtime pin names the final renderer bytes",
+      "applicability": "in_scope",
+      "status": "pass",
+      "commands": [
+        ".venv/bin/python artifacts/s07-runtime-final/reconcile-parity-pin.py"
+      ],
+      "exit_codes": [
+        0
+      ],
+      "evidence_paths_and_hashes": [
+        {
+          "path": "artifacts/s07-runtime-final/parity-pin-reconciliation-v2.json",
+          "sha256": "ed05cfb79a1204d14d5c87f21bfb8fd0ea892be75248eb85feba30fee4f41e08"
+        },
+        {
+          "path": "artifacts/s07-runtime-final/reconcile-parity-pin-v2.log",
+          "sha256": "487008698e2f582d3fba13d8fba3d0b9510b6af9ddfdf46b11486879494d84e3"
+        },
+        {
+          "path": "art/manifests/approvals.json",
+          "sha256": "0b0f5437c47ef21b6e137735135849142ee196998ade19c0149b6750eb825a00"
+        },
+        {
+          "path": "art/manifests/approved-s06-source-hashes.json",
+          "sha256": "7d2b36ecc6f6154582e5b3866b87d8b874fe36db6c482921fad1db1aeafa4dd0"
+        }
+      ],
+      "negative_controls": [
+        "the extended script asserts exactly four changed methods and fails if the set moves",
+        "protected-method equality is proven against two baselines, so a moved method cannot pass",
+        "the retained earlier correction block is compared byte-for-byte except superseded_by"
+      ],
+      "limitations": [
+        "the correction record started from an uncommitted intermediate approvals.json; those bytes are now published so the recorded hash is recomputable"
+      ],
+      "blocking_decision_id": null
+    },
+    {
+      "id": "C2",
+      "wp": "S07-step2",
+      "requirement_ref": "native catalogue captured on the final renderer",
+      "applicability": "in_scope",
+      "status": "pass",
+      "commands": [
+        "env -u SDL_VIDEODRIVER -u STAR_ARMADA_FIXED_MATERIALS .venv/bin/python artifacts/s07-runtime-final/run-bounded.py --seconds 1500 --log artifacts/s07-runtime-final/native-catalogue-final.log -- .venv/bin/python artifacts/s07-runtime-final/native-catalogue.py"
+      ],
+      "exit_codes": [
+        0
+      ],
+      "evidence_paths_and_hashes": [
+        {
+          "path": "artifacts/s07-runtime-final/native-catalogue-final/report.json",
+          "sha256": "153060e3d610b28e1e27118ec68bfd8936e1aa5d29df30538a9e0a5dab91e6c0"
+        },
+        {
+          "path": "artifacts/s07-runtime-final/native-catalogue-final.log",
+          "sha256": "2fe5d5d39f1dd610c6b57549baf8533baf66a4cf15fa9c78fa1296c89929a730"
+        }
+      ],
+      "negative_controls": [
+        "the harness asserts every unspawnable row is the documented render-only scaffold, so it cannot silently skip a row",
+        "a first attempt crashed on data_id=None and is retained as a failed attempt rather than deleted"
+      ],
+      "limitations": [
+        "captures are native-driver frames, not packaged-build or Windows evidence"
+      ],
+      "blocking_decision_id": null
+    },
+    {
+      "id": "C3",
+      "wp": "S07-step2",
+      "requirement_ref": "native representative matrix captured on the final renderer with protected inputs unchanged",
+      "applicability": "in_scope",
+      "status": "pass",
+      "commands": [
+        "env -u SDL_VIDEODRIVER -u STAR_ARMADA_FIXED_MATERIALS .venv/bin/python artifacts/s07-runtime-final/run-bounded.py --seconds 1800 --log artifacts/s07-runtime-final/native-matrix-final.log -- .venv/bin/python artifacts/s07-runtime-final/native-matrix.py"
+      ],
+      "exit_codes": [
+        0
+      ],
+      "evidence_paths_and_hashes": [
+        {
+          "path": "artifacts/s07-runtime-final/native-matrix-final/report.json",
+          "sha256": "fd94ae705d69dc8ef73b2151137c7f3b6bc06d9af7f1a96397beee35157c329d"
+        },
+        {
+          "path": "artifacts/s07-runtime-final/native-matrix-final.log",
+          "sha256": "72e3e8f52352426613743560aff7a0e149e9b73075f45081b2c1b434b7757c8e"
+        }
+      ],
+      "negative_controls": [
+        "the report records renderer_sha256 and the run asserts it in-loop, so acceptance cannot silently run on changed bytes",
+        "protected_changed must be empty across 327 pinned inputs"
+      ],
+      "limitations": [
+        "a first matrix run predates the renderer-hash field and its captures are not bound to bytes"
+      ],
+      "blocking_decision_id": null
+    },
+    {
+      "id": "C4",
+      "wp": "S07-step2",
+      "requirement_ref": "construction and scaffold rows captured on the final renderer",
+      "applicability": "in_scope",
+      "status": "pass",
+      "commands": [
+        "env -u SDL_VIDEODRIVER -u STAR_ARMADA_FIXED_MATERIALS .venv/bin/python artifacts/s07-runtime-final/run-bounded.py --seconds 1300 --log artifacts/s07-runtime-final/native-construction-final.log -- .venv/bin/python artifacts/s07-runtime-final/native-construction.py"
+      ],
+      "exit_codes": [
+        0
+      ],
+      "evidence_paths_and_hashes": [
+        {
+          "path": "artifacts/s07-runtime-final/native-construction-final/report.json",
+          "sha256": "858c5f3542e8fe4f34c7026eb036ae976026fedc06f2ed09b99daa3305f38ee6"
+        },
+        {
+          "path": "artifacts/s07-runtime-final/native-construction-final.log",
+          "sha256": "034053d7cb01806bc732b6a90e6f7e7b3750de1d3755163f85df05c1d1d40e1f"
+        }
+      ],
+      "negative_controls": [
+        "scaffold revision is asserted unchanged at 12959d25"
+      ],
+      "limitations": [
+        "construction captures cover queue/prop state, not gameplay construction timing"
+      ],
+      "blocking_decision_id": null
+    },
+    {
+      "id": "C5",
+      "wp": "S07-step2",
+      "requirement_ref": "final-byte captures do not drift from the pre-repair sets",
+      "applicability": "in_scope",
+      "status": "pass",
+      "commands": [
+        ".venv/bin/python artifacts/s07-runtime-final/compare-captures.py --old <pre> --new <final> --out <json> (catalogue, matrix, construction)"
+      ],
+      "exit_codes": [
+        0,
+        0,
+        0
+      ],
+      "evidence_paths_and_hashes": [
+        {
+          "path": "artifacts/s07-runtime-final/catalogue-final-vs-prefinal.json",
+          "sha256": "a62492f9e59390979a51868b421960e4c82d5268ddb181982201b5bb839e2a08"
+        },
+        {
+          "path": "artifacts/s07-runtime-final/matrix-final-vs-prefinal.json",
+          "sha256": "ce31b8ec1410d66ff3425228c97ae712988d302ae284c167ffa30affeaa55621"
+        },
+        {
+          "path": "artifacts/s07-runtime-final/construction-final-vs-prefinal.json",
+          "sha256": "09fba13f831016a492b8ff72aa5368bd107d5eab195ec34ded0ba55bd59d206c"
+        }
+      ],
+      "negative_controls": [
+        "the comparator refuses two capture sets produced by the same renderer bytes, so it cannot pass by comparing nothing",
+        "state hashes are checked where both reports carry them"
+      ],
+      "limitations": [
+        "byte-identity is expected here, and the reason is structural: the two changed draw methods on the uncached path have no production call site, and the one live change is authored LOD suppression, which draws sub-pixel geometry. Identity is therefore not evidence that the changed code is exercised \u2014 the motion-transition harness is what exercises it."
+      ],
+      "blocking_decision_id": null
+    },
+    {
+      "id": "C6",
+      "wp": "S07-step3",
+      "requirement_ref": "candidate menu movie rebuilt and independently read back at the final bytes",
+      "applicability": "in_scope",
+      "status": "pass",
+      "commands": [
+        ".venv/bin/python tools/build_menu_movie.py --model-preview --output-dir artifacts/s07-runtime-final/candidate-movie-final --asset artifacts/s07-runtime-final/candidate-movie-final/review/candidate.zip",
+        ".venv/bin/python artifacts/s07-runtime-final/verify-final-movie.py"
+      ],
+      "exit_codes": [
+        0,
+        0
+      ],
+      "evidence_paths_and_hashes": [
+        {
+          "path": "artifacts/s07-runtime-final/candidate-movie-final/render-report.json",
+          "sha256": "0e4d195c5a10dd945575f761171972e413629b8acb08dc7d8c989df60a5eff8f"
+        },
+        {
+          "path": "artifacts/s07-runtime-final/candidate-movie-final-readback.json",
+          "sha256": "3e26d456010674ea621ec7887318376c7c84976e52e0536903ec55cb98706dad"
+        },
+        {
+          "path": "artifacts/s07-runtime-final/candidate-movie-final-vs-prefinal.json",
+          "sha256": "83c3524fc56de29c5f43756f8313e662aaca0c1664be5d1cb733877c4232deda"
+        }
+      ],
+      "negative_controls": [
+        "the verifier refuses a candidate baked by different renderer bytes than the review it is pointed at (proven by an old-candidate control)",
+        "the shipped battle.zip is asserted byte-equal to the committed blob"
+      ],
+      "limitations": [
+        "offline presentation fixture, not gameplay or packaged-build acceptance"
+      ],
+      "blocking_decision_id": null
+    },
+    {
+      "id": "C7",
+      "wp": "S07-step4",
+      "requirement_ref": "independent review of the four-method delta",
+      "applicability": "in_scope",
+      "status": "pass",
+      "commands": [
+        "delegate_task leaf reviewer, disjoint from the implementer, bound to renderer sha256 9aff3414"
+      ],
+      "exit_codes": [
+        0
+      ],
+      "evidence_paths_and_hashes": [
+        {
+          "path": "artifacts/s07-runtime-final/INDEPENDENT-MOTION-REVIEW.json",
+          "sha256": "885ac6b8f92a34a124dd2ef073edbf3bc2f7e92225ca50ac9d82d20d9f238d6a"
+        }
+      ],
+      "negative_controls": [
+        "the review measured the renderer hash before and after and re-derived the AST diff itself",
+        "its findings were checked rather than accepted: the record-consistency finding reproduced exactly (the published hash matched no committed state)"
+      ],
+      "limitations": [
+        "no native GL or pixel execution by the reviewer",
+        "one review finding about mixed-fleet legacy trail state is recorded as unmeasured, not as pass"
+      ],
+      "blocking_decision_id": null,
+      "note": "overall pass_with_findings, no blocking findings; two record findings fixed in place, one coverage finding left open and labelled"
+    },
+    {
+      "id": "C8",
+      "wp": "S07-step1/5",
+      "requirement_ref": "registration and approval guards migrated to the scaffold authority without weakening",
+      "applicability": "in_scope",
+      "status": "pass",
+      "commands": [
+        "env -u SDL_VIDEODRIVER -u STAR_ARMADA_FIXED_MATERIALS PYTHONPATH=tests .venv/bin/python -m unittest test_s07_approval_preservation test_s07_registration test_s07_scaffold_registration test_s06_appearance_records test_s07_motion_order test_s07_material_parity test_s07_authored_lod_parity test_s07_capture_transition test_s07_construction_runtime test_s07_hidden_contact_acceptance test_s07_binding_routes test_s07_lod_environment test_s07_selected_geometry_matrix"
+      ],
+      "exit_codes": [
+        0
+      ],
+      "evidence_paths_and_hashes": [
+        {
+          "path": "artifacts/s07-runtime-final/guard-family-final.log",
+          "sha256": "947e156fb7962fcf9e95ec992caabe8838c4db1fcb6d96597f30a7476e461e56"
+        },
+        {
+          "path": "artifacts/s07-runtime-final/suite-per-module.json",
+          "sha256": "a05588b0281f313dc3549562a9ddfc9ed7eff87d63663a602c189ee58acb4664"
+        },
+        {
+          "path": "tests/s07_registration_assertions.py",
+          "sha256": "252bdb84a38fce1bf8c945f8ebbc733d06a266a6081db35220feb3c5ea61a266"
+        },
+        {
+          "path": "tests/test_s06_appearance_records.py",
+          "sha256": "1338224cc001c832872812ec656292c5268f254ce153e424fe074529011b0417"
+        }
+      ],
+      "negative_controls": [
+        "the scaffold is excluded only after proving its own appearance decision and its separate execution authority",
+        "two negative controls withdraw that authority and must be refused by the guard",
+        "the command names all thirteen modules, so the result is reproducible from the receipt"
+      ],
+      "limitations": [
+        "103 tests across the named guard modules, and every module also appears in the per-module gate",
+        "an earlier union run recorded 269 tests in a single process but logged no module names, so that figure is superseded rather than cited"
+      ],
+      "blocking_decision_id": null
+    },
+    {
+      "id": "C9",
+      "wp": "S07-step5",
+      "requirement_ref": "generated metadata, wrappers and sidecars reproduce",
+      "applicability": "in_scope",
+      "status": "pass",
+      "commands": [
+        ".venv/bin/python tools/art/sync_runtime_metadata.py --check",
+        ".venv/bin/python tools/art/gen_export_wrappers.py --check",
+        ".venv/bin/python tools/art/write_pending_sidecars.py --check"
+      ],
+      "exit_codes": [
+        0,
+        0,
+        0
+      ],
+      "evidence_paths_and_hashes": [
+        {
+          "path": "art/manifests/pipeline.json",
+          "sha256": "e24e71a181863fe2fbcc16b3a15f0adbdeaf64177eca3dcb47e317c274c2e058"
+        }
+      ],
+      "negative_controls": [
+        "each tool reports its own exit status; no text matching over generated files"
+      ],
+      "limitations": [
+        "reproducibility on this checkout, not on a fresh clone with autocrlf"
+      ],
+      "blocking_decision_id": null
+    },
+    {
+      "id": "C10",
+      "wp": "S07-step5",
+      "requirement_ref": "model contract validation satisfied for the whole catalogue",
+      "applicability": "in_scope",
+      "status": "pass",
+      "commands": [
+        ".venv/bin/python tools/art/validate-models --all"
+      ],
+      "exit_codes": [
+        0
+      ],
+      "evidence_paths_and_hashes": [
+        {
+          "path": "art/manifests/pipeline.json",
+          "sha256": "e24e71a181863fe2fbcc16b3a15f0adbdeaf64177eca3dcb47e317c274c2e058"
+        }
+      ],
+      "negative_controls": [
+        "a missing contract validator is a failure, not a skip"
+      ],
+      "limitations": [
+        "build-side and contract checks only; not packaging"
+      ],
+      "blocking_decision_id": null
+    },
+    {
+      "id": "C11",
+      "wp": "S07-step5",
+      "requirement_ref": "menu movie tests and simulation determinism",
+      "applicability": "in_scope",
+      "status": "pass",
+      "commands": [
+        ".venv/bin/python -m pytest -q -rs tests/test_menu_movie.py",
+        "PYTHONPATH=tests .venv/bin/python -m unittest test_detmath"
+      ],
+      "exit_codes": [
+        0,
+        0
+      ],
+      "evidence_paths_and_hashes": [
+        {
+          "path": "artifacts/s07-runtime-final/suite-per-module.json",
+          "sha256": "a05588b0281f313dc3549562a9ddfc9ed7eff87d63663a602c189ee58acb4664"
+        }
+      ],
+      "negative_controls": [
+        "the two skips are read and named rather than inferred; the skipped 360-frame bake was run separately as C6",
+        "both counts are read from the gate receipt, where test_menu_movie records 31 passed and 2 skipped"
+      ],
+      "limitations": [
+        "the skipped tests themselves were not executed under pytest"
+      ],
+      "blocking_decision_id": null
+    },
+    {
+      "id": "C12",
+      "wp": "S07-step5",
+      "requirement_ref": "suite green on the final tree apart from recorded pre-existing failures",
+      "applicability": "in_scope",
+      "status": "pass_with_recorded_pre_existing_failure",
+      "commands": [
+        ".venv/bin/python artifacts/s07-runtime-final/run-suite-per-module.py",
+        ".venv/bin/python artifacts/s07-runtime-final/record-pre-existing-failures.py"
+      ],
+      "exit_codes": [
+        1,
+        0
+      ],
+      "evidence_paths_and_hashes": [
+        {
+          "path": "artifacts/s07-runtime-final/suite-per-module.json",
+          "sha256": "a05588b0281f313dc3549562a9ddfc9ed7eff87d63663a602c189ee58acb4664"
+        },
+        {
+          "path": "artifacts/s07-runtime-final/pre-existing-failures.json",
+          "sha256": "66b995e8a44015f3b5da074301747bb4d64089cba2062aeb7a8f012c57dc0764"
+        },
+        {
+          "path": "artifacts/s07-runtime-final/gl-modules-separate-processes.json",
+          "sha256": "5ef43ba224f1002a4a82e64fc9ecb2a7f23fc0726c35d7fb45d36dd2ae5834f3"
+        }
+      ],
+      "negative_controls": [
+        "this receipt refuses to build while any failing module has no recorded classification",
+        "every pre-existing classification was produced by re-running the same test command against a pristine extraction of the base commit, not by assertion",
+        "the three modules that fail only under cold import are resolved by a declared prelude, and the unflattering isolation-only numbers are retained beside the resolved ones"
+      ],
+      "limitations": [
+        "205 modules, 2245 tests, 969s wall",
+        "the single-process run is recorded as not a valid gate: SDL_VIDEODRIVER=dummy is set process-wide at import, producing 18 GL errors and one test that did not complete in ~28 minutes; it was abandoned at 1910/2206",
+        "the exit code 1 is expected and is the recorded pre-existing failure, not a crash"
+      ],
+      "blocking_decision_id": null,
+      "note": "in-scope failures: none; pre-existing: test_crew_recovery_ui (1 failure on the base commit)"
+    },
+    {
+      "id": "C13",
+      "wp": "S07-step1",
+      "requirement_ref": "simulation state preserved across every capture and comparison",
+      "applicability": "in_scope",
+      "status": "pass",
+      "commands": [
+        ".venv/bin/python artifacts/s07-runtime-final/compare-captures.py (state hash assertions)"
+      ],
+      "exit_codes": [
+        0
+      ],
+      "evidence_paths_and_hashes": [
+        {
+          "path": "artifacts/s07-runtime-final/catalogue-final-vs-prefinal.json",
+          "sha256": "a62492f9e59390979a51868b421960e4c82d5268ddb181982201b5bb839e2a08"
+        },
+        {
+          "path": "artifacts/s07-runtime-final/matrix-final-vs-prefinal.json",
+          "sha256": "ce31b8ec1410d66ff3425228c97ae712988d302ae284c167ffa30affeaa55621"
+        }
+      ],
+      "negative_controls": [
+        "the comparator fails when a capture changed the state hash"
+      ],
+      "limitations": [
+        "state hashes are asserted where both reports carry them"
+      ],
+      "blocking_decision_id": null
+    },
+    {
+      "id": "C14",
+      "wp": "S07-step4",
+      "requirement_ref": "owner decision on the only player-facing consequence of the delta",
+      "applicability": "in_scope",
+      "status": "pass",
+      "commands": [
+        ".venv/bin/python tools/art/validate-models --all (decision log parses)"
+      ],
+      "exit_codes": [
+        0
+      ],
+      "evidence_paths_and_hashes": [
+        {
+          "path": "art/manifests/pipeline_policy.json",
+          "sha256": "65e176558346f7af5d7e798fbd26d4fcbac09d798f6780018c6b86a16aa861b8"
+        }
+      ],
+      "negative_controls": [
+        "the decision records the owner words verbatim and binds to the reviewed renderer hash"
+      ],
+      "limitations": [
+        "accepts a cost, authorizes no further performance or visual change"
+      ],
+      "blocking_decision_id": null
+    },
+    {
+      "id": "C15",
+      "wp": "S07-step0",
+      "requirement_ref": "S06 coverage complete or explicitly excepted, and the exception cannot drift",
+      "applicability": "in_scope",
+      "status": "pass",
+      "commands": [
+        ".venv/bin/python artifacts/s07-runtime-final/record-s06-coverage-exception.py",
+        ".venv/bin/python artifacts/s07-runtime-final/build-final-receipt.py"
+      ],
+      "exit_codes": [
+        0,
+        0
+      ],
+      "evidence_paths_and_hashes": [
+        {
+          "path": "art/manifests/reviews/S07-S06-COVERAGE-EXCEPTION.json",
+          "sha256": "4fef9be423b3c79dac49a7fd6126f7d0eb86464dc39d9d2e7184419dc260da3a"
+        },
+        {
+          "path": "assets/models/registry.json",
+          "sha256": "4683c937cfa4cc936953c25ee6fa013f1aaaad42730a7759ec6c39167e57e79f"
+        },
+        {
+          "path": "art/manifests/pipeline_policy.json",
+          "sha256": "65e176558346f7af5d7e798fbd26d4fcbac09d798f6780018c6b86a16aa861b8"
+        }
+      ],
+      "negative_controls": [
+        "the receipt refuses to build unless the exception enumerates exactly the registry non-core rows, class for class, so it cannot widen to a new unauthored row",
+        "every registered asset is asserted to carry an explicit approval decision, and the approved set must equal the registry core rows",
+        "the exception record states what it does not approve: no appearance, no default switch, no merge/release/packaging"
+      ],
+      "limitations": [
+        "103 bindings registered and approved by 15 decision ids; 16 excepted (12 authoring_pending, 4 keep_procedural_proposed)",
+        "the exception text is the implementer's draft under owner authorization; the owner words are quoted verbatim and are not an approval of any appearance"
+      ],
+      "blocking_decision_id": null
+    }
+  ],
+  "preservation": {
+    "renderer_protected_methods_ast_equal_to_published_checkpoint": true,
+    "renderer_pin_names_the_bytes_measured_here": true,
+    "approved_paths_byte_equal_to_published_checkpoint": "asserted per path by reconcile-parity-pin.py",
+    "earlier_correction_blocks_retained": [
+      "s07_renderer_pin_correction",
+      "s07_authored_parity_pin_correction (superseded_by pointer only)"
+    ],
+    "shipped_movie_unchanged": true,
+    "simulation_state_unchanged": true,
+    "approved_geometry_or_source_modified": false,
+    "tolerance_or_acceptance_criterion_relaxed": false
+  },
+  "retained_failed_attempts": [
+    {
+      "evidence": {
+        "path": "artifacts/s07-runtime-final/native-catalogue-final-attempt1-crash.log",
+        "sha256": "415a845f099dc4e59fd8b36ae2bf47ec97a0572451ef6fb03e73ae925462467c"
+      },
+      "note": "catalogue harness crashed on a row with data_id=None before the scaffold was explicitly excluded"
+    },
+    {
+      "evidence": {
+        "path": "artifacts/s07-runtime-final/full-suite-final-opaque-aborted.log",
+        "sha256": "7c75b6aae568704e2cce3b27486120c43bb39222948710fbcbe199e5ccda728d"
+      },
+      "note": "first full-suite attempt emitted one character per test, so a stall was indistinguishable from slowness; abandoned at 1910/2206 after the log froze for over five minutes"
+    },
+    {
+      "evidence": {
+        "path": "artifacts/s07-runtime-final/full-suite-bounded.log",
+        "sha256": "2aed773cb37268acc090d74cf5ecc3605b95cf1a5a262bdc9df23f14bd8bb652"
+      },
+      "note": "second full-suite attempt was bounded and instrumented, but hung in a GL test because a module import had set SDL_VIDEODRIVER=dummy process-wide; abandoned at 1910/2206 after a 1688s stall"
+    },
+    {
+      "evidence": {
+        "path": "artifacts/s07-runtime-final/suite-per-module-isolation-only.json",
+        "sha256": "e2a2f91319a4c6548376b860b42285848a9dbcecc4f171a445e0ae3e558548a9"
+      },
+      "note": "first per-module sweep counted three pytest-style modules as passing while they contributed zero tests, and blamed three modules for a pre-existing circular import; kept as the unflattering first attempt, superseded by suite-per-module.json"
+    },
+    {
+      "evidence": {
+        "path": "artifacts/s07-runtime-final/candidate-movie-final-vs-prefinal.json",
+        "sha256": "83c3524fc56de29c5f43756f8313e662aaca0c1664be5d1cb733877c4232deda"
+      },
+      "note": "the pre-repair candidate movie is byte-identical to the final one across 360 frames; that is a consequence of the uncached draw path having no production call site, and it is recorded as a limitation of what the movie gate proves, not as evidence the changed code was exercised"
+    }
+  ],
+  "deferred_gates": [
+    {
+      "gate": "macOS packaging / DMG build and smoke",
+      "status": "not_run",
+      "reason": "packaging is a separate owner gate and was not authorized in S07"
+    },
+    {
+      "gate": "Windows native graphics and packaged-build acceptance",
+      "status": "not_run",
+      "reason": "no Windows host in this workstream; S09 owns platform acceptance"
+    },
+    {
+      "gate": "interactive performance / FPS targets",
+      "status": "not_run",
+      "reason": "S08 owns performance; this receipt accepts a draw-cost change but measures no frame rate"
+    },
+    {
+      "gate": "S08/S09 compatibility and platform gates",
+      "status": "not_run",
+      "reason": "explicitly outside S07 closure"
+    },
+    {
+      "gate": "merge, default activation, release",
+      "status": "blocked_owner_decision",
+      "reason": "each is a separate owner gate; PR #131 stays draft"
+    }
+  ],
+  "suite_gate": {
+    "method": "one process per test module, real SDL video driver (SDL_VIDEODRIVER unset)",
+    "prelude": "import game.core (declared: works around a pre-existing circular import in game/systems/__init__.py <-> game/core/manager.py; identical on 56906ea)",
+    "pytest_fallback": "unittest yields zero tests for test_classic_replays_gl, test_classic_screens and test_menu_movie; the first two names were re-run under pytest, and test_classic_replays_gl has no test cases at all and runs as a script",
+    "modules": 205,
+    "tests_ran": 2245,
+    "tally": {
+      "pass": 204,
+      "fail": 1
+    },
+    "wall_seconds": 969.4,
+    "not_passing_modules": [
+      "test_crew_recovery_ui"
+    ],
+    "in_scope_failures": [],
+    "pre_existing_failures": [
+      {
+        "module": "test_crew_recovery_ui",
+        "test": "test_crew_recovery_ui.RecoveryUITests.test_faction_transports_have_small_known_solid_visuals",
+        "base_commit_result": {
+          "ran": 3,
+          "failures": 1,
+          "errors": 0
+        },
+        "final_tree_result": {
+          "ran": 3,
+          "failures": 1,
+          "errors": 0
+        },
+        "contradicted_decision": "s06-imperial-convoy-parity-2026-10-18",
+        "handling": "carried as a recorded pre-existing failure; repairing the expectation means editing an S06 guard together with the record that authorized the change, which is not part of this increment"
+      }
+    ],
+    "single_process_run_is_not_a_gate": "tests/test_weapon_sfx.py sets SDL_VIDEODRIVER=dummy at import, process-wide, so later GL modules error (18) or hang; one test did not complete in ~28 minutes and passes in seconds per process"
+  },
+  "pre_existing_failures": [
+    {
+      "module": "test_crew_recovery_ui",
+      "test": "test_crew_recovery_ui.RecoveryUITests.test_faction_transports_have_small_known_solid_visuals",
+      "base_commit_result": {
+        "ran": 3,
+        "failures": 1,
+        "errors": 0
+      },
+      "final_tree_result": {
+        "ran": 3,
+        "failures": 1,
+        "errors": 0
+      },
+      "contradicted_decision": "s06-imperial-convoy-parity-2026-10-18",
+      "handling": "carried as a recorded pre-existing failure; repairing the expectation means editing an S06 guard together with the record that authorized the change, which is not part of this increment"
+    }
+  ],
+  "criteria_not_passing": [],
+  "overall_status": "pass",
+  "what_this_receipt_does_not_prove": [
+    "that the phased-motion branch or _draw_station run in the shipped runtime: neither has a production call site, so the repair is latent there",
+    "any frame-rate, interactive or Windows behaviour",
+    "packaged-build or default-activation behaviour",
+    "that the changed code path is exercised by the capture evidence; the motion-transition harness exercises it, the stationary sets cannot",
+    "a green suite in a single process: that configuration is broken in this environment by a module that sets SDL_VIDEODRIVER=dummy at import, and the gate here is per module instead"
+  ]
+}

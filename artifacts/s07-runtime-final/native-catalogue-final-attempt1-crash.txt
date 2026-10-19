@@ -1,0 +1,4 @@
+{"command": [".venv/bin/python", "artifacts/s07-runtime-final/native-catalogue.py", "--out", "artifacts/s07-runtime-final/native-catalogue-final"], "pid": 95067, "exit_code": 1, "timed_out": false, "deadline_seconds": 1500.0, "elapsed_seconds": 38.154, "log": "artifacts/s07-runtime-final/native-catalogue-final.log"}
+real 38.20
+user 34.15
+sys 2.00

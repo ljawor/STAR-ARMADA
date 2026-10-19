@@ -1,0 +1,96 @@
+test_rejects_unsafe_asset_identifiers_before_manifest_generation (test_s07_registration.RegistrationTests.test_rejects_unsafe_asset_identifiers_before_manifest_generation) ... 
+  test_rejects_unsafe_asset_identifiers_before_manifest_generation (test_s07_registration.RegistrationTests.test_rejects_unsafe_asset_identifiers_before_manifest_generation) (identifier='../escape') ... FAIL
+  test_rejects_unsafe_asset_identifiers_before_manifest_generation (test_s07_registration.RegistrationTests.test_rejects_unsafe_asset_identifiers_before_manifest_generation) (identifier='/absolute') ... FAIL
+  test_rejects_unsafe_asset_identifiers_before_manifest_generation (test_s07_registration.RegistrationTests.test_rejects_unsafe_asset_identifiers_before_manifest_generation) (identifier='nested/name') ... FAIL
+  test_rejects_unsafe_asset_identifiers_before_manifest_generation (test_s07_registration.RegistrationTests.test_rejects_unsafe_asset_identifiers_before_manifest_generation) (identifier='nested\\name') ... FAIL
+  test_rejects_unsafe_asset_identifiers_before_manifest_generation (test_s07_registration.RegistrationTests.test_rejects_unsafe_asset_identifiers_before_manifest_generation) (identifier='.') ... FAIL
+  test_rejects_unsafe_asset_identifiers_before_manifest_generation (test_s07_registration.RegistrationTests.test_rejects_unsafe_asset_identifiers_before_manifest_generation) (identifier='..') ... FAIL
+  test_rejects_unsafe_asset_identifiers_before_manifest_generation (test_s07_registration.RegistrationTests.test_rejects_unsafe_asset_identifiers_before_manifest_generation) (identifier='') ... FAIL
+  test_rejects_unsafe_asset_identifiers_before_manifest_generation (test_s07_registration.RegistrationTests.test_rejects_unsafe_asset_identifiers_before_manifest_generation) (identifier='UPPER') ... FAIL
+  test_rejects_unsafe_asset_identifiers_before_manifest_generation (test_s07_registration.RegistrationTests.test_rejects_unsafe_asset_identifiers_before_manifest_generation) (identifier='trailing.') ... FAIL
+  test_rejects_unsafe_asset_identifiers_before_manifest_generation (test_s07_registration.RegistrationTests.test_rejects_unsafe_asset_identifiers_before_manifest_generation) (identifier='white space') ... FAIL
+
+======================================================================
+FAIL: test_rejects_unsafe_asset_identifiers_before_manifest_generation (test_s07_registration.RegistrationTests.test_rejects_unsafe_asset_identifiers_before_manifest_generation) (identifier='../escape')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_registration.py", line 51, in test_rejects_unsafe_asset_identifiers_before_manifest_generation
+    with self.assertRaisesRegex(ValueError, 'unsafe asset identifier'):
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_rejects_unsafe_asset_identifiers_before_manifest_generation (test_s07_registration.RegistrationTests.test_rejects_unsafe_asset_identifiers_before_manifest_generation) (identifier='/absolute')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_registration.py", line 51, in test_rejects_unsafe_asset_identifiers_before_manifest_generation
+    with self.assertRaisesRegex(ValueError, 'unsafe asset identifier'):
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_rejects_unsafe_asset_identifiers_before_manifest_generation (test_s07_registration.RegistrationTests.test_rejects_unsafe_asset_identifiers_before_manifest_generation) (identifier='nested/name')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_registration.py", line 51, in test_rejects_unsafe_asset_identifiers_before_manifest_generation
+    with self.assertRaisesRegex(ValueError, 'unsafe asset identifier'):
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_rejects_unsafe_asset_identifiers_before_manifest_generation (test_s07_registration.RegistrationTests.test_rejects_unsafe_asset_identifiers_before_manifest_generation) (identifier='nested\\name')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_registration.py", line 51, in test_rejects_unsafe_asset_identifiers_before_manifest_generation
+    with self.assertRaisesRegex(ValueError, 'unsafe asset identifier'):
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_rejects_unsafe_asset_identifiers_before_manifest_generation (test_s07_registration.RegistrationTests.test_rejects_unsafe_asset_identifiers_before_manifest_generation) (identifier='.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_registration.py", line 51, in test_rejects_unsafe_asset_identifiers_before_manifest_generation
+    with self.assertRaisesRegex(ValueError, 'unsafe asset identifier'):
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_rejects_unsafe_asset_identifiers_before_manifest_generation (test_s07_registration.RegistrationTests.test_rejects_unsafe_asset_identifiers_before_manifest_generation) (identifier='..')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_registration.py", line 51, in test_rejects_unsafe_asset_identifiers_before_manifest_generation
+    with self.assertRaisesRegex(ValueError, 'unsafe asset identifier'):
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_rejects_unsafe_asset_identifiers_before_manifest_generation (test_s07_registration.RegistrationTests.test_rejects_unsafe_asset_identifiers_before_manifest_generation) (identifier='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_registration.py", line 51, in test_rejects_unsafe_asset_identifiers_before_manifest_generation
+    with self.assertRaisesRegex(ValueError, 'unsafe asset identifier'):
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_rejects_unsafe_asset_identifiers_before_manifest_generation (test_s07_registration.RegistrationTests.test_rejects_unsafe_asset_identifiers_before_manifest_generation) (identifier='UPPER')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_registration.py", line 51, in test_rejects_unsafe_asset_identifiers_before_manifest_generation
+    with self.assertRaisesRegex(ValueError, 'unsafe asset identifier'):
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_rejects_unsafe_asset_identifiers_before_manifest_generation (test_s07_registration.RegistrationTests.test_rejects_unsafe_asset_identifiers_before_manifest_generation) (identifier='trailing.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_registration.py", line 51, in test_rejects_unsafe_asset_identifiers_before_manifest_generation
+    with self.assertRaisesRegex(ValueError, 'unsafe asset identifier'):
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_rejects_unsafe_asset_identifiers_before_manifest_generation (test_s07_registration.RegistrationTests.test_rejects_unsafe_asset_identifiers_before_manifest_generation) (identifier='white space')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_registration.py", line 51, in test_rejects_unsafe_asset_identifiers_before_manifest_generation
+    with self.assertRaisesRegex(ValueError, 'unsafe asset identifier'):
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 7.921s
+
+FAILED (failures=10)

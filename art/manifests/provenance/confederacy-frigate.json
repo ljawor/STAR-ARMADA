@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "confederacy:frigate",
+  "asset_id": "core:confederacy/frigate",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:24:59Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/confed_frigate.blend",
+    "sha256": "cfb8a6433bc380f8d5e689e7098c70bbd2a027cb1102b6d9517f86267f18acd9"
+  },
+  "exporter": {
+    "path": "tools/art/export_confed_frigate.py",
+    "sha256": "1ea9653c3e29c520e90cf243fb197ccb4d8f7ca86a0349a55e98ed4a32cb6737"
+  },
+  "runtime": {
+    "path": "assets/models/confed_frigate.mesh.json",
+    "sha256": "96fd45471049b92aede194cf851e801e022579ee1a84c61daf3cbe088c8ed268",
+    "bytes": 121379,
+    "triangles": 2152
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "96fd45471049b92aede194cf851e801e022579ee1a84c61daf3cbe088c8ed268",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

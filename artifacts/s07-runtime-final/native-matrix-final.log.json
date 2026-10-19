@@ -1,0 +1,14 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "artifacts/s07-runtime-final/native-matrix.py",
+    "--out",
+    "artifacts/s07-runtime-final/native-matrix-final"
+  ],
+  "pid": 96241,
+  "exit_code": 0,
+  "timed_out": false,
+  "deadline_seconds": 1200.0,
+  "elapsed_seconds": 18.46,
+  "log": "artifacts/s07-runtime-final/native-matrix-final.log"
+}

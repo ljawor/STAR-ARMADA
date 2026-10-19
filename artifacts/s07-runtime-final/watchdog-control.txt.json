@@ -1,0 +1,13 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-c",
+    "import time; time.sleep(30)"
+  ],
+  "pid": 82762,
+  "exit_code": -9,
+  "timed_out": true,
+  "deadline_seconds": 0.5,
+  "elapsed_seconds": 0.506,
+  "log": "artifacts/s07-runtime-final/watchdog-control.txt"
+}

@@ -1,0 +1,6 @@
+test_publication_failure_restores_entire_output_set (test_s07_registration.RegistrationTests.test_publication_failure_restores_entire_output_set) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.613s
+
+OK

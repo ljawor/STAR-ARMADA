@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "confederacy:sensor_station",
+  "asset_id": "core:confederacy/sensor_station",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:02Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/legion_sensor_station.blend",
+    "sha256": "a5d7d33d83326573165a7505aa8e6f1b29ba09864521657dcea0396e990002d1"
+  },
+  "exporter": {
+    "path": "tools/art/export_legion_sensor_station.py",
+    "sha256": "f244443ab293f6d468875847d4fc6b1fc0b9cdb4449bf3cd5e1e5ac6fead10d9"
+  },
+  "runtime": {
+    "path": "assets/models/legion_sensor_station.mesh.json",
+    "sha256": "27d3b5803c10a386b8ed74f8574acb0f8d0a6eb5f7509ad4bd2726ac33163755",
+    "bytes": 230217,
+    "triangles": 3564
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "27d3b5803c10a386b8ed74f8574acb0f8d0a6eb5f7509ad4bd2726ac33163755",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

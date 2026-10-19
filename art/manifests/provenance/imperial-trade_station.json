@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "imperial:trade_station",
+  "asset_id": "core:imperial/trade_station",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:14Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/imperial_trade_station.blend",
+    "sha256": "504242ca50725916f883d6ac5386d299d972537ed9e187826b8b4cecdf6583e5"
+  },
+  "exporter": {
+    "path": "tools/art/export_imperial_trade_station.py",
+    "sha256": "5c438cdd28794b729d290ca6927e3d174ee4398bdddd0f7820986d8d68ad7253"
+  },
+  "runtime": {
+    "path": "assets/models/imperial_trade_station.mesh.json",
+    "sha256": "058f6b8963921544c31213d669558d009ea043f24d4d4865f7dcc7ddec8103fc",
+    "bytes": 116868,
+    "triangles": 2100
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "058f6b8963921544c31213d669558d009ea043f24d4d4865f7dcc7ddec8103fc",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

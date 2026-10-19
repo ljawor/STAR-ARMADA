@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "confederacy:convoy",
+  "asset_id": "core:confederacy/convoy",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:24:56Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/legion_convoy.blend",
+    "sha256": "57d619a699cb85257131c4c212e0c58b9aea2e3199caf261d3948757446eabaa"
+  },
+  "exporter": {
+    "path": "tools/art/export_legion_convoy.py",
+    "sha256": "34806d3bd776a52e4ae738eff844a1929451e9bcdc0ecd8929fa174b2e511ec4"
+  },
+  "runtime": {
+    "path": "assets/models/legion_convoy.mesh.json",
+    "sha256": "78f864ab6a742b10596c3af75430744a31d5a77dfc5c7af3851dff7804c13041",
+    "bytes": 286955,
+    "triangles": 4584
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "78f864ab6a742b10596c3af75430744a31d5a77dfc5c7af3851dff7804c13041",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

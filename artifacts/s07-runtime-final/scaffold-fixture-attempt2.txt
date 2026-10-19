@@ -1,0 +1,105 @@
+test_exact_approved_set_and_deterministic_outputs (test_s07_registration.RegistrationTests.test_exact_approved_set_and_deterministic_outputs) ... ok
+test_pipeline_authorities_and_existing_trio_are_preserved (test_s07_registration.RegistrationTests.test_pipeline_authorities_and_existing_trio_are_preserved) ... ok
+test_publication_failure_restores_entire_output_set (test_s07_registration.RegistrationTests.test_publication_failure_restores_entire_output_set) ... ok
+test_publication_preflights_every_destination_without_partial_writes (test_s07_registration.RegistrationTests.test_publication_preflights_every_destination_without_partial_writes) ... ok
+test_refuses_registration_without_explicit_execution_authority (test_s07_registration.RegistrationTests.test_refuses_registration_without_explicit_execution_authority) ... ok
+test_regenerates_stale_corvette_registry_facts_without_dropping_row (test_s07_registration.RegistrationTests.test_regenerates_stale_corvette_registry_facts_without_dropping_row) ... ERROR
+test_regeneration_after_publication_is_idempotent_and_preserves_inputs (test_s07_registration.RegistrationTests.test_regeneration_after_publication_is_idempotent_and_preserves_inputs) ... ERROR
+test_rejects_arbitrary_cruiser_evidence_beside_real_report (test_s07_registration.RegistrationTests.test_rejects_arbitrary_cruiser_evidence_beside_real_report) ... ok
+test_rejects_corrupt_approved_pin (test_s07_registration.RegistrationTests.test_rejects_corrupt_approved_pin) ... ok
+test_rejects_corrupt_pinned_evidence (test_s07_registration.RegistrationTests.test_rejects_corrupt_pinned_evidence) ... ok
+test_rejects_manifest_identifiers_aliasing_other_specimens_or_trio (test_s07_registration.RegistrationTests.test_rejects_manifest_identifiers_aliasing_other_specimens_or_trio) ... ok
+test_rejects_missing_evidence (test_s07_registration.RegistrationTests.test_rejects_missing_evidence) ... ok
+test_rejects_noncanonical_safe_evidence_paths_without_normalizing (test_s07_registration.RegistrationTests.test_rejects_noncanonical_safe_evidence_paths_without_normalizing) ... ok
+test_rejects_rehashed_evidence_from_a_different_runtime (test_s07_registration.RegistrationTests.test_rejects_rehashed_evidence_from_a_different_runtime) ... ok
+test_rejects_unsafe_asset_identifiers_before_manifest_generation (test_s07_registration.RegistrationTests.test_rejects_unsafe_asset_identifiers_before_manifest_generation) ... ok
+test_rejects_wrong_real_script_selector (test_s07_registration.RegistrationTests.test_rejects_wrong_real_script_selector) ... ok
+test_resolver_loads_original_102_plus_separate_scaffold_in_assets_only_frozen_root (test_s07_registration.RegistrationTests.test_resolver_loads_original_102_plus_separate_scaffold_in_assets_only_frozen_root) ... ok
+test_captured_runtime_and_capture_code_identity_are_enforced (test_s07_scaffold_registration.ScaffoldRegistrationTests.test_captured_runtime_and_capture_code_identity_are_enforced) ... ok
+test_explicit_increment_preserves_original_99_and_trio (test_s07_scaffold_registration.ScaffoldRegistrationTests.test_explicit_increment_preserves_original_99_and_trio) ... ok
+test_manifest_evidence_is_bounded_and_receipt_preserves_full_approved_pin_map (test_s07_scaffold_registration.ScaffoldRegistrationTests.test_manifest_evidence_is_bounded_and_receipt_preserves_full_approved_pin_map) ... FAIL
+test_missing_separate_execution_authority_fails_closed (test_s07_scaffold_registration.ScaffoldRegistrationTests.test_missing_separate_execution_authority_fails_closed) ... ok
+test_original_evidence_bytes_are_enforced (test_s07_scaffold_registration.ScaffoldRegistrationTests.test_original_evidence_bytes_are_enforced) ... ok
+test_published_separate_increment_is_preserved_without_repeating_flag (test_s07_scaffold_registration.ScaffoldRegistrationTests.test_published_separate_increment_is_preserved_without_repeating_flag) ... ok
+test_scaffold_rejects_symlinked_approved_input_even_inside_root (test_s07_scaffold_registration.ScaffoldRegistrationTests.test_scaffold_rejects_symlinked_approved_input_even_inside_root) ... ok
+test_separate_appearance_decision_cannot_be_replaced_by_ship_batch (test_s07_scaffold_registration.ScaffoldRegistrationTests.test_separate_appearance_decision_cannot_be_replaced_by_ship_batch) ... ok
+test_all_historical_identities_have_deterministic_current_routes (test_s07_binding_routes.BindingRouteAuditTests.test_all_historical_identities_have_deterministic_current_routes) ... FAIL
+test_broken_registered_binding_is_not_reported_as_unregistered (test_s07_binding_routes.BindingRouteAuditTests.test_broken_registered_binding_is_not_reported_as_unregistered) ... ok
+test_cli_is_read_only_and_runs_without_pythonpath (test_s07_binding_routes.BindingRouteAuditTests.test_cli_is_read_only_and_runs_without_pythonpath) ... ok
+test_live_data_role_overrides_historical_identity_and_shape (test_s07_binding_routes.BindingRouteAuditTests.test_live_data_role_overrides_historical_identity_and_shape) ... ok
+test_real_configured_resolver_routes_convoy_aliases_and_imperial_station (test_s07_binding_routes.BindingRouteAuditTests.test_real_configured_resolver_routes_convoy_aliases_and_imperial_station)
+Synthetic core fixture proves seams, NOT candidate revision/appearance acceptance. ... ok
+test_selected_revision_must_match_approved_runtime_bytes (test_s07_binding_routes.BindingRouteAuditTests.test_selected_revision_must_match_approved_runtime_bytes) ... ok
+test_selection_is_separate_from_actual_geometry_dispatch (test_s07_binding_routes.BindingRouteAuditTests.test_selection_is_separate_from_actual_geometry_dispatch) ... FAIL
+
+======================================================================
+ERROR: test_regenerates_stale_corvette_registry_facts_without_dropping_row (test_s07_registration.RegistrationTests.test_regenerates_stale_corvette_registry_facts_without_dropping_row)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_registration.py", line 191, in test_regenerates_stale_corvette_registry_facts_without_dropping_row
+    regenerated = json.loads(outputs(root)['assets/models/registry.json'])
+                             ^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tools/art/sync_runtime_metadata.py", line 137, in outputs
+    scaffold, scaffold_receipts = publish_scaffold(
+                                  ^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tools/art/s07_registration.py", line 328, in publish_scaffold
+    target = safe_file(base, relative)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tools/art/s07_registration.py", line 30, in safe_file
+    raise ValueError('missing/unsafe registration file: ' + relative)
+ValueError: missing/unsafe registration file: artifacts/s07-integration/scaffold-review-attempt1/confederacy-0.5-before-close.png
+
+======================================================================
+ERROR: test_regeneration_after_publication_is_idempotent_and_preserves_inputs (test_s07_registration.RegistrationTests.test_regeneration_after_publication_is_idempotent_and_preserves_inputs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_registration.py", line 165, in test_regeneration_after_publication_is_idempotent_and_preserves_inputs
+    generated = outputs(root)
+                ^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tools/art/sync_runtime_metadata.py", line 137, in outputs
+    scaffold, scaffold_receipts = publish_scaffold(
+                                  ^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tools/art/s07_registration.py", line 328, in publish_scaffold
+    target = safe_file(base, relative)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tools/art/s07_registration.py", line 30, in safe_file
+    raise ValueError('missing/unsafe registration file: ' + relative)
+ValueError: missing/unsafe registration file: artifacts/s07-integration/scaffold-review-attempt1/confederacy-0.5-before-close.png
+
+======================================================================
+FAIL: test_manifest_evidence_is_bounded_and_receipt_preserves_full_approved_pin_map (test_s07_scaffold_registration.ScaffoldRegistrationTests.test_manifest_evidence_is_bounded_and_receipt_preserves_full_approved_pin_map)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_scaffold_registration.py", line 104, in test_manifest_evidence_is_bounded_and_receipt_preserves_full_approved_pin_map
+    self.assertEqual(receipts[manifest['asset']]['evidence_sha256'], pins)
+AssertionError: {'art[354 chars]mpt1/imperial-0.1-after-close.png': '2b26f6cf9[2166 chars]52a'} != {'art[354 chars]mpt1/confederacy-0.5-before-close.png': '8a9c7[4010 chars]bd4'}
+Diff is 4983 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_all_historical_identities_have_deterministic_current_routes (test_s07_binding_routes.BindingRouteAuditTests.test_all_historical_identities_have_deterministic_current_routes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_binding_routes.py", line 34, in test_all_historical_identities_have_deterministic_current_routes
+    self.assertEqual(report['counts'], {'selected': 107, 'deferred_texture_pipeline': 10,
+AssertionError: {'deferred_texture_pipeline': 10, 'outside_[59 chars] 106} != {'selected': 107, 'deferred_texture_pipelin[31 chars]': 3}
++ {'deferred_texture_pipeline': 10, 'outside_mesh_catalogue': 3, 'selected': 107}
+- {'deferred_texture_pipeline': 10,
+-  'outside_mesh_catalogue': 3,
+-  'registered_unresolved': 1,
+-  'selected': 106}
+
+======================================================================
+FAIL: test_selection_is_separate_from_actual_geometry_dispatch (test_s07_binding_routes.BindingRouteAuditTests.test_selection_is_separate_from_actual_geometry_dispatch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_binding_routes.py", line 52, in test_selection_is_separate_from_actual_geometry_dispatch
+    self.assertEqual(scaffold['disposition'], 'selected')
+AssertionError: 'registered_unresolved' != 'selected'
+- registered_unresolved
++ selected
+
+
+----------------------------------------------------------------------
+Ran 32 tests in 23.349s
+
+FAILED (failures=3, errors=2)

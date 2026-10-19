@@ -65,5 +65,7 @@ class CompletionApproval(unittest.TestCase):
                 for path, digest in asset[group].items():
                     self.assertEqual(hashlib.sha256((ROOT/path).read_bytes()).hexdigest(), digest)
         scaffold = load('art/manifests/pending/S06-SHARED-CONSTRUCTION-SCAFFOLD.json')
-        self.assertEqual(scaffold['status'], 'pending_owner_appearance_approval')
-        self.assertNotIn('appearance_decision', scaffold)
+        # A later, separately pictured S07 review approved the scaffold; the original
+        # three decisions above still cover only their original 26 pictures.
+        self.assertEqual(scaffold['status'], 'appearance_approved_pending_landing')
+        self.assertEqual(scaffold['appearance_decision'], 's07-scaffold-appearance-2026-10-18')

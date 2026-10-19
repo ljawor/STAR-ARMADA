@@ -1,0 +1,449 @@
+DE_FIXED_NEGATIVE_CONTROL removed_actual_ship_threshold_suppression
+test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) ... 
+  test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='rebel:battleship', apparent=15.999999) ... FAIL
+  test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='rebel:battleship', apparent=16.0) ... FAIL
+  test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='rebel:battleship', apparent=16.000001) ... FAIL
+  test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='rebel:battleship', apparent=33.999999) ... FAIL
+  test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='rebel:frigate', apparent=15.999999) ... FAIL
+  test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='rebel:frigate', apparent=16.0) ... FAIL
+  test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='rebel:frigate', apparent=16.000001) ... FAIL
+  test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='rebel:frigate', apparent=33.999999) ... FAIL
+  test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='imperial:fighter', apparent=15.999999) ... FAIL
+  test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='imperial:fighter', apparent=16.0) ... FAIL
+  test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='imperial:fighter', apparent=16.000001) ... FAIL
+  test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='imperial:fighter', apparent=33.999999) ... FAIL
+  test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='syndicate:convoy', apparent=15.999999) ... FAIL
+  test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='syndicate:convoy', apparent=16.0) ... FAIL
+  test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='syndicate:convoy', apparent=16.000001) ... FAIL
+  test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='syndicate:convoy', apparent=33.999999) ... FAIL
+  test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='confederacy:constructor', apparent=15.999999) ... FAIL
+  test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='confederacy:constructor', apparent=16.0) ... FAIL
+  test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='confederacy:constructor', apparent=16.000001) ... FAIL
+  test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='confederacy:constructor', apparent=33.999999) ... FAIL
+LOD_EXISTING_SEMANTICS_NOT_PARITY_OR_MESH_LOD [{"binding": "rebel:battleship", "apparent": 34.0, "cached": ["base", "dark", "trim", "accent", "lit", "cool"], "uncached": ["base", "dark", "trim", "accent", "lit", "cool"]}, {"binding": "rebel:battleship", "apparent": 34.000001, "cached": ["base", "dark", "trim", "accent", "lit", "cool"], "uncached": ["base", "dark", "trim", "accent", "lit", "cool"]}, {"binding": "rebel:frigate", "apparent": 34.0, "cached": ["base", "dark", "trim", "accent", "lit", "cool"], "uncached": ["base", "dark", "trim", "accent", "lit", "cool"]}, {"binding": "rebel:frigate", "apparent": 34.000001, "cached": ["base", "dark", "trim", "accent", "lit", "cool"], "uncached": ["base", "dark", "trim", "accent", "lit", "cool"]}, {"binding": "imperial:fighter", "apparent": 34.0, "cached": ["base", "dark", "trim", "accent", "lit", "cool"], "uncached": ["base", "dark", "trim", "accent", "lit", "cool"]}, {"binding": "imperial:fighter", "apparent": 34.000001, "cached": ["base", "dark", "trim", "accent", "lit", "cool"], "uncached": ["base", "dark", "trim", "accent", "lit", "cool"]}, {"binding": "syndicate:convoy", "apparent": 34.0, "cached": ["base", "dark", "trim", "accent", "lit", "cool"], "uncached": ["base", "dark", "trim", "accent", "lit", "cool"]}, {"binding": "syndicate:convoy", "apparent": 34.000001, "cached": ["base", "dark", "trim", "accent", "lit", "cool"], "uncached": ["base", "dark", "trim", "accent", "lit", "cool"]}, {"binding": "confederacy:constructor", "apparent": 34.0, "cached": ["base", "dark", "trim", "accent", "lit", "cool"], "uncached": ["base", "dark", "trim", "accent", "lit", "cool"]}, {"binding": "confederacy:constructor", "apparent": 34.000001, "cached": ["base", "dark", "trim", "accent", "lit", "cool"], "uncached": ["base", "dark", "trim", "accent", "lit", "cool"]}]
+
+======================================================================
+FAIL: test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='rebel:battleship', apparent=15.999999)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_lod_environment.py", line 184, in test_registered_representatives_cached_thresholds_and_uncached_difference
+    self.assertEqual(cached, expected_roles(px))
+AssertionError: Tuples differ: ('base', 'dark', 'trim', 'accent', 'lit', 'cool') != ('base',)
+
+First tuple contains 5 additional elements.
+First extra element 1:
+'dark'
+
+- ('base', 'dark', 'trim', 'accent', 'lit', 'cool')
++ ('base',)
+
+======================================================================
+FAIL: test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='rebel:battleship', apparent=16.0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_lod_environment.py", line 184, in test_registered_representatives_cached_thresholds_and_uncached_difference
+    self.assertEqual(cached, expected_roles(px))
+AssertionError: Tuples differ: ('base', 'dark', 'trim', 'accent', 'lit', 'cool') != ('base', 'lit')
+
+First differing element 1:
+'dark'
+'lit'
+
+First tuple contains 4 additional elements.
+First extra element 2:
+'trim'
+
+- ('base', 'dark', 'trim', 'accent', 'lit', 'cool')
++ ('base', 'lit')
+
+======================================================================
+FAIL: test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='rebel:battleship', apparent=16.000001)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_lod_environment.py", line 184, in test_registered_representatives_cached_thresholds_and_uncached_difference
+    self.assertEqual(cached, expected_roles(px))
+AssertionError: Tuples differ: ('base', 'dark', 'trim', 'accent', 'lit', 'cool') != ('base', 'lit')
+
+First differing element 1:
+'dark'
+'lit'
+
+First tuple contains 4 additional elements.
+First extra element 2:
+'trim'
+
+- ('base', 'dark', 'trim', 'accent', 'lit', 'cool')
++ ('base', 'lit')
+
+======================================================================
+FAIL: test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='rebel:battleship', apparent=33.999999)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_lod_environment.py", line 184, in test_registered_representatives_cached_thresholds_and_uncached_difference
+    self.assertEqual(cached, expected_roles(px))
+AssertionError: Tuples differ: ('base', 'dark', 'trim', 'accent', 'lit', 'cool') != ('base', 'lit')
+
+First differing element 1:
+'dark'
+'lit'
+
+First tuple contains 4 additional elements.
+First extra element 2:
+'trim'
+
+- ('base', 'dark', 'trim', 'accent', 'lit', 'cool')
++ ('base', 'lit')
+
+======================================================================
+FAIL: test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='rebel:frigate', apparent=15.999999)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_lod_environment.py", line 184, in test_registered_representatives_cached_thresholds_and_uncached_difference
+    self.assertEqual(cached, expected_roles(px))
+AssertionError: Tuples differ: ('base', 'dark', 'trim', 'accent', 'lit', 'cool') != ('base',)
+
+First tuple contains 5 additional elements.
+First extra element 1:
+'dark'
+
+- ('base', 'dark', 'trim', 'accent', 'lit', 'cool')
++ ('base',)
+
+======================================================================
+FAIL: test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='rebel:frigate', apparent=16.0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_lod_environment.py", line 184, in test_registered_representatives_cached_thresholds_and_uncached_difference
+    self.assertEqual(cached, expected_roles(px))
+AssertionError: Tuples differ: ('base', 'dark', 'trim', 'accent', 'lit', 'cool') != ('base', 'lit')
+
+First differing element 1:
+'dark'
+'lit'
+
+First tuple contains 4 additional elements.
+First extra element 2:
+'trim'
+
+- ('base', 'dark', 'trim', 'accent', 'lit', 'cool')
++ ('base', 'lit')
+
+======================================================================
+FAIL: test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='rebel:frigate', apparent=16.000001)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_lod_environment.py", line 184, in test_registered_representatives_cached_thresholds_and_uncached_difference
+    self.assertEqual(cached, expected_roles(px))
+AssertionError: Tuples differ: ('base', 'dark', 'trim', 'accent', 'lit', 'cool') != ('base', 'lit')
+
+First differing element 1:
+'dark'
+'lit'
+
+First tuple contains 4 additional elements.
+First extra element 2:
+'trim'
+
+- ('base', 'dark', 'trim', 'accent', 'lit', 'cool')
++ ('base', 'lit')
+
+======================================================================
+FAIL: test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='rebel:frigate', apparent=33.999999)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_lod_environment.py", line 184, in test_registered_representatives_cached_thresholds_and_uncached_difference
+    self.assertEqual(cached, expected_roles(px))
+AssertionError: Tuples differ: ('base', 'dark', 'trim', 'accent', 'lit', 'cool') != ('base', 'lit')
+
+First differing element 1:
+'dark'
+'lit'
+
+First tuple contains 4 additional elements.
+First extra element 2:
+'trim'
+
+- ('base', 'dark', 'trim', 'accent', 'lit', 'cool')
++ ('base', 'lit')
+
+======================================================================
+FAIL: test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='imperial:fighter', apparent=15.999999)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_lod_environment.py", line 184, in test_registered_representatives_cached_thresholds_and_uncached_difference
+    self.assertEqual(cached, expected_roles(px))
+AssertionError: Tuples differ: ('base', 'dark', 'trim', 'accent', 'lit', 'cool') != ('base',)
+
+First tuple contains 5 additional elements.
+First extra element 1:
+'dark'
+
+- ('base', 'dark', 'trim', 'accent', 'lit', 'cool')
++ ('base',)
+
+======================================================================
+FAIL: test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='imperial:fighter', apparent=16.0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_lod_environment.py", line 184, in test_registered_representatives_cached_thresholds_and_uncached_difference
+    self.assertEqual(cached, expected_roles(px))
+AssertionError: Tuples differ: ('base', 'dark', 'trim', 'accent', 'lit', 'cool') != ('base', 'lit')
+
+First differing element 1:
+'dark'
+'lit'
+
+First tuple contains 4 additional elements.
+First extra element 2:
+'trim'
+
+- ('base', 'dark', 'trim', 'accent', 'lit', 'cool')
++ ('base', 'lit')
+
+======================================================================
+FAIL: test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='imperial:fighter', apparent=16.000001)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_lod_environment.py", line 184, in test_registered_representatives_cached_thresholds_and_uncached_difference
+    self.assertEqual(cached, expected_roles(px))
+AssertionError: Tuples differ: ('base', 'dark', 'trim', 'accent', 'lit', 'cool') != ('base', 'lit')
+
+First differing element 1:
+'dark'
+'lit'
+
+First tuple contains 4 additional elements.
+First extra element 2:
+'trim'
+
+- ('base', 'dark', 'trim', 'accent', 'lit', 'cool')
++ ('base', 'lit')
+
+======================================================================
+FAIL: test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='imperial:fighter', apparent=33.999999)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_lod_environment.py", line 184, in test_registered_representatives_cached_thresholds_and_uncached_difference
+    self.assertEqual(cached, expected_roles(px))
+AssertionError: Tuples differ: ('base', 'dark', 'trim', 'accent', 'lit', 'cool') != ('base', 'lit')
+
+First differing element 1:
+'dark'
+'lit'
+
+First tuple contains 4 additional elements.
+First extra element 2:
+'trim'
+
+- ('base', 'dark', 'trim', 'accent', 'lit', 'cool')
++ ('base', 'lit')
+
+======================================================================
+FAIL: test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='syndicate:convoy', apparent=15.999999)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_lod_environment.py", line 184, in test_registered_representatives_cached_thresholds_and_uncached_difference
+    self.assertEqual(cached, expected_roles(px))
+AssertionError: Tuples differ: ('base', 'dark', 'trim', 'accent', 'lit', 'cool') != ('base',)
+
+First tuple contains 5 additional elements.
+First extra element 1:
+'dark'
+
+- ('base', 'dark', 'trim', 'accent', 'lit', 'cool')
++ ('base',)
+
+======================================================================
+FAIL: test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='syndicate:convoy', apparent=16.0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_lod_environment.py", line 184, in test_registered_representatives_cached_thresholds_and_uncached_difference
+    self.assertEqual(cached, expected_roles(px))
+AssertionError: Tuples differ: ('base', 'dark', 'trim', 'accent', 'lit', 'cool') != ('base', 'lit')
+
+First differing element 1:
+'dark'
+'lit'
+
+First tuple contains 4 additional elements.
+First extra element 2:
+'trim'
+
+- ('base', 'dark', 'trim', 'accent', 'lit', 'cool')
++ ('base', 'lit')
+
+======================================================================
+FAIL: test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='syndicate:convoy', apparent=16.000001)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_lod_environment.py", line 184, in test_registered_representatives_cached_thresholds_and_uncached_difference
+    self.assertEqual(cached, expected_roles(px))
+AssertionError: Tuples differ: ('base', 'dark', 'trim', 'accent', 'lit', 'cool') != ('base', 'lit')
+
+First differing element 1:
+'dark'
+'lit'
+
+First tuple contains 4 additional elements.
+First extra element 2:
+'trim'
+
+- ('base', 'dark', 'trim', 'accent', 'lit', 'cool')
++ ('base', 'lit')
+
+======================================================================
+FAIL: test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='syndicate:convoy', apparent=33.999999)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_lod_environment.py", line 184, in test_registered_representatives_cached_thresholds_and_uncached_difference
+    self.assertEqual(cached, expected_roles(px))
+AssertionError: Tuples differ: ('base', 'dark', 'trim', 'accent', 'lit', 'cool') != ('base', 'lit')
+
+First differing element 1:
+'dark'
+'lit'
+
+First tuple contains 4 additional elements.
+First extra element 2:
+'trim'
+
+- ('base', 'dark', 'trim', 'accent', 'lit', 'cool')
++ ('base', 'lit')
+
+======================================================================
+FAIL: test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='confederacy:constructor', apparent=15.999999)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_lod_environment.py", line 184, in test_registered_representatives_cached_thresholds_and_uncached_difference
+    self.assertEqual(cached, expected_roles(px))
+AssertionError: Tuples differ: ('base', 'dark', 'trim', 'accent', 'lit', 'cool') != ('base',)
+
+First tuple contains 5 additional elements.
+First extra element 1:
+'dark'
+
+- ('base', 'dark', 'trim', 'accent', 'lit', 'cool')
++ ('base',)
+
+======================================================================
+FAIL: test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='confederacy:constructor', apparent=16.0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_lod_environment.py", line 184, in test_registered_representatives_cached_thresholds_and_uncached_difference
+    self.assertEqual(cached, expected_roles(px))
+AssertionError: Tuples differ: ('base', 'dark', 'trim', 'accent', 'lit', 'cool') != ('base', 'lit')
+
+First differing element 1:
+'dark'
+'lit'
+
+First tuple contains 4 additional elements.
+First extra element 2:
+'trim'
+
+- ('base', 'dark', 'trim', 'accent', 'lit', 'cool')
++ ('base', 'lit')
+
+======================================================================
+FAIL: test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='confederacy:constructor', apparent=16.000001)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_lod_environment.py", line 184, in test_registered_representatives_cached_thresholds_and_uncached_difference
+    self.assertEqual(cached, expected_roles(px))
+AssertionError: Tuples differ: ('base', 'dark', 'trim', 'accent', 'lit', 'cool') != ('base', 'lit')
+
+First differing element 1:
+'dark'
+'lit'
+
+First tuple contains 4 additional elements.
+First extra element 2:
+'trim'
+
+- ('base', 'dark', 'trim', 'accent', 'lit', 'cool')
++ ('base', 'lit')
+
+======================================================================
+FAIL: test_registered_representatives_cached_thresholds_and_uncached_difference (test_s07_lod_environment.S07LodEnvironmentTests.test_registered_representatives_cached_thresholds_and_uncached_difference) (binding='confederacy:constructor', apparent=33.999999)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_lod_environment.py", line 184, in test_registered_representatives_cached_thresholds_and_uncached_difference
+    self.assertEqual(cached, expected_roles(px))
+AssertionError: Tuples differ: ('base', 'dark', 'trim', 'accent', 'lit', 'cool') != ('base', 'lit')
+
+First differing element 1:
+'dark'
+'lit'
+
+First tuple contains 4 additional elements.
+First extra element 2:
+'trim'
+
+- ('base', 'dark', 'trim', 'accent', 'lit', 'cool')
++ ('base', 'lit')
+
+----------------------------------------------------------------------
+Ran 1 test in 0.055s
+
+FAILED (failures=20)
+EXPECTED_RED removed_actual_ship_threshold_suppression assertion_failures= 20 errors= 0
+DE_FIXED_NEGATIVE_CONTROL skipped_selected_rock_rng
+test_actual_field_and_rock_branches_preserve_all_40_placements_and_final_rng (test_s07_lod_environment.S07LodEnvironmentTests.test_actual_field_and_rock_branches_preserve_all_40_placements_and_final_rng) ... 
+  test_actual_field_and_rock_branches_preserve_all_40_placements_and_final_rng (test_s07_lod_environment.S07LodEnvironmentTests.test_actual_field_and_rock_branches_preserve_all_40_placements_and_final_rng) (field_x=122.5) ... FAIL
+  test_actual_field_and_rock_branches_preserve_all_40_placements_and_final_rng (test_s07_lod_environment.S07LodEnvironmentTests.test_actual_field_and_rock_branches_preserve_all_40_placements_and_final_rng) (field_x=-37.25) ... FAIL
+  test_actual_field_and_rock_branches_preserve_all_40_placements_and_final_rng (test_s07_lod_environment.S07LodEnvironmentTests.test_actual_field_and_rock_branches_preserve_all_40_placements_and_final_rng) (field_x=0.0) ... FAIL
+
+======================================================================
+FAIL: test_actual_field_and_rock_branches_preserve_all_40_placements_and_final_rng (test_s07_lod_environment.S07LodEnvironmentTests.test_actual_field_and_rock_branches_preserve_all_40_placements_and_final_rng) (field_x=122.5)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_lod_environment.py", line 214, in test_actual_field_and_rock_branches_preserve_all_40_placements_and_final_rng
+    self.assert_field_equivalent(selected, fallback)
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_lod_environment.py", line 204, in assert_field_equivalent
+    self.assertEqual(selected.placements, fallback.placements)
+AssertionError: Lists differ: [(-18[94 chars]7), (86.83774260788756, 28.06272534288354, -32[3885 chars]313)] != [(-18[94 chars]7), (-2.9957677437250045, 8.064203266820371, 1[3887 chars]234)]
+
+First differing element 1:
+(86.83774260788756, 28.06272534288354, -32[49 chars]3468)
+(-2.9957677437250045, 8.064203266820371, 1[52 chars]2179)
+
+Diff is 9471 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actual_field_and_rock_branches_preserve_all_40_placements_and_final_rng (test_s07_lod_environment.S07LodEnvironmentTests.test_actual_field_and_rock_branches_preserve_all_40_placements_and_final_rng) (field_x=-37.25)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_lod_environment.py", line 214, in test_actual_field_and_rock_branches_preserve_all_40_placements_and_final_rng
+    self.assert_field_equivalent(selected, fallback)
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_lod_environment.py", line 204, in assert_field_equivalent
+    self.assertEqual(selected.placements, fallback.placements)
+AssertionError: Lists differ: [(-12[91 chars]3), (46.290403536437644, -39.11383604900593, 2[3878 chars]804)] != [(-12[91 chars]3), (256.4294655031844, 3.5733076351514086, 24[3889 chars]865)]
+
+First differing element 1:
+(46.290403536437644, -39.11383604900593, 2[53 chars]3945)
+(256.4294655031844, 3.5733076351514086, 24[51 chars]0106)
+
+Diff is 9463 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actual_field_and_rock_branches_preserve_all_40_placements_and_final_rng (test_s07_lod_environment.S07LodEnvironmentTests.test_actual_field_and_rock_branches_preserve_all_40_placements_and_final_rng) (field_x=0.0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_lod_environment.py", line 214, in test_actual_field_and_rock_branches_preserve_all_40_placements_and_final_rng
+    self.assert_field_equivalent(selected, fallback)
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_lod_environment.py", line 204, in assert_field_equivalent
+    self.assertEqual(selected.placements, fallback.placements)
+AssertionError: Lists differ: [(-26[94 chars]6), (-217.52703048860073, -2.8083655017173044,[3879 chars]523)] != [(-26[94 chars]6), (33.822399210809046, 23.91873650826433, 13[3872 chars]785)]
+
+First differing element 1:
+(-217.52703048860073, -2.8083655017173044,[53 chars]4949)
+(33.822399210809046, 23.91873650826433, 13[49 chars]7662)
+
+Diff is 9450 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 1 test in 0.724s
+
+FAILED (failures=3)
+EXPECTED_RED skipped_selected_rock_rng assertion_failures= 3 errors= 0
+PRODUCTION_SOURCE_SHA256_UNCHANGED 9a9d19c949d9cf2dec09ab083d79fc3053a61ef81fafdae216653446bb6c337a

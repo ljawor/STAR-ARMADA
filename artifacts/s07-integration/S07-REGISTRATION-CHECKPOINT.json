@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "status": "local-registration-and-pipeline-checkpoint-not-S07-acceptance",
+  "branch": "feat/s07-opt-in-catalogue",
+  "base": "65661e4a9fbde7e37da0bae0881e372c3dc21e59",
+  "exports": {
+    "count": 99,
+    "blender_version": "5.0.1",
+    "receipt": "artifacts/s07-integration/exports-approved-s06-attempt1.txt"
+  },
+  "isolated_script_builds": {
+    "count": 33,
+    "receipt": "artifacts/s07-integration/builds-approved-s06-script-attempt1.txt"
+  },
+  "protected_paths_unchanged": 327,
+  "runtime_tests_passed": 174,
+  "model_checks": 1024,
+  "route_counts": {
+    "approved_not_registered": 1,
+    "deferred_texture_pipeline": 10,
+    "outside_mesh_catalogue": 3,
+    "selected": 106
+  },
+  "core_manifests": 102,
+  "source_frozen_closure": "All 102 assets loaded from assets-only frozen root in test_s07_registration",
+  "scaffold": "Separately appearance-approved; not registered in this bounded 99-S06 increment.",
+  "legacy_default_preserved": true,
+  "committed": false,
+  "pushed": false,
+  "remaining": [
+    "Independent registration/pipeline review and batch-guard result pending.",
+    "S07 geometry/ownership/LOD/menu/cache/motion acceptance not closed.",
+    "Scaffold registration remains its own bounded increment.",
+    "S08/S09 compatibility/platform/performance/packaging not accepted.",
+    "No default activation, merge or release."
+  ]
+}

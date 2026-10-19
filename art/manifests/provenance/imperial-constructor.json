@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "imperial:constructor",
+  "asset_id": "core:imperial/constructor",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:06Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/imperial_constructor.blend",
+    "sha256": "4400900064d28c0d0b79b9e80d4c545d2ffc71b1b2317967604b5eb92ade46fe"
+  },
+  "exporter": {
+    "path": "tools/art/export_imperial_constructor.py",
+    "sha256": "598a5562f9a630a40f04c804c7148fdad939b60fedea7fb9cb6c1f7cd019a24e"
+  },
+  "runtime": {
+    "path": "assets/models/imperial_constructor.mesh.json",
+    "sha256": "32fc71942015d171695fc9a6f150a402235ff62c480d29288def84fe03340cdb",
+    "bytes": 183564,
+    "triangles": 3120
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "32fc71942015d171695fc9a6f150a402235ff62c480d29288def84fe03340cdb",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

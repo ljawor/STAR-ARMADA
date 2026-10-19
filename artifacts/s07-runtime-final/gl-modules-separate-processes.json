@@ -1,0 +1,100 @@
+{
+  "schema": 1,
+  "why": "single-process suite is not a valid gate: SDL_VIDEODRIVER=dummy is set process-wide at import by tests/test_weapon_sfx.py",
+  "driver": "real (SDL_VIDEODRIVER unset)",
+  "timeout_seconds_per_module": 420,
+  "results": [
+    {
+      "module": "test_audio",
+      "outcome": "pass",
+      "exit_code": 0,
+      "seconds": 9.6,
+      "summary": [
+        "Ran 34 tests in 9.405s",
+        "OK"
+      ],
+      "failing": []
+    },
+    {
+      "module": "test_crew_recovery_ui",
+      "outcome": "fail",
+      "exit_code": 1,
+      "seconds": 0.2,
+      "summary": [
+        "Ran 3 tests in 0.058s",
+        "FAILED (failures=1)"
+      ],
+      "failing": [
+        "FAIL: test_faction_transports_have_small_known_solid_visuals (test_crew_recovery_ui.RecoveryUITests.test_faction_transports_have_small_known_solid_visuals)"
+      ]
+    },
+    {
+      "module": "test_model_coverage_reconciliation",
+      "outcome": "fail",
+      "exit_code": 1,
+      "seconds": 0.3,
+      "summary": [
+        "Ran 2 tests in 0.231s",
+        "FAILED (failures=1)"
+      ],
+      "failing": [
+        "FAIL: test_cli_rejects_stale_report_and_approval_corruption_without_writing (test_model_coverage_reconciliation.CoverageReconciliation.test_cli_rejects_stale_report_and_approval_corruption_without_writing)"
+      ]
+    },
+    {
+      "module": "test_renderer_constructor_cleanup",
+      "outcome": "pass",
+      "exit_code": 0,
+      "seconds": 5.6,
+      "summary": [
+        "Ran 14 tests in 5.399s",
+        "OK"
+      ],
+      "failing": []
+    },
+    {
+      "module": "test_model_context_lifecycle",
+      "outcome": "pass",
+      "exit_code": 0,
+      "seconds": 5.0,
+      "summary": [
+        "Ran 3 tests in 4.867s",
+        "OK"
+      ],
+      "failing": []
+    },
+    {
+      "module": "test_lan_recovery_handoff",
+      "outcome": "pass",
+      "exit_code": 0,
+      "seconds": 12.5,
+      "summary": [
+        "Ran 8 tests in 12.427s",
+        "OK"
+      ],
+      "failing": []
+    },
+    {
+      "module": "test_lan_recovery_ui",
+      "outcome": "pass",
+      "exit_code": 0,
+      "seconds": 1.4,
+      "summary": [
+        "Ran 8 tests in 1.336s",
+        "OK"
+      ],
+      "failing": []
+    },
+    {
+      "module": "test_ship_material_passes",
+      "outcome": "pass",
+      "exit_code": 0,
+      "seconds": 2.2,
+      "summary": [
+        "Ran 4 tests in 2.073s",
+        "OK"
+      ],
+      "failing": []
+    }
+  ]
+}

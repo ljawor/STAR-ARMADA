@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "rebel:attack_satellite",
+  "asset_id": "core:alliance/attack_satellite",
+  "authority": "script",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:15Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/alliance_attack_satellite.blend",
+    "sha256": "2e9de52301ecafdaefa0b057586c63140f9d0c1fae1507e6dc5bb451198c9455"
+  },
+  "exporter": {
+    "path": "tools/art/export_alliance_attack_satellite.py",
+    "sha256": "791bc3ce238a0eb89b5f5014cd50baedfe2d7e7156973967366700dcf3bd9949"
+  },
+  "runtime": {
+    "path": "assets/models/alliance_attack_satellite.mesh.json",
+    "sha256": "c37dbc64cba78ee9f6a003645dea5630237da3558f7f1add3007f7c1197348d9",
+    "bytes": 160000,
+    "triangles": 2672
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "c37dbc64cba78ee9f6a003645dea5630237da3558f7f1add3007f7c1197348d9",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

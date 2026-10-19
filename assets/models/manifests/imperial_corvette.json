@@ -1,0 +1,74 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:imperial/corvette",
+  "revision": "5b36e73aa2b6132fc035a418897806a04b2f4421704a33ecb87a6af752563011",
+  "display_name": "imperial corvette (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/imperial_corvette.mesh.json",
+      "sha256": "be894218b84c00b4c6f78c96a46df1cf69441b627fa75155df02be41f6c30d05",
+      "bytes": 142216
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -16.0,
+      -5.0,
+      -43.601
+    ],
+    "max": [
+      16.0,
+      24.0,
+      48.0
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/imperial_corvette.blend",
+    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 2348,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "s06-b6-imperial-ships-2026-10-18",
+    "decided_by": "owner",
+    "decided_on": "2026-10-18",
+    "reviewed_revision": "5b36e73aa2b6132fc035a418897806a04b2f4421704a33ecb87a6af752563011",
+    "reviewed_evidence": [
+      "artifacts/s06_alliance_batch_review/b6-corvette/imperial-corvette-comparison.png",
+      "artifacts/s06_alliance_batch_review/b6-corvette/report.json"
+    ]
+  }
+}

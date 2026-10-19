@@ -1,0 +1,32 @@
+{
+ "changed_renderer_methods": [
+  "_draw_ship",
+  "_draw_ship_role_batch",
+  "_draw_ships",
+  "_draw_station"
+ ],
+ "changed_methods_vs_b5_approved_baseline": [
+  "_draw_authored_construction_scaffold",
+  "_draw_construction_sites",
+  "_draw_ship",
+  "_draw_ship_role_batch",
+  "_draw_ships",
+  "_draw_station",
+  "_shield_radius",
+  "_station_visual_radius",
+  "_visual_hit"
+ ],
+ "protected_methods": [
+  "_draw_asteroid_field",
+  "_asteroid_prop_lists",
+  "_emit_detail_mesh",
+  "_draw_construction_sites"
+ ],
+ "checked_approval_path_records": 518,
+ "previous_renderer_sha256": "7d05d28bb1ac57d42ef9966eff0fab3c22f3078a2bf22bd7a024b36e68e3f5e7",
+ "new_renderer_sha256": "9aff34140aa3d458eec358a2d87e64d4d4277c924ca198d507e4d29983350f3c",
+ "retained_corrections": [
+  "s07_authored_parity_pin_correction",
+  "s07_renderer_pin_correction"
+ ]
+}

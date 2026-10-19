@@ -1,0 +1,15 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "unittest",
+    "-v",
+    "test_s07_scaffold_registration"
+  ],
+  "pid": 85085,
+  "exit_code": 1,
+  "timed_out": false,
+  "deadline_seconds": 60.0,
+  "elapsed_seconds": 0.506,
+  "log": "artifacts/s07-runtime-final/scaffold-parent-attempt2.txt"
+}

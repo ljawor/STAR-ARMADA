@@ -1,0 +1,29 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+test_campaign_launch_preview_on_off_preserves_authoritative_state (test_s07_campaign_preview_entry.CampaignPreviewEntryTests.test_campaign_launch_preview_on_off_preserves_authoritative_state) ... FAIL
+test_negative_ordering_control_refuses_live_old_renderer (test_s07_campaign_preview_entry.CampaignPreviewEntryTests.test_negative_ordering_control_refuses_live_old_renderer) ... campaign-negative-ordering: real configure refused unreleased old owner
+ok
+test_negative_selection_control_detects_wrong_preview (test_s07_campaign_preview_entry.CampaignPreviewEntryTests.test_negative_selection_control_detects_wrong_preview) ... campaign-negative-selection: renderer observation caught wrong preview mode
+ok
+
+======================================================================
+FAIL: test_campaign_launch_preview_on_off_preserves_authoritative_state (test_s07_campaign_preview_entry.CampaignPreviewEntryTests.test_campaign_launch_preview_on_off_preserves_authoritative_state)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_campaign_preview_entry.py", line 145, in test_campaign_launch_preview_on_off_preserves_authoritative_state
+    self.assertEqual(self.launch(True), self.launch(False))
+                     ^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_campaign_preview_entry.py", line 127, in launch
+    exec(compile(ast.fix_missing_locations(code), str(ROOT / 'main.py'), 'exec'), ns)
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/main.py", line 922, in <module>
+    start_game(load_path=None, mdef=payload)
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/main.py", line 294, in start_game
+    renderer = Renderer(state, camera)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_campaign_preview_entry.py", line 112, in renderer
+    self.assertIsNotNone(mesh)
+AssertionError: unexpectedly None
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.132s
+
+FAILED (failures=1)

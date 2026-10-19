@@ -1,0 +1,63 @@
+test_failed_wrapper_exports_never_publish_or_attest_repository_bytes (test_s07_pipeline_execution.PipelineExecutionTest.test_failed_wrapper_exports_never_publish_or_attest_repository_bytes) ... 
+  test_failed_wrapper_exports_never_publish_or_attest_repository_bytes (test_s07_pipeline_execution.PipelineExecutionTest.test_failed_wrapper_exports_never_publish_or_attest_repository_bytes) (authority='script', failure='bad-output') ... FAIL
+  test_failed_wrapper_exports_never_publish_or_attest_repository_bytes (test_s07_pipeline_execution.PipelineExecutionTest.test_failed_wrapper_exports_never_publish_or_attest_repository_bytes) (authority='script', failure='exit-after-write') ... FAIL
+export-model imperial:corvette: ok - 1 triangles, runtime sha256 c39199e4d369e351... matches the approved bytes
+  test_failed_wrapper_exports_never_publish_or_attest_repository_bytes (test_s07_pipeline_execution.PipelineExecutionTest.test_failed_wrapper_exports_never_publish_or_attest_repository_bytes) (authority='script', failure='no-op') ... FAIL
+  test_failed_wrapper_exports_never_publish_or_attest_repository_bytes (test_s07_pipeline_execution.PipelineExecutionTest.test_failed_wrapper_exports_never_publish_or_attest_repository_bytes) (authority='blend', failure='bad-output') ... FAIL
+  test_failed_wrapper_exports_never_publish_or_attest_repository_bytes (test_s07_pipeline_execution.PipelineExecutionTest.test_failed_wrapper_exports_never_publish_or_attest_repository_bytes) (authority='blend', failure='exit-after-write') ... FAIL
+export-model imperial:corvette: ok - 1 triangles, runtime sha256 c39199e4d369e351... matches the approved bytes
+  test_failed_wrapper_exports_never_publish_or_attest_repository_bytes (test_s07_pipeline_execution.PipelineExecutionTest.test_failed_wrapper_exports_never_publish_or_attest_repository_bytes) (authority='blend', failure='no-op') ... FAIL
+
+======================================================================
+FAIL: test_failed_wrapper_exports_never_publish_or_attest_repository_bytes (test_s07_pipeline_execution.PipelineExecutionTest.test_failed_wrapper_exports_never_publish_or_attest_repository_bytes) (authority='script', failure='bad-output')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_pipeline_execution.py", line 85, in test_failed_wrapper_exports_never_publish_or_attest_repository_bytes
+    self.assertEqual((self.repo / self.asset[key]).read_bytes(), content)
+AssertionError: b'{"triangle_count": 2}' != b'{"triangle_count": 1}\n'
+
+======================================================================
+FAIL: test_failed_wrapper_exports_never_publish_or_attest_repository_bytes (test_s07_pipeline_execution.PipelineExecutionTest.test_failed_wrapper_exports_never_publish_or_attest_repository_bytes) (authority='script', failure='exit-after-write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_pipeline_execution.py", line 85, in test_failed_wrapper_exports_never_publish_or_attest_repository_bytes
+    self.assertEqual((self.repo / self.asset[key]).read_bytes(), content)
+AssertionError: b'{"triangle_count": 99}\n' != b'{"triangle_count": 1}\n'
+
+======================================================================
+FAIL: test_failed_wrapper_exports_never_publish_or_attest_repository_bytes (test_s07_pipeline_execution.PipelineExecutionTest.test_failed_wrapper_exports_never_publish_or_attest_repository_bytes) (authority='script', failure='no-op')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_pipeline_execution.py", line 80, in test_failed_wrapper_exports_never_publish_or_attest_repository_bytes
+    self.assertEqual(pipeline.main(["export-model", "--asset",
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_failed_wrapper_exports_never_publish_or_attest_repository_bytes (test_s07_pipeline_execution.PipelineExecutionTest.test_failed_wrapper_exports_never_publish_or_attest_repository_bytes) (authority='blend', failure='bad-output')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_pipeline_execution.py", line 85, in test_failed_wrapper_exports_never_publish_or_attest_repository_bytes
+    self.assertEqual((self.repo / self.asset[key]).read_bytes(), content)
+AssertionError: b'{"triangle_count": 2}' != b'{"triangle_count": 1}\n'
+
+======================================================================
+FAIL: test_failed_wrapper_exports_never_publish_or_attest_repository_bytes (test_s07_pipeline_execution.PipelineExecutionTest.test_failed_wrapper_exports_never_publish_or_attest_repository_bytes) (authority='blend', failure='exit-after-write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_pipeline_execution.py", line 85, in test_failed_wrapper_exports_never_publish_or_attest_repository_bytes
+    self.assertEqual((self.repo / self.asset[key]).read_bytes(), content)
+AssertionError: b'{"triangle_count": 99}\n' != b'{"triangle_count": 1}\n'
+
+======================================================================
+FAIL: test_failed_wrapper_exports_never_publish_or_attest_repository_bytes (test_s07_pipeline_execution.PipelineExecutionTest.test_failed_wrapper_exports_never_publish_or_attest_repository_bytes) (authority='blend', failure='no-op')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_pipeline_execution.py", line 80, in test_failed_wrapper_exports_never_publish_or_attest_repository_bytes
+    self.assertEqual(pipeline.main(["export-model", "--asset",
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 1 test in 0.095s
+
+FAILED (failures=6)
+REVERT CONTROL: original export path must fail all six authority/failure combinations

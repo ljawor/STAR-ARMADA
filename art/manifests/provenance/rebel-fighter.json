@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "rebel:fighter",
+  "asset_id": "core:alliance/fighter",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:19Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/alliance_interceptor.blend",
+    "sha256": "7021539d03e6a0ae0c15494370f5c09235708727c723ebe8add7d838d5200150"
+  },
+  "exporter": {
+    "path": "tools/art/export_alliance_interceptor.py",
+    "sha256": "7058f277b7d535aa6d05f7a25b8462cd40267ac7be18bf5e75bbd05ada92122e"
+  },
+  "runtime": {
+    "path": "assets/models/alliance_interceptor.mesh.json",
+    "sha256": "8d6dc397139d5fac871f1e74b48a6eb7fe2a9fc200871288ee2cc8d34a494df6",
+    "bytes": 140290,
+    "triangles": 2214
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "8d6dc397139d5fac871f1e74b48a6eb7fe2a9fc200871288ee2cc8d34a494df6",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

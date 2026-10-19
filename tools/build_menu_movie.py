@@ -6,6 +6,32 @@ read JPEGs; they never import this module. Source animation is 16s, with its las
 second crossfaded over its first second to produce a 15s/24fps baked loop.
 """
 from pathlib import Path
+from contextlib import contextmanager
+
+
+@contextmanager
+def offline_selection(model_preview=False):
+    """Explicit offline boundary; preserve an imported caller's exact resolver.
+
+    The selection facade has no public snapshot/restore API. Confine its private
+    state access here; never reconstruct a caller's potentially external packs.
+    configure() refuses live renderer owners before making any changes.
+    """
+    from render import asset_selection as selection
+    previous = selection._selection, selection._resolver
+    selection.configure({'model_preview': model_preview, 'visual_packs': []}, asset_root=ROOT)
+    try:
+        yield
+    finally:
+        if selection._renderer_owners:
+            raise RuntimeError('Offline renderer must close before restoring model selection')
+        current = selection._resolver
+        selection._selection, selection._resolver = previous
+        if current is not None:
+            current.cache_clear()
+        selection.invalidate_geometry_helpers()
+        selection._generation += 1
+
 import math
 import sys
 
@@ -145,6 +171,73 @@ def loop_frame(tail, head, alpha):
     return result
 
 
+def movie_provenance(fixture):
+    """CPU-only receipt of the actual selection; preview fails closed on fallback.
+
+    This baker supports core preview only, never inherited external visual packs.
+    Keep metadata lookup beside the real resolver rather than guessing mesh paths.
+    """
+    import hashlib
+    from render import asset_selection as selection
+    from render.ship_sizes import ship_visual_key
+    preview = selection._selection['model_preview']
+    resolver = selection._resolver
+    if selection._selection['visual_packs']:
+        raise ValueError('Movie provenance supports core selection only, not external packs')
+    rows = []
+    for entity_id, entity in sorted(fixture.state.entities.items()):
+        faction = fixture.state.players[entity.owner].faction
+        data = fixture.ds.ships[entity.data_id]
+        binding = f'{data.faction}:{data.category}'
+        resolved_binding = selection.ship_binding(fixture.ds, entity.data_id, faction)
+        row = dict(entity_id=entity_id, data_id=entity.data_id, owner=entity.owner,
+                   faction=faction, binding=binding, resolved_binding=resolved_binding,
+                   asset=None, revision=None, runtime_path=None, runtime_sha256=None,
+                   legacy_visual_key=None, legacy_fallback=None)
+        if preview:
+            if resolver is None or resolved_binding != binding:
+                raise ValueError(f'Movie preview requires resolved binding {binding}; no legacy fallback')
+            resolved = resolver.resolve(binding)
+            if resolved is None or resolved.source != 'core':
+                raise ValueError(f'Movie preview requires core binding {binding}')
+            manifest = resolver._core_manifest(binding)
+            entry = manifest['files'][resolved.lod]
+            path = (resolver.root / entry['path']).resolve()
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+            if (not path.is_relative_to(resolver.root) or digest != entry['sha256']
+                    or manifest['revision'] != resolved.revision):
+                raise ValueError(f'Movie provenance runtime pin differs for {binding}')
+            row.update(asset=resolved.asset, revision=resolved.revision,
+                       runtime_path=entry['path'], runtime_sha256=digest)
+        else:
+            row.update(legacy_visual_key=ship_visual_key(fixture.ds, entity.data_id, faction),
+                       legacy_fallback='explicit legacy policy')
+        rows.append(row)
+    code = [Path(__file__).resolve(), *sorted((ROOT / 'render').glob('*.py'))]
+    return dict(version=1, selection_policy='preview' if preview else 'legacy',
+                visual_packs=[], models=rows,
+                code_sha256={path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+                             for path in code},
+                scope='offline presentation only; runtime menus decode the baked ZIP, not the registry')
+
+
+def verify_movie_provenance(provenance, fixture):
+    """Reject stale or forged model/code pins before publishing a candidate."""
+    if provenance != movie_provenance(fixture):
+        raise ValueError('Movie provenance differs from current resolved models or capture code')
+
+
+def movie_metadata(fixture, report):
+    verify_movie_provenance(report['provenance'], fixture)
+    return dict(version=1, width=1280, height=720, fps=24, frame_count=360,
+                duration_seconds=15, still_frame=180, loop='baked-crossfade',
+                crossfade_frames=24, renderer='render.renderer.Renderer',
+                fixture='offline synthetic presentation; no gameplay simulation',
+                msaa_samples=report['msaa_samples'],
+                models=sorted({e.data_id for e in fixture.state.entities.values()}),
+                provenance=report['provenance'])
+
+
 def build_movie(renderer, fixture, cam, args, report):
     """Render/encode offline; runtime needs only the ZIP and pygame."""
     import json
@@ -202,72 +295,101 @@ def build_movie(renderer, fixture, cam, args, report):
                         '-movflags', '+faststart',
                         str(args.output_dir / 'intro-battle-preview.mp4')], check=True)
         args.asset.parent.mkdir(parents=True, exist_ok=True)
-        meta = dict(version=1, width=1280, height=720, fps=24, frame_count=360,
-                    duration_seconds=15, still_frame=180, loop='baked-crossfade',
-                    crossfade_frames=24, renderer='render.renderer.Renderer',
-                    fixture='offline synthetic presentation; no gameplay simulation',
-                    msaa_samples=report['msaa_samples'],
-                    models=sorted({e.data_id for e in fixture.state.entities.values()}))
-        temporary = args.asset.with_suffix('.tmp')
-        with zipfile.ZipFile(temporary, 'w', compression=zipfile.ZIP_STORED) as z:
-            z.writestr('metadata.json', json.dumps(meta, indent=2))
-            for i in range(360):
-                z.write(folder/f'{i:05d}.jpg', f'frames/{i:05d}.jpg')
-        temporary.replace(args.asset)
+        meta = movie_metadata(fixture, report)
+        # Exclusive, unpredictable same-directory staging avoids following an
+        # existing .tmp symlink/hardlink and permits atomic final publication.
+        with tempfile.NamedTemporaryFile(prefix='.'+args.asset.name+'-', suffix='.tmp',
+                                         dir=args.asset.parent, delete=False) as staging:
+            temporary = Path(staging.name)
+            try:
+                with zipfile.ZipFile(staging, 'w', compression=zipfile.ZIP_STORED) as z:
+                    z.writestr('metadata.json', json.dumps(meta, indent=2))
+                    for i in range(360):
+                        z.write(folder/f'{i:05d}.jpg', f'frames/{i:05d}.jpg')
+                staging.flush()
+                # Read this exact candidate, independent of its parent's name.
+                timings = []
+                with MenuMovie(temporary.parent, temporary.name) as movie:
+                    for i in range(360):
+                        before = time.perf_counter()
+                        frame = movie.get_frame((i+.1)/24, (1440, 810))
+                        timings.append((time.perf_counter()-before)*1000)
+                        if frame is None:
+                            raise RuntimeError('Asset decode verification failed: '+str(movie.error))
+                    report['playback'] = dict(decode_scale_mean_ms=float(np.mean(timings)),
+                        decode_scale_p95_ms=float(np.percentile(timings, 95)),
+                        decode_scale_max_ms=float(max(timings)), output_size=[1440, 810],
+                        cache=movie.cache_info(), frames_verified=360)
+                    first = pygame.surfarray.array3d(movie.get_frame(0, (1280, 720))).astype(np.int16)
+                    last = pygame.surfarray.array3d(movie.get_frame(359/24, (1280, 720))).astype(np.int16)
+                    report['loop_seam_mean_abs_rgb'] = float(np.abs(first-last).mean())
+                    report['loop_seam_changed_fraction'] = float((np.abs(first-last).max(axis=2)>10).mean())
+                staging.close()  # Windows also requires the writer closed before replace.
+                temporary.replace(args.asset)
+            finally:
+                staging.close()
+                temporary.unlink(missing_ok=True)
     report['asset_bytes'] = args.asset.stat().st_size
     report['render_encode_seconds'] = time.perf_counter()-started
-    # Decode + resize real asset sequentially (no cache hits), in real pygame.
-    timings = []
-    with MenuMovie(args.asset.parent.parent, 'menu/'+args.asset.name) as movie:
-        for i in range(360):
-            before = time.perf_counter()
-            frame = movie.get_frame((i+.1)/24, (1440, 810))
-            timings.append((time.perf_counter()-before)*1000)
-            if frame is None:
-                raise RuntimeError('Asset decode verification failed: '+str(movie.error))
-        report['playback'] = dict(decode_scale_mean_ms=float(np.mean(timings)),
-            decode_scale_p95_ms=float(np.percentile(timings, 95)),
-            decode_scale_max_ms=float(max(timings)), output_size=[1440, 810],
-            cache=movie.cache_info(), frames_verified=360)
-        first = pygame.surfarray.array3d(movie.get_frame(0, (1280, 720))).astype(np.int16)
-        last = pygame.surfarray.array3d(movie.get_frame(359/24, (1280, 720))).astype(np.int16)
-        report['loop_seam_mean_abs_rgb'] = float(np.abs(first-last).mean())
-        report['loop_seam_changed_fraction'] = float((np.abs(first-last).max(axis=2)>10).mean())
 
 
-def main():
+def main(argv=None):
     import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--preview-only', action='store_true', help='write three stills only; never bake a ZIP')
+    parser.add_argument('--model-preview', action='store_true', default=False,
+                        help='explicitly select core authored models (default: legacy)')
+    parser.add_argument('--output-dir', type=Path, required=True)
+    parser.add_argument('--asset', type=Path, default=None)
+    parser.add_argument('--ffmpeg', default='ffmpeg')
+    args = parser.parse_args(argv)
+    if args.model_preview and not args.preview_only:
+        if args.asset is None or args.asset.resolve().is_relative_to((ROOT / 'assets').resolve()):
+            parser.error('Preview candidate bake requires an explicit external --asset outside shipped assets')
+        shipped = ROOT / 'assets/menu/battle.zip'
+        if args.asset.exists() and args.asset.samefile(shipped):
+            parser.error('Preview candidate --asset must not alias the shipped movie')
+    args.asset = args.asset or ROOT / 'assets/menu/battle.zip'
+    # An imported baker must not replace another owner's SDL/GL context, even if
+    # that owner is not a production Renderer tracked by asset_selection.
+    from render import asset_selection as selection
+    if selection._renderer_owners or pygame.display.get_init():
+        raise RuntimeError('Offline movie requires a session boundary with renderers and display closed')
+    with offline_selection(args.model_preview):
+        args.output_dir.mkdir(parents=True, exist_ok=True)
+        _capture(args)
+
+
+def _capture(args):
     import json
     import numpy as np
     from OpenGL import GL
     from render.camera import Camera
     from render.renderer import Renderer
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--preview-only', action='store_true')
-    parser.add_argument('--output-dir', type=Path, required=True)
-    parser.add_argument('--asset', type=Path, default=ROOT / 'assets/menu/battle.zip')
-    parser.add_argument('--ffmpeg', default='ffmpeg')
-    args = parser.parse_args()
-    args.output_dir.mkdir(parents=True, exist_ok=True)
-    pygame.display.init()
-    pygame.display.gl_set_attribute(pygame.GL_MULTISAMPLEBUFFERS, 1)
-    pygame.display.gl_set_attribute(pygame.GL_MULTISAMPLESAMPLES, 4)
-    pygame.display.set_mode((1280, 720), pygame.OPENGL | pygame.DOUBLEBUF)
-    pygame.display.set_caption('STAR ARMADA — offline cinematic render')
-    GL.glEnable(GL.GL_MULTISAMPLE)
-    GL.glEnable(GL.GL_DEPTH_TEST)
-    GL.glClearColor(.006, .009, .018, 1.)
-    GL.glViewport(0, 0, 1280, 720)
-    fixture = PresentationFixture()
-    cam = Camera(1280, 720)
-    cam.target = [0., 15., 0.]
-    renderer = Renderer(fixture.state, cam)
-    renderer.marker_mode = 'off'
-    renderer.diff_render = True
-    if renderer.skip:
-        raise RuntimeError('Do not disable production renderer passes for this build')
-    report = {'msaa_samples': int(GL.glGetIntegerv(GL.GL_SAMPLES)), 'samples': []}
+    renderer = None
+    owns_display = not pygame.display.get_init()
     try:
+        pygame.display.init()
+        pygame.display.gl_set_attribute(pygame.GL_MULTISAMPLEBUFFERS, 1)
+        pygame.display.gl_set_attribute(pygame.GL_MULTISAMPLESAMPLES, 4)
+        pygame.display.set_mode((1280, 720), pygame.OPENGL | pygame.DOUBLEBUF)
+        pygame.display.set_caption('STAR ARMADA — offline cinematic render')
+        GL.glEnable(GL.GL_MULTISAMPLE)
+        GL.glEnable(GL.GL_DEPTH_TEST)
+        GL.glClearColor(.006, .009, .018, 1.)
+        GL.glViewport(0, 0, 1280, 720)
+        fixture = PresentationFixture()
+        provenance = movie_provenance(fixture)
+        cam = Camera(1280, 720)
+        cam.target = [0., 15., 0.]
+        renderer = Renderer(fixture.state, cam)
+        renderer.marker_mode = 'off'
+        renderer.diff_render = True
+        if renderer.skip:
+            raise RuntimeError('Do not disable production renderer passes for this build')
+        report = {'msaa_samples': int(GL.glGetIntegerv(GL.GL_SAMPLES)), 'samples': [],
+                  'provenance': provenance, 'candidate_zip_baked': False,
+                  'output_kind': 'stills-only' if args.preview_only else 'movie-bake'}
         for name, t in [('start', 1.), ('middle', 8.5), ('end', 15.9583333333)]:
             pygame.event.pump()
             fixture.sample(t)
@@ -308,12 +430,22 @@ def main():
             report['samples'].append(sample)
             if err:
                 raise RuntimeError(f'OpenGL error {err}')
+        verify_movie_provenance(report['provenance'], fixture)
         if not args.preview_only:
             build_movie(renderer, fixture, cam, args, report)
-        (args.output_dir / 'render-report.json').write_text(json.dumps(report, indent=2))
+            report['candidate_zip_baked'] = args.model_preview
+        (args.output_dir / 'render-report.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
         print(json.dumps(report, indent=2))
     finally:
-        pygame.quit()
+        try:
+            if renderer is not None:
+                renderer.close()
+        finally:
+            # main() requires a closed display at entry. Only release that
+            # subsystem, including partial init failures; imported callers may
+            # still own live fonts, mixer objects and cached audio resources.
+            if owns_display:
+                pygame.display.quit()
 
 
 if __name__ == '__main__':

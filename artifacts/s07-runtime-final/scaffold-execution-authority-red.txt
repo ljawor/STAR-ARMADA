@@ -1,0 +1,14 @@
+test_missing_separate_execution_authority_fails_closed (test_s07_scaffold_registration.ScaffoldRegistrationTests.test_missing_separate_execution_authority_fails_closed) ... FAIL
+
+======================================================================
+FAIL: test_missing_separate_execution_authority_fails_closed (test_s07_scaffold_registration.ScaffoldRegistrationTests.test_missing_separate_execution_authority_fails_closed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_scaffold_registration.py", line 88, in test_missing_separate_execution_authority_fails_closed
+    with self.assertRaisesRegex(ValueError, 'separate scaffold execution authority'):
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.023s
+
+FAILED (failures=1)

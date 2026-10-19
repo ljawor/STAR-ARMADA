@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "confederacy:bomber",
+  "asset_id": "core:confederacy/bomber",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:24:54Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/legion_hyena.blend",
+    "sha256": "f4b9af5efb7e2d1d157a168c74b1b2936c2df2a39f9217155e4cafb5edc01f2e"
+  },
+  "exporter": {
+    "path": "tools/art/export_legion_hyena.py",
+    "sha256": "63bf3affdb47f2fd55c1f180098a1208c270ebc20e23aebab37d085f110937cf"
+  },
+  "runtime": {
+    "path": "assets/models/legion_hyena.mesh.json",
+    "sha256": "63d2544abdbebf9089c0fb48e34666f610d2876d8b8a8569892d588b263bb18d",
+    "bytes": 230115,
+    "triangles": 3516
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "63d2544abdbebf9089c0fb48e34666f610d2876d8b8a8569892d588b263bb18d",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

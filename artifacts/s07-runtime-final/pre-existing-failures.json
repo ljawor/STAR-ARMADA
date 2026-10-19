@@ -1,0 +1,143 @@
+{
+  "schema": 1,
+  "base_commit": "56906ea7c73c219fbdc91c68176104b23d0f7712",
+  "baseline_extraction": "/Users/lukaszjawor/.hermes/cache/scratch/sa-base-step1",
+  "baseline_note": "a `git archive` extraction of the base commit outside the worktree, so the same tests can be run against bytes this increment never touched",
+  "method": "same command, same interpreter, same driver; only the tree differs",
+  "pre_existing": {
+    "test_crew_recovery_ui": {
+      "test": "test_crew_recovery_ui.RecoveryUITests.test_faction_transports_have_small_known_solid_visuals",
+      "final_tree": {
+        "exit_code": 1,
+        "counts": {
+          "ran": 3,
+          "failures": 1,
+          "errors": 0
+        },
+        "detail": [
+          "FAIL: test_faction_transports_have_small_known_solid_visuals (test_crew_recovery_ui.RecoveryUITests.test_faction_transports_have_small_known_solid_visuals)",
+          "AssertionError: 'imperial:convoy' != 'box'"
+        ]
+      },
+      "base_commit": {
+        "exit_code": 1,
+        "counts": {
+          "ran": 3,
+          "failures": 1,
+          "errors": 0
+        },
+        "detail": [
+          "FAIL: test_faction_transports_have_small_known_solid_visuals (test_crew_recovery_ui.RecoveryUITests.test_faction_transports_have_small_known_solid_visuals)",
+          "AssertionError: 'imperial:convoy' != 'box'"
+        ]
+      },
+      "contradicted_decision": "s06-imperial-convoy-parity-2026-10-18",
+      "classification": "pre_existing",
+      "why_it_fails": "the guard expects the legacy box shape for imperial transports, but imperial convoys are authored hardware since the convoy-parity decision, so the tree returns imperial:convoy",
+      "handling": "carried as a recorded pre-existing failure; repairing the expectation means editing an S06 guard together with the record that authorized the change, which is not part of this increment"
+    }
+  },
+  "import_order": {
+    "test_faction_visuals": {
+      "cold_import_final_tree": {
+        "exit_code": 1,
+        "counts": {
+          "ran": 16,
+          "failures": 0,
+          "errors": 16
+        },
+        "detail": [
+          "ERROR: test_bounds_cache_introspection_stays_bounded_after_unknown_mods (test_faction_visuals.HardwareIntegrationTests.test_bounds_cache_introspection_stays_bounded_after_unknown_mods)",
+          "ImportError: cannot import name 'UnitFactory' from partially initialized module 'game.systems' (most likely due to a circular import) (/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/game/systems/__init__.py)"
+        ]
+      },
+      "cold_import_base_commit": {
+        "exit_code": 1,
+        "counts": {
+          "ran": 16,
+          "failures": 0,
+          "errors": 16
+        }
+      },
+      "with_declared_prelude_final_tree": {
+        "exit_code": 0,
+        "counts": {
+          "ran": 16,
+          "failures": 0,
+          "errors": 0
+        }
+      },
+      "classification": "not_a_failure: pre-existing circular import between game/systems/__init__.py and game/core/manager.py; identical on the base commit"
+    },
+    "test_fleet_detail": {
+      "cold_import_final_tree": {
+        "exit_code": 1,
+        "counts": {
+          "ran": 2,
+          "failures": 0,
+          "errors": 1
+        },
+        "detail": [
+          "ERROR: test_station_types_are_distinct_alloy_hardware_not_generic_boxes (test_fleet_detail.FleetDetailTests.test_station_types_are_distinct_alloy_hardware_not_generic_boxes)",
+          "ImportError: cannot import name 'UnitFactory' from partially initialized module 'game.systems' (most likely due to a circular import) (/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/game/systems/__init__.py)"
+        ]
+      },
+      "cold_import_base_commit": {
+        "exit_code": 1,
+        "counts": {
+          "ran": 2,
+          "failures": 0,
+          "errors": 1
+        }
+      },
+      "with_declared_prelude_final_tree": {
+        "exit_code": 0,
+        "counts": {
+          "ran": 2,
+          "failures": 0,
+          "errors": 0
+        }
+      },
+      "classification": "not_a_failure: pre-existing circular import between game/systems/__init__.py and game/core/manager.py; identical on the base commit"
+    },
+    "test_skirmish_setup": {
+      "cold_import_final_tree": {
+        "exit_code": 1,
+        "counts": {
+          "ran": 9,
+          "failures": 0,
+          "errors": 9
+        },
+        "detail": [
+          "ERROR: test_all_factions_starting_loadout_and_missing_classes_graceful (test_skirmish_setup.TestSkirmishSetup.test_all_factions_starting_loadout_and_missing_classes_graceful)",
+          "ImportError: cannot import name 'UnitFactory' from partially initialized module 'game.systems' (most likely due to a circular import) (/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/game/systems/__init__.py)"
+        ]
+      },
+      "cold_import_base_commit": {
+        "exit_code": 1,
+        "counts": {
+          "ran": 9,
+          "failures": 0,
+          "errors": 9
+        }
+      },
+      "with_declared_prelude_final_tree": {
+        "exit_code": 0,
+        "counts": {
+          "ran": 9,
+          "failures": 0,
+          "errors": 0
+        }
+      },
+      "classification": "not_a_failure: pre-existing circular import between game/systems/__init__.py and game/core/manager.py; identical on the base commit"
+    }
+  },
+  "invalid_gate": {
+    "why": "tests/test_weapon_sfx.py sets SDL_VIDEODRIVER=dummy at import, process-wide, so later GL modules error (18) or hang; one test did not complete in ~28 minutes and passes in seconds per process",
+    "evidence": [
+      "artifacts/s07-runtime-final/full-suite-bounded.log",
+      "artifacts/s07-runtime-final/full-suite-final-opaque-aborted.log",
+      "artifacts/s07-runtime-final/full-suite-not-a-valid-gate.json"
+    ]
+  }
+}

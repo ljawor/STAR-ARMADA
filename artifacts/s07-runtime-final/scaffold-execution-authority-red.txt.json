@@ -1,0 +1,15 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "unittest",
+    "-v",
+    "test_s07_scaffold_registration.ScaffoldRegistrationTests.test_missing_separate_execution_authority_fails_closed"
+  ],
+  "pid": 85729,
+  "exit_code": 1,
+  "timed_out": false,
+  "deadline_seconds": 30.0,
+  "elapsed_seconds": 0.076,
+  "log": "artifacts/s07-runtime-final/scaffold-execution-authority-red.txt"
+}

@@ -28,7 +28,7 @@ BATCH = 's06-b4-hardware'
 SEED = 'tools/art/build_b4_hardware.py'
 SCENE = 'tools/art/probe_b4_scope.py'
 # The owner's approval of this batch, recorded in art/manifests/approvals.json and bound to the exact
-# revisions this module guards. It authorizes no landing: every binding stays unregistered.
+# revisions this module guards. It authorizes no landing: S07 registration needs separate execution authority.
 APPEARANCE_DECISION = 's06-b4-hardware-2026-10-17'
 BATCH_STATUS = 'appearance_approved_pending_landing'
 
@@ -327,20 +327,12 @@ class PendingRecords(unittest.TestCase):
                 self.assertEqual(row['seed'], SEED)
                 self.assertEqual(row['seed_arg'], f"--asset {asset['binding']}")
 
-    def test_no_pending_binding_is_registered_anywhere_in_production(self):
-        registry = load(ROOT / 'assets/models/registry.json')
-        status = {b['binding']: b['status'] for b in registry['bindings']}
-        pipeline = load(ROOT / 'art/manifests/pipeline.json')
-        registered = {a['binding'] for a in pipeline['assets']}
-        approvals = load(ROOT / 'art/manifests/approvals.json')
-        bound = json.dumps([e for e in approvals['approved_assets'] if isinstance(e, dict)])
-        for asset in ASSETS:
-            with self.subTest(binding=asset['binding']):
-                self.assertEqual(status[asset['binding']], 'procedural_legacy',
-                                 'an approved-appearance specimen must still not be selectable')
-                self.assertNotIn(asset['binding'], registered)
-                self.assertNotIn(asset['identifier'], bound)
-                self.assertNotIn(asset['binding'], bound)
+    def test_only_authorized_s06_specimens_register_with_legacy_default(self):
+        """S07 execution authority registers exact approved revisions, not pending rows."""
+        from s07_registration_assertions import assert_opt_in_registration, assert_preview_boundary
+        bindings = [asset['binding'] for asset in ASSETS]
+        assert_opt_in_registration(self, ROOT, bindings)
+        assert_preview_boundary(self, ROOT, bindings)
 
     def test_every_specimen_has_a_pending_sidecar_bound_to_its_own_master(self):
         for asset in ASSETS:

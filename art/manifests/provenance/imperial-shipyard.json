@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "imperial:shipyard",
+  "asset_id": "core:imperial/shipyard",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:13Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/imperial_shipyard.blend",
+    "sha256": "6412dad860b6a968e1783218ee5fbaa0a6d1025f6c6056039a2a968acbcc2e9f"
+  },
+  "exporter": {
+    "path": "tools/art/export_imperial_shipyard.py",
+    "sha256": "5d3b512eccdd2e39a3665c43bb67660051be99eb93f857ba6d7c8dc2625e05c7"
+  },
+  "runtime": {
+    "path": "assets/models/imperial_shipyard.mesh.json",
+    "sha256": "73ca3736a5bfacf3a74edbe343f0d1faf20f426536c359794644cef7ad5819b5",
+    "bytes": 126506,
+    "triangles": 2268
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "73ca3736a5bfacf3a74edbe343f0d1faf20f426536c359794644cef7ad5819b5",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

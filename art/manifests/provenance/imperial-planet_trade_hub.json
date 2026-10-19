@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "imperial:planet_trade_hub",
+  "asset_id": "core:imperial/planet_trade_hub",
+  "authority": "script",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:12Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/imperial_planet_trade_hub.blend",
+    "sha256": "88292f5a9f09a8541dbe8613166c4dda248dde014d6ff5c17339e9cd9975cc7a"
+  },
+  "exporter": {
+    "path": "tools/art/export_imperial_planet_trade_hub.py",
+    "sha256": "98a60854619e5a71857a26ace8b1fcc09ba051d1d483bf70c4f4a75781a9744f"
+  },
+  "runtime": {
+    "path": "assets/models/imperial_planet_trade_hub.mesh.json",
+    "sha256": "d3d8afaa06b5ca99409147163f437b0530d42cff2707d6d5cd00baaf67a107e1",
+    "bytes": 124411,
+    "triangles": 2248
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "d3d8afaa06b5ca99409147163f437b0530d42cff2707d6d5cd00baaf67a107e1",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

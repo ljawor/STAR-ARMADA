@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "syndicate:cruiser",
+  "asset_id": "core:syndicate/cruiser",
+  "authority": "blend",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:27Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/syndicate_cruiser.blend",
+    "sha256": "01b5efd863406c9ab9c880d0d209742431cce74e61d02441af30a4238de6af5c"
+  },
+  "exporter": {
+    "path": "tools/art/export_syndicate_cruiser.py",
+    "sha256": "1c20d382ef95bb3e71e5cc462d4869a1d0da5b9e8b2dfbebaf496071bb71969e"
+  },
+  "runtime": {
+    "path": "assets/models/syndicate_cruiser.mesh.json",
+    "sha256": "121608999dd39710a35322e7689f5af855fc848b7305242221d3702a35e8c223",
+    "bytes": 186853,
+    "triangles": 3184
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "121608999dd39710a35322e7689f5af855fc848b7305242221d3702a35e8c223",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

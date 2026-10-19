@@ -1,0 +1,18 @@
+/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tools/art/s07_registration.py:199: DeprecationWarning: Passing None for 's' to shlex.split() is deprecated.
+  'build_args': shlex.split(sidecar['initial_seed'].get('selects', '')),
+test_exact_approved_set_and_deterministic_outputs (test_s07_registration.RegistrationTests.test_exact_approved_set_and_deterministic_outputs) ... ok
+test_pipeline_authorities_and_existing_trio_are_preserved (test_s07_registration.RegistrationTests.test_pipeline_authorities_and_existing_trio_are_preserved) ... ok
+test_rejects_wrong_real_script_selector (test_s07_registration.RegistrationTests.test_rejects_wrong_real_script_selector) ... FAIL
+
+======================================================================
+FAIL: test_rejects_wrong_real_script_selector (test_s07_registration.RegistrationTests.test_rejects_wrong_real_script_selector)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_registration.py", line 45, in test_rejects_wrong_real_script_selector
+    with self.assertRaisesRegex(ValueError, 'selector'):
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 3 tests in 3.114s
+
+FAILED (failures=1)

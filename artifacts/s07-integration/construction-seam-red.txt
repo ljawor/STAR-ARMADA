@@ -1,0 +1,26 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+test_authored_scaffold_draws_six_roles_at_progress_height_and_preserves_queue (test_s07_construction_seam.ConstructionSelection.test_authored_scaffold_draws_six_roles_at_progress_height_and_preserves_queue) ... FAIL
+test_selected_imperial_station_construction_outline_uses_candidate (test_s07_construction_seam.ConstructionSelection.test_selected_imperial_station_construction_outline_uses_candidate) ... ERROR
+test_stock_scaffold_is_still_legacy_and_unselected_imperial_outline_absent (test_s07_construction_seam.ConstructionSelection.test_stock_scaffold_is_still_legacy_and_unselected_imperial_outline_absent) ... ok
+
+======================================================================
+ERROR: test_selected_imperial_station_construction_outline_uses_candidate (test_s07_construction_seam.ConstructionSelection.test_selected_imperial_station_construction_outline_uses_candidate)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_construction_seam.py", line 50, in test_selected_imperial_station_construction_outline_uses_candidate
+    self.assertEqual(r._draw_station_outline.call_args.args[:3],('shipyard','imperial',(400.,0.,0.)))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'args'
+
+======================================================================
+FAIL: test_authored_scaffold_draws_six_roles_at_progress_height_and_preserves_queue (test_s07_construction_seam.ConstructionSelection.test_authored_scaffold_draws_six_roles_at_progress_height_and_preserves_queue)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_construction_seam.py", line 61, in test_authored_scaffold_draws_six_roles_at_progress_height_and_preserves_queue
+    self.assertEqual(r._emit_detail_mesh.call_count,6)
+AssertionError: 0 != 6
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.021s
+
+FAILED (failures=1, errors=1)

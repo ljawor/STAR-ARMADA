@@ -1,0 +1,36 @@
+test_all_rows_station_roles_unique_labels_and_scaffold_proof (test_completion_review.CompletionReviewTests.test_all_rows_station_roles_unique_labels_and_scaffold_proof) ... FAIL
+test_cli_runs_unchanged_batch_with_derived_spec_not_original (test_completion_review.CompletionReviewTests.test_cli_runs_unchanged_batch_with_derived_spec_not_original) ... FAIL
+test_rejects_zero_pixel_reports (test_completion_review.CompletionReviewTests.test_rejects_zero_pixel_reports) ... ok
+test_selected_seam_tracks_only_current_mesh_and_restores_on_failure (test_completion_review.CompletionReviewTests.test_selected_seam_tracks_only_current_mesh_and_restores_on_failure) ... ok
+test_ship_roles_use_the_production_binding_function (test_completion_review.CompletionReviewTests.test_ship_roles_use_the_production_binding_function) ... ok
+test_station_views_centre_positive_y_hardware_with_extra_clearance (test_completion_review.CompletionReviewTests.test_station_views_centre_positive_y_hardware_with_extra_clearance) ... ok
+
+======================================================================
+FAIL: test_all_rows_station_roles_unique_labels_and_scaffold_proof (test_completion_review.CompletionReviewTests.test_all_rows_station_roles_unique_labels_and_scaffold_proof)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_completion_review.py", line 68, in test_all_rows_station_roles_unique_labels_and_scaffold_proof
+    review.assert_unregistered(derived)
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tools/diag_completion_review.py", line 62, in assert_unregistered
+    assert row['status'] in ('procedural_legacy', 'authoring_pending'), row
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'binding': 'imperial:command_station', 'category': 'station', 'identity': {'faction': 'imperial', 'class_or_kind': 'command_station', 'station_faction': 'imperial'}, 'manifest': 'core:imperial/command_station', 'status': 'core', 'legacy_identifiers': ['imperial_command_station'], 'envelope': {'min': [-62.0, -8.0, -62.0], 'max': [62.0, 55.0, 62.0]}, 'envelope_decision': 's06-b7-imperial-stations-2026-10-18'}
+
+======================================================================
+FAIL: test_cli_runs_unchanged_batch_with_derived_spec_not_original (test_completion_review.CompletionReviewTests.test_cli_runs_unchanged_batch_with_derived_spec_not_original)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_completion_review.py", line 144, in test_cli_runs_unchanged_batch_with_derived_spec_not_original
+    self.assertEqual(review.main(['--spec', str(source), '--out', str(Path(tmp) / 'review')]), 0)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tools/diag_completion_review.py", line 116, in main
+    assert_unregistered(spec)
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tools/diag_completion_review.py", line 62, in assert_unregistered
+    assert row['status'] in ('procedural_legacy', 'authoring_pending'), row
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'binding': 'imperial:constructor', 'category': 'construction', 'identity': {'faction': 'imperial', 'class_or_kind': 'constructor'}, 'manifest': 'core:imperial/constructor', 'status': 'core', 'legacy_identifiers': ['imperial_constructor'], 'envelope': {'min': [-20.0, -7.0, -24.6975], 'max': [20.0, 26.5, 24.35825]}, 'envelope_decision': 's06-b9-construction-2026-10-18'}
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.010s
+
+FAILED (failures=2)

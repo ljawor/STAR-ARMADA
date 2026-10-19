@@ -388,9 +388,10 @@ class InputController:
         from render.faction_visuals import owner_faction, normalize_station_key
         faction = owner_faction(self.state, e.owner)
         if e.is_station:
-            faction, _ = normalize_station_key(e.data_id, faction)
-            if faction == "imperial":
-                return d  # keep protected legacy station affordance
+            faction, data_id = normalize_station_key(e.data_id, faction)
+            from render.asset_selection import is_authored
+            if faction == "imperial" and not is_authored(f"{faction}:{data_id}"):
+                return d  # keep protected unselected legacy station affordance
             from render.camera_geometry import station_bounds
             lo, hi = station_bounds(e.data_id, faction)
             scale = e.radius / 50.

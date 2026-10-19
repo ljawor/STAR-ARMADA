@@ -1,0 +1,41 @@
+{
+  "exit_code": 0,
+  "timeout": false,
+  "elapsed": 0.9898794170003384,
+  "terminated": true,
+  "measurements": 18,
+  "owner_sequences": {
+    "defense_satellite": [
+      0,
+      1,
+      0
+    ],
+    "imperial_crew_transport": [
+      0,
+      1,
+      0
+    ],
+    "imperial_frigate": [
+      0,
+      1,
+      0
+    ],
+    "planet_extractor": [
+      0,
+      1,
+      0
+    ],
+    "shipyard": [
+      0,
+      1,
+      0
+    ],
+    "trade_convoy": [
+      0,
+      1,
+      0
+    ]
+  },
+  "stale_control_rejected": true,
+  "receipt_parser_correction": "unittest verbose prefix shares stdout measurement line"
+}

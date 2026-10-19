@@ -1,0 +1,26 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+test_explicit_legacy_and_preview_restore_exact_prior_selection (test_s07_movie_provenance.MovieSelectionTests.test_explicit_legacy_and_preview_restore_exact_prior_selection) ... ERROR
+test_live_renderer_owner_refuses_without_mutating_selection (test_s07_movie_provenance.MovieSelectionTests.test_live_renderer_owner_refuses_without_mutating_selection) ... ERROR
+
+======================================================================
+ERROR: test_explicit_legacy_and_preview_restore_exact_prior_selection (test_s07_movie_provenance.MovieSelectionTests.test_explicit_legacy_and_preview_restore_exact_prior_selection)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_movie_provenance.py", line 10, in test_explicit_legacy_and_preview_restore_exact_prior_selection
+    with baker.offline_selection(True):
+         ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'tools.build_menu_movie' has no attribute 'offline_selection'
+
+======================================================================
+ERROR: test_live_renderer_owner_refuses_without_mutating_selection (test_s07_movie_provenance.MovieSelectionTests.test_live_renderer_owner_refuses_without_mutating_selection)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_movie_provenance.py", line 26, in test_live_renderer_owner_refuses_without_mutating_selection
+    with baker.offline_selection(True):
+         ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'tools.build_menu_movie' has no attribute 'offline_selection'
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.001s
+
+FAILED (errors=2)

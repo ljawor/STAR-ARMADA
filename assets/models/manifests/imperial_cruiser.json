@@ -1,0 +1,74 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:imperial/cruiser",
+  "revision": "bdf2d383b5054696a86cd8b08aa155191fba4214354ef86bc12c28c44d5fc5f1",
+  "display_name": "imperial cruiser (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/imperial_cruiser.mesh.json",
+      "sha256": "125f37cf927840f5ccd452bfe8ec5998c0e6e644c0965932399b716d8fedd130",
+      "bytes": 147861
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -29.45,
+      -7.0,
+      -62.94
+    ],
+    "max": [
+      29.45,
+      31.5,
+      78.0
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/imperial_cruiser.blend",
+    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 2384,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "s06-b6-imperial-ships-2026-10-18",
+    "decided_by": "owner",
+    "decided_on": "2026-10-18",
+    "reviewed_revision": "bdf2d383b5054696a86cd8b08aa155191fba4214354ef86bc12c28c44d5fc5f1",
+    "reviewed_evidence": [
+      "artifacts/s06_alliance_batch_review/b6-cruiser/imperial-cruiser-comparison.png",
+      "artifacts/s06_alliance_batch_review/b6-cruiser/report.json"
+    ]
+  }
+}

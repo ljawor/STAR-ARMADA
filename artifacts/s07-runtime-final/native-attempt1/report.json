@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "source_commit": "56906ea7c73c219fbdc91c68176104b23d0f7712",
+  "harness_sha256": "8da442e0c0dd2ada229543ecaaecd0f74112926c84dd968b8bbc1fe704ae211c",
+  "status": "running",
+  "scope": "Representative production-frame owner paint, standing shells and hull/shield contact rasterization. No simulation advance, full campaign/audio, packaging or scaffold registration.",
+  "rows": [
+    {
+      "key": "0-rebel-rebel_frigate",
+      "binding": null,
+      "preview": false,
+      "radius": 54.453313074081535,
+      "distance": 350.0,
+      "captures": {
+        "red": {
+          "file": "0-rebel-rebel_frigate-red.png",
+          "sha256": "be0594193036d64acf17badf3bc951395c45c77b3af564df89af694a144ff63a",
+          "state_sha256": "341f15279b363ac89ebd5b743780047cbf880f7a0c7b3b43d406bd1226e7b12b",
+          "repeat_equal": true
+        },
+        "blue": {
+          "file": "0-rebel-rebel_frigate-blue.png",
+          "sha256": "be0594193036d64acf17badf3bc951395c45c77b3af564df89af694a144ff63a",
+          "state_sha256": "f3973fae44829a0ae930c2d504322b05f6220d4c95fb1eb4456d04aaf1009be2",
+          "repeat_equal": true
+        }
+      },
+      "metrics": {
+        "owner_changed_pixels_gt3": 0
+      }
+    }
+  ],
+  "gl": {
+    "vendor": "Apple",
+    "renderer": "Apple M4",
+    "version": "2.1 Metal - 90.5"
+  },
+  "msaa": 4,
+  "protected_changed": [],
+  "shipped_movie_unchanged": true
+}

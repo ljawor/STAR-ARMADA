@@ -97,6 +97,33 @@ class ShipMaterialPassTests(unittest.TestCase):
         self.assertEqual(GL.glGetError(), GL.GL_NO_ERROR)
 
     def test_cached_roles_use_their_actual_shader_and_emissive_state(self):
+        self._assert_cached_role_state(mixed_legacy=False)
+
+    def test_cached_roles_preserve_explicit_unselected_sibling(self):
+        # The stock preview catalogue now authors the corvette too. Preserve the
+        # mixed-mode regression with explicit temporary metadata, not stale IDs.
+        import json
+        from test_asset_registry import isolated_assets
+        from render.asset_selection import configure, mesh_for
+        from render.renderer import Renderer
+        root = isolated_assets(self)
+        registry_path = root / 'assets/models/registry.json'
+        registry = json.loads(registry_path.read_text())
+        row = next(row for row in registry['bindings']
+                   if row['binding'] == 'rebel:corvette')
+        # Procedural rows retain their declared manifest identity in this schema.
+        row['status'] = 'procedural_legacy'
+        registry_path.write_text(json.dumps(registry), encoding='utf-8')
+        self.r.close()
+        configure({'model_preview': True}, asset_root=root)
+        self.assertIsNone(mesh_for('rebel:corvette'))
+        self.assertIsNotNone(mesh_for('rebel:frigate'))
+        self.r = Renderer(self.st, self.cam)
+        self.addCleanup(self.r.close)
+        self.r.diff_render, self.r.time = True, 3.
+        self._assert_cached_role_state(mixed_legacy=True)
+
+    def _assert_cached_role_state(self, mixed_legacy):
         from render import renderer as module
         from game.benchmark import state_hash
         seen = []
@@ -116,6 +143,11 @@ class ShipMaterialPassTests(unittest.TestCase):
             for suffix in ('', '_dark', '_trim')} | {
             self.r._station_detail_list('shipyard', name, 'rebel')
             for name in ('base', 'dark', 'trim')}
+        sibling_lists = {self.r._ship_display_list('rebel:corvette' + suffix)
+                         for suffix in ('', '_dark', '_trim')}
+        self.assertTrue(sibling_lists.isdisjoint(authored_lists))
+        if not mixed_legacy:
+            authored_lists |= sibling_lists
         capital_accent = self.r._ship_display_list('rebel:battleship_accent')
         surface_seen, paint_seen = [], []
         def call(lst):
@@ -151,8 +183,11 @@ class ShipMaterialPassTests(unittest.TestCase):
                 failures.append((name, (program, lighting, texture), expected))
         self.assertEqual(failures, [], 'actual GL role state differs: observed vs expected')
         self.assertTrue(surface_seen)
-        self.assertEqual({expected for _, expected in surface_seen}, {0.0, 1.0},
-                         'must exercise an unselected sibling as well as all three authored assets')
+        self.assertEqual({expected for _, expected in surface_seen},
+                         {0.0, 1.0} if mixed_legacy else {1.0},
+                         'must exercise the declared full or mixed catalogue')
+        self.assertTrue(any(expected == float(not mixed_legacy)
+                            for _, expected in surface_seen))
         self.assertTrue(all(actual == expected for actual, expected in surface_seen), surface_seen)
         self.assertEqual(len(paint_seen), 1)
         for actual, expected in zip(paint_seen[0], self.st.players[0].color):

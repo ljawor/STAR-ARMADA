@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "imperial:fighter",
+  "asset_id": "core:imperial/fighter",
+  "authority": "script",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:09Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/imperial_tie_squadron.blend",
+    "sha256": "09e974692c2c4c69e9dcbd6d97c62d16b33874a7f3f986ec2b7d71239e8958b4"
+  },
+  "exporter": {
+    "path": "tools/art/export_imperial_tie_squadron.py",
+    "sha256": "fdff5cfdac484c070ea8859d3b861fcb4780b7eff905482548c692c9da101629"
+  },
+  "runtime": {
+    "path": "assets/models/imperial_tie_squadron.mesh.json",
+    "sha256": "5bc984c2ad3c2f649bf75265d3326d914a419659538360917b9c2217dcadd1cc",
+    "bytes": 122909,
+    "triangles": 2136
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "5bc984c2ad3c2f649bf75265d3326d914a419659538360917b9c2217dcadd1cc",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

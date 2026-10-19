@@ -1,0 +1,19 @@
+{
+ "old_renderer_sha256": "7d05d28bb1ac57d42ef9966eff0fab3c22f3078a2bf22bd7a024b36e68e3f5e7",
+ "old_renderer_sha256_source": "declared_on_command_line",
+ "new_renderer_sha256": "9aff34140aa3d458eec358a2d87e64d4d4277c924ca198d507e4d29983350f3c",
+ "old_harness_sha256": "eb6d818c934ff010dc95561164aaf6a6e9f2a05a60382d4a794e02c35c53eb9a",
+ "new_harness_sha256": "c9ddf41951b8fc5f011efd6e1774d1bdc13ca2ea4f0b451b7b19c51b1628fed2",
+ "bindings_compared": 24,
+ "captures_compared": 216,
+ "byte_identical_bindings": 24,
+ "moved_bindings": [],
+ "by_category": {
+  "unspecified": {
+   "bindings": 24,
+   "moved": 0
+  }
+ },
+ "per_frame_state_sha256_preserved": true,
+ "note": "A capture that moved is not a defect by itself: _draw_station changed the authored station path. Station-class movement is expected; identical station captures would mean the new method never took effect."
+}

@@ -1,0 +1,16 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "tools/art/export-model",
+    "--asset",
+    "shared:construction_scaffold",
+    "--blender",
+    "/Applications/Blender.app/Contents/MacOS/Blender"
+  ],
+  "pid": 88214,
+  "exit_code": 0,
+  "timed_out": false,
+  "deadline_seconds": 90.0,
+  "elapsed_seconds": 1.093,
+  "log": "artifacts/s07-runtime-final/scaffold-fresh-export-final.txt"
+}

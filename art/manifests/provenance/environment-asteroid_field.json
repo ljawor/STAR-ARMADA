@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "environment:asteroid_field",
+  "asset_id": "core:environment/asteroid_field",
+  "authority": "script",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:04Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/shared_asteroid_field.blend",
+    "sha256": "23260a7f81a54e874325fcca802c66c94fbb1c7f1e90378b799e129b17d4ea0e"
+  },
+  "exporter": {
+    "path": "tools/art/export_shared_asteroid_field.py",
+    "sha256": "f7bad0a2df2a47dbcab4ef547072a9c9f46e8da58b03db5d28cc88625616f9db"
+  },
+  "runtime": {
+    "path": "assets/models/shared_asteroid_field.mesh.json",
+    "sha256": "ad2b65483c330fecad28059fce9c489bc0bce2c050ebe38aa526e21f25c88ae7",
+    "bytes": 18854,
+    "triangles": 216
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "ad2b65483c330fecad28059fce9c489bc0bce2c050ebe38aa526e21f25c88ae7",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

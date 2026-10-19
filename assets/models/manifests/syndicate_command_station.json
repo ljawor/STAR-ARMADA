@@ -1,0 +1,74 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:syndicate/command_station",
+  "revision": "173a55bd6ce637b1101cecef9da6d28ab4e5172e9de6f5d78a58022b4223c13b",
+  "display_name": "syndicate command station (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/syndicate_command_station.mesh.json",
+      "sha256": "edb2fc8369f6a0d8d4d40020ac538b553659a5066face5ef3b1273b6afea778a",
+      "bytes": 221182
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -52.019135,
+      -15.2,
+      -53.66
+    ],
+    "max": [
+      48.0,
+      45.6,
+      38.400002
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/syndicate_command_station.blend",
+    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 3208,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "s06-b3a-command-stations-2026-10-17",
+    "decided_by": "owner",
+    "decided_on": "2026-10-17",
+    "reviewed_revision": "173a55bd6ce637b1101cecef9da6d28ab4e5172e9de6f5d78a58022b4223c13b",
+    "reviewed_evidence": [
+      "artifacts/s06_alliance_batch_review/b3a-command-stations/contact-sheet.png",
+      "artifacts/s06_alliance_batch_review/b3a-command-stations/metrics.json"
+    ]
+  }
+}

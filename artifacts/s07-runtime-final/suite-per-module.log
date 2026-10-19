@@ -1,0 +1,209 @@
+[  1/205] pass           0.1s  test_ai_construction_spacing
+[  2/205] pass           1.0s  test_alliance_blender_b1_combat
+[  3/205] pass           2.2s  test_alliance_blender_b2_squadron
+[  4/205] pass           0.3s  test_alliance_blender_b3_stations
+[  5/205] pass           1.1s  test_alliance_blender_b3b_stations
+[  6/205] pass           1.5s  test_alliance_blender_b3c_stations
+[  7/205] pass           0.7s  test_alliance_blender_b4_hardware
+[  8/205] pass           0.3s  test_alliance_blender_b5_asteroid
+[  9/205] pass           0.7s  test_alliance_blender_b6_imperial_ships
+[ 10/205] pass           0.7s  test_alliance_blender_battleship
+[ 11/205] pass           0.3s  test_alliance_blender_cruiser
+[ 12/205] pass           2.7s  test_alliance_blender_trio
+[ 13/205] pass          13.6s  test_alliance_combat_trade
+[ 14/205] pass           0.2s  test_alliance_victory
+[ 15/205] pass           0.2s  test_alliance_visibility
+[ 16/205] pass           0.1s  test_alliance_visual_slice
+[ 17/205] pass           0.1s  test_asset_contract
+[ 18/205] pass           9.1s  test_asset_registry
+[ 19/205] pass           2.2s  test_asset_selection
+[ 20/205] pass           9.6s  test_audio
+[ 21/205] pass           2.3s  test_audio_mix
+[ 22/205] pass           0.3s  test_b6_sidecar_reproduction
+[ 23/205] pass           0.2s  test_blender_b7_imperial_stations
+[ 24/205] pass           0.3s  test_blender_b8_remaining_combat
+[ 25/205] pass           0.1s  test_blender_b9_construction
+[ 26/205] pass          18.1s  test_boarding
+[ 27/205] pass           0.4s  test_boarding_cleanup
+[ 28/205] pass           0.2s  test_boarding_ui
+[ 29/205] pass           1.1s  test_build_cancel
+[ 30/205] pass           0.9s  test_builder_repairs
+[ 31/205] pass           0.5s  test_camera_safety
+[ 32/205] pass           0.2s  test_campaign_completion_flow
+[ 33/205] pass           0.7s  test_campaign_lifecycle
+[ 34/205] pass           0.2s  test_campaign_main
+[ 35/205] pass           0.2s  test_campaign_phase7_progress
+[ 36/205] pass           2.5s  test_campaign_phase7_script
+[ 37/205] pass           0.5s  test_checksum_canonicalization
+[ 38/205] pass           0.1s  test_cinematics
+[ 39/205] pass           2.2s  test_classic_replays
+[ 40/205] pass           0.1s  test_classic_replays_gl
+[ 41/205] pass           0.1s  test_classic_screens
+[ 42/205] pass           0.2s  test_clean_classic_menu
+[ 43/205] pass           0.2s  test_collapsible_hud
+[ 44/205] pass           1.4s  test_collection_point_layout
+[ 45/205] pass           1.1s  test_collection_points
+[ 46/205] pass           7.9s  test_collection_points_lan
+[ 47/205] pass          21.8s  test_colonies
+[ 48/205] pass           0.3s  test_colonies_ui
+[ 49/205] pass           0.2s  test_colony_ai
+[ 50/205] pass           0.3s  test_colony_factions
+[ 51/205] pass           0.4s  test_colony_income_balance
+[ 52/205] pass           0.4s  test_colony_visibility
+[ 53/205] pass           2.6s  test_combat_standoff
+[ 54/205] pass           0.2s  test_completion_approval
+[ 55/205] pass           0.3s  test_completion_payloads
+[ 56/205] pass           0.2s  test_completion_review
+[ 57/205] pass           0.0s  test_completion_wrapper_generation
+[ 58/205] pass           0.1s  test_construction_exclusions
+[ 59/205] pass          61.1s  test_construction_range
+[ 60/205] pass           2.4s  test_core
+[ 61/205] pass           0.1s  test_crew
+[ 62/205] pass           2.9s  test_crew_damage
+[ 63/205] pass           0.1s  test_crew_recovery
+[ 64/205] pass           0.0s  test_crew_recovery_ai
+[ 65/205] pass          19.6s  test_crew_recovery_ai_regressions
+[ 66/205] pass           6.6s  test_crew_recovery_lifecycle
+[ 67/205] fail           0.2s  test_crew_recovery_ui
+            FAIL: test_faction_transports_have_small_known_solid_visuals (test_crew_recovery_ui.RecoveryUITests.test_faction_transports_have_small_known_solid_visuals)
+[ 68/205] pass           0.2s  test_detmath
+[ 69/205] pass           0.9s  test_draw_view_scope
+[ 70/205] pass           0.1s  test_effect_geometry
+[ 71/205] pass           0.2s  test_effects
+[ 72/205] pass           2.9s  test_faction_ships
+[ 73/205] pass           1.9s  test_faction_stations
+[ 74/205] pass          14.6s  test_faction_visuals
+[ 75/205] pass           4.2s  test_fighter_exploration
+[ 76/205] pass           0.2s  test_fire_arcs
+[ 77/205] pass           0.2s  test_fleet_detail
+[ 78/205] pass           0.1s  test_fleet_materials
+[ 79/205] pass           0.2s  test_fleet_panel
+[ 80/205] pass           0.1s  test_fog_render
+[ 81/205] pass           0.1s  test_frozen_paths
+[ 82/205] pass          62.1s  test_gameplay
+[ 83/205] pass           0.1s  test_gameplay_acceptance_diagnostic
+[ 84/205] pass           0.6s  test_generic_model_preview
+[ 85/205] pass           0.2s  test_gl_lifecycle
+[ 86/205] pass          90.5s  test_graphics_benchmark
+[ 87/205] pass           0.1s  test_hit_effects
+[ 88/205] pass           0.1s  test_hit_geometry_performance
+[ 89/205] pass           0.1s  test_hud_compact
+[ 90/205] pass           0.5s  test_i18n
+[ 91/205] pass           0.3s  test_i18n_russian
+[ 92/205] pass           0.2s  test_imperial_convoy_gate
+[ 93/205] pass           2.2s  test_infrastructure_command
+[ 94/205] pass           0.2s  test_input_controls
+[ 95/205] pass           0.3s  test_jump_input
+[ 96/205] pass           2.6s  test_jump_sim
+[ 97/205] pass           1.8s  test_jump_travel
+[ 98/205] pass          10.5s  test_lan
+[ 99/205] pass           0.2s  test_lan_failure_diagnostics
+[100/205] pass          29.2s  test_lan_human_safety
+[101/205] pass           7.0s  test_lan_launch_recovery
+[102/205] pass           0.2s  test_lan_main
+[103/205] pass           0.3s  test_lan_menu
+[104/205] pass           6.9s  test_lan_ownership
+[105/205] pass          22.5s  test_lan_production_reconnect
+[106/205] pass           0.0s  test_lan_queue
+[107/205] pass           3.6s  test_lan_reconnect
+[108/205] pass           1.1s  test_lan_reconnect_admission
+[109/205] pass          12.4s  test_lan_recovery_handoff
+[110/205] pass           1.3s  test_lan_recovery_ui
+[111/205] pass           0.3s  test_lan_state_diff
+[112/205] pass           0.3s  test_language_tools
+[113/205] pass           0.1s  test_menu_movie
+[114/205] pass           0.2s  test_mission_hud_layout
+[115/205] pass           4.9s  test_model_context_lifecycle
+[116/205] pass           0.3s  test_model_coverage_reconciliation
+[117/205] pass           0.7s  test_model_pipeline
+[118/205] pass           0.2s  test_modern_fleet
+[119/205] pass           0.5s  test_multiplayer
+[120/205] pass           0.3s  test_multiselect_hud
+[121/205] pass           1.8s  test_nebula_altitude
+[122/205] pass         130.1s  test_nebula_satellite_orbits
+[123/205] pass          16.2s  test_netdiag
+[124/205] pass           0.1s  test_netdiag_compare
+[125/205] pass           0.9s  test_objectives
+[126/205] pass           1.4s  test_orbit_spacing_batch
+[127/205] pass           0.1s  test_orbit_terrain_scan
+[128/205] pass           0.0s  test_ownership_markers
+[129/205] pass           1.1s  test_performance
+[130/205] pass           0.1s  test_persistence
+[131/205] pass           0.1s  test_planet_building_visuals
+[132/205] pass           8.0s  test_planet_buildings
+[133/205] pass           0.2s  test_planet_buildings_ui
+[134/205] pass          39.2s  test_planet_economy
+[135/205] pass           0.7s  test_planet_replay_validation
+[136/205] pass           0.3s  test_presentation_main
+[137/205] pass           0.2s  test_presentation_sensor_batch
+[138/205] pass           0.4s  test_presentation_ux
+[139/205] pass           0.1s  test_preview_fog
+[140/205] pass           6.4s  test_projectile_aim
+[141/205] pass           0.1s  test_projectile_fire_look
+[142/205] pass           5.0s  test_recovery_drill
+[143/205] pass           7.8s  test_recovery_drill_replay
+[144/205] pass           5.5s  test_renderer_constructor_cleanup
+[145/205] pass           0.1s  test_replay_deletion_windows
+[146/205] pass          39.0s  test_replay_future_state
+[147/205] pass           0.5s  test_replay_library
+[148/205] pass           1.0s  test_replay_typed_validation
+[149/205] pass           5.2s  test_replay_workflow
+[150/205] pass           0.3s  test_research_ui
+[151/205] pass           0.3s  test_review_campaign_replay
+[152/205] pass           0.9s  test_runtime_asset_metadata
+[153/205] pass           1.6s  test_s06_appearance_records
+[154/205] pass           4.2s  test_s06_placement_repairs
+[155/205] pass           0.1s  test_s07_approval_preservation
+[156/205] pass           0.2s  test_s07_authored_lod_parity
+[157/205] pass           9.8s  test_s07_binding_routes
+[158/205] pass           0.3s  test_s07_campaign_preview_entry
+[159/205] pass          13.5s  test_s07_capture_transition
+[160/205] pass           2.7s  test_s07_construction_runtime
+[161/205] pass           0.2s  test_s07_construction_seam
+[162/205] pass           0.2s  test_s07_context_fixture_isolation
+[163/205] pass           0.1s  test_s07_fixture_isolation
+[164/205] pass           0.3s  test_s07_hidden_contact_acceptance
+[165/205] pass           0.6s  test_s07_lod_environment
+[166/205] pass           0.6s  test_s07_material_parity
+[167/205] pass           1.4s  test_s07_motion_order
+[168/205] pass           1.6s  test_s07_movie_provenance
+[169/205] pass           0.5s  test_s07_pipeline_execution
+[170/205] pass          10.2s  test_s07_registration
+[171/205] pass           0.1s  test_s07_scaffold_approval
+[172/205] pass           7.2s  test_s07_scaffold_registration
+[173/205] pass          12.5s  test_s07_selected_geometry_matrix
+[174/205] pass           0.2s  test_s07_station_consumers
+[175/205] pass          20.1s  test_satellite_orbits
+[176/205] pass           7.3s  test_satellite_penalty
+[177/205] pass           0.3s  test_satellite_ring_clearance
+[178/205] pass          42.5s  test_satellite_velocity
+[179/205] pass           2.4s  test_saved_games
+[180/205] pass           0.1s  test_sensor_combat
+[181/205] pass           0.8s  test_separation_performance
+[182/205] pass           0.5s  test_ship_experience
+[183/205] pass           2.2s  test_ship_material_passes
+[184/205] pass           0.1s  test_ship_rank_hud
+[185/205] pass           0.6s  test_ship_sizes
+[186/205] pass           2.0s  test_sim_profiles
+[187/205] pass           0.1s  test_skirmish_main
+[188/205] pass           0.7s  test_skirmish_maps
+[189/205] pass           0.6s  test_skirmish_menu
+[190/205] pass           0.5s  test_skirmish_setup
+[191/205] pass           0.0s  test_skirmish_teams
+[192/205] pass           0.3s  test_splash_movie_integration
+[193/205] pass           0.0s  test_staffing
+[194/205] pass           1.3s  test_station_balance
+[195/205] pass           0.7s  test_station_bounds_cache
+[196/205] pass           5.4s  test_station_upgrades
+[197/205] pass           0.2s  test_support_orders_ui
+[198/205] pass           0.0s  test_support_review
+[199/205] pass           0.1s  test_surface_geometry_integration
+[200/205] pass          32.1s  test_trading
+[201/205] pass           0.9s  test_trio_generic_equivalence
+[202/205] pass           0.3s  test_victory_modes
+[203/205] pass           0.1s  test_visibility
+[204/205] pass           2.9s  test_weapon_audio
+[205/205] pass           0.2s  test_weapon_sfx
+
+modules: 205 tests: 2206 tally: {'pass': 204, 'fail': 1} wall: 965.8 s
+not passing: ['test_crew_recovery_ui']

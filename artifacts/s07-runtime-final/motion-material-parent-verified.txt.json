@@ -1,0 +1,18 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "unittest",
+    "-v",
+    "test_s07_motion_order",
+    "test_s07_material_parity",
+    "test_s07_authored_lod_parity",
+    "test_s07_lod_environment"
+  ],
+  "pid": 89453,
+  "exit_code": 0,
+  "timed_out": false,
+  "deadline_seconds": 30.0,
+  "elapsed_seconds": 2.766,
+  "log": "artifacts/s07-runtime-final/motion-material-parent-verified.txt"
+}

@@ -1,0 +1,16 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "unittest",
+    "-v",
+    "test_s07_material_parity.MaterialParityTests.test_authored_station_roles_submit_identical_material_state",
+    "test_s07_material_parity.MaterialParityTests.test_legacy_station_accent_retains_original_alloy_material"
+  ],
+  "pid": 89186,
+  "exit_code": 0,
+  "timed_out": false,
+  "deadline_seconds": 20.0,
+  "elapsed_seconds": 0.501,
+  "log": "artifacts/s07-runtime-final/station-material-parity-green.txt"
+}

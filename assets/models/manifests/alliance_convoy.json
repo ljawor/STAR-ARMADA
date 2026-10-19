@@ -1,0 +1,74 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:alliance/convoy",
+  "revision": "9b3897d8c6165bb9a3517996409a280b9d6e71fd6fb8a8efc2c1d150c63b8f84",
+  "display_name": "alliance convoy (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/alliance_convoy.mesh.json",
+      "sha256": "fa341b2ac6cd91c79ab113e47c9a76888728e5528c46d068ebde6e8e6141205c",
+      "bytes": 260749
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -30.299999,
+      -6.0,
+      -72.698
+    ],
+    "max": [
+      30.299999,
+      14.776171,
+      59.5
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/alliance_convoy.blend",
+    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 4512,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "s06-b2-squadron-logistics-2026-10-17",
+    "decided_by": "owner",
+    "decided_on": "2026-10-17",
+    "reviewed_revision": "9b3897d8c6165bb9a3517996409a280b9d6e71fd6fb8a8efc2c1d150c63b8f84",
+    "reviewed_evidence": [
+      "artifacts/s06_alliance_batch_review/b2-squadron-logistics/contact-sheet.png",
+      "artifacts/s06_alliance_batch_review/b2-squadron-logistics/metrics.json"
+    ]
+  }
+}

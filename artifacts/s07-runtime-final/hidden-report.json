@@ -1,0 +1,40 @@
+{
+  "tests_run": 4,
+  "failures": 0,
+  "errors": 0,
+  "representative_bindings": [
+    "imperial:battleship",
+    "imperial:command_station",
+    "imperial:attack_satellite",
+    "imperial:planet_extractor"
+  ],
+  "datastore_selection_restored": true,
+  "protected_files": 460,
+  "protected_unchanged": true,
+  "negative_control": {
+    "source": "in-memory production _visual_hit with can_see early return removed",
+    "tests_run": 1,
+    "failures": 12,
+    "errors": 0,
+    "failing_cases": [
+      "test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:battleship', kind='hull_hit')",
+      "test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:battleship', kind='shield_hit')",
+      "test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:battleship', kind='impact')",
+      "test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:command_station', kind='hull_hit')",
+      "test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:command_station', kind='shield_hit')",
+      "test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:command_station', kind='impact')",
+      "test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:attack_satellite', kind='hull_hit')",
+      "test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:attack_satellite', kind='shield_hit')",
+      "test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:attack_satellite', kind='impact')",
+      "test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:planet_extractor', kind='hull_hit')",
+      "test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:planet_extractor', kind='shield_hit')",
+      "test_hidden_historical_contacts_do_not_follow_current_transform (test_s07_hidden_contact_acceptance.HiddenContactAcceptanceTests.test_hidden_historical_contacts_do_not_follow_current_transform) (binding='imperial:planet_extractor', kind='impact')"
+    ]
+  },
+  "limits": [
+    "CPU only; draw_hit GL endpoint intercepted, no rasterization",
+    "Four actual Imperial selected consumers, not exhaustive faction or asset coverage",
+    "Historical ballistic contact memory; no fabricated remembered ship/station snapshots",
+    "No full S07 closure, production activation, S08/S09, merge or release acceptance"
+  ]
+}

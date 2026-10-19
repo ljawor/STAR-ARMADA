@@ -2,7 +2,7 @@
   "schema": 1,
   "batch": "s06-b9-construction",
   "status": "partially_appearance_approved_pending_landing",
-  "note": "Blender authoring/exports complete. Owner approved the pictured exact revisions on 2026-10-18; see appearance_decision. No landing, registration or activation. Only eight constructor/colonizer rows approved. Scaffold remains pending: requires S07 seam and an actual-renderer review.",
+  "note": "The original B9 appearance decision covers only eight ships. The scaffold was subsequently pictured through the S07 construction seam and separately approved under s07-scaffold-appearance-2026-10-18. Per-row decisions preserve those distinct scopes. Registration and runtime acceptance remain separate gates; no production-default activation.",
   "assets": [
     {
       "binding": "imperial:constructor",
@@ -372,7 +372,8 @@
       ],
       "review_requires_scaffold_seam": true,
       "envelope_basis": "renderer._draw_construction_sites structural ring/posts at nominal r=50, frac=1; progress arc is retained effect outside mesh",
-      "status": "pending_owner_appearance_approval"
+      "status": "appearance_approved_pending_landing",
+      "appearance_decision": "s07-scaffold-appearance-2026-10-18"
     }
   ],
   "motion": [],
@@ -401,6 +402,10 @@
     },
     "syndicate:colonizer": {
       "sheet": "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png"
+    },
+    "shared:construction_scaffold": {
+      "sheet": "artifacts/s07-integration/scaffold-review-attempt1/scaffold-appearance-grid.jpg",
+      "metrics": "artifacts/s07-integration/scaffold-review-attempt1/metrics.json"
     }
   }
 }

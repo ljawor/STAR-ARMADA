@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "confederacy:planet_shield_generator",
+  "asset_id": "core:confederacy/planet_shield_generator",
+  "authority": "script",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:01Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/legion_planet_shield_generator.blend",
+    "sha256": "3e1c8f02a6f2ebc4647622078c0926081f3f5fa9ee39691f1c5d5b54db3e62e3"
+  },
+  "exporter": {
+    "path": "tools/art/export_legion_planet_shield_generator.py",
+    "sha256": "6c959436870831e3c80a7c5f46eeaf62b49da35ea00918a704c2b3aa7815832b"
+  },
+  "runtime": {
+    "path": "assets/models/legion_planet_shield_generator.mesh.json",
+    "sha256": "7d8d1676d83461298d8efa08be75faa494452a71196952d6943377dedb4f1873",
+    "bytes": 159373,
+    "triangles": 2608
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "7d8d1676d83461298d8efa08be75faa494452a71196952d6943377dedb4f1873",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

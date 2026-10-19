@@ -1,0 +1,6 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+rebel passed
+imperial passed
+confederacy passed
+syndicate passed
+{"status": "passed", "rows": 24}

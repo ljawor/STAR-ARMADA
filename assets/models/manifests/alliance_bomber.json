@@ -1,0 +1,74 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:alliance/bomber",
+  "revision": "4bb7a6a02043f10a83edd15d960c1a570b139565f826599f0b0e3102f5ec3f7f",
+  "display_name": "alliance bomber (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/alliance_bomber.mesh.json",
+      "sha256": "9eb42e8c2f5467ca849536fa6e0e06aeb4c4b8bd0538cba419df0859f1d997c2",
+      "bytes": 179700
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -14.316667,
+      -6.65,
+      -25.37
+    ],
+    "max": [
+      14.316667,
+      6.440669,
+      23.0
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/alliance_bomber.blend",
+    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 2810,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "s06-b2-squadron-logistics-2026-10-17",
+    "decided_by": "owner",
+    "decided_on": "2026-10-17",
+    "reviewed_revision": "4bb7a6a02043f10a83edd15d960c1a570b139565f826599f0b0e3102f5ec3f7f",
+    "reviewed_evidence": [
+      "artifacts/s06_alliance_batch_review/b2-squadron-logistics/contact-sheet.png",
+      "artifacts/s06_alliance_batch_review/b2-squadron-logistics/metrics.json"
+    ]
+  }
+}

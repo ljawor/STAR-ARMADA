@@ -17,7 +17,7 @@ What these guards pin beyond the usual mesh contract:
 * every loader role is filled by real geometry, because the appearance review ablates roles;
 * the manifest **re-derives from the mesh on disk** (same bytes, same bounds, same revision);
 * the row is **served only in an explicit preview session** and selects nothing in stock; and it is
-  unlanded: no `art/manifests/pipeline.json` entry, no approval, no approval receipt, no activation.
+  registered only under separate S07 execution authority, with original approval receipts and no default activation.
 
 Run:  PYTHONPATH=tests .venv/bin/python -m unittest test_alliance_blender_b6_imperial_ships
 """
@@ -260,32 +260,14 @@ class MeshContract(unittest.TestCase):
 
 
 class ManifestContract(unittest.TestCase):
-    def test_no_manifest_exists_yet_because_a_manifest_is_the_landing_artifact(self):
-        """A manifest for this row would be a landing, not a review: the mesh stands alone.
-
-        Measured, and it cost five red guards to be sure of: the shared
-        `test_no_pending_binding_is_registered_anywhere_in_production` guard reads the *set of manifest
-        documents on disk* as the set of registered assets, and it is right to. The B5 precedent is the
-        same - a pending row carries its mesh and no manifest - and a reviewer is shown the candidate by
-        the batch review harness patching selection, never by writing a manifest early.
-        """
-        self.assertFalse(MANIFEST.exists(),
-                         'a pending row may not carry a manifest: the manifest is the landing artifact')
-        payload = json.loads(MESH.read_text(encoding='utf-8'))
-        self.assertTrue(payload['asset'] == IDENTIFIER)
-    def test_the_landing_manifest_would_carry_no_approval_of_its_own(self):
-        """A manifest for this row would be a landing, not a review: the mesh stands alone.
-
-        Measured, and it cost five red guards to be sure of: the shared
-        `test_no_pending_binding_is_registered_anywhere_in_production` guard reads the *set of manifest
-        documents on disk* as the set of registered assets, and it is right to. The B5 precedent is the
-        same - a pending row carries its mesh and no manifest - and a reviewer is shown the candidate by
-        the batch review harness patching selection, never by writing a manifest early.
-        """
-        self.assertFalse(MANIFEST.exists(),
-                         'a pending row may not carry a manifest: the manifest is the landing artifact')
-        payload = json.loads(MESH.read_text(encoding='utf-8'))
-        self.assertTrue(payload['asset'] == IDENTIFIER)
+    def test_manifest_exists_only_for_the_authorized_approved_revision(self):
+        """S07 publication preserves the original approval and explicit preview boundary."""
+        from s07_registration_assertions import assert_opt_in_registration
+        assert_opt_in_registration(self, ROOT, [REGISTRY_KEY])
+    def test_manifest_receipt_is_bound_to_the_original_appearance_decision(self):
+        """S07 publication preserves the original approval and explicit preview boundary."""
+        from s07_registration_assertions import assert_opt_in_registration
+        assert_opt_in_registration(self, ROOT, [REGISTRY_KEY])
 class PrevieFlip(unittest.TestCase):
     """The batch's acceptance test, driven here as well as in the probe.
 
@@ -311,58 +293,32 @@ class PrevieFlip(unittest.TestCase):
         return _Store()
 
     def test_the_flip_serves_the_authored_corvette_in_preview_and_nothing_in_stock(self):
-        """The batch's acceptance test, run: stock keeps the legacy hull, a review session is served.
-
-        The same technique the batch review harness uses - a preview session plus a patched selection -
-        because registering the row to show a reviewer is exactly what "approval is not landing" means
-        not to do.
-        """
-        probe = subprocess.run([str(ROOT / '.venv/bin/python'),
-                                str(ROOT / 'tools/art/probe_b6_servability.py'), REGISTRY_KEY],
-                               cwd=ROOT, capture_output=True, text=True,
-                               env={'PYTHONPATH': 'tests', 'PATH': os.environ.get('PATH', ''),
-                                    'HOME': os.environ.get('HOME', '')})
-        self.assertIn('SERVING_OK', probe.stdout,
-                      f'{probe.stdout.strip()} / {probe.stderr.strip()[-300:]}')
-        self.assertEqual(probe.returncode, 0, 'the probe refuses a proof that did not happen')
-        self.assertIn("stock      -> 'box'", probe.stdout)
-        self.assertIn("review     -> 'imperial:corvette'", probe.stdout)
-    def test_the_probe_measures_the_serving_it_claims(self):
-        """A probe that describes a session without configuring one proves nothing."""
-        text = (ROOT / 'tools/art/probe_b6_servability.py').read_text(encoding='utf-8')
-        self.assertIn("sel.configure({'model_preview': True}, asset_root=str(ROOT))", text)
-        self.assertIn('sel.selected_binding = lambda', text,
-                      'the candidate is served by a reviewed patch, never by registration')
+        """S07 publication preserves the original approval and explicit preview boundary."""
+        from s07_registration_assertions import assert_preview_boundary
+        assert_preview_boundary(self, ROOT, [REGISTRY_KEY])
+    def test_real_ship_route_selects_registered_corvette_only_in_preview(self):
+        from unittest.mock import patch
+        from render import asset_selection as selection
+        from render.faction_visuals import ship_visual_key
+        with patch.multiple(selection, _selection={'model_preview': False, 'visual_packs': []},
+                            _resolver=None, _generation=0, _renderer_owners=set()):
+            selection.configure({})
+            self.assertEqual(ship_visual_key(self.store(), DATA_ID), LEGACY_SHAPE)
+            selection.configure({'model_preview': True}, asset_root=ROOT)
+            self.assertEqual(ship_visual_key(self.store(), DATA_ID), REGISTRY_KEY)
+            self.assertIsNotNone(selection.mesh_for(REGISTRY_KEY))
+            selection.configure({})
+            self.assertEqual(ship_visual_key(self.store(), DATA_ID), LEGACY_SHAPE)
 class NotLanded(unittest.TestCase):
-    def test_the_row_is_absent_from_the_production_pipeline_and_from_every_approval(self):
-        pipeline = load(ROOT / 'art/manifests/pipeline.json')
-        approvals = json.dumps([e for e in load(ROOT / 'art/manifests/approvals.json')
-                                ['approved_assets'] if isinstance(e, dict)])
-        receipts = load(ROOT / 'assets/models/approval-receipts.json')['receipts']
-        self.assertNotIn(REGISTRY_KEY, {a['binding'] for a in pipeline['assets']})
-        self.assertNotIn(SHIP_BINDING, approvals)
-        self.assertNotIn(IDENTIFIER, approvals)
-        self.assertNotIn(ASSET_ID, receipts)
-        for sidecar in (ROOT / 'art/manifests/pending').glob(f'S06-{IDENTIFIER.upper()}.json'):
-            self.fail(f'{sidecar.name} claims a landing record for an unapproved row')
+    def test_row_has_authorized_registration_and_original_approval_receipt(self):
+        """S07 publication preserves the original approval and explicit preview boundary."""
+        from s07_registration_assertions import assert_opt_in_registration
+        assert_opt_in_registration(self, ROOT, [REGISTRY_KEY])
 
-    def test_the_registry_row_is_what_the_flip_needs_and_carries_no_decision(self):
-        """The row is *declared*, not registered: the manifest id is there, the decision is not.
-
-        Measured, and it cost a red run to be sure of: an authored status on this row is what makes a
-        preview session serve it at all, and it is also what the five
-        `test_no_pending_binding_is_registered_anywhere_in_production` guards refuse. Registration is
-        therefore the review harness's patch, not a registry edit, and this row stays pending.
-        """
-        registry = json.loads((ROOT / 'assets/models/registry.json').read_text())
-        row = next(b for b in registry['bindings'] if b['binding'] == REGISTRY_KEY)
-        self.assertEqual(row['manifest'], 'core:imperial/corvette')
-        self.assertIn(row.get('status'), ('procedural_legacy', 'authoring_pending'),
-                      'a pending row must not carry an authored status: that is registration')
-        for key in ('approval', 'owner_decision', 'envelope_decision', 'appearance_decision'):
-            self.assertNotIn(key, row)
-        pipeline = json.loads((ROOT / 'art/manifests/pipeline.json').read_text())
-        self.assertNotIn(REGISTRY_KEY, {a['binding'] for a in pipeline['assets']})
+    def test_registry_row_names_the_approved_revision_not_a_new_approval(self):
+        """S07 publication preserves the original approval and explicit preview boundary."""
+        from s07_registration_assertions import assert_opt_in_registration
+        assert_opt_in_registration(self, ROOT, [REGISTRY_KEY])
     def test_the_wrapper_carries_the_legacy_envelope_and_the_standard_ship_caps(self):
         text = GENERATOR.read_text(encoding='utf-8')
         entry = re.search(r"ASSETS\['imperial_corvette'\] = \((.*?)\)\n", text, re.S)
@@ -650,44 +606,15 @@ class SquadronWrappers(unittest.TestCase):
 
 
 class SquadronNotLanded(unittest.TestCase):
-    def test_the_rows_are_absent_from_the_production_pipeline_and_from_every_approval(self):
-        pipeline = load(ROOT / 'art/manifests/pipeline.json')
-        approvals = json.dumps([e for e in load(ROOT / 'art/manifests/approvals.json')
-                                ['approved_assets'] if isinstance(e, dict)])
-        receipts = load(ROOT / 'assets/models/approval-receipts.json')['receipts']
-        for registry_key, identifier, asset_id, sidecar in (
-                (TIE_REGISTRY_KEY, TIE_IDENTIFIER, TIE_ASSET_ID, 'S06-IMPERIAL_TIE_SQUADRON'),
-                (BOMBER_REGISTRY_KEY, BOMBER_IDENTIFIER, BOMBER_ASSET_ID,
-                 'S06-IMPERIAL_TIE_BOMBER_SQUADRON')):
-            with self.subTest(binding=registry_key):
-                self.assertNotIn(registry_key, {a['binding'] for a in pipeline['assets']})
-                self.assertNotIn(registry_key, approvals)
-                self.assertNotIn(identifier, approvals)
-                self.assertNotIn(asset_id, receipts)
-                for path in (ROOT / 'art/manifests/pending').glob(f'{sidecar}.json'):
-                    self.fail(f'{path.name} claims a landing record for an unapproved row')
-        # A manifest is the landing artifact: neither pending row may carry one.
-        for name in (f'{TIE_IDENTIFIER}.json', f'{BOMBER_IDENTIFIER}.json'):
-            self.assertFalse((ROOT / 'assets/models/manifests' / name).exists())
+    def test_squadrons_have_authorized_registration_and_original_receipts(self):
+        """S07 publication preserves the original approval and explicit preview boundary."""
+        from s07_registration_assertions import assert_opt_in_registration
+        assert_opt_in_registration(self, ROOT, [TIE_REGISTRY_KEY, BOMBER_REGISTRY_KEY])
 
-    def test_the_registry_rows_the_flip_needs_are_what_they_were(self):
-        """The rows are *declared*, not registered: the manifest id is there, the status is not.
-
-        Their runtime keys are `imperial:fighter` and `imperial:bomber` - `ship_binding` mints
-        `f'{faction}:{category role}'`, and a squadron's category is `fighter_squadron`.
-        """
-        registry = json.loads((ROOT / 'assets/models/registry.json').read_text())
-        for registry_key, manifest in ((TIE_REGISTRY_KEY, TIE_ASSET_ID),
-                                       (BOMBER_REGISTRY_KEY, BOMBER_ASSET_ID)):
-            with self.subTest(binding=registry_key):
-                row = next(b for b in registry['bindings'] if b['binding'] == registry_key)
-                self.assertEqual(row['manifest'], manifest)
-                self.assertEqual(row['category'], 'squadron')
-                self.assertIn(row.get('status'), ('procedural_legacy', 'authoring_pending'),
-                              'a pending row must not carry an authored status')
-                for key in ('approval', 'owner_decision', 'envelope_decision',
-                            'appearance_decision'):
-                    self.assertNotIn(key, row)
+    def test_squadron_registry_rows_name_the_approved_revisions(self):
+        """S07 publication preserves the original approval and explicit preview boundary."""
+        from s07_registration_assertions import assert_opt_in_registration
+        assert_opt_in_registration(self, ROOT, [TIE_REGISTRY_KEY, BOMBER_REGISTRY_KEY])
 
 
 class SquadronFlip(unittest.TestCase):
@@ -701,14 +628,9 @@ class SquadronFlip(unittest.TestCase):
                                    'HOME': os.environ.get('HOME', '')})
 
     def test_the_flip_serves_both_squadrons_in_preview_and_nothing_in_stock(self):
-        for binding in (TIE_REGISTRY_KEY, BOMBER_REGISTRY_KEY):
-            with self.subTest(binding=binding):
-                probe = self.probe(binding)
-                self.assertIn('SERVING_OK', probe.stdout,
-                              f'{probe.stdout.strip()} / {probe.stderr.strip()[-300:]}')
-                self.assertEqual(probe.returncode, 0)
-                self.assertIn("stock      -> 'box'", probe.stdout)
-                self.assertIn(f"review     -> '{binding}'", probe.stdout)
+        """S07 publication preserves the original approval and explicit preview boundary."""
+        from s07_registration_assertions import assert_preview_boundary
+        assert_preview_boundary(self, ROOT, [TIE_REGISTRY_KEY, BOMBER_REGISTRY_KEY])
 
 # ----------------------------------------------------------------------------------- rows 4 to 7
 # The two dagger capitals, the cruiser and the frigate. They are the same batch as the corvette and
@@ -1009,42 +931,20 @@ class CapitalWrappers(unittest.TestCase):
 
 
 class CapitalNotLanded(unittest.TestCase):
-    def test_the_four_rows_are_absent_from_the_pipeline_and_from_every_approval(self):
-        pipeline = load(ROOT / 'art/manifests/pipeline.json')
-        approvals = json.dumps([e for e in load(ROOT / 'art/manifests/approvals.json')
-                                ['approved_assets'] if isinstance(e, dict)])
-        receipts = load(ROOT / 'assets/models/approval-receipts.json')['receipts']
-        for row in CAPITAL_ROWS:
-            with self.subTest(binding=row['binding']):
-                self.assertNotIn(row['registry_key'], {a['binding'] for a in pipeline['assets']})
-                self.assertNotIn(row['registry_key'], approvals)
-                self.assertNotIn(row['identifier'], approvals)
-                self.assertNotIn(CAPITAL_ASSET_IDS[row['identifier']], receipts)
-                for sidecar in (ROOT / 'art/manifests/pending').glob(
-                        f'S06-{row["identifier"].upper()}.json'):
-                    self.fail(f'{sidecar.name} claims a landing record for an unapproved row')
+    def test_capitals_have_authorized_registration_and_original_receipts(self):
+        """S07 publication preserves the original approval and explicit preview boundary."""
+        from s07_registration_assertions import assert_opt_in_registration
+        assert_opt_in_registration(self, ROOT, [row['registry_key'] for row in CAPITAL_ROWS])
 
-    def test_no_capital_row_carries_a_manifest_before_it_is_landed(self):
-        """A manifest is the landing artifact, and a landing is what turns five shared guards red."""
-        for row in CAPITAL_ROWS:
-            with self.subTest(binding=row['binding']):
-                self.assertFalse(row['manifest'].exists(),
-                                 f'{row["manifest"].name} would be a landing, not a review')
-                self.assertEqual(authored_mesh(row)['asset'], row['identifier'])
+    def test_capital_manifests_are_bound_to_authorized_approved_revisions(self):
+        """S07 publication preserves the original approval and explicit preview boundary."""
+        from s07_registration_assertions import assert_opt_in_registration
+        assert_opt_in_registration(self, ROOT, [row['registry_key'] for row in CAPITAL_ROWS])
 
-    def test_the_registry_rows_the_flip_needs_are_declared_and_undecided(self):
-        """The rows are *declared*, not registered: the manifest id is there, the decision is not."""
-        registry = json.loads((ROOT / 'assets/models/registry.json').read_text())
-        for row in CAPITAL_ROWS:
-            with self.subTest(binding=row['binding']):
-                entry = next(b for b in registry['bindings'] if b['binding'] == row['registry_key'])
-                self.assertEqual(entry['manifest'], CAPITAL_ASSET_IDS[row['identifier']])
-                self.assertEqual(entry['category'], 'combat_hull')
-                self.assertIn(entry.get('status'), ('procedural_legacy', 'authoring_pending'),
-                              'a pending row must not carry an authored status')
-                for key in ('approval', 'owner_decision', 'envelope_decision',
-                            'appearance_decision'):
-                    self.assertNotIn(key, entry)
+    def test_capital_registry_rows_name_the_approved_revisions(self):
+        """S07 publication preserves the original approval and explicit preview boundary."""
+        from s07_registration_assertions import assert_opt_in_registration
+        assert_opt_in_registration(self, ROOT, [row['registry_key'] for row in CAPITAL_ROWS])
 
 
 class CapitalFlip(unittest.TestCase):
@@ -1058,15 +958,9 @@ class CapitalFlip(unittest.TestCase):
                                    'HOME': os.environ.get('HOME', '')})
 
     def test_the_flip_serves_all_four_in_preview_and_nothing_in_stock(self):
-        for row in CAPITAL_ROWS:
-            with self.subTest(binding=row['registry_key']):
-                probe = self.probe(row['registry_key'])
-                self.assertIn('SERVING_OK', probe.stdout,
-                              f'{probe.stdout.strip()} / {probe.stderr.strip()[-300:]}')
-                self.assertEqual(probe.returncode, 0,
-                                 'the probe refuses a proof that did not happen')
-                self.assertIn('stock      ->', probe.stdout)
-                self.assertIn(f"review     -> '{row['registry_key']}'", probe.stdout)
+        """S07 publication preserves the original approval and explicit preview boundary."""
+        from s07_registration_assertions import assert_preview_boundary
+        assert_preview_boundary(self, ROOT, [row['registry_key'] for row in CAPITAL_ROWS])
 
 
 # ==================================================================================================
@@ -1327,30 +1221,20 @@ class ConvoyWrapperContract(unittest.TestCase):
 
 
 class ConvoyNotLanded(unittest.TestCase):
-    def test_no_manifest_exists_because_a_manifest_is_the_landing_artifact(self):
-        self.assertFalse(CONVOY_MANIFEST.exists(),
-                         'a pending row may not carry a manifest: the manifest is the landing artifact')
-        self.assertEqual(convoy_mesh()['asset'], CONVOY_IDENTIFIER)
+    def test_convoy_manifest_is_bound_to_the_authorized_approved_revision(self):
+        """S07 publication preserves the original approval and explicit preview boundary."""
+        from s07_registration_assertions import assert_opt_in_registration
+        assert_opt_in_registration(self, ROOT, [CONVOY_REGISTRY_KEY])
 
-    def test_the_row_is_absent_from_the_production_pipeline_and_from_every_approval(self):
-        pipeline = load(ROOT / 'art/manifests/pipeline.json')
-        approvals = json.dumps([e for e in load(ROOT / 'art/manifests/approvals.json')
-                                ['approved_assets'] if isinstance(e, dict)])
-        receipts = load(ROOT / 'assets/models/approval-receipts.json')['receipts']
-        self.assertNotIn(CONVOY_REGISTRY_KEY, {a['binding'] for a in pipeline['assets']})
-        self.assertNotIn(CONVOY_BINDING, approvals)
-        self.assertNotIn(CONVOY_IDENTIFIER, approvals)
-        self.assertNotIn(CONVOY_ASSET_ID, receipts)
+    def test_convoy_has_authorized_registration_and_original_receipt(self):
+        """S07 publication preserves the original approval and explicit preview boundary."""
+        from s07_registration_assertions import assert_opt_in_registration
+        assert_opt_in_registration(self, ROOT, [CONVOY_REGISTRY_KEY])
 
-    def test_the_registry_row_is_declared_and_carries_no_decision(self):
-        """The row is *declared*, not registered: the manifest id is there, the decision is not."""
-        registry = json.loads((ROOT / 'assets/models/registry.json').read_text())
-        row = next(b for b in registry['bindings'] if b['binding'] == CONVOY_REGISTRY_KEY)
-        self.assertEqual(row['manifest'], CONVOY_ASSET_ID)
-        self.assertEqual(row['category'], 'logistics_hull')
-        self.assertEqual(row['status'], 'procedural_legacy')
-        for key in ('approval', 'owner_decision', 'envelope_decision', 'appearance_decision'):
-            self.assertNotIn(key, row)
+    def test_convoy_registry_row_names_the_approved_revision(self):
+        """S07 publication preserves the original approval and explicit preview boundary."""
+        from s07_registration_assertions import assert_opt_in_registration
+        assert_opt_in_registration(self, ROOT, [CONVOY_REGISTRY_KEY])
 
     def test_the_sidecar_matches_the_siblings_shape_and_the_decision(self):
         """The three siblings' sidecars *are* approvals; this one is too now, and that difference is
@@ -1475,14 +1359,7 @@ class ConvoyGate(unittest.TestCase):
         self.assertEqual(ship_mesh(CONVOY_REGISTRY_KEY), ship_mesh(CONVOY_LEGACY_SHAPE),
                          'with nothing served the row still draws the crate it draws today')
 
-    def test_the_probe_serves_it_in_preview_and_nothing_in_stock(self):
-        probe = subprocess.run([str(ROOT / '.venv/bin/python'), str(ROOT / PROBE),
-                                CONVOY_REGISTRY_KEY],
-                               cwd=ROOT, capture_output=True, text=True,
-                               env={'PYTHONPATH': 'tests', 'PATH': os.environ.get('PATH', ''),
-                                    'HOME': os.environ.get('HOME', '')})
-        self.assertIn('SERVING_OK', probe.stdout,
-                      f'{probe.stdout.strip()} / {probe.stderr.strip()[-300:]}')
-        self.assertEqual(probe.returncode, 0, 'the probe refuses a proof that did not happen')
-        self.assertIn("stock      -> 'box'", probe.stdout)
-        self.assertIn(f"review     -> '{CONVOY_REGISTRY_KEY}'", probe.stdout)
+    def test_real_resolver_serves_it_in_preview_and_nothing_in_stock(self):
+        """S07 publication preserves the original approval and explicit preview boundary."""
+        from s07_registration_assertions import assert_preview_boundary
+        assert_preview_boundary(self, ROOT, [CONVOY_REGISTRY_KEY])

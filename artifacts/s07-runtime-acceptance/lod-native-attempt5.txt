@@ -1,0 +1,6 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/artifacts/s07-runtime-acceptance/lod-native-probe.py", line 53, in <module>
+    assert np.any(image!=empty),(mode,px,'blank subject')
+           ^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('cached', 15.99, 'blank subject')

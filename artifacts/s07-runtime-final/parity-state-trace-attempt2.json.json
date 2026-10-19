@@ -1,0 +1,12 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "artifacts/s07-runtime-final/parity-state-probe.py"
+  ],
+  "pid": 84034,
+  "exit_code": 0,
+  "timed_out": false,
+  "deadline_seconds": 60.0,
+  "elapsed_seconds": 0.238,
+  "log": "artifacts/s07-runtime-final/parity-state-trace-attempt2.json"
+}

@@ -1,164 +1,3459 @@
 {
- "schema": 1,
- "purpose": "Authoring registry for the model pipeline: where each asset's source lives, which authority owns it, how its runtime export is produced and what bytes were approved. This is the build-side companion to the shipped contract (S02): a manifest describes what the renderer may load, this file describes how the bytes are made. Do not duplicate approved hashes here - they are read from the record named per asset, so the two cannot drift.",
- "policy": {
-  "decision_id": "s03-pipeline-policy-2026-10-16",
-  "record": "art/manifests/pipeline_policy.json",
-  "lfs_threshold_bytes": 5242880,
-  "note": "Ordinary Git. LFS is adopted only when a single file crosses the threshold, and then atomically (attributes + build fetching + fresh-clone check)."
- },
- "budget_policy": {
-  "decision_id": "s02-section9-budgets-2026-10-16",
-  "contract": "docs/ASSET_EXTENSION_CONTRACT.md section 9",
-  "record": "art/manifests/decisions.md",
-  "note": "Advisory class budgets, set below the loader's hard failure (render/authored_mesh.py: 12,000 triangles, 10,000 vertices, 2,000,000 bytes per file) so a build can weigh them: the pipeline reports W_TRIANGLE_BUDGET when an asset crosses its own. Until this decision these numbers were the loader's caps, which can never fire."
- },
- "blender": {
-  "pin": "5.0.1",
-  "env_var": "STAR_ARMADA_BLENDER",
-  "note": "The pipeline never hardcodes an application path in code. Resolution order: --blender, $STAR_ARMADA_BLENDER, `blender` on PATH, then the per-platform candidates below. Add your install here rather than editing the tool.",
-  "candidates": {
-   "darwin": [
-    "/Applications/Blender.app/Contents/MacOS/Blender"
-   ],
-   "win32": [
-    "C:/Program Files/Blender Foundation/Blender 5.0/blender.exe",
-    "C:/Program Files/Blender Foundation/Blender/blender.exe"
-   ],
-   "linux": [
-    "/usr/bin/blender",
-    "/usr/local/bin/blender"
-   ]
-  }
- },
- "batches": {
-  "approved-trio": [
-   "rebel:battleship",
-   "rebel:frigate",
-   "rebel:shipyard"
-  ]
- },
- "assets": [
-  {
-   "binding": "rebel:battleship",
-   "asset_id": "core:alliance/battleship",
-   "gameplay_entity": "rebel_battleship",
-   "authority": "script",
-   "source": "art/blender/alliance_battleship.blend",
-   "exporter": "tools/art/build_alliance_battleship.py",
-   "export_script": null,
-   "runtime": "assets/models/alliance_battleship.mesh.json",
-   "expected_hashes": "art/manifests/approved-trio-source-hashes.json",
-   "expected_triangles": 11457,
-   "advisory_budget_triangles": 11888,
-   "category": "combat_hull",
-   "roles": [
-    "base",
-    "dark",
-    "trim",
-    "accent",
-    "lit",
-    "cool"
-   ],
-   "coordinates": "X beam; Y up; +Z forward; nominal game model units",
-   "approval": {
-    "decision_id": "s06-battleship-hull-detail-2026-10-16",
-    "record": "art/manifests/approvals.json"
-   },
-   "advisory_budget_class": "capital hull"
+  "schema": 1,
+  "purpose": "Authoring registry for the model pipeline: where each asset's source lives, which authority owns it, how its runtime export is produced and what bytes were approved. This is the build-side companion to the shipped contract (S02): a manifest describes what the renderer may load, this file describes how the bytes are made. Do not duplicate approved hashes here - they are read from the record named per asset, so the two cannot drift.",
+  "policy": {
+    "decision_id": "s03-pipeline-policy-2026-10-16",
+    "record": "art/manifests/pipeline_policy.json",
+    "lfs_threshold_bytes": 5242880,
+    "note": "Ordinary Git. LFS is adopted only when a single file crosses the threshold, and then atomically (attributes + build fetching + fresh-clone check)."
   },
-  {
-   "binding": "rebel:frigate",
-   "asset_id": "core:alliance/frigate",
-   "gameplay_entity": "rebel_frigate",
-   "authority": "script",
-   "source": "art/blender/alliance_frigate.blend",
-   "exporter": "tools/art/build_alliance_frigate.py",
-   "export_script": null,
-   "runtime": "assets/models/alliance_frigate.mesh.json",
-   "expected_hashes": "art/manifests/approved-trio-source-hashes.json",
-   "expected_triangles": 7708,
-   "advisory_budget_triangles": 8000,
-   "category": "combat_hull",
-   "roles": [
-    "base",
-    "dark",
-    "trim",
-    "accent",
-    "lit",
-    "cool"
-   ],
-   "coordinates": "X beam; Y up; +Z forward; nominal game model units",
-   "approval": {
-    "decision_id": "s07-frigate-shipyard-hull-detail-2026-10-16",
-    "record": "art/manifests/approvals.json"
-   },
-   "advisory_budget_class": "escort hull"
+  "budget_policy": {
+    "decision_id": "s02-section9-budgets-2026-10-16",
+    "contract": "docs/ASSET_EXTENSION_CONTRACT.md section 9",
+    "record": "art/manifests/decisions.md",
+    "note": "Advisory class budgets, set below the loader's hard failure (render/authored_mesh.py: 12,000 triangles, 10,000 vertices, 2,000,000 bytes per file) so a build can weigh them: the pipeline reports W_TRIANGLE_BUDGET when an asset crosses its own. Until this decision these numbers were the loader's caps, which can never fire."
   },
-  {
-   "binding": "rebel:shipyard",
-   "asset_id": "core:alliance/shipyard",
-   "gameplay_entity": null,
-   "gameplay_entity_note": "Alliance-owned (rebel) shipyard station. The station data row is in assets/data/stations/stations.json; no ship key names it, which is why this is null rather than an invented id.",
-   "authority": "script",
-   "source": "art/blender/alliance_shipyard.blend",
-   "exporter": "tools/art/build_alliance_shipyard.py",
-   "export_script": null,
-   "runtime": "assets/models/alliance_shipyard.mesh.json",
-   "expected_hashes": "art/manifests/approved-trio-source-hashes.json",
-   "expected_triangles": 10767,
-   "advisory_budget_triangles": 11500,
-   "category": "station",
-   "roles": [
-    "base",
-    "dark",
-    "trim",
-    "accent",
-    "lit",
-    "cool"
-   ],
-   "coordinates": "X beam; Y up; +Z forward; nominal game model units",
-   "approval": {
-    "decision_id": "s07-frigate-shipyard-hull-detail-2026-10-16",
-    "record": "art/manifests/approvals.json"
-   },
-   "advisory_budget_class": "station"
+  "blender": {
+    "pin": "5.0.1",
+    "env_var": "STAR_ARMADA_BLENDER",
+    "note": "The pipeline never hardcodes an application path in code. Resolution order: --blender, $STAR_ARMADA_BLENDER, `blender` on PATH, then the per-platform candidates below. Add your install here rather than editing the tool.",
+    "candidates": {
+      "darwin": [
+        "/Applications/Blender.app/Contents/MacOS/Blender"
+      ],
+      "win32": [
+        "C:/Program Files/Blender Foundation/Blender 5.0/blender.exe",
+        "C:/Program Files/Blender Foundation/Blender/blender.exe"
+      ],
+      "linux": [
+        "/usr/bin/blender",
+        "/usr/local/bin/blender"
+      ]
+    }
+  },
+  "batches": {
+    "approved-trio": [
+      "rebel:battleship",
+      "rebel:frigate",
+      "rebel:shipyard"
+    ],
+    "approved-s06": [
+      "confederacy:attack_satellite",
+      "confederacy:battleship",
+      "confederacy:bomber",
+      "confederacy:colonizer",
+      "confederacy:command_station",
+      "confederacy:constructor",
+      "confederacy:convoy",
+      "confederacy:corvette",
+      "confederacy:cruiser",
+      "confederacy:defense_platform",
+      "confederacy:defense_satellite",
+      "confederacy:energy_relay",
+      "confederacy:fighter",
+      "confederacy:fighter_platform",
+      "confederacy:frigate",
+      "confederacy:mining_station",
+      "confederacy:planet_extractor",
+      "confederacy:planet_pulsar_cannon",
+      "confederacy:planet_shield_generator",
+      "confederacy:planet_trade_hub",
+      "confederacy:repair_dock",
+      "confederacy:research_station",
+      "confederacy:sensor_station",
+      "confederacy:shipyard",
+      "confederacy:supercapital",
+      "confederacy:trade_station",
+      "environment:asteroid_field",
+      "imperial:attack_satellite",
+      "imperial:battleship",
+      "imperial:bomber",
+      "imperial:colonizer",
+      "imperial:command_station",
+      "imperial:constructor",
+      "imperial:convoy",
+      "imperial:corvette",
+      "imperial:cruiser",
+      "imperial:defense_platform",
+      "imperial:defense_satellite",
+      "imperial:energy_relay",
+      "imperial:fighter",
+      "imperial:fighter_platform",
+      "imperial:frigate",
+      "imperial:mining_station",
+      "imperial:planet_extractor",
+      "imperial:planet_pulsar_cannon",
+      "imperial:planet_shield_generator",
+      "imperial:planet_trade_hub",
+      "imperial:repair_dock",
+      "imperial:research_station",
+      "imperial:sensor_station",
+      "imperial:shipyard",
+      "imperial:supercapital",
+      "imperial:trade_station",
+      "rebel:attack_satellite",
+      "rebel:bomber",
+      "rebel:colonizer",
+      "rebel:command_station",
+      "rebel:constructor",
+      "rebel:convoy",
+      "rebel:corvette",
+      "rebel:cruiser",
+      "rebel:defense_platform",
+      "rebel:defense_satellite",
+      "rebel:energy_relay",
+      "rebel:fighter",
+      "rebel:fighter_platform",
+      "rebel:mining_station",
+      "rebel:planet_extractor",
+      "rebel:planet_pulsar_cannon",
+      "rebel:planet_shield_generator",
+      "rebel:planet_trade_hub",
+      "rebel:repair_dock",
+      "rebel:research_station",
+      "rebel:sensor_station",
+      "rebel:supercapital",
+      "rebel:trade_station",
+      "syndicate:attack_satellite",
+      "syndicate:colonizer",
+      "syndicate:command_station",
+      "syndicate:constructor",
+      "syndicate:convoy",
+      "syndicate:corvette",
+      "syndicate:cruiser",
+      "syndicate:defense_platform",
+      "syndicate:defense_satellite",
+      "syndicate:energy_relay",
+      "syndicate:fighter",
+      "syndicate:fighter_platform",
+      "syndicate:frigate",
+      "syndicate:mining_station",
+      "syndicate:planet_extractor",
+      "syndicate:planet_pulsar_cannon",
+      "syndicate:planet_shield_generator",
+      "syndicate:planet_trade_hub",
+      "syndicate:repair_dock",
+      "syndicate:research_station",
+      "syndicate:sensor_station",
+      "syndicate:shipyard",
+      "syndicate:trade_station"
+    ],
+    "approved-s07-scaffold": [
+      "shared:construction_scaffold"
+    ]
+  },
+  "assets": [
+    {
+      "binding": "rebel:battleship",
+      "asset_id": "core:alliance/battleship",
+      "gameplay_entity": "rebel_battleship",
+      "authority": "script",
+      "source": "art/blender/alliance_battleship.blend",
+      "exporter": "tools/art/build_alliance_battleship.py",
+      "export_script": null,
+      "runtime": "assets/models/alliance_battleship.mesh.json",
+      "expected_hashes": "art/manifests/approved-trio-source-hashes.json",
+      "expected_triangles": 11457,
+      "advisory_budget_triangles": 11888,
+      "category": "combat_hull",
+      "roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-battleship-hull-detail-2026-10-16",
+        "record": "art/manifests/approvals.json"
+      },
+      "advisory_budget_class": "capital hull"
+    },
+    {
+      "binding": "rebel:frigate",
+      "asset_id": "core:alliance/frigate",
+      "gameplay_entity": "rebel_frigate",
+      "authority": "script",
+      "source": "art/blender/alliance_frigate.blend",
+      "exporter": "tools/art/build_alliance_frigate.py",
+      "export_script": null,
+      "runtime": "assets/models/alliance_frigate.mesh.json",
+      "expected_hashes": "art/manifests/approved-trio-source-hashes.json",
+      "expected_triangles": 7708,
+      "advisory_budget_triangles": 8000,
+      "category": "combat_hull",
+      "roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s07-frigate-shipyard-hull-detail-2026-10-16",
+        "record": "art/manifests/approvals.json"
+      },
+      "advisory_budget_class": "escort hull"
+    },
+    {
+      "binding": "rebel:shipyard",
+      "asset_id": "core:alliance/shipyard",
+      "gameplay_entity": null,
+      "gameplay_entity_note": "Alliance-owned (rebel) shipyard station. The station data row is in assets/data/stations/stations.json; no ship key names it, which is why this is null rather than an invented id.",
+      "authority": "script",
+      "source": "art/blender/alliance_shipyard.blend",
+      "exporter": "tools/art/build_alliance_shipyard.py",
+      "export_script": null,
+      "runtime": "assets/models/alliance_shipyard.mesh.json",
+      "expected_hashes": "art/manifests/approved-trio-source-hashes.json",
+      "expected_triangles": 10767,
+      "advisory_budget_triangles": 11500,
+      "category": "station",
+      "roles": [
+        "base",
+        "dark",
+        "trim",
+        "accent",
+        "lit",
+        "cool"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s07-frigate-shipyard-hull-detail-2026-10-16",
+        "record": "art/manifests/approvals.json"
+      },
+      "advisory_budget_class": "station"
+    },
+    {
+      "binding": "confederacy:attack_satellite",
+      "asset_id": "core:confederacy/attack_satellite",
+      "gameplay_entity": "attack_satellite",
+      "authority": "script",
+      "source": "art/blender/legion_attack_satellite.blend",
+      "exporter": "tools/art/build_b4_hardware.py",
+      "export_script": "tools/art/export_legion_attack_satellite.py",
+      "build_args": [
+        "--asset",
+        "confederacy:attack_satellite"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/legion_attack_satellite.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2432,
+      "advisory_budget_triangles": 11888,
+      "category": "satellite",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b4-hardware-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "confederacy:battleship",
+      "asset_id": "core:confederacy/battleship",
+      "gameplay_entity": "confed_battleship",
+      "authority": "blend",
+      "source": "art/blender/confed_battleship.blend",
+      "exporter": "tools/art/build_b8_remaining_combat.py",
+      "export_script": "tools/art/export_confed_battleship.py",
+      "build_args": [
+        "--asset",
+        "confederacy:battleship"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/confed_battleship.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3212,
+      "advisory_budget_triangles": 11888,
+      "category": "combat_hull",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b8-remaining-combat-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "confederacy:bomber",
+      "asset_id": "core:confederacy/bomber",
+      "gameplay_entity": "confed_bomber_squadron",
+      "authority": "blend",
+      "source": "art/blender/legion_hyena.blend",
+      "exporter": "tools/art/build_b2_batch.py",
+      "export_script": "tools/art/export_legion_hyena.py",
+      "build_args": [
+        "--asset",
+        "confederacy:bomber"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/legion_hyena.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3516,
+      "advisory_budget_triangles": 11888,
+      "category": "squadron",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b2-squadron-logistics-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "confederacy:colonizer",
+      "asset_id": "core:confederacy/colonizer",
+      "gameplay_entity": "confed_colonizer",
+      "authority": "blend",
+      "source": "art/blender/confed_colonizer.blend",
+      "exporter": "tools/art/build_b9_construction.py",
+      "export_script": "tools/art/export_confed_colonizer.py",
+      "build_args": [
+        "--asset",
+        "confederacy:colonizer"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/confed_colonizer.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 4156,
+      "advisory_budget_triangles": 11888,
+      "category": "construction",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b9-construction-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "confederacy:command_station",
+      "asset_id": "core:confederacy/command_station",
+      "gameplay_entity": "command_station",
+      "authority": "blend",
+      "source": "art/blender/legion_command_station.blend",
+      "exporter": "tools/art/build_b3_stations.py",
+      "export_script": "tools/art/export_legion_command_station.py",
+      "build_args": [
+        "--asset",
+        "confederacy:command_station"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/legion_command_station.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2161,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3a-command-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "confederacy:constructor",
+      "asset_id": "core:confederacy/constructor",
+      "gameplay_entity": "confed_constructor",
+      "authority": "blend",
+      "source": "art/blender/confed_constructor.blend",
+      "exporter": "tools/art/build_b9_construction.py",
+      "export_script": "tools/art/export_confed_constructor.py",
+      "build_args": [
+        "--asset",
+        "confederacy:constructor"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/confed_constructor.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3932,
+      "advisory_budget_triangles": 11888,
+      "category": "construction",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b9-construction-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "confederacy:convoy",
+      "asset_id": "core:confederacy/convoy",
+      "gameplay_entity": "confed_crew_transport",
+      "authority": "blend",
+      "source": "art/blender/legion_convoy.blend",
+      "exporter": "tools/art/build_b2_batch.py",
+      "export_script": "tools/art/export_legion_convoy.py",
+      "build_args": [
+        "--asset",
+        "confederacy:convoy"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/legion_convoy.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 4584,
+      "advisory_budget_triangles": 11888,
+      "category": "logistics_hull",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b2-squadron-logistics-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "confederacy:corvette",
+      "asset_id": "core:confederacy/corvette",
+      "gameplay_entity": "confed_corvette",
+      "authority": "blend",
+      "source": "art/blender/confed_corvette.blend",
+      "exporter": "tools/art/build_b8_remaining_combat.py",
+      "export_script": "tools/art/export_confed_corvette.py",
+      "build_args": [
+        "--asset",
+        "confederacy:corvette"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/confed_corvette.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 1852,
+      "advisory_budget_triangles": 11888,
+      "category": "combat_hull",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b8-remaining-combat-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "confederacy:cruiser",
+      "asset_id": "core:confederacy/cruiser",
+      "gameplay_entity": "confed_cruiser",
+      "authority": "blend",
+      "source": "art/blender/confed_cruiser.blend",
+      "exporter": "tools/art/build_b8_remaining_combat.py",
+      "export_script": "tools/art/export_confed_cruiser.py",
+      "build_args": [
+        "--asset",
+        "confederacy:cruiser"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/confed_cruiser.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2688,
+      "advisory_budget_triangles": 11888,
+      "category": "combat_hull",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b8-remaining-combat-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "confederacy:defense_platform",
+      "asset_id": "core:confederacy/defense_platform",
+      "gameplay_entity": "defense_platform",
+      "authority": "blend",
+      "source": "art/blender/legion_defense_platform.blend",
+      "exporter": "tools/art/build_b3c_stations.py",
+      "export_script": "tools/art/export_legion_defense_platform.py",
+      "build_args": [
+        "--asset",
+        "confederacy:defense_platform"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/legion_defense_platform.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3640,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3c-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "confederacy:defense_satellite",
+      "asset_id": "core:confederacy/defense_satellite",
+      "gameplay_entity": "defense_satellite",
+      "authority": "script",
+      "source": "art/blender/legion_defense_satellite.blend",
+      "exporter": "tools/art/build_b4_hardware.py",
+      "export_script": "tools/art/export_legion_defense_satellite.py",
+      "build_args": [
+        "--asset",
+        "confederacy:defense_satellite"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/legion_defense_satellite.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2180,
+      "advisory_budget_triangles": 11888,
+      "category": "satellite",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b4-hardware-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "confederacy:energy_relay",
+      "asset_id": "core:confederacy/energy_relay",
+      "gameplay_entity": "energy_relay",
+      "authority": "blend",
+      "source": "art/blender/legion_energy_relay.blend",
+      "exporter": "tools/art/build_b3b_stations.py",
+      "export_script": "tools/art/export_legion_energy_relay.py",
+      "build_args": [
+        "--asset",
+        "confederacy:energy_relay"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/legion_energy_relay.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3484,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3b-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "confederacy:fighter",
+      "asset_id": "core:confederacy/fighter",
+      "gameplay_entity": "confed_vulture_squadron",
+      "authority": "blend",
+      "source": "art/blender/legion_vulture.blend",
+      "exporter": "tools/art/build_b2_batch.py",
+      "export_script": "tools/art/export_legion_vulture.py",
+      "build_args": [
+        "--asset",
+        "confederacy:fighter"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/legion_vulture.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2578,
+      "advisory_budget_triangles": 11888,
+      "category": "squadron",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b2-squadron-logistics-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "confederacy:fighter_platform",
+      "asset_id": "core:confederacy/fighter_platform",
+      "gameplay_entity": "fighter_platform",
+      "authority": "blend",
+      "source": "art/blender/legion_fighter_platform.blend",
+      "exporter": "tools/art/build_b3c_stations.py",
+      "export_script": "tools/art/export_legion_fighter_platform.py",
+      "build_args": [
+        "--asset",
+        "confederacy:fighter_platform"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/legion_fighter_platform.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3620,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3c-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "confederacy:frigate",
+      "asset_id": "core:confederacy/frigate",
+      "gameplay_entity": "confed_frigate",
+      "authority": "blend",
+      "source": "art/blender/confed_frigate.blend",
+      "exporter": "tools/art/build_b8_remaining_combat.py",
+      "export_script": "tools/art/export_confed_frigate.py",
+      "build_args": [
+        "--asset",
+        "confederacy:frigate"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/confed_frigate.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2152,
+      "advisory_budget_triangles": 11888,
+      "category": "combat_hull",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b8-remaining-combat-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "confederacy:mining_station",
+      "asset_id": "core:confederacy/mining_station",
+      "gameplay_entity": "mining_station",
+      "authority": "blend",
+      "source": "art/blender/legion_mining_station.blend",
+      "exporter": "tools/art/build_b3b_stations.py",
+      "export_script": "tools/art/export_legion_mining_station.py",
+      "build_args": [
+        "--asset",
+        "confederacy:mining_station"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/legion_mining_station.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 4268,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3b-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "confederacy:planet_extractor",
+      "asset_id": "core:confederacy/planet_extractor",
+      "gameplay_entity": "planet_extractor",
+      "authority": "script",
+      "source": "art/blender/legion_planet_extractor.blend",
+      "exporter": "tools/art/build_b4_hardware.py",
+      "export_script": "tools/art/export_legion_planet_extractor.py",
+      "build_args": [
+        "--asset",
+        "confederacy:planet_extractor"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/legion_planet_extractor.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2596,
+      "advisory_budget_triangles": 11888,
+      "category": "planet_installation",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b4-hardware-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "confederacy:planet_pulsar_cannon",
+      "asset_id": "core:confederacy/planet_pulsar_cannon",
+      "gameplay_entity": "planet_pulsar_cannon",
+      "authority": "script",
+      "source": "art/blender/legion_planet_pulsar_cannon.blend",
+      "exporter": "tools/art/build_b4_hardware.py",
+      "export_script": "tools/art/export_legion_planet_pulsar_cannon.py",
+      "build_args": [
+        "--asset",
+        "confederacy:planet_pulsar_cannon"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/legion_planet_pulsar_cannon.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2396,
+      "advisory_budget_triangles": 11888,
+      "category": "planet_installation",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b4-hardware-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "confederacy:planet_shield_generator",
+      "asset_id": "core:confederacy/planet_shield_generator",
+      "gameplay_entity": "planet_shield_generator",
+      "authority": "script",
+      "source": "art/blender/legion_planet_shield_generator.blend",
+      "exporter": "tools/art/build_b4_hardware.py",
+      "export_script": "tools/art/export_legion_planet_shield_generator.py",
+      "build_args": [
+        "--asset",
+        "confederacy:planet_shield_generator"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/legion_planet_shield_generator.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2608,
+      "advisory_budget_triangles": 11888,
+      "category": "planet_installation",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b4-hardware-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "confederacy:planet_trade_hub",
+      "asset_id": "core:confederacy/planet_trade_hub",
+      "gameplay_entity": "planet_trade_hub",
+      "authority": "script",
+      "source": "art/blender/legion_planet_trade_hub.blend",
+      "exporter": "tools/art/build_b4_hardware.py",
+      "export_script": "tools/art/export_legion_planet_trade_hub.py",
+      "build_args": [
+        "--asset",
+        "confederacy:planet_trade_hub"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/legion_planet_trade_hub.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2344,
+      "advisory_budget_triangles": 11888,
+      "category": "planet_installation",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b4-hardware-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "confederacy:repair_dock",
+      "asset_id": "core:confederacy/repair_dock",
+      "gameplay_entity": "repair_dock",
+      "authority": "blend",
+      "source": "art/blender/legion_repair_dock.blend",
+      "exporter": "tools/art/build_b3c_stations.py",
+      "export_script": "tools/art/export_legion_repair_dock.py",
+      "build_args": [
+        "--asset",
+        "confederacy:repair_dock"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/legion_repair_dock.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3356,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3c-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "confederacy:research_station",
+      "asset_id": "core:confederacy/research_station",
+      "gameplay_entity": "research_station",
+      "authority": "blend",
+      "source": "art/blender/legion_research_station.blend",
+      "exporter": "tools/art/build_b3c_stations.py",
+      "export_script": "tools/art/export_legion_research_station.py",
+      "build_args": [
+        "--asset",
+        "confederacy:research_station"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/legion_research_station.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3680,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3c-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "confederacy:sensor_station",
+      "asset_id": "core:confederacy/sensor_station",
+      "gameplay_entity": "sensor_station",
+      "authority": "blend",
+      "source": "art/blender/legion_sensor_station.blend",
+      "exporter": "tools/art/build_b3b_stations.py",
+      "export_script": "tools/art/export_legion_sensor_station.py",
+      "build_args": [
+        "--asset",
+        "confederacy:sensor_station"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/legion_sensor_station.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3564,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3b-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "confederacy:shipyard",
+      "asset_id": "core:confederacy/shipyard",
+      "gameplay_entity": "shipyard",
+      "authority": "blend",
+      "source": "art/blender/legion_shipyard.blend",
+      "exporter": "tools/art/build_b3c_stations.py",
+      "export_script": "tools/art/export_legion_shipyard.py",
+      "build_args": [
+        "--asset",
+        "confederacy:shipyard"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/legion_shipyard.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3772,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3c-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "confederacy:supercapital",
+      "asset_id": "core:confederacy/supercapital",
+      "gameplay_entity": "confed_supercapital",
+      "authority": "blend",
+      "source": "art/blender/confed_supercapital.blend",
+      "exporter": "tools/art/build_b8_remaining_combat.py",
+      "export_script": "tools/art/export_confed_supercapital.py",
+      "build_args": [
+        "--asset",
+        "confederacy:supercapital"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/confed_supercapital.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3916,
+      "advisory_budget_triangles": 11888,
+      "category": "combat_hull",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b8-remaining-combat-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "confederacy:trade_station",
+      "asset_id": "core:confederacy/trade_station",
+      "gameplay_entity": "trade_station",
+      "authority": "blend",
+      "source": "art/blender/legion_trade_station.blend",
+      "exporter": "tools/art/build_b3c_stations.py",
+      "export_script": "tools/art/export_legion_trade_station.py",
+      "build_args": [
+        "--asset",
+        "confederacy:trade_station"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/legion_trade_station.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3580,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3c-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "environment:asteroid_field",
+      "asset_id": "core:environment/asteroid_field",
+      "gameplay_entity": "asteroid_field",
+      "authority": "script",
+      "source": "art/blender/shared_asteroid_field.blend",
+      "exporter": "tools/art/build_b5_asteroid.py",
+      "export_script": "tools/art/export_shared_asteroid_field.py",
+      "build_args": [
+        "--asset",
+        "environment:asteroid_field"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/shared_asteroid_field.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 216,
+      "advisory_budget_triangles": 11888,
+      "category": "environment_prop",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b5-environment-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "imperial:attack_satellite",
+      "asset_id": "core:imperial/attack_satellite",
+      "gameplay_entity": "attack_satellite",
+      "authority": "script",
+      "source": "art/blender/imperial_attack_satellite.blend",
+      "exporter": "tools/art/build_b4_hardware.py",
+      "export_script": "tools/art/export_imperial_attack_satellite.py",
+      "build_args": [
+        "--asset",
+        "imperial:attack_satellite"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/imperial_attack_satellite.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2312,
+      "advisory_budget_triangles": 11888,
+      "category": "satellite",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b4-hardware-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "imperial:battleship",
+      "asset_id": "core:imperial/battleship",
+      "gameplay_entity": "imperial_battleship",
+      "authority": "script",
+      "source": "art/blender/imperial_battleship.blend",
+      "exporter": "tools/art/build_b6_imperial_ships.py",
+      "export_script": "tools/art/export_imperial_battleship.py",
+      "build_args": [
+        "--asset",
+        "ship:imperial:battleship"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/imperial_battleship.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2468,
+      "advisory_budget_triangles": 11888,
+      "category": "combat_hull",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b6-imperial-ships-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "imperial:bomber",
+      "asset_id": "core:imperial/bomber",
+      "gameplay_entity": "imperial_tie_bomber_squadron",
+      "authority": "script",
+      "source": "art/blender/imperial_tie_bomber_squadron.blend",
+      "exporter": "tools/art/build_b6_imperial_ships.py",
+      "export_script": "tools/art/export_imperial_tie_bomber_squadron.py",
+      "build_args": [
+        "--asset",
+        "ship:imperial:tie_bomber_squadron"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/imperial_tie_bomber_squadron.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2536,
+      "advisory_budget_triangles": 11888,
+      "category": "squadron",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b6-imperial-ships-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "imperial:colonizer",
+      "asset_id": "core:imperial/colonizer",
+      "gameplay_entity": "imperial_colonizer",
+      "authority": "blend",
+      "source": "art/blender/imperial_colonizer.blend",
+      "exporter": "tools/art/build_b9_construction.py",
+      "export_script": "tools/art/export_imperial_colonizer.py",
+      "build_args": [
+        "--asset",
+        "imperial:colonizer"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/imperial_colonizer.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3472,
+      "advisory_budget_triangles": 11888,
+      "category": "construction",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b9-construction-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "imperial:command_station",
+      "asset_id": "core:imperial/command_station",
+      "gameplay_entity": "command_station",
+      "authority": "blend",
+      "source": "art/blender/imperial_command_station.blend",
+      "exporter": "tools/art/build_b7_imperial_stations.py",
+      "export_script": "tools/art/export_imperial_command_station.py",
+      "build_args": [
+        "--asset",
+        "imperial:command_station"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/imperial_command_station.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2184,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b7-imperial-stations-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "imperial:constructor",
+      "asset_id": "core:imperial/constructor",
+      "gameplay_entity": "imperial_constructor",
+      "authority": "blend",
+      "source": "art/blender/imperial_constructor.blend",
+      "exporter": "tools/art/build_b9_construction.py",
+      "export_script": "tools/art/export_imperial_constructor.py",
+      "build_args": [
+        "--asset",
+        "imperial:constructor"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/imperial_constructor.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3120,
+      "advisory_budget_triangles": 11888,
+      "category": "construction",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b9-construction-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "imperial:convoy",
+      "asset_id": "core:imperial/convoy",
+      "gameplay_entity": "imperial_crew_transport",
+      "authority": "script",
+      "source": "art/blender/imperial_convoy.blend",
+      "exporter": "tools/art/build_b6_imperial_ships.py",
+      "export_script": "tools/art/export_imperial_convoy.py",
+      "build_args": [
+        "--asset",
+        "ship:imperial:convoy"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/imperial_convoy.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 4745,
+      "advisory_budget_triangles": 11888,
+      "category": "logistics_hull",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b6-imperial-ships-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "imperial:corvette",
+      "asset_id": "core:imperial/corvette",
+      "gameplay_entity": "imperial_corvette",
+      "authority": "script",
+      "source": "art/blender/imperial_corvette.blend",
+      "exporter": "tools/art/build_b6_imperial_ships.py",
+      "export_script": "tools/art/export_imperial_corvette.py",
+      "build_args": [
+        "--asset",
+        "ship:imperial:corvette"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/imperial_corvette.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2348,
+      "advisory_budget_triangles": 11888,
+      "category": "combat_hull",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b6-imperial-ships-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "imperial:cruiser",
+      "asset_id": "core:imperial/cruiser",
+      "gameplay_entity": "imperial_cruiser",
+      "authority": "script",
+      "source": "art/blender/imperial_cruiser.blend",
+      "exporter": "tools/art/build_b6_imperial_ships.py",
+      "export_script": "tools/art/export_imperial_cruiser.py",
+      "build_args": [
+        "--asset",
+        "ship:imperial:cruiser"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/imperial_cruiser.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2384,
+      "advisory_budget_triangles": 11888,
+      "category": "combat_hull",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b6-imperial-ships-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "imperial:defense_platform",
+      "asset_id": "core:imperial/defense_platform",
+      "gameplay_entity": "defense_platform",
+      "authority": "blend",
+      "source": "art/blender/imperial_defense_platform.blend",
+      "exporter": "tools/art/build_b7_imperial_stations.py",
+      "export_script": "tools/art/export_imperial_defense_platform.py",
+      "build_args": [
+        "--asset",
+        "imperial:defense_platform"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/imperial_defense_platform.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2516,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b7-imperial-stations-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "imperial:defense_satellite",
+      "asset_id": "core:imperial/defense_satellite",
+      "gameplay_entity": "defense_satellite",
+      "authority": "script",
+      "source": "art/blender/imperial_defense_satellite.blend",
+      "exporter": "tools/art/build_b4_hardware.py",
+      "export_script": "tools/art/export_imperial_defense_satellite.py",
+      "build_args": [
+        "--asset",
+        "imperial:defense_satellite"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/imperial_defense_satellite.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2060,
+      "advisory_budget_triangles": 11888,
+      "category": "satellite",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b4-hardware-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "imperial:energy_relay",
+      "asset_id": "core:imperial/energy_relay",
+      "gameplay_entity": "energy_relay",
+      "authority": "blend",
+      "source": "art/blender/imperial_energy_relay.blend",
+      "exporter": "tools/art/build_b7_imperial_stations.py",
+      "export_script": "tools/art/export_imperial_energy_relay.py",
+      "build_args": [
+        "--asset",
+        "imperial:energy_relay"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/imperial_energy_relay.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2776,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b7-imperial-stations-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "imperial:fighter",
+      "asset_id": "core:imperial/fighter",
+      "gameplay_entity": "imperial_tie_squadron",
+      "authority": "script",
+      "source": "art/blender/imperial_tie_squadron.blend",
+      "exporter": "tools/art/build_b6_imperial_ships.py",
+      "export_script": "tools/art/export_imperial_tie_squadron.py",
+      "build_args": [
+        "--asset",
+        "ship:imperial:tie_squadron"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/imperial_tie_squadron.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2136,
+      "advisory_budget_triangles": 11888,
+      "category": "squadron",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b6-imperial-ships-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "imperial:fighter_platform",
+      "asset_id": "core:imperial/fighter_platform",
+      "gameplay_entity": "fighter_platform",
+      "authority": "blend",
+      "source": "art/blender/imperial_fighter_platform.blend",
+      "exporter": "tools/art/build_b7_imperial_stations.py",
+      "export_script": "tools/art/export_imperial_fighter_platform.py",
+      "build_args": [
+        "--asset",
+        "imperial:fighter_platform"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/imperial_fighter_platform.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2240,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b7-imperial-stations-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "imperial:frigate",
+      "asset_id": "core:imperial/frigate",
+      "gameplay_entity": "imperial_frigate",
+      "authority": "script",
+      "source": "art/blender/imperial_frigate.blend",
+      "exporter": "tools/art/build_b6_imperial_ships.py",
+      "export_script": "tools/art/export_imperial_frigate.py",
+      "build_args": [
+        "--asset",
+        "ship:imperial:frigate"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/imperial_frigate.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2416,
+      "advisory_budget_triangles": 11888,
+      "category": "combat_hull",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b6-imperial-ships-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "imperial:mining_station",
+      "asset_id": "core:imperial/mining_station",
+      "gameplay_entity": "mining_station",
+      "authority": "blend",
+      "source": "art/blender/imperial_mining_station.blend",
+      "exporter": "tools/art/build_b7_imperial_stations.py",
+      "export_script": "tools/art/export_imperial_mining_station.py",
+      "build_args": [
+        "--asset",
+        "imperial:mining_station"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/imperial_mining_station.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2196,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b7-imperial-stations-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "imperial:planet_extractor",
+      "asset_id": "core:imperial/planet_extractor",
+      "gameplay_entity": "planet_extractor",
+      "authority": "script",
+      "source": "art/blender/imperial_planet_extractor.blend",
+      "exporter": "tools/art/build_b4_hardware.py",
+      "export_script": "tools/art/export_imperial_planet_extractor.py",
+      "build_args": [
+        "--asset",
+        "imperial:planet_extractor"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/imperial_planet_extractor.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2500,
+      "advisory_budget_triangles": 11888,
+      "category": "planet_installation",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b4-hardware-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "imperial:planet_pulsar_cannon",
+      "asset_id": "core:imperial/planet_pulsar_cannon",
+      "gameplay_entity": "planet_pulsar_cannon",
+      "authority": "script",
+      "source": "art/blender/imperial_planet_pulsar_cannon.blend",
+      "exporter": "tools/art/build_b4_hardware.py",
+      "export_script": "tools/art/export_imperial_planet_pulsar_cannon.py",
+      "build_args": [
+        "--asset",
+        "imperial:planet_pulsar_cannon"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/imperial_planet_pulsar_cannon.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2300,
+      "advisory_budget_triangles": 11888,
+      "category": "planet_installation",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b4-hardware-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "imperial:planet_shield_generator",
+      "asset_id": "core:imperial/planet_shield_generator",
+      "gameplay_entity": "planet_shield_generator",
+      "authority": "script",
+      "source": "art/blender/imperial_planet_shield_generator.blend",
+      "exporter": "tools/art/build_b4_hardware.py",
+      "export_script": "tools/art/export_imperial_planet_shield_generator.py",
+      "build_args": [
+        "--asset",
+        "imperial:planet_shield_generator"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/imperial_planet_shield_generator.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2416,
+      "advisory_budget_triangles": 11888,
+      "category": "planet_installation",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b4-hardware-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "imperial:planet_trade_hub",
+      "asset_id": "core:imperial/planet_trade_hub",
+      "gameplay_entity": "planet_trade_hub",
+      "authority": "script",
+      "source": "art/blender/imperial_planet_trade_hub.blend",
+      "exporter": "tools/art/build_b4_hardware.py",
+      "export_script": "tools/art/export_imperial_planet_trade_hub.py",
+      "build_args": [
+        "--asset",
+        "imperial:planet_trade_hub"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/imperial_planet_trade_hub.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2248,
+      "advisory_budget_triangles": 11888,
+      "category": "planet_installation",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b4-hardware-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "imperial:repair_dock",
+      "asset_id": "core:imperial/repair_dock",
+      "gameplay_entity": "repair_dock",
+      "authority": "blend",
+      "source": "art/blender/imperial_repair_dock.blend",
+      "exporter": "tools/art/build_b7_imperial_stations.py",
+      "export_script": "tools/art/export_imperial_repair_dock.py",
+      "build_args": [
+        "--asset",
+        "imperial:repair_dock"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/imperial_repair_dock.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2352,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b7-imperial-stations-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "imperial:research_station",
+      "asset_id": "core:imperial/research_station",
+      "gameplay_entity": "research_station",
+      "authority": "blend",
+      "source": "art/blender/imperial_research_station.blend",
+      "exporter": "tools/art/build_b7_imperial_stations.py",
+      "export_script": "tools/art/export_imperial_research_station.py",
+      "build_args": [
+        "--asset",
+        "imperial:research_station"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/imperial_research_station.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2364,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b7-imperial-stations-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "imperial:sensor_station",
+      "asset_id": "core:imperial/sensor_station",
+      "gameplay_entity": "sensor_station",
+      "authority": "blend",
+      "source": "art/blender/imperial_sensor_station.blend",
+      "exporter": "tools/art/build_b7_imperial_stations.py",
+      "export_script": "tools/art/export_imperial_sensor_station.py",
+      "build_args": [
+        "--asset",
+        "imperial:sensor_station"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/imperial_sensor_station.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2308,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b7-imperial-stations-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "imperial:shipyard",
+      "asset_id": "core:imperial/shipyard",
+      "gameplay_entity": "shipyard",
+      "authority": "blend",
+      "source": "art/blender/imperial_shipyard.blend",
+      "exporter": "tools/art/build_b7_imperial_stations.py",
+      "export_script": "tools/art/export_imperial_shipyard.py",
+      "build_args": [
+        "--asset",
+        "imperial:shipyard"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/imperial_shipyard.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2268,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b7-imperial-stations-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "imperial:supercapital",
+      "asset_id": "core:imperial/supercapital",
+      "gameplay_entity": "imperial_supercapital",
+      "authority": "script",
+      "source": "art/blender/imperial_supercapital.blend",
+      "exporter": "tools/art/build_b6_imperial_ships.py",
+      "export_script": "tools/art/export_imperial_supercapital.py",
+      "build_args": [
+        "--asset",
+        "ship:imperial:supercapital"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/imperial_supercapital.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2592,
+      "advisory_budget_triangles": 11888,
+      "category": "combat_hull",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b6-imperial-ships-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "imperial:trade_station",
+      "asset_id": "core:imperial/trade_station",
+      "gameplay_entity": "trade_station",
+      "authority": "blend",
+      "source": "art/blender/imperial_trade_station.blend",
+      "exporter": "tools/art/build_b7_imperial_stations.py",
+      "export_script": "tools/art/export_imperial_trade_station.py",
+      "build_args": [
+        "--asset",
+        "imperial:trade_station"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/imperial_trade_station.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2100,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b7-imperial-stations-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "rebel:attack_satellite",
+      "asset_id": "core:alliance/attack_satellite",
+      "gameplay_entity": "attack_satellite",
+      "authority": "script",
+      "source": "art/blender/alliance_attack_satellite.blend",
+      "exporter": "tools/art/build_b4_hardware.py",
+      "export_script": "tools/art/export_alliance_attack_satellite.py",
+      "build_args": [
+        "--asset",
+        "rebel:attack_satellite"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/alliance_attack_satellite.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2672,
+      "advisory_budget_triangles": 11888,
+      "category": "satellite",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b4-hardware-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "rebel:bomber",
+      "asset_id": "core:alliance/bomber",
+      "gameplay_entity": "rebel_y_squadron",
+      "authority": "blend",
+      "source": "art/blender/alliance_bomber.blend",
+      "exporter": "tools/art/build_b2_batch.py",
+      "export_script": "tools/art/export_alliance_bomber.py",
+      "build_args": [
+        "--asset",
+        "rebel:bomber"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/alliance_bomber.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2810,
+      "advisory_budget_triangles": 11888,
+      "category": "squadron",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b2-squadron-logistics-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "rebel:colonizer",
+      "asset_id": "core:alliance/colonizer",
+      "gameplay_entity": "rebel_colonizer",
+      "authority": "blend",
+      "source": "art/blender/rebel_colonizer.blend",
+      "exporter": "tools/art/build_b9_construction.py",
+      "export_script": "tools/art/export_rebel_colonizer.py",
+      "build_args": [
+        "--asset",
+        "rebel:colonizer"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/rebel_colonizer.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3560,
+      "advisory_budget_triangles": 11888,
+      "category": "construction",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b9-construction-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "rebel:command_station",
+      "asset_id": "core:alliance/command_station",
+      "gameplay_entity": "command_station",
+      "authority": "blend",
+      "source": "art/blender/alliance_command_station.blend",
+      "exporter": "tools/art/build_b3_stations.py",
+      "export_script": "tools/art/export_alliance_command_station.py",
+      "build_args": [
+        "--asset",
+        "rebel:command_station"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/alliance_command_station.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3172,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3a-command-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "rebel:constructor",
+      "asset_id": "core:alliance/constructor",
+      "gameplay_entity": "rebel_constructor",
+      "authority": "blend",
+      "source": "art/blender/rebel_constructor.blend",
+      "exporter": "tools/art/build_b9_construction.py",
+      "export_script": "tools/art/export_rebel_constructor.py",
+      "build_args": [
+        "--asset",
+        "rebel:constructor"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/rebel_constructor.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2512,
+      "advisory_budget_triangles": 11888,
+      "category": "construction",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b9-construction-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "rebel:convoy",
+      "asset_id": "core:alliance/convoy",
+      "gameplay_entity": "rebel_crew_transport",
+      "authority": "blend",
+      "source": "art/blender/alliance_convoy.blend",
+      "exporter": "tools/art/build_b2_batch.py",
+      "export_script": "tools/art/export_alliance_convoy.py",
+      "build_args": [
+        "--asset",
+        "rebel:convoy"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/alliance_convoy.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 4512,
+      "advisory_budget_triangles": 11888,
+      "category": "logistics_hull",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b2-squadron-logistics-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "rebel:corvette",
+      "asset_id": "core:alliance/corvette",
+      "gameplay_entity": "rebel_corvette",
+      "authority": "blend",
+      "source": "art/blender/alliance_corvette.blend",
+      "exporter": "tools/art/build_alliance_corvette.py",
+      "export_script": "tools/art/export_alliance_corvette.py",
+      "build_args": [],
+      "export_args": [],
+      "runtime": "assets/models/alliance_corvette.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 4372,
+      "advisory_budget_triangles": 11888,
+      "category": "combat_hull",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b1-alliance-combat-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "rebel:cruiser",
+      "asset_id": "core:alliance/cruiser",
+      "gameplay_entity": "rebel_cruiser",
+      "authority": "blend",
+      "source": "art/blender/alliance_cruiser.blend",
+      "exporter": "tools/art/build_alliance_cruiser.py",
+      "export_script": "tools/art/export_alliance_cruiser.py",
+      "build_args": [],
+      "export_args": [],
+      "runtime": "assets/models/alliance_cruiser.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 6264,
+      "advisory_budget_triangles": 11888,
+      "category": "combat_hull",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-cruiser-review-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "rebel:defense_platform",
+      "asset_id": "core:alliance/defense_platform",
+      "gameplay_entity": "defense_platform",
+      "authority": "blend",
+      "source": "art/blender/alliance_defense_platform.blend",
+      "exporter": "tools/art/build_b3c_stations.py",
+      "export_script": "tools/art/export_alliance_defense_platform.py",
+      "build_args": [
+        "--asset",
+        "rebel:defense_platform"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/alliance_defense_platform.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 4248,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3c-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "rebel:defense_satellite",
+      "asset_id": "core:alliance/defense_satellite",
+      "gameplay_entity": "defense_satellite",
+      "authority": "script",
+      "source": "art/blender/alliance_defense_satellite.blend",
+      "exporter": "tools/art/build_b4_hardware.py",
+      "export_script": "tools/art/export_alliance_defense_satellite.py",
+      "build_args": [
+        "--asset",
+        "rebel:defense_satellite"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/alliance_defense_satellite.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2420,
+      "advisory_budget_triangles": 11888,
+      "category": "satellite",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b4-hardware-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "rebel:energy_relay",
+      "asset_id": "core:alliance/energy_relay",
+      "gameplay_entity": "energy_relay",
+      "authority": "blend",
+      "source": "art/blender/alliance_energy_relay.blend",
+      "exporter": "tools/art/build_b3b_stations.py",
+      "export_script": "tools/art/export_alliance_energy_relay.py",
+      "build_args": [
+        "--asset",
+        "rebel:energy_relay"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/alliance_energy_relay.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 4496,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3b-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "rebel:fighter",
+      "asset_id": "core:alliance/fighter",
+      "gameplay_entity": "rebel_x_squadron",
+      "authority": "blend",
+      "source": "art/blender/alliance_interceptor.blend",
+      "exporter": "tools/art/build_b2_batch.py",
+      "export_script": "tools/art/export_alliance_interceptor.py",
+      "build_args": [
+        "--asset",
+        "rebel:fighter"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/alliance_interceptor.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2214,
+      "advisory_budget_triangles": 11888,
+      "category": "squadron",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b2-squadron-logistics-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "rebel:fighter_platform",
+      "asset_id": "core:alliance/fighter_platform",
+      "gameplay_entity": "fighter_platform",
+      "authority": "blend",
+      "source": "art/blender/alliance_fighter_platform.blend",
+      "exporter": "tools/art/build_b3c_stations.py",
+      "export_script": "tools/art/export_alliance_fighter_platform.py",
+      "build_args": [
+        "--asset",
+        "rebel:fighter_platform"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/alliance_fighter_platform.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 4288,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3c-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "rebel:mining_station",
+      "asset_id": "core:alliance/mining_station",
+      "gameplay_entity": "mining_station",
+      "authority": "blend",
+      "source": "art/blender/alliance_mining_station.blend",
+      "exporter": "tools/art/build_b3b_stations.py",
+      "export_script": "tools/art/export_alliance_mining_station.py",
+      "build_args": [
+        "--asset",
+        "rebel:mining_station"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/alliance_mining_station.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 4948,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3b-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "rebel:planet_extractor",
+      "asset_id": "core:alliance/planet_extractor",
+      "gameplay_entity": "planet_extractor",
+      "authority": "script",
+      "source": "art/blender/alliance_planet_extractor.blend",
+      "exporter": "tools/art/build_b4_hardware.py",
+      "export_script": "tools/art/export_alliance_planet_extractor.py",
+      "build_args": [
+        "--asset",
+        "rebel:planet_extractor"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/alliance_planet_extractor.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2788,
+      "advisory_budget_triangles": 11888,
+      "category": "planet_installation",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b4-hardware-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "rebel:planet_pulsar_cannon",
+      "asset_id": "core:alliance/planet_pulsar_cannon",
+      "gameplay_entity": "planet_pulsar_cannon",
+      "authority": "script",
+      "source": "art/blender/alliance_planet_pulsar_cannon.blend",
+      "exporter": "tools/art/build_b4_hardware.py",
+      "export_script": "tools/art/export_alliance_planet_pulsar_cannon.py",
+      "build_args": [
+        "--asset",
+        "rebel:planet_pulsar_cannon"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/alliance_planet_pulsar_cannon.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2588,
+      "advisory_budget_triangles": 11888,
+      "category": "planet_installation",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b4-hardware-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "rebel:planet_shield_generator",
+      "asset_id": "core:alliance/planet_shield_generator",
+      "gameplay_entity": "planet_shield_generator",
+      "authority": "script",
+      "source": "art/blender/alliance_planet_shield_generator.blend",
+      "exporter": "tools/art/build_b4_hardware.py",
+      "export_script": "tools/art/export_alliance_planet_shield_generator.py",
+      "build_args": [
+        "--asset",
+        "rebel:planet_shield_generator"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/alliance_planet_shield_generator.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2992,
+      "advisory_budget_triangles": 11888,
+      "category": "planet_installation",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b4-hardware-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "rebel:planet_trade_hub",
+      "asset_id": "core:alliance/planet_trade_hub",
+      "gameplay_entity": "planet_trade_hub",
+      "authority": "script",
+      "source": "art/blender/alliance_planet_trade_hub.blend",
+      "exporter": "tools/art/build_b4_hardware.py",
+      "export_script": "tools/art/export_alliance_planet_trade_hub.py",
+      "build_args": [
+        "--asset",
+        "rebel:planet_trade_hub"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/alliance_planet_trade_hub.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2536,
+      "advisory_budget_triangles": 11888,
+      "category": "planet_installation",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b4-hardware-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "rebel:repair_dock",
+      "asset_id": "core:alliance/repair_dock",
+      "gameplay_entity": "repair_dock",
+      "authority": "blend",
+      "source": "art/blender/alliance_repair_dock.blend",
+      "exporter": "tools/art/build_b3c_stations.py",
+      "export_script": "tools/art/export_alliance_repair_dock.py",
+      "build_args": [
+        "--asset",
+        "rebel:repair_dock"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/alliance_repair_dock.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 4696,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3c-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "rebel:research_station",
+      "asset_id": "core:alliance/research_station",
+      "gameplay_entity": "research_station",
+      "authority": "blend",
+      "source": "art/blender/alliance_research_station.blend",
+      "exporter": "tools/art/build_b3c_stations.py",
+      "export_script": "tools/art/export_alliance_research_station.py",
+      "build_args": [
+        "--asset",
+        "rebel:research_station"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/alliance_research_station.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 4812,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3c-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "rebel:sensor_station",
+      "asset_id": "core:alliance/sensor_station",
+      "gameplay_entity": "sensor_station",
+      "authority": "blend",
+      "source": "art/blender/alliance_sensor_station.blend",
+      "exporter": "tools/art/build_b3b_stations.py",
+      "export_script": "tools/art/export_alliance_sensor_station.py",
+      "build_args": [
+        "--asset",
+        "rebel:sensor_station"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/alliance_sensor_station.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 4196,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3b-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "rebel:supercapital",
+      "asset_id": "core:alliance/supercapital",
+      "gameplay_entity": "rebel_supercapital",
+      "authority": "blend",
+      "source": "art/blender/alliance_carrier.blend",
+      "exporter": "tools/art/build_alliance_carrier.py",
+      "export_script": "tools/art/export_alliance_carrier.py",
+      "build_args": [],
+      "export_args": [],
+      "runtime": "assets/models/alliance_carrier.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 8656,
+      "advisory_budget_triangles": 11888,
+      "category": "combat_hull",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b1-alliance-combat-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "rebel:trade_station",
+      "asset_id": "core:alliance/trade_station",
+      "gameplay_entity": "trade_station",
+      "authority": "blend",
+      "source": "art/blender/alliance_trade_station.blend",
+      "exporter": "tools/art/build_b3c_stations.py",
+      "export_script": "tools/art/export_alliance_trade_station.py",
+      "build_args": [
+        "--asset",
+        "rebel:trade_station"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/alliance_trade_station.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3916,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3c-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "syndicate:attack_satellite",
+      "asset_id": "core:syndicate/attack_satellite",
+      "gameplay_entity": "attack_satellite",
+      "authority": "script",
+      "source": "art/blender/syndicate_attack_satellite.blend",
+      "exporter": "tools/art/build_b4_hardware.py",
+      "export_script": "tools/art/export_syndicate_attack_satellite.py",
+      "build_args": [
+        "--asset",
+        "syndicate:attack_satellite"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/syndicate_attack_satellite.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2284,
+      "advisory_budget_triangles": 11888,
+      "category": "satellite",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b4-hardware-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "syndicate:colonizer",
+      "asset_id": "core:syndicate/colonizer",
+      "gameplay_entity": "syndicate_colonizer",
+      "authority": "blend",
+      "source": "art/blender/syndicate_colonizer.blend",
+      "exporter": "tools/art/build_b9_construction.py",
+      "export_script": "tools/art/export_syndicate_colonizer.py",
+      "build_args": [
+        "--asset",
+        "syndicate:colonizer"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/syndicate_colonizer.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3528,
+      "advisory_budget_triangles": 11888,
+      "category": "construction",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b9-construction-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "syndicate:command_station",
+      "asset_id": "core:syndicate/command_station",
+      "gameplay_entity": "command_station",
+      "authority": "blend",
+      "source": "art/blender/syndicate_command_station.blend",
+      "exporter": "tools/art/build_b3_stations.py",
+      "export_script": "tools/art/export_syndicate_command_station.py",
+      "build_args": [
+        "--asset",
+        "syndicate:command_station"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/syndicate_command_station.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3208,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3a-command-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "syndicate:constructor",
+      "asset_id": "core:syndicate/constructor",
+      "gameplay_entity": "syndicate_constructor",
+      "authority": "blend",
+      "source": "art/blender/syndicate_constructor.blend",
+      "exporter": "tools/art/build_b9_construction.py",
+      "export_script": "tools/art/export_syndicate_constructor.py",
+      "build_args": [
+        "--asset",
+        "syndicate:constructor"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/syndicate_constructor.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3240,
+      "advisory_budget_triangles": 11888,
+      "category": "construction",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b9-construction-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "syndicate:convoy",
+      "asset_id": "core:syndicate/convoy",
+      "gameplay_entity": "syndicate_crew_transport",
+      "authority": "blend",
+      "source": "art/blender/syndicate_convoy.blend",
+      "exporter": "tools/art/build_b2_batch.py",
+      "export_script": "tools/art/export_syndicate_convoy.py",
+      "build_args": [
+        "--asset",
+        "syndicate:convoy"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/syndicate_convoy.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 4756,
+      "advisory_budget_triangles": 11888,
+      "category": "logistics_hull",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b2-squadron-logistics-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "syndicate:corvette",
+      "asset_id": "core:syndicate/corvette",
+      "gameplay_entity": "syndicate_corvette",
+      "authority": "blend",
+      "source": "art/blender/syndicate_corvette.blend",
+      "exporter": "tools/art/build_b8_remaining_combat.py",
+      "export_script": "tools/art/export_syndicate_corvette.py",
+      "build_args": [
+        "--asset",
+        "syndicate:corvette"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/syndicate_corvette.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2176,
+      "advisory_budget_triangles": 11888,
+      "category": "combat_hull",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b8-remaining-combat-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "syndicate:cruiser",
+      "asset_id": "core:syndicate/cruiser",
+      "gameplay_entity": "syndicate_cruiser",
+      "authority": "blend",
+      "source": "art/blender/syndicate_cruiser.blend",
+      "exporter": "tools/art/build_b8_remaining_combat.py",
+      "export_script": "tools/art/export_syndicate_cruiser.py",
+      "build_args": [
+        "--asset",
+        "syndicate:cruiser"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/syndicate_cruiser.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3184,
+      "advisory_budget_triangles": 11888,
+      "category": "combat_hull",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b8-remaining-combat-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "syndicate:defense_platform",
+      "asset_id": "core:syndicate/defense_platform",
+      "gameplay_entity": "defense_platform",
+      "authority": "blend",
+      "source": "art/blender/syndicate_defense_platform.blend",
+      "exporter": "tools/art/build_b3c_stations.py",
+      "export_script": "tools/art/export_syndicate_defense_platform.py",
+      "build_args": [
+        "--asset",
+        "syndicate:defense_platform"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/syndicate_defense_platform.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3520,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3c-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "syndicate:defense_satellite",
+      "asset_id": "core:syndicate/defense_satellite",
+      "gameplay_entity": "defense_satellite",
+      "authority": "script",
+      "source": "art/blender/syndicate_defense_satellite.blend",
+      "exporter": "tools/art/build_b4_hardware.py",
+      "export_script": "tools/art/export_syndicate_defense_satellite.py",
+      "build_args": [
+        "--asset",
+        "syndicate:defense_satellite"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/syndicate_defense_satellite.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2032,
+      "advisory_budget_triangles": 11888,
+      "category": "satellite",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b4-hardware-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "syndicate:energy_relay",
+      "asset_id": "core:syndicate/energy_relay",
+      "gameplay_entity": "energy_relay",
+      "authority": "blend",
+      "source": "art/blender/syndicate_energy_relay.blend",
+      "exporter": "tools/art/build_b3b_stations.py",
+      "export_script": "tools/art/export_syndicate_energy_relay.py",
+      "build_args": [
+        "--asset",
+        "syndicate:energy_relay"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/syndicate_energy_relay.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3720,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3b-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "syndicate:fighter",
+      "asset_id": "core:syndicate/fighter",
+      "gameplay_entity": "syndicate_raid_squadron",
+      "authority": "blend",
+      "source": "art/blender/syndicate_jackal.blend",
+      "exporter": "tools/art/build_b2_batch.py",
+      "export_script": "tools/art/export_syndicate_jackal.py",
+      "build_args": [
+        "--asset",
+        "syndicate:fighter"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/syndicate_jackal.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2316,
+      "advisory_budget_triangles": 11888,
+      "category": "squadron",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b2-squadron-logistics-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "syndicate:fighter_platform",
+      "asset_id": "core:syndicate/fighter_platform",
+      "gameplay_entity": "fighter_platform",
+      "authority": "blend",
+      "source": "art/blender/syndicate_fighter_platform.blend",
+      "exporter": "tools/art/build_b3c_stations.py",
+      "export_script": "tools/art/export_syndicate_fighter_platform.py",
+      "build_args": [
+        "--asset",
+        "syndicate:fighter_platform"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/syndicate_fighter_platform.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3544,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3c-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "syndicate:frigate",
+      "asset_id": "core:syndicate/frigate",
+      "gameplay_entity": "syndicate_frigate",
+      "authority": "blend",
+      "source": "art/blender/syndicate_frigate.blend",
+      "exporter": "tools/art/build_b8_remaining_combat.py",
+      "export_script": "tools/art/export_syndicate_frigate.py",
+      "build_args": [
+        "--asset",
+        "syndicate:frigate"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/syndicate_frigate.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2644,
+      "advisory_budget_triangles": 11888,
+      "category": "combat_hull",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b8-remaining-combat-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "syndicate:mining_station",
+      "asset_id": "core:syndicate/mining_station",
+      "gameplay_entity": "mining_station",
+      "authority": "blend",
+      "source": "art/blender/syndicate_mining_station.blend",
+      "exporter": "tools/art/build_b3b_stations.py",
+      "export_script": "tools/art/export_syndicate_mining_station.py",
+      "build_args": [
+        "--asset",
+        "syndicate:mining_station"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/syndicate_mining_station.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3728,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3b-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "syndicate:planet_extractor",
+      "asset_id": "core:syndicate/planet_extractor",
+      "gameplay_entity": "planet_extractor",
+      "authority": "script",
+      "source": "art/blender/syndicate_planet_extractor.blend",
+      "exporter": "tools/art/build_b4_hardware.py",
+      "export_script": "tools/art/export_syndicate_planet_extractor.py",
+      "build_args": [
+        "--asset",
+        "syndicate:planet_extractor"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/syndicate_planet_extractor.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2484,
+      "advisory_budget_triangles": 11888,
+      "category": "planet_installation",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b4-hardware-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "syndicate:planet_pulsar_cannon",
+      "asset_id": "core:syndicate/planet_pulsar_cannon",
+      "gameplay_entity": "planet_pulsar_cannon",
+      "authority": "script",
+      "source": "art/blender/syndicate_planet_pulsar_cannon.blend",
+      "exporter": "tools/art/build_b4_hardware.py",
+      "export_script": "tools/art/export_syndicate_planet_pulsar_cannon.py",
+      "build_args": [
+        "--asset",
+        "syndicate:planet_pulsar_cannon"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/syndicate_planet_pulsar_cannon.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2284,
+      "advisory_budget_triangles": 11888,
+      "category": "planet_installation",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b4-hardware-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "syndicate:planet_shield_generator",
+      "asset_id": "core:syndicate/planet_shield_generator",
+      "gameplay_entity": "planet_shield_generator",
+      "authority": "script",
+      "source": "art/blender/syndicate_planet_shield_generator.blend",
+      "exporter": "tools/art/build_b4_hardware.py",
+      "export_script": "tools/art/export_syndicate_planet_shield_generator.py",
+      "build_args": [
+        "--asset",
+        "syndicate:planet_shield_generator"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/syndicate_planet_shield_generator.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2352,
+      "advisory_budget_triangles": 11888,
+      "category": "planet_installation",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b4-hardware-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "syndicate:planet_trade_hub",
+      "asset_id": "core:syndicate/planet_trade_hub",
+      "gameplay_entity": "planet_trade_hub",
+      "authority": "script",
+      "source": "art/blender/syndicate_planet_trade_hub.blend",
+      "exporter": "tools/art/build_b4_hardware.py",
+      "export_script": "tools/art/export_syndicate_planet_trade_hub.py",
+      "build_args": [
+        "--asset",
+        "syndicate:planet_trade_hub"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/syndicate_planet_trade_hub.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 2232,
+      "advisory_budget_triangles": 11888,
+      "category": "planet_installation",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b4-hardware-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "syndicate:repair_dock",
+      "asset_id": "core:syndicate/repair_dock",
+      "gameplay_entity": "repair_dock",
+      "authority": "blend",
+      "source": "art/blender/syndicate_repair_dock.blend",
+      "exporter": "tools/art/build_b3c_stations.py",
+      "export_script": "tools/art/export_syndicate_repair_dock.py",
+      "build_args": [
+        "--asset",
+        "syndicate:repair_dock"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/syndicate_repair_dock.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3548,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3c-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "syndicate:research_station",
+      "asset_id": "core:syndicate/research_station",
+      "gameplay_entity": "research_station",
+      "authority": "blend",
+      "source": "art/blender/syndicate_research_station.blend",
+      "exporter": "tools/art/build_b3c_stations.py",
+      "export_script": "tools/art/export_syndicate_research_station.py",
+      "build_args": [
+        "--asset",
+        "syndicate:research_station"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/syndicate_research_station.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3904,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3c-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "syndicate:sensor_station",
+      "asset_id": "core:syndicate/sensor_station",
+      "gameplay_entity": "sensor_station",
+      "authority": "blend",
+      "source": "art/blender/syndicate_sensor_station.blend",
+      "exporter": "tools/art/build_b3b_stations.py",
+      "export_script": "tools/art/export_syndicate_sensor_station.py",
+      "build_args": [
+        "--asset",
+        "syndicate:sensor_station"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/syndicate_sensor_station.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3832,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3b-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "syndicate:shipyard",
+      "asset_id": "core:syndicate/shipyard",
+      "gameplay_entity": "shipyard",
+      "authority": "blend",
+      "source": "art/blender/syndicate_shipyard.blend",
+      "exporter": "tools/art/build_b3c_stations.py",
+      "export_script": "tools/art/export_syndicate_shipyard.py",
+      "build_args": [
+        "--asset",
+        "syndicate:shipyard"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/syndicate_shipyard.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3784,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3c-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "syndicate:trade_station",
+      "asset_id": "core:syndicate/trade_station",
+      "gameplay_entity": "trade_station",
+      "authority": "blend",
+      "source": "art/blender/syndicate_trade_station.blend",
+      "exporter": "tools/art/build_b3c_stations.py",
+      "export_script": "tools/art/export_syndicate_trade_station.py",
+      "build_args": [
+        "--asset",
+        "syndicate:trade_station"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/syndicate_trade_station.mesh.json",
+      "expected_hashes": "art/manifests/approved-s06-source-hashes.json",
+      "expected_triangles": 3532,
+      "advisory_budget_triangles": 11888,
+      "category": "station",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s06-b3c-stations-2026-10-17",
+        "record": "art/manifests/approvals.json"
+      }
+    },
+    {
+      "binding": "shared:construction_scaffold",
+      "asset_id": "core:shared/construction_scaffold",
+      "gameplay_entity": "construction:site:scaffold",
+      "authority": "script",
+      "source": "art/blender/shared_construction_scaffold.blend",
+      "exporter": "tools/art/build_b9_construction.py",
+      "export_script": "tools/art/export_shared_construction_scaffold.py",
+      "build_args": [
+        "--asset",
+        "shared:construction_scaffold"
+      ],
+      "export_args": [],
+      "runtime": "assets/models/shared_construction_scaffold.mesh.json",
+      "expected_hashes": "art/manifests/approved-s07-scaffold-source-hashes.json",
+      "expected_triangles": 3104,
+      "advisory_budget_triangles": 11888,
+      "category": "construction",
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "coordinates": "X beam; Y up; +Z forward; nominal game model units",
+      "approval": {
+        "decision_id": "s07-scaffold-appearance-2026-10-18",
+        "record": "art/manifests/approvals.json"
+      }
+    }
+  ],
+  "tree_hygiene": {
+    "source_roots": [
+      "art/blender",
+      "assets/models"
+    ],
+    "forbidden_patterns": [
+      "*.blend1",
+      "*.blend2",
+      "*.blend@",
+      "*.blend[0-9]",
+      "*.tmp",
+      "*~",
+      ".DS_Store"
+    ],
+    "note": "Autosaves and temporary renders must never be committed. Raw capture runs belong outside the repository."
+  },
+  "packaging": {
+    "spec": "star_armada.spec",
+    "bundled_root": "assets",
+    "must_not_bundle": [
+      "art/",
+      "tools/",
+      ".blend"
+    ],
+    "note": "Runtime exports and manifests ship; editable sources and authoring tools do not."
+  },
+  "provenance": {
+    "dir": "art/manifests/provenance",
+    "required": true,
+    "note": "Written by build-model/export-model, committed with the change. A provenance entry that does not describe the bytes on disk is a validation error."
+  },
+  "contract_validation": {
+    "validator": "tools/art/validate_contract.py",
+    "required": true,
+    "note": "D2: validate-models IS the S02 contract validator, not a second opinion. If it is absent the pipeline fails with E_NO_CONTRACT_VALIDATOR rather than passing on its own checks alone."
   }
- ],
- "tree_hygiene": {
-  "source_roots": [
-   "art/blender",
-   "assets/models"
-  ],
-  "forbidden_patterns": [
-   "*.blend1",
-   "*.blend2",
-   "*.blend@",
-   "*.blend[0-9]",
-   "*.tmp",
-   "*~",
-   ".DS_Store"
-  ],
-  "note": "Autosaves and temporary renders must never be committed. Raw capture runs belong outside the repository."
- },
- "packaging": {
-  "spec": "star_armada.spec",
-  "bundled_root": "assets",
-  "must_not_bundle": [
-   "art/",
-   "tools/",
-   ".blend"
-  ],
-  "note": "Runtime exports and manifests ship; editable sources and authoring tools do not."
- },
- "provenance": {
-  "dir": "art/manifests/provenance",
-  "required": true,
-  "note": "Written by build-model/export-model, committed with the change. A provenance entry that does not describe the bytes on disk is a validation error."
- },
- "contract_validation": {
-  "validator": "tools/art/validate_contract.py",
-  "required": true,
-  "note": "D2: validate-models IS the S02 contract validator, not a second opinion. If it is absent the pipeline fails with E_NO_CONTRACT_VALIDATOR rather than passing on its own checks alone."
- }
 }

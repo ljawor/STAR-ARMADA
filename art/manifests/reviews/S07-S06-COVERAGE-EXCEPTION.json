@@ -1,0 +1,186 @@
+{
+  "schema": 1,
+  "id": "s07-s06-coverage-exception-2026-10-19",
+  "date": "2026-10-19",
+  "requirement": "docs/BLENDER_MODEL_S07_PLAN.md \u00a77 \u2014 S07 can close only after required S06 coverage is complete or explicitly excepted",
+  "classification": "explicit_exception",
+  "counts": {
+    "registry_bindings": 119,
+    "registered_and_approved": 103,
+    "excepted": 16,
+    "by_class": {
+      "authoring_pending": 12,
+      "keep_procedural_proposed": 4
+    }
+  },
+  "registered_and_approved": {
+    "bindings": 103,
+    "approval_decision_ids": [
+      "s06-b1-alliance-combat-2026-10-17",
+      "s06-b2-squadron-logistics-2026-10-17",
+      "s06-b3a-command-stations-2026-10-17",
+      "s06-b3b-stations-2026-10-17",
+      "s06-b3c-stations-2026-10-17",
+      "s06-b4-hardware-2026-10-17",
+      "s06-b5-environment-2026-10-17",
+      "s06-b6-imperial-ships-2026-10-18",
+      "s06-b7-imperial-stations-2026-10-18",
+      "s06-b8-remaining-combat-2026-10-18",
+      "s06-b9-construction-2026-10-18",
+      "s06-battleship-hull-detail-2026-10-16",
+      "s06-cruiser-review-2026-10-17",
+      "s07-frigate-shipyard-hull-detail-2026-10-16",
+      "s07-scaffold-appearance-2026-10-18"
+    ],
+    "note": "every registered asset carries an explicit approval decision; nothing is approved here"
+  },
+  "excepted_bindings": [
+    {
+      "binding": "environment:agricultural",
+      "registry_status": "authoring_pending",
+      "class_meaning": "deferred authoring, tracked for a later S06 batch",
+      "category": "environment_prop",
+      "manifest": "core:environment/agricultural",
+      "reason": "not yet authored: the binding remains procedural in the shipped runtime and is absent from the opt-in registry, so no preview or default path can select it; authoring continues in S06 after S07 closes"
+    },
+    {
+      "binding": "environment:barren",
+      "registry_status": "authoring_pending",
+      "class_meaning": "deferred authoring, tracked for a later S06 batch",
+      "category": "environment_prop",
+      "manifest": "core:environment/barren",
+      "reason": "not yet authored: the binding remains procedural in the shipped runtime and is absent from the opt-in registry, so no preview or default path can select it; authoring continues in S06 after S07 closes"
+    },
+    {
+      "binding": "environment:gas_giant",
+      "registry_status": "authoring_pending",
+      "class_meaning": "deferred authoring, tracked for a later S06 batch",
+      "category": "environment_prop",
+      "manifest": "core:environment/gas_giant",
+      "reason": "not yet authored: the binding remains procedural in the shipped runtime and is absent from the opt-in registry, so no preview or default path can select it; authoring continues in S06 after S07 closes"
+    },
+    {
+      "binding": "environment:industrial",
+      "registry_status": "authoring_pending",
+      "class_meaning": "deferred authoring, tracked for a later S06 batch",
+      "category": "environment_prop",
+      "manifest": "core:environment/industrial",
+      "reason": "not yet authored: the binding remains procedural in the shipped runtime and is absent from the opt-in registry, so no preview or default path can select it; authoring continues in S06 after S07 closes"
+    },
+    {
+      "binding": "environment:military",
+      "registry_status": "authoring_pending",
+      "class_meaning": "deferred authoring, tracked for a later S06 batch",
+      "category": "environment_prop",
+      "manifest": "core:environment/military",
+      "reason": "not yet authored: the binding remains procedural in the shipped runtime and is absent from the opt-in registry, so no preview or default path can select it; authoring continues in S06 after S07 closes"
+    },
+    {
+      "binding": "environment:research",
+      "registry_status": "authoring_pending",
+      "class_meaning": "deferred authoring, tracked for a later S06 batch",
+      "category": "environment_prop",
+      "manifest": "core:environment/research",
+      "reason": "not yet authored: the binding remains procedural in the shipped runtime and is absent from the opt-in registry, so no preview or default path can select it; authoring continues in S06 after S07 closes"
+    },
+    {
+      "binding": "environment:temperate",
+      "registry_status": "authoring_pending",
+      "class_meaning": "deferred authoring, tracked for a later S06 batch",
+      "category": "environment_prop",
+      "manifest": "core:environment/temperate",
+      "reason": "not yet authored: the binding remains procedural in the shipped runtime and is absent from the opt-in registry, so no preview or default path can select it; authoring continues in S06 after S07 closes"
+    },
+    {
+      "binding": "environment:trade",
+      "registry_status": "authoring_pending",
+      "class_meaning": "deferred authoring, tracked for a later S06 batch",
+      "category": "environment_prop",
+      "manifest": "core:environment/trade",
+      "reason": "not yet authored: the binding remains procedural in the shipped runtime and is absent from the opt-in registry, so no preview or default path can select it; authoring continues in S06 after S07 closes"
+    },
+    {
+      "binding": "menu:cinematic_backdrop",
+      "registry_status": "authoring_pending",
+      "class_meaning": "deferred authoring, tracked for a later S06 batch",
+      "category": "menu_cinematic",
+      "manifest": "core:menu/cinematic_backdrop",
+      "reason": "not yet authored: the binding remains procedural in the shipped runtime and is absent from the opt-in registry, so no preview or default path can select it; authoring continues in S06 after S07 closes"
+    },
+    {
+      "binding": "syndicate:battleship",
+      "registry_status": "authoring_pending",
+      "class_meaning": "deferred authoring, tracked for a later S06 batch",
+      "category": "combat_hull",
+      "manifest": "core:syndicate/battleship",
+      "reason": "not yet authored: the binding remains procedural in the shipped runtime and is absent from the opt-in registry, so no preview or default path can select it; authoring continues in S06 after S07 closes"
+    },
+    {
+      "binding": "syndicate:bomber",
+      "registry_status": "authoring_pending",
+      "class_meaning": "deferred authoring, tracked for a later S06 batch",
+      "category": "squadron",
+      "manifest": "core:syndicate/bomber",
+      "reason": "not yet authored: the binding remains procedural in the shipped runtime and is absent from the opt-in registry, so no preview or default path can select it; authoring continues in S06 after S07 closes"
+    },
+    {
+      "binding": "syndicate:supercapital",
+      "registry_status": "authoring_pending",
+      "class_meaning": "deferred authoring, tracked for a later S06 batch",
+      "category": "combat_hull",
+      "manifest": "core:syndicate/supercapital",
+      "reason": "not yet authored: the binding remains procedural in the shipped runtime and is absent from the opt-in registry, so no preview or default path can select it; authoring continues in S06 after S07 closes"
+    },
+    {
+      "binding": "environment:deep_space_sky_dome",
+      "registry_status": "keep_procedural_proposed",
+      "class_meaning": "proposed to remain procedural for the foreseeable catalogue",
+      "category": "environment_prop",
+      "manifest": "core:environment/deep_space_sky_dome",
+      "reason": "proposed to remain procedural: an environment backdrop whose generation is the shipped behaviour and for which no authored replacement is planned; the proposal status is retained and is not an appearance approval"
+    },
+    {
+      "binding": "environment:jump_point",
+      "registry_status": "keep_procedural_proposed",
+      "class_meaning": "proposed to remain procedural for the foreseeable catalogue",
+      "category": "environment_prop",
+      "manifest": "core:environment/jump_point",
+      "reason": "proposed to remain procedural: an environment backdrop whose generation is the shipped behaviour and for which no authored replacement is planned; the proposal status is retained and is not an appearance approval"
+    },
+    {
+      "binding": "environment:nebula",
+      "registry_status": "keep_procedural_proposed",
+      "class_meaning": "proposed to remain procedural for the foreseeable catalogue",
+      "category": "environment_prop",
+      "manifest": "core:environment/nebula",
+      "reason": "proposed to remain procedural: an environment backdrop whose generation is the shipped behaviour and for which no authored replacement is planned; the proposal status is retained and is not an appearance approval"
+    },
+    {
+      "binding": "environment:star",
+      "registry_status": "keep_procedural_proposed",
+      "class_meaning": "proposed to remain procedural for the foreseeable catalogue",
+      "category": "environment_prop",
+      "manifest": "core:environment/star",
+      "reason": "proposed to remain procedural: an environment backdrop whose generation is the shipped behaviour and for which no authored replacement is planned; the proposal status is retained and is not an appearance approval"
+    }
+  ],
+  "not_approved_by_this_record": [
+    "any appearance, model revision or approval for the excepted bindings",
+    "a default switch: the shipped default stays legacy",
+    "merge, release or packaging authorization, which remain separate owner gates"
+  ],
+  "owner_authorization": {
+    "basis": "owner instruction in chat, 2026-10-19",
+    "owner_wording": "OK let's do it : 1st a) than b) than merging rest.",
+    "scope_defined_by": "implementer enumeration derived from assets/models/registry.json status; the owner authorized recording the exception, not inventing its rows",
+    "wording_source": "implementer draft under that authorization; the enumerated rows are machine-derived from the registry, and this text is not attributed to the owner"
+  },
+  "binding_evidence": {
+    "base_commit": "56906ea7c73c219fbdc91c68176104b23d0f7712",
+    "registry_path": "assets/models/registry.json",
+    "registry_sha256": "4683c937cfa4cc936953c25ee6fa013f1aaaad42730a7759ec6c39167e57e79f",
+    "pipeline_path": "art/manifests/pipeline.json",
+    "pipeline_sha256": "e24e71a181863fe2fbcc16b3a15f0adbdeaf64177eca3dcb47e317c274c2e058"
+  },
+  "enforcement": "build-final-receipt.py refuses to build unless this record enumerates exactly the registry non-core rows, class for class, so the exception cannot silently absorb a new unauthored row or drop one"
+}

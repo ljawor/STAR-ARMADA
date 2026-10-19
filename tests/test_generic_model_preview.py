@@ -11,6 +11,10 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class GenericPreviewIntegrationTests(unittest.TestCase):
+    def setUp(self):
+        from game.data.store import DataStore
+        self.addCleanup(setattr, DataStore, '_instance', DataStore._instance)
+
     def tearDown(self):
         selection.configure({})
 

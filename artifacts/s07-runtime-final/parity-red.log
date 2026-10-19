@@ -1,0 +1,15 @@
+test_authored_cached_keeps_every_uncached_role_at_all_sizes (test_s07_authored_lod_parity.AuthoredLodParityTests.test_authored_cached_keeps_every_uncached_role_at_all_sizes) ... FAIL
+test_legacy_namespaced_and_procedural_thresholds_remain_unchanged (test_s07_authored_lod_parity.AuthoredLodParityTests.test_legacy_namespaced_and_procedural_thresholds_remain_unchanged) ... ok
+
+======================================================================
+FAIL: test_authored_cached_keeps_every_uncached_role_at_all_sizes (test_s07_authored_lod_parity.AuthoredLodParityTests.test_authored_cached_keeps_every_uncached_role_at_all_sizes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_authored_lod_parity.py", line 21, in test_authored_cached_keeps_every_uncached_role_at_all_sizes
+    self.assertTrue(set(SHIP_BINDINGS).issubset(bindings))
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.048s
+
+FAILED (failures=1)

@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "imperial:battleship",
+  "asset_id": "core:imperial/battleship",
+  "authority": "script",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:05Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/imperial_battleship.blend",
+    "sha256": "c2ec3a65b986cee9726997820d2aae0f4380824e5e6ce2aabfa78c92b2cb65d1"
+  },
+  "exporter": {
+    "path": "tools/art/export_imperial_battleship.py",
+    "sha256": "033089b0254bdf15f2b6751d460089a7b0b808b68d63f1e4e3503aa4e8a05ad4"
+  },
+  "runtime": {
+    "path": "assets/models/imperial_battleship.mesh.json",
+    "sha256": "3c69c3db9d0f55aba714d1af4bafbebc7493afb5da3a80d7bd59fccc7be8ac79",
+    "bytes": 154414,
+    "triangles": 2468
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "3c69c3db9d0f55aba714d1af4bafbebc7493afb5da3a80d7bd59fccc7be8ac79",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

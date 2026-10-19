@@ -1,0 +1,30 @@
+test_actual_b4_b6_seed_preflights_refuse_existing_selected_masters (test_s07_pipeline_execution.PipelineExecutionTest.test_actual_b4_b6_seed_preflights_refuse_existing_selected_masters) ... ok
+test_argument_arrays_reject_non_string_lists (test_s07_pipeline_execution.PipelineExecutionTest.test_argument_arrays_reject_non_string_lists) ... ok
+test_blend_authority_refuses_build_and_uses_export_wrapper_arguments (test_s07_pipeline_execution.PipelineExecutionTest.test_blend_authority_refuses_build_and_uses_export_wrapper_arguments) ... ok
+test_build_can_reconstruct_a_missing_script_derived_master (test_s07_pipeline_execution.PipelineExecutionTest.test_build_can_reconstruct_a_missing_script_derived_master) ... ok
+test_execution_forwards_exact_arguments_for_the_script_being_run (test_s07_pipeline_execution.PipelineExecutionTest.test_execution_forwards_exact_arguments_for_the_script_being_run) ... ok
+test_explicit_keep_blend_publishes_only_verified_script_build_source (test_s07_pipeline_execution.PipelineExecutionTest.test_explicit_keep_blend_publishes_only_verified_script_build_source) ... ok
+test_failed_or_changed_reconstruction_publishes_nothing (test_s07_pipeline_execution.PipelineExecutionTest.test_failed_or_changed_reconstruction_publishes_nothing) ... ok
+test_omitted_and_empty_argument_arrays_keep_legacy_execution (test_s07_pipeline_execution.PipelineExecutionTest.test_omitted_and_empty_argument_arrays_keep_legacy_execution) ... ok
+test_reconstruction_cannot_execute_an_absolute_original_recipe (test_s07_pipeline_execution.PipelineExecutionTest.test_reconstruction_cannot_execute_an_absolute_original_recipe) ... FAIL
+test_run_blender_preserves_argv_tokens_after_separator_without_shell (test_s07_pipeline_execution.PipelineExecutionTest.test_run_blender_preserves_argv_tokens_after_separator_without_shell) ... ok
+test_script_build_reconstructs_in_isolation_preserving_approved_master (test_s07_pipeline_execution.PipelineExecutionTest.test_script_build_reconstructs_in_isolation_preserving_approved_master) ... ok
+test_script_export_preserves_source_even_with_keep_blend (test_s07_pipeline_execution.PipelineExecutionTest.test_script_export_preserves_source_even_with_keep_blend) ... ok
+test_script_reconstruction_requires_its_derived_source (test_s07_pipeline_execution.PipelineExecutionTest.test_script_reconstruction_requires_its_derived_source) ... ok
+test_script_source_drift_is_refused_before_reconstruction (test_s07_pipeline_execution.PipelineExecutionTest.test_script_source_drift_is_refused_before_reconstruction) ... ok
+
+======================================================================
+FAIL: test_reconstruction_cannot_execute_an_absolute_original_recipe (test_s07_pipeline_execution.PipelineExecutionTest.test_reconstruction_cannot_execute_an_absolute_original_recipe)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_pipeline_execution.py", line 252, in test_reconstruction_cannot_execute_an_absolute_original_recipe
+    run.assert_not_called()
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/unittest/mock.py", line 900, in assert_not_called
+    raise AssertionError(msg)
+AssertionError: Expected 'run_blender' to not have been called. Called 1 times.
+Calls: [call('not-real-blender', PosixPath('/var/folders/17/72kb0scd4vq464hz3536cw0r0000gn/T/tmp1p1gkukt/tools/art/build_test.py'), argv=['--asset', 'ship:imperial:corvette'], cwd=PosixPath('/var/folders/17/72kb0scd4vq464hz3536cw0r0000gn/T/sa-model-61i7mukb'))].
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.313s
+
+FAILED (failures=1)

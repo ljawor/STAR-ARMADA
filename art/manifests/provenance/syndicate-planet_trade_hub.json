@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "binding": "syndicate:planet_trade_hub",
+  "asset_id": "core:syndicate/planet_trade_hub",
+  "authority": "script",
+  "tool": "tools/art/model_pipeline.py",
+  "tool_version": 1,
+  "recorded": "2026-10-18T16:25:31Z",
+  "host": {
+    "system": "Darwin",
+    "release": "25.6.0",
+    "machine": "arm64"
+  },
+  "coordinate_policy": "X beam; Y up; +Z forward; nominal game model units",
+  "blender": {
+    "executable_name": "Blender",
+    "version": "5.0.1",
+    "pin": "5.0.1"
+  },
+  "source": {
+    "path": "art/blender/syndicate_planet_trade_hub.blend",
+    "sha256": "3f06156d5e2f5114b584d1377e199672ec893d9be64f9c6569a4a9fac4fa38f9"
+  },
+  "exporter": {
+    "path": "tools/art/export_syndicate_planet_trade_hub.py",
+    "sha256": "b7eca902c9add5f33c6edddc9c11539664369661640ba6e5aed0546f64e83eee"
+  },
+  "runtime": {
+    "path": "assets/models/syndicate_planet_trade_hub.mesh.json",
+    "sha256": "e287675b6e86d7b5bb986169941179ff8cad49fa9c021182f7d279aa89be2aed",
+    "bytes": 123191,
+    "triangles": 2232
+  },
+  "approved_reference": {
+    "record": "art/manifests/approved-s06-source-hashes.json",
+    "sha256": "e287675b6e86d7b5bb986169941179ff8cad49fa9c021182f7d279aa89be2aed",
+    "matches": true
+  },
+  "action": "export",
+  "notes": [
+    "exported from an exact master copy in an isolated tools/art dependency workspace; repository source preserved"
+  ]
+}

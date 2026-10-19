@@ -1,0 +1,76 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:confederacy/corvette",
+  "revision": "3acc40a1eb58fb8b994b20097306a8901be448e90a3d1d2b84c2b00541c059c1",
+  "display_name": "confed corvette (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/confed_corvette.mesh.json",
+      "sha256": "921f8dd4afd759ea0d39c21c3bd3c4e6f7e1c3f8eaee18240371d9a96f101958",
+      "bytes": 107340
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -31.713844,
+      -7.0,
+      -38.489994
+    ],
+    "max": [
+      31.713844,
+      15.1,
+      48.06775
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/confed_corvette.blend",
+    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 1852,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "s06-b8-remaining-combat-2026-10-18",
+    "decided_by": "owner",
+    "decided_on": "2026-10-18",
+    "reviewed_revision": "3acc40a1eb58fb8b994b20097306a8901be448e90a3d1d2b84c2b00541c059c1",
+    "reviewed_evidence": [
+      "artifacts/s06-completion/B8-appearance-grid.jpg",
+      "artifacts/s06-completion/review-b8-attempt1/render/confederacy-corvette-after-close.png",
+      "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png",
+      "artifacts/s06-completion/review-b8-attempt1/render/metrics.json"
+    ]
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:confederacy/planet_trade_hub",
+  "revision": "d1bf5fac71fdd6ef27b662a137d81e338966044a2744a3eb577cf4bbe08f906b",
+  "display_name": "legion planet trade hub (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/legion_planet_trade_hub.mesh.json",
+      "sha256": "b3bbb4ccfd292d695e73134d4bda12e1e83e25fc1ac93aade8ff96cc0bf0ea39",
+      "bytes": 132236
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -34.0,
+      0.0,
+      -32.0
+    ],
+    "max": [
+      34.0,
+      49.5,
+      32.0
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/legion_planet_trade_hub.blend",
+    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 2344,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "s06-b4-hardware-2026-10-17",
+    "decided_by": "owner",
+    "decided_on": "2026-10-17",
+    "reviewed_revision": "d1bf5fac71fdd6ef27b662a137d81e338966044a2744a3eb577cf4bbe08f906b",
+    "reviewed_evidence": [
+      "artifacts/s06_alliance_batch_review/b4-hardware/contact-sheet.png",
+      "artifacts/s06_alliance_batch_review/b4-hardware/metrics.json"
+    ]
+  }
+}

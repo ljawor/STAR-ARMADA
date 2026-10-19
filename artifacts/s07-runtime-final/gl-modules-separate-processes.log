@@ -1,0 +1,12 @@
+pass         9.6s  test_audio
+fail         0.2s  test_crew_recovery_ui
+         FAIL: test_faction_transports_have_small_known_solid_visuals (test_crew_recovery_ui.RecoveryUITests.test_faction_transports_have_small_known_solid_visuals)
+fail         0.3s  test_model_coverage_reconciliation
+         FAIL: test_cli_rejects_stale_report_and_approval_corruption_without_writing (test_model_coverage_reconciliation.CoverageReconciliation.test_cli_rejects_stale_report_and_approval_corruption_without_writing)
+pass         5.6s  test_renderer_constructor_cleanup
+pass         5.0s  test_model_context_lifecycle
+pass        12.5s  test_lan_recovery_handoff
+pass         1.4s  test_lan_recovery_ui
+pass         2.2s  test_ship_material_passes
+
+not passing: ['test_crew_recovery_ui', 'test_model_coverage_reconciliation']

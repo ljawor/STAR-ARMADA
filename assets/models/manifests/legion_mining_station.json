@@ -1,0 +1,74 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:confederacy/mining_station",
+  "revision": "c99392774db060abc23c1504b1f22cd09baf7973f19468970e8588d9c7a3e58b",
+  "display_name": "legion mining station (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/legion_mining_station.mesh.json",
+      "sha256": "32bb2c2b72ac9dacee83ae841d3e5ecf6b0e7c4246ee4e99f0548b28d9695d8f",
+      "bytes": 290352
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -40.418598,
+      -31.44,
+      -29.36
+    ],
+    "max": [
+      40.418598,
+      11.08,
+      46.96
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/legion_mining_station.blend",
+    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 4268,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "s06-b3b-stations-2026-10-17",
+    "decided_by": "owner",
+    "decided_on": "2026-10-17",
+    "reviewed_revision": "c99392774db060abc23c1504b1f22cd09baf7973f19468970e8588d9c7a3e58b",
+    "reviewed_evidence": [
+      "artifacts/s06_alliance_batch_review/b3b-stations/contact-sheet.png",
+      "artifacts/s06_alliance_batch_review/b3b-stations/metrics.json"
+    ]
+  }
+}

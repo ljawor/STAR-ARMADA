@@ -1,0 +1,16 @@
+test_all_historical_identities_have_deterministic_current_routes (test_s07_binding_routes.BindingRouteAuditTests.test_all_historical_identities_have_deterministic_current_routes) ... ok
+test_live_data_role_overrides_historical_identity_and_shape (test_s07_binding_routes.BindingRouteAuditTests.test_live_data_role_overrides_historical_identity_and_shape) ... FAIL
+test_selection_is_separate_from_actual_geometry_dispatch (test_s07_binding_routes.BindingRouteAuditTests.test_selection_is_separate_from_actual_geometry_dispatch) ... ok
+
+======================================================================
+FAIL: test_live_data_role_overrides_historical_identity_and_shape (test_s07_binding_routes.BindingRouteAuditTests.test_live_data_role_overrides_historical_identity_and_shape)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/tests/test_s07_binding_routes.py", line 71, in test_live_data_role_overrides_historical_identity_and_shape
+    self.assertTrue(hasattr(tool, 'route_identity'), 'live route identity helper missing')
+AssertionError: False is not true : live route identity helper missing
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.298s
+
+FAILED (failures=1)

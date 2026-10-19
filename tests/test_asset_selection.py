@@ -130,12 +130,17 @@ class SelectionPreferencesTests(unittest.TestCase):
             self.assertEqual(selection.mesh_for('rebel:frigate'),
                              load_frigate(root / 'assets/models/alliance_frigate.mesh.json'))
             self.assertTrue(selection.is_authored('rebel:frigate'))
-            self.assertFalse(selection.is_authored('rebel:corvette'))
+            self.assertTrue(selection.is_authored('rebel:corvette'))
+            self.assertTrue(selection.is_authored('shared:construction_scaffold'))
+            self.assertIsNotNone(selection.mesh_for('shared:construction_scaffold'))
+            self.assertFalse(selection.is_authored('syndicate:bomber'))
             import json
             json.dumps(selection.diagnostics())
         finally:
             selection.configure({})
         self.assertIsNone(selection.mesh_for('rebel:frigate'))
+        self.assertIsNone(selection.mesh_for('rebel:corvette'))
+        self.assertIsNone(selection.mesh_for('shared:construction_scaffold'))
     def test_persisted_pack_order_drives_resolver_without_touching_settings(self):
         import shutil
         from test_asset_registry import PackTests

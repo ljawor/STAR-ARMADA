@@ -371,6 +371,103 @@
         "S07 completeness remains open while required art lacks appearance approval",
         "S08/S09 complete-candidate acceptance depends on S07; no final S10/S11 switch here"
       ]
+    },
+    {
+      "id": "s07-opt-in-continuation-2026-10-18",
+      "date": "2026-10-18",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "authorized-execution-not-appearance",
+      "owner_wording": "ok continue",
+      "question_answered": "Part 3: opt-in integration, including the scaffold review path.",
+      "applies_to": "S07 opt-in integration, superseding the temporary part-2-only current_increment of s06-catalogue-completion-execution-2026-10-18; prior appearance approvals remain revision-bound.",
+      "how_recorded": "After the 26 pictured B7/B8/B9 approvals were recorded, the assistant explicitly proposed Part 3 opt-in integration including scaffold review. The owner replied as quoted. This records progression of authorized engineering work, not a new appearance decision.",
+      "authorized": [
+        "Guard and repair selected/unselected runtime consumers, including Imperial stations and shared scaffold construction drawing",
+        "Audit live identities and register only exact previously appearance-approved models into the existing explicit preview path",
+        "Capture the unapproved shared scaffold through the real build-queue renderer for owner review",
+        "Run later S08/S09 engineering gates when prerequisites are satisfied"
+      ],
+      "not_authorized": [
+        "appearance approval or registration of the still-unapproved scaffold",
+        "changing any approved model source, exporter, seed or runtime payload revision",
+        "production-default activation, merge, tag or release",
+        "new gameplay statistics, collision, balance, or native-platform waivers"
+      ]
+    },
+    {
+      "id": "s07-scaffold-registration-2026-10-19",
+      "date": "2026-10-19",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "authorized-execution-not-appearance",
+      "owner_wording": "Work down the 4 points, please.",
+      "question_answered": "Complete the four S07 closure actions, including separately resolving the appearance-approved but unregistered scaffold instead of omitting it from full closure.",
+      "how_recorded": "The owner authorized the four closure actions after separately choosing 'Fix the opt-in rendering paths to match'. This is the separate scaffold registration increment; the original 99-row S06 increment and its authority remain unchanged.",
+      "appearance_authority": "s07-scaffold-appearance-2026-10-18",
+      "authorized": [
+        "Register exactly shared:construction_scaffold at its separately approved revision into the explicit opt-in preview path",
+        "Validate provenance, assets-only resolution, normal construction rendering, cache lifecycle and state preservation",
+        "Publish reviewed evidence and check CI at the final commit"
+      ],
+      "not_authorized": [
+        "new appearance approval or any modification of approved geometry, source, seed, exporter or evidence",
+        "expansion of the original approved-s06 batch or production-default activation",
+        "merge, tag, release, gameplay or balance changes",
+        "waiving S08/S09 compatibility, performance or real native packaged-build gates"
+      ]
+    },
+    {
+      "id": "s07-authored-lod-cost-2026-10-19",
+      "date": "2026-10-19",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "accepted-as-acceptable",
+      "owner_wording": "Yes acceptable",
+      "question_answered": "The authored-hull LOD suppression change in _draw_ship_role_batch makes authored hulls submit all six role batches down to sub-pixel apparent size, costing five extra display-list calls plus push/pop, colour and two shader uniform updates per authored ship per frame at zoom-out. Is that cost acceptable?",
+      "how_recorded": "Put to the owner as a single yes/no after the independent review flagged it as the only player-facing consequence of the motion/ownership repair, and after measurement showed the other two changed draw methods (_draw_ships phased branch, _draw_station) have no production call path: _draw_ships is called once at render/renderer.py:495 with a cache that _ensure_frame_cache always returns as a dict, and _draw_station has one call site (1445) inside that same uncached branch. Answer recorded verbatim; no bound was fitted to it.",
+      "binds_to": {
+        "reviewed_renderer_sha256": "9aff34140aa3d458eec358a2d87e64d4d4277c924ca198d507e4d29983350f3c",
+        "reviewed_commit": "56906ea7c73c219fbdc91c68176104b23d0f7712",
+        "pull_request": 131,
+        "review_artifact": "artifacts/s07-runtime-final/INDEPENDENT-MOTION-REVIEW.json",
+        "finding": "Authored hulls now submit all six roles at every apparent size, including sub-pixel; the LOD cut exists to avoid per-entity GL work at zoom-out.",
+        "measured_pixel_effect": "none: 870/870 native captures and 360/360 candidate-movie frames are byte-identical to the pre-repair sets"
+      },
+      "scope_statement": "Accepts the per-ship draw cost of authored hulls at zoom-out as the price of unmixed authored LOD treatment. It does not authorize removing an existing visual pass, lowering MSAA, reducing geometry, changing gameplay, or any further LOD change.",
+      "not_approved_by_this_decision": [
+        "merge",
+        "default activation",
+        "release or tag",
+        "a new appearance approval",
+        "S08/S09 compatibility, performance or packaged-build gates",
+        "any further renderer performance change"
+      ],
+      "review_note": "A later performance workstream may revisit authored LOD suppression as its own measured change; this decision is the current baseline, not a permanent ceiling on the workstream."
+    },
+    {
+      "id": "s07-s06-coverage-exception-2026-10-19",
+      "date": "2026-10-19",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "accepted-s06-coverage-exception",
+      "owner_wording": "OK let's do it : 1st a) than b) than merging rest.",
+      "question_answered": "S07 can close only once S06 coverage is complete or explicitly excepted. Sixteen registry bindings are not authored: twelve authoring_pending rows and four keep_procedural_proposed rows. Are those sixteen excepted from S07 coverage so S07 can close?",
+      "how_recorded": "Put to the owner as the second of three actions (\"1st a) then b) then merging rest\"); the enumerated rows and their classes are derived from assets/models/registry.json at the moment of recording and are listed in art/manifests/reviews/S07-S06-COVERAGE-EXCEPTION.json, not paraphrased here",
+      "scope": {
+        "excepted": 16,
+        "by_class": {
+          "authoring_pending": 12,
+          "keep_procedural_proposed": 4
+        },
+        "registered_and_approved_untouched": 103
+      },
+      "does_not_authorize": [
+        "any appearance approval",
+        "a default switch",
+        "merge, release or packaging"
+      ],
+      "evidence": "art/manifests/reviews/S07-S06-COVERAGE-EXCEPTION.json",
+      "bound_to": {
+        "registry_sha256": "4683c937cfa4cc936953c25ee6fa013f1aaaad42730a7759ec6c39167e57e79f",
+        "base_commit": "56906ea7c73c219fbdc91c68176104b23d0f7712"
+      }
     }
   ]
 }

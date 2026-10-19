@@ -1,0 +1,76 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:confederacy/battleship",
+  "revision": "e96c95da532b221753d793e11be4d4f8c5b087c0bb8377a024f573912e84f4a2",
+  "display_name": "confed battleship (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/confed_battleship.mesh.json",
+      "sha256": "0b04ca0ea42c2ea2fd670cfdbe0d4c0a047cbf65071101ba7d6927bf172df363",
+      "bytes": 190414
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -109.856392,
+      -14.0,
+      -129.825
+    ],
+    "max": [
+      109.856392,
+      49.5,
+      138.05574
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/confed_battleship.blend",
+    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 3212,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "s06-b8-remaining-combat-2026-10-18",
+    "decided_by": "owner",
+    "decided_on": "2026-10-18",
+    "reviewed_revision": "e96c95da532b221753d793e11be4d4f8c5b087c0bb8377a024f573912e84f4a2",
+    "reviewed_evidence": [
+      "artifacts/s06-completion/B8-appearance-grid.jpg",
+      "artifacts/s06-completion/review-b8-attempt1/render/confederacy-battleship-after-close.png",
+      "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png",
+      "artifacts/s06-completion/review-b8-attempt1/render/metrics.json"
+    ]
+  }
+}

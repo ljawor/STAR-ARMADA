@@ -1,0 +1,74 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:confederacy/trade_station",
+  "revision": "e745cc70bbd59b6f0706e61c10acc3ca0040e8d9e444e4972c6a14e85e49382a",
+  "display_name": "legion trade station (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/legion_trade_station.mesh.json",
+      "sha256": "567416bb0c267c8896eccdaf3210e9e347fc60ab0e92f80b9227a66e7ee82d49",
+      "bytes": 232608
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -43.7668,
+      -6.552,
+      -46.0532
+    ],
+    "max": [
+      43.7668,
+      18.28,
+      46.0532
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "Blender evaluated bevel mesh",
+    "license": "original",
+    "source": "art/blender/legion_trade_station.blend",
+    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 3580,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "s06-b3c-stations-2026-10-17",
+    "decided_by": "owner",
+    "decided_on": "2026-10-17",
+    "reviewed_revision": "e745cc70bbd59b6f0706e61c10acc3ca0040e8d9e444e4972c6a14e85e49382a",
+    "reviewed_evidence": [
+      "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+      "artifacts/s06_alliance_batch_review/b3c-stations/metrics.json"
+    ]
+  }
+}
