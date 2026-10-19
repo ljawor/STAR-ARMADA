@@ -84,7 +84,40 @@ def suite_gate():
     }
 
 
+def coverage_precondition():
+    """S07's stop criteria: S06 coverage complete or explicitly excepted.
+
+    The exception record must enumerate exactly the registry's non-core rows, class for class. If a
+    new unauthored row appears, or an excepted row becomes authored, this refuses to build rather
+    than letting the exception quietly widen.
+    """
+    record = json.loads((ROOT / 'art/manifests/reviews/S07-S06-COVERAGE-EXCEPTION.json').read_text())
+    registry = json.loads((ROOT / 'assets/models/registry.json').read_text())['bindings']
+    non_core = {(b['binding'], b.get('status')) for b in registry if b.get('status') != 'core'}
+    recorded = {(r['binding'], r['registry_status']) for r in record['excepted_bindings']}
+    assert recorded == non_core, (
+        'coverage exception drifted from the registry',
+        sorted(recorded - non_core)[:5], sorted(non_core - recorded)[:5])
+    core = [b for b in registry if b.get('status') == 'core']
+    assert record['counts']['registered_and_approved'] == len(core)
+    policy = json.loads((ROOT / 'art/manifests/pipeline_policy.json').read_text())['decision_log']
+    decision = next(d for d in policy if d.get('id') == record['id'])
+    assert decision['decision'] == 'accepted-s06-coverage-exception'
+    return {
+        'decision_id': record['id'],
+        'classification': record['classification'],
+        'registered_and_approved': len(core),
+        'excepted': len(recorded),
+        'by_class': record['counts']['by_class'],
+        'approval_decision_ids': record['registered_and_approved']['approval_decision_ids'],
+        'owner_wording': decision['owner_wording'],
+        'wording_source': record['owner_authorization']['wording_source'],
+        'not_approved_by_this_record': record['not_approved_by_this_record'],
+    }
+
+
 suite = suite_gate()
+coverage = coverage_precondition()
 pipeline = json.loads((ROOT / 'art/manifests/pipeline.json').read_text())
 renderer_sha = sha(ROOT / RENDERER)
 assert renderer_sha == RENDERER_PIN, ('renderer moved since the evidence was produced',
@@ -242,6 +275,22 @@ criteria = [
               ['art/manifests/pipeline_policy.json'],
               ['the decision records the owner words verbatim and binds to the reviewed renderer hash'],
               ['accepts a cost, authorizes no further performance or visual change']),
+    criterion('C15', 'S07-step0', 'S06 coverage complete or explicitly excepted, and the exception cannot drift',
+              'pass' if coverage['classification'] == 'explicit_exception' else 'unproven',
+              ['.venv/bin/python artifacts/s07-runtime-final/record-s06-coverage-exception.py',
+               '.venv/bin/python artifacts/s07-runtime-final/build-final-receipt.py'],
+              [0, 0],
+              ['art/manifests/reviews/S07-S06-COVERAGE-EXCEPTION.json',
+               'assets/models/registry.json',
+               'art/manifests/pipeline_policy.json'],
+              ['the receipt refuses to build unless the exception enumerates exactly the registry non-core rows, class for class, so it cannot widen to a new unauthored row',
+               'every registered asset is asserted to carry an explicit approval decision, and the approved set must equal the registry core rows',
+               'the exception record states what it does not approve: no appearance, no default switch, no merge/release/packaging'],
+              [f"{coverage['registered_and_approved']} bindings registered and approved by "
+               f"{len(coverage['approval_decision_ids'])} decision ids; {coverage['excepted']} excepted "
+               f"({coverage['by_class']['authoring_pending']} authoring_pending, "
+               f"{coverage['by_class']['keep_procedural_proposed']} keep_procedural_proposed)",
+               "the exception text is the implementer's draft under owner authorization; the owner words are quoted verbatim and are not an approval of any appearance"]),
 ]
 
 deferred = [
@@ -311,7 +360,9 @@ receipt = {
               'owner decision accepting the only player-facing consequence'),
     'authority_decision_ids': ['s07-opt-in-continuation-2026-10-18',
                                's07-scaffold-registration-2026-10-19',
-                               's07-authored-lod-cost-2026-10-19'],
+                               's07-authored-lod-cost-2026-10-19',
+                               's07-s06-coverage-exception-2026-10-19'],
+    's06_coverage': coverage,
     'candidate_binding_count': len(bindings),
     'candidate_bindings': bindings,
     'criteria': criteria,

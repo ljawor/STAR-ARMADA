@@ -7,8 +7,43 @@
   "authority_decision_ids": [
     "s07-opt-in-continuation-2026-10-18",
     "s07-scaffold-registration-2026-10-19",
-    "s07-authored-lod-cost-2026-10-19"
+    "s07-authored-lod-cost-2026-10-19",
+    "s07-s06-coverage-exception-2026-10-19"
   ],
+  "s06_coverage": {
+    "decision_id": "s07-s06-coverage-exception-2026-10-19",
+    "classification": "explicit_exception",
+    "registered_and_approved": 103,
+    "excepted": 16,
+    "by_class": {
+      "authoring_pending": 12,
+      "keep_procedural_proposed": 4
+    },
+    "approval_decision_ids": [
+      "s06-b1-alliance-combat-2026-10-17",
+      "s06-b2-squadron-logistics-2026-10-17",
+      "s06-b3a-command-stations-2026-10-17",
+      "s06-b3b-stations-2026-10-17",
+      "s06-b3c-stations-2026-10-17",
+      "s06-b4-hardware-2026-10-17",
+      "s06-b5-environment-2026-10-17",
+      "s06-b6-imperial-ships-2026-10-18",
+      "s06-b7-imperial-stations-2026-10-18",
+      "s06-b8-remaining-combat-2026-10-18",
+      "s06-b9-construction-2026-10-18",
+      "s06-battleship-hull-detail-2026-10-16",
+      "s06-cruiser-review-2026-10-17",
+      "s07-frigate-shipyard-hull-detail-2026-10-16",
+      "s07-scaffold-appearance-2026-10-18"
+    ],
+    "owner_wording": "OK let's do it : 1st a) than b) than merging rest.",
+    "wording_source": "implementer draft under that authorization; the enumerated rows are machine-derived from the registry, and this text is not attributed to the owner",
+    "not_approved_by_this_record": [
+      "any appearance, model revision or approval for the excepted bindings",
+      "a default switch: the shipped default stays legacy",
+      "merge, release or packaging authorization, which remain separate owner gates"
+    ]
+  },
   "candidate_binding_count": 103,
   "candidate_bindings": [
     {
@@ -1078,7 +1113,7 @@
       "evidence_paths_and_hashes": [
         {
           "path": "art/manifests/pipeline_policy.json",
-          "sha256": "c43ebfdc9cfaa8535c18d02545d793e7d98fcc751122cb80c33ad16b3c4f954c"
+          "sha256": "65e176558346f7af5d7e798fbd26d4fcbac09d798f6780018c6b86a16aa861b8"
         }
       ],
       "negative_controls": [
@@ -1086,6 +1121,45 @@
       ],
       "limitations": [
         "accepts a cost, authorizes no further performance or visual change"
+      ],
+      "blocking_decision_id": null
+    },
+    {
+      "id": "C15",
+      "wp": "S07-step0",
+      "requirement_ref": "S06 coverage complete or explicitly excepted, and the exception cannot drift",
+      "applicability": "in_scope",
+      "status": "pass",
+      "commands": [
+        ".venv/bin/python artifacts/s07-runtime-final/record-s06-coverage-exception.py",
+        ".venv/bin/python artifacts/s07-runtime-final/build-final-receipt.py"
+      ],
+      "exit_codes": [
+        0,
+        0
+      ],
+      "evidence_paths_and_hashes": [
+        {
+          "path": "art/manifests/reviews/S07-S06-COVERAGE-EXCEPTION.json",
+          "sha256": "4fef9be423b3c79dac49a7fd6126f7d0eb86464dc39d9d2e7184419dc260da3a"
+        },
+        {
+          "path": "assets/models/registry.json",
+          "sha256": "4683c937cfa4cc936953c25ee6fa013f1aaaad42730a7759ec6c39167e57e79f"
+        },
+        {
+          "path": "art/manifests/pipeline_policy.json",
+          "sha256": "65e176558346f7af5d7e798fbd26d4fcbac09d798f6780018c6b86a16aa861b8"
+        }
+      ],
+      "negative_controls": [
+        "the receipt refuses to build unless the exception enumerates exactly the registry non-core rows, class for class, so it cannot widen to a new unauthored row",
+        "every registered asset is asserted to carry an explicit approval decision, and the approved set must equal the registry core rows",
+        "the exception record states what it does not approve: no appearance, no default switch, no merge/release/packaging"
+      ],
+      "limitations": [
+        "103 bindings registered and approved by 15 decision ids; 16 excepted (12 authoring_pending, 4 keep_procedural_proposed)",
+        "the exception text is the implementer's draft under owner authorization; the owner words are quoted verbatim and are not an approval of any appearance"
       ],
       "blocking_decision_id": null
     }

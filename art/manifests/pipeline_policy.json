@@ -441,6 +441,33 @@
         "any further renderer performance change"
       ],
       "review_note": "A later performance workstream may revisit authored LOD suppression as its own measured change; this decision is the current baseline, not a permanent ceiling on the workstream."
+    },
+    {
+      "id": "s07-s06-coverage-exception-2026-10-19",
+      "date": "2026-10-19",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "accepted-s06-coverage-exception",
+      "owner_wording": "OK let's do it : 1st a) than b) than merging rest.",
+      "question_answered": "S07 can close only once S06 coverage is complete or explicitly excepted. Sixteen registry bindings are not authored: twelve authoring_pending rows and four keep_procedural_proposed rows. Are those sixteen excepted from S07 coverage so S07 can close?",
+      "how_recorded": "Put to the owner as the second of three actions (\"1st a) then b) then merging rest\"); the enumerated rows and their classes are derived from assets/models/registry.json at the moment of recording and are listed in art/manifests/reviews/S07-S06-COVERAGE-EXCEPTION.json, not paraphrased here",
+      "scope": {
+        "excepted": 16,
+        "by_class": {
+          "authoring_pending": 12,
+          "keep_procedural_proposed": 4
+        },
+        "registered_and_approved_untouched": 103
+      },
+      "does_not_authorize": [
+        "any appearance approval",
+        "a default switch",
+        "merge, release or packaging"
+      ],
+      "evidence": "art/manifests/reviews/S07-S06-COVERAGE-EXCEPTION.json",
+      "bound_to": {
+        "registry_sha256": "4683c937cfa4cc936953c25ee6fa013f1aaaad42730a7759ec6c39167e57e79f",
+        "base_commit": "56906ea7c73c219fbdc91c68176104b23d0f7712"
+      }
     }
   ]
 }
