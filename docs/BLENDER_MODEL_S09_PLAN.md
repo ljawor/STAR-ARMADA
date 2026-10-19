@@ -115,14 +115,48 @@ synchronized diagnostic frame cost, **not** interactive FPS) is:
 | Stress distributed (760 entities) | 421.74 ms | 444.16 ms | `GRAPHICS_BENCHMARK.md` §3 |
 | Stress combat | 544.31 ms | 766.39 ms | `GRAPHICS_BENCHMARK.md` §3 |
 
-`GRAPHICS_UPGRADE_PLAN.md` records **proposed, expressly not agreed** discussion targets: 60 FPS
-(16.67 ms) in normal gameplay and at least 30 FPS (33.33 ms) in the supported heavy battle. The
-measured stock scenes miss those by roughly 5-7×. S09 must not adopt them as approved, and must
-not start an open-ended optimization detour to chase them.
+`GRAPHICS_UPGRADE_PLAN.md` recorded those numbers as **proposed, expressly not agreed**. On
+2026-10-19 the owner adopted them as S09's measurement reference
+(`s09-performance-target-2026-10-19` in `art/manifests/pipeline_policy.json`): **60 FPS /
+16.67 ms in normal gameplay and at least 30 FPS / 33.33 ms in the supported heavy battle**, at
+1280×800 on this M4, with no quality, MSAA, fog or workload reduction permitted to reach them.
 
-**Owner decision required:** the target resolution and the frame budget S09 is measured against,
-on named hardware. Until that answer exists, no performance *acceptance* can be claimed; only
-measurement can be reported.
+### 6.1 Measured against that reference
+
+`tools/acceptance/measure_catalogue_cost.py` configures the real selection seam and then calls the
+real benchmark CLI, so the same instrument measured both selections: three serial fresh processes
+per fixture and selection, 10 warmup + 60 measured ticks, requested and actual MSAA 4, 1280×800,
+vsync 0, shader on. Medians of the three per-trial means, in ms; synchronized diagnostic frame
+cost, **not** interactive FPS.
+
+| Fixture | Entities | Frames, legacy | Frames, authored catalogue | Ratio | Sim | World | Camera |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Stock distributed | 212 | 41.97 | 188.22 | 4.48× | unchanged | 9.95× | 10.92× |
+| Stock combat | 212 | 56.87 | 292.73 | 5.15× | unchanged | 8.88× | 10.52× |
+| Stress distributed | 760 | 113.07 | 705.09 | 6.24× | unchanged | 12.7× | 15.64× |
+| Stress combat | 760 | 353.25 | 2,034.36 | 5.76× | unchanged | 14.33× | 15.57× |
+
+Full per-stage medians, p95/p99 and hashes: `artifacts/s09/PERFORMANCE.json`.
+
+Three results matter more than the frame numbers:
+
+1. **The adopted reference is not met by either selection.** Legacy is 2.5-21× over 16.67 ms
+   depending on scene; the authored catalogue is 11-122× over. Normal gameplay at 60 FPS is not
+   reachable at this scale on this machine today, with or without the Blender catalogue.
+2. **The catalogue's own cost is render-side and roughly 5-6×.** Simulation (20.79 → 20.29 ms),
+   HUD (5.38 → 5.06 ms) and LAN checksum (9.17 → 8.84 ms) are unchanged on stock combat; the world
+   stage goes 27.65 → 245.03 ms and the camera stage 1.60 → 16.64 ms. The camera growth and the
+   world growth are separate suspects: denser triangle payload for display-list replay, and
+   per-entity bounds work over authored meshes. Both are hypotheses recorded as such, not
+   conclusions.
+3. **Determinism is preserved.** Initial and final `state_sha256` values and LAN precise checksums
+   are identical between the two selections on all four fixtures and stable across all three
+   trials. The catalogue is a view.
+
+This is an S09 **result and a blocker**, not an authorization: no renderer change, quality
+reduction or fixture edit may be made to reach the reference. The 93.19 / 109.01 ms figures in
+`GRAPHICS_BENCHMARK.md` §7 are the pre-#113 baseline; today's legacy measures 41.97 / 56.87 ms,
+consistent with the post-optimization 38.84 / 51.22 ms in `GRAPHICS_DRAW_SCOPE_REUSE.md` §3.
 
 ## 7. Packaging gate
 
@@ -150,6 +184,8 @@ successor:
 1. Suite verdict from an attributable instrument, with every non-ok result classified against an
    executed control, and every instrument defect named rather than counted (§4, §5).
 2. Owner-agreed targets and resolution, with measured cost against them and quality unchanged.
+   *Status: measured (§6.1) with a recorded reference; the reference is **not met**, so this
+   criterion is open, not satisfied.*
 3. Exact-candidate Mac and Windows packages inspected inside the bundle and smoke-run in clean
    and existing-user-data scenarios.
 4. Native graphics evidence on the required platforms, or an explicit owner waiver naming what is
@@ -157,15 +193,20 @@ successor:
 5. Outstanding blockers listed with who owns them: the two recorded test failures, the
    `test_frozen_paths` checkout re-run, D3's Windows half, packaging, native Windows graphics.
 
-## 10. Open owner decisions
+## 10. Owner decisions recorded
 
-- **D-S09-1 — performance target.** Which resolution and frame budget should S09 be measured
-  against, on which hardware? Options: adopt the proposed 60/30 FPS discussion targets; set a
-  scene-specific budget from the measured baseline (e.g. hold stock scenes at today's cost and
-  require no regression); or defer numerical acceptance and report measurement only.
-- **D-S09-2 — platform evidence.** Windows graphics and package acceptance is unproven and this
-  machine cannot produce it. Options: authorize the work when Windows hardware is available;
-  record an explicit time-boxed waiver covering native Windows graphics/package acceptance only;
-  or hold S09 open as blocked on that evidence.
+Both questions were put to the owner as pick-one options and answered on 2026-10-19. The records
+live in `art/manifests/pipeline_policy.json`, with the selected option text kept verbatim beside
+the parsed decision.
 
-Both are recorded here as questions, not as answers. No part of this document is an approval.
+- **`s09-performance-target-2026-10-19` (D-S09-1)** — the 60 FPS / 30 FPS reference is adopted as
+  S09's measurement reference at 1280×800 on this M4. The record also carries the measured context
+  shown beside the option, and states that it authorizes no quality reduction, no workload edit and
+  no optimization project. Consequence: the reference is not met (§6.1), and S09 reports the gap
+  instead of claiming performance acceptance.
+- **`s09-platform-waiver-2026-10-19` (D-S09-2)** — a scoped waiver covers **native Windows graphics
+  evidence and native Windows package smoke** only. It does **not** cover the Windows half of the
+  S03 pipeline (D3), the native-Windows skip rows, mixed-machine play, the Mac package, the suite or
+  the performance reference. Those stay requirements or blockers.
+
+Neither record authorizes a merge, tag, release or default switch; S10 and S11 remain unauthorized.

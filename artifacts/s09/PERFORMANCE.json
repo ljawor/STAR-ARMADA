@@ -1,0 +1,207 @@
+{
+  "schema": 1,
+  "step": "S09",
+  "kind": "complete-opt-in-catalogue vs legacy draw cost",
+  "method": {
+    "fixtures": [
+      "four-player-stock-distributed-v1",
+      "four-player-stock-combat-v1",
+      "four-player-distributed-v1",
+      "four-player-combat-v1"
+    ],
+    "selection": {
+      "legacy": "model_preview false, no packs",
+      "preview": "model_preview true, no packs (103 authored bindings)"
+    },
+    "trials": "3 serial fresh processes per fixture and selection; medians of the three per-trial means",
+    "ticks": "10 warmup + 60 measured, fixed 1/30 s simulation step",
+    "quality": "requested_msaa 4 / actual_msaa 4, 1280x800 drawable and viewport, requested vsync 0, reported swap interval 0, shader on",
+    "machine": "Apple M4, macOS 26.6.2 arm64, GL 2.1 Metal - 90.5, pygame-ce 2.5.8 / SDL 2.32.10",
+    "semantics": "synchronized diagnostic frame cost with glFinish stage boundaries, NOT interactive FPS",
+    "harness": "tools/acceptance/measure_catalogue_cost.py configures the real selection seam then calls the real benchmark CLI; no product, fixture or quality parameter changed"
+  },
+  "reference": {
+    "source": "art/manifests/pipeline_policy.json s09-performance-target-2026-10-19",
+    "normal_gameplay_60fps_ms": 16.6667,
+    "heavy_battle_30fps_ms": 33.3333
+  },
+  "rows": {
+    "four-player-stock-distributed-v1": {
+      "legacy": {
+        "sim": 19.86,
+        "camera": 1.59,
+        "world": 14.54,
+        "hud": 5.32,
+        "frame": 41.97,
+        "lan_precise_checksum": 9.01,
+        "frame_p95": 45.41,
+        "frame_p99": 46.03,
+        "entities": 212,
+        "state_sha256": "d51b51bd4ca6ce91f5094dc77352c6d808ca2232aaaf0f7726ac96a88a97812b",
+        "initial_state_sha256": "aa6cf00baafcfdac8404fbae1bee22058e3e48e6d3e5bc1ce17050967545e533",
+        "lan_precise_checksum_final": "d5e8e7cdbbcb64bf6405afe377c097cd5ef583fb57598ec7f9a06c82cd2cd021"
+      },
+      "preview": {
+        "sim": 20.49,
+        "camera": 17.37,
+        "world": 144.63,
+        "hud": 5.21,
+        "frame": 188.22,
+        "lan_precise_checksum": 8.98,
+        "frame_p95": 201.13,
+        "frame_p99": 214.2,
+        "entities": 212,
+        "state_sha256": "d51b51bd4ca6ce91f5094dc77352c6d808ca2232aaaf0f7726ac96a88a97812b",
+        "initial_state_sha256": "aa6cf00baafcfdac8404fbae1bee22058e3e48e6d3e5bc1ce17050967545e533",
+        "lan_precise_checksum_final": "d5e8e7cdbbcb64bf6405afe377c097cd5ef583fb57598ec7f9a06c82cd2cd021"
+      }
+    },
+    "four-player-stock-combat-v1": {
+      "legacy": {
+        "sim": 21.15,
+        "camera": 1.61,
+        "world": 28.07,
+        "hud": 5.38,
+        "frame": 56.87,
+        "lan_precise_checksum": 9.17,
+        "frame_p95": 61.61,
+        "frame_p99": 63.68,
+        "entities": 212,
+        "state_sha256": "e93f433a2bac56a3a9fcecaa1f7302febac9050d6937f9c4031399c4ae9c3d07",
+        "initial_state_sha256": "4bd9dcc1480932f3d22a40d90bbb1f78c37b42858114733f2d41b94d4dcc6b22",
+        "lan_precise_checksum_final": "5f2772edf6be4c14a8765a298cf9dfda63ae05c3ba216e51245584970d80de19"
+      },
+      "preview": {
+        "sim": 20.36,
+        "camera": 16.94,
+        "world": 249.3,
+        "hud": 5.11,
+        "frame": 292.73,
+        "lan_precise_checksum": 8.85,
+        "frame_p95": 309.77,
+        "frame_p99": 313.28,
+        "entities": 212,
+        "state_sha256": "e93f433a2bac56a3a9fcecaa1f7302febac9050d6937f9c4031399c4ae9c3d07",
+        "initial_state_sha256": "4bd9dcc1480932f3d22a40d90bbb1f78c37b42858114733f2d41b94d4dcc6b22",
+        "lan_precise_checksum_final": "5f2772edf6be4c14a8765a298cf9dfda63ae05c3ba216e51245584970d80de19"
+      }
+    },
+    "four-player-distributed-v1": {
+      "legacy": {
+        "sim": 50.82,
+        "camera": 5.55,
+        "world": 43.67,
+        "hud": 12.55,
+        "frame": 113.07,
+        "lan_precise_checksum": 28.5,
+        "frame_p95": 138.83,
+        "frame_p99": 148.49,
+        "entities": 760,
+        "state_sha256": "39c6ba0bf4745c008b7435ece47d04e3f6513865a347c07d1f2c45fc821e63f4",
+        "initial_state_sha256": "52b3f50152737186527ab844c966232bbf5e3435c8b9e344f405b99a77d00c2a",
+        "lan_precise_checksum_final": "e6f2dde4d5b76fd435e12be633046142caa89e0f35e3cac17cb846f40c2e6c23"
+      },
+      "preview": {
+        "sim": 50.33,
+        "camera": 86.79,
+        "world": 554.64,
+        "hud": 12.71,
+        "frame": 705.09,
+        "lan_precise_checksum": 28.81,
+        "frame_p95": 728.39,
+        "frame_p99": 754.67,
+        "entities": 760,
+        "state_sha256": "39c6ba0bf4745c008b7435ece47d04e3f6513865a347c07d1f2c45fc821e63f4",
+        "initial_state_sha256": "52b3f50152737186527ab844c966232bbf5e3435c8b9e344f405b99a77d00c2a",
+        "lan_precise_checksum_final": "e6f2dde4d5b76fd435e12be633046142caa89e0f35e3cac17cb846f40c2e6c23"
+      }
+    },
+    "four-player-combat-v1": {
+      "legacy": {
+        "sim": 213.51,
+        "camera": 5.64,
+        "world": 120.16,
+        "hud": 10.53,
+        "frame": 353.25,
+        "lan_precise_checksum": 32.44,
+        "frame_p95": 600.72,
+        "frame_p99": 613.31,
+        "entities": 760,
+        "state_sha256": "de14b4754f62599ed9b7818d574383546ceaed174a943cdf8cc03367e86000c0",
+        "initial_state_sha256": "8179f6f09697f42783037c71577ee04172995ee8ac06bbf88884d285f9a897da",
+        "lan_precise_checksum_final": "a864f0e75df09b9a23acec4589ea7328c19c2f382bb6616d7a011d776684188e"
+      },
+      "preview": {
+        "sim": 211.03,
+        "camera": 87.8,
+        "world": 1721.8,
+        "hud": 11.02,
+        "frame": 2034.36,
+        "lan_precise_checksum": 33.13,
+        "frame_p95": 2279.56,
+        "frame_p99": 2318.68,
+        "entities": 760,
+        "state_sha256": "de14b4754f62599ed9b7818d574383546ceaed174a943cdf8cc03367e86000c0",
+        "initial_state_sha256": "8179f6f09697f42783037c71577ee04172995ee8ac06bbf88884d285f9a897da",
+        "lan_precise_checksum_final": "a864f0e75df09b9a23acec4589ea7328c19c2f382bb6616d7a011d776684188e"
+      }
+    }
+  },
+  "verdict": {
+    "four-player-stock-distributed-v1": {
+      "legacy_frame_ms": 41.97,
+      "preview_frame_ms": 188.22,
+      "ratio": 4.48,
+      "world_ratio": 9.95,
+      "camera_ratio": 10.92,
+      "meets_60fps_legacy": false,
+      "meets_60fps_preview": false,
+      "meets_30fps_heavy_preview": false,
+      "simulation_identical": true
+    },
+    "four-player-stock-combat-v1": {
+      "legacy_frame_ms": 56.87,
+      "preview_frame_ms": 292.73,
+      "ratio": 5.15,
+      "world_ratio": 8.88,
+      "camera_ratio": 10.52,
+      "meets_60fps_legacy": false,
+      "meets_60fps_preview": false,
+      "meets_30fps_heavy_preview": false,
+      "simulation_identical": true
+    },
+    "four-player-distributed-v1": {
+      "legacy_frame_ms": 113.07,
+      "preview_frame_ms": 705.09,
+      "ratio": 6.24,
+      "world_ratio": 12.7,
+      "camera_ratio": 15.64,
+      "meets_60fps_legacy": false,
+      "meets_60fps_preview": false,
+      "meets_30fps_heavy_preview": false,
+      "simulation_identical": true
+    },
+    "four-player-combat-v1": {
+      "legacy_frame_ms": 353.25,
+      "preview_frame_ms": 2034.36,
+      "ratio": 5.76,
+      "world_ratio": 14.33,
+      "camera_ratio": 15.57,
+      "meets_60fps_legacy": false,
+      "meets_60fps_preview": false,
+      "meets_30fps_heavy_preview": false,
+      "simulation_identical": true
+    }
+  },
+  "conclusion": {
+    "performance_reference": "NOT MET by either selection on any fixture; the adopted 60 FPS / 30 FPS reference is 5-40x below measured cost",
+    "catalogue_cost": "opting into the 103-binding authored catalogue multiplies frame cost by 4.5x-5.8x (stock 42->188 ms, 57->293 ms; stress 113->705 ms, 353->2034 ms)",
+    "where_the_cost_is": "render-side only: world stage 27.65->245.03 ms and camera 1.60->16.64 ms on stock combat, while simulation (20.79->20.29 ms), HUD (5.38->5.06 ms) and LAN checksum (9.17->8.84 ms) are unchanged",
+    "determinism": "initial and final state hashes and LAN precise checksums are identical between selections on all four fixtures, and stable across all three trials - the catalogue is a view, not simulation state",
+    "unverified_hypotheses": [
+      "the authored hulls carry roughly two orders of magnitude more triangles than the procedural shapes they replace, so display-list replay is vertex-throughput bound rather than call bound",
+      "the camera stage growth suggests authored bounds are recomputed per entity from full mesh extents rather than from the cached canonical bounds"
+    ],
+    "not_an_optimization_authorization": "recording this gap authorizes no renderer change, quality reduction or workload edit; renderer work remains a separate authorized workstream"
+  }
+}

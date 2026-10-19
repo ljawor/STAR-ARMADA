@@ -468,6 +468,83 @@
         "registry_sha256": "4683c937cfa4cc936953c25ee6fa013f1aaaad42730a7759ec6c39167e57e79f",
         "base_commit": "56906ea7c73c219fbdc91c68176104b23d0f7712"
       }
+    },
+    {
+      "id": "s09-performance-target-2026-10-19",
+      "date": "2026-10-19",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "accepted-s09-performance-reference",
+      "owner_wording": "Adopt the proposed 60 FPS / 30 FPS heavy-battle targets as the S09 measurement reference (measured stock scenes are ~5-7x off)",
+      "question_answered": "What should S09 measure the complete opt-in catalogue against: a no-regression budget on today's measured baseline, the proposed 60/30 FPS figures that GRAPHICS_UPGRADE_PLAN.md marks 'proposed, not agreed', or measurement without a numeric gate?",
+      "how_recorded": "Put as a pick-one question with three options; the owner selected the second. The selection is the owner's answer, so it is recorded as chosen rather than paraphrased. The parenthetical in the wording is the measured context shown beside the option, not a second decision.",
+      "applies_to": "S09 performance acceptance only",
+      "authorized": [
+        "measuring the complete opt-in catalogue (103 authored bindings) against 60 FPS / 16.67 ms in normal gameplay and at least 30 FPS / 33.33 ms in the supported heavy battle, at a stated resolution and on named hardware",
+        "reporting the standing gap between that reference and measured cost as an S09 result, per scene, including CPU/render versus simulation/checksum separation"
+      ],
+      "not_authorized": [
+        "any reduction in visual quality, MSAA, fog, geometry or catalogue scope to reach the target",
+        "an open-ended optimization project; renderer work remains a separately authorized workstream with its own measurement",
+        "changing the workload fixtures, tick pacing or balance to make the reference reachable",
+        "a merge, tag, release or default switch"
+      ],
+      "measured_context_at_decision": {
+        "reference_ms": {
+          "normal_gameplay_60fps": 16.6667,
+          "heavy_battle_30fps": 33.3333
+        },
+        "measured_baseline_ms_1280x800_m4_legacy": {
+          "stock_distributed": 93.19,
+          "stock_combat": 109.01,
+          "stress_distributed": 421.74,
+          "stress_combat": 544.31
+        },
+        "source": "docs/GRAPHICS_BENCHMARK.md sections 3 and 7",
+        "consequence": "the reference is not met by the current candidate; S09 reports the gap rather than claiming performance acceptance"
+      },
+      "binds_to": {
+        "candidate_head": "5980890c47f973b50fc677a962242e893e96f001",
+        "candidate_tree": "b28b48ab07abe0c4b5040f4696ffaf14d7e6ef12"
+      }
+    },
+    {
+      "id": "s09-platform-waiver-2026-10-19",
+      "date": "2026-10-19",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "accepted-scoped-platform-waiver",
+      "owner_wording": "Record a scoped waiver for native Windows graphics/package only; S09 still needs the Mac package, suite and agreed targets",
+      "question_answered": "Native Windows graphics, the Windows half of the S03 pipeline and Windows package smoke are unproven and this Mac cannot produce them: record a scoped waiver, authorize Windows work now, or hold S09 blocked?",
+      "how_recorded": "Put as a pick-one question with three options; the owner selected the first. The selected option names its own boundary and that boundary is what is recorded.",
+      "applies_to": "S09 acceptance only",
+      "waived_for_s09": [
+        "native Windows graphics evidence",
+        "native Windows package smoke"
+      ],
+      "not_waived": [
+        "the Windows half of the S03 authoring pipeline (D3)",
+        "native Windows kernel test rows in the macOS suite (they stay skips, not passes)",
+        "physical mixed-machine LAN play and Filip's laptop evidence",
+        "Mac package build, inspection and smoke",
+        "the protected suite, the agreed performance reference, or any art/catalogue gate"
+      ],
+      "still_required_for_s09": [
+        "Mac package built from the exact candidate and inspected inside the bundle",
+        "clean-install and copied-existing-user-data smoke runs",
+        "measured cost against the s09-performance-target-2026-10-19 reference",
+        "suite verdict from an attributable instrument with every failure classified"
+      ],
+      "does_not_authorize": [
+        "a merge",
+        "a tag",
+        "a release",
+        "a default switch",
+        "deleting the legacy fallback",
+        "treating skipped Windows rows as passes"
+      ],
+      "binds_to": {
+        "candidate_head": "5980890c47f973b50fc677a962242e893e96f001",
+        "candidate_tree": "b28b48ab07abe0c4b5040f4696ffaf14d7e6ef12"
+      }
     }
   ]
 }
