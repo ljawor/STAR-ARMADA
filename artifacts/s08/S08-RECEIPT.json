@@ -1323,7 +1323,7 @@
     "artifacts/s08/prerequisite-control/receipt.json": "56a4982e06b53daa2e1938087ce796210a8d0142825dec0ee904d46e173d3503"
   },
   "changed_source_and_docs_sha256": {
-    ".gitattributes": "2bf21ecb3a0951805387d3b6a2de90ae6878ef0a6927afc9b799d763354ef96c",
+    ".gitattributes": "87a78aae48a2f017ac7b09ad6998fcaac43eaec96d8bbe52fc7c73adb99ee144",
     "art/manifests/approved-s07-scaffold-source-hashes.json": "bda9dca664be79de059e88643f7dccf5491a30f9885b83ebc528148aab2ba99c",
     "art/manifests/handoffs/s08.md": "37c7029258065184c58f3a2f0b24bb78b4d7f2d13052e4a07f0ef4e88fbe2538",
     "docs/BLENDER_MODEL_MIGRATION_ROADMAP.md": "c145555f410f48462eaf688e6d0a03d0535f63cf418754c6d81d9150d93d5d81",
@@ -1509,13 +1509,15 @@
     "artifacts/s08/review.json": "dba421e840287b24c3112c080e94c53e47f82a632aac231468bf80dc606d4a1e",
     "artifacts/s08/session-selection-tests.txt": "96fe04b78c98c1572ec036665f4924e6419798cc99ce21d427c3a735260b6be4",
     "artifacts/s08/session-selection-tests.txt.json": "af621facaacae72dee35756a6c4b3496ce9da439fbf430875bd3a65e283fe2b4",
-    "artifacts/s08/static-scan.json": "febd7db3df75a5456a6b31aec50e382f50ecbd22cc8d84321d8adb1df60132dd"
+    "artifacts/s08/static-scan.json": "febd7db3df75a5456a6b31aec50e382f50ecbd22cc8d84321d8adb1df60132dd",
+    "artifacts/s08/publication-autocrlf/metadata-red.txt": "0b72759362e1c44f22b22d5865f2a76e3d98438e84c497e2c2cb2ce2829e1b5f",
+    "artifacts/s08/publication-autocrlf/README.md": "3db2cd2a41570a56ffa57ff4d7230422662317b8c2d61c3f196982fd28c5c195"
   },
   "post_review_normalization": {
     ".gitattributes": {
       "reviewed_sha256": "c14e143489fbc987017e83d0c81674cc48c559692b15983e4fe5f6d970099544",
-      "final_sha256": "2bf21ecb3a0951805387d3b6a2de90ae6878ef0a6927afc9b799d763354ef96c",
-      "change": "Removed exactly one trailing blank line to satisfy git diff --check; raw final bytes plus one LF exactly reconstruct reviewed bytes; attributes/semantics unchanged"
+      "final_sha256": "87a78aae48a2f017ac7b09ad6998fcaac43eaec96d8bbe52fc7c73adb99ee144",
+      "change": "Removed trailing blank line and added only comment plus render/renderer.py -text after real autocrlf clone metadata RED. Removing exactly that addition and restoring one LF reproduces independently reviewed attribute bytes. Renderer source and every final gate input remain unchanged; pure configuration fix."
     },
     "docs/BLENDER_MODEL_S08_PLAN.md": {
       "reviewed_sha256": "ba6a7e095c3ffd990188dfdb176ad3571e82cc41d15da9926c0df0f37c960128",

@@ -16,6 +16,8 @@ game/data/store.py -text
 main.py -text
 render/asset_registry.py -text
 render/asset_selection.py -text
+# Metadata regeneration pins this existing renderer; preserve its source bytes too.
+render/renderer.py -text
 tests/test_s08_*.py -text
 tests/test_generic_model_preview.py -text
 docs/BLENDER_MODEL_S08_PLAN.md -text
