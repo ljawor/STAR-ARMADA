@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b4-hardware",
+  "binding": "imperial:planet_trade_hub",
+  "canonical_binding": "ship:imperial:planet_trade_hub",
+  "gameplay_entity": "planet_trade_hub",
+  "class": "planet_trade_hub",
+  "authority": "script",
+  "source": {
+    "path": "art/blender/imperial_planet_trade_hub.blend",
+    "sha256": "88292f5a9f09a8541dbe8613166c4dda248dde014d6ff5c17339e9cd9975cc7a",
+    "bytes": 127169
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b4_hardware.py",
+    "sha256": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+    "bytes": 33018,
+    "selects": "--asset imperial:planet_trade_hub"
+  },
+  "export_script": {
+    "path": "tools/art/export_imperial_planet_trade_hub.py",
+    "sha256": "98a60854619e5a71857a26ace8b1fcc09ba051d1d483bf70c4f4a75781a9744f",
+    "bytes": 4767
+  },
+  "runtime": {
+    "path": "assets/models/imperial_planet_trade_hub.mesh.json",
+    "sha256": "d3d8afaa06b5ca99409147163f437b0530d42cff2707d6d5cd00baaf67a107e1",
+    "bytes": 124411,
+    "triangles": 2248,
+    "vertices": 1264,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -34.0,
+      0.0,
+      -32.0
+    ],
+    [
+      34.0,
+      49.5,
+      32.0
+    ]
+  ],
+  "bounds": [
+    [
+      -34.0,
+      0.0,
+      -32.0
+    ],
+    [
+      34.0,
+      49.5,
+      32.0
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b4-hardware/contact-sheet.png",
+  "motion": null,
+  "appearance_decision": "s06-b4-hardware-2026-10-17"
+}

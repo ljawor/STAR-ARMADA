@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b1-alliance-combat",
+  "binding": "rebel:corvette",
+  "canonical_binding": "ship:rebel:corvette",
+  "gameplay_entity": "rebel_corvette",
+  "class": "corvette",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/alliance_corvette.blend",
+    "sha256": "94b4e9033abd141e14bc1a3e42e9ce2821d38138868d560d86bf1c9483c6ae1c",
+    "bytes": 163679
+  },
+  "initial_seed": {
+    "path": "tools/art/build_alliance_corvette.py",
+    "sha256": "df4781bc45692ead8935e2ccd48f3fd2c922fb49aee25bac27524c44468790a1",
+    "bytes": 7554,
+    "selects": null
+  },
+  "export_script": {
+    "path": "tools/art/export_alliance_corvette.py",
+    "sha256": "4c9cad303ee3990437e486d90bb0926c5ef016e344072e16dd1c6c66b1016b96",
+    "bytes": 4749
+  },
+  "runtime": {
+    "path": "assets/models/alliance_corvette.mesh.json",
+    "sha256": "48d0a815af978976f3eda77ec2378353eb5191a7cdc72cddb931483a0df8571b",
+    "bytes": 276014,
+    "triangles": 4372,
+    "vertices": 2522,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -21.9,
+      -6.0,
+      -46.46
+    ],
+    [
+      21.9,
+      15.3,
+      45.0
+    ]
+  ],
+  "bounds": [
+    [
+      -21.9,
+      -6.0,
+      -46.46
+    ],
+    [
+      21.9,
+      15.3,
+      45.0
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b1-alliance-combat/contact-sheet.png",
+  "motion": "artifacts/s06_alliance_batch_review/b1-alliance-combat/corvette-after-motion.mp4",
+  "appearance_decision": "s06-b1-alliance-combat-2026-10-17"
+}

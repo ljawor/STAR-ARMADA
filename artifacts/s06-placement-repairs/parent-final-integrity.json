@@ -1,0 +1,12 @@
+{
+  "b1-alliance-combat": {
+    "rows": 2,
+    "files": 37,
+    "all_assertions_passed": true
+  },
+  "b3b-stations": {
+    "rows": 9,
+    "files": 117,
+    "all_assertions_passed": true
+  }
+}

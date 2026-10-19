@@ -1,0 +1,879 @@
+{
+  "schema": 1,
+  "batch": "s06-b6-imperial-ships",
+  "row": "ship:imperial:cruiser",
+  "row_argument": "imperial:cruiser",
+  "registry_key": "imperial:cruiser",
+  "identifier": "imperial_cruiser",
+  "status": "review_only_not_registered",
+  "integration": "UNAPPROVED review-only monkeypatch of render.asset_selection.selected_binding and render.asset_selection.mesh_for for this one binding, inside an explicit model_preview session. The renderer's ship path serves ship:imperial:cruiser as imperial:cruiser (measured: the data row's category goes through the fighter/bomber role mapping), so that measured key - and only that key - is patched. The registry row stays procedural_legacy, no manifest exists for the row and nothing in production selects it; both patches and the preview session are torn down at the end of this run.",
+  "warning": "Offline orbit captures from the real production draw path: not paced FPS, not a battle-acceptance or native-Windows-graphics acceptance, and not an owner appearance decision.",
+  "registration": {
+    "registry_binding": "imperial:cruiser",
+    "registry_status": "procedural_legacy",
+    "registry_manifest": "core:imperial/cruiser",
+    "manifest_exists": false,
+    "in_production_pipeline": false,
+    "registry_envelope_present": false
+  },
+  "legacy": {
+    "shape": "cruiser",
+    "source": "render/fleet_geometry.py::_ship_mesh",
+    "triangles": 2800,
+    "vertices": 1542,
+    "drawn_length": 160.30087500000002,
+    "drawn_scale": 1.1373696253724992
+  },
+  "serving": {
+    "declared_runtime_key": "imperial:cruiser",
+    "measured_runtime_key": "imperial:cruiser",
+    "legacy_shape_from_data": "cruiser",
+    "stock_visual_key": "cruiser",
+    "review_visual_key": "imperial:cruiser",
+    "selected_binding_in_production": false,
+    "mesh_in_production": null,
+    "note": "stock = the preview session with nothing patched; review = the same session with this row's measured runtime key served"
+  },
+  "authored": {
+    "path": "assets/models/imperial_cruiser.mesh.json",
+    "sha256": "125f37cf927840f5ccd452bfe8ec5998c0e6e644c0965932399b716d8fedd130",
+    "bytes": 147861,
+    "triangles": 2384,
+    "vertices": 1290,
+    "bounds": [
+      [
+        -29.45,
+        -7.0,
+        -62.94
+      ],
+      [
+        29.45,
+        31.5,
+        78.0
+      ]
+    ],
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ],
+    "authority": "script",
+    "approval": "pending_owner_approval"
+  },
+  "envelope": [
+    [
+      -29.45,
+      29.45
+    ],
+    [
+      -7.0,
+      31.5
+    ],
+    [
+      -62.94,
+      78.0
+    ]
+  ],
+  "min_authored_length": 140.7,
+  "drawn_size": {
+    "legacy": {
+      "shape": "cruiser",
+      "scale": 1.1373696253724992,
+      "length": 160.30087500000002,
+      "radius": 88.83442254288907
+    },
+    "candidate": {
+      "shape": "imperial:cruiser",
+      "scale": 1.1373696253724992,
+      "length": 160.30087500000002,
+      "radius": 89.08770226845708
+    }
+  },
+  "placement": [
+    [
+      "capital",
+      "ship",
+      "imperial_cruiser",
+      1,
+      [
+        -4200,
+        0,
+        2200
+      ],
+      0.0
+    ],
+    [
+      "escort",
+      "ship",
+      "rebel_frigate",
+      0,
+      [
+        -4200,
+        0,
+        2900
+      ],
+      0.0
+    ],
+    [
+      "battleship",
+      "ship",
+      "rebel_battleship",
+      0,
+      [
+        -4200,
+        0,
+        1500
+      ],
+      0.0
+    ],
+    [
+      "enemy_a",
+      "ship",
+      "imperial_frigate",
+      1,
+      [
+        -3500,
+        0,
+        2200
+      ],
+      -1.5707963267948966
+    ],
+    [
+      "enemy_b",
+      "ship",
+      "imperial_frigate",
+      1,
+      [
+        -3500,
+        0,
+        2900
+      ],
+      -1.5707963267948966
+    ]
+  ],
+  "initial_state_sha256": "4e8015ae39febb8725701542cc5c98ec3e240d8894acfda279d29c70901130f0",
+  "views": {
+    "close": {
+      "legacy": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4066.3113808108055,
+            125.96438233824267,
+            2320.3737733945445
+          ],
+          "resolved_eye": [
+            -4066.3113808108055,
+            125.96438233824267,
+            2320.3737733945445
+          ],
+          "union_eye": [
+            -4066.3113808108055,
+            125.96438233824267,
+            2320.3737733945445
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 219.61219875000003,
+          "yaw": 48.0,
+          "pitch": 35.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "4e8015ae39febb8725701542cc5c98ec3e240d8894acfda279d29c70901130f0",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            242.64,
+            188.81,
+            906.62,
+            671.62
+          ],
+          "visible_px": [
+            663.99,
+            482.81
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            242.64,
+            188.81,
+            906.62,
+            671.62
+          ],
+          "visible_px": [
+            663.99,
+            482.81
+          ]
+        },
+        "image": "imperial-cruiser-legacy-close.png",
+        "image_sha256": "90f0d72e2adbe43d2d08936169ca91fb69cd193e24d6d9b4b7b8063748bd4282"
+      },
+      "authored": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4066.3113808108055,
+            125.96438233824267,
+            2320.3737733945445
+          ],
+          "resolved_eye": [
+            -4066.3113808108055,
+            125.96438233824267,
+            2320.3737733945445
+          ],
+          "union_eye": [
+            -4066.3113808108055,
+            125.96438233824267,
+            2320.3737733945445
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 219.61219875000003,
+          "yaw": 48.0,
+          "pitch": 35.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "4e8015ae39febb8725701542cc5c98ec3e240d8894acfda279d29c70901130f0",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            242.64,
+            188.81,
+            906.62,
+            671.62
+          ],
+          "visible_px": [
+            663.99,
+            482.81
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            242.64,
+            188.81,
+            906.62,
+            671.62
+          ],
+          "visible_px": [
+            663.99,
+            482.81
+          ]
+        },
+        "image": "imperial-cruiser-authored-close.png",
+        "image_sha256": "57f77c989771799741341bb0a50beed56548483ae965fc1d4cc2724b2bd78913"
+      },
+      "legacy-repeat": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4066.3113808108055,
+            125.96438233824267,
+            2320.3737733945445
+          ],
+          "resolved_eye": [
+            -4066.3113808108055,
+            125.96438233824267,
+            2320.3737733945445
+          ],
+          "union_eye": [
+            -4066.3113808108055,
+            125.96438233824267,
+            2320.3737733945445
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 219.61219875000003,
+          "yaw": 48.0,
+          "pitch": 35.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "4e8015ae39febb8725701542cc5c98ec3e240d8894acfda279d29c70901130f0",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            242.64,
+            188.81,
+            906.62,
+            671.62
+          ],
+          "visible_px": [
+            663.99,
+            482.81
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            242.64,
+            188.81,
+            906.62,
+            671.62
+          ],
+          "visible_px": [
+            663.99,
+            482.81
+          ]
+        },
+        "image": "imperial-cruiser-legacy-repeat-close.png",
+        "image_sha256": "90f0d72e2adbe43d2d08936169ca91fb69cd193e24d6d9b4b7b8063748bd4282"
+      }
+    },
+    "wide": {
+      "legacy": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -3819.411336762624,
+            731.4010972786323,
+            2542.683571592842
+          ],
+          "resolved_eye": [
+            -3819.411336762624,
+            731.4010972786323,
+            2542.683571592842
+          ],
+          "union_eye": [
+            -3819.411336762624,
+            731.4010972786323,
+            2542.683571592842
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 892.8758737500001,
+          "yaw": 48.0,
+          "pitch": 55.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "4e8015ae39febb8725701542cc5c98ec3e240d8894acfda279d29c70901130f0",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            559.55,
+            331.95,
+            706.27,
+            466.43
+          ],
+          "visible_px": [
+            146.72,
+            134.49
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            559.55,
+            331.95,
+            706.27,
+            466.43
+          ],
+          "visible_px": [
+            146.72,
+            134.49
+          ]
+        },
+        "image": "imperial-cruiser-legacy-wide.png",
+        "image_sha256": "bff3ee0ff803e2393cb9cbf43dcc05c75705a79cbf7453cf7a3d8a4a3e92246f"
+      },
+      "authored": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -3819.411336762624,
+            731.4010972786323,
+            2542.683571592842
+          ],
+          "resolved_eye": [
+            -3819.411336762624,
+            731.4010972786323,
+            2542.683571592842
+          ],
+          "union_eye": [
+            -3819.411336762624,
+            731.4010972786323,
+            2542.683571592842
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 892.8758737500001,
+          "yaw": 48.0,
+          "pitch": 55.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "4e8015ae39febb8725701542cc5c98ec3e240d8894acfda279d29c70901130f0",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            559.55,
+            331.95,
+            706.27,
+            466.43
+          ],
+          "visible_px": [
+            146.72,
+            134.49
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            559.55,
+            331.95,
+            706.27,
+            466.43
+          ],
+          "visible_px": [
+            146.72,
+            134.49
+          ]
+        },
+        "image": "imperial-cruiser-authored-wide.png",
+        "image_sha256": "0b04bc1021bc3cbfab88d939f208a9502d79f4aff34e90a5cccc5172f49d734e"
+      },
+      "legacy-repeat": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -3819.411336762624,
+            731.4010972786323,
+            2542.683571592842
+          ],
+          "resolved_eye": [
+            -3819.411336762624,
+            731.4010972786323,
+            2542.683571592842
+          ],
+          "union_eye": [
+            -3819.411336762624,
+            731.4010972786323,
+            2542.683571592842
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 892.8758737500001,
+          "yaw": 48.0,
+          "pitch": 55.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "4e8015ae39febb8725701542cc5c98ec3e240d8894acfda279d29c70901130f0",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            559.55,
+            331.95,
+            706.27,
+            466.43
+          ],
+          "visible_px": [
+            146.72,
+            134.49
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            559.55,
+            331.95,
+            706.27,
+            466.43
+          ],
+          "visible_px": [
+            146.72,
+            134.49
+          ]
+        },
+        "image": "imperial-cruiser-legacy-repeat-wide.png",
+        "image_sha256": "bff3ee0ff803e2393cb9cbf43dcc05c75705a79cbf7453cf7a3d8a4a3e92246f"
+      }
+    }
+  },
+  "captures": {
+    "close": {
+      "legacy": "imperial-cruiser-legacy-close.png",
+      "authored": "imperial-cruiser-authored-close.png",
+      "legacy_repeat": "imperial-cruiser-legacy-repeat-close.png"
+    },
+    "wide": {
+      "legacy": "imperial-cruiser-legacy-wide.png",
+      "authored": "imperial-cruiser-authored-wide.png",
+      "legacy_repeat": "imperial-cruiser-legacy-repeat-wide.png"
+    }
+  },
+  "comparison": {
+    "close": {
+      "changed_pixels": 76554,
+      "changed_percent": 7.476,
+      "bbox": [
+        265,
+        25,
+        1014,
+        774
+      ],
+      "repeat_changed_pixels": 0,
+      "repeat_max_delta": 0,
+      "repeat_bbox": null,
+      "repeat_cells": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "per_pass_vs_first": {
+        "legacy": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        },
+        "authored": {
+          "changed_pixels": 76554,
+          "changed_percent": 7.476,
+          "max_delta": 245,
+          "bbox": [
+            265,
+            25,
+            1014,
+            774
+          ]
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        }
+      },
+      "in_pass_repeats": {
+        "legacy": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "authored": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        }
+      },
+      "first_variant": "legacy",
+      "per_variant_repeat_changed_pixels": {
+        "legacy": 0,
+        "authored": 0
+      }
+    },
+    "wide": {
+      "changed_pixels": 5470,
+      "changed_percent": 0.5342,
+      "bbox": [
+        556,
+        316,
+        723,
+        483
+      ],
+      "repeat_changed_pixels": 0,
+      "repeat_max_delta": 0,
+      "repeat_bbox": null,
+      "repeat_cells": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "per_pass_vs_first": {
+        "legacy": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        },
+        "authored": {
+          "changed_pixels": 5470,
+          "changed_percent": 0.5342,
+          "max_delta": 252,
+          "bbox": [
+            556,
+            316,
+            723,
+            483
+          ]
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        }
+      },
+      "in_pass_repeats": {
+        "legacy": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "authored": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        }
+      },
+      "first_variant": "legacy",
+      "per_variant_repeat_changed_pixels": {
+        "legacy": 0,
+        "authored": 0
+      }
+    }
+  },
+  "display": {
+    "samples": 4,
+    "viewport": [
+      0,
+      0,
+      1280,
+      800
+    ],
+    "per_pass": {
+      "legacy": {
+        "samples": 4,
+        "viewport": [
+          0,
+          0,
+          1280,
+          800
+        ]
+      },
+      "authored": {
+        "samples": 4,
+        "viewport": [
+          0,
+          0,
+          1280,
+          800
+        ]
+      },
+      "legacy-repeat": {
+        "samples": 4,
+        "viewport": [
+          0,
+          0,
+          1280,
+          800
+        ]
+      }
+    },
+    "gl": {
+      "vendor": "Apple",
+      "renderer": "Apple M4",
+      "version": "2.1 Metal - 90.5"
+    }
+  },
+  "production_candidate_unselected_after_review": true,
+  "one_camera_per_view": true,
+  "sheet": {
+    "image": "imperial-cruiser-comparison.png",
+    "bytes": 358206,
+    "sha256": "eb23a9064a21d2283e784fca3783a196cd9ec22286ead30899827878245c31a0",
+    "row": "ship:imperial:cruiser",
+    "runtime_key": "imperial:cruiser",
+    "label_band": [
+      "UNAPPROVED REVIEW ONLY - ship:imperial:cruiser - legacy `cruiser` hull vs authored mesh",
+      "served as runtime key imperial:cruiser - one camera, same tick, 4MSAA / production shaders - drawn length 160.30"
+    ],
+    "layout": "top row the close pair, bottom row the wide pair, legacy left and authored right"
+  }
+}

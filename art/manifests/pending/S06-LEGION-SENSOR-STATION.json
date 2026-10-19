@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b3b-stations-slice-1",
+  "binding": "confederacy:sensor_station",
+  "canonical_binding": "ship:confederacy:sensor_station",
+  "gameplay_entity": "sensor_station",
+  "class": "sensor_station",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/legion_sensor_station.blend",
+    "sha256": "a5d7d33d83326573165a7505aa8e6f1b29ba09864521657dcea0396e990002d1",
+    "bytes": 143468
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b3b_stations.py",
+    "sha256": "922fcabcafb207e312180e672d0a95001900618e231260d5a939815bcbf951d5",
+    "bytes": 35373,
+    "selects": "--asset confederacy:sensor_station"
+  },
+  "export_script": {
+    "path": "tools/art/export_legion_sensor_station.py",
+    "sha256": "f244443ab293f6d468875847d4fc6b1fc0b9cdb4449bf3cd5e1e5ac6fead10d9",
+    "bytes": 4773
+  },
+  "runtime": {
+    "path": "assets/models/legion_sensor_station.mesh.json",
+    "sha256": "27d3b5803c10a386b8ed74f8574acb0f8d0a6eb5f7509ad4bd2726ac33163755",
+    "bytes": 230217,
+    "triangles": 3564,
+    "vertices": 1944,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -36.1913,
+      -14.0,
+      -28.2851
+    ],
+    [
+      36.1913,
+      38.4,
+      34.8
+    ]
+  ],
+  "bounds": [
+    [
+      -36.1413,
+      -14.0,
+      -28.2851
+    ],
+    [
+      36.1413,
+      38.252628,
+      34.8
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b3b-stations/contact-sheet.png",
+  "motion": null,
+  "appearance_decision": "s06-b3b-stations-2026-10-17"
+}

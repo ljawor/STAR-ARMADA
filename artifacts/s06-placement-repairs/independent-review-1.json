@@ -1,0 +1,18 @@
+{
+  "scope": "Uncommitted five-placement repair, before carrier exterior correction",
+  "passed": false,
+  "security_concerns": [],
+  "logic_errors": [
+    {
+      "file": "tools/art/build_alliance_carrier.py",
+      "issue": "Relocated glazing is buried inside the island: vertical flank is x=+-w below top-chamfer, while panels centred at +-(w-chamfer/2) do not reach it with 0.6 half-thickness.",
+      "example": "Band 1 has w approximately 19.556; exterior panel x approximately 17.711 at its midpoint.",
+      "required_correction": "Follow actual exterior flank/chamfer, account for taper across the run, and test intended visible face reaches the exterior."
+    }
+  ],
+  "suggestions": [
+    "AABB connectivity proves neither exact surface attachment nor visible detail; add surface-placement assertions.",
+    "Payload-only guards miss recipe drift until regeneration; add lightweight builder-coordinate checks or an explicit reproducibility gate."
+  ],
+  "action": "Publication blocked; correction delegated to a third independent context. No merge, push, approval or activation occurred."
+}

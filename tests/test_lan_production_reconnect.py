@@ -76,6 +76,28 @@ class ProductionReconnectTests(unittest.TestCase):
                     return
         self.fail([s.recovery_snapshot for s in sessions])
 
+    def until_installed(self, sessions, managers):
+        """Wait until EVERY session holds its replacement graph.
+
+        `until_phase` waits on one index, but a single driver loop polls the
+        sessions in turn: the peer polled immediately after the host can still
+        be one bundle frame behind the later-polled peers (the host writes one
+        chunked frame per poll and delivers it asynchronously). That lag is a
+        property of the driver's socket timing, not of the peers' ability to
+        resume, so a one-index barrier can return while another consumed peer
+        has not installed. The install-ACK correctness property needs all four
+        graphs to exist, so wait for the whole set.
+        """
+        end = time.monotonic()+5
+        while time.monotonic() < end:
+            for session, manager in zip(sessions, managers):
+                session.poll()
+                self.assertNotEqual(session.snapshot['status'], 'error', session.snapshot)
+                session.recovery_step(manager)
+            if all(s._recovery.phase == 'install' for s in sessions):
+                return
+        self.fail([s.recovery_snapshot for s in sessions])
+
     def test_freeze_roundoff_never_exceeds_wire_grace_limit(self):
         # Windows monotonic readings near startup can make (now + 60) - now
         # round above 60 even when the clock has not advanced at all.
@@ -155,7 +177,7 @@ class ProductionReconnectTests(unittest.TestCase):
         sessions, managers = self.setup_match(4)
         self.align(sessions, managers, 8)
         sessions[1]._peers[0].sock.shutdown(socket.SHUT_RDWR)
-        self.until_phase(sessions, managers, 3, 'install')
+        self.until_installed(sessions, managers)
         for index in range(3):
             candidate = sessions[index].take_restored_manager()
             self.assertIsNotNone(candidate)

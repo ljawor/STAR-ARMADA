@@ -1,0 +1,879 @@
+{
+  "schema": 1,
+  "batch": "s06-b6-imperial-ships",
+  "row": "ship:imperial:tie_squadron",
+  "row_argument": "imperial:tie_squadron",
+  "registry_key": "imperial:fighter",
+  "identifier": "imperial_tie_squadron",
+  "status": "review_only_not_registered",
+  "integration": "UNAPPROVED review-only monkeypatch of render.asset_selection.selected_binding and render.asset_selection.mesh_for for this one binding, inside an explicit model_preview session. The renderer's ship path serves ship:imperial:tie_squadron as imperial:fighter (measured: the data row's category goes through the fighter/bomber role mapping), so that measured key - and only that key - is patched. The registry row stays procedural_legacy, no manifest exists for the row and nothing in production selects it; both patches and the preview session are torn down at the end of this run.",
+  "warning": "Offline orbit captures from the real production draw path: not paced FPS, not a battle-acceptance or native-Windows-graphics acceptance, and not an owner appearance decision.",
+  "registration": {
+    "registry_binding": "imperial:fighter",
+    "registry_status": "procedural_legacy",
+    "registry_manifest": "core:imperial/fighter",
+    "manifest_exists": false,
+    "in_production_pipeline": false,
+    "registry_envelope_present": false
+  },
+  "legacy": {
+    "shape": "wedge",
+    "source": "render/fleet_geometry.py::_ship_mesh",
+    "triangles": 1456,
+    "vertices": 792,
+    "drawn_length": 38.47221,
+    "drawn_scale": 0.6011640975955018
+  },
+  "serving": {
+    "declared_runtime_key": "imperial:fighter",
+    "measured_runtime_key": "imperial:fighter",
+    "legacy_shape_from_data": "wedge",
+    "stock_visual_key": "wedge",
+    "review_visual_key": "imperial:fighter",
+    "selected_binding_in_production": false,
+    "mesh_in_production": null,
+    "note": "stock = the preview session with nothing patched; review = the same session with this row's measured runtime key served"
+  },
+  "authored": {
+    "path": "assets/models/imperial_tie_squadron.mesh.json",
+    "sha256": "5bc984c2ad3c2f649bf75265d3326d914a419659538360917b9c2217dcadd1cc",
+    "bytes": 122909,
+    "triangles": 2136,
+    "vertices": 1136,
+    "bounds": [
+      [
+        -31.25,
+        -3.24,
+        -28.996
+      ],
+      [
+        31.25,
+        14.0,
+        35.0
+      ]
+    ],
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ],
+    "authority": "script",
+    "approval": "pending_owner_approval"
+  },
+  "envelope": [
+    [
+      -31.25,
+      31.25
+    ],
+    [
+      -3.24,
+      14.0
+    ],
+    [
+      -28.996,
+      35.0
+    ]
+  ],
+  "min_authored_length": 63.796,
+  "drawn_size": {
+    "legacy": {
+      "shape": "wedge",
+      "scale": 0.6011640975955018,
+      "length": 38.47221,
+      "radius": 22.33767434257897
+    },
+    "candidate": {
+      "shape": "imperial:fighter",
+      "scale": 0.6011658541158822,
+      "length": 38.47221,
+      "radius": 28.392006806848055
+    }
+  },
+  "placement": [
+    [
+      "capital",
+      "ship",
+      "imperial_tie_squadron",
+      1,
+      [
+        -4200,
+        0,
+        2200
+      ],
+      0.0
+    ],
+    [
+      "escort",
+      "ship",
+      "rebel_frigate",
+      0,
+      [
+        -4200,
+        0,
+        2900
+      ],
+      0.0
+    ],
+    [
+      "battleship",
+      "ship",
+      "rebel_battleship",
+      0,
+      [
+        -4200,
+        0,
+        1500
+      ],
+      0.0
+    ],
+    [
+      "enemy_a",
+      "ship",
+      "imperial_frigate",
+      1,
+      [
+        -3500,
+        0,
+        2200
+      ],
+      -1.5707963267948966
+    ],
+    [
+      "enemy_b",
+      "ship",
+      "imperial_frigate",
+      1,
+      [
+        -3500,
+        0,
+        2900
+      ],
+      -1.5707963267948966
+    ]
+  ],
+  "initial_state_sha256": "6624ff8ed570ff21be0da72d5af1ad35c80bff3da98b42771ccd8932e8a621eb",
+  "views": {
+    "close": {
+      "legacy": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4167.914731394593,
+            60.0,
+            2228.8897056146907
+          ],
+          "resolved_eye": [
+            -4167.914731394593,
+            60.0,
+            2228.8897056146907
+          ],
+          "union_eye": [
+            -4167.914731394593,
+            60.0,
+            2228.8897056146907
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 52.7069277,
+          "yaw": 48.0,
+          "pitch": 35.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "6624ff8ed570ff21be0da72d5af1ad35c80bff3da98b42771ccd8932e8a621eb",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            316.6,
+            159.19,
+            938.31,
+            710.59
+          ],
+          "visible_px": [
+            621.71,
+            551.4
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            316.6,
+            159.19,
+            938.31,
+            710.59
+          ],
+          "visible_px": [
+            621.71,
+            551.4
+          ]
+        },
+        "image": "imperial-tie-squadron-legacy-close.png",
+        "image_sha256": "e7c4a1e2dbdb95dff298808cdd4d09fd34e3c08965893bf545208a81e4173dbe"
+      },
+      "authored": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4167.914731394593,
+            60.0,
+            2228.8897056146907
+          ],
+          "resolved_eye": [
+            -4167.914731394593,
+            60.0,
+            2228.8897056146907
+          ],
+          "union_eye": [
+            -4167.914731394593,
+            60.0,
+            2228.8897056146907
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 52.7069277,
+          "yaw": 48.0,
+          "pitch": 35.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "6624ff8ed570ff21be0da72d5af1ad35c80bff3da98b42771ccd8932e8a621eb",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            316.6,
+            159.19,
+            938.31,
+            710.59
+          ],
+          "visible_px": [
+            621.71,
+            551.4
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            316.6,
+            159.19,
+            938.31,
+            710.59
+          ],
+          "visible_px": [
+            621.71,
+            551.4
+          ]
+        },
+        "image": "imperial-tie-squadron-authored-close.png",
+        "image_sha256": "37d8d6315e4615155a4fce9e28dc1cf468f1b08979ed64cfea19376067909b51"
+      },
+      "legacy-repeat": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4167.914731394593,
+            60.0,
+            2228.8897056146907
+          ],
+          "resolved_eye": [
+            -4167.914731394593,
+            60.0,
+            2228.8897056146907
+          ],
+          "union_eye": [
+            -4167.914731394593,
+            60.0,
+            2228.8897056146907
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 52.7069277,
+          "yaw": 48.0,
+          "pitch": 35.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "6624ff8ed570ff21be0da72d5af1ad35c80bff3da98b42771ccd8932e8a621eb",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            316.6,
+            159.19,
+            938.31,
+            710.59
+          ],
+          "visible_px": [
+            621.71,
+            551.4
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            316.6,
+            159.19,
+            938.31,
+            710.59
+          ],
+          "visible_px": [
+            621.71,
+            551.4
+          ]
+        },
+        "image": "imperial-tie-squadron-legacy-repeat-close.png",
+        "image_sha256": "e7c4a1e2dbdb95dff298808cdd4d09fd34e3c08965893bf545208a81e4173dbe"
+      }
+    },
+    "wide": {
+      "legacy": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4108.65872082303,
+            175.53626334687172,
+            2282.244057182282
+          ],
+          "resolved_eye": [
+            -4108.65872082303,
+            175.53626334687172,
+            2282.244057182282
+          ],
+          "union_eye": [
+            -4108.65872082303,
+            175.53626334687172,
+            2282.244057182282
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 214.2902097,
+          "yaw": 48.0,
+          "pitch": 55.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "6624ff8ed570ff21be0da72d5af1ad35c80bff3da98b42771ccd8932e8a621eb",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            535.46,
+            310.68,
+            735.17,
+            492.63
+          ],
+          "visible_px": [
+            199.71,
+            181.95
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            535.46,
+            310.68,
+            735.17,
+            492.63
+          ],
+          "visible_px": [
+            199.71,
+            181.95
+          ]
+        },
+        "image": "imperial-tie-squadron-legacy-wide.png",
+        "image_sha256": "8cc131946fb998c84573efb764874b3a934c9aacde94b91eac1f0a1b55bd9959"
+      },
+      "authored": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4108.65872082303,
+            175.53626334687172,
+            2282.244057182282
+          ],
+          "resolved_eye": [
+            -4108.65872082303,
+            175.53626334687172,
+            2282.244057182282
+          ],
+          "union_eye": [
+            -4108.65872082303,
+            175.53626334687172,
+            2282.244057182282
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 214.2902097,
+          "yaw": 48.0,
+          "pitch": 55.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "6624ff8ed570ff21be0da72d5af1ad35c80bff3da98b42771ccd8932e8a621eb",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            535.46,
+            310.68,
+            735.17,
+            492.63
+          ],
+          "visible_px": [
+            199.71,
+            181.95
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            535.46,
+            310.68,
+            735.17,
+            492.63
+          ],
+          "visible_px": [
+            199.71,
+            181.95
+          ]
+        },
+        "image": "imperial-tie-squadron-authored-wide.png",
+        "image_sha256": "ae4b403d221e282a438d3968198b9e3107423b08fafb38f9de5012f0b1c031aa"
+      },
+      "legacy-repeat": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4108.65872082303,
+            175.53626334687172,
+            2282.244057182282
+          ],
+          "resolved_eye": [
+            -4108.65872082303,
+            175.53626334687172,
+            2282.244057182282
+          ],
+          "union_eye": [
+            -4108.65872082303,
+            175.53626334687172,
+            2282.244057182282
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 214.2902097,
+          "yaw": 48.0,
+          "pitch": 55.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "6624ff8ed570ff21be0da72d5af1ad35c80bff3da98b42771ccd8932e8a621eb",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            535.46,
+            310.68,
+            735.17,
+            492.63
+          ],
+          "visible_px": [
+            199.71,
+            181.95
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            535.46,
+            310.68,
+            735.17,
+            492.63
+          ],
+          "visible_px": [
+            199.71,
+            181.95
+          ]
+        },
+        "image": "imperial-tie-squadron-legacy-repeat-wide.png",
+        "image_sha256": "8cc131946fb998c84573efb764874b3a934c9aacde94b91eac1f0a1b55bd9959"
+      }
+    }
+  },
+  "captures": {
+    "close": {
+      "legacy": "imperial-tie-squadron-legacy-close.png",
+      "authored": "imperial-tie-squadron-authored-close.png",
+      "legacy_repeat": "imperial-tie-squadron-legacy-repeat-close.png"
+    },
+    "wide": {
+      "legacy": "imperial-tie-squadron-legacy-wide.png",
+      "authored": "imperial-tie-squadron-authored-wide.png",
+      "legacy_repeat": "imperial-tie-squadron-legacy-repeat-wide.png"
+    }
+  },
+  "comparison": {
+    "close": {
+      "changed_pixels": 94239,
+      "changed_percent": 9.203,
+      "bbox": [
+        336,
+        198,
+        920,
+        691
+      ],
+      "repeat_changed_pixels": 0,
+      "repeat_max_delta": 0,
+      "repeat_bbox": null,
+      "repeat_cells": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "per_pass_vs_first": {
+        "legacy": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        },
+        "authored": {
+          "changed_pixels": 94239,
+          "changed_percent": 9.203,
+          "max_delta": 253,
+          "bbox": [
+            336,
+            198,
+            920,
+            691
+          ]
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        }
+      },
+      "in_pass_repeats": {
+        "legacy": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "authored": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        }
+      },
+      "first_variant": "legacy",
+      "per_variant_repeat_changed_pixels": {
+        "legacy": 0,
+        "authored": 0
+      }
+    },
+    "wide": {
+      "changed_pixels": 11233,
+      "changed_percent": 1.097,
+      "bbox": [
+        537,
+        322,
+        732,
+        482
+      ],
+      "repeat_changed_pixels": 0,
+      "repeat_max_delta": 0,
+      "repeat_bbox": null,
+      "repeat_cells": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "per_pass_vs_first": {
+        "legacy": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        },
+        "authored": {
+          "changed_pixels": 11233,
+          "changed_percent": 1.097,
+          "max_delta": 253,
+          "bbox": [
+            537,
+            322,
+            732,
+            482
+          ]
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        }
+      },
+      "in_pass_repeats": {
+        "legacy": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "authored": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        }
+      },
+      "first_variant": "legacy",
+      "per_variant_repeat_changed_pixels": {
+        "legacy": 0,
+        "authored": 0
+      }
+    }
+  },
+  "display": {
+    "samples": 4,
+    "viewport": [
+      0,
+      0,
+      1280,
+      800
+    ],
+    "per_pass": {
+      "legacy": {
+        "samples": 4,
+        "viewport": [
+          0,
+          0,
+          1280,
+          800
+        ]
+      },
+      "authored": {
+        "samples": 4,
+        "viewport": [
+          0,
+          0,
+          1280,
+          800
+        ]
+      },
+      "legacy-repeat": {
+        "samples": 4,
+        "viewport": [
+          0,
+          0,
+          1280,
+          800
+        ]
+      }
+    },
+    "gl": {
+      "vendor": "Apple",
+      "renderer": "Apple M4",
+      "version": "2.1 Metal - 90.5"
+    }
+  },
+  "production_candidate_unselected_after_review": true,
+  "one_camera_per_view": true,
+  "sheet": {
+    "image": "imperial-tie-squadron-comparison.png",
+    "bytes": 243928,
+    "sha256": "5b7403c0919a4c300efa07c774731d5573d721ba8ef9d1bb476b2bcf701282a6",
+    "row": "ship:imperial:tie_squadron",
+    "runtime_key": "imperial:fighter",
+    "label_band": [
+      "UNAPPROVED REVIEW ONLY - ship:imperial:tie_squadron - legacy `wedge` hull vs authored mesh",
+      "served as runtime key imperial:fighter - one camera, same tick, 4MSAA / production shaders - drawn length 38.47"
+    ],
+    "layout": "top row the close pair, bottom row the wide pair, legacy left and authored right"
+  }
+}

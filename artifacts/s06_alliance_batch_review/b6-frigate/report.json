@@ -1,0 +1,879 @@
+{
+  "schema": 1,
+  "batch": "s06-b6-imperial-ships",
+  "row": "ship:imperial:frigate",
+  "row_argument": "imperial:frigate",
+  "registry_key": "imperial:frigate",
+  "identifier": "imperial_frigate",
+  "status": "review_only_not_registered",
+  "integration": "UNAPPROVED review-only monkeypatch of render.asset_selection.selected_binding and render.asset_selection.mesh_for for this one binding, inside an explicit model_preview session. The renderer's ship path serves ship:imperial:frigate as imperial:frigate (measured: the data row's category goes through the fighter/bomber role mapping), so that measured key - and only that key - is patched. The registry row stays procedural_legacy, no manifest exists for the row and nothing in production selects it; both patches and the preview session are torn down at the end of this run.",
+  "warning": "Offline orbit captures from the real production draw path: not paced FPS, not a battle-acceptance or native-Windows-graphics acceptance, and not an owner appearance decision.",
+  "registration": {
+    "registry_binding": "imperial:frigate",
+    "registry_status": "procedural_legacy",
+    "registry_manifest": "core:imperial/frigate",
+    "manifest_exists": false,
+    "in_production_pipeline": false,
+    "registry_envelope_present": false
+  },
+  "legacy": {
+    "shape": "needle",
+    "source": "render/fleet_geometry.py::_ship_mesh",
+    "triangles": 1552,
+    "vertices": 858,
+    "drawn_length": 96.180525,
+    "drawn_scale": 1.0499999999999998
+  },
+  "serving": {
+    "declared_runtime_key": "imperial:frigate",
+    "measured_runtime_key": "imperial:frigate",
+    "legacy_shape_from_data": "needle",
+    "stock_visual_key": "needle",
+    "review_visual_key": "imperial:frigate",
+    "selected_binding_in_production": false,
+    "mesh_in_production": null,
+    "note": "stock = the preview session with nothing patched; review = the same session with this row's measured runtime key served"
+  },
+  "authored": {
+    "path": "assets/models/imperial_frigate.mesh.json",
+    "sha256": "6c5d925bcd67bd655aae5f7e4bbdfa178257a4d0a6897f52b8664dda3f94752d",
+    "bytes": 144668,
+    "triangles": 2416,
+    "vertices": 1320,
+    "bounds": [
+      [
+        -16.0,
+        -5.0,
+        -43.601
+      ],
+      [
+        16.0,
+        24.0,
+        48.0
+      ]
+    ],
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ],
+    "authority": "script",
+    "approval": "pending_owner_approval"
+  },
+  "envelope": [
+    [
+      -16.0,
+      16.0
+    ],
+    [
+      -5.0,
+      24.0
+    ],
+    [
+      -43.601,
+      48.0
+    ]
+  ],
+  "min_authored_length": 91.4,
+  "drawn_size": {
+    "legacy": {
+      "shape": "needle",
+      "scale": 1.0499999999999998,
+      "length": 96.180525,
+      "radius": 50.44773079695953
+    },
+    "candidate": {
+      "shape": "imperial:frigate",
+      "scale": 1.0499942686215216,
+      "length": 96.180525,
+      "radius": 50.70478339590647
+    }
+  },
+  "placement": [
+    [
+      "capital",
+      "ship",
+      "imperial_frigate",
+      1,
+      [
+        -4200,
+        0,
+        2200
+      ],
+      0.0
+    ],
+    [
+      "escort",
+      "ship",
+      "rebel_frigate",
+      0,
+      [
+        -4200,
+        0,
+        2900
+      ],
+      0.0
+    ],
+    [
+      "battleship",
+      "ship",
+      "rebel_battleship",
+      0,
+      [
+        -4200,
+        0,
+        1500
+      ],
+      0.0
+    ],
+    [
+      "enemy_a",
+      "ship",
+      "imperial_frigate",
+      1,
+      [
+        -3500,
+        0,
+        2200
+      ],
+      -1.5707963267948966
+    ],
+    [
+      "enemy_b",
+      "ship",
+      "imperial_frigate",
+      1,
+      [
+        -3500,
+        0,
+        2900
+      ],
+      -1.5707963267948966
+    ]
+  ],
+  "initial_state_sha256": "8f260ac626e77e9a9c3456bd4cd3c6369475bf29a6b0d3587c967cf8f74241af",
+  "views": {
+    "close": {
+      "legacy": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4119.7868284864835,
+            75.5786294029456,
+            2272.2242640367267
+          ],
+          "resolved_eye": [
+            -4119.7868284864835,
+            75.5786294029456,
+            2272.2242640367267
+          ],
+          "union_eye": [
+            -4119.7868284864835,
+            75.5786294029456,
+            2272.2242640367267
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 131.76731925,
+          "yaw": 48.0,
+          "pitch": 35.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "8f260ac626e77e9a9c3456bd4cd3c6369475bf29a6b0d3587c967cf8f74241af",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            265.51,
+            171.58,
+            903.13,
+            644.21
+          ],
+          "visible_px": [
+            637.62,
+            472.63
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            265.51,
+            171.58,
+            903.13,
+            644.21
+          ],
+          "visible_px": [
+            637.62,
+            472.63
+          ]
+        },
+        "image": "imperial-frigate-legacy-close.png",
+        "image_sha256": "ad3dbc2c95d8a540de83ba7c834284649f9f463b9daa5bb0364e54d746fed0da"
+      },
+      "authored": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4119.7868284864835,
+            75.5786294029456,
+            2272.2242640367267
+          ],
+          "resolved_eye": [
+            -4119.7868284864835,
+            75.5786294029456,
+            2272.2242640367267
+          ],
+          "union_eye": [
+            -4119.7868284864835,
+            75.5786294029456,
+            2272.2242640367267
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 131.76731925,
+          "yaw": 48.0,
+          "pitch": 35.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "8f260ac626e77e9a9c3456bd4cd3c6369475bf29a6b0d3587c967cf8f74241af",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            265.51,
+            171.58,
+            903.13,
+            644.21
+          ],
+          "visible_px": [
+            637.62,
+            472.63
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            265.51,
+            171.58,
+            903.13,
+            644.21
+          ],
+          "visible_px": [
+            637.62,
+            472.63
+          ]
+        },
+        "image": "imperial-frigate-authored-close.png",
+        "image_sha256": "6f22bee8daf957748402f1351102ee77f0c39c23093457c40ed6e6e6d52d90df"
+      },
+      "legacy-repeat": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4119.7868284864835,
+            75.5786294029456,
+            2272.2242640367267
+          ],
+          "resolved_eye": [
+            -4119.7868284864835,
+            75.5786294029456,
+            2272.2242640367267
+          ],
+          "union_eye": [
+            -4119.7868284864835,
+            75.5786294029456,
+            2272.2242640367267
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 131.76731925,
+          "yaw": 48.0,
+          "pitch": 35.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "8f260ac626e77e9a9c3456bd4cd3c6369475bf29a6b0d3587c967cf8f74241af",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            265.51,
+            171.58,
+            903.13,
+            644.21
+          ],
+          "visible_px": [
+            637.62,
+            472.63
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            265.51,
+            171.58,
+            903.13,
+            644.21
+          ],
+          "visible_px": [
+            637.62,
+            472.63
+          ]
+        },
+        "image": "imperial-frigate-legacy-repeat-close.png",
+        "image_sha256": "ad3dbc2c95d8a540de83ba7c834284649f9f463b9daa5bb0364e54d746fed0da"
+      }
+    },
+    "wide": {
+      "legacy": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -3971.646802057575,
+            438.8406583671794,
+            2405.6101429557048
+          ],
+          "resolved_eye": [
+            -3971.646802057575,
+            438.8406583671794,
+            2405.6101429557048
+          ],
+          "union_eye": [
+            -3971.646802057575,
+            438.8406583671794,
+            2405.6101429557048
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 535.72552425,
+          "yaw": 48.0,
+          "pitch": 55.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "8f260ac626e77e9a9c3456bd4cd3c6369475bf29a6b0d3587c967cf8f74241af",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            565.6,
+            329.15,
+            706.19,
+            461.14
+          ],
+          "visible_px": [
+            140.59,
+            132.0
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            565.6,
+            329.15,
+            706.19,
+            461.14
+          ],
+          "visible_px": [
+            140.59,
+            132.0
+          ]
+        },
+        "image": "imperial-frigate-legacy-wide.png",
+        "image_sha256": "ccb5a23ae90ce184549abfcda3f2ef63e2372535304989b4ad62b7369cd26275"
+      },
+      "authored": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -3971.646802057575,
+            438.8406583671794,
+            2405.6101429557048
+          ],
+          "resolved_eye": [
+            -3971.646802057575,
+            438.8406583671794,
+            2405.6101429557048
+          ],
+          "union_eye": [
+            -3971.646802057575,
+            438.8406583671794,
+            2405.6101429557048
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 535.72552425,
+          "yaw": 48.0,
+          "pitch": 55.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "8f260ac626e77e9a9c3456bd4cd3c6369475bf29a6b0d3587c967cf8f74241af",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            565.6,
+            329.15,
+            706.19,
+            461.14
+          ],
+          "visible_px": [
+            140.59,
+            132.0
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            565.6,
+            329.15,
+            706.19,
+            461.14
+          ],
+          "visible_px": [
+            140.59,
+            132.0
+          ]
+        },
+        "image": "imperial-frigate-authored-wide.png",
+        "image_sha256": "5d94c091451c36a20c72ae70c4bd8c7306399f0e6dd075209c388e18b4247601"
+      },
+      "legacy-repeat": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -3971.646802057575,
+            438.8406583671794,
+            2405.6101429557048
+          ],
+          "resolved_eye": [
+            -3971.646802057575,
+            438.8406583671794,
+            2405.6101429557048
+          ],
+          "union_eye": [
+            -3971.646802057575,
+            438.8406583671794,
+            2405.6101429557048
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 535.72552425,
+          "yaw": 48.0,
+          "pitch": 55.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "8f260ac626e77e9a9c3456bd4cd3c6369475bf29a6b0d3587c967cf8f74241af",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            565.6,
+            329.15,
+            706.19,
+            461.14
+          ],
+          "visible_px": [
+            140.59,
+            132.0
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            565.6,
+            329.15,
+            706.19,
+            461.14
+          ],
+          "visible_px": [
+            140.59,
+            132.0
+          ]
+        },
+        "image": "imperial-frigate-legacy-repeat-wide.png",
+        "image_sha256": "ccb5a23ae90ce184549abfcda3f2ef63e2372535304989b4ad62b7369cd26275"
+      }
+    }
+  },
+  "captures": {
+    "close": {
+      "legacy": "imperial-frigate-legacy-close.png",
+      "authored": "imperial-frigate-authored-close.png",
+      "legacy_repeat": "imperial-frigate-legacy-repeat-close.png"
+    },
+    "wide": {
+      "legacy": "imperial-frigate-legacy-wide.png",
+      "authored": "imperial-frigate-authored-wide.png",
+      "legacy_repeat": "imperial-frigate-legacy-repeat-wide.png"
+    }
+  },
+  "comparison": {
+    "close": {
+      "changed_pixels": 76950,
+      "changed_percent": 7.5146,
+      "bbox": [
+        289,
+        49,
+        990,
+        750
+      ],
+      "repeat_changed_pixels": 0,
+      "repeat_max_delta": 0,
+      "repeat_bbox": null,
+      "repeat_cells": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "per_pass_vs_first": {
+        "legacy": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        },
+        "authored": {
+          "changed_pixels": 76950,
+          "changed_percent": 7.5146,
+          "max_delta": 239,
+          "bbox": [
+            289,
+            49,
+            990,
+            750
+          ]
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        }
+      },
+      "in_pass_repeats": {
+        "legacy": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "authored": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        }
+      },
+      "first_variant": "legacy",
+      "per_variant_repeat_changed_pixels": {
+        "legacy": 0,
+        "authored": 0
+      }
+    },
+    "wide": {
+      "changed_pixels": 4842,
+      "changed_percent": 0.4729,
+      "bbox": [
+        561,
+        321,
+        718,
+        478
+      ],
+      "repeat_changed_pixels": 0,
+      "repeat_max_delta": 0,
+      "repeat_bbox": null,
+      "repeat_cells": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "per_pass_vs_first": {
+        "legacy": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        },
+        "authored": {
+          "changed_pixels": 4842,
+          "changed_percent": 0.4729,
+          "max_delta": 252,
+          "bbox": [
+            561,
+            321,
+            718,
+            478
+          ]
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        }
+      },
+      "in_pass_repeats": {
+        "legacy": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "authored": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        }
+      },
+      "first_variant": "legacy",
+      "per_variant_repeat_changed_pixels": {
+        "legacy": 0,
+        "authored": 0
+      }
+    }
+  },
+  "display": {
+    "samples": 4,
+    "viewport": [
+      0,
+      0,
+      1280,
+      800
+    ],
+    "per_pass": {
+      "legacy": {
+        "samples": 4,
+        "viewport": [
+          0,
+          0,
+          1280,
+          800
+        ]
+      },
+      "authored": {
+        "samples": 4,
+        "viewport": [
+          0,
+          0,
+          1280,
+          800
+        ]
+      },
+      "legacy-repeat": {
+        "samples": 4,
+        "viewport": [
+          0,
+          0,
+          1280,
+          800
+        ]
+      }
+    },
+    "gl": {
+      "vendor": "Apple",
+      "renderer": "Apple M4",
+      "version": "2.1 Metal - 90.5"
+    }
+  },
+  "production_candidate_unselected_after_review": true,
+  "one_camera_per_view": true,
+  "sheet": {
+    "image": "imperial-frigate-comparison.png",
+    "bytes": 337892,
+    "sha256": "f41f4e57c92aa166b3d89148ff930be73eb2b8bc6d855e5103461785d78ef2ce",
+    "row": "ship:imperial:frigate",
+    "runtime_key": "imperial:frigate",
+    "label_band": [
+      "UNAPPROVED REVIEW ONLY - ship:imperial:frigate - legacy `needle` hull vs authored mesh",
+      "served as runtime key imperial:frigate - one camera, same tick, 4MSAA / production shaders - drawn length 96.18"
+    ],
+    "layout": "top row the close pair, bottom row the wide pair, legacy left and authored right"
+  }
+}

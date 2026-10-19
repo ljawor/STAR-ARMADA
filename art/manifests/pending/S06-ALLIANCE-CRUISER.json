@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "binding": "rebel:cruiser",
+  "canonical_binding": "ship:rebel:cruiser",
+  "proposed_asset_id": "core:alliance/cruiser",
+  "gameplay_entity": "rebel_cruiser",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/alliance_cruiser.blend",
+    "sha256": "96cdcc024a304d317e7e95d6f096675322971c9671521338f248a140ddd77fd6",
+    "bytes": 173141
+  },
+  "initial_seed": {
+    "path": "tools/art/build_alliance_cruiser.py",
+    "sha256": "34b3543378213aea87a0a35a30e2ef1127b98372bdfd4b9d9c56f3ec0e9a6672",
+    "bytes": 6553
+  },
+  "export_script": {
+    "path": "tools/art/export_alliance_cruiser.py",
+    "sha256": "315ad0d20f99114cefd57e347b21687207541b843d3b128670dece1c0c85c16d",
+    "bytes": 3900
+  },
+  "runtime": {
+    "path": "assets/models/alliance_cruiser.mesh.json",
+    "sha256": "38b4e9f92040e67ffc1655910de39c24de4156397a94c76c34f94738a383ba84",
+    "bytes": 409447
+  },
+  "blender_pin": "5.0.1",
+  "triangles": 6264,
+  "vertices": 3492,
+  "roles": [
+    "base",
+    "dark",
+    "trim",
+    "accent",
+    "lit",
+    "cool"
+  ],
+  "envelope": [
+    [
+      -66,
+      -11.265,
+      -99.925
+    ],
+    [
+      66,
+      19.3,
+      97.5
+    ]
+  ],
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; seed must not overwrite master. Do not use this sidecar as expected_hashes approval.",
+  "evidence": "artifacts/s06_alliance_cruiser_review/fixed-review/capture/review-sheet.png",
+  "motion": "artifacts/s06_alliance_cruiser_review/fixed-review/capture/paired-motion.mp4",
+  "appearance_decision": "s06-cruiser-review-2026-10-17",
+  "note_on_status": "This sidecar predates the spec-driven writer (the cruiser was reviewed before the batch sheets existed), so the two fields above are set here rather than generated."
+}

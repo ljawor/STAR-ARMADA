@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b3c-stations",
+  "binding": "syndicate:defense_platform",
+  "canonical_binding": "ship:syndicate:defense_platform",
+  "gameplay_entity": "defense_platform",
+  "class": "defense_platform",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/syndicate_defense_platform.blend",
+    "sha256": "9170ecf71c77b6eeaa6134c501fd2d842c6594f33f702bc80989c025aab85672",
+    "bytes": 143501
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b3c_stations.py",
+    "sha256": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+    "bytes": 58285,
+    "selects": "--asset syndicate:defense_platform"
+  },
+  "export_script": {
+    "path": "tools/art/export_syndicate_defense_platform.py",
+    "sha256": "21997bdbafc2fa40b69ee57a1c0c0722482831f2d6073a7f9b1208b1c98f6746",
+    "bytes": 4791
+  },
+  "runtime": {
+    "path": "assets/models/syndicate_defense_platform.mesh.json",
+    "sha256": "d74eb09809cc081177b3edb7cd542dc393812d00f151d70a0d5235aa49e1245b",
+    "bytes": 223464,
+    "triangles": 3520,
+    "vertices": 1936,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -45.9679,
+      -10.8,
+      -28.5448
+    ],
+    [
+      30.3691,
+      22.1,
+      28.0475
+    ]
+  ],
+  "bounds": [
+    [
+      -45.9679,
+      -10.8,
+      -28.5448
+    ],
+    [
+      30.3691,
+      22.1,
+      28.0475
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+  "motion": "artifacts/s06_alliance_batch_review/b3c-stations/syndicate defense platform-after-motion.mp4",
+  "appearance_decision": "s06-b3c-stations-2026-10-17"
+}

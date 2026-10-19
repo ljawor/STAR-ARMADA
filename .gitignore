@@ -2,6 +2,10 @@
 __pycache__/
 *.py[cod]
 .venv/
+# ...and the same environment reached through a symlink, which `.venv/` does not match: a
+# worktree that reuses another checkout's virtualenv links to it by absolute path, and
+# `git add -A` then stages that link into the branch.
+.venv
 
 # Runtime artifacts
 # An unfrozen run keeps its user data next to the repo (render.menus USER_DIR = ROOT), so

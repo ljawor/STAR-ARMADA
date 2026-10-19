@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b3c-stations",
+  "binding": "syndicate:shipyard",
+  "canonical_binding": "ship:syndicate:shipyard",
+  "gameplay_entity": "shipyard",
+  "class": "shipyard",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/syndicate_shipyard.blend",
+    "sha256": "420dedfee68a25da78f4831d93b2dbddb716ba94134a58f890c570cec9efb735",
+    "bytes": 147187
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b3c_stations.py",
+    "sha256": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+    "bytes": 58285,
+    "selects": "--asset syndicate:shipyard"
+  },
+  "export_script": {
+    "path": "tools/art/export_syndicate_shipyard.py",
+    "sha256": "9dadeb8b073fc7791d8961363d58676a851eda4c923203a39348d32af035ad32",
+    "bytes": 4771
+  },
+  "runtime": {
+    "path": "assets/models/syndicate_shipyard.mesh.json",
+    "sha256": "c1a0aad3e30a013b95c704390ef925f8beeb024924ddd4a5d525dc60156c4670",
+    "bytes": 241812,
+    "triangles": 3784,
+    "vertices": 2072,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -52.1606,
+      -18.9928,
+      -53.6606
+    ],
+    [
+      46.9468,
+      45.6,
+      48.4056
+    ]
+  ],
+  "bounds": [
+    [
+      -52.1606,
+      -18.9928,
+      -53.6606
+    ],
+    [
+      46.9468,
+      45.6,
+      48.4056
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+  "motion": null,
+  "appearance_decision": "s06-b3c-stations-2026-10-17"
+}

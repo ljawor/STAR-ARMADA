@@ -1,0 +1,737 @@
+{
+  "schema": 1,
+  "batch": "s06-b3c-stations",
+  "status": "appearance_approved_pending_landing",
+  "note": "Review-only batch sheet for the S06 B3c station specimens. Their appearance was approved by the owner on 2026-10-17 under decision `s06-b3c-stations-2026-10-17` (his words: \"yes\", answering \"do these seventeen stations look like the right direction?\"); that decision binds the exact source, exporter and runtime hashes listed in `art/manifests/approvals.json`, and it authorizes no landing: every binding here is still unregistered, `activation` is false and the registry still reports `procedural_legacy`. The batch: the research station, defense platform, trade station, fighter platform and repair dock across the three families that have a mesh_for seam, plus the Legion and Syndicate shipyards - the remaining seventeen faction station rows after B3a (command stations, approved) and B3b (mining / sensor / relay). This file is not an approval record, a registry entry or a runtime manifest, and it does not select any asset in production. Each station is authored *to* its binding's legacy procedural extent - per axis and per side, not merely inside it - because the review harness compares the authored footprint against the legacy station mesh within 1 percent per axis and the legacy procedural station fills its declared box exactly. rebel:shipyard is absent because it is already delivered as the approved trio's `core` asset alliance_shipyard. The ten imperial station rows are absent because render.fleet_geometry.station_mesh dispatches them straight to _station_mesh with no mesh_for seam, so authoring them is a renderer change and an owner decision rather than an asset. The B3a command stations and the nine B3b small stations are absent: they are earlier batches. overview.spacing is 240 because a row line of seventeen station rows must not overlap: the widest pair this batch puts side by side is two 110-radius shipyards (220). overview yaw/pitch/distance are 90/40/2800, not the 48/50/1100 the earlier station batches used. Seventeen rows span 3840 units, and at a 48-degree yaw the eye is displaced 0.43 x distance *along* the row axis, so it ends up level with the far end of the line: rows beyond it are behind the camera and the near ones project past the frame edge. Measured on this spec's first run, the 48-degree plan put the far rows at negative depth and the near end at x_ndc -1.25, so the only scale view in the sheet showed four objects. At a 90-degree yaw the line is perpendicular to the view, every row sits at 2800 units and inside (-0.82 ... +0.82), and the lineup is a true single-scale comparison with no perspective spread. It is a presence-and-scale lineup; each row's own close and tactical views are its appearance evidence. The overview is a presence-and-scale lineup of all seventeen rows, not a per-row scale comparison; each row's own close and tactical views are its evidence. overview.close_distance_floor is 150: these stations frame at 110-215 units, and the shared scene's context group puts the near eye inside a hull without it - the harness refuses that capture as `camera not outside union`; the floor is inert for every earlier batch. The batch's --motion list names one row per family (rebel:research_station, confederacy:shipyard, syndicate:defense_platform) and every row that claims a clip is listed. Correction (same day, against the code): the claim above that the imperial station rows dispatch straight to _station_mesh with no mesh_for seam was wrong - render/fleet_geometry.py::station_mesh consults mesh_for(f'{faction}:{data_id}') ahead of its imperial branch for every faction, so those rows are ordinary asset work once the imperial rows are in scope (owner decision s06-imperial-migration-2026-10-17). What imperial ships need is a per-binding key in render/faction_visuals.py::ship_visual_key, which today mints one only for the three non-imperial families.",
+  "overview": {
+    "first_x": -4200,
+    "first_z": 1200,
+    "spacing": 240,
+    "distance": 2800,
+    "yaw": 90,
+    "pitch": 40,
+    "close_distance_floor": 150
+  },
+  "evidence": {
+    "rebel:research_station": {
+      "sheet": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+      "close": "artifacts/s06_alliance_batch_review/b3c-stations/alliance research station-after-close.png",
+      "tactical": "artifacts/s06_alliance_batch_review/b3c-stations/alliance research station-after-tactical.png",
+      "ablated": [
+        "artifacts/s06_alliance_batch_review/b3c-stations/alliance research station-ablated-accent.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/alliance research station-ablated-cool.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/alliance research station-ablated-dark.png"
+      ],
+      "restored": "artifacts/s06_alliance_batch_review/b3c-stations/alliance research station-close-restored.png",
+      "motion": "artifacts/s06_alliance_batch_review/b3c-stations/alliance research station-after-motion.mp4"
+    },
+    "confederacy:research_station": {
+      "sheet": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+      "close": "artifacts/s06_alliance_batch_review/b3c-stations/legion research station-after-close.png",
+      "tactical": "artifacts/s06_alliance_batch_review/b3c-stations/legion research station-after-tactical.png",
+      "ablated": [
+        "artifacts/s06_alliance_batch_review/b3c-stations/legion research station-ablated-accent.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/legion research station-ablated-cool.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/legion research station-ablated-dark.png"
+      ],
+      "restored": "artifacts/s06_alliance_batch_review/b3c-stations/legion research station-close-restored.png"
+    },
+    "syndicate:research_station": {
+      "sheet": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+      "close": "artifacts/s06_alliance_batch_review/b3c-stations/syndicate research station-after-close.png",
+      "tactical": "artifacts/s06_alliance_batch_review/b3c-stations/syndicate research station-after-tactical.png",
+      "ablated": [
+        "artifacts/s06_alliance_batch_review/b3c-stations/syndicate research station-ablated-accent.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/syndicate research station-ablated-cool.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/syndicate research station-ablated-dark.png"
+      ],
+      "restored": "artifacts/s06_alliance_batch_review/b3c-stations/syndicate research station-close-restored.png"
+    },
+    "rebel:defense_platform": {
+      "sheet": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+      "close": "artifacts/s06_alliance_batch_review/b3c-stations/alliance defense platform-after-close.png",
+      "tactical": "artifacts/s06_alliance_batch_review/b3c-stations/alliance defense platform-after-tactical.png",
+      "ablated": [
+        "artifacts/s06_alliance_batch_review/b3c-stations/alliance defense platform-ablated-accent.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/alliance defense platform-ablated-cool.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/alliance defense platform-ablated-dark.png"
+      ],
+      "restored": "artifacts/s06_alliance_batch_review/b3c-stations/alliance defense platform-close-restored.png"
+    },
+    "confederacy:defense_platform": {
+      "sheet": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+      "close": "artifacts/s06_alliance_batch_review/b3c-stations/legion defense platform-after-close.png",
+      "tactical": "artifacts/s06_alliance_batch_review/b3c-stations/legion defense platform-after-tactical.png",
+      "ablated": [
+        "artifacts/s06_alliance_batch_review/b3c-stations/legion defense platform-ablated-accent.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/legion defense platform-ablated-cool.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/legion defense platform-ablated-dark.png"
+      ],
+      "restored": "artifacts/s06_alliance_batch_review/b3c-stations/legion defense platform-close-restored.png"
+    },
+    "syndicate:defense_platform": {
+      "sheet": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+      "close": "artifacts/s06_alliance_batch_review/b3c-stations/syndicate defense platform-after-close.png",
+      "tactical": "artifacts/s06_alliance_batch_review/b3c-stations/syndicate defense platform-after-tactical.png",
+      "ablated": [
+        "artifacts/s06_alliance_batch_review/b3c-stations/syndicate defense platform-ablated-accent.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/syndicate defense platform-ablated-cool.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/syndicate defense platform-ablated-dark.png"
+      ],
+      "restored": "artifacts/s06_alliance_batch_review/b3c-stations/syndicate defense platform-close-restored.png",
+      "motion": "artifacts/s06_alliance_batch_review/b3c-stations/syndicate defense platform-after-motion.mp4"
+    },
+    "rebel:trade_station": {
+      "sheet": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+      "close": "artifacts/s06_alliance_batch_review/b3c-stations/alliance trade station-after-close.png",
+      "tactical": "artifacts/s06_alliance_batch_review/b3c-stations/alliance trade station-after-tactical.png",
+      "ablated": [
+        "artifacts/s06_alliance_batch_review/b3c-stations/alliance trade station-ablated-accent.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/alliance trade station-ablated-cool.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/alliance trade station-ablated-dark.png"
+      ],
+      "restored": "artifacts/s06_alliance_batch_review/b3c-stations/alliance trade station-close-restored.png"
+    },
+    "confederacy:trade_station": {
+      "sheet": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+      "close": "artifacts/s06_alliance_batch_review/b3c-stations/legion trade station-after-close.png",
+      "tactical": "artifacts/s06_alliance_batch_review/b3c-stations/legion trade station-after-tactical.png",
+      "ablated": [
+        "artifacts/s06_alliance_batch_review/b3c-stations/legion trade station-ablated-accent.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/legion trade station-ablated-cool.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/legion trade station-ablated-dark.png"
+      ],
+      "restored": "artifacts/s06_alliance_batch_review/b3c-stations/legion trade station-close-restored.png"
+    },
+    "syndicate:trade_station": {
+      "sheet": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+      "close": "artifacts/s06_alliance_batch_review/b3c-stations/syndicate trade station-after-close.png",
+      "tactical": "artifacts/s06_alliance_batch_review/b3c-stations/syndicate trade station-after-tactical.png",
+      "ablated": [
+        "artifacts/s06_alliance_batch_review/b3c-stations/syndicate trade station-ablated-accent.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/syndicate trade station-ablated-cool.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/syndicate trade station-ablated-dark.png"
+      ],
+      "restored": "artifacts/s06_alliance_batch_review/b3c-stations/syndicate trade station-close-restored.png"
+    },
+    "rebel:fighter_platform": {
+      "sheet": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+      "close": "artifacts/s06_alliance_batch_review/b3c-stations/alliance fighter platform-after-close.png",
+      "tactical": "artifacts/s06_alliance_batch_review/b3c-stations/alliance fighter platform-after-tactical.png",
+      "ablated": [
+        "artifacts/s06_alliance_batch_review/b3c-stations/alliance fighter platform-ablated-accent.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/alliance fighter platform-ablated-cool.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/alliance fighter platform-ablated-dark.png"
+      ],
+      "restored": "artifacts/s06_alliance_batch_review/b3c-stations/alliance fighter platform-close-restored.png"
+    },
+    "confederacy:fighter_platform": {
+      "sheet": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+      "close": "artifacts/s06_alliance_batch_review/b3c-stations/legion fighter platform-after-close.png",
+      "tactical": "artifacts/s06_alliance_batch_review/b3c-stations/legion fighter platform-after-tactical.png",
+      "ablated": [
+        "artifacts/s06_alliance_batch_review/b3c-stations/legion fighter platform-ablated-accent.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/legion fighter platform-ablated-cool.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/legion fighter platform-ablated-dark.png"
+      ],
+      "restored": "artifacts/s06_alliance_batch_review/b3c-stations/legion fighter platform-close-restored.png"
+    },
+    "syndicate:fighter_platform": {
+      "sheet": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+      "close": "artifacts/s06_alliance_batch_review/b3c-stations/syndicate fighter platform-after-close.png",
+      "tactical": "artifacts/s06_alliance_batch_review/b3c-stations/syndicate fighter platform-after-tactical.png",
+      "ablated": [
+        "artifacts/s06_alliance_batch_review/b3c-stations/syndicate fighter platform-ablated-accent.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/syndicate fighter platform-ablated-cool.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/syndicate fighter platform-ablated-dark.png"
+      ],
+      "restored": "artifacts/s06_alliance_batch_review/b3c-stations/syndicate fighter platform-close-restored.png"
+    },
+    "rebel:repair_dock": {
+      "sheet": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+      "close": "artifacts/s06_alliance_batch_review/b3c-stations/alliance repair dock-after-close.png",
+      "tactical": "artifacts/s06_alliance_batch_review/b3c-stations/alliance repair dock-after-tactical.png",
+      "ablated": [
+        "artifacts/s06_alliance_batch_review/b3c-stations/alliance repair dock-ablated-accent.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/alliance repair dock-ablated-cool.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/alliance repair dock-ablated-dark.png"
+      ],
+      "restored": "artifacts/s06_alliance_batch_review/b3c-stations/alliance repair dock-close-restored.png"
+    },
+    "confederacy:repair_dock": {
+      "sheet": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+      "close": "artifacts/s06_alliance_batch_review/b3c-stations/legion repair dock-after-close.png",
+      "tactical": "artifacts/s06_alliance_batch_review/b3c-stations/legion repair dock-after-tactical.png",
+      "ablated": [
+        "artifacts/s06_alliance_batch_review/b3c-stations/legion repair dock-ablated-accent.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/legion repair dock-ablated-cool.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/legion repair dock-ablated-dark.png"
+      ],
+      "restored": "artifacts/s06_alliance_batch_review/b3c-stations/legion repair dock-close-restored.png"
+    },
+    "syndicate:repair_dock": {
+      "sheet": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+      "close": "artifacts/s06_alliance_batch_review/b3c-stations/syndicate repair dock-after-close.png",
+      "tactical": "artifacts/s06_alliance_batch_review/b3c-stations/syndicate repair dock-after-tactical.png",
+      "ablated": [
+        "artifacts/s06_alliance_batch_review/b3c-stations/syndicate repair dock-ablated-accent.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/syndicate repair dock-ablated-cool.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/syndicate repair dock-ablated-dark.png"
+      ],
+      "restored": "artifacts/s06_alliance_batch_review/b3c-stations/syndicate repair dock-close-restored.png"
+    },
+    "confederacy:shipyard": {
+      "sheet": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+      "close": "artifacts/s06_alliance_batch_review/b3c-stations/legion shipyard-after-close.png",
+      "tactical": "artifacts/s06_alliance_batch_review/b3c-stations/legion shipyard-after-tactical.png",
+      "ablated": [
+        "artifacts/s06_alliance_batch_review/b3c-stations/legion shipyard-ablated-accent.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/legion shipyard-ablated-cool.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/legion shipyard-ablated-dark.png"
+      ],
+      "restored": "artifacts/s06_alliance_batch_review/b3c-stations/legion shipyard-close-restored.png",
+      "motion": "artifacts/s06_alliance_batch_review/b3c-stations/legion shipyard-after-motion.mp4"
+    },
+    "syndicate:shipyard": {
+      "sheet": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+      "close": "artifacts/s06_alliance_batch_review/b3c-stations/syndicate shipyard-after-close.png",
+      "tactical": "artifacts/s06_alliance_batch_review/b3c-stations/syndicate shipyard-after-tactical.png",
+      "ablated": [
+        "artifacts/s06_alliance_batch_review/b3c-stations/syndicate shipyard-ablated-accent.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/syndicate shipyard-ablated-cool.png",
+        "artifacts/s06_alliance_batch_review/b3c-stations/syndicate shipyard-ablated-dark.png"
+      ],
+      "restored": "artifacts/s06_alliance_batch_review/b3c-stations/syndicate shipyard-close-restored.png"
+    }
+  },
+  "assets": [
+    {
+      "binding": "rebel:research_station",
+      "label": "alliance research station",
+      "identifier": "alliance_research_station",
+      "mesh": "assets/models/alliance_research_station.mesh.json",
+      "envelope": [
+        [
+          -40.0,
+          -9.6,
+          -25.6
+        ],
+        [
+          40.0,
+          39.28,
+          35.901
+        ]
+      ],
+      "min_length": 61.3,
+      "data_id": "research_station",
+      "gameplay_entity": "research_station",
+      "class": "research_station",
+      "station_kind": "research_station",
+      "faction": "rebel",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b3c_stations.py",
+      "seed_arg": "--asset rebel:research_station"
+    },
+    {
+      "binding": "confederacy:research_station",
+      "label": "legion research station",
+      "identifier": "legion_research_station",
+      "mesh": "assets/models/legion_research_station.mesh.json",
+      "envelope": [
+        [
+          -46.3156,
+          -12.4,
+          -33.48
+        ],
+        [
+          46.3156,
+          13.88,
+          52.68
+        ]
+      ],
+      "min_length": 86.0,
+      "data_id": "research_station",
+      "gameplay_entity": "research_station",
+      "class": "research_station",
+      "station_kind": "research_station",
+      "faction": "confederacy",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b3c_stations.py",
+      "seed_arg": "--asset confederacy:research_station"
+    },
+    {
+      "binding": "syndicate:research_station",
+      "label": "syndicate research station",
+      "identifier": "syndicate_research_station",
+      "mesh": "assets/models/syndicate_research_station.mesh.json",
+      "envelope": [
+        [
+          -40.0,
+          -7.2,
+          -27.572
+        ],
+        [
+          36.4,
+          37.68,
+          32.8
+        ]
+      ],
+      "min_length": 60.2,
+      "data_id": "research_station",
+      "gameplay_entity": "research_station",
+      "class": "research_station",
+      "station_kind": "research_station",
+      "faction": "syndicate",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b3c_stations.py",
+      "seed_arg": "--asset syndicate:research_station"
+    },
+    {
+      "binding": "rebel:defense_platform",
+      "label": "alliance defense platform",
+      "identifier": "alliance_defense_platform",
+      "mesh": "assets/models/alliance_defense_platform.mesh.json",
+      "envelope": [
+        [
+          -45.92,
+          -4.8,
+          -44.32
+        ],
+        [
+          45.92,
+          11.166,
+          44.32
+        ]
+      ],
+      "min_length": 88.4,
+      "data_id": "defense_platform",
+      "gameplay_entity": "defense_platform",
+      "class": "defense_platform",
+      "station_kind": "defense_platform",
+      "faction": "rebel",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b3c_stations.py",
+      "seed_arg": "--asset rebel:defense_platform"
+    },
+    {
+      "binding": "confederacy:defense_platform",
+      "label": "legion defense platform",
+      "identifier": "legion_defense_platform",
+      "mesh": "assets/models/legion_defense_platform.mesh.json",
+      "envelope": [
+        [
+          -50.2043,
+          -8.4,
+          -31.2764
+        ],
+        [
+          50.2043,
+          16.544,
+          55.68
+        ]
+      ],
+      "min_length": 86.8,
+      "data_id": "defense_platform",
+      "gameplay_entity": "defense_platform",
+      "class": "defense_platform",
+      "station_kind": "defense_platform",
+      "faction": "confederacy",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b3c_stations.py",
+      "seed_arg": "--asset confederacy:defense_platform"
+    },
+    {
+      "binding": "syndicate:defense_platform",
+      "label": "syndicate defense platform",
+      "identifier": "syndicate_defense_platform",
+      "mesh": "assets/models/syndicate_defense_platform.mesh.json",
+      "envelope": [
+        [
+          -45.9679,
+          -10.8,
+          -28.5448
+        ],
+        [
+          30.3691,
+          22.1,
+          28.0475
+        ]
+      ],
+      "min_length": 56.4,
+      "data_id": "defense_platform",
+      "gameplay_entity": "defense_platform",
+      "class": "defense_platform",
+      "station_kind": "defense_platform",
+      "faction": "syndicate",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b3c_stations.py",
+      "seed_arg": "--asset syndicate:defense_platform"
+    },
+    {
+      "binding": "rebel:trade_station",
+      "label": "alliance trade station",
+      "identifier": "alliance_trade_station",
+      "mesh": "assets/models/alliance_trade_station.mesh.json",
+      "envelope": [
+        [
+          -44.0,
+          -5.948,
+          -38.736
+        ],
+        [
+          44.0,
+          6.12,
+          39.36
+        ]
+      ],
+      "min_length": 77.9,
+      "data_id": "trade_station",
+      "gameplay_entity": "trade_station",
+      "class": "trade_station",
+      "station_kind": "trade_station",
+      "faction": "rebel",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b3c_stations.py",
+      "seed_arg": "--asset rebel:trade_station"
+    },
+    {
+      "binding": "confederacy:trade_station",
+      "label": "legion trade station",
+      "identifier": "legion_trade_station",
+      "mesh": "assets/models/legion_trade_station.mesh.json",
+      "envelope": [
+        [
+          -43.7668,
+          -6.552,
+          -46.0532
+        ],
+        [
+          43.7668,
+          18.28,
+          46.0532
+        ]
+      ],
+      "min_length": 91.9,
+      "data_id": "trade_station",
+      "gameplay_entity": "trade_station",
+      "class": "trade_station",
+      "station_kind": "trade_station",
+      "faction": "confederacy",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b3c_stations.py",
+      "seed_arg": "--asset confederacy:trade_station"
+    },
+    {
+      "binding": "syndicate:trade_station",
+      "label": "syndicate trade station",
+      "identifier": "syndicate_trade_station",
+      "mesh": "assets/models/syndicate_trade_station.mesh.json",
+      "envelope": [
+        [
+          -52.3122,
+          -8.8,
+          -48.6483
+        ],
+        [
+          45.2571,
+          24.5,
+          46.5606
+        ]
+      ],
+      "min_length": 95.0,
+      "data_id": "trade_station",
+      "gameplay_entity": "trade_station",
+      "class": "trade_station",
+      "station_kind": "trade_station",
+      "faction": "syndicate",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b3c_stations.py",
+      "seed_arg": "--asset syndicate:trade_station"
+    },
+    {
+      "binding": "rebel:fighter_platform",
+      "label": "alliance fighter platform",
+      "identifier": "alliance_fighter_platform",
+      "mesh": "assets/models/alliance_fighter_platform.mesh.json",
+      "envelope": [
+        [
+          -48.0,
+          -9.2,
+          -39.2
+        ],
+        [
+          48.0,
+          6.92,
+          39.2
+        ]
+      ],
+      "min_length": 78.2,
+      "data_id": "fighter_platform",
+      "gameplay_entity": "fighter_platform",
+      "class": "fighter_platform",
+      "station_kind": "fighter_platform",
+      "faction": "rebel",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b3c_stations.py",
+      "seed_arg": "--asset rebel:fighter_platform"
+    },
+    {
+      "binding": "confederacy:fighter_platform",
+      "label": "legion fighter platform",
+      "identifier": "legion_fighter_platform",
+      "mesh": "assets/models/legion_fighter_platform.mesh.json",
+      "envelope": [
+        [
+          -42.4021,
+          -8.8,
+          -36.4
+        ],
+        [
+          42.4021,
+          11.88,
+          36.0
+        ]
+      ],
+      "min_length": 72.2,
+      "data_id": "fighter_platform",
+      "gameplay_entity": "fighter_platform",
+      "class": "fighter_platform",
+      "station_kind": "fighter_platform",
+      "faction": "confederacy",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b3c_stations.py",
+      "seed_arg": "--asset confederacy:fighter_platform"
+    },
+    {
+      "binding": "syndicate:fighter_platform",
+      "label": "syndicate fighter platform",
+      "identifier": "syndicate_fighter_platform",
+      "mesh": "assets/models/syndicate_fighter_platform.mesh.json",
+      "envelope": [
+        [
+          -39.6,
+          -15.2,
+          -39.2
+        ],
+        [
+          32.1135,
+          30.8,
+          39.2
+        ]
+      ],
+      "min_length": 78.2,
+      "data_id": "fighter_platform",
+      "gameplay_entity": "fighter_platform",
+      "class": "fighter_platform",
+      "station_kind": "fighter_platform",
+      "faction": "syndicate",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b3c_stations.py",
+      "seed_arg": "--asset syndicate:fighter_platform"
+    },
+    {
+      "binding": "rebel:repair_dock",
+      "label": "alliance repair dock",
+      "identifier": "alliance_repair_dock",
+      "mesh": "assets/models/alliance_repair_dock.mesh.json",
+      "envelope": [
+        [
+          -38.4,
+          -12.8,
+          -33.6
+        ],
+        [
+          38.4,
+          23.6,
+          39.6
+        ]
+      ],
+      "min_length": 73.0,
+      "data_id": "repair_dock",
+      "gameplay_entity": "repair_dock",
+      "class": "repair_dock",
+      "station_kind": "repair_dock",
+      "faction": "rebel",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b3c_stations.py",
+      "seed_arg": "--asset rebel:repair_dock"
+    },
+    {
+      "binding": "confederacy:repair_dock",
+      "label": "legion repair dock",
+      "identifier": "legion_repair_dock",
+      "mesh": "assets/models/legion_repair_dock.mesh.json",
+      "envelope": [
+        [
+          -40.1472,
+          -14.8,
+          -36.4
+        ],
+        [
+          40.1472,
+          26.4,
+          36.4
+        ]
+      ],
+      "min_length": 72.6,
+      "data_id": "repair_dock",
+      "gameplay_entity": "repair_dock",
+      "class": "repair_dock",
+      "station_kind": "repair_dock",
+      "faction": "confederacy",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b3c_stations.py",
+      "seed_arg": "--asset confederacy:repair_dock"
+    },
+    {
+      "binding": "syndicate:repair_dock",
+      "label": "syndicate repair dock",
+      "identifier": "syndicate_repair_dock",
+      "mesh": "assets/models/syndicate_repair_dock.mesh.json",
+      "envelope": [
+        [
+          -37.4318,
+          -16.8,
+          -38.931
+        ],
+        [
+          39.7528,
+          34.8,
+          37.9495
+        ]
+      ],
+      "min_length": 76.7,
+      "data_id": "repair_dock",
+      "gameplay_entity": "repair_dock",
+      "class": "repair_dock",
+      "station_kind": "repair_dock",
+      "faction": "syndicate",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b3c_stations.py",
+      "seed_arg": "--asset syndicate:repair_dock"
+    },
+    {
+      "binding": "confederacy:shipyard",
+      "label": "legion shipyard",
+      "identifier": "legion_shipyard",
+      "mesh": "assets/models/legion_shipyard.mesh.json",
+      "envelope": [
+        [
+          -62.04,
+          -5.6,
+          -45.0564
+        ],
+        [
+          62.04,
+          41.6,
+          62.4
+        ]
+      ],
+      "min_length": 107.3,
+      "data_id": "shipyard",
+      "gameplay_entity": "shipyard",
+      "class": "shipyard",
+      "station_kind": "shipyard",
+      "faction": "confederacy",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b3c_stations.py",
+      "seed_arg": "--asset confederacy:shipyard"
+    },
+    {
+      "binding": "syndicate:shipyard",
+      "label": "syndicate shipyard",
+      "identifier": "syndicate_shipyard",
+      "mesh": "assets/models/syndicate_shipyard.mesh.json",
+      "envelope": [
+        [
+          -52.1606,
+          -18.9928,
+          -53.6606
+        ],
+        [
+          46.9468,
+          45.6,
+          48.4056
+        ]
+      ],
+      "min_length": 101.9,
+      "data_id": "shipyard",
+      "gameplay_entity": "shipyard",
+      "class": "shipyard",
+      "station_kind": "shipyard",
+      "faction": "syndicate",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b3c_stations.py",
+      "seed_arg": "--asset syndicate:shipyard"
+    }
+  ],
+  "appearance_decision": "s06-b3c-stations-2026-10-17"
+}

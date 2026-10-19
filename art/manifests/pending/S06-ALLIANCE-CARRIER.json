@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b1-alliance-combat",
+  "binding": "rebel:supercapital",
+  "canonical_binding": "ship:rebel:supercapital",
+  "gameplay_entity": "rebel_supercapital",
+  "class": "supercapital",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/alliance_carrier.blend",
+    "sha256": "ac25a832ab26aabb5aff2797738661153ccd3145f34948bfa476407d0fa2053e",
+    "bytes": 234097
+  },
+  "initial_seed": {
+    "path": "tools/art/build_alliance_carrier.py",
+    "sha256": "73fe3afa6e16e1ebf3b070e917bd4e8145e54c94fd6f60d771c9839783fcce32",
+    "bytes": 10626,
+    "selects": null
+  },
+  "export_script": {
+    "path": "tools/art/export_alliance_carrier.py",
+    "sha256": "b839bc9f7e41b635b116ffa54f3e8dcc425c46cd02de7c6dc2be7b8b82d0bb05",
+    "bytes": 4772
+  },
+  "runtime": {
+    "path": "assets/models/alliance_carrier.mesh.json",
+    "sha256": "44e64c9ceed6d01d4e25eab1b4b0afec909bdc10d293af7d0d43a043dad64891",
+    "bytes": 547192,
+    "triangles": 8656,
+    "vertices": 5026,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -146.51,
+      -30.5,
+      -204.8
+    ],
+    [
+      146.51,
+      57.0,
+      190.0
+    ]
+  ],
+  "bounds": [
+    [
+      -146.51,
+      -30.5,
+      -204.8
+    ],
+    [
+      146.51,
+      56.95528,
+      190.0
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b1-alliance-combat/contact-sheet.png",
+  "motion": "artifacts/s06_alliance_batch_review/b1-alliance-combat/carrier-after-motion.mp4",
+  "appearance_decision": "s06-b1-alliance-combat-2026-10-17"
+}

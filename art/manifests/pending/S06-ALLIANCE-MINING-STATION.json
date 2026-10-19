@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b3b-stations-slice-1",
+  "binding": "rebel:mining_station",
+  "canonical_binding": "ship:rebel:mining_station",
+  "gameplay_entity": "mining_station",
+  "class": "mining_station",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/alliance_mining_station.blend",
+    "sha256": "ab9a5c7e263fc7754e2b4abb8397cc40e87ea4794996246cca73e8c16f1bacef",
+    "bytes": 155185
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b3b_stations.py",
+    "sha256": "922fcabcafb207e312180e672d0a95001900618e231260d5a939815bcbf951d5",
+    "bytes": 35373,
+    "selects": "--asset rebel:mining_station"
+  },
+  "export_script": {
+    "path": "tools/art/export_alliance_mining_station.py",
+    "sha256": "6e54e3dada65cab4c0571a533e93bfab5cea95ce552b80150f73f96d2b9ade01",
+    "bytes": 4774
+  },
+  "runtime": {
+    "path": "assets/models/alliance_mining_station.mesh.json",
+    "sha256": "ff14df049feaad5937326566ac8015a9d86dcf03671d7e3426f8952b7e53e9da",
+    "bytes": 335435,
+    "triangles": 4948,
+    "vertices": 2657,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -44.8,
+      -15.6,
+      -26.0
+    ],
+    [
+      44.8,
+      10.12,
+      22.8294
+    ]
+  ],
+  "bounds": [
+    [
+      -44.75,
+      -15.6,
+      -26.0
+    ],
+    [
+      44.75,
+      9.92,
+      22.8294
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b3b-stations/contact-sheet.png",
+  "motion": "artifacts/s06_alliance_batch_review/b3b-stations/alliance mining station-after-motion.mp4",
+  "appearance_decision": "s06-b3b-stations-2026-10-17"
+}

@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b3c-stations",
+  "binding": "confederacy:shipyard",
+  "canonical_binding": "ship:confederacy:shipyard",
+  "gameplay_entity": "shipyard",
+  "class": "shipyard",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/legion_shipyard.blend",
+    "sha256": "3156021eef4c77f744ecdd1a25a8c1f96566e32761e88ee1ae7ac606a2741042",
+    "bytes": 146437
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b3c_stations.py",
+    "sha256": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+    "bytes": 58285,
+    "selects": "--asset confederacy:shipyard"
+  },
+  "export_script": {
+    "path": "tools/art/export_legion_shipyard.py",
+    "sha256": "11e498efe68a8e2fa3c7dbab6f0819be212a89a7ac74e5c81c81aa75100bdf75",
+    "bytes": 4751
+  },
+  "runtime": {
+    "path": "assets/models/legion_shipyard.mesh.json",
+    "sha256": "748c48aa54266073f5b0773f3ef0748b2cf049cd51523d65f66083163d794f01",
+    "bytes": 236690,
+    "triangles": 3772,
+    "vertices": 2064,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -62.04,
+      -5.6,
+      -45.0564
+    ],
+    [
+      62.04,
+      41.6,
+      62.4
+    ]
+  ],
+  "bounds": [
+    [
+      -62.04,
+      -5.6,
+      -45.0564
+    ],
+    [
+      62.04,
+      41.6,
+      62.4
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+  "motion": "artifacts/s06_alliance_batch_review/b3c-stations/legion shipyard-after-motion.mp4",
+  "appearance_decision": "s06-b3c-stations-2026-10-17"
+}

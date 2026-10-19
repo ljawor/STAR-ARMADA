@@ -1,0 +1,879 @@
+{
+  "schema": 1,
+  "batch": "s06-b6-imperial-ships",
+  "row": "ship:imperial:convoy",
+  "row_argument": "imperial:convoy",
+  "registry_key": "imperial:convoy",
+  "identifier": "imperial_convoy",
+  "status": "review_only_not_registered",
+  "integration": "UNAPPROVED review-only monkeypatch of render.asset_selection.selected_binding and render.asset_selection.mesh_for for this one binding, inside an explicit model_preview session. The renderer's ship path serves ship:imperial:convoy as imperial:convoy (measured: the data row's category goes through the fighter/bomber role mapping), so that measured key - and only that key - is patched. The registry row stays procedural_legacy, no manifest exists for the row and nothing in production selects it; both patches and the preview session are torn down at the end of this run.",
+  "warning": "Offline orbit captures from the real production draw path: not paced FPS, not a battle-acceptance or native-Windows-graphics acceptance, and not an owner appearance decision.",
+  "registration": {
+    "registry_binding": "imperial:convoy",
+    "registry_status": "procedural_legacy",
+    "registry_manifest": "core:imperial/convoy",
+    "manifest_exists": false,
+    "in_production_pipeline": false,
+    "registry_envelope_present": false
+  },
+  "legacy": {
+    "shape": "box",
+    "source": "render/fleet_geometry.py::_ship_mesh",
+    "triangles": 1536,
+    "vertices": 840,
+    "drawn_length": 51.29628,
+    "drawn_scale": 1.0456731371959456
+  },
+  "serving": {
+    "declared_runtime_key": "imperial:convoy",
+    "measured_runtime_key": "imperial:convoy",
+    "legacy_shape_from_data": "box",
+    "stock_visual_key": "imperial:convoy",
+    "review_visual_key": "imperial:convoy",
+    "selected_binding_in_production": false,
+    "mesh_in_production": null,
+    "note": "stock = the preview session with nothing patched; review = the same session with this row's measured runtime key served"
+  },
+  "authored": {
+    "path": "assets/models/imperial_convoy.mesh.json",
+    "sha256": "3f887ced61a15b4d8038103ec6c015c482fa8db315cc46c3526063535ff6a56a",
+    "bytes": 292448,
+    "triangles": 4745,
+    "vertices": 2575,
+    "bounds": [
+      [
+        -19.5,
+        -6.8,
+        -24.6975
+      ],
+      [
+        19.5,
+        25.73641,
+        24.35825
+      ]
+    ],
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ],
+    "authority": "script",
+    "approval": "pending_owner_approval"
+  },
+  "envelope": [
+    [
+      -20.0,
+      20.0
+    ],
+    [
+      -7.0,
+      26.5
+    ],
+    [
+      -24.6975,
+      24.35825
+    ]
+  ],
+  "min_authored_length": 48.85575,
+  "drawn_size": {
+    "legacy": {
+      "shape": "imperial:convoy",
+      "scale": 1.0456731371959456,
+      "length": 51.29628,
+      "radius": 32.662527756938445
+    },
+    "candidate": {
+      "shape": "imperial:convoy",
+      "scale": 1.0456731371959453,
+      "length": 51.29628,
+      "radius": 36.37475734738221
+    }
+  },
+  "placement": [
+    [
+      "capital",
+      "ship",
+      "imperial_crew_transport",
+      1,
+      [
+        -4200,
+        0,
+        2200
+      ],
+      0.0
+    ],
+    [
+      "escort",
+      "ship",
+      "rebel_frigate",
+      0,
+      [
+        -4200,
+        0,
+        2900
+      ],
+      0.0
+    ],
+    [
+      "battleship",
+      "ship",
+      "rebel_battleship",
+      0,
+      [
+        -4200,
+        0,
+        1500
+      ],
+      0.0
+    ],
+    [
+      "enemy_a",
+      "ship",
+      "imperial_frigate",
+      1,
+      [
+        -3500,
+        0,
+        2200
+      ],
+      -1.5707963267948966
+    ],
+    [
+      "enemy_b",
+      "ship",
+      "imperial_frigate",
+      1,
+      [
+        -3500,
+        0,
+        2900
+      ],
+      -1.5707963267948966
+    ]
+  ],
+  "initial_state_sha256": "e768e09ec9c502781e30d7ef546f4108b62654789bca22c63469c7c40f520e0e",
+  "views": {
+    "close": {
+      "legacy": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4157.219641859458,
+            60.0,
+            2238.5196074862542
+          ],
+          "resolved_eye": [
+            -4157.219641859458,
+            60.0,
+            2238.5196074862542
+          ],
+          "union_eye": [
+            -4157.219641859458,
+            60.0,
+            2238.5196074862542
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 70.2759036,
+          "yaw": 48.0,
+          "pitch": 35.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "e768e09ec9c502781e30d7ef546f4108b62654789bca22c63469c7c40f520e0e",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            232.73,
+            16.43,
+            1036.22,
+            733.39
+          ],
+          "visible_px": [
+            803.48,
+            716.95
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            239.05,
+            25.23,
+            1026.96,
+            727.84
+          ],
+          "visible_px": [
+            787.91,
+            702.61
+          ]
+        },
+        "image": "imperial-convoy-legacy-close.png",
+        "image_sha256": "f8debd132a1bd72771c3f3c158d41070fcb78377f79ff63ada30700d281912fb"
+      },
+      "authored": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4157.219641859458,
+            60.0,
+            2238.5196074862542
+          ],
+          "resolved_eye": [
+            -4157.219641859458,
+            60.0,
+            2238.5196074862542
+          ],
+          "union_eye": [
+            -4157.219641859458,
+            60.0,
+            2238.5196074862542
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 70.2759036,
+          "yaw": 48.0,
+          "pitch": 35.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "e768e09ec9c502781e30d7ef546f4108b62654789bca22c63469c7c40f520e0e",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            232.73,
+            16.43,
+            1036.22,
+            733.39
+          ],
+          "visible_px": [
+            803.48,
+            716.95
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            239.05,
+            25.23,
+            1026.96,
+            727.84
+          ],
+          "visible_px": [
+            787.91,
+            702.61
+          ]
+        },
+        "image": "imperial-convoy-authored-close.png",
+        "image_sha256": "1d697c01554a021e10a84d23c312c26839307e225ffd5a92cf2178763292804b"
+      },
+      "legacy-repeat": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4157.219641859458,
+            60.0,
+            2238.5196074862542
+          ],
+          "resolved_eye": [
+            -4157.219641859458,
+            60.0,
+            2238.5196074862542
+          ],
+          "union_eye": [
+            -4157.219641859458,
+            60.0,
+            2238.5196074862542
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 70.2759036,
+          "yaw": 48.0,
+          "pitch": 35.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "e768e09ec9c502781e30d7ef546f4108b62654789bca22c63469c7c40f520e0e",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            232.73,
+            16.43,
+            1036.22,
+            733.39
+          ],
+          "visible_px": [
+            803.48,
+            716.95
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            239.05,
+            25.23,
+            1026.96,
+            727.84
+          ],
+          "visible_px": [
+            787.91,
+            702.61
+          ]
+        },
+        "image": "imperial-convoy-legacy-repeat-close.png",
+        "image_sha256": "f8debd132a1bd72771c3f3c158d41070fcb78377f79ff63ada30700d281912fb"
+      }
+    },
+    "wide": {
+      "legacy": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4078.21162776404,
+            234.04835112916234,
+            2309.6587429097094
+          ],
+          "resolved_eye": [
+            -4078.21162776404,
+            234.04835112916234,
+            2309.6587429097094
+          ],
+          "union_eye": [
+            -4078.21162776404,
+            234.04835112916234,
+            2309.6587429097094
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 285.7202796,
+          "yaw": 48.0,
+          "pitch": 55.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "e768e09ec9c502781e30d7ef546f4108b62654789bca22c63469c7c40f520e0e",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            543.5,
+            283.37,
+            736.58,
+            486.94
+          ],
+          "visible_px": [
+            193.08,
+            203.57
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            544.69,
+            285.66,
+            735.25,
+            485.69
+          ],
+          "visible_px": [
+            190.56,
+            200.03
+          ]
+        },
+        "image": "imperial-convoy-legacy-wide.png",
+        "image_sha256": "a12405f80afdfbdb6107ca82e5670e3102ca08457660f326a35169371e270b96"
+      },
+      "authored": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4078.21162776404,
+            234.04835112916234,
+            2309.6587429097094
+          ],
+          "resolved_eye": [
+            -4078.21162776404,
+            234.04835112916234,
+            2309.6587429097094
+          ],
+          "union_eye": [
+            -4078.21162776404,
+            234.04835112916234,
+            2309.6587429097094
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 285.7202796,
+          "yaw": 48.0,
+          "pitch": 55.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "e768e09ec9c502781e30d7ef546f4108b62654789bca22c63469c7c40f520e0e",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            543.5,
+            283.37,
+            736.58,
+            486.94
+          ],
+          "visible_px": [
+            193.08,
+            203.57
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            544.69,
+            285.66,
+            735.25,
+            485.69
+          ],
+          "visible_px": [
+            190.56,
+            200.03
+          ]
+        },
+        "image": "imperial-convoy-authored-wide.png",
+        "image_sha256": "b597edb75d19ed261c6cea5fa0c67676f065c8f5c155832f997ec3db1b366df4"
+      },
+      "legacy-repeat": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4078.21162776404,
+            234.04835112916234,
+            2309.6587429097094
+          ],
+          "resolved_eye": [
+            -4078.21162776404,
+            234.04835112916234,
+            2309.6587429097094
+          ],
+          "union_eye": [
+            -4078.21162776404,
+            234.04835112916234,
+            2309.6587429097094
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 285.7202796,
+          "yaw": 48.0,
+          "pitch": 55.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "e768e09ec9c502781e30d7ef546f4108b62654789bca22c63469c7c40f520e0e",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            543.5,
+            283.37,
+            736.58,
+            486.94
+          ],
+          "visible_px": [
+            193.08,
+            203.57
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            544.69,
+            285.66,
+            735.25,
+            485.69
+          ],
+          "visible_px": [
+            190.56,
+            200.03
+          ]
+        },
+        "image": "imperial-convoy-legacy-repeat-wide.png",
+        "image_sha256": "a12405f80afdfbdb6107ca82e5670e3102ca08457660f326a35169371e270b96"
+      }
+    }
+  },
+  "captures": {
+    "close": {
+      "legacy": "imperial-convoy-legacy-close.png",
+      "authored": "imperial-convoy-authored-close.png",
+      "legacy_repeat": "imperial-convoy-legacy-repeat-close.png"
+    },
+    "wide": {
+      "legacy": "imperial-convoy-legacy-wide.png",
+      "authored": "imperial-convoy-authored-wide.png",
+      "legacy_repeat": "imperial-convoy-legacy-repeat-wide.png"
+    }
+  },
+  "comparison": {
+    "close": {
+      "changed_pixels": 379263,
+      "changed_percent": 37.0374,
+      "bbox": [
+        228,
+        0,
+        1051,
+        799
+      ],
+      "repeat_changed_pixels": 0,
+      "repeat_max_delta": 0,
+      "repeat_bbox": null,
+      "repeat_cells": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "per_pass_vs_first": {
+        "legacy": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        },
+        "authored": {
+          "changed_pixels": 379263,
+          "changed_percent": 37.0374,
+          "max_delta": 251,
+          "bbox": [
+            228,
+            0,
+            1051,
+            799
+          ]
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        }
+      },
+      "in_pass_repeats": {
+        "legacy": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "authored": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        }
+      },
+      "first_variant": "legacy",
+      "per_variant_repeat_changed_pixels": {
+        "legacy": 0,
+        "authored": 0
+      }
+    },
+    "wide": {
+      "changed_pixels": 26900,
+      "changed_percent": 2.627,
+      "bbox": [
+        533,
+        293,
+        746,
+        506
+      ],
+      "repeat_changed_pixels": 0,
+      "repeat_max_delta": 0,
+      "repeat_bbox": null,
+      "repeat_cells": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "per_pass_vs_first": {
+        "legacy": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        },
+        "authored": {
+          "changed_pixels": 26900,
+          "changed_percent": 2.627,
+          "max_delta": 251,
+          "bbox": [
+            533,
+            293,
+            746,
+            506
+          ]
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        }
+      },
+      "in_pass_repeats": {
+        "legacy": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "authored": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        }
+      },
+      "first_variant": "legacy",
+      "per_variant_repeat_changed_pixels": {
+        "legacy": 0,
+        "authored": 0
+      }
+    }
+  },
+  "display": {
+    "samples": 4,
+    "viewport": [
+      0,
+      0,
+      1280,
+      800
+    ],
+    "per_pass": {
+      "legacy": {
+        "samples": 4,
+        "viewport": [
+          0,
+          0,
+          1280,
+          800
+        ]
+      },
+      "authored": {
+        "samples": 4,
+        "viewport": [
+          0,
+          0,
+          1280,
+          800
+        ]
+      },
+      "legacy-repeat": {
+        "samples": 4,
+        "viewport": [
+          0,
+          0,
+          1280,
+          800
+        ]
+      }
+    },
+    "gl": {
+      "vendor": "Apple",
+      "renderer": "Apple M4",
+      "version": "2.1 Metal - 90.5"
+    }
+  },
+  "production_candidate_unselected_after_review": true,
+  "one_camera_per_view": true,
+  "sheet": {
+    "image": "imperial-convoy-comparison.png",
+    "bytes": 380446,
+    "sha256": "00b8fa2dcf37540305ec84cb9bd75d16071e7fa6731ddf7f2b88746a798785d0",
+    "row": "ship:imperial:convoy",
+    "runtime_key": "imperial:convoy",
+    "label_band": [
+      "UNAPPROVED REVIEW ONLY - ship:imperial:convoy - legacy `box` hull vs authored mesh",
+      "served as runtime key imperial:convoy - one camera, same tick, 4MSAA / production shaders - drawn length 51.30"
+    ],
+    "layout": "top row the close pair, bottom row the wide pair, legacy left and authored right"
+  }
+}

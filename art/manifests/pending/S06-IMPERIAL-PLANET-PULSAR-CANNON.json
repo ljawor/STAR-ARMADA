@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b4-hardware",
+  "binding": "imperial:planet_pulsar_cannon",
+  "canonical_binding": "ship:imperial:planet_pulsar_cannon",
+  "gameplay_entity": "planet_pulsar_cannon",
+  "class": "planet_pulsar_cannon",
+  "authority": "script",
+  "source": {
+    "path": "art/blender/imperial_planet_pulsar_cannon.blend",
+    "sha256": "5a75993a045513dfff1421624ff38ef95af21c93814fde4ac4610c418f6f2377",
+    "bytes": 128813
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b4_hardware.py",
+    "sha256": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+    "bytes": 33018,
+    "selects": "--asset imperial:planet_pulsar_cannon"
+  },
+  "export_script": {
+    "path": "tools/art/export_imperial_planet_pulsar_cannon.py",
+    "sha256": "755621b87b38d2e1b70d719a6f65c9b146f0457a7b35f8dfda4fbe505374f4e2",
+    "bytes": 4779
+  },
+  "runtime": {
+    "path": "assets/models/imperial_planet_pulsar_cannon.mesh.json",
+    "sha256": "9a5e27a842b0fd32254291c06fc919f296d6153c0d759c0e2fcb48a013a837dd",
+    "bytes": 128327,
+    "triangles": 2300,
+    "vertices": 1296,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -34.0,
+      0.0,
+      -32.0
+    ],
+    [
+      34.0,
+      42.4,
+      46.0
+    ]
+  ],
+  "bounds": [
+    [
+      -34.0,
+      0.0,
+      -32.0
+    ],
+    [
+      34.0,
+      42.4,
+      46.0
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b4-hardware/contact-sheet.png",
+  "motion": "artifacts/s06_alliance_batch_review/b4-hardware/imperial pulsar cannon-after-motion.mp4",
+  "appearance_decision": "s06-b4-hardware-2026-10-17"
+}

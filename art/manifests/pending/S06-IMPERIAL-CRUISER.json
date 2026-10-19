@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b6-imperial-ships",
+  "binding": "imperial:cruiser",
+  "canonical_binding": "ship:imperial:cruiser",
+  "gameplay_entity": "imperial_cruiser",
+  "class": "combat_hull",
+  "authority": "script",
+  "source": {
+    "path": "art/blender/imperial_cruiser.blend",
+    "sha256": "aad9345c8d5aac5f0cb7a287a482c67d707e4b448aff0c93df96043c2509324e",
+    "bytes": 146252
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b6_imperial_ships.py",
+    "sha256": "b63f45eebd1c8c9ebe5f2d8529872098c9cbf6a8cf7691873d15f62a280070f5",
+    "bytes": 56133,
+    "selects": "--asset ship:imperial:cruiser"
+  },
+  "export_script": {
+    "path": "tools/art/export_imperial_cruiser.py",
+    "sha256": "a648e015477647e1e37288cd80acc98e00393a2e9ec8ffc3df531dba21b2a408",
+    "bytes": 4753
+  },
+  "runtime": {
+    "path": "assets/models/imperial_cruiser.mesh.json",
+    "sha256": "125f37cf927840f5ccd452bfe8ec5998c0e6e644c0965932399b716d8fedd130",
+    "bytes": 147861,
+    "triangles": 2384,
+    "vertices": 1290,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -29.45,
+      -7.0,
+      -62.94
+    ],
+    [
+      29.45,
+      31.5,
+      78.0
+    ]
+  ],
+  "bounds": [
+    [
+      -29.45,
+      -7.0,
+      -62.94
+    ],
+    [
+      29.45,
+      31.5,
+      78.0
+    ]
+  ],
+  "authoring": "Script-authored by the B6 seed (script-authoritative per the S03 source-authority policy)",
+  "blender_pin": "see tools/art",
+  "owner_decision": null,
+  "activation": false,
+  "appearance_decision": "s06-b6-imperial-ships-2026-10-18",
+  "future_pipeline_registration": "Not registered anywhere; a later landing step is what would add a pipeline entry.",
+  "evidence": "artifacts/s06_alliance_batch_review/b6-cruiser/imperial-cruiser-comparison.png",
+  "motion": []
+}

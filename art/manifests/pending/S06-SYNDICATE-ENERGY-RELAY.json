@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b3b-stations-slice-1",
+  "binding": "syndicate:energy_relay",
+  "canonical_binding": "ship:syndicate:energy_relay",
+  "gameplay_entity": "energy_relay",
+  "class": "energy_relay",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/syndicate_energy_relay.blend",
+    "sha256": "3a286a1b79c740cfd15005319f126398fec18301f00edce80a5d119b5a553a13",
+    "bytes": 144348
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b3b_stations.py",
+    "sha256": "922fcabcafb207e312180e672d0a95001900618e231260d5a939815bcbf951d5",
+    "bytes": 35373,
+    "selects": "--asset syndicate:energy_relay"
+  },
+  "export_script": {
+    "path": "tools/art/export_syndicate_energy_relay.py",
+    "sha256": "a6f9ca12a17fb103a3663c75b0131b8152b6eb354e06589942a6390cffb787e0",
+    "bytes": 4780
+  },
+  "runtime": {
+    "path": "assets/models/syndicate_energy_relay.mesh.json",
+    "sha256": "fabcb1e166385a6e0ae6c07fb3dd2fb040a309a332511aa8e19d638ff2f27af8",
+    "bytes": 238302,
+    "triangles": 3720,
+    "vertices": 2024,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -47.5594,
+      -11.2,
+      -46.5402
+    ],
+    [
+      46.5284,
+      23.36,
+      34.4011
+    ]
+  ],
+  "bounds": [
+    [
+      -47.5594,
+      -11.2,
+      -46.5402
+    ],
+    [
+      46.5284,
+      23.36,
+      34.4011
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b3b-stations/contact-sheet.png",
+  "motion": null,
+  "appearance_decision": "s06-b3b-stations-2026-10-17"
+}

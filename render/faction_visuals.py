@@ -1,14 +1,22 @@
 """Pure, finite render identities; ownership paint is deliberately separate.
 
 Catalogue identity wins for ships (including captured ships). Shared stations
-and catalogue-less commercial convoys use their owner's faction. Unknown mods
-and neutral owners keep the protected Imperial fallback.
+and catalogue-less commercial convoys use their owner's faction, and the
+convoy gate below admits every faction: a data-less trade convoy or a crew
+transport carrying crew reaches `<faction>:convoy` for Imperial too
+(s06-imperial-convoy-parity-2026-10-18). The general ship gate stays
+FACTIONS[1:], so no Imperial ship key moves. Unknown mods and neutral owners
+keep the protected Imperial fallback.
 """
 FACTIONS = ('imperial', 'rebel', 'confederacy', 'syndicate')
 SHIP_ROLES = ('fighter', 'bomber', 'corvette', 'frigate', 'cruiser',
               'battleship', 'supercapital', 'constructor', 'colonizer', 'convoy')
 LEGACY_SHAPES = ('wedge', 'needle', 'cruiser', 'dagger', 'box')
 SHIP_KEYS = LEGACY_SHAPES + tuple(f + ':' + r for f in FACTIONS[1:] for r in SHIP_ROLES)
+# The factions a convoy row may resolve to. Deliberately all four, and deliberately separate
+# from the general gate below: only the two convoy branches move for Imperial, because the ship
+# keys of the other factions are the only ones SHIP_KEYS carries (see tests/test_imperial_convoy_gate.py).
+CONVOY_FACTIONS = FACTIONS
 KNOWN_SHIP_IDS = frozenset(
     prefix + '_' + suffix
     for prefix, suffixes in (
@@ -45,6 +53,16 @@ def normalize_station_key(data_id, faction='imperial'):
     return (faction if faction in FACTIONS else 'imperial'), data_id
 
 
+def convoy_key(faction):
+    """`<faction>:convoy` for a faction whose convoy hull exists, else None.
+
+    One declared gate for both convoy branches in this module and for the same
+    two branches in render.asset_selection.ship_binding, so the two paths
+    cannot drift apart about which row is a convoy.
+    """
+    return faction + ':convoy' if faction in CONVOY_FACTIONS else None
+
+
 def ship_visual_key(ds, data_id, faction=None):
     from render.asset_selection import ship_binding
     selected = ship_binding(ds, data_id, faction)
@@ -52,11 +70,13 @@ def ship_visual_key(ds, data_id, faction=None):
         return selected
     data = ds.ships.get(data_id)
     if data is None:
-        if data_id == 'trade_convoy' and faction in FACTIONS[1:]:
-            return faction + ':convoy'
+        if data_id == 'trade_convoy':
+            key = convoy_key(faction)
+            if key is not None:
+                return key
         return normalize_ship_key(ds.ship_visual(data_id)['shape'])
     if data.category == 'crew_transport' and data.crew_capacity > 0:
-        return data.faction + ':convoy' if data.faction in FACTIONS[1:] else 'box'
+        return convoy_key(data.faction) or 'box'
     if data_id not in KNOWN_SHIP_IDS or data.faction not in FACTIONS[1:]:
         return normalize_ship_key(ds.ship_visual(data_id)['shape'])
     role = data.category

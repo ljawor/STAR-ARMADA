@@ -1,0 +1,15 @@
+Blender 5.0.1 (hash a3db93c5b259 built 2025-12-16 01:51:40)
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/tools/art/build_b3b_stations.py", line 610, in <module>
+    main()
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/tools/art/build_b3b_stations.py", line 607, in main
+    build(key)
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/tools/art/build_b3b_stations.py", line 570, in build
+    weld_scene()
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/tools/art/alliance_common.py", line 203, in weld_scene
+    raise RuntimeError(
+RuntimeError: 09 Relay pod left and 91 Bay machinery 5 are one cluster with 20.01 units of clear space between them. A brace that long is scaffold, not a weld: place one of them so it touches, or raise max_brace deliberately.
+
+Error: script failed, file: 'tools/art/build_b3b_stations.py', exiting.
+
+Blender quit

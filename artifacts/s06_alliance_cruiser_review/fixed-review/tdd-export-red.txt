@@ -1,0 +1,26 @@
+test_export_refuses_master_before_open (test_alliance_blender_cruiser.ExportSafety.test_export_refuses_master_before_open) ... ERROR
+
+======================================================================
+ERROR: test_export_refuses_master_before_open (test_alliance_blender_cruiser.ExportSafety.test_export_refuses_master_before_open)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/tests/test_alliance_blender_cruiser.py", line 73, in test_export_refuses_master_before_open
+    self.assert_master_refused('same')
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/tests/test_alliance_blender_cruiser.py", line 67, in assert_master_refused
+    exporter.main()
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/tools/art/export_alliance_cruiser.py", line 23, in main
+    bpy.ops.wm.open_mainfile(filepath=str(args.blend.resolve()))
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/unittest/mock.py", line 1124, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/unittest/mock.py", line 1128, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/unittest/mock.py", line 1183, in _execute_mock_call
+    raise effect
+RuntimeError: master opened before refusal
+
+----------------------------------------------------------------------
+Ran 1 test in 0.013s
+
+FAILED (errors=1)

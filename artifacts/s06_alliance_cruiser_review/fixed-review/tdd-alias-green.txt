@@ -1,0 +1,9 @@
+test_export_refuses_hardlink_master_alias_before_open (test_alliance_blender_cruiser.ExportSafety.test_export_refuses_hardlink_master_alias_before_open) ... ok
+test_export_refuses_master_before_open (test_alliance_blender_cruiser.ExportSafety.test_export_refuses_master_before_open) ... ok
+test_export_refuses_relative_master_alias_before_open (test_alliance_blender_cruiser.ExportSafety.test_export_refuses_relative_master_alias_before_open) ... ok
+test_export_refuses_symlink_master_alias_before_open (test_alliance_blender_cruiser.ExportSafety.test_export_refuses_symlink_master_alias_before_open) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.014s
+
+OK

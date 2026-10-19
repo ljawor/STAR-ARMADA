@@ -101,6 +101,150 @@ def cylinder(name,role,center,radius,depth,axis='Z',n=12):
 
 
 
+def _world_box(obj):
+    """One part's world-space box, from its own vertices; a bevel adds a hair, not a gap."""
+    corners = [obj.matrix_world @ v.co for v in obj.data.vertices]
+    return (tuple(min(c[i] for c in corners) for i in range(3)),
+            tuple(max(c[i] for c in corners) for i in range(3)))
+
+
+def _box_gap(a, b):  # noqa: D401
+    """How far apart two boxes are; negative as soon as they overlap on every axis."""
+    return max(max(a[0][i] - b[1][i], b[0][i] - a[1][i]) for i in range(3))
+
+
+def weld_scene(tolerance=.25, role='trim', grow_max=2.5, min_half=.3, max_half=.9,
+               overlap=.05, max_members=90, max_brace=10.0):
+    """Weld every part of the scene into one piece, so nothing floats in space.
+
+    A kit is authored part by part, by centre and by reach, and nothing in that process
+    guarantees contact. Without this pass the S06 batch shipped a sensor-station dish 23.75
+    units clear of its body - 120 px of daylight in its own capture - and a marker-light ring
+    1.4 units above the deck on all nine stations. `tolerance` is the largest daylight a part
+    may stand from its neighbour and still count as fitted.
+
+    A gap of at most `grow_max` is closed by growing the part: the face that looks at its
+    neighbour is pushed out until the two overlap, which thickens a panel onto the hull it was
+    always meant to sit on. A larger gap is closed with a member run between the two nearest
+ centres, because thickening a part by many times its own size is a different shape rather
+ than a fit - a sensor dish 2 units off its mast wants a short bracket, not a fatter dish.
+ A pair of parts whose centres are further apart than `max_brace` is a *design* fault, not a
+ fitting one: the first cut of this pass braced `legion_sensor_station`'s forward dish, which
+ had been authored at the station's origin while its mast sits 31 units forward, with three
+ long booms that read in the capture as an extra grey panel welded across the hull. Scaffold
+ is not a weld, so that case now refuses with the pair named, and the part gets placed where
+ it belongs instead. `max_brace` is 10 units of *clear space* - about a ninth of the smallest
+ of these stations - so a bracket across a small fit is fine and a hole you could see is not.
+ Either way
+    the asset's extent is kept, because the face that moves is the one facing the neighbour,
+    never the one that set the envelope - so the build's extent self-check stays a check on the
+    design rather than on this pass. Every joint is reported; the caller asserts the count, so
+    a silent no-op cannot pass for a weld.
+    """
+    parts = {o.name: _world_box(o) for o in bpy.context.scene.objects
+             if o.type == 'MESH' and o.data.vertices}
+    order = sorted(parts)
+    group = {name: name for name in order}
+
+    def find(name):
+        while group[name] != name:
+            group[name] = group[group[name]]
+            name = group[name]
+        return name
+
+    def join(names):
+        for i, a in enumerate(names):
+            for b in names[i + 1:]:
+                if _box_gap(parts[a], parts[b]) <= tolerance:
+                    ra, rb = find(a), find(b)
+                    if ra != rb:
+                        group[ra] = rb
+
+    def clusters():
+        out = {}
+        for name in list(parts):
+            out.setdefault(find(name), []).append(name)
+        return out
+
+    join(list(parts))
+    joints = []
+    while len(clusters()) > 1 and len(joints) < max_members:
+        groups = clusters()
+        body = max(groups.values(), key=len)
+        fixed = False
+        for names in (g for g in groups.values() if g is not body):
+            _, x, y = min((_box_gap(parts[a], parts[b]), a, b) for a in names for b in body)
+            bx, by = parts[x], parts[y]
+            axes = [i for i in range(3) if bx[0][i] > by[1][i] or by[0][i] > bx[1][i]]
+            if axes and _box_gap(bx, by) <= grow_max:
+                obj = bpy.context.scene.objects[x]
+                inverse = obj.matrix_world.inverted()
+                limit = {i: ((by[0][i] + overlap) if bx[1][i] < by[0][i] else (by[1][i] - overlap))
+                         for i in axes}
+                moved = 0
+                for vert in obj.data.vertices:
+                    point = obj.matrix_world @ vert.co
+                    # Only the axes this vertex actually sits on move: pushing a whole vertex on
+                    # an axis it does not lie on drags that cross-section out to the host's face
+                    # and resizes the part (measured: it took 0.045 off the carrier's Y extent).
+                    facing = [i for i in axes
+                              if abs(point[i] - (bx[1][i] if bx[1][i] < by[0][i] else bx[0][i]))
+                              < 1e-6]
+                    if facing:
+                        point = [limit[i] if i in facing else point[i] for i in range(3)]
+                        vert.co = inverse @ Vector(point)
+                        moved += 1
+                obj.data.update()
+                parts[x] = _world_box(obj)
+                joints.append((round(_box_gap(bx, by), 2), x, y, f'grew {moved} verts'))
+            else:
+                gap = _box_gap(bx, by)
+                if gap > max_brace:
+                    raise RuntimeError(
+                        f'{x} and {y} are one cluster with {gap:.2f} units of clear space '
+                        f'between them. A brace that long is scaffold, not a weld: place one of '
+                        f'them so it touches, or raise max_brace deliberately.')
+                smaller = min(bx, by, key=lambda box: min(box[1][i] - box[0][i] for i in range(3)))
+                half = min(max(.35 * min(smaller[1][i] - smaller[0][i] for i in range(3)),
+                               min_half), max_half)
+                # The member spans the *gap*, from one part's facing face to the other's, never
+                # from centre to centre: two long parts that almost touch would otherwise get a
+                # member as long as the parts themselves, which is how the first cut of this pass
+                # drew three booms across legion_sensor_station that read as an added hull panel.
+                lo, hi = [], []
+                for i in range(3):
+                    if bx[1][i] < by[0][i]:
+                        lo.append(bx[1][i] - overlap)
+                        hi.append(by[0][i] + overlap)
+                    elif by[1][i] < bx[0][i]:
+                        lo.append(by[1][i] - overlap)
+                        hi.append(bx[0][i] + overlap)
+                    else:
+                        mid = (max(bx[0][i], by[0][i]) + min(bx[1][i], by[1][i])) / 2
+                        lo.append(mid - half)
+                        hi.append(mid + half)
+                verts = [(lo[0], lo[1], lo[2]), (hi[0], lo[1], lo[2]), (hi[0], hi[1], lo[2]),
+                         (lo[0], hi[1], lo[2]), (lo[0], lo[1], hi[2]), (hi[0], lo[1], hi[2]),
+                         (hi[0], hi[1], hi[2]), (lo[0], hi[1], hi[2])]
+                faces = [(0, 1, 2, 3), (7, 6, 5, 4), (0, 4, 5, 1), (1, 5, 6, 2),
+                         (2, 6, 7, 3), (3, 7, 4, 0)]
+                member = mesh_object(f'95 Weld {len(joints) + 1}', role, verts, faces, 0)
+                parts[member.name] = (tuple(lo), tuple(hi))
+                group[member.name] = member.name
+                joints.append((round(_box_gap(bx, by), 2), x, y, f'braced with {member.name}'))
+            join(list(parts))
+            fixed = True
+        if not fixed:
+            break
+    for gap, x, y, how in joints:
+        print(f'WELD {x} ({gap} clear) -> {y}: {how}')
+    left = len(clusters())
+    print(f'WELD_TOTAL joints={len(joints)} tolerance={tolerance} clusters_left={left}')
+    assert left == 1, f'{left} clusters still floating; raise max_members'
+    return joints
+
+
+
 def export(identifier, design, features=None):
     BLEND = ROOT / f'art/blender/{identifier}.blend'
     EXPORT = ROOT / f'assets/models/{identifier}.mesh.json'

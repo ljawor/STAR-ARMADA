@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b6-imperial-ships",
+  "binding": "imperial:corvette",
+  "canonical_binding": "ship:imperial:corvette",
+  "gameplay_entity": "imperial_corvette",
+  "class": "combat_hull",
+  "authority": "script",
+  "source": {
+    "path": "art/blender/imperial_corvette.blend",
+    "sha256": "ddb2d4180faab70c9a48f1efd5750419414f2ce64e74dedf00cbbc00aec9714d",
+    "bytes": 145438
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b6_imperial_ships.py",
+    "sha256": "64b294578f4de02b6d0f2d4c200fd1681bf663ebca8944ad6cf828070e810f5e",
+    "bytes": 59461,
+    "selects": "--asset ship:imperial:corvette"
+  },
+  "export_script": {
+    "path": "tools/art/export_imperial_corvette.py",
+    "sha256": "c4fb1d3a44940b60b25ff7b0647d7a7b0e042c7ae5875e32bb11cf381263fa38",
+    "bytes": 4750
+  },
+  "runtime": {
+    "path": "assets/models/imperial_corvette.mesh.json",
+    "sha256": "be894218b84c00b4c6f78c96a46df1cf69441b627fa75155df02be41f6c30d05",
+    "bytes": 142216,
+    "triangles": 2348,
+    "vertices": 1272,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -16.0,
+      -5.0,
+      -43.601
+    ],
+    [
+      16.0,
+      24.0,
+      48.0
+    ]
+  ],
+  "bounds": [
+    [
+      -16.0,
+      -5.0,
+      -43.601
+    ],
+    [
+      16.0,
+      24.0,
+      48.0
+    ]
+  ],
+  "authoring": "Script-authored by the B6 seed (script-authoritative per the S03 source-authority policy)",
+  "blender_pin": "see tools/art (the pinned Blender version recorded with the batch)",
+  "owner_decision": null,
+  "activation": false,
+  "appearance_decision": "s06-b6-imperial-ships-2026-10-18",
+  "future_pipeline_registration": "Not registered anywhere. A later landing step is what would add a pipeline entry; this sidecar records appearance only.",
+  "evidence": "artifacts/s06_alliance_batch_review/b6-corvette/imperial-corvette-comparison.png",
+  "motion": []
+}

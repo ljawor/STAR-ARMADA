@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b3b-stations-slice-1",
+  "binding": "rebel:sensor_station",
+  "canonical_binding": "ship:rebel:sensor_station",
+  "gameplay_entity": "sensor_station",
+  "class": "sensor_station",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/alliance_sensor_station.blend",
+    "sha256": "6cd5fe3878340770a455da9945023d62b4ebdf5ecb0e1d814a84c4582cedba03",
+    "bytes": 147387
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b3b_stations.py",
+    "sha256": "922fcabcafb207e312180e672d0a95001900618e231260d5a939815bcbf951d5",
+    "bytes": 35373,
+    "selects": "--asset rebel:sensor_station"
+  },
+  "export_script": {
+    "path": "tools/art/export_alliance_sensor_station.py",
+    "sha256": "a77746fd5514a16b81e9d193f3f39bf7f2c1a05814ccf77bd9dd9e02691bc386",
+    "bytes": 4772
+  },
+  "runtime": {
+    "path": "assets/models/alliance_sensor_station.mesh.json",
+    "sha256": "02e7447e185ea4b01ddddd8e605247e2c99704736c9e0b4784b95545c2bff24e",
+    "bytes": 274873,
+    "triangles": 4196,
+    "vertices": 2158,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -46.4,
+      -12.8,
+      -24.8
+    ],
+    [
+      46.4,
+      30.48,
+      16.24
+    ]
+  ],
+  "bounds": [
+    [
+      -46.4,
+      -12.8,
+      -24.8
+    ],
+    [
+      46.4,
+      30.48,
+      16.24
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b3b-stations/contact-sheet.png",
+  "motion": null,
+  "appearance_decision": "s06-b3b-stations-2026-10-17"
+}

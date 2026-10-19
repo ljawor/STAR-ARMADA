@@ -123,9 +123,10 @@ def selected_binding(binding):
 def ship_binding(ds, data_id, faction=None):
     if _resolver is None:
         return None
+    from render.faction_visuals import convoy_key
     data = ds.ships.get(data_id)
     if data is None:
-        binding = f'{faction}:convoy' if data_id == 'trade_convoy' else None
+        binding = convoy_key(faction) if data_id == 'trade_convoy' else None
     else:
         role = data.category
         if role == 'fighter_squadron':
@@ -133,8 +134,10 @@ def ship_binding(ds, data_id, faction=None):
         elif role == 'construction':
             role = 'colonizer' if data_id.endswith('_colonizer') else 'constructor'
         elif role == 'crew_transport' and data.crew_capacity > 0:
+            # A crew transport with crew space is a convoy: built by the same declared gate as
+            # ship_visual_key's convoy branches (s06-imperial-convoy-parity-2026-10-18).
             role = 'convoy'
-        binding = f'{data.faction}:{role}'
+        binding = convoy_key(data.faction) if role == 'convoy' else f'{data.faction}:{role}'
     return binding if selected_binding(binding) else None
 
 

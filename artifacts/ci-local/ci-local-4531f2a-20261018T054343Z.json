@@ -1,0 +1,1185 @@
+{
+  "schema": 1,
+  "kind": "local-ci-reproduction",
+  "is_ci_run": false,
+  "head_sha": "4531f2aba1494eed0ccd8b95825b3e1e58748aa4",
+  "head_sha7": "4531f2a",
+  "branch": "feat/s06-next-model-batch",
+  "utc": "2026-10-18T05:43:43Z",
+  "started_utc": "2026-10-18T05:43:43.874819Z",
+  "finished_utc": "2026-10-18T05:45:50Z",
+  "wall_time_s": 126.68,
+  "verdict": "PASS",
+  "exit_code": 0,
+  "host": {
+    "platform": "darwin",
+    "release": "25.6.0",
+    "machine": "arm64",
+    "python": "3.11.16",
+    "worktree_python": "Python 3.11.16 (main, Aug 25 2026, 13:50:51) [Clang 22.1.3 ]",
+    "loadavg_1_5_15_start": [
+      3.68,
+      3.32,
+      4.71
+    ],
+    "loadavg_1_5_15_end": [
+      3.88,
+      3.52,
+      4.6
+    ],
+    "ci_runners_reproduced": [],
+    "ci_runners_not_reproduced": [
+      "macos-latest",
+      "windows-latest",
+      "ubuntu-latest"
+    ]
+  },
+  "counts": {
+    "steps_total": 29,
+    "ci_steps_enumerated": 28,
+    "ci_steps_run": 6,
+    "ci_steps_skipped": 22,
+    "steps_failed": 0,
+    "local_addition_steps": 1,
+    "unittest_total_ran": 355,
+    "unittest_total_skipped": 0
+  },
+  "workflow_files": [
+    {
+      "path": ".github/workflows/release.yml",
+      "sha256": "68f13ff4327a27e0d8b679fd5b78bd25547fda85620fd4350baf002ba84c86ee",
+      "bytes": 2393
+    },
+    {
+      "path": ".github/workflows/windows-signal.yml",
+      "sha256": "82f730490d701a6ebef779609de7c4658dab87d198a443d55cb4cc45252450a6",
+      "bytes": 6298
+    }
+  ],
+  "runner_script": {
+    "path": "tools/ci_local.py",
+    "sha256": "ca0333fe2886020e83a1fa9d8186a210628d0dc4a67454dbc7b2b29f1edf4eb6"
+  },
+  "git_status_before": [
+    "?? artifacts/ci-local/",
+    "?? tools/ci_local.py"
+  ],
+  "git_status_after": [
+    "M art/manifests/approvals.json",
+    " M art/manifests/pending/S06-BATCH-B6-IMPERIAL-SHIPS.json",
+    " M art/manifests/pending/S06-IMPERIAL-CONVOY.json",
+    " M tests/test_alliance_blender_b6_imperial_ships.py",
+    " M tests/test_s06_appearance_records.py",
+    "?? artifacts/ci-local/",
+    "?? tools/ci_local.py"
+  ],
+  "steps": [
+    {
+      "id": "release.mac.1",
+      "workflow": "release.yml",
+      "job": "mac",
+      "runs_on": "macos-latest",
+      "ci_step": "Checkout repository",
+      "ci_command": "uses: actions/checkout@v4",
+      "ci_step_is_ci_step": true,
+      "result": "SKIP",
+      "reproduction": "out_of_scope",
+      "skipped": true,
+      "skip_reason": "Runner provisioning: the action clones the repository into / installs software on a fresh GitHub-hosted runner. There is no runner here to provision - the worktree is already checked out and its head is recorded in this receipt instead.",
+      "exit_code": null,
+      "duration_s": 0.0
+    },
+    {
+      "id": "release.mac.2",
+      "workflow": "release.yml",
+      "job": "mac",
+      "runs_on": "macos-latest",
+      "ci_step": "Set up Python",
+      "ci_command": "uses: actions/setup-python@v5\nwith:\n  python-version: \"3.11\"",
+      "ci_step_is_ci_step": true,
+      "result": "SKIP",
+      "reproduction": "out_of_scope",
+      "skipped": true,
+      "skip_reason": "Runner provisioning: the action clones the repository into / installs software on a fresh GitHub-hosted runner. There is no runner here to provision - the worktree is already checked out and its head is recorded in this receipt instead. (The worktree interpreter reports 3.11, which matches the version this step pins; recorded in host.python below.)",
+      "exit_code": null,
+      "duration_s": 0.0
+    },
+    {
+      "id": "release.mac.3",
+      "workflow": "release.yml",
+      "job": "mac",
+      "runs_on": "macos-latest",
+      "ci_step": "Install deps",
+      "ci_command": "python3 -m venv .venv\n./.venv/bin/pip install --upgrade pip\n./.venv/bin/pip install -r requirements.txt pyinstaller",
+      "ci_step_is_ci_step": true,
+      "result": "PASS",
+      "reproduction": "dry_run",
+      "skipped": false,
+      "local_command": [
+        [
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python",
+          "-m",
+          "pip",
+          "install",
+          "--dry-run",
+          "-r",
+          "requirements.txt",
+          "pyinstaller"
+        ]
+      ],
+      "local_env": {},
+      "exit_code": 0,
+      "command_exit_codes": [
+        0
+      ],
+      "duration_s": 0.24,
+      "note": "PARTIAL. This does not create a venv or upgrade pip: the worktree already carries a provisioned .venv (a symlink to the live checkout, Python 3.11.16), and mutating a shared virtualenv is out of scope. What is verified here is that the pinned requirements plus pyinstaller resolve and are satisfied by that interpreter. pyinstaller itself is used only by the packaging step, which is skipped."
+    },
+    {
+      "id": "release.mac.4",
+      "workflow": "release.yml",
+      "job": "mac",
+      "runs_on": "macos-latest",
+      "ci_step": "Build app + DMG",
+      "ci_command": "./.venv/bin/pyinstaller star_armada.spec --noconfirm\ncodesign --force --deep --sign - \"dist/STAR ARMADA.app\"\nmkdir -p dist/dmg_staging\ncp -R \"dist/STAR ARMADA.app\" dist/dmg_staging/\nln -s /Applications dist/dmg_staging/Applications\nhdiutil create -volname \"STAR ARMADA\" -srcfolder dist/dmg_staging \\\n  -ov -format UDZO \"dist/STAR-ARMADA-${GITHUB_REF_NAME}-mac.dmg\"",
+      "ci_step_is_ci_step": true,
+      "result": "SKIP",
+      "reproduction": "out_of_scope",
+      "skipped": true,
+      "skip_reason": "Packaging step. It is reachable on macOS in principle (pyinstaller, codesign, hdiutil all exist here) but it is deliberately out of scope: it is a tag-triggered release build, it mutates dist/, and it is not a per-push correctness gate - nothing about a source change is decided by it.",
+      "exit_code": null,
+      "duration_s": 0.0
+    },
+    {
+      "id": "release.mac.5",
+      "workflow": "release.yml",
+      "job": "mac",
+      "runs_on": "macos-latest",
+      "ci_step": "Upload artifact (mac-dmg)",
+      "ci_command": "uses: actions/upload-artifact@v4\nwith:\n  name: mac-dmg\n  path: dist/STAR-ARMADA-*-mac.dmg",
+      "ci_step_is_ci_step": true,
+      "result": "SKIP",
+      "reproduction": "out_of_scope",
+      "skipped": true,
+      "skip_reason": "CI artifact storage (and it depends on the skipped packaging step). This run keeps its own evidence under artifacts/ci-local/ instead.",
+      "exit_code": null,
+      "duration_s": 0.0
+    },
+    {
+      "id": "release.win.1",
+      "workflow": "release.yml",
+      "job": "win",
+      "runs_on": "windows-latest",
+      "ci_step": "Checkout repository",
+      "ci_command": "uses: actions/checkout@v4",
+      "ci_step_is_ci_step": true,
+      "result": "SKIP",
+      "reproduction": "out_of_scope",
+      "skipped": true,
+      "skip_reason": "Runner provisioning: the action clones the repository into / installs software on a fresh GitHub-hosted runner. There is no runner here to provision - the worktree is already checked out and its head is recorded in this receipt instead. PLATFORM MISMATCH: job runs on windows-latest.",
+      "exit_code": null,
+      "duration_s": 0.0
+    },
+    {
+      "id": "release.win.2",
+      "workflow": "release.yml",
+      "job": "win",
+      "runs_on": "windows-latest",
+      "ci_step": "Set up Python",
+      "ci_command": "uses: actions/setup-python@v5\nwith:\n  python-version: \"3.11\"",
+      "ci_step_is_ci_step": true,
+      "result": "SKIP",
+      "reproduction": "out_of_scope",
+      "skipped": true,
+      "skip_reason": "Runner provisioning: the action clones the repository into / installs software on a fresh GitHub-hosted runner. There is no runner here to provision - the worktree is already checked out and its head is recorded in this receipt instead. PLATFORM MISMATCH: job declares runs-on windows-latest; this machine is darwin/arm64.",
+      "exit_code": null,
+      "duration_s": 0.0
+    },
+    {
+      "id": "release.win.3",
+      "workflow": "release.yml",
+      "job": "win",
+      "runs_on": "windows-latest",
+      "ci_step": "Install deps",
+      "ci_command": "python -m pip install --upgrade pip\npip install -r requirements.txt pyinstaller",
+      "ci_step_is_ci_step": true,
+      "result": "SKIP",
+      "reproduction": "out_of_scope",
+      "skipped": true,
+      "skip_reason": "PLATFORM MISMATCH: Windows-only job (windows-latest); this machine is darwin/arm64. The requirements themselves are resolved on macOS by release.mac.3, but that is not evidence about the Windows runner.",
+      "exit_code": null,
+      "duration_s": 0.0
+    },
+    {
+      "id": "release.win.4",
+      "workflow": "release.yml",
+      "job": "win",
+      "runs_on": "windows-latest",
+      "ci_step": "Build exe",
+      "ci_command": "pyinstaller star_armada.spec --noconfirm",
+      "ci_step_is_ci_step": true,
+      "result": "SKIP",
+      "reproduction": "out_of_scope",
+      "skipped": true,
+      "skip_reason": "PLATFORM MISMATCH and packaging: a Windows .exe build on windows-latest. Not run here and not substitutable on macOS.",
+      "exit_code": null,
+      "duration_s": 0.0
+    },
+    {
+      "id": "release.win.5",
+      "workflow": "release.yml",
+      "job": "win",
+      "runs_on": "windows-latest",
+      "ci_step": "Zip",
+      "ci_command": "Compress-Archive -Path \"dist/STAR ARMADA/*\" `\n  -DestinationPath \"dist/STAR-ARMADA-${env:GITHUB_REF_NAME}-win.zip\"",
+      "ci_step_is_ci_step": true,
+      "result": "SKIP",
+      "reproduction": "out_of_scope",
+      "skipped": true,
+      "skip_reason": "PLATFORM MISMATCH: Compress-Archive is a PowerShell cmdlet that exists only on Windows. Packaging step.",
+      "exit_code": null,
+      "duration_s": 0.0
+    },
+    {
+      "id": "release.win.6",
+      "workflow": "release.yml",
+      "job": "win",
+      "runs_on": "windows-latest",
+      "ci_step": "Upload artifact (win-zip)",
+      "ci_command": "uses: actions/upload-artifact@v4\nwith:\n  name: win-zip\n  path: dist/STAR-ARMADA-*-win.zip",
+      "ci_step_is_ci_step": true,
+      "result": "SKIP",
+      "reproduction": "out_of_scope",
+      "skipped": true,
+      "skip_reason": "CI artifact storage on a Windows-only job; depends on the skipped packaging step.",
+      "exit_code": null,
+      "duration_s": 0.0
+    },
+    {
+      "id": "release.release.1",
+      "workflow": "release.yml",
+      "job": "release",
+      "runs_on": "ubuntu-latest",
+      "ci_step": "Download artifacts",
+      "ci_command": "uses: actions/download-artifact@v4\nwith:\n  path: artifacts",
+      "ci_step_is_ci_step": true,
+      "result": "SKIP",
+      "reproduction": "out_of_scope",
+      "skipped": true,
+      "skip_reason": "Publishing job: it collects the mac and win packaging artifacts out of GitHub's artifact store, which does not exist locally and whose producers are skipped above.",
+      "exit_code": null,
+      "duration_s": 0.0
+    },
+    {
+      "id": "release.release.2",
+      "workflow": "release.yml",
+      "job": "release",
+      "runs_on": "ubuntu-latest",
+      "ci_step": "Create GitHub release",
+      "ci_command": "uses: softprops/action-gh-release@v2\nwith:\n  name: \"STAR ARMADA ${{ github.ref_name }}\"\n  ... files: artifacts/mac-dmg/* , artifacts/win-zip/*",
+      "ci_step_is_ci_step": true,
+      "result": "SKIP",
+      "reproduction": "out_of_scope",
+      "skipped": true,
+      "skip_reason": "Publishing: creates a public GitHub release and uploads the binaries. Neither local nor appropriate - this runner must not publish.",
+      "exit_code": null,
+      "duration_s": 0.0
+    },
+    {
+      "id": "windows-lan.1",
+      "workflow": "windows-signal.yml",
+      "job": "windows-lan",
+      "runs_on": "windows-latest",
+      "ci_step": "Checkout repository",
+      "ci_command": "uses: actions/checkout@v4",
+      "ci_step_is_ci_step": true,
+      "result": "SKIP",
+      "reproduction": "out_of_scope",
+      "skipped": true,
+      "skip_reason": "Runner provisioning: the action clones the repository into / installs software on a fresh GitHub-hosted runner. There is no runner here to provision - the worktree is already checked out and its head is recorded in this receipt instead.",
+      "exit_code": null,
+      "duration_s": 0.0
+    },
+    {
+      "id": "windows-lan.2",
+      "workflow": "windows-signal.yml",
+      "job": "windows-lan",
+      "runs_on": "windows-latest",
+      "ci_step": "Set up Python",
+      "ci_command": "uses: actions/setup-python@v5\nwith:\n  python-version: \"3.11\"\n  cache: pip",
+      "ci_step_is_ci_step": true,
+      "result": "SKIP",
+      "reproduction": "out_of_scope",
+      "skipped": true,
+      "skip_reason": "Runner provisioning: the action clones the repository into / installs software on a fresh GitHub-hosted runner. There is no runner here to provision - the worktree is already checked out and its head is recorded in this receipt instead. (The worktree interpreter reports 3.11, matching this step's pin; pip's cache is a runner speed feature with no local equivalent needed.)",
+      "exit_code": null,
+      "duration_s": 0.0
+    },
+    {
+      "id": "windows-lan.3",
+      "workflow": "windows-signal.yml",
+      "job": "windows-lan",
+      "runs_on": "windows-latest",
+      "ci_step": "Install deps",
+      "ci_command": "python -m pip install --upgrade pip\npip install -r requirements.txt",
+      "ci_step_is_ci_step": true,
+      "result": "PASS",
+      "reproduction": "dry_run",
+      "skipped": false,
+      "local_command": [
+        [
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python",
+          "-m",
+          "pip",
+          "install",
+          "--dry-run",
+          "-r",
+          "requirements.txt"
+        ]
+      ],
+      "local_env": {},
+      "exit_code": 0,
+      "command_exit_codes": [
+        0
+      ],
+      "duration_s": 0.17,
+      "note": "PARTIAL. No venv is created and pip is not upgraded; the worktree already carries a provisioned .venv (Python 3.11.16, matching the job's 3.11 pin). Verified: the pinned requirements resolve and are already satisfied (pygame-ce, PyOpenGL, numpy)."
+    },
+    {
+      "id": "windows-lan.4",
+      "workflow": "windows-signal.yml",
+      "job": "windows-lan",
+      "runs_on": "windows-latest",
+      "ci_step": "netdiag on real Windows",
+      "ci_command": "python main.py --netdiag info --out netdiag-windows.json",
+      "ci_step_is_ci_step": true,
+      "result": "PASS",
+      "reproduction": "other_platform",
+      "skipped": false,
+      "local_command": [
+        [
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python",
+          "main.py",
+          "--netdiag",
+          "info",
+          "--out",
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/artifacts/ci-local/netdiag-macos.json"
+        ]
+      ],
+      "local_env": {},
+      "exit_code": 0,
+      "command_exit_codes": [
+        0
+      ],
+      "duration_s": 3.88,
+      "note": "PARTIAL, and read this one carefully. The command really runs: the entry point, the environment probe, the local-address enumeration and the real host+join socket pairing all execute, and the report is written. But the step is named \"on real Windows\" and its whole purpose is the Windows half of a cross-platform comparison. This run is the macOS half. It says the netdiag code path works on macOS; it says nothing about Windows, and it does NOT substitute for the CI step. Output written to artifacts/ci-local/netdiag-macos.json (not the CI's netdiag-windows.json) so the two can never be confused."
+    },
+    {
+      "id": "windows-lan.5",
+      "workflow": "windows-signal.yml",
+      "job": "windows-lan",
+      "runs_on": "windows-latest",
+      "ci_step": "Show the report",
+      "ci_command": "Get-Content netdiag-windows.json",
+      "ci_step_is_ci_step": true,
+      "result": "PASS",
+      "reproduction": "substituted_command",
+      "skipped": false,
+      "local_command": [
+        [
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python",
+          "-c",
+          "import sys,pathlib;sys.stdout.write(pathlib.Path(\"artifacts/ci-local/netdiag-macos.json\").read_text()[:4000])"
+        ]
+      ],
+      "local_env": {},
+      "exit_code": 0,
+      "command_exit_codes": [
+        0
+      ],
+      "duration_s": 0.02,
+      "note": "SUBSTITUTED. This is a display step (its command is the PowerShell built-in Get-Content, which does not exist on macOS). Its intent - put the report the previous step wrote in front of the reader - is reproduced by reading that file, and the full report is in the log. No gate is decided here."
+    },
+    {
+      "id": "windows-lan.6",
+      "workflow": "windows-signal.yml",
+      "job": "windows-lan",
+      "runs_on": "windows-latest",
+      "ci_step": "Dump the scene states on Windows",
+      "ci_command": "python tools/lan_state_diff.py dump --out state-win-ticks0.json\npython tools/lan_state_diff.py dump --out state-win-ticks1.json --ticks 1\npython tools/lan_state_diff.py dump --out state-win-contact-ticks60.json --scene contact --ticks 60",
+      "ci_step_is_ci_step": true,
+      "result": "PASS",
+      "reproduction": "other_platform",
+      "skipped": false,
+      "local_command": [
+        [
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python",
+          "tools/lan_state_diff.py",
+          "dump",
+          "--out",
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/artifacts/ci-local/state-macos-ticks0.json"
+        ],
+        [
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python",
+          "tools/lan_state_diff.py",
+          "dump",
+          "--out",
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/artifacts/ci-local/state-macos-ticks1.json",
+          "--ticks",
+          "1"
+        ],
+        [
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python",
+          "tools/lan_state_diff.py",
+          "dump",
+          "--out",
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/artifacts/ci-local/state-macos-contact-ticks60.json",
+          "--scene",
+          "contact",
+          "--ticks",
+          "60"
+        ]
+      ],
+      "local_env": {},
+      "exit_code": 0,
+      "command_exit_codes": [
+        0,
+        0,
+        0
+      ],
+      "duration_s": 0.21,
+      "note": "PARTIAL. All three dumps execute and are written (macOS names, so they cannot be mistaken for the CI's state-win-*.json). These are pure-Python, platform-generic dumps of exactly the structure precise_checksum hashes, and two macOS peers can be diffed from them with `tools/lan_state_diff.py diff`. The comparison the CI step exists for is Windows-vs-macOS, and that half cannot be produced on this machine; the checksums below are the macOS side of that comparison only."
+    },
+    {
+      "id": "windows-lan.7",
+      "workflow": "windows-signal.yml",
+      "job": "windows-lan",
+      "runs_on": "windows-latest",
+      "ci_step": "Focused LAN tests on Windows",
+      "ci_command": "env: PYTHONPATH=tests, SDL_VIDEODRIVER=dummy, SDL_AUDIODRIVER=dummy, STAR_ARMADA_PACING_FLOOR=15\npython -m unittest test_netdiag test_netdiag_compare test_lan_state_diff test_sim_profiles test_lan test_multiplayer test_checksum_canonicalization test_orbit_spacing_batch test_draw_view_scope test_lan_human_safety test_lan_failure_diagnostics test_lan_reconnect test_lan_production_reconnect test_lan_reconnect_admission test_lan_launch_recovery test_station_balance test_collection_points test_collection_points_lan test_i18n test_i18n_russian test_language_tools -v",
+      "ci_step_is_ci_step": true,
+      "result": "PASS",
+      "reproduction": "exact_commands",
+      "skipped": false,
+      "local_command": [
+        [
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python",
+          "-m",
+          "unittest",
+          "test_netdiag",
+          "test_netdiag_compare",
+          "test_lan_state_diff",
+          "test_sim_profiles",
+          "test_lan",
+          "test_multiplayer",
+          "test_checksum_canonicalization",
+          "test_orbit_spacing_batch",
+          "test_draw_view_scope",
+          "test_lan_human_safety",
+          "test_lan_failure_diagnostics",
+          "test_lan_reconnect",
+          "test_lan_production_reconnect",
+          "test_lan_reconnect_admission",
+          "test_lan_launch_recovery",
+          "test_station_balance",
+          "test_collection_points",
+          "test_collection_points_lan",
+          "test_i18n",
+          "test_i18n_russian",
+          "test_language_tools",
+          "-v"
+        ]
+      ],
+      "local_env": {
+        "PYTHONPATH": "tests",
+        "SDL_VIDEODRIVER": "dummy",
+        "SDL_AUDIODRIVER": "dummy",
+        "STAR_ARMADA_PACING_FLOOR": "15"
+      },
+      "exit_code": 0,
+      "command_exit_codes": [
+        0
+      ],
+      "duration_s": 121.59,
+      "note": "REPRODUCED EXACTLY: same 21 modules, same order, same environment including the lowered STAR_ARMADA_PACING_FLOOR=15, the dummy SDL drivers and PYTHONPATH=tests. The commands are identical; the platform is not, so this is macOS evidence about modules that are platform-portable, not Windows evidence. Two-process LAN tests in this list are load-sensitive; the summary records the machine's load average before and after the run (host.loadavg_1_5_15_*) - read a timing failure against those numbers rather than assuming the box was idle. It was not necessarily: a sibling task was editing this same worktree while the receipt was produced, which is recorded in does_not_cover.",
+      "unittest": [
+        {
+          "tests": 340,
+          "seconds": 121.377,
+          "skipped": 0,
+          "verdict": "OK"
+        }
+      ]
+    },
+    {
+      "id": "windows-lan.8",
+      "workflow": "windows-signal.yml",
+      "job": "windows-lan",
+      "runs_on": "windows-latest",
+      "ci_step": "Replay deletion on real Windows",
+      "ci_command": "python -c \"import os, unittest; assert os.name == 'nt', 'Native Windows deletion gate requires Windows'; suite = unittest.defaultTestLoader.loadTestsFromName('test_replay_deletion_windows.NativeWindowsDeletionTests'); expected = suite.countTestCases(); result = unittest.TextTestRunner(verbosity=2).run(suite); optional = 'test_file_symlink_is_never_deleted_or_followed'; raise SystemExit(0 if result.wasSuccessful() and result.testsRun == expected and all(test._testMethodName == optional for test, reason in result.skipped) else 1)\"\nif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }\npython -m unittest test_replay_deletion_windows test_replay_library -v",
+      "ci_step_is_ci_step": true,
+      "result": "SKIP",
+      "reproduction": "out_of_scope",
+      "skipped": true,
+      "skip_reason": "PLATFORM MISMATCH, and reproducing it here would produce a FALSE PASS, so it is skipped on purpose. The step's first command asserts os.name == 'nt' - on macOS it exits 1 by construction. The module it gates carries @unittest.skipUnless(os.name == 'nt', 'native Windows kernel required; NOT accepted on macOS'), so running the step verbatim on macOS would report green while executing none of the native deletion gates it exists for. Those gates need real Windows handles, junctions and locked files. The portable member of the step's second command is run separately below, clearly labelled as a local addition rather than as this step passing.",
+      "exit_code": null,
+      "duration_s": 0.0
+    },
+    {
+      "id": "windows-lan.9",
+      "workflow": "windows-signal.yml",
+      "job": "windows-lan",
+      "runs_on": "windows-latest",
+      "ci_step": "Upload artifact (netdiag-windows)",
+      "ci_command": "uses: actions/upload-artifact@v4\nif: always()\nwith:\n  name: netdiag-windows\n  path: netdiag-windows.json, state-win-ticks0.json, state-win-ticks1.json, state-win-contact-ticks60.json",
+      "ci_step_is_ci_step": true,
+      "result": "SKIP",
+      "reproduction": "out_of_scope",
+      "skipped": true,
+      "skip_reason": "CI artifact storage. The four equivalent macOS files are written under artifacts/ci-local/ by windows-lan.4 and windows-lan.6 instead.",
+      "exit_code": null,
+      "duration_s": 0.0
+    },
+    {
+      "id": "package-windows.1",
+      "workflow": "windows-signal.yml",
+      "job": "package-windows",
+      "runs_on": "windows-latest",
+      "ci_step": "Checkout repository",
+      "ci_command": "uses: actions/checkout@v4",
+      "ci_step_is_ci_step": true,
+      "result": "SKIP",
+      "reproduction": "out_of_scope",
+      "skipped": true,
+      "skip_reason": "Runner provisioning: the action clones the repository into / installs software on a fresh GitHub-hosted runner. There is no runner here to provision - the worktree is already checked out and its head is recorded in this receipt instead. Job is also gated on github.event_name == workflow_dispatch (manual runs only).",
+      "exit_code": null,
+      "duration_s": 0.0
+    },
+    {
+      "id": "package-windows.2",
+      "workflow": "windows-signal.yml",
+      "job": "package-windows",
+      "runs_on": "windows-latest",
+      "ci_step": "Set up Python",
+      "ci_command": "uses: actions/setup-python@v5\nwith:\n  python-version: \"3.11\"\n  cache: pip",
+      "ci_step_is_ci_step": true,
+      "result": "SKIP",
+      "reproduction": "out_of_scope",
+      "skipped": true,
+      "skip_reason": "Runner provisioning: the action clones the repository into / installs software on a fresh GitHub-hosted runner. There is no runner here to provision - the worktree is already checked out and its head is recorded in this receipt instead. PLATFORM MISMATCH: windows-latest; this machine is darwin/arm64. Job is also manual-dispatch only.",
+      "exit_code": null,
+      "duration_s": 0.0
+    },
+    {
+      "id": "package-windows.3",
+      "workflow": "windows-signal.yml",
+      "job": "package-windows",
+      "runs_on": "windows-latest",
+      "ci_step": "Install deps",
+      "ci_command": "python -m pip install --upgrade pip\npip install -r requirements.txt pyinstaller",
+      "ci_step_is_ci_step": true,
+      "result": "SKIP",
+      "reproduction": "out_of_scope",
+      "skipped": true,
+      "skip_reason": "PLATFORM MISMATCH: Windows-only job (windows-latest), and this job only runs on a manual workflow_dispatch. The requirements are resolved on macOS under release.mac.3 / windows-lan.3.",
+      "exit_code": null,
+      "duration_s": 0.0
+    },
+    {
+      "id": "package-windows.4",
+      "workflow": "windows-signal.yml",
+      "job": "package-windows",
+      "runs_on": "windows-latest",
+      "ci_step": "Build exe",
+      "ci_command": "pyinstaller star_armada.spec --noconfirm",
+      "ci_step_is_ci_step": true,
+      "result": "SKIP",
+      "reproduction": "out_of_scope",
+      "skipped": true,
+      "skip_reason": "PLATFORM MISMATCH and packaging: a Windows .exe build. Not substitutable on macOS.",
+      "exit_code": null,
+      "duration_s": 0.0
+    },
+    {
+      "id": "package-windows.5",
+      "workflow": "windows-signal.yml",
+      "job": "package-windows",
+      "runs_on": "windows-latest",
+      "ci_step": "Zip",
+      "ci_command": "Compress-Archive -Path \"dist/STAR ARMADA/*\" `\n  -DestinationPath \"dist/STAR-ARMADA-candidate-win.zip\"",
+      "ci_step_is_ci_step": true,
+      "result": "SKIP",
+      "reproduction": "out_of_scope",
+      "skipped": true,
+      "skip_reason": "PLATFORM MISMATCH: Compress-Archive is Windows PowerShell only. Packaging step.",
+      "exit_code": null,
+      "duration_s": 0.0
+    },
+    {
+      "id": "package-windows.6",
+      "workflow": "windows-signal.yml",
+      "job": "package-windows",
+      "runs_on": "windows-latest",
+      "ci_step": "Upload artifact (star-armada-candidate-win)",
+      "ci_command": "uses: actions/upload-artifact@v4\nwith:\n  name: star-armada-candidate-win\n  path: dist/STAR-ARMADA-candidate-win.zip",
+      "ci_step_is_ci_step": true,
+      "result": "SKIP",
+      "reproduction": "out_of_scope",
+      "skipped": true,
+      "skip_reason": "CI artifact storage on a Windows-only, manual-only packaging job.",
+      "exit_code": null,
+      "duration_s": 0.0
+    },
+    {
+      "id": "local-extra.1",
+      "workflow": "(none)",
+      "job": "(local addition)",
+      "runs_on": "(this machine)",
+      "ci_step": "test_replay_library (portable member of the skipped Windows step)",
+      "ci_command": "(no CI step runs this module alone; it is the second of the two modules in windows-lan.8's second command)",
+      "ci_step_is_ci_step": false,
+      "result": "PASS",
+      "reproduction": "exact_commands",
+      "skipped": false,
+      "local_command": [
+        [
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python",
+          "-m",
+          "unittest",
+          "test_replay_library",
+          "-v"
+        ]
+      ],
+      "local_env": {
+        "PYTHONPATH": "tests",
+        "SDL_VIDEODRIVER": "dummy",
+        "SDL_AUDIODRIVER": "dummy"
+      },
+      "exit_code": 0,
+      "command_exit_codes": [
+        0
+      ],
+      "duration_s": 0.53,
+      "note": "LOCAL ADDITION, not a CI step. The CI runs this module together with test_replay_deletion_windows, which self-skips wholesale on macOS; running only the portable member keeps windows-lan.8 honestly marked as skipped while still covering the part of it that macOS can exercise.",
+      "unittest": [
+        {
+          "tests": 15,
+          "seconds": 0.437,
+          "skipped": 0,
+          "verdict": "OK"
+        }
+      ]
+    }
+  ],
+  "steps_run": [
+    {
+      "id": "release.mac.3",
+      "workflow": "release.yml",
+      "job": "mac",
+      "runs_on": "macos-latest",
+      "ci_step": "Install deps",
+      "ci_command": "python3 -m venv .venv\n./.venv/bin/pip install --upgrade pip\n./.venv/bin/pip install -r requirements.txt pyinstaller",
+      "ci_step_is_ci_step": true,
+      "result": "PASS",
+      "reproduction": "dry_run",
+      "skipped": false,
+      "local_command": [
+        [
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python",
+          "-m",
+          "pip",
+          "install",
+          "--dry-run",
+          "-r",
+          "requirements.txt",
+          "pyinstaller"
+        ]
+      ],
+      "local_env": {},
+      "exit_code": 0,
+      "command_exit_codes": [
+        0
+      ],
+      "duration_s": 0.24,
+      "note": "PARTIAL. This does not create a venv or upgrade pip: the worktree already carries a provisioned .venv (a symlink to the live checkout, Python 3.11.16), and mutating a shared virtualenv is out of scope. What is verified here is that the pinned requirements plus pyinstaller resolve and are satisfied by that interpreter. pyinstaller itself is used only by the packaging step, which is skipped."
+    },
+    {
+      "id": "windows-lan.3",
+      "workflow": "windows-signal.yml",
+      "job": "windows-lan",
+      "runs_on": "windows-latest",
+      "ci_step": "Install deps",
+      "ci_command": "python -m pip install --upgrade pip\npip install -r requirements.txt",
+      "ci_step_is_ci_step": true,
+      "result": "PASS",
+      "reproduction": "dry_run",
+      "skipped": false,
+      "local_command": [
+        [
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python",
+          "-m",
+          "pip",
+          "install",
+          "--dry-run",
+          "-r",
+          "requirements.txt"
+        ]
+      ],
+      "local_env": {},
+      "exit_code": 0,
+      "command_exit_codes": [
+        0
+      ],
+      "duration_s": 0.17,
+      "note": "PARTIAL. No venv is created and pip is not upgraded; the worktree already carries a provisioned .venv (Python 3.11.16, matching the job's 3.11 pin). Verified: the pinned requirements resolve and are already satisfied (pygame-ce, PyOpenGL, numpy)."
+    },
+    {
+      "id": "windows-lan.4",
+      "workflow": "windows-signal.yml",
+      "job": "windows-lan",
+      "runs_on": "windows-latest",
+      "ci_step": "netdiag on real Windows",
+      "ci_command": "python main.py --netdiag info --out netdiag-windows.json",
+      "ci_step_is_ci_step": true,
+      "result": "PASS",
+      "reproduction": "other_platform",
+      "skipped": false,
+      "local_command": [
+        [
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python",
+          "main.py",
+          "--netdiag",
+          "info",
+          "--out",
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/artifacts/ci-local/netdiag-macos.json"
+        ]
+      ],
+      "local_env": {},
+      "exit_code": 0,
+      "command_exit_codes": [
+        0
+      ],
+      "duration_s": 3.88,
+      "note": "PARTIAL, and read this one carefully. The command really runs: the entry point, the environment probe, the local-address enumeration and the real host+join socket pairing all execute, and the report is written. But the step is named \"on real Windows\" and its whole purpose is the Windows half of a cross-platform comparison. This run is the macOS half. It says the netdiag code path works on macOS; it says nothing about Windows, and it does NOT substitute for the CI step. Output written to artifacts/ci-local/netdiag-macos.json (not the CI's netdiag-windows.json) so the two can never be confused."
+    },
+    {
+      "id": "windows-lan.5",
+      "workflow": "windows-signal.yml",
+      "job": "windows-lan",
+      "runs_on": "windows-latest",
+      "ci_step": "Show the report",
+      "ci_command": "Get-Content netdiag-windows.json",
+      "ci_step_is_ci_step": true,
+      "result": "PASS",
+      "reproduction": "substituted_command",
+      "skipped": false,
+      "local_command": [
+        [
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python",
+          "-c",
+          "import sys,pathlib;sys.stdout.write(pathlib.Path(\"artifacts/ci-local/netdiag-macos.json\").read_text()[:4000])"
+        ]
+      ],
+      "local_env": {},
+      "exit_code": 0,
+      "command_exit_codes": [
+        0
+      ],
+      "duration_s": 0.02,
+      "note": "SUBSTITUTED. This is a display step (its command is the PowerShell built-in Get-Content, which does not exist on macOS). Its intent - put the report the previous step wrote in front of the reader - is reproduced by reading that file, and the full report is in the log. No gate is decided here."
+    },
+    {
+      "id": "windows-lan.6",
+      "workflow": "windows-signal.yml",
+      "job": "windows-lan",
+      "runs_on": "windows-latest",
+      "ci_step": "Dump the scene states on Windows",
+      "ci_command": "python tools/lan_state_diff.py dump --out state-win-ticks0.json\npython tools/lan_state_diff.py dump --out state-win-ticks1.json --ticks 1\npython tools/lan_state_diff.py dump --out state-win-contact-ticks60.json --scene contact --ticks 60",
+      "ci_step_is_ci_step": true,
+      "result": "PASS",
+      "reproduction": "other_platform",
+      "skipped": false,
+      "local_command": [
+        [
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python",
+          "tools/lan_state_diff.py",
+          "dump",
+          "--out",
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/artifacts/ci-local/state-macos-ticks0.json"
+        ],
+        [
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python",
+          "tools/lan_state_diff.py",
+          "dump",
+          "--out",
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/artifacts/ci-local/state-macos-ticks1.json",
+          "--ticks",
+          "1"
+        ],
+        [
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python",
+          "tools/lan_state_diff.py",
+          "dump",
+          "--out",
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/artifacts/ci-local/state-macos-contact-ticks60.json",
+          "--scene",
+          "contact",
+          "--ticks",
+          "60"
+        ]
+      ],
+      "local_env": {},
+      "exit_code": 0,
+      "command_exit_codes": [
+        0,
+        0,
+        0
+      ],
+      "duration_s": 0.21,
+      "note": "PARTIAL. All three dumps execute and are written (macOS names, so they cannot be mistaken for the CI's state-win-*.json). These are pure-Python, platform-generic dumps of exactly the structure precise_checksum hashes, and two macOS peers can be diffed from them with `tools/lan_state_diff.py diff`. The comparison the CI step exists for is Windows-vs-macOS, and that half cannot be produced on this machine; the checksums below are the macOS side of that comparison only."
+    },
+    {
+      "id": "windows-lan.7",
+      "workflow": "windows-signal.yml",
+      "job": "windows-lan",
+      "runs_on": "windows-latest",
+      "ci_step": "Focused LAN tests on Windows",
+      "ci_command": "env: PYTHONPATH=tests, SDL_VIDEODRIVER=dummy, SDL_AUDIODRIVER=dummy, STAR_ARMADA_PACING_FLOOR=15\npython -m unittest test_netdiag test_netdiag_compare test_lan_state_diff test_sim_profiles test_lan test_multiplayer test_checksum_canonicalization test_orbit_spacing_batch test_draw_view_scope test_lan_human_safety test_lan_failure_diagnostics test_lan_reconnect test_lan_production_reconnect test_lan_reconnect_admission test_lan_launch_recovery test_station_balance test_collection_points test_collection_points_lan test_i18n test_i18n_russian test_language_tools -v",
+      "ci_step_is_ci_step": true,
+      "result": "PASS",
+      "reproduction": "exact_commands",
+      "skipped": false,
+      "local_command": [
+        [
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python",
+          "-m",
+          "unittest",
+          "test_netdiag",
+          "test_netdiag_compare",
+          "test_lan_state_diff",
+          "test_sim_profiles",
+          "test_lan",
+          "test_multiplayer",
+          "test_checksum_canonicalization",
+          "test_orbit_spacing_batch",
+          "test_draw_view_scope",
+          "test_lan_human_safety",
+          "test_lan_failure_diagnostics",
+          "test_lan_reconnect",
+          "test_lan_production_reconnect",
+          "test_lan_reconnect_admission",
+          "test_lan_launch_recovery",
+          "test_station_balance",
+          "test_collection_points",
+          "test_collection_points_lan",
+          "test_i18n",
+          "test_i18n_russian",
+          "test_language_tools",
+          "-v"
+        ]
+      ],
+      "local_env": {
+        "PYTHONPATH": "tests",
+        "SDL_VIDEODRIVER": "dummy",
+        "SDL_AUDIODRIVER": "dummy",
+        "STAR_ARMADA_PACING_FLOOR": "15"
+      },
+      "exit_code": 0,
+      "command_exit_codes": [
+        0
+      ],
+      "duration_s": 121.59,
+      "note": "REPRODUCED EXACTLY: same 21 modules, same order, same environment including the lowered STAR_ARMADA_PACING_FLOOR=15, the dummy SDL drivers and PYTHONPATH=tests. The commands are identical; the platform is not, so this is macOS evidence about modules that are platform-portable, not Windows evidence. Two-process LAN tests in this list are load-sensitive; the summary records the machine's load average before and after the run (host.loadavg_1_5_15_*) - read a timing failure against those numbers rather than assuming the box was idle. It was not necessarily: a sibling task was editing this same worktree while the receipt was produced, which is recorded in does_not_cover.",
+      "unittest": [
+        {
+          "tests": 340,
+          "seconds": 121.377,
+          "skipped": 0,
+          "verdict": "OK"
+        }
+      ]
+    },
+    {
+      "id": "local-extra.1",
+      "workflow": "(none)",
+      "job": "(local addition)",
+      "runs_on": "(this machine)",
+      "ci_step": "test_replay_library (portable member of the skipped Windows step)",
+      "ci_command": "(no CI step runs this module alone; it is the second of the two modules in windows-lan.8's second command)",
+      "ci_step_is_ci_step": false,
+      "result": "PASS",
+      "reproduction": "exact_commands",
+      "skipped": false,
+      "local_command": [
+        [
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python",
+          "-m",
+          "unittest",
+          "test_replay_library",
+          "-v"
+        ]
+      ],
+      "local_env": {
+        "PYTHONPATH": "tests",
+        "SDL_VIDEODRIVER": "dummy",
+        "SDL_AUDIODRIVER": "dummy"
+      },
+      "exit_code": 0,
+      "command_exit_codes": [
+        0
+      ],
+      "duration_s": 0.53,
+      "note": "LOCAL ADDITION, not a CI step. The CI runs this module together with test_replay_deletion_windows, which self-skips wholesale on macOS; running only the portable member keeps windows-lan.8 honestly marked as skipped while still covering the part of it that macOS can exercise.",
+      "unittest": [
+        {
+          "tests": 15,
+          "seconds": 0.437,
+          "skipped": 0,
+          "verdict": "OK"
+        }
+      ]
+    }
+  ],
+  "steps_skipped": [
+    {
+      "id": "release.mac.1",
+      "workflow": "release.yml",
+      "job": "mac",
+      "ci_step": "Checkout repository",
+      "ci_command": "uses: actions/checkout@v4",
+      "reason": "Runner provisioning: the action clones the repository into / installs software on a fresh GitHub-hosted runner. There is no runner here to provision - the worktree is already checked out and its head is recorded in this receipt instead."
+    },
+    {
+      "id": "release.mac.2",
+      "workflow": "release.yml",
+      "job": "mac",
+      "ci_step": "Set up Python",
+      "ci_command": "uses: actions/setup-python@v5\nwith:\n  python-version: \"3.11\"",
+      "reason": "Runner provisioning: the action clones the repository into / installs software on a fresh GitHub-hosted runner. There is no runner here to provision - the worktree is already checked out and its head is recorded in this receipt instead. (The worktree interpreter reports 3.11, which matches the version this step pins; recorded in host.python below.)"
+    },
+    {
+      "id": "release.mac.4",
+      "workflow": "release.yml",
+      "job": "mac",
+      "ci_step": "Build app + DMG",
+      "ci_command": "./.venv/bin/pyinstaller star_armada.spec --noconfirm\ncodesign --force --deep --sign - \"dist/STAR ARMADA.app\"\nmkdir -p dist/dmg_staging\ncp -R \"dist/STAR ARMADA.app\" dist/dmg_staging/\nln -s /Applications dist/dmg_staging/Applications\nhdiutil create -volname \"STAR ARMADA\" -srcfolder dist/dmg_staging \\\n  -ov -format UDZO \"dist/STAR-ARMADA-${GITHUB_REF_NAME}-mac.dmg\"",
+      "reason": "Packaging step. It is reachable on macOS in principle (pyinstaller, codesign, hdiutil all exist here) but it is deliberately out of scope: it is a tag-triggered release build, it mutates dist/, and it is not a per-push correctness gate - nothing about a source change is decided by it."
+    },
+    {
+      "id": "release.mac.5",
+      "workflow": "release.yml",
+      "job": "mac",
+      "ci_step": "Upload artifact (mac-dmg)",
+      "ci_command": "uses: actions/upload-artifact@v4\nwith:\n  name: mac-dmg\n  path: dist/STAR-ARMADA-*-mac.dmg",
+      "reason": "CI artifact storage (and it depends on the skipped packaging step). This run keeps its own evidence under artifacts/ci-local/ instead."
+    },
+    {
+      "id": "release.win.1",
+      "workflow": "release.yml",
+      "job": "win",
+      "ci_step": "Checkout repository",
+      "ci_command": "uses: actions/checkout@v4",
+      "reason": "Runner provisioning: the action clones the repository into / installs software on a fresh GitHub-hosted runner. There is no runner here to provision - the worktree is already checked out and its head is recorded in this receipt instead. PLATFORM MISMATCH: job runs on windows-latest."
+    },
+    {
+      "id": "release.win.2",
+      "workflow": "release.yml",
+      "job": "win",
+      "ci_step": "Set up Python",
+      "ci_command": "uses: actions/setup-python@v5\nwith:\n  python-version: \"3.11\"",
+      "reason": "Runner provisioning: the action clones the repository into / installs software on a fresh GitHub-hosted runner. There is no runner here to provision - the worktree is already checked out and its head is recorded in this receipt instead. PLATFORM MISMATCH: job declares runs-on windows-latest; this machine is darwin/arm64."
+    },
+    {
+      "id": "release.win.3",
+      "workflow": "release.yml",
+      "job": "win",
+      "ci_step": "Install deps",
+      "ci_command": "python -m pip install --upgrade pip\npip install -r requirements.txt pyinstaller",
+      "reason": "PLATFORM MISMATCH: Windows-only job (windows-latest); this machine is darwin/arm64. The requirements themselves are resolved on macOS by release.mac.3, but that is not evidence about the Windows runner."
+    },
+    {
+      "id": "release.win.4",
+      "workflow": "release.yml",
+      "job": "win",
+      "ci_step": "Build exe",
+      "ci_command": "pyinstaller star_armada.spec --noconfirm",
+      "reason": "PLATFORM MISMATCH and packaging: a Windows .exe build on windows-latest. Not run here and not substitutable on macOS."
+    },
+    {
+      "id": "release.win.5",
+      "workflow": "release.yml",
+      "job": "win",
+      "ci_step": "Zip",
+      "ci_command": "Compress-Archive -Path \"dist/STAR ARMADA/*\" `\n  -DestinationPath \"dist/STAR-ARMADA-${env:GITHUB_REF_NAME}-win.zip\"",
+      "reason": "PLATFORM MISMATCH: Compress-Archive is a PowerShell cmdlet that exists only on Windows. Packaging step."
+    },
+    {
+      "id": "release.win.6",
+      "workflow": "release.yml",
+      "job": "win",
+      "ci_step": "Upload artifact (win-zip)",
+      "ci_command": "uses: actions/upload-artifact@v4\nwith:\n  name: win-zip\n  path: dist/STAR-ARMADA-*-win.zip",
+      "reason": "CI artifact storage on a Windows-only job; depends on the skipped packaging step."
+    },
+    {
+      "id": "release.release.1",
+      "workflow": "release.yml",
+      "job": "release",
+      "ci_step": "Download artifacts",
+      "ci_command": "uses: actions/download-artifact@v4\nwith:\n  path: artifacts",
+      "reason": "Publishing job: it collects the mac and win packaging artifacts out of GitHub's artifact store, which does not exist locally and whose producers are skipped above."
+    },
+    {
+      "id": "release.release.2",
+      "workflow": "release.yml",
+      "job": "release",
+      "ci_step": "Create GitHub release",
+      "ci_command": "uses: softprops/action-gh-release@v2\nwith:\n  name: \"STAR ARMADA ${{ github.ref_name }}\"\n  ... files: artifacts/mac-dmg/* , artifacts/win-zip/*",
+      "reason": "Publishing: creates a public GitHub release and uploads the binaries. Neither local nor appropriate - this runner must not publish."
+    },
+    {
+      "id": "windows-lan.1",
+      "workflow": "windows-signal.yml",
+      "job": "windows-lan",
+      "ci_step": "Checkout repository",
+      "ci_command": "uses: actions/checkout@v4",
+      "reason": "Runner provisioning: the action clones the repository into / installs software on a fresh GitHub-hosted runner. There is no runner here to provision - the worktree is already checked out and its head is recorded in this receipt instead."
+    },
+    {
+      "id": "windows-lan.2",
+      "workflow": "windows-signal.yml",
+      "job": "windows-lan",
+      "ci_step": "Set up Python",
+      "ci_command": "uses: actions/setup-python@v5\nwith:\n  python-version: \"3.11\"\n  cache: pip",
+      "reason": "Runner provisioning: the action clones the repository into / installs software on a fresh GitHub-hosted runner. There is no runner here to provision - the worktree is already checked out and its head is recorded in this receipt instead. (The worktree interpreter reports 3.11, matching this step's pin; pip's cache is a runner speed feature with no local equivalent needed.)"
+    },
+    {
+      "id": "windows-lan.8",
+      "workflow": "windows-signal.yml",
+      "job": "windows-lan",
+      "ci_step": "Replay deletion on real Windows",
+      "ci_command": "python -c \"import os, unittest; assert os.name == 'nt', 'Native Windows deletion gate requires Windows'; suite = unittest.defaultTestLoader.loadTestsFromName('test_replay_deletion_windows.NativeWindowsDeletionTests'); expected = suite.countTestCases(); result = unittest.TextTestRunner(verbosity=2).run(suite); optional = 'test_file_symlink_is_never_deleted_or_followed'; raise SystemExit(0 if result.wasSuccessful() and result.testsRun == expected and all(test._testMethodName == optional for test, reason in result.skipped) else 1)\"\nif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }\npython -m unittest test_replay_deletion_windows test_replay_library -v",
+      "reason": "PLATFORM MISMATCH, and reproducing it here would produce a FALSE PASS, so it is skipped on purpose. The step's first command asserts os.name == 'nt' - on macOS it exits 1 by construction. The module it gates carries @unittest.skipUnless(os.name == 'nt', 'native Windows kernel required; NOT accepted on macOS'), so running the step verbatim on macOS would report green while executing none of the native deletion gates it exists for. Those gates need real Windows handles, junctions and locked files. The portable member of the step's second command is run separately below, clearly labelled as a local addition rather than as this step passing."
+    },
+    {
+      "id": "windows-lan.9",
+      "workflow": "windows-signal.yml",
+      "job": "windows-lan",
+      "ci_step": "Upload artifact (netdiag-windows)",
+      "ci_command": "uses: actions/upload-artifact@v4\nif: always()\nwith:\n  name: netdiag-windows\n  path: netdiag-windows.json, state-win-ticks0.json, state-win-ticks1.json, state-win-contact-ticks60.json",
+      "reason": "CI artifact storage. The four equivalent macOS files are written under artifacts/ci-local/ by windows-lan.4 and windows-lan.6 instead."
+    },
+    {
+      "id": "package-windows.1",
+      "workflow": "windows-signal.yml",
+      "job": "package-windows",
+      "ci_step": "Checkout repository",
+      "ci_command": "uses: actions/checkout@v4",
+      "reason": "Runner provisioning: the action clones the repository into / installs software on a fresh GitHub-hosted runner. There is no runner here to provision - the worktree is already checked out and its head is recorded in this receipt instead. Job is also gated on github.event_name == workflow_dispatch (manual runs only)."
+    },
+    {
+      "id": "package-windows.2",
+      "workflow": "windows-signal.yml",
+      "job": "package-windows",
+      "ci_step": "Set up Python",
+      "ci_command": "uses: actions/setup-python@v5\nwith:\n  python-version: \"3.11\"\n  cache: pip",
+      "reason": "Runner provisioning: the action clones the repository into / installs software on a fresh GitHub-hosted runner. There is no runner here to provision - the worktree is already checked out and its head is recorded in this receipt instead. PLATFORM MISMATCH: windows-latest; this machine is darwin/arm64. Job is also manual-dispatch only."
+    },
+    {
+      "id": "package-windows.3",
+      "workflow": "windows-signal.yml",
+      "job": "package-windows",
+      "ci_step": "Install deps",
+      "ci_command": "python -m pip install --upgrade pip\npip install -r requirements.txt pyinstaller",
+      "reason": "PLATFORM MISMATCH: Windows-only job (windows-latest), and this job only runs on a manual workflow_dispatch. The requirements are resolved on macOS under release.mac.3 / windows-lan.3."
+    },
+    {
+      "id": "package-windows.4",
+      "workflow": "windows-signal.yml",
+      "job": "package-windows",
+      "ci_step": "Build exe",
+      "ci_command": "pyinstaller star_armada.spec --noconfirm",
+      "reason": "PLATFORM MISMATCH and packaging: a Windows .exe build. Not substitutable on macOS."
+    },
+    {
+      "id": "package-windows.5",
+      "workflow": "windows-signal.yml",
+      "job": "package-windows",
+      "ci_step": "Zip",
+      "ci_command": "Compress-Archive -Path \"dist/STAR ARMADA/*\" `\n  -DestinationPath \"dist/STAR-ARMADA-candidate-win.zip\"",
+      "reason": "PLATFORM MISMATCH: Compress-Archive is Windows PowerShell only. Packaging step."
+    },
+    {
+      "id": "package-windows.6",
+      "workflow": "windows-signal.yml",
+      "job": "package-windows",
+      "ci_step": "Upload artifact (star-armada-candidate-win)",
+      "ci_command": "uses: actions/upload-artifact@v4\nwith:\n  name: star-armada-candidate-win\n  path: dist/STAR-ARMADA-candidate-win.zip",
+      "reason": "CI artifact storage on a Windows-only, manual-only packaging job."
+    }
+  ],
+  "local_addition_steps": [
+    {
+      "id": "local-extra.1",
+      "workflow": "(none)",
+      "job": "(local addition)",
+      "runs_on": "(this machine)",
+      "ci_step": "test_replay_library (portable member of the skipped Windows step)",
+      "ci_command": "(no CI step runs this module alone; it is the second of the two modules in windows-lan.8's second command)",
+      "ci_step_is_ci_step": false,
+      "result": "PASS",
+      "reproduction": "exact_commands",
+      "skipped": false,
+      "local_command": [
+        [
+          "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python",
+          "-m",
+          "unittest",
+          "test_replay_library",
+          "-v"
+        ]
+      ],
+      "local_env": {
+        "PYTHONPATH": "tests",
+        "SDL_VIDEODRIVER": "dummy",
+        "SDL_AUDIODRIVER": "dummy"
+      },
+      "exit_code": 0,
+      "command_exit_codes": [
+        0
+      ],
+      "duration_s": 0.53,
+      "note": "LOCAL ADDITION, not a CI step. The CI runs this module together with test_replay_deletion_windows, which self-skips wholesale on macOS; running only the portable member keeps windows-lan.8 honestly marked as skipped while still covering the part of it that macOS can exercise.",
+      "unittest": [
+        {
+          "tests": 15,
+          "seconds": 0.437,
+          "skipped": 0,
+          "verdict": "OK"
+        }
+      ]
+    }
+  ],
+  "covers": [
+    "The focused LAN test suite from windows-signal.yml's windows-lan job: the same 21 modules, in the same order, under the same environment (PYTHONPATH=tests, dummy SDL video/audio, STAR_ARMADA_PACING_FLOOR=15) - executed on macOS.",
+    "The netdiag entry point (python main.py --netdiag info): environment probe, local-address enumeration and a real host+join socket pairing on macOS.",
+    "The three tools/lan_state_diff.py scene-state dumps (ticks 0, ticks 1, contact scene at 60 ticks), writing the same structure precise_checksum hashes, as the macOS half of the cross-platform comparison.",
+    "Requirements resolvability/installation for -r requirements.txt (and + pyinstaller for the packaging job) against a Python 3.11 interpreter - as a dry run, not a fresh install.",
+    "The portable member of the Windows-only replay-deletion step (test_replay_library), labelled as a local addition.",
+    "A named head: the summary records the full 40-character SHA, the branch and the sha256 of both workflow files the steps were enumerated from."
+  ],
+  "does_not_cover": [
+    "It is NOT a CI run. No GitHub-hosted runner was involved and no check was reported to GitHub.",
+    "Every Windows-only step: both windows-latest jobs in windows-signal.yml and the win job plus the release job in release.yml. That is the entire Windows evidence for issue #56 - netdiag on real Windows, the focused suite on Windows, the cross-platform checksum comparison and the native Windows replay-deletion gates (os.name == \"nt\" handles, junctions, locked files).",
+    "The native Windows replay-deletion gate specifically: it self-skips on macOS, so a green result here would be a false pass, which is why windows-lan.8 is reported as skipped.",
+    "All packaging: pyinstaller builds, codesign, hdiutil DMG creation, Compress-Archive zips, and the artifact upload/download steps that carry them.",
+    "The publish step (softprops/action-gh-release) and anything the tag-triggered release workflow does after a build.",
+    "Runner provisioning (actions/checkout, actions/setup-python): the worktree is reused as-is, and its head is recorded rather than re-cloned.",
+    "The CI's dependency install as such: it is verified as a pip dry run against the existing worktree virtualenv (a symlink to the live checkout), not by building a fresh .venv.",
+    "Fresh-clone conditions, and an idle machine. The CI checks out into an empty runner and owns it; this run was taken in a worktree that a sibling task was editing at the same time, under a non-trivial load average (recorded in host.loadavg_1_5_15_start/end). The tracked state it ran against is recorded in git_status_before/after and is not pristine.",
+    "Blender or any art/asset gate - none of the CI steps here run one."
+  ],
+  "log_path": "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/artifacts/ci-local/ci-local-4531f2a-20261018T054343Z.log",
+  "summary_path": "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/artifacts/ci-local/ci-local-4531f2a-20261018T054343Z.json"
+}

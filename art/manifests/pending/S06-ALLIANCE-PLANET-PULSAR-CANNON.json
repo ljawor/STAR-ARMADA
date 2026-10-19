@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b4-hardware",
+  "binding": "rebel:planet_pulsar_cannon",
+  "canonical_binding": "ship:rebel:planet_pulsar_cannon",
+  "gameplay_entity": "planet_pulsar_cannon",
+  "class": "planet_pulsar_cannon",
+  "authority": "script",
+  "source": {
+    "path": "art/blender/alliance_planet_pulsar_cannon.blend",
+    "sha256": "ae7e1f2e805cbf42c186d011f04061f67d29a037ed1c0b1ededb78fef9625a4f",
+    "bytes": 132337
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b4_hardware.py",
+    "sha256": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+    "bytes": 33018,
+    "selects": "--asset rebel:planet_pulsar_cannon"
+  },
+  "export_script": {
+    "path": "tools/art/export_alliance_planet_pulsar_cannon.py",
+    "sha256": "6d1ea84bc4541855ecf1f18651480d886205e3e39da0bbccc39260bdd2124ccb",
+    "bytes": 4779
+  },
+  "runtime": {
+    "path": "assets/models/alliance_planet_pulsar_cannon.mesh.json",
+    "sha256": "676e8a5f09782b0bcec88cd3f89756db296f66e38fc0f543ed28eb2394304782",
+    "bytes": 151386,
+    "triangles": 2588,
+    "vertices": 1440,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -34.0,
+      0.0,
+      -32.0
+    ],
+    [
+      34.0,
+      42.4,
+      46.0
+    ]
+  ],
+  "bounds": [
+    [
+      -34.0,
+      0.0,
+      -32.0
+    ],
+    [
+      34.0,
+      42.4,
+      46.0
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b4-hardware/contact-sheet.png",
+  "motion": null,
+  "appearance_decision": "s06-b4-hardware-2026-10-17"
+}

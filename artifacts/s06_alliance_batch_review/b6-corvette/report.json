@@ -1,0 +1,858 @@
+{
+  "schema": 1,
+  "batch": "s06-b6-imperial-ships",
+  "row": "ship:imperial:corvette",
+  "registry_key": "imperial:corvette",
+  "identifier": "imperial_corvette",
+  "status": "review_only_not_registered",
+  "integration": "UNAPPROVED review-only monkeypatch of render.asset_selection.selected_binding and render.asset_selection.mesh_for for this one binding, inside an explicit model_preview session. The registry row stays procedural_legacy, no manifest exists for the row and nothing in production selects it; both patches and the preview session are torn down at the end of this run.",
+  "warning": "Offline orbit captures from the real production draw path: not paced FPS, not a battle-acceptance or native-Windows-graphics acceptance, and not an owner appearance decision.",
+  "registration": {
+    "registry_binding": "imperial:corvette",
+    "registry_status": "procedural_legacy",
+    "registry_manifest": "core:imperial/corvette",
+    "manifest_exists": false,
+    "in_production_pipeline": false
+  },
+  "legacy": {
+    "shape": "needle",
+    "source": "render/fleet_geometry.py::_ship_mesh",
+    "triangles": 1552,
+    "vertices": 858,
+    "drawn_length": 64.12035,
+    "drawn_scale": 0.7
+  },
+  "authored": {
+    "path": "assets/models/imperial_corvette.mesh.json",
+    "sha256": "be894218b84c00b4c6f78c96a46df1cf69441b627fa75155df02be41f6c30d05",
+    "bytes": 142216,
+    "triangles": 2348,
+    "vertices": 1272,
+    "bounds": [
+      [
+        -16.0,
+        -5.0,
+        -43.601
+      ],
+      [
+        16.0,
+        24.0,
+        48.0
+      ]
+    ],
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ],
+    "authority": "script",
+    "approval": "pending_owner_approval"
+  },
+  "envelope": [
+    [
+      -16.0,
+      16.0
+    ],
+    [
+      -5.0,
+      24.0
+    ],
+    [
+      -43.601,
+      48.0
+    ]
+  ],
+  "drawn_size": {
+    "legacy": {
+      "shape": "needle",
+      "scale": 0.7,
+      "length": 64.12035
+    },
+    "candidate": {
+      "shape": "imperial:corvette",
+      "scale": 0.6999961790810144,
+      "length": 64.12035
+    }
+  },
+  "placement": [
+    [
+      "capital",
+      "ship",
+      "imperial_corvette",
+      1,
+      [
+        -4200,
+        0,
+        2200
+      ],
+      0.0
+    ],
+    [
+      "escort",
+      "ship",
+      "rebel_frigate",
+      0,
+      [
+        -4200,
+        0,
+        2900
+      ],
+      0.0
+    ],
+    [
+      "battleship",
+      "ship",
+      "rebel_battleship",
+      0,
+      [
+        -4200,
+        0,
+        1500
+      ],
+      0.0
+    ],
+    [
+      "enemy_a",
+      "ship",
+      "imperial_frigate",
+      1,
+      [
+        -3500,
+        0,
+        2200
+      ],
+      -1.5707963267948966
+    ],
+    [
+      "enemy_b",
+      "ship",
+      "imperial_frigate",
+      1,
+      [
+        -3500,
+        0,
+        2900
+      ],
+      -1.5707963267948966
+    ]
+  ],
+  "initial_state_sha256": "67aac553897d0b1dd2fb14c386ab8e4d7ef3058a5c2ec3ba18ea259ad27fc7b7",
+  "views": {
+    "close": {
+      "legacy": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4146.524552324322,
+            60.0,
+            2248.149509357818
+          ],
+          "resolved_eye": [
+            -4146.524552324322,
+            60.0,
+            2248.149509357818
+          ],
+          "union_eye": [
+            -4146.524552324322,
+            60.0,
+            2248.149509357818
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 87.8448795,
+          "yaw": 48.0,
+          "pitch": 35.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "67aac553897d0b1dd2fb14c386ab8e4d7ef3058a5c2ec3ba18ea259ad27fc7b7",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            293.82,
+            170.88,
+            891.41,
+            638.33
+          ],
+          "visible_px": [
+            597.6,
+            467.45
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            293.82,
+            170.88,
+            891.41,
+            638.33
+          ],
+          "visible_px": [
+            597.6,
+            467.45
+          ]
+        },
+        "image": "imperial-corvette-legacy-close.png",
+        "image_sha256": "ac17148cf88d4cb1c1b47f0e7924356d5eb73a154f2046bdb38784975e5c7ecb"
+      },
+      "authored": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4146.524552324322,
+            60.0,
+            2248.149509357818
+          ],
+          "resolved_eye": [
+            -4146.524552324322,
+            60.0,
+            2248.149509357818
+          ],
+          "union_eye": [
+            -4146.524552324322,
+            60.0,
+            2248.149509357818
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 87.8448795,
+          "yaw": 48.0,
+          "pitch": 35.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "67aac553897d0b1dd2fb14c386ab8e4d7ef3058a5c2ec3ba18ea259ad27fc7b7",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            293.82,
+            170.88,
+            891.41,
+            638.33
+          ],
+          "visible_px": [
+            597.6,
+            467.45
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            293.82,
+            170.88,
+            891.41,
+            638.33
+          ],
+          "visible_px": [
+            597.6,
+            467.45
+          ]
+        },
+        "image": "imperial-corvette-authored-close.png",
+        "image_sha256": "aa94476e7247fdbef218892575107dbe8ef89a4ec3a4981b86f90f9fb1dea81d"
+      },
+      "legacy-repeat": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4146.524552324322,
+            60.0,
+            2248.149509357818
+          ],
+          "resolved_eye": [
+            -4146.524552324322,
+            60.0,
+            2248.149509357818
+          ],
+          "union_eye": [
+            -4146.524552324322,
+            60.0,
+            2248.149509357818
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 87.8448795,
+          "yaw": 48.0,
+          "pitch": 35.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "67aac553897d0b1dd2fb14c386ab8e4d7ef3058a5c2ec3ba18ea259ad27fc7b7",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            293.82,
+            170.88,
+            891.41,
+            638.33
+          ],
+          "visible_px": [
+            597.6,
+            467.45
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            293.82,
+            170.88,
+            891.41,
+            638.33
+          ],
+          "visible_px": [
+            597.6,
+            467.45
+          ]
+        },
+        "image": "imperial-corvette-legacy-repeat-close.png",
+        "image_sha256": "ac17148cf88d4cb1c1b47f0e7924356d5eb73a154f2046bdb38784975e5c7ecb"
+      }
+    },
+    "wide": {
+      "legacy": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4047.7645347050498,
+            292.5604389114529,
+            2337.0734286371367
+          ],
+          "resolved_eye": [
+            -4047.7645347050498,
+            292.5604389114529,
+            2337.0734286371367
+          ],
+          "union_eye": [
+            -4047.7645347050498,
+            292.5604389114529,
+            2337.0734286371367
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 357.1503495,
+          "yaw": 48.0,
+          "pitch": 55.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "67aac553897d0b1dd2fb14c386ab8e4d7ef3058a5c2ec3ba18ea259ad27fc7b7",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            565.6,
+            329.15,
+            706.19,
+            461.14
+          ],
+          "visible_px": [
+            140.59,
+            132.0
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            565.6,
+            329.15,
+            706.19,
+            461.14
+          ],
+          "visible_px": [
+            140.59,
+            132.0
+          ]
+        },
+        "image": "imperial-corvette-legacy-wide.png",
+        "image_sha256": "dd4cfb50d300b76d1c91ee38c93411de1cf0c74c019f931e255be727c454074c"
+      },
+      "authored": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4047.7645347050498,
+            292.5604389114529,
+            2337.0734286371367
+          ],
+          "resolved_eye": [
+            -4047.7645347050498,
+            292.5604389114529,
+            2337.0734286371367
+          ],
+          "union_eye": [
+            -4047.7645347050498,
+            292.5604389114529,
+            2337.0734286371367
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 357.1503495,
+          "yaw": 48.0,
+          "pitch": 55.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "67aac553897d0b1dd2fb14c386ab8e4d7ef3058a5c2ec3ba18ea259ad27fc7b7",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            565.6,
+            329.15,
+            706.19,
+            461.14
+          ],
+          "visible_px": [
+            140.59,
+            132.0
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            565.6,
+            329.15,
+            706.19,
+            461.14
+          ],
+          "visible_px": [
+            140.59,
+            132.0
+          ]
+        },
+        "image": "imperial-corvette-authored-wide.png",
+        "image_sha256": "af7d0208eca4de5b26a3abaa5a4fd29caa4dfbb32bbb6f47e9e944f33e5067d8"
+      },
+      "legacy-repeat": {
+        "repeat_max_delta": 0,
+        "repeat_changed_pixels": 0,
+        "camera": {
+          "requested_eye": [
+            -4047.7645347050498,
+            292.5604389114529,
+            2337.0734286371367
+          ],
+          "resolved_eye": [
+            -4047.7645347050498,
+            292.5604389114529,
+            2337.0734286371367
+          ],
+          "union_eye": [
+            -4047.7645347050498,
+            292.5604389114529,
+            2337.0734286371367
+          ],
+          "target": [
+            -4200,
+            0,
+            2200
+          ],
+          "distance": 357.1503495,
+          "yaw": 48.0,
+          "pitch": 55.0,
+          "fov": 55.0,
+          "near": 20.0,
+          "far": 60000.0
+        },
+        "state_sha256": "67aac553897d0b1dd2fb14c386ab8e4d7ef3058a5c2ec3ba18ea259ad27fc7b7",
+        "framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            565.6,
+            329.15,
+            706.19,
+            461.14
+          ],
+          "visible_px": [
+            140.59,
+            132.0
+          ]
+        },
+        "authored_framing": {
+          "corners_on_screen": 8,
+          "bbox": [
+            565.6,
+            329.15,
+            706.19,
+            461.14
+          ],
+          "visible_px": [
+            140.59,
+            132.0
+          ]
+        },
+        "image": "imperial-corvette-legacy-repeat-wide.png",
+        "image_sha256": "dd4cfb50d300b76d1c91ee38c93411de1cf0c74c019f931e255be727c454074c"
+      }
+    }
+  },
+  "captures": {
+    "close": {
+      "legacy": "imperial-corvette-legacy-close.png",
+      "authored": "imperial-corvette-authored-close.png",
+      "legacy_repeat": "imperial-corvette-legacy-repeat-close.png"
+    },
+    "wide": {
+      "legacy": "imperial-corvette-legacy-wide.png",
+      "authored": "imperial-corvette-authored-wide.png",
+      "legacy_repeat": "imperial-corvette-legacy-repeat-wide.png"
+    }
+  },
+  "comparison": {
+    "close": {
+      "changed_pixels": 55078,
+      "changed_percent": 5.3787,
+      "bbox": [
+        318,
+        78,
+        961,
+        721
+      ],
+      "repeat_changed_pixels": 0,
+      "repeat_max_delta": 0,
+      "repeat_bbox": null,
+      "repeat_cells": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "per_pass_vs_first": {
+        "legacy": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        },
+        "authored": {
+          "changed_pixels": 55078,
+          "changed_percent": 5.3787,
+          "max_delta": 240,
+          "bbox": [
+            318,
+            78,
+            961,
+            721
+          ]
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        }
+      },
+      "in_pass_repeats": {
+        "legacy": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "authored": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        }
+      },
+      "first_variant": "legacy",
+      "per_variant_repeat_changed_pixels": {
+        "legacy": 0,
+        "authored": 0
+      }
+    },
+    "wide": {
+      "changed_pixels": 4101,
+      "changed_percent": 0.4005,
+      "bbox": [
+        562,
+        322,
+        717,
+        477
+      ],
+      "repeat_changed_pixels": 0,
+      "repeat_max_delta": 0,
+      "repeat_bbox": null,
+      "repeat_cells": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "per_pass_vs_first": {
+        "legacy": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        },
+        "authored": {
+          "changed_pixels": 4101,
+          "changed_percent": 0.4005,
+          "max_delta": 243,
+          "bbox": [
+            562,
+            322,
+            717,
+            477
+          ]
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "max_delta": 0,
+          "bbox": null
+        }
+      },
+      "in_pass_repeats": {
+        "legacy": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "authored": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        },
+        "legacy-repeat": {
+          "changed_pixels": 0,
+          "max_delta": 0
+        }
+      },
+      "first_variant": "legacy",
+      "per_variant_repeat_changed_pixels": {
+        "legacy": 0,
+        "authored": 0
+      }
+    }
+  },
+  "display": {
+    "samples": 4,
+    "viewport": [
+      0,
+      0,
+      1280,
+      800
+    ],
+    "per_pass": {
+      "legacy": {
+        "samples": 4,
+        "viewport": [
+          0,
+          0,
+          1280,
+          800
+        ]
+      },
+      "authored": {
+        "samples": 4,
+        "viewport": [
+          0,
+          0,
+          1280,
+          800
+        ]
+      },
+      "legacy-repeat": {
+        "samples": 4,
+        "viewport": [
+          0,
+          0,
+          1280,
+          800
+        ]
+      }
+    },
+    "gl": {
+      "vendor": "Apple",
+      "renderer": "Apple M4",
+      "version": "2.1 Metal - 90.5"
+    }
+  },
+  "production_candidate_unselected_after_review": true,
+  "one_camera_per_view": true,
+  "sheet": {
+    "image": "imperial-corvette-comparison.png",
+    "bytes": 292169,
+    "sha256": "48d5ade228e37a0162d45884f67efe6c584dd6bd0107276e57cb7ca2425a056c",
+    "layout": "top row the close pair, bottom row the wide pair, legacy left and authored right"
+  }
+}

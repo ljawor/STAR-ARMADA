@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b4-hardware",
+  "binding": "confederacy:attack_satellite",
+  "canonical_binding": "ship:confederacy:attack_satellite",
+  "gameplay_entity": "attack_satellite",
+  "class": "attack_satellite",
+  "authority": "script",
+  "source": {
+    "path": "art/blender/legion_attack_satellite.blend",
+    "sha256": "a05b500ac667751bfb1a6124fbdcf4a13d4c3d0f2b9c1f7e7c832d3c5b5d6fd2",
+    "bytes": 130222
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b4_hardware.py",
+    "sha256": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+    "bytes": 33018,
+    "selects": "--asset confederacy:attack_satellite"
+  },
+  "export_script": {
+    "path": "tools/art/export_legion_attack_satellite.py",
+    "sha256": "a72ff5cb7ac122dea026108983c2cb29e520c767d7108f2522afda9e97585498",
+    "bytes": 4775
+  },
+  "runtime": {
+    "path": "assets/models/legion_attack_satellite.mesh.json",
+    "sha256": "da4ad21c5c1a363054050169988d1ce0eab82d1c9fb31a5d1318c5f69eebaf64",
+    "bytes": 141204,
+    "triangles": 2432,
+    "vertices": 1360,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -50.9795,
+      -9.0,
+      -34.0
+    ],
+    [
+      50.9795,
+      21.5,
+      58.0
+    ]
+  ],
+  "bounds": [
+    [
+      -50.9795,
+      -9.0,
+      -34.0
+    ],
+    [
+      50.9795,
+      21.5,
+      58.0
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b4-hardware/contact-sheet.png",
+  "motion": "artifacts/s06_alliance_batch_review/b4-hardware/legion attack satellite-after-motion.mp4",
+  "appearance_decision": "s06-b4-hardware-2026-10-17"
+}

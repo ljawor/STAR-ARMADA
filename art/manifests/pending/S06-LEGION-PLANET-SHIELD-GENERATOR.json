@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b4-hardware",
+  "binding": "confederacy:planet_shield_generator",
+  "canonical_binding": "ship:confederacy:planet_shield_generator",
+  "gameplay_entity": "planet_shield_generator",
+  "class": "planet_shield_generator",
+  "authority": "script",
+  "source": {
+    "path": "art/blender/legion_planet_shield_generator.blend",
+    "sha256": "3e1c8f02a6f2ebc4647622078c0926081f3f5fa9ee39691f1c5d5b54db3e62e3",
+    "bytes": 128983
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b4_hardware.py",
+    "sha256": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+    "bytes": 33018,
+    "selects": "--asset confederacy:planet_shield_generator"
+  },
+  "export_script": {
+    "path": "tools/art/export_legion_planet_shield_generator.py",
+    "sha256": "6c959436870831e3c80a7c5f46eeaf62b49da35ea00918a704c2b3aa7815832b",
+    "bytes": 4782
+  },
+  "runtime": {
+    "path": "assets/models/legion_planet_shield_generator.mesh.json",
+    "sha256": "7d8d1676d83461298d8efa08be75faa494452a71196952d6943377dedb4f1873",
+    "bytes": 159373,
+    "triangles": 2608,
+    "vertices": 1440,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -34.0,
+      0.0,
+      -32.0
+    ],
+    [
+      34.0,
+      46.5,
+      32.0
+    ]
+  ],
+  "bounds": [
+    [
+      -34.0,
+      0.0,
+      -32.0
+    ],
+    [
+      34.0,
+      46.5,
+      32.0
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b4-hardware/contact-sheet.png",
+  "motion": null,
+  "appearance_decision": "s06-b4-hardware-2026-10-17"
+}

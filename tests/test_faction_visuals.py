@@ -9,7 +9,14 @@ class VisualIdentityTests(unittest.TestCase):
         ds = DataStore.get()
         for did, data in ds.ships.items():
             key = v.ship_visual_key(ds, did, 'syndicate')
-            if data.faction == 'imperial':
+            if data.faction == 'imperial' and data.category == 'crew_transport' and data.crew_capacity > 0:
+                # A crew transport carrying crew is a convoy, and a convoy resolves to its own
+                # faction's hull whatever owner paint is passed - the rule the other three factions
+                # already followed (`s06-imperial-convoy-parity-2026-10-18` extended the gate to
+                # Imperial). The row that lands here is the Imperial crew transport, not a hull whose
+                # shape the owner may repaint.
+                self.assertEqual(key, 'imperial:convoy')
+            elif data.faction == 'imperial':
                 self.assertEqual(key, ds.ship_visual(did)['shape'])
             else:
                 self.assertTrue(key.startswith(data.faction + ':'))

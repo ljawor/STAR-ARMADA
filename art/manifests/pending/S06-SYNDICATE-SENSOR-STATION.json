@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b3b-stations-slice-1",
+  "binding": "syndicate:sensor_station",
+  "canonical_binding": "ship:syndicate:sensor_station",
+  "gameplay_entity": "sensor_station",
+  "class": "sensor_station",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/syndicate_sensor_station.blend",
+    "sha256": "9238f17c16196ce938019f8b0263415261ae763b0f2e64f9d1df97442670f56b",
+    "bytes": 144416
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b3b_stations.py",
+    "sha256": "922fcabcafb207e312180e672d0a95001900618e231260d5a939815bcbf951d5",
+    "bytes": 35373,
+    "selects": "--asset syndicate:sensor_station"
+  },
+  "export_script": {
+    "path": "tools/art/export_syndicate_sensor_station.py",
+    "sha256": "ef4ddc6ed3d9507ffa0606d52341438edede17cf36e02bf39c62393966a8bfd5",
+    "bytes": 4783
+  },
+  "runtime": {
+    "path": "assets/models/syndicate_sensor_station.mesh.json",
+    "sha256": "e35b084c73b2702ab12f0611730bb4f99b24eefd80925344300360f68bb7a947",
+    "bytes": 253850,
+    "triangles": 3832,
+    "vertices": 2074,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -47.2,
+      -17.6,
+      -31.137
+    ],
+    [
+      26.3565,
+      43.857,
+      21.1423
+    ]
+  ],
+  "bounds": [
+    [
+      -47.2,
+      -17.6,
+      -31.137
+    ],
+    [
+      26.3565,
+      43.556999,
+      21.1423
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b3b-stations/contact-sheet.png",
+  "motion": null,
+  "appearance_decision": "s06-b3b-stations-2026-10-17"
+}

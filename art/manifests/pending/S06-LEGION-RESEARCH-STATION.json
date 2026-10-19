@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b3c-stations",
+  "binding": "confederacy:research_station",
+  "canonical_binding": "ship:confederacy:research_station",
+  "gameplay_entity": "research_station",
+  "class": "research_station",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/legion_research_station.blend",
+    "sha256": "6766c3d7cdc1915b9952a432a6f429ac60c354611822c04d77041fcc1288382b",
+    "bytes": 145158
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b3c_stations.py",
+    "sha256": "ccf787ad225b814eb1918d14c2e61aeff0ca55d984d7ffd6989d1b8fb3928553",
+    "bytes": 58285,
+    "selects": "--asset confederacy:research_station"
+  },
+  "export_script": {
+    "path": "tools/art/export_legion_research_station.py",
+    "sha256": "c527ba7cb4e9d5de31d1dbd4c05c6c3439763c1df540fa5b0e8129711e8fa28c",
+    "bytes": 4779
+  },
+  "runtime": {
+    "path": "assets/models/legion_research_station.mesh.json",
+    "sha256": "01485bb472f239ab70779b1f1a5dabb381c18347b8b9d2350a3cb2e045b7fd72",
+    "bytes": 240463,
+    "triangles": 3680,
+    "vertices": 2008,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -46.3156,
+      -12.4,
+      -33.48
+    ],
+    [
+      46.3156,
+      13.88,
+      52.68
+    ]
+  ],
+  "bounds": [
+    [
+      -46.3156,
+      -12.4,
+      -33.48
+    ],
+    [
+      46.3156,
+      13.88,
+      52.68
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
+  "motion": null,
+  "appearance_decision": "s06-b3c-stations-2026-10-17"
+}

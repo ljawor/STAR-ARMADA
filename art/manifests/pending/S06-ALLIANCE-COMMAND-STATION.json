@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b3a-command-stations",
+  "binding": "rebel:command_station",
+  "canonical_binding": "ship:rebel:command_station",
+  "gameplay_entity": "command_station",
+  "class": "command_station",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/alliance_command_station.blend",
+    "sha256": "a2377c1d8f815258791345869c005e95efe13ca99c99c5ba90ede8598ff0fd4c",
+    "bytes": 130333
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b3_stations.py",
+    "sha256": "7f84d8c60df8fe1d254a2bb05249f2467927621e105a6c4f57b5c55d0472c083",
+    "bytes": 21849,
+    "selects": "--asset rebel:command_station"
+  },
+  "export_script": {
+    "path": "tools/art/export_alliance_command_station.py",
+    "sha256": "413470bcd02250acbd379fef9cbc2fd818032d976ce6573536c800ee336fec38",
+    "bytes": 4773
+  },
+  "runtime": {
+    "path": "assets/models/alliance_command_station.mesh.json",
+    "sha256": "ee9790e6f95bdd2a5e0650fd4eb1d1d5496637b32956929a9c6d50df0ee8c93c",
+    "bytes": 219115,
+    "triangles": 3172,
+    "vertices": 1672,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -48.0,
+      -6.8,
+      -29.6
+    ],
+    [
+      48.0,
+      26.48,
+      29.6
+    ]
+  ],
+  "bounds": [
+    [
+      -48.0,
+      -6.8,
+      -29.6
+    ],
+    [
+      48.0,
+      26.48,
+      29.6
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b3a-command-stations/contact-sheet.png",
+  "motion": "artifacts/s06_alliance_batch_review/b3a-command-stations/alliance command station-after-motion.mp4",
+  "appearance_decision": "s06-b3a-command-stations-2026-10-17"
+}

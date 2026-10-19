@@ -6,3 +6,6 @@ assets/models/** -text
 art/** -text
 artifacts/** -text
 tools/art/** -text
+# S06 review tooling is source-hash attested; preserve its exact checkout bytes.
+tools/diag_alliance_cruiser_review.py -text
+tests/test_alliance_blender_cruiser.py -text

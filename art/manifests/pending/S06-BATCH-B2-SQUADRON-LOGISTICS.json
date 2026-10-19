@@ -1,0 +1,284 @@
+{
+  "schema": 1,
+  "batch": "s06-b2-squadron-logistics",
+  "status": "appearance_approved_pending_landing",
+  "note": "Review-only batch sheet for the pending S06 B2 squadron and logistics specimens. This file is not an approval record, a registry entry or a runtime manifest, and it does not select any asset in production. The four imperial rows of this batch are deliberately absent: those bindings resolve to the shared legacy generic shapes 'wedge' and 'box', which other imperial hulls also draw, so authoring them is a shared-source change for the owner to scope, not a per-binding model. The four trade_convoy rows share the crew-transport meshes below and carry no ShipData row of their own.",
+  "overview": {
+    "first_x": -4200,
+    "first_z": 1200,
+    "spacing": 300,
+    "distance": 620,
+    "yaw": 48,
+    "pitch": 50
+  },
+  "evidence": {
+    "rebel:fighter": {
+      "sheet": "artifacts/s06_alliance_batch_review/b2-squadron-logistics/contact-sheet.png",
+      "motion": "artifacts/s06_alliance_batch_review/b2-squadron-logistics/interceptor-after-motion.mp4"
+    },
+    "rebel:bomber": {
+      "sheet": "artifacts/s06_alliance_batch_review/b2-squadron-logistics/contact-sheet.png"
+    },
+    "rebel:convoy": {
+      "sheet": "artifacts/s06_alliance_batch_review/b2-squadron-logistics/contact-sheet.png"
+    },
+    "confederacy:fighter": {
+      "sheet": "artifacts/s06_alliance_batch_review/b2-squadron-logistics/contact-sheet.png"
+    },
+    "confederacy:bomber": {
+      "sheet": "artifacts/s06_alliance_batch_review/b2-squadron-logistics/contact-sheet.png"
+    },
+    "confederacy:convoy": {
+      "sheet": "artifacts/s06_alliance_batch_review/b2-squadron-logistics/contact-sheet.png"
+    },
+    "syndicate:fighter": {
+      "sheet": "artifacts/s06_alliance_batch_review/b2-squadron-logistics/contact-sheet.png"
+    },
+    "syndicate:convoy": {
+      "sheet": "artifacts/s06_alliance_batch_review/b2-squadron-logistics/contact-sheet.png"
+    }
+  },
+  "assets": [
+    {
+      "binding": "rebel:fighter",
+      "label": "interceptor",
+      "identifier": "alliance_interceptor",
+      "mesh": "assets/models/alliance_interceptor.mesh.json",
+      "envelope": [
+        [
+          -12.0,
+          -3.0,
+          -19.77
+        ],
+        [
+          12.0,
+          8.471,
+          18.0
+        ]
+      ],
+      "min_length": 37.7,
+      "data_id": "rebel_x_squadron",
+      "gameplay_entity": "rebel_x_squadron",
+      "class": "fighter_squadron",
+      "faction": "rebel",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b2_batch.py",
+      "seed_arg": "--asset rebel:fighter"
+    },
+    {
+      "binding": "rebel:bomber",
+      "label": "bomber",
+      "identifier": "alliance_bomber",
+      "mesh": "assets/models/alliance_bomber.mesh.json",
+      "envelope": [
+        [
+          -16.0,
+          -6.8,
+          -25.37
+        ],
+        [
+          16.0,
+          6.55,
+          23.0
+        ]
+      ],
+      "min_length": 48.3,
+      "data_id": "rebel_y_squadron",
+      "gameplay_entity": "rebel_y_squadron",
+      "class": "fighter_squadron",
+      "faction": "rebel",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b2_batch.py",
+      "seed_arg": "--asset rebel:bomber"
+    },
+    {
+      "binding": "rebel:convoy",
+      "label": "alliance-convoy",
+      "identifier": "alliance_convoy",
+      "mesh": "assets/models/alliance_convoy.mesh.json",
+      "envelope": [
+        [
+          -31.0,
+          -9.0,
+          -72.698
+        ],
+        [
+          31.0,
+          16.0,
+          59.5
+        ]
+      ],
+      "min_length": 132.1,
+      "data_id": "rebel_crew_transport",
+      "gameplay_entity": "rebel_crew_transport",
+      "class": "crew_transport",
+      "faction": "rebel",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b2_batch.py",
+      "seed_arg": "--asset rebel:convoy"
+    },
+    {
+      "binding": "confederacy:fighter",
+      "label": "vulture",
+      "identifier": "legion_vulture",
+      "mesh": "assets/models/legion_vulture.mesh.json",
+      "envelope": [
+        [
+          -12.831,
+          -3.0,
+          -15.07
+        ],
+        [
+          12.831,
+          7.6,
+          19.4
+        ]
+      ],
+      "min_length": 34.4,
+      "data_id": "confed_vulture_squadron",
+      "gameplay_entity": "confed_vulture_squadron",
+      "class": "fighter_squadron",
+      "faction": "confederacy",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b2_batch.py",
+      "seed_arg": "--asset confederacy:fighter"
+    },
+    {
+      "binding": "confederacy:bomber",
+      "label": "hyena",
+      "identifier": "legion_hyena",
+      "mesh": "assets/models/legion_hyena.mesh.json",
+      "envelope": [
+        [
+          -17.531,
+          -7.0,
+          -21.65
+        ],
+        [
+          17.531,
+          13.0,
+          26.12
+        ]
+      ],
+      "min_length": 47.7,
+      "data_id": "confed_bomber_squadron",
+      "gameplay_entity": "confed_bomber_squadron",
+      "class": "fighter_squadron",
+      "faction": "confederacy",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b2_batch.py",
+      "seed_arg": "--asset confederacy:bomber"
+    },
+    {
+      "binding": "confederacy:convoy",
+      "label": "legion-convoy",
+      "identifier": "legion_convoy",
+      "mesh": "assets/models/legion_convoy.mesh.json",
+      "envelope": [
+        [
+          -36.5,
+          -7.0,
+          -65.698
+        ],
+        [
+          36.5,
+          29.5,
+          57.6
+        ]
+      ],
+      "min_length": 123.2,
+      "data_id": "confed_crew_transport",
+      "gameplay_entity": "confed_crew_transport",
+      "class": "crew_transport",
+      "faction": "confederacy",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b2_batch.py",
+      "seed_arg": "--asset confederacy:convoy"
+    },
+    {
+      "binding": "syndicate:fighter",
+      "label": "jackal",
+      "identifier": "syndicate_jackal",
+      "mesh": "assets/models/syndicate_jackal.mesh.json",
+      "envelope": [
+        [
+          -7.892,
+          -4.024,
+          -17.258
+        ],
+        [
+          8.45,
+          12.0,
+          24.5
+        ]
+      ],
+      "min_length": 41.7,
+      "data_id": "syndicate_raid_squadron",
+      "gameplay_entity": "syndicate_raid_squadron",
+      "class": "fighter_squadron",
+      "faction": "syndicate",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b2_batch.py",
+      "seed_arg": "--asset syndicate:fighter"
+    },
+    {
+      "binding": "syndicate:convoy",
+      "label": "syndicate-convoy",
+      "identifier": "syndicate_convoy",
+      "mesh": "assets/models/syndicate_convoy.mesh.json",
+      "envelope": [
+        [
+          -27.786,
+          -9.0,
+          -76.912
+        ],
+        [
+          42.267,
+          36.5,
+          62.04
+        ]
+      ],
+      "min_length": 138.9,
+      "data_id": "syndicate_crew_transport",
+      "gameplay_entity": "syndicate_crew_transport",
+      "class": "crew_transport",
+      "faction": "syndicate",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ],
+      "seed": "tools/art/build_b2_batch.py",
+      "seed_arg": "--asset syndicate:convoy"
+    }
+  ],
+  "appearance_decision": "s06-b2-squadron-logistics-2026-10-17"
+}

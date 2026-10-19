@@ -113,6 +113,208 @@
           "applies_from": "until the class-budget question is answered; the ceiling raise above does not depend on it"
         }
       ]
+    },
+    {
+      "id": "s06-b4-scope-2026-10-17",
+      "date": "2026-10-17",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "authorized",
+      "applies_to": "S06 B4 - satellites and planet installations",
+      "owner_wording": "1.) B4 authorized",
+      "how_recorded": "Parsed from the owner's own words in the session that answered four questions at once (B4 authorization, the appearance approvals of the pending specimens, the roadmap catch-up and the imperial migration). Recorded verbatim, including the numbering, so the intent is not paraphrased away.",
+      "decisions": [
+        {
+          "id": "b4-authoring-scope",
+          "decision": "Author the satellite and planet-installation rows as the next catalogue batch: defense_satellite, attack_satellite, planet_extractor, planet_trade_hub, planet_shield_generator and planet_pulsar_cannon across the three families whose station-family dispatch already consults the authored-model seam (rebel, confederacy, syndicate) - eighteen rows, all at the catalogue radius of 45.",
+          "why": "B3 finished the station rows and the owner-approved order (s01-scope-2026-10-16) lists B4 next; the sixteen imperial rows of the same kinds are covered by the separate imperial-migration decision.",
+          "applies_from": "this decision"
+        },
+        {
+          "id": "b4-recipe-and-authority",
+          "decision": "B4 follows the same recipe as B3: one seed that builds every row, generated per-asset export wrappers, one batch sheet, a guard module, and real-application evidence (per-row close/rear/tactical/common-scale frames, per-role ablations, restored-simulation frames, paired motion clips and a one-scale overview). Satellites and planet installations are script-authoritative under the S03 source-authority policy, so the seed is the master and the .blend is a derived artifact.",
+          "why": "Repeated modular pieces are exactly the class the S03 policy keeps script-authoritative; the station recipes already proved the surrounding pipeline.",
+          "applies_from": "this decision"
+        },
+        {
+          "id": "b4-is-not-an-appearance-approval",
+          "decision": "Authoring authorization only. Each authored revision needs its own appearance approval before any landing, and this decision approves no revision, no landing, no registration, no tag or release, and no production-default switch.",
+          "why": "An approval binds to a revision; a scope decision binds to work about to be done. Conflating them is what makes an unapproved asset look approved.",
+          "applies_from": "this decision"
+        }
+      ],
+      "not_authorized": [
+        "landing, registration, activation, merge, tag or release of any B4 revision",
+        "the S11 catalogue switch or any production-default switch",
+        "packaging and native-Windows acceptance",
+        "changing simulation values, ship or structure stats, collision radii or gameplay balance in the name of authoring",
+        "the ten imperial station rows, the six imperial satellite and planet-installation rows and the imperial ship rows, which the imperial-migration decision covers separately"
+      ]
+    },
+    {
+      "id": "s06-imperial-migration-2026-10-17",
+      "date": "2026-10-17",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "authorized",
+      "applies_to": "S06 - the imperial rows of the model catalogue",
+      "owner_wording": "4.) decision need also migration.",
+      "how_recorded": "Parsed from the owner's own words in the session that answered four questions at once; the fourth answer settles the imperial seam question that had been left open, in favour of migrating the imperial rows rather than leaving them procedural.",
+      "decisions": [
+        {
+          "id": "imperial-rows-in-scope",
+          "decision": "The imperial rows are in scope for migration: the ten imperial station rows (command station, shipyard, research station, defense platform, trade station, fighter platform, repair dock, mining station, sensor station, energy relay), the two satellite rows, the four planet-installation rows, the five imperial combat hulls and the imperial squadron and logistics rows.",
+          "why": "Leaving them procedural would make the imperial faction the one faction whose stations and capitals still render placeholder geometry after the migration; the owner chose migration.",
+          "applies_from": "this decision"
+        },
+        {
+          "id": "imperial-per-binding-keys",
+          "decision": "Authoring the imperial rows needs one small, guardable renderer change, and it is not in station_mesh: that entry already consults mesh_for(f'{faction}:{data_id}') ahead of its imperial fallback, so the station, satellite and planet-installation rows are ordinary asset work. The change is in render/faction_visuals.py::ship_visual_key, which mints a per-binding key (faction:fighter, faction:convoy) for the three non-imperial families only and lets imperial hulls fall through normalize_ship_key(ds.ship_visual(data_id)['shape']) onto the shared legacy shapes 'wedge' and 'box'. Imperial ships, squadrons and convoys therefore need that function to mint an imperial per-binding key as well, with the shared shape kept as the fallback for every hull that has no approved revision.",
+          "why": "Two imperial hulls sharing one shape key cannot have two different models; today several imperial rows draw the same wedge or box. Making the key per-binding is what turns an imperial hull into an addressable revision, and keeping the old shape as fallback is what keeps activation a separate decision.",
+          "applies_from": "this decision"
+        },
+        {
+          "id": "imperial-is-not-an-appearance-approval",
+          "decision": "Authoring and seam authorization only. Every imperial revision needs its own appearance approval before landing, and nothing here authorizes a landing, a registration, a tag, a release or a production-default switch. The imperial rows are also not exempt from the envelope rule: their authored bounds must stay inside the legacy extents the simulation already uses.",
+          "why": "The same rule as every other batch: approval binds to a revision, and the simulation envelope is not an artwork decision.",
+          "applies_from": "this decision"
+        }
+      ],
+      "not_authorized": [
+        "landing, registration, activation, merge, tag or release of any imperial revision",
+        "changing simulation values, hull stats, station behaviour, collision radii or balance",
+        "removing the legacy procedural fallback or switching the catalogue to authored models (S11)",
+        "packaging and native-Windows acceptance"
+      ],
+      "correction": "The first draft of this record said the imperial station rows dispatch straight to _station_mesh with no mesh_for seam and that the seam change belongs in render/fleet_geometry.py::station_mesh. That was wrong, and it repeated a stale claim from the earlier handoffs: station_mesh consults the seam before its imperial branch, for every faction. Corrected the same day, against the code at render/fleet_geometry.py:254-272 and render/faction_visuals.py:34-64. The owner's wording and the scope of his answer are unchanged - only the engineering description of what migrating the imperial rows takes."
+    },
+    {
+      "id": "s06-large-evidence-accepted-2026-10-17",
+      "date": "2026-10-17",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved-as-asked",
+      "applies_to": "S03 storage policy - the size of committed review evidence",
+      "owner_wording": "2.) A policy flag: the B4 contact sheet is 12.7 MiB: accept bigger",
+      "how_recorded": "The owner was shown the measured sizes and the three ways out - accept larger binary evidence, split or re-encode the contact sheets, or adopt Git LFS atomically - and answered in favour of accepting. Recorded verbatim; this is a new record rather than an edit of s03-pipeline-policy-2026-10-16, because that file's own rule is that a policy change is a new decision record.",
+      "decisions": [
+        {
+          "id": "review-evidence-size-accepted",
+          "decision": "Committed review evidence is kept in ordinary Git however large it is, and the contact sheets are not split or re-encoded to fit a threshold. Measured at the time of the decision: B4 12.7 MiB, B3c 10.9 MiB, B3b 5.4 MiB.",
+          "why": "The evidence is what the appearance approvals are judged against and what the guards re-hash; splitting it changes the record a reviewer reads, and re-encoding it changes the bytes an approval is about.",
+          "applies_from": "this decision"
+        },
+        {
+          "id": "lfs-remains-unadopted",
+          "decision": "The S03 declaration \"Git LFS threshold: 5 MiB per file; LFS is not adopted until an asset actually crosses that threshold\" no longer triggers adoption for review evidence: evidence may cross it and stays in ordinary Git. If LFS is ever adopted it still lands in one change with its attributes, the build and test fetching, and a fresh-clone check.",
+          "why": "A threshold that fires on evidence would force LFS adoption to serve files no build or test reads.",
+          "applies_from": "this decision"
+        }
+      ],
+      "not_authorized": [
+        "adopting Git LFS, or rewriting, re-encoding, pruning or splitting any evidence already committed",
+        "relaxing the runtime loader caps (12,000 triangles / 10,000 vertices / 2,000,000 bytes) or any asset class budget",
+        "landing, registration, activation, merge, tag, release or a production-default switch",
+        "anything about asset sources crossing the threshold: that question was not put to the owner and the S03 wording stands"
+      ]
+    },
+    {
+      "id": "s06-b5-scope-2026-10-17",
+      "date": "2026-10-17",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved-as-recommended",
+      "applies_to": "S06 B5 - the environment rows",
+      "owner_wording": "go with recomendate way",
+      "how_recorded": "B5 was probed before anything was authored and found to be four asset classes rather than fourteen meshes (art/manifests/handoffs/S06-B5-SCOPE.md, generated by tools/art/probe_b5_scope.py). Two ways forward were put to the owner - open the texture class now, or stop B5 at the asteroid prop and leave the rest on their existing pipelines - with the second recommended, and he adopted the recommendation. Recorded verbatim, including his spelling, so the intent is not paraphrased away.",
+      "decisions": [
+        {
+          "id": "b5-authors-the-asteroid-prop",
+          "decision": "B5 authors the asteroid prop: the `environment:asteroid_field` row is real per-instance geometry, and the S01 scope answer already chose the reading for it (asked whether per-instance procedural asteroid props should stay procedural or become a shared authored prop, the owner answered \"in scope - bring into the catalogue\"). So the row is a seam consult in the asteroid draw plus one shared authored prop, on the existing mesh pipeline.",
+          "why": "It is the only B5 row that needs no new asset class, and it was already in scope before this decision.",
+          "applies_from": "this decision"
+        },
+        {
+          "id": "b5-leaves-the-textures-on-their-pipeline",
+          "decision": "The ten texture rows - the eight planet surfaces and the two billboards (star, nebula) - stay on their generated-texture pipeline for now. They are a class the catalogue has none of: the registry, the loader, the wrappers and the schemas are mesh-shaped, and the S03 storage policy gates exactly this case (\"re-examine before the first batch that ships textures\"). Opening a texture class is a pipeline decision of its own, with its schema, identity rule, evidence shape, loader path and the storage re-examination, and it is not taken here.",
+          "why": "Authoring ten payloads of the wrong kind would be worse than authoring one of the right kind, and a texture class changes the registry, loader and storage rules rather than adding a file.",
+          "applies_from": "this decision"
+        },
+        {
+          "id": "b5-effects-and-backdrop-recorded-as-outside-the-mesh-catalogue",
+          "decision": "The star dome and the jump glyph are effects with no surface or geometry to author, and the menu backdrop is a baked movie with its own pipeline (tools/build_menu_movie.py, drawn by render/menus.py::_draw_splash_movie). Both are recorded as deliberately outside the mesh catalogue rather than left looking unbuilt.",
+          "why": "A catalogue entry that cannot be a mesh is not work deferred; it is a different question, and saying so keeps the ledger honest.",
+          "applies_from": "this decision"
+        }
+      ],
+      "not_authorized": [
+        "creating a texture asset class, or any change to the registry, loader, schema or storage policy for textures",
+        "changing the planet shader, the shared unit sphere or the atmosphere shell",
+        "landing, registration, activation, merge, tag, release or a production-default switch",
+        "any change to asteroid gameplay values: the row stays decorative, and the field's count, placement, scale range and tumble are untouched"
+      ]
+    },
+    {
+      "id": "s06-small-prop-class-2026-10-17",
+      "date": "2026-10-17",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved-as-proposed",
+      "applies_to": "S03 authoring policy - the exporter's minimum triangle count",
+      "owner_wording": "option 1",
+      "how_recorded": "The B5 asteroid prop was shown to the owner three times against the procedural rock it replaces, and he judged the procedural rock better each time ('left one is better'). The cause was diagnosed and put to him with three ways out - open a small-prop class below the 1,800-triangle floor, accept a prop that is worse than what it replaces, or leave the row procedural - and he chose the first. Recorded verbatim.",
+      "decisions": [
+        {
+          "id": "small-prop-class-exists",
+          "decision": "A **small-prop class** exists for assets the renderer draws many times per frame: an asteroid rock, and any later prop of the same kind. Its floor is 120 triangles instead of 1,800, and its own ceiling is set per asset in the wrapper table, tighter than the loader's 12,000. The 1,800 floor stays exactly as it is for ships, stations, satellites, planet installations and every other asset already approved; nothing in this decision moves them.",
+          "why": "The floor was written for hull- and structure-scale assets. A unit rock is drawn forty times per field, so the floor forced a surface forty times finer than the rock it replaced - which reads as texture noise and spiky silhouette rather than stone, and costs a field 120,000 triangles instead of about 10,000. The class exists so a prop can be authored the way the thing it replaces is authored: a few very large facets.",
+          "applies_from": "this decision"
+        },
+        {
+          "id": "the-class-is-declared-per-asset",
+          "decision": "The class is declared where the caps already are: the wrapper template gains a minimum-triangle slot, the wrapper table sets it per asset, and the seed asserts its own floor. There is no implicit exemption and no global lowering - a small prop says so in its own file.",
+          "why": "A floor that can be waived silently is not a floor; a declared class is a record a reviewer can find.",
+          "applies_from": "this decision"
+        },
+        {
+          "id": "evidence-for-a-small-prop",
+          "decision": "A small-prop row is reviewed the same way as any other: actual-application captures with the legacy path, a per-role ablation, and a repeat frame that must be identical. The owner's judgement of the picture is the gate.",
+          "why": "The class changes what geometry is allowed, not what evidence is owed.",
+          "applies_from": "this decision"
+        }
+      ],
+      "not_authorized": [
+        "lowering the 1,800 floor for any asset outside the declared small-prop class",
+        "relaxing the runtime loader caps (12,000 triangles / 10,000 vertices / 2,000,000 bytes) or any owner class budget",
+        "landing, registration, activation, merge, tag, release or a production-default switch",
+        "any change to the field's gameplay values: 40 instances, placement, scale range and tumble stay as they are"
+      ]
+    },
+    {
+      "id": "s06-imperial-convoy-parity-2026-10-18",
+      "date": "2026-10-18",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved-as-proposed",
+      "applies_to": "the two remaining Imperial rows of S06 batch B6, and the convoy gate that reaches them",
+      "owner_wording": "other factions' convoys settled",
+      "how_recorded": "Put to him as the choice it was - author the Imperial convoy rows as hulls of their own, or follow whatever the other three factions' convoys settled on - and he chose the second. What that means is measured rather than assumed, below.",
+      "what_the_siblings_settled_on": {
+        "decision": "s06-b2-squadron-logistics-2026-10-17",
+        "rows": [
+          "rebel:convoy / alliance_convoy",
+          "confederacy:convoy / legion_convoy",
+          "syndicate:convoy / syndicate_convoy"
+        ],
+        "status": "appearance_approved_pending_landing, owner_decision null, activation false, registry procedural_legacy",
+        "mesh_sizes": "4,512 / 4,584 / 4,756 triangles - roughly twice the single-hull rows, because a convoy is a cluster",
+        "envelope_convention": "the sidecar's envelope is the binding's declared box, a little larger than the mesh's own bounds: rebel:convoy declares [-31,-9,-72.698]..[31,16,59.5] around mesh bounds of [-30.3,-6,-72.698]..[30.3,14.776,59.5]",
+        "evidence": "the same review sheets and per-row sidecars the rest of S06 uses"
+      },
+      "what_this_authorizes": [
+        "authoring an Imperial convoy row that follows the siblings: binding imperial:convoy (already in the registry with manifest core:imperial/convoy), a cluster-scale mesh around 4,500 triangles, an envelope in the siblings' style, a sidecar, a review picture, and an appearance decision when the owner has seen it"
+      ],
+      "what_it_does_not_authorize": [
+        "landing, registration, activation, merge, tag or release of anything",
+        "a blanket change to the convoy gate: extending it for Imperial is a seam change and is to be written, guarded and reviewed like any other",
+        "any change to the other three factions' convoys, which are already approved",
+        "packaging of any kind, an LFS conversion or a size policy"
+      ],
+      "finding_to_carry": "Both convoy paths exclude Imperial from the faction gate that maps a data row to a <faction>:convoy key - `data_id == 'trade_convoy' and faction in FACTIONS[1:]`, and the crew-transport branch beside it, where FACTIONS is (imperial, rebel, confederacy, syndicate). So an Imperial convoy hull cannot be reached until that gate is extended for Imperial; this is a real one-branch seam, unlike the ship rows, whose authored bindings are served through ship_binding without any key change."
     }
   ]
 }

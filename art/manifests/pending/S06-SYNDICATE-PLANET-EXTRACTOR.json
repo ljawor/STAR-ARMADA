@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b4-hardware",
+  "binding": "syndicate:planet_extractor",
+  "canonical_binding": "ship:syndicate:planet_extractor",
+  "gameplay_entity": "planet_extractor",
+  "class": "planet_extractor",
+  "authority": "script",
+  "source": {
+    "path": "art/blender/syndicate_planet_extractor.blend",
+    "sha256": "0021f21a1a2e95dc015ac652345cbf564f826b9dc06c9b8824290222502a843a",
+    "bytes": 130179
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b4_hardware.py",
+    "sha256": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+    "bytes": 33018,
+    "selects": "--asset syndicate:planet_extractor"
+  },
+  "export_script": {
+    "path": "tools/art/export_syndicate_planet_extractor.py",
+    "sha256": "72d3ea3fcc3a5b8e230b3c21e641d1e6b677db659aa55385106bca26dc3263ea",
+    "bytes": 4777
+  },
+  "runtime": {
+    "path": "assets/models/syndicate_planet_extractor.mesh.json",
+    "sha256": "388ba2aa4d5ebb3f33edc309cc4c177ce6d499c74d751c6573f8f5302dca4fa1",
+    "bytes": 135912,
+    "triangles": 2484,
+    "vertices": 1400,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -34.0,
+      0.0,
+      -32.0
+    ],
+    [
+      34.0,
+      43.0,
+      32.0
+    ]
+  ],
+  "bounds": [
+    [
+      -34.0,
+      0.0,
+      -32.0
+    ],
+    [
+      34.0,
+      43.0,
+      32.0
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b4-hardware/contact-sheet.png",
+  "motion": null,
+  "appearance_decision": "s06-b4-hardware-2026-10-17"
+}

@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b5-environment",
+  "binding": "environment:asteroid_field",
+  "canonical_binding": "ship:environment:asteroid_field",
+  "gameplay_entity": "asteroid_field",
+  "class": "environment_prop",
+  "authority": "script",
+  "source": {
+    "path": "art/blender/shared_asteroid_field.blend",
+    "sha256": "23260a7f81a54e874325fcca802c66c94fbb1c7f1e90378b799e129b17d4ea0e",
+    "bytes": 93464
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b5_asteroid.py",
+    "sha256": "eb6935400489de58df08e22effea006c5126838e2e927ab75f10db7d88ee6563",
+    "bytes": 15727,
+    "selects": "--asset environment:asteroid_field"
+  },
+  "export_script": {
+    "path": "tools/art/export_shared_asteroid_field.py",
+    "sha256": "f7bad0a2df2a47dbcab4ef547072a9c9f46e8da58b03db5d28cc88625616f9db",
+    "bytes": 5036
+  },
+  "runtime": {
+    "path": "assets/models/shared_asteroid_field.mesh.json",
+    "sha256": "ad2b65483c330fecad28059fce9c489bc0bce2c050ebe38aa526e21f25c88ae7",
+    "bytes": 18854,
+    "triangles": 216,
+    "vertices": 126,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -0.58,
+      -0.46,
+      -0.58
+    ],
+    [
+      0.58,
+      0.46,
+      0.58
+    ]
+  ],
+  "bounds": [
+    [
+      -0.58,
+      -0.46,
+      -0.58
+    ],
+    [
+      0.58,
+      0.46,
+      0.58
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": null,
+  "motion": null,
+  "appearance_decision": "s06-b5-environment-2026-10-17"
+}

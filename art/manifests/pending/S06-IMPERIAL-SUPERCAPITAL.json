@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b6-imperial-ships",
+  "binding": "imperial:supercapital",
+  "canonical_binding": "ship:imperial:supercapital",
+  "gameplay_entity": "imperial_supercapital",
+  "class": "combat_hull",
+  "authority": "script",
+  "source": {
+    "path": "art/blender/imperial_supercapital.blend",
+    "sha256": "1bc6ceb9d30698b27440023b2bc9098837e0775866a0a8046b29d656845f1f14",
+    "bytes": 152046
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b6_imperial_ships.py",
+    "sha256": "b63f45eebd1c8c9ebe5f2d8529872098c9cbf6a8cf7691873d15f62a280070f5",
+    "bytes": 56133,
+    "selects": "--asset ship:imperial:supercapital"
+  },
+  "export_script": {
+    "path": "tools/art/export_imperial_supercapital.py",
+    "sha256": "22deafd7462c6745bdb8c498aad00a9f0d4b89d980b512e1c9ac1105bdcd2ba4",
+    "bytes": 4781
+  },
+  "runtime": {
+    "path": "assets/models/imperial_supercapital.mesh.json",
+    "sha256": "1c44c3e7a78241b5048a9aefe23549b8578c0a21081ad797ce640e8ad9a98dbf",
+    "bytes": 163563,
+    "triangles": 2592,
+    "vertices": 1398,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -38.45,
+      -10.0,
+      -80.183
+    ],
+    [
+      38.45,
+      39.5,
+      108.0
+    ]
+  ],
+  "bounds": [
+    [
+      -38.45,
+      -10.0,
+      -80.183
+    ],
+    [
+      38.45,
+      39.5,
+      108.0
+    ]
+  ],
+  "authoring": "Script-authored by the B6 seed (script-authoritative per the S03 source-authority policy)",
+  "blender_pin": "see tools/art",
+  "owner_decision": null,
+  "activation": false,
+  "appearance_decision": "s06-b6-imperial-ships-2026-10-18",
+  "future_pipeline_registration": "Not registered anywhere; a later landing step is what would add a pipeline entry.",
+  "evidence": "artifacts/s06_alliance_batch_review/b6-supercapital/imperial-supercapital-comparison.png",
+  "motion": []
+}

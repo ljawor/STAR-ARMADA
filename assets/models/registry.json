@@ -492,7 +492,23 @@
         "class_or_kind": "corvette"
       },
       "manifest": "core:imperial/corvette",
-      "status": "procedural_legacy"
+      "legacy_identifiers": [
+        "imperial_corvette"
+      ],
+      "envelope": {
+        "min": [
+          -16.0,
+          -5.0,
+          -43.601
+        ],
+        "max": [
+          16.0,
+          24.0,
+          48.0
+        ]
+      },
+      "status": "procedural_legacy",
+      "notes": "S06 B6 row 1, the Imperial corvette, authored inside the legacy needle envelope. Pending the owner's decision and NOT registered: status stays procedural_legacy, no pipeline entry, stock draws the procedural needle. The manifest and mesh exist for a review session, shown by the review harness patching selection."
     },
     {
       "binding": "imperial:cruiser",

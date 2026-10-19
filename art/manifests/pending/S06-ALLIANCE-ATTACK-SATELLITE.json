@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b4-hardware",
+  "binding": "rebel:attack_satellite",
+  "canonical_binding": "ship:rebel:attack_satellite",
+  "gameplay_entity": "attack_satellite",
+  "class": "attack_satellite",
+  "authority": "script",
+  "source": {
+    "path": "art/blender/alliance_attack_satellite.blend",
+    "sha256": "2e9de52301ecafdaefa0b057586c63140f9d0c1fae1507e6dc5bb451198c9455",
+    "bytes": 132448
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b4_hardware.py",
+    "sha256": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+    "bytes": 33018,
+    "selects": "--asset rebel:attack_satellite"
+  },
+  "export_script": {
+    "path": "tools/art/export_alliance_attack_satellite.py",
+    "sha256": "791bc3ce238a0eb89b5f5014cd50baedfe2d7e7156973967366700dcf3bd9949",
+    "bytes": 4781
+  },
+  "runtime": {
+    "path": "assets/models/alliance_attack_satellite.mesh.json",
+    "sha256": "c37dbc64cba78ee9f6a003645dea5630237da3558f7f1add3007f7c1197348d9",
+    "bytes": 160000,
+    "triangles": 2672,
+    "vertices": 1480,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -50.9795,
+      -9.0,
+      -34.0
+    ],
+    [
+      50.9795,
+      21.5,
+      58.0
+    ]
+  ],
+  "bounds": [
+    [
+      -50.9795,
+      -9.0,
+      -34.0
+    ],
+    [
+      50.9795,
+      21.5,
+      58.0
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b4-hardware/contact-sheet.png",
+  "motion": null,
+  "appearance_decision": "s06-b4-hardware-2026-10-17"
+}

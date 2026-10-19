@@ -1,0 +1,34 @@
+{
+  "tools/art/build_alliance_cruiser.py": {
+    "sha256": "34b3543378213aea87a0a35a30e2ef1127b98372bdfd4b9d9c56f3ec0e9a6672",
+    "bytes": 6553
+  },
+  "tools/art/export_alliance_cruiser.py": {
+    "sha256": "315ad0d20f99114cefd57e347b21687207541b843d3b128670dece1c0c85c16d",
+    "bytes": 3900
+  },
+  "tools/diag_alliance_cruiser_review.py": {
+    "sha256": "03474a8dfeec835858ea995d818d095c5eb614782153929e505fd88341b11853",
+    "bytes": 14035
+  },
+  "tests/test_alliance_blender_cruiser.py": {
+    "sha256": "84655a487d5b055615beb623b25b7535bd8082d6a94209e10c13a52b2c8d4077",
+    "bytes": 10802
+  },
+  "art/blender/alliance_cruiser.blend": {
+    "sha256": "96cdcc024a304d317e7e95d6f096675322971c9671521338f248a140ddd77fd6",
+    "bytes": 173141
+  },
+  "assets/models/alliance_cruiser.mesh.json": {
+    "sha256": "38b4e9f92040e67ffc1655910de39c24de4156397a94c76c34f94738a383ba84",
+    "bytes": 409447
+  },
+  "tools/art/alliance_common.py": {
+    "sha256": "bc5ef04dee22d8e0133a29e9566536bdf0b64be6a96822ddc760bfe4dfe80e74",
+    "bytes": 7457
+  },
+  "tools/art/hull_detail.py": {
+    "sha256": "aa6e8880b03e32e3ffa2eaf2bc11a214972a186fc4c87cb4078a11ba6e3a6f74",
+    "bytes": 5193
+  }
+}

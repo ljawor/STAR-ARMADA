@@ -1,0 +1,81 @@
+{
+  "schema": 1,
+  "batch": "s06-b1-alliance-combat",
+  "status": "appearance_approved_pending_landing",
+  "note": "Review-only batch sheet for the pending S06 B1 Alliance specimens. This file is not an approval record, a registry entry or a runtime manifest, and it does not select any asset in production.",
+  "overview": {
+    "first_x": -4200,
+    "first_z": 1600,
+    "spacing": 1100,
+    "distance": 1700,
+    "yaw": 48,
+    "pitch": 50
+  },
+  "assets": [
+    {
+      "binding": "rebel:corvette",
+      "label": "corvette",
+      "identifier": "alliance_corvette",
+      "mesh": "assets/models/alliance_corvette.mesh.json",
+      "envelope": [
+        [
+          -21.9,
+          -6.0,
+          -46.46
+        ],
+        [
+          21.9,
+          15.3,
+          45.0
+        ]
+      ],
+      "min_length": 91.4,
+      "data_id": "rebel_corvette",
+      "gameplay_entity": "rebel_corvette",
+      "class": "corvette",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ]
+    },
+    {
+      "binding": "rebel:supercapital",
+      "label": "carrier",
+      "identifier": "alliance_carrier",
+      "mesh": "assets/models/alliance_carrier.mesh.json",
+      "envelope": [
+        [
+          -146.51,
+          -30.5,
+          -204.8
+        ],
+        [
+          146.51,
+          57.0,
+          190.0
+        ]
+      ],
+      "min_length": 394.0,
+      "data_id": "rebel_supercapital",
+      "gameplay_entity": "rebel_supercapital",
+      "class": "supercapital",
+      "slot": [
+        -4200,
+        0,
+        2200
+      ]
+    }
+  ],
+  "evidence": {
+    "rebel:corvette": {
+      "sheet": "artifacts/s06_alliance_batch_review/b1-alliance-combat/contact-sheet.png",
+      "motion": "artifacts/s06_alliance_batch_review/b1-alliance-combat/corvette-after-motion.mp4"
+    },
+    "rebel:supercapital": {
+      "sheet": "artifacts/s06_alliance_batch_review/b1-alliance-combat/contact-sheet.png",
+      "motion": "artifacts/s06_alliance_batch_review/b1-alliance-combat/carrier-after-motion.mp4"
+    }
+  },
+  "appearance_decision": "s06-b1-alliance-combat-2026-10-17"
+}

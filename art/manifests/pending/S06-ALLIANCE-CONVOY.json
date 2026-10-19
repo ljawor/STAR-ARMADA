@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b2-squadron-logistics",
+  "binding": "rebel:convoy",
+  "canonical_binding": "ship:rebel:convoy",
+  "gameplay_entity": "rebel_crew_transport",
+  "class": "crew_transport",
+  "authority": "blend",
+  "source": {
+    "path": "art/blender/alliance_convoy.blend",
+    "sha256": "56b7cfb2dc1eecc7d3fc1094e2fdac99b67404759d4efeaae8ecaf418bf88e7a",
+    "bytes": 141237
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b2_batch.py",
+    "sha256": "d8aa040c8bbff81baf836d193023ed6d21a2828f045e9fca6f18f422cfb6ea23",
+    "bytes": 31704,
+    "selects": "--asset rebel:convoy"
+  },
+  "export_script": {
+    "path": "tools/art/export_alliance_convoy.py",
+    "sha256": "794dc2f818b98545ceeaa0bf4720560c11587a0a69aa10b36c4fbc57fd44f01f",
+    "bytes": 4749
+  },
+  "runtime": {
+    "path": "assets/models/alliance_convoy.mesh.json",
+    "sha256": "fa341b2ac6cd91c79ab113e47c9a76888728e5528c46d068ebde6e8e6141205c",
+    "bytes": 260749,
+    "triangles": 4512,
+    "vertices": 2414,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -31.0,
+      -9.0,
+      -72.698
+    ],
+    [
+      31.0,
+      16.0,
+      59.5
+    ]
+  ],
+  "bounds": [
+    [
+      -30.299999,
+      -6.0,
+      -72.698
+    ],
+    [
+      30.299999,
+      14.776171,
+      59.5
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b2-squadron-logistics/contact-sheet.png",
+  "motion": null,
+  "appearance_decision": "s06-b2-squadron-logistics-2026-10-17"
+}

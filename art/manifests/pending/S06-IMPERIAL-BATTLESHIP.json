@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b6-imperial-ships",
+  "binding": "imperial:battleship",
+  "canonical_binding": "ship:imperial:battleship",
+  "gameplay_entity": "imperial_battleship",
+  "class": "combat_hull",
+  "authority": "script",
+  "source": {
+    "path": "art/blender/imperial_battleship.blend",
+    "sha256": "c2ec3a65b986cee9726997820d2aae0f4380824e5e6ce2aabfa78c92b2cb65d1",
+    "bytes": 147460
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b6_imperial_ships.py",
+    "sha256": "b63f45eebd1c8c9ebe5f2d8529872098c9cbf6a8cf7691873d15f62a280070f5",
+    "bytes": 56133,
+    "selects": "--asset ship:imperial:battleship"
+  },
+  "export_script": {
+    "path": "tools/art/export_imperial_battleship.py",
+    "sha256": "033089b0254bdf15f2b6751d460089a7b0b808b68d63f1e4e3503aa4e8a05ad4",
+    "bytes": 4771
+  },
+  "runtime": {
+    "path": "assets/models/imperial_battleship.mesh.json",
+    "sha256": "3c69c3db9d0f55aba714d1af4bafbebc7493afb5da3a80d7bd59fccc7be8ac79",
+    "bytes": 154414,
+    "triangles": 2468,
+    "vertices": 1334,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -38.45,
+      -10.0,
+      -80.183
+    ],
+    [
+      38.45,
+      39.5,
+      108.0
+    ]
+  ],
+  "bounds": [
+    [
+      -38.45,
+      -10.0,
+      -80.183
+    ],
+    [
+      38.45,
+      39.5,
+      108.0
+    ]
+  ],
+  "authoring": "Script-authored by the B6 seed (script-authoritative per the S03 source-authority policy)",
+  "blender_pin": "see tools/art",
+  "owner_decision": null,
+  "activation": false,
+  "appearance_decision": "s06-b6-imperial-ships-2026-10-18",
+  "future_pipeline_registration": "Not registered anywhere; a later landing step is what would add a pipeline entry.",
+  "evidence": "artifacts/s06_alliance_batch_review/b6-battleship/imperial-battleship-comparison.png",
+  "motion": []
+}

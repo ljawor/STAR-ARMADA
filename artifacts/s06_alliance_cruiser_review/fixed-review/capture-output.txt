@@ -1,0 +1,105 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+{
+  "status": "pending_owner_approval",
+  "mesh": {
+    "sha256": "38b4e9f92040e67ffc1655910de39c24de4156397a94c76c34f94738a383ba84",
+    "triangles": 6264,
+    "vertices": 3492,
+    "bytes": 409447,
+    "bounds": [
+      [
+        -66.0,
+        -11.265,
+        -99.925
+      ],
+      [
+        66.0,
+        19.3,
+        97.5
+      ]
+    ]
+  },
+  "features": {
+    "13 Recessed cyan emitter -1 0": {
+      "changed_pixels": 212,
+      "bbox": [
+        805,
+        456,
+        822,
+        471
+      ]
+    },
+    "13 Recessed cyan emitter -1 1": {
+      "changed_pixels": 222,
+      "bbox": [
+        776,
+        456,
+        793,
+        472
+      ]
+    },
+    "13 Recessed cyan emitter 1 0": {
+      "changed_pixels": 245,
+      "bbox": [
+        504,
+        459,
+        524,
+        475
+      ]
+    },
+    "13 Recessed cyan emitter 1 1": {
+      "changed_pixels": 239,
+      "bbox": [
+        475,
+        459,
+        494,
+        475
+      ]
+    }
+  },
+  "comparison": {
+    "close": {
+      "changed_pixels_gt3": 136116,
+      "changed_percent": 13.2926,
+      "bbox": [
+        331,
+        91,
+        948,
+        708
+      ]
+    },
+    "rear": {
+      "changed_pixels_gt3": 100030,
+      "changed_percent": 9.7686,
+      "bbox": [
+        338,
+        98,
+        941,
+        701
+      ]
+    },
+    "tactical": {
+      "changed_pixels_gt3": 8785,
+      "changed_percent": 0.8579,
+      "bbox": [
+        569,
+        329,
+        710,
+        470
+      ]
+    },
+    "common-scale": {
+      "changed_pixels_gt3": 9102,
+      "changed_percent": 0.8889,
+      "bbox": [
+        566,
+        326,
+        713,
+        473
+      ]
+    }
+  },
+  "motion_state_samples_equal": true,
+  "source_preserved": true,
+  "protected_files_preserved": true
+}

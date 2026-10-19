@@ -1,0 +1,70 @@
+{
+  "review": "owner appearance review of the B5 asteroid prop, first revision",
+  "date": "2026-10-17",
+  "binding": "environment:asteroid_field",
+  "identifier": "shared_asteroid_field",
+  "revision_under_review": "assets/models/shared_asteroid_field.mesh.json at branch head 39e6c3a (3,000 triangles, envelope [-0.90,-0.70,-0.90] .. [0.90,0.70,0.90])",
+  "evidence_shown": "artifacts/s06_alliance_batch_review/b5-asteroid/asteroid-field-comparison.png (same camera, same field, procedural rock left of each pair and authored prop right)",
+  "measured": {
+    "close_view_changed_pixels": 172041,
+    "close_view_changed_percent": 18.6676,
+    "wide_view_changed_pixels": 18755,
+    "wide_view_changed_percent": 2.035,
+    "repeat_changed_pixels": 0,
+    "layout": "identical between the two variants - the field's forty placements are unchanged, which is the RNG parity working"
+  },
+  "owner_words_verbatim": "left one is better.",
+  "decision": "rejected",
+  "reading": "The owner prefers the procedural rock the row replaces. In the capture the authored prop reads as soft, oversized, dark clusters - foliage rather than stone - where the legacy rock is crisp and faceted.",
+  "causes_identified_in_the_revision": [
+    "fitted to the legacy rock's worst-case box (+-0.90 x and z, +-0.70 y), so every instance is systematically larger than a typical legacy rock, which is nearer +-0.55",
+    "the gridded, noised crust replaced the flat per-face facets that give the legacy rock its read, and carried 3,000 triangles where the legacy is 48-96 - the wrong direction for a prop the field draws forty times",
+    "the dark role took 888 of 3,000 triangles and is tinted at 0.62, so the prop sits dark against a bright field"
+  ],
+  "next_revision_plan": [
+    "fit the prop to the *mean* legacy rock (+-0.58 x and z, +-0.46 y) with the worst case kept as a hard ceiling that is asserted, not reached",
+    "return to hard-edged facets: ten small overlapping lumps, each hull subdivided with jittered corner points and flat per-face normals",
+    "rebalance the roles so base and trim carry the crust, dark is undersides only, and lift the dark tint"
+  ],
+  "note": "Recorded rather than overwritten: this is what the owner was shown and what he said about it. The batch stays pending_owner_appearance_approval, activation stays false, and the row is not registered anywhere.",
+  "revisions_after_the_first_review": [
+    {
+      "revision": "second",
+      "changes": [
+        "fitted to the mean legacy rock (+-0.58 x and z, +-0.46 y) with the worst case kept as an asserted ceiling",
+        "per-cell displacement instead of per-vertex, so the surface is flat angular plates with hard edges",
+        "seven lumps, then three big ones, and lifted tints"
+      ],
+      "picture": "artifacts/s06_alliance_batch_review/b5-asteroid-v2/asteroid-field-comparison.png",
+      "measured": {
+        "close_changed_percent": null,
+        "wide_changed_percent": 1.1699
+      }
+    },
+    {
+      "revision": "third",
+      "changes": [
+        "three big lumps with coarse plates",
+        "stronger value split (dark 0.58, trim 1.26, lit 1.38)"
+      ],
+      "picture": "artifacts/s06_alliance_batch_review/b5-asteroid-v3/asteroid-field-comparison.png",
+      "measured": {
+        "close_changed_percent": 11.178,
+        "wide_changed_percent": 1.2039
+      },
+      "reading": "Still worse than the procedural rock: the right-hand instances read as clustered rubble with jagged teeth rather than one solid faceted mass."
+    }
+  ],
+  "root_cause_of_the_remaining_gap": "The legacy rock is deliberately tiny geometry - two to four lumps of 24 triangles, so each facet is huge relative to the rock, which is where its solid stone read comes from. The exporter refuses any mesh at or under 1,800 triangles, a floor written for ship- and station-scale assets, so a unit rock prop is forced into roughly forty times finer a surface than the rock it replaces and reads as texture noise and spiky silhouette instead. The floor and the read are in direct conflict for this row.",
+  "options_now": [
+    "open a small-prop class below the 1,800-triangle floor (200-400 triangles), which lets the prop be built the way the legacy rock is and cost a field 4-10x less; a policy decision, not an engineering one",
+    "keep the floor and accept the authored prop as it stands - not recommended: it is worse than what it replaces",
+    "leave this row procedural and record that the asteroid field is already at the bar, which is a legitimate outcome for a decorative row"
+  ],
+  "code_binding": {
+    "seam": "render/renderer.py",
+    "renderer_blob_before_this_revision": "5bfcb4966e6211fad7631e363ab3537f42e3e7ad",
+    "what_the_first_cut_shipped": "The seam read `mesh_for` at module scope and the role tints were the ones written with the 3,000-triangle prop. Both were changed while producing the revisions above - the lazy import is what lets a review harness serve a candidate at all, and the tints are part of what the owner was shown - and both were still uncommitted when the revisions were shown, so the committed head did not yet carry the rock in the pictures. They are committed with the code binding recorded here rather than left as working-tree state: a picture that cannot be reproduced from the branch it is described on is not evidence.",
+    "authored_mesh_sha256_the_pictures_show": "ad2b65483c330fecad28059fce9c489bc0bce2c050ebe38aa526e21f25c88ae7"
+  }
+}

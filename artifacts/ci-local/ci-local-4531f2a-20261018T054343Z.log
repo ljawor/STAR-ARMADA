@@ -1,0 +1,856 @@
+==============================================================================
+STAR ARMADA - local stand-in for the GitHub CI jobs
+==============================================================================
+worktree   : /Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06
+head       : 4531f2aba1494eed0ccd8b95825b3e1e58748aa4
+branch     : feat/s06-next-model-batch
+utc        : 2026-10-18T05:43:43Z
+interpreter: /Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python
+host       : macOS-26.6.2-arm64-arm-64bit / arm64
+git status : ?? artifacts/ci-local/
+?? tools/ci_local.py
+
+NOT a CI run. Skips are named with their reason; see the summary for what
+this receipt does and does not cover.
+
+python     : Python 3.11.16 (main, Aug 25 2026, 13:50:51) [Clang 22.1.3 ]
+
+------------------------------------------------------------------------------
+release.yml / job mac (runs-on macos-latest)
+------------------------------------------------------------------------------
+[release.mac.1] Checkout repository
+      ci> uses: actions/checkout@v4
+      SKIP - Runner provisioning: the action clones the repository into / installs software on a fresh GitHub-hosted runner. There is no runner here to provision - the worktree is already checked out and its head is recorded in this receipt instead.
+
+[release.mac.2] Set up Python
+      ci> uses: actions/setup-python@v5
+      ci> with:
+      ci>   python-version: "3.11"
+      SKIP - Runner provisioning: the action clones the repository into / installs software on a fresh GitHub-hosted runner. There is no runner here to provision - the worktree is already checked out and its head is recorded in this receipt instead. (The worktree interpreter reports 3.11, which matches the version this step pins; recorded in host.python below.)
+
+[release.mac.3] Install deps
+      ci> python3 -m venv .venv
+      ci> ./.venv/bin/pip install --upgrade pip
+      ci> ./.venv/bin/pip install -r requirements.txt pyinstaller
+      run> /Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python -m pip install --dry-run -r requirements.txt pyinstaller
+      --- stdout ---
+Requirement already satisfied: pyinstaller in ./.venv/lib/python3.11/site-packages (6.22.3)
+Requirement already satisfied: pygame-ce>=2.5 in ./.venv/lib/python3.11/site-packages (from -r requirements.txt (line 1)) (2.5.8)
+Requirement already satisfied: PyOpenGL>=3.1 in ./.venv/lib/python3.11/site-packages (from -r requirements.txt (line 2)) (3.1.10)
+Requirement already satisfied: numpy>=1.24 in ./.venv/lib/python3.11/site-packages (from -r requirements.txt (line 3)) (2.4.6)
+Requirement already satisfied: altgraph in ./.venv/lib/python3.11/site-packages (from pyinstaller) (0.17.5)
+Requirement already satisfied: macholib>=1.8 in ./.venv/lib/python3.11/site-packages (from pyinstaller) (1.16.4)
+Requirement already satisfied: packaging>=22.0 in ./.venv/lib/python3.11/site-packages (from pyinstaller) (26.3)
+Requirement already satisfied: pyinstaller-hooks-contrib>=2026.7 in ./.venv/lib/python3.11/site-packages (from pyinstaller) (2026.7)
+Requirement already satisfied: setuptools>=42.0.0 in ./.venv/lib/python3.11/site-packages (from pyinstaller) (84.0.0)
+      --- stderr ---
+
+[notice] A new release of pip is available: 24.0 -> 26.2.1
+[notice] To update, run: /Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python -m pip install --upgrade pip
+      exit=0 in 0.24s
+      PASS - Install deps
+      note: PARTIAL.
+      note: This does not create a venv or upgrade pip: the worktree already carries a provisioned .venv (a symlink to the live checkout, Python 3.11.16), and mutating a shared virtualenv is out of scope.
+      note: What is verified here is that the pinned requirements plus pyinstaller resolve and are satisfied by that interpreter.
+      note: pyinstaller itself is used only by the packaging step, which is skipped.
+
+[release.mac.4] Build app + DMG
+      ci> ./.venv/bin/pyinstaller star_armada.spec --noconfirm
+      ci> codesign --force --deep --sign - "dist/STAR ARMADA.app"
+      ci> mkdir -p dist/dmg_staging
+      ci> cp -R "dist/STAR ARMADA.app" dist/dmg_staging/
+      ci> ln -s /Applications dist/dmg_staging/Applications
+      ci> hdiutil create -volname "STAR ARMADA" -srcfolder dist/dmg_staging \
+      ci>   -ov -format UDZO "dist/STAR-ARMADA-${GITHUB_REF_NAME}-mac.dmg"
+      SKIP - Packaging step. It is reachable on macOS in principle (pyinstaller, codesign, hdiutil all exist here) but it is deliberately out of scope: it is a tag-triggered release build, it mutates dist/, and it is not a per-push correctness gate - nothing about a source change is decided by it.
+
+[release.mac.5] Upload artifact (mac-dmg)
+      ci> uses: actions/upload-artifact@v4
+      ci> with:
+      ci>   name: mac-dmg
+      ci>   path: dist/STAR-ARMADA-*-mac.dmg
+      SKIP - CI artifact storage (and it depends on the skipped packaging step). This run keeps its own evidence under artifacts/ci-local/ instead.
+
+------------------------------------------------------------------------------
+release.yml / job win (runs-on windows-latest)
+------------------------------------------------------------------------------
+[release.win.1] Checkout repository
+      ci> uses: actions/checkout@v4
+      SKIP - Runner provisioning: the action clones the repository into / installs software on a fresh GitHub-hosted runner. There is no runner here to provision - the worktree is already checked out and its head is recorded in this receipt instead. PLATFORM MISMATCH: job runs on windows-latest.
+      platform mismatch: needed windows-latest, this machine is darwin/arm64
+
+[release.win.2] Set up Python
+      ci> uses: actions/setup-python@v5
+      ci> with:
+      ci>   python-version: "3.11"
+      SKIP - Runner provisioning: the action clones the repository into / installs software on a fresh GitHub-hosted runner. There is no runner here to provision - the worktree is already checked out and its head is recorded in this receipt instead. PLATFORM MISMATCH: job declares runs-on windows-latest; this machine is darwin/arm64.
+      platform mismatch: needed windows-latest, this machine is darwin/arm64
+
+[release.win.3] Install deps
+      ci> python -m pip install --upgrade pip
+      ci> pip install -r requirements.txt pyinstaller
+      SKIP - PLATFORM MISMATCH: Windows-only job (windows-latest); this machine is darwin/arm64. The requirements themselves are resolved on macOS by release.mac.3, but that is not evidence about the Windows runner.
+      platform mismatch: needed windows-latest, this machine is darwin/arm64
+
+[release.win.4] Build exe
+      ci> pyinstaller star_armada.spec --noconfirm
+      SKIP - PLATFORM MISMATCH and packaging: a Windows .exe build on windows-latest. Not run here and not substitutable on macOS.
+      platform mismatch: needed windows-latest, this machine is darwin/arm64
+
+[release.win.5] Zip
+      ci> Compress-Archive -Path "dist/STAR ARMADA/*" `
+      ci>   -DestinationPath "dist/STAR-ARMADA-${env:GITHUB_REF_NAME}-win.zip"
+      SKIP - PLATFORM MISMATCH: Compress-Archive is a PowerShell cmdlet that exists only on Windows. Packaging step.
+      platform mismatch: needed windows-latest, this machine is darwin/arm64
+
+[release.win.6] Upload artifact (win-zip)
+      ci> uses: actions/upload-artifact@v4
+      ci> with:
+      ci>   name: win-zip
+      ci>   path: dist/STAR-ARMADA-*-win.zip
+      SKIP - CI artifact storage on a Windows-only job; depends on the skipped packaging step.
+
+------------------------------------------------------------------------------
+release.yml / job release (runs-on ubuntu-latest)
+------------------------------------------------------------------------------
+[release.release.1] Download artifacts
+      ci> uses: actions/download-artifact@v4
+      ci> with:
+      ci>   path: artifacts
+      SKIP - Publishing job: it collects the mac and win packaging artifacts out of GitHub's artifact store, which does not exist locally and whose producers are skipped above.
+
+[release.release.2] Create GitHub release
+      ci> uses: softprops/action-gh-release@v2
+      ci> with:
+      ci>   name: "STAR ARMADA ${{ github.ref_name }}"
+      ci>   ... files: artifacts/mac-dmg/* , artifacts/win-zip/*
+      SKIP - Publishing: creates a public GitHub release and uploads the binaries. Neither local nor appropriate - this runner must not publish.
+
+------------------------------------------------------------------------------
+windows-signal.yml / job windows-lan (runs-on windows-latest)
+------------------------------------------------------------------------------
+[windows-lan.1] Checkout repository
+      ci> uses: actions/checkout@v4
+      SKIP - Runner provisioning: the action clones the repository into / installs software on a fresh GitHub-hosted runner. There is no runner here to provision - the worktree is already checked out and its head is recorded in this receipt instead.
+
+[windows-lan.2] Set up Python
+      ci> uses: actions/setup-python@v5
+      ci> with:
+      ci>   python-version: "3.11"
+      ci>   cache: pip
+      SKIP - Runner provisioning: the action clones the repository into / installs software on a fresh GitHub-hosted runner. There is no runner here to provision - the worktree is already checked out and its head is recorded in this receipt instead. (The worktree interpreter reports 3.11, matching this step's pin; pip's cache is a runner speed feature with no local equivalent needed.)
+
+[windows-lan.3] Install deps
+      ci> python -m pip install --upgrade pip
+      ci> pip install -r requirements.txt
+      run> /Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python -m pip install --dry-run -r requirements.txt
+      --- stdout ---
+Requirement already satisfied: pygame-ce>=2.5 in ./.venv/lib/python3.11/site-packages (from -r requirements.txt (line 1)) (2.5.8)
+Requirement already satisfied: PyOpenGL>=3.1 in ./.venv/lib/python3.11/site-packages (from -r requirements.txt (line 2)) (3.1.10)
+Requirement already satisfied: numpy>=1.24 in ./.venv/lib/python3.11/site-packages (from -r requirements.txt (line 3)) (2.4.6)
+      --- stderr ---
+
+[notice] A new release of pip is available: 24.0 -> 26.2.1
+[notice] To update, run: /Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python -m pip install --upgrade pip
+      exit=0 in 0.17s
+      PASS - Install deps
+      note: PARTIAL.
+      note: No venv is created and pip is not upgraded; the worktree already carries a provisioned .venv (Python 3.11.16, matching the job's 3.11 pin).
+      note: Verified: the pinned requirements resolve and are already satisfied (pygame-ce, PyOpenGL, numpy).
+
+[windows-lan.4] netdiag on real Windows
+      ci> python main.py --netdiag info --out netdiag-windows.json
+      run> /Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python main.py --netdiag info --out /Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/artifacts/ci-local/netdiag-macos.json
+      --- stdout ---
+== STAR ARMADA netdiag / info ==
+platform darwin · macOS-26.6.2-arm64-arm-64bit
+game 0.15.1 · protocol 1 · content 645f609ba76de37b
+  local address 127.0.0.1  <-- loopback: only reachable on this machine
+  local address 192.168.1.97
+  sim fingerprint 509a9288a0f33f06 over 60 ticks
+
+  Local host+join pairing works on this machine (port 61921, 2 lobby entries).
+  Simulation fingerprint (canonical scene) 509a9288a0f33f06 over 60 ticks — every scene must be identical on both machines, or the match will desync after it connects.
+  Simulation fingerprint (contact scene) fa83f471c56fde44 over 600 ticks — every scene must be identical on both machines, or the match will desync after it connects.
+  This platform reports connect_ex() = 36 for a connection that cannot finish (pending); the join path accepts both the POSIX and the Winsock in-progress codes.
+  report: /Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/artifacts/ci-local/netdiag-macos.json
+      exit=0 in 3.88s
+      PASS - netdiag on real Windows
+      note: PARTIAL, and read this one carefully.
+      note: The command really runs: the entry point, the environment probe, the local-address enumeration and the real host+join socket pairing all execute, and the report is written.
+      note: But the step is named "on real Windows" and its whole purpose is the Windows half of a cross-platform comparison.
+      note: This run is the macOS half.
+      note: It says the netdiag code path works on macOS; it says nothing about Windows, and it does NOT substitute for the CI step.
+      note: Output written to artifacts/ci-local/netdiag-macos.json (not the CI's netdiag-windows.json) so the two can never be confused.
+
+[windows-lan.5] Show the report
+      ci> Get-Content netdiag-windows.json
+      run> /Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python -c import sys,pathlib;sys.stdout.write(pathlib.Path("artifacts/ci-local/netdiag-macos.json").read_text()[:4000])
+      --- stdout ---
+{
+  "tool": "netdiag",
+  "mode": "info",
+  "port": 7777,
+  "environment": {
+    "platform": "darwin",
+    "os_name": "posix",
+    "machine": "arm64",
+    "os_release": "macOS-26.6.2-arm64-arm-64bit",
+    "python": "3.11.16",
+    "frozen": false,
+    "executable": "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python",
+    "argv": [
+      "main.py",
+      "--netdiag",
+      "info",
+      "--out",
+      "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/artifacts/ci-local/netdiag-macos.json"
+    ],
+    "cwd": "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06",
+    "user_dir": "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06",
+    "hostname": "imac.home",
+    "game_version": "0.15.1",
+    "protocol_version": 1,
+    "content_hash": "645f609ba76de37bb75374cacec0e3f14faede2c449f640ee3321f008b912507",
+    "started": "2026-10-18T05:43:44+00:00"
+  },
+  "addresses": {
+    "route_preferred": "192.168.1.97",
+    "all": [
+      "127.0.0.1",
+      "192.168.1.97"
+    ],
+    "detail": [
+      {
+        "address": "127.0.0.1",
+        "caveat": "loopback: only reachable on this machine"
+      },
+      {
+        "address": "192.168.1.97",
+        "caveat": null
+      }
+    ],
+    "dialable": [
+      "192.168.1.97"
+    ]
+  },
+  "timeline": [],
+  "port_status": {
+    "port": 7777,
+    "bindable": true
+  },
+  "output_path": "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/artifacts/ci-local/netdiag-macos.json",
+  "loopback_pair": {
+    "port": 61921,
+    "paired": true,
+    "host_status": "lobby",
+    "client_status": "lobby",
+    "client_error": "",
+    "local_player": 1,
+    "players": [
+      "netdiag-host",
+      "netdiag-client"
+    ]
+  },
+  "socket_probes": {
+    "black_hole": {
+      "address": "192.0.2.1",
+      "port": 7777,
+      "nonblocking_code": 36,
+      "nonblocking_verdict": "pending",
+      "nonblocking_seconds": 0.0001,
+      "pending_writable": false,
+      "blocking_code": 35,
+      "blocking_seconds": 1.001,
+      "outcome": "timeout",
+      "outcome_message": "no completion within 1s \u2014 a firewall dropping the SYN, an unroutable 192.0.2.1, or a refusal this platform did not surface"
+    },
+    "refused": {
+      "address": "127.0.0.1",
+      "port": 61923,
+      "nonblocking_code": 36,
+      "nonblocking_verdict": "failed",
+      "nonblocking_seconds": 0.0,
+      "pending_writable": true,
+      "so_error_after_pending": 61,
+      "blocking_code": 61,
+      "blocking_seconds": 0.0001,
+      "outcome": "refused",
+      "outcome_message": "Connection failed (61: nothing is listening there (host not hosting, or a different port)) \u2014 dialing 127.0.0.1:61923"
+    },
+    "refused_pending": {
+      "address": "127.0.0.1",
+      "port": 61923,
+      "connect_ex": 36,
+      "polls": 2,
+      "seconds": 0.0063,
+      "completion_reported": true,
+      "outcome": "Connection failed (61: nothing is listening there (host not hosting, or a different port)) \u2014 dialing 127.0.0.1:61923"
+    }
+  },
+  "sim_fingerprints": {
+    "canonical": {
+      "profile": "canonical",
+      "ticks": 60,
+      "step": 1,
+      "checksum": "509a9288a0f33f065bc440aa582cff5fea4e32679ed3f07b83a15d9b160e4f9b",
+      "timeline": [
+        {
+          "tick": 0,
+          "checksum": "e844827781b3ca24fc9d7c6ddf739fd4761e9edae45350ff49f75b07d2575ffc"
+        },
+        {
+          "tick": 1,
+          "checksum": "3c69f9695c2f266d46b08e5611752419d7d376afbcf2d9cdd20953f311a29769"
+        },
+        {
+          "tick": 2,
+          "checksum": "d96ced10574491508441b64f71b1625c1d3a612beb32d3d865831351eef4f9d5"
+        },
+        {
+          "tick": 3,
+          "checksum": "f25234136ea0e1aeb13dc355e5e88855fa6f78dd8cfcd5602d4efcb09b2a79a7"
+        },
+        {
+          "tick": 4,
+          "checksum": "5df2daa528a97d05c5390aa618c4be42d053a5c209ae4761f7b2598831fc241a"
+        },
+        {
+          "tick": 5,
+          "checksum": "dd234a2932c50991e763a8b4d7fb8b063ca7d6d408a9f981c225bfaafbe2af75"
+        }
+      exit=0 in 0.02s
+      PASS - Show the report
+      note: SUBSTITUTED.
+      note: This is a display step (its command is the PowerShell built-in Get-Content, which does not exist on macOS).
+      note: Its intent - put the report the previous step wrote in front of the reader - is reproduced by reading that file, and the full report is in the log.
+      note: No gate is decided here.
+
+[windows-lan.6] Dump the scene states on Windows
+      ci> python tools/lan_state_diff.py dump --out state-win-ticks0.json
+      ci> python tools/lan_state_diff.py dump --out state-win-ticks1.json --ticks 1
+      ci> python tools/lan_state_diff.py dump --out state-win-contact-ticks60.json --scene contact --ticks 60
+      run> /Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python tools/lan_state_diff.py dump --out /Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/artifacts/ci-local/state-macos-ticks0.json
+      --- stdout ---
+dumped /Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/artifacts/ci-local/state-macos-ticks0.json: scene=canonical ticks=0 checksum=e844827781b3ca24…
+      exit=0 in 0.05s
+      run> /Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python tools/lan_state_diff.py dump --out /Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/artifacts/ci-local/state-macos-ticks1.json --ticks 1
+      --- stdout ---
+dumped /Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/artifacts/ci-local/state-macos-ticks1.json: scene=canonical ticks=1 checksum=3c69f9695c2f266d…
+      exit=0 in 0.05s
+      run> /Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python tools/lan_state_diff.py dump --out /Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/artifacts/ci-local/state-macos-contact-ticks60.json --scene contact --ticks 60
+      --- stdout ---
+dumped /Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/artifacts/ci-local/state-macos-contact-ticks60.json: scene=contact ticks=60 checksum=0b9f495a3fb62125…
+      exit=0 in 0.11s
+      PASS - Dump the scene states on Windows
+      note: PARTIAL.
+      note: All three dumps execute and are written (macOS names, so they cannot be mistaken for the CI's state-win-*.json).
+      note: These are pure-Python, platform-generic dumps of exactly the structure precise_checksum hashes, and two macOS peers can be diffed from them with `tools/lan_state_diff.py diff`.
+      note: The comparison the CI step exists for is Windows-vs-macOS, and that half cannot be produced on this machine; the checksums below are the macOS side of that comparison only.
+
+[windows-lan.7] Focused LAN tests on Windows
+      ci> env: PYTHONPATH=tests, SDL_VIDEODRIVER=dummy, SDL_AUDIODRIVER=dummy, STAR_ARMADA_PACING_FLOOR=15
+      ci> python -m unittest test_netdiag test_netdiag_compare test_lan_state_diff test_sim_profiles test_lan test_multiplayer test_checksum_canonicalization test_orbit_spacing_batch test_draw_view_scope test_lan_human_safety test_lan_failure_diagnostics test_lan_reconnect test_lan_production_reconnect test_lan_reconnect_admission test_lan_launch_recovery test_station_balance test_collection_points test_collection_points_lan test_i18n test_i18n_russian test_language_tools -v
+      run> /Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python -m unittest test_netdiag test_netdiag_compare test_lan_state_diff test_sim_profiles test_lan test_multiplayer test_checksum_canonicalization test_orbit_spacing_batch test_draw_view_scope test_lan_human_safety test_lan_failure_diagnostics test_lan_reconnect test_lan_production_reconnect test_lan_reconnect_admission test_lan_launch_recovery test_station_balance test_collection_points test_collection_points_lan test_i18n test_i18n_russian test_language_tools -v
+      --- stdout ---
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+      --- stderr ---
+test_failure_codes_fail_and_are_named (test_netdiag.ConnectCodeTests.test_failure_codes_fail_and_are_named) ... ok
+test_immediate_success_is_connected (test_netdiag.ConnectCodeTests.test_immediate_success_is_connected) ... ok
+test_legacy_join_predicate_rejected_the_winsock_code_only_where_it_aliases_errno (test_netdiag.ConnectCodeTests.test_legacy_join_predicate_rejected_the_winsock_code_only_where_it_aliases_errno)
+What the old expression really did, per platform — issue #56 discipline. ... ok
+test_observed_platform_connect_code_is_classified (test_netdiag.ConnectCodeTests.test_observed_platform_connect_code_is_classified)
+The code this platform really returns for a connect that cannot finish. ... ok
+test_posix_in_progress_codes_are_accepted (test_netdiag.ConnectCodeTests.test_posix_in_progress_codes_are_accepted) ... ok
+test_unknown_and_non_integer_codes_fail_without_crashing (test_netdiag.ConnectCodeTests.test_unknown_and_non_integer_codes_fail_without_crashing) ... ok
+test_windows_winsock_in_progress_codes_are_accepted (test_netdiag.ConnectCodeTests.test_windows_winsock_in_progress_codes_are_accepted) ... ok
+test_connect_requires_a_numeric_ipv4_address (test_netdiag.NetdiagContractTests.test_connect_requires_a_numeric_ipv4_address) ... ok
+test_connect_to_a_closed_port_reports_refusal_and_fails (test_netdiag.NetdiagContractTests.test_connect_to_a_closed_port_reports_refusal_and_fails) ... ok
+test_directory_valued_out_path_fails_with_nonzero_status (test_netdiag.NetdiagContractTests.test_directory_valued_out_path_fails_with_nonzero_status) ... ok
+test_help_exits_zero_with_usage (test_netdiag.NetdiagContractTests.test_help_exits_zero_with_usage) ... ok
+test_info_report_is_written_with_required_fields (test_netdiag.NetdiagContractTests.test_info_report_is_written_with_required_fields) ... ok
+test_missing_parent_directories_are_created (test_netdiag.NetdiagContractTests.test_missing_parent_directories_are_created) ... ok
+test_output_is_harmless_without_a_console (test_netdiag.NetdiagContractTests.test_output_is_harmless_without_a_console)
+Frozen GUI builds have stdout=None; --netdiag must still complete. ... ok
+test_raw_connect_reports_the_outcome_not_only_a_number (test_netdiag.NetdiagContractTests.test_raw_connect_reports_the_outcome_not_only_a_number)
+A refused dial and a dropped SYN must not read as the same failure. ... ok
+test_simulation_fingerprint_is_reproducible_and_data_bound (test_netdiag.NetdiagContractTests.test_simulation_fingerprint_is_reproducible_and_data_bound)
+Two peers compare this value before playing: it must be stable here ... ok
+test_unknown_mode_and_option_are_rejected_with_usage (test_netdiag.NetdiagContractTests.test_unknown_mode_and_option_are_rejected_with_usage) ... ok
+test_user_dir_matches_menus_rule (test_netdiag.NetdiagContractTests.test_user_dir_matches_menus_rule) ... ok
+test_listen_observes_a_real_inbound_connection (test_netdiag.NetdiagListenTests.test_listen_observes_a_real_inbound_connection)
+The report must come from a real socket, not from an empty default. ... ok
+test_listen_reports_a_port_it_cannot_open (test_netdiag.NetdiagListenTests.test_listen_reports_a_port_it_cannot_open) ... ok
+test_listen_without_a_peer_states_the_firewall_checks (test_netdiag.NetdiagListenTests.test_listen_without_a_peer_states_the_firewall_checks) ... ok
+test_peer_report_separates_tcp_arrival_from_the_handshake (test_netdiag.NetdiagListenTests.test_peer_report_separates_tcp_arrival_from_the_handshake) ... ok
+test_agreeing_machines_pass_every_clause (test_netdiag_compare.CompareTests.test_agreeing_machines_pass_every_clause) ... ok
+test_cli_exit_codes_and_labels (test_netdiag_compare.CompareTests.test_cli_exit_codes_and_labels) ... ok
+test_content_hash_mismatch_is_named_as_the_handshake_clause (test_netdiag_compare.CompareTests.test_content_hash_mismatch_is_named_as_the_handshake_clause) ... ok
+test_dialable_addresses_are_listed_per_machine (test_netdiag_compare.CompareTests.test_dialable_addresses_are_listed_per_machine) ... ok
+test_fingerprint_that_failed_to_run_is_a_clause_not_a_pass (test_netdiag_compare.CompareTests.test_fingerprint_that_failed_to_run_is_a_clause_not_a_pass) ... ok
+test_real_reports_from_two_platforms_compare (test_netdiag_compare.CompareTests.test_real_reports_from_two_platforms_compare)
+The reports CI and the reporter actually produce load and compare. ... ok
+test_reports_predating_the_timeline_still_compare_without_crashing (test_netdiag_compare.CompareTests.test_reports_predating_the_timeline_still_compare_without_crashing) ... ok
+test_simulation_mismatch_reports_the_first_divergent_tick_and_components (test_netdiag_compare.CompareTests.test_simulation_mismatch_reports_the_first_divergent_tick_and_components) ... ok
+test_unreadable_or_foreign_files_exit_two_without_a_traceback (test_netdiag_compare.CompareTests.test_unreadable_or_foreign_files_exit_two_without_a_traceback) ... ok
+test_version_and_protocol_mismatches_are_separate_clauses (test_netdiag_compare.CompareTests.test_version_and_protocol_mismatches_are_separate_clauses) ... ok
+test_a_doctored_dump_exits_one_and_names_the_path (test_lan_state_diff.CliTests.test_a_doctored_dump_exits_one_and_names_the_path) ... ok
+test_identical_dumps_exit_zero (test_lan_state_diff.CliTests.test_identical_dumps_exit_zero) ... ok
+test_non_dump_and_missing_files_exit_two_without_a_traceback (test_lan_state_diff.CliTests.test_non_dump_and_missing_files_exit_two_without_a_traceback) ... ok
+test_a_single_leaf_difference_is_named_with_both_values (test_lan_state_diff.DifferencesTests.test_a_single_leaf_difference_is_named_with_both_values) ... ok
+test_boolean_and_integer_type_changes_are_not_silently_equal (test_lan_state_diff.DifferencesTests.test_boolean_and_integer_type_changes_are_not_silently_equal) ... ok
+test_equal_states_have_no_differences (test_lan_state_diff.DifferencesTests.test_equal_states_have_no_differences) ... ok
+test_limit_stops_the_walk (test_lan_state_diff.DifferencesTests.test_limit_stops_the_walk) ... ok
+test_missing_keys_and_length_changes_are_reported (test_lan_state_diff.DifferencesTests.test_missing_keys_and_length_changes_are_reported) ... ok
+test_a_simulated_step_changes_the_dumped_state (test_lan_state_diff.DumpTests.test_a_simulated_step_changes_the_dumped_state)
+The tick argument must really step the scene, or the diff is empty. ... ok
+test_dump_writes_the_checksum_and_the_state (test_lan_state_diff.DumpTests.test_dump_writes_the_checksum_and_the_state) ... ok
+test_the_dumped_structure_is_exactly_what_the_checksum_hashes (test_lan_state_diff.DumpTests.test_the_dumped_structure_is_exactly_what_the_checksum_hashes)
+Non-vacuity: hashing the dumped structure must reproduce the ticksum. ... ok
+test_two_dumps_of_the_same_scene_are_identical (test_lan_state_diff.DumpTests.test_two_dumps_of_the_same_scene_are_identical) ... ok
+test_a_machine_that_never_ran_a_profile_fails (test_sim_profiles.ComparatorTests.test_a_machine_that_never_ran_a_profile_fails) ... ok
+test_a_report_from_before_the_profiles_still_compares (test_sim_profiles.ComparatorTests.test_a_report_from_before_the_profiles_still_compares)
+The single-profile shape the first Windows artifacts carry. ... ok
+test_identical_reports_pass_and_name_every_profile (test_sim_profiles.ComparatorTests.test_identical_reports_pass_and_name_every_profile) ... ok
+test_one_divergent_profile_fails_even_when_the_other_agrees (test_sim_profiles.ComparatorTests.test_one_divergent_profile_fails_even_when_the_other_agrees) ... ok
+test_the_report_carries_every_profile_and_the_legacy_key_still_works (test_sim_profiles.ReportContractTests.test_the_report_carries_every_profile_and_the_legacy_key_still_works) ... ok
+test_contact_scene_keeps_engaging_for_the_whole_fingerprint (test_sim_profiles.SceneCoverageTests.test_contact_scene_keeps_engaging_for_the_whole_fingerprint) ... ok
+test_contact_scene_reaches_the_collision_maths_that_canonical_never_touches (test_sim_profiles.SceneCoverageTests.test_contact_scene_reaches_the_collision_maths_that_canonical_never_touches)
+The gap this profile exists to close, asserted rather than assumed. ... ok
+test_every_profile_builds_and_hashes (test_sim_profiles.SceneCoverageTests.test_every_profile_builds_and_hashes) ... ok
+test_every_profile_is_reproducible_and_distinct (test_sim_profiles.SceneCoverageTests.test_every_profile_is_reproducible_and_distinct) ... ok
+test_profile_ticks_cover_every_profile (test_sim_profiles.SceneCoverageTests.test_profile_ticks_cover_every_profile) ... ok
+test_unknown_profile_is_rejected_rather_than_silently_using_the_default (test_sim_profiles.SceneCoverageTests.test_unknown_profile_is_rejected_rather_than_silently_using_the_default) ... ok
+test_a_dump_records_its_scene_so_a_mismatched_pair_is_visible (test_sim_profiles.StateDumpTests.test_a_dump_records_its_scene_so_a_mismatched_pair_is_visible) ... ok
+test_content_hash_ignores_the_platform_default_encoding (test_lan.ContentIdentityTests.test_content_hash_ignores_the_platform_default_encoding)
+Issue #56: the handshake refused every mixed-platform session. ... ok
+test_game_version_has_single_authoritative_import (test_lan.ContentIdentityTests.test_game_version_has_single_authoritative_import) ... ok
+test_hash_uses_portable_relative_paths (test_lan.ContentIdentityTests.test_hash_uses_portable_relative_paths) ... ok
+test_loaded_asset_text_matches_the_byte_reading (test_lan.ContentIdentityTests.test_loaded_asset_text_matches_the_byte_reading)
+DataStore and the hash must agree on non-ASCII data, on any platform. ... ok
+test_independent_processes_compare_every_tick_with_ai_and_moves (test_lan.DiagnosticTests.test_independent_processes_compare_every_tick_with_ai_and_moves) ... ok
+test_joined_disconnect_is_fatal_during_loading (test_lan.LoadingTests.test_joined_disconnect_is_fatal_during_loading) ... ok
+test_launch_flush_and_two_cold_graphs_survive_25_seconds_each (test_lan.LoadingTests.test_launch_flush_and_two_cold_graphs_survive_25_seconds_each) ... ok
+test_loading_deadline_is_absolute_despite_heartbeats_and_polls (test_lan.LoadingTests.test_loading_deadline_is_absolute_despite_heartbeats_and_polls) ... ok
+test_inflight_ready_cannot_consent_to_new_configuration (test_lan.LobbyTests.test_inflight_ready_cannot_consent_to_new_configuration) ... ok
+test_port_validation_and_in_use (test_lan.LobbyTests.test_port_validation_and_in_use) ... ok
+test_real_tcp_three_humans_ready_configure_start (test_lan.LobbyTests.test_real_tcp_three_humans_ready_configure_start) ... ok
+test_start_resets_lobby_clock_and_reports_lan_address (test_lan.LobbyTests.test_start_resets_lobby_clock_and_reports_lan_address) ... ok
+test_maps_are_private_validated_human_ai_slots (test_lan.MapTests.test_maps_are_private_validated_human_ai_slots) ... ok
+test_commands_reject_missing_fields_counts_and_nonfinite (test_lan.ProtocolTests.test_commands_reject_missing_fields_counts_and_nonfinite) ... ok
+test_duplicate_json_keys_and_invalid_lobby_or_start_are_rejected (test_lan.ProtocolTests.test_duplicate_json_keys_and_invalid_lobby_or_start_are_rejected) ... ok
+test_handshake_rejects_version_protocol_content_and_mods (test_lan.ProtocolTests.test_handshake_rejects_version_protocol_content_and_mods) ... ok
+test_heartbeat_keeps_idle_lobby_alive (test_lan.ProtocolTests.test_heartbeat_keeps_idle_lobby_alive) ... ok
+test_joined_timeout_stops_match_without_waiting (test_lan.ProtocolTests.test_joined_timeout_stops_match_without_waiting) ... ok
+test_malformed_frames_disconnect_and_timeout_are_fatal_nonblocking (test_lan.ProtocolTests.test_malformed_frames_disconnect_and_timeout_are_fatal_nonblocking) ... ok
+test_unjoined_tcp_probes_cannot_kill_lobby_or_running_match (test_lan.ProtocolTests.test_unjoined_tcp_probes_cannot_kill_lobby_or_running_match) ... ok
+test_four_human_and_two_ai_configurations (test_lan.SimulationTests.test_four_human_and_two_ai_configurations) ... ok
+test_joined_sender_cannot_skip_initial_checksum_barrier (test_lan.SimulationTests.test_joined_sender_cannot_skip_initial_checksum_barrier) ... ok
+test_pipeline_delivers_human_commands_once_after_fixed_delay (test_lan.SimulationTests.test_pipeline_delivers_human_commands_once_after_fixed_delay) ... ok
+test_precise_checksum_covers_future_state_and_excludes_query_caches (test_lan.SimulationTests.test_precise_checksum_covers_future_state_and_excludes_query_caches) ... ok
+test_real_managers_three_humans_ai_moves_every_tick_and_all_maps (test_lan.SimulationTests.test_real_managers_three_humans_ai_moves_every_tick_and_all_maps) ... ok
+test_wait_does_not_step_and_forged_player_rejected (test_lan.SimulationTests.test_wait_does_not_step_and_forged_player_rejected) ... ok
+test_parser_limits_messages_per_poll_and_preserves_remainder (test_lan.TransportTests.test_parser_limits_messages_per_poll_and_preserves_remainder) ... ok
+test_real_tcp_delayed_reads_partial_headers_short_writes (test_lan.TransportTests.test_real_tcp_delayed_reads_partial_headers_short_writes) ... ok
+test_divergent_runs_differ (test_multiplayer.TestChecksum.test_divergent_runs_differ) ... ok
+test_identical_runs_same_checksum (test_multiplayer.TestChecksum.test_identical_runs_same_checksum) ... ok
+test_command_exchange_and_delivery (test_multiplayer.TestLockstep.test_command_exchange_and_delivery) ... ok
+test_desync_detection (test_multiplayer.TestLockstep.test_desync_detection) ... ok
+test_input_delay_scheduling (test_multiplayer.TestLockstep.test_input_delay_scheduling) ... ok
+test_replay_file_format (test_multiplayer.TestReplay.test_replay_file_format) ... ok
+test_replay_reproduces_checksums_ai_on (test_multiplayer.TestReplay.test_replay_reproduces_checksums_ai_on)
+Full e2e: record a game WITH AI (AI commands are NOT recorded — ... ok
+test_replay_skips_ai_commands (test_multiplayer.TestReplay.test_replay_skips_ai_commands) ... ok
+test_checksum_visits_each_primitive_once (test_checksum_canonicalization.ChecksumCanonicalizationTests.test_checksum_visits_each_primitive_once) ... ok
+test_edge_types_order_floats_campaign_dataclasses_and_rejections (test_checksum_canonicalization.ChecksumCanonicalizationTests.test_edge_types_order_floats_campaign_dataclasses_and_rejections) ... ok
+test_evolving_combat_exact_bytes_hash_and_all_entity_fields (test_checksum_canonicalization.ChecksumCanonicalizationTests.test_evolving_combat_exact_bytes_hash_and_all_entity_fields) ... ok
+test_evolving_real_ai_matches_frozen_oracle (test_checksum_canonicalization.ChecksumCanonicalizationTests.test_evolving_real_ai_matches_frozen_oracle) ... ok
+test_exact_primitives_do_not_need_dataclass_introspection (test_checksum_canonicalization.ChecksumCanonicalizationTests.test_exact_primitives_do_not_need_dataclass_introspection) ... ok
+test_live_ai_system_fields_key_collisions_and_capacity_are_not_cached (test_checksum_canonicalization.ChecksumCanonicalizationTests.test_live_ai_system_fields_key_collisions_and_capacity_are_not_cached) ... ok
+test_active_and_paid_satellites_assemble_terrain_once_per_spacing_call (test_orbit_spacing_batch.OrbitSpacingBatchTests.test_active_and_paid_satellites_assemble_terrain_once_per_spacing_call) ... ok
+test_duplicate_ids_exclude_only_parent_object_and_keep_stable_sort_order (test_orbit_spacing_batch.OrbitSpacingBatchTests.test_duplicate_ids_exclude_only_parent_object_and_keep_stable_sort_order) ... ok
+test_early_rejections_and_missing_parents_do_not_capture_terrain (test_orbit_spacing_batch.OrbitSpacingBatchTests.test_early_rejections_and_missing_parents_do_not_capture_terrain) ... ok
+test_exact_legacy_geometry_for_every_parent_and_slot (test_orbit_spacing_batch.OrbitSpacingBatchTests.test_exact_legacy_geometry_for_every_parent_and_slot) ... ok
+test_first_rejection_endpoint_ring_paid_and_hostile_boundaries (test_orbit_spacing_batch.OrbitSpacingBatchTests.test_first_rejection_endpoint_ring_paid_and_hostile_boundaries) ... ok
+test_four_player_fixture_all_geometry_and_spacing_are_pure (test_orbit_spacing_batch.OrbitSpacingBatchTests.test_four_player_fixture_all_geometry_and_spacing_are_pure) ... ok
+test_invalid_cfg_does_not_assemble_terrain_even_for_many_queries (test_orbit_spacing_batch.OrbitSpacingBatchTests.test_invalid_cfg_does_not_assemble_terrain_even_for_many_queries) ... ok
+test_malformed_cfg_and_hulls_retain_validation_before_terrain_capture (test_orbit_spacing_batch.OrbitSpacingBatchTests.test_malformed_cfg_and_hulls_retain_validation_before_terrain_capture) ... ok
+test_malformed_parent_radius_and_bounds_keep_legacy_outcomes (test_orbit_spacing_batch.OrbitSpacingBatchTests.test_malformed_parent_radius_and_bounds_keep_legacy_outcomes) ... ok
+test_negative_control_legacy_reassembles_for_every_active_and_paid_satellite (test_orbit_spacing_batch.OrbitSpacingBatchTests.test_negative_control_legacy_reassembles_for_every_active_and_paid_satellite) ... ok
+test_no_geometry_means_no_terrain_scan (test_orbit_spacing_batch.OrbitSpacingBatchTests.test_no_geometry_means_no_terrain_scan) ... ok
+test_numeric_snapshot_freezes_bodies_not_entity_references (test_orbit_spacing_batch.OrbitSpacingBatchTests.test_numeric_snapshot_freezes_bodies_not_entity_references) ... ok
+test_same_tick_mutations_between_spacing_calls_are_live (test_orbit_spacing_batch.OrbitSpacingBatchTests.test_same_tick_mutations_between_spacing_calls_are_live) ... ok
+test_swept_legality_matches_legacy_spacing_and_geometry (test_orbit_spacing_batch.OrbitSpacingBatchTests.test_swept_legality_matches_legacy_spacing_and_geometry) ... ok
+test_viewer_paid_source_authority_ignores_and_parent_checks (test_orbit_spacing_batch.OrbitSpacingBatchTests.test_viewer_paid_source_authority_ignores_and_parent_checks) ... ok
+test_apply_refresh_does_not_reuse_pre_apply_safe_eye (test_draw_view_scope.DrawViewScopeTests.test_apply_refresh_does_not_reuse_pre_apply_safe_eye) ... ok
+test_exact_catalogue_sizes_shields_contacts_read_only (test_draw_view_scope.DrawViewScopeTests.test_exact_catalogue_sizes_shields_contacts_read_only) ... ok
+test_exact_legacy_projection_camera_matrix (test_draw_view_scope.DrawViewScopeTests.test_exact_legacy_projection_camera_matrix) ... ok
+test_nested_draw_restores_exact_outer_scope (test_draw_view_scope.DrawViewScopeTests.test_nested_draw_restores_exact_outer_scope) ... ok
+test_one_size_and_view_computation_per_draw (test_draw_view_scope.DrawViewScopeTests.test_one_size_and_view_computation_per_draw) ... ok
+test_same_tick_live_mutation_between_scopes_and_id_collision (test_draw_view_scope.DrawViewScopeTests.test_same_tick_live_mutation_between_scopes_and_id_collision) ... ok
+test_scope_restores_absent_attribute_even_on_exception (test_draw_view_scope.DrawViewScopeTests.test_scope_restores_absent_attribute_even_on_exception) ... ok
+test_uncached_oracle_discriminates_same_repeated_workload (test_draw_view_scope.DrawViewScopeTests.test_uncached_oracle_discriminates_same_repeated_workload) ... ok
+test_human_fixtures_preserve_shared_menu_fonts (test_lan_human_safety.FontLifecycleTests.test_human_fixtures_preserve_shared_menu_fonts) ... ok
+test_board_capture_and_source_ownership_both_origins_replay_once (test_lan_human_safety.GameplayAcceptanceTests.test_board_capture_and_source_ownership_both_origins_replay_once) ... ok
+test_foreign_source_and_allied_target_are_gameplay_noops (test_lan_human_safety.GameplayAcceptanceTests.test_foreign_source_and_allied_target_are_gameplay_noops) ... ok
+test_natural_crew_l_delivery_cancel_paid_once_and_replayed (test_lan_human_safety.GameplayAcceptanceTests.test_natural_crew_l_delivery_cancel_paid_once_and_replayed) ... ok
+test_player_crew_and_boarding_schema (test_lan_human_safety.HumanSchemaTests.test_player_crew_and_boarding_schema) ... ok
+test_65th_order_rejected_atomically_through_main (test_lan_human_safety.LocalRejectionTests.test_65th_order_rejected_atomically_through_main) ... ok
+test_malformed_crew_schema_is_fatal_through_real_tcp (test_lan_human_safety.LocalRejectionTests.test_malformed_crew_schema_is_fatal_through_real_tcp) ... ok
+test_natural_stop_257_rejected_nonfatally_on_both_origins (test_lan_human_safety.LocalRejectionTests.test_natural_stop_257_rejected_nonfatally_on_both_origins) ... ok
+test_peer_oversized_input_remains_fatal (test_lan_human_safety.LocalRejectionTests.test_peer_oversized_input_remains_fatal) ... ok
+test_both_real_tcp_peers_persist_terminal_error (test_lan_failure_diagnostics.DiagnosticsTests.test_both_real_tcp_peers_persist_terminal_error) ... ok
+test_bounded_reports_never_include_arbitrary_error_text (test_lan_failure_diagnostics.DiagnosticsTests.test_bounded_reports_never_include_arbitrary_error_text) ... ok
+test_empty_advance_exception_tears_down_at_real_main_poll_with_report (test_lan_failure_diagnostics.DiagnosticsTests.test_empty_advance_exception_tears_down_at_real_main_poll_with_report) ... ok
+test_empty_python_exception_still_records (test_lan_failure_diagnostics.DiagnosticsTests.test_empty_python_exception_still_records) ... ok
+test_main_input_python_exception_is_sanitized (test_lan_failure_diagnostics.DiagnosticsTests.test_main_input_python_exception_is_sanitized) ... ok
+test_main_poll_failure_persists_before_graph_teardown (test_lan_failure_diagnostics.DiagnosticsTests.test_main_poll_failure_persists_before_graph_teardown) ... ok
+test_report_write_fault_does_not_interrupt_main_teardown (test_lan_failure_diagnostics.DiagnosticsTests.test_report_write_fault_does_not_interrupt_main_teardown) ... ok
+test_session_simulation_failure_retains_phase_at_main_poll (test_lan_failure_diagnostics.DiagnosticsTests.test_session_simulation_failure_retains_phase_at_main_poll) ... ok
+test_simulation_failure_real_main_boundary_records (test_lan_failure_diagnostics.DiagnosticsTests.test_simulation_failure_real_main_boundary_records) ... ok
+test_unhandled_hook_forwards_original_exception_when_diagnostics_fail (test_lan_failure_diagnostics.DiagnosticsTests.test_unhandled_hook_forwards_original_exception_when_diagnostics_fail) ... ok
+test_unhandled_hook_records_and_preserves_previous_hook (test_lan_failure_diagnostics.DiagnosticsTests.test_unhandled_hook_records_and_preserves_previous_hook) ... ok
+test_abort_host_loss_and_authenticated_hash_mismatch_are_terminal (test_lan_reconnect.BarrierTests.test_abort_host_loss_and_authenticated_hash_mismatch_are_terminal) ... ok
+test_absolute_deadline_survives_heartbeats_second_disconnect_and_loading (test_lan_reconnect.BarrierTests.test_absolute_deadline_survives_heartbeats_second_disconnect_and_loading) ... ok
+test_authenticated_same_host_barrier_requires_every_peer_ack (test_lan_reconnect.BarrierTests.test_authenticated_same_host_barrier_requires_every_peer_ack) ... ok
+test_malformed_ack_types_and_non_ascii_tokens_are_rejected (test_lan_reconnect.BarrierTests.test_malformed_ack_types_and_non_ascii_tokens_are_rejected) ... ok
+test_resume_credentials_remain_stable_during_grace_and_check_build_protocol (test_lan_reconnect.BarrierTests.test_resume_credentials_remain_stable_during_grace_and_check_build_protocol) ... ok
+test_stale_wrong_incompatible_credentials_do_not_end_continuing_peer_session (test_lan_reconnect.BarrierTests.test_stale_wrong_incompatible_credentials_do_not_end_continuing_peer_session) ... ok
+test_chunk_receiver_rejects_oversize_reordering_truncation_and_corruption (test_lan_reconnect.ChunkTests.test_chunk_receiver_rejects_oversize_reordering_truncation_and_corruption) ... ok
+test_real_tcp_large_snapshot_is_chunked_bounded_and_verified (test_lan_reconnect.ChunkTests.test_real_tcp_large_snapshot_is_chunked_bounded_and_verified) ... ok
+test_acknowledgement_cannot_spoof_another_authenticated_connection_slot (test_lan_reconnect.DiagnosticTests.test_acknowledgement_cannot_spoof_another_authenticated_connection_slot) ... ok
+test_two_three_four_humans_real_tcp_disconnect_restore_and_following_ticks (test_lan_reconnect.DiagnosticTests.test_two_three_four_humans_real_tcp_disconnect_restore_and_following_ticks) ... ok
+test_pending_inputs_cannot_overfill_a_turn_or_reverse_sequence_target_time (test_lan_reconnect.PendingInputTests.test_pending_inputs_cannot_overfill_a_turn_or_reverse_sequence_target_time) ... ok
+test_restore_rejects_malformed_entry_and_envelope_schemas (test_lan_reconnect.PendingInputTests.test_restore_rejects_malformed_entry_and_envelope_schemas) ... ok
+test_restore_requires_exact_outstanding_sequences_without_duplicates (test_lan_reconnect.PendingInputTests.test_restore_requires_exact_outstanding_sequences_without_duplicates) ... ok
+test_unconfirmed_delayed_input_retries_are_exactly_once_and_spent_input_rejected (test_lan_reconnect.PendingInputTests.test_unconfirmed_delayed_input_retries_are_exactly_once_and_spent_input_rejected) ... ok
+test_full_snapshot_restores_ai_systems_queues_and_every_following_tick (test_lan_reconnect.SnapshotTests.test_full_snapshot_restores_ai_systems_queues_and_every_following_tick) ... ok
+test_snapshot_malformed_envelopes_and_bounded_decode_raise_valueerror (test_lan_reconnect.SnapshotTests.test_snapshot_malformed_envelopes_and_bounded_decode_raise_valueerror) ... ok
+test_snapshot_rejects_command_object_replaced_by_identical_dict (test_lan_reconnect.SnapshotTests.test_snapshot_rejects_command_object_replaced_by_identical_dict) ... ok
+test_snapshot_rejects_malformed_ai_pending_site_vector (test_lan_reconnect.SnapshotTests.test_snapshot_rejects_malformed_ai_pending_site_vector) ... ok
+test_snapshot_rejects_wrong_identity_corruption_and_campaign_managers (test_lan_reconnect.SnapshotTests.test_snapshot_rejects_wrong_identity_corruption_and_campaign_managers) ... ok
+test_snapshot_restores_active_projectiles_fleets_and_jump_state (test_lan_reconnect.SnapshotTests.test_snapshot_restores_active_projectiles_fleets_and_jump_state) ... ok
+test_snapshot_validates_runtime_graph_before_checksum (test_lan_reconnect.SnapshotTests.test_snapshot_validates_runtime_graph_before_checksum) ... ok
+test_abort_is_terminal_and_notifies_continuing_participants (test_lan_production_reconnect.ProductionReconnectTests.test_abort_is_terminal_and_notifies_continuing_participants) ... ok
+test_ack_rejects_bool_epoch_instead_of_accepting_int_equivalence (test_lan_production_reconnect.ProductionReconnectTests.test_ack_rejects_bool_epoch_instead_of_accepting_int_equivalence) ... ok
+test_authenticated_graph_desync_is_fatal (test_lan_production_reconnect.ProductionReconnectTests.test_authenticated_graph_desync_is_fatal) ... ok
+test_client_cannot_opt_in_after_hello_was_sent_before_welcome (test_lan_production_reconnect.ProductionReconnectTests.test_client_cannot_opt_in_after_hello_was_sent_before_welcome) ... ok
+test_clock_can_be_supplied_before_handshake (test_lan_production_reconnect.ProductionReconnectTests.test_clock_can_be_supplied_before_handshake) ... ok
+test_corrupt_real_transfer_is_fatal_not_retried (test_lan_production_reconnect.ProductionReconnectTests.test_corrupt_real_transfer_is_fatal_not_retried) ... ok
+test_deadline_is_absolute_across_freeze_transfer_and_application_loading (test_lan_production_reconnect.ProductionReconnectTests.test_deadline_is_absolute_across_freeze_transfer_and_application_loading) ... ok
+test_decode_time_is_part_of_absolute_grace (test_lan_production_reconnect.ProductionReconnectTests.test_decode_time_is_part_of_absolute_grace) ... ok
+test_disconnect_during_initial_loading_recovers_without_tick_zero_duplication (test_lan_production_reconnect.ProductionReconnectTests.test_disconnect_during_initial_loading_recovers_without_tick_zero_duplication) ... ok
+test_drain_runs_real_recorder_hooks_and_paid_action_is_recorded_once (test_lan_production_reconnect.ProductionReconnectTests.test_drain_runs_real_recorder_hooks_and_paid_action_is_recorded_once) ... ok
+test_explicit_close_is_terminal_not_an_unexpected_eof_retry (test_lan_production_reconnect.ProductionReconnectTests.test_explicit_close_is_terminal_not_an_unexpected_eof_retry) ... ok
+test_freeze_roundoff_never_exceeds_wire_grace_limit (test_lan_production_reconnect.ProductionReconnectTests.test_freeze_roundoff_never_exceeds_wire_grace_limit) ... ok
+test_freeze_wire_bound_remains_strict_and_repeat_cannot_renew_grace (test_lan_production_reconnect.ProductionReconnectTests.test_freeze_wire_bound_remains_strict_and_repeat_cannot_renew_grace) ... ok
+test_host_eof_retries_original_address_until_grace_without_migration (test_lan_production_reconnect.ProductionReconnectTests.test_host_eof_retries_original_address_until_grace_without_migration) ... ok
+test_host_join_recovery_optin_is_applied_before_hello (test_lan_production_reconnect.ProductionReconnectTests.test_host_join_recovery_optin_is_applied_before_hello) ... ok
+test_install_ack_at_absolute_deadline_is_terminal (test_lan_production_reconnect.ProductionReconnectTests.test_install_ack_at_absolute_deadline_is_terminal) ... ok
+test_invalid_and_rotated_credentials_cannot_replace_reserved_slot (test_lan_production_reconnect.ProductionReconnectTests.test_invalid_and_rotated_credentials_cannot_replace_reserved_slot) ... ok
+test_joined_loss_retains_continuing_socket_and_resumes_exact_graph (test_lan_production_reconnect.ProductionReconnectTests.test_joined_loss_retains_continuing_socket_and_resumes_exact_graph) ... ok
+test_large_unspent_report_uses_chunks_without_raising_frame_limits (test_lan_production_reconnect.ProductionReconnectTests.test_large_unspent_report_uses_chunks_without_raising_frame_limits) ... ok
+test_maximal_valid_unspent_journal_uses_chunk_backpressure (test_lan_production_reconnect.ProductionReconnectTests.test_maximal_valid_unspent_journal_uses_chunk_backpressure) ... ok
+test_missing_checksum_is_legal_only_for_empty_startup_frames (test_lan_production_reconnect.ProductionReconnectTests.test_missing_checksum_is_legal_only_for_empty_startup_frames) ... ok
+test_mixed_optin_is_rejected_before_slot_admission (test_lan_production_reconnect.ProductionReconnectTests.test_mixed_optin_is_rejected_before_slot_admission) ... ok
+test_no_peer_resumes_before_every_graph_and_bundle_install_ack (test_lan_production_reconnect.ProductionReconnectTests.test_no_peer_resumes_before_every_graph_and_bundle_install_ack) ... ok
+test_normal_ticks_have_bounded_history_and_never_capture_graph_snapshots (test_lan_production_reconnect.ProductionReconnectTests.test_normal_ticks_have_bounded_history_and_never_capture_graph_snapshots) ... ok
+test_recovery_cannot_be_enabled_after_a_handshake (test_lan_production_reconnect.ProductionReconnectTests.test_recovery_cannot_be_enabled_after_a_handshake) ... ok
+test_restore_rejects_future_frame_that_disagrees_with_input_journal (test_lan_production_reconnect.ProductionReconnectTests.test_restore_rejects_future_frame_that_disagrees_with_input_journal) ... ok
+test_restored_journal_rejects_spent_and_unsealed_future_identities (test_lan_production_reconnect.ProductionReconnectTests.test_restored_journal_rejects_spent_and_unsealed_future_identities) ... ok
+test_rotation_survives_eof_after_last_install_ack_before_resume_delivery (test_lan_production_reconnect.ProductionReconnectTests.test_rotation_survives_eof_after_last_install_ack_before_resume_delivery) ... ok
+test_second_interruption_restarts_work_without_renewing_grace (test_lan_production_reconnect.ProductionReconnectTests.test_second_interruption_restarts_work_without_renewing_grace) ... ok
+test_second_loss_discards_queued_old_freeze_report_and_install_ack (test_lan_production_reconnect.ProductionReconnectTests.test_second_loss_discards_queued_old_freeze_report_and_install_ack) ... ok
+test_skewed_paid_batches_preserve_original_target_and_exact_future (test_lan_production_reconnect.ProductionReconnectTests.test_skewed_paid_batches_preserve_original_target_and_exact_future) ... ok
+test_startup_skew_uses_authoritative_empty_released_frames (test_lan_production_reconnect.ProductionReconnectTests.test_startup_skew_uses_authoritative_empty_released_frames) ... ok
+test_complete_unauthenticated_traffic_cannot_refresh_budget (test_lan_reconnect_admission.AdmissionTests.test_complete_unauthenticated_traffic_cannot_refresh_budget) ... ok
+test_incomplete_outsiders_cannot_starve_original_slot (test_lan_reconnect_admission.AdmissionTests.test_incomplete_outsiders_cannot_starve_original_slot) ... ok
+test_partial_bytes_do_not_renew_absolute_authentication_budget (test_lan_reconnect_admission.AdmissionTests.test_partial_bytes_do_not_renew_absolute_authentication_budget) ... ok
+test_host_detects_ready_lobby_eof_before_start_and_resumes_original_slots (test_lan_launch_recovery.LaunchRecoveryTests.test_host_detects_ready_lobby_eof_before_start_and_resumes_original_slots) ... ok
+test_initial_launch_loss_recovers_in_distinct_processes (test_lan_launch_recovery.LaunchRecoveryTests.test_initial_launch_loss_recovers_in_distinct_processes) ... ok
+test_invalid_recovery_launch_map_is_terminal (test_lan_launch_recovery.LaunchRecoveryTests.test_invalid_recovery_launch_map_is_terminal) ... ok
+test_launch_delivery_and_tick_zero_wait_for_last_human_graph (test_lan_launch_recovery.LaunchRecoveryTests.test_launch_delivery_and_tick_zero_wait_for_last_human_graph) ... ok
+test_lobby_install_retry_uses_staged_bearer_and_original_grace (test_lan_launch_recovery.LaunchRecoveryTests.test_lobby_install_retry_uses_staged_bearer_and_original_grace) ... ok
+test_lobby_launch_retry_has_one_absolute_grace (test_lan_launch_recovery.LaunchRecoveryTests.test_lobby_launch_retry_has_one_absolute_grace) ... ok
+test_lobby_messages_reject_schema_epoch_revision_and_unauthenticated_ack (test_lan_launch_recovery.LaunchRecoveryTests.test_lobby_messages_reject_schema_epoch_revision_and_unauthenticated_ack) ... ok
+test_lost_or_partial_start_recovers_original_slots_before_tick_zero (test_lan_launch_recovery.LaunchRecoveryTests.test_lost_or_partial_start_recovers_original_slots_before_tick_zero) ... ok
+test_ready_lobby_loss_recovers_in_distinct_processes (test_lan_launch_recovery.LaunchRecoveryTests.test_ready_lobby_loss_recovers_in_distinct_processes) ... ok
+test_recovered_lobby_revokes_unseen_configuration_consent (test_lan_launch_recovery.LaunchRecoveryTests.test_recovered_lobby_revokes_unseen_configuration_consent) ... ok
+test_recovery_launch_keeps_map_validation_and_unlaunched_tick_zero_guard (test_lan_launch_recovery.LaunchRecoveryTests.test_recovery_launch_keeps_map_validation_and_unlaunched_tick_zero_guard) ... ok
+test_reverse_released_startup_skew_preserves_paid_targets_and_recording (test_lan_launch_recovery.LaunchRecoveryTests.test_reverse_released_startup_skew_preserves_paid_targets_and_recording) ... ok
+test_start_flush_eof_is_recoverable_not_explicit_abort (test_lan_launch_recovery.LaunchRecoveryTests.test_start_flush_eof_is_recoverable_not_explicit_abort) ... ok
+test_start_races_final_lobby_resume_without_building_a_recovery_graph (test_lan_launch_recovery.LaunchRecoveryTests.test_start_races_final_lobby_resume_without_building_a_recovery_graph) ... ok
+test_withdrawn_ready_consent_survives_lost_write_and_frozen_lobby (test_lan_launch_recovery.LaunchRecoveryTests.test_withdrawn_ready_consent_survives_lost_write_and_frozen_lobby) ... ok
+test_an_ungated_order_still_places_the_hull_directly (test_station_balance.BalanceAiGateTests.test_an_ungated_order_still_places_the_hull_directly) ... ok
+test_the_ai_never_orders_a_hull_the_catalogue_refuses (test_station_balance.BalanceAiGateTests.test_the_ai_never_orders_a_hull_the_catalogue_refuses)
+A gate it cannot lift is not a reason to spend: the order is left to the sim. ... ok
+test_the_ai_orders_the_refit_a_gated_hull_needs (test_station_balance.BalanceAiGateTests.test_the_ai_orders_the_refit_a_gated_hull_needs) ... ok
+test_the_refit_is_ordered_once_and_then_the_hull_is (test_station_balance.BalanceAiGateTests.test_the_refit_is_ordered_once_and_then_the_hull_is) ... ok
+test_a_gated_hull_is_listed_and_states_the_level_it_wants (test_station_balance.BalanceBuildRowTests.test_a_gated_hull_is_listed_and_states_the_level_it_wants) ... ok
+test_an_ungated_panel_is_untouched_by_the_gate_machinery (test_station_balance.BalanceBuildRowTests.test_an_ungated_panel_is_untouched_by_the_gate_machinery) ... ok
+test_the_same_row_becomes_buildable_once_the_refit_lands (test_station_balance.BalanceBuildRowTests.test_the_same_row_becomes_buildable_once_the_refit_lands)
+The in-test control: the gate is what withheld the button, not the fixture. ... ok
+test_a_config_that_could_not_have_come_from_the_screen_is_refused_unwritten (test_station_balance.BalanceFileTests.test_a_config_that_could_not_have_come_from_the_screen_is_refused_unwritten) ... ok
+test_a_corrupt_file_reads_as_shipped_values_rather_than_stopping_the_game (test_station_balance.BalanceFileTests.test_a_corrupt_file_reads_as_shipped_values_rather_than_stopping_the_game) ... ok
+test_a_round_trip_survives_a_new_catalogue_with_the_same_numbers (test_station_balance.BalanceFileTests.test_a_round_trip_survives_a_new_catalogue_with_the_same_numbers) ... ok
+test_a_save_installs_the_overlay_for_the_next_match_without_a_restart (test_station_balance.BalanceFileTests.test_a_save_installs_the_overlay_for_the_next_match_without_a_restart) ... ok
+test_an_absent_file_reads_as_shipped_values_and_writes_nothing (test_station_balance.BalanceFileTests.test_an_absent_file_reads_as_shipped_values_and_writes_nothing) ... ok
+test_the_file_lives_beside_settings_and_campaign_in_user_data (test_station_balance.BalancePathTests.test_the_file_lives_beside_settings_and_campaign_in_user_data) ... ok
+test_a_replay_digest_separates_two_different_overlays (test_station_balance.BalanceRecordingTests.test_a_replay_digest_separates_two_different_overlays) ... ok
+test_an_explicit_overlay_wins_over_the_installed_one_for_one_catalogue (test_station_balance.BalanceRecordingTests.test_an_explicit_overlay_wins_over_the_installed_one_for_one_catalogue)
+A LAN client adopting the host's numbers must not change its own file. ... ok
+test_an_installed_overlay_is_what_later_catalogues_carry (test_station_balance.BalanceRecordingTests.test_an_installed_overlay_is_what_later_catalogues_carry) ... ok
+test_the_lan_content_hash_ignores_the_overlay_it_exchanges_separately (test_station_balance.BalanceRecordingTests.test_the_lan_content_hash_ignores_the_overlay_it_exchanges_separately)
+Two peers with different balance files must still recognise the same catalogue. ... ok
+test_a_tuned_station_completes_a_refit_and_persists_its_level (test_station_balance.BalanceRefitFlowTests.test_a_tuned_station_completes_a_refit_and_persists_its_level) ... ok
+test_a_catalogue_carries_both_overlay_sections_even_when_empty (test_station_balance.BalanceRuleTests.test_a_catalogue_carries_both_overlay_sections_even_when_empty)
+An absent key and an empty one must hash identically, or identical peers differ. ... ok
+test_a_configured_level_gates_the_hull_until_the_refit_lands (test_station_balance.BalanceRuleTests.test_a_configured_level_gates_the_hull_until_the_refit_lands) ... ok
+test_a_faction_lists_the_stations_its_builders_can_lay_down (test_station_balance.BalanceRuleTests.test_a_faction_lists_the_stations_its_builders_can_lay_down) ... ok
+test_a_gain_override_never_moves_a_build_gate (test_station_balance.BalanceRuleTests.test_a_gain_override_never_moves_a_build_gate) ... ok
+test_a_gate_above_the_ladder_is_unrepresentable (test_station_balance.BalanceRuleTests.test_a_gate_above_the_ladder_is_unrepresentable) ... ok
+test_a_refit_still_costs_the_shipped_price_when_a_gain_is_retuned (test_station_balance.BalanceRuleTests.test_a_refit_still_costs_the_shipped_price_when_a_gain_is_retuned)
+Gains are the player's to tune; the ladder's cost and time are not (this change). ... ok
+test_a_retuned_gain_is_what_the_refit_actually_grants (test_station_balance.BalanceRuleTests.test_a_retuned_gain_is_what_the_refit_actually_grants)
+Hull capacity is scaled on completion — by the player's gain, not the shipped one. ... ok
+test_a_ship_and_a_planet_are_unaffected_by_a_station_overlay (test_station_balance.BalanceRuleTests.test_a_ship_and_a_planet_are_unaffected_by_a_station_overlay) ... ok
+test_an_explicit_table_is_never_folded_with_file_overrides (test_station_balance.BalanceRuleTests.test_an_explicit_table_is_never_folded_with_file_overrides)
+The established way to retune under test must stay in control of the numbers. ... ok
+test_an_overlay_reaches_the_live_rules_it_was_built_with (test_station_balance.BalanceRuleTests.test_an_overlay_reaches_the_live_rules_it_was_built_with) ... ok
+test_the_catalogue_gate_still_refuses_what_it_always_refused (test_station_balance.BalanceRuleTests.test_the_catalogue_gate_still_refuses_what_it_always_refused) ... ok
+test_the_gate_reaches_the_queued_human_intent (test_station_balance.BalanceRuleTests.test_the_gate_reaches_the_queued_human_intent)
+The command seam pays the same price the panel quoted, so it must gate identically. ... ok
+test_the_gated_hull_cannot_be_queued_and_nothing_is_paid_for_it (test_station_balance.BalanceRuleTests.test_the_gated_hull_cannot_be_queued_and_nothing_is_paid_for_it) ... ok
+test_the_panel_describes_the_same_gain_the_simulation_applies (test_station_balance.BalanceRuleTests.test_the_panel_describes_the_same_gain_the_simulation_applies) ... ok
+test_the_panel_expansion_and_the_simulation_gate_agree (test_station_balance.BalanceRuleTests.test_the_panel_expansion_and_the_simulation_gate_agree)
+One expansion: the panel offers the catalogue, the sim refuses the gates on top. ... ok
+test_the_rows_offered_match_what_the_hull_uses (test_station_balance.BalanceRuleTests.test_the_rows_offered_match_what_the_hull_uses) ... ok
+test_the_shipped_catalogue_is_untouched_when_nothing_is_tuned (test_station_balance.BalanceRuleTests.test_the_shipped_catalogue_is_untouched_when_nothing_is_tuned) ... ok
+test_the_store_refuses_an_overlay_no_screen_could_have_produced (test_station_balance.BalanceRuleTests.test_the_store_refuses_an_overlay_no_screen_could_have_produced)
+A mod ships rules through the same key; the ceilings apply to it too. ... ok
+test_a_gain_above_the_ceiling_is_not_a_win_button (test_station_balance.BalanceSchemaTests.test_a_gain_above_the_ceiling_is_not_a_win_button)
+A typo must not turn a refit into an instant win; the bound is enforced. ... ok
+test_a_hand_edit_drops_only_the_entry_it_could_not_read (test_station_balance.BalanceSchemaTests.test_a_hand_edit_drops_only_the_entry_it_could_not_read) ... ok
+test_a_newer_schema_is_not_guessed_at (test_station_balance.BalanceSchemaTests.test_a_newer_schema_is_not_guessed_at)
+A file from a future build is ignored whole, never half-read. ... ok
+test_an_empty_or_absent_file_reads_as_shipped_values (test_station_balance.BalanceSchemaTests.test_an_empty_or_absent_file_reads_as_shipped_values) ... ok
+test_reading_never_mutates_the_caller_s_config (test_station_balance.BalanceSchemaTests.test_reading_never_mutates_the_caller_s_config) ... ok
+test_the_digest_identity_follows_the_readable_config_only (test_station_balance.BalanceSchemaTests.test_the_digest_identity_follows_the_readable_config_only) ... ok
+test_the_strict_reader_refuses_what_the_lenient_one_drops (test_station_balance.BalanceSchemaTests.test_the_strict_reader_refuses_what_the_lenient_one_drops) ... ok
+test_a_gate_the_screen_sets_is_the_gate_the_simulation_enforces (test_station_balance.BalanceScreenTests.test_a_gate_the_screen_sets_is_the_gate_the_simulation_enforces) ... ok
+test_a_press_edits_the_draft_writes_the_file_and_reaches_the_next_match (test_station_balance.BalanceScreenTests.test_a_press_edits_the_draft_writes_the_file_and_reaches_the_next_match) ... ok
+test_a_row_stepped_back_to_the_shipped_number_stops_being_modified (test_station_balance.BalanceScreenTests.test_a_row_stepped_back_to_the_shipped_number_stops_being_modified) ... ok
+test_a_tuned_station_survives_a_re_entry_and_a_new_menu (test_station_balance.BalanceScreenTests.test_a_tuned_station_survives_a_re_entry_and_a_new_menu)
+The draft is the file: a menu built after a save starts from the saved numbers. ... ok
+test_reset_all_tuning_removes_the_file_and_returns_the_shipped_numbers (test_station_balance.BalanceScreenTests.test_reset_all_tuning_removes_the_file_and_returns_the_shipped_numbers) ... ok
+test_reset_this_station_leaves_the_other_stations_alone (test_station_balance.BalanceScreenTests.test_reset_this_station_leaves_the_other_stations_alone) ... ok
+test_stepping_a_gate_back_to_the_shipped_level_removes_it (test_station_balance.BalanceScreenTests.test_stepping_a_gate_back_to_the_shipped_level_removes_it) ... ok
+test_the_editor_returns_to_the_page_it_was_opened_from (test_station_balance.BalanceScreenTests.test_the_editor_returns_to_the_page_it_was_opened_from) ... ok
+test_the_faction_combo_lists_that_factions_stations (test_station_balance.BalanceScreenTests.test_the_faction_combo_lists_that_factions_stations) ... ok
+test_the_game_balance_page_names_what_is_tuned_and_opens_the_editor (test_station_balance.BalanceScreenTests.test_the_game_balance_page_names_what_is_tuned_and_opens_the_editor) ... ok
+test_the_gate_page_offers_only_hulls_the_station_could_build (test_station_balance.BalanceScreenTests.test_the_gate_page_offers_only_hulls_the_station_could_build)
+A gate on a hull the sim refuses anyway would be a row that means nothing. ... ok
+test_the_page_tabs_reach_their_own_page_from_either_side (test_station_balance.BalanceScreenTests.test_the_page_tabs_reach_their_own_page_from_either_side)
+A tab *names* its page; a handler that steps the payload strands the other one. ... ok
+test_the_screen_offers_exactly_the_rows_the_station_uses (test_station_balance.BalanceScreenTests.test_the_screen_offers_exactly_the_rows_the_station_uses)
+One source of truth: a row the sim would not read must not be offered. ... ok
+test_the_stepper_cannot_reach_a_value_the_strict_reader_refuses (test_station_balance.BalanceScreenTests.test_the_stepper_cannot_reach_a_value_the_strict_reader_refuses)
+Every value a stepper can land on has to be a value the file may carry. ... ok
+test_a_client_already_on_those_numbers_adopts_nothing (test_station_balance.LanBalanceExchangeTests.test_a_client_already_on_those_numbers_adopts_nothing) ... ok
+test_a_config_the_strict_reader_refuses_stops_the_match_whole (test_station_balance.LanBalanceExchangeTests.test_a_config_the_strict_reader_refuses_stops_the_match_whole)
+A half-applied overlay is a desync with a delay fuse; refuse it at the door. ... ok
+test_a_peer_sending_the_hostile_config_is_refused_and_never_half_applied (test_station_balance.LanBalanceExchangeTests.test_a_peer_sending_the_hostile_config_is_refused_and_never_half_applied) ... ok
+test_the_adopted_numbers_are_given_back_when_the_match_ends (test_station_balance.LanBalanceExchangeTests.test_the_adopted_numbers_are_given_back_when_the_match_ends) ... ok
+test_the_client_runs_the_hosts_numbers_without_anyone_owning_the_same_file (test_station_balance.LanBalanceExchangeTests.test_the_client_runs_the_hosts_numbers_without_anyone_owning_the_same_file) ... ok
+test_what_goes_on_the_wire_is_something_the_strict_reader_accepts (test_station_balance.LanBalanceExchangeTests.test_what_goes_on_the_wire_is_something_the_strict_reader_accepts)
+A hand-edited file on either side must not be able to refuse the other peer. ... ok
+test_collection_edit_does_not_supersede_standing_orders (test_collection_points.CollectionCommands.test_collection_edit_does_not_supersede_standing_orders) ... ok
+test_completion_moves_new_hull_without_teleporting (test_collection_points.CollectionCommands.test_completion_moves_new_hull_without_teleporting) ... ok
+test_digest_detects_point_without_changing_unset_legacy_digest (test_collection_points.CollectionCommands.test_digest_detects_point_without_changing_unset_legacy_digest) ... ok
+test_fighter_completion_keeps_move_after_tactical_update (test_collection_points.CollectionCommands.test_fighter_completion_keeps_move_after_tactical_update) ... ok
+test_foreign_ineligible_and_invalid_orders_leave_point_unchanged (test_collection_points.CollectionCommands.test_foreign_ineligible_and_invalid_orders_leave_point_unchanged) ... ok
+test_no_point_preserves_idle_default (test_collection_points.CollectionCommands.test_no_point_preserves_idle_default) ... ok
+test_nonoperational_and_boarded_station_cannot_edit_point (test_collection_points.CollectionCommands.test_nonoperational_and_boarded_station_cannot_edit_point) ... ok
+test_old_replay_runtime_is_not_silently_migrated (test_collection_points.CollectionCommands.test_old_replay_runtime_is_not_silently_migrated) ... ok
+test_old_save_runtime_migrates_missing_point_only (test_collection_points.CollectionCommands.test_old_save_runtime_migrates_missing_point_only) ... ok
+test_paid_completion_samples_latest_point_and_leaves_existing_hulls_alone (test_collection_points.CollectionCommands.test_paid_completion_samples_latest_point_and_leaves_existing_hulls_alone) ... ok
+test_paid_fighter_platform_completion_departs_for_point (test_collection_points.CollectionCommands.test_paid_fighter_platform_completion_departs_for_point) ... ok
+test_reinforcement_does_not_cancel_fighter_collection_movement (test_collection_points.CollectionCommands.test_reinforcement_does_not_cancel_fighter_collection_movement) ... ok
+test_replay_requires_collection_target_and_rejects_extra_fields (test_collection_points.CollectionCommands.test_replay_requires_collection_target_and_rejects_extra_fields) ... ok
+test_restored_pending_birth_continues_identically (test_collection_points.CollectionCommands.test_restored_pending_birth_continues_identically) ... ok
+test_save_projection_runtime_and_lan_snapshot_keep_point (test_collection_points.CollectionCommands.test_save_projection_runtime_and_lan_snapshot_keep_point) ... ok
+test_set_is_queued_and_clear_preserves_paid_work (test_collection_points.CollectionCommands.test_set_is_queued_and_clear_preserves_paid_work) ... ok
+test_snapshot_and_replay_projection_reject_out_of_policy_point (test_collection_points.CollectionCommands.test_snapshot_and_replay_projection_reject_out_of_policy_point) ... ok
+test_wire_set_clear_and_spurious_fields (test_collection_points.CollectionCommands.test_wire_set_clear_and_spurious_fields) ... ok
+test_fixture_cleanups_preserve_borrowed_cached_menu_font (test_collection_points.CollectionControls.test_fixture_cleanups_preserve_borrowed_cached_menu_font) ... ok
+test_ground_right_click_sets_station_point_and_clear_button_queues (test_collection_points.CollectionControls.test_ground_right_click_sets_station_point_and_clear_button_queues) ... ok
+test_minimap_right_click_does_not_project_through_to_ground (test_collection_points.CollectionControls.test_minimap_right_click_does_not_project_through_to_ground) ... ok
+test_mixed_ground_selection_sets_only_station_and_keeps_mobile_attack_move (test_collection_points.CollectionControls.test_mixed_ground_selection_sets_only_station_and_keeps_mobile_attack_move) ... ok
+test_stale_clear_button_and_foreign_selection_are_inert (test_collection_points.CollectionControls.test_stale_clear_button_and_foreign_selection_are_inert) ... ok
+test_both_origins_set_build_clear_paid_once_and_replay_every_tick (test_collection_points_lan.CollectionLanAcceptance.test_both_origins_set_build_clear_paid_once_and_replay_every_tick) ... ok
+test_a_panel_label_is_looked_up_at_the_drawing_edge (test_i18n.HudDrawingEdgeTests.test_a_panel_label_is_looked_up_at_the_drawing_edge) ... ok
+test_the_translation_reaches_the_canvas_and_not_just_the_lookup (test_i18n.HudDrawingEdgeTests.test_the_translation_reaches_the_canvas_and_not_just_the_lookup) ... ok
+test_a_data_name_uses_the_same_lookup (test_i18n.LookupTests.test_a_data_name_uses_the_same_lookup) ... ok
+test_a_pack_that_cannot_be_read_falls_back_to_english (test_i18n.LookupTests.test_a_pack_that_cannot_be_read_falls_back_to_english) ... ok
+test_an_unknown_code_resolves_to_english_and_is_reported (test_i18n.LookupTests.test_an_unknown_code_resolves_to_english_and_is_reported) ... ok
+test_apply_from_settings_corrects_a_language_this_build_does_not_ship (test_i18n.LookupTests.test_apply_from_settings_corrects_a_language_this_build_does_not_ship) ... ok
+test_available_reports_only_packs_that_are_shipped (test_i18n.LookupTests.test_available_reports_only_packs_that_are_shipped) ... ok
+test_cycle_walks_the_shipped_packs_and_wraps (test_i18n.LookupTests.test_cycle_walks_the_shipped_packs_and_wraps) ... ok
+test_english_is_the_catalogue_so_english_looks_translate_to_themselves (test_i18n.LookupTests.test_english_is_the_catalogue_so_english_looks_translate_to_themselves) ... ok
+test_known_strings_translate_and_unknown_ones_pass_through (test_i18n.LookupTests.test_known_strings_translate_and_unknown_ones_pass_through) ... ok
+test_non_strings_pass_through_untouched (test_i18n.LookupTests.test_non_strings_pass_through_untouched) ... ok
+test_runtime_templates_are_formatted_and_a_missing_field_is_survivable (test_i18n.LookupTests.test_runtime_templates_are_formatted_and_a_missing_field_is_survivable) ... ok
+test_data_names_a_player_picks_by_are_not_identity_mappings (test_i18n.PackCoverageTests.test_data_names_a_player_picks_by_are_not_identity_mappings) ... ok
+test_every_catalogue_string_and_name_is_translated_in_every_pack (test_i18n.PackCoverageTests.test_every_catalogue_string_and_name_is_translated_in_every_pack) ... ok
+test_labels_a_player_navigates_by_are_not_identity_mappings (test_i18n.PackCoverageTests.test_labels_a_player_navigates_by_are_not_identity_mappings) ... ok
+test_no_pack_carries_a_key_the_catalogue_lost (test_i18n.PackCoverageTests.test_no_pack_carries_a_key_the_catalogue_lost) ... ok
+test_no_simulation_module_references_the_language_layer (test_i18n.PresentationOnlyTests.test_no_simulation_module_references_the_language_layer) ... ok
+test_two_peers_running_different_languages_agree_on_the_ticksum (test_i18n.PresentationOnlyTests.test_two_peers_running_different_languages_agree_on_the_ticksum) ... ok
+test_default_settings_carry_a_language (test_i18n.SettingsIntegrationTests.test_default_settings_carry_a_language) ... ok
+test_every_settings_row_stays_reachable_now_that_a_language_page_exists (test_i18n.SettingsIntegrationTests.test_every_settings_row_stays_reachable_now_that_a_language_page_exists) ... ok
+test_the_language_row_cycles_applies_and_persists_immediately (test_i18n.SettingsIntegrationTests.test_the_language_row_cycles_applies_and_persists_immediately) ... ok
+test_the_language_row_names_each_pack_in_its_own_language (test_i18n.SettingsIntegrationTests.test_the_language_row_names_each_pack_in_its_own_language) ... ok
+test_the_main_menu_draws_translated_labels (test_i18n.SettingsIntegrationTests.test_the_main_menu_draws_translated_labels) ... ok
+test_the_menu_applies_a_saved_language_before_the_first_frame (test_i18n.SettingsIntegrationTests.test_the_menu_applies_a_saved_language_before_the_first_frame) ... ok
+test_the_refit_block_translates_its_assembled_lines (test_i18n.SettingsIntegrationTests.test_the_refit_block_translates_its_assembled_lines) ... ok
+test_the_settings_subtitle_is_translated_as_one_unit (test_i18n.SettingsIntegrationTests.test_the_settings_subtitle_is_translated_as_one_unit) ... ok
+test_validation_rejects_a_language_this_build_does_not_ship (test_i18n.SettingsIntegrationTests.test_validation_rejects_a_language_this_build_does_not_ship) ... ok
+test_complete_catalogue_has_no_stale_keys_or_changed_format_fields (test_i18n_russian.RussianPackTests.test_complete_catalogue_has_no_stale_keys_or_changed_format_fields) ... ok
+test_cyrillic_glyphs_have_real_distinct_pixels (test_i18n_russian.RussianPackTests.test_cyrillic_glyphs_have_real_distinct_pixels) ... ok
+test_high_signal_labels_and_names_are_russian (test_i18n_russian.RussianPackTests.test_high_signal_labels_and_names_are_russian) ... ok
+test_russian_is_registered_with_its_native_name (test_i18n_russian.RussianPackTests.test_russian_is_registered_with_its_native_name) ... ok
+test_fixture_cleanup_preserves_live_shared_fonts (test_i18n_russian.RussianSettingsTests.test_fixture_cleanup_preserves_live_shared_fonts) ... ok
+test_natural_click_cycle_saves_russian_and_restores_before_drawing (test_i18n_russian.RussianSettingsTests.test_natural_click_cycle_saves_russian_and_restores_before_drawing) ... ok
+test_nested_fixture_cleanup_preserves_active_shared_display (test_i18n_russian.RussianSettingsTests.test_nested_fixture_cleanup_preserves_active_shared_display) ... ok
+test_localization_file_io_ignores_non_utf8_defaults (test_language_tools.LanguageIOEncodingTests.test_localization_file_io_ignores_non_utf8_defaults) ... ok
+test_builder_regenerates_every_registered_translation_byte_exactly (test_language_tools.LanguageToolsTests.test_builder_regenerates_every_registered_translation_byte_exactly) ... ok
+test_catalogue_writer_roundtrips_shipped_english_byte_exactly (test_language_tools.LanguageToolsTests.test_catalogue_writer_roundtrips_shipped_english_byte_exactly) ... ok
+test_live_catalogue_preserves_shipped_dynamic_and_lowercase_keys (test_language_tools.LanguageToolsTests.test_live_catalogue_preserves_shipped_dynamic_and_lowercase_keys) ... ok
+test_new_player_labels_are_translated_with_unchanged_fields_in_all_packs (test_language_tools.LanguageToolsTests.test_new_player_labels_are_translated_with_unchanged_fields_in_all_packs) ... ok
+test_report_does_not_count_empty_or_non_string_entries_as_translated (test_language_tools.LanguageToolsTests.test_report_does_not_count_empty_or_non_string_entries_as_translated) ... ok
+test_report_uses_registered_languages_including_russian (test_language_tools.LanguageToolsTests.test_report_uses_registered_languages_including_russian) ... ok
+
+----------------------------------------------------------------------
+Ran 340 tests in 121.377s
+
+OK
+      tests: 340 ran, 0 skipped, OK
+      exit=0 in 121.59s
+      PASS - Focused LAN tests on Windows
+      note: REPRODUCED EXACTLY: same 21 modules, same order, same environment including the lowered STAR_ARMADA_PACING_FLOOR=15, the dummy SDL drivers and PYTHONPATH=tests.
+      note: The commands are identical; the platform is not, so this is macOS evidence about modules that are platform-portable, not Windows evidence.
+      note: Two-process LAN tests in this list are load-sensitive; the summary records the machine's load average before and after the run (host.loadavg_1_5_15_*) - read a timing failure against those numbers rather than assuming the box was idle.
+      note: It was not necessarily: a sibling task was editing this same worktree while the receipt was produced, which is recorded in does_not_cover.
+
+[windows-lan.8] Replay deletion on real Windows
+      ci> python -c "import os, unittest; assert os.name == 'nt', 'Native Windows deletion gate requires Windows'; suite = unittest.defaultTestLoader.loadTestsFromName('test_replay_deletion_windows.NativeWindowsDeletionTests'); expected = suite.countTestCases(); result = unittest.TextTestRunner(verbosity=2).run(suite); optional = 'test_file_symlink_is_never_deleted_or_followed'; raise SystemExit(0 if result.wasSuccessful() and result.testsRun == expected and all(test._testMethodName == optional for test, reason in result.skipped) else 1)"
+      ci> if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      ci> python -m unittest test_replay_deletion_windows test_replay_library -v
+      SKIP - PLATFORM MISMATCH, and reproducing it here would produce a FALSE PASS, so it is skipped on purpose. The step's first command asserts os.name == 'nt' - on macOS it exits 1 by construction. The module it gates carries @unittest.skipUnless(os.name == 'nt', 'native Windows kernel required; NOT accepted on macOS'), so running the step verbatim on macOS would report green while executing none of the native deletion gates it exists for. Those gates need real Windows handles, junctions and locked files. The portable member of the step's second command is run separately below, clearly labelled as a local addition rather than as this step passing.
+      platform mismatch: needed windows-latest, this machine is darwin/arm64
+
+[windows-lan.9] Upload artifact (netdiag-windows)
+      ci> uses: actions/upload-artifact@v4
+      ci> if: always()
+      ci> with:
+      ci>   name: netdiag-windows
+      ci>   path: netdiag-windows.json, state-win-ticks0.json, state-win-ticks1.json, state-win-contact-ticks60.json
+      SKIP - CI artifact storage. The four equivalent macOS files are written under artifacts/ci-local/ by windows-lan.4 and windows-lan.6 instead.
+
+------------------------------------------------------------------------------
+windows-signal.yml / job package-windows (runs-on windows-latest)
+------------------------------------------------------------------------------
+[package-windows.1] Checkout repository
+      ci> uses: actions/checkout@v4
+      SKIP - Runner provisioning: the action clones the repository into / installs software on a fresh GitHub-hosted runner. There is no runner here to provision - the worktree is already checked out and its head is recorded in this receipt instead. Job is also gated on github.event_name == workflow_dispatch (manual runs only).
+
+[package-windows.2] Set up Python
+      ci> uses: actions/setup-python@v5
+      ci> with:
+      ci>   python-version: "3.11"
+      ci>   cache: pip
+      SKIP - Runner provisioning: the action clones the repository into / installs software on a fresh GitHub-hosted runner. There is no runner here to provision - the worktree is already checked out and its head is recorded in this receipt instead. PLATFORM MISMATCH: windows-latest; this machine is darwin/arm64. Job is also manual-dispatch only.
+      platform mismatch: needed windows-latest, this machine is darwin/arm64
+
+[package-windows.3] Install deps
+      ci> python -m pip install --upgrade pip
+      ci> pip install -r requirements.txt pyinstaller
+      SKIP - PLATFORM MISMATCH: Windows-only job (windows-latest), and this job only runs on a manual workflow_dispatch. The requirements are resolved on macOS under release.mac.3 / windows-lan.3.
+      platform mismatch: needed windows-latest, this machine is darwin/arm64
+
+[package-windows.4] Build exe
+      ci> pyinstaller star_armada.spec --noconfirm
+      SKIP - PLATFORM MISMATCH and packaging: a Windows .exe build. Not substitutable on macOS.
+      platform mismatch: needed windows-latest, this machine is darwin/arm64
+
+[package-windows.5] Zip
+      ci> Compress-Archive -Path "dist/STAR ARMADA/*" `
+      ci>   -DestinationPath "dist/STAR-ARMADA-candidate-win.zip"
+      SKIP - PLATFORM MISMATCH: Compress-Archive is Windows PowerShell only. Packaging step.
+      platform mismatch: needed windows-latest, this machine is darwin/arm64
+
+[package-windows.6] Upload artifact (star-armada-candidate-win)
+      ci> uses: actions/upload-artifact@v4
+      ci> with:
+      ci>   name: star-armada-candidate-win
+      ci>   path: dist/STAR-ARMADA-candidate-win.zip
+      SKIP - CI artifact storage on a Windows-only, manual-only packaging job.
+
+------------------------------------------------------------------------------
+(none) / job (local addition) (runs-on (this machine))
+------------------------------------------------------------------------------
+[local-extra.1] test_replay_library (portable member of the skipped Windows step)
+      ci> (no CI step runs this module alone; it is the second of the two modules in windows-lan.8's second command)
+      run> /Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/.venv/bin/python -m unittest test_replay_library -v
+      --- stdout ---
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+      --- stderr ---
+test_browser_keeps_newest_thousand_not_first_thousand_scandir_entries (test_replay_library.LibraryTests.test_browser_keeps_newest_thousand_not_first_thousand_scandir_entries) ... ok
+test_corrupt_selection_is_not_playback_and_selected_delete_defaults_cancel (test_replay_library.LibraryTests.test_corrupt_selection_is_not_playback_and_selected_delete_defaults_cancel) ... ok
+test_created_timestamp_orders_renamed_invalid_files_without_reconstruction (test_replay_library.LibraryTests.test_created_timestamp_orders_renamed_invalid_files_without_reconstruction) ... ok
+test_delete_all_includes_files_beyond_browse_cap_and_keeps_other_entries (test_replay_library.LibraryTests.test_delete_all_includes_files_beyond_browse_cap_and_keeps_other_entries) ... ok
+test_delete_failure_is_visible_without_overlapping_text (test_replay_library.LibraryTests.test_delete_failure_is_visible_without_overlapping_text) ... ok
+test_delete_refuses_symlinked_user_directory_parent (test_replay_library.LibraryTests.test_delete_refuses_symlinked_user_directory_parent) ... ok
+test_empty_menu_initial_state_is_renderable_without_browse_side_effects (test_replay_library.LibraryTests.test_empty_menu_initial_state_is_renderable_without_browse_side_effects) ... ok
+test_metadata_does_not_retain_untrusted_container_headers (test_replay_library.LibraryTests.test_metadata_does_not_retain_untrusted_container_headers) ... ok
+test_metadata_works_without_posix_nofollow_flag (test_replay_library.LibraryTests.test_metadata_works_without_posix_nofollow_flag) ... ok
+test_missing_directory_is_a_renderable_empty_library (test_replay_library.LibraryTests.test_missing_directory_is_a_renderable_empty_library) ... ok
+test_partial_directory_scan_error_leaves_browser_renderable (test_replay_library.LibraryTests.test_partial_directory_scan_error_leaves_browser_renderable) ... ok
+test_selected_delete_refuses_replaced_symlink_and_outside_path (test_replay_library.LibraryTests.test_selected_delete_refuses_replaced_symlink_and_outside_path) ... ok
+test_selected_legacy_replay_retains_warning_and_timestamp (test_replay_library.LibraryTests.test_selected_legacy_replay_retains_warning_and_timestamp) ... ok
+test_symlinked_replay_directory_is_not_browsed_or_deleted (test_replay_library.LibraryTests.test_symlinked_replay_directory_is_not_browsed_or_deleted) ... ok
+test_unsupported_safe_directory_api_fails_closed_with_clear_error (test_replay_library.LibraryTests.test_unsupported_safe_directory_api_fails_closed_with_clear_error) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.437s
+
+OK
+      tests: 15 ran, 0 skipped, OK
+      exit=0 in 0.53s
+      PASS - test_replay_library (portable member of the skipped Windows step)
+      note: LOCAL ADDITION, not a CI step.
+      note: The CI runs this module together with test_replay_deletion_windows, which self-skips wholesale on macOS; running only the portable member keeps windows-lan.8 honestly marked as skipped while still covering the part of it that macOS can exercise.
+
+==============================================================================
+VERDICT: PASS
+  CI steps enumerated : 28
+  run here            : 6 (6 pass, 0 fail)
+  skipped, with reason: 22
+  local additions     : 1 (1 pass)
+  wall time           : 126.68s
+  load average 1m     : [3.68, 3.32, 4.71] -> [3.88, 3.52, 4.6]
+
+  This receipt is a local reproduction of the CI steps that can run on
+  macOS. It is NOT a CI run and it does not cover the Windows-only steps,
+  the packaging steps or the publish step. Full list of both:
+    /Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/artifacts/ci-local/ci-local-4531f2a-20261018T054343Z.json
+  Full transcript:
+    /Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/artifacts/ci-local/ci-local-4531f2a-20261018T054343Z.log
+  head 4531f2aba1494eed0ccd8b95825b3e1e58748aa4  git status: M art/manifests/approvals.json
+ M art/manifests/pending/S06-BATCH-B6-IMPERIAL-SHIPS.json
+ M art/manifests/pending/S06-IMPERIAL-CONVOY.json
+ M tests/test_alliance_blender_b6_imperial_ships.py
+ M tests/test_s06_appearance_records.py
+?? artifacts/ci-local/
+?? tools/ci_local.py
+==============================================================================

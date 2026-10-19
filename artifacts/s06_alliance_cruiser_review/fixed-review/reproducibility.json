@@ -1,0 +1,35 @@
+{
+  "blender": "5.0.1",
+  "exports": [
+    {
+      "command": [
+        "/Applications/Blender.app/Contents/MacOS/Blender",
+        "--background",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/tools/art/export_alliance_cruiser.py",
+        "--",
+        "--output",
+        "/Users/lukaszjawor/.hermes/cache/scratch/s06-fixed-export-1.mesh.json"
+      ],
+      "runtime_sha256": "38b4e9f92040e67ffc1655910de39c24de4156397a94c76c34f94738a383ba84"
+    },
+    {
+      "command": [
+        "/Applications/Blender.app/Contents/MacOS/Blender",
+        "--background",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/tools/art/export_alliance_cruiser.py",
+        "--",
+        "--output",
+        "/Users/lukaszjawor/.hermes/cache/scratch/s06-fixed-export-2.mesh.json"
+      ],
+      "runtime_sha256": "38b4e9f92040e67ffc1655910de39c24de4156397a94c76c34f94738a383ba84"
+    }
+  ],
+  "master_sha256": "96cdcc024a304d317e7e95d6f096675322971c9671521338f248a140ddd77fd6",
+  "master_preserved": true
+}

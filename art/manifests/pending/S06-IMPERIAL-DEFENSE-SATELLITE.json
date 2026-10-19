@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "status": "appearance_approved_pending_landing",
+  "purpose": "Review-only authoring sidecar. Not an approved runtime manifest, approval receipt, or selectable pipeline entry.",
+  "batch": "s06-b4-hardware",
+  "binding": "imperial:defense_satellite",
+  "canonical_binding": "ship:imperial:defense_satellite",
+  "gameplay_entity": "defense_satellite",
+  "class": "defense_satellite",
+  "authority": "script",
+  "source": {
+    "path": "art/blender/imperial_defense_satellite.blend",
+    "sha256": "5afcdbad5c2ae99916571fa01817f44e4961b360c1f22e1d7f42f7afac5003bd",
+    "bytes": 125522
+  },
+  "initial_seed": {
+    "path": "tools/art/build_b4_hardware.py",
+    "sha256": "4bd508b88e124e8051f6dad3157240d491283e1bcaf24002e90957ba8fda2f59",
+    "bytes": 33018,
+    "selects": "--asset imperial:defense_satellite"
+  },
+  "export_script": {
+    "path": "tools/art/export_imperial_defense_satellite.py",
+    "sha256": "13060096b4cb830e0d6fdc4d5d1b14ede3b7ef545779bd8f61565a1bf17b4185",
+    "bytes": 4784
+  },
+  "runtime": {
+    "path": "assets/models/imperial_defense_satellite.mesh.json",
+    "sha256": "ce8fae81cbcc80bd22316d4b70ca66a45171b6d32b36a87a6b7b1ded87161b0b",
+    "bytes": 117249,
+    "triangles": 2060,
+    "vertices": 1156,
+    "roles": [
+      "accent",
+      "base",
+      "cool",
+      "dark",
+      "lit",
+      "trim"
+    ]
+  },
+  "envelope": [
+    [
+      -41.1051,
+      -9.0,
+      -34.0
+    ],
+    [
+      41.1051,
+      19.5,
+      44.0
+    ]
+  ],
+  "bounds": [
+    [
+      -41.1051,
+      -9.0,
+      -34.0
+    ],
+    [
+      41.1051,
+      19.5,
+      44.0
+    ]
+  ],
+  "authoring": "Blender evaluated bevel mesh",
+  "blender_pin": "5.0.1",
+  "owner_decision": null,
+  "activation": false,
+  "future_pipeline_registration": "After explicit appearance approval only. Export-only script is normal workflow; the seed must not overwrite the master. Do not use this sidecar as approval.",
+  "evidence": "artifacts/s06_alliance_batch_review/b4-hardware/contact-sheet.png",
+  "motion": null,
+  "appearance_decision": "s06-b4-hardware-2026-10-17"
+}
