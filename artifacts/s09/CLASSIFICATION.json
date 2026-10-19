@@ -1,0 +1,177 @@
+{
+  "schema": 1,
+  "step": "S09",
+  "kind": "protected-complete-suite-on-frozen-candidate",
+  "candidate": {
+    "head": "5980890c47f973b50fc677a962242e893e96f001",
+    "tree": "b28b48ab07abe0c4b5040f4696ffaf14d7e6ef12",
+    "equals_origin_main_tree": true,
+    "tracked_changes_in_candidate": [],
+    "note": "The candidate is main's exact tree: S09 added no product, renderer, asset or test byte. Any failure below therefore exists on main; the classification separates real defects from defects in my instruments."
+  },
+  "validators_on_candidate": {
+    "validate-models --all": {
+      "result": "satisfied - 1034/1034 checks, 0 failures, 0 warnings",
+      "log": "gates/validate-models.log"
+    },
+    "sync_runtime_metadata --check": {
+      "result": "112 files; no mesh writes",
+      "log": "gates/sync-metadata.log"
+    },
+    "reconcile_model_coverage --check": {
+      "result": "CHECK_OK",
+      "log": "gates/coverage.log"
+    }
+  },
+  "instruments": [
+    {
+      "id": "per-module-gate",
+      "why": "attributable verdict per module; tests/test_weapon_sfx.py sets SDL_VIDEODRIVER=dummy at import, process-wide, which poisons later GL modules in one process",
+      "command": "sandbox-exec <write-deny profile> .venv/bin/python tools/acceptance/run_suite_per_module.py",
+      "protection": "native sandbox-exec write-deny over the live checkout and installed user data for the whole descendant tree; canary sentinel unchanged; independent before/after user-data inventory identical",
+      "modules": 210,
+      "tests": 2281,
+      "tally": {
+        "pass": 208,
+        "fail": 2
+      },
+      "wall_seconds": 1893.2,
+      "runners": {
+        "unittest": 207,
+        "pytest": 2,
+        "script": 1
+      },
+      "receipt": "artifacts/s09/per-module.json",
+      "log": "artifacts/s09/per-module.log",
+      "pytest_and_script_fallback": "test_classic_screens and test_menu_movie are pytest-authored; test_classic_replays_gl is a main() script printing CLASSIC_REPLAYS_GL_OK - no module was counted as a pass for yielding zero tests"
+    },
+    {
+      "id": "single-process-protected",
+      "why": "the literal whole-tree command, kept because it is what a reviewer will run",
+      "tests": 2238,
+      "failures": 6,
+      "errors": 6,
+      "skipped": 9,
+      "wall_seconds": 1212.62,
+      "receipt": "artifacts/s09/single-process/unittest-result.json",
+      "log": "artifacts/s09/single-process/run.log",
+      "verdict": "NOT usable as the attributable instrument: 10 of its 12 non-ok results are defects in the launcher, see instrument_defects"
+    },
+    {
+      "id": "unprotected-control-14-ids",
+      "why": "executed control on the same bytes for every non-ok result of both protected runs",
+      "command": "PYTHONPATH=tests:. SDL_VIDEODRIVER=cocoa .venv/bin/python -m unittest <the 14 ids>",
+      "result": {
+        "ran": 14,
+        "seconds": 5.528,
+        "failures": 1,
+        "errors": 1
+      },
+      "log": "artifacts/s09/gates/pristine-control-unprotected.log",
+      "verdict": "12 of 14 pass unprotected; the 2 that still fail are reproduced on the same bytes"
+    }
+  ],
+  "protection_self_test": {
+    "checks": [
+      "native-cocoa-parent-gl",
+      "anonymous-pipe-write",
+      "anonymous-socket-write",
+      "python-open",
+      "truncate",
+      "regular-file-fd-write",
+      "native-dir-fd-open",
+      "native-child-write",
+      "explicit-dummy-headless-child",
+      "production-child-real-gl-exit",
+      "unpatched-production-path-contract",
+      "five-parent-paths",
+      "five-child-paths",
+      "native-deletion-capability"
+    ],
+    "audit_violations": null,
+    "violations_kind": "3 deliberate denials exercised by the self-test itself, not suite writes",
+    "changed_sources": null,
+    "success": null,
+    "receipt": "artifacts/s09/single-process/self-test.json"
+  },
+  "failing_tests": {
+    "test_gl_lifecycle.MainLifecycleTests.test_start_game_closes_old_views_before_replacement": {
+      "status": "real_defect_pre_existing_on_main",
+      "detail": "AttributeError: 'types.SimpleNamespace' object has no attribute 'ds' at main.py:293 configure_from_settings(SETTINGS, data_store=gm.ds)",
+      "introduced_by": "S08 commit e82345f added data_store=gm.ds to main.start_game; the AST-extracted fixture in tests/test_gl_lifecycle.py (last touched in df78eb7, #111) builds a make_game namespace with state and mission but no ds",
+      "why_s08_missed_it": "S08's own gate ran 18 selected modules; test_gl_lifecycle was not among them, and S08 never ran the whole suite (its handoff says so)",
+      "reproduced": [
+        "per-module gate (fresh process, real driver)",
+        "unprotected control, same bytes"
+      ],
+      "handling": "carried as a recorded pre-existing failure. The repair is one line in the fixture (add ds to the fake game namespace); it is test-only and does not weaken the assertion, but it changes a test byte, so it is proposed as its own small change rather than folded into the acceptance receipt"
+    },
+    "test_crew_recovery_ui.RecoveryUITests.test_faction_transports_have_small_known_solid_visuals": {
+      "status": "real_defect_pre_existing_carried",
+      "detail": "AssertionError: 'imperial:convoy' != 'box' - the guard still expects the legacy box fallback for the Imperial crew transport",
+      "contradicted_decision": "s06-imperial-convoy-parity-2026-10-18",
+      "previously_recorded": "artifacts/s07-runtime-final/pre-existing-failures.json",
+      "reproduced": [
+        "per-module gate (fresh process, real driver)",
+        "unprotected control, same bytes"
+      ],
+      "handling": "unchanged from S07: carried, not repaired inside an unrelated increment"
+    }
+  },
+  "instrument_defects": [
+    {
+      "ids": [
+        "test_asset_contract.AssetContractTest (setUpClass, 4 tests)",
+        "test_b6_sidecar_reproduction.B6SidecarReproductionTests.test_b6_sidecars_reproduce_from_the_real_batch_check"
+      ],
+      "mechanism": "the launcher rewrites every child launched with sys.executable into itself (--python-child); that re-entry imports pygame, whose greeting lands on the child's stdout, so a tool's JSON/output no longer starts at column 1",
+      "control": "both pass unprotected on the same bytes"
+    },
+    {
+      "ids": [
+        "test_s07_binding_routes.BindingRouteAuditTests.test_cli_is_read_only_and_runs_without_pythonpath"
+      ],
+      "mechanism": "same rewrite injects sys.path into a child whose contract is to run with no PYTHONPATH"
+    },
+    {
+      "ids": [
+        "test_s08_pack_safety.PackSafetyTests.test_session_uses_complete_validated_snapshot_after_disk_corruption",
+        "test_s08_pack_safety.PackSafetyTests.test_symlink_loops_reject_without_aborting_following_packs"
+      ],
+      "mechanism": "the launcher's audit barrier calls Path.resolve() on the path being written, and these fixtures deliberately create symlink loops; resolve() raises RuntimeError, which escapes as a test error",
+      "control": "both pass unprotected on the same bytes"
+    },
+    {
+      "ids": [
+        "test_ship_material_passes.ShipMaterialPassTests x4"
+      ],
+      "mechanism": "setUp fails with 'Could not allocate fleet shader' only in the single-process run; the module passes in a fresh process under the same sandbox, so this is single-process GL state, not the barrier",
+      "control": "pass in the per-module gate and unprotected"
+    }
+  ],
+  "skips": {
+    "count": 9,
+    "buckets": {
+      "not a git checkout": [
+        "test_frozen_paths.TestFrozenPaths.test_every_folder_a_dev_run_writes_into_the_repo_is_ignored"
+      ],
+      "fixture ship has shields": [
+        "test_jump_travel.TestJumpTravel.test_ships_without_shields_get_no_lockdown_key"
+      ],
+      "native Windows kernel required; NOT accepted on macOS": [
+        "test_replay_deletion_windows.NativeWindowsDeletionTests.test_child_junction_and_outside_selected_are_preserved",
+        "test_replay_deletion_windows.NativeWindowsDeletionTests.test_file_symlink_is_never_deleted_or_followed",
+        "test_replay_deletion_windows.NativeWindowsDeletionTests.test_open_handles_block_directory_and_child_replacement",
+        "test_replay_deletion_windows.NativeWindowsDeletionTests.test_readonly_failure_is_reported_and_resources_are_released",
+        "test_replay_deletion_windows.NativeWindowsDeletionTests.test_replay_user_and_ancestor_junctions_are_rejected",
+        "test_replay_deletion_windows.NativeWindowsDeletionTests.test_saved_games_namespace_uncapped_delete_and_safe_read_real_handles",
+        "test_replay_deletion_windows.NativeWindowsDeletionTests.test_selected_and_uncapped_all_delete_real_files"
+      ]
+    }
+  },
+  "not_executed": [
+    "A pristine `git archive` control of the two failing modules: the command was blocked awaiting consent and was not run. The byte-identity above (candidate tree == origin/main tree) plus the executed unprotected control on the same bytes carries the same conclusion.",
+    "test_frozen_paths in a real checkout: it skips in a linked worktree because .git is a file. Not re-run in a checkout; recorded as outstanding, not as a pass."
+  ],
+  "gate_status": "S09 is NOT accepted. Suite classification is done; owner performance targets/resolution, native-platform evidence or an explicit waiver, and exact-candidate frozen packages remain open."
+}

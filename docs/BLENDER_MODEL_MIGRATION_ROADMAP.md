@@ -579,8 +579,8 @@ This is the current progress ledger; initial planning and failed attempts remain
 | S05 | **Complete and merged**, PR #125 → `f873a33`; 57 tests, two 102-frame current matrices, exact hashes and Windows CI | Closed by explicit owner merge authorization. Historical capture failure still rejected; no root-cause fix claimed |
 | S06 | **Closed for this milestone and merged** — PR #127 → `cdb1d53`, PR #130 → `ab62d6d`; 103 of 119 bindings authored and approved (98 under eleven `s06-b*` batch decisions, five outside them) | 16 rows explicitly excepted (`s07-s06-coverage-exception-2026-10-19`): 12 `authoring_pending`, 4 `keep_procedural_proposed`. No activation |
 | S07 | **Complete and merged** — PR #129 → `4ab1472`, PR #131 → `d427f66`; opt-in registration of 103 bindings, four-method repair at renderer `9aff3414`, pin record refreshed, receipt 15/15 criteria | Default remains legacy; packaging skipped and not accepted; native Windows graphics still S09; S11 unauthorized |
-| S08 | **Review-ready; focused engineering gates passed** on `feat/s08-model-mod-compatibility`, stacked on open prerequisite #134 | See `BLENDER_MODEL_S08_PLAN.md`, `art/manifests/handoffs/s08.md` and `artifacts/s08/S08-RECEIPT.json`; no merge/default activation implied |
-| S09 | Not started | Integrated suite/performance/package/platform gates |
+| S08 | **Complete and merged** 2026-10-19 — #134 → `e8925cff`, #135 → `5980890c` (merge commits, reviewed heads unchanged); main's tree equals the tested S08 head | Closed for its delivered scope; default remains legacy, S09 owns suite/cost/package/platform acceptance |
+| S09 | **In progress, not accepted** — candidate frozen at `5980890c` (tree identical to main); protected per-module sweep 210 modules / 2,281 tests / 208 pass, 2 real pre-existing failures classified; validators 1034/1034, 112 files, `CHECK_OK`; owner adopted the 60/30 FPS reference and a scoped Windows waiver (`s09-performance-target-2026-10-19`, `s09-platform-waiver-2026-10-19`); exact-candidate Mac package built and inspected | Measured: authored catalogue costs **4.5-6.2× legacy frame time** (stock 42→188 ms, 57→293 ms) with simulation and checksums identical, so the adopted reference is **not met**; the frozen Mac package **cannot start with the catalogue selected** (`E_SYMLINK_ESCAPE`, pre-existing). Open: packaging fix decision, two test-fixture repairs, Windows |
 | S10 | Not started | Final owner asset lock and switch authorization |
 | S11 | Not started | Last step only: verified, reversible default switch |
 
@@ -600,17 +600,20 @@ The original S00-only kickoff is historical and retained in Git/handoff history;
 | S05 trio equivalence | **Complete and merged**, PR #125 → `f873a33`, tree-identical to tested head `e74bf97`; Windows CI `39004868017` passed | Closed with historical capture limitation retained; manual package skipped, no native graphics/package claim |
 | S06 authoring | **Closed for this milestone via explicit exception**: 103 of 119 bindings registered and approved (98 under eleven `s06-b*` batch decisions, five outside them); merged in #127 `cdb1d53` / #130 `ab62d6d` | 16 rows excepted rather than finished: 12 `authoring_pending` (eight planet environments, `menu:cinematic_backdrop`, three Syndicate hulls) and 4 `keep_procedural_proposed`. Their authoring is later work, not a claim of completion |
 | S07 integration | **Complete and merged** — #129 `4ab1472` (coverage reconciliation + plan), #131 `d427f66` (103-binding opt-in registration, four-method repair at renderer `9aff3414`, refreshed pin, `S07-FINAL-RECEIPT.json` 15/15); evidence: 870/870 native captures and 360/360 movie frames on the final bytes, one independent byte-bound review, per-module suite gate 205 modules / 2,245 tests with one recorded pre-existing failure | Default is legacy; packaging skipped, not accepted; native Windows graphics and performance targets remain S09 owner gates; S11 unauthorized |
-| S08 | **Review-ready, not merged**: documented real replacement/additive packs, effective loaded gameplay-ship provenance, transactional immutable snapshots, revision/CPU/native-GL replacement, old-format continuation and differing-cosmetic TCP peers; 150 tests across 18 isolated modules plus four tool gates | Review/land prerequisite #134 and the S08 PR only with owner authorization; legacy default unchanged; details and baseline metadata recovery in `BLENDER_MODEL_S08_PLAN.md` |
-| S09–S10 | **Not completed** | Broad performance/package/platform gates → owner asset-lock/rollback review; no hardware waiver inferred |
+| S08 | **Merged** 2026-10-19 as #134 `e8925cff` then #135 `5980890c`, both with merge commits and unchanged reviewed heads; main's tracked tree equals tested head `340b5a2`. 150 tests / 18 isolated modules plus four tool gates, packed-pack and differing-cosmetic peer evidence | Closed. Its main.py `data_store=gm.ds` change left `test_gl_lifecycle`'s AST fixture stale — carried as recorded pre-existing debt into S09 |
+| S09 | **In progress, not accepted** — candidate `5980890c` frozen in an isolated checkout behind a native write barrier; per-module sweep 210 modules / 2,281 tests / 208 pass, the 2 failures classified (one S08 fixture defect, one carried convoy guard); 10 further single-process failures proven to be instrument defects; both owner decisions recorded; complete-catalogue cost measured with simulation and checksums identical; evidence in `artifacts/s09/`, plan in `docs/BLENDER_MODEL_S09_PLAN.md`, numbers in `artifacts/s09/PERFORMANCE.json` | Mac package build/inspection, the two test-fixture repairs, and the owner's decision on whether to fund renderer cost work against the unmet 60/30 FPS reference |
+| S10 | **Not started** | Owner asset-lock/rollback review after S09 acceptance; no hardware waiver inferred |
 | S11 | **Not started, not authorized, not done** | Final explicit owner-controlled catalogue switch only after S10 |
 
-**Current delivery: S08 review-ready; next engineering milestone is S09, not yet executed.**
-S08 lives on `feat/s08-model-mod-compatibility`, based on prerequisite #134 at
-`5517ad4d642e72f7a9a8c886e9946b5f49ea8490`, not silently merged into main. Main at kickoff
-was `0f4f1308a55c3861a34c5b2c6b31aa05d4a4e03b`; #134 was still open. Preserve the stack
-with true merge history if the owner later authorizes landing; do not auto-merge either PR.
-Read `art/manifests/handoffs/s08.md` and the sealed S08 receipt before S09. The remaining
-art rows are later authoring work, not prerequisites to restart S06/S07. Keep legacy default.
+**Current delivery: S09 in progress on an immutable candidate; S09 is not accepted.**
+#134 and #135 were merged bottom-up with merge commits on 2026-10-19 (`e8925cff`, `5980890c`),
+so the reviewed heads and their evidence-bound hashes survive; main's tracked tree equals the
+tested S08 head `340b5a2`. S09 froze that tree (`b28b48ab…`) in an isolated checkout and ran the
+protected per-module sweep: 210 modules, 2,281 tests, 208 pass, two real pre-existing failures
+(an S08 fixture omission and the carried convoy guard) and ten single-process results proven to be
+instrument defects. Read `docs/BLENDER_MODEL_S09_PLAN.md`, `art/manifests/handoffs/s09.md` and
+`artifacts/s09/CLASSIFICATION.json` before continuing. The remaining art rows are later authoring
+work, not prerequisites to restart S06/S07. Keep the legacy default.
 
 The old `S06-TO-S10-HANDOVER.md` claim that only landing remains was corrected on
 `docs/s06-coverage-s07-plan`, which is now merged. Read its coverage report and

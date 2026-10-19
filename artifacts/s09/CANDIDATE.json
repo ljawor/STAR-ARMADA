@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "step": "S09",
+  "candidate_head": "5980890c47f973b50fc677a962242e893e96f001",
+  "candidate_tree": "b28b48ab07abe0c4b5040f4696ffaf14d7e6ef12",
+  "origin_main_head": "5980890c47f973b50fc677a962242e893e96f001",
+  "origin_main_tree": "b28b48ab07abe0c4b5040f4696ffaf14d7e6ef12",
+  "branch": "accept/s09-integrated-candidate",
+  "merge_base": "5980890c47f973b50fc677a962242e893e96f001",
+  "catalogue_digest_sha256": "b06c178cc6d59c64807fa53f32b57a4db82cf6efbcaf4791b34efe350f0808c3",
+  "catalogue_file_count": 231,
+  "version": "0.15.1",
+  "catalogue_counts": {
+    "registry_bindings": 119,
+    "registry_core_authored": 103,
+    "authoring_pending": 12,
+    "keep_procedural_proposed": 4
+  },
+  "pinned_files": {
+    "render/renderer.py": "9aff34140aa3d458eec358a2d87e64d4d4277c924ca198d507e4d29983350f3c",
+    "render/asset_selection.py": "11b1c84ffc9258c3f19b2b53881cd45588eb66d6b514e4ffb09d0161ad239328",
+    "render/authored_mesh.py": "9db5744ba97b9fbc5d53ec47141c3a17ddfa575048f7a2d08e5b4965adadd6ea",
+    "render/asset_registry.py": "9cc5c030415ea5485634c74249d6569f636403c319b016de3f1bb48894908c4c",
+    "main.py": "c962373ac1ff218dbe7e821f20d07092ec78f89eca4421be72584d8903df6314",
+    "game/data/store.py": "be8152549e30e2f2e85ff3b14b8ecfc66aaf7d34b1b4405ab4f65c68610b605c",
+    "assets/models/registry.json": "4683c937cfa4cc936953c25ee6fa013f1aaaad42730a7759ec6c39167e57e79f",
+    "art/manifests/pipeline.json": "e24e71a181863fe2fbcc16b3a15f0adbdeaf64177eca3dcb47e317c274c2e058",
+    "art/manifests/approvals.json": "0b0f5437c47ef21b6e137735135849142ee196998ade19c0149b6750eb825a00",
+    "art/manifests/pipeline_policy.json": "65e176558346f7af5d7e798fbd26d4fcbac09d798f6780018c6b86a16aa861b8",
+    "game/__init__.py": "18a2d353a7e8804d0102a7177c3cb4b0d8652073a86fbaf4378b4e19f7946f24"
+  },
+  "frozen_utc": "2026-10-19T13:09:43Z",
+  "tree_equals_origin_main": true,
+  "tracked_changes_in_candidate": [],
+  "untracked_additions_at_freeze": [
+    "artifacts/s09/** (S09 evidence)",
+    "tools/acceptance/run_suite_per_module.py (S09 instrument)"
+  ]
+}

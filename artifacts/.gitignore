@@ -3,3 +3,8 @@
 # development noise. The repository-root `*.log` rule would otherwise drop them
 # silently while the handoffs cite them. This negation is scoped to artifacts/.
 !*.log
+
+# Raw benchmark reports carry per-frame sample arrays (~400 KB each, 9 MB for the
+# S09 sweep). The compact form plus their sha256 is what the receipt cites, so the
+# raw files stay out of Git and out of a later bulk add.
+s09/performance/*-t[123].json
