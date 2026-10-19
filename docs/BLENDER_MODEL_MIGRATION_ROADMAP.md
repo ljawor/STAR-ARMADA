@@ -37,7 +37,7 @@ Read `art/blender/README.md` critically: its initial battleship-only notes preda
 
 Catalogue data currently contains 37 ship definitions (Imperial 10, Alliance/rebel 10, Confederacy 10, Syndicate 7), 16 station definitions and four faction records. Syndicate is currently non-playable. **These are data-entry counts, not a complete mesh workload.** Shared types, faction-specific station variants, squadrons, transports, planet hardware, previews and campaign props require a rendered-model inventory. Do not multiply these counts and invent a final asset total.
 
-### 2.1 Delivery checkpoints — verified through S05 merge, October 17, 2026
+### 2.1 Delivery checkpoints — verified through S07 merge, October 19, 2026
 
 The observations and local-only warning above are the **historical document-creation baseline**, not the
 current storage status.
@@ -72,7 +72,7 @@ asteroid props and menu backdrop come **into** the catalogue, the three declared
 keys become planned hulls (battleships and capital ships at the shipyard, bombers at the fighter
 platform), and the five authoring batches are approved in the recommended order. That is scope and plan
 approval only: no individual model design is approved, and the broader catalogue default is still
-unswitched. S02–S05 have since closed and merged (below); S06–S10 remain incomplete. **S11 is not done or authorized.** No
+unswitched. S02–S07 have since closed and merged (below); S08–S10 remain open. **S11 is not done or authorized.** No
 release or tag is part of any of these deliveries.
 
 **S02 is complete and merged, and still implements nothing in the game.** `docs/ASSET_EXTENSION_CONTRACT.md`
@@ -112,6 +112,36 @@ possible is an owner decision, not a quiet edit (`s07-detail-budget-2026-10-16`:
 triangles / 9,500 vertices), and every revision is bound in `art/manifests/approvals.json` to the exact
 `.blend`, builder and runtime bytes the owner approved. This is S06 work taken early on the three
 specimens; the remaining bindings keep their inventory status and are not covered by it.
+
+**S06 — catalogue closed for this milestone and merged into `main`.** PR #127 → `cdb1d53` and
+PR #130 → `ab62d6d` landed the remaining batch specimens, and `main` now registers **103 of the 119
+registry bindings** as authored and approved: 98 bindings under **eleven** `s06-b*` batch decisions
+(B1–B9, with B3
+split into 3a/3b/3c), and five rows approved outside those batches (the original hull trio,
+`rebel:shipyard`, and the construction scaffold under `s07-scaffold-appearance-2026-10-18`). The
+other sixteen rows are covered by an explicit owner exception rather than left
+unaccounted: `s07-s06-coverage-exception-2026-10-19` records 12 `authoring_pending` bindings (eight
+planet environments, `menu:cinematic_backdrop`, and the three Syndicate hulls) and 4
+`keep_procedural_proposed` rows (sky dome, jump point, nebula, star). Every registered asset is
+asserted to carry an approval decision, and the exception may not widen: the receipt refuses to
+build unless it enumerates exactly the registry's non-core rows.
+
+**S07 — integration complete and merged into `main`.** PR #129 → `4ab1472` carried the coverage
+reconciliation and the bounded S07 plan; PR #131 → `d427f66` carried the opt-in integration: the
+construction scaffold
+registered as the 103rd asset, the motion/ownership repair of `_draw_ships`, `_draw_ship`,
+`_draw_ship_role_batch` and `_draw_station` (renderer `9aff3414`), the B5 pin record refreshed to
+those bytes, and `artifacts/s07-runtime-final/S07-FINAL-RECEIPT.json` — **15 criteria, overall
+pass**, bound to 870 re-captured native frames, a 360-frame rebuilt movie, one independent
+byte-bound review and a per-module suite gate of 205 modules / 2,245 tests. One failure is carried
+as recorded pre-existing: `test_crew_recovery_ui` expects the legacy box shape where the tree
+returns `imperial:convoy`, contradicting `s06-imperial-convoy-parity-2026-10-18`, and it fails
+identically on the pre-merge base commit.
+
+The five PRs were merged bottom-up with merge commits, not squashes, so each stacked PR kept its
+merge-base and its evidence-bound hashes. **The default is still legacy**, packaging remains
+skipped and not accepted, native Windows graphics remain unproven, and S11 remains unauthorized:
+registration is not activation.
 
 ## 3. Scope and invariants
 
@@ -225,8 +255,8 @@ Each step is a reviewable task/PR with a durable handoff. “Complete” require
 | S03 | Standardize Git authoring/export tools | S02 | **Complete** 2026-10-16: policies frozen before implementation (PR #118 → `fd08ac7`), pipeline green 34/34 from a fresh clone (PR #119 → `b5414b5`); D3's Windows half unproven |
 | S04 | Implement generic opt-in model integration | S02, S03 | **Complete and merged**, PR #124 → `7030dd2`; tested head/tree preserved, Windows CI passed |
 | S05 | Revalidate the trio on the generic path | S04 | **Complete and merged**, PR #125 → `f873a33`; two exact current matrices, owner-authorized repeat policy, retained historical limitation |
-| S06 | Author and approve remaining model batches | S01, S03; preview via S04 | **Incomplete catalogue**: 73 new specimens appearance-approved across nine batch decisions, plus the merged trio; 27 inventory meshes and three planned Syndicate hulls remain. Completed reviews preserved; no new batch registered |
-| S07 | Complete catalogue integration and LOD/contact behavior | S05, S06 | All render paths use opt-in registry consistently; no unexplained legacy usage |
+| S06 | Author and approve remaining model batches | S01, S03; preview via S04 | **Closed for this milestone**: 103 of 119 registry bindings authored and approved — 98 under eleven `s06-b*` batch decisions, five approved outside them — merged in PR #127 → `cdb1d53` and #130 → `ab62d6d`; the remaining 16 rows are covered by the explicit exception `s07-s06-coverage-exception-2026-10-19` (12 `authoring_pending`, 4 `keep_procedural_proposed`) |
+| S07 | Complete catalogue integration and LOD/contact behavior | S05, S06 | **Complete and merged**, PR #129 → `4ab1472` and #131 → `d427f66`: every registered path resolves through the opt-in registry, renderer `9aff3414`, `S07-FINAL-RECEIPT.json` 15/15 criteria; legacy default retained |
 | S08 | Validate visual mods and asset-update compatibility | S07 | Replacement/example packs, safe failure, revision/caches and save/replay tests |
 | S09 | Performance, package and platform acceptance | S07, S08 | Measured complete candidate; source/frozen packages and required test gates pass |
 | S10 | Final owner catalogue review and cutover readiness | S09 | Exact release asset lock approved, coverage complete, rollback rehearsed |
@@ -362,7 +392,12 @@ full-suite/performance, native Windows graphics/package acceptance, or an S11 sw
 
 ### S06 — Produce, show and approve every remaining batch
 
-#### Current S06 work — reconciled batch ledger, October 18, 2026
+#### Historical S06 ledger at published head `4ffdc600` — October 18, 2026 (superseded)
+
+Superseded on October 19, 2026 by the S07 merge: batches B7–B9 landed in PR #130 (`ab62d6d`) and
+the opt-in registration in PR #131 (`d427f66`), so the counts below describe the state audited at
+that earlier head. They are kept as the record of that audit, not as a live ledger; the current
+disposition is 103 registered and approved against 16 explicitly excepted rows (§2.1).
 
 This status is derived from published S06 head `4ffdc600306ecdf4f35265fca689b495e35dd3fe`
 (draft PR #127), not from the owner's live checkout. The coverage reconciliation and S07 plan
@@ -374,7 +409,8 @@ inventory stays unchanged; old implementation statuses are not a live completion
 **Correction:** the earlier ledger/handoff incorrectly declared S06 complete and S10/S11 the
 only remaining gate. It also mixed old counts, claimed eleven B6 models when only eight runtime
 bindings were authored, and described an absent Imperial station seam that already exists.
-The dependency table remains authoritative: S07, S08 and S09 have not been completed.
+The dependency table remains authoritative: S07 has since been completed and merged (§2.1);
+S08 and S09 have not been completed.
 
 | Batch | Delivered revisions | Current state |
 |---|---|---|
@@ -387,7 +423,8 @@ The dependency table remains authoritative: S07, S08 and S09 have not been compl
 | B6 Imperial ships | Five combat hulls, two squadrons, one convoy mesh | Eight appearance-approved; constructor/colonizer remain unbuilt, trade convoy is a shared candidate, not another model |
 
 There are **73 new approved specimens across nine `appearance-batch-revisions` decisions**,
-plus the original three approved assets: **76 unique approved assets**. All new batch specimens
+plus the original three approved assets: **76 unique approved assets**. *(Historical counts: §2.1
+carries the current 103 registered / 16 excepted.)* At this head all new batch specimens
 remain unregistered and unactivated (`procedural_legacy` or `authoring_pending`); the authoring
 pipeline still contains only the original trio. Appearance approval is not preview-registration,
 merge, production-default activation, packaging or release authorization.
@@ -433,10 +470,17 @@ Every meaningful improved/replaced model revision repeats the relevant export, c
 
 ### S07 — Close integration gaps
 
-**Planning only, not complete:** `docs/BLENDER_MODEL_S07_PLAN.md` on the reconciliation
-branch defines route identity, selected Imperial station consumers, bounds/contact/ownership,
-LOD semantics, retained non-mesh scope and the integrated preview receipt. S06 gaps remain
-prerequisites; no registration, renderer implementation or default switch is authorized by that plan.
+**Delivered and merged** 2026-10-19 — PR #129 → `4ab1472` (coverage reconciliation and this plan),
+PR #131 → `d427f66` (opt-in registration of 103 bindings, the four-method repair at renderer
+`9aff3414`, refreshed pin record, and `S07-FINAL-RECEIPT.json` with 15 criteria, overall pass).
+The requirements below are retained as the acceptance criteria they were met against.
+
+**How it closed:** `docs/BLENDER_MODEL_S07_PLAN.md` defined route identity, selected Imperial
+station consumers, bounds/contact/ownership, LOD semantics, retained non-mesh scope and the
+integrated preview receipt; that plan was executed rather than left as a proposal. The S06
+prerequisite was met by explicit coverage exception (§2.1), not by pretending the sixteen
+unauthored rows were finished. Closing S07 authorized opt-in registration only — it authorized no
+default switch, and the legacy default is unchanged.
 
 - Validate all inventory bindings across gameplay, main-menu cinematics, build icons/previews where 3D is used, construction, squadron/member rendering, convoys, satellites, campaign encounters, fog/contact remapping, picking and VFX.
 - Exercise all LOD transitions, near/far views, bounds under rotation and faction/owner remaps. Keep collision and simulation fields unchanged.
@@ -533,8 +577,8 @@ This is the current progress ledger; initial planning and failed attempts remain
 | S03 | **Complete and merged** 2026-10-16 — policies PR #118 `fd08ac7`, pipeline PR #119 `b5414b5`; D1/D2/D4/D6 machine-green, D5 signed by the owner | D3's Windows half is unproven: no Windows machine has run the pipeline. S09 owns that gate |
 | S04 | **Complete and merged**, PR #124 → `7030dd2` | Closed; S05 subsequently merged. No S11 authorization |
 | S05 | **Complete and merged**, PR #125 → `f873a33`; 57 tests, two 102-frame current matrices, exact hashes and Windows CI | Closed by explicit owner merge authorization. Historical capture failure still rejected; no root-cause fix claimed |
-| S06 | **Incomplete catalogue; delivered revisions preserved** on draft PR #127: 73 new specimens approved across nine batch decisions, plus the merged trio | 27 required inventory meshes and three planned Syndicate hulls remain; four trade-convoy shared candidates need integration proof. No new registration or activation |
-| S07 | **Planned, not implemented**; depends on full S06 coverage closure | Opt-in registration requires explicit authorization; prove dispatch, bounds/contact/LOD, ownership, construction and shared aliases; keep legacy default |
+| S06 | **Closed for this milestone and merged** — PR #127 → `cdb1d53`, PR #130 → `ab62d6d`; 103 of 119 bindings authored and approved (98 under eleven `s06-b*` batch decisions, five outside them) | 16 rows explicitly excepted (`s07-s06-coverage-exception-2026-10-19`): 12 `authoring_pending`, 4 `keep_procedural_proposed`. No activation |
+| S07 | **Complete and merged** — PR #129 → `4ab1472`, PR #131 → `d427f66`; opt-in registration of 103 bindings, four-method repair at renderer `9aff3414`, pin record refreshed, receipt 15/15 criteria | Default remains legacy; packaging skipped and not accepted; native Windows graphics still S09; S11 unauthorized |
 | S08 | Not started | Prove replacement packs, updates and cosmetic compatibility |
 | S09 | Not started | Integrated suite/performance/package/platform gates |
 | S10 | Not started | Final owner asset lock and switch authorization |
@@ -554,28 +598,34 @@ The original S00-only kickoff is historical and retained in Git/handoff history;
 | Trio hull detail (S06, early) | **Approved and merged** — one revision per binding: battleship #120 `47b0161`, frigate + shipyard #121 `047c380`, record correction #122 `96cd92e`; 11,457 / 7,708 / 10,767 triangles, no silhouette, scale or simulation change; the guard raise is the owner decision `s07-detail-budget-2026-10-16` (11,888 tri / 9,500 verts) | None outstanding. Not a catalogue batch: the remaining bindings keep their inventory status |
 | S04 generic integration | **Complete and merged**, PR #124 → `7030dd2`; autocrlf clone 195/195; contract 36/28; pipeline 34/34; Windows CI passed | Closed. Manual package skipped; full S05 matrix subsequently completed under its recorded policy |
 | S05 trio equivalence | **Complete and merged**, PR #125 → `f873a33`, tree-identical to tested head `e74bf97`; Windows CI `39004868017` passed | Closed with historical capture limitation retained; manual package skipped, no native graphics/package claim |
-| S06 authoring | **Incomplete**: 76 unique approved assets including the trio; nine batch decisions cover 73 new specimens on PR #127 | Remaining art/data/scope closure before S07 can close; completed approvals preserved |
-| S07–S10 | **Not completed**; S07 plan prepared on the reconciliation branch | Integration → mod/update compatibility → broad performance/package/platform gates → owner asset-lock/rollback review |
+| S06 authoring | **Closed for this milestone via explicit exception**: 103 of 119 bindings registered and approved (98 under eleven `s06-b*` batch decisions, five outside them); merged in #127 `cdb1d53` / #130 `ab62d6d` | 16 rows excepted rather than finished: 12 `authoring_pending` (eight planet environments, `menu:cinematic_backdrop`, three Syndicate hulls) and 4 `keep_procedural_proposed`. Their authoring is later work, not a claim of completion |
+| S07 integration | **Complete and merged** — #129 `4ab1472` (coverage reconciliation + plan), #131 `d427f66` (103-binding opt-in registration, four-method repair at renderer `9aff3414`, refreshed pin, `S07-FINAL-RECEIPT.json` 15/15); evidence: 870/870 native captures and 360/360 movie frames on the final bytes, one independent byte-bound review, per-module suite gate 205 modules / 2,245 tests with one recorded pre-existing failure | Default is legacy; packaging skipped, not accepted; native Windows graphics and performance targets remain S09 owner gates; S11 unauthorized |
+| S08–S10 | **Not completed**; S08 is the next executable step | Mod/update compatibility → broad performance/package/platform gates → owner asset-lock/rollback review |
 | S11 | **Not started, not authorized, not done** | Final explicit owner-controlled catalogue switch only after S10 |
 
-**Current next task: close the reconciled S06 gaps, then execute the bounded S07 integration plan.**
-The old `S06-TO-S10-HANDOVER.md` claim that only landing remains is explicitly corrected on
-`docs/s06-coverage-s07-plan`. Read its coverage report and `docs/BLENDER_MODEL_S07_PLAN.md` first.
-S00–S05 remain closed: do not restart those reviews. No remaining model approval is inferred.
+**Current next task: S08 — model replacement and mod compatibility.**
+S06 was closed for this milestone by explicit coverage exception and S07 is merged (§2.1); the
+remaining art rows listed below are later authoring work, not a prerequisite for S08. Start S08
+from `main` at `d427f66`, and keep the legacy default untouched while doing it.
 
-The owner accepted the reconciliation/S07-planning proposal with **"agree. Let do this"**.
-That authorizes this audit and plan, not new model designs, registry/pipeline activation,
-merge, default switch, tag, release, gameplay-stat changes or an engineering/platform waiver.
+The old `S06-TO-S10-HANDOVER.md` claim that only landing remains was corrected on
+`docs/s06-coverage-s07-plan`, which is now merged. Read its coverage report and
+`docs/BLENDER_MODEL_S07_PLAN.md` for how S07 was accepted. S00–S07 remain closed: do not restart
+those reviews. No remaining model approval is inferred.
 
-Recommended remaining-art order: ten Imperial orbital stations; eight existing Confederacy/
-Syndicate combat hulls; eight constructor/colonizer hulls plus the shared scaffold. Keep the
-three planned Syndicate hulls visible as additional work requiring the data/stat boundary to be
-settled. This order is a recommendation, not a new owner-approved scope exception or design.
+The owner accepted the reconciliation/S07-planning proposal with **"agree. Let do this"**, and the
+S07 merge, the S06 coverage exception and the bottom-up merge of the five stacked PRs were each
+authorized separately on 2026-10-19. None of that authorizes new model designs, a default switch,
+a tag or release, gameplay-stat changes, or an engineering/platform waiver.
 
-S07 may be prepared while remaining artwork is completed, but **cannot be declared complete**
-with required missing meshes. When authorized, registering approved revisions for **opt-in**
-preview is separate from S10's final release lock and S11's default switch. Registration does
-not itself require or authorize a release. Preserve the production legacy default throughout.
+Recommended remaining-art order for later batches: ten Imperial orbital stations; eight existing
+Confederacy/Syndicate combat hulls; eight constructor/colonizer hulls plus the shared scaffold.
+Keep the three planned Syndicate hulls visible as additional work requiring the data/stat boundary
+to be settled. This order is a recommendation, not a new owner-approved scope exception or design.
+
+Registering approved revisions for **opt-in** preview is separate from S10's final release lock and
+S11's default switch, and it does not itself require or authorize a release. Preserve the
+production legacy default throughout.
 
 Two owner policy questions remain: authoring extent drift versus collision policy and advisory
 draw-call/texture-byte columns. Do not answer them yourself. Public gameplay dependency discovery
