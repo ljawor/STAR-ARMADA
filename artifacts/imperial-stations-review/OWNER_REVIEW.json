@@ -1,0 +1,120 @@
+{
+  "approval_kind": "prototype-appearance-and-pr-landing",
+  "recorded_utc": "2026-10-20T13:38:12.657840+00:00",
+  "owner_words_verbatim": "Looks perfect.",
+  "question_answered": "Do the three Imperial station prototypes look right in the live game?",
+  "reviewed_revision_commit": "7b920e1f2d422e578c69fc9c8342d89c3ca1e633",
+  "reviewed_worktree_state": "The three station packs were uncommitted in the working tree when the owner reviewed the live match; the bytes he saw are pinned by the sha256 map below, not by a commit that existed at review time.",
+  "review_method": "Live production game window (tools/play_station_prototypes.py, stock Imperial skirmish with one of each station, isolated profile), plus real-renderer frames captured through the same launcher (--verify-out) and Cycles orthographic review renders.",
+  "renderer_sha256": "9aff34140aa3d458eec358a2d87e64d4d4277c924ca198d507e4d29983350f3c",
+  "execution_authority": {
+    "pull_request": 142,
+    "commit_push": true,
+    "merge": false,
+    "ci_waiver": "Owner instruction for this series: minimal testing, committed with the skip marker. No workflow or protection change."
+  },
+  "batch": "imperial-stations-2026-10-20",
+  "assets": [
+    {
+      "display_name": "Research Station",
+      "data_id": "research_station",
+      "binding": "imperial:research_station",
+      "pack": "imperium-research-prototype",
+      "pack_id": "prototype:imperial_research",
+      "mesh": "visual_packs/imperium-research-prototype/assets/models/research.mesh.json",
+      "triangle_count": 5426,
+      "parts": 334,
+      "bounds": [
+        [
+          -60.8951607,
+          -14.9861736,
+          -41.499897
+        ],
+        [
+          60.8951607,
+          40.2916107,
+          63.9736137
+        ]
+      ],
+      "sha256": {
+        "visual_packs/imperium-research-prototype/assets/models/research.mesh.json": "f86d34eee7f46f9bb6fd7d8e4ac29e73792c550f298d2a90b7925d648fe8d2ab",
+        "tools/art/build_imperial_station_prototypes.py": "c8bc28ac3823ea9505eb49c844039f1189d0a36a0ee47648b15bb074a0a22d54",
+        "art/blender/imperium_research_prototype.blend": "165e742edd728ee65c605013751f8538250d1aeca1acb1c555933f4b180f9a50",
+        "visual_packs/imperium-research-prototype/visual-pack.json": "8e9b3c741d584d47db829c7b2db6072c9aaa8b6b5cc2809b941ba97def3c07c3",
+        "visual_packs/imperium-research-prototype/assets/models/manifests/research.json": "7e077c1d4ef47bd1b19f9f1ce05c9fece9d1b77d0f511c4772212aab7b3b9402"
+      },
+      "in_game_capture": "artifacts/imperial-stations-review/research-in-game.png",
+      "in_game_capture_sha256": "acff824ab17fd95367fc7b3cfa10b326d563e5efa2f4acd183b868afe3eea72d"
+    },
+    {
+      "display_name": "Defence Platform",
+      "data_id": "defense_platform",
+      "binding": "imperial:defense_platform",
+      "pack": "imperium-defense-prototype",
+      "pack_id": "prototype:imperial_defense",
+      "mesh": "visual_packs/imperium-defense-prototype/assets/models/defense.mesh.json",
+      "triangle_count": 3864,
+      "parts": 266,
+      "bounds": [
+        [
+          -41.0869446,
+          -13.4913759,
+          -44.2364807
+        ],
+        [
+          41.0869446,
+          20.991375,
+          44.2364807
+        ]
+      ],
+      "sha256": {
+        "visual_packs/imperium-defense-prototype/assets/models/defense.mesh.json": "d49df878670d1301487a099d9852e4e05bffb6e0400068c4f233138a64b740a6",
+        "tools/art/build_imperial_station_prototypes.py": "c8bc28ac3823ea9505eb49c844039f1189d0a36a0ee47648b15bb074a0a22d54",
+        "art/blender/imperium_defence_prototype.blend": "eb390dd4c2178799fe350906f5987c47c071010e79cfd152657945c1ea3e54be",
+        "visual_packs/imperium-defense-prototype/visual-pack.json": "aea40fe48be921bb17dc54a110d005dcf3555fb6269fa773e143324f1899e563",
+        "visual_packs/imperium-defense-prototype/assets/models/manifests/defense.json": "22739dcf31425af5c576f3e38b85990e7af81512feecd9212ecee1dbec915f41"
+      },
+      "in_game_capture": "artifacts/imperial-stations-review/defence-in-game.png",
+      "in_game_capture_sha256": "f05d402dcb4defaaeb7a8b6e1745c8d860ec3cc7754ba1c2ee4ed14911a8ebd0"
+    },
+    {
+      "display_name": "Sensor Station",
+      "data_id": "sensor_station",
+      "binding": "imperial:sensor_station",
+      "pack": "imperium-sensor-prototype",
+      "pack_id": "prototype:imperial_sensor",
+      "mesh": "visual_packs/imperium-sensor-prototype/assets/models/sensor.mesh.json",
+      "triangle_count": 4104,
+      "parts": 183,
+      "bounds": [
+        [
+          -36.9814987,
+          -22.9786606,
+          -29.096693
+        ],
+        [
+          36.9814987,
+          62.3341522,
+          29.096693
+        ]
+      ],
+      "sha256": {
+        "visual_packs/imperium-sensor-prototype/assets/models/sensor.mesh.json": "a13c384843afa9ac7ed0e4010ea2f3a58cb3bbbc49dea46ba6b4575c61338aba",
+        "tools/art/build_imperial_station_prototypes.py": "c8bc28ac3823ea9505eb49c844039f1189d0a36a0ee47648b15bb074a0a22d54",
+        "art/blender/imperium_sensor_prototype.blend": "0084b0fd4ca4c4f02c9f3b678e2f49d0d746f003129425b783e1c1b8535bdf48",
+        "visual_packs/imperium-sensor-prototype/visual-pack.json": "65b8abd56d49714c65d80c75e0b1af74c514e60b865bf52247111e32709cc845",
+        "visual_packs/imperium-sensor-prototype/assets/models/manifests/sensor.json": "478c3f140f81ce44f45a53377c50730ff5f6a0188917f06858cd6b655da985d9"
+      },
+      "in_game_capture": "artifacts/imperial-stations-review/sensor-in-game.png",
+      "in_game_capture_sha256": "c84dcff39826f15514be05ef8afaeb70d841c6cec77b502a8d1311684a0bafb2"
+    }
+  ],
+  "not_approved_by_this_decision": [
+    "merging PR #142",
+    "tagging or releasing",
+    "core catalogue registration (assets/models/registry.json)",
+    "packaging / frozen-bundle delivery of packs",
+    "any faction other than the Galactic Imperium",
+    "any gameplay, size, collision or simulation change"
+  ]
+}

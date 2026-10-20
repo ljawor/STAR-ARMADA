@@ -1,0 +1,61 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "prototype:imperial/defense_platform",
+  "revision": "46b1a9f09c1190c005f27fcdb27a6eae487623469a8eaa78e2357b833aa981e7",
+  "display_name": "Galactic Imperium Defence Platform \u2014 visual prototype (unapproved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/defense.mesh.json",
+      "sha256": "d49df878670d1301487a099d9852e4e05bffb6e0400068c4f233138a64b740a6",
+      "bytes": 247910
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -41.0869446,
+      -13.4913759,
+      -44.2364807
+    ],
+    "max": [
+      41.0869446,
+      20.991375,
+      44.2364807
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor / STAR ARMADA visual prototype",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "notes": "Original Imperial defence platform authored by tools/art/build_imperial_station_prototypes.py; editable source art/blender/imperium_defence_prototype.blend. Appearance review pending. No gameplay changes or proprietary models."
+  },
+  "requires": {
+    "min_engine": "0.16.0",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 3864,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}

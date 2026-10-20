@@ -5,9 +5,10 @@ new owner appearance approvals. The catalogue itself became the production defau
 example packs stay outside that default and alter no approved `.blend`, mesh, manifest, receipt or
 release-asset-lock pin.
 
-The shipped default selection is a different list: the six owner-approved Imperial prototypes in
-`visual_packs/` (decision `imperium-prototype-default-selection-2026-10-20`, see `MODEL_PREVIEW.md`
-§1). None of the two examples below is enabled by default.
+The shipped default selection is a different list: the nine owner-approved Imperial prototypes in
+`visual_packs/` — six ships and three stations (decisions `imperium-prototype-default-selection-2026-10-20`
+and `imperial-station-prototypes-2026-10-20`, see `MODEL_PREVIEW.md` §1). None of the two examples
+below is enabled by default.
 
 See `ASSET_EXTENSION_CONTRACT.md` and `art/schemas/` for normative v1 contracts.
 

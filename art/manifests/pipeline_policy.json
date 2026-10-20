@@ -613,6 +613,32 @@
         ]
       },
       "follow_up": "Registering these six as core assets is the route to a packaged default. It needs its own authorization and the complete record set (registry status, pipeline expected_triangles and approval binding, receipts, coverage report), not a settings entry."
+    },
+    {
+      "id": "imperial-station-prototypes-2026-10-20",
+      "date": "2026-10-20",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved-station-prototype-batch-and-default-selection",
+      "applies_to": "the three Galactic Imperium station prototypes (research station, defence platform, sensor station) and their entry in the shipped render-only default selection",
+      "owner_wording": "Looks perfect.",
+      "question_answered": "Do the three Imperial station prototypes look right in the live game, and should they be committed to PR #142 together with the default switch?",
+      "how_recorded": "The owner reviewed the live production game window (tools/play_station_prototypes.py, stock Imperial skirmish with one of each station, isolated profile) and answered in two words. Appearance approval is recorded in artifacts/imperial-stations-review/OWNER_REVIEW.json bound to the mesh, builder, master, descriptor and manifest hashes; this entry records the batch approval and that the three packs join the shipped default selection.",
+      "authorizes": [
+        "committing the three station prototype packs, their authoring and packaging tools, the review launcher, the focused loader guard and the in-game captures to PR #142",
+        "listing the three station pack directories in DEFAULT_SETTINGS.visual_packs beside the six approved ship prototypes"
+      ],
+      "does_not_authorize": [
+        "merging PR #142",
+        "a tag or a release",
+        "registering the models in the core catalogue (assets/models/registry.json) or pipeline manifests",
+        "packaged / frozen-bundle delivery of the packs",
+        "any change to gameplay, ship sizes, collision radii or simulation state"
+      ],
+      "binds_to": {
+        "engine_version": "0.16.0",
+        "pull_request": 142,
+        "review_record": "artifacts/imperial-stations-review/OWNER_REVIEW.json"
+      }
     }
   ]
 }

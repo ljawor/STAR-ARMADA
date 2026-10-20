@@ -1,0 +1,61 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "prototype:imperial/research_station",
+  "revision": "aaebb57b749cba0933103a969ebffcd7f78eace80c0f0f467a524ab52013e4de",
+  "display_name": "Galactic Imperium Research Station \u2014 visual prototype (unapproved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/research.mesh.json",
+      "sha256": "f86d34eee7f46f9bb6fd7d8e4ac29e73792c550f298d2a90b7925d648fe8d2ab",
+      "bytes": 346406
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -60.8951607,
+      -14.9861736,
+      -41.499897
+    ],
+    "max": [
+      60.8951607,
+      40.2916107,
+      63.9736137
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor / STAR ARMADA visual prototype",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "notes": "Original Imperial research station authored by tools/art/build_imperial_station_prototypes.py; editable source art/blender/imperium_research_prototype.blend. Appearance review pending. No gameplay changes or proprietary models."
+  },
+  "requires": {
+    "min_engine": "0.16.0",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 5426,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}

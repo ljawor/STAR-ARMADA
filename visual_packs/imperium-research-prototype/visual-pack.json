@@ -1,0 +1,22 @@
+{
+  "contract": "star-armada/visual-pack",
+  "contract_major": 1,
+  "id": "prototype:imperial_research",
+  "version": "0.1.0",
+  "requires": {
+    "min_engine": "0.16.0",
+    "contracts": [
+      "star-armada/model-manifest/v1"
+    ]
+  },
+  "content": {
+    "replaces": [
+      {
+        "binding": "imperial:research_station",
+        "replace_of": "core:imperial/research_station",
+        "manifest": "assets/models/manifests/research.json"
+      }
+    ]
+  },
+  "notes": "Owner-requested Galactic Imperium Research Station prototype. Core catalogue unchanged; the approved appearance of every other asset is untouched."
+}

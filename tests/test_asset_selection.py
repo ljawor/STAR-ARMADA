@@ -35,12 +35,15 @@ class SelectionPreferencesTests(unittest.TestCase):
         import game.core
         from render import menus
         self.assertIs(menus.DEFAULT_SETTINGS.get('model_preview'), True)
-        # The shipped selection is the six owner-approved Imperial prototypes
-        # (decision imperium-prototype-default-selection-2026-10-20).
+        # The shipped selection is the nine owner-approved Imperial prototypes: the six
+        # ships (decision imperium-prototype-default-selection-2026-10-20) and the three
+        # stations (decision imperial-station-prototypes-2026-10-20).
         self.assertEqual(menus.DEFAULT_SETTINGS.get('visual_packs'),
                          ['vigil-prototype', 'imperium-command-prototype',
                           'imperium-shipyard-prototype', 'imperium-mining-prototype',
-                          'imperium-talon-prototype', 'imperium-engineer-prototype'])
+                          'imperium-talon-prototype', 'imperium-engineer-prototype',
+                          'imperium-research-prototype', 'imperium-defense-prototype',
+                          'imperium-sensor-prototype'])
         with self.assertWarnsRegex(RuntimeWarning, 'using legacy models'):
             clean = menus.validate_presentation_settings(
                 {'model_preview': True, 'visual_packs': ['../escape'], 'custom': 17})
@@ -346,23 +349,26 @@ class SelectionLanguageTests(unittest.TestCase):
 class ShippedPrototypeDefaultTests(unittest.TestCase):
     """The committed default is only real if it resolves the approved meshes.
 
-    `DEFAULT_SETTINGS['visual_packs']` names six external packs, and a name is not a
+    `DEFAULT_SETTINGS['visual_packs']` names nine external packs, and a name is not a
     model: a typo, a moved directory or a dropped mesh would leave the shipped
     selection pointing at nothing while every settings test still passed. Drive the
     real application seam from a clean install (no saved settings file) and check the
     loaded geometry against the owner's approved triangle counts.
     """
 
-    REVIEW = 'artifacts/imperial-flight-prototypes/OWNER_REVIEW.json'
+    REVIEWS = ('artifacts/imperial-flight-prototypes/OWNER_REVIEW.json',
+               'artifacts/imperial-stations-review/OWNER_REVIEW.json')
 
-    def test_shipped_default_loads_the_six_approved_prototype_meshes(self):
+    def test_shipped_default_loads_the_approved_prototype_meshes(self):
         import json
         import game.core
         from render import menus
         from render import asset_selection as selection
         root = Path(__file__).resolve().parents[1]
-        approved = json.loads((root / self.REVIEW).read_text(encoding='utf-8'))['assets']
-        self.assertEqual(len(approved), 6, 'the reviewed set is the six prototypes')
+        approved = [item for name in self.REVIEWS
+                    for item in json.loads((root / name).read_text(encoding='utf-8'))['assets']]
+        self.assertEqual(len(approved), len(menus.DEFAULT_SETTINGS['visual_packs']),
+                         'every shipped pack carries an owner-approved mesh')
         # A clean install: no settings file, so `load_settings` returns the shipped
         # defaults. In a source run USER_DIR is the checkout, which is where the
         # committed packs live.
@@ -377,7 +383,7 @@ class ShippedPrototypeDefaultTests(unittest.TestCase):
             report = selection.configure_from_settings(settings)
             self.assertEqual(report['mode'], 'preview')
             self.assertEqual([row['accepted'] for row in report['pack_order']],
-                             [True] * 6, report['pack_order'])
+                             [True] * len(menus.DEFAULT_SETTINGS['visual_packs']), report['pack_order'])
             self.assertEqual(report['enabled_order'], menus.DEFAULT_SETTINGS['visual_packs'])
             self.assertTrue(report['coverage']['ok'], report['coverage'])
             for item in approved:
