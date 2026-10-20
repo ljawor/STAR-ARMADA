@@ -20,14 +20,21 @@ VIEWS = {
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--out', required=True, type=Path)
-    parser.add_argument('--subject', choices=['vigil', 'command'], default='vigil')
+    parser.add_argument('--subject', choices=['vigil', 'command', 'shipyard', 'mining'], default='vigil')
     args = parser.parse_args()
-    command = args.subject == 'command'
-    views = ({
-        'close': dict(target=[-4200, 45, 2200], distance=640., yaw=48., pitch=32.),
-        'rear': dict(target=[-4200, 45, 2200], distance=640., yaw=155., pitch=25.),
-        'tactical': dict(target=[-4200, 0, 2200], distance=1600., yaw=48., pitch=55.),
-    } if command else VIEWS)
+    station = args.subject != 'vigil'
+    station_kind = {'command': 'command_station', 'shipyard': 'shipyard', 'mining': 'mining_station'}.get(args.subject)
+    framing = {'command': (45, 640., 1600.), 'shipyard': (20, 440., 1200.), 'mining': (-5, 310., 900.)}
+    if station:
+        assert station_kind is not None
+        target_y, close, tactical = framing[args.subject]
+        views = {
+            'close': dict(target=[-4200, target_y, 2200], distance=close, yaw=48., pitch=32.),
+            'rear': dict(target=[-4200, target_y, 2200], distance=close, yaw=155., pitch=25.),
+            'tactical': dict(target=[-4200, 0, 2200], distance=tactical, yaw=48., pitch=55.),
+        }
+    else:
+        views = VIEWS
     out = args.out.resolve()
     out.mkdir(parents=True, exist_ok=False)
     spec = importlib.util.spec_from_file_location('capture_slice', ROOT / 'artifacts/alliance_blender_trio/evidence/capture_slice.py')
@@ -35,7 +42,7 @@ def main():
     spec.loader.exec_module(helper)
     helper.isolate(ROOT, out)
     helper.PLACEMENTS = [
-        ('capital', 'station' if command else 'ship', 'command_station' if command else 'imperial_corvette', 0, [-4200, 0, 2200], 0.),
+        ('capital', 'station' if station else 'ship', station_kind if station else 'imperial_corvette', 0, [-4200, 0, 2200], 0.),
         ('escort', 'ship', 'imperial_frigate', 0, [-4200, 0, 2900], 0.),
         ('enemy_a', 'ship', 'imperial_corvette', 1, [-3500, 0, 2200], 0.),
         ('enemy_b', 'ship', 'imperial_corvette', 1, [-3500, 0, 2900], 0.),
@@ -64,7 +71,14 @@ def main():
     frames = {}
     cameras = {name: Camera(W, H) for name in views}
     try:
-        variants = [('before', ['vigil-prototype']), ('after', ['vigil-prototype', 'imperium-command-prototype'])] if command else [('before', []), ('after', ['vigil-prototype'])]
+        if args.subject in ('shipyard', 'mining'):
+            accepted = ['vigil-prototype', 'imperium-command-prototype']
+            candidate = {'shipyard': 'imperium-shipyard-prototype', 'mining': 'imperium-mining-prototype'}[args.subject]
+            variants = [('before', accepted), ('after', accepted + [candidate])]
+        elif station:
+            variants = [('before', ['vigil-prototype']), ('after', ['vigil-prototype', 'imperium-command-prototype'])]
+        else:
+            variants = [('before', []), ('after', ['vigil-prototype'])]
         for label, packs in variants:
             info = asset_selection.configure({'model_preview': True, 'visual_packs': packs},
                                              asset_root=ROOT, pack_root=ROOT / 'visual_packs')
@@ -76,11 +90,11 @@ def main():
             st.players[0].color = (0.85, 0.23, 0.12)
             assert st.can_see(0, ids['capital'])
             initial = state_hash(st)
-            if command:
+            if station:
                 from render.camera_geometry import station_bounds
-                lo, hi = station_bounds('command_station', 'imperial')
+                lo, hi = station_bounds(station_kind, 'imperial')
                 scale = st.entities[ids['capital']].radius / 50.
-                size_info = {'length': (hi[2] - lo[2]) * scale, 'scale': scale, 'shape': 'imperial:command_station'}
+                size_info = {'length': (hi[2] - lo[2]) * scale, 'scale': scale, 'shape': 'imperial:' + station_kind}
             else:
                 size = ship_size(gm.ds, 'imperial_corvette', 'imperial')
                 size_info = {'length': size.length, 'scale': size.scale, 'shape': size.shape}
