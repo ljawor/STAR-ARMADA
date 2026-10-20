@@ -90,7 +90,22 @@ DEFAULT_SETTINGS = {
     # Blender catalogue; the legacy procedural renderer stays available as the
     # rollback control and is never deleted by this step.
     "model_preview": True,
-    "visual_packs": [],
+    # The six owner-approved Imperial prototypes (decision
+    # `imperium-prototype-default-selection-2026-10-20`) ship as the default enabled
+    # selection, so a checkout that has never saved a settings file shows them instead
+    # of the six core bindings they replace. The packs replace disjoint bindings, so
+    # the order below decides nothing; it is the order they were approved in. A saved
+    # settings file that already carries `visual_packs` keeps its own list. Packs must
+    # live outside a frozen bundle, so a packaged build falls back to the core
+    # catalogue until these six are registered there.
+    "visual_packs": [
+        "vigil-prototype",
+        "imperium-command-prototype",
+        "imperium-shipyard-prototype",
+        "imperium-mining-prototype",
+        "imperium-talon-prototype",
+        "imperium-engineer-prototype",
+    ],
 }
 
 

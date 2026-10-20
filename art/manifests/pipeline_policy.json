@@ -579,6 +579,40 @@
       "binds_to": {
         "engine_version": "0.16.0"
       }
+    },
+    {
+      "id": "imperium-prototype-default-selection-2026-10-20",
+      "date": "2026-10-20",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "authorized-prototype-default-selection",
+      "applies_to": "the shipped render-only default selection (DEFAULT_SETTINGS.visual_packs) of the six owner-approved Imperial prototypes",
+      "owner_wording": "Do the commit so the local new models will stay as default.",
+      "question_answered": "The six approved prototypes appear only because the owner's local saves/settings.json enables them; that switch is user data and is not in Git, so a fresh checkout still draws the six core bindings they replace. Commit the switch as a shipped default, promote the six into the core catalogue, or leave them opt-in?",
+      "how_recorded": "The owner asked for the switch to be committed as the default. Their appearance approval is already recorded in artifacts/imperial-flight-prototypes/OWNER_REVIEW.json (approval_kind prototype-appearance-and-pr-landing, reviewed revision 255aaba7a121a5573ba00e7cfcce6f903c4d42ff) and is not re-decided here; this entry records only that those six packs become the shipped selection.",
+      "authorizes": [
+        "listing the six approved pack directories in DEFAULT_SETTINGS.visual_packs, so a checkout that has never saved a settings file starts on those revisions",
+        "leaving an existing saved settings file in charge of its own list, which is what keeps the owner's current local run unchanged"
+      ],
+      "not_authorized": [
+        "registering the six meshes as core catalogue assets (registry core status, packaged manifests and receipts)",
+        "claiming a packaged or frozen default: visual packs must live outside a frozen bundle, so a package resolves none of them and keeps the core catalogue",
+        "a tag, package or release",
+        "further artwork, or any change to the six approved revisions",
+        "reading this selection as catalogue coverage: the six replaced core bindings remain the packaged appearance"
+      ],
+      "binds_to": {
+        "owner_review": "artifacts/imperial-flight-prototypes/OWNER_REVIEW.json",
+        "reviewed_revision_commit": "255aaba7a121a5573ba00e7cfcce6f903c4d42ff",
+        "default_selection": [
+          "vigil-prototype",
+          "imperium-command-prototype",
+          "imperium-shipyard-prototype",
+          "imperium-mining-prototype",
+          "imperium-talon-prototype",
+          "imperium-engineer-prototype"
+        ]
+      },
+      "follow_up": "Registering these six as core assets is the route to a packaged default. It needs its own authorization and the complete record set (registry status, pipeline expected_triangles and approval binding, receipts, coverage report), not a settings entry."
     }
   ]
 }
