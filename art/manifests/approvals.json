@@ -2279,7 +2279,7 @@
             },
             "runtime": {
               "assets/models/shared_asteroid_field.mesh.json": "ad2b65483c330fecad28059fce9c489bc0bce2c050ebe38aa526e21f25c88ae7",
-              "render/renderer.py": "9aff34140aa3d458eec358a2d87e64d4d4277c924ca198d507e4d29983350f3c"
+              "render/renderer.py": "55fce2a4f8aefb5bd011cb19bf5099973616a31f7db717637e3cdd0a2528c12a"
             },
             "declared_floor_triangles": 120,
             "legacy_extent": [
@@ -9655,6 +9655,78 @@
             "preserved_against_published_checkpoint": true
           }
         ]
+      },
+      "s07_static_station_pin_correction": {
+        "authority_decision_ids": [
+          "s07-opt-in-continuation-2026-10-18",
+          "imperial-stations-static-yaw-2026-10-20"
+        ],
+        "authority_owner_words_verbatim": [
+          "Looks perfect."
+        ],
+        "supersedes": "s07_motion_ownership_pin_correction",
+        "reason": "Render-only freeze of the free-standing station cosmetic yaw: the 3 deg/s spin is replaced by _station_angle() returning 0.0, and the same fixed frame now feeds the draw, contact, camera-bind and placement-ghost sites. No simulation, save, envelope, mesh or material byte changes; planet buildings and satellites keep their own orientation. The broad B5 runtime implementation pin follows the final bytes; this is not a new appearance approval, asset change, tolerance amendment or acceptance-criterion waiver. All earlier correction blocks, the original appearance approval and every other approved path are retained unchanged.",
+        "previous_commit": "de85fe8622373b9d0887bc822ebea7fcf99348e9",
+        "previous_approvals_sha256": "0b0f5437c47ef21b6e137735135849142ee196998ade19c0149b6750eb825a00",
+        "previous_runtime": {
+          "assets/models/shared_asteroid_field.mesh.json": "ad2b65483c330fecad28059fce9c489bc0bce2c050ebe38aa526e21f25c88ae7",
+          "render/renderer.py": "9aff34140aa3d458eec358a2d87e64d4d4277c924ca198d507e4d29983350f3c"
+        },
+        "previous_changed_renderer_methods": [
+          "_draw_ship",
+          "_draw_ship_role_batch",
+          "_draw_ships",
+          "_draw_station"
+        ],
+        "previous_renderer_sha256": "9aff34140aa3d458eec358a2d87e64d4d4277c924ca198d507e4d29983350f3c",
+        "changed_renderer_methods": [
+          "_draw_ship_role_batch",
+          "_draw_station",
+          "_draw_station_outline",
+          "_initialize",
+          "_station_angle",
+          "_visual_hit"
+        ],
+        "new_renderer_methods": [
+          "_station_angle"
+        ],
+        "changed_methods_vs_b5_approved_baseline": [
+          "_draw_authored_construction_scaffold",
+          "_draw_construction_sites",
+          "_draw_ship",
+          "_draw_ship_role_batch",
+          "_draw_ships",
+          "_draw_station",
+          "_draw_station_outline",
+          "_initialize",
+          "_shield_radius",
+          "_station_angle",
+          "_station_visual_radius",
+          "_visual_hit"
+        ],
+        "protected_methods_ast_equal": {
+          "_draw_asteroid_field": true,
+          "_asteroid_prop_lists": true,
+          "_emit_detail_mesh": true,
+          "_draw_construction_sites": true
+        },
+        "protected_methods_ast_equal_vs_b5_approved_baseline": {
+          "_draw_asteroid_field": true,
+          "_asteroid_prop_lists": true,
+          "_emit_detail_mesh": true,
+          "_draw_construction_sites": false
+        },
+        "protected_methods_moved_before_this_correction": {
+          "_draw_construction_sites": "moved by the separately authorized scaffold seam between B5 approval (b0ca626) and the published checkpoint; unchanged since that checkpoint"
+        },
+        "behavior_note": "station_frame()/station_contact_offset() signatures are untouched; only the yaw argument changed, from math.radians(self.time * 3.) to self._station_angle(), which returns 0.0",
+        "b5_approved_renderer_sha256": "e264230fd0eeb5522e86d5527d7fa7c2ff9eddbd2d2eba05a1ab0cccbef0d378",
+        "retained_corrections": {
+          "s07_renderer_pin_correction": true,
+          "s07_authored_parity_pin_correction": true,
+          "s07_motion_ownership_pin_correction": true
+        },
+        "new_renderer_sha256": "55fce2a4f8aefb5bd011cb19bf5099973616a31f7db717637e3cdd0a2528c12a"
       }
     },
     {

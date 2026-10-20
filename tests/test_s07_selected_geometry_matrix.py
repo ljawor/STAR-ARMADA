@@ -201,7 +201,10 @@ class SelectedGeometryMatrixTests(unittest.TestCase):
         camera.bind_scene(state, lambda: 0, lambda: angle)
         renderer = Renderer.__new__(Renderer)
         renderer.camera, renderer.ds, renderer.state = camera, self.ds, state
-        renderer.local_player, renderer.time = 0, math.degrees(angle)/3.
+        renderer.local_player, renderer.time = 0, 0.
+        # Stations are static in the shipped game; drive the cosmetic yaw through its
+        # own seam so the rotated-frame contract stays covered.
+        renderer._station_angle = lambda: angle
         return camera, controller, renderer
 
     def assert_mesh(self, mesh, raw_batches):

@@ -68,7 +68,8 @@ class HiddenContactAcceptanceTests(unittest.TestCase):
                 target.planet_building_slot = 4
                 target.pos = Vec3(100., 4951., 0.)
         renderer = Renderer.__new__(Renderer)
-        renderer.ds, renderer.state, renderer.local_player, renderer.time = self.ds, state, 0, 17.
+        renderer.ds, renderer.state, renderer.local_player, renderer.time = self.ds, state, 0, 0.
+        renderer._station_angle = lambda: 0.51
         renderer._px_per_world = lambda *args, **kwargs: 1.
         resolved = selection._resolver.resolve(row['binding'])
         self.assertIsNotNone(resolved)
@@ -79,7 +80,7 @@ class HiddenContactAcceptanceTests(unittest.TestCase):
             world = rotate(raw * renderer._ship_size(target).scale, target.yaw) + target.pos.to_tuple()
             normal = (0., 1., 0.)
         else:
-            origin, basis = frame_oracle(target, planet, math.radians(renderer.time*3.))
+            origin, basis = frame_oracle(target, planet, renderer._station_angle())
             world = (raw * (target.radius/50.)) @ basis + origin
             normal = tuple(basis[1])
         effect = dict(kind='hull_hit', target_id=target.id, pos=tuple(world[0].mean(axis=0)),

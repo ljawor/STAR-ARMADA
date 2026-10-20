@@ -226,7 +226,7 @@ class Renderer:
         self._star_list = None
         self.time = 0.0
         self.camera.bind_scene(state, lambda: self.local_player,
-                               lambda: math.radians(self.time * 3.))
+                               self._station_angle)
         # debug isolation: STAR_ARMADA_SKIP=nebulas,star,planets,ships,... skips passes
         self.skip = {s for s in os.environ.get("STAR_ARMADA_SKIP", "").split(",") if s}
         self._planet_tex_cache: dict = {}   # data_id -> GL texture id
@@ -441,6 +441,17 @@ class Renderer:
         if scope is not None:
             scope['geometry'] = geometry
         return geometry
+
+    def _station_angle(self) -> float:
+        """Cosmetic yaw applied to free-standing stations.
+
+        Stations are static art. Every anchor that matters in play - docking pads,
+        hull contacts, camera bounds, picking - is computed from the same frame, so
+        a slow spin only made authored detail drift under the cursor. Planet
+        buildings and satellites are unaffected: they follow the surface frame and
+        the simulation yaw respectively.
+        """
+        return 0.0
 
     def _draw_read_only(self, dt: float, selection: set,
                         hover_id: int | None = None) -> None:
@@ -662,7 +673,7 @@ class Renderer:
             glLineWidth(1.)
             glColor4f(*color, .55)
             glTranslatef(*pos)
-            glRotatef(self.time * 3., 0, 1, 0)
+            glRotatef(math.degrees(self._station_angle()), 0, 1, 0)
             glScalef(radius / 50., radius / 50., radius / 50.)
             for triangles in mesh.values():
                 self._emit_detail_mesh(triangles)
@@ -1571,7 +1582,7 @@ class Renderer:
             from render.planet_building_geometry import station_frame
             from render.faction_visuals import owner_faction
             faction = owner_faction(self.state, e.owner)
-            origin, basis, _ = station_frame(self.state, e, math.radians(self.time * 3.))
+            origin, basis, _ = station_frame(self.state, e, self._station_angle())
             authored_station = is_authored(f"{faction}:{e.data_id}")
             glPushMatrix()
             glTranslatef(*origin)
@@ -2021,7 +2032,7 @@ class Renderer:
             else:
                 desired = tuple(fx.get('pos', center)[i]-center[i] for i in range(3))
                 offset = station_contact_offset(e.data_id, faction, e.radius, n,
-                                                math.radians(self.time * 3.), desired)
+                                                self._station_angle(), desired)
                 if offset is None:
                     return fx
                 radius = math.sqrt(sum(x*x for x in offset))
@@ -2526,7 +2537,7 @@ class Renderer:
         authored_station = is_authored(f"{faction}:{e.data_id}")
         glPushMatrix()
         from render.planet_building_geometry import station_frame
-        origin, basis, scale = station_frame(self.state, e, math.radians(self.time * 3.))
+        origin, basis, scale = station_frame(self.state, e, self._station_angle())
         glTranslatef(*origin)
         _gl.glMultMatrixf([*basis[0], 0., *basis[1], 0., *basis[2], 0., 0., 0., 0., 1.])
         glPushMatrix()

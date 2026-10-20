@@ -711,6 +711,42 @@
         "art-validator sweep"
       ],
       "skip_ci": true
+    },
+    {
+      "id": "imperial-stations-static-yaw-2026-10-20",
+      "date": "2026-10-20",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved-static-stations-and-rework-playbook",
+      "owner_wording": "Looks perfect.",
+      "owner_wording_context": [
+        "OK we have closed out the imperial stations. Can you check if this is a big change to globally stop every station from rotating?",
+        "My poposal: Make teh change locally and let me check this through main.py. If i am happy , let's add this to the existing PR and close and merge this one.",
+        "Looks perfect."
+      ],
+      "question_answered": "Free-standing stations should stop the 3 deg/s cosmetic spin so authored hull detail and every in-play anchor (docking pads, hull contacts, camera bounds, picking) stay in one fixed frame, and the model-rework protocol should be written down for the Imperial ships batch.",
+      "scope": {
+        "renderer_methods": [
+          "_initialize",
+          "_station_angle",
+          "_draw_ship_role_batch",
+          "_draw_station",
+          "_draw_station_outline",
+          "_visual_hit"
+        ],
+        "affected_population": "free-standing stations only; planet buildings and satellites keep their own orientation",
+        "sim_or_save_change": false,
+        "envelope_or_state_hash_change": false,
+        "default_packs_after": 13,
+        "playbook": "docs/MODEL_REWORK_PLAYBOOK.md"
+      },
+      "gates": [
+        "render/geometry suite (102 tests)",
+        "appearance pin correction (engineering-only, no new appearance approval)",
+        "owner review in a live main.py window",
+        "focused station prototype loader tests"
+      ],
+      "review_record": "art/manifests/approvals.json#s06-b5-environment-2026-10-17.s07_static_station_pin_correction",
+      "note": "The stray map circles the owner reported were the S06 jump-point line-loop markers; a STAR_ARMADA_SKIP=jumppoints run confirmed the identification. No marker geometry was changed by this decision."
     }
   ]
 }
