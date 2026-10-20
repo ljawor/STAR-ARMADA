@@ -1,0 +1,26 @@
+{
+  "code_commit": "f195c4b233e27b8b99a712e04cfcde2a4d6c4ea9",
+  "appearance": "pending owner review",
+  "vigil_mesh_unchanged": true,
+  "sha256": {
+    "art/blender/imperium_command_prototype.blend": "0d29e35bb9117be016a91b1156dc56f3e673416a75e69d302facc8e2b867fcbb",
+    "tools/art/build_command_center_prototype.py": "b5be7b7e54c90594914de59685aee54438890b6dfbffbb90b1d7294d95919cf2",
+    "tools/art/package_command_prototype.py": "491749e4387ef60b36299154a5e5528dea1877c7fc3d3f982d1960b51d9032e5",
+    "visual_packs/imperium-command-prototype/assets/models/command.mesh.json": "80128b5bb3d03bee8c630a291ec8299d51dceb59f36b4aef0dd24cc6add9019d",
+    "render/renderer.py": "9aff34140aa3d458eec358a2d87e64d4d4277c924ca198d507e4d29983350f3c",
+    "tools/diag_vigil_prototype.py": "6a583e8aceac4e3389dc38d04dd60d7a070f035ee4a1526287b774661ad4ed4c",
+    "tools/play_vigil_prototype.py": "945f85ad5a861b6455f5cd1930bedc1ff2f318827157796e06de0e2089742005"
+  },
+  "evidence_sha256": {
+    "after-rear.png": "0df71cf307e06a0314f08681a314c3c4d8df11f56b291d410519d1224a8cd7fc",
+    "before-close.png": "8f23ad417e5ab9991163a50155f87e25f8a14feb54fad55f535b8ad2a49534cc",
+    "after-tactical.png": "0d7ff3938118c87f9de3d142a02d67738931401fec941ad0373ee032f63e6acb",
+    "report.json": "65cf1aad890e5aa44a15e54e01f5a4c35be1b8bbbd291a23992110a353290b5f",
+    "before-tactical.png": "0dbd0fbf232879d6f31591651614395cb14c9ae80b84743eaee018c8508cddd5",
+    "gameplay.png": "5254dfe4c8677ee8e526fd3d1e0768a19343524af229ba14106e837ea66fbf0d",
+    "gameplay.json": "070b64fa311d7a98dfefb1ea4c545c511436bdb3db9442a1e645857e83fdbace",
+    "before-rear.png": "87d6be07916a3e6a5d5bfcbb58c796ce7d029aec1d7509f2b6e54f41d21375ed",
+    "after-close.png": "388ca1d489eef7bde6a953b5d7dbebf6cc13071bac481a4e582cb99a6dbc48ff",
+    "before-after.jpg": "f4bbc0b60eccffaa53f06d30d9d9c00880c854b4fc974ec38155e94655adf52f"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "code_commit": "c931eb3060c8150c00c03da683558a0e2bfac8ce",
+  "status": "LOCAL ONLY \u2014 owner appearance review pending; do not push or update PR before approval",
+  "models": {
+    "shipyard": {
+      "triangles": 10988,
+      "vertices": 6864,
+      "parts": 685,
+      "mesh_sha256": "c2f6488ceec01040c089ba0c61c1e3745787621107ae897c7cc7bb6d2644924b",
+      "changed_pixels": {
+        "close": 338126,
+        "rear": 332925,
+        "tactical": 41605
+      },
+      "unchanged_simulation": true
+    },
+    "mining": {
+      "triangles": 8564,
+      "vertices": 4888,
+      "parts": 318,
+      "mesh_sha256": "9cd778013b14b98c833009711f2b4385ec48d57c857ddc3050fe4a0bddbc9664",
+      "changed_pixels": {
+        "close": 180278,
+        "rear": 178090,
+        "tactical": 19381
+      },
+      "unchanged_simulation": true
+    }
+  },
+  "sha256": {
+    "render/renderer.py": "9aff34140aa3d458eec358a2d87e64d4d4277c924ca198d507e4d29983350f3c",
+    "tools/diag_vigil_prototype.py": "8853e66811ec5ddc9c434f914fbd44b35dc083dd7e73b9fd00ad90a0c61e22cd",
+    "tools/play_vigil_prototype.py": "4fc6544a83394f1fab99accaa76f43eec63a25538221789024cbdc322ca3739d",
+    "tools/art/package_industry_prototypes.py": "df4922e813576071369891c25a531b2d630fa60abc4a45eabc80a612a7a1cced",
+    "tools/art/build_shipyard_prototype.py": "ee66807d64e04e04d6d82e6bc622bdc30b62e0d54baad498bda0e76d418c6380",
+    "art/blender/imperium_shipyard_prototype.blend": "9be2b1fe18078cfd934350a7f6629cd4c3d77c3ffdef09b32f892012ef710286",
+    "visual_packs/imperium-shipyard-prototype/assets/models/shipyard.mesh.json": "c2f6488ceec01040c089ba0c61c1e3745787621107ae897c7cc7bb6d2644924b",
+    "tools/art/build_mining_prototype.py": "15dba1bb9f7dad0a4b9f252f71accf87a147637b27a53f4241506e87f43b9f8c",
+    "art/blender/imperium_mining_prototype.blend": "e122d59c093a550225036e4a4b2a165599e2d46a923cb78c70891bf9f13768b5",
+    "visual_packs/imperium-mining-prototype/assets/models/mining.mesh.json": "9cd778013b14b98c833009711f2b4385ec48d57c857ddc3050fe4a0bddbc9664"
+  },
+  "evidence_sha256": {
+    "before-after.jpg": "dbd670c03f450b57de0ce5dc76b050efae3a0143f1a7e747cdedfa26a1a4290f",
+    "mining/after-rear.png": "f6d40cddcd8af7abcb3e084d704bad079dab5cba8a1d2c5d9fef8cad948d5e8f",
+    "mining/before-close.png": "5d217af324e35c9cead08843fb4d0b000597a4361a67e365e478d87c545d5a70",
+    "mining/after-tactical.png": "13515cf5aad75eb9f425f4ad74517661e4a9bff30e8ba63e48d86c2b0718a37c",
+    "mining/report.json": "e40f0f51d2282ef332b0dcd90cee879496060326ba2ad46740c3e60139b81361",
+    "mining/before-tactical.png": "79ddc86960b434940cc4e1376030bec2cedd4d22c0d9d3278846990bb950107a",
+    "mining/gameplay.png": "94b8c376b23f9bba0731ed45c122ff52e507a8ec6a22eefa21906871675766b1",
+    "mining/gameplay.json": "9e3d3dde35ed5a82c59fc2d127032f64a1f828b907b27ee953ff33839248c2dd",
+    "mining/before-rear.png": "be47b999d114de52f87a6547fedf8f2a46497e8b5adf39a8236e2a8eae4403e9",
+    "mining/after-close.png": "b232a9e62a8fb2ff0e814bdb6c168c31e92643d75e0ed89aabc803e5688654f9",
+    "shipyard/after-rear.png": "129aa69a8d66a773555399708d4a7aed90db65bf0a854a33b5124bf402ce8da8",
+    "shipyard/before-close.png": "cee4958c9e7f9cd7943047e038feff77219d1a1d776e55715c7d03d8ad66b96c",
+    "shipyard/after-tactical.png": "6b9c7cea9d967656a28838759bbb5267f1287ef8190634e68323839fd7d3d0e9",
+    "shipyard/report.json": "0ac8299380adc8c32c47bc2f656a57275cd8554c431b1ddaddd64242eb6032c5",
+    "shipyard/before-tactical.png": "a64c29f92ddf638a6b990f86eb333bce8155f41d92082f6b55204dd12f54fadc",
+    "shipyard/gameplay.png": "417241bf1b774e62e34c84c75920e2c109f7e6777a018d568cfb3c7a6a9ba856",
+    "shipyard/gameplay.json": "ff779ca766eeec140687f373503812862c522b11b6f8ee6e1e5d5bf8689fa662",
+    "shipyard/before-rear.png": "dc0b54c299687f36fd0517b82c4758025795b9be62b359b82f763eeae350fcdd",
+    "shipyard/after-close.png": "0c4b52c2c820d18c75aadb7b77db8701a04d39c01d2ab9f48eb93b26229fb86e"
+  },
+  "limits": [
+    "No fleet-performance or packaging acceptance",
+    "Full suite deferred",
+    "Mining focus adds one prebuilt mine in an isolated stock-map copy",
+    "Existing upper-edge background bands appear in both core/prototype full-frame diagnostic captures; renderer unchanged"
+  ]
+}

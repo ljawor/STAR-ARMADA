@@ -1,0 +1,71 @@
+{
+  "comparison_code_commit": "c535e0922ece6440f96c2322c2f85eae5a905054",
+  "gameplay_code_commit": "a9fb8ac609bc780fc9c7d452fed3cdf5a7d93422",
+  "status": "LOCAL ONLY \u2014 new pair awaits appearance review before PR additions",
+  "models": {
+    "talon": {
+      "triangles": 4304,
+      "vertices": 2252,
+      "parts": 70,
+      "mesh_sha256": "0831eaff1c5870bccaa33e81fa801f2b2cf01f5208a9523cbd755ec99cb6bf20",
+      "changed_pixels": {
+        "close": 68853,
+        "rear": 57298,
+        "tactical": 4462
+      },
+      "unchanged_simulation": true
+    },
+    "engineer": {
+      "triangles": 8420,
+      "vertices": 4772,
+      "parts": 301,
+      "mesh_sha256": "840718f9eb5021afe4cf2cc01fd35d77b500669d9c4931407227f72c81188bd3",
+      "changed_pixels": {
+        "close": 179601,
+        "rear": 184616,
+        "tactical": 9625
+      },
+      "unchanged_simulation": true
+    }
+  },
+  "sha256": {
+    "render/renderer.py": "9aff34140aa3d458eec358a2d87e64d4d4277c924ca198d507e4d29983350f3c",
+    "tools/diag_vigil_prototype.py": "b1eb166cb452b922752be788764e47587cb7ba1b2ebdffbc7aef88da869db044",
+    "tools/play_vigil_prototype.py": "6121fe3b849daef9ce0c5ebaef8b33cb25b4e44ecd6dc6b152d1a6f7730ab65f",
+    "tools/art/package_flight_prototypes.py": "04d6701e4a20c90a98780c3fc3390b486f2ca38677e10e0cd8d638583ce41d2f",
+    "tools/art/build_talon_prototype.py": "5c335986f249c0f36280b4a1d648b24b8072fa09ae9ec5218c73847b83bd3f51",
+    "art/blender/imperium_talon_prototype.blend": "ed7811a04e9d5a9df6a25b8882eb5dc8c8bca9970d24168ffd416b798831bf2b",
+    "visual_packs/imperium-talon-prototype/assets/models/talon.mesh.json": "0831eaff1c5870bccaa33e81fa801f2b2cf01f5208a9523cbd755ec99cb6bf20",
+    "tools/art/build_engineer_prototype.py": "caaa4d6ebc0630e41b8c61fe9f949778ade56cbdaabf3d52b83bbf338b89436a",
+    "art/blender/imperium_engineer_prototype.blend": "7021cafdc8a16e3b69427bd6d45c7340f792655a4dbf1471df71725b36e7c66f",
+    "visual_packs/imperium-engineer-prototype/assets/models/engineer.mesh.json": "840718f9eb5021afe4cf2cc01fd35d77b500669d9c4931407227f72c81188bd3"
+  },
+  "evidence_sha256": {
+    "before-after.jpg": "f734b8dcdc1f1dc0a523842b128e733271b54c677800f7e0b382d414474663f3",
+    "talon/after-rear.png": "6875361d93fb61824ec2853ec4fa78bf750a06c2f76951bd672db29d9ad2703f",
+    "talon/before-close.png": "42307fb8145565c27dcf11317de40ffee18e5035ce250ca55dbcd5a85bd7a9d0",
+    "talon/after-tactical.png": "6cc2275e63ed3003c132f4bc3271fbc3281c82f67d7a3601b9dcd0d9d8ee5737",
+    "talon/report.json": "bb23c47a711f14e23fb3185f945e693c82e296f7c1cf60183686c25565f0f7c3",
+    "talon/before-tactical.png": "f907326346ceac541ae92af97eafdc13a43f51e0282fba1a2f289b2cefc10b2d",
+    "talon/gameplay.png": "258d36c7b95abe829fa91a8bec59bd53baedff4506dcd41dfd8518d4efbedf67",
+    "talon/gameplay.json": "23878687de0058a643c011acadeb530b202b87863e8578531b72dc4f5ffab250",
+    "talon/before-rear.png": "6c1a154226c03e0b5304d7a58bf032148e7fb92b2906ff021343e16ab5706096",
+    "talon/after-close.png": "a8da2faadd9b847974b2cc9c03d77665df72a668f15eabe2ca8451ac71cb637b",
+    "engineer/after-rear.png": "1996fbe9af1d59feb514d2052061a2035b45c98e4b58185ac3fe84f09115e453",
+    "engineer/before-close.png": "9cd9ea2114b20b05c783dc6acef069b85e3aaab1d865f0ce9a4c9a55fdea89c8",
+    "engineer/after-tactical.png": "c17c8f64da849fa978b5aa4d4180601c9f55f0196d81911193d624f329509350",
+    "engineer/report.json": "eb4e58547292c414ed5a3542b5715000eef433f3ece832199f95601a2e0014b3",
+    "engineer/before-tactical.png": "85e8b30a08ddafd5a580c188f42c6bf73c6250772a7f288575aeebcf5a76e7a3",
+    "engineer/gameplay.png": "daf924fa9a3a758d902ea756dba864911db1384c831f4bcadcee9b1e99e26d08",
+    "engineer/gameplay.json": "d3f2432910daf11bb9313806e8565917ce0bb88e29c533c11acd48d6dbec4506",
+    "engineer/before-rear.png": "bc865dfe897dbc62bf18e71d3351ef7ad5ce77ee68a651223d5f28843d6e345f",
+    "engineer/after-close.png": "6a4a8e72dd095ae915a816e066a66f8896f222de21618135aa336593f15f9576"
+  },
+  "limits": [
+    "No fleet-performance or packaging acceptance",
+    "Full suite deferred",
+    "Talon remains one representative craft per six-member gameplay squadron entity",
+    "Gameplay v1 faced the stern; retained in scratch as a historical attempt; final-byte v2 startup frames retained here",
+    "No production renderer changes; existing occasional background bands remain visible in full diagnostic frames"
+  ]
+}

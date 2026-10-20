@@ -1,0 +1,191 @@
+{
+  "quality": {
+    "samples": 4,
+    "viewport": [
+      1280,
+      800
+    ],
+    "gl": "Apple M4"
+  },
+  "subject": "engineer",
+  "views": {
+    "close": {
+      "target": [
+        -4200,
+        10.0,
+        2200
+      ],
+      "distance": 140.0,
+      "yaw": 48.0,
+      "pitch": 32.0
+    },
+    "rear": {
+      "target": [
+        -4200,
+        10.0,
+        2200
+      ],
+      "distance": 140.0,
+      "yaw": 155.0,
+      "pitch": 23.0
+    },
+    "tactical": {
+      "target": [
+        -4200,
+        10.0,
+        2200
+      ],
+      "distance": 600.0,
+      "yaw": 48.0,
+      "pitch": 55.0
+    }
+  },
+  "variants": {
+    "before": {
+      "state_sha256": "5966fe9685e52b47c81507f160ccd869cdac027698f33d9fd37d70cc83307506",
+      "size": {
+        "length": 64.12035,
+        "scale": 1.3070914214949318,
+        "shape": "imperial:constructor"
+      },
+      "pack_order": [
+        {
+          "path": "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/visual_packs/vigil-prototype/visual-pack.json",
+          "accepted": true,
+          "code": null,
+          "pack_id": "prototype:vigil",
+          "revision": "f802f2d0aec8ad249b5afacd1f3ccb95eee13203c9ee5b5e5b122bcdab5af5ab"
+        },
+        {
+          "path": "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/visual_packs/imperium-command-prototype/visual-pack.json",
+          "accepted": true,
+          "code": null,
+          "pack_id": "prototype:imperium_command",
+          "revision": "e87bdb59ef9e5a250003444edfc4dbd98aa4c0f30ddb9aebfedb77f86d3df78a"
+        },
+        {
+          "path": "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/visual_packs/imperium-shipyard-prototype/visual-pack.json",
+          "accepted": true,
+          "code": null,
+          "pack_id": "prototype:imperium_shipyard",
+          "revision": "2a04cb2ece305309713decd27331a152199c6c9d4a5e9e4249a03a373d5c8b5a"
+        },
+        {
+          "path": "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/visual_packs/imperium-mining-prototype/visual-pack.json",
+          "accepted": true,
+          "code": null,
+          "pack_id": "prototype:imperium_mining",
+          "revision": "d9931bb1bcb8e8ac127ab6158f76e40017139bcd7e9fdaa0ad994716a2996053"
+        }
+      ],
+      "captures": {
+        "close": {
+          "file": "before-close.png",
+          "eye": [
+            -4111.768842381955,
+            84.18869699264869,
+            2279.4436911523676
+          ],
+          "sha256": "9cd9ea2114b20b05c783dc6acef069b85e3aaab1d865f0ce9a4c9a55fdea89c8"
+        },
+        "rear": {
+          "file": "before-rear.png",
+          "eye": [
+            -4145.536897447408,
+            64.70235798849833,
+            2083.2034996635434
+          ],
+          "sha256": "bc865dfe897dbc62bf18e71d3351ef7ad5ce77ee68a651223d5f28843d6e345f"
+        },
+        "tactical": {
+          "file": "before-tactical.png",
+          "eye": [
+            -3944.2497835859735,
+            501.49122657339507,
+            2430.278529189237
+          ],
+          "sha256": "85e8b30a08ddafd5a580c188f42c6bf73c6250772a7f288575aeebcf5a76e7a3"
+        }
+      }
+    },
+    "after": {
+      "state_sha256": "5966fe9685e52b47c81507f160ccd869cdac027698f33d9fd37d70cc83307506",
+      "size": {
+        "length": 64.12035,
+        "scale": 1.3071457546136849,
+        "shape": "imperial:constructor"
+      },
+      "pack_order": [
+        {
+          "path": "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/visual_packs/vigil-prototype/visual-pack.json",
+          "accepted": true,
+          "code": null,
+          "pack_id": "prototype:vigil",
+          "revision": "f802f2d0aec8ad249b5afacd1f3ccb95eee13203c9ee5b5e5b122bcdab5af5ab"
+        },
+        {
+          "path": "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/visual_packs/imperium-command-prototype/visual-pack.json",
+          "accepted": true,
+          "code": null,
+          "pack_id": "prototype:imperium_command",
+          "revision": "e87bdb59ef9e5a250003444edfc4dbd98aa4c0f30ddb9aebfedb77f86d3df78a"
+        },
+        {
+          "path": "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/visual_packs/imperium-shipyard-prototype/visual-pack.json",
+          "accepted": true,
+          "code": null,
+          "pack_id": "prototype:imperium_shipyard",
+          "revision": "2a04cb2ece305309713decd27331a152199c6c9d4a5e9e4249a03a373d5c8b5a"
+        },
+        {
+          "path": "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/visual_packs/imperium-mining-prototype/visual-pack.json",
+          "accepted": true,
+          "code": null,
+          "pack_id": "prototype:imperium_mining",
+          "revision": "d9931bb1bcb8e8ac127ab6158f76e40017139bcd7e9fdaa0ad994716a2996053"
+        },
+        {
+          "path": "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/visual_packs/imperium-engineer-prototype/visual-pack.json",
+          "accepted": true,
+          "code": null,
+          "pack_id": "prototype:imperium_engineer",
+          "revision": "b2801c6a1e7f6994228c41da63e7507e539f804370d14e4121771dbeaafb1727"
+        }
+      ],
+      "captures": {
+        "close": {
+          "file": "after-close.png",
+          "eye": [
+            -4111.768842381955,
+            84.18869699264869,
+            2279.4436911523676
+          ],
+          "sha256": "6a4a8e72dd095ae915a816e066a66f8896f222de21618135aa336593f15f9576"
+        },
+        "rear": {
+          "file": "after-rear.png",
+          "eye": [
+            -4145.536897447408,
+            64.70235798849833,
+            2083.2034996635434
+          ],
+          "sha256": "1996fbe9af1d59feb514d2052061a2035b45c98e4b58185ac3fe84f09115e453"
+        },
+        "tactical": {
+          "file": "after-tactical.png",
+          "eye": [
+            -3944.2497835859735,
+            501.49122657339507,
+            2430.278529189237
+          ],
+          "sha256": "c17c8f64da849fa978b5aa4d4180601c9f55f0196d81911193d624f329509350"
+        }
+      }
+    }
+  },
+  "changed_pixels": {
+    "close": 179601,
+    "rear": 184616,
+    "tactical": 9625
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "quality": {
+    "samples": 4,
+    "viewport": [
+      1280,
+      800
+    ],
+    "gl": "Apple M4"
+  },
+  "views": {
+    "close": {
+      "target": [
+        -4200,
+        5,
+        2200
+      ],
+      "distance": 120.0,
+      "yaw": 48.0,
+      "pitch": 32.0
+    },
+    "rear": {
+      "target": [
+        -4200,
+        5,
+        2200
+      ],
+      "distance": 120.0,
+      "yaw": 155.0,
+      "pitch": 23.0
+    },
+    "tactical": {
+      "target": [
+        -4200,
+        0,
+        2200
+      ],
+      "distance": 500.0,
+      "yaw": 48.0,
+      "pitch": 55.0
+    }
+  },
+  "variants": {
+    "before": {
+      "state_sha256": "3581e8dc9f0ca99024d2c6d84205fc9bcf1c227f6988fbe210e74338d020c01f",
+      "size": {
+        "length": 64.12035,
+        "scale": 0.6999961790810144,
+        "shape": "imperial:corvette"
+      },
+      "pack_order": [],
+      "captures": {
+        "close": {
+          "file": "before-close.png",
+          "eye": [
+            -4124.3732934702475,
+            68.5903117079846,
+            2268.0945924163148
+          ],
+          "sha256": "e2c18e9eebef148938ef62af5b5513f456e30a265a4143783824bf5a71909977"
+        },
+        "rear": {
+          "file": "before-rear.png",
+          "eye": [
+            -4153.317340669207,
+            60.0,
+            2099.8887139973226
+          ],
+          "sha256": "337ca3f158fded1e47f0cc0037bad335515e2a4594d8a22abd738f760e6ecdef"
+        },
+        "tactical": {
+          "file": "before-tactical.png",
+          "eye": [
+            -3986.874819654978,
+            409.5760221444959,
+            2391.8987743243642
+          ],
+          "sha256": "5b04a037e842b0c2a81570b3d27debe114073c7b61bd1501f9aea6c3d4e93b07"
+        }
+      }
+    },
+    "after": {
+      "state_sha256": "3581e8dc9f0ca99024d2c6d84205fc9bcf1c227f6988fbe210e74338d020c01f",
+      "size": {
+        "length": 64.12035,
+        "scale": 0.6999976814613834,
+        "shape": "imperial:corvette"
+      },
+      "pack_order": [
+        {
+          "path": "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/visual_packs/vigil-prototype/visual-pack.json",
+          "accepted": true,
+          "code": null,
+          "pack_id": "prototype:vigil",
+          "revision": "f802f2d0aec8ad249b5afacd1f3ccb95eee13203c9ee5b5e5b122bcdab5af5ab"
+        }
+      ],
+      "captures": {
+        "close": {
+          "file": "after-close.png",
+          "eye": [
+            -4124.3732934702475,
+            68.5903117079846,
+            2268.0945924163148
+          ],
+          "sha256": "6dbfe144179fcac00e76c6e984f6960ef8882dbddfe51a5eba24f4a37bc7857e"
+        },
+        "rear": {
+          "file": "after-rear.png",
+          "eye": [
+            -4153.317340669207,
+            60.0,
+            2099.8887139973226
+          ],
+          "sha256": "86fe9504e7d4243d75a4458ddb1914a096171357b891a99dd36f4010f81e4238"
+        },
+        "tactical": {
+          "file": "after-tactical.png",
+          "eye": [
+            -3986.874819654978,
+            409.5760221444959,
+            2391.8987743243642
+          ],
+          "sha256": "25546200a5fdec687b90266b380d81387a99acf11a207bf1810bd52d97dcba69"
+        }
+      }
+    }
+  },
+  "changed_pixels": {
+    "close": 57725,
+    "rear": 51772,
+    "tactical": 3784
+  },
+  "source_commit": "a87e4cf",
+  "mesh_sha256": "3b1649ce032014875504cf9d6cc60f26c8410ed57058991321c6e129c4f3ca3b"
+}
