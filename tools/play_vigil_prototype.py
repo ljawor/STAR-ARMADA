@@ -7,6 +7,7 @@ The mining-only review scenario adds one prebuilt mine; normal game rules are un
 import argparse
 from copy import deepcopy
 import json
+import math
 import os
 from pathlib import Path
 import runpy
@@ -28,6 +29,15 @@ FOCUS = {
     'talon': ('imperial_tie_squadron', 110., 48., 28.),
     'engineer': ('imperial_constructor', 180., 48., 28.),
 }
+
+
+def frame_subject(camera, subject, focus):
+    """Show the new flight pair's working/front side without rotating game entities."""
+    _, distance, yaw, pitch = FOCUS[focus]
+    camera.target = list(subject.pos.to_tuple())
+    camera.distance, camera.pitch = distance, pitch
+    camera.yaw = yaw + math.degrees(subject.yaw) if focus in ('talon', 'engineer') else yaw
+    camera.follow_id = subject.id
 
 
 def review_map(map_def, focus):
@@ -62,7 +72,7 @@ def main():
     parser.add_argument('--focus', choices=list(FOCUS), default='vigil',
                         help='Select/frame a prototype; mining review includes one prebuilt mine')
     args = parser.parse_args()
-    subject_data_id, distance, yaw, pitch = FOCUS[args.focus]
+    subject_data_id = FOCUS[args.focus][0]
     profile = args.profile.resolve()
     prepare_profile(profile, core=args.core)
     sys.path.insert(0, str(ROOT))
@@ -97,9 +107,7 @@ def main():
             subject = next((e for e in state.entities.values()
                             if e.owner == 0 and e.data_id == subject_data_id), None)
             if subject:
-                camera.target = list(subject.pos.to_tuple())
-                camera.distance, camera.yaw, camera.pitch = distance, yaw, pitch
-                camera.follow_id = subject.id
+                frame_subject(camera, subject, args.focus)
             if args.verify_out:
                 assert self.materials and self.materials.available, 'The production hull shader did not load'
 

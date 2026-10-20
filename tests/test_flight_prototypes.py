@@ -1,12 +1,33 @@
 """Focused real-loader integration for the next original Imperial flight pair."""
 import json
+import importlib.util
+import math
 from pathlib import Path
+from types import SimpleNamespace
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 class FlightPrototypeTests(unittest.TestCase):
+    def test_new_flight_launchers_show_the_front_relative_to_the_spawn_heading(self):
+        spec = importlib.util.spec_from_file_location('flight_framing_test', ROOT / 'tools/play_vigil_prototype.py')
+        assert spec is not None and spec.loader is not None
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        self.assertTrue(hasattr(mod, 'frame_subject'), 'Flight launchers need heading-relative framing')
+        subject = SimpleNamespace(id=17, yaw=math.radians(90),
+                                  pos=SimpleNamespace(to_tuple=lambda: (1, 2, 3)))
+        for focus in ['talon', 'engineer']:
+            camera = SimpleNamespace()
+            mod.frame_subject(camera, subject, focus)
+            self.assertAlmostEqual(camera.yaw, 48 + 90)
+            self.assertEqual(camera.target, [1, 2, 3])
+            self.assertEqual(camera.follow_id, 17)
+        camera = SimpleNamespace()
+        mod.frame_subject(camera, subject, 'vigil')
+        self.assertEqual(camera.yaw, 48)
+
     def test_flight_pair_joins_four_accepted_packs_without_changing_them(self):
         from render.asset_registry import AssetResolver
         packroot = ROOT / 'visual_packs'
