@@ -1,10 +1,12 @@
 # STAR ARMADA — Blender model migration roadmap
 
-> **Delivered 2026-10-19, engine `0.16.0`.** S00–S11 are complete: every required binding is
-> authored, approved and pinned in `art/manifests/release-asset-lock.json`, and the shipped
-> default is that catalogue (decision `s11-default-switch-2026-10-19`). The 60/30 FPS reference
-> is **not met** and is carried into a separate performance engagement; native Windows graphics
-> and package smoke remain waived. Read §6 for the ledger and §2.1 for the evidence.
+> **Closed 2026-10-20, engine `0.16.0`.** S00–S11 are complete and merged. Every required binding is
+> authored, approved and pinned in `art/manifests/release-asset-lock.json`; the shipped default is
+> that catalogue (decision `s11-default-switch-2026-10-19`); and the last baked surface — the menu
+> cinematic, which a renderer switch cannot reach — was re-baked from the catalogue in #139
+> (`73a0dd0`). **No visible surface still draws legacy models.** The 60/30 FPS reference is **not
+> met** and is carried into a separate performance engagement; native Windows graphics and package
+> smoke remain waived. Read §6 for the ledger and §2.1 for the evidence.
 
 ## 1. Purpose, authority and owner decisions
 
@@ -266,12 +268,14 @@ Each step is a reviewable task/PR with a durable handoff. “Complete” require
 | S08 | Validate visual mods and asset-update compatibility | S07 | Replacement/example packs, safe failure, revision/caches and save/replay tests |
 | S09 | Performance, package and platform acceptance | S07, S08 | **Merged**, PR #136 → `62f11d0`; the measured cost is recorded and the accepted 60/30 FPS reference is **not met** (`s09-performance-target-2026-10-19`); the frozen authored package crashed on its own symlinked assets, fixed by PR #137 → `2f74430`; native Windows graphics and package smoke waived (`s09-platform-waiver-2026-10-19`) |
 | S10 | Final owner catalogue review and cutover readiness | S09 | **Complete** with the switch: `art/manifests/release-asset-lock.json` pins 103 required bindings / 21,126,346 payload bytes with hashes checked against disk; rollback rehearsed in `RollbackRehearsalTests` and in the frozen legacy run; owner sign-off `s11-default-switch-2026-10-19` |
-| S11 | **Switch the game default to Blender models** | S10 + explicit switch authorization | **Delivered in PR #138** (pending merge): default is the approved catalogue at engine `0.16.0`; fresh, pre-switch-upgrade and explicit-legacy frozen smokes pass (upgrade effectively identical to fresh at 0.055 %, authored vs legacy 2.774 %); legacy fallback retained and documented |
+| S11 | **Switch the game default to Blender models** | S10 + explicit switch authorization | **Delivered in PR #138** (pending merge): default is the approved catalogue at engine `0.16.0`; fresh, pre-switch-upgrade and explicit-legacy frozen smokes pass (upgrade effectively identical to fresh at 0.055 %, authored vs legacy 2.774 %); legacy fallback retained and documented. The baked menu cinematic was re-baked from the catalogue afterwards, PR #139 → `73a0dd0` |
 
 
 **The migration is closed as of engine `0.16.0`.** Every required binding is authored, approved and
-locked; the shipped default is that catalogue; returning to legacy is a settings change. What this
-does **not** claim, and what the next engagement owns:
+locked; the shipped default is that catalogue; returning to legacy is a settings change. The menu
+backdrop, which is a pre-rendered movie rather than live geometry and therefore kept showing the old
+models after the switch, was re-baked from the same catalogue in #139. What this does **not** claim,
+and what the next engagement owns:
 
 - **Performance.** The authored catalogue costs 4.5–6.2× the legacy frame time (188.22 ms stock
   distributed, 292.73 ms stock combat at 1280×800 / 4× MSAA), so the 60 FPS reference S09 adopted is

@@ -110,7 +110,15 @@ same rehearsal.
 - **Two pristine-checkout controls were never run** (blocked without consent) and stay recorded as
   unrun evidence gaps, not passes.
 
-## 5. Out of scope for this milestone
+## 5. Closed afterwards: the menu cinematic
+
+The one visible surface this switch could not touch was the menu backdrop: `assets/menu/battle.zip`
+is a pre-rendered movie, so the runtime kept blitting legacy pixels after the renderer changed
+(`E23`/`T01` in the inventory audit). It was re-baked from the same catalogue in PR #139 → `73a0dd0`
+(23,919,980 bytes, 0 GL errors, loop seam 1.39 mean abs RGB, provenance in
+`artifacts/menu-movie/`). With that merged, no shipped surface still draws legacy geometry.
+
+## 6. Out of scope for this milestone
 
 Performance measurement and optimisation (separate engagement), native Windows evidence, deletion
 of the legacy renderer, and any tag or release — those need their own authorization.
