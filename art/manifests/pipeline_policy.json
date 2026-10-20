@@ -545,6 +545,40 @@
         "candidate_head": "5980890c47f973b50fc677a962242e893e96f001",
         "candidate_tree": "b28b48ab07abe0c4b5040f4696ffaf14d7e6ef12"
       }
+    },
+    {
+      "id": "s11-default-switch-2026-10-19",
+      "date": "2026-10-19",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "authorized-default-switch-and-roadmap-closure",
+      "owner_wording": "No. We will concentrate on 1.) Merge 2.) Switch the game to the blender model and closing the roadmap with this. Later we will open a new chat were we will only focus on A) Performnce measuring B) Optimalization.",
+      "question_answered": "S09 measured the authored catalogue at 4.5-6.2x legacy frame time, so the agreed 60/30 FPS reference is not met. Hold the switch until optimisation lands, or switch now and separate the work?",
+      "how_recorded": "The owner declined further rendering-approach discussion and directed the merge, the default switch and roadmap closure, naming performance measurement and optimisation as a separate future engagement.",
+      "applies_to": "S10 sign-off and S11 switch only",
+      "authorizes": [
+        "merging the S09 evidence PR and the packaging fix PR",
+        "changing the shipped default to the approved Blender catalogue",
+        "closing the migration roadmap with the performance reference recorded as unmet"
+      ],
+      "does_not_authorize": [
+        "a tag or a release",
+        "deleting the legacy renderer or its fallback",
+        "relaxing the 60/30 FPS reference or recording it as met",
+        "shipping decimated or billboard geometry to gain performance without a separate owner decision",
+        "claiming native Windows graphics or package evidence that this Mac cannot produce"
+      ],
+      "carried_forward": {
+        "stream": "performance-measurement-and-optimisation",
+        "open_items": [
+          "clean re-measure of absolute frame times without the recorded contention",
+          "authored catalogue cost: 188.22 ms stock distributed, 292.73 ms stock combat at 1280x800 MSAA 4",
+          "legacy itself is 2.5-3.4x over the 60 FPS budget on stock scenes",
+          "decide between submission batching, authored LOD chains and far-field billboards with measured evidence"
+        ]
+      },
+      "binds_to": {
+        "engine_version": "0.16.0"
+      }
     }
   ]
 }

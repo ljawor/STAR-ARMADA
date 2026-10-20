@@ -468,17 +468,48 @@ class AssetResolver:
             _fail('E_EXTENT_DRIFT', binding, 'envelope decision differs from manifest approval')
         return manifest
 
-    def coverage(self):
-        """Report broken required core separately; an override cannot hide it."""
+    def coverage(self, *, full=False, record=True):
+        """Report broken required core separately; an override cannot hide it.
+
+        The default is a *structural* verdict: manifest document and revision, plus every
+        declared payload read, size-checked and hashed. That is what a session boundary can
+        afford — parsing all 103 payloads costs about a second, which is a session-start
+        regression, not a check. `full=True` also runs each payload through the real `_load`
+        path (JSON parse, identifiers, envelope, budgets) and belongs in acceptance tooling,
+        not in startup or a draw path.
+        """
         failures, authored = [], []
         for key, row in self._bindings.items():
             if row.get('status') == 'core':
                 try:
-                    self._load(self._core_manifest(key), self.root, 'mesh')
+                    manifest = self._core_manifest(key)
+                    body = '\n'.join(f"{name}:{manifest['files'][name]['sha256']}"
+                                      for name in sorted(manifest['files']))
+                    revision = hashlib.sha256(f"{manifest['asset']}\n{body}".encode()).hexdigest()
+                    if revision != manifest['revision']:
+                        _fail('E_REVISION_MISMATCH', key, 'content revision differs')
+                    for level, entry in manifest['files'].items():
+                        # Bytes are read and hashed: cheap next to parsing them, and it is the
+                        # only way a structural verdict notices corruption rather than absence.
+                        try:
+                            raw = _read(_safe(self.root, entry['path']))
+                        except (OSError, AssetError):
+                            _fail('E_FILE_SIZE', entry['path'], 'declared payload is missing')
+                        if len(raw) != entry['bytes']:
+                            _fail('E_FILE_SIZE', entry['path'], 'declared size differs')
+                        if hashlib.sha256(raw).hexdigest() != entry['sha256']:
+                            _fail('E_FILE_HASH', entry['path'], 'sha256 differs')
+                    if full:
+                        self._load(manifest, self.root, 'mesh')
                     authored.append(key)
                 except AssetError as exc:
                     failures.append(key)
-                    self.diagnostics.append({'binding': key, 'code': exc.code, 'message': str(exc), 'source': 'core'})
+                    if record:
+                        # Resolve-time reports keep this entry; a configuration-time sweep is
+                        # already carried by diagnostics()['coverage'] and must not double-count
+                        # an issue the failing resolution will record anyway.
+                        self.diagnostics.append({'binding': key, 'code': exc.code,
+                                                 'message': str(exc), 'source': 'core'})
         return {'ok': not failures, 'required_core_failures': tuple(failures),
                 'authored': tuple(authored),
                 'procedural': tuple(k for k, r in self._bindings.items() if r.get('status') != 'core'),

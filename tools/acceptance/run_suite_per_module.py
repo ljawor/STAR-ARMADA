@@ -129,6 +129,7 @@ def summarise(results):
 def main(argv):
     only = None
     merge_path = None
+    out_path = None
     args = list(argv[1:])
     while args:
         flag = args.pop(0)
@@ -136,6 +137,8 @@ def main(argv):
             only = set(args.pop(0).split(','))
         elif flag == '--merge':
             merge_path = Path(args.pop(0))
+        elif flag == '--out':
+            out_path = Path(args.pop(0))
         else:
             raise SystemExit(f'unknown argument {flag}')
 
@@ -159,7 +162,7 @@ def main(argv):
         for line in row['failing'][:6]:
             print(f'            {line}', flush=True)
 
-    out = ROOT / 'artifacts/s09/per-module.json'
+    out = Path(out_path) if out_path else ROOT / 'artifacts/s09/per-module.json'
     if merge_path:
         previous = json.loads(merge_path.read_text())
         by_module = {row['module']: row for row in previous['results']}

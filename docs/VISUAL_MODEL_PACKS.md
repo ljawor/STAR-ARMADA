@@ -1,8 +1,9 @@
 # Visual model packs: S08 examples
 
 These are installable **data-only compatibility examples**, not new model designs or
-new owner appearance approvals. Preview remains opt-in; these examples do not switch
-production defaults or alter the original approved `.blend`, mesh, manifests or receipts.
+new owner appearance approvals. The catalogue itself became the production default in S11; these
+example packs stay outside that default and alter no approved `.blend`, mesh, manifest, receipt or
+release-asset-lock pin.
 See `ASSET_EXTENSION_CONTRACT.md` and `art/schemas/` for normative v1 contracts.
 
 ## What ships

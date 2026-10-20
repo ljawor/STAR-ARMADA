@@ -33,7 +33,7 @@ class SelectionPreferencesTests(unittest.TestCase):
     def test_menu_defaults_and_bad_pack_list_are_safe(self):
         import game.core
         from render import menus
-        self.assertIs(menus.DEFAULT_SETTINGS.get('model_preview'), False)
+        self.assertIs(menus.DEFAULT_SETTINGS.get('model_preview'), True)
         self.assertEqual(menus.DEFAULT_SETTINGS.get('visual_packs'), [])
         with self.assertWarnsRegex(RuntimeWarning, 'using legacy models'):
             clean = menus.validate_presentation_settings(
@@ -73,9 +73,11 @@ class SelectionPreferencesTests(unittest.TestCase):
                     self.assertTrue(pygame.Rect(0, 0, 800, 600).contains(row['rect']))
                     menu.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN,
                                                         button=1, pos=row['rect'].center))
-                    self.assertIs(menu.settings['model_preview'], True)
+                    self.assertIs(menu.settings['model_preview'], False)
+                    self.assertIs(menu.settings['model_preview_explicit'], True,
+                                  'moving the selector must record an explicit choice')
                     menu.apply_pending()
-                    self.assertIs(menus.load_settings()['model_preview'], True)
+                    self.assertIs(menus.load_settings()['model_preview'], False)
                 finally:
                     menu.close()
                     if owned_display:

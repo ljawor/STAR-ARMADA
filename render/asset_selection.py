@@ -60,6 +60,16 @@ def configure(settings, *, asset_root=None, pack_root=None, gameplay_entities=No
         previous.cache_clear()
     invalidate_geometry_helpers()
     _generation += 1
+    report = _coverage_for_session()
+    if report is not None and not report['ok']:
+        # Loud, once per configuration, and carried in diagnostics(): the session still
+        # starts (a player with a damaged install can reach the menu) but nothing pretends
+        # the authored catalogue is complete.
+        import logging
+        logging.getLogger(__name__).error(
+            'Authored catalogue incomplete: %d required binding(s) failed: %s',
+            len(report['required_core_failures']),
+            ', '.join(report['required_core_failures'][:8]))
     return diagnostics()
 
 
@@ -90,14 +100,44 @@ def invalidate_geometry_helpers():
                 getattr(module, function).cache_clear()
 
 
+_coverage_report = None
+_coverage_generation = -1
+
+
+def _coverage_for_session():
+    """The authored catalogue's own verdict for this session, computed once.
+
+    `AssetResolver.coverage()` loads every required core manifest, so it is not
+    something to re-run from a draw path; one report per generation is enough and
+    keeps diagnostics() cheap.
+    """
+    global _coverage_report, _coverage_generation
+    if _resolver is None:
+        _coverage_report, _coverage_generation = None, -1
+        return None
+    if _coverage_report is None or _coverage_generation != _generation:
+        _coverage_report = _resolver.coverage(record=False)
+        _coverage_generation = _generation
+    return _coverage_report
+
+
 def diagnostics():
     import json
+    coverage = _coverage_for_session()
     return {'mode': 'preview' if _selection['model_preview'] else 'legacy',
             'enabled_order': list(_selection['visual_packs']),
             'generation': _generation,
             'pack_order': [dict(entry) for entry in _resolver.active_order] if _resolver else [],
             'effective_bindings': _resolver.pack_bindings() if _resolver else [],
-            'issues': json.loads(json.dumps(_resolver.diagnostics, default=dict)) if _resolver else []}
+            'issues': json.loads(json.dumps(_resolver.diagnostics, default=dict)) if _resolver else [],
+            # S11: a session drawn from a partly broken catalogue must say so instead of
+            # looking complete. `ok` is False when any required core binding failed to load,
+            # and `procedural` names the bindings that would still fall back to legacy.
+            'coverage': None if coverage is None else {
+                'ok': coverage['ok'],
+                'required_core_failures': list(coverage['required_core_failures']),
+                'authored': list(coverage['authored']),
+                'procedural': list(coverage['procedural'])}}
 
 
 def mesh_for(binding):
