@@ -1,6 +1,6 @@
 # S11 — switch the game default to the Blender catalogue
 
-**Status:** delivered on `feat/s11-default-authored`, engine `0.16.0`, decision record
+**Status:** delivered in PR #138 on `feat/s11-default-authored`, engine `0.16.0`, decision record
 `s11-default-switch-2026-10-19`. This document is the receipt for the switch; the roadmap carries
 the milestone ledger entry.
 
