@@ -162,7 +162,7 @@ def main(argv):
         for line in row['failing'][:6]:
             print(f'            {line}', flush=True)
 
-    out = ROOT / 'artifacts/s09/per-module.json'
+    out = Path(out_path) if out_path else ROOT / 'artifacts/s09/per-module.json'
     if merge_path:
         previous = json.loads(merge_path.read_text())
         by_module = {row['module']: row for row in previous['results']}

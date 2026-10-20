@@ -46,12 +46,12 @@ Pixel evidence (`artifacts/s11/smoke-*.png`, 1280×800, identical camera and 30 
 
 | Pair | Pixels differing > 8/255 |
 |---|---|
-| fresh vs upgraded | **0.014 %** |
+| fresh vs upgraded | **0.055 %** |
 | fresh vs legacy | **2.774 %** |
 | upgraded vs legacy | **2.776 %** |
 
-The upgrade path is pixel-identical to a fresh install, and both differ from the legacy control by
-~200× the noise floor. The fresh frame shows the plated authored station modules; the legacy frame
+The upgrade path is effectively identical to a fresh install, and both differ from the legacy
+control by ~50× that residual (particle placement differs run to run). The fresh frame shows the plated authored station modules; the legacy frame
 shows the ring-and-gantry procedure.
 
 ### 2.2 Automated gates
@@ -61,8 +61,25 @@ shows the ring-and-gantry procedure.
 - `build_release_asset_lock.py --check`: `LOCK_OK 103 bindings`, 21,126,346 payload bytes.
 - Focused union (`test_s11_default_switch`, `test_asset_selection`): 24 tests, OK.
 
-The full-suite verdict and its classification are recorded in §2.3 when the run completes; the
-per-module instrument remains the attributable one for this repository.
+### 2.3 Test verdict (per-module instrument)
+
+`tools/acceptance/run_suite_per_module.py --out artifacts/s11/per-module-final.json`, one process
+per module, 300 s timeout each:
+
+| Modules | Tests | Pass | Fail | Wall |
+|---|---|---|---|---|
+| 211 | 2,292 | **209** | **2** | 4,117 s |
+
+The two are the **pre-existing** fixtures proven on `main`'s own bytes in PR #137's control:
+`test_gl_lifecycle` (its AST fixture lacks the `ds` argument S08 added to `main.start_game`) and
+`test_crew_recovery_ui` (expects the legacy transport box superseded by `s06-imperial-convoy-parity`).
+
+Six failures this branch did introduce were found by this gate and fixed before the final run:
+`DEFAULT_SETTINGS` briefly carried the migration marker, which broke four modules asserting that
+every default is a reachable settings row; the configuration-time coverage sweep double-counted a
+missing asset as two diagnostics; and the S06 reconciliation report was stale after the new policy
+record. The single-process suite was abandoned as an instrument: one module
+(`test_lan_human_safety`) takes 1,030 s on its own, so the aggregate run had no usable ETA.
 
 ## 3. Rollback — rehearsed, not theoretical
 
