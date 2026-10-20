@@ -35,15 +35,18 @@ class SelectionPreferencesTests(unittest.TestCase):
         import game.core
         from render import menus
         self.assertIs(menus.DEFAULT_SETTINGS.get('model_preview'), True)
-        # The shipped selection is the nine owner-approved Imperial prototypes: the six
-        # ships (decision imperium-prototype-default-selection-2026-10-20) and the three
-        # stations (decision imperial-station-prototypes-2026-10-20).
+        # The shipped selection is the thirteen owner-approved Imperial prototypes: the six
+        # ships (decision imperium-prototype-default-selection-2026-10-20), the three
+        # stations (decision imperial-station-prototypes-2026-10-20) and the four dockyard
+        # units (decision imperial-dockyard-prototypes-2026-10-20).
         self.assertEqual(menus.DEFAULT_SETTINGS.get('visual_packs'),
                          ['vigil-prototype', 'imperium-command-prototype',
                           'imperium-shipyard-prototype', 'imperium-mining-prototype',
                           'imperium-talon-prototype', 'imperium-engineer-prototype',
                           'imperium-research-prototype', 'imperium-defense-prototype',
-                          'imperium-sensor-prototype'])
+                          'imperium-sensor-prototype', 'imperium-trade-prototype',
+                          'imperium-fighter-prototype', 'imperium-repair-prototype',
+                          'imperium-relay-prototype'])
         with self.assertWarnsRegex(RuntimeWarning, 'using legacy models'):
             clean = menus.validate_presentation_settings(
                 {'model_preview': True, 'visual_packs': ['../escape'], 'custom': 17})
@@ -349,7 +352,7 @@ class SelectionLanguageTests(unittest.TestCase):
 class ShippedPrototypeDefaultTests(unittest.TestCase):
     """The committed default is only real if it resolves the approved meshes.
 
-    `DEFAULT_SETTINGS['visual_packs']` names nine external packs, and a name is not a
+    `DEFAULT_SETTINGS['visual_packs']` names thirteen external packs, and a name is not a
     model: a typo, a moved directory or a dropped mesh would leave the shipped
     selection pointing at nothing while every settings test still passed. Drive the
     real application seam from a clean install (no saved settings file) and check the
@@ -357,7 +360,8 @@ class ShippedPrototypeDefaultTests(unittest.TestCase):
     """
 
     REVIEWS = ('artifacts/imperial-flight-prototypes/OWNER_REVIEW.json',
-               'artifacts/imperial-stations-review/OWNER_REVIEW.json')
+               'artifacts/imperial-stations-review/OWNER_REVIEW.json',
+               'artifacts/imperial-dockyard-review/OWNER_REVIEW.json')
 
     def test_shipped_default_loads_the_approved_prototype_meshes(self):
         import json

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Play the Imperial station prototypes with separate test saves.
+"""Play the Imperial station and dockyard prototypes with separate test saves.
 
 No application bundle, stock mesh, normal settings, saves or replays are modified.
 The focused review scenario adds one prebuilt copy of the selected station to slot 0;
@@ -25,16 +25,24 @@ APPROVED = ('vigil-prototype', 'imperium-command-prototype',
             'imperium-shipyard-prototype', 'imperium-mining-prototype',
             'imperium-talon-prototype', 'imperium-engineer-prototype')
 STATIONS = ('imperium-research-prototype', 'imperium-defense-prototype',
-            'imperium-sensor-prototype')
+            'imperium-sensor-prototype', 'imperium-trade-prototype',
+            'imperium-fighter-prototype', 'imperium-repair-prototype',
+            'imperium-relay-prototype')
 PACK_NAMES = APPROVED + STATIONS
 EXPECTED_PACK_IDS = {'prototype:vigil', 'prototype:imperium_command', 'prototype:imperium_shipyard',
                      'prototype:imperium_mining', 'prototype:imperium_talon',
                      'prototype:imperium_engineer', 'prototype:imperial_research',
-                     'prototype:imperial_defense', 'prototype:imperial_sensor'}
+                     'prototype:imperial_defense', 'prototype:imperial_sensor',
+                     'prototype:imperial_trade', 'prototype:imperial_fighter',
+                     'prototype:imperial_repair', 'prototype:imperial_relay'}
 FOCUS = {
     'research': ('research_station', 300., 48., 22.),
     'defence': ('defense_platform', 260., 48., 30.),
     'sensor': ('sensor_station', 290., 48., 18.),
+    'trade': ('trade_station', 320., 48., 26.),
+    'fighter': ('fighter_platform', 280., 48., 24.),
+    'repair': ('repair_dock', 300., 48., 28.),
+    'relay': ('energy_relay', 290., 48., 22.),
 }
 
 
@@ -49,7 +57,7 @@ def frame_subject(camera, subject, focus):
 def review_map(map_def, focus):
     """Make a disposable review variant; never mutate the stock map or catalogue.
 
-    Every station in the batch is placed, so one live match shows all three and the
+    Every station in the batch is placed, so one live match shows all of them and the
     camera focus only decides which one is framed at the start.
     """
     result = deepcopy(map_def)

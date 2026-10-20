@@ -668,6 +668,49 @@
         "review_record": "artifacts/imperial-stations-review/OWNER_REVIEW.json",
         "supersedes_appearance_in": "imperial-station-prototypes-2026-10-20"
       }
+    },
+    {
+      "id": "imperial-dockyard-prototypes-2026-10-20",
+      "date": "2026-10-20",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved-dockyard-prototypes-and-default",
+      "owner_wording": "Well done. I like it. Commit and make it default on PR and Local",
+      "question_answered": "The four dockyard models built from Homeworld 2 silhouette language are good enough to ship, and the default selection carries them in the repo and in the owner's local run.",
+      "scope": {
+        "prototypes": [
+          "imperium-trade-prototype",
+          "imperium-fighter-prototype",
+          "imperium-repair-prototype",
+          "imperium-relay-prototype"
+        ],
+        "bindings": [
+          "imperial:trade_station",
+          "imperial:fighter_platform",
+          "imperial:repair_dock",
+          "imperial:energy_relay"
+        ],
+        "default_packs_after": 13
+      },
+      "gates": [
+        "blender build",
+        "reproducible export",
+        "envelope fit",
+        "contact gate (no floating parts)",
+        "six material roles",
+        "real-driver gameplay capture",
+        "focused loader tests"
+      ],
+      "review_record": "artifacts/imperial-dockyard-review/OWNER_REVIEW.json",
+      "evidence_sha256": {
+        "builder": "e547cf795a40166aa7c7bec9981271f5a9633f3c3f5f79ad46039afa8aab5bcd",
+        "review": "1edcc2d35d5c55c450fbde2edd5cd466aefe0f82bad9e85745ffada831837a34"
+      },
+      "deliberately_skipped": [
+        "full test suite",
+        "contract-trio matrix",
+        "art-validator sweep"
+      ],
+      "skip_ci": true
     }
   ]
 }

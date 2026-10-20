@@ -97,7 +97,7 @@ DEFAULT_SETTINGS = {
     # The packs replace disjoint bindings, so the order below decides nothing; it is the
     # order they were approved in. A saved settings file that already carries
     # `visual_packs` keeps its own list. Packs must live outside a frozen bundle, so a
-    # packaged build falls back to the core catalogue until these nine are registered there.
+    # packaged build falls back to the core catalogue until these are registered there.
     "visual_packs": [
         "vigil-prototype",
         "imperium-command-prototype",
@@ -108,6 +108,10 @@ DEFAULT_SETTINGS = {
         "imperium-research-prototype",
         "imperium-defense-prototype",
         "imperium-sensor-prototype",
+        "imperium-trade-prototype",
+        "imperium-fighter-prototype",
+        "imperium-repair-prototype",
+        "imperium-relay-prototype",
     ],
 }
 

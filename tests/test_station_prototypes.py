@@ -1,4 +1,4 @@
-"""The three Imperial station prototypes beside the unchanged approved packs.
+"""The Imperial station and dockyard prototypes beside the unchanged approved packs.
 
 Focused guard for one reviewed batch: each replacement loads through the real resolver,
 lands inside its binding's approved envelope, keeps the six material roles, and leaving the
@@ -19,6 +19,14 @@ STATIONS = (
          binding='imperial:defense_platform', asset='prototype:imperial/defense_platform'),
     dict(pack='imperium-sensor-prototype', stem='sensor', pack_id='prototype:imperial_sensor',
          binding='imperial:sensor_station', asset='prototype:imperial/sensor_station'),
+    dict(pack='imperium-trade-prototype', stem='trade', pack_id='prototype:imperial_trade',
+         binding='imperial:trade_station', asset='prototype:imperial/trade_station'),
+    dict(pack='imperium-fighter-prototype', stem='fighter', pack_id='prototype:imperial_fighter',
+         binding='imperial:fighter_platform', asset='prototype:imperial/fighter_platform'),
+    dict(pack='imperium-repair-prototype', stem='repair', pack_id='prototype:imperial_repair',
+         binding='imperial:repair_dock', asset='prototype:imperial/repair_dock'),
+    dict(pack='imperium-relay-prototype', stem='relay', pack_id='prototype:imperial_relay',
+         binding='imperial:energy_relay', asset='prototype:imperial/energy_relay'),
 )
 
 

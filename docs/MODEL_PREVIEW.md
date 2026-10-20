@@ -24,21 +24,25 @@ first time the player moves the row. A pre-switch file otherwise starts on the a
 required core bindings do not all load logs an error naming them. A damaged install therefore reads
 as incomplete instead of looking like a finished catalogue with some objects quietly left procedural.
 
-**Shipped selection.** Since decisions `imperium-prototype-default-selection-2026-10-20` and
-`imperial-station-prototypes-2026-10-20` the default `visual_packs` list is the nine owner-approved
-Imperial prototypes — `vigil-prototype`, `imperium-command-prototype`, `imperium-shipyard-prototype`,
-`imperium-mining-prototype`, `imperium-talon-prototype`, `imperium-engineer-prototype`,
-`imperium-research-prototype`, `imperium-defense-prototype`, `imperium-sensor-prototype` — so a
-checkout that has never saved a settings file shows those nine revisions instead of the nine core
-bindings they replace. The packs replace disjoint bindings, so their order decides no precedence. A
+**Shipped selection.** Since decisions `imperium-prototype-default-selection-2026-10-20`,
+`imperial-station-prototypes-2026-10-20` and `imperial-dockyard-prototypes-2026-10-20` the default
+`visual_packs` list is the thirteen owner-approved Imperial models — `vigil-prototype`,
+`imperium-command-prototype`, `imperium-shipyard-prototype`, `imperium-mining-prototype`,
+`imperium-talon-prototype`, `imperium-engineer-prototype`, `imperium-research-prototype`,
+`imperium-defense-prototype`, `imperium-sensor-prototype`, `imperium-trade-prototype`,
+`imperium-fighter-prototype`, `imperium-repair-prototype`, `imperium-relay-prototype` — so a
+checkout that has never saved a settings file shows those thirteen revisions instead of the thirteen
+core bindings they replace. The packs replace disjoint bindings, so their order decides no precedence. A
 settings file that already carries `visual_packs` keeps its own list; a file written before this change
 has no such key and adopts the new default. Packs must live outside a frozen bundle (§2), so a package
 resolves none of them and keeps the core catalogue: this is a source-run selection, **not**
 core-catalogue registration, and it authorizes no tag or release. `tests/test_asset_selection.py`
 drives the real application seam from a clean install and checks the loaded triangle counts against
-the two owner review records (`artifacts/imperial-flight-prototypes/OWNER_REVIEW.json` for the six
-ships, `artifacts/imperial-stations-review/OWNER_REVIEW.json` for the three stations), so a mistyped or
-missing pack name fails the suite instead of quietly reverting the nine bindings.
+the three owner review records (`artifacts/imperial-flight-prototypes/OWNER_REVIEW.json` for the six
+ships, `artifacts/imperial-stations-review/OWNER_REVIEW.json` for the three stations,
+`artifacts/imperial-dockyard-review/OWNER_REVIEW.json` for the trade station, fighter dock, repair
+station and energy relay), so a mistyped or missing pack name fails the suite instead of quietly
+reverting the thirteen bindings.
 
 ## 2. Enabled pack order and writable paths
 

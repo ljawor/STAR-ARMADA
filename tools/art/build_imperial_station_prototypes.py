@@ -881,6 +881,429 @@ def review_camera(root, row):
     scene.render.resolution_percentage = 100
 
 
+# ---------------------------------------------------------------- trade station
+
+TRADE_PLINTH = [(-7.0, 44, 44, 12), (-3.0, 52, 52, 14), (2.0, 50, 50, 13)]
+TRADE_TOWER = [(-5, 23, 23, 6.2), (8, 20.5, 20.5, 5.6), (20, 19.5, 19.5, 5.2),
+               (32, 17.0, 17.0, 4.4), (39, 12.0, 12.0, 3.2)]
+
+
+def build_trade():
+    """A market citadel: wide trade plinth, four cargo arms on the diagonals, a central
+    exchange tower carrying a raised trading gallery, and docking claws at every arm."""
+    tier('Trade plinth', 'base', TRADE_PLINTH)
+    tier('Trade upper market deck', 'base', [(2, 44, 44, 11), (5, 40, 40, 10), (8, 34, 34, 8)])
+    tier('Trade exchange tower', 'base', TRADE_TOWER)
+    tier('Exchange shoulder low', 'trim', [(7, 21.5, 21.5, 5.8), (9, 20.8, 20.8, 5.6)])
+    tier('Exchange shoulder mid', 'trim', [(19, 20.2, 20.2, 5.4), (21, 19.6, 19.6, 5.2)])
+    tier('Exchange shoulder high', 'trim', [(31, 17.6, 17.6, 4.6), (33, 17.0, 17.0, 4.4)])
+    tier('Exchange crown', 'base', [(39, 11.4, 11.4, 3.0), (43, 12.6, 12.6, 3.4), (46, 7.0, 7.0, 2.0)])
+    for sx in (-1, 1):
+        for sz in (-1, 1):
+            beam('Exchange corner fin', 'trim', (sx * 16.0, 8.0, sz * 16.0), (sx * 9.0, 38.0, sz * 9.0), 1.8)
+
+    # Plinth skirt: armour bands, owner stripe, deck lights and container rows.
+    plinth_face = section(TRADE_PLINTH, -3.0)[0]
+    for s in (-1, 1):
+        for i in range(4):
+            box('Trade plinth armour band', 'trim',
+                (s * (plinth_face - .4), -4.4 + i * 1.9, 0), (.8, 2.6, 88))
+        box('Trade plinth owner stripe', 'accent', (s * (plinth_face - .2), -1.2, 0), (.5, 1.3, 54))
+        for i in range(4):
+            box('Trade plinth buttress', 'base',
+                (s * (plinth_face - 3.4), -1.0, -30 + i * 20), (6.0, 5.6, 7.0))
+        for i in range(6):
+            box('Trade container row', 'base', (s * 30, 4.4, -22 + i * 9), (10, 4.8, 7.4))
+            box('Trade container lid', 'trim', (s * 30, 7.2, -22 + i * 9), (9.2, .8, 6.6))
+        for i in range(5):
+            box('Trade deck work light', 'lit', (s * 12, 2.4, -26 + i * 13), (.9, .5, 4.0))
+    for i in range(9):
+        box('Trade plinth vent bank', 'dark', (-20 + i * 5, 2.3, 26), (4.0, .6, 7.0))
+
+    # Raised trading gallery: ring, cardinal and diagonal spokes, lamps along the rim.
+    ring('Trade gallery ring', 'trim', (0, 26, 0), 30, 1.8, 40, 8, axis='y')
+    for sx in (-1, 1):
+        for sz in (-1, 1):
+            tier('Trade gallery pylon', 'base',
+                 [(8, 4.6, 4.6, 1.2), (22, 3.8, 3.8, 1.0), (26.5, 3.2, 3.2, .8)],
+                 loc=(sx * 21.2, sz * 21.2))
+            box('Trade gallery pylon foot', 'trim', (sx * 21.2, 8.6, sz * 21.2), (6.2, 1.6, 6.2))
+    for s in (-1, 1):
+        beam('Trade gallery spoke', 'trim', (s * 11.5, 25.6, 0), (s * 30, 25.6, 0), 1.8)
+        beam('Trade gallery spoke diagonal', 'trim', (s * 8.0, 25.6, s * 8.0),
+             (s * 21.2, 25.6, s * 21.2), 1.6)
+    for i in range(8):
+        a = math.radians(i * 45)
+        box('Trade gallery lamp', 'cool', (30 * math.cos(a), 27.9, 30 * math.sin(a)), (1.4, .9, 1.4))
+
+    # Exchange tower detail: window bands, vent stacks, chevrons and the crown mast.
+    for y in (7.0, 15.0, 23.0, 31.0):
+        face = section(TRADE_TOWER, y)[0]
+        for s in (-1, 1):
+            for i in range(3):
+                box('Trade tower window band', 'lit',
+                    (s * (face - .2), y, -6 + i * 6), (.6, 1.2, 4.4))
+    for s in (-1, 1):
+        face = section(TRADE_TOWER, 20.0)[0]
+        box('Trade tower vent stack', 'dark', (s * (face - .3), 20.0, 12.5), (.7, 12.0, 3.4))
+        box('Trade tower chevron', 'accent', (0, 33.0, s * (section(TRADE_TOWER, 33.0)[1] - .3)),
+            (9.0, 1.6, .6))
+        beam('Trade spire brace', 'trim', (s * 6.0, 30.0, 0), (s * 0.4, 43.5, 0), .8)
+    beam('Trade crown mast', 'trim', (0, 46, 0), (0, 50.0, 0), 1.1)
+    box('Trade crown beacon', 'cool', (0, 50.2, 0), (1.3, 1.3, 1.3), .05)
+    for i in range(3):
+        a = math.radians(i * 120)
+        bx, bz = 4.4 * math.cos(a), 4.4 * math.sin(a)
+        beam('Trade crown aerial', 'trim', (bx, 44.6, bz), (bx * 1.5, 48.6, bz * 1.5), .5)
+        box('Trade crown aerial tip', 'cool', (bx * 1.5, 48.8, bz * 1.5), (.9, .9, .9), .04)
+
+    # Four cargo arms on the diagonals, ending in stacks and docking claws.
+    for sx in (-1, 1):
+        for sz in (-1, 1):
+            beam('Trade cargo arm', 'base', (sx * 28, 1.0, sz * 28), (sx * 44, 1.0, sz * 44), 13.0)
+            box('Trade cargo arm spine', 'trim', (sx * 36, 7.4, sz * 36), (10.0, 1.4, 10.0))
+            for i in range(3):
+                role = 'trim' if i % 2 == 0 else 'base'
+                box('Trade cargo stack', role, (sx * 43, 6.4 + i * 3.6, sz * 43), (11, 3.0, 11))
+                box('Trade cargo stack seam', 'dark', (sx * 43, 8.0 + i * 3.6, sz * 43), (10.4, .4, 10.4))
+                box('Trade cargo stack lamp', 'lit', (sx * 43, 7.0 + i * 3.6, sz * 43), (11.5, .5, 1.3))
+                for cx in (-1, 1):
+                    for cz in (-1, 1):
+                        box('Trade cargo stack post', 'trim',
+                            (sx * 43 + cx * 4.6, 6.4 + i * 3.6, sz * 43 + cz * 4.6), (1.4, 3.2, 1.4))
+            box('Trade cargo clamp', 'trim', (sx * 43, 14.4, sz * 43), (12, 1.2, 12))
+            box('Trade arm crane post', 'trim', (sx * 33, 12.0, sz * 33), (3.0, 8.0, 3.0))
+            box('Trade arm crane jib', 'dark', (sx * 37, 15.4, sz * 37), (11.0, 1.6, 2.2))
+            for k in (-1, 1):
+                beam('Trade docking claw', 'trim', (sx * 44, 1.5, sz * 44),
+                     (sx * 52, 10.0, sz * 52 - k * 6), 1.6)
+                box('Trade docking claw pad', 'dark', (sx * 52.6, 10.6, sz * 52 - k * 6), (3.4, 2.6, 3.4))
+                box('Trade docking claw light', 'cool', (sx * 52.6, 12.0, sz * 52 - k * 6), (1.2, .5, 1.2))
+            box('Trade arm hatch', 'trim', (sx * 38, 2.6, sz * 38), (8.0, 1.4, 4.0))
+
+    # Landing pads on the cardinal edges, each with a rim and approach lights.
+    for s in (-1, 1):
+        for axis in ('x', 'z'):
+            px, pz = (s * 52, 0) if axis == 'x' else (0, s * 52)
+            cylinder('Trade landing pad', 'trim', (px, 3.4, pz), 8.0, 2.8, 12)
+            ring('Trade pad rim', 'accent', (px, 5.0, pz), 7.4, .5, 24, 6, axis='y')
+            for i in range(4):
+                a = math.radians(45 + i * 90)
+                box('Trade pad approach light', 'cool',
+                    (px + 8.8 * math.cos(a), 5.0, pz + 8.8 * math.sin(a)), (1.4, .6, 1.4))
+            box('Trade pad cradle', 'dark', (px, 2.6, pz), (11.0, 1.0, 11.0))
+
+
+# ---------------------------------------------------------------- fighter platform
+
+FIGHTER_BASE = [(-11.0, 24, 23, 5), (-5.0, 27, 27, 6), (0.0, 25, 24, 5)]
+FIGHTER_HANGAR = [(-9, 24, 24, 5), (2, 27, 27, 6), (15, 27, 27, 6), (25, 23, 23, 5)]
+FIGHTER_TOWER = [(-6, 10.5, 10.5, 2.6), (10, 9.6, 9.6, 2.4), (26, 9.0, 9.0, 2.2),
+                 (38, 8.2, 8.2, 2.0), (42, 6.4, 6.4, 1.6)]
+
+
+def build_fighter():
+    """A fighter dock: forward hangar block with two stacked launch mouths and rails, a
+    landing deck braced on columns, an aft control tower and fuel bunkers on the base."""
+    tier('Fighter platform base', 'base', FIGHTER_BASE)
+    tier('Fighter hangar block', 'base', FIGHTER_HANGAR, loc=(0, 8))
+    tier('Fighter control tower', 'base', FIGHTER_TOWER, loc=(0, -30))
+    tier('Tower shoulder low', 'trim', [(14, 8.4, 8.4, 2.2), (16, 7.6, 7.6, 2.0)], loc=(0, -30))
+    tier('Tower shoulder high', 'trim', [(30, 6.6, 6.6, 1.7), (32, 6.0, 6.0, 1.5)], loc=(0, -30))
+    tier('Tower crown', 'base', [(43, 4.6, 4.6, 1.3), (45.4, 5.4, 5.4, 1.5), (47.2, 3.6, 3.6, 1.0)],
+         loc=(0, -30))
+    for sx in (-1, 1):
+        for sz in (-1, 1):
+            beam('Tower corner fin', 'trim', (sx * 8.2, 10.0, -30 + sz * 8.2),
+                 (sx * 4.4, 40.0, -30 + sz * 4.4), 1.2)
+    for y, role, tube in ((12.0, 'trim', 1.2), (24.0, 'trim', 1.1), (34.0, 'lit', .5), (39.5, 'trim', .9)):
+        radius = section(FIGHTER_TOWER, y)[0] * 1.06
+        ring('Tower ledge ring', role, (0, y, -30), radius, tube, 8, 4, axis='y')
+
+    hangar_front = 8 + section(FIGHTER_HANGAR, 14)[1]
+    hangar_face = section(FIGHTER_HANGAR, 8)[0]
+    tower_face = section(FIGHTER_TOWER, 20)[0]
+
+    # Two stacked launch mouths with lit frames, and rails running forward.
+    for mouth_y in (5.0, 17.0):
+        box('Hangar launch mouth', 'dark', (0, mouth_y, hangar_front + .1), (17, 8, .8))
+        box('Hangar mouth frame top', 'lit', (0, mouth_y + 4.5, hangar_front + .05), (18, .6, .6))
+        box('Hangar mouth frame foot', 'lit', (0, mouth_y - 4.5, hangar_front + .05), (18, .6, .6))
+        for s in (-1, 1):
+            box('Hangar mouth frame side', 'cool', (s * 8.8, mouth_y, hangar_front + .05), (.6, 9.0, .6))
+            box('Launch mouth chevron', 'accent', (s * 5.6, mouth_y + 5.6, hangar_front - .3),
+                (5.0, .9, .6))
+        if mouth_y < 10:
+            box('Launch pier deck', 'base', (0, mouth_y - 5.6, 38.4), (17, 3.2, 10.8))
+            for s in (-1, 1):
+                beam('Launch pier rail', 'trim', (s * 8.8, mouth_y - 3.4, hangar_front - 1),
+                     (s * 8.8, mouth_y - 4.4, 43.4), 4.8)
+                box('Launch pier rail light', 'lit', (s * 8.8, mouth_y - 1.2, 38.4), (1.4, .6, 10.4))
+                box('Launch pier stop', 'dark', (s * 8.8, mouth_y - 3.8, 43.4), (3.8, 2.8, 2.2))
+            box('Launch pier nose light', 'cool', (0, mouth_y - 5.6, 43.8), (16, 1.4, .7))
+            box('Launch pier guide strip', 'lit', (0, mouth_y - 3.9, 38.4), (3.0, .4, 10.4))
+
+    # Hangar flank detail on the real section, plus service lights and the owner stripe.
+    for s in (-1, 1):
+        for i in range(5):
+            box('Hangar flank armour plate', 'trim', (s * (hangar_face + .5), -4 + i * 5.2, 8),
+                (1.6, 4.2, 30))
+            box('Hangar flank plate seam', 'dark', (s * (hangar_face + .6), -1.4 + i * 5.2, 8),
+                (1.9, .7, 30))
+        for i in range(3):
+            box('Hangar service light', 'lit', (s * (hangar_face + 1.0), 6 + i * 6, 22),
+                (1.0, 1.2, 6.0))
+        box('Hangar owner stripe', 'accent', (s * (hangar_face + .9), 22, 8), (1.2, 1.6, 34))
+        box('Hangar service door', 'dark', (s * (hangar_face + .4), 12.0, -8), (1.4, 7.0, 9.0))
+        box('Hangar vent bank', 'dark', (0, 25.2, 8 + s * 14), (16, .6, 6))
+
+    # Landing deck on columns, with edge lighting, markings and a gantry crane.
+    box('Fighter landing deck', 'base', (0, 27.5, 14), (60, 1.4, 32))
+    for sx in (-1, 1):
+        for sz in (-1, 1):
+            box('Deck support column', 'base', (sx * 22, 25.4, 14 + sz * 10), (2.8, 5.6, 2.8))
+            box('Deck column foot', 'trim', (sx * 22, 23.2, 14 + sz * 10), (4.4, 1.6, 4.4))
+    for s in (-1, 1):
+        box('Deck edge light', 'lit', (0, 28.4, 14 + s * 15.6), (58, .5, .8))
+        box('Deck edge light flank', 'lit', (s * 29.6, 28.4, 14), (.8, .5, 30))
+        box('Deck landing chevron', 'accent', (s * 9, 28.3, 14), (5.0, .4, 24))
+    box('Deck approach lens', 'cool', (0, 28.5, 29.0), (10, .6, 1.4))
+    box('Deck elevator housing', 'base', (0, 29.6, 4), (13.0, 2.6, 11.0))
+    box('Deck elevator well', 'dark', (0, 30.9, 4), (9.4, .5, 7.4))
+    box('Deck elevator rim', 'trim', (0, 30.6, 4), (11.6, 1.2, 9.6))
+    for sx in (-1, 1):
+        for sz in (-1, 1):
+            box('Deck elevator guide', 'trim', (sx * 5.2, 31.0, 4 + sz * 4.2), (.9, 1.6, .9))
+    for sx in (-1, 1):
+        for i in range(3):
+            box('Deck tie-down ring', 'dark', (sx * 17, 28.5, 12 + i * 6), (2.4, .5, 2.4))
+    for sx in (-1, 1):
+        box('Deck crane leg', 'trim', (sx * 20, 31.4, 22), (2.6, 8.0, 2.6))
+        box('Deck crane foot', 'dark', (sx * 20, 27.6, 22), (3.6, 1.0, 3.6))
+    box('Deck crane beam', 'trim', (0, 34.6, 22), (44, 1.8, 2.4))
+    box('Deck crane trolley', 'dark', (0, 33.0, 22), (6.0, 2.6, 4.0))
+    beam('Deck crane cable', 'dark', (0, 31.6, 22), (0, 30.0, 22), .6)
+    box('Deck crane hook', 'trim', (0, 29.6, 22), (2.6, 1.6, 2.6))
+
+    # Control tower detail, radar and mast.
+    for y in (10.0, 20.0, 30.0):
+        for s in (-1, 1):
+            box('Tower window band', 'lit', (s * (tower_face - .2), y, -30), (.6, 1.2, 5.2))
+    for i in range(4):
+        a = math.radians(i * 90)
+        px, _, pz = hull_point(FIGHTER_TOWER, 26.0, a, loc=(0, -30), inset=.2)
+        box('Tower gallery light', 'cool', (px, 26.0, pz), (1.6, .6, 1.6))
+    box('Tower radar mast', 'trim', (0, 47.4, -30), (1.6, 3.6, 1.6))
+    box('Tower radar array', 'trim', (0, 49.2, -30), (7.6, 2.6, 1.4))
+    box('Tower radar array face', 'dark', (0, 49.2, -30.9), (6.8, 2.0, .5))
+    box('Tower radar array light', 'cool', (0, 49.2, -31.2), (5.6, .8, .4))
+    for i, (dx, dz) in enumerate(((-2.6, -2.6), (2.6, 2.6))):
+        beam('Tower aerial', 'trim', (dx, 47.4, -30 + dz), (dx * 1.4, 50.4, -30 + dz * 1.4), .45)
+        box('Tower aerial tip', 'cool', (dx * 1.4, 50.6, -30 + dz * 1.4), (.8, .8, .8), .04)
+    box('Tower aft vent', 'dark', (0, 12.0, -40.4), (12, 8.0, .8))
+
+    # Fuel bunkers on the base flanks, strapped and piped to the hangar.
+    for s in (-1, 1):
+        cylinder('Fighter fuel bunker', 'trim', (s * 24, 6, -8), 5.0, 12.0, 14)
+        for i, y in enumerate((3.0, 9.0)):
+            ring('Fighter bunker strap', 'dark', (s * 24, y, -8), 5.1, .45, 18, 6, axis='y')
+        box('Fighter bunker cap', 'dark', (s * 24, 12.4, -8), (6.0, 1.6, 6.0))
+        beam('Fighter fuel pipe', 'dark', (s * 24, 11.0, -8), (s * 20, 14.0, 6), .8)
+        box('Fighter base machinery', 'trim', (s * 17, 2.0, -18), (7.0, 6.0, 8.0))
+
+
+# ---------------------------------------------------------------- repair dock
+
+REPAIR_FLOOR = [(-12.0, 26, 34, 8), (-5.0, 31, 40, 9), (0.0, 29, 37, 8)]
+
+
+def build_repair():
+    """A dry dock: long armoured floor, two high side walls braced across the top, open
+    repair bay with scaffold towers and clamps, and a gantry crane over the slipway."""
+    tier('Repair dock floor', 'base', REPAIR_FLOOR)
+    tier('Repair dock keel', 'base', [(-18.0, 18, 24, 6), (-14.0, 23, 30, 7), (-12.0, 26, 34, 8)])
+    for s in (-1, 1):
+        box('Repair keel armour band', 'trim', (0, -16.0, s * 20.0), (34, 3.2, 4.0))
+        box('Repair keel machinery', 'dark', (0, -14.6, s * 12.0), (22, 3.0, 5.0))
+    for s in (-1, 1):
+        box('Repair dock wall', 'base', (s * 25, 6, 0), (9, 24, 72))
+
+    # Floor detail: guide strips, mooring rails and skirt plating.
+    box('Repair bay liner', 'dark', (0, .1, 0), (34, .4, 70))
+    for i in range(7):
+        box('Repair slipway guide', 'lit', (0, .4, -30 + i * 10), (22, .5, .8))
+    for i in range(4):
+        box('Repair bay hazard stripe', 'accent', (0, .4, -33 + i * 22), (30, .5, 1.6))
+    for s in (-1, 1):
+        box('Repair mooring rail', 'dark', (s * 11, .5, 0), (1.6, .8, 66))
+        box('Repair floor armour edge', 'trim', (s * 27.4, -2.0, 0), (3.0, 6.0, 70))
+        for i in range(6):
+            box('Repair floor skirt plate', 'trim', (s * 28.4, -8.0, -30 + i * 12), (2.6, 7.0, 9.0))
+
+    # Side walls: armour plates outside, lit ports inside, cap rails along the top.
+    for s in (-1, 1):
+        box('Repair wall cap rail', 'trim', (s * 25, 18.4, 0), (8.4, 1.2, 70))
+        for i in range(6):
+            box('Repair wall armour plate', 'trim', (s * 29.4, -2 + i * 4.0, 0), (.8, 3.2, 64))
+            box('Repair wall port', 'cool', (s * 20.6, 1.5 + i * 3.0, 0), (.6, 1.6, 4.2))
+        box('Repair wall owner stripe', 'accent', (s * 29.3, 16.4, 0), (.7, 1.4, 58))
+        for i in range(4):
+            box('Repair wall buttress', 'base', (s * 29.0, 10.0, -30 + i * 20), (3.4, 10.0, 5.0))
+
+    # Cross bracing over the open top, so the two walls read as one dock.
+    for i in range(3):
+        z = -32 + i * 30
+        beam('Repair dock cross brace', 'trim', (-21.5, 18.2, z), (21.5, 18.2, z), 1.6)
+        beam('Repair dock cross stay', 'dark', (-21.0, 13.0, z), (21.0, 13.0, z), .9)
+    for i in range(3):
+        ring('Repair cradle rib', 'trim', (0, 6.0, -24 + i * 24), 11.0, 1.4, 18, 6, axis='z')
+        ring('Repair cradle rib light', 'lit', (0, 6.0, -24 + i * 24), 9.6, .35, 18, 6, axis='z')
+        box('Repair cradle saddle', 'dark', (0, -1.0, -24 + i * 24), (10.0, 2.4, 2.6))
+    for s in (-1, 1):
+        for i in range(3):
+            box('Repair floodlight mast', 'trim', (s * 20.8, 14.6, -22 + i * 22), (1.0, 5.0, 1.0))
+            box('Repair floodlight head', 'cool', (s * 20.8, 17.4, -22 + i * 22), (2.4, 1.4, 2.4))
+
+    # Scaffold towers and clamp arms inside the bay.
+    for sx in (-1, 1):
+        for sz in (-1, 1):
+            box('Repair scaffold tower', 'base', (sx * 12, 4, sz * 14), (2.8, 16, 2.8))
+            box('Repair scaffold footing', 'dark', (sx * 12, -3.0, sz * 14), (4.2, 2.0, 4.2))
+            beam('Repair clamp arm', 'trim', (sx * 20.8, 12, sz * 14), (sx * 7.0, 12, sz * 14), 1.6)
+            box('Repair clamp head', 'dark', (sx * 6.4, 12, sz * 14), (3.4, 2.8, 4.4))
+            box('Repair clamp light', 'cool', (sx * 5.2, 12, sz * 14), (.5, 1.2, 1.6))
+            box('Repair scaffold platform', 'trim', (sx * 12, 12.4, sz * 14), (5.6, .8, 5.6))
+        beam('Repair scaffold tie', 'trim', (sx * 12, 8.5, -14), (sx * 12, 8.5, 14), 1.2)
+
+    # Gantry crane across the slipway.
+    for s in (-1, 1):
+        box('Repair gantry leg', 'trim', (s * 21.5, 24.0, 2), (3.6, 10.0, 3.6))
+        box('Repair gantry foot', 'dark', (s * 21.5, 19.4, 2), (5.2, 1.2, 5.2))
+    box('Repair gantry beam', 'trim', (0, 29.4, 2), (48, 2.4, 2.6))
+    box('Repair gantry trolley', 'dark', (0, 27.6, 2), (6.0, 2.6, 4.2))
+    beam('Repair gantry cable', 'dark', (0, 26.2, 2), (0, 20.4, 2), .6)
+    box('Repair gantry hook', 'trim', (0, 19.6, 2), (2.8, 1.6, 2.8))
+    box('Repair gantry beacon', 'cool', (0, 30.8, 2), (1.6, .8, 1.6), .04)
+
+    # Control cab on the starboard wall, dock mouth and aft throat.
+    box('Repair control cab', 'base', (28.5, 21.0, 24), (8.0, 6.0, 10.0))
+    box('Repair control cab roof', 'trim', (28.5, 24.4, 24), (8.6, .8, 10.6))
+    box('Repair control cab window', 'lit', (32.6, 21.6, 24), (.5, 2.4, 7.0))
+    box('Repair control cab lamp', 'cool', (28.5, 24.0, 29.2), (3.0, .5, .8))
+    for s in (-1, 1):
+        box('Repair dock mouth jamb', 'base', (s * 21.6, 6.0, 36.0), (3.0, 24, 6.4))
+        box('Repair dock mouth jamb light', 'cool', (s * 19.6, 6.0, 38.8), (.5, 22, .5))
+    box('Repair dock mouth head', 'base', (0, 15.4, 36.0), (46.2, 4.0, 6.4))
+    box('Repair dock mouth head light', 'lit', (0, 13.0, 38.8), (39, .5, .5))
+    box('Repair dock mouth sill', 'lit', (0, -3.4, 38.8), (39, .6, .6))
+    box('Repair dock aft throat', 'dark', (0, 4.0, -37.4), (18, 10, .8))
+    box('Repair dock aft hazard bar', 'accent', (0, -6.0, -37.2), (18, 1.2, .7))
+
+    # Service gantries, walkway rails, conduits and close-defence mounts on the walls.
+    for s in (-1, 1):
+        for i in range(6):
+            z = -30 + i * 12
+            box('Repair walkway post', 'trim', (s * 25, 19.6, z), (.5, 1.8, .5))
+        box('Repair walkway rail', 'trim', (s * 25, 20.3, 0), (.5, .5, 66))
+        for i in range(5):
+            beam('Repair wall gantry', 'trim', (s * 20.4, 14.0, -28 + i * 14), (s * 8.0, 14.0, -28 + i * 14), 1.0)
+            box('Repair gantry lamp', 'lit', (s * 12.0, 13.4, -28 + i * 14), (1.2, .5, 1.2))
+        for i in range(4):
+            box('Repair wall rib plate', 'trim', (s * 20.5, 2 + i * 4.6, -20), (.5, 3.2, 34))
+        box('Repair plasma conduit', 'dark', (s * 26.6, 17.0, 0), (1.2, 1.2, 62))
+        for i in range(3):
+            box('Repair wall vent bank', 'dark', (s * 29.4, 12.0, -18 + i * 18), (.8, 2.0, 6.0))
+        point_turret('Repair aft turret', (s * 25, 22.4, 25), .55)
+        point_turret('Repair fore turret', (s * 25, 22.4, -25), .55)
+    for i in range(8):
+        box('Repair floor cross rib', 'trim', (0, .2, -33 + i * 9.4), (20, .6, 1.2))
+    for s in (-1, 1):
+        for i in range(3):
+            box('Repair slipway bumper', 'dark', (s * 13.6, 1.2, -22 + i * 22), (2.4, 1.6, 3.0))
+
+
+# ---------------------------------------------------------------- energy relay
+
+RELAY_BASE = [(-16.0, 28, 32, 7), (-10.0, 34, 37, 9), (-3.0, 32, 35, 8)]
+RELAY_MAST = [(-3, 13, 12, 3.2), (8, 11.5, 10.5, 2.8), (18, 10, 9, 2.4),
+              (27, 7.5, 6.5, 1.8), (34, 4.2, 3.8, 1.0)]
+RELAY_PYLON = [(-18, 6.5, 6.5, 1.8), (0, 5.7, 5.7, 1.6), (20, 4.7, 4.7, 1.3), (30, 3.2, 3.2, .8)]
+
+
+def build_relay():
+    """An energy relay: broad armoured plinth, central emitter mast under a bowl dish, four
+    insulator pylons outside the mast, and a horizontal collector ring fed by every pylon."""
+    tier('Relay armoured base', 'base', RELAY_BASE, loc=(0, 7))
+    tier('Relay emitter mast', 'base', RELAY_MAST, loc=(0, 9))
+    tier('Relay mast shoulder low', 'trim', [(10, 12.4, 11.4, 2.9), (12, 11.6, 10.6, 2.7)], loc=(0, 9))
+    tier('Relay mast shoulder high', 'trim', [(24, 8.2, 7.2, 1.9), (26, 7.6, 6.6, 1.7)], loc=(0, 9))
+    tier('Relay crown platform', 'base', [(33, 6.2, 5.8, 1.6), (35, 7.0, 6.6, 1.8), (36.4, 4.4, 4.2, 1.1)],
+         loc=(0, 9))
+    for sx in (-1, 1):
+        for sz in (-1, 1):
+            beam('Relay mast corner fin', 'trim', (sx * 11.5, 4.0, 9 + sz * 10.5),
+                 (sx * 5.2, 31.0, 9 + sz * 4.8), 1.3)
+
+    # Plinth detail: skirt bands, conduit strips, vents and buttresses.
+    base_face = section(RELAY_BASE, -8.0)[0]
+    for s in (-1, 1):
+        for i in range(4):
+            box('Relay plinth armour band', 'trim', (s * (base_face - .4), -12 + i * 3.0, 0), (.8, 2.4, 54))
+        box('Relay plinth owner stripe', 'accent', (s * (base_face - .2), -6.0, 0), (.5, 1.3, 40))
+        box('Relay conduit strip', 'lit', (s * 14, -2.6, 0), (1.2, .6, 46))
+        for i in range(5):
+            box('Relay plinth buttress', 'base', (s * (base_face - 3.0), -6.0, -22 + i * 11), (6.0, 12.0, 6.0))
+    for sx in (-1, 1):
+        for pz in (-22.0, 36.0):
+            box('Relay pylon footing', 'base', (sx * 31, -15.0, pz), (17.0, 5.0, 17.0))
+    for i in range(8):
+        a = math.radians(i * 45)
+        vx, _, vz = hull_point(RELAY_BASE, -16.0, a, loc=(0, 7), inset=.4)
+        box('Relay base vent bank', 'dark', (vx, -16.0, vz), (4.2, .8, 5.0))
+
+    # Mast detail: window bands, radiator plates and the crown collar.
+    for y in (6.0, 14.0, 22.0):
+        face = section(RELAY_MAST, y)[0]
+        for s in (-1, 1):
+            box('Relay mast window band', 'lit', (s * (face - .2), y, 9), (.6, 1.2, 5.0))
+            box('Relay mast radiator plate', 'trim', (0, y + 3.0, 9 + s * (section(RELAY_MAST, y + 3.0)[1] - .2)),
+                (10.0, 5.0, .7))
+    box('Relay mast collar', 'trim', (0, 25.0, 9), (14.0, 1.6, 12.0))
+
+    # Collector ring with cardinal and diagonal spokes.
+    ring('Relay collector ring', 'trim', (0, 24, 7), 29, 1.7, 44, 8, axis='y')
+    for s in (-1, 1):
+        beam('Relay ring spoke', 'trim', (s * 8.0, 24, 7), (s * 29, 24, 7), 1.6)
+        for t in (-1, 1):
+            beam('Relay ring spoke diagonal', 'trim', (s * 6.0, 24, 7 + t * 6.0),
+                 (s * 20.5, 24, 7 + t * 20.5), 1.4)
+    for i in range(8):
+        a = math.radians(i * 45)
+        box('Relay ring lamp', 'cool', (29 * math.cos(a), 25.9, 7 + 29 * math.sin(a)), (1.4, .9, 1.4))
+
+    # Four insulator pylons, each cabled to the nearest point on the ring.
+    for sx in (-1, 1):
+        for pz in (-22.0, 36.0):
+            tier('Relay insulator pylon', 'base', RELAY_PYLON, loc=(sx * 31, pz))
+            box('Relay pylon cap', 'trim', (sx * 31, 30.6, pz), (7.0, 1.6, 7.0))
+            for y in (24.0, 27.0):
+                ring('Relay insulator ring', 'dark', (sx * 31, y, pz), 4.4, .45, 18, 6, axis='y')
+            box('Relay insulator block', 'dark', (sx * 31, 31.8, pz), (4.0, 2.4, 4.0))
+            dx, dz = sx * 31 - 0.0, pz - 7.0
+            length = math.hypot(dx, dz)
+            tx, tz = 29 * dx / length, 7 + 29 * dz / length
+            beam('Relay pylon cable', 'dark', (sx * 31, 30.0, pz), (tx, 24.6, tz), .8)
+            box('Relay pylon cable clamp', 'trim', (tx, 24.6, tz), (2.2, 1.4, 2.2))
+
+    # Emitter bowl on the mast crown, lit rim and beacon.
+    bowl('Relay emitter bowl', 'trim', (0, 37.2, 9), 6.6, 2.6, 18, axis='y')
+    ring('Relay emitter rim light', 'lit', (0, 37.6, 9), 6.1, .45, 28, 6, axis='y')
+    box('Relay emitter feed glow', 'cool', (0, 36.8, 9), (5.2, .6, 5.2))
+    for i in range(4):
+        a = math.radians(45 + i * 90)
+        box('Relay deck machinery', 'trim', (26 * math.cos(a), -1.0, 7 + 20 * math.sin(a)), (7.0, 5.0, 8.0))
+
+
 ROWS = (
     dict(key='research', label='IMPERIAL RESEARCH STATION', binding='imperial:research_station',
          asset='prototype:imperial/research_station',
@@ -900,6 +1323,30 @@ ROWS = (
          export=Path('visual_packs/imperium-sensor-prototype/assets/models/sensor.mesh.json'),
          envelope=((-37.0, -23.0, -30.387721), (37.0, 62.355496, 30.387721)),
          build=build_sensor),
+    dict(key='trade', label='IMPERIAL TRADE STATION', binding='imperial:trade_station',
+         asset='prototype:imperial/trade_station',
+         master=Path('art/blender/imperium_trade_prototype.blend'),
+         export=Path('visual_packs/imperium-trade-prototype/assets/models/trade.mesh.json'),
+         envelope=((-63.53675, -8.605, -63.53675), (63.53675, 51.5, 63.53675)),
+         build=build_trade),
+    dict(key='fighter', label='IMPERIAL FIGHTER PLATFORM', binding='imperial:fighter_platform',
+         asset='prototype:imperial/fighter_platform',
+         master=Path('art/blender/imperium_fighter_prototype.blend'),
+         export=Path('visual_packs/imperium-fighter-prototype/assets/models/fighter.mesh.json'),
+         envelope=((-33.0, -11.5, -42.0), (33.0, 53.5, 44.0)),
+         build=build_fighter),
+    dict(key='repair', label='IMPERIAL REPAIR DOCK', binding='imperial:repair_dock',
+         asset='prototype:imperial/repair_dock',
+         master=Path('art/blender/imperium_repair_prototype.blend'),
+         export=Path('visual_packs/imperium-repair-prototype/assets/models/repair.mesh.json'),
+         envelope=((-34.5, -20.0, -42.5), (34.5, 29.0, 42.5)),
+         build=build_repair),
+    dict(key='relay', label='IMPERIAL ENERGY RELAY', binding='imperial:energy_relay',
+         asset='prototype:imperial/energy_relay',
+         master=Path('art/blender/imperium_relay_prototype.blend'),
+         export=Path('visual_packs/imperium-relay-prototype/assets/models/relay.mesh.json'),
+         envelope=((-41.736688, -20.5, -28.0), (41.736688, 38.0, 46.75)),
+         build=build_relay),
 )
 
 

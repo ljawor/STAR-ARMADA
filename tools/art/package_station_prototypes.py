@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Package the three Imperial station prototypes as visual packs.
+"""Package the Imperial station prototypes as visual packs.
 
 Reads each generated runtime mesh, computes its content revision the same way
 `render/asset_registry.py` does, and writes the manifest, pack descriptor and SOURCE
@@ -35,6 +35,34 @@ ROWS = (
          label='Sensor Station',
          design='armoured base with twin sensor drums, braced lattice mast, great vertical scanner '
                 'hoop with clamp ribs, and a dish-and-antenna crown'),
+    dict(key='trade', pack='imperium-trade-prototype', pack_id='prototype:imperial_trade',
+         binding='imperial:trade_station', asset='prototype:imperial/trade_station',
+         mesh='assets/models/trade.mesh.json', stem='trade',
+         display='Galactic Imperium Trade Station — visual prototype (unapproved)',
+         label='Trade Station',
+         design='broad market plinth with four landing pads and cargo arms, stepped exchange tower '
+                'with ledges and a crown aerial cluster, raised gallery ring on braced pylons'),
+    dict(key='fighter', pack='imperium-fighter-prototype', pack_id='prototype:imperial_fighter',
+         binding='imperial:fighter_platform', asset='prototype:imperial/fighter_platform',
+         mesh='assets/models/fighter.mesh.json', stem='fighter',
+         display='Galactic Imperium Fighter Platform — visual prototype (unapproved)',
+         label='Fighter Platform',
+         design='hangar block with two lit launch mouths and trough rails, flanking deck platform '
+                'with chevrons and an elevator, straight control tower with radar array crown'),
+    dict(key='repair', pack='imperium-repair-prototype', pack_id='prototype:imperial_repair',
+         binding='imperial:repair_dock', asset='prototype:imperial/repair_dock',
+         mesh='assets/models/repair.mesh.json', stem='repair',
+         display='Galactic Imperium Repair Station — visual prototype (unapproved)',
+         label='Repair Dock',
+         design='long armoured slipway floor with guide strips, two high braced side walls with '
+                'lit ports and armour plates, three cradle ribs, gantry crane and a control cab'),
+    dict(key='relay', pack='imperium-relay-prototype', pack_id='prototype:imperial_relay',
+         binding='imperial:energy_relay', asset='prototype:imperial/energy_relay',
+         mesh='assets/models/relay.mesh.json', stem='relay',
+         display='Galactic Imperium Energy Relay — visual prototype (unapproved)',
+         label='Energy Relay',
+         design='wide armoured base with four insulator pylons, collector ring on cables, stepped '
+                'emitter mast with corner fins and a crown platform carrying the feed bowl'),
 )
 
 MIN_ENGINE = '0.16.0'
