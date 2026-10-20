@@ -1,0 +1,111 @@
+{
+  "approval_kind": "prototype-appearance-and-pr-landing",
+  "recorded_utc": "2026-10-20T12:03:27.264557+00:00",
+  "owner_words_verbatim": "Everything looks perfect. Well done. Please do a PR, commit it  and merge. We can skipp the CI for this PR.",
+  "reviewed_revision_commit": "255aaba7a121a5573ba00e7cfcce6f903c4d42ff",
+  "assets": [
+    {
+      "display_name": "Vigil Corvette",
+      "data_id": "imperial_corvette",
+      "binding": "imperial:corvette",
+      "mesh": "visual_packs/vigil-prototype/assets/models/vigil.mesh.json",
+      "triangle_count": 8456,
+      "sha256": {
+        "visual_packs/vigil-prototype/assets/models/vigil.mesh.json": "3b1649ce032014875504cf9d6cc60f26c8410ed57058991321c6e129c4f3ca3b",
+        "tools/art/build_vigil_prototype.py": "f38343910c47c3d4efc80928d07972179359412ad4493f150d53bcda5ef10093",
+        "art/blender/vigil_prototype.blend": "b9417b449d584609f4a479e394548a3104b2bbeb4a601ae9e76801888511e90a",
+        "visual_packs/vigil-prototype/visual-pack.json": "9b8f3c48a434d13b27831a487381dcbfb721029aacae1290ea251c124ff0b3a1",
+        "visual_packs/vigil-prototype/assets/models/manifests/vigil.json": "49a9967bccc04c0645773938074c2ce7c596fc84fa5e93202168f9ff72c50d2e"
+      }
+    },
+    {
+      "display_name": "Galactic Imperium Command Center",
+      "data_id": "command_station",
+      "binding": "imperial:command_station",
+      "mesh": "visual_packs/imperium-command-prototype/assets/models/command.mesh.json",
+      "triangle_count": 11012,
+      "sha256": {
+        "visual_packs/imperium-command-prototype/assets/models/command.mesh.json": "80128b5bb3d03bee8c630a291ec8299d51dceb59f36b4aef0dd24cc6add9019d",
+        "tools/art/build_command_center_prototype.py": "b5be7b7e54c90594914de59685aee54438890b6dfbffbb90b1d7294d95919cf2",
+        "art/blender/imperium_command_prototype.blend": "0d29e35bb9117be016a91b1156dc56f3e673416a75e69d302facc8e2b867fcbb",
+        "visual_packs/imperium-command-prototype/visual-pack.json": "279ad978a87a9cd434eb033b37bcf1a72722965107c25a03931369c48e520a22",
+        "visual_packs/imperium-command-prototype/assets/models/manifests/command.json": "6cc20cb3e0b9d79e273be8035c92f18f4ca72e81c81fad5b3b219e01bc691684"
+      }
+    },
+    {
+      "display_name": "Imperial Shipyard",
+      "data_id": "shipyard",
+      "binding": "imperial:shipyard",
+      "mesh": "visual_packs/imperium-shipyard-prototype/assets/models/shipyard.mesh.json",
+      "triangle_count": 10988,
+      "sha256": {
+        "visual_packs/imperium-shipyard-prototype/assets/models/shipyard.mesh.json": "c2f6488ceec01040c089ba0c61c1e3745787621107ae897c7cc7bb6d2644924b",
+        "tools/art/build_shipyard_prototype.py": "ee66807d64e04e04d6d82e6bc622bdc30b62e0d54baad498bda0e76d418c6380",
+        "art/blender/imperium_shipyard_prototype.blend": "9be2b1fe18078cfd934350a7f6629cd4c3d77c3ffdef09b32f892012ef710286",
+        "visual_packs/imperium-shipyard-prototype/visual-pack.json": "1c90f715a4d0e3cccce760f59a1a327e04583c69717f162cbeee227c7fa6f8e0",
+        "visual_packs/imperium-shipyard-prototype/assets/models/manifests/shipyard.json": "3b7ee53c4aeef6ca626092944f9040aaeb3c75b76ac206f0a2a53b437b74ed5d"
+      }
+    },
+    {
+      "display_name": "Imperial Mining Station",
+      "data_id": "mining_station",
+      "binding": "imperial:mining_station",
+      "mesh": "visual_packs/imperium-mining-prototype/assets/models/mining.mesh.json",
+      "triangle_count": 8564,
+      "sha256": {
+        "visual_packs/imperium-mining-prototype/assets/models/mining.mesh.json": "9cd778013b14b98c833009711f2b4385ec48d57c857ddc3050fe4a0bddbc9664",
+        "tools/art/build_mining_prototype.py": "15dba1bb9f7dad0a4b9f252f71accf87a147637b27a53f4241506e87f43b9f8c",
+        "art/blender/imperium_mining_prototype.blend": "e122d59c093a550225036e4a4b2a165599e2d46a923cb78c70891bf9f13768b5",
+        "visual_packs/imperium-mining-prototype/visual-pack.json": "8453de7e91102854c60bcb3ecd5e6dee1d517c72fe965c957d5a6903dd89df1d",
+        "visual_packs/imperium-mining-prototype/assets/models/manifests/mining.json": "d99d78ddc34e5d64b5dc90b854b64c3febf95acca1f2e002b968dbd2feaf6eb4"
+      }
+    },
+    {
+      "display_name": "Talon Interceptor Squadron",
+      "data_id": "imperial_tie_squadron",
+      "binding": "imperial:fighter",
+      "mesh": "visual_packs/imperium-talon-prototype/assets/models/talon.mesh.json",
+      "triangle_count": 4304,
+      "sha256": {
+        "visual_packs/imperium-talon-prototype/assets/models/talon.mesh.json": "0831eaff1c5870bccaa33e81fa801f2b2cf01f5208a9523cbd755ec99cb6bf20",
+        "tools/art/build_talon_prototype.py": "5c335986f249c0f36280b4a1d648b24b8072fa09ae9ec5218c73847b83bd3f51",
+        "art/blender/imperium_talon_prototype.blend": "ed7811a04e9d5a9df6a25b8882eb5dc8c8bca9970d24168ffd416b798831bf2b",
+        "visual_packs/imperium-talon-prototype/visual-pack.json": "c32b136c27dea6122e8ed1b912b862e39f7e4dbccb7464278189f9124ce7357c",
+        "visual_packs/imperium-talon-prototype/assets/models/manifests/talon.json": "ca0f46611724253256ce2e09d69cb4c17fc287f4c813abc1104dfcf2e9274d09"
+      }
+    },
+    {
+      "display_name": "Engineering Corps Corvette",
+      "data_id": "imperial_constructor",
+      "binding": "imperial:constructor",
+      "mesh": "visual_packs/imperium-engineer-prototype/assets/models/engineer.mesh.json",
+      "triangle_count": 8420,
+      "sha256": {
+        "visual_packs/imperium-engineer-prototype/assets/models/engineer.mesh.json": "840718f9eb5021afe4cf2cc01fd35d77b500669d9c4931407227f72c81188bd3",
+        "tools/art/build_engineer_prototype.py": "caaa4d6ebc0630e41b8c61fe9f949778ade56cbdaabf3d52b83bbf338b89436a",
+        "art/blender/imperium_engineer_prototype.blend": "7021cafdc8a16e3b69427bd6d45c7340f792655a4dbf1471df71725b36e7c66f",
+        "visual_packs/imperium-engineer-prototype/visual-pack.json": "fa639362c419e20971cf1804ce67d6c361eb11ebfc35875fc7d8d424b0484338",
+        "visual_packs/imperium-engineer-prototype/assets/models/manifests/engineer.json": "ac5863100b73f98465be4d001fa1aa4987efe5f382ed91d4dd107abd35e42454"
+      }
+    }
+  ],
+  "renderer_sha256": "9aff34140aa3d458eec358a2d87e64d4d4277c924ca198d507e4d29983350f3c",
+  "execution_authority": {
+    "pull_request": 141,
+    "commit_push_and_merge": true,
+    "ci_waiver": "This PR only; use skip marker on branch and squash merge commits. No repository-wide workflow or protection changes."
+  },
+  "supersedes_historical_review_boundary": [
+    "artifacts/command-center-prototype/README.md",
+    "artifacts/imperial-industry-prototypes/README.md",
+    "artifacts/imperial-flight-prototypes/README.md",
+    "visual_packs/*/SOURCE.md pending-review/local-only descriptions"
+  ],
+  "not_approved_by_this_decision": [
+    "default catalogue activation",
+    "installed application replacement",
+    "tag/package/release",
+    "fleet performance acceptance",
+    "further artwork beyond these six revisions"
+  ]
+}
