@@ -2,13 +2,13 @@
   "contract": "star-armada/model-manifest",
   "contract_major": 1,
   "asset": "prototype:imperial/research_station",
-  "revision": "aaebb57b749cba0933103a969ebffcd7f78eace80c0f0f467a524ab52013e4de",
+  "revision": "1c1b6f4218138b5a35d5f0703acb7efa271e7f76f211a8544b81e797d9bfa0ee",
   "display_name": "Galactic Imperium Research Station \u2014 visual prototype (unapproved)",
   "files": {
     "mesh": {
       "path": "assets/models/research.mesh.json",
-      "sha256": "f86d34eee7f46f9bb6fd7d8e4ac29e73792c550f298d2a90b7925d648fe8d2ab",
-      "bytes": 346406
+      "sha256": "7b478b1ef3b5dbbc144e625e3aa377d79a496e9572c2f0420abdc140f104d324",
+      "bytes": 336899
     }
   },
   "export": {
@@ -23,14 +23,14 @@
   ],
   "bounds": {
     "min": [
-      -60.8951607,
+      -60.8951645,
       -14.9861736,
       -41.499897
     ],
     "max": [
-      60.8951607,
+      60.8951645,
       40.2916107,
-      63.9736137
+      63.9736176
     ]
   },
   "nominal_scale": 1.0,
@@ -54,7 +54,7 @@
     "material_profile": "core:fleet/standard"
   },
   "budgets": {
-    "triangles": 5426,
+    "triangles": 5318,
     "draw_calls": 6,
     "texture_bytes": 0
   }

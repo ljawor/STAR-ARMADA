@@ -1,10 +1,10 @@
 {
   "approval_kind": "prototype-appearance-and-pr-landing",
-  "recorded_utc": "2026-10-20T13:38:12.657840+00:00",
-  "owner_words_verbatim": "Looks perfect.",
+  "recorded_utc": "2026-10-20T14:48:08.876990+00:00",
+  "owner_words_verbatim": "Looking good. You can commit and make it default on local and PR.",
   "question_answered": "Do the three Imperial station prototypes look right in the live game?",
-  "reviewed_revision_commit": "7b920e1f2d422e578c69fc9c8342d89c3ca1e633",
-  "reviewed_worktree_state": "The three station packs were uncommitted in the working tree when the owner reviewed the live match; the bytes he saw are pinned by the sha256 map below, not by a commit that existed at review time.",
+  "reviewed_revision_commit": "fcc3fb519c9bd78f5bc83df4957b773d9a202a9b",
+  "reviewed_worktree_state": "Station packs are committed at fcc3fb5; the surface-fit fix the owner reviewed here sits on top of it in the working tree and is pinned by the sha256 map below.",
   "review_method": "Live production game window (tools/play_station_prototypes.py, stock Imperial skirmish with one of each station, isolated profile), plus real-renderer frames captured through the same launcher (--verify-out) and Cycles orthographic review renders.",
   "renderer_sha256": "9aff34140aa3d458eec358a2d87e64d4d4277c924ca198d507e4d29983350f3c",
   "execution_authority": {
@@ -22,29 +22,31 @@
       "pack": "imperium-research-prototype",
       "pack_id": "prototype:imperial_research",
       "mesh": "visual_packs/imperium-research-prototype/assets/models/research.mesh.json",
-      "triangle_count": 5426,
-      "parts": 334,
+      "triangle_count": 5318,
+      "parts": 325,
       "bounds": [
         [
-          -60.8951607,
+          -60.8951645,
           -14.9861736,
           -41.499897
         ],
         [
-          60.8951607,
+          60.8951645,
           40.2916107,
-          63.9736137
+          63.9736176
         ]
       ],
       "sha256": {
-        "visual_packs/imperium-research-prototype/assets/models/research.mesh.json": "f86d34eee7f46f9bb6fd7d8e4ac29e73792c550f298d2a90b7925d648fe8d2ab",
-        "tools/art/build_imperial_station_prototypes.py": "c8bc28ac3823ea9505eb49c844039f1189d0a36a0ee47648b15bb074a0a22d54",
-        "art/blender/imperium_research_prototype.blend": "165e742edd728ee65c605013751f8538250d1aeca1acb1c555933f4b180f9a50",
+        "visual_packs/imperium-research-prototype/assets/models/research.mesh.json": "7b478b1ef3b5dbbc144e625e3aa377d79a496e9572c2f0420abdc140f104d324",
+        "tools/art/build_imperial_station_prototypes.py": "71aad0f93daaad226c18376cfee4e61c4fb725221c09a9c08aa49e2a944f7b24",
+        "art/blender/imperium_research_prototype.blend": "bdd8e5ba8d9be16f4e24c1483ebba426370a6591522db314fd6600b324928a29",
         "visual_packs/imperium-research-prototype/visual-pack.json": "8e9b3c741d584d47db829c7b2db6072c9aaa8b6b5cc2809b941ba97def3c07c3",
-        "visual_packs/imperium-research-prototype/assets/models/manifests/research.json": "7e077c1d4ef47bd1b19f9f1ce05c9fece9d1b77d0f511c4772212aab7b3b9402"
+        "visual_packs/imperium-research-prototype/assets/models/manifests/research.json": "a54bc4cc6e8f5385bce021b448babea89b708b921c2a8fe7324d8fb45e3fdee3"
       },
       "in_game_capture": "artifacts/imperial-stations-review/research-in-game.png",
-      "in_game_capture_sha256": "acff824ab17fd95367fc7b3cfa10b326d563e5efa2f4acd183b868afe3eea72d"
+      "in_game_capture_sha256": "4b3dbaed9e67a8a8da2c740e485bef2f14a51cc5b8bdc37d3494d4daa25461a3",
+      "blender_render": "artifacts/imperial-stations-review/research-blender.png",
+      "blender_render_sha256": "ba300edf34ef81e9aebfd88cf5484844c389255c026344a45ef92d8ffd3e61f8"
     },
     {
       "display_name": "Defence Platform",
@@ -57,25 +59,27 @@
       "parts": 266,
       "bounds": [
         [
-          -41.0869446,
+          -42.1318779,
           -13.4913759,
           -44.2364807
         ],
         [
-          41.0869446,
+          42.1318779,
           20.991375,
           44.2364807
         ]
       ],
       "sha256": {
-        "visual_packs/imperium-defense-prototype/assets/models/defense.mesh.json": "d49df878670d1301487a099d9852e4e05bffb6e0400068c4f233138a64b740a6",
-        "tools/art/build_imperial_station_prototypes.py": "c8bc28ac3823ea9505eb49c844039f1189d0a36a0ee47648b15bb074a0a22d54",
-        "art/blender/imperium_defence_prototype.blend": "eb390dd4c2178799fe350906f5987c47c071010e79cfd152657945c1ea3e54be",
+        "visual_packs/imperium-defense-prototype/assets/models/defense.mesh.json": "003683cf43c4c0fc6bd90ee7ed11a492ad93126d9b6668b055f7d39bb5c83c58",
+        "tools/art/build_imperial_station_prototypes.py": "71aad0f93daaad226c18376cfee4e61c4fb725221c09a9c08aa49e2a944f7b24",
+        "art/blender/imperium_defence_prototype.blend": "0632ea70aba5466368b4e2fc04ef0bf3952c24d9dc4898e749753c9661674753",
         "visual_packs/imperium-defense-prototype/visual-pack.json": "aea40fe48be921bb17dc54a110d005dcf3555fb6269fa773e143324f1899e563",
-        "visual_packs/imperium-defense-prototype/assets/models/manifests/defense.json": "22739dcf31425af5c576f3e38b85990e7af81512feecd9212ecee1dbec915f41"
+        "visual_packs/imperium-defense-prototype/assets/models/manifests/defense.json": "2aacdbe5b52b9b435958abaf9c4a994cc7f5eb80382eafd8b80854194442ab6f"
       },
       "in_game_capture": "artifacts/imperial-stations-review/defence-in-game.png",
-      "in_game_capture_sha256": "f05d402dcb4defaaeb7a8b6e1745c8d860ec3cc7754ba1c2ee4ed14911a8ebd0"
+      "in_game_capture_sha256": "ac9c095f2ff4e9984a8b6ed16f7f0a7e7a2b7490b6bd82b7295eb09250067d5e",
+      "blender_render": "artifacts/imperial-stations-review/defence-blender.png",
+      "blender_render_sha256": "f27b9a90a38a3fb167d39850ce08030250bc7cdb01526921596fd017deed1401"
     },
     {
       "display_name": "Sensor Station",
@@ -99,14 +103,16 @@
         ]
       ],
       "sha256": {
-        "visual_packs/imperium-sensor-prototype/assets/models/sensor.mesh.json": "a13c384843afa9ac7ed0e4010ea2f3a58cb3bbbc49dea46ba6b4575c61338aba",
-        "tools/art/build_imperial_station_prototypes.py": "c8bc28ac3823ea9505eb49c844039f1189d0a36a0ee47648b15bb074a0a22d54",
-        "art/blender/imperium_sensor_prototype.blend": "0084b0fd4ca4c4f02c9f3b678e2f49d0d746f003129425b783e1c1b8535bdf48",
+        "visual_packs/imperium-sensor-prototype/assets/models/sensor.mesh.json": "d26a6811ce475eb8879a7b2a16ce1eed746d0b0507f85ba16b33200150a11b02",
+        "tools/art/build_imperial_station_prototypes.py": "71aad0f93daaad226c18376cfee4e61c4fb725221c09a9c08aa49e2a944f7b24",
+        "art/blender/imperium_sensor_prototype.blend": "26c37a36db8962e22541c1962b2706a95cd9819503ae7e3683f0be6c223ee561",
         "visual_packs/imperium-sensor-prototype/visual-pack.json": "65b8abd56d49714c65d80c75e0b1af74c514e60b865bf52247111e32709cc845",
-        "visual_packs/imperium-sensor-prototype/assets/models/manifests/sensor.json": "478c3f140f81ce44f45a53377c50730ff5f6a0188917f06858cd6b655da985d9"
+        "visual_packs/imperium-sensor-prototype/assets/models/manifests/sensor.json": "42005f1a1b825dfbf6984404a7dac9cc904c5f8c30812be594bbf3aa3fc62ca6"
       },
       "in_game_capture": "artifacts/imperial-stations-review/sensor-in-game.png",
-      "in_game_capture_sha256": "c84dcff39826f15514be05ef8afaeb70d841c6cec77b502a8d1311684a0bafb2"
+      "in_game_capture_sha256": "af378b2d9eb2a35295995858070d20a492128265c7d5bd4c73b6a576aca2b452",
+      "blender_render": "artifacts/imperial-stations-review/sensor-blender.png",
+      "blender_render_sha256": "9bef897e7cfa233303e37e96053b0cedbe521b2918b050dcc714dc92373bd5b3"
     }
   ],
   "not_approved_by_this_decision": [
@@ -116,5 +122,31 @@
     "packaging / frozen-bundle delivery of packs",
     "any faction other than the Galactic Imperium",
     "any gameplay, size, collision or simulation change"
-  ]
+  ],
+  "revision_history": [
+    {
+      "revision": 1,
+      "recorded_utc": "2026-10-20T13:38:12.657840+00:00",
+      "owner_words_verbatim": "Looks perfect.",
+      "change": "first station batch: three prototypes authored, wired as prototype packs, shipped as the default selection.",
+      "triangle_counts": {
+        "research_station": 5426,
+        "defense_platform": 3864,
+        "sensor_station": 4104
+      }
+    },
+    {
+      "revision": 2,
+      "recorded_utc": "2026-10-20T14:48:08.876789+00:00",
+      "owner_words_verbatim": "Looking good. You can commit and make it default on local and PR.",
+      "owner_report": "The research station has objects that are not attached to the hull (small blue and black squares); the same on the sensor station.",
+      "change": "surface detail had been placed at remembered radii and sat 0.5-9 units off the hull wherever the octagon narrows or the chamfer cuts in; every field is now projected onto the section at its own height, buried fins became one flush radiator bank, rod-and-cube antennas became housings with recessed lenses, drum louvres and machinery were raised into the shell, aft radiator masts got roots and braces. The exporter now fails the build when any part touches no other part.",
+      "triangle_counts": {
+        "research_station": 5318,
+        "defense_platform": 3864,
+        "sensor_station": 4104
+      }
+    }
+  ],
+  "capture_note": "In-game captures and Blender renders regenerated from the fixed build, same launcher, same stock Imperial skirmish."
 }

@@ -2,13 +2,13 @@
   "contract": "star-armada/model-manifest",
   "contract_major": 1,
   "asset": "prototype:imperial/defense_platform",
-  "revision": "46b1a9f09c1190c005f27fcdb27a6eae487623469a8eaa78e2357b833aa981e7",
+  "revision": "00a391680db29bdd4b09f83e5dfd40d43dc7549fdaa849339b55628bed06584a",
   "display_name": "Galactic Imperium Defence Platform \u2014 visual prototype (unapproved)",
   "files": {
     "mesh": {
       "path": "assets/models/defense.mesh.json",
-      "sha256": "d49df878670d1301487a099d9852e4e05bffb6e0400068c4f233138a64b740a6",
-      "bytes": 247910
+      "sha256": "003683cf43c4c0fc6bd90ee7ed11a492ad93126d9b6668b055f7d39bb5c83c58",
+      "bytes": 248106
     }
   },
   "export": {
@@ -23,12 +23,12 @@
   ],
   "bounds": {
     "min": [
-      -41.0869446,
+      -42.1318779,
       -13.4913759,
       -44.2364807
     ],
     "max": [
-      41.0869446,
+      42.1318779,
       20.991375,
       44.2364807
     ]

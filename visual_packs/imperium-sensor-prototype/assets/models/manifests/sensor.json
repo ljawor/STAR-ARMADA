@@ -2,13 +2,13 @@
   "contract": "star-armada/model-manifest",
   "contract_major": 1,
   "asset": "prototype:imperial/sensor_station",
-  "revision": "ca1b46eb0cb2698c539f7f846968b70a36704e26fc660efe0de95dcc24ff8e08",
+  "revision": "08380671196fa5c4bcaee72e9492a82ce1c70b137b0f2dbd65b4d18f011e4fd4",
   "display_name": "Galactic Imperium Sensor Station \u2014 visual prototype (unapproved)",
   "files": {
     "mesh": {
       "path": "assets/models/sensor.mesh.json",
-      "sha256": "a13c384843afa9ac7ed0e4010ea2f3a58cb3bbbc49dea46ba6b4575c61338aba",
-      "bytes": 294742
+      "sha256": "d26a6811ce475eb8879a7b2a16ce1eed746d0b0507f85ba16b33200150a11b02",
+      "bytes": 294650
     }
   },
   "export": {

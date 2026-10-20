@@ -639,6 +639,35 @@
         "pull_request": 142,
         "review_record": "artifacts/imperial-stations-review/OWNER_REVIEW.json"
       }
+    },
+    {
+      "id": "imperial-station-surface-fit-2026-10-20",
+      "date": "2026-10-20",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved-surface-fit-fix-and-kept-station-defaults",
+      "applies_to": "the three Galactic Imperium station prototypes (research station, defence platform, sensor station), their runtime meshes and their entries in the shipped render-only default selection",
+      "owner_report": "Research station had objects not attached to the hull (small blue and black squares); the same on the sensor station.",
+      "owner_wording": "Looking good. You can commit and make it default on local and PR.",
+      "question_answered": "Do the station prototypes now read as one solid hull in the live game, and should the fix be committed to PR #142 and kept as the local and shipped default?",
+      "root_cause": "surface detail was placed at remembered radii rather than on the hull section at its own height, so plates, vents and bands sat 0.5-9 units clear of the hull wherever the octagon narrows or the chamfer cuts in; buried radiator fins showed only their edges and rod-and-cube antennas read as loose cubes.",
+      "how_recorded": "Owner reported the defect in the running game and reviewed the fix in the same live production window (tools/play_station_prototypes.py, stock Imperial skirmish with one of each station, isolated profile). Appearance approval is recorded in artifacts/imperial-stations-review/OWNER_REVIEW.json revision 2, bound to the new mesh, builder, master, descriptor, manifest, in-game capture and Blender render hashes.",
+      "authorizes": [
+        "committing the surface-fit fix, the projected-placement helpers and the build-time contact gate to PR #142",
+        "keeping the three station packs in DEFAULT_SETTINGS.visual_packs and in the local saved profile selection"
+      ],
+      "does_not_authorize": [
+        "merging PR #142",
+        "a tag or a release",
+        "registering the models in the core catalogue (assets/models/registry.json) or pipeline manifests",
+        "packaged / frozen-bundle delivery of the packs",
+        "any change to gameplay, ship sizes, collision radii or simulation state"
+      ],
+      "binds_to": {
+        "engine_version": "0.16.0",
+        "pull_request": 142,
+        "review_record": "artifacts/imperial-stations-review/OWNER_REVIEW.json",
+        "supersedes_appearance_in": "imperial-station-prototypes-2026-10-20"
+      }
     }
   ]
 }

@@ -10,6 +10,7 @@ Blender --background --python-exit-code 1 --python this_file [-- --only research
 """
 import argparse
 import json
+import os
 import math
 import struct
 import sys
@@ -84,6 +85,50 @@ def box(name, role, loc, size, bevel=None):
 def octagon(w, d, c):
     return [(-w + c, -d), (w - c, -d), (w, -d + c), (w, d - c),
             (w - c, d), (-w + c, d), (-w, d - c), (-w, -d + c)]
+
+
+def octagon_radius(w, d, c, theta):
+    """Radius of the eight-sided section along `theta`.
+
+    Surface detail has to be placed with this rather than at a remembered radius: the
+    section narrows with height and the chamfer cuts the corners in, so a fixed radius
+    that touches the hull at mid height hangs in space near the top or the corner.
+    """
+    ca, sa = math.cos(theta), math.sin(theta)
+    best = float('inf')
+    verts = octagon(w, d, c)
+    for i in range(len(verts)):
+        x1, z1 = verts[i]
+        x2, z2 = verts[(i + 1) % len(verts)]
+        ex, ez = x2 - x1, z2 - z1
+        det = -ca * ez + ex * sa
+        if abs(det) < 1e-12:
+            continue
+        t = (-x1 * ez + ex * z1) / det
+        u = (ca * z1 - sa * x1) / det
+        if t > 1e-9 and -1e-9 <= u <= 1 + 1e-9 and t < best:
+            best = t
+    return best
+
+
+def section(levels, y):
+    """Interpolate a stacked section's (half-x, half-z, chamfer) at height `y`."""
+    if y <= levels[0][0]:
+        return levels[0][1], levels[0][2], levels[0][3]
+    if y >= levels[-1][0]:
+        return levels[-1][1], levels[-1][2], levels[-1][3]
+    for low, high in zip(levels, levels[1:]):
+        if low[0] <= y <= high[0]:
+            f = (y - low[0]) / (high[0] - low[0]) if high[0] > low[0] else 0.0
+            return tuple(a + (b - a) * f for a, b in zip(low[1:], high[1:]))
+    return levels[-1][1], levels[-1][2], levels[-1][3]
+
+
+def hull_point(levels, y, theta, loc=(0.0, 0.0), inset=0.0):
+    """A point on, or `inset` inside, the hull surface at height `y` and bearing `theta`."""
+    w, d, c = section(levels, y)
+    r = octagon_radius(w, d, c, theta) - inset
+    return (loc[0] + r * math.cos(theta), y, loc[1] + r * math.sin(theta))
 
 
 def tier(name, role, levels, loc=(0.0, 0.0), bevel=0.0):
@@ -184,39 +229,55 @@ def windows(name, start, count, step, size, axis='x', role='lit'):
     louvres(name, role, start, count, step, size, axis)
 
 
+RESEARCH_KEEL = [(-14.6, 24, 28, 5), (-9, 30, 33, 5), (-2, 31, 34, 5), (4, 28, 31, 4)]
+RESEARCH_KEEL_DECK = [(4, 26, 29, 4), (7, 21, 24, 3.4), (9, 17, 20, 3)]
+RESEARCH_DRUM = [(-8, 21, 20, 3.5), (-3, 26, 24, 4.5), (7, 26, 24, 4.5), (13, 22, 21, 3.5)]
+RESEARCH_POD = [(2, 8, 11, 2), (8, 10, 13, 2.4), (16, 10, 13, 2.4), (21, 7, 9.6, 1.8)]
+SENSOR_BASE = [(-22.8, 24, 21, 5), (-16, 29, 26, 6), (-9, 30, 27, 6), (-4, 27, 24, 5)]
+SENSOR_MAST = [(-1, 9, 8, 2.6), (10, 7.4, 6.6, 2.2), (22, 6, 5.4, 1.8), (34, 4.6, 4.2, 1.4)]
+DEFENCE_SKIRT = [(-13.6, 29, 29, 8), (-9, 36, 36, 10), (-4, 38.5, 38.5, 10), (-1, 35, 35, 8)]
+DEFENCE_DECK = [(-2.4, 29, 29, 7), (1.0, 27, 27, 6), (5.4, 22, 22, 5), (8.0, 17, 17, 4)]
+DEFENCE_CORE = [(6, 15, 15, 3.4), (12, 13, 13, 3), (17, 10, 10, 2.4)]
+
+
 # ---------------------------------------------------------------- research station
 
 def build_research():
     """A laboratory citadel: armoured keel, forward research drum with an observation
     cupola, two outrigger science pods on spars, and an aft comms/radiator array."""
-    tier('Research armoured keel', 'base',
-         [(-14.6, 24, 28, 5), (-9, 30, 33, 5), (-2, 31, 34, 5), (4, 28, 31, 4)], loc=(0, 4))
-    tier('Research keel upper deck', 'base',
-         [(4, 26, 29, 4), (7, 21, 24, 3.4), (9, 17, 20, 3)], loc=(0, 4))
-    # Keel plating, vent banks and warm deck lighting along the spine.
+    tier('Research armoured keel', 'base', RESEARCH_KEEL, loc=(0, 4))
+    tier('Research keel upper deck', 'base', RESEARCH_KEEL_DECK, loc=(0, 4))
+    # Keel plating, vent banks and deck lighting, all seated on the hull surface.
+    keel_face = section(RESEARCH_KEEL, -6)[0]
     for s in (-1, 1):
         for i in range(6):
-            box('Keel flank armour panel', 'trim', (s * 30.6, -6 + i * 2.6, 4), (.6, 2.2, 44))
-    louvres('Keel dorsal vent slot', 'dark', (-18, 10.4, 4), 9, 4.4, (3.1, .5, 3.2))
-    windows('Keel deck work light', (-16, 9.6, 30), 7, 5.2, (2.6, .5, .9))
-    box('Keel owner stripe port', 'accent', (-30.9, -1.5, 4), (.4, 1.1, 30))
-    box('Keel owner stripe starboard', 'accent', (30.9, -1.5, 4), (.4, 1.1, 30))
+            box('Keel flank armour panel', 'trim', (s * (keel_face - .4), -6 + i * 2.6, 4), (.8, 2.2, 44))
+        box('Keel owner stripe', 'accent', (s * (keel_face - .2), -1.5, 4), (.5, 1.1, 30))
+    for i in range(9):
+        box('Keel dorsal vent slot', 'dark', (-15.2 + i * 3.8, 9.1, 4), (3.1, .6, 3.2))
+    for i in range(6):
+        box('Keel deck work light', 'lit', (-14.5 + i * 5.8, 9.2, 21), (2.6, .5, .9))
     for i in range(4):
-        box('Keel machinery housing', 'trim', (-13 + i * 9, 12.2, -8), (6.4, 2.6, 8))
-        box('Keel machinery shadow', 'dark', (-13 + i * 9, 13.6, -8), (4.6, .4, 6))
+        box('Keel machinery housing', 'trim', (-13 + i * 9, 10.2, -6), (6.4, 2.6, 8))
+        box('Keel machinery shadow', 'dark', (-13 + i * 9, 11.6, -6), (4.6, .4, 6))
 
     # Forward research drum.
     tier('Research laboratory drum', 'base',
          [(-8, 21, 20, 3.5), (-3, 26, 24, 4.5), (7, 26, 24, 4.5), (13, 22, 21, 3.5)], loc=(0, 38))
     tier('Drum collar', 'trim', [(13, 18, 17, 3), (16, 15, 14, 2.4)], loc=(0, 38))
-    windows('Drum forward observation band', (-17, 9.4, 62.3), 9, 4.2, (3.2, 1.1, .5))
-    windows('Drum rear observation band', (-17, 6.4, 13.9), 9, 4.2, (3.2, 1.1, .5))
+    drum_forward = 38 + section(RESEARCH_DRUM, 9.4)[1]
+    drum_aft = 38 - section(RESEARCH_DRUM, 6.4)[1]
+    windows('Drum forward observation band', (-17, 9.4, drum_forward - .25), 9, 4.2, (3.2, 1.1, .5))
+    windows('Drum rear observation band', (-17, 6.4, drum_aft + .35), 9, 4.2, (3.2, 1.1, .5))
     for s in (-1, 1):
-        windows('Drum flank observation band', (s * 26.3, 8.4, 26), 5, 4.6, (.5, 1.1, 3.2), axis='z')
-        box('Drum flank service arm', 'trim', (s * 28.5, 1.5, 38), (3.4, 4.2, 10))
-    box('Drum frontal owner chevron', 'accent', (0, 4.0, 62.4), (14, 2.6, .5))
+        drum_side = section(RESEARCH_DRUM, 8.4)[0]
+        windows('Drum flank observation band', (s * (drum_side - .2), 8.4, 26), 5, 4.6, (.5, 1.1, 3.2), axis='z')
+        box('Drum flank service arm', 'trim', (s * (drum_side - 1.4), 1.5, 38), (3.0, 4.2, 10))
+    box('Drum frontal owner chevron', 'accent', (0, 4.0, drum_forward - .3), (14, 2.6, .5))
+    vent_y = 10.6
+    vent_forward = 38 + section(RESEARCH_DRUM, vent_y)[1]
     for i in range(5):
-        box('Drum frontal vent bank', 'dark', (-8 + i * 4, 15.4, 62.2), (3.1, 2.6, .5))
+        box('Drum frontal vent bank', 'dark', (-8 + i * 4, vent_y, vent_forward - .3), (3.1, 2.6, .5))
 
     # Observation cupola above the drum.
     tier('Observation cupola', 'trim',
@@ -231,22 +292,27 @@ def build_research():
     for s in (-1, 1):
         box('Science spar main', 'base', (s * 40, -1, 14), (22, 3.6, 5.2))
         box('Science spar brace', 'trim', (s * 30, 2.4, 14), (2.2, 5.4, 4))
-        tier('Outrigger science pod', 'base',
-             [(2, 8, 11, 2), (8, 10, 13, 2.4), (16, 10, 13, 2.4), (21, 7, 9.6, 1.8)],
-             loc=(s * 51, 14))
+        tier('Outrigger science pod', 'base', RESEARCH_POD, loc=(s * 51, 14))
         tier('Pod lower keel pod', 'base',
              [(-9, 6, 9, 1.6), (-4, 7.4, 11, 2.0), (1, 6, 9, 1.6)], loc=(s * 51, 14))
-        windows('Pod flank sensor aperture', (s * 61.2, 1.6, 6), 5, 5.2, (.6, 1.3, 3.4), axis='z', role='cool')
-        windows('Pod deck light row', (s * 45, 12.5, 14), 4, 4.6, (2.8, .5, 5.4))
-        box('Pod owner stripe', 'accent', (s * 51, 9.5, 27.1), (12, .5, .9))
+        aperture_y = 3.2
+        aperture_face = section(RESEARCH_POD, aperture_y)[0]
+        pod_flat = section(RESEARCH_POD, 4.0)[1] - section(RESEARCH_POD, 4.0)[2]
+        for i in range(4):
+            box('Pod flank sensor aperture', 'cool',
+                (s * (51 + aperture_face - .15), aperture_y, 8 + i * 4.0), (.6, 1.3, 3.0))
+        for i in range(4):
+            box('Pod deck light row', 'lit', (s * (51 - 4 + i * 2.6), 21.2, 8), (2.2, .5, 3.0))
+        box('Pod owner stripe', 'accent', (s * 51, 9.5, 14 + pod_flat - .3), (12, .5, .9))
         for i in range(3):
-            box('Pod radiator fin', 'dark', (s * (55 + i * 2.6), 2, 14), (.5, 15, 21))
-            box('Pod radiator fin edge', 'trim', (s * (55 + i * 2.6), 9.6, 14), (.4, .5, 20))
+            fin_face = section(RESEARCH_POD, 6.5)[0]
+            box('Pod radiator bank', 'dark', (s * (51 + fin_face - .15), 6.6, 19.5), (.5, 4.2, 8.0))
+            box('Pod radiator bank lip', 'trim', (s * (51 + fin_face - .1), 8.8, 19.5), (.4, .5, 8.0))
         for i in range(3):
             box('Pod machinery cassette', 'trim', (s * 47, 13.4, 3 + i * 9), (5.6, 2.4, 7))
         cylinder('Pod sensor drum', 'dark', (s * 51, 15.4, 24), 3.4, 5.4, 14)
         frustum('Pod sensor horn', 'trim', (s * 51, 19.4, 24), 3.2, 1.5, 3.2, 14)
-        box('Pod sensor glow', 'cool', (s * 51, 21.2, 24), (2.4, .5, 2.4))
+        box('Pod sensor glow', 'cool', (s * 51, 21.05, 24), (2.6, .3, 1.4))
 
     # Aft comms and radiator array.
     for i, (dx, dz) in enumerate(((-14, -30), (0, -34), (14, -30))):
@@ -258,6 +324,8 @@ def build_research():
         box(f'Aft comms dish feed glow {i}', 'cool', (dx, 22.2, dz - 3.4), (1.0, 1.0, .4))
     for s in (-1, 1):
         box('Aft radiator mast', 'dark', (s * 24, 10, -32), (1.6, 26, 12))
+        beam('Aft radiator mast brace', 'trim', (s * 24, 21.6, -30), (s * 21.2, 8.4, -18), 1.0)
+        box('Aft radiator mast root', 'trim', (s * 24, -1.4, -32), (3.2, 4.0, 13))
         for i in range(4):
             box('Aft radiator blade', 'trim', (s * 24, 1 + i * 6.4, -32), (.5, 4.6, 11))
         box('Aft radiator mast owner stripe', 'accent', (s * 24, 20, -32), (.5, 1.2, 11))
@@ -274,22 +342,27 @@ def build_research():
         box('Forward docking clamp jaw', 'dark', (s * 24, 4, 32), (3.4, 5, 3))
 
     # Second pass: layered plating, spine structure and instrument detail.
+    plate_face = section(RESEARCH_KEEL, -9)[0]
+    panel_face = section(RESEARCH_KEEL, -3)[0]
     for s in (-1, 1):
-        plate_rows('Spine flank armour plate', 'trim', (s * 20.8, -11.4, -26), 12, 4.6, (.7, 7.0, 3.8), axis='z')
-        plate_rows('Spine flank recessed panel', 'dark', (s * 20.2, -6.0, -24), 10, 5.4, (.5, 4.0, 3.0), axis='z')
-        box('Spine keel rail', 'dark', (s * 16.2, -13.9, 0), (3.2, 2.2, 58))
+        for i in range(12):
+            box('Spine flank armour plate', 'trim', (s * (plate_face - .4), -9.0, -26 + i * 4.6), (.8, 7.0, 3.8))
+        for i in range(10):
+            box('Spine flank recessed panel', 'dark', (s * (panel_face - .2), -3.0, -24 + i * 5.4), (.6, 4.0, 3.0))
+        box('Spine keel rail', 'dark', (s * 16.2, -13.9, 4), (3.2, 2.2, 58))
         for i in range(5):
-            beam('Spine frame rib', 'trim', (s * 19.4, -12 + i * 1.6, -28 + i * 13), (s * 19.4, 8.4, -28 + i * 13), .8)
-        beam('Science spar cable run', 'dark', (s * 22, 4.6, 12), (s * 47, 6.2, 12), .7)
+            rib_y = -12 + i * 1.6
+            box('Spine frame rib', 'trim', (s * (section(RESEARCH_KEEL, rib_y)[0] - .5), rib_y, -24 + i * 13), (.9, 3.0, .9))
+        beam('Science spar cable run', 'dark', (s * 22, .9, 12), (s * 47, .9, 12), .7)
         beam('Outrigger under-brace', 'trim', (s * 21, -6, 18), (s * 46, -5, 20), 1.0)
-        windows('Pod flank warm window', (s * 60.6, 4.0, 5), 5, 4.0, (.5, 1.0, 2.6), axis='z')
+        pod_face = section(RESEARCH_POD, 11.6)[0]
         for i in range(4):
-            box('Pod hull plate', 'trim', (s * 52.4, 11.6, -1 + i * 6.4), (7.0, .6, 4.6))
-        box('Pod antenna boom', 'trim', (s * 57.6, 13.4, 16), (1.0, 1.0, 9.0))
-        box('Pod antenna tip', 'cool', (s * 57.6, 13.4, 21.2), (1.2, 1.2, 1.2))
+            box('Pod hull plate', 'trim', (s * (51 + pod_face - .2), 11.6, 8 + i * 4.0), (.8, .6, 4.6))
+        box('Pod antenna housing', 'trim', (s * 54, 21.75, 8), (2.6, 1.8, 2.6))
+        box('Pod antenna lens', 'cool', (s * 54, 22.75, 8), (1.4, .3, 1.4))
         frustum('Pod forward scanner', 'trim', (s * 51, 8.0, 26.4), 2.6, 1.2, 3.0, 12, axis='z')
-        box('Pod scanner lens', 'cool', (s * 51, 8.0, 28.4), (1.6, 1.6, .4))
-        box('Spine dorsal machinery', 'trim', (s * 12, 10.6, -22), (6.4, 3.2, 9.0))
+        box('Pod scanner lens', 'cool', (s * 51, 8.0, 27.6), (1.6, 1.6, .4))
+        box('Spine dorsal machinery', 'trim', (s * 12, 10.2, -22), (6.4, 3.2, 9.0))
     # Cupola observation dome cap and its lit ring.
     tier('Cupola dome cap', 'trim', [(33, 4.6, 4.2, 1.1), (36.0, 2.6, 2.4, .6)], loc=(0, 38))
     tier('Survey spire', 'trim', [(36.0, 2.4, 2.2, .5), (39.4, 1.3, 1.2, .3)], loc=(0, 38))
@@ -301,8 +374,8 @@ def build_research():
         a = math.radians(i * 60)
         box('Cupola dome window', 'lit', (6.1 * math.cos(a) + 0, 31.4, 6.1 * math.sin(a) + 38), (1.3, 1.5, .5))
     for i in range(7):
-        box('Drum crown plate', 'trim', (-14.4 + i * 4.8, 16.6, 30), (3.4, .6, 12))
-    louvres('Drum machinery louvre', 'dark', (-16, 3.0, 55.4), 8, 4.4, (3.2, 3.0, .6))
+        box('Drum crown plate', 'trim', (-14.4 + i * 4.8, 15.7, 30), (3.4, .6, 12))
+    louvres('Drum machinery louvre', 'dark', (-16, 3.0, drum_forward - .4), 8, 4.4, (3.2, 3.0, .6))
     box('Drum forward hazard bar', 'accent', (0, 13.2, 61.8), (30, .6, .5))
     box('Drum forward hazard bar lower', 'accent', (0, 3.8, 61.8), (30, .6, .5))
     # Aft radiator wings read as broad panels, not sticks.
@@ -313,7 +386,7 @@ def build_research():
         box('Aft radiator wing stripe', 'accent', (s * 26, 17, -33), (14, 1.2, .6))
     for i in range(3):
         box('Aft array bus housing', 'trim', (-10 + i * 9, 2.4, -37), (7.4, 6.0, 7.0))
-    box('Dorsal survey boom', 'trim', (0, 12.6, 12), (2.2, 2.2, 26))
+    box('Dorsal survey boom', 'trim', (0, 9.9, 12), (2.2, 2.2, 26))
     for s in (-1, 1):
         tier('Spine outrigger buttress', 'base',
              [(-13.0, 7.5, 9.0, 2.0), (-8.0, 6.0, 7.0, 1.6), (-3.0, 4.4, 5.0, 1.2)],
@@ -321,7 +394,7 @@ def build_research():
         beam('Buttress to spine tie', 'trim', (s * 13.0, -13.4, 8), (s * 19.0, -9.0, 8), 1.2)
     box('Ventral sensor keel', 'dark', (0, -14.6, 4), (26, 3.0, 46))
     windows('Ventral lit conduit', (-11, -13.0, 18), 6, 4.4, (2.6, .5, .9))
-    box('Dorsal survey lens', 'cool', (0, 12.6, 25.6), (2.0, 2.0, .6))
+    box('Dorsal survey lens', 'cool', (0, 9.9, 22), (2.0, 2.0, .6))
 
 
 # ---------------------------------------------------------------- defence platform
@@ -377,11 +450,13 @@ def build_defence():
     tier('Core cap', 'trim', [(17, 7.4, 7.4, 1.8), (19.4, 5.4, 5.4, 1.3)], loc=(0, 0))
     for i in range(8):
         a = math.radians(i * 45)
-        box('Core lit vent band', 'lit', (13.2 * math.cos(a), 9, 13.2 * math.sin(a)), (2.4, 4.4, .8))
-        box('Core louvre shadow', 'dark', (13.2 * math.cos(a), 12.4, 13.2 * math.sin(a)), (2.6, .6, 2.2))
-    box('Core owner chevron', 'accent', (0, 17.4, 10.4), (9, .5, 1.4))
+        vx, _, vz = hull_point(DEFENCE_CORE, 9.0, a, inset=.3)
+        box('Core lit vent band', 'lit', (vx, 9.0, vz), (2.4, 4.4, .8))
+        lx, _, lz = hull_point(DEFENCE_CORE, 12.4, a, inset=.2)
+        box('Core louvre shadow', 'dark', (lx, 12.4, lz), (2.6, .6, 2.2))
+    box('Core owner chevron', 'accent', (0, 17.1, 10.2), (9, .5, 1.4))
     beam('Fire control mast', 'trim', (0, 19, 0), (0, 20.2, 0), .8)
-    box('Fire control radar face', 'cool', (0, 20.4, 1.8), (3.2, 1.1, .5))
+    box('Fire control radar face', 'cool', (0, 20.3, 1.8), (3.2, 1.1, .5))
 
     # Missile hatch banks between the bastions.
     for i in range(4):
@@ -392,12 +467,14 @@ def build_defence():
         for gx in (-2.6, 2.6):
             for gz in (-2.6, 2.6):
                 box('Missile hatch cover', 'trim', (cx + gx, 9.2, cz + gz), (3.4, .5, 3.4))
-                box('Missile hatch hazard', 'accent', (cx + gx, 9.5, cz + gz), (1.4, .3, .6))
+                box('Missile hatch hazard', 'accent', (cx + gx, 8.95, cz + gz), (1.4, .3, .6))
     # Deck machinery and ammunition feeds.
     for i in range(6):
         a = math.radians(i * 60)
-        box('Deck machinery cassette', 'trim', (31 * math.cos(a), 4.4, 31 * math.sin(a)), (6, 3.2, 5))
-        box('Deck cassette shadow slot', 'dark', (31 * math.cos(a), 6.2, 31 * math.sin(a)), (4.2, .5, 3.4))
+        bx, _, bz = hull_point(DEFENCE_DECK, 4.4, a, inset=3.0)
+        box('Deck machinery cassette', 'trim', (bx, 4.4, bz), (6, 3.2, 5))
+        sx, _, sz = hull_point(DEFENCE_DECK, 6.2, a, inset=2.4)
+        box('Deck cassette shadow slot', 'dark', (sx, 6.2, sz), (4.2, .5, 3.4))
     for i in range(4):
         a = math.radians(45 + i * 90)
         beam('Deck ammunition conduit', 'trim',
@@ -410,10 +487,11 @@ def build_defence():
     for i in range(8):
         a = math.radians(22.5 + i * 45)
         for row in range(3):
-            box('Skirt plating tile', 'trim',
-                (36.6 * math.cos(a), -11.4 + row * 3.2, 36.6 * math.sin(a)), (5.4, 2.6, 1.0))
-        box('Skirt blast shield', 'base',
-            (33.4 * math.cos(a), -2.0, 33.4 * math.sin(a)), (9.0, 5.0, 1.4))
+            py = -11.4 + row * 3.2
+            px, _, pz = hull_point(DEFENCE_SKIRT, py, a, inset=.6)
+            box('Skirt plating tile', 'trim', (px, py, pz), (5.4, 2.6, 1.0))
+        hx, _, hz = hull_point(DEFENCE_SKIRT, -1.6, a, inset=1.0)
+        box('Skirt blast shield', 'base', (hx, -1.6, hz), (9.0, 5.0, 1.4))
         beam('Skirt frame rib', 'dark',
              (34.4 * math.cos(a), -13.4, 34.4 * math.sin(a)), (30.4 * math.cos(a), 1.0, 30.4 * math.sin(a)), .9)
     for i in range(6):
@@ -427,9 +505,10 @@ def build_defence():
     for i in range(4):
         a = math.radians(45 + i * 90)
         box('Deck cable trunking', 'dark', (17 * math.cos(a), 6.4, 17 * math.sin(a)), (10, 1.0, 1.6))
-        box('Deck plate tile', 'trim', (29 * math.cos(a), 3.6, 29 * math.sin(a)), (12, .6, 6))
-    box('Radar face port', 'cool', (-2.6, 20.8, 0), (1.6, 1.0, .5))
-    box('Radar face starboard', 'cool', (2.6, 20.8, 0), (1.6, 1.0, .5))
+        tx, _, tz = hull_point(DEFENCE_DECK, 3.6, a, inset=5.0)
+        box('Deck plate tile', 'trim', (tx, 3.6, tz), (12, .6, 6))
+    box('Radar face port', 'cool', (-2.6, 20.5, 0), (1.6, 1.0, .5))
+    box('Radar face starboard', 'cool', (2.6, 20.5, 0), (1.6, 1.0, .5))
 
 
 # ---------------------------------------------------------------- sensor station
@@ -443,13 +522,15 @@ def build_sensor():
     # Base plating, hazard bands and under-hull machinery.
     for i in range(8):
         a = math.radians(22.5 + i * 45)
-        box('Base flank armour plate', 'base', (27 * math.cos(a), -14, 24 * math.sin(a)), (6, 12, 6))
+        ax, _, az = hull_point(SENSOR_BASE, -14, a, inset=2.6)
+        box('Base flank armour plate', 'base', (ax, -14, az), (6, 12, 6))
     for s in (-1, 1):
         box('Sensor owner stripe', 'accent', (s * 29.9, -13, 0), (.5, 1.3, 40))
         box('Sensor owner stripe forward', 'accent', (0, -13, s * 27.2), (44, 1.3, .5))
     for i in range(8):
         a = math.radians(i * 45)
-        box('Base vent bank', 'dark', (28 * math.cos(a), -21.4, 25 * math.sin(a)), (3.2, .6, 4.8))
+        vx, _, vz = hull_point(SENSOR_BASE, -21.4, a, inset=.4)
+        box('Base vent bank', 'dark', (vx, -21.4, vz), (3.2, .6, 4.8))
     for s in (-1, 1):
         box('Base docking clamp', 'dark', (s * 33, -14, 0), (6.4, 5.4, 13))
         box('Base docking clamp arm', 'trim', (s * 30, -14, 0), (1.6, 6, 9))
@@ -458,27 +539,38 @@ def build_sensor():
     for s in (-1, 1):
         cylinder('Flank sensor drum', 'base', (s * 18, 4, 0), 8.6, 14, 16)
         cylinder('Flank drum collar', 'trim', (s * 18, 10.6, 0), 9.2, 2.2, 16)
-        windows('Flank drum aperture', (s * 18, 6.4, 8.9), 4, 1.8, (1.1, 1.4, .5), role='cool')
-        windows('Flank drum aperture aft', (s * 18, 6.4, -8.9), 4, 1.8, (1.1, 1.4, .5), role='cool')
-        box('Flank drum owner band', 'accent', (s * 18, 12.2, 0), (5.4, .5, 12))
-        box('Flank drum machinery', 'trim', (s * 18, -2.4, 7.4), (5.6, 5.4, 4.4))
+        for i, deg in enumerate((-46, -16, 16, 46)):
+            ca, sa = math.cos(math.radians(deg)), math.sin(math.radians(deg))
+            box('Flank drum aperture', 'cool',
+                (s * 18 + 7.9 * ca, 6.4, 7.9 * sa), (1.6, 1.4, 1.6))
+            box('Flank drum aperture aft', 'cool',
+                (s * 18 + 7.9 * ca, 2.0, 7.9 * sa), (1.6, 1.4, 1.6))
+        box('Flank drum owner band', 'accent', (s * 18, 11.1, 0), (5.4, .5, 12))
+        box('Flank drum machinery', 'trim', (s * 18, -0.4, 6.4), (5.6, 5.0, 4.4))
         for i in range(4):
-            box('Flank drum louvre', 'dark', (s * 18 - 4.2 + i * 2.8, 0.5, 10.5), (2.0, 8.4, .6))
+            box('Flank drum louvre', 'dark', (s * 18 - 4.2 + i * 2.8, 1.6, 8.4), (2.0, 7.0, .6))
 
     # Central lattice mast.
     tier('Sensor mast lower', 'base',
          [(-1, 9, 8, 2.6), (10, 7.4, 6.6, 2.2), (22, 6, 5.4, 1.8), (34, 4.6, 4.2, 1.4)], loc=(0, 0))
     for i in range(3):
-        box('Mast housing cassette', 'trim', (0, 3 + i * 11, 6.4), (12, 5.6, 3.6))
-        box('Mast housing shadow', 'dark', (0, 6.4 + i * 11, 7.6), (8.6, 2.4, .5))
+        cy = 3 + i * 11
+        cx_, _, cz_ = hull_point(SENSOR_MAST, cy, math.pi / 2, inset=1.6)
+        box('Mast housing cassette', 'trim', (0, cy, cz_), (12, 5.6, 3.6))
+        box('Mast housing shadow', 'dark', (0, cy + 1.8, cz_ + .9), (8.6, 2.4, .5))
     for i in range(6):
-        box('Mast strake', 'trim', (0, 1 + i * 6.4, -5.6), (9.4, 4.0, 1.4))
-    box('Mast forward sensor slot', 'cool', (0, 27.0, 4.6), (4.6, 1.6, .5))
-    box('Mast aft sensor slot', 'cool', (0, 27.0, -4.6), (4.6, 1.6, .5))
+        sy = 1 + i * 6.4
+        sx, _, sz = hull_point(SENSOR_MAST, sy, -math.pi / 2, inset=.5)
+        box('Mast strake', 'trim', (sx, sy, sz), (9.4, 4.0, 1.4))
+    fxp, _, fzp = hull_point(SENSOR_MAST, 27.0, math.pi / 2, inset=.15)
+    box('Mast forward sensor slot', 'cool', (0, 27.0, fzp), (4.6, 1.6, .5))
+    axp, _, azp = hull_point(SENSOR_MAST, 27.0, -math.pi / 2, inset=.15)
+    box('Mast aft sensor slot', 'cool', (0, 27.0, azp), (4.6, 1.6, .5))
     for s in (-1, 1):
         beam('Mast lattice brace', 'trim', (s * 8, 2, 8), (s * 3.4, 30, 4.4), .9)
         beam('Mast lattice brace low', 'trim', (s * 7.4, 8, -6), (s * 3.4, 26, -4.4), .9)
-        box('Mast owner stripe', 'accent', (s * 0.1 + s * 8.6, 16, 0), (.5, 16, 1.2))
+        mx, _, mz = hull_point(SENSOR_MAST, 16, 0.0 if s > 0 else math.pi, inset=.2)
+        box('Mast owner stripe', 'accent', (mx, 16, mz), (.5, 16, 1.2))
     windows('Mast warm aperture', (-2.4, 21, 5.6), 3, 2.4, (1.4, 1.6, .5))
 
     # Great vertical scanner hoop.
@@ -524,7 +616,8 @@ def build_sensor():
             beam('Mast lattice diagonal aft', 'trim', (s * 6.4, y, -3.0), (-s * 5.2, y + 7.0, 3.0), .55)
     for i in range(6):
         a = math.radians(22.5 + i * 45) if i < 4 else math.radians(i * 60)
-        box('Base plating tile', 'trim', (29.4 * math.cos(a), -11.0, 25.4 * math.sin(a)), (5.6, 9.0, 1.0))
+        px, _, pz = hull_point(SENSOR_BASE, -11.0, a, inset=2.8)
+        box('Base plating tile', 'trim', (px, -11.0, pz), (5.6, 9.0, 1.0))
     for s in (-1, 1):
         beam('Drum cable run', 'dark', (s * 18, 12.4, 6.0), (s * 6.0, 18.0, 2.0), .8)
         box('Drum radiator plate', 'trim', (s * 26.6, 2.0, 0), (1.2, 13.0, 15.0))
@@ -534,7 +627,8 @@ def build_sensor():
         beam('Base gantry rail', 'trim', (s * 26, -6.0, -20), (s * 12, -2.0, 18), .7)
     for i in range(8):
         a = math.radians(i * 45)
-        box('Base lower vent', 'dark', (26.4 * math.cos(a), -21.0, 22.8 * math.sin(a)), (3.0, .8, 4.4))
+        lx, _, lz = hull_point(SENSOR_BASE, -21.0, a, inset=.4)
+        box('Base lower vent', 'dark', (lx, -21.0, lz), (3.0, .8, 4.4))
     box('Base forward sensor lens', 'cool', (0, -14.0, 27.4), (7.0, 2.2, .5))
     box('Base aft docking throat', 'dark', (0, -14.0, -27.4), (9.0, 4.0, .8))
 
@@ -578,19 +672,26 @@ def fit_and_export(row, build, render_dir=None):
     bpy.context.view_layer.update()
     depsgraph = bpy.context.evaluated_depsgraph_get()
     verts, indices, batches, parts = [], {}, {r: [] for r in ROLES}, []
+    boxes = []
     skipped = 0
     for obj in OBJECTS:
         evaluated = obj.evaluated_get(depsgraph)
         mesh = evaluated.to_mesh()
         mesh.calc_loop_triangles()
         local = []
+        corners = []
         for v in mesh.vertices:
             p = tuple(round(struct.unpack('f', struct.pack('f', float(c)))[0], 7)
                       for c in evaluated.matrix_world @ v.co)
+            corners.append(p)
             if p not in indices:
                 indices[p] = len(verts)
                 verts.append(list(p))
             local.append(indices[p])
+        if corners:
+            boxes.append((obj.name,
+                          [min(c[i] for c in corners) for i in range(3)],
+                          [max(c[i] for c in corners) for i in range(3)]))
         role = obj['role']
         count = 0
         for tri in mesh.loop_triangles:
@@ -607,6 +708,28 @@ def fit_and_export(row, build, render_dir=None):
             count += 1
         parts.append({'name': obj.name, 'role': role, 'triangles': count})
         evaluated.to_mesh_clear()
+    # A part must touch something. Every greeble placed at a remembered radius instead of
+    # the hull section at its own height hangs in space, which reads in game as loose blue
+    # and black squares; measure contact rather than trusting the coordinates.
+    floating = []
+    for i, (name, lo, hi) in enumerate(boxes):
+        for j, (_, olo, ohi) in enumerate(boxes):
+            if i == j:
+                continue
+            if all(lo[a] - .6 <= ohi[a] and olo[a] - .6 <= hi[a] for a in range(3)):
+                break
+        else:
+            floating.append(name)
+    if os.environ.get('STATION_DUMP'):
+        role_of = {o.name: o.get('role', '?') for o in OBJECTS}
+        for name, lo, hi in boxes:
+            print('PART %-10s %-30s x[%7.2f %7.2f] y[%6.2f %6.2f] z[%7.2f %7.2f]'
+                  % (role_of.get(name, '?'), name.split('.')[0],
+                     lo[0], hi[0], lo[1], hi[1], lo[2], hi[2]), flush=True)
+    if floating:
+        from collections import Counter
+        print('FLOATING ' + json.dumps(Counter(floating).most_common()), flush=True)
+    assert not floating, f'{len(floating)} parts touch no other part: {sorted(set(floating))[:6]}'
     bounds = [[min(v[i] for v in verts) for i in range(3)], [max(v[i] for v in verts) for i in range(3)]]
     total = sum(len(v) for v in batches.values())
     data = {'contract': 'star-armada/mesh-export', 'contract_major': 1, 'asset': row['asset'],
