@@ -197,7 +197,7 @@
   "assets/models/syndicate_sensor_station.mesh.json": "e35b084c73b2702ab12f0611730bb4f99b24eefd80925344300360f68bb7a947",
   "assets/models/syndicate_shipyard.mesh.json": "c1a0aad3e30a013b95c704390ef925f8beeb024924ddd4a5d525dc60156c4670",
   "assets/models/syndicate_trade_station.mesh.json": "6bae5343f97a9d1881d8b1b7bbf21270a1acddc26a6b58752e258dcb90bd9e1c",
-  "render/renderer.py": "55fce2a4f8aefb5bd011cb19bf5099973616a31f7db717637e3cdd0a2528c12a",
+  "render/renderer.py": "fc7e3edcf67862c4b0f94bd942e738b62631c817e94690d700ad99c393e9ca2b",
   "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
   "tools/art/build_alliance_carrier.py": "73fe3afa6e16e1ebf3b070e917bd4e8145e54c94fd6f60d771c9839783fcce32",
   "tools/art/build_alliance_corvette.py": "df4781bc45692ead8935e2ccd48f3fd2c922fb49aee25bac27524c44468790a1",

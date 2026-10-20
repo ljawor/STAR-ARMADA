@@ -965,27 +965,21 @@ class Renderer:
         GL.glPopAttrib()
 
     def _draw_jump_points(self):
-        for jp in self.state.map_info.jump_points:
-            if not self.state.is_position_explored(self.local_player, position(jp["pos"])):
-                continue
-            pos = jp["pos"]
-            glPushMatrix()
-            glTranslatef(pos[0], pos[1], pos[2])
-            glRotatef(self.time * 20.0, 0, 1, 0)
-            glColor4f(0.4, 0.7, 1.0, 0.5)
-            glLineWidth(2.0)
-            glBegin(GL_LINE_LOOP)
-            r = 220.0
-            for i in range(24):
-                a = i / 24 * 2 * math.pi
-                glVertex3f(math.sin(a) * r, 0, math.cos(a) * r)
-            glEnd()
-            glBegin(GL_LINE_LOOP)
-            for i in range(24):
-                a = i / 24 * 2 * math.pi
-                glVertex3f(math.sin(a) * r * 0.7, 40, math.cos(a) * r * 0.7)
-            glEnd()
-            glPopMatrix()
+        """No world marker for jump points.
+
+        A jump point is a map cell, not an object in the battle space, and nothing
+        was ever modelled there. The marker that used to be drawn here - two line
+        loops, and every variation of them - read as a stray circle (or, with a
+        light cone, a solid blue teardrop) floating beside whatever happened to be
+        nearby, usually a planet. The owner asked for no marker at all, so the pass
+        is now a no-op. Jump destinations stay visible through the order and
+        navigation surfaces that already carry them; nothing is drawn in the world.
+
+        The method is kept as the seam for that pass - one call site, one place to
+        reintroduce a marker - rather than deleting the call and having to find it
+        again later.
+        """
+        return
 
     def _draw_glow(self, pos, radius, color, alpha, additive=False):
         """True camera-facing billboard disc with radial falloff.

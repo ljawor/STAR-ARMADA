@@ -747,6 +747,32 @@
       ],
       "review_record": "art/manifests/approvals.json#s06-b5-environment-2026-10-17.s07_static_station_pin_correction",
       "note": "The stray map circles the owner reported were the S06 jump-point line-loop markers; a STAR_ARMADA_SKIP=jumppoints run confirmed the identification. No marker geometry was changed by this decision."
+    },
+    {
+      "id": "jump-point-marker-removal-2026-10-20",
+      "date": "2026-10-20",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved-jump-point-marker-removal",
+      "owner_wording": "There shoudl be nothing no ring nothing This object shoudl not be there",
+      "question_answered": "The world view must not draw a marker at a jump point: no ring, no ticks, no pylons, no glow. The pass is a no-op and is kept only as the seam for a future marker.",
+      "scope": {
+        "renderer_methods": [
+          "_draw_jump_points"
+        ],
+        "removed_methods": [
+          "_gate_charge"
+        ],
+        "simulation_or_save_change": false,
+        "asset_change": false,
+        "envelope_or_state_hash_change": false,
+        "guard": "tests/test_jump_point_marker.py"
+      },
+      "gates": [
+        "offscreen probe: zero lit pixels at 2k/6k/16k and while charging",
+        "tests/test_jump_point_marker.py (2 tests)",
+        "render/geometry subset (54 tests)",
+        "appearance pin correction (engineering-only)"
+      ]
     }
   ]
 }
