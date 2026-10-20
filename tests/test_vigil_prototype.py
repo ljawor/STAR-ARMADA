@@ -23,7 +23,8 @@ class VigilPrototypeTests(unittest.TestCase):
             saved = json.loads((profile / 'saves/settings.json').read_text())
             self.assertTrue(saved['model_preview'])
             self.assertEqual(saved['visual_packs'], ['vigil-prototype', 'imperium-command-prototype',
-                                                   'imperium-shipyard-prototype', 'imperium-mining-prototype'])
+                                                   'imperium-shipyard-prototype', 'imperium-mining-prototype',
+                                                   'imperium-talon-prototype', 'imperium-engineer-prototype'])
             self.assertTrue((profile / 'visual_packs/vigil-prototype/visual-pack.json').is_file())
             self.assertEqual(settings.read_bytes() if settings.exists() else None, previous)
 

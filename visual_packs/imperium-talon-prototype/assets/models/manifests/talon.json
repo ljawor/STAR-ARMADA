@@ -1,0 +1,61 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "prototype:imperial/fighter",
+  "revision": "c12bc6c8849ed13158c5b704682173ba63a0e34534d15f3770c7db8472323a3d",
+  "display_name": "Talon Interceptor Squadron — visual prototype (review pending)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/talon.mesh.json",
+      "sha256": "0831eaff1c5870bccaa33e81fa801f2b2cf01f5208a9523cbd755ec99cb6bf20",
+      "bytes": 330218
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -31.2488003,
+      -3.2387996,
+      -28.9948006
+    ],
+    "max": [
+      31.2488003,
+      13.9988003,
+      34.9988022
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor / STAR ARMADA visual prototype",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "notes": "Original asset: tools/art/build_talon_prototype.py and art/blender/imperium_talon_prototype.blend. Appearance review pending. Gameplay, squadron membership and construction abilities unchanged."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 4304,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}

@@ -20,10 +20,11 @@ VIEWS = {
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--out', required=True, type=Path)
-    parser.add_argument('--subject', choices=['vigil', 'command', 'shipyard', 'mining'], default='vigil')
+    parser.add_argument('--subject', choices=['vigil', 'command', 'shipyard', 'mining', 'talon', 'engineer'], default='vigil')
     args = parser.parse_args()
-    station = args.subject != 'vigil'
+    station = args.subject in ('command', 'shipyard', 'mining')
     station_kind = {'command': 'command_station', 'shipyard': 'shipyard', 'mining': 'mining_station'}.get(args.subject)
+    ship_id = {'vigil': 'imperial_corvette', 'talon': 'imperial_tie_squadron', 'engineer': 'imperial_constructor'}.get(args.subject)
     framing = {'command': (45, 640., 1600.), 'shipyard': (20, 440., 1200.), 'mining': (-5, 310., 900.)}
     if station:
         assert station_kind is not None
@@ -35,6 +36,10 @@ def main():
         }
     else:
         views = VIEWS
+        if args.subject in ('talon', 'engineer'):
+            close, tactical, target_y = {'talon': (75., 350., 3.), 'engineer': (140., 600., 10.)}[args.subject]
+            views = {name: dict(info, distance=tactical if name == 'tactical' else close,
+                                target=[-4200, target_y, 2200]) for name, info in VIEWS.items()}
     out = args.out.resolve()
     out.mkdir(parents=True, exist_ok=False)
     spec = importlib.util.spec_from_file_location('capture_slice', ROOT / 'artifacts/alliance_blender_trio/evidence/capture_slice.py')
@@ -42,7 +47,7 @@ def main():
     spec.loader.exec_module(helper)
     helper.isolate(ROOT, out)
     helper.PLACEMENTS = [
-        ('capital', 'station' if station else 'ship', station_kind if station else 'imperial_corvette', 0, [-4200, 0, 2200], 0.),
+        ('capital', 'station' if station else 'ship', station_kind if station else ship_id, 0, [-4200, 0, 2200], 0.),
         ('escort', 'ship', 'imperial_frigate', 0, [-4200, 0, 2900], 0.),
         ('enemy_a', 'ship', 'imperial_corvette', 1, [-3500, 0, 2200], 0.),
         ('enemy_b', 'ship', 'imperial_corvette', 1, [-3500, 0, 2900], 0.),
@@ -71,7 +76,10 @@ def main():
     frames = {}
     cameras = {name: Camera(W, H) for name in views}
     try:
-        if args.subject in ('shipyard', 'mining'):
+        if args.subject in ('talon', 'engineer'):
+            accepted = ['vigil-prototype', 'imperium-command-prototype', 'imperium-shipyard-prototype', 'imperium-mining-prototype']
+            variants = [('before', accepted), ('after', accepted + ['imperium-' + args.subject + '-prototype'])]
+        elif args.subject in ('shipyard', 'mining'):
             accepted = ['vigil-prototype', 'imperium-command-prototype']
             candidate = {'shipyard': 'imperium-shipyard-prototype', 'mining': 'imperium-mining-prototype'}[args.subject]
             variants = [('before', accepted), ('after', accepted + [candidate])]
@@ -96,7 +104,7 @@ def main():
                 scale = st.entities[ids['capital']].radius / 50.
                 size_info = {'length': (hi[2] - lo[2]) * scale, 'scale': scale, 'shape': 'imperial:' + station_kind}
             else:
-                size = ship_size(gm.ds, 'imperial_corvette', 'imperial')
+                size = ship_size(gm.ds, ship_id, 'imperial')
                 size_info = {'length': size.length, 'scale': size.scale, 'shape': size.shape}
             variant = report['variants'][label] = {'state_sha256': initial,
                 'size': size_info,

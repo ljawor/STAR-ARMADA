@@ -1,0 +1,61 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "prototype:imperial/constructor",
+  "revision": "1622bbb727296c6e222376f702e12bfcdcb0c249ab9f2ba64f9a564964ff64a3",
+  "display_name": "Engineering Corps Corvette — visual prototype (review pending)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/engineer.mesh.json",
+      "sha256": "840718f9eb5021afe4cf2cc01fd35d77b500669d9c4931407227f72c81188bd3",
+      "bytes": 695675
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -19.998979568481445,
+      -6.998979568481445,
+      -24.69647979736328
+    ],
+    "max": [
+      19.998979568481445,
+      26.498979568481445,
+      24.35723114013672
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor / STAR ARMADA visual prototype",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "notes": "Original asset: tools/art/build_engineer_prototype.py and art/blender/imperium_engineer_prototype.blend. Appearance review pending. Gameplay, squadron membership and construction abilities unchanged."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 8420,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Play the four original Imperial visual prototypes with separate test saves.
+"""Play the original Imperial visual prototypes with separate test saves.
 
 No application bundle, stock mesh, normal settings, saves or replays are modified.
 The mining-only review scenario adds one prebuilt mine; normal game rules are unchanged.
@@ -18,12 +18,15 @@ PROFILE = Path.home() / 'Library/Application Support/STAR ARMADA/Vigil Prototype
 
 
 PACK_NAMES = ('vigil-prototype', 'imperium-command-prototype',
-              'imperium-shipyard-prototype', 'imperium-mining-prototype')
+              'imperium-shipyard-prototype', 'imperium-mining-prototype',
+              'imperium-talon-prototype', 'imperium-engineer-prototype')
 FOCUS = {
     'vigil': ('imperial_corvette', 180., 48., 28.),
     'command': ('command_station', 720., 48., 32.),
     'shipyard': ('shipyard', 600., 48., 28.),
     'mining': ('mining_station', 540., 48., 24.),
+    'talon': ('imperial_tie_squadron', 110., 48., 28.),
+    'engineer': ('imperial_constructor', 180., 48., 28.),
 }
 
 
@@ -129,7 +132,7 @@ def main():
                 pygame.image.save(pygame.transform.flip(surface, False, True), str(out / 'gameplay.png'))
                 info = diagnostics()
                 if not args.core:
-                    assert {row['pack_id'] for row in info['pack_order'] if row['accepted']} == {'prototype:vigil', 'prototype:imperium_command', 'prototype:imperium_shipyard', 'prototype:imperium_mining'}, info
+                    assert {row['pack_id'] for row in info['pack_order'] if row['accepted']} == {'prototype:vigil', 'prototype:imperium_command', 'prototype:imperium_shipyard', 'prototype:imperium_mining', 'prototype:imperium_talon', 'prototype:imperium_engineer'}, info
                 info['focus'] = args.focus
                 info['scenario'] = 'stock skirmish + one prebuilt mining station for review' if args.focus == 'mining' else 'stock skirmish'
                 info.update(frames=count, gl_samples=int(GL.glGetIntegerv(GL.GL_SAMPLES)),

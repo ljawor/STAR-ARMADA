@@ -1,0 +1,22 @@
+{
+  "contract": "star-armada/visual-pack",
+  "contract_major": 1,
+  "id": "prototype:imperium_engineer",
+  "version": "0.1.0",
+  "requires": {
+    "min_engine": "0.15.1",
+    "contracts": [
+      "star-armada/model-manifest/v1"
+    ]
+  },
+  "content": {
+    "replaces": [
+      {
+        "binding": "imperial:constructor",
+        "replace_of": "core:imperial/constructor",
+        "manifest": "assets/models/manifests/engineer.json"
+      }
+    ]
+  },
+  "notes": "Original owner-requested local visual specimen; accepted four assets unchanged. Review before PR additions."
+}
