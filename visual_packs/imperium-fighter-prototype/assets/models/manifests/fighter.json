@@ -1,0 +1,61 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "prototype:imperial/fighter_platform",
+  "revision": "aded3002737ff498642158db650bde0ae28562f17da74adb26069116891a43a8",
+  "display_name": "Galactic Imperium Fighter Platform \u2014 visual prototype (unapproved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/fighter.mesh.json",
+      "sha256": "afcaa87d5fe222d049f0798673e658d2198e1f062d2058873d33ebc807a085c2",
+      "bytes": 208330
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -31.4842491,
+      -11.4837503,
+      -41.9785004
+    ],
+    "max": [
+      31.4842491,
+      53.4837494,
+      43.9785042
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor / STAR ARMADA visual prototype",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "notes": "Original Imperial fighter platform authored by tools/art/build_imperial_station_prototypes.py; editable source art/blender/imperium_fighter_prototype.blend. Appearance review pending. No gameplay changes or proprietary models."
+  },
+  "requires": {
+    "min_engine": "0.16.0",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 3084,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}

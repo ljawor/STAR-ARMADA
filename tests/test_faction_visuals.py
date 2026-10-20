@@ -154,7 +154,8 @@ class HardwareIntegrationTests(unittest.TestCase):
                         self.assertEqual(fx['pos'], [0.,0.,42.])
                     before, effects = copy.deepcopy(st.to_dict(precise=True)), copy.deepcopy(st.effects)
                     r = Renderer.__new__(Renderer)
-                    r.state, r.ds, r.local_player, r.time = st, DataStore.get(), 0, math.degrees(angle)/3.
+                    r.state, r.ds, r.local_player, r.time = st, DataStore.get(), 0, 0.
+                    r._station_angle = lambda a=angle: a
                     contact = r._visual_hit(fx)
                     self.assertTrue(contact.get('visual_contact'))
                     point = np.asarray(contact['pos']) - center

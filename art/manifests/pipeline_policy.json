@@ -579,6 +579,174 @@
       "binds_to": {
         "engine_version": "0.16.0"
       }
+    },
+    {
+      "id": "imperium-prototype-default-selection-2026-10-20",
+      "date": "2026-10-20",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "authorized-prototype-default-selection",
+      "applies_to": "the shipped render-only default selection (DEFAULT_SETTINGS.visual_packs) of the six owner-approved Imperial prototypes",
+      "owner_wording": "Do the commit so the local new models will stay as default.",
+      "question_answered": "The six approved prototypes appear only because the owner's local saves/settings.json enables them; that switch is user data and is not in Git, so a fresh checkout still draws the six core bindings they replace. Commit the switch as a shipped default, promote the six into the core catalogue, or leave them opt-in?",
+      "how_recorded": "The owner asked for the switch to be committed as the default. Their appearance approval is already recorded in artifacts/imperial-flight-prototypes/OWNER_REVIEW.json (approval_kind prototype-appearance-and-pr-landing, reviewed revision 255aaba7a121a5573ba00e7cfcce6f903c4d42ff) and is not re-decided here; this entry records only that those six packs become the shipped selection.",
+      "authorizes": [
+        "listing the six approved pack directories in DEFAULT_SETTINGS.visual_packs, so a checkout that has never saved a settings file starts on those revisions",
+        "leaving an existing saved settings file in charge of its own list, which is what keeps the owner's current local run unchanged"
+      ],
+      "not_authorized": [
+        "registering the six meshes as core catalogue assets (registry core status, packaged manifests and receipts)",
+        "claiming a packaged or frozen default: visual packs must live outside a frozen bundle, so a package resolves none of them and keeps the core catalogue",
+        "a tag, package or release",
+        "further artwork, or any change to the six approved revisions",
+        "reading this selection as catalogue coverage: the six replaced core bindings remain the packaged appearance"
+      ],
+      "binds_to": {
+        "owner_review": "artifacts/imperial-flight-prototypes/OWNER_REVIEW.json",
+        "reviewed_revision_commit": "255aaba7a121a5573ba00e7cfcce6f903c4d42ff",
+        "default_selection": [
+          "vigil-prototype",
+          "imperium-command-prototype",
+          "imperium-shipyard-prototype",
+          "imperium-mining-prototype",
+          "imperium-talon-prototype",
+          "imperium-engineer-prototype"
+        ]
+      },
+      "follow_up": "Registering these six as core assets is the route to a packaged default. It needs its own authorization and the complete record set (registry status, pipeline expected_triangles and approval binding, receipts, coverage report), not a settings entry."
+    },
+    {
+      "id": "imperial-station-prototypes-2026-10-20",
+      "date": "2026-10-20",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved-station-prototype-batch-and-default-selection",
+      "applies_to": "the three Galactic Imperium station prototypes (research station, defence platform, sensor station) and their entry in the shipped render-only default selection",
+      "owner_wording": "Looks perfect.",
+      "question_answered": "Do the three Imperial station prototypes look right in the live game, and should they be committed to PR #142 together with the default switch?",
+      "how_recorded": "The owner reviewed the live production game window (tools/play_station_prototypes.py, stock Imperial skirmish with one of each station, isolated profile) and answered in two words. Appearance approval is recorded in artifacts/imperial-stations-review/OWNER_REVIEW.json bound to the mesh, builder, master, descriptor and manifest hashes; this entry records the batch approval and that the three packs join the shipped default selection.",
+      "authorizes": [
+        "committing the three station prototype packs, their authoring and packaging tools, the review launcher, the focused loader guard and the in-game captures to PR #142",
+        "listing the three station pack directories in DEFAULT_SETTINGS.visual_packs beside the six approved ship prototypes"
+      ],
+      "does_not_authorize": [
+        "merging PR #142",
+        "a tag or a release",
+        "registering the models in the core catalogue (assets/models/registry.json) or pipeline manifests",
+        "packaged / frozen-bundle delivery of the packs",
+        "any change to gameplay, ship sizes, collision radii or simulation state"
+      ],
+      "binds_to": {
+        "engine_version": "0.16.0",
+        "pull_request": 142,
+        "review_record": "artifacts/imperial-stations-review/OWNER_REVIEW.json"
+      }
+    },
+    {
+      "id": "imperial-station-surface-fit-2026-10-20",
+      "date": "2026-10-20",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved-surface-fit-fix-and-kept-station-defaults",
+      "applies_to": "the three Galactic Imperium station prototypes (research station, defence platform, sensor station), their runtime meshes and their entries in the shipped render-only default selection",
+      "owner_report": "Research station had objects not attached to the hull (small blue and black squares); the same on the sensor station.",
+      "owner_wording": "Looking good. You can commit and make it default on local and PR.",
+      "question_answered": "Do the station prototypes now read as one solid hull in the live game, and should the fix be committed to PR #142 and kept as the local and shipped default?",
+      "root_cause": "surface detail was placed at remembered radii rather than on the hull section at its own height, so plates, vents and bands sat 0.5-9 units clear of the hull wherever the octagon narrows or the chamfer cuts in; buried radiator fins showed only their edges and rod-and-cube antennas read as loose cubes.",
+      "how_recorded": "Owner reported the defect in the running game and reviewed the fix in the same live production window (tools/play_station_prototypes.py, stock Imperial skirmish with one of each station, isolated profile). Appearance approval is recorded in artifacts/imperial-stations-review/OWNER_REVIEW.json revision 2, bound to the new mesh, builder, master, descriptor, manifest, in-game capture and Blender render hashes.",
+      "authorizes": [
+        "committing the surface-fit fix, the projected-placement helpers and the build-time contact gate to PR #142",
+        "keeping the three station packs in DEFAULT_SETTINGS.visual_packs and in the local saved profile selection"
+      ],
+      "does_not_authorize": [
+        "merging PR #142",
+        "a tag or a release",
+        "registering the models in the core catalogue (assets/models/registry.json) or pipeline manifests",
+        "packaged / frozen-bundle delivery of the packs",
+        "any change to gameplay, ship sizes, collision radii or simulation state"
+      ],
+      "binds_to": {
+        "engine_version": "0.16.0",
+        "pull_request": 142,
+        "review_record": "artifacts/imperial-stations-review/OWNER_REVIEW.json",
+        "supersedes_appearance_in": "imperial-station-prototypes-2026-10-20"
+      }
+    },
+    {
+      "id": "imperial-dockyard-prototypes-2026-10-20",
+      "date": "2026-10-20",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved-dockyard-prototypes-and-default",
+      "owner_wording": "Well done. I like it. Commit and make it default on PR and Local",
+      "question_answered": "The four dockyard models built from Homeworld 2 silhouette language are good enough to ship, and the default selection carries them in the repo and in the owner's local run.",
+      "scope": {
+        "prototypes": [
+          "imperium-trade-prototype",
+          "imperium-fighter-prototype",
+          "imperium-repair-prototype",
+          "imperium-relay-prototype"
+        ],
+        "bindings": [
+          "imperial:trade_station",
+          "imperial:fighter_platform",
+          "imperial:repair_dock",
+          "imperial:energy_relay"
+        ],
+        "default_packs_after": 13
+      },
+      "gates": [
+        "blender build",
+        "reproducible export",
+        "envelope fit",
+        "contact gate (no floating parts)",
+        "six material roles",
+        "real-driver gameplay capture",
+        "focused loader tests"
+      ],
+      "review_record": "artifacts/imperial-dockyard-review/OWNER_REVIEW.json",
+      "evidence_sha256": {
+        "builder": "e547cf795a40166aa7c7bec9981271f5a9633f3c3f5f79ad46039afa8aab5bcd",
+        "review": "1edcc2d35d5c55c450fbde2edd5cd466aefe0f82bad9e85745ffada831837a34"
+      },
+      "deliberately_skipped": [
+        "full test suite",
+        "contract-trio matrix",
+        "art-validator sweep"
+      ],
+      "skip_ci": true
+    },
+    {
+      "id": "imperial-stations-static-yaw-2026-10-20",
+      "date": "2026-10-20",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved-static-stations-and-rework-playbook",
+      "owner_wording": "Looks perfect.",
+      "owner_wording_context": [
+        "OK we have closed out the imperial stations. Can you check if this is a big change to globally stop every station from rotating?",
+        "My poposal: Make teh change locally and let me check this through main.py. If i am happy , let's add this to the existing PR and close and merge this one.",
+        "Looks perfect."
+      ],
+      "question_answered": "Free-standing stations should stop the 3 deg/s cosmetic spin so authored hull detail and every in-play anchor (docking pads, hull contacts, camera bounds, picking) stay in one fixed frame, and the model-rework protocol should be written down for the Imperial ships batch.",
+      "scope": {
+        "renderer_methods": [
+          "_initialize",
+          "_station_angle",
+          "_draw_ship_role_batch",
+          "_draw_station",
+          "_draw_station_outline",
+          "_visual_hit"
+        ],
+        "affected_population": "free-standing stations only; planet buildings and satellites keep their own orientation",
+        "sim_or_save_change": false,
+        "envelope_or_state_hash_change": false,
+        "default_packs_after": 13,
+        "playbook": "docs/MODEL_REWORK_PLAYBOOK.md"
+      },
+      "gates": [
+        "render/geometry suite (102 tests)",
+        "appearance pin correction (engineering-only, no new appearance approval)",
+        "owner review in a live main.py window",
+        "focused station prototype loader tests"
+      ],
+      "review_record": "art/manifests/approvals.json#s06-b5-environment-2026-10-17.s07_static_station_pin_correction",
+      "note": "The stray map circles the owner reported were the S06 jump-point line-loop markers; a STAR_ARMADA_SKIP=jumppoints run confirmed the identification. No marker geometry was changed by this decision."
     }
   ]
 }

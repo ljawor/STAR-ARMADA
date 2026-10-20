@@ -1,0 +1,61 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "prototype:imperial/repair_dock",
+  "revision": "ca6bced25fbadd2075379cc09cecc01c1f5fa5da253ad5bad4552e3b98575c6b",
+  "display_name": "Galactic Imperium Repair Station \u2014 visual prototype (unapproved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/repair.mesh.json",
+      "sha256": "bea187d3bacb6705bd678afba2fbf80513537426c1869af2bf4b458e5d86cd7a",
+      "bytes": 303215
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -33.5044861,
+      -19.987751,
+      -41.9789963
+    ],
+    "max": [
+      33.5044861,
+      28.9877491,
+      41.9789963
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor / STAR ARMADA visual prototype",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "notes": "Original Imperial repair dock authored by tools/art/build_imperial_station_prototypes.py; editable source art/blender/imperium_repair_prototype.blend. Appearance review pending. No gameplay changes or proprietary models."
+  },
+  "requires": {
+    "min_engine": "0.16.0",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 4636,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}

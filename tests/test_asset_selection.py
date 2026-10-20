@@ -1,4 +1,5 @@
 """Render-only selection preferences and explicit session boundaries."""
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -34,7 +35,18 @@ class SelectionPreferencesTests(unittest.TestCase):
         import game.core
         from render import menus
         self.assertIs(menus.DEFAULT_SETTINGS.get('model_preview'), True)
-        self.assertEqual(menus.DEFAULT_SETTINGS.get('visual_packs'), [])
+        # The shipped selection is the thirteen owner-approved Imperial prototypes: the six
+        # ships (decision imperium-prototype-default-selection-2026-10-20), the three
+        # stations (decision imperial-station-prototypes-2026-10-20) and the four dockyard
+        # units (decision imperial-dockyard-prototypes-2026-10-20).
+        self.assertEqual(menus.DEFAULT_SETTINGS.get('visual_packs'),
+                         ['vigil-prototype', 'imperium-command-prototype',
+                          'imperium-shipyard-prototype', 'imperium-mining-prototype',
+                          'imperium-talon-prototype', 'imperium-engineer-prototype',
+                          'imperium-research-prototype', 'imperium-defense-prototype',
+                          'imperium-sensor-prototype', 'imperium-trade-prototype',
+                          'imperium-fighter-prototype', 'imperium-repair-prototype',
+                          'imperium-relay-prototype'])
         with self.assertWarnsRegex(RuntimeWarning, 'using legacy models'):
             clean = menus.validate_presentation_settings(
                 {'model_preview': True, 'visual_packs': ['../escape'], 'custom': 17})
@@ -335,6 +347,58 @@ class SelectionLanguageTests(unittest.TestCase):
                 actual = (Path(directory) / f'{code}.json').read_bytes()
                 self.assertNotIn(b'\r', actual)
                 self.assertEqual(actual, (root / f'assets/data/lang/{code}.json').read_bytes())
+
+
+class ShippedPrototypeDefaultTests(unittest.TestCase):
+    """The committed default is only real if it resolves the approved meshes.
+
+    `DEFAULT_SETTINGS['visual_packs']` names thirteen external packs, and a name is not a
+    model: a typo, a moved directory or a dropped mesh would leave the shipped
+    selection pointing at nothing while every settings test still passed. Drive the
+    real application seam from a clean install (no saved settings file) and check the
+    loaded geometry against the owner's approved triangle counts.
+    """
+
+    REVIEWS = ('artifacts/imperial-flight-prototypes/OWNER_REVIEW.json',
+               'artifacts/imperial-stations-review/OWNER_REVIEW.json',
+               'artifacts/imperial-dockyard-review/OWNER_REVIEW.json')
+
+    def test_shipped_default_loads_the_approved_prototype_meshes(self):
+        import json
+        import game.core
+        from render import menus
+        from render import asset_selection as selection
+        root = Path(__file__).resolve().parents[1]
+        approved = [item for name in self.REVIEWS
+                    for item in json.loads((root / name).read_text(encoding='utf-8'))['assets']]
+        self.assertEqual(len(approved), len(menus.DEFAULT_SETTINGS['visual_packs']),
+                         'every shipped pack carries an owner-approved mesh')
+        # A clean install: no settings file, so `load_settings` returns the shipped
+        # defaults. In a source run USER_DIR is the checkout, which is where the
+        # committed packs live.
+        self.assertEqual(os.path.realpath(menus.USER_DIR), os.path.realpath(root))
+        with patch.object(menus, 'SETTINGS_PATH', str(root / 'saves' / 'absent-settings.json')):
+            settings = menus.load_settings()
+        self.assertEqual(settings['visual_packs'], menus.DEFAULT_SETTINGS['visual_packs'])
+        with patch.multiple(selection,
+                            _selection={'model_preview': False, 'visual_packs': []},
+                            _resolver=None, _generation=0, _coverage_report=None,
+                            _coverage_generation=-1):
+            report = selection.configure_from_settings(settings)
+            self.assertEqual(report['mode'], 'preview')
+            self.assertEqual([row['accepted'] for row in report['pack_order']],
+                             [True] * len(menus.DEFAULT_SETTINGS['visual_packs']), report['pack_order'])
+            self.assertEqual(report['enabled_order'], menus.DEFAULT_SETTINGS['visual_packs'])
+            self.assertTrue(report['coverage']['ok'], report['coverage'])
+            for item in approved:
+                binding = item['binding']
+                with self.subTest(binding=binding):
+                    self.assertTrue(selection.selected_binding(binding), binding)
+                    mesh = selection.mesh_for(binding)
+                    assert mesh is not None, binding
+                    self.assertEqual(sum(len(faces) for faces in mesh.values()),
+                                     item['triangle_count'], 'shipped default is not the reviewed mesh')
+                    self.assertEqual(selection.gpu_cache_key(binding, 'base', 'legacy')[0], 'authored')
 
 
 if __name__ == '__main__':

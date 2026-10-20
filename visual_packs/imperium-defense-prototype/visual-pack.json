@@ -1,0 +1,22 @@
+{
+  "contract": "star-armada/visual-pack",
+  "contract_major": 1,
+  "id": "prototype:imperial_defense",
+  "version": "0.1.0",
+  "requires": {
+    "min_engine": "0.16.0",
+    "contracts": [
+      "star-armada/model-manifest/v1"
+    ]
+  },
+  "content": {
+    "replaces": [
+      {
+        "binding": "imperial:defense_platform",
+        "replace_of": "core:imperial/defense_platform",
+        "manifest": "assets/models/manifests/defense.json"
+      }
+    ]
+  },
+  "notes": "Owner-requested Galactic Imperium Defence Platform prototype. Core catalogue unchanged; the approved appearance of every other asset is untouched."
+}

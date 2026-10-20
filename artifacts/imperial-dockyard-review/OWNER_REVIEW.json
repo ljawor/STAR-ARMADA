@@ -1,0 +1,151 @@
+{
+  "approval_kind": "owner-approved",
+  "recorded_utc": "2026-10-20T00:00:00Z",
+  "batch": "imperial-dockyard-prototypes",
+  "reviewed_branch": "feat/imperial-approved-defaults",
+  "reviewed_pull_request": 142,
+  "review_method": "live review match (tools/play_station_prototypes.py) with all seven review stations placed; owner rotated the models in a real game window",
+  "gates": {
+    "blender_build": "pass",
+    "reproducible_export": "pass",
+    "envelope": "pass",
+    "contact": "pass (no floating parts)",
+    "roles": "pass (six roles)",
+    "live_capture": "pass (real driver, 12 frames)",
+    "focused_tests": "pass"
+  },
+  "assets": [
+    {
+      "display_name": "Trading Station",
+      "data_id": "trade_station",
+      "binding": "imperial:trade_station",
+      "pack": "imperium-trade-prototype",
+      "pack_id": "prototype:imperial_trade",
+      "mesh": "visual_packs/imperium-trade-prototype/assets/models/trade.mesh.json",
+      "triangle_count": 6200,
+      "parts": 291,
+      "bounds": [
+        [
+          -62.9684982,
+          -8.5899734,
+          -62.9684982
+        ],
+        [
+          62.9684982,
+          51.4849739,
+          62.9684982
+        ]
+      ],
+      "sha256": {
+        "visual_packs/imperium-trade-prototype/assets/models/trade.mesh.json": "db74d335bf7ed7680cb966fefa8dacfb842f543a1b1fe29bc8fcd02da61ba3f9",
+        "tools/art/build_imperial_station_prototypes.py": "e547cf795a40166aa7c7bec9981271f5a9633f3c3f5f79ad46039afa8aab5bcd",
+        "art/blender/imperium_trade_prototype.blend": "1cf4375f9d3ac52eb85e3c882e3fea726060ae426bb687d3b4babb9b55bd8c72",
+        "visual_packs/imperium-trade-prototype/visual-pack.json": "f43865d174073e0670613ec714c1be17b713459f5984e9f57a62c7f1b1d97c43",
+        "visual_packs/imperium-trade-prototype/assets/models/manifests/trade.json": "142ab68c877689f1fa2061a58fe9b74475c402b383418027c9cf886a4e48a0ae"
+      },
+      "in_game_capture": "artifacts/imperial-dockyard-review/trade-in-game.png",
+      "blender_capture": "artifacts/imperial-dockyard-review/trade-blender.png"
+    },
+    {
+      "display_name": "Fighter Dock",
+      "data_id": "fighter_platform",
+      "binding": "imperial:fighter_platform",
+      "pack": "imperium-fighter-prototype",
+      "pack_id": "prototype:imperial_fighter",
+      "mesh": "visual_packs/imperium-fighter-prototype/assets/models/fighter.mesh.json",
+      "triangle_count": 3084,
+      "parts": 137,
+      "bounds": [
+        [
+          -31.4842491,
+          -11.4837503,
+          -41.9785004
+        ],
+        [
+          31.4842491,
+          53.4837494,
+          43.9785042
+        ]
+      ],
+      "sha256": {
+        "visual_packs/imperium-fighter-prototype/assets/models/fighter.mesh.json": "afcaa87d5fe222d049f0798673e658d2198e1f062d2058873d33ebc807a085c2",
+        "tools/art/build_imperial_station_prototypes.py": "e547cf795a40166aa7c7bec9981271f5a9633f3c3f5f79ad46039afa8aab5bcd",
+        "art/blender/imperium_fighter_prototype.blend": "da11e49dede124c97a1571c729d60b2a46dd9b2561abdf54c1c6dd249bbbca12",
+        "visual_packs/imperium-fighter-prototype/visual-pack.json": "f71e67d67adcf16efacd001f9b73ae2cded11698a594082036ac429b126709c0",
+        "visual_packs/imperium-fighter-prototype/assets/models/manifests/fighter.json": "3f9589b76a0553c1552a99ae16015b74f4ac1e2a1264efbaa7b33ac90d68fe4d"
+      },
+      "in_game_capture": "artifacts/imperial-dockyard-review/fighter-in-game.png",
+      "blender_capture": "artifacts/imperial-dockyard-review/fighter-blender.png"
+    },
+    {
+      "display_name": "Repair Station",
+      "data_id": "repair_dock",
+      "binding": "imperial:repair_dock",
+      "pack": "imperium-repair-prototype",
+      "pack_id": "prototype:imperial_repair",
+      "mesh": "visual_packs/imperium-repair-prototype/assets/models/repair.mesh.json",
+      "triangle_count": 4636,
+      "parts": 226,
+      "bounds": [
+        [
+          -33.5044861,
+          -19.987751,
+          -41.9789963
+        ],
+        [
+          33.5044861,
+          28.9877491,
+          41.9789963
+        ]
+      ],
+      "sha256": {
+        "visual_packs/imperium-repair-prototype/assets/models/repair.mesh.json": "bea187d3bacb6705bd678afba2fbf80513537426c1869af2bf4b458e5d86cd7a",
+        "tools/art/build_imperial_station_prototypes.py": "e547cf795a40166aa7c7bec9981271f5a9633f3c3f5f79ad46039afa8aab5bcd",
+        "art/blender/imperium_repair_prototype.blend": "802c137c1e6500cc7db1ec96ee292dbed7a81fcc96e7ebeb31010685679e8d63",
+        "visual_packs/imperium-repair-prototype/visual-pack.json": "2a0448d36a3d8d53cf0e1da66cf0181db34c49e6898c616236aac61f4bc904b5",
+        "visual_packs/imperium-repair-prototype/assets/models/manifests/repair.json": "3669f666e3f9fac47469a4fbdb232a57ffbb6c20eb815496b34c7008970967eb"
+      },
+      "in_game_capture": "artifacts/imperial-dockyard-review/repair-in-game.png",
+      "blender_capture": "artifacts/imperial-dockyard-review/repair-blender.png"
+    },
+    {
+      "display_name": "Energy Relay",
+      "data_id": "energy_relay",
+      "binding": "imperial:energy_relay",
+      "pack": "imperium-relay-prototype",
+      "pack_id": "prototype:imperial_relay",
+      "mesh": "visual_packs/imperium-relay-prototype/assets/models/relay.mesh.json",
+      "triangle_count": 4510,
+      "parts": 106,
+      "bounds": [
+        [
+          -41.4542618,
+          -20.4853745,
+          -27.9813118
+        ],
+        [
+          41.4542618,
+          37.9853745,
+          46.7313118
+        ]
+      ],
+      "sha256": {
+        "visual_packs/imperium-relay-prototype/assets/models/relay.mesh.json": "35c92f4346fc986ba36d086b9e733aa1530c8103e025fe6c4e845ceb50c56d7b",
+        "tools/art/build_imperial_station_prototypes.py": "e547cf795a40166aa7c7bec9981271f5a9633f3c3f5f79ad46039afa8aab5bcd",
+        "art/blender/imperium_relay_prototype.blend": "a629e539df6f90862ea1007aaec5561171ccca709ea7650cea55e8ab3874bccd",
+        "visual_packs/imperium-relay-prototype/visual-pack.json": "9882e3ec54bf4cb444f9745ce2f43a8d8dc9bd848bb5418fb2e5f932d3d8b013",
+        "visual_packs/imperium-relay-prototype/assets/models/manifests/relay.json": "95e516dea476ba0369b905f30e92afcaf4000e85e6cf162cef6b97e779997e40"
+      },
+      "in_game_capture": "artifacts/imperial-dockyard-review/relay-in-game.png",
+      "blender_capture": "artifacts/imperial-dockyard-review/relay-blender.png"
+    }
+  ],
+  "notes": "Original silhouettes authored for STAR ARMADA; Homeworld 2 used only as a silhouette reference. Each unit is a prototype visual pack, core catalogue untouched.",
+  "owner_words_verbatim": "Well done. I like it. Commit and make it default on PR and Local",
+  "question_answered": "Ship the trade station, fighter dock, repair station and energy relay as shipped defaults in the repo and in the local run.",
+  "not_approved_by_this_decision": [
+    "appearance of any other binding",
+    "any gameplay, balance, collision or size change",
+    "any tag or release"
+  ]
+}
