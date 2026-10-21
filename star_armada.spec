@@ -31,9 +31,21 @@ VERSION = _version()
 a = Analysis(
     ["main.py"],
     pathex=[ROOT],
-    binaries=[],
+    binaries=[
+        # The native window (W11). A frozen build that ships the rings but not the viewer would
+        # fall back to legacy on every launch and the migration would exist only in a checkout.
+        ("render_cpp/build-w02/armada_viewer", "cpp"),
+    ],
     datas=[
         ("assets", "assets"),          # game data + fonts
+        # The compiled bgfx shaders. The viewer defaults to the directory baked in at build time
+        # (the build tree), which does not exist inside a bundle, so `cpp_window.spawn` passes
+        # `--shaders cpp/shaders` when the binary it found sits in a bundle.
+        ("render_cpp/build-w02/shaders", "cpp/shaders"),
+        # The approved Blender prototypes are the shipped default model selection, and the mesh
+        # catalogue the window loads names their files. A bundle without them cannot build its
+        # catalogue at all, which is what the first frozen attempt reported.
+        ("visual_packs", "visual_packs"),
     ],
     hiddenimports=[
         "pygame.pkg_properties",

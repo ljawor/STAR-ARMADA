@@ -90,6 +90,12 @@ DEFAULT_SETTINGS = {
     # Blender catalogue; the legacy procedural renderer stays available as the
     # rollback control and is never deleted by this step.
     "model_preview": True,
+    # Which renderer draws the world: 'cpp' (the native window over the W02-W11 bridge) or
+    # 'legacy' (the GL renderer this process grew up with). Presentation only - the simulation
+    # never reads it, so a LAN match plays the same either way. W11 makes the window the default
+    # because that is the migration's whole point; 'legacy' stays as the rollback control and is
+    # never deleted by this step.
+    "renderer": "cpp",
     # The nine owner-approved Imperial prototypes ship as the default enabled selection:
     # the six ships of decision `imperium-prototype-default-selection-2026-10-20` and the
     # three stations of `imperial-station-prototypes-2026-10-20`. A checkout that has never
@@ -175,6 +181,10 @@ def load_settings() -> dict:
     # production default applies and the next save records the choice as explicit.
     if not (isinstance(saved, dict) and saved.get("model_preview_explicit") is True):
         s["model_preview"] = DEFAULT_SETTINGS["model_preview"]
+    # A hand-edited file naming a renderer that does not exist must not reach the game as a
+    # silent no-window: unknown values read as the shipped default, exactly like a bad volume.
+    if s.get("renderer") not in ("cpp", "legacy"):
+        s["renderer"] = DEFAULT_SETTINGS["renderer"]
     return validate_presentation_settings(s)
 
 
@@ -1303,6 +1313,12 @@ class MenuStack:
                     from render.markers import next_mode
                     self.settings["markers"] = next_mode(
                         self.settings.get("markers", "all"))
+                    self._dirty_settings = True
+                elif act == "cycle_renderer":
+                    # 'cpp' is the native window; 'legacy' keeps this process's own GL renderer.
+                    # Applies at the next session, like every other presentation change.
+                    self.settings["renderer"] = (
+                        "legacy" if self.settings.get("renderer") == "cpp" else "cpp")
                     self._dirty_settings = True
                 elif act == "cycle_language":
                     code = i18n.cycle(str(self.settings.get("language", i18n.DEFAULT_LANGUAGE)))

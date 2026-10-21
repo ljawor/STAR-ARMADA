@@ -1551,6 +1551,19 @@
             "5,828 non-background pixels in an otherwise empty frame (starfield)",
             "ctest 12/12 OK after the cue change"
         ]
+    },
+    {
+        "id": "render-w11-default-2026-10-21",
+        "owner_wording": "please run all the steps till W11. Do not pause. Do all needed test, commits and merges. Ping me next when the game is ready and all points till W11 (included) are finished",
+        "base_commit": "8a84ceb",
+        "artifact": "docs/RENDER_W11_DEFAULT.md",
+        "decision": "The native window is the default renderer: DEFAULT_SETTINGS['renderer'] is 'cpp', the settings screen carries a Renderer row, and --renderer legacy remains the rollback control and is never deleted. A missing or dying window falls back to the legacy renderer with a message rather than blanking a match. The viewer, its shaders, the mesh catalogue and the approved visual packs ship in the frozen bundle, and the window is found under sys._MEIPASS first.",
+        "evidence": [
+            "main.py --skirmish with no renderer argument spawned armada_viewer and logged no fallback",
+            "SMOKE_CPP_OK t=30s on the default path, SMOKE_DONE t=30s with --renderer legacy",
+            "packaged armada_viewer run from inside dist/STAR ARMADA.app drew 5,828 non-background pixels with only packaged shaders/assets",
+            "6 new tests in tests/test_render_default.py; 217 render tests OK; ctest 12/12"
+        ]
     }
   ]
 }
