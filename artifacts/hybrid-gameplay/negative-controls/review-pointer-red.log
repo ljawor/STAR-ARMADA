@@ -1,0 +1,80 @@
+test_local_pointer_events_restore_local_placement_authority (test_hybrid_pointer.HybridPointerTests.test_local_pointer_events_restore_local_placement_authority) ... 
+  test_local_pointer_events_restore_local_placement_authority (test_hybrid_pointer.HybridPointerTests.test_local_pointer_events_restore_local_placement_authority) (event=1024) ... FAIL
+  test_local_pointer_events_restore_local_placement_authority (test_hybrid_pointer.HybridPointerTests.test_local_pointer_events_restore_local_placement_authority) (event=1025) ... FAIL
+  test_local_pointer_events_restore_local_placement_authority (test_hybrid_pointer.HybridPointerTests.test_local_pointer_events_restore_local_placement_authority) (event=1026) ... FAIL
+  test_local_pointer_events_restore_local_placement_authority (test_hybrid_pointer.HybridPointerTests.test_local_pointer_events_restore_local_placement_authority) (event=1027) ... FAIL
+test_reset_clears_native_pointer_before_local_event (test_hybrid_pointer.HybridPointerTests.test_reset_clears_native_pointer_before_local_event) ... FAIL
+
+======================================================================
+FAIL: test_local_pointer_events_restore_local_placement_authority (test_hybrid_pointer.HybridPointerTests.test_local_pointer_events_restore_local_placement_authority) (event=1024)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_hybrid_pointer.py", line 100, in test_local_pointer_events_restore_local_placement_authority
+    self.assertEqual((self.hud.placement['ghost']['sx'],
+AssertionError: Tuples differ: (620, 400) != (700, 450)
+
+First differing element 0:
+620
+700
+
+- (620, 400)
++ (700, 450)
+
+======================================================================
+FAIL: test_local_pointer_events_restore_local_placement_authority (test_hybrid_pointer.HybridPointerTests.test_local_pointer_events_restore_local_placement_authority) (event=1025)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_hybrid_pointer.py", line 100, in test_local_pointer_events_restore_local_placement_authority
+    self.assertEqual((self.hud.placement['ghost']['sx'],
+AssertionError: Tuples differ: (620, 400) != (700, 450)
+
+First differing element 0:
+620
+700
+
+- (620, 400)
++ (700, 450)
+
+======================================================================
+FAIL: test_local_pointer_events_restore_local_placement_authority (test_hybrid_pointer.HybridPointerTests.test_local_pointer_events_restore_local_placement_authority) (event=1026)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_hybrid_pointer.py", line 100, in test_local_pointer_events_restore_local_placement_authority
+    self.assertEqual((self.hud.placement['ghost']['sx'],
+AssertionError: Tuples differ: (620, 400) != (700, 450)
+
+First differing element 0:
+620
+700
+
+- (620, 400)
++ (700, 450)
+
+======================================================================
+FAIL: test_local_pointer_events_restore_local_placement_authority (test_hybrid_pointer.HybridPointerTests.test_local_pointer_events_restore_local_placement_authority) (event=1027)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_hybrid_pointer.py", line 100, in test_local_pointer_events_restore_local_placement_authority
+    self.assertEqual((self.hud.placement['ghost']['sx'],
+AssertionError: Tuples differ: (620, 400) != (700, 450)
+
+First differing element 0:
+620
+700
+
+- (620, 400)
++ (700, 450)
+
+======================================================================
+FAIL: test_reset_clears_native_pointer_before_local_event (test_hybrid_pointer.HybridPointerTests.test_reset_clears_native_pointer_before_local_event)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_hybrid_pointer.py", line 112, in test_reset_clears_native_pointer_before_local_event
+    self.assertIsNone(self.controller.remote_pointer)
+AssertionError: (620, 400) is not None
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.087s
+
+FAILED (failures=5)
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)

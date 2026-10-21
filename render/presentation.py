@@ -83,8 +83,11 @@ class PresentationOverlay:
                                   pygame.MOUSEMOTION, pygame.MOUSEWHEEL)
         if event.type in (pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEMOTION):
             return any(rect.collidepoint(event.pos) for rect in self.panel_rects)
-        if event.type == pygame.MOUSEWHEEL and pygame.display.get_init():
-            return any(rect.collidepoint(pygame.mouse.get_pos()) for rect in self.panel_rects)
+        if event.type == pygame.MOUSEWHEEL:
+            pos = getattr(event, 'pos', None)
+            if pos is None and pygame.display.get_init():
+                pos = pygame.mouse.get_pos()
+            return pos is not None and any(rect.collidepoint(pos) for rect in self.panel_rects)
         return False
 
     def _wrap(self, text: str, font, width: int) -> list[str]:

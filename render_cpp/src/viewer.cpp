@@ -161,13 +161,18 @@ struct Options {
   std::array<float, 3> star{0.f, 2000.f, 0.f};
   int inputSlots = 8;
   bool inputExercise = false;
+  bool cameraExercise = false;
   bool hudOnly = false;
   int width = 1280, height = 800, frames = 0, warmup = 30, preset = 1, msaa = 4;
   double seconds = 0.0, distance = 0.0, pitch = 0.0, yaw = 0.0;
   // `> 0` cannot express "a level camera" or "yaw 0", so a requested 0 silently fell back to the
   // stock 12/90. NaN means "not given".
   bool pitchGiven = false, yawGiven = false;
-  bool shadows = true, overlay = true, validate = false, exercise = false;
+  bool shadows = true, validate = false, exercise = false,
+       // The debug text is a development aid, never part of the game's window: it is off unless a
+       // tool asks for it, and the game never asks. `F` used to toggle it and was in the player's
+       // way on a key the game already owns.
+       overlay = false;
 };
 static Options options(int argc, char **argv) {
   Options o;
@@ -237,6 +242,8 @@ static Options options(int argc, char **argv) {
       o.inputSlots = std::stoi(value());
     else if (k == "--input-exercise")
       o.inputExercise = true;
+    else if (k == "--camera-exercise")
+      o.cameraExercise = true;
     else if (k == "--hud-only")
       o.hudOnly = true;
     else if (k == "--seconds")
@@ -261,8 +268,10 @@ static Options options(int argc, char **argv) {
       o.msaa = std::stoi(value());
     else if (k == "--no-shadows")
       o.shadows = false;
+    else if (k == "--debug-overlay")
+      o.overlay = true;
     else if (k == "--no-overlay")
-      o.overlay = false;
+      o.overlay = false; // Retain the existing diagnostic launchers' explicit opt-out.
     else if (k == "--validate-only")
       o.validate = true;
     else if (k == "--exercise-controls")
@@ -272,7 +281,7 @@ static Options options(int argc, char **argv) {
           << "armada_viewer --snapshot scene.snap --assets assets [--frames "
              "180 --report timing.json --screenshot fleet.png]\nMouse drag "
              "orbit | wheel zoom | WASD pan | 1 fleet | 2 capital | 3 station "
-             "| S screenshot | F overlay | H shadows | Esc quit\n"
+             "| S screenshot | H shadows | Esc quit\n"
              "Live mode: --ring ring.bin [--tables ring.bin.tables] [--seconds 10]\n"
              "HUD (W03): --overlay-ring hud.bin  (the Python producer publishes the composed "
              "HUD surface; dirty rects only after the first frame; the window waits for a "
@@ -1291,6 +1300,30 @@ static int run(const Options &o) {
         SDL_PushEvent(&wheel);
       }
     }
+    if (o.cameraExercise) {
+      // Bounded integration probe: travel through the real SDL event pump and input ring.
+      // It is deliberately separate from offline camera controls and never used by the game.
+      SDL_Event gesture{};
+      if (frame == 80 || frame == 100) {
+        gesture.type = frame == 80 ? SDL_EVENT_MOUSE_BUTTON_DOWN : SDL_EVENT_MOUSE_BUTTON_UP;
+        gesture.button.button = SDL_BUTTON_RIGHT;
+        gesture.button.x = frame == 80 ? 600.f : 760.f;
+        gesture.button.y = frame == 80 ? 400.f : 500.f;
+        SDL_PushEvent(&gesture);
+      } else if (frame == 90) {
+        gesture.type = SDL_EVENT_MOUSE_MOTION;
+        gesture.motion.state = SDL_BUTTON_RMASK;
+        gesture.motion.x = 760.f;
+        gesture.motion.y = 500.f;
+        gesture.motion.xrel = 160.f;
+        gesture.motion.yrel = 100.f;
+        SDL_PushEvent(&gesture);
+      } else if (frame == 110 || frame == 111) {
+        gesture.type = frame == 110 ? SDL_EVENT_KEY_DOWN : SDL_EVENT_KEY_UP;
+        gesture.key.key = SDLK_ESCAPE;
+        SDL_PushEvent(&gesture);
+      }
+    }
     SDL_Event ev;
     while (SDL_PollEvent(&ev)) {
       if (inputOut) {
@@ -1303,11 +1336,11 @@ static int run(const Options &o) {
           break;
         case SDL_EVENT_MOUSE_BUTTON_DOWN:
         case SDL_EVENT_MOUSE_BUTTON_UP:
-          SDL_GetMouseState(&mx, &my);
           inputPending.push_back({ev.type == SDL_EVENT_MOUSE_BUTTON_DOWN
                                       ? input_ring::kButtonDown
                                       : input_ring::kButtonUp,
-                                  uint8_t(ev.button.button), 0, int32_t(mx), int32_t(my), 0});
+                                  uint8_t(ev.button.button), 0,
+                                  int32_t(ev.button.x), int32_t(ev.button.y), 0});
           break;
         case SDL_EVENT_MOUSE_WHEEL:
           SDL_GetMouseState(&mx, &my);
@@ -1349,6 +1382,10 @@ static int run(const Options &o) {
         init.swapChain.width = width;
         init.swapChain.height = height;
         bgfx::reset(BGFX_RESET_NONE, &init.swapChain);
+      } else if (inputOut) {
+        // In a live game Python owns every shortcut, including Escape (cancel first),
+        // F (fleet), H and camera motion. Offline inspection controls must not also act.
+        continue;
       } else if (ev.type == SDL_EVENT_MOUSE_MOTION &&
                  (ev.motion.state & SDL_BUTTON_LMASK))
         camera.orbit(-ev.motion.xrel * .25f, ev.motion.yrel * .2f);
@@ -1367,9 +1404,6 @@ static int run(const Options &o) {
           break;
         case SDLK_3:
           preset(3);
-          break;
-        case SDLK_F:
-          overlay = !overlay;
           break;
         case SDLK_H:
           shadows = !shadows;
@@ -1391,9 +1425,11 @@ static int run(const Options &o) {
       inputEvents += inputPending.size();
       inputPending.clear();
     }
-    const bool *keys = SDL_GetKeyboardState(nullptr);
-    camera.pan(float(keys[SDL_SCANCODE_D]) - float(keys[SDL_SCANCODE_A]),
-               float(keys[SDL_SCANCODE_W]) - float(keys[SDL_SCANCODE_S]), dt);
+    if (!inputOut) {
+      const bool *keys = SDL_GetKeyboardState(nullptr);
+      camera.pan(float(keys[SDL_SCANCODE_D]) - float(keys[SDL_SCANCODE_A]),
+                 float(keys[SDL_SCANCODE_W]) - float(keys[SDL_SCANCODE_S]), dt);
+    }
     if (o.exercise && (frame == 0 || frame == 5 || frame == 10 || frame == 15))
       controlStates.push_back(Json{{"frame", frame},
                                    {"target", camera.target},
@@ -2289,7 +2325,7 @@ static int run(const Options &o) {
           1, 5, 0x07,
           "Drag orbit | wheel zoom | WASD pan | 1 fleet 2 capital 3 station");
       bgfx::dbgTextPrintf(1, 6, 0x07,
-                          "Shift+S PNG | F overlay | H shadows (%s) | Esc quit",
+                          "Shift+S PNG | H shadows (%s) | Esc quit",
                           shadows ? "ON" : "OFF");
       const auto *st = bgfx::getStats();
       if (live)

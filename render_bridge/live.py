@@ -44,7 +44,7 @@ class LiveSession:
     def __init__(self, state, ds, *, directory, local_player: int = 0, size=(1280, 800),
                  marker_mode: str = 'all', planet_texture: int = 256,
                  overlay_keyframe: float = 2.0, max_instances=None, max_effects=None,
-                 fps_probe=None, camera=None):
+                 fps_probe=None, camera=None, hud=None):
         self.state, self.ds = state, ds
         # The game's own camera, if it was handed in: the window looks where the player looks, and
         # only then can a click mean anything.
@@ -98,7 +98,13 @@ class LiveSession:
         import pygame
         pygame.font.init()
         from render.hud import HUD
-        self.hud = HUD(self.size[0], self.size[1], state)
+        # Runtime shares the controller's HUD: buttons, scroll state, placement and mission
+        # progress must be the same objects on screen and in the event handlers.
+        self._owns_hud = hud is None
+        self.hud = hud if hud is not None else HUD(self.size[0], self.size[1], state)
+        self.hud.local_player = self.local_player
+        if camera is not None:
+            self.hud.set_camera_ref(camera)
         self._overlay = ring.Ring.create(
             self.paths['overlay'], slots=4,
             slot_bytes=(overlay_codec.HEADER_BYTES
@@ -107,6 +113,7 @@ class LiveSession:
         self._overlay_published = 0
         self._overlay_last_full = float('-inf')
         self._overlay_keyframes = 0
+        self._overlay_had_layers = False
 
         import math
         from render import fog
@@ -173,7 +180,7 @@ class LiveSession:
     def publish(self, state, *, selection=(), visible_ids=None, effect_allow=None,
                 shot_allow=None, dt: float = 1.0 / 30.0,
                 paused: bool = False, message: str = "", flash_left: float = 0.0,
-                fps: float = 0.0, drag_box=None, floating_texts=None) -> dict:
+                fps: float = 0.0, drag_box=None, floating_texts=None, overlay_layers=()) -> dict:
         """Publish one frame. Every visibility argument is an *answer* from the game."""
         from render import emissive_batch, primitive_batch
         from render.renderer import projectile_extents
@@ -221,16 +228,25 @@ class LiveSession:
         self.hud.compose(set(selection), None, self.local_player, paused, message,
                          flash_left, fps)
         dirty = self.hud.recorder.take_dirty()
+        layers = tuple(overlay_layers)
+        surface = self.hud.overlay
+        if layers:
+            # Do not contaminate the HUD recorder's own previous-frame image.
+            surface = surface.copy()
+            for layer in layers:
+                surface.blit(layer, (0, 0))
         keyframe = (self._overlay_published == 0
+                    or bool(layers) or self._overlay_had_layers
                     or (self.overlay_keyframe > 0
                         and time.monotonic() - self._overlay_last_full >= self.overlay_keyframe))
         if keyframe:
             self._overlay_last_full = time.monotonic()
             self._overlay_keyframes += 1
-            payload = overlay_codec.encode_surface_full(self.hud.overlay)
+            payload = overlay_codec.encode_surface_full(surface)
         else:
             payload = overlay_codec.encode_surface(self.hud.overlay, dirty)
         self._overlay.publish(payload)
+        self._overlay_had_layers = bool(layers)
         self._overlay_published += 1
         overlay_ms = (time.perf_counter() - started) * 1000.0
 

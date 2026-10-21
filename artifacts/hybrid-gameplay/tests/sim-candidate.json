@@ -1,0 +1,324 @@
+{
+  "schema_version": 1,
+  "status": "ok",
+  "version": "0.16.0",
+  "environment": {
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "machine": "arm64",
+    "python": "3.11.16",
+    "frozen": false
+  },
+  "fixture": "corvette-combat-v1",
+  "seed": 12345,
+  "tick_dt": 0.03333333333333333,
+  "mode": "sim",
+  "units": 100,
+  "frames": 30,
+  "warmup_frames": 3,
+  "initial_state_sha256": "155530ab2a6d73552eb75667834e9638d4942a41ae16037290be6f649948e9d7",
+  "counts_initial": {
+    "entities": 102,
+    "alive": 102,
+    "ships": 100,
+    "stations": 2,
+    "projectiles": 0,
+    "effects": 0
+  },
+  "timing_semantics": "perf_counter_ns; fixed 1/30 simulation tick; no pacing; full mode glFinish after camera/world/HUD; world includes Renderer camera.apply; audio/input/menu/cinematic excluded; warmup excluded from samples",
+  "sample_exclusions": {},
+  "stages": {
+    "sim": {
+      "count": 30,
+      "mean_ms": 3.7670040333333334,
+      "median_ms": 3.601166,
+      "p95_ms": 5.018292,
+      "p99_ms": 7.040958,
+      "max_ms": 7.040958,
+      "samples_ms": [
+        3.858875,
+        3.725458,
+        3.811833,
+        3.719042,
+        3.767583,
+        3.585916,
+        3.764542,
+        4.178916,
+        5.018292,
+        4.001583,
+        3.616416,
+        3.583291,
+        3.079167,
+        3.299209,
+        3.065041,
+        7.040958,
+        3.407208,
+        3.532709,
+        3.433292,
+        3.712083,
+        3.621708,
+        3.414,
+        3.443333,
+        3.378958,
+        3.808583,
+        3.4435,
+        4.953042,
+        3.096667,
+        3.324041,
+        3.324875
+      ]
+    }
+  },
+  "state_sha256": "afbbe1b1940506cc53909efd8c2e3fbf432fbb0d2da42b4aea9271854417a230",
+  "counts_final": {
+    "entities": 102,
+    "alive": 102,
+    "ships": 100,
+    "stations": 2,
+    "projectiles": 0,
+    "effects": 400
+  },
+  "counts_per_sample": [
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 100,
+      "effects": 100
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 100,
+      "effects": 100
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 100,
+      "effects": 100
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 100,
+      "effects": 100
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 100,
+      "effects": 100
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 100,
+      "effects": 100
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 100,
+      "effects": 100
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 100,
+      "effects": 100
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 0,
+      "effects": 200
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 0,
+      "effects": 200
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 0,
+      "effects": 200
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 0,
+      "effects": 200
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 0,
+      "effects": 200
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 0,
+      "effects": 200
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 0,
+      "effects": 200
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 100,
+      "effects": 300
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 100,
+      "effects": 300
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 100,
+      "effects": 300
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 100,
+      "effects": 300
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 100,
+      "effects": 300
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 100,
+      "effects": 300
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 100,
+      "effects": 300
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 100,
+      "effects": 300
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 100,
+      "effects": 300
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 100,
+      "effects": 300
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 100,
+      "effects": 300
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 0,
+      "effects": 400
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 0,
+      "effects": 400
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 0,
+      "effects": 400
+    },
+    {
+      "entities": 102,
+      "alive": 102,
+      "ships": 100,
+      "stations": 2,
+      "projectiles": 0,
+      "effects": 400
+    }
+  ],
+  "executed_ticks": 33,
+  "game_over": false
+}

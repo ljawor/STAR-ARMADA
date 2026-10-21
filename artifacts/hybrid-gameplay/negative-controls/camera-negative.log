@@ -1,0 +1,16 @@
+test_right_drag_rotates_both_axes_in_hud_pixels_and_release_stops (test_hybrid_pointer.HybridPointerTests.test_right_drag_rotates_both_axes_in_hud_pixels_and_release_stops) ... FAIL
+
+======================================================================
+FAIL: test_right_drag_rotates_both_axes_in_hud_pixels_and_release_stops (test_hybrid_pointer.HybridPointerTests.test_right_drag_rotates_both_axes_in_hud_pixels_and_release_stops)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_hybrid_pointer.py", line 50, in test_right_drag_rotates_both_axes_in_hud_pixels_and_release_stops
+    self.assertAlmostEqual(self.camera.yaw, yaw - 10)
+AssertionError: 45.0 != 35.0 within 7 places (10.0 difference)
+
+----------------------------------------------------------------------
+Ran 1 test in 0.066s
+
+FAILED (failures=1)
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+NEGATIVE_CONTROL_CONFIRMED: committed bridge leaves camera yaw unchanged

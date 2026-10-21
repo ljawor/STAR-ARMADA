@@ -1,0 +1,14 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "unittest",
+    "-v",
+    "test_hybrid_main.HybridLifecycleTests.test_native_cinematic_restores_host_before_legacy_when_viewer_is_gone",
+    "test_hybrid_main.HybridLifecycleTests.test_native_cinematic_publishes_frozen_world_and_never_draws_legacy"
+  ],
+  "pid": 1283,
+  "seconds": 0.089,
+  "returncode": 1,
+  "timeout": false
+}
