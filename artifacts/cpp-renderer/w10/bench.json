@@ -1,0 +1,128 @@
+{
+  "fixture": "four-player-combat-v1 trimmed to N ships; stations, planets, HUD and fog kept",
+  "resolution": [
+    1280,
+    800
+  ],
+  "frames": 45,
+  "simulation": "not stepped - static state, so this is draw cost, not a frame rate of the game",
+  "rows": [
+    {
+      "ships": 200,
+      "instances": 88,
+      "cues": 21888,
+      "shields": 6688,
+      "emissive_primitives": 6688,
+      "triangles_per_pass": 394928,
+      "draw_calls_median": 39,
+      "producer": {
+        "frame_ms": {
+          "samples": 45,
+          "median_ms": 0.119,
+          "p95_ms": 0.142
+        },
+        "overlay_ms": {
+          "samples": 45,
+          "median_ms": 4.216,
+          "p95_ms": 4.596
+        },
+        "emit_ms": {
+          "samples": 45,
+          "median_ms": 0.575,
+          "p95_ms": 0.646
+        },
+        "fog_ms": {
+          "samples": 45,
+          "median_ms": 0.193,
+          "p95_ms": 0.235
+        }
+      },
+      "window": {
+        "wall_median_ms": 2.819375,
+        "wall_p95_ms": 7.202584,
+        "wall_mean_ms": 3.0924212444444454,
+        "gpu_median_ms": 2.099791,
+        "gpu_p95_ms": 2.6655,
+        "samples": 45
+      }
+    },
+    {
+      "ships": 400,
+      "instances": 88,
+      "cues": 37088,
+      "shields": 6688,
+      "emissive_primitives": 6688,
+      "triangles_per_pass": 394928,
+      "draw_calls_median": 39,
+      "producer": {
+        "frame_ms": {
+          "samples": 45,
+          "median_ms": 0.141,
+          "p95_ms": 0.16
+        },
+        "overlay_ms": {
+          "samples": 45,
+          "median_ms": 5.802,
+          "p95_ms": 6.288
+        },
+        "emit_ms": {
+          "samples": 45,
+          "median_ms": 0.839,
+          "p95_ms": 0.906
+        },
+        "fog_ms": {
+          "samples": 45,
+          "median_ms": 0.211,
+          "p95_ms": 0.267
+        }
+      },
+      "window": {
+        "wall_median_ms": 0.892,
+        "wall_p95_ms": 7.123334,
+        "wall_mean_ms": 2.987165688888889,
+        "gpu_median_ms": 2.22725,
+        "gpu_p95_ms": 3.099291,
+        "samples": 45
+      }
+    },
+    {
+      "ships": 600,
+      "instances": 88,
+      "cues": 52288,
+      "shields": 6688,
+      "emissive_primitives": 6688,
+      "triangles_per_pass": 394928,
+      "draw_calls_median": 39,
+      "producer": {
+        "frame_ms": {
+          "samples": 45,
+          "median_ms": 0.184,
+          "p95_ms": 0.209
+        },
+        "overlay_ms": {
+          "samples": 45,
+          "median_ms": 7.991,
+          "p95_ms": 8.727
+        },
+        "emit_ms": {
+          "samples": 45,
+          "median_ms": 1.146,
+          "p95_ms": 1.269
+        },
+        "fog_ms": {
+          "samples": 45,
+          "median_ms": 0.269,
+          "p95_ms": 0.354
+        }
+      },
+      "window": {
+        "wall_median_ms": 1.788083,
+        "wall_p95_ms": 6.639125,
+        "wall_mean_ms": 3.0762785777777784,
+        "gpu_median_ms": 1.9885,
+        "gpu_p95_ms": 4.30675,
+        "samples": 45
+      }
+    }
+  ]
+}
