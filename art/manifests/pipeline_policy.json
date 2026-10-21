@@ -1309,6 +1309,46 @@
       "any frame-rate claim",
       "enabling the disabled Windows signal workflow"
     ]
+  },
+{
+    "id": "render-w05-slice5-shields-2026-10-21",
+    "date": "2026-10-21",
+    "owner_wording": "OK we are good. Something open W05",
+    "scope": "W05 slice 5: the standing shield shell - strength and tint travel, the rim bake and the camera-dependent floor are native",
+    "base_commit": "02c3f8621f8525792b162576cbe624608d46aea6",
+    "artifact": "docs/RENDER_W05_SHIELDS.md",
+    "format": {
+      "magic": "ARMEMIT1",
+      "header_bytes": 20,
+      "record_bytes": 44,
+      "encoding": "<BBH4B3f3fffHH (kind, shape, flags, colour rgba, a, b, radius, width, segments)",
+      "kinds": "1 ribbon, 2 disc, 3 ring, 4 bolt, 5 explosion, 6 shield",
+      "shield_fields": "a = world centre, radius = world shell radius, width = shield fraction, segments = 0",
+      "frame_format_changed": false,
+      "note": "no new ring and no record growth: a shield reuses the emissive record that already carries three points, three floats, two shorts and a colour"
+    },
+    "units_decision": "shield strength and its tint cross; the rim falloff and the readability floor are native. A hull-damage guess inside the window would be a second opinion about game state, while SHIELD_MIN_PX and the detail level are functions of the camera the window actually has.",
+    "rule_kept": "Python decides, the window draws: whether a unit has a shield, its fraction, its ramp colour and its fade alpha all arrive per frame. The window bakes the same latitude terms Python bakes into its display list (base 0.001, rim 0.18*graze^2, capped whitening 0.18*graze^3) into one mesh per detail level and draws it instanced in view space, because the shell is view-aligned by construction.",
+    "evidence": {
+      "python_tests": "27 tests in tests/test_render_emissive.py including nine shield cases; 142 render tests in the module suite",
+      "cpp_tests": "ctest 10/10, including tests/test_shield.cpp (hemisphere only, unit sphere, baked terms, detail thresholds, view-space instance)",
+      "parity": "artifacts/cpp-renderer/w05/shields-parity.json: four bubbles matched within 0.41 px, radius ratio 1.003-1.019, energy ratio 0.988-1.006, rim hue 0.80-0.955 of the Python reference",
+      "live": "a live ring at 622 shells per frame: instances_by_detail.high 622, dropped_vertices 0, three instanced draws instead of about 155 chunked submits",
+      "measured_bug": "the first CPU implementation rebuilt 2400 vertices per shell per frame and lost every bubble to a 9600-vertex transient buffer; the instanced pass replaced it, and the shared-ring payload capacity fix from slice 4 is what made the fog and the emissive rings agree",
+      "not_verified": "no Windows/D3D12 run; shield and hull hit flashes are not part of this slice (slice 3c)"
+    },
+    "known_limits": [
+      "the nearly spent bubble is about 17 percent dimmer than the Python reference; the other three are within 1.4 percent of its light",
+      "per-quadrant damage on the bubble face is not baked, matching the renderer's own choice",
+      "no frame-rate claim; the equal-workload benchmark is still slice 6"
+    ],
+    "does_not_authorize": [
+      "merging PR #150",
+      "a tag or release",
+      "changing the default renderer",
+      "any frame-rate claim",
+      "enabling the disabled Windows signal workflow"
+    ]
   }
   ]
 }

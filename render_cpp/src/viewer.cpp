@@ -4,6 +4,7 @@
 #include "emissive.hpp"
 #include "explosion.hpp"
 #include "fogmap.hpp"
+#include "shield.hpp"
 #include "input_ring.hpp"
 #include "marker_ring.hpp"
 #include "overlay.hpp"
@@ -862,12 +863,52 @@ static int run(const Options &o) {
   if (!bgfx::isValid(cueProgram))
     throw DeviceError("Cue program creation failed");
   cleanup.actions.push_back([cueProgram] { bgfx::destroy(cueProgram); });
+  // W05 slice 5: the shield shell mesh. One view-space hemisphere per detail level, built once;
+  // every bubble in the frame is then an instance record of eight floats. The baked latitude terms
+  // (whiten, alpha) are the ones renderer.py::_shield_shell_list bakes into its display list.
+  bgfx::VertexLayout shieldLayout;
+  shieldLayout.begin()
+      .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
+      .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
+      .end();
+  bgfx::VertexBufferHandle shieldMesh[3] = {BGFX_INVALID_HANDLE, BGFX_INVALID_HANDLE,
+                                            BGFX_INVALID_HANDLE};
+  uint32_t shieldMeshVertices[3] = {0, 0, 0};
+  {
+    const int* grids[3] = {armada::fx::kShieldLow, armada::fx::kShieldMedium,
+                           armada::fx::kShieldHigh};
+    for (int level = 0; level < 3; ++level) {
+      std::vector<armada::fx::ShellVertex> mesh;
+      armada::fx::buildShellMesh(mesh, grids[level][0], grids[level][1]);
+      std::vector<float> packed;
+      packed.reserve(mesh.size() * 5);
+      for (const auto& v : mesh)
+        packed.insert(packed.end(), {v.x, v.y, v.z, v.whiten, v.alpha});
+      shieldMeshVertices[level] = uint32_t(mesh.size());
+      shieldMesh[level] = bgfx::createVertexBuffer(
+          bgfx::copy(packed.data(), uint32_t(packed.size() * sizeof(float))), shieldLayout);
+      if (!bgfx::isValid(shieldMesh[level]))
+        throw DeviceError("Shield mesh creation failed");
+      cleanup.actions.push_back([handle = shieldMesh[level]] { bgfx::destroy(handle); });
+    }
+  }
+  const bgfx::ProgramHandle shieldProgram =
+      bgfx::createProgram(shader(o.shaders / "vs_shield.bin"), shader(o.shaders / "fs_shield.bin"),
+                          true);
+  if (!bgfx::isValid(shieldProgram))
+    throw DeviceError("Shield program creation failed");
+  cleanup.actions.push_back([shieldProgram] { bgfx::destroy(shieldProgram); });
   // W05 slice 3: emissive pass. Same vertex layout and program as the cues - unlit world-space
   // triangles - but additive blending, so fire adds to the scene instead of covering it.
   std::unique_ptr<armada::bridge::RingReader> emitRing;
   uint64_t emitSequence = 0;
   size_t emitBatches = 0, emitDecodeFailures = 0, emitPrimitives = 0, emitTriangles = 0,
          emitDropped = 0;
+  // W05 slice 5: shield shells are counted across the run - they are the only emissive primitive
+  // whose cost scales with the number of shielded ships rather than with the number of shots.
+  size_t shieldShells = 0, shieldVertices = 0;
+  size_t shieldByDetail[3] = {0, 0, 0};
+  double shieldFade = 0.0;
   std::vector<uint8_t> emitPayload;
   std::vector<emit::Primitive> emitList;
   if (!o.emitRing.empty())
@@ -1593,6 +1634,7 @@ static int run(const Options &o) {
       std::vector<CueVertex> nearTriangles, farTriangles, smokeTriangles;
       size_t fxLayers = 0, fxVertexCount = 0;
       double fxAlphaSum = 0.0;
+      const float kShieldMinPx = 74.f;   // renderer.py::SHIELD_MIN_PX, applied at this camera
       const float rx = view[0], ry = view[4], rz = view[8];
       const float ux = view[1], uy = view[5], uz = view[9];
       const float rightVec[3] = {rx, ry, rz};
@@ -1620,6 +1662,9 @@ static int run(const Options &o) {
         triangle(out, a, b, c, colour);
         triangle(out, a, c, d, colour);
       };
+      // W05 slice 5: one bucket of instance records per detail level. Three instanced draws per
+      // frame replace ~2,400 CPU-built vertices per shielded unit.
+      std::vector<float> shieldInstances[3];
       for (const auto &primitive : emitList) {
         std::vector<CueVertex> &out = primitive.depth() ? farTriangles : nearTriangles;
         ++emitPrimitives;
@@ -1742,6 +1787,38 @@ static int run(const Options &o) {
             corners[corner][2] = primitive.a[2] + along[2] * sAlong + across[2] * sAcross;
           }
           quad(out, corners[0], corners[1], corners[2], corners[3], colour);
+        } else if (primitive.kind == emit::kShield) {
+          // Instanced: the mesh is built once per detail level in view space, and this record
+          // only says where this shell sits, how big it is, and what colour and fade it carries.
+          // A standing shield shell. The tint and the fade are Python's (the strength ramp that
+          // tells the player how much field is left); the rim falloff and the detail level come
+          // from this camera, like every other apparent-size decision in this window.
+          const double tint[3] = {primitive.colour[0] / 255.0, primitive.colour[1] / 255.0,
+                                  primitive.colour[2] / 255.0};
+          const double fade = primitive.colour[3] / 255.0;
+          // A bubble must stay readable when it is small; the renderer grows it until it is at
+          // least SHIELD_MIN_PX across, so the same floor is applied here at this camera.
+          const float depth = eyeDepth(primitive.a.data());
+          float radius = primitive.radius;
+          if (focal > 0.f && depth > 0.f) {
+            const float pxPerWorld = focal / depth;
+            const float floorRadius = 0.5f * kShieldMinPx / std::max(pxPerWorld, 1e-6f);
+            radius = std::max(radius, floorRadius);
+          }
+          const float apparent = focal > 0.f && depth > 0.f
+                                     ? (focal / depth) * radius * 2.f
+                                     : 0.f;
+          const int detail = fx::shieldDetail(apparent);
+          const double centre[3] = {primitive.a[0], primitive.a[1], primitive.a[2]};
+          const fx::ShellInstance shell =
+              fx::shellInstance(centre, double(radius), tint, fade, view);
+          // Eight floats per shell: the whole per-frame CPU cost of a bubble.
+          std::vector<float>& out = shieldInstances[detail];
+          out.insert(out.end(), {shell.centre[0], shell.centre[1], shell.centre[2], shell.radius,
+                                 shell.tint[0], shell.tint[1], shell.tint[2], shell.fade});
+          ++shieldShells;
+          ++shieldByDetail[detail];
+          shieldFade += fade;
         } else if (primitive.kind == emit::kExplosion) {
           // A blast is rebuilt from its parameters with the renderer's own formulas. Smoke blends
           // normally (it is a dark mass), everything else adds light, so the two are separated and
@@ -1765,14 +1842,23 @@ static int run(const Options &o) {
                                 bool additive) {
         if (verts.empty())
           return;
-        const uint32_t count = uint32_t(verts.size());
-        if (bgfx::getAvailTransientVertexBuffer(count, cueLayout) < count) {
-          emitDropped += count;      // counted, never silently squeezed
-          return;
+        // A transient vertex buffer is finite (a few hundred thousand vertices). One batch of
+        // shield shells at battle scale is larger than that, so the list is submitted in chunks:
+        // asking for the whole list would drop every vertex and the bubbles would vanish without
+        // a single failed draw call to show for it.
+        size_t cursor = 0;
+        while (cursor < verts.size()) {
+        const uint32_t avail = bgfx::getAvailTransientVertexBuffer(1, cueLayout);
+        const size_t want = std::min<size_t>(verts.size() - cursor, avail);
+        if (want == 0) {
+          emitDropped += uint32_t(verts.size() - cursor);   // counted, never silently squeezed
+          break;
         }
+        const uint32_t count = uint32_t(want);
         bgfx::TransientVertexBuffer tvb;
         bgfx::allocTransientVertexBuffer(&tvb, count, cueLayout);
-        std::memcpy(tvb.data, verts.data(), count * sizeof(CueVertex));
+        std::memcpy(tvb.data, verts.data() + cursor, count * sizeof(CueVertex));
+        cursor += want;
         bgfx::setVertexBuffer(0, &tvb);
         // BGFX_STATE_BLEND_ADD is (ONE, ONE): alpha is ignored and every faint shell lands at
         // full brightness, which turns a soft fireball into a solid white disc. Additive blending
@@ -1785,10 +1871,38 @@ static int run(const Options &o) {
           state |= BGFX_STATE_DEPTH_TEST_LESS;
         bgfx::setState(state);
         bgfx::submit(1, cueProgram);
+        }
       };
       submitEmissive(farTriangles, true, true);
       submitEmissive(smokeTriangles, false, false);
       submitEmissive(nearTriangles, false, true);
+      // Shield shells: additive, depth-tested, never writing depth - the ship inside must read
+      // through its own field, and two translucent shells must not fight over the depth buffer.
+      for (int detail = 0; detail < 3; ++detail) {
+        const std::vector<float>& bucket = shieldInstances[detail];
+        if (bucket.empty())
+          continue;
+        size_t cursor = 0;
+        while (cursor < bucket.size()) {
+          const uint32_t count = uint32_t((bucket.size() - cursor) / 8);
+          const uint32_t avail = bgfx::getAvailInstanceDataBuffer(count, 32);
+          const uint32_t take = std::min(count, avail);
+          if (take == 0) {
+            emitDropped += uint32_t((bucket.size() - cursor) / 8 * shieldMeshVertices[detail]);
+            break;
+          }
+          bgfx::InstanceDataBuffer buffer;
+          bgfx::allocInstanceDataBuffer(&buffer, take, 32);
+          std::memcpy(buffer.data, bucket.data() + cursor, size_t(take) * 8 * sizeof(float));
+          cursor += size_t(take) * 8;
+          bgfx::setVertexBuffer(0, shieldMesh[detail]);
+          bgfx::setInstanceDataBuffer(&buffer);
+          bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_MSAA | BGFX_STATE_DEPTH_TEST_LESS |
+                         BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_ONE));
+          bgfx::submit(1, shieldProgram);
+          shieldVertices += size_t(take) * shieldMeshVertices[detail];
+        }
+      }
     }
     // W03: read the newest HUD payload, apply the patches to the texture, draw one quad.
     if (uiRing) {
@@ -2005,6 +2119,18 @@ static int run(const Options &o) {
                                         : "composited over the scene"}};
   }
   if (emitRing) {
+    report["shields"] = {
+        {"shells", shieldShells},
+        {"vertices", shieldVertices},
+        {"instances_by_detail",
+         {{"low", shieldByDetail[0]}, {"medium", shieldByDetail[1]}, {"high", shieldByDetail[2]}}},
+        {"fade_sum", shieldFade},
+        {"min_px", 74.0},
+        {"blend", "additive, depth-tested, no depth write"},
+        {"note", "one instanced camera-facing hemisphere per shielded unit, alpha baked from "
+                 "latitude like renderer.py::_shield_shell_list; tint and fade are Python's "
+                 "strength ramp, the detail level and the readability floor come from this "
+                 "camera"}};
     report["emissive"] = {
         {"ring", o.emitRing.string()},
         {"fx_demo", o.fxDemo},

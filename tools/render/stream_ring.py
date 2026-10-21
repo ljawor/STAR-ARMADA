@@ -321,6 +321,20 @@ def main(argv=None):
                              if shot_allow is None or id(shot) in shot_allow]
                     emit_primitives, emit_stats = emissive_batch.build(
                         effects, shots, weapon_type_of, projectile_extents)
+                    # W05 slice 5: standing shield shells. The window cannot know a unit's shield
+                    # fraction and must not guess it from hull damage, so the bubble crosses as a
+                    # tint plus a strength and the window builds the shell at its own camera.
+                    # `visible_ids is None` means the frame carries every entity (omniscient
+                    # diagnostic), so visibility is not a filter in that mode.
+                    shown = collector.visible_ids
+                    shielded = [entity for entity in state.entities.values()
+                                if entity.alive
+                                and (entity.is_ship or entity.is_squadron or entity.is_station)
+                                and (shown is None or entity.id in shown)]
+                    shield_primitives = emissive_batch.shields(shielded, radius_of)
+                    emit_primitives = emit_primitives + shield_primitives
+                    emit_stats['shields'] = len(shield_primitives)
+                    emit_stats['primitives'] = len(emit_primitives)
                     emissive_ring.publish(bytes(emissive_codec.encode(emit_primitives)))
                     emit_ms.append((time.perf_counter() - emit_started) * 1000.0)
                     emit_counts.append(emit_stats)

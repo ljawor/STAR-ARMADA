@@ -34,6 +34,13 @@ FIRE_LIFETIME = 2.0
 EXPLOSION_LIFETIME = 1.5        # renderer.py::_draw_explosion `life`
 EXPLOSION_SMALL_LIFETIME = 0.6  # the small blast fades out over 0.6 s
 EXPLOSION_SMALL_SEED = 3
+SHIELD_MIN_FRACTION = 0.001     # renderer.py::_draw_shields: `if frac <= 0.001: continue`
+SHIELD_FADE = (0.20, 0.65)      # the renderer's alpha floor and ceiling (`_a_lo`, `_a_hi`)
+SHIELD_SHIP_FACTOR = 1.08       # _shield_radius: ships sit at 1.08x their hull radius
+SHIELD_STATION_FACTOR = 1.35    # ...and stations at 1.35x their own radius
+SHIELD_BUCKETS = 8              # strength is quantised into eight shells (one display list each)
+
+QUADRANTS = ('front', 'rear', 'left', 'right')
 
 
 def _lift(colour, amount):
@@ -149,6 +156,63 @@ def projectiles(shots, weapon_type_of, extents_of) -> tuple[list, dict]:
 def _shape(weapon_type):
     from render.renderer import projectile_shape       # local: keeps the import graph unchanged
     return projectile_shape(weapon_type)
+
+
+def shield_fraction(unit) -> float:
+    """Mean quadrant fraction, the same figure the side panel shows (renderer.py::_draw_shields)."""
+    total = unit.max_shield_total()
+    if total <= 0:
+        return 0.0
+    return sum(unit.shields.get(q, 0.0) for q in QUADRANTS) / total
+
+
+def shield_radius(unit, radius_of) -> float:
+    """World radius of a unit's bubble, without the camera-dependent readability floor.
+
+    `radius_of` is the caller's hull-radius lookup - the same one the selection rings use, so a
+    bubble and the ring around it cannot disagree about how big the hull is. The floor
+    (SHIELD_MIN_PX across) is presentation: it depends on how far away the camera is, so the window
+    applies it at its own camera, exactly as it does for marker footprints and bolts.
+    """
+    if not unit.is_station and (unit.is_ship or unit.is_squadron):
+        return float(radius_of(unit)) * SHIELD_SHIP_FACTOR
+    return float(unit.radius) * SHIELD_STATION_FACTOR
+
+
+def shields(units, radius_of, tint_of=None) -> list:
+    """A standing shell for every unit whose shields are worth drawing.
+
+    Everything that decides whether a bubble exists crosses: which units are drawn is the caller's
+    visibility answer, `frac <= 0.001` hides an empty field, and the tint comes from the renderer's
+    own strength ramp. What does not cross is the shell itself - the rim falloff is a function of
+    the camera, so the window builds it.
+    """
+    out = []
+    for unit in units:
+        if not getattr(unit, 'alive', False) or unit.is_planet:
+            continue
+        if getattr(unit, 'planet_building_slot', None) is not None:
+            continue                      # surface hardware is protected by its own generator
+        fraction = shield_fraction(unit)
+        if fraction <= SHIELD_MIN_FRACTION:
+            continue
+        bucket = max(1, min(SHIELD_BUCKETS, int(round(fraction * SHIELD_BUCKETS))))
+        strength = bucket / float(SHIELD_BUCKETS)
+        rgb = (tint_of or _shield_colour)(strength)
+        # Alpha is floored, not ramped to zero: a field at 5% is the one the player must notice, and
+        # a linear fade spends its most urgent quarter below the visibility threshold.
+        alpha = SHIELD_FADE[0] + (SHIELD_FADE[1] - SHIELD_FADE[0]) * strength
+        radius = shield_radius(unit, radius_of)
+        if radius <= 0.0:
+            continue                      # not drawn by the frame, so it gets no bubble
+        out.append(codec.shield((unit.pos.x, unit.pos.y, unit.pos.z), radius,
+                                fraction, (rgb[0], rgb[1], rgb[2], alpha)))
+    return out
+
+
+def _shield_colour(strength: float):
+    from render.renderer import shield_color
+    return shield_color(strength)
 
 
 def build(effects, shots, weapon_type_of, extents_of) -> tuple[list, dict]:

@@ -63,7 +63,10 @@ so the transport is one upload per distinct planet, not per frame.
 4. **Fog raster — landed, see `docs/RENDER_W05_FOG.md`.** The mask was carried as a texture rather
    than reproduced: it is the classifier's answer, one texel per visibility cell, and the parity
    frame agrees on 1.0000 of the labelled pixels.
-5. **Planet buildings and shields.** Builds on slices 1 and 2.
+5. **Shields — landed, see `docs/RENDER_W05_SHIELDS.md`.** The strength ramp and the fade cross;
+   the rim bake and the readability floor are native, drawn as one instanced view-space hemisphere
+   per detail level. Four fixture bubbles match the Python reference within 0.41 px, 1.9 % radius,
+   1.4 % light. **Planet buildings are still open**, plus the shield and hull hit flashes (3c).
 6. **`--renderer cpp` flag, then the equal-workload benchmark** (200/400/600 ships, HUD, planets, fog)
    before any frame-rate statement is made.
 

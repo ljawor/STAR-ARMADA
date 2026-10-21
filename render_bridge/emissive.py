@@ -6,7 +6,7 @@ window cannot infer any of them, so the *decisions and the shapes* cross as prim
 
     header  <8sHHII   20 B   magic "ARMEMIT1", version, count (<=4096), reserved, crc32
     record  <BBH4B3f3fffHH  44 B
-              kind B     RIBBON 1 | DISC 2 | RING 3 | BOLT 4 | EXPLOSION 5
+              kind B     RIBBON 1 | DISC 2 | RING 3 | BOLT 4 | EXPLOSION 5 | SHIELD 6
               shape B    RIBBON: 0 camera-facing | 1 flat
                          DISC/RING: 0 billboard | 1 flat (ecliptic)
                          BOLT: 0 elongated along its axis | 1 square
@@ -20,6 +20,11 @@ window cannot infer any of them, so the *decisions and the shapes* cross as prim
               segments H DISC fan segments (0 = 24) | RING segments (0 = 32)
                          EXPLOSION seed (the blast's own deterministic hash input)
               reserved H must be 0
+
+    A SHIELD record reuses the same fields: `a` is the shell centre, `radius` the shell's world
+    radius, `width` the shield fraction (0..1, the decision the side panel also shows) and `colour`
+    the tint the renderer derives from that fraction plus the fade alpha. The window builds the
+    shell from the tint and its own camera; it does not re-derive how damaged a unit is.
 
 Two units appear here on purpose. A beam is a world-sized ribbon: its width is part of how a
 capital ship's fire reads at any zoom. A bolt is screen-sized: the Python renderer derives its
@@ -44,6 +49,7 @@ DISC = 2
 RING = 3
 BOLT = 4
 EXPLOSION = 5                      # a blast carried as parameters, rebuilt by the window
+SHIELD = 6                         # a standing shield shell: centre, radius, strength, tint
 
 SHAPE_CAMERA = 0                   # camera-facing billboard
 SHAPE_FLAT = 1                     # lying in the ecliptic
@@ -119,6 +125,17 @@ def explosion(centre, size, age, seed, colour=(1.0, 1.0, 1.0, 1.0)) -> dict:
                    segments=int(seed) & 0xFFFF, depth=False, additive=False)
 
 
+def shield(centre, radius, fraction, tint) -> dict:
+    """A standing shield shell: where it is, how big it is, how strong it is, what colour that is.
+
+    `fraction` and `tint` are the renderer's decisions (the strength ramp that tells the player how
+    much shield is left). The shell's rim falloff is presentation and is rebuilt by the window at
+    its own camera, exactly like the marker footprint in slice 2.
+    """
+    return _record(SHIELD, SHAPE_CAMERA, tint, centre, radius=float(radius),
+                   width=float(fraction), segments=0, depth=True, additive=True)
+
+
 def encode(records) -> bytes:
     records = list(records)
     if len(records) > MAX_RECORDS:
@@ -126,7 +143,7 @@ def encode(records) -> bytes:
     body = bytearray()
     for record in records:
         kind = int(record['kind'])
-        if kind not in (RIBBON, DISC, RING, BOLT, EXPLOSION):
+        if kind not in (RIBBON, DISC, RING, BOLT, EXPLOSION, SHIELD):
             raise EmissiveError(f'unknown emissive kind {kind}')
         body += RECORD.pack(kind, int(record['shape']), int(record['flags']),
                             *[int(v) for v in record['colour']],
@@ -161,7 +178,7 @@ def decode(data):
     for index in range(count):
         fields = RECORD.unpack_from(body, index * RECORD_BYTES)
         kind, shape, flags = fields[0], fields[1], fields[2]
-        if kind not in (RIBBON, DISC, RING, BOLT, EXPLOSION):
+        if kind not in (RIBBON, DISC, RING, BOLT, EXPLOSION, SHIELD):
             raise EmissiveError(f'record {index}: unknown kind {kind}')
         if fields[-1]:
             raise EmissiveError(f'record {index}: reserved field must be zero')

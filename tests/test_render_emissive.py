@@ -178,5 +178,99 @@ class ExplosionTests(unittest.TestCase):
         self.assertEqual(decoded[0]['kind'], codec.EXPLOSION)
 
 
+class FakeUnit:
+    """The smallest thing `shields()` needs: identity, place, shields and what kind of hull it is."""
+
+    def __init__(self, uid=7, fraction=1.0, capacity=4.0,
+                 station=False, ship=True, alive=True, planet=False, slot=None, radius=30.0):
+        quadrants = (capacity * fraction,) * 4
+        maxima = (capacity,) * 4
+        self.id = uid
+        self.alive = alive
+        self.is_ship = ship
+        self.is_squadron = False
+        self.is_station = station
+        self.is_planet = planet
+        self.planet_building_slot = slot
+        self.radius = radius
+        self.pos = types.SimpleNamespace(x=1200.0, y=0.0, z=-800.0)
+        self.shields = dict(zip(emissive_batch.QUADRANTS, quadrants))
+        self._maxima = dict(zip(emissive_batch.QUADRANTS, maxima))
+
+    def max_shield_total(self):
+        return sum(self._maxima.values())
+
+
+class ShieldShellTests(unittest.TestCase):
+    """A bubble exists because Python says so; its tint is the strength ramp, not a hue guess."""
+
+    def radius_of(self, unit):
+        return 40.0
+
+    def test_a_full_field_is_the_blue_stop_of_the_ramp(self):
+        shells = emissive_batch.shields([FakeUnit()], self.radius_of)
+        self.assertEqual(len(shells), 1)
+        record = shells[0]
+        self.assertEqual(record['kind'], codec.SHIELD)
+        self.assertAlmostEqual(record['radius'], 40.0 * emissive_batch.SHIELD_SHIP_FACTOR)
+        self.assertAlmostEqual(record['width'], 1.0)
+        # blue: the nominal stop, with the ceiling alpha for a full field (the record stores
+        # colour as bytes, so the ramp's floats arrive quantised)
+        self.assertEqual(record['colour'][0], 77)      # 0.30 * 255
+        self.assertEqual(record['colour'][1], 140)     # 0.55 * 255
+        self.assertEqual(record['colour'][2], 255)
+        self.assertAlmostEqual(record['colour'][3], emissive_batch.SHIELD_FADE[1] * 255, delta=1)
+
+    def test_a_failing_field_is_red_and_still_visible(self):
+        unit = FakeUnit(fraction=0.2)
+        record = emissive_batch.shields([unit], self.radius_of)[0]
+        self.assertGreater(record['colour'][0], record['colour'][2])       # red leads blue
+        # the alpha floor exists so the most urgent quarter is never below the visibility line
+        self.assertGreaterEqual(record['colour'][3], emissive_batch.SHIELD_FADE[0] * 255 - 1)
+
+    def test_strength_is_quantised_into_eight_shells(self):
+        # The renderer caches one display list per strength octant; two fractions inside one octant
+        # must produce the same tint, and neighbours must not.
+        low = FakeUnit(fraction=0.62)
+        high = FakeUnit(fraction=0.74)
+        a = emissive_batch.shields([low], self.radius_of)[0]['colour']
+        b = emissive_batch.shields([high], self.radius_of)[0]['colour']
+        self.assertNotEqual(a[:3], b[:3])
+
+    def test_an_empty_field_raises_no_shell(self):
+        unit = FakeUnit(fraction=0.0)
+        self.assertEqual(emissive_batch.shields([unit], self.radius_of), [])
+
+    def test_units_without_shields_raise_no_shell(self):
+        unit = FakeUnit(fraction=1.0, capacity=0.0)
+        self.assertEqual(emissive_batch.shields([unit], self.radius_of), [])
+
+    def test_surface_hardware_is_protected_by_its_generator_not_a_bubble(self):
+        # renderer.py skips planet_building_slot entities: an exterior bubble would advertise
+        # protection for orbiting ships that the generator does not actually give.
+        unit = FakeUnit(slot=3)
+        self.assertEqual(emissive_batch.shields([unit], self.radius_of), [])
+
+    def test_planets_never_get_a_ship_bubble(self):
+        self.assertEqual(emissive_batch.shields([FakeUnit(planet=True)], self.radius_of), [])
+
+    def test_stations_use_their_own_radius_not_the_hull_lookup(self):
+        unit = FakeUnit(station=True, ship=False, radius=120.0)
+        record = emissive_batch.shields([unit], self.radius_of)[0]
+        self.assertAlmostEqual(record['radius'], 120.0 * emissive_batch.SHIELD_STATION_FACTOR)
+
+    def test_an_unresolved_hull_radius_raises_no_shell(self):
+        unit = FakeUnit()
+        self.assertEqual(emissive_batch.shields([unit], lambda _u: 0.0), [])
+
+    def test_shells_round_trip_through_the_bridge(self):
+        shells = emissive_batch.shields([FakeUnit()], self.radius_of)
+        decoded = codec.decode(codec.encode(shells))
+        self.assertEqual(decoded[0]['kind'], codec.SHIELD)
+        # the record carries the radius as a float32, so compare to its precision
+        self.assertAlmostEqual(decoded[0]['radius'], shells[0]['radius'], places=3)
+        self.assertEqual(decoded[0]['colour'], shells[0]['colour'])
+
+
 if __name__ == '__main__':
     unittest.main()

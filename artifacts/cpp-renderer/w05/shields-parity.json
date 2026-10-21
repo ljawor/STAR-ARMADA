@@ -1,0 +1,392 @@
+{
+  "background": {
+    "native": [
+      0.03137,
+      0.0549,
+      0.10588
+    ],
+    "python": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "band": [
+    250,
+    700
+  ],
+  "blob_count": {
+    "native": 4,
+    "python": 4
+  },
+  "native_blobs": [
+    {
+      "centre": [
+        310.7,
+        105.5
+      ],
+      "coloured_pixels": 2910,
+      "energy": 120.098,
+      "mean_rgb": [
+        0.01492,
+        0.02408,
+        0.04127
+      ],
+      "radius_px": 30.4,
+      "rim_rgb": [
+        0.04243,
+        0.0658,
+        0.10842
+      ]
+    },
+    {
+      "centre": [
+        523.6,
+        134.0
+      ],
+      "coloured_pixels": 2335,
+      "energy": 53.4,
+      "mean_rgb": [
+        0.02287,
+        0.01666,
+        0.00239
+      ],
+      "radius_px": 27.3,
+      "rim_rgb": [
+        0.05784,
+        0.04361,
+        0.01078
+      ]
+    },
+    {
+      "centre": [
+        763.0,
+        166.2
+      ],
+      "coloured_pixels": 1840,
+      "energy": 30.102,
+      "mean_rgb": [
+        0.01636,
+        0.00386,
+        0.00255
+      ],
+      "radius_px": 24.2,
+      "rim_rgb": [
+        0.03657,
+        0.01006,
+        0.00869
+      ]
+    },
+    {
+      "centre": [
+        1050.7,
+        204.6
+      ],
+      "coloured_pixels": 8113,
+      "energy": 312.749,
+      "mean_rgb": [
+        0.03855,
+        0.03579,
+        0.02203
+      ],
+      "radius_px": 50.8,
+      "rim_rgb": [
+        0.09232,
+        0.08594,
+        0.05492
+      ]
+    }
+  ],
+  "pairs": [
+    {
+      "centre_offset_px": [
+        0.2,
+        0.1
+      ],
+      "energy_ratio": 0.997,
+      "index": 0,
+      "match_distance_px": 0.22,
+      "native": {
+        "centre": [
+          310.7,
+          105.5
+        ],
+        "coloured_pixels": 2910,
+        "energy": 120.098,
+        "mean_rgb": [
+          0.01492,
+          0.02408,
+          0.04127
+        ],
+        "radius_px": 30.4,
+        "rim_rgb": [
+          0.04243,
+          0.0658,
+          0.10842
+        ]
+      },
+      "python": {
+        "centre": [
+          310.5,
+          105.4
+        ],
+        "coloured_pixels": 2881,
+        "energy": 120.42,
+        "mean_rgb": [
+          0.01501,
+          0.0243,
+          0.0418
+        ],
+        "radius_px": 30.3,
+        "rim_rgb": [
+          0.04633,
+          0.07126,
+          0.11689
+        ]
+      },
+      "radius_ratio": 1.003,
+      "rim_hue_match": [
+        0.916,
+        0.923,
+        0.928
+      ]
+    },
+    {
+      "centre_offset_px": [
+        -0.1,
+        0.0
+      ],
+      "energy_ratio": 1.006,
+      "index": 1,
+      "match_distance_px": 0.1,
+      "native": {
+        "centre": [
+          523.6,
+          134.0
+        ],
+        "coloured_pixels": 2335,
+        "energy": 53.4,
+        "mean_rgb": [
+          0.02287,
+          0.01666,
+          0.00239
+        ],
+        "radius_px": 27.3,
+        "rim_rgb": [
+          0.05784,
+          0.04361,
+          0.01078
+        ]
+      },
+      "python": {
+        "centre": [
+          523.7,
+          134.0
+        ],
+        "coloured_pixels": 2259,
+        "energy": 53.098,
+        "mean_rgb": [
+          0.0235,
+          0.01712,
+          0.0024
+        ],
+        "radius_px": 26.8,
+        "rim_rgb": [
+          0.06468,
+          0.04886,
+          0.01147
+        ]
+      },
+      "radius_ratio": 1.019,
+      "rim_hue_match": [
+        0.894,
+        0.893,
+        0.94
+      ]
+    },
+    {
+      "centre_offset_px": [
+        0.0,
+        0.2
+      ],
+      "energy_ratio": 0.988,
+      "index": 2,
+      "match_distance_px": 0.2,
+      "native": {
+        "centre": [
+          763.0,
+          166.2
+        ],
+        "coloured_pixels": 1840,
+        "energy": 30.102,
+        "mean_rgb": [
+          0.01636,
+          0.00386,
+          0.00255
+        ],
+        "radius_px": 24.2,
+        "rim_rgb": [
+          0.03657,
+          0.01006,
+          0.00869
+        ]
+      },
+      "python": {
+        "centre": [
+          763.0,
+          166.0
+        ],
+        "coloured_pixels": 1774,
+        "energy": 30.459,
+        "mean_rgb": [
+          0.01717,
+          0.00394,
+          0.00268
+        ],
+        "radius_px": 23.8,
+        "rim_rgb": [
+          0.04412,
+          0.01264,
+          0.01034
+        ]
+      },
+      "radius_ratio": 1.017,
+      "rim_hue_match": [
+        0.829,
+        0.796,
+        0.84
+      ]
+    },
+    {
+      "centre_offset_px": [
+        0.4,
+        0.1
+      ],
+      "energy_ratio": 0.998,
+      "index": 3,
+      "match_distance_px": 0.41,
+      "native": {
+        "centre": [
+          1050.7,
+          204.6
+        ],
+        "coloured_pixels": 8113,
+        "energy": 312.749,
+        "mean_rgb": [
+          0.03855,
+          0.03579,
+          0.02203
+        ],
+        "radius_px": 50.8,
+        "rim_rgb": [
+          0.09232,
+          0.08594,
+          0.05492
+        ]
+      },
+      "python": {
+        "centre": [
+          1050.3,
+          204.5
+        ],
+        "coloured_pixels": 7967,
+        "energy": 313.482,
+        "mean_rgb": [
+          0.03935,
+          0.03654,
+          0.02252
+        ],
+        "radius_px": 50.4,
+        "rim_rgb": [
+          0.09668,
+          0.09007,
+          0.0578
+        ]
+      },
+      "radius_ratio": 1.008,
+      "rim_hue_match": [
+        0.955,
+        0.954,
+        0.95
+      ]
+    }
+  ],
+  "python_blobs": [
+    {
+      "centre": [
+        310.5,
+        105.4
+      ],
+      "coloured_pixels": 2881,
+      "energy": 120.42,
+      "mean_rgb": [
+        0.01501,
+        0.0243,
+        0.0418
+      ],
+      "radius_px": 30.3,
+      "rim_rgb": [
+        0.04633,
+        0.07126,
+        0.11689
+      ]
+    },
+    {
+      "centre": [
+        523.7,
+        134.0
+      ],
+      "coloured_pixels": 2259,
+      "energy": 53.098,
+      "mean_rgb": [
+        0.0235,
+        0.01712,
+        0.0024
+      ],
+      "radius_px": 26.8,
+      "rim_rgb": [
+        0.06468,
+        0.04886,
+        0.01147
+      ]
+    },
+    {
+      "centre": [
+        763.0,
+        166.0
+      ],
+      "coloured_pixels": 1774,
+      "energy": 30.459,
+      "mean_rgb": [
+        0.01717,
+        0.00394,
+        0.00268
+      ],
+      "radius_px": 23.8,
+      "rim_rgb": [
+        0.04412,
+        0.01264,
+        0.01034
+      ]
+    },
+    {
+      "centre": [
+        1050.3,
+        204.5
+      ],
+      "coloured_pixels": 7967,
+      "energy": 313.482,
+      "mean_rgb": [
+        0.03935,
+        0.03654,
+        0.02252
+      ],
+      "radius_px": 50.4,
+      "rim_rgb": [
+        0.09668,
+        0.09007,
+        0.0578
+      ]
+    }
+  ]
+}

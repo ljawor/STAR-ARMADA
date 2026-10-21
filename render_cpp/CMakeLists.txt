@@ -62,7 +62,7 @@ else()
 endif()
 set(SHADER_OUTPUTS)
 foreach(NAME vs_fleet fs_fleet vs_shadow fs_shadow vs_ui fs_ui vs_planet fs_planet vs_mark fs_mark
-        vs_fog fs_fog)
+        vs_fog fs_fog vs_shield fs_shield)
   if(NAME MATCHES "^vs_")
     set(TYPE vertex)
   else()
@@ -123,6 +123,9 @@ add_test(NAME explosions COMMAND test_explosion)
 add_test(NAME planets COMMAND test_planets)
 set_tests_properties(planets PROPERTIES ENVIRONMENT
   "ARMADA_PLANET_FIXTURE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/planets")
+add_executable(test_shield tests/test_shield.cpp)
+target_include_directories(test_shield PRIVATE include)
+add_test(NAME shields COMMAND test_shield)
 add_executable(test_fogmap tests/test_fogmap.cpp)
 target_include_directories(test_fogmap PRIVATE include)
 target_compile_definitions(test_fogmap PRIVATE
