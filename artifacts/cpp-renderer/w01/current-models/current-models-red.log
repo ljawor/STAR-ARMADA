@@ -1,0 +1,33 @@
+test_real_fixture_export_is_read_only (test_render_snapshot.RenderSnapshotTests.test_real_fixture_export_is_read_only) ... FAIL
+
+======================================================================
+FAIL: test_real_fixture_export_is_read_only (test_render_snapshot.RenderSnapshotTests.test_real_fixture_export_is_read_only)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-w01/tests/test_render_snapshot.py", line 40, in test_real_fixture_export_is_read_only
+    self.assertEqual(asset_selection.diagnostics()['enabled_order'], defaults['visual_packs'])
+AssertionError: Lists differ: [] != ['vigil-prototype', 'imperium-command-prot[326 chars]ype']
+
+Second list contains 13 additional elements.
+First extra element 0:
+'vigil-prototype'
+
+- []
++ ['vigil-prototype',
++  'imperium-command-prototype',
++  'imperium-shipyard-prototype',
++  'imperium-mining-prototype',
++  'imperium-talon-prototype',
++  'imperium-engineer-prototype',
++  'imperium-research-prototype',
++  'imperium-defense-prototype',
++  'imperium-sensor-prototype',
++  'imperium-trade-prototype',
++  'imperium-fighter-prototype',
++  'imperium-repair-prototype',
++  'imperium-relay-prototype']
+
+----------------------------------------------------------------------
+Ran 1 test in 0.896s
+
+FAILED (failures=1)

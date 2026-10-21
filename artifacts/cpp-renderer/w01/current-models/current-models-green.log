@@ -1,0 +1,11 @@
+test_fixture_bytes (test_render_protocol.RenderProtocolTests.test_fixture_bytes) ... ok
+test_rejections (test_render_protocol.RenderProtocolTests.test_rejections) ... ok
+test_roundtrip (test_render_protocol.RenderProtocolTests.test_roundtrip) ... ok
+test_catalogue_runtime_mesh_closure (test_render_snapshot.RenderSnapshotTests.test_catalogue_runtime_mesh_closure) ... ok
+test_cli_visibility_and_file (test_render_snapshot.RenderSnapshotTests.test_cli_visibility_and_file) ... ok
+test_real_fixture_export_is_read_only (test_render_snapshot.RenderSnapshotTests.test_real_fixture_export_is_read_only) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 7.514s
+
+OK

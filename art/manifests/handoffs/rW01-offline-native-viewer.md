@@ -1,6 +1,11 @@
 # Handoff: W01 offline native fleet viewer
 
-Status: **engineering review-ready; owner camera/appearance gate open; not merged**.
+Status: **historical core-only engineering receipt; owner review open; not merged**.
+
+**Owner-caught correction:** this receipt omitted the shipped Imperial visual packs.
+Use `rW01-current-default-models.md` and `artifacts/cpp-renderer/w01/current-models/`
+for the corrected selection, meshes, captures and timings; do not treat the old
+core-only pictures or timings below as current-default parity.
 PR: **#146**, base PR #145 (`docs/cpp-renderer-w00-spec`).
 Branch: `render/cpp-w01-viewer`.
 Implementation base: `b2ff85ab622cd535aaf0525adb362a700e4b6f63`.

@@ -1,0 +1,10 @@
+Internal ctest changing into directory: /Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-w01/render_cpp/build-source-check
+Test project /Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-w01/render_cpp/build-source-check
+    Start 1: scene
+1/2 Test #1: scene ............................   Passed    0.42 sec
+    Start 2: camera
+2/2 Test #2: camera ...........................   Passed    0.00 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Total Test time (real) =   0.42 sec

@@ -242,7 +242,7 @@ Each lists: goal, owned files, the command that must work, and what the owner ch
 - Owner checks: the picture (does the fleet read better than the legacy renderer?) and the
   camera feel. **This is the "see progress, move and rotate" gate.**
 
-W01 execution receipt (2026-10-21, PR **#146**, code `7bf11d2204b3aca6c82e58943ab71f26613ea5d2`):
+Historical core-only W01 execution receipt (2026-10-21, PR **#146**, code `7bf11d2204b3aca6c82e58943ab71f26613ea5d2`):
 source-built Metal viewer/launcher runs; 638 detected mesh instances include 600 combat ships;
 103-mesh catalogue GPU upload/submission closure passes. At 1280×800, 240 measured offline
 mesh-only frames: wall median **8.736083 ms**, GPU median **3.893125 ms**. These are not full-game
@@ -251,6 +251,14 @@ Natural camera/appearance review and native Windows remain open. Source/test siz
 proposal's sizing rules; no exception approval is inferred. See
 `art/manifests/handoffs/rW01-offline-native-viewer.md` and `artifacts/cpp-renderer/w01/acceptance.json`.
 The source code is published; the owner gate, merge/release/default activation and W02 are not.
+
+Owner-caught model-selection correction: the initial exporter omitted the shipped
+Imperial visual packs. Code `2bf5ed5f78908a0e6e68dc01f0a55cdfa4f6c208` uses all 13
+actual default packs, including current Vigil and Command Center, and accepts their
+versioned mesh contract. Corrected Metal captures/103-mesh closure and 6 Python +
+2 native target checks pass; old core-only timings/pictures above are historical.
+Corrective handoff: `art/manifests/handoffs/rW01-current-default-models.md`.
+No new artwork, default activation or W02 work is authorized by this correction.
 
 #### W02 — Live link
 
@@ -435,7 +443,7 @@ Rules that make the handover useful rather than decorative:
 | W | Status | Next action / blocking condition |
 |---|---|---|
 | W00 | **Review-ready, not merged** | 2026-10-21, PR #145, code `f5844a8`: offline protocol/reference codec + three controls; 3 focused tests pass; owner protocol review open. See `art/manifests/handoffs/rW00-offline-protocol.md`. W02 wire format is not frozen. |
-| W01 | **Engineering review-ready; owner gate open; not merged** | 2026-10-21, PR #146, code `7bf11d2`: Metal source build, captures, camera probes and 103-mesh closure pass; 8.736083 ms offline wall median, not full-game FPS. Owner flies `render_cpp/launch.command`; no graphics upgrade, Windows or W02 claim. Handoff: `rW01-offline-native-viewer.md`. |
+| W01 | **Corrected-defaults engineering review-ready; owner gate open; not merged** | 2026-10-21, PR #146, code `2bf5ed5`: all 13 shipped visual packs resolved; newer Vigil/Command Center and 103 selected meshes render on Metal. Old core-only evidence is historical. Owner flies `render_cpp/launch.command`; handoff `rW01-current-default-models.md`. |
 | W02 | Not started | Depends on W01. Latency/serialization receipt decides whether the subprocess design holds |
 | W03 | Not started | Depends on W01 (parallel-safe with W02 if file ownership is disjoint — see §7.3) |
 | W04 | Not started | Depends on W03 |
@@ -445,7 +453,7 @@ Rules that make the handover useful rather than decorative:
 | W08 (future, out of scope) | Not planned | Simulation acceleration (150–250 h) — the only route to 60 fps at 600 ships |
 
 **Current next gate: owner reviews the W01 offline viewer**, using `render_cpp/launch.command`
-and `artifacts/cpp-renderer/w01/review-sheet.png`. W00 #145 and W01 #146 are separate drafts;
+and `artifacts/cpp-renderer/w01/current-models/review-sheet.png`. W00 #145 and W01 #146 are separate drafts;
 neither is merged. Do not begin W02 or infer appearance/merge/release/default permission.
 Resolve any bounded offline review issue first; only after acceptance agree the live-wire scope.
 
