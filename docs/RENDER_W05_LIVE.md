@@ -64,31 +64,55 @@ leave a window drawing a dead ring.
 CMD 9/34`), the ACTIONS / BUILD panel with its FLEET COMMAND text, the minimap with contacts, the
 ships, the owner rings and a planet — the same HUD code, the same match.
 
+## The camera crosses too (`ARMCAM01`)
+
+The frame ring carries no camera, so the window had its own and the window showed a different place
+from the one the game was playing - which is exactly what "the game started but I cannot see it"
+looked like. `render_bridge/camera.py` publishes the pose the game's camera already holds, six
+float32 behind a 20-byte header: target xyz, distance, yaw, pitch (degrees, as `render.camera.Camera`
+and the window's `Camera` both use). `--camera-ring` makes the window apply it before it builds the
+view matrix, so the two views agree.
+
+One compensation is applied and named: the window scales the distance by **0.62**. That is not a
+preference, it is the documented projection defect - this build feeds `camera.fov` (degrees) to
+`bx::mtxProj`, which wants radians, so the vertical field of view is ~88 deg instead of 55 and
+everything draws at ~54% of its intended size. Scaling the distance makes the battle frame the way
+the game frames it. It comes out in the same change that fixes the defect and re-baselines the
+comparisons.
+
+## The window always draws something
+
+Three failures had to stop being silent, because a renderer mode that shows nothing is worse than
+the one it replaces:
+
+* **No mesh catalogue**: the window loads mesh bindings from an offline snapshot even in live mode
+  (the rings carry transforms and a binding id, not geometry). The catalogue now ships as
+  `assets/cpp/catalogue.snap` - 103 approved meshes, 50 KB, built by `tools/render/dump_snapshot.py
+  --catalogue` - so `--renderer cpp` needs no setup. `STAR_ARMADA_CPP_SNAPSHOT` overrides it; if the
+  shipped file is missing, the catalogue is built in a child process (in-process is refused: "model
+  selection changes require a session boundary with renderers closed").
+* **The window will not start**: the game says so once and **draws with the legacy renderer** for
+  the rest of the match instead of publishing into a void.
+* **The producer throws**: the same fallback, with the exception printed, and the window is
+  terminated. A fault in the display path must not end a match.
+
+The SDL window is minimized once the native window is up (`pygame.display.iconify()`), so the
+unfocused, no-longer-drawn surface is not left in front looking like a frozen game.
+
 ## What is not connected, and why
 
-**Input does not come back yet.** The frame ring carries no camera, so the window's camera is its
-own: a click leaves the window in window pixels and would be resolved in Python against the *game's*
-camera. Two views, so a click would select or order something the player is not looking at. W04's
-`RingInput` is written and tested (`render/input_bridge.py`, `tests/test_input_bridge.py`,
-`render_cpp/tests/test_input.cpp`), and `LiveSession` still creates the input ring — it is the
-attachment point — but `main.py` does not poll it. The next package is a camera ring: the pose the
-game's camera already holds, published beside the frame, applied by the window so both views agree,
-and only then is the input ring safe to read.
+**Input still does not come back.** With the camera crossing, the views now agree on *where* they
+look - but not on *how much they see*: the window's ~88 deg vertical field of view against the game's
+55 deg means a pixel near the edge of the window corresponds to a different world ray than the same
+pixel in the game. A click resolved in Python through the game's camera would therefore pick or
+order something the player is not pointing at. W04's `RingInput` is written and tested
+(`render/input_bridge.py`, `tests/test_input_bridge.py`, `render_cpp/tests/test_input.cpp`), and
+`LiveSession` still creates the input ring - it is the attachment point - but `main.py` does not poll
+it. **Fixing the projection is the gate**, and then the input ring can be read.
 
-Until then `--renderer cpp` is a **display of a live match**, not yet a way to play one: the window's
-camera can be orbited and zoomed freely and the world stays correct, but the game does not see those
-clicks, and the game's own keyboard does not reach it (the SDL window is not the focused one).
-
-**The window needs a snapshot for its mesh catalogue.** `armada_viewer` loads asset bindings from an
-offline snapshot, so `STAR_ARMADA_CPP_SNAPSHOT` must name one:
-
-```sh
-STAR_ARMADA_CPP_SNAPSHOT=~/star-armada-live/live.snap ./.venv/bin/python main.py --renderer cpp
-```
-
-Without it the match still runs and the rings are still published; `cpp_window.spawn` says so
-instead of pretending a window is up. Buildings created mid-match arrive as meshes over the W05
-slice 3e ring, so the snapshot supplies the catalogue and the ring supplies the rest.
+So `--renderer cpp` is now a **faithful live view** of the match, not yet a way to play one: what you
+see is what the game sees, but clicks still go nowhere and the game's keyboard does not reach the
+window.
 
 **HUD state is the subset the session knows.** `LiveSession` composes with the selection, the local
 player and no pause text (`paused=False`, empty message): menus, tooltips owned by `menus.py` and

@@ -1489,6 +1489,25 @@
         "window": "frames_applied 7, full_frames 1, patches_applied 97, decode_failures 0",
         "tests": "199 python render tests + 12 ctest, all passing"
       }
+    },
+    {
+      "id": "render-w05-camera-ring-2026-10-21",
+      "owner_wording": "OK  I tried it but when clicking launch skirmish I can see that the game has started but I can't see it.",
+      "base_commit": "b87cd68",
+      "artifact": "docs/RENDER_W05_LIVE.md",
+      "scope": "The camera crosses with the frame (ARMCAM01), the mesh catalogue ships with the game, and a window that cannot draw falls back to the legacy renderer instead of showing nothing.",
+      "decision": "The window used its own camera while the game played through another, so the window showed a different place from the one being played - the owner's 'the game started but I can't see it'. The pose the game's camera already holds is now published every frame and applied by the window before it builds its view matrix. Camera distance is scaled by 0.62 in the window to compensate for the documented projection defect (fov in degrees fed to bx::mtxProj, which wants radians: ~88 deg effective against 55), and that factor is to be removed with the defect. Three failures stop being silent: with no mesh catalogue the window is not started and the legacy renderer draws; a producer exception prints, terminates the window and falls back; and the SDL window is minimized once the native one is up.",
+      "consequences": [
+        "The views agree on where they look but not on how much they see, so input is still not connected: a click near the window's edge is a different world ray than the same pixel in the game. Fixing the projection is the gate for reading the input ring.",
+        "The mesh catalogue ships as assets/cpp/catalogue.snap (103 approved meshes, 50 KB), so --renderer cpp needs no setup; STAR_ARMADA_CPP_SNAPSHOT overrides it and a missing file is rebuilt in a child process, because an in-process build is refused (model selection needs a session boundary with renderers closed).",
+        "The 0.62 distance scale is compensation for a known defect, not a framing preference, and must not outlive the fix."
+      ],
+      "evidence": {
+        "window": "camera poses 1657 applied, 0 decode failures, 0 torn; 98 producer frames adopted, 1 dropped; HUD 68 frames applied, 3 whole surfaces",
+        "smoke": "SMOKE_CPP_OK with 372 published frames and no window (the producer path runs headless in smoke)",
+        "tests": "207 python tests + 12 ctest, all passing",
+        "artifact": "artifacts/cpp-renderer/w05/live-camera.png"
+      }
     }
   ]
 }

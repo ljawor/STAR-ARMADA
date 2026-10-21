@@ -24,6 +24,7 @@ from __future__ import annotations
 import time
 from pathlib import Path
 
+from render_bridge import camera as camera_codec
 from render_bridge import emissive as emissive_codec
 from render_bridge import fogmap as fog_codec
 from render_bridge import markers as marker_codec
@@ -43,8 +44,11 @@ class LiveSession:
     def __init__(self, state, ds, *, directory, local_player: int = 0, size=(1280, 800),
                  marker_mode: str = 'all', planet_texture: int = 256,
                  overlay_keyframe: float = 2.0, max_instances=None, max_effects=None,
-                 fps_probe=None):
+                 fps_probe=None, camera=None):
         self.state, self.ds = state, ds
+        # The game's own camera, if it was handed in: the window looks where the player looks, and
+        # only then can a click mean anything.
+        self.camera = camera
         self.local_player = int(local_player)
         self.size = (int(size[0]), int(size[1]))
         self.marker_mode = marker_mode
@@ -62,6 +66,7 @@ class LiveSession:
             'fog': self.directory / 'fog.ring',
             'planets': self.directory / 'planets.ring',
             'input': self.directory / 'input.ring',
+            'camera': self.directory / 'camera.ring',
         }
 
         # The session tables are written once, beside the ring: frame records index them.
@@ -123,6 +128,9 @@ class LiveSession:
 
         from render.emissive_batch import PlanetDomes
         self._domes = PlanetDomes()
+
+        self._camera_ring = ring.Ring.create(
+            self.paths['camera'], slots=4, slot_bytes=1024)   # the ring's own minimum
 
         self._radius_cache: dict = {}
         self.frames = 0
@@ -236,6 +244,8 @@ class LiveSession:
             else self.counts['instances']
         self.counts['primitives'] = len(primitives)
         self.counts['markers'] = len(cues)
+        if self.camera is not None:
+            self._camera_ring.publish(camera_codec.encode(self.camera))
         self.counts['overlay_bytes'] = len(payload)
         self.counts['planet_blobs'] += len(pending)
         for key, value in (('frame_ms', frame_ms), ('overlay_ms', overlay_ms),
@@ -247,7 +257,7 @@ class LiveSession:
     # ------------------------------------------------------------------ lifecycle
     def close(self):
         for handle in (self._frames, self._emit, self._markers, self._overlay, self._fog,
-                       self._planet_ring):
+                       self._planet_ring, self._camera_ring):
             try:
                 handle.close()
             except Exception:

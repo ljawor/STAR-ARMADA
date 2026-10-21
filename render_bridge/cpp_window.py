@@ -15,8 +15,59 @@ import atexit
 import os
 import shutil
 import subprocess
+import time
 
 DEFAULT_BINARY = os.path.join('render_cpp', 'build-w02', 'armada_viewer')
+SNAPSHOT_NAME = 'catalogue.snap'
+
+
+def ensure_snapshot(root: str, directory: str, log=print) -> str | None:
+    """A snapshot for the window's mesh catalogue, made once if the user has not supplied one.
+
+    The window loads mesh bindings from an offline snapshot even in live mode: the rings carry
+    transforms and a binding id, not geometry. Asking a player to export one by hand before the
+    renderer will draw was the wrong shape of requirement - so the catalogue is built here from the
+    approved assets, once, and reused while the asset registry is older than it.
+    """
+    supplied = os.environ.get('STAR_ARMADA_CPP_SNAPSHOT')
+    if supplied and os.path.isfile(supplied):
+        return supplied
+
+    # The catalogue that ships with the game: the approved meshes, so a player never has to export
+    # anything before the renderer will draw.
+    shipped = os.path.join(root, 'assets', 'cpp', SNAPSHOT_NAME)
+    if os.path.isfile(shipped):
+        return shipped
+
+    path = os.path.join(directory, SNAPSHOT_NAME)
+    registry = os.path.join(root, 'assets', 'models', 'registry.json')
+    try:
+        fresh = (os.path.isfile(path) and os.path.isfile(registry)
+                 and os.path.getmtime(path) >= os.path.getmtime(registry))
+    except OSError:
+        fresh = False
+    if fresh:
+        return path
+
+    started = time.perf_counter()
+    try:
+        # In a child process, not in-process: building the catalogue changes the model selection, and
+        # this game already has a session open ("Model selection changes require a session boundary
+        # with renderers closed").
+        import subprocess
+        import sys
+        script = os.path.join(root, 'tools', 'render', 'dump_snapshot.py')
+        result = subprocess.run([sys.executable, script, '--fixture', 'four-player-combat-v1',
+                                 '--catalogue', '--out', path],
+                                cwd=root, capture_output=True, text=True, timeout=180)
+        if result.returncode != 0:
+            raise RuntimeError((result.stderr or result.stdout).strip().splitlines()[-1][:200])
+    except Exception as exc:                      # a missing build or a broken asset tree
+        log(f'cpp window: could not build the mesh catalogue ({exc}); the window was not started')
+        return None
+    log(f'cpp window: mesh catalogue built in {(time.perf_counter() - started) * 1000:.0f} ms '
+        f'-> {path}')
+    return path if os.path.isfile(path) else None
 
 
 def find_binary(root: str) -> str | None:
@@ -32,9 +83,11 @@ def spawn(paths: dict, *, root: str, snapshot: str | None, log=print):
         log('cpp window: no armada_viewer built (render_cpp/build-w02); the match is running '
             'headless and the rings are being published')
         return None
+    if not snapshot:
+        snapshot = ensure_snapshot(root, os.path.dirname(str(paths['frame'])), log=log)
     if not snapshot or not os.path.isfile(snapshot):
-        log('cpp window: STAR_ARMADA_CPP_SNAPSHOT is not set to an existing snapshot; the window '
-            'needs one for its mesh catalogue, so it was not started')
+        log('cpp window: no mesh catalogue, so the window was not started; the match is running '
+            'here instead (this fallback draws with the legacy renderer)')
         return None
 
     argv = [
@@ -49,6 +102,7 @@ def spawn(paths: dict, *, root: str, snapshot: str | None, log=print):
         '--fog-ring', str(paths['fog']),
         '--planet-ring', str(paths['planets']),
         '--input-ring', str(paths['input']),
+        '--camera-ring', str(paths['camera']),
         '--seconds', '0',
     ]
     player = shutil.which(binary) or binary
