@@ -28,6 +28,63 @@ def frame(instances=2, effects=2, *, tab=None):
     return tab, raw
 
 
+class InstanceHealthTest(unittest.TestCase):
+    """hp/shield on the wire must be the entity's real condition.
+
+    Entity carries `hull`/`max_hull`; an earlier reader asked for `hp`/`max_hp` (which only
+    subsystems have), so every instance in every frame carried hp = 0 and the disabled flag.
+    Nothing in the picture showed it, so only an assertion on the decoded values catches it.
+    """
+
+    def setUp(self):
+        import game.core  # noqa: F401
+        from game.graphics_benchmark import make_fixture
+        import pathlib
+        from render import asset_selection
+        from render.ship_sizes import ship_size
+        from tools.render.dump_snapshot import _default_selection
+        root = pathlib.Path(__file__).resolve().parents[1]
+        asset_selection.configure(_default_selection(), asset_root=root,
+                                  pack_root=root / 'visual_packs')
+        self.fixture = make_fixture('four-player-combat-v1')
+        self.state, self.ds = self.fixture.manager.state, self.fixture.manager.ds
+        _, _, seeded = collect.collect(
+            self.state, self.ds, None, asset_selection=asset_selection, ship_size=ship_size,
+            ship_binding=asset_selection.ship_binding, all_visible=True)
+        self.collector = collect.FrameCollector(
+            self.ds, seeded['tables'], asset_selection=asset_selection, ship_size=ship_size,
+            ship_binding=asset_selection.ship_binding, all_visible=True)
+        self.buffer = bytearray(packed.frame_size(packed.MAX_INSTANCES, packed.MAX_EFFECTS))
+
+    def decode(self):
+        raw, _ = self.collector.collect_into(self.state, self.buffer,
+                                             tick=self.state.tick, frame_index=0)
+        return {record['entity_id']: record
+                for record in packed.unpack_frame(bytes(raw), self.collector.tables)['instances']}
+
+    def test_intact_hull_is_one_not_zero(self):
+        decoded = self.decode()
+        fractions = [record['hp'] for record in decoded.values()]
+        self.assertTrue(fractions, 'the fixture produced no instances')
+        self.assertGreater(min(fractions), 0.9, 'every instance reported a destroyed hull')
+
+    def test_damage_and_disabled_flags_follow_the_hull(self):
+        entity = next(e for e in self.state.entities.values()
+                      if e.alive and e.is_ship and e.max_hull)
+        original = entity.hull
+        try:
+            entity.hull = entity.max_hull * 0.4
+            damaged = self.decode()[entity.id]
+            self.assertAlmostEqual(damaged['hp'], 0.4, places=5)
+            self.assertEqual(damaged['flags'], packed.FLAG_DAMAGED)
+            entity.hull = entity.max_hull * 0.01
+            disabled = self.decode()[entity.id]
+            self.assertAlmostEqual(disabled['hp'], 0.01, places=5)
+            self.assertEqual(disabled['flags'], packed.FLAG_DISABLED)
+        finally:
+            entity.hull = original
+
+
 class PackedProfileTests(unittest.TestCase):
     def test_roundtrip_preserves_every_field(self):
         tab, raw = frame()

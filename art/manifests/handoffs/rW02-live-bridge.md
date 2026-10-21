@@ -92,12 +92,17 @@ native rendering and no C++ build was run for this step.
   (`pose_from_matrix`, `lerp_angle`, `write_instance`), covered by `test_pose` in `ctest frame_v2`,
   including the degenerate-scale refusal. Writing the matrix element-wise shrinks a turning hull.
 - Producer: `tools/render/stream_ring.py` steps a real `GameManager` and publishes every tick.
-- Receipt: `artifacts/cpp-renderer/w02/live/live-receipt.json` (+ `final.png`, producer and viewer
-  JSON, `motion.json`). 899 frames drawn, 31 adopted, 0 dropped, decode 0.757 ms median, frames
-  behind median 0 / p95 0 / p99 1 (gate <= 2 met), producer 4.92 Hz with a 124.6 ms simulation tick.
-- Two honest negatives recorded rather than buried: a live frame with 1,046 transients costs 2.37 ms
-  (over the 1.0 ms budget; instances-only frames are 0.55/0.71 ms), and the stream rate is the
-  Python simulation, not the bridge.
+- Receipt: `artifacts/cpp-renderer/w02/live/live-receipt.json` (+ `detection.png`, producer and viewer
+  JSON, `gather-receipt.json`, `motion.json`). Player-visible stream: 1434 frames drawn, 54 adopted,
+  0 dropped, decode 0.716 ms median, frames behind median 0 / p95 0 / p99 1 (gate <= 2 met).
+- Producer cost is now inside the 1.0 ms budget on real combat frames: 0.964 ms median for 736
+  instances + 1,426 transients, after replacing the transient generator with a direct pack loop
+  (2.6x, interleaved A/B). `tools/render/measure_gather.py` is the bench and the regression tool.
+- Player visibility is supplied per frame (`visible_ids`, `effect_allow`, `projectile_allow`);
+  computing it in the legacy predicates costs 105 ms/frame and belongs to the renderer, not the
+  bridge. The stream still runs at 3.0 Hz because the Python tick costs 179 ms.
+- Defect found by the new health test: every instance carried hp = 0 and the disabled flag, because
+  the reader asked for `hp`/`max_hp` while `Entity` stores `hull`/`max_hull`.
 - `Ring.create` now takes an exclusive lock and refuses a second producer. It was added because a
   second producer silently truncated the header during this work and produced phantom drop counts.
 

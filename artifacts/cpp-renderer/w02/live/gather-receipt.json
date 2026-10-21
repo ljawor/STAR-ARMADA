@@ -1,0 +1,45 @@
+{
+  "tool": "measure_gather",
+  "fixture": "four-player-combat-v1",
+  "ticks_advanced": 300,
+  "repeats": 60,
+  "gate_ms": 1.0,
+  "live_composition": {
+    "instances": 736,
+    "transients": 1426,
+    "bytes_all_visible": 124248
+  },
+  "all_visible": {
+    "total": {
+      "samples": 60,
+      "median_ms": 0.964,
+      "p95_ms": 0.973,
+      "max_ms": 3.67
+    },
+    "instances": 736,
+    "transients": 1426,
+    "gate_met": true
+  },
+  "detection_set_supplied": {
+    "total": {
+      "samples": 60,
+      "median_ms": 0.964,
+      "p95_ms": 0.976,
+      "max_ms": 3.707
+    },
+    "instances": 634,
+    "transients": 1426,
+    "gate_met": true
+  },
+  "visibility_query_ms": 41.792,
+  "transient_fog_filter_ms": 73.644,
+  "transient_fog_filter_note": "render.fog.effect_visible / is_position_visible for every transient, once, outside the gather. The legacy renderer pays this per frame too; the C++ path should filter transients against the fog mask instead of querying.",
+  "transient_counts_after_filter": {
+    "effects": 1178,
+    "projectiles": 248
+  },
+  "visibility_query_note": "state.can_see for every entity, once, outside the gather. The renderer pays this for its own draw list; it is not part of the serialization budget.",
+  "state_sha256_before": "12a3ad340c13829c2be961d21f78a240fa50d7d2f301805068146ef5b468398f",
+  "state_sha256_after": "12a3ad340c13829c2be961d21f78a240fa50d7d2f301805068146ef5b468398f",
+  "state_unchanged": true
+}

@@ -26,7 +26,7 @@ sys.path.insert(0, str(ROOT))
 
 import game.core  # noqa: F401  core/systems import cycle, per the project skill
 from game.graphics_benchmark import make_fixture
-from render import asset_selection
+from render import asset_selection, fog
 from render.ship_sizes import ship_size
 from render_bridge import collect, packed, ring
 
@@ -44,6 +44,10 @@ def main(argv=None):
     parser.add_argument('--hz', type=float, default=60.0, help='Publish cadence (0 = unthrottled)')
     parser.add_argument('--slot-bytes', type=int, default=1 << 20)
     parser.add_argument('--slots', type=int, default=8)
+    parser.add_argument('--local-player', type=int, default=0)
+    parser.add_argument('--visibility', choices=('detection', 'all'), default='detection',
+                        help='detection = the renderer supplies what the player can see; '
+                             'all = omniscient diagnostic frame')
     parser.add_argument('--report', type=Path)
     args = parser.parse_args(argv)
 
@@ -54,16 +58,25 @@ def main(argv=None):
         state, ds, None, asset_selection=asset_selection, ship_size=ship_size,
         ship_binding=asset_selection.ship_binding, all_visible=True)
     tables = stats['tables']
+    # Two collectors' worth of behaviour, one object: the detection mode is handed the
+    # renderer's answers every frame (visible entity ids, plus fog decisions for effects and
+    # shots, which are not entities and cannot travel in the id set).
+    detection = args.visibility == 'detection'
+    seen_state = {'ids': None, 'effects': None, 'shots': None}
     collector = collect.FrameCollector(
         ds, tables, asset_selection=asset_selection, ship_size=ship_size,
-        ship_binding=asset_selection.ship_binding, all_visible=True)
+        ship_binding=asset_selection.ship_binding, local_player=args.local_player,
+        all_visible=not detection,
+        visible_ids=set() if detection else None,
+        effect_allow=set() if detection else None,
+        projectile_allow=set() if detection else None)
 
     args.ring.parent.mkdir(parents=True, exist_ok=True)
     tables_path = Path(str(args.ring) + '.tables')
     tables_path.write_bytes(tables.encode())
 
     buffer = bytearray(packed.frame_size(packed.MAX_INSTANCES, packed.MAX_EFFECTS))
-    encode_ms, step_ms = [], []
+    encode_ms, step_ms, visibility_ms = [], [], []
     published = 0
     period = 1.0 / args.hz if args.hz > 0 else 0.0
     started = time.monotonic()
@@ -78,6 +91,21 @@ def main(argv=None):
                 step_started = time.perf_counter()
                 fixture.manager.step(1.0 / 60.0)
                 step_ms.append((time.perf_counter() - step_started) * 1000.0)
+                if detection:
+                    # This is the renderer's own cost, measured apart from the gather. The
+                    # bridge is supposed to receive these answers, not derive them.
+                    seen_started = time.perf_counter()
+                    seen_state['ids'] = {entity.id for entity in state.entities.values()
+                                         if entity.alive
+                                         and state.can_see(args.local_player, entity.id)}
+                    seen_state['effects'] = {id(effect) for effect in state.effects
+                                             if fog.effect_visible(state, args.local_player, effect)}
+                    seen_state['shots'] = {id(shot) for shot in state.projectiles.values()
+                                           if state.is_position_visible(args.local_player, shot.pos)}
+                    collector.visible_ids = seen_state['ids']
+                    collector.effect_allow = seen_state['effects']
+                    collector.projectile_allow = seen_state['shots']
+                    visibility_ms.append((time.perf_counter() - seen_started) * 1000.0)
                 frame_started = time.perf_counter()
                 frame, counts = collector.collect_into(
                     state, buffer, tick=state.tick, frame_index=published)
@@ -109,7 +137,12 @@ def main(argv=None):
         'publish_hz': round(published / elapsed, 2) if elapsed else 0.0,
         'encode_ms': _stats(encode_ms),
         'sim_step_ms': _stats(step_ms),
-        'visibility': 'all_visible (player visibility is the live-integration seam)',
+        'visibility': ('detection: visible entity ids supplied per frame, fog predicates for '
+                       'effects and shots' if detection else
+                       'all_visible (omniscient diagnostic)'),
+        'renderer_visibility_ms': _stats(visibility_ms),
+        'renderer_visibility_note': ('cost of computing what the player can see, measured outside '
+                                     'the gather; the bridge receives these answers'),
         'instances_last_frame': counts['instances'],
         'transients_last_frame': counts['effects'],
     }

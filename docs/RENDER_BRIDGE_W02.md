@@ -210,14 +210,20 @@ Measured once, end to end, `artifacts/cpp-renderer/w02/live/live-receipt.json` (
 
 | Side | Quantity | Value |
 |---|---|---|
-| Producer | published frames / rate | 100 in 20.3 s = **4.92 Hz** |
-| Producer | gather + pack + publish | **2.372 ms** median, 3.015 ms p95 |
-| Producer | simulation tick, same frames | **124.555 ms** median, 442.9 ms p95 |
-| Consumer | frames drawn | 899 in 8 s |
-| Consumer | producer frames adopted / dropped | **31 / 0** |
-| Consumer | decode of a 752-instance frame | **0.757 ms** median, 0.782 ms p95 |
+| Producer | published frames / rate | 152 in 50.1 s = **3.03 Hz** |
+| Producer | gather + pack + publish | **1.102 ms** median, 1.381 ms p95 |
+| Producer | simulation tick, same frames | **178.9 ms** median, 442.0 ms p95 |
+| Producer | computing player visibility | **104.6 ms** median (renderer work, not bridge) |
+| Consumer | frames drawn / instances drawn | 1434 in 12 s / **638 of 752** (player-visible) |
+| Consumer | producer frames adopted / dropped | **54 / 0** |
+| Consumer | decode of a 638-instance frame | **0.716 ms** median, 0.772 ms p95 |
 | Consumer | frames behind at draw | median 0, p95 0, p99 1 (**gate ≤ 2: met**) |
-| Consumer | wall / GPU frame | 8.80 ms / 17.84 ms median |
+| Consumer | wall / GPU frame | 10.18 ms / 7.84 ms median |
+
+These numbers are the *detection* stream: the producer is handed the renderer's visibility
+answers (`visible_ids` plus fog predicates for effects and shots, which are not entities and
+cannot travel in an id set). The same tick measured all-visible costs the same 0.964 ms, because
+this fixture's transients are all inside player 0's sensor range.
 
 Three things this table says that are easy to misread:
 
@@ -228,12 +234,27 @@ Three things this table says that are easy to misread:
    were published between the one being drawn and the moment of drawing. Median and p95 are 0 and
    p99 is 1, i.e. the picture is at most one producer frame stale even though the viewer draws ~112
    frames a second. It is not wall-clock latency and not a frame rate.
-3. **The 1.0 ms serialization budget is met for instances-only frames and missed for this
-   composition.** The rows in §4 (0.55 / 0.71 ms) pack instances with synthetic transients. A live
-   frame carries 752 instances plus 1,046 real effects and projectiles, and gathering those from
-   `GameState` costs 2.37 ms — 2.4x the budget. It is listed as the next optimization target rather
-   than absorbed into a passing average; the per-transient cost is dominated by dictionary access
-   and tuple building, not by `struct.pack_into`.
+3. **The budget is met on real frames, and it took a rewrite to get there.** The generator that
+   produced transient tuples measured 2.6 ms on a combat frame (1,426 transients). Packing straight
+   from the state's own dicts, caching the colour conversion by object identity, hoisting `cos/sin`
+   per distinct yaw and inlining the hp/shield fractions took the same state to **0.964 ms**, an
+   interleaved A/B of 2.6x. `tools/render/measure_gather.py` is the bench; it steps 300 ticks into
+   the fight, measures both visibility modes and asserts the state hash afterwards.
+
+Two defects came out of writing that bench rather than out of reading the code:
+
+- **Every instance carried hp = 0 and the disabled flag.** `Entity` stores `hull` / `max_hull`;
+  `hp` / `max_hp` exist only on subsystems, and the reader asked for those with a `getattr` default,
+  so the missing attribute silently became 0. It never showed in the picture because nothing draws
+  health yet. `tests/test_render_packed.InstanceHealthTest` now asserts an intact hull reports 1.0
+  and that damage and disabled flags follow a hull the test sets by hand; reverting the field names
+  fails both tests.
+- **Computing what the player can see is not free, and the bridge must not own it.** Handing the
+  gather a per-record callable cost a Python call for every transient; pre-resolved id sets
+  (`effect_allow` / `projectile_allow`) dropped that. The visibility answers themselves cost 42 ms
+  (entity sensors) plus 74 ms (fog predicates on 1,426 transients) per frame in the legacy
+  predicates — work the renderer already pays, and work the C++ path should do against the fog mask
+  instead of querying per effect.
 
 That the picture is live, not a paused snapshot, was checked separately: two reads of the same ring
 1.2 s apart differ in **96 ship positions** (max delta 4.381 units) and in transient count

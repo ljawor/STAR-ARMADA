@@ -1,0 +1,35 @@
+{
+  "tool": "stream_ring",
+  "fixture": "four-player-combat-v1",
+  "ring": "/Users/lukaszjawor/.hermes/cache/scratch/w02-live/final4.bin",
+  "tables": "/Users/lukaszjawor/.hermes/cache/scratch/w02-live/final4.bin.tables",
+  "tables_crc32": 1380653850,
+  "bindings": 18,
+  "kinds": 10,
+  "published_frames": 152,
+  "ticks_advanced": 152,
+  "elapsed_s": 50.098,
+  "publish_hz": 3.03,
+  "encode_ms": {
+    "samples": 152,
+    "median_ms": 1.102,
+    "p95_ms": 1.381,
+    "max_ms": 3.261
+  },
+  "sim_step_ms": {
+    "samples": 152,
+    "median_ms": 178.855,
+    "p95_ms": 442.011,
+    "max_ms": 480.488
+  },
+  "visibility": "detection: visible entity ids supplied per frame, fog predicates for effects and shots",
+  "renderer_visibility_ms": {
+    "samples": 152,
+    "median_ms": 104.584,
+    "p95_ms": 139.171,
+    "max_ms": 146.567
+  },
+  "renderer_visibility_note": "cost of computing what the player can see, measured outside the gather; the bridge receives these answers",
+  "instances_last_frame": 638,
+  "transients_last_frame": 1152
+}

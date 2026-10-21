@@ -416,7 +416,7 @@ static int run(const Options &o) {
                picosha2::hash256_hex_string(armada::read_bytes(o.snapshot))},
               {"unique_meshes", groups.size()},
               {"unique_triangles", triangles},
-              {"instances", scene.at("instances").size()},
+              {"snapshot_instances", scene.at("instances").size()},
               {"submitted_triangles_per_pass", drawnTriangles},
               {"full_game_performance", false},
               {"quality",
@@ -831,6 +831,14 @@ static int run(const Options &o) {
       draws.push_back(st->numDraw);
     }
     frame++;
+  }
+  // Counted after the loop: the report object is built before the first frame, when the
+  // groups still hold the snapshot, so an in-place lambda would report 752 forever.
+  {
+    size_t drawn = 0;
+    for (const auto &group : groups)
+      drawn += group.instances.size() / 20;
+    report["instances"] = drawn;
   }
   if (live) {
     report["live"] = {
