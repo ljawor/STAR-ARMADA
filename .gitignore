@@ -26,3 +26,6 @@ build/
 dist/
 *.dmg
 netdiag/
+
+# native build trees (CMake configure output, not sources)
+render_cpp/build*/

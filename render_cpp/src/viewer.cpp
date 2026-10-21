@@ -940,6 +940,7 @@ static int run(const Options &o) {
   std::vector<emit::Primitive> emitList;
   if (!o.emitRing.empty())
     emitRing = std::make_unique<armada::bridge::RingReader>(o.emitRing);
+  float projScale = 0.f;    // proj[5] of the last frame, for the report's projection block
   std::unique_ptr<armada::bridge::RingReader> cameraRing;
   size_t cameraPoses = 0, cameraDecodeFailures = 0, cameraTorn = 0;
   if (!o.cameraRing.empty())
@@ -1325,14 +1326,9 @@ static int run(const Options &o) {
                                    {"yaw", camera.yaw},
                                    {"pitch", camera.pitch}});
     // The game's camera, applied before the view matrix is built. `ARMCAM01`: 20-byte header then
-    // six float32 - target xyz, distance, yaw, pitch - all in the game's units and degrees.
-    //
-    // The distance is scaled by kFovCompensation because of the documented projection defect: this
-    // build feeds `camera.fov` (degrees) to `bx::mtxProj`, which wants radians, so the vertical field
-    // of view is ~88 deg instead of 55 and everything draws at ~54% of its intended size. Scaling the
-    // distance by 0.62 makes the window frame the battle the way the game frames it. Remove this
-    // factor together with the defect, in the same change that re-baselines the comparisons.
-    constexpr float kFovCompensation = 0.62f;
+    // six float32 - target xyz, distance, yaw, pitch - all in the game's units and degrees. The pose
+    // is used exactly as sent: with the projection fixed there is no compensation to apply, and the
+    // window and the game frame the same battle at the same distance.
     if (cameraRing) {
       const uint64_t poseSeq = cameraRing->published();
       static std::vector<uint8_t> posePayload;
@@ -1344,7 +1340,7 @@ static int run(const Options &o) {
           // Length is checked above; the header's own crc is the producer's to validate (`decode`
           // refuses a bad pose), and the ring's seqlock has already rejected a torn slot.
           camera.target = {v[0], v[1], v[2]};
-          camera.distance = v[3] * kFovCompensation;
+          camera.distance = v[3];
           camera.yaw = v[4];
           camera.pitch = v[5];
           ++cameraPoses;
@@ -1361,14 +1357,15 @@ static int run(const Options &o) {
     bx::mtxLookAt(view, {eye[0], eye[1], eye[2]},
                   {camera.target[0], camera.target[1], camera.target[2]},
                   {0, 1, 0}, bx::Handedness::Right);
-    // NOTE: bx::mtxProj wants the vertical FOV in RADIANS while `camera.fov` holds degrees, so the
-    // effective vertical FOV is ~88 deg rather than the intended 55 - everything draws at about
-    // 54% of Python's apparent size at the same distance. Feeding toRad() here empties the frame
-    // entirely (the rest of the view setup depends on the current matrix), so correcting it means
-    // re-baselining every framing and benchmark - its own task, tracked in docs/RENDER_W05_EMIT
-    // and the W05 wrap-up. Until then, compare framings by scaling the distance by 0.62.
+    // W06: `camera.fov` is DEGREES and must stay degrees. `bx::math.h` documents `_fovy` as radians,
+    // but this bx version's `mtxProj` applies `toRad()` itself (bx_source-src/src/math.cpp:90:
+    // `height = 1.0f/tan(toRad(_fovy)*0.5f)`), so passing radians yields a ~1 deg field of view and
+    // a frame full of clipped geometry. Measured: `proj[5]` is 1.9209 for 55 deg as degrees (what the
+    // Python renderer uses) and 119.37 for 55 deg converted here. The report's `projection` block
+    // carries both `proj_scale` and `expected_scale` so this can never drift silently again.
     bx::mtxProj(proj, camera.fov, float(width) / height, .5f, 150000.f,
                 bgfx::getCaps()->homogeneousDepth, bx::Handedness::Right);
+    projScale = proj[5];
     const float radius =
         std::max(300.f, std::min(camera.distance * .85f, 14000.f));
     lightTarget = camera.target;
@@ -2307,9 +2304,22 @@ static int run(const Options &o) {
   report["gpu_samples_ms"] = gpu;
   report["draw_calls_samples"] = draws;
   if (cameraRing)
+    // The pose crosses verbatim: `distance_scale` is 1.0 because nothing is compensated here. W05
+    // scaled the distance by 0.62 to paper over a projection defect; the defect was `mtxProj`
+    // being fed radians (it applies `toRad` itself), so the window framed 1.6x closer than the
+    // game and its clicks resolved against a different picture. The projection block below is the
+    // guard that keeps that from coming back.
     report["camera_ring"] = {{"ring", o.cameraRing.string()}, {"poses", cameraPoses},
                             {"decode_failures", cameraDecodeFailures}, {"torn", cameraTorn},
-                            {"distance_scale", 0.62}};
+                            {"distance_scale", 1.0}};
+  // The projection, in numbers rather than in a picture: proj[5] is 1/tan(vfov/2), so a 55 deg
+  // vertical field of view at 800 px tall puts it at 1.9203. Anything else is a projection bug.
+  report["projection"] = {{"fov_deg", camera.fov},
+                          {"fov_input_rad", bx::toRad(camera.fov)},
+                          {"proj_scale", projScale},
+                          {"expected_scale", 1.0 / std::tan(bx::toRad(camera.fov) * 0.5)},
+                          {"focal_px", 0.5 * double(height) /
+                               std::tan(bx::toRad(camera.fov) * 0.5)}};
   report["camera"] = {{"target", camera.target},
                       {"distance", camera.distance},
                       {"yaw", camera.yaw},
