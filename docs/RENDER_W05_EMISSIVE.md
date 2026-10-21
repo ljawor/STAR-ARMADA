@@ -48,10 +48,11 @@ record  <BBH4B3f3fffHH  44 B   kind, shape, flags, rgba, a xyz, b xyz, radius, w
 
 ## Known gaps (not claims)
 
-* **Explosions are not carried.** `_draw_explosion` builds a per-effect particle sequence from a
-  seed; it needs its own vocabulary (or a great many discs), so it is slice 3b.
+* ~~**Explosions are not carried.**~~ **Done in slice 3b** — see `docs/RENDER_W05_EXPLOSIONS.md`.
+  A blast crosses as position/size/age/seed in the existing `EXPLOSION 5` record and the window
+  rebuilds `_draw_explosion`'s layers from its own formulas.
 * **Shield hits, hull hits and the standing shield shell** are still drawn by nobody in the native
-  window.
+  window (slice 3c).
 * **Legacy point-sprite projectiles** (`projectile_shape(...) == 'legacy'`) are counted
   (`legacy_shots` in the producer report) and not drawn.
 * The counters in the viewer report are **cumulative over frames drawn**, not per frame: a batch

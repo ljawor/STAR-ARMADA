@@ -116,6 +116,9 @@ target_include_directories(test_markers PRIVATE include)
 add_test(NAME markers COMMAND test_markers)
 set_tests_properties(markers PROPERTIES ENVIRONMENT
   "ARMADA_MARKER_FIXTURE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/markers")
+add_executable(test_explosion tests/test_explosion.cpp)
+target_include_directories(test_explosion PRIVATE include)
+add_test(NAME explosions COMMAND test_explosion)
 add_test(NAME planets COMMAND test_planets)
 set_tests_properties(planets PROPERTIES ENVIRONMENT
   "ARMADA_PLANET_FIXTURE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/planets")

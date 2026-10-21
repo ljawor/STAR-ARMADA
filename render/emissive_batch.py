@@ -31,10 +31,41 @@ CORE_ALPHA = 0.95
 CORE_WHITEN = 0.55
 HALO_SCALE = (1.9, 2.6)        # BOLT_HALO in renderer.py
 FIRE_LIFETIME = 2.0
+EXPLOSION_LIFETIME = 1.5        # renderer.py::_draw_explosion `life`
+EXPLOSION_SMALL_LIFETIME = 0.6  # the small blast fades out over 0.6 s
+EXPLOSION_SMALL_SEED = 3
 
 
 def _lift(colour, amount):
     return tuple(min(1.0, c * (1.0 - amount) + amount) for c in colour[:3])
+
+
+def explosions(effects) -> tuple[list, int]:
+    """One parameter record per live blast - the window rebuilds the layers from age and seed.
+
+    `explosion_small` is the same phenomenon at half size and 0.55x the clock, with its own fade,
+    exactly as the renderer draws it; both become the same record with different parameters.
+    """
+    out, skipped = [], 0
+    for effect in effects:
+        kind = effect.get('kind')
+        if kind not in ('explosion', 'explosion_small'):
+            continue
+        age = effect.get('t', 0.0)
+        size = float(effect.get('size', 40))
+        seed = int(effect.get('seed', 0))
+        if kind == 'explosion_small':
+            if max(0.0, 1.0 - age / EXPLOSION_SMALL_LIFETIME) <= 0.0:
+                skipped += 1
+                continue
+            size = max(10.0, size) * 0.5
+            age = age * 0.55
+            seed = EXPLOSION_SMALL_SEED
+        if age >= EXPLOSION_LIFETIME:
+            skipped += 1
+            continue
+        out.append(codec.explosion(effect['pos'], size, age, seed))
+    return out, skipped
 
 
 def beams(effects) -> tuple[list, int]:
@@ -121,10 +152,14 @@ def _shape(weapon_type):
 
 
 def build(effects, shots, weapon_type_of, extents_of) -> tuple[list, dict]:
+    blast_primitives, blasts_skipped = explosions(effects)
     primitives, skipped = beams(effects)
+    primitives += blast_primitives
     primitives += rings(effects)
     bolts, stats = projectiles(shots, weapon_type_of, extents_of)
     primitives += bolts
     stats['beams_skipped'] = skipped
+    stats['explosions'] = len(blast_primitives)
+    stats['explosions_skipped'] = blasts_skipped
     stats['primitives'] = len(primitives)
     return primitives, stats

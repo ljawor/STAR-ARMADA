@@ -6,7 +6,7 @@ window cannot infer any of them, so the *decisions and the shapes* cross as prim
 
     header  <8sHHII   20 B   magic "ARMEMIT1", version, count (<=4096), reserved, crc32
     record  <BBH4B3f3fffHH  44 B
-              kind B     RIBBON 1 | DISC 2 | RING 3 | BOLT 4
+              kind B     RIBBON 1 | DISC 2 | RING 3 | BOLT 4 | EXPLOSION 5
               shape B    RIBBON: 0 camera-facing | 1 flat
                          DISC/RING: 0 billboard | 1 flat (ecliptic)
                          BOLT: 0 elongated along its axis | 1 square
@@ -18,6 +18,7 @@ window cannot infer any of them, so the *decisions and the shapes* cross as prim
               width f    RIBBON half-width in world units | RING stroke half-width | BOLT half-width
                          in pixels
               segments H DISC fan segments (0 = 24) | RING segments (0 = 32)
+                         EXPLOSION seed (the blast's own deterministic hash input)
               reserved H must be 0
 
 Two units appear here on purpose. A beam is a world-sized ribbon: its width is part of how a
@@ -42,6 +43,7 @@ RIBBON = 1
 DISC = 2
 RING = 3
 BOLT = 4
+EXPLOSION = 5                      # a blast carried as parameters, rebuilt by the window
 
 SHAPE_CAMERA = 0                   # camera-facing billboard
 SHAPE_FLAT = 1                     # lying in the ecliptic
@@ -105,6 +107,18 @@ def bolt(position, heading, half_length_px, half_width_px, colour, *, square=Fal
                    radius=half_length_px, width=half_width_px)
 
 
+def explosion(centre, size, age, seed, colour=(1.0, 1.0, 1.0, 1.0)) -> dict:
+    """A detonation as parameters: position, size, age and seed.
+
+    The blast is ~40 irregular shells and several thousand vertices, all derived from `age` and
+    `seed` - so the parameters cross and the window rebuilds the same layers with the same
+    formulas (`render/renderer.py::_draw_explosion`). Sending the geometry instead would dwarf the
+    frame ring for one visual effect.
+    """
+    return _record(EXPLOSION, SHAPE_CAMERA, colour, centre, radius=float(size), width=float(age),
+                   segments=int(seed) & 0xFFFF, depth=False, additive=False)
+
+
 def encode(records) -> bytes:
     records = list(records)
     if len(records) > MAX_RECORDS:
@@ -112,7 +126,7 @@ def encode(records) -> bytes:
     body = bytearray()
     for record in records:
         kind = int(record['kind'])
-        if kind not in (RIBBON, DISC, RING, BOLT):
+        if kind not in (RIBBON, DISC, RING, BOLT, EXPLOSION):
             raise EmissiveError(f'unknown emissive kind {kind}')
         body += RECORD.pack(kind, int(record['shape']), int(record['flags']),
                             *[int(v) for v in record['colour']],
@@ -147,7 +161,7 @@ def decode(data):
     for index in range(count):
         fields = RECORD.unpack_from(body, index * RECORD_BYTES)
         kind, shape, flags = fields[0], fields[1], fields[2]
-        if kind not in (RIBBON, DISC, RING, BOLT):
+        if kind not in (RIBBON, DISC, RING, BOLT, EXPLOSION):
             raise EmissiveError(f'record {index}: unknown kind {kind}')
         if fields[-1]:
             raise EmissiveError(f'record {index}: reserved field must be zero')

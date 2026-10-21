@@ -376,9 +376,12 @@ def main(argv=None):
             'beams_skipped': sum(c.get('beams_skipped', 0) for c in emit_counts),
             'legacy_shots': sum(c.get('legacy', 0) for c in emit_counts),
             'bolts': sum(c.get('drawn', 0) for c in emit_counts),
+            'explosions': sum(c.get('explosions', 0) for c in emit_counts),
+            'explosions_skipped': sum(c.get('explosions_skipped', 0) for c in emit_counts),
             'squares': sum(c.get('squares', 0) for c in emit_counts),
             'note': 'beams and glows in world units, bolts in pixels so the window keeps them at '
-                    'its own zoom; additive, no depth write',
+                    'its own zoom; blasts travel as position/size/age/seed and are rebuilt by the '
+                    'window; additive, no depth write',
         } if args.emit_ring else {}),
         'cues': ({
             'ring': str(args.marker_ring) if args.marker_ring else None,

@@ -122,5 +122,61 @@ class BoltTests(unittest.TestCase):
         self.assertEqual(len(squares), 2)                  # halo + core for the torpedo only
 
 
+class ExplosionTests(unittest.TestCase):
+    """A blast crosses as parameters - position, size, age, seed - and the window rebuilds it.
+
+    Sending the geometry would be ~950 triangles per blast per frame; the parameters are 44 bytes
+    and the rebuild is the renderer's own formulas (`render_cpp/include/explosion.hpp`).
+    """
+
+    def blast(self, kind='explosion', t=0.35, size=120.0, seed=7):
+        return {'kind': kind, 'pos': (10.0, 20.0, 30.0), 't': t, 'size': size, 'seed': seed}
+
+    def test_a_live_blast_is_one_parameter_record(self):
+        primitives, skipped = emissive_batch.explosions([self.blast()])
+        self.assertEqual(len(primitives), 1)
+        self.assertEqual(skipped, 0)
+        record = primitives[0]
+        self.assertEqual(record['kind'], codec.EXPLOSION)
+        self.assertEqual(record['a'], (10.0, 20.0, 30.0))
+        self.assertAlmostEqual(record['radius'], 120.0)      # the size the renderer derives from
+        self.assertAlmostEqual(record['width'], 0.35)        # seconds, not a 0..1 fraction
+        self.assertEqual(record['segments'], 7)              # the seed the shape comes from
+
+    def test_the_same_seed_and_age_rebuild_the_same_blast(self):
+        first, _ = emissive_batch.explosions([self.blast()])
+        second, _ = emissive_batch.explosions([self.blast()])
+        self.assertEqual(codec.encode(first), codec.encode(second))
+
+    def test_a_blast_past_its_life_is_dropped(self):
+        primitives, skipped = emissive_batch.explosions([self.blast(t=1.5)])
+        self.assertEqual(primitives, [])
+        self.assertEqual(skipped, 1)
+
+    def test_small_blasts_are_half_size_on_their_own_clock(self):
+        # renderer.py draws explosion_small as the same phenomenon at half size, 0.55x the clock,
+        # with its own fade - not as a different orange blob.
+        primitives, skipped = emissive_batch.explosions([self.blast('explosion_small', t=0.40)])
+        self.assertEqual(skipped, 0)
+        self.assertEqual(len(primitives), 1)
+        record = primitives[0]
+        self.assertAlmostEqual(record['radius'], 60.0)        # max(10, 120) * 0.5
+        self.assertAlmostEqual(record['width'], 0.40 * 0.55)
+        self.assertEqual(record['segments'], emissive_batch.EXPLOSION_SMALL_SEED)
+
+    def test_a_faded_small_blast_is_dropped_before_the_big_lifetime(self):
+        primitives, skipped = emissive_batch.explosions(
+            [self.blast('explosion_small', t=emissive_batch.EXPLOSION_SMALL_LIFETIME)])
+        self.assertEqual(primitives, [])
+        self.assertEqual(skipped, 1)
+
+    def test_blasts_ride_alongside_beams_and_bolts(self):
+        primitives, stats = emissive_batch.build([self.blast()], [], lambda _w: None, None)
+        self.assertEqual(stats['explosions'], 1)
+        self.assertTrue(primitives)
+        decoded = codec.decode(codec.encode(primitives))
+        self.assertEqual(decoded[0]['kind'], codec.EXPLOSION)
+
+
 if __name__ == '__main__':
     unittest.main()

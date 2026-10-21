@@ -1213,6 +1213,55 @@
    ],
    "does_not_authorize": ["merging PR #150", "a tag or release", "changing the default renderer", "any frame-rate claim", "enabling the disabled Windows signal workflow"]
   }
-
+,
+{
+    "id": "render-w05-slice3b-explosions-2026-10-21",
+    "date": "2026-10-21",
+    "owner_wording": "OK we are good. Something open W05",
+    "scope": "W05 slice 3b: detonations carried as position/size/age/seed in the existing ARMEMIT1 record (kind EXPLOSION 5) and rebuilt natively by the window",
+    "base_commit": "55c888b920243fae4b401357cf7d31412d5b276d",
+    "artifact": "docs/RENDER_W05_EXPLOSIONS.md",
+    "format": {
+      "magic": "ARMEMIT1",
+      "header_bytes": 20,
+      "record_bytes": 44,
+      "max_records": 4096,
+      "kinds": [
+        "ribbon",
+        "disc",
+        "ring",
+        "bolt",
+        "explosion"
+      ],
+      "frame_format_changed": false,
+      "note": "no new ring and no record growth: a blast reuses the existing four floats as centre/size/age/seed"
+    },
+    "units_decision": "the blast crosses as parameters, not geometry: one station-scale blast is about 2,100 vertices and 950 triangles per frame, more than the frame ring, so position, size, seconds-since-start and seed cross and the window rebuilds the renderer's own layers (fxRing, fxRamp, glowRing, shock shell, streaks).",
+    "rule_kept": "Python decides, the window draws: effect liveness, position, size, seed and the small-blast transform (half size, 0.55x clock, its own 0.6 s fade) all cross as values. No explosion state and no damage decision moves into the window.",
+    "evidence": {
+      "python_tests": "17 tests in tests/test_render_emissive.py (6 new for explosions)",
+      "cpp_tests": "ctest 8/8, including tests/test_explosion.cpp (layer census, expiry, seed identity, no vertex escapes, size preserved)",
+      "reference_frame": "tools/render/capture_python_explosion.py --age 0.35 --size 120, synthetic blast in open space, fog and overlay off",
+      "native_frame": "armada_viewer --fx-demo 120,0.35,7 --distance 830 --pitch 0 --yaw 0",
+      "measured": "energy per lit pixel 1.354 native vs 1.347 python; pixels above 0.5: 21,135 vs 24,409; span 719x352 vs 751x488",
+      "layer_census": "python 37 glow-ring calls / alpha sum 13.116; native 36 / 12.480, missing the one secondary pop inside its 0.24 s window",
+      "frame": "artifacts/cpp-renderer/w05/detonation-native.png"
+    },
+    "known_limits": [
+      "clang 16 at -O3 miscompiled the unrolled emit loops (shells at the origin at 1/16 radius); the loops keep '#pragma clang loop unroll(disable)' and test_explosion fails at -O3 if it regresses",
+      "shield hits, hull hits and the standing shield shell are not drawn natively yet (slice 3c)",
+      "BGFX_STATE_BLEND_ADD is (ONE, ONE) and ignores vertex alpha; additive passes must use BLEND_FUNC(SRC_ALPHA, ONE)",
+      "the viewer hands degrees to bx::mtxProj, which wants radians: effective vertical FOV is about 88 degrees, so cross-renderer framings need about 1.36x the distance",
+      "legacy point-sprite projectiles are counted and not drawn",
+      "no frame-rate claim; the equal-workload benchmark is slice 6"
+    ],
+    "does_not_authorize": [
+      "merging PR #150",
+      "a tag or release",
+      "changing the default renderer",
+      "any frame-rate claim",
+      "enabling the disabled Windows signal workflow"
+    ]
+  }
   ]
 }

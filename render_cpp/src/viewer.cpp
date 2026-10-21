@@ -2,6 +2,7 @@
 #include "camera.hpp"
 #include "frame_v2.hpp"
 #include "emissive.hpp"
+#include "explosion.hpp"
 #include "input_ring.hpp"
 #include "marker_ring.hpp"
 #include "overlay.hpp"
@@ -34,6 +35,7 @@ namespace input_ring = armada::input;
 namespace planets = armada::planet;
 namespace cues = armada::marker;
 namespace emit = armada::emissive;
+namespace fx = armada::fx;
 using Json = nlohmann::json;
 using Clock = std::chrono::steady_clock;
 
@@ -147,7 +149,7 @@ struct Callbacks final : bgfx::CallbackI {
 };
 struct Options {
   fs::path snapshot, assets, shaders = ARMADA_SHADER_DIR, shot, report, ring, tables, overlayRing,
-      inputRing, planetRing, markerRing, emitRing;
+      inputRing, planetRing, markerRing, emitRing, fxDemo;
   std::array<float, 3> focus{};
   bool hasFocus = false;
   // The map's star lights every planet (render/renderer.py sets GL_LIGHT0 to the star position,
@@ -158,6 +160,9 @@ struct Options {
   bool hudOnly = false;
   int width = 1280, height = 800, frames = 0, warmup = 30, preset = 1, msaa = 4;
   double seconds = 0.0, distance = 0.0, pitch = 0.0, yaw = 0.0;
+  // `> 0` cannot express "a level camera" or "yaw 0", so a requested 0 silently fell back to the
+  // stock 12/90. NaN means "not given".
+  bool pitchGiven = false, yawGiven = false;
   bool shadows = true, overlay = true, validate = false, exercise = false;
 };
 static Options options(int argc, char **argv) {
@@ -195,6 +200,10 @@ static Options options(int argc, char **argv) {
       o.markerRing = value();
     else if (k == "--emit-ring")
       o.emitRing = value();
+    else if (k == "--fx-demo")
+      // Diagnostic only: one detonation in open space at a fixed age and seed, so the port can be
+      // compared with the Python reference frame. Not a simulation effect.
+      o.fxDemo = value();
     else if (k == "--star") {
       const std::string text = value();
       std::array<float, 3> point{};
@@ -222,11 +231,13 @@ static Options options(int argc, char **argv) {
       o.seconds = std::stod(value());
     else if (k == "--distance")
       o.distance = std::stod(value());
-    else if (k == "--pitch")
+    else if (k == "--pitch") {
       o.pitch = std::stod(value());
-    else if (k == "--yaw")
+      o.pitchGiven = true;
+    } else if (k == "--yaw") {
       o.yaw = std::stod(value());
-    else if (k == "--warmup")
+      o.yawGiven = true;
+    } else if (k == "--warmup")
       o.warmup = std::stoi(value());
     else if (k == "--width")
       o.width = std::stoi(value());
@@ -986,9 +997,9 @@ static int run(const Options &o) {
   }
   if (o.distance > 0)
     camera.distance = float(o.distance);
-  if (o.pitch > 0.0)
+  if (o.pitchGiven)
     camera.pitch = float(o.pitch);
-  if (o.yaw > 0.0)
+  if (o.yawGiven)
     camera.yaw = float(o.yaw);
   auto previous = Clock::now();
   const auto live_start = Clock::now();
@@ -1188,6 +1199,12 @@ static int run(const Options &o) {
     bx::mtxLookAt(view, {eye[0], eye[1], eye[2]},
                   {camera.target[0], camera.target[1], camera.target[2]},
                   {0, 1, 0}, bx::Handedness::Right);
+    // NOTE: bx::mtxProj wants the vertical FOV in RADIANS while `camera.fov` holds degrees, so the
+    // effective vertical FOV is ~88 deg rather than the intended 55 - everything draws at about
+    // 54% of Python's apparent size at the same distance. Feeding toRad() here empties the frame
+    // entirely (the rest of the view setup depends on the current matrix), so correcting it means
+    // re-baselining every framing and benchmark - its own task, tracked in docs/RENDER_W05_EMIT
+    // and the W05 wrap-up. Until then, compare framings by scaling the distance by 0.62.
     bx::mtxProj(proj, camera.fov, float(width) / height, .5f, 150000.f,
                 bgfx::getCaps()->homogeneousDepth, bx::Handedness::Right);
     const float radius =
@@ -1448,10 +1465,40 @@ static int run(const Options &o) {
         }
       }
     }
+    if (!o.fxDemo.empty() && emitList.empty()) {
+      // size,age,seed
+      float size = 120.f, age = 0.35f;
+      unsigned seed = 7;
+      std::sscanf(o.fxDemo.c_str(), "%f,%f,%u", &size, &age, &seed);
+      emit::Primitive demo{};
+      // "disc:SIZE,ALPHA" is a single-primitive alpha probe: one flat red disc whose on-screen
+      // value must equal ALPHA over the background. It is how the blend state is checked.
+      demo.kind = emit::kExplosion;
+      const std::string demoSpec = o.fxDemo.string();
+      if (demoSpec.rfind("disc:", 0) == 0) {
+        float dsize = 100.f, dalpha = 0.5f;
+        std::sscanf(demoSpec.c_str() + 5, "%f,%f", &dsize, &dalpha);
+        demo.kind = emit::kDisc;
+        demo.a = {camera.target[0], camera.target[1], camera.target[2]};
+        demo.radius = dsize;
+        demo.colour = {255, 0, 0, uint8_t(std::lround(dalpha * 255.f))};
+        emitList.assign(1, demo);
+      }
+      demo.a = {camera.target[0], camera.target[1], camera.target[2]};
+      demo.radius = size;
+      demo.width = age;
+      demo.segments = uint16_t(seed & 0xFFFFu);
+      emitList.assign(1, demo);
+    }
     if (!emitList.empty()) {
-      std::vector<CueVertex> nearTriangles, farTriangles;
+      std::vector<CueVertex> nearTriangles, farTriangles, smokeTriangles;
+      size_t fxLayers = 0, fxVertexCount = 0;
+      double fxAlphaSum = 0.0;
       const float rx = view[0], ry = view[4], rz = view[8];
       const float ux = view[1], uy = view[5], uz = view[9];
+      const float rightVec[3] = {rx, ry, rz};
+      const float upVec[3] = {ux, uy, uz};
+      const float eyeVec[3] = {float(eye[0]), float(eye[1]), float(eye[2])};
       const float focal = float(height) * 0.5f /
                           std::tan(camera.fov * 0.5f * float(M_PI) / 180.f);
       auto eyeDepth = [&](const float *p) {
@@ -1596,9 +1643,27 @@ static int run(const Options &o) {
             corners[corner][2] = primitive.a[2] + along[2] * sAlong + across[2] * sAcross;
           }
           quad(out, corners[0], corners[1], corners[2], corners[3], colour);
+        } else if (primitive.kind == emit::kExplosion) {
+          // A blast is rebuilt from its parameters with the renderer's own formulas. Smoke blends
+          // normally (it is a dark mass), everything else adds light, so the two are separated and
+          // the normal-blend pass is drawn first.
+          std::vector<fx::Vertex> blastAdditive, blastNormal;
+          std::vector<double> fxCounters;
+          fx::appendExplosion(blastAdditive, blastNormal, primitive.a.data(), primitive.radius,
+                              primitive.width, uint32_t(primitive.segments), rightVec, upVec,
+                              eyeVec, &fxCounters);
+          fxLayers = size_t(fxCounters.empty() ? 0 : fxCounters[0]);
+          fxAlphaSum = fxCounters.size() > 1 ? fxCounters[1] : 0.0;
+          fxVertexCount = blastAdditive.size() + blastNormal.size();
+          for (const auto& v : blastNormal)
+            smokeTriangles.push_back({v.x, v.y, v.z, v.r, v.g, v.b, v.a});
+          for (const auto& v : blastAdditive)
+            nearTriangles.push_back({v.x, v.y, v.z, v.r, v.g, v.b, v.a});
+          emitTriangles += (blastAdditive.size() + blastNormal.size()) / 3;
         }
       }
-      auto submitEmissive = [&](const std::vector<CueVertex> &verts, bool depthTest) {
+      auto submitEmissive = [&](const std::vector<CueVertex> &verts, bool depthTest,
+                                bool additive) {
         if (verts.empty())
           return;
         const uint32_t count = uint32_t(verts.size());
@@ -1610,14 +1675,21 @@ static int run(const Options &o) {
         bgfx::allocTransientVertexBuffer(&tvb, count, cueLayout);
         std::memcpy(tvb.data, verts.data(), count * sizeof(CueVertex));
         bgfx::setVertexBuffer(0, &tvb);
-        uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_MSAA | BGFX_STATE_BLEND_ADD;
+        // BGFX_STATE_BLEND_ADD is (ONE, ONE): alpha is ignored and every faint shell lands at
+        // full brightness, which turns a soft fireball into a solid white disc. Additive blending
+        // that honours the vertex alpha is (SRC_ALPHA, ONE).
+        uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_MSAA |
+                         (additive ? BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA,
+                                                          BGFX_STATE_BLEND_ONE)
+                                   : BGFX_STATE_BLEND_ALPHA);
         if (depthTest)
           state |= BGFX_STATE_DEPTH_TEST_LESS;
         bgfx::setState(state);
         bgfx::submit(1, cueProgram);
       };
-      submitEmissive(farTriangles, true);
-      submitEmissive(nearTriangles, false);
+      submitEmissive(farTriangles, true, true);
+      submitEmissive(smokeTriangles, false, false);
+      submitEmissive(nearTriangles, false, true);
     }
     // W03: read the newest HUD payload, apply the patches to the texture, draw one quad.
     if (uiRing) {
@@ -1836,6 +1908,7 @@ static int run(const Options &o) {
   if (emitRing) {
     report["emissive"] = {
         {"ring", o.emitRing.string()},
+        {"fx_demo", o.fxDemo},
         {"batches", emitBatches},
         {"decode_failures", emitDecodeFailures},
         {"primitives", emitPrimitives},
@@ -1843,6 +1916,11 @@ static int run(const Options &o) {
         {"dropped_vertices", emitDropped},
         {"blend", "additive, no depth write; bolts sized in pixels at this camera"},
     };
+  }
+  if (!o.fxDemo.empty() && !emitRing) {
+    report["fx_demo"] = {{"spec", o.fxDemo},
+                        {"triangles", emitTriangles},
+                        {"note", "diagnostic single blast; not a simulation effect"}};
   }
   if (markerRing) {
     report["cues"] = {

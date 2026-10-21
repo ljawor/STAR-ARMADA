@@ -40,6 +40,7 @@ constexpr uint8_t kRibbon = 1;
 constexpr uint8_t kDisc = 2;
 constexpr uint8_t kRing = 3;
 constexpr uint8_t kBolt = 4;
+constexpr uint8_t kExplosion = 5;    // a blast carried as parameters (see explosion.hpp)
 
 constexpr uint8_t kShapeCamera = 0;
 constexpr uint8_t kShapeFlat = 1;
@@ -125,7 +126,7 @@ inline std::vector<Primitive> decode(const uint8_t* data, size_t size) {
     std::memcpy(&primitive.radius, at + 32, 4);
     std::memcpy(&primitive.width, at + 36, 4);
     primitive.segments = get16(at + 40);
-    if (primitive.kind < kRibbon || primitive.kind > kBolt)
+    if (primitive.kind < kRibbon || primitive.kind > kExplosion)
       throw EmissiveError("unknown emissive kind");
     if (get16(at + 42) != 0)
       throw EmissiveError("reserved record field must be zero");
