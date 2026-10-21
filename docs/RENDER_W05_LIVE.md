@@ -54,6 +54,10 @@ a small skirmish, not a battle):
 simulation, the renderer and the window.* No frame rate is claimed for this mode — there is still no
 equal-workload benchmark, and adding one is not part of this switch.
 
+*The window is a child of the game.* It starts when the session starts and is gone when the game
+exits: `kill -TERM` on the game left no `armada_viewer` behind, so a crashed or quit match cannot
+leave a window drawing a dead ring.
+
 *The window draws it.* A second viewer attached to the same rings while the game was running:
 `frames_applied 7`, `full_frames 1`, `patches_applied 97`, `decode_failures 0`. The captured frame
 (`artifacts/cpp-renderer/w05/live-switch.png`) shows the resources bar (`EN 2,000  CRW 4,008
