@@ -138,6 +138,28 @@ static void mesh_correctness() {
     emissive += v.emission == 1;
   }
   check(painted == 3 && emissive == 6, "role flags");
+  auto modern = m;
+  modern.erase("schema");
+  modern["contract"] = "star-armada/mesh-export";
+  modern["contract_major"] = 1;
+  modern["asset"] = "prototype:test/mesh";
+  auto modern_record = asset(modern);
+  modern_record["manifest_asset"] = "prototype:test/mesh";
+  check(load_mesh(temp, modern_record).triangles == 6, "modern mesh contract");
+  auto wrong_identity = modern_record;
+  wrong_identity["manifest_asset"] = "prototype:test/other";
+  rejects([&] { load_mesh(temp, wrong_identity); });
+  for (const auto &field : {"contract", "contract_major"}) {
+    auto bad_contract = modern;
+    if (std::string(field) == "contract")
+      bad_contract[field] = "unsupported/mesh";
+    else
+      bad_contract[field] = 2;
+    auto bad_record = asset(bad_contract);
+    bad_record["manifest_asset"] = "prototype:test/mesh";
+    rejects([&] { load_mesh(temp, bad_record); });
+  }
+  a = asset(m);
   static_assert(sizeof(Vertex) == 44, "viewer vertex stride");
   const std::array<std::array<float, 3>, 6> colors = {{{.9f, .9f, .9f},
                                                        {.42f, .49f, .58f},

@@ -128,8 +128,18 @@ inline Mesh load_mesh(const std::filesystem::path &asset_root,
     detail::require(picosha2::hash256_hex_string(source) == record.at("sha256"),
                     "mesh SHA256 mismatch");
     auto j = Json::parse(source);
-    detail::require(j.is_object() && detail::integer(j.at("schema"), 1) == 1,
-                    "unsupported mesh schema");
+    detail::require(j.is_object(), "mesh must be object");
+    if (j.contains("schema")) {
+      detail::require(detail::integer(j.at("schema"), 1) == 1,
+                      "unsupported legacy mesh schema");
+    } else {
+      detail::require(j.at("contract") == "star-armada/mesh-export" &&
+                          detail::integer(j.at("contract_major"), 1) == 1,
+                      "unsupported mesh contract");
+      detail::require(detail::text(j.at("asset")) ==
+                          detail::text(record.at("manifest_asset")),
+                      "mesh identity differs from selected manifest");
+    }
     auto &points = j.at("vertices");
     auto &batches = j.at("batches");
     detail::require(points.is_array() && points.size() <= 10000 &&
