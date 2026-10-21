@@ -1,1003 +1,1044 @@
 {
-  "schema": 1,
-  "purpose": "Owner policy decisions that constrain how the model catalogue is authored, exported and stored. Separate from approvals.json: an approval binds to a model revision, a policy constrains the pipeline. Any change to a policy here is a new decision record, not an edit.",
-  "decision_log": [
+ "schema": 1,
+ "purpose": "Owner policy decisions that constrain how the model catalogue is authored, exported and stored. Separate from approvals.json: an approval binds to a model revision, a policy constrains the pipeline. Any change to a policy here is a new decision record, not an edit.",
+ "decision_log": [
+  {
+   "id": "s03-pipeline-policy-2026-10-16",
+   "date": "2026-10-16",
+   "owner": "owner (Lukasz Jawor)",
+   "decision": "approved-as-proposed",
+   "applies_to": "S03 - build a durable authoring pipeline",
+   "owner_wording": "agree  + 1.) Agree 2.) agrre to poposal 3.) agree to popsal",
+   "how_recorded": "The three policies and the definition of done were proposed in the model-migration conversation and adopted by the owner's reply above. Recorded verbatim, including spelling, so the intent is not paraphrased away. The proposal itself is not committed in this file: it is stated in full as the decisions below and in docs/BLENDER_MODEL_MIGRATION_ROADMAP.md section S03.",
+   "decisions": [
     {
-      "id": "s03-pipeline-policy-2026-10-16",
-      "date": "2026-10-16",
-      "owner": "owner (Lukasz Jawor)",
-      "decision": "approved-as-proposed",
-      "applies_to": "S03 - build a durable authoring pipeline",
-      "owner_wording": "agree  + 1.) Agree 2.) agrre to poposal 3.) agree to popsal",
-      "how_recorded": "The three policies and the definition of done were proposed in the model-migration conversation and adopted by the owner's reply above. Recorded verbatim, including spelling, so the intent is not paraphrased away. The proposal itself is not committed in this file: it is stated in full as the decisions below and in docs/BLENDER_MODEL_MIGRATION_ROADMAP.md section S03.",
-      "decisions": [
-        {
-          "id": "storage-policy",
-          "decision": "Ordinary Git for current sources and evidence. Declared Git LFS threshold: 5 MiB per file. LFS is not adopted until an asset actually crosses that threshold; if it is ever adopted, the attributes, the build/test fetching and a fresh-clone check land in the same change.",
-          "why": "LFS early costs clone friction on the second machine for no current benefit (12 MiB of artifacts, ~1 MiB sources). A pointer without fetched content is not a valid asset delivery, so adoption must be atomic.",
-          "applies_from": "S03 onward; re-examine before the first batch that ships textures"
-        },
-        {
-          "id": "source-authority",
-          "decision": "Blend-authoritative is the default for anything with real silhouette work: the .blend is the master and the exporter is export-only and must never overwrite hand edits. Script-authoritative remains for repeated or modular pieces (satellites, environment props, rails, hardware) and for the three already-approved assets, whose existing build scripts reproduce them.",
-          "why": "Detailed art is authored by hand in Blender; forcing a generator between the artist and the mesh loses work. Repeated/modular pieces are the opposite: a generator is the only way to keep them consistent.",
-          "applies_from": "S03 onward; the three approved assets keep their current authority",
-          "requires": "Every asset declares exactly one authority, recorded with its provenance entry"
-        },
-        {
-          "id": "platform-scope",
-          "decision": "Rebuild and validation must work from a fresh clone on macOS and on Windows, with no hardcoded /Applications/Blender.app, no sandbox-exec and no absolute home directories. Blender-side authoring tooling stays on macOS; Windows does not have to author models, only rebuild and validate them.",
-          "why": "A fresh Windows clone that cannot verify the catalogue makes every later platform gate an act of faith. Authoring on one machine keeps the toolchain pinned.",
-          "applies_from": "S03 onward"
-        }
-      ],
-      "scope_statement": "Freezes S03's policies and its definition of done so the step is reviewed against agreed criteria rather than against whatever gets built. It authorizes implementing S03 on a feature branch under the normal PR gate.",
-      "not_approved_by_this_decision": [
-        "any model design, catalogue batch or binding beyond the three already-approved assets (S06)",
-        "implementing or merging the registry/resolver this pipeline feeds (S04)",
-        "a production default switch, activation of the trio in the shipped default, a tag or a release (S11)",
-        "adopting Git LFS now",
-        "authoring models on Windows"
-      ],
-      "binds_to": {
-        "roadmap_step": "S03",
-        "artifact": "docs/BLENDER_MODEL_MIGRATION_ROADMAP.md",
-        "reviewed_basis": "the S03 acceptance proposal put to the owner in the model-migration conversation",
-        "base_commit": "dfda83f2e67931873296e9d49acc4e62a2e63bcd"
-      },
-      "definition_of_done": [
-        {
-          "id": "D1",
-          "claim": "build-model, export-model and validate-models each work for one asset, for a batch, and for validation-only; every failure path exits nonzero and no command writes user data",
-          "checked_by": "machine",
-          "evidence": "command transcript plus a deliberate-failure run per command"
-        },
-        {
-          "id": "D2",
-          "claim": "validate-models IS the S02 contract validator (tools/art/validate_contract.py), not a second, weaker opinion",
-          "checked_by": "machine",
-          "evidence": "the command it runs, and its output on the trio"
-        },
-        {
-          "id": "D3",
-          "claim": "a fresh clone of the pushed branch reproduces the three approved runtime exports byte-identically, and a second export run is byte-stable",
-          "checked_by": "machine",
-          "evidence": "sha256 of assets/models/alliance_{battleship,frigate,shipyard}.mesh.json before and after, on a clone with no local state"
-        },
-        {
-          "id": "D4",
-          "claim": "provenance is recorded per asset: Blender version, exporter version, source and runtime hashes, declared source authority, coordinate/scale policy",
-          "checked_by": "machine+skim",
-          "evidence": "the per-asset provenance record"
-        },
-        {
-          "id": "D5",
-          "claim": "the approved trio is unchanged: no file under assets/models/ differs from main, and a before/after in-game capture shows the same silhouettes, worklights and aft emitters",
-          "checked_by": "owner",
-          "evidence": "git diff --name-only over assets/, plus the capture set"
-        },
-        {
-          "id": "D6",
-          "claim": "no .blend1, autosave, temporary render or raw capture run is committed, and editable sources or authoring tools never enter the packaged build",
-          "checked_by": "machine",
-          "evidence": "status/inventory of the branch plus the packaging file list"
-        }
-      ],
-      "owner_review_pack": [
-        "the unchanged-trio capture set (D5) - the only item the owner judges visually",
-        "the build and validate receipt, including the fresh-clone hashes (D3, D1)",
-        "the provenance record (D4), skimmed"
-      ],
-      "review_note": "There is nothing new to judge visually in S03: a visible change to the approved trio is a failure of this step, not a feature of it."
+     "id": "storage-policy",
+     "decision": "Ordinary Git for current sources and evidence. Declared Git LFS threshold: 5 MiB per file. LFS is not adopted until an asset actually crosses that threshold; if it is ever adopted, the attributes, the build/test fetching and a fresh-clone check land in the same change.",
+     "why": "LFS early costs clone friction on the second machine for no current benefit (12 MiB of artifacts, ~1 MiB sources). A pointer without fetched content is not a valid asset delivery, so adoption must be atomic.",
+     "applies_from": "S03 onward; re-examine before the first batch that ships textures"
     },
     {
-      "id": "s07-detail-budget-2026-10-16",
-      "date": "2026-10-16",
-      "owner": "owner (Lukasz Jawor)",
-      "decision": "raise-the-authoring-ceiling",
-      "applies_to": "S07 - surface-detail roll-out from the capital to the frigate and the shipyard",
-      "owner_wording": "do it",
-      "how_recorded": "The assistant reported that the frigate and the shipyard sat at 5,128 and 7,935 triangles against a 9,000-triangle authoring ceiling, that the shipyard therefore had about a thousand triangles of headroom and would receive roughly a quarter of the detail the capital had just been given, and proposed raising the guard with the reasoning written down rather than leaving it half-done. The owner replied as above. That reply endorses the proposal it answers, so the ceiling is raised here as its own decision record, and the reasoning below is the one that was proposed.",
-      "decisions": [
-        {
-          "id": "detail-budget",
-          "decision": "The authored-model triangle ceiling for the trio's non-capital assets rises from 9,000 to 11,888, and a vertex ceiling of 9,500 is added where there was none.",
-          "why": "9,000 was chosen when these two models were sculpted forms with no surface detail at all. Surface detail costs 12 triangles and 8 vertices per block, and at the shipped close camera a 12-triangle block is about four pixels, so a hull that reads as plating, machinery and vents rather than one grey plate costs a few thousand triangles. The capital already carries an 11,888 ceiling at 11,457 triangles, and using the same number for the same reason keeps the fleet consistent. The hard limit is the runtime loader (render/authored_mesh.py: 12,000 triangles, 10,000 vertices, 2,000,000 bytes): past it the loader refuses the model and the build is wasted, so both ceilings sit deliberately just under it. A ceiling is a guard, not a target, and the detail for each asset is placed for that asset's own scale.",
-          "applies_from": "S07 onward, and only for a revision whose approval record is updated with it",
-          "does_not_apply_to": "The approved capital revision s06-battleship-hull-detail-2026-10-16 keeps its own 4,400 to 11,888 bounds and is not rebuilt by this decision."
-        },
-        {
-          "id": "advisory-budget-inconsistency",
-          "decision": "Recorded, not changed: art/manifests/pipeline.json gives the shipyard an advisory budget of 16,000 triangles while the runtime loader that reads the same registry caps an authored mesh at 12,000, so that advisory can never fire a warning. The frigate's and the capital's 12,000 advisories sit exactly on the loader cap, where a warning is possible only for a model the loader would refuse anyway.",
-          "why": "These advisory numbers are the S02 section 9 class budgets that are still pending the owner's review (PR #117, question 1). Retuning them here would answer that question by accident, in a file the owner was not looking at.",
-          "applies_from": "until the class-budget question is answered; the ceiling raise above does not depend on it"
-        }
-      ]
+     "id": "source-authority",
+     "decision": "Blend-authoritative is the default for anything with real silhouette work: the .blend is the master and the exporter is export-only and must never overwrite hand edits. Script-authoritative remains for repeated or modular pieces (satellites, environment props, rails, hardware) and for the three already-approved assets, whose existing build scripts reproduce them.",
+     "why": "Detailed art is authored by hand in Blender; forcing a generator between the artist and the mesh loses work. Repeated/modular pieces are the opposite: a generator is the only way to keep them consistent.",
+     "applies_from": "S03 onward; the three approved assets keep their current authority",
+     "requires": "Every asset declares exactly one authority, recorded with its provenance entry"
     },
     {
-      "id": "s06-b4-scope-2026-10-17",
-      "date": "2026-10-17",
-      "owner": "owner (Lukasz Jawor)",
-      "decision": "authorized",
-      "applies_to": "S06 B4 - satellites and planet installations",
-      "owner_wording": "1.) B4 authorized",
-      "how_recorded": "Parsed from the owner's own words in the session that answered four questions at once (B4 authorization, the appearance approvals of the pending specimens, the roadmap catch-up and the imperial migration). Recorded verbatim, including the numbering, so the intent is not paraphrased away.",
-      "decisions": [
-        {
-          "id": "b4-authoring-scope",
-          "decision": "Author the satellite and planet-installation rows as the next catalogue batch: defense_satellite, attack_satellite, planet_extractor, planet_trade_hub, planet_shield_generator and planet_pulsar_cannon across the three families whose station-family dispatch already consults the authored-model seam (rebel, confederacy, syndicate) - eighteen rows, all at the catalogue radius of 45.",
-          "why": "B3 finished the station rows and the owner-approved order (s01-scope-2026-10-16) lists B4 next; the sixteen imperial rows of the same kinds are covered by the separate imperial-migration decision.",
-          "applies_from": "this decision"
-        },
-        {
-          "id": "b4-recipe-and-authority",
-          "decision": "B4 follows the same recipe as B3: one seed that builds every row, generated per-asset export wrappers, one batch sheet, a guard module, and real-application evidence (per-row close/rear/tactical/common-scale frames, per-role ablations, restored-simulation frames, paired motion clips and a one-scale overview). Satellites and planet installations are script-authoritative under the S03 source-authority policy, so the seed is the master and the .blend is a derived artifact.",
-          "why": "Repeated modular pieces are exactly the class the S03 policy keeps script-authoritative; the station recipes already proved the surrounding pipeline.",
-          "applies_from": "this decision"
-        },
-        {
-          "id": "b4-is-not-an-appearance-approval",
-          "decision": "Authoring authorization only. Each authored revision needs its own appearance approval before any landing, and this decision approves no revision, no landing, no registration, no tag or release, and no production-default switch.",
-          "why": "An approval binds to a revision; a scope decision binds to work about to be done. Conflating them is what makes an unapproved asset look approved.",
-          "applies_from": "this decision"
-        }
-      ],
-      "not_authorized": [
-        "landing, registration, activation, merge, tag or release of any B4 revision",
-        "the S11 catalogue switch or any production-default switch",
-        "packaging and native-Windows acceptance",
-        "changing simulation values, ship or structure stats, collision radii or gameplay balance in the name of authoring",
-        "the ten imperial station rows, the six imperial satellite and planet-installation rows and the imperial ship rows, which the imperial-migration decision covers separately"
-      ]
-    },
-    {
-      "id": "s06-imperial-migration-2026-10-17",
-      "date": "2026-10-17",
-      "owner": "owner (Lukasz Jawor)",
-      "decision": "authorized",
-      "applies_to": "S06 - the imperial rows of the model catalogue",
-      "owner_wording": "4.) decision need also migration.",
-      "how_recorded": "Parsed from the owner's own words in the session that answered four questions at once; the fourth answer settles the imperial seam question that had been left open, in favour of migrating the imperial rows rather than leaving them procedural.",
-      "decisions": [
-        {
-          "id": "imperial-rows-in-scope",
-          "decision": "The imperial rows are in scope for migration: the ten imperial station rows (command station, shipyard, research station, defense platform, trade station, fighter platform, repair dock, mining station, sensor station, energy relay), the two satellite rows, the four planet-installation rows, the five imperial combat hulls and the imperial squadron and logistics rows.",
-          "why": "Leaving them procedural would make the imperial faction the one faction whose stations and capitals still render placeholder geometry after the migration; the owner chose migration.",
-          "applies_from": "this decision"
-        },
-        {
-          "id": "imperial-per-binding-keys",
-          "decision": "Authoring the imperial rows needs one small, guardable renderer change, and it is not in station_mesh: that entry already consults mesh_for(f'{faction}:{data_id}') ahead of its imperial fallback, so the station, satellite and planet-installation rows are ordinary asset work. The change is in render/faction_visuals.py::ship_visual_key, which mints a per-binding key (faction:fighter, faction:convoy) for the three non-imperial families only and lets imperial hulls fall through normalize_ship_key(ds.ship_visual(data_id)['shape']) onto the shared legacy shapes 'wedge' and 'box'. Imperial ships, squadrons and convoys therefore need that function to mint an imperial per-binding key as well, with the shared shape kept as the fallback for every hull that has no approved revision.",
-          "why": "Two imperial hulls sharing one shape key cannot have two different models; today several imperial rows draw the same wedge or box. Making the key per-binding is what turns an imperial hull into an addressable revision, and keeping the old shape as fallback is what keeps activation a separate decision.",
-          "applies_from": "this decision"
-        },
-        {
-          "id": "imperial-is-not-an-appearance-approval",
-          "decision": "Authoring and seam authorization only. Every imperial revision needs its own appearance approval before landing, and nothing here authorizes a landing, a registration, a tag, a release or a production-default switch. The imperial rows are also not exempt from the envelope rule: their authored bounds must stay inside the legacy extents the simulation already uses.",
-          "why": "The same rule as every other batch: approval binds to a revision, and the simulation envelope is not an artwork decision.",
-          "applies_from": "this decision"
-        }
-      ],
-      "not_authorized": [
-        "landing, registration, activation, merge, tag or release of any imperial revision",
-        "changing simulation values, hull stats, station behaviour, collision radii or balance",
-        "removing the legacy procedural fallback or switching the catalogue to authored models (S11)",
-        "packaging and native-Windows acceptance"
-      ],
-      "correction": "The first draft of this record said the imperial station rows dispatch straight to _station_mesh with no mesh_for seam and that the seam change belongs in render/fleet_geometry.py::station_mesh. That was wrong, and it repeated a stale claim from the earlier handoffs: station_mesh consults the seam before its imperial branch, for every faction. Corrected the same day, against the code at render/fleet_geometry.py:254-272 and render/faction_visuals.py:34-64. The owner's wording and the scope of his answer are unchanged - only the engineering description of what migrating the imperial rows takes."
-    },
-    {
-      "id": "s06-large-evidence-accepted-2026-10-17",
-      "date": "2026-10-17",
-      "owner": "owner (Lukasz Jawor)",
-      "decision": "approved-as-asked",
-      "applies_to": "S03 storage policy - the size of committed review evidence",
-      "owner_wording": "2.) A policy flag: the B4 contact sheet is 12.7 MiB: accept bigger",
-      "how_recorded": "The owner was shown the measured sizes and the three ways out - accept larger binary evidence, split or re-encode the contact sheets, or adopt Git LFS atomically - and answered in favour of accepting. Recorded verbatim; this is a new record rather than an edit of s03-pipeline-policy-2026-10-16, because that file's own rule is that a policy change is a new decision record.",
-      "decisions": [
-        {
-          "id": "review-evidence-size-accepted",
-          "decision": "Committed review evidence is kept in ordinary Git however large it is, and the contact sheets are not split or re-encoded to fit a threshold. Measured at the time of the decision: B4 12.7 MiB, B3c 10.9 MiB, B3b 5.4 MiB.",
-          "why": "The evidence is what the appearance approvals are judged against and what the guards re-hash; splitting it changes the record a reviewer reads, and re-encoding it changes the bytes an approval is about.",
-          "applies_from": "this decision"
-        },
-        {
-          "id": "lfs-remains-unadopted",
-          "decision": "The S03 declaration \"Git LFS threshold: 5 MiB per file; LFS is not adopted until an asset actually crosses that threshold\" no longer triggers adoption for review evidence: evidence may cross it and stays in ordinary Git. If LFS is ever adopted it still lands in one change with its attributes, the build and test fetching, and a fresh-clone check.",
-          "why": "A threshold that fires on evidence would force LFS adoption to serve files no build or test reads.",
-          "applies_from": "this decision"
-        }
-      ],
-      "not_authorized": [
-        "adopting Git LFS, or rewriting, re-encoding, pruning or splitting any evidence already committed",
-        "relaxing the runtime loader caps (12,000 triangles / 10,000 vertices / 2,000,000 bytes) or any asset class budget",
-        "landing, registration, activation, merge, tag, release or a production-default switch",
-        "anything about asset sources crossing the threshold: that question was not put to the owner and the S03 wording stands"
-      ]
-    },
-    {
-      "id": "s06-b5-scope-2026-10-17",
-      "date": "2026-10-17",
-      "owner": "owner (Lukasz Jawor)",
-      "decision": "approved-as-recommended",
-      "applies_to": "S06 B5 - the environment rows",
-      "owner_wording": "go with recomendate way",
-      "how_recorded": "B5 was probed before anything was authored and found to be four asset classes rather than fourteen meshes (art/manifests/handoffs/S06-B5-SCOPE.md, generated by tools/art/probe_b5_scope.py). Two ways forward were put to the owner - open the texture class now, or stop B5 at the asteroid prop and leave the rest on their existing pipelines - with the second recommended, and he adopted the recommendation. Recorded verbatim, including his spelling, so the intent is not paraphrased away.",
-      "decisions": [
-        {
-          "id": "b5-authors-the-asteroid-prop",
-          "decision": "B5 authors the asteroid prop: the `environment:asteroid_field` row is real per-instance geometry, and the S01 scope answer already chose the reading for it (asked whether per-instance procedural asteroid props should stay procedural or become a shared authored prop, the owner answered \"in scope - bring into the catalogue\"). So the row is a seam consult in the asteroid draw plus one shared authored prop, on the existing mesh pipeline.",
-          "why": "It is the only B5 row that needs no new asset class, and it was already in scope before this decision.",
-          "applies_from": "this decision"
-        },
-        {
-          "id": "b5-leaves-the-textures-on-their-pipeline",
-          "decision": "The ten texture rows - the eight planet surfaces and the two billboards (star, nebula) - stay on their generated-texture pipeline for now. They are a class the catalogue has none of: the registry, the loader, the wrappers and the schemas are mesh-shaped, and the S03 storage policy gates exactly this case (\"re-examine before the first batch that ships textures\"). Opening a texture class is a pipeline decision of its own, with its schema, identity rule, evidence shape, loader path and the storage re-examination, and it is not taken here.",
-          "why": "Authoring ten payloads of the wrong kind would be worse than authoring one of the right kind, and a texture class changes the registry, loader and storage rules rather than adding a file.",
-          "applies_from": "this decision"
-        },
-        {
-          "id": "b5-effects-and-backdrop-recorded-as-outside-the-mesh-catalogue",
-          "decision": "The star dome and the jump glyph are effects with no surface or geometry to author, and the menu backdrop is a baked movie with its own pipeline (tools/build_menu_movie.py, drawn by render/menus.py::_draw_splash_movie). Both are recorded as deliberately outside the mesh catalogue rather than left looking unbuilt.",
-          "why": "A catalogue entry that cannot be a mesh is not work deferred; it is a different question, and saying so keeps the ledger honest.",
-          "applies_from": "this decision"
-        }
-      ],
-      "not_authorized": [
-        "creating a texture asset class, or any change to the registry, loader, schema or storage policy for textures",
-        "changing the planet shader, the shared unit sphere or the atmosphere shell",
-        "landing, registration, activation, merge, tag, release or a production-default switch",
-        "any change to asteroid gameplay values: the row stays decorative, and the field's count, placement, scale range and tumble are untouched"
-      ]
-    },
-    {
-      "id": "s06-small-prop-class-2026-10-17",
-      "date": "2026-10-17",
-      "owner": "owner (Lukasz Jawor)",
-      "decision": "approved-as-proposed",
-      "applies_to": "S03 authoring policy - the exporter's minimum triangle count",
-      "owner_wording": "option 1",
-      "how_recorded": "The B5 asteroid prop was shown to the owner three times against the procedural rock it replaces, and he judged the procedural rock better each time ('left one is better'). The cause was diagnosed and put to him with three ways out - open a small-prop class below the 1,800-triangle floor, accept a prop that is worse than what it replaces, or leave the row procedural - and he chose the first. Recorded verbatim.",
-      "decisions": [
-        {
-          "id": "small-prop-class-exists",
-          "decision": "A **small-prop class** exists for assets the renderer draws many times per frame: an asteroid rock, and any later prop of the same kind. Its floor is 120 triangles instead of 1,800, and its own ceiling is set per asset in the wrapper table, tighter than the loader's 12,000. The 1,800 floor stays exactly as it is for ships, stations, satellites, planet installations and every other asset already approved; nothing in this decision moves them.",
-          "why": "The floor was written for hull- and structure-scale assets. A unit rock is drawn forty times per field, so the floor forced a surface forty times finer than the rock it replaced - which reads as texture noise and spiky silhouette rather than stone, and costs a field 120,000 triangles instead of about 10,000. The class exists so a prop can be authored the way the thing it replaces is authored: a few very large facets.",
-          "applies_from": "this decision"
-        },
-        {
-          "id": "the-class-is-declared-per-asset",
-          "decision": "The class is declared where the caps already are: the wrapper template gains a minimum-triangle slot, the wrapper table sets it per asset, and the seed asserts its own floor. There is no implicit exemption and no global lowering - a small prop says so in its own file.",
-          "why": "A floor that can be waived silently is not a floor; a declared class is a record a reviewer can find.",
-          "applies_from": "this decision"
-        },
-        {
-          "id": "evidence-for-a-small-prop",
-          "decision": "A small-prop row is reviewed the same way as any other: actual-application captures with the legacy path, a per-role ablation, and a repeat frame that must be identical. The owner's judgement of the picture is the gate.",
-          "why": "The class changes what geometry is allowed, not what evidence is owed.",
-          "applies_from": "this decision"
-        }
-      ],
-      "not_authorized": [
-        "lowering the 1,800 floor for any asset outside the declared small-prop class",
-        "relaxing the runtime loader caps (12,000 triangles / 10,000 vertices / 2,000,000 bytes) or any owner class budget",
-        "landing, registration, activation, merge, tag, release or a production-default switch",
-        "any change to the field's gameplay values: 40 instances, placement, scale range and tumble stay as they are"
-      ]
-    },
-    {
-      "id": "s06-imperial-convoy-parity-2026-10-18",
-      "date": "2026-10-18",
-      "owner": "owner (Lukasz Jawor)",
-      "decision": "approved-as-proposed",
-      "applies_to": "the two remaining Imperial rows of S06 batch B6, and the convoy gate that reaches them",
-      "owner_wording": "other factions' convoys settled",
-      "how_recorded": "Put to him as the choice it was - author the Imperial convoy rows as hulls of their own, or follow whatever the other three factions' convoys settled on - and he chose the second. What that means is measured rather than assumed, below.",
-      "what_the_siblings_settled_on": {
-        "decision": "s06-b2-squadron-logistics-2026-10-17",
-        "rows": [
-          "rebel:convoy / alliance_convoy",
-          "confederacy:convoy / legion_convoy",
-          "syndicate:convoy / syndicate_convoy"
-        ],
-        "status": "appearance_approved_pending_landing, owner_decision null, activation false, registry procedural_legacy",
-        "mesh_sizes": "4,512 / 4,584 / 4,756 triangles - roughly twice the single-hull rows, because a convoy is a cluster",
-        "envelope_convention": "the sidecar's envelope is the binding's declared box, a little larger than the mesh's own bounds: rebel:convoy declares [-31,-9,-72.698]..[31,16,59.5] around mesh bounds of [-30.3,-6,-72.698]..[30.3,14.776,59.5]",
-        "evidence": "the same review sheets and per-row sidecars the rest of S06 uses"
-      },
-      "what_this_authorizes": [
-        "authoring an Imperial convoy row that follows the siblings: binding imperial:convoy (already in the registry with manifest core:imperial/convoy), a cluster-scale mesh around 4,500 triangles, an envelope in the siblings' style, a sidecar, a review picture, and an appearance decision when the owner has seen it"
-      ],
-      "what_it_does_not_authorize": [
-        "landing, registration, activation, merge, tag or release of anything",
-        "a blanket change to the convoy gate: extending it for Imperial is a seam change and is to be written, guarded and reviewed like any other",
-        "any change to the other three factions' convoys, which are already approved",
-        "packaging of any kind, an LFS conversion or a size policy"
-      ],
-      "finding_to_carry": "Both convoy paths exclude Imperial from the faction gate that maps a data row to a <faction>:convoy key - `data_id == 'trade_convoy' and faction in FACTIONS[1:]`, and the crew-transport branch beside it, where FACTIONS is (imperial, rebel, confederacy, syndicate). So an Imperial convoy hull cannot be reached until that gate is extended for Imperial; this is a real one-branch seam, unlike the ship rows, whose authored bindings are served through ship_binding without any key change."
-    },
-    {
-      "id": "s06-catalogue-completion-execution-2026-10-18",
-      "date": "2026-10-18",
-      "owner": "owner (Lukasz Jawor)",
-      "decision": "approved-execution-not-appearance",
-      "current_increment": {
-        "owner_words_verbatim": "please continue part2. Anything pending from my end for this?",
-        "scope": "Continue part 2 authoring, export verification and review evidence only in this increment; stop before S07 integration or registration. Earlier 1/2/3 authorization is retained as history, not a claim of completion."
-      },
-      "owner_wording": "Agree execute 1 , 2 and 3",
-      "question_answered": "Execute the B6 sidecar repair; complete Imperial stations, remaining combat hulls and construction; then S07 opt-in integration followed by S08/S09 acceptance, not the final switch.",
-      "authorized": [
-        "B6 sidecar reproducibility repair preserving approved source/export/runtime bytes",
-        "author remaining 27 historical inventory meshes in B7 Imperial stations, B8 existing combat hulls, B9 construction batches",
-        "implement and test S07 opt-in paths; register only exact appearance-approved revisions",
-        "execute S08/S09 engineering gates when prerequisites are met; report unavailable native-platform acceptance as blocked"
-      ],
-      "not_authorized": [
-        "appearance approval of any new or revised model",
-        "inventing gameplay statistics for three planned Syndicate hulls",
-        "merge, tag, release or production-default activation",
-        "weakening tests, budgets, collision/extent policy or platform waivers"
-      ],
-      "acceptance_criteria": [
-        {
-          "id": "C1",
-          "checker": "machine",
-          "criterion": "B6 generator check reproduces sidecars; all existing approved sources/exporters/runtime hashes unchanged"
-        },
-        {
-          "id": "C2",
-          "checker": "machine",
-          "criterion": "27 authored models preserve live per-row envelopes, six roles, current budgets; masters and export-only reproduction retained; existing approved assets unchanged"
-        },
-        {
-          "id": "C3",
-          "checker": "owner",
-          "criterion": "Explicit approval of enumerated new model revisions on committed actual-renderer batch evidence"
-        },
-        {
-          "id": "C4",
-          "checker": "machine",
-          "criterion": "S07 selected/unselected routes, contact/picking/bounds/ownership/LOD and lifecycle proved for approved candidate, legacy remains default"
-        },
-        {
-          "id": "C5",
-          "checker": "machine",
-          "criterion": "S08/S09 gates only closed with exact-candidate receipts; unavailable native hardware remains blocked, never inferred"
-        }
-      ],
-      "prerequisites_and_stops": [
-        "New models remain pending and unregistered until C3",
-        "S07 completeness remains open while required art lacks appearance approval",
-        "S08/S09 complete-candidate acceptance depends on S07; no final S10/S11 switch here"
-      ]
-    },
-    {
-      "id": "s07-opt-in-continuation-2026-10-18",
-      "date": "2026-10-18",
-      "owner": "owner (Lukasz Jawor)",
-      "decision": "authorized-execution-not-appearance",
-      "owner_wording": "ok continue",
-      "question_answered": "Part 3: opt-in integration, including the scaffold review path.",
-      "applies_to": "S07 opt-in integration, superseding the temporary part-2-only current_increment of s06-catalogue-completion-execution-2026-10-18; prior appearance approvals remain revision-bound.",
-      "how_recorded": "After the 26 pictured B7/B8/B9 approvals were recorded, the assistant explicitly proposed Part 3 opt-in integration including scaffold review. The owner replied as quoted. This records progression of authorized engineering work, not a new appearance decision.",
-      "authorized": [
-        "Guard and repair selected/unselected runtime consumers, including Imperial stations and shared scaffold construction drawing",
-        "Audit live identities and register only exact previously appearance-approved models into the existing explicit preview path",
-        "Capture the unapproved shared scaffold through the real build-queue renderer for owner review",
-        "Run later S08/S09 engineering gates when prerequisites are satisfied"
-      ],
-      "not_authorized": [
-        "appearance approval or registration of the still-unapproved scaffold",
-        "changing any approved model source, exporter, seed or runtime payload revision",
-        "production-default activation, merge, tag or release",
-        "new gameplay statistics, collision, balance, or native-platform waivers"
-      ]
-    },
-    {
-      "id": "s07-scaffold-registration-2026-10-19",
-      "date": "2026-10-19",
-      "owner": "owner (Lukasz Jawor)",
-      "decision": "authorized-execution-not-appearance",
-      "owner_wording": "Work down the 4 points, please.",
-      "question_answered": "Complete the four S07 closure actions, including separately resolving the appearance-approved but unregistered scaffold instead of omitting it from full closure.",
-      "how_recorded": "The owner authorized the four closure actions after separately choosing 'Fix the opt-in rendering paths to match'. This is the separate scaffold registration increment; the original 99-row S06 increment and its authority remain unchanged.",
-      "appearance_authority": "s07-scaffold-appearance-2026-10-18",
-      "authorized": [
-        "Register exactly shared:construction_scaffold at its separately approved revision into the explicit opt-in preview path",
-        "Validate provenance, assets-only resolution, normal construction rendering, cache lifecycle and state preservation",
-        "Publish reviewed evidence and check CI at the final commit"
-      ],
-      "not_authorized": [
-        "new appearance approval or any modification of approved geometry, source, seed, exporter or evidence",
-        "expansion of the original approved-s06 batch or production-default activation",
-        "merge, tag, release, gameplay or balance changes",
-        "waiving S08/S09 compatibility, performance or real native packaged-build gates"
-      ]
-    },
-    {
-      "id": "s07-authored-lod-cost-2026-10-19",
-      "date": "2026-10-19",
-      "owner": "owner (Lukasz Jawor)",
-      "decision": "accepted-as-acceptable",
-      "owner_wording": "Yes acceptable",
-      "question_answered": "The authored-hull LOD suppression change in _draw_ship_role_batch makes authored hulls submit all six role batches down to sub-pixel apparent size, costing five extra display-list calls plus push/pop, colour and two shader uniform updates per authored ship per frame at zoom-out. Is that cost acceptable?",
-      "how_recorded": "Put to the owner as a single yes/no after the independent review flagged it as the only player-facing consequence of the motion/ownership repair, and after measurement showed the other two changed draw methods (_draw_ships phased branch, _draw_station) have no production call path: _draw_ships is called once at render/renderer.py:495 with a cache that _ensure_frame_cache always returns as a dict, and _draw_station has one call site (1445) inside that same uncached branch. Answer recorded verbatim; no bound was fitted to it.",
-      "binds_to": {
-        "reviewed_renderer_sha256": "9aff34140aa3d458eec358a2d87e64d4d4277c924ca198d507e4d29983350f3c",
-        "reviewed_commit": "56906ea7c73c219fbdc91c68176104b23d0f7712",
-        "pull_request": 131,
-        "review_artifact": "artifacts/s07-runtime-final/INDEPENDENT-MOTION-REVIEW.json",
-        "finding": "Authored hulls now submit all six roles at every apparent size, including sub-pixel; the LOD cut exists to avoid per-entity GL work at zoom-out.",
-        "measured_pixel_effect": "none: 870/870 native captures and 360/360 candidate-movie frames are byte-identical to the pre-repair sets"
-      },
-      "scope_statement": "Accepts the per-ship draw cost of authored hulls at zoom-out as the price of unmixed authored LOD treatment. It does not authorize removing an existing visual pass, lowering MSAA, reducing geometry, changing gameplay, or any further LOD change.",
-      "not_approved_by_this_decision": [
-        "merge",
-        "default activation",
-        "release or tag",
-        "a new appearance approval",
-        "S08/S09 compatibility, performance or packaged-build gates",
-        "any further renderer performance change"
-      ],
-      "review_note": "A later performance workstream may revisit authored LOD suppression as its own measured change; this decision is the current baseline, not a permanent ceiling on the workstream."
-    },
-    {
-      "id": "s07-s06-coverage-exception-2026-10-19",
-      "date": "2026-10-19",
-      "owner": "owner (Lukasz Jawor)",
-      "decision": "accepted-s06-coverage-exception",
-      "owner_wording": "OK let's do it : 1st a) than b) than merging rest.",
-      "question_answered": "S07 can close only once S06 coverage is complete or explicitly excepted. Sixteen registry bindings are not authored: twelve authoring_pending rows and four keep_procedural_proposed rows. Are those sixteen excepted from S07 coverage so S07 can close?",
-      "how_recorded": "Put to the owner as the second of three actions (\"1st a) then b) then merging rest\"); the enumerated rows and their classes are derived from assets/models/registry.json at the moment of recording and are listed in art/manifests/reviews/S07-S06-COVERAGE-EXCEPTION.json, not paraphrased here",
-      "scope": {
-        "excepted": 16,
-        "by_class": {
-          "authoring_pending": 12,
-          "keep_procedural_proposed": 4
-        },
-        "registered_and_approved_untouched": 103
-      },
-      "does_not_authorize": [
-        "any appearance approval",
-        "a default switch",
-        "merge, release or packaging"
-      ],
-      "evidence": "art/manifests/reviews/S07-S06-COVERAGE-EXCEPTION.json",
-      "bound_to": {
-        "registry_sha256": "4683c937cfa4cc936953c25ee6fa013f1aaaad42730a7759ec6c39167e57e79f",
-        "base_commit": "56906ea7c73c219fbdc91c68176104b23d0f7712"
-      }
-    },
-    {
-      "id": "s09-performance-target-2026-10-19",
-      "date": "2026-10-19",
-      "owner": "owner (Lukasz Jawor)",
-      "decision": "accepted-s09-performance-reference",
-      "owner_wording": "Adopt the proposed 60 FPS / 30 FPS heavy-battle targets as the S09 measurement reference (measured stock scenes are ~5-7x off)",
-      "question_answered": "What should S09 measure the complete opt-in catalogue against: a no-regression budget on today's measured baseline, the proposed 60/30 FPS figures that GRAPHICS_UPGRADE_PLAN.md marks 'proposed, not agreed', or measurement without a numeric gate?",
-      "how_recorded": "Put as a pick-one question with three options; the owner selected the second. The selection is the owner's answer, so it is recorded as chosen rather than paraphrased. The parenthetical in the wording is the measured context shown beside the option, not a second decision.",
-      "applies_to": "S09 performance acceptance only",
-      "authorized": [
-        "measuring the complete opt-in catalogue (103 authored bindings) against 60 FPS / 16.67 ms in normal gameplay and at least 30 FPS / 33.33 ms in the supported heavy battle, at a stated resolution and on named hardware",
-        "reporting the standing gap between that reference and measured cost as an S09 result, per scene, including CPU/render versus simulation/checksum separation"
-      ],
-      "not_authorized": [
-        "any reduction in visual quality, MSAA, fog, geometry or catalogue scope to reach the target",
-        "an open-ended optimization project; renderer work remains a separately authorized workstream with its own measurement",
-        "changing the workload fixtures, tick pacing or balance to make the reference reachable",
-        "a merge, tag, release or default switch"
-      ],
-      "measured_context_at_decision": {
-        "reference_ms": {
-          "normal_gameplay_60fps": 16.6667,
-          "heavy_battle_30fps": 33.3333
-        },
-        "measured_baseline_ms_1280x800_m4_legacy": {
-          "stock_distributed": 93.19,
-          "stock_combat": 109.01,
-          "stress_distributed": 421.74,
-          "stress_combat": 544.31
-        },
-        "source": "docs/GRAPHICS_BENCHMARK.md sections 3 and 7",
-        "consequence": "the reference is not met by the current candidate; S09 reports the gap rather than claiming performance acceptance"
-      },
-      "binds_to": {
-        "candidate_head": "5980890c47f973b50fc677a962242e893e96f001",
-        "candidate_tree": "b28b48ab07abe0c4b5040f4696ffaf14d7e6ef12"
-      }
-    },
-    {
-      "id": "s09-platform-waiver-2026-10-19",
-      "date": "2026-10-19",
-      "owner": "owner (Lukasz Jawor)",
-      "decision": "accepted-scoped-platform-waiver",
-      "owner_wording": "Record a scoped waiver for native Windows graphics/package only; S09 still needs the Mac package, suite and agreed targets",
-      "question_answered": "Native Windows graphics, the Windows half of the S03 pipeline and Windows package smoke are unproven and this Mac cannot produce them: record a scoped waiver, authorize Windows work now, or hold S09 blocked?",
-      "how_recorded": "Put as a pick-one question with three options; the owner selected the first. The selected option names its own boundary and that boundary is what is recorded.",
-      "applies_to": "S09 acceptance only",
-      "waived_for_s09": [
-        "native Windows graphics evidence",
-        "native Windows package smoke"
-      ],
-      "not_waived": [
-        "the Windows half of the S03 authoring pipeline (D3)",
-        "native Windows kernel test rows in the macOS suite (they stay skips, not passes)",
-        "physical mixed-machine LAN play and Filip's laptop evidence",
-        "Mac package build, inspection and smoke",
-        "the protected suite, the agreed performance reference, or any art/catalogue gate"
-      ],
-      "still_required_for_s09": [
-        "Mac package built from the exact candidate and inspected inside the bundle",
-        "clean-install and copied-existing-user-data smoke runs",
-        "measured cost against the s09-performance-target-2026-10-19 reference",
-        "suite verdict from an attributable instrument with every failure classified"
-      ],
-      "does_not_authorize": [
-        "a merge",
-        "a tag",
-        "a release",
-        "a default switch",
-        "deleting the legacy fallback",
-        "treating skipped Windows rows as passes"
-      ],
-      "binds_to": {
-        "candidate_head": "5980890c47f973b50fc677a962242e893e96f001",
-        "candidate_tree": "b28b48ab07abe0c4b5040f4696ffaf14d7e6ef12"
-      }
-    },
-    {
-      "id": "s11-default-switch-2026-10-19",
-      "date": "2026-10-19",
-      "owner": "owner (Lukasz Jawor)",
-      "decision": "authorized-default-switch-and-roadmap-closure",
-      "owner_wording": "No. We will concentrate on 1.) Merge 2.) Switch the game to the blender model and closing the roadmap with this. Later we will open a new chat were we will only focus on A) Performnce measuring B) Optimalization.",
-      "question_answered": "S09 measured the authored catalogue at 4.5-6.2x legacy frame time, so the agreed 60/30 FPS reference is not met. Hold the switch until optimisation lands, or switch now and separate the work?",
-      "how_recorded": "The owner declined further rendering-approach discussion and directed the merge, the default switch and roadmap closure, naming performance measurement and optimisation as a separate future engagement.",
-      "applies_to": "S10 sign-off and S11 switch only",
-      "authorizes": [
-        "merging the S09 evidence PR and the packaging fix PR",
-        "changing the shipped default to the approved Blender catalogue",
-        "closing the migration roadmap with the performance reference recorded as unmet"
-      ],
-      "does_not_authorize": [
-        "a tag or a release",
-        "deleting the legacy renderer or its fallback",
-        "relaxing the 60/30 FPS reference or recording it as met",
-        "shipping decimated or billboard geometry to gain performance without a separate owner decision",
-        "claiming native Windows graphics or package evidence that this Mac cannot produce"
-      ],
-      "carried_forward": {
-        "stream": "performance-measurement-and-optimisation",
-        "open_items": [
-          "clean re-measure of absolute frame times without the recorded contention",
-          "authored catalogue cost: 188.22 ms stock distributed, 292.73 ms stock combat at 1280x800 MSAA 4",
-          "legacy itself is 2.5-3.4x over the 60 FPS budget on stock scenes",
-          "decide between submission batching, authored LOD chains and far-field billboards with measured evidence"
-        ]
-      },
-      "binds_to": {
-        "engine_version": "0.16.0"
-      }
-    },
-    {
-      "id": "imperium-prototype-default-selection-2026-10-20",
-      "date": "2026-10-20",
-      "owner": "owner (Lukasz Jawor)",
-      "decision": "authorized-prototype-default-selection",
-      "applies_to": "the shipped render-only default selection (DEFAULT_SETTINGS.visual_packs) of the six owner-approved Imperial prototypes",
-      "owner_wording": "Do the commit so the local new models will stay as default.",
-      "question_answered": "The six approved prototypes appear only because the owner's local saves/settings.json enables them; that switch is user data and is not in Git, so a fresh checkout still draws the six core bindings they replace. Commit the switch as a shipped default, promote the six into the core catalogue, or leave them opt-in?",
-      "how_recorded": "The owner asked for the switch to be committed as the default. Their appearance approval is already recorded in artifacts/imperial-flight-prototypes/OWNER_REVIEW.json (approval_kind prototype-appearance-and-pr-landing, reviewed revision 255aaba7a121a5573ba00e7cfcce6f903c4d42ff) and is not re-decided here; this entry records only that those six packs become the shipped selection.",
-      "authorizes": [
-        "listing the six approved pack directories in DEFAULT_SETTINGS.visual_packs, so a checkout that has never saved a settings file starts on those revisions",
-        "leaving an existing saved settings file in charge of its own list, which is what keeps the owner's current local run unchanged"
-      ],
-      "not_authorized": [
-        "registering the six meshes as core catalogue assets (registry core status, packaged manifests and receipts)",
-        "claiming a packaged or frozen default: visual packs must live outside a frozen bundle, so a package resolves none of them and keeps the core catalogue",
-        "a tag, package or release",
-        "further artwork, or any change to the six approved revisions",
-        "reading this selection as catalogue coverage: the six replaced core bindings remain the packaged appearance"
-      ],
-      "binds_to": {
-        "owner_review": "artifacts/imperial-flight-prototypes/OWNER_REVIEW.json",
-        "reviewed_revision_commit": "255aaba7a121a5573ba00e7cfcce6f903c4d42ff",
-        "default_selection": [
-          "vigil-prototype",
-          "imperium-command-prototype",
-          "imperium-shipyard-prototype",
-          "imperium-mining-prototype",
-          "imperium-talon-prototype",
-          "imperium-engineer-prototype"
-        ]
-      },
-      "follow_up": "Registering these six as core assets is the route to a packaged default. It needs its own authorization and the complete record set (registry status, pipeline expected_triangles and approval binding, receipts, coverage report), not a settings entry."
-    },
-    {
-      "id": "imperial-station-prototypes-2026-10-20",
-      "date": "2026-10-20",
-      "owner": "owner (Lukasz Jawor)",
-      "decision": "approved-station-prototype-batch-and-default-selection",
-      "applies_to": "the three Galactic Imperium station prototypes (research station, defence platform, sensor station) and their entry in the shipped render-only default selection",
-      "owner_wording": "Looks perfect.",
-      "question_answered": "Do the three Imperial station prototypes look right in the live game, and should they be committed to PR #142 together with the default switch?",
-      "how_recorded": "The owner reviewed the live production game window (tools/play_station_prototypes.py, stock Imperial skirmish with one of each station, isolated profile) and answered in two words. Appearance approval is recorded in artifacts/imperial-stations-review/OWNER_REVIEW.json bound to the mesh, builder, master, descriptor and manifest hashes; this entry records the batch approval and that the three packs join the shipped default selection.",
-      "authorizes": [
-        "committing the three station prototype packs, their authoring and packaging tools, the review launcher, the focused loader guard and the in-game captures to PR #142",
-        "listing the three station pack directories in DEFAULT_SETTINGS.visual_packs beside the six approved ship prototypes"
-      ],
-      "does_not_authorize": [
-        "merging PR #142",
-        "a tag or a release",
-        "registering the models in the core catalogue (assets/models/registry.json) or pipeline manifests",
-        "packaged / frozen-bundle delivery of the packs",
-        "any change to gameplay, ship sizes, collision radii or simulation state"
-      ],
-      "binds_to": {
-        "engine_version": "0.16.0",
-        "pull_request": 142,
-        "review_record": "artifacts/imperial-stations-review/OWNER_REVIEW.json"
-      }
-    },
-    {
-      "id": "imperial-station-surface-fit-2026-10-20",
-      "date": "2026-10-20",
-      "owner": "owner (Lukasz Jawor)",
-      "decision": "approved-surface-fit-fix-and-kept-station-defaults",
-      "applies_to": "the three Galactic Imperium station prototypes (research station, defence platform, sensor station), their runtime meshes and their entries in the shipped render-only default selection",
-      "owner_report": "Research station had objects not attached to the hull (small blue and black squares); the same on the sensor station.",
-      "owner_wording": "Looking good. You can commit and make it default on local and PR.",
-      "question_answered": "Do the station prototypes now read as one solid hull in the live game, and should the fix be committed to PR #142 and kept as the local and shipped default?",
-      "root_cause": "surface detail was placed at remembered radii rather than on the hull section at its own height, so plates, vents and bands sat 0.5-9 units clear of the hull wherever the octagon narrows or the chamfer cuts in; buried radiator fins showed only their edges and rod-and-cube antennas read as loose cubes.",
-      "how_recorded": "Owner reported the defect in the running game and reviewed the fix in the same live production window (tools/play_station_prototypes.py, stock Imperial skirmish with one of each station, isolated profile). Appearance approval is recorded in artifacts/imperial-stations-review/OWNER_REVIEW.json revision 2, bound to the new mesh, builder, master, descriptor, manifest, in-game capture and Blender render hashes.",
-      "authorizes": [
-        "committing the surface-fit fix, the projected-placement helpers and the build-time contact gate to PR #142",
-        "keeping the three station packs in DEFAULT_SETTINGS.visual_packs and in the local saved profile selection"
-      ],
-      "does_not_authorize": [
-        "merging PR #142",
-        "a tag or a release",
-        "registering the models in the core catalogue (assets/models/registry.json) or pipeline manifests",
-        "packaged / frozen-bundle delivery of the packs",
-        "any change to gameplay, ship sizes, collision radii or simulation state"
-      ],
-      "binds_to": {
-        "engine_version": "0.16.0",
-        "pull_request": 142,
-        "review_record": "artifacts/imperial-stations-review/OWNER_REVIEW.json",
-        "supersedes_appearance_in": "imperial-station-prototypes-2026-10-20"
-      }
-    },
-    {
-      "id": "imperial-dockyard-prototypes-2026-10-20",
-      "date": "2026-10-20",
-      "owner": "owner (Lukasz Jawor)",
-      "decision": "approved-dockyard-prototypes-and-default",
-      "owner_wording": "Well done. I like it. Commit and make it default on PR and Local",
-      "question_answered": "The four dockyard models built from Homeworld 2 silhouette language are good enough to ship, and the default selection carries them in the repo and in the owner's local run.",
-      "scope": {
-        "prototypes": [
-          "imperium-trade-prototype",
-          "imperium-fighter-prototype",
-          "imperium-repair-prototype",
-          "imperium-relay-prototype"
-        ],
-        "bindings": [
-          "imperial:trade_station",
-          "imperial:fighter_platform",
-          "imperial:repair_dock",
-          "imperial:energy_relay"
-        ],
-        "default_packs_after": 13
-      },
-      "gates": [
-        "blender build",
-        "reproducible export",
-        "envelope fit",
-        "contact gate (no floating parts)",
-        "six material roles",
-        "real-driver gameplay capture",
-        "focused loader tests"
-      ],
-      "review_record": "artifacts/imperial-dockyard-review/OWNER_REVIEW.json",
-      "evidence_sha256": {
-        "builder": "e547cf795a40166aa7c7bec9981271f5a9633f3c3f5f79ad46039afa8aab5bcd",
-        "review": "1edcc2d35d5c55c450fbde2edd5cd466aefe0f82bad9e85745ffada831837a34"
-      },
-      "deliberately_skipped": [
-        "full test suite",
-        "contract-trio matrix",
-        "art-validator sweep"
-      ],
-      "skip_ci": true
-    },
-    {
-      "id": "imperial-stations-static-yaw-2026-10-20",
-      "date": "2026-10-20",
-      "owner": "owner (Lukasz Jawor)",
-      "decision": "approved-static-stations-and-rework-playbook",
-      "owner_wording": "Looks perfect.",
-      "owner_wording_context": [
-        "OK we have closed out the imperial stations. Can you check if this is a big change to globally stop every station from rotating?",
-        "My poposal: Make teh change locally and let me check this through main.py. If i am happy , let's add this to the existing PR and close and merge this one.",
-        "Looks perfect."
-      ],
-      "question_answered": "Free-standing stations should stop the 3 deg/s cosmetic spin so authored hull detail and every in-play anchor (docking pads, hull contacts, camera bounds, picking) stay in one fixed frame, and the model-rework protocol should be written down for the Imperial ships batch.",
-      "scope": {
-        "renderer_methods": [
-          "_initialize",
-          "_station_angle",
-          "_draw_ship_role_batch",
-          "_draw_station",
-          "_draw_station_outline",
-          "_visual_hit"
-        ],
-        "affected_population": "free-standing stations only; planet buildings and satellites keep their own orientation",
-        "sim_or_save_change": false,
-        "envelope_or_state_hash_change": false,
-        "default_packs_after": 13,
-        "playbook": "docs/MODEL_REWORK_PLAYBOOK.md"
-      },
-      "gates": [
-        "render/geometry suite (102 tests)",
-        "appearance pin correction (engineering-only, no new appearance approval)",
-        "owner review in a live main.py window",
-        "focused station prototype loader tests"
-      ],
-      "review_record": "art/manifests/approvals.json#s06-b5-environment-2026-10-17.s07_static_station_pin_correction",
-      "note": "The stray map circles the owner reported were the S06 jump-point line-loop markers; a STAR_ARMADA_SKIP=jumppoints run confirmed the identification. No marker geometry was changed by this decision."
-    },
-    {
-      "id": "jump-point-marker-removal-2026-10-20",
-      "date": "2026-10-20",
-      "owner": "owner (Lukasz Jawor)",
-      "decision": "approved-jump-point-marker-removal",
-      "owner_wording": "There shoudl be nothing no ring nothing This object shoudl not be there",
-      "question_answered": "The world view must not draw a marker at a jump point: no ring, no ticks, no pylons, no glow. The pass is a no-op and is kept only as the seam for a future marker.",
-      "scope": {
-        "renderer_methods": [
-          "_draw_jump_points"
-        ],
-        "removed_methods": [
-          "_gate_charge"
-        ],
-        "simulation_or_save_change": false,
-        "asset_change": false,
-        "envelope_or_state_hash_change": false,
-        "guard": "tests/test_jump_point_marker.py"
-      },
-      "gates": [
-        "offscreen probe: zero lit pixels at 2k/6k/16k and while charging",
-        "tests/test_jump_point_marker.py (2 tests)",
-        "render/geometry subset (54 tests)",
-        "appearance pin correction (engineering-only)"
-      ]
-    },
-    {
-      "id": "render-protocol-v1",
-      "date": "2026-10-21",
-      "owner": "owner (Lukasz Jawor)",
-      "owner_wording": "ok let's start this. Let's try to work on W00 + W01.",
-      "decision": "W00/W01 implementation authorized; engineering-selected offline protocol proposed for review, not blanket approval of every implementation detail.",
-      "applies_to": "W00 offline envelope/fixtures and W01 standalone viewer only",
-      "binds_to": {
-        "base_commit": "b2ff85ab622cd535aaf0525adb362a700e4b6f63",
-        "artifact": "docs/CPP_RENDERER_MIGRATION.md",
-        "protocol": "docs/RENDER_PROTOCOL.md"
-      },
-      "scope_statement": "Implement on feature branches, preserving authoritative simulation and asset bytes. No live bridge or normal-launch changes.",
-      "not_approved_by_this_decision": [
-        "merge",
-        "tag or release",
-        "production renderer default switch",
-        "model appearance approval or approved-mesh changes",
-        "W02 shared-memory transport, input or live-game integration",
-        "performance targets or Windows-native acceptance waiver"
-      ],
-      "engineering_choices": [
-        "Bounded canonical JSON offline payload in a versioned 32-byte little-endian CRC32 envelope.",
-        "Offline JSON does not establish the W02 1 ms serialization gate.",
-        "Offline camera is viewer-local; future picking requires a frame-consistent camera, not a once-per-second mirror."
-      ],
-      "definition_of_done": [
-        {
-          "id": "W00",
-          "checked_by": "machine + owner review",
-          "claim": "Reproducible world/UI/empty wire fixtures, round-trip and malformed-input rejection; spec agrees with bytes."
-        },
-        {
-          "id": "W01",
-          "checked_by": "machine + owner appearance/camera review",
-          "claim": "Native SDL3/bgfx viewer loads approved meshes, orbits/pans/zooms, exports a measured capture, and reports offline-only limitations."
-        }
-      ]
-    },
-    {
-      "id": "render-protocol-v1-owner-approval-2026-10-21",
-      "date": "2026-10-21",
-      "owner": "owner (Lukasz Jawor)",
-      "decision": "W00 offline snapshot format v1 is approved as the offline file profile, and PR #145 was merged into the migration-plan branch as proposed.",
-      "owner_wording": "Approve v1 as the offline file profile - mark #145 ready and merge it into the plan branch (#144), which moves #146's base",
-      "owner_wording_context": "Pick-one answer to a three-option question offering: (a) approve v1 and merge #145 into the plan branch, (b) approve the format but keep #145 draft until the W02 transport design lands, (c) hold approval for a format change. Option (a) was selected; the wording above is that option's text, not free-form prose, so it is not an approval of anything the option did not say.",
-      "question_answered": "Is the W00 v1 wire format approved, and does #145 merge into its base now?",
-      "supersedes_gap_in": "render-protocol-v1",
-      "applies_to": "docs/RENDER_PROTOCOL.md v1 offline file profile, render_bridge/protocol.py, tests/fixtures/render_protocol/*, tests/test_render_protocol.py",
-      "binds_to": {
-        "pr": 145,
-        "merge_commit": "428371513e9dd69be1d1b1b0e35c55f9c9f6175a",
-        "approved_head": "f5844a83936b52a64635cd4c664bce19d5197187",
-        "protocol_doc": {
-          "path": "docs/RENDER_PROTOCOL.md",
-          "sha256": "8711b9adc38f9920c4348e5e776daca80591d239212947de89afffc6478f6a43"
-        },
-        "codec": {
-          "path": "render_bridge/protocol.py",
-          "sha256": "a9f37f5f15ef5b2afe2b061c144739bfd01e76cea67324f41445a26629c847d1"
-        },
-        "envelope": "32 bytes little-endian <8sHHIQII>: magic b'ARMADAS\\0', version 1, kind 1=WORLD/2=UI, u64 tick, u32 frame index, u32 payload length, CRC32 over payload bytes only; canonical UTF-8 JSON payload; 64 MiB inclusive cap"
-      },
-      "verified_at_approval": [
-        "3/3 tests in tests/test_render_protocol.py pass at approved head f5844a83",
-        "spec byte table matches struct.Struct('<8sHHIQII') exactly: offsets 0 magic, 8 version, 10 kind, 12 tick, 20 frame index, 24 length, 28 crc",
-        "PR #145 delta is 11 files and none is under game/, render/, assets/ or main.py",
-        "checks at approved head: LAN surface on real Windows pass (7m10s); candidate Windows package skipped by hand",
-        "merged with --match-head-commit f5844a83; merged blobs are identical to the branch blobs (docs/RENDER_PROTOCOL.md aaaad744, render_bridge/protocol.py 637b222f)",
-        "payload already carries a real state_sha256 from game.benchmark.state_hash, so an offline capture is bound to a simulation state without a new envelope field"
-      ],
-      "not_approved_by_this_decision": [
-        "merge of PR #146 or of the migration plan into main",
-        "W02 live bridge: shared memory or packed SoA transport, frame-rate snapshot emission, latency budget, camera/picking authority",
-        "any FPS or speedup claim from the offline mesh-only loop",
-        "viewer shading/materials quality or a graphics upgrade",
-        "native Windows/D3D12 parity, frozen-package build or release",
-        "tag or release"
-      ],
-      "note": "The docs/cpp-renderer-w00-spec branch is deliberately still present because PR #146 is based on it; branch deletion follows #146. The progress-ledger rows in docs/CPP_RENDERER_MIGRATION.md are owned by #146's branch and were not rewritten here.",
-      "correction": {
-        "date": "2026-10-21",
-        "field": "binds_to.protocol_doc.sha256",
-        "previous_sha256": "8711b9adc38f9920c4348e5e776daca80591d239212947de89afffc6478f6a43",
-        "current_sha256": "a62961b84f1223881095bc574fbedb22c2dd168c2310c3bd6190109e1289bf66",
-        "reason": "PR #146's model-selection correction fixed the asset-resolution prose: repository-relative snapshot paths with --assets ., selection configured from the real DEFAULT_SETTINGS including all 13 shipped visual packs, and fail-closed rejection of a failed default pack. The document moved so the offline snapshots describe the paths the shipped exporter actually writes.",
-        "unchanged_claims": [
-          "Section 1 (the 32-byte envelope) is byte-identical to the approved revision; verified by extracting '## 1.' through '## 2.' from both revisions and comparing, not by assertion.",
-          "MAGIC b'ARMADAS\\0', version 1, kind, u64 tick, u32 frame index, u32 length, CRC32 over payload, 64 MiB cap and canonical JSON are unchanged; render_bridge/protocol.py bytes are unchanged (sha256 a9f37f5f...).",
-          "Only documentation prose moved; no fixture, control or codec byte changed, so the approved format is the format that is still tested."
-        ],
-        "check": {
-          "envelope_section_identical": true,
-          "codec_sha256_unchanged": true,
-          "fixtures_changed": false
-        }
-      }
-    },
-    {
-      "id": "render-w02-live-bridge-2026-10-21",
-      "date": "2026-10-21",
-      "owner": "owner (Lukasz Jawor)",
-      "owner_wording": "start W02",
-      "question_answered": "Whether to start work package W02 (the live Python-to-C++ frame bridge) once W00 and W01 had landed on main.",
-      "decision": "W02 implementation authorized on a feature branch, measured before it is claimed. Nothing about merging, activating or releasing is approved by this wording.",
-      "applies_to": "W02 live frame bridge only: render_bridge/packed.py, render_bridge/ring.py, render_bridge/collect.py, tools/render/measure_bridge.py, its tests and its documents",
-      "binds_to": {
-        "base_commit": "c267fdcbee32fa95115acdab46a6df9489b5dcb0",
-        "branch": "render/cpp-w02-bridge",
-        "artifact": "docs/RENDER_BRIDGE_W02.md",
-        "receipt": "artifacts/cpp-renderer/w02/producer-receipt.json"
-      },
-      "not_approved_by_this_decision": [
-        "merge, tag or release",
-        "any change to the production launch path or the default renderer",
-        "input return path, HUD/menu rendering or gameplay integration",
-        "a speed or frame-rate claim, including any claim from the mesh-only loop",
-        "Windows-native acceptance",
-        "any change to the W00 offline profile or the approved model bytes"
-      ],
-      "engineering_choices": [
-        "The live profile is packed structure-of-arrays, not the offline canonical JSON: measured 7.95 ms vs 0.58 ms per frame against a 1.0 ms budget.",
-        "The live frame carries its own v2 header rather than the approved W00 32-byte envelope, because a streamed frame must state its record counts and the identity of the tables it indexes; the offline bytes are untouched.",
-        "The producer takes the renderer's visibility set instead of calling state.can_see per entity: 45.3 ms vs 0.71 ms per frame.",
-        "Transport is a single-producer memory-mapped ring with seqlock slot tags and drop-oldest; the writer never blocks the simulation."
-      ],
-      "measured": {
-        "receipt": "artifacts/cpp-renderer/w02/producer-receipt.json",
-        "gate_ms": 1.0,
-        "detection_set_supplied_worst_case_ms": 0.7116,
-        "all_visible_worst_case_ms": 0.7741,
-        "visibility_recomputed_ms": 45.3389,
-        "state_sha256_unchanged": true
-      },
-      "not_proven": [
-        "C++ consumer decode + interpolation of these frames",
-        "end-to-end latency <= 2 frames",
-        "dropped-frame counts and fps at 200/400/600 ships on an equal-workload scene (fog, HUD, planets)",
-        "Windows-native build or Filip's laptop"
-      ]
-    },
-    {
-      "id": "render-w02-merge-and-w03-kickoff-2026-10-21",
-      "date": "2026-10-21",
-      "owner": "owner (Lukasz Jawor)",
-      "owner_wording": "Agree. 1 -3 need work and commit to PR. After this is OK we merge and kick of W03 on seperate PR",
-      "question_answered": "Whether to merge W02 (#147) and how to start W03 once the three review follow-ups were committed to the PR.",
-      "decision": "The three follow-ups are committed to PR #147 and merged with it. W03 starts on its own branch and its own PR, from the merged main. Nothing about tags, releases, the default renderer or Windows acceptance is approved by this wording.",
-      "applies_to": "the merge of PR #147 into main, and the start of W03 (draw-list executor: HUD, menus, text atlas) on render/cpp-w03-drawlist",
-      "binds_to": {
-        "merged_head": "dfacccd6f5f489c77c2938631589ef1e7339a915",
-        "merge_commit": "463d431664428a104543f3a697dfe8d077077596",
-        "pr": "https://github.com/ljawor/STAR-ARMADA/pull/147",
-        "branch": "render/cpp-w03-drawlist",
-        "artifact": "docs/CPP_RENDERER_MIGRATION.md",
-        "receipt": "artifacts/cpp-renderer/w02/live/live-receipt.json"
-      },
-      "not_approved_by_this_decision": [
-        "a tag, a release, or any change to the default renderer",
-        "switching the production launch path to the C++ window",
-        "a frame-rate claim: no equal-workload benchmark exists (fog, HUD, planets, 200/400/600 ships)",
-        "W03 being complete, correct or shippable - the wording starts it, it does not accept it",
-        "Windows-native acceptance"
-      ],
-      "engineering_choices": [
-        "Merged with --match-head-commit dfacccd so the merged tree is the one that was measured.",
-        "Verified after the merge from git archive origin/main: 25 render tests OK, 0 tracked symlinks.",
-        "W03 is scoped to the draw-list executor (HUD, menus, text atlas) with pixel comparison against the legacy path; it does not touch the W02 bridge or the W00 offline profile."
-      ],
-      "measured": {
-        "pr_head": "dfacccd",
-        "merge_commit": "463d431",
-        "committed_tree_tests": "25 tests OK (test_render_packed, test_render_ring, test_render_protocol, test_render_snapshot)",
-        "merged_tree_tests": "25 tests OK from git archive origin/main"
-      },
-      "not_proven": [
-        "no fps or frame-rate number",
-        "no fog/HUD/planet rendering in the C++ window",
-        "no Windows/D3D12 run",
-        "no CI check: the owner disabled the workflow, so this tree's evidence is local"
-      ]
-    },
-    {
-      "id": "render-w03-design-a-overlay-transport-2026-10-21",
-      "date": "2026-10-21",
-      "owner": "owner (Lukasz Jawor)",
-      "owner_wording": "OK. Your right. Let's go for A. If we later discover that we have big costs on the hud we can still run a migration project for this part seperatly.",
-      "question_answered": "Which W03 design to implement: A (carry the composed UI surface over the bridge, dirty-rected) or B (draw-list primitives with a C++ glyph atlas).",
-      "decision": "Design A. W03 transports the UI surface the Python layer already composes; text stays SDL_ttf, so the language packs are untouched. A separate project can move text to C++ later if the HUD ever shows up in a frame budget.",
-      "applies_to": "W03 only: the overlay upload path in the legacy renderer and the overlay payload in the bridge",
-      "binds_to": {
-        "base_commit": "e50457c6a5c1c6e99e4ecb3a36f64f8f8f7f558d",
-        "branch": "render/cpp-w03-drawlist",
-        "pr": "https://github.com/ljawor/STAR-ARMADA/pull/148",
-        "artifact": "docs/RENDER_DRAW_LIST_W03.md",
-        "receipt": "artifacts/cpp-renderer/w03/hud-upload-receipt.json"
-      },
-      "not_approved_by_this_decision": [
-        "a tag, a release, or a change to the default renderer",
-        "moving text rasterization into C++ now (that is the separate project the wording allows later)",
-        "a frame-rate claim of any kind",
-        "W03 being complete - this authorizes the design and the first slice",
-        "Windows-native acceptance"
-      ],
-      "engineering_choices": [
-        "Dirty rects come from a recorded op list, not from diffing pixels: a paint call whose arguments are unchanged provably produced the same pixels, and reading 4 MB back to discover that would cost more than the upload.",
-        "Unkeyed blits (minimap, fog thumbnail, floating text) are dirty every frame. Conservative by design: bandwidth, never a stale pixel.",
-        "A changed op dirties the union of its current and previous rect, and an op that disappears dirties the rect it painted, because a shorter bar uncovers pixels drawn earlier.",
-        "glTexSubImage2D yoffset is rect.y, not height - rect.bottom: glTexImage2D puts the surface's first row at t=0, so yoffset counts from that same origin. The first implementation got this backwards and the GPU readback check caught it."
-      ],
-      "measured": {
-        "hud_frame_full_upload_ms": 2.1932,
-        "hud_frame_dirty_upload_ms": 1.4071,
-        "saved_ms": 0.7861,
-        "saved_ratio": 0.3584,
-        "pixels_per_frame_full": 1024000,
-        "pixels_per_frame_dirty_median": 55016,
-        "gpu_readback": "partial and forced-full composites byte-identical in steady state, fps-change and hull-damage scenarios; repeatability control identical"
-      },
-      "not_proven": [
-        "no capture of a live match at 60 Hz with the dirty path (the bench renders the HUD from a real skirmish state but does not run the loop)",
-        "menus were not converted: they paint through clean_classic and are not per-frame",
-        "no Windows/D3D12 run; CI is disabled by the owner"
-      ]
+     "id": "platform-scope",
+     "decision": "Rebuild and validation must work from a fresh clone on macOS and on Windows, with no hardcoded /Applications/Blender.app, no sandbox-exec and no absolute home directories. Blender-side authoring tooling stays on macOS; Windows does not have to author models, only rebuild and validate them.",
+     "why": "A fresh Windows clone that cannot verify the catalogue makes every later platform gate an act of faith. Authoring on one machine keeps the toolchain pinned.",
+     "applies_from": "S03 onward"
     }
-  ]
+   ],
+   "scope_statement": "Freezes S03's policies and its definition of done so the step is reviewed against agreed criteria rather than against whatever gets built. It authorizes implementing S03 on a feature branch under the normal PR gate.",
+   "not_approved_by_this_decision": [
+    "any model design, catalogue batch or binding beyond the three already-approved assets (S06)",
+    "implementing or merging the registry/resolver this pipeline feeds (S04)",
+    "a production default switch, activation of the trio in the shipped default, a tag or a release (S11)",
+    "adopting Git LFS now",
+    "authoring models on Windows"
+   ],
+   "binds_to": {
+    "roadmap_step": "S03",
+    "artifact": "docs/BLENDER_MODEL_MIGRATION_ROADMAP.md",
+    "reviewed_basis": "the S03 acceptance proposal put to the owner in the model-migration conversation",
+    "base_commit": "dfda83f2e67931873296e9d49acc4e62a2e63bcd"
+   },
+   "definition_of_done": [
+    {
+     "id": "D1",
+     "claim": "build-model, export-model and validate-models each work for one asset, for a batch, and for validation-only; every failure path exits nonzero and no command writes user data",
+     "checked_by": "machine",
+     "evidence": "command transcript plus a deliberate-failure run per command"
+    },
+    {
+     "id": "D2",
+     "claim": "validate-models IS the S02 contract validator (tools/art/validate_contract.py), not a second, weaker opinion",
+     "checked_by": "machine",
+     "evidence": "the command it runs, and its output on the trio"
+    },
+    {
+     "id": "D3",
+     "claim": "a fresh clone of the pushed branch reproduces the three approved runtime exports byte-identically, and a second export run is byte-stable",
+     "checked_by": "machine",
+     "evidence": "sha256 of assets/models/alliance_{battleship,frigate,shipyard}.mesh.json before and after, on a clone with no local state"
+    },
+    {
+     "id": "D4",
+     "claim": "provenance is recorded per asset: Blender version, exporter version, source and runtime hashes, declared source authority, coordinate/scale policy",
+     "checked_by": "machine+skim",
+     "evidence": "the per-asset provenance record"
+    },
+    {
+     "id": "D5",
+     "claim": "the approved trio is unchanged: no file under assets/models/ differs from main, and a before/after in-game capture shows the same silhouettes, worklights and aft emitters",
+     "checked_by": "owner",
+     "evidence": "git diff --name-only over assets/, plus the capture set"
+    },
+    {
+     "id": "D6",
+     "claim": "no .blend1, autosave, temporary render or raw capture run is committed, and editable sources or authoring tools never enter the packaged build",
+     "checked_by": "machine",
+     "evidence": "status/inventory of the branch plus the packaging file list"
+    }
+   ],
+   "owner_review_pack": [
+    "the unchanged-trio capture set (D5) - the only item the owner judges visually",
+    "the build and validate receipt, including the fresh-clone hashes (D3, D1)",
+    "the provenance record (D4), skimmed"
+   ],
+   "review_note": "There is nothing new to judge visually in S03: a visible change to the approved trio is a failure of this step, not a feature of it."
+  },
+  {
+   "id": "s07-detail-budget-2026-10-16",
+   "date": "2026-10-16",
+   "owner": "owner (Lukasz Jawor)",
+   "decision": "raise-the-authoring-ceiling",
+   "applies_to": "S07 - surface-detail roll-out from the capital to the frigate and the shipyard",
+   "owner_wording": "do it",
+   "how_recorded": "The assistant reported that the frigate and the shipyard sat at 5,128 and 7,935 triangles against a 9,000-triangle authoring ceiling, that the shipyard therefore had about a thousand triangles of headroom and would receive roughly a quarter of the detail the capital had just been given, and proposed raising the guard with the reasoning written down rather than leaving it half-done. The owner replied as above. That reply endorses the proposal it answers, so the ceiling is raised here as its own decision record, and the reasoning below is the one that was proposed.",
+   "decisions": [
+    {
+     "id": "detail-budget",
+     "decision": "The authored-model triangle ceiling for the trio's non-capital assets rises from 9,000 to 11,888, and a vertex ceiling of 9,500 is added where there was none.",
+     "why": "9,000 was chosen when these two models were sculpted forms with no surface detail at all. Surface detail costs 12 triangles and 8 vertices per block, and at the shipped close camera a 12-triangle block is about four pixels, so a hull that reads as plating, machinery and vents rather than one grey plate costs a few thousand triangles. The capital already carries an 11,888 ceiling at 11,457 triangles, and using the same number for the same reason keeps the fleet consistent. The hard limit is the runtime loader (render/authored_mesh.py: 12,000 triangles, 10,000 vertices, 2,000,000 bytes): past it the loader refuses the model and the build is wasted, so both ceilings sit deliberately just under it. A ceiling is a guard, not a target, and the detail for each asset is placed for that asset's own scale.",
+     "applies_from": "S07 onward, and only for a revision whose approval record is updated with it",
+     "does_not_apply_to": "The approved capital revision s06-battleship-hull-detail-2026-10-16 keeps its own 4,400 to 11,888 bounds and is not rebuilt by this decision."
+    },
+    {
+     "id": "advisory-budget-inconsistency",
+     "decision": "Recorded, not changed: art/manifests/pipeline.json gives the shipyard an advisory budget of 16,000 triangles while the runtime loader that reads the same registry caps an authored mesh at 12,000, so that advisory can never fire a warning. The frigate's and the capital's 12,000 advisories sit exactly on the loader cap, where a warning is possible only for a model the loader would refuse anyway.",
+     "why": "These advisory numbers are the S02 section 9 class budgets that are still pending the owner's review (PR #117, question 1). Retuning them here would answer that question by accident, in a file the owner was not looking at.",
+     "applies_from": "until the class-budget question is answered; the ceiling raise above does not depend on it"
+    }
+   ]
+  },
+  {
+   "id": "s06-b4-scope-2026-10-17",
+   "date": "2026-10-17",
+   "owner": "owner (Lukasz Jawor)",
+   "decision": "authorized",
+   "applies_to": "S06 B4 - satellites and planet installations",
+   "owner_wording": "1.) B4 authorized",
+   "how_recorded": "Parsed from the owner's own words in the session that answered four questions at once (B4 authorization, the appearance approvals of the pending specimens, the roadmap catch-up and the imperial migration). Recorded verbatim, including the numbering, so the intent is not paraphrased away.",
+   "decisions": [
+    {
+     "id": "b4-authoring-scope",
+     "decision": "Author the satellite and planet-installation rows as the next catalogue batch: defense_satellite, attack_satellite, planet_extractor, planet_trade_hub, planet_shield_generator and planet_pulsar_cannon across the three families whose station-family dispatch already consults the authored-model seam (rebel, confederacy, syndicate) - eighteen rows, all at the catalogue radius of 45.",
+     "why": "B3 finished the station rows and the owner-approved order (s01-scope-2026-10-16) lists B4 next; the sixteen imperial rows of the same kinds are covered by the separate imperial-migration decision.",
+     "applies_from": "this decision"
+    },
+    {
+     "id": "b4-recipe-and-authority",
+     "decision": "B4 follows the same recipe as B3: one seed that builds every row, generated per-asset export wrappers, one batch sheet, a guard module, and real-application evidence (per-row close/rear/tactical/common-scale frames, per-role ablations, restored-simulation frames, paired motion clips and a one-scale overview). Satellites and planet installations are script-authoritative under the S03 source-authority policy, so the seed is the master and the .blend is a derived artifact.",
+     "why": "Repeated modular pieces are exactly the class the S03 policy keeps script-authoritative; the station recipes already proved the surrounding pipeline.",
+     "applies_from": "this decision"
+    },
+    {
+     "id": "b4-is-not-an-appearance-approval",
+     "decision": "Authoring authorization only. Each authored revision needs its own appearance approval before any landing, and this decision approves no revision, no landing, no registration, no tag or release, and no production-default switch.",
+     "why": "An approval binds to a revision; a scope decision binds to work about to be done. Conflating them is what makes an unapproved asset look approved.",
+     "applies_from": "this decision"
+    }
+   ],
+   "not_authorized": [
+    "landing, registration, activation, merge, tag or release of any B4 revision",
+    "the S11 catalogue switch or any production-default switch",
+    "packaging and native-Windows acceptance",
+    "changing simulation values, ship or structure stats, collision radii or gameplay balance in the name of authoring",
+    "the ten imperial station rows, the six imperial satellite and planet-installation rows and the imperial ship rows, which the imperial-migration decision covers separately"
+   ]
+  },
+  {
+   "id": "s06-imperial-migration-2026-10-17",
+   "date": "2026-10-17",
+   "owner": "owner (Lukasz Jawor)",
+   "decision": "authorized",
+   "applies_to": "S06 - the imperial rows of the model catalogue",
+   "owner_wording": "4.) decision need also migration.",
+   "how_recorded": "Parsed from the owner's own words in the session that answered four questions at once; the fourth answer settles the imperial seam question that had been left open, in favour of migrating the imperial rows rather than leaving them procedural.",
+   "decisions": [
+    {
+     "id": "imperial-rows-in-scope",
+     "decision": "The imperial rows are in scope for migration: the ten imperial station rows (command station, shipyard, research station, defense platform, trade station, fighter platform, repair dock, mining station, sensor station, energy relay), the two satellite rows, the four planet-installation rows, the five imperial combat hulls and the imperial squadron and logistics rows.",
+     "why": "Leaving them procedural would make the imperial faction the one faction whose stations and capitals still render placeholder geometry after the migration; the owner chose migration.",
+     "applies_from": "this decision"
+    },
+    {
+     "id": "imperial-per-binding-keys",
+     "decision": "Authoring the imperial rows needs one small, guardable renderer change, and it is not in station_mesh: that entry already consults mesh_for(f'{faction}:{data_id}') ahead of its imperial fallback, so the station, satellite and planet-installation rows are ordinary asset work. The change is in render/faction_visuals.py::ship_visual_key, which mints a per-binding key (faction:fighter, faction:convoy) for the three non-imperial families only and lets imperial hulls fall through normalize_ship_key(ds.ship_visual(data_id)['shape']) onto the shared legacy shapes 'wedge' and 'box'. Imperial ships, squadrons and convoys therefore need that function to mint an imperial per-binding key as well, with the shared shape kept as the fallback for every hull that has no approved revision.",
+     "why": "Two imperial hulls sharing one shape key cannot have two different models; today several imperial rows draw the same wedge or box. Making the key per-binding is what turns an imperial hull into an addressable revision, and keeping the old shape as fallback is what keeps activation a separate decision.",
+     "applies_from": "this decision"
+    },
+    {
+     "id": "imperial-is-not-an-appearance-approval",
+     "decision": "Authoring and seam authorization only. Every imperial revision needs its own appearance approval before landing, and nothing here authorizes a landing, a registration, a tag, a release or a production-default switch. The imperial rows are also not exempt from the envelope rule: their authored bounds must stay inside the legacy extents the simulation already uses.",
+     "why": "The same rule as every other batch: approval binds to a revision, and the simulation envelope is not an artwork decision.",
+     "applies_from": "this decision"
+    }
+   ],
+   "not_authorized": [
+    "landing, registration, activation, merge, tag or release of any imperial revision",
+    "changing simulation values, hull stats, station behaviour, collision radii or balance",
+    "removing the legacy procedural fallback or switching the catalogue to authored models (S11)",
+    "packaging and native-Windows acceptance"
+   ],
+   "correction": "The first draft of this record said the imperial station rows dispatch straight to _station_mesh with no mesh_for seam and that the seam change belongs in render/fleet_geometry.py::station_mesh. That was wrong, and it repeated a stale claim from the earlier handoffs: station_mesh consults the seam before its imperial branch, for every faction. Corrected the same day, against the code at render/fleet_geometry.py:254-272 and render/faction_visuals.py:34-64. The owner's wording and the scope of his answer are unchanged - only the engineering description of what migrating the imperial rows takes."
+  },
+  {
+   "id": "s06-large-evidence-accepted-2026-10-17",
+   "date": "2026-10-17",
+   "owner": "owner (Lukasz Jawor)",
+   "decision": "approved-as-asked",
+   "applies_to": "S03 storage policy - the size of committed review evidence",
+   "owner_wording": "2.) A policy flag: the B4 contact sheet is 12.7 MiB: accept bigger",
+   "how_recorded": "The owner was shown the measured sizes and the three ways out - accept larger binary evidence, split or re-encode the contact sheets, or adopt Git LFS atomically - and answered in favour of accepting. Recorded verbatim; this is a new record rather than an edit of s03-pipeline-policy-2026-10-16, because that file's own rule is that a policy change is a new decision record.",
+   "decisions": [
+    {
+     "id": "review-evidence-size-accepted",
+     "decision": "Committed review evidence is kept in ordinary Git however large it is, and the contact sheets are not split or re-encoded to fit a threshold. Measured at the time of the decision: B4 12.7 MiB, B3c 10.9 MiB, B3b 5.4 MiB.",
+     "why": "The evidence is what the appearance approvals are judged against and what the guards re-hash; splitting it changes the record a reviewer reads, and re-encoding it changes the bytes an approval is about.",
+     "applies_from": "this decision"
+    },
+    {
+     "id": "lfs-remains-unadopted",
+     "decision": "The S03 declaration \"Git LFS threshold: 5 MiB per file; LFS is not adopted until an asset actually crosses that threshold\" no longer triggers adoption for review evidence: evidence may cross it and stays in ordinary Git. If LFS is ever adopted it still lands in one change with its attributes, the build and test fetching, and a fresh-clone check.",
+     "why": "A threshold that fires on evidence would force LFS adoption to serve files no build or test reads.",
+     "applies_from": "this decision"
+    }
+   ],
+   "not_authorized": [
+    "adopting Git LFS, or rewriting, re-encoding, pruning or splitting any evidence already committed",
+    "relaxing the runtime loader caps (12,000 triangles / 10,000 vertices / 2,000,000 bytes) or any asset class budget",
+    "landing, registration, activation, merge, tag, release or a production-default switch",
+    "anything about asset sources crossing the threshold: that question was not put to the owner and the S03 wording stands"
+   ]
+  },
+  {
+   "id": "s06-b5-scope-2026-10-17",
+   "date": "2026-10-17",
+   "owner": "owner (Lukasz Jawor)",
+   "decision": "approved-as-recommended",
+   "applies_to": "S06 B5 - the environment rows",
+   "owner_wording": "go with recomendate way",
+   "how_recorded": "B5 was probed before anything was authored and found to be four asset classes rather than fourteen meshes (art/manifests/handoffs/S06-B5-SCOPE.md, generated by tools/art/probe_b5_scope.py). Two ways forward were put to the owner - open the texture class now, or stop B5 at the asteroid prop and leave the rest on their existing pipelines - with the second recommended, and he adopted the recommendation. Recorded verbatim, including his spelling, so the intent is not paraphrased away.",
+   "decisions": [
+    {
+     "id": "b5-authors-the-asteroid-prop",
+     "decision": "B5 authors the asteroid prop: the `environment:asteroid_field` row is real per-instance geometry, and the S01 scope answer already chose the reading for it (asked whether per-instance procedural asteroid props should stay procedural or become a shared authored prop, the owner answered \"in scope - bring into the catalogue\"). So the row is a seam consult in the asteroid draw plus one shared authored prop, on the existing mesh pipeline.",
+     "why": "It is the only B5 row that needs no new asset class, and it was already in scope before this decision.",
+     "applies_from": "this decision"
+    },
+    {
+     "id": "b5-leaves-the-textures-on-their-pipeline",
+     "decision": "The ten texture rows - the eight planet surfaces and the two billboards (star, nebula) - stay on their generated-texture pipeline for now. They are a class the catalogue has none of: the registry, the loader, the wrappers and the schemas are mesh-shaped, and the S03 storage policy gates exactly this case (\"re-examine before the first batch that ships textures\"). Opening a texture class is a pipeline decision of its own, with its schema, identity rule, evidence shape, loader path and the storage re-examination, and it is not taken here.",
+     "why": "Authoring ten payloads of the wrong kind would be worse than authoring one of the right kind, and a texture class changes the registry, loader and storage rules rather than adding a file.",
+     "applies_from": "this decision"
+    },
+    {
+     "id": "b5-effects-and-backdrop-recorded-as-outside-the-mesh-catalogue",
+     "decision": "The star dome and the jump glyph are effects with no surface or geometry to author, and the menu backdrop is a baked movie with its own pipeline (tools/build_menu_movie.py, drawn by render/menus.py::_draw_splash_movie). Both are recorded as deliberately outside the mesh catalogue rather than left looking unbuilt.",
+     "why": "A catalogue entry that cannot be a mesh is not work deferred; it is a different question, and saying so keeps the ledger honest.",
+     "applies_from": "this decision"
+    }
+   ],
+   "not_authorized": [
+    "creating a texture asset class, or any change to the registry, loader, schema or storage policy for textures",
+    "changing the planet shader, the shared unit sphere or the atmosphere shell",
+    "landing, registration, activation, merge, tag, release or a production-default switch",
+    "any change to asteroid gameplay values: the row stays decorative, and the field's count, placement, scale range and tumble are untouched"
+   ]
+  },
+  {
+   "id": "s06-small-prop-class-2026-10-17",
+   "date": "2026-10-17",
+   "owner": "owner (Lukasz Jawor)",
+   "decision": "approved-as-proposed",
+   "applies_to": "S03 authoring policy - the exporter's minimum triangle count",
+   "owner_wording": "option 1",
+   "how_recorded": "The B5 asteroid prop was shown to the owner three times against the procedural rock it replaces, and he judged the procedural rock better each time ('left one is better'). The cause was diagnosed and put to him with three ways out - open a small-prop class below the 1,800-triangle floor, accept a prop that is worse than what it replaces, or leave the row procedural - and he chose the first. Recorded verbatim.",
+   "decisions": [
+    {
+     "id": "small-prop-class-exists",
+     "decision": "A **small-prop class** exists for assets the renderer draws many times per frame: an asteroid rock, and any later prop of the same kind. Its floor is 120 triangles instead of 1,800, and its own ceiling is set per asset in the wrapper table, tighter than the loader's 12,000. The 1,800 floor stays exactly as it is for ships, stations, satellites, planet installations and every other asset already approved; nothing in this decision moves them.",
+     "why": "The floor was written for hull- and structure-scale assets. A unit rock is drawn forty times per field, so the floor forced a surface forty times finer than the rock it replaced - which reads as texture noise and spiky silhouette rather than stone, and costs a field 120,000 triangles instead of about 10,000. The class exists so a prop can be authored the way the thing it replaces is authored: a few very large facets.",
+     "applies_from": "this decision"
+    },
+    {
+     "id": "the-class-is-declared-per-asset",
+     "decision": "The class is declared where the caps already are: the wrapper template gains a minimum-triangle slot, the wrapper table sets it per asset, and the seed asserts its own floor. There is no implicit exemption and no global lowering - a small prop says so in its own file.",
+     "why": "A floor that can be waived silently is not a floor; a declared class is a record a reviewer can find.",
+     "applies_from": "this decision"
+    },
+    {
+     "id": "evidence-for-a-small-prop",
+     "decision": "A small-prop row is reviewed the same way as any other: actual-application captures with the legacy path, a per-role ablation, and a repeat frame that must be identical. The owner's judgement of the picture is the gate.",
+     "why": "The class changes what geometry is allowed, not what evidence is owed.",
+     "applies_from": "this decision"
+    }
+   ],
+   "not_authorized": [
+    "lowering the 1,800 floor for any asset outside the declared small-prop class",
+    "relaxing the runtime loader caps (12,000 triangles / 10,000 vertices / 2,000,000 bytes) or any owner class budget",
+    "landing, registration, activation, merge, tag, release or a production-default switch",
+    "any change to the field's gameplay values: 40 instances, placement, scale range and tumble stay as they are"
+   ]
+  },
+  {
+   "id": "s06-imperial-convoy-parity-2026-10-18",
+   "date": "2026-10-18",
+   "owner": "owner (Lukasz Jawor)",
+   "decision": "approved-as-proposed",
+   "applies_to": "the two remaining Imperial rows of S06 batch B6, and the convoy gate that reaches them",
+   "owner_wording": "other factions' convoys settled",
+   "how_recorded": "Put to him as the choice it was - author the Imperial convoy rows as hulls of their own, or follow whatever the other three factions' convoys settled on - and he chose the second. What that means is measured rather than assumed, below.",
+   "what_the_siblings_settled_on": {
+    "decision": "s06-b2-squadron-logistics-2026-10-17",
+    "rows": [
+     "rebel:convoy / alliance_convoy",
+     "confederacy:convoy / legion_convoy",
+     "syndicate:convoy / syndicate_convoy"
+    ],
+    "status": "appearance_approved_pending_landing, owner_decision null, activation false, registry procedural_legacy",
+    "mesh_sizes": "4,512 / 4,584 / 4,756 triangles - roughly twice the single-hull rows, because a convoy is a cluster",
+    "envelope_convention": "the sidecar's envelope is the binding's declared box, a little larger than the mesh's own bounds: rebel:convoy declares [-31,-9,-72.698]..[31,16,59.5] around mesh bounds of [-30.3,-6,-72.698]..[30.3,14.776,59.5]",
+    "evidence": "the same review sheets and per-row sidecars the rest of S06 uses"
+   },
+   "what_this_authorizes": [
+    "authoring an Imperial convoy row that follows the siblings: binding imperial:convoy (already in the registry with manifest core:imperial/convoy), a cluster-scale mesh around 4,500 triangles, an envelope in the siblings' style, a sidecar, a review picture, and an appearance decision when the owner has seen it"
+   ],
+   "what_it_does_not_authorize": [
+    "landing, registration, activation, merge, tag or release of anything",
+    "a blanket change to the convoy gate: extending it for Imperial is a seam change and is to be written, guarded and reviewed like any other",
+    "any change to the other three factions' convoys, which are already approved",
+    "packaging of any kind, an LFS conversion or a size policy"
+   ],
+   "finding_to_carry": "Both convoy paths exclude Imperial from the faction gate that maps a data row to a <faction>:convoy key - `data_id == 'trade_convoy' and faction in FACTIONS[1:]`, and the crew-transport branch beside it, where FACTIONS is (imperial, rebel, confederacy, syndicate). So an Imperial convoy hull cannot be reached until that gate is extended for Imperial; this is a real one-branch seam, unlike the ship rows, whose authored bindings are served through ship_binding without any key change."
+  },
+  {
+   "id": "s06-catalogue-completion-execution-2026-10-18",
+   "date": "2026-10-18",
+   "owner": "owner (Lukasz Jawor)",
+   "decision": "approved-execution-not-appearance",
+   "current_increment": {
+    "owner_words_verbatim": "please continue part2. Anything pending from my end for this?",
+    "scope": "Continue part 2 authoring, export verification and review evidence only in this increment; stop before S07 integration or registration. Earlier 1/2/3 authorization is retained as history, not a claim of completion."
+   },
+   "owner_wording": "Agree execute 1 , 2 and 3",
+   "question_answered": "Execute the B6 sidecar repair; complete Imperial stations, remaining combat hulls and construction; then S07 opt-in integration followed by S08/S09 acceptance, not the final switch.",
+   "authorized": [
+    "B6 sidecar reproducibility repair preserving approved source/export/runtime bytes",
+    "author remaining 27 historical inventory meshes in B7 Imperial stations, B8 existing combat hulls, B9 construction batches",
+    "implement and test S07 opt-in paths; register only exact appearance-approved revisions",
+    "execute S08/S09 engineering gates when prerequisites are met; report unavailable native-platform acceptance as blocked"
+   ],
+   "not_authorized": [
+    "appearance approval of any new or revised model",
+    "inventing gameplay statistics for three planned Syndicate hulls",
+    "merge, tag, release or production-default activation",
+    "weakening tests, budgets, collision/extent policy or platform waivers"
+   ],
+   "acceptance_criteria": [
+    {
+     "id": "C1",
+     "checker": "machine",
+     "criterion": "B6 generator check reproduces sidecars; all existing approved sources/exporters/runtime hashes unchanged"
+    },
+    {
+     "id": "C2",
+     "checker": "machine",
+     "criterion": "27 authored models preserve live per-row envelopes, six roles, current budgets; masters and export-only reproduction retained; existing approved assets unchanged"
+    },
+    {
+     "id": "C3",
+     "checker": "owner",
+     "criterion": "Explicit approval of enumerated new model revisions on committed actual-renderer batch evidence"
+    },
+    {
+     "id": "C4",
+     "checker": "machine",
+     "criterion": "S07 selected/unselected routes, contact/picking/bounds/ownership/LOD and lifecycle proved for approved candidate, legacy remains default"
+    },
+    {
+     "id": "C5",
+     "checker": "machine",
+     "criterion": "S08/S09 gates only closed with exact-candidate receipts; unavailable native hardware remains blocked, never inferred"
+    }
+   ],
+   "prerequisites_and_stops": [
+    "New models remain pending and unregistered until C3",
+    "S07 completeness remains open while required art lacks appearance approval",
+    "S08/S09 complete-candidate acceptance depends on S07; no final S10/S11 switch here"
+   ]
+  },
+  {
+   "id": "s07-opt-in-continuation-2026-10-18",
+   "date": "2026-10-18",
+   "owner": "owner (Lukasz Jawor)",
+   "decision": "authorized-execution-not-appearance",
+   "owner_wording": "ok continue",
+   "question_answered": "Part 3: opt-in integration, including the scaffold review path.",
+   "applies_to": "S07 opt-in integration, superseding the temporary part-2-only current_increment of s06-catalogue-completion-execution-2026-10-18; prior appearance approvals remain revision-bound.",
+   "how_recorded": "After the 26 pictured B7/B8/B9 approvals were recorded, the assistant explicitly proposed Part 3 opt-in integration including scaffold review. The owner replied as quoted. This records progression of authorized engineering work, not a new appearance decision.",
+   "authorized": [
+    "Guard and repair selected/unselected runtime consumers, including Imperial stations and shared scaffold construction drawing",
+    "Audit live identities and register only exact previously appearance-approved models into the existing explicit preview path",
+    "Capture the unapproved shared scaffold through the real build-queue renderer for owner review",
+    "Run later S08/S09 engineering gates when prerequisites are satisfied"
+   ],
+   "not_authorized": [
+    "appearance approval or registration of the still-unapproved scaffold",
+    "changing any approved model source, exporter, seed or runtime payload revision",
+    "production-default activation, merge, tag or release",
+    "new gameplay statistics, collision, balance, or native-platform waivers"
+   ]
+  },
+  {
+   "id": "s07-scaffold-registration-2026-10-19",
+   "date": "2026-10-19",
+   "owner": "owner (Lukasz Jawor)",
+   "decision": "authorized-execution-not-appearance",
+   "owner_wording": "Work down the 4 points, please.",
+   "question_answered": "Complete the four S07 closure actions, including separately resolving the appearance-approved but unregistered scaffold instead of omitting it from full closure.",
+   "how_recorded": "The owner authorized the four closure actions after separately choosing 'Fix the opt-in rendering paths to match'. This is the separate scaffold registration increment; the original 99-row S06 increment and its authority remain unchanged.",
+   "appearance_authority": "s07-scaffold-appearance-2026-10-18",
+   "authorized": [
+    "Register exactly shared:construction_scaffold at its separately approved revision into the explicit opt-in preview path",
+    "Validate provenance, assets-only resolution, normal construction rendering, cache lifecycle and state preservation",
+    "Publish reviewed evidence and check CI at the final commit"
+   ],
+   "not_authorized": [
+    "new appearance approval or any modification of approved geometry, source, seed, exporter or evidence",
+    "expansion of the original approved-s06 batch or production-default activation",
+    "merge, tag, release, gameplay or balance changes",
+    "waiving S08/S09 compatibility, performance or real native packaged-build gates"
+   ]
+  },
+  {
+   "id": "s07-authored-lod-cost-2026-10-19",
+   "date": "2026-10-19",
+   "owner": "owner (Lukasz Jawor)",
+   "decision": "accepted-as-acceptable",
+   "owner_wording": "Yes acceptable",
+   "question_answered": "The authored-hull LOD suppression change in _draw_ship_role_batch makes authored hulls submit all six role batches down to sub-pixel apparent size, costing five extra display-list calls plus push/pop, colour and two shader uniform updates per authored ship per frame at zoom-out. Is that cost acceptable?",
+   "how_recorded": "Put to the owner as a single yes/no after the independent review flagged it as the only player-facing consequence of the motion/ownership repair, and after measurement showed the other two changed draw methods (_draw_ships phased branch, _draw_station) have no production call path: _draw_ships is called once at render/renderer.py:495 with a cache that _ensure_frame_cache always returns as a dict, and _draw_station has one call site (1445) inside that same uncached branch. Answer recorded verbatim; no bound was fitted to it.",
+   "binds_to": {
+    "reviewed_renderer_sha256": "9aff34140aa3d458eec358a2d87e64d4d4277c924ca198d507e4d29983350f3c",
+    "reviewed_commit": "56906ea7c73c219fbdc91c68176104b23d0f7712",
+    "pull_request": 131,
+    "review_artifact": "artifacts/s07-runtime-final/INDEPENDENT-MOTION-REVIEW.json",
+    "finding": "Authored hulls now submit all six roles at every apparent size, including sub-pixel; the LOD cut exists to avoid per-entity GL work at zoom-out.",
+    "measured_pixel_effect": "none: 870/870 native captures and 360/360 candidate-movie frames are byte-identical to the pre-repair sets"
+   },
+   "scope_statement": "Accepts the per-ship draw cost of authored hulls at zoom-out as the price of unmixed authored LOD treatment. It does not authorize removing an existing visual pass, lowering MSAA, reducing geometry, changing gameplay, or any further LOD change.",
+   "not_approved_by_this_decision": [
+    "merge",
+    "default activation",
+    "release or tag",
+    "a new appearance approval",
+    "S08/S09 compatibility, performance or packaged-build gates",
+    "any further renderer performance change"
+   ],
+   "review_note": "A later performance workstream may revisit authored LOD suppression as its own measured change; this decision is the current baseline, not a permanent ceiling on the workstream."
+  },
+  {
+   "id": "s07-s06-coverage-exception-2026-10-19",
+   "date": "2026-10-19",
+   "owner": "owner (Lukasz Jawor)",
+   "decision": "accepted-s06-coverage-exception",
+   "owner_wording": "OK let's do it : 1st a) than b) than merging rest.",
+   "question_answered": "S07 can close only once S06 coverage is complete or explicitly excepted. Sixteen registry bindings are not authored: twelve authoring_pending rows and four keep_procedural_proposed rows. Are those sixteen excepted from S07 coverage so S07 can close?",
+   "how_recorded": "Put to the owner as the second of three actions (\"1st a) then b) then merging rest\"); the enumerated rows and their classes are derived from assets/models/registry.json at the moment of recording and are listed in art/manifests/reviews/S07-S06-COVERAGE-EXCEPTION.json, not paraphrased here",
+   "scope": {
+    "excepted": 16,
+    "by_class": {
+     "authoring_pending": 12,
+     "keep_procedural_proposed": 4
+    },
+    "registered_and_approved_untouched": 103
+   },
+   "does_not_authorize": [
+    "any appearance approval",
+    "a default switch",
+    "merge, release or packaging"
+   ],
+   "evidence": "art/manifests/reviews/S07-S06-COVERAGE-EXCEPTION.json",
+   "bound_to": {
+    "registry_sha256": "4683c937cfa4cc936953c25ee6fa013f1aaaad42730a7759ec6c39167e57e79f",
+    "base_commit": "56906ea7c73c219fbdc91c68176104b23d0f7712"
+   }
+  },
+  {
+   "id": "s09-performance-target-2026-10-19",
+   "date": "2026-10-19",
+   "owner": "owner (Lukasz Jawor)",
+   "decision": "accepted-s09-performance-reference",
+   "owner_wording": "Adopt the proposed 60 FPS / 30 FPS heavy-battle targets as the S09 measurement reference (measured stock scenes are ~5-7x off)",
+   "question_answered": "What should S09 measure the complete opt-in catalogue against: a no-regression budget on today's measured baseline, the proposed 60/30 FPS figures that GRAPHICS_UPGRADE_PLAN.md marks 'proposed, not agreed', or measurement without a numeric gate?",
+   "how_recorded": "Put as a pick-one question with three options; the owner selected the second. The selection is the owner's answer, so it is recorded as chosen rather than paraphrased. The parenthetical in the wording is the measured context shown beside the option, not a second decision.",
+   "applies_to": "S09 performance acceptance only",
+   "authorized": [
+    "measuring the complete opt-in catalogue (103 authored bindings) against 60 FPS / 16.67 ms in normal gameplay and at least 30 FPS / 33.33 ms in the supported heavy battle, at a stated resolution and on named hardware",
+    "reporting the standing gap between that reference and measured cost as an S09 result, per scene, including CPU/render versus simulation/checksum separation"
+   ],
+   "not_authorized": [
+    "any reduction in visual quality, MSAA, fog, geometry or catalogue scope to reach the target",
+    "an open-ended optimization project; renderer work remains a separately authorized workstream with its own measurement",
+    "changing the workload fixtures, tick pacing or balance to make the reference reachable",
+    "a merge, tag, release or default switch"
+   ],
+   "measured_context_at_decision": {
+    "reference_ms": {
+     "normal_gameplay_60fps": 16.6667,
+     "heavy_battle_30fps": 33.3333
+    },
+    "measured_baseline_ms_1280x800_m4_legacy": {
+     "stock_distributed": 93.19,
+     "stock_combat": 109.01,
+     "stress_distributed": 421.74,
+     "stress_combat": 544.31
+    },
+    "source": "docs/GRAPHICS_BENCHMARK.md sections 3 and 7",
+    "consequence": "the reference is not met by the current candidate; S09 reports the gap rather than claiming performance acceptance"
+   },
+   "binds_to": {
+    "candidate_head": "5980890c47f973b50fc677a962242e893e96f001",
+    "candidate_tree": "b28b48ab07abe0c4b5040f4696ffaf14d7e6ef12"
+   }
+  },
+  {
+   "id": "s09-platform-waiver-2026-10-19",
+   "date": "2026-10-19",
+   "owner": "owner (Lukasz Jawor)",
+   "decision": "accepted-scoped-platform-waiver",
+   "owner_wording": "Record a scoped waiver for native Windows graphics/package only; S09 still needs the Mac package, suite and agreed targets",
+   "question_answered": "Native Windows graphics, the Windows half of the S03 pipeline and Windows package smoke are unproven and this Mac cannot produce them: record a scoped waiver, authorize Windows work now, or hold S09 blocked?",
+   "how_recorded": "Put as a pick-one question with three options; the owner selected the first. The selected option names its own boundary and that boundary is what is recorded.",
+   "applies_to": "S09 acceptance only",
+   "waived_for_s09": [
+    "native Windows graphics evidence",
+    "native Windows package smoke"
+   ],
+   "not_waived": [
+    "the Windows half of the S03 authoring pipeline (D3)",
+    "native Windows kernel test rows in the macOS suite (they stay skips, not passes)",
+    "physical mixed-machine LAN play and Filip's laptop evidence",
+    "Mac package build, inspection and smoke",
+    "the protected suite, the agreed performance reference, or any art/catalogue gate"
+   ],
+   "still_required_for_s09": [
+    "Mac package built from the exact candidate and inspected inside the bundle",
+    "clean-install and copied-existing-user-data smoke runs",
+    "measured cost against the s09-performance-target-2026-10-19 reference",
+    "suite verdict from an attributable instrument with every failure classified"
+   ],
+   "does_not_authorize": [
+    "a merge",
+    "a tag",
+    "a release",
+    "a default switch",
+    "deleting the legacy fallback",
+    "treating skipped Windows rows as passes"
+   ],
+   "binds_to": {
+    "candidate_head": "5980890c47f973b50fc677a962242e893e96f001",
+    "candidate_tree": "b28b48ab07abe0c4b5040f4696ffaf14d7e6ef12"
+   }
+  },
+  {
+   "id": "s11-default-switch-2026-10-19",
+   "date": "2026-10-19",
+   "owner": "owner (Lukasz Jawor)",
+   "decision": "authorized-default-switch-and-roadmap-closure",
+   "owner_wording": "No. We will concentrate on 1.) Merge 2.) Switch the game to the blender model and closing the roadmap with this. Later we will open a new chat were we will only focus on A) Performnce measuring B) Optimalization.",
+   "question_answered": "S09 measured the authored catalogue at 4.5-6.2x legacy frame time, so the agreed 60/30 FPS reference is not met. Hold the switch until optimisation lands, or switch now and separate the work?",
+   "how_recorded": "The owner declined further rendering-approach discussion and directed the merge, the default switch and roadmap closure, naming performance measurement and optimisation as a separate future engagement.",
+   "applies_to": "S10 sign-off and S11 switch only",
+   "authorizes": [
+    "merging the S09 evidence PR and the packaging fix PR",
+    "changing the shipped default to the approved Blender catalogue",
+    "closing the migration roadmap with the performance reference recorded as unmet"
+   ],
+   "does_not_authorize": [
+    "a tag or a release",
+    "deleting the legacy renderer or its fallback",
+    "relaxing the 60/30 FPS reference or recording it as met",
+    "shipping decimated or billboard geometry to gain performance without a separate owner decision",
+    "claiming native Windows graphics or package evidence that this Mac cannot produce"
+   ],
+   "carried_forward": {
+    "stream": "performance-measurement-and-optimisation",
+    "open_items": [
+     "clean re-measure of absolute frame times without the recorded contention",
+     "authored catalogue cost: 188.22 ms stock distributed, 292.73 ms stock combat at 1280x800 MSAA 4",
+     "legacy itself is 2.5-3.4x over the 60 FPS budget on stock scenes",
+     "decide between submission batching, authored LOD chains and far-field billboards with measured evidence"
+    ]
+   },
+   "binds_to": {
+    "engine_version": "0.16.0"
+   }
+  },
+  {
+   "id": "imperium-prototype-default-selection-2026-10-20",
+   "date": "2026-10-20",
+   "owner": "owner (Lukasz Jawor)",
+   "decision": "authorized-prototype-default-selection",
+   "applies_to": "the shipped render-only default selection (DEFAULT_SETTINGS.visual_packs) of the six owner-approved Imperial prototypes",
+   "owner_wording": "Do the commit so the local new models will stay as default.",
+   "question_answered": "The six approved prototypes appear only because the owner's local saves/settings.json enables them; that switch is user data and is not in Git, so a fresh checkout still draws the six core bindings they replace. Commit the switch as a shipped default, promote the six into the core catalogue, or leave them opt-in?",
+   "how_recorded": "The owner asked for the switch to be committed as the default. Their appearance approval is already recorded in artifacts/imperial-flight-prototypes/OWNER_REVIEW.json (approval_kind prototype-appearance-and-pr-landing, reviewed revision 255aaba7a121a5573ba00e7cfcce6f903c4d42ff) and is not re-decided here; this entry records only that those six packs become the shipped selection.",
+   "authorizes": [
+    "listing the six approved pack directories in DEFAULT_SETTINGS.visual_packs, so a checkout that has never saved a settings file starts on those revisions",
+    "leaving an existing saved settings file in charge of its own list, which is what keeps the owner's current local run unchanged"
+   ],
+   "not_authorized": [
+    "registering the six meshes as core catalogue assets (registry core status, packaged manifests and receipts)",
+    "claiming a packaged or frozen default: visual packs must live outside a frozen bundle, so a package resolves none of them and keeps the core catalogue",
+    "a tag, package or release",
+    "further artwork, or any change to the six approved revisions",
+    "reading this selection as catalogue coverage: the six replaced core bindings remain the packaged appearance"
+   ],
+   "binds_to": {
+    "owner_review": "artifacts/imperial-flight-prototypes/OWNER_REVIEW.json",
+    "reviewed_revision_commit": "255aaba7a121a5573ba00e7cfcce6f903c4d42ff",
+    "default_selection": [
+     "vigil-prototype",
+     "imperium-command-prototype",
+     "imperium-shipyard-prototype",
+     "imperium-mining-prototype",
+     "imperium-talon-prototype",
+     "imperium-engineer-prototype"
+    ]
+   },
+   "follow_up": "Registering these six as core assets is the route to a packaged default. It needs its own authorization and the complete record set (registry status, pipeline expected_triangles and approval binding, receipts, coverage report), not a settings entry."
+  },
+  {
+   "id": "imperial-station-prototypes-2026-10-20",
+   "date": "2026-10-20",
+   "owner": "owner (Lukasz Jawor)",
+   "decision": "approved-station-prototype-batch-and-default-selection",
+   "applies_to": "the three Galactic Imperium station prototypes (research station, defence platform, sensor station) and their entry in the shipped render-only default selection",
+   "owner_wording": "Looks perfect.",
+   "question_answered": "Do the three Imperial station prototypes look right in the live game, and should they be committed to PR #142 together with the default switch?",
+   "how_recorded": "The owner reviewed the live production game window (tools/play_station_prototypes.py, stock Imperial skirmish with one of each station, isolated profile) and answered in two words. Appearance approval is recorded in artifacts/imperial-stations-review/OWNER_REVIEW.json bound to the mesh, builder, master, descriptor and manifest hashes; this entry records the batch approval and that the three packs join the shipped default selection.",
+   "authorizes": [
+    "committing the three station prototype packs, their authoring and packaging tools, the review launcher, the focused loader guard and the in-game captures to PR #142",
+    "listing the three station pack directories in DEFAULT_SETTINGS.visual_packs beside the six approved ship prototypes"
+   ],
+   "does_not_authorize": [
+    "merging PR #142",
+    "a tag or a release",
+    "registering the models in the core catalogue (assets/models/registry.json) or pipeline manifests",
+    "packaged / frozen-bundle delivery of the packs",
+    "any change to gameplay, ship sizes, collision radii or simulation state"
+   ],
+   "binds_to": {
+    "engine_version": "0.16.0",
+    "pull_request": 142,
+    "review_record": "artifacts/imperial-stations-review/OWNER_REVIEW.json"
+   }
+  },
+  {
+   "id": "imperial-station-surface-fit-2026-10-20",
+   "date": "2026-10-20",
+   "owner": "owner (Lukasz Jawor)",
+   "decision": "approved-surface-fit-fix-and-kept-station-defaults",
+   "applies_to": "the three Galactic Imperium station prototypes (research station, defence platform, sensor station), their runtime meshes and their entries in the shipped render-only default selection",
+   "owner_report": "Research station had objects not attached to the hull (small blue and black squares); the same on the sensor station.",
+   "owner_wording": "Looking good. You can commit and make it default on local and PR.",
+   "question_answered": "Do the station prototypes now read as one solid hull in the live game, and should the fix be committed to PR #142 and kept as the local and shipped default?",
+   "root_cause": "surface detail was placed at remembered radii rather than on the hull section at its own height, so plates, vents and bands sat 0.5-9 units clear of the hull wherever the octagon narrows or the chamfer cuts in; buried radiator fins showed only their edges and rod-and-cube antennas read as loose cubes.",
+   "how_recorded": "Owner reported the defect in the running game and reviewed the fix in the same live production window (tools/play_station_prototypes.py, stock Imperial skirmish with one of each station, isolated profile). Appearance approval is recorded in artifacts/imperial-stations-review/OWNER_REVIEW.json revision 2, bound to the new mesh, builder, master, descriptor, manifest, in-game capture and Blender render hashes.",
+   "authorizes": [
+    "committing the surface-fit fix, the projected-placement helpers and the build-time contact gate to PR #142",
+    "keeping the three station packs in DEFAULT_SETTINGS.visual_packs and in the local saved profile selection"
+   ],
+   "does_not_authorize": [
+    "merging PR #142",
+    "a tag or a release",
+    "registering the models in the core catalogue (assets/models/registry.json) or pipeline manifests",
+    "packaged / frozen-bundle delivery of the packs",
+    "any change to gameplay, ship sizes, collision radii or simulation state"
+   ],
+   "binds_to": {
+    "engine_version": "0.16.0",
+    "pull_request": 142,
+    "review_record": "artifacts/imperial-stations-review/OWNER_REVIEW.json",
+    "supersedes_appearance_in": "imperial-station-prototypes-2026-10-20"
+   }
+  },
+  {
+   "id": "imperial-dockyard-prototypes-2026-10-20",
+   "date": "2026-10-20",
+   "owner": "owner (Lukasz Jawor)",
+   "decision": "approved-dockyard-prototypes-and-default",
+   "owner_wording": "Well done. I like it. Commit and make it default on PR and Local",
+   "question_answered": "The four dockyard models built from Homeworld 2 silhouette language are good enough to ship, and the default selection carries them in the repo and in the owner's local run.",
+   "scope": {
+    "prototypes": [
+     "imperium-trade-prototype",
+     "imperium-fighter-prototype",
+     "imperium-repair-prototype",
+     "imperium-relay-prototype"
+    ],
+    "bindings": [
+     "imperial:trade_station",
+     "imperial:fighter_platform",
+     "imperial:repair_dock",
+     "imperial:energy_relay"
+    ],
+    "default_packs_after": 13
+   },
+   "gates": [
+    "blender build",
+    "reproducible export",
+    "envelope fit",
+    "contact gate (no floating parts)",
+    "six material roles",
+    "real-driver gameplay capture",
+    "focused loader tests"
+   ],
+   "review_record": "artifacts/imperial-dockyard-review/OWNER_REVIEW.json",
+   "evidence_sha256": {
+    "builder": "e547cf795a40166aa7c7bec9981271f5a9633f3c3f5f79ad46039afa8aab5bcd",
+    "review": "1edcc2d35d5c55c450fbde2edd5cd466aefe0f82bad9e85745ffada831837a34"
+   },
+   "deliberately_skipped": [
+    "full test suite",
+    "contract-trio matrix",
+    "art-validator sweep"
+   ],
+   "skip_ci": true
+  },
+  {
+   "id": "imperial-stations-static-yaw-2026-10-20",
+   "date": "2026-10-20",
+   "owner": "owner (Lukasz Jawor)",
+   "decision": "approved-static-stations-and-rework-playbook",
+   "owner_wording": "Looks perfect.",
+   "owner_wording_context": [
+    "OK we have closed out the imperial stations. Can you check if this is a big change to globally stop every station from rotating?",
+    "My poposal: Make teh change locally and let me check this through main.py. If i am happy , let's add this to the existing PR and close and merge this one.",
+    "Looks perfect."
+   ],
+   "question_answered": "Free-standing stations should stop the 3 deg/s cosmetic spin so authored hull detail and every in-play anchor (docking pads, hull contacts, camera bounds, picking) stay in one fixed frame, and the model-rework protocol should be written down for the Imperial ships batch.",
+   "scope": {
+    "renderer_methods": [
+     "_initialize",
+     "_station_angle",
+     "_draw_ship_role_batch",
+     "_draw_station",
+     "_draw_station_outline",
+     "_visual_hit"
+    ],
+    "affected_population": "free-standing stations only; planet buildings and satellites keep their own orientation",
+    "sim_or_save_change": false,
+    "envelope_or_state_hash_change": false,
+    "default_packs_after": 13,
+    "playbook": "docs/MODEL_REWORK_PLAYBOOK.md"
+   },
+   "gates": [
+    "render/geometry suite (102 tests)",
+    "appearance pin correction (engineering-only, no new appearance approval)",
+    "owner review in a live main.py window",
+    "focused station prototype loader tests"
+   ],
+   "review_record": "art/manifests/approvals.json#s06-b5-environment-2026-10-17.s07_static_station_pin_correction",
+   "note": "The stray map circles the owner reported were the S06 jump-point line-loop markers; a STAR_ARMADA_SKIP=jumppoints run confirmed the identification. No marker geometry was changed by this decision."
+  },
+  {
+   "id": "jump-point-marker-removal-2026-10-20",
+   "date": "2026-10-20",
+   "owner": "owner (Lukasz Jawor)",
+   "decision": "approved-jump-point-marker-removal",
+   "owner_wording": "There shoudl be nothing no ring nothing This object shoudl not be there",
+   "question_answered": "The world view must not draw a marker at a jump point: no ring, no ticks, no pylons, no glow. The pass is a no-op and is kept only as the seam for a future marker.",
+   "scope": {
+    "renderer_methods": [
+     "_draw_jump_points"
+    ],
+    "removed_methods": [
+     "_gate_charge"
+    ],
+    "simulation_or_save_change": false,
+    "asset_change": false,
+    "envelope_or_state_hash_change": false,
+    "guard": "tests/test_jump_point_marker.py"
+   },
+   "gates": [
+    "offscreen probe: zero lit pixels at 2k/6k/16k and while charging",
+    "tests/test_jump_point_marker.py (2 tests)",
+    "render/geometry subset (54 tests)",
+    "appearance pin correction (engineering-only)"
+   ]
+  },
+  {
+   "id": "render-protocol-v1",
+   "date": "2026-10-21",
+   "owner": "owner (Lukasz Jawor)",
+   "owner_wording": "ok let's start this. Let's try to work on W00 + W01.",
+   "decision": "W00/W01 implementation authorized; engineering-selected offline protocol proposed for review, not blanket approval of every implementation detail.",
+   "applies_to": "W00 offline envelope/fixtures and W01 standalone viewer only",
+   "binds_to": {
+    "base_commit": "b2ff85ab622cd535aaf0525adb362a700e4b6f63",
+    "artifact": "docs/CPP_RENDERER_MIGRATION.md",
+    "protocol": "docs/RENDER_PROTOCOL.md"
+   },
+   "scope_statement": "Implement on feature branches, preserving authoritative simulation and asset bytes. No live bridge or normal-launch changes.",
+   "not_approved_by_this_decision": [
+    "merge",
+    "tag or release",
+    "production renderer default switch",
+    "model appearance approval or approved-mesh changes",
+    "W02 shared-memory transport, input or live-game integration",
+    "performance targets or Windows-native acceptance waiver"
+   ],
+   "engineering_choices": [
+    "Bounded canonical JSON offline payload in a versioned 32-byte little-endian CRC32 envelope.",
+    "Offline JSON does not establish the W02 1 ms serialization gate.",
+    "Offline camera is viewer-local; future picking requires a frame-consistent camera, not a once-per-second mirror."
+   ],
+   "definition_of_done": [
+    {
+     "id": "W00",
+     "checked_by": "machine + owner review",
+     "claim": "Reproducible world/UI/empty wire fixtures, round-trip and malformed-input rejection; spec agrees with bytes."
+    },
+    {
+     "id": "W01",
+     "checked_by": "machine + owner appearance/camera review",
+     "claim": "Native SDL3/bgfx viewer loads approved meshes, orbits/pans/zooms, exports a measured capture, and reports offline-only limitations."
+    }
+   ]
+  },
+  {
+   "id": "render-protocol-v1-owner-approval-2026-10-21",
+   "date": "2026-10-21",
+   "owner": "owner (Lukasz Jawor)",
+   "decision": "W00 offline snapshot format v1 is approved as the offline file profile, and PR #145 was merged into the migration-plan branch as proposed.",
+   "owner_wording": "Approve v1 as the offline file profile - mark #145 ready and merge it into the plan branch (#144), which moves #146's base",
+   "owner_wording_context": "Pick-one answer to a three-option question offering: (a) approve v1 and merge #145 into the plan branch, (b) approve the format but keep #145 draft until the W02 transport design lands, (c) hold approval for a format change. Option (a) was selected; the wording above is that option's text, not free-form prose, so it is not an approval of anything the option did not say.",
+   "question_answered": "Is the W00 v1 wire format approved, and does #145 merge into its base now?",
+   "supersedes_gap_in": "render-protocol-v1",
+   "applies_to": "docs/RENDER_PROTOCOL.md v1 offline file profile, render_bridge/protocol.py, tests/fixtures/render_protocol/*, tests/test_render_protocol.py",
+   "binds_to": {
+    "pr": 145,
+    "merge_commit": "428371513e9dd69be1d1b1b0e35c55f9c9f6175a",
+    "approved_head": "f5844a83936b52a64635cd4c664bce19d5197187",
+    "protocol_doc": {
+     "path": "docs/RENDER_PROTOCOL.md",
+     "sha256": "8711b9adc38f9920c4348e5e776daca80591d239212947de89afffc6478f6a43"
+    },
+    "codec": {
+     "path": "render_bridge/protocol.py",
+     "sha256": "a9f37f5f15ef5b2afe2b061c144739bfd01e76cea67324f41445a26629c847d1"
+    },
+    "envelope": "32 bytes little-endian <8sHHIQII>: magic b'ARMADAS\\0', version 1, kind 1=WORLD/2=UI, u64 tick, u32 frame index, u32 payload length, CRC32 over payload bytes only; canonical UTF-8 JSON payload; 64 MiB inclusive cap"
+   },
+   "verified_at_approval": [
+    "3/3 tests in tests/test_render_protocol.py pass at approved head f5844a83",
+    "spec byte table matches struct.Struct('<8sHHIQII') exactly: offsets 0 magic, 8 version, 10 kind, 12 tick, 20 frame index, 24 length, 28 crc",
+    "PR #145 delta is 11 files and none is under game/, render/, assets/ or main.py",
+    "checks at approved head: LAN surface on real Windows pass (7m10s); candidate Windows package skipped by hand",
+    "merged with --match-head-commit f5844a83; merged blobs are identical to the branch blobs (docs/RENDER_PROTOCOL.md aaaad744, render_bridge/protocol.py 637b222f)",
+    "payload already carries a real state_sha256 from game.benchmark.state_hash, so an offline capture is bound to a simulation state without a new envelope field"
+   ],
+   "not_approved_by_this_decision": [
+    "merge of PR #146 or of the migration plan into main",
+    "W02 live bridge: shared memory or packed SoA transport, frame-rate snapshot emission, latency budget, camera/picking authority",
+    "any FPS or speedup claim from the offline mesh-only loop",
+    "viewer shading/materials quality or a graphics upgrade",
+    "native Windows/D3D12 parity, frozen-package build or release",
+    "tag or release"
+   ],
+   "note": "The docs/cpp-renderer-w00-spec branch is deliberately still present because PR #146 is based on it; branch deletion follows #146. The progress-ledger rows in docs/CPP_RENDERER_MIGRATION.md are owned by #146's branch and were not rewritten here.",
+   "correction": {
+    "date": "2026-10-21",
+    "field": "binds_to.protocol_doc.sha256",
+    "previous_sha256": "8711b9adc38f9920c4348e5e776daca80591d239212947de89afffc6478f6a43",
+    "current_sha256": "a62961b84f1223881095bc574fbedb22c2dd168c2310c3bd6190109e1289bf66",
+    "reason": "PR #146's model-selection correction fixed the asset-resolution prose: repository-relative snapshot paths with --assets ., selection configured from the real DEFAULT_SETTINGS including all 13 shipped visual packs, and fail-closed rejection of a failed default pack. The document moved so the offline snapshots describe the paths the shipped exporter actually writes.",
+    "unchanged_claims": [
+     "Section 1 (the 32-byte envelope) is byte-identical to the approved revision; verified by extracting '## 1.' through '## 2.' from both revisions and comparing, not by assertion.",
+     "MAGIC b'ARMADAS\\0', version 1, kind, u64 tick, u32 frame index, u32 length, CRC32 over payload, 64 MiB cap and canonical JSON are unchanged; render_bridge/protocol.py bytes are unchanged (sha256 a9f37f5f...).",
+     "Only documentation prose moved; no fixture, control or codec byte changed, so the approved format is the format that is still tested."
+    ],
+    "check": {
+     "envelope_section_identical": true,
+     "codec_sha256_unchanged": true,
+     "fixtures_changed": false
+    }
+   }
+  },
+  {
+   "id": "render-w02-live-bridge-2026-10-21",
+   "date": "2026-10-21",
+   "owner": "owner (Lukasz Jawor)",
+   "owner_wording": "start W02",
+   "question_answered": "Whether to start work package W02 (the live Python-to-C++ frame bridge) once W00 and W01 had landed on main.",
+   "decision": "W02 implementation authorized on a feature branch, measured before it is claimed. Nothing about merging, activating or releasing is approved by this wording.",
+   "applies_to": "W02 live frame bridge only: render_bridge/packed.py, render_bridge/ring.py, render_bridge/collect.py, tools/render/measure_bridge.py, its tests and its documents",
+   "binds_to": {
+    "base_commit": "c267fdcbee32fa95115acdab46a6df9489b5dcb0",
+    "branch": "render/cpp-w02-bridge",
+    "artifact": "docs/RENDER_BRIDGE_W02.md",
+    "receipt": "artifacts/cpp-renderer/w02/producer-receipt.json"
+   },
+   "not_approved_by_this_decision": [
+    "merge, tag or release",
+    "any change to the production launch path or the default renderer",
+    "input return path, HUD/menu rendering or gameplay integration",
+    "a speed or frame-rate claim, including any claim from the mesh-only loop",
+    "Windows-native acceptance",
+    "any change to the W00 offline profile or the approved model bytes"
+   ],
+   "engineering_choices": [
+    "The live profile is packed structure-of-arrays, not the offline canonical JSON: measured 7.95 ms vs 0.58 ms per frame against a 1.0 ms budget.",
+    "The live frame carries its own v2 header rather than the approved W00 32-byte envelope, because a streamed frame must state its record counts and the identity of the tables it indexes; the offline bytes are untouched.",
+    "The producer takes the renderer's visibility set instead of calling state.can_see per entity: 45.3 ms vs 0.71 ms per frame.",
+    "Transport is a single-producer memory-mapped ring with seqlock slot tags and drop-oldest; the writer never blocks the simulation."
+   ],
+   "measured": {
+    "receipt": "artifacts/cpp-renderer/w02/producer-receipt.json",
+    "gate_ms": 1.0,
+    "detection_set_supplied_worst_case_ms": 0.7116,
+    "all_visible_worst_case_ms": 0.7741,
+    "visibility_recomputed_ms": 45.3389,
+    "state_sha256_unchanged": true
+   },
+   "not_proven": [
+    "C++ consumer decode + interpolation of these frames",
+    "end-to-end latency <= 2 frames",
+    "dropped-frame counts and fps at 200/400/600 ships on an equal-workload scene (fog, HUD, planets)",
+    "Windows-native build or Filip's laptop"
+   ]
+  },
+  {
+   "id": "render-w02-merge-and-w03-kickoff-2026-10-21",
+   "date": "2026-10-21",
+   "owner": "owner (Lukasz Jawor)",
+   "owner_wording": "Agree. 1 -3 need work and commit to PR. After this is OK we merge and kick of W03 on seperate PR",
+   "question_answered": "Whether to merge W02 (#147) and how to start W03 once the three review follow-ups were committed to the PR.",
+   "decision": "The three follow-ups are committed to PR #147 and merged with it. W03 starts on its own branch and its own PR, from the merged main. Nothing about tags, releases, the default renderer or Windows acceptance is approved by this wording.",
+   "applies_to": "the merge of PR #147 into main, and the start of W03 (draw-list executor: HUD, menus, text atlas) on render/cpp-w03-drawlist",
+   "binds_to": {
+    "merged_head": "dfacccd6f5f489c77c2938631589ef1e7339a915",
+    "merge_commit": "463d431664428a104543f3a697dfe8d077077596",
+    "pr": "https://github.com/ljawor/STAR-ARMADA/pull/147",
+    "branch": "render/cpp-w03-drawlist",
+    "artifact": "docs/CPP_RENDERER_MIGRATION.md",
+    "receipt": "artifacts/cpp-renderer/w02/live/live-receipt.json"
+   },
+   "not_approved_by_this_decision": [
+    "a tag, a release, or any change to the default renderer",
+    "switching the production launch path to the C++ window",
+    "a frame-rate claim: no equal-workload benchmark exists (fog, HUD, planets, 200/400/600 ships)",
+    "W03 being complete, correct or shippable - the wording starts it, it does not accept it",
+    "Windows-native acceptance"
+   ],
+   "engineering_choices": [
+    "Merged with --match-head-commit dfacccd so the merged tree is the one that was measured.",
+    "Verified after the merge from git archive origin/main: 25 render tests OK, 0 tracked symlinks.",
+    "W03 is scoped to the draw-list executor (HUD, menus, text atlas) with pixel comparison against the legacy path; it does not touch the W02 bridge or the W00 offline profile."
+   ],
+   "measured": {
+    "pr_head": "dfacccd",
+    "merge_commit": "463d431",
+    "committed_tree_tests": "25 tests OK (test_render_packed, test_render_ring, test_render_protocol, test_render_snapshot)",
+    "merged_tree_tests": "25 tests OK from git archive origin/main"
+   },
+   "not_proven": [
+    "no fps or frame-rate number",
+    "no fog/HUD/planet rendering in the C++ window",
+    "no Windows/D3D12 run",
+    "no CI check: the owner disabled the workflow, so this tree's evidence is local"
+   ]
+  },
+  {
+   "id": "render-w03-design-a-overlay-transport-2026-10-21",
+   "date": "2026-10-21",
+   "owner": "owner (Lukasz Jawor)",
+   "owner_wording": "OK. Your right. Let's go for A. If we later discover that we have big costs on the hud we can still run a migration project for this part seperatly.",
+   "question_answered": "Which W03 design to implement: A (carry the composed UI surface over the bridge, dirty-rected) or B (draw-list primitives with a C++ glyph atlas).",
+   "decision": "Design A. W03 transports the UI surface the Python layer already composes; text stays SDL_ttf, so the language packs are untouched. A separate project can move text to C++ later if the HUD ever shows up in a frame budget.",
+   "applies_to": "W03 only: the overlay upload path in the legacy renderer and the overlay payload in the bridge",
+   "binds_to": {
+    "base_commit": "e50457c6a5c1c6e99e4ecb3a36f64f8f8f7f558d",
+    "branch": "render/cpp-w03-drawlist",
+    "pr": "https://github.com/ljawor/STAR-ARMADA/pull/148",
+    "artifact": "docs/RENDER_DRAW_LIST_W03.md",
+    "receipt": "artifacts/cpp-renderer/w03/hud-upload-receipt.json"
+   },
+   "not_approved_by_this_decision": [
+    "a tag, a release, or a change to the default renderer",
+    "moving text rasterization into C++ now (that is the separate project the wording allows later)",
+    "a frame-rate claim of any kind",
+    "W03 being complete - this authorizes the design and the first slice",
+    "Windows-native acceptance"
+   ],
+   "engineering_choices": [
+    "Dirty rects come from a recorded op list, not from diffing pixels: a paint call whose arguments are unchanged provably produced the same pixels, and reading 4 MB back to discover that would cost more than the upload.",
+    "Unkeyed blits (minimap, fog thumbnail, floating text) are dirty every frame. Conservative by design: bandwidth, never a stale pixel.",
+    "A changed op dirties the union of its current and previous rect, and an op that disappears dirties the rect it painted, because a shorter bar uncovers pixels drawn earlier.",
+    "glTexSubImage2D yoffset is rect.y, not height - rect.bottom: glTexImage2D puts the surface's first row at t=0, so yoffset counts from that same origin. The first implementation got this backwards and the GPU readback check caught it."
+   ],
+   "measured": {
+    "hud_frame_full_upload_ms": 2.1932,
+    "hud_frame_dirty_upload_ms": 1.4071,
+    "saved_ms": 0.7861,
+    "saved_ratio": 0.3584,
+    "pixels_per_frame_full": 1024000,
+    "pixels_per_frame_dirty_median": 55016,
+    "gpu_readback": "partial and forced-full composites byte-identical in steady state, fps-change and hull-damage scenarios; repeatability control identical"
+   },
+   "not_proven": [
+    "no capture of a live match at 60 Hz with the dirty path (the bench renders the HUD from a real skirmish state but does not run the loop)",
+    "menus were not converted: they paint through clean_classic and are not per-frame",
+    "no Windows/D3D12 run; CI is disabled by the owner"
+   ]
+  },
+  {
+   "id": "render-w03-landed-and-w04-start-2026-10-21",
+   "date": "2026-10-21",
+   "owner": "owner (Lukasz Jawor)",
+   "decision": "complete W03 with design A and continue into W04",
+   "applies_to": "W03 (HUD transport) and the start of W04 (input return path)",
+   "owner_wording": "OK conitnue with full W03 and W04.",
+   "recorded_at_head": "ce654388577e8b1c1ffe7cbef6da657bbdc64782",
+   "how_recorded": "The owner's reply above authorises finishing W03 as designed (design A: the composed surface crosses the bridge, text stays SDL_ttf) and starting W04. Recorded verbatim, spelling included. It authorises no tag, no release, no default-renderer change and no frame-rate claim; W04 keeps every command validator in Python and adds no new authority to the C++ side.",
+   "w03_result": {
+    "merge_commit": "ce654388577e8b1c1ffe7cbef6da657bbdc64782",
+    "pr": 148,
+    "branch": "render/cpp-w03-drawlist",
+    "slice_1": "aac2aeb",
+    "slice_2": "b445ebd",
+    "presented_pixel_parity": {
+     "identical_rows": 800,
+     "rows": 800,
+     "differing_pixels": 0,
+     "pixels_compared": 1024000,
+     "capture_offset_frames": -1,
+     "method": "viewer --hud-only backbuffer capture vs Python replay of the same ring",
+     "artifact": "artifacts/cpp-renderer/w03/hud-parity.json"
+    },
+    "verification": [
+     "53 render/bridge Python tests in the working tree",
+     "50 test_render_* plus 9 test_overlay_upload in a pristine git archive",
+     "4/4 C++ ctest: scene, camera, overlay, frame_v2"
+    ]
+   },
+   "w04_scope": {
+    "branch": "render/cpp-w04-input",
+    "authority": "Python command validators stay authoritative; the input ring carries events only",
+    "not_authorised": [
+     "tag",
+     "release",
+     "default renderer switch",
+     "frame-rate claim"
+    ]
+   }
+  }
+ ]
 }
