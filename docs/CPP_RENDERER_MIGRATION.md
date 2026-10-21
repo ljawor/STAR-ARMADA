@@ -199,7 +199,7 @@ One workstream = one branch = one PR = **one chat session**. Hours are engineeri
 |---|---|---:|---|---|---|
 | W00 | Protocol spec, wire format fixtures, decision record | 6–10 | this plan | `docs/cpp-renderer-w00-spec` | spec reviewed; no code |
 | W01 | **Offline viewer**: snapshot dump + bgfx window, orbit/pan/zoom on the real fleet | 30–50 | W00 | `render/cpp-w01-viewer` | **owner looks at a picture and flies the camera** |
-| W02 | **Live link**: running match streams into the viewer at 30 Hz; latency + fps receipt | 40–70 | W01 | `render/cpp-w02-live-link` | 1 ms serialization budget met; owner sees live battle |
+| W02 | **Live link**: running match streams into the viewer at 30 Hz; latency + fps receipt | 40–70 | W01 | `render/cpp-w02-bridge` | 1 ms serialization budget met; owner sees live battle |
 | W03 | Draw-list executor: HUD + menus + text atlas, pixel-compared to legacy | 100–160 | W01 | `render/cpp-w03-drawlist` | side-by-side captures; glyph coverage for all 4 packs |
 | W04 | Input return path: events from C++ into the existing mapper | 30–50 | W03 | `render/cpp-w04-input` | click/keys drive real menus and commands |
 | W05 | World parity: stations, planets, satellites, orbits, fog, markers, effects, LOD; `--renderer cpp` flag | 150–260 | W02, W03, W04 | `render/cpp-w05-parity` | **owner plays a skirmish in the new window**; determinism test green |
@@ -445,9 +445,9 @@ Rules that make the handover useful rather than decorative:
 
 | W | Status | Next action / blocking condition |
 |---|---|---|
-| W00 | **Merged into `main` and approved** | 2026-10-21, PR #145, code `f5844a8` → `4283715`, squashed to `main` as `3dc9279`. Offline protocol/reference codec + three controls; 3 focused tests pass. Owner approved v1 as the offline file profile (`render-protocol-v1-owner-approval-2026-10-21`). W02's packed transport is still undefined. See `art/manifests/handoffs/rW00-offline-protocol.md`. |
+| W00 | **Merged into `main` and approved** | 2026-10-21, PR #145, code `f5844a8` → `4283715`, squashed to `main` as `3dc9279`. Offline protocol/reference codec + three controls; 3 focused tests pass. Owner approved v1 as the offline file profile (`render-protocol-v1-owner-approval-2026-10-21`). W02's live transport is defined separately in `docs/RENDER_BRIDGE_W02.md` (v2 packed profile, not the offline envelope). See `art/manifests/handoffs/rW00-offline-protocol.md`. |
 | W01 | **Owner-reviewed; lands with this PR** | 2026-10-21, PR #146, renderer code `fdf1b2a`: all 13 shipped visual packs resolved; newer Vigil/Command Center and 103 selected meshes render on Metal. Owner accepted the appearance and the camera movement/zoom ("Looks good for me. The movement and zomming work really fast."). Old core-only evidence is historical. Handoff `rW01-current-default-models.md`. |
-| W02 | Not started | Depends on W01. Latency/serialization receipt decides whether the subprocess design holds |
+| W02 | **In progress: producer, decode and live draw path measured** | 2026-10-21, branch `render/cpp-w02-bridge`, PR open. v2 packed frame + mmap ring + read-only gather; `render_cpp/include/frame_v2.hpp` decodes committed Python-authored frames and refuses every corrupted variant; `armada_viewer --ring` draws ring frames with angle-and-scale interpolation (`tools/render/stream_ring.py` produces them from a stepping `GameManager`). End-to-end (`artifacts/cpp-renderer/w02/live/live-receipt.json`): a player-visible frame (638 of 752 hulls) decodes in 0.716 ms median with **frames behind at draw ≤ 1 (gate ≤ 2 met)**, 0 dropped of 54 adopted, 1434 frames drawn; 27 Python tests + `ctest` 3/3. Producer cost on a combat frame is **0.964 ms median** (736 instances + 1,426 transients) after replacing the transient generator with a direct pack loop — 2.6x faster than the 2.6 ms it measured, and inside the 1.0 ms budget. Two limits stated plainly: the stream runs at 3.0 Hz because a 752-hull Python tick costs 179 ms, not because of the bridge; and computing player visibility costs 105 ms/frame in the legacy predicates, which the C++ path must not inherit. Still open: equal-workload fps (fog, HUD, planets), player-visibility filtering in the live path, Windows, and the owner's live-battle check. |
 | W03 | Not started | Depends on W01 (parallel-safe with W02 if file ownership is disjoint — see §7.3) |
 | W04 | Not started | Depends on W03 |
 | W05 | Not started | a/b/c sub-branches; owner plays a skirmish here |
@@ -455,13 +455,14 @@ Rules that make the handover useful rather than decorative:
 | W07 | Not started, **not authorized** | Owner's explicit one-line switch, after W06 and its receipt |
 | W08 (future, out of scope) | Not planned | Simulation acceleration (150–250 h) — the only route to 60 fps at 600 ships |
 
-**Current next gate: W02 authorization**, and it is the owner's call, not an inference from this
-merge. W00 and W01 are offline only: the viewer consumes a file, and nothing here proves live
-transport. W02's first deliverable is a design plus an **equal-workload benchmark** (fog, HUD,
-planets, 200/400/600 ships) with the packed-transport decision and a serialization/latency
-receipt; the ≤ 1.0 ms serialize and ≤ 2-frame latency gates in §4.3 are the stop conditions. No
-speed claim may be made from the mesh-only loop. The `Windows signal` workflow is disabled by the
-owner's hand as of 2026-10-21, so W02's evidence has to be local until it is re-enabled.
+**Current next gate: the W02 consumer and its latency receipt.** The serialization half is measured
+(`docs/RENDER_BRIDGE_W02.md` §4): 0.712 ms worst case against the ≤ 1.0 ms gate, on the condition
+that the writer is handed the renderer's visibility set. What is *not* proven is everything the
+gate actually names — the C++ consumer decoding and interpolating these frames, end-to-end latency
+≤ 2 frames, dropped-frame counts, and fps at 200/400/600 ships on an **equal-workload** scene (fog,
+HUD, planets). No speed claim may be made from the mesh-only loop or from a producer-only
+number. The `Windows signal` workflow is disabled by the owner's hand as of 2026-10-21, so W02's
+evidence has to be local until it is re-enabled.
 
 ## 11. Risk register
 

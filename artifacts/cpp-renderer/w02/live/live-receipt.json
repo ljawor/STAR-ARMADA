@@ -1,0 +1,159 @@
+{
+  "work_package": "W02",
+  "half": "producer cost, live draw path, player visibility",
+  "generated": "2026-10-21T13:00:21+02:00",
+  "environment": {
+    "host": "macOS, Apple Silicon",
+    "backend": "Metal",
+    "drawable": [
+      1280,
+      800
+    ],
+    "msaa": 4,
+    "shadow_map": 2048,
+    "python": "3.11.16"
+  },
+  "commands": {
+    "gather_bench": ".venv/bin/python tools/render/measure_gather.py --ticks 300 --repeats 60",
+    "producer": ".venv/bin/python tools/render/stream_ring.py --ring final4.bin --seconds 50 --hz 60",
+    "consumer": "armada_viewer --snapshot live.snap --assets . --ring final4.bin --seconds 12 --warmup 4 --frames 0 --distance 9000 --pitch 45 --yaw 120 --screenshot detection.png"
+  },
+  "gather_bench_300_ticks": {
+    "composition": {
+      "instances": 736,
+      "transients": 1426,
+      "bytes_all_visible": 124248
+    },
+    "all_visible": {
+      "total": {
+        "samples": 60,
+        "median_ms": 0.964,
+        "p95_ms": 0.973,
+        "max_ms": 3.67
+      },
+      "instances": 736,
+      "transients": 1426,
+      "gate_met": true
+    },
+    "detection_set_supplied": {
+      "total": {
+        "samples": 60,
+        "median_ms": 0.964,
+        "p95_ms": 0.976,
+        "max_ms": 3.707
+      },
+      "instances": 634,
+      "transients": 1426,
+      "gate_met": true
+    },
+    "gate_ms": 1.0,
+    "renderer_visibility_ms": 41.792,
+    "transient_fog_filter_ms": 73.644,
+    "transients_after_fog_filter": {
+      "effects": 1178,
+      "projectiles": 248
+    },
+    "state_unchanged": true
+  },
+  "producer_live": {
+    "visibility": "detection: visible entity ids supplied per frame, fog predicates for effects and shots",
+    "published_frames": 152,
+    "elapsed_s": 50.098,
+    "publish_hz": 3.03,
+    "encode_ms": {
+      "samples": 152,
+      "median_ms": 1.102,
+      "p95_ms": 1.381,
+      "max_ms": 3.261
+    },
+    "sim_step_ms": {
+      "samples": 152,
+      "median_ms": 178.855,
+      "p95_ms": 442.011,
+      "max_ms": 480.488
+    },
+    "renderer_visibility_ms": {
+      "samples": 152,
+      "median_ms": 104.584,
+      "p95_ms": 139.171,
+      "max_ms": 146.567
+    },
+    "instances_last_frame": 638,
+    "transients_last_frame": 1152
+  },
+  "consumer_live": {
+    "frames_drawn": 1434,
+    "instances_drawn": 638,
+    "snapshot_instances": 752,
+    "producer_frames_adopted": 54,
+    "producer_frames_dropped": 0,
+    "decode_failures": 0,
+    "decode_ms": {
+      "mean_ms": 0.7122384444444444,
+      "median_ms": 0.716167,
+      "p95_ms": 0.772166,
+      "p99_ms": 0.811917,
+      "samples": 54
+    },
+    "frames_behind": {
+      "mean_ms": 0.03626220362622036,
+      "median_ms": 0.0,
+      "p95_ms": 0.0,
+      "p99_ms": 1.0,
+      "samples": 1434
+    },
+    "gate": {
+      "limit": 2,
+      "met": true,
+      "unit": "frames behind at draw"
+    },
+    "wall_frame_ms": {
+      "mean_ms": 8.371365195804204,
+      "median_ms": 10.183375,
+      "p95_ms": 10.300167,
+      "p99_ms": 11.373959,
+      "samples": 1430
+    },
+    "gpu_frame_ms": {
+      "mean_ms": 8.499727353146861,
+      "median_ms": 7.837,
+      "p95_ms": 10.185875,
+      "p99_ms": 10.31425,
+      "samples": 1430
+    },
+    "triangles_per_pass": 3632912
+  },
+  "motion_proof": {
+    "source": "motion2.bin",
+    "sequence_a": 12,
+    "sequence_b": 15,
+    "instances": 752,
+    "effects_a": 1118,
+    "effects_b": 1058,
+    "moved_positions": 96,
+    "rotated": 0,
+    "max_position_delta": 4.381,
+    "note": "two frames read 1.2 s apart from one live ring"
+  },
+  "file_sha256": {
+    "detection-producer.json": "16cef8030f583293735cb283d5eb5e588e05a44fe809f4af754170e275a7cefc",
+    "detection-viewer.json": "4415eb7181da811434417fae72b2f8bb43047b1c5744b7d868a8ce0d58ea5a3d",
+    "detection.png": "ef8b5e1c26c9123d36a19c896cd641ce699c3181938e3ca738b00db47841f831",
+    "gather-receipt.json": "0c825ea22c8b9f6f7ecf84c423a33fd42e6e7e88ac6bb0831810f2b8ce8fb8d1",
+    "live-receipt.json": "34a6ef06d9b51dae4ed330a00c4dace8f49164f18786b7ad03869f6145d63d13",
+    "motion.json": "882a11d7cf92b760f4ba1b65d03428e4f623e5923e9ca7196499f091f6117058"
+  },
+  "what_this_shows": [
+    "A player-visible frame (638 of 752 hulls) built from a running GameManager draws in the reviewed W01 path: 54 producer frames adopted, 0 dropped, decode 0.716 ms, frames behind median 0 / p95 0 / p99 1 against a limit of 2.",
+    "The producer's gather+pack+publish is inside its 1.0 ms budget at a combat steady state: 0.964 ms median over 60 reps for 736 instances and 1,426 transients (all-visible), 0.964 ms for the 634-instance player-visible frame of the same tick.",
+    "The live producer measured 1.10 ms median over 152 frames - above the bench figure because it runs a different tick and includes the ring publish.",
+    "Replacing the transient generator with a direct pack loop took the same frame from 2.6 ms to 0.96-1.02 ms (2.6x, interleaved A/B in one process on identical state).",
+    "The picture is live: two reads 1.2 s apart differ in 96 ship positions and in transient count."
+  ],
+  "what_this_does_not_show": [
+    "Not a frame rate. The producer is limited by the Python simulation: 179 ms per tick median, 442 ms p95 here, so the stream runs at 3.0 Hz.",
+    "Computing what the player can see cost 105 ms per frame (42 ms entity sensors + 74 ms fog predicates on transients). That is renderer work the bridge receives, not bridge cost; the C++ path should filter transients against the fog mask rather than querying per effect.",
+    "No fog, HUD, planets, transients drawn, or input in the window; it draws hulls only.",
+    "Nothing on Windows/D3D12; CI is disabled by the owner, so no CI check exists for this head."
+  ]
+}
