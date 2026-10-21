@@ -272,6 +272,121 @@ class ShieldShellTests(unittest.TestCase):
         self.assertEqual(decoded[0]['colour'], shells[0]['colour'])
 
 
+class FakePlanet:
+    """A world plus the surface generator its colony raised."""
+
+    def __init__(self, pid=11, radius=900.0, colonized_by="imperial"):
+        self.id = pid
+        self.alive = True
+        self.is_planet = True
+        self.radius = radius
+        self.colonized_by = colonized_by
+        self.pos = types.SimpleNamespace(x=0.0, y=0.0, z=-24000.0)
+        self.is_ship = False
+        self.is_squadron = False
+        self.operational = True
+        self.data_id = "planet"
+
+
+class FakeGenerator:
+    """`planet_shield_generator`: the pool that protects surface hardware, not an orbital shell."""
+
+    def __init__(self, gid=21, planet_id=11, owner="imperial", capacity=120.0, held=None,
+                 operational=True, alive=True):
+        self.id = gid
+        self.alive = alive
+        self.operational = operational
+        self.data_id = "planet_shield_generator"
+        self.planet_id = planet_id
+        self.owner = owner
+        self.is_planet = False
+        self.is_ship = False
+        self.pos = types.SimpleNamespace(x=0.0, y=0.0, z=-24000.0)
+        self._capacity = capacity
+        self._held = capacity if held is None else held
+
+    def max_shield_total(self):
+        return self._capacity
+
+    def total_shield(self):
+        return self._held
+
+
+class FakeState:
+    def __init__(self, *entities):
+        self.entities = {e.id: e for e in entities}
+
+    def entity(self, eid):
+        return self.entities.get(eid)
+
+
+class PlanetDomeTests(unittest.TestCase):
+    """A colony dome is a decision, and so is the pulse it shows when it absorbs a hit."""
+
+    def test_a_colony_field_crosses_as_the_shell_a_ship_bubble_already_uses(self):
+        domes = emissive_batch.PlanetDomes()
+        records = domes.step(FakeState(FakePlanet(), FakeGenerator()), 1.0 / 60.0)
+        self.assertEqual(len(records), 1)
+        self.assertEqual(records[0]["kind"], codec.SHIELD)
+        # the dome radius is the one planet_building_geometry owns: just above the foundations
+        self.assertAlmostEqual(records[0]["radius"], 900.0 * 1.04 + 48.0)
+        self.assertAlmostEqual(records[0]["width"], 1.0)
+
+    def test_no_generator_means_no_dome(self):
+        self.assertEqual(emissive_batch.PlanetDomes().step(FakeState(FakePlanet()), 0.016), [])
+
+    def test_a_generator_the_colonizer_does_not_own_raises_nothing(self):
+        state = FakeState(FakePlanet(), FakeGenerator(owner="pirates"))
+        self.assertEqual(emissive_batch.PlanetDomes().step(state, 0.016), [])
+
+    def test_an_offline_generator_raises_nothing(self):
+        state = FakeState(FakePlanet(), FakeGenerator(operational=False))
+        self.assertEqual(emissive_batch.PlanetDomes().step(state, 0.016), [])
+
+    def test_an_exhausted_field_raises_nothing(self):
+        state = FakeState(FakePlanet(), FakeGenerator(held=0.0))
+        self.assertEqual(emissive_batch.PlanetDomes().step(state, 0.016), [])
+
+    def test_a_loss_publishes_the_repeated_shell_the_renderer_draws(self):
+        planet, generator = FakePlanet(), FakeGenerator()
+        state = FakeState(planet, generator)
+        domes = emissive_batch.PlanetDomes()
+        self.assertEqual(len(domes.step(state, 1.0 / 60.0)), 1)
+        # a hit: the renderer draws 1 + round(flash*2) additive passes, which is a brightness
+        # multiplier - so the pulse crosses as three identical records, not a tint
+        generator._held = 60.0
+        pulse = domes.step(state, 1.0 / 60.0)
+        self.assertEqual(len(pulse), 3)
+        self.assertEqual(pulse[0], pulse[1])
+        self.assertEqual(pulse[1], pulse[2])
+        # flash decays at 3/s: it starts at 1.0 on the frame of the loss and reaches the quarter
+        # mark (where `round(flash*2)` drops to zero) a quarter of a second later
+        for _ in range(15):
+            pulse = domes.step(state, 1.0 / 60.0)
+        self.assertEqual(len(pulse), 1)
+
+    def test_a_weaker_field_keeps_the_visibility_floor(self):
+        state = FakeState(FakePlanet(), FakeGenerator(capacity=400.0, held=40.0))
+        record = emissive_batch.PlanetDomes().step(state, 0.016)[0]
+        self.assertGreaterEqual(record["colour"][3], emissive_batch.SHIELD_FADE[0] * 255 - 1)
+        full = emissive_batch.PlanetDomes().step(FakeState(FakePlanet(), FakeGenerator()), 0.016)[0]
+        self.assertGreater(full["colour"][3], record["colour"][3])
+
+    def test_a_lost_colony_is_forgotten(self):
+        planet, generator = FakePlanet(), FakeGenerator()
+        domes = emissive_batch.PlanetDomes()
+        domes.step(FakeState(planet, generator), 0.016)
+        # the planet is captured: a new owner's generator appears and the old pool is gone
+        domes.step(FakeState(planet, FakeGenerator(owner="pirates")), 0.016)
+        self.assertEqual(domes._previous, {})
+
+    def test_domes_round_trip_through_the_bridge(self):
+        records = emissive_batch.PlanetDomes().step(FakeState(FakePlanet(), FakeGenerator()), 0.016)
+        decoded = codec.decode(codec.encode(records))
+        self.assertEqual(decoded[0]["kind"], codec.SHIELD)
+        self.assertAlmostEqual(decoded[0]["radius"], records[0]["radius"], places=3)
+
+
 class ContactTests(unittest.TestCase):
     """W05 slice 3c: damage contacts cross as parameters, never as geometry."""
 

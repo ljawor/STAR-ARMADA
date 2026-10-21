@@ -14,7 +14,7 @@ tell it apart from the old one.* That is a list of things that exist in Python a
 | HUD, text, menus | `render/hud.py`, `menus.py`, SDL_ttf | **drawn** as a composed surface (W03) | menus not exercised over the bridge |
 | Input | `render/input.py` | **returns** to the controller (W04) | menus not bridged |
 | Planets | `_draw_planets` (renderer.py:1024) — procedural equirect texture per planet type, 512², seeded by name, axial spin, culling, asteroid fields separately | **absent** — `grep -c planet viewer.cpp` = 0 | planets are also excluded from the frame (`dump_snapshot.py:124`, `omitted_features=['planets (W05)', …]`) |
-| Planet buildings, shields | `render/planet_building_geometry.py` (253 lines), `_planet_shield_dome` | absent | depends on planets |
+| Planet buildings, shields | `render/planet_building_geometry.py` (253 lines), `_planet_shield_dome` | domes landed (slice 3d); buildings absent | depends on planets |
 | Fog | `render/fog.py` (172 lines, 22 GL calls) | absent (`fog` appears twice, in comments) | visibility *decisions* already come from Python; the raster does not |
 | Markers | `render/markers.py` (162 lines) | absent (`marker` = 0) | |
 | Hit effects, beams, projectiles | `render/hit_effects.py` (222 lines), effect records in the frame | **drawn**: beams, glows, jump rings, blasts, shield and hull contacts | the renderer's per-spark `GL_LINES` pair has no bgfx equivalent |
@@ -73,7 +73,13 @@ so the transport is one upload per distinct planet, not per frame.
    `hit_geometry` to 4.99e-10 on all 600 fixture vertices. The slice also found and fixed two bugs
    in the shared draw path: a chunk loop that asked for one vertex at a time (one draw call per
    vertex, which burned bgfx's 65535 ceiling and silently discarded later passes) and instance
-   memory claimed after a large triangle batch. **Planet buildings are still open.**
+   memory claimed after a large triangle batch.
+5c. **Colony shield domes (slice 3d) — landed, see `docs/RENDER_W05_DOMES.md`.** A world's field is
+   the same `kind 6` shell a hull bubble uses, so it needed no new record, ring or shader: the
+   producer decides whether a generator protects the planet, how big the field is and how brightly
+   it pulses after a loss, and publishes the pulse as repeated records because the renderer draws
+   it as repeated additive passes. Rim radius agrees exactly (291 px both sides), limb colour within
+   1.3 %, shell area within 0.7 %. **Planet buildings are still open.**
 6. **`--renderer cpp` flag, then the equal-workload benchmark** (200/400/600 ships, HUD, planets, fog)
    before any frame-rate statement is made.
 

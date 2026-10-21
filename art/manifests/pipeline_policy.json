@@ -1394,6 +1394,39 @@
       "enabling the disabled Windows signal workflow",
       "fixing the projection without its own task and re-baseline"
     ]
+  },
+  {
+    "id": "render-w05-slice3d-domes-2026-10-21",
+    "owner_wording": "go please",
+    "base_commit": "8a4dbc5",
+    "artifact": "docs/RENDER_W05_DOMES.md",
+    "scope": "W05 slice 3d: the colony shield dome a colonized world's operational surface generator raises",
+    "decision": "A dome crosses as the same kind-6 (SHIELD) record slice 5 introduced for hull bubbles - centre, radius, pooled strength fraction and the strength ramp's tint - so the slice needs no new ring, no record growth, no shader and no viewer change. Whether a generator protects the planet, the field radius, the pulse after a loss and the empty-field floor are decided in Python; only the shell's detail level and the SHIELD_MIN_PX floor stay native, as in slice 5.",
+    "design": {
+      "python_decides": "which worlds carry a field (planet_building_geometry.planet_shield_fields: an operational planet_shield_generator owned by the planet's colonizer), the radius (planet.radius * 1.04 + 48.0), the strength fraction and its eight-bucket tint, and the post-loss pulse",
+      "pulse": "_planet_shield_dome draws the same additive shell 1 + round(flash*2) times, which for (SRC_ALPHA, ONE) composes by addition - so the producer publishes two or three identical records instead of inventing a tinted pulse the renderer never shows",
+      "native_presentation": "the detail level (20x5, 30x8, 40x10 quads) and the SHIELD_MIN_PX readability floor, both from the window's own camera; a planet dome projects hundreds of pixels across, so it lands on the high-detail mesh and never reaches the floor"
+    },
+    "evidence": {
+      "framing": "equal camera distance matches for a dome, unlike planets: the fixture ring and the Python reference both sit 2600 back at pitch 22 / yaw 10, and the rim radius comes out identical",
+      "parity": "tools/render/compare_dome_frames.py over the same scene: rim radius 291 px on both sides, shell area 107,628 vs 108,420 px (1.0074), limb colour 0.0357/0.0555/0.0919 vs 0.0361/0.0558/0.0924 (1.0054), interior and peak colour identical; each side measured against its own background",
+      "pulse": "a field at half strength, which the renderer re-adds three times: rim radius 291 px both sides, area 161,772 vs 162,240 px, limb band ~17 % brighter on the window and peak 5 % lower - the same additive-pass quantisation already recorded for the spent ship bubble, not corrected here",
+      "report_caveat": "shields.shells and emissive.primitives are cumulative over every drawn frame including the warmup (one dome over 10 frames plus the 30-frame warmup reports 40), so they are not per-frame counts",
+      "tests": "170 Python render tests and ctest 11/11, including tests/test_render_emissive.py::PlanetDomeTests (owner-gated field, offline and empty generators, radius from the field pass, the repeated-record pulse and its decay, the visibility floor, a lost colony being forgotten, round-trip)"
+    },
+    "not_verified": [
+      "a dome inside a live skirmish: skirmish01 has no colonized world, so the fixture is synthetic (a real planet entity with a synthetic generator)",
+      "no Windows/D3D12 run"
+    ],
+    "does_not_authorize": [
+      "merging PR #150",
+      "a tag or release",
+      "changing the default renderer",
+      "any frame-rate claim",
+      "enabling the disabled Windows signal workflow",
+      "planet buildings, which are still drawn by Python only",
+      "fixing the projection without its own task and re-baseline"
+    ]
   }
   ]
 }

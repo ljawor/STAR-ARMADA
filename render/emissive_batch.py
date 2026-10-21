@@ -251,6 +251,68 @@ def shields(units, radius_of, tint_of=None) -> list:
     return out
 
 
+PLANET_FLASH_DECAY = 3.0         # renderer.py::_planet_shield_dome, flash -= dt*3
+
+
+class PlanetDomes:
+    """The field a colony's surface generator holds, and how recently it absorbed a hit.
+
+    A dome is the same shell as a ship bubble - additive, bucketed by strength, scaled to the planet -
+    so it crosses as the same `kind 6` record. Two things are this side's business and are decided
+    here rather than in the window:
+
+    * whether a planet has a field at all: only an operational generator owned by the planet's
+      colonizer raises one, and it protects surface hardware only, never an orbital shell;
+    * the pulse after a loss. Python shows it by drawing the same additive shell two or three times,
+      which for `(SRC_ALPHA, ONE)` is exactly a brightness multiplier - so the pulse is published as
+      repeated identical records instead of a tint the window would have to invent.
+    """
+
+    def __init__(self):
+        self._previous = {}
+        self._flash = {}
+
+    def step(self, state, dt):
+        """One record per pulse pass for every colony field standing right now.
+
+        `state.entities` is scanned once per frame by `planet_shield_fields`, which also owns the
+        dome radius (`planet.radius * 1.04 + 48.0`) - it is not re-derived here.
+        """
+        from render.planet_building_geometry import planet_shield_fields
+        fields = planet_shield_fields(state)
+        out = []
+        for planet_id, (generator, strength, radius) in sorted(fields.items()):
+            total = generator.total_shield()
+            previous = self._previous.get(planet_id)
+            if previous is not None and total < previous - 1e-6:
+                self._flash[planet_id] = 1.0
+            self._previous[planet_id] = total
+            flash = self._flash.get(planet_id, 0.0)
+            if flash > 0.0:
+                flash = max(0.0, flash - dt * PLANET_FLASH_DECAY)
+                self._flash[planet_id] = flash
+            fraction = max(0.0, min(1.0, strength))
+            if fraction <= SHIELD_MIN_FRACTION:
+                continue
+            bucket = max(1, min(SHIELD_BUCKETS, int(round(fraction * SHIELD_BUCKETS))))
+            ramp = bucket / float(SHIELD_BUCKETS)
+            rgb = _shield_colour(ramp)
+            alpha = SHIELD_FADE[0] + (SHIELD_FADE[1] - SHIELD_FADE[0]) * ramp
+            planet = state.entity(planet_id)
+            if planet is None:
+                continue
+            pos = (planet.pos.x, planet.pos.y, planet.pos.z)
+            record = codec.shield(pos, float(radius), fraction, (rgb[0], rgb[1], rgb[2], alpha))
+            # 1 + round(flash*2) passes in the renderer; additive passes compose by addition.
+            for _ in range(1 + int(round(flash * 2.0))):
+                out.append(dict(record))
+        live = set(fields)
+        for planet_id in [key for key in self._previous if key not in live]:
+            self._previous.pop(planet_id, None)
+            self._flash.pop(planet_id, None)
+        return out
+
+
 def _shield_colour(strength: float):
     from render.renderer import shield_color
     return shield_color(strength)

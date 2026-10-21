@@ -1,0 +1,133 @@
+{
+  "flash": {
+    "native": {
+      "background": [
+        0.0314,
+        0.0549,
+        0.1059
+      ],
+      "body_mean_rgb": [
+        0.0121,
+        0.0081,
+        0.0
+      ],
+      "centre": [
+        639.5,
+        400.0
+      ],
+      "limb_mean_rgb": [
+        0.2123,
+        0.1605,
+        0.0384
+      ],
+      "limb_pixels": 12846,
+      "peak_rgb": [
+        0.2588,
+        0.2,
+        0.0471
+      ],
+      "pixels": 162240,
+      "radius": 394.0,
+      "rim_energy": 0.25525,
+      "rim_radius": 292
+    }
+  },
+  "full": {
+    "native": {
+      "background": [
+        0.0314,
+        0.0549,
+        0.1059
+      ],
+      "body_mean_rgb": [
+        0.0032,
+        0.0039,
+        0.0078
+      ],
+      "centre": [
+        639.5,
+        400.0
+      ],
+      "limb_mean_rgb": [
+        0.0361,
+        0.0558,
+        0.0924
+      ],
+      "limb_pixels": 12854,
+      "peak_rgb": [
+        0.0549,
+        0.0824,
+        0.1333
+      ],
+      "pixels": 108420,
+      "radius": 394.0,
+      "rim_energy": 0.12821,
+      "rim_radius": 291
+    },
+    "python": {
+      "background": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "body_mean_rgb": [
+        0.0032,
+        0.0039,
+        0.0078
+      ],
+      "centre": [
+        639.5,
+        400.0
+      ],
+      "limb_mean_rgb": [
+        0.0357,
+        0.0555,
+        0.0919
+      ],
+      "limb_pixels": 12854,
+      "peak_rgb": [
+        0.0549,
+        0.0824,
+        0.1333
+      ],
+      "pixels": 107628,
+      "radius": 313.0,
+      "rim_energy": 0.12905,
+      "rim_radius": 291
+    },
+    "radius_ratio": 1.2588
+  },
+  "pulse": {
+    "python": {
+      "background": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "body_mean_rgb": [
+        0.0119,
+        0.008,
+        0.0
+      ],
+      "centre": [
+        639.5,
+        400.0
+      ],
+      "limb_mean_rgb": [
+        0.1813,
+        0.1382,
+        0.0321
+      ],
+      "limb_pixels": 12854,
+      "peak_rgb": [
+        0.2706,
+        0.2,
+        0.0471
+      ],
+      "pixels": 161772,
+      "radius": 313.0,
+      "rim_energy": 0.25721,
+      "rim_radius": 291
+    }
+  }
+}

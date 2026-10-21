@@ -264,6 +264,9 @@ def main(argv=None):
     buffer = bytearray(packed.frame_size(packed.MAX_INSTANCES, packed.MAX_EFFECTS))
     encode_ms, step_ms, visibility_ms, hud_ms = [], [], [], []
     published = 0
+    # Colony shield-dome memory: which fields existed last frame and which were just hit. The pulse
+    # is a presentation decision, so it is tracked here and published, never guessed in the window.
+    planet_domes = emissive_batch.PlanetDomes()
     period = 1.0 / args.hz if args.hz > 0 else 0.0
     started = time.monotonic()
     deadline = started + args.seconds if args.seconds > 0 else None
@@ -336,8 +339,15 @@ def main(argv=None):
                     # window rebuilds the cap and the sparks at its own camera, so a contact stays
                     # readable at any zoom.
                     hit_primitives, hits_skipped = emissive_batch.hits(effects)
-                    emit_primitives = emit_primitives + shield_primitives + hit_primitives
+                    # W05 slice 3d: colony shield domes. A dome is the same shell as a ship bubble,
+                    # so it crosses as the same kind-6 record; whether one exists and how brightly
+                    # it pulses after a loss are decided here, not in the window.
+                    dome_primitives = planet_domes.step(
+                        state, period if period else 1.0 / 60.0)
+                    emit_primitives = (emit_primitives + shield_primitives + hit_primitives
+                                       + dome_primitives)
                     emit_stats['shields'] = len(shield_primitives)
+                    emit_stats['domes'] = len(dome_primitives)
                     emit_stats['hits'] = len(hit_primitives)
                     emit_stats['hits_skipped'] = hits_skipped
                     emit_stats['primitives'] = len(emit_primitives)
@@ -448,6 +458,7 @@ def main(argv=None):
             'explosions_skipped': sum(c.get('explosions_skipped', 0) for c in emit_counts),
             'hits': sum(c.get('hits', 0) for c in emit_counts),
             'hits_skipped': sum(c.get('hits_skipped', 0) for c in emit_counts),
+            'domes': sum(c.get('domes', 0) for c in emit_counts),
             'squares': sum(c.get('squares', 0) for c in emit_counts),
             'note': 'beams and glows in world units, bolts in pixels so the window keeps them at '
                     'its own zoom; blasts travel as position/size/age/seed and are rebuilt by the '
