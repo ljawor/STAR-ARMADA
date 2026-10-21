@@ -289,6 +289,18 @@ class HUD:
     def render(self, selection: set, hover_id: int | None,
                local_player: int, paused: bool, flash_msg: str = "",
                flash_left: float = 0.0, fps: float = 0.0) -> None:
+        """Paint the overlay and upload what changed to the GPU (the legacy window's path)."""
+        self.compose(selection, hover_id, local_player, paused, flash_msg, flash_left, fps)
+        self._upload()
+
+    def compose(self, selection: set, hover_id: int | None,
+                local_player: int, paused: bool, flash_msg: str = "",
+                flash_left: float = 0.0, fps: float = 0.0) -> None:
+        """Paint the overlay into `self.overlay` and record it. No GL at all.
+
+        This is the seam the bridge uses: the recorder then knows which rects changed, and
+        `OverlayUploader` (or `render_bridge/overlay.py` for the C++ viewer) sends those.
+        """
         from game.systems.visibility import presentation_sensor_batch
         with presentation_sensor_batch(self.state):
             self._render_read_only(selection, hover_id, local_player, paused,
@@ -334,7 +346,6 @@ class HUD:
             self._label(self.width - 90, 40, f"{fps:0.0f} FPS", TXT_DIM,
                         self.font_small)
         self.recorder.finish()
-        self._upload()
 
     # ------------------------------------------------------------------ top bar
     def _top_bar(self, local_player: int, paused: bool) -> None:

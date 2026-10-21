@@ -137,6 +137,65 @@ Two defects were found this way, both of which would have shipped silent corrupt
    stops, there is no op to compare against, so nothing dirtied its rect and the old "59 FPS" stayed
    in the texture. Regression test: `test_a_vanishing_op_uploads_the_area_it_painted`.
 
+## 4b. Slice 2: the transport and the C++ pass (2026-10-21)
+
+Slice 2 carries the surface across the bridge and puts it on screen in the C++ window.
+
+**Wire format** (`render_bridge/overlay.py`, decoded by `render_cpp/include/overlay.hpp`):
+
+    header, 28 bytes: magic b'ARMOVL01', u16 version, u16 flags (bit 0 = whole surface),
+                      u16 width, u16 height, u16 rect count, u16 reserved,
+                      u32 payload bytes, u32 crc32(payload)
+    rects:  count x 8 bytes, u16 x/y/w/h in surface coordinates
+    payload: RGBA bytes of each rect in order, row major, no padding
+
+A full frame carries zero rects and `width * height * 4` bytes. A patch frame's payload must be
+exactly the sum of its rect areas, so a truncated or padded patch is refused instead of half-applied.
+The native decoder validates magic, version, flags, dimensions, rect count, rect bounds, payload
+length and CRC, and throws `OverlayError` naming the field it rejected.
+
+**Keyframes, because a window can attach at any time.** Dirty rects are state deltas: a window that
+starts after the producer's first frame has no base surface, so patches alone would never complete
+the HUD. The producer publishes a whole surface on its first frame and then at least every
+`--overlay-keyframe` seconds (default 2.0, 1.0 in the demo launcher), and the window refuses and
+counts patches that arrive before it has seen a keyframe (`skipped_patches_before_keyframe`). This
+bug was visible in the first live capture: only the minimap and one readout were drawn, everything
+else black.
+
+**The C++ pass.** One RGBA8 texture with point sampling (`--overlay-ring`), `updateTexture2D` per
+patch, and one fullscreen quad after the world pass with depth off and straight-alpha blending, which
+matches `hud.py::draw_gl`.
+
+**Parity, measured.** `tools/render/check_hud_parity.py` replays the same ring in Python and compares
+the presented picture with the replayed surface. The window is run with `--hud-only`, which draws
+that one quad unblended over opaque black so the backbuffer screenshot *is* the texture's own RGB:
+
+| check | result |
+|---|---|
+| identical rows | **800 / 800** |
+| differing pixels | **0** of 1,024,000 |
+| capture offset | **-1 frame** (`screenshot_sequence` records the sequence the capture belongs to, because the window keeps applying frames until it exits) |
+| decode failures | 0 |
+| patches applied in the run | 103 over 13 frames, 7 of them keyframes |
+
+Two things had to be fixed to get there, both invisible without comparing presented pixels:
+
+1. **`bgfx::requestScreenShot` silently does nothing for a render-target framebuffer on Metal**
+   (`renderer_mtl.cpp:1824` returns when the framebuffer has no swapchain). The first dump attempt
+   produced no file and the run failed with "HUD dump requested but never captured". Hence
+   `--hud-only` presenting into the backbuffer, which the capture path does support.
+2. **Sampling.** The HUD is presented one texel per pixel; linear filtering smeared neighbours into
+   glyph edges. The texture is created with `BGFX_SAMPLER_MIN_POINT | MAG_POINT`.
+
+**Launching it.** `render_cpp/live.command` starts the producer, waits for a complete frame, and opens
+the window; Esc quits and stops the producer. It uses a fresh ring directory per run, because a
+window that opens onto a half-created ring aborts with `cannot read ring payload` — the native reader
+treats a short read as fatal where a live window should treat it as "no frame yet". That is still
+open; the launcher avoids it rather than fixing it.
+
+Measured live session: 986 frames drawn, 638 instances, 13 HUD frames applied, 103 patches,
+0 decode failures, `hud.decode` 0.71 ms median.
+
 ## 5. What this document does not claim
 
 - No estimate: the 100–160 h figure in `docs/CPP_RENDERER_MIGRATION.md` was written for design B.
@@ -146,7 +205,9 @@ Two defects were found this way, both of which would have shipped silent corrupt
   measures `hud.render()` in this window only, with the world pass excluded; the C++ viewer has no
   HUD at all yet.
 - No live-loop check: the HUD is rendered from a real skirmish state 360 times, but not inside a
-  running match at 60 Hz with input, resizes and menus.
+  running match at 60 Hz with input, resizes and menus. Slice 2 runs the transport live but the
+  window takes no input, and the producer steps the simulation as fast as it can rather than at a
+  match's tick rate — the ~3 Hz stream is a transport property, not a game frame rate.
 - Menus are untouched. They paint through `render/clean_classic.py` and are not per-frame, so they
   are a separate slice.
 - No approval to change the migration plan's W03 definition. That definition names a text atlas;
