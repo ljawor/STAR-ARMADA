@@ -1080,6 +1080,38 @@
         "POSIX-only ring writer; nothing verified on Windows/D3D12",
         "CI disabled by owner instruction; local evidence only"
       ]
+    },
+    {
+      "id": "render-w04-merged-and-w05-start-2026-10-21",
+      "date": "2026-10-21",
+      "package": "W04 -> W05",
+      "scope": "W04 merged to main; W05 world parity started on its own branch",
+      "owner_wording": "we are done. Let s continue with next steps",
+      "approved_by": "owner",
+      "main_after_merge": "7d68b639463318b9b8af8275b3c6964a6e88d029",
+      "merge": {
+        "pr": 149,
+        "method": "squash",
+        "matched_head_commit": "917f6e0b62115f3a0bd026eb70cff8da4d5edf3d",
+        "result": "W04: input return path - the window records events, the simulation decides (#149)"
+      },
+      "verification": "pristine git archive of origin/main: 0 symlinks, 85 render/input/overlay/packed/ring tests pass",
+      "authorizes": [
+        "W05 world parity work on render/cpp-w05-parity",
+        "carrying planet textures and drawing planet bodies natively"
+      ],
+      "does_not_authorize": [
+        "a tag or release",
+        "changing the default renderer",
+        "any frame-rate claim",
+        "enabling the disabled Windows signal workflow"
+      ],
+      "known_limits_carried_into_w05": [
+        "input is sampled; a press and release can land in one slow tick",
+        "the stress fixture ticks at ~2.4 Hz",
+        "menus are not bridged",
+        "POSIX-only ring writer; nothing verified on Windows/D3D12"
+      ]
     }
   ]
 }
