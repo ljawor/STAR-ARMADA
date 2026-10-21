@@ -1,0 +1,219 @@
+{
+  "receipt": "w02-producer-v2-packed",
+  "fixture": "four-player-combat-v1",
+  "gate_ms": 1.0,
+  "labels": [
+    "Python producer only: gather + pack + publish. Not end-to-end latency, not a frame rate.",
+    "worst-case transients are synthetic at the simulation ceilings (1200 effects, 200 projectiles)",
+    "one process, no concurrent suite; see loadavg in the environment block"
+  ],
+  "frames": [
+    {
+      "visibility": "all-visible",
+      "frame": "shipped",
+      "instances": 752,
+      "transients": 0,
+      "omitted_planets": 8,
+      "unknown_bindings": [],
+      "frame_bytes": 51184,
+      "decode_roundtrip_instances": 752,
+      "decode_roundtrip_transients": 0,
+      "encode": {
+        "median_ms": 0.5524,
+        "p95_ms": 0.5604,
+        "max_ms": 0.5691,
+        "reps": 120
+      },
+      "publish": {
+        "median_ms": 0.001,
+        "p95_ms": 0.0011,
+        "max_ms": 0.0012,
+        "reps": 120
+      },
+      "combined": {
+        "median_ms": 0.5537,
+        "p95_ms": 0.5599,
+        "max_ms": 0.5672,
+        "reps": 120
+      },
+      "producer_total_ms": 0.5534,
+      "gate_ms": 1.0,
+      "gate_pass": true
+    },
+    {
+      "visibility": "all-visible",
+      "frame": "worst-case-synthetic",
+      "instances": 752,
+      "transients": 1400,
+      "omitted_planets": 8,
+      "unknown_bindings": [],
+      "frame_bytes": 123984,
+      "decode_roundtrip_instances": 752,
+      "decode_roundtrip_transients": 1400,
+      "encode": {
+        "median_ms": 0.772,
+        "p95_ms": 0.7809,
+        "max_ms": 0.7867,
+        "reps": 120
+      },
+      "publish": {
+        "median_ms": 0.0021,
+        "p95_ms": 0.0022,
+        "max_ms": 0.0027,
+        "reps": 120
+      },
+      "combined": {
+        "median_ms": 0.7743,
+        "p95_ms": 0.7801,
+        "max_ms": 0.8071,
+        "reps": 120
+      },
+      "producer_total_ms": 0.7741,
+      "gate_ms": 1.0,
+      "gate_pass": true
+    },
+    {
+      "visibility": "detection-set-supplied",
+      "frame": "shipped",
+      "instances": 638,
+      "transients": 0,
+      "omitted_planets": 8,
+      "unknown_bindings": [],
+      "frame_bytes": 43432,
+      "decode_roundtrip_instances": 638,
+      "decode_roundtrip_transients": 0,
+      "encode": {
+        "median_ms": 0.5004,
+        "p95_ms": 0.5068,
+        "max_ms": 0.513,
+        "reps": 120
+      },
+      "publish": {
+        "median_ms": 0.0009,
+        "p95_ms": 0.001,
+        "max_ms": 0.0011,
+        "reps": 120
+      },
+      "combined": {
+        "median_ms": 0.5014,
+        "p95_ms": 0.5132,
+        "max_ms": 0.5556,
+        "reps": 120
+      },
+      "producer_total_ms": 0.5013,
+      "gate_ms": 1.0,
+      "gate_pass": true
+    },
+    {
+      "visibility": "detection-set-supplied",
+      "frame": "worst-case-synthetic",
+      "instances": 638,
+      "transients": 1400,
+      "omitted_planets": 8,
+      "unknown_bindings": [],
+      "frame_bytes": 116232,
+      "decode_roundtrip_instances": 638,
+      "decode_roundtrip_transients": 1400,
+      "encode": {
+        "median_ms": 0.7097,
+        "p95_ms": 0.7185,
+        "max_ms": 0.7621,
+        "reps": 120
+      },
+      "publish": {
+        "median_ms": 0.0019,
+        "p95_ms": 0.002,
+        "max_ms": 0.0021,
+        "reps": 120
+      },
+      "combined": {
+        "median_ms": 0.7265,
+        "p95_ms": 0.737,
+        "max_ms": 0.7512,
+        "reps": 120
+      },
+      "producer_total_ms": 0.7116,
+      "gate_ms": 1.0,
+      "gate_pass": true
+    },
+    {
+      "visibility": "detection-recomputed",
+      "frame": "shipped",
+      "instances": 638,
+      "transients": 0,
+      "omitted_planets": 8,
+      "unknown_bindings": [],
+      "frame_bytes": 43432,
+      "decode_roundtrip_instances": 638,
+      "decode_roundtrip_transients": 0,
+      "encode": {
+        "median_ms": 45.338,
+        "p95_ms": 47.5818,
+        "max_ms": 61.2587,
+        "reps": 120
+      },
+      "publish": {
+        "median_ms": 0.0009,
+        "p95_ms": 0.001,
+        "max_ms": 0.0012,
+        "reps": 120
+      },
+      "combined": {
+        "median_ms": 46.4593,
+        "p95_ms": 61.6059,
+        "max_ms": 122.8828,
+        "reps": 120
+      },
+      "producer_total_ms": 45.3389,
+      "gate_ms": 1.0,
+      "gate_pass": false
+    },
+    {
+      "visibility": "detection-recomputed",
+      "frame": "worst-case-synthetic",
+      "instances": 638,
+      "transients": 1400,
+      "omitted_planets": 8,
+      "unknown_bindings": [],
+      "frame_bytes": 116232,
+      "decode_roundtrip_instances": 638,
+      "decode_roundtrip_transients": 1400,
+      "encode": {
+        "median_ms": 46.1154,
+        "p95_ms": 48.7588,
+        "max_ms": 69.3203,
+        "reps": 120
+      },
+      "publish": {
+        "median_ms": 0.0021,
+        "p95_ms": 0.0024,
+        "max_ms": 0.0027,
+        "reps": 120
+      },
+      "combined": {
+        "median_ms": 45.3158,
+        "p95_ms": 47.2454,
+        "max_ms": 78.6243,
+        "reps": 120
+      },
+      "producer_total_ms": 46.1175,
+      "gate_ms": 1.0,
+      "gate_pass": false
+    }
+  ],
+  "tables": {
+    "bindings": 18,
+    "kinds": 10,
+    "crc32": 1380653850,
+    "bytes": 515
+  },
+  "environment": {
+    "python": "3.11.16",
+    "platform": "darwin",
+    "loadavg": [
+      2.76513671875,
+      3.44287109375,
+      3.45654296875
+    ]
+  }
+}

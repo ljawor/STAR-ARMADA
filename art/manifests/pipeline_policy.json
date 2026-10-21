@@ -871,6 +871,49 @@
           "fixtures_changed": false
         }
       }
+    },
+    {
+      "id": "render-w02-live-bridge-2026-10-21",
+      "date": "2026-10-21",
+      "owner": "owner (Lukasz Jawor)",
+      "owner_wording": "start W02",
+      "question_answered": "Whether to start work package W02 (the live Python-to-C++ frame bridge) once W00 and W01 had landed on main.",
+      "decision": "W02 implementation authorized on a feature branch, measured before it is claimed. Nothing about merging, activating or releasing is approved by this wording.",
+      "applies_to": "W02 live frame bridge only: render_bridge/packed.py, render_bridge/ring.py, render_bridge/collect.py, tools/render/measure_bridge.py, its tests and its documents",
+      "binds_to": {
+        "base_commit": "c267fdcbee32fa95115acdab46a6df9489b5dcb0",
+        "branch": "render/cpp-w02-bridge",
+        "artifact": "docs/RENDER_BRIDGE_W02.md",
+        "receipt": "artifacts/cpp-renderer/w02/producer-receipt.json"
+      },
+      "not_approved_by_this_decision": [
+        "merge, tag or release",
+        "any change to the production launch path or the default renderer",
+        "input return path, HUD/menu rendering or gameplay integration",
+        "a speed or frame-rate claim, including any claim from the mesh-only loop",
+        "Windows-native acceptance",
+        "any change to the W00 offline profile or the approved model bytes"
+      ],
+      "engineering_choices": [
+        "The live profile is packed structure-of-arrays, not the offline canonical JSON: measured 7.95 ms vs 0.58 ms per frame against a 1.0 ms budget.",
+        "The live frame carries its own v2 header rather than the approved W00 32-byte envelope, because a streamed frame must state its record counts and the identity of the tables it indexes; the offline bytes are untouched.",
+        "The producer takes the renderer's visibility set instead of calling state.can_see per entity: 45.3 ms vs 0.71 ms per frame.",
+        "Transport is a single-producer memory-mapped ring with seqlock slot tags and drop-oldest; the writer never blocks the simulation."
+      ],
+      "measured": {
+        "receipt": "artifacts/cpp-renderer/w02/producer-receipt.json",
+        "gate_ms": 1.0,
+        "detection_set_supplied_worst_case_ms": 0.7116,
+        "all_visible_worst_case_ms": 0.7741,
+        "visibility_recomputed_ms": 45.3389,
+        "state_sha256_unchanged": true
+      },
+      "not_proven": [
+        "C++ consumer decode + interpolation of these frames",
+        "end-to-end latency <= 2 frames",
+        "dropped-frame counts and fps at 200/400/600 ships on an equal-workload scene (fog, HUD, planets)",
+        "Windows-native build or Filip's laptop"
+      ]
     }
   ]
 }
