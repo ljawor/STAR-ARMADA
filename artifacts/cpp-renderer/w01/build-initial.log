@@ -1,0 +1,44 @@
+[ 66%] Generating shaders/fs_fleet.bin
+[ 66%] Generating shaders/vs_fleet.bin
+[ 66%] Generating shaders/fs_shadow.bin
+[ 66%] Generating shaders/vs_shadow.bin
+Code:
+---
+    636: uniform float4x4 u_model[1];
+    637: 
+    638: 
+    639: 
+    640: uniform SamplerComparisonState s_shadowSamplerComparison : register(s0); uniform Texture2D s_shadowTexture : register(t0); static BgfxSampler2DShadow s_shadow = {s_shadowSamplerComparison,s_shadowTexture };
+    641: uniform float4 u_eye;
+    642: uniform float4 u_options;
+    643: float visibility() {
+    644: if(u_options.x<0.5) return 1.0;
+
+>>> 645: float3 p=v_shadow.xyz/v_shadow.w;
+>>>   0: ^
+
+    646: if(any(lessThan(p,float3(0.0))) || any(greaterThan(p,float3(1.0)))) return 1.0;
+    647: float s=0.0;
+    648: for(int y=-1;y<=1;y++) for(int x=-1;x<=1;x++)
+    649: s+=bgfxShadow2D(s_shadow, float3(p.xy+float2(float(x),float(y))/2048.0,p.z-0.0008));
+    650: return s/9.0;
+    651: }
+    652: void main( float4 gl_FragCoord : SV_POSITION , float4 v_color0 : COLOR0 , float3 v_normal : TEXCOORD1 , float4 v_shadow : TEXCOORD2 , float3 v_world : TEXCOORD0 , out float4 bgfx_FragData0 : SV_TARGET0 ) {
+    653: float4 bgfx_VoidFrag = vec4_splat(0.0);
+    654: 
+    655: float3 N=normalize(v_normal);
+---
+ERROR: 0:645: 'v_shadow' : unknown variable 
+ERROR: 0:645: 'swizzle or member' : Expected 
+ERROR: 0:645: 'initializer' : Expected 
+ERROR: 0:645: 'declaration' : Expected 
+(645): error at column 18, HLSL parsing failed.
+ERROR: 5 compilation errors.  No code generated.
+
+
+Failed to build shader.
+make[3]: *** [shaders/fs_fleet.bin] Error 1
+make[3]: *** Waiting for unfinished jobs....
+make[2]: *** [CMakeFiles/armada_shaders.dir/all] Error 2
+make[1]: *** [CMakeFiles/armada_viewer.dir/rule] Error 2
+make: *** [armada_viewer] Error 2

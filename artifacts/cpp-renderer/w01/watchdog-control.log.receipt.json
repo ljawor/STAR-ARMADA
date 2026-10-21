@@ -1,0 +1,13 @@
+{
+  "command": [
+    "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/.venv/bin/python",
+    "-c",
+    "import time;time.sleep(30)"
+  ],
+  "pid": 20502,
+  "exit_code": -9,
+  "timed_out": true,
+  "elapsed_seconds": 3.068153709056787,
+  "process_terminated": true,
+  "log": "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-evidence/watchdog-control.log"
+}

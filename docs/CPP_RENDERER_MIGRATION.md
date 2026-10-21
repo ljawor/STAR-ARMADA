@@ -1,6 +1,6 @@
 # STAR ARMADA — C++ renderer, Python simulation: migration plan
 
-Status: **W00 engineering checks passed; W00/W01 implementation authorized, not merged.**
+Status: **W00 and macOS W01 engineering review-ready; owner review open; neither merged.**
 Proposal base: `main` @ `bd22879` (2026-10-20). Implementation base: `b2ff85a`.
 The owner authorized W00 + W01 on 2026-10-21; merge, release and default activation remain separate.
 
@@ -234,12 +234,23 @@ Each lists: goal, owned files, the command that must work, and what the owner ch
   JSON mesh loader for `assets/models/*.json`, PBR-ish hull shader, one directional light,
   one shadow cascade, instanced draw of the whole fleet, simple HUD text overlay
   (fps, ships, draw calls).
-- Command: `python3 tools/render/dump_snapshot.py --units 600 --out /tmp/w01.snap` then
-  `render_cpp/build/armada_viewer --snapshot /tmp/w01.snap`.
+- Command: `python3 tools/render/dump_snapshot.py --units 600 --out render_cpp/build/fleet.snap` then
+  `render_cpp/build/armada_viewer --snapshot render_cpp/build/fleet.snap --assets assets`.
+  macOS shortcut: `open render_cpp/launch.command`; build prerequisites are in `render_cpp/README.md`.
 - Controls: drag to orbit, wheel to zoom, WASD to pan, `1`–`3` for camera presets,
-  `s` to save a PNG, `f` to toggle fps overlay.
+  Shift+S to save a PNG, `f` to toggle fps overlay.
 - Owner checks: the picture (does the fleet read better than the legacy renderer?) and the
   camera feel. **This is the "see progress, move and rotate" gate.**
+
+W01 execution receipt (2026-10-21, PR **#146**, code `7bf11d2204b3aca6c82e58943ab71f26613ea5d2`):
+source-built Metal viewer/launcher runs; 638 detected mesh instances include 600 combat ships;
+103-mesh catalogue GPU upload/submission closure passes. At 1280×800, 240 measured offline
+mesh-only frames: wall median **8.736083 ms**, GPU median **3.893125 ms**. These are not full-game
+FPS or a matched-quality speedup. Native shading remains basic; no visual improvement is claimed.
+Natural camera/appearance review and native Windows remain open. Source/test size exceeded the
+proposal's sizing rules; no exception approval is inferred. See
+`art/manifests/handoffs/rW01-offline-native-viewer.md` and `artifacts/cpp-renderer/w01/acceptance.json`.
+The source code is published; the owner gate, merge/release/default activation and W02 are not.
 
 #### W02 — Live link
 
@@ -423,8 +434,8 @@ Rules that make the handover useful rather than decorative:
 
 | W | Status | Next action / blocking condition |
 |---|---|---|
-| W00 | **Review-ready, not merged** | Offline protocol spec/reference codec + three binary controls; 3 focused tests pass. See `art/manifests/handoffs/rW00-offline-protocol.md`. W02 wire format is not frozen. |
-| W01 | Not started | Depends on W00. First visible gate: fly the camera around the 600-ship fleet |
+| W00 | **Review-ready, not merged** | 2026-10-21, PR #145, code `f5844a8`: offline protocol/reference codec + three controls; 3 focused tests pass; owner protocol review open. See `art/manifests/handoffs/rW00-offline-protocol.md`. W02 wire format is not frozen. |
+| W01 | **Engineering review-ready; owner gate open; not merged** | 2026-10-21, PR #146, code `7bf11d2`: Metal source build, captures, camera probes and 103-mesh closure pass; 8.736083 ms offline wall median, not full-game FPS. Owner flies `render_cpp/launch.command`; no graphics upgrade, Windows or W02 claim. Handoff: `rW01-offline-native-viewer.md`. |
 | W02 | Not started | Depends on W01. Latency/serialization receipt decides whether the subprocess design holds |
 | W03 | Not started | Depends on W01 (parallel-safe with W02 if file ownership is disjoint — see §7.3) |
 | W04 | Not started | Depends on W03 |
@@ -433,9 +444,10 @@ Rules that make the handover useful rather than decorative:
 | W07 | Not started, **not authorized** | Owner's explicit one-line switch, after W06 and its receipt |
 | W08 (future, out of scope) | Not planned | Simulation acceleration (150–250 h) — the only route to 60 fps at 600 ships |
 
-**Current next task: W01**, authorized with W00. Build the separately runnable offline viewer
-against the W00 file profile. W00 remains review-ready on its own branch; no merge or live
-transport work is authorized by this status update.
+**Current next gate: owner reviews the W01 offline viewer**, using `render_cpp/launch.command`
+and `artifacts/cpp-renderer/w01/review-sheet.png`. W00 #145 and W01 #146 are separate drafts;
+neither is merged. Do not begin W02 or infer appearance/merge/release/default permission.
+Resolve any bounded offline review issue first; only after acceptance agree the live-wire scope.
 
 ## 11. Risk register
 

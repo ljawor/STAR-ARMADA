@@ -1,0 +1,16 @@
+{
+  "command": [
+    "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-w01/render_cpp/build/armada_viewer",
+    "--assets",
+    "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-w01/assets",
+    "--snapshot",
+    "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-evidence/world-shaped-ui.snap",
+    "--validate-only"
+  ],
+  "pid": 23981,
+  "exit_code": 0,
+  "timed_out": false,
+  "elapsed_seconds": 0.11560970800928771,
+  "process_terminated": true,
+  "log": "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-evidence/kind-confusion-red.log"
+}
