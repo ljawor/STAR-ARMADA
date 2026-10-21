@@ -182,6 +182,7 @@ def main(argv=None):
         # selection itself is still W04 debt (the input bridge records orders, not selection).
         selected_ids |= {entity.id for entity in state.entities.values()
                          if entity.owner == args.local_player and entity.is_ship}
+    radius_cache: dict = {}
     def radius_of(entity):
         """World radius of the hull the frame drew, so a ring encloses what it is drawn around.
 
@@ -194,12 +195,19 @@ def main(argv=None):
             return float(entity.radius)
         faction = (state.players[entity.owner].faction
                    if entity.owner in state.players else 'imperial')
+        # Memoized per hull class: `ship_size` is a catalogue lookup, and calling it once per entity
+        # per frame made 688 shields cost 138 ms - the "emit block" that showed up as ~84 ms.
+        key = (entity.data_id, faction, float(entity.radius), bool(entity.is_station))
+        cached = radius_cache.get(key)
+        if cached is not None:
+            return cached[0]
         binding, scale = collector.visual(is_station=entity.is_station, data_id=entity.data_id,
                                           faction=faction, radius=entity.radius)
         if not isinstance(scale, (int, float)):
             return 0.0        # unresolved binding: not drawn, so no cue around something invisible
         size = ship_size(ds, entity.data_id, faction)
-        return float(getattr(size, 'radius', 0.0))
+        radius_cache[key] = (float(getattr(size, 'radius', 0.0)),)
+        return radius_cache[key][0]
     overlay_ring = overlay_hud = None
     overlay_width, overlay_height = (int(v) for v in args.overlay_size.lower().split('x'))
     overlay_selection = set()
