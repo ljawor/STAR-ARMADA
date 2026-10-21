@@ -171,7 +171,9 @@ class LiveSession:
 
     # ------------------------------------------------------------------ publish
     def publish(self, state, *, selection=(), visible_ids=None, effect_allow=None,
-                shot_allow=None, dt: float = 1.0 / 30.0) -> dict:
+                shot_allow=None, dt: float = 1.0 / 30.0,
+                paused: bool = False, message: str = "", flash_left: float = 0.0,
+                fps: float = 0.0, drag_box=None, floating_texts=None) -> dict:
         """Publish one frame. Every visibility argument is an *answer* from the game."""
         from render import emissive_batch, primitive_batch
         from render.renderer import projectile_extents
@@ -208,7 +210,16 @@ class LiveSession:
         self._markers.publish(bytes(marker_codec.encode(cues)))
 
         started = time.perf_counter()
-        self.hud.compose(set(selection), None, self.local_player, False, '', 0.0, 0.0)
+        # The HUD is composed from answers the game already made, including the ones that are not
+        # about the world: paused, the status line, the fps counter, the drag box and the floating
+        # texts. Composing with `paused=False, message=''` (as this did) made a paused match look
+        # like a running one and hid the replay status entirely.
+        if drag_box is not None:
+            self.hud.set_drag_box(*drag_box)
+        if floating_texts is not None:
+            self.hud.set_floating_texts(floating_texts)
+        self.hud.compose(set(selection), None, self.local_player, paused, message,
+                         flash_left, fps)
         dirty = self.hud.recorder.take_dirty()
         keyframe = (self._overlay_published == 0
                     or (self.overlay_keyframe > 0

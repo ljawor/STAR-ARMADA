@@ -1525,6 +1525,20 @@
             "command_queue 0 -> 3 after a right-click order",
             "210 python render tests + 12 ctest, all passing"
         ]
+    },
+    {
+        "id": "render-w08-ui-state-2026-10-21",
+        "owner_wording": "please run all the steps till W11. Do not pause. Do all needed test, commits and merges. Ping me next when the game is ready and all points till W11 (included) are finished",
+        "base_commit": "10de40e",
+        "artifact": "docs/RENDER_W08_UI.md",
+        "decision": "Everything the HUD shows that is not world state crosses as an answer: paused, the status line, the fps counter, the live drag box and the floating texts (already projected to screen pixels by the game's camera). One place in main.py computes them for both display paths.",
+        "evidence": [
+            "CPP_VIEW paused=True after key p through the input ring",
+            "836 of 8,800 px differ in the PAUSED label band between paused and running captures; 370 px of warn amber only when paused",
+            "test_the_window_is_told_what_the_player_is_told",
+            "211 render tests OK, ctest 12/12 OK"
+        ],
+        "note": "A viewer attached mid-match needs up to overlay_keyframe (2.0 s) before patches apply; a capture inside that window shows the previous keyframe, which reads as a frozen HUD. Use --seconds 4 for HUD captures."
     }
   ]
 }
