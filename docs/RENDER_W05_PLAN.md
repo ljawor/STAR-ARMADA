@@ -46,9 +46,13 @@ so the transport is one upload per distinct planet, not per frame.
 
 ## 3. Slices, in the order they become visible
 
-1. **Planets (this slice).** Frame v3 gains a planet section; blob ring `ARMTPL01` for textures;
-   native sphere pass with spin, culling and a lit/unlit switch so it matches the Python look;
-   asteroids as a separate kind (instanced rock field) or an explicit "not yet" in the report.
+1. **Planets — landed, see `docs/RENDER_W05_PLANETS.md`.** No frame change was needed: a planet
+   rides as an instance whose binding is `planet:<kind>:<name>` with the radius as scale, and the
+   blob ring `ARMPLN01` carries one procedural texture per distinct planet, published once.
+   The native sphere pass ports `fleet_materials.py::PLANET` term for term and lights from the
+   map's star (`--star`). Reference frame captured from the same fixture, planet and camera with
+   `tools/render/capture_python_planet.py`. Not yet: the 1.018× atmosphere shell (effects slice),
+   owner rings and background stars (slice 2). Asteroid fields are still omitted and counted.
 2. **Markers and selection rings.** Cheap, immediately visible, and they are the feedback the player
    uses to know what they selected. Needs a small primitive batch (rings, chevrons) in the frame.
 3. **Effects, beams, projectiles.** The records already cross the bridge; this is a per-kind native

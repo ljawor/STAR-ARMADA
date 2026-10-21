@@ -61,7 +61,7 @@ else()
   message(FATAL_ERROR "W01 native targets are macOS Metal and Windows Direct3D12")
 endif()
 set(SHADER_OUTPUTS)
-foreach(NAME vs_fleet fs_fleet vs_shadow fs_shadow vs_ui fs_ui)
+foreach(NAME vs_fleet fs_fleet vs_shadow fs_shadow vs_ui fs_ui vs_planet fs_planet)
   if(NAME MATCHES "^vs_")
     set(TYPE vertex)
   else()
@@ -107,6 +107,13 @@ target_include_directories(test_input PRIVATE include)
 add_test(NAME input COMMAND test_input)
 set_tests_properties(input PROPERTIES ENVIRONMENT
   "ARMADA_INPUT_FIXTURE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/input")
+add_executable(test_planets tests/test_planets.cpp)
+target_include_directories(test_planets PRIVATE include)
+target_compile_definitions(test_planets PRIVATE
+  ARMADA_PLANET_FIXTURE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/planets")
+add_test(NAME planets COMMAND test_planets)
+set_tests_properties(planets PROPERTIES ENVIRONMENT
+  "ARMADA_PLANET_FIXTURE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/planets")
 add_executable(test_frame_v2 tests/test_frame_v2.cpp)
 target_link_libraries(test_frame_v2 PRIVATE armada_scene)
 target_compile_definitions(test_frame_v2 PRIVATE

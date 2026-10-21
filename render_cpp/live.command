@@ -1,7 +1,7 @@
 #!/bin/bash
-# Double-click launcher for the W02/W03/W04 window: the Python simulation publishes frames and a
-# composed HUD into shared rings, the C++ viewer draws them and publishes the pointer and keyboard
-# back on a third ring (W04). Esc quits and stops the producer.
+# Double-click launcher for the W02-W05 window: the Python simulation publishes frames, a composed
+# HUD, one texture per distinct planet and receives the pointer and keyboard back on separate rings.
+# Esc quits and stops the producer.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
@@ -41,13 +41,14 @@ trap cleanup EXIT INT TERM
 "$PYTHON" tools/render/stream_ring.py \
   --ring "$DIR/frames.bin" --seconds 7200 --hz 60 \
   --overlay-ring "$DIR/hud.bin" --overlay-slots 48 --overlay-keyframe 1.0 \
-  --input-ring "$DIR/input.bin" \
+  --input-ring "$DIR/input.bin" --planet-ring "$DIR/planets.bin" --planet-texture 256 \
   --report "$DIR/producer.json" &
 producer=$!
 
 # Wait for the rings to carry a published frame, so the window opens on a complete HUD.
 for _ in $(seq 1 160); do
-  if [[ -s "$DIR/frames.bin" && -s "$DIR/hud.bin" && -s "$DIR/frames.bin.tables" ]]; then
+  if [[ -s "$DIR/frames.bin" && -s "$DIR/hud.bin" && -s "$DIR/frames.bin.tables" \
+        && -s "$DIR/planets.bin" ]]; then
     sleep 1.0   # let at least one slot finish being written before the reader maps it
     break
   fi
@@ -60,5 +61,5 @@ done
 
 "$BUILD/armada_viewer" --snapshot "$SNAP" --assets "$ROOT" \
   --ring "$DIR/frames.bin" --overlay-ring "$DIR/hud.bin" \
-  --input-ring "$DIR/input.bin" --input-slots 48 \
+  --input-ring "$DIR/input.bin" --input-slots 48 --planet-ring "$DIR/planets.bin" \
   --report "$DIR/viewer.json" "$@"

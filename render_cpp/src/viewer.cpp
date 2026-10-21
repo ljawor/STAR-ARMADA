@@ -3,6 +3,7 @@
 #include "frame_v2.hpp"
 #include "input_ring.hpp"
 #include "overlay.hpp"
+#include "planets.hpp"
 #include "scene.hpp"
 #include <SDL3/SDL.h>
 #ifdef __APPLE__
@@ -28,6 +29,7 @@ namespace fs = std::filesystem;
 // namespace there; a file-scope alias keeps the decoder reachable.
 namespace hud = armada::overlay;
 namespace input_ring = armada::input;
+namespace planets = armada::planet;
 using Json = nlohmann::json;
 using Clock = std::chrono::steady_clock;
 
@@ -141,7 +143,12 @@ struct Callbacks final : bgfx::CallbackI {
 };
 struct Options {
   fs::path snapshot, assets, shaders = ARMADA_SHADER_DIR, shot, report, ring, tables, overlayRing,
-      inputRing;
+      inputRing, planetRing;
+  std::array<float, 3> focus{};
+  bool hasFocus = false;
+  // The map's star lights every planet (render/renderer.py sets GL_LIGHT0 to the star position,
+  // with y raised to at least 2000 so a system in the ecliptic still has a day side).
+  std::array<float, 3> star{0.f, 2000.f, 0.f};
   int inputSlots = 8;
   bool inputExercise = false;
   bool hudOnly = false;
@@ -178,6 +185,25 @@ static Options options(int argc, char **argv) {
       o.overlayRing = value();
     else if (k == "--input-ring")
       o.inputRing = value();
+    else if (k == "--planet-ring")
+      o.planetRing = value();
+    else if (k == "--star") {
+      const std::string text = value();
+      std::array<float, 3> point{};
+      if (std::sscanf(text.c_str(), "%f,%f,%f", &point[0], &point[1], &point[2]) != 3)
+        throw std::runtime_error("--star expects x,y,z");
+      o.star = point;
+    }
+    else if (k == "--focus") {
+      // Look at a world point rather than the scene's own target: a planet sits tens of thousands
+      // of units out, so comparing it against the Python renderer needs the camera aimed at it.
+      const std::string text = value();
+      std::array<float, 3> point{};
+      if (std::sscanf(text.c_str(), "%f,%f,%f", &point[0], &point[1], &point[2]) != 3)
+        throw std::runtime_error("--focus expects x,y,z");
+      o.focus = point;
+      o.hasFocus = true;
+    }
     else if (k == "--input-slots")
       o.inputSlots = std::stoi(value());
     else if (k == "--input-exercise")
@@ -227,7 +253,10 @@ static Options options(int argc, char **argv) {
              "the window still decides nothing\n"
              "           --input-exercise pushes a scripted click/key sequence through the real "
              "SDL pump so the return path can be replayed end to end (synthetic input, labelled "
-             "as such in the report)\n";
+             "as such in the report)\n"
+             "Planets (W05): --planet-ring planets.bin carries one ARMPLN01 texture per distinct "
+             "planet; the body itself is drawn from the frame instance whose binding names that "
+             "texture, scaled by the planet's radius\n";
       std::exit(0);
     } else
       throw std::runtime_error("Unknown option: " + k);
@@ -296,6 +325,86 @@ static uint8_t wireMod(SDL_Keymod mod) {
   return bits;
 }
 
+// W05: a unit sphere with equirectangular texture coordinates. The Python renderer draws planets
+// as textured spheres; this is the same body, built once, so a planet costs a matrix and a bind
+// rather than a mesh load.
+struct Sphere {
+  std::vector<float> vertices;      // pos(3) normal(3) uv(2)
+  std::vector<uint16_t> indices;
+};
+
+static Sphere unitSphere(int segments = 48, int rings = 24) {
+  Sphere sphere;
+  for (int ring = 0; ring <= rings; ++ring) {
+    const float v = float(ring) / float(rings);
+    const float phi = v * float(M_PI);
+    for (int segment = 0; segment <= segments; ++segment) {
+      const float u = float(segment) / float(segments);
+      const float theta = u * 2.f * float(M_PI);
+      const float nx = std::sin(phi) * std::cos(theta);
+      const float ny = std::cos(phi);
+      const float nz = std::sin(phi) * std::sin(theta);
+      sphere.vertices.insert(sphere.vertices.end(), {nx, ny, nz, nx, ny, nz, u, 1.f - v});
+    }
+  }
+  const int stride = segments + 1;
+  for (int ring = 0; ring < rings; ++ring) {
+    for (int segment = 0; segment < segments; ++segment) {
+      const uint16_t a = uint16_t(ring * stride + segment);
+      const uint16_t b = uint16_t(a + 1);
+      const uint16_t c = uint16_t(a + stride);
+      const uint16_t d = uint16_t(c + 1);
+      sphere.indices.insert(sphere.indices.end(), {a, c, b, b, c, d});
+    }
+  }
+  return sphere;
+}
+
+// W05: the planet textures the window holds, keyed by the name the frame binding carries.
+struct PlanetTextures {
+  std::unordered_map<std::string, bgfx::TextureHandle> byName;
+  bgfx::TextureHandle fallback = BGFX_INVALID_HANDLE;
+  size_t uploaded = 0, reused = 0, failures = 0, bytes = 0;
+
+  bool apply(const armada::planet::Blob &blob) {
+    if (byName.count(blob.name)) {
+      ++reused;
+      return false;
+    }
+    const uint32_t count = uint32_t(blob.width) * uint32_t(blob.height) * 4u;
+    const bgfx::Memory *memory = bgfx::copy(blob.rgba, count);
+    const bgfx::TextureHandle handle = bgfx::createTexture2D(
+        blob.width, blob.height, false, 1, bgfx::TextureFormat::RGBA8,
+        // Linear minification/magnification is the default; only clamp V, because an
+        // equirectangular texture has to wrap across the seam at U = 0/1.
+        BGFX_SAMPLER_V_CLAMP,
+        memory);
+    if (!bgfx::isValid(handle)) {
+      ++failures;
+      return false;
+    }
+    byName.emplace(blob.name, handle);
+    ++uploaded;
+    bytes += count;
+    return true;
+  }
+
+  bgfx::TextureHandle handleFor(const std::string &name) const {
+    const auto it = byName.find(name);
+    return it == byName.end() ? fallback : it->second;
+  }
+
+  void destroy() {
+    for (auto &entry : byName)
+      if (bgfx::isValid(entry.second))
+        bgfx::destroy(entry.second);
+    byName.clear();
+    if (bgfx::isValid(fallback))
+      bgfx::destroy(fallback);
+    fallback = BGFX_INVALID_HANDLE;
+  }
+};
+
 static bgfx::ShaderHandle shader(const fs::path &p) {
   std::ifstream f(p, std::ios::binary | std::ios::ate);
   if (!f)
@@ -354,6 +463,15 @@ struct Live {
   double period = 1.0 / 60.0;
   uint64_t adopted = 0, dropped = 0, decode_failures = 0, empty_draws = 0;
   std::vector<double> decode_ms, age_frames, alphas;
+  //: W05 planet bodies for this frame: texture name, world position, radius.
+  struct PlanetBody {
+    std::string texture;
+    std::array<float, 3> position{};
+    float radius = 1.f;
+    bool atmosphere = true;   // the Python renderer lights a barren planet without a shell
+  };
+  std::vector<PlanetBody> planets;
+  size_t planet_pose_failures = 0;
 
   Live(const fs::path &ring_path, const fs::path &tables_path,
        const std::vector<Group> &groups)
@@ -424,8 +542,24 @@ struct Live {
         old.emplace(record.entity_id, &record);
 
     std::vector<float> scratch(20);
+    planets.clear();
     for (const auto &record : current->instances) {
-      const auto it = group_of.find(tables.bindings.at(record.binding_id));
+      const std::string &binding = tables.bindings.at(record.binding_id);
+      // W05: a planet is not a mesh. Its binding names the texture the window already holds, and
+      // the instance matrix is its position and radius, so it is collected instead of grouped.
+      if (planets::isPlanetBinding(binding)) {
+        try {
+          const auto pose = armada::bridge::pose_from_matrix(record.matrix);
+          const std::string kind = planets::planetKind(binding);
+          planets.push_back({planets::planetTextureName(binding),
+                             {pose.position[0], pose.position[1], pose.position[2]},
+                             pose.scale, kind != "barren"});
+        } catch (const armada::bridge::FrameError &) {
+          ++planet_pose_failures;
+        }
+        continue;
+      }
+      const auto it = group_of.find(binding);
       if (it == group_of.end())
         continue;
       auto pose = armada::bridge::pose_from_matrix(record.matrix);
@@ -641,6 +775,57 @@ static int run(const Options &o) {
   if (!bgfx::isValid(uiSampler))
     throw DeviceError("UI sampler creation failed");
   cleanup.actions.push_back([uiSampler] { bgfx::destroy(uiSampler); });
+  // W05 planet pass: sphere geometry, one program, one texture table fed by the planet ring.
+  Sphere sphere = unitSphere();
+  bgfx::VertexLayout planetLayout;
+  planetLayout.begin()
+      .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
+      .add(bgfx::Attrib::Normal, 3, bgfx::AttribType::Float)
+      .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
+      .end();
+  const bgfx::VertexBufferHandle sphereVbo = bgfx::createVertexBuffer(
+      bgfx::copy(sphere.vertices.data(), uint32_t(sphere.vertices.size() * sizeof(float))),
+      planetLayout);
+  const bgfx::IndexBufferHandle sphereIbo = bgfx::createIndexBuffer(
+      bgfx::copy(sphere.indices.data(), uint32_t(sphere.indices.size() * sizeof(uint16_t))));
+  if (!bgfx::isValid(sphereVbo) || !bgfx::isValid(sphereIbo))
+    throw DeviceError("Planet sphere buffer creation failed");
+  cleanup.actions.push_back([sphereVbo] { bgfx::destroy(sphereVbo); });
+  cleanup.actions.push_back([sphereIbo] { bgfx::destroy(sphereIbo); });
+  const bgfx::ProgramHandle planetProgram =
+      bgfx::createProgram(shader(o.shaders / "vs_planet.bin"),
+                          shader(o.shaders / "fs_planet.bin"), true);
+  if (!bgfx::isValid(planetProgram))
+    throw DeviceError("Planet program creation failed");
+  cleanup.actions.push_back([planetProgram] { bgfx::destroy(planetProgram); });
+  const bgfx::UniformHandle planetSampler =
+      bgfx::createUniform("s_planet", bgfx::UniformType::Sampler);
+  const bgfx::UniformHandle planetModel =
+      bgfx::createUniform("u_planet_model", bgfx::UniformType::Mat4);
+  const bgfx::UniformHandle planetFlags =
+      bgfx::createUniform("u_planet_flags", bgfx::UniformType::Vec4);
+  const bgfx::UniformHandle planetStar =
+      bgfx::createUniform("u_star", bgfx::UniformType::Vec4);
+  for (auto handle : {planetSampler, planetModel, planetFlags, planetStar}) {
+    if (!bgfx::isValid(handle))
+      throw DeviceError("Planet uniform creation failed");
+    cleanup.actions.push_back([handle] { bgfx::destroy(handle); });
+  }
+  PlanetTextures planetTextures;
+  cleanup.actions.push_back([&planetTextures] { planetTextures.destroy(); });
+  {
+    const uint32_t grey = 0x404040ff;
+    const bgfx::Memory *memory = bgfx::copy(&grey, sizeof(grey));
+    planetTextures.fallback = bgfx::createTexture2D(
+        1, 1, false, 1, bgfx::TextureFormat::RGBA8, BGFX_SAMPLER_NONE, memory);
+  }
+  std::unique_ptr<armada::bridge::RingReader> planetRing;
+  uint64_t planetSequence = 0;
+  size_t planetBlobs = 0, planetDecodeFailures = 0, planetBodiesDrawn = 0,
+         planetUntextured = 0, planetFramesWithBodies = 0;
+  std::vector<uint8_t> planetPayload;
+  if (!o.planetRing.empty())
+    planetRing = std::make_unique<armada::bridge::RingReader>(o.planetRing);
   auto lightUniform =
            bgfx::createUniform("u_lightMatrix", bgfx::UniformType::Mat4),
        eyeUniform = bgfx::createUniform("u_eye", bgfx::UniformType::Vec4),
@@ -739,7 +924,12 @@ static int run(const Options &o) {
   std::vector<double> wall, cpu, gpu;
   std::vector<uint32_t> draws;
   // Capture framing only; never touches simulation state.
-  if (o.distance > 0.0)
+  if (o.hasFocus) {
+    camera.target = o.focus;
+    camera.pitch = 12;
+    camera.yaw = 90;
+  }
+  if (o.distance > 0)
     camera.distance = float(o.distance);
   if (o.pitch > 0.0)
     camera.pitch = float(o.pitch);
@@ -747,6 +937,8 @@ static int run(const Options &o) {
     camera.yaw = float(o.yaw);
   auto previous = Clock::now();
   const auto live_start = Clock::now();
+  // The Python renderer spins a planet at 1.2 rad/s about its own axis (glRotatef(time * 1.2)).
+  double planetSeconds = 0.0;
   if (inputOut) {
     // First batch tells the consumer what the pointer is measured against, so it can map
     // window pixels onto the HUD surface without assuming a size.
@@ -763,6 +955,8 @@ static int run(const Options &o) {
     const auto start = Clock::now();
     const float dt = std::chrono::duration<float>(start - previous).count();
     previous = start;
+    planetSeconds += dt;
+    const float planetSpin = float(planetSeconds * 1.2);
     if (live)
       live->step(groups);   // no frame yet leaves the groups empty on purpose
     if (live && o.seconds > 0.0 &&
@@ -1015,6 +1209,58 @@ static int run(const Options &o) {
                      BGFX_STATE_MSAA);
       bgfx::submit(1, program);
     }
+    // W05: take in any planet texture published since the last frame, then draw the bodies the
+    // frame asked for. A planet whose texture has not arrived yet draws with the grey fallback and
+    // is counted, never silently dropped.
+    if (planetRing) {
+      const uint64_t available = planetRing->published();
+      while (planetSequence < available) {
+        if (planetRing->read_at_sequence(planetSequence, available, planetPayload)) {
+          try {
+            const auto blob = planets::decode(planetPayload.data(), planetPayload.size());
+            if (planetTextures.apply(blob))
+              ++planetBlobs;
+          } catch (const planets::PlanetError &) {
+            ++planetDecodeFailures;
+          }
+        }
+        ++planetSequence;
+      }
+    }
+    if (live && !live->planets.empty()) {
+      ++planetFramesWithBodies;
+      bgfx::setUniform(eyeUniform, eyeData);
+      const float starData[4] = {o.star[0], std::max(o.star[1], 2000.f), o.star[2], 1.f};
+      bgfx::setUniform(planetStar, starData);
+      for (const auto &body : live->planets) {
+        const float px = body.position[0], py = body.position[1], pz = body.position[2];
+        const float pr = body.radius;
+        // Build the body matrix through the same helper the fleet's instances use: bx::mtxMul's
+        // operand order is easy to get wrong (it produced a translation of radius * distance
+        // instead of distance), and this path is already exercised by 638 ships.
+        float model[20];
+        armada::bridge::Pose bodyPose;
+        bodyPose.position = {px, py, pz};
+        bodyPose.scale = pr;
+        bodyPose.yaw = planetSpin;
+        armada::bridge::write_instance(model, bodyPose, {{255, 255, 255, 255}});
+        // bgfx clears the draw state after every submit, so each body rebinds geometry and state.
+        // The matrix travels as an instance (as the fleet's does) rather than through u_model.
+        bgfx::setVertexBuffer(0, sphereVbo);
+        bgfx::setIndexBuffer(sphereIbo);
+        bgfx::setUniform(planetModel, model);
+        const float flags[4] = {body.atmosphere ? 1.f : 0.f, 0.f, 0.f, 0.f};
+        bgfx::setUniform(planetFlags, flags);
+        const bgfx::TextureHandle texture = planetTextures.handleFor(body.texture);
+        if (!bgfx::isValid(texture) || texture.idx == planetTextures.fallback.idx)
+          ++planetUntextured;
+        bgfx::setTexture(0, planetSampler, texture);
+        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_Z |
+                       BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_MSAA);
+        bgfx::submit(1, planetProgram);
+        ++planetBodiesDrawn;
+      }
+    }
     // W03: read the newest HUD payload, apply the patches to the texture, draw one quad.
     if (uiRing) {
       const uint64_t available = uiRing->published();
@@ -1199,6 +1445,19 @@ static int run(const Options &o) {
   report["inspection_binding"] = inspectionBinding;
   report["control_exercise"] = controlStates;
   report["quality"]["shadows_final"] = shadows;
+  // Snapshot what the planet pass held before cleanup destroys the GPU handles, so the report
+  // describes the run rather than the teardown.
+  const size_t planetTexturesHeld = planetTextures.byName.size();
+  const bool planetProgramValid = bgfx::isValid(planetProgram);
+  const bool planetVboValid = bgfx::isValid(sphereVbo);
+  const bool planetIboValid = bgfx::isValid(sphereIbo);
+  std::vector<std::string> planetTextureNames, planetRequestedNames;
+  for (const auto &entry : planetTextures.byName)
+    planetTextureNames.push_back(entry.first);
+  if (live)
+    for (const auto &body : live->planets)
+      if (planetRequestedNames.size() < 16)
+        planetRequestedNames.push_back(body.texture);
   cleanup.run();
   report["screenshots_written"] = callback.shots.load();
   if (uiRing) {
@@ -1215,6 +1474,33 @@ static int run(const Options &o) {
                      {"hud_only", o.hudOnly},
                      {"mode", o.hudOnly ? "presented-unblended (diagnostic)"
                                         : "composited over the scene"}};
+  }
+  if (planetRing) {
+    report["planets"] = {
+        {"ring", o.planetRing.string()},
+        {"textures", planetTexturesHeld},
+        {"valid", {{"program", planetProgramValid},
+                   {"vbo", planetVboValid},
+                   {"ibo", planetIboValid}}},
+        {"texture_names", planetTextureNames},
+        {"requested_names", planetRequestedNames},
+        {"textures_uploaded", planetTextures.uploaded},
+        {"textures_reused", planetTextures.reused},
+        {"texture_bytes", planetTextures.bytes},
+        {"texture_failures", planetTextures.failures},
+        {"blobs_applied", planetBlobs},
+        {"decode_failures", planetDecodeFailures},
+        {"bodies_drawn", planetBodiesDrawn},
+        {"frames_with_bodies", planetFramesWithBodies},
+        {"untextured_bodies", planetUntextured},
+        {"pose_failures", live ? live->planet_pose_failures : 0},
+        {"sphere", {{"vertices", sphere.vertices.size() / 8},
+                    {"triangles", sphere.indices.size() / 3},
+                    {"sample", {sphere.vertices[0], sphere.vertices[1], sphere.vertices[2],
+                                sphere.vertices[3], sphere.vertices[4], sphere.vertices[5],
+                                sphere.vertices[6], sphere.vertices[7]}}}},
+        {"note", "one blob per distinct planet, published once; the body is a unit sphere scaled "
+                 "by the frame instance's radius, spun at 1.2 rad/s like the Python renderer"}};
   }
   if (inputOut) {
     report["input"] = {{"ring", o.inputRing.string()},

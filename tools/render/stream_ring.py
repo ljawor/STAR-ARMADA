@@ -68,6 +68,11 @@ def main(argv=None):
     parser.add_argument('--overlay-slots', type=int, default=4)
     parser.add_argument('--overlay-all', action='store_true',
                         help='publish every overlay frame as a full surface (slow; for diagnosis)')
+    parser.add_argument('--planet-ring', type=Path,
+                        help='ring carrying planet textures to the window (W05); one blob per '
+                             'distinct planet, published once')
+    parser.add_argument('--planet-texture', type=int, default=256,
+                        help='planet texture edge in pixels (W05)')
     parser.add_argument('--input-ring', type=Path,
                         help='ring the C++ window publishes input on (W04); the producer attaches '
                              'when the file appears and feeds every event to the real '
@@ -152,6 +157,23 @@ def main(argv=None):
         input_bridge_factory = lambda: RingInput(  # noqa: E731
             args.input_ring, controller, (overlay_width, overlay_height))
 
+    # W05: planets travel as instances whose binding names a texture; the textures go over their
+    # own ring, once each, because they are static for the life of a match.
+    planet_ring = None
+    planet_textures = None
+    planet_blob_bytes = []
+    planet_encode_ms = []
+    if args.planet_ring is not None:
+        from render.planet_blobs import PlanetTextures
+        from render_bridge import planets as planet_codec
+        size = int(args.planet_texture)
+        if not 64 <= size <= 512:
+            raise SystemExit('--planet-texture must be 64..512')
+        slot_bytes = planet_codec.HEADER_BYTES + planet_codec.MAX_NAME + size * size * 4
+        args.planet_ring.parent.mkdir(parents=True, exist_ok=True)
+        planet_ring = ring.Ring.create(args.planet_ring, slots=8, slot_bytes=slot_bytes)
+        planet_textures = PlanetTextures(size=size)
+
     buffer = bytearray(packed.frame_size(packed.MAX_INSTANCES, packed.MAX_EFFECTS))
     encode_ms, step_ms, visibility_ms, hud_ms = [], [], [], []
     published = 0
@@ -225,6 +247,17 @@ def main(argv=None):
                     overlay_published += 1
                     overlay_sent.append(len(payload))
                     hud_ms.append((time.perf_counter() - hud_started) * 1000.0)
+                if planet_ring is not None and planet_textures is not None:
+                    # Encoding is the expensive half (a procedural 256x256 surface per new
+                    # planet), so it is timed rather than inferred from the blob size.
+                    planet_started = time.perf_counter()
+                    pending = planet_textures.pending(state)
+                    if pending:
+                        for blob in pending:
+                            planet_ring.publish(blob)
+                            planet_blob_bytes.append(len(blob))
+                        planet_encode_ms.append(
+                            (time.perf_counter() - planet_started) * 1000.0)
                 published += 1
                 if period:
                     next_at += period
@@ -262,6 +295,19 @@ def main(argv=None):
         'instances_last_frame': counts['instances'],
         'transients_last_frame': counts['effects'],
     }
+    if planet_ring is not None:
+        planet_ring.close()
+        summary['planets'] = {
+            'ring': str(args.planet_ring),
+            'blob_bytes': {'samples': len(planet_blob_bytes),
+                           'total': sum(planet_blob_bytes),
+                           'min': min(planet_blob_bytes) if planet_blob_bytes else 0,
+                           'max': max(planet_blob_bytes) if planet_blob_bytes else 0},
+            'encode_ms': _stats(planet_encode_ms),
+            **(planet_textures.report() if planet_textures is not None else {}),
+            'note': ('one blob per distinct planet, published once: the texture is procedural and '
+                     'static, the sphere is drawn natively from the frame instance scale'),
+        }
     if args.input_ring is not None:
         summary['input'] = {
             'ring': str(args.input_ring),

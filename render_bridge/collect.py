@@ -27,6 +27,7 @@ import math
 import zlib
 
 from . import packed
+from . import planets
 
 # Effect kinds raised by `GameState.spawn_effect` today. A kind outside this tuple is
 # a hard error rather than a silently dropped picture element, so adding an effect to
@@ -174,32 +175,47 @@ class FrameCollector:
         for entity in sorted(state.entities.values(), key=_ENTITY_ID):
             if not entity.alive:
                 continue
+            # W05: planets travel as instances too. Their binding names the texture the window
+            # keeps in its own table (`planet:<data_id>:<name>`), and the scale is the planet's
+            # radius because the native body is a unit sphere. Asteroid fields are not spheres
+            # and stay out until they have their own pass.
             if entity.is_planet:
-                omitted += 1
-                continue
-            # Inline the visibility test: it is one method call per entity otherwise, and
-            # a supplied set makes it a plain membership test.
-            if not all_visible and (
-                    entity.id not in visible_ids if visible_ids is not None
-                    else not state.can_see(local_player, entity.id)):
-                continue
-            if entity.owner in players:
-                player = players[entity.owner]
-                faction = player.faction
-                tint = tints.get(entity.owner)
-                if tint is None:
-                    tint = tints[entity.owner] = packed.tint_bytes(player.color)
-            else:
+                if entity.data_id == 'asteroid_field':
+                    omitted += 1
+                    continue
+                binding_id = binding_index.get(
+                    planets.binding_name(entity.data_id,
+                                         entity.name_override or entity.data_id))
+                if binding_id is None:
+                    unknown.add(entity.data_id)
+                    continue
+                scale = float(entity.radius)
                 faction, tint = 'imperial', _WHITE_BYTES
-            key = (entity.is_station, entity.data_id, faction)
-            cached = visual_cache.get(key)
-            if cached is None:
-                cached = self.visual(is_station=entity.is_station, data_id=entity.data_id,
-                                     faction=faction, radius=entity.radius)
-            binding_id, scale = cached
-            if binding_id is None:
-                unknown.add(scale)
-                continue
+                key = None  # not from the visual cache
+            else:
+                # Inline the visibility test: it is one method call per entity otherwise, and
+                # a supplied set makes it a plain membership test.
+                if not all_visible and (
+                        entity.id not in visible_ids if visible_ids is not None
+                        else not state.can_see(local_player, entity.id)):
+                    continue
+                if entity.owner in players:
+                    player = players[entity.owner]
+                    faction = player.faction
+                    tint = tints.get(entity.owner)
+                    if tint is None:
+                        tint = tints[entity.owner] = packed.tint_bytes(player.color)
+                else:
+                    faction, tint = 'imperial', _WHITE_BYTES
+                key = (entity.is_station, entity.data_id, faction)
+                cached = visual_cache.get(key)
+                if cached is None:
+                    cached = self.visual(is_station=entity.is_station, data_id=entity.data_id,
+                                         faction=faction, radius=entity.radius)
+                binding_id, scale = cached
+                if binding_id is None:
+                    unknown.add(scale)
+                    continue
             if offset + instance_size > limit0:
                 raise packed.FrameError('buffer too small for the frame')
             # Health and shields inline: _fractions() is a function call plus three
@@ -360,18 +376,29 @@ class FrameCollector:
             if not entity.alive:
                 continue
             if entity.is_planet:
-                omitted += 1
-                continue
-            if not self.all_visible and not self._visible(state, entity):
-                continue
-            faction = (state.players[entity.owner].faction
-                       if entity.owner in state.players else 'imperial')
-            binding_id, scale = self.visual(is_station=entity.is_station,
-                                            data_id=entity.data_id,
-                                            faction=faction, radius=entity.radius)
-            if binding_id is None:
-                unknown.add(scale)
-                continue
+                # W05: planets ride as instances whose binding names their texture, with the
+                # radius as the scale of the unit sphere the window draws.
+                if entity.data_id == 'asteroid_field':
+                    omitted += 1
+                    continue
+                binding_id = self._binding_index.get(
+                    planets.binding_name(entity.data_id,
+                                         entity.name_override or entity.data_id))
+                if binding_id is None:
+                    unknown.add(entity.data_id)
+                    continue
+                scale = float(entity.radius)
+            else:
+                if not self.all_visible and not self._visible(state, entity):
+                    continue
+                faction = (state.players[entity.owner].faction
+                           if entity.owner in state.players else 'imperial')
+                binding_id, scale = self.visual(is_station=entity.is_station,
+                                                data_id=entity.data_id,
+                                                faction=faction, radius=entity.radius)
+                if binding_id is None:
+                    unknown.add(scale)
+                    continue
             colour = (state.players[entity.owner].color
                       if entity.owner in state.players else (1.0, 1.0, 1.0))
             hp_frac, shield_frac = _fractions(entity)
@@ -427,11 +454,18 @@ def required_names(state, ds, *, ship_size, ship_binding, local_player=0, all_vi
     bindings, weapons = set(), set()
     resolved: dict = {}
     for entity in state.entities.values():
-        if not entity.alive or entity.is_planet:
+        if not entity.alive:
+            continue
+        if entity.is_planet and all_visible is False and not state.can_see(local_player, entity.id):
             continue
         if not all_visible and not state.can_see(local_player, entity.id):
             continue
         faction = state.players[entity.owner].faction if entity.owner in state.players else 'imperial'
+        if entity.is_planet:
+            if entity.data_id != 'asteroid_field':
+                bindings.add(planets.binding_name(entity.data_id,
+                                                  entity.name_override or entity.data_id))
+            continue
         key = (entity.is_station, entity.data_id, faction)
         if key not in resolved:
             resolved[key] = ('imperial:' + entity.data_id if entity.is_station
