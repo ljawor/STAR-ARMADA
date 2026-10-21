@@ -136,7 +136,10 @@ class InputController:
         elif ev.type == pygame.KEYUP:
             self.keys.discard(ev.key)
         elif ev.type == pygame.MOUSEWHEEL:
-            if not self._scroll_panel(-ev.y):
+            # The event carries where the wheel was; asking the local window for the pointer
+            # would make the controller depend on a pygame video system it need not own (the
+            # C++ window publishes `pos` with every wheel event for exactly this reason).
+            if not self._scroll_panel(-ev.y, getattr(ev, 'pos', None)):
                 self.camera.zoom(0.88 ** ev.y)
         elif ev.type == pygame.MOUSEBUTTONDOWN:
             self._disarm_menu()      # a click is the player moving on, not a menu press
@@ -231,9 +234,9 @@ class InputController:
             self.camera.pan(0, 14 * pan_speed)
 
     # ------------------------------------------------------------- panel scroll
-    def _scroll_panel(self, direction: int) -> bool:
+    def _scroll_panel(self, direction: int, pos=None) -> bool:
         """Wheel over a HUD scrollable list scrolls it; True if consumed."""
-        mp = pygame.mouse.get_pos()
+        mp = pos if pos is not None else pygame.mouse.get_pos()
         for rect, key in self.hud.scroll_rects:
             if rect.collidepoint(mp):
                 panel = getattr(self.hud, 'scroll_panels', {}).get(key)

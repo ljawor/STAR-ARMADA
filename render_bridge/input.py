@@ -251,11 +251,16 @@ def to_pygame_batch(events):
 class InputReader:
     """Reads batches from the ring the window writes; never blocks, never replays old batches."""
 
-    def __init__(self, path, ring_module=None):
+    def __init__(self, path, ring_module=None, from_oldest=False):
         if ring_module is None:
             from render_bridge import ring as ring_module
         self._ring = ring_module.Ring.open(path, writable=False)
-        self._consumed = self._ring.published
+        published = self._ring.published
+        # A reader that attaches mid-session must not replay clicks from before it existed, so
+        # the default starts at the head. Replaying is for tests and diagnostics only.
+        self._consumed = max(0, published - self._ring.slots) if from_oldest else published
+        #: Batches that were overwritten before this reader could consume them.
+        self.skipped = 0
 
     @property
     def pending(self):
@@ -266,18 +271,26 @@ class InputReader:
         """Batches the window published that this reader never consumed."""
         return max(0, self.pending - self._ring.slots)
 
-    def read(self):
-        """Every batch published since the last call, oldest first. Overwritten batches are skipped."""
+    def read(self, limit=None):
+        """Every batch published since the last call, oldest first. Overwritten batches are skipped.
+
+        `limit` stops after that many batches, which is what a game loop following the window's
+        frame cadence wants: one batch is one window frame, so a held key is still held when the
+        next update runs.
+        """
         published = self._ring.published
         batches = []
         if published - self._consumed > self._ring.slots:
             # The reader fell a whole ring behind: those slots already hold newer batches.
+            self.skipped += published - self._consumed - self._ring.slots
             self._consumed = published - self._ring.slots
         while self._consumed < published:
             payload = self._ring.read(self._consumed)
             if payload is not None:
                 batches.append(decode_batch(payload[1]))
             self._consumed += 1
+            if limit is not None and len(batches) >= limit:
+                break
         return batches
 
     def close(self):

@@ -1,0 +1,122 @@
+{
+  "magic": "ARMINP01",
+  "version": 1,
+  "header_bytes": 20,
+  "record_bytes": 16,
+  "bytes": 244,
+  "crc32": 2276074626,
+  "events": [
+    {
+      "kind": 8,
+      "button": 0,
+      "code": 0,
+      "x": 0,
+      "y": 0,
+      "extra": 167773760
+    },
+    {
+      "kind": 1,
+      "button": 1,
+      "code": 0,
+      "x": 640,
+      "y": 400,
+      "extra": 0
+    },
+    {
+      "kind": 1,
+      "button": 1,
+      "code": 0,
+      "x": 700,
+      "y": 440,
+      "extra": 0
+    },
+    {
+      "kind": 2,
+      "button": 1,
+      "code": 0,
+      "x": 700,
+      "y": 440,
+      "extra": 0
+    },
+    {
+      "kind": 3,
+      "button": 1,
+      "code": 0,
+      "x": 700,
+      "y": 440,
+      "extra": 0
+    },
+    {
+      "kind": 4,
+      "button": 1,
+      "code": 0,
+      "x": 512,
+      "y": 300,
+      "extra": 0
+    },
+    {
+      "kind": 4,
+      "button": 0,
+      "code": 0,
+      "x": 512,
+      "y": 300,
+      "extra": 0
+    },
+    {
+      "kind": 5,
+      "button": 3,
+      "code": 113,
+      "x": 0,
+      "y": 0,
+      "extra": 0
+    },
+    {
+      "kind": 6,
+      "button": 3,
+      "code": 113,
+      "x": 0,
+      "y": 0,
+      "extra": 0
+    },
+    {
+      "kind": 5,
+      "button": 0,
+      "code": 272,
+      "x": 0,
+      "y": 0,
+      "extra": 0
+    },
+    {
+      "kind": 6,
+      "button": 0,
+      "code": 272,
+      "x": 0,
+      "y": 0,
+      "extra": 0
+    },
+    {
+      "kind": 5,
+      "button": 4,
+      "code": 308,
+      "x": 0,
+      "y": 0,
+      "extra": 0
+    },
+    {
+      "kind": 7,
+      "button": 0,
+      "code": 0,
+      "x": 0,
+      "y": 0,
+      "extra": 0
+    },
+    {
+      "kind": 9,
+      "button": 0,
+      "code": 0,
+      "x": 0,
+      "y": 0,
+      "extra": 0
+    }
+  ]
+}

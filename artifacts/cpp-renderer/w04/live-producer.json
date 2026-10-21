@@ -1,0 +1,87 @@
+{
+  "tool": "stream_ring",
+  "fixture": "four-player-combat-v1",
+  "ring": "/Users/lukaszjawor/.hermes/cache/scratch/w04/demo4/run-20261021-143255-53343/frames.bin",
+  "tables": "/Users/lukaszjawor/.hermes/cache/scratch/w04/demo4/run-20261021-143255-53343/frames.bin.tables",
+  "tables_crc32": 1380653850,
+  "bindings": 18,
+  "kinds": 10,
+  "published_frames": 209,
+  "ticks_advanced": 210,
+  "elapsed_s": 88.628,
+  "publish_hz": 2.36,
+  "encode_ms": {
+    "samples": 209,
+    "median_ms": 1.431,
+    "p95_ms": 1.816,
+    "max_ms": 3.768
+  },
+  "sim_step_ms": {
+    "samples": 210,
+    "median_ms": 136.801,
+    "p95_ms": 472.845,
+    "max_ms": 517.272
+  },
+  "visibility": "detection: visible entity ids supplied per frame, fog predicates for effects and shots",
+  "renderer_visibility_ms": {
+    "samples": 209,
+    "median_ms": 111.575,
+    "p95_ms": 152.252,
+    "max_ms": 195.961
+  },
+  "renderer_visibility_note": "cost of computing what the player can see, measured outside the gather; the bridge receives these answers",
+  "instances_last_frame": 634,
+  "transients_last_frame": 1192,
+  "input": {
+    "ring": "/Users/lukaszjawor/.hermes/cache/scratch/w04/demo4/run-20261021-143255-53343/input.bin",
+    "attached": true,
+    "attached_after_s": 1.656,
+    "poll_ms": {
+      "samples": 207,
+      "median_ms": 58.166,
+      "p95_ms": 61.36,
+      "max_ms": 424.004
+    },
+    "events_delivered": 7,
+    "batches_read": 5,
+    "batches_skipped": 0,
+    "unmapped": 0,
+    "quit_requested": false,
+    "window": [
+      1280,
+      800
+    ],
+    "surface": [
+      1280,
+      800
+    ],
+    "messages": [
+      "select a unit to follow"
+    ],
+    "note": "the window publishes what the pointer and keyboard did; this process still runs InputController and the simulation validates every command"
+  },
+  "overlay": {
+    "ring": "/Users/lukaszjawor/.hermes/cache/scratch/w04/demo4/run-20261021-143255-53343/hud.bin",
+    "size": [
+      1280,
+      800
+    ],
+    "published_frames": 209,
+    "frame_bytes": {
+      "samples": 209,
+      "median_ms": 223540.0,
+      "p95_ms": 4096028.0,
+      "max_ms": 4096028.0
+    },
+    "publish_ms": {
+      "samples": 209,
+      "median_ms": 13.413,
+      "p95_ms": 21.927,
+      "max_ms": 67.175
+    },
+    "publish_note": "paint the HUD, encode the dirty rects and publish them; the paint is renderer work the bridge receives, the encode+publish is the cost of this transport",
+    "keyframes": 71,
+    "keyframe_seconds": 1.0,
+    "note": "the first overlay frame and every keyframe after --overlay-keyframe seconds are whole surfaces; the rest are dirty rects only, so a window that attaches late still converges on a complete HUD"
+  }
+}
