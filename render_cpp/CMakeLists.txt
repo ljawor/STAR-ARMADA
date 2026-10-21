@@ -61,7 +61,8 @@ else()
   message(FATAL_ERROR "W01 native targets are macOS Metal and Windows Direct3D12")
 endif()
 set(SHADER_OUTPUTS)
-foreach(NAME vs_fleet fs_fleet vs_shadow fs_shadow vs_ui fs_ui)
+foreach(NAME vs_fleet fs_fleet vs_shadow fs_shadow vs_ui fs_ui vs_planet fs_planet vs_mark fs_mark
+        vs_fog fs_fog vs_shield fs_shield)
   if(NAME MATCHES "^vs_")
     set(TYPE vertex)
   else()
@@ -107,6 +108,43 @@ target_include_directories(test_input PRIVATE include)
 add_test(NAME input COMMAND test_input)
 set_tests_properties(input PROPERTIES ENVIRONMENT
   "ARMADA_INPUT_FIXTURE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/input")
+add_executable(test_planets tests/test_planets.cpp)
+target_include_directories(test_planets PRIVATE include)
+target_compile_definitions(test_planets PRIVATE
+  ARMADA_PLANET_FIXTURE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/planets")
+add_executable(test_markers tests/test_markers.cpp)
+target_include_directories(test_markers PRIVATE include)
+add_test(NAME markers COMMAND test_markers)
+set_tests_properties(markers PROPERTIES ENVIRONMENT
+  "ARMADA_MARKER_FIXTURE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/markers")
+add_executable(test_explosion tests/test_explosion.cpp)
+target_include_directories(test_explosion PRIVATE include)
+add_test(NAME explosions COMMAND test_explosion)
+add_test(NAME planets COMMAND test_planets)
+set_tests_properties(planets PROPERTIES ENVIRONMENT
+  "ARMADA_PLANET_FIXTURE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/planets")
+add_executable(test_shield tests/test_shield.cpp)
+target_include_directories(test_shield PRIVATE include)
+add_test(NAME shields COMMAND test_shield)
+
+add_executable(test_hit tests/test_hit.cpp)
+add_executable(dump_hit_geometry tools/dump_hit_geometry.cpp)
+target_include_directories(dump_hit_geometry PRIVATE include)
+target_include_directories(test_hit PRIVATE include)
+add_test(NAME hits COMMAND test_hit)
+add_executable(test_fogmap tests/test_fogmap.cpp)
+target_include_directories(test_fogmap PRIVATE include)
+target_compile_definitions(test_fogmap PRIVATE
+  ARMADA_FOG_FIXTURE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/fog")
+add_test(NAME fog COMMAND test_fogmap)
+set_tests_properties(fog PROPERTIES ENVIRONMENT
+  "ARMADA_FOG_FIXTURE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/fog")
+add_executable(test_hardware tests/test_hardware.cpp)
+target_include_directories(test_hardware PRIVATE include)
+target_link_libraries(test_hardware PRIVATE armada_scene)
+target_compile_definitions(test_hardware PRIVATE
+  ARMADA_HARDWARE_FIXTURE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/hardware")
+add_test(NAME hardware COMMAND test_hardware "${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/hardware")
 add_executable(test_frame_v2 tests/test_frame_v2.cpp)
 target_link_libraries(test_frame_v2 PRIVATE armada_scene)
 target_compile_definitions(test_frame_v2 PRIVATE

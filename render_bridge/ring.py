@@ -13,7 +13,7 @@ Layout (little-endian, all offsets from the start of the mapping):
         0  8s  magic  b'ARMADAR1'
         8  u16 version (1)
        10  u16 slot count
-       12  u32 slot bytes (payload capacity is slot_bytes - 16)
+       13  u32 slot bytes (payload capacity is slot_bytes - 28)
        16  u64 published count (monotonic; the newest slot is (count - 1) % slots)
        24  .. reserved
 
@@ -40,7 +40,12 @@ VERSION = 1
 HEADER_BYTES = 64
 TAG = struct.Struct('<Q')
 LENGTH = struct.Struct('<I')
-SLOT_OVERHEAD = 2 * TAG.size + LENGTH.size
+SLOT_OVERHEAD = 2 * TAG.size + LENGTH.size   # offset of the frame bytes inside a slot
+# ...and the completing tag occupies the slot's last 8 bytes, so a frame one tag shorter than the
+# nominal capacity would have its tail overwritten by that tag. It went unnoticed because every
+# existing producer leaves slack; a fog mask sized exactly to capacity lost its last two texels and
+# failed its own crc.
+SLOT_TRAILER = TAG.size
 MIN_SLOT_BYTES = 1024
 
 
@@ -121,7 +126,7 @@ class Ring:
     # -- accessors ------------------------------------------------------------
     @property
     def payload_bytes(self):
-        return self.slot_bytes - SLOT_OVERHEAD
+        return self.slot_bytes - SLOT_OVERHEAD - SLOT_TRAILER
 
     @property
     def published(self):

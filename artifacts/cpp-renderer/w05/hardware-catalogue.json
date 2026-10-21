@@ -1,0 +1,33 @@
+{
+  "bindings": {
+    "imperial:planet_extractor": {
+      "bytes": 120063,
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "triangles": 2500
+    },
+    "imperial:planet_shield_generator": {
+      "bytes": 116038,
+      "roles": [
+        "accent",
+        "base",
+        "cool",
+        "dark",
+        "lit",
+        "trim"
+      ],
+      "triangles": 2416
+    }
+  },
+  "largest_blob_bytes": 120063,
+  "note": "one blob per binding: the window cannot read the asset catalogue for a mesh that only exists after a match starts",
+  "ring": "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/tests/fixtures/hardware/hardware.ring",
+  "source": "approved asset catalogue (render.asset_selection.mesh_for)",
+  "synthetic": false
+}

@@ -96,6 +96,20 @@ class RingTests(unittest.TestCase):
                 producer.publish(b'x' * (producer.payload_bytes + 1))
             self.assertEqual(producer.latest(), (0, b'small'))
 
+    def test_a_frame_at_exact_capacity_keeps_its_last_byte(self):
+        # The completing tag lives in the slot's last 8 bytes, so capacity is slot_bytes - 28, not
+        # slot_bytes - 20. The difference only shows up for a frame sized to capacity: two texels of
+        # a fog mask were being overwritten by the tag, and the mask failed its own crc.
+        with self.ring(slots=2, slot_bytes=4096) as producer:
+            frame = bytes([7]) * producer.payload_bytes
+            producer.publish(frame)
+            sequence, read_back = producer.latest()
+            self.assertEqual(sequence, 0)
+            self.assertEqual(len(read_back), producer.payload_bytes)
+            self.assertEqual(read_back, frame)
+            end_tag = ring.HEADER_BYTES + producer.slot_bytes - ring.TAG.size
+            self.assertEqual(ring.TAG.unpack_from(producer._buffer(), end_tag)[0], 2)
+
     def test_reopened_file_with_bad_header_is_refused(self):
         path = self.root / 'ring.bin'
         with ring.Ring.create(path, slots=2, slot_bytes=4096) as producer:

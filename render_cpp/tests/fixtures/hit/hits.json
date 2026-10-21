@@ -1,0 +1,25 @@
+{
+  "ages": [
+    0.06,
+    0.3,
+    0.1,
+    0.3
+  ],
+  "blob": "/Users/lukaszjawor/.hermes/cache/scratch/w05/hitfx/hits.bin",
+  "bytes": 196,
+  "kinds": [
+    7,
+    7,
+    8,
+    8
+  ],
+  "note": "written by render/emissive_batch.py::hits over tools/render/hit_scene.py",
+  "records": 4,
+  "ring": "/Users/lukaszjawor/.hermes/cache/scratch/w05/hitfx/hits.ring",
+  "seeds": [
+    7,
+    11,
+    3,
+    5
+  ]
+}

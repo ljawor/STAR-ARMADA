@@ -18,6 +18,7 @@ import argparse
 import signal
 import json
 from pathlib import Path
+import pygame
 import statistics
 import sys
 import time
@@ -27,9 +28,13 @@ sys.path.insert(0, str(ROOT))
 
 import game.core  # noqa: F401  core/systems import cycle, per the project skill
 from game.graphics_benchmark import make_fixture
-from render import asset_selection, fog
+from render import asset_selection, emissive_batch, fog, primitive_batch
+from render.renderer import projectile_extents
+from render_bridge import emissive as emissive_codec
+from render_bridge import markers as marker_codec
 from render.ship_sizes import ship_size
 from render_bridge import collect, packed, ring
+from tools.render import hardware_scene
 
 
 def configure_assets():
@@ -68,10 +73,41 @@ def main(argv=None):
     parser.add_argument('--overlay-slots', type=int, default=4)
     parser.add_argument('--overlay-all', action='store_true',
                         help='publish every overlay frame as a full surface (slow; for diagnosis)')
+    parser.add_argument('--fog-ring', type=Path,
+                        help='ring carrying the classified fog mask to the window (W05 slice 4); '
+                             'published once per change, not per frame')
+    parser.add_argument('--planet-ring', type=Path,
+                        help='ring carrying planet textures to the window (W05); one blob per '
+                             'distinct planet, published once')
+    parser.add_argument('--planet-texture', type=int, default=256,
+                        help='planet texture edge in pixels (W05)')
+    parser.add_argument('--emit-ring', type=Path,
+                        help='ring carrying weapon fire, beams, glows and jump rings (W05 slice 3)')
+    parser.add_argument('--marker-ring', type=Path,
+                        help='ring carrying selection rings, planet owner rings and ownership '
+                             'markers as primitives (W05 slice 2)')
+    parser.add_argument('--marker-mode', choices=('all', 'hostiles', 'off'), default='all',
+                        help='which ownership markers to publish (all = every detected unit; '
+                             'hostiles = the game\'s decluttered mode)')
+    parser.add_argument('--select', action='append', metavar='ID',
+                        help='entity id to draw a selection ring around (repeatable)')
+    parser.add_argument('--select-owned', action='store_true',
+                        help='diagnostic stand-in for live selection: ring every own ship')
     parser.add_argument('--input-ring', type=Path,
                         help='ring the C++ window publishes input on (W04); the producer attaches '
                              'when the file appears and feeds every event to the real '
                              'InputController')
+    parser.add_argument('--plant-building', metavar='KIND',
+                        help='diagnostic: plant one building of KIND on a planet, because a '
+                             'skirmish map has no colonies and the surface-hardware path has to '
+                             'be exercised on something')
+    parser.add_argument('--hide-building', action='store_true',
+                        help='diagnostic control: move the planet into place and then take the '
+                             'building off it, so a difference against the building frame is the '
+                             'building and not the planet')
+    parser.add_argument('--mesh-ring', type=Path,
+                        help='publish the surface-hardware meshes the offline catalogue cannot '
+                             'name, one blob per binding (W05)')
     parser.add_argument('--overlay-keyframe', type=float, default=2.0,
                         help='publish a full overlay surface at least this often, so a window '
                              'that attaches late still gets a complete HUD (0 disables)')
@@ -80,6 +116,14 @@ def main(argv=None):
     configure_assets()
     fixture = make_fixture(args.fixture)
     state, ds = fixture.manager.state, fixture.manager.ds
+    planted = None
+    if args.plant_building:
+        planted = hardware_scene.plant(state, kind=args.plant_building)
+        if args.hide_building:
+            planet, hull = planted
+            hull.is_station = False
+            hull.planet_building_slot = None
+            hull.planet_id = None
     _, _, stats = collect.collect(
         state, ds, None, asset_selection=asset_selection, ship_size=ship_size,
         ship_binding=asset_selection.ship_binding, all_visible=True)
@@ -101,8 +145,61 @@ def main(argv=None):
     tables_path = Path(str(args.ring) + '.tables')
     tables_path.write_bytes(tables.encode())
 
+    # W05 slice 3e: the meshes for surface hardware, published once. A building built during the
+    # match is not in the offline catalogue the window loaded, so its geometry travels here.
+    mesh_stats = None
+    if args.mesh_ring is not None:
+        mesh_stats = hardware_scene.publish(args.mesh_ring)
+        print(f'mesh ring {args.mesh_ring}: {len(mesh_stats["bindings"])} bindings, '
+              f'largest {mesh_stats["largest_blob_bytes"]} bytes', flush=True)
+
     # W03: the HUD is painted here, by the same Python code the legacy window uses, and only the
     # rects the recorder says changed are published. `compose` is the GL-free half of `render`.
+    # W05 slice 2: the ownership cues (selection rings, planet owner rings, markers) as one batch
+    # of primitives. The game decides them here; the window only draws.
+    # W05 slice 3: emissive primitives - weapon fire, beams, glows, jump rings.
+    emissive_ring = None
+    emit_ms, emit_counts = [], []
+    if args.emit_ring is not None:
+        emit_slot_bytes = (emissive_codec.HEADER.size
+                           + emissive_codec.MAX_RECORDS * emissive_codec.RECORD_BYTES)
+        args.emit_ring.parent.mkdir(parents=True, exist_ok=True)
+        emissive_ring = ring.Ring.create(args.emit_ring, slots=8, slot_bytes=emit_slot_bytes)
+
+    def weapon_type_of(weapon_id):
+        weapon = ds.weapons.get(weapon_id) if weapon_id is not None else None
+        return weapon.type if weapon is not None else None
+
+    marker_ring = None
+    marker_ms, marker_counts = [], []
+    selected_ids = set(int(v) for v in (args.select or []))
+    if marker_ring_path := args.marker_ring:
+        slot_bytes = marker_codec.HEADER.size + marker_codec.MAX_RECORDS * marker_codec.RECORD_BYTES
+        marker_ring_path.parent.mkdir(parents=True, exist_ok=True)
+        marker_ring = ring.Ring.create(marker_ring_path, slots=8, slot_bytes=slot_bytes)
+    if args.select_owned:
+        # Diagnostic stand-in, and the same one the HUD panel already uses: every own ship. Live
+        # selection itself is still W04 debt (the input bridge records orders, not selection).
+        selected_ids |= {entity.id for entity in state.entities.values()
+                         if entity.owner == args.local_player and entity.is_ship}
+    def radius_of(entity):
+        """World radius of the hull the frame drew, so a ring encloses what it is drawn around.
+
+        `instance scale` is a multiplier on a mesh authored at catalogue size, so a ring built
+        from it sits a few percent wide of the hull. `ship_size(...).radius` is the same world
+        radius the legacy renderer rings, minus its camera-dependent readability inflation, which
+        the window replaces with a pixel floor of its own.
+        """
+        if entity.is_planet or entity.is_station:
+            return float(entity.radius)
+        faction = (state.players[entity.owner].faction
+                   if entity.owner in state.players else 'imperial')
+        binding, scale = collector.visual(is_station=entity.is_station, data_id=entity.data_id,
+                                          faction=faction, radius=entity.radius)
+        if not isinstance(scale, (int, float)):
+            return 0.0        # unresolved binding: not drawn, so no cue around something invisible
+        size = ship_size(ds, entity.data_id, faction)
+        return float(getattr(size, 'radius', 0.0))
     overlay_ring = overlay_hud = None
     overlay_width, overlay_height = (int(v) for v in args.overlay_size.lower().split('x'))
     overlay_selection = set()
@@ -111,7 +208,6 @@ def main(argv=None):
     overlay_keyframes = 0
     overlay_last_full = float('-inf')
     if args.overlay_ring is not None:
-        import pygame
         pygame.font.init()
         from render.hud import HUD
         from render_bridge import overlay as overlay_codec
@@ -152,9 +248,53 @@ def main(argv=None):
         input_bridge_factory = lambda: RingInput(  # noqa: E731
             args.input_ring, controller, (overlay_width, overlay_height))
 
+    # W05 slice 4: the fog mask. Python classifies one texel per visibility cell (visible / charted
+    # / unexplored) and the window samples it; the mask is republished only when that classification
+    # changes, because the mask is derived data and re-deriving it natively would be a second
+    # opinion about what the player can see.
+    fog_ring = None
+    fog_mask = None
+    fog_generation = 0
+    fog_uploads = 0
+    fog_last_surface = None
+    fog_encode_ms = []
+    fog_cells = 0
+    if args.fog_ring is not None:
+        import math
+        from render_bridge import fogmap as fog_codec
+        cells = max(1, math.ceil(state.map_info.bounds / state.visibility_cell_size))
+        # The ring reserves 20 bytes for its begin tag and length, and the slot's last 8 bytes for
+        # the completing tag: 28 in all. A mask sized to the wrong figure either has its tail
+        # overwritten by that tag (and then fails its own crc) or is refused outright.
+        slot_bytes = fog_codec.HEADER_BYTES + cells * cells * 4 + 28
+        args.fog_ring.parent.mkdir(parents=True, exist_ok=True)
+        fog_ring = ring.Ring.create(args.fog_ring, slots=4, slot_bytes=slot_bytes)
+        fog_mask = fog.FogMask()
+        fog_cells = cells
+
+    # W05: planets travel as instances whose binding names a texture; the textures go over their
+    # own ring, once each, because they are static for the life of a match.
+    planet_ring = None
+    planet_textures = None
+    planet_blob_bytes = []
+    planet_encode_ms = []
+    if args.planet_ring is not None:
+        from render.planet_blobs import PlanetTextures
+        from render_bridge import planets as planet_codec
+        size = int(args.planet_texture)
+        if not 64 <= size <= 512:
+            raise SystemExit('--planet-texture must be 64..512')
+        slot_bytes = planet_codec.HEADER_BYTES + planet_codec.MAX_NAME + size * size * 4
+        args.planet_ring.parent.mkdir(parents=True, exist_ok=True)
+        planet_ring = ring.Ring.create(args.planet_ring, slots=8, slot_bytes=slot_bytes)
+        planet_textures = PlanetTextures(size=size)
+
     buffer = bytearray(packed.frame_size(packed.MAX_INSTANCES, packed.MAX_EFFECTS))
     encode_ms, step_ms, visibility_ms, hud_ms = [], [], [], []
     published = 0
+    # Colony shield-dome memory: which fields existed last frame and which were just hit. The pulse
+    # is a presentation decision, so it is tracked here and published, never guessed in the window.
+    planet_domes = emissive_batch.PlanetDomes()
     period = 1.0 / args.hz if args.hz > 0 else 0.0
     started = time.monotonic()
     deadline = started + args.seconds if args.seconds > 0 else None
@@ -202,6 +342,54 @@ def main(argv=None):
                 frame, counts = collector.collect_into(
                     state, buffer, tick=state.tick, frame_index=published)
                 out.publish(bytes(frame))
+                if emissive_ring is not None:
+                    emit_started = time.perf_counter()
+                    effect_allow = seen_state.get('effects') if detection else None
+                    shot_allow = seen_state.get('shots') if detection else None
+                    effects = [fx for fx in state.effects
+                               if effect_allow is None or id(fx) in effect_allow]
+                    shots = [shot for shot in state.projectiles.values()
+                             if shot_allow is None or id(shot) in shot_allow]
+                    emit_primitives, emit_stats = emissive_batch.build(
+                        effects, shots, weapon_type_of, projectile_extents)
+                    # W05 slice 5: standing shield shells. The window cannot know a unit's shield
+                    # fraction and must not guess it from hull damage, so the bubble crosses as a
+                    # tint plus a strength and the window builds the shell at its own camera.
+                    # `visible_ids is None` means the frame carries every entity (omniscient
+                    # diagnostic), so visibility is not a filter in that mode.
+                    shown = collector.visible_ids
+                    shielded = [entity for entity in state.entities.values()
+                                if entity.alive
+                                and (entity.is_ship or entity.is_squadron or entity.is_station)
+                                and (shown is None or entity.id in shown)]
+                    shield_primitives = emissive_batch.shields(shielded, radius_of)
+                    # W05 slice 3c: damage contacts. Position, normal, size, age and seed cross; the
+                    # window rebuilds the cap and the sparks at its own camera, so a contact stays
+                    # readable at any zoom.
+                    hit_primitives, hits_skipped = emissive_batch.hits(effects)
+                    # W05 slice 3d: colony shield domes. A dome is the same shell as a ship bubble,
+                    # so it crosses as the same kind-6 record; whether one exists and how brightly
+                    # it pulses after a loss are decided here, not in the window.
+                    dome_primitives = planet_domes.step(
+                        state, period if period else 1.0 / 60.0)
+                    emit_primitives = (emit_primitives + shield_primitives + hit_primitives
+                                       + dome_primitives)
+                    emit_stats['shields'] = len(shield_primitives)
+                    emit_stats['domes'] = len(dome_primitives)
+                    emit_stats['hits'] = len(hit_primitives)
+                    emit_stats['hits_skipped'] = hits_skipped
+                    emit_stats['primitives'] = len(emit_primitives)
+                    emissive_ring.publish(bytes(emissive_codec.encode(emit_primitives)))
+                    emit_ms.append((time.perf_counter() - emit_started) * 1000.0)
+                    emit_counts.append(emit_stats)
+                if marker_ring is not None:
+                    cues_started = time.perf_counter()
+                    primitives = primitive_batch.build(
+                        state, args.local_player, selected_ids, collector.visible_ids,
+                        radius_of=radius_of, mode=args.marker_mode)
+                    marker_ring.publish(bytes(marker_codec.encode(primitives)))
+                    marker_ms.append((time.perf_counter() - cues_started) * 1000.0)
+                    marker_counts.append(len(primitives))
                 encode_ms.append((time.perf_counter() - frame_started) * 1000.0)
                 if overlay_ring is not None:
                     hud_started = time.perf_counter()
@@ -225,6 +413,29 @@ def main(argv=None):
                     overlay_published += 1
                     overlay_sent.append(len(payload))
                     hud_ms.append((time.perf_counter() - hud_started) * 1000.0)
+                if planet_ring is not None and planet_textures is not None:
+                    # Encoding is the expensive half (a procedural 256x256 surface per new
+                    # planet), so it is timed rather than inferred from the blob size.
+                    planet_started = time.perf_counter()
+                    pending = planet_textures.pending(state)
+                    if pending:
+                        for blob in pending:
+                            planet_ring.publish(blob)
+                            planet_blob_bytes.append(len(blob))
+                        planet_encode_ms.append(
+                            (time.perf_counter() - planet_started) * 1000.0)
+                if fog_ring is not None:
+                    fog_started = time.perf_counter()
+                    surface = fog_mask.surface(state, args.local_player)
+                    if surface is not fog_last_surface:
+                        fog_generation += 1
+                        rgba = pygame.image.tobytes(surface, 'RGBA', False)
+                        fog_ring.publish(bytes(fog_codec.encode_blob(
+                            surface.get_width(), state.visibility_cell_size,
+                            state.map_info.bounds, fog_generation, rgba)))
+                        fog_last_surface = surface
+                        fog_uploads += 1
+                        fog_encode_ms.append((time.perf_counter() - fog_started) * 1000.0)
                 published += 1
                 if period:
                     next_at += period
@@ -253,6 +464,46 @@ def main(argv=None):
         'publish_hz': round(published / elapsed, 2) if elapsed else 0.0,
         'encode_ms': _stats(encode_ms),
         'sim_step_ms': _stats(step_ms),
+        'fog': ({
+            'ring': str(args.fog_ring) if args.fog_ring else None,
+            'cells': fog_cells,
+            'uploads': fog_uploads,
+            'generation': fog_generation,
+            'encode_ms': {'median': statistics.median(fog_encode_ms) if fog_encode_ms else 0.0,
+                          'worst': max(fog_encode_ms) if fog_encode_ms else 0.0},
+            'note': 'one texel per visibility cell; published only when the classification changes',
+        } if args.fog_ring else {}),
+        'emissive': ({
+            'ring': str(args.emit_ring) if args.emit_ring else None,
+            'encode_ms': {'median': statistics.median(emit_ms) if emit_ms else 0.0,
+                          'worst': max(emit_ms) if emit_ms else 0.0},
+            'frames': len(emit_counts),
+            'primitives_max': max((c['primitives'] for c in emit_counts), default=0),
+            'beams_skipped': sum(c.get('beams_skipped', 0) for c in emit_counts),
+            'legacy_shots': sum(c.get('legacy', 0) for c in emit_counts),
+            'bolts': sum(c.get('drawn', 0) for c in emit_counts),
+            'explosions': sum(c.get('explosions', 0) for c in emit_counts),
+            'explosions_skipped': sum(c.get('explosions_skipped', 0) for c in emit_counts),
+            'hits': sum(c.get('hits', 0) for c in emit_counts),
+            'hits_skipped': sum(c.get('hits_skipped', 0) for c in emit_counts),
+            'domes': sum(c.get('domes', 0) for c in emit_counts),
+            'squares': sum(c.get('squares', 0) for c in emit_counts),
+            'note': 'beams and glows in world units, bolts in pixels so the window keeps them at '
+                    'its own zoom; blasts travel as position/size/age/seed and are rebuilt by the '
+                    'window; additive, no depth write',
+        } if args.emit_ring else {}),
+        'cues': ({
+            'ring': str(args.marker_ring) if args.marker_ring else None,
+            'mode': args.marker_mode,
+            'selection': sorted(selected_ids) if args.select or args.select_owned else [],
+            'selection_is_diagnostic': bool(args.select_owned),
+            'encode_ms': {'median': statistics.median(marker_ms) if marker_ms else 0.0, 'worst': max(marker_ms) if marker_ms else 0.0},
+            'primitives': {'frames': len(marker_counts),
+                           'max': max(marker_counts) if marker_counts else 0,
+                           'total': sum(marker_counts)},
+            'note': 'selection rings, planet owner rings and ownership markers decided in Python; '
+                    'marker pixel size is left to the window camera',
+        } if args.marker_ring else {}),
         'visibility': ('detection: visible entity ids supplied per frame, fog predicates for '
                        'effects and shots' if detection else
                        'all_visible (omniscient diagnostic)'),
@@ -262,6 +513,19 @@ def main(argv=None):
         'instances_last_frame': counts['instances'],
         'transients_last_frame': counts['effects'],
     }
+    if planet_ring is not None:
+        planet_ring.close()
+        summary['planets'] = {
+            'ring': str(args.planet_ring),
+            'blob_bytes': {'samples': len(planet_blob_bytes),
+                           'total': sum(planet_blob_bytes),
+                           'min': min(planet_blob_bytes) if planet_blob_bytes else 0,
+                           'max': max(planet_blob_bytes) if planet_blob_bytes else 0},
+            'encode_ms': _stats(planet_encode_ms),
+            **(planet_textures.report() if planet_textures is not None else {}),
+            'note': ('one blob per distinct planet, published once: the texture is procedural and '
+                     'static, the sphere is drawn natively from the frame instance scale'),
+        }
     if args.input_ring is not None:
         summary['input'] = {
             'ring': str(args.input_ring),

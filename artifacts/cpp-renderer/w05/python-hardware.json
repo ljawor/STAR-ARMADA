@@ -1,0 +1,66 @@
+{
+  "absent": {
+    "lit_mean_rgb": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "lit_pixels": 0,
+    "peak": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "screenshot": "/Users/lukaszjawor/.hermes/cache/scratch/w05/hw2/python-hardware-absent.png"
+  },
+  "binding": "imperial:planet_extractor",
+  "building": {
+    "entity_id": 25,
+    "origin": [
+      0.0,
+      6601.0,
+      0.0
+    ],
+    "radius": 50.0
+  },
+  "camera": {
+    "distance": 300.0,
+    "height": 800,
+    "pitch": 24.0,
+    "target": [
+      0.0,
+      6601.0,
+      0.0
+    ],
+    "width": 1280,
+    "yaw": 20.0
+  },
+  "kind": "planet_extractor",
+  "note": "Python reference for the W05 surface-hardware slice: one planted building, station pass only, and the same camera with the building removed so the difference is the building",
+  "planet": {
+    "data_id": "temperate",
+    "id": 11,
+    "pos": [
+      0.0,
+      6000.0,
+      0.0
+    ],
+    "radius": 600.0
+  },
+  "present": {
+    "lit_mean_rgb": [
+      0.16089,
+      0.238708,
+      0.313153
+    ],
+    "lit_pixels": 22504,
+    "peak": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "screenshot": "/Users/lukaszjawor/.hermes/cache/scratch/w05/hw2/python-hardware.png"
+  },
+  "slot": 4,
+  "synthetic": true
+}

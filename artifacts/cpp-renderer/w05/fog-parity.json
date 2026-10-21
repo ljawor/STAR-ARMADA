@@ -1,0 +1,37 @@
+{
+  "background": {
+    "native": [
+      0.0314,
+      0.0549,
+      0.1059
+    ],
+    "python": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "footprint": {
+    "intersection": 791259,
+    "iou": 0.9972,
+    "only_native": 2244,
+    "only_python": 1,
+    "union": 793504
+  },
+  "native": {
+    "charted_pixels": 652935,
+    "opaque_pixels": 793503,
+    "unexplored_pixels": 140568
+  },
+  "note": "the two renderers clear to different colours, so every comparison is made against each side's own background; the native window's top 100 rows are excluded because they carry debug text",
+  "python": {
+    "charted_pixels": 670869,
+    "opaque_pixels": 791260,
+    "unexplored_pixels": 120391
+  },
+  "state_agreement": {
+    "agreement": 1.0,
+    "compared_pixels": 773326,
+    "disagreeing_pixels": 0
+  }
+}

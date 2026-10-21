@@ -13,3 +13,6 @@ vec3 v_normal : TEXCOORD1;
 vec4 v_color0 : COLOR0;
 vec4 v_shadow : TEXCOORD2;
 vec2 v_texcoord0 : TEXCOORD3;
+// W05 slice 5: the shell's own colour (tint pulled toward white, alpha after fade). TEXCOORD5 and 6
+// are free because the instanced pass declares only i_data0/i_data1.
+vec4 v_colour : TEXCOORD5;

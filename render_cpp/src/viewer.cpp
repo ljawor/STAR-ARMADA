@@ -1,8 +1,16 @@
 // Standalone W01 viewer: no authoritative game state and no Python runtime.
 #include "camera.hpp"
 #include "frame_v2.hpp"
+#include "emissive.hpp"
+#include "explosion.hpp"
+#include "fogmap.hpp"
+#include "hardware.hpp"
+#include "shield.hpp"
+#include "hit_effects.hpp"
 #include "input_ring.hpp"
+#include "marker_ring.hpp"
 #include "overlay.hpp"
+#include "planets.hpp"
 #include "scene.hpp"
 #include <SDL3/SDL.h>
 #ifdef __APPLE__
@@ -28,6 +36,10 @@ namespace fs = std::filesystem;
 // namespace there; a file-scope alias keeps the decoder reachable.
 namespace hud = armada::overlay;
 namespace input_ring = armada::input;
+namespace planets = armada::planet;
+namespace cues = armada::marker;
+namespace emit = armada::emissive;
+namespace fx = armada::fx;
 using Json = nlohmann::json;
 using Clock = std::chrono::steady_clock;
 
@@ -141,12 +153,20 @@ struct Callbacks final : bgfx::CallbackI {
 };
 struct Options {
   fs::path snapshot, assets, shaders = ARMADA_SHADER_DIR, shot, report, ring, tables, overlayRing,
-      inputRing;
+      inputRing, planetRing, markerRing, emitRing, fogRing, meshRing, fxDemo;
+  std::array<float, 3> focus{};
+  bool hasFocus = false;
+  // The map's star lights every planet (render/renderer.py sets GL_LIGHT0 to the star position,
+  // with y raised to at least 2000 so a system in the ecliptic still has a day side).
+  std::array<float, 3> star{0.f, 2000.f, 0.f};
   int inputSlots = 8;
   bool inputExercise = false;
   bool hudOnly = false;
   int width = 1280, height = 800, frames = 0, warmup = 30, preset = 1, msaa = 4;
   double seconds = 0.0, distance = 0.0, pitch = 0.0, yaw = 0.0;
+  // `> 0` cannot express "a level camera" or "yaw 0", so a requested 0 silently fell back to the
+  // stock 12/90. NaN means "not given".
+  bool pitchGiven = false, yawGiven = false;
   bool shadows = true, overlay = true, validate = false, exercise = false;
 };
 static Options options(int argc, char **argv) {
@@ -178,6 +198,37 @@ static Options options(int argc, char **argv) {
       o.overlayRing = value();
     else if (k == "--input-ring")
       o.inputRing = value();
+    else if (k == "--planet-ring")
+      o.planetRing = value();
+    else if (k == "--fog-ring")
+      o.fogRing = value();
+    else if (k == "--marker-ring")
+      o.markerRing = value();
+    else if (k == "--mesh-ring")
+      o.meshRing = value();
+    else if (k == "--emit-ring")
+      o.emitRing = value();
+    else if (k == "--fx-demo")
+      // Diagnostic only: one detonation in open space at a fixed age and seed, so the port can be
+      // compared with the Python reference frame. Not a simulation effect.
+      o.fxDemo = value();
+    else if (k == "--star") {
+      const std::string text = value();
+      std::array<float, 3> point{};
+      if (std::sscanf(text.c_str(), "%f,%f,%f", &point[0], &point[1], &point[2]) != 3)
+        throw std::runtime_error("--star expects x,y,z");
+      o.star = point;
+    }
+    else if (k == "--focus") {
+      // Look at a world point rather than the scene's own target: a planet sits tens of thousands
+      // of units out, so comparing it against the Python renderer needs the camera aimed at it.
+      const std::string text = value();
+      std::array<float, 3> point{};
+      if (std::sscanf(text.c_str(), "%f,%f,%f", &point[0], &point[1], &point[2]) != 3)
+        throw std::runtime_error("--focus expects x,y,z");
+      o.focus = point;
+      o.hasFocus = true;
+    }
     else if (k == "--input-slots")
       o.inputSlots = std::stoi(value());
     else if (k == "--input-exercise")
@@ -188,11 +239,13 @@ static Options options(int argc, char **argv) {
       o.seconds = std::stod(value());
     else if (k == "--distance")
       o.distance = std::stod(value());
-    else if (k == "--pitch")
+    else if (k == "--pitch") {
       o.pitch = std::stod(value());
-    else if (k == "--yaw")
+      o.pitchGiven = true;
+    } else if (k == "--yaw") {
       o.yaw = std::stod(value());
-    else if (k == "--warmup")
+      o.yawGiven = true;
+    } else if (k == "--warmup")
       o.warmup = std::stoi(value());
     else if (k == "--width")
       o.width = std::stoi(value());
@@ -227,7 +280,10 @@ static Options options(int argc, char **argv) {
              "the window still decides nothing\n"
              "           --input-exercise pushes a scripted click/key sequence through the real "
              "SDL pump so the return path can be replayed end to end (synthetic input, labelled "
-             "as such in the report)\n";
+             "as such in the report)\n"
+             "Planets (W05): --planet-ring planets.bin carries one ARMPLN01 texture per distinct "
+             "planet; the body itself is drawn from the frame instance whose binding names that "
+             "texture, scaled by the planet's radius\n";
       std::exit(0);
     } else
       throw std::runtime_error("Unknown option: " + k);
@@ -296,6 +352,103 @@ static uint8_t wireMod(SDL_Keymod mod) {
   return bits;
 }
 
+// W05: a unit sphere with equirectangular texture coordinates. The Python renderer draws planets
+// as textured spheres; this is the same body, built once, so a planet costs a matrix and a bind
+// rather than a mesh load.
+struct Sphere {
+  std::vector<float> vertices;      // pos(3) normal(3) uv(2)
+  std::vector<uint16_t> indices;
+};
+
+static Sphere unitSphere(int segments = 48, int rings = 24) {
+  Sphere sphere;
+  for (int ring = 0; ring <= rings; ++ring) {
+    const float v = float(ring) / float(rings);
+    const float phi = v * float(M_PI);
+    for (int segment = 0; segment <= segments; ++segment) {
+      const float u = float(segment) / float(segments);
+      const float theta = u * 2.f * float(M_PI);
+      const float nx = std::sin(phi) * std::cos(theta);
+      const float ny = std::cos(phi);
+      const float nz = std::sin(phi) * std::sin(theta);
+      sphere.vertices.insert(sphere.vertices.end(), {nx, ny, nz, nx, ny, nz, u, 1.f - v});
+    }
+  }
+  const int stride = segments + 1;
+  for (int ring = 0; ring < rings; ++ring) {
+    for (int segment = 0; segment < segments; ++segment) {
+      const uint16_t a = uint16_t(ring * stride + segment);
+      const uint16_t b = uint16_t(a + 1);
+      const uint16_t c = uint16_t(a + stride);
+      const uint16_t d = uint16_t(c + 1);
+      sphere.indices.insert(sphere.indices.end(), {a, c, b, b, c, d});
+    }
+  }
+  return sphere;
+}
+
+// W05: the planet textures the window holds, keyed by the name the frame binding carries.
+struct PlanetTextures {
+  std::unordered_map<std::string, bgfx::TextureHandle> byName;
+  bgfx::TextureHandle fallback = BGFX_INVALID_HANDLE;
+  size_t uploaded = 0, reused = 0, failures = 0, bytes = 0;
+
+  bool apply(const armada::planet::Blob &blob) {
+    if (byName.count(blob.name)) {
+      ++reused;
+      return false;
+    }
+    const uint32_t count = uint32_t(blob.width) * uint32_t(blob.height) * 4u;
+    const bgfx::Memory *memory = bgfx::copy(blob.rgba, count);
+    const bgfx::TextureHandle handle = bgfx::createTexture2D(
+        blob.width, blob.height, false, 1, bgfx::TextureFormat::RGBA8,
+        // Linear minification/magnification is the default; only clamp V, because an
+        // equirectangular texture has to wrap across the seam at U = 0/1.
+        BGFX_SAMPLER_V_CLAMP,
+        memory);
+    if (!bgfx::isValid(handle)) {
+      ++failures;
+      return false;
+    }
+    byName.emplace(blob.name, handle);
+    ++uploaded;
+    bytes += count;
+    return true;
+  }
+
+  bgfx::TextureHandle handleFor(const std::string &name) const {
+    const auto it = byName.find(name);
+    return it == byName.end() ? fallback : it->second;
+  }
+
+  void destroy() {
+    for (auto &entry : byName)
+      if (bgfx::isValid(entry.second))
+        bgfx::destroy(entry.second);
+    byName.clear();
+    if (bgfx::isValid(fallback))
+      bgfx::destroy(fallback);
+    fallback = BGFX_INVALID_HANDLE;
+  }
+};
+
+// W05 slice 2: ownership cues. The shapes are the Python ones (render/markers.py), copied rather
+// than approximated because a chevron that reads as a house is a different cue.
+struct CueVertex {
+  float x, y, z, r, g, b, a;
+};
+
+static const float kChevronPts[6][2] = {{-1.00f, 0.62f}, {-0.46f, 0.62f}, {0.00f, -0.18f},
+                                       {0.46f, 0.62f}, {1.00f, 0.62f}, {0.00f, -1.00f}};
+static const float kDiamondPts[6][2] = {{0.00f, 1.00f}, {0.72f, 0.20f}, {0.72f, -0.20f},
+                                       {0.00f, -1.00f}, {-0.72f, -0.20f}, {-0.72f, 0.20f}};
+
+static void pushCue(std::vector<CueVertex> &out, const float *point,
+                    const std::array<uint8_t, 4> &colour) {
+  out.push_back({point[0], point[1], point[2], colour[0] / 255.f, colour[1] / 255.f,
+                 colour[2] / 255.f, colour[3] / 255.f});
+}
+
 static bgfx::ShaderHandle shader(const fs::path &p) {
   std::ifstream f(p, std::ios::binary | std::ios::ate);
   if (!f)
@@ -354,6 +507,24 @@ struct Live {
   double period = 1.0 / 60.0;
   uint64_t adopted = 0, dropped = 0, decode_failures = 0, empty_draws = 0;
   std::vector<double> decode_ms, age_frames, alphas;
+  //: W05 planet bodies for this frame: texture name, world position, radius.
+  struct PlanetBody {
+    std::string texture;
+    std::array<float, 3> position{};
+    float radius = 1.f;
+    bool atmosphere = true;   // the Python renderer lights a barren planet without a shell
+  };
+  std::vector<PlanetBody> planets;
+  size_t planet_pose_failures = 0;
+  //: W05 surface hardware for this frame. Its binding names a mesh the producer published, and its
+  //: matrix is used as given: a building does not move, so there is nothing to interpolate.
+  struct SurfaceInstance {
+    std::string binding;
+    std::array<float, 12> matrix{};
+    std::array<uint8_t, 4> tint{255, 255, 255, 255};
+  };
+  std::vector<SurfaceInstance> surface;
+  size_t surface_unmeshed = 0;
 
   Live(const fs::path &ring_path, const fs::path &tables_path,
        const std::vector<Group> &groups)
@@ -424,8 +595,30 @@ struct Live {
         old.emplace(record.entity_id, &record);
 
     std::vector<float> scratch(20);
+    planets.clear();
+    surface.clear();
     for (const auto &record : current->instances) {
-      const auto it = group_of.find(tables.bindings.at(record.binding_id));
+      const std::string &binding = tables.bindings.at(record.binding_id);
+      if ((record.flags & armada::bridge::kFlagSurfaceFrame) != 0) {
+        // Verbatim: the frame's 12 floats are the surface basis the producer computed.
+        surface.push_back({binding, record.matrix, record.tint});
+        continue;
+      }
+      // W05: a planet is not a mesh. Its binding names the texture the window already holds, and
+      // the instance matrix is its position and radius, so it is collected instead of grouped.
+      if (planets::isPlanetBinding(binding)) {
+        try {
+          const auto pose = armada::bridge::pose_from_matrix(record.matrix);
+          const std::string kind = planets::planetKind(binding);
+          planets.push_back({planets::planetTextureName(binding),
+                             {pose.position[0], pose.position[1], pose.position[2]},
+                             pose.scale, kind != "barren"});
+        } catch (const armada::bridge::FrameError &) {
+          ++planet_pose_failures;
+        }
+        continue;
+      }
+      const auto it = group_of.find(binding);
       if (it == group_of.end())
         continue;
       auto pose = armada::bridge::pose_from_matrix(record.matrix);
@@ -641,6 +834,187 @@ static int run(const Options &o) {
   if (!bgfx::isValid(uiSampler))
     throw DeviceError("UI sampler creation failed");
   cleanup.actions.push_back([uiSampler] { bgfx::destroy(uiSampler); });
+  // W05 planet pass: sphere geometry, one program, one texture table fed by the planet ring.
+  Sphere sphere = unitSphere();
+  bgfx::VertexLayout planetLayout;
+  planetLayout.begin()
+      .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
+      .add(bgfx::Attrib::Normal, 3, bgfx::AttribType::Float)
+      .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
+      .end();
+  const bgfx::VertexBufferHandle sphereVbo = bgfx::createVertexBuffer(
+      bgfx::copy(sphere.vertices.data(), uint32_t(sphere.vertices.size() * sizeof(float))),
+      planetLayout);
+  const bgfx::IndexBufferHandle sphereIbo = bgfx::createIndexBuffer(
+      bgfx::copy(sphere.indices.data(), uint32_t(sphere.indices.size() * sizeof(uint16_t))));
+  if (!bgfx::isValid(sphereVbo) || !bgfx::isValid(sphereIbo))
+    throw DeviceError("Planet sphere buffer creation failed");
+  cleanup.actions.push_back([sphereVbo] { bgfx::destroy(sphereVbo); });
+  cleanup.actions.push_back([sphereIbo] { bgfx::destroy(sphereIbo); });
+  const bgfx::ProgramHandle planetProgram =
+      bgfx::createProgram(shader(o.shaders / "vs_planet.bin"),
+                          shader(o.shaders / "fs_planet.bin"), true);
+  if (!bgfx::isValid(planetProgram))
+    throw DeviceError("Planet program creation failed");
+  cleanup.actions.push_back([planetProgram] { bgfx::destroy(planetProgram); });
+  const bgfx::UniformHandle planetSampler =
+      bgfx::createUniform("s_planet", bgfx::UniformType::Sampler);
+  const bgfx::UniformHandle planetModel =
+      bgfx::createUniform("u_planet_model", bgfx::UniformType::Mat4);
+  const bgfx::UniformHandle planetFlags =
+      bgfx::createUniform("u_planet_flags", bgfx::UniformType::Vec4);
+  const bgfx::UniformHandle planetStar =
+      bgfx::createUniform("u_star", bgfx::UniformType::Vec4);
+  for (auto handle : {planetSampler, planetModel, planetFlags, planetStar}) {
+    if (!bgfx::isValid(handle))
+      throw DeviceError("Planet uniform creation failed");
+    cleanup.actions.push_back([handle] { bgfx::destroy(handle); });
+  }
+  // W05 slice 2: unlit cue pass - world-space lines and billboards the game already decided.
+  bgfx::VertexLayout cueLayout;
+  cueLayout.begin()
+      .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
+      .add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Float)
+      .end();
+  const bgfx::ProgramHandle cueProgram =
+      bgfx::createProgram(shader(o.shaders / "vs_mark.bin"),
+                          shader(o.shaders / "fs_mark.bin"), true);
+  if (!bgfx::isValid(cueProgram))
+    throw DeviceError("Cue program creation failed");
+  cleanup.actions.push_back([cueProgram] { bgfx::destroy(cueProgram); });
+  // W05 slice 5: the shield shell mesh. One view-space hemisphere per detail level, built once;
+  // every bubble in the frame is then an instance record of eight floats. The baked latitude terms
+  // (whiten, alpha) are the ones renderer.py::_shield_shell_list bakes into its display list.
+  bgfx::VertexLayout shieldLayout;
+  shieldLayout.begin()
+      .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
+      .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
+      .end();
+  bgfx::VertexBufferHandle shieldMesh[3] = {BGFX_INVALID_HANDLE, BGFX_INVALID_HANDLE,
+                                            BGFX_INVALID_HANDLE};
+  uint32_t shieldMeshVertices[3] = {0, 0, 0};
+  {
+    const int* grids[3] = {armada::fx::kShieldLow, armada::fx::kShieldMedium,
+                           armada::fx::kShieldHigh};
+    for (int level = 0; level < 3; ++level) {
+      std::vector<armada::fx::ShellVertex> mesh;
+      armada::fx::buildShellMesh(mesh, grids[level][0], grids[level][1]);
+      std::vector<float> packed;
+      packed.reserve(mesh.size() * 5);
+      for (const auto& v : mesh)
+        packed.insert(packed.end(), {v.x, v.y, v.z, v.whiten, v.alpha});
+      shieldMeshVertices[level] = uint32_t(mesh.size());
+      shieldMesh[level] = bgfx::createVertexBuffer(
+          bgfx::copy(packed.data(), uint32_t(packed.size() * sizeof(float))), shieldLayout);
+      if (!bgfx::isValid(shieldMesh[level]))
+        throw DeviceError("Shield mesh creation failed");
+      cleanup.actions.push_back([handle = shieldMesh[level]] { bgfx::destroy(handle); });
+    }
+  }
+  const bgfx::ProgramHandle shieldProgram =
+      bgfx::createProgram(shader(o.shaders / "vs_shield.bin"), shader(o.shaders / "fs_shield.bin"),
+                          true);
+  if (!bgfx::isValid(shieldProgram))
+    throw DeviceError("Shield program creation failed");
+  cleanup.actions.push_back([shieldProgram] { bgfx::destroy(shieldProgram); });
+  // W05 slice 3: emissive pass. Same vertex layout and program as the cues - unlit world-space
+  // triangles - but additive blending, so fire adds to the scene instead of covering it.
+  std::unique_ptr<armada::bridge::RingReader> emitRing;
+  uint64_t emitSequence = 0;
+  size_t emitBatches = 0, emitDecodeFailures = 0, emitPrimitives = 0, emitTriangles = 0,
+         emitDropped = 0;
+  // W05 slice 5: shield shells are counted across the run - they are the only emissive primitive
+  // whose cost scales with the number of shielded ships rather than with the number of shots.
+  size_t shieldShells = 0, shieldVertices = 0;
+  size_t shieldByDetail[3] = {0, 0, 0};
+  double shieldFade = 0.0;
+  // W05 slice 3c: damage contacts. Rebuilt geometry, so they are counted in triangles rather than
+  // in draws; the smoke list is separate because a dark mass may not be drawn additively.
+  size_t hitContacts = 0, hitShieldContacts = 0, hitHullContacts = 0, hitTrianglesCount = 0,
+         hitSmokeTris = 0, hitSparks = 0;
+  std::vector<uint8_t> emitPayload;
+  std::vector<emit::Primitive> emitList;
+  if (!o.emitRing.empty())
+    emitRing = std::make_unique<armada::bridge::RingReader>(o.emitRing);
+  std::unique_ptr<armada::bridge::RingReader> markerRing;
+  uint64_t markerSequence = 0;
+  size_t cueBatches = 0, cueDecodeFailures = 0, cueCircles = 0, cueMarkers = 0,
+         cueVertices = 0, cueDropped = 0;
+  std::vector<uint8_t> markerPayload;
+  std::vector<cues::Primitive> cuePrimitives;
+  if (!o.markerRing.empty())
+    markerRing = std::make_unique<armada::bridge::RingReader>(o.markerRing);
+  PlanetTextures planetTextures;
+  cleanup.actions.push_back([&planetTextures] { planetTextures.destroy(); });
+  {
+    const uint32_t grey = 0x404040ff;
+    const bgfx::Memory *memory = bgfx::copy(&grey, sizeof(grey));
+    planetTextures.fallback = bgfx::createTexture2D(
+        1, 1, false, 1, bgfx::TextureFormat::RGBA8, BGFX_SAMPLER_NONE, memory);
+  }
+  // W05 slice 4: fog. Python classifies one texel per visibility cell and the window samples it;
+  // the quad is the only geometry this pass owns.
+  struct FogVertex {
+    float x, y, z;
+    float u, v;
+  };
+  bgfx::VertexLayout fogLayout;
+  fogLayout.begin()
+      .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
+      .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
+      .end();
+  const bgfx::ProgramHandle fogProgram =
+      bgfx::createProgram(shader(o.shaders / "vs_fog.bin"),
+                          shader(o.shaders / "fs_fog.bin"), true);
+  if (!bgfx::isValid(fogProgram))
+    throw DeviceError("Fog program creation failed");
+  cleanup.actions.push_back([fogProgram] { bgfx::destroy(fogProgram); });
+  const bgfx::UniformHandle fogSampler =
+      bgfx::createUniform("s_fog", bgfx::UniformType::Sampler);
+  if (!bgfx::isValid(fogSampler))
+    throw DeviceError("Fog uniform creation failed");
+  cleanup.actions.push_back([fogSampler] { bgfx::destroy(fogSampler); });
+  bgfx::TextureHandle fogTexture = BGFX_INVALID_HANDLE;
+  int fogTextureCells = 0;
+  bgfx::VertexBufferHandle fogVbo = BGFX_INVALID_HANDLE;
+  uint32_t fogGeneration = 0;
+  float fogBounds = 0.f;
+  cleanup.actions.push_back([&fogTexture] {
+    if (bgfx::isValid(fogTexture))
+      bgfx::destroy(fogTexture);
+  });
+  cleanup.actions.push_back([&fogVbo] {
+    if (bgfx::isValid(fogVbo))
+      bgfx::destroy(fogVbo);
+  });
+  std::unique_ptr<armada::bridge::RingReader> fogRing;
+  uint64_t fogSequence = 0;
+  size_t fogMasks = 0, fogDecodeFailures = 0, fogFramesDrawn = 0;
+  std::vector<uint8_t> fogPayload;
+  if (!o.fogRing.empty())
+    fogRing = std::make_unique<armada::bridge::RingReader>(o.fogRing);
+  // W05 slice 3e: surface hardware. The window's catalogue comes from the offline snapshot, which
+  // cannot name a building that is constructed later, so the producer publishes the mesh itself.
+  struct HardwareMesh {
+    std::string binding;
+    armada::Mesh mesh;
+    bgfx::VertexBufferHandle vbo = BGFX_INVALID_HANDLE;
+  };
+  std::vector<HardwareMesh> hardwareMeshes;
+  std::unique_ptr<armada::bridge::RingReader> meshRing;
+  uint64_t meshSequence = 0;
+  size_t hardwareBlobs = 0, hardwareDecodeFailures = 0, hardwareInstances = 0,
+         hardwareDropped = 0;
+  std::vector<uint8_t> meshPayload;
+  if (!o.meshRing.empty())
+    meshRing = std::make_unique<armada::bridge::RingReader>(o.meshRing);
+  std::unique_ptr<armada::bridge::RingReader> planetRing;
+  uint64_t planetSequence = 0;
+  size_t planetBlobs = 0, planetDecodeFailures = 0, planetBodiesDrawn = 0,
+         planetUntextured = 0, planetFramesWithBodies = 0;
+  std::vector<uint8_t> planetPayload;
+  if (!o.planetRing.empty())
+    planetRing = std::make_unique<armada::bridge::RingReader>(o.planetRing);
   auto lightUniform =
            bgfx::createUniform("u_lightMatrix", bgfx::UniformType::Mat4),
        eyeUniform = bgfx::createUniform("u_eye", bgfx::UniformType::Vec4),
@@ -739,14 +1113,21 @@ static int run(const Options &o) {
   std::vector<double> wall, cpu, gpu;
   std::vector<uint32_t> draws;
   // Capture framing only; never touches simulation state.
-  if (o.distance > 0.0)
+  if (o.hasFocus) {
+    camera.target = o.focus;
+    camera.pitch = 12;
+    camera.yaw = 90;
+  }
+  if (o.distance > 0)
     camera.distance = float(o.distance);
-  if (o.pitch > 0.0)
+  if (o.pitchGiven)
     camera.pitch = float(o.pitch);
-  if (o.yaw > 0.0)
+  if (o.yawGiven)
     camera.yaw = float(o.yaw);
   auto previous = Clock::now();
   const auto live_start = Clock::now();
+  // The Python renderer spins a planet at 1.2 rad/s about its own axis (glRotatef(time * 1.2)).
+  double planetSeconds = 0.0;
   if (inputOut) {
     // First batch tells the consumer what the pointer is measured against, so it can map
     // window pixels onto the HUD surface without assuming a size.
@@ -763,6 +1144,8 @@ static int run(const Options &o) {
     const auto start = Clock::now();
     const float dt = std::chrono::duration<float>(start - previous).count();
     previous = start;
+    planetSeconds += dt;
+    const float planetSpin = float(planetSeconds * 1.2);
     if (live)
       live->step(groups);   // no frame yet leaves the groups empty on purpose
     if (live && o.seconds > 0.0 &&
@@ -939,6 +1322,12 @@ static int run(const Options &o) {
     bx::mtxLookAt(view, {eye[0], eye[1], eye[2]},
                   {camera.target[0], camera.target[1], camera.target[2]},
                   {0, 1, 0}, bx::Handedness::Right);
+    // NOTE: bx::mtxProj wants the vertical FOV in RADIANS while `camera.fov` holds degrees, so the
+    // effective vertical FOV is ~88 deg rather than the intended 55 - everything draws at about
+    // 54% of Python's apparent size at the same distance. Feeding toRad() here empties the frame
+    // entirely (the rest of the view setup depends on the current matrix), so correcting it means
+    // re-baselining every framing and benchmark - its own task, tracked in docs/RENDER_W05_EMIT
+    // and the W05 wrap-up. Until then, compare framings by scaling the distance by 0.62.
     bx::mtxProj(proj, camera.fov, float(width) / height, .5f, 150000.f,
                 bgfx::getCaps()->homogeneousDepth, bx::Handedness::Right);
     const float radius =
@@ -1014,6 +1403,693 @@ static int run(const Options &o) {
                      BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS |
                      BGFX_STATE_MSAA);
       bgfx::submit(1, program);
+    }
+    // W05 slice 3e: take in any surface-hardware mesh published since the last frame, then draw the
+    // buildings the frame placed. A building whose mesh has not arrived is counted and skipped - the
+    // producer publishes each binding once, so it appears on the next frame, not never.
+    if (meshRing) {
+      const uint64_t available = meshRing->published();
+      while (meshSequence < available) {
+        if (meshRing->read_at_sequence(meshSequence, available, meshPayload)) {
+          try {
+            auto mesh = armada::hardware::decode(meshPayload.data(), meshPayload.size());
+            bool known = false;
+            for (const auto &existing : hardwareMeshes)
+              known = known || existing.binding == mesh.binding;
+            if (!known) {
+              HardwareMesh entry;
+              entry.binding = mesh.binding;
+              entry.mesh = std::move(mesh);
+              entry.vbo = bgfx::createVertexBuffer(
+                  bgfx::copy(entry.mesh.vertices.data(),
+                             uint32_t(entry.mesh.vertices.size() * sizeof(armada::Vertex))),
+                  layout);
+              if (!bgfx::isValid(entry.vbo))
+                throw DeviceError("hardware mesh upload failed");
+              const auto handle = entry.vbo;
+              cleanup.actions.push_back([handle] { bgfx::destroy(handle); });
+              hardwareMeshes.push_back(std::move(entry));
+              ++hardwareBlobs;
+            }
+          } catch (const armada::hardware::HardwareError &) {
+            ++hardwareDecodeFailures;
+          }
+        }
+        ++meshSequence;
+      }
+    }
+    if (live && !live->surface.empty()) {
+      live->surface_unmeshed = 0;
+      for (const auto &h : hardwareMeshes) {
+        std::vector<float> instances;
+        for (const auto &building : live->surface) {
+          if (building.binding != h.binding)
+            continue;
+          float row[20] = {building.matrix[0], building.matrix[1], building.matrix[2], 0.f,
+                           building.matrix[3], building.matrix[4], building.matrix[5], 0.f,
+                           building.matrix[6], building.matrix[7], building.matrix[8], 0.f,
+                           building.matrix[9], building.matrix[10], building.matrix[11], 1.f,
+                           building.tint[0] / 255.f, building.tint[1] / 255.f,
+                           building.tint[2] / 255.f, building.tint[3] / 255.f};
+          instances.insert(instances.end(), row, row + 20);
+        }
+        const uint32_t count = uint32_t(instances.size() / 20);
+        if (!count)
+          continue;
+        if (bgfx::getAvailInstanceDataBuffer(count, 80) < count) {
+          hardwareDropped += count;
+          continue;
+        }
+        bgfx::InstanceDataBuffer buffer;
+        bgfx::allocInstanceDataBuffer(&buffer, count, 80);
+        std::memcpy(buffer.data, instances.data(), instances.size() * sizeof(float));
+        if (shadows) {
+          bgfx::setVertexBuffer(0, h.vbo);
+          bgfx::setInstanceDataBuffer(&buffer);
+          bgfx::setState(BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS);
+          bgfx::submit(0, shadowProgram);
+        }
+        bgfx::setVertexBuffer(0, h.vbo);
+        bgfx::setInstanceDataBuffer(&buffer);
+        bgfx::setUniform(lightUniform, lightMtx);
+        bgfx::setUniform(eyeUniform, eyeData);
+        bgfx::setUniform(optionsUniform, optionData);
+        bgfx::setTexture(0, shadowSampler, depth);
+        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A |
+                       BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS |
+                       BGFX_STATE_MSAA);
+        bgfx::submit(1, program);
+        hardwareInstances += count;
+      }
+      for (const auto &building : live->surface) {
+        bool meshed = false;
+        for (const auto &h : hardwareMeshes)
+          meshed = meshed || h.binding == building.binding;
+        if (!meshed)
+          ++live->surface_unmeshed;
+      }
+    }
+    // W05: take in any planet texture published since the last frame, then draw the bodies the
+    // frame asked for. A planet whose texture has not arrived yet draws with the grey fallback and
+    // is counted, never silently dropped.
+    if (planetRing) {
+      const uint64_t available = planetRing->published();
+      while (planetSequence < available) {
+        if (planetRing->read_at_sequence(planetSequence, available, planetPayload)) {
+          try {
+            const auto blob = planets::decode(planetPayload.data(), planetPayload.size());
+            if (planetTextures.apply(blob))
+              ++planetBlobs;
+          } catch (const planets::PlanetError &) {
+            ++planetDecodeFailures;
+          }
+        }
+        ++planetSequence;
+      }
+    }
+    if (live && !live->planets.empty()) {
+      ++planetFramesWithBodies;
+      bgfx::setUniform(eyeUniform, eyeData);
+      const float starData[4] = {o.star[0], std::max(o.star[1], 2000.f), o.star[2], 1.f};
+      bgfx::setUniform(planetStar, starData);
+      for (const auto &body : live->planets) {
+        const float px = body.position[0], py = body.position[1], pz = body.position[2];
+        const float pr = body.radius;
+        // Build the body matrix through the same helper the fleet's instances use: bx::mtxMul's
+        // operand order is easy to get wrong (it produced a translation of radius * distance
+        // instead of distance), and this path is already exercised by 638 ships.
+        float model[20];
+        armada::bridge::Pose bodyPose;
+        bodyPose.position = {px, py, pz};
+        bodyPose.scale = pr;
+        bodyPose.yaw = planetSpin;
+        armada::bridge::write_instance(model, bodyPose, {{255, 255, 255, 255}});
+        // bgfx clears the draw state after every submit, so each body rebinds geometry and state.
+        // The matrix travels as an instance (as the fleet's does) rather than through u_model.
+        bgfx::setVertexBuffer(0, sphereVbo);
+        bgfx::setIndexBuffer(sphereIbo);
+        bgfx::setUniform(planetModel, model);
+        const float flags[4] = {body.atmosphere ? 1.f : 0.f, 0.f, 0.f, 0.f};
+        bgfx::setUniform(planetFlags, flags);
+        const bgfx::TextureHandle texture = planetTextures.handleFor(body.texture);
+        if (!bgfx::isValid(texture) || texture.idx == planetTextures.fallback.idx)
+          ++planetUntextured;
+        bgfx::setTexture(0, planetSampler, texture);
+        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_Z |
+                       BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_MSAA);
+        bgfx::submit(1, planetProgram);
+        ++planetBodiesDrawn;
+      }
+    }
+    // W05 slice 4: the fog mask. Drawn after the bodies and with depth testing off, because in the
+    // Python renderer the mask is a picture of what the player knows rather than geometry in the
+    // world: it covers unexplored space, and the ships in it.
+    if (fogRing) {
+      const uint64_t available = fogRing->published();
+      while (fogSequence < available) {
+        if (fogRing->read_at_sequence(fogSequence, available, fogPayload)) {
+          try {
+            const auto mask = armada::fogmap::decode(fogPayload);
+            if (mask.generation != fogGeneration || mask.cells != fogTextureCells) {
+              const uint32_t side = uint32_t(mask.cells);
+              const bgfx::Memory *pixels =
+                  bgfx::copy(mask.rgba.data(), uint32_t(mask.rgba.size()));
+              if (bgfx::isValid(fogTexture) && mask.cells == fogTextureCells) {
+                bgfx::updateTexture2D(fogTexture, 0, 0, 0, 0, side, side, pixels);
+              } else {
+                if (bgfx::isValid(fogTexture))
+                  bgfx::destroy(fogTexture);
+                fogTexture = bgfx::createTexture2D(
+                    uint16_t(side), uint16_t(side), false, 1,
+                    bgfx::TextureFormat::RGBA8,
+                    BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP |
+                        BGFX_SAMPLER_MIN_POINT | BGFX_SAMPLER_MAG_POINT |
+                        BGFX_SAMPLER_MIP_POINT,
+                    pixels);
+                fogTextureCells = mask.cells;
+              }
+              if (mask.bounds != fogBounds) {
+                fogBounds = mask.bounds;
+                const float h = fogBounds * 0.5f;
+                const FogVertex quad[6] = {{-h, 0.f, -h, 0.f, 0.f}, {h, 0.f, -h, 1.f, 0.f},
+                                           {h, 0.f, h, 1.f, 1.f},  {-h, 0.f, -h, 0.f, 0.f},
+                                           {h, 0.f, h, 1.f, 1.f},  {-h, 0.f, h, 0.f, 1.f}};
+                if (bgfx::isValid(fogVbo))
+                  bgfx::destroy(fogVbo);
+                fogVbo = bgfx::createVertexBuffer(
+                    bgfx::copy(quad, sizeof(quad)), fogLayout);
+              }
+              fogGeneration = mask.generation;
+              ++fogMasks;
+            }
+          } catch (const armada::fogmap::FogMapError &) {
+            ++fogDecodeFailures;
+          }
+        }
+        ++fogSequence;
+      }
+    }
+    if (bgfx::isValid(fogTexture) && bgfx::isValid(fogVbo)) {
+      bgfx::setVertexBuffer(0, fogVbo);
+      bgfx::setTexture(0, fogSampler, fogTexture);
+      bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA);
+      bgfx::submit(1, fogProgram);
+      ++fogFramesDrawn;
+    }
+    // W05 slice 2: ownership cues. A batch is a few hundred primitives, so the geometry is rebuilt
+    // on the CPU each frame and drawn unlit: rings as line segments, markers as billboards.
+    if (markerRing) {
+      const uint64_t available = markerRing->published();
+      if (available > markerSequence &&
+          markerRing->read_at_sequence(available - 1, available, markerPayload)) {
+        markerSequence = available;
+        try {
+          cuePrimitives = cues::decode(markerPayload.data(), markerPayload.size());
+          ++cueBatches;
+        } catch (const cues::MarkerError &) {
+          ++cueDecodeFailures;      // a damaged batch must not half-draw: keep the last good one
+        }
+      }
+    }
+    if (!cuePrimitives.empty()) {
+      std::vector<CueVertex> flatLines, depthLines, fill;
+      // Billboard basis: rows 0 and 1 of the view rotation, which is what the Python markers use.
+      const float rx = view[0], ry = view[4], rz = view[8];
+      const float ux = view[1], uy = view[5], uz = view[9];
+      const float focal = float(height) * 0.5f /
+                          std::tan(camera.fov * 0.5f * float(M_PI) / 180.f);
+      for (const auto &primitive : cuePrimitives) {
+        if (primitive.kind == cues::kCircle) {
+          const int segments = primitive.segments ? int(primitive.segments) : 28;
+          // A ring at the frame's catalogue scale is a hairline when the camera is far away (a
+          // convoy hull is ~1.5 world units), so the radius is lifted to a legible floor on
+          // screen. Same rule and same reason as marker_px: what crosses is the decision, the
+          // window keeps the cue readable at any zoom.
+          const float viewZ = view[2] * primitive.centre[0] + view[6] * primitive.centre[1] +
+                              view[10] * primitive.centre[2] + view[14];
+          const float depth = std::max(1.f, -viewZ);
+          const float projected = primitive.size * focal / depth;
+          float ringSize = primitive.size;
+          if (projected > 0.f && projected < 9.f)
+            ringSize *= 9.f / projected;
+          std::vector<CueVertex> &out = primitive.depth() ? depthLines : flatLines;
+          for (int i = 0; i < segments; ++i) {
+            const float a0 = float(i) / float(segments) * 2.f * float(M_PI);
+            const float a1 = float(i + 1) / float(segments) * 2.f * float(M_PI);
+            const float s0 = std::sin(a0) * ringSize, c0 = std::cos(a0) * ringSize;
+            const float s1 = std::sin(a1) * ringSize, c1 = std::cos(a1) * ringSize;
+            float start[3], end[3];
+            if (primitive.shape == cues::kShapeUpright) {
+              start[0] = primitive.centre[0] + s0; start[1] = primitive.centre[1] + c0;
+              start[2] = primitive.centre[2];
+              end[0] = primitive.centre[0] + s1; end[1] = primitive.centre[1] + c1;
+              end[2] = primitive.centre[2];
+            } else {
+              start[0] = primitive.centre[0] + s0; start[1] = primitive.centre[1];
+              start[2] = primitive.centre[2] + c0;
+              end[0] = primitive.centre[0] + s1; end[1] = primitive.centre[1];
+              end[2] = primitive.centre[2] + c1;
+            }
+            pushCue(out, start, primitive.colour);
+            pushCue(out, end, primitive.colour);
+          }
+          ++cueCircles;
+          continue;
+        }
+        // A marker's footprint comes from this camera, exactly as render/markers.py does it, so the
+        // icon stays 9-15 px whatever the window's zoom is.
+        const float viewZ = view[2] * primitive.centre[0] + view[6] * primitive.centre[1] +
+                            view[10] * primitive.centre[2] + view[14];
+        const float depth = std::max(1.f, -viewZ);
+        const float apparent = 2.f * primitive.size * focal / depth;
+        const float px = std::max(9.f, std::min(15.f, 9.f + std::max(0.f, apparent) * 0.12f));
+        const float radius = (px * 0.5f) * depth / focal;
+        const float *polygon = primitive.shape == cues::kShapeDiamond ? &kDiamondPts[0][0]
+                                                                     : &kChevronPts[0][0];
+        const float anchor[3] = {primitive.centre[0] + ux * radius * 1.55f,
+                                 primitive.centre[1] + uy * radius * 1.55f,
+                                 primitive.centre[2] + uz * radius * 1.55f};
+        float points[6][3];
+        for (int i = 0; i < 6; ++i) {
+          points[i][0] = anchor[0] + rx * polygon[i * 2] * radius + ux * polygon[i * 2 + 1] * radius;
+          points[i][1] = anchor[1] + ry * polygon[i * 2] * radius + uy * polygon[i * 2 + 1] * radius;
+          points[i][2] = anchor[2] + rz * polygon[i * 2] * radius + uz * polygon[i * 2 + 1] * radius;
+        }
+        for (int i = 1; i + 1 < 6; ++i) {          // triangle fan over the outline
+          pushCue(fill, points[0], primitive.colour);
+          pushCue(fill, points[i], primitive.colour);
+          pushCue(fill, points[i + 1], primitive.colour);
+        }
+        const std::array<uint8_t, 4> outline = {5, 8, 13, primitive.colour[3]};
+        for (int i = 0; i < 6; ++i) {
+          pushCue(flatLines, points[i], outline);
+          pushCue(flatLines, points[(i + 1) % 6], outline);
+        }
+        ++cueMarkers;
+      }
+      auto submitCues = [&](const std::vector<CueVertex> &verts, uint64_t primitive,
+                            bool depthTest) {
+        if (verts.empty())
+          return;
+        const uint32_t count = uint32_t(verts.size());
+        if (bgfx::getAvailTransientVertexBuffer(count, cueLayout) < count) {
+          cueDropped += count;      // counted, not silently squeezed
+          return;
+        }
+        bgfx::TransientVertexBuffer tvb;
+        bgfx::allocTransientVertexBuffer(&tvb, count, cueLayout);
+        std::memcpy(tvb.data, verts.data(), count * sizeof(CueVertex));
+        bgfx::setVertexBuffer(0, &tvb);
+        uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_MSAA | primitive |
+                         BGFX_STATE_BLEND_ALPHA;
+        if (depthTest)
+          state |= BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS;
+        bgfx::setState(state);
+        bgfx::submit(1, cueProgram);
+        cueVertices += count;
+      };
+      submitCues(depthLines, BGFX_STATE_PT_LINES, true);
+      submitCues(flatLines, BGFX_STATE_PT_LINES, false);
+      submitCues(fill, 0, false);   // triangle lists are bgfx's default primitive type
+    }
+    // W05 slice 3: emissive pass - beams, glows, rings and bolts. The batch is small, so the
+    // geometry is built on the CPU, and everything blends additively: fire adds light to a scene
+    // rather than covering it.
+    if (emitRing) {
+      const uint64_t available = emitRing->published();
+      if (available > emitSequence &&
+          emitRing->read_at_sequence(available - 1, available, emitPayload)) {
+        emitSequence = available;
+        try {
+          emitList = emit::decode(emitPayload.data(), emitPayload.size());
+          ++emitBatches;
+        } catch (const emit::EmissiveError &) {
+          ++emitDecodeFailures;      // keep the last good batch rather than half-draw a volley
+        }
+      }
+    }
+    if (!o.fxDemo.empty() && emitList.empty()) {
+      // size,age,seed
+      float size = 120.f, age = 0.35f;
+      unsigned seed = 7;
+      std::sscanf(o.fxDemo.c_str(), "%f,%f,%u", &size, &age, &seed);
+      emit::Primitive demo{};
+      // "disc:SIZE,ALPHA" is a single-primitive alpha probe: one flat red disc whose on-screen
+      // value must equal ALPHA over the background. It is how the blend state is checked.
+      demo.kind = emit::kExplosion;
+      const std::string demoSpec = o.fxDemo.string();
+      if (demoSpec.rfind("disc:", 0) == 0) {
+        float dsize = 100.f, dalpha = 0.5f;
+        std::sscanf(demoSpec.c_str() + 5, "%f,%f", &dsize, &dalpha);
+        demo.kind = emit::kDisc;
+        demo.a = {camera.target[0], camera.target[1], camera.target[2]};
+        demo.radius = dsize;
+        demo.colour = {255, 0, 0, uint8_t(std::lround(dalpha * 255.f))};
+        emitList.assign(1, demo);
+      }
+      demo.a = {camera.target[0], camera.target[1], camera.target[2]};
+      demo.radius = size;
+      demo.width = age;
+      demo.segments = uint16_t(seed & 0xFFFFu);
+      emitList.assign(1, demo);
+    }
+    if (!emitList.empty()) {
+      std::vector<CueVertex> nearTriangles, farTriangles, smokeTriangles;
+      // Contacts are alpha-blended surface markings, not light: they ride their own submitted pair
+      // (triangles then smoke) so a fireball's additive pass cannot saturate them.
+      std::vector<CueVertex> hitTriangles, hitSmokeVerts;
+      size_t fxLayers = 0, fxVertexCount = 0;
+      double fxAlphaSum = 0.0;
+      const float kShieldMinPx = 74.f;   // renderer.py::SHIELD_MIN_PX, applied at this camera
+      const float rx = view[0], ry = view[4], rz = view[8];
+      const float ux = view[1], uy = view[5], uz = view[9];
+      const float rightVec[3] = {rx, ry, rz};
+      const float upVec[3] = {ux, uy, uz};
+      const float eyeVec[3] = {float(eye[0]), float(eye[1]), float(eye[2])};
+      const float focal = float(height) * 0.5f /
+                          std::tan(camera.fov * 0.5f * float(M_PI) / 180.f);
+      auto eyeDepth = [&](const float *p) {
+        return std::max(1.f, -(view[2] * p[0] + view[6] * p[1] + view[10] * p[2] + view[14]));
+      };
+      auto tint = [](const std::array<uint8_t, 4> &c, float alpha) {
+        return std::array<float, 4>{c[0] / 255.f, c[1] / 255.f, c[2] / 255.f,
+                                    (c[3] / 255.f) * alpha};
+      };
+      auto push = [](std::vector<CueVertex> &out, const float *p, const std::array<float, 4> &c) {
+        out.push_back({p[0], p[1], p[2], c[0], c[1], c[2], c[3]});
+      };
+      auto triangle = [&](std::vector<CueVertex> &out, const float *a, const float *b,
+                          const float *c, const std::array<float, 4> &colour) {
+        push(out, a, colour); push(out, b, colour); push(out, c, colour);
+        emitTriangles += 1;
+      };
+      auto quad = [&](std::vector<CueVertex> &out, const float *a, const float *b, const float *c,
+                      const float *d, const std::array<float, 4> &colour) {
+        triangle(out, a, b, c, colour);
+        triangle(out, a, c, d, colour);
+      };
+      // W05 slice 5: one bucket of instance records per detail level. Three instanced draws per
+      // frame replace ~2,400 CPU-built vertices per shielded unit.
+      std::vector<float> shieldInstances[3];
+      for (const auto &primitive : emitList) {
+        std::vector<CueVertex> &out = primitive.depth() ? farTriangles : nearTriangles;
+        ++emitPrimitives;
+        const std::array<float, 4> colour = tint(primitive.colour, 1.f);
+        if (primitive.kind == emit::kRibbon) {
+          // Camera-facing ribbon: the perpendicular is the beam axis crossed with the eye vector,
+          // exactly as renderer.py::_beam_ribbon builds it.
+          const float axis[3] = {primitive.b[0] - primitive.a[0], primitive.b[1] - primitive.a[1],
+                                 primitive.b[2] - primitive.a[2]};
+          const float lengthSq = axis[0] * axis[0] + axis[1] * axis[1] + axis[2] * axis[2];
+          if (lengthSq < 1e-12f)
+            continue;
+          const float mid[3] = {(primitive.a[0] + primitive.b[0]) * 0.5f,
+                                (primitive.a[1] + primitive.b[1]) * 0.5f,
+                                (primitive.a[2] + primitive.b[2]) * 0.5f};
+          const float length = std::sqrt(lengthSq);
+          const float nx = axis[0] / length, ny = axis[1] / length, nz = axis[2] / length;
+          const float vx = mid[0] - float(eye[0]), vy = mid[1] - float(eye[1]),
+                      vz = mid[2] - float(eye[2]);
+          float px = ny * vz - nz * vy, py = nz * vx - nx * vz, pz = nx * vy - ny * vx;
+          const float plen = std::sqrt(px * px + py * py + pz * pz);
+          if (plen < 1e-6f)
+            continue;                    // a beam pointing at the eye has no on-screen width
+          px = px / plen * primitive.width;
+          py = py / plen * primitive.width;
+          pz = pz / plen * primitive.width;
+          const float a0[3] = {primitive.a[0] - px, primitive.a[1] - py, primitive.a[2] - pz};
+          const float a1[3] = {primitive.a[0] + px, primitive.a[1] + py, primitive.a[2] + pz};
+          const float b0[3] = {primitive.b[0] - px, primitive.b[1] - py, primitive.b[2] - pz};
+          const float b1[3] = {primitive.b[0] + px, primitive.b[1] + py, primitive.b[2] + pz};
+          quad(out, a0, b0, b1, a1, colour);
+        } else if (primitive.kind == emit::kDisc) {
+          // Glow: hot centre, transparent rim - the falloff rides in the vertex colour.
+          const int segments = primitive.segments ? int(primitive.segments) : 24;
+          const std::array<float, 4> centre = tint(primitive.colour, 1.f);
+          const std::array<float, 4> rim = tint(primitive.colour, 0.f);
+          const float *origin = primitive.a.data();
+          for (int i = 0; i < segments; ++i) {
+            const float t0 = float(i) / segments * 2.f * float(M_PI);
+            const float t1 = float(i + 1) / segments * 2.f * float(M_PI);
+            float p0[3], p1[3];
+            if (primitive.shape == emit::kShapeFlat) {
+              p0[0] = origin[0] + std::sin(t0) * primitive.radius; p0[1] = origin[1];
+              p0[2] = origin[2] + std::cos(t0) * primitive.radius;
+              p1[0] = origin[0] + std::sin(t1) * primitive.radius; p1[1] = origin[1];
+              p1[2] = origin[2] + std::cos(t1) * primitive.radius;
+            } else {
+              p0[0] = origin[0] + (rx * std::cos(t0) + ux * std::sin(t0)) * primitive.radius;
+              p0[1] = origin[1] + (ry * std::cos(t0) + uy * std::sin(t0)) * primitive.radius;
+              p0[2] = origin[2] + (rz * std::cos(t0) + uz * std::sin(t0)) * primitive.radius;
+              p1[0] = origin[0] + (rx * std::cos(t1) + ux * std::sin(t1)) * primitive.radius;
+              p1[1] = origin[1] + (ry * std::cos(t1) + uy * std::sin(t1)) * primitive.radius;
+              p1[2] = origin[2] + (rz * std::cos(t1) + uz * std::sin(t1)) * primitive.radius;
+            }
+            push(out, origin, centre);
+            push(out, p0, rim);
+            push(out, p1, rim);
+            emitTriangles += 1;
+          }
+        } else if (primitive.kind == emit::kRing) {
+          const int segments = primitive.segments ? int(primitive.segments) : 32;
+          const float inner = std::max(0.f, primitive.radius - primitive.width);
+          const float outer = primitive.radius + primitive.width;
+          for (int i = 0; i < segments; ++i) {
+            const float t0 = float(i) / segments * 2.f * float(M_PI);
+            const float t1 = float(i + 1) / segments * 2.f * float(M_PI);
+            float i0[3], o0[3], i1[3], o1[3];
+            if (primitive.shape == emit::kShapeFlat) {
+              i0[0] = primitive.a[0] + std::sin(t0) * inner; i0[1] = primitive.a[1];
+              i0[2] = primitive.a[2] + std::cos(t0) * inner;
+              o0[0] = primitive.a[0] + std::sin(t0) * outer; o0[1] = primitive.a[1];
+              o0[2] = primitive.a[2] + std::cos(t0) * outer;
+              i1[0] = primitive.a[0] + std::sin(t1) * inner; i1[1] = primitive.a[1];
+              i1[2] = primitive.a[2] + std::cos(t1) * inner;
+              o1[0] = primitive.a[0] + std::sin(t1) * outer; o1[1] = primitive.a[1];
+              o1[2] = primitive.a[2] + std::cos(t1) * outer;
+            } else {
+              const float c0 = std::cos(t0), s0 = std::sin(t0);
+              const float c1 = std::cos(t1), s1 = std::sin(t1);
+              i0[0] = primitive.a[0] + (rx * c0 + ux * s0) * inner;
+              i0[1] = primitive.a[1] + (ry * c0 + uy * s0) * inner;
+              i0[2] = primitive.a[2] + (rz * c0 + uz * s0) * inner;
+              o0[0] = primitive.a[0] + (rx * c0 + ux * s0) * outer;
+              o0[1] = primitive.a[1] + (ry * c0 + uy * s0) * outer;
+              o0[2] = primitive.a[2] + (rz * c0 + uz * s0) * outer;
+              i1[0] = primitive.a[0] + (rx * c1 + ux * s1) * inner;
+              i1[1] = primitive.a[1] + (ry * c1 + uy * s1) * inner;
+              i1[2] = primitive.a[2] + (rz * c1 + uz * s1) * inner;
+              o1[0] = primitive.a[0] + (rx * c1 + ux * s1) * outer;
+              o1[1] = primitive.a[1] + (ry * c1 + uy * s1) * outer;
+              o1[2] = primitive.a[2] + (rz * c1 + uz * s1) * outer;
+            }
+            quad(out, i0, o0, o1, i1, colour);
+          }
+        } else if (primitive.kind == emit::kBolt) {
+          // Bolts carry pixel extents: they are converted at this camera's depth, so a volley
+          // keeps its size whatever the player's zoom is.
+          const float scale = eyeDepth(primitive.a.data()) / focal;
+          const float halfLength = std::max(0.005f, primitive.radius * scale);
+          const float halfWidth = std::max(0.005f, primitive.width * scale);
+          float dx = 1.f, dy = 0.f;
+          if (primitive.shape != emit::kShapeSquare) {
+            dx = primitive.b[0] * rx + primitive.b[1] * ry + primitive.b[2] * rz;
+            dy = primitive.b[0] * ux + primitive.b[1] * uy + primitive.b[2] * uz;
+            const float len = std::sqrt(dx * dx + dy * dy);
+            if (len < 1e-4f) { dx = 1.f; dy = 0.f; } else { dx /= len; dy /= len; }
+          }
+          const float along[3] = {(rx * dx + ux * dy) * halfLength,
+                                  (ry * dx + uy * dy) * halfLength,
+                                  (rz * dx + uz * dy) * halfLength};
+          const float across[3] = {(rx * -dy + ux * dx) * halfWidth,
+                                   (ry * -dy + uy * dx) * halfWidth,
+                                   (rz * -dy + uz * dx) * halfWidth};
+          float corners[4][3];
+          for (int corner = 0; corner < 4; ++corner) {
+            const float sAlong = (corner == 1 || corner == 2) ? 1.f : -1.f;
+            const float sAcross = (corner >= 2) ? 1.f : -1.f;
+            corners[corner][0] = primitive.a[0] + along[0] * sAlong + across[0] * sAcross;
+            corners[corner][1] = primitive.a[1] + along[1] * sAlong + across[1] * sAcross;
+            corners[corner][2] = primitive.a[2] + along[2] * sAlong + across[2] * sAcross;
+          }
+          quad(out, corners[0], corners[1], corners[2], corners[3], colour);
+        } else if (primitive.kind == emit::kShield) {
+          // Instanced: the mesh is built once per detail level in view space, and this record
+          // only says where this shell sits, how big it is, and what colour and fade it carries.
+          // A standing shield shell. The tint and the fade are Python's (the strength ramp that
+          // tells the player how much field is left); the rim falloff and the detail level come
+          // from this camera, like every other apparent-size decision in this window.
+          const double tint[3] = {primitive.colour[0] / 255.0, primitive.colour[1] / 255.0,
+                                  primitive.colour[2] / 255.0};
+          const double fade = primitive.colour[3] / 255.0;
+          // A bubble must stay readable when it is small; the renderer grows it until it is at
+          // least SHIELD_MIN_PX across, so the same floor is applied here at this camera.
+          const float depth = eyeDepth(primitive.a.data());
+          float radius = primitive.radius;
+          if (focal > 0.f && depth > 0.f) {
+            const float pxPerWorld = focal / depth;
+            const float floorRadius = 0.5f * kShieldMinPx / std::max(pxPerWorld, 1e-6f);
+            radius = std::max(radius, floorRadius);
+          }
+          const float apparent = focal > 0.f && depth > 0.f
+                                     ? (focal / depth) * radius * 2.f
+                                     : 0.f;
+          const int detail = fx::shieldDetail(apparent);
+          const double centre[3] = {primitive.a[0], primitive.a[1], primitive.a[2]};
+          const fx::ShellInstance shell =
+              fx::shellInstance(centre, double(radius), tint, fade, view);
+          // Eight floats per shell: the whole per-frame CPU cost of a bubble.
+          std::vector<float>& out = shieldInstances[detail];
+          out.insert(out.end(), {shell.centre[0], shell.centre[1], shell.centre[2], shell.radius,
+                                 shell.tint[0], shell.tint[1], shell.tint[2], shell.fade});
+          ++shieldShells;
+          ++shieldByDetail[detail];
+          shieldFade += fade;
+        } else if (primitive.kind == emit::kShieldHit || primitive.kind == emit::kHullHit) {
+          // A contact is rebuilt here from its parameters, the way a blast is: position, normal,
+          // size, age and seed cross, ~90 triangles of curved shell do not. The two camera-dependent
+          // numbers - the shield contact's SHIELD_MIN_PX floor and the hull contact's 7 px floor -
+          // are applied at this camera, exactly as Python applies them at its own.
+          const bool shieldContact = primitive.kind == emit::kShieldHit;
+          const float depth = eyeDepth(primitive.a.data());
+          const double pxPerWorld =
+              (focal > 0.f && depth > 0.f) ? double(focal) / double(depth) : 0.0;
+          const double centre[3] = {primitive.a[0], primitive.a[1], primitive.a[2]};
+          const double normal[3] = {primitive.b[0], primitive.b[1], primitive.b[2]};
+          const double right3[3] = {rightVec[0], rightVec[1], rightVec[2]};
+          const double up3[3] = {upVec[0], upVec[1], upVec[2]};
+          // The contact size is the effect's own, carried in the shape byte in tenths for a shell
+          // contact (its cap aperture is a function of it); a hull contact carries it in `radius`.
+          const double size = shieldContact ? double(primitive.shape) / 10.0
+                                            : double(primitive.radius);
+          std::vector<fx::HitVertex> rebuilt, rebuiltSmoke;
+          fx::HitCounters counters;
+          fx::appendHit(shieldContact, centre, normal, double(primitive.radius), size,
+                        double(primitive.width), uint32_t(primitive.segments),
+                        (primitive.flags & emit::kFlagVisualContact) != 0, pxPerWorld, right3, up3,
+                        rebuilt, rebuiltSmoke, &counters);
+          for (const auto& v : rebuilt)
+            hitTriangles.push_back({float(v.x), float(v.y), float(v.z), float(v.r), float(v.g),
+                                    float(v.b), float(v.a)});
+          for (const auto& v : rebuiltSmoke)
+            hitSmokeVerts.push_back({float(v.x), float(v.y), float(v.z), float(v.r),
+                                     float(v.g), float(v.b), float(v.a)});
+          ++hitContacts;
+          if (shieldContact)
+            ++hitShieldContacts;
+          else
+            ++hitHullContacts;
+          hitSparks += counters.sparkTriangles;
+          hitTrianglesCount += counters.capTriangles + counters.rippleTriangles;
+          hitSmokeTris += counters.smokeTriangles;
+        } else if (primitive.kind == emit::kExplosion) {
+          // A blast is rebuilt from its parameters with the renderer's own formulas. Smoke blends
+          // normally (it is a dark mass), everything else adds light, so the two are separated and
+          // the normal-blend pass is drawn first.
+          std::vector<fx::Vertex> blastAdditive, blastNormal;
+          std::vector<double> fxCounters;
+          fx::appendExplosion(blastAdditive, blastNormal, primitive.a.data(), primitive.radius,
+                              primitive.width, uint32_t(primitive.segments), rightVec, upVec,
+                              eyeVec, &fxCounters);
+          fxLayers = size_t(fxCounters.empty() ? 0 : fxCounters[0]);
+          fxAlphaSum = fxCounters.size() > 1 ? fxCounters[1] : 0.0;
+          fxVertexCount = blastAdditive.size() + blastNormal.size();
+          for (const auto& v : blastNormal)
+            smokeTriangles.push_back({v.x, v.y, v.z, v.r, v.g, v.b, v.a});
+          for (const auto& v : blastAdditive)
+            nearTriangles.push_back({v.x, v.y, v.z, v.r, v.g, v.b, v.a});
+          emitTriangles += (blastAdditive.size() + blastNormal.size()) / 3;
+        }
+      }
+      auto submitEmissive = [&](const std::vector<CueVertex> &verts, bool depthTest,
+                                bool additive) {
+        if (verts.empty())
+          return;
+        // A transient vertex buffer is finite (a few hundred thousand vertices), so a large list is
+        // submitted in chunks. The count asked for must be the number of vertices still wanted:
+        // `getAvailTransientVertexBuffer` returns min(available, requested), so asking for one
+        // vertex returns exactly one and the loop degenerates into a draw call per vertex. A frame
+        // with a few hundred damage contacts holds ~75k vertices; that burned bgfx's 65535
+        // draw-call ceiling and every later draw - the standing shield shells included - was
+        // silently discarded, with no failed call and no dropped-vertex count to show for it.
+        size_t cursor = 0;
+        while (cursor < verts.size()) {
+        const uint32_t wanted = uint32_t(std::min<size_t>(verts.size() - cursor, 0xFFFFFFFFu));
+        const uint32_t avail = bgfx::getAvailTransientVertexBuffer(wanted, cueLayout);
+        const size_t want = std::min<size_t>(verts.size() - cursor, avail);
+        if (want == 0) {
+          emitDropped += uint32_t(verts.size() - cursor);   // counted, never silently squeezed
+          break;
+        }
+        const uint32_t count = uint32_t(want);
+        bgfx::TransientVertexBuffer tvb;
+        bgfx::allocTransientVertexBuffer(&tvb, count, cueLayout);
+        std::memcpy(tvb.data, verts.data() + cursor, count * sizeof(CueVertex));
+        cursor += want;
+        bgfx::setVertexBuffer(0, &tvb);
+        // BGFX_STATE_BLEND_ADD is (ONE, ONE): alpha is ignored and every faint shell lands at
+        // full brightness, which turns a soft fireball into a solid white disc. Additive blending
+        // that honours the vertex alpha is (SRC_ALPHA, ONE).
+        uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_MSAA |
+                         (additive ? BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA,
+                                                          BGFX_STATE_BLEND_ONE)
+                                   : BGFX_STATE_BLEND_ALPHA);
+        if (depthTest)
+          state |= BGFX_STATE_DEPTH_TEST_LESS;
+        bgfx::setState(state);
+        bgfx::submit(1, cueProgram);
+        }
+      };
+      // Shield instance memory is claimed NOW, before any large triangle batch: transient vertex and
+      // instance memory come out of one per-frame pool in allocation order, and a frame with a few
+      // hundred damage contacts allocates ~75k vertices of triangles, which is enough to leave the
+      // instanced shell draws with nothing. The symptom is silent - the shells simply do not appear,
+      // and `dropped_vertices` stays 0 because the instance path counts its own shortfall. Claiming
+      // the instances first and submitting them last keeps both the memory and Python's layering
+      // (`_draw_effects` at renderer.py:502 runs before `_draw_shields` at :510).
+      struct ShieldDraw {
+        bgfx::InstanceDataBuffer buffer;
+        uint32_t count = 0;
+        int detail = 0;
+      };
+      std::vector<ShieldDraw> shieldDraws;
+      for (int detail = 0; detail < 3; ++detail) {
+        const std::vector<float>& bucket = shieldInstances[detail];
+        size_t cursor = 0;
+        while (cursor < bucket.size()) {
+          const uint32_t count = uint32_t((bucket.size() - cursor) / 8);
+          const uint32_t avail = bgfx::getAvailInstanceDataBuffer(count, 32);
+          const uint32_t take = std::min(count, avail);
+          if (take == 0) {
+            emitDropped += uint32_t((bucket.size() - cursor) / 8 * shieldMeshVertices[detail]);
+            break;
+          }
+          ShieldDraw draw;
+          draw.count = take;
+          draw.detail = detail;
+          bgfx::allocInstanceDataBuffer(&draw.buffer, take, 32);
+          std::memcpy(draw.buffer.data, bucket.data() + cursor, size_t(take) * 8 * sizeof(float));
+          cursor += size_t(take) * 8;
+          shieldDraws.push_back(draw);
+        }
+      }
+      submitEmissive(farTriangles, true, true);
+      submitEmissive(smokeTriangles, false, false);
+      submitEmissive(nearTriangles, false, true);
+      // Contacts after the light and before the shells, which is where Python draws them: a marking
+      // on armour is a surface fact, alpha-blended, above opaque armour and under a standing field.
+      submitEmissive(hitSmokeVerts, false, false);
+      submitEmissive(hitTriangles, false, false);
+      // Shield shells are additive, depth-tested and never write depth - the ship inside must read
+      // through its own field, and two translucent shells must not fight over the depth buffer.
+      for (const ShieldDraw& draw : shieldDraws) {
+        bgfx::setVertexBuffer(0, shieldMesh[draw.detail]);
+        bgfx::setInstanceDataBuffer(&draw.buffer);
+        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_MSAA | BGFX_STATE_DEPTH_TEST_LESS |
+                       BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_ONE));
+        bgfx::submit(1, shieldProgram);
+        shieldVertices += size_t(draw.count) * shieldMeshVertices[draw.detail];
+      }
     }
     // W03: read the newest HUD payload, apply the patches to the texture, draw one quad.
     if (uiRing) {
@@ -1199,8 +2275,34 @@ static int run(const Options &o) {
   report["inspection_binding"] = inspectionBinding;
   report["control_exercise"] = controlStates;
   report["quality"]["shadows_final"] = shadows;
+  // Snapshot what the planet pass held before cleanup destroys the GPU handles, so the report
+  // describes the run rather than the teardown.
+  const size_t planetTexturesHeld = planetTextures.byName.size();
+  const bool planetProgramValid = bgfx::isValid(planetProgram);
+  const bool planetVboValid = bgfx::isValid(sphereVbo);
+  const bool planetIboValid = bgfx::isValid(sphereIbo);
+  std::vector<std::string> planetTextureNames, planetRequestedNames;
+  for (const auto &entry : planetTextures.byName)
+    planetTextureNames.push_back(entry.first);
+  if (live)
+    for (const auto &body : live->planets)
+      if (planetRequestedNames.size() < 16)
+        planetRequestedNames.push_back(body.texture);
   cleanup.run();
   report["screenshots_written"] = callback.shots.load();
+    report["hardware"] = {
+        {"ring", o.meshRing.empty() ? std::string() : o.meshRing.string()},
+        {"meshes", hardwareMeshes.size()},
+        {"blobs", hardwareBlobs},
+        {"decode_failures", hardwareDecodeFailures},
+        {"instances_drawn", hardwareInstances},
+        {"dropped_instances", hardwareDropped},
+        {"unmeshed", live ? live->surface_unmeshed : 0},
+        {"note",
+         "surface hardware crosses as a full basis (FLAG_SURFACE_FRAME) that the window copies "
+         "verbatim, because a building stands on the foundation the site generator chose; its mesh "
+         "arrives on the mesh ring because the offline catalogue cannot name a building that is "
+         "constructed during a match; role colours are the shared palette, not on the wire"}};
   if (uiRing) {
     report["hud"] = {{"ring", o.overlayRing.string()},
                      {"texture", {uiWidth, uiHeight}},
@@ -1215,6 +2317,98 @@ static int run(const Options &o) {
                      {"hud_only", o.hudOnly},
                      {"mode", o.hudOnly ? "presented-unblended (diagnostic)"
                                         : "composited over the scene"}};
+  }
+  if (emitRing) {
+    report["shields"] = {
+        {"shells", shieldShells},
+        {"vertices", shieldVertices},
+        {"instances_by_detail",
+         {{"low", shieldByDetail[0]}, {"medium", shieldByDetail[1]}, {"high", shieldByDetail[2]}}},
+        {"fade_sum", shieldFade},
+        {"min_px", 74.0},
+        {"blend", "additive, depth-tested, no depth write"},
+        {"note", "one instanced camera-facing hemisphere per shielded unit, alpha baked from "
+                 "latitude like renderer.py::_shield_shell_list; tint and fade are Python's "
+                 "strength ramp, the detail level and the readability floor come from this "
+                 "camera"}};
+    report["hits"] = {
+        {"contacts", hitContacts},
+        {"by_kind", {{"shield", hitShieldContacts}, {"hull", hitHullContacts}}},
+        {"triangles", hitTrianglesCount},
+        {"smoke_triangles", hitSmokeTris},
+        {"spark_triangles", hitSparks},
+        {"blend", "alpha, no depth test, no depth write"},
+        {"note", "rebuilt from position, normal, size, age and seed like a blast; the seeded spark "
+                 "fragments come from this window's port of Python's random.Random, so a seed "
+                 "produces the same flecks on both sides"}};
+    report["emissive"] = {
+        {"ring", o.emitRing.string()},
+        {"fx_demo", o.fxDemo},
+        {"batches", emitBatches},
+        {"decode_failures", emitDecodeFailures},
+        {"primitives", emitPrimitives},
+        {"triangles", emitTriangles},
+        {"dropped_vertices", emitDropped},
+        {"blend", "additive, no depth write; bolts sized in pixels at this camera"},
+    };
+  }
+  if (!o.fxDemo.empty() && !emitRing) {
+    report["fx_demo"] = {{"spec", o.fxDemo},
+                        {"triangles", emitTriangles},
+                        {"note", "diagnostic single blast; not a simulation effect"}};
+  }
+  if (markerRing) {
+    report["cues"] = {
+        {"ring", o.markerRing.string()},
+        {"batches", cueBatches},
+        {"decode_failures", cueDecodeFailures},
+        {"circles", cueCircles},
+        {"markers", cueMarkers},
+        {"vertices", cueVertices},
+        {"dropped_vertices", cueDropped},
+        {"note", "selection rings, planet owner rings and ownership markers decided by the game; "
+                 "marker pixel size is derived from this window's camera so the icon stays 9-15 px "
+                 "at any zoom; lines are one pixel wide because bgfx has no line width"}};
+  }
+  if (planetRing) {
+    report["planets"] = {
+        {"ring", o.planetRing.string()},
+        {"textures", planetTexturesHeld},
+        {"valid", {{"program", planetProgramValid},
+                   {"vbo", planetVboValid},
+                   {"ibo", planetIboValid}}},
+        {"texture_names", planetTextureNames},
+        {"requested_names", planetRequestedNames},
+        {"textures_uploaded", planetTextures.uploaded},
+        {"textures_reused", planetTextures.reused},
+        {"texture_bytes", planetTextures.bytes},
+        {"texture_failures", planetTextures.failures},
+        {"blobs_applied", planetBlobs},
+        {"decode_failures", planetDecodeFailures},
+        {"bodies_drawn", planetBodiesDrawn},
+        {"frames_with_bodies", planetFramesWithBodies},
+        {"untextured_bodies", planetUntextured},
+        {"pose_failures", live ? live->planet_pose_failures : 0},
+        {"sphere", {{"vertices", sphere.vertices.size() / 8},
+                    {"triangles", sphere.indices.size() / 3},
+                    {"sample", {sphere.vertices[0], sphere.vertices[1], sphere.vertices[2],
+                                sphere.vertices[3], sphere.vertices[4], sphere.vertices[5],
+                                sphere.vertices[6], sphere.vertices[7]}}}},
+        {"note", "one blob per distinct planet, published once; the body is a unit sphere scaled "
+                 "by the frame instance's radius, spun at 1.2 rad/s like the Python renderer"}};
+  }
+  if (fogRing) {
+    report["fog"] = {
+        {"ring", o.fogRing.string()},
+        {"masks", fogMasks},
+        {"generation", fogGeneration},
+        {"cells", fogTextureCells},
+        {"bounds", fogBounds},
+        {"frames_drawn", fogFramesDrawn},
+        {"decode_failures", fogDecodeFailures},
+        {"blend", "alpha, depth test off (the mask covers unexplored space, not geometry)"},
+        {"note", "the mask is Python's classification, one texel per visibility cell; the window "
+                 "samples it and decides nothing about visibility"}};
   }
   if (inputOut) {
     report["input"] = {{"ring", o.inputRing.string()},

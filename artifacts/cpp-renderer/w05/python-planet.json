@@ -1,0 +1,127 @@
+{
+  "camera": {
+    "distance": 2200.0,
+    "height": 800,
+    "pitch": 8.0,
+    "target": [
+      -3500,
+      0,
+      24000
+    ],
+    "width": 1280,
+    "yaw": 90.0
+  },
+  "mean_rgb": [
+    0.043229,
+    0.059234,
+    0.093804
+  ],
+  "note": "Python renderer reference for the W05 planet slice; the clock is frozen so the axial spin is reproducible",
+  "planet": {
+    "data_id": "temperate",
+    "id": 11,
+    "position": [
+      -3500,
+      0,
+      24000
+    ],
+    "radius": 600.0
+  },
+  "planets": [
+    {
+      "data_id": "temperate",
+      "id": 11,
+      "name": "p0--3500",
+      "position": [
+        -3500,
+        0,
+        24000
+      ],
+      "radius": 600.0
+    },
+    {
+      "data_id": "industrial",
+      "id": 16,
+      "name": "p0-3500",
+      "position": [
+        3500,
+        0,
+        24000
+      ],
+      "radius": 600.0
+    },
+    {
+      "data_id": "temperate",
+      "id": 201,
+      "name": "p1--3500",
+      "position": [
+        24000,
+        0,
+        3500
+      ],
+      "radius": 600.0
+    },
+    {
+      "data_id": "industrial",
+      "id": 206,
+      "name": "p1-3500",
+      "position": [
+        24000,
+        0,
+        -3500
+      ],
+      "radius": 600.0
+    },
+    {
+      "data_id": "temperate",
+      "id": 391,
+      "name": "p2--3500",
+      "position": [
+        3500,
+        0,
+        -24000
+      ],
+      "radius": 600.0
+    },
+    {
+      "data_id": "industrial",
+      "id": 396,
+      "name": "p2-3500",
+      "position": [
+        -3500,
+        0,
+        -24000
+      ],
+      "radius": 600.0
+    },
+    {
+      "data_id": "temperate",
+      "id": 581,
+      "name": "p3--3500",
+      "position": [
+        -24000,
+        0,
+        -3500
+      ],
+      "radius": 600.0
+    },
+    {
+      "data_id": "industrial",
+      "id": 586,
+      "name": "p3-3500",
+      "position": [
+        -24000,
+        0,
+        3500
+      ],
+      "radius": 600.0
+    }
+  ],
+  "renderer_time": 3.0,
+  "screenshot": "/Users/lukaszjawor/.hermes/cache/scratch/w05/ref4/python-planet.png",
+  "star": [
+    0,
+    2000.0,
+    0
+  ]
+}

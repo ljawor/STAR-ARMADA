@@ -1,0 +1,33 @@
+{
+  "dome_radius": 984.0,
+  "flash": {
+    "colour": [
+      255,
+      183,
+      15,
+      108
+    ],
+    "records": 3
+  },
+  "full": {
+    "colour": [
+      77,
+      140,
+      255,
+      166
+    ],
+    "records": 1
+  },
+  "note": "a colony dome crosses as the same kind-6 record a ship bubble uses; the pulse is the renderer's repeated additive pass, published as repeated records",
+  "planet": [
+    0.0,
+    6000.0,
+    0.0
+  ],
+  "planet_radius": 900.0,
+  "rings": {
+    "domes-flash.ring": 3,
+    "domes-full.ring": 1
+  },
+  "synthetic": true
+}

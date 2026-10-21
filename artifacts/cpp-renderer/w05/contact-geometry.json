@@ -1,0 +1,23 @@
+{
+  "batch": "render_cpp/tests/fixtures/hit/hits.bin",
+  "counts_match": true,
+  "identical_to": "5e-10 absolute",
+  "max_abs_delta": 5e-10,
+  "px_per_world": 1.54,
+  "records": 4,
+  "smoke": {
+    "native": 72,
+    "python": 72
+  },
+  "structural_mismatches": 0,
+  "triangles": {
+    "native": 528,
+    "python": 528
+  },
+  "worst_component": {
+    "component": 0,
+    "native": 1204.593799174,
+    "python": 1204.5937991744995,
+    "vertex": 391
+  }
+}
