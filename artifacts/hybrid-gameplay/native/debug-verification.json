@@ -1,0 +1,9 @@
+{
+  "threshold": 20,
+  "upper_left_changed_pixels": 6570,
+  "dimensions": [
+    1280,
+    800
+  ],
+  "note": "Same native offline scene; development banner explicitly enabled versus production default. Not a gameplay/performance comparison."
+}

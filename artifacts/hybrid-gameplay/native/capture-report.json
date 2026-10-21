@@ -1,0 +1,47 @@
+{
+  "source_commit": "89565ae1b2fbf0130e7b2bc09aac2d46e78ab3d7",
+  "backend": "Metal",
+  "before_camera": {
+    "distance": 1650.0,
+    "fov": 55.0,
+    "pitch": 55.0,
+    "target": [
+      -11000.0,
+      0.0,
+      800.0
+    ],
+    "yaw": 45.0
+  },
+  "after_camera": {
+    "distance": 1650.0,
+    "fov": 55.0,
+    "pitch": 37.0,
+    "target": [
+      -11000.0,
+      0.0,
+      800.0
+    ],
+    "yaw": 5.0
+  },
+  "world_pixel_threshold": 20,
+  "world_changed_fraction": 0.07944484760522497,
+  "identical_image_control_rejected": true,
+  "debug": {
+    "threshold": 20,
+    "upper_left_changed_pixels": 6570,
+    "dimensions": [
+      1280,
+      800
+    ],
+    "note": "Same native offline scene; development banner explicitly enabled versus production default. Not a gameplay/performance comparison."
+  },
+  "binary_sha256": "3a2d52f4d656af5cc0320883aeb3c5a40c358a8a4ee8d0ca0628ff8c53d0ea84",
+  "image_sha256": {
+    "after.png": "cece82a9331d83d5e768cef19fbd5ca1051946133253600de255a7c689a4000f",
+    "before.png": "65ba8f3b8b37ee048e7876b6c86f65a1cbca590f7ce2ec7c5fd5f8d83b0f484e",
+    "camera-orbit-sheet.png": "891801e4f82e023146e13e0513e2557644f992a0623d2080d39d4189052a84dc",
+    "debug-default.png": "84944b6c9c793f51aa5a23947d03bf9db7324ddc578a94f65aac8fe5d59f9aa4",
+    "debug-diagnostic.png": "6fd5f50a8dda9f6aa6d75d9d7307498b5f3b081331940c6e85f523d1e2826265"
+  },
+  "scope": "Two actual main.py + Metal runs before/after SDL-injected right drag, not a pre-fix screenshot or performance comparison. Native default debug off versus explicit diagnostic on. Source pins verified against committed blobs."
+}
