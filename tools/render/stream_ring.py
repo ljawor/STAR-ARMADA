@@ -18,6 +18,7 @@ import argparse
 import signal
 import json
 from pathlib import Path
+import pygame
 import statistics
 import sys
 import time
@@ -71,6 +72,9 @@ def main(argv=None):
     parser.add_argument('--overlay-slots', type=int, default=4)
     parser.add_argument('--overlay-all', action='store_true',
                         help='publish every overlay frame as a full surface (slow; for diagnosis)')
+    parser.add_argument('--fog-ring', type=Path,
+                        help='ring carrying the classified fog mask to the window (W05 slice 4); '
+                             'published once per change, not per frame')
     parser.add_argument('--planet-ring', type=Path,
                         help='ring carrying planet textures to the window (W05); one blob per '
                              'distinct planet, published once')
@@ -176,7 +180,6 @@ def main(argv=None):
     overlay_keyframes = 0
     overlay_last_full = float('-inf')
     if args.overlay_ring is not None:
-        import pygame
         pygame.font.init()
         from render.hud import HUD
         from render_bridge import overlay as overlay_codec
@@ -216,6 +219,30 @@ def main(argv=None):
                                                      flash=input_messages.append))
         input_bridge_factory = lambda: RingInput(  # noqa: E731
             args.input_ring, controller, (overlay_width, overlay_height))
+
+    # W05 slice 4: the fog mask. Python classifies one texel per visibility cell (visible / charted
+    # / unexplored) and the window samples it; the mask is republished only when that classification
+    # changes, because the mask is derived data and re-deriving it natively would be a second
+    # opinion about what the player can see.
+    fog_ring = None
+    fog_mask = None
+    fog_generation = 0
+    fog_uploads = 0
+    fog_last_surface = None
+    fog_encode_ms = []
+    fog_cells = 0
+    if args.fog_ring is not None:
+        import math
+        from render_bridge import fogmap as fog_codec
+        cells = max(1, math.ceil(state.map_info.bounds / state.visibility_cell_size))
+        # The ring reserves 20 bytes for its begin tag and length, and the slot's last 8 bytes for
+        # the completing tag: 28 in all. A mask sized to the wrong figure either has its tail
+        # overwritten by that tag (and then fails its own crc) or is refused outright.
+        slot_bytes = fog_codec.HEADER_BYTES + cells * cells * 4 + 28
+        args.fog_ring.parent.mkdir(parents=True, exist_ok=True)
+        fog_ring = ring.Ring.create(args.fog_ring, slots=4, slot_bytes=slot_bytes)
+        fog_mask = fog.FogMask()
+        fog_cells = cells
 
     # W05: planets travel as instances whose binding names a texture; the textures go over their
     # own ring, once each, because they are static for the life of a match.
@@ -339,6 +366,18 @@ def main(argv=None):
                             planet_blob_bytes.append(len(blob))
                         planet_encode_ms.append(
                             (time.perf_counter() - planet_started) * 1000.0)
+                if fog_ring is not None:
+                    fog_started = time.perf_counter()
+                    surface = fog_mask.surface(state, args.local_player)
+                    if surface is not fog_last_surface:
+                        fog_generation += 1
+                        rgba = pygame.image.tobytes(surface, 'RGBA', False)
+                        fog_ring.publish(bytes(fog_codec.encode_blob(
+                            surface.get_width(), state.visibility_cell_size,
+                            state.map_info.bounds, fog_generation, rgba)))
+                        fog_last_surface = surface
+                        fog_uploads += 1
+                        fog_encode_ms.append((time.perf_counter() - fog_started) * 1000.0)
                 published += 1
                 if period:
                     next_at += period
@@ -367,6 +406,15 @@ def main(argv=None):
         'publish_hz': round(published / elapsed, 2) if elapsed else 0.0,
         'encode_ms': _stats(encode_ms),
         'sim_step_ms': _stats(step_ms),
+        'fog': ({
+            'ring': str(args.fog_ring) if args.fog_ring else None,
+            'cells': fog_cells,
+            'uploads': fog_uploads,
+            'generation': fog_generation,
+            'encode_ms': {'median': statistics.median(fog_encode_ms) if fog_encode_ms else 0.0,
+                          'worst': max(fog_encode_ms) if fog_encode_ms else 0.0},
+            'note': 'one texel per visibility cell; published only when the classification changes',
+        } if args.fog_ring else {}),
         'emissive': ({
             'ring': str(args.emit_ring) if args.emit_ring else None,
             'encode_ms': {'median': statistics.median(emit_ms) if emit_ms else 0.0,

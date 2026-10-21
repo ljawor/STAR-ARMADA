@@ -53,13 +53,16 @@ so the transport is one upload per distinct planet, not per frame.
    map's star (`--star`). Reference frame captured from the same fixture, planet and camera with
    `tools/render/capture_python_planet.py`. Not yet: the 1.018× atmosphere shell (effects slice),
    owner rings and background stars (slice 2). Asteroid fields are still omitted and counted.
-2. **Markers and selection rings.** Cheap, immediately visible, and they are the feedback the player
-   uses to know what they selected. Needs a small primitive batch (rings, chevrons) in the frame.
-3. **Effects, beams, projectiles.** The records already cross the bridge; this is a per-kind native
-   pass with additive blending.
-4. **Fog raster.** The decisions already come from Python per frame; the shape (radial reveal,
-   edge softness) has to be reproduced natively, or the fog mask itself carried as a texture —
-   measure before choosing.
+2. **Markers and selection rings — landed, see `docs/RENDER_W05_CUES.md`.** A primitive batch of
+   rings, chevrons and diamonds; the marker's pixel footprint is derived from the window's own
+   camera so the icon keeps its 9–15 px size at any zoom.
+3. **Effects, beams, projectiles — landed (3a), see `docs/RENDER_W05_EMISSIVE.md`.** Additive native
+   pass; beams and glows in world units, bolts in pixels.
+   3b. **Explosions — landed, see `docs/RENDER_W05_EXPLOSIONS.md`.** A blast crosses as position,
+   size, age and seed and the window rebuilds the layers.
+4. **Fog raster — landed, see `docs/RENDER_W05_FOG.md`.** The mask was carried as a texture rather
+   than reproduced: it is the classifier's answer, one texel per visibility cell, and the parity
+   frame agrees on 1.0000 of the labelled pixels.
 5. **Planet buildings and shields.** Builds on slices 1 and 2.
 6. **`--renderer cpp` flag, then the equal-workload benchmark** (200/400/600 ships, HUD, planets, fog)
    before any frame-rate statement is made.

@@ -253,7 +253,9 @@ void test_ring(const fs::path &dir, const Json &expected) {
   {
     armada::bridge::RingReader reader(path);
     check(reader.published() == 1, "ring published count");
-    check(reader.payload_bytes() == slot_bytes - 20, "ring payload capacity");
+    // 20 bytes of begin tag and length in front, 8 bytes of completing tag behind: a frame sized
+    // to the old figure would have its tail overwritten by that tag.
+    check(reader.payload_bytes() == slot_bytes - 28, "ring payload capacity");
     std::vector<uint8_t> out;
     check(reader.read(0, out), "ring read of the complete slot");
     check(out == frame_bytes, "ring handed back the exact frame bytes");

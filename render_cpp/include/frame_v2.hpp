@@ -65,7 +65,8 @@ constexpr uint32_t kMaxEffects = 8192;
 constexpr uint32_t kEffectClass = 2;
 constexpr uint32_t kProjectileClass = 3;
 constexpr size_t kRingHeaderBytes = 64;
-constexpr size_t kSlotOverhead = 20; // begin tag 8, length 4, end tag 8
+constexpr size_t kSlotOverhead = 20; // begin tag 8, length 4 (offset of the frame bytes)
+constexpr size_t kSlotTrailer = 8;   // the completing tag sits in the slot's last 8 bytes)
 
 // The session's string tables. A frame only indexes them; the identity is the CRC of
 // the serialized table body the producer sent.
@@ -294,7 +295,7 @@ public:
     slot_bytes_ = detail::read_le<uint32_t>(header.data() + 12);
     if (version_ != 1)
       throw FrameError("unknown ring version");
-    if (slots_ == 0 || slot_bytes_ < kSlotOverhead + 8)
+    if (slots_ == 0 || slot_bytes_ < kSlotOverhead + kSlotTrailer)
       throw FrameError("ring header declares an invalid layout");
     if (file_bytes_ != kRingHeaderBytes + size_t(slots_) * slot_bytes_)
       throw FrameError("ring file size does not match its header");
@@ -310,7 +311,9 @@ public:
   }
   uint16_t slots() const { return slots_; }
   uint32_t slot_bytes() const { return slot_bytes_; }
-  uint32_t payload_bytes() const { return slot_bytes_ - uint32_t(kSlotOverhead); }
+  uint32_t payload_bytes() const {
+    return slot_bytes_ - uint32_t(kSlotOverhead) - uint32_t(kSlotTrailer);
+  }
   const std::filesystem::path &path() const { return path_; }
 
   // Sequence numbers are monotonic and never reused; slot = sequence % slots.

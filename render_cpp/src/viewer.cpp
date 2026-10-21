@@ -3,6 +3,7 @@
 #include "frame_v2.hpp"
 #include "emissive.hpp"
 #include "explosion.hpp"
+#include "fogmap.hpp"
 #include "input_ring.hpp"
 #include "marker_ring.hpp"
 #include "overlay.hpp"
@@ -149,7 +150,7 @@ struct Callbacks final : bgfx::CallbackI {
 };
 struct Options {
   fs::path snapshot, assets, shaders = ARMADA_SHADER_DIR, shot, report, ring, tables, overlayRing,
-      inputRing, planetRing, markerRing, emitRing, fxDemo;
+      inputRing, planetRing, markerRing, emitRing, fogRing, fxDemo;
   std::array<float, 3> focus{};
   bool hasFocus = false;
   // The map's star lights every planet (render/renderer.py sets GL_LIGHT0 to the star position,
@@ -196,6 +197,8 @@ static Options options(int argc, char **argv) {
       o.inputRing = value();
     else if (k == "--planet-ring")
       o.planetRing = value();
+    else if (k == "--fog-ring")
+      o.fogRing = value();
     else if (k == "--marker-ring")
       o.markerRing = value();
     else if (k == "--emit-ring")
@@ -885,6 +888,47 @@ static int run(const Options &o) {
     planetTextures.fallback = bgfx::createTexture2D(
         1, 1, false, 1, bgfx::TextureFormat::RGBA8, BGFX_SAMPLER_NONE, memory);
   }
+  // W05 slice 4: fog. Python classifies one texel per visibility cell and the window samples it;
+  // the quad is the only geometry this pass owns.
+  struct FogVertex {
+    float x, y, z;
+    float u, v;
+  };
+  bgfx::VertexLayout fogLayout;
+  fogLayout.begin()
+      .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
+      .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
+      .end();
+  const bgfx::ProgramHandle fogProgram =
+      bgfx::createProgram(shader(o.shaders / "vs_fog.bin"),
+                          shader(o.shaders / "fs_fog.bin"), true);
+  if (!bgfx::isValid(fogProgram))
+    throw DeviceError("Fog program creation failed");
+  cleanup.actions.push_back([fogProgram] { bgfx::destroy(fogProgram); });
+  const bgfx::UniformHandle fogSampler =
+      bgfx::createUniform("s_fog", bgfx::UniformType::Sampler);
+  if (!bgfx::isValid(fogSampler))
+    throw DeviceError("Fog uniform creation failed");
+  cleanup.actions.push_back([fogSampler] { bgfx::destroy(fogSampler); });
+  bgfx::TextureHandle fogTexture = BGFX_INVALID_HANDLE;
+  int fogTextureCells = 0;
+  bgfx::VertexBufferHandle fogVbo = BGFX_INVALID_HANDLE;
+  uint32_t fogGeneration = 0;
+  float fogBounds = 0.f;
+  cleanup.actions.push_back([&fogTexture] {
+    if (bgfx::isValid(fogTexture))
+      bgfx::destroy(fogTexture);
+  });
+  cleanup.actions.push_back([&fogVbo] {
+    if (bgfx::isValid(fogVbo))
+      bgfx::destroy(fogVbo);
+  });
+  std::unique_ptr<armada::bridge::RingReader> fogRing;
+  uint64_t fogSequence = 0;
+  size_t fogMasks = 0, fogDecodeFailures = 0, fogFramesDrawn = 0;
+  std::vector<uint8_t> fogPayload;
+  if (!o.fogRing.empty())
+    fogRing = std::make_unique<armada::bridge::RingReader>(o.fogRing);
   std::unique_ptr<armada::bridge::RingReader> planetRing;
   uint64_t planetSequence = 0;
   size_t planetBlobs = 0, planetDecodeFailures = 0, planetBodiesDrawn = 0,
@@ -1332,6 +1376,61 @@ static int run(const Options &o) {
         bgfx::submit(1, planetProgram);
         ++planetBodiesDrawn;
       }
+    }
+    // W05 slice 4: the fog mask. Drawn after the bodies and with depth testing off, because in the
+    // Python renderer the mask is a picture of what the player knows rather than geometry in the
+    // world: it covers unexplored space, and the ships in it.
+    if (fogRing) {
+      const uint64_t available = fogRing->published();
+      while (fogSequence < available) {
+        if (fogRing->read_at_sequence(fogSequence, available, fogPayload)) {
+          try {
+            const auto mask = armada::fogmap::decode(fogPayload);
+            if (mask.generation != fogGeneration || mask.cells != fogTextureCells) {
+              const uint32_t side = uint32_t(mask.cells);
+              const bgfx::Memory *pixels =
+                  bgfx::copy(mask.rgba.data(), uint32_t(mask.rgba.size()));
+              if (bgfx::isValid(fogTexture) && mask.cells == fogTextureCells) {
+                bgfx::updateTexture2D(fogTexture, 0, 0, 0, 0, side, side, pixels);
+              } else {
+                if (bgfx::isValid(fogTexture))
+                  bgfx::destroy(fogTexture);
+                fogTexture = bgfx::createTexture2D(
+                    uint16_t(side), uint16_t(side), false, 1,
+                    bgfx::TextureFormat::RGBA8,
+                    BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP |
+                        BGFX_SAMPLER_MIN_POINT | BGFX_SAMPLER_MAG_POINT |
+                        BGFX_SAMPLER_MIP_POINT,
+                    pixels);
+                fogTextureCells = mask.cells;
+              }
+              if (mask.bounds != fogBounds) {
+                fogBounds = mask.bounds;
+                const float h = fogBounds * 0.5f;
+                const FogVertex quad[6] = {{-h, 0.f, -h, 0.f, 0.f}, {h, 0.f, -h, 1.f, 0.f},
+                                           {h, 0.f, h, 1.f, 1.f},  {-h, 0.f, -h, 0.f, 0.f},
+                                           {h, 0.f, h, 1.f, 1.f},  {-h, 0.f, h, 0.f, 1.f}};
+                if (bgfx::isValid(fogVbo))
+                  bgfx::destroy(fogVbo);
+                fogVbo = bgfx::createVertexBuffer(
+                    bgfx::copy(quad, sizeof(quad)), fogLayout);
+              }
+              fogGeneration = mask.generation;
+              ++fogMasks;
+            }
+          } catch (const armada::fogmap::FogMapError &) {
+            ++fogDecodeFailures;
+          }
+        }
+        ++fogSequence;
+      }
+    }
+    if (bgfx::isValid(fogTexture) && bgfx::isValid(fogVbo)) {
+      bgfx::setVertexBuffer(0, fogVbo);
+      bgfx::setTexture(0, fogSampler, fogTexture);
+      bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA);
+      bgfx::submit(1, fogProgram);
+      ++fogFramesDrawn;
     }
     // W05 slice 2: ownership cues. A batch is a few hundred primitives, so the geometry is rebuilt
     // on the CPU each frame and drawn unlit: rings as line segments, markers as billboards.
@@ -1961,6 +2060,19 @@ static int run(const Options &o) {
                                 sphere.vertices[6], sphere.vertices[7]}}}},
         {"note", "one blob per distinct planet, published once; the body is a unit sphere scaled "
                  "by the frame instance's radius, spun at 1.2 rad/s like the Python renderer"}};
+  }
+  if (fogRing) {
+    report["fog"] = {
+        {"ring", o.fogRing.string()},
+        {"masks", fogMasks},
+        {"generation", fogGeneration},
+        {"cells", fogTextureCells},
+        {"bounds", fogBounds},
+        {"frames_drawn", fogFramesDrawn},
+        {"decode_failures", fogDecodeFailures},
+        {"blend", "alpha, depth test off (the mask covers unexplored space, not geometry)"},
+        {"note", "the mask is Python's classification, one texel per visibility cell; the window "
+                 "samples it and decides nothing about visibility"}};
   }
   if (inputOut) {
     report["input"] = {{"ring", o.inputRing.string()},

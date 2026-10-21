@@ -1262,6 +1262,53 @@
       "any frame-rate claim",
       "enabling the disabled Windows signal workflow"
     ]
+  },
+{
+    "id": "render-w05-slice4-fog-2026-10-21",
+    "date": "2026-10-21",
+    "owner_wording": "OK we are good. Something open W05",
+    "scope": "W05 slice 4: the fog raster - the classified mask travels as a texture and the window only samples it",
+    "base_commit": "35aa2bf224a4100494515c57ac78b9793d48dcda",
+    "artifact": "docs/RENDER_W05_FOG.md",
+    "format": {
+      "magic": "ARMFOG01",
+      "header_bytes": 28,
+      "encoding": "<8sHHffII (magic, version, cells, metres per cell, bounds, generation, crc32)",
+      "pixel_bytes": "cells * cells * 4, RGBA, row 0 at the -z edge",
+      "max_cells": 2048,
+      "frame_format_changed": false,
+      "note": "a 72-cell mask over the 36 km skirmish map is 20,764 bytes; no frame-ring change, no new per-frame record"
+    },
+    "units_decision": "the finished mask crosses, not the sensor sources and explored-cell sets: carrying the inputs would be thousands of cells and would make the window re-derive visibility, which is the simulation's answer to give.",
+    "rule_kept": "Python decides, the window draws: visible / charted / unexplored is the classifier's decision per texel; the window samples it with nearest filtering and decides nothing. Depth test is off because the mask describes what the player knows, not geometry in the world.",
+    "evidence": {
+      "python_tests": "142 tests across the render modules, including tests/test_render_fogmap.py",
+      "cpp_tests": "ctest 9/9, including tests/test_fogmap.cpp (fields, texel order, visible column, refused magic / pixel count / crc / zero cells)",
+      "parity_state_agreement": "1.0000 over 773,326 compared pixels, 0 disagreeing (synthetic fixed pattern, both renderers rendered with and without the overlay)",
+      "parity_footprint_iou": 0.9972,
+      "boundary_columns_centre_row": "identical in both renderers: clear 0-155, charted 156-639, see-through cell 640, charted 641-1123, unexplored 1124-1279",
+      "live": "4 masks decoded, 0 decode failures, 50 frames drawn, 72 cells, bounds 36000; producer 2.03 ms median / 2.26 ms worst per publication at 20,764 bytes",
+      "frames": [
+        "artifacts/cpp-renderer/w05/fog-python-pattern.png",
+        "artifacts/cpp-renderer/w05/fog-native-pattern.png",
+        "artifacts/cpp-renderer/w05/fog-live.png"
+      ],
+      "numbers": "artifacts/cpp-renderer/w05/fog-parity.json"
+    },
+    "bug_found": "the shared ring reserves each slot's last 8 bytes for its completing tag, so payload capacity is slot_bytes - 28, not slot_bytes - 20. A mask sized to the nominal capacity had its tail overwritten by the tag and failed its own crc. Fixed in render_bridge/ring.py and frame_v2.hpp with a regression test at exact capacity; no existing producer had hit it because they all leave slack.",
+    "known_limits": [
+      "the live mask is republished on most frames (sensors ride on hulls), 20,764 bytes each",
+      "the minimap's fog surface is not carried (W06)",
+      "no frame-rate claim; the equal-workload benchmark is still slice 6",
+      "the fog overlay matches at equal camera distance while the planets slice needed about 1.36x the distance: both are measured and the projection needs its own audit"
+    ],
+    "does_not_authorize": [
+      "merging PR #150",
+      "a tag or release",
+      "changing the default renderer",
+      "any frame-rate claim",
+      "enabling the disabled Windows signal workflow"
+    ]
   }
   ]
 }

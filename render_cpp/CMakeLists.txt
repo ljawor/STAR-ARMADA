@@ -61,7 +61,8 @@ else()
   message(FATAL_ERROR "W01 native targets are macOS Metal and Windows Direct3D12")
 endif()
 set(SHADER_OUTPUTS)
-foreach(NAME vs_fleet fs_fleet vs_shadow fs_shadow vs_ui fs_ui vs_planet fs_planet vs_mark fs_mark)
+foreach(NAME vs_fleet fs_fleet vs_shadow fs_shadow vs_ui fs_ui vs_planet fs_planet vs_mark fs_mark
+        vs_fog fs_fog)
   if(NAME MATCHES "^vs_")
     set(TYPE vertex)
   else()
@@ -122,6 +123,13 @@ add_test(NAME explosions COMMAND test_explosion)
 add_test(NAME planets COMMAND test_planets)
 set_tests_properties(planets PROPERTIES ENVIRONMENT
   "ARMADA_PLANET_FIXTURE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/planets")
+add_executable(test_fogmap tests/test_fogmap.cpp)
+target_include_directories(test_fogmap PRIVATE include)
+target_compile_definitions(test_fogmap PRIVATE
+  ARMADA_FOG_FIXTURE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/fog")
+add_test(NAME fog COMMAND test_fogmap)
+set_tests_properties(fog PROPERTIES ENVIRONMENT
+  "ARMADA_FOG_FIXTURE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/fog")
 add_executable(test_frame_v2 tests/test_frame_v2.cpp)
 target_link_libraries(test_frame_v2 PRIVATE armada_scene)
 target_compile_definitions(test_frame_v2 PRIVATE
