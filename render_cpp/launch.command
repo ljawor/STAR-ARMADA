@@ -18,4 +18,4 @@ if [[ ! -x "$BUILD/armada_viewer" ]]; then
   cmake --build "$BUILD" --target armada_viewer --parallel 4
 fi
 "$PYTHON" tools/render/dump_snapshot.py --units 600 --out "$BUILD/fleet.snap"
-exec "$BUILD/armada_viewer" --snapshot "$BUILD/fleet.snap" --assets "$ROOT/assets" "$@"
+exec "$BUILD/armada_viewer" --snapshot "$BUILD/fleet.snap" --assets "$ROOT" "$@"

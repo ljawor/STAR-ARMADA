@@ -13,7 +13,7 @@ cmake -S render_cpp -B render_cpp/build -DCMAKE_BUILD_TYPE=Release
 cmake --build render_cpp/build --target armada_viewer test_scene test_camera --parallel 4
 ctest --test-dir render_cpp/build --output-on-failure
 .venv/bin/python tools/render/dump_snapshot.py --out render_cpp/build/fleet.snap
-render_cpp/build/armada_viewer --snapshot render_cpp/build/fleet.snap --assets assets
+render_cpp/build/armada_viewer --snapshot render_cpp/build/fleet.snap --assets .
 ```
 
 The first configure/build fetches pinned upstream dependencies and builds bgfx and shaderc.
@@ -44,9 +44,9 @@ The camera is local; there is no game command/picking or live camera mirror.
 ## 3. Bounded measurement
 
 ```sh
-render_cpp/build/armada_viewer --snapshot render_cpp/build/fleet.snap --assets assets \
+render_cpp/build/armada_viewer --snapshot render_cpp/build/fleet.snap --assets . \
   --warmup 30 --frames 180 --no-overlay --report render_cpp/build/timing.json
-render_cpp/build/armada_viewer --snapshot render_cpp/build/fleet.snap --assets assets \
+render_cpp/build/armada_viewer --snapshot render_cpp/build/fleet.snap --assets . \
   --warmup 30 --frames 30 --preset 2 --screenshot render_cpp/build/capital.png \
   --report render_cpp/build/capture.json
 ```
@@ -61,7 +61,25 @@ No VSync request is made; compositor/presentation pacing can still constrain wal
 opening a window. `--exercise-controls` sends synthetic SDL events through the actual event
 handler during a bounded run and records the resulting camera states.
 
-## 4. Preserved geometry, explicitly incomplete world
+## 4. Current model selection
+
+The exporter reads the actual application `DEFAULT_SETTINGS` without importing
+menus/window code, activates its ordered default visual packs through the real
+resolver, and exports their effective mesh manifests. A rejected default pack
+fails the export rather than silently falling back to an older core mesh.
+
+New snapshots use **repository-relative** paths under `assets/` or `visual_packs/`;
+pass `--assets .` from the repository root. Historical base-catalogue snapshots
+remain usable with their original `--assets assets` root. Do not mix the two roots.
+This reproduces current shipped **defaults**, not arbitrary user-installed packs
+or saved settings. Source model bytes are never copied, re-exported or modified.
+
+Earlier W01 captures/timings were core-catalogue-only and omitted the shipped
+Imperial replacement packs. They remain historical evidence, not evidence for the
+current model selection. See the corrective receipt under
+`artifacts/cpp-renderer/w01/current-models/`.
+
+## 5. Preserved geometry, explicitly incomplete world
 
 The loader hashes the **existing runtime JSON bytes**, validates indices/counts/finite
 numbers and uploads all material roles without triangle reduction or per-role suppression.

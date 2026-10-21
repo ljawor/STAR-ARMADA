@@ -17,21 +17,44 @@ from render import asset_selection
 from render.ship_sizes import ship_size
 
 
-def _manifest_map():
-    registry = json.loads((ROOT / 'assets/models/registry.json').read_text())
+def _default_selection():
+    # Read the real application defaults without importing menus/pygame or user settings.
+    import ast
+    tree = ast.parse((ROOT / 'render/menus.py').read_text(encoding='utf-8'))
+    settings = next(ast.literal_eval(node.value) for node in tree.body
+                    if isinstance(node, ast.Assign)
+                    and any(isinstance(target, ast.Name) and target.id == 'DEFAULT_SETTINGS'
+                            for target in node.targets))
+    return asset_selection.selection_preferences(settings)
+
+
+def _manifest_map(report):
+    registry = json.loads((ROOT / 'assets/models/registry.json').read_text(encoding='utf-8'))
     manifests = {m['asset']: m for path in sorted((ROOT / 'assets/models/manifests').glob('*.json'))
-                 for m in [json.loads(path.read_text())]}
-    return {row['binding']: manifests[row['manifest']] for row in registry['bindings']
-            if row['status'] == 'core'}
+                 for m in [json.loads(path.read_text(encoding='utf-8'))]}
+    selected = {row['binding']: (ROOT, manifests[row['manifest']]) for row in registry['bindings']
+                if row['status'] == 'core'}
+    for replacement in report['effective_bindings']:
+        origin = Path(replacement['source']).resolve()
+        if not origin.is_relative_to((ROOT / 'visual_packs').resolve()):
+            raise ValueError('selected pack origin escapes repository visual_packs')
+        candidates = [m for path in sorted((origin / 'assets/models/manifests').glob('*.json'))
+                      for m in [json.loads(path.read_text(encoding='utf-8'))]
+                      if m['asset'] == replacement['asset']]
+        if len(candidates) != 1:
+            raise ValueError(f"selected manifest is missing/ambiguous: {replacement['binding']}")
+        selected[replacement['binding']] = origin, candidates[0]
+    return selected
 
 
 def _asset(binding, manifests):
     # Use the real resolver for contract, indices, normal, envelope and hash validation.
     if asset_selection.mesh_for(binding) is None:
         raise ValueError(f'unresolved approved mesh: {binding}')
-    entry = manifests[binding]['files']['mesh']
-    path = (ROOT / entry['path']).resolve()
-    asset_root = (ROOT / 'assets').resolve()
+    origin, manifest = manifests[binding]
+    entry = manifest['files']['mesh']
+    path = (origin / entry['path']).resolve()
+    asset_root = (origin / 'assets').resolve()
     if not path.is_relative_to(asset_root):
         raise ValueError(f'mesh path escapes assets root: {path}')
     raw = path.read_bytes()
@@ -42,8 +65,9 @@ def _asset(binding, manifests):
     triangles = sum(len(rows) for rows in mesh['batches'].values())
     if triangles != mesh['triangle_count']:
         raise ValueError(f'mesh triangle count mismatch: {binding}')
-    return dict(binding=binding, path=path.relative_to(asset_root).as_posix(),
-                sha256=digest, vertex_count=len(mesh['vertices']), triangle_count=triangles)
+    return dict(binding=binding, path=path.relative_to(ROOT).as_posix(),
+                sha256=digest, vertex_count=len(mesh['vertices']), triangle_count=triangles,
+                manifest_asset=manifest['asset'])
 
 
 def _category(e):
@@ -62,10 +86,14 @@ def build_snapshot(fixture, *, all_visible=False) -> dict:
     before = state_hash(st)
     try:
         # AssetResolver's root contains assets/, despite its asset_root parameter name.
-        report = asset_selection.configure({'model_preview': True}, asset_root=ROOT)
+        selection = _default_selection()
+        report = asset_selection.configure(selection, asset_root=ROOT, pack_root=ROOT / 'visual_packs')
+        if len(report['pack_order']) != len(selection['visual_packs']) or any(
+                not pack['accepted'] for pack in report['pack_order']):
+            raise ValueError('a current default visual pack was rejected; refusing stale core fallback')
         if not report['coverage']['ok']:
             raise ValueError('approved catalogue is incomplete')
-        manifests = _manifest_map()
+        manifests = _manifest_map(asset_selection.diagnostics())
         instances, omitted = [], []
         detected = [e for e in sorted(st.entities.values(), key=lambda e: e.id)
                     if e.alive and (all_visible or st.can_see(0, e.id))]
@@ -86,7 +114,11 @@ def build_snapshot(fixture, *, all_visible=False) -> dict:
         camera = asdict(fixture.camera)
         camera['target'] = list(camera['target'])
         metadata = fixture.metadata()
-        metadata.update(inventory=semantic_inventory(st), exported_inventory=semantic_inventory(
+        metadata.update(asset_path_root='repository-root (pass --assets .)',
+            visual_selection=dict(enabled_order=selection['visual_packs'],
+                effective_bindings=[{k: row[k] for k in ('binding', 'asset', 'pack_id', 'pack_revision')}
+                                    for row in report['effective_bindings']]),
+            inventory=semantic_inventory(st), exported_inventory=semantic_inventory(
             st, entities=[st.entities[i['entity_id']] for i in instances]),
             visibility='omniscient-diagnostic' if all_visible else 'player0-detection',
             omitted_planets=omitted, omitted_features=['planets (W05)', 'fog raster', 'effects', 'UI'],
@@ -108,7 +140,7 @@ def build_catalogue(fixture) -> dict:
     before = state_hash(st)
     try:
         payload = build_snapshot(fixture, all_visible=True)
-        manifests = _manifest_map()
+        manifests = _manifest_map(asset_selection.diagnostics())
         assets = [_asset(binding, manifests) for binding in sorted(manifests)]
         if len(assets) != 103 or len({a['path'] for a in assets}) != 103:
             raise ValueError('expected 103 unique approved runtime meshes')

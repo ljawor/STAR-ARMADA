@@ -29,6 +29,28 @@ class RenderSnapshotTests(unittest.TestCase):
         self.assertEqual(payload['camera']['target'], list(fixture.camera.target))
         self.assertTrue(payload['metadata']['omitted_planets'])
         assets = {a['binding']: a for a in payload['assets']}
+        # The viewer must use the same default visual-pack selection as the game,
+        # not merely a valid but superseded core catalogue.
+        from render import asset_selection
+        import ast
+        tree = ast.parse((ROOT / 'render/menus.py').read_text(encoding='utf-8'))
+        defaults = next(ast.literal_eval(n.value) for n in tree.body
+                        if isinstance(n, ast.Assign)
+                        and any(isinstance(t, ast.Name) and t.id == 'DEFAULT_SETTINGS' for t in n.targets))
+        self.assertEqual(asset_selection.diagnostics()['enabled_order'], defaults['visual_packs'])
+        for pack_name in defaults['visual_packs']:
+            pack_root = ROOT / 'visual_packs' / pack_name
+            pack = json.loads((pack_root / 'visual-pack.json').read_text(encoding='utf-8'))
+            for replacement in pack['content']['replaces']:
+                binding = replacement['binding']
+                if binding not in assets:
+                    continue
+                manifest = json.loads((pack_root / replacement['manifest']).read_text(encoding='utf-8'))
+                self.assertEqual(assets[binding]['sha256'], manifest['files']['mesh']['sha256'])
+                self.assertEqual(assets[binding]['path'],
+                                 (pack_root / manifest['files']['mesh']['path']).relative_to(ROOT).as_posix())
+        self.assertEqual(assets['imperial:corvette']['manifest_asset'], 'prototype:imperial/vigil')
+        self.assertEqual(assets['imperial:command_station']['manifest_asset'], 'prototype:imperial/command_station')
         for i in payload['instances']:
             e = st.entities[i['entity_id']]
             self.assertEqual(i['position'], list(e.pos.to_tuple()))
@@ -38,12 +60,19 @@ class RenderSnapshotTests(unittest.TestCase):
             if e.data_id == 'trade_convoy':
                 self.assertEqual(i['binding'], 'imperial:convoy')
         for a in assets.values():
-            path = (ROOT / 'assets' / a['path']).resolve()
-            self.assertTrue(path.is_relative_to(ROOT / 'assets'))
+            path = (ROOT / a['path']).resolve()
+            self.assertTrue(path.is_relative_to(ROOT))
+            self.assertIn(Path(a['path']).parts[0], ('assets', 'visual_packs'))
             raw = path.read_bytes(); mesh = json.loads(raw)
             self.assertEqual(hashlib.sha256(raw).hexdigest(), a['sha256'])
             self.assertEqual(len(mesh['vertices']), a['vertex_count'])
             self.assertEqual(sum(len(rows) for rows in mesh['batches'].values()), a['triangle_count'])
+        from unittest.mock import patch
+        with patch('tools.render.dump_snapshot._default_selection',
+                   return_value={'model_preview': True, 'visual_packs': ['missing-default-pack']}):
+            with self.assertRaisesRegex(ValueError, 'default visual pack'):
+                build_snapshot(fixture)
+        self.assertEqual(before, state_hash(st))
         self.assertEqual(payload, build_snapshot(fixture))
     def test_cli_visibility_and_file(self):
         import os
@@ -88,7 +117,7 @@ class RenderSnapshotTests(unittest.TestCase):
         self.assertEqual(len({a['path'] for a in payload['assets']}), 103)
         self.assertEqual(len(payload['instances']), 103)
         for a in payload['assets']:
-            raw = (ROOT / 'assets' / a['path']).read_bytes()
+            raw = (ROOT / a['path']).read_bytes()
             mesh = json.loads(raw)
             self.assertEqual(a['sha256'], hashlib.sha256(raw).hexdigest())
             self.assertEqual(a['vertex_count'], len(mesh['vertices']))
