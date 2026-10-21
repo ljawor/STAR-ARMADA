@@ -39,6 +39,9 @@ SHIELD_FADE = (0.20, 0.65)      # the renderer's alpha floor and ceiling (`_a_lo
 SHIELD_SHIP_FACTOR = 1.08       # _shield_radius: ships sit at 1.08x their hull radius
 SHIELD_STATION_FACTOR = 1.35    # ...and stations at 1.35x their own radius
 SHIELD_BUCKETS = 8              # strength is quantised into eight shells (one display list each)
+HIT_SHIELD_LIFETIME = 0.55      # render/hit_effects.py::hit_geometry `life` for a shield contact
+HIT_HULL_LIFETIME = 0.42        # ...and for a bare-hull contact
+HIT_KINDS = ('shield_hit', 'hull_hit', 'impact')
 
 QUADRANTS = ('front', 'rear', 'left', 'right')
 
@@ -72,6 +75,44 @@ def explosions(effects) -> tuple[list, int]:
             skipped += 1
             continue
         out.append(codec.explosion(effect['pos'], size, age, seed))
+    return out, skipped
+
+
+def hits(effects) -> tuple[list, int]:
+    """Damage contacts as parameters: the window rebuilds the cap, the ripple and the sparks.
+
+    A contact is ~90 triangles of curved shell plus seeded sparks, all derived from position,
+    normal, size, age and seed - so those cross and the geometry does not. What stays on this side
+    is every decision: the aperture is a function of the size the damage system chose, the ripple
+    timing and the spark seeds come from the contact's own seed, and the colours are the renderer's
+    cool/warm pair.
+
+    The camera-dependent part stays on the window's side, where the camera is: the shield contact
+    is floored to `SHIELD_MIN_PX` across and the hull contact to 7 px, both of which the renderer
+    applies with its own `px_per_world`.
+    """
+    out, skipped = [], 0
+    for effect in effects:
+        kind = effect.get('kind')
+        if kind not in HIT_KINDS:
+            continue
+        age = max(0.0, float(effect.get('t', 0.0)))
+        life = HIT_SHIELD_LIFETIME if kind == 'shield_hit' else HIT_HULL_LIFETIME
+        if age >= life:
+            skipped += 1
+            continue
+        seed = int(effect.get('seed', 0))
+        normal = effect.get('normal') or tuple(-v for v in effect.get('direction', (0.0, 0.0, -1.0)))
+        visual_contact = bool(effect.get('visual_contact'))
+        size = min(18.0, max(1.0, float(effect.get('size', 5.0))))
+        if kind == 'shield_hit':
+            centre = effect.get('center', effect['pos'])
+            radius = float(effect.get('radius', 1.0))
+            out.append(codec.shield_hit(centre, normal, radius, size, age, seed,
+                                        visual_contact=visual_contact))
+        else:
+            out.append(codec.hull_hit(effect['pos'], normal, size, age, seed,
+                                      visual_contact=visual_contact))
     return out, skipped
 
 

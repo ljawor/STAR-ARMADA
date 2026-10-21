@@ -98,6 +98,9 @@ def main() -> int:
     parser.add_argument('--out')
     parser.add_argument('--band', type=int, nargs=2, default=[180, 700],
                         help='rows to consider, so HUD text is excluded from both frames')
+    parser.add_argument('--min-pixels', type=int, default=400,
+                        help='drop blobs smaller than this; a shell is thousands of pixels, a '
+                             'damage contact a few dozen')
     args = parser.parse_args()
 
     py = load(args.python)
@@ -107,8 +110,8 @@ def main() -> int:
     band = slice(args.band[0], args.band[1])
 
     py_bg, native_bg = background(py), background(native)
-    py_blobs = label_blobs(signal(py[band], py_bg))
-    native_blobs = label_blobs(signal(native[band], native_bg))
+    py_blobs = label_blobs(signal(py[band], py_bg), args.min_pixels)
+    native_blobs = label_blobs(signal(native[band], native_bg), args.min_pixels)
 
     report = {'band': args.band, 'python_blobs': [], 'native_blobs': [], 'pairs': [],
               'background': {'python': [round(float(v), 5) for v in py_bg],

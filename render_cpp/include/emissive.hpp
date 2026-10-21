@@ -5,7 +5,7 @@
 //
 //   header <8sHHII>          20 B  magic "ARMEMIT1", version, count, reserved, crc32(records)
 //   record <BBH4B3f3fffHH>   44 B
-//     kind B     1 ribbon, 2 disc, 3 ring, 4 bolt
+//     kind B     1 ribbon, 2 disc, 3 ring, 4 bolt, 5 explosion, 6 shield, 7 shield hit, 8 hull hit
 //     shape B    ribbon: 0 camera-facing, 1 flat
 //                disc/ring: 0 billboard, 1 flat
 //                bolt: 0 elongated along its axis, 1 square
@@ -42,6 +42,8 @@ constexpr uint8_t kRing = 3;
 constexpr uint8_t kBolt = 4;
 constexpr uint8_t kExplosion = 5;    // a blast carried as parameters (see explosion.hpp)
 constexpr uint8_t kShield = 6;       // a standing shield shell (see shield.hpp)
+constexpr uint8_t kShieldHit = 7;    // a damage contact on that shell (see hit_effects.hpp)
+constexpr uint8_t kHullHit = 8;      // a contact on bare hull (see hit_effects.hpp)
 
 constexpr uint8_t kShapeCamera = 0;
 constexpr uint8_t kShapeFlat = 1;
@@ -50,6 +52,8 @@ constexpr uint8_t kShapeSquare = 1;
 
 constexpr uint16_t kFlagDepth = 0x01;
 constexpr uint16_t kFlagAdditive = 0x02;
+// A contact the simulation already resolved visually: keep its own size, skip the readability floor.
+constexpr uint16_t kFlagVisualContact = 0x04;
 
 class EmissiveError : public std::runtime_error {
  public:
@@ -127,7 +131,7 @@ inline std::vector<Primitive> decode(const uint8_t* data, size_t size) {
     std::memcpy(&primitive.radius, at + 32, 4);
     std::memcpy(&primitive.width, at + 36, 4);
     primitive.segments = get16(at + 40);
-    if (primitive.kind < kRibbon || primitive.kind > kShield)
+    if (primitive.kind < kRibbon || primitive.kind > kHullHit)
       throw EmissiveError("unknown emissive kind");
     if (get16(at + 42) != 0)
       throw EmissiveError("reserved record field must be zero");

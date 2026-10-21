@@ -17,7 +17,7 @@ tell it apart from the old one.* That is a list of things that exist in Python a
 | Planet buildings, shields | `render/planet_building_geometry.py` (253 lines), `_planet_shield_dome` | absent | depends on planets |
 | Fog | `render/fog.py` (172 lines, 22 GL calls) | absent (`fog` appears twice, in comments) | visibility *decisions* already come from Python; the raster does not |
 | Markers | `render/markers.py` (162 lines) | absent (`marker` = 0) | |
-| Hit effects, beams, projectiles | `render/hit_effects.py` (222 lines), effect records in the frame | partially: effect records decode, one draw path | needs a pass per kind |
+| Hit effects, beams, projectiles | `render/hit_effects.py` (222 lines), effect records in the frame | **drawn**: beams, glows, jump rings, blasts, shield and hull contacts | the renderer's per-spark `GL_LINES` pair has no bgfx equivalent |
 | Selection rings, damage states | `renderer.py` ~3900 | absent (`selection` = 0) | |
 | Orbits | `renderer.py` orbit paths | absent (`orbit` = 3, comments) | |
 | LOD | `renderer.py` | flag exists, no mesh LOD | |
@@ -66,7 +66,14 @@ so the transport is one upload per distinct planet, not per frame.
 5. **Shields — landed, see `docs/RENDER_W05_SHIELDS.md`.** The strength ramp and the fade cross;
    the rim bake and the readability floor are native, drawn as one instanced view-space hemisphere
    per detail level. Four fixture bubbles match the Python reference within 0.41 px, 1.9 % radius,
-   1.4 % light. **Planet buildings are still open**, plus the shield and hull hit flashes (3c).
+   1.4 % light.
+5b. **Damage contacts (slice 3c) — landed, see `docs/RENDER_W05_CONTACTS.md`.** Shield and hull
+   contacts cross as position, normal, size, age and seed; the window rebuilds the cap, the ripples
+   and the sparks, seeded from a port of CPython's own Mersenne Twister. Geometry agrees with
+   `hit_geometry` to 4.99e-10 on all 600 fixture vertices. The slice also found and fixed two bugs
+   in the shared draw path: a chunk loop that asked for one vertex at a time (one draw call per
+   vertex, which burned bgfx's 65535 ceiling and silently discarded later passes) and instance
+   memory claimed after a large triangle batch. **Planet buildings are still open.**
 6. **`--renderer cpp` flag, then the equal-workload benchmark** (200/400/600 ships, HUD, planets, fog)
    before any frame-rate statement is made.
 

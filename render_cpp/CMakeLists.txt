@@ -126,6 +126,12 @@ set_tests_properties(planets PROPERTIES ENVIRONMENT
 add_executable(test_shield tests/test_shield.cpp)
 target_include_directories(test_shield PRIVATE include)
 add_test(NAME shields COMMAND test_shield)
+
+add_executable(test_hit tests/test_hit.cpp)
+add_executable(dump_hit_geometry tools/dump_hit_geometry.cpp)
+target_include_directories(dump_hit_geometry PRIVATE include)
+target_include_directories(test_hit PRIVATE include)
+add_test(NAME hits COMMAND test_hit)
 add_executable(test_fogmap tests/test_fogmap.cpp)
 target_include_directories(test_fogmap PRIVATE include)
 target_compile_definitions(test_fogmap PRIVATE

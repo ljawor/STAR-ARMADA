@@ -1349,6 +1349,51 @@
       "any frame-rate claim",
       "enabling the disabled Windows signal workflow"
     ]
+  },
+  {
+    "id": "render-w05-slice3c-contacts-2026-10-21",
+    "date": "2026-10-21",
+    "owner_wording": "ok got it. Please continue",
+    "scope": "W05 slice 3c: shield and hull damage contacts - position, normal, size, age and seed travel; the cap, the ripples and the seeded sparks are native",
+    "base_commit": "95682939023fe3a73b51942b1089182246ef2852",
+    "artifact": "docs/RENDER_W05_CONTACTS.md",
+    "format": {
+      "magic": "ARMEMIT1",
+      "header_bytes": 20,
+      "record_bytes": 44,
+      "encoding": "<BBH4B3f3fffHH (kind, shape, flags, colour rgba, a, b, radius, width, segments)",
+      "kinds": "1 ribbon, 2 disc, 3 ring, 4 bolt, 5 explosion, 6 shield, 7 shield hit, 8 hull hit",
+      "shield_hit_fields": "a = shell centre, b = outward normal, radius = shell radius, width = age, segments = seed, shape = effect size in tenths (the cap aperture is a function of it)",
+      "hull_hit_fields": "a = contact point, b = outward normal, radius = effect size, width = age, segments = seed, shape = 0",
+      "flags_bit2": "FLAG_VISUAL_CONTACT: the simulation already resolved the contact visually, so its own size is kept instead of the readability floor",
+      "frame_format_changed": false,
+      "note": "no new ring and no record growth: contacts ride the existing emissive record beside ribbons, discs, rings, bolts, blasts and shells"
+    },
+    "design": {
+      "python_decides": "which contacts exist, their position and normal, the size the damage system chose, their age, the renderer's cool/warm colours, the ripple timing and every spark seed",
+      "native_presentation": "the SHIELD_MIN_PX floor (74 px) and the 7 px hull floor, applied at this camera exactly as the renderer applies them at its own; the 12-segment cap, two 16-segment ripples and the alpha envelopes",
+      "rng": "the window ports CPython's Mersenne Twister with the int seeding path (init_by_array), so a seed produces the same fragments on both sides",
+      "blending": "alpha, no depth test, no depth write: a contact is a surface marking, composed above opaque armour like Python does; smoke rides its own submission because a dark mass may not be drawn additively",
+      "omission": "the renderer also emits a one-pixel GL_LINES pair per spark; bgfx has no line primitive and the tapered ribbon under it is the geometry with raster coverage"
+    },
+    "evidence": {
+      "geometry_parity": "tools/render/compare_hit_geometry.py over render_cpp/tests/fixtures/hit/hits.bin: 528 contact vertices and 72 smoke vertices on both sides, 0 structural mismatches, worst component delta 4.99e-10 (the dumper prints nine decimals)",
+      "live": "one real skirmish batch from a live emit.ring carried 337 contacts and 622 shells; published twice, with and without the contact records, at the same camera: 3,902 pixels differ, about 11 per contact",
+      "tests": "161 Python render tests and ctest 11/11, including tests/test_render_emissive.py::ContactTests and render_cpp/tests/test_hit.cpp (RNG parity against numbers printed by CPython, cap vertices on the sphere, flash and smoke counts, fade monotonicity, the 7 px floor and the visual-contact cap)",
+      "bugs_fixed": "bgfx::getAvailTransientVertexBuffer(1, layout) returns min(available, requested), so the chunk loop issued one draw call per vertex; a frame with 337 contacts holds about 75k vertices, burned the 65535 draw-call ceiling and every later pass was silently discarded while the report said 622 shells and dropped_vertices 0. Instance memory is now also claimed before the large triangle batches and the shells are submitted last, which keeps Python's layering"
+    },
+    "not_verified": [
+      "a pixel A/B between the two renderers: the window is handed degrees where bx::mtxProj wants radians, so it will not frame the reference camera's pitch and the framing difference would dominate a few-pixel comparison",
+      "no Windows/D3D12 run"
+    ],
+    "does_not_authorize": [
+      "merging PR #150",
+      "a tag or release",
+      "changing the default renderer",
+      "any frame-rate claim",
+      "enabling the disabled Windows signal workflow",
+      "fixing the projection without its own task and re-baseline"
+    ]
   }
   ]
 }

@@ -5,6 +5,7 @@
 #include "explosion.hpp"
 #include "fogmap.hpp"
 #include "shield.hpp"
+#include "hit_effects.hpp"
 #include "input_ring.hpp"
 #include "marker_ring.hpp"
 #include "overlay.hpp"
@@ -909,6 +910,10 @@ static int run(const Options &o) {
   size_t shieldShells = 0, shieldVertices = 0;
   size_t shieldByDetail[3] = {0, 0, 0};
   double shieldFade = 0.0;
+  // W05 slice 3c: damage contacts. Rebuilt geometry, so they are counted in triangles rather than
+  // in draws; the smoke list is separate because a dark mass may not be drawn additively.
+  size_t hitContacts = 0, hitShieldContacts = 0, hitHullContacts = 0, hitTrianglesCount = 0,
+         hitSmokeTris = 0, hitSparks = 0;
   std::vector<uint8_t> emitPayload;
   std::vector<emit::Primitive> emitList;
   if (!o.emitRing.empty())
@@ -1632,6 +1637,9 @@ static int run(const Options &o) {
     }
     if (!emitList.empty()) {
       std::vector<CueVertex> nearTriangles, farTriangles, smokeTriangles;
+      // Contacts are alpha-blended surface markings, not light: they ride their own submitted pair
+      // (triangles then smoke) so a fireball's additive pass cannot saturate them.
+      std::vector<CueVertex> hitTriangles, hitSmokeVerts;
       size_t fxLayers = 0, fxVertexCount = 0;
       double fxAlphaSum = 0.0;
       const float kShieldMinPx = 74.f;   // renderer.py::SHIELD_MIN_PX, applied at this camera
@@ -1819,6 +1827,43 @@ static int run(const Options &o) {
           ++shieldShells;
           ++shieldByDetail[detail];
           shieldFade += fade;
+        } else if (primitive.kind == emit::kShieldHit || primitive.kind == emit::kHullHit) {
+          // A contact is rebuilt here from its parameters, the way a blast is: position, normal,
+          // size, age and seed cross, ~90 triangles of curved shell do not. The two camera-dependent
+          // numbers - the shield contact's SHIELD_MIN_PX floor and the hull contact's 7 px floor -
+          // are applied at this camera, exactly as Python applies them at its own.
+          const bool shieldContact = primitive.kind == emit::kShieldHit;
+          const float depth = eyeDepth(primitive.a.data());
+          const double pxPerWorld =
+              (focal > 0.f && depth > 0.f) ? double(focal) / double(depth) : 0.0;
+          const double centre[3] = {primitive.a[0], primitive.a[1], primitive.a[2]};
+          const double normal[3] = {primitive.b[0], primitive.b[1], primitive.b[2]};
+          const double right3[3] = {rightVec[0], rightVec[1], rightVec[2]};
+          const double up3[3] = {upVec[0], upVec[1], upVec[2]};
+          // The contact size is the effect's own, carried in the shape byte in tenths for a shell
+          // contact (its cap aperture is a function of it); a hull contact carries it in `radius`.
+          const double size = shieldContact ? double(primitive.shape) / 10.0
+                                            : double(primitive.radius);
+          std::vector<fx::HitVertex> rebuilt, rebuiltSmoke;
+          fx::HitCounters counters;
+          fx::appendHit(shieldContact, centre, normal, double(primitive.radius), size,
+                        double(primitive.width), uint32_t(primitive.segments),
+                        (primitive.flags & emit::kFlagVisualContact) != 0, pxPerWorld, right3, up3,
+                        rebuilt, rebuiltSmoke, &counters);
+          for (const auto& v : rebuilt)
+            hitTriangles.push_back({float(v.x), float(v.y), float(v.z), float(v.r), float(v.g),
+                                    float(v.b), float(v.a)});
+          for (const auto& v : rebuiltSmoke)
+            hitSmokeVerts.push_back({float(v.x), float(v.y), float(v.z), float(v.r),
+                                     float(v.g), float(v.b), float(v.a)});
+          ++hitContacts;
+          if (shieldContact)
+            ++hitShieldContacts;
+          else
+            ++hitHullContacts;
+          hitSparks += counters.sparkTriangles;
+          hitTrianglesCount += counters.capTriangles + counters.rippleTriangles;
+          hitSmokeTris += counters.smokeTriangles;
         } else if (primitive.kind == emit::kExplosion) {
           // A blast is rebuilt from its parameters with the renderer's own formulas. Smoke blends
           // normally (it is a dark mass), everything else adds light, so the two are separated and
@@ -1842,13 +1887,17 @@ static int run(const Options &o) {
                                 bool additive) {
         if (verts.empty())
           return;
-        // A transient vertex buffer is finite (a few hundred thousand vertices). One batch of
-        // shield shells at battle scale is larger than that, so the list is submitted in chunks:
-        // asking for the whole list would drop every vertex and the bubbles would vanish without
-        // a single failed draw call to show for it.
+        // A transient vertex buffer is finite (a few hundred thousand vertices), so a large list is
+        // submitted in chunks. The count asked for must be the number of vertices still wanted:
+        // `getAvailTransientVertexBuffer` returns min(available, requested), so asking for one
+        // vertex returns exactly one and the loop degenerates into a draw call per vertex. A frame
+        // with a few hundred damage contacts holds ~75k vertices; that burned bgfx's 65535
+        // draw-call ceiling and every later draw - the standing shield shells included - was
+        // silently discarded, with no failed call and no dropped-vertex count to show for it.
         size_t cursor = 0;
         while (cursor < verts.size()) {
-        const uint32_t avail = bgfx::getAvailTransientVertexBuffer(1, cueLayout);
+        const uint32_t wanted = uint32_t(std::min<size_t>(verts.size() - cursor, 0xFFFFFFFFu));
+        const uint32_t avail = bgfx::getAvailTransientVertexBuffer(wanted, cueLayout);
         const size_t want = std::min<size_t>(verts.size() - cursor, avail);
         if (want == 0) {
           emitDropped += uint32_t(verts.size() - cursor);   // counted, never silently squeezed
@@ -1873,15 +1922,21 @@ static int run(const Options &o) {
         bgfx::submit(1, cueProgram);
         }
       };
-      submitEmissive(farTriangles, true, true);
-      submitEmissive(smokeTriangles, false, false);
-      submitEmissive(nearTriangles, false, true);
-      // Shield shells: additive, depth-tested, never writing depth - the ship inside must read
-      // through its own field, and two translucent shells must not fight over the depth buffer.
+      // Shield instance memory is claimed NOW, before any large triangle batch: transient vertex and
+      // instance memory come out of one per-frame pool in allocation order, and a frame with a few
+      // hundred damage contacts allocates ~75k vertices of triangles, which is enough to leave the
+      // instanced shell draws with nothing. The symptom is silent - the shells simply do not appear,
+      // and `dropped_vertices` stays 0 because the instance path counts its own shortfall. Claiming
+      // the instances first and submitting them last keeps both the memory and Python's layering
+      // (`_draw_effects` at renderer.py:502 runs before `_draw_shields` at :510).
+      struct ShieldDraw {
+        bgfx::InstanceDataBuffer buffer;
+        uint32_t count = 0;
+        int detail = 0;
+      };
+      std::vector<ShieldDraw> shieldDraws;
       for (int detail = 0; detail < 3; ++detail) {
         const std::vector<float>& bucket = shieldInstances[detail];
-        if (bucket.empty())
-          continue;
         size_t cursor = 0;
         while (cursor < bucket.size()) {
           const uint32_t count = uint32_t((bucket.size() - cursor) / 8);
@@ -1891,17 +1946,31 @@ static int run(const Options &o) {
             emitDropped += uint32_t((bucket.size() - cursor) / 8 * shieldMeshVertices[detail]);
             break;
           }
-          bgfx::InstanceDataBuffer buffer;
-          bgfx::allocInstanceDataBuffer(&buffer, take, 32);
-          std::memcpy(buffer.data, bucket.data() + cursor, size_t(take) * 8 * sizeof(float));
+          ShieldDraw draw;
+          draw.count = take;
+          draw.detail = detail;
+          bgfx::allocInstanceDataBuffer(&draw.buffer, take, 32);
+          std::memcpy(draw.buffer.data, bucket.data() + cursor, size_t(take) * 8 * sizeof(float));
           cursor += size_t(take) * 8;
-          bgfx::setVertexBuffer(0, shieldMesh[detail]);
-          bgfx::setInstanceDataBuffer(&buffer);
-          bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_MSAA | BGFX_STATE_DEPTH_TEST_LESS |
-                         BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_ONE));
-          bgfx::submit(1, shieldProgram);
-          shieldVertices += size_t(take) * shieldMeshVertices[detail];
+          shieldDraws.push_back(draw);
         }
+      }
+      submitEmissive(farTriangles, true, true);
+      submitEmissive(smokeTriangles, false, false);
+      submitEmissive(nearTriangles, false, true);
+      // Contacts after the light and before the shells, which is where Python draws them: a marking
+      // on armour is a surface fact, alpha-blended, above opaque armour and under a standing field.
+      submitEmissive(hitSmokeVerts, false, false);
+      submitEmissive(hitTriangles, false, false);
+      // Shield shells are additive, depth-tested and never write depth - the ship inside must read
+      // through its own field, and two translucent shells must not fight over the depth buffer.
+      for (const ShieldDraw& draw : shieldDraws) {
+        bgfx::setVertexBuffer(0, shieldMesh[draw.detail]);
+        bgfx::setInstanceDataBuffer(&draw.buffer);
+        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_MSAA | BGFX_STATE_DEPTH_TEST_LESS |
+                       BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_ONE));
+        bgfx::submit(1, shieldProgram);
+        shieldVertices += size_t(draw.count) * shieldMeshVertices[draw.detail];
       }
     }
     // W03: read the newest HUD payload, apply the patches to the texture, draw one quad.
@@ -2131,6 +2200,16 @@ static int run(const Options &o) {
                  "latitude like renderer.py::_shield_shell_list; tint and fade are Python's "
                  "strength ramp, the detail level and the readability floor come from this "
                  "camera"}};
+    report["hits"] = {
+        {"contacts", hitContacts},
+        {"by_kind", {{"shield", hitShieldContacts}, {"hull", hitHullContacts}}},
+        {"triangles", hitTrianglesCount},
+        {"smoke_triangles", hitSmokeTris},
+        {"spark_triangles", hitSparks},
+        {"blend", "alpha, no depth test, no depth write"},
+        {"note", "rebuilt from position, normal, size, age and seed like a blast; the seeded spark "
+                 "fragments come from this window's port of Python's random.Random, so a seed "
+                 "produces the same flecks on both sides"}};
     report["emissive"] = {
         {"ring", o.emitRing.string()},
         {"fx_demo", o.fxDemo},

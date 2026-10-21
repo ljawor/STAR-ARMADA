@@ -272,5 +272,92 @@ class ShieldShellTests(unittest.TestCase):
         self.assertEqual(decoded[0]['colour'], shells[0]['colour'])
 
 
+class ContactTests(unittest.TestCase):
+    """W05 slice 3c: damage contacts cross as parameters, never as geometry."""
+
+    def contact(self, **overrides):
+        effect = {'kind': 'shield_hit', 'pos': (10.0, 0.0, 0.0), 'center': (0.0, 0.0, 0.0),
+                  'normal': (0.0, 0.0, 1.0), 'radius': 108.0, 'size': 12.0, 't': 0.1, 'seed': 7}
+        effect.update(overrides)
+        return effect
+
+    def test_a_contact_is_one_parameter_record(self):
+        records, skipped = emissive_batch.hits([self.contact()])
+        self.assertEqual((len(records), skipped), (1, 0))
+        record = records[0]
+        self.assertEqual(record['kind'], codec.SHIELD_HIT)
+        self.assertEqual(record['a'], (0.0, 0.0, 0.0))        # the shell centre, not the impact
+        self.assertEqual(record['b'], (0.0, 0.0, 1.0))        # the outward normal
+        self.assertAlmostEqual(record['radius'], 108.0)
+        self.assertAlmostEqual(record['width'], 0.1)
+        self.assertEqual(record['segments'], 7)
+        # the cap aperture is a function of the effect size, so the size crosses in tenths
+        self.assertEqual(record['shape'], 120)
+        # contacts are surface markings: alpha blend, no depth test
+        self.assertFalse(record['flags'] & codec.FLAG_ADDITIVE)
+        self.assertFalse(record['flags'] & codec.FLAG_DEPTH)
+
+    def test_a_hull_contact_carries_its_own_size(self):
+        records, _ = emissive_batch.hits([self.contact(kind='hull_hit', pos=(5.0, 1.0, 2.0),
+                                                      size=14.0, seed=3)])
+        record = records[0]
+        self.assertEqual(record['kind'], codec.HULL_HIT)
+        self.assertEqual(record['a'], (5.0, 1.0, 2.0))
+        self.assertAlmostEqual(record['radius'], 14.0)
+        self.assertEqual(record['shape'], codec.SHAPE_CAMERA)
+
+    def test_the_effect_size_is_clamped_like_the_renderer_does(self):
+        records, _ = emissive_batch.hits([self.contact(size=40.0)])
+        self.assertEqual(records[0]['shape'], 180)             # min(18, 40) in tenths
+        records, _ = emissive_batch.hits([self.contact(size=0.2)])
+        self.assertEqual(records[0]['shape'], 10)              # max(1, 0.2) in tenths
+
+    def test_a_contact_past_its_life_is_dropped(self):
+        records, skipped = emissive_batch.hits([self.contact(t=0.56),
+                                                self.contact(kind='hull_hit', t=0.43)])
+        self.assertEqual(records, [])
+        self.assertEqual(skipped, 2)
+        # a hull contact dies sooner than a shield contact
+        records, _ = emissive_batch.hits([self.contact(t=0.5)])
+        self.assertEqual(len(records), 1)
+
+    def test_the_normal_falls_back_to_the_reversed_direction(self):
+        effect = self.contact()
+        del effect['normal']
+        effect['direction'] = (0.0, 0.0, 1.0)
+        records, _ = emissive_batch.hits([effect])
+        self.assertEqual(records[0]['b'], (0.0, 0.0, -1.0))
+
+    def test_a_visually_resolved_contact_keeps_its_size(self):
+        records, _ = emissive_batch.hits([self.contact(visual_contact=True)])
+        self.assertTrue(records[0]['flags'] & codec.FLAG_VISUAL_CONTACT)
+        records, _ = emissive_batch.hits([self.contact()])
+        self.assertFalse(records[0]['flags'] & codec.FLAG_VISUAL_CONTACT)
+
+    def test_other_effects_are_not_contacts(self):
+        records, skipped = emissive_batch.hits([{'kind': 'shield_burst', 't': 0.1}])
+        self.assertEqual((records, skipped), ([], 0))
+
+    def test_contacts_survive_the_bridge(self):
+        records, _ = emissive_batch.hits([self.contact(), self.contact(kind='hull_hit', size=9.0)])
+        decoded = codec.decode(codec.encode(records))
+        self.assertEqual([record['kind'] for record in decoded],
+                         [codec.SHIELD_HIT, codec.HULL_HIT])
+        self.assertEqual(decoded[0]['shape'], 120)
+        self.assertAlmostEqual(decoded[0]['width'], 0.1, places=5)
+
+    def test_an_unknown_kind_is_refused_by_the_decoder(self):
+        records, _ = emissive_batch.hits([self.contact()])
+        good = bytearray(codec.encode(records))
+        record = codec.HEADER.size
+        good[record] = 9                     # one past the last known kind
+        # the crc covers the records, so recompute it for the mutated kind byte
+        import zlib
+        import struct
+        struct.pack_into('<I', good, 12, zlib.crc32(bytes(good[codec.HEADER.size:])))
+        with self.assertRaises(codec.EmissiveError):
+            codec.decode(bytes(good))
+
+
 if __name__ == '__main__':
     unittest.main()

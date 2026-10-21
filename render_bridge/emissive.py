@@ -7,7 +7,11 @@ window cannot infer any of them, so the *decisions and the shapes* cross as prim
     header  <8sHHII   20 B   magic "ARMEMIT1", version, count (<=4096), reserved, crc32
     record  <BBH4B3f3fffHH  44 B
               kind B     RIBBON 1 | DISC 2 | RING 3 | BOLT 4 | EXPLOSION 5 | SHIELD 6
+                         SHIELD_HIT 7 | HULL_HIT 8
               shape B    RIBBON: 0 camera-facing | 1 flat
+                         SHIELD_HIT: the contact size in tenths of a world unit (2..18 -> 20..180),
+                         because the cap's aperture is min(.19, max(.055, size/radius)) and the
+                         window would otherwise have to guess the size the damage system chose
                          DISC/RING: 0 billboard | 1 flat (ecliptic)
                          BOLT: 0 elongated along its axis | 1 square
               flags H    bit0 depth test, bit1 additive blend
@@ -20,6 +24,12 @@ window cannot infer any of them, so the *decisions and the shapes* cross as prim
               segments H DISC fan segments (0 = 24) | RING segments (0 = 32)
                          EXPLOSION seed (the blast's own deterministic hash input)
               reserved H must be 0
+
+    A SHIELD_HIT record carries a damage contact on a standing shell: `a` is the shell centre, `b`
+    the outward normal, `radius` the shell radius, `width` the age in seconds and `segments` the
+    seed. A HULL_HIT is the same shape of record with `a` the contact point and `radius` the effect
+    size. Both are rebuilt by the window from those numbers plus its own camera, because the
+    contact's pixel floor depends on how far away the camera is.
 
     A SHIELD record reuses the same fields: `a` is the shell centre, `radius` the shell's world
     radius, `width` the shield fraction (0..1, the decision the side panel also shows) and `colour`
@@ -50,6 +60,8 @@ RING = 3
 BOLT = 4
 EXPLOSION = 5                      # a blast carried as parameters, rebuilt by the window
 SHIELD = 6                         # a standing shield shell: centre, radius, strength, tint
+SHIELD_HIT = 7                     # a damage contact on that shell: centre, normal, radius, age
+HULL_HIT = 8                       # a bare-hull contact: point, normal, size, age
 
 SHAPE_CAMERA = 0                   # camera-facing billboard
 SHAPE_FLAT = 1                     # lying in the ecliptic
@@ -58,6 +70,9 @@ SHAPE_SQUARE = 1                   # bolt drawn as a square
 
 FLAG_DEPTH = 0x01
 FLAG_ADDITIVE = 0x02
+# A hit the simulation already resolved visually: the renderer then keeps the effect's own size
+# instead of applying its readability floor (render/hit_effects.py::draw_hit).
+FLAG_VISUAL_CONTACT = 0x04
 
 DEFAULT_DISC_SEGMENTS = 24
 DEFAULT_RING_SEGMENTS = 32
@@ -72,12 +87,12 @@ def _byte(value: float) -> int:
 
 
 def _record(kind, shape, colour, a, b=(0.0, 0.0, 0.0), radius=0.0, width=0.0,
-            segments=0, depth=False, additive=True) -> dict:
+            segments=0, depth=False, additive=True, flags_extra=0) -> dict:
     alpha = float(colour[3]) if len(colour) == 4 else 1.0
     return {
         'kind': kind,
         'shape': shape,
-        'flags': (FLAG_DEPTH if depth else 0) | (FLAG_ADDITIVE if additive else 0),
+        'flags': ((FLAG_DEPTH if depth else 0) | (FLAG_ADDITIVE if additive else 0) | flags_extra),
         'colour': (_byte(colour[0]), _byte(colour[1]), _byte(colour[2]), _byte(alpha)),
         'a': tuple(float(v) for v in a),
         'b': tuple(float(v) for v in b),
@@ -136,6 +151,33 @@ def shield(centre, radius, fraction, tint) -> dict:
                    width=float(fraction), segments=0, depth=True, additive=True)
 
 
+def shield_hit(centre, normal, radius, size, age, seed, *, visual_contact=False) -> dict:
+    """A damage contact crawling over a standing shell.
+
+    `centre` is the shell's centre, not the impact point: the contact point is one shell radius
+    along `normal`, which is how `render/hit_effects.py::hit_geometry` places it, so the window can
+    put the cap exactly back on the sphere Python would have used. `size` is the effect's own
+    visual size, carried in the shape byte in tenths because the cap aperture is a function of it.
+    """
+    return _record(SHIELD_HIT, max(0, min(255, int(round(size * 10.0)))),
+                   (0.0, 0.0, 0.0, 1.0), centre, normal,
+                   radius=float(radius), width=float(age), segments=int(seed) & 0xFFFF,
+                   depth=False, additive=False,
+                   flags_extra=FLAG_VISUAL_CONTACT if visual_contact else 0)
+
+
+def hull_hit(point, normal, size, age, seed, *, visual_contact=False) -> dict:
+    """A contact on bare hull: warm flash, a little smoke, seeded sparks.
+
+    `size` is the effect's own size in world units; the window applies the renderer's 7 px
+    readability floor at its own camera, exactly as Python does with its own.
+    """
+    return _record(HULL_HIT, SHAPE_CAMERA, (0.0, 0.0, 0.0, 1.0), point, normal,
+                   radius=float(size), width=float(age), segments=int(seed) & 0xFFFF,
+                   depth=False, additive=False,
+                   flags_extra=FLAG_VISUAL_CONTACT if visual_contact else 0)
+
+
 def encode(records) -> bytes:
     records = list(records)
     if len(records) > MAX_RECORDS:
@@ -143,7 +185,7 @@ def encode(records) -> bytes:
     body = bytearray()
     for record in records:
         kind = int(record['kind'])
-        if kind not in (RIBBON, DISC, RING, BOLT, EXPLOSION, SHIELD):
+        if kind not in (RIBBON, DISC, RING, BOLT, EXPLOSION, SHIELD, SHIELD_HIT, HULL_HIT):
             raise EmissiveError(f'unknown emissive kind {kind}')
         body += RECORD.pack(kind, int(record['shape']), int(record['flags']),
                             *[int(v) for v in record['colour']],
@@ -178,7 +220,7 @@ def decode(data):
     for index in range(count):
         fields = RECORD.unpack_from(body, index * RECORD_BYTES)
         kind, shape, flags = fields[0], fields[1], fields[2]
-        if kind not in (RIBBON, DISC, RING, BOLT, EXPLOSION, SHIELD):
+        if kind not in (RIBBON, DISC, RING, BOLT, EXPLOSION, SHIELD, SHIELD_HIT, HULL_HIT):
             raise EmissiveError(f'record {index}: unknown kind {kind}')
         if fields[-1]:
             raise EmissiveError(f'record {index}: reserved field must be zero')

@@ -332,8 +332,14 @@ def main(argv=None):
                                 and (entity.is_ship or entity.is_squadron or entity.is_station)
                                 and (shown is None or entity.id in shown)]
                     shield_primitives = emissive_batch.shields(shielded, radius_of)
-                    emit_primitives = emit_primitives + shield_primitives
+                    # W05 slice 3c: damage contacts. Position, normal, size, age and seed cross; the
+                    # window rebuilds the cap and the sparks at its own camera, so a contact stays
+                    # readable at any zoom.
+                    hit_primitives, hits_skipped = emissive_batch.hits(effects)
+                    emit_primitives = emit_primitives + shield_primitives + hit_primitives
                     emit_stats['shields'] = len(shield_primitives)
+                    emit_stats['hits'] = len(hit_primitives)
+                    emit_stats['hits_skipped'] = hits_skipped
                     emit_stats['primitives'] = len(emit_primitives)
                     emissive_ring.publish(bytes(emissive_codec.encode(emit_primitives)))
                     emit_ms.append((time.perf_counter() - emit_started) * 1000.0)
@@ -440,6 +446,8 @@ def main(argv=None):
             'bolts': sum(c.get('drawn', 0) for c in emit_counts),
             'explosions': sum(c.get('explosions', 0) for c in emit_counts),
             'explosions_skipped': sum(c.get('explosions_skipped', 0) for c in emit_counts),
+            'hits': sum(c.get('hits', 0) for c in emit_counts),
+            'hits_skipped': sum(c.get('hits_skipped', 0) for c in emit_counts),
             'squares': sum(c.get('squares', 0) for c in emit_counts),
             'note': 'beams and glows in world units, bolts in pixels so the window keeps them at '
                     'its own zoom; blasts travel as position/size/age/seed and are rebuilt by the '
