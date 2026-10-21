@@ -98,6 +98,12 @@ slot:          u64 begin tag | u32 length | payload | u64 end tag
   padding.
 - A frame whose length exceeds the slot capacity is refused before anything is written, so a
   mis-sized ring cannot corrupt a good frame that is already in place.
+- A reader takes **one** header snapshot per attempt and validates the slot against it. Re-reading
+  the published counter inside the attempt looks harmless and is not: a producer that advanced by a
+  whole ring between the two reads makes the newest frame look overwritten, and the reader then
+  presents an older picture with no error anywhere. The native test found this while it was being
+  written (it reported "observed no frames" against a healthy producer), and both readers now hold
+  the snapshot fixed for the duration of one read.
 
 ## 4. Measured producer cost
 
@@ -148,8 +154,39 @@ it; the offline exporter's behaviour and bytes are untouched by that cache.
   The numbers above are a producer cost, not a frame rate. The migration plan's "owner sees a live
   battle" gate is untouched.
 
-## 6. Tests
+## 6. Native consumer (decode half)
+
+`render_cpp/include/frame_v2.hpp` is the C++ side of the same contract: a header-only, GPU-free
+decoder plus the ring reader. It validates in the same order as the Python decoder (magic, version,
+kind, record ceilings, table identity, length against counts, exact total length, CRC) and then adds
+what a renderer needs and Python's decoder also checks — every matrix element, status and transient
+number must be finite, because a CRC-valid frame can still carry a NaN if the producer was fed one.
+
+It decodes **bytes this producer wrote**, not frames it made up: the fixtures in
+`render_cpp/tests/fixtures/` are authored by `tools/render/write_frame_fixtures.py` (with a
+`--check` mode for drift) and committed, so the two languages are compared against one artifact.
+`ctest` runs it as `frame_v2` beside the existing `scene` and `camera` tests.
+
+The decoder's checks are shown to be load-bearing rather than merely present. Removing each one in
+turn from a scratch copy of the header and re-running the test:
+
+| Sabotage | Result |
+|---|---|
+| Drop the payload CRC comparison | caught: "accepted a frame it should refuse" (3/3 runs) |
+| Drop the table-identity comparison | caught (3/3 runs) |
+| Drop the matrix finiteness check | caught (3/3 runs) |
+| Drop the post-copy tag re-validation | **not caught** (3/3 runs passed) |
+
+The last row is reported as not caught, not as a pass: at a realistic publish rate (2 ms between
+frames) a reader's copy window is microseconds and no writer can cycle a slot inside it, so the
+concurrent C++ test cannot falsify that guard. The same removal *was* caught by the Python threaded
+test, which ran the producer unthrottled. The guard stays because the window it closes is real; the
+honest statement is that its control is the Python test, and the C++ side covers the deterministic
+torn-slot case (a slot whose completing tag is missing) instead.
+
+## 7. Tests
 
 `tests/test_render_packed.py` (9 tests) and `tests/test_render_ring.py` (6 tests, one of which
-drives a reader thread against a live writer) run without a display or GPU. The equivalence test builds the real fixture, encodes through both paths and
+drives a reader thread against a live writer) run without a display or GPU; `ctest` adds
+`frame_v2` (native decoder, both rejection matrices and ring reads, also GPU-free). The equivalence test builds the real fixture, encodes through both paths and
 compares every field, and asserts the simulation hash is unchanged afterwards.

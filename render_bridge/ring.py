@@ -147,13 +147,18 @@ class Ring:
         published = RING.unpack_from(self._buffer(), 0)[4]
         if published == 0:
             return None
-        return self.read(published - 1)
+        # Read against this one header snapshot: re-reading it inside `read` lets a writer
+        # that advanced by a full ring of frames make the newest frame look overwritten,
+        # and the reader then silently shows an older picture.
+        return self._read_at(published - 1, published)
 
     def read(self, sequence):
         """Return (sequence, frame bytes) for an exact slot, or None if torn/overwritten."""
         if sequence < 0:
             return None
-        published = RING.unpack_from(self._buffer(), 0)[4]
+        return self._read_at(sequence, RING.unpack_from(self._buffer(), 0)[4])
+
+    def _read_at(self, sequence, published):
         if sequence >= published:
             return None
         if published - sequence > self.slots:      # already overwritten by newer frames

@@ -1,0 +1,141 @@
+{
+  "frame": {
+    "effects": 2,
+    "flags": 1,
+    "frame_index": 99,
+    "instances": 2,
+    "tick": 4242
+  },
+  "instance_records": [
+    {
+      "binding": "rebel:fighter",
+      "entity_id": 7,
+      "flags": 1,
+      "hp": 1.0,
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        10.0,
+        0.0,
+        5.0
+      ],
+      "shield": 0.75,
+      "tint": [
+        255,
+        128,
+        64,
+        255
+      ]
+    },
+    {
+      "binding": "imperial:cruiser",
+      "entity_id": 9,
+      "flags": 6,
+      "hp": 0.5,
+      "matrix": [
+        0.0,
+        0.0,
+        -2.0,
+        0.0,
+        2.0,
+        0.0,
+        2.0,
+        0.0,
+        0.0,
+        -4.5,
+        0.0,
+        12.25
+      ],
+      "shield": 0.0,
+      "tint": [
+        64,
+        128,
+        255,
+        255
+      ]
+    }
+  ],
+  "sizes": {
+    "effect": 52,
+    "frame": 288,
+    "header": 48,
+    "instance": 68
+  },
+  "table": {
+    "bindings": [
+      "imperial:cruiser",
+      "neutral:station",
+      "rebel:fighter"
+    ],
+    "crc32": 275579063,
+    "kinds": [
+      "beam",
+      "explosion"
+    ]
+  },
+  "transient_records": [
+    {
+      "class": 2,
+      "colour": [
+        255,
+        0,
+        0,
+        255
+      ],
+      "end_position": [
+        4.5,
+        5.5,
+        6.5
+      ],
+      "is_beam": false,
+      "kind": "beam",
+      "life": 0.25,
+      "position": [
+        1.5,
+        2.5,
+        3.5
+      ],
+      "size": 2.0,
+      "velocity": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "class": 3,
+      "colour": [
+        0,
+        255,
+        128,
+        255
+      ],
+      "end_position": [
+        -1.0,
+        0.5,
+        0.0
+      ],
+      "is_beam": true,
+      "kind": "explosion",
+      "life": 3.0,
+      "position": [
+        -1.0,
+        0.5,
+        0.0
+      ],
+      "size": 1.5,
+      "velocity": [
+        0.25,
+        0.5,
+        -0.75
+      ]
+    }
+  ]
+}

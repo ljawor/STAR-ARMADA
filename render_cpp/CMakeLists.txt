@@ -91,3 +91,11 @@ add_test(NAME scene COMMAND test_scene)
 add_executable(test_camera tests/test_camera.cpp)
 target_include_directories(test_camera PRIVATE include)
 add_test(NAME camera COMMAND test_camera)
+# W02 consumer: decodes frames authored by the Python producer (tools/render/
+# write_frame_fixtures.py). Header-only and GPU-free on purpose -- the risky half of the
+# consumer is refusing malformed bytes, which needs no device.
+add_executable(test_frame_v2 tests/test_frame_v2.cpp)
+target_link_libraries(test_frame_v2 PRIVATE armada_scene)
+target_compile_definitions(test_frame_v2 PRIVATE
+  ARMADA_FIXTURE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures")
+add_test(NAME frame_v2 COMMAND test_frame_v2)
