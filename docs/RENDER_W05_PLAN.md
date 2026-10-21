@@ -13,8 +13,8 @@ tell it apart from the old one.* That is a list of things that exist in Python a
 | Ships, stations, satellites | `render/renderer.py`, authored meshes | **drawn** (frame instances + bindings) | W01/W02 |
 | HUD, text, menus | `render/hud.py`, `menus.py`, SDL_ttf | **drawn** as a composed surface (W03) | menus not exercised over the bridge |
 | Input | `render/input.py` | **returns** to the controller (W04) | menus not bridged |
-| Planets | `_draw_planets` (renderer.py:1024) — procedural equirect texture per planet type, 512², seeded by name, axial spin, culling, asteroid fields separately | **absent** — `grep -c planet viewer.cpp` = 0 | planets are also excluded from the frame (`dump_snapshot.py:124`, `omitted_features=['planets (W05)', …]`) |
-| Planet buildings, shields | `render/planet_building_geometry.py` (253 lines), `_planet_shield_dome` | domes landed (slice 3d); buildings absent | depends on planets |
+| Planets | `_draw_planets` (renderer.py:1024) — procedural equirect texture per planet type, 512², seeded by name, axial spin, culling, asteroid fields separately | **drawn** (slice 1: textures cross, unit sphere scaled by radius) | asteroid fields omitted and counted |
+| Planet buildings, shields | `render/planet_building_geometry.py` (253 lines), `_planet_shield_dome` | **drawn**: domes (3d) and surface hardware (3e, mesh + surface basis) | depends on planets |
 | Fog | `render/fog.py` (172 lines, 22 GL calls) | absent (`fog` appears twice, in comments) | visibility *decisions* already come from Python; the raster does not |
 | Markers | `render/markers.py` (162 lines) | absent (`marker` = 0) | |
 | Hit effects, beams, projectiles | `render/hit_effects.py` (222 lines), effect records in the frame | **drawn**: beams, glows, jump rings, blasts, shield and hull contacts | the renderer's per-spark `GL_LINES` pair has no bgfx equivalent |
@@ -79,7 +79,17 @@ so the transport is one upload per distinct planet, not per frame.
    producer decides whether a generator protects the planet, how big the field is and how brightly
    it pulses after a loss, and publishes the pulse as repeated records because the renderer draws
    it as repeated additive passes. Rim radius agrees exactly (291 px both sides), limb colour within
-   1.3 %, shell area within 0.7 %. **Planet buildings are still open.**
+   1.3 %, shell area within 0.7 %.
+5d. **Surface hardware (slice 3e) — landed, see `docs/RENDER_W05_HARDWARE.md`.** A planet building is
+  the one thing the window cannot look up: the offline snapshot names the 18 assets of the map it
+  was taken from and `assets/models/registry.json` has no planet binding, while a building appears
+  mid-match. So the mesh itself crosses (`ARMHWR01`, one blob per binding, role-batched, no
+  colours — the palette has been shared since W01) beside a frame record that carries
+  `FLAG_SURFACE_FRAME`: a full basis, copied verbatim, because a building stands on the foundation
+  the site generator chose. The C++ decode agrees with the mesh the renderer draws on **7,500
+  vertices with 0 mismatches** (worst delta 5.0e-07) and a live run draws 50 instances with 0
+  decode failures, 0 dropped and 0 unmeshed. No pixel parity is claimed: the two cameras still
+  disagree (see the projection audit), so the A/B sheet is for the eye.
 6. **`--renderer cpp` flag, then the equal-workload benchmark** (200/400/600 ships, HUD, planets, fog)
    before any frame-rate statement is made.
 

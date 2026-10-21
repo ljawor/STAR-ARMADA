@@ -238,5 +238,120 @@ class PackedProfileTests(unittest.TestCase):
         self.assertEqual(state_hash(state), before, 'producer mutated simulation state')
 
 
+class SurfaceHardwareTest(unittest.TestCase):
+    """A planet building is not a free-standing station: different binding, different transform.
+
+    Stations share one `imperial:<id>` mesh and are placed by a heading and a uniform scale.
+    Surface hardware stands on the foundation the site generator chose, so it needs a full basis
+    and its own per-faction asset; a yaw alone would stand it inside the planet.
+    """
+
+    def setUp(self):
+        import game.core  # noqa: F401
+        import pathlib
+        from render import asset_selection
+        from render.ship_sizes import ship_size
+        from tools.render.dump_snapshot import _default_selection
+        from game.graphics_benchmark import make_fixture
+        root = pathlib.Path(__file__).resolve().parents[1]
+        asset_selection.configure(_default_selection(), asset_root=root,
+                                  pack_root=root / 'visual_packs')
+        self.fixture = make_fixture('four-player-combat-v1')
+        self.state, self.ds = self.fixture.manager.state, self.fixture.manager.ds
+        _, _, seeded = collect.collect(
+            self.state, self.ds, None, asset_selection=asset_selection, ship_size=ship_size,
+            ship_binding=asset_selection.ship_binding, all_visible=True)
+        self.collector = collect.FrameCollector(
+            self.ds, seeded['tables'], asset_selection=asset_selection, ship_size=ship_size,
+            ship_binding=asset_selection.ship_binding, all_visible=True)
+        self.buffer = bytearray(packed.frame_size(packed.MAX_INSTANCES, packed.MAX_EFFECTS))
+
+    def plant(self, slot=1):
+        """Turn one hull into surface hardware on a real planet."""
+        planet = next(e for e in self.state.entities.values() if e.is_planet)
+        hull = next(e for e in self.state.entities.values() if e.alive and e.is_ship)
+        hull.data_id = 'planet_extractor'
+        hull.planet_id = planet.id
+        hull.planet_building_slot = slot
+        hull.is_station = True
+        hull.radius = 50.0
+        return planet, hull
+
+    def decode(self):
+        raw, _ = self.collector.collect_into(self.state, self.buffer,
+                                             tick=self.state.tick, frame_index=0)
+        return {record['entity_id']: record
+                for record in packed.unpack_frame(bytes(raw), self.collector.tables)['instances']}
+
+    def test_a_building_carries_its_own_binding_and_the_surface_flag(self):
+        _planet, hull = self.plant()
+        record = self.decode()[hull.id]
+        self.assertTrue(record['flags'] & packed.FLAG_SURFACE_FRAME)
+        self.assertTrue(record['binding'].endswith(':planet_extractor'))
+        # not the shared station binding: that mesh is a free-standing station silhouette
+        self.assertFalse(record['binding'].startswith('imperial:command_station'))
+
+    def test_a_hull_after_a_building_is_not_surface_hardware(self):
+        """The basis must be chosen per entity, not carried forward.
+
+        The collector walks entities in id order, so a building earlier in that order sits in front
+        of every hull after it. When the basis was resolved once outside the loop, each later hull
+        inherited the last building's foundation: the whole fleet stood on the planet, upright,
+        with a building's binding. Only the record order shows this, so the test asserts on the
+        hull that follows the building rather than on the building itself.
+        """
+        _planet, hull = self.plant()
+        later = [e for e in sorted(self.state.entities.values(), key=lambda e: e.id)
+                 if e.alive and e.is_ship and e.id > hull.id and e is not hull
+                 and e.planet_building_slot is None]
+        self.assertTrue(later, 'the fixture must have a hull id after the planted building')
+        records = self.decode()
+        for entity in later:
+            # With the basis hoisted the hull does not merely stand on the planet: its binding
+            # becomes a building name the table has no mesh for, so the collector skips it and the
+            # hull vanishes from the frame. Absence first, then the two fields.
+            self.assertTrue(entity.id in records,
+                            f'hull {entity.id} disappeared from the frame')
+            record = records[entity.id]
+            self.assertFalse(record['flags'] & packed.FLAG_SURFACE_FRAME,
+                             f'{entity.id} inherited a surface basis')
+            self.assertFalse(record['binding'].startswith('imperial:planet_'),
+                             f'{entity.id} inherited a building binding')
+
+    def test_the_matrix_is_the_surface_frame_not_a_heading(self):
+        from render.planet_building_geometry import surface_frame
+        planet, hull = self.plant()
+        origin, axes = surface_frame(planet, 1)
+        matrix = self.decode()[hull.id]['matrix']
+        scale = hull.radius / 50.0
+        for axis, column in enumerate(axes):
+            for row in range(3):
+                self.assertAlmostEqual(matrix[axis * 3 + row], column[row] * scale, places=4)
+        for index in range(3):
+            self.assertAlmostEqual(matrix[9 + index], origin[index], places=2)
+
+    def test_the_basis_is_orthonormal_and_stands_off_the_surface(self):
+        planet, hull = self.plant()
+        matrix = self.decode()[hull.id]['matrix']
+        columns = [matrix[0:3], matrix[3:6], matrix[6:9]]
+        dot = lambda a, b: sum(x * y for x, y in zip(a, b))
+        norm = lambda a: dot(a, a) ** 0.5
+        for index, column in enumerate(columns):
+            self.assertAlmostEqual(norm(column), 1.0, places=4)
+            for other in columns[index + 1:]:
+                self.assertAlmostEqual(dot(column, other), 0.0, places=4)
+        # the origin is the site lifted off the planet's surface, so it is further from the centre
+        centre = planet.pos.to_tuple()
+        distance = sum((matrix[9 + i] - centre[i]) ** 2 for i in range(3)) ** 0.5
+        self.assertGreater(distance, planet.radius)
+
+    def test_every_building_kind_has_a_binding_in_the_session_table(self):
+        for kind in ('planet_extractor', 'planet_trade_hub', 'planet_shield_generator',
+                     'planet_pulsar_cannon'):
+            self.assertTrue(any(binding.endswith(':' + kind)
+                                for binding in self.collector.tables.bindings),
+                            f'the table cannot name {kind}')
+
+
 if __name__ == '__main__':
     unittest.main()

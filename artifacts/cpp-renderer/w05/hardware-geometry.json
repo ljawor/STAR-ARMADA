@@ -1,0 +1,12 @@
+{
+  "binding": "imperial:planet_extractor",
+  "examples": [],
+  "mismatches": 0,
+  "note": "same decoder the viewer uses (test_hardware --dump) against the mesh the renderer draws; positions and face normals, in wire order",
+  "triangles": 2500,
+  "triangles_python": 2500,
+  "vertices": 7500,
+  "vertices_python": 7500,
+  "worst_delta": 5.00000002290335e-07,
+  "worst_vertex": 2100
+}

@@ -40,6 +40,11 @@ PROJECTILE_CLASS = 3
 FLAG_SELECTED = 1 << 0
 FLAG_DAMAGED = 1 << 1
 FLAG_DISABLED = 1 << 2
+# The 12-float matrix is a full basis, not a heading plus a uniform scale. Surface hardware stands
+# on a planet's foundation, so its orientation is the surface frame the site generator chose: no
+# amount of yaw and scale describes it. The consumer must copy this matrix verbatim and must not
+# interpolate it - the building does not move.
+FLAG_SURFACE_FRAME = 1 << 3
 
 # <magic><version><kind><tick><frame><instances><effects><table_crc><flags><length><crc>
 FRAME = struct.Struct('<8sHHIQIIIIII')

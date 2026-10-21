@@ -34,6 +34,7 @@ from render_bridge import emissive as emissive_codec
 from render_bridge import markers as marker_codec
 from render.ship_sizes import ship_size
 from render_bridge import collect, packed, ring
+from tools.render import hardware_scene
 
 
 def configure_assets():
@@ -96,6 +97,17 @@ def main(argv=None):
                         help='ring the C++ window publishes input on (W04); the producer attaches '
                              'when the file appears and feeds every event to the real '
                              'InputController')
+    parser.add_argument('--plant-building', metavar='KIND',
+                        help='diagnostic: plant one building of KIND on a planet, because a '
+                             'skirmish map has no colonies and the surface-hardware path has to '
+                             'be exercised on something')
+    parser.add_argument('--hide-building', action='store_true',
+                        help='diagnostic control: move the planet into place and then take the '
+                             'building off it, so a difference against the building frame is the '
+                             'building and not the planet')
+    parser.add_argument('--mesh-ring', type=Path,
+                        help='publish the surface-hardware meshes the offline catalogue cannot '
+                             'name, one blob per binding (W05)')
     parser.add_argument('--overlay-keyframe', type=float, default=2.0,
                         help='publish a full overlay surface at least this often, so a window '
                              'that attaches late still gets a complete HUD (0 disables)')
@@ -104,6 +116,14 @@ def main(argv=None):
     configure_assets()
     fixture = make_fixture(args.fixture)
     state, ds = fixture.manager.state, fixture.manager.ds
+    planted = None
+    if args.plant_building:
+        planted = hardware_scene.plant(state, kind=args.plant_building)
+        if args.hide_building:
+            planet, hull = planted
+            hull.is_station = False
+            hull.planet_building_slot = None
+            hull.planet_id = None
     _, _, stats = collect.collect(
         state, ds, None, asset_selection=asset_selection, ship_size=ship_size,
         ship_binding=asset_selection.ship_binding, all_visible=True)
@@ -124,6 +144,14 @@ def main(argv=None):
     args.ring.parent.mkdir(parents=True, exist_ok=True)
     tables_path = Path(str(args.ring) + '.tables')
     tables_path.write_bytes(tables.encode())
+
+    # W05 slice 3e: the meshes for surface hardware, published once. A building built during the
+    # match is not in the offline catalogue the window loaded, so its geometry travels here.
+    mesh_stats = None
+    if args.mesh_ring is not None:
+        mesh_stats = hardware_scene.publish(args.mesh_ring)
+        print(f'mesh ring {args.mesh_ring}: {len(mesh_stats["bindings"])} bindings, '
+              f'largest {mesh_stats["largest_blob_bytes"]} bytes', flush=True)
 
     # W03: the HUD is painted here, by the same Python code the legacy window uses, and only the
     # rects the recorder says changed are published. `compose` is the GL-free half of `render`.

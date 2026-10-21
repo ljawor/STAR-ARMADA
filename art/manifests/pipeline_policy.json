@@ -1427,6 +1427,30 @@
       "planet buildings, which are still drawn by Python only",
       "fixing the projection without its own task and re-baseline"
     ]
+  },
+  {
+    "id": "render-w05-slice3e-hardware-2026-10-21",
+    "owner_wording": "ok lets continue",
+    "base_commit": "a206b16",
+    "artifact": "docs/RENDER_W05_HARDWARE.md",
+    "scope": "W05 slice 3e: planet surface hardware (extractors, trade hubs, shield generators, pulsar cannons) on a colonized world",
+    "decision": "A planet building crosses as its authored mesh plus a full-basis transform, because the window owns no binding for it: the offline snapshot names only the assets of the map it was taken from, and assets/models/registry.json has 119 bindings of which none mentions a planet, while a building appears during a match. The mesh travels as ARMHWR01 (role-batched triangles, no colours - the palette has been shared since W01) and the transform travels in the existing 12-float instance matrix with FLAG_SURFACE_FRAME set, meaning a basis, not a heading plus scale; the window copies it verbatim and does not interpolate it, because a building does not move.",
+    "design": {
+      "python_decides": "which entities are surface hardware (planet_id and planet_building_slot both set), which binding they carry, the foundation and column basis (render.planet_building_geometry.surface_frame, the site generator's own choice), the scale (radius/50), and the mesh itself (asset_selection.mesh_for, the call fleet_geometry.station_mesh makes)",
+      "window_draws": "one instanced draw per binding per frame, shadow pass included, with the role index mapped onto the shared palette; it holds no notion of what a building is",
+      "wire": "ARMHWR01: u8[8] magic, u16 version, u16 name length, u16 triangles, u16 role blocks, u32 crc32, name, then per block u8 role, u16 count, count x (normal xyz, 3 vertices xyz) as float32; refuse-whole",
+      "no_record_change": "a surface building is an ordinary frame instance with bit 3 of its flags set; the frame format, the ring format and protocol.py are untouched",
+      "binding_reservation": "the session table reserves a binding for every BUILDING_TYPES kind per faction, so a building created mid-match needs no table revision to appear"
+    },
+    "evidence": {
+      "geometry": "tools/render/compare_hardware_geometry.py against test_hardware --dump (the same decoder the viewer uses): 7,500 vertices on both sides, 0 mismatches, worst delta 5.0e-07 on float32, 2,500 triangles, 6 roles",
+      "live": "stream_ring.py --plant-building planet_extractor --mesh-ring, 4 s at 20 Hz: viewer report hardware{meshes 16, blobs 16, decode_failures 0, instances_drawn 50, dropped_instances 0, unmeshed 0}",
+      "control": "the same scene with the building removed but the planet left in place (--hide-building): instances_drawn 0",
+      "refusals": "short blob, foreign magic, flipped byte, truncated payload and an out-of-palette role are all refused, on both sides (17 Python tests, test_hardware)",
+      "tests": "Python render suite green including tests/test_render_hardware.py (17) and tests/test_render_packed.py::SurfaceHardwareTest (5); ctest includes test_hardware"
+    },
+    "not_verified": "no pixel parity for the building: the two cameras disagree (bx::mtxProj is handed degrees where it wants radians, so the window's effective vertical FOV is ~88 deg against the renderer's 55, and the pitch/azimuth conventions differ), so the A/B sheet is for the eye only; this is the outstanding projection audit at viewer.cpp:1246 and it blocks any framing or fps statement. Nothing was measured on Windows/D3D12. The planted building is synthetic - the skirmish map has no colonies - and is labelled so.",
+    "does_not_authorize": "no change to the frame or ring formats, to protocol.py or to the frozen W00 JSON profile; no simulation authority in the window (it may not decide that a building exists, move it, or derive its foundation); no fps claim; no re-enabling of CI; no tag or release."
   }
   ]
 }

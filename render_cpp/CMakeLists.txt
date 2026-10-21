@@ -139,6 +139,12 @@ target_compile_definitions(test_fogmap PRIVATE
 add_test(NAME fog COMMAND test_fogmap)
 set_tests_properties(fog PROPERTIES ENVIRONMENT
   "ARMADA_FOG_FIXTURE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/fog")
+add_executable(test_hardware tests/test_hardware.cpp)
+target_include_directories(test_hardware PRIVATE include)
+target_link_libraries(test_hardware PRIVATE armada_scene)
+target_compile_definitions(test_hardware PRIVATE
+  ARMADA_HARDWARE_FIXTURE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/hardware")
+add_test(NAME hardware COMMAND test_hardware "${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/hardware")
 add_executable(test_frame_v2 tests/test_frame_v2.cpp)
 target_link_libraries(test_frame_v2 PRIVATE armada_scene)
 target_compile_definitions(test_frame_v2 PRIVATE

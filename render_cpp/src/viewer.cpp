@@ -4,6 +4,7 @@
 #include "emissive.hpp"
 #include "explosion.hpp"
 #include "fogmap.hpp"
+#include "hardware.hpp"
 #include "shield.hpp"
 #include "hit_effects.hpp"
 #include "input_ring.hpp"
@@ -152,7 +153,7 @@ struct Callbacks final : bgfx::CallbackI {
 };
 struct Options {
   fs::path snapshot, assets, shaders = ARMADA_SHADER_DIR, shot, report, ring, tables, overlayRing,
-      inputRing, planetRing, markerRing, emitRing, fogRing, fxDemo;
+      inputRing, planetRing, markerRing, emitRing, fogRing, meshRing, fxDemo;
   std::array<float, 3> focus{};
   bool hasFocus = false;
   // The map's star lights every planet (render/renderer.py sets GL_LIGHT0 to the star position,
@@ -203,6 +204,8 @@ static Options options(int argc, char **argv) {
       o.fogRing = value();
     else if (k == "--marker-ring")
       o.markerRing = value();
+    else if (k == "--mesh-ring")
+      o.meshRing = value();
     else if (k == "--emit-ring")
       o.emitRing = value();
     else if (k == "--fx-demo")
@@ -513,6 +516,15 @@ struct Live {
   };
   std::vector<PlanetBody> planets;
   size_t planet_pose_failures = 0;
+  //: W05 surface hardware for this frame. Its binding names a mesh the producer published, and its
+  //: matrix is used as given: a building does not move, so there is nothing to interpolate.
+  struct SurfaceInstance {
+    std::string binding;
+    std::array<float, 12> matrix{};
+    std::array<uint8_t, 4> tint{255, 255, 255, 255};
+  };
+  std::vector<SurfaceInstance> surface;
+  size_t surface_unmeshed = 0;
 
   Live(const fs::path &ring_path, const fs::path &tables_path,
        const std::vector<Group> &groups)
@@ -584,8 +596,14 @@ struct Live {
 
     std::vector<float> scratch(20);
     planets.clear();
+    surface.clear();
     for (const auto &record : current->instances) {
       const std::string &binding = tables.bindings.at(record.binding_id);
+      if ((record.flags & armada::bridge::kFlagSurfaceFrame) != 0) {
+        // Verbatim: the frame's 12 floats are the surface basis the producer computed.
+        surface.push_back({binding, record.matrix, record.tint});
+        continue;
+      }
       // W05: a planet is not a mesh. Its binding names the texture the window already holds, and
       // the instance matrix is its position and radius, so it is collected instead of grouped.
       if (planets::isPlanetBinding(binding)) {
@@ -975,6 +993,21 @@ static int run(const Options &o) {
   std::vector<uint8_t> fogPayload;
   if (!o.fogRing.empty())
     fogRing = std::make_unique<armada::bridge::RingReader>(o.fogRing);
+  // W05 slice 3e: surface hardware. The window's catalogue comes from the offline snapshot, which
+  // cannot name a building that is constructed later, so the producer publishes the mesh itself.
+  struct HardwareMesh {
+    std::string binding;
+    armada::Mesh mesh;
+    bgfx::VertexBufferHandle vbo = BGFX_INVALID_HANDLE;
+  };
+  std::vector<HardwareMesh> hardwareMeshes;
+  std::unique_ptr<armada::bridge::RingReader> meshRing;
+  uint64_t meshSequence = 0;
+  size_t hardwareBlobs = 0, hardwareDecodeFailures = 0, hardwareInstances = 0,
+         hardwareDropped = 0;
+  std::vector<uint8_t> meshPayload;
+  if (!o.meshRing.empty())
+    meshRing = std::make_unique<armada::bridge::RingReader>(o.meshRing);
   std::unique_ptr<armada::bridge::RingReader> planetRing;
   uint64_t planetSequence = 0;
   size_t planetBlobs = 0, planetDecodeFailures = 0, planetBodiesDrawn = 0,
@@ -1370,6 +1403,91 @@ static int run(const Options &o) {
                      BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS |
                      BGFX_STATE_MSAA);
       bgfx::submit(1, program);
+    }
+    // W05 slice 3e: take in any surface-hardware mesh published since the last frame, then draw the
+    // buildings the frame placed. A building whose mesh has not arrived is counted and skipped - the
+    // producer publishes each binding once, so it appears on the next frame, not never.
+    if (meshRing) {
+      const uint64_t available = meshRing->published();
+      while (meshSequence < available) {
+        if (meshRing->read_at_sequence(meshSequence, available, meshPayload)) {
+          try {
+            auto mesh = armada::hardware::decode(meshPayload.data(), meshPayload.size());
+            bool known = false;
+            for (const auto &existing : hardwareMeshes)
+              known = known || existing.binding == mesh.binding;
+            if (!known) {
+              HardwareMesh entry;
+              entry.binding = mesh.binding;
+              entry.mesh = std::move(mesh);
+              entry.vbo = bgfx::createVertexBuffer(
+                  bgfx::copy(entry.mesh.vertices.data(),
+                             uint32_t(entry.mesh.vertices.size() * sizeof(armada::Vertex))),
+                  layout);
+              if (!bgfx::isValid(entry.vbo))
+                throw DeviceError("hardware mesh upload failed");
+              const auto handle = entry.vbo;
+              cleanup.actions.push_back([handle] { bgfx::destroy(handle); });
+              hardwareMeshes.push_back(std::move(entry));
+              ++hardwareBlobs;
+            }
+          } catch (const armada::hardware::HardwareError &) {
+            ++hardwareDecodeFailures;
+          }
+        }
+        ++meshSequence;
+      }
+    }
+    if (live && !live->surface.empty()) {
+      live->surface_unmeshed = 0;
+      for (const auto &h : hardwareMeshes) {
+        std::vector<float> instances;
+        for (const auto &building : live->surface) {
+          if (building.binding != h.binding)
+            continue;
+          float row[20] = {building.matrix[0], building.matrix[1], building.matrix[2], 0.f,
+                           building.matrix[3], building.matrix[4], building.matrix[5], 0.f,
+                           building.matrix[6], building.matrix[7], building.matrix[8], 0.f,
+                           building.matrix[9], building.matrix[10], building.matrix[11], 1.f,
+                           building.tint[0] / 255.f, building.tint[1] / 255.f,
+                           building.tint[2] / 255.f, building.tint[3] / 255.f};
+          instances.insert(instances.end(), row, row + 20);
+        }
+        const uint32_t count = uint32_t(instances.size() / 20);
+        if (!count)
+          continue;
+        if (bgfx::getAvailInstanceDataBuffer(count, 80) < count) {
+          hardwareDropped += count;
+          continue;
+        }
+        bgfx::InstanceDataBuffer buffer;
+        bgfx::allocInstanceDataBuffer(&buffer, count, 80);
+        std::memcpy(buffer.data, instances.data(), instances.size() * sizeof(float));
+        if (shadows) {
+          bgfx::setVertexBuffer(0, h.vbo);
+          bgfx::setInstanceDataBuffer(&buffer);
+          bgfx::setState(BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS);
+          bgfx::submit(0, shadowProgram);
+        }
+        bgfx::setVertexBuffer(0, h.vbo);
+        bgfx::setInstanceDataBuffer(&buffer);
+        bgfx::setUniform(lightUniform, lightMtx);
+        bgfx::setUniform(eyeUniform, eyeData);
+        bgfx::setUniform(optionsUniform, optionData);
+        bgfx::setTexture(0, shadowSampler, depth);
+        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A |
+                       BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS |
+                       BGFX_STATE_MSAA);
+        bgfx::submit(1, program);
+        hardwareInstances += count;
+      }
+      for (const auto &building : live->surface) {
+        bool meshed = false;
+        for (const auto &h : hardwareMeshes)
+          meshed = meshed || h.binding == building.binding;
+        if (!meshed)
+          ++live->surface_unmeshed;
+      }
     }
     // W05: take in any planet texture published since the last frame, then draw the bodies the
     // frame asked for. A planet whose texture has not arrived yet draws with the grey fallback and
@@ -2172,6 +2290,19 @@ static int run(const Options &o) {
         planetRequestedNames.push_back(body.texture);
   cleanup.run();
   report["screenshots_written"] = callback.shots.load();
+    report["hardware"] = {
+        {"ring", o.meshRing.empty() ? std::string() : o.meshRing.string()},
+        {"meshes", hardwareMeshes.size()},
+        {"blobs", hardwareBlobs},
+        {"decode_failures", hardwareDecodeFailures},
+        {"instances_drawn", hardwareInstances},
+        {"dropped_instances", hardwareDropped},
+        {"unmeshed", live ? live->surface_unmeshed : 0},
+        {"note",
+         "surface hardware crosses as a full basis (FLAG_SURFACE_FRAME) that the window copies "
+         "verbatim, because a building stands on the foundation the site generator chose; its mesh "
+         "arrives on the mesh ring because the offline catalogue cannot name a building that is "
+         "constructed during a match; role colours are the shared palette, not on the wire"}};
   if (uiRing) {
     report["hud"] = {{"ring", o.overlayRing.string()},
                      {"texture", {uiWidth, uiHeight}},

@@ -79,6 +79,14 @@ struct Tables {
   static Tables parse(const std::vector<uint8_t> &body);
 };
 
+// Instance flags. `kSurfaceFrame` says the 12 floats are a full basis, not a heading: surface
+// hardware stands on the foundation the site generator chose, which no yaw and uniform scale can
+// describe. A consumer must copy such a matrix verbatim and must not interpolate it.
+constexpr uint16_t kFlagSelected = 1 << 0;
+constexpr uint16_t kFlagDamaged = 1 << 1;
+constexpr uint16_t kFlagDisabled = 1 << 2;
+constexpr uint16_t kFlagSurfaceFrame = 1 << 3;
+
 struct Instance {
   uint32_t entity_id = 0;
   uint16_t binding_id = 0;
