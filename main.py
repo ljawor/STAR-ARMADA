@@ -74,6 +74,21 @@ MODS: list[str] = []
 if "--mods" in sys.argv:
     MODS = [m for m in sys.argv[sys.argv.index("--mods") + 1].split(",") if m]
 
+# Which renderer draws the world. `legacy` is this process's own GL renderer and stays the default;
+# `cpp` hands the frames, HUD and effects to the native window over the W02-W05 bridge and draws
+# nothing here. Python keeps every decision either way - the window is a display.
+RENDERER = "legacy"
+if "--renderer" in sys.argv:
+    _index = sys.argv.index("--renderer")
+    RENDERER = sys.argv[_index + 1] if _index + 1 < len(sys.argv) else ""
+    if RENDERER not in ("legacy", "cpp"):
+        raise SystemExit("--renderer takes 'legacy' (default) or 'cpp'")
+# Absolute: `USER_DIR` is a relative '.' in a source checkout, so the rings would otherwise land in
+# the repository (and a frozen app must never write into its own bundle).
+CPP_DIR = os.path.join(os.path.abspath(USER_DIR), "cpp-window")
+CPP_HUD_SIZE = (1280, 800)
+CPP = {"session": None, "window": None, "input": None, "seen": set(), "seen_tick": -1}
+
 # --------------------------------------------------------------------------- window
 pygame.init()
 pygame.display.set_caption("STAR ARMADA — Fleet Command")
@@ -241,6 +256,66 @@ def flash(msg: str) -> None:
     global flash_msg, flash_until
     flash_msg = msg
     flash_until = (state.time if state else 0.0) + 2.5
+
+
+# --------------------------------------------------------------------------- cpp window
+def cpp_session(state, ds, local_player: int):
+    """The live producer for this match, started on first use.
+
+    Rings live under the user directory, not the bundle: a frozen app must not write into its own
+    package (`menus.py` follows the same rule).
+    """
+    if CPP["session"] is not None:
+        return CPP["session"]
+    from render_bridge.live import LiveSession
+    from render_bridge import cpp_window
+    # The HUD surface size, not the window size: the overlay codec caps a full surface at
+    # MAX_PAYLOAD, so the session composes at the size the bridge was measured at and the window
+    # presents it. `--overlay-size` in the diagnostic producer is the same figure.
+    session = LiveSession(state, ds, directory=CPP_DIR, local_player=local_player,
+                          size=CPP_HUD_SIZE, marker_mode="all")
+    CPP["session"] = session
+    if not SMOKE:
+        CPP["window"] = cpp_window.spawn(
+            session.paths, root=ROOT, snapshot=os.environ.get("STAR_ARMADA_CPP_SNAPSHOT"),
+            log=flash_print)
+    return session
+
+
+def flash_print(message: str) -> None:
+    print(message, flush=True)
+
+
+def cpp_seen_ids(state, local_player: int) -> set:
+    """What this player can see, refreshed a few times a second.
+
+    `state.can_see` costs ~45 ms p95 over a full fleet (docs/RENDER_BRIDGE_W02.md section 4), so the
+    answer is recomputed every 6 ticks instead of every tick: visibility changes on the scale of a
+    sensor sweep, not a frame. The window receives the answer; it never derives it.
+    """
+    if state.tick - CPP["seen_tick"] >= 6:
+        CPP["seen"] = {entity.id for entity in state.entities.values()
+                       if entity.alive and state.can_see(local_player, entity.id)}
+        CPP["seen_tick"] = state.tick
+    return CPP["seen"]
+
+
+def cpp_publish(state, ds, local_player: int, selection, dt: float):
+    """Hand one frame to the window: world, cues, effects, fog, HUD. Returns False if it could not.
+
+    Input does NOT come back yet, and that is deliberate rather than unfinished plumbing: the frame
+    ring carries no camera, so the window's camera is its own. A click leaves the window at window
+    pixels and would be resolved here against the *game's* camera - two different views, so a click
+    would select or order something the player is not looking at. W04's `RingInput` is written and
+    tested; it is not connected until the camera crosses with the frame (`render_bridge/live.py`
+    leaves the input ring in place so the W06 camera ring can attach to it).
+    """
+    session = cpp_session(state, ds, local_player)
+    if session is None:
+        return False
+    session.publish(state, selection=selection, visible_ids=cpp_seen_ids(state, local_player),
+                    dt=dt)
+    return True
 
 
 def start_game(load_path: str | None = None, mdef: dict | None = None,
@@ -1018,6 +1093,26 @@ while running:
         hud.mission_progress = None
 
     # ---- draw
+    if RENDERER == "cpp":
+        # The window is the display. Nothing is drawn into this process's GL context; the HUD is
+        # composed by the same `render.hud` code (design A) inside the session, so text stays SDL_ttf.
+        # The loop tail below (autosave, smoke exit, fps counter) runs exactly as in legacy mode.
+        camera.apply(W, H)
+        cpp_publish(state, gm.ds, local_player, inputc.selection, dt_frame)
+        pygame.event.pump()
+        frames += 1
+        fps_time += dt_frame
+        if fps_time >= 1.0:
+            fps = frames / fps_time
+            frames = 0
+            fps_time = 0.0
+        if SMOKE and state.tick >= SMOKE_TICKS:
+            print("SMOKE_CPP_OK " + summary())
+            if CPP["session"] is not None:
+                print("SMOKE_CPP_COST " + json.dumps(CPP["session"].report(), default=str))
+            raise SystemExit(0)
+        continue
+
     camera.apply(W, H)
     renderer.placement = hud.placement  # render-side preview only; never sim state
     renderer.draw(dt_frame, inputc.selection)

@@ -1451,6 +1451,44 @@
     },
     "not_verified": "no pixel parity for the building: the two cameras disagree (bx::mtxProj is handed degrees where it wants radians, so the window's effective vertical FOV is ~88 deg against the renderer's 55, and the pitch/azimuth conventions differ), so the A/B sheet is for the eye only; this is the outstanding projection audit at viewer.cpp:1246 and it blocks any framing or fps statement. Nothing was measured on Windows/D3D12. The planted building is synthetic - the skirmish map has no colonies - and is labelled so.",
     "does_not_authorize": "no change to the frame or ring formats, to protocol.py or to the frozen W00 JSON profile; no simulation authority in the window (it may not decide that a building exists, move it, or derive its foundation); no fps claim; no re-enabling of CI; no tag or release."
-  }
+  },
+    {
+      "id": "render-w05-switch-cpp-2026-10-21",
+      "owner_wording": "Got it. PLease run it till the end. After every thing is validated and merged do the switch and run full testing for it.",
+      "base_commit": "80aff00",
+      "artifact": "docs/RENDER_W05_LIVE.md",
+      "scope": "The switch: main.py --renderer cpp hands the running match to the native window over the W02-W05 rings; legacy stays the default.",
+      "decision": "The switch is a display, not a second simulation, and it is opt-in. LiveSession copies answers the simulation already produced into the frame, HUD, cue, emissive, fog and planet rings; it reads no input, moves no ship and resolves no contact, and the visibility answer is computed by the game and handed in because state.can_see costs ~45 ms p95. The HUD crosses as a composed surface (W03 design A) so no glyph rasterisation moves into C++.",
+      "consequences": [
+        "The window's own camera is not the game's camera yet: the frame ring carries no pose, so input is NOT connected even though W04's RingInput is written and tested. A click would be resolved in Python against a different view. The camera ring is the next package.",
+        "The window needs an offline snapshot for its mesh catalogue; without STAR_ARMADA_CPP_SNAPSHOT the match runs headless and says so.",
+        "HUD state is the in-match subset (selection, resources, panels, minimap); menus, tooltips owned by menus.py and the pause banner are not bridged.",
+        "No frame-rate claim for this mode: it is excluded from the equal-workload benchmark, which is still owed."
+      ],
+      "evidence": {
+        "smoke": "SMOKE_DONE and SMOKE_CPP_OK agree on the same 30 s skirmish",
+        "publish_cost_345_frames": {
+          "frame_ms": [
+            0.04,
+            0.059
+          ],
+          "overlay_ms": [
+            1.128,
+            1.856
+          ],
+          "emit_ms": [
+            0.047,
+            0.057
+          ],
+          "fog_ms": [
+            0.033,
+            0.045
+          ],
+          "note": "median, p95; publish only, excludes simulation, renderer and window; 17 instances (small skirmish, not a battle)"
+        },
+        "window": "frames_applied 7, full_frames 1, patches_applied 97, decode_failures 0",
+        "tests": "199 python render tests + 12 ctest, all passing"
+      }
+    }
   ]
 }
