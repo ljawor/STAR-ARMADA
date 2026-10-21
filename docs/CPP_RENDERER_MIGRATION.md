@@ -1,6 +1,11 @@
 # STAR ARMADA — C++ renderer, Python simulation: migration plan
 
-Status: **proposed, nothing started.** Base: `main` @ `bd22879` (2026-10-20).
+Status: **W00 engineering checks passed; W00/W01 implementation authorized, not merged.**
+Proposal base: `main` @ `bd22879` (2026-10-20). Implementation base: `b2ff85a`.
+The owner authorized W00 + W01 on 2026-10-21; merge, release and default activation remain separate.
+
+Execution correction: W00 v1 freezes only an **offline JSON file profile**, not W02 live SoA/shared memory.
+See `docs/RENDER_PROTOCOL.md`; W01 is mesh-only and cannot establish full-game FPS or world parity.
 Authority: this document proposes a renderer migration. It authorizes no merge to a
 default, no release, no tag and no change to gameplay, assets or simulation.
 
@@ -418,7 +423,7 @@ Rules that make the handover useful rather than decorative:
 
 | W | Status | Next action / blocking condition |
 |---|---|---|
-| W00 | **Not started** | Write `docs/RENDER_PROTOCOL.md` + fixtures + `render-protocol-v1` policy id |
+| W00 | **Review-ready, not merged** | Offline protocol spec/reference codec + three binary controls; 3 focused tests pass. See `art/manifests/handoffs/rW00-offline-protocol.md`. W02 wire format is not frozen. |
 | W01 | Not started | Depends on W00. First visible gate: fly the camera around the 600-ship fleet |
 | W02 | Not started | Depends on W01. Latency/serialization receipt decides whether the subprocess design holds |
 | W03 | Not started | Depends on W01 (parallel-safe with W02 if file ownership is disjoint — see §7.3) |
@@ -428,8 +433,9 @@ Rules that make the handover useful rather than decorative:
 | W07 | Not started, **not authorized** | Owner's explicit one-line switch, after W06 and its receipt |
 | W08 (future, out of scope) | Not planned | Simulation acceleration (150–250 h) — the only route to 60 fps at 600 ships |
 
-**Current next task: W00.** Nothing else in this plan may start first, because every later
-workstream decodes the format W00 freezes.
+**Current next task: W01**, authorized with W00. Build the separately runnable offline viewer
+against the W00 file profile. W00 remains review-ready on its own branch; no merge or live
+transport work is authorized by this status update.
 
 ## 11. Risk register
 
