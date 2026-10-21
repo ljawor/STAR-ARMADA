@@ -71,9 +71,22 @@ def ensure_snapshot(root: str, directory: str, log=print) -> str | None:
 
 
 def find_binary(root: str) -> str | None:
-    """The viewer, if this checkout has been built. A missing build is not an error: the game runs."""
-    path = os.environ.get('STAR_ARMADA_CPP_VIEWER') or os.path.join(root, DEFAULT_BINARY)
-    return path if os.path.isfile(path) and os.access(path, os.X_OK) else None
+    """The viewer, if this build has one. A missing viewer is not an error: the game runs.
+
+    A frozen bundle (`star_armada.spec`) ships the binary and its shaders under `cpp/` inside the
+    archive, so `root` alone is not enough there: the bundle's own directory is searched first,
+    then the source tree's build directory. `STAR_ARMADA_CPP_VIEWER` still wins over both.
+    """
+    import sys
+    candidates = [os.environ.get('STAR_ARMADA_CPP_VIEWER')]
+    bundle = getattr(sys, '_MEIPASS', None)
+    if bundle:
+        candidates.append(os.path.join(bundle, 'cpp', 'armada_viewer'))
+    candidates.append(os.path.join(root, DEFAULT_BINARY))
+    for path in candidates:
+        if path and os.path.isfile(path) and os.access(path, os.X_OK):
+            return path
+    return None
 
 
 def spawn(paths: dict, *, root: str, snapshot: str | None, log=print):
@@ -105,6 +118,11 @@ def spawn(paths: dict, *, root: str, snapshot: str | None, log=print):
         '--camera-ring', str(paths['camera']),
         '--seconds', '0',
     ]
+    # A frozen bundle carries the shaders beside the binary; the build-time default points into the
+    # source build tree, which a player does not have.
+    for extra in (os.path.join(os.path.dirname(binary), 'shaders'),):
+        if os.path.isdir(extra):
+            argv += ['--shaders', extra]
     player = shutil.which(binary) or binary
     process = subprocess.Popen([player] + argv[1:], stdin=subprocess.DEVNULL,
                                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

@@ -74,10 +74,13 @@ MODS: list[str] = []
 if "--mods" in sys.argv:
     MODS = [m for m in sys.argv[sys.argv.index("--mods") + 1].split(",") if m]
 
-# Which renderer draws the world. `legacy` is this process's own GL renderer and stays the default;
-# `cpp` hands the frames, HUD and effects to the native window over the W02-W05 bridge and draws
-# nothing here. Python keeps every decision either way - the window is a display.
-RENDERER = "legacy"
+# Which renderer draws the world. `cpp` hands the frames, HUD and effects to the native window over
+# the W02-W11 bridge and draws nothing here; `legacy` is this process's own GL renderer and stays
+# available as the rollback control. Python keeps every decision either way - the window is a
+# display. Since W11 the choice is a setting (`DEFAULT_SETTINGS["renderer"]`), and `--renderer`
+# still overrides it for one launch, because someone debugging a display must be able to pick the
+# rollback control without editing a file.
+RENDERER = "cpp"
 if "--renderer" in sys.argv:
     _index = sys.argv.index("--renderer")
     RENDERER = sys.argv[_index + 1] if _index + 1 < len(sys.argv) else ""
@@ -101,6 +104,8 @@ if SMOKE and os.environ.get("STAR_ARMADA_FORCE_DUMMY") == "1":
     pygame.quit()
     pygame.init()
 SETTINGS = load_settings()
+if "--renderer" not in sys.argv:
+    RENDERER = str(SETTINGS.get("renderer") or "cpp")
 # Station balance (#106) is installed before the first catalogue exists: every DataStore
 # folds the overlay into its rules, so one built earlier would hand the player shipped numbers
 # in one place and edited ones in another — and a LAN client would announce the wrong tuning
