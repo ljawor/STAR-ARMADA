@@ -1,6 +1,9 @@
 # STAR ARMADA — C++ renderer, Python simulation: migration plan
 
-Status: **W00 and macOS W01 engineering review-ready; owner review open; neither merged.**
+Status: **W00 merged into `main` and approved; W01 viewer complete, owner-reviewed, landing.**
+Proposal base: `main` @ `bd22879` (2026-10-20). Implementation base: `b2ff85a`.
+The owner authorized W00 + W01 on 2026-10-21 and approved the offline v1 format; merge, release and
+default activation remain separate decisions.
 Proposal base: `main` @ `bd22879` (2026-10-20). Implementation base: `b2ff85a`.
 The owner authorized W00 + W01 on 2026-10-21; merge, release and default activation remain separate.
 
@@ -442,8 +445,8 @@ Rules that make the handover useful rather than decorative:
 
 | W | Status | Next action / blocking condition |
 |---|---|---|
-| W00 | **Review-ready, not merged** | 2026-10-21, PR #145, code `f5844a8`: offline protocol/reference codec + three controls; 3 focused tests pass; owner protocol review open. See `art/manifests/handoffs/rW00-offline-protocol.md`. W02 wire format is not frozen. |
-| W01 | **Corrected-defaults engineering review-ready; owner gate open; not merged** | 2026-10-21, PR #146, code `2bf5ed5`: all 13 shipped visual packs resolved; newer Vigil/Command Center and 103 selected meshes render on Metal. Old core-only evidence is historical. Owner flies `render_cpp/launch.command`; handoff `rW01-current-default-models.md`. |
+| W00 | **Merged into `main` and approved** | 2026-10-21, PR #145, code `f5844a8` → `4283715`, squashed to `main` as `3dc9279`. Offline protocol/reference codec + three controls; 3 focused tests pass. Owner approved v1 as the offline file profile (`render-protocol-v1-owner-approval-2026-10-21`). W02's packed transport is still undefined. See `art/manifests/handoffs/rW00-offline-protocol.md`. |
+| W01 | **Owner-reviewed; lands with this PR** | 2026-10-21, PR #146, renderer code `fdf1b2a`: all 13 shipped visual packs resolved; newer Vigil/Command Center and 103 selected meshes render on Metal. Owner accepted the appearance and the camera movement/zoom ("Looks good for me. The movement and zomming work really fast."). Old core-only evidence is historical. Handoff `rW01-current-default-models.md`. |
 | W02 | Not started | Depends on W01. Latency/serialization receipt decides whether the subprocess design holds |
 | W03 | Not started | Depends on W01 (parallel-safe with W02 if file ownership is disjoint — see §7.3) |
 | W04 | Not started | Depends on W03 |
@@ -452,10 +455,13 @@ Rules that make the handover useful rather than decorative:
 | W07 | Not started, **not authorized** | Owner's explicit one-line switch, after W06 and its receipt |
 | W08 (future, out of scope) | Not planned | Simulation acceleration (150–250 h) — the only route to 60 fps at 600 ships |
 
-**Current next gate: owner reviews the W01 offline viewer**, using `render_cpp/launch.command`
-and `artifacts/cpp-renderer/w01/current-models/review-sheet.png`. W00 #145 and W01 #146 are separate drafts;
-neither is merged. Do not begin W02 or infer appearance/merge/release/default permission.
-Resolve any bounded offline review issue first; only after acceptance agree the live-wire scope.
+**Current next gate: W02 authorization**, and it is the owner's call, not an inference from this
+merge. W00 and W01 are offline only: the viewer consumes a file, and nothing here proves live
+transport. W02's first deliverable is a design plus an **equal-workload benchmark** (fog, HUD,
+planets, 200/400/600 ships) with the packed-transport decision and a serialization/latency
+receipt; the ≤ 1.0 ms serialize and ≤ 2-frame latency gates in §4.3 are the stop conditions. No
+speed claim may be made from the mesh-only loop. The `Windows signal` workflow is disabled by the
+owner's hand as of 2026-10-21, so W02's evidence has to be local until it is re-enabled.
 
 ## 11. Risk register
 
