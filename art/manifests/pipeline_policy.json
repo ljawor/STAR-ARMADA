@@ -1539,6 +1539,18 @@
             "211 render tests OK, ctest 12/12 OK"
         ],
         "note": "A viewer attached mid-match needs up to overlay_keyframe (2.0 s) before patches apply; a capture inside that window shows the previous keyframe, which reads as a frozen HUD. Use --seconds 4 for HUD captures."
+    },
+    {
+        "id": "render-w09-visual-2026-10-21",
+        "owner_wording": "please run all the steps till W11. Do not pause. Do all needed test, commits and merges. Ping me next when the game is ready and all points till W11 (included) are finished",
+        "base_commit": "616ff2f",
+        "artifact": "docs/RENDER_W09_VISUAL.md",
+        "decision": "Cues are widened into screen-aligned quads so a ring is 2-3 px like Python's, and the window draws a background starfield it generates itself because stars carry no gameplay meaning. Atmosphere shells, asteroid fields and the legacy point-sprite projectiles remain undrawn and are listed as known picture differences rather than claimed.",
+        "evidence": [
+            "green ring stroke width histogram 19/94/26/14 px for widths 1/2/3/4 (mode 2 px) on the pinned marker fixture",
+            "5,828 non-background pixels in an otherwise empty frame (starfield)",
+            "ctest 12/12 OK after the cue change"
+        ]
     }
   ]
 }

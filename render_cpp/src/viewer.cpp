@@ -453,6 +453,32 @@ static void pushCue(std::vector<CueVertex> &out, const float *point,
                  colour[2] / 255.f, colour[3] / 255.f});
 }
 
+// bgfx has no line width, so a 1 px line is the only line it can draw — and a 1 px selection ring
+// beside Python's 2-3 px ring reads as a different cue, not a thinner one. Line segments are
+// therefore widened into screen-aligned quads on the CPU: the offset is perpendicular to the
+// segment inside the camera plane, `halfWorld` wide, and callers size it from the segment's own
+// depth so the result is a constant number of pixels at any zoom.
+static void pushThickSegment(std::vector<CueVertex> &out, const float *a, const float *b,
+                             const std::array<uint8_t, 4> &colour, float halfWorld,
+                             const float *forward) {
+  const float dx = b[0] - a[0], dy = b[1] - a[1], dz = b[2] - a[2];
+  float px = dy * forward[2] - dz * forward[1];
+  float py = dz * forward[0] - dx * forward[2];
+  float pz = dx * forward[1] - dy * forward[0];
+  const float len = std::sqrt(px * px + py * py + pz * pz);
+  if (!(len > 1e-6f))
+    return;                       // a zero-length segment has no direction to widen along
+  px *= halfWorld / len;
+  py *= halfWorld / len;
+  pz *= halfWorld / len;
+  const float a0[3] = {a[0] + px, a[1] + py, a[2] + pz};
+  const float a1[3] = {a[0] - px, a[1] - py, a[2] - pz};
+  const float b0[3] = {b[0] + px, b[1] + py, b[2] + pz};
+  const float b1[3] = {b[0] - px, b[1] - py, b[2] - pz};
+  pushCue(out, a0, colour); pushCue(out, a1, colour); pushCue(out, b1, colour);
+  pushCue(out, a0, colour); pushCue(out, b1, colour); pushCue(out, b0, colour);
+}
+
 static bgfx::ShaderHandle shader(const fs::path &p) {
   std::ifstream f(p, std::ios::binary | std::ios::ate);
   if (!f)
@@ -886,6 +912,55 @@ static int run(const Options &o) {
   if (!bgfx::isValid(cueProgram))
     throw DeviceError("Cue program creation failed");
   cleanup.actions.push_back([cueProgram] { bgfx::destroy(cueProgram); });
+
+  // Background stars. `render/renderer.py` draws a 1400-point starfield; a window that shows empty
+  // black where the game shows stars does not look like the same game. The stars are pure
+  // decoration - no gameplay meaning, no state, nothing the simulation can be wrong about - so the
+  // window generates its own from a fixed xorshift seed instead of receiving them, exactly like a
+  // camera it owns. They live on a sphere far outside the tactical map so they read as parallax-free.
+  std::vector<CueVertex> starVerts;
+  {
+    const int kStars = 1400;
+    const float kRadius = 90000.f;
+    const float kHalf = 1.2f * kRadius / (float(o.height) * 0.5f);   // ~1.2 px half-size here
+    uint32_t seed = 0x9e3779b9u;
+    auto rnd = [&seed]() {
+      seed ^= seed << 13; seed ^= seed >> 17; seed ^= seed << 5;
+      return float(seed & 0xFFFFFFu) / float(0x1000000u);
+    };
+    for (int i = 0; i < kStars; ++i) {
+      const float z = 2.f * rnd() - 1.f;
+      const float a = 2.f * float(M_PI) * rnd();
+      const float r = std::sqrt(std::max(0.f, 1.f - z * z));
+      const float n[3] = {r * std::cos(a), r * std::sin(a), z};
+      float t[3] = {-n[1], n[0], 0.f};
+      float tl = std::sqrt(t[0] * t[0] + t[1] * t[1]);
+      if (!(tl > 1e-5f)) { t[0] = 1.f; t[1] = 0.f; tl = 1.f; }
+      t[0] /= tl; t[1] /= tl;
+      const float b[3] = {n[1] * t[2] - n[2] * t[1], n[2] * t[0] - n[0] * t[2],
+                          n[0] * t[1] - n[1] * t[0]};
+      const float half = kHalf * (0.55f + 0.9f * rnd());
+      const float bright = 0.45f + 0.55f * rnd();
+      const float warm = rnd();
+      const std::array<uint8_t, 4> col = {uint8_t(255.f * bright * (0.85f + 0.15f * warm)),
+                                          uint8_t(255.f * bright),
+                                          uint8_t(255.f * bright * (1.05f - 0.10f * warm)),
+                                          uint8_t(210.f + 45.f * bright)};
+      const float c[3] = {n[0] * kRadius, n[1] * kRadius, n[2] * kRadius};
+      float p0[3], p1[3], p2[3], p3[3];
+      for (int k = 0; k < 3; ++k) {
+        p0[k] = c[k] + (-t[k] - b[k]) * half;
+        p1[k] = c[k] + ( t[k] - b[k]) * half;
+        p2[k] = c[k] + ( t[k] + b[k]) * half;
+        p3[k] = c[k] + (-t[k] + b[k]) * half;
+      }
+      pushCue(starVerts, p0, col); pushCue(starVerts, p1, col); pushCue(starVerts, p2, col);
+      pushCue(starVerts, p0, col); pushCue(starVerts, p2, col); pushCue(starVerts, p3, col);
+    }
+  }
+  bgfx::VertexBufferHandle starVbo = bgfx::createVertexBuffer(
+      bgfx::copy(starVerts.data(), uint32_t(starVerts.size() * sizeof(CueVertex))), cueLayout);
+  cleanup.actions.push_back([starVbo] { bgfx::destroy(starVbo); });
   // W05 slice 5: the shield shell mesh. One view-space hemisphere per detail level, built once;
   // every bubble in the frame is then an instance record of eight floats. The baked latitude terms
   // (whiten, alpha) are the ones renderer.py::_shield_shell_list bakes into its display list.
@@ -1408,6 +1483,10 @@ static int run(const Options &o) {
     bgfx::setViewRect(0, 0, 0, 2048, 2048);
     bgfx::setViewTransform(0, lightView, lightProj);
     bgfx::setViewClear(1, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x080e1bff, 1.f);
+    // Stars first, with no depth at all: they are behind everything and must never occlude a hull.
+    bgfx::setVertexBuffer(0, starVbo);
+    bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_MSAA | BGFX_STATE_BLEND_ALPHA);
+    bgfx::submit(1, cueProgram);
     bgfx::setViewRect(1, 0, 0, uint16_t(width), uint16_t(height));
     bgfx::setViewTransform(1, view, proj);
     bgfx::touch(1);
@@ -1649,6 +1728,10 @@ static int run(const Options &o) {
     }
     if (!cuePrimitives.empty()) {
       std::vector<CueVertex> flatLines, depthLines, fill;
+      // Lines widened into quads (see pushThickSegment): circles and marker outlines go here, so a
+      // selection ring is the same weight on screen as Python's.
+      std::vector<CueVertex> flatQuads, depthQuads;
+      const float cueForward[3] = {view[2], view[6], view[10]};
       // Billboard basis: rows 0 and 1 of the view rotation, which is what the Python markers use.
       const float rx = view[0], ry = view[4], rz = view[8];
       const float ux = view[1], uy = view[5], uz = view[9];
@@ -1668,7 +1751,9 @@ static int run(const Options &o) {
           float ringSize = primitive.size;
           if (projected > 0.f && projected < 9.f)
             ringSize *= 9.f / projected;
-          std::vector<CueVertex> &out = primitive.depth() ? depthLines : flatLines;
+          std::vector<CueVertex> &out = primitive.depth() ? depthQuads : flatQuads;
+          // 2.5 px wide at this ring's own depth: half the width, converted from pixels to world.
+          const float halfWorld = 1.25f * depth / focal;
           for (int i = 0; i < segments; ++i) {
             const float a0 = float(i) / float(segments) * 2.f * float(M_PI);
             const float a1 = float(i + 1) / float(segments) * 2.f * float(M_PI);
@@ -1686,8 +1771,7 @@ static int run(const Options &o) {
               end[0] = primitive.centre[0] + s1; end[1] = primitive.centre[1];
               end[2] = primitive.centre[2] + c1;
             }
-            pushCue(out, start, primitive.colour);
-            pushCue(out, end, primitive.colour);
+            pushThickSegment(out, start, end, primitive.colour, halfWorld, cueForward);
           }
           ++cueCircles;
           continue;
@@ -1717,10 +1801,10 @@ static int run(const Options &o) {
           pushCue(fill, points[i + 1], primitive.colour);
         }
         const std::array<uint8_t, 4> outline = {5, 8, 13, primitive.colour[3]};
-        for (int i = 0; i < 6; ++i) {
-          pushCue(flatLines, points[i], outline);
-          pushCue(flatLines, points[(i + 1) % 6], outline);
-        }
+        const float outlineHalf = 1.0f * depth / focal;      // a 2 px outline, like the marker
+        for (int i = 0; i < 6; ++i)
+          pushThickSegment(flatQuads, points[i], points[(i + 1) % 6], outline, outlineHalf,
+                           cueForward);
         ++cueMarkers;
       }
       auto submitCues = [&](const std::vector<CueVertex> &verts, uint64_t primitive,
@@ -1744,6 +1828,8 @@ static int run(const Options &o) {
         bgfx::submit(1, cueProgram);
         cueVertices += count;
       };
+      submitCues(depthQuads, 0, true);
+      submitCues(flatQuads, 0, false);
       submitCues(depthLines, BGFX_STATE_PT_LINES, true);
       submitCues(flatLines, BGFX_STATE_PT_LINES, false);
       submitCues(fill, 0, false);   // triangle lists are bgfx's default primitive type
