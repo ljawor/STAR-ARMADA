@@ -812,6 +812,48 @@
           "claim": "Native SDL3/bgfx viewer loads approved meshes, orbits/pans/zooms, exports a measured capture, and reports offline-only limitations."
         }
       ]
+    },
+    {
+      "id": "render-protocol-v1-owner-approval-2026-10-21",
+      "date": "2026-10-21",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "W00 offline snapshot format v1 is approved as the offline file profile, and PR #145 was merged into the migration-plan branch as proposed.",
+      "owner_wording": "Approve v1 as the offline file profile - mark #145 ready and merge it into the plan branch (#144), which moves #146's base",
+      "owner_wording_context": "Pick-one answer to a three-option question offering: (a) approve v1 and merge #145 into the plan branch, (b) approve the format but keep #145 draft until the W02 transport design lands, (c) hold approval for a format change. Option (a) was selected; the wording above is that option's text, not free-form prose, so it is not an approval of anything the option did not say.",
+      "question_answered": "Is the W00 v1 wire format approved, and does #145 merge into its base now?",
+      "supersedes_gap_in": "render-protocol-v1",
+      "applies_to": "docs/RENDER_PROTOCOL.md v1 offline file profile, render_bridge/protocol.py, tests/fixtures/render_protocol/*, tests/test_render_protocol.py",
+      "binds_to": {
+        "pr": 145,
+        "merge_commit": "428371513e9dd69be1d1b1b0e35c55f9c9f6175a",
+        "approved_head": "f5844a83936b52a64635cd4c664bce19d5197187",
+        "protocol_doc": {
+          "path": "docs/RENDER_PROTOCOL.md",
+          "sha256": "8711b9adc38f9920c4348e5e776daca80591d239212947de89afffc6478f6a43"
+        },
+        "codec": {
+          "path": "render_bridge/protocol.py",
+          "sha256": "a9f37f5f15ef5b2afe2b061c144739bfd01e76cea67324f41445a26629c847d1"
+        },
+        "envelope": "32 bytes little-endian <8sHHIQII>: magic b'ARMADAS\\0', version 1, kind 1=WORLD/2=UI, u64 tick, u32 frame index, u32 payload length, CRC32 over payload bytes only; canonical UTF-8 JSON payload; 64 MiB inclusive cap"
+      },
+      "verified_at_approval": [
+        "3/3 tests in tests/test_render_protocol.py pass at approved head f5844a83",
+        "spec byte table matches struct.Struct('<8sHHIQII') exactly: offsets 0 magic, 8 version, 10 kind, 12 tick, 20 frame index, 24 length, 28 crc",
+        "PR #145 delta is 11 files and none is under game/, render/, assets/ or main.py",
+        "checks at approved head: LAN surface on real Windows pass (7m10s); candidate Windows package skipped by hand",
+        "merged with --match-head-commit f5844a83; merged blobs are identical to the branch blobs (docs/RENDER_PROTOCOL.md aaaad744, render_bridge/protocol.py 637b222f)",
+        "payload already carries a real state_sha256 from game.benchmark.state_hash, so an offline capture is bound to a simulation state without a new envelope field"
+      ],
+      "not_approved_by_this_decision": [
+        "merge of PR #146 or of the migration plan into main",
+        "W02 live bridge: shared memory or packed SoA transport, frame-rate snapshot emission, latency budget, camera/picking authority",
+        "any FPS or speedup claim from the offline mesh-only loop",
+        "viewer shading/materials quality or a graphics upgrade",
+        "native Windows/D3D12 parity, frozen-package build or release",
+        "tag or release"
+      ],
+      "note": "The docs/cpp-renderer-w00-spec branch is deliberately still present because PR #146 is based on it; branch deletion follows #146. The progress-ledger rows in docs/CPP_RENDERER_MIGRATION.md are owned by #146's branch and were not rewritten here."
     }
   ]
 }
