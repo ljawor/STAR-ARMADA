@@ -27,7 +27,9 @@ sys.path.insert(0, str(ROOT))
 
 import game.core  # noqa: F401  core/systems import cycle, per the project skill
 from game.graphics_benchmark import make_fixture
-from render import asset_selection, fog, primitive_batch
+from render import asset_selection, emissive_batch, fog, primitive_batch
+from render.renderer import projectile_extents
+from render_bridge import emissive as emissive_codec
 from render_bridge import markers as marker_codec
 from render.ship_sizes import ship_size
 from render_bridge import collect, packed, ring
@@ -74,6 +76,8 @@ def main(argv=None):
                              'distinct planet, published once')
     parser.add_argument('--planet-texture', type=int, default=256,
                         help='planet texture edge in pixels (W05)')
+    parser.add_argument('--emit-ring', type=Path,
+                        help='ring carrying weapon fire, beams, glows and jump rings (W05 slice 3)')
     parser.add_argument('--marker-ring', type=Path,
                         help='ring carrying selection rings, planet owner rings and ownership '
                              'markers as primitives (W05 slice 2)')
@@ -121,6 +125,19 @@ def main(argv=None):
     # rects the recorder says changed are published. `compose` is the GL-free half of `render`.
     # W05 slice 2: the ownership cues (selection rings, planet owner rings, markers) as one batch
     # of primitives. The game decides them here; the window only draws.
+    # W05 slice 3: emissive primitives - weapon fire, beams, glows, jump rings.
+    emissive_ring = None
+    emit_ms, emit_counts = [], []
+    if args.emit_ring is not None:
+        emit_slot_bytes = (emissive_codec.HEADER.size
+                           + emissive_codec.MAX_RECORDS * emissive_codec.RECORD_BYTES)
+        args.emit_ring.parent.mkdir(parents=True, exist_ok=True)
+        emissive_ring = ring.Ring.create(args.emit_ring, slots=8, slot_bytes=emit_slot_bytes)
+
+    def weapon_type_of(weapon_id):
+        weapon = ds.weapons.get(weapon_id) if weapon_id is not None else None
+        return weapon.type if weapon is not None else None
+
     marker_ring = None
     marker_ms, marker_counts = [], []
     selected_ids = set(int(v) for v in (args.select or []))
@@ -267,6 +284,19 @@ def main(argv=None):
                 frame, counts = collector.collect_into(
                     state, buffer, tick=state.tick, frame_index=published)
                 out.publish(bytes(frame))
+                if emissive_ring is not None:
+                    emit_started = time.perf_counter()
+                    effect_allow = seen_state.get('effects') if detection else None
+                    shot_allow = seen_state.get('shots') if detection else None
+                    effects = [fx for fx in state.effects
+                               if effect_allow is None or id(fx) in effect_allow]
+                    shots = [shot for shot in state.projectiles.values()
+                             if shot_allow is None or id(shot) in shot_allow]
+                    emit_primitives, emit_stats = emissive_batch.build(
+                        effects, shots, weapon_type_of, projectile_extents)
+                    emissive_ring.publish(bytes(emissive_codec.encode(emit_primitives)))
+                    emit_ms.append((time.perf_counter() - emit_started) * 1000.0)
+                    emit_counts.append(emit_stats)
                 if marker_ring is not None:
                     cues_started = time.perf_counter()
                     primitives = primitive_batch.build(
@@ -337,6 +367,19 @@ def main(argv=None):
         'publish_hz': round(published / elapsed, 2) if elapsed else 0.0,
         'encode_ms': _stats(encode_ms),
         'sim_step_ms': _stats(step_ms),
+        'emissive': ({
+            'ring': str(args.emit_ring) if args.emit_ring else None,
+            'encode_ms': {'median': statistics.median(emit_ms) if emit_ms else 0.0,
+                          'worst': max(emit_ms) if emit_ms else 0.0},
+            'frames': len(emit_counts),
+            'primitives_max': max((c['primitives'] for c in emit_counts), default=0),
+            'beams_skipped': sum(c.get('beams_skipped', 0) for c in emit_counts),
+            'legacy_shots': sum(c.get('legacy', 0) for c in emit_counts),
+            'bolts': sum(c.get('drawn', 0) for c in emit_counts),
+            'squares': sum(c.get('squares', 0) for c in emit_counts),
+            'note': 'beams and glows in world units, bolts in pixels so the window keeps them at '
+                    'its own zoom; additive, no depth write',
+        } if args.emit_ring else {}),
         'cues': ({
             'ring': str(args.marker_ring) if args.marker_ring else None,
             'mode': args.marker_mode,

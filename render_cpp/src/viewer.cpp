@@ -1,6 +1,7 @@
 // Standalone W01 viewer: no authoritative game state and no Python runtime.
 #include "camera.hpp"
 #include "frame_v2.hpp"
+#include "emissive.hpp"
 #include "input_ring.hpp"
 #include "marker_ring.hpp"
 #include "overlay.hpp"
@@ -32,6 +33,7 @@ namespace hud = armada::overlay;
 namespace input_ring = armada::input;
 namespace planets = armada::planet;
 namespace cues = armada::marker;
+namespace emit = armada::emissive;
 using Json = nlohmann::json;
 using Clock = std::chrono::steady_clock;
 
@@ -145,7 +147,7 @@ struct Callbacks final : bgfx::CallbackI {
 };
 struct Options {
   fs::path snapshot, assets, shaders = ARMADA_SHADER_DIR, shot, report, ring, tables, overlayRing,
-      inputRing, planetRing, markerRing;
+      inputRing, planetRing, markerRing, emitRing;
   std::array<float, 3> focus{};
   bool hasFocus = false;
   // The map's star lights every planet (render/renderer.py sets GL_LIGHT0 to the star position,
@@ -191,6 +193,8 @@ static Options options(int argc, char **argv) {
       o.planetRing = value();
     else if (k == "--marker-ring")
       o.markerRing = value();
+    else if (k == "--emit-ring")
+      o.emitRing = value();
     else if (k == "--star") {
       const std::string text = value();
       std::array<float, 3> point{};
@@ -844,6 +848,16 @@ static int run(const Options &o) {
   if (!bgfx::isValid(cueProgram))
     throw DeviceError("Cue program creation failed");
   cleanup.actions.push_back([cueProgram] { bgfx::destroy(cueProgram); });
+  // W05 slice 3: emissive pass. Same vertex layout and program as the cues - unlit world-space
+  // triangles - but additive blending, so fire adds to the scene instead of covering it.
+  std::unique_ptr<armada::bridge::RingReader> emitRing;
+  uint64_t emitSequence = 0;
+  size_t emitBatches = 0, emitDecodeFailures = 0, emitPrimitives = 0, emitTriangles = 0,
+         emitDropped = 0;
+  std::vector<uint8_t> emitPayload;
+  std::vector<emit::Primitive> emitList;
+  if (!o.emitRing.empty())
+    emitRing = std::make_unique<armada::bridge::RingReader>(o.emitRing);
   std::unique_ptr<armada::bridge::RingReader> markerRing;
   uint64_t markerSequence = 0;
   size_t cueBatches = 0, cueDecodeFailures = 0, cueCircles = 0, cueMarkers = 0,
@@ -1418,6 +1432,193 @@ static int run(const Options &o) {
       submitCues(flatLines, BGFX_STATE_PT_LINES, false);
       submitCues(fill, 0, false);   // triangle lists are bgfx's default primitive type
     }
+    // W05 slice 3: emissive pass - beams, glows, rings and bolts. The batch is small, so the
+    // geometry is built on the CPU, and everything blends additively: fire adds light to a scene
+    // rather than covering it.
+    if (emitRing) {
+      const uint64_t available = emitRing->published();
+      if (available > emitSequence &&
+          emitRing->read_at_sequence(available - 1, available, emitPayload)) {
+        emitSequence = available;
+        try {
+          emitList = emit::decode(emitPayload.data(), emitPayload.size());
+          ++emitBatches;
+        } catch (const emit::EmissiveError &) {
+          ++emitDecodeFailures;      // keep the last good batch rather than half-draw a volley
+        }
+      }
+    }
+    if (!emitList.empty()) {
+      std::vector<CueVertex> nearTriangles, farTriangles;
+      const float rx = view[0], ry = view[4], rz = view[8];
+      const float ux = view[1], uy = view[5], uz = view[9];
+      const float focal = float(height) * 0.5f /
+                          std::tan(camera.fov * 0.5f * float(M_PI) / 180.f);
+      auto eyeDepth = [&](const float *p) {
+        return std::max(1.f, -(view[2] * p[0] + view[6] * p[1] + view[10] * p[2] + view[14]));
+      };
+      auto tint = [](const std::array<uint8_t, 4> &c, float alpha) {
+        return std::array<float, 4>{c[0] / 255.f, c[1] / 255.f, c[2] / 255.f,
+                                    (c[3] / 255.f) * alpha};
+      };
+      auto push = [](std::vector<CueVertex> &out, const float *p, const std::array<float, 4> &c) {
+        out.push_back({p[0], p[1], p[2], c[0], c[1], c[2], c[3]});
+      };
+      auto triangle = [&](std::vector<CueVertex> &out, const float *a, const float *b,
+                          const float *c, const std::array<float, 4> &colour) {
+        push(out, a, colour); push(out, b, colour); push(out, c, colour);
+        emitTriangles += 1;
+      };
+      auto quad = [&](std::vector<CueVertex> &out, const float *a, const float *b, const float *c,
+                      const float *d, const std::array<float, 4> &colour) {
+        triangle(out, a, b, c, colour);
+        triangle(out, a, c, d, colour);
+      };
+      for (const auto &primitive : emitList) {
+        std::vector<CueVertex> &out = primitive.depth() ? farTriangles : nearTriangles;
+        ++emitPrimitives;
+        const std::array<float, 4> colour = tint(primitive.colour, 1.f);
+        if (primitive.kind == emit::kRibbon) {
+          // Camera-facing ribbon: the perpendicular is the beam axis crossed with the eye vector,
+          // exactly as renderer.py::_beam_ribbon builds it.
+          const float axis[3] = {primitive.b[0] - primitive.a[0], primitive.b[1] - primitive.a[1],
+                                 primitive.b[2] - primitive.a[2]};
+          const float lengthSq = axis[0] * axis[0] + axis[1] * axis[1] + axis[2] * axis[2];
+          if (lengthSq < 1e-12f)
+            continue;
+          const float mid[3] = {(primitive.a[0] + primitive.b[0]) * 0.5f,
+                                (primitive.a[1] + primitive.b[1]) * 0.5f,
+                                (primitive.a[2] + primitive.b[2]) * 0.5f};
+          const float length = std::sqrt(lengthSq);
+          const float nx = axis[0] / length, ny = axis[1] / length, nz = axis[2] / length;
+          const float vx = mid[0] - float(eye[0]), vy = mid[1] - float(eye[1]),
+                      vz = mid[2] - float(eye[2]);
+          float px = ny * vz - nz * vy, py = nz * vx - nx * vz, pz = nx * vy - ny * vx;
+          const float plen = std::sqrt(px * px + py * py + pz * pz);
+          if (plen < 1e-6f)
+            continue;                    // a beam pointing at the eye has no on-screen width
+          px = px / plen * primitive.width;
+          py = py / plen * primitive.width;
+          pz = pz / plen * primitive.width;
+          const float a0[3] = {primitive.a[0] - px, primitive.a[1] - py, primitive.a[2] - pz};
+          const float a1[3] = {primitive.a[0] + px, primitive.a[1] + py, primitive.a[2] + pz};
+          const float b0[3] = {primitive.b[0] - px, primitive.b[1] - py, primitive.b[2] - pz};
+          const float b1[3] = {primitive.b[0] + px, primitive.b[1] + py, primitive.b[2] + pz};
+          quad(out, a0, b0, b1, a1, colour);
+        } else if (primitive.kind == emit::kDisc) {
+          // Glow: hot centre, transparent rim - the falloff rides in the vertex colour.
+          const int segments = primitive.segments ? int(primitive.segments) : 24;
+          const std::array<float, 4> centre = tint(primitive.colour, 1.f);
+          const std::array<float, 4> rim = tint(primitive.colour, 0.f);
+          const float *origin = primitive.a.data();
+          for (int i = 0; i < segments; ++i) {
+            const float t0 = float(i) / segments * 2.f * float(M_PI);
+            const float t1 = float(i + 1) / segments * 2.f * float(M_PI);
+            float p0[3], p1[3];
+            if (primitive.shape == emit::kShapeFlat) {
+              p0[0] = origin[0] + std::sin(t0) * primitive.radius; p0[1] = origin[1];
+              p0[2] = origin[2] + std::cos(t0) * primitive.radius;
+              p1[0] = origin[0] + std::sin(t1) * primitive.radius; p1[1] = origin[1];
+              p1[2] = origin[2] + std::cos(t1) * primitive.radius;
+            } else {
+              p0[0] = origin[0] + (rx * std::cos(t0) + ux * std::sin(t0)) * primitive.radius;
+              p0[1] = origin[1] + (ry * std::cos(t0) + uy * std::sin(t0)) * primitive.radius;
+              p0[2] = origin[2] + (rz * std::cos(t0) + uz * std::sin(t0)) * primitive.radius;
+              p1[0] = origin[0] + (rx * std::cos(t1) + ux * std::sin(t1)) * primitive.radius;
+              p1[1] = origin[1] + (ry * std::cos(t1) + uy * std::sin(t1)) * primitive.radius;
+              p1[2] = origin[2] + (rz * std::cos(t1) + uz * std::sin(t1)) * primitive.radius;
+            }
+            push(out, origin, centre);
+            push(out, p0, rim);
+            push(out, p1, rim);
+            emitTriangles += 1;
+          }
+        } else if (primitive.kind == emit::kRing) {
+          const int segments = primitive.segments ? int(primitive.segments) : 32;
+          const float inner = std::max(0.f, primitive.radius - primitive.width);
+          const float outer = primitive.radius + primitive.width;
+          for (int i = 0; i < segments; ++i) {
+            const float t0 = float(i) / segments * 2.f * float(M_PI);
+            const float t1 = float(i + 1) / segments * 2.f * float(M_PI);
+            float i0[3], o0[3], i1[3], o1[3];
+            if (primitive.shape == emit::kShapeFlat) {
+              i0[0] = primitive.a[0] + std::sin(t0) * inner; i0[1] = primitive.a[1];
+              i0[2] = primitive.a[2] + std::cos(t0) * inner;
+              o0[0] = primitive.a[0] + std::sin(t0) * outer; o0[1] = primitive.a[1];
+              o0[2] = primitive.a[2] + std::cos(t0) * outer;
+              i1[0] = primitive.a[0] + std::sin(t1) * inner; i1[1] = primitive.a[1];
+              i1[2] = primitive.a[2] + std::cos(t1) * inner;
+              o1[0] = primitive.a[0] + std::sin(t1) * outer; o1[1] = primitive.a[1];
+              o1[2] = primitive.a[2] + std::cos(t1) * outer;
+            } else {
+              const float c0 = std::cos(t0), s0 = std::sin(t0);
+              const float c1 = std::cos(t1), s1 = std::sin(t1);
+              i0[0] = primitive.a[0] + (rx * c0 + ux * s0) * inner;
+              i0[1] = primitive.a[1] + (ry * c0 + uy * s0) * inner;
+              i0[2] = primitive.a[2] + (rz * c0 + uz * s0) * inner;
+              o0[0] = primitive.a[0] + (rx * c0 + ux * s0) * outer;
+              o0[1] = primitive.a[1] + (ry * c0 + uy * s0) * outer;
+              o0[2] = primitive.a[2] + (rz * c0 + uz * s0) * outer;
+              i1[0] = primitive.a[0] + (rx * c1 + ux * s1) * inner;
+              i1[1] = primitive.a[1] + (ry * c1 + uy * s1) * inner;
+              i1[2] = primitive.a[2] + (rz * c1 + uz * s1) * inner;
+              o1[0] = primitive.a[0] + (rx * c1 + ux * s1) * outer;
+              o1[1] = primitive.a[1] + (ry * c1 + uy * s1) * outer;
+              o1[2] = primitive.a[2] + (rz * c1 + uz * s1) * outer;
+            }
+            quad(out, i0, o0, o1, i1, colour);
+          }
+        } else if (primitive.kind == emit::kBolt) {
+          // Bolts carry pixel extents: they are converted at this camera's depth, so a volley
+          // keeps its size whatever the player's zoom is.
+          const float scale = eyeDepth(primitive.a.data()) / focal;
+          const float halfLength = std::max(0.005f, primitive.radius * scale);
+          const float halfWidth = std::max(0.005f, primitive.width * scale);
+          float dx = 1.f, dy = 0.f;
+          if (primitive.shape != emit::kShapeSquare) {
+            dx = primitive.b[0] * rx + primitive.b[1] * ry + primitive.b[2] * rz;
+            dy = primitive.b[0] * ux + primitive.b[1] * uy + primitive.b[2] * uz;
+            const float len = std::sqrt(dx * dx + dy * dy);
+            if (len < 1e-4f) { dx = 1.f; dy = 0.f; } else { dx /= len; dy /= len; }
+          }
+          const float along[3] = {(rx * dx + ux * dy) * halfLength,
+                                  (ry * dx + uy * dy) * halfLength,
+                                  (rz * dx + uz * dy) * halfLength};
+          const float across[3] = {(rx * -dy + ux * dx) * halfWidth,
+                                   (ry * -dy + uy * dx) * halfWidth,
+                                   (rz * -dy + uz * dx) * halfWidth};
+          float corners[4][3];
+          for (int corner = 0; corner < 4; ++corner) {
+            const float sAlong = (corner == 1 || corner == 2) ? 1.f : -1.f;
+            const float sAcross = (corner >= 2) ? 1.f : -1.f;
+            corners[corner][0] = primitive.a[0] + along[0] * sAlong + across[0] * sAcross;
+            corners[corner][1] = primitive.a[1] + along[1] * sAlong + across[1] * sAcross;
+            corners[corner][2] = primitive.a[2] + along[2] * sAlong + across[2] * sAcross;
+          }
+          quad(out, corners[0], corners[1], corners[2], corners[3], colour);
+        }
+      }
+      auto submitEmissive = [&](const std::vector<CueVertex> &verts, bool depthTest) {
+        if (verts.empty())
+          return;
+        const uint32_t count = uint32_t(verts.size());
+        if (bgfx::getAvailTransientVertexBuffer(count, cueLayout) < count) {
+          emitDropped += count;      // counted, never silently squeezed
+          return;
+        }
+        bgfx::TransientVertexBuffer tvb;
+        bgfx::allocTransientVertexBuffer(&tvb, count, cueLayout);
+        std::memcpy(tvb.data, verts.data(), count * sizeof(CueVertex));
+        bgfx::setVertexBuffer(0, &tvb);
+        uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_MSAA | BGFX_STATE_BLEND_ADD;
+        if (depthTest)
+          state |= BGFX_STATE_DEPTH_TEST_LESS;
+        bgfx::setState(state);
+        bgfx::submit(1, cueProgram);
+      };
+      submitEmissive(farTriangles, true);
+      submitEmissive(nearTriangles, false);
+    }
     // W03: read the newest HUD payload, apply the patches to the texture, draw one quad.
     if (uiRing) {
       const uint64_t available = uiRing->published();
@@ -1631,6 +1832,17 @@ static int run(const Options &o) {
                      {"hud_only", o.hudOnly},
                      {"mode", o.hudOnly ? "presented-unblended (diagnostic)"
                                         : "composited over the scene"}};
+  }
+  if (emitRing) {
+    report["emissive"] = {
+        {"ring", o.emitRing.string()},
+        {"batches", emitBatches},
+        {"decode_failures", emitDecodeFailures},
+        {"primitives", emitPrimitives},
+        {"triangles", emitTriangles},
+        {"dropped_vertices", emitDropped},
+        {"blend", "additive, no depth write; bolts sized in pixels at this camera"},
+    };
   }
   if (markerRing) {
     report["cues"] = {
