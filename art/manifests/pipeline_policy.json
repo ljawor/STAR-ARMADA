@@ -773,6 +773,45 @@
         "render/geometry subset (54 tests)",
         "appearance pin correction (engineering-only)"
       ]
+    },
+    {
+      "id": "render-protocol-v1",
+      "date": "2026-10-21",
+      "owner": "owner (Lukasz Jawor)",
+      "owner_wording": "ok let's start this. Let's try to work on W00 + W01.",
+      "decision": "W00/W01 implementation authorized; engineering-selected offline protocol proposed for review, not blanket approval of every implementation detail.",
+      "applies_to": "W00 offline envelope/fixtures and W01 standalone viewer only",
+      "binds_to": {
+        "base_commit": "b2ff85ab622cd535aaf0525adb362a700e4b6f63",
+        "artifact": "docs/CPP_RENDERER_MIGRATION.md",
+        "protocol": "docs/RENDER_PROTOCOL.md"
+      },
+      "scope_statement": "Implement on feature branches, preserving authoritative simulation and asset bytes. No live bridge or normal-launch changes.",
+      "not_approved_by_this_decision": [
+        "merge",
+        "tag or release",
+        "production renderer default switch",
+        "model appearance approval or approved-mesh changes",
+        "W02 shared-memory transport, input or live-game integration",
+        "performance targets or Windows-native acceptance waiver"
+      ],
+      "engineering_choices": [
+        "Bounded canonical JSON offline payload in a versioned 32-byte little-endian CRC32 envelope.",
+        "Offline JSON does not establish the W02 1 ms serialization gate.",
+        "Offline camera is viewer-local; future picking requires a frame-consistent camera, not a once-per-second mirror."
+      ],
+      "definition_of_done": [
+        {
+          "id": "W00",
+          "checked_by": "machine + owner review",
+          "claim": "Reproducible world/UI/empty wire fixtures, round-trip and malformed-input rejection; spec agrees with bytes."
+        },
+        {
+          "id": "W01",
+          "checked_by": "machine + owner appearance/camera review",
+          "claim": "Native SDL3/bgfx viewer loads approved meshes, orbits/pans/zooms, exports a measured capture, and reports offline-only limitations."
+        }
+      ]
     }
   ]
 }
