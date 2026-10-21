@@ -1,0 +1,23 @@
+[
+  {
+    "case": "kind-confusion",
+    "expected_exit": 3,
+    "observed_exit": 0,
+    "capture_exists": null,
+    "passed": false
+  },
+  {
+    "case": "short-capture",
+    "expected_exit": 0,
+    "observed_exit": 0,
+    "capture_exists": false,
+    "passed": false
+  },
+  {
+    "case": "device-error",
+    "expected_exit": 4,
+    "observed_exit": 1,
+    "capture_exists": null,
+    "passed": false
+  }
+]

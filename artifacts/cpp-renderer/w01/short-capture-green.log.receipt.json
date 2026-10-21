@@ -1,0 +1,22 @@
+{
+  "command": [
+    "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-w01/render_cpp/build/armada_viewer",
+    "--assets",
+    "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-w01/assets",
+    "--snapshot",
+    "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-evidence/fleet.snap",
+    "--frames",
+    "1",
+    "--warmup",
+    "0",
+    "--no-overlay",
+    "--screenshot",
+    "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-evidence/short-green.png"
+  ],
+  "pid": 25777,
+  "exit_code": 0,
+  "timed_out": false,
+  "elapsed_seconds": 0.3446567499777302,
+  "process_terminated": true,
+  "log": "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-evidence/short-capture-green.log"
+}

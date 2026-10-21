@@ -76,9 +76,13 @@ Required top-level fields:
   IDs except in explicitly labelled transport/catalogue inspection fixtures.
 - `assets`: one entry per used binding, sorted by binding:
   `{binding:string, path:string, sha256:string, vertex_count:int,
-  triangle_count:int}`. Path is relative to the viewer's **assets directory**,
-  e.g. `models/imperial_corvette.mesh.json`, never `assets/models/...` relative to
-  that directory. Resolve beneath that root; refuse absolute paths, `..`, and
+  triangle_count:int}`. Path is relative to the **explicit consumer root** passed
+  with `--assets`. Historical core-only exports use `models/...` with `--assets assets`.
+  Current default-selection exports use repository-relative `assets/...` or
+  `visual_packs/...` with `--assets .`, labelled in `metadata.asset_path_root`. Never
+  mix roots or guess a fallback root. Versioned mesh exports additionally carry
+  `manifest_asset`, whose identity must match the mesh payload. Resolve beneath
+  the chosen root; refuse absolute paths, `..`, and
   symlink escapes. SHA256 covers the unchanged mesh file bytes. Counts come from
   `vertices` and the sum of `batches` rows, cross-checked against `triangle_count`.
 - `metadata`: inventory, assumptions, visibility mode, explicit omissions,
@@ -95,17 +99,20 @@ the game loop, and verifies full precise checksum **before and after all render-
 extraction**, including catalogue mode. No simulation or selection settings are
 persisted. The tool does configure process-local render selection/cache state.
 
-Use real approved binding resolution: `asset_selection.configure({'model_preview':
-True}, asset_root=ROOT)` and `asset_selection.ship_binding(ds, data_id,
-owner_faction)` (including trade convoys). The `asset_root` argument is misleading:
-current `AssetResolver` expects the **repository root containing assets/**; passing
-`ROOT/'assets'` incorrectly searches `assets/assets/models/...`. Snapshot paths,
-by contrast, are intentionally relative to `ROOT/'assets'`. Station bindings use
+Use the actual application's ordered default visual selection: read `DEFAULT_SETTINGS`
+without importing the menu/window code, call `asset_selection.configure(selection,
+asset_root=ROOT, pack_root=ROOT/'visual_packs')`, and use
+`asset_selection.ship_binding(ds, data_id, owner_faction)` (including convoys).
+Reject a failed default pack instead of silently reverting to a superseded core mesh.
+The resolver's root is the **repository containing assets/**, not `ROOT/'assets'`.
+Current snapshot paths are repository-relative so unchanged selected pack files remain
+inside the explicit consumer root. This is current shipped defaults, not arbitrary
+saved user pack choices. Station bindings use
 registered `imperial:` + entity `data_id` for these all-Imperial fixtures.
 
 Every alive detected non-planet entity is exported; missing/unresolved approved
 meshes cause an explicit error rather than silent omission. `assets/models/registry.json`
-and its referenced manifests select mesh paths; the real resolver validates the
+and the effective default visual-pack manifests select mesh paths; the real resolver validates the
 mesh contract. No guessed filename dispatch or procedural replacement is used.
 Ships use canonical `ship_size(...).scale`, **not** the gameplay zoom readability
 multiplier; stations and satellites use `radius/50`. Satellite placement is the

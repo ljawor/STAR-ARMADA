@@ -853,7 +853,24 @@
         "native Windows/D3D12 parity, frozen-package build or release",
         "tag or release"
       ],
-      "note": "The docs/cpp-renderer-w00-spec branch is deliberately still present because PR #146 is based on it; branch deletion follows #146. The progress-ledger rows in docs/CPP_RENDERER_MIGRATION.md are owned by #146's branch and were not rewritten here."
+      "note": "The docs/cpp-renderer-w00-spec branch is deliberately still present because PR #146 is based on it; branch deletion follows #146. The progress-ledger rows in docs/CPP_RENDERER_MIGRATION.md are owned by #146's branch and were not rewritten here.",
+      "correction": {
+        "date": "2026-10-21",
+        "field": "binds_to.protocol_doc.sha256",
+        "previous_sha256": "8711b9adc38f9920c4348e5e776daca80591d239212947de89afffc6478f6a43",
+        "current_sha256": "a62961b84f1223881095bc574fbedb22c2dd168c2310c3bd6190109e1289bf66",
+        "reason": "PR #146's model-selection correction fixed the asset-resolution prose: repository-relative snapshot paths with --assets ., selection configured from the real DEFAULT_SETTINGS including all 13 shipped visual packs, and fail-closed rejection of a failed default pack. The document moved so the offline snapshots describe the paths the shipped exporter actually writes.",
+        "unchanged_claims": [
+          "Section 1 (the 32-byte envelope) is byte-identical to the approved revision; verified by extracting '## 1.' through '## 2.' from both revisions and comparing, not by assertion.",
+          "MAGIC b'ARMADAS\\0', version 1, kind, u64 tick, u32 frame index, u32 length, CRC32 over payload, 64 MiB cap and canonical JSON are unchanged; render_bridge/protocol.py bytes are unchanged (sha256 a9f37f5f...).",
+          "Only documentation prose moved; no fixture, control or codec byte changed, so the approved format is the format that is still tested."
+        ],
+        "check": {
+          "envelope_section_identical": true,
+          "codec_sha256_unchanged": true,
+          "fixtures_changed": false
+        }
+      }
     }
   ]
 }

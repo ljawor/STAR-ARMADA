@@ -1,0 +1,26 @@
+[ 66%] Built target armada_shaders
+[ 83%] Building CXX object CMakeFiles/armada_viewer.dir/src/viewer.cpp.o
+/Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-w01/render_cpp/src/viewer.cpp:578:25: warning: missing terminating '"' character [-Winvalid-pp-token]
+  578 |             DeviceError("Instance buffer exhausted; refusing partial fleet
+      |                         ^
+/Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-w01/render_cpp/src/viewer.cpp:578:25: error: expected expression
+/Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-w01/render_cpp/src/viewer.cpp:680:33: error: function definition is not allowed here
+  680 | int main(int argc, char **argv) {
+      |                                 ^
+/Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-w01/render_cpp/src/viewer.cpp:693:2: error: expected '}'
+  693 | }
+      |  ^
+/Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-w01/render_cpp/src/viewer.cpp:449:69: note: to match this '{'
+  449 |   while (running && (o.frames == 0 || frame < o.frames + o.warmup)) {
+      |                                                                     ^
+/Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-w01/render_cpp/src/viewer.cpp:693:2: error: expected '}'
+  693 | }
+      |  ^
+/Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-w01/render_cpp/src/viewer.cpp:240:34: note: to match this '{'
+  240 | static int run(const Options &o) {
+      |                                  ^
+1 warning and 4 errors generated.
+make[3]: *** [CMakeFiles/armada_viewer.dir/src/viewer.cpp.o] Error 1
+make[2]: *** [CMakeFiles/armada_viewer.dir/all] Error 2
+make[1]: *** [CMakeFiles/armada_viewer.dir/rule] Error 2
+make: *** [armada_viewer] Error 2

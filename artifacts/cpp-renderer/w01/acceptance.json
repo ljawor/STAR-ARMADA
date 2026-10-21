@@ -1,0 +1,289 @@
+{
+  "code_commit": "7bf11d2204b3aca6c82e58943ab71f26613ea5d2",
+  "base_commit": "b2ff85ab622cd535aaf0525adb362a700e4b6f63",
+  "pr": 146,
+  "created_utc": "2026-10-21T05:49:54.194247+00:00",
+  "source_sha256": {
+    "render_cpp/CMakeLists.txt": "b8ab38e9c94cf7732634608912c917340fb11e80dc0659da96d49a92b92d50fc",
+    "render_cpp/launch.command": "0bf23ec4334c2f94af2cea4d005ce01623acdc36bade927bc538963a74c4a2f4",
+    "render_cpp/README.md": "762d30fa3d6780eeffab73b9f9f6944d2f794286c722b2962a168439bcb55d52",
+    "render_cpp/.gitignore": "6debae4bd4878a3d70916d18319b6fbb5c53a5574b934288cb4e9f69759c2018",
+    "render_cpp/include/scene.hpp": "a394adec411ad56f4de5d0e7d4e8715839216e4c5fc47acd5832d52267891e10",
+    "render_cpp/include/camera.hpp": "11e58651f8500ae8497de9e9c1303238581f11e023e52042416f8b1d475b598a",
+    "render_cpp/tests/test_camera.cpp": "71a57500d8f23b63303f8cfab0b43a63896016e4ee657de3464febec0f678edf",
+    "render_cpp/tests/test_scene.cpp": "6f5f5d713aac38000ac3a95264eed3e016e3b7ff2d9f20dd08d3302c935ea61a",
+    "render_cpp/shaders/fs_fleet.sc": "50d910a5feac4039d84306d992c85d048d4178c664a4cec442b8357cffd03b12",
+    "render_cpp/shaders/varying.def.sc": "64ad75d57e4a99c14cfdb40a1d3a407fb2881fe5f1956472931408bc4784dedc",
+    "render_cpp/shaders/vs_shadow.sc": "10f509a2dfc9bb5bda8234b4d0b8d667f19233b4de91b9299b4322d70bb89d23",
+    "render_cpp/shaders/fs_shadow.sc": "773d695c91387f0bd3b8d2d6eb7be4e496f328012b8218988836fb787ec5495d",
+    "render_cpp/shaders/vs_fleet.sc": "f31c0e8de32c6a5aaac638f9e33ff232c7d4c1806132cc58096d01a070144642",
+    "render_cpp/src/viewer.cpp": "1bf949ba87d92dc9ebd630e4b027e5a2d6a359c66424c0fb19e48eaea5475ccc",
+    "tools/render/dump_snapshot.py": "cfc9f8025d52b1f0fc7bf1897ad2d4cc7ac04a1d1bcc6f8d83b738c17ddeb6c7",
+    "tests/test_render_snapshot.py": "2bf32812dda3d1695dca7e49e3f977cc4840cf8262cc9f7591403a98ba87fef1",
+    "docs/RENDER_PROTOCOL.md": "8711b9adc38f9920c4348e5e776daca80591d239212947de89afffc6478f6a43"
+  },
+  "mesh_sha256": {
+    "models/legion_attack_satellite.mesh.json": "da4ad21c5c1a363054050169988d1ce0eab82d1c9fb31a5d1318c5f69eebaf64",
+    "models/confed_battleship.mesh.json": "0b04ca0ea42c2ea2fd670cfdbe0d4c0a047cbf65071101ba7d6927bf172df363",
+    "models/legion_hyena.mesh.json": "63d2544abdbebf9089c0fb48e34666f610d2876d8b8a8569892d588b263bb18d",
+    "models/confed_colonizer.mesh.json": "7c8a7b31847896526b67d9daa7fe4ea866ff03f8c4da3acd31fe9401ef0fd08d",
+    "models/legion_command_station.mesh.json": "a9f6bdb8259217f1649ee47b44809cef79ac4c3369c680325f8e5c874a0cd0d8",
+    "models/confed_constructor.mesh.json": "cce3fd0e2a02b4e745efeec9ff6873869b17fec65f6aa0f9f08238226a40b14c",
+    "models/legion_convoy.mesh.json": "78f864ab6a742b10596c3af75430744a31d5a77dfc5c7af3851dff7804c13041",
+    "models/confed_corvette.mesh.json": "921f8dd4afd759ea0d39c21c3bd3c4e6f7e1c3f8eaee18240371d9a96f101958",
+    "models/confed_cruiser.mesh.json": "2866559ed742dd4f2f5a22937baa8021b8c0154a105cd4903c273d972ab00814",
+    "models/legion_defense_platform.mesh.json": "637ca1293919ca6bf7667f5e1f60ad052b16d1adf08085196f8ec3adb4f4d983",
+    "models/legion_defense_satellite.mesh.json": "8db782a326362e4e15d52090bd1dcd8039b96df4b2127d3c1bfd87ccb2b6ac9d",
+    "models/legion_energy_relay.mesh.json": "8c260a988a6e0f66bb7a659832f8c289dcd797a82c4eab1f25725131086de7e0",
+    "models/legion_vulture.mesh.json": "c17733f45e1669a3c664726f2e72f18a1d3e1c1e09e18455e22abc7fb83c47dd",
+    "models/legion_fighter_platform.mesh.json": "b88dd8ee806fc3b8167cd93252a64b87683430fc19cb0f3a177423ef46a32f9c",
+    "models/confed_frigate.mesh.json": "96fd45471049b92aede194cf851e801e022579ee1a84c61daf3cbe088c8ed268",
+    "models/legion_mining_station.mesh.json": "32bb2c2b72ac9dacee83ae841d3e5ecf6b0e7c4246ee4e99f0548b28d9695d8f",
+    "models/legion_planet_extractor.mesh.json": "21ac55b4336a9a34b9cc6bdea34e2d9e989dd027e236f7b9eca730f0b382a039",
+    "models/legion_planet_pulsar_cannon.mesh.json": "bd26fd608964a45f2ec3afd1bc7a66617d218cf6a69ef4fc0013331427ea8393",
+    "models/legion_planet_shield_generator.mesh.json": "7d8d1676d83461298d8efa08be75faa494452a71196952d6943377dedb4f1873",
+    "models/legion_planet_trade_hub.mesh.json": "b3bbb4ccfd292d695e73134d4bda12e1e83e25fc1ac93aade8ff96cc0bf0ea39",
+    "models/legion_repair_dock.mesh.json": "3c865b62f82ce4b5d8053d022a481d992f96b69852d335fed6cc0cbde4079d76",
+    "models/legion_research_station.mesh.json": "01485bb472f239ab70779b1f1a5dabb381c18347b8b9d2350a3cb2e045b7fd72",
+    "models/legion_sensor_station.mesh.json": "27d3b5803c10a386b8ed74f8574acb0f8d0a6eb5f7509ad4bd2726ac33163755",
+    "models/legion_shipyard.mesh.json": "748c48aa54266073f5b0773f3ef0748b2cf049cd51523d65f66083163d794f01",
+    "models/confed_supercapital.mesh.json": "f33b0f79430130cf5d1c8524f618f2ce5c541a5571edf28e6a4d84284c357c4f",
+    "models/legion_trade_station.mesh.json": "567416bb0c267c8896eccdaf3210e9e347fc60ab0e92f80b9227a66e7ee82d49",
+    "models/shared_asteroid_field.mesh.json": "ad2b65483c330fecad28059fce9c489bc0bce2c050ebe38aa526e21f25c88ae7",
+    "models/imperial_attack_satellite.mesh.json": "5f12f2debb3f9cabf6e5f9f22890dbe78ef7ba436697d26591fa9e21fc05a7a1",
+    "models/imperial_battleship.mesh.json": "3c69c3db9d0f55aba714d1af4bafbebc7493afb5da3a80d7bd59fccc7be8ac79",
+    "models/imperial_tie_bomber_squadron.mesh.json": "b0d03f0d0045e79653098a4a7d3c3e8769b0b1fc14d47c577195c635a862c826",
+    "models/imperial_colonizer.mesh.json": "a1076d24d95137ec3c086e46cd32d2555e1c374284994a250938fb7d790f8dae",
+    "models/imperial_command_station.mesh.json": "ae2faebf598832b30b6e64e1d485603e4721e45ac7e648c1b3768d4af8e48f50",
+    "models/imperial_constructor.mesh.json": "32fc71942015d171695fc9a6f150a402235ff62c480d29288def84fe03340cdb",
+    "models/imperial_convoy.mesh.json": "3f887ced61a15b4d8038103ec6c015c482fa8db315cc46c3526063535ff6a56a",
+    "models/imperial_corvette.mesh.json": "be894218b84c00b4c6f78c96a46df1cf69441b627fa75155df02be41f6c30d05",
+    "models/imperial_cruiser.mesh.json": "125f37cf927840f5ccd452bfe8ec5998c0e6e644c0965932399b716d8fedd130",
+    "models/imperial_defense_platform.mesh.json": "b0600256c84c6bf949e52831dd0af0f6a278054ca7378028a92acaba44df7999",
+    "models/imperial_defense_satellite.mesh.json": "ce8fae81cbcc80bd22316d4b70ca66a45171b6d32b36a87a6b7b1ded87161b0b",
+    "models/imperial_energy_relay.mesh.json": "56b573963cd5878122fb61d83cc7e45ab723bbf50bad7ff4db4e1c71a2b9238f",
+    "models/imperial_tie_squadron.mesh.json": "5bc984c2ad3c2f649bf75265d3326d914a419659538360917b9c2217dcadd1cc",
+    "models/imperial_fighter_platform.mesh.json": "076093e7f6b37c4151954428a95168084ba86d7edfbb36ae1dc44ce0132b462b",
+    "models/imperial_frigate.mesh.json": "6c5d925bcd67bd655aae5f7e4bbdfa178257a4d0a6897f52b8664dda3f94752d",
+    "models/imperial_mining_station.mesh.json": "a446d4963b60e4a4cb9d9256ad033287b1aa31f631dc078082a91bcb2feff568",
+    "models/imperial_planet_extractor.mesh.json": "7ace170ae089f00f31724eee0053ec84bdf259804b87ee64ee3be89e3f4de291",
+    "models/imperial_planet_pulsar_cannon.mesh.json": "9a5e27a842b0fd32254291c06fc919f296d6153c0d759c0e2fcb48a013a837dd",
+    "models/imperial_planet_shield_generator.mesh.json": "f9979421cd15903222d40a837d5fdf961494a3d5861f8b74dfe82b0ebf6b2f75",
+    "models/imperial_planet_trade_hub.mesh.json": "d3d8afaa06b5ca99409147163f437b0530d42cff2707d6d5cd00baaf67a107e1",
+    "models/imperial_repair_dock.mesh.json": "0d2a2018344f5a034130e1e4ea3da85c62b658e37651260b03e3ab742a6e0469",
+    "models/imperial_research_station.mesh.json": "4b4ea1ac3f85c95bc457f6f2de43423b4a1ac7d63a843a41c209fbffe1b4d1a0",
+    "models/imperial_sensor_station.mesh.json": "0b853ca6a6d894e40a8b460be69e40447299b931d1c8a84b477ce6e7b8258de5",
+    "models/imperial_shipyard.mesh.json": "73ca3736a5bfacf3a74edbe343f0d1faf20f426536c359794644cef7ad5819b5",
+    "models/imperial_supercapital.mesh.json": "1c44c3e7a78241b5048a9aefe23549b8578c0a21081ad797ce640e8ad9a98dbf",
+    "models/imperial_trade_station.mesh.json": "058f6b8963921544c31213d669558d009ea043f24d4d4865f7dcc7ddec8103fc",
+    "models/alliance_attack_satellite.mesh.json": "c37dbc64cba78ee9f6a003645dea5630237da3558f7f1add3007f7c1197348d9",
+    "models/alliance_battleship.mesh.json": "0a4e397d5c0b60f70fbba35f3e4f4a5ac997ac4de079f821f8f29db9872c95cd",
+    "models/alliance_bomber.mesh.json": "9eb42e8c2f5467ca849536fa6e0e06aeb4c4b8bd0538cba419df0859f1d997c2",
+    "models/rebel_colonizer.mesh.json": "0afb0eddcd4180f6fae0523eac4dcb086c65093a59983714e2298691bdf15fae",
+    "models/alliance_command_station.mesh.json": "ee9790e6f95bdd2a5e0650fd4eb1d1d5496637b32956929a9c6d50df0ee8c93c",
+    "models/rebel_constructor.mesh.json": "441cb0bb04afac29e8d1bcd4f704858988abb1226681e216796f33e5b0aae780",
+    "models/alliance_convoy.mesh.json": "fa341b2ac6cd91c79ab113e47c9a76888728e5528c46d068ebde6e8e6141205c",
+    "models/alliance_corvette.mesh.json": "48d0a815af978976f3eda77ec2378353eb5191a7cdc72cddb931483a0df8571b",
+    "models/alliance_cruiser.mesh.json": "38b4e9f92040e67ffc1655910de39c24de4156397a94c76c34f94738a383ba84",
+    "models/alliance_defense_platform.mesh.json": "80b1f3daae8e73fdf050bde9ac6cff87364c987683d6570c475e57fc6e993fa1",
+    "models/alliance_defense_satellite.mesh.json": "d38b5549310b6a9a554e429254857f895a5d7852cdd2dce3999276406ad1241d",
+    "models/alliance_energy_relay.mesh.json": "fea920827bc7c690d022ce614455dfad7da0ca6e053af0e5fde793c0fa6173f8",
+    "models/alliance_interceptor.mesh.json": "8d6dc397139d5fac871f1e74b48a6eb7fe2a9fc200871288ee2cc8d34a494df6",
+    "models/alliance_fighter_platform.mesh.json": "4f06b97c93cd05c3fb132b67d0a0f2a18bfc07847d16402c4ec18cdbe3b77d6f",
+    "models/alliance_frigate.mesh.json": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+    "models/alliance_mining_station.mesh.json": "ff14df049feaad5937326566ac8015a9d86dcf03671d7e3426f8952b7e53e9da",
+    "models/alliance_planet_extractor.mesh.json": "19354d7d4fc5264789fd7232993b48c5f80bf2a0567f8111c3b144030483c4fa",
+    "models/alliance_planet_pulsar_cannon.mesh.json": "676e8a5f09782b0bcec88cd3f89756db296f66e38fc0f543ed28eb2394304782",
+    "models/alliance_planet_shield_generator.mesh.json": "bf38721eb96bdfcffa962429a8a1cd3c830344936a521f3f03d197a05669df20",
+    "models/alliance_planet_trade_hub.mesh.json": "cd317db1714dfc9e2d0759bec83f0c1851c9f3139ee67f0c6f04a391aa88d691",
+    "models/alliance_repair_dock.mesh.json": "c7290bd9e1f51911c10bf5434de99d3294dd22ba6f6110f886c1677f46615d76",
+    "models/alliance_research_station.mesh.json": "1886a86b89cb1b0ef4a618a398216cccf44a0cd9dc84f950a0dce94b9892f870",
+    "models/alliance_sensor_station.mesh.json": "02e7447e185ea4b01ddddd8e605247e2c99704736c9e0b4784b95545c2bff24e",
+    "models/alliance_shipyard.mesh.json": "b0ee2678ab42b9005e7ab9007eb6cb1464e878d9896a0104dd9ebad2142e3468",
+    "models/alliance_carrier.mesh.json": "44e64c9ceed6d01d4e25eab1b4b0afec909bdc10d293af7d0d43a043dad64891",
+    "models/alliance_trade_station.mesh.json": "07fc9d41e83f80b517d0faf8b3a7839a8f0348d5629442a42d02b447301d8422",
+    "models/shared_construction_scaffold.mesh.json": "1643a7e19731cb6dac7bcce5e4876a0eead1337690418d7897c7b206901e3a0b",
+    "models/syndicate_attack_satellite.mesh.json": "007c331eb494d62ae49953d7c8a225d993b942a088e392869138c5f1fa219d2d",
+    "models/syndicate_colonizer.mesh.json": "d5c59777eb31515745f5085246247e86dd14ede2bc5325d89c72530fd2944841",
+    "models/syndicate_command_station.mesh.json": "edb2fc8369f6a0d8d4d40020ac538b553659a5066face5ef3b1273b6afea778a",
+    "models/syndicate_constructor.mesh.json": "b3d4946de75d41f6b02c591e3275ea3627ffdf010d83bd925b16c4d7d3a532c3",
+    "models/syndicate_convoy.mesh.json": "8e64349746f4818c9f1ba0024275949f1454847c4e1348cb77ee92cf521f5aea",
+    "models/syndicate_corvette.mesh.json": "fb321326eaf5390d40bbe559d7340695deb27ae33b086864360bedab2f3b3b49",
+    "models/syndicate_cruiser.mesh.json": "121608999dd39710a35322e7689f5af855fc848b7305242221d3702a35e8c223",
+    "models/syndicate_defense_platform.mesh.json": "d74eb09809cc081177b3edb7cd542dc393812d00f151d70a0d5235aa49e1245b",
+    "models/syndicate_defense_satellite.mesh.json": "3fbe61b531055a10b3a269f07cf291ed779cce08396bf7d8a7367e8c5585b71f",
+    "models/syndicate_energy_relay.mesh.json": "fabcb1e166385a6e0ae6c07fb3dd2fb040a309a332511aa8e19d638ff2f27af8",
+    "models/syndicate_jackal.mesh.json": "829f5a14e3dfae79437c3a3fb9749d4bd8c5fd5a0117ad00cc3665d1cd2fe126",
+    "models/syndicate_fighter_platform.mesh.json": "d3c1cd6a88c5087519a93a5ae5ed2debf756832d6a4298c9d0d2fe851115d036",
+    "models/syndicate_frigate.mesh.json": "9563c320fb164133b7731aa398f41653e25844da72644e0b438d3b10aeba1471",
+    "models/syndicate_mining_station.mesh.json": "6ce810fdf0be8ba5a3c7485fd9df4d6b3ff5fc5ae5e8a0f9a8fe4bc5b88692aa",
+    "models/syndicate_planet_extractor.mesh.json": "388ba2aa4d5ebb3f33edc309cc4c177ce6d499c74d751c6573f8f5302dca4fa1",
+    "models/syndicate_planet_pulsar_cannon.mesh.json": "498e6232ec385e903942da4a873f0153d951cc601e49df170b274a6863cecc55",
+    "models/syndicate_planet_shield_generator.mesh.json": "f05eed613663d33ae5bad77d2489a4a8f986585374645e19cf8aefe1a98f939d",
+    "models/syndicate_planet_trade_hub.mesh.json": "e287675b6e86d7b5bb986169941179ff8cad49fa9c021182f7d279aa89be2aed",
+    "models/syndicate_repair_dock.mesh.json": "39c5ef2886f1c56c4d2702f5e07fb9eb0adc7245a6711ae34e4cdf73851b9faa",
+    "models/syndicate_research_station.mesh.json": "c2532f898553a4ff437be8f365d037551e4c1d1a5d5389f35e500c473c1b224c",
+    "models/syndicate_sensor_station.mesh.json": "e35b084c73b2702ab12f0611730bb4f99b24eefd80925344300360f68bb7a947",
+    "models/syndicate_shipyard.mesh.json": "c1a0aad3e30a013b95c704390ef925f8beeb024924ddd4a5d525dc60156c4670",
+    "models/syndicate_trade_station.mesh.json": "6bae5343f97a9d1881d8b1b7bbf21270a1acddc26a6b58752e258dcb90bd9e1c"
+  },
+  "capture_identity": {
+    "fleet": {
+      "callback_file_sha256": "b1043f3c4e7b2ce04fef2f076508be45c29d3253ab9f08ebdc078e92a3615c16",
+      "stored_file_sha256": "ed7d0285305b2de3fa129362dadb57e1de17ee2239674a37c02c86e3690ae3f5",
+      "rgba_pixels_sha256": "40789b40e3ccc6bba29ba79c2c888eb9c744d14b3d03ed11d0cca6e1b805d518",
+      "size": [
+        1280,
+        800
+      ]
+    },
+    "capital": {
+      "callback_file_sha256": "fd3fa9d67f5cd555fb76d99d766b66f9268888dc4b3c25750cd549cee5906410",
+      "stored_file_sha256": "4e1a4a34bda7384d425a05652fe4ca7e4050fda3c3dcb5ca9b301571f60dfddd",
+      "rgba_pixels_sha256": "54d90d96fd19682c0cce58f07023226980d19362257fe633e9c2f45e79fd2584",
+      "size": [
+        1280,
+        800
+      ]
+    },
+    "station": {
+      "callback_file_sha256": "a7876dad00da26e2b5c61a38c323ed28c5c0bcfe4de42af35a3a69c8cb8ca3be",
+      "stored_file_sha256": "2fe38c4c42d4f37733594de85ff73cc58a8420517843fa8fdbb704170c1c2841",
+      "rgba_pixels_sha256": "e03374ab17562e7e9d0756a4bd1cf325544f24c315b6f5bab24741962deb2db9",
+      "size": [
+        1280,
+        800
+      ]
+    },
+    "catalogue": {
+      "callback_file_sha256": "91b0e9d2c7b1f77d234b07610df256649a081aca78fac56014dd1ca61bc75038",
+      "stored_file_sha256": "068177c729d4d47b29439f66e1dcbd1666f2358907443656196ee184c7c4605f",
+      "rgba_pixels_sha256": "3e0b05b361b859408e391d26ae63462803bc3c06cfa1fe1f3b40cb2a5b4a9350",
+      "size": [
+        1280,
+        800
+      ]
+    },
+    "capital-no-shadows": {
+      "callback_file_sha256": "9417bcb15091d05087a2682380ca10411aed9de2673e2e28e1bfa870920bb5e6",
+      "stored_file_sha256": "1db46042c07ff31baed8cc4773f0f39d45385e1ad1897479dd224cb5e39852b2",
+      "rgba_pixels_sha256": "2a0b4b0a0700b5b8754bbefda778c7b819ebab5a5f89a704a4fd6f3ef7c8769a",
+      "size": [
+        1280,
+        800
+      ]
+    },
+    "controls": {
+      "callback_file_sha256": "07912a2c5f27eb934a4d368dc9937a4be4d52bd1daf38f0f659632eb622d1530",
+      "stored_file_sha256": "d6463da5d953d0d003660bb15f356c2e204f8328fca2b8d5290581f897eb2c80",
+      "rgba_pixels_sha256": "5e29e9d551341097ba79784b11259522ad919436f2762444cc94199dfab9a8df",
+      "size": [
+        1280,
+        800
+      ]
+    },
+    "python-reference": {
+      "callback_file_sha256": "617074b542911622d14c12e283fa89f1c9c53638635b581eea38ba033c2374b3",
+      "stored_file_sha256": "5cba2cb58edf7c961cbad8d08ccd776bef0490661d3a1fa13d1d25c2cff78b1a",
+      "rgba_pixels_sha256": "b0b5689e5b9ed59de01bd6ff9f4ebce1892d030428e75c504e08bf1b789d5c66",
+      "size": [
+        1280,
+        800
+      ]
+    },
+    "short-green": {
+      "callback_file_sha256": "b1043f3c4e7b2ce04fef2f076508be45c29d3253ab9f08ebdc078e92a3615c16",
+      "stored_file_sha256": "ed7d0285305b2de3fa129362dadb57e1de17ee2239674a37c02c86e3690ae3f5",
+      "rgba_pixels_sha256": "40789b40e3ccc6bba29ba79c2c888eb9c744d14b3d03ed11d0cca6e1b805d518",
+      "size": [
+        1280,
+        800
+      ]
+    }
+  },
+  "pixel_measurements": {
+    "fleet": {
+      "non_background_pixels": 11919,
+      "bbox": [
+        412,
+        173,
+        868,
+        699
+      ]
+    },
+    "capital": {
+      "non_background_pixels": 33172,
+      "bbox": [
+        58,
+        6,
+        795,
+        487
+      ]
+    },
+    "station": {
+      "non_background_pixels": 66997,
+      "bbox": [
+        210,
+        99,
+        796,
+        513
+      ]
+    },
+    "catalogue": {
+      "non_background_pixels": 4045,
+      "bbox": [
+        359,
+        215,
+        913,
+        631
+      ]
+    }
+  },
+  "shadow_ablation_changed_pixels_gt2": 5431,
+  "tests": {
+    "python_passed": 20,
+    "python_new_w01_methods": 3,
+    "native_ctest_targets_passed": [
+      "scene",
+      "camera"
+    ],
+    "native_behavior_groups": [
+      "protocol",
+      "mesh_correctness",
+      "containment_and_refs",
+      "camera"
+    ],
+    "review_cli_regressions_passed": 3,
+    "full_suite_run": false
+  },
+  "native_backend": "Metal",
+  "native_runs": 7,
+  "launcher_passed": true,
+  "geometry_records_preserved": true,
+  "game_render_assets_diff_empty": true,
+  "timing": {
+    "wall": {
+      "mean_ms": 8.343170829166665,
+      "median_ms": 8.736083,
+      "p95_ms": 11.223917,
+      "p99_ms": 12.439416,
+      "samples": 240
+    },
+    "gpu": {
+      "mean_ms": 3.953746158333332,
+      "median_ms": 3.893125,
+      "p95_ms": 4.307875,
+      "p99_ms": 4.79525,
+      "samples": 240
+    }
+  },
+  "limitations": [
+    "offline mesh-only, not full game or speedup ratio",
+    "canonical scales differ from current gameplay readability inflation",
+    "MSAA4 requested; actual Metal sample count not independently queried",
+    "catalogue upload/submission closure, not per-asset visual acceptance",
+    "orbit/zoom/preset SDL event probes; pan math tested, natural keyboard/focus review remains owner-facing",
+    "no native Windows/D3D12, package/frozen acceptance, device-loss recovery or W02 live bridge",
+    "new W01 Python and native checks and code size exceed proposal test/LOC caps; no exception approval inferred"
+  ]
+}

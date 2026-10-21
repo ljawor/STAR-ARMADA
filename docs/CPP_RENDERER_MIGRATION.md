@@ -1,6 +1,9 @@
 # STAR ARMADA — C++ renderer, Python simulation: migration plan
 
-Status: **W00 engineering checks passed; W00/W01 implementation authorized, not merged.**
+Status: **W00 merged into `main` and approved; W01 viewer complete, owner-reviewed, landing.**
+Proposal base: `main` @ `bd22879` (2026-10-20). Implementation base: `b2ff85a`.
+The owner authorized W00 + W01 on 2026-10-21 and approved the offline v1 format; merge, release and
+default activation remain separate decisions.
 Proposal base: `main` @ `bd22879` (2026-10-20). Implementation base: `b2ff85a`.
 The owner authorized W00 + W01 on 2026-10-21; merge, release and default activation remain separate.
 
@@ -234,12 +237,31 @@ Each lists: goal, owned files, the command that must work, and what the owner ch
   JSON mesh loader for `assets/models/*.json`, PBR-ish hull shader, one directional light,
   one shadow cascade, instanced draw of the whole fleet, simple HUD text overlay
   (fps, ships, draw calls).
-- Command: `python3 tools/render/dump_snapshot.py --units 600 --out /tmp/w01.snap` then
-  `render_cpp/build/armada_viewer --snapshot /tmp/w01.snap`.
+- Command: `python3 tools/render/dump_snapshot.py --units 600 --out render_cpp/build/fleet.snap` then
+  `render_cpp/build/armada_viewer --snapshot render_cpp/build/fleet.snap --assets assets`.
+  macOS shortcut: `open render_cpp/launch.command`; build prerequisites are in `render_cpp/README.md`.
 - Controls: drag to orbit, wheel to zoom, WASD to pan, `1`–`3` for camera presets,
-  `s` to save a PNG, `f` to toggle fps overlay.
+  Shift+S to save a PNG, `f` to toggle fps overlay.
 - Owner checks: the picture (does the fleet read better than the legacy renderer?) and the
   camera feel. **This is the "see progress, move and rotate" gate.**
+
+Historical core-only W01 execution receipt (2026-10-21, PR **#146**, code `7bf11d2204b3aca6c82e58943ab71f26613ea5d2`):
+source-built Metal viewer/launcher runs; 638 detected mesh instances include 600 combat ships;
+103-mesh catalogue GPU upload/submission closure passes. At 1280×800, 240 measured offline
+mesh-only frames: wall median **8.736083 ms**, GPU median **3.893125 ms**. These are not full-game
+FPS or a matched-quality speedup. Native shading remains basic; no visual improvement is claimed.
+Natural camera/appearance review and native Windows remain open. Source/test size exceeded the
+proposal's sizing rules; no exception approval is inferred. See
+`art/manifests/handoffs/rW01-offline-native-viewer.md` and `artifacts/cpp-renderer/w01/acceptance.json`.
+The source code is published; the owner gate, merge/release/default activation and W02 are not.
+
+Owner-caught model-selection correction: the initial exporter omitted the shipped
+Imperial visual packs. Code `2bf5ed5f78908a0e6e68dc01f0a55cdfa4f6c208` uses all 13
+actual default packs, including current Vigil and Command Center, and accepts their
+versioned mesh contract. Corrected Metal captures/103-mesh closure and 6 Python +
+2 native target checks pass; old core-only timings/pictures above are historical.
+Corrective handoff: `art/manifests/handoffs/rW01-current-default-models.md`.
+No new artwork, default activation or W02 work is authorized by this correction.
 
 #### W02 — Live link
 
@@ -423,8 +445,8 @@ Rules that make the handover useful rather than decorative:
 
 | W | Status | Next action / blocking condition |
 |---|---|---|
-| W00 | **Review-ready, not merged** | Offline protocol spec/reference codec + three binary controls; 3 focused tests pass. See `art/manifests/handoffs/rW00-offline-protocol.md`. W02 wire format is not frozen. |
-| W01 | Not started | Depends on W00. First visible gate: fly the camera around the 600-ship fleet |
+| W00 | **Merged into `main` and approved** | 2026-10-21, PR #145, code `f5844a8` → `4283715`, squashed to `main` as `3dc9279`. Offline protocol/reference codec + three controls; 3 focused tests pass. Owner approved v1 as the offline file profile (`render-protocol-v1-owner-approval-2026-10-21`). W02's packed transport is still undefined. See `art/manifests/handoffs/rW00-offline-protocol.md`. |
+| W01 | **Owner-reviewed; lands with this PR** | 2026-10-21, PR #146, renderer code `fdf1b2a`: all 13 shipped visual packs resolved; newer Vigil/Command Center and 103 selected meshes render on Metal. Owner accepted the appearance and the camera movement/zoom ("Looks good for me. The movement and zomming work really fast."). Old core-only evidence is historical. Handoff `rW01-current-default-models.md`. |
 | W02 | Not started | Depends on W01. Latency/serialization receipt decides whether the subprocess design holds |
 | W03 | Not started | Depends on W01 (parallel-safe with W02 if file ownership is disjoint — see §7.3) |
 | W04 | Not started | Depends on W03 |
@@ -433,9 +455,13 @@ Rules that make the handover useful rather than decorative:
 | W07 | Not started, **not authorized** | Owner's explicit one-line switch, after W06 and its receipt |
 | W08 (future, out of scope) | Not planned | Simulation acceleration (150–250 h) — the only route to 60 fps at 600 ships |
 
-**Current next task: W01**, authorized with W00. Build the separately runnable offline viewer
-against the W00 file profile. W00 remains review-ready on its own branch; no merge or live
-transport work is authorized by this status update.
+**Current next gate: W02 authorization**, and it is the owner's call, not an inference from this
+merge. W00 and W01 are offline only: the viewer consumes a file, and nothing here proves live
+transport. W02's first deliverable is a design plus an **equal-workload benchmark** (fog, HUD,
+planets, 200/400/600 ships) with the packed-transport decision and a serialization/latency
+receipt; the ≤ 1.0 ms serialize and ≤ 2-frame latency gates in §4.3 are the stop conditions. No
+speed claim may be made from the mesh-only loop. The `Windows signal` workflow is disabled by the
+owner's hand as of 2026-10-21, so W02's evidence has to be local until it is re-enabled.
 
 ## 11. Risk register
 

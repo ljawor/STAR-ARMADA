@@ -1,0 +1,19 @@
+{
+  "command": [
+    "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-w01/render_cpp/build/armada_viewer",
+    "--assets",
+    "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-w01/assets",
+    "--snapshot",
+    "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-evidence/fleet.snap",
+    "--shaders",
+    "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-evidence/no-such-shaders",
+    "--frames",
+    "1"
+  ],
+  "pid": 25779,
+  "exit_code": 4,
+  "timed_out": false,
+  "elapsed_seconds": 0.22665141697507352,
+  "process_terminated": true,
+  "log": "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-evidence/device-error-green.log"
+}

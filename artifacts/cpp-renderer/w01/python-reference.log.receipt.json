@@ -1,0 +1,12 @@
+{
+  "command": [
+    "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/.venv/bin/python",
+    "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-evidence/capture_python.py"
+  ],
+  "pid": 22182,
+  "exit_code": 0,
+  "timed_out": false,
+  "elapsed_seconds": 20.88928945804946,
+  "process_terminated": true,
+  "log": "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-cpp-evidence/python-reference.log"
+}
