@@ -955,6 +955,49 @@
         "no Windows/D3D12 run",
         "no CI check: the owner disabled the workflow, so this tree's evidence is local"
       ]
+    },
+    {
+      "id": "render-w03-design-a-overlay-transport-2026-10-21",
+      "date": "2026-10-21",
+      "owner": "owner (Lukasz Jawor)",
+      "owner_wording": "OK. Your right. Let's go for A. If we later discover that we have big costs on the hud we can still run a migration project for this part seperatly.",
+      "question_answered": "Which W03 design to implement: A (carry the composed UI surface over the bridge, dirty-rected) or B (draw-list primitives with a C++ glyph atlas).",
+      "decision": "Design A. W03 transports the UI surface the Python layer already composes; text stays SDL_ttf, so the language packs are untouched. A separate project can move text to C++ later if the HUD ever shows up in a frame budget.",
+      "applies_to": "W03 only: the overlay upload path in the legacy renderer and the overlay payload in the bridge",
+      "binds_to": {
+        "base_commit": "e50457c6a5c1c6e99e4ecb3a36f64f8f8f7f558d",
+        "branch": "render/cpp-w03-drawlist",
+        "pr": "https://github.com/ljawor/STAR-ARMADA/pull/148",
+        "artifact": "docs/RENDER_DRAW_LIST_W03.md",
+        "receipt": "artifacts/cpp-renderer/w03/hud-upload-receipt.json"
+      },
+      "not_approved_by_this_decision": [
+        "a tag, a release, or a change to the default renderer",
+        "moving text rasterization into C++ now (that is the separate project the wording allows later)",
+        "a frame-rate claim of any kind",
+        "W03 being complete - this authorizes the design and the first slice",
+        "Windows-native acceptance"
+      ],
+      "engineering_choices": [
+        "Dirty rects come from a recorded op list, not from diffing pixels: a paint call whose arguments are unchanged provably produced the same pixels, and reading 4 MB back to discover that would cost more than the upload.",
+        "Unkeyed blits (minimap, fog thumbnail, floating text) are dirty every frame. Conservative by design: bandwidth, never a stale pixel.",
+        "A changed op dirties the union of its current and previous rect, and an op that disappears dirties the rect it painted, because a shorter bar uncovers pixels drawn earlier.",
+        "glTexSubImage2D yoffset is rect.y, not height - rect.bottom: glTexImage2D puts the surface's first row at t=0, so yoffset counts from that same origin. The first implementation got this backwards and the GPU readback check caught it."
+      ],
+      "measured": {
+        "hud_frame_full_upload_ms": 2.1932,
+        "hud_frame_dirty_upload_ms": 1.4071,
+        "saved_ms": 0.7861,
+        "saved_ratio": 0.3584,
+        "pixels_per_frame_full": 1024000,
+        "pixels_per_frame_dirty_median": 55016,
+        "gpu_readback": "partial and forced-full composites byte-identical in steady state, fps-change and hull-damage scenarios; repeatability control identical"
+      },
+      "not_proven": [
+        "no capture of a live match at 60 Hz with the dirty path (the bench renders the HUD from a real skirmish state but does not run the loop)",
+        "menus were not converted: they paint through clean_classic and are not per-frame",
+        "no Windows/D3D12 run; CI is disabled by the owner"
+      ]
     }
   ]
 }

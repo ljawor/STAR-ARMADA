@@ -1,0 +1,45 @@
+{
+  "tool": "diag_hud_upload",
+  "window": [
+    1280,
+    800
+  ],
+  "full_surface_bytes": 4096000,
+  "results": {
+    "steady_state": {
+      "full_surface_pixels": 1024000,
+      "second_pass_pixels": 54526,
+      "identical": true,
+      "max_channel_delta": 0
+    },
+    "partial_vs_full": {
+      "partial_pixels": 55114,
+      "forced_full_pixels": 1024000,
+      "saved_ratio": 0.9462,
+      "identical": true,
+      "max_channel_delta": 0
+    },
+    "damage_partial_vs_full_texture_ok": {
+      "texture_equals_surface": true,
+      "surface_identical": true
+    },
+    "damage_partial_vs_full": {
+      "partial_pixels": 59258,
+      "forced_full_pixels": 1024000,
+      "saved_ratio": 0.9421,
+      "identical": true,
+      "max_channel_delta": 0
+    },
+    "repeatability_control": {
+      "identical": true,
+      "mismatch_pixels": 0,
+      "max_channel_delta": 0
+    }
+  },
+  "upload_ms": {
+    "samples": 7,
+    "median_ms": 0.3765,
+    "max_ms": 2.431
+  },
+  "note": "Capture comparison is exact (max channel delta must be 0). Timings include only the texture transfer, not the paint; the world pass is drawn before every capture so the composite is the real frame."
+}

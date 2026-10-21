@@ -87,13 +87,68 @@ Gate for W03: every visible string present, pixel difference under the stated to
 language packs rendering identically in both paths (trivially true for A, which must still be proven
 by capture, not by argument).
 
+## 4a. Decision and first slice (2026-10-21)
+
+The owner chose **A**: *"OK. Your right. Let's go for A. If we later discover that we have big costs
+on the hud we can still run a migration project for this part seperatly."* Recorded in
+`art/manifests/pipeline_policy.json` as `render-w03-design-a-overlay-transport-2026-10-21`, scoped to
+W03 with no tag, release, default-renderer or frame-rate claim attached.
+
+Slice 1 is implemented in the legacy renderer, because it is the same work either way and it pays
+off before any C++ exists:
+
+- `render/overlay_upload.py` — `OpRecorder` records one key per paint call (every argument that
+  affects its pixels) plus the rect it painted; `OverlayUploader` sends only the rects whose keys
+  changed, merged into bands, with `glTexSubImage2D`. Unkeyed blits are dirty every frame.
+- `render/hud.py` — the 59 `pygame.draw.*` calls, the `fill` and the 17 overlay blits go through the
+  painter proxy; `_label` and the bar labels carry keys, so unchanged text is not re-sent.
+
+Measured with `tools/render/measure_hud_frame.py` (360 frames per mode, interleaved rounds, real
+skirmish state, fps label changing every frame so the dirty path cannot win by doing nothing):
+
+| | median `hud.render()` | pixels uploaded per frame |
+|---|---:|---:|
+| full surface (previous behaviour) | **2.193 ms** | 1,024,000 |
+| dirty rects | **1.407 ms** | 55,016 |
+
+0.786 ms per frame saved (36 %), 95 % fewer bytes. The remaining 55 k pixels are the unkeyed
+blits — minimap, fog thumbnail, floating texts — which are genuinely animated.
+
+Correctness is checked two ways, and the second one earned its keep:
+
+- `tests/test_overlay_upload.py` (9 tests): an unchanged paint list uploads nothing; a changed label
+  dirties only its own rect; a *vanishing* op dirties the rect it painted; an unkeyed blit is dirty
+  every frame; and replaying a run of partial uploads onto a blank buffer reproduces exactly the
+  bytes a full upload would send, for a real HUD painted from real state.
+- `tools/diag_hud_upload.py` reads the framebuffer back and compares a partially-uploaded composite
+  against a forced-full one. All three scenarios (steady state, fps change, hull damage) are
+  byte-identical with max channel delta 0, and a repeatability control draws the same state twice to
+  prove the comparison itself is sound.
+
+Two defects were found this way, both of which would have shipped silent corruption:
+
+1. **The y offset was inverted.** `glTexImage2D` puts the surface's *first* row at `t = 0`, so
+   `glTexSubImage2D` counts rows from that origin: `rect.y`, not `height - rect.bottom`. With the
+   inverted formula every patch landed mirrored, which the framebuffer comparison showed as 227
+   corrupted rows; the Python-side replay test could not see it, because it used the same formula.
+   Any check that only replays the uploader's own arithmetic proves nothing about the GPU — the
+   readback is the control.
+2. **A disappearing op left its pixels behind.** The fps label is drawn only while `fps > 0`. When it
+   stops, there is no op to compare against, so nothing dirtied its rect and the old "59 FPS" stayed
+   in the texture. Regression test: `test_a_vanishing_op_uploads_the_area_it_painted`.
+
 ## 5. What this document does not claim
 
 - No estimate: the 100–160 h figure in `docs/CPP_RENDERER_MIGRATION.md` was written for design B.
   Design A is materially smaller, but this document does not price it — slice 1 has to land first and
   tell us how many rects a real HUD touches per frame.
-- No frame-rate claim, and no claim that the C++ window is faster at UI than the legacy one. Only the
-  upload cost in §2 is measured.
+- No frame-rate claim, and no claim that the C++ window is faster at UI than the legacy one. §4a
+  measures `hud.render()` in this window only, with the world pass excluded; the C++ viewer has no
+  HUD at all yet.
+- No live-loop check: the HUD is rendered from a real skirmish state 360 times, but not inside a
+  running match at 60 Hz with input, resizes and menus.
+- Menus are untouched. They paint through `render/clean_classic.py` and are not per-frame, so they
+  are a separate slice.
 - No approval to change the migration plan's W03 definition. That definition names a text atlas;
   adopting A instead is the owner's call, and this document is the evidence for it.
 

@@ -33,6 +33,7 @@ from OpenGL.GL import (
     GL_UNSIGNED_BYTE, GL_LINEAR,
 )
 
+from render.overlay_upload import OpRecorder, OverlayUploader, painter as _p
 from game.core.entity import QUADRANTS
 from render.fog import FogMask, known_entities
 from game.data.store import DataStore
@@ -138,6 +139,8 @@ class HUD:
         self.font_small = pygame.font.SysFont("menlo,consolas,monaco", 12)
         self.font_title = pygame.font.SysFont("helvetica,arial", 22, bold=True)
         self.overlay = pygame.Surface((width, height), pygame.SRCALPHA)
+        self.recorder = OpRecorder()
+        self.uploader = OverlayUploader()
         self.tex = None
         self.minimized = {'left': False, 'right': False, 'mission': False}
         self.buttons: list[dict] = []   # {"rect": Rect, "kind": str, "payload": dict}
@@ -170,6 +173,13 @@ class HUD:
 
     def close(self) -> None:
         """Release the overlay texture before the current GL context is lost."""
+        uploader = getattr(self, "uploader", None)
+        if uploader is not None:
+            uploader.release()
+            self.tex = uploader.tex
+            return
+        # A HUD built without __init__ (tests, or a view reused across contexts) still owns a
+        # texture id; releasing it must stay idempotent.
         if self.tex is not None:
             from OpenGL import GL
             GL.glDeleteTextures([self.tex])
@@ -199,7 +209,7 @@ class HUD:
             self.blocked_rects[rect_start] = self.blocked_rects[rect_start].union(rail)
         else:
             self.blocked_rects.append(rail)
-        pygame.draw.rect(self.overlay, HEADER_BG, rail, border_radius=5)
+        _p.rect(self.overlay, HEADER_BG, rail, border_radius=5)
         self._label(x + 12, rail.y + 6, title, TXT_DIM, self.font_small)
         self._fleet_button(pygame.Rect(rail.right - 94, rail.y + 3, 88, 22),
                            'Minimize', 'hud_panel', {'panel': key, 'minimized': True})
@@ -270,10 +280,10 @@ class HUD:
             yy += 6
         h = yy - y + 2
         self.blocked_rects.append(pygame.Rect(x, y, w, h))
-        pygame.draw.rect(ov, PANEL_BG, (x, y, w, h), border_radius=8)
-        pygame.draw.rect(ov, PANEL_EDGE, (x, y, w, h), 1, border_radius=8)
+        _p.rect(ov, PANEL_BG, (x, y, w, h), border_radius=8)
+        _p.rect(ov, PANEL_EDGE, (x, y, w, h), 1, border_radius=8)
         for surf, yy in lines:
-            ov.blit(surf, (x + 14, yy))
+            _p.blit(ov, surf, (x + 14, yy))
 
     # ------------------------------------------------------------------ frame
     def render(self, selection: set, hover_id: int | None,
@@ -290,7 +300,9 @@ class HUD:
         self.local_player = local_player
         selection = {eid for eid in selection if self.state.can_see(local_player, eid)}
         ov = self.overlay
-        ov.fill((0, 0, 0, 0))
+        _p.recorder = self.recorder
+        self.recorder.begin(ov)
+        _p.fill(ov, (0, 0, 0, 0))
         self.scroll_rects = []          # rebuilt each frame
         self.buttons = []
         self.blocked_rects = []
@@ -308,19 +320,20 @@ class HUD:
             prompt = self.font.render(text, True, WARN)
             rect = prompt.get_rect(center=(self.width // 2, self.height - 96))
             self.blocked_rects.append(rect.inflate(20, 12))
-            pygame.draw.rect(ov, PANEL_BG, rect.inflate(20, 12), border_radius=6)
-            ov.blit(prompt, rect)
+            _p.rect(ov, PANEL_BG, rect.inflate(20, 12), border_radius=6)
+            _p.blit(ov, prompt, rect)
         if flash_msg and flash_left > 0.0:
             surf = self.font_big.render(flash_msg, True, WARN)
             r = surf.get_rect(center=(self.width // 2, self.height - 60))
             bg = r.inflate(24, 12)
             self.blocked_rects.append(bg)
-            pygame.draw.rect(ov, PANEL_BG, bg, border_radius=6)
-            pygame.draw.rect(ov, PANEL_EDGE, bg, 1, border_radius=6)
-            ov.blit(surf, r)
+            _p.rect(ov, PANEL_BG, bg, border_radius=6)
+            _p.rect(ov, PANEL_EDGE, bg, 1, border_radius=6)
+            _p.blit(ov, surf, r)
         if fps > 0.0:
             self._label(self.width - 90, 40, f"{fps:0.0f} FPS", TXT_DIM,
                         self.font_small)
+        self.recorder.finish()
         self._upload()
 
     # ------------------------------------------------------------------ top bar
@@ -330,8 +343,8 @@ class HUD:
         p = st.players.get(local_player)
         rect = pygame.Rect(0, 0, self.width, 34)
         self.blocked_rects.append(rect)
-        pygame.draw.rect(ov, HEADER_BG, rect)
-        pygame.draw.line(ov, PANEL_EDGE, (0, 33), (self.width, 33), 1)
+        _p.rect(ov, HEADER_BG, rect)
+        _p.line(ov, PANEL_EDGE, (0, 33), (self.width, 33), 1)
 
         if p is None:
             return
@@ -352,10 +365,10 @@ class HUD:
         )
         for label, val, col, rate in cells:
             surf = self.font.render(label, True, TXT_DIM)
-            ov.blit(surf, (x, 9))
+            _p.blit(ov, surf, (x, 9))
             x += surf.get_width() + 5
             surf = self.font_big.render(val, True, col)
-            ov.blit(surf, (x, 7))
+            _p.blit(ov, surf, (x, 7))
             x += surf.get_width() + 4
             if rate is not None:
                 # a genuinely zero rate is the interesting case — say so in the
@@ -365,7 +378,7 @@ class HUD:
                 else:
                     rtext, rcol = f"{rate:0.1f}/s", TXT_DIM
                 rsurf = self.font.render(rtext, True, rcol)
-                ov.blit(rsurf, (x, 14))
+                _p.blit(ov, rsurf, (x, 14))
                 x += rsurf.get_width() + 14
             else:
                 x += 18
@@ -377,11 +390,11 @@ class HUD:
         # straight through a centred clock. PAUSED sits at width-200 and still
         # clears this.
         surf = self.font_big.render(clock, True, TXT)
-        ov.blit(surf, (self.width - surf.get_width() - 14, 7))
+        _p.blit(ov, surf, (self.width - surf.get_width() - 14, 7))
 
         if paused:
             surf = self.font_big.render(i18n.t("PAUSED"), True, WARN)
-            ov.blit(surf, (self.width - 200, 7))
+            _p.blit(ov, surf, (self.width - 200, 7))
         if st.game_over:
             w = st.winner
             won = w in st.allied_player_ids(local_player)
@@ -393,12 +406,12 @@ class HUD:
             surf = self.font_title.render(title, True, col)
             rect = surf.get_rect(center=(self.width // 2, self.height // 2 - 40))
             bg = rect.inflate(30, 16)
-            pygame.draw.rect(ov, PANEL_BG, bg, border_radius=6)
-            pygame.draw.rect(ov, col, bg, 2, border_radius=6)
-            ov.blit(surf, rect)
+            _p.rect(ov, PANEL_BG, bg, border_radius=6)
+            _p.rect(ov, col, bg, 2, border_radius=6)
+            _p.blit(ov, surf, rect)
         if st.game_over:
             surf = self.font.render(i18n.t("press ESC to exit"), True, TXT_DIM)
-            ov.blit(surf, (self.width // 2 - surf.get_width() // 2,
+            _p.blit(ov, surf, (self.width // 2 - surf.get_width() // 2,
                            self.height // 2 + 4))
 
     # ------------------------------------------------------------------ trade
@@ -467,8 +480,8 @@ class HUD:
         panel = pygame.Rect(10, 72, 320, (min(650, self.height - 145) if recovery_extra
                             else min(540, self.height - 260)) if ents else 84)
         self.blocked_rects.append(panel)
-        pygame.draw.rect(ov, PANEL_BG, panel, border_radius=8)
-        pygame.draw.rect(ov, PANEL_EDGE, panel, 1, border_radius=8)
+        _p.rect(ov, PANEL_BG, panel, border_radius=8)
+        _p.rect(ov, PANEL_EDGE, panel, 1, border_radius=8)
         if not ents:
             self._label(panel.x + 12, panel.y + 10, "NO SELECTION", TXT_DIM)
             self._label(panel.x + 12, panel.y + 34,
@@ -686,8 +699,8 @@ class HUD:
     def _selection_panel(self, ents, local_player):
         panel = pygame.Rect(10, 72, 320, min(430, self.height - 270))
         self.blocked_rects.append(panel)
-        pygame.draw.rect(self.overlay, PANEL_BG, panel, border_radius=8)
-        pygame.draw.rect(self.overlay, PANEL_EDGE, panel, 1, border_radius=8)
+        _p.rect(self.overlay, PANEL_BG, panel, border_radius=8)
+        _p.rect(self.overlay, PANEL_EDGE, panel, 1, border_radius=8)
         self._label(panel.x + 12, panel.y + 8,
                     f"SELECTED UNITS · {len(ents)}", TXT, self.font_big)
         y = panel.y + 58
@@ -720,7 +733,7 @@ class HUD:
         for x, text, delta, enabled in ((panel.right - 60, "▲", -capacity, off > 0),
                                       (panel.right - 34, "▼", capacity, off + capacity < count)):
             rect = pygame.Rect(x, y, 22, 18)
-            pygame.draw.rect(self.overlay, BAR_BG, rect, border_radius=3)
+            _p.rect(self.overlay, BAR_BG, rect, border_radius=3)
             self._label(x + 5, y + 1, text, ACCENT if enabled else TXT_DIM, self.font_small)
             if enabled:
                 self.buttons.append({"rect": rect, "kind": "hud_scroll",
@@ -740,7 +753,7 @@ class HUD:
         for row in groups[off:off + capacity]:
             ad = self.ds.abilities[row['ability_id']]
             rect = pygame.Rect(panel.x + 12, y, 296, 36)
-            pygame.draw.rect(self.overlay, BAR_BG, rect, border_radius=4)
+            _p.rect(self.overlay, BAR_BG, rect, border_radius=4)
             self._label(rect.x + 8, y + 2, self._fleet_text(ad.display_name, 280), TXT,
                         self.font_small)
             cooldowns = row['cooldowns']
@@ -760,8 +773,8 @@ class HUD:
         from game.systems.planet_buildings import BUILDING_TYPES, building_rules, building_slots
         panel = pygame.Rect(self.width - 330, 72, 320, self.height - 308)
         self.blocked_rects.append(panel)
-        pygame.draw.rect(self.overlay, PANEL_BG, panel, border_radius=8)
-        pygame.draw.rect(self.overlay, PANEL_EDGE, panel, 1, border_radius=8)
+        _p.rect(self.overlay, PANEL_BG, panel, border_radius=8)
+        _p.rect(self.overlay, PANEL_EDGE, panel, 1, border_radius=8)
         x, y = panel.x + 12, panel.y + 10
         self._label(x, y, 'COLONY HARDWARE', ACCENT, self.font_big)
         y += 30
@@ -876,8 +889,8 @@ class HUD:
             # The minimap starts at height - 222; leave a visible gap below actions.
             panel.height = min(panel.height, self.height - 230 - panel.y)
         self.blocked_rects.append(panel)
-        pygame.draw.rect(ov, PANEL_BG, panel, border_radius=8)
-        pygame.draw.rect(ov, PANEL_EDGE, panel, 1, border_radius=8)
+        _p.rect(ov, PANEL_BG, panel, border_radius=8)
+        _p.rect(ov, PANEL_EDGE, panel, 1, border_radius=8)
 
         y = panel.y + 10
         if scouts:
@@ -938,8 +951,8 @@ class HUD:
                                 TXT_DIM, self.font_small)
                     if item.get('kind') in ('ship', 'station', 'satellite'):
                         button = pygame.Rect(row.right - 62, row.y, 62, 18)
-                        pygame.draw.rect(self.overlay, BAR_BG, button, border_radius=3)
-                        pygame.draw.rect(self.overlay, ACCENT, button, 1, border_radius=3)
+                        _p.rect(self.overlay, BAR_BG, button, border_radius=3)
+                        _p.rect(self.overlay, ACCENT, button, 1, border_radius=3)
                         self._label(button.x + 6, button.y + 1, "✕ Cancel", TXT,
                                     self.font_small)
                         self.buttons.append({"rect": button, "kind": "cancel_build",
@@ -1001,7 +1014,7 @@ class HUD:
                                 ('R  Deliver crew to owned hull', 'crew_deliver'),
                                 ('Cancel crew order · keep passengers', 'crew_cancel')]:
                 rect = pygame.Rect(panel.x + 12, y, 296, 26)
-                pygame.draw.rect(ov, BAR_BG, rect, border_radius=4)
+                _p.rect(ov, BAR_BG, rect, border_radius=4)
                 self._label(rect.x + 8, rect.y + 4, label, TXT, self.font_small)
                 self.buttons.append({'rect': rect, 'kind': kind, 'payload': {}})
                 y += 30
@@ -1010,8 +1023,8 @@ class HUD:
         """Fleet intent controls; eligibility is re-read on every drawn frame."""
         panel = pygame.Rect(self.width - 330, 72, 320, 430)
         self.blocked_rects.append(panel)
-        pygame.draw.rect(self.overlay, PANEL_BG, panel, border_radius=8)
-        pygame.draw.rect(self.overlay, PANEL_EDGE, panel, 1, border_radius=8)
+        _p.rect(self.overlay, PANEL_BG, panel, border_radius=8)
+        _p.rect(self.overlay, PANEL_EDGE, panel, 1, border_radius=8)
         ships = [e for eid in sorted(selection)
                  if (e := self.state.entity(eid)) is not None
                  and e.alive and e.owner == local_player and e.is_ship]
@@ -1052,7 +1065,7 @@ class HUD:
                 "commander": self.fleet_commander,
             })
         else:
-            pygame.draw.rect(self.overlay, BAR_BG, rect, border_radius=4)
+            _p.rect(self.overlay, BAR_BG, rect, border_radius=4)
             self._label(rect.x + 8, rect.y + 6, "Create fleet (no ships)", TXT_DIM,
                         self.font_small)
         self._fleet_button(pygame.Rect(x + 206, rect.y, 90, 28), "Close",
@@ -1097,8 +1110,8 @@ class HUD:
         return text + "…"
 
     def _fleet_button(self, rect, label, kind, payload, selected=False) -> None:
-        pygame.draw.rect(self.overlay, (24, 34, 52, 255), rect, border_radius=4)
-        pygame.draw.rect(self.overlay, ACCENT if selected else PANEL_EDGE,
+        _p.rect(self.overlay, (24, 34, 52, 255), rect, border_radius=4)
+        _p.rect(self.overlay, ACCENT if selected else PANEL_EDGE,
                          rect, 1, border_radius=4)
         label = ("▸ " if selected else "") + label
         self._label(rect.x + 8, rect.y + (rect.height - self.font_small.get_height()) // 2,
@@ -1171,7 +1184,7 @@ class HUD:
             if not viewport.contains(button['rect']):
                 # A clipped affordance must not look clickable when its hit box
                 # is intentionally absent; wheel it fully into view instead.
-                self.overlay.fill(PANEL_BG, button['rect'].clip(viewport))
+                _p.fill(self.overlay, PANEL_BG, button['rect'].clip(viewport))
         self.buttons[start:] = [b for b in self.buttons[start:] if viewport.contains(b['rect'])]
         if offset:
             self._label(panel.x + 2, y, '▲', TXT_DIM, self.font_small)
@@ -1226,8 +1239,8 @@ class HUD:
             self._label(panel.x + 12, y + 1, f"REFIT IN PROGRESS · {left:.0f}s",
                         TXT_DIM, self.font_small)
             button = pygame.Rect(panel.right - 74, y, 62, 18)
-            pygame.draw.rect(self.overlay, BAR_BG, button, border_radius=3)
-            pygame.draw.rect(self.overlay, ACCENT, button, 1, border_radius=3)
+            _p.rect(self.overlay, BAR_BG, button, border_radius=3)
+            _p.rect(self.overlay, ACCENT, button, 1, border_radius=3)
             self._label(button.x + 6, button.y + 1, "✕ Cancel", TXT, self.font_small)
             self.buttons.append({"rect": button, "kind": "cancel_build",
                                  "payload": {"target_id": sel.id, "index": index}})
@@ -1238,8 +1251,8 @@ class HUD:
             self._label(panel.x + 12, y, 'MAXIMUM LEVEL', TXT_DIM, self.font_small)
             return y + 20
         button = pygame.Rect(panel.x + 12, y, 296, 20)
-        pygame.draw.rect(self.overlay, BAR_BG, button, border_radius=3)
-        pygame.draw.rect(self.overlay, ACCENT, button, 1, border_radius=3)
+        _p.rect(self.overlay, BAR_BG, button, border_radius=3)
+        _p.rect(self.overlay, ACCENT, button, 1, border_radius=3)
         self._label(button.x + 8, button.y + 3,
                     i18n.t('▲ Refit to level {level}', level=level + 1), TXT,
                     self.font_small, translate=False)
@@ -1314,8 +1327,8 @@ class HUD:
         elif afford:
             col = (24, 34, 52, 255)
             tcol = TXT
-        pygame.draw.rect(ov, col, rect, border_radius=4)
-        pygame.draw.rect(ov, PANEL_EDGE if (done or locked) else
+        _p.rect(ov, col, rect, border_radius=4)
+        _p.rect(ov, PANEL_EDGE if (done or locked) else
                          (ACCENT if afford else PANEL_EDGE), rect, 1,
                          border_radius=4)
         self._label(rect.x + 8, rect.y + 2, d.display_name, tcol)
@@ -1342,9 +1355,9 @@ class HUD:
         afford = (not gated) and (
             p.credits >= d.cost_credits and p.materials >= d.cost_materials
             and p.energy >= d.cost_energy and p.crew >= d.crew_cost)
-        pygame.draw.rect(ov, (24, 34, 52, 255) if afford else (18, 22, 32, 255),
+        _p.rect(ov, (24, 34, 52, 255) if afford else (18, 22, 32, 255),
                          rect, border_radius=4)
-        pygame.draw.rect(ov, ACCENT if afford else PANEL_EDGE, rect, 1,
+        _p.rect(ov, ACCENT if afford else PANEL_EDGE, rect, 1,
                          border_radius=4)
         self._label(rect.x + 8, rect.y + 2, self._fit_text(d.display_name, 280),
                     TXT if afford else TXT_DIM)
@@ -1431,8 +1444,8 @@ class HUD:
         x, y = 10, self.height - 14 - height
         rect = pygame.Rect(x, y, 420, height)
         self.blocked_rects.append(rect)
-        pygame.draw.rect(ov, PANEL_BG, rect, border_radius=8)
-        pygame.draw.rect(ov, PANEL_EDGE, rect, 1, border_radius=8)
+        _p.rect(ov, PANEL_BG, rect, border_radius=8)
+        _p.rect(ov, PANEL_EDGE, rect, 1, border_radius=8)
         self._label(x + 10, y + 6, "INCOMING", TXT_DIM, self.font_small)
         yy = y + 24
         for ev in rows:
@@ -1471,36 +1484,36 @@ class HUD:
         surf = self.font_big.render(text, True, WARN)
         r = surf.get_rect(center=(self.width // 2, 56))
         bg = r.inflate(26, 14)
-        pygame.draw.rect(ov, (30, 24, 10, 225), bg, border_radius=6)
-        pygame.draw.rect(ov, WARN, bg, 1, border_radius=6)
-        ov.blit(surf, r)
+        _p.rect(ov, (30, 24, 10, 225), bg, border_radius=6)
+        _p.rect(ov, WARN, bg, 1, border_radius=6)
+        _p.blit(ov, surf, r)
         ghost = self.placement.get("ghost")
         if ghost:
             valid = ghost.get("valid", True)
             gx, gy = ghost["sx"], ghost["sy"]
             rad = ghost.get("radius", 120)
             col = GOOD if valid else BAD
-            pygame.draw.circle(ov, (*col[:3], 90), (int(gx), int(gy)),
+            _p.circle(ov, (*col[:3], 90), (int(gx), int(gy)),
                                max(10, int(rad)), 2)
-            pygame.draw.circle(ov, (*col[:3], 40), (int(gx), int(gy)),
+            _p.circle(ov, (*col[:3], 40), (int(gx), int(gy)),
                                max(10, int(rad)))
-            pygame.draw.line(ov, col, (gx - 12, gy), (gx + 12, gy), 2)
-            pygame.draw.line(ov, col, (gx, gy - 12), (gx, gy + 12), 2)
+            _p.line(ov, col, (gx - 12, gy), (gx + 12, gy), 2)
+            _p.line(ov, col, (gx, gy - 12), (gx, gy + 12), 2)
             # reason line: WHY the ghost is red (same validator as the sim)
             reason = ghost.get("reason", "")
             if not valid and reason:
                 surf = self.font_small.render(f"✕ {reason}", True, BAD)
                 r = surf.get_rect(midbottom=(gx, gy - max(10, int(rad)) - 8))
                 bg = r.inflate(12, 6)
-                pygame.draw.rect(ov, (28, 12, 10, 220), bg, border_radius=4)
-                pygame.draw.rect(ov, BAD, bg, 1, border_radius=4)
-                ov.blit(surf, r)
+                _p.rect(ov, (28, 12, 10, 220), bg, border_radius=4)
+                _p.rect(ov, BAD, bg, 1, border_radius=4)
+                _p.blit(ov, surf, r)
             elif valid:
                 surf = self.font_small.render(
                     f"✓ place {self.placement.get('station_kind', '').replace('_', ' ')}",
                     True, GOOD)
                 r = surf.get_rect(midbottom=(gx, gy - max(10, int(rad)) - 8))
-                ov.blit(surf, r)
+                _p.blit(ov, surf, r)
 
     # ------------------------------------------------------------------ minimap
     def _draw_floating_texts(self) -> None:
@@ -1512,9 +1525,9 @@ class HUD:
             surf = self.font_small.render(text, True, rgb)
             r = surf.get_rect(midtop=(x, y))
             bg = r.inflate(10, 4)
-            pygame.draw.rect(ov, (10, 12, 18, int(200 * alpha)), bg,
+            _p.rect(ov, (10, 12, 18, int(200 * alpha)), bg,
                              border_radius=4)
-            ov.blit(surf, r)
+            _p.blit(ov, surf, r)
 
     def _minimap(self, selection: set, local_player: int) -> None:
         ov = self.overlay
@@ -1523,8 +1536,8 @@ class HUD:
         x, y = self.width - size - 12, self.height - size - 12
         rect = pygame.Rect(x, y, size, size)
         self.minimap_rect = rect
-        pygame.draw.rect(ov, (8, 10, 16, 225), rect, border_radius=6)
-        pygame.draw.rect(ov, PANEL_EDGE, rect, 1, border_radius=6)
+        _p.rect(ov, (8, 10, 16, 225), rect, border_radius=6)
+        _p.rect(ov, PANEL_EDGE, rect, 1, border_radius=6)
         bounds = max(1.0, getattr(st.map_info, "bounds", 26000.0))
         half = bounds / 2.0
         cx, cy = rect.centerx, rect.centery
@@ -1535,7 +1548,7 @@ class HUD:
 
         # Reuse the small cached cell mask, rather than scanning screen pixels.
         fog = self.fog.surface(st, local_player)
-        ov.blit(pygame.transform.scale(fog, (size - 8, size - 8)), (x + 4, y + 4))
+        _p.blit(ov, pygame.transform.scale(fog, (size - 8, size - 8)), (x + 4, y + 4))
         for e in known_entities(st, local_player):
             if not e.alive:
                 continue
@@ -1547,23 +1560,23 @@ class HUD:
                     col = self._owner_rgb(e.colonized_by)
                 if not st.can_see(local_player, e.id):
                     col = tuple(int(c * .42) for c in col[:3])
-                pygame.draw.circle(ov, col, (mx, my), r, 1 if e.colonized_by is None else 0)
+                _p.circle(ov, col, (mx, my), r, 1 if e.colonized_by is None else 0)
             elif e.owner == -1:
                 continue
             else:
                 col = self._owner_rgb(e.owner)
                 r = 4 if (e.is_station or e.kind == "supercapital") else 2
                 if e.is_station:
-                    pygame.draw.circle(ov, col, (mx, my), r)
+                    _p.circle(ov, col, (mx, my), r)
                 elif e.is_squadron:
-                    pygame.draw.line(ov, col, (mx - r, my), (mx + r, my), 1)
+                    _p.line(ov, col, (mx - r, my), (mx + r, my), 1)
                 else:
-                    pygame.draw.rect(ov, col, (mx - 2, my - 2, 4, 4))
+                    _p.rect(ov, col, (mx - 2, my - 2, 4, 4))
         for eid in selection:
             e = st.known_entity(local_player, eid)
             if e is not None:
                 mx, my = px(e.pos.x, e.pos.z)
-                pygame.draw.circle(ov, (255, 255, 255), (mx, my), 5, 1)
+                _p.circle(ov, (255, 255, 255), (mx, my), 5, 1)
 
     def set_camera_ref(self, camera) -> None:
         self.camera = camera
@@ -1597,8 +1610,8 @@ class HUD:
         ov = self.overlay
         rect = pygame.Rect(min(x0, x1), min(y0, y1),
                            abs(x1 - x0), abs(y1 - y0))
-        pygame.draw.rect(ov, DRAG_FILL, rect)
-        pygame.draw.rect(ov, DRAG_EDGE, rect, 1)
+        _p.rect(ov, DRAG_FILL, rect)
+        _p.rect(ov, DRAG_EDGE, rect, 1)
 
     def _owner_rgb(self, owner: int):
         p = self.state.players.get(owner)
@@ -1613,21 +1626,23 @@ class HUD:
         # data names (ship / station / tech display names). `translate=False` is for
         # callers that already hold a translated string: a wrapped line is not a msgid,
         # so looking it up again could only ever miss.
-        surf = (font or self.font).render(
-            str(i18n.t(text) if translate else text), True, color)
-        self.overlay.blit(surf, (x, y))
+        shown = str(i18n.t(text) if translate else text)
+        font = font or self.font
+        surf = font.render(shown, True, color)
+        _p.blit_text(self.overlay, surf, (x, y), shown, color, id(font))
 
     def _bar(self, x, y, w, h, frac, color, label=None):
         frac = max(0.0, min(1.0, frac))
         rect = pygame.Rect(x, y, w, h)
-        pygame.draw.rect(self.overlay, BAR_BG, rect)
+        _p.rect(self.overlay, BAR_BG, rect)
         if frac > 0:
-            pygame.draw.rect(self.overlay, color,
+            _p.rect(self.overlay, color,
                              (x, y, max(2, int(w * frac)), h))
-        pygame.draw.rect(self.overlay, (50, 62, 84), rect, 1)
+        _p.rect(self.overlay, (50, 62, 84), rect, 1)
         if label:
             surf = self.font_small.render(label, True, (200, 210, 225))
-            self.overlay.blit(surf, (x + 4, y + (h - surf.get_height()) // 2))
+            _p.blit_text(self.overlay, surf, (x + 4, y + (h - surf.get_height()) // 2),
+                         label, (200, 210, 225), id(self.font_small))
 
     # ------------------------------------------------------------------ GL upload
     def resize(self, width: int, height: int) -> None:
@@ -1635,23 +1650,22 @@ class HUD:
         self.width = width
         self.height = height
         self.overlay = pygame.Surface((width, height), pygame.SRCALPHA)
+        self.uploader.release()
+        self.uploader.full_pending = True
+        self.recorder.invalidate()
         self.minimap_rect = None
         self.buttons.clear()
         self.scroll_rects.clear()
         self.blocked_rects.clear()
 
     def _upload(self) -> None:
-        if self.tex is None:
-            self.tex = _gl.glGenTextures(1)
+        # Only the rects whose paint calls changed since the previous frame go to the GPU; the
+        # recorder proves the rest produced identical pixels (render/overlay_upload.py).
+        self.uploader.upload(self.overlay, self.recorder.take_dirty())
+        self.tex = self.uploader.tex
         glBindTexture(GL_TEXTURE_2D, self.tex)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP)
-        w, h = self.overlay.get_size()
-        data = pygame.image.tostring(self.overlay, "RGBA", False)
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA,
-                     GL_UNSIGNED_BYTE, data)
 
     def draw_gl(self) -> None:
         """Blit the overlay as a fullscreen quad (ortho pass)."""
