@@ -273,13 +273,30 @@ def cpp_session(state, ds, local_player: int):
     # MAX_PAYLOAD, so the session composes at the size the bridge was measured at and the window
     # presents it. `--overlay-size` in the diagnostic producer is the same figure.
     session = LiveSession(state, ds, directory=CPP_DIR, local_player=local_player,
-                          size=CPP_HUD_SIZE, marker_mode="all")
+                          size=CPP_HUD_SIZE, marker_mode="all", camera=camera)
     CPP["session"] = session
     if not SMOKE:
         CPP["window"] = cpp_window.spawn(
             session.paths, root=ROOT, snapshot=os.environ.get("STAR_ARMADA_CPP_SNAPSHOT"),
             log=flash_print)
+        if CPP["window"] is not None:
+            # The window is the display now. Left in front, this process's own (no longer drawn)
+            # surface looks like a game that started and then froze.
+            try:
+                pygame.display.iconify()
+            except Exception:
+                pass
     return session
+
+
+def cpp_drawing() -> bool:
+    """True while the native window is actually up and drawing.
+
+    A renderer mode that can silently show nothing is worse than the one it replaces, so when the
+    window is not there the caller draws with the legacy path instead of publishing into a void.
+    """
+    window = CPP["window"]
+    return window is not None and window.poll() is None
 
 
 def flash_print(message: str) -> None:
@@ -310,11 +327,24 @@ def cpp_publish(state, ds, local_player: int, selection, dt: float):
     tested; it is not connected until the camera crosses with the frame (`render_bridge/live.py`
     leaves the input ring in place so the W06 camera ring can attach to it).
     """
-    session = cpp_session(state, ds, local_player)
-    if session is None:
+    try:
+        session = cpp_session(state, ds, local_player)
+        if session is None:
+            return False
+        session.publish(state, selection=selection, visible_ids=cpp_seen_ids(state, local_player),
+                        dt=dt)
+    except Exception as exc:
+        # A fault in the producer must not end the match: drop the window and let the legacy path
+        # draw from the next frame on.
+        CPP["session"] = None
+        CPP["failed"] = repr(exc)
+        flash_print(f"cpp producer failed ({exc!r}); falling back to the legacy renderer")
+        if CPP.get("window") is not None:
+            try:
+                CPP["window"].terminate()
+            except Exception:
+                pass
         return False
-    session.publish(state, selection=selection, visible_ids=cpp_seen_ids(state, local_player),
-                    dt=dt)
     return True
 
 
@@ -1093,25 +1123,40 @@ while running:
         hud.mission_progress = None
 
     # ---- draw
-    if RENDERER == "cpp":
-        # The window is the display. Nothing is drawn into this process's GL context; the HUD is
-        # composed by the same `render.hud` code (design A) inside the session, so text stays SDL_ttf.
-        # The loop tail below (autosave, smoke exit, fps counter) runs exactly as in legacy mode.
+    # In `cpp` mode the producer runs whether or not a window is up (the smoke run has no window and
+    # still exercises every ring); the legacy path draws only when the window is not doing it.
+    if RENDERER == "cpp" and not CPP.get("failed") and (SMOKE or CPP["session"] is None
+                                                        or cpp_drawing()):
         camera.apply(W, H)
         cpp_publish(state, gm.ds, local_player, inputc.selection, dt_frame)
-        pygame.event.pump()
-        frames += 1
-        fps_time += dt_frame
-        if fps_time >= 1.0:
-            fps = frames / fps_time
-            frames = 0
-            fps_time = 0.0
-        if SMOKE and state.tick >= SMOKE_TICKS:
-            print("SMOKE_CPP_OK " + summary())
-            if CPP["session"] is not None:
-                print("SMOKE_CPP_COST " + json.dumps(CPP["session"].report(), default=str))
-            raise SystemExit(0)
-        continue
+        if SMOKE or cpp_drawing():
+            # Nothing is drawn into this process's GL context: the window is the display, and the HUD
+            # is composed by the same `render.hud` code (design A) inside the session, so text stays
+            # SDL_ttf. The loop tail (autosave, smoke exit, fps counter) runs as in legacy mode.
+            if not SMOKE:
+                pygame.event.pump()
+            frames += 1
+            fps_time += dt_frame
+            if fps_time >= 1.0:
+                fps = frames / fps_time
+                frames = 0
+                fps_time = 0.0
+            if SMOKE and state.tick >= SMOKE_TICKS:
+                print("SMOKE_CPP_OK " + summary())
+                if CPP["session"] is not None:
+                    print("SMOKE_CPP_COST " + json.dumps(CPP["session"].report(), default=str))
+                raise SystemExit(0)
+            continue
+
+    if RENDERER == "cpp" and not CPP.get("fell_back"):
+        # The window is gone (killed, crashed, or it never started). Say it once and draw the match
+        # here: a player who launched a skirmish must never be left looking at a frozen menu.
+        CPP["fell_back"] = True
+        flash_print("cpp window is not drawing; falling back to the legacy renderer")
+        try:
+            pygame.display.set_mode((W, H))
+        except Exception:
+            pass
 
     camera.apply(W, H)
     renderer.placement = hud.placement  # render-side preview only; never sim state

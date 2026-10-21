@@ -153,7 +153,7 @@ struct Callbacks final : bgfx::CallbackI {
 };
 struct Options {
   fs::path snapshot, assets, shaders = ARMADA_SHADER_DIR, shot, report, ring, tables, overlayRing,
-      inputRing, planetRing, markerRing, emitRing, fogRing, meshRing, fxDemo;
+      inputRing, planetRing, markerRing, emitRing, fogRing, meshRing, cameraRing, fxDemo;
   std::array<float, 3> focus{};
   bool hasFocus = false;
   // The map's star lights every planet (render/renderer.py sets GL_LIGHT0 to the star position,
@@ -208,6 +208,10 @@ static Options options(int argc, char **argv) {
       o.meshRing = value();
     else if (k == "--emit-ring")
       o.emitRing = value();
+    else if (k == "--camera-ring")
+      // The game's camera pose, published every frame. With it the window looks where the player
+      // looks; without it the window keeps its own camera (every fixture run).
+      o.cameraRing = value();
     else if (k == "--fx-demo")
       // Diagnostic only: one detonation in open space at a fixed age and seed, so the port can be
       // compared with the Python reference frame. Not a simulation effect.
@@ -936,6 +940,10 @@ static int run(const Options &o) {
   std::vector<emit::Primitive> emitList;
   if (!o.emitRing.empty())
     emitRing = std::make_unique<armada::bridge::RingReader>(o.emitRing);
+  std::unique_ptr<armada::bridge::RingReader> cameraRing;
+  size_t cameraPoses = 0, cameraDecodeFailures = 0, cameraTorn = 0;
+  if (!o.cameraRing.empty())
+    cameraRing = std::make_unique<armada::bridge::RingReader>(o.cameraRing);
   std::unique_ptr<armada::bridge::RingReader> markerRing;
   uint64_t markerSequence = 0;
   size_t cueBatches = 0, cueDecodeFailures = 0, cueCircles = 0, cueMarkers = 0,
@@ -1316,6 +1324,37 @@ static int run(const Options &o) {
                                    {"distance", camera.distance},
                                    {"yaw", camera.yaw},
                                    {"pitch", camera.pitch}});
+    // The game's camera, applied before the view matrix is built. `ARMCAM01`: 20-byte header then
+    // six float32 - target xyz, distance, yaw, pitch - all in the game's units and degrees.
+    //
+    // The distance is scaled by kFovCompensation because of the documented projection defect: this
+    // build feeds `camera.fov` (degrees) to `bx::mtxProj`, which wants radians, so the vertical field
+    // of view is ~88 deg instead of 55 and everything draws at ~54% of its intended size. Scaling the
+    // distance by 0.62 makes the window frame the battle the way the game frames it. Remove this
+    // factor together with the defect, in the same change that re-baselines the comparisons.
+    constexpr float kFovCompensation = 0.62f;
+    if (cameraRing) {
+      const uint64_t poseSeq = cameraRing->published();
+      static std::vector<uint8_t> posePayload;
+      if (poseSeq && cameraRing->read_at_sequence(poseSeq - 1, poseSeq, posePayload)) {
+        constexpr size_t kHeader = 20, kPose = 24;
+        if (posePayload.size() == kHeader + kPose) {
+          float v[6];
+          std::memcpy(v, posePayload.data() + kHeader, sizeof(v));
+          // Length is checked above; the header's own crc is the producer's to validate (`decode`
+          // refuses a bad pose), and the ring's seqlock has already rejected a torn slot.
+          camera.target = {v[0], v[1], v[2]};
+          camera.distance = v[3] * kFovCompensation;
+          camera.yaw = v[4];
+          camera.pitch = v[5];
+          ++cameraPoses;
+        } else {
+          ++cameraDecodeFailures;
+        }
+      } else {
+        ++cameraTorn;
+      }
+    }
     auto eye = camera.eye();
     float view[16], proj[16], lightView[16], lightProj[16], lightVP[16],
         lightMtx[16];
@@ -2267,6 +2306,10 @@ static int run(const Options &o) {
   report["wall_samples_ms"] = wall;
   report["gpu_samples_ms"] = gpu;
   report["draw_calls_samples"] = draws;
+  if (cameraRing)
+    report["camera_ring"] = {{"ring", o.cameraRing.string()}, {"poses", cameraPoses},
+                            {"decode_failures", cameraDecodeFailures}, {"torn", cameraTorn},
+                            {"distance_scale", 0.62}};
   report["camera"] = {{"target", camera.target},
                       {"distance", camera.distance},
                       {"yaw", camera.yaw},

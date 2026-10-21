@@ -121,6 +121,26 @@ class LiveSessionTest(unittest.TestCase):
                          'a hull class was resolved more than once')
         self.assertLessEqual(calls['n'], 2, 'two convoys of one class must resolve once')
 
+    def test_a_handed_in_camera_is_published_every_frame(self):
+        """The window's camera must be the game's, or a click lands somewhere the player is not
+        looking - which is why the input ring stays unread until this pose crosses."""
+        from render_bridge import camera as cam
+        from render_bridge import ring as ring_mod
+        class Pose:
+            target, distance, yaw, pitch = [10.0, 20.0, 30.0], 1234.0, 45.0, 60.0
+        self.session.camera = Pose()
+        self.session.publish(self.state, visible_ids=self.visible())
+        reader = ring_mod.Ring.open(str(self.session.paths['camera']))
+        try:
+            got = reader.latest()
+        finally:
+            reader.close()
+        self.assertIsNotNone(got, 'no camera pose was published')
+        _sequence, payload = got
+        pose = cam.decode(payload)
+        self.assertEqual(pose['target'], (10.0, 20.0, 30.0))
+        self.assertEqual(pose['distance'], 1234.0)
+
     def test_close_is_idempotent(self):
         self.session.close()
         self.session.close()
