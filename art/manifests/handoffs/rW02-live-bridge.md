@@ -37,13 +37,27 @@ prevent (per-entity visibility queries; record-tuple building in the hot path).
   simulation hash moved.
 - `tests/test_render_packed.py` (9), `tests/test_render_ring.py` (6) — round-trip, every rejection
   path, both-path equivalence, and a threaded writer/reader that caught a real torn read.
+- `render_cpp/include/frame_v2.hpp` — the consumer's decode half: header-only, GPU-free decoder and
+  ring reader with the same validation order as the Python decoder, plus non-finite rejection.
+- `render_cpp/tests/test_frame_v2.cpp` + `render_cpp/tests/fixtures/` — decodes frames authored by
+  `tools/render/write_frame_fixtures.py` (`--check` for drift); `ctest` target `frame_v2`.
 - `docs/RENDER_BRIDGE_W02.md`, ledger update, and this handoff.
+
+Two defects were found by writing these tests rather than by reading the code: `latest()`
+re-read the published counter inside the read attempt (so the newest frame could silently read as
+overwritten — fixed on both sides with one header snapshot per attempt), and a patch dropped an
+`push_back` that the count assertion caught immediately. The sabotage matrix in
+`docs/RENDER_BRIDGE_W02.md` §6 records which removals the tests catch and which one they do not.
 
 ## 3. Commands actually run
 
 ```sh
 PYTHONPATH=tests .venv/bin/python -m unittest test_render_packed test_render_ring -v   # 15 tests OK
 .venv/bin/python tools/render/measure_bridge.py --out artifacts/cpp-renderer/w02/producer-receipt.json
+.venv/bin/python tools/render/write_frame_fixtures.py --check                           # FIXTURES_OK
+cmake -S render_cpp -B render_cpp/build-w02 ...   # same bgfx prebuilt pins as W01
+cmake --build render_cpp/build-w02 --target test_frame_v2 test_scene test_camera
+ctest --test-dir render_cpp/build-w02                                                 # 3/3 passed
 ```
 
 The ring test was repeated five times after the seqlock repair (`OK` each time). No full suite, no
@@ -51,8 +65,14 @@ native rendering and no C++ build was run for this step.
 
 ## 4. Known gaps and traps for the next chat
 
-- **Nothing consumes these frames yet.** The C++ side must decode, interpolate and draw them; the
-  ≤ 2-frame latency gate, dropped-frame counts and fps at 200/400/600 ships are all unmeasured.
+- **Nothing draws these frames yet.** The decode half exists and is tested; there is no draw path,
+  no interpolation and no camera mirror, so the ≤ 2-frame latency gate, dropped-frame counts and fps
+  at 200/400/600 ships are all unmeasured.
+- **The post-copy tag re-validation has no deterministic control.** Its removal is not caught by the
+  native concurrent test at a realistic publish rate; the Python threaded test caught it when the
+  producer ran unthrottled. Keep both tests, and do not read the native one as covering that guard.
+- **`build-w02` is a local build directory** configured against the W01 bgfx prebuilt pins; it is not
+  part of the branch.
 - **Equal-workload benchmark still missing.** Fog, HUD and planets are absent from every number
   here; the migration plan's owner gate ("owner sees a live battle") is untouched.
 - **Who supplies the visibility set is a design decision, not a detail.** The gather needs the set
