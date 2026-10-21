@@ -1147,6 +1147,38 @@
         "any frame-rate claim",
         "enabling the disabled Windows signal workflow"
       ]
-    }
+    }  ,
+  {
+   "id": "render-w05-slice2-cues-2026-10-21",
+   "date": "2026-10-21",
+   "owner_wording": "continue",
+   "scope": "W05 slice 2: selection rings, ownership markers and planet owner rings carried as ARMARK01 primitives; the game decides every cue, the window draws",
+   "base_commit": "3f44b2c34d1b13003f8f1ea1e5f6492f9702bf70",
+   "artifact": "docs/RENDER_W05_CUES.md",
+   "format": {
+    "magic": "ARMARK01",
+    "header_bytes": 20,
+    "record_bytes": 32,
+    "max_records": 1024,
+    "frame_format_changed": false,
+    "note": "a third ring beside frames and planets; the frame format and render_bridge/protocol.py are untouched"
+   },
+   "rule_kept": "Python decides, the window draws: selection ids, owner colours, hull severity, relation, shape and marker mode cross as values; no entity id, relation or hull fraction is recomputed natively. The marker pixel footprint uses the window camera only because live mode makes the window the camera owner.",
+   "evidence": {
+    "python_tests": "114 tests OK across test_render_markers, test_render_planets, test_render_packed, test_render_ring, test_render_overlay, test_overlay_upload, test_render_input, test_input_bridge",
+    "cpp_tests": "ctest 7/7 in render_cpp/build-w02, including markers: Python-written cues.bin decoded field by field, re-encoded byte-identically, five damaged variants refused",
+    "live_counters": "9 cue batches, 0 decode failures, 0 dropped vertices, about 638 markers and 22 rings per frame at 638 instances",
+    "frames": "artifacts/cpp-renderer/w05/planet-owner-ring.png (colonist ring circling the world in the ecliptic), artifacts/cpp-renderer/w05/cues-fleet.png (hostile diamonds over enemy hulls)"
+   },
+   "known_limits": [
+    "selection rings are drawn at the entity collision radius rather than the legacy readability-inflated radius, so they read tighter than the Python ring; a 9 px floor keeps them from vanishing",
+    "bgfx has no line width: every cue is one pixel where the legacy renderer uses 2 px and 3 px",
+    "planet owner rings set the depth flag but view 1 binds no depth buffer, so a ring is drawn over its world instead of behind it",
+    "live selection is still W04 debt; rings are inspected with --select or the diagnostic --select-owned",
+    "markers are published for every detected unit, which is busier than the legacy decluttered default"
+   ],
+   "does_not_authorize": ["merging PR #150", "a tag or release", "changing the default renderer", "any frame-rate claim", "enabling the disabled Windows signal workflow"]
+  }
+
   ]
 }

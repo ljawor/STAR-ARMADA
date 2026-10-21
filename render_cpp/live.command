@@ -38,17 +38,23 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
+# Cues the *producer* decides but the window must not see as options: ARMADA_SELECT="26 27" rings
+# those entity ids (live selection is still W04 debt, so this is how a ring is inspected today).
+PRODUCER_CUES=()
+for id in ${ARMADA_SELECT:-}; do PRODUCER_CUES+=(--select "$id"); done
+
 "$PYTHON" tools/render/stream_ring.py \
   --ring "$DIR/frames.bin" --seconds 7200 --hz 60 \
   --overlay-ring "$DIR/hud.bin" --overlay-slots 48 --overlay-keyframe 1.0 \
   --input-ring "$DIR/input.bin" --planet-ring "$DIR/planets.bin" --planet-texture 256 \
+  --marker-ring "$DIR/cues.bin" ${PRODUCER_CUES:+--select-owned} "${PRODUCER_CUES[@]}" \
   --report "$DIR/producer.json" &
 producer=$!
 
 # Wait for the rings to carry a published frame, so the window opens on a complete HUD.
 for _ in $(seq 1 160); do
   if [[ -s "$DIR/frames.bin" && -s "$DIR/hud.bin" && -s "$DIR/frames.bin.tables" \
-        && -s "$DIR/planets.bin" ]]; then
+        && -s "$DIR/planets.bin" && -s "$DIR/cues.bin" ]]; then
     sleep 1.0   # let at least one slot finish being written before the reader maps it
     break
   fi
@@ -62,4 +68,5 @@ done
 "$BUILD/armada_viewer" --snapshot "$SNAP" --assets "$ROOT" \
   --ring "$DIR/frames.bin" --overlay-ring "$DIR/hud.bin" \
   --input-ring "$DIR/input.bin" --input-slots 48 --planet-ring "$DIR/planets.bin" \
+  --marker-ring "$DIR/cues.bin" \
   --report "$DIR/viewer.json" "$@"

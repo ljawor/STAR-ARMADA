@@ -2,6 +2,7 @@
 #include "camera.hpp"
 #include "frame_v2.hpp"
 #include "input_ring.hpp"
+#include "marker_ring.hpp"
 #include "overlay.hpp"
 #include "planets.hpp"
 #include "scene.hpp"
@@ -30,6 +31,7 @@ namespace fs = std::filesystem;
 namespace hud = armada::overlay;
 namespace input_ring = armada::input;
 namespace planets = armada::planet;
+namespace cues = armada::marker;
 using Json = nlohmann::json;
 using Clock = std::chrono::steady_clock;
 
@@ -143,7 +145,7 @@ struct Callbacks final : bgfx::CallbackI {
 };
 struct Options {
   fs::path snapshot, assets, shaders = ARMADA_SHADER_DIR, shot, report, ring, tables, overlayRing,
-      inputRing, planetRing;
+      inputRing, planetRing, markerRing;
   std::array<float, 3> focus{};
   bool hasFocus = false;
   // The map's star lights every planet (render/renderer.py sets GL_LIGHT0 to the star position,
@@ -187,6 +189,8 @@ static Options options(int argc, char **argv) {
       o.inputRing = value();
     else if (k == "--planet-ring")
       o.planetRing = value();
+    else if (k == "--marker-ring")
+      o.markerRing = value();
     else if (k == "--star") {
       const std::string text = value();
       std::array<float, 3> point{};
@@ -404,6 +408,23 @@ struct PlanetTextures {
     fallback = BGFX_INVALID_HANDLE;
   }
 };
+
+// W05 slice 2: ownership cues. The shapes are the Python ones (render/markers.py), copied rather
+// than approximated because a chevron that reads as a house is a different cue.
+struct CueVertex {
+  float x, y, z, r, g, b, a;
+};
+
+static const float kChevronPts[6][2] = {{-1.00f, 0.62f}, {-0.46f, 0.62f}, {0.00f, -0.18f},
+                                       {0.46f, 0.62f}, {1.00f, 0.62f}, {0.00f, -1.00f}};
+static const float kDiamondPts[6][2] = {{0.00f, 1.00f}, {0.72f, 0.20f}, {0.72f, -0.20f},
+                                       {0.00f, -1.00f}, {-0.72f, -0.20f}, {-0.72f, 0.20f}};
+
+static void pushCue(std::vector<CueVertex> &out, const float *point,
+                    const std::array<uint8_t, 4> &colour) {
+  out.push_back({point[0], point[1], point[2], colour[0] / 255.f, colour[1] / 255.f,
+                 colour[2] / 255.f, colour[3] / 255.f});
+}
 
 static bgfx::ShaderHandle shader(const fs::path &p) {
   std::ifstream f(p, std::ios::binary | std::ios::ate);
@@ -811,6 +832,26 @@ static int run(const Options &o) {
       throw DeviceError("Planet uniform creation failed");
     cleanup.actions.push_back([handle] { bgfx::destroy(handle); });
   }
+  // W05 slice 2: unlit cue pass - world-space lines and billboards the game already decided.
+  bgfx::VertexLayout cueLayout;
+  cueLayout.begin()
+      .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
+      .add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Float)
+      .end();
+  const bgfx::ProgramHandle cueProgram =
+      bgfx::createProgram(shader(o.shaders / "vs_mark.bin"),
+                          shader(o.shaders / "fs_mark.bin"), true);
+  if (!bgfx::isValid(cueProgram))
+    throw DeviceError("Cue program creation failed");
+  cleanup.actions.push_back([cueProgram] { bgfx::destroy(cueProgram); });
+  std::unique_ptr<armada::bridge::RingReader> markerRing;
+  uint64_t markerSequence = 0;
+  size_t cueBatches = 0, cueDecodeFailures = 0, cueCircles = 0, cueMarkers = 0,
+         cueVertices = 0, cueDropped = 0;
+  std::vector<uint8_t> markerPayload;
+  std::vector<cues::Primitive> cuePrimitives;
+  if (!o.markerRing.empty())
+    markerRing = std::make_unique<armada::bridge::RingReader>(o.markerRing);
   PlanetTextures planetTextures;
   cleanup.actions.push_back([&planetTextures] { planetTextures.destroy(); });
   {
@@ -1261,6 +1302,122 @@ static int run(const Options &o) {
         ++planetBodiesDrawn;
       }
     }
+    // W05 slice 2: ownership cues. A batch is a few hundred primitives, so the geometry is rebuilt
+    // on the CPU each frame and drawn unlit: rings as line segments, markers as billboards.
+    if (markerRing) {
+      const uint64_t available = markerRing->published();
+      if (available > markerSequence &&
+          markerRing->read_at_sequence(available - 1, available, markerPayload)) {
+        markerSequence = available;
+        try {
+          cuePrimitives = cues::decode(markerPayload.data(), markerPayload.size());
+          ++cueBatches;
+        } catch (const cues::MarkerError &) {
+          ++cueDecodeFailures;      // a damaged batch must not half-draw: keep the last good one
+        }
+      }
+    }
+    if (!cuePrimitives.empty()) {
+      std::vector<CueVertex> flatLines, depthLines, fill;
+      // Billboard basis: rows 0 and 1 of the view rotation, which is what the Python markers use.
+      const float rx = view[0], ry = view[4], rz = view[8];
+      const float ux = view[1], uy = view[5], uz = view[9];
+      const float focal = float(height) * 0.5f /
+                          std::tan(camera.fov * 0.5f * float(M_PI) / 180.f);
+      for (const auto &primitive : cuePrimitives) {
+        if (primitive.kind == cues::kCircle) {
+          const int segments = primitive.segments ? int(primitive.segments) : 28;
+          // A ring at the frame's catalogue scale is a hairline when the camera is far away (a
+          // convoy hull is ~1.5 world units), so the radius is lifted to a legible floor on
+          // screen. Same rule and same reason as marker_px: what crosses is the decision, the
+          // window keeps the cue readable at any zoom.
+          const float viewZ = view[2] * primitive.centre[0] + view[6] * primitive.centre[1] +
+                              view[10] * primitive.centre[2] + view[14];
+          const float depth = std::max(1.f, -viewZ);
+          const float projected = primitive.size * focal / depth;
+          float ringSize = primitive.size;
+          if (projected > 0.f && projected < 9.f)
+            ringSize *= 9.f / projected;
+          std::vector<CueVertex> &out = primitive.depth() ? depthLines : flatLines;
+          for (int i = 0; i < segments; ++i) {
+            const float a0 = float(i) / float(segments) * 2.f * float(M_PI);
+            const float a1 = float(i + 1) / float(segments) * 2.f * float(M_PI);
+            const float s0 = std::sin(a0) * ringSize, c0 = std::cos(a0) * ringSize;
+            const float s1 = std::sin(a1) * ringSize, c1 = std::cos(a1) * ringSize;
+            float start[3], end[3];
+            if (primitive.shape == cues::kShapeUpright) {
+              start[0] = primitive.centre[0] + s0; start[1] = primitive.centre[1] + c0;
+              start[2] = primitive.centre[2];
+              end[0] = primitive.centre[0] + s1; end[1] = primitive.centre[1] + c1;
+              end[2] = primitive.centre[2];
+            } else {
+              start[0] = primitive.centre[0] + s0; start[1] = primitive.centre[1];
+              start[2] = primitive.centre[2] + c0;
+              end[0] = primitive.centre[0] + s1; end[1] = primitive.centre[1];
+              end[2] = primitive.centre[2] + c1;
+            }
+            pushCue(out, start, primitive.colour);
+            pushCue(out, end, primitive.colour);
+          }
+          ++cueCircles;
+          continue;
+        }
+        // A marker's footprint comes from this camera, exactly as render/markers.py does it, so the
+        // icon stays 9-15 px whatever the window's zoom is.
+        const float viewZ = view[2] * primitive.centre[0] + view[6] * primitive.centre[1] +
+                            view[10] * primitive.centre[2] + view[14];
+        const float depth = std::max(1.f, -viewZ);
+        const float apparent = 2.f * primitive.size * focal / depth;
+        const float px = std::max(9.f, std::min(15.f, 9.f + std::max(0.f, apparent) * 0.12f));
+        const float radius = (px * 0.5f) * depth / focal;
+        const float *polygon = primitive.shape == cues::kShapeDiamond ? &kDiamondPts[0][0]
+                                                                     : &kChevronPts[0][0];
+        const float anchor[3] = {primitive.centre[0] + ux * radius * 1.55f,
+                                 primitive.centre[1] + uy * radius * 1.55f,
+                                 primitive.centre[2] + uz * radius * 1.55f};
+        float points[6][3];
+        for (int i = 0; i < 6; ++i) {
+          points[i][0] = anchor[0] + rx * polygon[i * 2] * radius + ux * polygon[i * 2 + 1] * radius;
+          points[i][1] = anchor[1] + ry * polygon[i * 2] * radius + uy * polygon[i * 2 + 1] * radius;
+          points[i][2] = anchor[2] + rz * polygon[i * 2] * radius + uz * polygon[i * 2 + 1] * radius;
+        }
+        for (int i = 1; i + 1 < 6; ++i) {          // triangle fan over the outline
+          pushCue(fill, points[0], primitive.colour);
+          pushCue(fill, points[i], primitive.colour);
+          pushCue(fill, points[i + 1], primitive.colour);
+        }
+        const std::array<uint8_t, 4> outline = {5, 8, 13, primitive.colour[3]};
+        for (int i = 0; i < 6; ++i) {
+          pushCue(flatLines, points[i], outline);
+          pushCue(flatLines, points[(i + 1) % 6], outline);
+        }
+        ++cueMarkers;
+      }
+      auto submitCues = [&](const std::vector<CueVertex> &verts, uint64_t primitive,
+                            bool depthTest) {
+        if (verts.empty())
+          return;
+        const uint32_t count = uint32_t(verts.size());
+        if (bgfx::getAvailTransientVertexBuffer(count, cueLayout) < count) {
+          cueDropped += count;      // counted, not silently squeezed
+          return;
+        }
+        bgfx::TransientVertexBuffer tvb;
+        bgfx::allocTransientVertexBuffer(&tvb, count, cueLayout);
+        std::memcpy(tvb.data, verts.data(), count * sizeof(CueVertex));
+        bgfx::setVertexBuffer(0, &tvb);
+        uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_MSAA | primitive |
+                         BGFX_STATE_BLEND_ALPHA;
+        if (depthTest)
+          state |= BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS;
+        bgfx::setState(state);
+        bgfx::submit(1, cueProgram);
+        cueVertices += count;
+      };
+      submitCues(depthLines, BGFX_STATE_PT_LINES, true);
+      submitCues(flatLines, BGFX_STATE_PT_LINES, false);
+      submitCues(fill, 0, false);   // triangle lists are bgfx's default primitive type
+    }
     // W03: read the newest HUD payload, apply the patches to the texture, draw one quad.
     if (uiRing) {
       const uint64_t available = uiRing->published();
@@ -1474,6 +1631,19 @@ static int run(const Options &o) {
                      {"hud_only", o.hudOnly},
                      {"mode", o.hudOnly ? "presented-unblended (diagnostic)"
                                         : "composited over the scene"}};
+  }
+  if (markerRing) {
+    report["cues"] = {
+        {"ring", o.markerRing.string()},
+        {"batches", cueBatches},
+        {"decode_failures", cueDecodeFailures},
+        {"circles", cueCircles},
+        {"markers", cueMarkers},
+        {"vertices", cueVertices},
+        {"dropped_vertices", cueDropped},
+        {"note", "selection rings, planet owner rings and ownership markers decided by the game; "
+                 "marker pixel size is derived from this window's camera so the icon stays 9-15 px "
+                 "at any zoom; lines are one pixel wide because bgfx has no line width"}};
   }
   if (planetRing) {
     report["planets"] = {

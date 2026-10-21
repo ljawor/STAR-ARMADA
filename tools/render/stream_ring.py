@@ -27,7 +27,8 @@ sys.path.insert(0, str(ROOT))
 
 import game.core  # noqa: F401  core/systems import cycle, per the project skill
 from game.graphics_benchmark import make_fixture
-from render import asset_selection, fog
+from render import asset_selection, fog, primitive_batch
+from render_bridge import markers as marker_codec
 from render.ship_sizes import ship_size
 from render_bridge import collect, packed, ring
 
@@ -73,6 +74,16 @@ def main(argv=None):
                              'distinct planet, published once')
     parser.add_argument('--planet-texture', type=int, default=256,
                         help='planet texture edge in pixels (W05)')
+    parser.add_argument('--marker-ring', type=Path,
+                        help='ring carrying selection rings, planet owner rings and ownership '
+                             'markers as primitives (W05 slice 2)')
+    parser.add_argument('--marker-mode', choices=('all', 'hostiles', 'off'), default='all',
+                        help='which ownership markers to publish (all = every detected unit; '
+                             'hostiles = the game\'s decluttered mode)')
+    parser.add_argument('--select', action='append', metavar='ID',
+                        help='entity id to draw a selection ring around (repeatable)')
+    parser.add_argument('--select-owned', action='store_true',
+                        help='diagnostic stand-in for live selection: ring every own ship')
     parser.add_argument('--input-ring', type=Path,
                         help='ring the C++ window publishes input on (W04); the producer attaches '
                              'when the file appears and feeds every event to the real '
@@ -108,6 +119,31 @@ def main(argv=None):
 
     # W03: the HUD is painted here, by the same Python code the legacy window uses, and only the
     # rects the recorder says changed are published. `compose` is the GL-free half of `render`.
+    # W05 slice 2: the ownership cues (selection rings, planet owner rings, markers) as one batch
+    # of primitives. The game decides them here; the window only draws.
+    marker_ring = None
+    marker_ms, marker_counts = [], []
+    selected_ids = set(int(v) for v in (args.select or []))
+    if marker_ring_path := args.marker_ring:
+        slot_bytes = marker_codec.HEADER.size + marker_codec.MAX_RECORDS * marker_codec.RECORD_BYTES
+        marker_ring_path.parent.mkdir(parents=True, exist_ok=True)
+        marker_ring = ring.Ring.create(marker_ring_path, slots=8, slot_bytes=slot_bytes)
+    if args.select_owned:
+        # Diagnostic stand-in, and the same one the HUD panel already uses: every own ship. Live
+        # selection itself is still W04 debt (the input bridge records orders, not selection).
+        selected_ids |= {entity.id for entity in state.entities.values()
+                         if entity.owner == args.local_player and entity.is_ship}
+    def scale_of(entity):
+        """The scale the frame drew this entity at, so a ring encloses the hull it is drawn around."""
+        if entity.is_planet:
+            return float(entity.radius)
+        faction = (state.players[entity.owner].faction
+                   if entity.owner in state.players else 'imperial')
+        _, scale = collector.visual(is_station=entity.is_station, data_id=entity.data_id,
+                                    faction=faction, radius=entity.radius)
+        # An unresolved binding comes back as a reason string, not a scale. It is also not drawn,
+        # so it gets no ring: a cue around something invisible is a lie.
+        return float(scale) if isinstance(scale, (int, float)) else 0.0
     overlay_ring = overlay_hud = None
     overlay_width, overlay_height = (int(v) for v in args.overlay_size.lower().split('x'))
     overlay_selection = set()
@@ -224,6 +260,14 @@ def main(argv=None):
                 frame, counts = collector.collect_into(
                     state, buffer, tick=state.tick, frame_index=published)
                 out.publish(bytes(frame))
+                if marker_ring is not None:
+                    cues_started = time.perf_counter()
+                    primitives = primitive_batch.build(
+                        state, args.local_player, selected_ids, collector.visible_ids,
+                        scale_of=scale_of, mode=args.marker_mode)
+                    marker_ring.publish(bytes(marker_codec.encode(primitives)))
+                    marker_ms.append((time.perf_counter() - cues_started) * 1000.0)
+                    marker_counts.append(len(primitives))
                 encode_ms.append((time.perf_counter() - frame_started) * 1000.0)
                 if overlay_ring is not None:
                     hud_started = time.perf_counter()
@@ -286,6 +330,18 @@ def main(argv=None):
         'publish_hz': round(published / elapsed, 2) if elapsed else 0.0,
         'encode_ms': _stats(encode_ms),
         'sim_step_ms': _stats(step_ms),
+        'cues': ({
+            'ring': str(args.marker_ring) if args.marker_ring else None,
+            'mode': args.marker_mode,
+            'selection': sorted(selected_ids) if args.select or args.select_owned else [],
+            'selection_is_diagnostic': bool(args.select_owned),
+            'encode_ms': {'median': statistics.median(marker_ms) if marker_ms else 0.0, 'worst': max(marker_ms) if marker_ms else 0.0},
+            'primitives': {'frames': len(marker_counts),
+                           'max': max(marker_counts) if marker_counts else 0,
+                           'total': sum(marker_counts)},
+            'note': 'selection rings, planet owner rings and ownership markers decided in Python; '
+                    'marker pixel size is left to the window camera',
+        } if args.marker_ring else {}),
         'visibility': ('detection: visible entity ids supplied per frame, fog predicates for '
                        'effects and shots' if detection else
                        'all_visible (omniscient diagnostic)'),
