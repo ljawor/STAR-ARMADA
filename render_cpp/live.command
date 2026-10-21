@@ -40,14 +40,27 @@ trap cleanup EXIT INT TERM
 
 # Cues the *producer* decides but the window must not see as options: ARMADA_SELECT="26 27" rings
 # those entity ids (live selection is still W04 debt, so this is how a ring is inspected today).
-PRODUCER_CUES=()
-for id in ${ARMADA_SELECT:-}; do PRODUCER_CUES+=(--select "$id"); done
+# macOS ships bash 3.2, where an empty array under `set -u` is an unbound-variable error, so the
+# selection travels as a plain string and the diagnostic stand-in only applies when it is empty.
+PRODUCER_SELECT=""
+for id in ${ARMADA_SELECT:-}; do PRODUCER_SELECT="$PRODUCER_SELECT --select $id"; done
+
+# `--select ID` given on this script's command line belongs to the producer, not the window: the
+# window has no business knowing an entity id, and an unknown option there aborts the launch.
+VIEWER_ARGS=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --select) PRODUCER_SELECT="$PRODUCER_SELECT --select $2"; shift 2 ;;
+    *) VIEWER_ARGS="$VIEWER_ARGS $1"; shift ;;
+  esac
+done
+if [[ -z "$PRODUCER_SELECT" ]]; then PRODUCER_SELECT="--select-owned"; fi
 
 "$PYTHON" tools/render/stream_ring.py \
   --ring "$DIR/frames.bin" --seconds 7200 --hz 60 \
   --overlay-ring "$DIR/hud.bin" --overlay-slots 48 --overlay-keyframe 1.0 \
   --input-ring "$DIR/input.bin" --planet-ring "$DIR/planets.bin" --planet-texture 256 \
-  --marker-ring "$DIR/cues.bin" ${PRODUCER_CUES:+--select-owned} "${PRODUCER_CUES[@]}" \
+  --marker-ring "$DIR/cues.bin" $PRODUCER_SELECT \
   --report "$DIR/producer.json" &
 producer=$!
 
@@ -69,4 +82,4 @@ done
   --ring "$DIR/frames.bin" --overlay-ring "$DIR/hud.bin" \
   --input-ring "$DIR/input.bin" --input-slots 48 --planet-ring "$DIR/planets.bin" \
   --marker-ring "$DIR/cues.bin" \
-  --report "$DIR/viewer.json" "$@"
+  --report "$DIR/viewer.json" $VIEWER_ARGS
