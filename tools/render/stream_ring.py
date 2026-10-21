@@ -49,6 +49,17 @@ def main(argv=None):
                         help='detection = the renderer supplies what the player can see; '
                              'all = omniscient diagnostic frame')
     parser.add_argument('--report', type=Path)
+    parser.add_argument('--overlay-ring', type=Path,
+                        help='second ring carrying the composed HUD surface (W03 design A); '
+                             'written beside the frame ring, with its own slots')
+    parser.add_argument('--overlay-size', default='1280x800',
+                        help='HUD surface size, WxH (the C++ window size)')
+    parser.add_argument('--overlay-slots', type=int, default=4)
+    parser.add_argument('--overlay-all', action='store_true',
+                        help='publish every overlay frame as a full surface (slow; for diagnosis)')
+    parser.add_argument('--overlay-keyframe', type=float, default=2.0,
+                        help='publish a full overlay surface at least this often, so a window '
+                             'that attaches late still gets a complete HUD (0 disables)')
     args = parser.parse_args(argv)
 
     configure_assets()
@@ -75,8 +86,33 @@ def main(argv=None):
     tables_path = Path(str(args.ring) + '.tables')
     tables_path.write_bytes(tables.encode())
 
+    # W03: the HUD is painted here, by the same Python code the legacy window uses, and only the
+    # rects the recorder says changed are published. `compose` is the GL-free half of `render`.
+    overlay_ring = overlay_hud = None
+    overlay_width, overlay_height = (int(v) for v in args.overlay_size.lower().split('x'))
+    overlay_selection = set()
+    overlay_sent = []
+    overlay_published = 0
+    overlay_keyframes = 0
+    overlay_last_full = float('-inf')
+    if args.overlay_ring is not None:
+        import pygame
+        pygame.font.init()
+        from render.hud import HUD
+        from render_bridge import overlay as overlay_codec
+        overlay_hud = HUD(overlay_width, overlay_height, state)
+        overlay_selection = {entity.id for entity in state.entities.values()
+                             if entity.owner == args.local_player and entity.is_ship}
+        slot_bytes = (overlay_codec.HEADER_BYTES + overlay_codec.MAX_RECTS * overlay_codec.RECT_BYTES
+                      + overlay_width * overlay_height * 4)
+        if slot_bytes > (1 << 26):
+            raise SystemExit(f'overlay slot would be {slot_bytes} bytes; pick a smaller --overlay-size')
+        args.overlay_ring.parent.mkdir(parents=True, exist_ok=True)
+        overlay_ring = ring.Ring.create(args.overlay_ring, slots=args.overlay_slots,
+                                        slot_bytes=slot_bytes)
+
     buffer = bytearray(packed.frame_size(packed.MAX_INSTANCES, packed.MAX_EFFECTS))
-    encode_ms, step_ms, visibility_ms = [], [], []
+    encode_ms, step_ms, visibility_ms, hud_ms = [], [], [], []
     published = 0
     period = 1.0 / args.hz if args.hz > 0 else 0.0
     started = time.monotonic()
@@ -111,6 +147,28 @@ def main(argv=None):
                     state, buffer, tick=state.tick, frame_index=published)
                 out.publish(bytes(frame))
                 encode_ms.append((time.perf_counter() - frame_started) * 1000.0)
+                if overlay_ring is not None:
+                    hud_started = time.perf_counter()
+                    overlay_hud.compose(overlay_selection, None, args.local_player, False,
+                                        '', 0.0, 0.0)
+                    dirty = overlay_hud.recorder.take_dirty()
+                    # The first frame and periodic keyframes are whole surfaces: a window that
+                    # attaches late has no base texture, so dirty rects alone would never
+                    # complete the HUD.
+                    keyframe = (overlay_published == 0 or args.overlay_all
+                                or (args.overlay_keyframe > 0
+                                    and time.monotonic() - overlay_last_full
+                                    >= args.overlay_keyframe))
+                    if keyframe:
+                        overlay_last_full = time.monotonic()
+                        overlay_keyframes += 1
+                        payload = overlay_codec.encode_surface_full(overlay_hud.overlay)
+                    else:
+                        payload = overlay_codec.encode_surface(overlay_hud.overlay, dirty)
+                    overlay_ring.publish(payload)
+                    overlay_published += 1
+                    overlay_sent.append(len(payload))
+                    hud_ms.append((time.perf_counter() - hud_started) * 1000.0)
                 published += 1
                 if period:
                     next_at += period
@@ -122,6 +180,8 @@ def main(argv=None):
         except KeyboardInterrupt:
             pass
 
+    if overlay_ring is not None:
+        overlay_ring.close()
     elapsed = time.monotonic() - started
     summary = {
         'tool': 'stream_ring',
@@ -146,6 +206,22 @@ def main(argv=None):
         'instances_last_frame': counts['instances'],
         'transients_last_frame': counts['effects'],
     }
+    if overlay_ring is not None:
+        summary['overlay'] = {
+            'ring': str(args.overlay_ring),
+            'size': [overlay_width, overlay_height],
+            'published_frames': overlay_published,
+            'frame_bytes': _stats([float(v) for v in overlay_sent]),
+            'publish_ms': _stats(hud_ms),
+            'publish_note': ('paint the HUD, encode the dirty rects and publish them; the paint is '
+                             'renderer work the bridge receives, the encode+publish is the cost of '
+                             'this transport'),
+            'keyframes': overlay_keyframes,
+            'keyframe_seconds': args.overlay_keyframe,
+            'note': ('the first overlay frame and every keyframe after --overlay-keyframe seconds '
+                     'are whole surfaces; the rest are dirty rects only, so a window that '
+                     'attaches late still converges on a complete HUD'),
+        }
     text = json.dumps(summary, indent=2)
     print(text)
     if args.report:

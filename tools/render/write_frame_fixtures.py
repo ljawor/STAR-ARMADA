@@ -14,7 +14,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from render_bridge import packed
+from render_bridge import overlay, packed
 
 ROOT = Path(__file__).resolve().parents[2]
 FIXTURES = ROOT / 'render_cpp' / 'tests' / 'fixtures'
@@ -81,13 +81,68 @@ def build():
     return files
 
 
+def build_overlay():
+    """Overlay fixtures: the surface pixels are a deterministic pattern, so the native test can
+    check both the rect list and the bytes without a GPU or a pygame dependency."""
+    width, height = 8, 4
+
+    def pixel(x, y):
+        return bytes(((x * 16) & 0xFF, (y * 32) & 0xFF, ((x + y) * 7) & 0xFF, 255))
+
+    surface = b''.join(pixel(x, y) for y in range(height) for x in range(width))
+    full = overlay.encode(width, height, full=surface)
+
+    rects = [(2, 1, 3, 2), (6, 0, 2, 3)]
+    patches = []
+    for x0, y0, w, h in rects:
+        patches.append(b''.join(pixel(x, y) for y in range(y0, y0 + h) for x in range(x0, x0 + w)))
+    patch_frame = overlay.encode(width, height, rects, patches)
+
+    # Malformed variants: each must be refused by the native decoder for a different reason.
+    bad_magic = b'XRMOVL01' + full[8:]
+    bad_version = full[:8] + (2).to_bytes(2, 'little') + full[10:]
+    bad_flags = full[:10] + (0x8).to_bytes(2, 'little') + full[12:]
+    truncated = full[:-4]
+    bad_crc = full[:-1] + bytes([full[-1] ^ 0xFF])
+    rect_outside = overlay.encode(width, height, rects, patches)
+    rect_outside = rect_outside[:28] + (7).to_bytes(2, 'little') + (0).to_bytes(2, 'little') + \
+        rect_outside[32:]
+    full_with_rects = (full[:16] + (1).to_bytes(2, 'little') + full[18:])
+    count_too_high = patch_frame[:16] + (overlay.MAX_RECTS + 1).to_bytes(2, 'little') + patch_frame[18:]
+
+    expected = {
+        'full': {'width': width, 'height': height, 'full': True, 'rects': [],
+                 'surface_crc32': __import__('zlib').crc32(surface) & 0xFFFFFFFF,
+                 'frame_bytes': len(full)},
+        'patch': {'width': width, 'height': height, 'full': False,
+                  'rects': [list(r) for r in rects], 'frame_bytes': len(patch_frame),
+                  'patch_bytes': sum(w * h * 4 for _, _, w, h in rects)},
+        'sizes': {'header': overlay.HEADER_BYTES, 'rect': overlay.RECT_BYTES},
+        'refusals': ['bad_magic', 'bad_version', 'bad_flags', 'truncated', 'bad_crc',
+                     'rect_outside', 'full_with_rects', 'count_too_high'],
+    }
+    return {
+        'overlay-full-v1.bin': full,
+        'overlay-patch-v1.bin': patch_frame,
+        'overlay-bad-magic.bin': bad_magic,
+        'overlay-bad-version.bin': bad_version,
+        'overlay-bad-flags.bin': bad_flags,
+        'overlay-truncated.bin': truncated,
+        'overlay-bad-crc.bin': bad_crc,
+        'overlay-rect-outside.bin': rect_outside,
+        'overlay-full-with-rects.bin': full_with_rects,
+        'overlay-count-too-high.bin': count_too_high,
+        'overlay-expected.json': (json.dumps(expected, indent=2, sort_keys=True) + '\n').encode(),
+    }
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true',
                         help='fail if the committed fixtures differ from what this script writes')
     parser.add_argument('--out', type=Path, default=FIXTURES)
     args = parser.parse_args(argv)
-    files = build()
+    files = {**build(), **build_overlay()}
     args.out.mkdir(parents=True, exist_ok=True)
     drift = []
     for name, payload in files.items():

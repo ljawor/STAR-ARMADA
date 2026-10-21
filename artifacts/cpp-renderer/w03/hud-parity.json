@@ -1,0 +1,40 @@
+{
+  "comparison": {
+    "differing_pixels": 0,
+    "first_difference": null,
+    "identical_rows": 800,
+    "rows": 800
+  },
+  "dump": "/tmp/w03par/presented.png",
+  "dump_crc32": 1949278737,
+  "identical": true,
+  "replay": {
+    "applied": 43,
+    "height": 800,
+    "keyframes": 14,
+    "published": 54,
+    "width": 1280
+  },
+  "ring": "/tmp/w03par/hud.bin",
+  "sequence": 48,
+  "surface_rgb_crc32": 1949278737,
+  "surface_sha256": "77d5582855ce5945bbe770e8e0a0f39128f165680a1efb5642d872a31bb5bb93",
+  "window": {
+    "best_sequence": 48,
+    "differing_pixels": {
+      "47": 24,
+      "48": 0,
+      "49": 118,
+      "50": 118,
+      "51": 78
+    },
+    "offset": -1,
+    "searched": [
+      47,
+      48,
+      49,
+      50,
+      51
+    ]
+  }
+}

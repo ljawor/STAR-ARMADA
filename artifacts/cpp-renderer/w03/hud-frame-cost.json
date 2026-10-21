@@ -1,0 +1,29 @@
+{
+  "tool": "measure_hud_frame",
+  "window": [
+    1280,
+    800
+  ],
+  "frames_per_round": 120,
+  "rounds": 3,
+  "full_surface_pixels": 1024000,
+  "modes": {
+    "full": {
+      "samples": 360,
+      "median": 2.1932,
+      "p95": 2.5651,
+      "median_pixels_uploaded": 1024000,
+      "pixels_per_frame_median": 1024000
+    },
+    "dirty": {
+      "samples": 360,
+      "median": 1.4071,
+      "p95": 2.4638,
+      "median_pixels_uploaded": 55016,
+      "pixels_per_frame_median": 55016
+    }
+  },
+  "note": "Timing is hud.render() as a whole: paint into the surface, upload, rebind. It includes the recorder's per-op bookkeeping, which is why this is the number that matters and the transfer table in the W03 document is not. The HUD state is a real skirmish; the fps label changes every frame, so the dirty path still has work to do.",
+  "saved_ms": 0.7861,
+  "saved_ratio": 0.3584
+}

@@ -61,7 +61,7 @@ else()
   message(FATAL_ERROR "W01 native targets are macOS Metal and Windows Direct3D12")
 endif()
 set(SHADER_OUTPUTS)
-foreach(NAME vs_fleet fs_fleet vs_shadow fs_shadow)
+foreach(NAME vs_fleet fs_fleet vs_shadow fs_shadow vs_ui fs_ui)
   if(NAME MATCHES "^vs_")
     set(TYPE vertex)
   else()
@@ -94,6 +94,12 @@ add_test(NAME camera COMMAND test_camera)
 # W02 consumer: decodes frames authored by the Python producer (tools/render/
 # write_frame_fixtures.py). Header-only and GPU-free on purpose -- the risky half of the
 # consumer is refusing malformed bytes, which needs no device.
+# W03 consumer: decodes overlay payloads authored by tools/render/write_frame_fixtures.py.
+add_executable(test_overlay tests/test_overlay.cpp)
+target_link_libraries(test_overlay PRIVATE armada_scene)
+target_compile_definitions(test_overlay PRIVATE
+  ARMADA_FIXTURE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures")
+add_test(NAME overlay COMMAND test_overlay)
 add_executable(test_frame_v2 tests/test_frame_v2.cpp)
 target_link_libraries(test_frame_v2 PRIVATE armada_scene)
 target_compile_definitions(test_frame_v2 PRIVATE

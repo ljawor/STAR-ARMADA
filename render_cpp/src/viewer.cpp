@@ -1,6 +1,7 @@
 // Standalone W01 viewer: no authoritative game state and no Python runtime.
 #include "camera.hpp"
 #include "frame_v2.hpp"
+#include "overlay.hpp"
 #include "scene.hpp"
 #include <SDL3/SDL.h>
 #ifdef __APPLE__
@@ -22,6 +23,9 @@
 #include <thread>
 #include <unordered_map>
 namespace fs = std::filesystem;
+// `overlay` is also the debug-text toggle's variable name inside main(), which shadows the
+// namespace there; a file-scope alias keeps the decoder reachable.
+namespace hud = armada::overlay;
 using Json = nlohmann::json;
 using Clock = std::chrono::steady_clock;
 
@@ -134,7 +138,8 @@ struct Callbacks final : bgfx::CallbackI {
   void captureFrame(const void *, uint32_t) override {}
 };
 struct Options {
-  fs::path snapshot, assets, shaders = ARMADA_SHADER_DIR, shot, report, ring, tables;
+  fs::path snapshot, assets, shaders = ARMADA_SHADER_DIR, shot, report, ring, tables, overlayRing;
+  bool hudOnly = false;
   int width = 1280, height = 800, frames = 0, warmup = 30, preset = 1, msaa = 4;
   double seconds = 0.0, distance = 0.0, pitch = 0.0, yaw = 0.0;
   bool shadows = true, overlay = true, validate = false, exercise = false;
@@ -164,6 +169,10 @@ static Options options(int argc, char **argv) {
       o.ring = value();
     else if (k == "--tables")
       o.tables = value();
+    else if (k == "--overlay-ring")
+      o.overlayRing = value();
+    else if (k == "--hud-only")
+      o.hudOnly = true;
     else if (k == "--seconds")
       o.seconds = std::stod(value());
     else if (k == "--distance")
@@ -196,7 +205,12 @@ static Options options(int argc, char **argv) {
              "180 --report timing.json --screenshot fleet.png]\nMouse drag "
              "orbit | wheel zoom | WASD pan | 1 fleet | 2 capital | 3 station "
              "| S screenshot | F overlay | H shadows | Esc quit\n"
-             "Live mode: --ring ring.bin [--tables ring.bin.tables] [--seconds 10]\n";
+             "Live mode: --ring ring.bin [--tables ring.bin.tables] [--seconds 10]\n"
+             "HUD (W03): --overlay-ring hud.bin  (the Python producer publishes the composed "
+             "HUD surface; dirty rects only after the first frame; the window waits for a "
+             "full frame so a late attach never shows a half-texture)\n"
+             "           --hud-only draws only that quad, unblended, so --screenshot is the HUD "
+             "texture's own pixels (bgfx screenshots a swapchain only, never a render target)\n";
       std::exit(0);
     } else
       throw std::runtime_error("Unknown option: " + k);
@@ -517,6 +531,43 @@ static int run(const Options &o) {
   if (!bgfx::isValid(shadowProgram))
     throw DeviceError("Shadow program creation failed");
   cleanup.actions.push_back([shadowProgram] { bgfx::destroy(shadowProgram); });
+  // W03: the HUD is a texture drawn as one fullscreen quad over the world. It carries display
+  // colours with straight alpha, so the pass disables depth and blends src-alpha/one-minus-src-alpha.
+  struct UiVertex {
+    float x, y, z, u, v;
+  };
+  auto uiProgram = bgfx::createProgram(shader(o.shaders / "vs_ui.bin"),
+                                       shader(o.shaders / "fs_ui.bin"), true);
+  if (!bgfx::isValid(uiProgram))
+    throw DeviceError("UI program creation failed");
+  cleanup.actions.push_back([uiProgram] { bgfx::destroy(uiProgram); });
+  bgfx::VertexLayout uiLayout;
+  uiLayout.begin()
+      .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
+      .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
+      .end();
+  // Texture row 0 is the surface's top row (bgfx uploads rows in the order given), so v = 0 is the
+  // top of the HUD and the quad puts v = 0 at NDC y = +1.
+  const UiVertex uiVertices[4] = {{-1.f, -1.f, 0.f, 0.f, 1.f},
+                                  {1.f, -1.f, 0.f, 1.f, 1.f},
+                                  {1.f, 1.f, 0.f, 1.f, 0.f},
+                                  {-1.f, 1.f, 0.f, 0.f, 0.f}};
+  const bgfx::VertexBufferHandle uiVbo = bgfx::createVertexBuffer(
+      bgfx::copy(uiVertices, sizeof(uiVertices)), uiLayout);
+  if (!bgfx::isValid(uiVbo))
+    throw DeviceError("UI vertex buffer creation failed");
+  cleanup.actions.push_back([uiVbo] { bgfx::destroy(uiVbo); });
+  static const uint16_t uiIndices[6] = {0, 1, 2, 0, 2, 3};
+  const bgfx::IndexBufferHandle uiIbo =
+      bgfx::createIndexBuffer(bgfx::copy(uiIndices, sizeof(uiIndices)));
+  if (!bgfx::isValid(uiIbo))
+    throw DeviceError("UI index buffer creation failed");
+  cleanup.actions.push_back([uiIbo] { bgfx::destroy(uiIbo); });
+  const bgfx::UniformHandle uiSampler =
+      bgfx::createUniform("s_overlay", bgfx::UniformType::Sampler);
+  if (!bgfx::isValid(uiSampler))
+    throw DeviceError("UI sampler creation failed");
+  cleanup.actions.push_back([uiSampler] { bgfx::destroy(uiSampler); });
   auto lightUniform =
            bgfx::createUniform("u_lightMatrix", bgfx::UniformType::Mat4),
        eyeUniform = bgfx::createUniform("u_eye", bgfx::UniformType::Vec4),
@@ -541,6 +592,24 @@ static int run(const Options &o) {
   if (!bgfx::isValid(shadowFB))
     throw DeviceError("Shadow framebuffer creation failed");
   cleanup.actions.push_back([shadowFB] { bgfx::destroy(shadowFB); });
+  // W03 overlay: its own ring, decoded with armada::overlay::decode, uploaded into one texture.
+  std::unique_ptr<armada::bridge::RingReader> uiRing;
+  if (!o.overlayRing.empty())
+    uiRing = std::make_unique<armada::bridge::RingReader>(o.overlayRing);
+  bgfx::TextureHandle uiTexture = BGFX_INVALID_HANDLE;
+  uint16_t uiWidth = 0, uiHeight = 0;
+  uint64_t uiSequence = 0;
+  uint64_t uiSequenceAtShot = 0;
+  size_t uiFrames = 0, uiPatches = 0, uiBytes = 0, uiFullFrames = 0, uiDecodeFailures = 0;
+  size_t uiSkippedPatches = 0;
+  // --hud-only presents the HUD quad alone so a screenshot is the texture's own pixels; bgfx's
+  // Metal backend can only screenshot a swapchain framebuffer, so an offscreen dump target
+  // silently produces nothing.
+  std::vector<uint8_t> uiPayload;
+  cleanup.actions.push_back([&uiTexture] {
+    if (bgfx::isValid(uiTexture))
+      bgfx::destroy(uiTexture);
+  });
   armada::Camera original, camera;
   auto jc = scene.at("camera");
   original.target = jc.at("target").get<std::array<float, 3>>();
@@ -717,6 +786,13 @@ static int run(const Options &o) {
                             hd ? .5f : 0.f,
                             1};
     bx::mtxMul(lightMtx, lightVP, bias);
+    if (o.hudOnly) {
+      // Diagnostic mode: the HUD quad alone over opaque black, no blending, no debug text. The
+      // backbuffer screenshot is then the HUD texture's own RGB, comparable with the Python
+      // surface pixel for pixel.
+      bgfx::setViewClear(1, BGFX_CLEAR_COLOR, 0x000000ff, 1.f, 0);
+      bgfx::touch(1);
+    }
     bgfx::setViewClear(0, BGFX_CLEAR_DEPTH, 0, 1.f);
     bgfx::setViewFrameBuffer(0, shadowFB);
     bgfx::setViewRect(0, 0, 0, 2048, 2048);
@@ -754,9 +830,68 @@ static int run(const Options &o) {
                      BGFX_STATE_MSAA);
       bgfx::submit(1, program);
     }
-    bgfx::setDebug(overlay ? BGFX_DEBUG_TEXT : BGFX_DEBUG_NONE);
+    // W03: read the newest HUD payload, apply the patches to the texture, draw one quad.
+    if (uiRing) {
+      const uint64_t available = uiRing->published();
+      if (available > uiSequence && uiRing->read_at_sequence(available - 1, available, uiPayload)) {
+        uiSequence = available;
+        try {
+          const auto frame = hud::decode(uiPayload);
+          if (!bgfx::isValid(uiTexture) || frame.width != uiWidth || frame.height != uiHeight) {
+            if (bgfx::isValid(uiTexture))
+              bgfx::destroy(uiTexture);
+            uiWidth = frame.width;
+            uiHeight = frame.height;
+            // Point sampling with the UV clamp: the HUD is presented one texel per pixel, so
+            // linear filtering can only smear a texel into its neighbour.
+            uiTexture = bgfx::createTexture2D(uiWidth, uiHeight, false, 1,
+                                              bgfx::TextureFormat::RGBA8,
+                                              BGFX_TEXTURE_NONE | BGFX_SAMPLER_MIN_POINT |
+                                                  BGFX_SAMPLER_MAG_POINT | BGFX_SAMPLER_U_CLAMP |
+                                                  BGFX_SAMPLER_V_CLAMP);
+            if (!bgfx::isValid(uiTexture))
+              throw DeviceError("HUD texture creation failed");
+          }
+          // A late-attaching window has no base surface: patches before the first full frame
+          // would land on an uninitialised texture, so they are dropped (and counted).
+          if (!frame.full && uiFullFrames == 0) {
+            uiSkippedPatches += frame.patches.size();
+            continue;
+          }
+          for (const auto &patch : frame.patches) {
+            const bgfx::Memory *mem =
+                bgfx::copy(patch.rgba.data(), uint32_t(patch.rgba.size()));
+            bgfx::updateTexture2D(uiTexture, 0, 0, patch.rect.x, patch.rect.y, patch.rect.w,
+                                  patch.rect.h, mem, uint32_t(patch.rect.w) * 4);
+            uiPatches++;
+            uiBytes += patch.rgba.size();
+          }
+          frame.full ? uiFullFrames++ : 0;
+          uiFrames++;
+        } catch (const std::exception &e) {
+          // A malformed HUD payload is dropped, counted, and never half-applied: the texture keeps
+          // the last good frame and the console says why.
+          uiDecodeFailures++;
+          std::cerr << "overlay decode failed: " << e.what() << std::endl;
+        }
+      }
+      float identity[16] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
+      if (bgfx::isValid(uiTexture) && uiFullFrames > 0) {
+        bgfx::setViewRect(2, 0, 0, uint16_t(width), uint16_t(height));
+        bgfx::setViewTransform(2, identity, identity);
+        bgfx::setVertexBuffer(0, uiVbo);
+        bgfx::setIndexBuffer(uiIbo);
+        bgfx::setTexture(0, uiSampler, uiTexture);
+        bgfx::setState(o.hudOnly ? (BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A)
+                                 : (BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A |
+                                    BGFX_STATE_BLEND_ALPHA));
+        bgfx::submit(2, uiProgram);
+        bgfx::touch(2);
+      }
+    }
+    bgfx::setDebug(overlay && !o.hudOnly ? BGFX_DEBUG_TEXT : BGFX_DEBUG_NONE);
     bgfx::dbgTextClear();
-    if (overlay) {
+    if (overlay && !o.hudOnly) {
       bgfx::dbgTextPrintf(1, 1, 0x0f, "STAR ARMADA / %s / %s",
                           live ? "W02 LIVE RING" : "W01 OFFLINE",
                           bgfx::getRendererName(bgfx::getRendererType()));
@@ -813,6 +948,9 @@ static int run(const Options &o) {
       bgfx::requestScreenShot(BGFX_INVALID_HANDLE, o.shot.string().c_str());
       screenshotExpected++;
       shot_taken = true;
+      // The capture is of *this* frame; the loop keeps applying HUD frames afterwards, so the
+      // sequence that belongs to the screenshot has to be recorded here.
+      uiSequenceAtShot = uiSequence;
     }
     bgfx::frame();
     if (live)
@@ -878,6 +1016,21 @@ static int run(const Options &o) {
   report["quality"]["shadows_final"] = shadows;
   cleanup.run();
   report["screenshots_written"] = callback.shots.load();
+  if (uiRing) {
+    report["hud"] = {{"ring", o.overlayRing.string()},
+                     {"texture", {uiWidth, uiHeight}},
+                     {"frames_applied", uiFrames},
+                     {"applied_sequence", uiSequence},
+                     {"screenshot_sequence", uiSequenceAtShot},
+                     {"full_frames", uiFullFrames},
+                     {"patches_applied", uiPatches},
+                     {"bytes_applied", uiBytes},
+                     {"decode_failures", uiDecodeFailures},
+                     {"skipped_patches_before_keyframe", uiSkippedPatches},
+                     {"hud_only", o.hudOnly},
+                     {"mode", o.hudOnly ? "presented-unblended (diagnostic)"
+                                        : "composited over the scene"}};
+  }
   if (callback.errors || callback.shots < screenshotExpected ||
       (!o.shot.empty() && o.frames > 0 && callback.shots == 0))
     throw std::runtime_error("Screenshot not delivered");

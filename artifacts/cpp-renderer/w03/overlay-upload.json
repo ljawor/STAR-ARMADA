@@ -1,0 +1,35 @@
+{
+  "tool": "measure_overlay",
+  "synthetic": true,
+  "surface": [
+    1280,
+    800
+  ],
+  "megapixels": 1.024,
+  "bytes_per_frame": 4096000,
+  "encode_tostring": {
+    "samples": 240,
+    "median_ms": 0.5752,
+    "p95_ms": 0.5891,
+    "max_ms": 0.9495
+  },
+  "full_teximage": {
+    "samples": 240,
+    "median_ms": 0.9508,
+    "p95_ms": 0.9818,
+    "max_ms": 2.1489
+  },
+  "full_subimage": {
+    "samples": 240,
+    "median_ms": 1.3186,
+    "p95_ms": 1.3531,
+    "max_ms": 2.7737
+  },
+  "dirty_subimage": {
+    "samples": 240,
+    "median_ms": 0.0607,
+    "p95_ms": 0.0684,
+    "max_ms": 0.144
+  },
+  "note": "full_teximage is what render/hud.py::_upload does today; full_subimage reuses the allocation; dirty_subimage is one 320x180 rect. Timings include glFinish so the transfer is complete, which a real frame would overlap with the world pass."
+}
