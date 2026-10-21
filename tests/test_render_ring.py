@@ -2,12 +2,40 @@
 from __future__ import annotations
 
 import tempfile
+import subprocess
+import sys
 import threading
 import time
 import unittest
 from pathlib import Path
 
 from render_bridge import ring
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+class SingleProducerTest(unittest.TestCase):
+    """Two producers on one ring must be an error, not a quietly reset counter."""
+
+    def test_second_producer_is_refused(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'ring.bin'
+            with ring.Ring.create(path, slots=2, slot_bytes=4096) as out:
+                out.publish(b'first')
+                script = (
+                    'import sys\n'
+                    f'sys.path.insert(0, {str(ROOT)!r})\n'
+                    'from render_bridge import ring\n'
+                    f'ring.Ring.create({str(path)!r}, slots=2, slot_bytes=4096)\n'
+                )
+                result = subprocess.run([sys.executable, '-c', script],
+                                        capture_output=True, text=True, timeout=60)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn('already has a producer', result.stderr)
+            # The surviving ring still holds its frame and its counter.
+            reader = ring.Ring.open(path)
+            sequence, payload = reader.latest()
+            self.assertEqual((sequence, payload), (0, b'first'))
 
 
 class RingTests(unittest.TestCase):

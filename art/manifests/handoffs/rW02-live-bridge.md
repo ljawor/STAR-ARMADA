@@ -84,9 +84,26 @@ native rendering and no C++ build was run for this step.
 - A frame that exceeds the ring slot capacity is refused by the writer. If a future frame profile
   grows, size the ring deliberately — a refused publish is a dropped picture, not a corrupt one.
 
-## 5. Next executable step
+## 5. Live draw path (landed with this step)
 
-Give the viewer a consumer: read the ring, validate the v2 header, decode instances and transients,
-interpolate between the two newest frames, and record latency plus dropped frames. Then run the
-equal-workload scene before any speed statement is made. Do not merge, switch the default renderer,
-or claim W02 done on the producer receipt alone.
+- `render_cpp/src/viewer.cpp` gained `--ring`, `--tables`, `--seconds`; the snapshot still supplies
+  the mesh catalogue and camera, instances come from the ring, drawn by the reviewed W01 path.
+- Pose is recovered as `(position, yaw, scale)` and interpolated as an angle and a scalar
+  (`pose_from_matrix`, `lerp_angle`, `write_instance`), covered by `test_pose` in `ctest frame_v2`,
+  including the degenerate-scale refusal. Writing the matrix element-wise shrinks a turning hull.
+- Producer: `tools/render/stream_ring.py` steps a real `GameManager` and publishes every tick.
+- Receipt: `artifacts/cpp-renderer/w02/live/live-receipt.json` (+ `final.png`, producer and viewer
+  JSON, `motion.json`). 899 frames drawn, 31 adopted, 0 dropped, decode 0.757 ms median, frames
+  behind median 0 / p95 0 / p99 1 (gate <= 2 met), producer 4.92 Hz with a 124.6 ms simulation tick.
+- Two honest negatives recorded rather than buried: a live frame with 1,046 transients costs 2.37 ms
+  (over the 1.0 ms budget; instances-only frames are 0.55/0.71 ms), and the stream rate is the
+  Python simulation, not the bridge.
+- `Ring.create` now takes an exclusive lock and refuses a second producer. It was added because a
+  second producer silently truncated the header during this work and produced phantom drop counts.
+
+## 6. Next executable step
+
+The bridge is wired; what remains is the part that makes a number mean something: the equal-workload
+scene (fog, HUD, planets, transients drawn) at 200/400/600 ships, and handing the producer the
+renderer's player-visibility set instead of `all_visible`. Then the owner's live-battle check. Do not
+merge, switch the default renderer, or call W02 done on this receipt alone.

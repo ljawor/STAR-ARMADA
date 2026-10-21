@@ -133,11 +133,25 @@ def frame_size(instances: int, effects: int) -> int:
 
 
 def matrix_from_pose(position, yaw: float, scale: float) -> tuple[float, ...]:
-    """3x4 column-major transform, matching the shipped exporter's convention."""
+    """3x4 column-major transform: Ry(yaw) scaled uniformly, then the translation.
+
+    The twelve floats are the three columns
+
+        (c, 0, -t)   (0, s, 0)   (t, 0, c)      then (px, py, pz)
+
+    with c = cos(yaw)*scale, t = sin(yaw)*scale and s = scale. That is the W01 snapshot's
+    20-float column-major instance transform with its constant 0/1 entries dropped, and it
+    is the same rotation the live renderer performs with `glRotatef(yaw, 0, 1, 0)`.
+
+    The middle column is the *vertical* axis. Writing the middle and last columns the
+    other way round (which an earlier revision of this profile did) zeroes the vertical
+    axis and skews every hull whose yaw is not a multiple of pi: perfectly valid bytes,
+    perfectly wrong picture, and nothing in a decoder can tell.
+    """
     c, s = math.cos(yaw), math.sin(yaw)
     return (c * scale, 0.0, -s * scale,
+            0.0, scale, 0.0,
             s * scale, 0.0, c * scale,
-            0.0, 0.0, scale,
             float(position[0]), float(position[1]), float(position[2]))
 
 

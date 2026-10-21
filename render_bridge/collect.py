@@ -55,6 +55,23 @@ def _fractions(entity):
             max(0.0, min(1.0, shield)))
 
 
+def _xyz(value, fallback=(0.0, 0.0, 0.0)):
+    """Position from whatever shape the state holds: dict, list, tuple or nothing.
+
+    Live effects keep `pos` as a list (Vec3.to_dict()), so a dict-only reader raised
+    AttributeError the first time a frame carried a real effect.
+    """
+    if value is None:
+        return fallback
+    if isinstance(value, dict):
+        return (float(value.get('x', fallback[0])), float(value.get('y', fallback[1])),
+                float(value.get('z', fallback[2])))
+    try:
+        return (float(value[0]), float(value[1]), float(value[2]))
+    except (TypeError, IndexError, KeyError):
+        return fallback
+
+
 class FrameCollector:
     """Per-session producer: holds the tables and the resolver's memoized answers."""
 
@@ -149,54 +166,36 @@ class FrameCollector:
             position, yaw = entity.pos, entity.yaw
             cos_yaw, sin_yaw = math.cos(yaw), math.sin(yaw)
             cos_scaled, sin_scaled = cos_yaw * scale, sin_yaw * scale
+            # Three columns of three, i.e. the W01 snapshot's 20-float column-major
+            # instance transform with its constant 0/1 entries dropped:
+            #   (c,0,-t) (0,s,0) (t,0,c) then the translation
+            # which is the live renderer's `glRotatef(yaw, 0,1,0)` scaled uniformly.
+            # An earlier version swapped the middle and last columns, which collapses the
+            # vertical axis to zero and skews every hull with a non-zero yaw.
             pack_instance(buffer, offset, entity.id, binding_id, entity_flags, *tint,
                           cos_scaled, 0.0, -sin_scaled,
+                          0.0, scale, 0.0,
                           sin_scaled, 0.0, cos_scaled,
-                          0.0, 0.0, scale,
                           position.x, position.y, position.z,
                           hp_frac, shield_frac)
             offset += instance_size
             written += 1
 
-        kind_index = self._kind_index
         effects_written = 0
-        for effect in state.effects:
-            kind = effect.get('kind')
-            if kind not in kind_index:
-                unknown.add(f'<effect kind {kind}>')
-                continue
+
+        # Effects and projectiles come from one generator, so this path and the
+        # validating one cannot drift apart in shape. Their fields arrive as tuples:
+        # (class, kind, position, end, life, size, colour, is_beam).
+        for cls, kind, pos, end, life, size, colour, beam in self._transients(state, unknown):
             if offset + effect_size > len(buffer):
                 raise packed.FrameError('buffer too small for the frame')
-            pos = effect.get('pos') or _ZERO
-            end = effect.get('target_pos') or pos
-            colour = effect.get('color') or _WHITE
-            pack_effect(buffer, offset, packed.EFFECT_CLASS, 0, kind_index[kind],
-                        pos.get('x', 0.0), pos.get('y', 0.0), pos.get('z', 0.0),
-                        _ZERO['x'], _ZERO['y'], _ZERO['z'],
-                        end.get('x', pos.get('x', 0.0)), end.get('y', pos.get('y', 0.0)),
-                        end.get('z', pos.get('z', 0.0)),
-                        float(effect.get('t', 0.0)), float(effect.get('size', 1.0)),
+            pack_effect(buffer, offset, cls, 1 if beam else 0, self._kind_index[kind],
+                        *pos, 0.0, 0.0, 0.0, *end, life, size,
                         *packed.channels(colour))
             offset += effect_size
             effects_written += 1
 
-        for projectile in state.projectiles.values():
-            if projectile.weapon_id not in kind_index:
-                unknown.add(f'<weapon {projectile.weapon_id}>')
-                continue
-            if offset + effect_size > len(buffer):
-                raise packed.FrameError('buffer too small for the frame')
-            pack_effect(buffer, offset, packed.PROJECTILE_CLASS,
-                        1 if projectile.is_beam else 0, kind_index[projectile.weapon_id],
-                        projectile.pos.x, projectile.pos.y, projectile.pos.z,
-                        projectile.vel.x, projectile.vel.y, projectile.vel.z,
-                        projectile.pos.x, projectile.pos.y, projectile.pos.z,
-                        float(projectile.life), float(projectile.size),
-                        *packed.channels(projectile.color))
-            offset += effect_size
-            effects_written += 1
-
-        for record in extra_effects:            # measurement hook; empty in production
+        for record in extra_effects:  # measurement hook; empty in production
             if offset + effect_size > len(buffer):
                 raise packed.FrameError('buffer too small for the frame')
             pack_effect(buffer, offset, *record)
@@ -263,15 +262,13 @@ class FrameCollector:
             if kind not in self._kind_index:
                 unknown.add(f'<effect kind {kind}>')
                 continue
-            pos = effect.get('pos') or {}
-            end = effect.get('target_pos') or pos
+            pos = _xyz(effect.get('pos'))
+            end = _xyz(effect.get('target_pos') or effect.get('center'), pos)
             colour = effect.get('color') or (1.0, 1.0, 1.0, 1.0)
-            yield (packed.EFFECT_CLASS, kind,
-                   (pos.get('x', 0.0), pos.get('y', 0.0), pos.get('z', 0.0)),
-                   (end.get('x', pos.get('x', 0.0)), end.get('y', pos.get('y', 0.0)),
-                    end.get('z', pos.get('z', 0.0))),
+            colour = tuple(float(c) for c in colour)
+            yield (packed.EFFECT_CLASS, kind, pos, end,
                    float(effect.get('t', 0.0)), float(effect.get('size', 1.0)),
-                   tuple(colour) + (1.0,) * (4 - len(colour)), False)
+                   colour + (1.0,) * (4 - len(colour)), False)
         for projectile in state.projectiles.values():
             weapon = projectile.weapon_id
             if weapon not in self._kind_index:

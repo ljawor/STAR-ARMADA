@@ -1,0 +1,12 @@
+{
+  "source": "motion2.bin",
+  "sequence_a": 12,
+  "sequence_b": 15,
+  "instances": 752,
+  "effects_a": 1118,
+  "effects_b": 1058,
+  "moved_positions": 96,
+  "rotated": 0,
+  "max_position_delta": 4.381,
+  "note": "two frames read 1.2 s apart from one live ring"
+}

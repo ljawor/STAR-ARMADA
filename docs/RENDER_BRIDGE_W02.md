@@ -148,11 +148,11 @@ it; the offline exporter's behaviour and bytes are untouched by that cache.
   foreign table hashes, out-of-table binding ids, trailing bytes, truncated frames and non-finite
   input are all rejected with `FrameError`; the ring hands back whole frames under a concurrent
   reader; both encoding paths agree.
-- **Not proven here**, and required before any claim about W02: the C++ consumer end-to-end
-  (decode + interpolate + draw), the ≤ 2-frame latency gate, dropped-frame counts and fps at
-  200/400/600 ships, the equal-workload scenario (fog, HUD, planets), and Filip's Windows laptop.
-  The numbers above are a producer cost, not a frame rate. The migration plan's "owner sees a live
-  battle" gate is untouched.
+- **Not proven in this section**: the consumer side. It is measured in §7 (decode, interpolation,
+  draw path, frames-behind, drops) — but on a producer-only window, so still not proven anywhere:
+  fps at 200/400/600 ships, the equal-workload scenario (fog, HUD, planets, transients drawn against
+  the real HUD), player-visibility filtering in the live path, and Filip's Windows laptop. The
+  migration plan's "owner sees a live battle" gate is untouched.
 
 ## 6. Native consumer (decode half)
 
@@ -184,9 +184,70 @@ test, which ran the producer unthrottled. The guard stays because the window it 
 honest statement is that its control is the Python test, and the C++ side covers the deterministic
 torn-slot case (a slot whose completing tag is missing) instead.
 
-## 7. Tests
+## 7. The live draw path
 
-`tests/test_render_packed.py` (9 tests) and `tests/test_render_ring.py` (6 tests, one of which
-drives a reader thread against a live writer) run without a display or GPU; `ctest` adds
+`render_cpp/src/viewer.cpp` gained a live mode rather than a second program, so the frames being
+timed are drawn by the same code path that already passed W01 review:
+
+```
+armada_viewer --snapshot live.snap --assets . --ring live.bin [--seconds 8]
+```
+
+The snapshot still supplies the mesh catalogue (bindings, scales, camera); instances come from the
+ring. Per frame the viewer reads the newest complete frame, decodes it, and writes interpolated
+instance records into the same `Group` buffers the offline path uses. Pose is recovered from the wire
+matrix as `(position, yaw, scale)` — `yaw = atan2(col2.x, col0.x)`, `scale = col1.y` — and
+interpolated as an angle and a scalar, not element by element, because interpolating matrix entries
+shrinks a turning hull toward the chord between two rotations. `pose_from_matrix`, `lerp_angle` and
+`write_instance` are covered by `test_pose` in the native suite, including the degenerate-scale
+refusal and the `+pi -> -pi` short-way case.
+
+The producer side is `tools/render/stream_ring.py`: a real `GameManager`, stepped at 1/60 s, gathered
+and published every tick, paced to `--hz` when the simulation can keep up.
+
+Measured once, end to end, `artifacts/cpp-renderer/w02/live/live-receipt.json` (macOS, Metal,
+1280x800, MSAA 4, 2048 shadow map, `four-player-combat-v1`, 752 instances):
+
+| Side | Quantity | Value |
+|---|---|---|
+| Producer | published frames / rate | 100 in 20.3 s = **4.92 Hz** |
+| Producer | gather + pack + publish | **2.372 ms** median, 3.015 ms p95 |
+| Producer | simulation tick, same frames | **124.555 ms** median, 442.9 ms p95 |
+| Consumer | frames drawn | 899 in 8 s |
+| Consumer | producer frames adopted / dropped | **31 / 0** |
+| Consumer | decode of a 752-instance frame | **0.757 ms** median, 0.782 ms p95 |
+| Consumer | frames behind at draw | median 0, p95 0, p99 1 (**gate ≤ 2: met**) |
+| Consumer | wall / GPU frame | 8.80 ms / 17.84 ms median |
+
+Three things this table says that are easy to misread:
+
+1. **The 4.92 Hz is the simulation, not the bridge.** A 752-hull Python tick costs 125 ms median on
+   this stress fixture. The bridge spends 2.4 ms of that 127 ms. Nothing about the stream rate is
+   evidence about how fast a rendered frame is.
+2. **"Frames behind" is the gate in the unit it was written in.** It counts how many producer frames
+   were published between the one being drawn and the moment of drawing. Median and p95 are 0 and
+   p99 is 1, i.e. the picture is at most one producer frame stale even though the viewer draws ~112
+   frames a second. It is not wall-clock latency and not a frame rate.
+3. **The 1.0 ms serialization budget is met for instances-only frames and missed for this
+   composition.** The rows in §4 (0.55 / 0.71 ms) pack instances with synthetic transients. A live
+   frame carries 752 instances plus 1,046 real effects and projectiles, and gathering those from
+   `GameState` costs 2.37 ms — 2.4x the budget. It is listed as the next optimization target rather
+   than absorbed into a passing average; the per-transient cost is dominated by dictionary access
+   and tuple building, not by `struct.pack_into`.
+
+That the picture is live, not a paused snapshot, was checked separately: two reads of the same ring
+1.2 s apart differ in **96 ship positions** (max delta 4.381 units) and in transient count
+(1,118 -> 1,058), with the ring's sequence advancing 12 -> 15.
+
+The ring is single-producer and now says so: `Ring.create` takes an exclusive advisory lock and
+refuses a second producer on the same path. Without it, a second producer truncated the header and
+restarted the counter under the first, and a consumer reported thousands of phantom drops — which is
+exactly what happened once during this work and produced the guard, not a hypothesis.
+
+## 8. Tests
+
+`tests/test_render_packed.py` (9 tests) and `tests/test_render_ring.py` (7 tests, one of which
+drives a reader thread against a live writer and one of which starts a second producer process to
+prove it is refused) run without a display or GPU; `ctest` adds
 `frame_v2` (native decoder, both rejection matrices and ring reads, also GPU-free). The equivalence test builds the real fixture, encodes through both paths and
 compares every field, and asserts the simulation hash is unchanged afterwards.

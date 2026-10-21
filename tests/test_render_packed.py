@@ -88,6 +88,52 @@ class PackedProfileTests(unittest.TestCase):
             packed.effect_record(cls=packed.EFFECT_CLASS, kind_id=0,
                                  position=(float('inf'), 0.0, 0.0))
 
+    def test_instance_matrix_is_a_uniformly_scaled_yaw_rotation(self):
+        """The 12 floats are (c,0,-t)(0,s,0)(t,0,c)+translation, as the W01 layout reads them.
+
+        Asserted as invariants rather than against one expected tuple, because they hold for
+        every entity and would have caught a transposed or column-swapped matrix: the middle
+        column must be the vertical axis, and the two horizontal columns must stay
+        orthogonal with equal lengths.
+        """
+        import game.core  # noqa: F401
+        from game.graphics_benchmark import make_fixture
+        from render import asset_selection
+        from render.ship_sizes import ship_size
+        from tools.render.dump_snapshot import _default_selection
+        import pathlib
+
+        asset_selection.configure(_default_selection(),
+                                  asset_root=pathlib.Path(__file__).resolve().parents[1],
+                                  pack_root=pathlib.Path(__file__).resolve().parents[1] / 'visual_packs')
+        fixture = make_fixture('four-player-combat-v1')
+        state, ds = fixture.manager.state, fixture.manager.ds
+        _, _, stats = collect.collect(
+            state, ds, None, asset_selection=asset_selection, ship_size=ship_size,
+            ship_binding=asset_selection.ship_binding, all_visible=True)
+        collector = collect.FrameCollector(
+            ds, stats['tables'], asset_selection=asset_selection, ship_size=ship_size,
+            ship_binding=asset_selection.ship_binding, all_visible=True)
+        buffer = bytearray(packed.frame_size(1024, 0))
+        raw, counts = collector.collect_into(state, buffer, tick=state.tick, frame_index=0)
+        decoded = packed.unpack_frame(bytes(raw), collector.tables)
+        entities = {entity.id: entity for entity in state.entities.values()}
+        turned = 0
+        for instance in decoded['instances']:
+            m = instance['matrix']
+            left, up, right = m[0:3], m[3:6], m[6:9]
+            self.assertEqual((up[0], up[2]), (0.0, 0.0), 'middle column is not the vertical axis')
+            self.assertGreater(up[1], 0.0, 'vertical axis collapsed')
+            self.assertAlmostEqual(left[0], right[2], places=5)     # c == c
+            self.assertAlmostEqual(left[2], -right[0], places=5)    # -t == -(t)
+            entity = entities[instance['entity_id']]
+            self.assertAlmostEqual(m[9], entity.pos.x, places=2)
+            self.assertAlmostEqual(m[10], entity.pos.y, places=2)
+            self.assertAlmostEqual(m[11], entity.pos.z, places=2)
+            if abs(entity.yaw) > 0.3:
+                turned += 1
+        self.assertGreater(turned, 0, 'fixture carries no rotated entity; the check proved nothing')
+
     def test_tables_are_sorted_and_crc_is_stable(self):
         flipped = packed.Tables.build(['b', 'a'], ['y', 'x'])
         sorted_same = packed.Tables.build(['a', 'b'], ['x', 'y'])

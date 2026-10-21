@@ -228,6 +228,46 @@ inline Tables Tables::parse(const std::vector<uint8_t> &raw) {
   return tables;
 }
 
+// Pose recovered from an instance record's twelve floats. The layout is
+// (c,0,-t)(0,s,0)(t,0,c) then the translation, so the vertical axis carries the uniform
+// scale and the horizontal pair carries cos/sin of the yaw. Decomposing here rather than
+// interpolating the matrix element by element keeps a turning hull at constant size
+// instead of shrinking toward the chord between two rotations.
+struct Pose {
+  std::array<float, 3> position{};
+  float yaw = 0.0f;
+  float scale = 1.0f;
+};
+
+inline Pose pose_from_matrix(const std::array<float, 12> &matrix) {
+  Pose pose;
+  pose.position = {matrix[9], matrix[10], matrix[11]};
+  pose.scale = matrix[4];
+  if (!(pose.scale > 0.0f) || !std::isfinite(pose.scale))
+    throw FrameError("instance matrix has no usable scale");
+  pose.yaw = std::atan2(matrix[6], matrix[0]);
+  return pose;
+}
+
+// Shortest-path angle interpolation: -pi -> +pi must cross zero, not go the long way.
+inline float lerp_angle(float from, float to, float alpha) {
+  float delta = std::remainder(to - from, 2.0f * float(M_PI));
+  return from + delta * alpha;
+}
+
+// The viewer's 20-float instance record: four columns of four, as the W01 snapshot layout
+// expects, followed by the tint.
+inline void write_instance(float *out, const Pose &pose, const std::array<uint8_t, 4> &tint) {
+  const float c = std::cos(pose.yaw) * pose.scale;
+  const float t = std::sin(pose.yaw) * pose.scale;
+  const float values[20] = {c,    0.0f, -t,      0.0f,
+                            0.0f, pose.scale, 0.0f, 0.0f,
+                            t,    0.0f, c,       0.0f,
+                            pose.position[0], pose.position[1], pose.position[2], 1.0f,
+                            tint[0] / 255.0f, tint[1] / 255.0f, tint[2] / 255.0f, tint[3] / 255.0f};
+  std::memcpy(out, values, sizeof(values));
+}
+
 // Read-only attachment to the producer's ring file. The writer never blocks; this side
 // reads straight from the file on every call (never a snapshot copy, which would freeze
 // the picture at the first frame) and must tolerate a slot being overwritten mid-read by

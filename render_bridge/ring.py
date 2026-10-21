@@ -28,6 +28,7 @@ that sees published == n can trust slot n once both tags agree.
 """
 from __future__ import annotations
 
+import fcntl
 import mmap
 import os
 from pathlib import Path
@@ -76,8 +77,19 @@ class Ring:
         path = Path(path)
         if path.parent and not path.parent.exists():
             path.parent.mkdir(parents=True, exist_ok=True)
-        fd = os.open(path, os.O_RDWR | os.O_CREAT | os.O_TRUNC, 0o600)
+        # No O_TRUNC here: the file must survive a refused second producer intact, so it
+        # is emptied only after the lock is held.
+        fd = os.open(path, os.O_RDWR | os.O_CREAT, 0o600)
         try:
+            # The ring is single-producer: `create` truncates the header, so a second
+            # producer on the same path would restart the counter under the first one and
+            # a consumer would report nonsense drops. An advisory lock makes that an
+            # error instead of a silent corruption. Readers never take the lock.
+            try:
+                fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except OSError as error:
+                raise RingError(f'ring already has a producer: {path}') from error
+            os.ftruncate(fd, 0)                      # a new session starts from zeroed slots
             os.ftruncate(fd, HEADER_BYTES + slots * slot_bytes)
             mapping = mmap.mmap(fd, 0, access=mmap.ACCESS_WRITE)
         finally:
@@ -191,6 +203,8 @@ class Ring:
     def close(self):
         if not self._closed:
             self._closed = True
+            # Closing the mapping drops the mapping's reference to the descriptor, which
+            # is what releases the producer lock.
             self._mapping.close()
 
     def __enter__(self):

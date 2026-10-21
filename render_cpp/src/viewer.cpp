@@ -1,5 +1,6 @@
 // Standalone W01 viewer: no authoritative game state and no Python runtime.
 #include "camera.hpp"
+#include "frame_v2.hpp"
 #include "scene.hpp"
 #include <SDL3/SDL.h>
 #ifdef __APPLE__
@@ -17,7 +18,9 @@
 #include <iostream>
 #include <map>
 #include <numeric>
+#include <optional>
 #include <thread>
+#include <unordered_map>
 namespace fs = std::filesystem;
 using Json = nlohmann::json;
 using Clock = std::chrono::steady_clock;
@@ -131,8 +134,9 @@ struct Callbacks final : bgfx::CallbackI {
   void captureFrame(const void *, uint32_t) override {}
 };
 struct Options {
-  fs::path snapshot, assets, shaders = ARMADA_SHADER_DIR, shot, report;
+  fs::path snapshot, assets, shaders = ARMADA_SHADER_DIR, shot, report, ring, tables;
   int width = 1280, height = 800, frames = 0, warmup = 30, preset = 1, msaa = 4;
+  double seconds = 0.0, distance = 0.0, pitch = 0.0, yaw = 0.0;
   bool shadows = true, overlay = true, validate = false, exercise = false;
 };
 static Options options(int argc, char **argv) {
@@ -156,6 +160,18 @@ static Options options(int argc, char **argv) {
       o.report = value();
     else if (k == "--frames")
       o.frames = std::stoi(value());
+    else if (k == "--ring")
+      o.ring = value();
+    else if (k == "--tables")
+      o.tables = value();
+    else if (k == "--seconds")
+      o.seconds = std::stod(value());
+    else if (k == "--distance")
+      o.distance = std::stod(value());
+    else if (k == "--pitch")
+      o.pitch = std::stod(value());
+    else if (k == "--yaw")
+      o.yaw = std::stod(value());
     else if (k == "--warmup")
       o.warmup = std::stoi(value());
     else if (k == "--width")
@@ -179,7 +195,8 @@ static Options options(int argc, char **argv) {
           << "armada_viewer --snapshot scene.snap --assets assets [--frames "
              "180 --report timing.json --screenshot fleet.png]\nMouse drag "
              "orbit | wheel zoom | WASD pan | 1 fleet | 2 capital | 3 station "
-             "| S screenshot | F overlay | H shadows | Esc quit\n";
+             "| S screenshot | F overlay | H shadows | Esc quit\n"
+             "Live mode: --ring ring.bin [--tables ring.bin.tables] [--seconds 10]\n";
       std::exit(0);
     } else
       throw std::runtime_error("Unknown option: " + k);
@@ -188,7 +205,7 @@ static Options options(int argc, char **argv) {
     throw std::runtime_error("--snapshot and --assets are required");
   if (o.width < 320 || o.height < 240 || o.width > 7680 || o.height > 4320 ||
       o.frames < 0 || o.warmup < 0 || o.preset < 1 || o.preset > 3 ||
-      (o.msaa != 0 && o.msaa != 4))
+      (o.msaa != 0 && o.msaa != 4) || o.seconds < 0.0)
     throw std::runtime_error("Invalid viewer limits");
   return o;
 }
@@ -237,6 +254,126 @@ struct Cleanup {
   }
   ~Cleanup() { run(); }
 };
+// Live mode: the same draw path as the offline scene, but the instances come from the
+// producer's ring every frame instead of from the snapshot.
+struct Live {
+  armada::bridge::RingReader reader;
+  armada::bridge::Tables tables;
+  std::unordered_map<std::string, size_t> group_of;
+  std::optional<armada::bridge::Frame> previous, current;
+  uint64_t previous_sequence = 0, current_sequence = 0;
+  std::chrono::steady_clock::time_point current_at{};
+  bool have_current_at = false;
+  double period = 1.0 / 60.0;
+  uint64_t adopted = 0, dropped = 0, decode_failures = 0, empty_draws = 0;
+  std::vector<double> decode_ms, age_frames, alphas;
+
+  Live(const fs::path &ring_path, const fs::path &tables_path,
+       const std::vector<Group> &groups)
+      : reader(ring_path), tables(armada::bridge::Tables::parse(
+            [&] {
+              std::ifstream in(tables_path, std::ios::binary | std::ios::ate);
+              if (!in)
+                throw armada::bridge::FrameError(
+                    "table file missing: " + tables_path.string());
+              const auto size = in.tellg();
+              std::vector<uint8_t> bytes(static_cast<size_t>(size));
+              in.seekg(0);
+              if (!bytes.empty())
+                in.read(reinterpret_cast<char *>(bytes.data()), size);
+              return bytes;
+            }())) {
+    for (size_t i = 0; i < groups.size(); ++i)
+      group_of.emplace(groups[i].mesh.binding, i);
+  }
+
+  // Adopt the newest complete frame if it is new, then write interpolated instances into
+  // the draw groups. Returns false when nothing has been published yet.
+  bool step(std::vector<Group> &groups) {
+    std::vector<uint8_t> bytes;
+    uint64_t sequence = 0;
+    const auto started = Clock::now();
+    if (!reader.latest(bytes, &sequence))
+      return false;
+    if (!current || sequence != current_sequence) {
+      try {
+        auto frame = armada::bridge::decode(bytes, tables);
+        decode_ms.push_back(std::chrono::duration<double, std::milli>(
+                                Clock::now() - started)
+                                .count());
+        previous = std::move(current);
+        previous_sequence = current_sequence;
+        current = std::move(frame);
+        const uint64_t skipped = current_sequence == 0 && !previous
+                                     ? 0
+                                     : reader.dropped_since(current_sequence);
+        dropped += skipped;
+        current_sequence = sequence;
+        const auto now = Clock::now();
+        if (have_current_at) {
+          const double delta = std::chrono::duration<double>(now - current_at).count();
+          if (delta > 0.0005 && delta < 0.5)
+            period = period * 0.8 + delta * 0.2;
+        }
+        current_at = now;
+        have_current_at = true;
+        ++adopted;
+      } catch (const armada::bridge::FrameError &) {
+        ++decode_failures;
+        return false;
+      }
+    }
+    const double elapsed =
+        have_current_at ? std::chrono::duration<double>(Clock::now() - current_at).count()
+                        : 0.0;
+    const float alpha = float(std::clamp(elapsed / period, 0.0, 1.0));
+    alphas.push_back(alpha);
+
+    for (auto &group : groups)
+      group.instances.clear();
+    std::unordered_map<uint32_t, const armada::bridge::Instance *> old;
+    if (previous)
+      for (const auto &record : previous->instances)
+        old.emplace(record.entity_id, &record);
+
+    std::vector<float> scratch(20);
+    for (const auto &record : current->instances) {
+      const auto it = group_of.find(tables.bindings.at(record.binding_id));
+      if (it == group_of.end())
+        continue;
+      auto pose = armada::bridge::pose_from_matrix(record.matrix);
+      if (const auto prior = old.find(record.entity_id); prior != old.end()) {
+        try {
+          const auto before = armada::bridge::pose_from_matrix(prior->second->matrix);
+          pose.yaw = armada::bridge::lerp_angle(before.yaw, pose.yaw, alpha);
+          pose.scale = before.scale + (pose.scale - before.scale) * alpha;
+          for (size_t axis = 0; axis < 3; ++axis)
+            pose.position[axis] =
+                before.position[axis] + (pose.position[axis] - before.position[axis]) * alpha;
+        } catch (const armada::bridge::FrameError &) {
+          // keep the newest pose when the older record cannot be decomposed
+        }
+      }
+      armada::bridge::write_instance(scratch.data(), pose, record.tint);
+      auto &target = groups[it->second].instances;
+      target.insert(target.end(), scratch.begin(), scratch.end());
+    }
+    return true;
+  }
+
+  // How many frames the producer advanced while this one was being drawn: the gate is
+  // stated in frames, so this is the number it is stated against.
+  void after_frame() {
+    if (!current)
+      return;
+    const uint64_t available = reader.published();
+    if (available > current_sequence)
+      age_frames.push_back(double(available - 1 - current_sequence));
+    else
+      age_frames.push_back(0.0);
+  }
+};
+
 static int run(const Options &o) {
   Callbacks callback;
   Cleanup cleanup;
@@ -264,7 +401,14 @@ static int run(const Options &o) {
     }
     groups.push_back(std::move(g));
   }
-  Json report{{"profile", "W01-offline-mesh-only"},
+  std::optional<Live> live;
+  if (!o.ring.empty()) {
+    const fs::path tables = o.tables.empty() ? fs::path(o.ring.string() + ".tables") : o.tables;
+    live.emplace(o.ring, tables, groups);
+    if (o.snapshot.empty())
+      throw std::runtime_error("live mode still needs --snapshot for the mesh catalogue");
+  }
+  Json report{{"profile", live ? "W02-live-ring" : "W01-offline-mesh-only"},
               {"fixture", scene.at("fixture")},
               {"state_sha256", scene.at("state_sha256")},
               {"metadata", scene.value("metadata", Json::object())},
@@ -442,14 +586,28 @@ static int run(const Options &o) {
   int width = pixelWidth, height = pixelHeight, frame = 0;
   std::vector<double> wall, cpu, gpu;
   std::vector<uint32_t> draws;
+  // Capture framing only; never touches simulation state.
+  if (o.distance > 0.0)
+    camera.distance = float(o.distance);
+  if (o.pitch > 0.0)
+    camera.pitch = float(o.pitch);
+  if (o.yaw > 0.0)
+    camera.yaw = float(o.yaw);
   auto previous = Clock::now();
+  const auto live_start = Clock::now();
   std::array<float, 3> lightTarget = original.target;
   int screenshotExpected = 0;
+  bool shot_taken = false;
   std::vector<Json> controlStates;
   while (running && (o.frames == 0 || frame < o.frames + o.warmup)) {
     const auto start = Clock::now();
     const float dt = std::chrono::duration<float>(start - previous).count();
     previous = start;
+    if (live)
+      live->step(groups);   // no frame yet leaves the groups empty on purpose
+    if (live && o.seconds > 0.0 &&
+        std::chrono::duration<double>(start - live_start).count() >= o.seconds)
+      running = false;
     if (o.exercise && (frame == 5 || frame == 10 || frame == 15)) {
       SDL_Event event{};
       if (frame == 5) {
@@ -599,12 +757,16 @@ static int run(const Options &o) {
     bgfx::setDebug(overlay ? BGFX_DEBUG_TEXT : BGFX_DEBUG_NONE);
     bgfx::dbgTextClear();
     if (overlay) {
-      bgfx::dbgTextPrintf(1, 1, 0x0f, "STAR ARMADA / W01 OFFLINE / %s",
+      bgfx::dbgTextPrintf(1, 1, 0x0f, "STAR ARMADA / %s / %s",
+                          live ? "W02 LIVE RING" : "W01 OFFLINE",
                           bgfx::getRendererName(bgfx::getRendererType()));
+      size_t drawnInstances = 0;
+      for (const auto &group : groups)
+        drawnInstances += group.instances.size() / 20;
       bgfx::dbgTextPrintf(
           1, 3, 0x07,
           "%zu mesh instances | %zu unique meshes | %zu triangles/pass",
-          scene.at("instances").size(), groups.size(), drawnTriangles);
+          drawnInstances, groups.size(), drawnTriangles);
       bgfx::dbgTextPrintf(
           1, 5, 0x07,
           "Drag orbit | wheel zoom | WASD pan | 1 fleet 2 capital 3 station");
@@ -612,22 +774,49 @@ static int run(const Options &o) {
                           "Shift+S PNG | F overlay | H shadows (%s) | Esc quit",
                           shadows ? "ON" : "OFF");
       const auto *st = bgfx::getStats();
-      bgfx::dbgTextPrintf(1, 8, 0x0b,
-                          "GPU %.2f ms | submits %u | fixed scene: NO "
-                          "simulation, fog, HUD or VFX",
-                          st->gpuTimerFreq
-                              ? 1000.0 *
-                                    double(st->gpuTimeEnd - st->gpuTimeBegin) /
-                                    st->gpuTimerFreq
-                              : 0,
-                          st->numDraw);
+      if (live)
+        bgfx::dbgTextPrintf(1, 8, 0x0b,
+                            "GPU %.2f ms | submits %u | live: %llu frames adopted, "
+                            "%llu dropped, decode %.2f ms, %llu behind",
+                            st->gpuTimerFreq
+                                ? 1000.0 *
+                                      double(st->gpuTimeEnd - st->gpuTimeBegin) /
+                                      st->gpuTimerFreq
+                                : 0,
+                            st->numDraw,
+                            (unsigned long long)live->adopted,
+                            (unsigned long long)live->dropped,
+                            live->decode_ms.empty() ? 0.0 : live->decode_ms.back(),
+                            (unsigned long long)(live->age_frames.empty()
+                                                     ? 0
+                                                     : live->age_frames.back()));
+      else
+        bgfx::dbgTextPrintf(1, 8, 0x0b,
+                            "GPU %.2f ms | submits %u | fixed scene: NO "
+                            "simulation, fog, HUD or VFX",
+                            st->gpuTimerFreq
+                                ? 1000.0 *
+                                      double(st->gpuTimeEnd - st->gpuTimeBegin) /
+                                      st->gpuTimerFreq
+                                : 0,
+                            st->numDraw);
     }
-    if (!o.shot.empty() && o.frames > 0 &&
-        frame == std::max(0, o.frames + o.warmup - 5)) {
+    // A frame-counted capture cannot fire in a duration-bounded live session, so the
+    // live path arms it on elapsed time instead, late enough to leave frames for delivery.
+    const bool shot_due =
+        !o.shot.empty() && !shot_taken && frame > o.warmup &&
+        ((o.frames > 0 && frame == std::max(0, o.frames + o.warmup - 5)) ||
+         (o.frames == 0 && live && o.seconds > 0.0 &&
+          std::chrono::duration<double>(Clock::now() - live_start).count() >=
+              o.seconds * 0.85));
+    if (shot_due) {
       bgfx::requestScreenShot(BGFX_INVALID_HANDLE, o.shot.string().c_str());
       screenshotExpected++;
+      shot_taken = true;
     }
     bgfx::frame();
+    if (live)
+      live->after_frame();
     const auto end = Clock::now();
     const auto *st = bgfx::getStats();
     if (frame >= o.warmup) {
@@ -642,6 +831,25 @@ static int run(const Options &o) {
       draws.push_back(st->numDraw);
     }
     frame++;
+  }
+  if (live) {
+    report["live"] = {
+        {"ring", o.ring.string()},
+        {"frames_drawn", frame},
+        {"producer_frames_adopted", live->adopted},
+        {"producer_frames_dropped", live->dropped},
+        {"decode_failures", live->decode_failures},
+        {"producer_period_ms", live->period * 1000.0},
+        {"decode_ms", stats(live->decode_ms)},
+        {"frames_behind", stats(live->age_frames)},
+        {"interpolation_alpha", stats(live->alphas)},
+        {"gate", {{"unit", "frames behind at draw"}, {"limit", 2}, {"met", true}}},
+        {"note", "Producer-only frames: no simulation or HUD is drawn by this window. "
+                 "frames_behind counts producer frames published while this frame was "
+                 "being drawn; it is not wall-clock latency and not a frame rate."}};
+    const auto behind = stats(live->age_frames);
+    report["live"]["gate"]["met"] =
+        behind.contains("p95_ms") && behind["p95_ms"].get<double>() <= 2.0;
   }
   report["timing_scope"] =
       "Unsynchronized offline mesh-only frame loop; excludes simulation, HUD, "

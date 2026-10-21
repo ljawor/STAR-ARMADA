@@ -381,6 +381,58 @@ void test_ring(const fs::path &dir, const Json &expected) {
 
 } // namespace
 
+// The viewer draws interpolated poses, so the pose it recovers from a wire matrix has to
+// be the pose that matrix means: same yaw, same scale, same position, and the same matrix
+// when written back out. A transposed column layout passes decode checks and still renders
+// every yawed hull as a flat pancake, which is what this covers.
+static void test_pose() {
+  using namespace armada::bridge;
+  const std::array<float, 12> identity{1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 5};
+  const auto straight = pose_from_matrix(identity);
+  check(std::abs(straight.yaw) < 1e-5f, "identity yaw is zero");
+  check(std::abs(straight.scale - 1.0f) < 1e-6f, "identity scale is one");
+  check(straight.position[0] == 10.0f && straight.position[2] == 5.0f,
+        "identity translation is read from the last column");
+
+  // Quarter turn about +y at twice the size, authored the same way the producer does.
+  const float c = std::cos(float(M_PI) / 2.0f) * 2.0f, s = std::sin(float(M_PI) / 2.0f) * 2.0f;
+  const std::array<float, 12> turned{c, 0, -s, 0, 2, 0, s, 0, c, -4.5f, 0, 12.25f};
+  const auto quarter = pose_from_matrix(turned);
+  check(std::abs(quarter.yaw - float(M_PI) / 2.0f) < 1e-5f, "quarter turn yaw recovered");
+  check(std::abs(quarter.scale - 2.0f) < 1e-6f, "quarter turn scale recovered");
+  check(quarter.position[0] == -4.5f && quarter.position[2] == 12.25f,
+        "quarter turn translation recovered");
+
+  // Round trip through the viewer's 20-float layout.
+  const std::array<uint8_t, 4> tint{64, 128, 192, 255};
+  for (const auto &matrix : {identity, turned}) {
+    const auto pose = pose_from_matrix(matrix);
+    float out[20];
+    write_instance(out, pose, tint);
+    // The wire holds three floats per column, the viewer four, so map them by hand.
+    const size_t wire_to_viewer[12] = {0, 1, 2, 4, 5, 6, 8, 9, 10, 12, 13, 14};
+    for (size_t i = 0; i < 12; ++i)
+      check(std::abs(out[wire_to_viewer[i]] - matrix[i]) < 1e-5f,
+            "written matrix matches the wire matrix");
+    check(std::abs(out[15] - 1.0f) < 1e-6f, "written w column is one");
+    check(std::abs(out[16] - 64.0f / 255.0f) < 1e-6f, "written tint is the wire tint");
+  }
+
+  // Shortest-path interpolation: +3 rad to -3 rad crosses zero, not the long way round.
+  const float middle = lerp_angle(3.0f, -3.0f, 0.5f);
+  check(std::abs(middle) > float(M_PI) - 0.2f, "angle interpolation takes the short way");
+  check(std::abs(lerp_angle(0.2f, 0.4f, 0.5f) - 0.3f) < 1e-6f, "small angle halves");
+
+  // A matrix with no vertical axis cannot be decomposed, and must say so.
+  bool refused = false;
+  try {
+    pose_from_matrix({1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0});
+  } catch (const FrameError &) {
+    refused = true;
+  }
+  check(refused, "degenerate scale is refused");
+}
+
 int main(int argc, char **argv) {
   const fs::path dir = argc > 1 ? fs::path(argv[1]) : fs::path(ARMADA_FIXTURE_DIR);
   try {
@@ -390,6 +442,7 @@ int main(int argc, char **argv) {
     test_tables(dir, expected);
     test_frame(dir, expected);
     test_ring(dir, expected);
+    test_pose();
   } catch (const std::exception &e) {
     std::cerr << "FATAL " << e.what() << '\n';
     return 2;
