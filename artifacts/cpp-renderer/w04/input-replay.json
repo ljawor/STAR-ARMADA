@@ -1,0 +1,150 @@
+{
+  "events_delivered": 9,
+  "batches_read": 7,
+  "batches_skipped": 0,
+  "unmapped": 0,
+  "quit_requested": false,
+  "window": [
+    1280,
+    800
+  ],
+  "surface": [
+    1280,
+    800
+  ],
+  "steps": [
+    {
+      "delivered": 1,
+      "follow_id": null,
+      "yaw": 45.0,
+      "distance": 3000.0,
+      "pitch": 55.0,
+      "selection": [
+        18
+      ],
+      "paused": false,
+      "messages": [],
+      "changed": []
+    },
+    {
+      "delivered": 1,
+      "follow_id": null,
+      "yaw": 45.0,
+      "distance": 3000.0,
+      "pitch": 55.0,
+      "selection": [
+        18
+      ],
+      "paused": false,
+      "messages": [],
+      "changed": []
+    },
+    {
+      "delivered": 2,
+      "follow_id": 18,
+      "yaw": 45.0,
+      "distance": 3000.0,
+      "pitch": 55.0,
+      "selection": [
+        18
+      ],
+      "paused": false,
+      "messages": [
+        "following selection"
+      ],
+      "changed": [
+        "follow",
+        "messages"
+      ]
+    },
+    {
+      "delivered": 1,
+      "follow_id": 18,
+      "yaw": 43.0,
+      "distance": 3000.0,
+      "pitch": 55.0,
+      "selection": [
+        18
+      ],
+      "paused": false,
+      "messages": [
+        "following selection"
+      ],
+      "changed": [
+        "yaw"
+      ]
+    },
+    {
+      "delivered": 1,
+      "follow_id": 18,
+      "yaw": 43.0,
+      "distance": 3000.0,
+      "pitch": 55.0,
+      "selection": [
+        18
+      ],
+      "paused": false,
+      "messages": [
+        "following selection"
+      ],
+      "changed": []
+    },
+    {
+      "delivered": 2,
+      "follow_id": 18,
+      "yaw": 43.0,
+      "distance": 3000.0,
+      "pitch": 55.0,
+      "selection": [],
+      "paused": false,
+      "messages": [
+        "following selection"
+      ],
+      "changed": [
+        "selection"
+      ]
+    },
+    {
+      "delivered": 1,
+      "follow_id": 18,
+      "yaw": 43.0,
+      "distance": 3409.0909090909095,
+      "pitch": 55.0,
+      "selection": [],
+      "paused": false,
+      "messages": [
+        "following selection"
+      ],
+      "changed": [
+        "distance"
+      ]
+    },
+    {
+      "delivered": 0,
+      "follow_id": 18,
+      "yaw": 43.0,
+      "distance": 3409.0909090909095,
+      "pitch": 55.0,
+      "selection": [],
+      "paused": false,
+      "messages": [
+        "following selection"
+      ],
+      "changed": []
+    }
+  ],
+  "final": {
+    "follow_id": 18,
+    "yaw": 43.0,
+    "distance": 3409.0909090909095,
+    "pitch": 55.0,
+    "selection": [],
+    "paused": false
+  },
+  "checks": {
+    "events_arrived": true,
+    "some_frame_changed_game_state": true,
+    "camera_followed_a_selection": true
+  },
+  "verified": true
+}

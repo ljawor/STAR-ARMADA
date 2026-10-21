@@ -1,6 +1,7 @@
 // Standalone W01 viewer: no authoritative game state and no Python runtime.
 #include "camera.hpp"
 #include "frame_v2.hpp"
+#include "input_ring.hpp"
 #include "overlay.hpp"
 #include "scene.hpp"
 #include <SDL3/SDL.h>
@@ -26,6 +27,7 @@ namespace fs = std::filesystem;
 // `overlay` is also the debug-text toggle's variable name inside main(), which shadows the
 // namespace there; a file-scope alias keeps the decoder reachable.
 namespace hud = armada::overlay;
+namespace input_ring = armada::input;
 using Json = nlohmann::json;
 using Clock = std::chrono::steady_clock;
 
@@ -138,7 +140,10 @@ struct Callbacks final : bgfx::CallbackI {
   void captureFrame(const void *, uint32_t) override {}
 };
 struct Options {
-  fs::path snapshot, assets, shaders = ARMADA_SHADER_DIR, shot, report, ring, tables, overlayRing;
+  fs::path snapshot, assets, shaders = ARMADA_SHADER_DIR, shot, report, ring, tables, overlayRing,
+      inputRing;
+  int inputSlots = 8;
+  bool inputExercise = false;
   bool hudOnly = false;
   int width = 1280, height = 800, frames = 0, warmup = 30, preset = 1, msaa = 4;
   double seconds = 0.0, distance = 0.0, pitch = 0.0, yaw = 0.0;
@@ -171,6 +176,12 @@ static Options options(int argc, char **argv) {
       o.tables = value();
     else if (k == "--overlay-ring")
       o.overlayRing = value();
+    else if (k == "--input-ring")
+      o.inputRing = value();
+    else if (k == "--input-slots")
+      o.inputSlots = std::stoi(value());
+    else if (k == "--input-exercise")
+      o.inputExercise = true;
     else if (k == "--hud-only")
       o.hudOnly = true;
     else if (k == "--seconds")
@@ -210,7 +221,13 @@ static Options options(int argc, char **argv) {
              "HUD surface; dirty rects only after the first frame; the window waits for a "
              "full frame so a late attach never shows a half-texture)\n"
              "           --hud-only draws only that quad, unblended, so --screenshot is the HUD "
-             "texture's own pixels (bgfx screenshots a swapchain only, never a render target)\n";
+             "texture's own pixels (bgfx screenshots a swapchain only, never a render target)\n"
+             "Input (W04): --input-ring input.bin [--input-slots 8] publishes the window's "
+             "pointer and keyboard events as ARMINP01 batches for the simulation to consume; "
+             "the window still decides nothing\n"
+             "           --input-exercise pushes a scripted click/key sequence through the real "
+             "SDL pump so the return path can be replayed end to end (synthetic input, labelled "
+             "as such in the report)\n";
       std::exit(0);
     } else
       throw std::runtime_error("Unknown option: " + k);
@@ -219,10 +236,66 @@ static Options options(int argc, char **argv) {
     throw std::runtime_error("--snapshot and --assets are required");
   if (o.width < 320 || o.height < 240 || o.width > 7680 || o.height > 4320 ||
       o.frames < 0 || o.warmup < 0 || o.preset < 1 || o.preset > 3 ||
-      (o.msaa != 0 && o.msaa != 4) || o.seconds < 0.0)
+      (o.msaa != 0 && o.msaa != 4) || o.seconds < 0.0 || o.inputSlots < 1 ||
+      o.inputSlots > 4096)
     throw std::runtime_error("Invalid viewer limits");
   return o;
 }
+// SDL keycode -> the bridge's own key code. Printable keys keep their ASCII value, so a letter
+// is the same number on both sides; everything else is one of the shared input::kKey constants.
+// Returns 0 for a key the simulation has no business seeing.
+static uint16_t wireKey(SDL_Keycode key) {
+  if (key >= 0x20 && key <= 0x7E)
+    return uint16_t(key);
+  switch (key) {
+  case SDLK_ESCAPE: return input_ring::kCodeEscape;
+  case SDLK_RETURN: return input_ring::kCodeReturn;
+  case SDLK_KP_ENTER: return input_ring::kCodeReturn;
+  case SDLK_TAB: return input_ring::kCodeTab;
+  case SDLK_BACKSPACE: return input_ring::kCodeBackspace;
+  case SDLK_DELETE: return input_ring::kCodeDelete;
+  case SDLK_INSERT: return input_ring::kCodeInsert;
+  case SDLK_SPACE: return input_ring::kCodeSpace;
+  case SDLK_LEFT: return input_ring::kCodeLeft;
+  case SDLK_RIGHT: return input_ring::kCodeRight;
+  case SDLK_UP: return input_ring::kCodeUp;
+  case SDLK_DOWN: return input_ring::kCodeDown;
+  case SDLK_HOME: return input_ring::kCodeHome;
+  case SDLK_END: return input_ring::kCodeEnd;
+  case SDLK_PAGEUP: return input_ring::kCodePageUp;
+  case SDLK_PAGEDOWN: return input_ring::kCodePageDown;
+  case SDLK_LSHIFT: return input_ring::kCodeLShift;
+  case SDLK_RSHIFT: return input_ring::kCodeRShift;
+  case SDLK_LCTRL: return input_ring::kCodeLCtrl;
+  case SDLK_RCTRL: return input_ring::kCodeRCtrl;
+  case SDLK_LALT: return input_ring::kCodeLAlt;
+  case SDLK_RALT: return input_ring::kCodeRAlt;
+  case SDLK_F1: return input_ring::kCodeF1;
+  case SDLK_F2: return uint16_t(input_ring::kCodeF1 + 1);
+  case SDLK_F3: return uint16_t(input_ring::kCodeF1 + 2);
+  case SDLK_F4: return uint16_t(input_ring::kCodeF1 + 3);
+  case SDLK_F5: return uint16_t(input_ring::kCodeF1 + 4);
+  case SDLK_F6: return uint16_t(input_ring::kCodeF1 + 5);
+  case SDLK_F7: return uint16_t(input_ring::kCodeF1 + 6);
+  case SDLK_F8: return uint16_t(input_ring::kCodeF1 + 7);
+  case SDLK_F9: return uint16_t(input_ring::kCodeF1 + 8);
+  case SDLK_F10: return uint16_t(input_ring::kCodeF1 + 9);
+  case SDLK_F11: return uint16_t(input_ring::kCodeF1 + 10);
+  case SDLK_F12: return uint16_t(input_ring::kCodeF1 + 11);
+  default: return 0;
+  }
+}
+
+static uint8_t wireMod(SDL_Keymod mod) {
+  uint8_t bits = 0;
+  if (mod & SDL_KMOD_LSHIFT) bits |= input_ring::kModShiftLeft;
+  if (mod & SDL_KMOD_RSHIFT) bits |= input_ring::kModShiftRight;
+  if (mod & SDL_KMOD_CTRL) bits |= input_ring::kModCtrl;
+  if (mod & SDL_KMOD_ALT) bits |= input_ring::kModAlt;
+  if (mod & SDL_KMOD_GUI) bits |= input_ring::kModGui;
+  return bits;
+}
+
 static bgfx::ShaderHandle shader(const fs::path &p) {
   std::ifstream f(p, std::ios::binary | std::ios::ate);
   if (!f)
@@ -596,6 +669,16 @@ static int run(const Options &o) {
   std::unique_ptr<armada::bridge::RingReader> uiRing;
   if (!o.overlayRing.empty())
     uiRing = std::make_unique<armada::bridge::RingReader>(o.overlayRing);
+  // W04: the same ring layout, written by this window and read by the simulation. The first
+  // batch carries the window size so the consumer can map pointer pixels without guessing; it
+  // never resizes the HUD, it only tells the game what the pointer is measured against.
+  std::unique_ptr<input_ring::RingWriter> inputOut;
+  size_t inputBatches = 0, inputEvents = 0, inputUnmappedKeys = 0;
+  std::vector<input_ring::Event> inputPending;
+  if (!o.inputRing.empty()) {
+    inputOut = std::make_unique<input_ring::RingWriter>(o.inputRing, uint16_t(o.inputSlots),
+                                                        1u << 16);
+  }
   bgfx::TextureHandle uiTexture = BGFX_INVALID_HANDLE;
   uint16_t uiWidth = 0, uiHeight = 0;
   uint64_t uiSequence = 0;
@@ -664,6 +747,14 @@ static int run(const Options &o) {
     camera.yaw = float(o.yaw);
   auto previous = Clock::now();
   const auto live_start = Clock::now();
+  if (inputOut) {
+    // First batch tells the consumer what the pointer is measured against, so it can map
+    // window pixels onto the HUD surface without assuming a size.
+    inputOut->publish(input_ring::encodeBatch(
+        {{input_ring::kResize, 0, 0, 0, 0, (uint32_t(width) << 16) | uint32_t(height)}}));
+    inputBatches = 1;
+    inputEvents = 1;
+  }
   std::array<float, 3> lightTarget = original.target;
   int screenshotExpected = 0;
   bool shot_taken = false;
@@ -693,8 +784,96 @@ static int run(const Options &o) {
       }
       SDL_PushEvent(&event);
     }
+    if (o.inputExercise) {
+      if (frame == 40) {
+        SDL_Event down{};
+        down.type = SDL_EVENT_KEY_DOWN;
+        down.key.key = SDLK_SPACE;
+        SDL_PushEvent(&down);
+        SDL_Event up{};
+        up.type = SDL_EVENT_KEY_UP;
+        up.key.key = SDLK_SPACE;
+        SDL_PushEvent(&up);
+      } else if (frame == 41) {
+        SDL_Event down{};
+        down.type = SDL_EVENT_KEY_DOWN;
+        down.key.key = SDLK_Q;
+        SDL_PushEvent(&down);
+      } else if (frame == 44) {
+        SDL_Event up{};
+        up.type = SDL_EVENT_KEY_UP;
+        up.key.key = SDLK_Q;
+        SDL_PushEvent(&up);
+      } else if (frame == 46) {
+        SDL_Event click{};
+        click.type = SDL_EVENT_MOUSE_BUTTON_DOWN;
+        click.button.button = SDL_BUTTON_LEFT;
+        click.button.x = 640;
+        click.button.y = 400;
+        SDL_PushEvent(&click);
+        SDL_Event release{};
+        release.type = SDL_EVENT_MOUSE_BUTTON_UP;
+        release.button.button = SDL_BUTTON_LEFT;
+        release.button.x = 640;
+        release.button.y = 400;
+        SDL_PushEvent(&release);
+      } else if (frame == 48) {
+        SDL_Event wheel{};
+        wheel.type = SDL_EVENT_MOUSE_WHEEL;
+        wheel.wheel.y = -1.f;
+        SDL_PushEvent(&wheel);
+      }
+    }
     SDL_Event ev;
     while (SDL_PollEvent(&ev)) {
+      if (inputOut) {
+        float mx = 0.f, my = 0.f;
+        switch (ev.type) {
+        case SDL_EVENT_MOUSE_MOTION:
+          inputPending.push_back({input_ring::kMotion,
+                                  uint8_t(ev.motion.state & 0xFF), 0,
+                                  int32_t(ev.motion.x), int32_t(ev.motion.y), 0});
+          break;
+        case SDL_EVENT_MOUSE_BUTTON_DOWN:
+        case SDL_EVENT_MOUSE_BUTTON_UP:
+          SDL_GetMouseState(&mx, &my);
+          inputPending.push_back({ev.type == SDL_EVENT_MOUSE_BUTTON_DOWN
+                                      ? input_ring::kButtonDown
+                                      : input_ring::kButtonUp,
+                                  uint8_t(ev.button.button), 0, int32_t(mx), int32_t(my), 0});
+          break;
+        case SDL_EVENT_MOUSE_WHEEL:
+          SDL_GetMouseState(&mx, &my);
+          inputPending.push_back({input_ring::kWheel, uint8_t(ev.wheel.y > 0.f ? 1 : 0), 0,
+                                  int32_t(mx), int32_t(my), 0});
+          break;
+        case SDL_EVENT_KEY_DOWN:
+        case SDL_EVENT_KEY_UP: {
+          const uint16_t code = wireKey(ev.key.key);
+          if (code == 0) {
+            ++inputUnmappedKeys;
+            break;
+          }
+          inputPending.push_back({ev.type == SDL_EVENT_KEY_DOWN ? input_ring::kKeyDownEvent
+                                                                 : input_ring::kKeyUpEvent,
+                                  wireMod(ev.key.mod), code, 0, 0, 0});
+          break;
+        }
+        case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
+          inputPending.push_back({input_ring::kResize, 0, 0, 0, 0,
+                                  (uint32_t(ev.window.data1) << 16) |
+                                      uint32_t(ev.window.data2)});
+          break;
+        case SDL_EVENT_WINDOW_FOCUS_LOST:
+          inputPending.push_back({input_ring::kFocusLost, 0, 0, 0, 0, 0});
+          break;
+        case SDL_EVENT_QUIT:
+          inputPending.push_back({input_ring::kQuit, 0, 0, 0, 0, 0});
+          break;
+        default:
+          break;
+        }
+      }
       if (ev.type == SDL_EVENT_QUIT)
         running = false;
       else if (ev.type == SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED) {
@@ -738,6 +917,12 @@ static int run(const Options &o) {
           break;
         }
       }
+    }
+    if (inputOut && !inputPending.empty()) {
+      inputOut->publish(input_ring::encodeBatch(inputPending));
+      ++inputBatches;
+      inputEvents += inputPending.size();
+      inputPending.clear();
     }
     const bool *keys = SDL_GetKeyboardState(nullptr);
     camera.pan(float(keys[SDL_SCANCODE_D]) - float(keys[SDL_SCANCODE_A]),
@@ -1030,6 +1215,18 @@ static int run(const Options &o) {
                      {"hud_only", o.hudOnly},
                      {"mode", o.hudOnly ? "presented-unblended (diagnostic)"
                                         : "composited over the scene"}};
+  }
+  if (inputOut) {
+    report["input"] = {{"ring", o.inputRing.string()},
+                       {"batches", inputBatches},
+                       {"events", inputEvents},
+                       {"published", inputOut->published()},
+                       {"unmapped_keys", inputUnmappedKeys},
+                       {"coordinates", "window pixels"},
+                       {"window", {width, height}},
+                       {"authority", "the window records events; the simulation validates "
+                                     "and executes every command"},
+                       {"exercise", o.inputExercise ? "scripted-synthetic" : "off"}};
   }
   if (callback.errors || callback.shots < screenshotExpected ||
       (!o.shot.empty() && o.frames > 0 && callback.shots == 0))

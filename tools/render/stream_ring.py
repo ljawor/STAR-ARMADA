@@ -15,6 +15,7 @@ is the live-integration seam: recomputing it here with `state.can_see` costs ~45
 from __future__ import annotations
 
 import argparse
+import signal
 import json
 from pathlib import Path
 import statistics
@@ -36,7 +37,17 @@ def configure_assets():
     asset_selection.configure(_default_selection(), asset_root=ROOT, pack_root=ROOT / 'visual_packs')
 
 
+def _stop_on_sigterm(signum, frame):
+    """Turn SIGTERM into the same path Ctrl-C takes, so the summary is still written.
+
+    A launcher that kills its producer would otherwise lose the report that says what happened,
+    including the input counters, and a shell-started background job ignores SIGINT by default.
+    """
+    raise KeyboardInterrupt
+
+
 def main(argv=None):
+    signal.signal(signal.SIGTERM, _stop_on_sigterm)
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--ring', type=Path, required=True)
     parser.add_argument('--fixture', default='four-player-combat-v1')
@@ -57,6 +68,10 @@ def main(argv=None):
     parser.add_argument('--overlay-slots', type=int, default=4)
     parser.add_argument('--overlay-all', action='store_true',
                         help='publish every overlay frame as a full surface (slow; for diagnosis)')
+    parser.add_argument('--input-ring', type=Path,
+                        help='ring the C++ window publishes input on (W04); the producer attaches '
+                             'when the file appears and feeds every event to the real '
+                             'InputController')
     parser.add_argument('--overlay-keyframe', type=float, default=2.0,
                         help='publish a full overlay surface at least this often, so a window '
                              'that attaches late still gets a complete HUD (0 disables)')
@@ -111,6 +126,32 @@ def main(argv=None):
         overlay_ring = ring.Ring.create(args.overlay_ring, slots=args.overlay_slots,
                                         slot_bytes=slot_bytes)
 
+    # W04: the window records events, this process decides what they mean. The bridge attaches
+    # when the window creates its ring, so either can start first.
+    input_bridge = None
+    controller = None
+    input_bridge_factory = None
+    input_attached_at = None
+    input_poll_ms = []
+    input_messages = []
+    if args.input_ring is not None and overlay_hud is not None:
+        from types import SimpleNamespace
+        from render.camera import Camera
+        from render.input import InputController
+        from render.input_bridge import RingInput
+        input_camera = Camera(overlay_width, overlay_height)
+        paused = {'value': False}
+
+        def _toggle_pause():
+            paused['value'] = not paused['value']
+
+        controller = InputController(state, input_camera, overlay_hud,
+                                     SimpleNamespace(toggle_pause=_toggle_pause,
+                                                     request_exit=lambda: None,
+                                                     flash=input_messages.append))
+        input_bridge_factory = lambda: RingInput(  # noqa: E731
+            args.input_ring, controller, (overlay_width, overlay_height))
+
     buffer = bytearray(packed.frame_size(packed.MAX_INSTANCES, packed.MAX_EFFECTS))
     encode_ms, step_ms, visibility_ms, hud_ms = [], [], [], []
     published = 0
@@ -124,6 +165,21 @@ def main(argv=None):
                 now = time.monotonic()
                 if deadline is not None and now >= deadline:
                     break
+                if args.input_ring is not None and overlay_hud is not None:
+                    if input_bridge is None and input_bridge_factory and args.input_ring.exists():
+                        input_bridge = input_bridge_factory()
+                        input_attached_at = time.monotonic()
+                    if input_bridge is not None and controller is not None:
+                        poll_started = time.perf_counter()
+                        # Drain everything: a click must never be lost because the simulation
+                        # ticked slowly. The cost is that a press and its release can land in one
+                        # tick, so held-key camera motion degrades when the tick is slower than
+                        # the window -- reported, not hidden, in docs/RENDER_DRAW_LIST_W04.md.
+                        input_bridge.poll()
+                        controller.update(1.0 / 60.0)
+                        input_poll_ms.append((time.perf_counter() - poll_started) * 1000.0)
+                        if controller.selection:
+                            overlay_selection = set(controller.selection)
                 step_started = time.perf_counter()
                 fixture.manager.step(1.0 / 60.0)
                 step_ms.append((time.perf_counter() - step_started) * 1000.0)
@@ -206,6 +262,18 @@ def main(argv=None):
         'instances_last_frame': counts['instances'],
         'transients_last_frame': counts['effects'],
     }
+    if args.input_ring is not None:
+        summary['input'] = {
+            'ring': str(args.input_ring),
+            'attached': input_bridge is not None,
+            'attached_after_s': (round(input_attached_at - started, 3)
+                                 if input_attached_at is not None else None),
+            'poll_ms': _stats(input_poll_ms),
+            **(input_bridge.report() if input_bridge is not None else {}),
+            'messages': input_messages[-4:],
+            'note': ('the window publishes what the pointer and keyboard did; this process still '
+                     'runs InputController and the simulation validates every command'),
+        }
     if overlay_ring is not None:
         summary['overlay'] = {
             'ring': str(args.overlay_ring),

@@ -998,6 +998,88 @@
         "menus were not converted: they paint through clean_classic and are not per-frame",
         "no Windows/D3D12 run; CI is disabled by the owner"
       ]
+    },
+    {
+      "id": "render-w03-landed-and-w04-start-2026-10-21",
+      "date": "2026-10-21",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "complete W03 with design A and continue into W04",
+      "applies_to": "W03 (HUD transport) and the start of W04 (input return path)",
+      "owner_wording": "OK conitnue with full W03 and W04.",
+      "recorded_at_head": "ce654388577e8b1c1ffe7cbef6da657bbdc64782",
+      "how_recorded": "The owner's reply above authorises finishing W03 as designed (design A: the composed surface crosses the bridge, text stays SDL_ttf) and starting W04. Recorded verbatim, spelling included. It authorises no tag, no release, no default-renderer change and no frame-rate claim; W04 keeps every command validator in Python and adds no new authority to the C++ side.",
+      "w03_result": {
+        "merge_commit": "ce654388577e8b1c1ffe7cbef6da657bbdc64782",
+        "pr": 148,
+        "branch": "render/cpp-w03-drawlist",
+        "slice_1": "aac2aeb",
+        "slice_2": "b445ebd",
+        "presented_pixel_parity": {
+          "identical_rows": 800,
+          "rows": 800,
+          "differing_pixels": 0,
+          "pixels_compared": 1024000,
+          "capture_offset_frames": -1,
+          "method": "viewer --hud-only backbuffer capture vs Python replay of the same ring",
+          "artifact": "artifacts/cpp-renderer/w03/hud-parity.json"
+        },
+        "verification": [
+          "53 render/bridge Python tests in the working tree",
+          "50 test_render_* plus 9 test_overlay_upload in a pristine git archive",
+          "4/4 C++ ctest: scene, camera, overlay, frame_v2"
+        ]
+      },
+      "w04_scope": {
+        "branch": "render/cpp-w04-input",
+        "authority": "Python command validators stay authoritative; the input ring carries events only",
+        "not_authorised": [
+          "tag",
+          "release",
+          "default renderer switch",
+          "frame-rate claim"
+        ]
+      }
+    },
+    {
+      "id": "render-w04-input-return-path-2026-10-21",
+      "date": "2026-10-21",
+      "package": "W04",
+      "scope": "the C++ window records pointer and keyboard events and publishes them back to the Python simulation; every command validator stays in Python",
+      "owner_wording": "OK conitnue with full W03 and W04.",
+      "approved_by": "owner",
+      "base_commit": "9ff88678278cedfd5660238e8d37418465362673",
+      "branch": "render/cpp-w04-input",
+      "implementation_commit_at_record_time": "69a3f4979314d0f1694fdeccd400a370c45533ac",
+      "binds_to": {
+        "artifact": "artifacts/cpp-renderer/w04/input-replay.json",
+        "surface": "ARMINP01 input batches on the W02 ring layout, written by the window"
+      },
+      "authorizes": [
+        "the input batch format and the native ring writer",
+        "window-side event recording with no simulation authority",
+        "feeding the existing InputController from the bridge"
+      ],
+      "does_not_authorize": [
+        "a tag or release",
+        "changing the default renderer",
+        "any frame-rate claim",
+        "moving command validation out of Python",
+        "enabling the disabled Windows signal workflow"
+      ],
+      "evidence": [
+        "native and Python encoders byte-identical on a 14-event, 244-byte fixture (render_cpp/tests/test_input.cpp)",
+        "10 bridge tests against a live GameManager skirmish (tests/test_input_bridge.py)",
+        "native ring replayed through the real controller (tools/render/replay_input_ring.py)",
+        "live producer+window run: attached after 1.66 s, 7 of 9 scripted events delivered, 0 skipped"
+      ],
+      "known_limits": [
+        "input is sampled: a press and its release can land in one slow tick",
+        "the stress fixture steps at ~2.4 Hz, so held-key motion degrades",
+        "the window still owns its own Esc/S/F/H shortcuts",
+        "menus are not bridged",
+        "POSIX-only ring writer; nothing verified on Windows/D3D12",
+        "CI disabled by owner instruction; local evidence only"
+      ]
     }
   ]
 }

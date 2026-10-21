@@ -1,7 +1,7 @@
 #!/bin/bash
-# Double-click launcher for the W02/W03 window: the Python simulation publishes frames and a
-# composed HUD into shared rings, the C++ viewer draws them. Camera only for now (W04 adds
-# commands back into the simulation); Esc quits and stops the producer.
+# Double-click launcher for the W02/W03/W04 window: the Python simulation publishes frames and a
+# composed HUD into shared rings, the C++ viewer draws them and publishes the pointer and keyboard
+# back on a third ring (W04). Esc quits and stops the producer.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
@@ -30,7 +30,9 @@ mkdir -p "$DIR"
 producer=0
 cleanup() {
   if [[ "$producer" != 0 ]]; then
-    kill "$producer" 2>/dev/null || true
+    # SIGINT, not SIGTERM: the producer catches it and still writes its summary, which is where
+    # the input counters (events delivered, batches skipped) are reported.
+    kill -INT "$producer" 2>/dev/null || true
     wait "$producer" 2>/dev/null || true
   fi
 }
@@ -39,6 +41,7 @@ trap cleanup EXIT INT TERM
 "$PYTHON" tools/render/stream_ring.py \
   --ring "$DIR/frames.bin" --seconds 7200 --hz 60 \
   --overlay-ring "$DIR/hud.bin" --overlay-slots 48 --overlay-keyframe 1.0 \
+  --input-ring "$DIR/input.bin" \
   --report "$DIR/producer.json" &
 producer=$!
 
@@ -57,4 +60,5 @@ done
 
 "$BUILD/armada_viewer" --snapshot "$SNAP" --assets "$ROOT" \
   --ring "$DIR/frames.bin" --overlay-ring "$DIR/hud.bin" \
+  --input-ring "$DIR/input.bin" --input-slots 48 \
   --report "$DIR/viewer.json" "$@"

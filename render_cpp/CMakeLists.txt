@@ -100,6 +100,13 @@ target_link_libraries(test_overlay PRIVATE armada_scene)
 target_compile_definitions(test_overlay PRIVATE
   ARMADA_FIXTURE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures")
 add_test(NAME overlay COMMAND test_overlay)
+# W04: the native input codec must produce the same bytes as the Python encoder
+# (tools/render/write_input_fixtures.py writes the fixtures into tests/fixtures/input).
+add_executable(test_input tests/test_input.cpp)
+target_include_directories(test_input PRIVATE include)
+add_test(NAME input COMMAND test_input)
+set_tests_properties(input PROPERTIES ENVIRONMENT
+  "ARMADA_INPUT_FIXTURE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/input")
 add_executable(test_frame_v2 tests/test_frame_v2.cpp)
 target_link_libraries(test_frame_v2 PRIVATE armada_scene)
 target_compile_definitions(test_frame_v2 PRIVATE
