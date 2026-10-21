@@ -95,6 +95,9 @@ static void protocol() {
   rejects([&] { read_snapshot(p); });
   put(p, packet(Json{{"schema", 1}, {"widgets", Json::array()}}, 2));
   check(read_snapshot(p)["schema"] == 1, "UI envelope decode");
+  rejects([&] { read_snapshot(p, 1); });
+  put(p, packet(world(), 2));
+  rejects([&] { read_snapshot(p, 1); });
   put(p, packet(Json{{"schema", 2}}, 2));
   rejects([&] { read_snapshot(p); });
 }

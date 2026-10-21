@@ -89,12 +89,17 @@ static void png(const fs::path &path, uint32_t w, uint32_t h, uint32_t pitch,
   if (!f)
     throw std::runtime_error("Cannot write PNG: " + path.string());
 }
+struct DeviceError : std::runtime_error {
+  using std::runtime_error::runtime_error;
+};
 struct Callbacks final : bgfx::CallbackI {
   std::atomic<int> shots{0}, errors{0};
   void fatal(const char *, uint16_t, bgfx::Fatal::Enum,
              const char *msg) override {
     std::fprintf(stderr, "BGFX_FATAL %s\n", msg);
-    std::abort();
+    // Unrecoverable backend callback: do not throw across the driver thread.
+    std::fflush(stderr);
+    std::_Exit(4);
   }
   void traceVargs(const char *, uint16_t, const char *fmt,
                   va_list args) override {
@@ -190,16 +195,16 @@ static Options options(int argc, char **argv) {
 static bgfx::ShaderHandle shader(const fs::path &p) {
   std::ifstream f(p, std::ios::binary | std::ios::ate);
   if (!f)
-    throw std::runtime_error("Missing shader: " + p.string());
+    throw DeviceError("Missing shader: " + p.string());
   auto n = f.tellg();
   if (n <= 0 || n > 4 * 1024 * 1024)
-    throw std::runtime_error("Invalid shader size");
+    throw DeviceError("Invalid shader size");
   auto *m = bgfx::alloc(uint32_t(n));
   f.seekg(0);
   f.read(reinterpret_cast<char *>(m->data), n);
   auto h = bgfx::createShader(m);
   if (!bgfx::isValid(h))
-    throw std::runtime_error("Shader rejected: " + p.string());
+    throw DeviceError("Shader rejected: " + p.string());
   return h;
 }
 struct Group {
@@ -235,7 +240,7 @@ struct Cleanup {
 static int run(const Options &o) {
   Callbacks callback;
   Cleanup cleanup;
-  auto scene = armada::read_snapshot(o.snapshot);
+  auto scene = armada::read_snapshot(o.snapshot, 1);
   armada::validate_world(scene);
   std::vector<Group> groups;
   size_t triangles = 0, drawnTriangles = 0;
@@ -285,7 +290,7 @@ static int run(const Options &o) {
     return 0;
   }
   if (!SDL_Init(SDL_INIT_VIDEO))
-    throw std::runtime_error(SDL_GetError());
+    throw DeviceError(SDL_GetError());
   cleanup.actions.push_back([] { SDL_Quit(); });
   SDL_Window *window = SDL_CreateWindow(
       "STAR ARMADA | W01 offline native viewer", o.width, o.height,
@@ -295,13 +300,13 @@ static int run(const Options &o) {
 #endif
   );
   if (!window)
-    throw std::runtime_error(SDL_GetError());
+    throw DeviceError(SDL_GetError());
   cleanup.actions.push_back([window] { SDL_DestroyWindow(window); });
   void *nativeWindow = nullptr;
 #ifdef __APPLE__
   SDL_MetalView metal = SDL_Metal_CreateView(window);
   if (!metal)
-    throw std::runtime_error(SDL_GetError());
+    throw DeviceError(SDL_GetError());
   cleanup.actions.push_back([metal] { SDL_Metal_DestroyView(metal); });
   nativeWindow = SDL_Metal_GetLayer(metal);
 #elif defined(_WIN32)
@@ -328,8 +333,8 @@ static int run(const Options &o) {
   init.swapChain.flags =
       o.msaa == 4 ? BGFX_SWAP_CHAIN_MSAA_X4 : BGFX_SWAP_CHAIN_NONE;
   if (!bgfx::init(init))
-    throw std::runtime_error("bgfx initialization failed (requested native "
-                             "backend, no silent fallback)");
+    throw DeviceError("bgfx initialization failed (requested native "
+                      "backend, no silent fallback)");
   cleanup.actions.push_back([] { bgfx::shutdown(); });
   // Instancing is baseline in this pinned bgfx API; buffer availability is
   // checked per draw.
@@ -353,20 +358,20 @@ static int run(const Options &o) {
                    uint32_t(g.mesh.vertices.size() * sizeof(armada::Vertex))),
         layout);
     if (!bgfx::isValid(g.vbo))
-      throw std::runtime_error("GPU mesh upload failed");
+      throw DeviceError("GPU mesh upload failed");
     const auto handle = g.vbo;
     cleanup.actions.push_back([handle] { bgfx::destroy(handle); });
   }
   auto program = bgfx::createProgram(shader(o.shaders / "vs_fleet.bin"),
                                      shader(o.shaders / "fs_fleet.bin"), true);
   if (!bgfx::isValid(program))
-    throw std::runtime_error("Fleet program creation failed");
+    throw DeviceError("Fleet program creation failed");
   cleanup.actions.push_back([program] { bgfx::destroy(program); });
   auto shadowProgram =
       bgfx::createProgram(shader(o.shaders / "vs_shadow.bin"),
                           shader(o.shaders / "fs_shadow.bin"), true);
   if (!bgfx::isValid(shadowProgram))
-    throw std::runtime_error("Shadow program creation failed");
+    throw DeviceError("Shadow program creation failed");
   cleanup.actions.push_back([shadowProgram] { bgfx::destroy(shadowProgram); });
   auto lightUniform =
            bgfx::createUniform("u_lightMatrix", bgfx::UniformType::Mat4),
@@ -378,7 +383,7 @@ static int run(const Options &o) {
   for (auto handle :
        {lightUniform, eyeUniform, optionsUniform, shadowSampler}) {
     if (!bgfx::isValid(handle))
-      throw std::runtime_error("Uniform creation failed");
+      throw DeviceError("Uniform creation failed");
     cleanup.actions.push_back([handle] { bgfx::destroy(handle); });
   }
   auto depth =
@@ -386,11 +391,11 @@ static int run(const Options &o) {
                             BGFX_TEXTURE_RT | BGFX_SAMPLER_COMPARE_LEQUAL |
                                 BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP);
   if (!bgfx::isValid(depth))
-    throw std::runtime_error("Shadow depth texture creation failed");
+    throw DeviceError("Shadow depth texture creation failed");
   cleanup.actions.push_back([depth] { bgfx::destroy(depth); });
   auto shadowFB = bgfx::createFrameBuffer(1, &depth, false);
   if (!bgfx::isValid(shadowFB))
-    throw std::runtime_error("Shadow framebuffer creation failed");
+    throw DeviceError("Shadow framebuffer creation failed");
   cleanup.actions.push_back([shadowFB] { bgfx::destroy(shadowFB); });
   armada::Camera original, camera;
   auto jc = scene.at("camera");
@@ -569,8 +574,7 @@ static int run(const Options &o) {
       if (!count)
         continue;
       if (bgfx::getAvailInstanceDataBuffer(count, 80) < count)
-        throw std::runtime_error(
-            "Instance buffer exhausted; refusing partial fleet");
+        throw DeviceError("Instance buffer exhausted; refusing partial fleet");
       bgfx::InstanceDataBuffer buffer;
       bgfx::allocInstanceDataBuffer(&buffer, count, 80);
       std::memcpy(buffer.data, g.instances.data(),
@@ -618,7 +622,8 @@ static int run(const Options &o) {
                               : 0,
                           st->numDraw);
     }
-    if (!o.shot.empty() && o.frames > 0 && frame == o.frames + o.warmup - 5) {
+    if (!o.shot.empty() && o.frames > 0 &&
+        frame == std::max(0, o.frames + o.warmup - 5)) {
       bgfx::requestScreenShot(BGFX_INVALID_HANDLE, o.shot.string().c_str());
       screenshotExpected++;
     }
@@ -657,7 +662,8 @@ static int run(const Options &o) {
   report["quality"]["shadows_final"] = shadows;
   cleanup.run();
   report["screenshots_written"] = callback.shots.load();
-  if (callback.errors || callback.shots < screenshotExpected)
+  if (callback.errors || callback.shots < screenshotExpected ||
+      (!o.shot.empty() && o.frames > 0 && callback.shots == 0))
     throw std::runtime_error("Screenshot not delivered");
   if (!o.report.empty()) {
     if (!o.report.parent_path().empty())
@@ -673,6 +679,9 @@ static int run(const Options &o) {
 int main(int argc, char **argv) {
   try {
     return run(options(argc, argv));
+  } catch (const DeviceError &e) {
+    std::cerr << "E_RENDERER_DEVICE " << e.what() << std::endl;
+    return 4;
   } catch (const armada::ProtocolError &e) {
     std::cerr << "E_RENDERER_PROTOCOL " << e.what() << std::endl;
     return 3;

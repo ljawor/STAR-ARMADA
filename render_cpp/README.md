@@ -22,6 +22,15 @@ on macOS). No third-party sources or local dependency paths are committed. macOS
 **Metal**, Windows requests **Direct3D 12**; a failed native backend is not silently replaced
 with OpenGL. Windows build/graphics acceptance must be measured on a Windows machine.
 
+For a local checkout/worktree with a configured build, double-click
+`render_cpp/launch.command`, or run it from Terminal. It exports the real frozen
+600-combat-ship fixture and opens the viewer. `STAR_ARMADA_PYTHON` and
+`STAR_ARMADA_VIEWER_BUILD` can select an existing interpreter/build; the launcher
+also locates the original checkout's `.venv` when used from a Git worktree.
+
+This is a source tool, not a redistributed app package. Shader files remain in
+the configured build's `shaders/` directory; use `--shaders` if moving the executable.
+
 ## 2. Controls
 
 - Left-drag: orbit. Mouse wheel: zoom. WASD: camera-relative pan.
@@ -68,5 +77,10 @@ It draws the mesh instances selected by the offline exporter. An all-visible dia
 snapshot must be labeled as such; it is not representative player visibility.
 
 Those differences must not be used to claim a whole-game speedup. W02 live streaming and
-W03–W05 parity remain separate gates. No shared-memory protocol or 1 ms serialization claim
+W03–W05 parity remain separate gates. Exit 3 rejects malformed/wrong-kind snapshots before drawing. Ordinary backend,
+shader and GPU-resource failures unwind acquired resources and exit 4; a fatal
+bgfx callback logs and terminates with exit 4 rather than throwing through a driver
+thread. There is no device reinitialization, game fallback or live recovery.
+
+No shared-memory protocol or 1 ms serialization claim
 is established by this JSON-based offline profile.

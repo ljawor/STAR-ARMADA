@@ -250,7 +250,8 @@ inline void validate_world(const Json &j) {
     detail::text(instance.at("category"));
   }
 }
-inline Json read_snapshot(const std::filesystem::path &path) {
+inline Json read_snapshot(const std::filesystem::path &path,
+                          uint16_t expected_kind = 0) {
   try {
     auto s = detail::read_file(path, 32 + 64 * 1024 * 1024);
     detail::require(s.size() >= 32, "truncated header");
@@ -265,6 +266,8 @@ inline Json read_snapshot(const std::filesystem::path &path) {
     detail::require(le(8, 2) == 1, "unsupported protocol version");
     detail::require(le(10, 2) == 1 || le(10, 2) == 2,
                     "unsupported snapshot kind");
+    detail::require(expected_kind == 0 || le(10, 2) == expected_kind,
+                    "wrong snapshot kind for consumer");
     detail::require(le(24, 4) <= 64 * 1024 * 1024 && s.size() == 32 + le(24, 4),
                     "payload length mismatch");
     auto body = s.substr(32);
