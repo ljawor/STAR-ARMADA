@@ -1508,6 +1508,23 @@
         "tests": "207 python tests + 12 ctest, all passing",
         "artifact": "artifacts/cpp-renderer/w05/live-camera.png"
       }
+    },
+    {
+        "id": "render-w06-w07-projection-input-2026-10-21",
+        "owner_wording": "please run all the steps till W11. Do not pause. Do all needed test, commits and merges. Ping me next when the game is ready and all points till W11 (included) are finished",
+        "base_commit": "1ec180de17fc50582af0d362bce2729fbf5af2d7",
+        "artifact": "docs/RENDER_W06_W07.md",
+        "decision": "The projection stays in degrees because bx::mtxProj applies toRad itself; the window pose crosses verbatim with no distance compensation; the window's pointer events enter the same InputController a native window feeds, and the game's camera is measured in CPP_HUD_SIZE pixels so a click resolves against the picture the player sees.",
+        "correction": "W05's 0.62 distance compensation and the earlier 88-vs-55 vFOV diagnosis were symptoms of feeding radians to a function that converts degrees. Recorded so later evidence is not measured against a compensated window.",
+        "evidence": [
+            "proj_scale 1.9209821224 vs expected 1.9209821575 (55 deg, 800 px)",
+            "camera_ring.distance_scale 1.0, 0 decode failures, 0 torn",
+            "CPP_SELECTION [16] from a click at screen centre",
+            "CPP_SELECTION [16,17,18] from a box drag (502,92)->(750,429)",
+            "CPP_SELECTION [19] from a click at (334,183), the game's own projection of that hull",
+            "command_queue 0 -> 3 after a right-click order",
+            "210 python render tests + 12 ctest, all passing"
+        ]
     }
   ]
 }

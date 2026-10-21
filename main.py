@@ -87,7 +87,9 @@ if "--renderer" in sys.argv:
 # the repository (and a frozen app must never write into its own bundle).
 CPP_DIR = os.path.join(os.path.abspath(USER_DIR), "cpp-window")
 CPP_HUD_SIZE = (1280, 800)
-CPP = {"session": None, "window": None, "input": None, "seen": set(), "seen_tick": -1}
+CPP = {"session": None, "window": None, "input": None, "seen": set(), "seen_tick": -1,
+       "selection": frozenset(), "quit": False, "failed": False, "fell_back": False,
+       "bridge_mark": (0, 0, 0)}
 
 # --------------------------------------------------------------------------- window
 pygame.init()
@@ -289,6 +291,12 @@ def cpp_session(state, ds, local_player: int):
     return session
 
 
+def cpp_trace(message: str) -> None:
+    """Diagnostics for the input path, only when asked for: selection is invisible otherwise."""
+    if os.environ.get("STAR_ARMADA_CPP_TRACE"):
+        print(message, flush=True)
+
+
 def cpp_drawing() -> bool:
     """True while the native window is actually up and drawing.
 
@@ -318,21 +326,55 @@ def cpp_seen_ids(state, local_player: int) -> set:
 
 
 def cpp_publish(state, ds, local_player: int, selection, dt: float):
-    """Hand one frame to the window: world, cues, effects, fog, HUD. Returns False if it could not.
+    """Hand one frame to the window: world, cues, effects, fog, HUD, camera. Returns False on fault.
 
-    Input does NOT come back yet, and that is deliberate rather than unfinished plumbing: the frame
-    ring carries no camera, so the window's camera is its own. A click leaves the window at window
-    pixels and would be resolved here against the *game's* camera - two different views, so a click
-    would select or order something the player is not looking at. W04's `RingInput` is written and
-    tested; it is not connected until the camera crosses with the frame (`render_bridge/live.py`
-    leaves the input ring in place so the W06 camera ring can attach to it).
+    The window sends its pointer and keyboard back on the input ring, and they enter the same
+    `InputController` a native window feeds, so a click builds the same `PlayerCommand` and the
+    simulation validates it as usual. That only works while both sides mean the same pixel, which
+    is why the camera pose crosses (`ARMCAM01`) and the camera is measured in the window's pixels.
     """
     try:
         session = cpp_session(state, ds, local_player)
         if session is None:
             return False
+        if CPP["input"] is None and session.paths["input"].exists():
+            from render.input_bridge import RingInput
+
+            class _Traced:
+                """Pass-through that writes down what the window sent, when asked to."""
+
+                def __init__(self, inner):
+                    self.inner = inner
+
+                def __getattr__(self, name):
+                    return getattr(self.inner, name)
+
+                def handle_event(self, ev):
+                    if os.environ.get("STAR_ARMADA_CPP_TRACE"):
+                        print(f"CPP_EVENT {ev.type} {getattr(ev, 'pos', None)} "
+                              f"btn={getattr(ev, 'button', None)} key={getattr(ev, 'key', None)}",
+                              flush=True)
+                    result = self.inner.handle_event(ev)
+                    if os.environ.get("STAR_ARMADA_CPP_TRACE"):
+                        print(f"CPP_STATE sel={sorted(self.inner.selection)} "
+                              f"drag={self.inner.drag_start} dragging={self.inner.dragging}",
+                              flush=True)
+                    return result
+            # The window's events enter the same controller the keyboard does. One batch per frame:
+            # draining a backlog would deliver a press and its release before the game updated, and
+            # a held key would be lost.
+            target = inputc
+            if os.environ.get("STAR_ARMADA_CPP_TRACE"):
+                target = _Traced(inputc)
+            CPP["input"] = RingInput(session.paths["input"], target, CPP_HUD_SIZE)
+        if CPP["input"] is not None:
+            CPP["input"].poll(limit=1)
+            if CPP["input"].quit_requested:
+                CPP["input"].quit_requested = False
+                CPP["quit"] = True
+        CPP["camera"] = session.camera
         session.publish(state, selection=selection, visible_ids=cpp_seen_ids(state, local_player),
-                        dt=dt)
+                    dt=dt)
     except Exception as exc:
         # A fault in the producer must not end the match: drop the window and let the legacy path
         # draw from the next frame on.
@@ -1049,6 +1091,11 @@ while running:
     poll_network()
     if mode != 'game':
         continue
+    if CPP.get("quit"):
+        # The native window was closed: leave the match the way Escape would, not by dying.
+        CPP["quit"] = False
+        leave_game()
+        continue
     sync_campaign_outcome()
     presentation_frame = cinematic is not None
     help_frame = presentation is not None and presentation.help_visible
@@ -1127,7 +1174,11 @@ while running:
     # still exercises every ring); the legacy path draws only when the window is not doing it.
     if RENDERER == "cpp" and not CPP.get("failed") and (SMOKE or CPP["session"] is None
                                                         or cpp_drawing()):
-        camera.apply(W, H)
+        # `apply` also sets the camera's pixel size, and that size is what turns a click into a
+        # world ray. The view surface in this mode is the window (CPP_HUD_SIZE = the size the HUD is
+        # composed at and the window draws at), not the hidden SDL window (2560x1440 here) - a
+        # camera left at the SDL size put every pick at half the pointer's x and 0.55x its y.
+        camera.apply(*CPP_HUD_SIZE)
         cpp_publish(state, gm.ds, local_player, inputc.selection, dt_frame)
         if SMOKE or cpp_drawing():
             # Nothing is drawn into this process's GL context: the window is the display, and the HUD
@@ -1141,6 +1192,17 @@ while running:
                 fps = frames / fps_time
                 frames = 0
                 fps_time = 0.0
+            if CPP["input"] is not None:
+                bridge = CPP["input"]
+                marker = (bridge.batches_read, bridge.events_delivered, bridge.unmapped)
+                if marker != CPP["bridge_mark"]:
+                    CPP["bridge_mark"] = marker
+                    cpp_trace(f"CPP_INPUT batches={bridge.batches_read} events={bridge.events_delivered} "
+                              f"unmapped={bridge.unmapped} skipped={bridge.batches_skipped}")
+            current = frozenset(inputc.selection)
+            if current != CPP["selection"]:
+                CPP["selection"] = current
+                cpp_trace(f"CPP_SELECTION {sorted(current)}")
             if SMOKE and state.tick >= SMOKE_TICKS:
                 print("SMOKE_CPP_OK " + summary())
                 if CPP["session"] is not None:
