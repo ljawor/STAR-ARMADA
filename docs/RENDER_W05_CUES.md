@@ -52,11 +52,12 @@ the last good batch and counts the failure instead.
 
 ## Known gaps (not claims)
 
-* **Selection rings are still too small to read.** `entity.radius` is the collision radius, while
-  the Python renderer draws at its own *readability-inflated* `_ship_size(...).radius`. The ring
-  therefore encloses the hull but sits closer than the legacy ring does, and at long zoom it is a
-  hairline. A pixel floor (radius lifted to ≥ 9 px) keeps it from vanishing, but matching the
-  legacy framing needs the readability radius carried across — the next slice-2 item.
+* **Selection rings are sized from `ship_size(...).radius`** — the hull's world radius, so a ring
+  encloses the hull that was drawn. The legacy renderer additionally multiplies by a
+  camera-dependent *readability* inflation (`render/ship_sizes.py::readable_size`); the window does
+  not, and uses a 9 px floor instead. At default zoom the two agree; on a far-out camera the legacy
+  ring is larger than the native one.
+* **Stations and worlds** ring at `entity.radius`, since their world radius is the drawn radius.
 * **Line width.** bgfx has no line width, so every cue is one pixel. The legacy renderer draws
   selection rings at 2 px and planet rings at 3 px, so the native cues read thinner.
 * **Cue depth.** Planet owner rings set the depth flag, but view 1 has no depth buffer bound, so

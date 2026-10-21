@@ -100,46 +100,46 @@ class CodecTests(unittest.TestCase):
 
 
 class SelectionRuleTests(unittest.TestCase):
-    def scale(self, entity):
-        return 100.0
+    def radius(self, entity):
+        return 100.0                       # the hull's world radius, as the frame drew it
 
-    def test_ring_radius_is_the_drawn_scale(self):
+    def test_ring_radius_is_the_hull_world_radius(self):
         entity = Entity(1, radius=40.0)
-        rings = primitive_batch.selection_rings(State([entity]), {1}, self.scale)
+        rings = primitive_batch.selection_rings(State([entity]), {1}, self.radius)
         self.assertEqual(len(rings), 1)
-        self.assertAlmostEqual(rings[0]['size'], 54.0)      # 1.35 x the entity's world radius
+        self.assertAlmostEqual(rings[0]['size'], 135.0)     # 1.35 x the hull radius
         self.assertEqual(rings[0]['segments'], 28)
         self.assertFalse(rings[0]['flags'] & codec.FLAG_DEPTH)
 
     def test_a_shielded_unit_draws_no_ring(self):
         shielded = Entity(2, max_shield_total=lambda: 50.0, total_shield=lambda: 50.0)
-        self.assertEqual(primitive_batch.selection_rings(State([shielded]), {2}, self.scale), [])
+        self.assertEqual(primitive_batch.selection_rings(State([shielded]), {2}, self.radius), [])
 
     def test_hull_severity_overrides_the_owner_colour(self):
         hurt = Entity(3, hull=20.0, max_hull=100.0)
-        ring = primitive_batch.selection_rings(State([hurt]), {3}, self.scale)[0]
+        ring = primitive_batch.selection_rings(State([hurt]), {3}, self.radius)[0]
         self.assertEqual(ring['colour'][:3], (255, 64, 51))
         wounded = Entity(4, hull=50.0, max_hull=100.0)
-        ring = primitive_batch.selection_rings(State([wounded]), {4}, self.scale)[0]
+        ring = primitive_batch.selection_rings(State([wounded]), {4}, self.radius)[0]
         self.assertEqual(ring['colour'][:3], (255, 204, 64))
         healthy = Entity(5)
-        ring = primitive_batch.selection_rings(State([healthy]), {5}, self.scale)[0]
+        ring = primitive_batch.selection_rings(State([healthy]), {5}, self.radius)[0]
         self.assertEqual(ring['colour'][:3], (51, 204, 76))
 
     def test_stations_and_planets_get_an_upright_ring(self):
         station = Entity(6, is_ship=False, is_station=True)
-        ring = primitive_batch.selection_rings(State([station]), {6}, self.scale)[0]
+        ring = primitive_batch.selection_rings(State([station]), {6}, self.radius)[0]
         self.assertEqual(ring['shape'], codec.SHAPE_XY)
         planet = Entity(7, is_ship=False, is_station=False, is_planet=True, radius=600.0)
-        ring = primitive_batch.selection_rings(State([planet]), {7}, self.scale)[0]
+        ring = primitive_batch.selection_rings(State([planet]), {7}, self.radius)[0]
         self.assertEqual(ring['shape'], codec.SHAPE_XY)
-        self.assertAlmostEqual(ring['size'], 660.0)          # 1.1 x radius for a world
+        self.assertAlmostEqual(ring['size'], 110.0)          # 1.1 x radius for a world
 
     def test_dead_and_surface_hardware_are_skipped(self):
         dead = Entity(8, alive=False)
         building = Entity(9)
         building.planet_building_slot = 0      # surface hardware selects its planet, not itself
-        rings = primitive_batch.selection_rings(State([dead, building]), {8, 9}, self.scale)
+        rings = primitive_batch.selection_rings(State([dead, building]), {8, 9}, self.radius)
         self.assertEqual(rings, [])
 
 
@@ -189,7 +189,7 @@ class MarkerRuleTests(unittest.TestCase):
     def test_marker_carries_the_hull_radius_not_pixels(self):
         own = Entity(25, radius=60.0)
         marker = primitive_batch.ownership_markers(State([own]), 0, {25}, 'all', {0},
-                                                  scale_of=lambda entity: 12.5)[0]
+                                                  radius_of=lambda entity: 12.5)[0]
         self.assertAlmostEqual(marker['size'], 12.5)
 
 

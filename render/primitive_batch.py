@@ -55,7 +55,7 @@ def is_shielded(entity) -> bool:
         return False
 
 
-def selection_rings(state, selection_ids, scale_of) -> list:
+def selection_rings(state, selection_ids, radius_of) -> list:
     """One circle per selected unit, coloured by owner and hull severity."""
     out = []
     for entity_id in sorted(selection_ids):
@@ -66,15 +66,14 @@ def selection_rings(state, selection_ids, scale_of) -> list:
             continue                     # surface hardware selects its planet, not itself
         if is_shielded(entity):
             continue
-        scale = float(scale_of(entity))
-        if scale <= 0.0:
+        hull = float(radius_of(entity))
+        if hull <= 0.0:
             continue                     # not drawn by the frame, so it gets no ring
         player = state.players.get(entity.owner)
         colour = _severity_colour(entity, _colour(player))
-        # World units, not the instance scale: `scale` is a multiplier on a mesh authored at
-        # catalogue size, so a ring sized from it is a hairline next to the hull it surrounds.
-        radius = float(entity.radius) * (PLAIN_RING_FACTOR if not entity.is_planet
-                                         else PLANET_RING_FACTOR)
+        # The hull's world radius, not the instance scale: `scale` is a multiplier on a mesh
+        # authored at catalogue size, so a ring sized from it is a hairline beside the hull.
+        radius = hull * (PLAIN_RING_FACTOR if not entity.is_planet else PLANET_RING_FACTOR)
         vertical = entity.is_station or not (entity.is_ship or entity.is_squadron)
         out.append(codec.circle((entity.pos.x, entity.pos.y, entity.pos.z), radius, colour,
                                 vertical=vertical, width=SELECTION_WIDTH,
@@ -103,7 +102,7 @@ def planet_owner_rings(state) -> list:
 
 
 def ownership_markers(state, local_player, visible_ids, mode='all', allies=None,
-                      scale_of=None) -> list:
+                      radius_of=None) -> list:
     """A chevron (own/ally/neutral) or diamond (hostile) on every detected unit."""
     mode = mk.marker_mode(mode)
     if mode == 'off':
@@ -124,7 +123,7 @@ def ownership_markers(state, local_player, visible_ids, mode='all', allies=None,
         # `size` is the hull's own world radius, not the icon's pixels: the window applies
         # markers.marker_px to its own camera's apparent size, which is the only way the icon
         # stays screen-clamped when the window owns the camera.
-        hull_radius = float(scale_of(entity)) if scale_of is not None else 0.0
+        hull_radius = float(radius_of(entity)) if radius_of is not None else 0.0
         # The shape comes from render/markers.py, not from a second opinion about what a hostile
         # is: shape and colour both encode ownership, so both are the game's call.
         shape = mk.shape_for(relationship)
@@ -133,12 +132,12 @@ def ownership_markers(state, local_player, visible_ids, mode='all', allies=None,
     return out
 
 
-def build(state, local_player, selection_ids, visible_ids, *, scale_of, mode='all',
+def build(state, local_player, selection_ids, visible_ids, *, radius_of, mode='all',
           allies=None, planet_rings=True, with_markers=True) -> list:
     """Everything the window draws on top of the world, as one batch."""
-    primitives = selection_rings(state, selection_ids, scale_of)
+    primitives = selection_rings(state, selection_ids, radius_of)
     if planet_rings:
         primitives += planet_owner_rings(state)
     if with_markers:
-        primitives += ownership_markers(state, local_player, visible_ids, mode, allies, scale_of)
+        primitives += ownership_markers(state, local_player, visible_ids, mode, allies, radius_of)
     return primitives

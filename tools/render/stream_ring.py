@@ -133,17 +133,24 @@ def main(argv=None):
         # selection itself is still W04 debt (the input bridge records orders, not selection).
         selected_ids |= {entity.id for entity in state.entities.values()
                          if entity.owner == args.local_player and entity.is_ship}
-    def scale_of(entity):
-        """The scale the frame drew this entity at, so a ring encloses the hull it is drawn around."""
-        if entity.is_planet:
+    def radius_of(entity):
+        """World radius of the hull the frame drew, so a ring encloses what it is drawn around.
+
+        `instance scale` is a multiplier on a mesh authored at catalogue size, so a ring built
+        from it sits a few percent wide of the hull. `ship_size(...).radius` is the same world
+        radius the legacy renderer rings, minus its camera-dependent readability inflation, which
+        the window replaces with a pixel floor of its own.
+        """
+        if entity.is_planet or entity.is_station:
             return float(entity.radius)
         faction = (state.players[entity.owner].faction
                    if entity.owner in state.players else 'imperial')
-        _, scale = collector.visual(is_station=entity.is_station, data_id=entity.data_id,
-                                    faction=faction, radius=entity.radius)
-        # An unresolved binding comes back as a reason string, not a scale. It is also not drawn,
-        # so it gets no ring: a cue around something invisible is a lie.
-        return float(scale) if isinstance(scale, (int, float)) else 0.0
+        binding, scale = collector.visual(is_station=entity.is_station, data_id=entity.data_id,
+                                          faction=faction, radius=entity.radius)
+        if not isinstance(scale, (int, float)):
+            return 0.0        # unresolved binding: not drawn, so no cue around something invisible
+        size = ship_size(ds, entity.data_id, faction)
+        return float(getattr(size, 'radius', 0.0))
     overlay_ring = overlay_hud = None
     overlay_width, overlay_height = (int(v) for v in args.overlay_size.lower().split('x'))
     overlay_selection = set()
@@ -264,7 +271,7 @@ def main(argv=None):
                     cues_started = time.perf_counter()
                     primitives = primitive_batch.build(
                         state, args.local_player, selected_ids, collector.visible_ids,
-                        scale_of=scale_of, mode=args.marker_mode)
+                        radius_of=radius_of, mode=args.marker_mode)
                     marker_ring.publish(bytes(marker_codec.encode(primitives)))
                     marker_ms.append((time.perf_counter() - cues_started) * 1000.0)
                     marker_counts.append(len(primitives))
