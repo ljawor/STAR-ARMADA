@@ -141,6 +141,28 @@ class LiveSessionTest(unittest.TestCase):
         self.assertEqual(pose['target'], (10.0, 20.0, 30.0))
         self.assertEqual(pose['distance'], 1234.0)
 
+    def test_the_window_is_told_what_the_player_is_told(self):
+        """Paused, the status line and the drag box reach the composed HUD, not just the legacy one.
+
+        The window used to compose with `paused=False, message=''` unconditionally, so a paused
+        match looked like a running one and the replay status line never appeared.
+        """
+        session = self.session
+        session.publish(self.state, selection={1}, visible_ids=None)
+        running = session.hud.overlay.copy()
+        dirty_box = session.hud.drag_box
+        session.publish(self.state, selection={1}, visible_ids=None, paused=True,
+                        message="PAUSED 2.0s", drag_box=((10, 20), (300, 400)))
+        self.assertTrue(session.hud.drag_box == ((10, 20), (300, 400)))
+        self.assertNotEqual(dirty_box, session.hud.drag_box)
+        paused_frame = session.hud.overlay.copy()
+        changed = 0
+        for y in range(0, paused_frame.get_height(), 4):
+            for x in range(0, paused_frame.get_width(), 4):
+                if paused_frame.get_at((x, y)) != running.get_at((x, y)):
+                    changed += 1
+        self.assertGreater(changed, 0, "the paused HUD looks identical to the running one")
+
     def test_close_is_idempotent(self):
         self.session.close()
         self.session.close()

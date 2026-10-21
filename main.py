@@ -325,7 +325,9 @@ def cpp_seen_ids(state, local_player: int) -> set:
     return CPP["seen"]
 
 
-def cpp_publish(state, ds, local_player: int, selection, dt: float):
+def cpp_publish(state, ds, local_player: int, selection, dt: float, *, paused: bool = False,
+                message: str = "", flash_left: float = 0.0, fps: float = 0.0,
+                drag_box=None, floating_texts=None):
     """Hand one frame to the window: world, cues, effects, fog, HUD, camera. Returns False on fault.
 
     The window sends its pointer and keyboard back on the input ring, and they enter the same
@@ -374,7 +376,8 @@ def cpp_publish(state, ds, local_player: int, selection, dt: float):
                 CPP["quit"] = True
         CPP["camera"] = session.camera
         session.publish(state, selection=selection, visible_ids=cpp_seen_ids(state, local_player),
-                    dt=dt)
+                        dt=dt, paused=paused, message=message, flash_left=flash_left, fps=fps,
+                        drag_box=drag_box, floating_texts=floating_texts)
     except Exception as exc:
         # A fault in the producer must not end the match: drop the window and let the legacy path
         # draw from the next frame on.
@@ -1169,6 +1172,28 @@ while running:
     else:
         hud.mission_progress = None
 
+    # ---- what the HUD is told
+    # One place decides it, so the window and the legacy path cannot disagree about whether the
+    # match is paused, what the status line says, or where the drag box is. The window used to
+    # compose the HUD with `paused=False, message=''` unconditionally, which is why a paused match
+    # looked like a running one.
+    flash_left = flash_until - state.time
+    view_msg = flash_msg
+    view_paused = paused
+    if playback is not None:
+        view_paused = playback.paused
+        status = 'ENDED' if playback.ended else 'PAUSED' if playback.paused else 'PLAYING'
+        elapsed = (state.tick - playback._data['initial_state'].get('tick', 0)) / TICK_RATE
+        duration = (playback.end_tick - playback._data['initial_state'].get('tick', 0)) / TICK_RATE
+        view_msg = f'REPLAY {status} {elapsed:.1f}/{duration:.1f}s {playback.speed:g}x | P pause [ ] speed Esc exit'
+        flash_left = 1.
+    elif replay_notice:
+        view_msg, flash_left = replay_notice, 1.
+    view_flash = max(0.0, flash_left)
+    view_drag = (inputc.drag_start, inputc.drag_cur)
+    # Floating texts are projected from the *game's* camera and handed over as finished pixels.
+    view_texts = renderer.floating_texts_screen() if renderer is not None else []
+
     # ---- draw
     # In `cpp` mode the producer runs whether or not a window is up (the smoke run has no window and
     # still exercises every ring); the legacy path draws only when the window is not doing it.
@@ -1179,7 +1204,15 @@ while running:
         # composed at and the window draws at), not the hidden SDL window (2560x1440 here) - a
         # camera left at the SDL size put every pick at half the pointer's x and 0.55x its y.
         camera.apply(*CPP_HUD_SIZE)
-        cpp_publish(state, gm.ds, local_player, inputc.selection, dt_frame)
+        cpp_publish(state, gm.ds, local_player, inputc.selection, dt_frame,
+                    paused=view_paused, message=view_msg, flash_left=view_flash, fps=fps,
+                    drag_box=view_drag, floating_texts=view_texts)
+        if os.environ.get("STAR_ARMADA_CPP_TRACE"):
+            marker = (view_paused, view_msg, len(view_texts), view_drag)
+            if marker != CPP.get("view_mark"):
+                CPP["view_mark"] = marker
+                cpp_trace(f"CPP_VIEW paused={view_paused} msg={view_msg!r} "
+                          f"texts={len(view_texts)} drag={view_drag}")
         if SMOKE or cpp_drawing():
             # Nothing is drawn into this process's GL context: the window is the display, and the HUD
             # is composed by the same `render.hud` code (design A) inside the session, so text stays
@@ -1223,23 +1256,11 @@ while running:
     camera.apply(W, H)
     renderer.placement = hud.placement  # render-side preview only; never sim state
     renderer.draw(dt_frame, inputc.selection)
-    hud.set_floating_texts(renderer.floating_texts_screen())
+    hud.set_floating_texts(view_texts)
     # live box-select rectangle while left-dragging
-    hud.set_drag_box(inputc.drag_start, inputc.drag_cur)
-    flash_left = flash_until - state.time
-    view_msg = flash_msg
-    view_paused = paused
-    if playback is not None:
-        view_paused = playback.paused
-        status = 'ENDED' if playback.ended else 'PAUSED' if playback.paused else 'PLAYING'
-        elapsed = (state.tick - playback._data['initial_state'].get('tick', 0)) / TICK_RATE
-        duration = (playback.end_tick - playback._data['initial_state'].get('tick', 0)) / TICK_RATE
-        view_msg = f'REPLAY {status} {elapsed:.1f}/{duration:.1f}s {playback.speed:g}x | P pause [ ] speed Esc exit'
-        flash_left = 1.
-    elif replay_notice:
-        view_msg, flash_left = replay_notice, 1.
+    hud.set_drag_box(*view_drag)
     hud.render(inputc.selection, None, local_player, view_paused, view_msg,
-               max(0.0, flash_left), fps)
+               view_flash, fps)
     hud.draw_gl()
     draw_presentation_overlay()
     draw_recovery_overlay()
