@@ -195,6 +195,7 @@ def settings(menu):
     pages = (
         ('Sound & display', (('Music volume', 'music_volume', 'slider'),
             ('SFX volume', 'sfx_volume', 'slider'), ('Fullscreen', 'fullscreen', 'toggle'),
+            ('Resolution', 'resolution', 'cycle_resolution'),
             ('Autosave', 'autosave', 'toggle'), ('Ownership markers', 'markers', 'cycle_markers'),
             ('Camera pan speed', 'pan_speed', 'slider')), ()),
         ('Audio & presentation', (('Dynamic range', 'audio_dynamic_range', 'cycle_range'),
@@ -223,8 +224,10 @@ def settings(menu):
     c = _canvas(menu, 'settings', 'Settings',
                 i18n.t('{page} · Page {n}/{total}', page=i18n.t(title),
                        n=menu.settings_page + 1, total=len(pages)))
+    # Seven sound/display rows plus current-mode information must clear the pinned help footer.
+    row_step, row_height = (46, 40) if menu.settings_page == 0 else (61, 48)
     for index, (label, key, action) in enumerate(rows):
-        r = pygame.Rect(52, 164 + index * 61, 1016, 48)
+        r = pygame.Rect(52, 164 + index * row_step, 1016, row_height)
         hot = menu.settings_focus == index or _hot(c, r)
         pygame.draw.rect(c.surface, (28, 48, 53) if hot else (14, 24, 33), r, border_radius=4)
         pygame.draw.rect(c.surface, ACCENT if hot else BORDER, r, 2 if hot else 1, border_radius=4)
@@ -242,6 +245,8 @@ def settings(menu):
             # one: "Polski" has to be readable to someone stuck in a pack they cannot read.
             if action == 'cycle_language':
                 value = i18n.label(str(value))
+            elif action == 'cycle_resolution':
+                value = i18n.t('Automatic') if value == 'auto' else str(value).replace('x', ' × ')
             elif action == 'toggle':
                 value = 'ON' if value else 'OFF'
             else:
@@ -249,7 +254,17 @@ def settings(menu):
             c.text(value + ' ›', (788, r.y + 12, 264, 28), 18, ACCENT)
             payload = {'key': key}
         menu.buttons.append(dict(rect=r, action=action, payload=payload))
-    notes_top = max(246, 164 + len(rows) * 61 + 15)
+    if menu.settings_page == 0:
+        # Read the live SDL surface, never the saved preference (which can be pending a restart).
+        surface = pygame.display.get_surface()
+        width, height = surface.get_size() if surface is not None else (menu.width, menu.height)
+        full = bool(surface.get_flags() & pygame.FULLSCREEN) if surface is not None else False
+        mode = i18n.t('Fullscreen') if full else i18n.t('Windowed')
+        c.text(i18n.t('Current resolution: {width} × {height} · {mode}',
+                     width=width, height=height, mode=mode), (68, 491, 968, 24), 16, MUTED)
+        c.text('Resolution changes take effect after restarting the game.',
+               (68, 519, 968, 24), 16, MUTED)
+    notes_top = max(246, 164 + len(rows) * row_step + 15)
     for index, line in enumerate(notes):
         c.text(line, (68, notes_top + index * 40, 968, 30), 18, MUTED)
     if menu.settings_page == BALANCE_PAGE:

@@ -1,6 +1,12 @@
 """Russian pack for STAR ARMADA (#108), authored UTF-8 maintenance source."""
 
 RU: dict[str, str] = {
+    "Change fullscreen in Settings after leaving the match": "Измените полноэкранный режим в настройках после выхода из матча",
+    "Resolution": "Разрешение",
+    "Automatic": "Автоматически",
+    "Windowed": "В окне",
+    "Current resolution: {width} × {height} · {mode}": "Текущее разрешение: {width} × {height} · {mode}",
+    "Resolution changes take effect after restarting the game.": "Разрешение изменится после перезапуска игры.",
     "CPP": "CPP",
     "RENDERER": "RENDERER",
     "Changes apply at the next session, never during a battle.": "Изменения действуют со следующей сессии, но никогда во время боя.",

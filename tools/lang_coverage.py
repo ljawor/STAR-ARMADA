@@ -65,6 +65,7 @@ SKIP_EXACT = {
 #: as an f-string fragment, and a unit word ('hull') reads as an id because it is
 #: lowercase. A key that is not in the catalogue can never be reported as untranslated.
 EXTRA_UI_KEYS = (
+    'Current resolution: {width} × {height} · {mode}',
     '{outcome} — {name}',
     '{label} +{percent}%',
     '{page} · Page {n}/{total}',

@@ -199,15 +199,17 @@ class HybridLifecycleTests(unittest.TestCase):
         camera = SimpleNamespace(width=1280, height=800, _proj=object(), _view=object())
         hud = Mock()
         display = Mock()
-        display.Info.return_value = SimpleNamespace(current_w=1920, current_h=1080)
+        display.set_mode.return_value = SimpleNamespace(get_size=lambda: (1920, 1080))
         env = helpers('toggle_fullscreen', W=1440, H=900, FULLSCREEN=False,
                       RENDERER='cpp', CPP_HUD_SIZE=(1280, 800), CPP={},
+                      SESSION_RESOLUTION='auto', DESKTOP_SIZE=(1920, 1080),
                       camera=camera, hud=hud, SMOKE=False, flash=Mock())
         from unittest.mock import patch
         with patch.object(pygame, 'display', display):
             env['toggle_fullscreen']()
         self.assertEqual((camera.width, camera.height), (1280, 800))
         hud.resize.assert_called_once_with(1280, 800)
+        self.assertEqual(camera.projection_aspect, 1920 / 1080)
 
     def test_empty_presentation_does_not_force_full_surface_uploads(self):
         presentation = Mock()
@@ -236,7 +238,8 @@ class HybridLifecycleTests(unittest.TestCase):
         from unittest.mock import patch
         with tempfile.TemporaryDirectory() as directory:
             env = helpers('cpp_session', CPP={'session': None}, CPP_DIR=directory,
-                          CPP_HUD_SIZE=(1280, 800), camera=object(), hud=object(), SMOKE=True)
+                          CPP_HUD_SIZE=(1280, 800), camera=object(), hud=object(), SMOKE=True,
+                          SETTINGS={'markers': 'all'})
             with patch('render_bridge.live.LiveSession') as session:
                 env['cpp_session'](object(), object(), 0)
                 first = session.call_args.kwargs['directory']

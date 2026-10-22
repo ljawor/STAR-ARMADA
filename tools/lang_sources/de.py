@@ -6,6 +6,12 @@ fall back to English here.
 """
 
 DE: dict[str, str] = {
+    "Change fullscreen in Settings after leaving the match": "Vollbildmodus nach Verlassen der Partie in den Einstellungen ändern",
+    "Resolution": "Auflösung",
+    "Automatic": "Automatisch",
+    "Windowed": "Fenstermodus",
+    "Current resolution: {width} × {height} · {mode}": "Aktuelle Auflösung: {width} × {height} · {mode}",
+    "Resolution changes take effect after restarting the game.": "Auflösungsänderungen gelten nach einem Neustart des Spiels.",
     "CPP": "CPP",
     "RENDERER": "RENDERER",
     "Changes apply at the next session, never during a battle.": "Änderungen gelten ab der nächsten Sitzung, niemals während einer Schlacht.",

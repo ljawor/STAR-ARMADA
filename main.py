@@ -119,30 +119,44 @@ if _aa > 1:
         pygame.display.gl_set_attribute(pygame.GL_MULTISAMPLESAMPLES, _aa)
     except Exception:                                    # noqa: BLE001
         _aa = 0                                          # keep running, no AA
-if FULLSCREEN:
+from render.display_settings import open_display, validate_resolution, window_size
+# Apply the saved preference once, for either startup mode. Settings edits take
+# effect after restart, never by reinitializing the live in-process native owner.
+SESSION_RESOLUTION = validate_resolution(SETTINGS.get('resolution', 'auto'))
+try:
+    DESKTOP_SIZE = tuple(pygame.display.get_desktop_sizes()[0])
+except (pygame.error, IndexError):
     _info = pygame.display.Info()
-    W, H = _info.current_w, _info.current_h
-    _flags |= pygame.FULLSCREEN
-else:
-    W, H = (1280, 800) if SMOKE else (1440, 900)
-screen = pygame.display.set_mode((W, H), _flags)
+    DESKTOP_SIZE = (_info.current_w, _info.current_h)
+_requested_size = window_size(SESSION_RESOLUTION, DESKTOP_SIZE,
+                              fullscreen=FULLSCREEN, smoke=SMOKE)
+_requested_fullscreen = FULLSCREEN
+screen, FULLSCREEN = open_display(pygame, SESSION_RESOLUTION, DESKTOP_SIZE, _flags,
+                                  fullscreen=FULLSCREEN, smoke=SMOKE)
+W, H = screen.get_size()
+if (W, H) != _requested_size or FULLSCREEN != _requested_fullscreen:
+    print(f'Display fallback: requested {_requested_size[0]}x{_requested_size[1]} '
+          f'{"fullscreen" if _requested_fullscreen else "windowed"}; running {W}x{H} '
+          f'{"fullscreen" if FULLSCREEN else "windowed"}', flush=True)
 
 
 def toggle_fullscreen() -> None:
-    """Switch windowed <-> fullscreen; retarget camera + HUD."""
-    global W, H, FULLSCREEN
-    FULLSCREEN = not FULLSCREEN
-    if FULLSCREEN:
-        info = pygame.display.Info()
-        W, H = info.current_w, info.current_h
-        pygame.display.set_mode((W, H), pygame.DOUBLEBUF | pygame.OPENGL |
-                                pygame.FULLSCREEN)
-    else:
-        W, H = (1280, 800) if SMOKE else (1440, 900)
-        pygame.display.set_mode((W, H), pygame.DOUBLEBUF | pygame.OPENGL)
+    """Switch only without a native owner; keep the startup resolution token."""
+    global W, H, FULLSCREEN, screen
+    if CPP.get('window') is not None:
+        # Readback targets are fixed for a native session; a host-only resize
+        # stretches the scene and native re-init is not lifecycle-safe yet.
+        flash('Change fullscreen in Settings after leaving the match')
+        return
+    from render.display_settings import open_display
+    screen, FULLSCREEN = open_display(pygame, SESSION_RESOLUTION, DESKTOP_SIZE,
+                                      pygame.DOUBLEBUF | pygame.OPENGL,
+                                      fullscreen=not FULLSCREEN, smoke=SMOKE)
+    W, H = screen.get_size()
     if camera is not None and hud is not None:
         view_size = CPP_HUD_SIZE
         camera.width, camera.height = view_size
+        camera.projection_aspect = W / max(1, H)
         camera._proj = camera._view = None
         hud.resize(*view_size)
     flash("fullscreen ON" if FULLSCREEN else "fullscreen OFF")
@@ -343,7 +357,7 @@ def cpp_session(state, ds, local_player: int):
     if not SMOKE:
         CPP["window"] = cpp_window.spawn(
             session.paths, root=ROOT, snapshot=os.environ.get("STAR_ARMADA_CPP_SNAPSHOT"),
-            log=flash_print)
+            size=(W, H), log=flash_print)
         if CPP["window"] is not None and not getattr(CPP["window"], "embedded", False):
             # The window is the display now. Left in front, this process's own (no longer drawn)
             # surface looks like a game that started and then froze.
@@ -556,6 +570,7 @@ def start_game(load_path: str | None = None, mdef: dict | None = None,
     last_autosave = state.time
     view_size = CPP_HUD_SIZE
     camera = Camera(*view_size)
+    camera.projection_aspect = W / max(1, H)
     _start = next((e for e in state.entities.values()
                    if e.owner == local_player and e.is_station), None)
     if _start is not None:
@@ -619,6 +634,7 @@ def install_recovered_manager(candidate):
         DataStore._instance = candidate.ds
         view_size = CPP_HUD_SIZE
         prepared_camera = Camera(*view_size)
+        prepared_camera.projection_aspect = W / max(1, H)
         for name in ('distance', 'yaw', 'pitch', 'fov', 'near', 'far', 'zoom_limits'):
             setattr(prepared_camera, name, getattr(camera, name))
         prepared_camera.target = list(camera.target)
@@ -1338,10 +1354,8 @@ while running:
     # exercises every ring); the window is the only thing that draws (#160).
     if RENDERER == "cpp" and not CPP.get("failed") and (SMOKE or CPP["session"] is None
                                                         or cpp_drawing()):
-        # `apply` also sets the camera's pixel size, and that size is what turns a click into a
-        # world ray. The view surface in this mode is the window (CPP_HUD_SIZE = the size the HUD is
-        # composed at and the window draws at), not the hidden SDL window (2560x1440 here) - a
-        # camera left at the SDL size put every pick at half the pointer's x and 0.55x its y.
+        # Input and overlays stay at the bounded HUD codec size. The camera's
+        # independent projection aspect matches the actual native output (W/H).
         camera.apply(*CPP_HUD_SIZE)
         cpp_publish(state, gm.ds, local_player, inputc.selection, dt_frame,
                     paused=view_paused, message=view_msg, flash_left=view_flash, fps=fps,

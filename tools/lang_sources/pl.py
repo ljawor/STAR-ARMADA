@@ -1,6 +1,12 @@
 """Polish pack for STAR ARMADA (#93) — msgid (English UI string) -> translation."""
 
 PL: dict[str, str] = {
+    "Change fullscreen in Settings after leaving the match": "Tryb pełnoekranowy można zmienić w ustawieniach po opuszczeniu rozgrywki",
+    "Resolution": "Rozdzielczość",
+    "Automatic": "Automatyczna",
+    "Windowed": "W oknie",
+    "Current resolution: {width} × {height} · {mode}": "Bieżąca rozdzielczość: {width} × {height} · {mode}",
+    "Resolution changes take effect after restarting the game.": "Zmiana rozdzielczości wymaga ponownego uruchomienia gry.",
     "CPP": "CPP",
     "RENDERER": "RENDERER",
     "Changes apply at the next session, never during a battle.": "Zmiany obowiązują od następnej sesji, nigdy w trakcie bitwy.",
