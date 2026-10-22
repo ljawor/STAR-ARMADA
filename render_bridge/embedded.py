@@ -55,7 +55,12 @@ class EmbeddedWindow:
         lib.armada_poll.restype = ctypes.c_int
         lib.armada_error.argtypes = [ctypes.c_void_p]
         lib.armada_error.restype = ctypes.c_char_p
-        self.size = (1280, 800)
+        # Readback/texture dimensions must match Options, not the separate HUD codec size.
+        width = int(argv[argv.index('--width') + 1]) if '--width' in argv else 1280
+        height = int(argv[argv.index('--height') + 1]) if '--height' in argv else 800
+        if not (320 <= width <= 7680 and 240 <= height <= 4320):
+            raise ValueError('Invalid native drawable resolution')
+        self.size = (width, height)
         self._pixels = (ctypes.c_ubyte * (self.size[0] * self.size[1] * 4))()
         self._texture = None
         # Empty optional streams are valid; do not ask a decoder to open a missing file.

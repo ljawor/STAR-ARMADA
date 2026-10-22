@@ -546,6 +546,13 @@ def required_names(state, ds, *, ship_size, ship_binding, local_player=0, all_vi
         for kind in (*BUILDING_TYPES, *STATION_TYPES):
             bindings.add(f'{faction}:{kind}')
     bindings.add(stations.SCAFFOLD)
+    # A session's table never changes. Reserve the public unit/weapon catalogue,
+    # not just hulls present at startup, or newly built types are silently omitted.
+    for ship_id, data in ds.ships.items():
+        binding = ship_binding(ds, ship_id, data.faction)
+        if binding:
+            bindings.add(binding)
+    weapons.update(ds.weapons)
     weapons.update(projectile.weapon_id for projectile in state.projectiles.values())
     return bindings, weapons
 

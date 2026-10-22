@@ -33,5 +33,5 @@ void main() {
     lit+=base*pow(1.0-nv,3.0)*0.13;
     lit=mix(lit,base*2.0,v_color0.a);
     lit=lit/(lit+vec3(1.0));
-    gl_FragColor=vec4(pow(lit,vec3(1.0/2.2)),1.0);
+    gl_FragColor=vec4(pow(lit,vec3(1.0/2.2)),u_options.y);
 }

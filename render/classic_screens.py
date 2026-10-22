@@ -197,6 +197,7 @@ def settings(menu):
             ('SFX volume', 'sfx_volume', 'slider'), ('Fullscreen', 'fullscreen', 'toggle'),
             ('Autosave', 'autosave', 'toggle'), ('Ownership markers', 'markers', 'cycle_markers'),
             ('Camera pan speed', 'pan_speed', 'slider'),
+            ('Resolution (restart required)', 'resolution', 'cycle_resolution'),
             ('Renderer (next session)', 'renderer', 'cycle_renderer')), ()),
         ('Audio & presentation', (('Dynamic range', 'audio_dynamic_range', 'cycle_range'),
             ('Mono audio', 'audio_mono', 'toggle'), ('Cinematics', 'cinematics_enabled', 'toggle'),
@@ -225,32 +226,38 @@ def settings(menu):
     c = _canvas(menu, 'settings', 'Settings',
                 i18n.t('{page} · Page {n}/{total}', page=i18n.t(title),
                        n=menu.settings_page + 1, total=len(pages)))
+    # Keep the pinned help/navigation clear even with the display selector.
+    row_step = min(61, 372 // max(1, len(rows)))
+    row_height = min(48, row_step - 6)
     for index, (label, key, action) in enumerate(rows):
-        r = pygame.Rect(52, 164 + index * 61, 1016, 48)
+        r = pygame.Rect(52, 164 + index * row_step, 1016, row_height)
         hot = menu.settings_focus == index or _hot(c, r)
         pygame.draw.rect(c.surface, (28, 48, 53) if hot else (14, 24, 33), r, border_radius=4)
         pygame.draw.rect(c.surface, ACCENT if hot else BORDER, r, 2 if hot else 1, border_radius=4)
-        c.text(label, (r.x + 16, r.y + 12, 530, 28), 18)
+        text_y = r.y + (row_height - 28) // 2
+        c.text(label, (r.x + 16, text_y, 530, 28), 18)
         value = menu.settings.get(key)
         if action == 'slider':
             value = min(1., max(0., float(value)))
-            bar = pygame.Rect(788, r.y + 20, 184, 10)
+            bar = pygame.Rect(788, r.centery - 5, 184, 10)
             pygame.draw.rect(c.surface, BORDER, bar, border_radius=3)
             pygame.draw.rect(c.surface, ACCENT, (bar.x, bar.y, round(bar.w * value), bar.h), border_radius=3)
-            c.text(f'{int(value * 100)}%', (988, r.y + 12, 64, 28), 18)
+            c.text(f'{int(value * 100)}%', (988, text_y, 64, 28), 18)
             payload = {'key': key, 'rect': bar}
         else:
             # The language row names the pack in its own language, never in the active
             # one: "Polski" has to be readable to someone stuck in a pack they cannot read.
             if action == 'cycle_language':
                 value = i18n.label(str(value))
+            elif action == 'cycle_resolution':
+                value = 'Auto / desktop' if value == 'auto' else str(value).replace('x', ' × ')
             elif action == 'pack_order':
                 value = i18n.t('{count} enabled · settings.json', count=len(value or []))
             elif action == 'toggle':
                 value = 'ON' if value else 'OFF'
             else:
                 value = str(value).upper()
-            c.text(value + ' ›', (788, r.y + 12, 264, 28), 18, ACCENT)
+            c.text(value + ' ›', (788, text_y, 264, 28), 18, ACCENT)
             payload = {'key': key}
         menu.buttons.append(dict(rect=r, action=action, payload=payload))
     notes_top = max(246, 164 + len(rows) * 61 + 15)

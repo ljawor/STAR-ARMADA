@@ -72,6 +72,7 @@ DEFAULT_SETTINGS = {
     "music_volume": 0.6,
     "sfx_volume": 0.8,
     "fullscreen": False,
+    "resolution": "auto",
     "pan_speed": 1.0,
     "autosave": True,
     # Ownership marker verbosity in the 3D view: 'all' | 'hostiles' | 'off'.
@@ -131,6 +132,8 @@ BOOKKEEPING_SETTINGS = ('model_preview_explicit',)
 def validate_presentation_settings(settings: dict) -> dict:
     """Normalize only presentation preferences; retain legacy/mod settings."""
     result = dict(settings) if isinstance(settings, dict) else {}
+    from render.display_settings import validate_resolution
+    result['resolution'] = validate_resolution(result.get('resolution'))
     for key in ('music_volume', 'sfx_volume', 'pan_speed'):
         value = result.get(key)
         if type(value) not in (int, float) or (isinstance(value, float) and not math.isfinite(value)):
@@ -1313,6 +1316,11 @@ class MenuStack:
                     from render.markers import next_mode
                     self.settings["markers"] = next_mode(
                         self.settings.get("markers", "all"))
+                    self._dirty_settings = True
+                elif act == "cycle_resolution":
+                    from render.display_settings import RESOLUTIONS, validate_resolution
+                    current = validate_resolution(self.settings.get('resolution'))
+                    self.settings['resolution'] = RESOLUTIONS[(RESOLUTIONS.index(current) + 1) % len(RESOLUTIONS)]
                     self._dirty_settings = True
                 elif act == "cycle_renderer":
                     # 'cpp' is the native window; 'legacy' keeps this process's own GL renderer.

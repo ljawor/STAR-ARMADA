@@ -28,7 +28,7 @@ def construction_records(state, ds, binding_index, *, local_player, visible_ids=
         data = ds.stations.get(item.get('item'))
         if data is None:
             continue
-        if not 0 <= builder.id < 0x80000000:
+        if not 0 <= builder.id < 0x40000000:
             raise packed.FrameError('constructor ID overlaps render-only station namespace')
         position = item['pos']
         if isinstance(position, dict):
@@ -42,3 +42,14 @@ def construction_records(state, ds, binding_index, *, local_player, visible_ids=
         yield packed.instance_record(entity_id=0x80000000 | builder.id, binding_id=binding,
             matrix=matrix, tint=(*color[:3], 1.), flags=packed.FLAG_DYNAMIC_MESH,
             hp=1., shield=0.)
+        # Full-sized planned hull, separate from the vertically growing scaffold.
+        # The top two render-only ID quarters cannot collide with one another.
+        from render.faction_visuals import normalize_station_key
+        faction = state.players[builder.owner].faction
+        hull_binding = binding_index.get(':'.join(normalize_station_key(item['item'], faction)))
+        if hull_binding is not None:
+            yield packed.instance_record(entity_id=0xC0000000 | builder.id,
+                binding_id=hull_binding,
+                matrix=packed.matrix_from_pose(tuple(position), 0., scale),
+                tint=(*color[:3], .20 + .35 * fraction), flags=packed.FLAG_DYNAMIC_MESH,
+                hp=1., shield=0.)

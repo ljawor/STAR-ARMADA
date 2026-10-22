@@ -89,7 +89,7 @@ def find_binary(root: str) -> str | None:
     return None
 
 
-def spawn(paths: dict, *, root: str, snapshot: str | None, log=print):
+def spawn(paths: dict, *, root: str, snapshot: str | None, size=(1280, 800), log=print):
     """Launch the viewer against a live session's rings. Returns the process, or None."""
     binary = find_binary(root)
     if binary is None:
@@ -105,6 +105,8 @@ def spawn(paths: dict, *, root: str, snapshot: str | None, log=print):
 
     argv = [
         binary,
+        '--width', str(size[0]),
+        '--height', str(size[1]),
         '--snapshot', snapshot,
         '--assets', root,
         '--ring', str(paths['frame']),

@@ -1,0 +1,19 @@
+test_enemy_sensor_does_not_reveal_our_mask (test_native_fog_discovery.NativeFogDiscoveryTests.test_enemy_sensor_does_not_reveal_our_mask) ... ok
+test_live_ring_republishes_discovery_for_ship_and_new_station (test_native_fog_discovery.NativeFogDiscoveryTests.test_live_ring_republishes_discovery_for_ship_and_new_station) ... ok
+test_ships_and_stations_reveal_move_and_retain_charted_ground (test_native_fog_discovery.NativeFogDiscoveryTests.test_ships_and_stations_reveal_move_and_retain_charted_ground) ... ok
+test_pygame_surface_bytes_round_trip_unchanged (test_render_fogmap.FogMapAgreesWithTheRenderer.test_pygame_surface_bytes_round_trip_unchanged) ... ok
+test_bad_magic (test_render_fogmap.FogMapRefuses.test_bad_magic) ... ok
+test_crc_mismatch (test_render_fogmap.FogMapRefuses.test_crc_mismatch) ... ok
+test_encode_refuses_a_short_pixel_budget (test_render_fogmap.FogMapRefuses.test_encode_refuses_a_short_pixel_budget) ... ok
+test_short_header (test_render_fogmap.FogMapRefuses.test_short_header) ... ok
+test_wrong_pixel_count (test_render_fogmap.FogMapRefuses.test_wrong_pixel_count) ... ok
+test_zero_cells_is_refused (test_render_fogmap.FogMapRefuses.test_zero_cells_is_refused) ... ok
+test_header_is_twenty_eight_bytes (test_render_fogmap.FogMapRoundTrip.test_header_is_twenty_eight_bytes) ... ok
+test_one_mask_is_small_enough_to_republish_on_change (test_render_fogmap.FogMapRoundTrip.test_one_mask_is_small_enough_to_republish_on_change) ... ok
+test_round_trip_keeps_every_field (test_render_fogmap.FogMapRoundTrip.test_round_trip_keeps_every_field) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.166s
+
+OK
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)

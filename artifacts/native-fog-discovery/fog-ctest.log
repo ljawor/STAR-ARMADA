@@ -1,0 +1,32 @@
+Internal ctest changing into directory: /Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/build-w02
+Test project /Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/build-w02
+      Start  1: scene
+ 1/13 Test  #1: scene ............................   Passed    0.05 sec
+      Start  2: camera
+ 2/13 Test  #2: camera ...........................   Passed    0.00 sec
+      Start  3: overlay
+ 3/13 Test  #3: overlay ..........................   Passed    0.00 sec
+      Start  4: input
+ 4/13 Test  #4: input ............................   Passed    0.00 sec
+      Start  5: markers
+ 5/13 Test  #5: markers ..........................   Passed    0.00 sec
+      Start  6: explosions
+ 6/13 Test  #6: explosions .......................   Passed    0.00 sec
+      Start  7: planets
+ 7/13 Test  #7: planets ..........................   Passed    0.00 sec
+      Start  8: shields
+ 8/13 Test  #8: shields ..........................   Passed    0.00 sec
+      Start  9: hits
+ 9/13 Test  #9: hits .............................   Passed    0.00 sec
+      Start 10: fog
+10/13 Test #10: fog ..............................   Passed    0.00 sec
+      Start 11: hardware
+11/13 Test #11: hardware .........................   Passed    0.00 sec
+      Start 12: frame_v2
+12/13 Test #12: frame_v2 .........................   Passed    0.26 sec
+      Start 13: starfield
+13/13 Test #13: starfield ........................   Passed    0.00 sec
+
+100% tests passed, 0 tests failed out of 13
+
+Total Test time (real) =   0.33 sec

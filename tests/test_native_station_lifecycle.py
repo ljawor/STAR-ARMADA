@@ -37,11 +37,12 @@ class StationLifecycleTests(unittest.TestCase):
         self.addCleanup(setattr, DataStore, '_instance', original_store)
         DataStore.reset()
         self.st = GameState()
-        self.st.players[0] = PlayerState(0, faction='rebel', credits=100000,
+        faction = getattr(self, 'faction', 'rebel')
+        self.st.players[0] = PlayerState(0, faction=faction, credits=100000,
             materials=100000, energy=100000, crew=100000, command_capacity=100)
         self.factory = UnitFactory(self.st)
         self.ds = DataStore.get()
-        self.builder = self.factory.spawn_ship('rebel_constructor', 0, Vec3())
+        self.builder = self.factory.spawn_ship(f'{faction}_constructor', 0, Vec3())
         self.cs = ConstructionSystem(self.st)
         self.cs.factory = self.factory
         self.st._construction_system = self.cs
@@ -75,6 +76,46 @@ class StationLifecycleTests(unittest.TestCase):
         self.assertFalse(rows[0]['flags'] & packed.FLAG_SURFACE_FRAME)
         self.assertEqual(rows[0]['matrix'][9:12], list(station.pos.to_tuple()))
         self.assertEqual(before, self.st.to_dict(precise=True))
+
+    def test_paid_build_includes_transparent_full_station_before_completion(self):
+        self.pay()
+        before = self.st.to_dict(precise=True)
+        early, _ = self.frame()
+        previews = [r for r in early['instances'] if r['binding'] == 'rebel:trade_station']
+        self.assertEqual(len(previews), 1, 'Missing transparent full station at paid construction site')
+        preview = previews[0]
+        self.assertTrue(preview['flags'] & packed.FLAG_DYNAMIC_MESH)
+        self.assertFalse(preview['flags'] & packed.FLAG_SURFACE_FRAME)
+        self.assertGreater(preview['tint'][3], 0)
+        self.assertLess(preview['tint'][3], 1.)
+        scale = self.ds.stations['trade_station'].radius / 50.
+        for axis in (0, 4, 8):
+            self.assertAlmostEqual(preview['matrix'][axis], scale)
+        self.assertFalse(any(e.is_station for e in self.st.entities.values()))
+        self.assertEqual(len({r['entity_id'] for r in early['instances']}), len(early['instances']))
+        self.assertEqual(before, self.st.to_dict(precise=True))
+        self.cs.update(self.builder.build_queue[0]['total'] / 2)
+        middle, _ = self.frame()
+        ghost, = [r for r in middle['instances'] if r['binding'] == preview['binding']]
+        self.assertGreater(ghost['tint'][3], preview['tint'][3])
+        self.assertLess(ghost['tint'][3], 1.)
+        self.assertEqual(ghost['matrix'], preview['matrix'], 'Planned station must not squash with scaffold')
+        self.cs.update(self.builder.build_queue[0]['total'] + 1)
+        completed, _ = self.frame()
+        hull, = [r for r in completed['instances'] if r['binding'] == preview['binding']]
+        self.assertEqual(hull['tint'][3], 1.)
+        self.assertNotEqual(hull['entity_id'], preview['entity_id'])
+        self.assertNotIn('shared:construction_scaffold', [r['binding'] for r in completed['instances']])
+
+    def test_cancelled_and_hidden_sites_do_not_publish_previews(self):
+        self.pay()
+        self.collector.visible_ids = set()
+        hidden, _ = self.frame()
+        self.assertFalse(any(r['entity_id'] >= 0x80000000 for r in hidden['instances']))
+        self.collector.visible_ids = None
+        self.assertTrue(self.cs.cancel_build(self.builder.id, 0))
+        cancelled, _ = self.frame()
+        self.assertFalse(any(r['entity_id'] >= 0x80000000 for r in cancelled['instances']))
 
     def test_paid_site_grows_and_is_replaced_by_completed_hull(self):
         self.pay()
@@ -111,12 +152,14 @@ class StationLifecycleTests(unittest.TestCase):
         scaffold = hardware.decode(reader.read(initial - 1)[1])
         self.assertEqual(scaffold['name'], 'shared:construction_scaffold')
         self.assertGreater(scaffold['triangles'], 0)
+        initial_meshes = [hardware.decode(reader.read(i)[1]) for i in range(initial)]
+        hull, = [mesh for mesh in initial_meshes if mesh['name'] == 'rebel:trade_station']
         session.publish(self.st, visible_ids={self.builder.id})
         self.assertEqual(reader.published, initial, 'unchanged mesh uploaded again')
         self.cs.update(self.builder.build_queue[0]['total'] + 1)
         station, = [e for e in self.st.entities.values() if e.is_station]
         session.publish(self.st, visible_ids={self.builder.id, station.id})
-        hull = hardware.decode(reader.read(reader.published - 1)[1])
+        self.assertEqual(reader.published, initial, 'Completed hull should reuse its already published preview mesh')
         self.assertEqual(hull['name'], 'rebel:trade_station')
         from render.fleet_geometry import station_mesh
         self.assertEqual(hull['triangles'], sum(map(len, station_mesh('trade_station', 'rebel').values())))

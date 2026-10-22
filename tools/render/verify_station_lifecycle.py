@@ -12,6 +12,7 @@ from verify_star_occlusion import run  # shared bounded native runner
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--out', type=Path, required=True)
+    parser.add_argument('--faction', choices=('imperial', 'rebel'), default='imperial')
     args = parser.parse_args()
     out = args.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
@@ -22,6 +23,7 @@ def main():
     from tools.render.dump_snapshot import _default_selection
     asset_selection.configure(_default_selection(), asset_root=ROOT, pack_root=ROOT / 'visual_packs')
     fixture = StationLifecycleTests('test_paid_site_grows_and_is_replaced_by_completed_hull')
+    fixture.faction = args.faction
     reports = {}
     fixture.setUp()
     try:

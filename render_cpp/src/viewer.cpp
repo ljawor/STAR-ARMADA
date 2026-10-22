@@ -824,6 +824,7 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
     host->pixels.resize(size_t(pixelWidth) * pixelHeight * 4);
     bgfx::setViewFrameBuffer(1, outputFB);
     bgfx::setViewFrameBuffer(2, outputFB);
+    bgfx::setViewFrameBuffer(3, outputFB);
   }
   // Instancing is baseline in this pinned bgfx API; buffer availability is
   // checked per draw.
@@ -1529,8 +1530,14 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
     bgfx::setViewRect(1, 0, 0, uint16_t(width), uint16_t(height));
     bgfx::setViewTransform(1, view, proj);
     bgfx::touch(1);
+    // Opaque world, then ordered translucent previews/fog, then the logical HUD.
+    const bgfx::ViewId viewOrder[] = {0, 1, 3, 2, 4};
+    bgfx::setViewOrder(0, 5, viewOrder);
+    bgfx::setViewRect(3, 0, 0, uint16_t(width), uint16_t(height));
+    bgfx::setViewTransform(3, view, proj);
+    bgfx::setViewMode(3, bgfx::ViewMode::Sequential);
     const float eyeData[4] = {eye[0], eye[1], eye[2], 1},
-                optionData[4] = {shadows ? 1.f : 0.f, 0, 0, 0};
+                optionData[4] = {shadows ? 1.f : 0.f, 1.f, 0, 0};
     for (const auto &g : groups) {
       const uint32_t count = uint32_t(g.instances.size() / 20);
       if (!count)
@@ -1597,7 +1604,7 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
       for (const auto &h : hardwareMeshes) {
         std::vector<float> instances;
         for (const auto &building : live->surface) {
-          if (building.binding != h.binding)
+          if (building.binding != h.binding || building.tint[3] < 255)
             continue;
           float row[20] = {building.matrix[0], building.matrix[1], building.matrix[2], 0.f,
                            building.matrix[3], building.matrix[4], building.matrix[5], 0.f,
@@ -1695,6 +1702,53 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
         ++planetBodiesDrawn;
       }
     }
+    if (live) {
+      std::vector<const Live::SurfaceInstance *> previews;
+      for (const auto &building : live->surface)
+        if (building.tint[3] > 0 && building.tint[3] < 255)
+          previews.push_back(&building);
+      auto distanceSquared = [&](const Live::SurfaceInstance *building) {
+        float d = 0.f;
+        for (int i = 0; i < 3; ++i) {
+          const float axis = building->matrix[9 + i] - eye[i];
+          d += axis * axis;
+        }
+        return d;
+      };
+      std::stable_sort(previews.begin(), previews.end(), [&](const auto *a, const auto *b) {
+        return distanceSquared(a) > distanceSquared(b);
+      });
+      for (const auto *building : previews) {
+        const auto mesh = std::find_if(hardwareMeshes.begin(), hardwareMeshes.end(),
+            [&](const auto &h) { return h.binding == building->binding; });
+        if (mesh == hardwareMeshes.end())
+          continue; // Counted by the same unmeshed census as opaque hardware.
+        if (bgfx::getAvailInstanceDataBuffer(1, 80) < 1) {
+          ++hardwareDropped;
+          continue;
+        }
+        const auto &m = building->matrix;
+        const auto &t = building->tint;
+        const float row[20] = {m[0], m[1], m[2], 0.f, m[3], m[4], m[5], 0.f,
+            m[6], m[7], m[8], 0.f, m[9], m[10], m[11], 1.f,
+            t[0] / 255.f, t[1] / 255.f, t[2] / 255.f, t[3] / 255.f};
+        bgfx::InstanceDataBuffer buffer;
+        bgfx::allocInstanceDataBuffer(&buffer, 1, 80);
+        std::memcpy(buffer.data, row, sizeof(row));
+        const float previewOptions[4] = {shadows ? 1.f : 0.f, t[3] / 255.f, 0.f, 0.f};
+        bgfx::setVertexBuffer(0, mesh->vbo);
+        bgfx::setInstanceDataBuffer(&buffer);
+        bgfx::setUniform(lightUniform, lightMtx);
+        bgfx::setUniform(eyeUniform, eyeData);
+        bgfx::setUniform(optionsUniform, previewOptions);
+        bgfx::setTexture(0, shadowSampler, depth);
+        // Keep opaque occluders, but do not stamp a solid depth/shadow silhouette.
+        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A |
+                       BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_MSAA | BGFX_STATE_BLEND_ALPHA);
+        bgfx::submit(3, program);
+        ++hardwareInstances;
+      }
+    }
     // W05 slice 4: the fog mask. Drawn after the bodies and with depth testing off, because in the
     // Python renderer the mask is a picture of what the player knows rather than geometry in the
     // world: it covers unexplored space, and the ships in it.
@@ -1719,7 +1773,10 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
                     BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP |
                         BGFX_SAMPLER_MIN_POINT | BGFX_SAMPLER_MAG_POINT |
                         BGFX_SAMPLER_MIP_POINT,
-                    pixels);
+                    nullptr); // Initial data makes a bgfx texture immutable; fog must change.
+                if (!bgfx::isValid(fogTexture))
+                  throw DeviceError("Fog texture creation failed");
+                bgfx::updateTexture2D(fogTexture, 0, 0, 0, 0, side, side, pixels);
                 fogTextureCells = mask.cells;
               }
               if (mask.bounds != fogBounds) {
@@ -1747,7 +1804,7 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
       bgfx::setVertexBuffer(0, fogVbo);
       bgfx::setTexture(0, fogSampler, fogTexture);
       bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA);
-      bgfx::submit(1, fogProgram);
+      bgfx::submit(3, fogProgram);
       ++fogFramesDrawn;
     }
     // W05 slice 2: ownership cues. A batch is a few hundred primitives, so the geometry is rebuilt
@@ -2378,7 +2435,7 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
     if (host) {
       bgfx::TextureRegion source{}, destination{};
       source.init(outputColor); destination.init(outputRead);
-      bgfx::blit(3, destination, source);
+      bgfx::blit(4, destination, source); // After preview/fog and HUD, never before their draws.
       const uint32_t ready = bgfx::read(destination, host->pixels.data());
       uint32_t completed = bgfx::frame();
       drawStats = *bgfx::getStats();

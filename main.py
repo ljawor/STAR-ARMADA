@@ -128,31 +128,48 @@ if _aa > 1:
         pygame.display.gl_set_attribute(pygame.GL_MULTISAMPLESAMPLES, _aa)
     except Exception:                                    # noqa: BLE001
         _aa = 0                                          # keep running, no AA
-if FULLSCREEN:
+from render.display_settings import open_display
+# Latch once: changing the preference never recreates a live native renderer or
+# invalidates cached menu/scene GL resources. The Settings row says restart required.
+SESSION_RESOLUTION = SETTINGS.get('resolution', 'auto')
+try:
+    DESKTOP_SIZE = tuple(pygame.display.get_desktop_sizes()[0])
+except (pygame.error, IndexError):
     _info = pygame.display.Info()
-    W, H = _info.current_w, _info.current_h
-    _flags |= pygame.FULLSCREEN
-else:
-    W, H = (1280, 800) if SMOKE else (1440, 900)
-screen = pygame.display.set_mode((W, H), _flags)
+    DESKTOP_SIZE = (_info.current_w, _info.current_h)
+screen, FULLSCREEN = open_display(pygame, SESSION_RESOLUTION, DESKTOP_SIZE, _flags,
+                                  fullscreen=FULLSCREEN, smoke=SMOKE)
+W, H = screen.get_size()
+_flags = (_flags & ~pygame.FULLSCREEN) | (pygame.FULLSCREEN if FULLSCREEN else 0)
 
 
 def toggle_fullscreen() -> None:
     """Switch windowed <-> fullscreen; retarget camera + HUD."""
     global W, H, FULLSCREEN
+    if globals().get('CPP', {}).get('window') is not None:
+        # Native buffers are fixed for this session. Never stretch them after a
+        # host-only mode change, or recreate the known-unsafe in-process owner.
+        flash('Change fullscreen in Settings after leaving the match')
+        return
+    from render.display_settings import window_size
+    info = pygame.display.Info()
+    desktop = globals().get('DESKTOP_SIZE', (info.current_w, info.current_h))
+    resolution = globals().get('SESSION_RESOLUTION', 'auto')
     FULLSCREEN = not FULLSCREEN
-    if FULLSCREEN:
-        info = pygame.display.Info()
-        W, H = info.current_w, info.current_h
-        pygame.display.set_mode((W, H), pygame.DOUBLEBUF | pygame.OPENGL |
-                                pygame.FULLSCREEN)
-    else:
-        W, H = (1280, 800) if SMOKE else (1440, 900)
-        pygame.display.set_mode((W, H), pygame.DOUBLEBUF | pygame.OPENGL)
+    W, H = window_size(resolution, desktop, fullscreen=FULLSCREEN, smoke=SMOKE)
+    flags = pygame.DOUBLEBUF | pygame.OPENGL
+    try:
+        pygame.display.set_mode((W, H), flags | (pygame.FULLSCREEN if FULLSCREEN else 0))
+    except pygame.error:
+        from render.display_settings import open_display
+        surface, FULLSCREEN = open_display(pygame, 'auto', desktop, flags,
+                                            fullscreen=FULLSCREEN, smoke=SMOKE)
+        W, H = surface.get_size()
     if camera is not None and hud is not None:
         view_size = (CPP_HUD_SIZE if globals().get('RENDERER') == 'cpp'
                      and not globals().get('CPP', {}).get('fell_back') else (W, H))
         camera.width, camera.height = view_size
+        camera.projection_aspect = (W / max(1, H) if view_size == CPP_HUD_SIZE else None)
         camera._proj = camera._view = None
         hud.resize(*view_size)
     flash("fullscreen ON" if FULLSCREEN else "fullscreen OFF")
@@ -344,7 +361,7 @@ def cpp_session(state, ds, local_player: int):
     if not SMOKE:
         CPP["window"] = cpp_window.spawn(
             session.paths, root=ROOT, snapshot=os.environ.get("STAR_ARMADA_CPP_SNAPSHOT"),
-            log=flash_print)
+            size=(W, H), log=flash_print)
         if CPP["window"] is not None and not getattr(CPP["window"], "embedded", False):
             # The window is the display now. Left in front, this process's own (no longer drawn)
             # surface looks like a game that started and then froze.
@@ -506,6 +523,7 @@ def start_game(load_path: str | None = None, mdef: dict | None = None,
     last_autosave = state.time
     view_size = CPP_HUD_SIZE if globals().get('RENDERER') == 'cpp' else (W, H)
     camera = Camera(*view_size)
+    camera.projection_aspect = W / max(1, H) if globals().get('RENDERER') == 'cpp' else None
     _start = next((e for e in state.entities.values()
                    if e.owner == local_player and e.is_station), None)
     if _start is not None:
@@ -575,6 +593,7 @@ def install_recovered_manager(candidate):
         DataStore._instance = candidate.ds
         view_size = CPP_HUD_SIZE if globals().get('RENDERER') == 'cpp' else (W, H)
         prepared_camera = Camera(*view_size)
+        prepared_camera.projection_aspect = W / max(1, H) if globals().get('RENDERER') == 'cpp' else None
         for name in ('distance', 'yaw', 'pitch', 'fov', 'near', 'far', 'zoom_limits'):
             setattr(prepared_camera, name, getattr(camera, name))
         prepared_camera.target = list(camera.target)
@@ -747,6 +766,7 @@ def draw_campaign_presentation(dt_frame):
             hud.resize(W, H)
             CPP['fell_back'] = True
     if not native_drawn:
+        camera.projection_aspect = None
         camera.apply(W, H)
         renderer.placement = None
         renderer.draw(0.0, set())
@@ -1361,6 +1381,7 @@ while running:
             except Exception:
                 pass
 
+        camera.projection_aspect = None
         camera.apply(W, H)
         renderer.placement = hud.placement  # render-side preview only; never sim state
         renderer.draw(dt_frame, inputc.selection)

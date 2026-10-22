@@ -1,0 +1,33 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+{
+  "early": {
+    "blobs": 2,
+    "decode_failures": 0,
+    "dropped_instances": 0,
+    "instances_drawn": 70,
+    "meshes": 2,
+    "note": "surface hardware crosses as a full basis (FLAG_SURFACE_FRAME) that the window copies verbatim, because a building stands on the foundation the site generator chose; its mesh arrives on the mesh ring because the offline catalogue cannot name a building that is constructed during a match; role colours are the shared palette, not on the wire",
+    "ring": "/Users/lukaszjawor/.hermes/cache/scratch/sa-transparent-imperial-paid/early/hardware.ring",
+    "unmeshed": 0
+  },
+  "half": {
+    "blobs": 2,
+    "decode_failures": 0,
+    "dropped_instances": 0,
+    "instances_drawn": 70,
+    "meshes": 2,
+    "note": "surface hardware crosses as a full basis (FLAG_SURFACE_FRAME) that the window copies verbatim, because a building stands on the foundation the site generator chose; its mesh arrives on the mesh ring because the offline catalogue cannot name a building that is constructed during a match; role colours are the shared palette, not on the wire",
+    "ring": "/Users/lukaszjawor/.hermes/cache/scratch/sa-transparent-imperial-paid/half/hardware.ring",
+    "unmeshed": 0
+  },
+  "complete": {
+    "blobs": 1,
+    "decode_failures": 0,
+    "dropped_instances": 0,
+    "instances_drawn": 35,
+    "meshes": 1,
+    "note": "surface hardware crosses as a full basis (FLAG_SURFACE_FRAME) that the window copies verbatim, because a building stands on the foundation the site generator chose; its mesh arrives on the mesh ring because the offline catalogue cannot name a building that is constructed during a match; role colours are the shared palette, not on the wire",
+    "ring": "/Users/lukaszjawor/.hermes/cache/scratch/sa-transparent-imperial-paid/complete/hardware.ring",
+    "unmeshed": 0
+  }
+}
