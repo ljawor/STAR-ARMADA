@@ -132,7 +132,6 @@ def trace(frame, event, arg):
             assert env['recording'] is original_recording
             assert original_recording.gm is env['gm']
             assert env['audio'].state is env['state']
-            assert env['renderer'].ds is env['gm'].ds
             assert env['camera']._scene is env['state']
         if ((paid_clicks == 0 and env['state'].tick >= 3)
                 or (paid_clicks == 1 and installed and env['state'].tick >= 16)):
@@ -355,7 +354,6 @@ class HandoffTests(unittest.TestCase):
         import pygame
         from game.net.lan import LanSession, default_lan_options, precise_checksum
         from render.camera import Camera
-        from render.renderer import Renderer
         from render.hud import HUD
         from render.input import InputController
         from render.audio import Audio
@@ -381,7 +379,6 @@ class HandoffTests(unittest.TestCase):
         self.addCleanup(session.close)
         old.state._net_session = session
         cam = Camera(800, 600)
-        ren = Renderer(old.state, cam)
         hud = HUD(800, 600, old.state)
         hud.set_camera_ref(cam)
         inp = InputController(old.state, cam, hud, None)
@@ -394,29 +391,28 @@ class HandoffTests(unittest.TestCase):
         inp.groups = {1: {own, 999999}}
         inp._pending_ability = {'unsafe': True}
         cam.follow_id = own
-        namespace: dict = dict(gm=old, state=old.state, camera=cam, renderer=ren,
+        namespace: dict = dict(gm=old, state=old.state, camera=cam,
                          hud=hud, inputc=inp, audio=audio, recording=rec,
                          net_session=session, local_player=0, DataStore=DataStore,
                          W=800, H=600, CPP_HUD_SIZE=(1280, 800), SETTINGS={}, accumulator=99,
                          mission_def=None, last_autosave=0,
-                         Camera=Camera, Renderer=Renderer, HUD=HUD,
+                         Camera=Camera, HUD=HUD,
                          InputController=InputController, _AppGlue=lambda: object())
         exec(compile(ast.Module(body=nodes, type_ignores=[]), str(ROOT / 'main.py'), 'exec'), namespace)
         def release_views():
-            namespace['renderer'].close()
             namespace['hud'].close()
         self.addCleanup(release_views)
         candidate = restored(old)
-        before = tuple(namespace[k] for k in ('gm', 'state', 'camera', 'renderer', 'hud', 'inputc'))
+        before = tuple(namespace[k] for k in ('gm', 'state', 'camera', 'hud', 'inputc'))
         # Fault injection only at render resource construction; wire, state and
         # hashes remain real. Failed preparations cannot alter any old refs.
         def fail(*args, **kwargs):
             raise RuntimeError('injected construction failure')
-        for name in ('HUD', 'InputController', 'Renderer'):
+        for name in ('HUD', 'InputController'):
             with patch.dict(namespace, {name: fail}):
                 with self.assertRaisesRegex(RuntimeError, 'injected'):
                     namespace['install_recovered_manager'](candidate)
-            self.assertEqual(before, tuple(namespace[k] for k in ('gm', 'state', 'camera', 'renderer', 'hud', 'inputc')))
+            self.assertEqual(before, tuple(namespace[k] for k in ('gm', 'state', 'camera', 'hud', 'inputc')))
             self.assertIs(rec.gm, old)
             self.assertIs(audio.state, old.state)
             self.assertIs(DataStore._instance, old.ds)
@@ -425,20 +421,19 @@ class HandoffTests(unittest.TestCase):
                 namespace['install_recovered_manager'](candidate)
         self.assertIs(audio.state, old.state)
         self.assertIs(audio.camera, None)
-        self.assertEqual(before, tuple(namespace[k] for k in ('gm', 'state', 'camera', 'renderer', 'hud', 'inputc')))
+        self.assertEqual(before, tuple(namespace[k] for k in ('gm', 'state', 'camera', 'hud', 'inputc')))
         candidate.state.players[0].credits += 1
         with self.assertRaises(ValueError):
             namespace['install_recovered_manager'](candidate)
-        self.assertEqual(before, tuple(namespace[k] for k in ('gm', 'state', 'camera', 'renderer', 'hud', 'inputc')))
+        self.assertEqual(before, tuple(namespace[k] for k in ('gm', 'state', 'camera', 'hud', 'inputc')))
         self.assertIs(rec.gm, old)
         candidate = restored(old)
         digest = precise_checksum(old)
         history = rec.to_dict()
         namespace['install_recovered_manager'](candidate)
         self.assertEqual(precise_checksum(candidate), digest)
-        for name in ('renderer', 'hud', 'inputc', 'audio'):
-            self.assertIs(namespace[name].state, candidate.state)
-        self.assertIs(namespace['renderer'].ds, candidate.ds)
+        for name in ('hud', 'inputc', 'audio'):
+            self.assertIs(getattr(namespace[name], 'state', candidate.state), candidate.state)
         self.assertIs(namespace['camera']._scene, candidate.state)
         self.assertIs(namespace['hud'].camera, namespace['camera'])
         self.assertIs(namespace['audio'].camera, namespace['camera'])
@@ -448,8 +443,6 @@ class HandoffTests(unittest.TestCase):
         self.assertEqual(namespace['camera'].follow_id, own)
         self.assertIs(candidate.state._net_session, session)
         self.assertIsNone(old.state._net_session)
-        self.assertEqual(namespace['renderer']._frame_cache, {})
-        self.assertIsNot(namespace['renderer'].fog, ren.fog)
         self.assertIs(rec.gm, candidate)
         self.assertEqual(history, rec.to_dict())
         self.assertEqual(namespace['accumulator'], 0)
