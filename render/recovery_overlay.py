@@ -72,3 +72,4 @@ class RecoveryOverlay(PresentationOverlay):
         self.cancel_rect = pygame.Rect(x, y, self.panel_rect.w - 40, line)
         pygame.draw.rect(self.surface, ACCENT, self.cancel_rect, border_radius=4)
         text('Cancel reconnect and leave match  ·  Escape', color=(16, 42, 42))
+        return self.surface

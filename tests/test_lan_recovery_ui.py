@@ -101,6 +101,11 @@ class RecoveryUITests(unittest.TestCase):
                 pygame.font.quit()
         self.addCleanup(close_owned_font)
 
+    def test_draw_returns_surface_for_native_hud_composition(self):
+        from render.recovery_overlay import RecoveryOverlay
+        overlay = RecoveryOverlay(1280, 800)
+        self.assertIs(overlay.draw({'phase': 'waiting', 'missing': [1]}), overlay.surface)
+
     def test_real_gl_small_and_large_capture_matches_measured_surface(self):
         import json
         import os

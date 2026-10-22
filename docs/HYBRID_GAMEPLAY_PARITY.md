@@ -1,5 +1,9 @@
 # STAR ARMADA — Hybrid gameplay parity audit and repair
 
+> Historical bounded repair. The local original-window, star and station follow-up
+> is documented in `NATIVE_SAME_WINDOW_REPAIR.md`; the old review below does not
+> approve that new ABI/rendering change.
+
 ## 1. Scope and reference
 
 The owner reported three regressions after switching `main.py` to the hybrid renderer:

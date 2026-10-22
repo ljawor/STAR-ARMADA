@@ -1,0 +1,154 @@
+{
+  "format": 3,
+  "runtime_state": null,
+  "seed": 12345,
+  "game_type": "skirmish",
+  "mission_id": null,
+  "mission_state": null,
+  "time": 0.0,
+  "tick": 0,
+  "capacity_timer": 0.0,
+  "next_entity_id": 2,
+  "next_fleet_id": 1,
+  "next_projectile_id": 1,
+  "map_info": {
+    "name": "skirmish01",
+    "bounds": 24000.0,
+    "nebulas": [],
+    "jump_points": [],
+    "star": {},
+    "victory_mode": "command"
+  },
+  "visibility_cell_size": 500.0,
+  "explored_cells": {},
+  "discovered_planets": {},
+  "players": {
+    "0": {
+      "id": 0,
+      "faction": "rebel",
+      "is_ai": false,
+      "ai_difficulty": "normal",
+      "name": "Player",
+      "credits": 99000.0,
+      "materials": 99400.0,
+      "energy": 99900.0,
+      "crew": 99900.0,
+      "command_capacity": 100,
+      "team": null,
+      "researched": [],
+      "researching": {},
+      "color": [
+        0.4,
+        0.7,
+        1.0
+      ]
+    }
+  },
+  "fleets": {},
+  "entities": {
+    "1": {
+      "id": 1,
+      "kind": "ship",
+      "owner": 0,
+      "data_id": "rebel_constructor",
+      "sensor_range": 1200.0,
+      "pos": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "vel": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "yaw": 0.0,
+      "radius": 30.0,
+      "is_ship": true,
+      "is_station": false,
+      "is_squadron": false,
+      "is_construction": true,
+      "is_planet": false,
+      "hull": 680.0,
+      "max_hull": 680.0,
+      "shields": {
+        "front": 310.0,
+        "rear": 310.0,
+        "left": 310.0,
+        "right": 310.0
+      },
+      "max_shield_quad": 310.0,
+      "shield_regen": 11.0,
+      "systems": {
+        "engines": {
+          "hp": 100.0,
+          "max_hp": 100.0
+        },
+        "sensors": {
+          "hp": 80.0,
+          "max_hp": 80.0
+        },
+        "shield_gen": {
+          "hp": 62.0,
+          "max_hp": 62.0
+        },
+        "life_support": {
+          "hp": 100.0,
+          "max_hp": 100.0
+        }
+      },
+      "alive": true,
+      "xp": 0.0,
+      "level": 1,
+      "upgrade_level": 1,
+      "crew": 28,
+      "max_crew": 28,
+      "crew_loss_accumulator": 0.0,
+      "crew_damage_accumulator": 0.0,
+      "abandoned_attack_target": null,
+      "recruitment_progress": 0.0,
+      "crew_cargo": 0,
+      "cargo_loss_accumulator": 0.0,
+      "crew_mission": {},
+      "boarding": {},
+      "boarding_party_id": null,
+      "retarget_cooldown": 0.0,
+      "last_hit_time": -999.0,
+      "order_type": "move",
+      "energy": 100.0,
+      "max_energy": 100.0,
+      "spawn_time": 0.0,
+      "order_target_pos": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "build_queue": [
+        {
+          "kind": "station",
+          "item": "trade_station",
+          "time_left": 9.0,
+          "total": 18.0,
+          "pos": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "status": "paid"
+        }
+      ]
+    }
+  },
+  "projectiles": [],
+  "winner": null,
+  "game_over": false,
+  "game_over_reason": "",
+  "stats": {
+    "0": {
+      "kills": 0,
+      "losses": 0,
+      "credits_spent": 1000.0
+    }
+  },
+  "command_queue": []
+}

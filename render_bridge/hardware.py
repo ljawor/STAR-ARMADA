@@ -134,3 +134,67 @@ def decode(blob: bytes) -> dict:
     if seen != triangles:
         raise HardwareError(f'header says {triangles} triangles, blocks hold {seen}')
     return {'name': name, 'roles': roles, 'triangles': triangles}
+
+
+def scaffold_mesh():
+    """Selected authored scaffold, otherwise a solid version of the legacy lattice."""
+    from render.asset_selection import mesh_for
+    from render.fleet_geometry import _Hardware
+    mesh = mesh_for('shared:construction_scaffold')
+    if mesh is not None:
+        return mesh
+    import math
+    hardware = _Hardware()
+    hardware.ring('accent', 50., 48., 2., (0., 1., 0.), sides=24)
+    hardware.ring('trim', 43.5, 41.5, 2., (0., 49., 0.), sides=24)
+    for index in range(8):
+        angle = index * math.tau / 8
+        hardware.plate('base', (2., 50., 2.),
+                       (42.5 * math.sin(angle), 25., 42.5 * math.cos(angle)), .3)
+    return hardware.finish()
+
+
+class MeshPublisher:
+    """Only meshes named by visible packed instances cross; never inspect hidden entities.
+
+    At most four blobs per frame fit in the eight-slot mesh ring without a single
+    publish burst overwriting itself. Refresh active bindings periodically so a
+    late/slow consumer can recover overwritten startup blobs. Geometry is encoded
+    once per session, never rebuilt at frame rate.
+    """
+    def __init__(self, *, refresh_frames=120, max_per_frame=4):
+        if refresh_frames < 1 or not 1 <= max_per_frame <= 4:
+            raise ValueError('invalid mesh publication budget')
+        self.refresh_frames = refresh_frames
+        self.max_per_frame = max_per_frame
+        self._blobs = {}
+        self._sent = {}
+        self.frames = 0
+
+    def publish_frame(self, frame, tables, target):
+        from . import packed
+        names = set()
+        count = packed.FRAME.unpack_from(frame)[5]
+        for index in range(count):
+            record = packed.INSTANCE.unpack_from(frame, packed.FRAME.size + index * packed.INSTANCE.size)
+            if record[2] & (packed.FLAG_DYNAMIC_MESH | packed.FLAG_SURFACE_FRAME):
+                names.add(tables.bindings[record[1]])
+        due = [name for name in names if name not in self._sent
+               or self.frames - self._sent[name] >= self.refresh_frames]
+        # Unsent first, then oldest, ensuring a busy active set cannot starve a binding.
+        due.sort(key=lambda name: (self._sent.get(name, -1), name))
+        published = 0
+        for name in due[:self.max_per_frame]:
+            if name not in self._blobs:
+                if name == 'shared:construction_scaffold':
+                    mesh = scaffold_mesh()
+                else:
+                    from render.fleet_geometry import station_mesh
+                    faction, kind = name.split(':', 1)
+                    mesh = station_mesh(kind, faction)
+                self._blobs[name] = encode(name, mesh)
+            target.publish(self._blobs[name])
+            self._sent[name] = self.frames
+            published += 1
+        self.frames += 1
+        return published

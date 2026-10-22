@@ -1,0 +1,13 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "unittest",
+    "test_lan_recovery_ui.RecoveryUITests.test_draw_returns_surface_for_native_hud_composition",
+    "-v"
+  ],
+  "pid": 7841,
+  "seconds": 0.228,
+  "returncode": 1,
+  "timeout": false
+}

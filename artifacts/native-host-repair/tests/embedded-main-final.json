@@ -1,0 +1,12 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "tools/render/verify_embedded_main.py",
+    "--out",
+    "/Users/lukaszjawor/.hermes/cache/scratch/sa-embedded-main-final"
+  ],
+  "pid": 7949,
+  "seconds": 6.167,
+  "returncode": 0,
+  "timeout": false
+}

@@ -45,6 +45,9 @@ FLAG_DISABLED = 1 << 2
 # amount of yaw and scale describes it. The consumer must copy this matrix verbatim and must not
 # interpolate it - the building does not move.
 FLAG_SURFACE_FRAME = 1 << 3
+# Geometry supplied over ARMHWR01, with an ordinary/full 3x4 pose. Distinct from
+# surface hardware: orbital hulls and render-only scaffolds are not planet buildings.
+FLAG_DYNAMIC_MESH = 1 << 4
 
 # <magic><version><kind><tick><frame><instances><effects><table_crc><flags><length><crc>
 FRAME = struct.Struct('<8sHHIQIIIIII')

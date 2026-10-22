@@ -1,0 +1,507 @@
+{
+  "backend": "Metal",
+  "bgfx_cpu": {
+    "mean_ms": 0.1376571428571428,
+    "median_ms": 0.028,
+    "p95_ms": 0.444,
+    "p99_ms": 2.441,
+    "samples": 35
+  },
+  "camera": {
+    "distance": 350.0,
+    "fov": 55.0,
+    "pitch": 35.0,
+    "target": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "yaw": 25.0
+  },
+  "control_exercise": [],
+  "draw_calls_samples": [
+    0,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6
+  ],
+  "drawable": [
+    1280,
+    800
+  ],
+  "fixture": "approved-runtime-catalogue-inspection-v1",
+  "full_game_performance": false,
+  "gpu_device_id": 1009,
+  "gpu_frame": {
+    "mean_ms": 0.8526299714285717,
+    "median_ms": 0.778625,
+    "p95_ms": 1.689,
+    "p99_ms": 3.526959,
+    "samples": 35
+  },
+  "gpu_samples_ms": [
+    0.0,
+    0.0,
+    0.000334,
+    0.000209,
+    0.000125,
+    0.0,
+    3.526959,
+    0.930291,
+    0.981834,
+    0.646375,
+    0.651959,
+    0.857875,
+    1.351375,
+    1.630459,
+    1.684,
+    1.689,
+    1.673459,
+    1.432084,
+    1.156709,
+    0.631584,
+    0.72775,
+    0.833666,
+    0.92,
+    0.799375,
+    0.802959,
+    0.825334,
+    0.89425,
+    0.778625,
+    0.66225,
+    0.630334,
+    0.622541,
+    0.666,
+    0.520459,
+    0.679125,
+    0.63475
+  ],
+  "gpu_vendor_id": 4203,
+  "hardware": {
+    "blobs": 1,
+    "decode_failures": 0,
+    "dropped_instances": 0,
+    "instances_drawn": 35,
+    "meshes": 1,
+    "note": "surface hardware crosses as a full basis (FLAG_SURFACE_FRAME) that the window copies verbatim, because a building stands on the foundation the site generator chose; its mesh arrives on the mesh ring because the offline catalogue cannot name a building that is constructed during a match; role colours are the shared palette, not on the wire",
+    "ring": "/Users/lukaszjawor/.hermes/cache/scratch/sa-station-lifecycle-final/early/hardware.ring",
+    "unmeshed": 0
+  },
+  "inspection_binding": "",
+  "instances": 1,
+  "live": {
+    "decode_failures": 0,
+    "decode_ms": {
+      "mean_ms": 0.036625,
+      "median_ms": 0.036625,
+      "p95_ms": 0.036625,
+      "p99_ms": 0.036625,
+      "samples": 1
+    },
+    "frames_behind": {
+      "mean_ms": 0.0,
+      "median_ms": 0.0,
+      "p95_ms": 0.0,
+      "p99_ms": 0.0,
+      "samples": 35
+    },
+    "frames_drawn": 35,
+    "gate": {
+      "limit": 2,
+      "met": true,
+      "unit": "frames behind at draw"
+    },
+    "interpolation_alpha": {
+      "mean_ms": 0.9714285714285714,
+      "median_ms": 1.0,
+      "p95_ms": 1.0,
+      "p99_ms": 1.0,
+      "samples": 35
+    },
+    "note": "Producer-only frames: no simulation or HUD is drawn by this window. frames_behind counts producer frames published while this frame was being drawn; it is not wall-clock latency and not a frame rate.",
+    "producer_frames_adopted": 1,
+    "producer_frames_dropped": 0,
+    "producer_period_ms": 16.666666666666668,
+    "ring": "/Users/lukaszjawor/.hermes/cache/scratch/sa-station-lifecycle-final/early/frame.ring"
+  },
+  "metadata": {
+    "ai": false,
+    "asset_path_root": "repository-root (pass --assets .)",
+    "assumptions": [
+      "Four human slots, same Imperial faction, distinct colours, hostile teams; no strategic AI.",
+      "Direct factory setup of completed hardware, colonies and staggered convoys; not a replay of paid construction, resource gathering, colonization or station-site validation; no build queues.",
+      "Requested pre-existing fleet exceeds current stock construction command capacity (906 used / 78 available per player); no capacity rules changed. This is a scale workload, not a proof this exact economy can build the fleet.",
+      "Ten ordinary stations include the command station; two eligible colonies supply stock command capacity. Infrastructure sites are prebuilt, not proof of an organic build history (mines/relay require suitable terrain when constructed).",
+      "Four extra trade stations per player; four pre-existing convoys per source, nearest own market.",
+      "Convoys start at staggered route progress; deliveries remove hulls normally, never respawned by fixture.",
+      "At most 300 fixed 30 Hz ticks (10 simulated seconds), below the stock 45s convoy spawn interval.",
+      "Player 0 live fog/sensors, not an omniscient all-map graphics load; visibility reported per sample.",
+      "Close inspection uses the distributed world with a fixed flagship camera; not all assets are on screen.",
+      "Versioned class mix is a benchmark assumption, not an approved gameplay distribution.",
+      "Combat is an established interleaved four-way melee, held stock hulls with automatic targeting; no forced damage or godmode.",
+      "Omniscient diagnostic export; not ordinary player visibility.",
+      "Artificial catalogue grid, synthetic IDs/transforms; checksum refers to unchanged source fixture, not this layout."
+    ],
+    "camera": {
+      "distance": 14000.0,
+      "fov": 55.0,
+      "pitch": 70.0,
+      "target": [
+        0.0,
+        0.0,
+        1400.0
+      ],
+      "yaw": 0.0
+    },
+    "checksum": "game.benchmark.state_hash: full precise state before and after extraction",
+    "combat_mix_per_player": {
+      "imperial_battleship": 16,
+      "imperial_corvette": 60,
+      "imperial_cruiser": 30,
+      "imperial_frigate": 40,
+      "imperial_supercapital": 4
+    },
+    "command_budget_initial": {
+      "0": {
+        "capacity": 78,
+        "used": 906
+      },
+      "1": {
+        "capacity": 78,
+        "used": 906
+      },
+      "2": {
+        "capacity": 78,
+        "used": 906
+      },
+      "3": {
+        "capacity": 78,
+        "used": 906
+      }
+    },
+    "exported_inventory": {
+      "catalogue_meshes": 103
+    },
+    "factions": [
+      "imperial",
+      "imperial",
+      "imperial",
+      "imperial"
+    ],
+    "inventory": {
+      "classes": {
+        "attack_satellite": 16,
+        "command_station": 4,
+        "defense_platform": 4,
+        "defense_satellite": 16,
+        "energy_relay": 4,
+        "fighter_platform": 4,
+        "imperial_battleship": 64,
+        "imperial_corvette": 240,
+        "imperial_cruiser": 120,
+        "imperial_frigate": 160,
+        "imperial_supercapital": 16,
+        "industrial": 4,
+        "mining_station": 8,
+        "repair_dock": 4,
+        "research_station": 4,
+        "sensor_station": 4,
+        "shipyard": 4,
+        "temperate": 4,
+        "trade_convoy": 64,
+        "trade_station": 16
+      },
+      "players": {
+        "0": {
+          "combat_ships": 150,
+          "ordinary_stations": 10,
+          "planets": 2,
+          "satellites": 8,
+          "trade_stations": 4,
+          "transports": 16
+        },
+        "1": {
+          "combat_ships": 150,
+          "ordinary_stations": 10,
+          "planets": 2,
+          "satellites": 8,
+          "trade_stations": 4,
+          "transports": 16
+        },
+        "2": {
+          "combat_ships": 150,
+          "ordinary_stations": 10,
+          "planets": 2,
+          "satellites": 8,
+          "trade_stations": 4,
+          "transports": 16
+        },
+        "3": {
+          "combat_ships": 150,
+          "ordinary_stations": 10,
+          "planets": 2,
+          "satellites": 8,
+          "trade_stations": 4,
+          "transports": 16
+        }
+      },
+      "total": {
+        "combat_ships": 600,
+        "ordinary_stations": 40,
+        "planets": 8,
+        "satellites": 32,
+        "trade_stations": 16,
+        "transports": 64
+      }
+    },
+    "local_player": 0,
+    "max_ticks": 300,
+    "name": "four-player-combat-v1",
+    "omitted_features": [
+      "planets (W05)",
+      "fog raster",
+      "effects",
+      "UI"
+    ],
+    "omitted_planets": [
+      11,
+      16,
+      201,
+      206,
+      391,
+      396,
+      581,
+      586
+    ],
+    "ordinary_station_mix_per_player": {
+      "command_station": 1,
+      "defense_platform": 1,
+      "energy_relay": 1,
+      "fighter_platform": 1,
+      "mining_station": 2,
+      "repair_dock": 1,
+      "research_station": 1,
+      "sensor_station": 1,
+      "shipyard": 1
+    },
+    "planet_mix_per_player": {
+      "industrial": 1,
+      "temperate": 1
+    },
+    "players": 4,
+    "profile": "W00/W01 offline JSON; not W02 shared memory or a throughput claim",
+    "satellite_mix_per_planet": {
+      "attack_satellite": 2,
+      "defense_satellite": 2
+    },
+    "scale_policy": "Inspection grid: raw authored mesh units, scale 1; not gameplay size.",
+    "selection": [
+      187
+    ],
+    "source_fixture": "four-player-combat-v1",
+    "teams": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "visibility": "catalogue-inspection-not-gameplay",
+    "visual_selection": {
+      "effective_bindings": [
+        {
+          "asset": "prototype:imperial/command_station",
+          "binding": "imperial:command_station",
+          "pack_id": "prototype:imperium_command",
+          "pack_revision": "e87bdb59ef9e5a250003444edfc4dbd98aa4c0f30ddb9aebfedb77f86d3df78a"
+        },
+        {
+          "asset": "prototype:imperial/constructor",
+          "binding": "imperial:constructor",
+          "pack_id": "prototype:imperium_engineer",
+          "pack_revision": "b2801c6a1e7f6994228c41da63e7507e539f804370d14e4121771dbeaafb1727"
+        },
+        {
+          "asset": "prototype:imperial/vigil",
+          "binding": "imperial:corvette",
+          "pack_id": "prototype:vigil",
+          "pack_revision": "f802f2d0aec8ad249b5afacd1f3ccb95eee13203c9ee5b5e5b122bcdab5af5ab"
+        },
+        {
+          "asset": "prototype:imperial/defense_platform",
+          "binding": "imperial:defense_platform",
+          "pack_id": "prototype:imperial_defense",
+          "pack_revision": "c30a9a2bfd25819cf9d593307284526a2d50fc00e94c4015f7d39e75f08e7c9f"
+        },
+        {
+          "asset": "prototype:imperial/energy_relay",
+          "binding": "imperial:energy_relay",
+          "pack_id": "prototype:imperial_relay",
+          "pack_revision": "04e7ad19c2e367050368a8abb5450825ebe7a236dbdf69da7815858ec7802d99"
+        },
+        {
+          "asset": "prototype:imperial/fighter",
+          "binding": "imperial:fighter",
+          "pack_id": "prototype:imperium_talon",
+          "pack_revision": "322a0475c089aab935793e78f71a82f1b176dad19a09764cad9592fa085693a9"
+        },
+        {
+          "asset": "prototype:imperial/fighter_platform",
+          "binding": "imperial:fighter_platform",
+          "pack_id": "prototype:imperial_fighter",
+          "pack_revision": "5136d5d4762aaf205deb047c95116b5d3c7a05e44cce820a01f6e241eba6fd09"
+        },
+        {
+          "asset": "prototype:imperial/mining_station",
+          "binding": "imperial:mining_station",
+          "pack_id": "prototype:imperium_mining",
+          "pack_revision": "d9931bb1bcb8e8ac127ab6158f76e40017139bcd7e9fdaa0ad994716a2996053"
+        },
+        {
+          "asset": "prototype:imperial/repair_dock",
+          "binding": "imperial:repair_dock",
+          "pack_id": "prototype:imperial_repair",
+          "pack_revision": "2c9f167c5c4d47c4de0dbaec60380f1f6692ef902c5cafea8cf7ce628d5212ea"
+        },
+        {
+          "asset": "prototype:imperial/research_station",
+          "binding": "imperial:research_station",
+          "pack_id": "prototype:imperial_research",
+          "pack_revision": "1f99957ec8c0ab18c72b09bf65433ddf4a67c487de1943d84ba59b9d9244b756"
+        },
+        {
+          "asset": "prototype:imperial/sensor_station",
+          "binding": "imperial:sensor_station",
+          "pack_id": "prototype:imperial_sensor",
+          "pack_revision": "fdda1fe19e5ac8330bf402b52977f7644adba4fdb8a4632c4fe5198902e1e953"
+        },
+        {
+          "asset": "prototype:imperial/shipyard",
+          "binding": "imperial:shipyard",
+          "pack_id": "prototype:imperium_shipyard",
+          "pack_revision": "2a04cb2ece305309713decd27331a152199c6c9d4a5e9e4249a03a373d5c8b5a"
+        },
+        {
+          "asset": "prototype:imperial/trade_station",
+          "binding": "imperial:trade_station",
+          "pack_id": "prototype:imperial_trade",
+          "pack_revision": "25ceef03bba9a2a4f5c66ce601c02a4f8af2bbed1cff2cca49616d35b3fd549d"
+        }
+      ],
+      "enabled_order": [
+        "vigil-prototype",
+        "imperium-command-prototype",
+        "imperium-shipyard-prototype",
+        "imperium-mining-prototype",
+        "imperium-talon-prototype",
+        "imperium-engineer-prototype",
+        "imperium-research-prototype",
+        "imperium-defense-prototype",
+        "imperium-sensor-prototype",
+        "imperium-trade-prototype",
+        "imperium-fighter-prototype",
+        "imperium-repair-prototype",
+        "imperium-relay-prototype"
+      ]
+    },
+    "workload_class": "stress"
+  },
+  "profile": "W02-live-ring",
+  "projection": {
+    "expected_scale": 1.9209821575133663,
+    "focal_px": 768.3928630053465,
+    "fov_deg": 55.0,
+    "fov_input_rad": 0.9599310755729675,
+    "proj_scale": 1.9209821224212646
+  },
+  "quality": {
+    "all_mesh_roles": true,
+    "mesh_lod": false,
+    "msaa_requested": 4,
+    "shadow_map": 2048,
+    "shadows_final": true
+  },
+  "screenshots_written": 1,
+  "snapshot_instances": 103,
+  "snapshot_sha256": "a88d1c58bdb6098c9fa2d6ec2c8e077e3f00a8e0906157124feaf11e37f0b50a",
+  "state_sha256": "8179f6f09697f42783037c71577ee04172995ee8ac06bbf88884d285f9a897da",
+  "submitted_triangles_per_pass": 394928,
+  "timing_scope": "Unsynchronized offline mesh-only frame loop; excludes simulation, HUD, fog, effects, LAN; capture can affect timing",
+  "unique_meshes": 103,
+  "unique_triangles": 394928,
+  "vsync": false,
+  "wall_frame": {
+    "mean_ms": 2.288246371428572,
+    "median_ms": 0.324958,
+    "p95_ms": 21.306209,
+    "p99_ms": 40.930792,
+    "samples": 35
+  },
+  "wall_samples_ms": [
+    21.306209,
+    1.277583,
+    0.46525,
+    3.98575,
+    0.338708,
+    0.285792,
+    0.274709,
+    0.319833,
+    0.665875,
+    0.655042,
+    0.79975,
+    0.60225,
+    0.661916,
+    0.949833,
+    0.268666,
+    0.297625,
+    0.324958,
+    0.4585,
+    0.293,
+    0.434625,
+    0.319333,
+    0.411917,
+    0.375208,
+    0.309792,
+    0.288917,
+    0.295041,
+    0.288208,
+    0.28175,
+    0.29975,
+    0.292667,
+    40.930792,
+    0.22425,
+    0.132166,
+    0.125,
+    0.847958
+  ]
+}

@@ -5,6 +5,8 @@
 #include "explosion.hpp"
 #include "fogmap.hpp"
 #include "hardware.hpp"
+#include "starfield.hpp"
+#include "embedded.hpp"
 #include "shield.hpp"
 #include "hit_effects.hpp"
 #include "input_ring.hpp"
@@ -638,7 +640,8 @@ struct Live {
     surface.clear();
     for (const auto &record : current->instances) {
       const std::string &binding = tables.bindings.at(record.binding_id);
-      if ((record.flags & armada::bridge::kFlagSurfaceFrame) != 0) {
+      if ((record.flags & (armada::bridge::kFlagSurfaceFrame |
+                           armada::bridge::kFlagDynamicMesh)) != 0) {
         // Verbatim: the frame's 12 floats are the surface basis the producer computed.
         surface.push_back({binding, record.matrix, record.tint});
         continue;
@@ -693,7 +696,7 @@ struct Live {
   }
 };
 
-static int run(const Options &o) {
+static int run(const Options &o, EmbeddedState *host = nullptr) {
   Callbacks callback;
   Cleanup cleanup;
   auto scene = armada::read_snapshot(o.snapshot, 1);
@@ -752,10 +755,13 @@ static int run(const Options &o) {
     }
     return 0;
   }
+  SDL_Window *window = nullptr;
+  void *nativeWindow = nullptr;
+  if (!host) {
   if (!SDL_Init(SDL_INIT_VIDEO))
     throw DeviceError(SDL_GetError());
   cleanup.actions.push_back([] { SDL_Quit(); });
-  SDL_Window *window = SDL_CreateWindow(
+  window = SDL_CreateWindow(
       "STAR ARMADA | W01 offline native viewer", o.width, o.height,
       SDL_WINDOW_RESIZABLE
 #ifdef __APPLE__
@@ -765,7 +771,6 @@ static int run(const Options &o) {
   if (!window)
     throw DeviceError(SDL_GetError());
   cleanup.actions.push_back([window] { SDL_DestroyWindow(window); });
-  void *nativeWindow = nullptr;
 #ifdef __APPLE__
   SDL_MetalView metal = SDL_Metal_CreateView(window);
   if (!metal)
@@ -779,6 +784,7 @@ static int run(const Options &o) {
 #else
 #error "W01 currently targets macOS and Windows"
 #endif
+  }
   bgfx::renderFrame();
   bgfx::Init init;
   init.callback = &callback;
@@ -788,17 +794,37 @@ static int run(const Options &o) {
 #else
   init.type = bgfx::RendererType::Direct3D12;
 #endif
-  int pixelWidth = 0, pixelHeight = 0;
-  SDL_GetWindowSizeInPixels(window, &pixelWidth, &pixelHeight);
+  int pixelWidth = o.width, pixelHeight = o.height;
+  if (!host) SDL_GetWindowSizeInPixels(window, &pixelWidth, &pixelHeight);
   init.swapChain.nwh = nativeWindow;
-  init.swapChain.width = pixelWidth;
-  init.swapChain.height = pixelHeight;
+  init.swapChain.width = host ? 0 : pixelWidth;
+  init.swapChain.height = host ? 0 : pixelHeight;
   init.swapChain.flags =
       o.msaa == 4 ? BGFX_SWAP_CHAIN_MSAA_X4 : BGFX_SWAP_CHAIN_NONE;
   if (!bgfx::init(init))
     throw DeviceError("bgfx initialization failed (requested native "
                       "backend, no silent fallback)");
   cleanup.actions.push_back([] { bgfx::shutdown(); });
+  bgfx::FrameBufferHandle outputFB = BGFX_INVALID_HANDLE;
+  bgfx::TextureHandle outputColor = BGFX_INVALID_HANDLE, outputRead = BGFX_INVALID_HANDLE;
+  if (host) {
+    const uint64_t samples = o.msaa == 4 ? BGFX_TEXTURE_RT_MSAA_X4 : BGFX_TEXTURE_RT;
+    outputColor = bgfx::createTexture2D(pixelWidth, pixelHeight, false, 1,
+                                      bgfx::TextureFormat::BGRA8, samples);
+    const auto outputDepth = bgfx::createTexture2D(pixelWidth, pixelHeight, false, 1,
+                                   bgfx::TextureFormat::D24S8, samples | BGFX_TEXTURE_RT_WRITE_ONLY);
+    const bgfx::TextureHandle attachments[] = {outputColor, outputDepth};
+    outputFB = bgfx::createFrameBuffer(2, attachments, true);
+    outputRead = bgfx::createTexture2D(pixelWidth, pixelHeight, false, 1,
+                     bgfx::TextureFormat::BGRA8, BGFX_TEXTURE_BLIT_DST | BGFX_TEXTURE_READ_BACK);
+    if (!bgfx::isValid(outputColor) || !bgfx::isValid(outputFB) || !bgfx::isValid(outputRead))
+      throw DeviceError("Embedded render target creation failed");
+    cleanup.actions.push_back([outputFB] { bgfx::destroy(outputFB); });
+    cleanup.actions.push_back([outputRead] { bgfx::destroy(outputRead); });
+    host->pixels.resize(size_t(pixelWidth) * pixelHeight * 4);
+    bgfx::setViewFrameBuffer(1, outputFB);
+    bgfx::setViewFrameBuffer(2, outputFB);
+  }
   // Instancing is baseline in this pinned bgfx API; buffer availability is
   // checked per draw.
   report["backend"] = bgfx::getRendererName(bgfx::getRendererType());
@@ -922,54 +948,25 @@ static int run(const Options &o) {
     throw DeviceError("Cue program creation failed");
   cleanup.actions.push_back([cueProgram] { bgfx::destroy(cueProgram); });
 
-  // Background stars. `render/renderer.py` draws a 1400-point starfield; a window that shows empty
-  // black where the game shows stars does not look like the same game. The stars are pure
-  // decoration - no gameplay meaning, no state, nothing the simulation can be wrong about - so the
-  // window generates its own from a fixed xorshift seed instead of receiving them, exactly like a
-  // camera it owns. They live on a sphere far outside the tactical map so they read as parallax-free.
-  std::vector<CueVertex> starVerts;
-  {
-    const int kStars = 1400;
-    const float kRadius = 90000.f;
-    const float kHalf = 1.2f * kRadius / (float(o.height) * 0.5f);   // ~1.2 px half-size here
-    uint32_t seed = 0x9e3779b9u;
-    auto rnd = [&seed]() {
-      seed ^= seed << 13; seed ^= seed >> 17; seed ^= seed << 5;
-      return float(seed & 0xFFFFFFu) / float(0x1000000u);
-    };
-    for (int i = 0; i < kStars; ++i) {
-      const float z = 2.f * rnd() - 1.f;
-      const float a = 2.f * float(M_PI) * rnd();
-      const float r = std::sqrt(std::max(0.f, 1.f - z * z));
-      const float n[3] = {r * std::cos(a), r * std::sin(a), z};
-      float t[3] = {-n[1], n[0], 0.f};
-      float tl = std::sqrt(t[0] * t[0] + t[1] * t[1]);
-      if (!(tl > 1e-5f)) { t[0] = 1.f; t[1] = 0.f; tl = 1.f; }
-      t[0] /= tl; t[1] /= tl;
-      const float b[3] = {n[1] * t[2] - n[2] * t[1], n[2] * t[0] - n[0] * t[2],
-                          n[0] * t[1] - n[1] * t[0]};
-      const float half = kHalf * (0.55f + 0.9f * rnd());
-      const float bright = 0.45f + 0.55f * rnd();
-      const float warm = rnd();
-      const std::array<uint8_t, 4> col = {uint8_t(255.f * bright * (0.85f + 0.15f * warm)),
-                                          uint8_t(255.f * bright),
-                                          uint8_t(255.f * bright * (1.05f - 0.10f * warm)),
-                                          uint8_t(210.f + 45.f * bright)};
-      const float c[3] = {n[0] * kRadius, n[1] * kRadius, n[2] * kRadius};
-      float p0[3], p1[3], p2[3], p3[3];
-      for (int k = 0; k < 3; ++k) {
-        p0[k] = c[k] + (-t[k] - b[k]) * half;
-        p1[k] = c[k] + ( t[k] - b[k]) * half;
-        p2[k] = c[k] + ( t[k] + b[k]) * half;
-        p3[k] = c[k] + (-t[k] + b[k]) * half;
-      }
-      pushCue(starVerts, p0, col); pushCue(starVerts, p1, col); pushCue(starVerts, p2, col);
-      pushCue(starVerts, p0, col); pushCue(starVerts, p2, col); pushCue(starVerts, p3, col);
-    }
-  }
-  bgfx::VertexBufferHandle starVbo = bgfx::createVertexBuffer(
-      bgfx::copy(starVerts.data(), uint32_t(starVerts.size() * sizeof(CueVertex))), cueLayout);
+  // Camera-translation-free soft points at far depth; never painted over the world.
+  const auto starVerts = armada::sky::buildStarfield();
+  bgfx::VertexLayout starLayout;
+  starLayout.begin().add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
+      .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
+      .add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true)
+      .add(bgfx::Attrib::Color1, 1, bgfx::AttribType::Float).end();
+  if (starLayout.getStride() != sizeof(armada::sky::StarVertex))
+    throw DeviceError("Star layout mismatch");
+  const auto starProgram = bgfx::createProgram(shader(o.shaders / "vs_star.bin"),
+                                              shader(o.shaders / "fs_star.bin"), true);
+  const auto starViewport = bgfx::createUniform("u_star_viewport", bgfx::UniformType::Vec4);
+  const auto starVbo = bgfx::createVertexBuffer(
+      bgfx::copy(starVerts.data(), uint32_t(starVerts.size() * sizeof(armada::sky::StarVertex))), starLayout);
+  if (!bgfx::isValid(starVbo) || !bgfx::isValid(starProgram) || !bgfx::isValid(starViewport))
+    throw DeviceError("Star resource creation failed");
   cleanup.actions.push_back([starVbo] { bgfx::destroy(starVbo); });
+  cleanup.actions.push_back([starProgram] { bgfx::destroy(starProgram); });
+  cleanup.actions.push_back([starViewport] { bgfx::destroy(starViewport); });
   // W05 slice 5: the shield shell mesh. One view-space hemisphere per detail level, built once;
   // every bubble in the frame is then an instance record of eight floats. The baked latitude terms
   // (whiten, alpha) are the ones renderer.py::_shield_shell_list bakes into its display list.
@@ -1234,6 +1231,7 @@ static int run(const Options &o) {
   bool shot_taken = false;
   std::vector<Json> controlStates;
   while (running && (o.frames == 0 || frame < o.frames + o.warmup)) {
+    if (host && !host->beginFrame()) break;
     const auto start = Clock::now();
     const float dt = std::chrono::duration<float>(start - previous).count();
     previous = start;
@@ -1325,7 +1323,7 @@ static int run(const Options &o) {
       }
     }
     SDL_Event ev;
-    while (SDL_PollEvent(&ev)) {
+    while (!host && SDL_PollEvent(&ev)) {
       if (inputOut) {
         float mx = 0.f, my = 0.f;
         switch (ev.type) {
@@ -1425,7 +1423,7 @@ static int run(const Options &o) {
       inputEvents += inputPending.size();
       inputPending.clear();
     }
-    if (!inputOut) {
+    if (!host && !inputOut) {
       const bool *keys = SDL_GetKeyboardState(nullptr);
       camera.pan(float(keys[SDL_SCANCODE_D]) - float(keys[SDL_SCANCODE_A]),
                  float(keys[SDL_SCANCODE_W]) - float(keys[SDL_SCANCODE_S]), dt);
@@ -1519,10 +1517,15 @@ static int run(const Options &o) {
     bgfx::setViewRect(0, 0, 0, 2048, 2048);
     bgfx::setViewTransform(0, lightView, lightProj);
     bgfx::setViewClear(1, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x080e1bff, 1.f);
-    // Stars first, with no depth at all: they are behind everything and must never occlude a hull.
-    bgfx::setVertexBuffer(0, starVbo);
-    bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_MSAA | BGFX_STATE_BLEND_ALPHA);
-    bgfx::submit(1, cueProgram);
+    // Sorting can submit sky after opaque draws: far-plane depth testing is mandatory.
+    if (!o.hudOnly) {
+      const float viewport[4] = {float(width), float(height), 0.f, 0.f};
+      bgfx::setVertexBuffer(0, starVbo);
+      bgfx::setUniform(starViewport, viewport);
+      bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_MSAA | BGFX_STATE_DEPTH_TEST_LEQUAL |
+                    BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_ONE));
+      bgfx::submit(1, starProgram);
+    }
     bgfx::setViewRect(1, 0, 0, uint16_t(width), uint16_t(height));
     bgfx::setViewTransform(1, view, proj);
     bgfx::touch(1);
@@ -2371,11 +2374,25 @@ static int run(const Options &o) {
       // sequence that belongs to the screenshot has to be recorded here.
       uiSequenceAtShot = uiSequence;
     }
-    bgfx::frame();
+    bgfx::Stats drawStats{};
+    if (host) {
+      bgfx::TextureRegion source{}, destination{};
+      source.init(outputColor); destination.init(outputRead);
+      bgfx::blit(3, destination, source);
+      const uint32_t ready = bgfx::read(destination, host->pixels.data());
+      uint32_t completed = bgfx::frame();
+      drawStats = *bgfx::getStats();
+      // Readback completion is bounded; never expose partially written pixels to Python.
+      for (int wait = 0; completed < ready && wait < 8; ++wait) completed = bgfx::frame();
+      if (completed < ready) throw DeviceError("Embedded readback failed to complete");
+      host->finishFrame();
+    } else {
+      bgfx::frame();
+    }
     if (live)
       live->after_frame();
     const auto end = Clock::now();
-    const auto *st = bgfx::getStats();
+    const auto *st = host ? &drawStats : bgfx::getStats();
     if (frame >= o.warmup) {
       wall.push_back(
           std::chrono::duration<double, std::milli>(end - start).count());
@@ -2611,6 +2628,8 @@ static int run(const Options &o) {
   std::cout << "VIEWER_OK " << report.dump() << std::endl;
   return 0;
 }
+
+#ifndef ARMADA_EMBEDDED_BUILD
 int main(int argc, char **argv) {
   try {
     return run(options(argc, argv));
@@ -2625,3 +2644,67 @@ int main(int argc, char **argv) {
     return 1;
   }
 }
+
+#else
+#ifdef _WIN32
+#define ARMADA_API extern "C" __declspec(dllexport)
+#else
+#define ARMADA_API extern "C" __attribute__((visibility("default")))
+#endif
+ARMADA_API unsigned armada_abi_version() noexcept { return 1; }
+ARMADA_API EmbeddedState *armada_open(int argc, char **argv) noexcept {
+  try {
+    auto parsed = options(argc, argv);
+    parsed.inputRing.clear(); // pygame owns physical input in the existing window.
+    parsed.frames = 0; parsed.seconds = 0.; parsed.warmup = 0;
+    auto *host = new EmbeddedState;
+    try {
+      host->worker = std::thread([host, parsed] {
+        try { run(parsed, host); }
+        catch (const std::exception &e) {
+          std::lock_guard lock(host->mutex); host->error = e.what();
+        }
+        catch (...) {
+          std::lock_guard lock(host->mutex); host->error = "Unknown native renderer failure";
+        }
+        std::lock_guard lock(host->mutex);
+        host->exited = true; host->cv.notify_all();
+      });
+    } catch (...) { delete host; throw; }
+    return host;
+  } catch (...) { return nullptr; }
+}
+ARMADA_API int armada_frame(EmbeddedState *host, void *out, size_t capacity) noexcept {
+  if (!host || !out) return -1;
+  try {
+    std::unique_lock lock(host->mutex);
+    if (host->stop || host->exited) return -2;
+    host->completed = false; host->requested = true; host->cv.notify_all();
+    if (!host->cv.wait_for(lock, std::chrono::seconds(15), [&] {
+          return host->completed || host->exited;
+        })) return -3;
+    if (!host->error.empty() || !host->completed) return -4;
+    if (capacity < host->pixels.size()) return -5;
+    std::memcpy(out, host->pixels.data(), host->pixels.size());
+    return int(host->pixels.size());
+  } catch (...) { return -6; }
+}
+ARMADA_API int armada_poll(EmbeddedState *host) noexcept {
+  if (!host) return 1;
+  std::lock_guard lock(host->mutex);
+  return host->exited ? (host->error.empty() ? 1 : 2) : 0;
+}
+ARMADA_API const char *armada_error(EmbeddedState *host) noexcept {
+  thread_local std::string message;
+  if (!host) return "Native session unavailable";
+  std::lock_guard lock(host->mutex);
+  message = host->error;
+  return message.c_str();
+}
+ARMADA_API void armada_close(EmbeddedState *host) noexcept {
+  if (!host) return;
+  { std::lock_guard lock(host->mutex); host->stop = true; host->cv.notify_all(); }
+  if (host->worker.joinable()) host->worker.join();
+  delete host;
+}
+#endif

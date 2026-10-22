@@ -345,7 +345,7 @@ def cpp_session(state, ds, local_player: int):
         CPP["window"] = cpp_window.spawn(
             session.paths, root=ROOT, snapshot=os.environ.get("STAR_ARMADA_CPP_SNAPSHOT"),
             log=flash_print)
-        if CPP["window"] is not None:
+        if CPP["window"] is not None and not getattr(CPP["window"], "embedded", False):
             # The window is the display now. Left in front, this process's own (no longer drawn)
             # surface looks like a game that started and then froze.
             try:
@@ -450,6 +450,9 @@ def cpp_publish(state, ds, local_player: int, selection, dt: float, *, paused: b
         session.publish(state, selection=selection, visible_ids=cpp_seen_ids(state, local_player),
                         dt=dt, paused=paused, message=message, flash_left=flash_left, fps=fps,
                         drag_box=drag_box, floating_texts=floating_texts, overlay_layers=layers)
+        window = CPP.get("window")
+        if window is not None and getattr(window, "embedded", False):
+            window.present()
         # HUD composition rebuilds its hitboxes; add the displayed application panels afterwards.
         if globals().get('presentation') is not None and globals().get('cinematic') is None:
             hud.blocked_rects.extend(presentation.panel_rects)
@@ -943,6 +946,10 @@ class _GameEventDispatcher:
 def dispatch_game_event(ev):
     """Application routes shared by SDL and native-window events, in modal order."""
     global running, _input_help_frame
+    native = globals().get('CPP', {}).get('window')
+    if native is not None and getattr(native, 'embedded', False):
+        from render_bridge.embedded import map_pointer_event
+        ev = map_pointer_event(ev, (W, H), CPP_HUD_SIZE)
     if mode != 'game' or not running:
         return
     if ev.type == pygame.QUIT:

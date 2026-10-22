@@ -30,7 +30,7 @@ from render_bridge import fogmap as fog_codec
 from render_bridge import markers as marker_codec
 from render_bridge import overlay as overlay_codec
 from render_bridge import planets as planet_codec
-from render_bridge import collect, packed, ring
+from render_bridge import collect, packed, ring, hardware
 
 
 class LiveSession:
@@ -67,6 +67,7 @@ class LiveSession:
             'planets': self.directory / 'planets.ring',
             'input': self.directory / 'input.ring',
             'camera': self.directory / 'camera.ring',
+            'hardware': self.directory / 'hardware.ring',
         }
 
         # The session tables are written once, beside the ring: frame records index them.
@@ -85,6 +86,11 @@ class LiveSession:
                                                   max_effects or packed.MAX_EFFECTS))
 
         self._frames = ring.Ring.create(self.paths['frame'], slots=8, slot_bytes=1 << 20)
+        self._hardware = ring.Ring.create(self.paths['hardware'], slots=8,
+            slot_bytes=hardware.HEADER.size + hardware.MAX_NAME
+            + len(hardware.ROLES) * hardware.BLOCK.size
+            + hardware.MAX_TRIANGLES * hardware.ROW.size + ring.SLOT_OVERHEAD + 8)
+        self._mesh_publisher = hardware.MeshPublisher()
         self._emit = ring.Ring.create(
             self.paths['emit'], slots=8,
             slot_bytes=emissive_codec.HEADER.size
@@ -143,7 +149,7 @@ class LiveSession:
         self.frames = 0
         self.perf = {'frame_ms': [], 'overlay_ms': [], 'emit_ms': [], 'fog_ms': []}
         self.counts = {'instances': 0, 'primitives': 0, 'markers': 0, 'overlay_bytes': 0,
-                       'planet_blobs': 0, 'fog_uploads': 0}
+                       'planet_blobs': 0, 'fog_uploads': 0, 'hardware_blobs': 0}
 
     # ------------------------------------------------------------------ helpers
     def radius_of(self, entity):
@@ -192,6 +198,8 @@ class LiveSession:
         started = time.perf_counter()
         frame, counts = self.collector.collect_into(
             state, self.buffer, tick=state.tick, frame_index=self.frames)
+        self.counts['hardware_blobs'] += self._mesh_publisher.publish_frame(
+            frame, self.tables, self._hardware)
         self._frames.publish(bytes(frame))
         frame_ms = (time.perf_counter() - started) * 1000.0
 
@@ -284,7 +292,7 @@ class LiveSession:
     # ------------------------------------------------------------------ lifecycle
     def close(self):
         for handle in (self._frames, self._emit, self._markers, self._overlay, self._fog,
-                       self._planet_ring, self._camera_ring):
+                       self._planet_ring, self._camera_ring, self._hardware):
             try:
                 handle.close()
             except Exception:

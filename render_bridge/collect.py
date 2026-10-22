@@ -27,7 +27,7 @@ import math
 import zlib
 
 from . import packed
-from . import planets
+from . import planets, stations
 
 # Effect kinds raised by `GameState.spawn_effect` today. A kind outside this tuple is
 # a hard error rather than a silently dropped picture element, so adding an effect to
@@ -41,6 +41,11 @@ FLAG_DISABLED_HP = 0.02        # matches the renderer's "combat-ineffective" tin
 
 _ZERO = {'x': 0.0, 'y': 0.0, 'z': 0.0}
 _WHITE = (1.0, 1.0, 1.0, 1.0)
+
+
+def station_binding(data_id, faction):
+    from render.faction_visuals import normalize_station_key
+    return ':'.join(normalize_station_key(data_id, faction))
 
 
 def build_tables(bindings, weapon_ids):
@@ -137,7 +142,7 @@ class FrameCollector:
         key = (bool(is_station), data_id, faction)
         cached = self._visual.get(key)
         if cached is None:
-            binding = ('imperial:' + data_id if is_station
+            binding = (station_binding(data_id, faction) if is_station
                        else self._ship_binding(self.ds, data_id, faction))
             if binding is None or binding not in self._binding_index:
                 cached = (None, binding or f'<unresolved {data_id}>')
@@ -257,6 +262,8 @@ class FrameCollector:
                 entity_flags = packed.FLAG_DAMAGED
             else:
                 entity_flags = 0
+            if entity.is_station and surface is None:
+                entity_flags |= packed.FLAG_DYNAMIC_MESH
             if surface is not None:
                 entity_flags |= packed.FLAG_SURFACE_FRAME
             if hp_frac < 0.0:
@@ -308,6 +315,15 @@ class FrameCollector:
                           sin_scaled, 0.0, cos_scaled,
                           position.x, position.y, position.z,
                           hp_frac, shield_frac)
+            offset += instance_size
+            written += 1
+
+        for record in stations.construction_records(
+                state, ds, binding_index, local_player=local_player,
+                visible_ids=visible_ids, all_visible=all_visible):
+            if offset + instance_size > limit0:
+                raise packed.FrameError('buffer too small for the frame')
+            pack_instance(buffer, offset, *record)
             offset += instance_size
             written += 1
 
@@ -447,7 +463,7 @@ class FrameCollector:
             colour = (state.players[entity.owner].color
                       if entity.owner in state.players else (1.0, 1.0, 1.0))
             hp_frac, shield_frac = _fractions(entity)
-            flags = 0
+            flags = packed.FLAG_DYNAMIC_MESH if entity.is_station else 0
             if hp_frac <= FLAG_DISABLED_HP:
                 flags |= packed.FLAG_DISABLED
             elif hp_frac < 0.5:
@@ -457,6 +473,9 @@ class FrameCollector:
                 matrix=packed.matrix_from_pose(entity.pos.to_tuple(), entity.yaw, scale),
                 tint=(*colour, 1.0), flags=flags, hp=hp_frac, shield=shield_frac))
 
+        instances.extend(stations.construction_records(
+            state, self.ds, self._binding_index, local_player=self.local_player,
+            visible_ids=self.visible_ids, all_visible=self.all_visible))
         effects = []
         for cls, kind, pos, end, life, size, colour, beam in self._transients(state, unknown):
             effects.append(packed.effect_record(
@@ -513,7 +532,7 @@ def required_names(state, ds, *, ship_size, ship_binding, local_player=0, all_vi
             continue
         key = (entity.is_station, entity.data_id, faction)
         if key not in resolved:
-            resolved[key] = ('imperial:' + entity.data_id if entity.is_station
+            resolved[key] = (station_binding(entity.data_id, faction) if entity.is_station
                              else ship_binding(ds, entity.data_id, faction))
         if resolved[key]:
             bindings.add(resolved[key])
@@ -523,8 +542,10 @@ def required_names(state, ds, *, ship_size, ship_binding, local_player=0, all_vi
     from game.systems.planet_buildings import BUILDING_TYPES
     factions = {player.faction for player in state.players.values()} | {'imperial'}
     for faction in sorted(factions):
-        for kind in BUILDING_TYPES:
+        from render.faction_visuals import STATION_TYPES
+        for kind in (*BUILDING_TYPES, *STATION_TYPES):
             bindings.add(f'{faction}:{kind}')
+    bindings.add(stations.SCAFFOLD)
     weapons.update(projectile.weapon_id for projectile in state.projectiles.values())
     return bindings, weapons
 

@@ -1,0 +1,38 @@
+{
+  "passed": false,
+  "security_concerns": [],
+  "logic_errors": [
+    {
+      "severity": "high",
+      "path": "render_cpp/src/viewer.cpp; render_bridge/embedded.py; main.py",
+      "reason": "Frame timeout immediately enters unconditional worker.join during cleanup; GPU initialization/readback/shutdown hang can freeze pygame indefinitely."
+    },
+    {
+      "severity": "high",
+      "path": "render_cpp/src/viewer.cpp:Callbacks::fatal",
+      "reason": "std::_Exit(4) now terminates the entire host process instead of only the diagnostic viewer."
+    },
+    {
+      "severity": "high",
+      "path": "star_armada.spec; render_cpp/CMakeLists.txt; render_bridge/embedded.py",
+      "reason": "Frozen spec bundles only armada_viewer, omitting the required embedded shared library."
+    },
+    {
+      "severity": "medium",
+      "path": "render_cpp/src/viewer.cpp:armada_frame/armada_close; render_cpp/include/embedded.hpp",
+      "reason": "C ABI lacks single-flight/close-versus-frame lifetime protection; concurrent callers may race pixel copy or access deleted state."
+    }
+  ],
+  "suggestions": [
+    "GPU-free fault/concurrency/close tests",
+    "F11/context-recreation presenter test",
+    "Dispose native handle even if embedded worker exited"
+  ],
+  "review_delegation": "deleg_25ced258",
+  "fix_attempt": {
+    "delegation": "deleg_0df2eba3",
+    "status": "interrupted",
+    "verified_fix": false
+  },
+  "summary": "Independent review rejected current original-window architecture; checkpoint only, do not merge."
+}

@@ -1,0 +1,9 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+cpp window: armada_viewer pid 7088, rings in /Users/lukaszjawor/.hermes/cache/scratch/sa-same-window-red
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/render/verify_same_window.py", line 68, in <module>
+    main()
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/render/verify_same_window.py", line 38, in main
+    assert getattr(window, 'embedded', False), 'Match still launches an external native window/process'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Match still launches an external native window/process

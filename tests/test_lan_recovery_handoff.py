@@ -81,6 +81,8 @@ def trace(frame, event, arg):
     global peer, peer_manager, peer_rec, initial_manager, original_recording, client_menu, last_tick
     if frame.f_code.co_filename != str(source):
         return None
+    if event == 'return' and frame.f_code.co_name == 'cpp_publish' and arg is True:
+        observe_overlay(env=frame.f_globals, front=True)
     if event != 'line':
         return trace
     env = frame.f_globals
@@ -122,6 +124,7 @@ def trace(frame, event, arg):
             peer_manager.state._net_session = peer
             peer_rec = MatchRecording(peer_manager, mode='lan')
             started = True
+        assert not env['CPP'].get('failed'), env['CPP'].get('failed')
         host = env['net_session']
         assert host is not None and env['mode'] == 'game', env['menu'].lan_notice
         if env['gm'] is not initial_manager:
@@ -140,10 +143,14 @@ def trace(frame, event, arg):
             hud.render(controller.selection, None, slot, False, '', 0., 30.)
             button = next(b for b in hud.buttons if b['kind'] == 'build_ship')
             paid_payloads.append(button['payload'])
+            point = button['rect'].center
+            if getattr(env['CPP'].get('window'), 'embedded', False):
+                logical = env['CPP_HUD_SIZE']
+                point = tuple(round(point[i] * (env['W'], env['H'])[i] / logical[i]) for i in range(2))
             pygame.event.post(pygame.event.Event(pygame.MOUSEBUTTONDOWN,
-                                                button=1, pos=button['rect'].center))
+                                                button=1, pos=point))
             pygame.event.post(pygame.event.Event(pygame.MOUSEBUTTONUP,
-                                                button=1, pos=button['rect'].center))
+                                                button=1, pos=point))
             paid_clicks += 1
         if env['state'].tick >= 12 and not lost:
             peer._peers[0].sock.shutdown(socket.SHUT_RDWR)
@@ -165,21 +172,30 @@ def trace(frame, event, arg):
             peer.advance(peer_manager, 1/30)
         if sample(env):
             return trace
-    if frame.f_lineno == flip_line and env.get('recovery_overlay') is not None:
-        overlay = env['recovery_overlay']
-        assert env['accumulator'] == 0
-        assert all(overlay.panel_rect.contains(r) for r in overlay.text_bounds)
-        if not saw_overlay:
-            before = precise_checksum(env['gm'])
-            env['handle_game_input'](pygame.event.Event(pygame.KEYDOWN, key=pygame.K_BACKSPACE))
-            assert precise_checksum(env['gm']) == before
-            glFinish()
-            glReadBuffer(GL_BACK)
-            data = glReadPixels(0, 0, env['W'], env['H'], GL_RGB, GL_UNSIGNED_BYTE)
-            image = pygame.image.frombuffer(data, (env['W'], env['H']), 'RGB')
-            pygame.image.save(pygame.transform.flip(image, False, True), str(EVIDENCE / 'full-app-recovering.png'))
-            saw_overlay = True
+    if frame.f_lineno == flip_line:
+        observe_overlay(env)
     return trace
+
+
+def observe_overlay(env, front=False):
+    global saw_overlay
+    if env.get('recovery_overlay') is None:
+        return
+    overlay = env['recovery_overlay']
+    assert env['accumulator'] == 0
+    assert all(overlay.panel_rect.contains(r) for r in overlay.text_bounds)
+    if not saw_overlay:
+        before = precise_checksum(env['gm'])
+        env['handle_game_input'](pygame.event.Event(pygame.KEYDOWN, key=pygame.K_BACKSPACE))
+        assert precise_checksum(env['gm']) == before
+        from OpenGL.GL import GL_FRONT
+        glFinish()
+        glReadBuffer(GL_FRONT if front else GL_BACK)
+        data = glReadPixels(0, 0, env['W'], env['H'], GL_RGB, GL_UNSIGNED_BYTE)
+        glReadBuffer(GL_BACK)
+        image = pygame.image.frombuffer(data, (env['W'], env['H']), 'RGB')
+        pygame.image.save(pygame.transform.flip(image, False, True), str(EVIDENCE / 'full-app-recovering.png'))
+        saw_overlay = True
 
 with tempfile.TemporaryDirectory(dir=EVIDENCE.parent) as directory:
     menus.USER_DIR = directory

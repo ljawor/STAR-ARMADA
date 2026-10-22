@@ -1,0 +1,12 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "tools/render/verify_station_lifecycle.py",
+    "--out",
+    "/Users/lukaszjawor/.hermes/cache/scratch/sa-station-native-red-corrected"
+  ],
+  "pid": 6976,
+  "seconds": 2.905,
+  "returncode": 1,
+  "timeout": false
+}
