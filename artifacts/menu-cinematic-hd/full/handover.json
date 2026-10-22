@@ -1,0 +1,25 @@
+{
+  "captured_at_utc": "2026-10-22T17:27:51.824302+00:00",
+  "capture_code_revision": "c3b81b6a46496b651a64c5a9d0ba7c4fa4f246c2",
+  "scope": "Actual committed main.py startup using default installed assets/menu/battle.zip; Reduced Motion still proves composition/native source, not animation. Separate full-loop audit and nine phase captures establish completed animation.",
+  "actual_size": [
+    2560,
+    1440
+  ],
+  "movie_sha256": "33fdd93e67ad66201ce9def49d6f9ba1cb5a2d502fee2ab1f14196e6fca93ae7",
+  "screenshot_sha256": "e277a6e4336022d63a8ced472788db10e4978fce3994cef2ee4d0e792f79da38",
+  "matches_precommit_pixels": true,
+  "code_sha256": {
+    "main.py": "85304b6ebff357e1e79472e984af2724a36eb525a05ab04217f0d96c814e6ab0",
+    "render/menus.py": "3a33127509bec3fed5a4e922687ccc05f94ec17b23dce231cf95c1795bf624c6",
+    "render/menu_movie.py": "629825f4c61cb11ce87393152f89d91fc20334d9ccb836428a8025ae5380d890",
+    "tools/cinematics/verify_preview.py": "b967856a9fc43c8b45616699e2f8f472a783611cd62039ffbd435f6c808f82f4",
+    "tools/cinematics/blender_scene.py": "ff20306613c82940d717e9f24a080b68d9b36f21f29f82a860514ce7667fb274",
+    "tools/cinematics/scene_spec.py": "244eeace04d869296272a464703fc4951ebf5a0a729492a5ce162fc355edb4de"
+  },
+  "independent_review_passed": true,
+  "owner_final_playback_accepted": false,
+  "merged": false,
+  "checkout_branch": "feat/menu-cinematic-hd",
+  "preview_storage": "full/preview.mp4 is local-only, intentionally ignored by existing repo rule; derived optional review copy, not runtime dependency"
+}

@@ -61,7 +61,7 @@ Prepare separate delivery JPEGs without resizing, preserving 4:4:4 colour:
 The report path must be fresh, outside both input/output directories, and have
 an existing parent. Preflight rejects image aliases before encoding; exclusive
 publication also refuses files or symlinks that appear after preflight. MP4
-encoding has one180-second deadline covering streaming, close and encoder exit,
+encoding has one 180-second deadline covering streaming, close and encoder exit,
 with bounded stderr diagnostics and cleanup that preserves an earlier preview.
 
 Use `--provenance '<JSON>'` (or the Python API) to embed the pinned scene plan and

@@ -17,7 +17,8 @@
   {
     "path": "preview.mp4",
     "sha256": "122f594a792201fdba7be316129e8ccd1cfbfa65e1174ffdd84fd50ee817d810",
-    "bytes": 21044591
+    "bytes": 21044591,
+    "storage": "local-only; ignored derived MP4 review copy"
   },
   {
     "path": "render-report.json",
@@ -118,5 +119,20 @@
     "path": "independent-rereview.json",
     "sha256": "399972d517e54539042f689951be83f5fa7d90313a476075aba87e24db1a49a3",
     "bytes": 1310
+  },
+  {
+    "path": "committed-main.json",
+    "sha256": "27236e0b2a39d3077313bdc392eef4b69b6a602565a6023d12fd55c395e516d4",
+    "bytes": 7023
+  },
+  {
+    "path": "committed-main.png",
+    "sha256": "e277a6e4336022d63a8ced472788db10e4978fce3994cef2ee4d0e792f79da38",
+    "bytes": 1226123
+  },
+  {
+    "path": "handover.json",
+    "sha256": "c6bb8ce05873beaae1fa0b8516b9ed23f2b1b12e499895f95e001aae762ef72a",
+    "bytes": 1548
   }
 ]

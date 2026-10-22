@@ -19,8 +19,11 @@ The early look probes were captured from uncommitted authoring code. Their raw
 Blender/helper SHA-256 pins are retained rather than falsely labelling them as a
 committed capture. The full bake used the identical approved Blender script;
 frame24's mean absolute RGB difference from the approved PNG was below0.002 per
-channel. Final handover needs a committed candidate and a fresh actual-main
-capture before owner playback/merge approval.
+channel. A fresh actual-main capture of committed candidate
+`c3b81b6a46496b651a64c5a9d0ba7c4fa4f246c2` uses the default installed asset,
+not a review-path substitution. `full/handover.json` binds the source/asset hashes
+to `full/committed-main.png`; its pixels match the validated precommit capture.
+This remains a Reduced Motion still; full-loop evidence is recorded separately.
 
 ## Completed render and candidate audit
 
@@ -38,7 +41,9 @@ capture before owner playback/merge approval.
 - Last-to-first mean absolute RGB difference1.3998, below the predefined8 bound.
   Reduced Motion returned identical pixels at distinct elapsed phases.
 - Full MP4 decoded successfully with ffmpeg; ffprobe read360frames at2560×1440
-  and24/1fps. `full/preview.mp4` is a review copy, not the runtime asset.
+  and24/1fps. `full/preview.mp4` is a local-only review copy, intentionally ignored
+  by the existing repository rule, not the runtime asset. Its hash/storage scope
+  remains in the evidence manifest; a fresh clone can regenerate it offline.
 - Real `main.py` startup capture at2560×1440, plus9 production SDL/OpenGL
   compositor captures across800×600,1280×800,1440×900 at start/middle/wrap.
   Navigation to main, Reduced Motion and cinematics-off moving-star fallback
@@ -57,7 +62,7 @@ source/output images. The streaming helper now uses nonblocking pipes and one
 encoding deadline; report paths are preflighted and exclusively created. CPU
 regressions exercise stalled/early-exit encoders and source/output alias cases.
 Independent re-review passed with no remaining security or logic findings;
-its69 focused CPU tests passed. The optional extra publication-race regression
+its 69 focused CPU tests passed. The optional extra publication-race regression
 was suggested as coverage, not an unresolved implementation defect.
 
 An initial fallback probe failed due to a NumPy comparison in the probe itself;
