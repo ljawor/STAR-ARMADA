@@ -21,8 +21,8 @@ from render_bridge import markers as codec
 SELECTION_ALPHA = 0.9           # render/renderer.py::_draw_selection_rings
 # render/renderer.py::_draw_collection_points draws the destination in this teal, at a world radius
 # of at least 45 units, as a diamond in the ecliptic with a cross through it. The window draws the
-# destination even when the station is not selected: the point lives in the simulation until it is
-# cleared, so a player who selected something else still needs to see where new units will go.
+# destination only while its owning station is selected. Deselecting hides the cue without
+# clearing the saved destination used by future production.
 COLLECTION_COLOUR = (0.35, 0.95, 0.8)
 COLLECTION_ALPHA = 0.95
 COLLECTION_RADIUS = 45.0
@@ -112,8 +112,8 @@ def planet_owner_rings(state) -> list:
     return out
 
 
-def collection_point_cues(state, local_player) -> list:
-    """A diamond on the destination of every owned station that has one.
+def collection_point_cues(state, local_player, selection_ids=()) -> list:
+    """A diamond on each selected owned station's saved destination.
 
     The rule (which station, which point, which colour) is `render/renderer.py::_draw_collection_points`
     and `game/systems/collection_points.py`; only the shape crosses. Four segments of a flat ring put
@@ -121,9 +121,9 @@ def collection_point_cues(state, local_player) -> list:
     """
     from game.systems.collection_points import collection_capable
     out = []
-    for entity_id in sorted(state.entities):
-        entity = state.entities[entity_id]
-        if not entity.alive or entity.owner != local_player:
+    for entity_id in sorted(selection_ids):
+        entity = state.entities.get(entity_id)
+        if entity is None or not entity.alive or entity.owner != local_player:
             continue
         point = getattr(entity, 'collection_point', None)
         if point is None or not collection_capable(entity):
@@ -175,7 +175,7 @@ def build(state, local_player, selection_ids, visible_ids, *, radius_of, mode='a
     if planet_rings:
         primitives += planet_owner_rings(state)
     if collection_points:
-        primitives += collection_point_cues(state, local_player)
+        primitives += collection_point_cues(state, local_player, selection_ids)
     if with_markers:
         primitives += ownership_markers(state, local_player, visible_ids, mode, allies, radius_of)
     return primitives

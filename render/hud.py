@@ -1657,7 +1657,7 @@ class HUD:
             point = getattr(e, 'collection_point', None)
             if point is None or not e.alive or not collection_capable(e):
                 continue
-            if e.owner != local_player:
+            if e.owner != local_player or e.id not in selection:
                 continue
             sx, sy = px(e.pos.x, e.pos.z)
             mx, my = px(point.x, point.z)
