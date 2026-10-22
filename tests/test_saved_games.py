@@ -208,11 +208,12 @@ class SavedMenuTests(unittest.TestCase):
         from game.core.state import GameState
         from game.data.store import DataStore
         tree = ast.parse((ROOT / 'main.py').read_text())
-        ns = dict(GameManager=GameManager, GameState=GameState, DataStore=DataStore,
+        ns: dict = dict(GameManager=GameManager, GameState=GameState, DataStore=DataStore,
                   MODS=[], W=800, H=600, gm=None, state=None, camera=None, renderer=None,
                   hud=None, audio=None, inputc=None, net_session=None, local_player=0,
                   accumulator=0., last_autosave=0., menu=self.menu, mode='menu', paused=False,
-                  TICK_DT=1/30, Audio=object, SETTINGS={}, json=json, os=os, SAVES_DIR=str(self.folder),
+                  TICK_DT=1/30, Audio=object, SETTINGS={}, CPP_HUD_SIZE=(1280, 800),
+                  json=json, os=os, SAVES_DIR=str(self.folder),
                   recording=None, playback=None, mission_def=None, presentation=None)
         for name in ('Camera', 'Renderer', 'HUD', 'InputController'):
             ns[name] = Mock(side_effect=lambda *a: SimpleNamespace(close=Mock(), zoom=Mock(), set_camera_ref=Mock()))

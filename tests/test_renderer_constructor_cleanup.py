@@ -169,10 +169,11 @@ class ConstructorCleanupTests(unittest.TestCase):
         source = Path(__file__).resolve().parents[1] / 'main.py'
         node = next(n for n in ast.parse(source.read_text()).body
                     if isinstance(n, ast.FunctionDef) and n.name == 'install_recovered_manager')
-        ns = dict(gm=self.manager, state=self.manager.state, camera=self.old.camera,
+        ns: dict = dict(gm=self.manager, state=self.manager.state, camera=self.old.camera,
                   renderer=self.old, hud=hud, inputc=controller, audio=audio,
                   recording=recording, net_session=object(), local_player=0,
-                  DataStore=DataStore, W=320, H=240, SETTINGS={}, accumulator=0,
+                  DataStore=DataStore, W=320, H=240, CPP_HUD_SIZE=(1280, 800),
+                  SETTINGS={}, accumulator=0,
                   last_autosave=0, mission_def=None, Camera=Camera,
                   Renderer=module.Renderer, HUD=HUD, InputController=InputController,
                   _AppGlue=lambda: object())

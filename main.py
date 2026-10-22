@@ -74,24 +74,17 @@ MODS: list[str] = []
 if "--mods" in sys.argv:
     MODS = [m for m in sys.argv[sys.argv.index("--mods") + 1].split(",") if m]
 
-# Which renderer draws the world. `cpp` hands the frames, HUD and effects to the native window over
-# the W02-W11 bridge and draws nothing here; `legacy` is this process's own GL renderer and stays
-# available as the rollback control. Python keeps every decision either way - the window is a
-# display. Since W11 the choice is a setting (`DEFAULT_SETTINGS["renderer"]`), and `--renderer`
-# still overrides it for one launch, because someone debugging a display must be able to pick the
-# rollback control without editing a file.
+# The native window is the only renderer (#160). It draws the frames, HUD and effects the W02-W11
+# bridge publishes; Python keeps every decision either way - the window is a display. There is no
+# switch, no `--renderer` launch option and no fallback: when the window cannot start or dies, the
+# game says so and refuses to run rather than drawing a second, legacy world.
 RENDERER = "cpp"
-if "--renderer" in sys.argv:
-    _index = sys.argv.index("--renderer")
-    RENDERER = sys.argv[_index + 1] if _index + 1 < len(sys.argv) else ""
-    if RENDERER not in ("legacy", "cpp"):
-        raise SystemExit("--renderer takes 'legacy' (default) or 'cpp'")
 # Absolute: `USER_DIR` is a relative '.' in a source checkout, so the rings would otherwise land in
 # the repository (and a frozen app must never write into its own bundle).
 CPP_DIR = os.path.join(os.path.abspath(USER_DIR), "cpp-window")
 CPP_HUD_SIZE = (1280, 800)
 CPP = {"session": None, "window": None, "input": None, "seen": set(), "seen_tick": -1,
-       "selection": frozenset(), "quit": False, "failed": False, "fell_back": False,
+       "selection": frozenset(), "quit": False, "failed": False,
        "bridge_mark": (0, 0, 0), "iconified": False}
 
 # --------------------------------------------------------------------------- window
@@ -104,8 +97,6 @@ if SMOKE and os.environ.get("STAR_ARMADA_FORCE_DUMMY") == "1":
     pygame.quit()
     pygame.init()
 SETTINGS = load_settings()
-if "--renderer" not in sys.argv:  # developer/diagnostic escape; the game itself has no choice
-    RENDERER = str(SETTINGS.get("renderer") or "cpp")
 # Station balance (#106) is installed before the first catalogue exists: every DataStore
 # folds the overlay into its rules, so one built earlier would hand the player shipped numbers
 # in one place and edited ones in another — and a LAN client would announce the wrong tuning
@@ -150,8 +141,7 @@ def toggle_fullscreen() -> None:
         W, H = (1280, 800) if SMOKE else (1440, 900)
         pygame.display.set_mode((W, H), pygame.DOUBLEBUF | pygame.OPENGL)
     if camera is not None and hud is not None:
-        view_size = (CPP_HUD_SIZE if globals().get('RENDERER') == 'cpp'
-                     and not globals().get('CPP', {}).get('fell_back') else (W, H))
+        view_size = CPP_HUD_SIZE
         camera.width, camera.height = view_size
         camera._proj = camera._view = None
         hud.resize(*view_size)
@@ -291,7 +281,7 @@ def cpp_reset():
         return  # CPU helper probes can load functions without the SDL bootstrap.
     resources = {name: CPP.get(name) for name in ('input', 'window', 'session')}
     CPP.update(session=None, window=None, input=None, seen=set(), seen_tick=-1,
-               selection=frozenset(), quit=False, failed=False, fell_back=False,
+               selection=frozenset(), quit=False, failed=False,
                bridge_mark=(0, 0, 0))
     CPP.pop('camera', None)
     CPP.pop('view_mark', None)
@@ -335,6 +325,10 @@ def cpp_session(state, ds, local_player: int):
     """
     if CPP["session"] is not None:
         return CPP["session"]
+    if not SMOKE:
+        missing = cpp_unavailable()
+        if missing:
+            raise RuntimeError(missing)
     from render_bridge.live import LiveSession
     from render_bridge import cpp_window
     import tempfile
@@ -370,8 +364,8 @@ def cpp_trace(message: str) -> None:
 def cpp_drawing() -> bool:
     """True while the native window is actually up and drawing.
 
-    A renderer mode that can silently show nothing is worse than the one it replaces, so when the
-    window is not there the caller draws with the legacy path instead of publishing into a void.
+    The window is the only renderer now (#160), so "not drawing" is a fault to report, never a
+    reason to hand the frame to a second renderer.
     """
     window = CPP["window"]
     return window is not None and window.poll() is None
@@ -379,6 +373,38 @@ def cpp_drawing() -> bool:
 
 def flash_print(message: str) -> None:
     print(message, flush=True)
+
+
+def cpp_unavailable() -> str | None:
+    """Why no window can be opened, or None when one can. There is no second renderer (#160)."""
+    from render_bridge import cpp_window
+    if cpp_window.find_binary(ROOT) is not None:
+        return None
+    return ('the native renderer is missing: build it with\n'
+            '  cmake -S render_cpp -B render_cpp/build-w02 && cmake --build render_cpp/build-w02\n'
+            'there is no legacy renderer to fall back to any more (issue #160)')
+
+
+def cpp_fatal(reason: str) -> None:
+    """Report the fault that killed the window and leave the match; never draw a legacy frame.
+
+    Called from both the producer and the frame loop, so the first fault wins and is said once.
+    """
+    if CPP.get('failed'):
+        return
+    cpp_reset()
+    CPP['failed'] = reason
+    CPP['quit'] = True
+    flash_print(f'native renderer stopped: {reason} - leaving the match (no legacy fallback)')
+
+
+# The window is the only renderer (#160): without it there is nothing to play on, so say why and stop
+# here instead of half-starting and drawing a second, legacy world behind the player's back.
+if not SMOKE:
+    _missing_renderer = cpp_unavailable()
+    if _missing_renderer:
+        flash_print(_missing_renderer)
+        raise SystemExit(2)
 
 
 def cpp_seen_ids(state, local_player: int) -> set:
@@ -412,9 +438,7 @@ def cpp_poll_input():
                 bridge.quit_requested = False
                 CPP['quit'] = True
     except Exception as exc:
-        cpp_reset()
-        CPP['failed'] = repr(exc)
-        flash_print(f'cpp input failed ({exc!r}); falling back to the legacy renderer')
+        cpp_fatal(f'input failed ({exc!r})')
 
 
 def cpp_overlay_layers():
@@ -463,11 +487,8 @@ def cpp_publish(state, ds, local_player: int, selection, dt: float, *, paused: b
         if globals().get('presentation') is not None and globals().get('cinematic') is None:
             hud.blocked_rects.extend(presentation.panel_rects)
     except Exception as exc:
-        # A fault in the producer must not end the match: drop the window and let the legacy path
-        # draw from the next frame on.
-        cpp_reset()
-        CPP["failed"] = repr(exc)
-        flash_print(f"cpp producer failed ({exc!r}); falling back to the legacy renderer")
+        # No second renderer to hand the frame to (#160): report it and leave the match.
+        cpp_fatal(f'producer failed ({exc!r})')
         return False
     return True
 
@@ -510,7 +531,7 @@ def start_game(load_path: str | None = None, mdef: dict | None = None,
         recording = begin_recording(gm)
     accumulator = 0.0
     last_autosave = state.time
-    view_size = CPP_HUD_SIZE if globals().get('RENDERER') == 'cpp' else (W, H)
+    view_size = CPP_HUD_SIZE
     camera = Camera(*view_size)
     _start = next((e for e in state.entities.values()
                    if e.owner == local_player and e.is_station), None)
@@ -579,7 +600,7 @@ def install_recovered_manager(candidate):
                 or precise_checksum(candidate) != precise_checksum(old_gm)):
             raise ValueError('Recovered manager differs from the drained canonical barrier')
         DataStore._instance = candidate.ds
-        view_size = CPP_HUD_SIZE if globals().get('RENDERER') == 'cpp' else (W, H)
+        view_size = CPP_HUD_SIZE
         prepared_camera = Camera(*view_size)
         for name in ('distance', 'yaw', 'pitch', 'fov', 'near', 'far', 'zoom_limits'):
             setattr(prepared_camera, name, getattr(camera, name))
@@ -747,17 +768,11 @@ def draw_campaign_presentation(dt_frame):
         published = cpp_publish(state, gm.ds, local_player, set(), 0.0,
                                 paused=True, fps=fps)
         native_drawn = published and (SMOKE or cpp_drawing())
-        if published and not native_drawn:
-            cpp_reset()
-            CPP['failed'] = 'native window is not drawing'
-            hud.resize(W, H)
-            CPP['fell_back'] = True
     if not native_drawn:
-        camera.apply(W, H)
-        renderer.placement = None
-        renderer.draw(0.0, set())
-        cinematic.draw_gl(W, H)
-        pygame.display.flip()
+        # The campaign cinematic is a window presentation too: without a window there is nothing to
+        # show, and no second renderer to show it with (#160).
+        cpp_fatal('native window is not drawing')
+        return
     if cinematic.finished:
         outcome = cinematic.outcome
         cinematic = None
@@ -892,7 +907,7 @@ def sync_recovery_overlay():
         accumulator = 0.0
         if globals().get('recovery_overlay') is None:
             from render.recovery_overlay import RecoveryOverlay
-            view_size = CPP_HUD_SIZE if globals().get('RENDERER') == 'cpp' and not CPP.get('fell_back') else (W, H)
+            view_size = CPP_HUD_SIZE
             recovery_overlay = RecoveryOverlay(*view_size)
             inputc.keys.clear()
             inputc.dragging = False
@@ -904,12 +919,6 @@ def sync_recovery_overlay():
         recovery_overlay.cleanup()
         recovery_overlay = None
 
-
-def draw_recovery_overlay():
-    sync_recovery_overlay()
-    if recovery_overlay is not None:
-        recovery_overlay.draw(net_session.recovery_snapshot, width=W, height=H)
-        recovery_overlay.draw_gl()
 
 
 def handle_recovery_event(ev):
@@ -1293,7 +1302,7 @@ while running:
         hud.mission_progress = None
 
     # ---- what the HUD is told
-    # One place decides it, so the window and the legacy path cannot disagree about whether the
+    # One place decides it, so the window cannot disagree with the simulation about whether the
     # match is paused, what the status line says, or where the drag box is. The window used to
     # compose the HUD with `paused=False, message=''` unconditionally, which is why a paused match
     # looked like a running one.
@@ -1316,8 +1325,8 @@ while running:
 
     # ---- draw
     native_drawn = False
-    # In `cpp` mode the producer runs whether or not a window is up (the smoke run has no window and
-    # still exercises every ring); the legacy path draws only when the window is not doing it.
+    # The producer runs whether or not a window is up (the smoke run has no window and still
+    # exercises every ring); the window is the only thing that draws (#160).
     if RENDERER == "cpp" and not CPP.get("failed") and (SMOKE or CPP["session"] is None
                                                         or cpp_drawing()):
         # `apply` also sets the camera's pixel size, and that size is what turns a click into a
@@ -1353,31 +1362,10 @@ while running:
                 cpp_trace(f"CPP_SELECTION {sorted(current)}")
             native_drawn = True
 
-    if not native_drawn:
-        if RENDERER == "cpp" and not CPP.get("fell_back"):
-            # The window is gone (killed, crashed, or it never started). Say it once and draw the match
-            # here: a player who launched a skirmish must never be left looking at a frozen menu.
-            cpp_reset()
-            CPP["failed"] = "native window is not drawing"
-            CPP["fell_back"] = True
-            flash_print("cpp window is not drawing; falling back to the legacy renderer")
-            try:
-                pygame.display.set_mode((W, H), _flags)
-                hud.resize(W, H)
-            except Exception:
-                pass
-
-        camera.apply(W, H)
-        renderer.placement = hud.placement  # render-side preview only; never sim state
-        renderer.draw(dt_frame, inputc.selection)
-        hud.set_floating_texts(view_texts)
-        # live box-select rectangle while left-dragging
-        hud.set_drag_box(*view_drag)
-        hud.render(inputc.selection, None, local_player, view_paused, view_msg,
-                   view_flash, fps)
-        hud.draw_gl()
-        draw_presentation_overlay()
-        draw_recovery_overlay()
+    if not native_drawn and not CPP.get("failed"):
+        # The window is gone (killed, crashed, or it never started). One renderer means this is a
+        # fault, not a reason to draw the frame here: report it and leave the match (#160).
+        cpp_fatal(str(CPP.get("failed") or "the native window is not drawing"))
         pygame.display.flip()
 
     frames += 1
