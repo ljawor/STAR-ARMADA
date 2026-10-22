@@ -19,21 +19,53 @@ def window_size(resolution, desktop, *, fullscreen=False, smoke=False):
     if smoke:
         return (1280, 800)
     if resolution != 'auto':
-        return tuple(map(int, resolution.split('x')))
+        requested = tuple(map(int, resolution.split('x')))
+        if all(value <= limit for value, limit in zip(requested, desktop)):
+            return requested
+        # SDL may accept a mode from another monitor instead of raising an error.
+        # Never submit a request larger than the target desktop in either mode.
     if fullscreen:
         return tuple(desktop)
     scale = min(1.0, desktop[0] / 1440, desktop[1] / 900)
     return max(1, round(1440 * scale)), max(1, round(900 * scale))
 
 
-def open_display(pygame, resolution, desktop, flags, *, fullscreen=False, smoke=False):
+def available_resolutions(pygame, *, fullscreen=False, display_index=0):
+    """Offer only presets that fit the same display used at startup."""
+    try:
+        desktop = pygame.display.get_desktop_sizes()[display_index]
+        modes = (pygame.display.list_modes(flags=pygame.FULLSCREEN, display=display_index)
+                 if fullscreen else -1)
+    except (pygame.error, IndexError):
+        return ('auto',)
+    choices = ['auto']
+    for token in RESOLUTIONS[1:]:
+        size = tuple(map(int, token.split('x')))
+        if window_size(token, desktop, fullscreen=fullscreen) != size:
+            continue
+        if isinstance(modes, (list, tuple)) and size not in modes:
+            continue
+        choices.append(token)
+    return tuple(choices)
+
+
+def open_display(pygame, resolution, desktop, flags, *, fullscreen=False, smoke=False,
+                 display_index=0):
     """Return the actual surface and effective mode after bounded SDL fallbacks.
 
     Try the chosen mode, desktop fullscreen when appropriate, then the old safe
     window. Never persist a fallback over the user's preference. A total failure
     raises the last SDL error; duplicated attempts are not retried.
     """
-    attempts = [(window_size(resolution, desktop, fullscreen=fullscreen, smoke=smoke), fullscreen)]
+    requested = window_size(resolution, desktop, fullscreen=fullscreen, smoke=smoke)
+    if fullscreen and not smoke:
+        try:
+            modes = pygame.display.list_modes(flags=pygame.FULLSCREEN, display=display_index)
+        except pygame.error:
+            modes = []
+        if isinstance(modes, (list, tuple)) and requested not in modes:
+            requested = window_size('auto', desktop, fullscreen=True)
+    attempts = [(requested, fullscreen)]
     if fullscreen:
         attempts.append((window_size('auto', desktop, fullscreen=True, smoke=smoke), True))
     attempts.append((window_size('auto', desktop, smoke=smoke), False))
@@ -45,7 +77,7 @@ def open_display(pygame, resolution, desktop, flags, *, fullscreen=False, smoke=
         seen.add((size, full))
         try:
             mode_flags = (flags & ~pygame.FULLSCREEN) | (pygame.FULLSCREEN if full else 0)
-            return pygame.display.set_mode(size, mode_flags), full
+            return pygame.display.set_mode(size, mode_flags, display=display_index), full
         except pygame.error as exc:
             last_error = exc
     assert last_error is not None  # At least one distinct mode was attempted.

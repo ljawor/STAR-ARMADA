@@ -886,9 +886,11 @@ class MenuStack:
         self.balance_notice = i18n.t('Every station uses the shipped balance again.')
 
     def _cycle_resolution(self, delta=1) -> None:
-        from render.display_settings import RESOLUTIONS, validate_resolution
+        from render.display_settings import available_resolutions, validate_resolution
+        choices = available_resolutions(pygame, fullscreen=self.settings.get('fullscreen', False))
         current = validate_resolution(self.settings.get('resolution'))
-        self.settings['resolution'] = RESOLUTIONS[(RESOLUTIONS.index(current) + delta) % len(RESOLUTIONS)]
+        index = choices.index(current) if current in choices else 0
+        self.settings['resolution'] = choices[(index + delta) % len(choices)]
         self._dirty_settings = True
 
     def _settings_key(self, ev) -> bool:

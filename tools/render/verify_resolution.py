@@ -21,6 +21,7 @@ def main():
     parser.add_argument('--out', type=Path, required=True)
     parser.add_argument('--resolution', required=True)
     parser.add_argument('--fullscreen', action='store_true')
+    parser.add_argument('--expect-size', help='Expected safe fallback size for an unavailable saved mode')
     args = parser.parse_args()
     out = args.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
@@ -100,8 +101,12 @@ def main():
                 surface = pygame.display.get_surface()
                 size = surface.get_size()
                 fullscreen = bool(surface.get_flags() & pygame.FULLSCREEN)
-                if args.resolution != 'auto':
-                    assert size == tuple(map(int, args.resolution.split('x'))), (args.resolution, size)
+                expected_token = args.expect_size or args.resolution
+                if expected_token != 'auto':
+                    assert size == tuple(map(int, expected_token.split('x'))), (expected_token, size)
+                assert pygame.display.get_window_position() == (0, 0) if args.fullscreen else True
+                result['window_position'] = pygame.display.get_window_position()
+                result['desktops'] = pygame.display.get_desktop_sizes()
                 assert fullscreen == args.fullscreen, (args.fullscreen, fullscreen)
                 label = f'Current resolution: {size[0]} × {size[1]} · ' + ('Fullscreen' if fullscreen else 'Windowed')
                 assert label in ns['menu'].settings_rendered_text

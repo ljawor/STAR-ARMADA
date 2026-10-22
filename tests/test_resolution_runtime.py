@@ -55,19 +55,54 @@ class DisplaySelectionTests(unittest.TestCase):
         surface = Mock()
         fake = SimpleNamespace(FULLSCREEN=pygame.FULLSCREEN, error=pygame.error, display=Mock())
         fake.display.set_mode.side_effect = [pygame.error('mode'), pygame.error('desktop'), surface]
-        result, full = display.open_display(fake, '3840x2160', (2560, 1600), pygame.OPENGL,
+        result, full = display.open_display(fake, '1920x1080', (2560, 1600), pygame.OPENGL,
                                              fullscreen=True)
         self.assertIs(result, surface)
         self.assertFalse(full)
         self.assertEqual(fake.display.set_mode.call_args_list, [
-            unittest.mock.call((3840, 2160), pygame.OPENGL | pygame.FULLSCREEN),
-            unittest.mock.call((2560, 1600), pygame.OPENGL | pygame.FULLSCREEN),
-            unittest.mock.call((1440, 900), pygame.OPENGL)])
+            unittest.mock.call((1920, 1080), pygame.OPENGL | pygame.FULLSCREEN, display=0),
+            unittest.mock.call((2560, 1600), pygame.OPENGL | pygame.FULLSCREEN, display=0),
+            unittest.mock.call((1440, 900), pygame.OPENGL, display=0)])
         fake.display.set_mode.reset_mock()
         fake.display.set_mode.side_effect = pygame.error('no usable mode')
         with self.assertRaisesRegex(pygame.error, 'no usable mode'):
             display.open_display(fake, 'auto', (1440, 900), pygame.OPENGL)
         self.assertEqual(fake.display.set_mode.call_count, 1)
+
+    def test_oversized_mode_never_reaches_sdl_or_redirects_to_the_second_display(self):
+        display = self.display()
+        fake = SimpleNamespace(FULLSCREEN=pygame.FULLSCREEN, error=pygame.error, display=Mock())
+        desktops = [(2560, 1440), (2240, 1260)]
+        modes = {0: [(2560, 1440), (1920, 1080), (1280, 720)],
+                 1: [(4480, 2520), (3840, 2160), (2240, 1260)]}
+        fake.display.get_desktop_sizes.return_value = desktops
+        fake.display.list_modes.side_effect = lambda flags=0, display=0: modes[display]
+        redirected = []
+        def mode(size, flags, *, display=0):
+            # Model SDL accepting a mode available only on monitor 1 rather than raising.
+            if size == (3840, 2160):
+                redirected.append(1)
+            return pygame.Surface(size)
+        fake.display.set_mode.side_effect = mode
+        surface, full = display.open_display(fake, '3840x2160', desktops[0], pygame.OPENGL,
+                                              fullscreen=True)
+        self.assertFalse(redirected, 'oversized mode was sent to SDL and moved to monitor 1')
+        self.assertEqual(surface.get_size(), desktops[0])
+        self.assertTrue(full)
+        fake.display.set_mode.assert_called_once_with(desktops[0], pygame.OPENGL | pygame.FULLSCREEN,
+                                                      display=0)
+
+    def test_unsupported_primary_mode_is_rejected_before_sdl(self):
+        display = self.display()
+        fake = SimpleNamespace(FULLSCREEN=pygame.FULLSCREEN, error=pygame.error, display=Mock())
+        fake.display.list_modes.return_value = [(2560, 1440), (1920, 1080)]
+        fake.display.set_mode.side_effect = lambda size, flags, **kw: pygame.Surface(size)
+        surface, full = display.open_display(fake, '1440x900', (2560, 1440), pygame.OPENGL,
+                                              fullscreen=True)
+        self.assertEqual(surface.get_size(), (2560, 1440))
+        self.assertTrue(full)
+        fake.display.set_mode.assert_called_once_with((2560, 1440), pygame.OPENGL | pygame.FULLSCREEN,
+                                                      display=0)
 
     def test_portrait_desktop_outside_native_limits_is_not_an_allocation_request(self):
         display = self.display()
@@ -211,7 +246,7 @@ class MainResolutionTests(unittest.TestCase):
         fake.display.get_desktop_sizes.return_value = [(2560, 1600)]
         fake.display.set_mode.side_effect = side_effect
         if side_effect is None:
-            fake.display.set_mode.side_effect = lambda size, flags: pygame.Surface(size)
+            fake.display.set_mode.side_effect = lambda size, flags, **kwargs: pygame.Surface(size)
         env = dict(pygame=fake, SETTINGS={'resolution': resolution}, FULLSCREEN=fullscreen,
                    _flags=pygame.OPENGL, SMOKE=smoke)
         with patch('builtins.print') as notice:
@@ -222,7 +257,7 @@ class MainResolutionTests(unittest.TestCase):
         for fullscreen in (False, True):
             env, mode, _ = self.bootstrap('1920x1080', fullscreen)
             mode.assert_called_once_with((1920, 1080), pygame.OPENGL |
-                                         (pygame.FULLSCREEN if fullscreen else 0))
+                                         (pygame.FULLSCREEN if fullscreen else 0), display=0)
             self.assertEqual((env['W'], env['H']), (1920, 1080))
             self.assertEqual(env['FULLSCREEN'], fullscreen)
             self.assertEqual(env['SESSION_RESOLUTION'], '1920x1080')
@@ -244,10 +279,10 @@ class MainResolutionTests(unittest.TestCase):
             if full:
                 attempts.append(pygame.error('no fullscreen'))
             attempts.append(pygame.Surface((1024, 640)))
-            env, _, notice = self.bootstrap('3840x2160', full, side_effect=attempts)
+            env, _, notice = self.bootstrap('1920x1080', full, side_effect=attempts)
             self.assertEqual((env['W'], env['H']), (1024, 640))
             self.assertFalse(env['FULLSCREEN'])
-            self.assertEqual(env['SETTINGS']['resolution'], '3840x2160')
+            self.assertEqual(env['SETTINGS']['resolution'], '1920x1080')
             messages = ' '.join(str(c) for c in notice.call_args_list).lower()
             self.assertIn('fallback', messages)
             self.assertIn('1024x640', messages)
@@ -260,7 +295,8 @@ class MainResolutionTests(unittest.TestCase):
                            CPP_HUD_SIZE=(1280, 800), camera=Mock(), hud=Mock(),
                            SMOKE=False, flash=Mock())
         with patch.object(pygame.display, 'Info', return_value=SimpleNamespace(current_w=2560, current_h=1600)), \
-                patch.object(pygame.display, 'set_mode', side_effect=lambda size, flags: pygame.Surface(size)) as mode:
+                patch.object(pygame.display, 'list_modes', return_value=-1), \
+                patch.object(pygame.display, 'set_mode', side_effect=lambda size, flags, **kwargs: pygame.Surface(size)) as mode:
             env['toggle_fullscreen']()
             self.assertTrue(env['FULLSCREEN'])
             self.assertEqual((env['W'], env['H']), (1920, 1080))
@@ -268,9 +304,10 @@ class MainResolutionTests(unittest.TestCase):
             env['toggle_fullscreen']()
             self.assertFalse(env['FULLSCREEN'])
             self.assertEqual(mode.call_args_list, [
-                unittest.mock.call((1920, 1080), pygame.DOUBLEBUF | pygame.OPENGL | pygame.FULLSCREEN),
-                unittest.mock.call((1920, 1080), pygame.DOUBLEBUF | pygame.OPENGL)])
-        with patch.object(pygame.display, 'set_mode', side_effect=[pygame.error('unsupported'),
+                unittest.mock.call((1920, 1080), pygame.DOUBLEBUF | pygame.OPENGL | pygame.FULLSCREEN, display=0),
+                unittest.mock.call((1920, 1080), pygame.DOUBLEBUF | pygame.OPENGL, display=0)])
+        with patch.object(pygame.display, 'list_modes', return_value=-1), \
+                patch.object(pygame.display, 'set_mode', side_effect=[pygame.error('unsupported'),
                           pygame.Surface((2560, 1600))]):
             env['toggle_fullscreen']()
         self.assertTrue(env['FULLSCREEN'])

@@ -73,6 +73,22 @@ class ResolutionMenuTests(unittest.TestCase):
                     set_mode.assert_not_called()
                     self.assertEqual(menu.result, menus.MenuResult.NONE)
 
+    def test_resolution_cycle_excludes_modes_from_other_displays_and_oversized_windows(self):
+        for full in (False, True):
+            with self.subTest(fullscreen=full):
+                menu = self.menu((800, 600))
+                menu.settings.update(fullscreen=full, resolution='1280x800')
+                with patch.object(pygame.display, 'get_desktop_sizes', return_value=[(1280, 800), (3840, 2160)]), \
+                        patch.object(pygame.display, 'list_modes', return_value=[(1280, 800), (1280, 720)]):
+                    menu.render(0)
+                    row = next(b for b in menu.buttons if b['action'] == 'cycle_resolution')
+                    menu.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN,
+                                                       button=1, pos=row['rect'].center))
+                    self.assertEqual(menu.settings['resolution'], 'auto')
+                    menu.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN,
+                                                       button=1, pos=row['rect'].center))
+                    self.assertEqual(menu.settings['resolution'], '1280x720')
+
     def test_saved_resolution_is_validated_without_losing_other_preferences(self):
         path = Path(menus.SETTINGS_PATH)
         path.parent.mkdir(parents=True, exist_ok=True)
