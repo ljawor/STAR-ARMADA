@@ -1,0 +1,49 @@
+{
+  "hull_isolated": {
+    "build_55": {
+      "pixels_where_only_the_hull_is_visible": 8531,
+      "measured_alpha": 0.55
+    },
+    "build_97": {
+      "pixels_where_only_the_hull_is_visible": 7474,
+      "measured_alpha": 0.8275
+    }
+  },
+  "station_kind": "sensor_station",
+  "site": [
+    -3690.0,
+    0.0,
+    17910.0
+  ],
+  "covering_pixels": 22535,
+  "interior_pixels": 21219,
+  "reference_pixels": 63657,
+  "progress": {
+    "build_03": {
+      "fraction_requested": 0.03,
+      "measured_alpha_vs_finished_station": 0.4192,
+      "background_through": 0.5808
+    },
+    "build_55": {
+      "fraction_requested": 0.55,
+      "measured_alpha_vs_finished_station": 0.7167,
+      "background_through": 0.2833
+    },
+    "build_97": {
+      "fraction_requested": 0.97,
+      "measured_alpha_vs_finished_station": 0.8671,
+      "background_through": 0.1329
+    },
+    "scaffold_55": {
+      "fraction_requested": 0.55,
+      "measured_alpha_vs_finished_station": 0.4745,
+      "background_through": 0.5255
+    },
+    "scaffold_97": {
+      "fraction_requested": 0.97,
+      "measured_alpha_vs_finished_station": 0.5092,
+      "background_through": 0.4908
+    }
+  },
+  "passed": true
+}
