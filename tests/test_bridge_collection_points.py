@@ -1,9 +1,7 @@
 """Issue #161: the collection point has to be visible in the window, not only in the panel.
 
-`render/renderer.py::_draw_collection_points` draws it for the Python renderer — a teal line from the
-station and a diamond on the destination — but the native window never received anything to draw, so
-on the default (`renderer: cpp`) path a player who right-clicked a command centre saw the coordinates
-in the side panel and nothing in the world.
+The native window receives a teal diamond on the destination and the minimap paints its tether.
+Both cues must follow station selection, not the lifetime of the saved collection point.
 
 Two cues are pinned here: the diamond in the world (a four-segment flat ring, which puts a vertex on
 each axis exactly like the legacy hand-built diamond) and, on the minimap, the diamond plus its tether.
@@ -40,7 +38,7 @@ class CollectionPointCueTests(unittest.TestCase):
         return float(getattr(entity, 'radius', 40.0))
 
     def test_the_window_is_told_where_an_owned_station_sends_its_units(self):
-        cues = primitive_batch.collection_point_cues(self.state, 0)
+        cues = primitive_batch.collection_point_cues(self.state, 0, {self.station.id})
         mine = [cue for cue in cues
                 if (round(cue['centre'][0], 3), round(cue['centre'][2], 3))
                 == (round(self.point.x, 3), round(self.point.z, 3))]
@@ -57,7 +55,8 @@ class CollectionPointCueTests(unittest.TestCase):
         enemy.collection_point = Vec3(enemy.pos.x - 700.0, 0.0, enemy.pos.z + 400.0)
         bare = next(e for e in self.stations if e.owner == 0 and e.id != self.station.id)
         self.assertIsNone(bare.collection_point)
-        cues = primitive_batch.collection_point_cues(self.state, 0)
+        cues = primitive_batch.collection_point_cues(
+            self.state, 0, {self.station.id, bare.id, enemy.id, -999})
         self.assertEqual(len(cues), 1, f'expected one owned cue, got {len(cues)}')
         centres = {(round(c['centre'][0], 3), round(c['centre'][1], 3), round(c['centre'][2], 3))
                    for c in cues}
@@ -69,7 +68,7 @@ class CollectionPointCueTests(unittest.TestCase):
         self.addCleanup(directory.cleanup)
         session = LiveSession(self.state, self.manager.ds, directory=directory.name, local_player=0)
         self.addCleanup(session.close)
-        session.publish(self.state, visible_ids=set(self.state.entities))
+        session.publish(self.state, selection={self.station.id}, visible_ids=set(self.state.entities))
         with ring.Ring.open(session.paths['markers']) as reader:
             records = marker_codec.decode(reader.latest()[1])
         where = (round(self.point.x, 3), round(self.point.y, 3), round(self.point.z, 3))
@@ -82,7 +81,7 @@ class CollectionPointCueTests(unittest.TestCase):
     def test_the_minimap_draws_the_diamond_and_its_tether(self):
         hud = HUD(1280, 800, self.state)
         self.addCleanup(hud.close)
-        hud._minimap(set(), 0)
+        hud._minimap({self.station.id}, 0)
         rect = hud.minimap_rect
         half = max(1.0, getattr(self.state.map_info, 'bounds', 26000.0)) / 2.0
 
@@ -97,6 +96,54 @@ class CollectionPointCueTests(unittest.TestCase):
                     (self.station.pos.z + self.point.z) / 2.0)
         painted = tuple(hud.overlay.get_at(middle))[:3]
         self.assertGreater(sum(painted), 0, 'the tether to the station was not drawn')
+
+
+    def test_published_marker_follows_selection_without_clearing_saved_point(self):
+        from game.net.replay import state_checksum
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        session = LiveSession(self.state, self.manager.ds, directory=directory.name, local_player=0)
+        self.addCleanup(session.close)
+        other = next(e for e in self.stations if e.owner == 0 and e.id != self.station.id)
+        other.collection_point = Vec3(self.point.x + 500, 0, self.point.z + 500)
+        ship = next(e for e in self.state.entities.values() if e.owner == 0 and e.is_ship)
+        before = state_checksum(self.state)
+        for selection, expected in [({self.station.id}, [self.point]),
+                                    ({other.id}, [other.collection_point]),
+                                    ({ship.id}, []), (set(), []),
+                                    ({self.station.id, other.id}, [self.point, other.collection_point]),
+                                    ({self.station.id}, [self.point])]:
+            with self.subTest(selection=selection):
+                session.publish(self.state, selection=selection, visible_ids=set(self.state.entities))
+                with ring.Ring.open(session.paths['markers']) as reader:
+                    records = marker_codec.decode(reader.latest()[1])
+                diamonds = [r for r in records if r['kind'] == marker_codec.CIRCLE
+                            and r['segments'] == 4]
+                self.assertEqual(sorted(tuple(round(v, 3) for v in r['centre']) for r in diamonds),
+                                 sorted((round(p.x, 3), round(p.y, 3), round(p.z, 3)) for p in expected))
+                self.assertEqual(state_checksum(self.state), before)
+
+    def test_minimap_hides_point_when_station_is_deselected_and_restores_it(self):
+        import pygame
+        hud = HUD(1280, 800, self.state)
+        self.addCleanup(hud.close)
+        other = next(e for e in self.stations if e.owner == 0 and e.id != self.station.id)
+        # Compare the complete minimap with the same scene without this one point, so a station
+        # icon or fog pixel cannot masquerade as the collection cue.
+        for selection, visible in [({self.station.id}, True), ({other.id}, False),
+                                   (set(), False), ({self.station.id}, True)]:
+            with self.subTest(selection=selection):
+                hud.overlay.fill((0, 0, 0, 0))
+                hud._minimap(selection, 0)
+                actual = pygame.image.tobytes(hud.overlay.subsurface(hud.minimap_rect), 'RGBA')
+                self.station.collection_point = None
+                try:
+                    hud.overlay.fill((0, 0, 0, 0))
+                    hud._minimap(selection, 0)
+                    control = pygame.image.tobytes(hud.overlay.subsurface(hud.minimap_rect), 'RGBA')
+                finally:
+                    self.station.collection_point = self.point
+                self.assertEqual(actual != control, visible)
 
 
 if __name__ == '__main__':
