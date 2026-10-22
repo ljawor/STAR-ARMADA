@@ -1,1 +1,0 @@
-export-model shared:construction_scaffold: ok - 3104 triangles, runtime sha256 1643a7e19731cb6d... matches the approved bytes

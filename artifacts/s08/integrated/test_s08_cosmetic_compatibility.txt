@@ -1,8 +1,0 @@
-test_gameplay_changing_mod_is_still_incompatible (test_s08_cosmetic_compatibility.CosmeticCompatibilityTests.test_gameplay_changing_mod_is_still_incompatible) ... ok
-test_legacy_and_current_save_replay_continuation_across_visual_selections (test_s08_cosmetic_compatibility.CosmeticCompatibilityTests.test_legacy_and_current_save_replay_continuation_across_visual_selections) ... ok
-test_two_live_production_lan_peers_different_real_visual_payloads (test_s08_cosmetic_compatibility.CosmeticCompatibilityTests.test_two_live_production_lan_peers_different_real_visual_payloads) ... ok
-
-----------------------------------------------------------------------
-Ran 3 tests in 61.612s
-
-OK

@@ -1,6 +1,0 @@
-test_publication_preflights_every_destination_without_partial_writes (test_s07_registration.RegistrationTests.test_publication_preflights_every_destination_without_partial_writes) ... ok
-
-----------------------------------------------------------------------
-Ran 1 test in 0.759s
-
-OK

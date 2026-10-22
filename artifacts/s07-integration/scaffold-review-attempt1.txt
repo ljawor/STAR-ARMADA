@@ -1,8 +1,0 @@
-pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
-imperial-0.1 {'close': {'changed_pixels_gt3': 30782}, 'tactical': {'changed_pixels_gt3': 6086}}
-imperial-0.5 {'close': {'changed_pixels_gt3': 38258}, 'tactical': {'changed_pixels_gt3': 7806}}
-imperial-0.9 {'close': {'changed_pixels_gt3': 45249}, 'tactical': {'changed_pixels_gt3': 9080}}
-rebel-0.5 {'close': {'changed_pixels_gt3': 38169}, 'tactical': {'changed_pixels_gt3': 7618}}
-confederacy-0.5 {'close': {'changed_pixels_gt3': 38325}, 'tactical': {'changed_pixels_gt3': 7734}}
-syndicate-0.5 {'close': {'changed_pixels_gt3': 38446}, 'tactical': {'changed_pixels_gt3': 7702}}
-{"captures": 6, "ablations": {"accent": {"changed_pixels_gt3": 959}, "dark": {"changed_pixels_gt3": 5668}, "cool": {"changed_pixels_gt3": 1201}}, "protected_files_preserved": true}

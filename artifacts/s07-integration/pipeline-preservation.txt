@@ -1,4 +1,0 @@
-{
-  "protected_inputs": 327,
-  "changed": []
-}

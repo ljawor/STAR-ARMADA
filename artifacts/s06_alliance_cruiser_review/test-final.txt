@@ -1,9 +1,0 @@
-test_corruption_is_rejected_by_production_loader (test_alliance_blender_cruiser.LibertyGeometry.test_corruption_is_rejected_by_production_loader) ... ok
-test_each_recessed_emitter_has_five_clear_aft_rays (test_alliance_blender_cruiser.LibertyGeometry.test_each_recessed_emitter_has_five_clear_aft_rays) ... ok
-test_evaluated_mesh_contract (test_alliance_blender_cruiser.LibertyGeometry.test_evaluated_mesh_contract) ... ok
-test_source_is_blend_authoritative_and_export_only (test_alliance_blender_cruiser.LibertyGeometry.test_source_is_blend_authoritative_and_export_only) ... ok
-
-----------------------------------------------------------------------
-Ran 4 tests in 0.185s
-
-OK

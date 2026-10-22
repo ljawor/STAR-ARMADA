@@ -1,1 +1,0 @@
-(version 1)(allow default)(deny file-write* (subpath "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA"))(deny file-write* (subpath "/Users/lukaszjawor/Library/Application Support/STAR ARMADA"))(deny file-write* (subpath "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s09/artifacts/s09/suite-run1/protected-canary"))

@@ -1,8 +1,0 @@
-test_cli_rejects_stale_report_and_approval_corruption_without_writing (test_model_coverage_reconciliation.CoverageReconciliation.test_cli_rejects_stale_report_and_approval_corruption_without_writing)
-Exercise real --check on a disposable copy, never mutate approved inputs. ... ok
-test_every_inventory_row_is_accounted_for_without_inventing_approval (test_model_coverage_reconciliation.CoverageReconciliation.test_every_inventory_row_is_accounted_for_without_inventing_approval) ... ok
-
-----------------------------------------------------------------------
-Ran 2 tests in 0.248s
-
-OK

@@ -1,9 +1,0 @@
-pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
-Traceback (most recent call last):
-  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/artifacts/s07-runtime-final/native-matrix.py", line 102, in <module>
-    if __name__=='__main__': main()
-                             ^^^^^^
-  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/artifacts/s07-runtime-final/native-matrix.py", line 70, in main
-    assert row['metrics']['owner_changed_pixels_gt3']>0,(key,'owner paint invisible')
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: ('0-rebel-rebel_frigate', 'owner paint invisible')

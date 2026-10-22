@@ -1,7 +1,0 @@
-pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
-diagnostic cached 15.99 distance 10657555.762285713 eye (4322489.203177148, 8730158.589800267, 4322489.203177148) size ShipSize(shape='imperial:supercapital', scale=1703.6700977240243, length=320601.75000000006, radius=184816.82955110172, stern=-136605.37944580548, half_width=65506.11525748874) skip set() visible [(1, 15.990000000000004)]
-Traceback (most recent call last):
-  File "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s07-integration/artifacts/s07-runtime-acceptance/lod-native-probe.py", line 56, in <module>
-    assert np.any(image!=empty),(mode,px,'blank subject')
-           ^^^^^^^^^^^^^^^^^^^^
-AssertionError: ('cached', 15.99, 'blank subject')

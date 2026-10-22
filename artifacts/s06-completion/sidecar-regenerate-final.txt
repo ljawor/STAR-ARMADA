@@ -1,8 +1,0 @@
-wrote art/manifests/pending/S06-IMPERIAL-CORVETTE.json
-wrote art/manifests/pending/S06-IMPERIAL-TIE-SQUADRON.json
-wrote art/manifests/pending/S06-IMPERIAL-TIE-BOMBER-SQUADRON.json
-wrote art/manifests/pending/S06-IMPERIAL-BATTLESHIP.json
-wrote art/manifests/pending/S06-IMPERIAL-SUPERCAPITAL.json
-wrote art/manifests/pending/S06-IMPERIAL-CRUISER.json
-wrote art/manifests/pending/S06-IMPERIAL-FRIGATE.json
-wrote art/manifests/pending/S06-IMPERIAL-CONVOY.json

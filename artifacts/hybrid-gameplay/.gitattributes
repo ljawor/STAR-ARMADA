@@ -1,2 +1,0 @@
-# Preserve raw unittest receipts, including subtest progress whitespace.
-*.log -whitespace

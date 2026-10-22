@@ -1,6 +1,0 @@
-test_rejects_unsafe_asset_identifiers_before_manifest_generation (test_s07_registration.RegistrationTests.test_rejects_unsafe_asset_identifiers_before_manifest_generation) ... ok
-
-----------------------------------------------------------------------
-Ran 1 test in 0.860s
-
-OK

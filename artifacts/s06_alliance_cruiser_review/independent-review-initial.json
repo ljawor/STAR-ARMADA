@@ -1,9 +1,0 @@
-{
-  "passed": false,
-  "review_delegation": "deleg_59c457d0",
-  "security_concerns": [],
-  "logic_errors": [{"file": "tools/diag_alliance_cruiser_review.py", "finding": "Inherited scene recipe declares AttackCommand schedule and capital selection not executed by this harness; actual harness uses no explicit commands and empty selections.", "requested_change": "Record the actual empty command schedule and selection; regenerate truthful metadata without inventing battle execution."}],
-  "suggestions": ["Keep measured repeat/feature counts as review evidence, not S09 acceptance without agreed gates.", "Refuse exporter output resolving to the input blend master.", "Require exactly four emitter centers and bind them to exported geometry to avoid vacuous ray-test success."],
-  "scope": "Read-only review; four tests passed; verified source hashes, evidence index, pixel metrics, motion-state timelines and media metadata. Did not rerun Blender or GL; parent independently did both.",
-  "disposition": "Blocked publication until narrow fixes and re-review. Original failed finding retained. Mesh and observed captures remain usable; original recipe metadata is inaccurate."
-}

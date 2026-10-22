@@ -1,2 +1,0 @@
-pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
-{"files": 87, "video": {"width": 1280, "height": 400, "r_frame_rate": "12/1", "duration": "5.000000", "nb_read_frames": "60"}, "output": "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s05/artifacts/s05_trio_generic_equivalence/policy-run"}

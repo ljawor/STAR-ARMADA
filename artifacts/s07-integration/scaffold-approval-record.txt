@@ -1,1 +1,0 @@
-{"approval": "s07-scaffold-appearance-2026-10-18", "binding": "shared:construction_scaffold", "runtime_sha256": "1643a7e19731cb6dac7bcce5e4876a0eead1337690418d7897c7b206901e3a0b", "evidence_paths": 29, "earlier_decisions_unchanged": true, "activation": false}

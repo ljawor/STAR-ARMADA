@@ -1,2 +1,0 @@
-FAIL E_PROVENANCE_MISSING: shared:construction_scaffold: no provenance record. Run build-model or export-model; a shipped asset must say which toolchain produced it.
-validate-models: FAILED - 1032/1033 checks, 1 failures, 0 warnings

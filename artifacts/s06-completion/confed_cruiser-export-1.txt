@@ -1,5 +1,0 @@
-00:00.154  blend            | Read blend: "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/art/blender/confed_cruiser.blend"
-GAME_EXPORT {"asset": "confed_cruiser", "triangles": 2688, "vertices": 1508, "bounds": [[-75.392305, -10.0, -80.31], [75.392305, 15.655, 94.61775]], "bytes": 157405}
-Blender 5.0.1 (hash a3db93c5b259 built 2025-12-16 01:51:40)
-
-Blender quit

@@ -1,5 +1,0 @@
-00:00.179  blend            | Read blend: "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/art/blender/confed_supercapital.blend"
-GAME_EXPORT {"asset": "confed_supercapital", "triangles": 3916, "vertices": 2204, "bounds": [[-147.0, -29.605, -178.825], [147.0, 49.5, 187.055725]], "bytes": 233638}
-Blender 5.0.1 (hash a3db93c5b259 built 2025-12-16 01:51:40)
-
-Blender quit

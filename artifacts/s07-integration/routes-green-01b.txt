@@ -1,6 +1,0 @@
-test_all_historical_identities_have_deterministic_current_routes (test_s07_binding_routes.BindingRouteAuditTests.test_all_historical_identities_have_deterministic_current_routes) ... ok
-
-----------------------------------------------------------------------
-Ran 1 test in 0.092s
-
-OK

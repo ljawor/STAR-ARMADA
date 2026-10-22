@@ -1,5 +1,0 @@
-00:00.171  blend            | Read blend: "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/art/blender/imperial_sensor_station.blend"
-GAME_EXPORT {"asset": "imperial_sensor_station", "triangles": 2308, "vertices": 1264, "bounds": [[-37.0, -23.0, -30.387721], [37.0, 62.355496, 30.387721]], "bytes": 128161}
-Blender 5.0.1 (hash a3db93c5b259 built 2025-12-16 01:51:40)
-
-Blender quit

@@ -1,6 +1,0 @@
-test_b6_sidecars_reproduce_from_the_real_batch_check (test_b6_sidecar_reproduction.B6SidecarReproductionTests.test_b6_sidecars_reproduce_from_the_real_batch_check) ... ok
-
-----------------------------------------------------------------------
-Ran 1 test in 0.036s
-
-OK
