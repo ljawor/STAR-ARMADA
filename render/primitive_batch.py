@@ -64,6 +64,8 @@ def selection_rings(state, selection_ids, radius_of) -> list:
             continue
         if getattr(entity, 'planet_building_slot', None) is not None:
             continue                     # surface hardware selects its planet, not itself
+        if getattr(entity, 'jump_travelling', False):
+            continue                     # no hull in the world view, so no ring around it (#162)
         if is_shielded(entity):
             continue
         hull = float(radius_of(entity))
@@ -114,6 +116,8 @@ def ownership_markers(state, local_player, visible_ids, mode='all', allies=None,
         entity = state.entities.get(entity_id)
         if entity is None or not entity.alive or entity.is_planet:
             continue
+        if getattr(entity, 'jump_travelling', False):
+            continue                     # a chevron over empty space is a marker for nothing (#162)
         relationship = mk.relation_of(local_player, entity.owner, allies)
         if not mk.shows_marker(relationship, mode):
             continue
