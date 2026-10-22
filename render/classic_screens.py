@@ -196,17 +196,15 @@ def settings(menu):
         ('Sound & display', (('Music volume', 'music_volume', 'slider'),
             ('SFX volume', 'sfx_volume', 'slider'), ('Fullscreen', 'fullscreen', 'toggle'),
             ('Autosave', 'autosave', 'toggle'), ('Ownership markers', 'markers', 'cycle_markers'),
-            ('Camera pan speed', 'pan_speed', 'slider'),
-            ('Renderer (next session)', 'renderer', 'cycle_renderer')), ()),
+            ('Camera pan speed', 'pan_speed', 'slider')), ()),
         ('Audio & presentation', (('Dynamic range', 'audio_dynamic_range', 'cycle_range'),
             ('Mono audio', 'audio_mono', 'toggle'), ('Cinematics', 'cinematics_enabled', 'toggle'),
             ('Reduced motion', 'reduced_motion', 'toggle'), ('Tutorial hints', 'tutorial_hints', 'toggle')), ()),
-        ('Readability & help', (('High contrast panels', 'high_contrast_ui', 'toggle'),
-            ('Blender model preview (next session)', 'model_preview', 'toggle'),
-            ('Enabled visual packs (saved order)', 'visual_packs', 'pack_order')),
+        # #160: the renderer, the Blender catalogue and the visual-pack order are no longer choices.
+        # The window is the one renderer, the approved catalogue is always on, and the pack list is
+        # shipped order. A row for any of them was a switch the player could not use.
+        ('Readability & help', (('High contrast panels', 'high_contrast_ui', 'toggle'),),
             ('F1: keyboard and controls help during play.',
-             'Preview is opt-in; OFF keeps stock legacy models.',
-             'Pack order: visual_packs in settings.json; later entries win.',
              'Changes apply at the next session, never during a battle.')),
         # #93: the language row sits on its own page with the rules it follows, so
         # the fallback behaviour is stated where the choice is made.
@@ -244,8 +242,6 @@ def settings(menu):
             # one: "Polski" has to be readable to someone stuck in a pack they cannot read.
             if action == 'cycle_language':
                 value = i18n.label(str(value))
-            elif action == 'pack_order':
-                value = i18n.t('{count} enabled · settings.json', count=len(value or []))
             elif action == 'toggle':
                 value = 'ON' if value else 'OFF'
             else:

@@ -1,11 +1,8 @@
 """Polish pack for STAR ARMADA (#93) — msgid (English UI string) -> translation."""
 
 PL: dict[str, str] = {
-    "Blender model preview (next session)": "Podgląd modeli Blendera (następna sesja)",
-    "{count} enabled · settings.json": "{count} włączone · settings.json",
-    "Enabled visual packs (saved order)": "Włączone pakiety graficzne (zapisana kolejność)",
-    "Preview is opt-in; OFF keeps stock legacy models.": "Podgląd wymaga włączenia; WYŁ. zachowuje dotychczasowe modele domyślne.",
-    "Pack order: visual_packs in settings.json; later entries win.": "Kolejność pakietów: visual_packs w settings.json; późniejsze wpisy mają pierwszeństwo.",
+    "CPP": "CPP",
+    "RENDERER": "RENDERER",
     "Changes apply at the next session, never during a battle.": "Zmiany obowiązują od następnej sesji, nigdy w trakcie bitwy.",
     "1-9 control groups · F fleet menu": "1-9 grupy sterowania · F menu floty",
     "ACTIONS / BUILD": "AKCJE / BUDOWA",

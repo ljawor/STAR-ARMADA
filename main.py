@@ -104,7 +104,7 @@ if SMOKE and os.environ.get("STAR_ARMADA_FORCE_DUMMY") == "1":
     pygame.quit()
     pygame.init()
 SETTINGS = load_settings()
-if "--renderer" not in sys.argv:
+if "--renderer" not in sys.argv:  # developer/diagnostic escape; the game itself has no choice
     RENDERER = str(SETTINGS.get("renderer") or "cpp")
 # Station balance (#106) is installed before the first catalogue exists: every DataStore
 # folds the overlay into its rules, so one built earlier would hand the player shipped numbers

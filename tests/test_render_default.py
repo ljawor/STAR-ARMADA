@@ -39,15 +39,18 @@ class RendererSettingTest(unittest.TestCase):
             self.assertAlmostEqual(loaded["music_volume"], 0.25)
 
             Path(path).write_text(json.dumps({"renderer": "legacy"}))
-            self.assertEqual(menus.load_settings()["renderer"], "legacy")
+            self.assertEqual(menus.load_settings()["renderer"], "cpp",
+                             "a retired renderer must not be honoured from a file")
         finally:
             menus.SETTINGS_PATH = original
 
-    def test_the_settings_screen_has_a_row_for_it(self):
+    def test_the_settings_screen_no_longer_offers_a_renderer_row(self):
+        # #160: the window is the one renderer. A row that could switch the world back to the
+        # legacy path was a choice the owner retired, so its absence is the contract now.
         source = (ROOT / "render" / "classic_screens.py").read_text()
-        self.assertIn("('Renderer (next session)', 'renderer', 'cycle_renderer')", source)
+        self.assertNotIn("'renderer', 'cycle_renderer'", source)
         menu_source = (ROOT / "render" / "menus.py").read_text()
-        self.assertIn('elif act == "cycle_renderer":', menu_source)
+        self.assertNotIn('elif act == "cycle_renderer":', menu_source)
 
 
 class FindBinaryTest(unittest.TestCase):

@@ -6,11 +6,8 @@ fall back to English here.
 """
 
 DE: dict[str, str] = {
-    "Blender model preview (next session)": "Blender-Modellvorschau (nächste Sitzung)",
-    "{count} enabled · settings.json": "{count} aktiv · settings.json",
-    "Enabled visual packs (saved order)": "Aktivierte Grafikpakete (gespeicherte Reihenfolge)",
-    "Preview is opt-in; OFF keeps stock legacy models.": "Vorschau nur bei Aktivierung; AUS behält die bisherigen Standardmodelle bei.",
-    "Pack order: visual_packs in settings.json; later entries win.": "Paketreihenfolge: visual_packs in settings.json; spätere Einträge haben Vorrang.",
+    "CPP": "CPP",
+    "RENDERER": "RENDERER",
     "Changes apply at the next session, never during a battle.": "Änderungen gelten ab der nächsten Sitzung, niemals während einer Schlacht.",
     "1-9 control groups · F fleet menu": "1-9 Kontrollgruppen · F Flottenmenü",
     "ACTIONS / BUILD": "AKTIONEN / BAU",

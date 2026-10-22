@@ -63,7 +63,6 @@ EXTRA_UI_KEYS = (
     '{outcome} — {name}',
     '{label} +{percent}%',
     '{page} · Page {n}/{total}',
-    '{count} enabled · settings.json',
     '{credits} cr · {materials} mt',
     '{credits} cr · {materials} mt · {energy} EN',
     '{credits} cr · {materials} mt · {energy} EN · {time}s',
