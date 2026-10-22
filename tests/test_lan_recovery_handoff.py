@@ -46,7 +46,8 @@ tree = ast.parse(source.read_text())
 loop = next(n for n in tree.body if isinstance(n, ast.While))
 first_line = loop.body[0].lineno
 screen_line = next(n.lineno for n in tree.body if isinstance(n, ast.Assign)
-                   and any(isinstance(t, ast.Name) and t.id == 'screen' for t in n.targets))
+                   and any(isinstance(t, ast.Name) and t.id == 'screen'
+                           for target in n.targets for t in ast.walk(target)))
 flip_line = max(n.lineno for n in ast.walk(loop)
                 if isinstance(n, ast.Call) and ast.unparse(n.func) == 'pygame.display.flip')
 started = False

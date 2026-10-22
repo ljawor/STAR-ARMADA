@@ -1,0 +1,12 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "tools/render/verify_station_transparency.py",
+    "--out",
+    "/Users/lukaszjawor/.hermes/cache/scratch/sa-transparent-imperial-alpha"
+  ],
+  "pid": 10977,
+  "seconds": 3.686,
+  "returncode": 0,
+  "timeout": false
+}

@@ -1,0 +1,12 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "tools/render/verify_embedded_main.py",
+    "--out",
+    "/Users/lukaszjawor/.hermes/cache/scratch/sa-transparent-main"
+  ],
+  "pid": 11083,
+  "seconds": 5.974,
+  "returncode": 0,
+  "timeout": false
+}

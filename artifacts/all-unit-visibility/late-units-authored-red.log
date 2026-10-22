@@ -1,0 +1,349 @@
+test_paid_colonial_outreach_built_after_startup_is_in_native_frame (test_native_late_units.LateUnitTests.test_paid_colonial_outreach_built_after_startup_is_in_native_frame) ... FAIL
+test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) ... 
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='imperial_tie_squadron') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='imperial_tie_bomber_squadron') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='imperial_corvette') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='imperial_frigate') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='imperial_cruiser') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='imperial_battleship') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='imperial_supercapital') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='imperial_colonizer') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='imperial_crew_transport') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='rebel_x_squadron') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='rebel_y_squadron') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='rebel_corvette') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='rebel_frigate') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='rebel_cruiser') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='rebel_battleship') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='rebel_supercapital') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='rebel_constructor') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='rebel_colonizer') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='rebel_crew_transport') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='confed_vulture_squadron') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='confed_bomber_squadron') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='confed_corvette') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='confed_frigate') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='confed_cruiser') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='confed_battleship') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='confed_supercapital') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='confed_constructor') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='confed_colonizer') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='confed_crew_transport') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='syndicate_raid_squadron') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='syndicate_corvette') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='syndicate_frigate') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='syndicate_cruiser') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='syndicate_constructor') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='syndicate_colonizer') ... FAIL
+  test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='syndicate_crew_transport') ... FAIL
+test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) ... FAIL
+
+======================================================================
+FAIL: test_paid_colonial_outreach_built_after_startup_is_in_native_frame (test_native_late_units.LateUnitTests.test_paid_colonial_outreach_built_after_startup_is_in_native_frame)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 34, in test_paid_colonial_outreach_built_after_startup_is_in_native_frame
+    self.assertEqual(len(rows), 1, ('Colonial Outreach Frigate completed but has no native hull record', stats))
+AssertionError: 0 != 1 : ('Colonial Outreach Frigate completed but has no native hull record', {'instances': 2, 'effects': 0, 'omitted_planets': 0, 'unknown_bindings': ['imperial:colonizer'], 'tables': Tables(bindings=('imperial:attack_satellite', 'imperial:command_station', 'imperial:constructor', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:energy_relay', 'imperial:fighter_platform', 'imperial:mining_station', 'imperial:planet_extractor', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:planet_trade_hub', 'imperial:repair_dock', 'imperial:research_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:trade_station', 'shared:construction_scaffold'), kinds=('beam', 'explosion', 'explosion_small', 'fire', 'jump_arrive', 'jump_charge', 'jump_depart', 'muzzle', 'repair', 'shield_hit'))})
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='imperial_tie_squadron')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'imperial:fighter' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='imperial_tie_bomber_squadron')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'imperial:bomber' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='imperial_corvette')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'imperial:corvette' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='imperial_frigate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'imperial:frigate' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='imperial_cruiser')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'imperial:cruiser' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='imperial_battleship')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'imperial:battleship' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='imperial_supercapital')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'imperial:supercapital' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='imperial_colonizer')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'imperial:colonizer' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='imperial_crew_transport')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'imperial:convoy' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='rebel_x_squadron')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'rebel:fighter' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='rebel_y_squadron')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'rebel:bomber' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='rebel_corvette')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'rebel:corvette' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='rebel_frigate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'rebel:frigate' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='rebel_cruiser')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'rebel:cruiser' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='rebel_battleship')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'rebel:battleship' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='rebel_supercapital')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'rebel:supercapital' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='rebel_constructor')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'rebel:constructor' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='rebel_colonizer')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'rebel:colonizer' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='rebel_crew_transport')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'rebel:convoy' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='confed_vulture_squadron')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'confederacy:fighter' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='confed_bomber_squadron')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'confederacy:bomber' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='confed_corvette')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'confederacy:corvette' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='confed_frigate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'confederacy:frigate' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='confed_cruiser')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'confederacy:cruiser' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='confed_battleship')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'confederacy:battleship' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='confed_supercapital')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'confederacy:supercapital' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='confed_constructor')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'confederacy:constructor' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='confed_colonizer')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'confederacy:colonizer' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='confed_crew_transport')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'confederacy:convoy' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='syndicate_raid_squadron')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'syndicate:fighter' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='syndicate_corvette')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'syndicate:corvette' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='syndicate_frigate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'syndicate:frigate' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='syndicate_cruiser')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'syndicate:cruiser' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='syndicate_constructor')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'syndicate:constructor' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='syndicate_colonizer')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'syndicate:colonizer' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) (ship='syndicate_crew_transport')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 46, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertIn(binding, names, 'Future unit type missing from session-long table')
+AssertionError: 'syndicate:convoy' not found in {'shared:construction_scaffold', 'imperial:energy_relay', 'imperial:attack_satellite', 'imperial:defense_platform', 'imperial:defense_satellite', 'imperial:planet_trade_hub', 'imperial:mining_station', 'imperial:sensor_station', 'imperial:shipyard', 'imperial:repair_dock', 'imperial:fighter_platform', 'imperial:planet_extractor', 'imperial:research_station', 'imperial:planet_pulsar_cannon', 'imperial:planet_shield_generator', 'imperial:constructor', 'imperial:command_station', 'imperial:trade_station'} : Future unit type missing from session-long table
+
+======================================================================
+FAIL: test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_native_late_units.py", line 47, in test_startup_tables_cover_every_data_ship_before_it_exists
+    self.assertTrue(set(f.ds.weapons).issubset(weapons), 'Future ships must retain their weapon effect bindings')
+AssertionError: False is not true : Future ships must retain their weapon effect bindings
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.220s
+
+FAILED (failures=38)
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)

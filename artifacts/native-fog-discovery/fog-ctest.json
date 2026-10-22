@@ -1,0 +1,12 @@
+{
+  "command": [
+    "ctest",
+    "--test-dir",
+    "render_cpp/build-w02",
+    "--output-on-failure"
+  ],
+  "pid": 9684,
+  "seconds": 0.338,
+  "returncode": 0,
+  "timeout": false
+}
