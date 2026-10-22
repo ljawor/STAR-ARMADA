@@ -94,6 +94,18 @@ class GhostInstanceTests(_Session):
         self.assertGreater(g, r, 'a legal site is green')
         self.assertGreater(g, b)
 
+    def test_the_preview_is_translucent_not_opaque(self):
+        # The window draws any instance below full alpha in its own depth-testing-but-not-writing
+        # view, so translucency is what makes the ghost show the site behind it instead of
+        # covering the ground the player is trying to judge.
+        for valid in (True, False):
+            with self.subTest(valid=valid):
+                self.publish(ghost=ghost(valid=valid))
+                entries, _ = self.instances()
+                entry = [r for r in entries if r['flags'] & packed.FLAG_GHOST][0]
+                self.assertLess(entry['tint'][3], 0.9, 'an opaque preview is not a preview')
+                self.assertGreater(entry['tint'][3], 0.2, 'a preview too faint to read is not a preview')
+
     def test_an_illegal_site_turns_the_preview_red(self):
         self.publish(ghost=ghost(valid=False))
         entries, _ = self.instances()

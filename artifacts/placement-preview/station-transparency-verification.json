@@ -1,0 +1,55 @@
+{
+  "contrasting_station_pixels": 73732,
+  "hardware": {
+    "empty": {
+      "blobs": 0,
+      "decode_failures": 0,
+      "dropped_instances": 0,
+      "instances_drawn": 0,
+      "meshes": 0,
+      "note": "surface hardware crosses as a full basis (FLAG_SURFACE_FRAME) that the window copies verbatim, because a building stands on the foundation the site generator chose; its mesh arrives on the mesh ring because the offline catalogue cannot name a building that is constructed during a match; role colours are the shared palette, not on the wire",
+      "ring": "/Users/lukaszjawor/.hermes/cache/scratch/sa-sprev/artifacts/station-transparency-alpha/empty/mesh.ring",
+      "unmeshed": 0
+    },
+    "early": {
+      "blobs": 1,
+      "decode_failures": 0,
+      "dropped_instances": 0,
+      "instances_drawn": 0,
+      "meshes": 1,
+      "note": "surface hardware crosses as a full basis (FLAG_SURFACE_FRAME) that the window copies verbatim, because a building stands on the foundation the site generator chose; its mesh arrives on the mesh ring because the offline catalogue cannot name a building that is constructed during a match; role colours are the shared palette, not on the wire",
+      "ring": "/Users/lukaszjawor/.hermes/cache/scratch/sa-sprev/artifacts/station-transparency-alpha/early/mesh.ring",
+      "unmeshed": 0
+    },
+    "late": {
+      "blobs": 1,
+      "decode_failures": 0,
+      "dropped_instances": 0,
+      "instances_drawn": 0,
+      "meshes": 1,
+      "note": "surface hardware crosses as a full basis (FLAG_SURFACE_FRAME) that the window copies verbatim, because a building stands on the foundation the site generator chose; its mesh arrives on the mesh ring because the offline catalogue cannot name a building that is constructed during a match; role colours are the shared palette, not on the wire",
+      "ring": "/Users/lukaszjawor/.hermes/cache/scratch/sa-sprev/artifacts/station-transparency-alpha/late/mesh.ring",
+      "unmeshed": 0
+    },
+    "solid": {
+      "blobs": 1,
+      "decode_failures": 0,
+      "dropped_instances": 0,
+      "instances_drawn": 24,
+      "meshes": 1,
+      "note": "surface hardware crosses as a full basis (FLAG_SURFACE_FRAME) that the window copies verbatim, because a building stands on the foundation the site generator chose; its mesh arrives on the mesh ring because the offline catalogue cannot name a building that is constructed during a match; role colours are the shared palette, not on the wire",
+      "ring": "/Users/lukaszjawor/.hermes/cache/scratch/sa-sprev/artifacts/station-transparency-alpha/solid/mesh.ring",
+      "unmeshed": 0
+    }
+  },
+  "early": {
+    "background_distance": 25.997020741785565,
+    "solid_distance": 96.05883469863831
+  },
+  "late": {
+    "background_distance": 71.13678366697408,
+    "solid_distance": 50.990908515524694
+  },
+  "solid_background_distance": 122.05585544042388,
+  "passed": true
+}

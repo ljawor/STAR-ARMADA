@@ -49,9 +49,11 @@ GHOST_ENTITY = 0xFFFFFFFE
 
 #: Legality colours, taken from the deleted legacy preview pass (`render/renderer.py::
 #: _draw_placement_preview`, removed with the renderer in #160) so the ghost reads the same green
-#: or red the HUD banner already reports.
-GHOST_VALID = (0.30, 0.90, 0.55, 1.0)
-GHOST_INVALID = (1.00, 0.25, 0.20, 1.0)
+#: or red the HUD banner already reports. The alpha is the translucency: the window submits any
+#: fleet instance below full alpha in its own view after the opaque world, so the preview shows
+#: the site behind it instead of covering it.
+GHOST_VALID = (0.30, 0.90, 0.55, 0.55)
+GHOST_INVALID = (1.00, 0.25, 0.20, 0.50)
 
 
 def station_binding(data_id, faction):

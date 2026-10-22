@@ -1,0 +1,29 @@
+{
+  "alpha": 0.55,
+  "ghost_pixels_covering_the_site": 235367,
+  "interior_pixels_measured": 232241,
+  "control_alpha": 0.95,
+  "faint": {
+    "median_abs_vs_base": 29.505496445502732,
+    "median_abs_vs_control": 81.7974589614524,
+    "green_over_red": 16.515038257671986,
+    "preview_instances_drawn": 25
+  },
+  "ghost": {
+    "median_abs_vs_base": 64.44085095511416,
+    "median_abs_vs_control": 46.86210445184098,
+    "green_over_red": 29.17570540946689,
+    "preview_instances_drawn": 25
+  },
+  "strong": {
+    "median_abs_vs_base": 111.30295540695514,
+    "median_abs_vs_control": 0.0,
+    "green_over_red": 45.95212301014894,
+    "preview_instances_drawn": 25
+  },
+  "measured_alpha": 0.5495867768595041,
+  "measured_alpha_with_faint": 0.2514705882352941,
+  "background_through_preview": 0.42148760330578516,
+  "preview_instances_without_ghost": 0,
+  "passed": true
+}
