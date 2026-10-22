@@ -189,7 +189,7 @@ class LiveSession:
                 fps: float = 0.0, drag_box=None, floating_texts=None, overlay_layers=()) -> dict:
         """Publish one frame. Every visibility argument is an *answer* from the game."""
         from render import emissive_batch, primitive_batch
-        from render.renderer import projectile_extents
+        from render.shapes import projectile_extents
 
         self.collector.visible_ids = visible_ids
         self.collector.effect_allow = effect_allow

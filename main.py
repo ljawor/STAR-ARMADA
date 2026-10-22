@@ -45,7 +45,7 @@ from game.core.manager import GameManager  # noqa: E402
 from game.core.state import GameState  # noqa: E402
 from game.data.store import DataStore  # noqa: E402
 from render.camera import Camera  # noqa: E402
-from render.renderer import Renderer  # noqa: E402
+from render.floating_text import floating_texts_screen  # noqa: E402
 from render.hud import HUD  # noqa: E402
 from render.input import InputController  # noqa: E402
 from render.audio import Audio  # noqa: E402
@@ -231,7 +231,6 @@ if SKIP_MENUS:
 gm = None
 state = None
 camera = None
-renderer = None
 hud = None
 audio = None
 inputc = None
@@ -338,7 +337,8 @@ def cpp_session(state, ds, local_player: int):
     # MAX_PAYLOAD, so the session composes at the size the bridge was measured at and the window
     # presents it. `--overlay-size` in the diagnostic producer is the same figure.
     session = LiveSession(state, ds, directory=CPP['directory'].name, local_player=local_player,
-                          size=CPP_HUD_SIZE, marker_mode="all", camera=camera, hud=hud)
+                          size=CPP_HUD_SIZE, marker_mode=SETTINGS.get('markers', 'all'),
+                          camera=camera, hud=hud)
     CPP["session"] = session
     if not SMOKE:
         CPP["window"] = cpp_window.spawn(
@@ -497,7 +497,7 @@ def start_game(load_path: str | None = None, mdef: dict | None = None,
                skirmish_options: dict | None = None, lan_session=None,
                replay_path: str | None = None) -> None:
     """Build the full in-game object graph (skirmish, mission, or load)."""
-    global gm, state, camera, renderer, hud, audio, inputc, paused, mission_def
+    global gm, state, camera, hud, audio, inputc, paused, mission_def
     global flash_until
     global net_session, local_player, accumulator, last_autosave
     global recording, playback, replay_notice
@@ -538,16 +538,10 @@ def start_game(load_path: str | None = None, mdef: dict | None = None,
     if _start is not None:
         camera.target = [_start.pos.x, 0.0, _start.pos.z]
     camera.zoom(0.55)                    # start close-in; wheel out for tactics
-    if renderer is not None:
-        renderer.close()
     if hud is not None:
         hud.close()
     from render.asset_selection import configure_from_settings
     configure_from_settings(SETTINGS, data_store=gm.ds)
-    renderer = Renderer(state, camera)
-    renderer.local_player = local_player
-    # Ownership-marker verbosity is view-only; Settings owns the value.
-    renderer.marker_mode = SETTINGS.get("markers", "all")
     hud = HUD(*view_size, state)
     hud.local_player = local_player
     hud.set_camera_ref(camera)
@@ -580,18 +574,18 @@ def install_recovered_manager(candidate):
     The caller ACKs only after this returns. No tick rewind, new recording or
     mixer restart is permitted. Constructors touch only a private camera.
     """
-    global gm, state, camera, renderer, hud, inputc, mission_def
+    global gm, state, camera, hud, inputc, mission_def
     global accumulator, last_autosave
     from game.net.lan import precise_checksum
     from game.net.replay_validation import validate_state, validate_mission
     if net_session is None or candidate is gm:
         raise ValueError('Recovery requires a detached LAN manager')
     old_gm, old_state = gm, state
-    old_renderer, old_hud = renderer, hud
+    old_hud = hud
     # Candidate reconstruction may replace the singleton. Live consumers must
     # retain their original catalogue even when preparation/validation fails.
     previous_store = old_gm.ds
-    prepared_renderer = prepared_hud = None
+    prepared_hud = None
     published = False
     try:
         validate_state(candidate.state.to_dict(precise=True))
@@ -618,10 +612,6 @@ def install_recovered_manager(candidate):
         prepared_input.groups = {key: {eid for eid in ids if retained(eid)}
                                  for key, ids in inputc.groups.items()}
         prepared_input.grab_mouse = inputc.grab_mouse
-        # Bind renderer last so the camera keeps its animation callback too.
-        prepared_renderer = Renderer(candidate.state, prepared_camera)
-        prepared_renderer.local_player = local_player
-        prepared_renderer.marker_mode = SETTINGS.get('markers', 'all')
         # No remaining preparation can fail after ownership transfer. Undo audio
         # if recorder transfer rejects a malformed/closed recording.
         if audio is not None:
@@ -636,9 +626,8 @@ def install_recovered_manager(candidate):
         candidate.state._net_session = net_session
         if 'cpp_reset' in globals():
             cpp_reset()
-        gm, state, camera, renderer, hud, inputc = (
-            candidate, candidate.state, prepared_camera, prepared_renderer,
-            prepared_hud, prepared_input)
+        gm, state, camera, hud, inputc = (
+            candidate, candidate.state, prepared_camera, prepared_hud, prepared_input)
         mission_def = gm.mission.mission
         accumulator, last_autosave = 0.0, state.time
         old_state._net_session = None
@@ -648,12 +637,9 @@ def install_recovered_manager(candidate):
     finally:
         if not published:
             DataStore._instance = previous_store
-            if prepared_renderer is not None:
-                prepared_renderer.close()
             if prepared_hud is not None:
                 prepared_hud.close()
     # Old resources are released only after all live references agree.
-    old_renderer.close()
     old_hud.close()
 
 
@@ -1321,7 +1307,7 @@ while running:
     view_flash = max(0.0, flash_left)
     view_drag = (inputc.drag_start, inputc.drag_cur)
     # Floating texts are projected from the *game's* camera and handed over as finished pixels.
-    view_texts = renderer.floating_texts_screen() if renderer is not None else []
+    view_texts = floating_texts_screen(state, camera, local_player)
 
     # ---- draw
     native_drawn = False
@@ -1409,8 +1395,6 @@ else:
     # still a device to release when no game was ever started.
     pygame.mixer.quit()
 save_settings(SETTINGS)
-if renderer is not None:
-    renderer.close()
 if hud is not None:
     hud.close()
 if presentation is not None:

@@ -164,7 +164,7 @@ def draw_hit(renderer, fx):
     radius = None
     if fx.get('kind') == 'shield_hit':
         # Use exactly the standing shell's tactical minimum radius.
-        from render.renderer import SHIELD_MIN_PX
+        from render.shapes import SHIELD_MIN_PX
         center = fx.get('center', fx['pos'])
         ppw = renderer._px_per_world(center)
         if ppw <= 0:
