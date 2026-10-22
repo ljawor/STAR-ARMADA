@@ -45,6 +45,7 @@ HEADER_BG = (22, 30, 46, 230)
 TXT = (214, 224, 238)
 TXT_DIM = (128, 142, 164)
 ACCENT = (86, 140, 220)
+COLLECTION = (89, 242, 204)     # render/renderer.py::_draw_collection_points (0.35, 0.95, 0.8)
 WARN = (232, 168, 76)
 BAD = (232, 92, 76)
 GOOD = (110, 200, 120)
@@ -1583,6 +1584,21 @@ class HUD:
                     _p.line(ov, col, (mx - r, my), (mx + r, my), 1)
                 else:
                     _p.rect(ov, col, (mx - 2, my - 2, 4, 4))
+        # Destinations where completed units leave for. On the map the cue is a diamond alone;
+        # here the tether to its station is a single line, which is what makes the pair legible
+        # without hunting the station panel (issue #161).
+        from game.systems.collection_points import collection_capable
+        for e in known_entities(st, local_player):
+            point = getattr(e, 'collection_point', None)
+            if point is None or not e.alive or not collection_capable(e):
+                continue
+            if e.owner != local_player:
+                continue
+            sx, sy = px(e.pos.x, e.pos.z)
+            mx, my = px(point.x, point.z)
+            _p.line(ov, tuple(int(c * .55) for c in COLLECTION) + (255,), (sx, sy), (mx, my), 1)
+            _p.polygon(ov, COLLECTION + (255,), [(mx, my - 4), (mx + 4, my), (mx, my + 4),
+                                                 (mx - 4, my)], 1)
         for eid in selection:
             e = st.known_entity(local_player, eid)
             if e is not None:
