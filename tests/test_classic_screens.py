@@ -9,6 +9,15 @@ from render.clean_classic import ACCENT
 
 SIZES = ((800, 600), (1280, 800), (1440, 900), (2400, 1400))
 
+# #160 retired the renderer, preview and pack-order rows: the window is the one renderer, the
+# approved catalogue is always on, and the pack list is shipped order. `model_preview` and
+# `visual_packs` are still read out of the settings file by `render.asset_selection`, and
+# `model_preview_explicit` is bookkeeping; no screen offers any of the four. Exclude them by
+# name rather than letting the walk quietly stop comparing them (same set as
+# test_presentation_ux.NO_ROW).
+NO_ROW = {'renderer', 'model_preview', 'visual_packs', 'model_preview_explicit'}
+
+
 
 @pytest.fixture(autouse=True)
 def isolated_user_data(tmp_path, monkeypatch):
@@ -152,7 +161,7 @@ def test_settings_classic_responsive_focus_and_slider_payload_mapping():
                         assert menu.settings[b['payload']['key']] == 1.0
                 with patch('pygame.font.SysFont', side_effect=AssertionError('uncached font')):
                     menu.render(0)
-            assert seen == set(DEFAULT_SETTINGS)
+            assert seen == set(DEFAULT_SETTINGS) - NO_ROW
 
 
 def test_briefing_family_measured_wrap_objectives_and_launch_at_all_sizes():

@@ -50,6 +50,11 @@ SKIP_EXACT = {
     'ON', 'OFF', 'left', 'right', 'center', 'top', 'bottom', 'none', 'en', 'de', 'pl', 'ru',
     # Settings validation warning, never drawn as a player-facing label.
     'Invalid visual pack preferences; using legacy models',
+    # The startup refusal of #160: printed to the console and followed by SystemExit(2) before
+    # any screen exists, so it is a developer diagnostic, not a label the player can be shown.
+    'the native renderer is missing: build it with\n'
+    '  cmake -S render_cpp -B render_cpp/build-w02 && cmake --build render_cpp/build-w02\n'
+    'there is no legacy renderer to fall back to any more (issue #160)',
     # Internal canonical handoff assertions, never presented as player-facing labels.
     'Recovery requires a detached LAN manager',
     'Recovered manager differs from the drained canonical barrier',
