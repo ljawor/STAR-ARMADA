@@ -230,14 +230,18 @@ class HybridLifecycleTests(unittest.TestCase):
                       hud=SimpleNamespace(blocked_rects=[]), sync_recovery_overlay=Mock())
         self.assertEqual(env['cpp_overlay_layers'](), [])
 
-    def test_restore_reuses_display_window_without_recreating_gl_context(self):
-        env = helpers('cpp_restore_window')
-        self.assertIn('cpp_restore_window', env)
+    def test_restore_keeps_the_gl_context_and_never_builds_a_second_window(self):
+        # The rest of the contract (only after an iconification, SDL not pygame) lives in
+        # tests/test_host_window.py; here the point is that restoring does not re-enter
+        # pygame.display.set_mode, which would throw away the menu's cached textures.
         from unittest.mock import patch
-        with patch('pygame._sdl2.video.Window') as window:
+        env = helpers('cpp_restore_window', CPP={'iconified': False})
+        self.assertIn('cpp_restore_window', env)
+        with patch('pygame.display.set_mode') as set_mode, \
+                patch('pygame._sdl2.video.Window') as window:
             env['cpp_restore_window']()
-        window.from_display_module.return_value.restore.assert_called_once()
-        window.from_display_module.return_value.show.assert_called_once()
+        set_mode.assert_not_called()
+        window.from_display_module.assert_not_called()
 
     def test_live_session_allocates_a_fresh_ring_directory(self):
         import tempfile
