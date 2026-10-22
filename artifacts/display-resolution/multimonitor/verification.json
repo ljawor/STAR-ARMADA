@@ -1,0 +1,726 @@
+{
+  "tested_head": "0e1761f",
+  "owner_feedback_verbatim": [
+    "I change the resolution to a higher one than my desktop. Now the game starts on my other screen (I have 2 of them) and I cant select any menu. I need to quit the game with ESC",
+    "Fullscreen"
+  ],
+  "rejected_candidate": "eb88936f40e16bb7697ca0ef4d277ba92e47c981",
+  "discovery": {
+    "desktop_sizes": [
+      [
+        2560,
+        1440
+      ],
+      [
+        2240,
+        1260
+      ]
+    ],
+    "saved_choice": "3840x2160",
+    "fullscreen": true,
+    "primary_lacks_saved_mode": true,
+    "secondary_offers_saved_mode": true
+  },
+  "fix": "Reject oversized and unadvertised target-display fullscreen modes before SDL; explicitly pass display=0 for every attempt. Filter selector choices against target desktop and fullscreen modes. Retain saved preference, expose actual fallback dimensions separately.",
+  "code_sha256": {
+    "render/display_settings.py": "19103e563feca29b725c06e30d716cd1205795ba06b15b80dee72e9f184477a2",
+    "render/menus.py": "3a33127509bec3fed5a4e922687ccc05f94ec17b23dce231cf95c1795bf624c6",
+    "tests/test_resolution_runtime.py": "76c74d0635c2dbbf04c28308722cc40a1fc087667040f7b73d9cd8c695806711",
+    "tests/test_resolution_menu.py": "3029a5f8a9603c84d9cbb92fef4019bf7f9a83ca4a6d79344e39cf322dbb46b5",
+    "tools/render/verify_resolution.py": "c93404a7626b76e95a43afb60e40599a894bc0211a90520dc5be1daca3b95951"
+  },
+  "regressions": {
+    "red": "2 runtime assertion failures proving secondary-only mode was sent to SDL and unsupported primary mode accepted;2 UI subtest failures proving oversized cycling.",
+    "green_unittest_count": 147,
+    "classic_screen_pytest": 6
+  },
+  "native_cases": {
+    "1280x720-fullscreen": {
+      "requested_resolution": "1280x720",
+      "requested_fullscreen": true,
+      "code_revision": "0e1761f338749ec36c70aba39bcf600a9de4c24c",
+      "window_position": [
+        0,
+        0
+      ],
+      "desktops": [
+        [
+          2560,
+          1440
+        ],
+        [
+          2240,
+          1260
+        ]
+      ],
+      "actual_size": [
+        1280,
+        720
+      ],
+      "actual_fullscreen": true,
+      "settings_text": [
+        "STAR ARMADA",
+        "Settings",
+        "Sound & display · Page 1/5",
+        "Music volume",
+        "0%",
+        "SFX volume",
+        "0%",
+        "Fullscreen",
+        "ON ›",
+        "Resolution",
+        "1280 × 720 ›",
+        "Autosave",
+        "ON ›",
+        "Ownership markers",
+        "ALL ›",
+        "Camera pan speed",
+        "100%",
+        "Current resolution: 1280 × 720 · Fullscreen",
+        "Resolution changes take effect after restarting the game.",
+        "Tab / Up / Down: focus · Enter: toggle · Left / Right: volume",
+        "Page Up / Down: pages · Esc: back",
+        "Back",
+        "Previous page",
+        "Next page"
+      ],
+      "settings.png": {
+        "size": [
+          1280,
+          720
+        ],
+        "viewport": [
+          0,
+          0,
+          1280,
+          720
+        ],
+        "sha256": "d4d5f8afe7d4f08b0518665d6292e4ec33cdbff5e0908562dfa7d16ddedbc76d"
+      },
+      "native_target": [
+        1280,
+        720
+      ],
+      "native_frames": 8,
+      "native_readback_bytes": 3686400,
+      "hud_size": [
+        1280,
+        800
+      ],
+      "camera_aspect": 1.7777777777777777,
+      "nonblack_pixels": 789852,
+      "match.png": {
+        "size": [
+          1280,
+          720
+        ],
+        "viewport": [
+          0,
+          0,
+          1280,
+          720
+        ],
+        "sha256": "003ef11e25ed908265d647d489840b8ce3e83c38ba593afbf1df9d2031d4f80c"
+      },
+      "phase": {
+        "settings_seen": true,
+        "back": true,
+        "native_frames": 8,
+        "done": true
+      },
+      "elapsed_seconds": 3.5410096250707284
+    },
+    "1280x720-windowed": {
+      "requested_resolution": "1280x720",
+      "requested_fullscreen": false,
+      "code_revision": "0e1761f338749ec36c70aba39bcf600a9de4c24c",
+      "window_position": [
+        640,
+        360
+      ],
+      "desktops": [
+        [
+          2560,
+          1440
+        ],
+        [
+          2240,
+          1260
+        ]
+      ],
+      "actual_size": [
+        1280,
+        720
+      ],
+      "actual_fullscreen": false,
+      "settings_text": [
+        "STAR ARMADA",
+        "Settings",
+        "Sound & display · Page 1/5",
+        "Music volume",
+        "0%",
+        "SFX volume",
+        "0%",
+        "Fullscreen",
+        "OFF ›",
+        "Resolution",
+        "1280 × 720 ›",
+        "Autosave",
+        "ON ›",
+        "Ownership markers",
+        "ALL ›",
+        "Camera pan speed",
+        "100%",
+        "Current resolution: 1280 × 720 · Windowed",
+        "Resolution changes take effect after restarting the game.",
+        "Tab / Up / Down: focus · Enter: toggle · Left / Right: volume",
+        "Page Up / Down: pages · Esc: back",
+        "Back",
+        "Previous page",
+        "Next page"
+      ],
+      "settings.png": {
+        "size": [
+          1280,
+          720
+        ],
+        "viewport": [
+          0,
+          0,
+          1280,
+          720
+        ],
+        "sha256": "da672cabfb56c17584c8edfcbd6d21d2acd6c4c7055ad4b778fe8ab1bf381708"
+      },
+      "native_target": [
+        1280,
+        720
+      ],
+      "native_frames": 8,
+      "native_readback_bytes": 3686400,
+      "hud_size": [
+        1280,
+        800
+      ],
+      "camera_aspect": 1.7777777777777777,
+      "nonblack_pixels": 789429,
+      "match.png": {
+        "size": [
+          1280,
+          720
+        ],
+        "viewport": [
+          0,
+          0,
+          1280,
+          720
+        ],
+        "sha256": "c4ec8be84b20f062a05a0afab8cf55d5ce7f0db8c9c2d7dd1e6f62b350254f06"
+      },
+      "phase": {
+        "settings_seen": true,
+        "back": true,
+        "native_frames": 8,
+        "done": true
+      },
+      "elapsed_seconds": 3.2028610409470275
+    },
+    "1920x1080-fullscreen": {
+      "requested_resolution": "1920x1080",
+      "requested_fullscreen": true,
+      "code_revision": "0e1761f338749ec36c70aba39bcf600a9de4c24c",
+      "window_position": [
+        0,
+        0
+      ],
+      "desktops": [
+        [
+          2560,
+          1440
+        ],
+        [
+          2240,
+          1260
+        ]
+      ],
+      "actual_size": [
+        1920,
+        1080
+      ],
+      "actual_fullscreen": true,
+      "settings_text": [
+        "STAR ARMADA",
+        "Settings",
+        "Sound & display · Page 1/5",
+        "Music volume",
+        "0%",
+        "SFX volume",
+        "0%",
+        "Fullscreen",
+        "ON ›",
+        "Resolution",
+        "1920 × 1080 ›",
+        "Autosave",
+        "ON ›",
+        "Ownership markers",
+        "ALL ›",
+        "Camera pan speed",
+        "100%",
+        "Current resolution: 1920 × 1080 · Fullscreen",
+        "Resolution changes take effect after restarting the game.",
+        "Tab / Up / Down: focus · Enter: toggle · Left / Right: volume",
+        "Page Up / Down: pages · Esc: back",
+        "Back",
+        "Previous page",
+        "Next page"
+      ],
+      "settings.png": {
+        "size": [
+          1920,
+          1080
+        ],
+        "viewport": [
+          0,
+          0,
+          1920,
+          1080
+        ],
+        "sha256": "1b40533353c59d234189e650516e18da66131fcc2591153fc1559366335dd7ce"
+      },
+      "native_target": [
+        1920,
+        1080
+      ],
+      "native_frames": 8,
+      "native_readback_bytes": 8294400,
+      "hud_size": [
+        1280,
+        800
+      ],
+      "camera_aspect": 1.7777777777777777,
+      "nonblack_pixels": 1776585,
+      "match.png": {
+        "size": [
+          1920,
+          1080
+        ],
+        "viewport": [
+          0,
+          0,
+          1920,
+          1080
+        ],
+        "sha256": "21350270221c37eed87efcfbb1b02ea531b07969199ebf1ce81c8cdd412133b5"
+      },
+      "phase": {
+        "settings_seen": true,
+        "back": true,
+        "native_frames": 8,
+        "done": true
+      },
+      "elapsed_seconds": 4.711409291950986
+    },
+    "1920x1080-windowed": {
+      "requested_resolution": "1920x1080",
+      "requested_fullscreen": false,
+      "code_revision": "0e1761f338749ec36c70aba39bcf600a9de4c24c",
+      "window_position": [
+        320,
+        180
+      ],
+      "desktops": [
+        [
+          2560,
+          1440
+        ],
+        [
+          2240,
+          1260
+        ]
+      ],
+      "actual_size": [
+        1920,
+        1080
+      ],
+      "actual_fullscreen": false,
+      "settings_text": [
+        "STAR ARMADA",
+        "Settings",
+        "Sound & display · Page 1/5",
+        "Music volume",
+        "0%",
+        "SFX volume",
+        "0%",
+        "Fullscreen",
+        "OFF ›",
+        "Resolution",
+        "1920 × 1080 ›",
+        "Autosave",
+        "ON ›",
+        "Ownership markers",
+        "ALL ›",
+        "Camera pan speed",
+        "100%",
+        "Current resolution: 1920 × 1080 · Windowed",
+        "Resolution changes take effect after restarting the game.",
+        "Tab / Up / Down: focus · Enter: toggle · Left / Right: volume",
+        "Page Up / Down: pages · Esc: back",
+        "Back",
+        "Previous page",
+        "Next page"
+      ],
+      "settings.png": {
+        "size": [
+          1920,
+          1080
+        ],
+        "viewport": [
+          0,
+          0,
+          1920,
+          1080
+        ],
+        "sha256": "0f9ac38737ee2ea25287ce64444726e8cd9cb19d0e2fa09f272afb6ad8cc9552"
+      },
+      "native_target": [
+        1920,
+        1080
+      ],
+      "native_frames": 8,
+      "native_readback_bytes": 8294400,
+      "hud_size": [
+        1280,
+        800
+      ],
+      "camera_aspect": 1.7777777777777777,
+      "nonblack_pixels": 1777085,
+      "match.png": {
+        "size": [
+          1920,
+          1080
+        ],
+        "viewport": [
+          0,
+          0,
+          1920,
+          1080
+        ],
+        "sha256": "5dfdc25ca0dfd4644d2d51d2b563827de27fe8c27b73438b5b12e687347c18c2"
+      },
+      "phase": {
+        "settings_seen": true,
+        "back": true,
+        "native_frames": 8,
+        "done": true
+      },
+      "elapsed_seconds": 3.0510672089876607
+    },
+    "3840x2160-fullscreen": {
+      "requested_resolution": "3840x2160",
+      "requested_fullscreen": true,
+      "code_revision": "0e1761f338749ec36c70aba39bcf600a9de4c24c",
+      "window_position": [
+        0,
+        0
+      ],
+      "desktops": [
+        [
+          2560,
+          1440
+        ],
+        [
+          2240,
+          1260
+        ]
+      ],
+      "actual_size": [
+        2560,
+        1440
+      ],
+      "actual_fullscreen": true,
+      "settings_text": [
+        "STAR ARMADA",
+        "Settings",
+        "Sound & display · Page 1/5",
+        "Music volume",
+        "0%",
+        "SFX volume",
+        "0%",
+        "Fullscreen",
+        "ON ›",
+        "Resolution",
+        "3840 × 2160 ›",
+        "Autosave",
+        "ON ›",
+        "Ownership markers",
+        "ALL ›",
+        "Camera pan speed",
+        "100%",
+        "Current resolution: 2560 × 1440 · Fullscreen",
+        "Resolution changes take effect after restarting the game.",
+        "Tab / Up / Down: focus · Enter: toggle · Left / Right: volume",
+        "Page Up / Down: pages · Esc: back",
+        "Back",
+        "Previous page",
+        "Next page"
+      ],
+      "settings.png": {
+        "size": [
+          2560,
+          1440
+        ],
+        "viewport": [
+          0,
+          0,
+          2560,
+          1440
+        ],
+        "sha256": "2edb48350c35e8d0191cb1ce8d741875878d004062a924c858e7905b18f0e8a2"
+      },
+      "native_target": [
+        2560,
+        1440
+      ],
+      "native_frames": 8,
+      "native_readback_bytes": 14745600,
+      "hud_size": [
+        1280,
+        800
+      ],
+      "camera_aspect": 1.7777777777777777,
+      "nonblack_pixels": 3159445,
+      "match.png": {
+        "size": [
+          2560,
+          1440
+        ],
+        "viewport": [
+          0,
+          0,
+          2560,
+          1440
+        ],
+        "sha256": "f100e1ac32a299f5cc1da468984d9c09a479ef974ee164cce9b12efa6165d71f"
+      },
+      "phase": {
+        "settings_seen": true,
+        "back": true,
+        "native_frames": 8,
+        "done": true
+      },
+      "elapsed_seconds": 4.3654236670117825
+    },
+    "3840x2160-windowed": {
+      "requested_resolution": "3840x2160",
+      "requested_fullscreen": false,
+      "code_revision": "0e1761f338749ec36c70aba39bcf600a9de4c24c",
+      "window_position": [
+        560,
+        270
+      ],
+      "desktops": [
+        [
+          2560,
+          1440
+        ],
+        [
+          2240,
+          1260
+        ]
+      ],
+      "actual_size": [
+        1440,
+        900
+      ],
+      "actual_fullscreen": false,
+      "settings_text": [
+        "STAR ARMADA",
+        "Settings",
+        "Sound & display · Page 1/5",
+        "Music volume",
+        "0%",
+        "SFX volume",
+        "0%",
+        "Fullscreen",
+        "OFF ›",
+        "Resolution",
+        "3840 × 2160 ›",
+        "Autosave",
+        "ON ›",
+        "Ownership markers",
+        "ALL ›",
+        "Camera pan speed",
+        "100%",
+        "Current resolution: 1440 × 900 · Windowed",
+        "Resolution changes take effect after restarting the game.",
+        "Tab / Up / Down: focus · Enter: toggle · Left / Right: volume",
+        "Page Up / Down: pages · Esc: back",
+        "Back",
+        "Previous page",
+        "Next page"
+      ],
+      "settings.png": {
+        "size": [
+          1440,
+          900
+        ],
+        "viewport": [
+          0,
+          0,
+          1440,
+          900
+        ],
+        "sha256": "62e40a5ccd06e38ec9c5d7c76ce6345c0e5cbb22fe956976e0f6e9b0cf38fb52"
+      },
+      "native_target": [
+        1440,
+        900
+      ],
+      "native_frames": 8,
+      "native_readback_bytes": 5184000,
+      "hud_size": [
+        1280,
+        800
+      ],
+      "camera_aspect": 1.6,
+      "nonblack_pixels": 1134717,
+      "match.png": {
+        "size": [
+          1440,
+          900
+        ],
+        "viewport": [
+          0,
+          0,
+          1440,
+          900
+        ],
+        "sha256": "3c9240d9c2b20af5699c6f0caa780b29d201bc034de8020a64dcfb70fdaebee3"
+      },
+      "phase": {
+        "settings_seen": true,
+        "back": true,
+        "native_frames": 8,
+        "done": true
+      },
+      "elapsed_seconds": 3.2379953749477863
+    }
+  },
+  "deadline_receipts": [
+    {
+      "case": "1280x720-windowed",
+      "command": [
+        "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/.venv/bin/python",
+        "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/render/verify_resolution.py",
+        "--out",
+        "/Users/lukaszjawor/.hermes/cache/scratch/resolution-native/1280x720-windowed",
+        "--resolution",
+        "1280x720"
+      ],
+      "returncode": 0,
+      "timed_out": false,
+      "terminated": true,
+      "elapsed": 3.3881121249869466
+    },
+    {
+      "case": "1920x1080-windowed",
+      "command": [
+        "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/.venv/bin/python",
+        "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/render/verify_resolution.py",
+        "--out",
+        "/Users/lukaszjawor/.hermes/cache/scratch/resolution-native/1920x1080-windowed",
+        "--resolution",
+        "1920x1080"
+      ],
+      "returncode": 0,
+      "timed_out": false,
+      "terminated": true,
+      "elapsed": 3.2232237498974428
+    },
+    {
+      "case": "1280x720-fullscreen",
+      "command": [
+        "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/.venv/bin/python",
+        "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/render/verify_resolution.py",
+        "--out",
+        "/Users/lukaszjawor/.hermes/cache/scratch/resolution-native/1280x720-fullscreen",
+        "--resolution",
+        "1280x720",
+        "--fullscreen"
+      ],
+      "returncode": 0,
+      "timed_out": false,
+      "terminated": true,
+      "elapsed": 3.7330272500403225
+    },
+    {
+      "case": "1920x1080-fullscreen",
+      "command": [
+        "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/.venv/bin/python",
+        "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/render/verify_resolution.py",
+        "--out",
+        "/Users/lukaszjawor/.hermes/cache/scratch/resolution-native/1920x1080-fullscreen",
+        "--resolution",
+        "1920x1080",
+        "--fullscreen"
+      ],
+      "returncode": 0,
+      "timed_out": false,
+      "terminated": true,
+      "elapsed": 5.031362000037916
+    },
+    {
+      "case": "3840x2160-windowed",
+      "command": [
+        "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/.venv/bin/python",
+        "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/render/verify_resolution.py",
+        "--out",
+        "/Users/lukaszjawor/.hermes/cache/scratch/resolution-native/3840x2160-windowed",
+        "--resolution",
+        "3840x2160",
+        "--expect-size",
+        "1440x900"
+      ],
+      "returncode": 0,
+      "timed_out": false,
+      "terminated": true,
+      "elapsed": 3.4709004580508918
+    },
+    {
+      "case": "3840x2160-fullscreen",
+      "command": [
+        "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/.venv/bin/python",
+        "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/render/verify_resolution.py",
+        "--out",
+        "/Users/lukaszjawor/.hermes/cache/scratch/resolution-native/3840x2160-fullscreen",
+        "--resolution",
+        "3840x2160",
+        "--fullscreen",
+        "--expect-size",
+        "2560x1440"
+      ],
+      "returncode": 0,
+      "timed_out": false,
+      "terminated": true,
+      "elapsed": 4.55247837502975
+    }
+  ],
+  "physical_click_limitation": {
+    "result": "NOT VERIFIED through desktop automation; native automated cases inject SDL events into actual menu hitboxes.",
+    "reason": "cua-driver AX capture of pygame process timed out after20 seconds; no active window for background click; bounded physical-input harness exited after90 seconds without receiving a click. Not a product assertion failure, not a pass.",
+    "receipt": {
+      "pid": 66353,
+      "code": 1,
+      "timed_out": false,
+      "terminated": true
+    }
+  },
+  "other_initial_failures": [
+    "Existing CPU fullscreen-toggle fixture needed list_modes=-1 supplied alongside mocked set_mode; without that fixture input it queried an uninitialized real SDL display and correctly fell back. Final strict expectations retain selected dims, output aspect, effective fullscreen flag and exact target display on set_mode."
+  ],
+  "not_proven": [
+    "Owner physical-pointer retest pending",
+    "Windows/frozen-package acceptance",
+    "Other monitor selection UI (startup explicitly targets primary display0)"
+  ]
+}
