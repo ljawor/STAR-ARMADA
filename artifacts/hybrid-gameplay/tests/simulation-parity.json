@@ -1,0 +1,12 @@
+{
+  "initial_state_sha256": {
+    "baseline": "155530ab2a6d73552eb75667834e9638d4942a41ae16037290be6f649948e9d7",
+    "candidate": "155530ab2a6d73552eb75667834e9638d4942a41ae16037290be6f649948e9d7",
+    "equal": true
+  },
+  "state_sha256": {
+    "baseline": "afbbe1b1940506cc53909efd8c2e3fbf432fbb0d2da42b4aea9271854417a230",
+    "candidate": "afbbe1b1940506cc53909efd8c2e3fbf432fbb0d2da42b4aea9271854417a230",
+    "equal": true
+  }
+}

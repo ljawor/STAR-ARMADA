@@ -150,9 +150,11 @@ def toggle_fullscreen() -> None:
         W, H = (1280, 800) if SMOKE else (1440, 900)
         pygame.display.set_mode((W, H), pygame.DOUBLEBUF | pygame.OPENGL)
     if camera is not None and hud is not None:
-        camera.width, camera.height = W, H
+        view_size = (CPP_HUD_SIZE if globals().get('RENDERER') == 'cpp'
+                     and not globals().get('CPP', {}).get('fell_back') else (W, H))
+        camera.width, camera.height = view_size
         camera._proj = camera._view = None
-        hud.resize(W, H)
+        hud.resize(*view_size)
     flash("fullscreen ON" if FULLSCREEN else "fullscreen OFF")
 
 # macOS (skill): pump events so the window system is up before any grabbing
@@ -266,6 +268,60 @@ def flash(msg: str) -> None:
 
 
 # --------------------------------------------------------------------------- cpp window
+def cpp_restore_window():
+    """Show the existing menu/GL window again without destroying its cached textures."""
+    try:
+        from pygame._sdl2.video import Window
+        window = Window.from_display_module()
+        window.restore()
+        window.show()
+        window.focus()
+    except (pygame.error, RuntimeError):
+        pass
+
+
+def cpp_reset():
+    """Release native match ownership before its camera/HUD/controller are replaced."""
+    if 'CPP' not in globals():
+        return  # CPU helper probes can load functions without the SDL bootstrap.
+    resources = {name: CPP.get(name) for name in ('input', 'window', 'session')}
+    CPP.update(session=None, window=None, input=None, seen=set(), seen_tick=-1,
+               selection=frozenset(), quit=False, failed=False, fell_back=False,
+               bridge_mark=(0, 0, 0))
+    CPP.pop('camera', None)
+    CPP.pop('view_mark', None)
+    controller = globals().get('inputc')
+    if controller is not None:
+        controller.keys.clear()
+        controller.dragging = False
+        controller.drag_start = controller.drag_cur = controller.right_drag = None
+        controller.remote_pointer = None
+    for name in ('input', 'window', 'session'):
+        resource = resources[name]
+        if resource is None:
+            continue
+        try:
+            if name == 'window':
+                resource.terminate()
+                try:
+                    resource.wait(timeout=1.0)
+                except Exception:
+                    resource.kill()
+                    resource.wait(timeout=1.0)
+            else:
+                resource.close()
+        except Exception:
+            pass  # best effort: one broken owner must not leak all the others
+    if resources['window'] is not None and 'cpp_restore_window' in globals():
+        cpp_restore_window()
+    directory = CPP.pop('directory', None)
+    if directory is not None:
+        try:
+            directory.cleanup()
+        except OSError:
+            pass
+
+
 def cpp_session(state, ds, local_player: int):
     """The live producer for this match, started on first use.
 
@@ -276,17 +332,20 @@ def cpp_session(state, ds, local_player: int):
         return CPP["session"]
     from render_bridge.live import LiveSession
     from render_bridge import cpp_window
+    import tempfile
+    os.makedirs(CPP_DIR, exist_ok=True)
+    CPP['directory'] = tempfile.TemporaryDirectory(prefix='match-', dir=CPP_DIR)
     # The HUD surface size, not the window size: the overlay codec caps a full surface at
     # MAX_PAYLOAD, so the session composes at the size the bridge was measured at and the window
     # presents it. `--overlay-size` in the diagnostic producer is the same figure.
-    session = LiveSession(state, ds, directory=CPP_DIR, local_player=local_player,
-                          size=CPP_HUD_SIZE, marker_mode="all", camera=camera)
+    session = LiveSession(state, ds, directory=CPP['directory'].name, local_player=local_player,
+                          size=CPP_HUD_SIZE, marker_mode="all", camera=camera, hud=hud)
     CPP["session"] = session
     if not SMOKE:
         CPP["window"] = cpp_window.spawn(
             session.paths, root=ROOT, snapshot=os.environ.get("STAR_ARMADA_CPP_SNAPSHOT"),
             log=flash_print)
-        if CPP["window"] is not None:
+        if CPP["window"] is not None and not getattr(CPP["window"], "embedded", False):
             # The window is the display now. Left in front, this process's own (no longer drawn)
             # surface looks like a game that started and then froze.
             try:
@@ -323,11 +382,53 @@ def cpp_seen_ids(state, local_player: int) -> set:
     answer is recomputed every 6 ticks instead of every tick: visibility changes on the scale of a
     sensor sweep, not a frame. The window receives the answer; it never derives it.
     """
-    if state.tick - CPP["seen_tick"] >= 6:
+    if CPP["seen_tick"] < 0 or state.tick - CPP["seen_tick"] >= 6:
         CPP["seen"] = {entity.id for entity in state.entities.values()
                        if entity.alive and state.can_see(local_player, entity.id)}
         CPP["seen_tick"] = state.tick
     return CPP["seen"]
+
+
+def cpp_poll_input():
+    """Sample one native batch before simulation and held-input updates."""
+    if RENDERER != 'cpp' or CPP.get('failed'):
+        return
+    try:
+        session = cpp_session(state, gm.ds, local_player)
+        if CPP['input'] is None and session.paths['input'].exists():
+            from render.input_bridge import RingInput
+            CPP['input'] = RingInput(session.paths['input'], _GameEventDispatcher(), CPP_HUD_SIZE)
+        bridge = CPP['input']
+        if bridge is not None:
+            bridge.poll(limit=1)
+            # Dispatch may have left/rebuilt the match and closed this bridge.
+            if CPP['input'] is bridge and bridge.quit_requested:
+                bridge.quit_requested = False
+                CPP['quit'] = True
+    except Exception as exc:
+        cpp_reset()
+        CPP['failed'] = repr(exc)
+        flash_print(f'cpp input failed ({exc!r}); falling back to the legacy renderer')
+
+
+def cpp_overlay_layers():
+    """Compose application-only overlays in the native HUD's input coordinates."""
+    if globals().get('cinematic') is not None:
+        return [cinematic.compose(*CPP_HUD_SIZE)]
+    layers = []
+    overlay = globals().get('presentation')
+    if overlay is not None:
+        surface = overlay.draw(state, inputc, width=CPP_HUD_SIZE[0],
+                                   height=CPP_HUD_SIZE[1], local_player=local_player,
+                                   blocked_rects=[rect for rect in hud.blocked_rects
+                                                  if rect not in overlay.panel_rects])
+        if overlay.panel_rects:
+            layers.append(surface)
+    sync_recovery_overlay()
+    if globals().get('recovery_overlay') is not None:
+        layers.append(recovery_overlay.draw(net_session.recovery_snapshot,
+                      width=CPP_HUD_SIZE[0], height=CPP_HUD_SIZE[1]))
+    return layers
 
 
 def cpp_publish(state, ds, local_player: int, selection, dt: float, *, paused: bool = False,
@@ -344,56 +445,23 @@ def cpp_publish(state, ds, local_player: int, selection, dt: float, *, paused: b
         session = cpp_session(state, ds, local_player)
         if session is None:
             return False
-        if CPP["input"] is None and session.paths["input"].exists():
-            from render.input_bridge import RingInput
-
-            class _Traced:
-                """Pass-through that writes down what the window sent, when asked to."""
-
-                def __init__(self, inner):
-                    self.inner = inner
-
-                def __getattr__(self, name):
-                    return getattr(self.inner, name)
-
-                def handle_event(self, ev):
-                    if os.environ.get("STAR_ARMADA_CPP_TRACE"):
-                        print(f"CPP_EVENT {ev.type} {getattr(ev, 'pos', None)} "
-                              f"btn={getattr(ev, 'button', None)} key={getattr(ev, 'key', None)}",
-                              flush=True)
-                    result = self.inner.handle_event(ev)
-                    if os.environ.get("STAR_ARMADA_CPP_TRACE"):
-                        print(f"CPP_STATE sel={sorted(self.inner.selection)} "
-                              f"drag={self.inner.drag_start} dragging={self.inner.dragging}",
-                              flush=True)
-                    return result
-            # The window's events enter the same controller the keyboard does. One batch per frame:
-            # draining a backlog would deliver a press and its release before the game updated, and
-            # a held key would be lost.
-            target = inputc
-            if os.environ.get("STAR_ARMADA_CPP_TRACE"):
-                target = _Traced(inputc)
-            CPP["input"] = RingInput(session.paths["input"], target, CPP_HUD_SIZE)
-        if CPP["input"] is not None:
-            CPP["input"].poll(limit=1)
-            if CPP["input"].quit_requested:
-                CPP["input"].quit_requested = False
-                CPP["quit"] = True
         CPP["camera"] = session.camera
+        layers = cpp_overlay_layers()
         session.publish(state, selection=selection, visible_ids=cpp_seen_ids(state, local_player),
                         dt=dt, paused=paused, message=message, flash_left=flash_left, fps=fps,
-                        drag_box=drag_box, floating_texts=floating_texts)
+                        drag_box=drag_box, floating_texts=floating_texts, overlay_layers=layers)
+        window = CPP.get("window")
+        if window is not None and getattr(window, "embedded", False):
+            window.present()
+        # HUD composition rebuilds its hitboxes; add the displayed application panels afterwards.
+        if globals().get('presentation') is not None and globals().get('cinematic') is None:
+            hud.blocked_rects.extend(presentation.panel_rects)
     except Exception as exc:
         # A fault in the producer must not end the match: drop the window and let the legacy path
         # draw from the next frame on.
-        CPP["session"] = None
+        cpp_reset()
         CPP["failed"] = repr(exc)
         flash_print(f"cpp producer failed ({exc!r}); falling back to the legacy renderer")
-        if CPP.get("window") is not None:
-            try:
-                CPP["window"].terminate()
-            except Exception:
-                pass
         return False
     return True
 
@@ -414,6 +482,8 @@ def start_game(load_path: str | None = None, mdef: dict | None = None,
     candidate_gm = (candidate.gm if candidate is not None else
                     GameManager.start_skirmish(lan_session.launch['map_def'], mods=MODS or None)
                     if lan_session is not None else make_game(load_path, mdef, skirmish_options))
+    if 'cpp_reset' in globals():
+        cpp_reset()
     if 'finish_recording' in globals():
         finish_recording()
     playback = candidate
@@ -434,7 +504,8 @@ def start_game(load_path: str | None = None, mdef: dict | None = None,
         recording = begin_recording(gm)
     accumulator = 0.0
     last_autosave = state.time
-    camera = Camera(W, H)
+    view_size = CPP_HUD_SIZE if globals().get('RENDERER') == 'cpp' else (W, H)
+    camera = Camera(*view_size)
     _start = next((e for e in state.entities.values()
                    if e.owner == local_player and e.is_station), None)
     if _start is not None:
@@ -450,7 +521,7 @@ def start_game(load_path: str | None = None, mdef: dict | None = None,
     renderer.local_player = local_player
     # Ownership-marker verbosity is view-only; Settings owns the value.
     renderer.marker_mode = SETTINGS.get("markers", "all")
-    hud = HUD(W, H, state)
+    hud = HUD(*view_size, state)
     hud.local_player = local_player
     hud.set_camera_ref(camera)
     if audio is not None:
@@ -469,7 +540,7 @@ def start_game(load_path: str | None = None, mdef: dict | None = None,
     from render.presentation import PresentationOverlay
     if globals().get('presentation') is not None:
         presentation.cleanup()
-    presentation = PresentationOverlay(W, H, SETTINGS, local_player)
+    presentation = PresentationOverlay(*view_size, SETTINGS, local_player)
     globals()['cinematic'] = None
     globals()['campaign_outcome_seen'] = False
     if mdef is not None and load_path is None:
@@ -502,7 +573,8 @@ def install_recovered_manager(candidate):
                 or precise_checksum(candidate) != precise_checksum(old_gm)):
             raise ValueError('Recovered manager differs from the drained canonical barrier')
         DataStore._instance = candidate.ds
-        prepared_camera = Camera(W, H)
+        view_size = CPP_HUD_SIZE if globals().get('RENDERER') == 'cpp' else (W, H)
+        prepared_camera = Camera(*view_size)
         for name in ('distance', 'yaw', 'pitch', 'fov', 'near', 'far', 'zoom_limits'):
             setattr(prepared_camera, name, getattr(camera, name))
         prepared_camera.target = list(camera.target)
@@ -510,7 +582,7 @@ def install_recovered_manager(candidate):
             entity = candidate.state.known_entity(local_player, eid)
             return entity is not None and entity.alive
         prepared_camera.follow_id = camera.follow_id if retained(camera.follow_id) else None
-        prepared_hud = HUD(W, H, candidate.state)
+        prepared_hud = HUD(*view_size, candidate.state)
         prepared_hud.local_player = local_player
         prepared_hud.set_camera_ref(prepared_camera)
         prepared_input = InputController(candidate.state, prepared_camera, prepared_hud, _AppGlue())
@@ -535,6 +607,8 @@ def install_recovered_manager(candidate):
                 audio.rebind_state(old_state, old_gm.ds)
             raise
         candidate.state._net_session = net_session
+        if 'cpp_reset' in globals():
+            cpp_reset()
         gm, state, camera, renderer, hud, inputc = (
             candidate, candidate.state, prepared_camera, prepared_renderer,
             prepared_hud, prepared_input)
@@ -661,11 +735,23 @@ def draw_campaign_presentation(dt_frame):
     global cinematic, accumulator
     accumulator = 0.0
     cinematic.update(dt_frame)
-    camera.apply(W, H)
-    renderer.placement = None
-    renderer.draw(0.0, set())
-    cinematic.draw_gl(W, H)
-    pygame.display.flip()
+    native_drawn = False
+    if globals().get('RENDERER') == 'cpp' and not CPP.get('failed'):
+        camera.apply(*CPP_HUD_SIZE)
+        published = cpp_publish(state, gm.ds, local_player, set(), 0.0,
+                                paused=True, fps=fps)
+        native_drawn = published and (SMOKE or cpp_drawing())
+        if published and not native_drawn:
+            cpp_reset()
+            CPP['failed'] = 'native window is not drawing'
+            hud.resize(W, H)
+            CPP['fell_back'] = True
+    if not native_drawn:
+        camera.apply(W, H)
+        renderer.placement = None
+        renderer.draw(0.0, set())
+        cinematic.draw_gl(W, H)
+        pygame.display.flip()
     if cinematic.finished:
         outcome = cinematic.outcome
         cinematic = None
@@ -741,6 +827,8 @@ def leave_game(reason='', screen=None, *, phase='termination', exception=None):
     """
     global net_session, mode, paused, accumulator, audio
     global presentation, recovery_overlay
+    if 'cpp_reset' in globals():
+        cpp_reset()
     if globals().get('recovery_overlay') is not None:
         recovery_overlay.cleanup()
         recovery_overlay = None
@@ -798,7 +886,8 @@ def sync_recovery_overlay():
         accumulator = 0.0
         if globals().get('recovery_overlay') is None:
             from render.recovery_overlay import RecoveryOverlay
-            recovery_overlay = RecoveryOverlay(W, H)
+            view_size = CPP_HUD_SIZE if globals().get('RENDERER') == 'cpp' and not CPP.get('fell_back') else (W, H)
+            recovery_overlay = RecoveryOverlay(*view_size)
             inputc.keys.clear()
             inputc.dragging = False
             inputc.drag_start = inputc.drag_cur = inputc.right_drag = None
@@ -839,6 +928,62 @@ def handle_recovery_event(ev):
     elif ev.type == pygame.MOUSEWHEEL:
         camera.zoom(0.88 ** ev.y)
     return True
+
+
+class _GameEventDispatcher:
+    """RingInput adapter; never deliver an old batch into a replacement match."""
+    def __init__(self):
+        self.controller = inputc
+
+    def __getattr__(self, name):
+        return getattr(self.controller, name)
+
+    def handle_event(self, ev):
+        if self.controller is inputc:
+            dispatch_game_event(ev)
+
+
+def dispatch_game_event(ev):
+    """Application routes shared by SDL and native-window events, in modal order."""
+    global running, _input_help_frame
+    native = globals().get('CPP', {}).get('window')
+    if native is not None and getattr(native, 'embedded', False):
+        from render_bridge.embedded import map_pointer_event
+        ev = map_pointer_event(ev, (W, H), CPP_HUD_SIZE)
+    if mode != 'game' or not running:
+        return
+    if ev.type == pygame.QUIT:
+        running = False
+        return
+    if handle_recovery_event(ev):
+        return
+    if cinematic is not None:
+        cinematic.handle_event(ev)
+        return
+    if handle_presentation_input(ev):
+        _input_help_frame = globals().get('_input_help_frame', False) or presentation.help_visible
+        return
+    if globals().get('_input_help_frame', False):
+        return
+    if ev.type == pygame.KEYDOWN:
+        if playback is not None and ev.key != pygame.K_F11:
+            handle_game_input(ev)
+            return
+        if handle_network_event(ev):
+            return
+        if ev.key == pygame.K_F5:
+            write_save(os.path.join(SAVES_DIR, 'quicksave.json'))
+            flash('quicksaved')
+            return
+        if ev.key == pygame.K_F9:
+            rebuild(os.path.join(SAVES_DIR, 'quicksave.json'))
+            return
+        if ev.key == pygame.K_F11 and not SMOKE:
+            toggle_fullscreen()
+            return
+        if ev.key == pygame.K_ESCAPE and escape_from_decided_match():
+            return
+    handle_game_input(ev)
 
 
 def handle_game_input(ev):
@@ -952,6 +1097,8 @@ def escape_from_decided_match() -> bool:
         # a decided LAN match still owns a live session: release it properly
         leave_game('Match finished.')
     else:
+        if 'cpp_reset' in globals():
+            cpp_reset()
         mode = "menu"       # campaign result -> back to the previous screen
         if mission_def is not None:
             # campaign result (cinematics disabled): the campaign screen is the
@@ -1099,55 +1246,17 @@ while running:
     poll_network()
     if mode != 'game':
         continue
-    if CPP.get("quit"):
-        # The native window was closed: leave the match the way Escape would, not by dying.
-        CPP["quit"] = False
-        leave_game()
-        continue
     sync_campaign_outcome()
-    presentation_frame = cinematic is not None
-    help_frame = presentation is not None and presentation.help_visible
+    _input_help_frame = presentation is not None and presentation.help_visible
     for ev in pygame.event.get():
-        if ev.type == pygame.QUIT:
-            running = False
+        dispatch_game_event(ev)
+        if mode != 'game' or not running:
             break
-        if handle_recovery_event(ev):
-            if mode != 'game':
-                break
-            continue
-        if presentation_frame:
-            cinematic.handle_event(ev)
-            continue
-        if handle_presentation_input(ev):
-            help_frame = help_frame or presentation.help_visible
-            continue
-        if help_frame:
-            continue
-        if ev.type == pygame.KEYDOWN:
-            if playback is not None and ev.key != pygame.K_F11:
-                handle_game_input(ev)
-                if mode != 'game':
-                    break
-                continue
-            if handle_network_event(ev):
-                if mode != 'game':
-                    break
-                continue
-            if ev.key == pygame.K_F5:
-                write_save(os.path.join(SAVES_DIR, "quicksave.json"))
-                flash("quicksaved")
-                continue
-            if ev.key == pygame.K_F9:
-                rebuild(os.path.join(SAVES_DIR, "quicksave.json"))
-                continue
-            if ev.key == pygame.K_F11 and not SMOKE:
-                toggle_fullscreen()
-                continue
-            if ev.key == pygame.K_ESCAPE and escape_from_decided_match():
-                continue
-        handle_game_input(ev)
-        if mode != 'game':
-            break
+    if mode == 'game' and running:
+        cpp_poll_input()
+    if CPP.get('quit'):
+        leave_game()
+    presentation_frame = cinematic is not None
 
     if mode != 'game' or not running:
         continue
@@ -1200,6 +1309,7 @@ while running:
     view_texts = renderer.floating_texts_screen() if renderer is not None else []
 
     # ---- draw
+    native_drawn = False
     # In `cpp` mode the producer runs whether or not a window is up (the smoke run has no window and
     # still exercises every ring); the legacy path draws only when the window is not doing it.
     if RENDERER == "cpp" and not CPP.get("failed") and (SMOKE or CPP["session"] is None
@@ -1224,12 +1334,6 @@ while running:
             # SDL_ttf. The loop tail (autosave, smoke exit, fps counter) runs as in legacy mode.
             if not SMOKE:
                 pygame.event.pump()
-            frames += 1
-            fps_time += dt_frame
-            if fps_time >= 1.0:
-                fps = frames / fps_time
-                frames = 0
-                fps_time = 0.0
             if CPP["input"] is not None:
                 bridge = CPP["input"]
                 marker = (bridge.batches_read, bridge.events_delivered, bridge.unmapped)
@@ -1241,35 +1345,34 @@ while running:
             if current != CPP["selection"]:
                 CPP["selection"] = current
                 cpp_trace(f"CPP_SELECTION {sorted(current)}")
-            if SMOKE and state.tick >= SMOKE_TICKS:
-                print("SMOKE_CPP_OK " + summary())
-                if CPP["session"] is not None:
-                    print("SMOKE_CPP_COST " + json.dumps(CPP["session"].report(), default=str))
-                raise SystemExit(0)
-            continue
+            native_drawn = True
 
-    if RENDERER == "cpp" and not CPP.get("fell_back"):
-        # The window is gone (killed, crashed, or it never started). Say it once and draw the match
-        # here: a player who launched a skirmish must never be left looking at a frozen menu.
-        CPP["fell_back"] = True
-        flash_print("cpp window is not drawing; falling back to the legacy renderer")
-        try:
-            pygame.display.set_mode((W, H))
-        except Exception:
-            pass
+    if not native_drawn:
+        if RENDERER == "cpp" and not CPP.get("fell_back"):
+            # The window is gone (killed, crashed, or it never started). Say it once and draw the match
+            # here: a player who launched a skirmish must never be left looking at a frozen menu.
+            cpp_reset()
+            CPP["failed"] = "native window is not drawing"
+            CPP["fell_back"] = True
+            flash_print("cpp window is not drawing; falling back to the legacy renderer")
+            try:
+                pygame.display.set_mode((W, H), _flags)
+                hud.resize(W, H)
+            except Exception:
+                pass
 
-    camera.apply(W, H)
-    renderer.placement = hud.placement  # render-side preview only; never sim state
-    renderer.draw(dt_frame, inputc.selection)
-    hud.set_floating_texts(view_texts)
-    # live box-select rectangle while left-dragging
-    hud.set_drag_box(*view_drag)
-    hud.render(inputc.selection, None, local_player, view_paused, view_msg,
-               view_flash, fps)
-    hud.draw_gl()
-    draw_presentation_overlay()
-    draw_recovery_overlay()
-    pygame.display.flip()
+        camera.apply(W, H)
+        renderer.placement = hud.placement  # render-side preview only; never sim state
+        renderer.draw(dt_frame, inputc.selection)
+        hud.set_floating_texts(view_texts)
+        # live box-select rectangle while left-dragging
+        hud.set_drag_box(*view_drag)
+        hud.render(inputc.selection, None, local_player, view_paused, view_msg,
+                   view_flash, fps)
+        hud.draw_gl()
+        draw_presentation_overlay()
+        draw_recovery_overlay()
+        pygame.display.flip()
 
     frames += 1
     fps_time += dt_frame
@@ -1287,11 +1390,17 @@ while running:
 
     # smoke-mode exit: capture proof and stop
     if SMOKE and state.tick >= SMOKE_TICKS:
-        shot = os.path.join(SAVES_DIR, "smoke_screenshot.png")
-        take_screenshot(shot)
-        print("SMOKE_OK " + summary() + " shot=" + shot)
+        if native_drawn:
+            print("SMOKE_CPP_OK " + summary())
+            if CPP['session'] is not None:
+                print("SMOKE_CPP_COST " + json.dumps(CPP['session'].report(), default=str))
+        else:
+            shot = os.path.join(SAVES_DIR, "smoke_screenshot.png")
+            take_screenshot(shot)
+            print("SMOKE_OK " + summary() + " shot=" + shot)
         running = False
 
+cpp_reset()
 if 'finish_recording' in globals():
     finish_recording()
 menu.close()

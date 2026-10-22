@@ -1,0 +1,19 @@
+{
+  "events_delivered": 23,
+  "batches_read": 22,
+  "batches_skipped": 0,
+  "unmapped": 0,
+  "quit_requested": false,
+  "window": [
+    1280,
+    800
+  ],
+  "surface": [
+    1280,
+    800
+  ],
+  "camera_yaw": 5.0,
+  "camera_pitch": 37.0,
+  "native_frames": 140,
+  "backend": "Metal"
+}

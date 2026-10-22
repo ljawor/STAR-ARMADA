@@ -1,0 +1,40 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+{
+  "early": {
+    "blobs": 1,
+    "decode_failures": 0,
+    "dropped_instances": 0,
+    "instances_drawn": 0,
+    "meshes": 1,
+    "note": "surface hardware crosses as a full basis (FLAG_SURFACE_FRAME) that the window copies verbatim, because a building stands on the foundation the site generator chose; its mesh arrives on the mesh ring because the offline catalogue cannot name a building that is constructed during a match; role colours are the shared palette, not on the wire",
+    "ring": "/Users/lukaszjawor/.hermes/cache/scratch/sa-station-native-red-corrected/early/hardware.ring",
+    "unmeshed": 0
+  },
+  "half": {
+    "blobs": 1,
+    "decode_failures": 0,
+    "dropped_instances": 0,
+    "instances_drawn": 0,
+    "meshes": 1,
+    "note": "surface hardware crosses as a full basis (FLAG_SURFACE_FRAME) that the window copies verbatim, because a building stands on the foundation the site generator chose; its mesh arrives on the mesh ring because the offline catalogue cannot name a building that is constructed during a match; role colours are the shared palette, not on the wire",
+    "ring": "/Users/lukaszjawor/.hermes/cache/scratch/sa-station-native-red-corrected/half/hardware.ring",
+    "unmeshed": 0
+  },
+  "complete": {
+    "blobs": 1,
+    "decode_failures": 0,
+    "dropped_instances": 0,
+    "instances_drawn": 0,
+    "meshes": 1,
+    "note": "surface hardware crosses as a full basis (FLAG_SURFACE_FRAME) that the window copies verbatim, because a building stands on the foundation the site generator chose; its mesh arrives on the mesh ring because the offline catalogue cannot name a building that is constructed during a match; role colours are the shared palette, not on the wire",
+    "ring": "/Users/lukaszjawor/.hermes/cache/scratch/sa-station-native-red-corrected/complete/hardware.ring",
+    "unmeshed": 0
+  }
+}
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/render/verify_station_lifecycle.py", line 68, in <module>
+    main()
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/render/verify_station_lifecycle.py", line 63, in main
+    assert report['instances_drawn'] > 0, (label, 'paid station/site invisible', report)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('early', 'paid station/site invisible', {'blobs': 1, 'decode_failures': 0, 'dropped_instances': 0, 'instances_drawn': 0, 'meshes': 1, 'note': 'surface hardware crosses as a full basis (FLAG_SURFACE_FRAME) that the window copies verbatim, because a building stands on the foundation the site generator chose; its mesh arrives on the mesh ring because the offline catalogue cannot name a building that is constructed during a match; role colours are the shared palette, not on the wire', 'ring': '/Users/lukaszjawor/.hermes/cache/scratch/sa-station-native-red-corrected/early/hardware.ring', 'unmeshed': 0})

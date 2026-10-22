@@ -32,6 +32,7 @@ with tempfile.TemporaryDirectory(dir=EVIDENCE.parent) as directory:
     menus.SAVES_DIR = str(Path(directory) / 'saves')
     menus.SETTINGS_PATH = str(Path(directory) / 'settings.json')
     menus.CAMPAIGN_PATH = str(Path(directory) / 'campaign.json')
+    menus.BALANCE_PATH = str(Path(directory) / 'balance.json')
     try:
         for width, height in ((640, 480), (1920, 1080)):
             pygame.display.set_mode((width, height), pygame.DOUBLEBUF | pygame.OPENGL)
@@ -86,7 +87,8 @@ class RecoveryUITests(unittest.TestCase):
         self.addCleanup(self.directory.cleanup)
         for key, value in dict(USER_DIR=self.directory.name, SAVES_DIR=self.directory.name,
                                SETTINGS_PATH=self.directory.name + '/settings.json',
-                               CAMPAIGN_PATH=self.directory.name + '/campaign.json').items():
+                               CAMPAIGN_PATH=self.directory.name + '/campaign.json',
+                               BALANCE_PATH=self.directory.name + '/balance.json').items():
             scope = patch.object(menus, key, value)
             scope.start()
             self.addCleanup(scope.stop)
@@ -98,6 +100,11 @@ class RecoveryUITests(unittest.TestCase):
                 font.cache_clear()
                 pygame.font.quit()
         self.addCleanup(close_owned_font)
+
+    def test_draw_returns_surface_for_native_hud_composition(self):
+        from render.recovery_overlay import RecoveryOverlay
+        overlay = RecoveryOverlay(1280, 800)
+        self.assertIs(overlay.draw({'phase': 'waiting', 'missing': [1]}), overlay.surface)
 
     def test_real_gl_small_and_large_capture_matches_measured_surface(self):
         import json
@@ -126,13 +133,31 @@ class RecoveryUITests(unittest.TestCase):
         tree = ast.parse((Path(__file__).resolve().parents[1] / 'main.py').read_text())
         loop = next(n for n in tree.body if isinstance(n, ast.While))
         event_loop = next(n for n in ast.walk(loop) if isinstance(n, ast.For)
-                          and ast.unparse(n.iter) == 'pygame.event.get()'
-                          and any(isinstance(x, ast.Call) and isinstance(x.func, ast.Name)
-                                  and x.func.id == 'handle_game_input' for x in ast.walk(n)))
+                          and ast.unparse(n.iter) == 'pygame.event.get()')
         calls = [n.func.id for n in ast.walk(event_loop)
                  if isinstance(n, ast.Call) and isinstance(n.func, ast.Name)]
-        self.assertIn('handle_recovery_event', calls, 'main event loop bypasses recovery gate')
-        self.assertLess(calls.index('handle_recovery_event'), calls.index('handle_presentation_input'))
+        self.assertIn('dispatch_game_event', calls, 'main bypasses shared game event routing')
+        # Follow the production dispatcher and execute it: moving routing out of the loop
+        # must not weaken the recovery-before-help/world-order contract.
+        dispatch = next(n for n in tree.body if isinstance(n, ast.FunctionDef)
+                        and n.name == 'dispatch_game_event')
+        import pygame
+        from types import SimpleNamespace
+        order = []
+        namespace = dict(pygame=pygame, state=object(), gm=object(), mode='game', running=True,
+                         inputc=SimpleNamespace(), playback=None, cinematic=None,
+                         net_session=None, HumanCommandRejected=RuntimeError,
+                         handle_recovery_event=lambda event: order.append('recovery') or True,
+                         handle_presentation_input=lambda event: order.append('presentation') or False,
+                         handle_game_input=lambda event: order.append('input'))
+        exec(compile(ast.Module(body=[dispatch], type_ignores=[]), 'main.py', 'exec'), namespace)
+        event = pygame.event.Event(pygame.MOUSEMOTION, pos=(20, 20), rel=(0, 0), buttons=(0, 0, 0))
+        namespace['dispatch_game_event'](event)
+        self.assertEqual(order, ['recovery'])
+        order.clear()
+        namespace['handle_recovery_event'] = lambda event: order.append('recovery') or False
+        namespace['dispatch_game_event'](event)
+        self.assertEqual(order, ['recovery', 'presentation', 'input'])
         all_calls = [n.func.id for n in ast.walk(loop)
                      if isinstance(n, ast.Call) and isinstance(n.func, ast.Name)]
         self.assertIn('draw_recovery_overlay', all_calls, 'main never displays abort/progress')

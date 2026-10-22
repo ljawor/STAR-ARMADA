@@ -30,7 +30,7 @@ from render_bridge import fogmap as fog_codec
 from render_bridge import markers as marker_codec
 from render_bridge import overlay as overlay_codec
 from render_bridge import planets as planet_codec
-from render_bridge import collect, packed, ring
+from render_bridge import collect, packed, ring, hardware
 
 
 class LiveSession:
@@ -44,7 +44,7 @@ class LiveSession:
     def __init__(self, state, ds, *, directory, local_player: int = 0, size=(1280, 800),
                  marker_mode: str = 'all', planet_texture: int = 256,
                  overlay_keyframe: float = 2.0, max_instances=None, max_effects=None,
-                 fps_probe=None, camera=None):
+                 fps_probe=None, camera=None, hud=None):
         self.state, self.ds = state, ds
         # The game's own camera, if it was handed in: the window looks where the player looks, and
         # only then can a click mean anything.
@@ -67,6 +67,7 @@ class LiveSession:
             'planets': self.directory / 'planets.ring',
             'input': self.directory / 'input.ring',
             'camera': self.directory / 'camera.ring',
+            'hardware': self.directory / 'hardware.ring',
         }
 
         # The session tables are written once, beside the ring: frame records index them.
@@ -85,6 +86,11 @@ class LiveSession:
                                                   max_effects or packed.MAX_EFFECTS))
 
         self._frames = ring.Ring.create(self.paths['frame'], slots=8, slot_bytes=1 << 20)
+        self._hardware = ring.Ring.create(self.paths['hardware'], slots=8,
+            slot_bytes=hardware.HEADER.size + hardware.MAX_NAME
+            + len(hardware.ROLES) * hardware.BLOCK.size
+            + hardware.MAX_TRIANGLES * hardware.ROW.size + ring.SLOT_OVERHEAD + 8)
+        self._mesh_publisher = hardware.MeshPublisher()
         self._emit = ring.Ring.create(
             self.paths['emit'], slots=8,
             slot_bytes=emissive_codec.HEADER.size
@@ -98,7 +104,13 @@ class LiveSession:
         import pygame
         pygame.font.init()
         from render.hud import HUD
-        self.hud = HUD(self.size[0], self.size[1], state)
+        # Runtime shares the controller's HUD: buttons, scroll state, placement and mission
+        # progress must be the same objects on screen and in the event handlers.
+        self._owns_hud = hud is None
+        self.hud = hud if hud is not None else HUD(self.size[0], self.size[1], state)
+        self.hud.local_player = self.local_player
+        if camera is not None:
+            self.hud.set_camera_ref(camera)
         self._overlay = ring.Ring.create(
             self.paths['overlay'], slots=4,
             slot_bytes=(overlay_codec.HEADER_BYTES
@@ -107,6 +119,7 @@ class LiveSession:
         self._overlay_published = 0
         self._overlay_last_full = float('-inf')
         self._overlay_keyframes = 0
+        self._overlay_had_layers = False
 
         import math
         from render import fog
@@ -136,7 +149,7 @@ class LiveSession:
         self.frames = 0
         self.perf = {'frame_ms': [], 'overlay_ms': [], 'emit_ms': [], 'fog_ms': []}
         self.counts = {'instances': 0, 'primitives': 0, 'markers': 0, 'overlay_bytes': 0,
-                       'planet_blobs': 0, 'fog_uploads': 0}
+                       'planet_blobs': 0, 'fog_uploads': 0, 'hardware_blobs': 0}
 
     # ------------------------------------------------------------------ helpers
     def radius_of(self, entity):
@@ -173,7 +186,7 @@ class LiveSession:
     def publish(self, state, *, selection=(), visible_ids=None, effect_allow=None,
                 shot_allow=None, dt: float = 1.0 / 30.0,
                 paused: bool = False, message: str = "", flash_left: float = 0.0,
-                fps: float = 0.0, drag_box=None, floating_texts=None) -> dict:
+                fps: float = 0.0, drag_box=None, floating_texts=None, overlay_layers=()) -> dict:
         """Publish one frame. Every visibility argument is an *answer* from the game."""
         from render import emissive_batch, primitive_batch
         from render.renderer import projectile_extents
@@ -185,6 +198,8 @@ class LiveSession:
         started = time.perf_counter()
         frame, counts = self.collector.collect_into(
             state, self.buffer, tick=state.tick, frame_index=self.frames)
+        self.counts['hardware_blobs'] += self._mesh_publisher.publish_frame(
+            frame, self.tables, self._hardware)
         self._frames.publish(bytes(frame))
         frame_ms = (time.perf_counter() - started) * 1000.0
 
@@ -221,16 +236,25 @@ class LiveSession:
         self.hud.compose(set(selection), None, self.local_player, paused, message,
                          flash_left, fps)
         dirty = self.hud.recorder.take_dirty()
+        layers = tuple(overlay_layers)
+        surface = self.hud.overlay
+        if layers:
+            # Do not contaminate the HUD recorder's own previous-frame image.
+            surface = surface.copy()
+            for layer in layers:
+                surface.blit(layer, (0, 0))
         keyframe = (self._overlay_published == 0
+                    or bool(layers) or self._overlay_had_layers
                     or (self.overlay_keyframe > 0
                         and time.monotonic() - self._overlay_last_full >= self.overlay_keyframe))
         if keyframe:
             self._overlay_last_full = time.monotonic()
             self._overlay_keyframes += 1
-            payload = overlay_codec.encode_surface_full(self.hud.overlay)
+            payload = overlay_codec.encode_surface_full(surface)
         else:
             payload = overlay_codec.encode_surface(self.hud.overlay, dirty)
         self._overlay.publish(payload)
+        self._overlay_had_layers = bool(layers)
         self._overlay_published += 1
         overlay_ms = (time.perf_counter() - started) * 1000.0
 
@@ -268,7 +292,7 @@ class LiveSession:
     # ------------------------------------------------------------------ lifecycle
     def close(self):
         for handle in (self._frames, self._emit, self._markers, self._overlay, self._fog,
-                       self._planet_ring, self._camera_ring):
+                       self._planet_ring, self._camera_ring, self._hardware):
             try:
                 handle.close()
             except Exception:

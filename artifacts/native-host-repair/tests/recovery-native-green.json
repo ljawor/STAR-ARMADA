@@ -1,0 +1,15 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "unittest",
+    "test_lan_recovery_ui.RecoveryUITests.test_draw_returns_surface_for_native_hud_composition",
+    "test_lan_recovery_handoff.HandoffTests.test_launched_full_application_reconnect_and_paid_replay",
+    "test_lan_recovery_handoff.HandoffTests.test_launched_joined_application_reconnect_and_paid_replay",
+    "-v"
+  ],
+  "pid": 7882,
+  "seconds": 14.08,
+  "returncode": 0,
+  "timeout": false
+}

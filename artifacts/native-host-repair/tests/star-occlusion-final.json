@@ -1,0 +1,12 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "tools/render/verify_star_occlusion.py",
+    "--out",
+    "/Users/lukaszjawor/.hermes/cache/scratch/sa-star-occlusion-final"
+  ],
+  "pid": 7938,
+  "seconds": 1.774,
+  "returncode": 0,
+  "timeout": false
+}

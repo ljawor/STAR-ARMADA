@@ -1,0 +1,74 @@
+{
+  "initial": {
+    "yaw": 45.0,
+    "pitch": 55.0
+  },
+  "camera": {
+    "yaw": 45.0,
+    "pitch": 55.0
+  },
+  "shared_hud": true,
+  "bridge": {
+    "events_delivered": 4,
+    "batches_read": 3,
+    "batches_skipped": 0,
+    "unmapped": 0,
+    "quit_requested": false,
+    "window": [
+      1280,
+      800
+    ],
+    "surface": [
+      1280,
+      800
+    ]
+  },
+  "cpp_failed": false,
+  "mode": "game",
+  "tick": 130,
+  "orbit": false,
+  "backend": "Metal",
+  "native_camera": {
+    "distance": 1650.0,
+    "fov": 55.0,
+    "pitch": 55.0,
+    "target": [
+      -11000.0,
+      0.0,
+      800.0
+    ],
+    "yaw": 45.0
+  },
+  "camera_ring": {
+    "decode_failures": 0,
+    "distance_scale": 1.0,
+    "poses": 2238,
+    "ring": "/Users/lukaszjawor/.hermes/cache/scratch/sa-hybrid-checks/committed-before/user-8ueh3wk2/cpp-window/match-v8zsiton/camera.ring",
+    "torn": 0
+  },
+  "hud": {
+    "applied_sequence": 117,
+    "bytes_applied": 31518912,
+    "decode_failures": 0,
+    "frames_applied": 93,
+    "full_frames": 3,
+    "hud_only": false,
+    "mode": "composited over the scene",
+    "patches_applied": 1449,
+    "ring": "/Users/lukaszjawor/.hermes/cache/scratch/sa-hybrid-checks/committed-before/user-8ueh3wk2/cpp-window/match-v8zsiton/hud.ring",
+    "screenshot_sequence": 99,
+    "skipped_patches_before_keyframe": 369,
+    "texture": [
+      1280,
+      800
+    ]
+  },
+  "adopted_frames": 116,
+  "code_sha256": {
+    "main.py": "82198ff8c5938769a9908100c8ad4576d8c2534b8d9606fbf9f888d3626512d0",
+    "render/input.py": "9db93a53acbd4f2752d010578bc6f4ae9b5d0e91755f3e89947c47f3da8c53bc",
+    "render/input_bridge.py": "2270f2eed7ff3bc92c5b375704e1fe3000c2717e09954e57c044b71e563d5c5c",
+    "render_bridge/live.py": "93aae0e9a1cf6dd7d4619d0918ec0260875dd6d9f6b3e9cd2a23e9cd390edb79",
+    "render_cpp/src/viewer.cpp": "d2c5a61d6d6fffbbf74bbeed809f343c5306de2f1433f51c23c105d95e2bd2ee"
+  }
+}

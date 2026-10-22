@@ -116,6 +116,7 @@ def spawn(paths: dict, *, root: str, snapshot: str | None, log=print):
         '--planet-ring', str(paths['planets']),
         '--input-ring', str(paths['input']),
         '--camera-ring', str(paths['camera']),
+        '--mesh-ring', str(paths['hardware']),
         '--seconds', '0',
     ]
     # A frozen bundle carries the shaders beside the binary; the build-time default points into the
@@ -123,6 +124,17 @@ def spawn(paths: dict, *, root: str, snapshot: str | None, log=print):
     for extra in (os.path.join(os.path.dirname(binary), 'shaders'),):
         if os.path.isdir(extra):
             argv += ['--shaders', extra]
+    if os.environ.get('STAR_ARMADA_CPP_EXTERNAL') != '1':
+        from .embedded import EmbeddedWindow
+        try:
+            window = EmbeddedWindow(argv, root=root)
+        except Exception as exc:
+            log(f'cpp embedded renderer unavailable ({exc}); retaining this window')
+            return None
+        atexit.register(stop, window)
+        log('cpp renderer: in-process bgfx target, original pygame window retained')
+        return window
+    # Separate-window mode is diagnostic-only, never the normal game launch.
     player = shutil.which(binary) or binary
     process = subprocess.Popen([player] + argv[1:], stdin=subprocess.DEVNULL,
                                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

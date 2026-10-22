@@ -38,6 +38,11 @@ class RingInput:
         self.batches_skipped = 0
         self.unmapped = 0
         self.quit_requested = False
+        # The pointer delta a MOUSEMOTION carries. The game's right-drag does
+        # `dx, dy = ev.rel; camera.rotate(...)`, which is how the camera is orbited out of top-down
+        # into the 3D view; the ring carries absolute positions only, so the delta is computed here
+        # rather than published (a dropped frame must not change what a drag means).
+        self._last_pos = None
 
     # -- size ----------------------------------------------------------------
     def _learn_window(self, event):
@@ -85,6 +90,20 @@ class RingInput:
                     # controller is not told to quit by an input event.
                     self.quit_requested = True
                     continue
+                pygame_event.remote = True
+                if pygame_event.type == pygame.MOUSEMOTION:
+                    # Absolute positions cross the bridge; the delta the game rotates with is the
+                    # change since the previous event. The first motion of a drag has no previous
+                    # point, so it reports no movement rather than a jump from the last click.
+                    last = self._last_pos
+                    pygame_event.rel = ((0, 0) if last is None
+                                        else (event.x - last[0], event.y - last[1]))
+                    self._last_pos = (event.x, event.y)
+                elif pygame_event.type in (pygame.WINDOWFOCUSLOST, pygame.WINDOWRESIZED):
+                    # The previous sample belongs to another focus/coordinate space.
+                    self._last_pos = None
+                elif pygame_event.type in (pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP):
+                    self._last_pos = event.pos
                 self.controller.handle_event(pygame_event)
                 delivered += 1
                 self.events_delivered += 1

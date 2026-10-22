@@ -86,6 +86,8 @@ constexpr uint16_t kFlagSelected = 1 << 0;
 constexpr uint16_t kFlagDamaged = 1 << 1;
 constexpr uint16_t kFlagDisabled = 1 << 2;
 constexpr uint16_t kFlagSurfaceFrame = 1 << 3;
+// Orbital hulls/scaffolds use the mesh channel but are not surface hardware.
+constexpr uint16_t kFlagDynamicMesh = 1 << 4;
 
 struct Instance {
   uint32_t entity_id = 0;

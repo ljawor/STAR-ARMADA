@@ -37,6 +37,7 @@ class InputController:
         self.dragging = False
         self.right_drag: tuple | None = None
         self.grab_mouse = False
+        self.remote_pointer = None      # native viewer pixels, already scaled to the HUD
         self.local_player = 0
         self.camera.bind_scene(state, lambda: self.local_player)
         self._pending_jump: tuple[int, ...] | None = None
@@ -50,6 +51,12 @@ class InputController:
 
     # ------------------------------------------------------------------ events
     def handle_event(self, ev) -> None:
+        if getattr(ev, 'remote', False) and hasattr(ev, 'pos'):
+            self.remote_pointer = ev.pos
+        elif not getattr(ev, 'remote', False) and ev.type in (
+                pygame.MOUSEMOTION, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP,
+                pygame.MOUSEWHEEL):
+            self.remote_pointer = None
         self.camera.refresh_scene()
         st = self.state
         self._prune_contacts()
@@ -573,7 +580,7 @@ class InputController:
         pl = self.hud.placement
         if not pl:
             return
-        mx, my = pygame.mouse.get_pos()
+        mx, my = self.remote_pointer if self.remote_pointer is not None else pygame.mouse.get_pos()
         w = self.camera.screen_to_world(mx, my)
         if w is None:
             pl["ghost"] = None
@@ -763,7 +770,8 @@ class InputController:
             return PlayerCommand('board', self.local_player, unit_ids=ids)
         tgt = None
         if pl.get("targeted"):
-            tgt = self.camera.screen_to_world(*pygame.mouse.get_pos())
+            pointer = self.remote_pointer if self.remote_pointer is not None else pygame.mouse.get_pos()
+            tgt = self.camera.screen_to_world(*pointer)
         from render.hud import selected_ability_data
         ids = set(pl['unit_ids']) & self.selection
         rows = selected_ability_data(self.state, ids, self.local_player)

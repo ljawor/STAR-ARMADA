@@ -1,0 +1,11 @@
+{
+  "secrets": [],
+  "shell_injection": [],
+  "eval_exec": [
+    "exec(",
+    "exec(",
+    "exec(",
+    "exec("
+  ],
+  "pickle": []
+}

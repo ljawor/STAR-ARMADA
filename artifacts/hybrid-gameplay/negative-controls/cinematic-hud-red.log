@@ -1,0 +1,36 @@
+test_native_cinematic_restores_host_before_legacy_when_viewer_is_gone (test_hybrid_main.HybridLifecycleTests.test_native_cinematic_restores_host_before_legacy_when_viewer_is_gone) ... FAIL
+test_native_cinematic_publishes_frozen_world_and_never_draws_legacy (test_hybrid_main.HybridLifecycleTests.test_native_cinematic_publishes_frozen_world_and_never_draws_legacy) ... ok
+
+======================================================================
+FAIL: test_native_cinematic_restores_host_before_legacy_when_viewer_is_gone (test_hybrid_main.HybridLifecycleTests.test_native_cinematic_restores_host_before_legacy_when_viewer_is_gone)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_hybrid_main.py", line 178, in test_native_cinematic_restores_host_before_legacy_when_viewer_is_gone
+    env['draw_campaign_presentation'](.03)
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/main.py", line 748, in draw_campaign_presentation
+    renderer.draw(0.0, set())
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/unittest/mock.py", line 1124, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/unittest/mock.py", line 1128, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/unittest/mock.py", line 1189, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_hybrid_main.py", line 171, in draw
+    self.assertEqual((hud.width, hud.height), (1440, 900))
+AssertionError: Tuples differ: (1280, 800) != (1440, 900)
+
+First differing element 0:
+1280
+1440
+
+- (1280, 800)
++ (1440, 900)
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.011s
+
+FAILED (failures=1)
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
