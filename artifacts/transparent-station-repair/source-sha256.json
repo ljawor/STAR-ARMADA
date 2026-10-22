@@ -1,8 +1,0 @@
-{
-  "render_bridge/stations.py": "36c4d6073dd1b3e21d2ff4b0dceac37e69c6bc7baf5574f5c78a5510bbc2c91c",
-  "render_cpp/src/viewer.cpp": "ef12bc4d34609395e4d3508abfcd96f3d7ade89504456e5d38e9800cd4e592c1",
-  "render_cpp/shaders/fs_fleet.sc": "bba7c60db387c900db90e9b731396109c2204a6255c214939498c15c59074b38",
-  "tests/test_native_station_lifecycle.py": "bfc74a8281faa10b0e0dc7b976814c2a3b8dffb94a7268ad90de1bba51d78e4b",
-  "tools/render/verify_station_transparency.py": "2d8dd99b1c22054a79d289a537efa307e8bae97874caef5065a083d27ebe7445",
-  "tools/render/verify_station_lifecycle.py": "3368ea68377595207858380dbd825be2938a1653a64205777de48a5929f6128d"
-}

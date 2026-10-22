@@ -1,8 +1,0 @@
-{
-  "passed": true,
-  "review_delegation": "deleg_5dc395a4",
-  "security_concerns": [],
-  "logic_errors": [],
-  "suggestions": [],
-  "summary": "Narrow re-review passed: 11 tests; truthful empty command/selection recipe; source-master output aliases refused; nonvacuous 4-emitter geometry checks; 150 matching state hashes; all 23 PNGs match originals; pixel metrics and source provenance rehashed. No GL/Blender rerun in reviewer; parent independently reproduced. Excludes parent-owned publication bookkeeping. Not owner appearance approval or activation."
-}

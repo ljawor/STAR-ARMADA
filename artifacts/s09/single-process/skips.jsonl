@@ -1,9 +1,0 @@
-{"test": "test_frozen_paths.TestFrozenPaths.test_every_folder_a_dev_run_writes_into_the_repo_is_ignored", "reason": "not a git checkout"}
-{"test": "test_jump_travel.TestJumpTravel.test_ships_without_shields_get_no_lockdown_key", "reason": "fixture ship has shields"}
-{"test": "test_replay_deletion_windows.NativeWindowsDeletionTests.test_child_junction_and_outside_selected_are_preserved", "reason": "native Windows kernel required; NOT accepted on macOS"}
-{"test": "test_replay_deletion_windows.NativeWindowsDeletionTests.test_file_symlink_is_never_deleted_or_followed", "reason": "native Windows kernel required; NOT accepted on macOS"}
-{"test": "test_replay_deletion_windows.NativeWindowsDeletionTests.test_open_handles_block_directory_and_child_replacement", "reason": "native Windows kernel required; NOT accepted on macOS"}
-{"test": "test_replay_deletion_windows.NativeWindowsDeletionTests.test_readonly_failure_is_reported_and_resources_are_released", "reason": "native Windows kernel required; NOT accepted on macOS"}
-{"test": "test_replay_deletion_windows.NativeWindowsDeletionTests.test_replay_user_and_ancestor_junctions_are_rejected", "reason": "native Windows kernel required; NOT accepted on macOS"}
-{"test": "test_replay_deletion_windows.NativeWindowsDeletionTests.test_saved_games_namespace_uncapped_delete_and_safe_read_real_handles", "reason": "native Windows kernel required; NOT accepted on macOS"}
-{"test": "test_replay_deletion_windows.NativeWindowsDeletionTests.test_selected_and_uncapped_all_delete_real_files", "reason": "native Windows kernel required; NOT accepted on macOS"}

@@ -1,5 +1,0 @@
-{
-  "render_cpp/src/viewer.cpp": "f288549403aa135c0522419d0d53cc12fe844e9925fb4f0da0758fdf69c73405",
-  "tests/test_native_fog_discovery.py": "158240d5444f714d19475b25b5805c41394a9502e57326b049ea0b28eb90786a",
-  "tools/render/verify_native_fog_discovery.py": "a78728c115ec7b5e49a94fe3b93663221b6037b9390ec96848421714cbb065a1"
-}

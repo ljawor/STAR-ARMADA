@@ -1,5 +1,0 @@
-00:00.152  blend            | Read blend: "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/art/blender/imperial_fighter_platform.blend"
-GAME_EXPORT {"asset": "imperial_fighter_platform", "triangles": 2240, "vertices": 1264, "bounds": [[-33.0, -11.5, -42.0], [33.0, 53.5, 44.0]], "bytes": 123582}
-Blender 5.0.1 (hash a3db93c5b259 built 2025-12-16 01:51:40)
-
-Blender quit

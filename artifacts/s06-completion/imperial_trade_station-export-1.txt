@@ -1,5 +1,0 @@
-00:00.153  blend            | Read blend: "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/art/blender/imperial_trade_station.blend"
-GAME_EXPORT {"asset": "imperial_trade_station", "triangles": 2100, "vertices": 1200, "bounds": [[-63.53675, -8.605, -63.53675], [63.53675, 51.5, 63.53675]], "bytes": 116868}
-Blender 5.0.1 (hash a3db93c5b259 built 2025-12-16 01:51:40)
-
-Blender quit

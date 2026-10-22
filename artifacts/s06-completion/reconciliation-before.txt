@@ -1,1 +1,0 @@
-STALE: art/manifests/reviews/S06-COVERAGE-RECONCILIATION.json

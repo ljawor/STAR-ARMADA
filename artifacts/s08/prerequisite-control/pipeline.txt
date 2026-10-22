@@ -1,1 +1,0 @@
-E_NO_APPROVED_RECORD: shared:construction_scaffold: missing approved-hash record art/manifests/approved-s07-scaffold-source-hashes.json

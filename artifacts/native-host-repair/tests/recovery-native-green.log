@@ -1,9 +1,0 @@
-test_draw_returns_surface_for_native_hud_composition (test_lan_recovery_ui.RecoveryUITests.test_draw_returns_surface_for_native_hud_composition) ... ok
-test_launched_full_application_reconnect_and_paid_replay (test_lan_recovery_handoff.HandoffTests.test_launched_full_application_reconnect_and_paid_replay) ... ok
-test_launched_joined_application_reconnect_and_paid_replay (test_lan_recovery_handoff.HandoffTests.test_launched_joined_application_reconnect_and_paid_replay) ... ok
-
-----------------------------------------------------------------------
-Ran 3 tests in 13.916s
-
-OK
-pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)

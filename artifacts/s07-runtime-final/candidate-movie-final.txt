@@ -1,4 +1,0 @@
-{"command": [".venv/bin/python", "tools/build_menu_movie.py", "--model-preview", "--output-dir", "artifacts/s07-runtime-final/candidate-movie-final", "--asset", "artifacts/s07-runtime-final/candidate-movie-final/review/candidate.zip"], "pid": 96566, "exit_code": 0, "timed_out": false, "deadline_seconds": 900.0, "elapsed_seconds": 28.546, "log": "artifacts/s07-runtime-final/candidate-movie-final.log"}
-real 28.57
-user 42.79
-sys 2.85

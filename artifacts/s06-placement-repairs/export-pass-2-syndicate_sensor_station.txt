@@ -1,5 +1,0 @@
-00:00.171  blend            | Read blend: "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-s06/art/blender/syndicate_sensor_station.blend"
-GAME_EXPORT {"asset": "syndicate_sensor_station", "triangles": 3832, "vertices": 2074, "bounds": [[-47.2, -17.6, -31.137], [26.3565, 43.556999, 21.1423]], "bytes": 253850}
-Blender 5.0.1 (hash a3db93c5b259 built 2025-12-16 01:51:40)
-
-Blender quit

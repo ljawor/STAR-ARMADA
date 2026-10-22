@@ -1,9 +1,0 @@
-test_native_lists_are_deleted_and_recompiled_after_update_and_context_recreation (test_s08_asset_updates.NativeSessionAssetUpdates.test_native_lists_are_deleted_and_recompiled_after_update_and_context_recreation) ... pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
-ok
-test_partial_update_at_boundary_falls_back_as_whole_pack (test_s08_asset_updates.SessionAssetUpdates.test_partial_update_at_boundary_falls_back_as_whole_pack) ... ok
-test_same_path_revision_update_invalidates_all_bounds_and_contact_helpers (test_s08_asset_updates.SessionAssetUpdates.test_same_path_revision_update_invalidates_all_bounds_and_contact_helpers) ... ok
-
-----------------------------------------------------------------------
-Ran 3 tests in 1.544s
-
-OK

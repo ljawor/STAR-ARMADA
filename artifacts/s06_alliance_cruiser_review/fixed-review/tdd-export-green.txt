@@ -1,6 +1,0 @@
-test_export_refuses_master_before_open (test_alliance_blender_cruiser.ExportSafety.test_export_refuses_master_before_open) ... ok
-
-----------------------------------------------------------------------
-Ran 1 test in 0.014s
-
-OK

@@ -1,2 +1,0 @@
-pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
-{"close": {"changed_pixels_gt3": 9141, "disabled_equal": true}, "tactical": {"changed_pixels_gt3": 776, "disabled_equal": true}}

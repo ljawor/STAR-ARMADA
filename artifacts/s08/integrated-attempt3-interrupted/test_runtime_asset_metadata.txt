@@ -1,6 +1,0 @@
-test_shipped_metadata_matches_source_contract_and_inventory (test_runtime_asset_metadata.RuntimeMetadataTests.test_shipped_metadata_matches_source_contract_and_inventory) ... ok
-
-----------------------------------------------------------------------
-Ran 1 test in 0.778s
-
-OK

@@ -1,2 +1,0 @@
-PASS protocol
-FAIL [json.exception.out_of_range.403] key 'schema' not found

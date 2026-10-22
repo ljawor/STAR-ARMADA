@@ -1,9 +1,0 @@
-wrote art/manifests/pending/S06-ALLIANCE-MINING-STATION.json
-wrote art/manifests/pending/S06-LEGION-MINING-STATION.json
-wrote art/manifests/pending/S06-SYNDICATE-MINING-STATION.json
-wrote art/manifests/pending/S06-ALLIANCE-SENSOR-STATION.json
-wrote art/manifests/pending/S06-LEGION-SENSOR-STATION.json
-wrote art/manifests/pending/S06-SYNDICATE-SENSOR-STATION.json
-wrote art/manifests/pending/S06-ALLIANCE-ENERGY-RELAY.json
-wrote art/manifests/pending/S06-LEGION-ENERGY-RELAY.json
-wrote art/manifests/pending/S06-SYNDICATE-ENERGY-RELAY.json

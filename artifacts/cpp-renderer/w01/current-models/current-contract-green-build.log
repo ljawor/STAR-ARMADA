@@ -1,8 +1,0 @@
-[ 66%] Built target armada_shaders
-[ 83%] Building CXX object CMakeFiles/armada_viewer.dir/src/viewer.cpp.o
-[100%] Linking CXX executable armada_viewer
-[100%] Built target armada_viewer
-[ 50%] Building CXX object CMakeFiles/test_scene.dir/tests/test_scene.cpp.o
-[100%] Linking CXX executable test_scene
-[100%] Built target test_scene
-[100%] Built target test_camera

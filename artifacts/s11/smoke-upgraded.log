@@ -1,4 +1,0 @@
-pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
-SMOKE_OK t=30s winner=None entities={0: 7, 1: 12} P0(cr=8030 mt=4000 techs=0) P1(cr=4750 techs=0) shot=/Users/lukaszjawor/.hermes/cache/scratch/s11-home-upgraded/Library/Application Support/STAR ARMADA/saves/smoke_screenshot.png
-Replay saved: match-3602e1f64f8c43afb5d785ffe2854a2f.json
-SMOKE_DONE t=30s winner=None entities={0: 7, 1: 12} P0(cr=8030 mt=4000 techs=0) P1(cr=4750 techs=0)

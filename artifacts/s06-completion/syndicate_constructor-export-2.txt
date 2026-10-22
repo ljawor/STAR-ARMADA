@@ -1,5 +1,0 @@
-00:00.174  blend            | Read blend: "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-catalogue-completion/art/blender/syndicate_constructor.blend"
-GAME_EXPORT {"asset": "syndicate_constructor", "triangles": 3240, "vertices": 1804, "bounds": [[-25.714157, -9.0, -40.8725], [29.98, 36.5, 32.388]], "bytes": 191074}
-Blender 5.0.1 (hash a3db93c5b259 built 2025-12-16 01:51:40)
-
-Blender quit

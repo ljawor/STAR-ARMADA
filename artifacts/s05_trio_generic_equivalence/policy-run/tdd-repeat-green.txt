@@ -1,6 +1,0 @@
-test_background_allowance_is_narrow_and_cross_source_stays_exact (test_trio_generic_equivalence.RepeatPolicyTests.test_background_allowance_is_narrow_and_cross_source_stays_exact) ... ok
-
-----------------------------------------------------------------------
-Ran 1 test in 0.007s
-
-OK

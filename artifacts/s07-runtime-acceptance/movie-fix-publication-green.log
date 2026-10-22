@@ -1,7 +1,0 @@
-pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
-test_success_verifies_exact_staged_zip_before_atomic_publication (test_s07_movie_provenance.MoviePublicationTests.test_success_verifies_exact_staged_zip_before_atomic_publication) ... ok
-
-----------------------------------------------------------------------
-Ran 1 test in 0.167s
-
-OK
