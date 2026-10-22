@@ -1,0 +1,2 @@
+# Offline authoring only; never add this to the game runtime requirements.
+Pillow==13.0.0

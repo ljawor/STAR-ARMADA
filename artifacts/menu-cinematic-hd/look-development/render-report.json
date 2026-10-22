@@ -1,0 +1,182 @@
+{
+  "plan": {
+    "version": 1,
+    "resolution": [
+      2560,
+      1440
+    ],
+    "fps": 24,
+    "source_seconds": 16,
+    "overlap_seconds": 1,
+    "scope": "offline menu movie only; no gameplay or runtime renderer changes",
+    "renderer": "Blender 5.0.1 EEVEE offline cinematic, not native gameplay renderer",
+    "authoring": "script-authoritative; original approved core geometry, cinematic-only materials and lighting",
+    "repo_root": "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA",
+    "ships": [
+      {
+        "id": 0,
+        "data_id": "imperial_supercapital",
+        "faction": "imperial",
+        "binding": "imperial:supercapital",
+        "asset": "core:imperial/supercapital",
+        "revision": "6eb500499505e10b6609db34472dddf03275952894a8a608ca4414b76a0114b0",
+        "runtime_path": "assets/models/imperial_supercapital.mesh.json",
+        "runtime_sha256": "1c44c3e7a78241b5048a9aefe23549b8578c0a21081ad797ce640e8ad9a98dbf",
+        "triangle_count": 2592,
+        "length": 320.60175000000004,
+        "scale": 1.7036700977240242,
+        "location": [
+          -210,
+          -110,
+          0
+        ],
+        "yaw": 76
+      },
+      {
+        "id": 1,
+        "data_id": "imperial_battleship",
+        "faction": "imperial",
+        "binding": "imperial:battleship",
+        "asset": "core:imperial/battleship",
+        "revision": "974d00963c452f85a870ae02a6f9f19e5778e8ea53f9f0998b3c34b0ab6580d4",
+        "runtime_path": "assets/models/imperial_battleship.mesh.json",
+        "runtime_sha256": "3c69c3db9d0f55aba714d1af4bafbebc7493afb5da3a80d7bd59fccc7be8ac79",
+        "triangle_count": 2468,
+        "length": 224.421225,
+        "scale": 1.1925690684068169,
+        "location": [
+          -235,
+          180,
+          30
+        ],
+        "yaw": 76
+      },
+      {
+        "id": 2,
+        "data_id": "imperial_frigate",
+        "faction": "imperial",
+        "binding": "imperial:frigate",
+        "asset": "core:imperial/frigate",
+        "revision": "c0cf348ad0163a52a10eb9140c1c43abf2a6e3ed2d7fd113d6bc95746aa03109",
+        "runtime_path": "assets/models/imperial_frigate.mesh.json",
+        "runtime_sha256": "6c5d925bcd67bd655aae5f7e4bbdfa178257a4d0a6897f52b8664dda3f94752d",
+        "triangle_count": 2416,
+        "length": 96.180525,
+        "scale": 1.0499942686215216,
+        "location": [
+          -75,
+          -35,
+          -70
+        ],
+        "yaw": 76
+      },
+      {
+        "id": 3,
+        "data_id": "imperial_frigate",
+        "faction": "imperial",
+        "binding": "imperial:frigate",
+        "asset": "core:imperial/frigate",
+        "revision": "c0cf348ad0163a52a10eb9140c1c43abf2a6e3ed2d7fd113d6bc95746aa03109",
+        "runtime_path": "assets/models/imperial_frigate.mesh.json",
+        "runtime_sha256": "6c5d925bcd67bd655aae5f7e4bbdfa178257a4d0a6897f52b8664dda3f94752d",
+        "triangle_count": 2416,
+        "length": 96.180525,
+        "scale": 1.0499942686215216,
+        "location": [
+          -300,
+          340,
+          75
+        ],
+        "yaw": 76
+      },
+      {
+        "id": 4,
+        "data_id": "rebel_battleship",
+        "faction": "rebel",
+        "binding": "rebel:battleship",
+        "asset": "core:alliance/battleship",
+        "revision": "7634f9edda51e6a87a50cfbcf697e914ae0f94ba16f0aab6eb59a939214ed7d9",
+        "runtime_path": "assets/models/alliance_battleship.mesh.json",
+        "runtime_sha256": "0a4e397d5c0b60f70fbba35f3e4f4a5ac997ac4de079f821f8f29db9872c95cd",
+        "triangle_count": 11457,
+        "length": 224.421225,
+        "scale": 0.8058212746858169,
+        "location": [
+          205,
+          100,
+          25
+        ],
+        "yaw": -104
+      },
+      {
+        "id": 5,
+        "data_id": "rebel_frigate",
+        "faction": "rebel",
+        "binding": "rebel:frigate",
+        "asset": "core:alliance/frigate",
+        "revision": "60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df",
+        "runtime_path": "assets/models/alliance_frigate.mesh.json",
+        "runtime_sha256": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+        "triangle_count": 7708,
+        "length": 96.180525,
+        "scale": 0.6257679042114751,
+        "location": [
+          90,
+          40,
+          -60
+        ],
+        "yaw": -104
+      },
+      {
+        "id": 6,
+        "data_id": "rebel_frigate",
+        "faction": "rebel",
+        "binding": "rebel:frigate",
+        "asset": "core:alliance/frigate",
+        "revision": "60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df",
+        "runtime_path": "assets/models/alliance_frigate.mesh.json",
+        "runtime_sha256": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+        "triangle_count": 7708,
+        "length": 96.180525,
+        "scale": 0.6257679042114751,
+        "location": [
+          300,
+          310,
+          80
+        ],
+        "yaw": -104
+      }
+    ]
+  },
+  "blender_version": "5.0.1",
+  "engine": "BLENDER_EEVEE",
+  "samples": 64,
+  "resolution": [
+    2560,
+    1440
+  ],
+  "renders": [
+    {
+      "frame": 24,
+      "seconds": 4.610031666001305,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-preview-v3/frame_00024.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-preview-v3/preview_00024.png",
+      "sha256": "c7ddb7ff4e1ac02e925a8b9b72500ed5199d1b9df71d2c12a12980b37f17f719"
+    },
+    {
+      "frame": 144,
+      "seconds": 4.606801416957751,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-preview-v3/frame_00144.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-preview-v3/preview_00144.png",
+      "sha256": "4e783a4dde24f978705ef1f531b1495f917d069ff1e3a0f4bc69388bd042e15a"
+    },
+    {
+      "frame": 264,
+      "seconds": 4.629002333036624,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-preview-v3/frame_00264.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-preview-v3/preview_00264.png",
+      "sha256": "7e0fcd60cdae8590c5a3a1e0e05a2c1968ef4dd93a69dde5589ea67301d9d665"
+    }
+  ],
+  "source_sha256": "ff20306613c82940d717e9f24a080b68d9b36f21f29f82a860514ce7667fb274"
+}

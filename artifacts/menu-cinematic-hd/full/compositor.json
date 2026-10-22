@@ -1,0 +1,83 @@
+[
+  {
+    "size": [
+      800,
+      600
+    ],
+    "phase": "start",
+    "render_upload_finish_ms": 19.99779196921736,
+    "screenshot": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-finished-compositor-v2/800x600_start.png"
+  },
+  {
+    "size": [
+      800,
+      600
+    ],
+    "phase": "middle",
+    "render_upload_finish_ms": 14.305458054877818,
+    "screenshot": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-finished-compositor-v2/800x600_middle.png"
+  },
+  {
+    "size": [
+      800,
+      600
+    ],
+    "phase": "wrap",
+    "render_upload_finish_ms": 1.5170419355854392,
+    "screenshot": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-finished-compositor-v2/800x600_wrap.png"
+  },
+  {
+    "size": [
+      1280,
+      800
+    ],
+    "phase": "start",
+    "render_upload_finish_ms": 19.437290960922837,
+    "screenshot": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-finished-compositor-v2/1280x800_start.png"
+  },
+  {
+    "size": [
+      1280,
+      800
+    ],
+    "phase": "middle",
+    "render_upload_finish_ms": 17.266999930143356,
+    "screenshot": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-finished-compositor-v2/1280x800_middle.png"
+  },
+  {
+    "size": [
+      1280,
+      800
+    ],
+    "phase": "wrap",
+    "render_upload_finish_ms": 7.755958009511232,
+    "screenshot": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-finished-compositor-v2/1280x800_wrap.png"
+  },
+  {
+    "size": [
+      1440,
+      900
+    ],
+    "phase": "start",
+    "render_upload_finish_ms": 15.803333022631705,
+    "screenshot": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-finished-compositor-v2/1440x900_start.png"
+  },
+  {
+    "size": [
+      1440,
+      900
+    ],
+    "phase": "middle",
+    "render_upload_finish_ms": 13.219207990914583,
+    "screenshot": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-finished-compositor-v2/1440x900_middle.png"
+  },
+  {
+    "size": [
+      1440,
+      900
+    ],
+    "phase": "wrap",
+    "render_upload_finish_ms": 4.44233394227922,
+    "screenshot": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-finished-compositor-v2/1440x900_wrap.png"
+  }
+]

@@ -1,0 +1,69 @@
+{
+  "scope": "owner-approved look-development only; full loop not yet completed or installed",
+  "owner_response": "Approve this look\u2014build the full animation",
+  "recorded_at": "2026-10-22T15:13:41.778657+02:00",
+  "render_code_sha256": "ff20306613c82940d717e9f24a080b68d9b36f21f29f82a860514ce7667fb274",
+  "source_spec_sha256": "244eeace04d869296272a464703fc4951ebf5a0a729492a5ce162fc355edb4de",
+  "native_resolution": [
+    2560,
+    1440
+  ],
+  "baseline_source_resolution": [
+    1280,
+    720
+  ],
+  "pixel_ratio": 4.0,
+  "actual_main_captured": true,
+  "full_vs_approved_source24_mean_abs_rgb": [
+    0.0016512044270833334,
+    0.001665310329861111,
+    0.001928439670138889
+  ],
+  "files": [
+    {
+      "file": "old-startup.png",
+      "bytes": 660595,
+      "sha256": "c4d47ab6a7b5b2344de932a69f8bbc1a03246a7db57c06cf3a408f0a04967868"
+    },
+    {
+      "file": "candidate-startup.png",
+      "bytes": 2073829,
+      "sha256": "215a94bf1447ea86dd3e245d29fa04e2e37bf192a24c1cc0585e2891b0aa8eeb"
+    },
+    {
+      "file": "old-compositor.json",
+      "bytes": 9073,
+      "sha256": "8a3eb570ead3050936941b047477b30127a664ce0e587a7de8d0d2035b75983e"
+    },
+    {
+      "file": "candidate-compositor.json",
+      "bytes": 638,
+      "sha256": "ee9f2fb44653c3e60e4c5f47dcbca9ab910a536385116df95e16e8e8e927e4f2"
+    },
+    {
+      "file": "render-report.json",
+      "bytes": 6191,
+      "sha256": "87a90e1c25129f12b5fcaba278b63c9e8cfea6672de9709e53359ce9e4903b6c"
+    },
+    {
+      "file": "scene-plan.json",
+      "bytes": 4641,
+      "sha256": "c9b1ef99c4d1e5e59f2f5a595d59430a5e9c2b016dae80e7ee1f769c2deb8940"
+    },
+    {
+      "file": "source-00024.png",
+      "bytes": 3563424,
+      "sha256": "7852a5104161fb4929a6f430b4095b3f2fa7f207929114f80ecfaa849c10328e"
+    },
+    {
+      "file": "source-00144.png",
+      "bytes": 3537965,
+      "sha256": "bcf67f7446a11f33d46ed26b857286ddc3a1ad7618e4c96f61e6acc177c24412"
+    },
+    {
+      "file": "source-00264.png",
+      "bytes": 3572522,
+      "sha256": "345cf72784d4812e32f3d8ff8d2a80414bc1e8c67f7ef66944fbfbf81ae00140"
+    }
+  ]
+}

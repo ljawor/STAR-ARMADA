@@ -1,0 +1,33 @@
+{
+  "native_resolution": [
+    2560,
+    1440
+  ],
+  "frames": 360,
+  "fps": 24,
+  "duration_seconds": 15.0,
+  "movie_sha256": "33fdd93e67ad66201ce9def49d6f9ba1cb5a2d502fee2ab1f14196e6fca93ae7",
+  "movie_bytes": 96737678,
+  "decode_native": {
+    "mean_ms": 4.916295298931396,
+    "p95_ms": 5.108439980540425,
+    "max_ms": 11.718291905708611,
+    "frames": 360
+  },
+  "max_retained_cache_bytes": 22118400,
+  "loop_last_to_first_mean_abs_rgb": 1.3997860604745371,
+  "reduced_motion_identical": true,
+  "quality": {
+    "min_psnr_db": 43.20165659427721,
+    "resize_operations": 0,
+    "jpeg_quality": 86,
+    "subsampling": "4:4:4"
+  },
+  "preview": {
+    "destination": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-candidate-v1/preview.mp4",
+    "bytes": 21044591,
+    "frames": 360,
+    "fps": 24
+  },
+  "scope": "exact CPU-validated staged candidate; NOT installed or owner-playback-accepted yet"
+}
