@@ -19,6 +19,8 @@ class Camera:
         self.width = width
         self.height = height
         self.target = [0.0, 0.0, 0.0]
+        # Pointer/HUD coordinates stay logical; world projection uses the output aspect.
+        self.projection_aspect: float | None = None
         self.distance = 3000.0
         self.yaw = 45.0        # degrees
         self.pitch = 55.0      # degrees (90 = top-down)
@@ -36,6 +38,11 @@ class Camera:
         self._safe_cache = None
         self._scene_geometry_key = None
 
+    @property
+    def aspect(self):
+        return (self.width / max(1, self.height) if self.projection_aspect is None
+                else self.projection_aspect)
+
     def bind_scene(self, state, player, station_angle=None):
         """Bind view-only geometry; player/animation getters stay current."""
         if state is not self._scene:
@@ -52,7 +59,7 @@ class Camera:
             from render.camera_geometry import scene_boxes, camera_ray
             requested = self._requested_eye()
             ray = camera_ray(self.target, requested, self.near, self.fov,
-                             self.width / max(1, self.height), self.height)
+                             self.aspect, self.height)
             player, angle = self._scene_player(), self._station_angle()
             attached = {e.id: e for e in self._scene.entities.values()
                         if e.is_station and (e.planet_building_slot is not None
@@ -95,7 +102,7 @@ class Camera:
         self.refresh_scene()
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
-        aspect = self.width / max(1, self.height)
+        aspect = self.aspect
         _gluPerspective(self.fov, aspect, self.near, self.far)
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
@@ -117,7 +124,8 @@ class Camera:
         return (ex, max(ey, 60.0), ez)
 
     def _geometry_key(self, requested):
-        return (tuple(self.target), requested, self.near, self.fov, self.width, self.height)
+        return (tuple(self.target), requested, self.near, self.fov, self.width, self.height,
+                self.aspect)
 
     def eye_position(self):
         requested = self._requested_eye()
@@ -127,7 +135,7 @@ class Camera:
         if self._safe_cache is None or self._safe_cache[0] != key:
             from render.camera_geometry import safe_eye
             eye = safe_eye(self.target, requested, self._camera_boxes,
-                           self.near, self.fov, self.width / max(1, self.height), self.height)
+                           self.near, self.fov, self.aspect, self.height)
             self._safe_cache = (key, eye)
         return self._safe_cache[1]
 
@@ -185,7 +193,7 @@ class Camera:
         ndc_x = (mx / self.width) * 2.0 - 1.0
         ndc_y = 1.0 - (my / self.height) * 2.0
         tan_fov = math.tan(math.radians(self.fov) / 2.0)
-        aspect = self.width / max(1, self.height)
+        aspect = self.aspect
         # camera basis
         right, up, fwd = self.basis()
         # note: screen up in world = camera up
@@ -210,7 +218,7 @@ class Camera:
         if depth <= 1.0:
             return None
         tan_fov = math.tan(math.radians(self.fov) / 2.0)
-        aspect = self.width / max(1, self.height)
+        aspect = self.aspect
         nx = (vx * right[0] + vy * right[1] + vz * right[2]) / (depth * tan_fov * aspect)
         ny = (vx * up[0] + vy * up[1] + vz * up[2]) / (depth * tan_fov)
         if abs(nx) > 3.0 or abs(ny) > 3.0:

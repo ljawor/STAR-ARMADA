@@ -72,6 +72,7 @@ DEFAULT_SETTINGS = {
     "music_volume": 0.6,
     "sfx_volume": 0.8,
     "fullscreen": False,
+    "resolution": "auto",
     "pan_speed": 1.0,
     "autosave": True,
     # Ownership marker verbosity in the 3D view: 'all' | 'hostiles' | 'off'.
@@ -154,6 +155,8 @@ def validate_presentation_settings(settings: dict) -> dict:
     # say) must be rejected like any other bad value, not crash the loader.
     if result.get('language') not in tuple(code for code, _label in i18n.LANGUAGES):
         result['language'] = DEFAULT_SETTINGS['language']
+    from render.display_settings import validate_resolution
+    result['resolution'] = validate_resolution(result.get('resolution'))
     from render.asset_selection import selection_preferences
     try:
         result.update(selection_preferences(result))
@@ -882,6 +885,12 @@ class MenuStack:
         reset_balance()
         self.balance_notice = i18n.t('Every station uses the shipped balance again.')
 
+    def _cycle_resolution(self, delta=1) -> None:
+        from render.display_settings import RESOLUTIONS, validate_resolution
+        current = validate_resolution(self.settings.get('resolution'))
+        self.settings['resolution'] = RESOLUTIONS[(RESOLUTIONS.index(current) + delta) % len(RESOLUTIONS)]
+        self._dirty_settings = True
+
     def _settings_key(self, ev) -> bool:
         if ev.type != pygame.KEYDOWN or ev.key == pygame.K_ESCAPE:
             return False
@@ -902,7 +911,9 @@ class MenuStack:
         elif ev.key in (pygame.K_RETURN, pygame.K_SPACE, pygame.K_LEFT, pygame.K_RIGHT):
             focus = max(0, min(len(controls) - 1, focus))
             button = controls[focus]
-            if button['action'] == 'slider':
+            if button['action'] == 'cycle_resolution':
+                self._cycle_resolution(-1 if ev.key == pygame.K_LEFT else 1)
+            elif button['action'] == 'slider':
                 key = button['payload']['key']
                 delta = -0.05 if ev.key == pygame.K_LEFT else 0.05
                 self.settings[key] = round(min(1, max(0, self.settings[key] + delta)), 2)
@@ -1315,6 +1326,8 @@ class MenuStack:
                     self.settings["markers"] = next_mode(
                         self.settings.get("markers", "all"))
                     self._dirty_settings = True
+                elif act == "cycle_resolution":
+                    self._cycle_resolution()
                 elif act == "cycle_language":
                     code = i18n.cycle(str(self.settings.get("language", i18n.DEFAULT_LANGUAGE)))
                     # Apply immediately: the settings row shows the native label of the
