@@ -68,7 +68,7 @@ def main():
             return events
         menu = ns['menu']
         if menu.screen == 'splash':
-            return events + [pygame.event.Event(pygame.KEYDOWN, key=pygame.K_RETURN)]
+            return events + click(menu, 'goto_main')
         if menu.screen == 'main':
             return events + click(menu, 'start_skirmish' if phase['back'] else 'goto_settings')
         if menu.screen == 'settings' and phase['settings_seen']:
