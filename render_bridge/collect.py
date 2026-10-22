@@ -211,6 +211,12 @@ class FrameCollector:
                         entity.id not in visible_ids if visible_ids is not None
                         else not state.can_see(local_player, entity.id)):
                     continue
+                if entity.jump_travelling:
+                    # A travelling hull has no hull, no glow and no marker in the world view for
+                    # anyone, its owner included (issue #162; render/renderer.py sets the same gate
+                    # in its one visibility list). Only the sim data path stays whole, so the HUD
+                    # minimap keeps tracking the contact from its interpolated sim position.
+                    continue
                 if entity.owner in players:
                     player = players[entity.owner]
                     faction = player.faction
@@ -451,6 +457,9 @@ class FrameCollector:
                 scale = float(entity.radius)
             else:
                 if not self.all_visible and not self._visible(state, entity):
+                    continue
+                if entity.jump_travelling:
+                    # See collect_into: in hyperspace there is nothing to draw, for anyone (#162).
                     continue
                 faction = (state.players[entity.owner].faction
                            if entity.owner in state.players else 'imperial')
