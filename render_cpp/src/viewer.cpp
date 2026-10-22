@@ -1544,16 +1544,6 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
     bgfx::setViewRect(1, 0, 0, uint16_t(width), uint16_t(height));
     bgfx::setViewTransform(1, view, proj);
     bgfx::touch(1);
-    // View 3 carries the placement preview: the ghost instance arrives with alpha < 1 in its
-    // tint, so it cannot share the opaque fleet draw (which writes depth) and cannot be a
-    // per-draw uniform either (one group holds every instance of a binding). Drawn after the
-    // opaque world and before the logical HUD, without writing depth so the station's own
-    // far side and the ground behind it stay visible through it.
-    bgfx::setViewRect(3, 0, 0, uint16_t(width), uint16_t(height));
-    bgfx::setViewTransform(3, view, proj);
-    bgfx::setViewMode(3, bgfx::ViewMode::Sequential);
-    const bgfx::ViewId viewOrder[] = {0, 1, 3, 2};
-    bgfx::setViewOrder(0, 4, viewOrder);
     const float eyeData[4] = {eye[0], eye[1], eye[2], 1},
                 optionData[4] = {shadows ? 1.f : 0.f, 0, 0, 0};
     // Every translucent row - a fleet instance or a station whose mesh arrived on the mesh ring -
@@ -1564,40 +1554,58 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
     // and a solid station is its alpha - otherwise the two images differ by lighting too and a
     // measured blend proves nothing.
     const float previewOptions[4] = {shadows ? 1.f : 0.f, 1.f, 1.f, 0.f};
-    auto submitPreviews = [&](bgfx::VertexBufferHandle vbo, const std::vector<float> &rows) {
-      const uint32_t count = uint32_t(rows.size() / 20);
-      if (!count)
-        return;
-      if (bgfx::getAvailInstanceDataBuffer(count, 80) < count) {
-        previewDropped += count;
-        return;
+    struct PreviewDraw {
+      bgfx::VertexBufferHandle vbo;
+      std::vector<float> rows;
+    };
+    std::vector<PreviewDraw> previewDraws;
+    // The preview rides the ordinary world view. A separate view id has to be declared in the
+    // window's view order, and getting that order wrong silently cost the whole HUD, so the ghost
+    // is queued here and drawn as one extra blended submit at the end of the world instead.
+    auto queuePreviews = [&](bgfx::VertexBufferHandle vbo, const std::vector<float> &rows) {
+      if (!rows.empty())
+        previewDraws.push_back({vbo, rows});
+    };
+    auto flushPreviews = [&]() {
+      for (const auto &draw : previewDraws) {
+        const uint32_t count = uint32_t(draw.rows.size() / 20);
+        if (!count)
+          continue;
+        if (bgfx::getAvailInstanceDataBuffer(count, 80) < count) {
+          previewDropped += count;
+          continue;
+        }
+        bgfx::InstanceDataBuffer buffer;
+        bgfx::allocInstanceDataBuffer(&buffer, count, 80);
+        std::memcpy(buffer.data, draw.rows.data(), draw.rows.size() * sizeof(float));
+        bgfx::setVertexBuffer(0, draw.vbo);
+        bgfx::setInstanceDataBuffer(&buffer);
+        bgfx::setUniform(lightUniform, lightMtx);
+        bgfx::setUniform(eyeUniform, eyeData);
+        bgfx::setUniform(optionsUniform, previewOptions);
+        bgfx::setTexture(0, shadowSampler, depth);
+        // Two submits, no extra view: a station mesh overlaps itself many times and its triangle
+        // order is arbitrary, so a single blended draw composites whichever nearer triangle
+        // happens to come last on top of the previous one - measured at alpha 0.55 that produced
+        // 0.81, i.e. a solid-looking hull. Depth-only first, then colour at EQUAL depth: the
+        // front-most surface composites exactly once at the alpha on the wire.
+        bgfx::setState(BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS);
+        bgfx::submit(1, program);
+        bgfx::setVertexBuffer(0, draw.vbo);
+        bgfx::setInstanceDataBuffer(&buffer);
+        bgfx::setUniform(lightUniform, lightMtx);
+        bgfx::setUniform(eyeUniform, eyeData);
+        bgfx::setUniform(optionsUniform, previewOptions);
+        bgfx::setTexture(0, shadowSampler, depth);
+        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A |
+                       BGFX_STATE_DEPTH_TEST_LEQUAL | BGFX_STATE_MSAA | BGFX_STATE_BLEND_ALPHA);
+        bgfx::submit(1, program);
+        previewInstances += count;
       }
-      bgfx::InstanceDataBuffer buffer;
-      bgfx::allocInstanceDataBuffer(&buffer, count, 80);
-      std::memcpy(buffer.data, rows.data(), rows.size() * sizeof(float));
-      bgfx::setVertexBuffer(0, vbo);
-      bgfx::setInstanceDataBuffer(&buffer);
-      bgfx::setUniform(lightUniform, lightMtx);
-      bgfx::setUniform(eyeUniform, eyeData);
-      bgfx::setUniform(optionsUniform, previewOptions);
-      bgfx::setTexture(0, shadowSampler, depth);
-      // A station mesh overlaps itself many times, so blending every layer saturates the alpha and
-      // the preview reads as opaque. Depth pre-pass first (no colour write), then the colour pass
-      // at EQUAL depth: the front-most surface composites once, and the measured translucency is
-      // the alpha on the wire instead of an artefact of how many plates the hull happens to have.
-      bgfx::setState(BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS);
-      bgfx::submit(3, program);
-      bgfx::setVertexBuffer(0, vbo);
-      bgfx::setInstanceDataBuffer(&buffer);
-      bgfx::setUniform(lightUniform, lightMtx);
-      bgfx::setUniform(eyeUniform, eyeData);
-      bgfx::setUniform(optionsUniform, previewOptions);
-      bgfx::setTexture(0, shadowSampler, depth);
-      bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A |
-                     BGFX_STATE_DEPTH_TEST_LEQUAL | BGFX_STATE_MSAA |
-                     BGFX_STATE_BLEND_ALPHA);
-      bgfx::submit(3, program);
-      previewInstances += count;
+      previewDraws.clear();
+    };
+    auto submitPreviews = [&](bgfx::VertexBufferHandle vbo, const std::vector<float> &rows) {
+      queuePreviews(vbo, rows);
     };
     // Split each binding's rows: opaque rows keep the existing state, preview rows (alpha < 1)
     // are deferred to view 3. Keeping the opaque path byte-for-byte unchanged matters - the
@@ -1733,6 +1741,7 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
           ++live->surface_unmeshed;
       }
     }
+    flushPreviews();
     // W05: take in any planet texture published since the last frame, then draw the bodies the
     // frame asked for. A planet whose texture has not arrived yet draws with the grey fallback and
     // is counted, never silently dropped.
@@ -2589,7 +2598,7 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
         {"instances_drawn", previewInstances},
         {"dropped_instances", previewDropped},
         {"note",
-         "translucent fleet instances (tint alpha < 1) submitted in view 3 after the opaque world, "
+         "translucent rows (tint alpha < 1) submitted blended in the world view after every "
          "depth-tested but not depth-writing, alpha read from the instance row"}};
   if (uiRing) {
     report["hud"] = {{"ring", o.overlayRing.string()},
