@@ -125,6 +125,19 @@ class ConstructionProgressTests(unittest.TestCase):
             builder.build_queue[0]['time_left'] = builder.build_queue[0]['total'] * 0.4
         self.assertGreater(self.ring_pixels(self.overlay()), one,
                            'the second site must get its own ring')
+    def test_the_ring_is_green_and_bright_enough_to_read(self):
+        """Colour is part of the feature: a player-colour triple in 0..1 clamps to black in this painter."""
+        self.set_progress(0.6)
+        raw = pygame.image.tostring(self.overlay(), 'RGBA')
+        frame = np.frombuffer(raw, dtype=np.uint8).reshape(HEIGHT, WIDTH, 4)
+        box = frame[CENTRE[1] - 90:CENTRE[1] + 90, CENTRE[0] - 90:CENTRE[0] + 90]
+        drawn = box[:, :, 3] > 120
+        self.assertGreater(int(drawn.sum()), 100, 'the ring was not drawn')
+        red, green, blue = (box[:, :, channel][drawn].astype(float) for channel in (0, 1, 2))
+        self.assertGreater(green.mean(), red.mean() + 20, 'the arc is not green')
+        self.assertGreater(green.mean(), blue.mean() + 20, 'the arc is not green')
+        self.assertGreater(green.mean(), 140, 'the arc is too dark to read as progress')
+
     def test_the_ring_lands_on_the_site_the_camera_projects(self):
         """The ring has to be drawn where the model stands, not just somewhere on screen."""
         from render.camera import Camera

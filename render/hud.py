@@ -1574,8 +1574,9 @@ class HUD:
             radius_px = max(9.0, min(360.0, radius_px))
             total = max(1e-6, float(item.get("total", 1.0)))
             fraction = min(1.0, max(0.0, 1.0 - float(item.get("time_left", 0.0)) / total))
-            col = self.state.players[self.local_player].color
-            _p.circle(ov, (*col[:3], 70), (int(cx), int(cy)), int(radius_px), 2)
+            # Green, like the placement check: the arc answers "is this progressing", and a player's own
+            # colour is a 0..1 float triple that would clamp to black in a 0..255 painter.
+            _p.circle(ov, (*GOOD, 70), (int(cx), int(cy)), int(radius_px), 2)
             # The fill: short chords rather than pygame.draw.arc, because every overlay op goes through
             # the recorder and an arc is not one of its primitives.
             steps = max(1, int(48 * fraction))
@@ -1585,9 +1586,9 @@ class HUD:
             for i in range(1, steps + 1):
                 angle = -math.pi / 2 + sweep * i / steps
                 point = (cx + radius_px * math.cos(angle), cy + radius_px * math.sin(angle))
-                _p.line(ov, (*col[:3], 230), prev, point, 4)
+                _p.line(ov, (*GOOD, 240), prev, point, 4)
                 prev = point
-            label = self.font_small.render(f"{int(round(fraction * 100))}%", True, (*col[:3], 255))
+            label = self.font_small.render(f"{int(round(fraction * 100))}%", True, GOOD)
             rect = label.get_rect(midtop=(int(cx), int(cy + radius_px) + 4))
             _p.blit(ov, label, rect)
 
