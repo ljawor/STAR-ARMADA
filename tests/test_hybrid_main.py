@@ -57,7 +57,8 @@ class HybridDispatchTests(unittest.TestCase):
         session = SimpleNamespace(paths={'input': Mock()})
         env = helpers('cpp_poll_input', RENDERER='cpp', CPP=cpp, state=object(),
                       gm=SimpleNamespace(ds=object()), local_player=0,
-                      cpp_session=Mock(return_value=session), cpp_reset=Mock(), flash_print=Mock())
+                      cpp_session=Mock(return_value=session), cpp_reset=Mock(), flash_print=Mock(),
+                      cpp_fatal=Mock())
         env['cpp_poll_input']()
         bridge.poll.assert_called_once_with(limit=1)
         env['cpp_reset'].assert_not_called()
@@ -152,40 +153,27 @@ class HybridLifecycleTests(unittest.TestCase):
         flip.assert_not_called()
         self.assertEqual(env['accumulator'], 0.)
 
-    def test_native_cinematic_restores_host_before_legacy_when_viewer_is_gone(self):
+    def test_native_cinematic_reports_and_ends_when_the_window_is_gone(self):
+        # There is one renderer (#160): a dead window is a fault to report, never a reason to draw
+        # the presentation here.
         cinematic = SimpleNamespace(update=Mock(), draw_gl=Mock(), finished=False)
-        calls = Mock()
-        hud = SimpleNamespace(width=1280, height=800, resize=calls.resize)
+        hud = SimpleNamespace(width=1280, height=800, resize=Mock())
         env = helpers('draw_campaign_presentation', cinematic=cinematic, accumulator=5.,
-                      RENDERER='cpp', CPP={'failed': False, 'fell_back': False}, SMOKE=False,
-                      camera=Mock(), renderer=calls.renderer, hud=hud, CPP_HUD_SIZE=(1280, 800),
+                      RENDERER='cpp', CPP={'failed': False}, SMOKE=False,
+                      camera=Mock(), renderer=Mock(), hud=hud, CPP_HUD_SIZE=(1280, 800),
                       cpp_publish=Mock(return_value=True), cpp_drawing=Mock(return_value=False),
-                      cpp_reset=calls.reset, W=1440, H=900,
+                      cpp_reset=Mock(), cpp_fatal=Mock(), W=1440, H=900,
                       state=object(), gm=SimpleNamespace(ds=object()), local_player=0, fps=30.)
-
-        def resize(width, height):
-            self.assertFalse(env['CPP']['fell_back'], 'resize must precede the fallback latch')
-            hud.width, hud.height = width, height
-
-        def draw(*args):
-            self.assertEqual((hud.width, hud.height), (1440, 900))
-            self.assertTrue(env['CPP']['fell_back'])
-
-        hud.resize.side_effect = resize
-        env['renderer'].draw.side_effect = draw
-        from unittest.mock import patch, call
+        from unittest.mock import patch
         with patch.object(pygame.display, 'flip') as flip:
             env['draw_campaign_presentation'](.03)
-            env['draw_campaign_presentation'](.03)  # intro continues after fallback is latched
+
         env['cpp_publish'].assert_called_once()
-        env['cpp_drawing'].assert_called_once()
-        self.assertEqual(calls.mock_calls, [call.reset(), call.resize(1440, 900),
-                                          call.renderer.draw(0.0, set()),
-                                          call.renderer.draw(0.0, set())])
-        self.assertEqual(env['camera'].apply.call_args_list,
-                         [call(1280, 800), call(1440, 900), call(1440, 900)])
-        self.assertEqual(cinematic.draw_gl.call_args_list, [call(1440, 900), call(1440, 900)])
-        self.assertEqual(flip.call_count, 2)
+        env['cpp_fatal'].assert_called_once_with('native window is not drawing')
+        env['renderer'].draw.assert_not_called()
+        cinematic.draw_gl.assert_not_called()
+        hud.resize.assert_not_called()
+        flip.assert_not_called()
 
     def test_native_publish_includes_presentation_and_recovery_surfaces(self):
         session = Mock()
@@ -196,7 +184,7 @@ class HybridLifecycleTests(unittest.TestCase):
         recovery.draw.return_value = 'recovery surface'
         env = helpers('cpp_publish', 'cpp_overlay_layers', CPP={},
                       cpp_session=Mock(return_value=session), cpp_seen_ids=Mock(return_value=set()),
-                      cpp_reset=Mock(), flash_print=Mock(), presentation=presentation,
+                      cpp_reset=Mock(), flash_print=Mock(), cpp_fatal=Mock(), presentation=presentation,
                       recovery_overlay=recovery, cinematic=None, sync_recovery_overlay=Mock(),
                       hud=SimpleNamespace(blocked_rects=['hud rect', 'help rect']), CPP_HUD_SIZE=(1280, 800),
                       state=object(), inputc=Mock(), local_player=0,
@@ -213,7 +201,7 @@ class HybridLifecycleTests(unittest.TestCase):
         display = Mock()
         display.Info.return_value = SimpleNamespace(current_w=1920, current_h=1080)
         env = helpers('toggle_fullscreen', W=1440, H=900, FULLSCREEN=False,
-                      RENDERER='cpp', CPP_HUD_SIZE=(1280, 800), CPP={'fell_back': False},
+                      RENDERER='cpp', CPP_HUD_SIZE=(1280, 800), CPP={},
                       camera=camera, hud=hud, SMOKE=False, flash=Mock())
         from unittest.mock import patch
         with patch.object(pygame, 'display', display):
@@ -265,7 +253,7 @@ class HybridLifecycleTests(unittest.TestCase):
     def test_reset_closes_every_owner_and_clears_match_caches(self):
         bridge, session, window = Mock(), Mock(), Mock()
         cpp = dict(input=bridge, session=session, window=window, failed='old failure',
-                   seen={12}, seen_tick=400, selection={12}, quit=True, fell_back=True,
+                   seen={12}, seen_tick=400, selection={12}, quit=True,
                    camera=object(), bridge_mark=(4, 5, 6))
         env = helpers('cpp_reset', CPP=cpp, inputc=SimpleNamespace(keys={1}, right_drag=(1, 2),
                       dragging=True, drag_start=(1, 1), drag_cur=(2, 2)))

@@ -121,10 +121,10 @@ class MainLifecycleTests(unittest.TestCase):
         def create_hud(*args):
             events.append('HUD')
             return Mock()
-        ns = dict(renderer=old_renderer, hud=old_hud, W=640, H=480,
-                  net_session=None, audio=None, SETTINGS={},
+        ns: dict = dict(renderer=old_renderer, hud=old_hud, W=640, H=480,
+                  net_session=None, audio=None, SETTINGS={}, CPP_HUD_SIZE=(1280, 800),
                   make_game=lambda *args: SimpleNamespace(
-                      state=SimpleNamespace(entities={}, time=0.0),
+                      state=SimpleNamespace(entities={}, time=0.0), ds=SimpleNamespace(),
                       mission=SimpleNamespace(mission=None)),
                   Camera=Mock(), Renderer=create_renderer, HUD=create_hud,
                   make_audio=Mock(), InputController=Mock(), _AppGlue=Mock())
@@ -148,7 +148,7 @@ class MainLifecycleTests(unittest.TestCase):
                 exec(code, dict(audio=None, renderer=renderer if started else None,
                                 hud=hud if started else None,
                                 presentation=presentation if started else None, pygame=pygame,
-                                save_settings=Mock(), SETTINGS={}, SMOKE=False,
+                                save_settings=Mock(), SETTINGS={}, SMOKE=False, cpp_reset=Mock(),
                                 menu=Mock(), net_session=None, recovery_overlay=None))
                 self.assertEqual(events, ['renderer.close', 'hud.close', 'presentation.cleanup', 'quit']
                                  if started else ['quit'])
@@ -171,7 +171,7 @@ class MainLifecycleTests(unittest.TestCase):
         pygame.quit.side_effect = lambda: events.append('quit')
         exec(code, dict(audio=None, renderer=renderer, hud=hud,
                         presentation=presentation, pygame=pygame,
-                        save_settings=Mock(), SETTINGS={}, SMOKE=False,
+                        save_settings=Mock(), SETTINGS={}, SMOKE=False, cpp_reset=Mock(),
                         menu=Mock(), net_session=None, recovery_overlay=overlay))
         self.assertEqual(events, ['overlay.cleanup', 'renderer.close', 'hud.close',
                                  'presentation.cleanup', 'quit'])

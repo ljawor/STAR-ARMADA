@@ -394,10 +394,10 @@ class HandoffTests(unittest.TestCase):
         inp.groups = {1: {own, 999999}}
         inp._pending_ability = {'unsafe': True}
         cam.follow_id = own
-        namespace = dict(gm=old, state=old.state, camera=cam, renderer=ren,
+        namespace: dict = dict(gm=old, state=old.state, camera=cam, renderer=ren,
                          hud=hud, inputc=inp, audio=audio, recording=rec,
                          net_session=session, local_player=0, DataStore=DataStore,
-                         W=800, H=600, SETTINGS={}, accumulator=99,
+                         W=800, H=600, CPP_HUD_SIZE=(1280, 800), SETTINGS={}, accumulator=99,
                          mission_def=None, last_autosave=0,
                          Camera=Camera, Renderer=Renderer, HUD=HUD,
                          InputController=InputController, _AppGlue=lambda: object())

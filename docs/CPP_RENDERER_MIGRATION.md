@@ -47,6 +47,12 @@ rather than good intentions. Each one names the section that enforces it.
 | Continue past W05 (in-game switch behind a flag) | owner, on a playable build | after W05 |
 | Make the C++ renderer the default | owner, explicit, one line | W07 only |
 | Delete the legacy renderer | owner, separate later decision | after W07 + one release |
+
+**Status note (#160).** The runtime half is done: `main.py` has one renderer, no `--renderer` switch,
+no settings value and no fallback — a missing or dead window is reported and the match is left, and
+a fresh launch without the built viewer stops with the build command instead of drawing a legacy
+world. What remains of this row is the deletion of `render/renderer.py` and the code that still
+projects floating text through it, which is a separate change.
 | Any performance target used as an acceptance gate | owner | before W06 |
 | Gameplay, balance, asset, approval-record changes | **out of scope entirely** | — |
 

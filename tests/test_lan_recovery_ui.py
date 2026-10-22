@@ -160,7 +160,13 @@ class RecoveryUITests(unittest.TestCase):
         self.assertEqual(order, ['recovery', 'presentation', 'input'])
         all_calls = [n.func.id for n in ast.walk(loop)
                      if isinstance(n, ast.Call) and isinstance(n.func, ast.Name)]
-        self.assertIn('draw_recovery_overlay', all_calls, 'main never displays abort/progress')
+        # The window owns every surface now (#160): the loop hands the frame to the producer, and the
+        # producer composes the recovery overlay into it (`cpp_overlay_layers`).
+        self.assertIn('cpp_publish', all_calls, 'main never displays the world the loop is running')
+        layers = next(n for n in ast.parse((Path(__file__).resolve().parents[1] / 'main.py').read_text()).body
+                      if isinstance(n, ast.FunctionDef) and n.name == 'cpp_overlay_layers')
+        self.assertIn('recovery_overlay.draw', ast.unparse(layers),
+                      'the native overlay composer must carry abort/progress')
 
     def test_lan_menu_failed_recovery_opt_in_releases_unusable_socket(self):
         from render.menus import MenuStack
@@ -227,9 +233,10 @@ class RecoveryUITests(unittest.TestCase):
         controller._pending_ability = {'unsafe': True}
         hud.placement = {'unsafe': True}
         notices = []
-        namespace = dict(net_session=session, gm=manager, state=manager.state,
+        namespace: dict = dict(net_session=session, gm=manager, state=manager.state,
                          camera=camera, hud=hud, inputc=controller, pygame=pygame,
                          recovery_overlay=None, W=640, H=480, accumulator=42.,
+                         CPP_HUD_SIZE=(1280, 800),
                          leave_game=lambda reason: notices.append(reason))
         exec(compile(ast.Module(body=nodes, type_ignores=[]), 'main.py', 'exec'), namespace)
         sessions[1]._peers[0].sock.shutdown(socket.SHUT_RDWR)

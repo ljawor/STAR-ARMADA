@@ -237,12 +237,17 @@ class CampaignResultDestinationTests(unittest.TestCase):
 
     def test_finished_campaign_cinematic_routes_through_the_campaign_screen(self):
         calls = []
+        # The presentation ends only if the window actually showed it (#160): a dead window is a
+        # fault (`test_hybrid_main` covers that), never a reason to draw a legacy frame here.
         ns = {'cinematic': SimpleNamespace(finished=True, outcome='MISSION COMPLETE',
                                            update=lambda dt: None,
                                            draw_gl=lambda w, h: None),
               'accumulator': 1.0, 'camera': SimpleNamespace(apply=lambda w, h: None),
-              'renderer': SimpleNamespace(placement=None, draw=lambda *a: None),
               'pygame': pygame, 'W': 1280, 'H': 800,
+              'CPP': {'failed': False}, 'CPP_HUD_SIZE': (1280, 800), 'RENDERER': 'cpp',
+              'SMOKE': False, 'cpp_publish': lambda *a, **k: True,
+              'cpp_drawing': lambda: True, 'cpp_fatal': lambda reason: calls.append(('fault', reason)),
+              'state': object(), 'gm': SimpleNamespace(ds=object()), 'local_player': 0, 'fps': 30.,
               'mission_def': {'id': 'm01_recovery_drill'},
               'leave_game': lambda *a, **k: calls.append((a, k))}
         _exec_main(('draw_campaign_presentation',), ns)
