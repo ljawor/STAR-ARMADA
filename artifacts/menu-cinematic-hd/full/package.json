@@ -1,0 +1,184 @@
+{
+  "destination": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-candidate-v1/battle.zip",
+  "bytes": 96737678,
+  "metadata": {
+    "version": 1,
+    "width": 2560,
+    "height": 1440,
+    "fps": 24,
+    "frame_count": 360,
+    "still_frame": 180,
+    "loop": "baked-crossfade",
+    "native_width": 2560,
+    "native_height": 1440,
+    "ai_upscaled": false,
+    "source_frame_count": 384,
+    "source_seconds": 16,
+    "overlap_seconds": 1,
+    "crossfade_jpeg_quality": 86,
+    "crossfade_jpeg_subsampling": "4:4:4",
+    "provenance": {
+      "scene": {
+        "version": 1,
+        "resolution": [
+          2560,
+          1440
+        ],
+        "fps": 24,
+        "source_seconds": 16,
+        "overlap_seconds": 1,
+        "scope": "offline menu movie only; no gameplay or runtime renderer changes",
+        "renderer": "Blender 5.0.1 EEVEE offline cinematic, not native gameplay renderer",
+        "authoring": "script-authoritative; original approved core geometry, cinematic-only materials and lighting",
+        "repo_root": "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA",
+        "ships": [
+          {
+            "id": 0,
+            "data_id": "imperial_supercapital",
+            "faction": "imperial",
+            "binding": "imperial:supercapital",
+            "asset": "core:imperial/supercapital",
+            "revision": "6eb500499505e10b6609db34472dddf03275952894a8a608ca4414b76a0114b0",
+            "runtime_path": "assets/models/imperial_supercapital.mesh.json",
+            "runtime_sha256": "1c44c3e7a78241b5048a9aefe23549b8578c0a21081ad797ce640e8ad9a98dbf",
+            "triangle_count": 2592,
+            "length": 320.60175000000004,
+            "scale": 1.7036700977240242,
+            "location": [
+              -210,
+              -110,
+              0
+            ],
+            "yaw": 76
+          },
+          {
+            "id": 1,
+            "data_id": "imperial_battleship",
+            "faction": "imperial",
+            "binding": "imperial:battleship",
+            "asset": "core:imperial/battleship",
+            "revision": "974d00963c452f85a870ae02a6f9f19e5778e8ea53f9f0998b3c34b0ab6580d4",
+            "runtime_path": "assets/models/imperial_battleship.mesh.json",
+            "runtime_sha256": "3c69c3db9d0f55aba714d1af4bafbebc7493afb5da3a80d7bd59fccc7be8ac79",
+            "triangle_count": 2468,
+            "length": 224.421225,
+            "scale": 1.1925690684068169,
+            "location": [
+              -235,
+              180,
+              30
+            ],
+            "yaw": 76
+          },
+          {
+            "id": 2,
+            "data_id": "imperial_frigate",
+            "faction": "imperial",
+            "binding": "imperial:frigate",
+            "asset": "core:imperial/frigate",
+            "revision": "c0cf348ad0163a52a10eb9140c1c43abf2a6e3ed2d7fd113d6bc95746aa03109",
+            "runtime_path": "assets/models/imperial_frigate.mesh.json",
+            "runtime_sha256": "6c5d925bcd67bd655aae5f7e4bbdfa178257a4d0a6897f52b8664dda3f94752d",
+            "triangle_count": 2416,
+            "length": 96.180525,
+            "scale": 1.0499942686215216,
+            "location": [
+              -75,
+              -35,
+              -70
+            ],
+            "yaw": 76
+          },
+          {
+            "id": 3,
+            "data_id": "imperial_frigate",
+            "faction": "imperial",
+            "binding": "imperial:frigate",
+            "asset": "core:imperial/frigate",
+            "revision": "c0cf348ad0163a52a10eb9140c1c43abf2a6e3ed2d7fd113d6bc95746aa03109",
+            "runtime_path": "assets/models/imperial_frigate.mesh.json",
+            "runtime_sha256": "6c5d925bcd67bd655aae5f7e4bbdfa178257a4d0a6897f52b8664dda3f94752d",
+            "triangle_count": 2416,
+            "length": 96.180525,
+            "scale": 1.0499942686215216,
+            "location": [
+              -300,
+              340,
+              75
+            ],
+            "yaw": 76
+          },
+          {
+            "id": 4,
+            "data_id": "rebel_battleship",
+            "faction": "rebel",
+            "binding": "rebel:battleship",
+            "asset": "core:alliance/battleship",
+            "revision": "7634f9edda51e6a87a50cfbcf697e914ae0f94ba16f0aab6eb59a939214ed7d9",
+            "runtime_path": "assets/models/alliance_battleship.mesh.json",
+            "runtime_sha256": "0a4e397d5c0b60f70fbba35f3e4f4a5ac997ac4de079f821f8f29db9872c95cd",
+            "triangle_count": 11457,
+            "length": 224.421225,
+            "scale": 0.8058212746858169,
+            "location": [
+              205,
+              100,
+              25
+            ],
+            "yaw": -104
+          },
+          {
+            "id": 5,
+            "data_id": "rebel_frigate",
+            "faction": "rebel",
+            "binding": "rebel:frigate",
+            "asset": "core:alliance/frigate",
+            "revision": "60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df",
+            "runtime_path": "assets/models/alliance_frigate.mesh.json",
+            "runtime_sha256": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+            "triangle_count": 7708,
+            "length": 96.180525,
+            "scale": 0.6257679042114751,
+            "location": [
+              90,
+              40,
+              -60
+            ],
+            "yaw": -104
+          },
+          {
+            "id": 6,
+            "data_id": "rebel_frigate",
+            "faction": "rebel",
+            "binding": "rebel:frigate",
+            "asset": "core:alliance/frigate",
+            "revision": "60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df",
+            "runtime_path": "assets/models/alliance_frigate.mesh.json",
+            "runtime_sha256": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+            "triangle_count": 7708,
+            "length": 96.180525,
+            "scale": 0.6257679042114751,
+            "location": [
+              300,
+              310,
+              80
+            ],
+            "yaw": -104
+          }
+        ]
+      },
+      "render_code_sha256": "ff20306613c82940d717e9f24a080b68d9b36f21f29f82a860514ce7667fb274",
+      "scene_spec_sha256": "244eeace04d869296272a464703fc4951ebf5a0a729492a5ce162fc355edb4de",
+      "blender_version": "5.0.1",
+      "samples": 64,
+      "source_png_sha256": "d14aca5104b23355e945f1600385381ca35946351577b2d9ef41762751dde1ed",
+      "delivery_jpeg_quality": 86,
+      "delivery_subsampling": "4:4:4",
+      "minimum_png_to_jpeg_psnr_db": 43.20165659427721,
+      "resize_operations": 0,
+      "look_approval": "Approve this look\u2014build the full animation"
+    },
+    "source_sha256": "617cd29a5aa16a1a39e36e44e089e315a1f434c956802fbf13daf06d6adf8f4f"
+  },
+  "validated_frames": 360
+}

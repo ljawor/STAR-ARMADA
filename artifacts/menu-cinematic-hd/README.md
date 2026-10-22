@@ -1,0 +1,85 @@
+# Native 1440p startup battle cinematic
+
+## Scope
+
+Offline menu-movie replacement only. The gameplay renderer, simulation, approved
+model catalogue, saves and video runtime dependencies are unchanged. The scene
+uses the approved core mesh bytes at real class lengths; cinematic materials,
+lighting, nebula, camera, weapons and shield treatment live in the offline tool.
+
+## Owner appearance gate
+
+The owner reviewed the native-resolution look through the actual startup
+compositor and answered **“Approve this look—build the full animation”**.
+`look-development/approval.json` preserves that wording, source/model pins and
+three native probes. This approves the visual direction and full bake, **not**
+merge, release, gameplay graphics or final playback acceptance.
+
+The early look probes were captured from uncommitted authoring code. Their raw
+Blender/helper SHA-256 pins are retained rather than falsely labelling them as a
+committed capture. The full bake used the identical approved Blender script;
+frame24's mean absolute RGB difference from the approved PNG was below0.002 per
+channel. A fresh actual-main capture of committed candidate
+`c3b81b6a46496b651a64c5a9d0ba7c4fa4f246c2` uses the default installed asset,
+not a review-path substitution. `full/handover.json` binds the source/asset hashes
+to `full/committed-main.png`; its pixels match the validated precommit capture.
+This remains a Reduced Motion still; full-loop evidence is recorded separately.
+
+## Completed render and candidate audit
+
+- Native **2560×1440**, 100% render scale, Blender5.0.1 EEVEE, 64samples.
+- 384source frames completed under an independent process-group deadline;
+  exit0, original authoring source hash unchanged.
+- Final **360frames / 15seconds / 24fps**; smoothstep overlap loop.
+- Delivery JPEG86, **4:4:4colour**, no resizing or AI upscaling. Every PNG/JPEG
+  comparison exceeded the predefined42dBPSNR floor; minimum43.2017dB.
+- Exact staged ZIP: **96,737,678bytes**, SHA-256
+  `33fdd93e67ad66201ce9def49d6f9ba1cb5a2d502fee2ab1f14196e6fca93ae7`.
+- All360 frames decoded through the actual pygame `MenuMovie` runtime. Local
+  native decode mean4.92ms / p955.11ms / max11.72ms; cache retained22,118,400bytes,
+  at most two frames. These are codec measurements, not interactive gameplayFPS.
+- Last-to-first mean absolute RGB difference1.3998, below the predefined8 bound.
+  Reduced Motion returned identical pixels at distinct elapsed phases.
+- Full MP4 decoded successfully with ffmpeg; ffprobe read360frames at2560×1440
+  and24/1fps. `full/preview.mp4` is a local-only review copy, intentionally ignored
+  by the existing repository rule, not the runtime asset. Its hash/storage scope
+  remains in the evidence manifest; a fresh clone can regenerate it offline.
+- Real `main.py` startup capture at2560×1440, plus9 production SDL/OpenGL
+  compositor captures across800×600,1280×800,1440×900 at start/middle/wrap.
+  Navigation to main, Reduced Motion and cinematics-off moving-star fallback
+  passed. Narrow windows deliberately cover-crop the cinematic; not every hull
+  remains fully in-frame. Menus/logo remain readable.
+- Focused CPU suite103passed,2 opt-in GPU/full-package tests skipped by default;
+  additional menu/resolution/language regression suite24passed. The full bake,
+  decode and compositor gates above were executed separately, not inferred from
+  those skipped tests.
+
+## Review and limitations
+
+The first independent code review found two offline-tool issues: ffmpeg could
+block before reaching its wait timeout, and an encoding report could overwrite
+source/output images. The streaming helper now uses nonblocking pipes and one
+encoding deadline; report paths are preflighted and exclusively created. CPU
+regressions exercise stalled/early-exit encoders and source/output alias cases.
+Independent re-review passed with no remaining security or logic findings;
+its 69 focused CPU tests passed. The optional extra publication-race regression
+was suggested as coverage, not an unresolved implementation defect.
+
+An initial fallback probe failed due to a NumPy comparison in the probe itself;
+it was corrected to compare a copied array and rerun successfully. No failing
+product result is hidden by that correction.
+
+`full/scene.blend` is an editable still master; animation authority is
+`tools/cinematics/blender_scene.py` plus its pinned plan and helper. Raw full PNG
+sequences remain in scratch and are not duplicated in Git. Recorded paths in
+historical receipts are capture locations, not portable build inputs.
+
+Windows, Retina-specific device behaviour, frozen packages and the project-wide
+long acceptance suite were not established by this local movie task. At capture
+handover, final owner approval and merge were pending. The owner subsequently
+approved the completed result and explicitly authorized merge: **“looks perfect
+merge please”**. `full/owner-approval.json` pins that authorization to the approved
+candidate and exact movie hash; it does not claim an independently observed
+physical play-test. The capture-time flags in `full/handover.json` remain a
+historical record, not the current approval state. The GitHub PR records the final
+merge outcome. This does not authorize a release or tag.

@@ -1,0 +1,2849 @@
+{
+  "plan": {
+    "version": 1,
+    "resolution": [
+      2560,
+      1440
+    ],
+    "fps": 24,
+    "source_seconds": 16,
+    "overlap_seconds": 1,
+    "scope": "offline menu movie only; no gameplay or runtime renderer changes",
+    "renderer": "Blender 5.0.1 EEVEE offline cinematic, not native gameplay renderer",
+    "authoring": "script-authoritative; original approved core geometry, cinematic-only materials and lighting",
+    "repo_root": "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA",
+    "ships": [
+      {
+        "id": 0,
+        "data_id": "imperial_supercapital",
+        "faction": "imperial",
+        "binding": "imperial:supercapital",
+        "asset": "core:imperial/supercapital",
+        "revision": "6eb500499505e10b6609db34472dddf03275952894a8a608ca4414b76a0114b0",
+        "runtime_path": "assets/models/imperial_supercapital.mesh.json",
+        "runtime_sha256": "1c44c3e7a78241b5048a9aefe23549b8578c0a21081ad797ce640e8ad9a98dbf",
+        "triangle_count": 2592,
+        "length": 320.60175000000004,
+        "scale": 1.7036700977240242,
+        "location": [
+          -210,
+          -110,
+          0
+        ],
+        "yaw": 76
+      },
+      {
+        "id": 1,
+        "data_id": "imperial_battleship",
+        "faction": "imperial",
+        "binding": "imperial:battleship",
+        "asset": "core:imperial/battleship",
+        "revision": "974d00963c452f85a870ae02a6f9f19e5778e8ea53f9f0998b3c34b0ab6580d4",
+        "runtime_path": "assets/models/imperial_battleship.mesh.json",
+        "runtime_sha256": "3c69c3db9d0f55aba714d1af4bafbebc7493afb5da3a80d7bd59fccc7be8ac79",
+        "triangle_count": 2468,
+        "length": 224.421225,
+        "scale": 1.1925690684068169,
+        "location": [
+          -235,
+          180,
+          30
+        ],
+        "yaw": 76
+      },
+      {
+        "id": 2,
+        "data_id": "imperial_frigate",
+        "faction": "imperial",
+        "binding": "imperial:frigate",
+        "asset": "core:imperial/frigate",
+        "revision": "c0cf348ad0163a52a10eb9140c1c43abf2a6e3ed2d7fd113d6bc95746aa03109",
+        "runtime_path": "assets/models/imperial_frigate.mesh.json",
+        "runtime_sha256": "6c5d925bcd67bd655aae5f7e4bbdfa178257a4d0a6897f52b8664dda3f94752d",
+        "triangle_count": 2416,
+        "length": 96.180525,
+        "scale": 1.0499942686215216,
+        "location": [
+          -75,
+          -35,
+          -70
+        ],
+        "yaw": 76
+      },
+      {
+        "id": 3,
+        "data_id": "imperial_frigate",
+        "faction": "imperial",
+        "binding": "imperial:frigate",
+        "asset": "core:imperial/frigate",
+        "revision": "c0cf348ad0163a52a10eb9140c1c43abf2a6e3ed2d7fd113d6bc95746aa03109",
+        "runtime_path": "assets/models/imperial_frigate.mesh.json",
+        "runtime_sha256": "6c5d925bcd67bd655aae5f7e4bbdfa178257a4d0a6897f52b8664dda3f94752d",
+        "triangle_count": 2416,
+        "length": 96.180525,
+        "scale": 1.0499942686215216,
+        "location": [
+          -300,
+          340,
+          75
+        ],
+        "yaw": 76
+      },
+      {
+        "id": 4,
+        "data_id": "rebel_battleship",
+        "faction": "rebel",
+        "binding": "rebel:battleship",
+        "asset": "core:alliance/battleship",
+        "revision": "7634f9edda51e6a87a50cfbcf697e914ae0f94ba16f0aab6eb59a939214ed7d9",
+        "runtime_path": "assets/models/alliance_battleship.mesh.json",
+        "runtime_sha256": "0a4e397d5c0b60f70fbba35f3e4f4a5ac997ac4de079f821f8f29db9872c95cd",
+        "triangle_count": 11457,
+        "length": 224.421225,
+        "scale": 0.8058212746858169,
+        "location": [
+          205,
+          100,
+          25
+        ],
+        "yaw": -104
+      },
+      {
+        "id": 5,
+        "data_id": "rebel_frigate",
+        "faction": "rebel",
+        "binding": "rebel:frigate",
+        "asset": "core:alliance/frigate",
+        "revision": "60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df",
+        "runtime_path": "assets/models/alliance_frigate.mesh.json",
+        "runtime_sha256": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+        "triangle_count": 7708,
+        "length": 96.180525,
+        "scale": 0.6257679042114751,
+        "location": [
+          90,
+          40,
+          -60
+        ],
+        "yaw": -104
+      },
+      {
+        "id": 6,
+        "data_id": "rebel_frigate",
+        "faction": "rebel",
+        "binding": "rebel:frigate",
+        "asset": "core:alliance/frigate",
+        "revision": "60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df",
+        "runtime_path": "assets/models/alliance_frigate.mesh.json",
+        "runtime_sha256": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+        "triangle_count": 7708,
+        "length": 96.180525,
+        "scale": 0.6257679042114751,
+        "location": [
+          300,
+          310,
+          80
+        ],
+        "yaw": -104
+      }
+    ]
+  },
+  "blender_version": "5.0.1",
+  "engine": "BLENDER_EEVEE",
+  "samples": 64,
+  "resolution": [
+    2560,
+    1440
+  ],
+  "renders": [
+    {
+      "frame": 0,
+      "seconds": 5.523796833003871,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00000.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00000.png",
+      "sha256": "b6bf080459a65a1d6e7eac5727134cd0b97f5b585bf12e0105ceeccd463b0b80"
+    },
+    {
+      "frame": 1,
+      "seconds": 5.208412792067975,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00001.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00001.png",
+      "sha256": "fa2ade20821cb2d79fcdd98521fd01d4752db2ccffdebfd98169eebdcaab81e3"
+    },
+    {
+      "frame": 2,
+      "seconds": 4.582477166084573,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00002.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00002.png",
+      "sha256": "10b12e53ada9375019f02b5e7733a6ef9005a1a0b01b5e12cc19680ce22ab6a0"
+    },
+    {
+      "frame": 3,
+      "seconds": 4.970656958059408,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00003.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00003.png",
+      "sha256": "dec8030941bdc65734b939aa0896fd997ad743bb7a14f73fac1d68e84a9727fd"
+    },
+    {
+      "frame": 4,
+      "seconds": 5.304870499996468,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00004.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00004.png",
+      "sha256": "3ed80819f1011bc5aa16c55627282464170fc708063ac45fc14146938063d6b3"
+    },
+    {
+      "frame": 5,
+      "seconds": 5.004542040987872,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00005.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00005.png",
+      "sha256": "d7774098e1322707e4a8a04e5ebf4a954ae1437101f682a0ef387e3a75257677"
+    },
+    {
+      "frame": 6,
+      "seconds": 5.129469167091884,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00006.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00006.png",
+      "sha256": "f693f91798c8510d96343d61ae55955bd1f02a1f915aeb7ef8058ff9dd9abf7c"
+    },
+    {
+      "frame": 7,
+      "seconds": 4.747305875062011,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00007.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00007.png",
+      "sha256": "039b4a3f8cead37c36f4d8ec9a9f407ca454af2cfbea012a25b06fa021b15aea"
+    },
+    {
+      "frame": 8,
+      "seconds": 5.272113916929811,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00008.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00008.png",
+      "sha256": "51034952f2aacb9007fb70e7424ee3945be856858935389ac4ad653f7e9cdcdc"
+    },
+    {
+      "frame": 9,
+      "seconds": 4.547060749959201,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00009.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00009.png",
+      "sha256": "00ccd85679bf05423fb16ac5d1aa5ffa8ce24a956d1754c75d78e5439be38c50"
+    },
+    {
+      "frame": 10,
+      "seconds": 5.3741227079881355,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00010.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00010.png",
+      "sha256": "35afc1b67f76fc75e605d6cf9ecf8c99b4e67c8516d9f1b536414c4f4c296682"
+    },
+    {
+      "frame": 11,
+      "seconds": 5.370664832997136,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00011.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00011.png",
+      "sha256": "32b14b6356c61825151b1894ac58d1666ffcb91703a8d06ec1c4f2ebcc5f82f5"
+    },
+    {
+      "frame": 12,
+      "seconds": 5.795807832968421,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00012.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00012.png",
+      "sha256": "17ad4bb53d2767af585b40df4978b01cdc2cafffbe89253b383b6fb323a37ecd"
+    },
+    {
+      "frame": 13,
+      "seconds": 5.40591912495438,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00013.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00013.png",
+      "sha256": "5228fb0dfcf59dfb33316d2f4c8b89d45a631a352e778b855309f8ccb8bc5c02"
+    },
+    {
+      "frame": 14,
+      "seconds": 5.636092166998424,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00014.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00014.png",
+      "sha256": "ac9cc6cb38a049559a8e9416c20287ba88647ee379e6de4f675d7be02e87ef07"
+    },
+    {
+      "frame": 15,
+      "seconds": 5.224896042025648,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00015.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00015.png",
+      "sha256": "8d738d8b3118b8a5fcc9de09f079a17c7fc42791f92ed444d42224b306903fc9"
+    },
+    {
+      "frame": 16,
+      "seconds": 5.558729542070068,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00016.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00016.png",
+      "sha256": "97fa0051e1050376a33a888759cc9b26dc2373910158d14769da281911bf0818"
+    },
+    {
+      "frame": 17,
+      "seconds": 5.617901750025339,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00017.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00017.png",
+      "sha256": "d60ad48dfe930e5679b7f548bd784fcd0bb857733c49db438e91b9002cbec316"
+    },
+    {
+      "frame": 18,
+      "seconds": 5.732150499941781,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00018.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00018.png",
+      "sha256": "62a389ad35a4b589d6e62b354eb517e46c008002d626026648c9fcfa254595fb"
+    },
+    {
+      "frame": 19,
+      "seconds": 5.350069082924165,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00019.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00019.png",
+      "sha256": "60e24d9b2516808703706777e2af25a47b91f3f59611fa0168896615e7480c8d"
+    },
+    {
+      "frame": 20,
+      "seconds": 5.404297332977876,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00020.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00020.png",
+      "sha256": "15f8e1bd7ce63882905e48542ff91796237a8328c5cd3765b60b60c2b7ae2f1c"
+    },
+    {
+      "frame": 21,
+      "seconds": 5.484218417084776,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00021.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00021.png",
+      "sha256": "5a22c4edba2ca166e30e4447c0e0f31daed8309f3fbfa3e1e1270244e33c64e7"
+    },
+    {
+      "frame": 22,
+      "seconds": 5.354617165983655,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00022.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00022.png",
+      "sha256": "093541f51064afa466c3363f9c70b2d99cce276c8afcb131e17e9ede82f0f7da"
+    },
+    {
+      "frame": 23,
+      "seconds": 4.892644833074883,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00023.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00023.png",
+      "sha256": "5a0dc7d62bdc5d2ab83e2aa323108275632378b38fe9d2e32d50abee9efb0e36"
+    },
+    {
+      "frame": 24,
+      "seconds": 5.219964624964632,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00024.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00024.png",
+      "sha256": "86d654904f95a18a090fcfc99e8ef21bc975d8b010e0ef13fb01fbca2cb28584"
+    },
+    {
+      "frame": 25,
+      "seconds": 5.533118040999398,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00025.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00025.png",
+      "sha256": "b4a44241a4f26a615bc20b32e69c778e298c98e346194fafd94e67f1e0d553f3"
+    },
+    {
+      "frame": 26,
+      "seconds": 5.2140102500561625,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00026.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00026.png",
+      "sha256": "a28c46b2e4d699f8637a0d45d1718b5aba294fa2878b2eee43307dead34f7071"
+    },
+    {
+      "frame": 27,
+      "seconds": 5.245204709004611,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00027.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00027.png",
+      "sha256": "c181b9cf4208b22d86ce61d59b195865888389e222d1b32bc846f036114460bd"
+    },
+    {
+      "frame": 28,
+      "seconds": 5.05159970803652,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00028.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00028.png",
+      "sha256": "a899535e0e38b7b07b364775b69ab33221b7bf358ac3ef9d079223f3a1a135c4"
+    },
+    {
+      "frame": 29,
+      "seconds": 5.276440832996741,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00029.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00029.png",
+      "sha256": "899155fefa0b7f689e360670fdabc109f1678a44a8dd58afa9d8286d55b99347"
+    },
+    {
+      "frame": 30,
+      "seconds": 4.823900207993574,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00030.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00030.png",
+      "sha256": "77d7f49e2f33c674218bfa9ed8acee418471529b0d926cccc5ea80812633208a"
+    },
+    {
+      "frame": 31,
+      "seconds": 5.4287719579879194,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00031.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00031.png",
+      "sha256": "985845482e8e24fadf9550f55d66bb84ab1da241b57a9d1cadd7d124333c969c"
+    },
+    {
+      "frame": 32,
+      "seconds": 5.253390167024918,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00032.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00032.png",
+      "sha256": "602ab0c036c3e3dfd2912c21dd346af60564d5c8f936a64fd7d73c2fbe2774d6"
+    },
+    {
+      "frame": 33,
+      "seconds": 5.767099542077631,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00033.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00033.png",
+      "sha256": "9649d9bc457b49f616a06b7d3271b609230e4e18e8e0a5670e991c8bebc4d630"
+    },
+    {
+      "frame": 34,
+      "seconds": 5.181387708056718,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00034.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00034.png",
+      "sha256": "8aa93c2910a372e2ca520751a1b8e21bc12a7d31d854d15fc93fb84ab27d5514"
+    },
+    {
+      "frame": 35,
+      "seconds": 5.012342875008471,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00035.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00035.png",
+      "sha256": "6a9c8b5a694038ea83a3449db41cca9e36ecc2a20c832a37bfb6eed962bbdbaf"
+    },
+    {
+      "frame": 36,
+      "seconds": 5.361860290984623,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00036.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00036.png",
+      "sha256": "85be55280e6fd4edbe8da5ab5462b9f48cad8b3b11510e5f1157b8a568f3dd92"
+    },
+    {
+      "frame": 37,
+      "seconds": 5.5872639999724925,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00037.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00037.png",
+      "sha256": "28fe04beb680ac0eae040e2ebd266ac44f9add53584fe279a0d2e91fa28c51d2"
+    },
+    {
+      "frame": 38,
+      "seconds": 5.471032207948156,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00038.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00038.png",
+      "sha256": "1e418273283c0718b48262b6afe3229bd0369935687b682c5d92693569568fc5"
+    },
+    {
+      "frame": 39,
+      "seconds": 5.1137667500879616,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00039.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00039.png",
+      "sha256": "645930507b0990afa583d27d94ab9bbd371dca994648cbf97621cd76958f4593"
+    },
+    {
+      "frame": 40,
+      "seconds": 5.340405458002351,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00040.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00040.png",
+      "sha256": "eafb262b7bd39e6a1d9ca88387596659729cea8005e4f6a9a598de4715517765"
+    },
+    {
+      "frame": 41,
+      "seconds": 5.3309192499145865,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00041.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00041.png",
+      "sha256": "11680e1bfa1173bede817e4702cb8e63e3f313d9ac37e58d28fb45ebb666cb60"
+    },
+    {
+      "frame": 42,
+      "seconds": 5.5530079999007285,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00042.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00042.png",
+      "sha256": "f5186455a70cc1b76b21422a9ceb5ecec988749e140a97fc2a7440b011c0b5bd"
+    },
+    {
+      "frame": 43,
+      "seconds": 6.21896841598209,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00043.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00043.png",
+      "sha256": "03c23450d119751425f1da4ca42b961adbc1303390c8b996123c6328009de856"
+    },
+    {
+      "frame": 44,
+      "seconds": 5.0858871669042856,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00044.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00044.png",
+      "sha256": "9f99c6d56996a0d0283092a7b2e5740983d04820ece31fc14caa5e6bac683ba5"
+    },
+    {
+      "frame": 45,
+      "seconds": 5.219509874936193,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00045.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00045.png",
+      "sha256": "4992342428655da6a7d70029c37b4e770bc1c84e10b078564ab57f1c2f91bd21"
+    },
+    {
+      "frame": 46,
+      "seconds": 5.99756091600284,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00046.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00046.png",
+      "sha256": "02bd9739b3a7be6f7bec84092815e53caddf403e2eda18fa8d938553e2bdb9aa"
+    },
+    {
+      "frame": 47,
+      "seconds": 5.522977250046097,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00047.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00047.png",
+      "sha256": "85e23698128fadf837f171c46a1a8907b23e24657394463c6798a6936e03bfc5"
+    },
+    {
+      "frame": 48,
+      "seconds": 5.338378167012706,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00048.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00048.png",
+      "sha256": "07c35c6749f10bbed24058498ff6916efa1fc7b9b8bd9a8223a0b0cac9b681d9"
+    },
+    {
+      "frame": 49,
+      "seconds": 5.055515207932331,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00049.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00049.png",
+      "sha256": "4adf2e9c894289895c36721e686d197b1f26a68ebcb3d389078f811044398076"
+    },
+    {
+      "frame": 50,
+      "seconds": 5.677197834011167,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00050.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00050.png",
+      "sha256": "a978c8fcf7051821e24fcfa556274684a08339abfb22ea2b264c867590916d18"
+    },
+    {
+      "frame": 51,
+      "seconds": 4.7242298340424895,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00051.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00051.png",
+      "sha256": "87d608d0bbfa518dfe33eddcc56822e1d950cdd341ce9688cf1fa5b60073f277"
+    },
+    {
+      "frame": 52,
+      "seconds": 5.167356624966487,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00052.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00052.png",
+      "sha256": "eb5584cd9eebaeb1ce7085de299e6bb60f392c8097f0a208d5b550863bda4df4"
+    },
+    {
+      "frame": 53,
+      "seconds": 5.085289500071667,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00053.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00053.png",
+      "sha256": "7179c9fdc434f95f8b3083b095c0daf8fa12a1c104eac1fac6a67d73fd0dedfb"
+    },
+    {
+      "frame": 54,
+      "seconds": 5.575744834030047,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00054.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00054.png",
+      "sha256": "c245aa5527d5b2ca3e6a17510e916a7fc1e662013f16e2470cdea256f70a5720"
+    },
+    {
+      "frame": 55,
+      "seconds": 5.316073082969524,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00055.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00055.png",
+      "sha256": "ef51fe4d1ff7d2e3bdec4ecc8813e99f732dcce58abd27c35e429670cb31bcb2"
+    },
+    {
+      "frame": 56,
+      "seconds": 4.965178000042215,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00056.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00056.png",
+      "sha256": "733d9b98d5a9167d209e227f5dd61663682e975573f426773329849ce93f039e"
+    },
+    {
+      "frame": 57,
+      "seconds": 5.1473721250658855,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00057.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00057.png",
+      "sha256": "ac3d93f69daafa6221347dd7226ce3452643910d13ef502ca7dc101a619cb3ad"
+    },
+    {
+      "frame": 58,
+      "seconds": 5.51453283301089,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00058.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00058.png",
+      "sha256": "5cdfaec7d26016681eb5f2ca1a583a4de30a8d53255b3f3bc74521cae6afb1d1"
+    },
+    {
+      "frame": 59,
+      "seconds": 5.4158468750538304,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00059.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00059.png",
+      "sha256": "f4016cd61929ebc20b5b38e03ca805cec5852e7445feb009e725d9865d9b971d"
+    },
+    {
+      "frame": 60,
+      "seconds": 5.14668695803266,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00060.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00060.png",
+      "sha256": "ffd1f975231b420bf9f0476b7a5c8fae1cf249601d7799634e7c4b9c20e10a19"
+    },
+    {
+      "frame": 61,
+      "seconds": 5.395933832973242,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00061.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00061.png",
+      "sha256": "adab175ffe064267a1928b8bc8f9485a51774b9ed79e35a304c8d6ba3897c4fb"
+    },
+    {
+      "frame": 62,
+      "seconds": 5.4379900000058115,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00062.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00062.png",
+      "sha256": "fb39f6acc0d8b4f875eee44cf61316a18a0594d7fe040c60a8bdc2b742de6bd5"
+    },
+    {
+      "frame": 63,
+      "seconds": 5.648693167022429,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00063.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00063.png",
+      "sha256": "fe21bc94eae5c8cb77e432439b4fab2655261ed029d27bda26cf718ceb472e1e"
+    },
+    {
+      "frame": 64,
+      "seconds": 5.26052208407782,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00064.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00064.png",
+      "sha256": "af813b523b153fbd670228cb612e1702ef45acdcaf321f1c6f7948af73a452ba"
+    },
+    {
+      "frame": 65,
+      "seconds": 4.927851125015877,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00065.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00065.png",
+      "sha256": "46c071db1ca20d0449254914d4fb326648195e3213f8acbacf2c22936f3d57d0"
+    },
+    {
+      "frame": 66,
+      "seconds": 5.302761124912649,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00066.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00066.png",
+      "sha256": "19563cee3a6f5cc5bb0bb508483b4385335d3a49e0316d4a371711d16cb83a76"
+    },
+    {
+      "frame": 67,
+      "seconds": 5.725271209026687,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00067.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00067.png",
+      "sha256": "addcd2e5808807d3b4789080f0481fd57612fc4607a47c706cf87763a413c192"
+    },
+    {
+      "frame": 68,
+      "seconds": 5.298824624973349,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00068.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00068.png",
+      "sha256": "c107f619607523243d5a3d9409d7285210a30ce15a9b1f936933bbec38bf56a2"
+    },
+    {
+      "frame": 69,
+      "seconds": 5.276660708012059,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00069.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00069.png",
+      "sha256": "f7073344ac5c11aecc745876290f9ad7f434f3e2879aaf64fdb4a23a856ce690"
+    },
+    {
+      "frame": 70,
+      "seconds": 4.916858084034175,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00070.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00070.png",
+      "sha256": "4c66666cb95088bf2dcfa1b642f4e96f41cec4c691ed7745b999b6021afe862e"
+    },
+    {
+      "frame": 71,
+      "seconds": 5.390286625013687,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00071.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00071.png",
+      "sha256": "97b1c3af03a8ce1a3c29d1d0ab9742b4af0a0bf95130e9219c479da74bc369d0"
+    },
+    {
+      "frame": 72,
+      "seconds": 5.176547707989812,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00072.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00072.png",
+      "sha256": "c41acbd56ec67d41376ef16842c457daff762b6f8c45929d82540c8d6b3f3b10"
+    },
+    {
+      "frame": 73,
+      "seconds": 5.343988458043896,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00073.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00073.png",
+      "sha256": "713b74bee453b7685bcfd8cecd0ff84e45c4fb505831b1d5b6e72a1439bd2cc8"
+    },
+    {
+      "frame": 74,
+      "seconds": 5.432976124924608,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00074.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00074.png",
+      "sha256": "f375ce7634d0a1436157ba8316aefe515b6ddda897bb89846cae20ab03968a42"
+    },
+    {
+      "frame": 75,
+      "seconds": 6.058152290992439,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00075.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00075.png",
+      "sha256": "d6e4db65db6839161922f3e9a9c2256d499a59ff79ecaa3125721e777b05bcf3"
+    },
+    {
+      "frame": 76,
+      "seconds": 5.633433916023932,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00076.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00076.png",
+      "sha256": "7fe4c83cb9b9c348e96e9648759e5f95a5b6fad187652a6f2455c0c6d7875a1c"
+    },
+    {
+      "frame": 77,
+      "seconds": 5.02922279201448,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00077.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00077.png",
+      "sha256": "928cdbf95e8eeea184270f2d5050c2550960e91271b94a360686a27a1cb49a84"
+    },
+    {
+      "frame": 78,
+      "seconds": 5.238017207942903,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00078.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00078.png",
+      "sha256": "e55959a94a5228333a51218ebfceab3717bfc66d4c2085be3d568a79d7e35dfc"
+    },
+    {
+      "frame": 79,
+      "seconds": 5.720276999985799,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00079.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00079.png",
+      "sha256": "450b0b162f58f88764b6ac202e5accc41e3ea064dff277b1252d87570b88c635"
+    },
+    {
+      "frame": 80,
+      "seconds": 5.327945958008058,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00080.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00080.png",
+      "sha256": "55fbaa524a30cc246f2b59e6d667222ae9c13babe76e581c9f3d86a27fd5c905"
+    },
+    {
+      "frame": 81,
+      "seconds": 5.058546707965434,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00081.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00081.png",
+      "sha256": "29c04a6f8bdccdc63e64e13218fb4f9fabccf4dcfb12253aff6216809f0b42f8"
+    },
+    {
+      "frame": 82,
+      "seconds": 5.222969750058837,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00082.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00082.png",
+      "sha256": "d8e288014896615ce99638c9c6620c6cf55a5020d59d84d17512dd6928063182"
+    },
+    {
+      "frame": 83,
+      "seconds": 4.843002083944157,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00083.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00083.png",
+      "sha256": "317e301e7408836076619d2f8feb57f47e2f281308ddb7c3f9843a290cc62acc"
+    },
+    {
+      "frame": 84,
+      "seconds": 5.427904125070199,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00084.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00084.png",
+      "sha256": "24f03b5d37cec820845057636d9e2535ecfe994685e5701fba39e4e5b9e11057"
+    },
+    {
+      "frame": 85,
+      "seconds": 5.147707999916747,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00085.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00085.png",
+      "sha256": "1eba977dc31e9a792bd21aa51ce41888b853d95c6c363e947b9e8ea748d2c0b1"
+    },
+    {
+      "frame": 86,
+      "seconds": 5.15497204195708,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00086.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00086.png",
+      "sha256": "b422ebc9cc183ad3e6b05d20725b461378846a339a776412c764ec83bf8404eb"
+    },
+    {
+      "frame": 87,
+      "seconds": 4.213488457957283,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00087.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00087.png",
+      "sha256": "7f3d2c531442c12cfa2f0fe5162f3a4faef95584c0d42afa0d7749c4fd2aa22f"
+    },
+    {
+      "frame": 88,
+      "seconds": 5.74068579194136,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00088.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00088.png",
+      "sha256": "27a04828571067eb6ce09a23a0e0df011daffe3c86c12bd88f520520c68a8c97"
+    },
+    {
+      "frame": 89,
+      "seconds": 5.351773542002775,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00089.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00089.png",
+      "sha256": "e3c949853d898ad73ae44e172814faa768a33f441ff3f04c29ad55dd138c79a3"
+    },
+    {
+      "frame": 90,
+      "seconds": 5.54018825001549,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00090.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00090.png",
+      "sha256": "2628b7cd03a3114cced7b7f174760fe41e69a7ec3c56f853823c3548d80d3970"
+    },
+    {
+      "frame": 91,
+      "seconds": 5.02223112503998,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00091.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00091.png",
+      "sha256": "13ca8f8c752c7a035ba244410959a051bd2e74977f85fd865fbf2304263c0598"
+    },
+    {
+      "frame": 92,
+      "seconds": 5.511135041946545,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00092.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00092.png",
+      "sha256": "e58142cdbb09af69a5f351f543968bb1650816fdaa84b1bb2e52e6984d8094de"
+    },
+    {
+      "frame": 93,
+      "seconds": 5.046196582959965,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00093.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00093.png",
+      "sha256": "c1bad41ce4f37c33fa8194b304967701db99f46fe60c1cc00f30b22a3d40882c"
+    },
+    {
+      "frame": 94,
+      "seconds": 5.226048166980036,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00094.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00094.png",
+      "sha256": "14367394173e9b960f262fa0e2e85ad98a75bd99a788611d249f385887bca01b"
+    },
+    {
+      "frame": 95,
+      "seconds": 5.302875749999657,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00095.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00095.png",
+      "sha256": "7e9f9cddd7d9d11d332d657e87e548c4acf56d440afe02390fc8ab717e8c9d63"
+    },
+    {
+      "frame": 96,
+      "seconds": 5.448697208077647,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00096.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00096.png",
+      "sha256": "ae3e3c67343a3d82eb5cd9678e7893d11314317b96beb95c63fe6e4b7340e035"
+    },
+    {
+      "frame": 97,
+      "seconds": 5.4797504170564935,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00097.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00097.png",
+      "sha256": "795b0676f971f4bb6fdfeaf89e9f5ef6026a44e1541611c685ff2ea05be9e53d"
+    },
+    {
+      "frame": 98,
+      "seconds": 5.026749875047244,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00098.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00098.png",
+      "sha256": "11fbac778badc16d82866490e4c945c9180c56d648beb17ed447250e853433ed"
+    },
+    {
+      "frame": 99,
+      "seconds": 5.18892754195258,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00099.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00099.png",
+      "sha256": "b3c501f93cec9e8616a6753d29c1b0eb3b9f3513ee508d529db5d44a2b805fc7"
+    },
+    {
+      "frame": 100,
+      "seconds": 4.449778791982681,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00100.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00100.png",
+      "sha256": "97a04fc51946aa408591c75b9e84830e27e64354da578bf200871f374706fb0b"
+    },
+    {
+      "frame": 101,
+      "seconds": 5.487238582922146,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00101.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00101.png",
+      "sha256": "6077a0ebbd8f8042ee531d7bf434f34ae0ee2961de6abeb89337743fcc2eb146"
+    },
+    {
+      "frame": 102,
+      "seconds": 5.789813832961954,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00102.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00102.png",
+      "sha256": "4a20672542d30d2af3024c411c7a17ea21db008283cbe500f6ee9c7a741195fe"
+    },
+    {
+      "frame": 103,
+      "seconds": 5.361807500012219,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00103.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00103.png",
+      "sha256": "088cc53ef77afeb83a04e7e39135e0e6031ee67354a76873b323c6834a50fc66"
+    },
+    {
+      "frame": 104,
+      "seconds": 4.959752750000916,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00104.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00104.png",
+      "sha256": "91600baeecd0d872ad9b13b28d03aa1d63139b7c5b180f202388e2b34ff3f92e"
+    },
+    {
+      "frame": 105,
+      "seconds": 5.5681669160258025,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00105.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00105.png",
+      "sha256": "1dfbdd34c3c842f758ac1e02bd739cb6b76b81a414e16fe063c22d79232edb6c"
+    },
+    {
+      "frame": 106,
+      "seconds": 5.18069700000342,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00106.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00106.png",
+      "sha256": "dfde8ab516e029b0c13af279fb402e5bd6668dde701618f2f002745102e01838"
+    },
+    {
+      "frame": 107,
+      "seconds": 5.005807082983665,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00107.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00107.png",
+      "sha256": "7c02a95002e6cbe1fbca246f8b915a8dac24081be01892689843c6ac6372f1f3"
+    },
+    {
+      "frame": 108,
+      "seconds": 4.230372500023805,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00108.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00108.png",
+      "sha256": "3237f70cbeadaf38a30a291206b73b3a641e86f091253fd98726441fd01671ce"
+    },
+    {
+      "frame": 109,
+      "seconds": 5.690486834035255,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00109.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00109.png",
+      "sha256": "6107cb4ba24422e767ee0aeedeaf991df379869d95f74680f0bf39789f4a0060"
+    },
+    {
+      "frame": 110,
+      "seconds": 5.358459125040099,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00110.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00110.png",
+      "sha256": "8a2516f02147e53952b1669cf401c7d9fc2011037e5b47ca6cb2df88b1f43363"
+    },
+    {
+      "frame": 111,
+      "seconds": 5.387280416092835,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00111.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00111.png",
+      "sha256": "1e00500a695347472d54e5e85ba3636ba15fd3db0634d4380935c2c7dd37a74e"
+    },
+    {
+      "frame": 112,
+      "seconds": 5.14896379201673,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00112.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00112.png",
+      "sha256": "dce23d17658aae6ad5957b58187444447bd006b064e960a7bf49305215ae719c"
+    },
+    {
+      "frame": 113,
+      "seconds": 4.792719624936581,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00113.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00113.png",
+      "sha256": "53eaef69ade3ecffd59d8a5392ae927a5765f4afd0441069493573f79dc62a36"
+    },
+    {
+      "frame": 114,
+      "seconds": 5.202786458074115,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00114.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00114.png",
+      "sha256": "07e467dd008976b4bd1dc9a4e6b33ada924de124d5804c956cfb5725051d49fe"
+    },
+    {
+      "frame": 115,
+      "seconds": 5.847195124952123,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00115.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00115.png",
+      "sha256": "8198eb12f0facd6f06a5b744f2b4c8d934b199df4de3e8cbffd7588be0a62cc5"
+    },
+    {
+      "frame": 116,
+      "seconds": 5.273924583103508,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00116.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00116.png",
+      "sha256": "03bd2f6b124b2007553cf86eca078a37858ed3f41148df06339b48f19cd49cd3"
+    },
+    {
+      "frame": 117,
+      "seconds": 5.041519999969751,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00117.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00117.png",
+      "sha256": "1b736d42c35fd508bc5777bac4878c76aeaafa3ad5c6f977a44b161dbda84944"
+    },
+    {
+      "frame": 118,
+      "seconds": 5.4899082919582725,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00118.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00118.png",
+      "sha256": "5437c0b0dffce8cae123285262668a2f5ea86580d6f4c058837d9e7922a2b7ef"
+    },
+    {
+      "frame": 119,
+      "seconds": 5.140979832969606,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00119.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00119.png",
+      "sha256": "c66be90b6f972927c649d82de53c654e147dbe74bc2ce3e52e2e95f235e6ee16"
+    },
+    {
+      "frame": 120,
+      "seconds": 4.998996832990088,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00120.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00120.png",
+      "sha256": "65abd25ae658c65815d7f9823ecd75ca4662d5826c1f1d5ae8fbe89670341302"
+    },
+    {
+      "frame": 121,
+      "seconds": 4.625316750025377,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00121.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00121.png",
+      "sha256": "e9622c55643f79b622bbf69fc72bf50f151c28f2310ba6a29ada08f1ae49f539"
+    },
+    {
+      "frame": 122,
+      "seconds": 5.72671308403369,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00122.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00122.png",
+      "sha256": "640844ea601be134c37f132e60f795bafdd5f1bd418e9e4bd3238bb4036bb776"
+    },
+    {
+      "frame": 123,
+      "seconds": 5.2097337919985875,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00123.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00123.png",
+      "sha256": "6b60d0c0dd3fdb51b15f3d67c1edaef8435b92e8b2d2d259907a0df2b45cbc11"
+    },
+    {
+      "frame": 124,
+      "seconds": 5.351315459003672,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00124.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00124.png",
+      "sha256": "babcce45dd30e503f758e5596fe56f977e3d5bb8b71fc8cffc380d804d958824"
+    },
+    {
+      "frame": 125,
+      "seconds": 4.925163042033091,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00125.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00125.png",
+      "sha256": "0e4d0ebd334c2c1926fcd3d98a0e86da5e69908ac466e7c86ee2b24163ef9c18"
+    },
+    {
+      "frame": 126,
+      "seconds": 5.094360708026215,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00126.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00126.png",
+      "sha256": "9d99ccec2f97f45a22fb5c9f4d2d81e2ea2393e396cfab07d050ec3a31064837"
+    },
+    {
+      "frame": 127,
+      "seconds": 5.347179458010942,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00127.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00127.png",
+      "sha256": "2d6772acce896d5432f31b0a751cfa2b70417be7b2c4d603603a68b6c49d0e3d"
+    },
+    {
+      "frame": 128,
+      "seconds": 5.073856917093508,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00128.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00128.png",
+      "sha256": "89307c4adc15a676cd990fde800b0d0e5d2fd920ca1d2088f21f31a37bfe38be"
+    },
+    {
+      "frame": 129,
+      "seconds": 4.337940332945436,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00129.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00129.png",
+      "sha256": "3333972e52d6dc824b03bdcee1bb26a94093013c3425e890c15564549767c47f"
+    },
+    {
+      "frame": 130,
+      "seconds": 4.869317583972588,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00130.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00130.png",
+      "sha256": "138ee80c721c9283dd34df574b4962c5dd27116dfbda43a6569ee541313b49cd"
+    },
+    {
+      "frame": 131,
+      "seconds": 5.402207167004235,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00131.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00131.png",
+      "sha256": "182e13e10662668e0e42c3beca8a145b1753e325c5578c433010890540e95b3c"
+    },
+    {
+      "frame": 132,
+      "seconds": 5.643352832994424,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00132.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00132.png",
+      "sha256": "877162e068f7c2f37706b3c093e02dc2d22d9b9bdf7164addbf7f2417335ec87"
+    },
+    {
+      "frame": 133,
+      "seconds": 4.872945458977483,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00133.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00133.png",
+      "sha256": "4075236e073e8435984f2d40d6383365af1d6272d923b9d32c0b1ac82d6869f8"
+    },
+    {
+      "frame": 134,
+      "seconds": 4.6825186249334365,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00134.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00134.png",
+      "sha256": "b347f1b1e08b1d44b073ebc877cff20ea0bcec950fe0216c5d376d9a3bc34895"
+    },
+    {
+      "frame": 135,
+      "seconds": 4.929559458047152,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00135.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00135.png",
+      "sha256": "5c87838144b2eea38c18ccb80832ec379d27eaec1045ad05c3090d1d8631c6b8"
+    },
+    {
+      "frame": 136,
+      "seconds": 5.135296916938387,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00136.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00136.png",
+      "sha256": "c7bda05fc14f856454b8dc99b004acd63098c189cea63fda8dbd63b3af07a844"
+    },
+    {
+      "frame": 137,
+      "seconds": 5.089032249990851,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00137.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00137.png",
+      "sha256": "132b2d661edc4212e0598c9fae2f3987d3f2169c4a89ddf22d5ad85a9e6a3a07"
+    },
+    {
+      "frame": 138,
+      "seconds": 4.9036709170322865,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00138.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00138.png",
+      "sha256": "dd758f99493d07574e275b2df5581b6a718ab3788b6c72fa49e777538776bc0a"
+    },
+    {
+      "frame": 139,
+      "seconds": 5.288332415977493,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00139.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00139.png",
+      "sha256": "852f1272bf084d9ab4bc2fd5111efcc575e479679c9f03fe7fce1dcc4cb0b48a"
+    },
+    {
+      "frame": 140,
+      "seconds": 4.946448709000833,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00140.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00140.png",
+      "sha256": "488d51bd9324935d8ef9283553516b1f257820405d3d60e2312623f5e3440062"
+    },
+    {
+      "frame": 141,
+      "seconds": 4.9683641659794375,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00141.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00141.png",
+      "sha256": "3ed7667ed8fd8e0f81ea44e8ce1833794d78caebe886a4e6213db586ed4a7ed9"
+    },
+    {
+      "frame": 142,
+      "seconds": 4.423753625014797,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00142.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00142.png",
+      "sha256": "24c0ab5811a0c458e061efd2797bc74f0244dd6166730fe4cc4041adc4b309c1"
+    },
+    {
+      "frame": 143,
+      "seconds": 5.079530332935974,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00143.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00143.png",
+      "sha256": "2886f3baeb29168381e1d6aacd910ce4951bc195f9ede3f64a24ce210c2254d5"
+    },
+    {
+      "frame": 144,
+      "seconds": 5.039011792046949,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00144.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00144.png",
+      "sha256": "6c23d3c2bcc30e03195c0156f03a26b3f3065e9f844b1b59c1cfcbf4413a93aa"
+    },
+    {
+      "frame": 145,
+      "seconds": 5.3286258749431,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00145.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00145.png",
+      "sha256": "bd266010efb69baf4781d8dd5e7bf438b122abf635a862cb9626dbaf9c17d0db"
+    },
+    {
+      "frame": 146,
+      "seconds": 5.051305375061929,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00146.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00146.png",
+      "sha256": "b166abf937b39865d482bd92c1b06fc0eb8e9f9c6b6388aa36ed7e7a43260cf8"
+    },
+    {
+      "frame": 147,
+      "seconds": 5.038510250044055,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00147.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00147.png",
+      "sha256": "dda52914a4b078aa677aa05fdd819c67d7cafb9d2dc89ae748eea144d5221c65"
+    },
+    {
+      "frame": 148,
+      "seconds": 5.096992624923587,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00148.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00148.png",
+      "sha256": "aaae0a28120a56c13e4f73a08e2e8579bdcac0928fc338eff677945a3f675f8f"
+    },
+    {
+      "frame": 149,
+      "seconds": 5.066028415923938,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00149.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00149.png",
+      "sha256": "f6112e05cbe2331d16e3f003352a05447e2c0f722c8cb396605eb3d49c654287"
+    },
+    {
+      "frame": 150,
+      "seconds": 4.253423457965255,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00150.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00150.png",
+      "sha256": "aafe08c52b7f4ff97fb40852f3af46039bee9ae50f1d0254e8be548201609d37"
+    },
+    {
+      "frame": 151,
+      "seconds": 5.19214729196392,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00151.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00151.png",
+      "sha256": "597cb0353187b01e7f76521a013c53dd63a90ecc9bc0bb70d20ce40026db7024"
+    },
+    {
+      "frame": 152,
+      "seconds": 6.409775833017193,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00152.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00152.png",
+      "sha256": "a7d17341e8e91122635f0fa3e6ba25a9469138c985c5a4ef9f00f769b37da4b7"
+    },
+    {
+      "frame": 153,
+      "seconds": 5.465506208012812,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00153.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00153.png",
+      "sha256": "d06a9ef877132279a5cb23273b6edc3096af2e0675877f9bcaffa517dc1e19a6"
+    },
+    {
+      "frame": 154,
+      "seconds": 4.915990749956109,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00154.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00154.png",
+      "sha256": "0874dde9aead479febce5b0010072abc7c976d186b8893c94fa09f69d2f3d65f"
+    },
+    {
+      "frame": 155,
+      "seconds": 4.717221291968599,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00155.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00155.png",
+      "sha256": "5832ac5751ce2c7dc15083bef2b75da58bfad09e543708a3b75a2568f388c2ad"
+    },
+    {
+      "frame": 156,
+      "seconds": 4.882900084019639,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00156.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00156.png",
+      "sha256": "e2b19f4022814393ddf1748e650c1e08d63325f965ceed722dccffdbb9a047af"
+    },
+    {
+      "frame": 157,
+      "seconds": 5.148676540935412,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00157.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00157.png",
+      "sha256": "f749d3de383396553a860067b899ddc656078cc87e93c8dc4bc0adc49d7cf9ff"
+    },
+    {
+      "frame": 158,
+      "seconds": 5.105927374912426,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00158.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00158.png",
+      "sha256": "ee2b3d7a46a57c2a0406505238627c35ce8da56d041a8826d5e2179270a45afc"
+    },
+    {
+      "frame": 159,
+      "seconds": 5.026283917017281,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00159.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00159.png",
+      "sha256": "aa5ee87801efb6d1a673893cf198e2d617607f86e9a93fc1189e561b374d9eb4"
+    },
+    {
+      "frame": 160,
+      "seconds": 5.4194446669425815,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00160.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00160.png",
+      "sha256": "e499d1503b8501a5ae99d28e46373cee01b8665d6c97cbdc089e6dbee8f2db04"
+    },
+    {
+      "frame": 161,
+      "seconds": 4.97594883304555,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00161.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00161.png",
+      "sha256": "30aa226f6bfecd7fc7663ab3a31cc12194fd1fc55ffe4a2f393433a9490cf7bd"
+    },
+    {
+      "frame": 162,
+      "seconds": 5.092774083954282,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00162.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00162.png",
+      "sha256": "1963b04b933185862f3aaa74ef07314a9f5f4cef0ec9d042c23444ccf9312246"
+    },
+    {
+      "frame": 163,
+      "seconds": 4.81322979205288,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00163.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00163.png",
+      "sha256": "b391150c2d939009fecf05c63f12040bca5658ca702fdc0b1e942d97181bb489"
+    },
+    {
+      "frame": 164,
+      "seconds": 5.774076375062577,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00164.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00164.png",
+      "sha256": "08d5bde2737a5becd96a5ce41dbe961cf341f102d1731dcac3a7b5c27798badf"
+    },
+    {
+      "frame": 165,
+      "seconds": 5.63155516597908,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00165.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00165.png",
+      "sha256": "79f9849b5e89446e2a5f1a27da9ad78b3818f57ac6c7dd7c6ce2fe81a2249fab"
+    },
+    {
+      "frame": 166,
+      "seconds": 5.920672249980271,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00166.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00166.png",
+      "sha256": "a336cb088c62a10734f5b9dda1def63b9931136f8adf8f82e4a1cf24d0502083"
+    },
+    {
+      "frame": 167,
+      "seconds": 5.564690749975853,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00167.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00167.png",
+      "sha256": "51ecfdd095d3b39e262e2d44b915f9b852ad2c6e7aa67228597f38372c6caaf1"
+    },
+    {
+      "frame": 168,
+      "seconds": 5.720003957976587,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00168.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00168.png",
+      "sha256": "3e0b71e92a66b02a7f21200e75ffe0aba7cc4aca62b1d50a7cef96e85c5ada17"
+    },
+    {
+      "frame": 169,
+      "seconds": 5.4521039159735665,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00169.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00169.png",
+      "sha256": "9655488f5d265f11d02ad99bd89f6e2833abe884c8710110449431c2ba134109"
+    },
+    {
+      "frame": 170,
+      "seconds": 5.360031625023112,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00170.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00170.png",
+      "sha256": "b0e7225e1b0b622eb36c31e8b5371fe50621009cdffde17c010f31e56526f87d"
+    },
+    {
+      "frame": 171,
+      "seconds": 5.013161750044674,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00171.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00171.png",
+      "sha256": "041da3b850b5d4b6455fa60d948bebd0122b74edcfc8b6cb1504746482f387d4"
+    },
+    {
+      "frame": 172,
+      "seconds": 5.610299999942072,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00172.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00172.png",
+      "sha256": "4da61df9ecb88660c6bf896c7c6f7f74bf9e100a14e5edc6d0935801e786f404"
+    },
+    {
+      "frame": 173,
+      "seconds": 6.009034208022058,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00173.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00173.png",
+      "sha256": "3adfd6ddb22ed9bd9acbbe554ff9adf27cf18dd8f8f4f2c92b625c8174cb5840"
+    },
+    {
+      "frame": 174,
+      "seconds": 5.5647347090998664,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00174.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00174.png",
+      "sha256": "c918d7fb445de98c1c4dbb36aa2295a63d64e94abe2648414af7c3b918cd61ad"
+    },
+    {
+      "frame": 175,
+      "seconds": 5.630778416991234,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00175.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00175.png",
+      "sha256": "3a4eb72dbf2b620ccd8909db0e9da06a63ee96847630755eaa8326d7f6c2c2cf"
+    },
+    {
+      "frame": 176,
+      "seconds": 5.22411666600965,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00176.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00176.png",
+      "sha256": "afd7290508c3e663b23f581866eb776a7bad87388ebe5d037f61cbd8edd27fc1"
+    },
+    {
+      "frame": 177,
+      "seconds": 5.590075999964029,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00177.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00177.png",
+      "sha256": "696160c729a1825f0bdeb6cfd0f7fe11e5ac628a3f5a3363fd2353d0ca2224fe"
+    },
+    {
+      "frame": 178,
+      "seconds": 4.75229433295317,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00178.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00178.png",
+      "sha256": "2f9a2c92bd894dc8f25b9acebc9dfd84683be6ea484f967ef0883c478eb6017c"
+    },
+    {
+      "frame": 179,
+      "seconds": 5.683107333024964,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00179.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00179.png",
+      "sha256": "353235dc0cf487ae3e09c04f21c54c585cf159e9ce7b1aae037786a05af53883"
+    },
+    {
+      "frame": 180,
+      "seconds": 5.640784832998179,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00180.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00180.png",
+      "sha256": "8fbc35a273728d3c3be971117128b1be5eba06ff6f1a67afd672f91a2c451dd6"
+    },
+    {
+      "frame": 181,
+      "seconds": 6.0200691249920055,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00181.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00181.png",
+      "sha256": "3d9421ac0377b7b10436a3ccd76db1b12ece431879d979641f8771e81d5f70e7"
+    },
+    {
+      "frame": 182,
+      "seconds": 5.689611000008881,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00182.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00182.png",
+      "sha256": "c320d338952d37124a61e104303ba88e09a889fe544c26a9d52b366a1a8fc4f7"
+    },
+    {
+      "frame": 183,
+      "seconds": 5.753546124906279,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00183.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00183.png",
+      "sha256": "7e888b9ef155291b94b15b4b50e9048f76d1da69e99f37118fe1552468749b3f"
+    },
+    {
+      "frame": 184,
+      "seconds": 5.622262542019598,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00184.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00184.png",
+      "sha256": "abfc4d4af722315b5dd6ace74965d1bd815c9caa9c5087118025772be7a9d618"
+    },
+    {
+      "frame": 185,
+      "seconds": 5.703193624969572,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00185.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00185.png",
+      "sha256": "f993a7fd25868ec7efaeecf7b56907767f3818f5cb46bd039bf37db0f04d29e1"
+    },
+    {
+      "frame": 186,
+      "seconds": 5.8892360830213875,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00186.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00186.png",
+      "sha256": "9c182d5153b76f5d9d8e01c502f8c8615057c9d0f4f52e25839ae916d68a3d44"
+    },
+    {
+      "frame": 187,
+      "seconds": 5.886581165948883,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00187.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00187.png",
+      "sha256": "3634af37d93c50a05ce09d289310dd12f022deb66f1883a93be3d5910c4996c3"
+    },
+    {
+      "frame": 188,
+      "seconds": 5.664623500080779,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00188.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00188.png",
+      "sha256": "30d61de84ff025f9f7e060ff15743babc525a1d49b5564381ad8acec303fd789"
+    },
+    {
+      "frame": 189,
+      "seconds": 5.524579458986409,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00189.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00189.png",
+      "sha256": "fb3e6b06e75eff34afe8d2c69089bdbdc7ee22f074d989277cdf38878f9c4abc"
+    },
+    {
+      "frame": 190,
+      "seconds": 5.631189250038005,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00190.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00190.png",
+      "sha256": "6a4e04c065474b6b44f3d4b432c69b0f4f8d2804a800f076efe72f3e67e53995"
+    },
+    {
+      "frame": 191,
+      "seconds": 5.3593285829992965,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00191.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00191.png",
+      "sha256": "0b92984510e50b6b15951e8a5b22c12809495ccf3eaf57a34c67ace3d6cea231"
+    },
+    {
+      "frame": 192,
+      "seconds": 4.846984333009459,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00192.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00192.png",
+      "sha256": "60c2cefe15c7848a7ab8b4b32e8332a5173a5af92faf251abcee4bd051236e04"
+    },
+    {
+      "frame": 193,
+      "seconds": 5.187703417032026,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00193.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00193.png",
+      "sha256": "a704b59710840978c1e01de1e624ae6f2041a87f88efa4daa32eddecc5eb42ff"
+    },
+    {
+      "frame": 194,
+      "seconds": 5.623071542009711,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00194.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00194.png",
+      "sha256": "272f599d7c28125e9a62cf3dff5a369b7b525eb0cb2ef5eced6888477018e41a"
+    },
+    {
+      "frame": 195,
+      "seconds": 5.236391333048232,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00195.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00195.png",
+      "sha256": "aaa548faf22a7553accae52a4fbcbd302a8afefd4bb9379bb6180bbcee1874cf"
+    },
+    {
+      "frame": 196,
+      "seconds": 4.854444249998778,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00196.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00196.png",
+      "sha256": "9e0362938c0dd48b51ddf3eb37f9f648536c17c5702e68fd83f4a326d53ab2e7"
+    },
+    {
+      "frame": 197,
+      "seconds": 4.67892745800782,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00197.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00197.png",
+      "sha256": "3fd859da01c370edfa644337b45fdbdef0c5870f4004728a39edc3472b22ce5a"
+    },
+    {
+      "frame": 198,
+      "seconds": 5.195873499964364,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00198.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00198.png",
+      "sha256": "411d5543dddb53f49f7cb0956890c19d7c789316629a0e69093163e2f10d9b48"
+    },
+    {
+      "frame": 199,
+      "seconds": 4.6286400420358405,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00199.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00199.png",
+      "sha256": "58dd41febec715ccd91fa59995cab0d9d041c7e8acd5d76694aceb868f249953"
+    },
+    {
+      "frame": 200,
+      "seconds": 5.4268567089457065,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00200.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00200.png",
+      "sha256": "9a00f839209203d656c196f87493951e36f8ea0bbbeb4a517ffa648d73117439"
+    },
+    {
+      "frame": 201,
+      "seconds": 5.308082958916202,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00201.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00201.png",
+      "sha256": "9f5eeab6ba8c5cba70b27811f4f9549c140a176e92baf17e8b56d6393d1cb536"
+    },
+    {
+      "frame": 202,
+      "seconds": 5.85761187504977,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00202.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00202.png",
+      "sha256": "6c6cec12982d32e76d134272387109b792418e7145ce1ca40990c8eeaac91fab"
+    },
+    {
+      "frame": 203,
+      "seconds": 5.287939665955491,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00203.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00203.png",
+      "sha256": "db005678be8a9b331e672c0950d60124cbbda57de35d1ae736d8c8abd121f788"
+    },
+    {
+      "frame": 204,
+      "seconds": 4.788895417004824,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00204.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00204.png",
+      "sha256": "c931fe80d439bd90d478ff2c2804ecd871279628b212bc8a0d6d1166edfeb34a"
+    },
+    {
+      "frame": 205,
+      "seconds": 4.881334541947581,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00205.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00205.png",
+      "sha256": "5ea9a0a3696fbe670ce476d7aeeee0c16a96fc832cda22d9658d761ed8632113"
+    },
+    {
+      "frame": 206,
+      "seconds": 5.336740999948233,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00206.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00206.png",
+      "sha256": "bd78af1b5ebee7b9442f08bcab17a15b272055a0e818c235d42005074566ad6e"
+    },
+    {
+      "frame": 207,
+      "seconds": 5.371705916943029,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00207.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00207.png",
+      "sha256": "c9695e7f135a01a947d1cd6e004f12c9b3e39f584453856b429412b50fdfddfe"
+    },
+    {
+      "frame": 208,
+      "seconds": 4.851068707997911,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00208.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00208.png",
+      "sha256": "e3abad28e45ae34a8fe794c2b36c28231f37df46984f9c6bc1ed4ff75d2819be"
+    },
+    {
+      "frame": 209,
+      "seconds": 5.236106750089675,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00209.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00209.png",
+      "sha256": "61187294b17d59ebd71e678ef1323d24b8ac186f49c3c99906f1c0275db128c0"
+    },
+    {
+      "frame": 210,
+      "seconds": 5.382063416996971,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00210.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00210.png",
+      "sha256": "760989d2a66579224de784a1b87a0519aa62540e1f165454102d1b89c6cd8619"
+    },
+    {
+      "frame": 211,
+      "seconds": 5.45156954205595,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00211.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00211.png",
+      "sha256": "d2ec5620f2f0079f83d5c61dbe1d2970797e3aae70219c470124218d6ae82535"
+    },
+    {
+      "frame": 212,
+      "seconds": 5.2514065830037,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00212.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00212.png",
+      "sha256": "8ef787a36d2bce706c1afaed81fe6d5046fac77f12813cbb9d9a5534ca3017cd"
+    },
+    {
+      "frame": 213,
+      "seconds": 4.964502249960788,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00213.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00213.png",
+      "sha256": "b355c1c42049c34707cca778c2073865538860f2f38cf724f0b2746a31d06ed1"
+    },
+    {
+      "frame": 214,
+      "seconds": 5.403950499952771,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00214.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00214.png",
+      "sha256": "df15e8efc00c7448e6ff9280afd0cd5dda0b9c4bbec3e2d6ec46fc0b258367e9"
+    },
+    {
+      "frame": 215,
+      "seconds": 5.80398895801045,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00215.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00215.png",
+      "sha256": "01fd591ea8e6a27a7620d8a0699f1990890d36ca12f5884d9607dcbce0e6e6b4"
+    },
+    {
+      "frame": 216,
+      "seconds": 5.648513583932072,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00216.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00216.png",
+      "sha256": "619a3719bcef847db1a596db6aa26ff06e820d2d072d8f80596461760648ebff"
+    },
+    {
+      "frame": 217,
+      "seconds": 5.595750082982704,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00217.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00217.png",
+      "sha256": "6b75c548c2bde7c9cf24eaf1d442758062ff100955b5c3837cfbbdb334957f52"
+    },
+    {
+      "frame": 218,
+      "seconds": 5.291985125048086,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00218.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00218.png",
+      "sha256": "ac68a3725967decfbe6f33354b5affe99bec6cd272498f0fff46463b1eddd807"
+    },
+    {
+      "frame": 219,
+      "seconds": 5.69549954100512,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00219.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00219.png",
+      "sha256": "5e17eb0a8ef6b3a2ca1bdc4b3e75c47cd6d4d2d0c73d86e4e564206678f37b2a"
+    },
+    {
+      "frame": 220,
+      "seconds": 4.87991575000342,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00220.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00220.png",
+      "sha256": "4d1e982792c3c171e3e97ea0c27ecb5092d70e7065c2cf3ea1915142645a2dac"
+    },
+    {
+      "frame": 221,
+      "seconds": 5.49858045799192,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00221.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00221.png",
+      "sha256": "ca45fe6322e17a1ccf484a9b2622633583a3927965c66260f75a3aafb02968ad"
+    },
+    {
+      "frame": 222,
+      "seconds": 5.634703541989438,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00222.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00222.png",
+      "sha256": "ced8c1ad3ada71ed464e989ed89f09ce693f28cbe6c4ead508ba38fd773f0616"
+    },
+    {
+      "frame": 223,
+      "seconds": 6.000270458054729,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00223.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00223.png",
+      "sha256": "f55b0d56e5a88246613bf2c3f38e1d39423d80d7f0a4c675d8736473870a9954"
+    },
+    {
+      "frame": 224,
+      "seconds": 5.527009374927729,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00224.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00224.png",
+      "sha256": "ef4293d0fa61bff3ff9de41a8757e3ccb5c4228d54c84f50dc67c63b6d845f74"
+    },
+    {
+      "frame": 225,
+      "seconds": 4.96168754203245,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00225.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00225.png",
+      "sha256": "ffe77fbcb639bcc56873aa7caa23dc74b068874bc2f3e27094f8aab4bce3b5d8"
+    },
+    {
+      "frame": 226,
+      "seconds": 5.3341855419566855,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00226.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00226.png",
+      "sha256": "dc802818582d15f69121a568b4314fb114b677b6bcce5dcd5da897ffab5912b5"
+    },
+    {
+      "frame": 227,
+      "seconds": 5.591355583979748,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00227.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00227.png",
+      "sha256": "0d5ade98e4c663fe77271d9b434f02bbfc9df130ae69c5faf5ebfde0976a1f7d"
+    },
+    {
+      "frame": 228,
+      "seconds": 5.616735083051026,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00228.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00228.png",
+      "sha256": "264704c0604169ad8d47f5cb39727bb71a881bc098e826e79435fa2464d8fbc0"
+    },
+    {
+      "frame": 229,
+      "seconds": 5.074940958991647,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00229.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00229.png",
+      "sha256": "495e80ebdb83af6e1188896ddc3d2dffa2556b1e5ccf18851a0738f74b774ec7"
+    },
+    {
+      "frame": 230,
+      "seconds": 5.3205858749570325,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00230.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00230.png",
+      "sha256": "56143d0437fe13fcc098ad11f3356ecfc1e5f6fd130199efeebfadf5e053a33f"
+    },
+    {
+      "frame": 231,
+      "seconds": 5.151412709034048,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00231.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00231.png",
+      "sha256": "0e77830e44da3e2ffe0dc45951738b7b7b168850d27043c96d916aa0e0e939e0"
+    },
+    {
+      "frame": 232,
+      "seconds": 5.340081584057771,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00232.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00232.png",
+      "sha256": "cded086c2616d0e21534c684c87bcc2a3d661c20797461364f4ac013dda58ba6"
+    },
+    {
+      "frame": 233,
+      "seconds": 5.022893541958183,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00233.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00233.png",
+      "sha256": "c232ea56caea4c8d7bf21cd026adeb83d1e27adabda1756b0bb928aceb384e05"
+    },
+    {
+      "frame": 234,
+      "seconds": 4.96297091699671,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00234.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00234.png",
+      "sha256": "b7ebfffdcb60f4ecc64e2d81acdcac978bdb02151fda02dae90746695699e8d0"
+    },
+    {
+      "frame": 235,
+      "seconds": 5.362279583932832,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00235.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00235.png",
+      "sha256": "2c93bbc441ff0c494a90b410a93de71f83643191205a6f7f3e4e7b283676aa59"
+    },
+    {
+      "frame": 236,
+      "seconds": 5.600185584044084,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00236.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00236.png",
+      "sha256": "675bb0aa6729738443e5193cf59e51ec640093ebedf22e937acce87010531260"
+    },
+    {
+      "frame": 237,
+      "seconds": 5.223287499975413,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00237.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00237.png",
+      "sha256": "e7e06d079d7c49e40963bed76b415cd48de3d7b90628e87fd28f65dd7db0eaf1"
+    },
+    {
+      "frame": 238,
+      "seconds": 5.2686559580033645,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00238.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00238.png",
+      "sha256": "c4ed7c1f43a41cf2f5570713b07f1452aea9588ad3668462211cc6e36031aaa0"
+    },
+    {
+      "frame": 239,
+      "seconds": 5.2657922089565545,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00239.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00239.png",
+      "sha256": "4aaff63f23c4a2e9e05428377089358f6afc331316d8c57b9d6c74f9b093339f"
+    },
+    {
+      "frame": 240,
+      "seconds": 5.474026000010781,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00240.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00240.png",
+      "sha256": "317353d8803d86373e7271751923232e37df201a77daab78c7c3df118c35ad26"
+    },
+    {
+      "frame": 241,
+      "seconds": 4.733179125003517,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00241.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00241.png",
+      "sha256": "4f54518fc45dac6ece392ae539a1cdd842380fb6d16f4214e8b17695b08c3f2b"
+    },
+    {
+      "frame": 242,
+      "seconds": 4.8605003339471295,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00242.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00242.png",
+      "sha256": "85fcbebc2caa0e379b4884fb34b964012fa57b0257f6c6aeae08a5a728617918"
+    },
+    {
+      "frame": 243,
+      "seconds": 5.2710061660036445,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00243.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00243.png",
+      "sha256": "501fa7cd777492a89a80543359df53f733f624c379261eb1c8cf22d9a48a859e"
+    },
+    {
+      "frame": 244,
+      "seconds": 5.400526250014082,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00244.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00244.png",
+      "sha256": "2ebf43fe757872a5c7f1bc4be5fb6fa869e50df22d3201040049f2248dcf8bd2"
+    },
+    {
+      "frame": 245,
+      "seconds": 5.015305749955587,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00245.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00245.png",
+      "sha256": "9a57f7a6f662ab532a7ba5820e9984cd2799da44f525b4642f3a52885eb71e85"
+    },
+    {
+      "frame": 246,
+      "seconds": 4.648703874903731,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00246.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00246.png",
+      "sha256": "b0e6cfe3c8be6b0275b480662f8f61cebf3e3e06c48031043b1399b1a6b1f26b"
+    },
+    {
+      "frame": 247,
+      "seconds": 4.817157124984078,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00247.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00247.png",
+      "sha256": "bb254d6fcfa7c357bb72badf5a53a3a2352b4d37cedc645a5564c3697b4c966b"
+    },
+    {
+      "frame": 248,
+      "seconds": 5.263247375027277,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00248.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00248.png",
+      "sha256": "4bdf58d79ee7cc3b056dfc5d57bccf3e8e30cf97f44e10698e78ad0c2a92169d"
+    },
+    {
+      "frame": 249,
+      "seconds": 5.447230083984323,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00249.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00249.png",
+      "sha256": "5b4a72accdf716afca232b4a030e30046b4a557fe80a6620a9ebd32b4a566c5b"
+    },
+    {
+      "frame": 250,
+      "seconds": 4.862150499946438,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00250.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00250.png",
+      "sha256": "12f695c993d36352cbb686b996f21aab99644e97da63bc2c21254f88ed0f3d10"
+    },
+    {
+      "frame": 251,
+      "seconds": 5.0969042090000585,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00251.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00251.png",
+      "sha256": "0780061024adddeb52248a534fb6ce4a1e69a6c458b7eb6e3048340aa27f40a9"
+    },
+    {
+      "frame": 252,
+      "seconds": 5.353818790987134,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00252.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00252.png",
+      "sha256": "a19ab3a66b9a64a0fd1afcd0e27b2ef1df37b0228ad6ab0f2f46961931663f35"
+    },
+    {
+      "frame": 253,
+      "seconds": 5.254284749971703,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00253.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00253.png",
+      "sha256": "2206a4131e7fb3aca428ecc0d2be49857a6a85c61363083bd92a91f3f62c264c"
+    },
+    {
+      "frame": 254,
+      "seconds": 5.1168569579022005,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00254.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00254.png",
+      "sha256": "ac0bfc868e87cca67ff4aac41377163a2037bf0d501292678a973f92b50703da"
+    },
+    {
+      "frame": 255,
+      "seconds": 4.799845750094391,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00255.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00255.png",
+      "sha256": "c2e913c86e6e9fb66293fa01fbfb3a6f08e5262bc375ee8f4857c4ec3a1b59c7"
+    },
+    {
+      "frame": 256,
+      "seconds": 4.342992749996483,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00256.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00256.png",
+      "sha256": "2541631348c8585c3387eeb9481d589da3734720a380443a2b89e51fa463a66a"
+    },
+    {
+      "frame": 257,
+      "seconds": 5.470266165910289,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00257.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00257.png",
+      "sha256": "b9f16bf627c5f419ca813f5fd11ac995d84bf7ad6f537e79fc55f4ce114c443f"
+    },
+    {
+      "frame": 258,
+      "seconds": 5.058361375005916,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00258.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00258.png",
+      "sha256": "3b575509c8f4fb7aaa5f0421ea4ba878175e436cf4b6c92408fbb6f80ae46554"
+    },
+    {
+      "frame": 259,
+      "seconds": 5.343278040993027,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00259.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00259.png",
+      "sha256": "09f2b916f41d6473c897ac943ff59f4f32745a6157554fe4b0053905f2834102"
+    },
+    {
+      "frame": 260,
+      "seconds": 4.880021125078201,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00260.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00260.png",
+      "sha256": "d69e6e247d98c80ae37e1954cb2c80f2c317b8ffb9e7aaa766404e9eaff10d3c"
+    },
+    {
+      "frame": 261,
+      "seconds": 5.33561191696208,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00261.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00261.png",
+      "sha256": "72c807cfeee88b166d5f3603e69b3b98acd73255d363d57e0d8372ed944646f8"
+    },
+    {
+      "frame": 262,
+      "seconds": 4.909349166904576,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00262.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00262.png",
+      "sha256": "38cd9dee0a3a47c13c31a76d6e0263aee4487facff58abe874eb0b284034aa9c"
+    },
+    {
+      "frame": 263,
+      "seconds": 5.113093499909155,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00263.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00263.png",
+      "sha256": "95fe164f0003e98a40cf951df0a028aaf31d30dd2fa23fe0b9a1476749bc5e99"
+    },
+    {
+      "frame": 264,
+      "seconds": 5.066205292008817,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00264.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00264.png",
+      "sha256": "d9499c7583ee6ef753c45c5ad3f888923a53f8c048e7277df4185be47447bb19"
+    },
+    {
+      "frame": 265,
+      "seconds": 5.593051917036064,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00265.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00265.png",
+      "sha256": "b50980e31385d4f11db51c26ce5efd3373e37c566a9733a057056de65f2bb62d"
+    },
+    {
+      "frame": 266,
+      "seconds": 5.260354417026974,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00266.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00266.png",
+      "sha256": "092a036979f1465bebff88f2f5bd5efe9ecf9a431c7264cbea0a257332a6c816"
+    },
+    {
+      "frame": 267,
+      "seconds": 4.904819458024576,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00267.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00267.png",
+      "sha256": "739da2cb0350deb65c59ee14074e4566d10c35b2997ebfb5029c75feb8cf3b2c"
+    },
+    {
+      "frame": 268,
+      "seconds": 5.087065749918111,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00268.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00268.png",
+      "sha256": "9112e204cf1fd02480239d444fd6c5e9e265ccb425e5d06aeabe20f80139325c"
+    },
+    {
+      "frame": 269,
+      "seconds": 4.402552332961932,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00269.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00269.png",
+      "sha256": "6aa13c540a698f133ec278600223f97c866f35b4a6c5babe0898a480ffe5da86"
+    },
+    {
+      "frame": 270,
+      "seconds": 5.163725749938749,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00270.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00270.png",
+      "sha256": "781c9a8160df158e830da3ac675484228591de7c32f2dc313ab0848b616708a8"
+    },
+    {
+      "frame": 271,
+      "seconds": 4.901584665989503,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00271.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00271.png",
+      "sha256": "95f3448a219b9d9868da398f3d2709eefad93ef486bbc270193cf9501b340c2d"
+    },
+    {
+      "frame": 272,
+      "seconds": 4.986471666023135,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00272.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00272.png",
+      "sha256": "68be6fd270779821c60798f49c5c5f4434b2622a4971f2f631ccc98e9e5dabf7"
+    },
+    {
+      "frame": 273,
+      "seconds": 4.7774201249703765,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00273.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00273.png",
+      "sha256": "bc745e5375d750ba9ad2cb077a02eec87db8dd0cdc36301a41ee3d50b96de508"
+    },
+    {
+      "frame": 274,
+      "seconds": 5.301994665991515,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00274.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00274.png",
+      "sha256": "5ced3e1b2ca88d0b3b631dcc8b90e5b0b268e24f7d1193ee4d84bd76914af963"
+    },
+    {
+      "frame": 275,
+      "seconds": 4.8302647499367595,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00275.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00275.png",
+      "sha256": "cd756ce202cd979cde57445fecd18ec894b1d05965326958dce683a132016ecb"
+    },
+    {
+      "frame": 276,
+      "seconds": 5.029386459034868,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00276.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00276.png",
+      "sha256": "17079f3394f6cbf29e46d6c4223e7cd73f885b7856174cdf8fddebf1d6fa21c5"
+    },
+    {
+      "frame": 277,
+      "seconds": 4.1960227499948815,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00277.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00277.png",
+      "sha256": "24836e711ca31158d482ce76368143fc73651d9e7174b022748eaebe61011a04"
+    },
+    {
+      "frame": 278,
+      "seconds": 5.424262333079241,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00278.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00278.png",
+      "sha256": "b0b943f9a7093f886db467b8dbe44734aa29f9786367a9241547dd14bd3b9cba"
+    },
+    {
+      "frame": 279,
+      "seconds": 5.157675249967724,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00279.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00279.png",
+      "sha256": "58797f0a33027e31a414a6a9fe124cf55f3e055c6698c32e32a8c71166a27e79"
+    },
+    {
+      "frame": 280,
+      "seconds": 5.1479994169203565,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00280.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00280.png",
+      "sha256": "eb9a7c6cb446a7197f205ce37a0b55be8337e89c50fe0270eb51b7ebfd7f5e89"
+    },
+    {
+      "frame": 281,
+      "seconds": 4.951446000020951,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00281.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00281.png",
+      "sha256": "dc034a75b41f5e1a0a4a8305e381548607d435a9a26e8f058720693300d9c98f"
+    },
+    {
+      "frame": 282,
+      "seconds": 4.612846834002994,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00282.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00282.png",
+      "sha256": "f01612035c6bab7cc26c9d12140027897f64fac48602cd575f6a99004a313f26"
+    },
+    {
+      "frame": 283,
+      "seconds": 4.612049082992598,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00283.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00283.png",
+      "sha256": "0bf48d06fa3afd08fcb1f5f02a9aa05ca349f99bb49a6ab50ad75cc102f99c19"
+    },
+    {
+      "frame": 284,
+      "seconds": 4.818158500012942,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00284.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00284.png",
+      "sha256": "27420162b2f5e1fa10eaa317d1716da816d9882f03204ca23815e1c4e36e3a67"
+    },
+    {
+      "frame": 285,
+      "seconds": 4.933558667078614,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00285.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00285.png",
+      "sha256": "14ccd94a732fb3be029da721ec4b02c079db808c99da6fc3f0c1e2c738dc62e3"
+    },
+    {
+      "frame": 286,
+      "seconds": 4.6521852920996025,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00286.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00286.png",
+      "sha256": "7b1b0f9aa459b964dbb78058bfc2ef4bb95cbd66b30fd86a8d7b105d8d0b472b"
+    },
+    {
+      "frame": 287,
+      "seconds": 4.848317499971017,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00287.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00287.png",
+      "sha256": "e66a7fa2188c30b5b0c6a6a92f732126ea903600363cbbe8694d85a3aae65c1a"
+    },
+    {
+      "frame": 288,
+      "seconds": 4.571389207965694,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00288.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00288.png",
+      "sha256": "cfdeab8206b1328b1a9adbccc3b4435894a51092daa8e5b21c54ada5feee2ac3"
+    },
+    {
+      "frame": 289,
+      "seconds": 4.56610549998004,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00289.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00289.png",
+      "sha256": "65da5114373509dda440e27b3ebeb0d85cfcddd4823cba160c25d92f9f93f851"
+    },
+    {
+      "frame": 290,
+      "seconds": 3.8973194169811904,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00290.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00290.png",
+      "sha256": "83fd8a2f985161e6e86fbdb213259c5d2ee17b1b64b360bdd4988eae48a6cf78"
+    },
+    {
+      "frame": 291,
+      "seconds": 4.835531749995425,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00291.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00291.png",
+      "sha256": "cc20fdf890fd1ae97606140a31c9e1a6d56e058ee149d3630a87d7b3e5ffb597"
+    },
+    {
+      "frame": 292,
+      "seconds": 4.631952708936296,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00292.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00292.png",
+      "sha256": "5a3da663c3fae4f75de549dc860cf3006485d3b3089b5568abd847acc1d2d9d9"
+    },
+    {
+      "frame": 293,
+      "seconds": 4.61279037501663,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00293.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00293.png",
+      "sha256": "2768b034d12b7f58b5f732b5bdfc8e403d09308b8e20ae1905530074920a2074"
+    },
+    {
+      "frame": 294,
+      "seconds": 4.474950667005032,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00294.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00294.png",
+      "sha256": "b7402ea0ad649f7fad2f61dff5587bd4b422a4bc47845006b275c4e0584ab99d"
+    },
+    {
+      "frame": 295,
+      "seconds": 4.882889500004239,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00295.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00295.png",
+      "sha256": "ab79cad6d47ac216bde43e952a857f061bcc1b65e3df6aecd28657cc95237e05"
+    },
+    {
+      "frame": 296,
+      "seconds": 4.597163500031456,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00296.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00296.png",
+      "sha256": "e23ae56290d7d996d822532047474418c12c862ba6186dd357992d4f86149cf1"
+    },
+    {
+      "frame": 297,
+      "seconds": 4.643040833063424,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00297.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00297.png",
+      "sha256": "4bce3f859d1e89e908fd489559a1dd9ff2d7d825e53b6b017533e847ec5773c8"
+    },
+    {
+      "frame": 298,
+      "seconds": 4.044035708066076,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00298.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00298.png",
+      "sha256": "dccb78367b44325526eb6c9a0b4b07d8b066ac5a8727c4deaea4a745c929ea49"
+    },
+    {
+      "frame": 299,
+      "seconds": 4.673064708011225,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00299.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00299.png",
+      "sha256": "d217f5aae65b189f9a3cf3af08cd1a74a1e3d7bebb61f147bd77f418c2266b7a"
+    },
+    {
+      "frame": 300,
+      "seconds": 5.023176709073596,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00300.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00300.png",
+      "sha256": "5e2b61511b51a11b9a5b2cfe25a240ef6c2a07dadfb58d64c4ca7033d04dd430"
+    },
+    {
+      "frame": 301,
+      "seconds": 4.857905333046801,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00301.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00301.png",
+      "sha256": "44584ee0ea09f756c89198de2d47180391cb319fd244297830e9fd33aa234091"
+    },
+    {
+      "frame": 302,
+      "seconds": 4.71349754196126,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00302.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00302.png",
+      "sha256": "edcf64e7c8342a7984c5df25e22d34ee0d2912eee10a3a1d5984e57db021e700"
+    },
+    {
+      "frame": 303,
+      "seconds": 4.363814041949809,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00303.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00303.png",
+      "sha256": "5b1ca1bd15b7a46245b8bb1894186dbf1ef64b6f7767e596b33ee4bf5fd4d46c"
+    },
+    {
+      "frame": 304,
+      "seconds": 4.658464458072558,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00304.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00304.png",
+      "sha256": "2f7414849498fc8ce747c5caa4080ad537b6beb80ac5f05a009af31db8aa5f91"
+    },
+    {
+      "frame": 305,
+      "seconds": 4.765102042001672,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00305.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00305.png",
+      "sha256": "86803d459896506ef9b283f9d9869a975bf86f507e094d2bd3f12e4c9824f0eb"
+    },
+    {
+      "frame": 306,
+      "seconds": 4.825331958010793,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00306.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00306.png",
+      "sha256": "bfdb77751bd86b2a00401cdda8db9365736f0393dacf39f9b1f631ba65163bc2"
+    },
+    {
+      "frame": 307,
+      "seconds": 4.4958894160808995,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00307.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00307.png",
+      "sha256": "29e1ddd235d26042219a870d51a1049515588590b8c096698e78227173efde56"
+    },
+    {
+      "frame": 308,
+      "seconds": 5.130888333078474,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00308.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00308.png",
+      "sha256": "b2a4a71ae68aaab604794ba132dec47c85977fb4b9cdaf6936c142ec1841b7dd"
+    },
+    {
+      "frame": 309,
+      "seconds": 4.699831833015196,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00309.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00309.png",
+      "sha256": "acbcfb021cd3bf6a2e3c87b40af66ff1eb29d2043aa1ad5c09b8748d0126170a"
+    },
+    {
+      "frame": 310,
+      "seconds": 4.756089000031352,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00310.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00310.png",
+      "sha256": "473417d44586d93f82ab58bbee19d84ada492e3e1afef47bf776abb1453cab40"
+    },
+    {
+      "frame": 311,
+      "seconds": 4.174571583978832,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00311.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00311.png",
+      "sha256": "f744ce88f3c31e56f4b099ebbbdfc8177488a94230f0c432eefdb47fba51e065"
+    },
+    {
+      "frame": 312,
+      "seconds": 4.721998707973398,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00312.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00312.png",
+      "sha256": "5cf035392f9551c64a7152e5641f0f4c00ea4cadcd7a9ca655afae39c82423b4"
+    },
+    {
+      "frame": 313,
+      "seconds": 4.659701625001617,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00313.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00313.png",
+      "sha256": "a7980e071e2c681fd761709a9456db7d4a0368d9d66ded8360b5c88de578ab91"
+    },
+    {
+      "frame": 314,
+      "seconds": 4.827190416981466,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00314.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00314.png",
+      "sha256": "73cec43c229ad79b1ae5d6d31db4578a55111acc3ab89f1a59fd86f4c605a2bc"
+    },
+    {
+      "frame": 315,
+      "seconds": 4.617834500037134,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00315.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00315.png",
+      "sha256": "bc1f721f88467c037d419b66b31e90226a4d23f892bb7bff4ab649928eac38bd"
+    },
+    {
+      "frame": 316,
+      "seconds": 4.679809916997328,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00316.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00316.png",
+      "sha256": "4ab47c0368d0e095a43604a0ba64ebcac250fae09fc7ad6ed39bdbff699e91fd"
+    },
+    {
+      "frame": 317,
+      "seconds": 4.794220124953426,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00317.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00317.png",
+      "sha256": "03b8513f45e070f5c9638220cb914fd5e6d7e01e79ab48e82988575dfdafa32f"
+    },
+    {
+      "frame": 318,
+      "seconds": 4.725664291996509,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00318.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00318.png",
+      "sha256": "978fa9790d1bf1c3e5676b017229208e78840627ed5b4c3af0901994e7901f79"
+    },
+    {
+      "frame": 319,
+      "seconds": 4.087417209055275,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00319.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00319.png",
+      "sha256": "75cd79ad707b8fd744adaf7518d0b10338702a4748dcbb20f393d16275306b4d"
+    },
+    {
+      "frame": 320,
+      "seconds": 4.674282207968645,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00320.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00320.png",
+      "sha256": "073c0e992a33d3eecc06aee3d035038cb3ae1d1cf37b44bde760723eff1e2b72"
+    },
+    {
+      "frame": 321,
+      "seconds": 4.980103957932442,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00321.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00321.png",
+      "sha256": "dc812b98f346dc6952c691b2726273733b1a03e9678da2527e434563e959b2eb"
+    },
+    {
+      "frame": 322,
+      "seconds": 5.044150458066724,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00322.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00322.png",
+      "sha256": "7d34b923c342697bc91f0717ec7e5fa5fde36844bcc2ad7842f4ef802f8352c3"
+    },
+    {
+      "frame": 323,
+      "seconds": 4.648686290951446,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00323.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00323.png",
+      "sha256": "22e935deb5a91cde039c37e454eeb36cfd2effb960aafce30a79358de55784ec"
+    },
+    {
+      "frame": 324,
+      "seconds": 4.521566541981883,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00324.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00324.png",
+      "sha256": "8632785eefbd58bb6114b4ff5b8b148ae50be7008339c09ca6579daa3c590457"
+    },
+    {
+      "frame": 325,
+      "seconds": 4.571070083999075,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00325.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00325.png",
+      "sha256": "ea03189b9a3abe3782a9246d05383eacab2c1a7bd624e9141d48d33cdde81819"
+    },
+    {
+      "frame": 326,
+      "seconds": 4.868452833034098,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00326.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00326.png",
+      "sha256": "d9a8728d32ab6848b4e31474612896ea8582981a6f189d76c8d1271bd48b200c"
+    },
+    {
+      "frame": 327,
+      "seconds": 4.7532089579617605,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00327.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00327.png",
+      "sha256": "a3172870132e00d052e45eeaf2a43729d86042d4c26e36d80374b6cb93e6d256"
+    },
+    {
+      "frame": 328,
+      "seconds": 4.747203000006266,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00328.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00328.png",
+      "sha256": "ea90b783784b7a4055ca9496dd74c759879a5ed0f26dedf1d32f65eb30d68711"
+    },
+    {
+      "frame": 329,
+      "seconds": 5.007644917001016,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00329.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00329.png",
+      "sha256": "91f4d981c400879be506993ef4f3a988784ad383488264f638ff509bec651813"
+    },
+    {
+      "frame": 330,
+      "seconds": 4.685094082960859,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00330.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00330.png",
+      "sha256": "90b8b82dd1a3c88b5a3bb56235e44a3f743eb23ade549e95841cf85861c3a767"
+    },
+    {
+      "frame": 331,
+      "seconds": 4.8059811249841005,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00331.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00331.png",
+      "sha256": "f198e3fb4919171c51c6e0375b9a294a46695ac5b827d2ba3a7714c9b20c44bb"
+    },
+    {
+      "frame": 332,
+      "seconds": 4.260030500008725,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00332.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00332.png",
+      "sha256": "b4f594e3353b3af45924014a661475ebeade9332cab222ab89b19c5d230e51ce"
+    },
+    {
+      "frame": 333,
+      "seconds": 4.80075112497434,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00333.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00333.png",
+      "sha256": "1306cc9f39cd1d37bb5d0a3f4615b1d65cfd0853266bcb65ff346dd337f727a3"
+    },
+    {
+      "frame": 334,
+      "seconds": 4.589154083980247,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00334.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00334.png",
+      "sha256": "546376faa6cae973c622410a90d802c2482d987466b14ecb469bd2c08c30deb3"
+    },
+    {
+      "frame": 335,
+      "seconds": 4.833750457968563,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00335.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00335.png",
+      "sha256": "b705980e14f60edee2abb9dde700fbb914cee9360254712e9980089b948e8912"
+    },
+    {
+      "frame": 336,
+      "seconds": 4.6250952910631895,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00336.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00336.png",
+      "sha256": "02077cc125f442362aace7c1c554ef32e0382d0fed3be87aae810336fb703012"
+    },
+    {
+      "frame": 337,
+      "seconds": 4.667038582963869,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00337.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00337.png",
+      "sha256": "d870787a89de306a25911c883322be782a904a7b0f4d15ef121466b3e2fe90da"
+    },
+    {
+      "frame": 338,
+      "seconds": 4.780952875036746,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00338.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00338.png",
+      "sha256": "06dba4aceec5e30886c8f737cd942239d2aa2e4819e078389577641d94b1622e"
+    },
+    {
+      "frame": 339,
+      "seconds": 4.704037833027542,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00339.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00339.png",
+      "sha256": "020d81021decf191e0345fbd159a80805d0b7affea0214abfbd5a88b0bbdc638"
+    },
+    {
+      "frame": 340,
+      "seconds": 4.163448542007245,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00340.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00340.png",
+      "sha256": "cb351fc91554dfdf2ae9a75242ba7646b13af9e0fb548542baa55de004611f9c"
+    },
+    {
+      "frame": 341,
+      "seconds": 4.5627648329827935,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00341.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00341.png",
+      "sha256": "ace604c61c3ca5cc2a11c4ffce2ae39c5c6d34aed46a61d1340244224627a8b8"
+    },
+    {
+      "frame": 342,
+      "seconds": 4.9637142500141636,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00342.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00342.png",
+      "sha256": "9f4be957a304a74b40b695e056c0b5d97c5bf76604adad1c9137d8144c0f4ec5"
+    },
+    {
+      "frame": 343,
+      "seconds": 4.9426743750227615,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00343.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00343.png",
+      "sha256": "6b7e6ccf486d84ac4e37e2c1f0c64cce42d08aa5450f71fc81b98923d2f7d4c0"
+    },
+    {
+      "frame": 344,
+      "seconds": 4.706962333060801,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00344.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00344.png",
+      "sha256": "de19b83266bcee202ffad51f94ece9ecfd5a3210ce4d0a830b44a91011bba67b"
+    },
+    {
+      "frame": 345,
+      "seconds": 4.494353665970266,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00345.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00345.png",
+      "sha256": "d946809ecc68f87de1f088e407a93be678f2b86b1327fb065bee1b3401c49401"
+    },
+    {
+      "frame": 346,
+      "seconds": 4.731698125018738,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00346.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00346.png",
+      "sha256": "ed547aa7f5a995149aca4ea44457d145ff2d5d0686ef2543a6dcc6378a53acfc"
+    },
+    {
+      "frame": 347,
+      "seconds": 4.188109791954048,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00347.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00347.png",
+      "sha256": "b714c487f5a91170a62422d1334cd5b524a72b5780c11d53eba655e54fc1a089"
+    },
+    {
+      "frame": 348,
+      "seconds": 4.871674333000556,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00348.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00348.png",
+      "sha256": "7d99d3536da0e64a5f3bc9dcca7049b0cbd3d33e1aab84b99868a71cf90ade08"
+    },
+    {
+      "frame": 349,
+      "seconds": 4.55942674994003,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00349.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00349.png",
+      "sha256": "dca0c79ada0ec68e363f88668ea13737d35b936dc3c9e89653b4f47881b641db"
+    },
+    {
+      "frame": 350,
+      "seconds": 5.218747875071131,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00350.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00350.png",
+      "sha256": "19bc3609570d3274b870787a3cea9f54b73f0ce1d983ebab04e59c65ecae7baa"
+    },
+    {
+      "frame": 351,
+      "seconds": 4.650909209041856,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00351.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00351.png",
+      "sha256": "15213e24cf7da576e8feda30645803d75a2217aa432a167b36ffdc262c7f80f3"
+    },
+    {
+      "frame": 352,
+      "seconds": 4.994619749952108,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00352.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00352.png",
+      "sha256": "a310f6ba7cfb3f25b0681c0a0b26cdcd9964d6c9e7abe682521cbb3cff00bb37"
+    },
+    {
+      "frame": 353,
+      "seconds": 4.616843750001863,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00353.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00353.png",
+      "sha256": "b5a069c4a68ad00ae74d31af6c2f80accbe788eb7f5de833f247209c4703a5b6"
+    },
+    {
+      "frame": 354,
+      "seconds": 4.8225984160089865,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00354.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00354.png",
+      "sha256": "012813e8fc1be4a155f1c84bc7c5353999c41e48de2b5be12663db2c7645af7b"
+    },
+    {
+      "frame": 355,
+      "seconds": 4.680461084004492,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00355.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00355.png",
+      "sha256": "a2976e2bca14085878f06895d75c4c09015e8b681ec95617d72c2ff8440c4bb8"
+    },
+    {
+      "frame": 356,
+      "seconds": 4.857602417003363,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00356.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00356.png",
+      "sha256": "5ae7de55c9428a4359006e41107d2956480831d6bf9745ca764526e99cdfc88e"
+    },
+    {
+      "frame": 357,
+      "seconds": 4.481846584007144,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00357.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00357.png",
+      "sha256": "d7af074dc49fa14002f713d665c1c5820fb2929657e1ff4ef82f184ef0299a4f"
+    },
+    {
+      "frame": 358,
+      "seconds": 4.5965665420517325,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00358.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00358.png",
+      "sha256": "b202cff30ae1874f6e3d0064c2dd2cac8f6eed2fa3d202b4b6889a3409c907f7"
+    },
+    {
+      "frame": 359,
+      "seconds": 4.779628792079166,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00359.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00359.png",
+      "sha256": "0ff2007f5b3777f8334901b067f7e6eeba8b7f574d2a0bf649b1a7bcfb069b9f"
+    },
+    {
+      "frame": 360,
+      "seconds": 4.511427833000198,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00360.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00360.png",
+      "sha256": "5de0c70c514a67a5763b93094f2831e7167206a196a362949c3adbee5b91f465"
+    },
+    {
+      "frame": 361,
+      "seconds": 4.131075542070903,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00361.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00361.png",
+      "sha256": "890ae52d49bc98174457b0f849b03cd39dcddd5e2a7bfbeef5ef1ae67bde427f"
+    },
+    {
+      "frame": 362,
+      "seconds": 4.596329957945272,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00362.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00362.png",
+      "sha256": "95c0d34fcae46af70cf927dfce1c42bbe0baf61c2d25dda3b2c3c7ec4dd106ba"
+    },
+    {
+      "frame": 363,
+      "seconds": 4.892026416957378,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00363.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00363.png",
+      "sha256": "211bd2bacefc240825bc6ad8d4ecc12b2fcf7c54f778672af3b0139690c68426"
+    },
+    {
+      "frame": 364,
+      "seconds": 4.556523292092606,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00364.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00364.png",
+      "sha256": "db928c652c97c3419856590f57eadc19a8d67de26326e13eac3bcbd31b3aa1f1"
+    },
+    {
+      "frame": 365,
+      "seconds": 4.535756541998126,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00365.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00365.png",
+      "sha256": "0785bffe6846024f9f8593d0f7d44d050aa3d3599fee0c398e7f6cf23e8f2436"
+    },
+    {
+      "frame": 366,
+      "seconds": 4.472330375108868,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00366.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00366.png",
+      "sha256": "add174bdc7aa405d63ebf4627868c24a319aba0e96129ab3112bdbc86691ae7d"
+    },
+    {
+      "frame": 367,
+      "seconds": 4.609538166900165,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00367.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00367.png",
+      "sha256": "2b2f2559d01c4a5cc033c2c58350c6c7f7486099c2d816c6037324a6910b8aa2"
+    },
+    {
+      "frame": 368,
+      "seconds": 3.9925214579561725,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00368.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00368.png",
+      "sha256": "dfc9f20676c162d6f60dccfae35876c4ab5c071a9280192e67b72b12d9212ad4"
+    },
+    {
+      "frame": 369,
+      "seconds": 4.877980375080369,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00369.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00369.png",
+      "sha256": "af37ce62931f015f1b79de64802e6937a78a25b1f82bc6518822a5a08f5e1239"
+    },
+    {
+      "frame": 370,
+      "seconds": 4.608879500068724,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00370.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00370.png",
+      "sha256": "3b339b0c76cf09e47b77fb6c84120574f42b3a339cae78e678c99e69b8a80092"
+    },
+    {
+      "frame": 371,
+      "seconds": 5.047111624968238,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00371.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00371.png",
+      "sha256": "5122cc63059af8ad99c5b2781c060c5f2049bc6f83b7c2977a1f7e069b10027f"
+    },
+    {
+      "frame": 372,
+      "seconds": 4.500306708039716,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00372.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00372.png",
+      "sha256": "d56d8a06bcdf3699c6fd7fdaf52270d4ea60d2ed4f5c53ed08c3f8b81abc59ff"
+    },
+    {
+      "frame": 373,
+      "seconds": 5.001066708937287,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00373.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00373.png",
+      "sha256": "cc6429cc051bb545f627a158e33536ea11665dd1a5035efd96447e7eda74b316"
+    },
+    {
+      "frame": 374,
+      "seconds": 4.628620957955718,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00374.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00374.png",
+      "sha256": "e170443194bc5a748434d5a87808f1b42fd49e7a9b9eb20e1e2ecb3b27cb7194"
+    },
+    {
+      "frame": 375,
+      "seconds": 5.098128249985166,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00375.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00375.png",
+      "sha256": "a823215ea34da753f38293ab8117b511d7612f55e9ddcea94b98dad1e7efbeb0"
+    },
+    {
+      "frame": 376,
+      "seconds": 4.794819374918006,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00376.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00376.png",
+      "sha256": "b9eb0349d771aa05af8780ac58ab947b22d15161d4e3b58e77d69877300506e8"
+    },
+    {
+      "frame": 377,
+      "seconds": 4.5868840829934925,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00377.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00377.png",
+      "sha256": "cbdd93f829178dfcbd9f839eb91d46e76a494a3f1020bbf38b24c8bbdf2d2961"
+    },
+    {
+      "frame": 378,
+      "seconds": 4.714894833043218,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00378.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00378.png",
+      "sha256": "2eefc075bd8b2d2281f9fafb76d95e49d4526960098395efb4b0a3b6dde00138"
+    },
+    {
+      "frame": 379,
+      "seconds": 4.770339707960375,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00379.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00379.png",
+      "sha256": "dcc8a48e40f2e836dc3bdadbaba9b1f3b94044be68eac2aac57a62884e6d8ae1"
+    },
+    {
+      "frame": 380,
+      "seconds": 4.889601041912101,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00380.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00380.png",
+      "sha256": "96a1d04401894a3612013619e0f3014a2b6e9c064877c1a465cf33d12ca1375b"
+    },
+    {
+      "frame": 381,
+      "seconds": 4.9026505830697715,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00381.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00381.png",
+      "sha256": "52c7f67763afc59c6ff2428e82dd3d3bee1da684965f79a59859f1c4f4c5afc4"
+    },
+    {
+      "frame": 382,
+      "seconds": 4.394976165960543,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00382.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00382.png",
+      "sha256": "357e21c0ed7394b21e0d18f73bc6377cebfe4b358c779d71393e7bd0dbaa9d8d"
+    },
+    {
+      "frame": 383,
+      "seconds": 4.736618541995995,
+      "jpeg": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/frame_00383.jpg",
+      "png": "/Users/lukaszjawor/.hermes/cache/scratch/menu-hd-full-v1/preview_00383.png",
+      "sha256": "a3adb0cad3f421f964f98d593558bb4fdabaf0a309ee6743b2012c3d3287330a"
+    }
+  ],
+  "source_sha256": "ff20306613c82940d717e9f24a080b68d9b36f21f29f82a860514ce7667fb274"
+}

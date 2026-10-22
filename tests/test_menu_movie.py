@@ -137,106 +137,100 @@ def test_close_is_idempotent(tmp_path):
     assert movie.get_frame(0, (8, 6)) is None
 
 
-def test_presentation_fixture_contains_real_models_and_animated_contacts():
-    from tools.build_menu_movie import PresentationFixture
-    fixture = PresentationFixture()
-    state = fixture.state
-    assert state._manager is None
-    ids = {e.data_id for e in state.entities.values()}
+def test_presentation_plan_uses_approved_models_without_a_game_manager():
+    from pathlib import Path
+    from tools.cinematics.scene_spec import build_plan, ship_pose
+    plan = build_plan(Path(__file__).resolve().parents[1])
+    assert len(plan['ships']) == 7
     assert {'imperial_frigate', 'rebel_frigate', 'imperial_battleship',
-            'imperial_supercapital'} <= ids
-    assert len(state.entities) >= 6
-    assert state.players[0].color != state.players[1].color
-    assert all(state.can_see(0, e.id) for e in state.entities.values())
-    fixture.sample(.2)
-    a = [tuple(e.pos.to_dict()) for e in state.entities.values()]
-    assert {'beam', 'shield_hit', 'muzzle'} <= {fx['kind'] for fx in state.effects}
-    assert len(state.projectiles) >= 4
-    assert sum(fx['kind'] == 'beam' for fx in state.effects) >= 2
-    assert all(fx.get('size', 0) <= 18 for fx in state.effects if fx['kind'] == 'shield_hit')
-    fixture.sample(3.7)
-    b = [tuple(e.pos.to_dict()) for e in state.entities.values()]
-    assert a != b
-    assert state.tick > 0
+            'imperial_supercapital'} <= {s['data_id'] for s in plan['ships']}
+    assert {s['faction'] for s in plan['ships']} == {'imperial', 'rebel'}
+    assert all(s['runtime_sha256'] and s['revision'] for s in plan['ships'])
+    assert ship_pose(plan['ships'][0], .2) != ship_pose(plan['ships'][0], 3.7)
+    assert 'no gameplay' in plan['scope']
 
 
 def test_cinematic_camera_is_slow_and_periodic():
-    from tools.build_menu_movie import camera_pose
-    a, b, c = camera_pose(0), camera_pose(16), camera_pose(.0416667)
-    assert a == pytest.approx(b)
-    assert abs(c[0] - a[0]) < .2
-    assert abs(c[1] - a[1]) < .2
-    assert abs(c[2] - a[2]) < 1
+    from tools.cinematics.scene_spec import camera_pose
+    a, b, c = camera_pose(0), camera_pose(16), camera_pose(1 / 24)
+    assert a['location'] == pytest.approx(b['location'])
+    assert a['target'] == b['target'] == c['target']
+    assert all(abs(x - y) < 1 for x, y in zip(a['location'], c['location']))
 
 
-def test_baked_crossfade_matches_head_continuation():
-    from tools.build_menu_movie import loop_frame
-    surfaces = []
+def test_baked_crossfade_matches_head_continuation(tmp_path):
+    pytest.importorskip('PIL', reason='offline cinematic authoring extra is not installed')
+    from tools.cinematics.movie_pack import assemble_movie
+    source = tmp_path / 'source'; source.mkdir()
     for i in range(8):
-        s = pygame.Surface((3, 2)); s.fill((i * 30, 0, 0)); surfaces.append(s)
-    assert loop_frame(surfaces[2], None, 0).get_at((0, 0)).r == 60
-    assert loop_frame(surfaces[7], surfaces[1], 1).get_at((0, 0)).r == 30
-    assert 60 < loop_frame(surfaces[6], surfaces[0], .5).get_at((0, 0)).r < 130
+        surface = pygame.Surface((3, 2)); surface.fill((i * 30, 0, 0))
+        pygame.image.save(surface, str(source / f'frame_{i:05d}.jpg'))
+    movie = tmp_path / 'movie.zip'
+    assemble_movie(source, movie, width=3, height=2, fps=2,
+                   source_seconds=4, overlap_seconds=1)
+    with zipfile.ZipFile(movie) as archive:
+        assert archive.read('frames/00000.jpg') == (source / 'frame_00002.jpg').read_bytes()
+        end = pygame.image.load(io.BytesIO(archive.read('frames/00005.jpg')), 'frame.jpg')
+        head = pygame.image.load(str(source / 'frame_00001.jpg'))
+        assert abs(end.get_at((0, 0)).r - head.get_at((0, 0)).r) <= 2
 
 
 @pytest.mark.skipif(__import__('os').environ.get('STAR_ARMADA_GL_TEST') != '1',
-                    reason='requires real desktop GL context')
+                    reason='requires pinned Blender5.0.1 and an idle GPU')
 def test_offline_builder_real_gl_preview(tmp_path):
     import subprocess
-    import sys
+    import shutil
     from pathlib import Path
+    from tools.cinematics.scene_spec import build_plan
     root = Path(__file__).resolve().parents[1]
-    completed = subprocess.run([sys.executable, 'tools/build_menu_movie.py',
-                                '--preview-only', '--output-dir', str(tmp_path)],
-                               cwd=root, capture_output=True, text=True, timeout=120)
+    blender = shutil.which('blender') or '/Applications/Blender.app/Contents/MacOS/Blender'
+    plan_path = tmp_path / 'plan.json'
+    plan_path.write_text(json.dumps(build_plan(root)), encoding='utf-8')
+    output = tmp_path / 'render'
+    completed = subprocess.run([blender, '--background', '--factory-startup',
+        '--python-exit-code', '1', '--python', 'tools/cinematics/blender_scene.py',
+        '--', '--plan', str(plan_path), '--out', str(output)],
+        cwd=root, capture_output=True, text=True, timeout=120)
     assert completed.returncode == 0, completed.stdout + completed.stderr
-    report = json.loads((tmp_path / 'render-report.json').read_text())
-    assert report['msaa_samples'] >= 4
-    assert len(report['samples']) == 3
-    for sample in report['samples']:
-        assert sample['gl_error'] == 0
-        assert sample['lit_pixels'] > 40000
-        assert sample['red_pixels'] > 1500
-        assert sample['blue_pixels'] > 1500
-        assert sample['visible_centers'] == 7
-        assert sample['weapon_effect_pixels'] > 100
-        assert sample['shield_hit_pixels'] > 10
-    assert all((tmp_path / name).is_file() for name in ['start.png', 'middle.png', 'end.png'])
+    report = json.loads((output / 'render-report.json').read_text())
+    assert report['samples'] == 64
+    assert report['resolution'] == [2560, 1440]
+    assert len(report['renders']) == 3
+    assert report['engine'] == 'BLENDER_EEVEE'
+    for sample in report['renders']:
+        assert pygame.image.load(sample['png']).get_size() == (2560, 1440)
 
 
 @pytest.mark.skipif(__import__('os').environ.get('STAR_ARMADA_MOVIE_BUILD_TEST') != '1',
-                    reason='offline 360-frame GL/ffmpeg build acceptance')
+                    reason='offline packaging gate requires completed 384-frame native PNG renders')
 def test_full_movie_asset_preview_and_lazy_playback(tmp_path):
-    import subprocess
-    import sys
-    from pathlib import Path
-    from render.menu_movie import MenuMovie
-    root = Path(__file__).resolve().parents[1]
+    # Full Blender rendering is a separate bounded process: do not secretly
+    # rebake half an hour of GPU work inside a packaging/playback test.
     import os
-    import shutil
-    ffmpeg = os.environ.get('STAR_ARMADA_FFMPEG') or shutil.which('ffmpeg')
-    assert ffmpeg, 'Set STAR_ARMADA_FFMPEG for the opt-in offline build test'
-    asset_root = tmp_path / 'assets'
-    result = subprocess.run([sys.executable, 'tools/build_menu_movie.py',
-                             '--asset', str(asset_root / 'menu/battle.zip'),
-                             '--output-dir', str(tmp_path / 'preview'), '--ffmpeg', ffmpeg],
-                             cwd=root, capture_output=True, text=True, timeout=240)
-    assert result.returncode == 0, result.stdout + result.stderr
-    with zipfile.ZipFile(asset_root / 'menu/battle.zip') as z:
-        assert len(z.namelist()) == 361
-        assert all(i.compress_type == zipfile.ZIP_STORED for i in z.infolist())
-    with MenuMovie(asset_root) as movie:
+    from pathlib import Path
+    from tools.cinematics.prepare_frames import encode_frames
+    from tools.cinematics.movie_pack import assemble_movie, encode_preview
+    from render.menu_movie import MenuMovie
+    source = os.environ.get('STAR_ARMADA_CINEMATIC_FRAMES')
+    assert source, 'Set STAR_ARMADA_CINEMATIC_FRAMES to the completed native PNG directory'
+    encoded = tmp_path / 'encoded'
+    quality = encode_frames(Path(source), encoded)
+    movie_path = tmp_path / 'battle.zip'
+    assemble_movie(encoded, movie_path, jpeg_quality=86, max_archive_bytes=95*1024*1024)
+    preview = tmp_path / 'preview.mp4'
+    encode_preview(movie_path, preview, os.environ.get('STAR_ARMADA_FFMPEG'))
+    assert quality['min_psnr_db'] >= 42
+    assert quality['resize_operations'] == 0
+    with zipfile.ZipFile(movie_path) as archive:
+        assert len(archive.namelist()) == 361
+        assert all(info.compress_type == zipfile.ZIP_STORED for info in archive.infolist())
+    with MenuMovie(movie_path.parent, movie_path.name) as movie:
         assert movie.metadata['fps'] == 24
         assert movie.metadata['frame_count'] == 360
         for t in (0., 7.5, 14.958333333, 15.):
-            assert movie.get_frame(t, (1280, 720)).get_size() == (1280, 720)
+            assert movie.get_frame(t, (2560, 1440)).get_size() == (2560, 1440)
             assert movie.cache_info()['frames'] <= 2
-    assert (tmp_path / 'preview/intro-battle-preview.mp4').stat().st_size > 100000
-    report = json.loads((tmp_path / 'preview/render-report.json').read_text())
-    assert report['full_render_gl_errors'] == 0
-    assert report['asset_bytes'] > 100000
-    assert report['playback']['decode_scale_p95_ms'] < 45
-    assert report['loop_seam_mean_abs_rgb'] < 8
+    assert preview.stat().st_size > 100000
 
 
 @pytest.mark.parametrize('problem', ['zip', 'json', 'missing', 'dimensions', 'large', 'compressed'])

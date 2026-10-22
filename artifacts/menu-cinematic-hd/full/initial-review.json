@@ -1,0 +1,12 @@
+{
+  "passed": false,
+  "security_concerns": [],
+  "logic_errors": [
+    "P1 — tools/cinematics/movie_pack.py:264-275: The 180-second timeout starts only after all blocking process.stdin.write() calls and stdin.close(). If ffmpeg stalls or stops reading, a pipe write/flush blocks indefinitely and the timeout/kill handler is never reached. A CPU-only probe with a non-reading child reproduced blocking before wait() was reached; externally killing that child produced BrokenPipeError rather than the captured encoder diagnostics. Apply one deadline to the complete streaming/encoding operation, terminate and reap on expiry, and preserve stderr when writes or close fail. Add stalled-reader and early-exit regression tests.",
+    "P2 — tools/cinematics/prepare_frames.py:72-74: The CLI writes --report only after encoding, without checking whether the report path aliases a source PNG or a generated delivery JPEG. Setting --report to SOURCE/preview_00000.png destroys an original render; setting it to DESTINATION/frame_00000.jpg overwrites a successfully validated JPEG with JSON while still printing NATIVE_DELIVERY_OK. Preflight report/source/output collisions, including symlink aliases, before creating the encoded directory; reject collisions and preserve existing source/output files. Add CLI collision tests."
+  ],
+  "suggestions": [
+    "tools/cinematics/blender_scene.py:35-38 and verify_preview.py:24-33: Consider enforcing the documented fresh-output-directory requirement rather than checking only scene.blend or accepting existing directories. A directory without scene.blend can already contain frame/preview/report files, and the capture tool overwrites existing user/settings.json and capture artifacts. Fail before work when those output targets already exist."
+  ],
+  "summary": "Reviewed all 1,687 diff lines and verified every new file matches the repository source, including the pinned Blender script hash. Focused CPU tests returned 89 passed and 2 GPU/full-movie tests deselected. Found an unbounded ffmpeg stdin path and destructive encoding-report collisions. No Blender, GL, main, native, or full-suite execution; repository files were not modified. Only scratch test/probe artifacts and this verdict JSON were created."
+}

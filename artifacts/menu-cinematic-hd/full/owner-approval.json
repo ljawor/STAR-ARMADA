@@ -1,0 +1,10 @@
+{
+  "owner_message_verbatim": "looks perfect merge please",
+  "approved_candidate_revision": "6a3e27a7f8e84327d7a6fe475b69a4af406fe7bf",
+  "approved_movie_sha256": "33fdd93e67ad66201ce9def49d6f9ba1cb5a2d502fee2ab1f14196e6fca93ae7",
+  "final_animation_approved": true,
+  "merge_authorized": true,
+  "release_or_tag_authorized": false,
+  "physical_main_py_playtest_separately_reported": false,
+  "scope": "Explicit owner approval of the completed result and request to merge; preserve exact tested source and movie. GitHub PR records the actual merge outcome."
+}
