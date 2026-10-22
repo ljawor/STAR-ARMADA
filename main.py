@@ -92,7 +92,7 @@ CPP_DIR = os.path.join(os.path.abspath(USER_DIR), "cpp-window")
 CPP_HUD_SIZE = (1280, 800)
 CPP = {"session": None, "window": None, "input": None, "seen": set(), "seen_tick": -1,
        "selection": frozenset(), "quit": False, "failed": False, "fell_back": False,
-       "bridge_mark": (0, 0, 0)}
+       "bridge_mark": (0, 0, 0), "iconified": False}
 
 # --------------------------------------------------------------------------- window
 pygame.init()
@@ -269,15 +269,20 @@ def flash(msg: str) -> None:
 
 # --------------------------------------------------------------------------- cpp window
 def cpp_restore_window():
-    """Show the existing menu/GL window again without destroying its cached textures."""
-    try:
-        from pygame._sdl2.video import Window
-        window = Window.from_display_module()
-        window.restore()
-        window.show()
-        window.focus()
-    except (pygame.error, RuntimeError):
-        pass
+    """Show the existing menu/GL window again without destroying its cached textures.
+
+    Only the separate-window diagnostic path iconifies this process's own window; the embedded
+    renderer draws into it instead (`render_bridge/cpp_window.py`). So the normal game has no
+    window state to repair here, and this used to reach for pygame's deprecated
+    `Window.from_display_module()` bridge for nothing, warning in the player's terminal every
+    time a match ended. `render/host_window.py` raises the window through SDL when a match really
+    did put it out of the way.
+    """
+    if not CPP.get("iconified"):
+        return
+    CPP["iconified"] = False
+    from render import host_window
+    host_window.restore()
 
 
 def cpp_reset():
@@ -350,6 +355,7 @@ def cpp_session(state, ds, local_player: int):
             # surface looks like a game that started and then froze.
             try:
                 pygame.display.iconify()
+                CPP["iconified"] = True
             except Exception:
                 pass
     return session

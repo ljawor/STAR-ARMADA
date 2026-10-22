@@ -170,6 +170,11 @@ struct Options {
   // `> 0` cannot express "a level camera" or "yaw 0", so a requested 0 silently fell back to the
   // stock 12/90. NaN means "not given".
   bool pitchGiven = false, yawGiven = false;
+  // The whole report on stdout floods the player's terminal (the frame-time sample arrays alone
+  // are one float per frame), and nothing reads it: the host never parses the viewer's stdout and
+  // the separate-window launcher discards it. `--report` is the file route a tool wants; this is
+  // the opt-in for a tool that pipes stdout.
+  bool stdoutReport = false;
   bool shadows = true, validate = false, exercise = false,
        // The debug text is a development aid, never part of the game's window: it is off unless a
        // tool asks for it, and the game never asks. `F` used to toggle it and was in the player's
@@ -274,6 +279,8 @@ static Options options(int argc, char **argv) {
       o.overlay = true;
     else if (k == "--no-overlay")
       o.overlay = false; // Retain the existing diagnostic launchers' explicit opt-out.
+    else if (k == "--stdout-report")
+      o.stdoutReport = true;
     else if (k == "--validate-only")
       o.validate = true;
     else if (k == "--exercise-controls")
@@ -298,7 +305,10 @@ static Options options(int argc, char **argv) {
              "as such in the report)\n"
              "Planets (W05): --planet-ring planets.bin carries one ARMPLN01 texture per distinct "
              "planet; the body itself is drawn from the frame instance whose binding names that "
-             "texture, scaled by the planet's radius\n";
+             "texture, scaled by the planet's radius\n"
+             "Report (stdout): --stdout-report prints the whole JSON report as ONE line before "
+             "exit. Off by default: it is a diagnostic dump, the game's window inherits stdout, "
+             "and the frame-time sample arrays are one float per frame. Use --report for a file.\n";
       std::exit(0);
     } else
       throw std::runtime_error("Unknown option: " + k);
@@ -2625,7 +2635,7 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
     if (!f)
       throw std::runtime_error("Cannot write report");
   }
-  std::cout << "VIEWER_OK " << report.dump() << std::endl;
+  if (o.stdoutReport) std::cout << "VIEWER_OK " << report.dump() << std::endl;
   return 0;
 }
 
