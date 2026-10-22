@@ -195,7 +195,7 @@ def projectiles(shots, weapon_type_of, extents_of) -> tuple[list, dict]:
 
 
 def _shape(weapon_type):
-    from render.renderer import projectile_shape       # local: keeps the import graph unchanged
+    from render.shapes import projectile_shape       # local: keeps the import graph unchanged
     return projectile_shape(weapon_type)
 
 
@@ -314,7 +314,7 @@ class PlanetDomes:
 
 
 def _shield_colour(strength: float):
-    from render.renderer import shield_color
+    from render.shapes import shield_color
     return shield_color(strength)
 
 

@@ -29,7 +29,7 @@ sys.path.insert(0, str(ROOT))
 import game.core  # noqa: F401  core/systems import cycle, per the project skill
 from game.graphics_benchmark import make_fixture
 from render import asset_selection, emissive_batch, fog, primitive_batch
-from render.renderer import projectile_extents
+from render.shapes import projectile_extents
 from render_bridge import emissive as emissive_codec
 from render_bridge import markers as marker_codec
 from render.ship_sizes import ship_size

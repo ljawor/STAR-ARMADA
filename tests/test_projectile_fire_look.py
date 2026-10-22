@@ -18,7 +18,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
-from render.renderer import (  # noqa: E402
+from render.shapes import (  # noqa: E402
     BOLT_WEAPON_TYPES, SQUARE_WEAPON_TYPES,
     projectile_extents, projectile_quad_offsets, projectile_shape,
     square_quad_offsets)

@@ -125,8 +125,13 @@ def run_benchmark(*, units=200, frames=60, warmup=10, mode='full',
             raise ValueError(f'{name} must be an integer in [{low}, {high}]')
     if mode not in ('sim', 'full') or vsync not in (0, 1) or msaa not in (0, 2, 4, 8):
         raise ValueError('invalid mode, vsync or msaa')
+    if mode == 'full':
+        # full mode timed the Python renderer's glFinish boundaries; that module is gone (#160).
+        # Frame pacing of the shipping path is the window's own measurement, not this probe's.
+        raise ValueError('full mode timed the Python renderer, which #160 deleted; measure the '
+                         'native window (render_cpp) instead, or use --mode sim')
     if mode == 'sim' and screenshot is not None:
-        raise ValueError('screenshots require full mode')
+        raise ValueError('screenshots require a GL renderer, which #160 removed')
     from game.graphics_benchmark import FIXTURES, make_fixture, semantic_inventory, visibility_sample, Activity
     if fixture not in ('corvette-combat-v1',) + FIXTURES:
         raise ValueError(f'unknown fixture: {fixture}')
@@ -154,8 +159,9 @@ def run_benchmark(*, units=200, frames=60, warmup=10, mode='full',
         frames=frames, warmup_frames=warmup,
         initial_state_sha256=initial_hash, counts_initial=initial_counts,
         timing_semantics='perf_counter_ns; fixed 1/30 simulation tick; no pacing; '
-            'full mode glFinish after camera/world/HUD; world includes Renderer camera.apply; '
-            'audio/input/menu/cinematic excluded; warmup excluded from samples')
+            'simulation only: `full` mode, which timed glFinish after camera/world/HUD, was retired '
+            'with the Python renderer (#160); audio/input/menu/cinematic excluded; warmup excluded '
+            'from samples')
     samples = {'sim': []}
     activity = None
     if scene is not None:
@@ -170,107 +176,21 @@ def run_benchmark(*, units=200, frames=60, warmup=10, mode='full',
         samples['lan_precise_checksum'] = []
         report['lan_checksum_semantics'] = ('Separate precise_checksum(manager) cost after simulation/render/presentation; '
             'excluded from sim and frame stages; no sockets/barrier/input delay; not real-network pacing')
-    pygame = GL = camera = renderer = hud = None
     primary_error = None
     report['sample_exclusions'] = {}
     try:
-        if mode == 'full':
-            import pygame
-            from OpenGL import GL
-            from render.camera import Camera
-            from render.renderer import Renderer
-            from render.hud import HUD
-            # No pygame.init(): audio is intentionally excluded from this probe.
-            pygame.display.init()
-            pygame.display.set_caption('STAR ARMADA — deterministic performance report')
-            pygame.display.gl_set_attribute(pygame.GL_MULTISAMPLEBUFFERS, int(msaa > 0))
-            pygame.display.gl_set_attribute(pygame.GL_MULTISAMPLESAMPLES, msaa)
-            pygame.display.set_mode((width, height), pygame.OPENGL | pygame.DOUBLEBUF, vsync=vsync)
-            requested_resolution = [width, height]
-            drawable = reported_drawable_size(pygame)
-            if scene is not None and drawable is not None:
-                width, height = drawable
-            GL.glViewport(0, 0, width, height)
-            pygame.event.pump()
-            camera = Camera(width, height)
-            camera.distance = 4500
-            if scene is not None:
-                scene.camera.apply(camera)
-            renderer = Renderer(st, camera)
-            hud = HUD(width, height, st)
-            samples.update({name: [] for name in ('camera', 'world', 'hud', 'swap', 'frame')})
-            def gl_string(name):
-                raw = GL.glGetString(name)
-                return raw.decode('utf-8', errors='replace') if raw else None
-            actual_vsync = reported_swap_interval(pygame)
-            report['graphics'] = dict(resolution=requested_resolution, drawable_size=drawable,
-                render_size=[width, height],
-                drawable_note='Actual SDL_GL_GetDrawableSize, null when unavailable; render_size is the viewport/capture extent used.',
-                viewport=[int(x) for x in GL.glGetIntegerv(GL.GL_VIEWPORT)],
-                requested_vsync=vsync, reported_swap_interval=actual_vsync,
-                vsync_note='swap interval may be unavailable or overridden by driver; inspect swap samples',
-                requested_msaa=msaa, actual_msaa=int(GL.glGetIntegerv(GL.GL_SAMPLES)),
-                sdl_driver=pygame.display.get_driver(), pygame=pygame.version.ver,
-                sdl=list(pygame.get_sdl_version()), vendor=gl_string(GL.GL_VENDOR),
-                gpu=gl_string(GL.GL_RENDERER), driver=gl_string(GL.GL_VERSION),
-                shader_enabled=renderer.materials.available)
-            if scene is not None:
-                report['graphics']['window_size'] = list(pygame.display.get_window_size())
-                report['graphics_per_sample'] = []
-            report['sample_exclusions'] = dict(swap=[frames - 1], frame=[frames - 1])
-            report['capture_timing_note'] = ('Final back-buffer capture preserves the frame hash; '
-                'capture-adjacent swap and frame samples excluded (zero-based measured indices). '
-                'One-frame runs have no swap/frame timing evidence.')
-            GL.glFinish()
         selection = (set(scene.selection) if scene is not None else
                      {next(e.id for e in st.entities.values() if e.is_ship and e.owner == 0)})
         count_history = []
         for frame in range(warmup + frames):
             if activity is not None:
                 activity.frame.clear()
-            if pygame is not None:
-                if any(ev.type == pygame.QUIT for ev in pygame.event.get()):
-                    raise RuntimeError('benchmark cancelled; no complete acceptance result')
             frame_start = time.perf_counter_ns()
             start = frame_start
             gm.step(TICK_DT)
             durations = {'sim': (time.perf_counter_ns() - start) / 1e6}
             if st.tick != frame + 1 or st.game_over:
                 raise RuntimeError('fixture stopped early; simulation samples would be vacuous')
-            if renderer is not None:
-                start = time.perf_counter_ns()
-                camera.apply(width, height)
-                GL.glFinish()
-                durations['camera'] = (time.perf_counter_ns() - start) / 1e6
-                start = time.perf_counter_ns()
-                renderer.draw(TICK_DT, selection)
-                GL.glFinish()
-                durations['world'] = (time.perf_counter_ns() - start) / 1e6
-                start = time.perf_counter_ns()
-                hud.set_floating_texts(renderer.floating_texts_screen())
-                hud.render(selection, None, 0, False)
-                hud.draw_gl()
-                GL.glFinish()
-                durations['hud'] = (time.perf_counter_ns() - start) / 1e6
-                if frame == warmup + frames - 1:
-                    # Preserve back-buffer evidence, but exclude the adjacent
-                    # presentation: readback can change the vsync wait.
-                    capture_start = time.perf_counter_ns()
-                    pixels = bytes(GL.glReadPixels(0, 0, width, height, GL.GL_RGB, GL.GL_UNSIGNED_BYTE))
-                    report['framebuffer_sha256'] = hashlib.sha256(pixels).hexdigest()
-                    report['framebuffer_nonuniform'] = pixels != pixels[:3] * (len(pixels) // 3)
-                    report['framebuffer_evidence_note'] = ('RGB spatial nonuniformity only; '
-                        'not world/combat acceptance (HUD/background can be nonuniform).')
-                    if screenshot is not None:
-                        image = pygame.image.frombytes(pixels, (width, height), 'RGB')
-                        pygame.image.save(pygame.transform.flip(image, False, True), str(screenshot))
-                    capture_ns = time.perf_counter_ns() - capture_start
-                else:
-                    capture_ns = 0
-                start = time.perf_counter_ns()
-                pygame.display.flip()
-                durations['swap'] = (time.perf_counter_ns() - start) / 1e6
-                durations['frame'] = (time.perf_counter_ns() - frame_start - capture_ns) / 1e6
             if lan_checksum:
                 start = time.perf_counter_ns()
                 checksum = precise_checksum(gm)
@@ -284,19 +204,13 @@ def run_benchmark(*, units=200, frames=60, warmup=10, mode='full',
                 count_history.append(counts(st))
                 if scene is not None:
                     report['inventory_per_sample'].append(semantic_inventory(st))
-                    report['visibility_per_sample'].append(visibility_sample(st, camera))
+                    # No window, therefore no camera pose to test visibility against: the sample
+                    # records the fixture's default view, exactly as sim mode did before (#160).
+                    report['visibility_per_sample'].append(visibility_sample(st, None))
                     report['activity_per_sample'].append(activity.snapshot(activity.frame))
                     report['command_budget_per_sample'].append({str(owner): dict(
                         used=player.command_used(st.entities), capacity=player.command_capacity)
                         for owner, player in sorted(st.players.items())})
-                    if GL is not None:
-                        report['graphics_per_sample'].append(dict(
-                            drawable_size=reported_drawable_size(pygame),
-                            viewport=[int(x) for x in GL.glGetIntegerv(GL.GL_VIEWPORT)],
-                            camera_target=list(camera.target), camera_eye=list(camera.eye_position()),
-                            camera_distance=camera.distance, camera_yaw=camera.yaw, camera_pitch=camera.pitch,
-                            sdl_driver=report['graphics']['sdl_driver'], gpu=report['graphics']['gpu'],
-                            driver=report['graphics']['driver']))
         report.update(stages={name: summarize(values) if values else dict(
                           count=0, mean_ms=None, median_ms=None, p95_ms=None, p99_ms=None,
                           max_ms=None, samples_ms=[]) for name, values in samples.items()},
@@ -313,13 +227,7 @@ def run_benchmark(*, units=200, frames=60, warmup=10, mode='full',
     finally:
         # Attempt both GL owners before destroying their context, even if one
         # fails. Shutdown must not replace the original measurement failure.
-        cleanup_errors = []
-        for name, owner in (('hud', hud), ('renderer', renderer), ('pygame', pygame)):
-            if owner is not None:
-                try:
-                    owner.quit() if name == 'pygame' else owner.close()
-                except BaseException as exc:
-                    cleanup_errors.append(dict(owner=name, error=f'{type(exc).__name__}: {exc}'))
+        cleanup_errors: list = []
         if cleanup_errors:
             error = primary_error if primary_error is not None else RuntimeError('benchmark cleanup failed')
             setattr(error, 'cleanup_errors', cleanup_errors)
