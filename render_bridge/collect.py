@@ -42,6 +42,17 @@ FLAG_DISABLED_HP = 0.02        # matches the renderer's "combat-ineffective" tin
 _ZERO = {'x': 0.0, 'y': 0.0, 'z': 0.0}
 _WHITE = (1.0, 1.0, 1.0, 1.0)
 
+#: The instance id the placement preview (#171) rides under. No simulation entity can hold it, and
+#: the window keys its per-entity interpolation on the id, so a constant one makes the ghost glide
+#: between two frames' cursor positions instead of snapping.
+GHOST_ENTITY = 0xFFFFFFFE
+
+#: Legality colours, taken from the deleted legacy preview pass (`render/renderer.py::
+#: _draw_placement_preview`, removed with the renderer in #160) so the ghost reads the same green
+#: or red the HUD banner already reports.
+GHOST_VALID = (0.30, 0.90, 0.55, 1.0)
+GHOST_INVALID = (1.00, 0.25, 0.20, 1.0)
+
 
 def station_binding(data_id, faction):
     from render.faction_visuals import normalize_station_key
@@ -153,7 +164,53 @@ class FrameCollector:
             self._visual[key] = cached
         return cached
 
-    def collect_into(self, state, buffer, *, tick, frame_index, flags=0, extra_effects=()):
+    def ghost_instance(self, ghost, binding_index=None):
+        """The station placement preview as one frame instance, or None (#171).
+
+        `render/input.py::update_placement` already decides where the station would stand and
+        whether the site is legal; this only turns that answer into the same record a real station
+        is drawn from, so the window needs no ghost pass of its own and the preview is the actual
+        authored mesh for that binding.
+
+        Scale is `radius / 50`, the same nominal source radius the entity path uses for stations,
+        and the pose is a plain yaw - a preview stands in the world, it does not sit on a surface
+        frame. Deliberately no state: this reads the ghost dict and writes no simulation field.
+        """
+        if not ghost:
+            return None
+        kind = ghost.get('station_kind')
+        faction = ghost.get('faction')
+        world = ghost.get('world')
+        if not kind or not faction or world is None:
+            return None
+        try:
+            x, y, z = float(world[0]), float(world[1]), float(world[2])
+        except (TypeError, IndexError, ValueError):
+            return None
+        index = self._binding_index if binding_index is None else binding_index
+        binding_id = index.get(station_binding(kind, faction))
+        if binding_id is None:
+            # An unregistered binding is not an error: the ghost simply is not drawn, exactly as an
+            # unknown hull is omitted rather than invented.
+            return None
+        try:
+            scale = float(ghost.get('radius') or 120.0) / 50.0
+        except (TypeError, ValueError):
+            scale = 120.0 / 50.0
+        try:
+            yaw = float(ghost.get('yaw') or 0.0)
+        except (TypeError, ValueError):
+            yaw = 0.0
+        cos_scaled, sin_scaled = math.cos(yaw) * scale, math.sin(yaw) * scale
+        tint = packed.channels(GHOST_VALID if ghost.get('valid', True) else GHOST_INVALID)
+        return (GHOST_ENTITY, binding_id, packed.FLAG_GHOST, *tint,
+                cos_scaled, 0.0, -sin_scaled,
+                0.0, scale, 0.0,
+                sin_scaled, 0.0, cos_scaled,
+                x, y, z, 1.0, 0.0)
+
+    def collect_into(self, state, buffer, *, tick, frame_index, flags=0, extra_effects=(),
+                     ghost=None):
         """Pack one frame straight into `buffer` and return (bytes written, stats).
 
         This is the frame-rate path. It skips the per-record validation that
@@ -333,6 +390,17 @@ class FrameCollector:
             offset += instance_size
             written += 1
 
+        ghost_written = False
+        if ghost is not None:
+            record = self.ghost_instance(ghost, binding_index)
+            if record is not None:
+                if offset + instance_size > limit0:
+                    raise packed.FrameError('buffer too small for the frame')
+                pack_instance(buffer, offset, *record)
+                offset += instance_size
+                written += 1
+                ghost_written = True
+
         effects_written = 0
         kind_index = self._kind_index
         colour_cache = self._colour_cache
@@ -434,9 +502,9 @@ class FrameCollector:
         return view[:offset], {
             'instances': written, 'effects': effects_written,
             'omitted_planets': omitted, 'unknown_bindings': sorted(unknown),
-            'tables': self.tables}
+            'ghost': ghost_written, 'tables': self.tables}
 
-    def collect(self, state):
+    def collect(self, state, ghost=None):
         """Return (instances, effects, stats) for this state. Never writes state."""
         instances, omitted, unknown = [], 0, set()
         for entity in sorted(state.entities.values(), key=_ENTITY_ID):
@@ -485,6 +553,9 @@ class FrameCollector:
         instances.extend(stations.construction_records(
             state, self.ds, self._binding_index, local_player=self.local_player,
             visible_ids=self.visible_ids, all_visible=self.all_visible))
+        record = self.ghost_instance(ghost)
+        if record is not None:
+            instances.append(record)
         effects = []
         for cls, kind, pos, end, life, size, colour, beam in self._transients(state, unknown):
             effects.append(packed.effect_record(

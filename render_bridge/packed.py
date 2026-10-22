@@ -48,6 +48,11 @@ FLAG_SURFACE_FRAME = 1 << 3
 # Geometry supplied over ARMHWR01, with an ordinary/full 3x4 pose. Distinct from
 # surface hardware: orbital hulls and render-only scaffolds are not planet buildings.
 FLAG_DYNAMIC_MESH = 1 << 4
+# The placement preview (#171): not an entity, drawn from the same instance record so the window
+# needs no ghost pass. The id is a sentinel (`collect.GHOST_ENTITY`), hp is meaningless and the
+# tint carries legality, so a consumer that wants a translucent or stippled ghost can key on this
+# instead of guessing from the binding.
+FLAG_GHOST = 1 << 5
 
 # <magic><version><kind><tick><frame><instances><effects><table_crc><flags><length><crc>
 FRAME = struct.Struct('<8sHHIQIIIIII')
