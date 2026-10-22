@@ -1,0 +1,16 @@
+{
+  "command": [
+    "cmake",
+    "--build",
+    "render_cpp/build-w02",
+    "--target",
+    "armada_viewer",
+    "armada_embedded",
+    "-j",
+    "4"
+  ],
+  "pid": 10708,
+  "seconds": 11.25,
+  "returncode": 0,
+  "timeout": false
+}

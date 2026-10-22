@@ -1,0 +1,12 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "tools/render/verify_station_transparency.py",
+    "--out",
+    "/Users/lukaszjawor/.hermes/cache/scratch/sa-transparent-native-red"
+  ],
+  "pid": 10233,
+  "seconds": 3.468,
+  "returncode": 1,
+  "timeout": false
+}

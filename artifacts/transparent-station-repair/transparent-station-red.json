@@ -1,0 +1,13 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "unittest",
+    "test_native_station_lifecycle.StationLifecycleTests.test_paid_build_includes_transparent_full_station_before_completion",
+    "-v"
+  ],
+  "pid": 10182,
+  "seconds": 0.141,
+  "returncode": 1,
+  "timeout": false
+}

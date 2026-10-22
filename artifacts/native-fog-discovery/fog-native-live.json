@@ -1,0 +1,12 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "tools/render/verify_native_fog_discovery.py",
+    "--out",
+    "/Users/lukaszjawor/.hermes/cache/scratch/sa-fog-native-live"
+  ],
+  "pid": 9011,
+  "seconds": 4.931,
+  "returncode": 1,
+  "timeout": false
+}

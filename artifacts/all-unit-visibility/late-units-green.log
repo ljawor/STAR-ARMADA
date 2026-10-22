@@ -1,0 +1,8 @@
+test_paid_colonial_outreach_built_after_startup_is_in_native_frame (test_native_late_units.LateUnitTests.test_paid_colonial_outreach_built_after_startup_is_in_native_frame) ... ok
+test_startup_tables_cover_every_data_ship_before_it_exists (test_native_late_units.LateUnitTests.test_startup_tables_cover_every_data_ship_before_it_exists) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.605s
+
+OK
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
