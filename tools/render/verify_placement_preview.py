@@ -48,7 +48,7 @@ class _Hud:
         self.placement = placement
 
 
-def game_ghost(scene):
+def game_ghost(scene, station_kind=STATION_KIND):
     """Ask the game where the station would stand, exactly as it does while a player is placing."""
     from render.input import InputController
 
@@ -73,7 +73,7 @@ def game_ghost(scene):
             return SITE
 
     camera = _Camera()
-    hud = _Hud({'builder_id': builder.id, 'station_kind': STATION_KIND, 'ghost': None})
+    hud = _Hud({'builder_id': builder.id, 'station_kind': station_kind, 'ghost': None})
     controller = InputController(state, camera, hud, app=None)
     controller.local_player = 0
     controller.remote_pointer = (480, 300)      # screen centre -> the camera target
@@ -134,6 +134,8 @@ def render(folder: Path, out: Path, site) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--out', type=Path, required=True)
+    parser.add_argument('--station', default=STATION_KIND,
+                        help='station kind to preview (default: %(default)s)')
     args = parser.parse_args()
     out = args.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
@@ -145,7 +147,7 @@ def main() -> int:
     from render_bridge import collect
 
     scene = make_fixture('four-player-close-v1')
-    ghost, builder = game_ghost(scene)
+    ghost, builder = game_ghost(scene, args.station)
     site = tuple(ghost['world'])
     alpha = collect.GHOST_VALID[3]
     folders = {
@@ -173,7 +175,8 @@ def main() -> int:
     interior[0, :] = interior[-1, :] = interior[:, 0] = interior[:, -1] = False
     span = (strong - base)[interior]
     usable = np.abs(span) > 12                      # pixels that actually differ, per channel
-    results = {'game_selected_site': [round(v, 2) for v in site],
+    results = {'station_kind': args.station,
+               'game_selected_site': [round(v, 2) for v in site],
                'game_says_valid': bool(ghost['valid']),
                'game_reason': ghost.get('reason', ''),
                'radius': ghost['radius'], 'alpha': alpha,
