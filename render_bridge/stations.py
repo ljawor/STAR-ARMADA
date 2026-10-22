@@ -8,6 +8,28 @@ from . import packed
 
 SCAFFOLD = 'shared:construction_scaffold'
 
+# The site being built draws twice: the authored scaffold frame at full opacity, and the station's
+# own hull underneath it at the alpha below, rising as the work completes. A site that paid and then
+# vanished for its whole build time read as a failed order; the hull says what is coming, the scaffold
+# says that it is not there yet.
+HULL_ALPHA_FIRST = 0.22
+HULL_ALPHA_LAST = 0.85
+
+# Render-only id space: 0x80000000 for the scaffold, 0x90000000 for the hull, both | builder id so a
+# builder working one site cannot collide with itself or with the other row.
+SCAFFOLD_ID_BASE = 0x80000000
+HULL_ID_BASE = 0x90000000
+
+
+def _hull_binding(binding_index, state, station_id, owner):
+    """Binding id for the station's own mesh, or None when the faction has no such binding."""
+    from render.faction_visuals import normalize_station_key
+    player = state.players.get(owner)
+    faction = getattr(player, 'faction', None) if player is not None else None
+    if not faction:
+        return None
+    return binding_index.get(':'.join(normalize_station_key(station_id, faction)))
+
 
 def construction_records(state, ds, binding_index, *, local_player, visible_ids=None,
                          all_visible=False):
@@ -37,8 +59,15 @@ def construction_records(state, ds, binding_index, *, local_player, visible_ids=
                                max(.1, item.get('total', 1.))))
         scale = data.radius / 50.
         matrix = list(packed.matrix_from_pose((position[0], 0., position[2]), 0., scale))
-        matrix[4] *= .4 + .6 * fraction
         color = state.players[builder.owner].color
-        yield packed.instance_record(entity_id=0x80000000 | builder.id, binding_id=binding,
-            matrix=matrix, tint=(*color[:3], 1.), flags=packed.FLAG_DYNAMIC_MESH,
+        hull = _hull_binding(binding_index, state, item.get('item'), builder.owner)
+        if hull is not None:
+            yield packed.instance_record(entity_id=HULL_ID_BASE | builder.id, binding_id=hull,
+                matrix=list(matrix),
+                tint=(*color[:3], HULL_ALPHA_FIRST + (HULL_ALPHA_LAST - HULL_ALPHA_FIRST) * fraction),
+                flags=packed.FLAG_DYNAMIC_MESH, hp=1., shield=0.)
+        scaffold_matrix = list(matrix)
+        scaffold_matrix[4] *= .4 + .6 * fraction
+        yield packed.instance_record(entity_id=SCAFFOLD_ID_BASE | builder.id, binding_id=binding,
+            matrix=scaffold_matrix, tint=(*color[:3], 1.), flags=packed.FLAG_DYNAMIC_MESH,
             hp=1., shield=0.)

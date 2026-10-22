@@ -96,7 +96,38 @@ class StationLifecycleTests(unittest.TestCase):
         self.assertNotIn(site['binding'], [r['binding'] for r in done['instances']])
         self.assertIn('rebel:trade_station', [r['binding'] for r in done['instances']])
 
-    def test_live_session_transports_scaffold_and_completed_mesh_without_catalogue(self):
+    def test_paid_site_shows_the_hull_it_is_building_until_it_is_ready(self):
+        """The half-built station is the station, not a mystery box: its own mesh, translucent.
+
+        The legacy renderer drew the model itself while the constructor worked and left it transparent
+        until the station was operational, so the player could see what was coming and how far along it
+        was. Only the scaffold was ported, which is the frame around the site but not what is inside it.
+        """
+        self.pay()
+        early, _ = self.frame()
+        hulls = [r for r in early['instances'] if r['binding'] == 'rebel:trade_station']
+        self.assertEqual(len(hulls), 1, 'the paid site must show the hull it is building')
+        hull = hulls[0]
+        self.assertEqual(hull['entity_id'], 0x90000000 | self.builder.id)
+        self.assertEqual(hull['flags'], packed.FLAG_DYNAMIC_MESH)
+        self.assertEqual(hull['matrix'][9:12], self.builder.build_queue[0]['pos'],
+                         'the hull must stand on the site, not on the constructor')
+        first_alpha = hull['tint'][3]
+        self.assertGreater(first_alpha, 0.0, 'a fully transparent hull proves nothing')
+        self.assertLess(first_alpha, 0.9, 'a site under construction must not read as finished')
+        self.cs.update(self.builder.build_queue[0]['total'] / 2)
+        later, _ = self.frame()
+        half, = [r for r in later['instances'] if r['binding'] == 'rebel:trade_station']
+        self.assertGreater(half['tint'][3], first_alpha, 'the hull must fill in as the work completes')
+        self.assertLess(half['tint'][3], 0.95, 'still translucent until it is ready')
+        self.cs.update(self.builder.build_queue[0]['total'] + 1)
+        done, _ = self.frame()
+        ready, = [r for r in done['instances'] if r['binding'] == 'rebel:trade_station']
+        self.assertEqual(ready['tint'][3], 1.0, 'the finished station is opaque')
+        self.assertNotEqual(ready['entity_id'], hull['entity_id'],
+                            'the real entity replaces the render-only site row')
+
+    def test_live_session_transports_scaffold_and_hull_without_catalogue(self):
         from render_bridge.live import LiveSession
         from render_bridge import hardware, ring
         session = LiveSession(self.st, self.ds, directory=Path(self.tmp.name) / 'rings',
@@ -107,17 +138,24 @@ class StationLifecycleTests(unittest.TestCase):
         self.assertIn('hardware', session.paths, 'no live mesh channel')
         reader = ring.Ring.open(session.paths['hardware'])
         self.addCleanup(reader.close)
-        initial = reader.published
-        scaffold = hardware.decode(reader.read(initial - 1)[1])
-        self.assertEqual(scaffold['name'], 'shared:construction_scaffold')
-        self.assertGreater(scaffold['triangles'], 0)
+        published = reader.published
+        meshes = {}
+        for index in range(published):
+            record = hardware.decode(reader.read(index)[1])
+            meshes[record['name']] = record
+        self.assertIn('shared:construction_scaffold', meshes)
+        # The site draws the station it is building, so that mesh has to travel while it is being built -
+        # not only once the station exists.
+        self.assertIn('rebel:trade_station', meshes,
+                      'the hull on the site never reached the mesh ring')
         session.publish(self.st, visible_ids={self.builder.id})
-        self.assertEqual(reader.published, initial, 'unchanged mesh uploaded again')
+        self.assertEqual(reader.published, published, 'unchanged mesh uploaded again')
         self.cs.update(self.builder.build_queue[0]['total'] + 1)
         station, = [e for e in self.st.entities.values() if e.is_station]
         session.publish(self.st, visible_ids={self.builder.id, station.id})
-        hull = hardware.decode(reader.read(reader.published - 1)[1])
-        self.assertEqual(hull['name'], 'rebel:trade_station')
+        self.assertEqual(reader.published, published,
+                         'completion must reuse the hull already sent for the site')
+        hull = meshes['rebel:trade_station']
         from render.fleet_geometry import station_mesh
         self.assertEqual(hull['triangles'], sum(map(len, station_mesh('trade_station', 'rebel').values())))
         frame_reader = ring.Ring.open(session.paths['frame'])

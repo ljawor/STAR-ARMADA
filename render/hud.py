@@ -328,6 +328,7 @@ class HUD:
         self._draw_floating_texts()
         self._draw_drag_box()
         self._placement_banner()
+        self._construction_progress()
         if self.jump_prompt or self.ability_prompt:
             text = self.ability_prompt or "JUMP: click destination on ground or minimap | Esc / right-click cancel"
             prompt = self.font.render(text, True, WARN)
@@ -1526,6 +1527,69 @@ class HUD:
                     True, GOOD)
                 r = surf.get_rect(midbottom=(gx, gy - max(10, int(rad)) - 8))
                 _p.blit(ov, surf, r)
+
+    # ------------------------------------------------- construction progress
+    def _construction_progress(self) -> None:
+        """A ring at each site being built, filling clockwise as the work completes.
+
+        The placement disc already answers *where*; once the order is paid for this answers *how far*,
+        around the same circle, so a station that is still translucent reads as work in progress rather
+        than as a model that failed to finish. The radius is projected from the site so the ring sits on
+        the ground under the hull at any zoom, unlike the disc, which is drawn at a fixed pixel size to
+        stay readable while the cursor moves.
+        """
+        camera = getattr(self, "camera", None)
+        if camera is None:
+            return
+        ov = self.overlay
+        for builder in sorted(self.state.entities.values(), key=lambda e: e.id):
+            if (not builder.alive or not builder.is_construction
+                    or builder.owner != self.local_player or not builder.build_queue):
+                continue
+            item = builder.build_queue[0]
+            if item.get("kind") != "station" or not item.get("pos"):
+                continue
+            data = self.ds.stations.get(item.get("item"))
+            if data is None:
+                continue
+            pos = item["pos"]
+            if isinstance(pos, dict):
+                x, y, z = pos.get("x", 0.0), pos.get("y", 0.0), pos.get("z", 0.0)
+            else:
+                x, y, z = float(pos[0]), float(pos[1]), float(pos[2])
+            centre = camera.world_to_screen(x, y, z)
+            if centre is None:
+                continue
+            cx, cy = centre
+            radius = max(8.0, float(getattr(data, "radius", 90.0)))
+            radius_px = radius  # fallback: the same fixed pixel size the placement disc uses
+            try:
+                right = camera.basis()[0]
+                edge = camera.world_to_screen(x + right[0] * radius, y + right[1] * radius,
+                                              z + right[2] * radius)
+            except (AttributeError, IndexError, TypeError):
+                edge = None
+            if edge is not None:
+                radius_px = math.hypot(edge[0] - cx, edge[1] - cy)
+            radius_px = max(9.0, min(360.0, radius_px))
+            total = max(1e-6, float(item.get("total", 1.0)))
+            fraction = min(1.0, max(0.0, 1.0 - float(item.get("time_left", 0.0)) / total))
+            col = self.state.players[self.local_player].color
+            _p.circle(ov, (*col[:3], 70), (int(cx), int(cy)), int(radius_px), 2)
+            # The fill: short chords rather than pygame.draw.arc, because every overlay op goes through
+            # the recorder and an arc is not one of its primitives.
+            steps = max(1, int(48 * fraction))
+            sweep = math.tau * fraction
+            prev = (cx + radius_px * math.cos(-math.pi / 2),
+                    cy + radius_px * math.sin(-math.pi / 2))
+            for i in range(1, steps + 1):
+                angle = -math.pi / 2 + sweep * i / steps
+                point = (cx + radius_px * math.cos(angle), cy + radius_px * math.sin(angle))
+                _p.line(ov, (*col[:3], 230), prev, point, 4)
+                prev = point
+            label = self.font_small.render(f"{int(round(fraction * 100))}%", True, (*col[:3], 255))
+            rect = label.get_rect(midtop=(int(cx), int(cy + radius_px) + 4))
+            _p.blit(ov, label, rect)
 
     # ------------------------------------------------------------------ minimap
     def _draw_floating_texts(self) -> None:
