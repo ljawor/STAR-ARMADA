@@ -381,50 +381,6 @@ print('isolated simulation ok')
             with self.assertRaises(ValueError):
                 run_benchmark(mode='sim', **kwargs)
 
-    def test_full_report_records_actual_drawable_viewport_driver_and_camera(self):
-        import os
-        import sys
-        from types import SimpleNamespace
-        from unittest.mock import Mock, patch
-        from game import benchmark
-        pygame = Mock()
-        pygame.QUIT, pygame.OPENGL, pygame.DOUBLEBUF = 99, 1, 2
-        pygame.event.get.return_value = []
-        pygame.version.ver = 'test'
-        pygame.get_sdl_version.return_value = (2, 0, 0)
-        pygame.display.get_driver.return_value = 'test-sdl'
-        pygame.display.get_window_size.return_value = (800, 600)
-        gl = Mock()
-        gl.glGetString.return_value = b'test-driver'
-        gl.glGetIntegerv.side_effect = lambda name: [0, 0, 1000, 750] if name == gl.GL_VIEWPORT else 4
-        gl.glReadPixels.return_value = b'\x10\x20\x30' * (1000 * 750)
-        camera = SimpleNamespace(width=1000, height=750, apply=Mock(),
-                                 world_to_screen=lambda *p: (500., 375.),
-                                 eye_position=lambda: (0., 1000., 0.))
-        camera_factory, hud_factory, renderer_factory = Mock(return_value=camera), Mock(), Mock()
-        renderer_factory.return_value.materials.available = True
-        modules = {'pygame': pygame, 'OpenGL': SimpleNamespace(GL=gl),
-                   'render.camera': SimpleNamespace(Camera=camera_factory),
-                   'render.hud': SimpleNamespace(HUD=hud_factory),
-                   'render.renderer': SimpleNamespace(Renderer=renderer_factory)}
-        self.assertTrue(hasattr(benchmark, 'reported_drawable_size'), 'actual SDL drawable query missing')
-        with patch.dict(sys.modules, modules), \
-                patch.dict(os.environ, {'STAR_ARMADA_SKIP': '', 'STAR_ARMADA_NO_CULL': ''}), \
-                patch.object(benchmark, 'reported_swap_interval', return_value=0), \
-                patch.object(benchmark, 'reported_drawable_size', return_value=[1000, 750]):
-            report = benchmark.run_benchmark(fixture='four-player-combat-v1', frames=2, warmup=0,
-                                            width=800, height=600)
-        camera_factory.assert_called_once_with(1000, 750)
-        self.assertEqual(camera.target, [0., 0., 1400.])
-        self.assertEqual(camera.distance, 14000.)
-        self.assertEqual(report['graphics']['resolution'], [800, 600])
-        self.assertEqual(report['graphics']['drawable_size'], [1000, 750])
-        self.assertEqual(report['graphics']['gpu'], 'test-driver')
-        self.assertEqual(len(report['graphics_per_sample']), 2)
-        self.assertEqual(report['graphics_per_sample'][0]['viewport'], [0, 0, 1000, 750])
-        self.assertEqual(report['graphics_per_sample'][0]['camera_eye'], [0., 1000., 0.])
-        self.assertEqual(report['visibility_per_sample'][0]['centres_in_viewport']['total']['combat_ships'], 600)
-
     def test_sdl_drawable_is_unknown_not_a_requested_size_when_unavailable(self):
         from game import benchmark
         from types import SimpleNamespace

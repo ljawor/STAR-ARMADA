@@ -256,94 +256,12 @@ class BenchmarkContractTests(unittest.TestCase):
         self.assertEqual(report['measurement_result']['status'], 'ok')
         self.assertFalse(output.exists())
 
-    def test_full_mode_rejects_render_overrides_before_scene_creation(self):
-        import game.benchmark as benchmark
-        for key in ('STAR_ARMADA_SKIP', 'STAR_ARMADA_NO_CULL'):
-            with self.subTest(key=key), patch.dict(os.environ, {key: 'ships'}), \
-                    patch.object(benchmark, 'make_scene') as scene:
-                with self.assertRaisesRegex(ValueError, key):
-                    benchmark.run_benchmark(frames=1, warmup=0)
-                scene.assert_not_called()
-        with patch.dict(os.environ, {'STAR_ARMADA_SKIP': 'ships', 'STAR_ARMADA_NO_CULL': '1'}):
-            self.assertEqual(benchmark.run_benchmark(units=2, frames=1, warmup=0,
-                                                   mode='sim')['status'], 'ok')
-
-    def full_run(self, *, primary=None, hud_error=None, renderer_error=None,
-                 quit_error=None, pixels=None, frames=2):
-        import game.benchmark as benchmark
-        events = []
-        def cleanup(name, error):
-            events.append(name)
-            if error:
-                raise error
-        pygame = Mock()
-        pygame.QUIT = 99
-        pygame.OPENGL, pygame.DOUBLEBUF = 1, 2
-        pygame.event.get.return_value = []
-        pygame.get_sdl_version.return_value = (2, 0, 0)
-        pygame.version.ver = 'test'
-        pygame.display.flip.side_effect = lambda: events.append('swap')
-        pygame.quit.side_effect = lambda: cleanup('quit', quit_error)
-        gl = Mock()
-        gl.glGetString.return_value = b'test'
-        gl.glGetIntegerv.side_effect = lambda name: [0, 0, 800, 600] if name == gl.GL_VIEWPORT else 0
-        def capture(*args):
-            events.append('capture')
-            return pixels if pixels is not None else b'\x10\x20\x30' * (800 * 600)
-        gl.glReadPixels.side_effect = capture
-        renderer = Mock()
-        renderer.draw.side_effect = primary
-        renderer.close.side_effect = lambda: cleanup('renderer', renderer_error)
-        renderer.materials.available = True
-        hud = Mock()
-        hud.close.side_effect = lambda: cleanup('hud', hud_error)
-        modules = {'pygame': pygame, 'OpenGL': SimpleNamespace(GL=gl),
-                   'render.camera': SimpleNamespace(Camera=Mock()),
-                   'render.renderer': SimpleNamespace(Renderer=Mock(return_value=renderer)),
-                   'render.hud': SimpleNamespace(HUD=Mock(return_value=hud))}
-        try:
-            with patch.dict(sys.modules, modules), \
-                    patch.dict(os.environ, {'STAR_ARMADA_SKIP': '', 'STAR_ARMADA_NO_CULL': ''}), \
-                    patch.object(benchmark, 'reported_swap_interval', return_value=0):
-                return benchmark.run_benchmark(units=2, frames=frames, warmup=0,
-                                               width=800, height=600), events
-        except BaseException as exc:
-            exc.test_events = events
-            raise
-
-    def test_cleanup_attempts_all_owners_and_preserves_primary_error(self):
-        primary = ValueError('measurement failed')
-        with self.assertRaises(ValueError) as raised:
-            self.full_run(primary=primary, hud_error=RuntimeError('hud failed'),
-                          renderer_error=RuntimeError('renderer failed'),
-                          quit_error=RuntimeError('quit failed'))
-        self.assertIs(raised.exception, primary)
-        self.assertEqual(primary.test_events, ['hud', 'renderer', 'quit'])
-        self.assertEqual([e['owner'] for e in primary.cleanup_errors], ['hud', 'renderer', 'pygame'])
-
-    def test_cleanup_failure_after_success_is_an_error(self):
-        with self.assertRaisesRegex(RuntimeError, 'cleanup') as raised:
-            self.full_run(hud_error=RuntimeError('hud failed'),
-                          renderer_error=RuntimeError('renderer failed'))
-        self.assertEqual(raised.exception.test_events[-3:], ['hud', 'renderer', 'quit'])
-        self.assertEqual(len(raised.exception.cleanup_errors), 2)
-
-    def test_capture_checks_rgb_pixels_and_excludes_adjacent_presentation(self):
-        for pixels, nonuniform in [(b'\x10\x20\x30' * (800 * 600), False),
-                (b'\x10\x20\x30' * (800 * 600 - 1) + b'\x10\x20\x31', True)]:
-            with self.subTest(nonuniform=nonuniform):
-                report, events = self.full_run(pixels=pixels)
-                self.assertEqual(report['framebuffer_nonuniform'], nonuniform)
-                self.assertIn('not world/combat acceptance', report['framebuffer_evidence_note'])
-                self.assertEqual(report['stages']['swap']['count'], 1)
-                self.assertEqual(report['stages']['frame']['count'], 1)
-                self.assertEqual(report['stages']['world']['count'], 2)
-                self.assertEqual(report['sample_exclusions']['swap'], [1])
-                self.assertEqual(report['sample_exclusions']['frame'], [1])
-                self.assertEqual(events[-5:], ['capture', 'swap', 'hud', 'renderer', 'quit'])
-        report, _ = self.full_run(frames=1)
-        self.assertEqual(report['stages']['swap']['count'], 0)
-        self.assertIsNone(report['stages']['swap']['mean_ms'])
+    def test_full_mode_is_retired_with_the_renderer(self):
+        # `full` timed glFinish around the Python renderer's world/HUD passes; that renderer is
+        # gone (#160), so asking for it must say so instead of measuring half a frame.
+        from game.benchmark import run_benchmark
+        with self.assertRaisesRegex(ValueError, 'native window'):
+            run_benchmark(mode='full', frames=1, warmup=0)
 
     def test_swap_interval_is_unknown_when_sdl_symbol_is_unavailable(self):
         import game.benchmark as benchmark
