@@ -1,0 +1,12 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-c",
+    "import time;time.sleep(10)"
+  ],
+  "pid": 81209,
+  "elapsed_seconds": 0.2074170419946313,
+  "returncode": -9,
+  "timeout": true,
+  "orphan_group_killed": false
+}

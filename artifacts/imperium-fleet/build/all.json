@@ -1,0 +1,247 @@
+[
+  {
+    "kind": "bomber",
+    "triangles": 2696,
+    "vertices": 1420,
+    "parts": 62,
+    "bounds": [
+      [
+        -31.2467995,
+        -3.2368,
+        -28.9927998
+      ],
+      [
+        31.2467995,
+        13.9968004,
+        34.9967995
+      ]
+    ],
+    "bytes": 180858,
+    "degenerate_skipped": 0,
+    "roles": {
+      "base": 520,
+      "dark": 924,
+      "trim": 1000,
+      "accent": 80,
+      "lit": 56,
+      "cool": 116
+    },
+    "blender_version": "5.0.1",
+    "source_sha256": {
+      "tools/art/build_imperium_fleet.py": "f80a42dc8ec2cbfee4401224948e25fd2fc236aeed71a8e5df4451b2422bad26",
+      "tools/art/imperium_fleet_geometry.py": "fce967f48447696a09d3b7693a015d6615552e0dd182a74f3099eb57056baa64",
+      "tools/art/imperium_capital_designs.py": "430e4f8aebc2243c4680bb6b105300bc42b3d6b6fc956e1ec9e244d3354bbfdb",
+      "tools/art/imperium_support_designs.py": "5a07587e8325e2f9a1faca4c43ba1dc0265c2171f659a5c522be452c6d743dea"
+    }
+  },
+  {
+    "kind": "frigate",
+    "triangles": 6232,
+    "vertices": 3496,
+    "parts": 220,
+    "bounds": [
+      [
+        -15.9412136,
+        -4.9959998,
+        -43.5970001
+      ],
+      [
+        15.9412136,
+        23.9960003,
+        47.9959984
+      ]
+    ],
+    "bytes": 393450,
+    "degenerate_skipped": 0,
+    "roles": {
+      "base": 2216,
+      "dark": 1768,
+      "trim": 1772,
+      "accent": 164,
+      "lit": 168,
+      "cool": 144
+    },
+    "blender_version": "5.0.1",
+    "source_sha256": {
+      "tools/art/build_imperium_fleet.py": "f80a42dc8ec2cbfee4401224948e25fd2fc236aeed71a8e5df4451b2422bad26",
+      "tools/art/imperium_fleet_geometry.py": "fce967f48447696a09d3b7693a015d6615552e0dd182a74f3099eb57056baa64",
+      "tools/art/imperium_capital_designs.py": "430e4f8aebc2243c4680bb6b105300bc42b3d6b6fc956e1ec9e244d3354bbfdb",
+      "tools/art/imperium_support_designs.py": "5a07587e8325e2f9a1faca4c43ba1dc0265c2171f659a5c522be452c6d743dea"
+    }
+  },
+  {
+    "kind": "cruiser",
+    "triangles": 8120,
+    "vertices": 4504,
+    "parts": 268,
+    "bounds": [
+      [
+        -29.4459991,
+        -6.9959998,
+        -62.9360008
+      ],
+      [
+        29.4459991,
+        31.4960003,
+        77.9960022
+      ]
+    ],
+    "bytes": 520621,
+    "degenerate_skipped": 0,
+    "roles": {
+      "base": 2816,
+      "dark": 2404,
+      "trim": 2312,
+      "accent": 216,
+      "lit": 168,
+      "cool": 204
+    },
+    "blender_version": "5.0.1",
+    "source_sha256": {
+      "tools/art/build_imperium_fleet.py": "f80a42dc8ec2cbfee4401224948e25fd2fc236aeed71a8e5df4451b2422bad26",
+      "tools/art/imperium_fleet_geometry.py": "fce967f48447696a09d3b7693a015d6615552e0dd182a74f3099eb57056baa64",
+      "tools/art/imperium_capital_designs.py": "430e4f8aebc2243c4680bb6b105300bc42b3d6b6fc956e1ec9e244d3354bbfdb",
+      "tools/art/imperium_support_designs.py": "5a07587e8325e2f9a1faca4c43ba1dc0265c2171f659a5c522be452c6d743dea"
+    }
+  },
+  {
+    "kind": "battleship",
+    "triangles": 9432,
+    "vertices": 5176,
+    "parts": 290,
+    "bounds": [
+      [
+        -38.4459991,
+        -9.9960003,
+        -80.1790009
+      ],
+      [
+        38.4459991,
+        39.4959984,
+        107.9960022
+      ]
+    ],
+    "bytes": 610317,
+    "degenerate_skipped": 0,
+    "roles": {
+      "base": 3304,
+      "dark": 2844,
+      "trim": 2596,
+      "accent": 256,
+      "lit": 168,
+      "cool": 264
+    },
+    "blender_version": "5.0.1",
+    "source_sha256": {
+      "tools/art/build_imperium_fleet.py": "f80a42dc8ec2cbfee4401224948e25fd2fc236aeed71a8e5df4451b2422bad26",
+      "tools/art/imperium_fleet_geometry.py": "fce967f48447696a09d3b7693a015d6615552e0dd182a74f3099eb57056baa64",
+      "tools/art/imperium_capital_designs.py": "430e4f8aebc2243c4680bb6b105300bc42b3d6b6fc956e1ec9e244d3354bbfdb",
+      "tools/art/imperium_support_designs.py": "5a07587e8325e2f9a1faca4c43ba1dc0265c2171f659a5c522be452c6d743dea"
+    }
+  },
+  {
+    "kind": "supercapital",
+    "triangles": 9968,
+    "vertices": 5408,
+    "parts": 288,
+    "bounds": [
+      [
+        -38.4459991,
+        -9.9960003,
+        -80.1790009
+      ],
+      [
+        38.4459991,
+        39.4959984,
+        107.9960022
+      ]
+    ],
+    "bytes": 651779,
+    "degenerate_skipped": 0,
+    "roles": {
+      "base": 3736,
+      "dark": 2948,
+      "trim": 2492,
+      "accent": 336,
+      "lit": 168,
+      "cool": 288
+    },
+    "blender_version": "5.0.1",
+    "source_sha256": {
+      "tools/art/build_imperium_fleet.py": "f80a42dc8ec2cbfee4401224948e25fd2fc236aeed71a8e5df4451b2422bad26",
+      "tools/art/imperium_fleet_geometry.py": "fce967f48447696a09d3b7693a015d6615552e0dd182a74f3099eb57056baa64",
+      "tools/art/imperium_capital_designs.py": "430e4f8aebc2243c4680bb6b105300bc42b3d6b6fc956e1ec9e244d3354bbfdb",
+      "tools/art/imperium_support_designs.py": "5a07587e8325e2f9a1faca4c43ba1dc0265c2171f659a5c522be452c6d743dea"
+    }
+  },
+  {
+    "kind": "colonizer",
+    "triangles": 3760,
+    "vertices": 2064,
+    "parts": 108,
+    "bounds": [
+      [
+        -19.9967995,
+        -6.9967999,
+        -24.6942997
+      ],
+      [
+        19.9967995,
+        26.4967995,
+        24.3550491
+      ]
+    ],
+    "bytes": 236391,
+    "degenerate_skipped": 0,
+    "roles": {
+      "base": 704,
+      "dark": 1376,
+      "trim": 920,
+      "accent": 168,
+      "lit": 476,
+      "cool": 116
+    },
+    "blender_version": "5.0.1",
+    "source_sha256": {
+      "tools/art/build_imperium_fleet.py": "f80a42dc8ec2cbfee4401224948e25fd2fc236aeed71a8e5df4451b2422bad26",
+      "tools/art/imperium_fleet_geometry.py": "fce967f48447696a09d3b7693a015d6615552e0dd182a74f3099eb57056baa64",
+      "tools/art/imperium_capital_designs.py": "430e4f8aebc2243c4680bb6b105300bc42b3d6b6fc956e1ec9e244d3354bbfdb",
+      "tools/art/imperium_support_designs.py": "5a07587e8325e2f9a1faca4c43ba1dc0265c2171f659a5c522be452c6d743dea"
+    }
+  },
+  {
+    "kind": "convoy",
+    "triangles": 3496,
+    "vertices": 1920,
+    "parts": 102,
+    "bounds": [
+      [
+        -19.4967995,
+        -6.7968001,
+        -24.6942997
+      ],
+      [
+        19.4967995,
+        25.7332096,
+        24.3550491
+      ]
+    ],
+    "bytes": 217522,
+    "degenerate_skipped": 0,
+    "roles": {
+      "base": 800,
+      "dark": 1208,
+      "trim": 784,
+      "accent": 196,
+      "lit": 392,
+      "cool": 116
+    },
+    "blender_version": "5.0.1",
+    "source_sha256": {
+      "tools/art/build_imperium_fleet.py": "f80a42dc8ec2cbfee4401224948e25fd2fc236aeed71a8e5df4451b2422bad26",
+      "tools/art/imperium_fleet_geometry.py": "fce967f48447696a09d3b7693a015d6615552e0dd182a74f3099eb57056baa64",
+      "tools/art/imperium_capital_designs.py": "430e4f8aebc2243c4680bb6b105300bc42b3d6b6fc956e1ec9e244d3354bbfdb",
+      "tools/art/imperium_support_designs.py": "5a07587e8325e2f9a1faca4c43ba1dc0265c2171f659a5c522be452c6d743dea"
+    }
+  }
+]

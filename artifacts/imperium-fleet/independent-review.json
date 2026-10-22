@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "security_concerns": [],
+  "logic_errors": [],
+  "suggestions": [
+    {
+      "file": "tools/play_imperium_fleet.py",
+      "lines": "234-242, 314-315",
+      "suggestion": "Nonblocking hardening: create capture and receipt outputs exclusively rather than checking existence before ordinary writes, eliminating a concurrent-writer overwrite race."
+    },
+    {
+      "file": "tests/test_play_imperium_fleet.py",
+      "lines": "148-187, 231-238",
+      "suggestion": "Add CPU negative tests for CPP.failed, changed-session focus mismatch, and capture rejection for existing evidence and protected save/pack paths. These guards exist, but current tests do not exercise all of them."
+    }
+  ],
+  "summary": "No blocking correctness or security bug found. Reviewed every staged Python diff and all new manifests/descriptor without dumping mesh payloads. All 16 focused CPU tests passed with fresh TMPDIR; real AssetResolver tests validated the seven replacements, mesh hashes, budgets and unaffected neighbouring bindings. Independently SHA-256 checked 626 baseline files across runtime/source/assets and accepted packs against fd3368e: zero changes. All staged files matched working-tree bytes, security-pattern scan was clean, and cached whitespace checks passed. Launcher executes current main.py, isolates settings/saves/replays and copied packs, rejects missing/rejected replacements, and counts successful native presents without introducing a legacy fallback. No repository files modified; no Blender, main, GPU or installation run. This permits asset-task handover only, not merge, owner appearance approval, organic-construction acceptance or FPS claims."
+}

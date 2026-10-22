@@ -1,0 +1,61 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "prototype:imperial/cruiser",
+  "revision": "d14b9c266b78fd42dcd6501f5a8b4cf03bc4000b913a5415670766ba06cfeaaf",
+  "display_name": "Gladiator Cruiser — pending appearance review",
+  "files": {
+    "mesh": {
+      "path": "assets/models/gladiator.mesh.json",
+      "sha256": "d82b04374015ff2b5cae3506fbb68a5484a5e6f3346e5169aad20f6a9ca9dd4f",
+      "bytes": 520621
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -29.4459991,
+      -6.9959998,
+      -62.9360008
+    ],
+    "max": [
+      29.4459991,
+      31.4960003,
+      77.9960022
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor / STAR ARMADA",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "notes": "Original remaining Imperium fleet. Script-authoritative build_imperium_fleet.py; editable masters in art/blender. Pending owner appearance approval. No simulation, scale, squadron membership or balance changes."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 8120,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}

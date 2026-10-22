@@ -1,0 +1,17 @@
+{
+  "command": [
+    "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/.venv/bin/python",
+    "tools/play_imperium_fleet.py",
+    "--focus",
+    "colonial",
+    "--frames",
+    "90",
+    "--capture",
+    "/Users/lukaszjawor/.hermes/cache/scratch/imperium-main-seven-v1/colonial.png"
+  ],
+  "pid": 82104,
+  "elapsed_seconds": 11.803606917033903,
+  "returncode": 0,
+  "timeout": false,
+  "orphan_group_killed": false
+}

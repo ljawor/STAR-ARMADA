@@ -1,0 +1,14 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "tools/render/verify_imperium_fleet.py",
+    "--include-control",
+    "--out",
+    "/Users/lukaszjawor/.hermes/cache/scratch/imperium-all-native-final"
+  ],
+  "pid": 82467,
+  "elapsed_seconds": 25.886804916895926,
+  "returncode": 0,
+  "timeout": false,
+  "orphan_group_killed": false
+}

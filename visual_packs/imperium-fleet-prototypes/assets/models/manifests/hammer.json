@@ -1,0 +1,61 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "prototype:imperial/bomber",
+  "revision": "6a8eba518633d125fa3829e6115676c42d7b5bbde1fac23f90d895947678302d",
+  "display_name": "Hammer Torpedo Squadron — pending appearance review",
+  "files": {
+    "mesh": {
+      "path": "assets/models/hammer.mesh.json",
+      "sha256": "3143a1a2b66ec5066154937149f5e77ecb1bb5c257e66581fc60437a6a0c5499",
+      "bytes": 180858
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -31.2467995,
+      -3.2368,
+      -28.9927998
+    ],
+    "max": [
+      31.2467995,
+      13.9968004,
+      34.9967995
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor / STAR ARMADA",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "notes": "Original remaining Imperium fleet. Script-authoritative build_imperium_fleet.py; editable masters in art/blender. Pending owner appearance approval. No simulation, scale, squadron membership or balance changes."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 2696,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}
