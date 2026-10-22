@@ -19,6 +19,15 @@ from render import markers as mk
 from render_bridge import markers as codec
 
 SELECTION_ALPHA = 0.9           # render/renderer.py::_draw_selection_rings
+# render/renderer.py::_draw_collection_points draws the destination in this teal, at a world radius
+# of at least 45 units, as a diamond in the ecliptic with a cross through it. The window draws the
+# destination even when the station is not selected: the point lives in the simulation until it is
+# cleared, so a player who selected something else still needs to see where new units will go.
+COLLECTION_COLOUR = (0.35, 0.95, 0.8)
+COLLECTION_ALPHA = 0.95
+COLLECTION_RADIUS = 45.0
+COLLECTION_WIDTH = 2.0
+COLLECTION_SEGMENTS = 4         # a four-segment flat ring is the legacy diamond, corner for corner
 SELECTION_WIDTH = 2.0
 SELECTION_SEGMENTS = 28
 SHIELDED_RING_FACTOR = 1.1      # tucked inside the bubble at radius * 1.35
@@ -103,6 +112,29 @@ def planet_owner_rings(state) -> list:
     return out
 
 
+def collection_point_cues(state, local_player) -> list:
+    """A diamond on the destination of every owned station that has one.
+
+    The rule (which station, which point, which colour) is `render/renderer.py::_draw_collection_points`
+    and `game/systems/collection_points.py`; only the shape crosses. Four segments of a flat ring put
+    a vertex on each axis, which is the same diamond the Python renderer builds by hand.
+    """
+    from game.systems.collection_points import collection_capable
+    out = []
+    for entity_id in sorted(state.entities):
+        entity = state.entities[entity_id]
+        if not entity.alive or entity.owner != local_player:
+            continue
+        point = getattr(entity, 'collection_point', None)
+        if point is None or not collection_capable(entity):
+            continue
+        out.append(codec.circle((point.x, point.y, point.z), COLLECTION_RADIUS, COLLECTION_COLOUR,
+                                vertical=False, width=COLLECTION_WIDTH,
+                                segments=COLLECTION_SEGMENTS, alpha=COLLECTION_ALPHA,
+                                depth=False))
+    return out
+
+
 def ownership_markers(state, local_player, visible_ids, mode='all', allies=None,
                       radius_of=None) -> list:
     """A chevron (own/ally/neutral) or diamond (hostile) on every detected unit."""
@@ -137,11 +169,13 @@ def ownership_markers(state, local_player, visible_ids, mode='all', allies=None,
 
 
 def build(state, local_player, selection_ids, visible_ids, *, radius_of, mode='all',
-          allies=None, planet_rings=True, with_markers=True) -> list:
+          allies=None, planet_rings=True, with_markers=True, collection_points=True) -> list:
     """Everything the window draws on top of the world, as one batch."""
     primitives = selection_rings(state, selection_ids, radius_of)
     if planet_rings:
         primitives += planet_owner_rings(state)
+    if collection_points:
+        primitives += collection_point_cues(state, local_player)
     if with_markers:
         primitives += ownership_markers(state, local_player, visible_ids, mode, allies, radius_of)
     return primitives
