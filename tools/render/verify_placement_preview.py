@@ -33,22 +33,71 @@ sys.path[:0] = [str(ROOT), str(ROOT / 'tests')]
 
 VIEWER = ROOT / 'render_cpp/build-w02/armada_viewer'
 SNAPSHOT = ROOT / 'assets/cpp/catalogue.snap'
-FOCUS = (600.0, 0.0, -400.0)
-GHOST = {'station_kind': 'shipyard', 'faction': 'imperial', 'world': FOCUS,
-         'radius': 120.0, 'valid': True}
+SITE = (600.0, 0.0, -400.0)          # an empty patch of the fixture map
+STATION_KIND = 'shipyard'
 
 
-def publish(name: str, out: Path, ghost=None, alpha_override=None) -> Path:
-    """Publish a short session into ``out/name`` and return its frame ring."""
-    from game.graphics_benchmark import make_fixture
+class _Hud:
+    """Only what `update_placement` reads: the placement dict the HUD button creates.
+
+    Everything else in the chain - the cursor unprojection, `check_site`, the validity reason and
+    the payload shape - is the game's own code.
+    """
+
+    def __init__(self, placement):
+        self.placement = placement
+
+
+def game_ghost(scene):
+    """Ask the game where the station would stand, exactly as it does while a player is placing."""
+    from render.input import InputController
+
+    state, manager = scene.manager.state, scene.manager
+    factory = manager.factory
+    from game.core.vectors import Vec3
+    builder = factory.spawn_ship('imperial_constructor', 0,
+                                 Vec3(SITE[0] + 260.0, SITE[1], SITE[2]))
+
+    class _Camera:
+        """The one thing this probe replaces: picking the world point under the cursor.
+
+        `Camera.screen_to_world` drags in the whole scene-bounding pass in this fixture and is
+        camera code that every other gameplay path already exercises; the placement maths, the
+        legality check and the payload shape below are the game's own.
+        """
+
+        def bind_scene(self, *args, **kwargs):
+            pass
+
+        def screen_to_world(self, mx, my, plane_y=0.0):
+            return SITE
+
+    camera = _Camera()
+    hud = _Hud({'builder_id': builder.id, 'station_kind': STATION_KIND, 'ghost': None})
+    controller = InputController(state, camera, hud, app=None)
+    controller.local_player = 0
+    controller.remote_pointer = (480, 300)      # screen centre -> the camera target
+    controller.update_placement()
+    ghost = hud.placement.get('ghost')
+    if ghost is None:
+        raise SystemExit('the game produced no ghost for a legal placement - the preview is dead '
+                         'before the bridge')
+    return ghost, builder
+
+
+def publish(scene, name: str, out: Path, ghost=None, alpha_override=None) -> Path:
+    """Publish a short session into ``out/name`` from one fixture and return its folder.
+
+    The same scene serves every variant, so the construction hull the ghost belongs to is the one
+    the state actually holds - the preview is not being shown from a state that could not produce it.
+    """
     from render import asset_selection
+    from render_bridge import collect
     from render_bridge.live import LiveSession
     from tools.render.dump_snapshot import _default_selection
-    from render_bridge import collect
 
     folder = out / name
     folder.mkdir(parents=True, exist_ok=True)
-    scene = make_fixture('four-player-close-v1')
     asset_selection.configure(_default_selection(), asset_root=ROOT, pack_root=ROOT / 'visual_packs')
     previous = (collect.GHOST_VALID, collect.GHOST_INVALID)
     if alpha_override is not None:
@@ -66,14 +115,14 @@ def publish(name: str, out: Path, ghost=None, alpha_override=None) -> Path:
     return folder
 
 
-def render(folder: Path, out: Path) -> dict:
+def render(folder: Path, out: Path, site) -> dict:
     report = folder / 'viewer.json'
     command = [str(VIEWER), '--snapshot', str(SNAPSHOT), '--assets', str(ROOT),
                '--ring', str(folder / 'frame.ring'), '--tables', str(folder / 'frame.ring.tables'),
                '--mesh-ring', str(folder / 'hardware.ring'),
                '--overlay-ring', str(folder / 'hud.ring'),
                '--frames', '24', '--warmup', '0',
-               '--focus', '%g,%g,%g' % FOCUS, '--distance', '330', '--pitch', '32', '--yaw', '25',
+               '--focus', '%g,%g,%g' % tuple(site), '--distance', '330', '--pitch', '32', '--yaw', '25',
                '--screenshot', str(folder / 'capture.png'), '--report', str(report)]
     done = subprocess.run(command, cwd=folder, capture_output=True, text=True,
                           env={**os.environ, 'SDL_VIDEODRIVER': 'cocoa'})
@@ -92,21 +141,27 @@ def main() -> int:
     import numpy as np
     from PIL import Image
 
-    alpha = None
+    from game.graphics_benchmark import make_fixture
+    from render_bridge import collect
+
+    scene = make_fixture('four-player-close-v1')
+    ghost, builder = game_ghost(scene)
+    site = tuple(ghost['world'])
+    alpha = collect.GHOST_VALID[3]
     folders = {
-        'base': publish('base', out, ghost=None),
-        'faint': publish('faint', out, ghost=GHOST, alpha_override=0.25),
-        'ghost': publish('ghost', out, ghost=GHOST),
+        'base': publish(scene, 'base', out, ghost=None),
+        'faint': publish(scene, 'faint', out, ghost=ghost, alpha_override=0.25),
+        'ghost': publish(scene, 'ghost', out, ghost=ghost),
         # 0.95, not 1.0: a full-alpha row takes the opaque path, which also drops the preview's
         # legality tint, and then the control differs from the ghost in colour as well as alpha.
-        'strong': publish('strong', out, ghost=GHOST, alpha_override=0.95),
+        'strong': publish(scene, 'strong', out, ghost=ghost, alpha_override=0.95),
     }
-    from render_bridge import collect
-    alpha = collect.GHOST_VALID[3]
+    from render_bridge import collect as _collect
+    alpha = _collect.GHOST_VALID[3]
 
     reports, images = {}, {}
     for name, folder in folders.items():
-        reports[name] = render(folder, out)
+        reports[name] = render(folder, out, site)
         images[name] = np.asarray(Image.open(folder / 'capture.png').convert('RGB'), dtype=float)
 
     base, strong = images['base'], images['strong']
@@ -118,7 +173,10 @@ def main() -> int:
     interior[0, :] = interior[-1, :] = interior[:, 0] = interior[:, -1] = False
     span = (strong - base)[interior]
     usable = np.abs(span) > 12                      # pixels that actually differ, per channel
-    results = {'alpha': alpha,
+    results = {'game_selected_site': [round(v, 2) for v in site],
+               'game_says_valid': bool(ghost['valid']),
+               'game_reason': ghost.get('reason', ''),
+               'radius': ghost['radius'], 'alpha': alpha,
                'ghost_pixels_covering_the_site': int(covered.sum()),
                'interior_pixels_measured': int(interior.sum()),
                'control_alpha': 0.95}
