@@ -29,3 +29,16 @@ netdiag/
 
 # native build trees (CMake configure output, not sources)
 render_cpp/build*/
+
+# Artifact evidence: receipts, not media. What git carries is the JSON metrics plus the sheets that
+# art/manifests/** pins by hash and tools/art/s07_registration.py verifies. Review movies, candidate
+# zips and run logs are regenerable - they were 75 MB of the evidence tree on their own - so they stay
+# on disk. Sheets are deliberately NOT excluded: a pinned sheet is evidence, and it has to be committable.
+/artifacts/**/*.mp4
+/artifacts/**/*.mov
+/artifacts/**/*.zip
+/artifacts/**/*.log
+/artifacts/**/*.gif
+
+# match replays written by a --smoke or local run
+/match-*.json
