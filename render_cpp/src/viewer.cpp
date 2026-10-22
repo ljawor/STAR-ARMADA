@@ -834,6 +834,7 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
     host->pixels.resize(size_t(pixelWidth) * pixelHeight * 4);
     bgfx::setViewFrameBuffer(1, outputFB);
     bgfx::setViewFrameBuffer(2, outputFB);
+    bgfx::setViewFrameBuffer(3, outputFB);
   }
   // Instancing is baseline in this pinned bgfx API; buffer availability is
   // checked per draw.
@@ -1105,6 +1106,10 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
   uint64_t meshSequence = 0;
   size_t hardwareBlobs = 0, hardwareDecodeFailures = 0, hardwareInstances = 0,
          hardwareDropped = 0;
+  // Placement previews: fleet instances whose tint alpha is below 1 (the station ghost the
+  // producer publishes while a build is being sited). Counted so a frame that silently lost
+  // its preview is visible in the report rather than in a screenshot nobody takes.
+  size_t previewInstances = 0, previewDropped = 0;
   std::vector<uint8_t> meshPayload;
   if (!o.meshRing.empty())
     meshRing = std::make_unique<armada::bridge::RingReader>(o.meshRing);
@@ -1541,16 +1546,92 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
     bgfx::touch(1);
     const float eyeData[4] = {eye[0], eye[1], eye[2], 1},
                 optionData[4] = {shadows ? 1.f : 0.f, 0, 0, 0};
-    for (const auto &g : groups) {
-      const uint32_t count = uint32_t(g.instances.size() / 20);
-      if (!count)
+    // Every translucent row - a fleet instance or a station whose mesh arrived on the mesh ring -
+    // is drawn by this one path, so the preview behaves the same however the station is meshed.
+    // Alpha comes from the instance row, not a per-draw uniform: one binding's group can hold
+    // both opaque hulls and a ghost, and several previews must still blend independently.
+    // Shadowing stays whatever the opaque pass uses, so the only difference between the preview
+    // and a solid station is its alpha - otherwise the two images differ by lighting too and a
+    // measured blend proves nothing.
+    const float previewOptions[4] = {shadows ? 1.f : 0.f, 1.f, 1.f, 0.f};
+    struct PreviewDraw {
+      bgfx::VertexBufferHandle vbo;
+      std::vector<float> rows;
+    };
+    std::vector<PreviewDraw> previewDraws;
+    // The preview rides the ordinary world view. A separate view id has to be declared in the
+    // window's view order, and getting that order wrong silently cost the whole HUD, so the ghost
+    // is queued here and drawn as one extra blended submit at the end of the world instead.
+    auto queuePreviews = [&](bgfx::VertexBufferHandle vbo, const std::vector<float> &rows) {
+      if (!rows.empty())
+        previewDraws.push_back({vbo, rows});
+    };
+    auto flushPreviews = [&]() {
+      for (const auto &draw : previewDraws) {
+        const uint32_t count = uint32_t(draw.rows.size() / 20);
+        if (!count)
+          continue;
+        if (bgfx::getAvailInstanceDataBuffer(count, 80) < count) {
+          previewDropped += count;
+          continue;
+        }
+        bgfx::InstanceDataBuffer buffer;
+        bgfx::allocInstanceDataBuffer(&buffer, count, 80);
+        std::memcpy(buffer.data, draw.rows.data(), draw.rows.size() * sizeof(float));
+        bgfx::setVertexBuffer(0, draw.vbo);
+        bgfx::setInstanceDataBuffer(&buffer);
+        bgfx::setUniform(lightUniform, lightMtx);
+        bgfx::setUniform(eyeUniform, eyeData);
+        bgfx::setUniform(optionsUniform, previewOptions);
+        bgfx::setTexture(0, shadowSampler, depth);
+        // Two submits, no extra view: a station mesh overlaps itself many times and its triangle
+        // order is arbitrary, so a single blended draw composites whichever nearer triangle
+        // happens to come last on top of the previous one - measured at alpha 0.55 that produced
+        // 0.81, i.e. a solid-looking hull. Depth-only first, then colour at EQUAL depth: the
+        // front-most surface composites exactly once at the alpha on the wire.
+        bgfx::setState(BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS);
+        bgfx::submit(1, program);
+        bgfx::setVertexBuffer(0, draw.vbo);
+        bgfx::setInstanceDataBuffer(&buffer);
+        bgfx::setUniform(lightUniform, lightMtx);
+        bgfx::setUniform(eyeUniform, eyeData);
+        bgfx::setUniform(optionsUniform, previewOptions);
+        bgfx::setTexture(0, shadowSampler, depth);
+        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A |
+                       BGFX_STATE_DEPTH_TEST_LEQUAL | BGFX_STATE_MSAA | BGFX_STATE_BLEND_ALPHA);
+        bgfx::submit(1, program);
+        previewInstances += count;
+      }
+      previewDraws.clear();
+    };
+    auto submitPreviews = [&](bgfx::VertexBufferHandle vbo, const std::vector<float> &rows) {
+      queuePreviews(vbo, rows);
+    };
+    // Split each binding's rows: opaque rows keep the existing state, preview rows (alpha < 1)
+    // are deferred to view 3. Keeping the opaque path byte-for-byte unchanged matters - the
+    // approved reference frames are captured from it.
+    std::vector<std::vector<float>> previewRows(groups.size());
+    std::vector<float> opaqueRows;
+    for (size_t gi = 0; gi < groups.size(); ++gi) {
+      const auto &g = groups[gi];
+      opaqueRows.clear();
+      opaqueRows.reserve(g.instances.size());
+      for (size_t i = 0; i + 19 < g.instances.size(); i += 20) {
+        auto &bucket = g.instances[i + 19] < 0.999f ? previewRows[gi] : opaqueRows;
+        bucket.insert(bucket.end(), &g.instances[i], &g.instances[i] + 20);
+      }
+      const uint32_t count = uint32_t(opaqueRows.size() / 20);
+      if (!count) {
+        // A binding whose only instance is the preview (the station being placed has no other
+        // hull yet) must still reach its own draw: skipping the opaque submit must not skip it.
+        submitPreviews(g.vbo, previewRows[gi]);
         continue;
+      }
       if (bgfx::getAvailInstanceDataBuffer(count, 80) < count)
         throw DeviceError("Instance buffer exhausted; refusing partial fleet");
       bgfx::InstanceDataBuffer buffer;
       bgfx::allocInstanceDataBuffer(&buffer, count, 80);
-      std::memcpy(buffer.data, g.instances.data(),
-                  g.instances.size() * sizeof(float));
+      std::memcpy(buffer.data, opaqueRows.data(), opaqueRows.size() * sizeof(float));
       if (shadows) {
         bgfx::setVertexBuffer(0, g.vbo);
         bgfx::setInstanceDataBuffer(&buffer);
@@ -1567,6 +1648,7 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
                      BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS |
                      BGFX_STATE_MSAA);
       bgfx::submit(1, program);
+      submitPreviews(g.vbo, previewRows[gi]);
     }
     // W05 slice 3e: take in any surface-hardware mesh published since the last frame, then draw the
     // buildings the frame placed. A building whose mesh has not arrived is counted and skipped - the
@@ -1606,6 +1688,7 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
       live->surface_unmeshed = 0;
       for (const auto &h : hardwareMeshes) {
         std::vector<float> instances;
+        std::vector<float> translucent;
         for (const auto &building : live->surface) {
           if (building.binding != h.binding)
             continue;
@@ -1615,13 +1698,17 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
                            building.matrix[9], building.matrix[10], building.matrix[11], 1.f,
                            building.tint[0] / 255.f, building.tint[1] / 255.f,
                            building.tint[2] / 255.f, building.tint[3] / 255.f};
-          instances.insert(instances.end(), row, row + 20);
+          auto &bucket = building.tint[3] < 255 ? translucent : instances;
+          bucket.insert(bucket.end(), row, row + 20);
         }
         const uint32_t count = uint32_t(instances.size() / 20);
-        if (!count)
+        if (!count) {
+          submitPreviews(h.vbo, translucent);
           continue;
+        }
         if (bgfx::getAvailInstanceDataBuffer(count, 80) < count) {
           hardwareDropped += count;
+          submitPreviews(h.vbo, translucent);
           continue;
         }
         bgfx::InstanceDataBuffer buffer;
@@ -1644,6 +1731,7 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
                        BGFX_STATE_MSAA);
         bgfx::submit(1, program);
         hardwareInstances += count;
+        submitPreviews(h.vbo, translucent);
       }
       for (const auto &building : live->surface) {
         bool meshed = false;
@@ -1653,6 +1741,7 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
           ++live->surface_unmeshed;
       }
     }
+    flushPreviews();
     // W05: take in any planet texture published since the last frame, then draw the bodies the
     // frame asked for. A planet whose texture has not arrived yet draws with the grey fallback and
     // is counted, never silently dropped.
@@ -2505,6 +2594,12 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
          "verbatim, because a building stands on the foundation the site generator chose; its mesh "
          "arrives on the mesh ring because the offline catalogue cannot name a building that is "
          "constructed during a match; role colours are the shared palette, not on the wire"}};
+    report["placement_preview"] = {
+        {"instances_drawn", previewInstances},
+        {"dropped_instances", previewDropped},
+        {"note",
+         "translucent rows (tint alpha < 1) submitted blended in the world view after every "
+         "depth-tested but not depth-writing, alpha read from the instance row"}};
   if (uiRing) {
     report["hud"] = {{"ring", o.overlayRing.string()},
                      {"texture", {uiWidth, uiHeight}},

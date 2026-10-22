@@ -1,4 +1,4 @@
-$input v_world, v_normal, v_color0, v_shadow
+$input v_world, v_normal, v_color0, v_shadow, v_alpha
 #include <bgfx_shader.sh>
 SAMPLER2DSHADOW(s_shadow,0);
 uniform vec4 u_eye;
@@ -33,5 +33,5 @@ void main() {
     lit+=base*pow(1.0-nv,3.0)*0.13;
     lit=mix(lit,base*2.0,v_color0.a);
     lit=lit/(lit+vec3(1.0));
-    gl_FragColor=vec4(pow(lit,vec3(1.0/2.2)),1.0);
+    gl_FragColor=vec4(pow(lit,vec3(1.0/2.2)),v_alpha);
 }

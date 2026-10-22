@@ -461,6 +461,28 @@ def cpp_overlay_layers():
     return layers
 
 
+def cpp_placement_ghost(state, local_player: int):
+    """The station placement preview the window should draw, or None (#171).
+
+    The decision stays in the game: `render/input.py::update_placement` has already put the cursor's
+    world position and site legality into `hud.placement['ghost']`, and this only checks what the
+    deleted legacy preview checked - the builder is alive, ours, and actually a construction hull.
+    Reads state, never writes it.
+    """
+    placement = getattr(globals().get('hud'), 'placement', None)
+    if not placement:
+        return None
+    ghost = placement.get('ghost')
+    if not ghost or ghost.get('world') is None:
+        return None
+    builder = state.entities.get(placement.get('builder_id'))
+    if builder is None or not getattr(builder, 'alive', False):
+        return None
+    if builder.owner != local_player or not getattr(builder, 'is_construction', False):
+        return None
+    return ghost
+
+
 def cpp_publish(state, ds, local_player: int, selection, dt: float, *, paused: bool = False,
                 message: str = "", flash_left: float = 0.0, fps: float = 0.0,
                 drag_box=None, floating_texts=None):
@@ -479,7 +501,8 @@ def cpp_publish(state, ds, local_player: int, selection, dt: float, *, paused: b
         layers = cpp_overlay_layers()
         session.publish(state, selection=selection, visible_ids=cpp_seen_ids(state, local_player),
                         dt=dt, paused=paused, message=message, flash_left=flash_left, fps=fps,
-                        drag_box=drag_box, floating_texts=floating_texts, overlay_layers=layers)
+                        drag_box=drag_box, floating_texts=floating_texts, overlay_layers=layers,
+                        ghost=cpp_placement_ghost(state, local_player))
         window = CPP.get("window")
         if window is not None and getattr(window, "embedded", False):
             window.present()

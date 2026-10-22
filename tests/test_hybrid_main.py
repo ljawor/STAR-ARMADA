@@ -182,7 +182,7 @@ class HybridLifecycleTests(unittest.TestCase):
         presentation.panel_rects = ['help rect']
         recovery = Mock()
         recovery.draw.return_value = 'recovery surface'
-        env = helpers('cpp_publish', 'cpp_overlay_layers', CPP={},
+        env = helpers('cpp_publish', 'cpp_overlay_layers', 'cpp_placement_ghost', CPP={},
                       cpp_session=Mock(return_value=session), cpp_seen_ids=Mock(return_value=set()),
                       cpp_reset=Mock(), flash_print=Mock(), cpp_fatal=Mock(), presentation=presentation,
                       recovery_overlay=recovery, cinematic=None, sync_recovery_overlay=Mock(),

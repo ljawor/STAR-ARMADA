@@ -186,8 +186,14 @@ class LiveSession:
     def publish(self, state, *, selection=(), visible_ids=None, effect_allow=None,
                 shot_allow=None, dt: float = 1.0 / 30.0,
                 paused: bool = False, message: str = "", flash_left: float = 0.0,
-                fps: float = 0.0, drag_box=None, floating_texts=None, overlay_layers=()) -> dict:
-        """Publish one frame. Every visibility argument is an *answer* from the game."""
+                fps: float = 0.0, drag_box=None, floating_texts=None, overlay_layers=(),
+                ghost=None) -> dict:
+        """Publish one frame. Every visibility argument is an *answer* from the game.
+
+        `ghost` is the station placement preview (#171): the dict `render/input.py` already builds
+        for the HUD's placement banner, or None. It crosses as one extra instance flagged
+        `FLAG_GHOST`, so the preview is drawn by the same window path as every other hull.
+        """
         from render import emissive_batch, primitive_batch
         from render.shapes import projectile_extents
 
@@ -197,7 +203,7 @@ class LiveSession:
 
         started = time.perf_counter()
         frame, counts = self.collector.collect_into(
-            state, self.buffer, tick=state.tick, frame_index=self.frames)
+            state, self.buffer, tick=state.tick, frame_index=self.frames, ghost=ghost)
         self.counts['hardware_blobs'] += self._mesh_publisher.publish_frame(
             frame, self.tables, self._hardware)
         self._frames.publish(bytes(frame))
