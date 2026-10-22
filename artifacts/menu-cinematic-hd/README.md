@@ -75,6 +75,11 @@ sequences remain in scratch and are not duplicated in Git. Recorded paths in
 historical receipts are capture locations, not portable build inputs.
 
 Windows, Retina-specific device behaviour, frozen packages and the project-wide
-long acceptance suite were not established by this local movie task. Owner final
-playback approval and merge are pending. The verified ZIP is installed in this
-feature checkout for that test; main/releases still retain the original movie.
+long acceptance suite were not established by this local movie task. At capture
+handover, final owner approval and merge were pending. The owner subsequently
+approved the completed result and explicitly authorized merge: **“looks perfect
+merge please”**. `full/owner-approval.json` pins that authorization to the approved
+candidate and exact movie hash; it does not claim an independently observed
+physical play-test. The capture-time flags in `full/handover.json` remain a
+historical record, not the current approval state. The GitHub PR records the final
+merge outcome. This does not authorize a release or tag.
