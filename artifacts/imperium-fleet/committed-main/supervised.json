@@ -1,0 +1,17 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "tools/play_imperium_fleet.py",
+    "--focus",
+    "sovereign",
+    "--frames",
+    "90",
+    "--capture",
+    "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/artifacts/imperium-fleet/committed-main/capture.png"
+  ],
+  "pid": 82886,
+  "elapsed_seconds": 13.632802166044712,
+  "returncode": 0,
+  "timeout": false,
+  "orphan_group_killed": false
+}

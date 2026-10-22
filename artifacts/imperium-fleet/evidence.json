@@ -70,12 +70,28 @@
   "physical_owner_playtest_reported": false,
   "files": {
     "README.md": {
-      "sha256": "9941c3a442218310cfbeed4f986684b5fc24613c520b13ed29b878d5b21a790c",
-      "bytes": 6787
+      "sha256": "e76a05f7c81483708eaa73d86b706e4048d2cfbdbe63a0a80bfa68b92f706513",
+      "bytes": 6999
     },
     "build/all.json": {
       "sha256": "c769e3d305a4fd3c1f09aebf20c8197a281d19164149a284bd7099f8a1fdd425",
       "bytes": 6826
+    },
+    "committed-main/capture.json": {
+      "sha256": "2aebda798bbe4f591ad0a6623dcec419cf7055dc4c5f2ef7f7b7125378f4ee77",
+      "bytes": 1925
+    },
+    "committed-main/capture.png": {
+      "sha256": "6e13a14fd3c7647d2f4d94de92be3c985a2c7a29e0b495808a89ca806823014b",
+      "bytes": 165984
+    },
+    "committed-main/supervised.json": {
+      "sha256": "6420fc470c1b24a0156cb49d1db9d50d29749bb0f2b0538ffb64ad1cf27e0cc6",
+      "bytes": 393
+    },
+    "committed-main/supervised.log": {
+      "sha256": "04bd125b2af02b243843b1f061de9a0d2e13b088b24c47a511383a52f4860890",
+      "bytes": 1985
     },
     "focused-regressions.txt": {
       "sha256": "ceff95ee5cc5e5ea86272a8428b0af5a675ea14b73dc0fa4847b5e2f0f348ecf",
@@ -88,6 +104,10 @@
     "gallery.png": {
       "sha256": "d5b04ba7839db54939bd00f1e1d10fb521eaa25801636660b9a8bbc45761d1f9",
       "bytes": 231923
+    },
+    "handover.json": {
+      "sha256": "3535796bd80127ee3c684dbd45839f5d5499887671469fbf64693097fa9ab1b4",
+      "bytes": 5526
     },
     "independent-review.json": {
       "sha256": "80646c495ed8a4ef2e9a516ff4c0cff0f4474501741f3cec6de066de9a232e25",

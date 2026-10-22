@@ -75,7 +75,10 @@ For a finite real-main capture:
   degenerates, all six runtime roles, and authoring-source SHA-256s. Editable
   masters are the seven new `art/blender/imperium_*_prototype.blend` files.
 - `evidence.json`: generated payload/evidence hashes, preservation checks and
-  explicit unapproved/unactivated states. `native-final-run.json` records the
+  explicit unapproved/unactivated states. `committed-main/` is a fresh composed
+  real-main capture from clean content commit `088e87757558e2ac0c6594487b4a9bdd965f95c9`;
+  `handover.json` binds that commit and the exact reviewed source/payload hashes.
+  `native-final-run.json` records the
   final externally supervised capture run; `watchdog-negative.json` proves its
   timeout path on a deliberately blocked child (not a product test failure).
 - Native viewer PNGs originally used uncompressed storage. Retained PNGs were
