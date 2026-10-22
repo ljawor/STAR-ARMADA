@@ -1,11 +1,8 @@
 """Russian pack for STAR ARMADA (#108), authored UTF-8 maintenance source."""
 
 RU: dict[str, str] = {
-    "Blender model preview (next session)": "Предпросмотр моделей Blender (со следующей сессии)",
-    "{count} enabled · settings.json": "{count} вкл. · settings.json",
-    "Enabled visual packs (saved order)": "Включённые графические пакеты (сохранённый порядок)",
-    "Preview is opt-in; OFF keeps stock legacy models.": "Предпросмотр нужно включить вручную; ВЫКЛ. сохраняет прежние стандартные модели.",
-    "Pack order: visual_packs in settings.json; later entries win.": "Порядок пакетов: visual_packs в settings.json; более поздние записи имеют приоритет.",
+    "CPP": "CPP",
+    "RENDERER": "RENDERER",
     "Changes apply at the next session, never during a battle.": "Изменения действуют со следующей сессии, но никогда во время боя.",
     "+{count} convoy": "+{count} конвоев",
     "+{count} per level": "+{count} за уровень",

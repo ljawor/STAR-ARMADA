@@ -251,7 +251,9 @@ class SettingsIntegrationTests(unittest.TestCase):
             menu.handle_event(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_PAGEDOWN))
             if menu.settings_page == pages - 1 and pages > 4:
                 break
-        self.assertEqual(seen, set(menus.DEFAULT_SETTINGS))
+        # #160: these keys are read by the game but deliberately have no row any more.
+        retired = {'renderer', 'model_preview', 'visual_packs', 'model_preview_explicit'}
+        self.assertEqual(seen, set(menus.DEFAULT_SETTINGS) - retired)
 
     def test_the_main_menu_draws_translated_labels(self):
         # This screen renders its own labels instead of going through the classic canvas,

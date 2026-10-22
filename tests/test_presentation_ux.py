@@ -86,8 +86,14 @@ class SettingsTests(unittest.TestCase):
         self.assertFalse((menu.stars == before).all())
         menu.close()
 
+    # #160 retired the renderer, preview and pack-order rows: the window is the one renderer, the
+    # approved catalogue is always on, and the pack list is shipped order. The keys stay in the
+    # settings file (the game reads them) but no screen may offer them, so the walk excludes them
+    # by name rather than quietly losing them from the comparison.
+    NO_ROW = {'renderer', 'model_preview', 'visual_packs', 'model_preview_explicit'}
+
     def test_all_settings_reachable_contained_keyboard_and_mouse(self):
-        expected = set(menus.DEFAULT_SETTINGS)
+        expected = set(menus.DEFAULT_SETTINGS) - self.NO_ROW
         pygame.display.init()
         self.addCleanup(pygame.display.quit)
         for width, height in ((1024, 768), (1280, 800)):

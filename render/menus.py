@@ -181,9 +181,10 @@ def load_settings() -> dict:
     # production default applies and the next save records the choice as explicit.
     if not (isinstance(saved, dict) and saved.get("model_preview_explicit") is True):
         s["model_preview"] = DEFAULT_SETTINGS["model_preview"]
-    # A hand-edited file naming a renderer that does not exist must not reach the game as a
-    # silent no-window: unknown values read as the shipped default, exactly like a bad volume.
-    if s.get("renderer") not in ("cpp", "legacy"):
+    # #160 hard-switched the world renderer: the native window is the only one the game selects,
+    # so `legacy` is no longer honoured from a file either. Anything else reads as the default,
+    # exactly like a bad volume.
+    if s.get("renderer") != "cpp":
         s["renderer"] = DEFAULT_SETTINGS["renderer"]
     return validate_presentation_settings(s)
 
@@ -1313,12 +1314,6 @@ class MenuStack:
                     from render.markers import next_mode
                     self.settings["markers"] = next_mode(
                         self.settings.get("markers", "all"))
-                    self._dirty_settings = True
-                elif act == "cycle_renderer":
-                    # 'cpp' is the native window; 'legacy' keeps this process's own GL renderer.
-                    # Applies at the next session, like every other presentation change.
-                    self.settings["renderer"] = (
-                        "legacy" if self.settings.get("renderer") == "cpp" else "cpp")
                     self._dirty_settings = True
                 elif act == "cycle_language":
                     code = i18n.cycle(str(self.settings.get("language", i18n.DEFAULT_LANGUAGE)))

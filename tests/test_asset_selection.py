@@ -53,47 +53,45 @@ class SelectionPreferencesTests(unittest.TestCase):
         self.assertIs(clean['model_preview'], False)
         self.assertEqual(clean['visual_packs'], [])
         self.assertEqual(clean['custom'], 17)
-    def test_preview_control_is_reachable_and_persists_from_natural_input(self):
+    def test_the_approved_catalogue_is_on_and_has_no_control(self):
+        """#160: the preview is no longer a switch, so nothing may offer one and the catalogue stays on."""
         import game.core
         import pygame
-        from render import menus, i18n
+        from render import menus
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             saves = root / 'saves'
+            settings_path = saves / 'settings.json'
             with patch.multiple(menus, USER_DIR=str(root), SAVES_DIR=str(saves),
-                                SETTINGS_PATH=str(saves / 'settings.json'),
+                                SETTINGS_PATH=str(settings_path),
                                 CAMPAIGN_PATH=str(saves / 'campaign.json'),
                                 BALANCE_PATH=str(saves / 'balance.json')):
+                # A file that carries the retired opt-out must still play the approved catalogue.
+                saves.mkdir(parents=True, exist_ok=True)
+                settings_path.write_text('{"model_preview": false}')
+                self.assertIs(menus.load_settings()['model_preview'], True)
                 owned_display = not pygame.display.get_init()
                 if owned_display:
                     pygame.display.init()
                 menu = menus.MenuStack(800, 600)
                 try:
                     menu.screen = 'settings'
-                    menu.settings_page = 0
-                    for _ in range(3):
+                    offered = set()
+                    for page in range(8):
+                        menu.settings_page = page
                         menu.buttons = []
                         menu.render(0)
-                        rows = [b for b in menu.buttons
-                                if b.get('payload') == {'key': 'model_preview'}]
-                        if rows:
-                            break
-                        menu.handle_event(pygame.event.Event(pygame.KEYDOWN,
-                                                            key=pygame.K_PAGEDOWN))
-                    self.assertEqual(len(rows), 1, 'no reachable model preview control')
-                    row = rows[0]
-                    self.assertTrue(pygame.Rect(0, 0, 800, 600).contains(row['rect']))
-                    menu.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN,
-                                                        button=1, pos=row['rect'].center))
-                    self.assertIs(menu.settings['model_preview'], False)
-                    self.assertIs(menu.settings['model_preview_explicit'], True,
-                                  'moving the selector must record an explicit choice')
-                    menu.apply_pending()
-                    self.assertIs(menus.load_settings()['model_preview'], False)
+                        offered |= {tuple(sorted((b.get('payload') or {}).get('key', '').split()))
+                                    for b in menu.buttons if isinstance(b.get('payload'), dict)}
+                    self.assertNotIn(('model_preview',), offered,
+                                     'the retired preview switch is still reachable')
+                    self.assertIn(('high_contrast_ui',), offered,
+                                  'the remaining readability controls must still be drawn')
                 finally:
                     menu.close()
                     if owned_display:
                         pygame.display.quit()
+
     def test_legacy_boundary_has_visible_diagnostics_and_no_resolver_io(self):
         from render import asset_selection as selection
         before = {'model_preview': False, 'visual_packs': []}
@@ -199,14 +197,23 @@ class SelectionPreferencesTests(unittest.TestCase):
 
 
 class SelectionLanguageTests(unittest.TestCase):
-    LABELS = (
+    LABELS = ('Changes apply at the next session, never during a battle.',)
+    # #160 removed the renderer, preview and pack-order rows. Their labels must leave the catalogue
+    # with them, or the language pipeline keeps translating controls the game no longer draws.
+    RETIRED = (
+        'Renderer (next session)',
         'Blender model preview (next session)',
         'Enabled visual packs (saved order)',
         '{count} enabled · settings.json',
         'Preview is opt-in; OFF keeps stock legacy models.',
         'Pack order: visual_packs in settings.json; later entries win.',
-        'Changes apply at the next session, never during a battle.',
     )
+
+    def test_retired_rows_left_the_language_catalogue(self):
+        from tools import lang_coverage as coverage
+        for key in self.RETIRED:
+            with self.subTest(key=key):
+                self.assertNotIn(key, coverage.catalogue())
 
     def test_preview_labels_have_authored_translations_in_every_registered_pack(self):
         import json
@@ -228,11 +235,11 @@ class SelectionLanguageTests(unittest.TestCase):
                     if code != 'en':
                         self.assertNotEqual(pack[key], key)
 
-    def test_pack_count_is_localized_in_actual_settings_draw(self):
+    def test_no_settings_page_offers_a_retired_control(self):
+        """#160: walking every page must not find a row the owner retired."""
         import game.core
         import pygame
-        from render import menus, i18n, clean_classic
-        previous_language = i18n.language()
+        from render import menus, clean_classic
         owned_font = not pygame.font.get_init()
         owned_display = not pygame.display.get_init()
         with tempfile.TemporaryDirectory() as tmp:
@@ -248,30 +255,31 @@ class SelectionLanguageTests(unittest.TestCase):
                 try:
                     menu = menus.MenuStack(800, 600)
                     menu.screen = 'settings'
-                    for _ in range(3):
+                    seen_actions, seen_keys, pages = set(), set(), 0
+                    for page in range(8):
+                        menu.settings_page = page
                         menu.buttons = []
                         menu.render(0)
-                        if any(b.get('action') == 'pack_order' for b in menu.buttons):
+                        if menu.settings_page != page:
                             break
-                        menu.handle_event(pygame.event.Event(
-                            pygame.KEYDOWN, key=pygame.K_PAGEDOWN))
-                    self.assertTrue(any(b.get('action') == 'pack_order'
-                                        for b in menu.buttons))
-                    for code, word in (('en', 'enabled'), ('de', 'aktiv'),
-                                       ('pl', 'włączone'), ('ru', 'вкл.')):
-                        i18n.set_language(code)
-                        for packs in ([], ['first', 'second']):
-                            with self.subTest(code=code, packs=packs):
-                                menu.settings['visual_packs'] = packs
-                                menu.buttons = []
-                                menu.render(0)
-                                self.assertIn(
-                                    f'{len(packs)} {word} · settings.json ›',
-                                    menu.settings_rendered_text)
+                        pages += 1
+                        for button in menu.buttons:
+                            seen_actions.add(button.get('action'))
+                            payload = button.get('payload')
+                            if isinstance(payload, dict) and 'key' in payload:
+                                seen_keys.add(payload['key'])
+                            elif isinstance(payload, str):
+                                seen_keys.add(payload)
+                    self.assertGreaterEqual(pages, 4, 'the settings walk did not reach every page')
+                    self.assertFalse(seen_actions & {'cycle_renderer', 'pack_order'},
+                                     f'retired actions are still offered: {seen_actions}')
+                    self.assertFalse(seen_keys & {'renderer', 'model_preview', 'visual_packs'},
+                                     f'retired rows are still drawn: {seen_keys}')
+                    for label in SelectionLanguageTests.RETIRED:
+                        self.assertNotIn(label, menu.settings_rendered_text)
                 finally:
                     if menu is not None:
                         menu.close()
-                    i18n.set_language(previous_language)
                     if owned_font:
                         clean_classic.font.cache_clear()
                         pygame.font.quit()
