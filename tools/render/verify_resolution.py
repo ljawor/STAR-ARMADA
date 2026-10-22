@@ -48,7 +48,9 @@ def main():
     original_spawn = cpp_window.spawn
     namespace = [None]
     phase = {'settings_seen': False, 'back': False, 'native_frames': 0, 'done': False}
-    result = {'requested_resolution': args.resolution, 'requested_fullscreen': args.fullscreen}
+    import subprocess
+    result = {'requested_resolution': args.resolution, 'requested_fullscreen': args.fullscreen,
+              'code_revision': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()}
     started = time.monotonic()
 
     def click(menu, action):
@@ -98,6 +100,9 @@ def main():
                 surface = pygame.display.get_surface()
                 size = surface.get_size()
                 fullscreen = bool(surface.get_flags() & pygame.FULLSCREEN)
+                if args.resolution != 'auto':
+                    assert size == tuple(map(int, args.resolution.split('x'))), (args.resolution, size)
+                assert fullscreen == args.fullscreen, (args.fullscreen, fullscreen)
                 label = f'Current resolution: {size[0]} × {size[1]} · ' + ('Fullscreen' if fullscreen else 'Windowed')
                 assert label in ns['menu'].settings_rendered_text
                 assert ns['menu'].settings['resolution'] == args.resolution
