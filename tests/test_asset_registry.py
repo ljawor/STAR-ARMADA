@@ -167,8 +167,7 @@ class RegistryDiscoveryTests(unittest.TestCase):
                     'shared:construction_scaffold'):
             with self.subTest(approved_binding=key):
                 self.assertIsNotNone(resolver.resolve(key))
-        for key in ('syndicate:bomber',
-                    'environment:temperate', 'menu:cinematic_backdrop'):
+        for key in ('environment:temperate', 'menu:cinematic_backdrop'):
             with self.subTest(binding=key):
                 self.assertIsNone(resolver.resolve(key))
         with self.assertRaises(AssetError) as caught:
@@ -183,8 +182,10 @@ class RegistryDiscoveryTests(unittest.TestCase):
                              (ROOT / f'art/schemas/examples/manifests/{name}.json').read_bytes())
         self.assertTrue(resolver.coverage()['ok'])
         coverage = resolver.coverage()
-        self.assertEqual(len(coverage['authored']), 103)
-        self.assertEqual(len(coverage['procedural']), 16)
+        # 103 core manifests plus the three Rim Syndicate hulls registered for the rework;
+        # the procedural remainder is the environments and the menu backdrop.
+        self.assertEqual(len(coverage['authored']), 106)
+        self.assertEqual(len(coverage['procedural']), 13)
 
     def test_registry_duplicate_bindings_are_not_silently_overwritten(self):
         from render.asset_registry import AssetResolver, AssetError
@@ -230,7 +231,7 @@ class CacheTests(unittest.TestCase):
         a = resolver.resolve('rebel:frigate')
         self.assertIs(a, resolver.resolve('rebel:frigate'))
         self.assertTrue(resolver.is_authored('rebel:frigate'))
-        self.assertFalse(resolver.is_authored('syndicate:bomber'))
+        self.assertFalse(resolver.is_authored('environment:temperate'))
         self.assertEqual(resolver.cache_info().currsize, 1)
         self.assertGreater(resolver.cache_info().hits, 0)
         self.assertEqual(resolver.cache_key('rebel:frigate'),
@@ -241,7 +242,7 @@ class CacheTests(unittest.TestCase):
         resolver.cache_clear()
         self.assertEqual(resolver.cache_info().currsize, 0)
         self.assertEqual(resolver.cache_info().hits, 0)
-        self.assertIsNone(resolver.cache_key('syndicate:bomber'))
+        self.assertIsNone(resolver.cache_key('environment:temperate'))
         self.assertIsNone(resolver.resolve('rebel:frigate', lod='lod1'))
         self.assertEqual(resolver.diagnostics[-1]['code'], 'E_LOD')
         for count in (-1, True, 1.5, 4097):

@@ -1,0 +1,24 @@
+{
+  "scenario": "isolated-factory-prebuilt-review-not-organic-build",
+  "focus": "marauder",
+  "subject_id": 30,
+  "spawned": true,
+  "native_presented_frames": 90,
+  "enabled_packs": [],
+  "core_assets": [],
+  "camera": {
+    "target": [
+      -11000.0,
+      0,
+      3200.0
+    ],
+    "distance": 555.3209463247459,
+    "yaw": 35.0,
+    "pitch": 32.0
+  },
+  "actual_eye": [
+    -10729.880560468313,
+    294.27526728969644,
+    3585.770539149475
+  ]
+}

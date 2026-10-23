@@ -143,7 +143,7 @@ class SelectionPreferencesTests(unittest.TestCase):
             self.assertTrue(selection.is_authored('rebel:corvette'))
             self.assertTrue(selection.is_authored('shared:construction_scaffold'))
             self.assertIsNotNone(selection.mesh_for('shared:construction_scaffold'))
-            self.assertFalse(selection.is_authored('syndicate:bomber'))
+            self.assertFalse(selection.is_authored('environment:temperate'))
             import json
             json.dumps(selection.diagnostics())
         finally:

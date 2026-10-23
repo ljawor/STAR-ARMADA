@@ -142,8 +142,10 @@ def build_catalogue(fixture) -> dict:
         payload = build_snapshot(fixture, all_visible=True)
         manifests = _manifest_map(asset_selection.diagnostics())
         assets = [_asset(binding, manifests) for binding in sorted(manifests)]
-        if len(assets) != 103 or len({a['path'] for a in assets}) != 103:
-            raise ValueError('expected 103 unique approved runtime meshes')
+        # 103 approved core manifests plus the three Rim Syndicate hulls registered for
+        # the faction rework.
+        if len(assets) != 106 or len({a['path'] for a in assets}) != 106:
+            raise ValueError('expected 106 unique approved runtime meshes')
         payload['fixture'] = 'approved-runtime-catalogue-inspection-v1'
         payload['assets'] = assets
         payload['instances'] = [dict(entity_id=index, binding=asset['binding'],
@@ -152,7 +154,7 @@ def build_catalogue(fixture) -> dict:
                                 for index, asset in enumerate(assets)]
         payload['camera'] = dict(target=[3500., 0., 3150.], distance=11000., yaw=0., pitch=65., fov=55.)
         payload['metadata'].update(visibility='catalogue-inspection-not-gameplay',
-                                   source_fixture=fixture.name, exported_inventory={'catalogue_meshes': 103},
+                                   source_fixture=fixture.name, exported_inventory={'catalogue_meshes': 106},
                                    scale_policy='Inspection grid: raw authored mesh units, scale 1; not gameplay size.')
         payload['metadata']['assumptions'].append(
             'Artificial catalogue grid, synthetic IDs/transforms; checksum refers to unchanged source fixture, not this layout.')
@@ -170,7 +172,7 @@ def main(argv=None):
     parser.add_argument('--fixture', choices=FIXTURES, default='four-player-combat-v1')
     parser.add_argument('--units', type=int, help='Assert fixture combat-ship count; never changes its recipe')
     parser.add_argument('--all-visible', action='store_true', help='Omniscient diagnostic; not player visibility')
-    parser.add_argument('--catalogue', action='store_true', help='103 approved meshes in artificial inspection grid')
+    parser.add_argument('--catalogue', action='store_true', help='106 approved meshes in artificial inspection grid')
     parser.add_argument('--out', type=Path, required=True)
     args = parser.parse_args(argv)
     fixture = make_fixture(args.fixture)

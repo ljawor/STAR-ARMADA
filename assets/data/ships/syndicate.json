@@ -1,5 +1,44 @@
 {
   "ships": {
+    "syndicate_bomber_squadron": {
+      "name": "Cutthroat Strike Wing", "faction": "syndicate",
+      "category": "fighter_squadron", "is_squadron": true, "squadron_size": 6,
+      "cost": {"credits": 320, "materials": 80, "energy": 0},
+      "crew_cost": 14, "command_cost": 1, "build_time": 10,
+      "hull": 92, "shield_quad": 0, "shield_regen": 0,
+      "speed": 92, "turn_rate": 105, "radius": 24, "sensor_range": 820,
+      "weapons": [{"weapon": "missile_battery", "count": 1, "arcs": ["front"]}],
+      "systems": {"engines": 30, "weapons": 36, "sensors": 18},
+      "hangar_capacity": 0, "max_rank": 5, "veteran_xp": 95
+    },
+    "syndicate_battleship": {
+      "name": "Marauder Battleship", "faction": "syndicate", "category": "battleship",
+      "cost": {"credits": 6200, "materials": 4600, "energy": 1300},
+      "crew_cost": 1400, "command_cost": 14, "build_time": 58,
+      "hull": 26500, "shield_quad": 7000, "shield_regen": 66,
+      "speed": 29, "turn_rate": 12, "radius": 145, "sensor_range": 2700,
+      "weapons": [{"weapon": "plasma_lance", "count": 2, "arcs": ["all"]},
+                  {"weapon": "missile_battery", "count": 2, "arcs": ["all"]},
+                  {"weapon": "laser_cannon", "count": 3, "arcs": ["all"]},
+                  {"weapon": "point_defense", "count": 4, "arcs": ["all"]}],
+      "abilities": ["engine_overdrive", "sensor_jam"],
+      "systems": {"engines": 1700, "weapons": 2100, "sensors": 850, "shield_gen": 1700, "hangar": 450},
+      "hangar_capacity": 3, "max_rank": 5, "veteran_xp": 235
+    },
+    "syndicate_supercapital": {
+      "name": "Leviathan Salvage Dreadnought", "faction": "syndicate", "category": "supercapital",
+      "cost": {"credits": 15500, "materials": 11500, "energy": 3800},
+      "crew_cost": 3800, "command_cost": 29, "build_time": 105,
+      "hull": 81000, "shield_quad": 21000, "shield_regen": 115,
+      "speed": 21, "turn_rate": 7, "radius": 250, "sensor_range": 3500,
+      "weapons": [{"weapon": "plasma_lance", "count": 3, "arcs": ["all"]},
+                  {"weapon": "missile_battery", "count": 3, "arcs": ["all"]},
+                  {"weapon": "laser_cannon", "count": 4, "arcs": ["all"]},
+                  {"weapon": "point_defense", "count": 6, "arcs": ["all"]}],
+      "abilities": ["engine_overdrive", "sensor_jam", "emp_burst"],
+      "systems": {"engines": 4300, "weapons": 5800, "sensors": 2100, "shield_gen": 4800, "hangar": 1300},
+      "hangar_capacity": 5, "max_rank": 5, "veteran_xp": 390
+    },
     "syndicate_raid_squadron": {
       "name": "Jackal Raid Wing", "faction": "syndicate",
       "category": "fighter_squadron", "is_squadron": true, "squadron_size": 6,

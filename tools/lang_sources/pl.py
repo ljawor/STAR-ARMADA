@@ -532,4 +532,7 @@ PL_NAMES: dict[str, str] = {
     "Vigil Corvette": "Korweta Vigil",
     "Volcanic": "Wulkaniczna",
     "Vulture Drone Wing": "Skrzydło dronów Sęp",
+    "Cutthroat Strike Wing": "Skrzydło Uderzeniowe Opryszków",
+    "Leviathan Salvage Dreadnought": "Drednot Ratowniczy Lewiatan",
+    "Marauder Battleship": "Pancernik Maruderów",
 }

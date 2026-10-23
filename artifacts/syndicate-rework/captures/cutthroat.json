@@ -1,0 +1,24 @@
+{
+  "scenario": "isolated-factory-prebuilt-review-not-organic-build",
+  "focus": "cutthroat",
+  "subject_id": 30,
+  "spawned": true,
+  "native_presented_frames": 90,
+  "enabled_packs": [],
+  "core_assets": [],
+  "camera": {
+    "target": [
+      -11000.0,
+      0,
+      3200.0
+    ],
+    "distance": 180.0,
+    "yaw": 35.0,
+    "pitch": 32.0
+  },
+  "actual_eye": [
+    -10912.444327127416,
+    95.38546756197688,
+    3325.042459691946
+  ]
+}

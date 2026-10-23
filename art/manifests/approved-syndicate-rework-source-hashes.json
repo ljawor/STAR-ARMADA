@@ -1,0 +1,15 @@
+{
+  "art/blender/syndicate_battleship.blend": "53761561d19be870c96bb09eb1151f2884d08d2bb03c39afd54162573d95a0fa",
+  "art/blender/syndicate_bomber.blend": "b6763bf0a5952bbfde77352483deb74e4e75f23739f4b0fe1cefbda88909dad4",
+  "art/blender/syndicate_supercapital.blend": "24725a1fcacbc4c4224092e763a10637395bfbdcd007fac542908f2a99064d87",
+  "assets/models/manifests/battleship.json": "f451edcbd8e099c7ff34d979c505cc1dcc8ce329ef5fb9da70b778cf13277d17",
+  "assets/models/manifests/bomber.json": "c02244b9c4524f8605d506925629083bb8d1317c263f5f89ae851184e466ebbb",
+  "assets/models/manifests/supercapital.json": "60c272a9b4092a653a7b207d5eb1547cf1b023310cad3abe87b19c6e4a6d1ef6",
+  "assets/models/syndicate_battleship.mesh.json": "477363742f063303a8edfe0e1f069b6a26a5384e48aadf3b579a1d74e1eb2259",
+  "assets/models/syndicate_bomber.mesh.json": "29c1fd050fc28a02a01652958ea27029b40b44dc2409af22680289d577b71984",
+  "assets/models/syndicate_supercapital.mesh.json": "3df9894570b465d08d47f527aa9b0cad5c57857e9d75dfeca0c3d55cb3f73307",
+  "tools/art/build_syndicate_imperium.py": "30560e10f1eb508d0436e585f71eef07206cf400c0d0b6886e2ddaad3493433e",
+  "tools/art/register_syndicate_prototypes.py": "5c2c52d873bfbef5bd8a59eb177c9093b082bb50ef6c53d8f2e3b5ba2103b9a5",
+  "tools/art/syndicate_imperium_designs.py": "5908a6b4fd5b52bbcfa0e7efcefd98baaccfaa46ae94276972d012567eb34db1",
+  "tools/art/syndicate_imperium_geometry.py": "98b3586235a28780e1cf496f24df36c4366515975d719a7685a0ec36bb941fb4"
+}

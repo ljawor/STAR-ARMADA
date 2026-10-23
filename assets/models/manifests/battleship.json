@@ -1,0 +1,75 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "core:syndicate/battleship",
+  "revision": "d31e91dfe3522c0a18553c3062423095db195fbfaf2a6a5ab7046ce13ea31db0",
+  "display_name": "Rim Syndicate Marauder Battleship (approved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/syndicate_battleship.mesh.json",
+      "sha256": "477363742f063303a8edfe0e1f069b6a26a5384e48aadf3b579a1d74e1eb2259",
+      "bytes": 1011877
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1,
+    "legacy_schema_int": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -53.4127502,
+      -20.3088207,
+      -141.5467529
+    ],
+    "max": [
+      84.5595169,
+      81.948822,
+      124.6667633
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "source": "art/blender/syndicate_battleship.blend",
+    "notes": "Original Rim Syndicate battleship authored for the faction rework; occupies the measured legacy envelope."
+  },
+  "requires": {
+    "min_engine": "0.16.0",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 6528,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  },
+  "approval": {
+    "status": "approved",
+    "decision_id": "syndicate-rework-appearance-2026-10-23",
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "d31e91dfe3522c0a18553c3062423095db195fbfaf2a6a5ab7046ce13ea31db0",
+    "reviewed_evidence": [
+      "artifacts/syndicate-rework/stills/syndicate_battleship-quarter.png",
+      "artifacts/syndicate-rework/stills/syndicate_battleship-profile.png",
+      "artifacts/syndicate-rework/stills/syndicate_battleship-bow.png"
+    ]
+  }
+}

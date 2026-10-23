@@ -2295,7 +2295,7 @@
         "class_or_kind": "battleship"
       },
       "manifest": "core:syndicate/battleship",
-      "status": "authoring_pending",
+      "status": "core",
       "notes": "Planned hull; no gameplay entity or appearance approval is created here.",
       "envelope": {
         "min": [
@@ -2309,7 +2309,7 @@
           124.8
         ]
       },
-      "envelope_decision": "syndicate-rework-envelope-2026-10-23"
+      "envelope_decision": "syndicate-rework-appearance-2026-10-23"
     },
     {
       "binding": "syndicate:bomber",
@@ -2320,9 +2320,10 @@
       },
       "manifest": "core:syndicate/bomber",
       "legacy_identifiers": [
-        "syndicate_bomber"
+        "syndicate_bomber",
+        "syndicate_bomber_squadron"
       ],
-      "status": "authoring_pending",
+      "status": "core",
       "notes": "Planned hull (s01-hull-plan-2026-10-16). Its data id must also be added to fighter_platform.builds_ships or it exists but cannot be built.",
       "envelope": {
         "min": [
@@ -2336,7 +2337,7 @@
           20.16
         ]
       },
-      "envelope_decision": "syndicate-rework-envelope-2026-10-23"
+      "envelope_decision": "syndicate-rework-appearance-2026-10-23"
     },
     {
       "binding": "syndicate:colonizer",
@@ -2906,7 +2907,7 @@
         "class_or_kind": "supercapital"
       },
       "manifest": "core:syndicate/supercapital",
-      "status": "authoring_pending",
+      "status": "core",
       "notes": "Planned hull; no gameplay entity or appearance approval is created here.",
       "envelope": {
         "min": [
@@ -2920,7 +2921,7 @@
           175.2
         ]
       },
-      "envelope_decision": "syndicate-rework-envelope-2026-10-23"
+      "envelope_decision": "syndicate-rework-appearance-2026-10-23"
     },
     {
       "binding": "syndicate:trade_station",
