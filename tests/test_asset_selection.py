@@ -35,10 +35,8 @@ class SelectionPreferencesTests(unittest.TestCase):
         import game.core
         from render import menus
         self.assertIs(menus.DEFAULT_SETTINGS.get('model_preview'), True)
-        # The shipped selection is the thirteen owner-approved Imperial prototypes: the six
-        # ships (decision imperium-prototype-default-selection-2026-10-20), the three
-        # stations (decision imperial-station-prototypes-2026-10-20) and the four dockyard
-        # units (decision imperial-dockyard-prototypes-2026-10-20).
+        # The fourteen shipped packs cover the approved Imperium ships/stations,
+        # including the seven remaining ship bindings in the fleet pack.
         self.assertEqual(menus.DEFAULT_SETTINGS.get('visual_packs'),
                          ['vigil-prototype', 'imperium-command-prototype',
                           'imperium-shipyard-prototype', 'imperium-mining-prototype',
@@ -46,7 +44,7 @@ class SelectionPreferencesTests(unittest.TestCase):
                           'imperium-research-prototype', 'imperium-defense-prototype',
                           'imperium-sensor-prototype', 'imperium-trade-prototype',
                           'imperium-fighter-prototype', 'imperium-repair-prototype',
-                          'imperium-relay-prototype'])
+                          'imperium-relay-prototype', 'imperium-fleet-prototypes'])
         with self.assertWarnsRegex(RuntimeWarning, 'using legacy models'):
             clean = menus.validate_presentation_settings(
                 {'model_preview': True, 'visual_packs': ['../escape'], 'custom': 17})
@@ -369,7 +367,8 @@ class ShippedPrototypeDefaultTests(unittest.TestCase):
 
     REVIEWS = ('artifacts/imperial-flight-prototypes/OWNER_REVIEW.json',
                'artifacts/imperial-stations-review/OWNER_REVIEW.json',
-               'artifacts/imperial-dockyard-review/OWNER_REVIEW.json')
+               'artifacts/imperial-dockyard-review/OWNER_REVIEW.json',
+               'artifacts/imperium-fleet/OWNER_REVIEW.json')
 
     def test_shipped_default_loads_the_approved_prototype_meshes(self):
         import json
@@ -379,8 +378,12 @@ class ShippedPrototypeDefaultTests(unittest.TestCase):
         root = Path(__file__).resolve().parents[1]
         approved = [item for name in self.REVIEWS
                     for item in json.loads((root / name).read_text(encoding='utf-8'))['assets']]
-        self.assertEqual(len(approved), len(menus.DEFAULT_SETTINGS['visual_packs']),
-                         'every shipped pack carries an owner-approved mesh')
+        replacements=[item for pack in menus.DEFAULT_SETTINGS['visual_packs']
+                      for item in json.loads((root/'visual_packs'/pack/'visual-pack.json').read_text())['content']['replaces']]
+        self.assertEqual(len(approved),len(replacements),
+                         'every shipped replacement carries an owner-approved mesh')
+        self.assertEqual({item['binding'] for item in approved},
+                         {item['binding'] for item in replacements})
         # A clean install: no settings file, so `load_settings` returns the shipped
         # defaults. In a source run USER_DIR is the checkout, which is where the
         # committed packs live.

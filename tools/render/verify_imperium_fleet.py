@@ -47,6 +47,8 @@ def main():
     from render_bridge.protocol import encode,WORLD
     from tools.render import dump_snapshot as snapshot
     defaults=snapshot._default_selection()
+    # Production now enables this pack; the paired BEFORE must still exclude it.
+    defaults['visual_packs']=[name for name in defaults['visual_packs'] if name!=PACK_NAME]
     original_selection=snapshot._default_selection
     rows=[r for r in ROWS if not a.only or r[0]==a.only]
     if a.include_control:rows.append(('corvette','vigil-control','imperial_corvette','Vigil — unchanged control'))

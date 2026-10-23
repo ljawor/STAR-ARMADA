@@ -15,7 +15,8 @@ class RemainingImperiumFleetTests(unittest.TestCase):
         from render.menus import DEFAULT_SETTINGS
         descriptor=PACK/'visual-pack.json'
         self.assertTrue(descriptor.is_file(),'Remaining seven Imperium models have no real loadable pack yet')
-        defaults=[ROOT/'visual_packs'/name/'visual-pack.json' for name in DEFAULT_SETTINGS['visual_packs']]
+        defaults=[ROOT/'visual_packs'/name/'visual-pack.json' for name in DEFAULT_SETTINGS['visual_packs']
+                  if name!='imperium-fleet-prototypes']
         resolver=AssetResolver(ROOT)
         resolver.activate_packs(defaults,pack_root=ROOT/'visual_packs')
         before={key:resolver.resolve(key).revision for key in

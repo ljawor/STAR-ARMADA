@@ -1,8 +1,14 @@
-# Remaining Galactic Imperium fleet — owner review candidate
+# Remaining Galactic Imperium fleet — normal-game integration
 
-**Status: built and native-rendered; appearance/activation/merge approval pending.**
-This is a new optional seven-binding pack, not a change to the accepted catalogue,
-normal settings, simulation, unit data, shaders, or the startup cinematic.
+**Status: owner-approved appearance; normal-game activation and merge authorized.**
+The seven-binding pack is enabled by ordinary `main.py`, for fresh settings and the
+previous shipped thirteen-pack selection. The shipped native catalogue now names
+the exact seven approved meshes. No review launcher is needed to use them.
+Simulation, unit data, shaders and the startup cinematic are unchanged.
+
+`OWNER_REVIEW.json` records the owner's approval and activation clarification.
+Earlier `evidence.json`/`handover.json` inactive/pending fields describe the original
+review-stage candidate and are superseded for delivery, not rewritten as past facts.
 
 ## What is new
 
@@ -29,6 +35,26 @@ factions and core assets remain byte-identical: `protected-baseline.json` pins
 
 ## How to play-test
 
+**Normal game — this is the delivery entry point:**
+
+```sh
+.venv/bin/python main.py
+```
+
+The models replace their normal ship classes in new and loaded matches; gameplay
+construction/progression is unchanged. Default settings enable fourteen packs.
+Existing saved settings matching the previous shipped thirteen-pack list migrate
+to fourteen without changing other preferences; explicitly custom lists are retained.
+The owner's local saved selection is also updated. `assets/cpp/catalogue.snap`
+contains all seven approved mesh paths/hashes: changing settings alone would have
+left the native game drawing its cached old ship geometry.
+
+`normal-game-catalogue.json` records exactly seven changed asset rows out of 103;
+the other 96 rows, scene instances/cameras and all metadata except visual selection
+are unchanged.
+
+### Optional diagnostic inspection (not needed to play)
+
 Run in the owner's existing checkout (close any other game instance first):
 
 ```sh
@@ -44,9 +70,9 @@ that fixture explicitly. It is not an organic construction or progression test.
 A temporary profile contains copies of all 13 accepted packs plus the candidate;
 normal saves/settings/replays are neither loaded nor written. The review fails
 closed on pack rejection or core fallback. On exit the temporary profile/replay
-is removed. Normal `main.py` has **not** been switched to these pending models.
-Appearance approval and a deliberate default/local-settings activation are later,
-separate steps. No frozen application or Windows delivery is claimed.
+is removed. This tool remains an isolated diagnostic; ordinary `main.py` now uses
+the approved models through normal settings and the shipped native catalogue.
+No frozen application or Windows delivery is claimed.
 
 For a finite real-main capture:
 
@@ -74,8 +100,9 @@ For a finite real-main capture:
 - `build/all.json`: real Blender 5.0.1 evaluated counts/bounds, zero skipped
   degenerates, all six runtime roles, and authoring-source SHA-256s. Editable
   masters are the seven new `art/blender/imperium_*_prototype.blend` files.
-- `evidence.json`: generated payload/evidence hashes, preservation checks and
-  explicit unapproved/unactivated states. `committed-main/` is a fresh composed
+- `evidence.json`: original review-stage payload/evidence hashes, preservation
+  checks and then-unapproved/unactivated states. `OWNER_REVIEW.json` supersedes those
+  states after approval. `committed-main/` is a fresh composed
   real-main capture from clean content commit `088e87757558e2ac0c6594487b4a9bdd965f95c9`;
   `handover.json` binds that commit and the exact reviewed source/payload hashes.
   `native-final-run.json` records the
@@ -89,6 +116,27 @@ Native inspection captures omit the HUD/effects/fog and are not organic matches;
 the separate `main/` captures demonstrate the composed real-game path. None of
 this substitutes for the owner's physical play-test or appearance decision.
 No full-suite, performance target, CI, merge, tag or release pass is implied.
+
+## Normal-game activation verification
+
+- `tests/test_imperium_game_activation.py` covers fresh settings, previous shipped
+  thirteen-pack settings migration, preservation of explicit custom selections,
+  and the actual shipped native catalogue's seven approved paths/hashes. The
+  catalogue test first failed on all seven old hashes before regeneration.
+- Final focused activation/asset/design/review/default-switch union: **45 tests,
+  85 subtests passed**, one known baseline stale-release-lock test deselected.
+  The committed baseline checker reproduces that stale lock with unchanged core
+  inputs: `release-lock-preexisting-failure.json`. The older metadata-registration
+  failure documented below also remains outside this feature; no full-suite pass
+  is claimed.
+- Ordinary `main.py --smoke`, using the normal local settings and shipped native
+  catalogue (not the inspection launcher), exited zero after 30 simulation seconds:
+  **SMOKE_CPP_OK**, 283 published frames. `normal-main-smoke.{json,txt}` retain
+  the supervised receipt and real runtime output. This is not an organic build
+  of all seven classes or an FPS acceptance claim.
+- Incremental independent review passed with no security/logic blockers:
+  `activation-independent-review.json`. Two nonblocking hardening suggestions
+  remain recorded rather than silently claimed implemented.
 
 ## Rebuild and checks
 

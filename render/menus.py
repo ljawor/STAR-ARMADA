@@ -97,14 +97,10 @@ DEFAULT_SETTINGS = {
     # because that is the migration's whole point; 'legacy' stays as the rollback control and is
     # never deleted by this step.
     "renderer": "cpp",
-    # The nine owner-approved Imperial prototypes ship as the default enabled selection:
-    # the six ships of decision `imperium-prototype-default-selection-2026-10-20` and the
-    # three stations of `imperial-station-prototypes-2026-10-20`. A checkout that has never
-    # saved a settings file therefore shows them instead of the core bindings they replace.
-    # The packs replace disjoint bindings, so the order below decides nothing; it is the
-    # order they were approved in. A saved settings file that already carries
-    # `visual_packs` keeps its own list. Packs must live outside a frozen bundle, so a
-    # packaged build falls back to the core catalogue until these are registered there.
+    # Owner-approved Imperium ship/station designs are part of the normal game.
+    # The remaining fleet is enabled here, not through a review-only entry point.
+    # Saved selections matching the previous shipped list migrate in load_settings;
+    # explicitly customized selections retain their order and choices.
     "visual_packs": [
         "vigil-prototype",
         "imperium-command-prototype",
@@ -119,6 +115,7 @@ DEFAULT_SETTINGS = {
         "imperium-fighter-prototype",
         "imperium-repair-prototype",
         "imperium-relay-prototype",
+        "imperium-fleet-prototypes",
     ],
 }
 
@@ -177,6 +174,12 @@ def load_settings() -> dict:
             s.update(saved)
     except (OSError, ValueError):
         pass
+    # Upgrade the previous shipped Imperium selection, including existing installs.
+    # Custom/empty lists are explicit selections and must not be overwritten.
+    previous_imperium_packs = DEFAULT_SETTINGS['visual_packs'][:-1]
+    if (isinstance(saved, dict)
+            and saved.get('visual_packs') == previous_imperium_packs):
+        s['visual_packs'] = list(DEFAULT_SETTINGS['visual_packs'])
     # The S11 migration. Before the switch every saved file carried
     # `model_preview: false` because that was the default, so the stored value
     # cannot distinguish "chose legacy" from "never chose". Honour the stored
