@@ -93,7 +93,7 @@ class SetupCanvas:
             else:
                 line = candidate
         lines.append(line)
-        line_height = max(f.get_linesize(), f.get_height()) + 1
+        line_height = max(f.get_linesize(), f.get_height(), f.get_ascent() - f.get_descent()) + 2
         limit = max(1, rect.h // line_height)
         for i, line in enumerate(lines[:limit]):
             truncated = i == limit - 1 and len(lines) > limit
@@ -124,7 +124,8 @@ class SetupCanvas:
             rgb = tuple(round(c * 255) for c in PLAYER_COLORS[swatch])
             pygame.draw.rect(self.surface, rgb, (rect.x + 9, rect.y + 10, 14, 14), border_radius=2)
             inset = 30
-        self.text(label, (rect.x + inset, rect.y + 8, rect.w - inset - 6, rect.h - 10), size,
+        top = max(1, (rect.h - font(size).get_height()) // 2) if rect.h < 30 else 8
+        self.text(label, (rect.x + inset, rect.y + top, rect.w - inset - 6, rect.h - top), size,
                   (16, 42, 42) if primary else INK)
 
     def panel(self, rect):
@@ -152,7 +153,7 @@ def battlefield(c, options, active_count, action):
     from game.core.skirmish import SKIRMISH_MAP_IDS, PLAYER_COLORS
     m = c.menu
     c.text('BATTLEFIELD', (32, 107, 224, 24), 14, MUTED)
-    for i, mid in enumerate(SKIRMISH_MAP_IDS):
+    for i, mid in enumerate(SKIRMISH_MAP_IDS[:4]):
         y = 140 + i * 88
         data = m.skirmish_store.maps[mid]
         c.button((32, y, 224, 76), '', action, mid, mid == options['map_id'])
@@ -190,37 +191,8 @@ def battlefield(c, options, active_count, action):
 
 
 def skirmish_setup(menu):
-    from game.core.skirmish import COLOR_NAMES
-    c = SetupCanvas(menu, 'skirmish')
-    o = menu.skirmish_options
-    c.text('STAR ARMADA', (32, 20, 300, 30), 24)
-    c.text('Deploy your fleet', (32, 65, 780, 36), 28)
-    c.text('Choose a battlefield, configure your fleet, then launch.', (280, 107, 548, 24), 14, MUTED)
-    data, preview = battlefield(c, o, o['ai_count'] + 1, 'skirmish_map')
-    c.text('FLEET ROSTER', (280, 330, 548, 24), 16, MUTED)
-    for slot in range(o['ai_count'] + 1):
-        y = 364 + slot * 42
-        relation = 'Ally' if o['teams'][slot] == o['teams'][0] else 'Enemy'
-        c.text('You' if slot == 0 else f'AI {slot} · {relation}', (280, y + 8, 92, 24), 14)
-        color = o['colors'][slot]
-        c.button((376, y, 114, 34), COLOR_NAMES[color] + ' ›', 'skirmish_color', slot, swatch=color)
-        c.button((498, y, 220, 34), menu.skirmish_store.factions[o['factions'][slot]].display_name + ' ›', 'skirmish_faction', slot)
-        c.button((726, y, 102, 34), f"Team {o['teams'][slot] + 1} ›", 'skirmish_team', slot)
-    c.panel((852, 107, 236, 423))
-    c.text('Match settings', (866, 122, 208, 30), 24)
-    c.text(f"AI PLAYERS   {o['ai_count']} / {menu.skirmish_capacity(o['map_id']) - 1}", (866, 169, 208, 26), 16)
-    c.button((866, 201, 48, 34), '−', 'skirmish_ai', -1)
-    c.button((922, 201, 48, 34), '+', 'skirmish_ai', 1)
-    c.text('AI DIFFICULTY', (866, 255, 208, 24), 14, MUTED)
-    c.button((866, 283, 208, 34), o['ai_difficulty'].upper() + ' ›', 'skirmish_difficulty')
-    c.text('Same team = allies. AI allies share vision, not control. Keep at least two different teams.', (866, 340, 208, 100), 14, MUTED, wrap=True)
-    c.text('Distinct colors are kept automatically. Click to cycle.', (866, 449, 208, 60), 14, MUTED, wrap=True)
-    c.text(data['description'], (32, 544, 1056, 60), 14, MUTED, wrap=True)
-    c.text(menu.skirmish_notice or 'Unused fleet choices are retained when reducing AI players.', (32, 608, 1056, 22), 14, MUTED)
-    pygame.draw.line(c.surface, BORDER, (32, 637), (1088, 637))
-    c.button((32, 650, 180, 36), 'Back', 'goto_main')
-    c.button((852, 650, 236, 36), 'Launch skirmish', 'launch_skirmish', primary=True)
-    c.finish(preview)
+    from render.skirmish_screen import setup
+    setup(menu)
 
 
 def host_setup(menu):

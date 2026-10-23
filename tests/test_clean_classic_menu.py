@@ -76,7 +76,7 @@ class CleanClassicTests(unittest.TestCase):
             self.assertTrue(all(r.right < preview.left for r in maps))
             roster = [b['rect'] for b in menu.buttons if b['action'] == 'skirmish_faction']
             settings = next(b['rect'] for b in menu.buttons if b['action'] == 'skirmish_difficulty')
-            self.assertTrue(all(r.left >= preview.left and r.right < settings.left for r in roster))
+            self.assertTrue(all(r.left > preview.right and r.top > settings.bottom for r in roster))
             with patch('pygame.font.SysFont', side_effect=AssertionError('per-frame font allocation')):
                 menu.render(0)
 

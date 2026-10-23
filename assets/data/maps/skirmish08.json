@@ -1,0 +1,315 @@
+{
+  "id": "skirmish08",
+  "name": "Amber Spiral",
+  "max_players": 3,
+  "description": "Three rim bases feed clockwise expansion arms around a central research world. Each has an equally close mine and temperate colony. Offset gas giants bend the inward routes; nebula-shrouded rich fields sit between the arms, inviting concealed flanks rather than a single central mining rush. The outer rim remains clear for counterattacks.",
+  "bounds": 40000,
+  "star": {
+    "pos": [
+      0,
+      -6500,
+      0
+    ],
+    "size": 1800,
+    "color": [
+      1.0,
+      0.86,
+      0.62
+    ]
+  },
+  "players": [
+    {
+      "slot": 0,
+      "faction": "imperial",
+      "team": 0,
+      "is_ai": false,
+      "name": "Player",
+      "start": [
+        0.0,
+        0,
+        14000.0
+      ],
+      "start_units": {
+        "command_station": 1,
+        "shipyard": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    },
+    {
+      "slot": 1,
+      "faction": "imperial",
+      "team": 1,
+      "is_ai": true,
+      "name": "AI Commander 1",
+      "start": [
+        12124.355653,
+        0,
+        -7000.0
+      ],
+      "start_units": {
+        "command_station": 1,
+        "shipyard": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    },
+    {
+      "slot": 2,
+      "faction": "imperial",
+      "team": 2,
+      "is_ai": true,
+      "name": "AI Commander 2",
+      "start": [
+        -12124.355653,
+        0,
+        -7000.0
+      ],
+      "start_units": {
+        "command_station": 1,
+        "shipyard": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    }
+  ],
+  "asteroid_fields": [
+    {
+      "id": "ast_skirmish08_home_0",
+      "pos": [
+        0.0,
+        0,
+        10500.0
+      ],
+      "radius": 1400,
+      "richness": 1.0
+    },
+    {
+      "id": "ast_skirmish08_spiral_0",
+      "pos": [
+        3349.931974,
+        0,
+        3977.179374
+      ],
+      "radius": 1200,
+      "richness": 1.5
+    },
+    {
+      "id": "ast_skirmish08_home_1",
+      "pos": [
+        9093.26674,
+        0,
+        -5250.0
+      ],
+      "radius": 1400,
+      "richness": 1.0
+    },
+    {
+      "id": "ast_skirmish08_spiral_1",
+      "pos": [
+        1769.372386,
+        0,
+        -4889.715877
+      ],
+      "radius": 1200,
+      "richness": 1.5
+    },
+    {
+      "id": "ast_skirmish08_home_2",
+      "pos": [
+        -9093.26674,
+        0,
+        -5250.0
+      ],
+      "radius": 1400,
+      "richness": 1.0
+    },
+    {
+      "id": "ast_skirmish08_spiral_2",
+      "pos": [
+        -5119.30436,
+        0,
+        912.536503
+      ],
+      "radius": 1200,
+      "richness": 1.5
+    }
+  ],
+  "gas_giants": [
+    {
+      "id": "gas_skirmish08_arm_0",
+      "pos": [
+        -3952.497314,
+        0,
+        5777.349304
+      ],
+      "radius": 1800,
+      "color": [
+        0.65,
+        0.55,
+        0.8
+      ]
+    },
+    {
+      "id": "gas_skirmish08_arm_1",
+      "pos": [
+        6979.579921,
+        0,
+        534.28843
+      ],
+      "radius": 1800,
+      "color": [
+        0.65,
+        0.55,
+        0.8
+      ]
+    },
+    {
+      "id": "gas_skirmish08_arm_2",
+      "pos": [
+        -3027.082607,
+        0,
+        -6311.637734
+      ],
+      "radius": 1800,
+      "color": [
+        0.65,
+        0.55,
+        0.8
+      ]
+    }
+  ],
+  "planets": [
+    {
+      "id": "planet_skirmish08_Amber Haven 1",
+      "name": "Amber Haven 1",
+      "pos": [
+        3000.0,
+        0,
+        9500.0
+      ],
+      "radius": 700,
+      "type": "temperate",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    },
+    {
+      "id": "planet_skirmish08_Amber Haven 2",
+      "name": "Amber Haven 2",
+      "pos": [
+        6727.241336,
+        0,
+        -7348.076211
+      ],
+      "radius": 700,
+      "type": "temperate",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    },
+    {
+      "id": "planet_skirmish08_Amber Haven 3",
+      "name": "Amber Haven 3",
+      "pos": [
+        -9727.241336,
+        0,
+        -2151.923789
+      ],
+      "radius": 700,
+      "type": "temperate",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    },
+    {
+      "id": "planet_skirmish08_Amber Archive",
+      "name": "Amber Archive",
+      "pos": [
+        0,
+        0,
+        0
+      ],
+      "radius": 850,
+      "type": "research",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    }
+  ],
+  "nebulas": [
+    {
+      "pos": [
+        3349.931974,
+        0,
+        3977.179374
+      ],
+      "radius": 2000,
+      "color": [
+        0.25,
+        0.3,
+        0.55
+      ]
+    },
+    {
+      "pos": [
+        1769.372386,
+        0,
+        -4889.715877
+      ],
+      "radius": 2000,
+      "color": [
+        0.25,
+        0.3,
+        0.55
+      ]
+    },
+    {
+      "pos": [
+        -5119.30436,
+        0,
+        912.536503
+      ],
+      "radius": 2000,
+      "color": [
+        0.25,
+        0.3,
+        0.55
+      ]
+    }
+  ],
+  "jump_points": [
+    {
+      "pos": [
+        0.0,
+        0,
+        17500.0
+      ]
+    },
+    {
+      "pos": [
+        15155.444566,
+        0,
+        -8750.0
+      ]
+    },
+    {
+      "pos": [
+        -15155.444566,
+        0,
+        -8750.0
+      ]
+    }
+  ]
+}

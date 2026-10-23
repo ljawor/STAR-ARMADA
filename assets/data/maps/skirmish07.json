@@ -1,0 +1,193 @@
+{
+  "id": "skirmish07",
+  "name": "Offset Corridors",
+  "max_players": 2,
+  "description": "Diagonal bases approach a narrow central mining lane between twin gas giants. Equal nearby mines and temperate colonies leave both openings safe. Offset outer reserves offer a longer, exposed alternative to the direct crossing. No nebula cover hides fleet movements: scout the center before committing to either corridor.",
+  "bounds": 36000,
+  "star": {
+    "pos": [
+      0,
+      -6500,
+      0
+    ],
+    "size": 1800,
+    "color": [
+      1.0,
+      0.86,
+      0.62
+    ]
+  },
+  "players": [
+    {
+      "slot": 0,
+      "faction": "imperial",
+      "team": 0,
+      "is_ai": false,
+      "name": "Player",
+      "start": [
+        -11000,
+        0,
+        -8000
+      ],
+      "start_units": {
+        "command_station": 1,
+        "shipyard": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    },
+    {
+      "slot": 1,
+      "faction": "imperial",
+      "team": 1,
+      "is_ai": true,
+      "name": "AI Commander 1",
+      "start": [
+        11000,
+        0,
+        8000
+      ],
+      "start_units": {
+        "command_station": 1,
+        "shipyard": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    }
+  ],
+  "asteroid_fields": [
+    {
+      "id": "ast_skirmish07_home_0",
+      "pos": [
+        -7500,
+        0,
+        -8000
+      ],
+      "radius": 1400,
+      "richness": 1.0
+    },
+    {
+      "id": "ast_skirmish07_flank_0",
+      "pos": [
+        -4000,
+        0,
+        10000
+      ],
+      "radius": 1300,
+      "richness": 1.4
+    },
+    {
+      "id": "ast_skirmish07_home_1",
+      "pos": [
+        7500,
+        0,
+        8000
+      ],
+      "radius": 1400,
+      "richness": 1.0
+    },
+    {
+      "id": "ast_skirmish07_flank_1",
+      "pos": [
+        4000,
+        0,
+        -10000
+      ],
+      "radius": 1300,
+      "richness": 1.4
+    },
+    {
+      "id": "ast_skirmish07_crossing",
+      "pos": [
+        0,
+        0,
+        0
+      ],
+      "radius": 1300,
+      "richness": 1.8
+    }
+  ],
+  "gas_giants": [
+    {
+      "id": "gas_skirmish07_north",
+      "pos": [
+        0,
+        0,
+        5000
+      ],
+      "radius": 2600,
+      "color": [
+        0.65,
+        0.55,
+        0.8
+      ]
+    },
+    {
+      "id": "gas_skirmish07_south",
+      "pos": [
+        0,
+        0,
+        -5000
+      ],
+      "radius": 2600,
+      "color": [
+        0.65,
+        0.55,
+        0.8
+      ]
+    }
+  ],
+  "planets": [
+    {
+      "id": "planet_skirmish07_Corridor Haven 1",
+      "name": "Corridor Haven 1",
+      "pos": [
+        -8500,
+        0,
+        -3500
+      ],
+      "radius": 700,
+      "type": "temperate",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    },
+    {
+      "id": "planet_skirmish07_Corridor Haven 2",
+      "name": "Corridor Haven 2",
+      "pos": [
+        8500,
+        0,
+        3500
+      ],
+      "radius": 700,
+      "type": "temperate",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    }
+  ],
+  "nebulas": [],
+  "jump_points": [
+    {
+      "pos": [
+        -14500,
+        0,
+        -11000
+      ]
+    },
+    {
+      "pos": [
+        14500,
+        0,
+        11000
+      ]
+    }
+  ]
+}

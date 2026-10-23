@@ -1,6 +1,10 @@
 """Russian pack for STAR ARMADA (#108), authored UTF-8 maintenance source."""
 
 RU: dict[str, str] = {
+    "Click a start to deploy here.": "Нажмите на стартовую точку, чтобы разместить здесь флот.",
+    "Gold: resources · Teal: worlds · Rings: starts": "Золото: ресурсы · Бирюза: миры · Кольца: стартовые точки",
+    "Same team = allies. AI allies share vision, not control.": "Одна команда — союзники. Союзный ИИ делится обзором, но не управлением.",
+    "Start {n}": "Стартовая точка {n}",
     "Change fullscreen in Settings after leaving the match": "Измените полноэкранный режим в настройках после выхода из матча",
     "Resolution": "Разрешение",
     "Automatic": "Автоматически",
@@ -73,7 +77,6 @@ RU: dict[str, str] = {
     "Cancel crew order · keep passengers": "Отменить приказ экипажу · оставить пассажиров",
     "Canonical runtime state": "Каноническое состояние симуляции",
     "Choose a battlefield and fleet roster. Open a lobby, then launch once everyone is ready.": "Выберите поле боя и состав флота. Создайте лобби и начните бой, когда все будут готовы.",
-    "Choose a battlefield, configure your fleet, then launch.": "Выберите поле боя, настройте флот и начните бой.",
     "Cinematics": "Кинематографические эффекты",
     "Close": "Закрыть",
     "Connect": "Подключиться",
@@ -102,7 +105,6 @@ RU: dict[str, str] = {
     "Deliver passengers: with cargo loaded, press R and click an owned hull missing crew.": "Доставка пассажиров: загрузите транспорт, нажмите R и укажите свой корабль с нехваткой экипажа.",
     "Deploy your fleet": "Разверните свой флот",
     "Destroy ALL defending satellites first.": "Сначала уничтожьте ВСЕ защитные спутники.",
-    "Distinct colors are kept automatically. Click to cycle.": "Различимые цвета подбираются автоматически. Нажмите для смены.",
     "Distinct colors. Unused slot choices are retained. Click to cycle.": "Различимые цвета. Выбор для неиспользуемых мест сохраняется. Нажмите для смены.",
     "Dynamic range": "Динамический диапазон",
     "EN": "ЭН",
@@ -274,7 +276,6 @@ RU: dict[str, str] = {
     "SURFACE BONUS / SECOND": "БОНУС ПОВЕРХНОСТИ / СЕКУНДА",
     "SURVEY · waiting for a safe route": "РАЗВЕДКА · ожидание безопасного маршрута",
     "Safe replay deletion unavailable on this platform (directory handles required)": "Безопасное удаление повторов недоступно на этой платформе (нужны дескрипторы каталогов)",
-    "Same team = allies. AI allies share vision, not control. Keep at least two different teams.": "Одна команда — союзники. Союзный ИИ делится обзором, но не управлением. Оставьте хотя бы две разные команды.",
     "Saved Games": "Сохранённые игры",
     "Saved game exceeds size limit (64 MiB)": "Сохранение превышает лимит размера (64 МиБ)",
     "Saved games": "Сохранённые игры",
@@ -323,7 +324,6 @@ RU: dict[str, str] = {
     "Unknown time UTC": "Время неизвестно UTC",
     "Unready": "Не готов",
     "Unsupported saved-game format": "Неподдерживаемый формат сохранения",
-    "Unused fleet choices are retained when reducing AI players.": "При уменьшении числа игроков ИИ выбор неиспользуемых флотов сохраняется.",
     "Use the address shown in the host lobby and the same TCP port.\nAsk the host to allow STAR ARMADA through their firewall.": "Используйте адрес из лобби сервера и тот же TCP-порт.\nПопросите владельца сервера разрешить STAR ARMADA в брандмауэре.",
     "VICTORY": "ПОБЕДА",
     "WAITING FOR CR / MT": "ОЖИДАНИЕ КР / МТ",

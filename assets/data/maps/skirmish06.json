@@ -1,0 +1,228 @@
+{
+  "id": "skirmish06",
+  "name": "Titan Divide",
+  "max_players": 2,
+  "description": "Opposing bases face a giant central gravity well: fleets must choose the northern or southern passage. Equal home mines and temperate colonies anchor both sides. Rich polar fields and matching research worlds reward control of either bypass; small nebula banks near the titan conceal crossings without blocking travel.",
+  "bounds": 36000,
+  "star": {
+    "pos": [
+      0,
+      -6500,
+      0
+    ],
+    "size": 1800,
+    "color": [
+      1.0,
+      0.86,
+      0.62
+    ]
+  },
+  "players": [
+    {
+      "slot": 0,
+      "faction": "imperial",
+      "team": 0,
+      "is_ai": false,
+      "name": "Player",
+      "start": [
+        -12000,
+        0,
+        0
+      ],
+      "start_units": {
+        "command_station": 1,
+        "shipyard": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    },
+    {
+      "slot": 1,
+      "faction": "imperial",
+      "team": 1,
+      "is_ai": true,
+      "name": "AI Commander 1",
+      "start": [
+        12000,
+        0,
+        0
+      ],
+      "start_units": {
+        "command_station": 1,
+        "shipyard": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    }
+  ],
+  "asteroid_fields": [
+    {
+      "id": "ast_skirmish06_home_0",
+      "pos": [
+        -8500,
+        0,
+        0
+      ],
+      "radius": 1400,
+      "richness": 1.0
+    },
+    {
+      "id": "ast_skirmish06_home_1",
+      "pos": [
+        8500,
+        0,
+        0
+      ],
+      "radius": 1400,
+      "richness": 1.0
+    },
+    {
+      "id": "ast_skirmish06_passage_0",
+      "pos": [
+        0,
+        0,
+        -7500
+      ],
+      "radius": 1500,
+      "richness": 1.6
+    },
+    {
+      "id": "ast_skirmish06_passage_1",
+      "pos": [
+        0,
+        0,
+        7500
+      ],
+      "radius": 1500,
+      "richness": 1.6
+    }
+  ],
+  "gas_giants": [
+    {
+      "id": "gas_skirmish06_titan",
+      "pos": [
+        0,
+        0,
+        0
+      ],
+      "radius": 3400,
+      "color": [
+        0.65,
+        0.55,
+        0.8
+      ]
+    }
+  ],
+  "planets": [
+    {
+      "id": "planet_skirmish06_Divide Haven 1",
+      "name": "Divide Haven 1",
+      "pos": [
+        -9500,
+        0,
+        -4000
+      ],
+      "radius": 700,
+      "type": "temperate",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    },
+    {
+      "id": "planet_skirmish06_Divide Haven 2",
+      "name": "Divide Haven 2",
+      "pos": [
+        9500,
+        0,
+        4000
+      ],
+      "radius": 700,
+      "type": "temperate",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    },
+    {
+      "id": "planet_skirmish06_Polar Observatory 1",
+      "name": "Polar Observatory 1",
+      "pos": [
+        0,
+        0,
+        -12000
+      ],
+      "radius": 750,
+      "type": "research",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    },
+    {
+      "id": "planet_skirmish06_Polar Observatory 2",
+      "name": "Polar Observatory 2",
+      "pos": [
+        0,
+        0,
+        12000
+      ],
+      "radius": 750,
+      "type": "research",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    }
+  ],
+  "nebulas": [
+    {
+      "pos": [
+        0,
+        0,
+        -4000
+      ],
+      "radius": 2000,
+      "color": [
+        0.25,
+        0.3,
+        0.55
+      ]
+    },
+    {
+      "pos": [
+        0,
+        0,
+        4000
+      ],
+      "radius": 2000,
+      "color": [
+        0.25,
+        0.3,
+        0.55
+      ]
+    }
+  ],
+  "jump_points": [
+    {
+      "pos": [
+        -15500,
+        0,
+        0
+      ]
+    },
+    {
+      "pos": [
+        15500,
+        0,
+        0
+      ]
+    }
+  ]
+}

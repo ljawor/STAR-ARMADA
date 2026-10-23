@@ -29,6 +29,22 @@ class SkirmishMainTests(unittest.TestCase):
                             and k.value.id == 'payload' for k in n.keywords)]
         self.assertTrue(launches, 'setup launch must pass the actual menu payload')
 
+    def test_eight_player_factory_uses_selected_anchor(self):
+        from game.data.store import DataStore
+        from game.core.skirmish import default_skirmish_options, PLAYER_COLORS
+        ds = DataStore.get()
+        options = default_skirmish_options(ds)
+        options.update(map_id='skirmish05', ai_count=7, colors=list(PLAYER_COLORS),
+                       factions=['imperial']*8, teams=list(range(8)),
+                       spawn_slots=list(reversed(range(8))))
+        gm = self.factory()(None,skirmish_options=options)
+        self.assertEqual(len(gm.state.players),8)
+        gm.ai.ensure()
+        self.assertEqual(set(gm.ai.ais),set(range(1,8)))
+        anchor = ds.maps['skirmish05']['players'][7]['start']
+        home = next(e for e in gm.player_entities(0) if e.data_id=='command_station')
+        self.assertEqual([home.pos.x,home.pos.y,home.pos.z],anchor)
+
     def test_factory_uses_selected_map_and_players(self):
         from game.data.store import DataStore
         from game.core.skirmish import default_skirmish_options

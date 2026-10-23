@@ -30,6 +30,7 @@ LANG_DIR = os.path.join(ROOT, 'assets', 'data', 'lang')
 #: Presentation only — no simulation module may need a translation.
 UI_SURFACE = (
     'render/menus.py',
+    'render/skirmish_screen.py',
     'render/clean_classic.py',
     'render/classic_screens.py',
     'render/classic_saves.py',
@@ -65,6 +66,7 @@ SKIP_EXACT = {
 #: as an f-string fragment, and a unit word ('hull') reads as an id because it is
 #: lowercase. A key that is not in the catalogue can never be reported as untranslated.
 EXTRA_UI_KEYS = (
+    'Start {n}',
     'Current resolution: {width} × {height} · {mode}',
     '{outcome} — {name}',
     '{label} +{percent}%',
