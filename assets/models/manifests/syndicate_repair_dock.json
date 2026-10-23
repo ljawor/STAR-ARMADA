@@ -61,12 +61,15 @@
     "texture_bytes": 0
   },
   "approval": {
-    "status": "pending",
+    "status": "approved",
     "decision_id": "s06-b3c-stations-2026-10-17",
     "reviewed_evidence": [
       "artifacts/syndicate-fleet/review/repair_dock-quarter.jpg",
       "artifacts/syndicate-fleet/review/repair_dock-profile.jpg",
       "artifacts/syndicate-fleet/review/repair_dock-bow.jpg"
-    ]
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "015208f6e90deed9ed00b168195ce81cbcee48541f44591de1d0a3381caaf60f"
   }
 }

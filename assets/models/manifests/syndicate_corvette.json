@@ -61,12 +61,15 @@
     "texture_bytes": 0
   },
   "approval": {
-    "status": "pending",
+    "status": "approved",
     "decision_id": "s06-b8-remaining-combat-2026-10-18",
     "reviewed_evidence": [
       "artifacts/syndicate-fleet/review/corvette-quarter.jpg",
       "artifacts/syndicate-fleet/review/corvette-profile.jpg",
       "artifacts/syndicate-fleet/review/corvette-bow.jpg"
-    ]
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "e1bae4f63cff7f3b4d8e90257ff19f1577c64ea113fdc487feeb2755cae7a79d"
   }
 }

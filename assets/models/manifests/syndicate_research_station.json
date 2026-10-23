@@ -61,12 +61,15 @@
     "texture_bytes": 0
   },
   "approval": {
-    "status": "pending",
+    "status": "approved",
     "decision_id": "s06-b3c-stations-2026-10-17",
     "reviewed_evidence": [
       "artifacts/syndicate-fleet/review/research_station-quarter.jpg",
       "artifacts/syndicate-fleet/review/research_station-profile.jpg",
       "artifacts/syndicate-fleet/review/research_station-bow.jpg"
-    ]
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "0455ff1581363710aa34e89faf63edf5cb6da1a35de8a021e0e2bd82b6814a39"
   }
 }

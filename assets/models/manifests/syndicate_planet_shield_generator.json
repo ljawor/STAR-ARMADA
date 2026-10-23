@@ -61,12 +61,15 @@
     "texture_bytes": 0
   },
   "approval": {
-    "status": "pending",
+    "status": "approved",
     "decision_id": "s06-b4-hardware-2026-10-17",
     "reviewed_evidence": [
       "artifacts/syndicate-fleet/review/planet_shield_generator-quarter.jpg",
       "artifacts/syndicate-fleet/review/planet_shield_generator-profile.jpg",
       "artifacts/syndicate-fleet/review/planet_shield_generator-bow.jpg"
-    ]
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "17a6795df440cee2b5973b2f2edbdbe69a3409f62c78988585f8ef72f83ef345"
   }
 }

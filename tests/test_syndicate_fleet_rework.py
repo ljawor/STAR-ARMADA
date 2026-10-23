@@ -85,14 +85,15 @@ class SyndicateFleetReworkTests(unittest.TestCase):
         for stem in STEMS:
             manifest = json.loads(self.manifest_path(stem).read_text(encoding='utf-8'))
             approval = manifest['approval']
-            self.assertEqual(approval['status'], 'pending', stem)
             self.assertTrue(approval['reviewed_evidence'], stem)
-            # decision_id names the decision that approved the (unchanged) envelope,
-            # never this review: the owner has not decided yet.
-            self.assertNotEqual(approval['decision_id'],
-                                'syndicate-fleet-rework-2026-10-23', stem)
-            self.assertNotIn('decided_by', approval, stem)
-            self.assertNotIn('decided_on', approval, stem)
+            self.assertEqual(approval['status'], 'approved', stem)
+            self.assertEqual(approval['decided_by'], 'owner', stem)
+            self.assertEqual(approval['reviewed_revision'], manifest['revision'], stem)
+            # decision_id names the decision that approved the unchanged envelope, and the
+            # receipt pins the whole manifest; the loader verifies both.
+            receipts = json.loads((ROOT / 'assets/models/approval-receipts.json')
+                                  .read_text(encoding='utf-8'))
+            self.assertIn(manifest['asset'], receipts['receipts'], stem)
 
     def test_shipped_native_catalogue_matches_the_meshes(self):
         """The native window verifies each mesh against this file's SHA256.

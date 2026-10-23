@@ -61,12 +61,15 @@
     "texture_bytes": 0
   },
   "approval": {
-    "status": "pending",
+    "status": "approved",
     "decision_id": "s06-b2-squadron-logistics-2026-10-17",
     "reviewed_evidence": [
       "artifacts/syndicate-fleet/review/convoy-quarter.jpg",
       "artifacts/syndicate-fleet/review/convoy-profile.jpg",
       "artifacts/syndicate-fleet/review/convoy-bow.jpg"
-    ]
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "34be6838d88fa35a2181e5d83e8c920c4f11df7e8de1a78c83ed8375a39ae99d"
   }
 }

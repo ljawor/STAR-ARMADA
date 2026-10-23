@@ -61,12 +61,15 @@
     "texture_bytes": 0
   },
   "approval": {
-    "status": "pending",
+    "status": "approved",
     "decision_id": "s06-b2-squadron-logistics-2026-10-17",
     "reviewed_evidence": [
       "artifacts/syndicate-fleet/review/fighter-quarter.jpg",
       "artifacts/syndicate-fleet/review/fighter-profile.jpg",
       "artifacts/syndicate-fleet/review/fighter-bow.jpg"
-    ]
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "342f10dc0cf6e40ec79b36b15e77088f3568daf2a0949a3dc85a53ab594690b4"
   }
 }

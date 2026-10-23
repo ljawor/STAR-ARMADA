@@ -61,12 +61,15 @@
     "texture_bytes": 0
   },
   "approval": {
-    "status": "pending",
+    "status": "approved",
     "decision_id": "s06-b4-hardware-2026-10-17",
     "reviewed_evidence": [
       "artifacts/syndicate-fleet/review/planet_extractor-quarter.jpg",
       "artifacts/syndicate-fleet/review/planet_extractor-profile.jpg",
       "artifacts/syndicate-fleet/review/planet_extractor-bow.jpg"
-    ]
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "fb93470cb671e1de8e9b4a4442e6f57a7eed7b6d7791c9d3e5ad7afba9fec210"
   }
 }

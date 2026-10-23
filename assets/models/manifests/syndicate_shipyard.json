@@ -61,12 +61,15 @@
     "texture_bytes": 0
   },
   "approval": {
-    "status": "pending",
+    "status": "approved",
     "decision_id": "s06-b3c-stations-2026-10-17",
     "reviewed_evidence": [
       "artifacts/syndicate-fleet/review/shipyard-quarter.jpg",
       "artifacts/syndicate-fleet/review/shipyard-profile.jpg",
       "artifacts/syndicate-fleet/review/shipyard-bow.jpg"
-    ]
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "70b55ba0bd5c01ec62ec112d017554ef00f5b5881aca4362e1d44f8c5e72c43b"
   }
 }

@@ -61,12 +61,15 @@
     "texture_bytes": 0
   },
   "approval": {
-    "status": "pending",
+    "status": "approved",
     "decision_id": "s06-b9-construction-2026-10-18",
     "reviewed_evidence": [
       "artifacts/syndicate-fleet/review/constructor-quarter.jpg",
       "artifacts/syndicate-fleet/review/constructor-profile.jpg",
       "artifacts/syndicate-fleet/review/constructor-bow.jpg"
-    ]
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "56f49a2705e122a16aa0afbccd317044e999b3dc7c01ed9be7f6b7339784a460"
   }
 }

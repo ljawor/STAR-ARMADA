@@ -61,12 +61,15 @@
     "texture_bytes": 0
   },
   "approval": {
-    "status": "pending",
+    "status": "approved",
     "decision_id": "s06-b9-construction-2026-10-18",
     "reviewed_evidence": [
       "artifacts/syndicate-fleet/review/colonizer-quarter.jpg",
       "artifacts/syndicate-fleet/review/colonizer-profile.jpg",
       "artifacts/syndicate-fleet/review/colonizer-bow.jpg"
-    ]
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "0ebba5c08532c2d23dd93107888dcb2dfd322249e3078ee9ccf780fa8633f4ab"
   }
 }

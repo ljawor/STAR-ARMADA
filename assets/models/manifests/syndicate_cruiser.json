@@ -61,12 +61,15 @@
     "texture_bytes": 0
   },
   "approval": {
-    "status": "pending",
+    "status": "approved",
     "decision_id": "s06-b8-remaining-combat-2026-10-18",
     "reviewed_evidence": [
       "artifacts/syndicate-fleet/review/cruiser-quarter.jpg",
       "artifacts/syndicate-fleet/review/cruiser-profile.jpg",
       "artifacts/syndicate-fleet/review/cruiser-bow.jpg"
-    ]
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "ffe532181547d3ca999050e501a08e53b7b556c2c70568519e02ccdc46b95fac"
   }
 }

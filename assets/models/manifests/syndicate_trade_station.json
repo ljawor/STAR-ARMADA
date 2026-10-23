@@ -61,12 +61,15 @@
     "texture_bytes": 0
   },
   "approval": {
-    "status": "pending",
+    "status": "approved",
     "decision_id": "s06-b3c-stations-2026-10-17",
     "reviewed_evidence": [
       "artifacts/syndicate-fleet/review/trade_station-quarter.jpg",
       "artifacts/syndicate-fleet/review/trade_station-profile.jpg",
       "artifacts/syndicate-fleet/review/trade_station-bow.jpg"
-    ]
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "d00e2bc892baa580243071ab069274050b6cbce28f91f17ed1c98a0ce4a8227f"
   }
 }

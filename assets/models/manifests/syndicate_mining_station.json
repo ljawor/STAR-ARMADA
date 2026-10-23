@@ -61,12 +61,15 @@
     "texture_bytes": 0
   },
   "approval": {
-    "status": "pending",
+    "status": "approved",
     "decision_id": "s06-b3b-stations-2026-10-17",
     "reviewed_evidence": [
       "artifacts/syndicate-fleet/review/mining_station-quarter.jpg",
       "artifacts/syndicate-fleet/review/mining_station-profile.jpg",
       "artifacts/syndicate-fleet/review/mining_station-bow.jpg"
-    ]
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "7df3aa377cce1bbd12ccce1ff40ab2a8330cdc79a1df612d6ae5cf250dcb00da"
   }
 }

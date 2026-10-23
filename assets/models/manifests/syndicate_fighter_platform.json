@@ -61,12 +61,15 @@
     "texture_bytes": 0
   },
   "approval": {
-    "status": "pending",
+    "status": "approved",
     "decision_id": "s06-b3c-stations-2026-10-17",
     "reviewed_evidence": [
       "artifacts/syndicate-fleet/review/fighter_platform-quarter.jpg",
       "artifacts/syndicate-fleet/review/fighter_platform-profile.jpg",
       "artifacts/syndicate-fleet/review/fighter_platform-bow.jpg"
-    ]
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "07d7165e29110c37fb7e1910fd96cf1a0c53d9417088baa4195d1949bbed005b"
   }
 }

@@ -788,12 +788,14 @@
       }
     },
     "core:syndicate/attack_satellite": {
-      "manifest_sha256": "42be9ab2a78fc4865ac6ce6088248a66d5105188ad8991704abdc8ef9aa7d0b6",
-      "reviewed_revision": "e25a40a2901e770ff5ba1a2c20683cde06494478b6eba4adcd6cad474abf73e8",
+      "manifest_sha256": "d9d6c71eb6b33a4c6553e935a846428b2622eded7f32310de808de22a9a37692",
+      "reviewed_revision": "f1b2ef767b687436d7ac0174264958d9decc4bd3b1355c03928608028e14eb1a",
       "decision_id": "s06-b4-hardware-2026-10-17",
+      "review_id": "syndicate-fleet-rework-2026-10-23",
       "evidence_sha256": {
-        "artifacts/s06_alliance_batch_review/b4-hardware/contact-sheet.png": "d1f6523e3642201333444faa80079447ceea09745008166fe5d582c9e2b4c653",
-        "artifacts/s06_alliance_batch_review/b4-hardware/metrics.json": "cc85246856a1456dcd15cf81c1f649ba400c3fad894de2807768b41d5dd73900"
+        "artifacts/syndicate-fleet/review/attack_satellite-quarter.jpg": "d597bc76ec9b32b6535f017be5647868089350d255fd74823305fce66e1ae41b",
+        "artifacts/syndicate-fleet/review/attack_satellite-profile.jpg": "9617713beb73c2c2e1c178762da3fb15a2fbf7117705c0bbcb95c1df75ba52b0",
+        "artifacts/syndicate-fleet/review/attack_satellite-bow.jpg": "648d3e64e603b2ce8a24c3dd0b1253657f96da40425e8e78ebec7343a6afc7f5"
       }
     },
     "core:syndicate/battleship": {
@@ -817,202 +819,234 @@
       }
     },
     "core:syndicate/colonizer": {
-      "manifest_sha256": "05a9b46bf3ecb4a351f1f4f94c8cf6865e937753caf485d97d9fba9f778c5c4d",
-      "reviewed_revision": "b7ab1a0e2821aa89dbeb086deb21b1e68159d4d39f0f3013184e0f1a916c6474",
+      "manifest_sha256": "ff97760028ebbe0819cb1f03f92210444196acb043be04f82907c8922f074e7e",
+      "reviewed_revision": "0ebba5c08532c2d23dd93107888dcb2dfd322249e3078ee9ccf780fa8633f4ab",
       "decision_id": "s06-b9-construction-2026-10-18",
+      "review_id": "syndicate-fleet-rework-2026-10-23",
       "evidence_sha256": {
-        "artifacts/s06-completion/B9-appearance-grid.jpg": "dec0e3607153ed2c4ce98e6141ac61a2616ab7e70832e79e8e2c1c640e0e8be4",
-        "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png": "aa8e69ecbf84428fa5b8fa890492dd211d80a29bf6c91d8d781dcb8bb7859799",
-        "artifacts/s06-completion/review-b9-attempt1/render/metrics.json": "11c5b5b55212621a3a66d73c268ff03d18078c287a950409668c63f7d6cf8bed",
-        "artifacts/s06-completion/review-b9-attempt1/render/syndicate-colonizer-after-close.png": "6f6bcf724b38f961f1ac6e73da441e83f6a7a588f5bbaf59037439b7b164da12"
+        "artifacts/syndicate-fleet/review/colonizer-quarter.jpg": "a87877e8d5d9afb9473924b8a64172f7f207d999ca26ecf87d7e4e1042956be6",
+        "artifacts/syndicate-fleet/review/colonizer-profile.jpg": "a6c34b67db06c22d5867c474b80b852e6c993a8780c29549fc3b27b9cd0c8872",
+        "artifacts/syndicate-fleet/review/colonizer-bow.jpg": "640346f8114ce0598fdec9a1b18e74b768aaa2fd66a8e5fc1ade58447c34aa69"
       }
     },
     "core:syndicate/command_station": {
-      "manifest_sha256": "2fdcada67fcaffea844567d21a56f84bac9283ce1c18a3e793bf9284798bc3a7",
-      "reviewed_revision": "173a55bd6ce637b1101cecef9da6d28ab4e5172e9de6f5d78a58022b4223c13b",
+      "manifest_sha256": "8fc78fbe639b37c585c5f3b26b61508841f7af83fa1fadd699bcbd6fd5c52407",
+      "reviewed_revision": "77cd5a9ea2f2bb5054426206e582d21ec0491f7f3f4da76e47b0250c7bcc7930",
       "decision_id": "s06-b3a-command-stations-2026-10-17",
+      "review_id": "syndicate-fleet-rework-2026-10-23",
       "evidence_sha256": {
-        "artifacts/s06_alliance_batch_review/b3a-command-stations/contact-sheet.png": "b96123c84abdea92a9493cf520c369204831b9e3920362dc079b72e7dcfff048",
-        "artifacts/s06_alliance_batch_review/b3a-command-stations/metrics.json": "568c1fc42f7e80e8b5b3d3870f9e7f1a4029b1f0f66565032e87e1913fbe2e02"
+        "artifacts/syndicate-fleet/review/command_station-quarter.jpg": "5ceacc3e9f5822165eb498446c0567b6ed6b312974c572c7ef76295ad14574c0",
+        "artifacts/syndicate-fleet/review/command_station-profile.jpg": "ee28677d6e8cb8fb23aeeada8223c64c009cb8d6316ee9eca43c2c3e77c1619e",
+        "artifacts/syndicate-fleet/review/command_station-bow.jpg": "cab5bbab90d28b384afef47660c26fd04e0001ec1194e60d6bb07d1ebada2fc1"
       }
     },
     "core:syndicate/constructor": {
-      "manifest_sha256": "e307bfaa54dc77b92ef82096ecf2a0786865e51907049dc3a18cd479a919d0d9",
-      "reviewed_revision": "a108859694d0d2b75f2cb36d4cfbc0f4a915d08dc70904582b1a9bef74988b9e",
+      "manifest_sha256": "edf35e8dcb84521120d62ac60ee8927b1568af82aa0efccf00de5809079d658b",
+      "reviewed_revision": "56f49a2705e122a16aa0afbccd317044e999b3dc7c01ed9be7f6b7339784a460",
       "decision_id": "s06-b9-construction-2026-10-18",
+      "review_id": "syndicate-fleet-rework-2026-10-23",
       "evidence_sha256": {
-        "artifacts/s06-completion/B9-appearance-grid.jpg": "dec0e3607153ed2c4ce98e6141ac61a2616ab7e70832e79e8e2c1c640e0e8be4",
-        "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png": "aa8e69ecbf84428fa5b8fa890492dd211d80a29bf6c91d8d781dcb8bb7859799",
-        "artifacts/s06-completion/review-b9-attempt1/render/metrics.json": "11c5b5b55212621a3a66d73c268ff03d18078c287a950409668c63f7d6cf8bed",
-        "artifacts/s06-completion/review-b9-attempt1/render/syndicate-constructor-after-close.png": "d34eff30f4b55bd16407f814a75eae0dc0ef4ae7ba6b6ad9c18704304a467eb3"
+        "artifacts/syndicate-fleet/review/constructor-quarter.jpg": "0024d8f8c14837e862f0a0f10b816c72f1df37a43dfc25a8c28712f940639c3e",
+        "artifacts/syndicate-fleet/review/constructor-profile.jpg": "20b7c01666c954780a0d508af391210f98348f97b335802eaf8965dff15d69ca",
+        "artifacts/syndicate-fleet/review/constructor-bow.jpg": "ad1885d8b408e9d31524694e19d6260199ed2162d489ca9fac589a96eea8644a"
       }
     },
     "core:syndicate/convoy": {
-      "manifest_sha256": "a06c080de7ff1588452d6be342a13171fad66b1dd9d8c4ae6b37d14f18497291",
-      "reviewed_revision": "da23912b0fad1d51ea9a82791dbc55a90d2ec1999fe5ff1e6b2616a84094f73c",
+      "manifest_sha256": "590ccc983596656f4ec39038c1f502ba492436092152bacb89da5d9f31f82495",
+      "reviewed_revision": "34be6838d88fa35a2181e5d83e8c920c4f11df7e8de1a78c83ed8375a39ae99d",
       "decision_id": "s06-b2-squadron-logistics-2026-10-17",
+      "review_id": "syndicate-fleet-rework-2026-10-23",
       "evidence_sha256": {
-        "artifacts/s06_alliance_batch_review/b2-squadron-logistics/contact-sheet.png": "1f7c409a43de77cc6d4656c556585d944f4a81d19511359c145de5a5f756ccf9",
-        "artifacts/s06_alliance_batch_review/b2-squadron-logistics/metrics.json": "3ca3e15149050fbe5624480b00caaf5d82cdbc9aaa811d55eede6f9aeee0f7eb"
+        "artifacts/syndicate-fleet/review/convoy-quarter.jpg": "df5431963fc3f925dbe0ac88ac428c74065ec251d3aa1da748f02da1ce60342d",
+        "artifacts/syndicate-fleet/review/convoy-profile.jpg": "cdb31a737c12169af8b2bc8bfd25111a0f83a5991cfc5bbdf86f2c7e45f2a0ee",
+        "artifacts/syndicate-fleet/review/convoy-bow.jpg": "5c2769d8413b5f3452b657e6a630a3be51134551cb35f1fa61d8997bcc0a66d4"
       }
     },
     "core:syndicate/corvette": {
-      "manifest_sha256": "25342bc2215753e2c276ecb2d3aaaca016f7043758fb15d690d261bffa27e39a",
-      "reviewed_revision": "fe88721c7ab09eb36a9c8edb35ff8bb1b15358df9e24e33c8b9e8e2f34c85e70",
+      "manifest_sha256": "8c114598662201cf59087ee54153a64b521dd5a818e8cf43822f67dfc37b43c1",
+      "reviewed_revision": "e1bae4f63cff7f3b4d8e90257ff19f1577c64ea113fdc487feeb2755cae7a79d",
       "decision_id": "s06-b8-remaining-combat-2026-10-18",
+      "review_id": "syndicate-fleet-rework-2026-10-23",
       "evidence_sha256": {
-        "artifacts/s06-completion/B8-appearance-grid.jpg": "906afb98f94b7f548c8e81afbd928e5f33835b64bf3ae3f7e34bb73f765d40b9",
-        "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png": "4f7139f13bd37265dd0327d06da878bb1799dfb83fa3d2d60387278c68cc6c94",
-        "artifacts/s06-completion/review-b8-attempt1/render/metrics.json": "ee1f0fb949909b55ced2724c9a0b069e1e94a838b83a4c29d28fe09ecb21174e",
-        "artifacts/s06-completion/review-b8-attempt1/render/syndicate-corvette-after-close.png": "493504be71411c0d66cee3d3b8ac308e63a54e832956b24935e9ab3b4d17a97c"
+        "artifacts/syndicate-fleet/review/corvette-quarter.jpg": "7035d26251a3ef8516023e692cd53108507a894859a265eea14b557ac3d0c1c0",
+        "artifacts/syndicate-fleet/review/corvette-profile.jpg": "140c6f0a15f8dfb422926f5503014144fc56e47c51f63c0c06beacf77e12874f",
+        "artifacts/syndicate-fleet/review/corvette-bow.jpg": "db33649dc3bfab023be32fef8b11f49e8ec39772b6fba173ab1d16dd2130a25c"
       }
     },
     "core:syndicate/cruiser": {
-      "manifest_sha256": "2030bbd7d0084f6e38f152e0582969712879dae21113c8507416e7f24163e612",
-      "reviewed_revision": "8728ed41419613d4c920e0066706bee5f421d3460c7c97126e0d3b20082d4cfe",
+      "manifest_sha256": "8faee3d5d5b6a6887315ee74d89bb1b72c44ba4a3c12b16e56f09df8a6eec741",
+      "reviewed_revision": "ffe532181547d3ca999050e501a08e53b7b556c2c70568519e02ccdc46b95fac",
       "decision_id": "s06-b8-remaining-combat-2026-10-18",
+      "review_id": "syndicate-fleet-rework-2026-10-23",
       "evidence_sha256": {
-        "artifacts/s06-completion/B8-appearance-grid.jpg": "906afb98f94b7f548c8e81afbd928e5f33835b64bf3ae3f7e34bb73f765d40b9",
-        "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png": "4f7139f13bd37265dd0327d06da878bb1799dfb83fa3d2d60387278c68cc6c94",
-        "artifacts/s06-completion/review-b8-attempt1/render/metrics.json": "ee1f0fb949909b55ced2724c9a0b069e1e94a838b83a4c29d28fe09ecb21174e",
-        "artifacts/s06-completion/review-b8-attempt1/render/syndicate-cruiser-after-close.png": "393dd69d32cf4a85dc9d851524bc3db590cbfb30e561f8b8336cfa740c301cad"
+        "artifacts/syndicate-fleet/review/cruiser-quarter.jpg": "cbce5005dabac17e6b142aca5c6a68b4562ba0fb09614d64635c65af300e9af2",
+        "artifacts/syndicate-fleet/review/cruiser-profile.jpg": "3fb84430720e2d1ecd8d64580e6912cb6d8b25e370abdc71218ca5912466c012",
+        "artifacts/syndicate-fleet/review/cruiser-bow.jpg": "6eb2229363d618d65c9d9287b2fa873ba5c18b95c275011069255bc06bd3804e"
       }
     },
     "core:syndicate/defense_platform": {
-      "manifest_sha256": "7dd7c0fda6ef5134e26691a5c57a69c7f7f823f838fffb466cf316c56b0aa450",
-      "reviewed_revision": "6316df4e01073095f98be41ea0653709f17a19d9f206485917e235af35712223",
+      "manifest_sha256": "cc7bcc37990f5ec01fb682db1385ac7b8bcf86bebb5ceeab92f533c93037af1f",
+      "reviewed_revision": "afa479beb5037ed06b966f3a301863ab46f2339140427ed9098a0d6ece2dbd1f",
       "decision_id": "s06-b3c-stations-2026-10-17",
+      "review_id": "syndicate-fleet-rework-2026-10-23",
       "evidence_sha256": {
-        "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png": "42dad16e8c6f53c5c2ad01ad25d4b1bf33c48cfc51f2226753ebe6bd057e4ec1",
-        "artifacts/s06_alliance_batch_review/b3c-stations/metrics.json": "293abb3db1ed58c94a530afde8846f57f070c04c75dafc3fc3dd47dfc2911493"
+        "artifacts/syndicate-fleet/review/defense_platform-quarter.jpg": "16976eae9e4e3c7b079e07eeca870ac1b54ec9afd34bd033ae736f2e08f85c72",
+        "artifacts/syndicate-fleet/review/defense_platform-profile.jpg": "1dfec196c92690ebc47f4c25eac3e9cb4ead3b0fe2eecbf97e0369678b885fb9",
+        "artifacts/syndicate-fleet/review/defense_platform-bow.jpg": "097981201554465d050e28597dc2831e81c58e0c1196d3c8ca06c085983d79e3"
       }
     },
     "core:syndicate/defense_satellite": {
-      "manifest_sha256": "cfe42a144a7da29dae0f7a112c9e55a579878cb9cf7b1caa4db1d10a7604868d",
-      "reviewed_revision": "dd20f0704d174984f444f86c7582c3c317b888447c2af62e9e01d9d8598010a2",
+      "manifest_sha256": "1a82c5f2ff3e4b01c7808d34d0d31ee53771e29a485c19aafcfb14e3909639b2",
+      "reviewed_revision": "ffa6c5cd771f733d58a504b91c43d8c03b5835cfa9b69b49a0d38b14069e3660",
       "decision_id": "s06-b4-hardware-2026-10-17",
+      "review_id": "syndicate-fleet-rework-2026-10-23",
       "evidence_sha256": {
-        "artifacts/s06_alliance_batch_review/b4-hardware/contact-sheet.png": "d1f6523e3642201333444faa80079447ceea09745008166fe5d582c9e2b4c653",
-        "artifacts/s06_alliance_batch_review/b4-hardware/metrics.json": "cc85246856a1456dcd15cf81c1f649ba400c3fad894de2807768b41d5dd73900"
+        "artifacts/syndicate-fleet/review/defense_satellite-quarter.jpg": "078a1c162720427639618211dd74d21ce492c5ea44491cff97e70f5e38e5b344",
+        "artifacts/syndicate-fleet/review/defense_satellite-profile.jpg": "7ee17fbe2a20a6154b0563391403126c4cf92422c5f3a3ab2a545f223693791c",
+        "artifacts/syndicate-fleet/review/defense_satellite-bow.jpg": "07287500b7d5aa15551f00f2e3ae6cbe4516b29d826a57d306d3c01269321f37"
       }
     },
     "core:syndicate/energy_relay": {
-      "manifest_sha256": "7769c2f15216ca6f10f98a7048a3be852c5bd1725b76694b7ccf20df7fa777ba",
-      "reviewed_revision": "052381831f91a1d20cbdb612f9b485f12fbbcb374d7157420a4b2f0643ecec4b",
+      "manifest_sha256": "509ca41d5ad6b5689833ba7e1cd045c027835c42d875e41cbd607a077a73b6f1",
+      "reviewed_revision": "690a24e33ea2dbaf2b7c255be91e88cb10730b3c0b309b19807e062793c28b08",
       "decision_id": "s06-b3b-stations-2026-10-17",
+      "review_id": "syndicate-fleet-rework-2026-10-23",
       "evidence_sha256": {
-        "artifacts/s06_alliance_batch_review/b3b-stations/contact-sheet.png": "cca888f8035a93c9c5c131549d32b791293464a7b497cdf06dff8da1a503303c",
-        "artifacts/s06_alliance_batch_review/b3b-stations/metrics.json": "e78edc911647e337d384e6920f28c8fc38bd0dd6bdf5d0790cca3ea9851112e8"
+        "artifacts/syndicate-fleet/review/energy_relay-quarter.jpg": "8d16e79a3174073f9ae826220bf058643ecd04e56fef443214466767a7a0dcbc",
+        "artifacts/syndicate-fleet/review/energy_relay-profile.jpg": "fe322126783454928f3164a7e539b005c5a7b03c03e4f24e3e269b2835a5d92e",
+        "artifacts/syndicate-fleet/review/energy_relay-bow.jpg": "8071a16e1b9a65a068e4b9840ece9d5c2deb3a167a9b7bb92390aedce6d235cd"
       }
     },
     "core:syndicate/fighter": {
-      "manifest_sha256": "5db9b5f2a145d7f717789c4249b01552524c0d378eaa375673b255d728ace31d",
-      "reviewed_revision": "8c51a4179b2932bcbf20ffaf84c69c852aec96cc75d027fe2b466d7a633e2028",
+      "manifest_sha256": "2ba0177ede7ff1c75b48eca312f4fe4ab982e7cbe229f6dd517e228205310fca",
+      "reviewed_revision": "342f10dc0cf6e40ec79b36b15e77088f3568daf2a0949a3dc85a53ab594690b4",
       "decision_id": "s06-b2-squadron-logistics-2026-10-17",
+      "review_id": "syndicate-fleet-rework-2026-10-23",
       "evidence_sha256": {
-        "artifacts/s06_alliance_batch_review/b2-squadron-logistics/contact-sheet.png": "1f7c409a43de77cc6d4656c556585d944f4a81d19511359c145de5a5f756ccf9",
-        "artifacts/s06_alliance_batch_review/b2-squadron-logistics/metrics.json": "3ca3e15149050fbe5624480b00caaf5d82cdbc9aaa811d55eede6f9aeee0f7eb"
+        "artifacts/syndicate-fleet/review/fighter-quarter.jpg": "f4e754d2fd3a5ba3aac0f8086e379267c3d8e17a0d61196ce75e1980256f8fff",
+        "artifacts/syndicate-fleet/review/fighter-profile.jpg": "b73e2a749cff73ded43f17c8b02e55cca72a6af7a0fabbd63c0b43700c8f68d9",
+        "artifacts/syndicate-fleet/review/fighter-bow.jpg": "748ab1f17c12c15c9cfb9ccd9a579e991e9a498554790bee4a65bfb8339b7166"
       }
     },
     "core:syndicate/fighter_platform": {
-      "manifest_sha256": "9f4d4a037f1907a2d69ac23f8fcb669c389693c0fb06fcbaa2e818dafa27558a",
-      "reviewed_revision": "834a7b9a1d03c3d92fdabc5948af3c98e67b7a91f31d636dda2ef35c47f37d9c",
+      "manifest_sha256": "61db0793406d54248d9c09c2e90e1bf80a5544275ef36b633c971ec956d6e512",
+      "reviewed_revision": "07d7165e29110c37fb7e1910fd96cf1a0c53d9417088baa4195d1949bbed005b",
       "decision_id": "s06-b3c-stations-2026-10-17",
+      "review_id": "syndicate-fleet-rework-2026-10-23",
       "evidence_sha256": {
-        "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png": "42dad16e8c6f53c5c2ad01ad25d4b1bf33c48cfc51f2226753ebe6bd057e4ec1",
-        "artifacts/s06_alliance_batch_review/b3c-stations/metrics.json": "293abb3db1ed58c94a530afde8846f57f070c04c75dafc3fc3dd47dfc2911493"
+        "artifacts/syndicate-fleet/review/fighter_platform-quarter.jpg": "0d0010f580b09d0743f1a30d5eca29f81894bd8b0470e2c84788f381b7746918",
+        "artifacts/syndicate-fleet/review/fighter_platform-profile.jpg": "281d2505c88f96729f1f67dab38b08fb4d717d4c8552546a23aa962a404274df",
+        "artifacts/syndicate-fleet/review/fighter_platform-bow.jpg": "f5846b4488b02d15655c06603e4b67b7b81db654f2edf9e0ca49376c956b4b79"
       }
     },
     "core:syndicate/frigate": {
-      "manifest_sha256": "fe56154341691d72a3728f975a328bc4b98ac5de33ae13ba0bb4df6a9d2da96c",
-      "reviewed_revision": "db352a8ffcd56d47687e15ce69bad0e685f2e6c9bfb668277160dcd3d55ac422",
+      "manifest_sha256": "1a936b425dfe60de4d4f96aa3f4babf3e4c9c231a98698f37921b61c60b75941",
+      "reviewed_revision": "2dac0a24dfe1e4d3ce3d564787717aa176ac30dee9c347f9bbdb0a793379f234",
       "decision_id": "s06-b8-remaining-combat-2026-10-18",
+      "review_id": "syndicate-fleet-rework-2026-10-23",
       "evidence_sha256": {
-        "artifacts/s06-completion/B8-appearance-grid.jpg": "906afb98f94b7f548c8e81afbd928e5f33835b64bf3ae3f7e34bb73f765d40b9",
-        "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png": "4f7139f13bd37265dd0327d06da878bb1799dfb83fa3d2d60387278c68cc6c94",
-        "artifacts/s06-completion/review-b8-attempt1/render/metrics.json": "ee1f0fb949909b55ced2724c9a0b069e1e94a838b83a4c29d28fe09ecb21174e",
-        "artifacts/s06-completion/review-b8-attempt1/render/syndicate-frigate-after-close.png": "3d952a6f01d9f218fa3e58735ec247f0a78dc36fa6a59853104b73683667740f"
+        "artifacts/syndicate-fleet/review/frigate-quarter.jpg": "889f74c47209d933b287e5040e1cfeccbb44f56ebbb54b19d4115dc2955e4970",
+        "artifacts/syndicate-fleet/review/frigate-profile.jpg": "77d5003780347a552463fdbc876896f708d898147a77128e2a58281dcf69386c",
+        "artifacts/syndicate-fleet/review/frigate-bow.jpg": "6d640df26916a74693283ffb104aa4a07e150415eb8f316bc166ee9fe0e77114"
       }
     },
     "core:syndicate/mining_station": {
-      "manifest_sha256": "b448f4fec4674a64450dae4f89d99287512e78427acc2f005ab703c1c8e91281",
-      "reviewed_revision": "55e5ddbbd3810466756224e07178754a5e31c99c4296fba599956692d7521ee8",
+      "manifest_sha256": "f50bc787162a73bec519ede56899cd2bed0a8f46f5be511547e124ff879cbfc6",
+      "reviewed_revision": "7df3aa377cce1bbd12ccce1ff40ab2a8330cdc79a1df612d6ae5cf250dcb00da",
       "decision_id": "s06-b3b-stations-2026-10-17",
+      "review_id": "syndicate-fleet-rework-2026-10-23",
       "evidence_sha256": {
-        "artifacts/s06_alliance_batch_review/b3b-stations/contact-sheet.png": "cca888f8035a93c9c5c131549d32b791293464a7b497cdf06dff8da1a503303c",
-        "artifacts/s06_alliance_batch_review/b3b-stations/metrics.json": "e78edc911647e337d384e6920f28c8fc38bd0dd6bdf5d0790cca3ea9851112e8"
+        "artifacts/syndicate-fleet/review/mining_station-quarter.jpg": "d8ed759285112c20631728d5033e159afcbe96d27c48de22ebc9973f0bc90544",
+        "artifacts/syndicate-fleet/review/mining_station-profile.jpg": "fd114b13663d3501f32de6f76be7072dfdacff51e06633cc595f32e9f1114ce6",
+        "artifacts/syndicate-fleet/review/mining_station-bow.jpg": "30979c7c6d476388567b89ba85a67d098145e92e5bd63231dd0b6336b2966b66"
       }
     },
     "core:syndicate/planet_extractor": {
-      "manifest_sha256": "afedfecc6273d69a89830a50fa5035b1f616fa55ae34e55aeeb36c4f2c887e5c",
-      "reviewed_revision": "a3a4f09f882b06a458ec36239b6da7061723393e1046e7053d6d4d71291232df",
+      "manifest_sha256": "4cfb434f08157e49e5e607a212e1cab970a50b3342b05c363bb6ef670b1ef04f",
+      "reviewed_revision": "fb93470cb671e1de8e9b4a4442e6f57a7eed7b6d7791c9d3e5ad7afba9fec210",
       "decision_id": "s06-b4-hardware-2026-10-17",
+      "review_id": "syndicate-fleet-rework-2026-10-23",
       "evidence_sha256": {
-        "artifacts/s06_alliance_batch_review/b4-hardware/contact-sheet.png": "d1f6523e3642201333444faa80079447ceea09745008166fe5d582c9e2b4c653",
-        "artifacts/s06_alliance_batch_review/b4-hardware/metrics.json": "cc85246856a1456dcd15cf81c1f649ba400c3fad894de2807768b41d5dd73900"
+        "artifacts/syndicate-fleet/review/planet_extractor-quarter.jpg": "1b61074f715a213addd69c6f1b6d3a06dfb020e86f5e7cae2ec32214abee714f",
+        "artifacts/syndicate-fleet/review/planet_extractor-profile.jpg": "ad4f6d78f81094e62fbea3fddd2ec8c5bc27c86600a5fa0479da1bb314aaebd5",
+        "artifacts/syndicate-fleet/review/planet_extractor-bow.jpg": "59129978bf3362e16a68add2489e6faa5e394c9a68fc8a4b7cdb2e8736ca31f0"
       }
     },
     "core:syndicate/planet_pulsar_cannon": {
-      "manifest_sha256": "272325247494846b9b1a5e157856141bfedea4d375e862d3ba28588c091f55fa",
-      "reviewed_revision": "9f14e368cbdc3372dfe5d9132d857f29d39ed9820fface47354094ef186526e5",
+      "manifest_sha256": "96c5d2d5f1e6b533914d081d37a7b71e56c39b54a186671c825de03d8289d0fe",
+      "reviewed_revision": "268bd8c4c8415de5c20f58a0f558a4930c5c0de702f61374d07634075e926c7c",
       "decision_id": "s06-b4-hardware-2026-10-17",
+      "review_id": "syndicate-fleet-rework-2026-10-23",
       "evidence_sha256": {
-        "artifacts/s06_alliance_batch_review/b4-hardware/contact-sheet.png": "d1f6523e3642201333444faa80079447ceea09745008166fe5d582c9e2b4c653",
-        "artifacts/s06_alliance_batch_review/b4-hardware/metrics.json": "cc85246856a1456dcd15cf81c1f649ba400c3fad894de2807768b41d5dd73900"
+        "artifacts/syndicate-fleet/review/planet_pulsar_cannon-quarter.jpg": "ef0c7a12ab738fd3e8ca20885eba3eb028db36273683c6fcb50d855ea73a80e7",
+        "artifacts/syndicate-fleet/review/planet_pulsar_cannon-profile.jpg": "89d8f7291bdad401d9d09b01c0ada8a0df6e29d179336cd9d00bb11e4d5e84af",
+        "artifacts/syndicate-fleet/review/planet_pulsar_cannon-bow.jpg": "800fd2903c16f80da4083c312cada3c6f334222b7d3b83e9262c086445f36781"
       }
     },
     "core:syndicate/planet_shield_generator": {
-      "manifest_sha256": "8bdf9dd47b93c932bc65ea76b8837c00a0941da5ba64fca53cd6e9f50665a728",
-      "reviewed_revision": "1d3e33e24d0a9ad6e4c579333c82d5de12fa41ea7f043fba0e489e77c72afe71",
+      "manifest_sha256": "900e355f2167c64a7381ea149e4ac6c2c9b66d7400a8de6e9a8bfb807aa00899",
+      "reviewed_revision": "17a6795df440cee2b5973b2f2edbdbe69a3409f62c78988585f8ef72f83ef345",
       "decision_id": "s06-b4-hardware-2026-10-17",
+      "review_id": "syndicate-fleet-rework-2026-10-23",
       "evidence_sha256": {
-        "artifacts/s06_alliance_batch_review/b4-hardware/contact-sheet.png": "d1f6523e3642201333444faa80079447ceea09745008166fe5d582c9e2b4c653",
-        "artifacts/s06_alliance_batch_review/b4-hardware/metrics.json": "cc85246856a1456dcd15cf81c1f649ba400c3fad894de2807768b41d5dd73900"
+        "artifacts/syndicate-fleet/review/planet_shield_generator-quarter.jpg": "0a28d75c05e64f4c4766fa7764ec66e857b1c109ce82fc3c27442c4c7e1ff873",
+        "artifacts/syndicate-fleet/review/planet_shield_generator-profile.jpg": "7d88c03d89252446e19b91bcc0d4e119d6bc2ba37fe9c479e8e18c6508ffb874",
+        "artifacts/syndicate-fleet/review/planet_shield_generator-bow.jpg": "dc8338904a59925276ec7cf1febf8fd46aded580bfdbf35405b6f01832204878"
       }
     },
     "core:syndicate/planet_trade_hub": {
-      "manifest_sha256": "5192ec20a3c616bebeb3396209e316127e1defbf1d95d7c2617567288ff764f0",
-      "reviewed_revision": "cf6a994253230790f4305436a6778dc4d94fed750fa6cede5aae8a87e828b1ca",
+      "manifest_sha256": "c57c3463b568c70f7c99d7a19028cb5b069b827359aaafca435c6e367a48f6d1",
+      "reviewed_revision": "e0a9c520696d1b415822a18c0eabf6630f6ff3fafa60c8315fcb652d9e7f4ee5",
       "decision_id": "s06-b4-hardware-2026-10-17",
+      "review_id": "syndicate-fleet-rework-2026-10-23",
       "evidence_sha256": {
-        "artifacts/s06_alliance_batch_review/b4-hardware/contact-sheet.png": "d1f6523e3642201333444faa80079447ceea09745008166fe5d582c9e2b4c653",
-        "artifacts/s06_alliance_batch_review/b4-hardware/metrics.json": "cc85246856a1456dcd15cf81c1f649ba400c3fad894de2807768b41d5dd73900"
+        "artifacts/syndicate-fleet/review/planet_trade_hub-quarter.jpg": "a821d817339d9ef12ff6bf6339ba9c45155c898ddedc4836dc71de5522945548",
+        "artifacts/syndicate-fleet/review/planet_trade_hub-profile.jpg": "ed70bd03350291830e06a7c0d574e0722236c809ae118944885b0cb6d69b015d",
+        "artifacts/syndicate-fleet/review/planet_trade_hub-bow.jpg": "a62ce59f65725bd9487e044dd25a1d442138e5d33b6ba154a31eadc726276dc0"
       }
     },
     "core:syndicate/repair_dock": {
-      "manifest_sha256": "3f4fac09e9565890c6ab2976a9f169b23b2939c108ad65157b733b297a0c50cf",
-      "reviewed_revision": "6f04a9dc3b31a35d86eeaceb6467a0fbc8dfea0ade32dd0c4943c8eaf2900617",
+      "manifest_sha256": "48c9e81e2fb2c1494fa54393f5617bbb17da9dd9c1eb8e490b623dd1b8f66713",
+      "reviewed_revision": "015208f6e90deed9ed00b168195ce81cbcee48541f44591de1d0a3381caaf60f",
       "decision_id": "s06-b3c-stations-2026-10-17",
+      "review_id": "syndicate-fleet-rework-2026-10-23",
       "evidence_sha256": {
-        "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png": "42dad16e8c6f53c5c2ad01ad25d4b1bf33c48cfc51f2226753ebe6bd057e4ec1",
-        "artifacts/s06_alliance_batch_review/b3c-stations/metrics.json": "293abb3db1ed58c94a530afde8846f57f070c04c75dafc3fc3dd47dfc2911493"
+        "artifacts/syndicate-fleet/review/repair_dock-quarter.jpg": "e3200d9d612a7e7496780a8fa104f26172251fceea7938508d61a900e03f675e",
+        "artifacts/syndicate-fleet/review/repair_dock-profile.jpg": "fca1b39e7df1f0e7fad7f922e794ff77a3354d5c18095f1a4009ba1a3c27d69e",
+        "artifacts/syndicate-fleet/review/repair_dock-bow.jpg": "d2907359c70150cde890dd3bae5e6ae68e1b740e9f74ea33f91e46ae60cf5d80"
       }
     },
     "core:syndicate/research_station": {
-      "manifest_sha256": "0fbc34f6a89d11b33b571c606e095890803e904f789813976199e34d84087ea2",
-      "reviewed_revision": "49bb828a8fc05a8ef36d1ffbea67a783840adae53d4e47156d6ec2845bea51c7",
+      "manifest_sha256": "8b5ab355b6f45fd5096d2498828e19ae8fe143d7be4e227b94828d4cf7ba1e75",
+      "reviewed_revision": "0455ff1581363710aa34e89faf63edf5cb6da1a35de8a021e0e2bd82b6814a39",
       "decision_id": "s06-b3c-stations-2026-10-17",
+      "review_id": "syndicate-fleet-rework-2026-10-23",
       "evidence_sha256": {
-        "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png": "42dad16e8c6f53c5c2ad01ad25d4b1bf33c48cfc51f2226753ebe6bd057e4ec1",
-        "artifacts/s06_alliance_batch_review/b3c-stations/metrics.json": "293abb3db1ed58c94a530afde8846f57f070c04c75dafc3fc3dd47dfc2911493"
+        "artifacts/syndicate-fleet/review/research_station-quarter.jpg": "af60e0dc9fe876f6d70eb85970ab7404f7d7f86ce07b1116f0f6f525a8bb4516",
+        "artifacts/syndicate-fleet/review/research_station-profile.jpg": "c62fcd33130d276ca7ac340b43552768d0ea5b2500a160ded95ffe08740b3484",
+        "artifacts/syndicate-fleet/review/research_station-bow.jpg": "4f7bea1021156874c36c85e5d834a4929b9604eed20f73148dd462430be6c45a"
       }
     },
     "core:syndicate/sensor_station": {
-      "manifest_sha256": "c8d0f28e5f5f483ea1dab9f22c8f40ec62ae89df2356cce767dcd5a6d0f99c09",
-      "reviewed_revision": "5034252337170dfc88a4352c9da5b7ec5d665c99e35bbf4030e583bb480a4911",
+      "manifest_sha256": "769e8e2ee1d8a6515f852e1f38fc1aefd280c3caf3ce89f8bd6fbbe9ce1b20d3",
+      "reviewed_revision": "b4089320eaa9383a834a3520b58f8d2656ad1deb622b99c3d5601dcda449a057",
       "decision_id": "s06-b3b-stations-2026-10-17",
+      "review_id": "syndicate-fleet-rework-2026-10-23",
       "evidence_sha256": {
-        "artifacts/s06_alliance_batch_review/b3b-stations/contact-sheet.png": "cca888f8035a93c9c5c131549d32b791293464a7b497cdf06dff8da1a503303c",
-        "artifacts/s06_alliance_batch_review/b3b-stations/metrics.json": "e78edc911647e337d384e6920f28c8fc38bd0dd6bdf5d0790cca3ea9851112e8"
+        "artifacts/syndicate-fleet/review/sensor_station-quarter.jpg": "4038f65b27fff2299a5d32b1c84e6b2be470943064552c54c5fbfdc1ddc8bade",
+        "artifacts/syndicate-fleet/review/sensor_station-profile.jpg": "614ce3129f76be6e1f7647c8cc01eb92702916eb67adf2a153673a06a1b99bda",
+        "artifacts/syndicate-fleet/review/sensor_station-bow.jpg": "b008f455ece229099605cdd6126a1928aef2112f4c0d9bd5c7aa393dc6ee0c79"
       }
     },
     "core:syndicate/shipyard": {
-      "manifest_sha256": "38fc033a5e97b5f392ea890cfef2bd950f014f5696045073524aaf3994e452af",
-      "reviewed_revision": "440c9a50f38af58dbd87265ffab8f1c1351fbd4333516fb42d878c7f08884170",
+      "manifest_sha256": "5f37c48795b64bd43035ffc14c79e4d32960bd4abdbf306eddd614b909cf6ab1",
+      "reviewed_revision": "70b55ba0bd5c01ec62ec112d017554ef00f5b5881aca4362e1d44f8c5e72c43b",
       "decision_id": "s06-b3c-stations-2026-10-17",
+      "review_id": "syndicate-fleet-rework-2026-10-23",
       "evidence_sha256": {
-        "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png": "42dad16e8c6f53c5c2ad01ad25d4b1bf33c48cfc51f2226753ebe6bd057e4ec1",
-        "artifacts/s06_alliance_batch_review/b3c-stations/metrics.json": "293abb3db1ed58c94a530afde8846f57f070c04c75dafc3fc3dd47dfc2911493"
+        "artifacts/syndicate-fleet/review/shipyard-quarter.jpg": "379aca2dcb633bc93ecb0753b79ad2885478aace62dd035a8d8ec1a740b228bc",
+        "artifacts/syndicate-fleet/review/shipyard-profile.jpg": "484600be9630e2c778b16e541d2745e8fb004dd49e3adf53c0a635051175140c",
+        "artifacts/syndicate-fleet/review/shipyard-bow.jpg": "e4de1604c945b1752ac81bc8b560202967e4139ce88b49bbaa61e3fa0076d038"
       }
     },
     "core:syndicate/supercapital": {
@@ -1026,12 +1060,14 @@
       }
     },
     "core:syndicate/trade_station": {
-      "manifest_sha256": "d5bfcb388af99571e5c5b4e82af4b7f6a7ac3d30aae18807a2df66ef7fd4d0f7",
-      "reviewed_revision": "bec232e61fea50479f60ad0721001b2e6115bc78f040470d918644f70d3a6f69",
+      "manifest_sha256": "84983d489b29b4a9ef2960ca75df589e70c0c674df31cd9463442a73e30be43b",
+      "reviewed_revision": "d00e2bc892baa580243071ab069274050b6cbce28f91f17ed1c98a0ce4a8227f",
       "decision_id": "s06-b3c-stations-2026-10-17",
+      "review_id": "syndicate-fleet-rework-2026-10-23",
       "evidence_sha256": {
-        "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png": "42dad16e8c6f53c5c2ad01ad25d4b1bf33c48cfc51f2226753ebe6bd057e4ec1",
-        "artifacts/s06_alliance_batch_review/b3c-stations/metrics.json": "293abb3db1ed58c94a530afde8846f57f070c04c75dafc3fc3dd47dfc2911493"
+        "artifacts/syndicate-fleet/review/trade_station-quarter.jpg": "827e558229c51421463399f926207bbf253161c8809fc70ede201739a257c020",
+        "artifacts/syndicate-fleet/review/trade_station-profile.jpg": "3d88e6bbbb7c45dfffd901ccabed8ee8b40c3cc4e2e39af4ef38be51452dcf0c",
+        "artifacts/syndicate-fleet/review/trade_station-bow.jpg": "fdc0fc655fb8e46d54a6219880dd64cbd76170080051640d7ae01f6a82a2d34a"
       }
     }
   }

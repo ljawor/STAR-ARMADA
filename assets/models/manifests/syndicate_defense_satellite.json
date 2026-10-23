@@ -61,12 +61,15 @@
     "texture_bytes": 0
   },
   "approval": {
-    "status": "pending",
+    "status": "approved",
     "decision_id": "s06-b4-hardware-2026-10-17",
     "reviewed_evidence": [
       "artifacts/syndicate-fleet/review/defense_satellite-quarter.jpg",
       "artifacts/syndicate-fleet/review/defense_satellite-profile.jpg",
       "artifacts/syndicate-fleet/review/defense_satellite-bow.jpg"
-    ]
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "ffa6c5cd771f733d58a504b91c43d8c03b5835cfa9b69b49a0d38b14069e3660"
   }
 }

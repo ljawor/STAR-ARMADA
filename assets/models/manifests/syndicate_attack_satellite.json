@@ -61,12 +61,15 @@
     "texture_bytes": 0
   },
   "approval": {
-    "status": "pending",
+    "status": "approved",
     "decision_id": "s06-b4-hardware-2026-10-17",
     "reviewed_evidence": [
       "artifacts/syndicate-fleet/review/attack_satellite-quarter.jpg",
       "artifacts/syndicate-fleet/review/attack_satellite-profile.jpg",
       "artifacts/syndicate-fleet/review/attack_satellite-bow.jpg"
-    ]
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "f1b2ef767b687436d7ac0174264958d9decc4bd3b1355c03928608028e14eb1a"
   }
 }

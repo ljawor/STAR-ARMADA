@@ -61,12 +61,15 @@
     "texture_bytes": 0
   },
   "approval": {
-    "status": "pending",
+    "status": "approved",
     "decision_id": "s06-b4-hardware-2026-10-17",
     "reviewed_evidence": [
       "artifacts/syndicate-fleet/review/planet_trade_hub-quarter.jpg",
       "artifacts/syndicate-fleet/review/planet_trade_hub-profile.jpg",
       "artifacts/syndicate-fleet/review/planet_trade_hub-bow.jpg"
-    ]
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "e0a9c520696d1b415822a18c0eabf6630f6ff3fafa60c8315fcb652d9e7f4ee5"
   }
 }

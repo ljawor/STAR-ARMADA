@@ -61,12 +61,15 @@
     "texture_bytes": 0
   },
   "approval": {
-    "status": "pending",
+    "status": "approved",
     "decision_id": "s06-b8-remaining-combat-2026-10-18",
     "reviewed_evidence": [
       "artifacts/syndicate-fleet/review/frigate-quarter.jpg",
       "artifacts/syndicate-fleet/review/frigate-profile.jpg",
       "artifacts/syndicate-fleet/review/frigate-bow.jpg"
-    ]
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "2dac0a24dfe1e4d3ce3d564787717aa176ac30dee9c347f9bbdb0a793379f234"
   }
 }

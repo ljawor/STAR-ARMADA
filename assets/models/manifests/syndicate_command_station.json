@@ -61,12 +61,15 @@
     "texture_bytes": 0
   },
   "approval": {
-    "status": "pending",
+    "status": "approved",
     "decision_id": "s06-b3a-command-stations-2026-10-17",
     "reviewed_evidence": [
       "artifacts/syndicate-fleet/review/command_station-quarter.jpg",
       "artifacts/syndicate-fleet/review/command_station-profile.jpg",
       "artifacts/syndicate-fleet/review/command_station-bow.jpg"
-    ]
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "77cd5a9ea2f2bb5054426206e582d21ec0491f7f3f4da76e47b0250c7bcc7930"
   }
 }

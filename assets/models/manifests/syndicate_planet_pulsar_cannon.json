@@ -61,12 +61,15 @@
     "texture_bytes": 0
   },
   "approval": {
-    "status": "pending",
+    "status": "approved",
     "decision_id": "s06-b4-hardware-2026-10-17",
     "reviewed_evidence": [
       "artifacts/syndicate-fleet/review/planet_pulsar_cannon-quarter.jpg",
       "artifacts/syndicate-fleet/review/planet_pulsar_cannon-profile.jpg",
       "artifacts/syndicate-fleet/review/planet_pulsar_cannon-bow.jpg"
-    ]
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "268bd8c4c8415de5c20f58a0f558a4930c5c0de702f61374d07634075e926c7c"
   }
 }

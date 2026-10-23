@@ -61,12 +61,15 @@
     "texture_bytes": 0
   },
   "approval": {
-    "status": "pending",
+    "status": "approved",
     "decision_id": "s06-b3b-stations-2026-10-17",
     "reviewed_evidence": [
       "artifacts/syndicate-fleet/review/energy_relay-quarter.jpg",
       "artifacts/syndicate-fleet/review/energy_relay-profile.jpg",
       "artifacts/syndicate-fleet/review/energy_relay-bow.jpg"
-    ]
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "690a24e33ea2dbaf2b7c255be91e88cb10730b3c0b309b19807e062793c28b08"
   }
 }

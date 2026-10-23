@@ -61,12 +61,15 @@
     "texture_bytes": 0
   },
   "approval": {
-    "status": "pending",
+    "status": "approved",
     "decision_id": "s06-b3b-stations-2026-10-17",
     "reviewed_evidence": [
       "artifacts/syndicate-fleet/review/sensor_station-quarter.jpg",
       "artifacts/syndicate-fleet/review/sensor_station-profile.jpg",
       "artifacts/syndicate-fleet/review/sensor_station-bow.jpg"
-    ]
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "b4089320eaa9383a834a3520b58f8d2656ad1deb622b99c3d5601dcda449a057"
   }
 }
