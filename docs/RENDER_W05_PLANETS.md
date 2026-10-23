@@ -21,7 +21,7 @@ So the bridge carries **textures**, not planet surfaces:
 | --- | --- | --- | --- |
 | Surface texture | `render/textures.planet_texture`, seeded by `blake2s(name)` | one `ARMPLN01` blob per distinct planet | once per match |
 | Position, radius | the frame's instance record | packed frame instance, as before | every frame |
-| Axial spin | the viewer's clock, 1.2 rad/s as in Python | not carried | per frame |
+| Axial spin | the viewer's clock, 0.48 rad/s (`kPlanetSpinRadPerSecond`, 60% slower than the Python renderer's 1.2) | not carried | per frame |
 | Lighting | the map's star position | `--star x,y,z`, default `0,2000,0` | once |
 
 A planet therefore needs **no frame-format change**: it rides as an instance whose binding names

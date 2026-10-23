@@ -39,6 +39,10 @@ namespace fs = std::filesystem;
 // `overlay` is also the debug-text toggle's variable name inside main(), which shadows the
 // namespace there; a file-scope alias keeps the decoder reachable.
 namespace hud = armada::overlay;
+
+// Axial spin of a planet, radians per second. 1.2 was the old Python renderer's rate; the
+// owner asked for 60% slower, so the planet takes 2.5x as long per turn.
+constexpr float kPlanetSpinRadPerSecond = 1.2f * 0.4f;
 namespace input_ring = armada::input;
 namespace planets = armada::planet;
 namespace cues = armada::marker;
@@ -1303,7 +1307,9 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
     camera.yaw = float(o.yaw);
   auto previous = Clock::now();
   const auto live_start = Clock::now();
-  // The Python renderer spins a planet at 1.2 rad/s about its own axis (glRotatef(time * 1.2)).
+  // A planet turns about its own axis at kPlanetSpinRadPerSecond. The Python renderer used
+  // 1.2 rad/s (glRotatef(time * 1.2)); the owner asked for a 60% slower drift, and this is the
+  // only place the spin is applied, so the constant is the whole feature.
   double planetSeconds = 0.0;
   if (inputOut) {
     // First batch tells the consumer what the pointer is measured against, so it can map
@@ -1323,7 +1329,7 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
     const float dt = std::chrono::duration<float>(start - previous).count();
     previous = start;
     planetSeconds += dt;
-    const float planetSpin = float(planetSeconds * 1.2);
+    const float planetSpin = float(planetSeconds * kPlanetSpinRadPerSecond);
     if (live)
       live->step(groups);   // no frame yet leaves the groups empty on purpose
     if (live && o.seconds > 0.0 &&
