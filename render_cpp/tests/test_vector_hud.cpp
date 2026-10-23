@@ -453,6 +453,11 @@ void incomingIcon(const char *symbol, uint32_t cp) {
     assert(coverage(d, 50.137f, 60.173f) == 1); // Filled star centre.
     assert(coverage(d, 50.137f, 25.173f) == 1); // Upper tip.
     assert(coverage(d, 25.137f, 35.173f) == 0); // Concave notch.
+  } else if (cp == 0x2713) {
+    assert(coverage(d, 65.137f, 66.173f) == 1); // Middle of the long up-stroke.
+    assert(coverage(d, 30.137f, 74.173f) == 1); // Short down-stroke.
+    assert(coverage(d, 85.137f, 85.173f) == 0); // Below the elbow, outside the ribbon.
+    assert(coverage(d, 25.137f, 45.173f) == 0); // Above the short stroke.
   } else {
     assert(coverage(d, 50.137f, 60.173f) == 1); // Disjoint centre dot.
     assert(coverage(d, 71.137f, 60.173f) == 0); // Annular gap.
@@ -464,18 +469,31 @@ void incomingIcon(const char *symbol, uint32_t cp) {
       assert(coverage(d, x, y) <= 1);
   // Text uses sy for its em size even at nonuniform drawable scale.
   // sx only moves the origin; clip and bounds are logical rectangles.
-  m.ops[0].clip = {20, 25, 20, 35};
-  m.ops[0].bounds = {0, 30, 35, 22};
+  // The check mark keeps its ink in the lower half of the em, so the shared corner above it
+  // is legitimately empty; clip at its elbow instead and keep the corner case for the rest.
+  bool lowerHalfInk = cp == 0x2713;
+  m.ops[0].clip = lowerHalfInk ? Rect{25, 55, 25, 35} : Rect{20, 25, 20, 35};
+  m.ops[0].bounds = lowerHalfInk ? Rect{0, 0, 800, 600} : Rect{0, 30, 35, 22};
   auto clipped = layout(m, 1600, 900, f);
   assert(!clipped.vertices.empty());
+  // Clip the emitted mesh against the same logical rectangle the text op was given:
+  // drawable 1600x900 is 2x/1.5x the 800x600 logical space.
+  Rect limit{std::max(m.ops[0].clip[0], m.ops[0].bounds[0]) * 2,
+             std::max(m.ops[0].clip[1], m.ops[0].bounds[1]) * 1.5f, 0, 0};
+  limit[2] = std::min(m.ops[0].clip[0] + m.ops[0].clip[2],
+                      m.ops[0].bounds[0] + m.ops[0].bounds[2]) * 2 - limit[0];
+  limit[3] = std::min(m.ops[0].clip[1] + m.ops[0].clip[3],
+                      m.ops[0].bounds[1] + m.ops[0].bounds[3]) * 1.5f - limit[1];
   for (auto v : clipped.vertices) {
     float x = (v.x + 1) * 800, y = (1 - v.y) * 450;
-    assert(x >= 39.999f && x <= 70.001f && y >= 44.999f && y <= 78.001f);
+    assert(x >= limit[0] - .001f && x <= limit[0] + limit[2] + .001f &&
+           y >= limit[1] - .001f && y <= limit[1] + limit[3] + .001f);
   }
-  for (float y = 45.371f; y < 78; y += 2.711f)
-    for (float x = 40.193f; x < 70; x += 2.707f)
-      assert(coverage(clipped, x, y, 1600, 900) ==
-             coverage(d, 10 + (x - 20) / 1.5f, 20 + (y - 30) / 1.5f));
+  if (!lowerHalfInk)
+    for (float y = 45.371f; y < 78; y += 2.711f)
+      for (float x = 40.193f; x < 70; x += 2.707f)
+        assert(coverage(clipped, x, y, 1600, 900) ==
+               coverage(d, 10 + (x - 20) / 1.5f, 20 + (y - 30) / 1.5f));
   m.ops[0].fit = "shrink";
   m.ops[0].clip = m.ops[0].bounds = {10, 20, 9, 8};
   auto shrunk = layout(m, 800, 600, f);
@@ -487,6 +505,7 @@ void incomingIcons() {
   incomingIcon(reinterpret_cast<const char *>(u8"△"), 0x25b3);
   incomingIcon(reinterpret_cast<const char *>(u8"✦"), 0x2726);
   incomingIcon(reinterpret_cast<const char *>(u8"◉"), 0x25c9);
+  incomingIcon(reinterpret_cast<const char *>(u8"✓"), 0x2713);
 }
 // Return pixel-space min/max from the emitted mesh, independently of TextBounds.
 Rect emittedExtents(const DrawList &d, int w, int h) {

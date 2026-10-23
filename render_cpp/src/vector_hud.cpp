@@ -410,7 +410,8 @@ struct Builder {
   }
   bool icon(uint32_t cp) const {
     return cp == 0x25b2 || cp == 0x25bc || cp == 0x25b8 || cp == 0x2715 ||
-           cp == 0x2192 || cp == 0x25b3 || cp == 0x2726 || cp == 0x25c9;
+           cp == 0x2192 || cp == 0x25b3 || cp == 0x2726 || cp == 0x25c9 ||
+           cp == 0x2713;
   }
   // Min/max of the geometry before clipping, not the pen/advance box. Keep
   // this separate from the legacy measurement used by shrink and clip.
@@ -551,6 +552,17 @@ struct Builder {
           std::vector<Point> shape{{.4f, 0}, {.51f, .29f}, {.8f, .4f},
                                    {.51f, .51f}, {.4f, .8f}, {.29f, .51f},
                                    {0, .4f}, {.29f, .29f}};
+          for (auto &v : shape) {
+            v[0] = (ix + v[0] * z) / sx;
+            v[1] = (iy + v[1] * z) / sy;
+          }
+          polygon(shape);
+        }
+        else if (cp == 0x2713) {
+          // Check mark as a filled ribbon: 0.11 em thick, so a 18 em label stays a
+          // hairline instead of picking up the bold-ish stroke of a packed glyph.
+          std::vector<Point> shape{{.159f, .421f}, {.434f, .696f}, {.783f, .254f},
+                                   {.697f, .186f}, {.287f, .704f}, {.081f, .499f}};
           for (auto &v : shape) {
             v[0] = (ix + v[0] * z) / sx;
             v[1] = (iy + v[1] * z) / sy;
