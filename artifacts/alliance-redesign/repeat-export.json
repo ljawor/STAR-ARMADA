@@ -1,0 +1,17 @@
+{
+  "blender": "5.0.1",
+  "independent_reconstruction": true,
+  "models": {
+    "frigate": {
+      "sha256": "59702b027954acca6dd820eaf11aa3856c2d6f05f4f1441259d3312c6e4400b8",
+      "repeat_sha256": "59702b027954acca6dd820eaf11aa3856c2d6f05f4f1441259d3312c6e4400b8",
+      "byte_identical": true
+    },
+    "shipyard": {
+      "sha256": "f926b0e62dd679d9797fae513370998c7a7bdd188b46353432c5633fe429ff24",
+      "repeat_sha256": "f926b0e62dd679d9797fae513370998c7a7bdd188b46353432c5633fe429ff24",
+      "byte_identical": true
+    }
+  },
+  "repeat_root": "/Users/lukaszjawor/.hermes/cache/scratch/alliance-export-repeat-check"
+}

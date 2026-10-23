@@ -1,0 +1,27 @@
+{
+  "contract": "star-armada/visual-pack",
+  "contract_major": 1,
+  "id": "prototype:alliance_redesign",
+  "version": "0.1.0",
+  "requires": {
+    "min_engine": "0.15.1",
+    "contracts": [
+      "star-armada/model-manifest/v1"
+    ]
+  },
+  "content": {
+    "replaces": [
+      {
+        "binding": "rebel:frigate",
+        "replace_of": "core:alliance/frigate",
+        "manifest": "assets/models/manifests/frigate.json"
+      },
+      {
+        "binding": "rebel:shipyard",
+        "replace_of": "core:alliance/shipyard",
+        "manifest": "assets/models/manifests/shipyard.json"
+      }
+    ]
+  },
+  "notes": "Alliance frigate/shipyard style specimens for a complete faction redesign. All existing meshes and normal settings preserved. Appearance review pending; final delivery must activate the complete approved set in normal main.py."
+}

@@ -1,0 +1,15 @@
+{
+  "delegation": "deleg_85b018a2",
+  "scope": "Independent first frigate/shipyard technical review, not owner appearance approval or complete faction delivery",
+  "passed": true,
+  "security_concerns": [],
+  "logic_errors": [],
+  "focused_tests_reported": 15,
+  "suggestions_addressed": {
+    "capture_image_and_script_hashes": "native-specimens/evidence-sha256.json generated after lossless compression",
+    "inherited_fixture_metadata": "Dedicated subject_snapshot now rebuilds truthful isolated/faction metadata; regression RED then GREEN",
+    "stale_activation_comment": "Corrected to future-safe BEFORE exclusion"
+  },
+  "subsequent_capture": "All19PNGdecodedpixelbuffersidenticaltoreviewedcaptures",
+  "models_repeat_export_byte_identical": true
+}

@@ -1,0 +1,638 @@
+{
+  "base": "805b2eccfd6bd7259a38abca0f5ff60b81e69f98",
+  "scope": "All faction-specific Alliance ships, stations, satellites and surface installations; shared scaffold and environment excluded",
+  "total": 26,
+  "groups": {
+    "orbital_station": 10,
+    "satellite": 2,
+    "ship_or_logistics": 10,
+    "surface_installation": 4
+  },
+  "rows": [
+    {
+      "binding": "rebel:attack_satellite",
+      "name": "Attack Satellite",
+      "live_ids": [
+        "attack_satellite"
+      ],
+      "group": "satellite",
+      "baseline_path": "assets/models/alliance_attack_satellite.mesh.json",
+      "baseline_sha256": "c37dbc64cba78ee9f6a003645dea5630237da3558f7f1add3007f7c1197348d9",
+      "baseline_triangles": 2672,
+      "bounds": [
+        [
+          -50.9795,
+          -9.0,
+          -34.0
+        ],
+        [
+          50.9795,
+          21.5,
+          58.0
+        ]
+      ],
+      "redesign_status": "planned_after_style_review"
+    },
+    {
+      "binding": "rebel:battleship",
+      "name": "Hope-class Command Cruiser",
+      "live_ids": [
+        "rebel_battleship"
+      ],
+      "group": "ship_or_logistics",
+      "baseline_path": "assets/models/alliance_battleship.mesh.json",
+      "baseline_sha256": "0a4e397d5c0b60f70fbba35f3e4f4a5ac997ac4de079f821f8f29db9872c95cd",
+      "baseline_triangles": 11457,
+      "bounds": [
+        [
+          -73.349998,
+          -31.0,
+          -143.5
+        ],
+        [
+          73.349998,
+          61.0,
+          135.0
+        ]
+      ],
+      "redesign_status": "planned_after_style_review"
+    },
+    {
+      "binding": "rebel:bomber",
+      "name": "Bulwark Bomber Squadron",
+      "live_ids": [
+        "rebel_y_squadron"
+      ],
+      "group": "ship_or_logistics",
+      "baseline_path": "assets/models/alliance_bomber.mesh.json",
+      "baseline_sha256": "9eb42e8c2f5467ca849536fa6e0e06aeb4c4b8bd0538cba419df0859f1d997c2",
+      "baseline_triangles": 2810,
+      "bounds": [
+        [
+          -14.316667,
+          -6.65,
+          -25.37
+        ],
+        [
+          14.316667,
+          6.440669,
+          23.0
+        ]
+      ],
+      "redesign_status": "planned_after_style_review"
+    },
+    {
+      "binding": "rebel:colonizer",
+      "name": "Freedom Colony Ship",
+      "live_ids": [
+        "rebel_colonizer"
+      ],
+      "group": "ship_or_logistics",
+      "baseline_path": "assets/models/rebel_colonizer.mesh.json",
+      "baseline_sha256": "0afb0eddcd4180f6fae0523eac4dcb086c65093a59983714e2298691bdf15fae",
+      "baseline_triangles": 3560,
+      "bounds": [
+        [
+          -42.5,
+          -13.5,
+          -46.94
+        ],
+        [
+          42.5,
+          36.5,
+          48.507
+        ]
+      ],
+      "redesign_status": "planned_after_style_review"
+    },
+    {
+      "binding": "rebel:command_station",
+      "name": "Command Station",
+      "live_ids": [
+        "command_station"
+      ],
+      "group": "orbital_station",
+      "baseline_path": "assets/models/alliance_command_station.mesh.json",
+      "baseline_sha256": "ee9790e6f95bdd2a5e0650fd4eb1d1d5496637b32956929a9c6d50df0ee8c93c",
+      "baseline_triangles": 3172,
+      "bounds": [
+        [
+          -48.0,
+          -6.8,
+          -29.6
+        ],
+        [
+          48.0,
+          26.48,
+          29.6
+        ]
+      ],
+      "redesign_status": "planned_after_style_review"
+    },
+    {
+      "binding": "rebel:constructor",
+      "name": "Alliance Engineering Sled",
+      "live_ids": [
+        "rebel_constructor"
+      ],
+      "group": "ship_or_logistics",
+      "baseline_path": "assets/models/rebel_constructor.mesh.json",
+      "baseline_sha256": "441cb0bb04afac29e8d1bcd4f704858988abb1226681e216796f33e5b0aae780",
+      "baseline_triangles": 2512,
+      "bounds": [
+        [
+          -25.0,
+          -7.0,
+          -38.455
+        ],
+        [
+          25.0,
+          32.451235,
+          35.5
+        ]
+      ],
+      "redesign_status": "planned_after_style_review"
+    },
+    {
+      "binding": "rebel:convoy",
+      "name": "Rebel Crew Transport",
+      "live_ids": [
+        "rebel_crew_transport",
+        "trade_convoy"
+      ],
+      "group": "ship_or_logistics",
+      "baseline_path": "assets/models/alliance_convoy.mesh.json",
+      "baseline_sha256": "fa341b2ac6cd91c79ab113e47c9a76888728e5528c46d068ebde6e8e6141205c",
+      "baseline_triangles": 4512,
+      "bounds": [
+        [
+          -30.299999,
+          -6.0,
+          -72.698
+        ],
+        [
+          30.299999,
+          14.776171,
+          59.5
+        ]
+      ],
+      "redesign_status": "planned_after_style_review"
+    },
+    {
+      "binding": "rebel:corvette",
+      "name": "Blockade Runner",
+      "live_ids": [
+        "rebel_corvette"
+      ],
+      "group": "ship_or_logistics",
+      "baseline_path": "assets/models/alliance_corvette.mesh.json",
+      "baseline_sha256": "48d0a815af978976f3eda77ec2378353eb5191a7cdc72cddb931483a0df8571b",
+      "baseline_triangles": 4372,
+      "bounds": [
+        [
+          -21.9,
+          -6.0,
+          -46.46
+        ],
+        [
+          21.9,
+          15.3,
+          45.0
+        ]
+      ],
+      "redesign_status": "planned_after_style_review"
+    },
+    {
+      "binding": "rebel:cruiser",
+      "name": "Liberty Cruiser",
+      "live_ids": [
+        "rebel_cruiser"
+      ],
+      "group": "ship_or_logistics",
+      "baseline_path": "assets/models/alliance_cruiser.mesh.json",
+      "baseline_sha256": "38b4e9f92040e67ffc1655910de39c24de4156397a94c76c34f94738a383ba84",
+      "baseline_triangles": 6264,
+      "bounds": [
+        [
+          -66.0,
+          -11.265,
+          -99.925
+        ],
+        [
+          66.0,
+          19.3,
+          97.5
+        ]
+      ],
+      "redesign_status": "planned_after_style_review"
+    },
+    {
+      "binding": "rebel:defense_platform",
+      "name": "Defense Platform",
+      "live_ids": [
+        "defense_platform"
+      ],
+      "group": "orbital_station",
+      "baseline_path": "assets/models/alliance_defense_platform.mesh.json",
+      "baseline_sha256": "80b1f3daae8e73fdf050bde9ac6cff87364c987683d6570c475e57fc6e993fa1",
+      "baseline_triangles": 4248,
+      "bounds": [
+        [
+          -45.92,
+          -4.8,
+          -44.32
+        ],
+        [
+          45.92,
+          11.166,
+          44.32
+        ]
+      ],
+      "redesign_status": "planned_after_style_review"
+    },
+    {
+      "binding": "rebel:defense_satellite",
+      "name": "Defense Satellite",
+      "live_ids": [
+        "defense_satellite"
+      ],
+      "group": "satellite",
+      "baseline_path": "assets/models/alliance_defense_satellite.mesh.json",
+      "baseline_sha256": "d38b5549310b6a9a554e429254857f895a5d7852cdd2dce3999276406ad1241d",
+      "baseline_triangles": 2420,
+      "bounds": [
+        [
+          -41.1051,
+          -9.0,
+          -34.0
+        ],
+        [
+          41.1051,
+          19.5,
+          44.0
+        ]
+      ],
+      "redesign_status": "planned_after_style_review"
+    },
+    {
+      "binding": "rebel:energy_relay",
+      "name": "Energy Relay",
+      "live_ids": [
+        "energy_relay"
+      ],
+      "group": "orbital_station",
+      "baseline_path": "assets/models/alliance_energy_relay.mesh.json",
+      "baseline_sha256": "fea920827bc7c690d022ce614455dfad7da0ca6e053af0e5fde793c0fa6173f8",
+      "baseline_triangles": 4496,
+      "bounds": [
+        [
+          -50.299999,
+          -8.4078,
+          -29.36
+        ],
+        [
+          50.299999,
+          13.2078,
+          20.9846
+        ]
+      ],
+      "redesign_status": "planned_after_style_review"
+    },
+    {
+      "binding": "rebel:fighter",
+      "name": "Falcon Fighter Squadron",
+      "live_ids": [
+        "rebel_x_squadron"
+      ],
+      "group": "ship_or_logistics",
+      "baseline_path": "assets/models/alliance_interceptor.mesh.json",
+      "baseline_sha256": "8d6dc397139d5fac871f1e74b48a6eb7fe2a9fc200871288ee2cc8d34a494df6",
+      "baseline_triangles": 2214,
+      "bounds": [
+        [
+          -10.11875,
+          -2.85,
+          -19.77
+        ],
+        [
+          10.11875,
+          8.290814,
+          18.0
+        ]
+      ],
+      "redesign_status": "planned_after_style_review"
+    },
+    {
+      "binding": "rebel:fighter_platform",
+      "name": "Fighter Platform",
+      "live_ids": [
+        "fighter_platform"
+      ],
+      "group": "orbital_station",
+      "baseline_path": "assets/models/alliance_fighter_platform.mesh.json",
+      "baseline_sha256": "4f06b97c93cd05c3fb132b67d0a0f2a18bfc07847d16402c4ec18cdbe3b77d6f",
+      "baseline_triangles": 4288,
+      "bounds": [
+        [
+          -48.0,
+          -9.2,
+          -39.2
+        ],
+        [
+          48.0,
+          6.92,
+          39.2
+        ]
+      ],
+      "redesign_status": "planned_after_style_review"
+    },
+    {
+      "binding": "rebel:frigate",
+      "name": "Escort Frigate",
+      "live_ids": [
+        "rebel_frigate"
+      ],
+      "group": "ship_or_logistics",
+      "baseline_path": "assets/models/alliance_frigate.mesh.json",
+      "baseline_sha256": "8562c3c85424d87839b580a495f8f5744cf96e9b06d189eaa78fd867a4e6aa32",
+      "baseline_triangles": 7708,
+      "bounds": [
+        [
+          -34.0,
+          -10.0,
+          -80.699997
+        ],
+        [
+          34.0,
+          25.35,
+          73.0
+        ]
+      ],
+      "redesign_status": "built_native_style_specimen_pending_owner_review"
+    },
+    {
+      "binding": "rebel:mining_station",
+      "name": "Mining Station",
+      "live_ids": [
+        "mining_station"
+      ],
+      "group": "orbital_station",
+      "baseline_path": "assets/models/alliance_mining_station.mesh.json",
+      "baseline_sha256": "ff14df049feaad5937326566ac8015a9d86dcf03671d7e3426f8952b7e53e9da",
+      "baseline_triangles": 4948,
+      "bounds": [
+        [
+          -44.75,
+          -15.6,
+          -26.0
+        ],
+        [
+          44.75,
+          9.92,
+          22.8294
+        ]
+      ],
+      "redesign_status": "planned_after_style_review"
+    },
+    {
+      "binding": "rebel:planet_extractor",
+      "name": "Resource Extractor",
+      "live_ids": [
+        "planet_extractor"
+      ],
+      "group": "surface_installation",
+      "baseline_path": "assets/models/alliance_planet_extractor.mesh.json",
+      "baseline_sha256": "19354d7d4fc5264789fd7232993b48c5f80bf2a0567f8111c3b144030483c4fa",
+      "baseline_triangles": 2788,
+      "bounds": [
+        [
+          -34.0,
+          0.0,
+          -32.0
+        ],
+        [
+          34.0,
+          43.0,
+          32.0
+        ]
+      ],
+      "redesign_status": "planned_after_style_review"
+    },
+    {
+      "binding": "rebel:planet_pulsar_cannon",
+      "name": "Pulsar Cannon",
+      "live_ids": [
+        "planet_pulsar_cannon"
+      ],
+      "group": "surface_installation",
+      "baseline_path": "assets/models/alliance_planet_pulsar_cannon.mesh.json",
+      "baseline_sha256": "676e8a5f09782b0bcec88cd3f89756db296f66e38fc0f543ed28eb2394304782",
+      "baseline_triangles": 2588,
+      "bounds": [
+        [
+          -34.0,
+          0.0,
+          -32.0
+        ],
+        [
+          34.0,
+          42.4,
+          46.0
+        ]
+      ],
+      "redesign_status": "planned_after_style_review"
+    },
+    {
+      "binding": "rebel:planet_shield_generator",
+      "name": "Surface Shield Generator",
+      "live_ids": [
+        "planet_shield_generator"
+      ],
+      "group": "surface_installation",
+      "baseline_path": "assets/models/alliance_planet_shield_generator.mesh.json",
+      "baseline_sha256": "bf38721eb96bdfcffa962429a8a1cd3c830344936a521f3f03d197a05669df20",
+      "baseline_triangles": 2992,
+      "bounds": [
+        [
+          -34.0,
+          0.0,
+          -32.0
+        ],
+        [
+          34.0,
+          46.5,
+          32.0
+        ]
+      ],
+      "redesign_status": "planned_after_style_review"
+    },
+    {
+      "binding": "rebel:planet_trade_hub",
+      "name": "Trade Hub",
+      "live_ids": [
+        "planet_trade_hub"
+      ],
+      "group": "surface_installation",
+      "baseline_path": "assets/models/alliance_planet_trade_hub.mesh.json",
+      "baseline_sha256": "cd317db1714dfc9e2d0759bec83f0c1851c9f3139ee67f0c6f04a391aa88d691",
+      "baseline_triangles": 2536,
+      "bounds": [
+        [
+          -34.0,
+          0.0,
+          -32.0
+        ],
+        [
+          34.0,
+          49.5,
+          32.0
+        ]
+      ],
+      "redesign_status": "planned_after_style_review"
+    },
+    {
+      "binding": "rebel:repair_dock",
+      "name": "Repair Dock",
+      "live_ids": [
+        "repair_dock"
+      ],
+      "group": "orbital_station",
+      "baseline_path": "assets/models/alliance_repair_dock.mesh.json",
+      "baseline_sha256": "c7290bd9e1f51911c10bf5434de99d3294dd22ba6f6110f886c1677f46615d76",
+      "baseline_triangles": 4696,
+      "bounds": [
+        [
+          -38.4,
+          -12.8,
+          -33.6
+        ],
+        [
+          38.4,
+          23.6,
+          39.6
+        ]
+      ],
+      "redesign_status": "planned_after_style_review"
+    },
+    {
+      "binding": "rebel:research_station",
+      "name": "Research Station",
+      "live_ids": [
+        "research_station"
+      ],
+      "group": "orbital_station",
+      "baseline_path": "assets/models/alliance_research_station.mesh.json",
+      "baseline_sha256": "1886a86b89cb1b0ef4a618a398216cccf44a0cd9dc84f950a0dce94b9892f870",
+      "baseline_triangles": 4812,
+      "bounds": [
+        [
+          -40.0,
+          -9.6,
+          -25.6
+        ],
+        [
+          40.0,
+          39.28,
+          35.901
+        ]
+      ],
+      "redesign_status": "planned_after_style_review"
+    },
+    {
+      "binding": "rebel:sensor_station",
+      "name": "Sensor Station",
+      "live_ids": [
+        "sensor_station"
+      ],
+      "group": "orbital_station",
+      "baseline_path": "assets/models/alliance_sensor_station.mesh.json",
+      "baseline_sha256": "02e7447e185ea4b01ddddd8e605247e2c99704736c9e0b4784b95545c2bff24e",
+      "baseline_triangles": 4196,
+      "bounds": [
+        [
+          -46.4,
+          -12.8,
+          -24.8
+        ],
+        [
+          46.4,
+          30.48,
+          16.24
+        ]
+      ],
+      "redesign_status": "planned_after_style_review"
+    },
+    {
+      "binding": "rebel:shipyard",
+      "name": "Shipyard",
+      "live_ids": [
+        "shipyard"
+      ],
+      "group": "orbital_station",
+      "baseline_path": "assets/models/alliance_shipyard.mesh.json",
+      "baseline_sha256": "b0ee2678ab42b9005e7ab9007eb6cb1464e878d9896a0104dd9ebad2142e3468",
+      "baseline_triangles": 10767,
+      "bounds": [
+        [
+          -55.700001,
+          -17.0,
+          -46.5
+        ],
+        [
+          55.700001,
+          39.400002,
+          51.0
+        ]
+      ],
+      "redesign_status": "built_native_style_specimen_pending_owner_review"
+    },
+    {
+      "binding": "rebel:supercapital",
+      "name": "Independence-class Fleet Carrier",
+      "live_ids": [
+        "rebel_supercapital"
+      ],
+      "group": "ship_or_logistics",
+      "baseline_path": "assets/models/alliance_carrier.mesh.json",
+      "baseline_sha256": "44e64c9ceed6d01d4e25eab1b4b0afec909bdc10d293af7d0d43a043dad64891",
+      "baseline_triangles": 8656,
+      "bounds": [
+        [
+          -146.51,
+          -30.5,
+          -204.8
+        ],
+        [
+          146.51,
+          56.95528,
+          190.0
+        ]
+      ],
+      "redesign_status": "planned_after_style_review"
+    },
+    {
+      "binding": "rebel:trade_station",
+      "name": "Trade Station",
+      "live_ids": [
+        "trade_station"
+      ],
+      "group": "orbital_station",
+      "baseline_path": "assets/models/alliance_trade_station.mesh.json",
+      "baseline_sha256": "07fc9d41e83f80b517d0faf8b3a7839a8f0348d5629442a42d02b447301d8422",
+      "baseline_triangles": 3916,
+      "bounds": [
+        [
+          -44.0,
+          -5.948,
+          -38.736
+        ],
+        [
+          44.0,
+          6.12,
+          39.36
+        ]
+      ],
+      "redesign_status": "planned_after_style_review"
+    }
+  ]
+}
