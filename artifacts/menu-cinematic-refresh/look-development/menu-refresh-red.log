@@ -1,0 +1,83 @@
+FFFFFFF
+======================================================================
+FAIL: test_scene_uses_the_same_redesigned_ships_as_normal_game_defaults (test_cinematic_scene.CinematicSceneTests.test_scene_uses_the_same_redesigned_ships_as_normal_game_defaults) (binding='imperial:supercapital')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_cinematic_scene.py", line 50, in test_scene_uses_the_same_redesigned_ships_as_normal_game_defaults
+    self.assertEqual(row['revision'], selected.revision,
+AssertionError: '6eb500499505e10b6609db34472dddf03275952894a8a608ca4414b76a0114b0' != 'a8a36e1edd56ac89c8720e7ada901a84505768ce32236b891610bc8ec3effd80'
+- 6eb500499505e10b6609db34472dddf03275952894a8a608ca4414b76a0114b0
++ a8a36e1edd56ac89c8720e7ada901a84505768ce32236b891610bc8ec3effd80
+ : Movie still uses the old core hull, not the shipped redesign
+
+======================================================================
+FAIL: test_scene_uses_the_same_redesigned_ships_as_normal_game_defaults (test_cinematic_scene.CinematicSceneTests.test_scene_uses_the_same_redesigned_ships_as_normal_game_defaults) (binding='imperial:battleship')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_cinematic_scene.py", line 50, in test_scene_uses_the_same_redesigned_ships_as_normal_game_defaults
+    self.assertEqual(row['revision'], selected.revision,
+AssertionError: '974d00963c452f85a870ae02a6f9f19e5778e8ea53f9f0998b3c34b0ab6580d4' != 'cd67382e693a55dfadbdec33501ec2b84d35aa8a00252d6709652bf50b8e32c4'
+- 974d00963c452f85a870ae02a6f9f19e5778e8ea53f9f0998b3c34b0ab6580d4
++ cd67382e693a55dfadbdec33501ec2b84d35aa8a00252d6709652bf50b8e32c4
+ : Movie still uses the old core hull, not the shipped redesign
+
+======================================================================
+FAIL: test_scene_uses_the_same_redesigned_ships_as_normal_game_defaults (test_cinematic_scene.CinematicSceneTests.test_scene_uses_the_same_redesigned_ships_as_normal_game_defaults) (binding='imperial:frigate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_cinematic_scene.py", line 50, in test_scene_uses_the_same_redesigned_ships_as_normal_game_defaults
+    self.assertEqual(row['revision'], selected.revision,
+AssertionError: 'c0cf348ad0163a52a10eb9140c1c43abf2a6e3ed2d7fd113d6bc95746aa03109' != '1099a7fd997218d853f370ba5bfe67f30bf9c92af97f9e7cecd7273d09e2defc'
+- c0cf348ad0163a52a10eb9140c1c43abf2a6e3ed2d7fd113d6bc95746aa03109
++ 1099a7fd997218d853f370ba5bfe67f30bf9c92af97f9e7cecd7273d09e2defc
+ : Movie still uses the old core hull, not the shipped redesign
+
+======================================================================
+FAIL: test_scene_uses_the_same_redesigned_ships_as_normal_game_defaults (test_cinematic_scene.CinematicSceneTests.test_scene_uses_the_same_redesigned_ships_as_normal_game_defaults) (binding='imperial:frigate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_cinematic_scene.py", line 50, in test_scene_uses_the_same_redesigned_ships_as_normal_game_defaults
+    self.assertEqual(row['revision'], selected.revision,
+AssertionError: 'c0cf348ad0163a52a10eb9140c1c43abf2a6e3ed2d7fd113d6bc95746aa03109' != '1099a7fd997218d853f370ba5bfe67f30bf9c92af97f9e7cecd7273d09e2defc'
+- c0cf348ad0163a52a10eb9140c1c43abf2a6e3ed2d7fd113d6bc95746aa03109
++ 1099a7fd997218d853f370ba5bfe67f30bf9c92af97f9e7cecd7273d09e2defc
+ : Movie still uses the old core hull, not the shipped redesign
+
+======================================================================
+FAIL: test_scene_uses_the_same_redesigned_ships_as_normal_game_defaults (test_cinematic_scene.CinematicSceneTests.test_scene_uses_the_same_redesigned_ships_as_normal_game_defaults) (binding='rebel:battleship')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_cinematic_scene.py", line 50, in test_scene_uses_the_same_redesigned_ships_as_normal_game_defaults
+    self.assertEqual(row['revision'], selected.revision,
+AssertionError: '7634f9edda51e6a87a50cfbcf697e914ae0f94ba16f0aab6eb59a939214ed7d9' != 'a0b6fb6e28c0a836ad3d056365ee9ae7886204eecd8982adfee68ca61597a2b4'
+- 7634f9edda51e6a87a50cfbcf697e914ae0f94ba16f0aab6eb59a939214ed7d9
++ a0b6fb6e28c0a836ad3d056365ee9ae7886204eecd8982adfee68ca61597a2b4
+ : Movie still uses the old core hull, not the shipped redesign
+
+======================================================================
+FAIL: test_scene_uses_the_same_redesigned_ships_as_normal_game_defaults (test_cinematic_scene.CinematicSceneTests.test_scene_uses_the_same_redesigned_ships_as_normal_game_defaults) (binding='rebel:frigate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_cinematic_scene.py", line 50, in test_scene_uses_the_same_redesigned_ships_as_normal_game_defaults
+    self.assertEqual(row['revision'], selected.revision,
+AssertionError: '60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df' != '417a13c6d871971a3b594b13d167da10ba85c4b1e99d8c6fa620bf8e1431f012'
+- 60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df
++ 417a13c6d871971a3b594b13d167da10ba85c4b1e99d8c6fa620bf8e1431f012
+ : Movie still uses the old core hull, not the shipped redesign
+
+======================================================================
+FAIL: test_scene_uses_the_same_redesigned_ships_as_normal_game_defaults (test_cinematic_scene.CinematicSceneTests.test_scene_uses_the_same_redesigned_ships_as_normal_game_defaults) (binding='rebel:frigate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_cinematic_scene.py", line 50, in test_scene_uses_the_same_redesigned_ships_as_normal_game_defaults
+    self.assertEqual(row['revision'], selected.revision,
+AssertionError: '60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df' != '417a13c6d871971a3b594b13d167da10ba85c4b1e99d8c6fa620bf8e1431f012'
+- 60ba4e69d91f20b3a7cd4c62d88b2b6b4d8625070734e4883c139ff61218a0df
++ 417a13c6d871971a3b594b13d167da10ba85c4b1e99d8c6fa620bf8e1431f012
+ : Movie still uses the old core hull, not the shipped redesign
+
+----------------------------------------------------------------------
+Ran 1 test in 1.335s
+
+FAILED (failures=7)
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)

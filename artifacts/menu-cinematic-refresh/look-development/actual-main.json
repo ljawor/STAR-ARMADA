@@ -1,0 +1,23 @@
+{
+  "scope": "real main startup compositor; frozen look-development frame, not completed animation",
+  "actual_size": [
+    2560,
+    1440
+  ],
+  "movie_metadata": {
+    "version": 1,
+    "width": 2560,
+    "height": 1440,
+    "frame_count": 1,
+    "fps": 24,
+    "still_frame": 0,
+    "loop": "baked-crossfade",
+    "scope": "LOOK DEVELOPMENT STILL ONLY: constant seamless loop; no animation acceptance"
+  },
+  "screenshot_sha256": "f2371d8455401e27358186788c8f4e30ec14439f9e889cc10b2a84a38cc5acf5",
+  "movie_sha256": "7ab6d513668e7fd712004d9fa7b8d136096b16a0e95943aa5bf9d3dad3d58d32",
+  "frame_surface_size": [
+    2560,
+    1440
+  ]
+}
