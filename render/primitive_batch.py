@@ -64,8 +64,13 @@ def is_shielded(entity) -> bool:
         return False
 
 
-def selection_rings(state, selection_ids, radius_of) -> list:
-    """One circle per selected unit, coloured by owner and hull severity."""
+def selection_rings(state, selection_ids, radius_of, lead=0.0) -> list:
+    """One circle per selected unit, coloured by owner and hull severity.
+
+    `lead` carries the ring by the same sub-tick distance as the hull it surrounds
+    (see `render_bridge.collect.collect_into`), so a 60 Hz window never shows a ring
+    trailing its own ship.
+    """
     out = []
     for entity_id in sorted(selection_ids):
         entity = state.entities.get(entity_id)
@@ -86,7 +91,14 @@ def selection_rings(state, selection_ids, radius_of) -> list:
         # authored at catalogue size, so a ring sized from it is a hairline beside the hull.
         radius = hull * (PLAIN_RING_FACTOR if not entity.is_planet else PLANET_RING_FACTOR)
         vertical = entity.is_station or not (entity.is_ship or entity.is_squadron)
-        out.append(codec.circle((entity.pos.x, entity.pos.y, entity.pos.z), radius, colour,
+        position = entity.pos
+        if lead:
+            velocity = entity.vel
+            position = (position.x + velocity.x * lead, position.y + velocity.y * lead,
+                        position.z + velocity.z * lead)
+        else:
+            position = (position.x, position.y, position.z)
+        out.append(codec.circle(position, radius, colour,
                                 vertical=vertical, width=SELECTION_WIDTH,
                                 segments=SELECTION_SEGMENTS, alpha=SELECTION_ALPHA,
                                 depth=False))
@@ -169,9 +181,10 @@ def ownership_markers(state, local_player, visible_ids, mode='all', allies=None,
 
 
 def build(state, local_player, selection_ids, visible_ids, *, radius_of, mode='all',
-          allies=None, planet_rings=True, with_markers=True, collection_points=True) -> list:
+          allies=None, planet_rings=True, with_markers=True, collection_points=True,
+          lead=0.0) -> list:
     """Everything the window draws on top of the world, as one batch."""
-    primitives = selection_rings(state, selection_ids, radius_of)
+    primitives = selection_rings(state, selection_ids, radius_of, lead=lead)
     if planet_rings:
         primitives += planet_owner_rings(state)
     if collection_points:

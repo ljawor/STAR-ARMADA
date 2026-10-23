@@ -215,12 +215,16 @@ class LiveSession:
                 shot_allow=None, dt: float = 1.0 / 30.0,
                 paused: bool = False, message: str = "", flash_left: float = 0.0,
                 fps: float = 0.0, drag_box=None, floating_texts=None, overlay_layers=(),
-                ghost=None) -> dict:
+                ghost=None, lead: float = 0.0) -> dict:
         """Publish one frame. Every visibility argument is an *answer* from the game.
 
         `ghost` is the station placement preview (#171): the dict `render/input.py` already builds
         for the HUD's placement banner, or None. It crosses as one extra instance flagged
         `FLAG_GHOST`, so the preview is drawn by the same window path as every other hull.
+
+        `lead` is the elapsed part of the current simulation tick, in seconds. The window is
+        presented faster than the simulation steps, so world poses are carried forward by that
+        much; it never reaches the simulation.
         """
         from render import emissive_batch, primitive_batch
         from render.shapes import projectile_extents
@@ -231,7 +235,8 @@ class LiveSession:
 
         started = time.perf_counter()
         frame, counts = self.collector.collect_into(
-            state, self.buffer, tick=state.tick, frame_index=self.frames, ghost=ghost)
+            state, self.buffer, tick=state.tick, frame_index=self.frames, ghost=ghost,
+            lead=lead)
         self.counts['hardware_blobs'] += self._mesh_publisher.publish_frame(
             frame, self.tables, self._hardware)
         self._frames.publish(bytes(frame))
@@ -243,7 +248,7 @@ class LiveSession:
                  if shot_allow is None or id(shot) in shot_allow]
         started = time.perf_counter()
         primitives, emit_stats = emissive_batch.build(
-            effects, shots, self._weapon_type_of, projectile_extents)
+            effects, shots, self._weapon_type_of, projectile_extents, lead=lead)
         shown = self.collector.visible_ids
         shielded = [entity for entity in state.entities.values()
                     if entity.alive and (entity.is_ship or entity.is_squadron or entity.is_station)
@@ -255,7 +260,8 @@ class LiveSession:
         emit_ms = (time.perf_counter() - started) * 1000.0
 
         cues = primitive_batch.build(state, self.local_player, set(selection), shown,
-                                     radius_of=self.radius_of, mode=self.marker_mode)
+                                     radius_of=self.radius_of, mode=self.marker_mode,
+                                     lead=lead)
         self._markers.publish(bytes(marker_codec.encode(cues)))
 
         started = time.perf_counter()

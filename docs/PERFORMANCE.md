@@ -92,6 +92,43 @@ with Windows loaders; never assume that a requested setting was honored.
 Driver control-panel overrides can still change pacing. The legacy pygame
 `GL_SWAP_CONTROL` constant aliases another GL attribute and is not used.
 
+## Frame pacing: 30 Hz simulation, 60 Hz window
+
+The loop used to be paced by `clock.tick(TICK_RATE)` with one rate for everything, so the window
+could never present more than 30 frames a second and the HUD counter in the top bar never rose
+above 30. Two numbers now:
+
+| Constant | Value | What it paces |
+|---|---|---|
+| `TICK_RATE` / `TICK_DT` | 30 Hz (`1/30` s) | the simulation. `advance_simulation` accumulates real frame time and steps whole `TICK_DT` slices, so a tick is a fixed 1/30 s of world time at any frame rate. Replays, LAN barriers and state checksums do not depend on the frame rate. |
+| `RENDER_RATE` | 60 Hz | the loop and therefore the window: input, HUD, `cpp_publish`, native present. |
+
+Between two ticks nothing has moved in the simulation, so presenting a frame twice would still
+look like 30 Hz. Each frame is published with `lead` - the part of the current tick that has already
+elapsed - and the world is drawn that far along its own velocity: hulls in
+`render_bridge/collect.py`, selection rings in `render/primitive_batch.py`, bolts in
+`render/emissive_batch.py`. Positions only; headings, damage, orders and every other number are the
+simulation's. `lead` never reaches the simulation, the recorder or a checksum.
+
+Pacing needs a spin. Measured on this machine, `time.sleep` rounds up to a ~9 ms quantum
+(`sleep(1 ms)` returns in 9.0 ms, `sleep(4 ms)` in 27.5 ms), so a 16.7 ms budget paced with sleeping
+lands at ~25 ms per frame:
+
+| Pacing | Achieved |
+|---|---|
+| no cap at all (loop runs as fast as it can) | 95-104 fps |
+| `clock.tick(60)` | 38-41 fps |
+| `clock.tick_busy_loop(60)` | 61-62 fps |
+
+So the game loop uses `tick_busy_loop`, which costs CPU: 10.8 s of user time per 15.6 s of wall time
+(~0.7 of a core) at 61 fps, against ~0.36 of a core when the loop sleeps at 30 fps. Smoke runs
+(`main.py --smoke`, no window) keep the sleeping path: there is nothing to be smooth about and 35 s
+of spinning per verification run is waste.
+
+Simulation rate is unchanged by any of it: with the window at 61-62 fps the measured tick rate stays
+29.5-30.6 Hz. When the machine cannot hold 60, the rate simply falls - nothing is skipped, and the
+simulation keeps its 30 Hz cadence.
+
 ## Measured macOS result
 
 A completed 24-trial comparison used three alternating baseline/candidate trials

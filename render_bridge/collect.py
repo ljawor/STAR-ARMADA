@@ -212,7 +212,7 @@ class FrameCollector:
                 x, y, z, 1.0, 0.0)
 
     def collect_into(self, state, buffer, *, tick, frame_index, flags=0, extra_effects=(),
-                     ghost=None):
+                     ghost=None, lead=0.0):
         """Pack one frame straight into `buffer` and return (bytes written, stats).
 
         This is the frame-rate path. It skips the per-record validation that
@@ -220,6 +220,11 @@ class FrameCollector:
         already holds and the consumer validates the frame it decodes; the validating
         builder stays the API for tooling and tests. Tints are resolved once per owner
         instead of once per entity, and no intermediate record tuples are built.
+
+        `lead` is the fraction of a tick that has already elapsed since the last one, in
+        seconds. The window is presented more often than the simulation steps, so a hull
+        is drawn where it will be by the next step; see `main.py`'s RENDER_RATE. It is
+        render-only: nothing here feeds back into the simulation, the replay or a checksum.
         """
         view = memoryview(buffer)
         instance_size, effect_size = packed.INSTANCE.size, packed.EFFECT.size
@@ -363,6 +368,17 @@ class FrameCollector:
                 written += 1
                 continue
             position, yaw = entity.pos, entity.yaw
+            if lead:
+                # Presented between two ticks: carry the hull along its own velocity for the part
+                # of the tick that has already elapsed, so a 60 Hz window shows 60 distinct poses
+                # instead of each simulated pose twice. Positions only; the heading is the one the
+                # simulation last produced.
+                velocity = entity.vel
+                px = position.x + velocity.x * lead
+                py = position.y + velocity.y * lead
+                pz = position.z + velocity.z * lead
+            else:
+                px, py, pz = position.x, position.y, position.z
             # Many hulls share a heading, so cos/sin are memoized per distinct yaw.
             pair = trig.get(yaw)
             if pair is None:
@@ -378,7 +394,7 @@ class FrameCollector:
                           cos_scaled, 0.0, -sin_scaled,
                           0.0, scale, 0.0,
                           sin_scaled, 0.0, cos_scaled,
-                          position.x, position.y, position.z,
+                          px, py, pz,
                           hp_frac, shield_frac)
             offset += instance_size
             written += 1
