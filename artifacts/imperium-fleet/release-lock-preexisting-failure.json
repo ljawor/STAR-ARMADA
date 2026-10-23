@@ -1,0 +1,12 @@
+{
+  "baseline": "1a8ef91babafef329480e4e52c793fce35c6881d",
+  "committed_checker_returncode": 1,
+  "checker_and_core_inputs_unchanged": [
+    "tools/art/build_release_asset_lock.py",
+    "render/asset_registry.py",
+    "game/__init__.py",
+    "assets/models",
+    "assets/data"
+  ],
+  "message": "Release asset lock is stale with the committed baseline checker and unchanged core inputs; not repaired by this fleet activation."
+}

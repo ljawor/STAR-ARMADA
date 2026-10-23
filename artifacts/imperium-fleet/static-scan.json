@@ -1,0 +1,9 @@
+{
+  "added_python_lines": 1815,
+  "findings": {
+    "hardcoded_secret": [],
+    "shell_execution": [],
+    "eval_exec": [],
+    "pickle": []
+  }
+}

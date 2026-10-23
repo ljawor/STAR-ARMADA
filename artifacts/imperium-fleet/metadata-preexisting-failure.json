@@ -1,0 +1,14 @@
+{
+  "baseline_revision": "fd3368e",
+  "committed_metadata_tool_reproduces_same_failure": true,
+  "result": {
+    "output": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/Users/lukaszjawor/.hermes/cache/scratch/imperium-baseline-sync-runtime.py\", line 128, in outputs\n    registered, new_receipts = publish(root, rows, mapping, categories)\n                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/art/s07_registration.py\", line 132, in publish\n    return _publish_specimens(root, registry_rows, categories, specimens, HASHES, 'approved-s06',\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/art/s07_registration.py\", line 166, in _publish_specimens\n    pin(root, relative, expected)\n  File \"/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/art/s07_registration.py\", line 39, in pin\n    if digest(safe_file(root, relative).read_bytes()) != expected:\n              ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/art/s07_registration.py\", line 30, in safe_file\n    raise ValueError('missing/unsafe registration file: ' + relative)\nValueError: missing/unsafe registration file: render/renderer.py",
+    "exit_code": 1,
+    "error": null
+  },
+  "unchanged_check_and_removed_file": {
+    "output": "fatal: path 'render/renderer.py' does not exist in 'HEAD'",
+    "exit_code": 128,
+    "error": null
+  }
+}

@@ -1,0 +1,36 @@
+..............................................F................                        [100%]
+=================================== FAILURES ===================================
+_ RuntimeMetadataTests.test_shipped_metadata_matches_source_contract_and_inventory _
+
+self = <test_runtime_asset_metadata.RuntimeMetadataTests testMethod=test_shipped_metadata_matches_source_contract_and_inventory>
+
+    def test_shipped_metadata_matches_source_contract_and_inventory(self):
+        result = subprocess.run([sys.executable, 'tools/art/sync_runtime_metadata.py', '--check'],
+                                cwd=ROOT, capture_output=True, text=True)
+>       self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+E       AssertionError: 1 != 0 : Traceback (most recent call last):
+E         File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/art/sync_runtime_metadata.py", line 272, in <module>
+E           raise SystemExit(main())
+E                            ^^^^^^
+E         File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/art/sync_runtime_metadata.py", line 256, in main
+E           expected = outputs(ROOT, include_scaffold=True) if args.include_scaffold else outputs(ROOT)
+E                                                                                         ^^^^^^^^^^^^^
+E         File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/art/sync_runtime_metadata.py", line 128, in outputs
+E           registered, new_receipts = publish(root, rows, mapping, categories)
+E                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/art/s07_registration.py", line 132, in publish
+E           return _publish_specimens(root, registry_rows, categories, specimens, HASHES, 'approved-s06',
+E                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/art/s07_registration.py", line 166, in _publish_specimens
+E           pin(root, relative, expected)
+E         File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/art/s07_registration.py", line 39, in pin
+E           if digest(safe_file(root, relative).read_bytes()) != expected:
+E                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+E         File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/art/s07_registration.py", line 30, in safe_file
+E           raise ValueError('missing/unsafe registration file: ' + relative)
+E       ValueError: missing/unsafe registration file: render/renderer.py
+
+tests/test_runtime_asset_metadata.py:14: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_runtime_asset_metadata.py::RuntimeMetadataTests::test_shipped_metadata_matches_source_contract_and_inventory
+1 failed, 62 passed, 130 subtests passed in 14.41s

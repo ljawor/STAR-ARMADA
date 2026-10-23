@@ -1,0 +1,17 @@
+{
+  "bindings_total": 103,
+  "changed_bindings": [
+    "imperial:battleship",
+    "imperial:bomber",
+    "imperial:colonizer",
+    "imperial:convoy",
+    "imperial:cruiser",
+    "imperial:frigate",
+    "imperial:supercapital"
+  ],
+  "other_asset_rows_unchanged": 96,
+  "non_asset_snapshot_payload_changes": [
+    "metadata.visual_selection: shipped selection now fourteen packs/twenty replacements"
+  ],
+  "geometry_source": "exact owner-approved mesh SHA256 values"
+}

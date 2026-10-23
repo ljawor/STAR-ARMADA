@@ -1,0 +1,17 @@
+{
+  "command": [
+    "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/.venv/bin/python",
+    "tools/play_imperium_fleet.py",
+    "--focus",
+    "gladiator",
+    "--frames",
+    "90",
+    "--capture",
+    "/Users/lukaszjawor/.hermes/cache/scratch/imperium-main-seven-v1/gladiator.png"
+  ],
+  "pid": 81625,
+  "elapsed_seconds": 11.087598333018832,
+  "returncode": 0,
+  "timeout": false,
+  "orphan_group_killed": false
+}

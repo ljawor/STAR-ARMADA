@@ -1,0 +1,1122 @@
+{
+  "protected_original_files": 560,
+  "protected_originals_unchanged": true,
+  "new_meshes": [
+    {
+      "binding": "imperial:bomber",
+      "mesh": "visual_packs/imperium-fleet-prototypes/assets/models/hammer.mesh.json",
+      "sha256": "3143a1a2b66ec5066154937149f5e77ecb1bb5c257e66581fc60437a6a0c5499",
+      "triangles": 2696
+    },
+    {
+      "binding": "imperial:frigate",
+      "mesh": "visual_packs/imperium-fleet-prototypes/assets/models/lancer.mesh.json",
+      "sha256": "8ece02287862e54ef3166aa3ee63929b7ca3a9fdaa0f355fb08443c3731b909b",
+      "triangles": 6232
+    },
+    {
+      "binding": "imperial:cruiser",
+      "mesh": "visual_packs/imperium-fleet-prototypes/assets/models/gladiator.mesh.json",
+      "sha256": "d82b04374015ff2b5cae3506fbb68a5484a5e6f3346e5169aad20f6a9ca9dd4f",
+      "triangles": 8120
+    },
+    {
+      "binding": "imperial:battleship",
+      "mesh": "visual_packs/imperium-fleet-prototypes/assets/models/executor.mesh.json",
+      "sha256": "ca0128360ec6b2f0914af6e3158dc8dd0cc25d2a7ed32795269a047087ec74a2",
+      "triangles": 9432
+    },
+    {
+      "binding": "imperial:supercapital",
+      "mesh": "visual_packs/imperium-fleet-prototypes/assets/models/sovereign.mesh.json",
+      "sha256": "7030bbb06d575e76e1374cbafca1541cab4fc149d2ab25bd4248165ee65609af",
+      "triangles": 9968
+    },
+    {
+      "binding": "imperial:colonizer",
+      "mesh": "visual_packs/imperium-fleet-prototypes/assets/models/colonial.mesh.json",
+      "sha256": "c135f0a2ef72e06290e6d1048c6b068b86046f73f468d59b0c3e921506ac37c2",
+      "triangles": 3760
+    },
+    {
+      "binding": "imperial:convoy",
+      "mesh": "visual_packs/imperium-fleet-prototypes/assets/models/transport.mesh.json",
+      "sha256": "a0e5969e9fd22b99e4aa4e0986fd8d8270980a15f30ecbc6ffa34afa9b4e7c66",
+      "triangles": 3496
+    }
+  ],
+  "native_subjects": 8,
+  "native_pairs": 24,
+  "native_images": 48,
+  "unchanged_vigil_pixels": [
+    0,
+    0,
+    0
+  ],
+  "real_main_subjects": 7,
+  "native_presented_frames_each": [
+    90,
+    90,
+    90,
+    90,
+    90,
+    90,
+    90
+  ],
+  "normal_user_profile_unchanged": true,
+  "appearance_approved": false,
+  "default_activated": false,
+  "organic_construction_tested": false,
+  "physical_owner_playtest_reported": false,
+  "files": {
+    "README.md": {
+      "sha256": "e76a05f7c81483708eaa73d86b706e4048d2cfbdbe63a0a80bfa68b92f706513",
+      "bytes": 6999
+    },
+    "build/all.json": {
+      "sha256": "c769e3d305a4fd3c1f09aebf20c8197a281d19164149a284bd7099f8a1fdd425",
+      "bytes": 6826
+    },
+    "committed-main/capture.json": {
+      "sha256": "2aebda798bbe4f591ad0a6623dcec419cf7055dc4c5f2ef7f7b7125378f4ee77",
+      "bytes": 1925
+    },
+    "committed-main/capture.png": {
+      "sha256": "6e13a14fd3c7647d2f4d94de92be3c985a2c7a29e0b495808a89ca806823014b",
+      "bytes": 165984
+    },
+    "committed-main/supervised.json": {
+      "sha256": "6420fc470c1b24a0156cb49d1db9d50d29749bb0f2b0538ffb64ad1cf27e0cc6",
+      "bytes": 393
+    },
+    "committed-main/supervised.log": {
+      "sha256": "04bd125b2af02b243843b1f061de9a0d2e13b088b24c47a511383a52f4860890",
+      "bytes": 1985
+    },
+    "focused-regressions.txt": {
+      "sha256": "ceff95ee5cc5e5ea86272a8428b0af5a675ea14b73dc0fa4847b5e2f0f348ecf",
+      "bytes": 2915
+    },
+    "focused-tests.txt": {
+      "sha256": "d83baad414bd99573fa9e932e8d2b64a52066e79e6e3c54c404de230b853789a",
+      "bytes": 97
+    },
+    "gallery.png": {
+      "sha256": "d5b04ba7839db54939bd00f1e1d10fb521eaa25801636660b9a8bbc45761d1f9",
+      "bytes": 231923
+    },
+    "handover.json": {
+      "sha256": "3535796bd80127ee3c684dbd45839f5d5499887671469fbf64693097fa9ab1b4",
+      "bytes": 5526
+    },
+    "independent-review.json": {
+      "sha256": "80646c495ed8a4ef2e9a516ff4c0cff0f4474501741f3cec6de066de9a232e25",
+      "bytes": 1687
+    },
+    "lossless-retention.json": {
+      "sha256": "b8754a3e352bfc7e50e440911c6ff1c630b1c84f29e6cf16b801dec7f3d4a8cd",
+      "bytes": 166
+    },
+    "main/colonial-main.json": {
+      "sha256": "6bad8b96b210772e5d640448fb1d3c5ce2507348c8599c4fa2d3944cd3571a84",
+      "bytes": 1927
+    },
+    "main/colonial-supervised.json": {
+      "sha256": "13d6df5894e4bd655fbba1c34b47902d1dcda5426bbffcfdd1be5bef49c6332c",
+      "bytes": 417
+    },
+    "main/colonial-supervised.log": {
+      "sha256": "ea8ee6d12253d230953386ec769ee454961c1575576c4e8aa2e7486103ef5ae0",
+      "bytes": 1987
+    },
+    "main/colonial.json": {
+      "sha256": "6bad8b96b210772e5d640448fb1d3c5ce2507348c8599c4fa2d3944cd3571a84",
+      "bytes": 1927
+    },
+    "main/colonial.png": {
+      "sha256": "e606a874480471577ed809bc289cb8ade51f8499bb4312a536ff901d6d569190",
+      "bytes": 130764
+    },
+    "main/executor-main.json": {
+      "sha256": "7e0d36221e91463644bf490fe04fd7f58c2e80c6917b43df4ed790e2adde9171",
+      "bytes": 1926
+    },
+    "main/executor-supervised.json": {
+      "sha256": "2f1c9eda6f3e25be74ec82f3492b2ea718aba8c28818886042a71ca04d69ad5b",
+      "bytes": 417
+    },
+    "main/executor-supervised.log": {
+      "sha256": "814d5abe6aa1026c3d592508c617f831e6553762002c46e35f9fee79797d31a8",
+      "bytes": 1986
+    },
+    "main/executor.json": {
+      "sha256": "7e0d36221e91463644bf490fe04fd7f58c2e80c6917b43df4ed790e2adde9171",
+      "bytes": 1926
+    },
+    "main/executor.png": {
+      "sha256": "a595137ae470b1622ca7abf20567a9ee93af583bf8b4f7eaad5f80e0c110fe0d",
+      "bytes": 155998
+    },
+    "main/gladiator-main.json": {
+      "sha256": "fcecde3fc2273c4d8c9a7104cf03de8349dce086f71d5bff0a7230eee109330e",
+      "bytes": 1926
+    },
+    "main/gladiator-supervised.json": {
+      "sha256": "69cc31d79b1ac4fc24b00ebea55efe1937caed34caee2db0ca64fc4f62193cf8",
+      "bytes": 419
+    },
+    "main/gladiator-supervised.log": {
+      "sha256": "70387f44a0ea02bffe071d2d54d9e58e046e80bf610dfadad0504bf4212f428d",
+      "bytes": 1986
+    },
+    "main/gladiator.json": {
+      "sha256": "fcecde3fc2273c4d8c9a7104cf03de8349dce086f71d5bff0a7230eee109330e",
+      "bytes": 1926
+    },
+    "main/gladiator.png": {
+      "sha256": "8317f20a95765aaaedea6286347a05322fdbc129acb0b40123a97411b1493f9e",
+      "bytes": 142359
+    },
+    "main/hammer-main.json": {
+      "sha256": "fb0501f089d47f504cd385c35f2a3041102dd47dd5b52dd6bbcfb17dca5634c9",
+      "bytes": 1911
+    },
+    "main/hammer-supervised.json": {
+      "sha256": "de100336996e839156d495cc76f31c129fc9686de5dd233c11b0d912a46f400a",
+      "bytes": 413
+    },
+    "main/hammer-supervised.log": {
+      "sha256": "34964681442cf345b8ae25c854d9e198b99406e3913c985b6d000732ced9de77",
+      "bytes": 1971
+    },
+    "main/hammer.json": {
+      "sha256": "fb0501f089d47f504cd385c35f2a3041102dd47dd5b52dd6bbcfb17dca5634c9",
+      "bytes": 1911
+    },
+    "main/hammer.png": {
+      "sha256": "6a485e869ac75800eb71abefa5fefdb076b7a92f019b8200b8c1f56c6185214a",
+      "bytes": 93019
+    },
+    "main/lancer-main.json": {
+      "sha256": "9b27060b3e1a2826ee7e731d80f4fc312eed29d5d9d20f29e5c682b68b6e4ab0",
+      "bytes": 1925
+    },
+    "main/lancer-supervised.json": {
+      "sha256": "68e386f14d74d32ed138ddf6207d04a04ec0147ac381302b318a7123ebd259b5",
+      "bytes": 413
+    },
+    "main/lancer-supervised.log": {
+      "sha256": "f2f995549e91c6d5085a2fe4b958019ce1fc79f1683b86a04b3cd212442843e6",
+      "bytes": 1985
+    },
+    "main/lancer.json": {
+      "sha256": "9b27060b3e1a2826ee7e731d80f4fc312eed29d5d9d20f29e5c682b68b6e4ab0",
+      "bytes": 1925
+    },
+    "main/lancer.png": {
+      "sha256": "c370b59b3d7c1e00db1bfee5d1a39045b0535afcd2490c03a00c2ada4fcbc664",
+      "bytes": 126412
+    },
+    "main/normal-profile-after.json": {
+      "sha256": "9d14639bd84e96152246d6d238efd1a200b7544cbe756164c9ec23371617ef1b",
+      "bytes": 660
+    },
+    "main/normal-profile-before.json": {
+      "sha256": "9d14639bd84e96152246d6d238efd1a200b7544cbe756164c9ec23371617ef1b",
+      "bytes": 660
+    },
+    "main/sovereign-main.json": {
+      "sha256": "2aebda798bbe4f591ad0a6623dcec419cf7055dc4c5f2ef7f7b7125378f4ee77",
+      "bytes": 1925
+    },
+    "main/sovereign-supervised.json": {
+      "sha256": "c0ea6fa4d91d1647450474a15d757b6c2e14a5b589672dbd2dd6802b695d8aae",
+      "bytes": 419
+    },
+    "main/sovereign-supervised.log": {
+      "sha256": "9c2664adac1ae6f2f2e1c06713e295188e188f6250f2e666df5f37cecabc2b06",
+      "bytes": 1985
+    },
+    "main/sovereign.json": {
+      "sha256": "2aebda798bbe4f591ad0a6623dcec419cf7055dc4c5f2ef7f7b7125378f4ee77",
+      "bytes": 1925
+    },
+    "main/sovereign.png": {
+      "sha256": "9e5d8022e3f7c2064479914964b0bfdc723e109c1c1ac62fa3334efb1c503108",
+      "bytes": 162547
+    },
+    "main/summary.json": {
+      "sha256": "a8fed42d1de7f0aeae5a9be60ff093992ad98a80d78fade7853dc56bdc3f29d0",
+      "bytes": 15048
+    },
+    "main/transport-main.json": {
+      "sha256": "8d2661a06152c448759943221bbdc539299158a11a44af08ab56686c48be54db",
+      "bytes": 1914
+    },
+    "main/transport-supervised.json": {
+      "sha256": "4ddb5f6851d2a9d7ac39e7fb18975d0921f25574637b769df4df3342b198ba3a",
+      "bytes": 419
+    },
+    "main/transport-supervised.log": {
+      "sha256": "9f20ed91ac89cb626f7690bd75156e33ae2d87318ebc2e5f5adf57557892d1ac",
+      "bytes": 1974
+    },
+    "main/transport.json": {
+      "sha256": "8d2661a06152c448759943221bbdc539299158a11a44af08ab56686c48be54db",
+      "bytes": 1914
+    },
+    "main/transport.png": {
+      "sha256": "3a6820d64e33f08f6693f484b9de4798fca7a64b2a8770cfc7d80730d376b8f5",
+      "bytes": 120138
+    },
+    "metadata-preexisting-failure.json": {
+      "sha256": "d3d5ff12a5a6c90405e7b147c8dc9b21a544486e231e1552280c0c790a4af75b",
+      "bytes": 1599
+    },
+    "native-final-run.json": {
+      "sha256": "75a3725684cf9816c7eca52f7b3fc222cb5829e35fd71207003ae82e119927ea",
+      "bytes": 331
+    },
+    "native-pairs/before-after.png": {
+      "sha256": "95056dd08ef06ae1d9f8b2721a22e54bdef70a71dcfebaacdbdc06f79fd95ebf",
+      "bytes": 538711
+    },
+    "native-pairs/colonial-after-close/capture.png": {
+      "sha256": "bc434110694c547d3eae6a86f1d3debada4d18b19677d33ff17c305d3c3ea837",
+      "bytes": 58469
+    },
+    "native-pairs/colonial-after-close/scene.snap": {
+      "sha256": "f960e3de622b6fd0a76f4fd7380c2cfa65b860305c03f6f70dbfa112438b498c",
+      "bytes": 9444
+    },
+    "native-pairs/colonial-after-close/stdout.txt": {
+      "sha256": "adda70fa4b741f29bad0af9cc1b80c794a94a697454a68ef5def0c3187bf806e",
+      "bytes": 116
+    },
+    "native-pairs/colonial-after-close/viewer.json": {
+      "sha256": "3a66736d60eeb896180ef1502629cb10e4d62f55445036356478376819dffa53",
+      "bytes": 15324
+    },
+    "native-pairs/colonial-after-rear/capture.png": {
+      "sha256": "4a4023171a3aba67cf15eb53a59abc75bf65deaff6eede1a548e52991ca5fb62",
+      "bytes": 66070
+    },
+    "native-pairs/colonial-after-rear/scene.snap": {
+      "sha256": "04f46f18ff9306ff469c4d4e8d77e3ef0635dbe514637237208f029658ed90f5",
+      "bytes": 9445
+    },
+    "native-pairs/colonial-after-rear/stdout.txt": {
+      "sha256": "38cca116cfa931a2602d5a23b487859a9a2b00521da30b50ad462cb040242a9a",
+      "bytes": 115
+    },
+    "native-pairs/colonial-after-rear/viewer.json": {
+      "sha256": "6dccfeb32aedb607e21a0a743ff0f426ce2f5d453b723010d7fe2328981d4a14",
+      "bytes": 15338
+    },
+    "native-pairs/colonial-after-tactical/capture.png": {
+      "sha256": "ddc57cde2a4cd2e1ac7bc7356204a39a383140f519caa171ab5da012283d060c",
+      "bytes": 23141
+    },
+    "native-pairs/colonial-after-tactical/scene.snap": {
+      "sha256": "98687b0075e3233ae63764a4b77f21428d39336d820b825436e982bfd3b9d834",
+      "bytes": 9442
+    },
+    "native-pairs/colonial-after-tactical/stdout.txt": {
+      "sha256": "46f08665dd8249401fddb8ee47fdbe0e7539453d7aa688d9a9eb2b9df3eb30f2",
+      "bytes": 119
+    },
+    "native-pairs/colonial-after-tactical/viewer.json": {
+      "sha256": "b43d0f6362af4cf72197da15c3379eda9c90e9d605ef99365a4c58cc0252e3e6",
+      "bytes": 15365
+    },
+    "native-pairs/colonial-before-close/capture.png": {
+      "sha256": "10e36ec1498ae94dd3b5145d028260caae3cd438e18c8c3f20501f30232842b1",
+      "bytes": 56610
+    },
+    "native-pairs/colonial-before-close/scene.snap": {
+      "sha256": "69d7895e91a36c068f9703b7dfdfd553199b2f1191fbdf6726b90ba95af8c741",
+      "bytes": 8050
+    },
+    "native-pairs/colonial-before-close/stdout.txt": {
+      "sha256": "879994418e7e787e48780671a5ac80d5d47a6ffa6736e914bee3ccc9d6ecfc93",
+      "bytes": 117
+    },
+    "native-pairs/colonial-before-close/viewer.json": {
+      "sha256": "ac90302a5bc45bdf042077e017887afbc4d9f6e9fa20bb84e817871394dacd45",
+      "bytes": 13523
+    },
+    "native-pairs/colonial-before-rear/capture.png": {
+      "sha256": "bfa943f203c7730081ed34ef4d4b9e73172e083df0e3d3e307cf78c5d1c1482e",
+      "bytes": 48312
+    },
+    "native-pairs/colonial-before-rear/scene.snap": {
+      "sha256": "f5538760e3863b9ab2efabf3462b4d7dd5f5027c1674ed32bc7a890c14323a20",
+      "bytes": 8051
+    },
+    "native-pairs/colonial-before-rear/stdout.txt": {
+      "sha256": "f01e5ed97f1ff4cdc97e4d28167a2a2b4ec16d6c2e1a6c44b714799aef0918ff",
+      "bytes": 116
+    },
+    "native-pairs/colonial-before-rear/viewer.json": {
+      "sha256": "e80e0d93cae6816a26a640d32a120936b8153289e951c7e3d1130b3fbe2b0951",
+      "bytes": 13508
+    },
+    "native-pairs/colonial-before-tactical/capture.png": {
+      "sha256": "d03f4deb38d407419ec5e5f7823b1bc7a1aa7bead162f26ecf45f26e0e8c8cb4",
+      "bytes": 22100
+    },
+    "native-pairs/colonial-before-tactical/scene.snap": {
+      "sha256": "9def13ec7be40774bb79f5617c9e97a0d101b51ffc3b2904e46f954126159b45",
+      "bytes": 8048
+    },
+    "native-pairs/colonial-before-tactical/stdout.txt": {
+      "sha256": "70f13c66ef2c5cfdf1c78620a8f1d4edc2fa3aeae0cfb01b214f4792f0a15456",
+      "bytes": 120
+    },
+    "native-pairs/colonial-before-tactical/viewer.json": {
+      "sha256": "abc4f530a77281423fa61c80a2ab3b719d62a2876d53fb7c6d36de67d532d1c0",
+      "bytes": 13514
+    },
+    "native-pairs/executor-after-close/capture.png": {
+      "sha256": "f7400d9e16b8f75095e9f96978746b82c95be33b204a7dcf998123d678ae9730",
+      "bytes": 32535
+    },
+    "native-pairs/executor-after-close/scene.snap": {
+      "sha256": "07fc286aeb2f31ea4f077901484f91af6add19eaff58726e8b258bf15e34ac33",
+      "bytes": 9446
+    },
+    "native-pairs/executor-after-close/stdout.txt": {
+      "sha256": "397b43e080d550aa5b17702252a6d51a7aba712568624f96b71c7ba2a1b80dc8",
+      "bytes": 116
+    },
+    "native-pairs/executor-after-close/viewer.json": {
+      "sha256": "3f8215c363088d117295d6ba4c5cee7319a105cd00107cfe25767b94d283c08c",
+      "bytes": 15351
+    },
+    "native-pairs/executor-after-rear/capture.png": {
+      "sha256": "0475011e6e7dcb4e2818f1a553260c9d7b8ab5829339ba7d7d59ba203d584d65",
+      "bytes": 39005
+    },
+    "native-pairs/executor-after-rear/scene.snap": {
+      "sha256": "953d026f1d65ccb7ea3265501fc85465793a18d500e30195a0348ea87acd0d4a",
+      "bytes": 9447
+    },
+    "native-pairs/executor-after-rear/stdout.txt": {
+      "sha256": "a94bf83b57302f03c0370f6f65b11a20a543789bbde53797c878f348cbecf0d3",
+      "bytes": 115
+    },
+    "native-pairs/executor-after-rear/viewer.json": {
+      "sha256": "97e714846c74b044db1f73168fd7f989fc0032fba1553d185b0f2a5bc9ff28ec",
+      "bytes": 15340
+    },
+    "native-pairs/executor-after-tactical/capture.png": {
+      "sha256": "f993faacad92fccd34b1c892d1a1b1c5458153547c1fcb7e8b31cdc5877e9fdf",
+      "bytes": 15467
+    },
+    "native-pairs/executor-after-tactical/scene.snap": {
+      "sha256": "c2d4b74001949d8f66b3effe42b56d654667195165a0629cba62daaf50ba32a0",
+      "bytes": 9444
+    },
+    "native-pairs/executor-after-tactical/stdout.txt": {
+      "sha256": "f7eb7a84b52ffcc531664a1f00d86f11850161ae92e8b3afa8c3ba60a550ecf9",
+      "bytes": 119
+    },
+    "native-pairs/executor-after-tactical/viewer.json": {
+      "sha256": "19fae1798e4ec489225e225d72e1663d99fdf388ab3935828fb0db6954171011",
+      "bytes": 15326
+    },
+    "native-pairs/executor-before-close/capture.png": {
+      "sha256": "4a4256cd352682161768332a563ab69e63571b2f652e854be9195549cf639d7e",
+      "bytes": 24786
+    },
+    "native-pairs/executor-before-close/scene.snap": {
+      "sha256": "9b570fda5dc80f7eb5a6d31fbd20efec60aed0e1564ceb17b6afdac7d5893103",
+      "bytes": 8053
+    },
+    "native-pairs/executor-before-close/stdout.txt": {
+      "sha256": "0779b040738024cd7b09a82583006fe5d4484fa075a35df4d888624cdd0f9188",
+      "bytes": 117
+    },
+    "native-pairs/executor-before-close/viewer.json": {
+      "sha256": "843b8d760e737a8ab350e42af1d1ff6f67f2f9b188035f7d75f18de05e1031ac",
+      "bytes": 13507
+    },
+    "native-pairs/executor-before-rear/capture.png": {
+      "sha256": "c25d542956696bf10f71712c4aa85d986e696c10bb1dfaaf71dafa7655dd3013",
+      "bytes": 27009
+    },
+    "native-pairs/executor-before-rear/scene.snap": {
+      "sha256": "7a4ca297ab80b7582d318b781cd3a4dd5e2bf5e0d73ba7717ae44bf668d9aef1",
+      "bytes": 8054
+    },
+    "native-pairs/executor-before-rear/stdout.txt": {
+      "sha256": "9783535293afbc0c337f39a3507dc701bfdb5d06e65794b51279ac44d05f0ac6",
+      "bytes": 116
+    },
+    "native-pairs/executor-before-rear/viewer.json": {
+      "sha256": "a051215c7eb1405fd1bfb1b5b7d0b5ae1e378d0edf478e34057d93df64025c7d",
+      "bytes": 13504
+    },
+    "native-pairs/executor-before-tactical/capture.png": {
+      "sha256": "aad9abb06b5cdf51bacb8b751af85c305c82d3ef40d29713afb1f2389a2fb3c5",
+      "bytes": 12650
+    },
+    "native-pairs/executor-before-tactical/scene.snap": {
+      "sha256": "7e48e37add106d5a0411532a969c919176c01fc37d4a884197e6f67c6f345ccd",
+      "bytes": 8051
+    },
+    "native-pairs/executor-before-tactical/stdout.txt": {
+      "sha256": "06d1bf3526ed2e4f37f0246bf684469ebd0f989d296b79bccab68c7098f196d4",
+      "bytes": 120
+    },
+    "native-pairs/executor-before-tactical/viewer.json": {
+      "sha256": "e9094b6c413d85ede50268d53c3cfdef84f0df835b68f5b1fb20aeab3dbbf4a8",
+      "bytes": 13485
+    },
+    "native-pairs/gladiator-after-close/capture.png": {
+      "sha256": "a9160fb5a11797058392a15f13da651582150b2fb07b3b6288fad8f000c397a1",
+      "bytes": 31495
+    },
+    "native-pairs/gladiator-after-close/scene.snap": {
+      "sha256": "88b3cd48aaa671e59ed2a50db80880abbb43ca3d2d5206cac7bacf8f51277f44",
+      "bytes": 9438
+    },
+    "native-pairs/gladiator-after-close/stdout.txt": {
+      "sha256": "d962200c01a5c6f3d273219da5d4f9fa5f1c65ffc21733b7e1fd7786d058092f",
+      "bytes": 117
+    },
+    "native-pairs/gladiator-after-close/viewer.json": {
+      "sha256": "21eaab771353fcfc8bff9105565f9261a7ea8cbd02d6b856119b289f0b7d6fe9",
+      "bytes": 15309
+    },
+    "native-pairs/gladiator-after-rear/capture.png": {
+      "sha256": "e3653ec778f41d0d269c529e545bf0a06cda9f0ceff7c003025ad76bd35b3f7f",
+      "bytes": 37320
+    },
+    "native-pairs/gladiator-after-rear/scene.snap": {
+      "sha256": "32fa330db1694c5425682a59003cce5d471f828c2e3a828c018a03e25cb7b0e1",
+      "bytes": 9439
+    },
+    "native-pairs/gladiator-after-rear/stdout.txt": {
+      "sha256": "ce33f98377579840fe78aeaadd738346cd229a09931bc7eebcd7adc29f8cb9bd",
+      "bytes": 116
+    },
+    "native-pairs/gladiator-after-rear/viewer.json": {
+      "sha256": "9f627839191a36f940cc80c78cfb77144ad48ebd6a0300618666f0008744a7a3",
+      "bytes": 15315
+    },
+    "native-pairs/gladiator-after-tactical/capture.png": {
+      "sha256": "11699483a5e0de66f60747ddd32e082901550b150463dbff033f0a252eed6010",
+      "bytes": 15005
+    },
+    "native-pairs/gladiator-after-tactical/scene.snap": {
+      "sha256": "52e5ba0243e8d5191c0b8e214df9a8e05840fad8a206d6953751798b73d8a841",
+      "bytes": 9438
+    },
+    "native-pairs/gladiator-after-tactical/stdout.txt": {
+      "sha256": "3d2f261a9d94fbeb5f09efbc854b17511914f95b7ee46d5695842a916592bf43",
+      "bytes": 120
+    },
+    "native-pairs/gladiator-after-tactical/viewer.json": {
+      "sha256": "bb4272c81760feeb68d0134bdf52dc1882d96915f7867e37ab853aad2590771a",
+      "bytes": 15310
+    },
+    "native-pairs/gladiator-before-close/capture.png": {
+      "sha256": "fdc3c2667594c4e649a3cf3b7e8bf4dcfa9aa59c419f3216d7d36b0363c01ede",
+      "bytes": 25407
+    },
+    "native-pairs/gladiator-before-close/scene.snap": {
+      "sha256": "fe6924235287d7e38047887ce5f7f955b924522cb72c54f418e91e64ba481022",
+      "bytes": 8041
+    },
+    "native-pairs/gladiator-before-close/stdout.txt": {
+      "sha256": "2869e05d528411f1e69e4ae9a4a2bc1edebc1c0bfc214d56b9a0b509f68692b2",
+      "bytes": 118
+    },
+    "native-pairs/gladiator-before-close/viewer.json": {
+      "sha256": "bc56cf05dabbb773db6c7ba0ab84c047d6115e50b995080ec213874172b807fc",
+      "bytes": 13491
+    },
+    "native-pairs/gladiator-before-rear/capture.png": {
+      "sha256": "65fb7cc661fa9d596f8b90f6240b1d8c4dc2eac435f6bc853947a0ef653ab1cb",
+      "bytes": 27881
+    },
+    "native-pairs/gladiator-before-rear/scene.snap": {
+      "sha256": "c0def8c87f9df6a26498478ae37a9c77c7618805920b056c22ca610564bc36ce",
+      "bytes": 8042
+    },
+    "native-pairs/gladiator-before-rear/stdout.txt": {
+      "sha256": "f87099af2e9b315906e7edd663886e3c755a41fa4c30f89588d4bba14a90caf9",
+      "bytes": 117
+    },
+    "native-pairs/gladiator-before-rear/viewer.json": {
+      "sha256": "5871354bdf73e73a1b8b8b0c06f3e04f41d8b22755ef13b4daf1d37bf37544b2",
+      "bytes": 13489
+    },
+    "native-pairs/gladiator-before-tactical/capture.png": {
+      "sha256": "eb3f573740bda2fe5e631877ae051f3fb965b9ab1d3f9a1a517af30435c7e619",
+      "bytes": 13195
+    },
+    "native-pairs/gladiator-before-tactical/scene.snap": {
+      "sha256": "3dc9aa798711c01f87c89d76619cf067bf021c5b7b09e43a5096c46086cffcdb",
+      "bytes": 8041
+    },
+    "native-pairs/gladiator-before-tactical/stdout.txt": {
+      "sha256": "3e48d6020c04963b092a4949680ef995bd0f51a4219fd37cb6116b415108cdd8",
+      "bytes": 121
+    },
+    "native-pairs/gladiator-before-tactical/viewer.json": {
+      "sha256": "d3ce55dd8a1c38a8f8621522beffa877035964a2d36446a4c980faae28194fec",
+      "bytes": 13506
+    },
+    "native-pairs/hammer-after-close/capture.png": {
+      "sha256": "e7b02264af6f222c8a1886ffac32026d7f59d9d4ea0a610874a29f3e888b4f5d",
+      "bytes": 31602
+    },
+    "native-pairs/hammer-after-close/scene.snap": {
+      "sha256": "df332f87f758a6308653adc6384ac03ae6cfbaaee01841f2c32f3571e8d81bea",
+      "bytes": 9444
+    },
+    "native-pairs/hammer-after-close/stdout.txt": {
+      "sha256": "bac0de92fa420b72f27a9e33891d66d8049c00793ad1665a5332b9be0121a3cc",
+      "bytes": 114
+    },
+    "native-pairs/hammer-after-close/viewer.json": {
+      "sha256": "33ef89968e57e78e72efacf799f20412b1baff4a9b2dd9b7440fd0bde4b5dcfc",
+      "bytes": 15335
+    },
+    "native-pairs/hammer-after-rear/capture.png": {
+      "sha256": "092fbd475fd8995c05de2c89ba8aaa68ede95a7b2772504dd7256d7db8e7573e",
+      "bytes": 32414
+    },
+    "native-pairs/hammer-after-rear/scene.snap": {
+      "sha256": "08d97e47c7082f2468fbb4f17d90a09f8cc1e4e70434df660b00569914d336ea",
+      "bytes": 9445
+    },
+    "native-pairs/hammer-after-rear/stdout.txt": {
+      "sha256": "57b33dd236a642eda4d84da7c6a2adec4695df62ceac6b9d6dce3fccb0a23752",
+      "bytes": 113
+    },
+    "native-pairs/hammer-after-rear/viewer.json": {
+      "sha256": "198efdf7a832eba1940cd33e25cf7e362624e82e26ab03c0f8edb5e0b14f1b45",
+      "bytes": 15353
+    },
+    "native-pairs/hammer-after-tactical/capture.png": {
+      "sha256": "4c099edec36fccf5ed47927d113c49c7c4ca7de46ba88b7ff7ebd8fb4e34786d",
+      "bytes": 20950
+    },
+    "native-pairs/hammer-after-tactical/scene.snap": {
+      "sha256": "698b4983331cd22b5622a7857e299b634aa9f4f7cc766a11978d82ee0a950e24",
+      "bytes": 9458
+    },
+    "native-pairs/hammer-after-tactical/stdout.txt": {
+      "sha256": "b46da3250a6bdf13522243dadcf9292b946a2ee09465e0c2aee963fe4aa4dccb",
+      "bytes": 117
+    },
+    "native-pairs/hammer-after-tactical/viewer.json": {
+      "sha256": "b575dc697d71cc8ef588a39b83885ce7a4fcc718cc5e00cfcaa35c531958da8b",
+      "bytes": 15372
+    },
+    "native-pairs/hammer-before-close/capture.png": {
+      "sha256": "0aa158ec357164feae7d4fd561b83e309a5acd6421922489e3703c4241984fa5",
+      "bytes": 27546
+    },
+    "native-pairs/hammer-before-close/scene.snap": {
+      "sha256": "49a09046ea498e54a9036a941f36b7316304da2761340e11ee5ad7aaf4fe6b46",
+      "bytes": 8062
+    },
+    "native-pairs/hammer-before-close/stdout.txt": {
+      "sha256": "d3bc6bab9b3a198bdd74e658c48852694ada087e4792f0a87cf509a99b2fb19a",
+      "bytes": 115
+    },
+    "native-pairs/hammer-before-close/viewer.json": {
+      "sha256": "c147f522c6916e1bac8d4f85e82f2330923d6d4bbcd319b5b2bdc415338d7fc4",
+      "bytes": 13491
+    },
+    "native-pairs/hammer-before-rear/capture.png": {
+      "sha256": "ab21ae4e8cffab08c1b8b728cb5e36cc39f1d765bc20de9ead5d3dfcf17a1d7f",
+      "bytes": 30511
+    },
+    "native-pairs/hammer-before-rear/scene.snap": {
+      "sha256": "85b298a0c516c69a1a06c68ed265b1848ceac7f1335cf9805a0db6efb7a7275e",
+      "bytes": 8063
+    },
+    "native-pairs/hammer-before-rear/stdout.txt": {
+      "sha256": "0d039dad8d79517e729e0cb41d16aa3dbcbb7e7bb5878f116683cb0bc62b0023",
+      "bytes": 114
+    },
+    "native-pairs/hammer-before-rear/viewer.json": {
+      "sha256": "581a5d7d4925bb5d58c5e0cb8a627cde2f2201163b740e661b4cca442bbabd4d",
+      "bytes": 13503
+    },
+    "native-pairs/hammer-before-tactical/capture.png": {
+      "sha256": "a917e540ca213ad7fd80f63e7d7c6b2db908d2042c43f1e7a7f5a70a14916f74",
+      "bytes": 15471
+    },
+    "native-pairs/hammer-before-tactical/scene.snap": {
+      "sha256": "3a49aeb2427a72e029e564558bc9865bd5474597cfa36ca6494ea68ced85b583",
+      "bytes": 8076
+    },
+    "native-pairs/hammer-before-tactical/stdout.txt": {
+      "sha256": "11115ab9ff07b3e0f658651eb7ce73b3a3e74b94a9a3e2ebb45f42937453baec",
+      "bytes": 118
+    },
+    "native-pairs/hammer-before-tactical/viewer.json": {
+      "sha256": "92419dcf57a6e090cc422616b2252008252368ea2878144154050aff12d56a83",
+      "bytes": 13529
+    },
+    "native-pairs/lancer-after-close/capture.png": {
+      "sha256": "6e9f92c78054b7d3f680301b97d123c67a9495958b56e58e012204db1b6ea7e8",
+      "bytes": 27750
+    },
+    "native-pairs/lancer-after-close/scene.snap": {
+      "sha256": "c1004ab911131122ca9d0c94e7924f332a8d6e0d68ea5242e0eee0dd02637f1d",
+      "bytes": 9429
+    },
+    "native-pairs/lancer-after-close/stdout.txt": {
+      "sha256": "f903b7b28d836f755122b9700f7529468561c184095eed213dea4d45900d2140",
+      "bytes": 114
+    },
+    "native-pairs/lancer-after-close/viewer.json": {
+      "sha256": "8a18fcfa4066b56f2132f2cb65cb055767ebaad44b80a7b0320fe0f50db058de",
+      "bytes": 15337
+    },
+    "native-pairs/lancer-after-rear/capture.png": {
+      "sha256": "5607e97f768acaad2fdfcb4e1f626c982f174594da194814efe7b7b09a88da1c",
+      "bytes": 34624
+    },
+    "native-pairs/lancer-after-rear/scene.snap": {
+      "sha256": "104451b087802bba44340d9a0d5f6288427c95d88f8677b2bf3c73a5c29d8299",
+      "bytes": 9430
+    },
+    "native-pairs/lancer-after-rear/stdout.txt": {
+      "sha256": "6aef13a7587cfac8d6802245b08549074282213b870d14d91487eb90f8b7fe10",
+      "bytes": 113
+    },
+    "native-pairs/lancer-after-rear/viewer.json": {
+      "sha256": "8e5c5408c7875f5dfa7adb2e756fa8221553cc6197d40b10133605c307d7fcda",
+      "bytes": 15319
+    },
+    "native-pairs/lancer-after-tactical/capture.png": {
+      "sha256": "5ee5ccf3aa44a1c2356f86940381d2962b2869dde847e17121ed64f30b47b3d1",
+      "bytes": 13141
+    },
+    "native-pairs/lancer-after-tactical/scene.snap": {
+      "sha256": "c818491a993cfd7fd5f8ebd36a6ea206fa5f0381af13ebdb8765b0e1927974c6",
+      "bytes": 9426
+    },
+    "native-pairs/lancer-after-tactical/stdout.txt": {
+      "sha256": "20667b0fa421cf0975ae4fa5baee80987ff1fb4d132eff4db9012d91513c3016",
+      "bytes": 117
+    },
+    "native-pairs/lancer-after-tactical/viewer.json": {
+      "sha256": "542c437b3082a30c0d8976c11e94cde636684e51b48d52581dbe90038a746136",
+      "bytes": 15325
+    },
+    "native-pairs/lancer-before-close/capture.png": {
+      "sha256": "d984f0321db5b25284007203d6834eee9d2d3cba00a67e18d4013c5f8ea6f5a0",
+      "bytes": 25724
+    },
+    "native-pairs/lancer-before-close/scene.snap": {
+      "sha256": "3abc965c8ff7dcc898aace3586d8aae6c9e552c488413ed9e7aa521003a8d6dc",
+      "bytes": 8035
+    },
+    "native-pairs/lancer-before-close/stdout.txt": {
+      "sha256": "4ffc26b5d3e7cef3b096977d712d22d76e57d2375c71b4ceaa95730c1de9aee4",
+      "bytes": 115
+    },
+    "native-pairs/lancer-before-close/viewer.json": {
+      "sha256": "927c711eefe0fd8fa42e5e094cb427cd88e2eb6090fd883e23d13a2b68853cb3",
+      "bytes": 13477
+    },
+    "native-pairs/lancer-before-rear/capture.png": {
+      "sha256": "2e0be017fa629c6a4f16c63aca4fa3fe77f224fafc5d4a4f88bdfcae8b80007c",
+      "bytes": 25268
+    },
+    "native-pairs/lancer-before-rear/scene.snap": {
+      "sha256": "6533c21bb3875c5835e58832f00acd9c97b392d9f421b22c2e54a76e3804c6fe",
+      "bytes": 8036
+    },
+    "native-pairs/lancer-before-rear/stdout.txt": {
+      "sha256": "8fcedd83f3bab2a249392c3fbb34cd0b0149e0d720bf0d4fcaccccf81d0b10bd",
+      "bytes": 114
+    },
+    "native-pairs/lancer-before-rear/viewer.json": {
+      "sha256": "0a59500557ad0ef51a322009a81e158322274d411ceff2246c55c821283bdc28",
+      "bytes": 13518
+    },
+    "native-pairs/lancer-before-tactical/capture.png": {
+      "sha256": "53491d42370a59e9468e3cbeb31ab2a23a6687b5e98c6347fdd05855ffbe50d5",
+      "bytes": 13007
+    },
+    "native-pairs/lancer-before-tactical/scene.snap": {
+      "sha256": "d0e7d62b5857098f0128e413408bc28309a90d8e2924769b281728f62ed3c533",
+      "bytes": 8032
+    },
+    "native-pairs/lancer-before-tactical/stdout.txt": {
+      "sha256": "3a01d19de2a9e5a7881373d5302b501fce6ca6cd60b1a2259aeefe3bdace0bb2",
+      "bytes": 118
+    },
+    "native-pairs/lancer-before-tactical/viewer.json": {
+      "sha256": "a708c3ca723d36ec94b126eba49449cbf5fba367dac4b9cfb0944cd54025e659",
+      "bytes": 13506
+    },
+    "native-pairs/metrics.json": {
+      "sha256": "a5407da8cc82f09fa6ce9f3c804e3d3497868e3ead1e5d1855d5d851c1d9400b",
+      "bytes": 20490
+    },
+    "native-pairs/progress.jsonl": {
+      "sha256": "6a0df2071e54a5fbbf484b456a126a50905a78f2698835e7f0c5289f6e685ec7",
+      "bytes": 13599
+    },
+    "native-pairs/sovereign-after-close/capture.png": {
+      "sha256": "4d701ab0f3e3fe664f04c38d4bd3ed224580d6e24f8db7b638eb5482734e036a",
+      "bytes": 33008
+    },
+    "native-pairs/sovereign-after-close/scene.snap": {
+      "sha256": "09d87d3d6b675f78297de9be99464c8d67128d74d06437731e66800f8f14e0a1",
+      "bytes": 9456
+    },
+    "native-pairs/sovereign-after-close/stdout.txt": {
+      "sha256": "471a9a85e4894db54a7827eece386a455096ed65ca45c2dc05222a17354475c6",
+      "bytes": 117
+    },
+    "native-pairs/sovereign-after-close/viewer.json": {
+      "sha256": "a20becdc14dc9cd208a5827bba70e5807b38be932ddc6075130bf72cbb7dd8aa",
+      "bytes": 15338
+    },
+    "native-pairs/sovereign-after-rear/capture.png": {
+      "sha256": "f5a31e97e4734258636cfc40f996eba8be94ebe8710569b5da3b478c782b49cf",
+      "bytes": 40472
+    },
+    "native-pairs/sovereign-after-rear/scene.snap": {
+      "sha256": "09f7c64b1a9db251d6695b59f7e3ea06a50eee171157898ee54ee12d8e4b2fc9",
+      "bytes": 9457
+    },
+    "native-pairs/sovereign-after-rear/stdout.txt": {
+      "sha256": "0fbae676094079880f92bc194c8185e86ffdf37b66a58ddc34783f7225cc17f3",
+      "bytes": 116
+    },
+    "native-pairs/sovereign-after-rear/viewer.json": {
+      "sha256": "51b13f3d92a89f4883f9cb0d47cc39250fa2fa8e4e64cc941731a78e78425684",
+      "bytes": 15328
+    },
+    "native-pairs/sovereign-after-tactical/capture.png": {
+      "sha256": "b29cc4a793b78518c694f30ed122522f8306342300d21b24a9f6a54b26c499ed",
+      "bytes": 15463
+    },
+    "native-pairs/sovereign-after-tactical/scene.snap": {
+      "sha256": "d1c006a6221f6d40dc3b9a0a7d7acb69281082acd9c3a947c9d9d3f8898088b4",
+      "bytes": 9454
+    },
+    "native-pairs/sovereign-after-tactical/stdout.txt": {
+      "sha256": "72468b7dcdf409b94290415a091d5ccda569502bb71e27d3d3f15bd432972079",
+      "bytes": 120
+    },
+    "native-pairs/sovereign-after-tactical/viewer.json": {
+      "sha256": "4068471838e97ec497023a55ebabc5e7f390e4310563749022bcd29870fc3b24",
+      "bytes": 15341
+    },
+    "native-pairs/sovereign-before-close/capture.png": {
+      "sha256": "8e7d71f0f6b559b1303f001d971a2e9e425e0d5ee2b4fd4c32d86b45896c3848",
+      "bytes": 27027
+    },
+    "native-pairs/sovereign-before-close/scene.snap": {
+      "sha256": "b2ce72e6286d181c26b63c343604c8228d8d801f2e0b0ae7a35ea2c9742a5994",
+      "bytes": 8064
+    },
+    "native-pairs/sovereign-before-close/stdout.txt": {
+      "sha256": "5815a79c4aa5376c27d97580a1d95e30a5a35ca320966ccd42aa842d428205a8",
+      "bytes": 118
+    },
+    "native-pairs/sovereign-before-close/viewer.json": {
+      "sha256": "9baadff30847440333d258c7f295c8d764c9fa19765545ab26a4374c0876e656",
+      "bytes": 13508
+    },
+    "native-pairs/sovereign-before-rear/capture.png": {
+      "sha256": "1bf26d07118b45891ee91d745383bfea666ac2e446f4e20bbd1679d19f643a67",
+      "bytes": 26928
+    },
+    "native-pairs/sovereign-before-rear/scene.snap": {
+      "sha256": "cbaf18773dfcaad08f52b696f48de1626f64ea35ace5cd9a12924187b0198287",
+      "bytes": 8065
+    },
+    "native-pairs/sovereign-before-rear/stdout.txt": {
+      "sha256": "7b8e7fc4a7bf784401aeb50f995c91bd29a4f172a0df88df78317b20cbb49e97",
+      "bytes": 117
+    },
+    "native-pairs/sovereign-before-rear/viewer.json": {
+      "sha256": "d788369d970fc739208abcfd9e927632b697f92ab3f598d663ba961e4748dabd",
+      "bytes": 13478
+    },
+    "native-pairs/sovereign-before-tactical/capture.png": {
+      "sha256": "ab2321da87e454f5203cfa2199f6b90ae075e3ce4c0e6bb2062638103e92512b",
+      "bytes": 13119
+    },
+    "native-pairs/sovereign-before-tactical/scene.snap": {
+      "sha256": "e75135f71b2b8f94bb6c87b9808b9c6c88c034536c910142a7127ef8942f936f",
+      "bytes": 8062
+    },
+    "native-pairs/sovereign-before-tactical/stdout.txt": {
+      "sha256": "21e6510c3a40959904253f555cf839902cc358ee7459602a295bb54aba949465",
+      "bytes": 121
+    },
+    "native-pairs/sovereign-before-tactical/viewer.json": {
+      "sha256": "a486650ff170ead09caffba62e88e4f703ae8dc611bb3c870d338130a2334d8f",
+      "bytes": 13492
+    },
+    "native-pairs/transport-after-close/capture.png": {
+      "sha256": "16337bdd5fd5cf8e28524157ffa057f2ff7126068250cc960a2ad35e0308c6be",
+      "bytes": 53928
+    },
+    "native-pairs/transport-after-close/scene.snap": {
+      "sha256": "09071c87cba2f29661be8fbc9d365dca2871002d71e2eec718d8b3491dbf5473",
+      "bytes": 9443
+    },
+    "native-pairs/transport-after-close/stdout.txt": {
+      "sha256": "6852504b849ed3e156df6ef211571dde910e6d887543de1133de99d4bf4dc64f",
+      "bytes": 117
+    },
+    "native-pairs/transport-after-close/viewer.json": {
+      "sha256": "f1aece5f328b7165bb77ccca18be33ebc4762d3bbbef650aa69c2f19d28d670d",
+      "bytes": 15342
+    },
+    "native-pairs/transport-after-rear/capture.png": {
+      "sha256": "53adbd6d6c17602aedab21ba5a32f6b82a2836ccefb90f14e541ab1cc60f7d48",
+      "bytes": 65201
+    },
+    "native-pairs/transport-after-rear/scene.snap": {
+      "sha256": "c4e01629e592e0275ca4872f3590893a139fe6f01758e64552f961c7ab4c7971",
+      "bytes": 9444
+    },
+    "native-pairs/transport-after-rear/stdout.txt": {
+      "sha256": "9b34f5dbd764d91534517532eb64ab2e6fe91fcaa22ed6648f80e920ec38c556",
+      "bytes": 116
+    },
+    "native-pairs/transport-after-rear/viewer.json": {
+      "sha256": "dbd8ae25821b74639f3ad2400ea5b3d6815e057ef0bcadd753b7bd539b274488",
+      "bytes": 15340
+    },
+    "native-pairs/transport-after-tactical/capture.png": {
+      "sha256": "170eb62042a87554d64697980eea5c5b58711b29d38999f92f5d81f040285da6",
+      "bytes": 22169
+    },
+    "native-pairs/transport-after-tactical/scene.snap": {
+      "sha256": "d5f0e0b6dac1495a6fe08842ec6688f5fea54c5b82b7de699b0f433fc37c0743",
+      "bytes": 9452
+    },
+    "native-pairs/transport-after-tactical/stdout.txt": {
+      "sha256": "8d3c477732b19f299ee9d1684e64fc7dedb555d5d11c9c29b58d54eaa0d5f6e2",
+      "bytes": 120
+    },
+    "native-pairs/transport-after-tactical/viewer.json": {
+      "sha256": "6f4f004b155feacfc9829bf3f863723933ada29ec1c0f3d35b5260d5ff9ccc73",
+      "bytes": 15345
+    },
+    "native-pairs/transport-before-close/capture.png": {
+      "sha256": "376b83482b93416f1b5c26dce74e82d41caf8ef13436bf3dee5c5f2db4c9f042",
+      "bytes": 65610
+    },
+    "native-pairs/transport-before-close/scene.snap": {
+      "sha256": "72a797b003e2f623d6710142a1cdce0e64b81fc16f2918971991e343d69dc0c8",
+      "bytes": 8045
+    },
+    "native-pairs/transport-before-close/stdout.txt": {
+      "sha256": "f69abbb2842623cdd13d899d8c1368ea4407150a69a8016b37cf11463b091176",
+      "bytes": 118
+    },
+    "native-pairs/transport-before-close/viewer.json": {
+      "sha256": "1da454266870d19e2d94517e12a5dbeb3ee7b157d74f44f86fe666563cb2325e",
+      "bytes": 13510
+    },
+    "native-pairs/transport-before-rear/capture.png": {
+      "sha256": "ef5685a4d56bc8f0f0f106b2c1b0d67530f02da2133e13f877b7d70892b9c139",
+      "bytes": 52953
+    },
+    "native-pairs/transport-before-rear/scene.snap": {
+      "sha256": "f5cdb35eea1ae1289e0d1f6ad1f9da13c016e19b3152744cd180845e6fef448c",
+      "bytes": 8046
+    },
+    "native-pairs/transport-before-rear/stdout.txt": {
+      "sha256": "74dde72d66dcc841f696512705ac0ba4ddb07c80e05652070b92f5d4b82fc52d",
+      "bytes": 117
+    },
+    "native-pairs/transport-before-rear/viewer.json": {
+      "sha256": "3d54f46f94e38c1a68e9083fb10ad80dcfd6a96b74bd1cf40da41fb72ab9cce7",
+      "bytes": 13523
+    },
+    "native-pairs/transport-before-tactical/capture.png": {
+      "sha256": "81e97836f49e8771cdb97a3c59d3f9e17ef93b759abbbbdad911378a0529912b",
+      "bytes": 24304
+    },
+    "native-pairs/transport-before-tactical/scene.snap": {
+      "sha256": "49e160779686810694f6afb60faf9c03c1cd74600dd5da84dc7f9de4d5591568",
+      "bytes": 8054
+    },
+    "native-pairs/transport-before-tactical/stdout.txt": {
+      "sha256": "d47793136278b74a492ae8dcea1e031936e4ae409602821769605e90a2a5f57d",
+      "bytes": 121
+    },
+    "native-pairs/transport-before-tactical/viewer.json": {
+      "sha256": "57f8713664701dbe892b56b932d8e558aac93f2ddaef3955aba9a05f8ceeca9c",
+      "bytes": 13527
+    },
+    "native-pairs/vigil-control-after-close/capture.png": {
+      "sha256": "7a4d03f1f32d0d86ce4a6868a58ad0be9e252c5f714bd3f2d0209fac6e84cdf4",
+      "bytes": 32658
+    },
+    "native-pairs/vigil-control-after-close/scene.snap": {
+      "sha256": "163b8f4501f02f227aa8eb93d784cbe84354715efdf2363d2a524dfaa6e26949",
+      "bytes": 9420
+    },
+    "native-pairs/vigil-control-after-close/stdout.txt": {
+      "sha256": "f8c417d6b373c12acbd42a9a614a07168efaaa82bb3e430fd720343ee1dbf916",
+      "bytes": 121
+    },
+    "native-pairs/vigil-control-after-close/viewer.json": {
+      "sha256": "7f6a019718247b156b9e61d42e031f9408846e86708db7eb4682b35d63251b26",
+      "bytes": 15337
+    },
+    "native-pairs/vigil-control-after-rear/capture.png": {
+      "sha256": "00e4611dadc6401f7ce7101079945c34c1092bfd82c27abea8eca958e8d88f81",
+      "bytes": 34950
+    },
+    "native-pairs/vigil-control-after-rear/scene.snap": {
+      "sha256": "3c4df8ae802ced6e7a27c83e0b5aa1b77fea9b0b6f7417ccd04fda84353c0145",
+      "bytes": 9421
+    },
+    "native-pairs/vigil-control-after-rear/stdout.txt": {
+      "sha256": "e4eb78205720dd6c98837de99ef49fe3d0017a641888ed03bd1c5945abe12799",
+      "bytes": 120
+    },
+    "native-pairs/vigil-control-after-rear/viewer.json": {
+      "sha256": "ff2ff695f3a93e91be5e165b3fd5dd2d4cacc1acd10649d26811b5ef4a67d7e2",
+      "bytes": 15328
+    },
+    "native-pairs/vigil-control-after-tactical/capture.png": {
+      "sha256": "987ed0732493d10a1ce2449b4c087ea12b5b100d431bb25ee0b474531ff30c94",
+      "bytes": 15011
+    },
+    "native-pairs/vigil-control-after-tactical/scene.snap": {
+      "sha256": "5800642227acde640a8e532c46fa2898199c44148dc243dbeffef918397060e0",
+      "bytes": 9418
+    },
+    "native-pairs/vigil-control-after-tactical/stdout.txt": {
+      "sha256": "ac51220a504b94eeefdffcb577be90b85317bbf7d4d3e07df4c3e1ae8c40b4db",
+      "bytes": 124
+    },
+    "native-pairs/vigil-control-after-tactical/viewer.json": {
+      "sha256": "57c50bf540ed8601baa2889269f45d9bcec762dfb7cf8a299590debce3124213",
+      "bytes": 15342
+    },
+    "native-pairs/vigil-control-before-close/capture.png": {
+      "sha256": "7a4d03f1f32d0d86ce4a6868a58ad0be9e252c5f714bd3f2d0209fac6e84cdf4",
+      "bytes": 32658
+    },
+    "native-pairs/vigil-control-before-close/scene.snap": {
+      "sha256": "44b7f57b18ded2e0ece4853ee7d5a56045da35d4f9a774a6077a43b9e8bf4a83",
+      "bytes": 8060
+    },
+    "native-pairs/vigil-control-before-close/stdout.txt": {
+      "sha256": "b17a60c793b55c55267157e6a858d620622d216971b37679e743357688d394fd",
+      "bytes": 122
+    },
+    "native-pairs/vigil-control-before-close/viewer.json": {
+      "sha256": "7c2bda8ef9d96ed85851193cdb3fa09b5efb4fa4a86ef957f8a68c9b80d1c7d7",
+      "bytes": 13508
+    },
+    "native-pairs/vigil-control-before-rear/capture.png": {
+      "sha256": "00e4611dadc6401f7ce7101079945c34c1092bfd82c27abea8eca958e8d88f81",
+      "bytes": 34950
+    },
+    "native-pairs/vigil-control-before-rear/scene.snap": {
+      "sha256": "81ca626a57344a1168022e828b386c13dd20289c4512c3303df57b422f0cfd59",
+      "bytes": 8061
+    },
+    "native-pairs/vigil-control-before-rear/stdout.txt": {
+      "sha256": "d3f500c67963748e8f0fe9e47e929d956d08f96bd42ce45ffd2bb49c4aef35a0",
+      "bytes": 121
+    },
+    "native-pairs/vigil-control-before-rear/viewer.json": {
+      "sha256": "33b01d81c395baf3dac4ddba7cfb22fb20432d93c2df4b5d063178e90d8623bb",
+      "bytes": 13505
+    },
+    "native-pairs/vigil-control-before-tactical/capture.png": {
+      "sha256": "987ed0732493d10a1ce2449b4c087ea12b5b100d431bb25ee0b474531ff30c94",
+      "bytes": 15011
+    },
+    "native-pairs/vigil-control-before-tactical/scene.snap": {
+      "sha256": "e1af11f4f1f31d662fc833dbce2533b28632a6a5b378a6aeaf07d183f58bfd0b",
+      "bytes": 8058
+    },
+    "native-pairs/vigil-control-before-tactical/stdout.txt": {
+      "sha256": "fab8baa31fa085efdcf60c77b72fd7e1125cab46573576fdd66e321f26535ce9",
+      "bytes": 125
+    },
+    "native-pairs/vigil-control-before-tactical/viewer.json": {
+      "sha256": "245b5d11d96097b497bdbf3e66bd1d86b062545bb626b65dcbe01a674d51a394",
+      "bytes": 13504
+    },
+    "protected-baseline.json": {
+      "sha256": "0cd24df86e4b57374b9980a40e13cb270d7b191a1b750100a5933cdec717c2f2",
+      "bytes": 66093
+    },
+    "static-scan.json": {
+      "sha256": "7fc127170c180e7984537a40a346f1148b5d2b3e8ec60e1e978bcf45a834515f",
+      "bytes": 146
+    },
+    "watchdog-negative.json": {
+      "sha256": "9aba20a3690dc5573645bbedb2cf1a463c3bd373252395193b9c05526566b0a7",
+      "bytes": 218
+    }
+  },
+  "repeat_capture_pixels_identical": 48,
+  "png_lossless_repack": {
+    "png_count": 57,
+    "before_bytes": 112359515,
+    "after_bytes": 3181756,
+    "all_decoded_pixels_preserved": true,
+    "repeated_native_capture_identical_images": 48
+  },
+  "reviewed_change_files": {
+    "art/blender/imperium_colonial_prototype.blend": "7f9625fd22a76094d723cc3d104e3b4e17ef2e146cc8d091a3da92972aba3cff",
+    "art/blender/imperium_executor_prototype.blend": "4ac1fa5ed7c053f9b8b860e8f85b42687ee737835ac73aff424913f5f8062e5c",
+    "art/blender/imperium_gladiator_prototype.blend": "b5de0a2afa13ce2576cd61a3e2a21543fab9bd1d7cbe829c4326863891c42fad",
+    "art/blender/imperium_hammer_prototype.blend": "4cd60542e7cd9e9fcffd73fe867b244746c4a41ce59f40722c02b4d6d4048f02",
+    "art/blender/imperium_lancer_prototype.blend": "d11eb5b77756011d117084df08328a82d104dab2e2944f290b282836ca489918",
+    "art/blender/imperium_sovereign_prototype.blend": "616cee2b2bc75cdb7591085d8a4eca245942354be3da34b865a0074f38ead843",
+    "art/blender/imperium_transport_prototype.blend": "2b9ded6eb7f50d164e140ef633ffa930b830bf8c68111344bd268d599bbb353c",
+    "tests/test_imperium_capital_designs.py": "990789b62ca1c4c924ca709789cc81dfdd5cb1b625ebc483900c40d8e6c2b05e",
+    "tests/test_imperium_fleet_capture.py": "3bcea8bc9bdf225ecf8244d808491ddf7e9d48d25678a7294ffb7c83bb66860c",
+    "tests/test_imperium_support_designs.py": "db3ec7d0a2045df51d4908831c5f27bae915027bd05ea95ff550b6f087e12351",
+    "tests/test_play_imperium_fleet.py": "7abceec6e26a2316831c6ca07a711b71755c8d3674856350951aed82d294018d",
+    "tests/test_remaining_imperium_fleet.py": "55e94664bce2d75622dd3c8e08cba867726d76f3474519087aa07f13d2cac3b1",
+    "tools/art/build_imperium_fleet.py": "f80a42dc8ec2cbfee4401224948e25fd2fc236aeed71a8e5df4451b2422bad26",
+    "tools/art/imperium_capital_designs.py": "430e4f8aebc2243c4680bb6b105300bc42b3d6b6fc956e1ec9e244d3354bbfdb",
+    "tools/art/imperium_fleet_geometry.py": "fce967f48447696a09d3b7693a015d6615552e0dd182a74f3099eb57056baa64",
+    "tools/art/imperium_support_designs.py": "5a07587e8325e2f9a1faca4c43ba1dc0265c2171f659a5c522be452c6d743dea",
+    "tools/art/package_imperium_fleet.py": "430e57dd9adb5eb46672ea3c44e0f9fbbf9ea7e95ab064ebaa47c0b06b84194f",
+    "tools/play_imperium_fleet.py": "be4a0269b825a2066af4733a45540b50dae0f86918641be6d6104c519de3a19b",
+    "tools/render/verify_imperium_fleet.py": "75c3cc477288c095adcfea0d1f93650595f3304c1ead6f48e777be3d69f93802",
+    "visual_packs/imperium-fleet-prototypes/assets/models/colonial.mesh.json": "c135f0a2ef72e06290e6d1048c6b068b86046f73f468d59b0c3e921506ac37c2",
+    "visual_packs/imperium-fleet-prototypes/assets/models/executor.mesh.json": "ca0128360ec6b2f0914af6e3158dc8dd0cc25d2a7ed32795269a047087ec74a2",
+    "visual_packs/imperium-fleet-prototypes/assets/models/gladiator.mesh.json": "d82b04374015ff2b5cae3506fbb68a5484a5e6f3346e5169aad20f6a9ca9dd4f",
+    "visual_packs/imperium-fleet-prototypes/assets/models/hammer.mesh.json": "3143a1a2b66ec5066154937149f5e77ecb1bb5c257e66581fc60437a6a0c5499",
+    "visual_packs/imperium-fleet-prototypes/assets/models/lancer.mesh.json": "8ece02287862e54ef3166aa3ee63929b7ca3a9fdaa0f355fb08443c3731b909b",
+    "visual_packs/imperium-fleet-prototypes/assets/models/manifests/colonial.json": "d04983c3d375a74be5afc33b0d91a69ede6d23c33dc9ef71308be63eb2d48be0",
+    "visual_packs/imperium-fleet-prototypes/assets/models/manifests/executor.json": "9960ae2dfaeec75b16ab3a41d3d5503207b463261cb1e2fc740354ceb3962a4a",
+    "visual_packs/imperium-fleet-prototypes/assets/models/manifests/gladiator.json": "9312663c6167c65548cd1c018197cd7d5dbec46f0faf612aba5bd2f2b9dde150",
+    "visual_packs/imperium-fleet-prototypes/assets/models/manifests/hammer.json": "2bf0b40127c3b051134701273cbfdbb005d948e4a69acdd8afbc007af14370cf",
+    "visual_packs/imperium-fleet-prototypes/assets/models/manifests/lancer.json": "808615ad35383247e621aece7b233ccfe1ff101dc78c1f2d87467335d9c99d2a",
+    "visual_packs/imperium-fleet-prototypes/assets/models/manifests/sovereign.json": "a25bd020fc624eca2b689e2bcee832505ede051187141901a50b6ccf1c9c88a4",
+    "visual_packs/imperium-fleet-prototypes/assets/models/manifests/transport.json": "bc2d11bcd7268d23b580fb6923053176df09940c145a9d1cd95dae431ffa71b5",
+    "visual_packs/imperium-fleet-prototypes/assets/models/sovereign.mesh.json": "7030bbb06d575e76e1374cbafca1541cab4fc149d2ab25bd4248165ee65609af",
+    "visual_packs/imperium-fleet-prototypes/assets/models/transport.mesh.json": "a0e5969e9fd22b99e4aa4e0986fd8d8270980a15f30ecbc6ffa34afa9b4e7c66",
+    "visual_packs/imperium-fleet-prototypes/visual-pack.json": "fc2f3383cd8434e914eac461a22069b4790ddbb856701cfb74c4916af21b3b18"
+  },
+  "native_binaries": {
+    "render_cpp/build-w02/armada_viewer": "3cb3d241b1439b064cccd9486c7797f1f6356fc77ced417c822fcdebd34ecaed",
+    "render_cpp/build-w02/libarmada_embedded.dylib": "8fb0fb8de8331278b4999072c5f953eeea8d11afebf1114e281dc9c8544e659c"
+  },
+  "native_stdout_trailing_blank_line_normalized": 48
+}
