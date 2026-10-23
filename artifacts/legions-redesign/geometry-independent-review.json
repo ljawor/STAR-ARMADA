@@ -1,0 +1,46 @@
+{
+  "delegation_id": "deleg_ce2065a4",
+  "review_task": "geometry_and_source_security",
+  "passed": true,
+  "security_concerns": [],
+  "logic_errors": [],
+  "verified": {
+    "models": 26,
+    "triangles": 103664,
+    "vertices": 58408,
+    "mesh_bytes": 6646942,
+    "parts": 3539,
+    "closed_consistently_wound_positive_volume_parts": 3539,
+    "nondegenerate_triangles": 103664,
+    "maximum_recomputed_normal_component_error": 5.551115123125783e-16,
+    "minimum_signed_part_volume": 0.04280448686216188,
+    "all_six_roles_per_model": true,
+    "counts_bounds_hashes_manifest_budgets_match": true,
+    "all_per_kind_allocations_respected": true,
+    "cpu_recipe_to_export_vertex_sets_and_triangle_counts_match": true,
+    "build_source_pins": 104,
+    "masters_hash_checked_and_structurally_decompressed": 26,
+    "repeat_export_receipt_hashes_checked": 26,
+    "protected_files_checked": 654,
+    "protected_files_changed": 0,
+    "combined_triangles": 327536,
+    "combined_mesh_bytes": 21539000,
+    "authorized_shared_triangle_cap": 360000,
+    "other_limits_unchanged": true,
+    "cpu_tests_passed": 190,
+    "cpu_subtests_passed": 52,
+    "unsafe_network_credential_shell_or_deserialization_paths_found": false
+  },
+  "suggestions": [
+    "Use explicit exceptions rather than assertions for authoring and activation safety checks that must survive Python optimization.",
+    "Consider strict staged metadata validation before replacing existing package metadata."
+  ],
+  "limitations": [
+    "CPU/source/raw-geometry review is not owner appearance, merge or release approval.",
+    "Part closure and positive volume do not prove a Boolean-unioned manifold, lack of self-intersections or exhaustive exact component contact.",
+    "Masters were structurally decompressed and hash-checked, not opened in Blender by the reviewer.",
+    "Reviewer did not rerun Blender reconstruction, main.py or GPU/native captures.",
+    "Public-default activation and historical settings migration remain required before eventual approved merge."
+  ],
+  "activation_helper_followup": "Optimization-resistant activation guards and transactional I/O are being hardened separately; this historical review is not rewritten to imply those changes were already reviewed."
+}

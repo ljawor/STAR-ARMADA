@@ -1,0 +1,61 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "prototype:legions_redesign/command_station",
+  "revision": "1a0848364f4f3ee8dab10814191fb0abce13c55bd372c6c689607e2188c1eab7",
+  "display_name": "Legions Command Station — pending appearance review",
+  "files": {
+    "mesh": {
+      "path": "assets/models/command_station.mesh.json",
+      "sha256": "f51d2479b8c41991708d4af464ffa2f91893f812c074bd4c37b17780648ffc80",
+      "bytes": 232563
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -53.7462006,
+      -5.9762001,
+      -37.9510002
+    ],
+    "max": [
+      53.7462006,
+      41.5761986,
+      59.9510002
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor / STAR ARMADA",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "notes": "Original Legions redesign. Script-authoritative build_legions_redesign.py and dedicated design modules; editable masters in art/blender. Complete faction redesign pending owner appearance approval. No simulation, scale or balance changes."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 3660,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}

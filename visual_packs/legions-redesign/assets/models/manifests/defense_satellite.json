@@ -1,0 +1,61 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "prototype:legions_redesign/defense_satellite",
+  "revision": "46608920e76517c03842b6eda65a3c0eb6a2fd82c2bb1d3208f28f826fe9a0f2",
+  "display_name": "Legions Defense Satellite — pending appearance review",
+  "files": {
+    "mesh": {
+      "path": "assets/models/defense_satellite.mesh.json",
+      "sha256": "6573780a190d2dc8c9d8fe965c552d4b90c6ebd63490cce6cc118e41bf204737",
+      "bytes": 133353
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -41.0228882,
+      -8.9715004,
+      -33.9220009
+    ],
+    "max": [
+      41.0228882,
+      19.4715004,
+      43.9220009
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor / STAR ARMADA",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "notes": "Original Legions redesign. Script-authoritative build_legions_redesign.py and dedicated design modules; editable masters in art/blender. Complete faction redesign pending owner appearance approval. No simulation, scale or balance changes."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 2248,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}

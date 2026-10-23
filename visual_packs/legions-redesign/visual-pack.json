@@ -1,0 +1,147 @@
+{
+  "contract": "star-armada/visual-pack",
+  "contract_major": 1,
+  "id": "prototype:legions_redesign",
+  "version": "0.1.0",
+  "requires": {
+    "min_engine": "0.15.1",
+    "contracts": [
+      "star-armada/model-manifest/v1"
+    ]
+  },
+  "content": {
+    "replaces": [
+      {
+        "binding": "confederacy:fighter",
+        "replace_of": "core:confederacy/fighter",
+        "manifest": "assets/models/manifests/fighter.json"
+      },
+      {
+        "binding": "confederacy:bomber",
+        "replace_of": "core:confederacy/bomber",
+        "manifest": "assets/models/manifests/bomber.json"
+      },
+      {
+        "binding": "confederacy:corvette",
+        "replace_of": "core:confederacy/corvette",
+        "manifest": "assets/models/manifests/corvette.json"
+      },
+      {
+        "binding": "confederacy:frigate",
+        "replace_of": "core:confederacy/frigate",
+        "manifest": "assets/models/manifests/frigate.json"
+      },
+      {
+        "binding": "confederacy:cruiser",
+        "replace_of": "core:confederacy/cruiser",
+        "manifest": "assets/models/manifests/cruiser.json"
+      },
+      {
+        "binding": "confederacy:battleship",
+        "replace_of": "core:confederacy/battleship",
+        "manifest": "assets/models/manifests/battleship.json"
+      },
+      {
+        "binding": "confederacy:supercapital",
+        "replace_of": "core:confederacy/supercapital",
+        "manifest": "assets/models/manifests/supercapital.json"
+      },
+      {
+        "binding": "confederacy:constructor",
+        "replace_of": "core:confederacy/constructor",
+        "manifest": "assets/models/manifests/constructor.json"
+      },
+      {
+        "binding": "confederacy:colonizer",
+        "replace_of": "core:confederacy/colonizer",
+        "manifest": "assets/models/manifests/colonizer.json"
+      },
+      {
+        "binding": "confederacy:convoy",
+        "replace_of": "core:confederacy/convoy",
+        "manifest": "assets/models/manifests/convoy.json"
+      },
+      {
+        "binding": "confederacy:command_station",
+        "replace_of": "core:confederacy/command_station",
+        "manifest": "assets/models/manifests/command_station.json"
+      },
+      {
+        "binding": "confederacy:shipyard",
+        "replace_of": "core:confederacy/shipyard",
+        "manifest": "assets/models/manifests/shipyard.json"
+      },
+      {
+        "binding": "confederacy:mining_station",
+        "replace_of": "core:confederacy/mining_station",
+        "manifest": "assets/models/manifests/mining_station.json"
+      },
+      {
+        "binding": "confederacy:research_station",
+        "replace_of": "core:confederacy/research_station",
+        "manifest": "assets/models/manifests/research_station.json"
+      },
+      {
+        "binding": "confederacy:defense_platform",
+        "replace_of": "core:confederacy/defense_platform",
+        "manifest": "assets/models/manifests/defense_platform.json"
+      },
+      {
+        "binding": "confederacy:sensor_station",
+        "replace_of": "core:confederacy/sensor_station",
+        "manifest": "assets/models/manifests/sensor_station.json"
+      },
+      {
+        "binding": "confederacy:trade_station",
+        "replace_of": "core:confederacy/trade_station",
+        "manifest": "assets/models/manifests/trade_station.json"
+      },
+      {
+        "binding": "confederacy:fighter_platform",
+        "replace_of": "core:confederacy/fighter_platform",
+        "manifest": "assets/models/manifests/fighter_platform.json"
+      },
+      {
+        "binding": "confederacy:repair_dock",
+        "replace_of": "core:confederacy/repair_dock",
+        "manifest": "assets/models/manifests/repair_dock.json"
+      },
+      {
+        "binding": "confederacy:energy_relay",
+        "replace_of": "core:confederacy/energy_relay",
+        "manifest": "assets/models/manifests/energy_relay.json"
+      },
+      {
+        "binding": "confederacy:defense_satellite",
+        "replace_of": "core:confederacy/defense_satellite",
+        "manifest": "assets/models/manifests/defense_satellite.json"
+      },
+      {
+        "binding": "confederacy:attack_satellite",
+        "replace_of": "core:confederacy/attack_satellite",
+        "manifest": "assets/models/manifests/attack_satellite.json"
+      },
+      {
+        "binding": "confederacy:planet_extractor",
+        "replace_of": "core:confederacy/planet_extractor",
+        "manifest": "assets/models/manifests/planet_extractor.json"
+      },
+      {
+        "binding": "confederacy:planet_trade_hub",
+        "replace_of": "core:confederacy/planet_trade_hub",
+        "manifest": "assets/models/manifests/planet_trade_hub.json"
+      },
+      {
+        "binding": "confederacy:planet_shield_generator",
+        "replace_of": "core:confederacy/planet_shield_generator",
+        "manifest": "assets/models/manifests/planet_shield_generator.json"
+      },
+      {
+        "binding": "confederacy:planet_pulsar_cannon",
+        "replace_of": "core:confederacy/planet_pulsar_cannon",
+        "manifest": "assets/models/manifests/planet_pulsar_cannon.json"
+      }
+    ]
+  },
+  "notes": "Complete 26-binding Legions faction redesign. Accepted baseline geometry preserved. Appearance review pending; final delivery must be active in normal main.py."
+}

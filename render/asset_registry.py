@@ -158,7 +158,9 @@ MAX_VERTICES = 10_000
 MAX_TRIANGLES = 12_000
 # Session-retained optional geometry, across all bindings and LODs. This is
 # separate from the disposable LRU and prevents many small valid files exhausting RAM.
-MAX_PACK_SNAPSHOT_TRIANGLES = 240_000
+# Owner-authorized full Legions rollout; byte/per-model limits remain unchanged.
+# Decision: artifacts/legions-redesign/resource-budget-authorization.json.
+MAX_PACK_SNAPSHOT_TRIANGLES = 360_000
 MAX_PACK_SNAPSHOT_BYTES = 32_000_000
 
 

@@ -1,0 +1,61 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "prototype:legions_redesign/sensor_station",
+  "revision": "9665e6eb228ddcca46467ddfe5fddd7e7f0426c0d7adabe071a448413dcedd23",
+  "display_name": "Legions Sensor Station — pending appearance review",
+  "files": {
+    "mesh": {
+      "path": "assets/models/sensor_station.mesh.json",
+      "sha256": "9f27c0e93a753368489429ec6bf061343ac9a6ac3311a62da7036c8c936fccc6",
+      "bytes": 256486
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -36.1051598,
+      -13.9738741,
+      -28.2535572
+    ],
+    "max": [
+      36.1051598,
+      38.2265015,
+      34.7684593
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor / STAR ARMADA",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "notes": "Original Legions redesign. Script-authoritative build_legions_redesign.py and dedicated design modules; editable masters in art/blender. Complete faction redesign pending owner appearance approval. No simulation, scale or balance changes."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 4108,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}

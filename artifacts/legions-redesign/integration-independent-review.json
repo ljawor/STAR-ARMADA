@@ -1,0 +1,69 @@
+{
+  "delegation_id": "deleg_ce2065a4",
+  "review_task": "integration_evidence_and_activation_helper_security",
+  "reviewer_passed_current_integration": true,
+  "security_concerns": [
+    {
+      "severity": "low",
+      "blocking_in_original_review": false,
+      "file": "tools/art/activate_legions_review.py",
+      "finding": "Write-protecting assertions disappear under Python -O; current ordinary execution and activated files are correct.",
+      "followup_status": "Explicit-exception and transaction hardening in progress; follow-up review required before clean verification claim."
+    }
+  ],
+  "logic_errors": [],
+  "suggestions": [
+    "Use atomic replacements and rollback to prevent partial settings/catalogue activation after I/O failures.",
+    "Keep public-default activation and exact historical 13/14/15-cohort migration explicitly required before eventual approved merge."
+  ],
+  "verified": {
+    "retained_files_hashed": 651,
+    "source_pins_hashed": 4,
+    "missing_extra_or_hash_mismatched_files": 0,
+    "actual_snapshots_decoded": 162,
+    "subjects": 27,
+    "views_per_subject": 3,
+    "image_pairs_recomputed_exactly": 81,
+    "legions_pairs_changed": 78,
+    "changed_pixels_gt8_range": [4225, 116752],
+    "vigil_control_pairs_with_zero_change": 3,
+    "paired_camera_pose_tint_and_mesh_hashes_verified": true,
+    "maximum_relative_drawn_length_difference": 0.0020040470968107904,
+    "actual_ensure_snapshot_path": "assets/cpp/catalogue.snap",
+    "catalogue_sha256": "6979adf2acfcfa450243db52ce8a10eb4d081123ccf614877c892f811d35417b",
+    "replacement_rows": 26,
+    "unchanged_rows": 77,
+    "all_other_payload_unchanged_except_metadata_visual_selection": true,
+    "owner_saved_pack_count": 16,
+    "public_default_pack_count": 15,
+    "only_saved_settings_change_is_legions_append": true,
+    "real_load_settings_and_configure_exercised": true,
+    "accepted_packs": 16,
+    "resolved_legions_bindings": 26,
+    "resolved_alliance_bindings": 26,
+    "resolved_imperium_bindings": 20,
+    "coverage_ok": true,
+    "protected_files_compared_to_base": 654,
+    "protected_files_changed": 0,
+    "legions_triangles": 103664,
+    "legions_mesh_bytes": 6646942,
+    "combined_triangles": 327536,
+    "combined_mesh_bytes": 21539000,
+    "resource_authorization_checked": true,
+    "other_resource_limits_unchanged": true,
+    "smoke_returncode": 0,
+    "smoke_timeout": false,
+    "smoke_orphan_group_killed": false,
+    "smoke_simulated_seconds": 30,
+    "smoke_published_frames": 374,
+    "independent_cpu_tests_passed": 4,
+    "shell_interpolation_or_network_exfiltration_found": false
+  },
+  "limitations": [
+    "Current owner-profile integration/evidence review, not appearance/merge/release or fresh global activation approval.",
+    "Public defaults and historical cohort migrations remain intentionally pending until owner approval and must precede merge.",
+    "Reviewer did not execute main.py, GPU/native viewer, Blender, installs or activation writes.",
+    "Smoke and repeat-export receipts were checked, not independently regenerated.",
+    "Final 651 evidence files and four source pins were rechecked after parent staging."
+  ]
+}

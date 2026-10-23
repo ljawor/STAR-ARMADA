@@ -46,7 +46,8 @@ class AllianceFullFactionTests(unittest.TestCase):
                 manifest=json.loads((pack/row['manifest']).read_text())
                 total_triangles+=manifest['budgets']['triangles']
                 total_bytes+=manifest['files']['mesh']['bytes']
-        self.assertEqual(MAX_PACK_SNAPSHOT_TRIANGLES,240000)
+        # The Legions decision expands retained capacity, not these approved meshes.
+        self.assertEqual(MAX_PACK_SNAPSHOT_TRIANGLES,360000)
         self.assertLessEqual(total_triangles,MAX_PACK_SNAPSHOT_TRIANGLES)
         self.assertLessEqual(total_bytes,MAX_PACK_SNAPSHOT_BYTES)
         for kind,_,_,_ in ROWS:

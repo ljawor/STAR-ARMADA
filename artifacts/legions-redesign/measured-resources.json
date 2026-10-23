@@ -1,0 +1,12 @@
+{
+  "legions_triangles": 103664,
+  "legions_mesh_bytes": 6646942,
+  "unchanged_imperium_alliance_triangles": 223872,
+  "unchanged_imperium_alliance_mesh_bytes": 14892058,
+  "combined_triangles": 327536,
+  "shared_triangle_ceiling": 360000,
+  "combined_mesh_bytes": 21539000,
+  "shared_byte_ceiling": 32000000,
+  "protected_existing_files_verified": 654,
+  "losslessly_compressed_pngs": 163
+}

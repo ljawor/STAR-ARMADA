@@ -1,0 +1,2167 @@
+{
+  "scope": "production native renderer, isolated per-subject inspection; individually framed, not true-size fleet or main-loop acceptance",
+  "count": 27,
+  "rows": [
+    {
+      "binding": "confederacy:fighter",
+      "name": "Vulture Drone Wing",
+      "source_state_sha256": "630389d1169ae418f50f7643b4bb953f2383b8632b0ae382e1932c85a69a251e",
+      "drawn_lengths": [
+        38.47221,
+        38.47220999999999
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 23088,
+          "mean_abs_rgb": 3.0008732638888893,
+          "camera": {
+            "target": [
+              0.0,
+              2.3042591778805024,
+              2.4175811402841276
+            ],
+            "distance": 75.0,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "fighter-before-close/capture.png",
+          "after": "fighter-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 23009,
+          "mean_abs_rgb": 3.021263310185185,
+          "camera": {
+            "target": [
+              0.0,
+              2.3042591778805024,
+              2.4175811402841276
+            ],
+            "distance": 75.0,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "fighter-before-rear/capture.png",
+          "after": "fighter-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 5398,
+          "mean_abs_rgb": 0.8047962962962963,
+          "camera": {
+            "target": [
+              0.0,
+              2.3042591778805024,
+              2.4175811402841276
+            ],
+            "distance": 184.66660799999997,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "fighter-before-tactical/capture.png",
+          "after": "fighter-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "confederacy:fighter",
+          "path": "assets/models/legion_vulture.mesh.json",
+          "sha256": "c17733f45e1669a3c664726f2e72f18a1d3e1c1e09e18455e22abc7fb83c47dd",
+          "vertex_count": 1144,
+          "triangle_count": 2578,
+          "manifest_asset": "core:confederacy/fighter"
+        },
+        "after": {
+          "binding": "confederacy:fighter",
+          "path": "visual_packs/legions-redesign/assets/models/fighter.mesh.json",
+          "sha256": "8236ad8b1735a50097643abd84279bda61a60ab3c741fe0707aba5da85a358c8",
+          "vertex_count": 1384,
+          "triangle_count": 2484,
+          "manifest_asset": "prototype:legions_redesign/fighter"
+        }
+      }
+    },
+    {
+      "binding": "confederacy:bomber",
+      "name": "Hyena Strike Wing",
+      "source_state_sha256": "adbff55832c098d88bfe322e5648aa7ad115f8709c157ae7d73f4b0d70519e22",
+      "drawn_lengths": [
+        38.47221,
+        38.47221
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 37669,
+          "mean_abs_rgb": 5.010370370370371,
+          "camera": {
+            "target": [
+              0.0,
+              2.3971552587367015,
+              1.800887953305688
+            ],
+            "distance": 75.0,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "bomber-before-close/capture.png",
+          "after": "bomber-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 32678,
+          "mean_abs_rgb": 4.524447337962964,
+          "camera": {
+            "target": [
+              0.0,
+              2.3971552587367015,
+              1.800887953305688
+            ],
+            "distance": 75.0,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "bomber-before-rear/capture.png",
+          "after": "bomber-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 8228,
+          "mean_abs_rgb": 1.288929398148148,
+          "camera": {
+            "target": [
+              0.0,
+              2.3971552587367015,
+              1.800887953305688
+            ],
+            "distance": 184.66660799999997,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "bomber-before-tactical/capture.png",
+          "after": "bomber-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "confederacy:bomber",
+          "path": "assets/models/legion_hyena.mesh.json",
+          "sha256": "63d2544abdbebf9089c0fb48e34666f610d2876d8b8a8569892d588b263bb18d",
+          "vertex_count": 1538,
+          "triangle_count": 3516,
+          "manifest_asset": "core:confederacy/bomber"
+        },
+        "after": {
+          "binding": "confederacy:bomber",
+          "path": "visual_packs/legions-redesign/assets/models/bomber.mesh.json",
+          "sha256": "81b400bdcb76a30d8cb3032a92f92b088be6c2ff4b8423e38922e98ac05aa07c",
+          "vertex_count": 1612,
+          "triangle_count": 2908,
+          "manifest_asset": "prototype:legions_redesign/bomber"
+        }
+      }
+    },
+    {
+      "binding": "confederacy:corvette",
+      "name": "Droth Drone Corvette",
+      "source_state_sha256": "e6ee96b8feac13a62014c24e6ef79f967a0b9e99616a1c37e01ef22f4900a7df",
+      "drawn_lengths": [
+        64.12035,
+        64.12035
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 41292,
+          "mean_abs_rgb": 4.491366319444444,
+          "camera": {
+            "target": [
+              0.0,
+              3.001665455542444,
+              3.549286138801751
+            ],
+            "distance": 105.7985775,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "corvette-before-close/capture.png",
+          "after": "corvette-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 36330,
+          "mean_abs_rgb": 3.9922175925925933,
+          "camera": {
+            "target": [
+              0.0,
+              3.001665455542444,
+              3.549286138801751
+            ],
+            "distance": 105.7985775,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "corvette-before-rear/capture.png",
+          "after": "corvette-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 6537,
+          "mean_abs_rgb": 0.7031209490740741,
+          "camera": {
+            "target": [
+              0.0,
+              3.001665455542444,
+              3.549286138801751
+            ],
+            "distance": 307.77768,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "corvette-before-tactical/capture.png",
+          "after": "corvette-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "confederacy:corvette",
+          "path": "assets/models/confed_corvette.mesh.json",
+          "sha256": "921f8dd4afd759ea0d39c21c3bd3c4e6f7e1c3f8eaee18240371d9a96f101958",
+          "vertex_count": 1036,
+          "triangle_count": 1852,
+          "manifest_asset": "core:confederacy/corvette"
+        },
+        "after": {
+          "binding": "confederacy:corvette",
+          "path": "visual_packs/legions-redesign/assets/models/corvette.mesh.json",
+          "sha256": "e63e31d56b89c03b2717a7a26f6d1bfcff35250446139032dd1844c36a4d528c",
+          "vertex_count": 1904,
+          "triangle_count": 3468,
+          "manifest_asset": "prototype:legions_redesign/corvette"
+        }
+      }
+    },
+    {
+      "binding": "confederacy:frigate",
+      "name": "Cobalt Frigate",
+      "source_state_sha256": "4ea46ac96ad58cc86b3a63666e72347fe78ca03b071afd3b916c85b0c7406198",
+      "drawn_lengths": [
+        96.180525,
+        96.180525
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 40464,
+          "mean_abs_rgb": 4.488585648148148,
+          "camera": {
+            "target": [
+              0.0,
+              2.386861187491278,
+              4.373290534235355
+            ],
+            "distance": 158.69786625,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "frigate-before-close/capture.png",
+          "after": "frigate-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 34414,
+          "mean_abs_rgb": 3.811197337962963,
+          "camera": {
+            "target": [
+              0.0,
+              2.386861187491278,
+              4.373290534235355
+            ],
+            "distance": 158.69786625,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "frigate-before-rear/capture.png",
+          "after": "frigate-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 6661,
+          "mean_abs_rgb": 0.7653605324074074,
+          "camera": {
+            "target": [
+              0.0,
+              2.386861187491278,
+              4.373290534235355
+            ],
+            "distance": 461.66652,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "frigate-before-tactical/capture.png",
+          "after": "frigate-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "confederacy:frigate",
+          "path": "assets/models/confed_frigate.mesh.json",
+          "sha256": "96fd45471049b92aede194cf851e801e022579ee1a84c61daf3cbe088c8ed268",
+          "vertex_count": 1204,
+          "triangle_count": 2152,
+          "manifest_asset": "core:confederacy/frigate"
+        },
+        "after": {
+          "binding": "confederacy:frigate",
+          "path": "visual_packs/legions-redesign/assets/models/frigate.mesh.json",
+          "sha256": "b12e43a696e111d52e895b6c7ba506343d781d4584c72de0416ebc462bc7e8ff",
+          "vertex_count": 2408,
+          "triangle_count": 4276,
+          "manifest_asset": "prototype:legions_redesign/frigate"
+        }
+      }
+    },
+    {
+      "binding": "confederacy:cruiser",
+      "name": "Recusant Raider",
+      "source_state_sha256": "4e14ec1e8ba8eb22e7ccacf49885863ebe2650d7aeed893f9b710c6b4a3684d9",
+      "drawn_lengths": [
+        160.30087500000002,
+        160.30087500000002
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 42973,
+          "mean_abs_rgb": 4.812534143518519,
+          "camera": {
+            "target": [
+              0.0,
+              2.5923711131570304,
+              6.558968024324166
+            ],
+            "distance": 264.49644375,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "cruiser-before-close/capture.png",
+          "after": "cruiser-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 34758,
+          "mean_abs_rgb": 3.7638605324074077,
+          "camera": {
+            "target": [
+              0.0,
+              2.5923711131570304,
+              6.558968024324166
+            ],
+            "distance": 264.49644375,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "cruiser-before-rear/capture.png",
+          "after": "cruiser-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 7276,
+          "mean_abs_rgb": 0.7986903935185184,
+          "camera": {
+            "target": [
+              0.0,
+              2.5923711131570304,
+              6.558968024324166
+            ],
+            "distance": 769.4442,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "cruiser-before-tactical/capture.png",
+          "after": "cruiser-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "confederacy:cruiser",
+          "path": "assets/models/confed_cruiser.mesh.json",
+          "sha256": "2866559ed742dd4f2f5a22937baa8021b8c0154a105cd4903c273d972ab00814",
+          "vertex_count": 1508,
+          "triangle_count": 2688,
+          "manifest_asset": "core:confederacy/cruiser"
+        },
+        "after": {
+          "binding": "confederacy:cruiser",
+          "path": "visual_packs/legions-redesign/assets/models/cruiser.mesh.json",
+          "sha256": "9fbe128fee31d07b78d225636e2f056d352b6581d267db89ef13c9ad143c81cf",
+          "vertex_count": 3248,
+          "triangle_count": 5704,
+          "manifest_asset": "prototype:legions_redesign/cruiser"
+        }
+      }
+    },
+    {
+      "binding": "confederacy:battleship",
+      "name": "Bulwark Bastion",
+      "source_state_sha256": "fe3807eefaa87d65b0461653f4e7b43881cdef7e117581d7443963c9375a069a",
+      "drawn_lengths": [
+        224.421225,
+        224.421225
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 46810,
+          "mean_abs_rgb": 4.61341087962963,
+          "camera": {
+            "target": [
+              0.0,
+              14.877779637176292,
+              3.4494410729255875
+            ],
+            "distance": 370.29502125,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "battleship-before-close/capture.png",
+          "after": "battleship-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 42546,
+          "mean_abs_rgb": 4.799892939814815,
+          "camera": {
+            "target": [
+              0.0,
+              14.877779637176292,
+              3.4494410729255875
+            ],
+            "distance": 370.29502125,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "battleship-before-rear/capture.png",
+          "after": "battleship-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 7653,
+          "mean_abs_rgb": 0.7291863425925925,
+          "camera": {
+            "target": [
+              0.0,
+              14.877779637176292,
+              3.4494410729255875
+            ],
+            "distance": 1077.2218799999998,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "battleship-before-tactical/capture.png",
+          "after": "battleship-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "confederacy:battleship",
+          "path": "assets/models/confed_battleship.mesh.json",
+          "sha256": "0b04ca0ea42c2ea2fd670cfdbe0d4c0a047cbf65071101ba7d6927bf172df363",
+          "vertex_count": 1804,
+          "triangle_count": 3212,
+          "manifest_asset": "core:confederacy/battleship"
+        },
+        "after": {
+          "binding": "confederacy:battleship",
+          "path": "visual_packs/legions-redesign/assets/models/battleship.mesh.json",
+          "sha256": "24d977b88e47377bc1fba62c1ce5e4c0b1ae16b94ceb44110ca75499d6db25a7",
+          "vertex_count": 4464,
+          "triangle_count": 8124,
+          "manifest_asset": "prototype:legions_redesign/battleship"
+        }
+      }
+    },
+    {
+      "binding": "confederacy:supercapital",
+      "name": "Subjugator-class Sovereignty",
+      "source_state_sha256": "631417c08b446b83ca3179521b6dcec2f88ffcf44df0a18f5d061374f97e662f",
+      "drawn_lengths": [
+        320.60175000000004,
+        320.60175000000004
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 51407,
+          "mean_abs_rgb": 5.548247685185185,
+          "camera": {
+            "target": [
+              0.0,
+              8.720826480341913,
+              3.607878026717543
+            ],
+            "distance": 528.9928875,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "supercapital-before-close/capture.png",
+          "after": "supercapital-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 42775,
+          "mean_abs_rgb": 4.957012731481481,
+          "camera": {
+            "target": [
+              0.0,
+              8.720826480341913,
+              3.607878026717543
+            ],
+            "distance": 528.9928875,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "supercapital-before-rear/capture.png",
+          "after": "supercapital-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 7836,
+          "mean_abs_rgb": 0.9145405092592593,
+          "camera": {
+            "target": [
+              0.0,
+              8.720826480341913,
+              3.607878026717543
+            ],
+            "distance": 1538.8884,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "supercapital-before-tactical/capture.png",
+          "after": "supercapital-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "confederacy:supercapital",
+          "path": "assets/models/confed_supercapital.mesh.json",
+          "sha256": "f33b0f79430130cf5d1c8524f618f2ce5c541a5571edf28e6a4d84284c357c4f",
+          "vertex_count": 2204,
+          "triangle_count": 3916,
+          "manifest_asset": "core:confederacy/supercapital"
+        },
+        "after": {
+          "binding": "confederacy:supercapital",
+          "path": "visual_packs/legions-redesign/assets/models/supercapital.mesh.json",
+          "sha256": "8e1e2ba6689bfca7327c778e2b598b0b0026d4e29418b01ef48e4c94453c4b7e",
+          "vertex_count": 4576,
+          "triangle_count": 8136,
+          "manifest_asset": "prototype:legions_redesign/supercapital"
+        }
+      }
+    },
+    {
+      "binding": "confederacy:constructor",
+      "name": "Homing Spider Droid Rig",
+      "source_state_sha256": "173592083ceccc661c0f37ed05d487836d711e24f17356d94605604ffccaecb3",
+      "drawn_lengths": [
+        64.12035,
+        64.12035
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 86346,
+          "mean_abs_rgb": 11.15515625,
+          "camera": {
+            "target": [
+              0.0,
+              11.549259855049064,
+              -0.325676142971961
+            ],
+            "distance": 105.7985775,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "constructor-before-close/capture.png",
+          "after": "constructor-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 81848,
+          "mean_abs_rgb": 10.567466435185187,
+          "camera": {
+            "target": [
+              0.0,
+              11.549259855049064,
+              -0.325676142971961
+            ],
+            "distance": 105.7985775,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "constructor-before-rear/capture.png",
+          "after": "constructor-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 10743,
+          "mean_abs_rgb": 1.4921770833333332,
+          "camera": {
+            "target": [
+              0.0,
+              11.549259855049064,
+              -0.325676142971961
+            ],
+            "distance": 307.77768,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "constructor-before-tactical/capture.png",
+          "after": "constructor-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "confederacy:constructor",
+          "path": "assets/models/confed_constructor.mesh.json",
+          "sha256": "cce3fd0e2a02b4e745efeec9ff6873869b17fec65f6aa0f9f08238226a40b14c",
+          "vertex_count": 2196,
+          "triangle_count": 3932,
+          "manifest_asset": "core:confederacy/constructor"
+        },
+        "after": {
+          "binding": "confederacy:constructor",
+          "path": "visual_packs/legions-redesign/assets/models/constructor.mesh.json",
+          "sha256": "2271937c772a461c220b7fae2eb0022f07e5a2d0a36f59bb5b312b635fc27b74",
+          "vertex_count": 1600,
+          "triangle_count": 2892,
+          "manifest_asset": "prototype:legions_redesign/constructor"
+        }
+      }
+    },
+    {
+      "binding": "confederacy:colonizer",
+      "name": "Droid Foundry Barge",
+      "source_state_sha256": "937e02650a4767d0541d295b1d96992b2692fd8f37b7a1e5ccd14a47fadac29f",
+      "drawn_lengths": [
+        64.12035,
+        64.12035
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 82985,
+          "mean_abs_rgb": 9.288071759259259,
+          "camera": {
+            "target": [
+              0.0,
+              10.927080697693949,
+              1.1226452762778951
+            ],
+            "distance": 105.7985775,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "colonizer-before-close/capture.png",
+          "after": "colonizer-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 64420,
+          "mean_abs_rgb": 7.268635416666666,
+          "camera": {
+            "target": [
+              0.0,
+              10.927080697693949,
+              1.1226452762778951
+            ],
+            "distance": 105.7985775,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "colonizer-before-rear/capture.png",
+          "after": "colonizer-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 10995,
+          "mean_abs_rgb": 1.2500219907407406,
+          "camera": {
+            "target": [
+              0.0,
+              10.927080697693949,
+              1.1226452762778951
+            ],
+            "distance": 307.77768,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "colonizer-before-tactical/capture.png",
+          "after": "colonizer-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "confederacy:colonizer",
+          "path": "assets/models/confed_colonizer.mesh.json",
+          "sha256": "7c8a7b31847896526b67d9daa7fe4ea866ff03f8c4da3acd31fe9401ef0fd08d",
+          "vertex_count": 2292,
+          "triangle_count": 4156,
+          "manifest_asset": "core:confederacy/colonizer"
+        },
+        "after": {
+          "binding": "confederacy:colonizer",
+          "path": "visual_packs/legions-redesign/assets/models/colonizer.mesh.json",
+          "sha256": "74d391e892184a9c35bc311f663b33c0c93de794e1fa0738b31c67b54aea5b2b",
+          "vertex_count": 2512,
+          "triangle_count": 4440,
+          "manifest_asset": "prototype:legions_redesign/colonizer"
+        }
+      }
+    },
+    {
+      "binding": "confederacy:convoy",
+      "name": "Confederacy Crew Transport",
+      "source_state_sha256": "f6e20186eaf501f51d56d68b218a527625b749ad5d5c8150d59d6696e5445a5b",
+      "drawn_lengths": [
+        51.29628,
+        51.29628
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 25752,
+          "mean_abs_rgb": 2.9068246527777775,
+          "camera": {
+            "target": [
+              0.0,
+              4.807609096323479,
+              -1.6853690538947124
+            ],
+            "distance": 84.638862,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "convoy-before-close/capture.png",
+          "after": "convoy-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 26501,
+          "mean_abs_rgb": 2.741526041666667,
+          "camera": {
+            "target": [
+              0.0,
+              4.807609096323479,
+              -1.6853690538947124
+            ],
+            "distance": 84.638862,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "convoy-before-rear/capture.png",
+          "after": "convoy-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 4225,
+          "mean_abs_rgb": 0.45289814814814816,
+          "camera": {
+            "target": [
+              0.0,
+              4.807609096323479,
+              -1.6853690538947124
+            ],
+            "distance": 246.22214400000001,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "convoy-before-tactical/capture.png",
+          "after": "convoy-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "confederacy:convoy",
+          "path": "assets/models/legion_convoy.mesh.json",
+          "sha256": "78f864ab6a742b10596c3af75430744a31d5a77dfc5c7af3851dff7804c13041",
+          "vertex_count": 2414,
+          "triangle_count": 4584,
+          "manifest_asset": "core:confederacy/convoy"
+        },
+        "after": {
+          "binding": "confederacy:convoy",
+          "path": "visual_packs/legions-redesign/assets/models/convoy.mesh.json",
+          "sha256": "17054ba67c1e9934a2dc86e9e0e8b1a37f99fb5e7731d094845b3042215dfaed",
+          "vertex_count": 1812,
+          "triangle_count": 3244,
+          "manifest_asset": "prototype:legions_redesign/convoy"
+        }
+      }
+    },
+    {
+      "binding": "confederacy:command_station",
+      "name": "Legions Command Station",
+      "source_state_sha256": "9c218fc36302510c7a7d35ba7ad0c6761ad8b634d34faafcfb5adf3cb4dbc874",
+      "drawn_lengths": [
+        279.7599948,
+        279.48024312
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 67286,
+          "mean_abs_rgb": 8.462025462962963,
+          "camera": {
+            "target": [
+              0.0,
+              46.28,
+              28.6
+            ],
+            "distance": 461.60399142,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "command_station-before-close/capture.png",
+          "after": "command_station-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 61813,
+          "mean_abs_rgb": 7.641610532407408,
+          "camera": {
+            "target": [
+              0.0,
+              46.28,
+              28.6
+            ],
+            "distance": 461.60399142,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "command_station-before-rear/capture.png",
+          "after": "command_station-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 9526,
+          "mean_abs_rgb": 1.333798611111111,
+          "camera": {
+            "target": [
+              0.0,
+              46.28,
+              28.6
+            ],
+            "distance": 1342.84797504,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "command_station-before-tactical/capture.png",
+          "after": "command_station-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "confederacy:command_station",
+          "path": "assets/models/legion_command_station.mesh.json",
+          "sha256": "a9f6bdb8259217f1649ee47b44809cef79ac4c3369c680325f8e5c874a0cd0d8",
+          "vertex_count": 1175,
+          "triangle_count": 2161,
+          "manifest_asset": "core:confederacy/command_station"
+        },
+        "after": {
+          "binding": "confederacy:command_station",
+          "path": "visual_packs/legions-redesign/assets/models/command_station.mesh.json",
+          "sha256": "f51d2479b8c41991708d4af464ffa2f91893f812c074bd4c37b17780648ffc80",
+          "vertex_count": 2120,
+          "triangle_count": 3660,
+          "manifest_asset": "prototype:legions_redesign/command_station"
+        }
+      }
+    },
+    {
+      "binding": "confederacy:shipyard",
+      "name": "Legions Shipyard",
+      "source_state_sha256": "738efff17f4d5c88397121aa17741e4d5ecdf9815a58c80e96a2c5d439628b01",
+      "drawn_lengths": [
+        272.976,
+        272.70301828000004
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 80102,
+          "mean_abs_rgb": 10.351384837962962,
+          "camera": {
+            "target": [
+              0.0,
+              39.60000000000001,
+              19.077959999999997
+            ],
+            "distance": 450.4104,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "shipyard-before-close/capture.png",
+          "after": "shipyard-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 77755,
+          "mean_abs_rgb": 9.665902777777779,
+          "camera": {
+            "target": [
+              0.0,
+              39.60000000000001,
+              19.077959999999997
+            ],
+            "distance": 450.4104,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "shipyard-before-rear/capture.png",
+          "after": "shipyard-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 10938,
+          "mean_abs_rgb": 1.5604195601851851,
+          "camera": {
+            "target": [
+              0.0,
+              39.60000000000001,
+              19.077959999999997
+            ],
+            "distance": 1310.2848,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "shipyard-before-tactical/capture.png",
+          "after": "shipyard-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "confederacy:shipyard",
+          "path": "assets/models/legion_shipyard.mesh.json",
+          "sha256": "748c48aa54266073f5b0773f3ef0748b2cf049cd51523d65f66083163d794f01",
+          "vertex_count": 2064,
+          "triangle_count": 3772,
+          "manifest_asset": "core:confederacy/shipyard"
+        },
+        "after": {
+          "binding": "confederacy:shipyard",
+          "path": "visual_packs/legions-redesign/assets/models/shipyard.mesh.json",
+          "sha256": "cbc9a99206b7fb6ccd2de8eb5fa5efdec3de7acbf74cc8dd20e0855848f1d062",
+          "vertex_count": 3992,
+          "triangle_count": 7048,
+          "manifest_asset": "prototype:legions_redesign/shipyard"
+        }
+      }
+    },
+    {
+      "binding": "confederacy:mining_station",
+      "name": "Legions Mining Station",
+      "source_state_sha256": "67a95120fdc8e0452413b332c652fa557fdc92045ceb6babbe45789384cec5f3",
+      "drawn_lengths": [
+        113.1720744,
+        113.05889728
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 74602,
+          "mean_abs_rgb": 9.662566550925925,
+          "camera": {
+            "target": [
+              0.0,
+              -14.251999999999999,
+              12.32
+            ],
+            "distance": 186.73392275999998,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "mining_station-before-close/capture.png",
+          "after": "mining_station-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 70506,
+          "mean_abs_rgb": 8.464976273148148,
+          "camera": {
+            "target": [
+              0.0,
+              -14.251999999999999,
+              12.32
+            ],
+            "distance": 186.73392275999998,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "mining_station-before-rear/capture.png",
+          "after": "mining_station-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 10665,
+          "mean_abs_rgb": 1.4795410879629631,
+          "camera": {
+            "target": [
+              0.0,
+              -14.251999999999999,
+              12.32
+            ],
+            "distance": 543.22595712,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "mining_station-before-tactical/capture.png",
+          "after": "mining_station-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "confederacy:mining_station",
+          "path": "assets/models/legion_mining_station.mesh.json",
+          "sha256": "32bb2c2b72ac9dacee83ae841d3e5ecf6b0e7c4246ee4e99f0548b28d9695d8f",
+          "vertex_count": 2304,
+          "triangle_count": 4268,
+          "manifest_asset": "core:confederacy/mining_station"
+        },
+        "after": {
+          "binding": "confederacy:mining_station",
+          "path": "visual_packs/legions-redesign/assets/models/mining_station.mesh.json",
+          "sha256": "04aa69ff9ed47baa7690882f072fab54b0b48cc7da827cec4650a1f5e889be76",
+          "vertex_count": 1920,
+          "triangle_count": 3476,
+          "manifest_asset": "prototype:legions_redesign/mining_station"
+        }
+      }
+    },
+    {
+      "binding": "confederacy:research_station",
+      "name": "Legions Research Station",
+      "source_state_sha256": "fb40f47cccd064539e0481eefc83902e11a251e344bf4858fbbd523193acddb0",
+      "drawn_lengths": [
+        157.47304,
+        157.31556322
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 48621,
+          "mean_abs_rgb": 7.122913194444443,
+          "camera": {
+            "target": [
+              0.0,
+              1.258000000000001,
+              16.320000000000004
+            ],
+            "distance": 259.830516,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "research_station-before-close/capture.png",
+          "after": "research_station-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 43359,
+          "mean_abs_rgb": 6.460951967592592,
+          "camera": {
+            "target": [
+              0.0,
+              1.258000000000001,
+              16.320000000000004
+            ],
+            "distance": 259.830516,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "research_station-before-rear/capture.png",
+          "after": "research_station-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 7238,
+          "mean_abs_rgb": 1.0594901620370372,
+          "camera": {
+            "target": [
+              0.0,
+              1.258000000000001,
+              16.320000000000004
+            ],
+            "distance": 755.870592,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "research_station-before-tactical/capture.png",
+          "after": "research_station-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "confederacy:research_station",
+          "path": "assets/models/legion_research_station.mesh.json",
+          "sha256": "01485bb472f239ab70779b1f1a5dabb381c18347b8b9d2350a3cb2e045b7fd72",
+          "vertex_count": 2008,
+          "triangle_count": 3680,
+          "manifest_asset": "core:confederacy/research_station"
+        },
+        "after": {
+          "binding": "confederacy:research_station",
+          "path": "visual_packs/legions-redesign/assets/models/research_station.mesh.json",
+          "sha256": "3b83838a74b65539dae7be1d2c5c3a2e00615ff44fc066b15c7c53b8791dc3d5",
+          "vertex_count": 2408,
+          "triangle_count": 4268,
+          "manifest_asset": "prototype:legions_redesign/research_station"
+        }
+      }
+    },
+    {
+      "binding": "confederacy:defense_platform",
+      "name": "Legions Defense Platform",
+      "source_state_sha256": "a224761d3b96c2fc59dde26f3e72f0fdeee7b7a079b33b3eee79f794f84bcc5e",
+      "drawn_lengths": [
+        120.49032,
+        120.36982728
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 57263,
+          "mean_abs_rgb": 9.036359953703704,
+          "camera": {
+            "target": [
+              0.0,
+              4.886399999999999,
+              14.642160000000004
+            ],
+            "distance": 198.80902799999998,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "defense_platform-before-close/capture.png",
+          "after": "defense_platform-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 48822,
+          "mean_abs_rgb": 7.302433449074074,
+          "camera": {
+            "target": [
+              0.0,
+              4.886399999999999,
+              14.642160000000004
+            ],
+            "distance": 198.80902799999998,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "defense_platform-before-rear/capture.png",
+          "after": "defense_platform-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 9300,
+          "mean_abs_rgb": 1.5527424768518518,
+          "camera": {
+            "target": [
+              0.0,
+              4.886399999999999,
+              14.642160000000004
+            ],
+            "distance": 578.353536,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "defense_platform-before-tactical/capture.png",
+          "after": "defense_platform-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "confederacy:defense_platform",
+          "path": "assets/models/legion_defense_platform.mesh.json",
+          "sha256": "637ca1293919ca6bf7667f5e1f60ad052b16d1adf08085196f8ec3adb4f4d983",
+          "vertex_count": 2008,
+          "triangle_count": 3640,
+          "manifest_asset": "core:confederacy/defense_platform"
+        },
+        "after": {
+          "binding": "confederacy:defense_platform",
+          "path": "visual_packs/legions-redesign/assets/models/defense_platform.mesh.json",
+          "sha256": "ecc6628394412016107c19dc242c555a2626da9016151bdf89c070d13595b27f",
+          "vertex_count": 2080,
+          "triangle_count": 3708,
+          "manifest_asset": "prototype:legions_redesign/defense_platform"
+        }
+      }
+    },
+    {
+      "binding": "confederacy:sensor_station",
+      "name": "Legions Sensor Station",
+      "source_state_sha256": "5818467be0b25278b579d54e0f4cec1891abc2a1b341a958a8511e98743e2ee2",
+      "drawn_lengths": [
+        65.05434000000001,
+        64.98928764
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 79448,
+          "mean_abs_rgb": 11.196401041666668,
+          "camera": {
+            "target": [
+              0.0,
+              10.913682600000001,
+              2.9317049999999973
+            ],
+            "distance": 107.339661,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "sensor_station-before-close/capture.png",
+          "after": "sensor_station-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 77966,
+          "mean_abs_rgb": 9.710269097222223,
+          "camera": {
+            "target": [
+              0.0,
+              10.913682600000001,
+              2.9317049999999973
+            ],
+            "distance": 107.339661,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "sensor_station-before-rear/capture.png",
+          "after": "sensor_station-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 8756,
+          "mean_abs_rgb": 1.2354664351851852,
+          "camera": {
+            "target": [
+              0.0,
+              10.913682600000001,
+              2.9317049999999973
+            ],
+            "distance": 312.26083200000005,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "sensor_station-before-tactical/capture.png",
+          "after": "sensor_station-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "confederacy:sensor_station",
+          "path": "assets/models/legion_sensor_station.mesh.json",
+          "sha256": "27d3b5803c10a386b8ed74f8574acb0f8d0a6eb5f7509ad4bd2726ac33163755",
+          "vertex_count": 1944,
+          "triangle_count": 3564,
+          "manifest_asset": "core:confederacy/sensor_station"
+        },
+        "after": {
+          "binding": "confederacy:sensor_station",
+          "path": "visual_packs/legions-redesign/assets/models/sensor_station.mesh.json",
+          "sha256": "9f27c0e93a753368489429ec6bf061343ac9a6ac3311a62da7036c8c936fccc6",
+          "vertex_count": 2432,
+          "triangle_count": 4108,
+          "manifest_asset": "prototype:legions_redesign/sensor_station"
+        }
+      }
+    },
+    {
+      "binding": "confederacy:trade_station",
+      "name": "Legions Trade Station",
+      "source_state_sha256": "b2580db69969b9ad25c6550f91760ead46ec30d5dab39d461edec83624c285cb",
+      "drawn_lengths": [
+        119.73832,
+        119.61857674000001
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 48607,
+          "mean_abs_rgb": 6.840247106481481,
+          "camera": {
+            "target": [
+              0.0,
+              7.6232000000000015,
+              0.0
+            ],
+            "distance": 197.568228,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "trade_station-before-close/capture.png",
+          "after": "trade_station-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 43574,
+          "mean_abs_rgb": 6.019834490740742,
+          "camera": {
+            "target": [
+              0.0,
+              7.6232000000000015,
+              0.0
+            ],
+            "distance": 197.568228,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "trade_station-before-rear/capture.png",
+          "after": "trade_station-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 6710,
+          "mean_abs_rgb": 0.9404427083333333,
+          "camera": {
+            "target": [
+              0.0,
+              7.6232000000000015,
+              0.0
+            ],
+            "distance": 574.743936,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "trade_station-before-tactical/capture.png",
+          "after": "trade_station-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "confederacy:trade_station",
+          "path": "assets/models/legion_trade_station.mesh.json",
+          "sha256": "567416bb0c267c8896eccdaf3210e9e347fc60ab0e92f80b9227a66e7ee82d49",
+          "vertex_count": 1968,
+          "triangle_count": 3580,
+          "manifest_asset": "core:confederacy/trade_station"
+        },
+        "after": {
+          "binding": "confederacy:trade_station",
+          "path": "visual_packs/legions-redesign/assets/models/trade_station.mesh.json",
+          "sha256": "7304679c32334e5b0a707e2658b5df039c31f65b363bab4be73833a17a1ef9e9",
+          "vertex_count": 2080,
+          "triangle_count": 3640,
+          "manifest_asset": "prototype:legions_redesign/trade_station"
+        }
+      }
+    },
+    {
+      "binding": "confederacy:fighter_platform",
+      "name": "Legions Fighter Platform",
+      "source_state_sha256": "354c2a28bc01ea016deaa17222f86a5c4e28563c82a02d4ecf2b2f32a09db012",
+      "drawn_lengths": [
+        127.2063,
+        127.07909760000001
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 60331,
+          "mean_abs_rgb": 10.243696180555556,
+          "camera": {
+            "target": [
+              0.0,
+              2.3099999999999996,
+              -0.29999999999999716
+            ],
+            "distance": 209.89039499999998,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "fighter_platform-before-close/capture.png",
+          "after": "fighter_platform-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 46228,
+          "mean_abs_rgb": 6.684661458333333,
+          "camera": {
+            "target": [
+              0.0,
+              2.3099999999999996,
+              -0.29999999999999716
+            ],
+            "distance": 209.89039499999998,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "fighter_platform-before-rear/capture.png",
+          "after": "fighter_platform-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 9276,
+          "mean_abs_rgb": 1.6915381944444443,
+          "camera": {
+            "target": [
+              0.0,
+              2.3099999999999996,
+              -0.29999999999999716
+            ],
+            "distance": 610.59024,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "fighter_platform-before-tactical/capture.png",
+          "after": "fighter_platform-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "confederacy:fighter_platform",
+          "path": "assets/models/legion_fighter_platform.mesh.json",
+          "sha256": "b88dd8ee806fc3b8167cd93252a64b87683430fc19cb0f3a177423ef46a32f9c",
+          "vertex_count": 2000,
+          "triangle_count": 3620,
+          "manifest_asset": "core:confederacy/fighter_platform"
+        },
+        "after": {
+          "binding": "confederacy:fighter_platform",
+          "path": "visual_packs/legions-redesign/assets/models/fighter_platform.mesh.json",
+          "sha256": "7d3ff39ae95c40f113def13b4233663896c13d1090c5db3396ea3c21b2910ac4",
+          "vertex_count": 2200,
+          "triangle_count": 3772,
+          "manifest_asset": "prototype:legions_redesign/fighter_platform"
+        }
+      }
+    },
+    {
+      "binding": "confederacy:repair_dock",
+      "name": "Legions Repair Dock",
+      "source_state_sha256": "efcc92eb26ce8ac11eabf97adad6820b8ff132e069b9e80d36130c2b7502efd8",
+      "drawn_lengths": [
+        112.41215999999999,
+        112.29974503999999
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 87632,
+          "mean_abs_rgb": 10.986410300925925,
+          "camera": {
+            "target": [
+              0.0,
+              8.119999999999997,
+              0.0
+            ],
+            "distance": 185.48006399999997,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "repair_dock-before-close/capture.png",
+          "after": "repair_dock-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 83393,
+          "mean_abs_rgb": 8.913320023148149,
+          "camera": {
+            "target": [
+              0.0,
+              8.119999999999997,
+              0.0
+            ],
+            "distance": 185.48006399999997,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "repair_dock-before-rear/capture.png",
+          "after": "repair_dock-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 11113,
+          "mean_abs_rgb": 1.6361180555555555,
+          "camera": {
+            "target": [
+              0.0,
+              8.119999999999997,
+              0.0
+            ],
+            "distance": 539.578368,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "repair_dock-before-tactical/capture.png",
+          "after": "repair_dock-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "confederacy:repair_dock",
+          "path": "assets/models/legion_repair_dock.mesh.json",
+          "sha256": "3c865b62f82ce4b5d8053d022a481d992f96b69852d335fed6cc0cbde4079d76",
+          "vertex_count": 1840,
+          "triangle_count": 3356,
+          "manifest_asset": "core:confederacy/repair_dock"
+        },
+        "after": {
+          "binding": "confederacy:repair_dock",
+          "path": "visual_packs/legions-redesign/assets/models/repair_dock.mesh.json",
+          "sha256": "29e4243c400b8953a4869b25fb20f6d0a00396c1493afb4d11ccf59e4bbea11f",
+          "vertex_count": 2648,
+          "triangle_count": 4668,
+          "manifest_asset": "prototype:legions_redesign/repair_dock"
+        }
+      }
+    },
+    {
+      "binding": "confederacy:energy_relay",
+      "name": "Legions Energy Relay",
+      "source_state_sha256": "f0e037c1ae35360bd2adbcdc0d6e3a5001bcce4f947117166663948e49ab1edb",
+      "drawn_lengths": [
+        90.83184220000001,
+        90.7410119
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 90061,
+          "mean_abs_rgb": 10.217968749999999,
+          "camera": {
+            "target": [
+              0.0,
+              8.580000000000002,
+              11.345783899999999
+            ],
+            "distance": 149.87253963,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "energy_relay-before-close/capture.png",
+          "after": "energy_relay-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 90187,
+          "mean_abs_rgb": 11.322494212962964,
+          "camera": {
+            "target": [
+              0.0,
+              8.580000000000002,
+              11.345783899999999
+            ],
+            "distance": 149.87253963,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "energy_relay-before-rear/capture.png",
+          "after": "energy_relay-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 10846,
+          "mean_abs_rgb": 1.3403744212962962,
+          "camera": {
+            "target": [
+              0.0,
+              8.580000000000002,
+              11.345783899999999
+            ],
+            "distance": 435.99284256000004,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "energy_relay-before-tactical/capture.png",
+          "after": "energy_relay-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "confederacy:energy_relay",
+          "path": "assets/models/legion_energy_relay.mesh.json",
+          "sha256": "8c260a988a6e0f66bb7a659832f8c289dcd797a82c4eab1f25725131086de7e0",
+          "vertex_count": 1912,
+          "triangle_count": 3484,
+          "manifest_asset": "core:confederacy/energy_relay"
+        },
+        "after": {
+          "binding": "confederacy:energy_relay",
+          "path": "visual_packs/legions-redesign/assets/models/energy_relay.mesh.json",
+          "sha256": "37aa35685ef47ef7063f1d01742d8f9cb40a88474ef6e4ca0fa3970cd1405448",
+          "vertex_count": 2144,
+          "triangle_count": 3872,
+          "manifest_asset": "prototype:legions_redesign/energy_relay"
+        }
+      }
+    },
+    {
+      "binding": "confederacy:defense_satellite",
+      "name": "Legions Defense Satellite",
+      "source_state_sha256": "9ee188f8834379847aeec77b35c548c1591cfb8536f25e825f440dc6e62958ee",
+      "drawn_lengths": [
+        73.98918,
+        73.84119876
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 54435,
+          "mean_abs_rgb": 6.37865451388889,
+          "camera": {
+            "target": [
+              0.0,
+              4.7250000000000005,
+              4.5
+            ],
+            "distance": 122.082147,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "defense_satellite-before-close/capture.png",
+          "after": "defense_satellite-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 50230,
+          "mean_abs_rgb": 5.50720486111111,
+          "camera": {
+            "target": [
+              0.0,
+              4.7250000000000005,
+              4.5
+            ],
+            "distance": 122.082147,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "defense_satellite-before-rear/capture.png",
+          "after": "defense_satellite-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 8881,
+          "mean_abs_rgb": 1.087791087962963,
+          "camera": {
+            "target": [
+              0.0,
+              4.7250000000000005,
+              4.5
+            ],
+            "distance": 355.14806400000003,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "defense_satellite-before-tactical/capture.png",
+          "after": "defense_satellite-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "confederacy:defense_satellite",
+          "path": "assets/models/legion_defense_satellite.mesh.json",
+          "sha256": "8db782a326362e4e15d52090bd1dcd8039b96df4b2127d3c1bfd87ccb2b6ac9d",
+          "vertex_count": 1216,
+          "triangle_count": 2180,
+          "manifest_asset": "core:confederacy/defense_satellite"
+        },
+        "after": {
+          "binding": "confederacy:defense_satellite",
+          "path": "visual_packs/legions-redesign/assets/models/defense_satellite.mesh.json",
+          "sha256": "6573780a190d2dc8c9d8fe965c552d4b90c6ebd63490cce6cc118e41bf204737",
+          "vertex_count": 1232,
+          "triangle_count": 2248,
+          "manifest_asset": "prototype:legions_redesign/defense_satellite"
+        }
+      }
+    },
+    {
+      "binding": "confederacy:attack_satellite",
+      "name": "Legions Attack Satellite",
+      "source_state_sha256": "df098607b7f99daff2a04068a0f82ef1ea2a0c5e29dd7c7254aa60d9150015e1",
+      "drawn_lengths": [
+        91.76310000000001,
+        91.57957308
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 55147,
+          "mean_abs_rgb": 7.295509259259259,
+          "camera": {
+            "target": [
+              0.0,
+              5.625000000000001,
+              10.8
+            ],
+            "distance": 151.409115,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "attack_satellite-before-close/capture.png",
+          "after": "attack_satellite-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 49571,
+          "mean_abs_rgb": 6.853828125,
+          "camera": {
+            "target": [
+              0.0,
+              5.625000000000001,
+              10.8
+            ],
+            "distance": 151.409115,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "attack_satellite-before-rear/capture.png",
+          "after": "attack_satellite-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 8383,
+          "mean_abs_rgb": 1.1513796296296297,
+          "camera": {
+            "target": [
+              0.0,
+              5.625000000000001,
+              10.8
+            ],
+            "distance": 440.46288000000004,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "attack_satellite-before-tactical/capture.png",
+          "after": "attack_satellite-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "confederacy:attack_satellite",
+          "path": "assets/models/legion_attack_satellite.mesh.json",
+          "sha256": "da4ad21c5c1a363054050169988d1ce0eab82d1c9fb31a5d1318c5f69eebaf64",
+          "vertex_count": 1360,
+          "triangle_count": 2432,
+          "manifest_asset": "core:confederacy/attack_satellite"
+        },
+        "after": {
+          "binding": "confederacy:attack_satellite",
+          "path": "visual_packs/legions-redesign/assets/models/attack_satellite.mesh.json",
+          "sha256": "56cbf7457512ed256ad57d1b7c5106c2c92815ca99c4b456127bfd43f9e27b70",
+          "vertex_count": 1248,
+          "triangle_count": 2260,
+          "manifest_asset": "prototype:legions_redesign/attack_satellite"
+        }
+      }
+    },
+    {
+      "binding": "confederacy:planet_extractor",
+      "name": "Legions Planet Extractor",
+      "source_state_sha256": "61b893adc04c478e7e6f13971162321dcc314a39f2f78cf6a80d671fd020503f",
+      "drawn_lengths": [
+        61.2,
+        61.07759856
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 94170,
+          "mean_abs_rgb": 9.842438657407408,
+          "camera": {
+            "target": [
+              0.0,
+              19.35,
+              0.0
+            ],
+            "distance": 100.98,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "planet_extractor-before-close/capture.png",
+          "after": "planet_extractor-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 91391,
+          "mean_abs_rgb": 9.247769675925925,
+          "camera": {
+            "target": [
+              0.0,
+              19.35,
+              0.0
+            ],
+            "distance": 100.98,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "planet_extractor-before-rear/capture.png",
+          "after": "planet_extractor-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 11037,
+          "mean_abs_rgb": 1.1363009259259258,
+          "camera": {
+            "target": [
+              0.0,
+              19.35,
+              0.0
+            ],
+            "distance": 293.76,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "planet_extractor-before-tactical/capture.png",
+          "after": "planet_extractor-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "confederacy:planet_extractor",
+          "path": "assets/models/legion_planet_extractor.mesh.json",
+          "sha256": "21ac55b4336a9a34b9cc6bdea34e2d9e989dd027e236f7b9eca730f0b382a039",
+          "vertex_count": 1456,
+          "triangle_count": 2596,
+          "manifest_asset": "core:confederacy/planet_extractor"
+        },
+        "after": {
+          "binding": "confederacy:planet_extractor",
+          "path": "visual_packs/legions-redesign/assets/models/planet_extractor.mesh.json",
+          "sha256": "3b68efa25203d897e88cffd3b80e0f297268a5326d97e4f13ddef4c35c4edd85",
+          "vertex_count": 1432,
+          "triangle_count": 2512,
+          "manifest_asset": "prototype:legions_redesign/planet_extractor"
+        }
+      }
+    },
+    {
+      "binding": "confederacy:planet_trade_hub",
+      "name": "Legions Planet Trade Hub",
+      "source_state_sha256": "8259180dd775136acbad732e1aa6789807c9f2680d33edadd5425a7e8c5a737c",
+      "drawn_lengths": [
+        61.2,
+        61.07759856
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 113022,
+          "mean_abs_rgb": 13.366776620370368,
+          "camera": {
+            "target": [
+              0.0,
+              22.275000000000002,
+              0.0
+            ],
+            "distance": 100.98,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "planet_trade_hub-before-close/capture.png",
+          "after": "planet_trade_hub-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 105224,
+          "mean_abs_rgb": 12.005118055555556,
+          "camera": {
+            "target": [
+              0.0,
+              22.275000000000002,
+              0.0
+            ],
+            "distance": 100.98,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "planet_trade_hub-before-rear/capture.png",
+          "after": "planet_trade_hub-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 12397,
+          "mean_abs_rgb": 1.4259276620370371,
+          "camera": {
+            "target": [
+              0.0,
+              22.275000000000002,
+              0.0
+            ],
+            "distance": 293.76,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "planet_trade_hub-before-tactical/capture.png",
+          "after": "planet_trade_hub-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "confederacy:planet_trade_hub",
+          "path": "assets/models/legion_planet_trade_hub.mesh.json",
+          "sha256": "b3bbb4ccfd292d695e73134d4bda12e1e83e25fc1ac93aade8ff96cc0bf0ea39",
+          "vertex_count": 1312,
+          "triangle_count": 2344,
+          "manifest_asset": "core:confederacy/planet_trade_hub"
+        },
+        "after": {
+          "binding": "confederacy:planet_trade_hub",
+          "path": "visual_packs/legions-redesign/assets/models/planet_trade_hub.mesh.json",
+          "sha256": "fd7f870fef9f353896e1bc356b4377d00500f8d38ba99147869180370adb7af2",
+          "vertex_count": 1504,
+          "triangle_count": 2628,
+          "manifest_asset": "prototype:legions_redesign/planet_trade_hub"
+        }
+      }
+    },
+    {
+      "binding": "confederacy:planet_shield_generator",
+      "name": "Legions Planet Shield Generator",
+      "source_state_sha256": "f176c8efa18f00fa9a1e2db5540264dd8dc89b5a729829a6dd4e2acb241b46e3",
+      "drawn_lengths": [
+        61.2,
+        61.07759856
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 116752,
+          "mean_abs_rgb": 14.02476273148148,
+          "camera": {
+            "target": [
+              0.0,
+              20.925,
+              0.0
+            ],
+            "distance": 100.98,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "planet_shield_generator-before-close/capture.png",
+          "after": "planet_shield_generator-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 113863,
+          "mean_abs_rgb": 12.82713599537037,
+          "camera": {
+            "target": [
+              0.0,
+              20.925,
+              0.0
+            ],
+            "distance": 100.98,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "planet_shield_generator-before-rear/capture.png",
+          "after": "planet_shield_generator-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 12951,
+          "mean_abs_rgb": 1.5176840277777777,
+          "camera": {
+            "target": [
+              0.0,
+              20.925,
+              0.0
+            ],
+            "distance": 293.76,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "planet_shield_generator-before-tactical/capture.png",
+          "after": "planet_shield_generator-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "confederacy:planet_shield_generator",
+          "path": "assets/models/legion_planet_shield_generator.mesh.json",
+          "sha256": "7d8d1676d83461298d8efa08be75faa494452a71196952d6943377dedb4f1873",
+          "vertex_count": 1440,
+          "triangle_count": 2608,
+          "manifest_asset": "core:confederacy/planet_shield_generator"
+        },
+        "after": {
+          "binding": "confederacy:planet_shield_generator",
+          "path": "visual_packs/legions-redesign/assets/models/planet_shield_generator.mesh.json",
+          "sha256": "a39387b48051f858fb411c4f394ebe8272684cc725731438d71a788e0dd339fd",
+          "vertex_count": 1784,
+          "triangle_count": 3108,
+          "manifest_asset": "prototype:legions_redesign/planet_shield_generator"
+        }
+      }
+    },
+    {
+      "binding": "confederacy:planet_pulsar_cannon",
+      "name": "Legions Planet Pulsar Cannon",
+      "source_state_sha256": "fa6fbff030512d1e6c9fc592463d01baceffb6664a21b5e5fb4f45118ca7a914",
+      "drawn_lengths": [
+        70.2,
+        70.05960162000001
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 94126,
+          "mean_abs_rgb": 11.560255208333333,
+          "camera": {
+            "target": [
+              0.0,
+              19.08,
+              6.299999999999999
+            ],
+            "distance": 115.83,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "planet_pulsar_cannon-before-close/capture.png",
+          "after": "planet_pulsar_cannon-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 84445,
+          "mean_abs_rgb": 9.400704282407407,
+          "camera": {
+            "target": [
+              0.0,
+              19.08,
+              6.299999999999999
+            ],
+            "distance": 115.83,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "planet_pulsar_cannon-before-rear/capture.png",
+          "after": "planet_pulsar_cannon-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 11535,
+          "mean_abs_rgb": 1.4393130787037036,
+          "camera": {
+            "target": [
+              0.0,
+              19.08,
+              6.299999999999999
+            ],
+            "distance": 336.96,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "planet_pulsar_cannon-before-tactical/capture.png",
+          "after": "planet_pulsar_cannon-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "confederacy:planet_pulsar_cannon",
+          "path": "assets/models/legion_planet_pulsar_cannon.mesh.json",
+          "sha256": "bd26fd608964a45f2ec3afd1bc7a66617d218cf6a69ef4fc0013331427ea8393",
+          "vertex_count": 1344,
+          "triangle_count": 2396,
+          "manifest_asset": "core:confederacy/planet_pulsar_cannon"
+        },
+        "after": {
+          "binding": "confederacy:planet_pulsar_cannon",
+          "path": "visual_packs/legions-redesign/assets/models/planet_pulsar_cannon.mesh.json",
+          "sha256": "9108095d2dc9db9768003423a23fd742a2b6603ea796b0c1f2cd07e9adc9a924",
+          "vertex_count": 1664,
+          "triangle_count": 3012,
+          "manifest_asset": "prototype:legions_redesign/planet_pulsar_cannon"
+        }
+      }
+    },
+    {
+      "binding": "imperial:corvette",
+      "name": "Vigil \u2014 unchanged control",
+      "source_state_sha256": "1523e6b444a8747f432272687af7474735494f129fb66f93765d22a4a23be683",
+      "drawn_lengths": [
+        64.12035,
+        64.12035
+      ],
+      "views": {
+        "close": {
+          "changed_pixels_gt8": 0,
+          "mean_abs_rgb": 0.0,
+          "camera": {
+            "target": [
+              0.0,
+              6.667408231150487,
+              1.5396442703763995
+            ],
+            "distance": 105.7985775,
+            "yaw": 48.0,
+            "pitch": 28,
+            "fov": 55.0
+          },
+          "before": "vigil-control-before-close/capture.png",
+          "after": "vigil-control-after-close/capture.png"
+        },
+        "rear": {
+          "changed_pixels_gt8": 0,
+          "mean_abs_rgb": 0.0,
+          "camera": {
+            "target": [
+              0.0,
+              6.667408231150487,
+              1.5396442703763995
+            ],
+            "distance": 105.7985775,
+            "yaw": 220.0,
+            "pitch": 18,
+            "fov": 55.0
+          },
+          "before": "vigil-control-before-rear/capture.png",
+          "after": "vigil-control-after-rear/capture.png"
+        },
+        "tactical": {
+          "changed_pixels_gt8": 0,
+          "mean_abs_rgb": 0.0,
+          "camera": {
+            "target": [
+              0.0,
+              6.667408231150487,
+              1.5396442703763995
+            ],
+            "distance": 307.77768,
+            "yaw": 48.0,
+            "pitch": 52,
+            "fov": 55.0
+          },
+          "before": "vigil-control-before-tactical/capture.png",
+          "after": "vigil-control-after-tactical/capture.png"
+        }
+      },
+      "meshes": {
+        "before": {
+          "binding": "imperial:corvette",
+          "path": "visual_packs/vigil-prototype/assets/models/vigil.mesh.json",
+          "sha256": "3b1649ce032014875504cf9d6cc60f26c8410ed57058991321c6e129c4f3ca3b",
+          "vertex_count": 4608,
+          "triangle_count": 8456,
+          "manifest_asset": "prototype:imperial/vigil"
+        },
+        "after": {
+          "binding": "imperial:corvette",
+          "path": "visual_packs/vigil-prototype/assets/models/vigil.mesh.json",
+          "sha256": "3b1649ce032014875504cf9d6cc60f26c8410ed57058991321c6e129c4f3ca3b",
+          "vertex_count": 4608,
+          "triangle_count": 8456,
+          "manifest_asset": "prototype:imperial/vigil"
+        }
+      }
+    }
+  ],
+  "capture_code_revision": "186903ae05aa9bd43d7e299fdc248be7cca42fd5"
+}

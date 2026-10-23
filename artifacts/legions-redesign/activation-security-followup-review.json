@@ -1,0 +1,29 @@
+{
+  "delegation_id": "deleg_e4e2fabf",
+  "scope": "Independent security and logic re-review of corrected activation helper and safety regressions",
+  "passed": true,
+  "security_concerns": [],
+  "logic_errors": [],
+  "supersedes": "The activation-helper optimization/partial-I/O finding in integration-independent-review.json; original art/integration evidence review remains intact.",
+  "verified": {
+    "normal_python_safety_tests": "3 passed",
+    "optimized_python_safety_tests": "3 passed",
+    "game_activation_test": "1 passed",
+    "helper_assert_statements": 0,
+    "optimized_rejections_probed": ["Incorrect mesh paths", "Incorrect mesh hashes", "Duplicate bindings", "Changed binding keysets", "Partial or unrelated asset deltas", "Unrelated scene or metadata changes"],
+    "candidate_generation_byte_idempotent": true,
+    "settings_validation": "One append, no duplicates on repeat, unrelated values retained, customized/reordered/duplicate selections rejected",
+    "atomic_replacement": "Same-directory temporary file; complete bytes flushed and fsynced before os.replace; temporary cleanup checked",
+    "transaction_failure_probes": ["Failing target included in rollback", "Earlier originals restored", "Previously absent receipt removed", "Readback corruption detected", "Rollback continues after rollback error"],
+    "rollback_failure": "Explicit RuntimeError with chained original activation error",
+    "main_wiring": "Static review confirms all candidates validated before writes; backups read back and retained; settings/catalogue/receipt applied in one rollback-capable transaction",
+    "live_activation_or_main_blender_gpu_execution": false,
+    "repository_files_modified_by_reviewer": false
+  },
+  "suggestions": ["Persist the additional independent temporary failure probes as permanent tests in future helper work."],
+  "limitations": [
+    "Rollback covers caught exceptions, not cross-file crash atomicity or concurrent external writers.",
+    "Helper main/backup wiring inspected statically, not executed by reviewer.",
+    "Does not grant appearance approval, merge authorization or release/tag permission."
+  ]
+}
