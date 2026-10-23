@@ -44,7 +44,7 @@ class SelectionPreferencesTests(unittest.TestCase):
                           'imperium-sensor-prototype', 'imperium-trade-prototype',
                           'imperium-fighter-prototype', 'imperium-repair-prototype',
                           'imperium-relay-prototype', 'imperium-fleet-prototypes',
-                          'alliance-redesign'])
+                          'alliance-redesign', 'legions-redesign'])
         with self.assertWarnsRegex(RuntimeWarning, 'using legacy models'):
             clean = menus.validate_presentation_settings(
                 {'model_preview': True, 'visual_packs': ['../escape'], 'custom': 17})
@@ -369,7 +369,8 @@ class ShippedPrototypeDefaultTests(unittest.TestCase):
                'artifacts/imperial-stations-review/OWNER_REVIEW.json',
                'artifacts/imperial-dockyard-review/OWNER_REVIEW.json',
                'artifacts/imperium-fleet/OWNER_REVIEW.json',
-               'artifacts/alliance-redesign/OWNER_REVIEW.json')
+               'artifacts/alliance-redesign/OWNER_REVIEW.json',
+               'artifacts/legions-redesign/OWNER_REVIEW.json')
 
     def test_shipped_default_loads_the_approved_prototype_meshes(self):
         import json

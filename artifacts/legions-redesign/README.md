@@ -1,6 +1,6 @@
 # Automated Legions — complete 26-model redesign
 
-## Ordinary-game owner review build
+## Owner-approved ordinary-game delivery
 
 All **26 existing Automated Legions (`confederacy`) bindings** now have original editable Blender masters and strictly runtime-validated exports: 10 ships/logistics, 10 orbital stations, 2 satellites and 4 surface installations. Crew transports and generated trade convoys retain their shared existing binding. No gameplay, balance, classes, simulation or save format changed.
 
@@ -15,11 +15,11 @@ The complete family is **active in this owner's ordinary `main.py` checkout**, n
 
 Choose Automated Legions normally. No alternate viewer, art flag or runtime Blender installation is required.
 
-**Not owner appearance-approved and not merged.** Public fresh defaults remain the prior 15 packs while awaiting the owner's decision. Before an approved merge, add the pack to fresh defaults and migrate exact historical 13-/14-/15-pack shipped cohorts, preserving custom/reordered/subset/extended/empty selections and unrelated preferences. A disabled/optional-only merge is not acceptable. No release/tag is authorized.
+**Owner appearance-approved and merge-authorized:** “Looking good. Weel done. Merge please”. `OWNER_REVIEW.json` pins the exact 26 accepted meshes and masters. Fresh defaults now enable all 16 packs, including Legions. Exact historical 13-/14-/15-pack shipped cohorts migrate to those defaults; custom/reordered/subset/extended/empty selections and unrelated preferences remain unchanged. This is ordinary `main.py` delivery, not an optional-only feature. No release/tag is authorized.
 
 ## Verification and evidence
 
-- Final local union: **223 tests and 281 subtests passed**, including optimized-Python activation guards and transaction rollback regressions. CPU/loader compatibility is separate from appearance acceptance.
+- Approved activation union: **238 tests and 385 subtests passed**; the one previously documented baseline release-lock test was explicitly deselected, not counted as passed. Fresh defaults, all three historical migrations and exact approval hashes are covered. `approved-game-delivery.json` retains the delivery audit and explains reuse of the earlier normal smoke rather than disturbing the owner's already-running game. CPU/loader compatibility is separate from appearance acceptance.
 - `fleet-review.png`, `stations-review.png`, `hardware-review.png`: all 26 actual native models, individually framed, not a true-size fleet comparison.
 - `native-full-faction/`: 27 subjects including an unchanged Imperial Vigil control; three matched before/after views each. Actual snapshot mesh paths/hashes and image metrics are retained, and all PNGs were losslessly compressed with decoded-pixel equality checks.
 - `native-full-faction/evidence-sha256.json`: hashes of every retained capture/snapshot/report and four exact source/executable pins.
@@ -41,6 +41,8 @@ Large segmented carapaces, forked machine hulls, distributed computation nodes, 
 CPU guards cover closed geometry, envelopes, six roles, functional features, sampled visibility/clearance and attachment. Broad-phase AABB connectivity does not prove every exact solid contact; stronger convex/ray guards cover declared features, not every possible camera or part. Ordinary smoke is not organic construction of every class, physical owner play-testing, frozen Windows/macOS delivery or a performance/FPS gate.
 
 `cpu-checkpoint.json` is historical pre-export evidence. The screen-sharing restriction was respected during that phase; Blender/native work resumed only after the owner said sharing had ended.
+
+The original `normal-game-catalogue.json` and independent integration receipt describe the historical owner-review boundary (owner 16 packs, public 15, approval pending). They are preserved rather than rewritten. Current approval/default activation is recorded above and in `OWNER_REVIEW.json`; the 26 reviewed export bytes and native catalogue are unchanged.
 
 ## Reproduce
 

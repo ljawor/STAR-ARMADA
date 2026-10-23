@@ -97,7 +97,7 @@ DEFAULT_SETTINGS = {
     # because that is the migration's whole point; 'legacy' stays as the rollback control and is
     # never deleted by this step.
     "renderer": "cpp",
-    # Owner-approved Imperium and Alliance designs are part of the normal game.
+    # Owner-approved Imperium, Alliance and Legions designs are part of the normal game.
     # Enable them here, not through a review-only entry point.
     # Saved selections matching the previous shipped list migrate in load_settings;
     # explicitly customized selections retain their order and choices.
@@ -117,6 +117,7 @@ DEFAULT_SETTINGS = {
         "imperium-relay-prototype",
         "imperium-fleet-prototypes",
         "alliance-redesign",
+        "legions-redesign",
     ],
 }
 
@@ -131,6 +132,7 @@ _SHIPPED_IMPERIUM_13 = (
 _PREVIOUS_SHIPPED_PACK_LISTS = (
     list(_SHIPPED_IMPERIUM_13),
     [*_SHIPPED_IMPERIUM_13, 'imperium-fleet-prototypes'],
+    [*_SHIPPED_IMPERIUM_13, 'imperium-fleet-prototypes', 'alliance-redesign'],
 )
 
 
@@ -188,7 +190,7 @@ def load_settings() -> dict:
             s.update(saved)
     except (OSError, ValueError):
         pass
-    # Upgrade either previous shipped Imperium selection, including existing installs.
+    # Upgrade exact historical 13/14/15-pack shipped selections, including existing installs.
     # Custom/empty lists are explicit selections and must not be overwritten.
     if (isinstance(saved, dict)
             and saved.get('visual_packs') in _PREVIOUS_SHIPPED_PACK_LISTS):

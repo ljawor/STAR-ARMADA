@@ -1,0 +1,44 @@
+{
+  "status": "owner_approved_default_activation_verified_pending_authorized_merge",
+  "reviewed_art_commit": "cbf82a335d15c7ffe898edc97e1ce8af9887bc42",
+  "owner_approval": "artifacts/legions-redesign/OWNER_REVIEW.json",
+  "models": 26,
+  "fresh_default_pack_count": 16,
+  "exact_historical_migration_cohorts": [13, 14, 15],
+  "custom_reordered_subset_extended_empty_lists_preserved": true,
+  "unrelated_settings_preserved": true,
+  "duplicate_free_settings_roundtrip_verified": true,
+  "tests": {
+    "passed": 238,
+    "subtests_passed": 385,
+    "deselected": 1,
+    "deselected_test": "tests/test_s11_default_switch.py::test_lock_check_mode_passes_on_the_committed_tree",
+    "deselection_reason": "Previously documented unrelated baseline release-lock failure; not counted as passed",
+    "baseline_evidence": "artifacts/imperium-fleet/release-lock-preexisting-failure.json",
+    "initial_rollout_run": "Failed on old 15-pack defaults as expected; corrected invalid duplicate/subset fixtures before final RED. Initial broad union then exposed one superseded hardcoded Imperium 15-pack expectation; updated to include the approved Legions pack before final GREEN."
+  },
+  "delivery_verification": {
+    "actual_owner_pack_count": 16,
+    "fresh_default_catalogue_byte_identical_to_reviewed_native_catalogue": true,
+    "catalogue_sha256": "6979adf2acfcfa450243db52ce8a10eb4d081123ccf614877c892f811d35417b",
+    "main_sha256": "85304b6ebff357e1e79472e984af2724a36eb525a05ab04217f0d96c814e6ab0",
+    "activation_source_sha256": "ebc6be289c7b6b1370282a3e37610d2514ada387d4f2db92112d43d1381dc46a",
+    "approved_masters_and_meshes_hash_checked": 26,
+    "accepted_source_assets_hash_checked_unchanged": 654,
+    "sealed_native_files_hash_checked": 651,
+    "sealed_capture_source_and_executable_pins_checked": 4
+  },
+  "ordinary_smoke": {
+    "receipt_reused": "artifacts/legions-redesign/normal-main-smoke.json",
+    "output_reused": "artifacts/legions-redesign/normal-main-smoke.txt",
+    "returncode": 0,
+    "simulated_seconds": 30,
+    "published_frames": 374,
+    "timeout": false,
+    "orphans": false,
+    "rerun_after_default_switch": false,
+    "reason": "Owner main.py game was already running (PID 14495); left untouched and did not launch a competing viewer. Fresh-default catalogue is byte-identical to the reviewed ordinary-game catalogue, owner effective pack list remains the same 16, and main/native executable/approved mesh bytes are unchanged."
+  },
+  "release_or_tag_authorized": false,
+  "ci_claim": "Local checks only; remote run state must be read at final publication."
+}
