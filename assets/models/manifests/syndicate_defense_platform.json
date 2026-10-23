@@ -2,13 +2,13 @@
   "contract": "star-armada/model-manifest",
   "contract_major": 1,
   "asset": "core:syndicate/defense_platform",
-  "revision": "6316df4e01073095f98be41ea0653709f17a19d9f206485917e235af35712223",
+  "revision": "52e388bdc7401ca4507d66181dba66bfff4d6b31dc88514e961fad32d8bbce34",
   "display_name": "syndicate defense platform (approved)",
   "files": {
     "mesh": {
       "path": "assets/models/syndicate_defense_platform.mesh.json",
-      "sha256": "d74eb09809cc081177b3edb7cd542dc393812d00f151d70a0d5235aa49e1245b",
-      "bytes": 223464
+      "sha256": "d71fa65c48279cc56077a9ccb70b1f9f5eb14084dc629779b9a5b94a3fed0c8f",
+      "bytes": 383534
     }
   },
   "export": {
@@ -24,14 +24,14 @@
   ],
   "bounds": {
     "min": [
-      -45.9679,
-      -10.8,
-      -28.5448
+      -45.9297333,
+      -10.7835503,
+      -28.5165043
     ],
     "max": [
-      30.3691,
-      22.1,
-      28.0475
+      6.0513325,
+      15.1886435,
+      24.6727371
     ]
   },
   "nominal_scale": 1.0,
@@ -46,29 +46,27 @@
   "provenance": {
     "author": "Lukasz Jawor",
     "tool": "Blender",
-    "tool_version": "Blender evaluated bevel mesh",
+    "tool_version": "5.0.1",
     "license": "original",
-    "source": "art/blender/syndicate_defense_platform.blend",
-    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+    "source": "art/blender/syndicate_fleet/defense_platform.blend",
+    "notes": "Rim Syndicate rework in the industrial language the Marauder/Leviathan batch established. Authored by tools/art/build_syndicate_fleet.py. Containment only inside the approved binding envelope: length, camera framing and collision radii are unchanged."
   },
   "requires": {
     "min_engine": "0.15.1",
     "material_profile": "core:fleet/standard"
   },
   "budgets": {
-    "triangles": 3520,
+    "triangles": 2484,
     "draw_calls": 6,
     "texture_bytes": 0
   },
   "approval": {
-    "status": "approved",
+    "status": "pending",
     "decision_id": "s06-b3c-stations-2026-10-17",
-    "decided_by": "owner",
-    "decided_on": "2026-10-17",
-    "reviewed_revision": "6316df4e01073095f98be41ea0653709f17a19d9f206485917e235af35712223",
     "reviewed_evidence": [
-      "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
-      "artifacts/s06_alliance_batch_review/b3c-stations/metrics.json"
+      "artifacts/syndicate-fleet/review/defense_platform-quarter.jpg",
+      "artifacts/syndicate-fleet/review/defense_platform-profile.jpg",
+      "artifacts/syndicate-fleet/review/defense_platform-bow.jpg"
     ]
   }
 }

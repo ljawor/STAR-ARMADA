@@ -1,0 +1,142 @@
+{
+  "scenario": "pack-active-isolated-fleet-review-not-release",
+  "pack": "prototype:syndicate_fleet",
+  "reviewed_bindings": [
+    "syndicate:corvette",
+    "syndicate:frigate",
+    "syndicate:cruiser",
+    "syndicate:convoy",
+    "syndicate:colonizer",
+    "syndicate:constructor",
+    "syndicate:fighter",
+    "syndicate:command_station",
+    "syndicate:defense_platform",
+    "syndicate:energy_relay",
+    "syndicate:fighter_platform",
+    "syndicate:mining_station",
+    "syndicate:repair_dock",
+    "syndicate:research_station",
+    "syndicate:sensor_station",
+    "syndicate:shipyard",
+    "syndicate:trade_station",
+    "syndicate:attack_satellite",
+    "syndicate:defense_satellite",
+    "syndicate:planet_extractor",
+    "syndicate:planet_pulsar_cannon",
+    "syndicate:planet_shield_generator",
+    "syndicate:planet_trade_hub"
+  ],
+  "resolved_assets": {
+    "syndicate:attack_satellite": "prototype:syndicate/attack_satellite",
+    "syndicate:colonizer": "prototype:syndicate/colonizer",
+    "syndicate:command_station": "prototype:syndicate/command_station",
+    "syndicate:constructor": "prototype:syndicate/constructor",
+    "syndicate:convoy": "prototype:syndicate/convoy",
+    "syndicate:corvette": "prototype:syndicate/corvette",
+    "syndicate:cruiser": "prototype:syndicate/cruiser",
+    "syndicate:defense_platform": "prototype:syndicate/defense_platform",
+    "syndicate:defense_satellite": "prototype:syndicate/defense_satellite",
+    "syndicate:energy_relay": "prototype:syndicate/energy_relay",
+    "syndicate:fighter": "prototype:syndicate/fighter",
+    "syndicate:fighter_platform": "prototype:syndicate/fighter_platform",
+    "syndicate:frigate": "prototype:syndicate/frigate",
+    "syndicate:mining_station": "prototype:syndicate/mining_station",
+    "syndicate:planet_extractor": "prototype:syndicate/planet_extractor",
+    "syndicate:planet_pulsar_cannon": "prototype:syndicate/planet_pulsar_cannon",
+    "syndicate:planet_shield_generator": "prototype:syndicate/planet_shield_generator",
+    "syndicate:planet_trade_hub": "prototype:syndicate/planet_trade_hub",
+    "syndicate:repair_dock": "prototype:syndicate/repair_dock",
+    "syndicate:research_station": "prototype:syndicate/research_station",
+    "syndicate:sensor_station": "prototype:syndicate/sensor_station",
+    "syndicate:shipyard": "prototype:syndicate/shipyard",
+    "syndicate:trade_station": "prototype:syndicate/trade_station"
+  },
+  "subjects": [
+    {
+      "id": 30,
+      "data_id": "syndicate_corvette",
+      "kind": "ship"
+    },
+    {
+      "id": 31,
+      "data_id": "syndicate_frigate",
+      "kind": "ship"
+    },
+    {
+      "id": 32,
+      "data_id": "syndicate_cruiser",
+      "kind": "ship"
+    },
+    {
+      "id": 33,
+      "data_id": "syndicate_raid_squadron",
+      "kind": "squadron"
+    },
+    {
+      "id": 34,
+      "data_id": "syndicate_colonizer",
+      "kind": "ship"
+    },
+    {
+      "id": 35,
+      "data_id": "syndicate_constructor",
+      "kind": "ship"
+    },
+    {
+      "id": 36,
+      "data_id": "syndicate_crew_transport",
+      "kind": "ship"
+    },
+    {
+      "id": 37,
+      "data_id": "command_station",
+      "kind": "station"
+    },
+    {
+      "id": 38,
+      "data_id": "defense_platform",
+      "kind": "station"
+    },
+    {
+      "id": 39,
+      "data_id": "energy_relay",
+      "kind": "station"
+    },
+    {
+      "id": 40,
+      "data_id": "fighter_platform",
+      "kind": "station"
+    },
+    {
+      "id": 41,
+      "data_id": "mining_station",
+      "kind": "station"
+    },
+    {
+      "id": 42,
+      "data_id": "repair_dock",
+      "kind": "station"
+    },
+    {
+      "id": 43,
+      "data_id": "research_station",
+      "kind": "station"
+    },
+    {
+      "id": 44,
+      "data_id": "sensor_station",
+      "kind": "station"
+    },
+    {
+      "id": 45,
+      "data_id": "shipyard",
+      "kind": "station"
+    },
+    {
+      "id": 46,
+      "data_id": "trade_station",
+      "kind": "station"
+    }
+  ],
+  "native_presented_frames": 120
+}

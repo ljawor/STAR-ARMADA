@@ -42,3 +42,6 @@ render_cpp/build*/
 
 # match replays written by a --smoke or local run
 /match-*.json
+
+# Syndicate fleet rework: Blender build staging (the registered copies live in assets/models)
+art/blender/syndicate_fleet/runtime/

@@ -1624,6 +1624,18 @@
           "syndicate:supercapital"
         ]
       }
-    }
+    },
+  {
+    "id": "syndicate-fleet-rework-2026-10-23-review",
+    "date": "2026-10-23",
+    "owner_words": "Migrade the rest of the statiosn and ship of the syndicate. Every change land on a branch. The brahc will be a PR. The chanhges you are doing must be approved by me by running main.py. After I see it in the game I will confirm and you will merge. (2026-10-23, verbatim)",
+    "scope": "All 23 pre-existing Rim Syndicate bindings re-authored; meshes and manifests committed to core, approval pending the owner playing them.",
+    "not_claimed": [
+      "owner approval",
+      "merge",
+      "release or tag",
+      "any change to gameplay data, envelope or collision radius"
+    ]
+  }
   ]
 }

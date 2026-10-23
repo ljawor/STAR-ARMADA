@@ -2,13 +2,13 @@
   "contract": "star-armada/model-manifest",
   "contract_major": 1,
   "asset": "core:syndicate/repair_dock",
-  "revision": "6f04a9dc3b31a35d86eeaceb6467a0fbc8dfea0ade32dd0c4943c8eaf2900617",
+  "revision": "bd4f86f3d0ae5b8fb213f9ba533abce31a889b0ba8e09562a02424730984eea6",
   "display_name": "syndicate repair dock (approved)",
   "files": {
     "mesh": {
       "path": "assets/models/syndicate_repair_dock.mesh.json",
-      "sha256": "39c5ef2886f1c56c4d2702f5e07fb9eb0adc7245a6711ae34e4cdf73851b9faa",
-      "bytes": 226350
+      "sha256": "989f2c4ccd339557d1c6e9e28574760f1d1761ce59f6401489f96576dae3a2c4",
+      "bytes": 415363
     }
   },
   "export": {
@@ -24,14 +24,14 @@
   ],
   "bounds": {
     "min": [
-      -37.4318,
-      -16.8,
-      -38.931
+      -37.3932076,
+      -16.7742004,
+      -38.8925591
     ],
     "max": [
-      39.7528,
-      34.8,
-      37.9495
+      28.2069035,
+      11.7070246,
+      33.3675919
     ]
   },
   "nominal_scale": 1.0,
@@ -46,29 +46,27 @@
   "provenance": {
     "author": "Lukasz Jawor",
     "tool": "Blender",
-    "tool_version": "Blender evaluated bevel mesh",
+    "tool_version": "5.0.1",
     "license": "original",
-    "source": "art/blender/syndicate_repair_dock.blend",
-    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+    "source": "art/blender/syndicate_fleet/repair_dock.blend",
+    "notes": "Rim Syndicate rework in the industrial language the Marauder/Leviathan batch established. Authored by tools/art/build_syndicate_fleet.py. Containment only inside the approved binding envelope: length, camera framing and collision radii are unchanged."
   },
   "requires": {
     "min_engine": "0.15.1",
     "material_profile": "core:fleet/standard"
   },
   "budgets": {
-    "triangles": 3548,
+    "triangles": 2680,
     "draw_calls": 6,
     "texture_bytes": 0
   },
   "approval": {
-    "status": "approved",
+    "status": "pending",
     "decision_id": "s06-b3c-stations-2026-10-17",
-    "decided_by": "owner",
-    "decided_on": "2026-10-17",
-    "reviewed_revision": "6f04a9dc3b31a35d86eeaceb6467a0fbc8dfea0ade32dd0c4943c8eaf2900617",
     "reviewed_evidence": [
-      "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
-      "artifacts/s06_alliance_batch_review/b3c-stations/metrics.json"
+      "artifacts/syndicate-fleet/review/repair_dock-quarter.jpg",
+      "artifacts/syndicate-fleet/review/repair_dock-profile.jpg",
+      "artifacts/syndicate-fleet/review/repair_dock-bow.jpg"
     ]
   }
 }

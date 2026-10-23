@@ -3460,5 +3460,37 @@
     "validator": "tools/art/validate_contract.py",
     "required": true,
     "note": "D2: validate-models IS the S02 contract validator, not a second opinion. If it is absent the pipeline fails with E_NO_CONTRACT_VALIDATOR rather than passing on its own checks alone."
+  },
+  "review_batches": {
+    "syndicate-fleet-rework": {
+      "state": "owner_review_pending",
+      "requested_on": "2026-10-23",
+      "bindings": [
+        "syndicate:attack_satellite",
+        "syndicate:colonizer",
+        "syndicate:command_station",
+        "syndicate:constructor",
+        "syndicate:convoy",
+        "syndicate:corvette",
+        "syndicate:cruiser",
+        "syndicate:defense_platform",
+        "syndicate:defense_satellite",
+        "syndicate:energy_relay",
+        "syndicate:fighter",
+        "syndicate:fighter_platform",
+        "syndicate:frigate",
+        "syndicate:mining_station",
+        "syndicate:planet_extractor",
+        "syndicate:planet_pulsar_cannon",
+        "syndicate:planet_shield_generator",
+        "syndicate:planet_trade_hub",
+        "syndicate:repair_dock",
+        "syndicate:research_station",
+        "syndicate:sensor_station",
+        "syndicate:shipyard",
+        "syndicate:trade_station"
+      ],
+      "note": "Registered into core so a plain main.py launch draws the rework. Approval is pending the owner seeing it in the game."
+    }
   }
 }

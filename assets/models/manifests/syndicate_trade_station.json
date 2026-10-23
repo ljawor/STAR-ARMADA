@@ -2,13 +2,13 @@
   "contract": "star-armada/model-manifest",
   "contract_major": 1,
   "asset": "core:syndicate/trade_station",
-  "revision": "bec232e61fea50479f60ad0721001b2e6115bc78f040470d918644f70d3a6f69",
+  "revision": "59dab42ec94f6b8631801a0c01bb70c4e3045292d16c6e8038344190cac9547d",
   "display_name": "syndicate trade station (approved)",
   "files": {
     "mesh": {
       "path": "assets/models/syndicate_trade_station.mesh.json",
-      "sha256": "6bae5343f97a9d1881d8b1b7bbf21270a1acddc26a6b58752e258dcb90bd9e1c",
-      "bytes": 223717
+      "sha256": "a5eddb4680a7bfa2109594f2c6b2c339094f5f7958ced66031bffa49ffff221c",
+      "bytes": 368365
     }
   },
   "export": {
@@ -24,14 +24,14 @@
   ],
   "bounds": {
     "min": [
-      -52.3122,
-      -8.8,
-      -48.6483
+      -52.2634163,
+      -8.78335,
+      -48.6006966
     ],
     "max": [
-      45.2571,
-      24.5,
-      46.5606
+      30.0648689,
+      22.0617409,
+      40.8881493
     ]
   },
   "nominal_scale": 1.0,
@@ -46,29 +46,27 @@
   "provenance": {
     "author": "Lukasz Jawor",
     "tool": "Blender",
-    "tool_version": "Blender evaluated bevel mesh",
+    "tool_version": "5.0.1",
     "license": "original",
-    "source": "art/blender/syndicate_trade_station.blend",
-    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+    "source": "art/blender/syndicate_fleet/trade_station.blend",
+    "notes": "Rim Syndicate rework in the industrial language the Marauder/Leviathan batch established. Authored by tools/art/build_syndicate_fleet.py. Containment only inside the approved binding envelope: length, camera framing and collision radii are unchanged."
   },
   "requires": {
     "min_engine": "0.15.1",
     "material_profile": "core:fleet/standard"
   },
   "budgets": {
-    "triangles": 3532,
+    "triangles": 2388,
     "draw_calls": 6,
     "texture_bytes": 0
   },
   "approval": {
-    "status": "approved",
+    "status": "pending",
     "decision_id": "s06-b3c-stations-2026-10-17",
-    "decided_by": "owner",
-    "decided_on": "2026-10-17",
-    "reviewed_revision": "bec232e61fea50479f60ad0721001b2e6115bc78f040470d918644f70d3a6f69",
     "reviewed_evidence": [
-      "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
-      "artifacts/s06_alliance_batch_review/b3c-stations/metrics.json"
+      "artifacts/syndicate-fleet/review/trade_station-quarter.jpg",
+      "artifacts/syndicate-fleet/review/trade_station-profile.jpg",
+      "artifacts/syndicate-fleet/review/trade_station-bow.jpg"
     ]
   }
 }

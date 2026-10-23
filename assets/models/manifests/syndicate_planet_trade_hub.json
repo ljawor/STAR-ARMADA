@@ -2,13 +2,13 @@
   "contract": "star-armada/model-manifest",
   "contract_major": 1,
   "asset": "core:syndicate/planet_trade_hub",
-  "revision": "cf6a994253230790f4305436a6778dc4d94fed750fa6cede5aae8a87e828b1ca",
+  "revision": "e0a9c520696d1b415822a18c0eabf6630f6ff3fafa60c8315fcb652d9e7f4ee5",
   "display_name": "syndicate planet trade hub (approved)",
   "files": {
     "mesh": {
       "path": "assets/models/syndicate_planet_trade_hub.mesh.json",
-      "sha256": "e287675b6e86d7b5bb986169941179ff8cad49fa9c021182f7d279aa89be2aed",
-      "bytes": 123191
+      "sha256": "f45d9b99ad29d2dfe54ffcaf7740a44b1dd7c7aca9fa624f5f1bb0f067f75e1f",
+      "bytes": 268721
     }
   },
   "export": {
@@ -24,14 +24,14 @@
   ],
   "bounds": {
     "min": [
-      -34.0,
-      0.0,
-      -32.0
+      -33.9659996,
+      0.02475,
+      -31.9680004
     ],
     "max": [
-      34.0,
-      49.5,
-      32.0
+      25.8669586,
+      43.4647217,
+      2.5876803
     ]
   },
   "nominal_scale": 1.0,
@@ -46,29 +46,27 @@
   "provenance": {
     "author": "Lukasz Jawor",
     "tool": "Blender",
-    "tool_version": "Blender evaluated bevel mesh",
+    "tool_version": "5.0.1",
     "license": "original",
-    "source": "art/blender/syndicate_planet_trade_hub.blend",
-    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+    "source": "art/blender/syndicate_fleet/planet_trade_hub.blend",
+    "notes": "Rim Syndicate rework in the industrial language the Marauder/Leviathan batch established. Authored by tools/art/build_syndicate_fleet.py. Containment only inside the approved binding envelope: length, camera framing and collision radii are unchanged."
   },
   "requires": {
     "min_engine": "0.15.1",
     "material_profile": "core:fleet/standard"
   },
   "budgets": {
-    "triangles": 2232,
+    "triangles": 1760,
     "draw_calls": 6,
     "texture_bytes": 0
   },
   "approval": {
-    "status": "approved",
+    "status": "pending",
     "decision_id": "s06-b4-hardware-2026-10-17",
-    "decided_by": "owner",
-    "decided_on": "2026-10-17",
-    "reviewed_revision": "cf6a994253230790f4305436a6778dc4d94fed750fa6cede5aae8a87e828b1ca",
     "reviewed_evidence": [
-      "artifacts/s06_alliance_batch_review/b4-hardware/contact-sheet.png",
-      "artifacts/s06_alliance_batch_review/b4-hardware/metrics.json"
+      "artifacts/syndicate-fleet/review/planet_trade_hub-quarter.jpg",
+      "artifacts/syndicate-fleet/review/planet_trade_hub-profile.jpg",
+      "artifacts/syndicate-fleet/review/planet_trade_hub-bow.jpg"
     ]
   }
 }

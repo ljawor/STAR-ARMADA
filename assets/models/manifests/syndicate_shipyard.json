@@ -2,13 +2,13 @@
   "contract": "star-armada/model-manifest",
   "contract_major": 1,
   "asset": "core:syndicate/shipyard",
-  "revision": "440c9a50f38af58dbd87265ffab8f1c1351fbd4333516fb42d878c7f08884170",
+  "revision": "bd119751bd80caff68f379cf12cf5ad19f8236710d1c85a600c75f0ea6183622",
   "display_name": "syndicate shipyard (approved)",
   "files": {
     "mesh": {
       "path": "assets/models/syndicate_shipyard.mesh.json",
-      "sha256": "c1a0aad3e30a013b95c704390ef925f8beeb024924ddd4a5d525dc60156c4670",
-      "bytes": 241812
+      "sha256": "31a1d7e0cc8f76a0d92c2ad89649d34701c71e694e3d26f3a138c252fd5d3fe8",
+      "bytes": 431552
     }
   },
   "export": {
@@ -24,14 +24,14 @@
   ],
   "bounds": {
     "min": [
-      -52.1606,
-      -18.9928,
-      -53.6606
+      -52.1110458,
+      -18.9605045,
+      -53.6095657
     ],
     "max": [
-      46.9468,
-      45.6,
-      48.4056
+      19.2603416,
+      20.0673466,
+      42.3251419
     ]
   },
   "nominal_scale": 1.0,
@@ -46,29 +46,27 @@
   "provenance": {
     "author": "Lukasz Jawor",
     "tool": "Blender",
-    "tool_version": "Blender evaluated bevel mesh",
+    "tool_version": "5.0.1",
     "license": "original",
-    "source": "art/blender/syndicate_shipyard.blend",
-    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+    "source": "art/blender/syndicate_fleet/shipyard.blend",
+    "notes": "Rim Syndicate rework in the industrial language the Marauder/Leviathan batch established. Authored by tools/art/build_syndicate_fleet.py. Containment only inside the approved binding envelope: length, camera framing and collision radii are unchanged."
   },
   "requires": {
     "min_engine": "0.15.1",
     "material_profile": "core:fleet/standard"
   },
   "budgets": {
-    "triangles": 3784,
+    "triangles": 2760,
     "draw_calls": 6,
     "texture_bytes": 0
   },
   "approval": {
-    "status": "approved",
+    "status": "pending",
     "decision_id": "s06-b3c-stations-2026-10-17",
-    "decided_by": "owner",
-    "decided_on": "2026-10-17",
-    "reviewed_revision": "440c9a50f38af58dbd87265ffab8f1c1351fbd4333516fb42d878c7f08884170",
     "reviewed_evidence": [
-      "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
-      "artifacts/s06_alliance_batch_review/b3c-stations/metrics.json"
+      "artifacts/syndicate-fleet/review/shipyard-quarter.jpg",
+      "artifacts/syndicate-fleet/review/shipyard-profile.jpg",
+      "artifacts/syndicate-fleet/review/shipyard-bow.jpg"
     ]
   }
 }
