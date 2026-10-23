@@ -12,6 +12,7 @@
 #include "input_ring.hpp"
 #include "marker_ring.hpp"
 #include "overlay.hpp"
+#include "top_hud.hpp"
 #include "planets.hpp"
 #include "scene.hpp"
 #include <SDL3/SDL.h>
@@ -155,7 +156,7 @@ struct Callbacks final : bgfx::CallbackI {
 };
 struct Options {
   fs::path snapshot, assets, shaders = ARMADA_SHADER_DIR, shot, report, ring, tables, overlayRing,
-      inputRing, planetRing, markerRing, emitRing, fogRing, meshRing, cameraRing, fxDemo;
+      inputRing, planetRing, markerRing, emitRing, fogRing, meshRing, cameraRing, fxDemo, topHudRing;
   std::array<float, 3> focus{};
   bool hasFocus = false;
   // The map's star lights every planet (render/renderer.py sets GL_LIGHT0 to the star position,
@@ -208,6 +209,8 @@ static Options options(int argc, char **argv) {
       o.tables = value();
     else if (k == "--overlay-ring")
       o.overlayRing = value();
+    else if (k == "--top-hud-ring")
+      o.topHudRing = value();
     else if (k == "--input-ring")
       o.inputRing = value();
     else if (k == "--planet-ring")
@@ -835,6 +838,7 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
     bgfx::setViewFrameBuffer(1, outputFB);
     bgfx::setViewFrameBuffer(2, outputFB);
     bgfx::setViewFrameBuffer(3, outputFB);
+    bgfx::setViewFrameBuffer(4, outputFB);
   }
   // Instancing is baseline in this pinned bgfx API; buffer availability is
   // checked per draw.
@@ -910,6 +914,25 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
   if (!bgfx::isValid(uiSampler))
     throw DeviceError("UI sampler creation failed");
   cleanup.actions.push_back([uiSampler] { bgfx::destroy(uiSampler); });
+  // The upper HUD is native measured text/geometry, not an enlarged Python surface.
+  // View 2 is below view 3's remaining HUD/application overlays and above the world.
+  bgfx::VertexLayout topLayout;
+  topLayout.begin().add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
+      .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
+      .add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true).end();
+  if (topLayout.getStride() != sizeof(armada::top_hud::Vertex))
+    throw DeviceError("Native HUD vertex layout mismatch");
+  bgfx::ProgramHandle topProgram = BGFX_INVALID_HANDLE;
+  bgfx::UniformHandle topSampler = BGFX_INVALID_HANDLE;
+  if (!o.topHudRing.empty()) {
+    topProgram = bgfx::createProgram(shader(o.shaders / "vs_top_hud.bin"),
+                                    shader(o.shaders / "fs_top_hud.bin"), true);
+    if (!bgfx::isValid(topProgram)) throw DeviceError("Native HUD program creation failed");
+    cleanup.actions.push_back([topProgram] { bgfx::destroy(topProgram); });
+    topSampler = bgfx::createUniform("s_top_hud", bgfx::UniformType::Sampler);
+    if (!bgfx::isValid(topSampler)) throw DeviceError("Native HUD sampler creation failed");
+    cleanup.actions.push_back([topSampler] { bgfx::destroy(topSampler); });
+  }
   // W05 planet pass: sphere geometry, one program, one texture table fed by the planet ring.
   Sphere sphere = unitSphere();
   bgfx::VertexLayout planetLayout;
@@ -1148,6 +1171,21 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
   std::unique_ptr<armada::bridge::RingReader> uiRing;
   if (!o.overlayRing.empty())
     uiRing = std::make_unique<armada::bridge::RingReader>(o.overlayRing);
+  std::unique_ptr<armada::bridge::RingReader> topRing;
+  if (!o.topHudRing.empty())
+    topRing = std::make_unique<armada::bridge::RingReader>(o.topHudRing);
+  std::unique_ptr<armada::top_hud::FontAtlas> topFont;
+  std::optional<armada::top_hud::Model> topModel;
+  armada::top_hud::Mesh topMesh;
+  auto topTexture = std::make_shared<bgfx::TextureHandle>(bgfx::TextureHandle{bgfx::kInvalidHandle});
+  cleanup.actions.push_back([topTexture] {
+    if (bgfx::isValid(*topTexture)) bgfx::destroy(*topTexture);
+  });
+  uint64_t topSequence = 0;
+  size_t topFrames = 0, topDecodeFailures = 0, topDrawn = 0, topAtlasUploads = 0;
+  int topWidth = 0, topHeight = 0;
+  bool topDirty = false;
+  std::vector<uint8_t> topPayload, topPrevious;
   // W04: the same ring layout, written by this window and read by the simulation. The first
   // batch carries the window size so the consumer can map pointer pixels without guessing; it
   // never resizes the HUD, it only tells the game what the pointer is measured against.
@@ -2351,7 +2389,65 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
         shieldVertices += size_t(draw.count) * shieldMeshVertices[draw.detail];
       }
     }
-    // W03: read the newest HUD payload, apply the patches to the texture, draw one quad.
+    if (topRing) {
+      const auto available = topRing->published();
+      if (available > topSequence && topRing->read_at_sequence(available - 1, available, topPayload)) {
+        topSequence = available;
+        try {
+          // Whole immutable snapshots: no dependency on missed patch/keyframe history.
+          if (topPayload != topPrevious) {
+            auto candidate = armada::top_hud::decode(topPayload);
+            topModel = std::move(candidate);
+            topPrevious = topPayload;
+            topDirty = true;
+          }
+          topFrames++;
+        } catch (const std::exception &e) {
+          topDecodeFailures++;
+          std::cerr << "native top HUD decode failed: " << e.what() << std::endl;
+        }
+      }
+      if (topModel && (!topFont || height != topHeight)) {
+        // Font reader only accepts the pinned, bundled font (validated before parsing).
+        auto atlas = std::make_unique<armada::top_hud::FontAtlas>(
+            o.assets / "assets/fonts/NotoSans-Regular.ttf", height);
+        const auto texture = bgfx::createTexture2D(uint16_t(atlas->width()), uint16_t(atlas->height()),
+            false, 1, bgfx::TextureFormat::RGBA8,
+            BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP,
+            bgfx::copy(atlas->pixels().data(), uint32_t(atlas->pixels().size())));
+        if (!bgfx::isValid(texture)) throw DeviceError("Native HUD atlas upload failed");
+        if (bgfx::isValid(*topTexture)) bgfx::destroy(*topTexture);
+        *topTexture = texture;
+        topFont = std::move(atlas);
+        topAtlasUploads++;
+        topDirty = true;
+      }
+      if (topModel && (topDirty || width != topWidth || height != topHeight)) {
+        topMesh = armada::top_hud::layout(*topModel, width, height, *topFont);
+        topWidth = width; topHeight = height; topDirty = false;
+      }
+      if (!topMesh.vertices.empty()) {
+        const auto nv = uint32_t(topMesh.vertices.size()), ni = uint32_t(topMesh.indices.size());
+        if (bgfx::getAvailTransientVertexBuffer(nv, topLayout) < nv ||
+            bgfx::getAvailTransientIndexBuffer(ni) < ni)
+          throw DeviceError("Native HUD transient buffer exhausted");
+        bgfx::TransientVertexBuffer vb;
+        bgfx::TransientIndexBuffer ib;
+        bgfx::allocTransientVertexBuffer(&vb, nv, topLayout);
+        bgfx::allocTransientIndexBuffer(&ib, ni);
+        std::memcpy(vb.data, topMesh.vertices.data(), nv * sizeof(armada::top_hud::Vertex));
+        std::memcpy(ib.data, topMesh.indices.data(), ni * sizeof(uint16_t));
+        bgfx::setViewRect(2, 0, 0, uint16_t(width), uint16_t(height));
+        bgfx::setViewMode(2, bgfx::ViewMode::Sequential);
+        bgfx::setVertexBuffer(0, &vb);
+        bgfx::setIndexBuffer(&ib);
+        bgfx::setTexture(0, topSampler, *topTexture);
+        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA);
+        bgfx::submit(2, topProgram);
+        topDrawn++;
+      }
+    }
+    // W03: the unmigrated HUD/application overlays composite above the native strip.
     if (uiRing) {
       const uint64_t available = uiRing->published();
       if (available > uiSequence && uiRing->read_at_sequence(available - 1, available, uiPayload)) {
@@ -2398,16 +2494,16 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
       }
       float identity[16] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
       if (bgfx::isValid(uiTexture) && uiFullFrames > 0) {
-        bgfx::setViewRect(2, 0, 0, uint16_t(width), uint16_t(height));
-        bgfx::setViewTransform(2, identity, identity);
+        bgfx::setViewRect(3, 0, 0, uint16_t(width), uint16_t(height));
+        bgfx::setViewTransform(3, identity, identity);
         bgfx::setVertexBuffer(0, uiVbo);
         bgfx::setIndexBuffer(uiIbo);
         bgfx::setTexture(0, uiSampler, uiTexture);
-        bgfx::setState(o.hudOnly ? (BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A)
+        bgfx::setState(o.hudOnly && !topRing ? (BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A)
                                  : (BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A |
                                     BGFX_STATE_BLEND_ALPHA));
-        bgfx::submit(2, uiProgram);
-        bgfx::touch(2);
+        bgfx::submit(3, uiProgram);
+        bgfx::touch(3);
       }
     }
     bgfx::setDebug(overlay && !o.hudOnly ? BGFX_DEBUG_TEXT : BGFX_DEBUG_NONE);
@@ -2477,7 +2573,7 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
     if (host) {
       bgfx::TextureRegion source{}, destination{};
       source.init(outputColor); destination.init(outputRead);
-      bgfx::blit(3, destination, source);
+      bgfx::blit(4, destination, source);
       const uint32_t ready = bgfx::read(destination, host->pixels.data());
       uint32_t completed = bgfx::frame();
       drawStats = *bgfx::getStats();
@@ -2718,6 +2814,13 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
                        {"authority", "the window records events; the simulation validates "
                                      "and executes every command"},
                        {"exercise", o.inputExercise ? "scripted-synthetic" : "off"}};
+  }
+  if (topRing) {
+    report["native_top_hud"] = {{"ring", o.topHudRing.string()}, {"frames_applied", topFrames},
+        {"frames_drawn", topDrawn}, {"decode_failures", topDecodeFailures},
+        {"atlas_uploads", topAtlasUploads}, {"drawable", {topWidth, topHeight}},
+        {"vertices", topMesh.vertices.size()},
+        {"authority", "Python display values/translation; C++ native font/layout/GPU drawing"}};
   }
   if (callback.errors || callback.shots < screenshotExpected ||
       (!o.shot.empty() && o.frames > 0 && callback.shots == 0))

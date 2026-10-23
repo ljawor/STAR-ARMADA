@@ -1,0 +1,23 @@
+{
+  "delegation": "deleg_0a81856b",
+  "passed": false,
+  "security_concerns": [
+    {
+      "file": "render_cpp/src/top_hud.cpp:71-92",
+      "finding": "Raw NUL terminates nlohmann JSON scanning early, accepting prohibited trailing bytes outside the validated JSON document.",
+      "reproduction": "Valid fixture plus lone raw NUL, NUL+junk, or NUL+0xFF was independently accepted under UBSan.",
+      "required_fix": "Reject raw NUL anywhere before JSON parsing; preserve escaped-NUL rejection through decoded-string validation."
+    }
+  ],
+  "logic_errors": [],
+  "scope": "Read-only native CPU parser, font authentication/provenance/licenses, atlas/layout and tests. No GPU or GUI.",
+  "tests": [
+    "Existing release test_top_hud passed with assertions enabled.",
+    "Independent UBSan build passed.",
+    "25,000 seeded parser mutations, nested/escaped duplicate rejection, atlas bounds and extreme geometry dimensions passed.",
+    "Font, OFL license and stb header match pinned upstream bytes.",
+    "Trailing raw-NUL regression failed: malformed suffix accepted."
+  ],
+  "limitations": ["ASan blocked during macOS sanitizer runtime initialization; UBSan completed."],
+  "status": "Initial failure retained; requires correction and fresh independent re-review before publication."
+}

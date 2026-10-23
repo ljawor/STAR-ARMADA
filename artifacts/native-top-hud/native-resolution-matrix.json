@@ -1,0 +1,202 @@
+{
+  "passed": true,
+  "captures_retained": "Ordinary-main screenshots retained here; per-resolution offline diagnostic images are regenerable with tools/render/probe_native_top_hud.py.",
+  "resolutions": [
+    {
+      "passed": true,
+      "drawable": [
+        1280,
+        800
+      ],
+      "header_pixels": 34,
+      "mode": "windowless production bgfx library; real skirmish HUD, catalogue world",
+      "languages": [
+        {
+          "language": "en",
+          "paused": "PAUSED",
+          "model_bytes": 540,
+          "capture_sha256": "f78a3efed6843e710730087f05a34e5b85448ecbc1498c3f7fcc041150b79bfd"
+        },
+        {
+          "language": "de",
+          "paused": "PAUSIERT",
+          "model_bytes": 542,
+          "capture_sha256": "aa46929ab00bbbefd19c6f07943481925bdd916e8e85cea1f48ae70f8cd57d29"
+        },
+        {
+          "language": "pl",
+          "paused": "PAUZA",
+          "model_bytes": 539,
+          "capture_sha256": "439e000572716553a609b9a04fa98f7693f03a5f77653f3aee53ebfad5e30766"
+        },
+        {
+          "language": "ru",
+          "paused": "\u041f\u0410\u0423\u0417\u0410",
+          "model_bytes": 544,
+          "capture_sha256": "824c3c4a3eae99b8ce849fe7b667a58482e5c910ce6afecbc828d56df0925365"
+        }
+      ],
+      "native_without_python_bitmap": true,
+      "repeatable_top_strip": true,
+      "opaque_app_overlay_covers_native": true,
+      "native_glyph_color_pixels": {
+        "credits": 186,
+        "materials": 185,
+        "energy": 172,
+        "crew": 176,
+        "zero_income": 119
+      },
+      "malformed_model_preserves_good": true,
+      "inactive_model_clears": true,
+      "inactive_native_pixel_control": true,
+      "resumed_matches_pre_pause_pre_fps_control": true
+    },
+    {
+      "passed": true,
+      "drawable": [
+        1920,
+        1080
+      ],
+      "header_pixels": 46,
+      "mode": "windowless production bgfx library; real skirmish HUD, catalogue world",
+      "languages": [
+        {
+          "language": "en",
+          "paused": "PAUSED",
+          "model_bytes": 540,
+          "capture_sha256": "5561b6b3d2741213cda8ce3aad83f7b5be04b8a0b261b13348082e89da622fdc"
+        },
+        {
+          "language": "de",
+          "paused": "PAUSIERT",
+          "model_bytes": 542,
+          "capture_sha256": "1a94595c27d8284974d526b4065e7719989016fc68704ad0201021781ec0b8b2"
+        },
+        {
+          "language": "pl",
+          "paused": "PAUZA",
+          "model_bytes": 539,
+          "capture_sha256": "074144e5d86a2f770445d348eec8c51cc65775e11e5cf072fb7164ccb3dddbf8"
+        },
+        {
+          "language": "ru",
+          "paused": "\u041f\u0410\u0423\u0417\u0410",
+          "model_bytes": 544,
+          "capture_sha256": "e1a07d6a30fbc7dc561e08af12db3b5aa45e8abab508eb4fed6e1dacba336ac6"
+        }
+      ],
+      "native_without_python_bitmap": true,
+      "repeatable_top_strip": true,
+      "opaque_app_overlay_covers_native": true,
+      "native_glyph_color_pixels": {
+        "credits": 316,
+        "materials": 298,
+        "energy": 286,
+        "crew": 295,
+        "zero_income": 186
+      },
+      "malformed_model_preserves_good": true,
+      "inactive_model_clears": true,
+      "inactive_native_pixel_control": true,
+      "resumed_matches_pre_pause_pre_fps_control": true
+    },
+    {
+      "passed": true,
+      "drawable": [
+        2560,
+        1440
+      ],
+      "header_pixels": 61,
+      "mode": "windowless production bgfx library; real skirmish HUD, catalogue world",
+      "languages": [
+        {
+          "language": "en",
+          "paused": "PAUSED",
+          "model_bytes": 540,
+          "capture_sha256": "2f314e18d5910a621a1fc9388711edeaaec20c61fd7befe19e3c56e948325f9b"
+        },
+        {
+          "language": "de",
+          "paused": "PAUSIERT",
+          "model_bytes": 542,
+          "capture_sha256": "13fe6fb6bb89605b96840d9dda02fdf624b45509178aa686dd52c78db78576dd"
+        },
+        {
+          "language": "pl",
+          "paused": "PAUZA",
+          "model_bytes": 539,
+          "capture_sha256": "23507659b7b6e0d8d63e02e31b3f546bd90862e1102d4395999eefb631356dff"
+        },
+        {
+          "language": "ru",
+          "paused": "\u041f\u0410\u0423\u0417\u0410",
+          "model_bytes": 544,
+          "capture_sha256": "23a12e970a95c1f1e2d9009687fe4979c3e3321c62fc388b196690af0d66cb83"
+        }
+      ],
+      "native_without_python_bitmap": true,
+      "repeatable_top_strip": true,
+      "opaque_app_overlay_covers_native": true,
+      "native_glyph_color_pixels": {
+        "credits": 541,
+        "materials": 505,
+        "energy": 463,
+        "crew": 525,
+        "zero_income": 336
+      },
+      "malformed_model_preserves_good": true,
+      "inactive_model_clears": true,
+      "inactive_native_pixel_control": true,
+      "resumed_matches_pre_pause_pre_fps_control": true
+    },
+    {
+      "passed": true,
+      "drawable": [
+        3840,
+        2160
+      ],
+      "header_pixels": 92,
+      "mode": "windowless production bgfx library; real skirmish HUD, catalogue world",
+      "languages": [
+        {
+          "language": "en",
+          "paused": "PAUSED",
+          "model_bytes": 540,
+          "capture_sha256": "fcd071fd6a85bed578071ccd9baafaebc36d3389e7318135a7d8b3a245182f84"
+        },
+        {
+          "language": "de",
+          "paused": "PAUSIERT",
+          "model_bytes": 542,
+          "capture_sha256": "b5a0150196471113fe228526b9c6e99ae31c175e9805376e204f18abf6d9ba4d"
+        },
+        {
+          "language": "pl",
+          "paused": "PAUZA",
+          "model_bytes": 539,
+          "capture_sha256": "4a80fa000e1f249d793266a759244d6a3fea3b7391e64aa5baa347e92e7511ec"
+        },
+        {
+          "language": "ru",
+          "paused": "\u041f\u0410\u0423\u0417\u0410",
+          "model_bytes": 544,
+          "capture_sha256": "c8ad5dc645433105f866c604780ce2b3ddc02e1a9af3cc92bf798d48158c5e98"
+        }
+      ],
+      "native_without_python_bitmap": true,
+      "repeatable_top_strip": true,
+      "opaque_app_overlay_covers_native": true,
+      "native_glyph_color_pixels": {
+        "credits": 1211,
+        "materials": 1126,
+        "energy": 1120,
+        "crew": 1131,
+        "zero_income": 774
+      },
+      "malformed_model_preserves_good": true,
+      "inactive_model_clears": true,
+      "inactive_native_pixel_control": true,
+      "resumed_matches_pre_pause_pre_fps_control": true
+    }
+  ]
+}
