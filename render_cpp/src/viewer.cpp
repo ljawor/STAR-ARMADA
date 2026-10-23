@@ -13,6 +13,7 @@
 #include "marker_ring.hpp"
 #include "overlay.hpp"
 #include "top_hud.hpp"
+#include "vector_hud.hpp"
 #include "planets.hpp"
 #include "scene.hpp"
 #include <SDL3/SDL.h>
@@ -156,7 +157,8 @@ struct Callbacks final : bgfx::CallbackI {
 };
 struct Options {
   fs::path snapshot, assets, shaders = ARMADA_SHADER_DIR, shot, report, ring, tables, overlayRing,
-      inputRing, planetRing, markerRing, emitRing, fogRing, meshRing, cameraRing, fxDemo, topHudRing;
+      inputRing, planetRing, markerRing, emitRing, fogRing, meshRing, cameraRing, fxDemo, topHudRing,
+      vectorHudRing;
   std::array<float, 3> focus{};
   bool hasFocus = false;
   // The map's star lights every planet (render/renderer.py sets GL_LIGHT0 to the star position,
@@ -211,6 +213,8 @@ static Options options(int argc, char **argv) {
       o.overlayRing = value();
     else if (k == "--top-hud-ring")
       o.topHudRing = value();
+    else if (k == "--vector-hud-ring")
+      o.vectorHudRing = value();
     else if (k == "--input-ring")
       o.inputRing = value();
     else if (k == "--planet-ring")
@@ -924,7 +928,7 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
     throw DeviceError("Native HUD vertex layout mismatch");
   bgfx::ProgramHandle topProgram = BGFX_INVALID_HANDLE;
   bgfx::UniformHandle topSampler = BGFX_INVALID_HANDLE;
-  if (!o.topHudRing.empty()) {
+  if (!o.topHudRing.empty() || !o.vectorHudRing.empty()) {
     topProgram = bgfx::createProgram(shader(o.shaders / "vs_top_hud.bin"),
                                     shader(o.shaders / "fs_top_hud.bin"), true);
     if (!bgfx::isValid(topProgram)) throw DeviceError("Native HUD program creation failed");
@@ -1184,8 +1188,38 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
   uint64_t topSequence = 0;
   size_t topFrames = 0, topDecodeFailures = 0, topDrawn = 0, topAtlasUploads = 0;
   int topWidth = 0, topHeight = 0;
+  int topFontHeight = 0;
   bool topDirty = false;
   std::vector<uint8_t> topPayload, topPrevious;
+  auto ensureHudAtlas = [&](int drawableHeight) {
+    if (topFont && topFontHeight == drawableHeight) return;
+    auto atlas = std::make_unique<armada::top_hud::FontAtlas>(
+        o.assets / "assets/fonts/NotoSans-Regular.ttf", drawableHeight);
+    const auto texture = bgfx::createTexture2D(uint16_t(atlas->width()), uint16_t(atlas->height()),
+        false, 1, bgfx::TextureFormat::RGBA8, BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP,
+        bgfx::copy(atlas->pixels().data(), uint32_t(atlas->pixels().size())));
+    if (!bgfx::isValid(texture)) throw DeviceError("Native HUD atlas upload failed");
+    if (bgfx::isValid(*topTexture)) bgfx::destroy(*topTexture);
+    *topTexture = texture;
+    topFont = std::move(atlas);
+    topFontHeight = drawableHeight;
+    ++topAtlasUploads;
+    topDirty = true;
+  };
+  std::unique_ptr<armada::bridge::RingReader> vectorRing;
+  if (!o.vectorHudRing.empty())
+    vectorRing = std::make_unique<armada::bridge::RingReader>(o.vectorHudRing);
+  std::optional<armada::vector_hud::Model> vectorModel;
+  armada::vector_hud::DrawList vectorMesh;
+  auto vectorFogTexture = std::make_shared<bgfx::TextureHandle>(bgfx::TextureHandle{bgfx::kInvalidHandle});
+  cleanup.actions.push_back([vectorFogTexture] {
+    if (bgfx::isValid(*vectorFogTexture)) bgfx::destroy(*vectorFogTexture);
+  });
+  uint64_t vectorSequence = 0;
+  size_t vectorFrames = 0, vectorDecodeFailures = 0, vectorDrawn = 0;
+  size_t vectorFogUploads = 0, vectorTransientDrops = 0;
+  int vectorWidth = 0, vectorHeight = 0;
+  std::vector<uint8_t> vectorPayload, vectorPrevious;
   // W04: the same ring layout, written by this window and read by the simulation. The first
   // batch carries the window size so the consumer can map pointer pixels without guessing; it
   // never resizes the HUD, it only tells the game what the pointer is measured against.
@@ -2407,21 +2441,7 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
           std::cerr << "native top HUD decode failed: " << e.what() << std::endl;
         }
       }
-      if (topModel && (!topFont || height != topHeight)) {
-        // Font reader only accepts the pinned, bundled font (validated before parsing).
-        auto atlas = std::make_unique<armada::top_hud::FontAtlas>(
-            o.assets / "assets/fonts/NotoSans-Regular.ttf", height);
-        const auto texture = bgfx::createTexture2D(uint16_t(atlas->width()), uint16_t(atlas->height()),
-            false, 1, bgfx::TextureFormat::RGBA8,
-            BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP,
-            bgfx::copy(atlas->pixels().data(), uint32_t(atlas->pixels().size())));
-        if (!bgfx::isValid(texture)) throw DeviceError("Native HUD atlas upload failed");
-        if (bgfx::isValid(*topTexture)) bgfx::destroy(*topTexture);
-        *topTexture = texture;
-        topFont = std::move(atlas);
-        topAtlasUploads++;
-        topDirty = true;
-      }
+      if (topModel) ensureHudAtlas(height);
       if (topModel && (topDirty || width != topWidth || height != topHeight)) {
         topMesh = armada::top_hud::layout(*topModel, width, height, *topFont);
         topWidth = width; topHeight = height; topDirty = false;
@@ -2447,7 +2467,89 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
         topDrawn++;
       }
     }
-    // W03: the unmigrated HUD/application overlays composite above the native strip.
+    if (vectorRing) {
+      // A complete candidate (geometry and fog together) replaces the last-good
+      // presentation only after decoding and bounded CPU layout both succeed.
+      auto installVectorMesh = [&](armada::vector_hud::DrawList candidate) {
+        const bool changedFog = candidate.fogWidth != vectorMesh.fogWidth ||
+            candidate.fogHeight != vectorMesh.fogHeight || candidate.fogPixels != vectorMesh.fogPixels;
+        bgfx::TextureHandle replacement = BGFX_INVALID_HANDLE;
+        if (changedFog && !candidate.fogPixels.empty()) {
+          replacement = bgfx::createTexture2D(uint16_t(candidate.fogWidth), uint16_t(candidate.fogHeight),
+              false, 1, bgfx::TextureFormat::RGBA8,
+              BGFX_SAMPLER_MIN_POINT | BGFX_SAMPLER_MAG_POINT |
+                  BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP,
+              bgfx::copy(candidate.fogPixels.data(), uint32_t(candidate.fogPixels.size())));
+          if (!bgfx::isValid(replacement)) throw DeviceError("Native minimap fog upload failed");
+        }
+        if (changedFog) {
+          if (bgfx::isValid(*vectorFogTexture)) bgfx::destroy(*vectorFogTexture);
+          *vectorFogTexture = replacement;
+          if (bgfx::isValid(replacement)) ++vectorFogUploads;
+        }
+        vectorMesh = std::move(candidate);
+        vectorWidth = width; vectorHeight = height;
+      };
+      const auto available = vectorRing->published();
+      if (available > vectorSequence &&
+          vectorRing->read_at_sequence(available - 1, available, vectorPayload)) {
+        vectorSequence = available;
+        std::optional<armada::vector_hud::Model> candidate;
+        try {
+          if (vectorPayload != vectorPrevious) candidate = armada::vector_hud::decode(vectorPayload);
+        } catch (const std::exception &e) {
+          ++vectorDecodeFailures;
+          std::cerr << "native vector HUD decode failed: " << e.what() << std::endl;
+        }
+        if (candidate) {
+          ensureHudAtlas(height); // trusted asset/resource failure is not a bad wire record
+          std::optional<armada::vector_hud::DrawList> mesh;
+          try {
+            mesh = armada::vector_hud::layout(*candidate, width, height, *topFont);
+          } catch (const std::exception &e) {
+            ++vectorDecodeFailures;
+            std::cerr << "native vector HUD layout rejected: " << e.what() << std::endl;
+          }
+          if (mesh) {
+            installVectorMesh(std::move(*mesh));
+            vectorModel = std::move(candidate);
+            vectorPrevious.swap(vectorPayload);
+            ++vectorFrames;
+          }
+        } else if (vectorPayload == vectorPrevious) {
+          ++vectorFrames;
+        }
+      }
+      if (vectorModel && (width != vectorWidth || height != vectorHeight)) {
+        ensureHudAtlas(height);
+        installVectorMesh(armada::vector_hud::layout(*vectorModel, width, height, *topFont));
+      }
+      if (!vectorMesh.vertices.empty()) {
+        const auto nv = uint32_t(vectorMesh.vertices.size()), ni = uint32_t(vectorMesh.indices.size());
+        if (bgfx::getAvailTransientVertexBuffer(nv, topLayout) < nv ||
+            bgfx::getAvailTransientIndexBuffer(ni) < ni) {
+          ++vectorTransientDrops; // skip the complete slice, never submit half its controls
+        } else {
+          bgfx::TransientVertexBuffer vb;
+          bgfx::TransientIndexBuffer ib;
+          bgfx::allocTransientVertexBuffer(&vb, nv, topLayout);
+          bgfx::allocTransientIndexBuffer(&ib, ni);
+          std::memcpy(vb.data, vectorMesh.vertices.data(), nv * sizeof(armada::top_hud::Vertex));
+          std::memcpy(ib.data, vectorMesh.indices.data(), ni * sizeof(uint16_t));
+          bgfx::setViewRect(2, 0, 0, uint16_t(width), uint16_t(height));
+          bgfx::setViewMode(2, bgfx::ViewMode::Sequential);
+          for (const auto &batch : vectorMesh.batches) {
+            bgfx::setVertexBuffer(0, &vb);
+            bgfx::setIndexBuffer(&ib, batch.firstIndex, batch.indexCount);
+            bgfx::setTexture(0, topSampler, batch.textureKind == 1 ? *vectorFogTexture : *topTexture);
+            bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA);
+            bgfx::submit(2, topProgram);
+          }
+          ++vectorDrawn;
+        }
+      }
+    }
+    // W03: the unmigrated HUD/application overlays composite above native UI.
     if (uiRing) {
       const uint64_t available = uiRing->published();
       if (available > uiSequence && uiRing->read_at_sequence(available - 1, available, uiPayload)) {
@@ -2499,7 +2601,7 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
         bgfx::setVertexBuffer(0, uiVbo);
         bgfx::setIndexBuffer(uiIbo);
         bgfx::setTexture(0, uiSampler, uiTexture);
-        bgfx::setState(o.hudOnly && !topRing ? (BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A)
+        bgfx::setState(o.hudOnly && !topRing && !vectorRing ? (BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A)
                                  : (BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A |
                                     BGFX_STATE_BLEND_ALPHA));
         bgfx::submit(3, uiProgram);
@@ -2821,6 +2923,13 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
         {"atlas_uploads", topAtlasUploads}, {"drawable", {topWidth, topHeight}},
         {"vertices", topMesh.vertices.size()},
         {"authority", "Python display values/translation; C++ native font/layout/GPU drawing"}};
+  }
+  if (vectorRing) {
+    report["native_vector_hud"] = {{"ring", o.vectorHudRing.string()}, {"frames_applied", vectorFrames},
+        {"frames_drawn", vectorDrawn}, {"decode_failures", vectorDecodeFailures},
+        {"fog_uploads", vectorFogUploads}, {"transient_drops", vectorTransientDrops},
+        {"drawable", {vectorWidth, vectorHeight}}, {"vertices", vectorMesh.vertices.size()},
+        {"authority", "Python display/visibility/commands; C++ native vectors/text/minimap"}};
   }
   if (callback.errors || callback.shots < screenshotExpected ||
       (!o.shot.empty() && o.frames > 0 && callback.shots == 0))

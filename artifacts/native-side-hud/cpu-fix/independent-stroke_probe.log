@@ -1,0 +1,6 @@
+stroke=2 center_coverage=0 edge_coverage=0 outside_coverage=0
+stroke=10 center_coverage=1 edge_coverage=1 outside_coverage=1
+stroke=20 center_coverage=1 edge_coverage=1 outside_coverage=1
+stroke=64 center_coverage=1 edge_coverage=1 outside_coverage=1
+
+pid=33442 exit=0 timeout=False seconds=0.403

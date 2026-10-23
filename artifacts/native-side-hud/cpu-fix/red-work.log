@@ -1,0 +1,4 @@
+offscreen 128x256 points seconds=9.16362
+Assertion failed: (seconds < 1.0), function workBudget, file test_vector_hud.cpp, line 502.
+
+pid=32966 exit=-6 timeout=False seconds=9.957

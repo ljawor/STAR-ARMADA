@@ -7,7 +7,7 @@ import pytest
 
 
 @pytest.mark.parametrize('previous_native', [False, True])
-@pytest.mark.parametrize('failure_name, expected_open', [('top-hud.ring', 5), ('camera.ring', 8)])
+@pytest.mark.parametrize('failure_name, expected_open', [('top-hud.ring', 5), ('camera.ring', 9)])
 @pytest.mark.parametrize('cleanup_raises', [False, True])
 def test_live_session_constructor_failure_rolls_back(
         tmp_path, monkeypatch, previous_native, failure_name, expected_open, cleanup_raises):
@@ -87,7 +87,7 @@ def test_live_session_success_restores_shared_hud_on_repeated_close(
         session.close()
         assert hud.native_top_bar is previous_native
         assert not hud_closes
-        assert len(opened) == 9
+        assert len(opened) == 10
         assert all(handle._closed and handle._mapping.closed for handle in opened)
     finally:
         if session is not None:
@@ -138,6 +138,9 @@ def test_live_session_publishes_native_data_and_leaves_other_panels_identical(tm
     session = LiveSession(gm.state, gm.ds, directory=tmp_path, hud=hud)
     try:
         assert 'top_hud' in session.paths, 'ordinary live session has no native top-bar stream'
+        # Isolate the upper-strip migration; side-panel default activation has
+        # its own vector-stream/pixel/input acceptance tests.
+        hud.native_panels = False
         session.publish(gm.state, visible_ids=set())
         with ring.Ring.open(session.paths['top_hud']) as reader:
             model = json.loads(reader.latest()[1])

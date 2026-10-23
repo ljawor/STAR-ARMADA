@@ -1,0 +1,21 @@
+[ 31%] Built target armada_shaders
+[ 37%] Built target test_planets
+[ 37%] Built target test_camera
+[ 41%] Built target test_scene
+[ 44%] Built target test_input
+[ 48%] Built target test_overlay
+[ 51%] Built target test_markers
+[ 55%] Built target armada_top_hud
+[ 62%] Built target test_shield
+[ 62%] Built target test_explosion
+[ 65%] Built target test_fogmap
+[ 68%] Built target test_hardware
+[ 72%] Built target test_starfield
+[ 75%] Built target test_frame_v2
+[ 79%] Built target test_hit
+[ 82%] Built target dump_hit_geometry
+[ 86%] Built target test_top_hud
+[ 89%] Built target armada_vector_hud
+[100%] Built target test_vector_hud
+[100%] Built target armada_embedded
+[100%] Built target armada_viewer

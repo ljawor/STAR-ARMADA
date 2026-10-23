@@ -1,0 +1,5 @@
+offscreen 128x256 points seconds=5.1417e-05
+cumulative zero-output rejection=1 seconds=0.015907
+offscreen rejection / cumulative CPU work budget PASS
+
+pid=33012 exit=0 timeout=False seconds=0.382

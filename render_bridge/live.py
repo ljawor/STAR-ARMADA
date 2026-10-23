@@ -63,6 +63,7 @@ class LiveSession:
             'tables': self.directory / 'frame.ring.tables',
             'overlay': self.directory / 'hud.ring',
             'top_hud': self.directory / 'top-hud.ring',
+            'vector_hud': self.directory / 'hud-vector.ring',
             'emit': self.directory / 'emit.ring',
             'markers': self.directory / 'markers.ring',
             'fog': self.directory / 'fog.ring',
@@ -88,6 +89,7 @@ class LiveSession:
                                                   max_effects or packed.MAX_EFFECTS))
 
         self._rings = []
+        self._closed = False
         try:
             self._initialize_resources(hud, camera, planet_texture)
         except BaseException:
@@ -135,6 +137,9 @@ class LiveSession:
         self._overlay_published = 0
         self._top_hud = self._create_ring(self.paths['top_hud'], slots=4,
                                        slot_bytes=top_hud_codec.MAX_PAYLOAD + ring.SLOT_OVERHEAD + 8)
+        from . import vector_hud as vector_hud_codec
+        self._vector_hud = self._create_ring(self.paths['vector_hud'], slots=4,
+            slot_bytes=vector_hud_codec.MAX_PAYLOAD + ring.SLOT_OVERHEAD + 8)
         self._overlay_last_full = float('-inf')
         self._overlay_keyframes = 0
         self._overlay_had_layers = False
@@ -170,7 +175,9 @@ class LiveSession:
                        'planet_blobs': 0, 'fog_uploads': 0, 'hardware_blobs': 0}
         # Activate shared presentation only after all fallible setup has succeeded.
         self._previous_native_top = self.hud.native_top_bar
+        self._previous_native_panels = self.hud.native_panels
         self.hud.native_top_bar = True
+        self.hud.native_panels = True
 
     # ------------------------------------------------------------------ helpers
     def radius_of(self, entity):
@@ -284,6 +291,9 @@ class LiveSession:
         top_payload = top_hud_codec.encode(top_hud_codec.build(
             state, self.local_player, paused=paused, fps=fps))
         self._top_hud.publish(top_payload)
+        from . import vector_hud as vector_hud_codec
+        vector_payload = vector_hud_codec.encode(self.hud.native_vector_model())
+        self._vector_hud.publish(vector_payload)
         self._overlay_had_layers = bool(layers)
         self._overlay_published += 1
         overlay_ms = (time.perf_counter() - started) * 1000.0
@@ -313,6 +323,7 @@ class LiveSession:
             self._camera_ring.publish(camera_codec.encode(self.camera))
         self.counts['overlay_bytes'] = len(payload)
         self.counts['top_hud_bytes'] = len(top_payload)
+        self.counts['vector_hud_bytes'] = len(vector_payload)
         self.counts['planet_blobs'] += len(pending)
         for key, value in (('frame_ms', frame_ms), ('overlay_ms', overlay_ms),
                            ('emit_ms', emit_ms), ('fog_ms', world_ms)):
@@ -322,7 +333,11 @@ class LiveSession:
 
     # ------------------------------------------------------------------ lifecycle
     def close(self):
+        if self._closed:
+            return
+        self._closed = True
         self.hud.native_top_bar = self._previous_native_top
+        self.hud.native_panels = self._previous_native_panels
         self._close_rings()
 
     def _close_rings(self):

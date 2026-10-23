@@ -1,0 +1,7 @@
+{
+  "native_bridge_probe_union": {"passed":213,"subtests_passed":1587,"warnings":88,"seconds":6.67,"exit_code":0},
+  "adjacent_hud_visibility_union": {"passed":119,"subtests_passed":40,"failed":1,"seconds":6.24,"exit_code":1,"failure":"tests/test_crew_recovery_ui.py::RecoveryUITests::test_faction_transports_have_small_known_solid_visuals","assertion":"imperial:convoy != box","classification":"Identical preexisting failure on immutable base; see python-regressions.json"},
+  "actual_main_typography_red": {"heading_before_px":25,"heading_after_px":13,"failed_assertion":"compact native heading is not near 75% of legacy ink height","exit_code":1},
+  "actual_main_typography_green": [{"drawable":[1280,800],"before_px":14,"after_px":11,"passed":true},{"drawable":[2560,1440],"before_px":25,"after_px":20,"passed":true}],
+  "scope":"Focused and adjacent local suites, not the full whole-game acceptance suite; no merge approval"
+}

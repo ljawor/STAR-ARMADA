@@ -1,0 +1,27 @@
+{
+  "owner_statement": "Thanks look perfect. Merge it",
+  "recorded_at": "2026-10-23T20:13:36.103752+02:00",
+  "scope": "Visual approval and explicit merge authorization for native compact left/right HUD and unchanged-size minimap in ordinary main.py; no release/tag authorization. Subsequent repair restricted to diagnostic assertion and its tests.",
+  "approved_production_sha256": {
+    "render/hud.py": "7f627607aa230f4b17871cb12058e9c0da4953bdea842fa89d94dedd4ecbe14e",
+    "render/overlay_upload.py": "9af5a22c2e29a9f2fa5ef4534e6811acf39194b92490911cd3daacd33a835363",
+    "render_bridge/cpp_window.py": "92f51fdb9fa843916eeccbde0aa97af2828d226954e43e77d4a2e62fbd44cbb6",
+    "render_bridge/live.py": "eb997f811d6e6d04e73599e8ee486c32b5629d8cf0c12721c09d72a6449c4f5f",
+    "render_bridge/vector_hud.py": "3505e43fab0b9ceac74d14384cf08ed6caa58b90191929501c5da8dd680dc980",
+    "render_cpp/CMakeLists.txt": "159f1a4cf0d8f11390299bb6431ae874caa622da7df9bcb4d157bf0862803270",
+    "render_cpp/src/viewer.cpp": "b8031383028d4b95185a2b75255655c5ebbb65ff3782444333c28a69abc68637",
+    "render_cpp/include/vector_hud.hpp": "cb801d57e96feb48b17815851ca20dd0113a7b7715a023e85312658ca45e91c9",
+    "render_cpp/src/vector_hud.cpp": "0bf21f07d411ecd6bad2166cd0cada53898ba0478b29614c30cf344c5d086efa",
+    "main.py": "85304b6ebff357e1e79472e984af2724a36eb525a05ab04217f0d96c814e6ab0",
+    "render_cpp/include/top_hud.hpp": "8bd1d95a18eac8bbb481b12c44bad9206f435837168141aa564625cbde88f4bb",
+    "render_cpp/src/top_hud.cpp": "2f9d31a3e0d2c4f4faa0245936540b9dd30cfd0e3089b04b5ad540b8a7d6c7e6",
+    "render_cpp/shaders/vs_top_hud.sc": "da83ba74b4617020f3203675147a5f3578a8d44bbb1b3e46b969b28dc3ef3508",
+    "render_cpp/shaders/fs_top_hud.sc": "e6cfd30c7c251c5e5bfa76e2c772b7b59357b3514e768b5fb06462950b05edda",
+    "assets/fonts/NotoSans-Regular.ttf": "b85c38ecea8a7cfb39c24e395a4007474fa5a4fc864f6ee33309eb4948d232d5",
+    "render_cpp/third_party/stb_truetype.h": "96689d5c7b8b1670a9ea3879f025a4ee35f15df7f548506a4567d83f2ee7161f"
+  },
+  "approved_binaries_sha256": {
+    "render_cpp/build-w02/armada_viewer": "30d0fa4b94ab233e31e7d41fc3d278c4125d29f83a1c373706ed8ed523023546",
+    "render_cpp/build-w02/libarmada_embedded.dylib": "cd2bbf1b7746cb0ec463ffe3c33a37443c518d164e120306d362c46bb6ab14eb"
+  }
+}

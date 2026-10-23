@@ -1,0 +1,79 @@
+{
+  "passed": true,
+  "drawable": [
+    1280,
+    800
+  ],
+  "entrypoint": "main.py --skirmish",
+  "loop": "unaltered production AST loop body, real SDL input and EmbeddedWindow.present",
+  "capture": "GL framebuffer immediately before normal flip; hidden Cocoa window",
+  "paused_same_state_before_after": true,
+  "top_bar_click_occlusion": true,
+  "pause_resume_gameplay": true,
+  "python_top_bar_disabled_by_default": true,
+  "top_hud_bytes": 542,
+  "files": [
+    "actual-main-after.png",
+    "actual-main-before.png",
+    "actual-main-paused-de.png",
+    "actual-main-paused-pl.png",
+    "actual-main-paused-ru.png",
+    "actual-main-running.png"
+  ],
+  "native_side_panels_default": true,
+  "side_scale": 0.75,
+  "minimap_unchanged": [
+    1058,
+    578,
+    210,
+    210
+  ],
+  "compact_collapse_restore_clicks": true,
+  "freed_world_input": true,
+  "minimap_camera_click": true,
+  "panel_wheel_down_up": true,
+  "heading_ink_height_before": 14,
+  "heading_ink_height_after": 11,
+  "heading_ink_ratio": 0.7857142857142857,
+  "vector_hud_bytes": 14267,
+  "before_blocks": [
+    [
+      0,
+      0,
+      1280,
+      34
+    ],
+    [
+      10,
+      44,
+      320,
+      568
+    ],
+    [
+      950,
+      44,
+      320,
+      458
+    ]
+  ],
+  "after_blocks": [
+    [
+      0,
+      0,
+      1280,
+      34
+    ],
+    [
+      10,
+      44,
+      240,
+      426
+    ],
+    [
+      1030,
+      44,
+      240,
+      344
+    ]
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "passed":false,
+  "security_concerns":[],
+  "logic_errors":[{"severity":"medium","file":"tools/render/probe_native_vector_hud.py","lines":"530-536","issue":"AA assertion coverage includes opaque foreground (coverage=1), so eight solid text pixels falsely satisfy claimed antialiasing check.","verification":"Independent CPU opaque-only negative control produced ramp_hits=8 and passed.","recommendation":"Require strictly intermediate matching source-over coverage and retain an opaque-only negative control that fails."}],
+  "suggestions":[{"file":"tools/render/capture_native_top_hud_game.py","suggestion":"Consider empty-output and fail-closed receipt lifecycle. Existing acceptance runner checks process exit status, so recorded runs remain valid. Deferred: not a production defect or acceptance-run failure."}],
+  "provenance":"Independent review deleg_16e1b0c3",
+  "summary":"No production typography regression. Em correction changes sizes while preserving content/bounds/clips/geometry across 25 text operations; simulation checksum unchanged. All 41 focused CPU tests passed. Existing GPU/library/PNG hashes verified. No-contact controls, settled restoration, oversize rejection, persistence isolation and ordinary-main default activation sound. Approval withheld only for reproducible AA probe false positive."
+}

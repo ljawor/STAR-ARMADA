@@ -1,0 +1,124 @@
+{
+  "cases": [
+    {
+      "label": "gpu-1280x800",
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 2.401024166960269,
+      "passed": true,
+      "metrics": "gpu-1280x800/metrics.json",
+      "checks": 297,
+      "failure": null,
+      "source_metrics": "/Users/lukaszjawor/.hermes/cache/scratch/side-acceptance-d553c9be/gpu-1280x800/metrics.json",
+      "retained_images": []
+    },
+    {
+      "label": "gpu-1920x1080",
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 3.279362792032771,
+      "passed": true,
+      "metrics": "gpu-1920x1080/metrics.json",
+      "checks": 297,
+      "failure": null,
+      "source_metrics": "/Users/lukaszjawor/.hermes/cache/scratch/side-acceptance-d553c9be/gpu-1920x1080/metrics.json",
+      "retained_images": []
+    },
+    {
+      "label": "gpu-2560x1440",
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 4.616818292066455,
+      "passed": true,
+      "metrics": "gpu-2560x1440/metrics.json",
+      "checks": 297,
+      "failure": null,
+      "source_metrics": "/Users/lukaszjawor/.hermes/cache/scratch/side-acceptance-d553c9be/gpu-2560x1440/metrics.json",
+      "retained_images": [
+        "default-production-panels.png",
+        "production-language-ru.png",
+        "PIPELINE-FIXTURE-primitives-alpha-clips-fog.png"
+      ]
+    },
+    {
+      "label": "gpu-3840x2160",
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 7.6020935830892995,
+      "passed": true,
+      "metrics": "gpu-3840x2160/metrics.json",
+      "checks": 297,
+      "failure": null,
+      "source_metrics": "/Users/lukaszjawor/.hermes/cache/scratch/side-acceptance-d553c9be/gpu-3840x2160/metrics.json",
+      "retained_images": []
+    },
+    {
+      "label": "vector-only-1280x800",
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 1.4978908749762923,
+      "passed": true,
+      "metrics": "vector-only-1280x800/metrics.json",
+      "checks": 120,
+      "failure": null,
+      "source_metrics": "/Users/lukaszjawor/.hermes/cache/scratch/side-acceptance-d553c9be/vector-only-1280x800/metrics.json",
+      "retained_images": []
+    },
+    {
+      "label": "vector-only-2560x1440",
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 2.4426925000734627,
+      "passed": true,
+      "metrics": "vector-only-2560x1440/metrics.json",
+      "checks": 120,
+      "failure": null,
+      "source_metrics": "/Users/lukaszjawor/.hermes/cache/scratch/side-acceptance-d553c9be/vector-only-2560x1440/metrics.json",
+      "retained_images": [
+        "VECTOR-ONLY-PIPELINE-FIXTURE-transparent-overlay.png"
+      ]
+    },
+    {
+      "label": "main-1280x800",
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 5.932394250063226,
+      "passed": true,
+      "metrics": "main-1280x800/actual-main-metrics.json",
+      "checks": 0,
+      "failure": null,
+      "source_metrics": "/Users/lukaszjawor/.hermes/cache/scratch/side-acceptance-d553c9be/main-1280x800/actual-main-metrics.json",
+      "retained_images": [
+        "actual-main-side-comparison.png",
+        "actual-main-after.png",
+        "actual-main-paused-de.png",
+        "actual-main-running.png",
+        "actual-main-paused-ru.png",
+        "actual-main-paused-pl.png",
+        "actual-main-before.png"
+      ]
+    },
+    {
+      "label": "main-2560x1440",
+      "exit_code": 0,
+      "timeout": false,
+      "seconds": 5.644084666972049,
+      "passed": true,
+      "metrics": "main-2560x1440/actual-main-metrics.json",
+      "checks": 0,
+      "failure": null,
+      "source_metrics": "/Users/lukaszjawor/.hermes/cache/scratch/side-acceptance-d553c9be/main-2560x1440/actual-main-metrics.json",
+      "retained_images": [
+        "actual-main-side-comparison.png",
+        "actual-main-after.png",
+        "actual-main-paused-de.png",
+        "actual-main-running.png",
+        "actual-main-paused-ru.png",
+        "actual-main-paused-pl.png",
+        "actual-main-before.png"
+      ]
+    }
+  ],
+  "gpu_checks": 1428,
+  "image_retention": "All actual-main images and representative pipeline images retained; full pipeline readback image hashes remain in each metrics.json. Rerunning probe regenerates every pipeline control PNG."
+}
