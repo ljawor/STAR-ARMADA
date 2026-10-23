@@ -2,13 +2,13 @@
   "contract": "star-armada/model-manifest",
   "contract_major": 1,
   "asset": "core:syndicate/energy_relay",
-  "revision": "17bba6b13e2a42bba2fb005203da8d77be37e89549bfd0080c69859ceef9610e",
+  "revision": "690a24e33ea2dbaf2b7c255be91e88cb10730b3c0b309b19807e062793c28b08",
   "display_name": "syndicate energy relay (approved)",
   "files": {
     "mesh": {
       "path": "assets/models/syndicate_energy_relay.mesh.json",
-      "sha256": "8959ebc80c7245e347aa6e4567dee8ab8f19472ef620c41f2da2a9fa338814d8",
-      "bytes": 393654
+      "sha256": "33149e5819348e8412a742e48d5e7d9c58f0e1d44bd86de6350a2d61c6b08063",
+      "bytes": 496423
     }
   },
   "export": {
@@ -56,7 +56,7 @@
     "material_profile": "core:fleet/standard"
   },
   "budgets": {
-    "triangles": 2560,
+    "triangles": 3232,
     "draw_calls": 6,
     "texture_bytes": 0
   },

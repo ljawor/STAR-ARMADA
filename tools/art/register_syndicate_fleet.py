@@ -84,13 +84,25 @@ def append_decision(entry):
     path.write_text(text[: -len(tail)] + ',\n' + body + tail, encoding='utf-8')
 
 
+def payload_for(stem):
+    """The freshest mesh for a stem: a pending rebuild, else what is registered.
+
+    The build staging directory is gitignored, so a tree that only rebuilt one family
+    still has the other meshes as the registered copies.
+    """
+    for path in (PACK / 'assets/models' / f'syndicate_{stem}.mesh.json',
+                 ROOT / 'assets/models' / f'syndicate_{stem}.mesh.json'):
+        if path.exists():
+            return json.loads(path.read_bytes())
+    raise FileNotFoundError(stem)
+
+
 def register():
     hashes = {}
     for stem in STEMS:
         asset = f'core:syndicate/{stem}'
-        source = PACK / 'assets/models' / f'syndicate_{stem}.mesh.json'
         target = ROOT / 'assets/models' / f'syndicate_{stem}.mesh.json'
-        payload = json.loads(source.read_bytes())
+        payload = payload_for(stem)
         # The loader compares the contract payload's identity with the manifest asset,
         # so the prototype id has to become the core id before the bytes are hashed.
         payload['asset'] = asset

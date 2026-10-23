@@ -2,13 +2,13 @@
   "contract": "star-armada/model-manifest",
   "contract_major": 1,
   "asset": "core:syndicate/shipyard",
-  "revision": "bd119751bd80caff68f379cf12cf5ad19f8236710d1c85a600c75f0ea6183622",
+  "revision": "70b55ba0bd5c01ec62ec112d017554ef00f5b5881aca4362e1d44f8c5e72c43b",
   "display_name": "syndicate shipyard (approved)",
   "files": {
     "mesh": {
       "path": "assets/models/syndicate_shipyard.mesh.json",
-      "sha256": "31a1d7e0cc8f76a0d92c2ad89649d34701c71e694e3d26f3a138c252fd5d3fe8",
-      "bytes": 431552
+      "sha256": "4061374edeed429d35e970ba5cf292e930d37da701e4bc9390a4e3aa706974c7",
+      "bytes": 559605
     }
   },
   "export": {
@@ -30,7 +30,7 @@
     ],
     "max": [
       19.2603416,
-      20.0673466,
+      20.196516,
       42.3251419
     ]
   },
@@ -56,7 +56,7 @@
     "material_profile": "core:fleet/standard"
   },
   "budgets": {
-    "triangles": 2760,
+    "triangles": 3600,
     "draw_calls": 6,
     "texture_bytes": 0
   },

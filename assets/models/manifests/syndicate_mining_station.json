@@ -2,13 +2,13 @@
   "contract": "star-armada/model-manifest",
   "contract_major": 1,
   "asset": "core:syndicate/mining_station",
-  "revision": "3a5c4a708db80d50574ccb5e24bec7a9d082e8343d19c7335282bec75224d9f7",
+  "revision": "7df3aa377cce1bbd12ccce1ff40ab2a8330cdc79a1df612d6ae5cf250dcb00da",
   "display_name": "syndicate mining station (approved)",
   "files": {
     "mesh": {
       "path": "assets/models/syndicate_mining_station.mesh.json",
-      "sha256": "c584bc0a78aa19250cd9ef0f04b180e9f09e450008d352f317b4a9446bf6b57c",
-      "bytes": 414217
+      "sha256": "bf8f73236bdd40bffa2e56f9785d2c0eb8bd5a54777214e414c0aeb605559e37",
+      "bytes": 517815
     }
   },
   "export": {
@@ -56,7 +56,7 @@
     "material_profile": "core:fleet/standard"
   },
   "budgets": {
-    "triangles": 2640,
+    "triangles": 3312,
     "draw_calls": 6,
     "texture_bytes": 0
   },

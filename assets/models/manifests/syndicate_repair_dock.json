@@ -2,13 +2,13 @@
   "contract": "star-armada/model-manifest",
   "contract_major": 1,
   "asset": "core:syndicate/repair_dock",
-  "revision": "bd4f86f3d0ae5b8fb213f9ba533abce31a889b0ba8e09562a02424730984eea6",
+  "revision": "015208f6e90deed9ed00b168195ce81cbcee48541f44591de1d0a3381caaf60f",
   "display_name": "syndicate repair dock (approved)",
   "files": {
     "mesh": {
       "path": "assets/models/syndicate_repair_dock.mesh.json",
-      "sha256": "989f2c4ccd339557d1c6e9e28574760f1d1761ce59f6401489f96576dae3a2c4",
-      "bytes": 415363
+      "sha256": "a0dae4d9d25c133e5fd9d2fc92bff443bbaa14ca64ed4ed02f66fb675714d4c4",
+      "bytes": 518153
     }
   },
   "export": {
@@ -56,7 +56,7 @@
     "material_profile": "core:fleet/standard"
   },
   "budgets": {
-    "triangles": 2680,
+    "triangles": 3352,
     "draw_calls": 6,
     "texture_bytes": 0
   },

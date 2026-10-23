@@ -2,13 +2,13 @@
   "contract": "star-armada/model-manifest",
   "contract_major": 1,
   "asset": "core:syndicate/defense_platform",
-  "revision": "52e388bdc7401ca4507d66181dba66bfff4d6b31dc88514e961fad32d8bbce34",
+  "revision": "afa479beb5037ed06b966f3a301863ab46f2339140427ed9098a0d6ece2dbd1f",
   "display_name": "syndicate defense platform (approved)",
   "files": {
     "mesh": {
       "path": "assets/models/syndicate_defense_platform.mesh.json",
-      "sha256": "d71fa65c48279cc56077a9ccb70b1f9f5eb14084dc629779b9a5b94a3fed0c8f",
-      "bytes": 383534
+      "sha256": "257c75592032378d871e2881c9fee0dca8c628aae317bc7179a69d14fdd7f31b",
+      "bytes": 486457
     }
   },
   "export": {
@@ -56,7 +56,7 @@
     "material_profile": "core:fleet/standard"
   },
   "budgets": {
-    "triangles": 2484,
+    "triangles": 3156,
     "draw_calls": 6,
     "texture_bytes": 0
   },

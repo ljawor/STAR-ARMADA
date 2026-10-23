@@ -2,13 +2,13 @@
   "contract": "star-armada/model-manifest",
   "contract_major": 1,
   "asset": "core:syndicate/command_station",
-  "revision": "9f22e9bc2fe486d8e672871d75f6d747061702ec75b13ba514885c3ed449beee",
+  "revision": "77cd5a9ea2f2bb5054426206e582d21ec0491f7f3f4da76e47b0250c7bcc7930",
   "display_name": "syndicate command station (approved)",
   "files": {
     "mesh": {
       "path": "assets/models/syndicate_command_station.mesh.json",
-      "sha256": "09fbccd638697b955a62702b871a07e7a58e5ae72861e5aeb318a236f1034add",
-      "bytes": 371653
+      "sha256": "a6a7765ae0b54358fe8c3463fbb8d2866cb8f8256af8815c8b723b8581c4b8f5",
+      "bytes": 474763
     }
   },
   "export": {
@@ -56,7 +56,7 @@
     "material_profile": "core:fleet/standard"
   },
   "budgets": {
-    "triangles": 2404,
+    "triangles": 3076,
     "draw_calls": 6,
     "texture_bytes": 0
   },

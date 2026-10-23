@@ -319,6 +319,29 @@ def _hull(f, cfg):
               (f.beam * .05, f.SY(.03), f.SZ(.08)))
 
 
+def _module(f, label, loc, size, role):
+    """A bolted working module, not a bare box: corner posts, a weld seam, a hatch.
+
+    Bare accent boxes were the weakest read on the stations: a flat slab of colour
+    where the eye expects a manufactured volume. Four posts, a seam band, a lit hatch
+    and a vent are enough to turn the same silhouette into hardware.
+    """
+    g = f.g
+    x, y, z = loc
+    sx, sy, sz = size
+    g.box(label, role, loc, size)
+    post = min(sx, sz) * .18
+    for i in (-1, 1):
+        for k in (-1, 1):
+            g.box(f'{label} post', 'trim',
+                  (x + i * (sx / 2 - post / 2), y, z + k * (sz / 2 - post / 2)),
+                  (post, sy * 1.05, post))
+    g.box(f'{label} seam', 'dark', (x, y, z), (sx * 1.04, sy * .12, sz * 1.04))
+    g.box(f'{label} hatch', 'lit', (x, y + sy / 2, z), (sx * .36, sy * .03, sz * .20))
+    g.box(f'{label} vent', 'dark', (x, y + sy / 2 - sy * .03, z - sz * .30),
+          (sx * .46, sy * .05, sz * .08))
+
+
 def _hull_detail(f, hw):
     """Deck ribs, a signal mast and flank pipe runs: the class's welded read."""
     g = f.g
@@ -405,10 +428,11 @@ def _station_detail(f, cfg):
     _hoop(f, 'service ring', mid, inner, 12, f.beam * .020, role='base')
     for j in range(8):
         a = j * 2 * math.pi / 8 + .39
-        g.box(f.name(f'hoop module {j}'), ('trim', 'base', 'accent')[j % 3],
-              (f.cx + hoop_r * .90 * math.cos(a), mid + f.SY(.06),
-               f.Z(.50) + hoop_r * .90 * math.sin(a)),
-              (f.beam * .10, f.SY(.09), f.beam * .10))
+        _module(f, f.name(f'hoop module {j}'),
+                (f.cx + hoop_r * .90 * math.cos(a), mid + f.SY(.06),
+                 f.Z(.50) + hoop_r * .90 * math.sin(a)),
+                (f.beam * .10, f.SY(.09), f.beam * .10),
+                ('trim', 'base', 'accent')[j % 3])
         g.strut(f.name(f'module stay {j}'), 'trim',
                 (f.cx + inner * math.cos(a), mid, f.Z(.50) + inner * math.sin(a)),
                 (f.cx + hoop_r * .86 * math.cos(a), mid, f.Z(.50) + hoop_r * .86 * math.sin(a)),
@@ -581,9 +605,9 @@ def _station(f, cfg):
             g.box(f.name(f'crane pedestal {j}'), 'dark',
                   (f.X(side * .52), f.Y(.745), f.Z(.44 + j * .12)),
                   (f.beam * .14, f.SY(.05), f.SZ(.10)))
-            g.box(f.name(f'crane house {j}'), 'accent',
-                  (f.X(side * .52), f.Y(.795), f.Z(.44 + j * .12)),
-                  (f.beam * .19, f.SY(.08), f.SZ(.13)))
+            _module(f, f.name(f'crane house {j}'),
+                    (f.X(side * .52), f.Y(.795), f.Z(.44 + j * .12)),
+                    (f.beam * .19, f.SY(.08), f.SZ(.13)), 'accent')
             g.strut(f.name(f'crane jib {j}'), 'trim',
                     (f.X(side * .52), f.Y(.78), f.Z(.44 + j * .12)),
                     (f.X(side * .16), f.Y(.68), f.Z(.52 + j * .12)), f.beam * .022)
@@ -647,9 +671,10 @@ def _station(f, cfg):
     elif kit == 'trade':
         for j in range(4):
             side = -1 if j % 2 else 1
-            g.box(f.name(f'cargo stack {j}'), 'accent' if j % 3 == 0 else 'base',
-                  (f.X(side * .30), f.Y(.62 + (j // 2) * .12), f.Z(.34 + (j % 2) * .32)),
-                  (f.beam * .26, f.SY(.12), f.SZ(.20)))
+            _module(f, f.name(f'cargo stack {j}'),
+                    (f.X(side * .30), f.Y(.62 + (j // 2) * .12), f.Z(.34 + (j % 2) * .32)),
+                    (f.beam * .26, f.SY(.12), f.SZ(.20)),
+                    'accent' if j % 3 == 0 else 'base')
         for side in (-1, 1):
             g.strut(f.name('docking boom'), 'trim',
                     (f.X(side * .16), mid, f.Z(.50)),

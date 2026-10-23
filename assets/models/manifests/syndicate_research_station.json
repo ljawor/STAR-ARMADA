@@ -2,13 +2,13 @@
   "contract": "star-armada/model-manifest",
   "contract_major": 1,
   "asset": "core:syndicate/research_station",
-  "revision": "495631d1afb24806910b10a989f5fdcfae330f9d22bf583799e6cfed1a20aafe",
+  "revision": "0455ff1581363710aa34e89faf63edf5cb6da1a35de8a021e0e2bd82b6814a39",
   "display_name": "syndicate research station (approved)",
   "files": {
     "mesh": {
       "path": "assets/models/syndicate_research_station.mesh.json",
-      "sha256": "1fd826daea298d421e4e65e15710ea536d3cc71147d623b2c662b5d5eef34a13",
-      "bytes": 373153
+      "sha256": "706bd3c00a3a46c03a06d48c67b4fd16f9bd26c649e0ec63faa2c0de2f50d3ff",
+      "bytes": 476214
     }
   },
   "export": {
@@ -56,7 +56,7 @@
     "material_profile": "core:fleet/standard"
   },
   "budgets": {
-    "triangles": 2416,
+    "triangles": 3088,
     "draw_calls": 6,
     "texture_bytes": 0
   },
