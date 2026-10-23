@@ -36,7 +36,7 @@ Every operation has `kind` and `clip:[x,y,w,h]`. Its only other fields are:
 | circle | center, radius, color, stroke |
 | line | points (exactly two), color, stroke |
 | polygon | points, color, stroke |
-| text | pos, size, text, color, bounds, fit (`shrink` or `clip`) |
+| text | pos, size, text, color, bounds, fit (`shrink`, `clip` or `center`) |
 | fog | rect |
 
 Rectangles are `[x,y,width,height]`; points are `[x,y]`; colors are four integer RGBA bytes. Text is unabridged translated content constrained to its source-layout line box. Invisible measurement passes and empty effective clips emit no visible geometry.
@@ -74,3 +74,19 @@ The actual-main helper executes the unchanged production loop body with real SDL
 A production-library pixel probe is pipeline evidence, not a replacement for actual-main delivery. Local macOS checks do not establish Windows/frozen-package acceptance, full-game performance targets, owner appearance approval or merge authorization.
 
 Final local evidence is retained in `artifacts/native-side-hud/`: ordinary-main captures at 1280×800 and 2560×1440, English/Polish/German/Russian, collapse/restore, station scrolling, freed world input and minimap camera controls. Normal GPU snapshots pass at 1280×800, 1920×1080, 2560×1440 and 3840×2160; vector-only alpha/shader probes also pass at 1280×800 and 2560×1440. Small antialiased contacts are checked against the matching no-contact scene rather than requiring fully opaque color endpoints. Last-good tests settle valid restoration before publishing malformed records.
+
+## World-anchored HUD elements
+
+The placement banner, the placement ghost ring and crosshair, the construction ring with its
+percentage and the floating sim messages (`Station complete`, rejections) are part of the same
+layer. `HUD._native_layer()` opens a full-screen identity sink for them, so their logical
+coordinates stay logical coordinates and C++ draws the glyphs at the drawable resolution instead
+of the pygame overlay upscaling a bitmap font. Plates and anchors are still measured with pygame,
+which keeps the layout identical on the fallback path when no native session is running.
+
+Line weights are hairlines here: the ghost ring and crosshair use stroke 1 and the construction
+progress is a filled annulus polygon (3 px band) rather than chords. U+2713 is a vector icon in
+`vector_hud` because the atlas has no check glyph; U+2715 was already one. Text uses `fit=center`
+inside a measured plate, so the native ink cannot drift out of its background.
+
+Pipeline readback crops are in `artifacts/native-world-hud/`.

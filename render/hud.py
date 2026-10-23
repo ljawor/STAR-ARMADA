@@ -16,6 +16,7 @@ translates into queued PlayerCommands — the HUD itself queues nothing.
 from __future__ import annotations
 
 import math
+from contextlib import contextmanager
 
 import pygame
 
@@ -223,6 +224,53 @@ class HUD:
     def native_vector_model(self):
         """Return an independent complete display snapshot, including inactive clears."""
         return self._native_capture().snapshot(self.native_panels)
+
+    @contextmanager
+    def _native_layer(self):
+        """Draw this element in C++ when the native side HUD is live.
+
+        The panels, minimap and notifications already render as vector ops with the bundled
+        Noto Sans atlas. World-anchored HUD text (placement banner and ghost, construction
+        ring and percentage, floating sim messages) was still rasterized with the pygame
+        Menlo bitmap font, which is what made those elements read as 640x480 next to the
+        vector ones. A full-screen identity sink puts them in the same layer, so they share
+        the native glyphs, the native line weights and the display resolution.
+        """
+        if not self.native_panels or _p.native_sink is not None:
+            yield False
+            return
+        from render_bridge.vector_hud import Sink
+        previous = _p.native_sink
+        _p.native_sink = Sink(self._native_capture(), (0, 0, self.width, self.height))
+        try:
+            yield True
+        finally:
+            _p.native_sink = previous
+
+    def _native_text_size(self, font) -> float:
+        """The native em size that matches one of the HUD's pygame fonts."""
+        return (12 if font is self.font_small else 19 if font is self.font_big
+                else 22 if font is self.font_title else 15) * NATIVE_TEXT_EM_SCALE
+
+    def _screen_text(self, rect, text, color, font) -> None:
+        """Text centred in `rect`, in the native layer when it is open.
+
+        `rect` is measured with pygame (a font measurement, not a rasterization) so the
+        background plate around the text keeps the size it had before the move to C++.
+        """
+        r = pygame.Rect(rect)
+        if _p.native_sink is not None:
+            _p.native_sink.text(self.overlay, r.x, r.y, str(text), color,
+                                self._native_text_size(font), r.width, r.height,
+                                fit='center')
+            return
+        surf = font.render(str(text), True, color)
+        _p.blit_text(self.overlay, surf, surf.get_rect(center=r.center), str(text), color,
+                     id(font))
+
+    def _text_box(self, text, font) -> pygame.Rect:
+        """The box a rasterized label would occupy, so layout is identical in both layers."""
+        return pygame.Rect(0, 0, *font.size(str(text)))
 
     def _draw_collapsible_content(self, key, title, draw):
         """Separate control rail; minimized panels occupy only their restore tab."""
@@ -1591,44 +1639,47 @@ class HUD:
 
     # ------------------------------------------------------------- placement mode
     def _placement_banner(self) -> None:
-        if not self.placement:
+        placement = self.placement
+        if not placement:
             return
+        with self._native_layer():
+            self._placement_content(placement)
+
+    def _placement_content(self, placement: dict) -> None:
         ov = self.overlay
-        name = str(self.placement.get("station_kind", "")).replace("_", " ")
+        name = str(placement.get("station_kind", "")).replace("_", " ")
         text = f"PLACE {name.upper()} — left-click to position · ESC/right-click to cancel"
-        surf = self.font_big.render(text, True, WARN)
-        r = surf.get_rect(center=(self.width // 2, 56))
+        r = self._text_box(text, self.font_big)
+        r.center = (self.width // 2, 56)
         bg = r.inflate(26, 14)
         _p.rect(ov, (30, 24, 10, 225), bg, border_radius=6)
         _p.rect(ov, WARN, bg, 1, border_radius=6)
-        _p.blit(ov, surf, r)
-        ghost = self.placement.get("ghost")
+        self._screen_text(r, text, WARN, self.font_big)
+        ghost = placement.get("ghost")
         if ghost:
             valid = ghost.get("valid", True)
             gx, gy = ghost["sx"], ghost["sy"]
-            rad = ghost.get("radius", 120)
+            rad = max(10, int(ghost.get("radius", 120)))
             col = GOOD if valid else BAD
-            _p.circle(ov, (*col[:3], 90), (int(gx), int(gy)),
-                               max(10, int(rad)), 2)
-            _p.circle(ov, (*col[:3], 40), (int(gx), int(gy)),
-                               max(10, int(rad)))
-            _p.line(ov, col, (gx - 12, gy), (gx + 12, gy), 2)
-            _p.line(ov, col, (gx, gy - 12), (gx, gy + 12), 2)
+            _p.circle(ov, (*col[:3], 90), (int(gx), int(gy)), rad, 1)
+            _p.circle(ov, (*col[:3], 40), (int(gx), int(gy)), rad)
+            _p.line(ov, col, (gx - 12, gy), (gx + 12, gy), 1)
+            _p.line(ov, col, (gx, gy - 12), (gx, gy + 12), 1)
             # reason line: WHY the ghost is red (same validator as the sim)
             reason = ghost.get("reason", "")
             if not valid and reason:
-                surf = self.font_small.render(f"✕ {reason}", True, BAD)
-                r = surf.get_rect(midbottom=(gx, gy - max(10, int(rad)) - 8))
+                text = f"✕ {reason}"
+                r = self._text_box(text, self.font_small)
+                r.midbottom = (gx, gy - rad - 8)
                 bg = r.inflate(12, 6)
                 _p.rect(ov, (28, 12, 10, 220), bg, border_radius=4)
                 _p.rect(ov, BAD, bg, 1, border_radius=4)
-                _p.blit(ov, surf, r)
+                self._screen_text(r, text, BAD, self.font_small)
             elif valid:
-                surf = self.font_small.render(
-                    f"✓ place {self.placement.get('station_kind', '').replace('_', ' ')}",
-                    True, GOOD)
-                r = surf.get_rect(midbottom=(gx, gy - max(10, int(rad)) - 8))
-                _p.blit(ov, surf, r)
+                text = f"✓ place {placement.get('station_kind', '').replace('_', ' ')}"
+                r = self._text_box(text, self.font_small)
+                r.midbottom = (gx, gy - rad - 8)
+                self._screen_text(r, text, GOOD, self.font_small)
 
     # ------------------------------------------------- construction progress
     def _construction_progress(self) -> None:
@@ -1643,6 +1694,10 @@ class HUD:
         camera = getattr(self, "camera", None)
         if camera is None:
             return
+        with self._native_layer():
+            self._construction_progress_content(camera)
+
+    def _construction_progress_content(self, camera) -> None:
         ov = self.overlay
         for builder in sorted(self.state.entities.values(), key=lambda e: e.id):
             if (not builder.alive or not builder.is_construction
@@ -1678,35 +1733,62 @@ class HUD:
             fraction = min(1.0, max(0.0, 1.0 - float(item.get("time_left", 0.0)) / total))
             # Green, like the placement check: the arc answers "is this progressing", and a player's own
             # colour is a 0..1 float triple that would clamp to black in a 0..255 painter.
-            _p.circle(ov, (*GOOD, 70), (int(cx), int(cy)), int(radius_px), 2)
-            # The fill: short chords rather than pygame.draw.arc, because every overlay op goes through
-            # the recorder and an arc is not one of its primitives.
-            steps = max(1, int(48 * fraction))
-            sweep = math.tau * fraction
-            prev = (cx + radius_px * math.cos(-math.pi / 2),
-                    cy + radius_px * math.sin(-math.pi / 2))
-            for i in range(1, steps + 1):
-                angle = -math.pi / 2 + sweep * i / steps
-                point = (cx + radius_px * math.cos(angle), cy + radius_px * math.sin(angle))
-                _p.line(ov, (*GOOD, 240), prev, point, 4)
-                prev = point
-            label = self.font_small.render(f"{int(round(fraction * 100))}%", True, GOOD)
-            rect = label.get_rect(midtop=(int(cx), int(cy + radius_px) + 4))
-            _p.blit(ov, label, rect)
+            _p.circle(ov, (*GOOD, 70), (int(cx), int(cy)), int(radius_px), 1)
+            if _p.native_sink is not None:
+                _p.polygon(ov, (*GOOD, 240), self._arc_band((cx, cy), radius_px, fraction))
+            else:
+                # Legacy overlay: short chords rather than pygame.draw.arc, because every overlay
+                # op goes through the recorder and an arc is not one of its primitives.
+                steps = max(1, int(48 * fraction))
+                sweep = math.tau * fraction
+                prev = (cx + radius_px * math.cos(-math.pi / 2),
+                        cy + radius_px * math.sin(-math.pi / 2))
+                for i in range(1, steps + 1):
+                    angle = -math.pi / 2 + sweep * i / steps
+                    point = (cx + radius_px * math.cos(angle), cy + radius_px * math.sin(angle))
+                    _p.line(ov, (*GOOD, 240), prev, point, 2)
+                    prev = point
+            label = f"{int(round(fraction * 100))}%"
+            r = self._text_box(label, self.font_small)
+            r.midtop = (int(cx), int(cy + radius_px) + 4)
+            self._screen_text(r, label, GOOD, self.font_small)
+
+    @staticmethod
+    def _arc_band(centre, radius: float, fraction: float, band: float = 3.0) -> list:
+        """One polygon for the completed arc: the native layer has no arc primitive.
+
+        Outer rim forwards, inner rim back, which leaves a simple annulus even-odd fills
+        correctly. Point budget is 2 * (120 + 1), inside the renderer's 256-point limit.
+        """
+        fraction = max(0.0, min(1.0, fraction))
+        steps = max(2, min(120, int(round(96 * max(fraction, 0.02)))))
+        sweep = math.tau * fraction
+        inner = max(0.0, radius - band)
+        cx, cy = centre
+        outer_pts, inner_pts = [], []
+        for i in range(steps + 1):
+            angle = -math.pi / 2 + sweep * i / steps
+            ca, sa = math.cos(angle), math.sin(angle)
+            outer_pts.append((cx + radius * ca, cy + radius * sa))
+            inner_pts.append((cx + inner * ca, cy + inner * sa))
+        return outer_pts + inner_pts[::-1]
 
     # ------------------------------------------------------------------ minimap
     def _draw_floating_texts(self) -> None:
         """Sim rejection/status messages as floating labels above the world."""
+        with self._native_layer():
+            self._draw_floating_texts_content()
+
+    def _draw_floating_texts_content(self) -> None:
         ov = self.overlay
         for x, y, text, rgb, alpha in getattr(self, "floating_texts", []):
             if not text:
                 continue
-            surf = self.font_small.render(text, True, rgb)
-            r = surf.get_rect(midtop=(x, y))
+            r = self._text_box(text, self.font_small)
+            r.midtop = (x, y)
             bg = r.inflate(10, 4)
-            _p.rect(ov, (10, 12, 18, int(200 * alpha)), bg,
-                             border_radius=4)
-            _p.blit(ov, surf, r)
+            _p.rect(ov, (10, 12, 18, int(200 * alpha)), bg, border_radius=4)
+            self._screen_text(r, text, rgb, self.font_small)
 
     def _minimap(self, selection: set, local_player: int) -> None:
         if self.native_panels and _p.native_sink is None:
@@ -1838,9 +1920,8 @@ class HUD:
         shown = str(i18n.t(text) if translate else text)
         font = font or self.font
         if _p.native_sink is not None:
-            size = 12 if font is self.font_small else 19 if font is self.font_big else 22 if font is self.font_title else 15
             width = getattr(text, 'width', max(0, _p.native_sink.scope.right - x - 8))
-            _p.native_sink.text(self.overlay, x, y, shown, color, size * NATIVE_TEXT_EM_SCALE,
+            _p.native_sink.text(self.overlay, x, y, shown, color, self._native_text_size(font),
                                 width, font.get_linesize())
             return
         surf = font.render(shown, True, color)
