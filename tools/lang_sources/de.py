@@ -534,4 +534,7 @@ DE_NAMES: dict[str, str] = {
     "Vigil Corvette": "Vigil-Korvette",
     "Volcanic": "Vulkanisch",
     "Vulture Drone Wing": "Geier-Drohnengeschwader",
+    "Cutthroat Strike Wing": "Halsabschneider-Angriffsgeschwader",
+    "Leviathan Salvage Dreadnought": "Leviathan-Bergungsdreadnought",
+    "Marauder Battleship": "Marodeur-Schlachtschiff",
 }

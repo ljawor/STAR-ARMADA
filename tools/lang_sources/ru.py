@@ -468,5 +468,8 @@ RU_NAMES: dict[str, str] = {
     "Turbolaser": "Турболазер",
     "Vigil Corvette": "Корвет «Дозор»",
     "Volcanic": "Вулканическая",
-    "Vulture Drone Wing": "Крыло дронов «Стервятник»"
+    "Vulture Drone Wing": "Крыло дронов «Стервятник»",
+    "Cutthroat Strike Wing": "Ударное крыло «Головорезы»",
+    "Leviathan Salvage Dreadnought": "Спасательный дредноут «Левиафан»",
+    "Marauder Battleship": "Линкор «Мародёр»",
 }

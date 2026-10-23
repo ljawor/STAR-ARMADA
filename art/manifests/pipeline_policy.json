@@ -1564,6 +1564,66 @@
             "packaged armada_viewer run from inside dist/STAR ARMADA.app drew 5,828 non-background pixels with only packaged shaders/assets",
             "6 new tests in tests/test_render_default.py; 217 render tests OK; ctest 12/12"
         ]
+    },
+    {
+      "id": "syndicate-rework-envelope-2026-10-23",
+      "date": "2026-10-23",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved-as-proposed",
+      "applies_to": "Rim Syndicate rework: faction appearance redesign plus the three hulls the faction never had",
+      "owner_wording": "Feature: We have th eRIm syndicate. PLease upgrade the grafic design of this fraction based on the galactic imperium. Please also add all missing stations and ship for this fracyion.",
+      "how_recorded": "Recorded verbatim, typos included, from the request that opened the work. The owner then answered 'ok let's do it' to the proposed plan: new hulls first, the existing meshes as a separate batch.",
+      "decisions": [
+        {
+          "id": "syndicate-rework-scope",
+          "decision": "Authorize authoring the three Rim Syndicate bindings that exist only as authoring_pending - bomber, battleship, supercapital. Registered station bindings already match the Imperium one for one, so no station binding is added."
+        },
+        {
+          "id": "syndicate-rework-envelope",
+          "decision": "Each replacement mesh must occupy the visual envelope measured from the live procedural geometry it replaces, so in-game length, camera framing, collision radius and simulation fields do not move. The measured box is recorded on the binding as its containment box; the mesh is fitted inside it per axis and the fit scale is printed in the build report."
+        }
+      ],
+      "scope_statement": "Appearance work on the Rim Syndicate only, at the composition level the accepted Imperium capital batch established.",
+      "not_approved_by_this_decision": "appearance approval of any authored revision, bounded registration, pipeline.json entries, default activation, packaging, merge or release. Every authored revision still needs its own appearance decision bound to its hashes.",
+      "binds_to": {
+        "reviewed_revision_commit": null,
+        "note": "No revision block: a scope and containment decision, not an appearance approval."
+      },
+      "definition_of_done": "The three meshes build reproducibly from committed sources inside their measured envelopes, the pack resolves through the real loader, and the owner has approved the appearance so the gameplay rows and bounded registration can follow."
+    },
+    {
+      "id": "syndicate-rework-appearance-2026-10-23",
+      "date": "2026-10-23",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved",
+      "approval_kind": "appearance-direction-and-specimen",
+      "applies_to": "Rim Syndicate rework: the three hulls the faction never had — bomber, battleship, supercapital",
+      "owner_wording": "Approve — register them into the core catalogue, add the gameplay rows and capture them in-game, then merge #186",
+      "how_recorded": "Recorded verbatim from the owner's answer to the approval question, after reviewing the three quarter/profile/bow stills rendered through the same camera and lights as the accepted imperial_battleship.blend benchmark.",
+      "decisions": [
+        {
+          "id": "syndicate-rework-appearance-approved",
+          "decision": "The shown geometry and material direction for exactly three bindings are approved: syndicate:bomber, syndicate:battleship, syndicate:supercapital. Approval is bound to the revisions in art/manifests/approved-syndicate-rework-source-hashes.json and covers these three only."
+        },
+        {
+          "id": "syndicate-rework-registration-authorized",
+          "decision": "Register the three into the core catalogue: meshes under assets/models/, one core manifest each, registry rows moved from authoring_pending to core, and a pipeline batch approved-syndicate-rework. Add the gameplay data rows so a Syndicate player can build them, then capture them in the running game."
+        }
+      ],
+      "not_approved_by_this_decision": "any other ship, station, satellite, construction or planet asset; the 23 existing Syndicate meshes, whose rework is a separate batch; a change of envelope, scale, collision radius or simulation field; default renderer policy changes for other factions; packaging, tagging or release.",
+      "evidence": {
+        "stills": "artifacts/syndicate-rework/stills/",
+        "python_tests": "pending in this commit",
+        "in_game_capture": "pending in this commit"
+      },
+      "bound_to": {
+        "source_hashes": "art/manifests/approved-syndicate-rework-source-hashes.json",
+        "bindings": [
+          "syndicate:bomber",
+          "syndicate:battleship",
+          "syndicate:supercapital"
+        ]
+      }
     }
   ]
 }

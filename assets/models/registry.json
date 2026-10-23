@@ -2295,8 +2295,21 @@
         "class_or_kind": "battleship"
       },
       "manifest": "core:syndicate/battleship",
-      "status": "authoring_pending",
-      "notes": "Planned hull; no gameplay entity or appearance approval is created here."
+      "status": "core",
+      "notes": "Planned hull; no gameplay entity or appearance approval is created here.",
+      "envelope": {
+        "min": [
+          -53.481804,
+          -20.36,
+          -141.68
+        ],
+        "max": [
+          84.628573,
+          82.0,
+          124.8
+        ]
+      },
+      "envelope_decision": "syndicate-rework-appearance-2026-10-23"
     },
     {
       "binding": "syndicate:bomber",
@@ -2307,10 +2320,24 @@
       },
       "manifest": "core:syndicate/bomber",
       "legacy_identifiers": [
-        "syndicate_bomber"
+        "syndicate_bomber",
+        "syndicate_bomber_squadron"
       ],
-      "status": "authoring_pending",
-      "notes": "Planned hull (s01-hull-plan-2026-10-16). Its data id must also be added to fighter_platform.builds_ships or it exists but cannot be built."
+      "status": "core",
+      "notes": "Planned hull (s01-hull-plan-2026-10-16). Its data id must also be added to fighter_platform.builds_ships or it exists but cannot be built.",
+      "envelope": {
+        "min": [
+          -11.737607,
+          -4.925,
+          -23.618
+        ],
+        "max": [
+          19.625,
+          12.0,
+          20.16
+        ]
+      },
+      "envelope_decision": "syndicate-rework-appearance-2026-10-23"
     },
     {
       "binding": "syndicate:colonizer",
@@ -2880,8 +2907,21 @@
         "class_or_kind": "supercapital"
       },
       "manifest": "core:syndicate/supercapital",
-      "status": "authoring_pending",
-      "notes": "Planned hull; no gameplay entity or appearance approval is created here."
+      "status": "core",
+      "notes": "Planned hull; no gameplay entity or appearance approval is created here.",
+      "envelope": {
+        "min": [
+          -71.835399,
+          -34.0,
+          -197.33
+        ],
+        "max": [
+          116.676,
+          82.0,
+          175.2
+        ]
+      },
+      "envelope_decision": "syndicate-rework-appearance-2026-10-23"
     },
     {
       "binding": "syndicate:trade_station",

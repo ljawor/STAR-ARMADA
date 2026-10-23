@@ -140,6 +140,11 @@
     ],
     "approved-s07-scaffold": [
       "shared:construction_scaffold"
+    ],
+    "approved-syndicate-rework": [
+      "syndicate:battleship",
+      "syndicate:bomber",
+      "syndicate:supercapital"
     ]
   },
   "assets": [
