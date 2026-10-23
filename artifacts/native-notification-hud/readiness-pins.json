@@ -1,0 +1,21 @@
+{
+  "branch": "feat/native-notification-hud",
+  "base": "8348a4b622a3b19dfb5e2ee82030528df99c9037",
+  "sources": {
+    "render/hud.py": "56cdbd6eac941017a6eb0faa7c69d4bca557acfedf3262b79efe04d844fbac85",
+    "render_bridge/vector_hud.py": "f2a8c370c3ec7d4ec2913834b7cf15bcaa986b2a6778846adf30fb0e02c9eaa9",
+    "render_cpp/src/vector_hud.cpp": "6fb153d04cc5e467505cb2201c1de4ee400b6fce8c5f953df12f2f9c56ec731e",
+    "render_cpp/tests/test_vector_hud.cpp": "5302e10ba18b5a42cae433e48c96296d1d119dc56fc62a7c1e90b484f6c79f43",
+    "tests/test_native_notification_hud.py": "3fcd0a5bd1d3576c2a0b7832f833d5664dc04bef4f18441d68825fc281200124",
+    "tests/test_native_notification_capture.py": "7c1b48d28c12f2d1a0bca79e55ccf8398e67e364a718deec9516f5f17e5febe7",
+    "tools/render/capture_native_notification_hud_game.py": "5fcd04ebc14065adadee4198516183f7c0957c4454fbaec0cf4bff5c142bf867",
+    "tools/render/probe_native_vector_hud.py": "d71a4954a09c4ba4e26ff2c6bae0178db345eb68a638ac1d0d495cb77347a705",
+    "main.py": "85304b6ebff357e1e79472e984af2724a36eb525a05ab04217f0d96c814e6ab0"
+  },
+  "binaries": {
+    "render_cpp/build-w02/armada_viewer": "00a756262be1fd0ae6fe19d1dc558982bbaae5099994be2e8f175f02aff5ff0a",
+    "render_cpp/build-w02/libarmada_embedded.dylib": "dce2819d16df94dc0b1b693e51a7f8a25d481e38f74777d00979c5ff3e74d468"
+  },
+  "acceptance_report": "/Users/lukaszjawor/.hermes/cache/scratch/notification-acceptance-dfd0b9d3/acceptance.json",
+  "review_status": "Final Python review passed; C++ review found an actual-ink centering edge case under repair. Handed-over binaries unchanged. Not merged; owner may visually test the current candidate."
+}

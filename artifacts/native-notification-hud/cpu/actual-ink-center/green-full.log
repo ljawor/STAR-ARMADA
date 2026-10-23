@@ -1,0 +1,55 @@
+center actual ink: jAy drawable=800x600 midpoint=200,200
+center actual ink: jAy drawable=1600x900 midpoint=400,300
+center actual ink: jAy drawable=640x900 midpoint=160,300
+center actual ink: WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW drawable=800x600 midpoint=200,200
+center actual ink: WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW drawable=1600x900 midpoint=400,300
+center actual ink: WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW drawable=640x900 midpoint=160,300
+center actual ink: ALERT     drawable=800x600 midpoint=200,200
+center actual ink: ALERT     drawable=1600x900 midpoint=400,300
+center actual ink: ALERT     drawable=640x900 midpoint=160,300
+center actual ink:    ALERT   drawable=800x600 midpoint=200,200
+center actual ink:    ALERT   drawable=1600x900 midpoint=400,300
+center actual ink:    ALERT   drawable=640x900 midpoint=160,300
+center actual ink: ✦ drawable=800x600 midpoint=200,200
+center actual ink: ✦ drawable=1600x900 midpoint=400,300
+center actual ink: ✦ drawable=640x900 midpoint=160,300
+center actual ink: ◉ drawable=800x600 midpoint=200,200
+center actual ink: ◉ drawable=1600x900 midpoint=400,300
+center actual ink: ◉ drawable=640x900 midpoint=160,300
+center actual ink: △ drawable=800x600 midpoint=200,200
+center actual ink: △ drawable=1600x900 midpoint=400,300
+center actual ink: △ drawable=640x900 midpoint=160,300
+center actual ink: → drawable=800x600 midpoint=200,200
+center actual ink: → drawable=1600x900 midpoint=400,300
+center actual ink: → drawable=640x900 midpoint=160,300
+center actual ink: ✦ ALERT △ drawable=800x600 midpoint=200,200
+center actual ink: ✦ ALERT △ drawable=1600x900 midpoint=400,300
+center actual ink: ✦ ALERT △ drawable=640x900 midpoint=160,300
+center actual ink: △ ALERT ◉     drawable=800x600 midpoint=200,200
+center actual ink: △ ALERT ◉     drawable=1600x900 midpoint=400,300
+center actual ink: △ ALERT ◉     drawable=640x900 midpoint=160,300
+center actual emitted ink / icons / trailing whitespace / empty ink / XY / fit / nonuniform clip PASS
+incoming U+25b3 question-mark geometry/UV identical=0
+incoming shape / UV / measurement / single alpha / bounds / nonuniform clip PASS
+incoming U+2726 question-mark geometry/UV identical=0
+incoming shape / UV / measurement / single alpha / bounds / nonuniform clip PASS
+incoming U+25c9 question-mark geometry/UV identical=0
+incoming shape / UV / measurement / single alpha / bounds / nonuniform clip PASS
+decoder strict schema PASS
+clipped geometry / semantic fog / batch order PASS
+measured text / alpha / glyph UV clip / control icons / glyph budget / resize PASS
+rounded rect / primitive coverage / batch budget / wire maximums PASS
+control icon translucent union PASS
+joined polygon stroke alpha PASS
+crossed / concave / reversed polygon even-odd fill PASS
+square stroke=1 reversed=0 sample coverage=0
+square stroke=20 reversed=0 sample coverage=1
+square stroke=64 reversed=0 sample coverage=1
+square stroke=1 reversed=1 sample coverage=0
+square stroke=20 reversed=1 sample coverage=1
+square stroke=64 reversed=1 sample coverage=1
+thin / collapsed thick / concave / reversed translucent stroke union PASS
+offscreen 128x256 points seconds=2.0541e-05
+zero-output work boundary: 89 accepted, 90 rejected (44928 units/op, 4000000 limit)
+cumulative zero-output rejection=1 seconds=0.0119285
+offscreen rejection / cumulative CPU work budget PASS

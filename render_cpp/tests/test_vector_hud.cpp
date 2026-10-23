@@ -405,6 +405,192 @@ double coverage(const DrawList &d, float x, float y, int width = 800,
   }
   return count;
 }
+void incomingIcon(const char *symbol, uint32_t cp) {
+  armada::top_hud::FontAtlas f(std::string(ARMADA_ASSET_ROOT) +
+                                 "/assets/fonts/NotoSans-Regular.ttf", 600);
+  Model m;
+  m.active = true;
+  m.logical_size = {800, 600};
+  Op o;
+  o.kind = "text";
+  o.pos = {10, 20};
+  o.clip = o.bounds = {0, 0, 800, 600};
+  o.size = 100;
+  o.fit = "clip";
+  o.color = {25, 50, 75, 128};
+  o.text = "?";
+  m.ops = {o};
+  auto fallback = layout(m, 800, 600, f);
+  // The actual event codepoint is absent from the unchanged authentic atlas.
+  assert(f.glyph(cp).codepoint == f.glyph('?').codepoint);
+  o.text = symbol;
+  m.ops = {o};
+  auto d = layout(m, 800, 600, f);
+  assert(!d.vertices.empty());
+  bool sameFallback = d.indices == fallback.indices &&
+                      d.vertices.size() == fallback.vertices.size();
+  if (sameFallback)
+    for (size_t i = 0; i < d.vertices.size(); ++i) {
+      auto a = d.vertices[i], b = fallback.vertices[i];
+      sameFallback &= a.x == b.x && a.y == b.y && a.u == b.u && a.v == b.v;
+    }
+  std::cout << "incoming U+" << std::hex << cp << std::dec
+            << " question-mark geometry/UV identical=" << sameFallback << std::endl;
+  assert(!sameFallback);
+  assert(d.textBounds.size() == 1 && d.textBounds[0].text == symbol);
+  assert(std::abs(d.textBounds[0].width - 90) < .001f);
+  assert(std::abs(d.textBounds[0].height - 80) < .001f);
+  for (auto v : d.vertices) {
+    assert(v.u == .5f / f.width() && v.v == .5f / f.height());
+    assert(v.color == 0x804b3219);
+    float x = (v.x + 1) * 400, y = (1 - v.y) * 300;
+    assert(x >= 9.999f && x <= 90.001f && y >= 19.999f && y <= 100.001f);
+  }
+  if (cp == 0x25b3) {
+    assert(coverage(d, 50.137f, 60.173f) == 0); // Hollow triangle.
+    assert(coverage(d, 50.137f, 97.173f) == 1);
+  } else if (cp == 0x2726) {
+    assert(coverage(d, 50.137f, 60.173f) == 1); // Filled star centre.
+    assert(coverage(d, 50.137f, 25.173f) == 1); // Upper tip.
+    assert(coverage(d, 25.137f, 35.173f) == 0); // Concave notch.
+  } else {
+    assert(coverage(d, 50.137f, 60.173f) == 1); // Disjoint centre dot.
+    assert(coverage(d, 71.137f, 60.173f) == 0); // Annular gap.
+    assert(coverage(d, 87.137f, 60.173f) == 1); // Outer ring.
+    assert(coverage(d, 85.137f, 95.173f) == 0); // Outside circle.
+  }
+  for (float y = 18.371f; y < 103; y += 1.711f)
+    for (float x = 8.193f; x < 93; x += 1.707f)
+      assert(coverage(d, x, y) <= 1);
+  // Text uses sy for its em size even at nonuniform drawable scale.
+  // sx only moves the origin; clip and bounds are logical rectangles.
+  m.ops[0].clip = {20, 25, 20, 35};
+  m.ops[0].bounds = {0, 30, 35, 22};
+  auto clipped = layout(m, 1600, 900, f);
+  assert(!clipped.vertices.empty());
+  for (auto v : clipped.vertices) {
+    float x = (v.x + 1) * 800, y = (1 - v.y) * 450;
+    assert(x >= 39.999f && x <= 70.001f && y >= 44.999f && y <= 78.001f);
+  }
+  for (float y = 45.371f; y < 78; y += 2.711f)
+    for (float x = 40.193f; x < 70; x += 2.707f)
+      assert(coverage(clipped, x, y, 1600, 900) ==
+             coverage(d, 10 + (x - 20) / 1.5f, 20 + (y - 30) / 1.5f));
+  m.ops[0].fit = "shrink";
+  m.ops[0].clip = m.ops[0].bounds = {10, 20, 9, 8};
+  auto shrunk = layout(m, 800, 600, f);
+  assert(shrunk.textBounds[0].width <= 9.001f &&
+         shrunk.textBounds[0].height <= 8.001f);
+  std::cout << "incoming shape / UV / measurement / single alpha / bounds / nonuniform clip PASS\n";
+}
+void incomingIcons() {
+  incomingIcon(reinterpret_cast<const char *>(u8"△"), 0x25b3);
+  incomingIcon(reinterpret_cast<const char *>(u8"✦"), 0x2726);
+  incomingIcon(reinterpret_cast<const char *>(u8"◉"), 0x25c9);
+}
+// Return pixel-space min/max from the emitted mesh, independently of TextBounds.
+Rect emittedExtents(const DrawList &d, int w, int h) {
+  assert(!d.vertices.empty());
+  Rect box{1e6f, 1e6f, -1e6f, -1e6f};
+  for (auto v : d.vertices) {
+    float x = (v.x + 1) * w / 2, y = (1 - v.y) * h / 2;
+    box[0] = std::min(box[0], x); box[1] = std::min(box[1], y);
+    box[2] = std::max(box[2], x); box[3] = std::max(box[3], y);
+  }
+  return box;
+}
+void centeredText() {
+  armada::top_hud::FontAtlas f(std::string(ARMADA_ASSET_ROOT) +
+                                 "/assets/fonts/NotoSans-Regular.ttf", 600);
+  for (const auto &value : {std::string("jAy"), std::string(180, 'W'),
+                           std::string("ALERT    "), std::string("   ALERT  "),
+                           std::string(reinterpret_cast<const char *>(u8"✦")),
+                           std::string(reinterpret_cast<const char *>(u8"◉")),
+                           std::string(reinterpret_cast<const char *>(u8"△")),
+                           std::string(reinterpret_cast<const char *>(u8"→")),
+                           std::string(reinterpret_cast<const char *>(u8"✦ ALERT △")),
+                           std::string(reinterpret_cast<const char *>(u8"△ ALERT ◉    "))}) {
+    auto j = fixture();
+    j["active"] = true;
+    j["ops"].push_back({{"kind", "text"}, {"clip", {0, 0, 800, 600}},
+                        {"pos", {100, 150}}, {"bounds", {100, 150, 200, 100}},
+                        {"size", 40}, {"text", value}, {"color", {1, 2, 3, 128}},
+                        {"fit", "center"}});
+    auto m = parse(j);
+    assert(m.ops[0].fit == "center" && m.ops[0].text == value);
+    for (auto drawable : std::vector<Point>{{800, 600}, {1600, 900}, {640, 900}}) {
+      int w = int(drawable[0]), h = int(drawable[1]);
+      float sx = drawable[0] / 800, sy = drawable[1] / 600;
+      auto d = layout(m, w, h, f);
+      assert(d.textBounds.size() == 1 && !d.vertices.empty());
+      auto t = d.textBounds[0];
+      assert(t.text == value);
+      auto ink = emittedExtents(d, w, h);
+      std::cout << "center actual ink: " << value << " drawable=" << w << 'x' << h
+                << " midpoint=" << (ink[0] + ink[2]) / 2 << ','
+                << (ink[1] + ink[3]) / 2 << std::endl;
+      assert(std::abs((ink[0] + ink[2]) / 2 - 200 * sx) < .002f);
+      assert(std::abs((ink[1] + ink[3]) / 2 - 200 * sy) < .002f);
+      assert(std::abs(ink[0] - t.x) < .002f && std::abs(ink[1] - t.y) < .002f);
+      assert(std::abs(ink[2] - t.x - t.width) < .002f);
+      assert(std::abs(ink[3] - t.y - t.height) < .002f);
+      assert(t.width <= 200 * sx + .002f && t.height <= 100 * sy + .002f);
+      // An exact ink-sized box must not shrink for a trailing advance/space.
+      // Tighten each axis independently so fitting is tested, not just XY.
+      for (auto fraction : std::vector<Point>{{.6f, 1.2f}, {1.2f, .6f}}) {
+        m.ops[0].bounds = {100, 150, t.width / sx * fraction[0],
+                                   t.height / sy * fraction[1]};
+        auto small = layout(m, w, h, f);
+        auto b = emittedExtents(small, w, h);
+        assert(std::abs((b[2] - b[0]) - t.width * .6f) < .003f);
+        assert(std::abs((b[3] - b[1]) - t.height * .6f) < .003f);
+        assert(std::abs((b[0] + b[2]) / 2 -
+                        (100 * sx + m.ops[0].bounds[2] * sx / 2)) < .003f);
+        assert(std::abs((b[1] + b[3]) / 2 -
+                        (150 * sy + m.ops[0].bounds[3] * sy / 2)) < .003f);
+      }
+      m.ops[0].bounds = {100, 150, 200, 100};
+      // Changing the scissor must not recenter the surviving geometry.
+      m.ops[0].clip = {200, 150, 100, 100};
+      auto clipped = layout(m, w, h, f);
+      auto b = emittedExtents(clipped, w, h);
+      assert(clipped.textBounds[0].x == t.x && clipped.textBounds[0].y == t.y);
+      assert(std::abs(b[0] - 200 * sx) < .002f);
+      assert(std::abs(b[2] - ink[2]) < .002f);
+      for (auto v : clipped.vertices) {
+        float x = (v.x + 1) * w / 2, y = (1 - v.y) * h / 2;
+        assert(x >= 200 * sx - .002f && x <= 300 * sx + .002f);
+        assert(y >= 150 * sy - .002f && y <= 250 * sy + .002f);
+      }
+      m.ops[0].clip = {0, 0, 800, 600};
+      // Trailing whitespace must remain in the model/receipt, not affect ink.
+      m.ops[0].text = value + "    ";
+      auto spaces = layout(m, w, h, f);
+      auto c = emittedExtents(spaces, w, h);
+      for (int i = 0; i < 4; ++i) assert(std::abs(c[i] - ink[i]) < .002f);
+      assert(spaces.textBounds[0].text == value + "    ");
+      m.ops[0].text = value;
+    }
+  }
+  // No emitted ink has a zero-sized box at the bounds' centre; preserve text.
+  Model m;
+  m.active = true;
+  m.logical_size = {800, 600};
+  Op o;
+  o.kind = "text"; o.text = "     "; o.fit = "center"; o.size = 40;
+  o.pos = {100, 150}; o.bounds = {100, 150, 200, 100};
+  o.clip = {0, 0, 800, 600};
+  m.ops = {o};
+  for (auto drawable : std::vector<Point>{{800, 600}, {1600, 900}}) {
+    auto d = layout(m, int(drawable[0]), int(drawable[1]), f);
+    assert(d.vertices.empty() && d.indices.empty() && d.batches.empty());
+    assert(d.textBounds.size() == 1 && d.textBounds[0].text == o.text);
+    auto t = d.textBounds[0];
+    assert(t.width == 0 && t.height == 0);
+    assert(t.x == 200 * drawable[0] / 800 && t.y == 200 * drawable[1] / 600);
+  }
+  std::cout << "center actual emitted ink / icons / trailing whitespace / empty ink / XY / fit / nonuniform clip PASS\n";
+}
 void iconAlpha() {
   armada::top_hud::FontAtlas f(std::string(ARMADA_ASSET_ROOT) +
                                    "/assets/fonts/NotoSans-Regular.ttf",
@@ -586,6 +772,10 @@ void workBudget() {
 int main(int argc, char **argv) {
   if (argc > 1 && std::string(argv[1]) == "work") { workBudget(); return 0; }
   if (argc > 1 && std::string(argv[1]) == "stroke") { thickStrokeAlpha(); return 0; }
+  if (argc > 1 && std::string(argv[1]) == "center") { centeredText(); return 0; }
+  if (argc > 1 && std::string(argv[1]) == "incoming") { incomingIcons(); return 0; }
+  centeredText();
+  incomingIcons();
   decoder();
   geometry();
   text();

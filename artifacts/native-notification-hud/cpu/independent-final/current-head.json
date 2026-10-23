@@ -1,0 +1,9 @@
+{
+  "name": "current-head",
+  "exit_code": 0,
+  "args": [
+    "/Users/lukaszjawor/.hermes/cache/scratch/ink-rereview-independent/probe-current",
+    "head"
+  ],
+  "log": "/Users/lukaszjawor/.hermes/cache/scratch/ink-rereview-independent/current-head.log"
+}

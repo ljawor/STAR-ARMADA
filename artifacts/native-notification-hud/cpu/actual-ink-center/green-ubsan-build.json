@@ -1,0 +1,26 @@
+{
+  "name": "green-ubsan-build",
+  "args": [
+    "clang++",
+    "-std=c++20",
+    "-O1",
+    "-g",
+    "-UNDEBUG",
+    "-Irender_cpp/include",
+    "-Irender_cpp/build-w02/_deps/json-src/include",
+    "-Irender_cpp/build-w02/_deps/picosha2-src",
+    "-fsanitize=undefined",
+    "-fno-sanitize-recover=all",
+    "-DARMADA_ASSET_ROOT=\"/Users/lukaszjawor/Downloads/Project/STAR-ARMADA\"",
+    "render_cpp/src/vector_hud.cpp",
+    "render_cpp/src/top_hud.cpp",
+    "render_cpp/tests/test_vector_hud.cpp",
+    "-o",
+    "/Users/lukaszjawor/.hermes/cache/scratch/actual-ink-center/green-ubsan"
+  ],
+  "pid": 40710,
+  "exit_code": 0,
+  "timed_out": false,
+  "elapsed": 7.359097333974205,
+  "deadline": 90
+}

@@ -1,0 +1,8 @@
+{
+  "name": "ubsan-full",
+  "exit_code": 0,
+  "args": [
+    "/Users/lukaszjawor/.hermes/cache/scratch/ink-rereview-independent/ubsan"
+  ],
+  "log": "/Users/lukaszjawor/.hermes/cache/scratch/ink-rereview-independent/ubsan-full.log"
+}

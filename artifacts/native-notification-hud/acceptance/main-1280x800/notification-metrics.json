@@ -1,0 +1,505 @@
+{
+  "passed": true,
+  "acceptance_complete": true,
+  "cleanup_complete": true,
+  "entrypoint": "main.py --skirmish",
+  "loop": "unchanged production AST while body, one frame at a time",
+  "capture": "real embedded Cocoa/OpenGL framebuffer before normal flip; hidden SDL window",
+  "control_scope": [
+    "_event_log",
+    "_flash_message"
+  ],
+  "geometry": {
+    "construction-en": {
+      "incoming_legacy": [
+        10,
+        590,
+        420,
+        196
+      ],
+      "incoming_native": [
+        10,
+        639,
+        240,
+        147
+      ],
+      "flash_legacy_measured": [
+        466,
+        723,
+        348,
+        35
+      ],
+      "flash_native": [
+        510,
+        727,
+        260,
+        27
+      ],
+      "expected_latest_9": [
+        "△ sensor_station online",
+        "△ trade_station online",
+        "✦ research: sensor_range",
+        "◉ planet New Terra colonized",
+        "✕ fighter lost (imperial)",
+        "△ trade_station online",
+        "✦ research: energy_efficiency",
+        "◉ planet Frontier colonized",
+        "✕ interceptor lost (imperial)"
+      ],
+      "incoming_pixel_delta": {
+        "mean_absolute_rgb": 14.096626984126985,
+        "changed": true
+      },
+      "flash_pixel_delta": {
+        "mean_absolute_rgb": 28.410541310541316,
+        "changed": true
+      }
+    },
+    "language-en": {
+      "incoming_legacy": [
+        10,
+        590,
+        420,
+        196
+      ],
+      "incoming_native": [
+        10,
+        639,
+        240,
+        147
+      ],
+      "flash_legacy_measured": [
+        514,
+        723,
+        252,
+        35
+      ],
+      "flash_native": [
+        546,
+        727,
+        188,
+        27
+      ],
+      "expected_latest_9": [
+        "△ sensor_station online",
+        "△ trade_station online",
+        "✦ research: sensor_range",
+        "◉ planet New Terra colonized",
+        "✕ fighter lost (imperial)",
+        "△ trade_station online",
+        "✦ research: energy_efficiency",
+        "◉ planet Frontier colonized",
+        "✕ interceptor lost (imperial)"
+      ],
+      "incoming_pixel_delta": {
+        "mean_absolute_rgb": 14.096626984126985,
+        "changed": true
+      },
+      "flash_pixel_delta": {
+        "mean_absolute_rgb": 31.655174678224324,
+        "changed": true
+      }
+    },
+    "language-de": {
+      "incoming_legacy": [
+        10,
+        590,
+        420,
+        196
+      ],
+      "incoming_native": [
+        10,
+        639,
+        240,
+        147
+      ],
+      "flash_legacy_measured": [
+        502,
+        723,
+        276,
+        35
+      ],
+      "flash_native": [
+        536,
+        727,
+        208,
+        27
+      ],
+      "expected_latest_9": [
+        "△ sensor_station online",
+        "△ trade_station online",
+        "✦ research: sensor_range",
+        "◉ planet New Terra colonized",
+        "✕ fighter lost (imperial)",
+        "△ trade_station online",
+        "✦ research: energy_efficiency",
+        "◉ planet Frontier colonized",
+        "✕ interceptor lost (imperial)"
+      ],
+      "incoming_pixel_delta": {
+        "mean_absolute_rgb": 14.085515873015872,
+        "changed": true
+      },
+      "flash_pixel_delta": {
+        "mean_absolute_rgb": 31.226080246913583,
+        "changed": true
+      }
+    },
+    "language-pl": {
+      "incoming_legacy": [
+        10,
+        590,
+        420,
+        196
+      ],
+      "incoming_native": [
+        10,
+        639,
+        240,
+        147
+      ],
+      "flash_legacy_measured": [
+        496,
+        723,
+        288,
+        35
+      ],
+      "flash_native": [
+        532,
+        727,
+        216,
+        27
+      ],
+      "expected_latest_9": [
+        "△ sensor_station online",
+        "△ trade_station online",
+        "✦ research: sensor_range",
+        "◉ planet New Terra colonized",
+        "✕ fighter lost (imperial)",
+        "△ trade_station online",
+        "✦ research: energy_efficiency",
+        "◉ planet Frontier colonized",
+        "✕ interceptor lost (imperial)"
+      ],
+      "incoming_pixel_delta": {
+        "mean_absolute_rgb": 14.10767195767196,
+        "changed": true
+      },
+      "flash_pixel_delta": {
+        "mean_absolute_rgb": 31.016175125743022,
+        "changed": true
+      }
+    },
+    "language-ru": {
+      "incoming_legacy": [
+        10,
+        590,
+        420,
+        196
+      ],
+      "incoming_native": [
+        10,
+        639,
+        240,
+        147
+      ],
+      "flash_legacy_measured": [
+        466,
+        723,
+        348,
+        35
+      ],
+      "flash_native": [
+        510,
+        727,
+        260,
+        27
+      ],
+      "expected_latest_9": [
+        "△ sensor_station online",
+        "△ trade_station online",
+        "✦ research: sensor_range",
+        "◉ planet New Terra colonized",
+        "✕ fighter lost (imperial)",
+        "△ trade_station online",
+        "✦ research: energy_efficiency",
+        "◉ planet Frontier colonized",
+        "✕ interceptor lost (imperial)"
+      ],
+      "incoming_pixel_delta": {
+        "mean_absolute_rgb": 14.253278533635678,
+        "changed": true
+      },
+      "flash_pixel_delta": {
+        "mean_absolute_rgb": 31.115764482431146,
+        "changed": true
+      }
+    }
+  },
+  "checksums": {
+    "construction-en": {
+      "before": "b623bfc32df5642a3efc66d18760e61da79d5be9c25384e849ba70b1e551db7c",
+      "after": "b623bfc32df5642a3efc66d18760e61da79d5be9c25384e849ba70b1e551db7c"
+    },
+    "language-en": {
+      "before": "b623bfc32df5642a3efc66d18760e61da79d5be9c25384e849ba70b1e551db7c",
+      "after": "b623bfc32df5642a3efc66d18760e61da79d5be9c25384e849ba70b1e551db7c"
+    },
+    "language-de": {
+      "before": "b623bfc32df5642a3efc66d18760e61da79d5be9c25384e849ba70b1e551db7c",
+      "after": "b623bfc32df5642a3efc66d18760e61da79d5be9c25384e849ba70b1e551db7c"
+    },
+    "language-pl": {
+      "before": "b623bfc32df5642a3efc66d18760e61da79d5be9c25384e849ba70b1e551db7c",
+      "after": "b623bfc32df5642a3efc66d18760e61da79d5be9c25384e849ba70b1e551db7c"
+    },
+    "language-ru": {
+      "before": "b623bfc32df5642a3efc66d18760e61da79d5be9c25384e849ba70b1e551db7c",
+      "after": "b623bfc32df5642a3efc66d18760e61da79d5be9c25384e849ba70b1e551db7c"
+    },
+    "expired-flash": {
+      "before": "d44da282fbd07ebacc8b167734f5d9a2b4f1a39eb6215884a981b2a7afceb5ba",
+      "after": "d44da282fbd07ebacc8b167734f5d9a2b4f1a39eb6215884a981b2a7afceb5ba"
+    },
+    "empty-notifications": {
+      "before": "d44da282fbd07ebacc8b167734f5d9a2b4f1a39eb6215884a981b2a7afceb5ba",
+      "after": "d44da282fbd07ebacc8b167734f5d9a2b4f1a39eb6215884a981b2a7afceb5ba"
+    }
+  },
+  "protected_before": {
+    "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/main.py": "85304b6ebff357e1e79472e984af2724a36eb525a05ab04217f0d96c814e6ab0",
+    "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render/hud.py": "56cdbd6eac941017a6eb0faa7c69d4bca557acfedf3262b79efe04d844fbac85",
+    "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_bridge/live.py": "eb997f811d6e6d04e73599e8ee486c32b5629d8cf0c12721c09d72a6449c4f5f",
+    "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_bridge/vector_hud.py": "f2a8c370c3ec7d4ec2913834b7cf15bcaa986b2a6778846adf30fb0e02c9eaa9",
+    "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/saves/balance.json": null,
+    "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/saves/campaign.json": null,
+    "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/saves/settings.json": "b5a25ee5ea8c6f0dd6157481706d97bb322e5183f5612d9b814d302d3f6179b5",
+    "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/render/capture_native_top_hud_game.py": "9769ccdc4131e6b742091554bfcfe5ed29d6193cb5359882dee6efd364a4e0a3"
+  },
+  "production_loop_ast_sha256": "929c28a40e9765f54764cbb51b4f74bad184367964314ac0de0b68b159c7c2e0",
+  "fixture": {
+    "kind": "real production EventBus presentation-event setup AFTER pause",
+    "not_construction_command_completion": true,
+    "before_checksum": "b623bfc32df5642a3efc66d18760e61da79d5be9c25384e849ba70b1e551db7c",
+    "after_checksum": "b623bfc32df5642a3efc66d18760e61da79d5be9c25384e849ba70b1e551db7c",
+    "events": [
+      {
+        "type": "station_built",
+        "data": {
+          "entity_id": 16,
+          "owner": 0,
+          "station": "mining_station"
+        }
+      },
+      {
+        "type": "station_built",
+        "data": {
+          "entity_id": 16,
+          "owner": 0,
+          "station": "mining_station"
+        }
+      },
+      {
+        "type": "station_built",
+        "data": {
+          "entity_id": 16,
+          "owner": 0,
+          "station": "mining_station"
+        }
+      },
+      {
+        "type": "station_built",
+        "data": {
+          "entity_id": 16,
+          "owner": 0,
+          "station": "sensor_station"
+        }
+      },
+      {
+        "type": "station_built",
+        "data": {
+          "entity_id": 16,
+          "owner": 0,
+          "station": "trade_station"
+        }
+      },
+      {
+        "type": "research_complete",
+        "data": {
+          "entity_id": 16,
+          "owner": 0,
+          "tech": "sensor_range"
+        }
+      },
+      {
+        "type": "planet_colonized",
+        "data": {
+          "entity_id": 16,
+          "owner": 0,
+          "planet": "New Terra"
+        }
+      },
+      {
+        "type": "unit_destroyed",
+        "data": {
+          "entity_id": 16,
+          "owner": 0,
+          "unit": "fighter",
+          "faction": "imperial"
+        }
+      },
+      {
+        "type": "station_built",
+        "data": {
+          "entity_id": 16,
+          "owner": 0,
+          "station": "trade_station"
+        }
+      },
+      {
+        "type": "research_complete",
+        "data": {
+          "entity_id": 16,
+          "owner": 0,
+          "tech": "energy_efficiency"
+        }
+      },
+      {
+        "type": "planet_colonized",
+        "data": {
+          "entity_id": 16,
+          "owner": 0,
+          "planet": "Frontier"
+        }
+      },
+      {
+        "type": "unit_destroyed",
+        "data": {
+          "entity_id": 16,
+          "owner": 0,
+          "unit": "interceptor",
+          "faction": "imperial"
+        }
+      },
+      {
+        "type": "station_built",
+        "data": {
+          "entity_id": 16,
+          "station": "shipyard",
+          "owner": 1
+        }
+      }
+    ],
+    "symbol_shapes": [
+      "△",
+      "◉",
+      "✕",
+      "✦"
+    ]
+  },
+  "languages": {
+    "en": "INCOMING · Page 2/3",
+    "de": "EINGEHEND · Seite 2/3",
+    "pl": "NADCHODZI · Strona 2/3",
+    "ru": "ПРИБЛИЖАЕТСЯ · Страница 2/3"
+  },
+  "replacement": true,
+  "input": {
+    "incoming_blocks_click": true,
+    "flash_blocks_click": true,
+    "former_wide_incoming_world_drag": [
+      400,
+      712
+    ],
+    "station_selection_restored": true
+  },
+  "application_overlay": {
+    "help_shown_over_notifications": true,
+    "input_consumed": true
+  },
+  "expiry": {
+    "deadline": 2.533333333333333,
+    "observed_state_time": 2.533333333333334,
+    "view_flash": 0.0,
+    "clear_pixel_control": {
+      "mean_absolute_rgb": 0.0,
+      "changed": false
+    }
+  },
+  "empty_incoming": {
+    "no_stale_ops_or_input_rect": true,
+    "clear_pixel_control": {
+      "mean_absolute_rgb": 0.0,
+      "changed": false
+    }
+  },
+  "drawable": [
+    1280,
+    800
+  ],
+  "logical_size": [
+    1280,
+    800
+  ],
+  "native_panels_default": true,
+  "files": [
+    "application-help-over-notifications-methods.json",
+    "application-help-over-notifications-vector.json",
+    "application-help-over-notifications.png",
+    "construction-en-after-methods.json",
+    "construction-en-after-vector.json",
+    "construction-en-after.png",
+    "construction-en-before-methods.json",
+    "construction-en-before-vector.json",
+    "construction-en-before.png",
+    "empty-notifications-after-methods.json",
+    "empty-notifications-after-vector.json",
+    "empty-notifications-after.png",
+    "empty-notifications-before-methods.json",
+    "empty-notifications-before-vector.json",
+    "empty-notifications-before.png",
+    "expired-flash-after-methods.json",
+    "expired-flash-after-vector.json",
+    "expired-flash-after.png",
+    "expired-flash-before-methods.json",
+    "expired-flash-before-vector.json",
+    "expired-flash-before.png",
+    "language-de-after-methods.json",
+    "language-de-after-vector.json",
+    "language-de-after.png",
+    "language-de-before-methods.json",
+    "language-de-before-vector.json",
+    "language-de-before.png",
+    "language-en-after-methods.json",
+    "language-en-after-vector.json",
+    "language-en-after.png",
+    "language-en-before-methods.json",
+    "language-en-before-vector.json",
+    "language-en-before.png",
+    "language-pl-after-methods.json",
+    "language-pl-after-vector.json",
+    "language-pl-after.png",
+    "language-pl-before-methods.json",
+    "language-pl-before-vector.json",
+    "language-pl-before.png",
+    "language-ru-after-methods.json",
+    "language-ru-after-vector.json",
+    "language-ru-after.png",
+    "language-ru-before-methods.json",
+    "language-ru-before-vector.json",
+    "language-ru-before.png"
+  ],
+  "image_count": 15,
+  "protected_after": {
+    "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/main.py": "85304b6ebff357e1e79472e984af2724a36eb525a05ab04217f0d96c814e6ab0",
+    "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render/hud.py": "56cdbd6eac941017a6eb0faa7c69d4bca557acfedf3262b79efe04d844fbac85",
+    "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_bridge/live.py": "eb997f811d6e6d04e73599e8ee486c32b5629d8cf0c12721c09d72a6449c4f5f",
+    "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_bridge/vector_hud.py": "f2a8c370c3ec7d4ec2913834b7cf15bcaa986b2a6778846adf30fb0e02c9eaa9",
+    "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/saves/balance.json": null,
+    "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/saves/campaign.json": null,
+    "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/saves/settings.json": "b5a25ee5ea8c6f0dd6157481706d97bb322e5183f5612d9b814d302d3f6179b5",
+    "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/render/capture_native_top_hud_game.py": "9769ccdc4131e6b742091554bfcfe5ed29d6193cb5359882dee6efd364a4e0a3"
+  },
+  "protected_files_unchanged": true,
+  "cleanup_errors": []
+}

@@ -1,0 +1,9 @@
+{
+  "name": "head-head",
+  "exit_code": 0,
+  "args": [
+    "/Users/lukaszjawor/.hermes/cache/scratch/ink-rereview-independent/probe-head",
+    "head"
+  ],
+  "log": "/Users/lukaszjawor/.hermes/cache/scratch/ink-rereview-independent/head-head.log"
+}

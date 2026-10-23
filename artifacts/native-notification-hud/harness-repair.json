@@ -1,0 +1,160 @@
+{
+ "harness_repair_date": "2026-10-23",
+ "harness": "tools/render/capture_native_notification_hud_game.py",
+ "harness_sha256": "048a55ef211337265c29ee7a6e3b57fc6490f2ead5dbc6dc0e337e44b7e7d577",
+ "test_sha256": "1a4e40b26377820f1ce1359f2d874b513662be8b7d3cb96373295442383f9823",
+ "cpu_tests": "69 passed (test_native_notification_hud.py + test_native_notification_capture.py)",
+ "ctest": "15/15 passed on render_cpp/build-w02",
+ "hud_regressions": "78 tests OK (13 HUD/overlay modules)",
+ "runs": {
+  "large": {
+   "passed": true,
+   "protected_files_unchanged": true,
+   "cleanup_complete": true,
+   "production_loop_ast_sha256": "929c28a40e9765f54764cbb51b4f74bad184367964314ac0de0b68b159c7c2e0",
+   "incoming_native": [
+    10,
+    639,
+    240,
+    147
+   ],
+   "incoming_legacy": [
+    10,
+    590,
+    420,
+    196
+   ],
+   "flash_native": [
+    510,
+    727,
+    260,
+    27
+   ],
+   "flash_legacy_measured": [
+    466,
+    723,
+    348,
+    35
+   ],
+   "incoming_pixel_delta": {
+    "mean_absolute_rgb": 14.082751572327043,
+    "changed": true
+   },
+   "flash_pixel_delta": {
+    "mean_absolute_rgb": 29.446621260683767,
+    "changed": true
+   },
+   "checksums_identical": true,
+   "cases": [
+    "construction-en",
+    "empty-notifications",
+    "expired-flash",
+    "language-de",
+    "language-en",
+    "language-pl",
+    "language-ru"
+   ]
+  },
+  "small800": {
+   "passed": true,
+   "protected_files_unchanged": true,
+   "cleanup_complete": true,
+   "production_loop_ast_sha256": "929c28a40e9765f54764cbb51b4f74bad184367964314ac0de0b68b159c7c2e0",
+   "incoming_native": [
+    10,
+    639,
+    240,
+    147
+   ],
+   "incoming_legacy": [
+    10,
+    590,
+    420,
+    196
+   ],
+   "flash_native": [
+    510,
+    727,
+    260,
+    27
+   ],
+   "flash_legacy_measured": [
+    466,
+    723,
+    348,
+    35
+   ],
+   "incoming_pixel_delta": {
+    "mean_absolute_rgb": 14.096626984126985,
+    "changed": true
+   },
+   "flash_pixel_delta": {
+    "mean_absolute_rgb": 28.12293447293447,
+    "changed": true
+   },
+   "checksums_identical": true,
+   "cases": [
+    "construction-en",
+    "empty-notifications",
+    "expired-flash",
+    "language-de",
+    "language-en",
+    "language-pl",
+    "language-ru"
+   ]
+  },
+  "small": {
+   "passed": true,
+   "protected_files_unchanged": true,
+   "cleanup_complete": true,
+   "production_loop_ast_sha256": "929c28a40e9765f54764cbb51b4f74bad184367964314ac0de0b68b159c7c2e0",
+   "incoming_native": [
+    10,
+    639,
+    240,
+    147
+   ],
+   "incoming_legacy": [
+    10,
+    590,
+    420,
+    196
+   ],
+   "flash_native": [
+    510,
+    727,
+    260,
+    27
+   ],
+   "flash_legacy_measured": [
+    466,
+    723,
+    348,
+    35
+   ],
+   "incoming_pixel_delta": {
+    "mean_absolute_rgb": 13.906134259259261,
+    "changed": true
+   },
+   "flash_pixel_delta": {
+    "mean_absolute_rgb": 27.21297435897436,
+    "changed": true
+   },
+   "checksums_identical": true,
+   "cases": [
+    "construction-en",
+    "empty-notifications",
+    "expired-flash",
+    "language-de",
+    "language-en",
+    "language-pl",
+    "language-ru"
+   ]
+  }
+ },
+ "not_proven": [
+  "owner visual approval",
+  "interactive play-through feel",
+  "Windows/frozen delivery"
+ ]
+}

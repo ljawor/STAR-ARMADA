@@ -1,0 +1,7 @@
+{
+  "files": {
+    "render_cpp/src/vector_hud.cpp": "1fafac8512812c118be8b9fd74be6232c84c38f460381148b621a8c24c6ce325",
+    "render_cpp/tests/test_vector_hud.cpp": "358631f14711030f77ff3f0b544b44684b153551b766be35c1ea070ee18fd9e6"
+  },
+  "production_sha256": "dce2819d16df94dc0b1b693e51a7f8a25d481e38f74777d00979c5ff3e74d468"
+}

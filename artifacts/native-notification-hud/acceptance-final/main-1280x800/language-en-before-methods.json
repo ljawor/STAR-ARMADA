@@ -1,0 +1,46 @@
+{
+  "_event_log": {
+    "legacy_control": true,
+    "labels": [
+      "INCOMING",
+      "△ sensor_station online",
+      "△ trade_station online",
+      "✦ research: sensor_range",
+      "◉ planet New Terra colonized",
+      "✕ fighter lost (imperial)",
+      "△ trade_station online",
+      "✦ research: energy_efficiency",
+      "◉ planet Frontier colonized",
+      "✕ interceptor lost (imperial)"
+    ],
+    "arguments": [
+      0
+    ],
+    "blocks": [
+      [
+        10,
+        590,
+        420,
+        196
+      ]
+    ],
+    "ops": []
+  },
+  "_flash_message": {
+    "legacy_control": true,
+    "labels": [],
+    "arguments": [
+      "INCOMING · Page 2/3",
+      2.5
+    ],
+    "blocks": [
+      [
+        514,
+        723,
+        252,
+        35
+      ]
+    ],
+    "ops": []
+  }
+}

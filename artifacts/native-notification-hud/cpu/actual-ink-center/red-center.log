@@ -1,0 +1,2 @@
+center actual ink: jAy drawable=800x600 midpoint=200,200
+Assertion failed: (std::abs(c[i] - ink[i]) < .002f), function centeredText, file test_vector_hud.cpp, line 570.

@@ -1,0 +1,11 @@
+{
+  "name": "green-full",
+  "args": [
+    "/Users/lukaszjawor/.hermes/cache/scratch/actual-ink-center/green"
+  ],
+  "pid": 40708,
+  "exit_code": 0,
+  "timed_out": false,
+  "elapsed": 0.38317808392457664,
+  "deadline": 45
+}

@@ -1,0 +1,26 @@
+{
+  "name": "expanded-after-build",
+  "args": [
+    "clang++",
+    "-std=c++20",
+    "-O1",
+    "-g",
+    "-UNDEBUG",
+    "-Irender_cpp/include",
+    "-Irender_cpp/build-w02/_deps/json-src/include",
+    "-Irender_cpp/build-w02/_deps/picosha2-src",
+    "-fsanitize=undefined",
+    "-fno-sanitize-recover=all",
+    "-DARMADA_ASSET_ROOT=\"/Users/lukaszjawor/Downloads/Project/STAR-ARMADA\"",
+    "render_cpp/src/vector_hud.cpp",
+    "render_cpp/src/top_hud.cpp",
+    "/Users/lukaszjawor/.hermes/cache/scratch/actual-ink-center/expanded-legacy-probe.cpp",
+    "-o",
+    "/Users/lukaszjawor/.hermes/cache/scratch/actual-ink-center/expanded-after"
+  ],
+  "pid": 40932,
+  "exit_code": 0,
+  "timed_out": false,
+  "elapsed": 5.989367333007976,
+  "deadline": 90
+}

@@ -375,18 +375,47 @@ class HUD:
             self.blocked_rects.append(rect.inflate(20, 12))
             _p.rect(ov, PANEL_BG, rect.inflate(20, 12), border_radius=6)
             _p.blit(ov, prompt, rect)
-        if flash_msg and flash_left > 0.0:
+        self._flash_message(flash_msg, flash_left)
+        if fps > 0.0 and not self.native_top_bar:
+            self._label(self.width - 90, 40, f"{fps:0.0f} FPS", TXT_DIM,
+                        self.font_small)
+        self.recorder.finish()
+
+    def _flash_message(self, flash_msg: str, flash_left: float) -> None:
+        """Caller-owned text/lifetime, captured before rasterization in native mode."""
+        if not flash_msg or not flash_left > 0.0:
+            return
+        ov = self.overlay
+        center = (self.width // 2, self.height - 60)
+        if not self.native_panels:
             surf = self.font_big.render(flash_msg, True, WARN)
-            r = surf.get_rect(center=(self.width // 2, self.height - 60))
+            r = surf.get_rect(center=center)
             bg = r.inflate(24, 12)
             self.blocked_rects.append(bg)
             _p.rect(ov, PANEL_BG, bg, border_radius=6)
             _p.rect(ov, PANEL_EDGE, bg, 1, border_radius=6)
             _p.blit(ov, surf, r)
-        if fps > 0.0 and not self.native_top_bar:
-            self._label(self.width - 90, 40, f"{fps:0.0f} FPS", TXT_DIM,
-                        self.font_small)
-        self.recorder.finish()
+            return
+        from render_bridge.vector_hud import Sink
+        # Match the old measured surface/card, not a rasterized intermediate.
+        # Preserve legacy overflow geometry; the existing surface clip bounds it.
+        width = self.font_big.size(flash_msg)[0]
+        r = pygame.Rect(0, 0, width, self.font_big.get_height())
+        r.center = center
+        bg = r.inflate(24, 12)
+        sink = Sink(self._native_capture(), bg, source_x=center[0], target_x=center[0],
+                    source_y=center[1], target_y=center[1], scale=.75)
+        previous = _p.native_sink
+        _p.native_sink = sink
+        try:
+            self.blocked_rects.append(pygame.Rect(sink.rect(bg)))
+            _p.rect(ov, PANEL_BG, bg, border_radius=6)
+            _p.rect(ov, PANEL_EDGE, bg, 1, border_radius=6)
+            # Native font ink is centred by the consumer within the old glyph box.
+            sink.text(ov, r.x, r.y, flash_msg, WARN, 19 * NATIVE_TEXT_EM_SCALE,
+                      r.width, r.height, fit='center')
+        finally:
+            _p.native_sink = previous
 
     # ------------------------------------------------------------------ top bar
     def _top_bar(self, local_player: int, paused: bool) -> None:
@@ -1515,21 +1544,34 @@ class HUD:
         rows = log[-9:]
         height = 34 + 18 * len(rows)
         x, y = 10, self.height - 14 - height
-        rect = pygame.Rect(x, y, 420, height)
-        self.blocked_rects.append(rect)
-        _p.rect(ov, PANEL_BG, rect, border_radius=8)
-        _p.rect(ov, PANEL_EDGE, rect, 1, border_radius=8)
-        self._label(x + 10, y + 6, "INCOMING", TXT_DIM, self.font_small)
-        yy = y + 24
-        for ev in rows:
-            d = ev.data
-            line = self._event_text(ev, local_player)
-            col = GOOD if d.get("owner", d.get("winner", -9)) == local_player \
-                else TXT_DIM
-            if ev.type == "unit_destroyed":
-                col = BAD if d.get("owner") == local_player else TXT_DIM
-            self._label(x + 10, yy, line, col, self.font_small)
-            yy += 18
+        rect = pygame.Rect(x, y, 320 if self.native_panels else 420, height)
+        previous = _p.native_sink
+        sink = None
+        if self.native_panels:
+            from render_bridge.vector_hud import Sink
+            # Same 240px width/left edge as SELECTION; preserve the bottom gap.
+            sink = Sink(self._native_capture(), rect, source_x=x, target_x=x,
+                        source_y=rect.bottom, target_y=rect.bottom, scale=.75)
+            _p.native_sink = sink
+        self.blocked_rects.append(pygame.Rect(sink.rect(rect)) if sink else rect)
+        try:
+            _p.rect(ov, PANEL_BG, rect, border_radius=8)
+            _p.rect(ov, PANEL_EDGE, rect, 1, border_radius=8)
+            self._label(x + 10, y + 6, "INCOMING", TXT_DIM, self.font_small)
+            yy = y + 24
+            for ev in rows:
+                d = ev.data
+                line = self._event_text(ev, local_player)
+                col = GOOD if d.get("owner", d.get("winner", -9)) == local_player \
+                    else TXT_DIM
+                if ev.type == "unit_destroyed":
+                    col = BAD if d.get("owner") == local_player else TXT_DIM
+                if sink:
+                    line = self._fit_text(line, rect.width - 20, self.font_small)
+                self._label(x + 10, yy, line, col, self.font_small)
+                yy += 18
+        finally:
+            _p.native_sink = previous
 
     @staticmethod
     def _event_text(ev, local_player: int) -> str:

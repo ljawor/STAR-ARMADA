@@ -1,0 +1,21 @@
+{
+  "name": "cpu-build",
+  "exit_code": 0,
+  "args": [
+    "clang++",
+    "-std=c++20",
+    "-O1",
+    "-g",
+    "-UNDEBUG",
+    "-I/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/include",
+    "-I/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/build-w02/_deps/json-src/include",
+    "-I/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/build-w02/_deps/picosha2-src",
+    "-DARMADA_ASSET_ROOT=\"/Users/lukaszjawor/Downloads/Project/STAR-ARMADA\"",
+    "render_cpp/src/vector_hud.cpp",
+    "render_cpp/src/top_hud.cpp",
+    "render_cpp/tests/test_vector_hud.cpp",
+    "-o",
+    "/Users/lukaszjawor/.hermes/cache/scratch/ink-rereview-independent/cpu"
+  ],
+  "log": "/Users/lukaszjawor/.hermes/cache/scratch/ink-rereview-independent/cpu-build.log"
+}

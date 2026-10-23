@@ -1,0 +1,182 @@
+{
+  "cases": [
+    {
+      "label": "watchdog-negative-control",
+      "command": [
+        "/usr/local/bin/python3",
+        "-c",
+        "import threading;threading.Event().wait()"
+      ],
+      "exit_code": -9,
+      "pid": 41012,
+      "timeout": true,
+      "seconds": 0.12119554099626839,
+      "log": "/Users/lukaszjawor/.hermes/cache/scratch/notification-acceptance-9aa0a054/watchdog-negative-control.log",
+      "passed": true
+    },
+    {
+      "label": "build",
+      "command": [
+        "cmake",
+        "--build",
+        "render_cpp/build-w02",
+        "-j8"
+      ],
+      "exit_code": 0,
+      "pid": 41013,
+      "timeout": false,
+      "seconds": 6.961681665969081,
+      "log": "/Users/lukaszjawor/.hermes/cache/scratch/notification-acceptance-9aa0a054/build.log",
+      "passed": true
+    },
+    {
+      "label": "ctest",
+      "command": [
+        "ctest",
+        "--test-dir",
+        "render_cpp/build-w02",
+        "--output-on-failure"
+      ],
+      "exit_code": 0,
+      "pid": 41172,
+      "timeout": false,
+      "seconds": 1.4225582500221208,
+      "log": "/Users/lukaszjawor/.hermes/cache/scratch/notification-acceptance-9aa0a054/ctest.log",
+      "passed": true
+    },
+    {
+      "label": "main-1280x800",
+      "command": [
+        ".venv/bin/python",
+        "tools/render/capture_native_notification_hud_game.py",
+        "--out",
+        "/Users/lukaszjawor/.hermes/cache/scratch/notification-acceptance-9aa0a054/main-1280x800",
+        "--width",
+        "1280",
+        "--height",
+        "800"
+      ],
+      "exit_code": 0,
+      "pid": 41189,
+      "timeout": false,
+      "seconds": 14.271097957971506,
+      "log": "/Users/lukaszjawor/.hermes/cache/scratch/notification-acceptance-9aa0a054/main-1280x800.log",
+      "passed": true,
+      "metrics": "/Users/lukaszjawor/.hermes/cache/scratch/notification-acceptance-9aa0a054/main-1280x800/notification-metrics.json",
+      "checks": 0,
+      "failure": null
+    },
+    {
+      "label": "main-2560x1440",
+      "command": [
+        ".venv/bin/python",
+        "tools/render/capture_native_notification_hud_game.py",
+        "--out",
+        "/Users/lukaszjawor/.hermes/cache/scratch/notification-acceptance-9aa0a054/main-2560x1440",
+        "--width",
+        "2560",
+        "--height",
+        "1440"
+      ],
+      "exit_code": 0,
+      "pid": 41205,
+      "timeout": false,
+      "seconds": 13.12329829193186,
+      "log": "/Users/lukaszjawor/.hermes/cache/scratch/notification-acceptance-9aa0a054/main-2560x1440.log",
+      "passed": true,
+      "metrics": "/Users/lukaszjawor/.hermes/cache/scratch/notification-acceptance-9aa0a054/main-2560x1440/notification-metrics.json",
+      "checks": 0,
+      "failure": null
+    },
+    {
+      "label": "pipeline-1280x800-normal",
+      "command": [
+        ".venv/bin/python",
+        "tools/render/probe_native_vector_hud.py",
+        "--out",
+        "/Users/lukaszjawor/.hermes/cache/scratch/notification-acceptance-9aa0a054/pipeline-1280x800-normal",
+        "--width",
+        "1280",
+        "--height",
+        "800"
+      ],
+      "exit_code": 0,
+      "pid": 41208,
+      "timeout": false,
+      "seconds": 5.649679666967131,
+      "log": "/Users/lukaszjawor/.hermes/cache/scratch/notification-acceptance-9aa0a054/pipeline-1280x800-normal.log",
+      "passed": true,
+      "metrics": "/Users/lukaszjawor/.hermes/cache/scratch/notification-acceptance-9aa0a054/pipeline-1280x800-normal/metrics.json",
+      "checks": 297,
+      "failure": null
+    },
+    {
+      "label": "pipeline-2560x1440-normal",
+      "command": [
+        ".venv/bin/python",
+        "tools/render/probe_native_vector_hud.py",
+        "--out",
+        "/Users/lukaszjawor/.hermes/cache/scratch/notification-acceptance-9aa0a054/pipeline-2560x1440-normal",
+        "--width",
+        "2560",
+        "--height",
+        "1440"
+      ],
+      "exit_code": 0,
+      "pid": 41209,
+      "timeout": false,
+      "seconds": 9.242184791946784,
+      "log": "/Users/lukaszjawor/.hermes/cache/scratch/notification-acceptance-9aa0a054/pipeline-2560x1440-normal.log",
+      "passed": true,
+      "metrics": "/Users/lukaszjawor/.hermes/cache/scratch/notification-acceptance-9aa0a054/pipeline-2560x1440-normal/metrics.json",
+      "checks": 297,
+      "failure": null
+    },
+    {
+      "label": "pipeline-1280x800-only",
+      "command": [
+        ".venv/bin/python",
+        "tools/render/probe_native_vector_hud.py",
+        "--out",
+        "/Users/lukaszjawor/.hermes/cache/scratch/notification-acceptance-9aa0a054/pipeline-1280x800-only",
+        "--width",
+        "1280",
+        "--height",
+        "800",
+        "--vector-only"
+      ],
+      "exit_code": 0,
+      "pid": 41219,
+      "timeout": false,
+      "seconds": 4.159938749973662,
+      "log": "/Users/lukaszjawor/.hermes/cache/scratch/notification-acceptance-9aa0a054/pipeline-1280x800-only.log",
+      "passed": true,
+      "metrics": "/Users/lukaszjawor/.hermes/cache/scratch/notification-acceptance-9aa0a054/pipeline-1280x800-only/metrics.json",
+      "checks": 120,
+      "failure": null
+    },
+    {
+      "label": "pipeline-2560x1440-only",
+      "command": [
+        ".venv/bin/python",
+        "tools/render/probe_native_vector_hud.py",
+        "--out",
+        "/Users/lukaszjawor/.hermes/cache/scratch/notification-acceptance-9aa0a054/pipeline-2560x1440-only",
+        "--width",
+        "2560",
+        "--height",
+        "1440",
+        "--vector-only"
+      ],
+      "exit_code": 0,
+      "pid": 41223,
+      "timeout": false,
+      "seconds": 5.229696792084724,
+      "log": "/Users/lukaszjawor/.hermes/cache/scratch/notification-acceptance-9aa0a054/pipeline-2560x1440-only.log",
+      "passed": true,
+      "metrics": "/Users/lukaszjawor/.hermes/cache/scratch/notification-acceptance-9aa0a054/pipeline-2560x1440-only/metrics.json",
+      "checks": 120,
+      "failure": null
+    }
+  ]
+}

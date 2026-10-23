@@ -1,0 +1,27 @@
+[ 31%] Built target armada_shaders
+[ 37%] Built target armada_top_hud
+[ 37%] Built target test_planets
+[ 41%] Built target test_scene
+[ 46%] Built target test_markers
+[ 48%] Built target test_camera
+[ 55%] Built target test_input
+[ 55%] Built target test_overlay
+[ 58%] Built target test_explosion
+[ 62%] Built target test_hit
+[ 65%] Built target test_shield
+[ 68%] Built target test_frame_v2
+[ 75%] Built target dump_hit_geometry
+[ 75%] Built target test_hardware
+[ 79%] Built target test_starfield
+[ 82%] Built target test_fogmap
+[ 86%] Building CXX object CMakeFiles/armada_vector_hud.dir/src/vector_hud.cpp.o
+[ 87%] Built target test_top_hud
+[ 89%] Linking CXX static library libarmada_vector_hud.a
+[ 89%] Built target armada_vector_hud
+[ 93%] Linking CXX shared library libarmada_embedded.dylib
+[ 93%] Building CXX object CMakeFiles/test_vector_hud.dir/tests/test_vector_hud.cpp.o
+[ 94%] Linking CXX executable armada_viewer
+[ 98%] Built target armada_embedded
+[ 98%] Built target armada_viewer
+[100%] Linking CXX executable test_vector_hud
+[100%] Built target test_vector_hud
