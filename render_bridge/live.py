@@ -29,6 +29,7 @@ from render_bridge import emissive as emissive_codec
 from render_bridge import fogmap as fog_codec
 from render_bridge import markers as marker_codec
 from render_bridge import overlay as overlay_codec
+from render_bridge import top_hud as top_hud_codec
 from render_bridge import planets as planet_codec
 from render_bridge import collect, packed, ring, hardware
 
@@ -61,6 +62,7 @@ class LiveSession:
             'frame': self.directory / 'frame.ring',
             'tables': self.directory / 'frame.ring.tables',
             'overlay': self.directory / 'hud.ring',
+            'top_hud': self.directory / 'top-hud.ring',
             'emit': self.directory / 'emit.ring',
             'markers': self.directory / 'markers.ring',
             'fog': self.directory / 'fog.ring',
@@ -85,17 +87,31 @@ class LiveSession:
         self.buffer = bytearray(packed.frame_size(max_instances or packed.MAX_INSTANCES,
                                                   max_effects or packed.MAX_EFFECTS))
 
-        self._frames = ring.Ring.create(self.paths['frame'], slots=8, slot_bytes=1 << 20)
-        self._hardware = ring.Ring.create(self.paths['hardware'], slots=8,
+        self._rings = []
+        try:
+            self._initialize_resources(hud, camera, planet_texture)
+        except BaseException:
+            # __init__ never returns, so the caller cannot close this session.
+            self._close_rings()
+            raise
+
+    def _create_ring(self, path, **kwargs):
+        handle = ring.Ring.create(path, **kwargs)
+        self._rings.append(handle)
+        return handle
+
+    def _initialize_resources(self, hud, camera, planet_texture):
+        self._frames = self._create_ring(self.paths['frame'], slots=8, slot_bytes=1 << 20)
+        self._hardware = self._create_ring(self.paths['hardware'], slots=8,
             slot_bytes=hardware.HEADER.size + hardware.MAX_NAME
             + len(hardware.ROLES) * hardware.BLOCK.size
             + hardware.MAX_TRIANGLES * hardware.ROW.size + ring.SLOT_OVERHEAD + 8)
         self._mesh_publisher = hardware.MeshPublisher()
-        self._emit = ring.Ring.create(
+        self._emit = self._create_ring(
             self.paths['emit'], slots=8,
             slot_bytes=emissive_codec.HEADER.size
             + emissive_codec.MAX_RECORDS * emissive_codec.RECORD_BYTES)
-        self._markers = ring.Ring.create(
+        self._markers = self._create_ring(
             self.paths['markers'], slots=8,
             slot_bytes=marker_codec.HEADER.size
             + marker_codec.MAX_RECORDS * marker_codec.RECORD_BYTES)
@@ -107,34 +123,36 @@ class LiveSession:
         # Runtime shares the controller's HUD: buttons, scroll state, placement and mission
         # progress must be the same objects on screen and in the event handlers.
         self._owns_hud = hud is None
-        self.hud = hud if hud is not None else HUD(self.size[0], self.size[1], state)
+        self.hud = hud if hud is not None else HUD(self.size[0], self.size[1], self.state)
         self.hud.local_player = self.local_player
         if camera is not None:
             self.hud.set_camera_ref(camera)
-        self._overlay = ring.Ring.create(
+        self._overlay = self._create_ring(
             self.paths['overlay'], slots=4,
             slot_bytes=(overlay_codec.HEADER_BYTES
                         + overlay_codec.MAX_RECTS * overlay_codec.RECT_BYTES
                         + self.size[0] * self.size[1] * 4))
         self._overlay_published = 0
+        self._top_hud = self._create_ring(self.paths['top_hud'], slots=4,
+                                       slot_bytes=top_hud_codec.MAX_PAYLOAD + ring.SLOT_OVERHEAD + 8)
         self._overlay_last_full = float('-inf')
         self._overlay_keyframes = 0
         self._overlay_had_layers = False
 
         import math
         from render import fog
-        cells = max(1, math.ceil(state.map_info.bounds / state.visibility_cell_size))
+        cells = max(1, math.ceil(self.state.map_info.bounds / self.state.visibility_cell_size))
         self._fog_mask = fog.FogMask()
         self._fog_cells = cells
         self._fog_generation = 0
         self._fog_last = None
-        self._fog = ring.Ring.create(
+        self._fog = self._create_ring(
             self.paths['fog'], slots=4,
             slot_bytes=fog_codec.HEADER_BYTES + cells * cells * 4 + 28)   # 20 begin + 8 trailer
 
         from render.planet_blobs import PlanetTextures
         self._planet_textures = PlanetTextures(size=int(planet_texture))
-        self._planet_ring = ring.Ring.create(
+        self._planet_ring = self._create_ring(
             self.paths['planets'], slots=8,
             slot_bytes=planet_codec.HEADER_BYTES + planet_codec.MAX_NAME
             + int(planet_texture) * int(planet_texture) * 4)
@@ -142,7 +160,7 @@ class LiveSession:
         from render.emissive_batch import PlanetDomes
         self._domes = PlanetDomes()
 
-        self._camera_ring = ring.Ring.create(
+        self._camera_ring = self._create_ring(
             self.paths['camera'], slots=4, slot_bytes=1024)   # the ring's own minimum
 
         self._radius_cache: dict = {}
@@ -150,6 +168,9 @@ class LiveSession:
         self.perf = {'frame_ms': [], 'overlay_ms': [], 'emit_ms': [], 'fog_ms': []}
         self.counts = {'instances': 0, 'primitives': 0, 'markers': 0, 'overlay_bytes': 0,
                        'planet_blobs': 0, 'fog_uploads': 0, 'hardware_blobs': 0}
+        # Activate shared presentation only after all fallible setup has succeeded.
+        self._previous_native_top = self.hud.native_top_bar
+        self.hud.native_top_bar = True
 
     # ------------------------------------------------------------------ helpers
     def radius_of(self, entity):
@@ -260,6 +281,9 @@ class LiveSession:
         else:
             payload = overlay_codec.encode_surface(self.hud.overlay, dirty)
         self._overlay.publish(payload)
+        top_payload = top_hud_codec.encode(top_hud_codec.build(
+            state, self.local_player, paused=paused, fps=fps))
+        self._top_hud.publish(top_payload)
         self._overlay_had_layers = bool(layers)
         self._overlay_published += 1
         overlay_ms = (time.perf_counter() - started) * 1000.0
@@ -288,6 +312,7 @@ class LiveSession:
         if self.camera is not None:
             self._camera_ring.publish(camera_codec.encode(self.camera))
         self.counts['overlay_bytes'] = len(payload)
+        self.counts['top_hud_bytes'] = len(top_payload)
         self.counts['planet_blobs'] += len(pending)
         for key, value in (('frame_ms', frame_ms), ('overlay_ms', overlay_ms),
                            ('emit_ms', emit_ms), ('fog_ms', world_ms)):
@@ -297,11 +322,15 @@ class LiveSession:
 
     # ------------------------------------------------------------------ lifecycle
     def close(self):
-        for handle in (self._frames, self._emit, self._markers, self._overlay, self._fog,
-                       self._planet_ring, self._camera_ring, self._hardware):
+        self.hud.native_top_bar = self._previous_native_top
+        self._close_rings()
+
+    def _close_rings(self):
+        for handle in reversed(self._rings):
             try:
                 handle.close()
             except Exception:
+                # Continue releasing resources without replacing a constructor error.
                 pass
 
     def report(self) -> dict:

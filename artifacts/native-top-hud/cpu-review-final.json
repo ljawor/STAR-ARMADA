@@ -1,0 +1,17 @@
+{
+  "delegation": "deleg_3c6e1fa5",
+  "passed": true,
+  "security_concerns": [],
+  "logic_errors": [],
+  "suggestions": [],
+  "summary": "Fresh independent CPU review passed the complete decoder, font atlas, layout, header/tests and relevant CMake. Raw NUL is rejected after the size guard and before JSON parsing. No remaining security or logic defects found in scope.",
+  "scope": "Read-only CPU review. Independent harnesses built only in scratch; no GPU, GUI, repository edits or concurrent CMake build.",
+  "tests": [
+    {"scope":"Independent clang C++20 -UNDEBUG UBSan non-recovering build of current source/tests", "result":"All CPU tests passed; no UBSan diagnostics"},
+    {"scope":"Separately authored raw-NUL fixture", "result":"Valid fixture accepted; NUL, NUL+junk and NUL+0xFF suffixes all threw std::invalid_argument"},
+    {"scope":"Boundary/schema", "result":"Leading/interior/escaped NUL rejected; exact 16384-byte whitespace-padded valid JSON accepted; full strict schema, duplicates, depth, UTF8, controls and limits passed"},
+    {"scope":"Font/layout", "result":"Authentication before stb parsing verified; corrupt-font rejection, distinct multilingual masks, fallback, atlas and nine resolutions x three value-stress variants passed"},
+    {"scope":"Release test assertions", "result":"CMake and independent compiler explicitly undefine NDEBUG"}
+  ],
+  "supersedes": "cpu-review-initial.json"
+}

@@ -1,0 +1,23 @@
+{
+  "delegation": "deleg_3eb2ad61",
+  "passed": false,
+  "security_concerns": [],
+  "logic_errors": [
+    {
+      "file": "render_bridge/live.py",
+      "severity": "medium",
+      "finding": "Constructor failure leaks native_top_bar=True into the shared HUD and leaves previously opened rings unclosed when top-hud.ring creation raises.",
+      "reproduction": "Injected OSError from Ring.create for top-hud.ring: native_top_bar_after_failed_constructor=True, handles_created=5, handles_closed=0."
+    }
+  ],
+  "suggestions": [
+    "Strengthen native-only pixels with an otherwise identical inactive-native control.",
+    "Compare resumed pause/FPS pixels with a clean reference captured before either state was displayed."
+  ],
+  "tests": [
+    "25 passed, 5 subtests passed: native_top_hud, resolution_runtime and hybrid_hud (CPU/dummy SDL).",
+    "Constructor-failure injection reproduced leaked HUD presentation mode and unclosed handles."
+  ],
+  "scope": "Read-only Python/native integration and diagnostic-isolation review. CPU font/parser/layout excluded; no GUI or GPU execution.",
+  "status": "Initial failure retained; requires correction and fresh independent re-review before publication."
+}

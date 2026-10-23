@@ -1,0 +1,17 @@
+{
+  "delegation": "deleg_72fac1c9",
+  "passed": true,
+  "security_concerns": [],
+  "logic_errors": [],
+  "suggestions": [],
+  "summary": "Approved corrected constructor rollback and Python/native integration. Activation is deferred until setup completes; failures close initialized rings without changing shared mode or replacing the original exception. Successful repeated close restores the previous mode. Model/HUD/launcher, viewer ordering, CMake, shaders, diagnostic isolation and documentation have no blocking findings.",
+  "scope": "Read-only integration review; native CPU parser/font/layout reviewed separately. GPU and ordinary-main acceptance performed separately by parent.",
+  "tests": [
+    {"scope":"native_top_hud, render_live, embedded_window", "result":"26 passed; 58 existing pygame.image.tostring deprecation warnings"},
+    {"scope":"Constructor rollback / repeated-close", "result":"10 passed, 5 deselected"},
+    {"scope":"Ring, overlay, hybrid/compact/collapsible HUD, host-window, renderer-path", "result":"65 passed, 2 subtests passed; 20 existing deprecation warnings"},
+    {"scope":"Independent injection at all nine ring seams, both prior modes", "result":"18 cases passed; deferred activation, unchanged prior mode, original exception identity, closed mappings and producer-lock reacquisition verified"},
+    {"scope":"git diff --check", "result":"Passed"}
+  ],
+  "supersedes": "integration-review-initial.json"
+}

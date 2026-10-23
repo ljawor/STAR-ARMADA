@@ -121,6 +121,8 @@ def spawn(paths: dict, *, root: str, snapshot: str | None, size=(1280, 800), log
         '--mesh-ring', str(paths['hardware']),
         '--seconds', '0',
     ]
+    if paths.get('top_hud') is not None:
+        argv += ['--top-hud-ring', str(paths['top_hud'])]
     # A frozen bundle carries the shaders beside the binary; the build-time default points into the
     # source build tree, which a player does not have.
     for extra in (os.path.join(os.path.dirname(binary), 'shaders'),):

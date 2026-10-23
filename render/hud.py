@@ -143,6 +143,7 @@ class HUD:
         self.recorder = OpRecorder()
         self.uploader = OverlayUploader()
         self.tex = None
+        self.native_top_bar = False  # LiveSession owns the native presentation boundary.
         self.minimized = {'left': False, 'right': False, 'mission': False}
         self.buttons: list[dict] = []   # {"rect": Rect, "kind": str, "payload": dict}
         self.minimap_rect = None        # set each frame; input uses it
@@ -344,13 +345,21 @@ class HUD:
             _p.rect(ov, PANEL_BG, bg, border_radius=6)
             _p.rect(ov, PANEL_EDGE, bg, 1, border_radius=6)
             _p.blit(ov, surf, r)
-        if fps > 0.0:
+        if fps > 0.0 and not self.native_top_bar:
             self._label(self.width - 90, 40, f"{fps:0.0f} FPS", TXT_DIM,
                         self.font_small)
         self.recorder.finish()
 
     # ------------------------------------------------------------------ top bar
     def _top_bar(self, local_player: int, paused: bool) -> None:
+        if self.native_top_bar:
+            # Keep input occlusion in the unchanged logical HUD coordinates.
+            self.blocked_rects.append(pygame.Rect(0, 0, self.width, 34))
+        else:
+            self._legacy_top_bar(local_player, paused)
+        self._game_over_banner(local_player)
+
+    def _legacy_top_bar(self, local_player: int, paused: bool) -> None:
         ov = self.overlay
         st = self.state
         p = st.players.get(local_player)
@@ -408,6 +417,10 @@ class HUD:
         if paused:
             surf = self.font_big.render(i18n.t("PAUSED"), True, WARN)
             _p.blit(ov, surf, (self.width - 200, 7))
+
+    def _game_over_banner(self, local_player: int) -> None:
+        # The centred outcome banner is not part of this top-strip migration.
+        st, ov = self.state, self.overlay
         if st.game_over:
             w = st.winner
             won = w in st.allied_player_ids(local_player)
