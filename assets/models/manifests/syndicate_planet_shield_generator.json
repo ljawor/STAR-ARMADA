@@ -2,13 +2,13 @@
   "contract": "star-armada/model-manifest",
   "contract_major": 1,
   "asset": "core:syndicate/planet_shield_generator",
-  "revision": "1d3e33e24d0a9ad6e4c579333c82d5de12fa41ea7f043fba0e489e77c72afe71",
+  "revision": "17a6795df440cee2b5973b2f2edbdbe69a3409f62c78988585f8ef72f83ef345",
   "display_name": "syndicate planet shield generator (approved)",
   "files": {
     "mesh": {
       "path": "assets/models/syndicate_planet_shield_generator.mesh.json",
-      "sha256": "f05eed613663d33ae5bad77d2489a4a8f986585374645e19cf8aefe1a98f939d",
-      "bytes": 138031
+      "sha256": "1fcbaa6ca82dd2fd7c38530fbc71f1f7b8feb229d7c984a87f6cac6110d4235b",
+      "bytes": 292525
     }
   },
   "export": {
@@ -24,14 +24,14 @@
   ],
   "bounds": {
     "min": [
-      -34.0,
-      0.0,
-      -32.0
+      -33.9659996,
+      0.02325,
+      -31.9680004
     ],
     "max": [
-      34.0,
-      46.5,
-      32.0
+      25.8669586,
+      46.4767494,
+      -3.1379666
     ]
   },
   "nominal_scale": 1.0,
@@ -46,29 +46,30 @@
   "provenance": {
     "author": "Lukasz Jawor",
     "tool": "Blender",
-    "tool_version": "Blender evaluated bevel mesh",
+    "tool_version": "5.0.1",
     "license": "original",
-    "source": "art/blender/syndicate_planet_shield_generator.blend",
-    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+    "source": "art/blender/syndicate_fleet/planet_shield_generator.blend",
+    "notes": "Rim Syndicate rework in the industrial language the Marauder/Leviathan batch established. Authored by tools/art/build_syndicate_fleet.py. Containment only inside the approved binding envelope: length, camera framing and collision radii are unchanged."
   },
   "requires": {
     "min_engine": "0.15.1",
     "material_profile": "core:fleet/standard"
   },
   "budgets": {
-    "triangles": 2352,
+    "triangles": 1924,
     "draw_calls": 6,
     "texture_bytes": 0
   },
   "approval": {
     "status": "approved",
     "decision_id": "s06-b4-hardware-2026-10-17",
-    "decided_by": "owner",
-    "decided_on": "2026-10-17",
-    "reviewed_revision": "1d3e33e24d0a9ad6e4c579333c82d5de12fa41ea7f043fba0e489e77c72afe71",
     "reviewed_evidence": [
-      "artifacts/s06_alliance_batch_review/b4-hardware/contact-sheet.png",
-      "artifacts/s06_alliance_batch_review/b4-hardware/metrics.json"
-    ]
+      "artifacts/syndicate-fleet/review/planet_shield_generator-quarter.jpg",
+      "artifacts/syndicate-fleet/review/planet_shield_generator-profile.jpg",
+      "artifacts/syndicate-fleet/review/planet_shield_generator-bow.jpg"
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "17a6795df440cee2b5973b2f2edbdbe69a3409f62c78988585f8ef72f83ef345"
   }
 }

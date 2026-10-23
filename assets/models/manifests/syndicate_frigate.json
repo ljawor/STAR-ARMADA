@@ -2,13 +2,13 @@
   "contract": "star-armada/model-manifest",
   "contract_major": 1,
   "asset": "core:syndicate/frigate",
-  "revision": "db352a8ffcd56d47687e15ce69bad0e685f2e6c9bfb668277160dcd3d55ac422",
+  "revision": "2dac0a24dfe1e4d3ce3d564787717aa176ac30dee9c347f9bbdb0a793379f234",
   "display_name": "syndicate frigate (approved)",
   "files": {
     "mesh": {
       "path": "assets/models/syndicate_frigate.mesh.json",
-      "sha256": "9563c320fb164133b7731aa398f41653e25844da72644e0b438d3b10aeba1471",
-      "bytes": 155568
+      "sha256": "d043f8e33b16a4ba1c71ce61ec27d82c8f67cce0e6634793509ae204d07b939c",
+      "bytes": 443014
     }
   },
   "export": {
@@ -24,14 +24,14 @@
   ],
   "bounds": {
     "min": [
-      -31.829605,
-      -9.0,
-      -70.509995
+      -31.7917538,
+      -8.9735003,
+      -70.4435425
     ],
     "max": [
-      43.872131,
-      44.0,
-      62.399994
+      36.4839935,
+      30.823494,
+      58.2055855
     ]
   },
   "nominal_scale": 1.0,
@@ -46,31 +46,30 @@
   "provenance": {
     "author": "Lukasz Jawor",
     "tool": "Blender",
-    "tool_version": "Blender evaluated bevel mesh",
+    "tool_version": "5.0.1",
     "license": "original",
-    "source": "art/blender/syndicate_frigate.blend",
-    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+    "source": "art/blender/syndicate_fleet/frigate.blend",
+    "notes": "Rim Syndicate rework in the industrial language the Marauder/Leviathan batch established. Authored by tools/art/build_syndicate_fleet.py. Containment only inside the approved binding envelope: length, camera framing and collision radii are unchanged."
   },
   "requires": {
     "min_engine": "0.15.1",
     "material_profile": "core:fleet/standard"
   },
   "budgets": {
-    "triangles": 2644,
+    "triangles": 2944,
     "draw_calls": 6,
     "texture_bytes": 0
   },
   "approval": {
     "status": "approved",
     "decision_id": "s06-b8-remaining-combat-2026-10-18",
-    "decided_by": "owner",
-    "decided_on": "2026-10-18",
-    "reviewed_revision": "db352a8ffcd56d47687e15ce69bad0e685f2e6c9bfb668277160dcd3d55ac422",
     "reviewed_evidence": [
-      "artifacts/s06-completion/B8-appearance-grid.jpg",
-      "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png",
-      "artifacts/s06-completion/review-b8-attempt1/render/metrics.json",
-      "artifacts/s06-completion/review-b8-attempt1/render/syndicate-frigate-after-close.png"
-    ]
+      "artifacts/syndicate-fleet/review/frigate-quarter.jpg",
+      "artifacts/syndicate-fleet/review/frigate-profile.jpg",
+      "artifacts/syndicate-fleet/review/frigate-bow.jpg"
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "2dac0a24dfe1e4d3ce3d564787717aa176ac30dee9c347f9bbdb0a793379f234"
   }
 }

@@ -236,11 +236,18 @@ def assert_contact(boxes, slack=.6):
 
 
 def export(root, kind, stem, limits, *, replace_own=False, fit_tolerance=.01,
-           part_dump=False):
-    """Quantize, refit inside the approved box, then save master + runtime mesh."""
+           part_dump=False, master_path=None, target_path=None, asset_id=None,
+           authority=None, min_triangles=1800, fit_min=.98, fit_max=1.06,
+           contain_only=False):
+    """Quantize, refit inside the approved box, then save master + runtime mesh.
+
+    ``master_path``/``target_path`` let a later batch write beside an accepted one
+    instead of over it; the defaults are the original capital batch's paths.
+    """
     root = Path(root)
-    master = root / f'art/blender/syndicate_{stem}.blend'
-    target = (root / 'visual_packs/syndicate-imperium-prototypes/assets/models'
+    master = Path(master_path) if master_path else root / f'art/blender/syndicate_{stem}.blend'
+    target = (Path(target_path) if target_path else
+              root / 'visual_packs/syndicate-imperium-prototypes/assets/models'
               / f'syndicate_{stem}.mesh.json')
     if not replace_own and (master.exists() or target.exists()):
         raise FileExistsError(f'Refusing existing Syndicate outputs: {master}, {target}')
@@ -280,7 +287,12 @@ def export(root, kind, stem, limits, *, replace_own=False, fit_tolerance=.01,
         inset = (high - low) * .0005
         want = (high - low) * .999
         s = want / span if span else 1.
-        assert .98 <= s <= 1.06, (kind, 'fit scale out of range', axis, s)
+        if contain_only:
+            # Legacy envelopes are padded framing boxes, not tight mesh bounds:
+            # shrink to fit when needed and never inflate a design to fill them.
+            s = min(1., s)
+        else:
+            assert fit_min <= s <= fit_max, (kind, 'fit scale out of range', axis, s)
         scale.append(s)
         offset.append((low + inset) - lo[axis] * s)
     print('FIT', json.dumps({'kind': kind, 'scale': [round(s, 6) for s in scale],
@@ -333,7 +345,8 @@ def export(root, kind, stem, limits, *, replace_own=False, fit_tolerance=.01,
               [max(v[i] for v in verts) for i in range(3)]]
     total = sum(len(v) for v in batches.values())
     payload = {'contract': 'star-armada/mesh-export', 'contract_major': 1,
-               'asset': f'prototype:syndicate/{kind}', 'authoring': 'Blender evaluated mesh',
+               'asset': asset_id or f'prototype:syndicate/{kind}',
+               'authoring': 'Blender evaluated mesh',
                'coordinates': 'X beam; Y up; +Z forward', 'vertices': verts,
                'batches': batches, 'bounds': bounds, 'parts': parts,
                'triangle_count': total}
@@ -343,20 +356,21 @@ def export(root, kind, stem, limits, *, replace_own=False, fit_tolerance=.01,
               'degenerate_skipped': skipped, 'fit_scale': scale,
               'roles': {r: len(batches[r]) for r in ROLES}}
     print('SYNDICATE_GEOMETRY ' + json.dumps(report), flush=True)
-    assert all(batches.values()) and 1800 < total <= 11888, total
+    assert all(batches.values()) and min_triangles < total <= 11888, total
     assert len(verts) < 9500, len(verts)
     assert skipped == 0, skipped
     assert len(text.encode()) < 2000000
     for i, (low, high) in enumerate(limits):
         assert low <= bounds[0][i] < bounds[1][i] <= high, (kind, i, limits, bounds)
-        assert abs((bounds[1][i] - bounds[0][i]) / (high - low) - 1) < fit_tolerance, \
-            (kind, i, 'footprint drift', bounds)
+        if not contain_only:
+            assert abs((bounds[1][i] - bounds[0][i]) / (high - low) - 1) < fit_tolerance, \
+                (kind, i, 'footprint drift', bounds)
     master.parent.mkdir(parents=True, exist_ok=True)
     target.parent.mkdir(parents=True, exist_ok=True)
     bpy.context.scene['asset_status'] = ('Pending owner appearance review; original '
                                          'Rim Syndicate rework batch')
-    bpy.context.scene['source_authority'] = ('tools/art/build_syndicate_imperium.py and '
-                                             'syndicate_imperium_designs.py')
+    bpy.context.scene['source_authority'] = authority or (
+        'tools/art/build_syndicate_imperium.py and syndicate_imperium_designs.py')
     bpy.ops.wm.save_as_mainfile(filepath=str(master))
     target.write_text(text, encoding='utf-8')
     return report

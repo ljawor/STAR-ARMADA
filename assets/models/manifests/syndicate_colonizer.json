@@ -2,13 +2,13 @@
   "contract": "star-armada/model-manifest",
   "contract_major": 1,
   "asset": "core:syndicate/colonizer",
-  "revision": "b7ab1a0e2821aa89dbeb086deb21b1e68159d4d39f0f3013184e0f1a916c6474",
+  "revision": "0ebba5c08532c2d23dd93107888dcb2dfd322249e3078ee9ccf780fa8633f4ab",
   "display_name": "syndicate colonizer (approved)",
   "files": {
     "mesh": {
       "path": "assets/models/syndicate_colonizer.mesh.json",
-      "sha256": "d5c59777eb31515745f5085246247e86dd14ede2bc5325d89c72530fd2944841",
-      "bytes": 208615
+      "sha256": "2e1dd9fa6d37ff1623f3726c4b1148cb00001aa1c4f0f515b33804161edcd7d0",
+      "bytes": 389727
     }
   },
   "export": {
@@ -24,14 +24,14 @@
   ],
   "bounds": {
     "min": [
-      -35.961081,
-      -11.0,
-      -57.8325
+      -35.9193993,
+      -10.9762497,
+      -57.7748604
     ],
     "max": [
-      47.4,
-      36.5,
-      57.4475
+      39.2650795,
+      24.6902409,
+      53.8084373
     ]
   },
   "nominal_scale": 1.0,
@@ -46,31 +46,30 @@
   "provenance": {
     "author": "Lukasz Jawor",
     "tool": "Blender",
-    "tool_version": "Blender evaluated bevel mesh",
+    "tool_version": "5.0.1",
     "license": "original",
-    "source": "art/blender/syndicate_colonizer.blend",
-    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+    "source": "art/blender/syndicate_fleet/colonizer.blend",
+    "notes": "Rim Syndicate rework in the industrial language the Marauder/Leviathan batch established. Authored by tools/art/build_syndicate_fleet.py. Containment only inside the approved binding envelope: length, camera framing and collision radii are unchanged."
   },
   "requires": {
     "min_engine": "0.15.1",
     "material_profile": "core:fleet/standard"
   },
   "budgets": {
-    "triangles": 3528,
+    "triangles": 2552,
     "draw_calls": 6,
     "texture_bytes": 0
   },
   "approval": {
     "status": "approved",
     "decision_id": "s06-b9-construction-2026-10-18",
-    "decided_by": "owner",
-    "decided_on": "2026-10-18",
-    "reviewed_revision": "b7ab1a0e2821aa89dbeb086deb21b1e68159d4d39f0f3013184e0f1a916c6474",
     "reviewed_evidence": [
-      "artifacts/s06-completion/B9-appearance-grid.jpg",
-      "artifacts/s06-completion/review-b9-attempt1/render/contact-sheet.png",
-      "artifacts/s06-completion/review-b9-attempt1/render/metrics.json",
-      "artifacts/s06-completion/review-b9-attempt1/render/syndicate-colonizer-after-close.png"
-    ]
+      "artifacts/syndicate-fleet/review/colonizer-quarter.jpg",
+      "artifacts/syndicate-fleet/review/colonizer-profile.jpg",
+      "artifacts/syndicate-fleet/review/colonizer-bow.jpg"
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "0ebba5c08532c2d23dd93107888dcb2dfd322249e3078ee9ccf780fa8633f4ab"
   }
 }

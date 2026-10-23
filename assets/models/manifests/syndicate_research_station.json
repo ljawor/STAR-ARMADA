@@ -2,13 +2,13 @@
   "contract": "star-armada/model-manifest",
   "contract_major": 1,
   "asset": "core:syndicate/research_station",
-  "revision": "49bb828a8fc05a8ef36d1ffbea67a783840adae53d4e47156d6ec2845bea51c7",
+  "revision": "0455ff1581363710aa34e89faf63edf5cb6da1a35de8a021e0e2bd82b6814a39",
   "display_name": "syndicate research station (approved)",
   "files": {
     "mesh": {
       "path": "assets/models/syndicate_research_station.mesh.json",
-      "sha256": "c2532f898553a4ff437be8f365d037551e4c1d1a5d5389f35e500c473c1b224c",
-      "bytes": 259774
+      "sha256": "706bd3c00a3a46c03a06d48c67b4fd16f9bd26c649e0ec63faa2c0de2f50d3ff",
+      "bytes": 476214
     }
   },
   "export": {
@@ -24,14 +24,14 @@
   ],
   "bounds": {
     "min": [
-      -40.0,
-      -7.2,
-      -27.572
+      -39.9617996,
+      -7.1775599,
+      -27.5418148
     ],
     "max": [
-      36.4,
-      37.68,
-      32.8
+      0.0584961,
+      28.9778442,
+      29.200346
     ]
   },
   "nominal_scale": 1.0,
@@ -46,29 +46,30 @@
   "provenance": {
     "author": "Lukasz Jawor",
     "tool": "Blender",
-    "tool_version": "Blender evaluated bevel mesh",
+    "tool_version": "5.0.1",
     "license": "original",
-    "source": "art/blender/syndicate_research_station.blend",
-    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+    "source": "art/blender/syndicate_fleet/research_station.blend",
+    "notes": "Rim Syndicate rework in the industrial language the Marauder/Leviathan batch established. Authored by tools/art/build_syndicate_fleet.py. Containment only inside the approved binding envelope: length, camera framing and collision radii are unchanged."
   },
   "requires": {
     "min_engine": "0.15.1",
     "material_profile": "core:fleet/standard"
   },
   "budgets": {
-    "triangles": 3904,
+    "triangles": 3088,
     "draw_calls": 6,
     "texture_bytes": 0
   },
   "approval": {
     "status": "approved",
     "decision_id": "s06-b3c-stations-2026-10-17",
-    "decided_by": "owner",
-    "decided_on": "2026-10-17",
-    "reviewed_revision": "49bb828a8fc05a8ef36d1ffbea67a783840adae53d4e47156d6ec2845bea51c7",
     "reviewed_evidence": [
-      "artifacts/s06_alliance_batch_review/b3c-stations/contact-sheet.png",
-      "artifacts/s06_alliance_batch_review/b3c-stations/metrics.json"
-    ]
+      "artifacts/syndicate-fleet/review/research_station-quarter.jpg",
+      "artifacts/syndicate-fleet/review/research_station-profile.jpg",
+      "artifacts/syndicate-fleet/review/research_station-bow.jpg"
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "0455ff1581363710aa34e89faf63edf5cb6da1a35de8a021e0e2bd82b6814a39"
   }
 }

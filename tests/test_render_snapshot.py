@@ -111,11 +111,11 @@ class RenderSnapshotTests(unittest.TestCase):
         self.assertEqual(payload['metadata']['visibility'], 'catalogue-inspection-not-gameplay')
         registry = json.loads((ROOT / 'assets/models/registry.json').read_text())
         expected = {r['binding'] for r in registry['bindings'] if r['status'] == 'core'}
-        self.assertEqual(len(expected), 103)
+        self.assertEqual(len(expected), 106)
         self.assertEqual({i['binding'] for i in payload['instances']}, expected)
         self.assertEqual({a['binding'] for a in payload['assets']}, expected)
-        self.assertEqual(len({a['path'] for a in payload['assets']}), 103)
-        self.assertEqual(len(payload['instances']), 103)
+        self.assertEqual(len({a['path'] for a in payload['assets']}), 106)
+        self.assertEqual(len(payload['instances']), 106)
         for a in payload['assets']:
             raw = (ROOT / a['path']).read_bytes()
             mesh = json.loads(raw)
@@ -132,7 +132,7 @@ class RenderSnapshotTests(unittest.TestCase):
             result = subprocess.run([sys.executable, str(ROOT / 'tools/render/dump_snapshot.py'),
                                      '--catalogue', '--out', str(out)], capture_output=True, text=True)
             self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertEqual(len(decode(out.read_bytes()).payload['assets']), 103)
+            self.assertEqual(len(decode(out.read_bytes()).payload['assets']), 106)
 
 
 if __name__ == '__main__':

@@ -2,13 +2,13 @@
   "contract": "star-armada/model-manifest",
   "contract_major": 1,
   "asset": "core:syndicate/corvette",
-  "revision": "fe88721c7ab09eb36a9c8edb35ff8bb1b15358df9e24e33c8b9e8e2f34c85e70",
+  "revision": "e1bae4f63cff7f3b4d8e90257ff19f1577c64ea113fdc487feeb2755cae7a79d",
   "display_name": "syndicate corvette (approved)",
   "files": {
     "mesh": {
       "path": "assets/models/syndicate_corvette.mesh.json",
-      "sha256": "fb321326eaf5390d40bbe559d7340695deb27ae33b086864360bedab2f3b3b49",
-      "bytes": 126752
+      "sha256": "2115bc86be6f9c8c94266c38bd593c1aa04afdb3bffcc72455e5e639e604be57",
+      "bytes": 361108
     }
   },
   "export": {
@@ -24,14 +24,14 @@
   ],
   "bounds": {
     "min": [
-      -22.36926,
-      -9.0,
-      -44.024994
+      -22.3427391,
+      -8.9735003,
+      -43.9837799
     ],
     "max": [
-      30.672491,
-      44.0,
-      38.399994
+      25.4937038,
+      30.823494,
+      35.7958641
     ]
   },
   "nominal_scale": 1.0,
@@ -46,31 +46,30 @@
   "provenance": {
     "author": "Lukasz Jawor",
     "tool": "Blender",
-    "tool_version": "Blender evaluated bevel mesh",
+    "tool_version": "5.0.1",
     "license": "original",
-    "source": "art/blender/syndicate_corvette.blend",
-    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+    "source": "art/blender/syndicate_fleet/corvette.blend",
+    "notes": "Rim Syndicate rework in the industrial language the Marauder/Leviathan batch established. Authored by tools/art/build_syndicate_fleet.py. Containment only inside the approved binding envelope: length, camera framing and collision radii are unchanged."
   },
   "requires": {
     "min_engine": "0.15.1",
     "material_profile": "core:fleet/standard"
   },
   "budgets": {
-    "triangles": 2176,
+    "triangles": 2404,
     "draw_calls": 6,
     "texture_bytes": 0
   },
   "approval": {
     "status": "approved",
     "decision_id": "s06-b8-remaining-combat-2026-10-18",
-    "decided_by": "owner",
-    "decided_on": "2026-10-18",
-    "reviewed_revision": "fe88721c7ab09eb36a9c8edb35ff8bb1b15358df9e24e33c8b9e8e2f34c85e70",
     "reviewed_evidence": [
-      "artifacts/s06-completion/B8-appearance-grid.jpg",
-      "artifacts/s06-completion/review-b8-attempt1/render/contact-sheet.png",
-      "artifacts/s06-completion/review-b8-attempt1/render/metrics.json",
-      "artifacts/s06-completion/review-b8-attempt1/render/syndicate-corvette-after-close.png"
-    ]
+      "artifacts/syndicate-fleet/review/corvette-quarter.jpg",
+      "artifacts/syndicate-fleet/review/corvette-profile.jpg",
+      "artifacts/syndicate-fleet/review/corvette-bow.jpg"
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "e1bae4f63cff7f3b4d8e90257ff19f1577c64ea113fdc487feeb2755cae7a79d"
   }
 }

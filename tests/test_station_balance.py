@@ -201,9 +201,11 @@ class BalanceRuleTests(unittest.TestCase):
         self.assertEqual(set(imperial), set(YARD_KINDS))
         self.assertNotIn('defense_satellite', imperial)
         self.assertNotIn('planet_extractor', imperial)
-        # A reduced catalogue is not a full one: the syndicate fields four of the ten.
+        # Every faction fields the full catalogue it can lay down; the Syndicate's
+        # four-station list was a leftover restriction, not a faction trait (owner report:
+        # "my constructor can only build those stations - where is the rest?").
         self.assertEqual(set(balance.faction_station_types(self.ds, 'syndicate')),
-                         {'mining_station', 'trade_station', 'defense_platform', 'energy_relay'})
+                         set(YARD_KINDS))
         self.assertEqual(imperial, tuple(s for s in self.ds.stations if s in imperial))
 
     # ------------------------------------------------------------- the build gate

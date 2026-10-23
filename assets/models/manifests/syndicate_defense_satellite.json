@@ -2,13 +2,13 @@
   "contract": "star-armada/model-manifest",
   "contract_major": 1,
   "asset": "core:syndicate/defense_satellite",
-  "revision": "dd20f0704d174984f444f86c7582c3c317b888447c2af62e9e01d9d8598010a2",
+  "revision": "ffa6c5cd771f733d58a504b91c43d8c03b5835cfa9b69b49a0d38b14069e3660",
   "display_name": "syndicate defense satellite (approved)",
   "files": {
     "mesh": {
       "path": "assets/models/syndicate_defense_satellite.mesh.json",
-      "sha256": "3fbe61b531055a10b3a269f07cf291ed779cce08396bf7d8a7367e8c5585b71f",
-      "bytes": 116184
+      "sha256": "9657efaaf0f82757bdef6484a9b75de159ceb149301d5c4dd09c88bb3f4fa68c",
+      "bytes": 183627
     }
   },
   "export": {
@@ -24,14 +24,14 @@
   ],
   "bounds": {
     "min": [
-      -41.1051,
-      -9.0,
-      -27.5066
+      -41.0639954,
+      -8.9857502,
+      -27.4708462
     ],
     "max": [
-      41.1051,
-      19.5,
-      44.0
+      31.273941,
+      12.7116146,
+      2.9027486
     ]
   },
   "nominal_scale": 1.0,
@@ -46,29 +46,30 @@
   "provenance": {
     "author": "Lukasz Jawor",
     "tool": "Blender",
-    "tool_version": "Blender evaluated bevel mesh",
+    "tool_version": "5.0.1",
     "license": "original",
-    "source": "art/blender/syndicate_defense_satellite.blend",
-    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+    "source": "art/blender/syndicate_fleet/defense_satellite.blend",
+    "notes": "Rim Syndicate rework in the industrial language the Marauder/Leviathan batch established. Authored by tools/art/build_syndicate_fleet.py. Containment only inside the approved binding envelope: length, camera framing and collision radii are unchanged."
   },
   "requires": {
     "min_engine": "0.15.1",
     "material_profile": "core:fleet/standard"
   },
   "budgets": {
-    "triangles": 2032,
+    "triangles": 1204,
     "draw_calls": 6,
     "texture_bytes": 0
   },
   "approval": {
     "status": "approved",
     "decision_id": "s06-b4-hardware-2026-10-17",
-    "decided_by": "owner",
-    "decided_on": "2026-10-17",
-    "reviewed_revision": "dd20f0704d174984f444f86c7582c3c317b888447c2af62e9e01d9d8598010a2",
     "reviewed_evidence": [
-      "artifacts/s06_alliance_batch_review/b4-hardware/contact-sheet.png",
-      "artifacts/s06_alliance_batch_review/b4-hardware/metrics.json"
-    ]
+      "artifacts/syndicate-fleet/review/defense_satellite-quarter.jpg",
+      "artifacts/syndicate-fleet/review/defense_satellite-profile.jpg",
+      "artifacts/syndicate-fleet/review/defense_satellite-bow.jpg"
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "ffa6c5cd771f733d58a504b91c43d8c03b5835cfa9b69b49a0d38b14069e3660"
   }
 }

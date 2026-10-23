@@ -2,13 +2,13 @@
   "contract": "star-armada/model-manifest",
   "contract_major": 1,
   "asset": "core:syndicate/fighter",
-  "revision": "8c51a4179b2932bcbf20ffaf84c69c852aec96cc75d027fe2b466d7a633e2028",
+  "revision": "342f10dc0cf6e40ec79b36b15e77088f3568daf2a0949a3dc85a53ab594690b4",
   "display_name": "syndicate jackal (approved)",
   "files": {
     "mesh": {
-      "path": "assets/models/syndicate_jackal.mesh.json",
-      "sha256": "829f5a14e3dfae79437c3a3fb9749d4bd8c5fd5a0117ad00cc3665d1cd2fe126",
-      "bytes": 146531
+      "path": "assets/models/syndicate_fighter.mesh.json",
+      "sha256": "6fb1590cc6b3e6679a0846ef38b79ce557c0cf4b1ea06232e2e36fb3f40a8685",
+      "bytes": 175610
     }
   },
   "export": {
@@ -24,14 +24,14 @@
   ],
   "bounds": {
     "min": [
-      -7.85,
-      -3.95,
-      -17.258
+      -7.8420749,
+      -3.9421,
+      -17.2371216
     ],
     "max": [
-      8.0,
-      11.85,
-      24.5
+      7.6830854,
+      1.8221515,
+      21.1728783
     ]
   },
   "nominal_scale": 1.0,
@@ -46,29 +46,30 @@
   "provenance": {
     "author": "Lukasz Jawor",
     "tool": "Blender",
-    "tool_version": "Blender evaluated bevel mesh",
+    "tool_version": "5.0.1",
     "license": "original",
-    "source": "art/blender/syndicate_jackal.blend",
-    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+    "source": "art/blender/syndicate_fleet/fighter.blend",
+    "notes": "Rim Syndicate rework in the industrial language the Marauder/Leviathan batch established. Authored by tools/art/build_syndicate_fleet.py. Containment only inside the approved binding envelope: length, camera framing and collision radii are unchanged."
   },
   "requires": {
     "min_engine": "0.15.1",
     "material_profile": "core:fleet/standard"
   },
   "budgets": {
-    "triangles": 2316,
+    "triangles": 1160,
     "draw_calls": 6,
     "texture_bytes": 0
   },
   "approval": {
     "status": "approved",
     "decision_id": "s06-b2-squadron-logistics-2026-10-17",
-    "decided_by": "owner",
-    "decided_on": "2026-10-17",
-    "reviewed_revision": "8c51a4179b2932bcbf20ffaf84c69c852aec96cc75d027fe2b466d7a633e2028",
     "reviewed_evidence": [
-      "artifacts/s06_alliance_batch_review/b2-squadron-logistics/contact-sheet.png",
-      "artifacts/s06_alliance_batch_review/b2-squadron-logistics/metrics.json"
-    ]
+      "artifacts/syndicate-fleet/review/fighter-quarter.jpg",
+      "artifacts/syndicate-fleet/review/fighter-profile.jpg",
+      "artifacts/syndicate-fleet/review/fighter-bow.jpg"
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "342f10dc0cf6e40ec79b36b15e77088f3568daf2a0949a3dc85a53ab594690b4"
   }
 }

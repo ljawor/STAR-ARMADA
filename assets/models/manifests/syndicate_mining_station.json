@@ -2,13 +2,13 @@
   "contract": "star-armada/model-manifest",
   "contract_major": 1,
   "asset": "core:syndicate/mining_station",
-  "revision": "55e5ddbbd3810466756224e07178754a5e31c99c4296fba599956692d7521ee8",
+  "revision": "7df3aa377cce1bbd12ccce1ff40ab2a8330cdc79a1df612d6ae5cf250dcb00da",
   "display_name": "syndicate mining station (approved)",
   "files": {
     "mesh": {
       "path": "assets/models/syndicate_mining_station.mesh.json",
-      "sha256": "6ce810fdf0be8ba5a3c7485fd9df4d6b3ff5fc5ae5e8a0f9a8fe4bc5b88692aa",
-      "bytes": 244936
+      "sha256": "bf8f73236bdd40bffa2e56f9785d2c0eb8bd5a54777214e414c0aeb605559e37",
+      "bytes": 517815
     }
   },
   "export": {
@@ -24,14 +24,14 @@
   ],
   "bounds": {
     "min": [
-      -33.9322,
-      -32.4,
-      -25.0848
+      -33.8940353,
+      -32.3639984,
+      -25.0515366
     ],
     "max": [
-      42.4,
-      39.6,
-      41.4431
+      4.1189408,
+      16.2173462,
+      37.4771729
     ]
   },
   "nominal_scale": 1.0,
@@ -46,29 +46,30 @@
   "provenance": {
     "author": "Lukasz Jawor",
     "tool": "Blender",
-    "tool_version": "Blender evaluated bevel mesh",
+    "tool_version": "5.0.1",
     "license": "original",
-    "source": "art/blender/syndicate_mining_station.blend",
-    "notes": "Registered from original S06 revision approval. No rebuild or fresh export is attested."
+    "source": "art/blender/syndicate_fleet/mining_station.blend",
+    "notes": "Rim Syndicate rework in the industrial language the Marauder/Leviathan batch established. Authored by tools/art/build_syndicate_fleet.py. Containment only inside the approved binding envelope: length, camera framing and collision radii are unchanged."
   },
   "requires": {
     "min_engine": "0.15.1",
     "material_profile": "core:fleet/standard"
   },
   "budgets": {
-    "triangles": 3728,
+    "triangles": 3312,
     "draw_calls": 6,
     "texture_bytes": 0
   },
   "approval": {
     "status": "approved",
     "decision_id": "s06-b3b-stations-2026-10-17",
-    "decided_by": "owner",
-    "decided_on": "2026-10-17",
-    "reviewed_revision": "55e5ddbbd3810466756224e07178754a5e31c99c4296fba599956692d7521ee8",
     "reviewed_evidence": [
-      "artifacts/s06_alliance_batch_review/b3b-stations/contact-sheet.png",
-      "artifacts/s06_alliance_batch_review/b3b-stations/metrics.json"
-    ]
+      "artifacts/syndicate-fleet/review/mining_station-quarter.jpg",
+      "artifacts/syndicate-fleet/review/mining_station-profile.jpg",
+      "artifacts/syndicate-fleet/review/mining_station-bow.jpg"
+    ],
+    "decided_by": "owner",
+    "decided_on": "2026-10-23",
+    "reviewed_revision": "7df3aa377cce1bbd12ccce1ff40ab2a8330cdc79a1df612d6ae5cf250dcb00da"
   }
 }
