@@ -94,6 +94,22 @@ class SyndicateFleetReworkTests(unittest.TestCase):
             self.assertNotIn('decided_by', approval, stem)
             self.assertNotIn('decided_on', approval, stem)
 
+    def test_shipped_native_catalogue_matches_the_meshes(self):
+        """The native window verifies each mesh against this file's SHA256.
+
+        A reworked mesh with a stale catalogue stops the renderer on the first frame
+        ('mesh SHA256 mismatch') and the match is left with no legacy fallback, so the
+        shipped catalogue has to be current in the same commit as the meshes.
+        """
+        raw = (ROOT / 'assets/cpp/catalogue.snap').read_bytes()
+        payload = json.loads(raw[raw.index(b'{'):raw.rindex(b'}') + 1])
+        records = {record['binding']: record for record in payload['assets']}
+        for binding, record in records.items():
+            digest = hashlib.sha256((ROOT / record['path']).read_bytes()).hexdigest()
+            self.assertEqual(record['sha256'], digest, binding)
+        for stem in STEMS:
+            self.assertIn('syndicate:' + stem, records)
+
     @staticmethod
     def manifest_path(stem):
         for path in sorted((ROOT / 'assets/models/manifests').glob('*.json')):

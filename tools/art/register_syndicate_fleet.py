@@ -164,7 +164,27 @@ def register():
     })
     (ROOT / 'art/manifests' / f'{BATCH}-source-hashes.json').write_text(
         json.dumps(dict(sorted(hashes.items())), indent=2) + '\n', encoding='utf-8')
+    refresh_native_catalogue()
     print('REGISTER_OK', len(STEMS), 'hashes', len(hashes))
+
+
+def refresh_native_catalogue():
+    """Rebuild the shipped mesh catalogue the native window loads.
+
+    The window verifies every mesh against the SHA256 in this file, so a mesh rework
+    that does not refresh it stops the native renderer with 'mesh SHA256 mismatch' on
+    the first frame - the game then leaves the match with no legacy fallback.
+    """
+    import subprocess
+    import sys
+    result = subprocess.run([sys.executable, 'tools/render/dump_snapshot.py',
+                             '--fixture', 'four-player-combat-v1', '--catalogue',
+                             '--out', 'assets/cpp/catalogue.snap'],
+                            cwd=ROOT, capture_output=True, text=True)
+    if result.returncode != 0:
+        raise SystemExit('catalogue refresh failed: '
+                         + (result.stderr or result.stdout).strip()[-400:])
+    print('CATALOGUE', result.stdout.strip()[:120])
 
 
 def approve():
