@@ -1,0 +1,7 @@
+{
+  "name": "probe-final-run",
+  "returncode": 0,
+  "timeout": false,
+  "seconds": 1.7318845419213176,
+  "output": "random even-odd fill / stroke-union / alpha / anisotropic clip oracle: comparisons=74602 near-boundary-skips=6398 budget-rejections=0 PASS\nindependent parser mutation checks PASS\n"
+}

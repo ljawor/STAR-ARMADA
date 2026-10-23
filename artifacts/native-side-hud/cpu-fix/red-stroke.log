@@ -1,0 +1,5 @@
+square stroke=1 reversed=0 sample coverage=0
+square stroke=20 reversed=0 sample coverage=4
+Assertion failed: (count == (stroke == 1 ? 0 : 1)), function thickStrokeAlpha, file test_vector_hud.cpp, line 507.
+
+pid=33029 exit=-6 timeout=False seconds=0.387

@@ -53,6 +53,9 @@ BAR_BG = (34, 44, 62, 255)
 BAR_SHIELD = (84, 150, 220)
 BAR_HULL = (110, 200, 120)
 BAR_STRUCT = (150, 150, 160)
+# stb's em-height includes ascent/descent padding; match visible pygame ink
+# before applying the requested .75 panel transform (real-main pixel guard).
+NATIVE_TEXT_EM_SCALE = 1.5
 TRADE = (226, 196, 120)          # cargo / trade income readouts
 RESEARCH = (168, 140, 255)       # research progress bars / readouts
 DRAG_FILL = (86, 140, 220, 26)   # box-select rectangle (subtle tint)
@@ -144,6 +147,8 @@ class HUD:
         self.uploader = OverlayUploader()
         self.tex = None
         self.native_top_bar = False  # LiveSession owns the native presentation boundary.
+        self.native_panels = False  # Activated only after native transport initialization.
+        self._vector_capture = None
         self.minimized = {'left': False, 'right': False, 'mission': False}
         self.buttons: list[dict] = []   # {"rect": Rect, "kind": str, "payload": dict}
         self.minimap_rect = None        # set each frame; input uses it
@@ -188,6 +193,38 @@ class HUD:
             self.tex = None
 
     def _draw_collapsible(self, key, title, draw):
+        if self.native_panels and key in ('left', 'right') and _p.native_sink is None:
+            from render_bridge.vector_hud import Sink
+            source = 10 if key == 'left' else self.width - 330
+            target = 10 if key == 'left' else self.width - 250
+            sink = Sink(self._native_capture(), (source, 44, 320, self.height - 44),
+                        source_x=source, target_x=target, scale=.75)
+            start, blocked, scroll = len(self.buttons), len(self.blocked_rects), len(self.scroll_rects)
+            previous = _p.native_sink
+            _p.native_sink = sink
+            try:
+                self._draw_collapsible(key, title, draw)
+            finally:
+                _p.native_sink = previous
+                for button in self.buttons[start:]:
+                    button['rect'] = pygame.Rect(sink.rect(button['rect']))
+                    button['panel'] = key
+                self.blocked_rects[blocked:] = [pygame.Rect(sink.rect(r)) for r in self.blocked_rects[blocked:]]
+                self.scroll_rects[scroll:] = [(pygame.Rect(sink.rect(r)), k) for r, k in self.scroll_rects[scroll:]]
+            return
+        self._draw_collapsible_content(key, title, draw)
+
+    def _native_capture(self):
+        from render_bridge.vector_hud import Capture
+        if self._vector_capture is None or (self._vector_capture.width, self._vector_capture.height) != (self.width, self.height):
+            self._vector_capture = Capture(self.width, self.height)
+        return self._vector_capture
+
+    def native_vector_model(self):
+        """Return an independent complete display snapshot, including inactive clears."""
+        return self._native_capture().snapshot(self.native_panels)
+
+    def _draw_collapsible_content(self, key, title, draw):
         """Separate control rail; minimized panels occupy only their restore tab."""
         w = min(380, self.width - 680) if key == 'mission' else 320
         x = ((self.width - w) // 2 if key == 'mission'
@@ -315,6 +352,7 @@ class HUD:
         selection = {eid for eid in selection if self.state.can_see(local_player, eid)}
         ov = self.overlay
         _p.recorder = self.recorder
+        self._vector_capture = None
         self.recorder.begin(ov)
         _p.fill(ov, (0, 0, 0, 0))
         self.scroll_rects = []          # rebuilt each frame
@@ -1108,6 +1146,9 @@ class HUD:
         for word in i18n.t(text).split():
             candidate = (line + ' ' + word).strip()
             if line and self.font_small.size(candidate)[0] > width:
+                if _p.native_sink is not None:
+                    from render_bridge.vector_hud import BoundedText
+                    line = BoundedText(line, width)
                 self._label(x, y, line, TXT_DIM, self.font_small, translate=False)
                 y += self.font_small.get_linesize()
                 line = word
@@ -1120,6 +1161,9 @@ class HUD:
         return y
 
     def _fit_text(self, text, width, font=None):
+        if _p.native_sink is not None:
+            from render_bridge.vector_hud import BoundedText
+            return BoundedText(i18n.t(text), width)
         font = font or self.font
         if font.size(text)[0] <= width:
             return text
@@ -1129,6 +1173,9 @@ class HUD:
 
     def _fleet_text(self, text: str, width: int) -> str:
         """Fit data-driven names without painting over adjacent controls."""
+        if _p.native_sink is not None:
+            from render_bridge.vector_hud import BoundedText
+            return BoundedText(i18n.t(text), width)
         if self.font_small.size(text)[0] <= width:
             return text
         while text and self.font_small.size(text + "…")[0] > width:
@@ -1620,6 +1667,18 @@ class HUD:
             _p.blit(ov, surf, r)
 
     def _minimap(self, selection: set, local_player: int) -> None:
+        if self.native_panels and _p.native_sink is None:
+            from render_bridge.vector_hud import Sink
+            previous = _p.native_sink
+            _p.native_sink = Sink(self._native_capture(), (self.width - 222, self.height - 222, 210, 210))
+            try:
+                self._minimap_content(selection, local_player)
+            finally:
+                _p.native_sink = previous
+            return
+        self._minimap_content(selection, local_player)
+
+    def _minimap_content(self, selection: set, local_player: int) -> None:
         ov = self.overlay
         st = self.state
         size = 210
@@ -1637,8 +1696,11 @@ class HUD:
                    int(cy + wz / half * (size / 2 - 4))
 
         # Reuse the small cached cell mask, rather than scanning screen pixels.
-        fog = self.fog.surface(st, local_player)
-        _p.blit(ov, pygame.transform.scale(fog, (size - 8, size - 8)), (x + 4, y + 4))
+        if _p.native_sink is not None:
+            _p.native_sink.fog_mask(ov, st, local_player, (x + 4, y + 4, size - 8, size - 8))
+        else:
+            fog = self.fog.surface(st, local_player)
+            _p.blit(ov, pygame.transform.scale(fog, (size - 8, size - 8)), (x + 4, y + 4))
         for e in known_entities(st, local_player):
             if not e.alive:
                 continue
@@ -1733,6 +1795,12 @@ class HUD:
         # so looking it up again could only ever miss.
         shown = str(i18n.t(text) if translate else text)
         font = font or self.font
+        if _p.native_sink is not None:
+            size = 12 if font is self.font_small else 19 if font is self.font_big else 22 if font is self.font_title else 15
+            width = getattr(text, 'width', max(0, _p.native_sink.scope.right - x - 8))
+            _p.native_sink.text(self.overlay, x, y, shown, color, size * NATIVE_TEXT_EM_SCALE,
+                                width, font.get_linesize())
+            return
         surf = font.render(shown, True, color)
         _p.blit_text(self.overlay, surf, (x, y), shown, color, id(font))
 
@@ -1745,6 +1813,12 @@ class HUD:
                              (x, y, max(2, int(w * frac)), h))
         _p.rect(self.overlay, (50, 62, 84), rect, 1)
         if label:
+            if _p.native_sink is not None:
+                # Native text positions anchor measured ink, not a padded
+                # pygame glyph surface. Keep that ink box inside the bar.
+                _p.native_sink.text(self.overlay, x + 4, y,
+                                    label, (200, 210, 225), 12 * NATIVE_TEXT_EM_SCALE, max(0, w - 8), h)
+                return
             surf = self.font_small.render(label, True, (200, 210, 225))
             _p.blit_text(self.overlay, surf, (x + 4, y + (h - surf.get_height()) // 2),
                          label, (200, 210, 225), id(self.font_small))

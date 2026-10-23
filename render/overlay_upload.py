@@ -24,6 +24,10 @@ is the natural input to W03's draw-list transport.
 from __future__ import annotations
 
 import pygame
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from render_bridge.vector_hud import Sink
 
 from OpenGL.GL import (
     GL_LINEAR, GL_RGBA, GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_TEXTURE_MIN_FILTER,
@@ -239,8 +243,11 @@ class Painter:
     """
 
     recorder: OpRecorder | None = None
+    native_sink: Sink | None = None  # Scoped by HUD; never infer vectors from raster metadata.
 
     def _op(self, kind, surface, color, args, kwargs, rect):
+        if self.native_sink is not None:
+            return self.native_sink.geometry(kind, surface, color, args, kwargs)
         recorder = self.recorder
         if recorder is not None:
             key = (kind, _freeze(color), _freeze(tuple(args)),
@@ -272,6 +279,8 @@ class Painter:
 
     def fill(self, surface, color, rect=None, **kwargs):
         target = pygame.Rect(rect) if rect is not None else pygame.Rect(0, 0, *surface.get_size())
+        if self.native_sink is not None:
+            return self.native_sink.geometry('rect', surface, color, (target, 0), {})
         recorder = self.recorder
         if recorder is not None:
             key = ("fill", _freeze(color), _freeze(target))
@@ -283,6 +292,8 @@ class Painter:
 
     def blit(self, surface, source, dest, key=None, area=None, **kwargs):
         """A blit whose `key` describes `source`; without one the rect is dirty every frame."""
+        if self.native_sink is not None:
+            raise RuntimeError('Bitmap blit inside a native HUD scope')
         if isinstance(dest, pygame.Rect):
             target = pygame.Rect(dest)
         else:

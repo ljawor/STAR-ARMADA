@@ -1,0 +1,7 @@
+{
+  "name": "suite-run",
+  "returncode": 0,
+  "timeout": false,
+  "seconds": 1.1595425839768723,
+  "output": "decoder strict schema PASS\nclipped geometry / semantic fog / batch order PASS\nmeasured text / alpha / glyph UV clip / control icons / glyph budget / resize PASS\nrounded rect / primitive coverage / batch budget / wire maximums PASS\ncontrol icon translucent union PASS\njoined polygon stroke alpha PASS\ncrossed / concave / reversed polygon even-odd fill PASS\nsquare stroke=1 reversed=0 sample coverage=0\nsquare stroke=20 reversed=0 sample coverage=1\nsquare stroke=64 reversed=0 sample coverage=1\nsquare stroke=1 reversed=1 sample coverage=0\nsquare stroke=20 reversed=1 sample coverage=1\nsquare stroke=64 reversed=1 sample coverage=1\nthin / collapsed thick / concave / reversed translucent stroke union PASS\noffscreen 128x256 points seconds=3.9792e-05\nzero-output work boundary: 89 accepted, 90 rejected (44928 units/op, 4000000 limit)\ncumulative zero-output rejection=1 seconds=0.0231707\noffscreen rejection / cumulative CPU work budget PASS\n"
+}

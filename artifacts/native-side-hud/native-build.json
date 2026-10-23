@@ -1,0 +1,26 @@
+[
+  {
+    "step": "build",
+    "command": [
+      "cmake",
+      "--build",
+      "render_cpp/build-w02",
+      "-j8"
+    ],
+    "exit_code": 0,
+    "seconds": 0.1762599169742316,
+    "log": "/Users/lukaszjawor/.hermes/cache/scratch/side-final-build.log"
+  },
+  {
+    "step": "ctest",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "render_cpp/build-w02",
+      "--output-on-failure"
+    ],
+    "exit_code": 0,
+    "seconds": 0.6289779170183465,
+    "log": "/Users/lukaszjawor/.hermes/cache/scratch/side-final-ctest.log"
+  }
+]

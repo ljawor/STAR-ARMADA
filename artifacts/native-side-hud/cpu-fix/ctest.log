@@ -1,0 +1,10 @@
+Internal ctest changing into directory: /Users/lukaszjawor/.hermes/cache/scratch/native-vector-fix/cpu-build
+Test project /Users/lukaszjawor/.hermes/cache/scratch/native-vector-fix/cpu-build
+    Start 1: vector_hud
+1/1 Test #1: vector_hud .......................   Passed    0.46 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.47 sec
+
+pid=33480 exit=0 timeout=False seconds=0.498

@@ -1,0 +1,11 @@
+{
+  "passed": false,
+  "reviewer": "deleg_e2d823bd task-0 independent read-only native integration review",
+  "security_concerns": [],
+  "logic_errors": [
+    {"severity":"P2","file":"render_cpp/src/viewer.cpp","lines":"929-938;2505;2544-2546","issue":"Vector-only configuration submits invalid shared program/sampler handles because shader setup only checks topHudRing.","requested_fix":"Initialize shared HUD program/sampler when either ring is configured."},
+    {"severity":"P2","file":"render_cpp/src/viewer.cpp","lines":"2539-2546;2604-2607","issue":"hud-only overlay blending ignores vectorRing, overwriting native vectors even at transparent overlay pixels.","requested_fix":"Use unblended diagnostic path only when neither native HUD ring is configured."}
+  ],
+  "summary":"Ordinary dual-ring candidate installation, last-good retention, inactive clearing, atlas resizing, batch ordering, allocation and cleanup were coherent; vector-only diagnostic configuration needs two corrections.",
+  "parent_reproduction":{"probe":"scratch/probe-vector-only-review.py","native_log":"scratch/vector-only-red-native.log","exit_code":1,"timeout":false,"failure":"Native panel pixel (20,80) was RGBA (0,0,0,0) under transparent overlay in vector-only --hud-only mode."}
+}

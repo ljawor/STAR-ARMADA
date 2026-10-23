@@ -1,0 +1,16 @@
+{
+  "focused_native_and_bridge": {"passed":198,"subtests_passed":1587,"warnings":88,"seconds":6.73},
+  "additional_hud_visibility_and_station": {"passed":119,"subtests_passed":40,"failed":1,"seconds":6.66},
+  "baseline_failure": {
+    "name":"test_crew_recovery_ui.RecoveryUITests.test_faction_transports_have_small_known_solid_visuals",
+    "assertion":"imperial:convoy != box",
+    "classification":"Reproduced on immutable branch-base code; not introduced by native side HUD.",
+    "control_head":"d889157731b26504736079082d42c8353a5bec15",
+    "control_directory":"Hermes scratch/side-hud-baseline",
+    "control_method":"git archive HEAD game render render_bridge tests main.py; read-only use of same assets through symlink; independent process executed from baseline directory with baseline render.hud.__file__ printed.",
+    "control_result":"1 failed in 0.09s, identical failure name/assertion",
+    "control_integrity":"Archived HUD bytes match git show HEAD:render/hud.py; target test bytes identical to candidate.",
+    "note":"No unrelated asset or crew-visual changes made. An earlier baseline invocation from candidate cwd was superseded by explicit baseline cwd/import-path verification."
+  },
+  "limitations":"Focused CPU regressions, not a full-game suite, GPU pass or final source/build-pin receipt. Existing pygame.image.tostring deprecation warnings retained. Counts are separate runs; no de-duplicated combined total asserted."
+}

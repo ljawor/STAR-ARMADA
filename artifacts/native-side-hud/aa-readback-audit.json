@@ -1,0 +1,142 @@
+{
+  "passed": true,
+  "mode": "CPU-only re-evaluation of authenticated existing GPU readbacks; no new GPU/GUI launch",
+  "cases": [
+    {
+      "drawable": [
+        1280,
+        800
+      ],
+      "languages": [
+        {
+          "language": "en",
+          "strict_intermediate_aa_pixels": 14677,
+          "model_sha256": "c337deb6aba397f9c08f9ae96d118889c6d45022dd7b25b97ada096480338121",
+          "passed": true
+        },
+        {
+          "language": "de",
+          "strict_intermediate_aa_pixels": 16020,
+          "model_sha256": "c65adbd1cbc327e1d51e3cba08583f399c3306994094cd53de12a27a41672944",
+          "passed": true
+        },
+        {
+          "language": "pl",
+          "strict_intermediate_aa_pixels": 16592,
+          "model_sha256": "0ea73d73b50966d68ed5f5d470c2b7fbe8dc44f2f76b119af478fceb861bdd1e",
+          "passed": true
+        },
+        {
+          "language": "ru",
+          "strict_intermediate_aa_pixels": 17471,
+          "model_sha256": "a489b2c2ad22d433699675e44eaf535a42200a5d904d9500756de2a9b152ae51",
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "drawable": [
+        1920,
+        1080
+      ],
+      "languages": [
+        {
+          "language": "en",
+          "strict_intermediate_aa_pixels": 21029,
+          "model_sha256": "c337deb6aba397f9c08f9ae96d118889c6d45022dd7b25b97ada096480338121",
+          "passed": true
+        },
+        {
+          "language": "de",
+          "strict_intermediate_aa_pixels": 23223,
+          "model_sha256": "c65adbd1cbc327e1d51e3cba08583f399c3306994094cd53de12a27a41672944",
+          "passed": true
+        },
+        {
+          "language": "pl",
+          "strict_intermediate_aa_pixels": 24402,
+          "model_sha256": "0ea73d73b50966d68ed5f5d470c2b7fbe8dc44f2f76b119af478fceb861bdd1e",
+          "passed": true
+        },
+        {
+          "language": "ru",
+          "strict_intermediate_aa_pixels": 25340,
+          "model_sha256": "a489b2c2ad22d433699675e44eaf535a42200a5d904d9500756de2a9b152ae51",
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "drawable": [
+        2560,
+        1440
+      ],
+      "languages": [
+        {
+          "language": "en",
+          "strict_intermediate_aa_pixels": 29028,
+          "model_sha256": "c337deb6aba397f9c08f9ae96d118889c6d45022dd7b25b97ada096480338121",
+          "passed": true
+        },
+        {
+          "language": "de",
+          "strict_intermediate_aa_pixels": 31705,
+          "model_sha256": "c65adbd1cbc327e1d51e3cba08583f399c3306994094cd53de12a27a41672944",
+          "passed": true
+        },
+        {
+          "language": "pl",
+          "strict_intermediate_aa_pixels": 33971,
+          "model_sha256": "0ea73d73b50966d68ed5f5d470c2b7fbe8dc44f2f76b119af478fceb861bdd1e",
+          "passed": true
+        },
+        {
+          "language": "ru",
+          "strict_intermediate_aa_pixels": 35664,
+          "model_sha256": "a489b2c2ad22d433699675e44eaf535a42200a5d904d9500756de2a9b152ae51",
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "drawable": [
+        3840,
+        2160
+      ],
+      "languages": [
+        {
+          "language": "en",
+          "strict_intermediate_aa_pixels": 45530,
+          "model_sha256": "c337deb6aba397f9c08f9ae96d118889c6d45022dd7b25b97ada096480338121",
+          "passed": true
+        },
+        {
+          "language": "de",
+          "strict_intermediate_aa_pixels": 50447,
+          "model_sha256": "c65adbd1cbc327e1d51e3cba08583f399c3306994094cd53de12a27a41672944",
+          "passed": true
+        },
+        {
+          "language": "pl",
+          "strict_intermediate_aa_pixels": 53175,
+          "model_sha256": "0ea73d73b50966d68ed5f5d470c2b7fbe8dc44f2f76b119af478fceb861bdd1e",
+          "passed": true
+        },
+        {
+          "language": "ru",
+          "strict_intermediate_aa_pixels": 55357,
+          "model_sha256": "a489b2c2ad22d433699675e44eaf535a42200a5d904d9500756de2a9b152ae51",
+          "passed": true
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "probe_sha256": "d71a4954a09c4ba4e26ff2c6bae0178db345eb68a638ac1d0d495cb77347a705",
+  "authenticated_pngs": 192,
+  "language_cases": 16,
+  "production_native_sha256": "cd2bbf1b7746cb0ec463ffe3c33a37443c518d164e120306d362c46bb6ab14eb"
+}
