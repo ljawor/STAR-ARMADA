@@ -1,0 +1,61 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "prototype:legions_redesign/convoy",
+  "revision": "f73fa69de34fc73a4f78a0069ed22d4e35f83ae65dbe4b10ec1bedc4e97975ac",
+  "display_name": "Confederacy Crew Transport — pending appearance review",
+  "files": {
+    "mesh": {
+      "path": "assets/models/convoy.mesh.json",
+      "sha256": "17054ba67c1e9934a2dc86e9e0e8b1a37f99fb5e7731d094845b3042215dfaed",
+      "bytes": 212643
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -24.6506252,
+      -6.2821498,
+      -65.6363525
+    ],
+    "max": [
+      24.6506252,
+      29.3821507,
+      57.5383492
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor / STAR ARMADA",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "notes": "Original Legions redesign. Script-authoritative build_legions_redesign.py and dedicated design modules; editable masters in art/blender. Complete faction redesign pending owner appearance approval. No simulation, scale or balance changes."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 3244,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}

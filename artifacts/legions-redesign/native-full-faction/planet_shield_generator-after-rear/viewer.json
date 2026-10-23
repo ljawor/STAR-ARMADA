@@ -1,0 +1,745 @@
+{
+  "backend": "Metal",
+  "bgfx_cpu": {
+    "mean_ms": 7.127374999999997,
+    "median_ms": 8.55,
+    "p95_ms": 12.37,
+    "p99_ms": 12.951,
+    "samples": 24
+  },
+  "camera": {
+    "distance": 100.9800033569336,
+    "fov": 55.0,
+    "pitch": 18.0,
+    "target": [
+      0.0,
+      20.924999237060547,
+      0.0
+    ],
+    "yaw": 220.0
+  },
+  "control_exercise": [],
+  "draw_calls_samples": [
+    0,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4
+  ],
+  "drawable": [
+    960,
+    600
+  ],
+  "fixture": "legions-redesign-specimen-inspection-v1",
+  "full_game_performance": false,
+  "gpu_device_id": 1009,
+  "gpu_frame": {
+    "mean_ms": 0.6521492500000002,
+    "median_ms": 0.602375,
+    "p95_ms": 0.712375,
+    "p99_ms": 4.192541,
+    "samples": 24
+  },
+  "gpu_samples_ms": [
+    0.000125,
+    4.1e-05,
+    4.192541,
+    0.712375,
+    0.595416,
+    0.6085,
+    0.635125,
+    0.602375,
+    0.6095,
+    0.617834,
+    0.59975,
+    0.602375,
+    0.6095,
+    0.617834,
+    0.59975,
+    0.62925,
+    0.635375,
+    0.626791,
+    0.624916,
+    0.243,
+    0.28725,
+    0.38075,
+    0.337584,
+    0.283625
+  ],
+  "gpu_vendor_id": 4203,
+  "hardware": {
+    "blobs": 0,
+    "decode_failures": 0,
+    "dropped_instances": 0,
+    "instances_drawn": 0,
+    "meshes": 0,
+    "note": "surface hardware crosses as a full basis (FLAG_SURFACE_FRAME) that the window copies verbatim, because a building stands on the foundation the site generator chose; its mesh arrives on the mesh ring because the offline catalogue cannot name a building that is constructed during a match; role colours are the shared palette, not on the wire",
+    "ring": "",
+    "unmeshed": 0
+  },
+  "inspection_binding": "",
+  "instances": 1,
+  "metadata": {
+    "ai": false,
+    "asset_path_root": "repository-root (pass --assets .)",
+    "assumptions": [
+      "One completed factory-created subject; no paid construction or organic economy.",
+      "All entities from the benchmark seed removed before this subject is spawned.",
+      "Omniscient fixed-camera inspection; no HUD, fog or effects.",
+      "Same entity, owner tint, camera and lighting for each before/after pair.",
+      "Individually framed subjects do not establish relative fleet sizes."
+    ],
+    "checksum": "game.benchmark.state_hash: full precise state before and after extraction",
+    "exported_inventory": {
+      "classes": {
+        "planet_shield_generator": 1
+      },
+      "players": {
+        "0": {
+          "combat_ships": 0,
+          "ordinary_stations": 1,
+          "planets": 0,
+          "satellites": 0,
+          "trade_stations": 0,
+          "transports": 0
+        },
+        "1": {
+          "combat_ships": 0,
+          "ordinary_stations": 0,
+          "planets": 0,
+          "satellites": 0,
+          "trade_stations": 0,
+          "transports": 0
+        },
+        "2": {
+          "combat_ships": 0,
+          "ordinary_stations": 0,
+          "planets": 0,
+          "satellites": 0,
+          "trade_stations": 0,
+          "transports": 0
+        },
+        "3": {
+          "combat_ships": 0,
+          "ordinary_stations": 0,
+          "planets": 0,
+          "satellites": 0,
+          "trade_stations": 0,
+          "transports": 0
+        }
+      },
+      "total": {
+        "combat_ships": 0,
+        "ordinary_stations": 1,
+        "planets": 0,
+        "satellites": 0,
+        "trade_stations": 0,
+        "transports": 0
+      }
+    },
+    "factions": [
+      "confederacy",
+      "imperial",
+      "imperial",
+      "imperial"
+    ],
+    "inventory": {
+      "classes": {
+        "planet_shield_generator": 1
+      },
+      "players": {
+        "0": {
+          "combat_ships": 0,
+          "ordinary_stations": 1,
+          "planets": 0,
+          "satellites": 0,
+          "trade_stations": 0,
+          "transports": 0
+        },
+        "1": {
+          "combat_ships": 0,
+          "ordinary_stations": 0,
+          "planets": 0,
+          "satellites": 0,
+          "trade_stations": 0,
+          "transports": 0
+        },
+        "2": {
+          "combat_ships": 0,
+          "ordinary_stations": 0,
+          "planets": 0,
+          "satellites": 0,
+          "trade_stations": 0,
+          "transports": 0
+        },
+        "3": {
+          "combat_ships": 0,
+          "ordinary_stations": 0,
+          "planets": 0,
+          "satellites": 0,
+          "trade_stations": 0,
+          "transports": 0
+        }
+      },
+      "total": {
+        "combat_ships": 0,
+        "ordinary_stations": 1,
+        "planets": 0,
+        "satellites": 0,
+        "trade_stations": 0,
+        "transports": 0
+      }
+    },
+    "local_player": 0,
+    "name": "legions-isolated-factory-subject-v1",
+    "omitted_features": [
+      "planets (W05)",
+      "fog raster",
+      "effects",
+      "UI"
+    ],
+    "omitted_planets": [],
+    "players": 4,
+    "profile": "production native hull shader; isolated inspection, not main-loop acceptance",
+    "review_scope": "Factory-spawned single subject, normal native hull shader; no HUD/fog/effects. Individually framed, not a size-comparison board or organic build.",
+    "scale_policy": "Canonical ship_size.scale; differs from gameplay zoom readability inflation. Stations radius/50.",
+    "selection": [],
+    "source_fixture": "four-player-close-v1 (entities removed and replaced)",
+    "visibility": "omniscient-diagnostic",
+    "visual_selection": {
+      "effective_bindings": [
+        {
+          "asset": "prototype:legions_redesign/attack_satellite",
+          "binding": "confederacy:attack_satellite",
+          "pack_id": "prototype:legions_redesign",
+          "pack_revision": "d5360e51fe4086cbc8d31b94a660bcff33121c7c66350e6d57a23a28058c6e06"
+        },
+        {
+          "asset": "prototype:legions_redesign/battleship",
+          "binding": "confederacy:battleship",
+          "pack_id": "prototype:legions_redesign",
+          "pack_revision": "d5360e51fe4086cbc8d31b94a660bcff33121c7c66350e6d57a23a28058c6e06"
+        },
+        {
+          "asset": "prototype:legions_redesign/bomber",
+          "binding": "confederacy:bomber",
+          "pack_id": "prototype:legions_redesign",
+          "pack_revision": "d5360e51fe4086cbc8d31b94a660bcff33121c7c66350e6d57a23a28058c6e06"
+        },
+        {
+          "asset": "prototype:legions_redesign/colonizer",
+          "binding": "confederacy:colonizer",
+          "pack_id": "prototype:legions_redesign",
+          "pack_revision": "d5360e51fe4086cbc8d31b94a660bcff33121c7c66350e6d57a23a28058c6e06"
+        },
+        {
+          "asset": "prototype:legions_redesign/command_station",
+          "binding": "confederacy:command_station",
+          "pack_id": "prototype:legions_redesign",
+          "pack_revision": "d5360e51fe4086cbc8d31b94a660bcff33121c7c66350e6d57a23a28058c6e06"
+        },
+        {
+          "asset": "prototype:legions_redesign/constructor",
+          "binding": "confederacy:constructor",
+          "pack_id": "prototype:legions_redesign",
+          "pack_revision": "d5360e51fe4086cbc8d31b94a660bcff33121c7c66350e6d57a23a28058c6e06"
+        },
+        {
+          "asset": "prototype:legions_redesign/convoy",
+          "binding": "confederacy:convoy",
+          "pack_id": "prototype:legions_redesign",
+          "pack_revision": "d5360e51fe4086cbc8d31b94a660bcff33121c7c66350e6d57a23a28058c6e06"
+        },
+        {
+          "asset": "prototype:legions_redesign/corvette",
+          "binding": "confederacy:corvette",
+          "pack_id": "prototype:legions_redesign",
+          "pack_revision": "d5360e51fe4086cbc8d31b94a660bcff33121c7c66350e6d57a23a28058c6e06"
+        },
+        {
+          "asset": "prototype:legions_redesign/cruiser",
+          "binding": "confederacy:cruiser",
+          "pack_id": "prototype:legions_redesign",
+          "pack_revision": "d5360e51fe4086cbc8d31b94a660bcff33121c7c66350e6d57a23a28058c6e06"
+        },
+        {
+          "asset": "prototype:legions_redesign/defense_platform",
+          "binding": "confederacy:defense_platform",
+          "pack_id": "prototype:legions_redesign",
+          "pack_revision": "d5360e51fe4086cbc8d31b94a660bcff33121c7c66350e6d57a23a28058c6e06"
+        },
+        {
+          "asset": "prototype:legions_redesign/defense_satellite",
+          "binding": "confederacy:defense_satellite",
+          "pack_id": "prototype:legions_redesign",
+          "pack_revision": "d5360e51fe4086cbc8d31b94a660bcff33121c7c66350e6d57a23a28058c6e06"
+        },
+        {
+          "asset": "prototype:legions_redesign/energy_relay",
+          "binding": "confederacy:energy_relay",
+          "pack_id": "prototype:legions_redesign",
+          "pack_revision": "d5360e51fe4086cbc8d31b94a660bcff33121c7c66350e6d57a23a28058c6e06"
+        },
+        {
+          "asset": "prototype:legions_redesign/fighter",
+          "binding": "confederacy:fighter",
+          "pack_id": "prototype:legions_redesign",
+          "pack_revision": "d5360e51fe4086cbc8d31b94a660bcff33121c7c66350e6d57a23a28058c6e06"
+        },
+        {
+          "asset": "prototype:legions_redesign/fighter_platform",
+          "binding": "confederacy:fighter_platform",
+          "pack_id": "prototype:legions_redesign",
+          "pack_revision": "d5360e51fe4086cbc8d31b94a660bcff33121c7c66350e6d57a23a28058c6e06"
+        },
+        {
+          "asset": "prototype:legions_redesign/frigate",
+          "binding": "confederacy:frigate",
+          "pack_id": "prototype:legions_redesign",
+          "pack_revision": "d5360e51fe4086cbc8d31b94a660bcff33121c7c66350e6d57a23a28058c6e06"
+        },
+        {
+          "asset": "prototype:legions_redesign/mining_station",
+          "binding": "confederacy:mining_station",
+          "pack_id": "prototype:legions_redesign",
+          "pack_revision": "d5360e51fe4086cbc8d31b94a660bcff33121c7c66350e6d57a23a28058c6e06"
+        },
+        {
+          "asset": "prototype:legions_redesign/planet_extractor",
+          "binding": "confederacy:planet_extractor",
+          "pack_id": "prototype:legions_redesign",
+          "pack_revision": "d5360e51fe4086cbc8d31b94a660bcff33121c7c66350e6d57a23a28058c6e06"
+        },
+        {
+          "asset": "prototype:legions_redesign/planet_pulsar_cannon",
+          "binding": "confederacy:planet_pulsar_cannon",
+          "pack_id": "prototype:legions_redesign",
+          "pack_revision": "d5360e51fe4086cbc8d31b94a660bcff33121c7c66350e6d57a23a28058c6e06"
+        },
+        {
+          "asset": "prototype:legions_redesign/planet_shield_generator",
+          "binding": "confederacy:planet_shield_generator",
+          "pack_id": "prototype:legions_redesign",
+          "pack_revision": "d5360e51fe4086cbc8d31b94a660bcff33121c7c66350e6d57a23a28058c6e06"
+        },
+        {
+          "asset": "prototype:legions_redesign/planet_trade_hub",
+          "binding": "confederacy:planet_trade_hub",
+          "pack_id": "prototype:legions_redesign",
+          "pack_revision": "d5360e51fe4086cbc8d31b94a660bcff33121c7c66350e6d57a23a28058c6e06"
+        },
+        {
+          "asset": "prototype:legions_redesign/repair_dock",
+          "binding": "confederacy:repair_dock",
+          "pack_id": "prototype:legions_redesign",
+          "pack_revision": "d5360e51fe4086cbc8d31b94a660bcff33121c7c66350e6d57a23a28058c6e06"
+        },
+        {
+          "asset": "prototype:legions_redesign/research_station",
+          "binding": "confederacy:research_station",
+          "pack_id": "prototype:legions_redesign",
+          "pack_revision": "d5360e51fe4086cbc8d31b94a660bcff33121c7c66350e6d57a23a28058c6e06"
+        },
+        {
+          "asset": "prototype:legions_redesign/sensor_station",
+          "binding": "confederacy:sensor_station",
+          "pack_id": "prototype:legions_redesign",
+          "pack_revision": "d5360e51fe4086cbc8d31b94a660bcff33121c7c66350e6d57a23a28058c6e06"
+        },
+        {
+          "asset": "prototype:legions_redesign/shipyard",
+          "binding": "confederacy:shipyard",
+          "pack_id": "prototype:legions_redesign",
+          "pack_revision": "d5360e51fe4086cbc8d31b94a660bcff33121c7c66350e6d57a23a28058c6e06"
+        },
+        {
+          "asset": "prototype:legions_redesign/supercapital",
+          "binding": "confederacy:supercapital",
+          "pack_id": "prototype:legions_redesign",
+          "pack_revision": "d5360e51fe4086cbc8d31b94a660bcff33121c7c66350e6d57a23a28058c6e06"
+        },
+        {
+          "asset": "prototype:legions_redesign/trade_station",
+          "binding": "confederacy:trade_station",
+          "pack_id": "prototype:legions_redesign",
+          "pack_revision": "d5360e51fe4086cbc8d31b94a660bcff33121c7c66350e6d57a23a28058c6e06"
+        },
+        {
+          "asset": "prototype:imperial/battleship",
+          "binding": "imperial:battleship",
+          "pack_id": "prototype:imperium_fleet",
+          "pack_revision": "10293bfd7e52762eb6a5ac97132bb62d2589e0bc45a381beb0bfa13899517e32"
+        },
+        {
+          "asset": "prototype:imperial/bomber",
+          "binding": "imperial:bomber",
+          "pack_id": "prototype:imperium_fleet",
+          "pack_revision": "10293bfd7e52762eb6a5ac97132bb62d2589e0bc45a381beb0bfa13899517e32"
+        },
+        {
+          "asset": "prototype:imperial/colonizer",
+          "binding": "imperial:colonizer",
+          "pack_id": "prototype:imperium_fleet",
+          "pack_revision": "10293bfd7e52762eb6a5ac97132bb62d2589e0bc45a381beb0bfa13899517e32"
+        },
+        {
+          "asset": "prototype:imperial/command_station",
+          "binding": "imperial:command_station",
+          "pack_id": "prototype:imperium_command",
+          "pack_revision": "e87bdb59ef9e5a250003444edfc4dbd98aa4c0f30ddb9aebfedb77f86d3df78a"
+        },
+        {
+          "asset": "prototype:imperial/constructor",
+          "binding": "imperial:constructor",
+          "pack_id": "prototype:imperium_engineer",
+          "pack_revision": "b2801c6a1e7f6994228c41da63e7507e539f804370d14e4121771dbeaafb1727"
+        },
+        {
+          "asset": "prototype:imperial/convoy",
+          "binding": "imperial:convoy",
+          "pack_id": "prototype:imperium_fleet",
+          "pack_revision": "10293bfd7e52762eb6a5ac97132bb62d2589e0bc45a381beb0bfa13899517e32"
+        },
+        {
+          "asset": "prototype:imperial/vigil",
+          "binding": "imperial:corvette",
+          "pack_id": "prototype:vigil",
+          "pack_revision": "f802f2d0aec8ad249b5afacd1f3ccb95eee13203c9ee5b5e5b122bcdab5af5ab"
+        },
+        {
+          "asset": "prototype:imperial/cruiser",
+          "binding": "imperial:cruiser",
+          "pack_id": "prototype:imperium_fleet",
+          "pack_revision": "10293bfd7e52762eb6a5ac97132bb62d2589e0bc45a381beb0bfa13899517e32"
+        },
+        {
+          "asset": "prototype:imperial/defense_platform",
+          "binding": "imperial:defense_platform",
+          "pack_id": "prototype:imperial_defense",
+          "pack_revision": "c30a9a2bfd25819cf9d593307284526a2d50fc00e94c4015f7d39e75f08e7c9f"
+        },
+        {
+          "asset": "prototype:imperial/energy_relay",
+          "binding": "imperial:energy_relay",
+          "pack_id": "prototype:imperial_relay",
+          "pack_revision": "04e7ad19c2e367050368a8abb5450825ebe7a236dbdf69da7815858ec7802d99"
+        },
+        {
+          "asset": "prototype:imperial/fighter",
+          "binding": "imperial:fighter",
+          "pack_id": "prototype:imperium_talon",
+          "pack_revision": "322a0475c089aab935793e78f71a82f1b176dad19a09764cad9592fa085693a9"
+        },
+        {
+          "asset": "prototype:imperial/fighter_platform",
+          "binding": "imperial:fighter_platform",
+          "pack_id": "prototype:imperial_fighter",
+          "pack_revision": "5136d5d4762aaf205deb047c95116b5d3c7a05e44cce820a01f6e241eba6fd09"
+        },
+        {
+          "asset": "prototype:imperial/frigate",
+          "binding": "imperial:frigate",
+          "pack_id": "prototype:imperium_fleet",
+          "pack_revision": "10293bfd7e52762eb6a5ac97132bb62d2589e0bc45a381beb0bfa13899517e32"
+        },
+        {
+          "asset": "prototype:imperial/mining_station",
+          "binding": "imperial:mining_station",
+          "pack_id": "prototype:imperium_mining",
+          "pack_revision": "d9931bb1bcb8e8ac127ab6158f76e40017139bcd7e9fdaa0ad994716a2996053"
+        },
+        {
+          "asset": "prototype:imperial/repair_dock",
+          "binding": "imperial:repair_dock",
+          "pack_id": "prototype:imperial_repair",
+          "pack_revision": "2c9f167c5c4d47c4de0dbaec60380f1f6692ef902c5cafea8cf7ce628d5212ea"
+        },
+        {
+          "asset": "prototype:imperial/research_station",
+          "binding": "imperial:research_station",
+          "pack_id": "prototype:imperial_research",
+          "pack_revision": "1f99957ec8c0ab18c72b09bf65433ddf4a67c487de1943d84ba59b9d9244b756"
+        },
+        {
+          "asset": "prototype:imperial/sensor_station",
+          "binding": "imperial:sensor_station",
+          "pack_id": "prototype:imperial_sensor",
+          "pack_revision": "fdda1fe19e5ac8330bf402b52977f7644adba4fdb8a4632c4fe5198902e1e953"
+        },
+        {
+          "asset": "prototype:imperial/shipyard",
+          "binding": "imperial:shipyard",
+          "pack_id": "prototype:imperium_shipyard",
+          "pack_revision": "2a04cb2ece305309713decd27331a152199c6c9d4a5e9e4249a03a373d5c8b5a"
+        },
+        {
+          "asset": "prototype:imperial/supercapital",
+          "binding": "imperial:supercapital",
+          "pack_id": "prototype:imperium_fleet",
+          "pack_revision": "10293bfd7e52762eb6a5ac97132bb62d2589e0bc45a381beb0bfa13899517e32"
+        },
+        {
+          "asset": "prototype:imperial/trade_station",
+          "binding": "imperial:trade_station",
+          "pack_id": "prototype:imperial_trade",
+          "pack_revision": "25ceef03bba9a2a4f5c66ce601c02a4f8af2bbed1cff2cca49616d35b3fd549d"
+        },
+        {
+          "asset": "prototype:alliance_redesign/attack_satellite",
+          "binding": "rebel:attack_satellite",
+          "pack_id": "prototype:alliance_redesign",
+          "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+        },
+        {
+          "asset": "prototype:alliance_redesign/battleship",
+          "binding": "rebel:battleship",
+          "pack_id": "prototype:alliance_redesign",
+          "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+        },
+        {
+          "asset": "prototype:alliance_redesign/bomber",
+          "binding": "rebel:bomber",
+          "pack_id": "prototype:alliance_redesign",
+          "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+        },
+        {
+          "asset": "prototype:alliance_redesign/colonizer",
+          "binding": "rebel:colonizer",
+          "pack_id": "prototype:alliance_redesign",
+          "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+        },
+        {
+          "asset": "prototype:alliance_redesign/command_station",
+          "binding": "rebel:command_station",
+          "pack_id": "prototype:alliance_redesign",
+          "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+        },
+        {
+          "asset": "prototype:alliance_redesign/constructor",
+          "binding": "rebel:constructor",
+          "pack_id": "prototype:alliance_redesign",
+          "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+        },
+        {
+          "asset": "prototype:alliance_redesign/convoy",
+          "binding": "rebel:convoy",
+          "pack_id": "prototype:alliance_redesign",
+          "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+        },
+        {
+          "asset": "prototype:alliance_redesign/corvette",
+          "binding": "rebel:corvette",
+          "pack_id": "prototype:alliance_redesign",
+          "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+        },
+        {
+          "asset": "prototype:alliance_redesign/cruiser",
+          "binding": "rebel:cruiser",
+          "pack_id": "prototype:alliance_redesign",
+          "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+        },
+        {
+          "asset": "prototype:alliance_redesign/defense_platform",
+          "binding": "rebel:defense_platform",
+          "pack_id": "prototype:alliance_redesign",
+          "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+        },
+        {
+          "asset": "prototype:alliance_redesign/defense_satellite",
+          "binding": "rebel:defense_satellite",
+          "pack_id": "prototype:alliance_redesign",
+          "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+        },
+        {
+          "asset": "prototype:alliance_redesign/energy_relay",
+          "binding": "rebel:energy_relay",
+          "pack_id": "prototype:alliance_redesign",
+          "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+        },
+        {
+          "asset": "prototype:alliance_redesign/fighter",
+          "binding": "rebel:fighter",
+          "pack_id": "prototype:alliance_redesign",
+          "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+        },
+        {
+          "asset": "prototype:alliance_redesign/fighter_platform",
+          "binding": "rebel:fighter_platform",
+          "pack_id": "prototype:alliance_redesign",
+          "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+        },
+        {
+          "asset": "prototype:alliance_redesign/frigate",
+          "binding": "rebel:frigate",
+          "pack_id": "prototype:alliance_redesign",
+          "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+        },
+        {
+          "asset": "prototype:alliance_redesign/mining_station",
+          "binding": "rebel:mining_station",
+          "pack_id": "prototype:alliance_redesign",
+          "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+        },
+        {
+          "asset": "prototype:alliance_redesign/planet_extractor",
+          "binding": "rebel:planet_extractor",
+          "pack_id": "prototype:alliance_redesign",
+          "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+        },
+        {
+          "asset": "prototype:alliance_redesign/planet_pulsar_cannon",
+          "binding": "rebel:planet_pulsar_cannon",
+          "pack_id": "prototype:alliance_redesign",
+          "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+        },
+        {
+          "asset": "prototype:alliance_redesign/planet_shield_generator",
+          "binding": "rebel:planet_shield_generator",
+          "pack_id": "prototype:alliance_redesign",
+          "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+        },
+        {
+          "asset": "prototype:alliance_redesign/planet_trade_hub",
+          "binding": "rebel:planet_trade_hub",
+          "pack_id": "prototype:alliance_redesign",
+          "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+        },
+        {
+          "asset": "prototype:alliance_redesign/repair_dock",
+          "binding": "rebel:repair_dock",
+          "pack_id": "prototype:alliance_redesign",
+          "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+        },
+        {
+          "asset": "prototype:alliance_redesign/research_station",
+          "binding": "rebel:research_station",
+          "pack_id": "prototype:alliance_redesign",
+          "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+        },
+        {
+          "asset": "prototype:alliance_redesign/sensor_station",
+          "binding": "rebel:sensor_station",
+          "pack_id": "prototype:alliance_redesign",
+          "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+        },
+        {
+          "asset": "prototype:alliance_redesign/shipyard",
+          "binding": "rebel:shipyard",
+          "pack_id": "prototype:alliance_redesign",
+          "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+        },
+        {
+          "asset": "prototype:alliance_redesign/supercapital",
+          "binding": "rebel:supercapital",
+          "pack_id": "prototype:alliance_redesign",
+          "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+        },
+        {
+          "asset": "prototype:alliance_redesign/trade_station",
+          "binding": "rebel:trade_station",
+          "pack_id": "prototype:alliance_redesign",
+          "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+        }
+      ],
+      "enabled_order": [
+        "vigil-prototype",
+        "imperium-command-prototype",
+        "imperium-shipyard-prototype",
+        "imperium-mining-prototype",
+        "imperium-talon-prototype",
+        "imperium-engineer-prototype",
+        "imperium-research-prototype",
+        "imperium-defense-prototype",
+        "imperium-sensor-prototype",
+        "imperium-trade-prototype",
+        "imperium-fighter-prototype",
+        "imperium-repair-prototype",
+        "imperium-relay-prototype",
+        "imperium-fleet-prototypes",
+        "alliance-redesign",
+        "legions-redesign"
+      ]
+    }
+  },
+  "placement_preview": {
+    "dropped_instances": 0,
+    "instances_drawn": 0,
+    "note": "translucent rows (tint alpha < 1) submitted blended in the world view after every depth-tested but not depth-writing, alpha read from the instance row"
+  },
+  "profile": "W01-offline-mesh-only",
+  "projection": {
+    "expected_scale": 1.9209821575133663,
+    "focal_px": 576.2946472540099,
+    "fov_deg": 55.0,
+    "fov_input_rad": 0.9599310755729675,
+    "proj_scale": 1.9209821224212646
+  },
+  "quality": {
+    "all_mesh_roles": true,
+    "mesh_lod": false,
+    "msaa_requested": 4,
+    "shadow_map": 2048,
+    "shadows_final": true
+  },
+  "screenshots_written": 1,
+  "snapshot_instances": 1,
+  "snapshot_sha256": "93b82e1e322162d1aec0f12d6effc4b30aa452a913b4b643d72ccc3468afabaf",
+  "state_sha256": "f176c8efa18f00fa9a1e2db5540264dd8dc89b5a729829a6dd4e2acb241b46e3",
+  "submitted_triangles_per_pass": 3108,
+  "timing_scope": "Unsynchronized offline mesh-only frame loop; excludes simulation, HUD, fog, effects, LAN; capture can affect timing",
+  "unique_meshes": 1,
+  "unique_triangles": 3108,
+  "vsync": false,
+  "wall_frame": {
+    "mean_ms": 10.201394083333334,
+    "median_ms": 9.097417,
+    "p95_ms": 19.778167,
+    "p99_ms": 44.582458,
+    "samples": 24
+  },
+  "wall_samples_ms": [
+    19.778167,
+    11.250542,
+    4.619416,
+    9.097417,
+    8.771166,
+    8.5975,
+    6.788042,
+    8.888042,
+    12.432958,
+    5.647375,
+    10.120541,
+    5.125291,
+    10.125791,
+    10.123084,
+    5.108,
+    10.131667,
+    10.0815,
+    5.10475,
+    10.131709,
+    44.582458,
+    0.169792,
+    12.969125,
+    5.087292,
+    10.101833
+  ]
+}

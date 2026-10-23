@@ -1,0 +1,162 @@
+{
+  "count": 26,
+  "method": "Independent full Blender reconstruction into fresh scratch output root",
+  "rows": [
+    {
+      "binding": "confederacy:fighter",
+      "mesh": "visual_packs/legions-redesign/assets/models/fighter.mesh.json",
+      "sha256": "8236ad8b1735a50097643abd84279bda61a60ab3c741fe0707aba5da85a358c8",
+      "independent_repeat_byte_identical": true
+    },
+    {
+      "binding": "confederacy:bomber",
+      "mesh": "visual_packs/legions-redesign/assets/models/bomber.mesh.json",
+      "sha256": "81b400bdcb76a30d8cb3032a92f92b088be6c2ff4b8423e38922e98ac05aa07c",
+      "independent_repeat_byte_identical": true
+    },
+    {
+      "binding": "confederacy:corvette",
+      "mesh": "visual_packs/legions-redesign/assets/models/corvette.mesh.json",
+      "sha256": "e63e31d56b89c03b2717a7a26f6d1bfcff35250446139032dd1844c36a4d528c",
+      "independent_repeat_byte_identical": true
+    },
+    {
+      "binding": "confederacy:frigate",
+      "mesh": "visual_packs/legions-redesign/assets/models/frigate.mesh.json",
+      "sha256": "b12e43a696e111d52e895b6c7ba506343d781d4584c72de0416ebc462bc7e8ff",
+      "independent_repeat_byte_identical": true
+    },
+    {
+      "binding": "confederacy:cruiser",
+      "mesh": "visual_packs/legions-redesign/assets/models/cruiser.mesh.json",
+      "sha256": "9fbe128fee31d07b78d225636e2f056d352b6581d267db89ef13c9ad143c81cf",
+      "independent_repeat_byte_identical": true
+    },
+    {
+      "binding": "confederacy:battleship",
+      "mesh": "visual_packs/legions-redesign/assets/models/battleship.mesh.json",
+      "sha256": "24d977b88e47377bc1fba62c1ce5e4c0b1ae16b94ceb44110ca75499d6db25a7",
+      "independent_repeat_byte_identical": true
+    },
+    {
+      "binding": "confederacy:supercapital",
+      "mesh": "visual_packs/legions-redesign/assets/models/supercapital.mesh.json",
+      "sha256": "8e1e2ba6689bfca7327c778e2b598b0b0026d4e29418b01ef48e4c94453c4b7e",
+      "independent_repeat_byte_identical": true
+    },
+    {
+      "binding": "confederacy:constructor",
+      "mesh": "visual_packs/legions-redesign/assets/models/constructor.mesh.json",
+      "sha256": "2271937c772a461c220b7fae2eb0022f07e5a2d0a36f59bb5b312b635fc27b74",
+      "independent_repeat_byte_identical": true
+    },
+    {
+      "binding": "confederacy:colonizer",
+      "mesh": "visual_packs/legions-redesign/assets/models/colonizer.mesh.json",
+      "sha256": "74d391e892184a9c35bc311f663b33c0c93de794e1fa0738b31c67b54aea5b2b",
+      "independent_repeat_byte_identical": true
+    },
+    {
+      "binding": "confederacy:convoy",
+      "mesh": "visual_packs/legions-redesign/assets/models/convoy.mesh.json",
+      "sha256": "17054ba67c1e9934a2dc86e9e0e8b1a37f99fb5e7731d094845b3042215dfaed",
+      "independent_repeat_byte_identical": true
+    },
+    {
+      "binding": "confederacy:command_station",
+      "mesh": "visual_packs/legions-redesign/assets/models/command_station.mesh.json",
+      "sha256": "f51d2479b8c41991708d4af464ffa2f91893f812c074bd4c37b17780648ffc80",
+      "independent_repeat_byte_identical": true
+    },
+    {
+      "binding": "confederacy:shipyard",
+      "mesh": "visual_packs/legions-redesign/assets/models/shipyard.mesh.json",
+      "sha256": "cbc9a99206b7fb6ccd2de8eb5fa5efdec3de7acbf74cc8dd20e0855848f1d062",
+      "independent_repeat_byte_identical": true
+    },
+    {
+      "binding": "confederacy:mining_station",
+      "mesh": "visual_packs/legions-redesign/assets/models/mining_station.mesh.json",
+      "sha256": "04aa69ff9ed47baa7690882f072fab54b0b48cc7da827cec4650a1f5e889be76",
+      "independent_repeat_byte_identical": true
+    },
+    {
+      "binding": "confederacy:research_station",
+      "mesh": "visual_packs/legions-redesign/assets/models/research_station.mesh.json",
+      "sha256": "3b83838a74b65539dae7be1d2c5c3a2e00615ff44fc066b15c7c53b8791dc3d5",
+      "independent_repeat_byte_identical": true
+    },
+    {
+      "binding": "confederacy:defense_platform",
+      "mesh": "visual_packs/legions-redesign/assets/models/defense_platform.mesh.json",
+      "sha256": "ecc6628394412016107c19dc242c555a2626da9016151bdf89c070d13595b27f",
+      "independent_repeat_byte_identical": true
+    },
+    {
+      "binding": "confederacy:sensor_station",
+      "mesh": "visual_packs/legions-redesign/assets/models/sensor_station.mesh.json",
+      "sha256": "9f27c0e93a753368489429ec6bf061343ac9a6ac3311a62da7036c8c936fccc6",
+      "independent_repeat_byte_identical": true
+    },
+    {
+      "binding": "confederacy:trade_station",
+      "mesh": "visual_packs/legions-redesign/assets/models/trade_station.mesh.json",
+      "sha256": "7304679c32334e5b0a707e2658b5df039c31f65b363bab4be73833a17a1ef9e9",
+      "independent_repeat_byte_identical": true
+    },
+    {
+      "binding": "confederacy:fighter_platform",
+      "mesh": "visual_packs/legions-redesign/assets/models/fighter_platform.mesh.json",
+      "sha256": "7d3ff39ae95c40f113def13b4233663896c13d1090c5db3396ea3c21b2910ac4",
+      "independent_repeat_byte_identical": true
+    },
+    {
+      "binding": "confederacy:repair_dock",
+      "mesh": "visual_packs/legions-redesign/assets/models/repair_dock.mesh.json",
+      "sha256": "29e4243c400b8953a4869b25fb20f6d0a00396c1493afb4d11ccf59e4bbea11f",
+      "independent_repeat_byte_identical": true
+    },
+    {
+      "binding": "confederacy:energy_relay",
+      "mesh": "visual_packs/legions-redesign/assets/models/energy_relay.mesh.json",
+      "sha256": "37aa35685ef47ef7063f1d01742d8f9cb40a88474ef6e4ca0fa3970cd1405448",
+      "independent_repeat_byte_identical": true
+    },
+    {
+      "binding": "confederacy:defense_satellite",
+      "mesh": "visual_packs/legions-redesign/assets/models/defense_satellite.mesh.json",
+      "sha256": "6573780a190d2dc8c9d8fe965c552d4b90c6ebd63490cce6cc118e41bf204737",
+      "independent_repeat_byte_identical": true
+    },
+    {
+      "binding": "confederacy:attack_satellite",
+      "mesh": "visual_packs/legions-redesign/assets/models/attack_satellite.mesh.json",
+      "sha256": "56cbf7457512ed256ad57d1b7c5106c2c92815ca99c4b456127bfd43f9e27b70",
+      "independent_repeat_byte_identical": true
+    },
+    {
+      "binding": "confederacy:planet_extractor",
+      "mesh": "visual_packs/legions-redesign/assets/models/planet_extractor.mesh.json",
+      "sha256": "3b68efa25203d897e88cffd3b80e0f297268a5326d97e4f13ddef4c35c4edd85",
+      "independent_repeat_byte_identical": true
+    },
+    {
+      "binding": "confederacy:planet_trade_hub",
+      "mesh": "visual_packs/legions-redesign/assets/models/planet_trade_hub.mesh.json",
+      "sha256": "fd7f870fef9f353896e1bc356b4377d00500f8d38ba99147869180370adb7af2",
+      "independent_repeat_byte_identical": true
+    },
+    {
+      "binding": "confederacy:planet_shield_generator",
+      "mesh": "visual_packs/legions-redesign/assets/models/planet_shield_generator.mesh.json",
+      "sha256": "a39387b48051f858fb411c4f394ebe8272684cc725731438d71a788e0dd339fd",
+      "independent_repeat_byte_identical": true
+    },
+    {
+      "binding": "confederacy:planet_pulsar_cannon",
+      "mesh": "visual_packs/legions-redesign/assets/models/planet_pulsar_cannon.mesh.json",
+      "sha256": "9108095d2dc9db9768003423a23fd742a2b6603ea796b0c1f2cd07e9adc9a924",
+      "independent_repeat_byte_identical": true
+    }
+  ]
+}

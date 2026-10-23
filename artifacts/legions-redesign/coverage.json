@@ -1,0 +1,762 @@
+{
+  "base": "186903ae05aa9bd43d7e299fdc248be7cca42fd5",
+  "scope": "All existing Automated Legions (confederacy) bindings",
+  "count": 26,
+  "rows": [
+    {
+      "binding": "confederacy:fighter",
+      "kind": "fighter",
+      "template": "legion_vulture",
+      "live_factory_id": "confed_vulture_squadron",
+      "display_name": "Vulture Drone Wing",
+      "baseline_mesh": "assets/models/legion_vulture.mesh.json",
+      "baseline_mesh_sha256": "c17733f45e1669a3c664726f2e72f18a1d3e1c1e09e18455e22abc7fb83c47dd",
+      "original_envelope": {
+        "min": [
+          -12.36669,
+          -2.75,
+          -15.07
+        ],
+        "max": [
+          12.36669,
+          6.877035,
+          19.4
+        ]
+      },
+      "replacement_mesh": "visual_packs/legions-redesign/assets/models/fighter.mesh.json",
+      "replacement_status": "built_strictly_loaded_native_captured_pending_owner_review",
+      "triangle_allocation": 3000,
+      "replacement_sha256": "8236ad8b1735a50097643abd84279bda61a60ab3c741fe0707aba5da85a358c8",
+      "replacement_triangles": 2484,
+      "replacement_bytes": 160902,
+      "master": "art/blender/legions_redesign_fighter.blend",
+      "master_sha256": "72f102d38032ece44c045abbcd9a65157adf344944c1070445dcf9b0c69c8213"
+    },
+    {
+      "binding": "confederacy:bomber",
+      "kind": "bomber",
+      "template": "legion_hyena",
+      "live_factory_id": "confed_bomber_squadron",
+      "display_name": "Hyena Strike Wing",
+      "baseline_mesh": "assets/models/legion_hyena.mesh.json",
+      "baseline_mesh_sha256": "63d2544abdbebf9089c0fb48e34666f610d2876d8b8a8569892d588b263bb18d",
+      "original_envelope": {
+        "min": [
+          -17.307274,
+          -6.9,
+          -21.65
+        ],
+        "max": [
+          17.307274,
+          12.85,
+          26.12
+        ]
+      },
+      "replacement_mesh": "visual_packs/legions-redesign/assets/models/bomber.mesh.json",
+      "replacement_status": "built_strictly_loaded_native_captured_pending_owner_review",
+      "triangle_allocation": 3200,
+      "replacement_sha256": "81b400bdcb76a30d8cb3032a92f92b088be6c2ff4b8423e38922e98ac05aa07c",
+      "replacement_triangles": 2908,
+      "replacement_bytes": 187497,
+      "master": "art/blender/legions_redesign_bomber.blend",
+      "master_sha256": "56f1c8362ef59fd2c906d2140eeb419d6445c982d2d5de15b408394c62cd590e"
+    },
+    {
+      "binding": "confederacy:corvette",
+      "kind": "corvette",
+      "template": "confed_corvette",
+      "live_factory_id": "confed_corvette",
+      "display_name": "Droth Drone Corvette",
+      "baseline_mesh": "assets/models/confed_corvette.mesh.json",
+      "baseline_mesh_sha256": "921f8dd4afd759ea0d39c21c3bd3c4e6f7e1c3f8eaee18240371d9a96f101958",
+      "original_envelope": {
+        "min": [
+          -31.713844,
+          -7.0,
+          -38.489994
+        ],
+        "max": [
+          31.713844,
+          15.1,
+          48.06775
+        ]
+      },
+      "replacement_mesh": "visual_packs/legions-redesign/assets/models/corvette.mesh.json",
+      "replacement_status": "built_strictly_loaded_native_captured_pending_owner_review",
+      "triangle_allocation": 4500,
+      "replacement_sha256": "e63e31d56b89c03b2717a7a26f6d1bfcff35250446139032dd1844c36a4d528c",
+      "replacement_triangles": 3468,
+      "replacement_bytes": 226363,
+      "master": "art/blender/legions_redesign_corvette.blend",
+      "master_sha256": "7d1288eca5e19a3f49ef39845274d144b7d82d1bf119291d25863351a635f0dc"
+    },
+    {
+      "binding": "confederacy:frigate",
+      "kind": "frigate",
+      "template": "confed_frigate",
+      "live_factory_id": "confed_frigate",
+      "display_name": "Cobalt Frigate",
+      "baseline_mesh": "assets/models/confed_frigate.mesh.json",
+      "baseline_mesh_sha256": "96fd45471049b92aede194cf851e801e022579ee1a84c61daf3cbe088c8ed268",
+      "original_envelope": {
+        "min": [
+          -48.070759,
+          -8.5,
+          -60.475
+        ],
+        "max": [
+          48.070759,
+          15.1,
+          72.56775
+        ]
+      },
+      "replacement_mesh": "visual_packs/legions-redesign/assets/models/frigate.mesh.json",
+      "replacement_status": "built_strictly_loaded_native_captured_pending_owner_review",
+      "triangle_allocation": 7000,
+      "replacement_sha256": "b12e43a696e111d52e895b6c7ba506343d781d4584c72de0416ebc462bc7e8ff",
+      "replacement_triangles": 4276,
+      "replacement_bytes": 280583,
+      "master": "art/blender/legions_redesign_frigate.blend",
+      "master_sha256": "3699647995889035946eda1781a5ae6b4295ed05f710ebe0000649206a6c8655"
+    },
+    {
+      "binding": "confederacy:cruiser",
+      "kind": "cruiser",
+      "template": "confed_cruiser",
+      "live_factory_id": "confed_cruiser",
+      "display_name": "Recusant Raider",
+      "baseline_mesh": "assets/models/confed_cruiser.mesh.json",
+      "baseline_mesh_sha256": "2866559ed742dd4f2f5a22937baa8021b8c0154a105cd4903c273d972ab00814",
+      "original_envelope": {
+        "min": [
+          -75.392305,
+          -10.0,
+          -80.31
+        ],
+        "max": [
+          75.392305,
+          15.655,
+          94.617737
+        ]
+      },
+      "replacement_mesh": "visual_packs/legions-redesign/assets/models/cruiser.mesh.json",
+      "replacement_status": "built_strictly_loaded_native_captured_pending_owner_review",
+      "triangle_allocation": 9000,
+      "replacement_sha256": "9fbe128fee31d07b78d225636e2f056d352b6581d267db89ef13c9ad143c81cf",
+      "replacement_triangles": 5704,
+      "replacement_bytes": 369502,
+      "master": "art/blender/legions_redesign_cruiser.blend",
+      "master_sha256": "27a9f306a0a983cb702cd0f787499bcfc83d55cbac21cf7167a9a101f5f06d58"
+    },
+    {
+      "binding": "confederacy:battleship",
+      "kind": "battleship",
+      "template": "confed_battleship",
+      "live_factory_id": "confed_battleship",
+      "display_name": "Bulwark Bastion",
+      "baseline_mesh": "assets/models/confed_battleship.mesh.json",
+      "baseline_mesh_sha256": "0b04ca0ea42c2ea2fd670cfdbe0d4c0a047cbf65071101ba7d6927bf172df363",
+      "original_envelope": {
+        "min": [
+          -109.856392,
+          -14.0,
+          -129.825
+        ],
+        "max": [
+          109.856392,
+          49.5,
+          138.05574
+        ]
+      },
+      "replacement_mesh": "visual_packs/legions-redesign/assets/models/battleship.mesh.json",
+      "replacement_status": "built_strictly_loaded_native_captured_pending_owner_review",
+      "triangle_allocation": 11500,
+      "replacement_sha256": "24d977b88e47377bc1fba62c1ce5e4c0b1ae16b94ceb44110ca75499d6db25a7",
+      "replacement_triangles": 8124,
+      "replacement_bytes": 542069,
+      "master": "art/blender/legions_redesign_battleship.blend",
+      "master_sha256": "971584755b9bf5c5ad06d55de399dc4e4e7fd411837e32a09ece0913c44d46d3"
+    },
+    {
+      "binding": "confederacy:supercapital",
+      "kind": "supercapital",
+      "template": "confed_supercapital",
+      "live_factory_id": "confed_supercapital",
+      "display_name": "Subjugator-class Sovereignty",
+      "baseline_mesh": "assets/models/confed_supercapital.mesh.json",
+      "baseline_mesh_sha256": "f33b0f79430130cf5d1c8524f618f2ce5c541a5571edf28e6a4d84284c357c4f",
+      "original_envelope": {
+        "min": [
+          -147.0,
+          -29.605,
+          -178.825
+        ],
+        "max": [
+          147.0,
+          49.5,
+          187.055725
+        ]
+      },
+      "replacement_mesh": "visual_packs/legions-redesign/assets/models/supercapital.mesh.json",
+      "replacement_status": "built_strictly_loaded_native_captured_pending_owner_review",
+      "triangle_allocation": 11800,
+      "replacement_sha256": "8e1e2ba6689bfca7327c778e2b598b0b0026d4e29418b01ef48e4c94453c4b7e",
+      "replacement_triangles": 8136,
+      "replacement_bytes": 541197,
+      "master": "art/blender/legions_redesign_supercapital.blend",
+      "master_sha256": "e50ce659f0c5ea5affc278281d08c26ade5948baffbd34a943682cf30f029957"
+    },
+    {
+      "binding": "confederacy:constructor",
+      "kind": "constructor",
+      "template": "confed_constructor",
+      "live_factory_id": "confed_constructor",
+      "display_name": "Homing Spider Droid Rig",
+      "baseline_mesh": "assets/models/confed_constructor.mesh.json",
+      "baseline_mesh_sha256": "cce3fd0e2a02b4e745efeec9ff6873869b17fec65f6aa0f9f08238226a40b14c",
+      "original_envelope": {
+        "min": [
+          -37.794229,
+          -8.265,
+          -34.6975
+        ],
+        "max": [
+          37.794229,
+          33.0,
+          34.0
+        ]
+      },
+      "replacement_mesh": "visual_packs/legions-redesign/assets/models/constructor.mesh.json",
+      "replacement_status": "built_strictly_loaded_native_captured_pending_owner_review",
+      "triangle_allocation": 3500,
+      "replacement_sha256": "2271937c772a461c220b7fae2eb0022f07e5a2d0a36f59bb5b312b635fc27b74",
+      "replacement_triangles": 2892,
+      "replacement_bytes": 200585,
+      "master": "art/blender/legions_redesign_constructor.blend",
+      "master_sha256": "afa25d4e1bca164dd7a4500185d47cfd7b9d3ce8a713a5cdcb3066d8bbaee03a"
+    },
+    {
+      "binding": "confederacy:colonizer",
+      "kind": "colonizer",
+      "template": "confed_colonizer",
+      "live_factory_id": "confed_colonizer",
+      "display_name": "Droid Foundry Barge",
+      "baseline_mesh": "assets/models/confed_colonizer.mesh.json",
+      "baseline_mesh_sha256": "7c8a7b31847896526b67d9daa7fe4ea866ff03f8c4da3acd31fe9401ef0fd08d",
+      "original_envelope": {
+        "min": [
+          -52.856406,
+          -7.0,
+          -51.6975
+        ],
+        "max": [
+          52.856406,
+          43.5,
+          55.4475
+        ]
+      },
+      "replacement_mesh": "visual_packs/legions-redesign/assets/models/colonizer.mesh.json",
+      "replacement_status": "built_strictly_loaded_native_captured_pending_owner_review",
+      "triangle_allocation": 4500,
+      "replacement_sha256": "74d391e892184a9c35bc311f663b33c0c93de794e1fa0738b31c67b54aea5b2b",
+      "replacement_triangles": 4440,
+      "replacement_bytes": 290406,
+      "master": "art/blender/legions_redesign_colonizer.blend",
+      "master_sha256": "8de02f680a4011ec9df0947ac27de0179bd8938175587d14b7d790e89a0b2c94"
+    },
+    {
+      "binding": "confederacy:convoy",
+      "kind": "convoy",
+      "template": "legion_convoy",
+      "live_factory_id": "confed_crew_transport",
+      "display_name": "Confederacy Crew Transport",
+      "baseline_mesh": "assets/models/legion_convoy.mesh.json",
+      "baseline_mesh_sha256": "78f864ab6a742b10596c3af75430744a31d5a77dfc5c7af3851dff7804c13041",
+      "original_envelope": {
+        "min": [
+          -24.700001,
+          -6.3,
+          -65.698
+        ],
+        "max": [
+          24.700001,
+          29.4,
+          57.6
+        ]
+      },
+      "replacement_mesh": "visual_packs/legions-redesign/assets/models/convoy.mesh.json",
+      "replacement_status": "built_strictly_loaded_native_captured_pending_owner_review",
+      "triangle_allocation": 4000,
+      "replacement_sha256": "17054ba67c1e9934a2dc86e9e0e8b1a37f99fb5e7731d094845b3042215dfaed",
+      "replacement_triangles": 3244,
+      "replacement_bytes": 212643,
+      "master": "art/blender/legions_redesign_convoy.blend",
+      "master_sha256": "884c94a79622d9b6da735645d035ca34cd92523f8e6032543c8a6a2f6bd32bca"
+    },
+    {
+      "binding": "confederacy:command_station",
+      "kind": "command_station",
+      "template": "legion_command_station",
+      "live_factory_id": "command_station",
+      "display_name": "Legions Command Station",
+      "baseline_mesh": "assets/models/legion_command_station.mesh.json",
+      "baseline_mesh_sha256": "a9f6bdb8259217f1649ee47b44809cef79ac4c3369c680325f8e5c874a0cd0d8",
+      "original_envelope": {
+        "min": [
+          -53.799999,
+          -6.0,
+          -38.0
+        ],
+        "max": [
+          53.799999,
+          41.6,
+          60.0
+        ]
+      },
+      "replacement_mesh": "visual_packs/legions-redesign/assets/models/command_station.mesh.json",
+      "replacement_status": "built_strictly_loaded_native_captured_pending_owner_review",
+      "triangle_allocation": 6000,
+      "replacement_sha256": "f51d2479b8c41991708d4af464ffa2f91893f812c074bd4c37b17780648ffc80",
+      "replacement_triangles": 3660,
+      "replacement_bytes": 232563,
+      "master": "art/blender/legions_redesign_command_station.blend",
+      "master_sha256": "4a428127e83f2f09ad8cb17802dc4ce8b0e47bc7e8a4bd6adad22b5602c88045"
+    },
+    {
+      "binding": "confederacy:shipyard",
+      "kind": "shipyard",
+      "template": "legion_shipyard",
+      "live_factory_id": "shipyard",
+      "display_name": "Legions Shipyard",
+      "baseline_mesh": "assets/models/legion_shipyard.mesh.json",
+      "baseline_mesh_sha256": "748c48aa54266073f5b0773f3ef0748b2cf049cd51523d65f66083163d794f01",
+      "original_envelope": {
+        "min": [
+          -62.04,
+          -5.6,
+          -45.0564
+        ],
+        "max": [
+          62.04,
+          41.6,
+          62.4
+        ]
+      },
+      "replacement_mesh": "visual_packs/legions-redesign/assets/models/shipyard.mesh.json",
+      "replacement_status": "built_strictly_loaded_native_captured_pending_owner_review",
+      "triangle_allocation": 11000,
+      "replacement_sha256": "cbc9a99206b7fb6ccd2de8eb5fa5efdec3de7acbf74cc8dd20e0855848f1d062",
+      "replacement_triangles": 7048,
+      "replacement_bytes": 475291,
+      "master": "art/blender/legions_redesign_shipyard.blend",
+      "master_sha256": "9589d99e30c2af381ea6791ef161a6c1b415acdfbc8176b3c212609057ec00ac"
+    },
+    {
+      "binding": "confederacy:mining_station",
+      "kind": "mining_station",
+      "template": "legion_mining_station",
+      "live_factory_id": "mining_station",
+      "display_name": "Legions Mining Station",
+      "baseline_mesh": "assets/models/legion_mining_station.mesh.json",
+      "baseline_mesh_sha256": "32bb2c2b72ac9dacee83ae841d3e5ecf6b0e7c4246ee4e99f0548b28d9695d8f",
+      "original_envelope": {
+        "min": [
+          -40.418598,
+          -31.44,
+          -29.36
+        ],
+        "max": [
+          40.418598,
+          11.08,
+          46.96
+        ]
+      },
+      "replacement_mesh": "visual_packs/legions-redesign/assets/models/mining_station.mesh.json",
+      "replacement_status": "built_strictly_loaded_native_captured_pending_owner_review",
+      "triangle_allocation": 4500,
+      "replacement_sha256": "04aa69ff9ed47baa7690882f072fab54b0b48cc7da827cec4650a1f5e889be76",
+      "replacement_triangles": 3476,
+      "replacement_bytes": 210638,
+      "master": "art/blender/legions_redesign_mining_station.blend",
+      "master_sha256": "20acd9ddb8ac91c4149fc2741aaf81ff7905d565bb2b948752fa31e9f5326422"
+    },
+    {
+      "binding": "confederacy:research_station",
+      "kind": "research_station",
+      "template": "legion_research_station",
+      "live_factory_id": "research_station",
+      "display_name": "Legions Research Station",
+      "baseline_mesh": "assets/models/legion_research_station.mesh.json",
+      "baseline_mesh_sha256": "01485bb472f239ab70779b1f1a5dabb381c18347b8b9d2350a3cb2e045b7fd72",
+      "original_envelope": {
+        "min": [
+          -46.3156,
+          -12.4,
+          -33.48
+        ],
+        "max": [
+          46.3156,
+          13.88,
+          52.68
+        ]
+      },
+      "replacement_mesh": "visual_packs/legions-redesign/assets/models/research_station.mesh.json",
+      "replacement_status": "built_strictly_loaded_native_captured_pending_owner_review",
+      "triangle_allocation": 5000,
+      "replacement_sha256": "3b83838a74b65539dae7be1d2c5c3a2e00615ff44fc066b15c7c53b8791dc3d5",
+      "replacement_triangles": 4268,
+      "replacement_bytes": 267034,
+      "master": "art/blender/legions_redesign_research_station.blend",
+      "master_sha256": "398c0f0ced32d14a7ed7c7a150f676e3a371b0e396df30ab476b776a99443269"
+    },
+    {
+      "binding": "confederacy:defense_platform",
+      "kind": "defense_platform",
+      "template": "legion_defense_platform",
+      "live_factory_id": "defense_platform",
+      "display_name": "Legions Defense Platform",
+      "baseline_mesh": "assets/models/legion_defense_platform.mesh.json",
+      "baseline_mesh_sha256": "637ca1293919ca6bf7667f5e1f60ad052b16d1adf08085196f8ec3adb4f4d983",
+      "original_envelope": {
+        "min": [
+          -50.2043,
+          -8.4,
+          -31.2764
+        ],
+        "max": [
+          50.2043,
+          16.544,
+          55.68
+        ]
+      },
+      "replacement_mesh": "visual_packs/legions-redesign/assets/models/defense_platform.mesh.json",
+      "replacement_status": "built_strictly_loaded_native_captured_pending_owner_review",
+      "triangle_allocation": 4500,
+      "replacement_sha256": "ecc6628394412016107c19dc242c555a2626da9016151bdf89c070d13595b27f",
+      "replacement_triangles": 3708,
+      "replacement_bytes": 226445,
+      "master": "art/blender/legions_redesign_defense_platform.blend",
+      "master_sha256": "dcdd9cc87f618344b71e0e7aa5db21f140671b5194d1273a1cf41ebd479b543a"
+    },
+    {
+      "binding": "confederacy:sensor_station",
+      "kind": "sensor_station",
+      "template": "legion_sensor_station",
+      "live_factory_id": "sensor_station",
+      "display_name": "Legions Sensor Station",
+      "baseline_mesh": "assets/models/legion_sensor_station.mesh.json",
+      "baseline_mesh_sha256": "27d3b5803c10a386b8ed74f8574acb0f8d0a6eb5f7509ad4bd2726ac33163755",
+      "original_envelope": {
+        "min": [
+          -36.1413,
+          -14.0,
+          -28.2851
+        ],
+        "max": [
+          36.1413,
+          38.252628,
+          34.8
+        ]
+      },
+      "replacement_mesh": "visual_packs/legions-redesign/assets/models/sensor_station.mesh.json",
+      "replacement_status": "built_strictly_loaded_native_captured_pending_owner_review",
+      "triangle_allocation": 4500,
+      "replacement_sha256": "9f27c0e93a753368489429ec6bf061343ac9a6ac3311a62da7036c8c936fccc6",
+      "replacement_triangles": 4108,
+      "replacement_bytes": 256486,
+      "master": "art/blender/legions_redesign_sensor_station.blend",
+      "master_sha256": "ab92f2565b19750c132e9388b80a1aabcb307519862d4bfd953c2899ca8e0d32"
+    },
+    {
+      "binding": "confederacy:trade_station",
+      "kind": "trade_station",
+      "template": "legion_trade_station",
+      "live_factory_id": "trade_station",
+      "display_name": "Legions Trade Station",
+      "baseline_mesh": "assets/models/legion_trade_station.mesh.json",
+      "baseline_mesh_sha256": "567416bb0c267c8896eccdaf3210e9e347fc60ab0e92f80b9227a66e7ee82d49",
+      "original_envelope": {
+        "min": [
+          -43.7668,
+          -6.552,
+          -46.0532
+        ],
+        "max": [
+          43.7668,
+          18.28,
+          46.0532
+        ]
+      },
+      "replacement_mesh": "visual_packs/legions-redesign/assets/models/trade_station.mesh.json",
+      "replacement_status": "built_strictly_loaded_native_captured_pending_owner_review",
+      "triangle_allocation": 4500,
+      "replacement_sha256": "7304679c32334e5b0a707e2658b5df039c31f65b363bab4be73833a17a1ef9e9",
+      "replacement_triangles": 3640,
+      "replacement_bytes": 223602,
+      "master": "art/blender/legions_redesign_trade_station.blend",
+      "master_sha256": "daf9faa388e1c12304847ee2af5387e22be503edf5abd8da5693f68413d1d917"
+    },
+    {
+      "binding": "confederacy:fighter_platform",
+      "kind": "fighter_platform",
+      "template": "legion_fighter_platform",
+      "live_factory_id": "fighter_platform",
+      "display_name": "Legions Fighter Platform",
+      "baseline_mesh": "assets/models/legion_fighter_platform.mesh.json",
+      "baseline_mesh_sha256": "b88dd8ee806fc3b8167cd93252a64b87683430fc19cb0f3a177423ef46a32f9c",
+      "original_envelope": {
+        "min": [
+          -42.4021,
+          -8.8,
+          -36.4
+        ],
+        "max": [
+          42.4021,
+          11.88,
+          36.0
+        ]
+      },
+      "replacement_mesh": "visual_packs/legions-redesign/assets/models/fighter_platform.mesh.json",
+      "replacement_status": "built_strictly_loaded_native_captured_pending_owner_review",
+      "triangle_allocation": 4500,
+      "replacement_sha256": "7d3ff39ae95c40f113def13b4233663896c13d1090c5db3396ea3c21b2910ac4",
+      "replacement_triangles": 3772,
+      "replacement_bytes": 235867,
+      "master": "art/blender/legions_redesign_fighter_platform.blend",
+      "master_sha256": "3f381627aa1940b5ee82fd4070fac30af002ca2283427bde5ae5fb4446e2cf3f"
+    },
+    {
+      "binding": "confederacy:repair_dock",
+      "kind": "repair_dock",
+      "template": "legion_repair_dock",
+      "live_factory_id": "repair_dock",
+      "display_name": "Legions Repair Dock",
+      "baseline_mesh": "assets/models/legion_repair_dock.mesh.json",
+      "baseline_mesh_sha256": "3c865b62f82ce4b5d8053d022a481d992f96b69852d335fed6cc0cbde4079d76",
+      "original_envelope": {
+        "min": [
+          -40.1472,
+          -14.8,
+          -36.4
+        ],
+        "max": [
+          40.1472,
+          26.4,
+          36.4
+        ]
+      },
+      "replacement_mesh": "visual_packs/legions-redesign/assets/models/repair_dock.mesh.json",
+      "replacement_status": "built_strictly_loaded_native_captured_pending_owner_review",
+      "triangle_allocation": 5000,
+      "replacement_sha256": "29e4243c400b8953a4869b25fb20f6d0a00396c1493afb4d11ccf59e4bbea11f",
+      "replacement_triangles": 4668,
+      "replacement_bytes": 301014,
+      "master": "art/blender/legions_redesign_repair_dock.blend",
+      "master_sha256": "7cbd8767613f2e92192ae320a3ca0ce42f1054a256e962a9e7aedeba8acce461"
+    },
+    {
+      "binding": "confederacy:energy_relay",
+      "kind": "energy_relay",
+      "template": "legion_energy_relay",
+      "live_factory_id": "energy_relay",
+      "display_name": "Legions Energy Relay",
+      "baseline_mesh": "assets/models/legion_energy_relay.mesh.json",
+      "baseline_mesh_sha256": "8c260a988a6e0f66bb7a659832f8c289dcd797a82c4eab1f25725131086de7e0",
+      "original_envelope": {
+        "min": [
+          -41.287201,
+          -16.0,
+          -25.671301
+        ],
+        "max": [
+          41.287201,
+          31.6,
+          46.299999
+        ]
+      },
+      "replacement_mesh": "visual_packs/legions-redesign/assets/models/energy_relay.mesh.json",
+      "replacement_status": "built_strictly_loaded_native_captured_pending_owner_review",
+      "triangle_allocation": 4000,
+      "replacement_sha256": "37aa35685ef47ef7063f1d01742d8f9cb40a88474ef6e4ca0fa3970cd1405448",
+      "replacement_triangles": 3872,
+      "replacement_bytes": 246628,
+      "master": "art/blender/legions_redesign_energy_relay.blend",
+      "master_sha256": "771f4388cfe4c117bce71f09de8f9f53d2f1f45fcf29e3671347d96812c35be3"
+    },
+    {
+      "binding": "confederacy:defense_satellite",
+      "kind": "defense_satellite",
+      "template": "legion_defense_satellite",
+      "live_factory_id": "defense_satellite",
+      "display_name": "Legions Defense Satellite",
+      "baseline_mesh": "assets/models/legion_defense_satellite.mesh.json",
+      "baseline_mesh_sha256": "8db782a326362e4e15d52090bd1dcd8039b96df4b2127d3c1bfd87ccb2b6ac9d",
+      "original_envelope": {
+        "min": [
+          -41.1051,
+          -9.0,
+          -34.0
+        ],
+        "max": [
+          41.1051,
+          19.5,
+          44.0
+        ]
+      },
+      "replacement_mesh": "visual_packs/legions-redesign/assets/models/defense_satellite.mesh.json",
+      "replacement_status": "built_strictly_loaded_native_captured_pending_owner_review",
+      "triangle_allocation": 2500,
+      "replacement_sha256": "6573780a190d2dc8c9d8fe965c552d4b90c6ebd63490cce6cc118e41bf204737",
+      "replacement_triangles": 2248,
+      "replacement_bytes": 133353,
+      "master": "art/blender/legions_redesign_defense_satellite.blend",
+      "master_sha256": "db20020db3b0c637da780a0195a2d8286daaa85485ddcdad2e783f75d141ac1f"
+    },
+    {
+      "binding": "confederacy:attack_satellite",
+      "kind": "attack_satellite",
+      "template": "legion_attack_satellite",
+      "live_factory_id": "attack_satellite",
+      "display_name": "Legions Attack Satellite",
+      "baseline_mesh": "assets/models/legion_attack_satellite.mesh.json",
+      "baseline_mesh_sha256": "da4ad21c5c1a363054050169988d1ce0eab82d1c9fb31a5d1318c5f69eebaf64",
+      "original_envelope": {
+        "min": [
+          -50.9795,
+          -9.0,
+          -34.0
+        ],
+        "max": [
+          50.9795,
+          21.5,
+          58.0
+        ]
+      },
+      "replacement_mesh": "visual_packs/legions-redesign/assets/models/attack_satellite.mesh.json",
+      "replacement_status": "built_strictly_loaded_native_captured_pending_owner_review",
+      "triangle_allocation": 2500,
+      "replacement_sha256": "56cbf7457512ed256ad57d1b7c5106c2c92815ca99c4b456127bfd43f9e27b70",
+      "replacement_triangles": 2260,
+      "replacement_bytes": 136070,
+      "master": "art/blender/legions_redesign_attack_satellite.blend",
+      "master_sha256": "462730fe88f777815e258ded6462dfc2dd279503df121de482498975d298ea17"
+    },
+    {
+      "binding": "confederacy:planet_extractor",
+      "kind": "planet_extractor",
+      "template": "legion_planet_extractor",
+      "live_factory_id": "planet_extractor",
+      "display_name": "Legions Planet Extractor",
+      "baseline_mesh": "assets/models/legion_planet_extractor.mesh.json",
+      "baseline_mesh_sha256": "21ac55b4336a9a34b9cc6bdea34e2d9e989dd027e236f7b9eca730f0b382a039",
+      "original_envelope": {
+        "min": [
+          -34.0,
+          0.0,
+          -32.0
+        ],
+        "max": [
+          34.0,
+          43.0,
+          32.0
+        ]
+      },
+      "replacement_mesh": "visual_packs/legions-redesign/assets/models/planet_extractor.mesh.json",
+      "replacement_status": "built_strictly_loaded_native_captured_pending_owner_review",
+      "triangle_allocation": 3000,
+      "replacement_sha256": "3b68efa25203d897e88cffd3b80e0f297268a5326d97e4f13ddef4c35c4edd85",
+      "replacement_triangles": 2512,
+      "replacement_bytes": 154211,
+      "master": "art/blender/legions_redesign_planet_extractor.blend",
+      "master_sha256": "577772c12e9804579a2447f0d5d9432629eaf5da877b0f83336eb87f99509609"
+    },
+    {
+      "binding": "confederacy:planet_trade_hub",
+      "kind": "planet_trade_hub",
+      "template": "legion_planet_trade_hub",
+      "live_factory_id": "planet_trade_hub",
+      "display_name": "Legions Planet Trade Hub",
+      "baseline_mesh": "assets/models/legion_planet_trade_hub.mesh.json",
+      "baseline_mesh_sha256": "b3bbb4ccfd292d695e73134d4bda12e1e83e25fc1ac93aade8ff96cc0bf0ea39",
+      "original_envelope": {
+        "min": [
+          -34.0,
+          0.0,
+          -32.0
+        ],
+        "max": [
+          34.0,
+          49.5,
+          32.0
+        ]
+      },
+      "replacement_mesh": "visual_packs/legions-redesign/assets/models/planet_trade_hub.mesh.json",
+      "replacement_status": "built_strictly_loaded_native_captured_pending_owner_review",
+      "triangle_allocation": 3000,
+      "replacement_sha256": "fd7f870fef9f353896e1bc356b4377d00500f8d38ba99147869180370adb7af2",
+      "replacement_triangles": 2628,
+      "replacement_bytes": 160917,
+      "master": "art/blender/legions_redesign_planet_trade_hub.blend",
+      "master_sha256": "9fb7f09d0a3ab566343c6aad33134e72358b3dcb12f41564ebdc68eea46f4e8d"
+    },
+    {
+      "binding": "confederacy:planet_shield_generator",
+      "kind": "planet_shield_generator",
+      "template": "legion_planet_shield_generator",
+      "live_factory_id": "planet_shield_generator",
+      "display_name": "Legions Planet Shield Generator",
+      "baseline_mesh": "assets/models/legion_planet_shield_generator.mesh.json",
+      "baseline_mesh_sha256": "7d8d1676d83461298d8efa08be75faa494452a71196952d6943377dedb4f1873",
+      "original_envelope": {
+        "min": [
+          -34.0,
+          0.0,
+          -32.0
+        ],
+        "max": [
+          34.0,
+          46.5,
+          32.0
+        ]
+      },
+      "replacement_mesh": "visual_packs/legions-redesign/assets/models/planet_shield_generator.mesh.json",
+      "replacement_status": "built_strictly_loaded_native_captured_pending_owner_review",
+      "triangle_allocation": 3500,
+      "replacement_sha256": "a39387b48051f858fb411c4f394ebe8272684cc725731438d71a788e0dd339fd",
+      "replacement_triangles": 3108,
+      "replacement_bytes": 188891,
+      "master": "art/blender/legions_redesign_planet_shield_generator.blend",
+      "master_sha256": "d80c0b5beff2f2bc1f67a6e079b4d288e7580a252787893861018d8d145a8e73"
+    },
+    {
+      "binding": "confederacy:planet_pulsar_cannon",
+      "kind": "planet_pulsar_cannon",
+      "template": "legion_planet_pulsar_cannon",
+      "live_factory_id": "planet_pulsar_cannon",
+      "display_name": "Legions Planet Pulsar Cannon",
+      "baseline_mesh": "assets/models/legion_planet_pulsar_cannon.mesh.json",
+      "baseline_mesh_sha256": "bd26fd608964a45f2ec3afd1bc7a66617d218cf6a69ef4fc0013331427ea8393",
+      "original_envelope": {
+        "min": [
+          -34.0,
+          0.0,
+          -32.0
+        ],
+        "max": [
+          34.0,
+          42.4,
+          46.0
+        ]
+      },
+      "replacement_mesh": "visual_packs/legions-redesign/assets/models/planet_pulsar_cannon.mesh.json",
+      "replacement_status": "built_strictly_loaded_native_captured_pending_owner_review",
+      "triangle_allocation": 3500,
+      "replacement_sha256": "9108095d2dc9db9768003423a23fd742a2b6603ea796b0c1f2cd07e9adc9a924",
+      "replacement_triangles": 3012,
+      "replacement_bytes": 186185,
+      "master": "art/blender/legions_redesign_planet_pulsar_cannon.blend",
+      "master_sha256": "0bfa35097a62e4d7bc9eedfe3c4a624b68cd34e85c8d33741bf38f759aa90ef1"
+    }
+  ],
+  "status": "complete_26_exports_native_review_and_owner_local_normal_game_activation"
+}

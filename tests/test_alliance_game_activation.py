@@ -74,7 +74,7 @@ class AllianceDefaultRolloutTests(unittest.TestCase):
                        'resolution':'auto','fullscreen':False,'opaque_mod_preference':{'x':[1,2]}}
                 loaded=self.load(saved)
                 self.assertEqual(loaded['visual_packs'],menus.DEFAULT_SETTINGS['visual_packs'])
-                self.assertEqual(len(loaded['visual_packs']),15)
+                self.assertEqual(len(loaded['visual_packs']),16)
                 self.assertEqual({k:v for k,v in loaded.items() if k!='visual_packs'},
                                  {k:v for k,v in saved.items() if k!='visual_packs'})
 

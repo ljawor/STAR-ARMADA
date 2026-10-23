@@ -1,0 +1,61 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "prototype:legions_redesign/mining_station",
+  "revision": "801d479d51ab86acc2bb5b178f53ea175bdb93b1069e4697e95f5c2db2ef6278",
+  "display_name": "Legions Mining Station — pending appearance review",
+  "files": {
+    "mesh": {
+      "path": "assets/models/mining_station.mesh.json",
+      "sha256": "04aa69ff9ed47baa7690882f072fab54b0b48cc7da827cec4650a1f5e889be76",
+      "bytes": 210638
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -40.3781776,
+      -31.4187393,
+      -29.3218403
+    ],
+    "max": [
+      40.3781776,
+      11.0587397,
+      46.9218407
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor / STAR ARMADA",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "notes": "Original Legions redesign. Script-authoritative build_legions_redesign.py and dedicated design modules; editable masters in art/blender. Complete faction redesign pending owner appearance approval. No simulation, scale or balance changes."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 3476,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}

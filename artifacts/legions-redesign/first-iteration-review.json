@@ -1,0 +1,7 @@
+{
+  "status": "rejected_plain_surfaces_then_revised",
+  "reason": "First native station/hardware pass was overly plain and cyan-banded despite passing CPU/runtime contracts. Added broad functional armor/machinery and localized emissives, rebuilt all actual meshes and recaptured.",
+  "archived_first_capture": "/Users/lukaszjawor/.hermes/cache/scratch/legions-first-native-faction",
+  "final_capture": "native-full-faction",
+  "screen_sharing_hold": "Observed during CPU-only phase; user subsequently said Sharing has ended. You can continue"
+}

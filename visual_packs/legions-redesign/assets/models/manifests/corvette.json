@@ -1,0 +1,61 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "prototype:legions_redesign/corvette",
+  "revision": "e30d383f10d6fec57e5125f03fcbd5f4802b82d464770a8deca0f5b0948479c3",
+  "display_name": "Droth Drone Corvette — pending appearance review",
+  "files": {
+    "mesh": {
+      "path": "assets/models/corvette.mesh.json",
+      "sha256": "e63e31d56b89c03b2717a7a26f6d1bfcff35250446139032dd1844c36a4d528c",
+      "bytes": 226363
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -31.6821308,
+      -6.9889498,
+      -38.4467163
+    ],
+    "max": [
+      31.6821308,
+      15.0889502,
+      48.0244713
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor / STAR ARMADA",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "notes": "Original Legions redesign. Script-authoritative build_legions_redesign.py and dedicated design modules; editable masters in art/blender. Complete faction redesign pending owner appearance approval. No simulation, scale or balance changes."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 3468,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}

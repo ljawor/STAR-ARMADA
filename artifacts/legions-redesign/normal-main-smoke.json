@@ -1,0 +1,12 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "main.py",
+    "--smoke"
+  ],
+  "pid": 8184,
+  "elapsed_seconds": 35.071063708979636,
+  "returncode": 0,
+  "timeout": false,
+  "orphan_group_killed": false
+}

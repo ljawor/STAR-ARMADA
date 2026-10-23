@@ -1,0 +1,14 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "tools/render/verify_legions_redesign.py",
+    "--include-control",
+    "--out",
+    "artifacts/legions-redesign/native-full-faction"
+  ],
+  "pid": 7920,
+  "elapsed_seconds": 124.76359029195737,
+  "returncode": 0,
+  "timeout": false,
+  "orphan_group_killed": false
+}
