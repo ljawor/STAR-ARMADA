@@ -125,7 +125,8 @@ def export(root,kind,stem,limits,*,replace_own=False):
             'bounds':bounds,'bytes':len(payload.encode()),'degenerate_skipped':skipped,
             'roles':{r:len(batches[r]) for r in ROLES}}
     print('ALLIANCE_REDESIGN_GEOMETRY '+json.dumps(report),flush=True)
-    assert all(batches.values()) and 1800<total<=(6000 if kind=='bomber' else 11888)
+    from tools.art.alliance_redesign_catalogue import TRIANGLE_LIMITS
+    assert all(batches.values()) and 1800<total<=TRIANGLE_LIMITS[kind],(kind,total)
     assert len(verts)<9500 and len(payload.encode())<2000000
     assert skipped==0,skipped
     for i,(low,high) in enumerate(limits):

@@ -5,8 +5,11 @@ from tools.render.verify_alliance_redesign import camera_plan, LIVE_IDS, PACK_NA
 
 class AllianceRedesignCaptureTests(unittest.TestCase):
     def test_representative_rows_are_actual_alliance_factory_ids(self):
-        self.assertEqual({row[0] for row in ROWS},{'frigate','shipyard'})
-        self.assertEqual(LIVE_IDS,{'frigate':'rebel_frigate','shipyard':'shipyard'})
+        self.assertEqual(len(ROWS),26)
+        self.assertTrue({'frigate','shipyard'}.issubset({row[0] for row in ROWS}))
+        self.assertEqual(LIVE_IDS['frigate'],'rebel_frigate')
+        self.assertEqual(LIVE_IDS['shipyard'],'shipyard')
+        self.assertEqual(LIVE_IDS['convoy'],'rebel_crew_transport')
         self.assertEqual(PACK_NAME,'alliance-redesign')
 
     def test_station_snapshot_uses_production_owner_faction_binding(self):

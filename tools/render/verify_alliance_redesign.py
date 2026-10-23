@@ -15,6 +15,7 @@ import sys
 
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT))
+from tools.art.alliance_redesign_catalogue import SHIP_KINDS
 from tools.art.build_alliance_redesign import ROWS as SOURCE_ROWS
 ROWS=tuple((kind,kind,live,name) for kind,template,live,name in SOURCE_ROWS)
 PACK_NAME='alliance-redesign'
@@ -28,6 +29,13 @@ def camera_plan(*,length,center,heading_degrees):
                       yaw=yaw+heading_degrees,pitch=pitch,fov=55.)
             for name,multiplier,yaw,pitch in
             [('close',1.65,48,28),('rear',1.65,220,18),('tactical',4.8,48,52)]}
+
+
+def spawn_subject(fixture,kind,live_id):
+    from game.core.vectors import Vec3
+    factory=(fixture.manager.factory.spawn_ship if kind in SHIP_KINDS
+             else fixture.manager.factory.spawn_station)
+    return factory(live_id,0,Vec3())
 
 
 def subject_snapshot(fixture):
@@ -106,10 +114,10 @@ def main():
             fixture=make_fixture('four-player-close-v1')
             state=fixture.manager.state
             state.entities.clear()
-            state.players[0].faction='imperial' if kind=='corvette' else 'rebel'
-            factory=fixture.manager.factory.spawn_station if kind=='shipyard' else fixture.manager.factory.spawn_ship
-            entity=factory(LIVE_IDS.get(kind,data_id),0,Vec3())
-            faction='imperial' if kind=='corvette' else 'rebel'
+            is_control=stem=='vigil-control'
+            state.players[0].faction='imperial' if is_control else 'rebel'
+            entity=spawn_subject(fixture,kind,data_id)
+            faction='imperial' if is_control else 'rebel'
             source_hash=state_hash(state)
             configurations={label:{**defaults,'visual_packs':list(defaults['visual_packs'])+
                 ([PACK_NAME] if label=='after' else [])} for label in ('before','after')}
@@ -130,7 +138,7 @@ def main():
                 model=json.loads(raw);scale=payload['instances'][0]['scale']
                 allpoints.extend([[c*scale for c in point] for point in model['bounds']])
                 lengths.append(max((model['bounds'][1][i]-model['bounds'][0][i])*scale
-                                  for i in (range(3) if kind=='shipyard' else (2,))))
+                                  for i in ((2,) if kind in SHIP_KINDS else range(3))))
             assert abs(lengths[0]/lengths[1]-1)<.011,(kind,lengths)
             center=[(min(v[i] for v in allpoints)+max(v[i] for v in allpoints))/2 for i in range(3)]
             plan=camera_plan(length=max(lengths),center=center,heading_degrees=math.degrees(entity.yaw))
@@ -151,14 +159,15 @@ def main():
                         '--screenshot',str(image),'--report',str(report)]
                     result=subprocess.run(command,cwd=ROOT,capture_output=True,text=True,
                         env={**os.environ,'SDL_VIDEODRIVER':'cocoa'},timeout=60)
-                    (folder/'stdout.txt').write_text(result.stdout+'\n'+result.stderr)
+                    output=(result.stdout+'\n'+result.stderr).rstrip()
+                    (folder/'stdout.txt').write_text(output+'\n' if output else '')
                     if result.returncode:raise RuntimeError(f'Native viewer failed: {folder}: {result.stderr[-2000:]}')
                     if not image.is_file() or not report.is_file():raise RuntimeError('Missing native capture/report')
                     with Image.open(image) as captured:pair[label]=captured.convert('RGB')
                 difference=ImageChops.difference(pair['before'],pair['after'])
                 changed=int(np.count_nonzero(np.max(np.asarray(difference),axis=2)>8))
                 mean=sum(ImageStat.Stat(difference).mean)/3
-                if kind=='corvette':assert changed==0,(kind,view,changed)
+                if is_control:assert changed==0,(kind,view,changed)
                 else:assert changed>40,(kind,view,changed)
                 metrics['views'][view]={'changed_pixels_gt8':changed,'mean_abs_rgb':mean,'camera':pose,
                     'before':f'{stem}-before-{view}/capture.png','after':f'{stem}-after-{view}/capture.png'}

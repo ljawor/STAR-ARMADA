@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Package Alliance redesign specimens, preserving original assets and normal defaults until review."""
+"""Package all 26 Alliance redesigns through strict runtime contracts; accepted baseline art stays frozen."""
 from copy import deepcopy
 import hashlib
 import json
@@ -10,6 +10,7 @@ import tempfile
 
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT))
+from tools.art.alliance_redesign_catalogue import TRIANGLE_LIMITS
 from tools.art.build_alliance_redesign import ROWS
 
 
@@ -23,7 +24,7 @@ def main():
         raw=(pack/relative).read_bytes();payload=json.loads(raw)
         asset='prototype:alliance_redesign/'+kind
         if payload.get('asset')!=asset:raise ValueError(f'Wrong export identity: {kind}')
-        if not 1800<payload['triangle_count']<=(6000 if kind=='bomber' else 11888):
+        if not 1800<payload['triangle_count']<=TRIANGLE_LIMITS[kind]:
             raise ValueError(f'Triangle budget: {kind}')
         digest=hashlib.sha256(raw).hexdigest()
         manifest=deepcopy(json.loads((ROOT/f'assets/models/manifests/{template}.json').read_text()))
@@ -37,7 +38,7 @@ def main():
         manifest['budgets']={'triangles':payload['triangle_count'],'draw_calls':6,'texture_bytes':0}
         manifest['provenance']={'author':'Lukasz Jawor / STAR ARMADA',
             'tool':'Blender','tool_version':'5.0.1','license':'original',
-            'notes':'Original Alliance redesign. Script-authoritative build_alliance_redesign.py and dedicated design modules; editable masters in art/blender. Style specimens pending owner appearance approval. No simulation, scale or balance changes.'}
+            'notes':'Original Alliance redesign. Script-authoritative build_alliance_redesign.py and dedicated design modules; editable masters in art/blender. Complete faction redesign pending owner appearance approval. No simulation, scale or balance changes.'}
         manifest_path=f'assets/models/manifests/{stem}.json'
         manifests.append((manifest_path,manifest))
         replacements.append({'binding':'rebel:'+kind,'replace_of':baseline_asset,'manifest':manifest_path})
@@ -45,7 +46,7 @@ def main():
         'id':'prototype:alliance_redesign','version':'0.1.0',
         'requires':{'min_engine':'0.15.1','contracts':['star-armada/model-manifest/v1']},
         'content':{'replaces':replacements},
-        'notes':'Alliance frigate/shipyard style specimens for a complete faction redesign. All existing meshes and normal settings preserved. Appearance review pending; final delivery must activate the complete approved set in normal main.py.'}
+        'notes':'Complete 26-binding Alliance faction redesign. Accepted baseline geometry preserved. Appearance review pending; final delivery must be active in normal main.py.'}
     for relative,value in manifests+[('visual-pack.json',descriptor)]:
         target=pack/relative;target.parent.mkdir(parents=True,exist_ok=True)
         fd,name=tempfile.mkstemp(prefix='.'+target.name+'-',dir=target.parent)
@@ -57,9 +58,12 @@ def main():
         finally:stage.unlink(missing_ok=True)
     # Actual transactional runtime validation, including geometry and binding envelopes.
     from render.asset_registry import AssetResolver
+    from render.menus import DEFAULT_SETTINGS
     resolver=AssetResolver(ROOT)
-    active=resolver.activate_packs([pack/'visual-pack.json'],pack_root=ROOT/'visual_packs')
-    if active!=('prototype:alliance_redesign',):raise ValueError(resolver.diagnostics)
+    paths=[ROOT/'visual_packs'/name/'visual-pack.json'
+           for name in DEFAULT_SETTINGS['visual_packs'] if name!='alliance-redesign']
+    active=resolver.activate_packs(paths+[pack/'visual-pack.json'],pack_root=ROOT/'visual_packs')
+    if 'prototype:alliance_redesign' not in active:raise ValueError(resolver.diagnostics)
     for kind,_,_,_ in ROWS:
         resolved=resolver.resolve('rebel:'+kind)
         if resolved is None or resolved.asset!='prototype:alliance_redesign/'+kind:

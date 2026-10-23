@@ -1,0 +1,11 @@
+{
+  "models": 26,
+  "alliance_triangles": 96708,
+  "accepted_imperium_triangles": 127164,
+  "combined_triangles": 223872,
+  "unchanged_global_ceiling": 240000,
+  "headroom": 16128,
+  "bytes": 6125684,
+  "all_six_roles_nonempty": true,
+  "zero_degenerate_triangles_skipped": true
+}

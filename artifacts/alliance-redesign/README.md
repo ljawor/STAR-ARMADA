@@ -1,68 +1,47 @@
-# Free Systems Alliance redesign — first style specimens
+# Free Systems Alliance — complete 26-model redesign
 
-## Current state
+## Owner review build
 
-The Escort Frigate and Shipyard are built in Blender and exported as real,
-strict-runtime-validated replacements. Their close/rear/tactical before/after
-captures use the production native renderer and normal material roles.
-These are **two style specimens, not completion of the faction redesign**.
-The remaining 24 bindings are the next authoring stage, using these specimens
-as the faction style reference; the original full-faction request remains active.
+All **26 existing Alliance bindings** have new editable Blender masters and strict-runtime-validated exports: 10 ship/logistics, 10 orbital stations, 2 satellites, and 4 surface installations. Crew transports and generated trade convoys share their existing single binding. No classes, balance, gameplay, saves, or simulation changed.
 
-The requested final delivery is the **normal game launched with `main.py`**,
-not an optional-viewer-only merge. No merge or release has been requested for
-these new appearances yet. Normal settings and the shipped catalogue remain
-unchanged during this first visual check; the existing accepted Imperium fleet
-is protected.
+The models are **active in this owner's ordinary `main.py` review checkout**:
+- `saves/settings.json` enables the new pack alongside all 14 accepted Imperium packs. Every other saved preference is preserved.
+- The actual native entry catalogue contains all 26 new mesh hashes.
+- Ordinary `main.py --smoke` passed: `SMOKE_CPP_OK`, 30 simulated seconds, 367 published frames.
 
-## Style
+```sh
+.venv/bin/python main.py
+```
 
-Alliance modular/naval construction rather than Imperial spear-shaped armor:
-chamfered command modules, connected service frames and mission pods, broad
-stepped plating, exposed paired drives, inhabited industrial facilities and
-open drydock slipways. The shipyard has two empty service lanes with connected
-cranes; it is not a filled box with a dock label.
+Choose Free Systems Alliance normally. No art viewer, command-line art switch or runtime Blender installation is required.
 
-## Full coverage
+**Not merged and not owner appearance-approved yet.** Public fresh defaults retain the prior 14 approved packs during owner review. Before any merge, enable the Alliance pack in fresh defaults and migrate both historical 13-/14-pack shipped settings, preserving custom lists and other preferences. A disabled/optional-only merge is not acceptable. Keep the native catalogue bound to these reviewed exports.
 
-`coverage.json` is derived from the live shipped catalogue and verified hashes:
-26 bindings = 10 ship/logistics + 10 orbital stations + 2 satellites + 4 surface
-installations. Crew transport and generated trade convoys share one existing
-binding. The shared scaffold and environmental meshes are not faction-specific
-and stay unchanged. No new classes, costs, balance values or unit behavior.
+## Actual evidence
 
-## First specimens
+- `fleet-review.png`, `stations-review.png`, `hardware-review.png`: all 26 native-rendered models, individually framed, **not** relative-size fleet charts.
+- `native-full-faction/`: same-subject close/rear/tactical BEFORE/AFTER pairs. Its 27 subjects include an Imperial Vigil with **zero changed pixels in all three views**.
+- `native-full-faction/metrics.json`: exact mesh paths/hashes, cameras, drawn lengths and per-view image differences. Every Alliance pair changes.
+- `native-full-faction/evidence-sha256.json`: retained PNG/snapshot/report hashes and the exact capture script, builder, descriptor and native executable hashes. Retained PNG recompression preserves decoded pixels.
+- `normal-game-catalogue.json`: exactly **26 / 103** native asset rows changed; all other **77 rows** are identical. The only other payload change is `metadata.visual_selection`; cameras, instances and all other metadata are identical.
+- `normal-main-smoke.{json,txt}`, `native-full-faction-supervised.{json,txt}`: real bounded execution receipts.
+- `coverage.json`: actual live IDs, original hashes/envelopes and every new export/hash.
+- `build/complete-faction.json`: actual Blender 5.0.1 counts, roles and source hashes.
+- `measured-resources.json`: **96,708 Alliance triangles**, combined with unchanged accepted Imperium **223,872 / 240,000**, leaving **16,128** triangles. All six roles are populated, no degenerate triangles were skipped, existing vertex/byte/triangle ceilings stay unchanged.
 
-| Binding | Triangles | Export vertices |
-|---|---:|---:|
-| `rebel:frigate` | 9,864 | 5,480 |
-| `rebel:shipyard` | 10,708 | 6,824 |
+The normal smoke proves startup and a live match, not organic construction of every class, physical owner play-testing, packaged Windows/macOS delivery or FPS. Publication timings exclude simulation/rendering and are not FPS.
 
-Both fit the exact existing replacement envelopes with small inward clearance,
-use all six existing material roles and remain inside the current loader limits.
-Editable new masters are `art/blender/alliance_redesign_{frigate,shipyard}.blend`;
-old Alliance/Imperium masters, exports and approved helpers are not overwritten.
+## Design and containment
 
-## Real native evidence
+Modular/naval Alliance construction rather than recolored Imperial wedges: blunt crossheads, pressure spines, replaceable armor/machinery, open carrier hangars and drydock cradles, attached cranes, habitats and working industrial frames. Capitals received substantive raised panel banks and exposed service machinery after a rejected initial full-family render showed overly plain surfaces.
 
-`native-specimens/before-after.png` compares the exact same entity, ownership
-color, camera and shader, with an unchanged Imperial Vigil control. Individually
-framed subjects are not a ship-size comparison or organic construction test.
+Every model stays within its existing replacement envelope with small inward clearance. Original core masters/exports and accepted Imperium assets/helpers are unchanged. The intentional pre-existing-file integration change is `assets/cpp/catalogue.snap`.
 
-Changed pixels (>8 RGB delta), close / rear / tactical:
-- Frigate: 30,480 / 26,027 / 4,696.
-- Shipyard: 77,416 / 71,033 / 10,734.
-- Imperial Vigil control: 0 / 0 / 0.
+Masters: `art/blender/alliance_redesign_<kind>.blend`.
+Pack: `visual_packs/alliance-redesign/`.
+Offline live/template IDs, budgets and dispatch: `tools/art/alliance_redesign_catalogue.py`.
 
-`native-specimens/metrics.json` binds each rendered mesh to its actual path/hash.
-`native-specimens-supervised.{json,txt}` records the successful externally bounded
-capture. All retained PNGs were recompressed losslessly with decoded pixels checked.
-
-The generic benchmark snapshot exporter assumes Imperial stations; this new
-capture tool instead uses production `render_bridge.collect.station_binding`
-for the specimen owner's actual faction. A regression covers the Alliance
-station binding so an Imperial shipyard cannot masquerade as an Alliance review.
-The shared exporter and runtime were not changed.
+The dedicated review exporter uses production `station_binding` and actual owner factions; it does not inherit the generic benchmark exporter's Imperial-station assumption. Snapshot metadata describes actual isolated subjects, not the old four-Imperial-fleet workload.
 
 ## Reproduce
 
@@ -70,24 +49,16 @@ The shared exporter and runtime were not changed.
 /Applications/Blender.app/Contents/MacOS/Blender --background --factory-startup \
   --python-exit-code 1 --python tools/art/build_alliance_redesign.py
 .venv/bin/python tools/art/package_alliance_redesign.py
-.venv/bin/python -m pytest -q tests/test_alliance_redesign_ship_designs.py \
-  tests/test_alliance_redesign_station_designs.py \
-  tests/test_alliance_redesign_specimens.py tests/test_alliance_redesign_capture.py
+.venv/bin/python -m pytest -q tests/test_alliance_redesign_*.py \
+  tests/test_alliance_game_activation.py
 .venv/bin/python tools/render/verify_alliance_redesign.py --include-control \
-  --out /absolute/fresh/path/native-specimens
+  --out /absolute/fresh/path/native-pairs
 ```
 
-The builder refuses existing new outputs unless `--replace-own` is explicitly
-provided. Do not rebuild the original accepted masters. Blender is offline-only;
-the eventual normal game requires no Blender installation.
+Existing new outputs require explicit `--replace-own`; never run this on accepted original builders/masters. Combined optional-pack limits are validated together, so splitting packs cannot bypass them.
 
-## Rollout constraints
+## Historical evidence
 
-The existing optional-pack global triangle ceiling applies to the combined
-Imperium + Alliance selection, not to each individual pack. Keep the accepted
-Imperium geometry unchanged; allocate the remaining faction budget explicitly
-before bulk authoring. Never silently raise the cap, split packs to bypass it,
-or reduce accepted Imperium detail. The two current specimens fit that ceiling.
-Normal-game rollout must migrate both former thirteen- and fourteen-pack shipped
-settings, retain custom selections/preferences, regenerate the actual shipped
-native catalogue, and verify all non-Alliance native asset rows remain identical.
+`native-specimens/`, `style-specimens.png`, `build/specimens.json`, `specimen-independent-review.json` and `repeat-export.json` describe the first two-model checkpoint **5db9886e0541436301cba59899228815982dde03**. Its two runtime meshes remain identical, but old source/descriptor pins refer to that checkpoint, not the later full-faction tooling. They are historical, not the current activation claim.
+
+`first-full-iteration-review.json` records the rejected first complete visual pass; original native pixels remain archived in scratch. The orbital detail worker was interrupted after writing changes: parent independently ran current CPU tests, built every actual Blender model, strictly loaded the whole pack and captured the final native frames.
