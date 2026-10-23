@@ -1,0 +1,14 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "tools/render/verify_alliance_redesign.py",
+    "--include-control",
+    "--out",
+    "artifacts/alliance-redesign/native-full-faction"
+  ],
+  "pid": 98121,
+  "elapsed_seconds": 107.8923330840189,
+  "returncode": 0,
+  "timeout": false,
+  "orphan_group_killed": false
+}

@@ -1,0 +1,32 @@
+{
+  "delegation": "deleg_7a7ffbd5",
+  "scope": "Independent complete-faction geometry and authoring technical review; not owner appearance approval or merge authorization",
+  "reviewed_model_count": 26,
+  "passed": true,
+  "security_concerns": [],
+  "logic_errors": [],
+  "tests_passed": 23,
+  "subtests_passed": 109,
+  "exported_parts_checked": 4795,
+  "checks": [
+    "26 actual exports, reports and editable masters",
+    "Manifest SHA-256, byte counts, geometry counts/bounds and current authoring source hashes",
+    "Exact actual 26-binding scope and baseline templates/envelopes",
+    "Six populated material roles and distinct functional signatures",
+    "Every exported part has closed edge topology, consistent winding, positive signed volume and triangle-derived normals",
+    "Sampled hangar/working clearances and selected feature visibility",
+    "Unchanged baseline core and accepted Imperium asset/source/metadata paths"
+  ],
+  "combined_pack_triangles": 223872,
+  "unchanged_triangle_ceiling": 240000,
+  "combined_pack_bytes": 14892058,
+  "unchanged_byte_ceiling": 32000000,
+  "suggestions": [
+    {
+      "text": "Attachment tests establish bounding-box connectivity, not exact solid contact. Add triangle-level contact/intersection checks for tapered hulls, annular components and mounts.",
+      "blocking": false,
+      "implemented": false
+    }
+  ],
+  "limits": "No exhaustive solid-contact or all-feature visibility proof. No owner appearance decision. Reviewer did not run Blender/GPU/main or modify files."
+}

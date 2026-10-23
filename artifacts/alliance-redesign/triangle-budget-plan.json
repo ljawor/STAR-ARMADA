@@ -1,0 +1,40 @@
+{
+  "status": "authoring allocation, not measurements for the remaining unbuilt models",
+  "current_accepted_imperium_triangles": 127164,
+  "alliance_planned_total": 108172,
+  "combined_planned_total": 235336,
+  "global_ceiling_unchanged": 240000,
+  "headroom": 4664,
+  "per_binding_alliance_allocations": {
+    "fighter": 2200,
+    "bomber": 2500,
+    "corvette": 4300,
+    "frigate": 9864,
+    "cruiser": 6500,
+    "battleship": 9500,
+    "supercapital": 9500,
+    "constructor": 2500,
+    "colonizer": 3500,
+    "convoy": 3600,
+    "command_station": 4000,
+    "shipyard": 10708,
+    "mining_station": 3200,
+    "research_station": 3500,
+    "defense_platform": 3200,
+    "sensor_station": 3000,
+    "trade_station": 3000,
+    "fighter_platform": 3000,
+    "repair_dock": 3200,
+    "energy_relay": 3000,
+    "defense_satellite": 2200,
+    "attack_satellite": 2200,
+    "planet_extractor": 2500,
+    "planet_trade_hub": 2500,
+    "planet_shield_generator": 2500,
+    "planet_pulsar_cannon": 2500
+  },
+  "measured_specimens": [
+    "frigate",
+    "shipyard"
+  ]
+}

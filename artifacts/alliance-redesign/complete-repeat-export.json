@@ -1,0 +1,164 @@
+{
+  "blender": "5.0.1",
+  "independent_reconstruction": true,
+  "count": 26,
+  "rows": [
+    {
+      "binding": "rebel:fighter",
+      "sha256": "fcce65b617f2afbb0360d76c1d03f17e71bcb226252117f965cef4009c990092",
+      "repeat_sha256": "fcce65b617f2afbb0360d76c1d03f17e71bcb226252117f965cef4009c990092",
+      "byte_identical": true
+    },
+    {
+      "binding": "rebel:bomber",
+      "sha256": "59111c9a9dc54cd2524be46ef0d0d270e49176a3e3db29bea384a655d2c2ef0c",
+      "repeat_sha256": "59111c9a9dc54cd2524be46ef0d0d270e49176a3e3db29bea384a655d2c2ef0c",
+      "byte_identical": true
+    },
+    {
+      "binding": "rebel:corvette",
+      "sha256": "81689d105474575b83ec65adf3b0bb0d1019af5c15789f3bb56de035867cff6b",
+      "repeat_sha256": "81689d105474575b83ec65adf3b0bb0d1019af5c15789f3bb56de035867cff6b",
+      "byte_identical": true
+    },
+    {
+      "binding": "rebel:frigate",
+      "sha256": "59702b027954acca6dd820eaf11aa3856c2d6f05f4f1441259d3312c6e4400b8",
+      "repeat_sha256": "59702b027954acca6dd820eaf11aa3856c2d6f05f4f1441259d3312c6e4400b8",
+      "byte_identical": true
+    },
+    {
+      "binding": "rebel:cruiser",
+      "sha256": "b1e628686f007ef9c090416c6a8f54badb20b5bfbb462a96aa8b981809498692",
+      "repeat_sha256": "b1e628686f007ef9c090416c6a8f54badb20b5bfbb462a96aa8b981809498692",
+      "byte_identical": true
+    },
+    {
+      "binding": "rebel:battleship",
+      "sha256": "66fbb324c3bb0fb8c6dd8cc70499d807397d5aec8433d3bf9f294a392a508e73",
+      "repeat_sha256": "66fbb324c3bb0fb8c6dd8cc70499d807397d5aec8433d3bf9f294a392a508e73",
+      "byte_identical": true
+    },
+    {
+      "binding": "rebel:supercapital",
+      "sha256": "66d8b0fdfe45627634a1a31d2f9a5ce2c2f7cb81a31ef0b0ed41887126452f7b",
+      "repeat_sha256": "66d8b0fdfe45627634a1a31d2f9a5ce2c2f7cb81a31ef0b0ed41887126452f7b",
+      "byte_identical": true
+    },
+    {
+      "binding": "rebel:constructor",
+      "sha256": "a837c280afef030b0cb39345f5d459816c54f17e87f00f23e70d1e7ef4007d56",
+      "repeat_sha256": "a837c280afef030b0cb39345f5d459816c54f17e87f00f23e70d1e7ef4007d56",
+      "byte_identical": true
+    },
+    {
+      "binding": "rebel:colonizer",
+      "sha256": "fa48c19c1f81b732a2b2bea50d6111895ad134b21eae6ecd5bb6a2fbb28cc644",
+      "repeat_sha256": "fa48c19c1f81b732a2b2bea50d6111895ad134b21eae6ecd5bb6a2fbb28cc644",
+      "byte_identical": true
+    },
+    {
+      "binding": "rebel:convoy",
+      "sha256": "b5f0b27a4f358828c5f4157ed179dfc415f67b66b61e5854bbd65c6dee670c83",
+      "repeat_sha256": "b5f0b27a4f358828c5f4157ed179dfc415f67b66b61e5854bbd65c6dee670c83",
+      "byte_identical": true
+    },
+    {
+      "binding": "rebel:command_station",
+      "sha256": "87ba9ec0e51257daffd04a2a84b3060fc2590b7bcbab728ca2db2740f60e49cb",
+      "repeat_sha256": "87ba9ec0e51257daffd04a2a84b3060fc2590b7bcbab728ca2db2740f60e49cb",
+      "byte_identical": true
+    },
+    {
+      "binding": "rebel:shipyard",
+      "sha256": "f926b0e62dd679d9797fae513370998c7a7bdd188b46353432c5633fe429ff24",
+      "repeat_sha256": "f926b0e62dd679d9797fae513370998c7a7bdd188b46353432c5633fe429ff24",
+      "byte_identical": true
+    },
+    {
+      "binding": "rebel:mining_station",
+      "sha256": "c3e58a61b10ec51b5cab8f00d63e9b7a7747dbf0a7161ee78d9e94dd0e405b52",
+      "repeat_sha256": "c3e58a61b10ec51b5cab8f00d63e9b7a7747dbf0a7161ee78d9e94dd0e405b52",
+      "byte_identical": true
+    },
+    {
+      "binding": "rebel:research_station",
+      "sha256": "f1204d2e2694d88176c3cffdfe39d8c44b7706b59d7ebd393d8b9ce917e47e37",
+      "repeat_sha256": "f1204d2e2694d88176c3cffdfe39d8c44b7706b59d7ebd393d8b9ce917e47e37",
+      "byte_identical": true
+    },
+    {
+      "binding": "rebel:defense_platform",
+      "sha256": "9a225c1553ad06fb14fee1f98145e94dc32a5ae79a743611adcd9fd074cd9dac",
+      "repeat_sha256": "9a225c1553ad06fb14fee1f98145e94dc32a5ae79a743611adcd9fd074cd9dac",
+      "byte_identical": true
+    },
+    {
+      "binding": "rebel:sensor_station",
+      "sha256": "38f18bfdae40851f7f08f135044a5b4f9474c0a3a50f5a15e2f4241b9a7cbde8",
+      "repeat_sha256": "38f18bfdae40851f7f08f135044a5b4f9474c0a3a50f5a15e2f4241b9a7cbde8",
+      "byte_identical": true
+    },
+    {
+      "binding": "rebel:trade_station",
+      "sha256": "701d9f772ba5fd5e7bfa025b1e2c1fde67a3adce4efc92721e54e7bdef07d189",
+      "repeat_sha256": "701d9f772ba5fd5e7bfa025b1e2c1fde67a3adce4efc92721e54e7bdef07d189",
+      "byte_identical": true
+    },
+    {
+      "binding": "rebel:fighter_platform",
+      "sha256": "0d3dd45f3c35ccf73ebbcf17cc4d0c47fff6010b24c0c886062ce6882199edaf",
+      "repeat_sha256": "0d3dd45f3c35ccf73ebbcf17cc4d0c47fff6010b24c0c886062ce6882199edaf",
+      "byte_identical": true
+    },
+    {
+      "binding": "rebel:repair_dock",
+      "sha256": "2c7080c6b933fd79628f9775401304807c2335e51a052f969b0b3c09af32a33e",
+      "repeat_sha256": "2c7080c6b933fd79628f9775401304807c2335e51a052f969b0b3c09af32a33e",
+      "byte_identical": true
+    },
+    {
+      "binding": "rebel:energy_relay",
+      "sha256": "95c8d82d56268dfdec1d43ebe63a6bb3a26f0377bd594a9257e51f6786cfefc6",
+      "repeat_sha256": "95c8d82d56268dfdec1d43ebe63a6bb3a26f0377bd594a9257e51f6786cfefc6",
+      "byte_identical": true
+    },
+    {
+      "binding": "rebel:defense_satellite",
+      "sha256": "4b45e4fa8897c9c36ee5c579d2502aaf98ca5804648c0b9eaf2850bf770b7ebe",
+      "repeat_sha256": "4b45e4fa8897c9c36ee5c579d2502aaf98ca5804648c0b9eaf2850bf770b7ebe",
+      "byte_identical": true
+    },
+    {
+      "binding": "rebel:attack_satellite",
+      "sha256": "202f031148aeef81f7e3375095f8e99090bee97ccb81f0863b857e47258f610c",
+      "repeat_sha256": "202f031148aeef81f7e3375095f8e99090bee97ccb81f0863b857e47258f610c",
+      "byte_identical": true
+    },
+    {
+      "binding": "rebel:planet_extractor",
+      "sha256": "06eda4b16a7efbd58face47ecc689677398385351f93e02cc369996b99b84d99",
+      "repeat_sha256": "06eda4b16a7efbd58face47ecc689677398385351f93e02cc369996b99b84d99",
+      "byte_identical": true
+    },
+    {
+      "binding": "rebel:planet_trade_hub",
+      "sha256": "0f82c978aa92c46ca80fa1b25f78421a6d08f68061eb05b6da109ce4b70dca06",
+      "repeat_sha256": "0f82c978aa92c46ca80fa1b25f78421a6d08f68061eb05b6da109ce4b70dca06",
+      "byte_identical": true
+    },
+    {
+      "binding": "rebel:planet_shield_generator",
+      "sha256": "cac047bbe7f00f9857c68f865901b5d9ec623aaf6665254d97fc73c0725c05cf",
+      "repeat_sha256": "cac047bbe7f00f9857c68f865901b5d9ec623aaf6665254d97fc73c0725c05cf",
+      "byte_identical": true
+    },
+    {
+      "binding": "rebel:planet_pulsar_cannon",
+      "sha256": "58781a9b31c0fb2f888ffd93a8fa3f389e4cc62298557abb7d7ab2627dbd71f5",
+      "repeat_sha256": "58781a9b31c0fb2f888ffd93a8fa3f389e4cc62298557abb7d7ab2627dbd71f5",
+      "byte_identical": true
+    }
+  ],
+  "repeat_root": "/Users/lukaszjawor/.hermes/cache/scratch/alliance-complete-export-repeat"
+}

@@ -1,0 +1,9 @@
+{
+  "delegation_id": "deleg_634370e1",
+  "scope": "Final public-default activation and settings migration staged diff, including owner approval and ordinary smoke receipts",
+  "passed": true,
+  "security_concerns": [],
+  "logic_errors": [],
+  "suggestions": [],
+  "summary": "Reviewed the entire diff, including all added runtime code and test changes. No security or logic issues found: defaults include Alliance, migration matches only the exact historical ordered 13/14-pack cohorts, and other selections remain untouched. Tests cover preference preservation and repeated-load stability. Owner approval and ordinary smoke receipts are retained without release/tag authorization. Static review only; no tests executed, files modified, or other repository contents inspected."
+}

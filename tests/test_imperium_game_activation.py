@@ -29,7 +29,7 @@ class ImperiumGameActivationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             path=Path(folder)/'settings.json';path.write_text(json.dumps(saved))
             with patch.object(menus,'SETTINGS_PATH',str(path)):loaded=menus.load_settings()
-        self.assertEqual(loaded['visual_packs'],[*ACCEPTED_PACKS,'imperium-fleet-prototypes'])
+        self.assertEqual(loaded['visual_packs'],[*ACCEPTED_PACKS,'imperium-fleet-prototypes','alliance-redesign'])
         self.assertEqual(loaded['music_volume'],.25);self.assertEqual(loaded['language'],'pl')
         self.assertEqual(len(loaded['visual_packs']),len(set(loaded['visual_packs'])))
 

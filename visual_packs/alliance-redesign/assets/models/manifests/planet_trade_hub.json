@@ -1,0 +1,61 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "prototype:alliance_redesign/planet_trade_hub",
+  "revision": "3eedd49fc0cddd844612e86e2081e0aa40c538167fdaca9abf048bce278245ae",
+  "display_name": "Trade Hub — pending appearance review",
+  "files": {
+    "mesh": {
+      "path": "assets/models/planet_trade_hub.mesh.json",
+      "sha256": "0f82c978aa92c46ca80fa1b25f78421a6d08f68061eb05b6da109ce4b70dca06",
+      "bytes": 113416
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -33.9319992,
+      0.0495,
+      -31.9360008
+    ],
+    "max": [
+      33.9319992,
+      49.4505005,
+      31.9360008
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor / STAR ARMADA",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "notes": "Original Alliance redesign. Script-authoritative build_alliance_redesign.py and dedicated design modules; editable masters in art/blender. Complete faction redesign pending owner appearance approval. No simulation, scale or balance changes."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 1944,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}

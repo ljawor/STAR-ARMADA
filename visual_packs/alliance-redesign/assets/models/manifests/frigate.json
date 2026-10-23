@@ -1,0 +1,61 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "prototype:alliance_redesign/frigate",
+  "revision": "417a13c6d871971a3b594b13d167da10ba85c4b1e99d8c6fa620bf8e1431f012",
+  "display_name": "Escort Frigate — pending appearance review",
+  "files": {
+    "mesh": {
+      "path": "assets/models/frigate.mesh.json",
+      "sha256": "59702b027954acca6dd820eaf11aa3856c2d6f05f4f1441259d3312c6e4400b8",
+      "bytes": 660217
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -33.9319992,
+      -9.9646502,
+      -80.5462952
+    ],
+    "max": [
+      33.9319992,
+      25.3146496,
+      72.8462982
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor / STAR ARMADA",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "notes": "Original Alliance redesign. Script-authoritative build_alliance_redesign.py and dedicated design modules; editable masters in art/blender. Complete faction redesign pending owner appearance approval. No simulation, scale or balance changes."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 9864,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}

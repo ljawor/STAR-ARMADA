@@ -1,0 +1,14 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "tools/render/verify_alliance_redesign.py",
+    "--include-control",
+    "--out",
+    "artifacts/alliance-redesign/native-specimens"
+  ],
+  "pid": 87322,
+  "elapsed_seconds": 11.348260792088695,
+  "returncode": 0,
+  "timeout": false,
+  "orphan_group_killed": false
+}

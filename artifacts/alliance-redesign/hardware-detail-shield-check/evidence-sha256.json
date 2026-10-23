@@ -1,0 +1,37 @@
+{
+  "files": {
+    "before-after.png": "5636891c711afce810e0f26cae31b54e9215689059e5b07c498e9e3437352fb5",
+    "metrics.json": "f1ec5062a97092a5bf41145f0f0ddd233e9e19f9fb128c54d07186f33d4f8ebd",
+    "planet_shield_generator-after-close/capture.png": "e88ff1514b505f97c1d50dea1fcb8e76d54fe0dacb43d24b492f32312399ba7a",
+    "planet_shield_generator-after-close/scene.snap": "c52d03caf61015c8e8105557d3b1ae81f9787eb83c0e7cd99517707da45799bb",
+    "planet_shield_generator-after-close/stdout.txt": "304c97da495533fb3f47f14107b8f0710f063f06f7f8518b8cd433b2a9e82cbf",
+    "planet_shield_generator-after-close/viewer.json": "3c535296e6dd1fef453ea002c28f28e5fac72f5b48989dcfb6dc03d97850b028",
+    "planet_shield_generator-after-rear/capture.png": "8694bc9932028823f5960ae28192f227eea2809ded0c808b8cd2f8950fbf8649",
+    "planet_shield_generator-after-rear/scene.snap": "9e2550b67108a4443763963abb93e88a00fa5e012107da5e3dd3a9f5bf902581",
+    "planet_shield_generator-after-rear/stdout.txt": "da77c39b65da5d6cb20e8040e6f2dd33ea76f28918784b46392d34e37b48d536",
+    "planet_shield_generator-after-rear/viewer.json": "c56b41eed1a6c1e8d6c5a0a23323137679421d832703be8b817ebcf10d7fca8d",
+    "planet_shield_generator-after-tactical/capture.png": "c4e59d5f1cb7f49ecfd0361bc27073ec100a5378ab996d9afda1105ad74076c2",
+    "planet_shield_generator-after-tactical/scene.snap": "d23cc785bb6bb65166418176f980b991d00bc16c38865d5f53862ee51d34d880",
+    "planet_shield_generator-after-tactical/stdout.txt": "9ff8a80aa3848c16062ccd54a64fd64ec8168f9814757afaa820a5a7a1ee7ee6",
+    "planet_shield_generator-after-tactical/viewer.json": "73119e4ac2fdddea8518b225293fdfa77f7cc52e482d772bc1d2417d4f34ff1a",
+    "planet_shield_generator-before-close/capture.png": "f85c24e1e3e86d4515f10119288993d4e9352369210fde30155067eea5e3c433",
+    "planet_shield_generator-before-close/scene.snap": "74b6dd8f10004d3f574a383100bf76c9c5994e3da173c28525b49c11ab0f7d9c",
+    "planet_shield_generator-before-close/stdout.txt": "5f787dc0fec7890282a54299bca13a67f5eaf565e0915714a0ec46acb764a6d5",
+    "planet_shield_generator-before-close/viewer.json": "f604c9a2f567ac6e8ce22d80fd882ee6f2701b6a6b001c8ca9cff3bb35c76b4a",
+    "planet_shield_generator-before-rear/capture.png": "7a9a3e81b2535a9d4e56db1a4630417c572a44def36b98a6847f64f7773deed7",
+    "planet_shield_generator-before-rear/scene.snap": "fce779d055bafae9a0dffc9d1aa4999e0e15262ad91d7b4a0ea3b25513fc54aa",
+    "planet_shield_generator-before-rear/stdout.txt": "421f3b1422671846a2295da2846f53e4098cad11718020f36f063db58c7de263",
+    "planet_shield_generator-before-rear/viewer.json": "ba47566a1fd282304858b1bf2e1a679cc4253f657d8932fe57f37786ff77448d",
+    "planet_shield_generator-before-tactical/capture.png": "4ee0eb64cd9464198cdbe84920429394c3644183804a562e20e63e4dcec5f260",
+    "planet_shield_generator-before-tactical/scene.snap": "912a0806795294ff35de143a72b9721f182730d32d9d2ac78f93f3e17f38be6c",
+    "planet_shield_generator-before-tactical/stdout.txt": "d6bfa107d23348a77a74beedc6f604dd8cf0599a3bd77d1d6c86af0761daecb8",
+    "planet_shield_generator-before-tactical/viewer.json": "4c229b22dfc5527bbacbcb268a55b5431daa639071fa338c153ac5b4bb28a39b",
+    "progress.jsonl": "a92440132d48b1971ee107d633247ee5fcbfdcb426d1aebfb1711b661f74d705"
+  },
+  "sources": {
+    "tools/render/verify_alliance_redesign.py": "453ae2555666926be640658842a2681f03c7abc90258f3e6a2b1f15b3205209d",
+    "tools/art/build_alliance_redesign.py": "6e65430cdd847c591645c03eb4aee32d6ed087a93be5c7d0f78c4333ceeb29e2",
+    "visual_packs/alliance-redesign/visual-pack.json": "cdfa1a953599def3281fb1c196301bba00f4b09064576bbfa83b8f33857493b7",
+    "render_cpp/build-w02/armada_viewer": "3cb3d241b1439b064cccd9486c7797f1f6356fc77ced417c822fcdebd34ecaed"
+  }
+}

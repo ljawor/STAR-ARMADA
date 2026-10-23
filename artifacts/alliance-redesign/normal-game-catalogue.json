@@ -1,0 +1,42 @@
+{
+  "scope": "normal main.py in owner review checkout; public defaults remain the prior approved cohort until owner approval and landing",
+  "path": "assets/cpp/catalogue.snap",
+  "changed_assets": [
+    "rebel:attack_satellite",
+    "rebel:battleship",
+    "rebel:bomber",
+    "rebel:colonizer",
+    "rebel:command_station",
+    "rebel:constructor",
+    "rebel:convoy",
+    "rebel:corvette",
+    "rebel:cruiser",
+    "rebel:defense_platform",
+    "rebel:defense_satellite",
+    "rebel:energy_relay",
+    "rebel:fighter",
+    "rebel:fighter_platform",
+    "rebel:frigate",
+    "rebel:mining_station",
+    "rebel:planet_extractor",
+    "rebel:planet_pulsar_cannon",
+    "rebel:planet_shield_generator",
+    "rebel:planet_trade_hub",
+    "rebel:repair_dock",
+    "rebel:research_station",
+    "rebel:sensor_station",
+    "rebel:shipyard",
+    "rebel:supercapital",
+    "rebel:trade_station"
+  ],
+  "total_assets": 103,
+  "unrelated_asset_rows_identical": 77,
+  "other_payload_differences": [
+    "metadata.visual_selection"
+  ],
+  "owner_local_pack_enabled": true,
+  "other_owner_preferences_unchanged": true,
+  "saved_settings_backup": "/Users/lukaszjawor/.hermes/cache/scratch/alliance-owner-settings-before-activation.json",
+  "catalogue_backup": "/Users/lukaszjawor/.hermes/cache/scratch/alliance-catalogue-before-activation.snap",
+  "new_catalogue_sha256": "a0efc1a055046b3b3e3534a64ec0c252d3814324d8d0f154e06558810b6192bd"
+}

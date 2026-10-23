@@ -1,0 +1,61 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "prototype:alliance_redesign/fighter_platform",
+  "revision": "5ced541e81fa4e9f852e0d2bab5c7b622fc8574279a47f77b5b7a28053e15c3e",
+  "display_name": "Fighter Platform — pending appearance review",
+  "files": {
+    "mesh": {
+      "path": "assets/models/fighter_platform.mesh.json",
+      "sha256": "0d3dd45f3c35ccf73ebbcf17cc4d0c47fff6010b24c0c886062ce6882199edaf",
+      "bytes": 150541
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -47.9519997,
+      -9.1919403,
+      -39.1608009
+    ],
+    "max": [
+      47.9519997,
+      6.9119401,
+      39.1608009
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor / STAR ARMADA",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "notes": "Original Alliance redesign. Script-authoritative build_alliance_redesign.py and dedicated design modules; editable masters in art/blender. Complete faction redesign pending owner appearance approval. No simulation, scale or balance changes."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 2468,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}

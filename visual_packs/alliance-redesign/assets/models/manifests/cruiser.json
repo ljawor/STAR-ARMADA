@@ -1,0 +1,61 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "prototype:alliance_redesign/cruiser",
+  "revision": "04edaffbdf175b294c693af05fa4fe4b89792d5c87c0ad9280fc29699d86335e",
+  "display_name": "Liberty Cruiser — pending appearance review",
+  "files": {
+    "mesh": {
+      "path": "assets/models/cruiser.mesh.json",
+      "sha256": "b1e628686f007ef9c090416c6a8f54badb20b5bfbb462a96aa8b981809498692",
+      "bytes": 397651
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -65.8680649,
+      -11.2497177,
+      -99.8262863
+    ],
+    "max": [
+      65.8680649,
+      19.2847176,
+      97.4012909
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor / STAR ARMADA",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "notes": "Original Alliance redesign. Script-authoritative build_alliance_redesign.py and dedicated design modules; editable masters in art/blender. Complete faction redesign pending owner appearance approval. No simulation, scale or balance changes."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 6076,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}

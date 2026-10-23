@@ -1,0 +1,28 @@
+{
+  "recorded_utc": "2026-10-23T01:52:34.471508+00:00",
+  "base": "805b2eccfd6bd7259a38abca0f5ff60b81e69f98",
+  "approved_candidate": "2efcad2e78ea03a83a5aaf71b7ce3e758aab4e74",
+  "native_catalogue": "assets/cpp/catalogue.snap",
+  "native_catalogue_sha256": "a0efc1a055046b3b3e3534a64ec0c252d3814324d8d0f154e06558810b6192bd",
+  "alliance_approved_exports_verified": 26,
+  "native_rows_changed": 26,
+  "native_rows_unchanged": 77,
+  "all_other_scene_and_metadata_unchanged": true,
+  "review_evidence_files_verified": 651,
+  "review_sources_verified": 4,
+  "default_pack_count": 15,
+  "fresh_resolver_alliance_bindings": 26,
+  "fresh_resolver_imperium_bindings": 20,
+  "all_packs_strictly_accepted": true,
+  "delta_paths_checked": 882,
+  "unexpected_paths": [],
+  "local_test_result": "73 passed; 264 subtests passed; 1 deselected",
+  "known_preexisting_exclusion": "tests/test_s11_default_switch.py::ReleaseAssetLockTests::test_lock_check_mode_passes_on_the_committed_tree; see artifacts/imperium-fleet/release-lock-preexisting-failure.json",
+  "ordinary_main_smoke": "approved-defaults-main-smoke.json",
+  "ordinary_main_smoke_stdout": "approved-defaults-main-smoke.txt",
+  "limitations": [
+    "Not a packaged/frozen Windows or macOS delivery",
+    "No new FPS acceptance or organic construction of every class",
+    "No tag/release authorization"
+  ]
+}

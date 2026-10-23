@@ -1,0 +1,61 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "prototype:alliance_redesign/supercapital",
+  "revision": "a8e6357b3ea0a1022cc835dc00e83ff1c0aaad5631a8c3c277110d70c47401f4",
+  "display_name": "Independence-class Fleet Carrier — pending appearance review",
+  "files": {
+    "mesh": {
+      "path": "assets/models/supercapital.mesh.json",
+      "sha256": "66d8b0fdfe45627634a1a31d2f9a5ce2c2f7cb81a31ef0b0ed41887126452f7b",
+      "bytes": 520946
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -146.3634949,
+      -30.4562721,
+      -204.6026001
+    ],
+    "max": [
+      146.3634949,
+      56.9115524,
+      189.802597
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor / STAR ARMADA",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "notes": "Original Alliance redesign. Script-authoritative build_alliance_redesign.py and dedicated design modules; editable masters in art/blender. Complete faction redesign pending owner appearance approval. No simulation, scale or balance changes."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 7900,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}

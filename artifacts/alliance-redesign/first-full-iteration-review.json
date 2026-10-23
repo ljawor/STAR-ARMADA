@@ -1,0 +1,15 @@
+{
+  "iteration": "First complete faction export, NOT final appearance acceptance",
+  "native_subjects": 27,
+  "alliance_bindings": 26,
+  "views_per_pair": 3,
+  "retained_pngs": 163,
+  "archive": "/Users/lukaszjawor/.hermes/cache/scratch/alliance-first-full-faction-native",
+  "technical_result": "Every replacement strictly loads with all14acceptedImperium packs;all26pairsshowchangesandImperialcontrol0pixels",
+  "visual_result": "Rejected for insufficient broad-face detail on several capitals/orbitals/hardware despite green technical contracts; details being re-authored inside existing caps",
+  "required_corrections": [
+    "Segmented raised armor and service machinery on large hull faces",
+    "More distinctive substantial station architecture",
+    "Reallocate repetitive tiny hardware-bar detail towards functional main-body geometry"
+  ]
+}

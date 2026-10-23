@@ -1,0 +1,61 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "prototype:alliance_redesign/command_station",
+  "revision": "31855e1636290d95374df849e2dfa337b226beefa4eca7e7e6d91ce402ca50ff",
+  "display_name": "Command Station — pending appearance review",
+  "files": {
+    "mesh": {
+      "path": "assets/models/command_station.mesh.json",
+      "sha256": "87ba9ec0e51257daffd04a2a84b3060fc2590b7bcbab728ca2db2740f60e49cb",
+      "bytes": 218073
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -47.9519997,
+      -6.78336,
+      -29.5704002
+    ],
+    "max": [
+      47.9519997,
+      26.4633598,
+      29.5704002
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor / STAR ARMADA",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "notes": "Original Alliance redesign. Script-authoritative build_alliance_redesign.py and dedicated design modules; editable masters in art/blender. Complete faction redesign pending owner appearance approval. No simulation, scale or balance changes."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 3532,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}

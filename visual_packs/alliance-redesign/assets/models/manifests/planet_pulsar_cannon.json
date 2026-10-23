@@ -1,0 +1,61 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "prototype:alliance_redesign/planet_pulsar_cannon",
+  "revision": "51ddd08e5d792464953933f19687dbb086d4a0dfaa2fe87474e7d43fa89bc74e",
+  "display_name": "Pulsar Cannon — pending appearance review",
+  "files": {
+    "mesh": {
+      "path": "assets/models/planet_pulsar_cannon.mesh.json",
+      "sha256": "58781a9b31c0fb2f888ffd93a8fa3f389e4cc62298557abb7d7ab2627dbd71f5",
+      "bytes": 116334
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -33.9319992,
+      0.0424,
+      -31.9220009
+    ],
+    "max": [
+      33.9319992,
+      42.3576012,
+      45.9220009
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor / STAR ARMADA",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "notes": "Original Alliance redesign. Script-authoritative build_alliance_redesign.py and dedicated design modules; editable masters in art/blender. Complete faction redesign pending owner appearance approval. No simulation, scale or balance changes."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 2012,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}

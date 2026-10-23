@@ -97,8 +97,8 @@ DEFAULT_SETTINGS = {
     # because that is the migration's whole point; 'legacy' stays as the rollback control and is
     # never deleted by this step.
     "renderer": "cpp",
-    # Owner-approved Imperium ship/station designs are part of the normal game.
-    # The remaining fleet is enabled here, not through a review-only entry point.
+    # Owner-approved Imperium and Alliance designs are part of the normal game.
+    # Enable them here, not through a review-only entry point.
     # Saved selections matching the previous shipped list migrate in load_settings;
     # explicitly customized selections retain their order and choices.
     "visual_packs": [
@@ -116,8 +116,22 @@ DEFAULT_SETTINGS = {
         "imperium-repair-prototype",
         "imperium-relay-prototype",
         "imperium-fleet-prototypes",
+        "alliance-redesign",
     ],
 }
+
+# Freeze historical cohorts: slicing the growing default would lose older migrations.
+_SHIPPED_IMPERIUM_13 = (
+    'vigil-prototype', 'imperium-command-prototype', 'imperium-shipyard-prototype',
+    'imperium-mining-prototype', 'imperium-talon-prototype', 'imperium-engineer-prototype',
+    'imperium-research-prototype', 'imperium-defense-prototype', 'imperium-sensor-prototype',
+    'imperium-trade-prototype', 'imperium-fighter-prototype', 'imperium-repair-prototype',
+    'imperium-relay-prototype',
+)
+_PREVIOUS_SHIPPED_PACK_LISTS = (
+    list(_SHIPPED_IMPERIUM_13),
+    [*_SHIPPED_IMPERIUM_13, 'imperium-fleet-prototypes'],
+)
 
 
 # Settings that record *when* a player chose something rather than *what* they chose.
@@ -174,11 +188,10 @@ def load_settings() -> dict:
             s.update(saved)
     except (OSError, ValueError):
         pass
-    # Upgrade the previous shipped Imperium selection, including existing installs.
+    # Upgrade either previous shipped Imperium selection, including existing installs.
     # Custom/empty lists are explicit selections and must not be overwritten.
-    previous_imperium_packs = DEFAULT_SETTINGS['visual_packs'][:-1]
     if (isinstance(saved, dict)
-            and saved.get('visual_packs') == previous_imperium_packs):
+            and saved.get('visual_packs') in _PREVIOUS_SHIPPED_PACK_LISTS):
         s['visual_packs'] = list(DEFAULT_SETTINGS['visual_packs'])
     # The S11 migration. Before the switch every saved file carried
     # `model_preview: false` because that was the default, so the stored value
