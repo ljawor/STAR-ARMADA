@@ -20,13 +20,22 @@ class AllianceRedesignCaptureTests(unittest.TestCase):
         fixture.manager.state.entities.clear()
         fixture.manager.state.players[0].faction='rebel'
         fixture.manager.factory.spawn_station('shipyard',0,Vec3())
-        payload=subject_snapshot(fixture)
-        self.assertEqual([r['binding'] for r in payload['instances']],['rebel:shipyard'])
-        self.assertEqual([r['binding'] for r in payload['assets']],['rebel:shipyard'])
-        self.assertIn('alliance_shipyard',payload['assets'][0]['path'])
-        self.assertEqual(payload['metadata']['factions'][0],'rebel')
-        self.assertNotIn('combat_mix_per_player',payload['metadata'])
-        self.assertTrue(all('Imperial' not in line for line in payload['metadata']['assumptions']))
+        from unittest.mock import patch
+        from render import menus
+        from tools.render import dump_snapshot
+        for enabled,expected in ((False,'assets/models/alliance_shipyard.mesh.json'),
+                                 (True,'visual_packs/alliance-redesign/assets/models/shipyard.mesh.json')):
+            settings=dict(menus.DEFAULT_SETTINGS)
+            if not enabled:
+                settings['visual_packs']=[p for p in settings['visual_packs'] if p!=PACK_NAME]
+            with self.subTest(alliance_enabled=enabled),patch.object(dump_snapshot,'_default_selection',return_value=settings):
+                payload=subject_snapshot(fixture)
+                self.assertEqual([r['binding'] for r in payload['instances']],['rebel:shipyard'])
+                self.assertEqual([r['binding'] for r in payload['assets']],['rebel:shipyard'])
+                self.assertEqual(payload['assets'][0]['path'],expected)
+                self.assertEqual(payload['metadata']['factions'][0],'rebel')
+                self.assertNotIn('combat_mix_per_player',payload['metadata'])
+                self.assertTrue(all('Imperial' not in line for line in payload['metadata']['assumptions']))
 
     def test_paired_views_are_heading_relative_and_tactical_is_farther(self):
         views=camera_plan(length=100,center=[0,10,0],heading_degrees=90)

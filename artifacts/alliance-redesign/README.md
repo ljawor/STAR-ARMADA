@@ -1,10 +1,11 @@
 # Free Systems Alliance — complete 26-model redesign
 
-## Owner review build
+## Approved ordinary-game delivery
 
 All **26 existing Alliance bindings** have new editable Blender masters and strict-runtime-validated exports: 10 ship/logistics, 10 orbital stations, 2 satellites, and 4 surface installations. Crew transports and generated trade convoys share their existing single binding. No classes, balance, gameplay, saves, or simulation changed.
 
-The models are **active in this owner's ordinary `main.py` review checkout**:
+The models are **active through ordinary `main.py`, including fresh installs**:
+- Fresh defaults enable all 15 packs; saved selections exactly matching either historical 13- or 14-pack shipped cohort migrate to the new list. Custom/reordered/subset/extended/empty lists and unrelated preferences are preserved.
 - `saves/settings.json` enables the new pack alongside all 14 accepted Imperium packs. Every other saved preference is preserved.
 - The actual native entry catalogue contains all 26 new mesh hashes.
 - Ordinary `main.py --smoke` passed: `SMOKE_CPP_OK`, 30 simulated seconds, 367 published frames.
@@ -15,7 +16,9 @@ The models are **active in this owner's ordinary `main.py` review checkout**:
 
 Choose Free Systems Alliance normally. No art viewer, command-line art switch or runtime Blender installation is required.
 
-**Not merged and not owner appearance-approved yet.** Public fresh defaults retain the prior 14 approved packs during owner review. Before any merge, enable the Alliance pack in fresh defaults and migrate both historical 13-/14-pack shipped settings, preserving custom lists and other preferences. A disabled/optional-only merge is not acceptable. Keep the native catalogue bound to these reviewed exports.
+**Owner appearance, normal-game activation and merge approved:** “Looks good merge”. `OWNER_REVIEW.json` binds that decision to all 26 exact reviewed exports. Fresh defaults and both historical saved-settings migrations are implemented, not optional-only. No tag or release is authorized by this decision.
+
+Earlier review receipts and unchanged pack provenance/labels retain their review-time pending wording. They are historical; `OWNER_REVIEW.json` and this delivery status supersede that wording without rewriting sealed capture evidence or changing reviewed mesh bytes.
 
 ## Actual evidence
 
@@ -35,7 +38,7 @@ The normal smoke proves startup and a live match, not organic construction of ev
 
 Modular/naval Alliance construction rather than recolored Imperial wedges: blunt crossheads, pressure spines, replaceable armor/machinery, open carrier hangars and drydock cradles, attached cranes, habitats and working industrial frames. Capitals received substantive raised panel banks and exposed service machinery after a rejected initial full-family render showed overly plain surfaces.
 
-Every model stays within its existing replacement envelope with small inward clearance. Original core masters/exports and accepted Imperium assets/helpers are unchanged. The intentional pre-existing-file integration change is `assets/cpp/catalogue.snap`.
+Every model stays within its existing replacement envelope with small inward clearance. Original core masters/exports and accepted Imperium assets/helpers are unchanged. Integration updates `assets/cpp/catalogue.snap`, normal defaults/settings migration in `render/menus.py`, and focused regression tests.
 
 Masters: `art/blender/alliance_redesign_<kind>.blend`.
 Pack: `visual_packs/alliance-redesign/`.

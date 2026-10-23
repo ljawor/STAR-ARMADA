@@ -40,4 +40,51 @@ class AllianceGameCatalogueTests(unittest.TestCase):
         finally:
             asset_selection.configure({})
 
+class AllianceDefaultRolloutTests(unittest.TestCase):
+    def load(self,saved=None):
+        from unittest.mock import patch
+        from render import menus
+        with tempfile.TemporaryDirectory() as folder:
+            path=Path(folder)/'settings.json'
+            if saved is not None:path.write_text(json.dumps(saved))
+            with patch.object(menus,'SETTINGS_PATH',str(path)):
+                loaded=menus.load_settings()
+                menus.save_settings(loaded)
+                again=menus.load_settings()
+        self.assertEqual(again,loaded)
+        return loaded
+
+    def test_fresh_defaults_enable_alliance_and_all_26_approved_meshes(self):
+        from render import menus,asset_selection
+        settings=self.load()
+        self.assertIn('alliance-redesign',settings['visual_packs'])
+        self.assertEqual(settings['visual_packs'],menus.DEFAULT_SETTINGS['visual_packs'])
+        try:
+            report=asset_selection.configure_from_settings(settings)
+            alliance=[r for r in report['effective_bindings'] if r['pack_id']=='prototype:alliance_redesign']
+            self.assertEqual(len(alliance),26)
+        finally:asset_selection.configure({})
+
+    def test_both_historical_shipped_cohorts_migrate_preserving_preferences(self):
+        from render import menus
+        from tools.play_imperium_fleet import ACCEPTED_PACKS
+        for cohort in (list(ACCEPTED_PACKS),[*ACCEPTED_PACKS,'imperium-fleet-prototypes']):
+            with self.subTest(cohort=len(cohort)):
+                saved={**menus.DEFAULT_SETTINGS,'visual_packs':cohort,'music_volume':.23,'language':'pl',
+                       'resolution':'auto','fullscreen':False,'opaque_mod_preference':{'x':[1,2]}}
+                loaded=self.load(saved)
+                self.assertEqual(loaded['visual_packs'],menus.DEFAULT_SETTINGS['visual_packs'])
+                self.assertEqual(len(loaded['visual_packs']),15)
+                self.assertEqual({k:v for k,v in loaded.items() if k!='visual_packs'},
+                                 {k:v for k,v in saved.items() if k!='visual_packs'})
+
+    def test_custom_order_subset_extension_empty_and_current_selection_are_preserved(self):
+        from render import menus
+        from tools.play_imperium_fleet import ACCEPTED_PACKS
+        previous=[*ACCEPTED_PACKS,'imperium-fleet-prototypes']
+        for packs in ([],list(reversed(previous)),previous[:-2],previous+['custom-last'],
+                      ['custom-first']+previous,['custom-only'],list(menus.DEFAULT_SETTINGS['visual_packs'])):
+            with self.subTest(packs=packs):
+                self.assertEqual(self.load({'visual_packs':packs})['visual_packs'],packs)
+
 if __name__=='__main__':unittest.main()
