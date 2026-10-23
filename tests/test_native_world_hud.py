@@ -96,6 +96,11 @@ def test_placement_banner_and_ghost_are_vector_text_and_hairlines(view, monkeypa
     texts = [op['text'] for op in model['ops'] if op['kind'] == 'text']
     assert any(t.startswith('PLACE TRADE STATION') for t in texts), texts
     assert '✓ place trade station' in texts
+    banner = next(op for op in model['ops']
+                  if op['kind'] == 'text' and op['text'].startswith('PLACE'))
+    assert banner['size'] == pytest.approx(19 * 1.5 * 0.6), 'world labels keep their overlay size'
+    plate = next(op for op in model['ops'] if op['kind'] == 'rect')
+    assert plate['rect'][3] <= banner['bounds'][3] + 8, 'the plate shrinks with the text'
     circles = [op for op in model['ops'] if op['kind'] == 'circle']
     assert [op['stroke'] for op in circles] == [1, 0], 'ghost ring must be a hairline, disc a fill'
     lines = [op for op in model['ops'] if op['kind'] == 'line']

@@ -84,6 +84,11 @@ coordinates stay logical coordinates and C++ draws the glyphs at the drawable re
 of the pygame overlay upscaling a bitmap font. Plates and anchors are still measured with pygame,
 which keeps the layout identical on the fallback path when no native session is running.
 
+Their text is drawn at `HUD.WORLD_HUD_TEXT_SCALE` (0.6) of the panel em map, because the native em
+is calibrated for the panel label sizes and overshoots the menlo bitmap at headline sizes; the
+background plates shrink with the text. Marker geometry (ghost disc, ring radius, crosshair) and
+the side panels are unaffected.
+
 Line weights are hairlines here: the ghost ring and crosshair use stroke 1 and the construction
 progress is a filled annulus polygon (3 px band) rather than chords. U+2713 is a vector icon in
 `vector_hud` because the atlas has no check glyph; U+2715 was already one. Text uses `fit=center`

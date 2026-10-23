@@ -57,6 +57,10 @@ BAR_STRUCT = (150, 150, 160)
 # stb's em-height includes ascent/descent padding; match visible pygame ink
 # before applying the requested .75 panel transform (real-main pixel guard).
 NATIVE_TEXT_EM_SCALE = 1.5
+# The native em above is tuned for the 12/15/19/22 px panel labels. At the banner and status sizes
+# Noto's cap height lands about 45% above the menlo bitmap those labels replaced, so the world HUD
+# text is scaled back to the size it had on the overlay.
+WORLD_HUD_TEXT_SCALE = 0.6
 TRADE = (226, 196, 120)          # cargo / trade income readouts
 RESEARCH = (168, 140, 255)       # research progress bars / readouts
 DRAG_FILL = (86, 140, 220, 26)   # box-select rectangle (subtle tint)
@@ -252,25 +256,30 @@ class HUD:
         return (12 if font is self.font_small else 19 if font is self.font_big
                 else 22 if font is self.font_title else 15) * NATIVE_TEXT_EM_SCALE
 
-    def _screen_text(self, rect, text, color, font) -> None:
+    def _screen_text(self, rect, text, color, font, scale: float = 1.0) -> None:
         """Text centred in `rect`, in the native layer when it is open.
 
         `rect` is measured with pygame (a font measurement, not a rasterization) so the
         background plate around the text keeps the size it had before the move to C++.
+        `scale` shrinks both paths alike, so the world labels keep the size they had on
+        the overlay now that they are drawn with the larger native em.
         """
         r = pygame.Rect(rect)
         if _p.native_sink is not None:
             _p.native_sink.text(self.overlay, r.x, r.y, str(text), color,
-                                self._native_text_size(font), r.width, r.height,
+                                self._native_text_size(font) * scale, r.width, r.height,
                                 fit='center')
             return
         surf = font.render(str(text), True, color)
+        if scale != 1.0:
+            surf = pygame.transform.smoothscale(surf, (max(1, r.width), max(1, r.height)))
         _p.blit_text(self.overlay, surf, surf.get_rect(center=r.center), str(text), color,
-                     id(font))
+                     (id(font), scale))
 
-    def _text_box(self, text, font) -> pygame.Rect:
+    def _text_box(self, text, font, scale: float = 1.0) -> pygame.Rect:
         """The box a rasterized label would occupy, so layout is identical in both layers."""
-        return pygame.Rect(0, 0, *font.size(str(text)))
+        w, h = font.size(str(text))
+        return pygame.Rect(0, 0, max(1, int(round(w * scale))), max(1, int(round(h * scale))))
 
     def _draw_collapsible_content(self, key, title, draw):
         """Separate control rail; minimized panels occupy only their restore tab."""
@@ -1649,12 +1658,12 @@ class HUD:
         ov = self.overlay
         name = str(placement.get("station_kind", "")).replace("_", " ")
         text = f"PLACE {name.upper()} — left-click to position · ESC/right-click to cancel"
-        r = self._text_box(text, self.font_big)
+        r = self._text_box(text, self.font_big, WORLD_HUD_TEXT_SCALE)
         r.center = (self.width // 2, 56)
-        bg = r.inflate(26, 14)
+        bg = r.inflate(int(26 * WORLD_HUD_TEXT_SCALE), int(14 * WORLD_HUD_TEXT_SCALE))
         _p.rect(ov, (30, 24, 10, 225), bg, border_radius=6)
         _p.rect(ov, WARN, bg, 1, border_radius=6)
-        self._screen_text(r, text, WARN, self.font_big)
+        self._screen_text(r, text, WARN, self.font_big, WORLD_HUD_TEXT_SCALE)
         ghost = placement.get("ghost")
         if ghost:
             valid = ghost.get("valid", True)
@@ -1669,17 +1678,17 @@ class HUD:
             reason = ghost.get("reason", "")
             if not valid and reason:
                 text = f"✕ {reason}"
-                r = self._text_box(text, self.font_small)
+                r = self._text_box(text, self.font_small, WORLD_HUD_TEXT_SCALE)
                 r.midbottom = (gx, gy - rad - 8)
-                bg = r.inflate(12, 6)
+                bg = r.inflate(int(12 * WORLD_HUD_TEXT_SCALE), int(6 * WORLD_HUD_TEXT_SCALE))
                 _p.rect(ov, (28, 12, 10, 220), bg, border_radius=4)
                 _p.rect(ov, BAD, bg, 1, border_radius=4)
-                self._screen_text(r, text, BAD, self.font_small)
+                self._screen_text(r, text, BAD, self.font_small, WORLD_HUD_TEXT_SCALE)
             elif valid:
                 text = f"✓ place {placement.get('station_kind', '').replace('_', ' ')}"
-                r = self._text_box(text, self.font_small)
+                r = self._text_box(text, self.font_small, WORLD_HUD_TEXT_SCALE)
                 r.midbottom = (gx, gy - rad - 8)
-                self._screen_text(r, text, GOOD, self.font_small)
+                self._screen_text(r, text, GOOD, self.font_small, WORLD_HUD_TEXT_SCALE)
 
     # ------------------------------------------------- construction progress
     def _construction_progress(self) -> None:
@@ -1749,9 +1758,9 @@ class HUD:
                     _p.line(ov, (*GOOD, 240), prev, point, 2)
                     prev = point
             label = f"{int(round(fraction * 100))}%"
-            r = self._text_box(label, self.font_small)
+            r = self._text_box(label, self.font_small, WORLD_HUD_TEXT_SCALE)
             r.midtop = (int(cx), int(cy + radius_px) + 4)
-            self._screen_text(r, label, GOOD, self.font_small)
+            self._screen_text(r, label, GOOD, self.font_small, WORLD_HUD_TEXT_SCALE)
 
     @staticmethod
     def _arc_band(centre, radius: float, fraction: float, band: float = 3.0) -> list:
@@ -1784,11 +1793,11 @@ class HUD:
         for x, y, text, rgb, alpha in getattr(self, "floating_texts", []):
             if not text:
                 continue
-            r = self._text_box(text, self.font_small)
+            r = self._text_box(text, self.font_small, WORLD_HUD_TEXT_SCALE)
             r.midtop = (x, y)
-            bg = r.inflate(10, 4)
+            bg = r.inflate(int(10 * WORLD_HUD_TEXT_SCALE), int(4 * WORLD_HUD_TEXT_SCALE))
             _p.rect(ov, (10, 12, 18, int(200 * alpha)), bg, border_radius=4)
-            self._screen_text(r, text, rgb, self.font_small)
+            self._screen_text(r, text, rgb, self.font_small, WORLD_HUD_TEXT_SCALE)
 
     def _minimap(self, selection: set, local_player: int) -> None:
         if self.native_panels and _p.native_sink is None:

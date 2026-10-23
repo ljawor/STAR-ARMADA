@@ -11,16 +11,22 @@ bundled Noto Sans atlas, with hairline strokes:
 
 | element | before | after |
 | --- | --- | --- |
-| `PLACE <STATION> — left-click …` banner | pygame `font_big` (Menlo bold 19) blitted | native text, size 28.5 em, `fit=center`, plate measured with the same font metrics |
+| `PLACE <STATION> — left-click …` banner | pygame `font_big` (Menlo bold 19) blitted | native text, 17.1 em, `fit=center`, plate measured with the same font metrics |
 | ghost ring / crosshair | stroke 2 | stroke 1 |
-| `✓ place <station>` / `✕ <reason>` | pygame `font_small` blitted | native text, size 18 em |
+| `✓ place <station>` / `✕ <reason>` | pygame `font_small` blitted | native text, 10.8 em |
 | construction ring | stroke 2 + 48 chords of width 4 | stroke 1 + one filled annulus polygon, 3 px band |
-| `66%` | pygame `font_small` blitted | native text, size 18 em, centred under the ring |
-| `Station complete` (floating text) | pygame `font_small` blitted | native text with the same plate |
+| `66%` | pygame `font_small` blitted | native text, 10.8 em, centred under the ring |
+| `Station complete` (floating text) | pygame `font_small` blitted | native text with a plate scaled with it |
 
 Two supporting changes:
 
-* `render/hud.py` gains `_native_layer()` (a full-screen identity `Sink`, so world coordinates stay
+Text is drawn at `WORLD_HUD_TEXT_SCALE = 0.6` of the panel em map: the native em is tuned for the
+12/15/19/22 px panel labels, and at the banner and status sizes Noto's cap height lands about 45%
+above the menlo bitmap those labels replaced. The scale also shrinks the plates, so the labels
+keep the size they had on the overlay. The ghost ring, the crosshair, the construction ring and
+the side panels are unchanged - they did not grow with the migration.
+
+`render/hud.py` gains `_native_layer()` (a full-screen identity `Sink`, so world coordinates stay
   world coordinates), `_screen_text()` and `_text_box()`. Layout is still measured with pygame,
   which keeps plates and anchors pixel-identical in both layers; only rasterization moved.
 * `render_cpp/src/vector_hud.cpp` gains U+2713 as a vector icon (a 0.11 em ribbon). The atlas has
