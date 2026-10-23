@@ -1,0 +1,32 @@
+{
+  "contract": "star-armada/visual-pack",
+  "contract_major": 1,
+  "id": "prototype:syndicate_imperium",
+  "version": "0.1.0",
+  "requires": {
+    "min_engine": "0.16.0",
+    "contracts": [
+      "star-armada/model-manifest/v1"
+    ]
+  },
+  "content": {
+    "replaces": [
+      {
+        "binding": "syndicate:bomber",
+        "replace_of": "core:syndicate/bomber",
+        "manifest": "assets/models/manifests/bomber.json"
+      },
+      {
+        "binding": "syndicate:battleship",
+        "replace_of": "core:syndicate/battleship",
+        "manifest": "assets/models/manifests/battleship.json"
+      },
+      {
+        "binding": "syndicate:supercapital",
+        "replace_of": "core:syndicate/supercapital",
+        "manifest": "assets/models/manifests/supercapital.json"
+      }
+    ]
+  },
+  "notes": "Owner-requested Rim Syndicate rework: the three hulls the faction never had. Core catalogue unchanged; the approved appearance of every other asset is untouched."
+}

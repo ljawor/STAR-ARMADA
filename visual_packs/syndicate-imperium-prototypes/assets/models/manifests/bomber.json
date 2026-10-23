@@ -1,0 +1,61 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "prototype:syndicate/bomber",
+  "revision": "eab008b2348ad0f1b224549b46f75c51d2b20828faeb479364e6844507adb4a6",
+  "display_name": "Rim Syndicate Cutthroat Strike Wing \u2014 rework prototype (unapproved)",
+  "files": {
+    "mesh": {
+      "path": "assets/models/syndicate_bomber.mesh.json",
+      "sha256": "0c301b27b61a3139f05d5d4b36c7d68413c049834f4c608c413ef54a84e26e3a",
+      "bytes": 275323
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -11.7219257,
+      -4.9165373,
+      -23.5961113
+    ],
+    "max": [
+      19.6093178,
+      11.9915371,
+      20.1381111
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor / STAR ARMADA visual prototype",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "notes": "Original Rim Syndicate strike wing authored by tools/art/build_syndicate_imperium.py; editable source art/blender/syndicate_bomber.blend. Appearance review pending. No gameplay, scale or collision changes: the mesh occupies the measured legacy procedural envelope."
+  },
+  "requires": {
+    "min_engine": "0.16.0",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 4052,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}

@@ -1564,6 +1564,32 @@
             "packaged armada_viewer run from inside dist/STAR ARMADA.app drew 5,828 non-background pixels with only packaged shaders/assets",
             "6 new tests in tests/test_render_default.py; 217 render tests OK; ctest 12/12"
         ]
+    },
+    {
+      "id": "syndicate-rework-envelope-2026-10-23",
+      "date": "2026-10-23",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved-as-proposed",
+      "applies_to": "Rim Syndicate rework: faction appearance redesign plus the three hulls the faction never had",
+      "owner_wording": "Feature: We have th eRIm syndicate. PLease upgrade the grafic design of this fraction based on the galactic imperium. Please also add all missing stations and ship for this fracyion.",
+      "how_recorded": "Recorded verbatim, typos included, from the request that opened the work. The owner then answered 'ok let's do it' to the proposed plan: new hulls first, the existing meshes as a separate batch.",
+      "decisions": [
+        {
+          "id": "syndicate-rework-scope",
+          "decision": "Authorize authoring the three Rim Syndicate bindings that exist only as authoring_pending - bomber, battleship, supercapital. Registered station bindings already match the Imperium one for one, so no station binding is added."
+        },
+        {
+          "id": "syndicate-rework-envelope",
+          "decision": "Each replacement mesh must occupy the visual envelope measured from the live procedural geometry it replaces, so in-game length, camera framing, collision radius and simulation fields do not move. The measured box is recorded on the binding as its containment box; the mesh is fitted inside it per axis and the fit scale is printed in the build report."
+        }
+      ],
+      "scope_statement": "Appearance work on the Rim Syndicate only, at the composition level the accepted Imperium capital batch established.",
+      "not_approved_by_this_decision": "appearance approval of any authored revision, bounded registration, pipeline.json entries, default activation, packaging, merge or release. Every authored revision still needs its own appearance decision bound to its hashes.",
+      "binds_to": {
+        "reviewed_revision_commit": null,
+        "note": "No revision block: a scope and containment decision, not an appearance approval."
+      },
+      "definition_of_done": "The three meshes build reproducibly from committed sources inside their measured envelopes, the pack resolves through the real loader, and the owner has approved the appearance so the gameplay rows and bounded registration can follow."
     }
   ]
 }
