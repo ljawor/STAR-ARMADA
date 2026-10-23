@@ -1,0 +1,21 @@
+{
+  "_event_log": {
+    "legacy_control": true,
+    "labels": [],
+    "arguments": [
+      0
+    ],
+    "blocks": [],
+    "ops": []
+  },
+  "_flash_message": {
+    "legacy_control": true,
+    "labels": [],
+    "arguments": [
+      "Constructing sensor station",
+      0.0
+    ],
+    "blocks": [],
+    "ops": []
+  }
+}

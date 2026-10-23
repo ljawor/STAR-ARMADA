@@ -1,0 +1,7 @@
+COMMAND ['clang++', '-std=c++20', '-O1', '-UNDEBUG', '-I/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/include', '-I/Users/lukaszjawor/.hermes/cache/scratch/armada-w01-deps', '-DARMADA_ASSET_ROOT="/Users/lukaszjawor/Downloads/Project/STAR-ARMADA"', '/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/src/top_hud.cpp', '/Users/lukaszjawor/.hermes/cache/scratch/incoming-native-cpu/baseline-vector_hud.cpp', '/Users/lukaszjawor/.hermes/cache/scratch/incoming-native-cpu/legacy-probe.cpp', '-o', '/Users/lukaszjawor/.hermes/cache/scratch/incoming-native-cpu/legacy-before']
+COMPILE EXIT 0
+
+COMMAND ['clang++', '-std=c++20', '-O1', '-UNDEBUG', '-I/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/include', '-I/Users/lukaszjawor/.hermes/cache/scratch/armada-w01-deps', '-DARMADA_ASSET_ROOT="/Users/lukaszjawor/Downloads/Project/STAR-ARMADA"', '/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/src/top_hud.cpp', '/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/src/vector_hud.cpp', '/Users/lukaszjawor/.hermes/cache/scratch/incoming-native-cpu/legacy-probe.cpp', '-o', '/Users/lukaszjawor/.hermes/cache/scratch/incoming-native-cpu/legacy-after']
+COMPILE EXIT 0
+
+PASS: 56 cases (5 prior icons + 2 mixed/normal texts; 2 drawable sizes x 2 fits x 2 clips) exactly identical vertices/UV/color/indices/batches/TextBounds

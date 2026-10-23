@@ -1,0 +1,448 @@
+{
+  "_event_log": {
+    "legacy_control": false,
+    "labels": [
+      "INCOMING",
+      "△ sensor_station online",
+      "△ trade_station online",
+      "✦ research: sensor_range",
+      "◉ planet New Terra colonized",
+      "✕ fighter lost (imperial)",
+      "△ trade_station online",
+      "✦ research: energy_efficiency",
+      "◉ planet Frontier colonized",
+      "✕ interceptor lost (imperial)"
+    ],
+    "arguments": [
+      0
+    ],
+    "blocks": [
+      [
+        10,
+        639,
+        240,
+        147
+      ]
+    ],
+    "ops": [
+      {
+        "kind": "rect",
+        "clip": [
+          10,
+          639,
+          240,
+          147
+        ],
+        "color": [
+          14,
+          18,
+          28,
+          205
+        ],
+        "rect": [
+          10,
+          639,
+          240,
+          147
+        ],
+        "stroke": 0.0,
+        "radius": 6.0
+      },
+      {
+        "kind": "rect",
+        "clip": [
+          10,
+          639,
+          240,
+          147
+        ],
+        "color": [
+          60,
+          80,
+          110,
+          220
+        ],
+        "rect": [
+          10,
+          639,
+          240,
+          147
+        ],
+        "stroke": 0.75,
+        "radius": 6.0
+      },
+      {
+        "kind": "text",
+        "clip": [
+          10,
+          639,
+          240,
+          147
+        ],
+        "pos": [
+          18,
+          644
+        ],
+        "size": 13.5,
+        "text": "INCOMING",
+        "color": [
+          128,
+          142,
+          164,
+          255
+        ],
+        "bounds": [
+          18,
+          644,
+          226,
+          10
+        ],
+        "fit": "shrink"
+      },
+      {
+        "kind": "text",
+        "clip": [
+          10,
+          639,
+          240,
+          147
+        ],
+        "pos": [
+          18,
+          657
+        ],
+        "size": 13.5,
+        "text": "△ sensor_station online",
+        "color": [
+          110,
+          200,
+          120,
+          255
+        ],
+        "bounds": [
+          18,
+          657,
+          224,
+          11
+        ],
+        "fit": "shrink"
+      },
+      {
+        "kind": "text",
+        "clip": [
+          10,
+          639,
+          240,
+          147
+        ],
+        "pos": [
+          18,
+          670
+        ],
+        "size": 13.5,
+        "text": "△ trade_station online",
+        "color": [
+          110,
+          200,
+          120,
+          255
+        ],
+        "bounds": [
+          18,
+          670,
+          224,
+          11
+        ],
+        "fit": "shrink"
+      },
+      {
+        "kind": "text",
+        "clip": [
+          10,
+          639,
+          240,
+          147
+        ],
+        "pos": [
+          18,
+          684
+        ],
+        "size": 13.5,
+        "text": "✦ research: sensor_range",
+        "color": [
+          110,
+          200,
+          120,
+          255
+        ],
+        "bounds": [
+          18,
+          684,
+          224,
+          10
+        ],
+        "fit": "shrink"
+      },
+      {
+        "kind": "text",
+        "clip": [
+          10,
+          639,
+          240,
+          147
+        ],
+        "pos": [
+          18,
+          698
+        ],
+        "size": 13.5,
+        "text": "◉ planet New Terra colonized",
+        "color": [
+          110,
+          200,
+          120,
+          255
+        ],
+        "bounds": [
+          18,
+          698,
+          224,
+          10
+        ],
+        "fit": "shrink"
+      },
+      {
+        "kind": "text",
+        "clip": [
+          10,
+          639,
+          240,
+          147
+        ],
+        "pos": [
+          18,
+          711
+        ],
+        "size": 13.5,
+        "text": "✕ fighter lost (imperial)",
+        "color": [
+          232,
+          92,
+          76,
+          255
+        ],
+        "bounds": [
+          18,
+          711,
+          224,
+          11
+        ],
+        "fit": "shrink"
+      },
+      {
+        "kind": "text",
+        "clip": [
+          10,
+          639,
+          240,
+          147
+        ],
+        "pos": [
+          18,
+          724
+        ],
+        "size": 13.5,
+        "text": "△ trade_station online",
+        "color": [
+          110,
+          200,
+          120,
+          255
+        ],
+        "bounds": [
+          18,
+          724,
+          224,
+          11
+        ],
+        "fit": "shrink"
+      },
+      {
+        "kind": "text",
+        "clip": [
+          10,
+          639,
+          240,
+          147
+        ],
+        "pos": [
+          18,
+          738
+        ],
+        "size": 13.5,
+        "text": "✦ research: energy_efficiency",
+        "color": [
+          110,
+          200,
+          120,
+          255
+        ],
+        "bounds": [
+          18,
+          738,
+          224,
+          10
+        ],
+        "fit": "shrink"
+      },
+      {
+        "kind": "text",
+        "clip": [
+          10,
+          639,
+          240,
+          147
+        ],
+        "pos": [
+          18,
+          752
+        ],
+        "size": 13.5,
+        "text": "◉ planet Frontier colonized",
+        "color": [
+          110,
+          200,
+          120,
+          255
+        ],
+        "bounds": [
+          18,
+          752,
+          224,
+          10
+        ],
+        "fit": "shrink"
+      },
+      {
+        "kind": "text",
+        "clip": [
+          10,
+          639,
+          240,
+          147
+        ],
+        "pos": [
+          18,
+          765
+        ],
+        "size": 13.5,
+        "text": "✕ interceptor lost (imperial)",
+        "color": [
+          232,
+          92,
+          76,
+          255
+        ],
+        "bounds": [
+          18,
+          765,
+          224,
+          11
+        ],
+        "fit": "shrink"
+      }
+    ]
+  },
+  "_flash_message": {
+    "legacy_control": false,
+    "labels": [],
+    "arguments": [
+      "Constructing sensor station",
+      2.5
+    ],
+    "blocks": [
+      [
+        510,
+        727,
+        260,
+        27
+      ]
+    ],
+    "ops": [
+      {
+        "kind": "rect",
+        "clip": [
+          510,
+          727,
+          260,
+          27
+        ],
+        "color": [
+          14,
+          18,
+          28,
+          205
+        ],
+        "rect": [
+          510,
+          727,
+          260,
+          27
+        ],
+        "stroke": 0.0,
+        "radius": 4.5
+      },
+      {
+        "kind": "rect",
+        "clip": [
+          510,
+          727,
+          260,
+          27
+        ],
+        "color": [
+          60,
+          80,
+          110,
+          220
+        ],
+        "rect": [
+          510,
+          727,
+          260,
+          27
+        ],
+        "stroke": 0.75,
+        "radius": 4.5
+      },
+      {
+        "kind": "text",
+        "clip": [
+          510,
+          727,
+          260,
+          27
+        ],
+        "pos": [
+          518,
+          732
+        ],
+        "size": 21.375,
+        "text": "Constructing sensor station",
+        "color": [
+          232,
+          168,
+          76,
+          255
+        ],
+        "bounds": [
+          518,
+          732,
+          244,
+          17
+        ],
+        "fit": "center"
+      }
+    ]
+  }
+}

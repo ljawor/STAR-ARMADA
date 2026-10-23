@@ -1,0 +1,5 @@
+COMMAND: ['clang++', '-std=c++20', '-O1', '-g', '-UNDEBUG', '-I/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/include', '-I/Users/lukaszjawor/.hermes/cache/scratch/armada-w01-deps', '-DARMADA_ASSET_ROOT="/Users/lukaszjawor/Downloads/Project/STAR-ARMADA"', '/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/src/top_hud.cpp', '/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/src/vector_hud.cpp', '/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/tests/test_vector_hud.cpp', '-o', '/Users/lukaszjawor/.hermes/cache/scratch/incoming-native-cpu/center-schema-red']
+COMPILE EXIT: 0
+RUN EXIT: -6
+SECONDS: 0.4307465829188004
+Assertion failed: (accepted && "schema-v1 center fit must be accepted"), function centeredText, file test_vector_hud.cpp, line 506.

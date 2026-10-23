@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "security_concerns": [],
+  "logic_errors": [],
+  "suggestions": ["Share hollow-triangle shape/stroke constants between inkBounds and emission, or retain explicit footprint regression tests to prevent drift."],
+  "provenance": "Independent read-only C++ rereview deleg_06b45594",
+  "summary": "Full CPU and nonrecovering UBSan suites exited0. Additional2142case sanitized probe passed actual emitted-geometry centering, symbols, mixed text, leading/trailing whitespace invariance, bearings, empty ink, tight bounds, shrinking and nonuniform scales. Repository clipping, strict decoding, mesh/batch/work limits passed. Prior centering failures resolved. Complete draw-list serialization matched HEAD byte-for-byte across1296 legacy shrink/clip cases;1728cases including new icons matched pre-repair implementation byte-for-byte. Source hashes unchanged. No repository edits, production build, GPU, commits, settings or installs.",
+  "independent_receipts": "/Users/lukaszjawor/.hermes/cache/scratch/ink-rereview-independent/"
+}

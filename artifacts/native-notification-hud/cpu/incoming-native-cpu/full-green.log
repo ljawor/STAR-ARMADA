@@ -1,0 +1,29 @@
+COMMAND: ['clang++', '-std=c++20', '-O1', '-g', '-UNDEBUG', '-I/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/include', '-I/Users/lukaszjawor/.hermes/cache/scratch/armada-w01-deps', '-DARMADA_ASSET_ROOT="/Users/lukaszjawor/Downloads/Project/STAR-ARMADA"', '/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/src/top_hud.cpp', '/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/src/vector_hud.cpp', '/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/tests/test_vector_hud.cpp', '-o', '/Users/lukaszjawor/.hermes/cache/scratch/incoming-native-cpu/full-green']
+COMPILE EXIT: 0
+RUN EXIT: 0
+SECONDS: 0.8041707089869305
+center schema-v1 / measured ink XY / fit / long text / clipping / old shrink PASS
+incoming U+25b3 question-mark geometry/UV identical=0
+incoming shape / UV / measurement / single alpha / bounds / nonuniform clip PASS
+incoming U+2726 question-mark geometry/UV identical=0
+incoming shape / UV / measurement / single alpha / bounds / nonuniform clip PASS
+incoming U+25c9 question-mark geometry/UV identical=0
+incoming shape / UV / measurement / single alpha / bounds / nonuniform clip PASS
+decoder strict schema PASS
+clipped geometry / semantic fog / batch order PASS
+measured text / alpha / glyph UV clip / control icons / glyph budget / resize PASS
+rounded rect / primitive coverage / batch budget / wire maximums PASS
+control icon translucent union PASS
+joined polygon stroke alpha PASS
+crossed / concave / reversed polygon even-odd fill PASS
+square stroke=1 reversed=0 sample coverage=0
+square stroke=20 reversed=0 sample coverage=1
+square stroke=64 reversed=0 sample coverage=1
+square stroke=1 reversed=1 sample coverage=0
+square stroke=20 reversed=1 sample coverage=1
+square stroke=64 reversed=1 sample coverage=1
+thin / collapsed thick / concave / reversed translucent stroke union PASS
+offscreen 128x256 points seconds=3.0875e-05
+zero-output work boundary: 89 accepted, 90 rejected (44928 units/op, 4000000 limit)
+cumulative zero-output rejection=1 seconds=0.0121255
+offscreen rejection / cumulative CPU work budget PASS

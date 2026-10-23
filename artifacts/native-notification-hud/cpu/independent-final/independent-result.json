@@ -1,0 +1,13 @@
+{
+  "head-legacy": {
+    "byte_identical": true,
+    "bytes": 1080766,
+    "sha256": "afb867bac58d02513e22cf5df362cc1887ae2a7b2289a0f4b7953dd24e286863"
+  },
+  "repair-compatibility": {
+    "byte_identical": true,
+    "bytes": 3358659,
+    "sha256": "88e01dea1c9f896ecf07705aba8c6711e2a6329a9855d43d333eccbde2c17971"
+  },
+  "sources_unchanged": true
+}

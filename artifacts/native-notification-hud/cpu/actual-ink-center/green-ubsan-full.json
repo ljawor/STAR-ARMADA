@@ -1,0 +1,11 @@
+{
+  "name": "green-ubsan-full",
+  "args": [
+    "/Users/lukaszjawor/.hermes/cache/scratch/actual-ink-center/green-ubsan"
+  ],
+  "pid": 40762,
+  "exit_code": 0,
+  "timed_out": false,
+  "elapsed": 0.9677031669998541,
+  "deadline": 45
+}

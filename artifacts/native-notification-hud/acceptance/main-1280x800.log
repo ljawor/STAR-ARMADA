@@ -1,0 +1,3 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+cpp renderer: in-process bgfx target, original pygame window retained
+{"passed": true, "metrics": "/Users/lukaszjawor/.hermes/cache/scratch/notification-acceptance-dfd0b9d3/main-1280x800/notification-metrics.json", "error": null}

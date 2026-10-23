@@ -1,0 +1,33 @@
+-- Using the multi-header code from /Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/build-w02/_deps/json-src/include/
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/build-w02
+[ 31%] Built target armada_shaders
+[ 34%] Built target test_camera
+[ 37%] Built target armada_top_hud
+[ 44%] Built target test_markers
+[ 44%] Built target test_scene
+[ 51%] Built target test_overlay
+[ 51%] Built target test_planets
+[ 55%] Built target test_input
+[ 58%] Built target test_explosion
+[ 62%] Built target dump_hit_geometry
+[ 68%] Built target test_shield
+[ 68%] Built target test_fogmap
+[ 75%] Built target test_frame_v2
+[ 75%] Built target test_starfield
+[ 79%] Built target test_hit
+[ 82%] Built target test_hardware
+[ 84%] Building CXX object CMakeFiles/armada_vector_hud.dir/src/vector_hud.cpp.o
+[ 87%] Built target test_top_hud
+[ 89%] Linking CXX static library libarmada_vector_hud.a
+[ 89%] Built target armada_vector_hud
+[ 91%] Building CXX object CMakeFiles/test_vector_hud.dir/tests/test_vector_hud.cpp.o
+[ 94%] Building CXX object CMakeFiles/armada_viewer.dir/src/viewer.cpp.o
+[ 94%] Building CXX object CMakeFiles/armada_embedded.dir/src/viewer.cpp.o
+[ 96%] Linking CXX executable test_vector_hud
+[ 96%] Built target test_vector_hud
+[ 98%] Linking CXX executable armada_viewer
+[100%] Linking CXX shared library libarmada_embedded.dylib
+[100%] Built target armada_viewer
+[100%] Built target armada_embedded

@@ -1,0 +1,31 @@
+center actual ink: jAy drawable=800x600 midpoint=200,200
+center actual ink: jAy drawable=1600x900 midpoint=400,300
+center actual ink: jAy drawable=640x900 midpoint=160,300
+center actual ink: WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW drawable=800x600 midpoint=200,200
+center actual ink: WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW drawable=1600x900 midpoint=400,300
+center actual ink: WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW drawable=640x900 midpoint=160,300
+center actual ink: ALERT     drawable=800x600 midpoint=200,200
+center actual ink: ALERT     drawable=1600x900 midpoint=400,300
+center actual ink: ALERT     drawable=640x900 midpoint=160,300
+center actual ink:    ALERT   drawable=800x600 midpoint=200,200
+center actual ink:    ALERT   drawable=1600x900 midpoint=400,300
+center actual ink:    ALERT   drawable=640x900 midpoint=160,300
+center actual ink: ✦ drawable=800x600 midpoint=200,200
+center actual ink: ✦ drawable=1600x900 midpoint=400,300
+center actual ink: ✦ drawable=640x900 midpoint=160,300
+center actual ink: ◉ drawable=800x600 midpoint=200,200
+center actual ink: ◉ drawable=1600x900 midpoint=400,300
+center actual ink: ◉ drawable=640x900 midpoint=160,300
+center actual ink: △ drawable=800x600 midpoint=200,200
+center actual ink: △ drawable=1600x900 midpoint=400,300
+center actual ink: △ drawable=640x900 midpoint=160,300
+center actual ink: → drawable=800x600 midpoint=200,200
+center actual ink: → drawable=1600x900 midpoint=400,300
+center actual ink: → drawable=640x900 midpoint=160,300
+center actual ink: ✦ ALERT △ drawable=800x600 midpoint=200,200
+center actual ink: ✦ ALERT △ drawable=1600x900 midpoint=400,300
+center actual ink: ✦ ALERT △ drawable=640x900 midpoint=160,300
+center actual ink: △ ALERT ◉     drawable=800x600 midpoint=200,200
+center actual ink: △ ALERT ◉     drawable=1600x900 midpoint=400,300
+center actual ink: △ ALERT ◉     drawable=640x900 midpoint=160,300
+center actual emitted ink / icons / trailing whitespace / empty ink / XY / fit / nonuniform clip PASS

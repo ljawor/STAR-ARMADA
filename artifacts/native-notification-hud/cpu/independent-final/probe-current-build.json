@@ -1,0 +1,23 @@
+{
+  "name": "probe-current-build",
+  "exit_code": 0,
+  "args": [
+    "clang++",
+    "-std=c++20",
+    "-O1",
+    "-g",
+    "-UNDEBUG",
+    "-I/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/include",
+    "-I/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/build-w02/_deps/json-src/include",
+    "-I/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/build-w02/_deps/picosha2-src",
+    "-DARMADA_ASSET_ROOT=\"/Users/lukaszjawor/Downloads/Project/STAR-ARMADA\"",
+    "-fsanitize=undefined",
+    "-fno-sanitize-recover=all",
+    "render_cpp/src/vector_hud.cpp",
+    "render_cpp/src/top_hud.cpp",
+    "/Users/lukaszjawor/.hermes/cache/scratch/ink-rereview-independent/probe.cpp",
+    "-o",
+    "/Users/lukaszjawor/.hermes/cache/scratch/ink-rereview-independent/probe-current"
+  ],
+  "log": "/Users/lukaszjawor/.hermes/cache/scratch/ink-rereview-independent/probe-current-build.log"
+}

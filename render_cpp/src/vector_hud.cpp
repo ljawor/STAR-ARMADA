@@ -145,7 +145,7 @@ Model decode(const std::vector<uint8_t> &bytes) {
         if (total > 65536)
           invalid();
         o.fit = string(v.at("fit"), 6);
-        if (o.fit != "shrink" && o.fit != "clip")
+        if (o.fit != "shrink" && o.fit != "clip" && o.fit != "center")
           invalid();
       } else if (o.kind == "rect") {
         keys(v, {"kind", "clip", "rect", "color", "stroke", "radius"});
@@ -410,7 +410,65 @@ struct Builder {
   }
   bool icon(uint32_t cp) const {
     return cp == 0x25b2 || cp == 0x25bc || cp == 0x25b8 || cp == 0x2715 ||
-           cp == 0x2192;
+           cp == 0x2192 || cp == 0x25b3 || cp == 0x2726 || cp == 0x25c9;
+  }
+  // Min/max of the geometry before clipping, not the pen/advance box. Keep
+  // this separate from the legacy measurement used by shrink and clip.
+  Rect inkBounds(const std::vector<uint32_t> &codes, float ph) const {
+    Rect ink{};
+    bool present = false;
+    float pen = 0;
+    auto include = [&](float l, float t, float r, float b) {
+      if (!present) {
+        ink = {l, t, r, b};
+        present = true;
+      } else {
+        ink[0] = std::min(ink[0], l); ink[1] = std::min(ink[1], t);
+        ink[2] = std::max(ink[2], r); ink[3] = std::max(ink[3], b);
+      }
+    };
+    for (auto cp : codes) {
+      if (icon(cp)) {
+        Rect box{0, 0, .8f, .8f};
+        if (cp == 0x2192)
+          box = {0, .1f, .8f, .7f};
+        else if (cp == 0x25b3) {
+          // The hollow triangle's joined stroke does not quite fill .8 em.
+          // Match outline's miter footprint, including both sides of the join.
+          const std::array<Point, 3> shape{{{.4f, .09f}, {.735f, .76f},
+                                          {.065f, .76f}}};
+          box = {1, 1, -1, -1};
+          for (size_t i = 0; i < shape.size(); ++i) {
+            auto prev = shape[(i + 2) % 3], p = shape[i], next = shape[(i + 1) % 3];
+            float ax = p[0] - prev[0], ay = p[1] - prev[1],
+                  bx = next[0] - p[0], by = next[1] - p[1],
+                  al = std::hypot(ax, ay), bl = std::hypot(bx, by),
+                  nx = -ay / al - by / bl, ny = ax / al + bx / bl,
+                  len = std::hypot(nx, ny);
+            nx /= len; ny /= len;
+            float dot = nx * (-ay / al) + ny * (ax / al),
+                  miter = std::min(.07f * 2,
+                                  .07f * .5f / std::max(.25f, std::abs(dot)));
+            box[0] = std::min(box[0], p[0] - std::abs(nx * miter));
+            box[1] = std::min(box[1], p[1] - std::abs(ny * miter));
+            box[2] = std::max(box[2], p[0] + std::abs(nx * miter));
+            box[3] = std::max(box[3], p[1] + std::abs(ny * miter));
+          }
+        }
+        include(pen + box[0] * ph, (box[1] - .8f) * ph,
+                pen + box[2] * ph, (box[3] - .8f) * ph);
+        pen += ph * .9f;
+      } else {
+        auto &g = font.glyph(cp);
+        // quad emits nothing for an empty glyph (notably whitespace). Its
+        // advance still separates later visible glyphs, but is never itself ink.
+        if (g.x1 > g.x0 && g.y1 > g.y0)
+          include(pen + g.xoff, g.yoff, pen + g.xoff + g.x1 - g.x0,
+                  g.yoff + g.y1 - g.y0);
+        pen += g.advance;
+      }
+    }
+    return ink;
   }
   void text(const Op &o) {
     clip = intersect(clip, {o.bounds[0] * sx, o.bounds[1] * sy,
@@ -435,10 +493,14 @@ struct Builder {
       }
     }
     right = std::max(right, pen);
+    if (o.fit == "center") {
+      auto ink = inkBounds(codes, ph);
+      left = ink[0]; top = ink[1]; right = ink[2]; bottom = ink[3];
+    }
     float scale = o.size * sy / ph, w = (right - left) * scale,
           h = (bottom - top) * scale;
     float x = o.pos[0] * sx, y = o.pos[1] * sy;
-    if (o.fit == "shrink") {
+    if (o.fit == "shrink" || o.fit == "center") {
       float aw = std::max(0.f, (o.bounds[0] + o.bounds[2]) * sx -
                                    std::max(x, o.bounds[0] * sx)),
             ah = std::max(0.f, (o.bounds[1] + o.bounds[3]) * sy -
@@ -451,6 +513,10 @@ struct Builder {
     }
     if (scale <= 0)
       return;
+    if (o.fit == "center") {
+      x = o.bounds[0] * sx + (o.bounds[2] * sx - w) / 2;
+      y = o.bounds[1] * sy + (o.bounds[3] * sy - h) / 2;
+    }
     out.textBounds.push_back({o.text, x, y, w, h});
     pen = x - left * scale;
     float baseline = y - top * scale;
@@ -466,6 +532,49 @@ struct Builder {
           tri(p(0, 0), p(.8f, 0), p(.4f, .8f));
         else if (cp == 0x25b8)
           tri(p(0, 0), p(.8f, .4f), p(0, .8f));
+        else if (cp == 0x25b3) {
+          // Inset the centreline so joined miters stay inside the .8 em ink box.
+          // Tessellate the stroke union once, preserving translucent alpha.
+          std::vector<Point> shape{{.4f, .09f}, {.735f, .76f}, {.065f, .76f}};
+          for (auto &v : shape) {
+            v[0] = ix + v[0] * z;
+            v[1] = iy + v[1] * z;
+          }
+          // outline works in logical coordinates. Use isotropic pixel space
+          // temporarily so nonuniform drawable scaling cannot distort the em.
+          float oldSx = sx, oldSy = sy;
+          sx = sy = 1;
+          outline(shape, .07f * z);
+          sx = oldSx; sy = oldSy;
+        }
+        else if (cp == 0x2726) {
+          std::vector<Point> shape{{.4f, 0}, {.51f, .29f}, {.8f, .4f},
+                                   {.51f, .51f}, {.4f, .8f}, {.29f, .51f},
+                                   {0, .4f}, {.29f, .29f}};
+          for (auto &v : shape) {
+            v[0] = (ix + v[0] * z) / sx;
+            v[1] = (iy + v[1] * z) / sy;
+          }
+          polygon(shape);
+        }
+        else if (cp == 0x25c9) {
+          // Fixed bounded annulus and a disjoint dot: no repeated alpha blends.
+          constexpr int N = 32;
+          work(N * 3);
+          for (int i = 0; i < N; ++i) {
+            float a = float(i) * 6.28318530718f / N,
+                  b = float(i + 1) * 6.28318530718f / N;
+            auto radial = [&](float angle, float radius) {
+              return p(.4f + radius * std::cos(angle),
+                       .4f + radius * std::sin(angle));
+            };
+            auto outerA = radial(a, .4f), outerB = radial(b, .4f),
+                 innerA = radial(a, .31f), innerB = radial(b, .31f);
+            tri(outerA, outerB, innerB);
+            tri(outerA, innerB, innerA);
+            tri(p(.4f, .4f), radial(a, .13f), radial(b, .13f));
+          }
+        }
         else {
           std::vector<Point> shape =
               cp == 0x2192

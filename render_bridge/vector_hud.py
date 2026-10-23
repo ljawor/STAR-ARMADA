@@ -55,15 +55,17 @@ class Capture:
 
 
 class Sink:
-    def __init__(self, capture, scope, *, source_x=0, target_x=0, scale: float=1):
+    def __init__(self, capture, scope, *, source_x=0, target_x=0,
+                 source_y=44, target_y=44, scale: float=1):
         self.capture = capture
         self.scope = pygame.Rect(scope)
         self.source_x, self.target_x, self.scale = source_x, target_x, scale
+        self.source_y, self.target_y = source_y, target_y
 
     def point(self, point):
         x, y = point
         return [round(self.target_x + self.scale * (x - self.source_x)),
-                round(44 + self.scale * (y - 44))]
+                round(self.target_y + self.scale * (y - self.source_y))]
 
     def rect(self, rect):
         r = pygame.Rect(rect)
@@ -102,10 +104,10 @@ class Sink:
         self.emit(surface, kind, **fields)
         return pygame.Rect(0, 0, 0, 0)
 
-    def text(self, surface, x, y, text, color, size, width, height):
+    def text(self, surface, x, y, text, color, size, width, height, *, fit='shrink'):
         bounds = self.rect((x, y, max(0, width), max(0, height)))
         self.emit(surface, 'text', pos=self.point((x, y)), size=size * self.scale,
-                  text=str(text), color=color4(color), bounds=bounds, fit='shrink')
+                  text=str(text), color=color4(color), bounds=bounds, fit=fit)
 
     def fog_mask(self, surface, state, player_id, rect):
         """Match FogMask.surface's authoritative sphere/cell sampling, not pixels.
@@ -215,7 +217,7 @@ def _validate(model):
         if kind == 'text':
             n = len(op['text'].encode('utf-8'))
             text_bytes += n
-            if n > 4096 or text_bytes > 65536 or op['fit'] not in ('shrink', 'clip'):
+            if n > 4096 or text_bytes > 65536 or op['fit'] not in ('shrink', 'clip', 'center'):
                 raise ValueError('Invalid native vector HUD text')
     fog = model['fog']
     if fog is not None:

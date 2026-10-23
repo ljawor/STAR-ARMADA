@@ -1,0 +1,9 @@
+{
+  "name": "independent-center",
+  "exit_code": 0,
+  "args": [
+    "/Users/lukaszjawor/.hermes/cache/scratch/ink-rereview-independent/probe-current",
+    "center"
+  ],
+  "log": "/Users/lukaszjawor/.hermes/cache/scratch/ink-rereview-independent/independent-center.log"
+}

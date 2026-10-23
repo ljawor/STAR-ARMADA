@@ -1,0 +1,11 @@
+{
+  "passed":false,
+  "security_concerns":[],
+  "logic_errors":[
+    {"severity":"P1","file":"tools/render/capture_native_notification_hud_game.py","issue":"Missing fail-closed owner-game preflight before SDL/OpenGL initialization; parent supervisor guard alone does not protect direct helper execution."},
+    {"severity":"P2","file":"render/hud.py:_flash_message","issue":"Clamping source measured width before scaling violates exact .75 legacy-background-width contract for long messages.","reproduction":{"legacy_width":17304,"expected_native_width":12978,"actual_native_width":942}}
+  ],
+  "suggestions":["CPU-only diagnostic tests for preflight, cleanup failures and fail-closed receipts","Direct legacy-versus-native geometry comparisons at width threshold"],
+  "provenance":"Independent read-only Python/diagnostic review deleg_9fb69054",
+  "summary":"107 CPU tests and 8439 subtests passed; immutable committed Python baseline81 tests and8439subtests. Verified native pre-raster capture, owner filtering, latest-nine ordering, bounds/clips, expiry/replacement, default activation, timing authority and unchanged approved panel methods. No GPU execution. Two contract discrepancies require repair; C++ excluded."
+}

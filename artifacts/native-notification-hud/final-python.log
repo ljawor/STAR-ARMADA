@@ -1,0 +1,15 @@
+........................................................................ [ 24%]
+........................................................................ [ 48%]
+............................................................................. [ 75%]
+..................................................................... [ 98%]
+....                                                                     [100%]
+=============================== warnings summary ===============================
+tests/test_native_top_hud.py: 10 warnings
+tests/test_native_vector_integration.py: 10 warnings
+tests/test_hybrid_hud.py: 20 warnings
+tests/test_render_live.py: 48 warnings
+  /Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_bridge/planets.py:106: DeprecationWarning: pygame.image.tostring deprecated since 2.3.0
+    rgba = pygame.image.tostring(surface, 'RGBA')
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+294 passed, 88 warnings, 9934 subtests passed in 13.66s

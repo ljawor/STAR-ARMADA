@@ -1,0 +1,12 @@
+{
+  "name": "red-center",
+  "args": [
+    "/Users/lukaszjawor/.hermes/cache/scratch/actual-ink-center/red",
+    "center"
+  ],
+  "pid": 40503,
+  "exit_code": -6,
+  "timed_out": false,
+  "elapsed": 0.5385809590807185,
+  "deadline": 45
+}

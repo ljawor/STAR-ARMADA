@@ -1,0 +1,11 @@
+{
+  "name": "legacy-after",
+  "args": [
+    "/Users/lukaszjawor/.hermes/cache/scratch/actual-ink-center/legacy-after"
+  ],
+  "pid": 40848,
+  "exit_code": 0,
+  "timed_out": false,
+  "elapsed": 0.41060687496792525,
+  "deadline": 45
+}

@@ -1,0 +1,13 @@
+{
+  "name": "watchdog-proof",
+  "args": [
+    "/usr/local/bin/python3",
+    "-c",
+    "import time;time.sleep(60)"
+  ],
+  "pid": 40478,
+  "exit_code": -9,
+  "timed_out": true,
+  "elapsed": 0.27084754093084484,
+  "deadline": 0.2
+}

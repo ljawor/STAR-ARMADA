@@ -1,0 +1,6 @@
+COMMAND: ['clang++', '-std=c++20', '-O1', '-g', '-UNDEBUG', '-I/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/include', '-I/Users/lukaszjawor/.hermes/cache/scratch/armada-w01-deps', '-DARMADA_ASSET_ROOT="/Users/lukaszjawor/Downloads/Project/STAR-ARMADA"', '/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/src/top_hud.cpp', '/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/src/vector_hud.cpp', '/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/tests/test_vector_hud.cpp', '-o', '/Users/lukaszjawor/.hermes/cache/scratch/incoming-native-cpu/triangle-green']
+COMPILE EXIT: 0
+RUN EXIT: 0
+SECONDS: 0.2900547500466928
+incoming U+25b3 question-mark geometry/UV identical=0
+incoming shape / UV / measurement / single alpha / bounds / nonuniform clip PASS

@@ -1,0 +1,48 @@
+{
+ "branch": "feat/native-notification-hud",
+ "base": "8348a4b622a3b19dfb5e2ee82030528df99c9037",
+ "sources": {
+  "main.py": "85304b6ebff357e1e79472e984af2724a36eb525a05ab04217f0d96c814e6ab0",
+  "render/hud.py": "56cdbd6eac941017a6eb0faa7c69d4bca557acfedf3262b79efe04d844fbac85",
+  "render_bridge/vector_hud.py": "f2a8c370c3ec7d4ec2913834b7cf15bcaa986b2a6778846adf30fb0e02c9eaa9",
+  "render_cpp/src/vector_hud.cpp": "1fafac8512812c118be8b9fd74be6232c84c38f460381148b621a8c24c6ce325",
+  "render_cpp/tests/test_vector_hud.cpp": "358631f14711030f77ff3f0b544b44684b153551b766be35c1ea070ee18fd9e6",
+  "tests/test_native_notification_hud.py": "3fcd0a5bd1d3576c2a0b7832f833d5664dc04bef4f18441d68825fc281200124",
+  "tests/test_native_notification_capture.py": "1a4e40b26377820f1ce1359f2d874b513662be8b7d3cb96373295442383f9823",
+  "tools/render/capture_native_notification_hud_game.py": "048a55ef211337265c29ee7a6e3b57fc6490f2ead5dbc6dc0e337e44b7e7d577",
+  "tools/render/probe_native_vector_hud.py": "d71a4954a09c4ba4e26ff2c6bae0178db345eb68a638ac1d0d495cb77347a705"
+ },
+ "binaries": {
+  "render_cpp/build-w02/armada_viewer": "c74196f52258cf8dd25d87fa73b37989c01d975824918575c8dc31a31328f413",
+  "render_cpp/build-w02/libarmada_embedded.dylib": "9a4e45038b769a652dd215abdb302102549f349f87638b444965f7afbedbdef0"
+ },
+ "actual_main_cases": 2,
+ "pipeline_cases": 4,
+ "pipeline_assertions": 834,
+ "actual_main_images": 30,
+ "python_tests": 294,
+ "python_subtests": 9934,
+ "ctest_passed": 15,
+ "python_review": "passed",
+ "cpp_review": "passed",
+ "owner_visual_approval": false,
+ "merged": false,
+ "acceptance_report": "/Users/lukaszjawor/.hermes/cache/scratch/notification-acceptance-9aa0a054/acceptance.json",
+ "harness_repair": {
+  "date": "2026-10-23",
+  "what": "capture harness now refuses a resolution that is not a shipped preset before creating output or rendering; presets are read from render/display_settings.py with ast so the CLI still never imports the game",
+  "why": "--width 1024 --height 640 rendered a full production frame and then failed 'wrong production output resolution', because the window silently maps an unshipped request to desktop 'auto'",
+  "superseded_source_hashes": {
+   "tests/test_native_notification_capture.py": {
+    "previous": "7c1b48d28c12f2d1a0bca79e55ccf8398e67e364a718deec9516f5f17e5febe7",
+    "current": "1a4e40b26377820f1ce1359f2d874b513662be8b7d3cb96373295442383f9823"
+   },
+   "tools/render/capture_native_notification_hud_game.py": {
+    "previous": "5fcd04ebc14065adadee4198516183f7c0957c4454fbaec0cf4bff5c142bf867",
+    "current": "048a55ef211337265c29ee7a6e3b57fc6490f2ead5dbc6dc0e337e44b7e7d577"
+   }
+  },
+  "production_sources_changed": false,
+  "note": "harness + its test only; every production source and both binaries still match the earlier full acceptance, and the 2560x1440 / 1280x800 / 1280x720 actual-main captures below were re-run on the repaired harness"
+ }
+}

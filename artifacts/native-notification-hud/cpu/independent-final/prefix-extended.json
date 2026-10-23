@@ -1,0 +1,9 @@
+{
+  "name": "prefix-extended",
+  "exit_code": 0,
+  "args": [
+    "/Users/lukaszjawor/.hermes/cache/scratch/ink-rereview-independent/probe-prefix",
+    "extended"
+  ],
+  "log": "/Users/lukaszjawor/.hermes/cache/scratch/ink-rereview-independent/prefix-extended.log"
+}
