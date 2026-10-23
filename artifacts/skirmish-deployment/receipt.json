@@ -1,0 +1,293 @@
+{
+  "captures": [
+    {
+      "map": "skirmish01",
+      "size": [
+        800,
+        600
+      ],
+      "players": 2,
+      "sha256": "554ee4b08eb21269a3b3c074790083e2d256bdc75d3f69e24c117d9472faf35a",
+      "capture": "800x600_skirmish01_2players.png"
+    },
+    {
+      "map": "skirmish02",
+      "size": [
+        800,
+        600
+      ],
+      "players": 3,
+      "sha256": "40c283443d42c6a761020f067ca976369ab7f828d47f81610fbbf744c156c213",
+      "capture": "800x600_skirmish02_3players.png"
+    },
+    {
+      "map": "skirmish03",
+      "size": [
+        800,
+        600
+      ],
+      "players": 4,
+      "sha256": "4a369cc815aeaf66b78adc75aaf35259aa8f3a20241945d761d335912d0e619d",
+      "capture": "800x600_skirmish03_4players.png"
+    },
+    {
+      "map": "skirmish04",
+      "size": [
+        800,
+        600
+      ],
+      "players": 4,
+      "sha256": "f07d797937e45f3d5bd12c9fe24f6c1d08755dcf332f577d71818c80ef8ebb86",
+      "capture": "800x600_skirmish04_4players.png"
+    },
+    {
+      "map": "skirmish05",
+      "size": [
+        800,
+        600
+      ],
+      "players": 8,
+      "sha256": "88b1db6df1ebe3984c227d855963cc2c5f3f12eff90a96c87146a2a53c48d204",
+      "capture": "800x600_skirmish05_8players.png"
+    },
+    {
+      "map": "skirmish06",
+      "size": [
+        800,
+        600
+      ],
+      "players": 2,
+      "sha256": "be3e7670a4b6635c3eb186a80564d5d9465aafe5bb2c9b4ab1b0ba060d4915b8",
+      "capture": "800x600_skirmish06_2players.png"
+    },
+    {
+      "map": "skirmish07",
+      "size": [
+        800,
+        600
+      ],
+      "players": 2,
+      "sha256": "60c57e2d91bb6427005be15bcc228e8d2737cce9e15b4f7720ba977e40e02162",
+      "capture": "800x600_skirmish07_2players.png"
+    },
+    {
+      "map": "skirmish08",
+      "size": [
+        800,
+        600
+      ],
+      "players": 3,
+      "sha256": "3755d6bf56570c00736156dee4bae73c5c919fd529fa6d242b5942cb1b3e8be3",
+      "capture": "800x600_skirmish08_3players.png"
+    },
+    {
+      "map": "skirmish01",
+      "size": [
+        1024,
+        768
+      ],
+      "players": 2,
+      "sha256": "1775bb95633a18f101751dd4e9f896a01ffa9cfda21525fb2a54d168fdf14385",
+      "capture": "1024x768_skirmish01_2players.png"
+    },
+    {
+      "map": "skirmish02",
+      "size": [
+        1024,
+        768
+      ],
+      "players": 3,
+      "sha256": "6da65444dde17489c25faf8f9fcb3d98c4ae3eb46564850cac3a73138b9ec858",
+      "capture": "1024x768_skirmish02_3players.png"
+    },
+    {
+      "map": "skirmish03",
+      "size": [
+        1024,
+        768
+      ],
+      "players": 4,
+      "sha256": "0f1c76f90a47cec90a66ef584a5390940410ca733ea494d1bd12a33c592012a8",
+      "capture": "1024x768_skirmish03_4players.png"
+    },
+    {
+      "map": "skirmish04",
+      "size": [
+        1024,
+        768
+      ],
+      "players": 4,
+      "sha256": "ac9e5f9cfca66c8fac66dfd8aeb1d01a81dcfe3a197556a2445d68bc05f43b00",
+      "capture": "1024x768_skirmish04_4players.png"
+    },
+    {
+      "map": "skirmish05",
+      "size": [
+        1024,
+        768
+      ],
+      "players": 8,
+      "sha256": "3981247e416bc15efb78aa7d8dc85a7f9877f890de8e9c80aa137be07c276198",
+      "capture": "1024x768_skirmish05_8players.png"
+    },
+    {
+      "map": "skirmish06",
+      "size": [
+        1024,
+        768
+      ],
+      "players": 2,
+      "sha256": "561c0a65c4140c6ddd702c58340069235422e118b662f9f788d3b36a2d3898cd",
+      "capture": "1024x768_skirmish06_2players.png"
+    },
+    {
+      "map": "skirmish07",
+      "size": [
+        1024,
+        768
+      ],
+      "players": 2,
+      "sha256": "ecb82b867c4813f340124cabd1b4f9269c6e3a46b9cc2890df1172915a297dec",
+      "capture": "1024x768_skirmish07_2players.png"
+    },
+    {
+      "map": "skirmish08",
+      "size": [
+        1024,
+        768
+      ],
+      "players": 3,
+      "sha256": "c590d4963b67f84bb134b22824541e6b7761e9892459d5baaf66cb51b280dfe2",
+      "capture": "1024x768_skirmish08_3players.png"
+    },
+    {
+      "map": "skirmish01",
+      "size": [
+        1440,
+        900
+      ],
+      "players": 2,
+      "sha256": "a56e204a461442263c1e073d2a9771368b52449ab991874bfedc525811edf7d1",
+      "capture": "1440x900_skirmish01_2players.png"
+    },
+    {
+      "map": "skirmish02",
+      "size": [
+        1440,
+        900
+      ],
+      "players": 3,
+      "sha256": "cb8ec3b654c9ed31ccc0e1485907d74d89536d410de8e3442b883cfbf1039aaf",
+      "capture": "1440x900_skirmish02_3players.png"
+    },
+    {
+      "map": "skirmish03",
+      "size": [
+        1440,
+        900
+      ],
+      "players": 4,
+      "sha256": "d3761235ffca84cd9794679ea53ea8a5be77269ae27b351aa1feb75359a28c0f",
+      "capture": "1440x900_skirmish03_4players.png"
+    },
+    {
+      "map": "skirmish04",
+      "size": [
+        1440,
+        900
+      ],
+      "players": 4,
+      "sha256": "a73740841b8f58102d447182b4305155bd4942d9a1c4ae6598190954400b67f2",
+      "capture": "1440x900_skirmish04_4players.png"
+    },
+    {
+      "map": "skirmish05",
+      "size": [
+        1440,
+        900
+      ],
+      "players": 8,
+      "sha256": "20b92da1123061ba09564080f8290c359878212cc2a2fd97ff1db8d2ef3a3738",
+      "capture": "1440x900_skirmish05_8players.png"
+    },
+    {
+      "map": "skirmish06",
+      "size": [
+        1440,
+        900
+      ],
+      "players": 2,
+      "sha256": "414a5a1226f040b69f1ff0b7bc5270aee87157093e5254e03727999173200965",
+      "capture": "1440x900_skirmish06_2players.png"
+    },
+    {
+      "map": "skirmish07",
+      "size": [
+        1440,
+        900
+      ],
+      "players": 2,
+      "sha256": "5ee53be0cb046935a68bd5b01869f59be2575a96b476fc6074f0cd78b9b312bd",
+      "capture": "1440x900_skirmish07_2players.png"
+    },
+    {
+      "map": "skirmish08",
+      "size": [
+        1440,
+        900
+      ],
+      "players": 3,
+      "sha256": "1804340034511fca885faa4e3584578a26e87bc19654d387015b3338f951377d",
+      "capture": "1440x900_skirmish08_3players.png"
+    }
+  ],
+  "count": 24,
+  "scope": "Real SDL/OpenGL menu, full-capacity input/layout/color pixels and backend launch. Not native Windows or interactive performance acceptance.",
+  "source_commit": "3b1164fa8d7f8c94a8ca31f018abbf8824b950f1",
+  "baseline_commit": "c8f46a08dfd2209e0fa777e4e7f0741f58c4f1ba",
+  "footer_comparison": {
+    "Back": {
+      "rect": [
+        41,
+        836,
+        231,
+        46
+      ],
+      "changed_pixels": 0
+    },
+    "Launch skirmish": {
+      "rect": [
+        1095,
+        836,
+        303,
+        46
+      ],
+      "changed_pixels": 0
+    }
+  },
+  "prior_attempts": {
+    "lan_pacing": "Initial candidate combined run and isolated rerun failed 27 ticks/s floor (host/client 19.6/19.9 and 20.8/20.6). Immutable baseline isolated run also failed (20.0/20.1). Final 157-test candidate run passed including that test. Earlier focused.log was overwritten by the runner; initial tool outputs remain in session, not retained as raw logs here.",
+    "smoke_environment": "First supervisor inherited Hermes PYTHONPATH and NumPy import failed. Retried with PYTHONPATH/PYTHONHOME removed, Python -E: exit 0 SMOKE_CPP_OK and SMOKE_DONE. Smoke is publish-only, not native-world drawing evidence."
+  },
+  "independent_review": {
+    "passed": true,
+    "security_concerns": [],
+    "logic_errors": [],
+    "scope": "Core, new maps, menu chart/input and boundary forwarding; language reconciliation subsequently verified by language tests."
+  },
+  "limitations": [
+    "Not full repository suite",
+    "No Windows/native cross-platform acceptance",
+    "No 8-player performance target claimed",
+    "No merge/tag/release authorized",
+    "Map names/descriptions and existing dynamic team/capacity/AI labels retain existing localization limitations"
+  ],
+  "selected_evidence": {
+    "setup-eight.png": "20b92da1123061ba09564080f8290c359878212cc2a2fd97ff1db8d2ef3a3738",
+    "focused.json": "fd10453944ba3d91963773a3bf14743589a7bb7fa7da37110fafd689b080ba24",
+    "smoke.log": "52ad4f1ec921084d75a678986a261d624898a0734c20312b10915aa2999fac64",
+    "setup-duel.png": "4158da9a1b3803c563bc5ae9f030201c7c05722a7a8eac4881fdcf88e03dc2e5",
+    "before-after.png": "c7b3a46a96f23c4510dca7456c09949c97fbcdae30942dde10705d3d7e2bbf73",
+    "focused.log": "ea2ac5863605da44bab339b6ca9af88c3a8a57e6e90aa343e32c5639eca6f2b2"
+  }
+}
