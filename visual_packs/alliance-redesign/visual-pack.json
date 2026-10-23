@@ -12,16 +12,136 @@
   "content": {
     "replaces": [
       {
+        "binding": "rebel:fighter",
+        "replace_of": "core:alliance/fighter",
+        "manifest": "assets/models/manifests/fighter.json"
+      },
+      {
+        "binding": "rebel:bomber",
+        "replace_of": "core:alliance/bomber",
+        "manifest": "assets/models/manifests/bomber.json"
+      },
+      {
+        "binding": "rebel:corvette",
+        "replace_of": "core:alliance/corvette",
+        "manifest": "assets/models/manifests/corvette.json"
+      },
+      {
         "binding": "rebel:frigate",
         "replace_of": "core:alliance/frigate",
         "manifest": "assets/models/manifests/frigate.json"
       },
       {
+        "binding": "rebel:cruiser",
+        "replace_of": "core:alliance/cruiser",
+        "manifest": "assets/models/manifests/cruiser.json"
+      },
+      {
+        "binding": "rebel:battleship",
+        "replace_of": "core:alliance/battleship",
+        "manifest": "assets/models/manifests/battleship.json"
+      },
+      {
+        "binding": "rebel:supercapital",
+        "replace_of": "core:alliance/supercapital",
+        "manifest": "assets/models/manifests/supercapital.json"
+      },
+      {
+        "binding": "rebel:constructor",
+        "replace_of": "core:alliance/constructor",
+        "manifest": "assets/models/manifests/constructor.json"
+      },
+      {
+        "binding": "rebel:colonizer",
+        "replace_of": "core:alliance/colonizer",
+        "manifest": "assets/models/manifests/colonizer.json"
+      },
+      {
+        "binding": "rebel:convoy",
+        "replace_of": "core:alliance/convoy",
+        "manifest": "assets/models/manifests/convoy.json"
+      },
+      {
+        "binding": "rebel:command_station",
+        "replace_of": "core:alliance/command_station",
+        "manifest": "assets/models/manifests/command_station.json"
+      },
+      {
         "binding": "rebel:shipyard",
         "replace_of": "core:alliance/shipyard",
         "manifest": "assets/models/manifests/shipyard.json"
+      },
+      {
+        "binding": "rebel:mining_station",
+        "replace_of": "core:alliance/mining_station",
+        "manifest": "assets/models/manifests/mining_station.json"
+      },
+      {
+        "binding": "rebel:research_station",
+        "replace_of": "core:alliance/research_station",
+        "manifest": "assets/models/manifests/research_station.json"
+      },
+      {
+        "binding": "rebel:defense_platform",
+        "replace_of": "core:alliance/defense_platform",
+        "manifest": "assets/models/manifests/defense_platform.json"
+      },
+      {
+        "binding": "rebel:sensor_station",
+        "replace_of": "core:alliance/sensor_station",
+        "manifest": "assets/models/manifests/sensor_station.json"
+      },
+      {
+        "binding": "rebel:trade_station",
+        "replace_of": "core:alliance/trade_station",
+        "manifest": "assets/models/manifests/trade_station.json"
+      },
+      {
+        "binding": "rebel:fighter_platform",
+        "replace_of": "core:alliance/fighter_platform",
+        "manifest": "assets/models/manifests/fighter_platform.json"
+      },
+      {
+        "binding": "rebel:repair_dock",
+        "replace_of": "core:alliance/repair_dock",
+        "manifest": "assets/models/manifests/repair_dock.json"
+      },
+      {
+        "binding": "rebel:energy_relay",
+        "replace_of": "core:alliance/energy_relay",
+        "manifest": "assets/models/manifests/energy_relay.json"
+      },
+      {
+        "binding": "rebel:defense_satellite",
+        "replace_of": "core:alliance/defense_satellite",
+        "manifest": "assets/models/manifests/defense_satellite.json"
+      },
+      {
+        "binding": "rebel:attack_satellite",
+        "replace_of": "core:alliance/attack_satellite",
+        "manifest": "assets/models/manifests/attack_satellite.json"
+      },
+      {
+        "binding": "rebel:planet_extractor",
+        "replace_of": "core:alliance/planet_extractor",
+        "manifest": "assets/models/manifests/planet_extractor.json"
+      },
+      {
+        "binding": "rebel:planet_trade_hub",
+        "replace_of": "core:alliance/planet_trade_hub",
+        "manifest": "assets/models/manifests/planet_trade_hub.json"
+      },
+      {
+        "binding": "rebel:planet_shield_generator",
+        "replace_of": "core:alliance/planet_shield_generator",
+        "manifest": "assets/models/manifests/planet_shield_generator.json"
+      },
+      {
+        "binding": "rebel:planet_pulsar_cannon",
+        "replace_of": "core:alliance/planet_pulsar_cannon",
+        "manifest": "assets/models/manifests/planet_pulsar_cannon.json"
       }
     ]
   },
-  "notes": "Alliance frigate/shipyard style specimens for a complete faction redesign. All existing meshes and normal settings preserved. Appearance review pending; final delivery must activate the complete approved set in normal main.py."
+  "notes": "Complete 26-binding Alliance faction redesign. Accepted baseline geometry preserved. Appearance review pending; final delivery must be active in normal main.py."
 }

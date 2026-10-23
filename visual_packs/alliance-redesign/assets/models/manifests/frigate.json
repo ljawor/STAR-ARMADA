@@ -47,7 +47,7 @@
     "tool": "Blender",
     "tool_version": "5.0.1",
     "license": "original",
-    "notes": "Original Alliance redesign. Script-authoritative build_alliance_redesign.py and dedicated design modules; editable masters in art/blender. Style specimens pending owner appearance approval. No simulation, scale or balance changes."
+    "notes": "Original Alliance redesign. Script-authoritative build_alliance_redesign.py and dedicated design modules; editable masters in art/blender. Complete faction redesign pending owner appearance approval. No simulation, scale or balance changes."
   },
   "requires": {
     "min_engine": "0.15.1",

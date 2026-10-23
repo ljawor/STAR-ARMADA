@@ -1,0 +1,61 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "prototype:alliance_redesign/research_station",
+  "revision": "658e79914170be1704ef7d7133001cf24cbb0fb83306f278b9b909e6ed97c7a8",
+  "display_name": "Research Station — pending appearance review",
+  "files": {
+    "mesh": {
+      "path": "assets/models/research_station.mesh.json",
+      "sha256": "f1204d2e2694d88176c3cffdfe39d8c44b7706b59d7ebd393d8b9ce917e47e37",
+      "bytes": 162626
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -39.9599991,
+      -9.5755596,
+      -25.5692501
+    ],
+    "max": [
+      39.9599991,
+      39.2555618,
+      35.8702507
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor / STAR ARMADA",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "notes": "Original Alliance redesign. Script-authoritative build_alliance_redesign.py and dedicated design modules; editable masters in art/blender. Complete faction redesign pending owner appearance approval. No simulation, scale or balance changes."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 2680,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}

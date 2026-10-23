@@ -1,0 +1,61 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "prototype:alliance_redesign/defense_platform",
+  "revision": "e467ed68626c69bf1965c799a6b6114db266a27fe66fdc81f2719806e2cbb596",
+  "display_name": "Defense Platform — pending appearance review",
+  "files": {
+    "mesh": {
+      "path": "assets/models/defense_platform.mesh.json",
+      "sha256": "9a225c1553ad06fb14fee1f98145e94dc32a5ae79a743611adcd9fd074cd9dac",
+      "bytes": 151768
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -45.8740807,
+      -4.792017,
+      -44.2756805
+    ],
+    "max": [
+      45.8740807,
+      11.1580172,
+      44.2756805
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor / STAR ARMADA",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "notes": "Original Alliance redesign. Script-authoritative build_alliance_redesign.py and dedicated design modules; editable masters in art/blender. Complete faction redesign pending owner appearance approval. No simulation, scale or balance changes."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 2504,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "prototype:alliance_redesign/defense_satellite",
+  "revision": "c88be2495b9476a5a9d64774a964251f0c56ee218ba8897b915e0c40843520fe",
+  "display_name": "Defense Satellite — pending appearance review",
+  "files": {
+    "mesh": {
+      "path": "assets/models/defense_satellite.mesh.json",
+      "sha256": "4b45e4fa8897c9c36ee5c579d2502aaf98ca5804648c0b9eaf2850bf770b7ebe",
+      "bytes": 106009
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -41.0228882,
+      -8.9715004,
+      -33.9220009
+    ],
+    "max": [
+      41.0228882,
+      19.4715004,
+      43.9220009
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor / STAR ARMADA",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "notes": "Original Alliance redesign. Script-authoritative build_alliance_redesign.py and dedicated design modules; editable masters in art/blender. Complete faction redesign pending owner appearance approval. No simulation, scale or balance changes."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 1852,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}

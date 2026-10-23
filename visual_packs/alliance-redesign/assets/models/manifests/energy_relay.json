@@ -1,0 +1,61 @@
+{
+  "contract": "star-armada/model-manifest",
+  "contract_major": 1,
+  "asset": "prototype:alliance_redesign/energy_relay",
+  "revision": "0befe1ae3297e056fc75e7c2425ba0105353f016f136205e3e8732b4aee3999c",
+  "display_name": "Energy Relay — pending appearance review",
+  "files": {
+    "mesh": {
+      "path": "assets/models/energy_relay.mesh.json",
+      "sha256": "95c8d82d56268dfdec1d43ebe63a6bb3a26f0377bd594a9257e51f6786cfefc6",
+      "bytes": 168684
+    }
+  },
+  "export": {
+    "contract": "star-armada/mesh-export",
+    "contract_major": 1
+  },
+  "coordinates": "X beam; Y up; +Z forward",
+  "pivot": [
+    0,
+    0,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -50.2496986,
+      -8.3969917,
+      -29.3348274
+    ],
+    "max": [
+      50.2496986,
+      13.1969919,
+      20.9594269
+    ]
+  },
+  "nominal_scale": 1.0,
+  "roles": [
+    "accent",
+    "base",
+    "cool",
+    "dark",
+    "lit",
+    "trim"
+  ],
+  "provenance": {
+    "author": "Lukasz Jawor / STAR ARMADA",
+    "tool": "Blender",
+    "tool_version": "5.0.1",
+    "license": "original",
+    "notes": "Original Alliance redesign. Script-authoritative build_alliance_redesign.py and dedicated design modules; editable masters in art/blender. Complete faction redesign pending owner appearance approval. No simulation, scale or balance changes."
+  },
+  "requires": {
+    "min_engine": "0.15.1",
+    "material_profile": "core:fleet/standard"
+  },
+  "budgets": {
+    "triangles": 2816,
+    "draw_calls": 6,
+    "texture_bytes": 0
+  }
+}
