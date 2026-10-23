@@ -162,11 +162,14 @@ def rings(effects) -> list:
     return out
 
 
-def projectiles(shots, weapon_type_of, extents_of) -> tuple[list, dict]:
+def projectiles(shots, weapon_type_of, extents_of, lead=0.0) -> tuple[list, dict]:
     """A halo quad and a hot core per shaped bolt.
 
     `extents_of(shape, size, 1.0)` returns *pixel* extents because a pixels-per-world of 1.0 makes
     world units and pixels the same number: the window converts them back with its own camera.
+
+    `lead` is the elapsed part of the tick, in seconds: a bolt travels in a straight line, so its
+    position at the moment of presentation is its simulated position plus velocity times that.
     """
     out = []
     stats = {'drawn': 0, 'legacy': 0, 'squares': 0}
@@ -178,7 +181,12 @@ def projectiles(shots, weapon_type_of, extents_of) -> tuple[list, dict]:
         length, width = extents_of(shape, shot.size, 1.0)
         heading = shot.vel.to_tuple()
         colour = tuple(float(c) for c in shot.color[:3])
-        pos = (shot.pos.x, shot.pos.y, shot.pos.z)
+        if lead:
+            position, velocity = shot.pos, shot.vel
+            pos = (position.x + velocity.x * lead, position.y + velocity.y * lead,
+                   position.z + velocity.z * lead)
+        else:
+            pos = (shot.pos.x, shot.pos.y, shot.pos.z)
         if shape == 'square':
             stats['squares'] += 1
             out.append(codec.bolt(pos, (0.0, 0.0, 0.0), length * HALO_SCALE[0] * 0.5,
@@ -318,12 +326,12 @@ def _shield_colour(strength: float):
     return shield_color(strength)
 
 
-def build(effects, shots, weapon_type_of, extents_of) -> tuple[list, dict]:
+def build(effects, shots, weapon_type_of, extents_of, lead=0.0) -> tuple[list, dict]:
     blast_primitives, blasts_skipped = explosions(effects)
     primitives, skipped = beams(effects)
     primitives += blast_primitives
     primitives += rings(effects)
-    bolts, stats = projectiles(shots, weapon_type_of, extents_of)
+    bolts, stats = projectiles(shots, weapon_type_of, extents_of, lead=lead)
     primitives += bolts
     stats['beams_skipped'] = skipped
     stats['explosions'] = len(blast_primitives)

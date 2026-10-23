@@ -58,6 +58,13 @@ install_exception_hook(USER_DIR, lambda: getattr(globals().get('state'), 'tick',
 
 TICK_RATE = 30
 TICK_DT = 1.0 / TICK_RATE
+# The simulation steps at TICK_RATE; the loop and the window run as fast as this allows. They are
+# deliberately different numbers: a tick is a fixed 1/30 s of world time whatever the frame rate is,
+# so replays, LAN barriers and state checksums are unchanged by this, while the picture moves at up
+# to RENDER_RATE. Between two ticks the world is drawn `lead` seconds along its own velocity
+# (`render_bridge.collect`), which is what makes the extra frames show new poses instead of the same
+# pose twice. When the machine cannot keep up the rate simply falls; nothing is dropped or skipped.
+RENDER_RATE = 60
 # User data follows the same rule as menus.py: a frozen app must never write
 # into its own bundle, so this is the same directory the menus persist to.
 SAVES_DIR = os.path.join(USER_DIR, "saves")
@@ -499,7 +506,7 @@ def cpp_placement_ghost(state, local_player: int):
 
 def cpp_publish(state, ds, local_player: int, selection, dt: float, *, paused: bool = False,
                 message: str = "", flash_left: float = 0.0, fps: float = 0.0,
-                drag_box=None, floating_texts=None):
+                drag_box=None, floating_texts=None, lead: float = 0.0):
     """Hand one frame to the window: world, cues, effects, fog, HUD, camera. Returns False on fault.
 
     The window sends its pointer and keyboard back on the input ring, and they enter the same
@@ -516,7 +523,7 @@ def cpp_publish(state, ds, local_player: int, selection, dt: float, *, paused: b
         session.publish(state, selection=selection, visible_ids=cpp_seen_ids(state, local_player),
                         dt=dt, paused=paused, message=message, flash_left=flash_left, fps=fps,
                         drag_box=drag_box, floating_texts=floating_texts, overlay_layers=layers,
-                        ghost=cpp_placement_ghost(state, local_player))
+                        ghost=cpp_placement_ghost(state, local_player), lead=lead)
         window = CPP.get("window")
         if window is not None and getattr(window, "embedded", False):
             window.present()
@@ -1231,7 +1238,11 @@ fps_time = 0.0
 last_autosave = 0.0
 
 while running:
-    dt_frame = min(clock.tick(TICK_RATE) / 1000.0, 0.25)
+    # A 16.7 ms budget cannot be met by sleeping: macOS rounds a short sleep up to ~9 ms, and a
+    # 60 fps target then reads as ~40. Spinning the last part of the frame is what makes the rate
+    # exact. A run with no window to present (smoke) has nothing to be smooth about, so it sleeps.
+    pacer = clock.tick if SMOKE else clock.tick_busy_loop
+    dt_frame = min(pacer(RENDER_RATE) / 1000.0, 0.25)
 
     if mode == "menu":
         for ev in pygame.event.get():
@@ -1359,7 +1370,8 @@ while running:
         camera.apply(*CPP_HUD_SIZE)
         cpp_publish(state, gm.ds, local_player, inputc.selection, dt_frame,
                     paused=view_paused, message=view_msg, flash_left=view_flash, fps=fps,
-                    drag_box=view_drag, floating_texts=view_texts)
+                    drag_box=view_drag, floating_texts=view_texts,
+                    lead=min(accumulator, TICK_DT))
         if os.environ.get("STAR_ARMADA_CPP_TRACE"):
             marker = (view_paused, view_msg, len(view_texts), view_drag)
             if marker != CPP.get("view_mark"):

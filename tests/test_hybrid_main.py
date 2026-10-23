@@ -108,7 +108,8 @@ class HybridLifecycleTests(unittest.TestCase):
         once = ast.For(target=ast.Name(id='_frame', ctx=ast.Store()),
                        iter=ast.Call(func=ast.Name(id='range', ctx=ast.Load()), args=[ast.Constant(1)], keywords=[]),
                        body=loop.body, orelse=[])
-        env = dict(mode='game', running=True, clock=Mock(), TICK_RATE=30,
+        env = dict(mode='game', running=True, clock=Mock(), TICK_RATE=30, RENDER_RATE=60,
+                   TICK_DT=1.0 / 30.0, SMOKE=True,
                    poll_network=Mock(), sync_campaign_outcome=Mock(), presentation=None,
                    cinematic=None, CPP={}, step_game_frame=Mock())
         env['clock'].tick.return_value = 33
