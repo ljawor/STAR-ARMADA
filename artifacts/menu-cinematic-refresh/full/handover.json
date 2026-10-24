@@ -1,0 +1,18 @@
+{
+  "captured_commit": "e3d6ac0b6cb55dd7d9becccff2e2fafc7e1939c6",
+  "movie_source": "assets/menu/battle.zip (ordinary default path)",
+  "candidate_substitution": false,
+  "movie_sha256": "ddbb55831ec5640bf655e310131e309bbb79a5b12193fa6a3c4db63fe7710805",
+  "scope": "Committed real main.py startup; Reduced Motion still proves final installed composition, resolution and source. Full animation separately established by all-frame CPU decode, full MP4 decode and9phase compositor captures.",
+  "code_sha256": {
+    "main.py": "b0ae836676c7c66062699336792cb68d65ae6abfc792afd995201478225373a2",
+    "render/menus.py": "59bfaf2490905a25523c84089822cdbb89a79d00983b77d08fdd09451a830b00",
+    "render/menu_movie.py": "629825f4c61cb11ce87393152f89d91fc20334d9ccb836428a8025ae5380d890",
+    "tools/cinematics/verify_preview.py": "b967856a9fc43c8b45616699e2f8f472a783611cd62039ffbd435f6c808f82f4",
+    "tools/cinematics/blender_scene.py": "6d217b24ea40ad5da1811c38b22d40423b0fdd80a6dce50117c0c86d47876c2b",
+    "tools/cinematics/scene_spec.py": "3425f7b0fee8d95609d7606f8cebf460c175fd80551ad484833e0921cfcc83de"
+  },
+  "owner_look_approved": true,
+  "owner_final_playback_accepted": false,
+  "merged": false
+}

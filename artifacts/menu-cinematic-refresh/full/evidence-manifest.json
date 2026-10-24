@@ -36,7 +36,12 @@
     "preview_00144.png": "4a63271063f36d545da8a353a35ce31cb504162f2ba60e47b01a7d020af16ce7",
     "preview_00264.png": "fe17aaa0dc7a93013b706a9497bcad445c51bfcc2617dafca445782828c2edd4",
     "render-report.json": "7655189a3a6f8dc458c36df053aef83bba832e795e9299dfb74f4bea3d48299d",
-    "scene.blend": "e24d4aa904286f77ea35e5a5455afaf526ca8f4eeb56cfca9666eccb0be006cd"
+    "scene.blend": "e24d4aa904286f77ea35e5a5455afaf526ca8f4eeb56cfca9666eccb0be006cd",
+    "committed-main.png": "265a2198a3b880a25bdd9a27548ec618a4ba938b57673f63eb863b7eb1ef0416",
+    "committed-main.json": "61e824b7f9740e487df512d6197fbd8e0f3936af9ecda1faa56c974e3d76ab46",
+    "menu-refresh-committed-main.log": "7fe7a9cdd7897f57b4e6998ce27b4bf7d263be9f57a8205ec4ccdc7ecaa44efb",
+    "menu-refresh-committed-main.deadline.json": "d7e6b9e8975e1b769734af7fbe12e7f10569175ad1a8987a6bcc743d1eee32b7",
+    "handover.json": "9befdf0d2fdd7fe5aea9626778ccb26306a663214b19264db8c4aed81e1fcc67"
   },
   "local_only_files": {
     "preview.mp4": {

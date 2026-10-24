@@ -1,0 +1,15 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-E",
+    "tools/cinematics/verify_preview.py",
+    "--out",
+    "/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-committed-main"
+  ],
+  "pid": 73573,
+  "returncode": 0,
+  "timed_out": false,
+  "seconds": 2.2225342920282856,
+  "reaped": true,
+  "log": "/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-committed-main.log"
+}
