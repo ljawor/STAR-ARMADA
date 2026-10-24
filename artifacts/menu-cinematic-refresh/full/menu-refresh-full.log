@@ -1,0 +1,781 @@
+/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/cinematics/blender_scene.py:124: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  mat.use_nodes=True
+/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/cinematics/blender_scene.py:90: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  mat.use_nodes = True
+/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/cinematics/blender_scene.py:165: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  scene.world=world;world.use_nodes=True
+/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/cinematics/blender_scene.py:215: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  shield_material.use_nodes=True
+00:05.832  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00000.jpg'
+Info: Saved as "scene.blend"
+CINEMATIC_FRAME 0 5.452544374973513
+00:11.411  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00001.jpg'
+CINEMATIC_FRAME 1 5.572936375043355
+00:16.322  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00002.jpg'
+CINEMATIC_FRAME 2 4.892502292059362
+00:21.802  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00003.jpg'
+CINEMATIC_FRAME 3 5.471487000002526
+00:27.743  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00004.jpg'
+CINEMATIC_FRAME 4 5.934625333058648
+00:33.273  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00005.jpg'
+CINEMATIC_FRAME 5 5.529182999976911
+00:38.785  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00006.jpg'
+CINEMATIC_FRAME 6 5.497085249982774
+00:44.055  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00007.jpg'
+CINEMATIC_FRAME 7 5.263830209034495
+00:49.798  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00008.jpg'
+CINEMATIC_FRAME 8 5.736450541997328
+00:54.702  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00009.jpg'
+CINEMATIC_FRAME 9 4.889661792083643
+01:00.401  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00010.jpg'
+CINEMATIC_FRAME 10 5.693880625069141
+01:05.856  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00011.jpg'
+CINEMATIC_FRAME 11 5.448901291005313
+01:11.839  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00012.jpg'
+CINEMATIC_FRAME 12 5.975999833084643
+01:17.710  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00013.jpg'
+CINEMATIC_FRAME 13 5.862260207999498
+01:23.503  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00014.jpg'
+CINEMATIC_FRAME 14 5.78278612496797
+01:28.923  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00015.jpg'
+CINEMATIC_FRAME 15 5.406963791931048
+01:34.710  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00016.jpg'
+CINEMATIC_FRAME 16 5.792099375044927
+01:40.449  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00017.jpg'
+CINEMATIC_FRAME 17 5.73517775000073
+01:46.309  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00018.jpg'
+CINEMATIC_FRAME 18 5.849547749967314
+01:51.776  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00019.jpg'
+CINEMATIC_FRAME 19 5.461034249980003
+01:57.427  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00020.jpg'
+CINEMATIC_FRAME 20 5.651705458993092
+02:03.283  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00021.jpg'
+CINEMATIC_FRAME 21 5.836398291983642
+02:08.716  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00022.jpg'
+CINEMATIC_FRAME 22 5.421224042074755
+02:13.853  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00023.jpg'
+CINEMATIC_FRAME 23 5.13122724997811
+02:18.749  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00024.jpg'
+CINEMATIC_FRAME 24 4.888951541041024
+02:24.082  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00025.jpg'
+CINEMATIC_FRAME 25 5.331804333021864
+02:29.149  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00026.jpg'
+CINEMATIC_FRAME 26 5.048866749973968
+02:34.184  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00027.jpg'
+CINEMATIC_FRAME 27 5.027974499971606
+02:38.796  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00028.jpg'
+CINEMATIC_FRAME 28 4.5863870839821175
+02:43.825  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00029.jpg'
+CINEMATIC_FRAME 29 5.020091000013053
+02:48.164  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00030.jpg'
+CINEMATIC_FRAME 30 4.348031374975108
+02:53.365  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00031.jpg'
+CINEMATIC_FRAME 31 5.1800759580219164
+02:58.462  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00032.jpg'
+CINEMATIC_FRAME 32 5.071606667013839
+03:03.960  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00033.jpg'
+CINEMATIC_FRAME 33 5.5048195839626715
+03:08.994  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00034.jpg'
+CINEMATIC_FRAME 34 5.011922833044082
+03:13.613  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00035.jpg'
+CINEMATIC_FRAME 35 4.623070916975848
+03:18.407  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00036.jpg'
+CINEMATIC_FRAME 36 4.770239374949597
+03:23.616  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00037.jpg'
+CINEMATIC_FRAME 37 5.209787457948551
+03:28.616  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00038.jpg'
+CINEMATIC_FRAME 38 4.9781952920602635
+03:33.559  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00039.jpg'
+CINEMATIC_FRAME 39 4.933008500025608
+03:38.531  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00040.jpg'
+CINEMATIC_FRAME 40 4.971256333985366
+03:43.561  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00041.jpg'
+CINEMATIC_FRAME 41 5.023296083090827
+03:48.856  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00042.jpg'
+CINEMATIC_FRAME 42 5.272021999931894
+03:53.809  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00043.jpg'
+CINEMATIC_FRAME 43 4.942787499981932
+03:58.584  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00044.jpg'
+CINEMATIC_FRAME 44 4.774844208033755
+04:03.635  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00045.jpg'
+CINEMATIC_FRAME 45 5.038609083974734
+04:09.217  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00046.jpg'
+CINEMATIC_FRAME 46 5.566297332989052
+04:14.434  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00047.jpg'
+CINEMATIC_FRAME 47 5.205972166964784
+04:19.566  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00048.jpg'
+CINEMATIC_FRAME 48 5.123332416987978
+04:24.350  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00049.jpg'
+CINEMATIC_FRAME 49 4.810632540960796
+04:29.535  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00050.jpg'
+CINEMATIC_FRAME 50 5.127311791991815
+04:34.086  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00051.jpg'
+CINEMATIC_FRAME 51 4.584818916046061
+04:39.161  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00052.jpg'
+CINEMATIC_FRAME 52 5.022736708051525
+04:44.277  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00053.jpg'
+CINEMATIC_FRAME 53 5.131657332996838
+04:49.951  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00054.jpg'
+CINEMATIC_FRAME 54 5.665179457981139
+04:55.195  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00055.jpg'
+CINEMATIC_FRAME 55 5.230581167037599
+04:59.942  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00056.jpg'
+CINEMATIC_FRAME 56 4.7073918340029195
+05:04.821  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00057.jpg'
+CINEMATIC_FRAME 57 4.900727666914463
+05:10.167  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00058.jpg'
+CINEMATIC_FRAME 58 5.328506874968298
+05:15.400  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00059.jpg'
+CINEMATIC_FRAME 59 5.242149249999784
+05:20.383  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00060.jpg'
+CINEMATIC_FRAME 60 4.920636207913049
+05:25.424  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00061.jpg'
+CINEMATIC_FRAME 61 5.0779874589061365
+05:30.669  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00062.jpg'
+CINEMATIC_FRAME 62 5.217464999994263
+05:35.974  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00063.jpg'
+CINEMATIC_FRAME 63 5.282597708050162
+05:41.004  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00064.jpg'
+CINEMATIC_FRAME 64 5.038667125045322
+05:46.286  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00065.jpg'
+CINEMATIC_FRAME 65 5.23266641702503
+05:51.780  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00066.jpg'
+CINEMATIC_FRAME 66 5.500697290990502
+05:58.493  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00067.jpg'
+CINEMATIC_FRAME 67 6.711647000047378
+06:04.991  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00068.jpg'
+CINEMATIC_FRAME 68 6.484948750003241
+06:11.821  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00069.jpg'
+CINEMATIC_FRAME 69 6.87543520797044
+06:18.512  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00070.jpg'
+CINEMATIC_FRAME 70 6.656805792008527
+06:25.491  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00071.jpg'
+CINEMATIC_FRAME 71 6.962749707978219
+06:31.902  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00072.jpg'
+CINEMATIC_FRAME 72 6.406453540897928
+06:38.611  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00073.jpg'
+CINEMATIC_FRAME 73 6.68746841698885
+06:45.249  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00074.jpg'
+CINEMATIC_FRAME 74 6.622382542002015
+06:52.696  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00075.jpg'
+CINEMATIC_FRAME 75 7.429735874990001
+06:59.419  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00076.jpg'
+CINEMATIC_FRAME 76 6.711191916954704
+07:05.656  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00077.jpg'
+CINEMATIC_FRAME 77 6.240221707965247
+07:12.025  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00078.jpg'
+CINEMATIC_FRAME 78 6.341418625088409
+07:18.924  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00079.jpg'
+CINEMATIC_FRAME 79 6.880524458014406
+07:25.675  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00080.jpg'
+CINEMATIC_FRAME 80 6.743903458002023
+07:32.051  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00081.jpg'
+CINEMATIC_FRAME 81 6.359250750043429
+07:38.554  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00082.jpg'
+CINEMATIC_FRAME 82 6.488178416970186
+07:44.668  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00083.jpg'
+CINEMATIC_FRAME 83 6.116254875087179
+07:51.507  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00084.jpg'
+CINEMATIC_FRAME 84 6.808229666901752
+07:57.815  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00085.jpg'
+CINEMATIC_FRAME 85 6.284266083035618
+08:03.931  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00086.jpg'
+CINEMATIC_FRAME 86 6.0978920420166105
+08:09.259  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00087.jpg'
+CINEMATIC_FRAME 87 5.317832125001587
+08:16.177  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00088.jpg'
+CINEMATIC_FRAME 88 6.900032083038241
+08:22.663  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00089.jpg'
+CINEMATIC_FRAME 89 6.479550375021063
+08:28.528  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00090.jpg'
+CINEMATIC_FRAME 90 5.873233207967132
+08:33.582  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00091.jpg'
+CINEMATIC_FRAME 91 5.03407358401455
+08:38.926  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00092.jpg'
+CINEMATIC_FRAME 92 5.350033291964792
+08:43.850  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00093.jpg'
+CINEMATIC_FRAME 93 4.858908124966547
+08:48.811  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00094.jpg'
+CINEMATIC_FRAME 94 4.958130624960177
+08:53.847  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00095.jpg'
+CINEMATIC_FRAME 95 5.051649625063874
+08:59.035  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00096.jpg'
+CINEMATIC_FRAME 96 5.17809020797722
+09:04.279  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00097.jpg'
+CINEMATIC_FRAME 97 5.230001416988671
+09:09.084  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00098.jpg'
+CINEMATIC_FRAME 98 4.796117375022732
+09:14.036  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00099.jpg'
+CINEMATIC_FRAME 99 4.939006124972366
+09:18.273  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00100.jpg'
+CINEMATIC_FRAME 100 4.196570625063032
+09:23.425  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00101.jpg'
+CINEMATIC_FRAME 101 5.174145041964948
+09:28.422  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00102.jpg'
+CINEMATIC_FRAME 102 4.985924332984723
+09:33.492  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00103.jpg'
+CINEMATIC_FRAME 103 5.057875166996382
+09:38.268  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00104.jpg'
+CINEMATIC_FRAME 104 4.767250334029086
+09:43.571  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00105.jpg'
+CINEMATIC_FRAME 105 5.298251084052026
+09:48.590  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00106.jpg'
+CINEMATIC_FRAME 106 5.002881249994971
+09:53.421  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00107.jpg'
+CINEMATIC_FRAME 107 4.815716499928385
+09:57.566  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00108.jpg'
+CINEMATIC_FRAME 108 4.100134915905073
+10:03.093  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00109.jpg'
+CINEMATIC_FRAME 109 5.550661333021708
+10:08.360  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00110.jpg'
+CINEMATIC_FRAME 110 5.25699770799838
+10:13.650  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00111.jpg'
+CINEMATIC_FRAME 111 5.277726666070521
+10:18.453  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00112.jpg'
+CINEMATIC_FRAME 112 4.791267291991971
+10:22.971  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00113.jpg'
+CINEMATIC_FRAME 113 4.476841666968539
+10:27.835  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00114.jpg'
+CINEMATIC_FRAME 114 4.895734834019095
+10:32.801  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00115.jpg'
+CINEMATIC_FRAME 115 4.943945624982007
+10:37.911  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00116.jpg'
+CINEMATIC_FRAME 116 5.100633916910738
+10:42.733  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00117.jpg'
+CINEMATIC_FRAME 117 4.851775874965824
+10:48.067  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00118.jpg'
+CINEMATIC_FRAME 118 5.2518921659793705
+10:52.857  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00119.jpg'
+CINEMATIC_FRAME 119 4.839392042020336
+10:57.819  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00120.jpg'
+CINEMATIC_FRAME 120 4.896237040986307
+11:02.083  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00121.jpg'
+CINEMATIC_FRAME 121 4.30564212508034
+11:07.382  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00122.jpg'
+CINEMATIC_FRAME 122 5.275125125073828
+11:12.414  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00123.jpg'
+CINEMATIC_FRAME 123 5.006504041957669
+11:17.534  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00124.jpg'
+CINEMATIC_FRAME 124 5.105433291988447
+11:22.339  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00125.jpg'
+CINEMATIC_FRAME 125 4.7932921659667045
+11:27.120  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00126.jpg'
+CINEMATIC_FRAME 126 4.784081500023603
+11:32.204  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00127.jpg'
+CINEMATIC_FRAME 127 5.06719766696915
+11:37.035  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00128.jpg'
+CINEMATIC_FRAME 128 4.809943082975224
+11:41.228  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00129.jpg'
+CINEMATIC_FRAME 129 4.16963462496642
+11:45.989  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00130.jpg'
+CINEMATIC_FRAME 130 4.774031582986936
+11:51.248  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00131.jpg'
+CINEMATIC_FRAME 131 5.228996583027765
+11:56.538  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00132.jpg'
+CINEMATIC_FRAME 132 5.292017083032988
+12:01.384  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00133.jpg'
+CINEMATIC_FRAME 133 4.8462796250823885
+12:05.932  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00134.jpg'
+CINEMATIC_FRAME 134 4.530656999908388
+12:10.855  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00135.jpg'
+CINEMATIC_FRAME 135 4.916883542085998
+12:15.865  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00136.jpg'
+CINEMATIC_FRAME 136 4.9945188330020756
+12:20.953  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00137.jpg'
+CINEMATIC_FRAME 137 5.085302041959949
+12:25.826  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00138.jpg'
+CINEMATIC_FRAME 138 4.838824334088713
+12:31.154  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00139.jpg'
+CINEMATIC_FRAME 139 5.342299542040564
+12:36.077  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00140.jpg'
+CINEMATIC_FRAME 140 4.888319457997568
+12:41.065  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00141.jpg'
+CINEMATIC_FRAME 141 4.992500917054713
+12:45.509  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00142.jpg'
+CINEMATIC_FRAME 142 4.4137912089936435
+12:50.531  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00143.jpg'
+CINEMATIC_FRAME 143 5.032889875001274
+12:55.613  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00144.jpg'
+CINEMATIC_FRAME 144 5.069273500004783
+13:00.805  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00145.jpg'
+CINEMATIC_FRAME 145 5.179346374934539
+13:05.678  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00146.jpg'
+CINEMATIC_FRAME 146 4.860755000030622
+13:10.586  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00147.jpg'
+CINEMATIC_FRAME 147 4.886424291995354
+13:15.628  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00148.jpg'
+CINEMATIC_FRAME 148 5.039923624950461
+13:20.576  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00149.jpg'
+CINEMATIC_FRAME 149 4.952425999916159
+13:24.773  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00150.jpg'
+CINEMATIC_FRAME 150 4.138939416967332
+13:29.705  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00151.jpg'
+CINEMATIC_FRAME 151 5.045614707982168
+13:35.358  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00152.jpg'
+CINEMATIC_FRAME 152 5.521476375055499
+13:40.947  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00153.jpg'
+CINEMATIC_FRAME 153 5.574238125002012
+13:46.369  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00154.jpg'
+CINEMATIC_FRAME 154 5.441690624924377
+13:52.398  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00155.jpg'
+CINEMATIC_FRAME 155 5.019069041009061
+13:57.415  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00156.jpg'
+CINEMATIC_FRAME 156 5.012656957958825
+14:04.481  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00157.jpg'
+CINEMATIC_FRAME 157 7.04685150005389
+14:09.750  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00158.jpg'
+CINEMATIC_FRAME 158 5.267693208064884
+14:14.746  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00159.jpg'
+CINEMATIC_FRAME 159 4.975245709065348
+14:20.113  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00160.jpg'
+CINEMATIC_FRAME 160 5.3656023340299726
+14:25.461  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00161.jpg'
+CINEMATIC_FRAME 161 5.32888729206752
+14:30.560  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00162.jpg'
+CINEMATIC_FRAME 162 5.094258832978085
+14:35.052  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00163.jpg'
+CINEMATIC_FRAME 163 4.484073416911997
+20:41.108  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00164.jpg'
+CINEMATIC_FRAME 164 5.854639542056248
+20:47.128  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00165.jpg'
+CINEMATIC_FRAME 165 5.78999916696921
+20:52.225  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00166.jpg'
+CINEMATIC_FRAME 166 5.0708831660449505
+20:57.075  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00167.jpg'
+CINEMATIC_FRAME 167 4.855429333052598
+21:02.148  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00168.jpg'
+CINEMATIC_FRAME 168 5.053667959058657
+21:07.261  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00169.jpg'
+CINEMATIC_FRAME 169 5.098738792003132
+21:12.842  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00170.jpg'
+CINEMATIC_FRAME 170 5.571514708106406
+21:17.318  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00171.jpg'
+CINEMATIC_FRAME 171 4.469612916000187
+21:22.295  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00172.jpg'
+CINEMATIC_FRAME 172 4.970857457956299
+21:27.665  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00173.jpg'
+CINEMATIC_FRAME 173 5.359869749983773
+21:32.668  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00174.jpg'
+CINEMATIC_FRAME 174 4.998882167041302
+21:37.624  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00175.jpg'
+CINEMATIC_FRAME 175 4.947226166026667
+21:42.136  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00176.jpg'
+CINEMATIC_FRAME 176 4.504230207996443
+21:47.054  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00177.jpg'
+CINEMATIC_FRAME 177 4.9059743750840425
+21:51.337  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00178.jpg'
+CINEMATIC_FRAME 178 4.275876250001602
+21:56.453  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00179.jpg'
+CINEMATIC_FRAME 179 5.105335708009079
+22:01.674  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00180.jpg'
+CINEMATIC_FRAME 180 5.217915959074162
+22:07.507  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00181.jpg'
+CINEMATIC_FRAME 181 5.820287625072524
+22:12.697  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00182.jpg'
+CINEMATIC_FRAME 182 5.175728625035845
+22:18.065  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00183.jpg'
+CINEMATIC_FRAME 183 5.363879457931034
+22:22.984  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00184.jpg'
+CINEMATIC_FRAME 184 4.906864374992438
+22:28.259  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00185.jpg'
+CINEMATIC_FRAME 185 5.2670234580291435
+22:33.571  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00186.jpg'
+CINEMATIC_FRAME 186 5.302252584020607
+22:38.784  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00187.jpg'
+CINEMATIC_FRAME 187 5.212322082952596
+22:43.751  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00188.jpg'
+CINEMATIC_FRAME 188 4.953353749937378
+22:48.693  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00189.jpg'
+CINEMATIC_FRAME 189 4.939247458009049
+22:53.768  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00190.jpg'
+CINEMATIC_FRAME 190 5.069711999967694
+22:58.409  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00191.jpg'
+CINEMATIC_FRAME 191 4.637031250051223
+23:02.959  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00192.jpg'
+CINEMATIC_FRAME 192 4.540404791943729
+23:07.863  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00193.jpg'
+CINEMATIC_FRAME 193 4.894181874929927
+23:13.231  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00194.jpg'
+CINEMATIC_FRAME 194 5.360201332950965
+23:18.351  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00195.jpg'
+CINEMATIC_FRAME 195 5.1155650418950245
+23:23.368  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00196.jpg'
+CINEMATIC_FRAME 196 4.998406333033927
+23:27.995  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00197.jpg'
+CINEMATIC_FRAME 197 4.617000250029378
+23:32.952  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00198.jpg'
+CINEMATIC_FRAME 198 4.946929375058971
+23:37.290  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00199.jpg'
+CINEMATIC_FRAME 199 4.328280625049956
+23:42.435  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00200.jpg'
+CINEMATIC_FRAME 200 5.1326044159941375
+23:47.493  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00201.jpg'
+CINEMATIC_FRAME 201 5.056022666976787
+23:53.020  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00202.jpg'
+CINEMATIC_FRAME 202 5.505179917090572
+23:58.106  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00203.jpg'
+CINEMATIC_FRAME 203 5.078183999983594
+24:02.722  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00204.jpg'
+CINEMATIC_FRAME 204 4.614043292007409
+24:07.542  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00205.jpg'
+CINEMATIC_FRAME 205 4.808863541926257
+24:12.761  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00206.jpg'
+CINEMATIC_FRAME 206 5.197749208891764
+24:17.910  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00207.jpg'
+CINEMATIC_FRAME 207 5.14416520902887
+24:22.819  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00208.jpg'
+CINEMATIC_FRAME 208 4.9095329160336405
+24:27.855  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00209.jpg'
+CINEMATIC_FRAME 209 5.0066204169997945
+24:32.873  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00210.jpg'
+CINEMATIC_FRAME 210 5.007698250003159
+24:38.019  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00211.jpg'
+CINEMATIC_FRAME 211 5.144683666992933
+24:42.909  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00212.jpg'
+CINEMATIC_FRAME 212 4.880513624986634
+24:47.600  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00213.jpg'
+CINEMATIC_FRAME 213 4.678057000041008
+24:52.588  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00214.jpg'
+CINEMATIC_FRAME 214 4.976859125075862
+24:58.073  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00215.jpg'
+CINEMATIC_FRAME 215 5.483131500077434
+25:03.213  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00216.jpg'
+CINEMATIC_FRAME 216 5.118727499968372
+25:08.294  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00217.jpg'
+CINEMATIC_FRAME 217 5.062675875029527
+25:13.042  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00218.jpg'
+CINEMATIC_FRAME 218 4.735670124995522
+25:18.142  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00219.jpg'
+CINEMATIC_FRAME 219 5.093311624950729
+25:22.558  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00220.jpg'
+CINEMATIC_FRAME 220 4.405003332998604
+25:27.605  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00221.jpg'
+CINEMATIC_FRAME 221 5.040967375040054
+25:32.735  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00222.jpg'
+CINEMATIC_FRAME 222 5.136258915998042
+25:38.386  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00223.jpg'
+CINEMATIC_FRAME 223 5.64207133394666
+25:43.501  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00224.jpg'
+CINEMATIC_FRAME 224 5.101696041994728
+25:48.217  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00225.jpg'
+CINEMATIC_FRAME 225 4.668995709042065
+25:53.048  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00226.jpg'
+CINEMATIC_FRAME 226 4.8690072919707745
+25:58.495  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00227.jpg'
+CINEMATIC_FRAME 227 5.427513291011564
+26:03.703  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00228.jpg'
+CINEMATIC_FRAME 228 5.200611792039126
+26:08.688  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00229.jpg'
+CINEMATIC_FRAME 229 4.924664874910377
+26:13.729  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00230.jpg'
+CINEMATIC_FRAME 230 5.068470209022053
+26:18.781  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00231.jpg'
+CINEMATIC_FRAME 231 5.006712542031892
+26:23.985  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00232.jpg'
+CINEMATIC_FRAME 232 5.237305166083388
+26:28.914  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00233.jpg'
+CINEMATIC_FRAME 233 4.867417625035159
+26:33.649  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00234.jpg'
+CINEMATIC_FRAME 234 4.762503249919973
+26:38.707  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00235.jpg'
+CINEMATIC_FRAME 235 5.045486792107113
+26:44.172  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00236.jpg'
+CINEMATIC_FRAME 236 5.46648520801682
+26:49.346  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00237.jpg'
+CINEMATIC_FRAME 237 5.1129969579633325
+26:54.424  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00238.jpg'
+CINEMATIC_FRAME 238 5.096168832969852
+26:59.214  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00239.jpg'
+CINEMATIC_FRAME 239 4.753336625057273
+27:04.368  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00240.jpg'
+CINEMATIC_FRAME 240 5.188673292053863
+27:08.942  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00241.jpg'
+CINEMATIC_FRAME 241 4.517147124977782
+27:13.966  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00242.jpg'
+CINEMATIC_FRAME 242 5.043700041947886
+27:19.188  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00243.jpg'
+CINEMATIC_FRAME 243 5.216477415990084
+27:24.831  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00244.jpg'
+CINEMATIC_FRAME 244 5.61544245807454
+27:30.012  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00245.jpg'
+CINEMATIC_FRAME 245 5.178036583005451
+27:34.761  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00246.jpg'
+CINEMATIC_FRAME 246 4.699240625021048
+27:39.581  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00247.jpg'
+CINEMATIC_FRAME 247 4.845385249936953
+27:45.053  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00248.jpg'
+CINEMATIC_FRAME 248 5.472074000048451
+27:50.731  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00249.jpg'
+CINEMATIC_FRAME 249 5.703405958018266
+27:56.067  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00250.jpg'
+CINEMATIC_FRAME 250 5.230394207988866
+28:01.281  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00251.jpg'
+CINEMATIC_FRAME 251 5.255917042028159
+28:07.266  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00252.jpg'
+CINEMATIC_FRAME 252 5.32606808305718
+28:12.765  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00253.jpg'
+CINEMATIC_FRAME 253 5.495446333894506
+28:17.922  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00254.jpg'
+CINEMATIC_FRAME 254 5.155716624925844
+28:22.882  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00255.jpg'
+CINEMATIC_FRAME 255 4.939580249949358
+28:27.209  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00256.jpg'
+CINEMATIC_FRAME 256 4.325645916978829
+28:32.848  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00257.jpg'
+CINEMATIC_FRAME 257 5.629433750058524
+28:38.299  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00258.jpg'
+CINEMATIC_FRAME 258 5.440120833925903
+28:43.382  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00259.jpg'
+CINEMATIC_FRAME 259 5.071363124996424
+28:48.354  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00260.jpg'
+CINEMATIC_FRAME 260 4.95496749994345
+28:53.447  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00261.jpg'
+CINEMATIC_FRAME 261 5.094824208994396
+46:18.563  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00262.jpg'
+CINEMATIC_FRAME 262 5.510292208055034
+46:24.509  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00263.jpg'
+CINEMATIC_FRAME 263 5.9151488749776036
+46:29.861  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00264.jpg'
+CINEMATIC_FRAME 264 5.3452330000000075
+46:35.603  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00265.jpg'
+CINEMATIC_FRAME 265 5.739260542090051
+46:40.647  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00266.jpg'
+CINEMATIC_FRAME 266 5.03024191595614
+46:45.555  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00267.jpg'
+CINEMATIC_FRAME 267 4.896481417003088
+46:50.684  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00268.jpg'
+CINEMATIC_FRAME 268 5.122262292075902
+46:54.979  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00269.jpg'
+CINEMATIC_FRAME 269 4.289677916909568
+47:00.200  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00270.jpg'
+CINEMATIC_FRAME 270 5.210126582998782
+01:02:46.331  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00271.jpg'
+CINEMATIC_FRAME 271 5.7732153329998255
+01:02:51.423  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00272.jpg'
+CINEMATIC_FRAME 272 5.080656832898967
+01:02:56.301  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00273.jpg'
+CINEMATIC_FRAME 273 4.863528334069997
+01:03:01.788  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00274.jpg'
+CINEMATIC_FRAME 274 5.473806374939159
+01:03:07.002  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00275.jpg'
+CINEMATIC_FRAME 275 5.204143833019771
+01:03:11.919  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00276.jpg'
+CINEMATIC_FRAME 276 4.90411350002978
+01:03:16.246  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00277.jpg'
+CINEMATIC_FRAME 277 4.316496207960881
+01:03:21.853  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00278.jpg'
+CINEMATIC_FRAME 278 5.59859987499658
+01:03:27.192  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00279.jpg'
+CINEMATIC_FRAME 279 5.334108457900584
+01:03:32.820  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00280.jpg'
+CINEMATIC_FRAME 280 5.631893125013448
+01:03:37.922  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00281.jpg'
+CINEMATIC_FRAME 281 5.078119542100467
+01:03:42.708  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00282.jpg'
+CINEMATIC_FRAME 282 4.7773628330323845
+01:03:47.746  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00283.jpg'
+CINEMATIC_FRAME 283 5.028808249975555
+01:03:52.814  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00284.jpg'
+CINEMATIC_FRAME 284 5.061260125017725
+01:03:58.059  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00285.jpg'
+CINEMATIC_FRAME 285 5.237027499941178
+01:04:02.987  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00286.jpg'
+CINEMATIC_FRAME 286 4.914927792036906
+01:04:08.037  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00287.jpg'
+CINEMATIC_FRAME 287 5.040566459065303
+01:04:13.087  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00288.jpg'
+CINEMATIC_FRAME 288 5.045315416995436
+01:04:18.466  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00289.jpg'
+CINEMATIC_FRAME 289 5.364596834057011
+01:04:22.795  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00290.jpg'
+CINEMATIC_FRAME 290 4.319451499963179
+01:04:28.023  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00291.jpg'
+CINEMATIC_FRAME 291 5.220568374963477
+01:04:33.249  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00292.jpg'
+CINEMATIC_FRAME 292 5.2170255840756
+01:04:38.199  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00293.jpg'
+CINEMATIC_FRAME 293 4.937768874922767
+01:04:43.010  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00294.jpg'
+CINEMATIC_FRAME 294 4.809430834022351
+01:04:48.557  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00295.jpg'
+CINEMATIC_FRAME 295 5.529728624969721
+01:04:53.990  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00296.jpg'
+CINEMATIC_FRAME 296 5.431482166983187
+01:04:58.979  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00297.jpg'
+CINEMATIC_FRAME 297 4.974710333975963
+01:05:03.283  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00298.jpg'
+CINEMATIC_FRAME 298 4.2962443340802565
+01:05:08.339  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00299.jpg'
+CINEMATIC_FRAME 299 5.043585249921307
+01:05:13.798  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00300.jpg'
+CINEMATIC_FRAME 300 5.455733792041428
+01:05:19.051  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00301.jpg'
+CINEMATIC_FRAME 301 5.241931249969639
+01:05:24.360  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00302.jpg'
+CINEMATIC_FRAME 302 5.2976807079976425
+01:05:29.184  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00303.jpg'
+CINEMATIC_FRAME 303 4.815279125003144
+01:05:34.315  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00304.jpg'
+CINEMATIC_FRAME 304 5.124430124997161
+01:05:41.729  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00305.jpg'
+CINEMATIC_FRAME 305 7.4037934999214485
+01:05:47.236  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00306.jpg'
+CINEMATIC_FRAME 306 5.496563959051855
+01:05:52.280  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00307.jpg'
+CINEMATIC_FRAME 307 5.036509666009806
+01:22:04.936  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00308.jpg'
+CINEMATIC_FRAME 308 8.44772679102607
+01:22:10.220  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00309.jpg'
+CINEMATIC_FRAME 309 5.261280834092759
+01:22:15.413  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00310.jpg'
+CINEMATIC_FRAME 310 5.186315250000916
+01:22:19.837  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00311.jpg'
+CINEMATIC_FRAME 311 4.4164477090816945
+01:22:25.115  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00312.jpg'
+CINEMATIC_FRAME 312 5.2888392499880865
+01:22:30.385  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00313.jpg'
+CINEMATIC_FRAME 313 5.247835041955113
+01:22:35.385  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00314.jpg'
+CINEMATIC_FRAME 314 4.990972707979381
+01:22:40.387  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00315.jpg'
+CINEMATIC_FRAME 315 4.995866707991809
+01:22:45.618  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00316.jpg'
+CINEMATIC_FRAME 316 5.247423207969405
+01:22:51.139  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00317.jpg'
+CINEMATIC_FRAME 317 5.4917384159052745
+01:22:56.171  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00318.jpg'
+CINEMATIC_FRAME 318 5.020341125084087
+01:23:00.672  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00319.jpg'
+CINEMATIC_FRAME 319 4.488466124981642
+01:23:05.725  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00320.jpg'
+CINEMATIC_FRAME 320 5.049636250012554
+01:23:11.045  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00321.jpg'
+CINEMATIC_FRAME 321 5.307782124960795
+01:23:16.372  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00322.jpg'
+CINEMATIC_FRAME 322 5.321954249986447
+01:23:21.489  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00323.jpg'
+CINEMATIC_FRAME 323 5.108308958006091
+01:23:26.384  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00324.jpg'
+CINEMATIC_FRAME 324 4.886105834040791
+01:23:31.456  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00325.jpg'
+CINEMATIC_FRAME 325 5.06043245899491
+01:23:36.551  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00326.jpg'
+CINEMATIC_FRAME 326 5.087366207968444
+01:23:42.039  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00327.jpg'
+CINEMATIC_FRAME 327 5.476288874982856
+01:23:47.223  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00328.jpg'
+CINEMATIC_FRAME 328 5.173218125011772
+01:23:52.449  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00329.jpg'
+CINEMATIC_FRAME 329 5.215138416970149
+01:23:57.790  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00330.jpg'
+CINEMATIC_FRAME 330 5.334922458045185
+01:24:03.268  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00331.jpg'
+CINEMATIC_FRAME 331 5.471374124987051
+01:24:07.774  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00332.jpg'
+CINEMATIC_FRAME 332 4.494460999965668
+01:24:13.198  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00333.jpg'
+CINEMATIC_FRAME 333 5.414188666967675
+01:24:18.514  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00334.jpg'
+CINEMATIC_FRAME 334 5.304460834013298
+01:24:23.627  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00335.jpg'
+CINEMATIC_FRAME 335 5.108494500047527
+01:24:28.758  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00336.jpg'
+CINEMATIC_FRAME 336 5.120231832959689
+01:24:34.109  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00337.jpg'
+CINEMATIC_FRAME 337 5.340886540943757
+01:24:39.656  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00338.jpg'
+CINEMATIC_FRAME 338 5.53575070889201
+01:24:44.632  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00339.jpg'
+CINEMATIC_FRAME 339 4.968863458023407
+01:24:49.123  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00340.jpg'
+CINEMATIC_FRAME 340 4.481143790995702
+01:24:54.345  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00341.jpg'
+CINEMATIC_FRAME 341 5.220922792097554
+01:25:00.009  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00342.jpg'
+CINEMATIC_FRAME 342 5.646707457955927
+01:25:07.492  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00343.jpg'
+CINEMATIC_FRAME 343 7.471897333976813
+01:25:12.712  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00344.jpg'
+CINEMATIC_FRAME 344 5.21142858301755
+01:25:17.604  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00345.jpg'
+CINEMATIC_FRAME 345 4.880265499930829
+01:25:22.745  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00346.jpg'
+CINEMATIC_FRAME 346 5.131062750006095
+01:25:30.211  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00347.jpg'
+CINEMATIC_FRAME 347 7.961116958991624
+01:40:42.887  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00348.jpg'
+CINEMATIC_FRAME 348 5.481690583983436
+01:40:48.086  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00349.jpg'
+CINEMATIC_FRAME 349 5.18755791708827
+01:40:53.637  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00350.jpg'
+CINEMATIC_FRAME 350 5.538818374974653
+01:40:59.027  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00351.jpg'
+CINEMATIC_FRAME 351 5.380466499947943
+01:41:04.654  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00352.jpg'
+CINEMATIC_FRAME 352 5.622833458939567
+01:41:09.745  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00353.jpg'
+CINEMATIC_FRAME 353 5.074480458977632
+01:41:14.962  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00354.jpg'
+CINEMATIC_FRAME 354 5.20882562501356
+01:41:20.430  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00355.jpg'
+CINEMATIC_FRAME 355 5.462025250075385
+01:41:25.745  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00356.jpg'
+CINEMATIC_FRAME 356 5.30171004193835
+01:41:31.016  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00357.jpg'
+CINEMATIC_FRAME 357 5.262406709021889
+01:41:36.232  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00358.jpg'
+CINEMATIC_FRAME 358 5.2101548750652
+01:41:41.752  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00359.jpg'
+CINEMATIC_FRAME 359 5.509433917002752
+01:41:46.849  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00360.jpg'
+CINEMATIC_FRAME 360 5.086909500067122
+01:41:51.315  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00361.jpg'
+CINEMATIC_FRAME 361 4.455704583087936
+01:41:56.342  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00362.jpg'
+CINEMATIC_FRAME 362 5.018602625001222
+01:42:01.976  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00363.jpg'
+CINEMATIC_FRAME 363 5.626285500009544
+01:42:07.343  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00364.jpg'
+CINEMATIC_FRAME 364 5.356635875068605
+01:42:12.513  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00365.jpg'
+CINEMATIC_FRAME 365 5.16401550010778
+01:42:17.367  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00366.jpg'
+CINEMATIC_FRAME 366 4.843516916967928
+01:42:22.715  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00367.jpg'
+CINEMATIC_FRAME 367 5.336619167006575
+01:42:27.112  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00368.jpg'
+CINEMATIC_FRAME 368 4.384112166939303
+01:42:32.432  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00369.jpg'
+CINEMATIC_FRAME 369 5.47761470801197
+01:58:47.673  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00370.jpg'
+CINEMATIC_FRAME 370 5.257145958021283
+01:58:53.182  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00371.jpg'
+CINEMATIC_FRAME 371 5.497268500039354
+01:58:58.475  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00372.jpg'
+CINEMATIC_FRAME 372 5.283709625015035
+01:59:04.060  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00373.jpg'
+CINEMATIC_FRAME 373 5.592253957991488
+01:59:09.079  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00374.jpg'
+CINEMATIC_FRAME 374 4.997266749967821
+01:59:14.267  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00375.jpg'
+CINEMATIC_FRAME 375 5.1759234580677
+01:59:19.571  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00376.jpg'
+CINEMATIC_FRAME 376 5.29271599999629
+01:59:24.514  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00377.jpg'
+CINEMATIC_FRAME 377 4.933862915961072
+01:59:29.670  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00378.jpg'
+CINEMATIC_FRAME 378 5.152432917035185
+02:15:13.715  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00379.jpg'
+CINEMATIC_FRAME 379 5.762544792029075
+02:15:19.281  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00380.jpg'
+CINEMATIC_FRAME 380 5.5459284170065075
+02:15:24.378  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00381.jpg'
+CINEMATIC_FRAME 381 5.0807734170230106
+02:15:29.123  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00382.jpg'
+CINEMATIC_FRAME 382 4.73214666696731
+02:15:34.114  render           | Saved: '/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full/frame_00383.jpg'
+CINEMATIC_FRAME 383 4.982443124987185
+CINEMATIC_PREVIEW_OK 384
+Blender 5.0.1 (hash a3db93c5b259 built 2025-12-16 01:51:40)
+
+Blender quit

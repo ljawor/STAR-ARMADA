@@ -1,0 +1,26 @@
+{
+  "command": [
+    "/Applications/Blender.app/Contents/MacOS/Blender",
+    "--background",
+    "--factory-startup",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "tools/cinematics/blender_scene.py",
+    "--",
+    "--plan",
+    "/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-plan.json",
+    "--out",
+    "/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full",
+    "--frames",
+    "all",
+    "--samples",
+    "64"
+  ],
+  "pid": 72348,
+  "returncode": 0,
+  "timed_out": false,
+  "seconds": 2013.6561593330698,
+  "reaped": true,
+  "log": "/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-full.log"
+}

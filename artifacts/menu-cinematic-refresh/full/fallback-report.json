@@ -1,0 +1,10 @@
+{
+  "cinematics_disabled_decoder_never_called": true,
+  "phases": [
+    0,
+    7.5,
+    15
+  ],
+  "gl_error": 0,
+  "scope": "isolated real-GL fallback smoke"
+}

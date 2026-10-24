@@ -1,0 +1,83 @@
+[
+  {
+    "size": [
+      800,
+      600
+    ],
+    "phase": "start",
+    "render_upload_finish_ms": 17.132333014160395,
+    "screenshot": "/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-playback/800x600_start.png"
+  },
+  {
+    "size": [
+      800,
+      600
+    ],
+    "phase": "middle",
+    "render_upload_finish_ms": 9.184124995954335,
+    "screenshot": "/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-playback/800x600_middle.png"
+  },
+  {
+    "size": [
+      800,
+      600
+    ],
+    "phase": "wrap",
+    "render_upload_finish_ms": 1.9398339791223407,
+    "screenshot": "/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-playback/800x600_wrap.png"
+  },
+  {
+    "size": [
+      1280,
+      800
+    ],
+    "phase": "start",
+    "render_upload_finish_ms": 12.447667075321078,
+    "screenshot": "/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-playback/1280x800_start.png"
+  },
+  {
+    "size": [
+      1280,
+      800
+    ],
+    "phase": "middle",
+    "render_upload_finish_ms": 10.994542040862143,
+    "screenshot": "/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-playback/1280x800_middle.png"
+  },
+  {
+    "size": [
+      1280,
+      800
+    ],
+    "phase": "wrap",
+    "render_upload_finish_ms": 3.5652919905260205,
+    "screenshot": "/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-playback/1280x800_wrap.png"
+  },
+  {
+    "size": [
+      1440,
+      900
+    ],
+    "phase": "start",
+    "render_upload_finish_ms": 14.191415975801647,
+    "screenshot": "/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-playback/1440x900_start.png"
+  },
+  {
+    "size": [
+      1440,
+      900
+    ],
+    "phase": "middle",
+    "render_upload_finish_ms": 12.34920893330127,
+    "screenshot": "/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-playback/1440x900_middle.png"
+  },
+  {
+    "size": [
+      1440,
+      900
+    ],
+    "phase": "wrap",
+    "render_upload_finish_ms": 4.090750007890165,
+    "screenshot": "/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-playback/1440x900_wrap.png"
+  }
+]

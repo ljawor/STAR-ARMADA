@@ -1,0 +1,65 @@
+{
+  "files": {
+    "1280x800_middle.png": "a57f6a4502b8c0c6a5aad188a128d7e579e8cea1fbf0e8635367fa5a701704e7",
+    "1280x800_start.png": "0f5e6826aa928602a580aad5fdf3fa2f9171c52fe670af7c7d0b20150ed18298",
+    "1280x800_wrap.png": "7fffda050119f6391fee12c98d93bf4e982221e5d2e2f3c07f6bd1b3686a512b",
+    "1440x900_middle.png": "02c94e0f615c376eff85533dc1dd40333374ba5e620a1ca931b8b7d798de591c",
+    "1440x900_start.png": "d853464a61a97611e7d7019017da843b2f358d7a75aa5b027bcd09ae8942b63b",
+    "1440x900_wrap.png": "5fe930e1da7748db15fa23c743f325c1196f4a74559475d618190b8217a61d75",
+    "800x600_middle.png": "74624c73178066205d558f1545713a2b990a8d25938026a0a0d76c5dc7dfb03a",
+    "800x600_start.png": "61ac0692a18a6231244c70683ea7221d786eff066cef3e3eb704a5afdcf5b4e0",
+    "800x600_wrap.png": "b9ffa978a2b0b6990f54ad7d30e8b5502c9e68000e32d644f11856471b71c18f",
+    "approved-phase-differences.json": "c13752e2d81c894fcb97016d4ac7bd3ae78b56efb8899cf8a67e67ce2aeb9327",
+    "audit.json": "9e5780776b008a4ac6a0d8b2e0cd84e91c403dd66c1e16adade19870da5b472a",
+    "cinematics-disabled.png": "088f9aaee445e9b2abedc1682d189c361adf9c07e6ed0ecd193bfec6f2c52272",
+    "encoding.json": "0d5843dbf3c3b5bc33e7764446152d799ae2f7462da2d5f693898d8cab528b75",
+    "failed-q86-encoding.json": "7e47b364bb765fc8b4ff08cf1a0d48677db499f7a5a27f4b2b688d78b4e05a97",
+    "fallback-report.json": "d66becddd421da5f08ff98d7d33c3ab5c8dbf1761d5641f8823835bf165becd4",
+    "menu-refresh-fallback-2.deadline.json": "65198d25d93fd242156a31a717f9b039c5fc98013f66f6409b7ec30adbc16793",
+    "menu-refresh-fallback-2.log": "743d0e575362c032e7c52ae40f67914cfc57909c8fcebde76cd29f716a98df18",
+    "menu-refresh-fallback.deadline.json": "4c093e33a9de986076a04a3f7ed452839f67c3e02ac955bd2553c765033fe447",
+    "menu-refresh-fallback.log": "3091272f083b3f2e620f431eb6c75922ba645067c75f8927c9fa299afb8a59bd",
+    "menu-refresh-full.deadline.json": "5a692f5dff9d10bc52c87b6c83c708e8c7cceeb31ee34640057c92208f325550",
+    "menu-refresh-full.log": "72e1a24fe17eb624a8e1187857599db3abaa96c2fd7d2623def2368802438d4c",
+    "menu-refresh-menu-regressions.log": "613378db3af94f68fb67a5aa8dcaeb6f2899315b6631f87ab0ade9cad66d3c7a",
+    "menu-refresh-package-audit-q85.deadline.json": "3d7822784ab10a610fcecedd2de05558de1efdaa26c4b9b58ff26ba35210ea88",
+    "menu-refresh-package-audit-q85.log": "0c1f0deb0e3df552abf4ad04d502a080e35e289a4fc921f27680ef99a1d7f251",
+    "menu-refresh-package-audit.deadline.json": "f086f696367a7f592584cb6f5729fac85f87e34d1c24f3deb16f9cff31ca08d6",
+    "menu-refresh-package-audit.log": "c388e69a124944bb19e0519831e07a0acb4a9e52f031be519b1b24bfaba28ac2",
+    "menu-refresh-playback.deadline.json": "455a366192719113a26bbba97087e36fd8c8ef07cc39c33573a7b018275d4b27",
+    "menu-refresh-playback.log": "ba2f40872e52a23b437a95aded8c066f00867adde410579e044171b3201f1311",
+    "menu-refresh-tests-installed.log": "841bd8301ebd96097d914906de30af64072eb2a6d891036fd106d59e6b02c781",
+    "package.json": "5134d667d8cdcc2546cdfa20ddbe659b6329671adc47ada5891bf0ab6dfffa29",
+    "phase-sheet.png": "4c4481d98122c64b2cc524105788021d547ab3461c2ef772ab66e18eb7b74d05",
+    "playback-report.json": "c20f7f35a2a20724a2d95b8e015f0e218ae7b30b6d002ed9836ef5f4380f5692",
+    "preview_00024.png": "25a2c86acdf58ade7158bffc4df559612282bedeecf1fedf3e3101c622637567",
+    "preview_00144.png": "4a63271063f36d545da8a353a35ce31cb504162f2ba60e47b01a7d020af16ce7",
+    "preview_00264.png": "fe17aaa0dc7a93013b706a9497bcad445c51bfcc2617dafca445782828c2edd4",
+    "render-report.json": "7655189a3a6f8dc458c36df053aef83bba832e795e9299dfb74f4bea3d48299d",
+    "scene.blend": "e24d4aa904286f77ea35e5a5455afaf526ca8f4eeb56cfca9666eccb0be006cd"
+  },
+  "local_only_files": {
+    "preview.mp4": {
+      "sha256": "2a08d312db3b85e39e03bf1bf4802941b062ad9dde68d65921da4670e5b0e14b",
+      "reason": "Derived optional review video; ignored by established repo rule. Runtime asset is assets/menu/battle.zip."
+    }
+  },
+  "movie_sha256": "ddbb55831ec5640bf655e310131e309bbb79a5b12193fa6a3c4db63fe7710805",
+  "failed_attempts": [
+    {
+      "attempt": "quality86",
+      "archive_bytes": 104306254,
+      "cap_bytes": 99614720,
+      "result": "Rejected before publication; no cap or resolution/fps relaxation"
+    },
+    {
+      "attempt": "fallback-probe1",
+      "result": "Probe AttributeError because lazy movie is None before first render; corrected to patch decoder class, product unchanged"
+    }
+  ],
+  "appearance_repeatability": "All3 PNG hashes differ by rounding noise; each has zero pixels changed above12 RGB levels. See approved-phase-differences.json; do not claim byte identity.",
+  "delivery": "quality85/4:4:4; all384 source PNG\u2192JPEG comparisons pass unchanged42dB minimum, archive passes unchanged95MiB cap; no resize, no frame drops",
+  "source_geometry_unchanged": true,
+  "owner_final_playback_accepted": false,
+  "merged": false
+}

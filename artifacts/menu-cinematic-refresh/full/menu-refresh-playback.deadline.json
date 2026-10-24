@@ -1,0 +1,13 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-E",
+    "/Users/lukaszjawor/.hermes/cache/scratch/verify-menu-refresh-playback.py"
+  ],
+  "pid": 73365,
+  "returncode": 0,
+  "timed_out": false,
+  "seconds": 0.9020242920378223,
+  "reaped": true,
+  "log": "/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-playback.log"
+}

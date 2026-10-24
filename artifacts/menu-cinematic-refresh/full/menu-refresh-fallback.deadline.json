@@ -1,0 +1,13 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-E",
+    "/Users/lukaszjawor/.hermes/cache/scratch/verify-menu-refresh-fallback.py"
+  ],
+  "pid": 73420,
+  "returncode": 1,
+  "timed_out": false,
+  "seconds": 0.3388336669886485,
+  "reaped": true,
+  "log": "/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-fallback.log"
+}
