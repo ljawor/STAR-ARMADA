@@ -1,0 +1,10 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/verify-menu-refresh-fallback.py", line 21, in <module>
+    with patch.object(menu._menu_movie,'get_frame',side_effect=AssertionError('Movie decoded with cinematics disabled')):
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/unittest/mock.py", line 1446, in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/.local/share/uv/python/cpython-3.11.16-macos-aarch64-none/lib/python3.11/unittest/mock.py", line 1419, in get_original
+    raise AttributeError(
+AttributeError: None does not have the attribute 'get_frame'

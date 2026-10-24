@@ -738,8 +738,8 @@ class MenuStack:
         lan_chooser(self)
 
     def _screen_skirmish(self):
-        from render.clean_classic import skirmish_setup
-        skirmish_setup(self)
+        from render.skirmish_screen import setup
+        setup(self)
 
     def open_replays(self):
         """Snapshot bounded directory entries; only visible pages parse files."""
@@ -1227,8 +1227,25 @@ class MenuStack:
                 elif act == "start_skirmish":
                     self.screen = "skirmish"
                     self.buttons = []
+                elif act in ('skirmish_spawn', 'skirmish_spawn_point'):
+                    options = self.skirmish_options
+                    capacity = self.skirmish_capacity(options['map_id'])
+                    starts = options.setdefault('spawn_slots', list(range(capacity)))
+                    slot = b['payload'] if act == 'skirmish_spawn' else 0
+                    target = (starts[slot] + 1) % capacity if act == 'skirmish_spawn' else b['payload']
+                    other = starts.index(target)
+                    starts[slot], starts[other] = starts[other], starts[slot]
+                    self.buttons = []
                 elif act == "skirmish_map":
                     self.skirmish_options['map_id'] = b['payload']
+                    capacity = self.skirmish_capacity(b['payload'])
+                    self.skirmish_options['spawn_slots'] = list(range(capacity))
+                    if capacity > len(self.skirmish_options['colors']):
+                        from game.core.skirmish import PLAYER_COLORS
+                        o = self.skirmish_options
+                        o['colors'].extend([key for key in PLAYER_COLORS if key not in o['colors']][:8 - len(o['colors'])])
+                        o['factions'].extend(['imperial'] * (8 - len(o['factions'])))
+                        o['teams'].extend(range(len(o['teams']), 8))
                     maximum = self.skirmish_capacity(b['payload']) - 1
                     if self.skirmish_options['ai_count'] > maximum:
                         self.skirmish_options['ai_count'] = maximum
@@ -1270,7 +1287,7 @@ class MenuStack:
                 elif act == "skirmish_team":
                     slot = b['payload']
                     teams = self.skirmish_options['teams']
-                    teams[slot] = (teams[slot] + 1) % 4
+                    teams[slot] = (teams[slot] + 1) % max(4, self.skirmish_capacity(self.skirmish_options['map_id']))
                     self.skirmish_notice = ''
                 elif act == "skirmish_difficulty":
                     levels = ('easy', 'normal', 'hard')

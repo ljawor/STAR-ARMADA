@@ -1,0 +1,216 @@
+{
+  "scope": "real main startup compositor; frozen look-development frame, not completed animation",
+  "actual_size": [
+    2560,
+    1440
+  ],
+  "movie_metadata": {
+    "ai_upscaled": false,
+    "crossfade_jpeg_quality": 85,
+    "crossfade_jpeg_subsampling": "4:4:4",
+    "fps": 24,
+    "frame_count": 360,
+    "height": 1440,
+    "loop": "baked-crossfade",
+    "native_height": 1440,
+    "native_width": 2560,
+    "overlap_seconds": 1,
+    "provenance": {
+      "blender_version": "5.0.1",
+      "delivery_jpeg_quality": 85,
+      "delivery_subsampling": "4:4:4",
+      "look_approval": "Approve \u2014 render and install the full video",
+      "look_approval_decision": "menu-redesigned-fleets-full-bake-2026-10-24",
+      "minimum_png_to_jpeg_psnr_db": 42.647360805541354,
+      "render_code_sha256": "6d217b24ea40ad5da1811c38b22d40423b0fdd80a6dce50117c0c86d47876c2b",
+      "resize_operations": 0,
+      "samples": 64,
+      "scene": {
+        "authoring": "script-authoritative; shipped default geometry, cinematic-only materials and lighting",
+        "fps": 24,
+        "overlap_seconds": 1,
+        "renderer": "Blender 5.0.1 EEVEE offline cinematic, not native gameplay renderer",
+        "repo_root": "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA",
+        "resolution": [
+          2560,
+          1440
+        ],
+        "scope": "offline menu movie only; no gameplay or runtime renderer changes",
+        "ships": [
+          {
+            "asset": "prototype:imperial/supercapital",
+            "binding": "imperial:supercapital",
+            "data_id": "imperial_supercapital",
+            "faction": "imperial",
+            "id": 0,
+            "length": 320.60175000000004,
+            "location": [
+              -210,
+              -110,
+              0
+            ],
+            "pack_id": "prototype:imperium_fleet",
+            "revision": "a8a36e1edd56ac89c8720e7ada901a84505768ce32236b891610bc8ec3effd80",
+            "runtime_path": "visual_packs/imperium-fleet-prototypes/assets/models/sovereign.mesh.json",
+            "runtime_sha256": "7030bbb06d575e76e1374cbafca1541cab4fc149d2ab25bd4248165ee65609af",
+            "scale": 1.7037424988356489,
+            "triangle_count": 9968,
+            "yaw": 76
+          },
+          {
+            "asset": "prototype:imperial/battleship",
+            "binding": "imperial:battleship",
+            "data_id": "imperial_battleship",
+            "faction": "imperial",
+            "id": 1,
+            "length": 224.421225,
+            "location": [
+              -235,
+              180,
+              30
+            ],
+            "pack_id": "prototype:imperium_fleet",
+            "revision": "cd67382e693a55dfadbdec33501ec2b84d35aa8a00252d6709652bf50b8e32c4",
+            "runtime_path": "visual_packs/imperium-fleet-prototypes/assets/models/executor.mesh.json",
+            "runtime_sha256": "ca0128360ec6b2f0914af6e3158dc8dd0cc25d2a7ed32795269a047087ec74a2",
+            "scale": 1.1926197491849542,
+            "triangle_count": 9432,
+            "yaw": 76
+          },
+          {
+            "asset": "prototype:imperial/frigate",
+            "binding": "imperial:frigate",
+            "data_id": "imperial_frigate",
+            "faction": "imperial",
+            "id": 2,
+            "length": 96.180525,
+            "location": [
+              -75,
+              -35,
+              -70
+            ],
+            "pack_id": "prototype:imperium_fleet",
+            "revision": "1099a7fd997218d853f370ba5bfe67f30bf9c92af97f9e7cecd7273d09e2defc",
+            "runtime_path": "visual_packs/imperium-fleet-prototypes/assets/models/lancer.mesh.json",
+            "runtime_sha256": "8ece02287862e54ef3166aa3ee63929b7ca3a9fdaa0f355fb08443c3731b909b",
+            "scale": 1.0500859953831516,
+            "triangle_count": 6232,
+            "yaw": 76
+          },
+          {
+            "asset": "prototype:imperial/frigate",
+            "binding": "imperial:frigate",
+            "data_id": "imperial_frigate",
+            "faction": "imperial",
+            "id": 3,
+            "length": 96.180525,
+            "location": [
+              -300,
+              340,
+              75
+            ],
+            "pack_id": "prototype:imperium_fleet",
+            "revision": "1099a7fd997218d853f370ba5bfe67f30bf9c92af97f9e7cecd7273d09e2defc",
+            "runtime_path": "visual_packs/imperium-fleet-prototypes/assets/models/lancer.mesh.json",
+            "runtime_sha256": "8ece02287862e54ef3166aa3ee63929b7ca3a9fdaa0f355fb08443c3731b909b",
+            "scale": 1.0500859953831516,
+            "triangle_count": 6232,
+            "yaw": 76
+          },
+          {
+            "asset": "prototype:alliance_redesign/battleship",
+            "binding": "rebel:battleship",
+            "data_id": "rebel_battleship",
+            "faction": "rebel",
+            "id": 4,
+            "length": 224.421225,
+            "location": [
+              205,
+              100,
+              25
+            ],
+            "pack_id": "prototype:alliance_redesign",
+            "revision": "a0b6fb6e28c0a836ad3d056365ee9ae7886204eecd8982adfee68ca61597a2b4",
+            "runtime_path": "visual_packs/alliance-redesign/assets/models/battleship.mesh.json",
+            "runtime_sha256": "66fbb324c3bb0fb8c6dd8cc70499d807397d5aec8433d3bf9f294a392a508e73",
+            "scale": 0.8066279124457847,
+            "triangle_count": 7788,
+            "yaw": -104
+          },
+          {
+            "asset": "prototype:alliance_redesign/frigate",
+            "binding": "rebel:frigate",
+            "data_id": "rebel_frigate",
+            "faction": "rebel",
+            "id": 5,
+            "length": 96.180525,
+            "location": [
+              90,
+              40,
+              -60
+            ],
+            "pack_id": "prototype:alliance_redesign",
+            "revision": "417a13c6d871971a3b594b13d167da10ba85c4b1e99d8c6fa620bf8e1431f012",
+            "runtime_path": "visual_packs/alliance-redesign/assets/models/frigate.mesh.json",
+            "runtime_sha256": "59702b027954acca6dd820eaf11aa3856c2d6f05f4f1441259d3312c6e4400b8",
+            "scale": 0.6270219628479141,
+            "triangle_count": 9864,
+            "yaw": -104
+          },
+          {
+            "asset": "prototype:alliance_redesign/frigate",
+            "binding": "rebel:frigate",
+            "data_id": "rebel_frigate",
+            "faction": "rebel",
+            "id": 6,
+            "length": 96.180525,
+            "location": [
+              300,
+              310,
+              80
+            ],
+            "pack_id": "prototype:alliance_redesign",
+            "revision": "417a13c6d871971a3b594b13d167da10ba85c4b1e99d8c6fa620bf8e1431f012",
+            "runtime_path": "visual_packs/alliance-redesign/assets/models/frigate.mesh.json",
+            "runtime_sha256": "59702b027954acca6dd820eaf11aa3856c2d6f05f4f1441259d3312c6e4400b8",
+            "scale": 0.6270219628479141,
+            "triangle_count": 9864,
+            "yaw": -104
+          }
+        ],
+        "source_seconds": 16,
+        "version": 1,
+        "visual_packs": [
+          "vigil-prototype",
+          "imperium-command-prototype",
+          "imperium-shipyard-prototype",
+          "imperium-mining-prototype",
+          "imperium-talon-prototype",
+          "imperium-engineer-prototype",
+          "imperium-research-prototype",
+          "imperium-defense-prototype",
+          "imperium-sensor-prototype",
+          "imperium-trade-prototype",
+          "imperium-fighter-prototype",
+          "imperium-repair-prototype",
+          "imperium-relay-prototype",
+          "imperium-fleet-prototypes",
+          "alliance-redesign",
+          "legions-redesign"
+        ]
+      }
+    },
+    "source_frame_count": 384,
+    "source_seconds": 16,
+    "source_sha256": "c3431c15940f4ed1675fe822791831cb337c1d833a8c3d3b9182fcddf4b2b824",
+    "still_frame": 180,
+    "version": 1,
+    "width": 2560
+  },
+  "screenshot_sha256": "265a2198a3b880a25bdd9a27548ec618a4ba938b57673f63eb863b7eb1ef0416",
+  "movie_sha256": "ddbb55831ec5640bf655e310131e309bbb79a5b12193fa6a3c4db63fe7710805",
+  "frame_surface_size": [
+    2560,
+    1440
+  ]
+}

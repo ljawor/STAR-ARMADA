@@ -1,0 +1,35 @@
+{
+  "modules": [
+    "test_skirmish_maps",
+    "test_skirmish_setup",
+    "test_skirmish_spawns",
+    "test_skirmish_new_maps",
+    "test_skirmish_teams",
+    "test_skirmish_deployment_ui",
+    "test_skirmish_menu",
+    "test_skirmish_main",
+    "test_clean_classic_menu",
+    "test_lan_menu",
+    "test_lan",
+    "test_i18n",
+    "test_presentation_ux",
+    "test_language_tools",
+    "test_skirmish_language",
+    "test_detmath"
+  ],
+  "tests": 157,
+  "failures": [],
+  "errors": [],
+  "skipped": [],
+  "seconds": 18.443956000031903,
+  "load_before": [
+    1.11083984375,
+    2.380859375,
+    2.70849609375
+  ],
+  "load_after": [
+    1.78271484375,
+    2.45263671875,
+    2.72607421875
+  ]
+}

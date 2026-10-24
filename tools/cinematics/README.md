@@ -1,7 +1,9 @@
 # HD startup cinematic — offline authoring
 
-This builds a native **2560×1440** menu movie from the game's approved core
-ship meshes, with cinematic-only materials, lighting and effects. It does **not**
+This builds a native **2560×1440** menu movie from the game's shipped default
+ship meshes, including the ordered visual packs in `menus.DEFAULT_SETTINGS`,
+with cinematic-only materials, lighting and effects. The planner refuses a
+rejected shipped pack rather than silently baking an obsolete core fallback. It does **not**
 change the native gameplay renderer, gameplay models, simulation, or saves.
 The scene is script-authoritative: `scene_spec.py` + `blender_scene.py` + a pinned
 JSON plan reproduce the scene. The generated `scene.blend` is an editable still

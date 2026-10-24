@@ -6,6 +6,10 @@ fall back to English here.
 """
 
 DE: dict[str, str] = {
+    "Click a start to deploy here.": "Klicke auf einen Startpunkt, um hier zu starten.",
+    "Gold: resources · Teal: worlds · Rings: starts": "Gold: Ressourcen · Türkis: Welten · Ringe: Startpunkte",
+    "Same team = allies. AI allies share vision, not control.": "Gleiches Team = Verbündete. KI-Verbündete teilen Sicht, nicht Kontrolle.",
+    "Start {n}": "Startpunkt {n}",
     "Change fullscreen in Settings after leaving the match": "Vollbildmodus nach Verlassen der Partie in den Einstellungen ändern",
     "Resolution": "Auflösung",
     "Automatic": "Automatisch",
@@ -86,8 +90,6 @@ DE: dict[str, str] = {
     "Canonical runtime state": "Kanonischer Laufzeitzustand",
     "Choose a battlefield and fleet roster. Open a lobby, then launch once everyone is ready.":
         "Wähle Schlachtfeld und Flottenaufstellung. Öffne eine Lobby und starte, sobald alle bereit sind.",
-    "Choose a battlefield, configure your fleet, then launch.":
-        "Wähle ein Schlachtfeld, stelle deine Flotte zusammen und starte.",
     "Cinematics": "Zwischensequenzen",
     "Close": "Schließen",
     "Connect": "Verbinden",
@@ -120,8 +122,6 @@ DE: dict[str, str] = {
         "Passagiere abliefern: mit geladener Fracht R drücken und einen eigenen Rumpf ohne volle Besatzung anklicken.",
     "Deploy your fleet": "Flotte einsetzen",
     "Destroy ALL defending satellites first.": "Zerstöre ZUERST alle verteidigenden Satelliten.",
-    "Distinct colors are kept automatically. Click to cycle.":
-        "Unterschiedliche Farben werden automatisch beibehalten. Klicken zum Durchschalten.",
     "Distinct colors. Unused slot choices are retained. Click to cycle.":
         "Unterschiedliche Farben. Ungenutzte Platzwahl bleibt erhalten. Klicken zum Durchschalten.",
     "Dynamic range": "Dynamikumfang",
@@ -297,8 +297,6 @@ DE: dict[str, str] = {
     "SURVEY · waiting for a safe route": "VERMESSUNG · wartet auf eine sichere Route",
     "Safe replay deletion unavailable on this platform (directory handles required)":
         "Sicheres Replay-Löschen ist auf dieser Plattform nicht verfügbar (Verzeichnis-Handles erforderlich)",
-    "Same team = allies. AI allies share vision, not control. Keep at least two different teams.":
-        "Gleiches Team = Verbündete. KI-Verbündete teilen Sicht, nicht Kontrolle. Behalte mindestens zwei verschiedene Teams.",
     "Saved Games": "Spielstände",
     "Saved game exceeds size limit (64 MiB)": "Spielstand überschreitet das Größenlimit (64 MiB)",
     "Saved games": "Spielstände",
@@ -353,8 +351,6 @@ DE: dict[str, str] = {
     "Unknown time UTC": "Unbekannte Zeit UTC",
     "Unready": "Nicht bereit",
     "Unsupported saved-game format": "Nicht unterstütztes Spielstand-Format",
-    "Unused fleet choices are retained when reducing AI players.":
-        "Ungenutzte Flottenwahlen bleiben erhalten, wenn KI-Spieler reduziert werden.",
     "Use the address shown in the host lobby and the same TCP port.\nAsk the host to allow STAR ARMADA through their firewall.":
         "Nutze die in der Host-Lobby angezeigte Adresse und denselben TCP-Port.\nBitte den Host, STAR ARMADA in seiner Firewall zuzulassen.",
     "VICTORY": "SIEG",

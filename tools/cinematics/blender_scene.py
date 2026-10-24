@@ -1,6 +1,6 @@
 """Blender-only offline authoring of the HD menu cinematic (no game renderer import).
 
-Script-authoritative scene: approved core triangles are read, never rewritten.
+Script-authoritative scene: shipped default triangles are read, never rewritten.
 Cinematic materials/light/effects are isolated here; output is a pre-rendered movie,
 not a claim about native gameplay graphics. Run with Blender5.0.1 --background.
 """
@@ -27,6 +27,22 @@ def arguments():
     return parser.parse_args(sys.argv[sys.argv.index('--')+1:])
 
 
+def load_payloads(plan, root):
+    """Read hash-pinned shipped geometry; never import Blender or write a mesh."""
+    root = Path(root).resolve()
+    payloads = {}
+    for row in plan['ships']:
+        path = (root / row['runtime_path']).resolve()
+        if not (path.is_relative_to(root / 'assets/models')
+                or path.is_relative_to(root / 'visual_packs')):
+            raise ValueError('Model path escapes shipped assets')
+        data = path.read_bytes()
+        if hashlib.sha256(data).hexdigest() != row['runtime_sha256']:
+            raise ValueError('Shipped mesh differs from scene plan: ' + row['binding'])
+        payloads[row['runtime_path']] = json.loads(data)
+    return payloads
+
+
 def main():
     args = arguments()
     plan = json.loads(args.plan.read_text(encoding='utf-8'))
@@ -38,15 +54,7 @@ def main():
         raise ValueError('Candidates must remain outside shipped assets until owner review')
     assert plan['resolution'] == [2560, 1440] and plan['fps'] == 24
     assert 16 <= args.samples <= 256
-    payloads = {}
-    for row in plan['ships']:
-        path = (root / row['runtime_path']).resolve()
-        if not path.is_relative_to(root / 'assets/models'):
-            raise ValueError('Model path escapes core assets')
-        data = path.read_bytes()
-        if hashlib.sha256(data).hexdigest() != row['runtime_sha256']:
-            raise ValueError('Approved mesh differs from scene plan: ' + row['binding'])
-        payloads[row['runtime_path']] = json.loads(data)
+    payloads = load_payloads(plan, root)
     import bpy
     from mathutils import Vector
     if bpy.app.version_string != '5.0.1':

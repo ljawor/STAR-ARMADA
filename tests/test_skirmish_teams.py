@@ -17,9 +17,9 @@ class SkirmishTeamTests(unittest.TestCase):
         del first['teams']
         self.assertEqual([p['team'] for p in build_skirmish_map(self.ds, first)['players']], [0, 1])
 
-    def test_active_teams_require_four_slots_integer_ids_and_an_enemy(self):
-        for teams in (None, '0123', [0, 1], [0, 1, 2, 3, 0],
-                      [True, 1, 2, 3], [-1, 1, 2, 3], [4, 1, 2, 3],
+    def test_active_teams_require_four_to_eight_slots_integer_ids_and_an_enemy(self):
+        for teams in (None, '0123', [0, 1], list(range(9)),
+                      [True, 1, 2, 3], [-1, 1, 2, 3], [8, 1, 2, 3],
                       [0.0, 1, 2, 3], ['0', 1, 2, 3], [[], 1, 2, 3],
                       [3, 3, 0, 1]):
             options = default_skirmish_options(self.ds)
@@ -29,6 +29,9 @@ class SkirmishTeamTests(unittest.TestCase):
         options['teams'] = [3, 0, None, -10]
         self.assertEqual([p['team'] for p in build_skirmish_map(self.ds, options)['players']], [3, 0])
         self.assertEqual(options['teams'], [3, 0, None, -10])
+        for teams in ([7, 4, 0, 0], [0, 1, 2, 3, 0], list(range(8))):
+            options['teams'] = teams
+            self.assertEqual([p['team'] for p in build_skirmish_map(self.ds, options)['players']], teams[:2])
 
     def test_lan_api_keeps_cooperative_and_ffa_despite_inherited_skirmish_teams(self):
         from game.net.lan import build_lan_map

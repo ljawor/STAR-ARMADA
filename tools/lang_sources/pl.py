@@ -1,6 +1,10 @@
 """Polish pack for STAR ARMADA (#93) — msgid (English UI string) -> translation."""
 
 PL: dict[str, str] = {
+    "Click a start to deploy here.": "Kliknij punkt startowy, aby rozmieścić tu flotę.",
+    "Gold: resources · Teal: worlds · Rings: starts": "Złoto: zasoby · Turkus: planety · Okręgi: punkty startowe",
+    "Same team = allies. AI allies share vision, not control.": "Ta sama drużyna = sojusznicy. Sojusznicy SI dzielą się widocznością, nie kontrolą.",
+    "Start {n}": "Punkt startowy {n}",
     "Change fullscreen in Settings after leaving the match": "Tryb pełnoekranowy można zmienić w ustawieniach po opuszczeniu rozgrywki",
     "Resolution": "Rozdzielczość",
     "Automatic": "Automatyczna",
@@ -82,8 +86,6 @@ PL: dict[str, str] = {
     "Canonical runtime state": "Kanoniczny stan wykonania",
     "Choose a battlefield and fleet roster. Open a lobby, then launch once everyone is ready.":
         "Wybierz pole bitwy i skład floty. Otwórz lobby i startuj, gdy wszyscy będą gotowi.",
-    "Choose a battlefield, configure your fleet, then launch.":
-        "Wybierz pole bitwy, skonfiguruj flotę i startuj.",
     "Cinematics": "Przerywniki",
     "Close": "Zamknij",
     "Connect": "Połącz",
@@ -116,8 +118,6 @@ PL: dict[str, str] = {
         "Dostarcz pasażerów: z załadowanym ładunkiem naciśnij R i kliknij własny kadłub bez pełnej załogi.",
     "Deploy your fleet": "Rozmieść flotę",
     "Destroy ALL defending satellites first.": "Najpierw zniszcz WSZYSTKIE satelity obronne.",
-    "Distinct colors are kept automatically. Click to cycle.":
-        "Różne kolory są zachowywane automatycznie. Kliknij, aby przełączać.",
     "Distinct colors. Unused slot choices are retained. Click to cycle.":
         "Różne kolory. Nieużyte wybory miejsc pozostają. Kliknij, aby przełączać.",
     "Dynamic range": "Zakres dynamiki",
@@ -295,8 +295,6 @@ PL: dict[str, str] = {
     "SURVEY · waiting for a safe route": "ROZPOZNANIE · czeka na bezpieczną trasę",
     "Safe replay deletion unavailable on this platform (directory handles required)":
         "Bezpieczne usuwanie powtórek niedostępne na tej platformie (wymagane uchwyty katalogu)",
-    "Same team = allies. AI allies share vision, not control. Keep at least two different teams.":
-        "Ta sama drużyna = sojusznicy. Sojusznicy SI dzielą widzenie, nie kontrolę. Zostaw co najmniej dwie różne drużyny.",
     "Saved Games": "Zapisy gry",
     "Saved game exceeds size limit (64 MiB)": "Zapis przekracza limit rozmiaru (64 MiB)",
     "Saved games": "Zapisy gry",
@@ -351,8 +349,6 @@ PL: dict[str, str] = {
     "Unknown time UTC": "Nieznany czas UTC",
     "Unready": "Niegotowy",
     "Unsupported saved-game format": "Nieobsługiwany format zapisu gry",
-    "Unused fleet choices are retained when reducing AI players.":
-        "Nieużyte wybory floty są zachowywane przy zmniejszaniu liczby graczy SI.",
     "Use the address shown in the host lobby and the same TCP port.\nAsk the host to allow STAR ARMADA through their firewall.":
         "Użyj adresu pokazanego w lobby hosta i tego samego portu TCP.\nPoproś hosta o przepuszczenie STAR ARMADA przez zaporę.",
     "VICTORY": "ZWYCIĘSTWO",

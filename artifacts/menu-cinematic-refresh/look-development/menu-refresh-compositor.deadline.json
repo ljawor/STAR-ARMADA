@@ -1,0 +1,17 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-E",
+    "tools/cinematics/verify_preview.py",
+    "--movie",
+    "/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-still.zip",
+    "--out",
+    "/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-compositor"
+  ],
+  "pid": 72047,
+  "returncode": 0,
+  "timed_out": false,
+  "seconds": 1.73543395800516,
+  "reaped": true,
+  "log": "/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-compositor.log"
+}

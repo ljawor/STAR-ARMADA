@@ -20,7 +20,7 @@ PLAYER_COLORS = {
     "pink": (1.0, 0.35, 0.70),
 }
 COLOR_NAMES = {key: key.title() for key in PLAYER_COLORS}
-SKIRMISH_MAP_IDS = ("skirmish01", "skirmish02", "skirmish03", "skirmish04")
+SKIRMISH_MAP_IDS = tuple(f"skirmish{i:02d}" for i in range(1, 9))
 
 
 def default_skirmish_options(ds) -> dict:
@@ -33,7 +33,7 @@ def default_skirmish_options(ds) -> dict:
 def build_skirmish_map(ds, options: dict) -> dict:
     """Return a validated private map; reject malformed input with ValueError.
 
-    Require four choice slots, validate only active choices, and never coerce
+    Require four to eight choice slots, validate only active choices, and never coerce
     counts/IDs. All map slots/spawns are validated before any simulation starts.
     """
     required = {'map_id', 'ai_count', 'colors', 'factions', 'ai_difficulty'}
@@ -43,8 +43,8 @@ def build_skirmish_map(ds, options: dict) -> dict:
     if not isinstance(map_id, str) or map_id not in SKIRMISH_MAP_IDS or map_id not in ds.maps:
         raise ValueError('Unknown or unavailable skirmish map')
     ai_count = options['ai_count']
-    if type(ai_count) is not int or not 1 <= ai_count <= 3:
-        raise ValueError('AI count must be an integer from 1 to 3')
+    if type(ai_count) is not int or not 1 <= ai_count <= 7:
+        raise ValueError('AI count must be an integer from 1 to 7')
     difficulty = options['ai_difficulty']
     if (not isinstance(difficulty, str) or difficulty not in ('easy', 'normal', 'hard')
             or difficulty not in ds.rules.get('ai', {}).get('difficulty', {})):
@@ -53,16 +53,16 @@ def build_skirmish_map(ds, options: dict) -> dict:
     # LAN owns its cooperative/FFA policy and overwrites teams after this
     # shared map conversion. Never interpret inherited skirmish choices there.
     lan_policy = 'human_count' in options and 'cooperative' in options
-    teams = [0, 1, 2, 3] if lan_policy else options.get('teams', [0, 1, 2, 3])
-    if not isinstance(teams, list) or len(teams) != 4:
-        raise ValueError('teams must be a four-slot list')
-    if any(type(team) is not int or not 0 <= team <= 3 for team in teams[:active]):
-        raise ValueError('Active teams must be integers from 0 to 3')
+    teams = [0, 1, 2, 3] if lan_policy else options.get('teams', list(range(8)))
+    if not isinstance(teams, list) or not max(4, active) <= len(teams) <= 8:
+        raise ValueError('teams must be a four-to-eight-slot list covering active players')
+    if any(type(team) is not int or not 0 <= team <= 7 for team in teams[:active]):
+        raise ValueError('Active teams must be integers from 0 to 7')
     if len(set(teams[:active])) < 2:
         raise ValueError('Choose at least two different teams: every fleet needs an enemy.')
     for key in ('colors', 'factions'):
-        if not isinstance(options[key], list) or len(options[key]) != 4:
-            raise ValueError(f'{key} must be a four-slot list')
+        if not isinstance(options[key], list) or not max(4, active) <= len(options[key]) <= 8:
+            raise ValueError(f'{key} must be a four-to-eight-slot list covering active players')
     colors = options['colors'][:active]
     if any(not isinstance(c, str) or c not in PLAYER_COLORS for c in colors):
         raise ValueError('Unknown active player color')
@@ -77,8 +77,14 @@ def build_skirmish_map(ds, options: dict) -> dict:
     if not isinstance(bounds, (int, float)) or not _finite_number(bounds) or bounds <= 0:
         raise ValueError('Map bounds must be finite and positive')
     players = source.get('players')
-    if not isinstance(players, list) or not 2 <= len(players) <= 4 or active > len(players):
+    if not isinstance(players, list) or not 2 <= len(players) <= 8 or active > len(players):
         raise ValueError('Selected AI count exceeds map capacity')
+    spawn_slots = options.get('spawn_slots', list(range(active)))
+    if (not isinstance(spawn_slots, list) or len(spawn_slots) < active
+            or any(type(index) is not int or not 0 <= index < len(players)
+                   for index in spawn_slots)
+            or len(set(spawn_slots)) != len(spawn_slots)):
+        raise ValueError('spawn_slots must be a list of unique map-slot integers covering active players')
     spawns = set()
     kinds = set(ds.stations) | {'constructor', 'colonizer', 'squadron', 'corvette',
                               'frigate', 'cruiser', 'battleship', 'supercapital'}
@@ -102,6 +108,8 @@ def build_skirmish_map(ds, options: dict) -> dict:
     result = deepcopy(source)
     result["players"] = result["players"][:options["ai_count"] + 1]
     for slot, player in enumerate(result["players"]):
+        # Move the anchor, never the source slot's identity or starting loadout.
+        player['start'] = deepcopy(players[spawn_slots[slot]]['start'])
         faction = options["factions"][slot]
         player.update(slot=slot, team=teams[slot],
                       is_ai=slot > 0, faction=faction,

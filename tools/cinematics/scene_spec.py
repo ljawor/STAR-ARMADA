@@ -1,6 +1,6 @@
 """Pinned read-only scene plan for the offline 1440p startup cinematic.
 
-Run with the project Python, not Blender: resolves the same approved core meshes
+Run with the project Python, not Blender: resolves the same shipped default meshes
 as the game, captures their hashes and real class lengths, then writes a plan.
 The Blender authoring tool consumes only this data; runtime imports neither tool.
 """
@@ -25,35 +25,50 @@ def build_plan(root):
     from game.data.store import DataStore
     from render.asset_registry import AssetResolver
     from render.ship_sizes import ship_size
+    from render.menus import DEFAULT_SETTINGS
     root = Path(root).resolve()
     resolver = AssetResolver(root)
+    pack_root = root / 'visual_packs'
+    pack_paths = [pack_root / name / 'visual-pack.json'
+                  for name in DEFAULT_SETTINGS['visual_packs']]
+    resolver.activate_packs(pack_paths, pack_root=pack_root)
+    if any(not row['accepted'] for row in resolver.active_order):
+        raise ValueError('Cinematic shipped visual pack rejected: ' + repr(resolver.active_order))
     ds = DataStore.get()
     ships = []
     for index, (data_id, faction, location, yaw) in enumerate(LAYOUT):
         binding = f'{faction}:{ds.ships[data_id].category}'
         resolved = resolver.resolve(binding)
-        if resolved is None or resolved.source != 'core':
-            raise ValueError('Cinematic requires approved core mesh: ' + binding)
-        manifest = resolver._core_manifest(binding)
+        if resolved is None:
+            raise ValueError('Cinematic requires a validated shipped mesh: ' + binding)
+        if binding in resolver._overrides:
+            # Use the resolver's validated last-writer manifest, not an old core
+            # manifest with the same gameplay binding. Offline tooling only.
+            manifest, model_root = resolver._overrides[binding][:2]
+        else:
+            manifest, model_root = resolver._core_manifest(binding), root
         entry = manifest['files'][resolved.lod]
-        path = (root / entry['path']).resolve()
-        if not path.is_relative_to(root / 'assets/models'):
-            raise ValueError('Model escapes core assets')
+        path = (model_root / entry['path']).resolve()
+        if not (path.is_relative_to(root / 'assets/models')
+                or path.is_relative_to(pack_root)):
+            raise ValueError('Model escapes shipped assets')
         digest = hashlib.sha256(path.read_bytes()).hexdigest()
         if digest != entry['sha256']:
-            raise ValueError('Core model approval hash differs: ' + binding)
+            raise ValueError('Shipped model hash differs: ' + binding)
         payload = json.loads(path.read_text(encoding='utf-8'))
         span = payload['bounds'][1][2] - payload['bounds'][0][2]
         length = ship_size(ds, data_id, faction).length
         ships.append(dict(id=index, data_id=data_id, faction=faction, binding=binding,
                           asset=resolved.asset, revision=resolved.revision,
-                          runtime_path=entry['path'], runtime_sha256=digest,
+                          runtime_path=path.relative_to(root).as_posix(), runtime_sha256=digest,
+                          pack_id=resolved.pack_id,
                           triangle_count=payload['triangle_count'], length=length,
                           scale=length/span, location=list(location), yaw=yaw))
     return dict(version=1, resolution=[2560, 1440], fps=24, source_seconds=16,
                 overlap_seconds=1, scope='offline menu movie only; no gameplay or runtime renderer changes',
                 renderer='Blender 5.0.1 EEVEE offline cinematic, not native gameplay renderer',
-                authoring='script-authoritative; original approved core geometry, cinematic-only materials and lighting',
+                authoring='script-authoritative; shipped default geometry, cinematic-only materials and lighting',
+                visual_packs=list(DEFAULT_SETTINGS['visual_packs']),
                 repo_root=str(root), ships=ships)
 
 

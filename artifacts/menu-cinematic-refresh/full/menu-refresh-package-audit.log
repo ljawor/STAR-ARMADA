@@ -1,0 +1,9 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+NATIVE_DELIVERY_OK 384 42.86846131671133
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/.hermes/cache/scratch/package-audit-menu-refresh.py", line 31, in <module>
+    package=assemble_movie(out/'encoded',movie,jpeg_quality=86,max_archive_bytes=95*1024*1024,provenance=provenance)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tools/cinematics/movie_pack.py", line 207, in assemble_movie
+    raise ValueError(f'archive exceeds byte budget: {published_bytes} > {max_archive_bytes}')
+ValueError: archive exceeds byte budget: 104306254 > 99614720

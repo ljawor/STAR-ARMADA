@@ -29,7 +29,7 @@ def main():
             glViewport(0, 0, w, h)
             pygame.event.pump()
             for screen in ('main', 'lan_host'):
-                for mid in (SKIRMISH_MAP_IDS if screen == 'lan_host' else (None,)):
+                for mid in (SKIRMISH_MAP_IDS[:4] if screen == 'lan_host' else (None,)):
                     menu = MenuStack(w, h)
                     menu.screen = screen
                     if mid:

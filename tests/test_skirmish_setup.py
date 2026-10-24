@@ -19,7 +19,7 @@ class TestSkirmishSetup(unittest.TestCase):
                        ai_difficulty='hard')
         original = copy.deepcopy(self.ds.maps)
         result = build_skirmish_map(self.ds, options)
-        self.assertEqual(SKIRMISH_MAP_IDS, tuple(f'skirmish0{i}' for i in range(1, 5)))
+        self.assertEqual(SKIRMISH_MAP_IDS, tuple(f'skirmish0{i}' for i in range(1, 9)))
         self.assertEqual(set(COLOR_NAMES), set(PLAYER_COLORS))
         self.assertEqual(len(result['players']), 2)
         for i, p in enumerate(result['players']):
@@ -35,11 +35,11 @@ class TestSkirmishSetup(unittest.TestCase):
         result['asteroid_fields'][0]['pos'][0] = 123
         self.assertEqual(self.ds.maps, original)
 
-    def test_all_four_maps_every_valid_count_real_ai_sixty_ticks(self):
+    def test_all_eight_maps_every_valid_count_real_ai_sixty_ticks(self):
         from game.core.skirmish import (SKIRMISH_MAP_IDS, PLAYER_COLORS,
                                        build_skirmish_map, default_skirmish_options)
         from game.core.manager import GameManager
-        capacities = dict(zip(SKIRMISH_MAP_IDS, (2, 3, 4, 4)))
+        capacities = dict(zip(SKIRMISH_MAP_IDS, (2, 3, 4, 4, 8, 2, 2, 3)))
         for map_id, capacity in capacities.items():
             self.assertIn(map_id, self.ds.maps)
             self.assertEqual(len(self.ds.maps[map_id]['players']), capacity)
@@ -47,7 +47,8 @@ class TestSkirmishSetup(unittest.TestCase):
                 with self.subTest(map_id=map_id, ai_count=ai_count):
                     options = default_skirmish_options(self.ds)
                     options.update(map_id=map_id, ai_count=ai_count,
-                                   factions=['imperial', 'rebel', 'confederacy', 'syndicate'])
+                                   colors=list(PLAYER_COLORS), teams=list(range(8)),
+                                   factions=['imperial', 'rebel', 'confederacy', 'syndicate'] * 2)
                     m = build_skirmish_map(self.ds, options)
                     gm = GameManager.start_skirmish(m)
                     st = gm.state
@@ -74,7 +75,7 @@ class TestSkirmishSetup(unittest.TestCase):
                         self.assertTrue(any(e.build_queue or e.order_type for e in own)
                                         or ai._pending_site,
                                         f'{map_id} AI {pid} never initiated production/expansion')
-            if capacity < 4:
+            if capacity < 8:
                 options = default_skirmish_options(self.ds)
                 options.update(map_id=map_id, ai_count=capacity)
                 with self.assertRaises(ValueError):

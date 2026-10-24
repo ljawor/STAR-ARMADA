@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_blender_input_accepts_pinned_shipped_pack_meshes_but_rejects_stale_bytes (test_cinematic_scene.CinematicSceneTests.test_blender_input_accepts_pinned_shipped_pack_meshes_but_rejects_stale_bytes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_cinematic_scene.py", line 59, in test_blender_input_accepts_pinned_shipped_pack_meshes_but_rejects_stale_bytes
+    self.assertTrue(callable(loader), 'Blender needs shared read-only input validation for shipped packs')
+AssertionError: False is not true : Blender needs shared read-only input validation for shipped packs
+
+----------------------------------------------------------------------
+Ran 1 test in 0.004s
+
+FAILED (failures=1)

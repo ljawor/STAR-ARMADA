@@ -107,13 +107,13 @@ class SkirmishMenuTests(unittest.TestCase):
             name = self.menu.skirmish_store.factions[faction].display_name
             self.assertIn(name + ' ›', self.menu.skirmish_rendered_text)
 
-    def test_four_public_map_cards_with_capacity_and_preview(self):
+    def test_eight_public_map_cards_with_capacity_and_preview(self):
         self.open_setup()
         cards = [b for b in self.menu.buttons if b['action'] == 'skirmish_map']
         self.assertEqual([b['payload'] for b in cards],
-                         ['skirmish01', 'skirmish02', 'skirmish03', 'skirmish04'])
+                         [f'skirmish0{i}' for i in range(1, 9)])
         self.assertEqual([self.menu.skirmish_capacity(b['payload']) for b in cards],
-                         [2, 3, 4, 4])
+                         [2, 3, 4, 4, 8, 2, 2, 3])
         self.assertEqual(len(self.menu.skirmish_preview_starts), 2)
         self.assertTrue(self.menu.skirmish_text_bounds)
 

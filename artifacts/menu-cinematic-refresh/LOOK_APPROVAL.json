@@ -1,0 +1,167 @@
+{
+  "decision_id": "menu-redesigned-fleets-full-bake-2026-10-24",
+  "question_answered": "Approve this look for the full 15-second video on this branch?",
+  "owner_words_verbatim": "Approve — render and install the full video",
+  "authorization": "Render and install the complete refreshed menu video on feat/skirmish-maps-spawn-selection; retain existing camera, lighting, materials, composition and runtime playback behavior.",
+  "not_authorized": [
+    "merge",
+    "tag",
+    "release",
+    "ship geometry changes",
+    "gameplay changes"
+  ],
+  "reviewed_source_commit": "71242a080964d204352a79bfd100d6e3206670c2",
+  "reviewed_evidence_commit": "a6e4713fee6fc3eaf338624471782f912d4d7cac",
+  "render_code_sha256": "6d217b24ea40ad5da1811c38b22d40423b0fdd80a6dce50117c0c86d47876c2b",
+  "scene_plan_sha256": "5e48c1aecd7dfec2a7e19c0eea0ee3515c964f2370e2c9d10a53ad94bc8db6be",
+  "reviewed_evidence": {
+    "before-after.png": "c3b4d6363e403e075a433426b03d3397bb5cc1cf722c34dc7ad19e2c074b22fe",
+    "actual-main.png": "f2371d8455401e27358186788c8f4e30ec14439f9e889cc10b2a84a38cc5acf5",
+    "preview_00024.png": "cd78c92fa5efb1ec8ac9f49f17a3b875f4c410765b2bd05efc2fcd8f5e6913f7",
+    "preview_00144.png": "178dbc316d9496b2600b191599a6efc8a98e4ebc79e541027378e2a90b13b63c",
+    "preview_00264.png": "c8e5c44e9a3f54dd7207fb2f9b66c5a7c003d3ed6ef1b7c6a0405775d1a2261e"
+  },
+  "ships": [
+    {
+      "id": 0,
+      "data_id": "imperial_supercapital",
+      "faction": "imperial",
+      "binding": "imperial:supercapital",
+      "asset": "prototype:imperial/supercapital",
+      "revision": "a8a36e1edd56ac89c8720e7ada901a84505768ce32236b891610bc8ec3effd80",
+      "runtime_path": "visual_packs/imperium-fleet-prototypes/assets/models/sovereign.mesh.json",
+      "runtime_sha256": "7030bbb06d575e76e1374cbafca1541cab4fc149d2ab25bd4248165ee65609af",
+      "pack_id": "prototype:imperium_fleet",
+      "triangle_count": 9968,
+      "length": 320.60175000000004,
+      "scale": 1.7037424988356489,
+      "location": [
+        -210,
+        -110,
+        0
+      ],
+      "yaw": 76
+    },
+    {
+      "id": 1,
+      "data_id": "imperial_battleship",
+      "faction": "imperial",
+      "binding": "imperial:battleship",
+      "asset": "prototype:imperial/battleship",
+      "revision": "cd67382e693a55dfadbdec33501ec2b84d35aa8a00252d6709652bf50b8e32c4",
+      "runtime_path": "visual_packs/imperium-fleet-prototypes/assets/models/executor.mesh.json",
+      "runtime_sha256": "ca0128360ec6b2f0914af6e3158dc8dd0cc25d2a7ed32795269a047087ec74a2",
+      "pack_id": "prototype:imperium_fleet",
+      "triangle_count": 9432,
+      "length": 224.421225,
+      "scale": 1.1926197491849542,
+      "location": [
+        -235,
+        180,
+        30
+      ],
+      "yaw": 76
+    },
+    {
+      "id": 2,
+      "data_id": "imperial_frigate",
+      "faction": "imperial",
+      "binding": "imperial:frigate",
+      "asset": "prototype:imperial/frigate",
+      "revision": "1099a7fd997218d853f370ba5bfe67f30bf9c92af97f9e7cecd7273d09e2defc",
+      "runtime_path": "visual_packs/imperium-fleet-prototypes/assets/models/lancer.mesh.json",
+      "runtime_sha256": "8ece02287862e54ef3166aa3ee63929b7ca3a9fdaa0f355fb08443c3731b909b",
+      "pack_id": "prototype:imperium_fleet",
+      "triangle_count": 6232,
+      "length": 96.180525,
+      "scale": 1.0500859953831516,
+      "location": [
+        -75,
+        -35,
+        -70
+      ],
+      "yaw": 76
+    },
+    {
+      "id": 3,
+      "data_id": "imperial_frigate",
+      "faction": "imperial",
+      "binding": "imperial:frigate",
+      "asset": "prototype:imperial/frigate",
+      "revision": "1099a7fd997218d853f370ba5bfe67f30bf9c92af97f9e7cecd7273d09e2defc",
+      "runtime_path": "visual_packs/imperium-fleet-prototypes/assets/models/lancer.mesh.json",
+      "runtime_sha256": "8ece02287862e54ef3166aa3ee63929b7ca3a9fdaa0f355fb08443c3731b909b",
+      "pack_id": "prototype:imperium_fleet",
+      "triangle_count": 6232,
+      "length": 96.180525,
+      "scale": 1.0500859953831516,
+      "location": [
+        -300,
+        340,
+        75
+      ],
+      "yaw": 76
+    },
+    {
+      "id": 4,
+      "data_id": "rebel_battleship",
+      "faction": "rebel",
+      "binding": "rebel:battleship",
+      "asset": "prototype:alliance_redesign/battleship",
+      "revision": "a0b6fb6e28c0a836ad3d056365ee9ae7886204eecd8982adfee68ca61597a2b4",
+      "runtime_path": "visual_packs/alliance-redesign/assets/models/battleship.mesh.json",
+      "runtime_sha256": "66fbb324c3bb0fb8c6dd8cc70499d807397d5aec8433d3bf9f294a392a508e73",
+      "pack_id": "prototype:alliance_redesign",
+      "triangle_count": 7788,
+      "length": 224.421225,
+      "scale": 0.8066279124457847,
+      "location": [
+        205,
+        100,
+        25
+      ],
+      "yaw": -104
+    },
+    {
+      "id": 5,
+      "data_id": "rebel_frigate",
+      "faction": "rebel",
+      "binding": "rebel:frigate",
+      "asset": "prototype:alliance_redesign/frigate",
+      "revision": "417a13c6d871971a3b594b13d167da10ba85c4b1e99d8c6fa620bf8e1431f012",
+      "runtime_path": "visual_packs/alliance-redesign/assets/models/frigate.mesh.json",
+      "runtime_sha256": "59702b027954acca6dd820eaf11aa3856c2d6f05f4f1441259d3312c6e4400b8",
+      "pack_id": "prototype:alliance_redesign",
+      "triangle_count": 9864,
+      "length": 96.180525,
+      "scale": 0.6270219628479141,
+      "location": [
+        90,
+        40,
+        -60
+      ],
+      "yaw": -104
+    },
+    {
+      "id": 6,
+      "data_id": "rebel_frigate",
+      "faction": "rebel",
+      "binding": "rebel:frigate",
+      "asset": "prototype:alliance_redesign/frigate",
+      "revision": "417a13c6d871971a3b594b13d167da10ba85c4b1e99d8c6fa620bf8e1431f012",
+      "runtime_path": "visual_packs/alliance-redesign/assets/models/frigate.mesh.json",
+      "runtime_sha256": "59702b027954acca6dd820eaf11aa3856c2d6f05f4f1441259d3312c6e4400b8",
+      "pack_id": "prototype:alliance_redesign",
+      "triangle_count": 9864,
+      "length": 96.180525,
+      "scale": 0.6270219628479141,
+      "location": [
+        300,
+        310,
+        80
+      ],
+      "yaw": -104
+    }
+  ],
+  "full_movie_status_at_decision": "not yet rendered or installed"
+}

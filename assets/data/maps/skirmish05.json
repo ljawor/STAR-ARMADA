@@ -1,0 +1,594 @@
+{
+  "id": "skirmish05",
+  "name": "Eightfold Crown",
+  "max_players": 8,
+  "description": "Eight isolated rim bastions surround a massive central gas giant. Equal home mines and temperate colonies support every opening; an inner ring of rich reserves invites inward expansion or raids along neighboring sectors. Wide gaps keep starting sensors separate. The open outer crown offers a longer flanking route around the contested interior.",
+  "bounds": 68000,
+  "star": {
+    "pos": [
+      0,
+      -6500,
+      0
+    ],
+    "size": 1800,
+    "color": [
+      1.0,
+      0.86,
+      0.62
+    ]
+  },
+  "players": [
+    {
+      "slot": 0,
+      "faction": "imperial",
+      "team": 0,
+      "is_ai": false,
+      "name": "Player",
+      "start": [
+        0.0,
+        0,
+        28000.0
+      ],
+      "start_units": {
+        "command_station": 1,
+        "shipyard": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    },
+    {
+      "slot": 1,
+      "faction": "imperial",
+      "team": 1,
+      "is_ai": true,
+      "name": "AI Commander 1",
+      "start": [
+        19798.989873,
+        0,
+        19798.989873
+      ],
+      "start_units": {
+        "command_station": 1,
+        "shipyard": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    },
+    {
+      "slot": 2,
+      "faction": "imperial",
+      "team": 2,
+      "is_ai": true,
+      "name": "AI Commander 2",
+      "start": [
+        28000.0,
+        0,
+        0.0
+      ],
+      "start_units": {
+        "command_station": 1,
+        "shipyard": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    },
+    {
+      "slot": 3,
+      "faction": "imperial",
+      "team": 3,
+      "is_ai": true,
+      "name": "AI Commander 3",
+      "start": [
+        19798.989873,
+        0,
+        -19798.989873
+      ],
+      "start_units": {
+        "command_station": 1,
+        "shipyard": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    },
+    {
+      "slot": 4,
+      "faction": "imperial",
+      "team": 4,
+      "is_ai": true,
+      "name": "AI Commander 4",
+      "start": [
+        0.0,
+        0,
+        -28000.0
+      ],
+      "start_units": {
+        "command_station": 1,
+        "shipyard": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    },
+    {
+      "slot": 5,
+      "faction": "imperial",
+      "team": 5,
+      "is_ai": true,
+      "name": "AI Commander 5",
+      "start": [
+        -19798.989873,
+        0,
+        -19798.989873
+      ],
+      "start_units": {
+        "command_station": 1,
+        "shipyard": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    },
+    {
+      "slot": 6,
+      "faction": "imperial",
+      "team": 6,
+      "is_ai": true,
+      "name": "AI Commander 6",
+      "start": [
+        -28000.0,
+        0,
+        -0.0
+      ],
+      "start_units": {
+        "command_station": 1,
+        "shipyard": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    },
+    {
+      "slot": 7,
+      "faction": "imperial",
+      "team": 7,
+      "is_ai": true,
+      "name": "AI Commander 7",
+      "start": [
+        -19798.989873,
+        0,
+        19798.989873
+      ],
+      "start_units": {
+        "command_station": 1,
+        "shipyard": 1,
+        "constructor": 1,
+        "squadron": 2,
+        "corvette": 2
+      }
+    }
+  ],
+  "asteroid_fields": [
+    {
+      "id": "ast_skirmish05_home_0",
+      "pos": [
+        0.0,
+        0,
+        24500.0
+      ],
+      "radius": 1400,
+      "richness": 1.0
+    },
+    {
+      "id": "ast_skirmish05_inner_0",
+      "pos": [
+        0.0,
+        0,
+        13000.0
+      ],
+      "radius": 1300,
+      "richness": 1.4
+    },
+    {
+      "id": "ast_skirmish05_home_1",
+      "pos": [
+        17324.116139,
+        0,
+        17324.116139
+      ],
+      "radius": 1400,
+      "richness": 1.0
+    },
+    {
+      "id": "ast_skirmish05_inner_1",
+      "pos": [
+        9192.388155,
+        0,
+        9192.388155
+      ],
+      "radius": 1300,
+      "richness": 1.4
+    },
+    {
+      "id": "ast_skirmish05_home_2",
+      "pos": [
+        24500.0,
+        0,
+        0.0
+      ],
+      "radius": 1400,
+      "richness": 1.0
+    },
+    {
+      "id": "ast_skirmish05_inner_2",
+      "pos": [
+        13000.0,
+        0,
+        0.0
+      ],
+      "radius": 1300,
+      "richness": 1.4
+    },
+    {
+      "id": "ast_skirmish05_home_3",
+      "pos": [
+        17324.116139,
+        0,
+        -17324.116139
+      ],
+      "radius": 1400,
+      "richness": 1.0
+    },
+    {
+      "id": "ast_skirmish05_inner_3",
+      "pos": [
+        9192.388155,
+        0,
+        -9192.388155
+      ],
+      "radius": 1300,
+      "richness": 1.4
+    },
+    {
+      "id": "ast_skirmish05_home_4",
+      "pos": [
+        0.0,
+        0,
+        -24500.0
+      ],
+      "radius": 1400,
+      "richness": 1.0
+    },
+    {
+      "id": "ast_skirmish05_inner_4",
+      "pos": [
+        0.0,
+        0,
+        -13000.0
+      ],
+      "radius": 1300,
+      "richness": 1.4
+    },
+    {
+      "id": "ast_skirmish05_home_5",
+      "pos": [
+        -17324.116139,
+        0,
+        -17324.116139
+      ],
+      "radius": 1400,
+      "richness": 1.0
+    },
+    {
+      "id": "ast_skirmish05_inner_5",
+      "pos": [
+        -9192.388155,
+        0,
+        -9192.388155
+      ],
+      "radius": 1300,
+      "richness": 1.4
+    },
+    {
+      "id": "ast_skirmish05_home_6",
+      "pos": [
+        -24500.0,
+        0,
+        -0.0
+      ],
+      "radius": 1400,
+      "richness": 1.0
+    },
+    {
+      "id": "ast_skirmish05_inner_6",
+      "pos": [
+        -13000.0,
+        0,
+        -0.0
+      ],
+      "radius": 1300,
+      "richness": 1.4
+    },
+    {
+      "id": "ast_skirmish05_home_7",
+      "pos": [
+        -17324.116139,
+        0,
+        17324.116139
+      ],
+      "radius": 1400,
+      "richness": 1.0
+    },
+    {
+      "id": "ast_skirmish05_inner_7",
+      "pos": [
+        -9192.388155,
+        0,
+        9192.388155
+      ],
+      "radius": 1300,
+      "richness": 1.4
+    }
+  ],
+  "gas_giants": [
+    {
+      "id": "gas_skirmish05_heart",
+      "pos": [
+        0,
+        0,
+        0
+      ],
+      "radius": 4000,
+      "color": [
+        0.65,
+        0.55,
+        0.8
+      ]
+    }
+  ],
+  "planets": [
+    {
+      "id": "planet_skirmish05_Crown Haven 1",
+      "name": "Crown Haven 1",
+      "pos": [
+        3000.0,
+        0,
+        23500.0
+      ],
+      "radius": 700,
+      "type": "temperate",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    },
+    {
+      "id": "planet_skirmish05_Crown Haven 2",
+      "name": "Crown Haven 2",
+      "pos": [
+        18738.329701,
+        0,
+        14495.689014
+      ],
+      "radius": 700,
+      "type": "temperate",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    },
+    {
+      "id": "planet_skirmish05_Crown Haven 3",
+      "name": "Crown Haven 3",
+      "pos": [
+        23500.0,
+        0,
+        -3000.0
+      ],
+      "radius": 700,
+      "type": "temperate",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    },
+    {
+      "id": "planet_skirmish05_Crown Haven 4",
+      "name": "Crown Haven 4",
+      "pos": [
+        14495.689014,
+        0,
+        -18738.329701
+      ],
+      "radius": 700,
+      "type": "temperate",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    },
+    {
+      "id": "planet_skirmish05_Crown Haven 5",
+      "name": "Crown Haven 5",
+      "pos": [
+        -3000.0,
+        0,
+        -23500.0
+      ],
+      "radius": 700,
+      "type": "temperate",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    },
+    {
+      "id": "planet_skirmish05_Crown Haven 6",
+      "name": "Crown Haven 6",
+      "pos": [
+        -18738.329701,
+        0,
+        -14495.689014
+      ],
+      "radius": 700,
+      "type": "temperate",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    },
+    {
+      "id": "planet_skirmish05_Crown Haven 7",
+      "name": "Crown Haven 7",
+      "pos": [
+        -23500.0,
+        0,
+        3000.0
+      ],
+      "radius": 700,
+      "type": "temperate",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    },
+    {
+      "id": "planet_skirmish05_Crown Haven 8",
+      "name": "Crown Haven 8",
+      "pos": [
+        -14495.689014,
+        0,
+        18738.329701
+      ],
+      "radius": 700,
+      "type": "temperate",
+      "color": [
+        0.3,
+        0.6,
+        0.95
+      ]
+    }
+  ],
+  "nebulas": [
+    {
+      "pos": [
+        6696.960066,
+        0,
+        16167.891819
+      ],
+      "radius": 2400,
+      "color": [
+        0.25,
+        0.3,
+        0.55
+      ]
+    },
+    {
+      "pos": [
+        16167.891819,
+        0,
+        -6696.960066
+      ],
+      "radius": 2400,
+      "color": [
+        0.25,
+        0.3,
+        0.55
+      ]
+    },
+    {
+      "pos": [
+        -6696.960066,
+        0,
+        -16167.891819
+      ],
+      "radius": 2400,
+      "color": [
+        0.25,
+        0.3,
+        0.55
+      ]
+    },
+    {
+      "pos": [
+        -16167.891819,
+        0,
+        6696.960066
+      ],
+      "radius": 2400,
+      "color": [
+        0.25,
+        0.3,
+        0.55
+      ]
+    }
+  ],
+  "jump_points": [
+    {
+      "pos": [
+        0.0,
+        0,
+        31000.0
+      ]
+    },
+    {
+      "pos": [
+        21920.310217,
+        0,
+        21920.310217
+      ]
+    },
+    {
+      "pos": [
+        31000.0,
+        0,
+        0.0
+      ]
+    },
+    {
+      "pos": [
+        21920.310217,
+        0,
+        -21920.310217
+      ]
+    },
+    {
+      "pos": [
+        0.0,
+        0,
+        -31000.0
+      ]
+    },
+    {
+      "pos": [
+        -21920.310217,
+        0,
+        -21920.310217
+      ]
+    },
+    {
+      "pos": [
+        -31000.0,
+        0,
+        -0.0
+      ]
+    },
+    {
+      "pos": [
+        -21920.310217,
+        0,
+        21920.310217
+      ]
+    }
+  ]
+}

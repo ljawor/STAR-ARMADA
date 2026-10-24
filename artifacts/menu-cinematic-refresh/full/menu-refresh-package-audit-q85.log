@@ -1,0 +1,54 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+NATIVE_DELIVERY_OK 384 42.647360805541354
+PACKAGE_OK 99320554
+PREVIEW_FULL_DECODE_OK
+CANDIDATE_AUDIT_OK {
+  "scope": "Exact completed candidate; CPU decoded, not yet installed or owner-playback-accepted",
+  "source_frames": 384,
+  "frames": 360,
+  "fps": 24,
+  "duration_seconds": 15,
+  "native_resolution": [
+    2560,
+    1440
+  ],
+  "movie_sha256": "ddbb55831ec5640bf655e310131e309bbb79a5b12193fa6a3c4db63fe7710805",
+  "movie_bytes": 99320554,
+  "decode_and_scale": {
+    "2560x1440": {
+      "frames": 360,
+      "mean_ms": 4.8246718668249535,
+      "p95_ms": 5.152291967533529,
+      "max_ms": 6.0281670885160565
+    },
+    "1440x900": {
+      "frames": 360,
+      "mean_ms": 7.518136000726372,
+      "p95_ms": 7.688916986808181,
+      "max_ms": 9.784125024452806
+    }
+  },
+  "max_retained_cache_bytes": 22118400,
+  "loop_last_to_first_mean_abs_rgb": 1.6790167462384258,
+  "reduced_motion_identical": true,
+  "quality": {
+    "min_psnr_db": 42.647360805541354,
+    "quality": 85,
+    "subsampling": "4:4:4",
+    "resize_operations": 0
+  },
+  "preview": {
+    "destination": "/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-delivery-q85/preview.mp4",
+    "bytes": 21342908,
+    "frames": 360,
+    "fps": 24
+  },
+  "preview_complete_decode": true,
+  "approved_still_phase_byte_matches": {
+    "24": false,
+    "144": false,
+    "264": false
+  },
+  "source_code_commit": "71242a080964d204352a79bfd100d6e3206670c2",
+  "look_approval_decision": "menu-redesigned-fleets-full-bake-2026-10-24"
+}

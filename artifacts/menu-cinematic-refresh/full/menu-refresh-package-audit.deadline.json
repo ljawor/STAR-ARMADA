@@ -1,0 +1,12 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "/Users/lukaszjawor/.hermes/cache/scratch/package-audit-menu-refresh.py"
+  ],
+  "pid": 73207,
+  "returncode": 1,
+  "timed_out": false,
+  "seconds": 28.229094417067245,
+  "reaped": true,
+  "log": "/Users/lukaszjawor/.hermes/cache/scratch/menu-refresh-package-audit.log"
+}
