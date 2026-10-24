@@ -1,193 +1,54 @@
 # STAR ARMADA
 
 **STAR ARMADA** is a large-scale, fleet-based real-time strategy game in the spirit of
-classic space-fleet RTS titles (Armada II / Fleet Operations era). It runs entirely on
-Python 3 — deterministic simulation, AI, OpenGL rendering via pygame-ce and procedural audio.
+classic space-fleet RTS titles (Armada II / Fleet Operations era). Build an economy,
+colonize worlds, research upgrades and command fleets in an original space-opera universe.
+Deterministic **Python gameplay and AI** run alongside a **native C++ bgfx renderer**,
+with authored 3D ships and stations and procedural audio.
 
-**Current release: [v0.15.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.15.0)**
-— published October 15, 2026, with a verified macOS DMG and **unsigned Windows ZIP**.
-Adds station collection points (#105), Russian (#108), retunable station refits/build-level
-gates (#106), and experimental same-host LAN recovery hardening. The final **1,618-test**
-suite passed with zero failures/errors and 8 existing skips; independent reviews and native
-Windows source CI passed. Both published downloads match GitHub SHA-256 digests, pass
-DMG/ZIP integrity checks, and match the immutable tag for **30 inspected runtime modules
-and all 20 tracked assets per platform**. The downloaded macOS app passed a read-only
-30-second frozen smoke and both benchmark modes with equal simulation hashes.
-Frozen Windows interactive gameplay, physical mixed-platform LAN, silent-blackhole recovery,
-trusted signing/Smart App Control, human listening/campaign and full-match balance remain open.
+- **Four factions:** Galactic Imperium, Free Systems Alliance, Automated Legions and Outer Rim Syndicate.
+- **Eight skirmish maps** with capacities of **2, 3, 4 or 8 players**; teams or free-for-all.
+- **LAN for 2–8 humans**, with optional AI up to **8 total players**, limited by the map.
+- Campaign missions, boarding and crew recovery, planetary colonies, station refits and fleet progression.
+- **English, German, Polish and Russian**, selectable in Settings.
 
-## v0.15.0 — Collection points, Russian and LAN recovery hardening
+**[Download for macOS / Windows](https://github.com/ljawor/STAR-ARMADA/releases/latest)**
+— **v1.0.0 is being prepared for publication**. Until it is published, this link may
+still offer an earlier version; check the version shown on the download page.
 
-PR #111 is merged; #105 and #108 are closed. The immutable release tag and
-`release/v0.15.0` branch point to verified source `df78eb7`.
+### Fleet gallery
 
-Production stations can send newly completed ships and fighter squadrons to a
-collection point without changing their safe spawn position. Select an owned
-production station and right-click empty space to set its destination; use
-**Clear collection point** in the station panel to restore nearby idle production.
-The point is sampled at completion, so changing it also affects already queued work.
-Existing units are not retasked. See [the collection-point contract](docs/COLLECTION_POINTS.md).
+Free Systems Alliance ships and stations, captured with the native renderer.
+These are isolated model views, not full-match screenshots; each is framed independently.
 
-### Station balance: retunable refit gains and per-level build gates (#106)
+| Hope-class Command Cruiser · battleship | Liberty Cruiser |
+|:---:|:---:|
+| <img src="docs/images/v1.0/alliance-battleship.jpg" alt="Free Systems Alliance Hope-class Command Cruiser, battleship-class hull" width="350"> | <img src="docs/images/v1.0/alliance-cruiser.jpg" alt="Free Systems Alliance Liberty Cruiser" width="350"> |
+| **Command Station** | **Shipyard** |
+| <img src="docs/images/v1.0/alliance-command-station.jpg" alt="Free Systems Alliance Command Station" width="350"> | <img src="docs/images/v1.0/alliance-shipyard.jpg" alt="Free Systems Alliance Shipyard" width="350"> |
 
-The five-level station refit ladder is no longer fixed data. **Settings → Game Balance → Station
-upgrades** (page 5 of 5) picks a faction, lists every station type its builders can lay down, and
-edits the per-level gains that station actually uses — the individual rows the simulation reads,
-not one percentage standing in for all of them. The second page sets **build levels**: a hull can
-be made to wait until its station has paid for refit level 2..5 before it may be built, for every
-player and for the AI alike. A gated hull stays on the build panel drawn locked with the level it
-wants, and the AI buys the level rather than stalling when it can pay for it.
-
-The configuration lives in `balance.json` beside `settings.json`, `campaign.json` and the saved
-games in the per-user data directory, never in the app bundle: an update replaces
-`assets/data/game_rules.json` and would otherwise revert the player's numbers. It is read
-leniently when the player may have hand-edited it (unreadable entries drop out; the game still
-starts) and strictly when it arrives over the network (a config that cannot be applied whole is
-refused, never half-applied). One overlay is folded into the catalogue's live rules, so the
-simulation, the station panel, the replay recorder, replay validation and the LAN handshake all
-read the same numbers.
-
-On LAN the tuning travels with the handshake instead of being compared: the content hash still
-covers the shipped catalogue, mods and game version exactly, and the host's overlay rides in the
-`welcome` so a peer whose own file differs adopts the host's numbers for that match — and gives
-them back when the session closes, writing nothing to its own file. Full contract in
-[`docs/STATION_UPGRADES.md`](docs/STATION_UPGRADES.md).
-
-## v0.14.0 — Hyperspace transit, language packs, weapon voices and five-level station refits
-
-Published October 14, 2026 with a verified macOS DMG and an unsigned Windows ZIP
-([release notes](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.14.0)).
-
-Hyperjumps (#92) are no longer instant: the charge countdown ends with a departure
-ring/sound and the hull rides hyperspace along the origin→exit corridor. Travel time
-scales with distance (240 units/second, clamped 3–120 s). While in transit the ship
-is invisible on the strategic view for every player, cannot be targeted, hit, boarded
-or sensed, and its own sensors are inert — but it keeps moving on the minimap. On
-arrival the reserved exit position is re-checked and shields stay down for 15 seconds
-(#78): no regeneration and no emergency recharge until the lockdown expires. A group
-jump still lands every ship on its deterministic reserved exit; saves, restores and
-replays serialize the full transit state bit-exactly.
-
-The final **1,404-test** suite passed (1 pre-existing, environment-dependent failure
-in the menu-exit audio probe reproduces on v0.13.0 and is unrelated; 8 platform skips).
-
-Beyond hyperspace, this increment collects everything merged since v0.13.0: the campaign
-returns to the campaign screen after a mission and marks wins COMPLETE (#89); cancelling
-paid queued work refunds exactly half of the bill that was paid and surface build times are
-derived from the catalogue bill at 80 units/second ([`docs/COMMAND_CAPACITY.md`](docs/COMMAND_CAPACITY.md),
-#94, #95); weapon fire is shaped by family and the pulsar cannon's reach is 6720 (#90, #81);
-stations gain five paid refit levels ([`docs/STATION_UPGRADES.md`](docs/STATION_UPGRADES.md),
-#77); the interface ships **English, German and Polish** ([`docs/LOCALIZATION.md`](docs/LOCALIZATION.md),
-#93); and the laser and photon weapon families were re-voiced against reference recordings
-([`docs/WEAPON_AUDIO.md`](docs/WEAPON_AUDIO.md), #91).
-
-The setting is an original space-opera universe. Prototype faction/ship names are
-placeholder-style data (Imperial / Rebel / Confederacy / Syndicate) so the feel reads
-familiar, but **no copyrighted assets, code, maps, sounds or text from any commercial
-game are used**. Every ship, weapon, faction, tech and map is a JSON data file — replace
-them and the game changes with zero code edits.
-
-### Weapon fire look and pulsar reach (#90, #81)
-
-Weapon fire is shaped by family instead of every projectile being the same round
-speck in a different colour. Laser, point-defence and turbolaser bolts are thin
-rectangles elongated along their heading; torpedoes and missiles are squares. Each
-is a soft additive halo around a hot core, expanded into triangles and emitted in a
-single batched pass for the whole volley (the old path issued one glow call per
-projectile, which is what made fleet-scale volleys expensive). Ion, plasma, kinetic
-and beam weapons keep the previous round glow, so super weapons such as the pulsar
-cannon are unchanged; a bolt fired straight at or away from the camera has no
-screen-space heading and falls back to a vertical streak rather than collapsing to a
-dot. Both extents carry a screen-space floor, because a world-only size is about one
-pixel at overview range.
-
-The pulsar cannon also out-ranged the map it defends: `planet_pulsar_beam` reached
-8400 units on a ~24000-unit skirmish span, a third of the map from one planetary
-battery. Reach is now **6720**, with the cannon's `sensor_range` moved with it —
-detection gates every launch, so shortening one without the other would blind the
-battery. The #52 regression ("when building a pulsar cannon we are not able to fire
-it") now pins the guarantee rather than the number: the emplacement must see as far
-as it shoots and must fire across that whole band, and never past it.
-
-### Station upgrades — five paid refit levels (#77)
-
-Stations are no longer fixed at the strength they were built with. Every station hull
-laid down by a construction ship or a shipyard can be refitted through **five levels**
-(level 1 is the hull as it leaves the yard; the four steps above it are paid work), and
-the station panel carries the row: the level, the accumulated effect of the levels
-already bought, and one button per step with its price and refit time.
-
-A refit costs a fraction of the station's *own* catalogue build bill (0.75×, 1.10×,
-1.50×, 2.00×) and takes a fraction of its build time (0.60×, 0.85×, 1.10×, 1.40×), so
-a command station's refit is dearer than a sensor station's and a full ladder costs
-5.35× the hull. Each level raises hull capacity, shields and shield regeneration, and
-adds the category bonus the hull can actually use: firepower and an extra shot per
-weapon mount for anything that can shoot, resource output for anything with an income
-table, and more, fuller convoys for a trade station. Categories come from the
-catalogue, not from station names, so a mod that arms a mining station gets a
-firepower ladder for it.
-
-The work is paid up front, queued on the station's own build queue and finished on a
-timer while the station keeps operating — and it is cancellable like any other paid
-work, refunding half of the exact bill that was paid (`cancel_build`, #94). Hull and
-shield capacity are raised once at completion and the current quads and hull are
-*scaled* with them, so a refit can never be bought as a cheap repair. `upgrade_level`
-is hull state: a captured station keeps the level its previous owner paid for, the
-level rides the save graph and the LAN reconnect snapshot, and it is part of the
-per-tick desync digest, so two peers that disagreed about a refit fail loudly instead
-of diverging. Saves made before #77 load as an all-level-1 fleet.
-
-Planet-built hardware is deliberately out of scope: the four surface buildings and the
-two orbit satellites are excluded, exactly as the issue specified. Full contract in
-[`docs/STATION_UPGRADES.md`](docs/STATION_UPGRADES.md).
-
----
-
-## v0.13.0 — Clean Classic menus, battle backgrounds, Saved Games and replay management
-
-This release unifies menu presentation across every screen with the approved Clean Classic design: centered main menu, a clear seaglass primary action, proportional typography and restrained dark panels. A close-up looping battle sequence involving frigates and dreadnoughts now runs behind the title screen, main menu, Skirmish setup, LAN host/join/lobby, Settings, Campaign list and briefing screens. The Replay browser remains static and receives a Skirmish-style library/details/actions layout.
-
-**Saved Games** is a new main-menu entry exposing the existing F5/F9 quicksave/quickload system through a Clean Classic library. Passive row selection shows UTC timestamps and save kind (Quick/Autosave); explicit **Load selected** restores the canonical state through the existing `GameState.from_dict` → `GameManager` pipeline, including campaign progress and a 120-tick full-precision continuation verified against the production F5 writer. **Delete selected** and **Delete all** operate on the managed namespace only (`quicksave.json`, `autosave.json`, `autosave_<digits>.json`), with Cancel-default confirmations; settings, campaign, replays and unknown files are protected.
-
-The Replay browser adds newest-first timestamp ordering, select/delete-all/delete-selected with Cancel-default confirmations, and metadata-only rendering (no gameplay reconstruction). Native Windows safe deletion now includes seven real-kernel tests: the original six (4,101-file uncapped delete, symlink/junction containment, replacement blocking, handle cleanup) plus a new saved-games namespace test.
-
-Independent integrated review passed after malformed-save and fixture-isolation regressions were fixed with strict RED→GREEN cycles. The final **1,266-test** suite passed.
-
-## v0.12.1 — Renderer performance improvements
-
-This release applies the PR#87 quality-preserving renderer optimizations:
-
-- Per-frame cache for camera basis, owner colors/relations and per-entity view data.
-- Role-batched ship/station draws (base/dark/trim, accent, lit/cool) to cut GL state changes.
-- Distance/material-role LOD for small on-screen ships.
-- Batched ownership markers and shield-shell detail LOD.
-- Shield opacity tuning so dense fleets no longer additive-saturate to white.
-
-Measured on the macOS 500-corvette stress benchmark (1280×800, 4× MSAA, vsync off):
-- World render median: **98.5 ms → 65.0 ms** (~34% reduction).
-- Full frame median: **133.5 ms → 100.0 ms** (~25% reduction).
-- Station-heavy and developed-base scenes are already inside the 33 ms render budget.
-
-Station rotation, MSAA, visual passes and gameplay are unchanged. The final
-**1,162-test** suite passed; LAN network tests and `--netdiag` passed locally.
-Native Windows interactive and mixed-platform live LAN acceptance remain separate
-open gates.
-
-## v0.12.0 — Crew casualties and gameplay fixes
-**1,162-test** suite and real macOS crew-damage SDL/OpenGL checks passed. Both
-published packages passed download integrity/code/data verification; native Windows
-interactive and mixed-platform live LAN acceptance remain separate open gates.
-
-Remaining issue work, outside this release: #78 (15-second post-jump shield lockout),
-#81 (clarify pulsar range), and #77 (paid five-level station upgrades).
+[Image sources and processing](docs/images/v1.0/provenance.json).
 
 ## Quick Start
+
+For packaged builds, use the [latest downloads](https://github.com/ljawor/STAR-ARMADA/releases/latest);
+Python and a compiler are not required. On macOS, open the DMG and drag the app to
+Applications. On Windows, extract the **entire ZIP** and run `STAR ARMADA.exe`.
+Check the release notes for signing and first-launch instructions for that download.
+
+**From source:** Python 3.11 is recommended. The native renderer is **required**:
+install **CMake 3.25 or newer** and a **C++20 toolchain** (Xcode Command Line Tools on
+macOS, Visual Studio Build Tools with Desktop development with C++ on Windows).
+The first native build needs an internet connection to fetch its dependencies.
+Run the following from the repository root; the build command works on both platforms.
 
 ```bash
 cd STAR-ARMADA
 python3 -m venv .venv           # Python 3.11 recommended
 source .venv/bin/activate       # Windows: .venv\Scripts\activate
 python -m pip install -r requirements.txt
+python -m pip install pyinstaller  # native dependency inspection for the build helper
+python tools/build_native_release.py --build-dir render_cpp/build-w02
 
 python main.py                  # title screen → main menu → game
 python main.py --skirmish       # straight into a skirmish vs AI (skips menus)
@@ -196,11 +57,6 @@ python main.py --fullscreen     # start fullscreen
 python main.py --load saves/quicksave.json
 python main.py --mods example   # load a data override mod
 ```
-
-For packaged builds, download the DMG or ZIP from the release above; Python is
-not required. On macOS, drag the app to Applications. The app is ad-hoc signed,
-not Apple-notarized; first launch may require right-click → Open. On Windows,
-extract the entire ZIP and run `STAR ARMADA.exe` (unsigned).
 
 ## Controls
 
@@ -234,7 +90,7 @@ extract the entire ZIP and run `STAR ARMADA.exe` (unsigned).
 ## Boarding, crew and life support
 
 Ships and stations carry onboard crew and damageable life support. Failing support
-kills crew gradually. The v0.12.0 source also loses **one operating crew member per
+kills crew gradually. Hull damage also causes the loss of **one operating crew member per
 10 actual hull damage** after shields and armor; smaller hits accumulate toward the
 next casualty. Configure `combat.hull_damage_per_crew` in `game_rules.json` (`0`
 disables combat casualties). Passengers and unassigned crew pools are unchanged.
@@ -252,10 +108,10 @@ stabilizes life support to at least **10%**, but does not revive crew. Abandoned
 no defenders and are easier to capture. Repair docks repair owned ships/fighters only;
 engineer ships can explicitly repair owned ships, fighters and stations for CR/MT.
 Equipment repair does not replace dead crew. See [docs/SUPPORT_ORDERS.md](docs/SUPPORT_ORDERS.md)
-for the PR #40 support-order changes and [docs/BOARDING.md](docs/BOARDING.md) for the
+for support orders and [docs/BOARDING.md](docs/BOARDING.md) for the
 underlying boarding mechanics.
 
-Crew recovery (merged in PR #38 and included in v0.7.0) adds automatic owned-hull
+Crew recovery provides automatic owned-hull
 recruitment near friendly bases and faction crew transports.
 Build/select a transport: **L** loads passengers at a base; **R** / **Deliver crew**
 then click an owned hull for field delivery. **Cancel crew order** keeps passengers.
@@ -267,19 +123,16 @@ life-support effectiveness is not staffing-scaled. Cautious AI uses the same com
 No towing, allied reclaim or neutral salvage. Initial defaults and limitations:
 [docs/CREW_RECOVERY.md](docs/CREW_RECOVERY.md).
 
-## Planetary hardware / HUD follow-up (released in v0.10.0)
+## Planetary hardware / HUD
 
-The v0.10.0 increment adds independently minimizable left/right/mission panels,
+The interface provides independently minimizable left/right/mission panels,
 3D satellite orbits that pause for engagement, lower satellite cost/durability, and
 six separate planetary surface slots for resource, trade, surface-only shield and
-long-range pulsar buildings. Basic colony income remains unchanged. This increment
-is merged in #43 and included in the verified published v0.10.0 packages. The final
-946-test suite and independent source reviews passed; final native wheel-input QA
-remains focus-blocked and disclosed.
+long-range pulsar buildings. Basic colony income remains unchanged.
 See [PLANETARY_HARDWARE.md](docs/PLANETARY_HARDWARE.md)
-for mechanics, configurable tuning and pending/executed acceptance gates.
+for mechanics and configurable tuning.
 
-## Infrastructure command points (#70; released in v0.12.0)
+## Infrastructure command points
 
 All living stations, surface buildings and satellites consume **1 CMD**, except
 research stations (**5 CMD**). Every owned eligible colony adds a command center's
@@ -289,7 +142,7 @@ show their CMD costs. Abandoned hulls still count, while destruction/cancellatio
 releases usage. Losing capacity blocks new purchases, not already paid production.
 See [the accounting and lifecycle contract](docs/COMMAND_CAPACITY.md).
 
-### Cancelling paid work and cost-based building times (#94, #95)
+### Cancelling paid work and cost-based building times
 
 Paid construction is now cancellable. A selected station's build-queue rows and a
 colony's paid slot cells carry a **✕ Cancel** affordance that submits a
@@ -300,7 +153,7 @@ immediately, because usage and reservations are derived from the live queues.
 Colonisation is a standing fleet order with no resource cost, not paid
 construction, so it is not cancellable this way; re-order the ship instead. A
 cancel is never treated as a new order, so it cannot supersede the units' other
-standing orders. Surface building time now follows the resource bill (#95):
+standing orders. Surface building time follows the resource bill:
 seconds are the building's credits + materials + energy over
 `planet_buildings.resource_units_per_second` (80 units/s shipped), so the
 extractor and trade hub take 20 s, the shield generator 27.5 s and the pulsar
@@ -310,28 +163,22 @@ that disagrees, which keeps the time the HUD prints equal to the one the
 simulation runs. See [docs/COMMAND_CAPACITY.md](docs/COMMAND_CAPACITY.md) and
 [docs/PLANETARY_HARDWARE.md](docs/PLANETARY_HARDWARE.md).
 
-## Planetary colonies and satellites (released in v0.7.0)
+## Planetary colonies and satellites
 
-PR #40, merged October 10, 2026 and included in v0.7.0, extends colony ships for all
-four built-in factions (including a new Syndicate colony hull): command-center-only
+Colony ships are available to all four built-in factions: command-center-only
 production, non-gas planetary settlement,
 crew/resource income and timed enemy-colony capture after all defending satellites
 are destroyed. Successful control consumes the colony ship without an extra fee.
 Owned planets expose paid defense/attack satellite construction with a shared limit.
-Historical PR #40 acceptance: player controls, AI and persistence passed the
-**766-test suite**, independent review and real SDL/OpenGL diagnostics. The release adds paid engineer repairs,
+Support includes paid engineer repairs,
 ship/fighter-only repair docks, universal build crew-cost labels and automatic fighter
 exploration that avoids detected enemies. Trade stations require 1,500-unit spacing;
 new stations/satellites require 3,000-unit clearance from enemy command centers.
 See [docs/SUPPORT_ORDERS.md](docs/SUPPORT_ORDERS.md) and
-[docs/COLONIES.md](docs/COLONIES.md) for the approved rules, initial tuning and diagnostics.
+[docs/COLONIES.md](docs/COLONIES.md) for rules and tuning.
 
-**Released balance follow-up:** **5× colonized-planet resource and crew income**
-was merged in PR #39 and packaged in v0.8.0, together with campaign objective/abandonment
-save-restore fixes. It is not included in v0.7.0. Bounded AI matrix and long-probe observations,
-mechanic regressions and open acceptance gates are recorded in
-[docs/GAMEPLAY_ACCEPTANCE.md](docs/GAMEPLAY_ACCEPTANCE.md); these do not establish
-statistical full-match balance or Windows/mixed-platform LAN acceptance.
+Colonized planets provide **5× the base resource and crew income**.
+See [gameplay notes](docs/GAMEPLAY_ACCEPTANCE.md) for balance context.
 
 ## Combat experience and ship ranks
 
@@ -382,18 +229,16 @@ Faction identity now comes from **3D geometry**, independently of player color:
 
 | Faction | Ships | Stations |
 |---|---|---|
-| **Galactic Imperium** | Existing tapered escorts and capitals retained | Existing station look retained |
-| **Free Systems Alliance** | Segmented hulls, twin nacelles and open hangars | Linked habitats and open oval frames |
+| **Galactic Imperium** | Armored wedge hulls and tapered escorts | Angular command hubs and industrial docks |
+| **Free Systems Alliance** | Segmented armored hulls and twin engine blocks | Layered command decks and open gantry docks |
 | **Automated Legions** | Forked bows and repeated robotic machinery | Threefold hubs and modular machine docks |
 | **Outer Rim Syndicate** | Asymmetric armored barges and offset bridges | Salvaged modules, unequal docks and cranes |
 
-The redesign covers all **32 existing catalogue ships**, all **40 faction/station
-combinations** (ten station types per faction), and four faction convoy designs.
+Authored ship, station and convoy models give each faction a distinct silhouette.
 Construction previews and sites match the faction hardware; camera bounds, shields
 and hull-hit contacts follow the rendered geometry, including open docking/fork gaps.
-Galactic Imperium geometry and material treatment remain unchanged. No new ship
-classes, balance changes or full Syndicate gameplay parity are implied.
-See [the faction hardware notes](docs/FACTION_VISUALS.md) for design and diagnostics.
+Faction appearance is separate from gameplay balance and catalogue availability.
+See [the faction hardware notes](docs/FACTION_VISUALS.md) for more detail.
 
 Ownership remains a separate visual channel: colored hull accents and screen-clamped
 markers distinguish players and hostiles. Settings allow markers on all units,
@@ -406,25 +251,23 @@ Multiplayer / Settings / Quit). Settings (music/SFX volume, fullscreen, autosave
 camera pan speed) persist to `saves/settings.json` in source runs. Packaged builds
 store settings, saves and campaign progress outside the application bundle:
 `~/Library/Application Support/STAR ARMADA` on macOS and `%APPDATA%\STAR ARMADA`
-on Windows. Since v0.8.0, the **Campaign** screen pages an introductory
+on Windows. The **Campaign** screen pages an introductory
 recovery drill plus the original ten-mission "Rise of the Outer Armada" chain (`assets/data/campaign/campaign.json`); each mission
 has a briefing (story, objectives, enemy preview) before LAUNCH, and in-game objectives
 are tracked live in the HUD with COMPLETE/FAILED states. A finished mission is marked
 COMPLETE in gold on the campaign screen and stays selectable for replay, and
 acknowledging a campaign result returns to that campaign screen rather than the main menu.
 
-Recovery Drill's current source objective (#80) is to capture the abandoned syndicate
+Recovery Drill's objective is to capture the abandoned syndicate
 corvette and restore **that captured corvette to 100% onboard crew**. Automatic
 recruitment near a friendly base and loaded crew-transport delivery both count; a
 full surviving boarding party can complete it immediately. The abandoned frigate
 is optional practice, not a delivery requirement. Personnel costs, life-support
-safety and campaign unlock-save migration are unchanged. The correction is merged
-in #82 and released in v0.12.0; see `docs/CAMPAIGN_SCRIPTING.md`
-for controlled QA evidence. Natural human playthrough acceptance remains separate.
+safety and campaign unlock-save migration are unchanged. See [campaign scripting](docs/CAMPAIGN_SCRIPTING.md) for mission rules.
 
-### Phase 10 presentation (released in v0.9.0)
+### Audio, cinematics, help and accessibility
 
-The v0.9.0 increment adds:
+Presentation options include:
 
 - **Audio:** standard/night dynamic-range profiles, mono output, live music/SFX gain
   controls and reserved ambient/critical/objective channels. Own notifications are
@@ -440,19 +283,13 @@ The v0.9.0 increment adds:
 - **Settings:** keyboard/mouse-reachable pages; all new options persist and reject
   malformed/nonfinite values.
 
-Native macOS audio and SDL/OpenGL diagnostics pass at 1024×768 and 1280×800;
-the published v0.9.0 frozen app also passes a read-only DMG smoke. Human listening,
-natural tutorial usability, native Windows and mixed-platform LAN remain open.
-See [Phase 10 acceptance](docs/PHASE10_ACCEPTANCE.md) for evidence and limits.
-Both published downloads passed package verification; those checks do not close
-the human/platform acceptance gates above.
+See [presentation notes](docs/PHASE10_ACCEPTANCE.md) for details and limitations.
 
-## Localization — English, German, Polish, Russian (#93, #108)
+## Localization — English, German, Polish, Russian
 
 The source ships four languages: English, Deutsch, Polski and Русский. `Settings → Language`
 cycles them and applies immediately; the choice persists in `saves/settings.json`, for
-example as `"language": "ru"`. Russian is part of the v0.15.0 source increment, not the
-older v0.14.0 downloads.
+example as `"language": "ru"`.
 
 A language is **presentation only**: packs are read at the drawing edges (the classic
 canvas, the menu helpers, `HUD._label` and the word-wrap helper), a pack that is missing a
@@ -474,19 +311,17 @@ and `tools/build_lang_packs.py` refuses to write a pack that is missing a key or
 dead one. See `docs/LOCALIZATION.md` and run `python tools/diag_i18n.py` to re-check that
 geometry, truncation and lookup coverage all hold.
 
-## Weapon audio — laser and photon voices (#91)
+## Weapon audio — laser and photon voices
 
 Every sound is synthesised by `render/audio.py` at load time; **no audio file ships with the
-game**. Issue #91 was "improve sound effects" with no symptom named until two reference
-recordings were supplied — a laser and a photon gun — so the voices were re-tuned against
-what those recordings actually measure:
+game**. Laser and photon reference recordings informed the synthesised voices:
 
-| voice | before | after |
-|---|---|---|
-| laser family | 85 ms chirp, centroid >5 kHz | 300 ms dark thump, centroid ~1.4 kHz, 137 ms tail |
-| point-defense | short thin chirp | same gun smaller: brighter, over in 90 ms |
-| turbolaser (+ heavy) | 280 ms band-limited crack | 500/680 ms broadband thump, rolloff ~7.3 kHz |
-| plasma lance | short band-passed flame | same photon character, top end closing downward |
+| Voice | Character |
+|---|---|
+| Laser family | 300 ms dark thump, centroid ~1.4 kHz, 137 ms tail |
+| Point-defense | Smaller, brighter gun voice, over in 90 ms |
+| Turbolaser (+ heavy) | 500/680 ms broadband thump, rolloff ~7.3 kHz |
+| Plasma lance | Photon character, top end closing downward |
 
 The references are a **target, not an asset**: they are not in the repo, and were measured
 with `tools/sfx_character.py`, which measures a recording and a synthesised voice with the
@@ -500,9 +335,9 @@ a game voice is punched in ~3 ms, because fire feedback cannot wait. See
 
 ## Skirmish maps and setup contract
 
-The built-in skirmish catalogue is restricted to these four map IDs. Capacity is
-**total players**, including the human; selecting fewer opponents uses the first
-consecutive spawn slots and leaves the remaining terrain/resources in place.
+The built-in skirmish catalogue is restricted to these eight map IDs. Capacity is
+**total players**, including the human; selecting fewer opponents uses the chosen
+spawn slots and leaves the remaining terrain/resources in place.
 
 | Map ID | Public name | Capacity | Layout |
 |---|---|---:|---|
@@ -510,6 +345,10 @@ consecutive spawn slots and leaves the remaining terrain/resources in place.
 | `skirmish02` | Trinary Reach | 3 | Equilateral triangle, personal expansion pockets, contested central mine |
 | `skirmish03` | Crossroads | 4 | Open corner quadrants with broad flanking lanes and four inner reserves |
 | `skirmish04` | Nebula Frontier | 4 | Cardinal starts, diagonal gas-giant barriers and sensor-reducing nebula banks |
+| `skirmish05` | Eightfold Crown | 8 | Rim bastions around a central gas giant, inner reserves and outer flanking routes |
+| `skirmish06` | Titan Divide | 2 | Opposing bases, a central gravity well and two polar passages |
+| `skirmish07` | Offset Corridors | 2 | Diagonal starts, twin gas giants and a contested central mining lane |
+| `skirmish08` | Amber Spiral | 3 | Clockwise expansion arms, a central research world and nebula-covered reserves |
 
 New maps give each slot the same nearest mining-field distance and an equally
 accessible temperate colony, with room for station construction. Kotarri retains
@@ -521,8 +360,8 @@ positions and neutral geometry (`asteroid_fields`, `gas_giants`, `planets`,
 
 Setup requirements/contract:
 
-- One human in slot 0 plus **1–3 AI players**, limited to map capacity minus one.
-  Choose **Team 1–4** for each player: matching teams are allies; different teams
+- One human in slot 0 plus **1–7 AI players**, limited to map capacity minus one.
+  Choose **Team 1–8** for each player: matching teams are allies; different teams
   are enemies. At least two active teams are required to launch.
 - Allied ships and stations are always visible, including allied AI fleets outside
   your own sensors. Allies share sensor coverage and exploration, but not control
@@ -546,9 +385,9 @@ Setup requirements/contract:
 - Default map slots are all Imperial, with one command station, one shipyard, one
   constructor, two squadrons and two corvettes per slot. The JSON loadout uses
   generic ship roles, resolved to faction-specific hulls when the game starts.
-- The setup payload has `map_id`, integer `ai_count`, four-slot `colors` and
-  `factions` lists, `ai_difficulty`, and an optional four-slot integer `teams` list
-  (values 0–3). Omitting teams retains free-for-all defaults; inactive choices do
+- The setup payload has `map_id`, integer `ai_count`, four-to-eight-slot `colors` and
+  `factions` lists, `ai_difficulty`, and an optional four-to-eight-slot integer `teams` list
+  (values 0–7), plus optional `spawn_slots` selecting distinct map starts. Omitting teams retains free-for-all defaults; inactive choices do
   not participate. Setup conversion must not mutate the shared DataStore map definition.
 
 Focused map acceptance checks (real headless GameManager starts, actual starter
@@ -562,8 +401,8 @@ PYTHONPATH=tests .venv/bin/python -m unittest test_skirmish_maps -v
 ## LAN multiplayer
 
 Open **Multiplayer** to host or join by LAN IPv4 address. The host selects a
-**TCP port** (default **7777**) and uses the same four maps as Skirmish, with
-**2–4 human players** and optional AI within map capacity. Cooperative play puts
+**TCP port** (default **7777**) and uses the same eight maps as Skirmish, with
+**2–8 human players** and optional AI, up to **8 total players** within map capacity. Cooperative play puts
 humans on a shared team against AI; free-for-all uses separate teams.
 
 For setup, Windows Firewall commands, and troubleshooting, see **docs/LAN.md**.
@@ -597,51 +436,6 @@ an unseen target's live position. Already-fired ballistic shots continue travell
 guided projectiles cannot keep tracking a target outside sensor coverage. A remote
 friendly sensor can provide detection for another ship's longer-range weapons.
 
-## Feature matrix (vertical slice vs full spec)
-
-| Spec section | Status |
-|---|---|
-| 3D tactical camera, minimap recenter, geometry-safe close zoom | ✅ implemented |
-| Box/drag select, control groups, fleets | ✅ prototype |
-| Faction-specific ship/station/convoy hardware, protected Imperial look | ✅ implemented across the existing catalogue |
-| Four data-driven factions | ✅ faction-selectable setup; Syndicate remains a prototype, not full parity |
-| Resources: credits/materials/energy/crew, command capacity | ✅ prototype |
-| Stations: command, mining, shipyard, research, defense, sensor, fighter platform, repair, trade, energy relay | ✅ prototype |
-| Planetary colonies, timed capture and orbital satellites; asteroid fields, nebulae, jump points | ✅ prototype; colonies/satellites merged in #40 and released in v0.7.0 |
-| Ships: fighter→supercapital, construction ship | ✅ prototype |
-| Fighter **squadrons** with losses + carrier reinforcement | ✅ prototype |
-| Hull / shields / **subsystem damage** (engines, weapons, sensors, shields, hangar) | ✅ prototype |
-| Directional shields (front/rear/left/right) | ✅ prototype |
-| Weapons: laser/turbolaser/ion/missile/torpedo/plasma/point-defense/beam (data-driven) | ✅ prototype |
-| Special abilities (overdrive, shield recharge, EMP burst, scramble, repair drones, jump) | ✅ prototype |
-| Hyperspace jump (two-layer movement) | ✅ prototype (jump points + prep time) |
-| Formations: line/wedge/column/diamond/screen/escort | ✅ prototype |
-| Fleet command + commanders (aggressive/logistics/recon/defensive) | ✅ prototype |
-| Technology tree (data-driven, per faction) | ✅ prototype |
-| Combat XP, per-ship capped ranks, attack and defense promotions | ✅ implemented; rank/XP HUD |
-| Strategic + tactical AI, update-frequency tiers | ✅ prototype |
-| Skirmish/LAN team victory: eliminate all enemy forces | ✅ implemented; shared allied detection/exploration |
-| Save / load (quick save F5 / load F9) | ✅ implemented; disabled during LAN matches |
-| Procedural audio (original, no assets) | ✅ implemented; laser, turbolaser and plasma families re-voiced against reference recordings (#91) |
-| Minimap, fleet roster/ability union, rank inspector, build/research progress | ✅ implemented |
-| Title screen, main menu, settings menu (music/SFX volume, fullscreen, autosave, pan speed — persisted to `saves/settings.json`) | ✅ prototype; Clean Classic unified since v0.13.0; battle backgrounds on all non-replay screens |
-| Language packs: English, German, Polish, Russian with a `Settings → Language` selector | ✅ implemented (#93/#108); complete registered catalogues, presentation-only so a language cannot reach the simulation; Russian added for v0.15.0 |
-| Campaign: ten combat missions plus recovery drill, persisted triggers/waves and staged capture/crew objectives | ✅ released since v0.8.0; recovery objective correction released in v0.12.0; natural full playthrough acceptance pending |
-| Victory conditions: annihilation, planet majority, economic, timed (data-driven) | ✅ prototype |
-| Trade convoys between trade stations + raiding (salvage loot) | ✅ prototype |
-| Objectives: build/destroy/colonize/survive + escort_convoy, hold_point | ✅ prototype |
-| Autosave ring (3 rotating slots) | ✅ prototype |
-| LAN host/join, 2–4 humans, optional AI, configurable TCP port | ✅ implemented; matching version/content required |
-| Deterministic lockstep, serialized commands, replay infrastructure | ✅ implemented and tested |
-| Replay recording/browser/read-only playback | ✅ released in v0.8.0; timestamps, selection, bulk delete, metadata-only rendering since v0.13.0; strict version/content compatibility |
-| LAN reconnect/resync | 🟠 experimental same-host live integration; v0.15.0 hardens admission, initial launch loss and GL rollback; physical mixed-machine acceptance remains open |
-| Four skirmish maps, player factions/colors/teams, AI difficulty | ✅ implemented; 2–4 total players by map |
-| Boarding/capture, onboard crew/life support and abandoned hulls | ✅ merged in #37; released in v0.7.0 |
-| Base crew recruitment, field crew transports, proportional staffing, cautious boarding/recovery AI | ✅ merged in #38; released in v0.7.0; balance acceptance remains open |
-| Saved Games library (Load/Delete quick/autosaves) | ✅ implemented v0.13.0; managed namespace only, Cancel-default confirmations |
-| Native Windows safe deletion acceptance | ✅ 7 real-kernel tests v0.13.0 (4,101-file uncapped, symlinks/junctions, containment, replacement blocking, handle cleanup, saved-games namespace) |
-| 8-player skirmish | 🔲 planned; current capacity is 2–4 total players |
-
 ## Repository layout
 
 ```
@@ -652,7 +446,9 @@ game/                    simulation core (no rendering imports)
   systems/               simulation systems (movement, combat, economy, ...)
   ai/                    strategic & tactical AI
   net/                   LAN lobby, transports, lockstep and replay
-render/                  OpenGL renderer, camera, UI, minimap, menus, audio, input
+render/                  native bridge, camera, UI, minimap, menus, audio, input
+render_cpp/              native C++ bgfx renderer
+visual_packs/            authored faction models and visual-pack manifests
 assets/data/             JSON: factions, ships, weapons, tech, maps, abilities, campaign
 assets/audio/            (generated at runtime — no binary assets committed)
 tests/                   headless simulation tests
@@ -668,127 +464,10 @@ PYTHONPATH=tests .venv/bin/python -m unittest discover -s tests -v
 Tests run the **real simulation headless** — no window, no GPU — covering economy,
 combat, subsystem damage, formations, squadrons, research, AI, save/load, victory
 conditions, trade convoys, mission objectives and the full
-build→gather→research→fleet→attack→win loop. Historical v0.6.0 acceptance: its source tree passed **577
-headless tests**, plus real SDL/OpenGL catalogue checks for 32 ships, 40 station
-variants, four convoys, all station placement/construction views and all four
-faction close-camera keep-outs. **19 protected Imperial pixel comparisons were
-unchanged.** Independent code review, ship-size/close-zoom regressions and the
-30-second rendered gameplay smoke also passed. Render diagnostics in `tools/`
-need a working window server/OpenGL context; they are separate from headless tests.
-Historical v0.7.0 acceptance recorded **766 headless tests**, independent support-order
-review and real SDL/OpenGL diagnostics at 1280×800 and 1024×768. Current branch
-observations and exact campaign restore regressions are recorded separately in
-[docs/GAMEPLAY_ACCEPTANCE.md](docs/GAMEPLAY_ACCEPTANCE.md); release-era tests are
-not proof of statistical full-match balance.
-
-## Releases
-
-**[Download v0.15.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.15.0)**
-(published October 15, 2026):
-
-- **macOS:** `STAR-ARMADA-v0.15.0-mac.dmg`
-- **Windows:** `STAR-ARMADA-v0.15.0-win.zip` (unsigned)
-
-Both published downloads match GitHub SHA-256 digests: DMG
-`3daa9fc75d6fa0b16ff074cfea763b3aeb37c707871f6adfc23c02267a7e7bb1`, ZIP
-`424c87f1c8b57386d11a3fe18af3392e29764a4ab8ff6dc75f0874679443ef42`.
-DMG verification and ZIP CRC passed. Thirty inspected runtime modules and all 20
-tracked assets per platform match the immutable tag; a prior-release package fails
-the same checker. The mounted downloaded macOS app reports 0.15.0 and passed a
-30-second frozen smoke plus simulation/real-GL benchmarks (30 ticks each, equal
-state hashes) under a fresh isolated HOME. New PNG/replay files were validated;
-real user data remained unchanged. Windows source CI passed, but its executable
-was not run here: frozen Windows gameplay and physical mixed-platform LAN remain open.
-Detailed evidence and installation/signing caveats are in the release notes.
-
-**[Download v0.14.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.14.0)**
-(published October 14, 2026):
-
-- **macOS:** `STAR-ARMADA-v0.14.0-mac.dmg`
-- **Windows:** `STAR-ARMADA-v0.14.0-win.zip` (unsigned)
-
-Both published downloads were re-downloaded from the release and hashed here: DMG
-`2ff802dfb8bf1b5378a8ae454b77a546d61d06087547ad06a09e1f0cd91d4690`, ZIP
-`74ccca2f039e784a4d1c76b46e05ee560b60b5c8cf7ecc5d0fb8b2a3c631b526`. The DMG passes
-`hdiutil verify`, mounts with the app and the Applications symlink, ships all three language
-packs, and the packaged app reports 0.14.0 and runs its simulation benchmark and LAN
-diagnostic with the same initial-state hash and the same canonical (60-tick) and contact
-(600-tick) fingerprints as the source build. The Windows ZIP passes `unzip -t` and contains
-`STAR ARMADA.exe` and the language packs; the Windows executable itself was **not** run, so
-frozen Windows gameplay and mixed-platform live LAN remain open. Full hashes and per-artifact
-evidence are in the release notes.
-
-**[Download v0.13.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.13.0)**
-(published October 13, 2026):
-
-- **macOS:** `STAR-ARMADA-v0.13.0-mac.dmg`
-- **Windows:** `STAR-ARMADA-v0.13.0-win.zip` (unsigned)
-
-Both published downloads match GitHub SHA-256 digests, pass DMG/ZIP integrity and match the immutable tag for inspected runtime modules and tracked assets. The downloaded macOS bundle reports 0.13.0 and passes a 30-second smoke from the read-only mount; new screenshot/replay data are written outside the app. Windows-source LAN checks passed in CI; native frozen Windows gameplay and mixed-platform live LAN acceptance remain open. Full hashes/evidence are in the release notes.
-
-**[Download v0.12.0](https://github.com/ljawor/STAR-ARMADA/releases/tag/v0.12.0)**
-(published October 13, 2026):
-
-- **macOS:** `STAR-ARMADA-v0.12.0-mac.dmg`
-- **Windows:** `STAR-ARMADA-v0.12.0-win.zip` (unsigned)
-
-Both published downloads match GitHub SHA-256 digests, pass DMG/ZIP integrity
-and match the immutable tag for 42 inspected runtime modules and all 15 tracked
-assets. The downloaded macOS bundle reports 0.12.0 and passed a 30-second smoke
-from the read-only mount; new screenshot/replay data were written outside the app.
-Windows-source LAN checks passed in CI; native frozen Windows gameplay and
-mixed-platform live LAN acceptance remain open. Full hashes/evidence are in the
-release notes. Historical v0.11.0 laptop measurements remain separate evidence.
-
-Tagged versions (`v*`) trigger native macOS and Windows builds and GitHub Release
-publication. Version is defined once in `game/__init__.py`; merge the version
-bump through a PR before tagging its merged commit. See `docs/PACKAGING.md` for
-local builds (`./scripts/build_mac.sh`).
-
-## Completed development
-
-| Release | Delivered |
-|---|---|
-| **v0.14.0** | Hyperspace transit travel and post-jump shield lockdown (#92/#78); campaign return with COMPLETE wins (#89); cancel refunds and cost-derived surface build times (#94/#95); family-shaped weapon fire with a 6720 pulsar reach (#90/#81); five paid station refit levels (#77); English/German/Polish language packs with a Settings selector (#93); laser/photon weapon voices rebuilt against reference recordings (#91); verified DMG and Windows ZIP |
-| **v0.13.0** | Clean Classic menu unification, looping battle backgrounds on all non-replay screens, Saved Games library with Load/Delete, replay management with timestamps/selection/bulk deletion, native Windows safe deletion acceptance (7 real-kernel tests); verified DMG and Windows ZIP |
-| **v0.12.1** | Renderer performance improvements (per-frame cache, role-batched draws, LOD, marker batching, shield opacity) without visual quality loss; 500-corvette stress 133.5→100.0 ms full-frame, 98.5→65.0 ms world-render; verified DMG and Windows ZIP |
-| **v0.12.0** | Crew hull-damage casualties and abandonment-safe targeting (#85/#79); mixed-platform deterministic LAN, Escape, orbit targeting, infrastructure CMD, Recovery Drill, elevated-fighter pursuit and crowded-map orbit fixes; verified DMG and Windows ZIP |
-| **v0.11.0** | Large-fleet CPU/fog optimization and packaged benchmark reports (#66); input, capital arcs and planetary projectile/slot-lockout fixes |
-| **v0.10.1** | Quiet firing audio and live-volume silence correction (#47) |
-| **v0.10.0** | Surface resource/trade/shield/pulsar hardware, satellite orbits and independent HUD panel minimization (#43) |
-| **v0.9.0** | Standard/night audio mix, mono/live controls, short skippable campaign cinematics, paged help/settings, recovery hints and targeted accessibility (#41); verified published macOS DMG and Windows ZIP |
-| **v0.8.0** | Campaign scripting/reinforcements, eleven-mission catalogue, stable-ID progression, canonical runtime restore, replay recording/browser/playback and 5× colonized-planet income (#39); published macOS DMG and Windows ZIP |
-| **v0.7.0** | Boarding and crew/life support (#37), crew recovery/transports and cautious AI (#38), colonies/capture/satellites and support orders (#40); published macOS DMG and Windows ZIP |
-| **v0.6.0** | Distinct ships, ten station types and convoys for every faction; Imperial look preserved; faction construction previews, geometry-safe cameras and exact hull contacts |
-| **v0.5.2** | Ownership hull shading and screen-clamped friend/hostile markers with configurable visibility |
-| **v0.5.1** | Close/very-close base camera safety, minimap recenter/follow correction, behind-eye ship-size fix, consistent projection/picking/audio, and large-fleet camera query optimization |
-| **v0.5.0** | Combat XP and capped ship ranks with attack/defense bonuses; selected-fleet roster and combined special abilities; construction-progress layout fixes; alliances/team elimination and normalized hull sizes |
-| **v0.4.0** | LAN host/join with human and AI slots and selectable port; click-targeted hyperjump; combat standoff/orbit behavior; metal hulls, planets, deep-space and shield/hull impact graphics |
-| **v0.3.0** | Per-weapon combat audio/pitch fixes, layered explosions, reachable trade convoys, and writable user data outside frozen application bundles |
-| **v0.2.0** | Menus/settings, 10-mission campaign, data-driven victory conditions, trading/raiding, escort/hold-point objectives and rotating autosaves |
-
-### Still in development
-
-The game remains a playable prototype, not the full design specification.
-Boarding/capture (#37), crew recovery/staffing/AI (#38), and colonies/support orders
-(#40) are merged and packaged in v0.7.0. Long-match balance, native interactive
-Windows and mixed-platform LAN acceptance remain open. The 5× colonized-planet
-resource and crew income follow-up is packaged in v0.8.0, not v0.7.0; bounded
-observations and remaining balance gates are documented separately. Campaign scripting,
-staged capture/crew objectives and replay recording/browser/playback are implemented
-in v0.8.0; package checks are recorded in release notes.
-See [campaign notes](docs/CAMPAIGN_SCRIPTING.md)
-and [replay notes](docs/REPLAYS.md). This source adds **experimental same-host LAN reconnect**
-with freeze/drain, delayed-input reconciliation and UI/recorder handoff. It is enabled
-by the LAN menus. The v0.15.0 source increment repairs admission, launch-delivery and
-resource-cleanup defects; historical failed integration evidence is preserved rather
-than relabeled. Physical mixed-machine and silent-blackhole acceptance remain open;
-see [scope and evidence](docs/LAN_RECONNECT.md).
-The Phase 10 audio/cinematic/help increment is packaged in v0.9.0; its acceptance limits
-are listed above. Eight-player matches, natural full campaign playthroughs, full faction parity,
-in-game mod management and further performance work remain pending. Current skirmish/LAN capacity is **2–4 total players**,
-limited by the selected map. See `docs/DEV_PLAN.md` for the broader plan; the
-feature matrix above describes the implemented release behavior.
+build→gather→research→fleet→attack→win loop.
+Renderer diagnostics and native integration checks are separate from headless tests;
+rendered checks need a working graphics environment. See [packaging](docs/PACKAGING.md)
+and [gameplay notes](docs/GAMEPLAY_ACCEPTANCE.md) for additional workflows and limitations.
 
 ## License / originality
 

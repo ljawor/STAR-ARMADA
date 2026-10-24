@@ -1,0 +1,23 @@
+{
+  "scope": "Final focused macOS execution; NOT full-suite or Windows acceptance",
+  "test_count": 54,
+  "skips": 0,
+  "pixel_parity": {
+    "baseline_commit": "9dcb9b5a4009ca9d1d3aadb379f4a5ab4517f71b",
+    "frames_per_host": 12,
+    "changed_pixels": 0,
+    "scene": "static native catalogue snapshot; no motion-equivalence claim"
+  },
+  "actual_main": "Two matches separated by menu; original pygame window retained; quicksave exercised in isolated userdata",
+  "files": {
+    "containment-54.log": "f1c9dae20b1a7f535fb10073128f20d5ad1f04d95774e5eece8e23eaf16429c5",
+    "native-build.log": "e1be7e49f5b07c52adf304cb8aeaba1f2a55bb9c3f3c573bcdd2d7752f1006d7",
+    "actual-main.log": "bf85ef22d4366351b755467bd7393f8c787fecd410dbb09bb400b9a548f1121f",
+    "pixel-parity.log": "ff941b727fd550a4252548992db9ce014ad568dc335a305055d9e91400989897",
+    "fix-source-receipt.json": "4a17859fa4ee90f336fa8607a5f03789c4a8b2c71efa6fb7a2a64a7405714cd3",
+    "actual-main.json": "e78b536249ed55ed0e98810a772be937ca174e489ceeff09f1dc523716d85178",
+    "actual-main-second-match.png": "7c7d5666b6d07d311adceed6c884acaee6214472439b89b34309a4584e8985ff",
+    "pixel-parity.json": "ff941b727fd550a4252548992db9ce014ad568dc335a305055d9e91400989897",
+    "pixel-parity-isolated.png": "7a5d8844d179835977b7924bf317cac455f92b9e725e7be622f20db1fee98f43"
+  }
+}

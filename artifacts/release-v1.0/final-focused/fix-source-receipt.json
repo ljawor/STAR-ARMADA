@@ -1,0 +1,45 @@
+{
+  "tests_run": 54,
+  "skipped": 0,
+  "parent_death_cases": 6,
+  "parent_death_case_names": [
+    "test_parent_death_blocked_close (tests.test_native_worker.NativeWorkerTests.test_parent_death_blocked_close) ... ok",
+    "test_parent_death_blocked_frame (tests.test_native_worker.NativeWorkerTests.test_parent_death_blocked_frame) ... ok",
+    "test_parent_death_blocked_library_load (tests.test_native_worker.NativeWorkerTests.test_parent_death_blocked_library_load) ... ok",
+    "test_parent_death_blocked_open (tests.test_native_worker.NativeWorkerTests.test_parent_death_blocked_open) ... ok",
+    "test_parent_death_blocked_poll (tests.test_native_worker.NativeWorkerTests.test_parent_death_blocked_poll) ... ok",
+    "test_parent_death_idle (tests.test_native_worker.NativeWorkerTests.test_parent_death_idle) ... ok"
+  ],
+  "platform": "macOS; Windows kernel APIs mocked for portable identity regression",
+  "windows_native_execution": "pending; existing six real parent-death cases retained in Windows CI, identity module appended",
+  "log": "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-v1-release-evidence/focused-cycle2-green.log",
+  "deadline": {
+    "command": [
+      ".venv/bin/python",
+      "-m",
+      "unittest",
+      "tests.test_native_worker",
+      "tests.test_native_worker_main_boundary",
+      "tests.test_native_worker_entry",
+      "tests.test_native_binary_discovery",
+      "tests.test_release_packaging",
+      "tests.test_native_worker_parent_identity",
+      "-v"
+    ],
+    "pid": 92295,
+    "returncode": 0,
+    "timed_out": false,
+    "seconds": 4.763309124973603,
+    "reaped": true,
+    "log": "/Users/lukaszjawor/.hermes/cache/scratch/star-armada-v1-release-evidence/focused-cycle2-green.log"
+  },
+  "source_sha256": {
+    "render_bridge/embedded.py": "4b84d9f729b83f24c3855c2feb585771758a23d596265f3543cd34ee92c53556",
+    "render_bridge/native_worker.py": "27e1ce578c92bf7650e73e67fa405eb61eba59969de5c79483b22140b40d15b5",
+    "tests/test_native_worker.py": "81e4d26fdde8999ffe008c187737eb98150c2a87981bacbd10914254c7d58e4e",
+    "tests/test_native_worker_parent_identity.py": "479bd332f0536c8008a3be8675d3bfc83ad5008fcb8c520ef59c20a3a30459b3",
+    "tests/test_release_packaging.py": "421301144a2b3b98170ea90394562ea7ce7782ca2247520c315e2731a9b2f8de",
+    ".github/workflows/release.yml": "b7ce371651520842fb06511d872d9b77be97ae89117ee5004c49875fbe0b21af",
+    ".github/workflows/windows-signal.yml": "ea38f94595ec45fcd7759972dd94e707eeb4f9f56dbe7457f266865db24e4f87"
+  }
+}

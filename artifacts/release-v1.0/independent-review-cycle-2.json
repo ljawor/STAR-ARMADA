@@ -1,0 +1,30 @@
+{
+  "delegation_id": "deleg_74ef9c52",
+  "cycle": 2,
+  "passed": true,
+  "renderer": {
+    "passed": true,
+    "security_concerns": [],
+    "logic_errors": [],
+    "summary": "Original parent creation FILETIME captured before spawn and validated on held handle before native loading; bounded single-owner containment and controlled poll failure handling accepted."
+  },
+  "packaging": {
+    "passed": true,
+    "security_concerns": [],
+    "logic_errors": [],
+    "summary": "Both Python-shell preludes establish checkout import path; frozen probe, mandatory products, eighteen shaders and recursive dependencies accepted on static inspection."
+  },
+  "source_sha256": {
+    "render_bridge/embedded.py": "4b84d9f729b83f24c3855c2feb585771758a23d596265f3543cd34ee92c53556",
+    "render_bridge/native_worker.py": "27e1ce578c92bf7650e73e67fa405eb61eba59969de5c79483b22140b40d15b5",
+    "tests/test_native_worker.py": "81e4d26fdde8999ffe008c187737eb98150c2a87981bacbd10914254c7d58e4e",
+    "tests/test_native_worker_parent_identity.py": "479bd332f0536c8008a3be8675d3bfc83ad5008fcb8c520ef59c20a3a30459b3",
+    "tests/test_release_packaging.py": "421301144a2b3b98170ea90394562ea7ce7782ca2247520c315e2731a9b2f8de",
+    ".github/workflows/release.yml": "b7ce371651520842fb06511d872d9b77be97ae89117ee5004c49875fbe0b21af",
+    ".github/workflows/windows-signal.yml": "ea38f94595ec45fcd7759972dd94e707eeb4f9f56dbe7457f266865db24e4f87"
+  },
+  "limitations": [
+    "Read-only independent reviews; no reviewer runtime execution.",
+    "Actual Windows CI, final protected whole-tree suite and refreshed frozen macOS package verification remain pending."
+  ]
+}

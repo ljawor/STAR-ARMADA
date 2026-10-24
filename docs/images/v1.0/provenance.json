@@ -1,0 +1,157 @@
+{
+  "scope": "Four existing native Metal/bgfx isolated specimen captures of owner-approved Alliance assets; not new renders, gameplay screenshots, or relative-size comparisons.",
+  "copyright": "Original STAR ARMADA assets; source files and authorship unchanged.",
+  "approval": "owner_appearance_and_game_activation_approved_merge_authorized",
+  "evidence_index": "artifacts/alliance-redesign/native-full-faction/evidence-sha256.json",
+  "evidence_index_sha256": "74f3729370fd28000b3de7af51ae265963b4c157b1768bbd7aee1f446d97bf55",
+  "images": [
+    {
+      "file": "docs/images/v1.0/alliance-battleship.jpg",
+      "sha256": "f1b45279049a1571a279d45e1c494736982477d19e045325a52cdcb1ea0a4de0",
+      "bytes": 16504,
+      "size": [
+        600,
+        375
+      ],
+      "label": "Hope-class Command Cruiser",
+      "binding": "rebel:battleship",
+      "source": "artifacts/alliance-redesign/native-full-faction/battleship-after-close/capture.png",
+      "source_sha256": "a19e34df4d5a540c4b904185ae8eb84c004239471b8a91a9398634d0e2f567f9",
+      "capture_report": "artifacts/alliance-redesign/native-full-faction/battleship-after-close/viewer.json",
+      "capture_report_sha256": "61cff44c5e0675b1ad390a8896ce56dd23a8e975c5426909fbc3dba871a98ddf",
+      "capture_selection": {
+        "asset": "prototype:alliance_redesign/battleship",
+        "binding": "rebel:battleship",
+        "pack_id": "prototype:alliance_redesign",
+        "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+      },
+      "current_mesh": "visual_packs/alliance-redesign/assets/models/battleship.mesh.json",
+      "current_mesh_sha256": "66fbb324c3bb0fb8c6dd8cc70499d807397d5aec8433d3bf9f294a392a508e73",
+      "current_manifest": "visual_packs/alliance-redesign/assets/models/manifests/battleship.json",
+      "owner_review": "artifacts/alliance-redesign/OWNER_REVIEW.json",
+      "owner_review_sha256": "4fa8a62540be51e9ae6ca16b6f5b97f48ab946eff031ff119a822682f0aea0b4",
+      "processing": {
+        "crop_xyxy": [
+          180,
+          130,
+          780,
+          505
+        ],
+        "resize": "Pillow LANCZOS, maximum 700x470, no upscaling",
+        "encoding": "JPEG quality 88, optimized, progressive",
+        "pixel_edits": "crop and rescale only; no retouching or synthetic rendering"
+      }
+    },
+    {
+      "file": "docs/images/v1.0/alliance-cruiser.jpg",
+      "sha256": "46f1032fd7ae0db609e0e7fa25a6f7027e6dd6a68403ca1e573d27ade7002b05",
+      "bytes": 15945,
+      "size": [
+        600,
+        375
+      ],
+      "label": "Liberty Cruiser",
+      "binding": "rebel:cruiser",
+      "source": "artifacts/alliance-redesign/native-full-faction/cruiser-after-close/capture.png",
+      "source_sha256": "66757e1ec9cdf1488363aae3772242daf7d56402f166d4c09495927cb55177dd",
+      "capture_report": "artifacts/alliance-redesign/native-full-faction/cruiser-after-close/viewer.json",
+      "capture_report_sha256": "8aaa7284f7f025cd493f116a986a6e3b6ea6afe63a6985c448cb8343f860658a",
+      "capture_selection": {
+        "asset": "prototype:alliance_redesign/cruiser",
+        "binding": "rebel:cruiser",
+        "pack_id": "prototype:alliance_redesign",
+        "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+      },
+      "current_mesh": "visual_packs/alliance-redesign/assets/models/cruiser.mesh.json",
+      "current_mesh_sha256": "b1e628686f007ef9c090416c6a8f54badb20b5bfbb462a96aa8b981809498692",
+      "current_manifest": "visual_packs/alliance-redesign/assets/models/manifests/cruiser.json",
+      "owner_review": "artifacts/alliance-redesign/OWNER_REVIEW.json",
+      "owner_review_sha256": "4fa8a62540be51e9ae6ca16b6f5b97f48ab946eff031ff119a822682f0aea0b4",
+      "processing": {
+        "crop_xyxy": [
+          180,
+          130,
+          780,
+          505
+        ],
+        "resize": "Pillow LANCZOS, maximum 700x470, no upscaling",
+        "encoding": "JPEG quality 88, optimized, progressive",
+        "pixel_edits": "crop and rescale only; no retouching or synthetic rendering"
+      }
+    },
+    {
+      "file": "docs/images/v1.0/alliance-command-station.jpg",
+      "sha256": "f4a7624d8b134ebb292016b9714aeed7673dfd7efd46c7f69bf61d122c7b2705",
+      "bytes": 14943,
+      "size": [
+        600,
+        375
+      ],
+      "label": "Command Station",
+      "binding": "rebel:command_station",
+      "source": "artifacts/alliance-redesign/native-full-faction/command_station-after-close/capture.png",
+      "source_sha256": "f0faa892cd3f2e205009a84a07cadce744a2c0e0c8f68e178cdd4c30c2a4f111",
+      "capture_report": "artifacts/alliance-redesign/native-full-faction/command_station-after-close/viewer.json",
+      "capture_report_sha256": "c104a16d2e431ebb14f435a4b5a13fdb7a26e3445af82748a53e0cde8391ccfe",
+      "capture_selection": {
+        "asset": "prototype:alliance_redesign/command_station",
+        "binding": "rebel:command_station",
+        "pack_id": "prototype:alliance_redesign",
+        "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+      },
+      "current_mesh": "visual_packs/alliance-redesign/assets/models/command_station.mesh.json",
+      "current_mesh_sha256": "87ba9ec0e51257daffd04a2a84b3060fc2590b7bcbab728ca2db2740f60e49cb",
+      "current_manifest": "visual_packs/alliance-redesign/assets/models/manifests/command_station.json",
+      "owner_review": "artifacts/alliance-redesign/OWNER_REVIEW.json",
+      "owner_review_sha256": "4fa8a62540be51e9ae6ca16b6f5b97f48ab946eff031ff119a822682f0aea0b4",
+      "processing": {
+        "crop_xyxy": [
+          180,
+          130,
+          780,
+          505
+        ],
+        "resize": "Pillow LANCZOS, maximum 700x470, no upscaling",
+        "encoding": "JPEG quality 88, optimized, progressive",
+        "pixel_edits": "crop and rescale only; no retouching or synthetic rendering"
+      }
+    },
+    {
+      "file": "docs/images/v1.0/alliance-shipyard.jpg",
+      "sha256": "3addbb0fcefe4e80d1a3edb50a59cfc969561ab64e3132d88ad7b5050c8fd6fe",
+      "bytes": 31942,
+      "size": [
+        700,
+        470
+      ],
+      "label": "Shipyard",
+      "binding": "rebel:shipyard",
+      "source": "artifacts/alliance-redesign/native-full-faction/shipyard-after-close/capture.png",
+      "source_sha256": "324b5a1e18e42381576442979f77daedf3bc7949df2022691a904f64dbde3664",
+      "capture_report": "artifacts/alliance-redesign/native-full-faction/shipyard-after-close/viewer.json",
+      "capture_report_sha256": "e4a8b3335b0c820444c09b00c1910906842c7ba12b0c4edbe7876d15d821d68e",
+      "capture_selection": {
+        "asset": "prototype:alliance_redesign/shipyard",
+        "binding": "rebel:shipyard",
+        "pack_id": "prototype:alliance_redesign",
+        "pack_revision": "e122b5a1d1fc32c36a02c91206916e10e760f00efd03752caddc5fd3c76a42f7"
+      },
+      "current_mesh": "visual_packs/alliance-redesign/assets/models/shipyard.mesh.json",
+      "current_mesh_sha256": "f926b0e62dd679d9797fae513370998c7a7bdd188b46353432c5633fe429ff24",
+      "current_manifest": "visual_packs/alliance-redesign/assets/models/manifests/shipyard.json",
+      "owner_review": "artifacts/alliance-redesign/OWNER_REVIEW.json",
+      "owner_review_sha256": "4fa8a62540be51e9ae6ca16b6f5b97f48ab946eff031ff119a822682f0aea0b4",
+      "processing": {
+        "crop_xyxy": [
+          130,
+          100,
+          830,
+          570
+        ],
+        "resize": "Pillow LANCZOS, maximum 700x470, no upscaling",
+        "encoding": "JPEG quality 88, optimized, progressive",
+        "pixel_edits": "crop and rescale only; no retouching or synthetic rendering"
+      }
+    }
+  ]
+}

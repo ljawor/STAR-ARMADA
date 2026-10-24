@@ -1,6 +1,11 @@
 """Russian pack for STAR ARMADA (#108), authored UTF-8 maintenance source."""
 
 RU: dict[str, str] = {
+    "Humans {count} / {capacity}": "Игроки {count} / {capacity}",
+    "AI {count} / {capacity}": "ИИ {count} / {capacity}",
+    "Human {n}": "Игрок {n}",
+    "AI {n}": "ИИ {n}",
+    "Unused {n}": "Не используется {n}",
     "Click a start to deploy here.": "Нажмите на стартовую точку, чтобы разместить здесь флот.",
     "Gold: resources · Teal: worlds · Rings: starts": "Золото: ресурсы · Бирюза: миры · Кольца: стартовые точки",
     "Same team = allies. AI allies share vision, not control.": "Одна команда — союзники. Союзный ИИ делится обзором, но не управлением.",
@@ -23,7 +28,7 @@ RU: dict[str, str] = {
     "A line a pack does not carry falls back to English.": "Если строки нет в переводе, она отображается на английском.",
     "A retuned station reads the same numbers in the simulation, in its own panel and in a replay recorded with it.": "Изменённые параметры станции одинаковы в симуляции, на её панели и в записи повтора.",
     "ACTIONS / BUILD": "ДЕЙСТВИЯ / СТРОИТЕЛЬСТВО",
-    "AI": "ИИ",
+
     "AI DIFFICULTY": "СЛОЖНОСТЬ ИИ",
     "ALL": "ВСЕ",
     "ALL replay JSON files, including files beyond the browser limit.": "ВСЕ JSON-файлы повторов, включая не показанные в списке.",
@@ -105,7 +110,7 @@ RU: dict[str, str] = {
     "Deliver passengers: with cargo loaded, press R and click an owned hull missing crew.": "Доставка пассажиров: загрузите транспорт, нажмите R и укажите свой корабль с нехваткой экипажа.",
     "Deploy your fleet": "Разверните свой флот",
     "Destroy ALL defending satellites first.": "Сначала уничтожьте ВСЕ защитные спутники.",
-    "Distinct colors. Unused slot choices are retained. Click to cycle.": "Различимые цвета. Выбор для неиспользуемых мест сохраняется. Нажмите для смены.",
+
     "Dynamic range": "Динамический диапазон",
     "EN": "ЭН",
     "ENDED": "ЗАВЕРШЕНО",
@@ -137,7 +142,7 @@ RU: dict[str, str] = {
     "Gated hulls: {gated}": "Кораблей с ограничением: {gated}",
     "Goal: board and capture the hull.": "Цель: взять корабль на абордаж и захватить.",
     "HULL": "КОРПУС",
-    "HUMAN": "ИГРОК",
+
     "High contrast panels": "Контрастные панели",
     "Host IPv4 address": "IPv4-адрес сервера",
     "Host a game": "Создать игру",
@@ -315,7 +320,7 @@ RU: dict[str, str] = {
     "This station lays down no ships.": "Эта станция не строит корабли.",
     "This tuning could not be saved.": "Не удалось сохранить настройку.",
     "Tutorial hints": "Обучающие подсказки",
-    "UNUSED": "НЕ ИСПОЛЬЗУЕТСЯ",
+
     "UP - lower all shields": "ВКЛЮЧЕНЫ — отключить все щиты",
     "Unavailable": "Недоступно",
     "Uncolonized": "Не колонизирована",

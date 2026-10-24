@@ -64,13 +64,15 @@ def lan_session(menu):
         c.text(f"{snap.get('status', 'Connecting')} · TCP {snap.get('port', menu.lan_port)}", (56, 170, 1004, 30), 20, ACCENT)
         c.text('Host IPs: ' + ', '.join(snap.get('addresses', [])), (56, 207, 1004, 28), 16, MUTED)
         players = {p['slot']: p for p in snap.get('players', [])}
+        compact = o['human_count'] > 4
+        step = min(64, 280 // o['human_count'])
         for slot in range(o['human_count']):
             p = players.get(slot)
-            y = 248 + slot * 64
-            c.panel((56, y, 614, 54))
-            c.text(f'{slot + 1:02d}', (72, y + 14, 40, 28), 18, MUTED)
-            c.text(p['name'] if p else 'Waiting for player…', (122, y + 14, 340, 28), 18, INK if p else MUTED)
-            c.text('READY' if p and p['ready'] else 'NOT READY' if p else 'OPEN SLOT', (488, y + 16, 166, 24), 16, ACCENT if p and p['ready'] else MUTED)
+            y = 248 + slot * step
+            c.panel((56, y, 614, step - 8 if compact else 54))
+            c.text(f'{slot + 1:02d}', (72, y + (4 if compact else 14), 40, 22 if compact else 28), 14 if compact else 18, MUTED)
+            c.text(p['name'] if p else 'Waiting for player…', (122, y + (4 if compact else 14), 340, 22 if compact else 28), 14 if compact else 18, INK if p else MUTED)
+            c.text('READY' if p and p['ready'] else 'NOT READY' if p else 'OPEN SLOT', (488, y + (5 if compact else 16), 166, 22 if compact else 24), 12 if compact else 16, ACCENT if p and p['ready'] else MUTED)
         c.panel((706, 248, 354, 282))
         c.text('Match settings', (730, 268, 306, 34), 24)
         for i, line in enumerate((f"Map: {o['map_id']}", f"Humans: {o['human_count']} · AI: {o['ai_count']}",

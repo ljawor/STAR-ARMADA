@@ -19,10 +19,16 @@ jobs:
         run: |
           python3 -m venv .venv
           ./.venv/bin/pip install --upgrade pip
-          ./.venv/bin/pip install -r requirements.txt pyinstaller
+          ./.venv/bin/pip install -r requirements.txt pyinstaller==6.20.0 cmake==3.31.6
+      - name: Build and test mandatory native renderer (Release)
+        timeout-minutes: 25
+        run: PATH="$PWD/.venv/bin:$PATH" ./.venv/bin/python tools/build_native_release.py --build-dir render_cpp/build-w02
+      - name: Packaging contract tests
+        run: ./.venv/bin/python -m unittest discover -s tests -p test_release_packaging.py -v
       - name: Build app + DMG
         run: |
           ./.venv/bin/pyinstaller star_armada.spec --noconfirm
+          ./.venv/bin/python tools/build_native_release.py --validate-frozen "dist/STAR ARMADA.app/Contents/Frameworks"
           codesign --force --deep --sign - "dist/STAR ARMADA.app"
           mkdir -p dist/dmg_staging
           cp -R "dist/STAR ARMADA.app" dist/dmg_staging/
@@ -33,6 +39,7 @@ jobs:
         with:
           name: mac-dmg
           path: dist/STAR-ARMADA-*-mac.dmg
+          if-no-files-found: error
 
   win:
     runs-on: windows-latest
@@ -44,9 +51,35 @@ jobs:
       - name: Install deps
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt pyinstaller
+          pip install -r requirements.txt pyinstaller==6.20.0 cmake==3.31.6
+      - name: Build and test mandatory native renderer (Release)
+        timeout-minutes: 25
+        run: python tools/build_native_release.py --build-dir render_cpp/build-w02
+      - name: Packaging contract tests
+        run: python -m unittest discover -s tests -p test_release_packaging.py -v
       - name: Build exe
         run: pyinstaller star_armada.spec --noconfirm
+      - name: Validate frozen native payload
+        run: python tools/build_native_release.py --validate-frozen "dist/STAR ARMADA/_internal"
+      - name: Exercise frozen renderer worker and native ABI (no GPU)
+        shell: python
+        run: |
+          import json, os, pathlib, subprocess, sys
+          sys.path.insert(0, str(pathlib.Path(os.environ['GITHUB_WORKSPACE']).resolve()))
+          from game import __version__
+          exe = pathlib.Path('dist/STAR ARMADA/STAR ARMADA.exe').resolve()
+          output = pathlib.Path(os.environ['RUNNER_TEMP']) / 'native-worker-probe.json'
+          assert not output.exists(), 'Refusing stale probe output'
+          env = dict(os.environ)
+          env.pop('STAR_ARMADA_CPP_LIBRARY', None)
+          subprocess.run([str(exe), '--native-render-worker', '--probe', '--output', str(output)],
+                         env=env, check=True, timeout=60)
+          report = json.loads(output.read_text(encoding='utf-8'))
+          assert report['status'] == 'ok' and report['abi'] == 1
+          assert report['frozen'] is True and report['version'] == __version__
+          expected = exe.parent / '_internal/cpp/armada_embedded.dll'
+          assert pathlib.Path(report['native_library']).resolve() == expected.resolve()
+          print(json.dumps(report, indent=2))
       - name: Zip
         run: |
           Compress-Archive -Path "dist/STAR ARMADA/*" `
@@ -55,6 +88,7 @@ jobs:
         with:
           name: win-zip
           path: dist/STAR-ARMADA-*-win.zip
+          if-no-files-found: error
 
   release:
     needs: [mac, win]

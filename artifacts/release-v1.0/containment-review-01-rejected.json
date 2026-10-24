@@ -1,0 +1,23 @@
+{
+  "delegation_id": "deleg_1a45f431",
+  "scope": "Renderer subprocess containment and application integration",
+  "passed": false,
+  "security_concerns": [],
+  "logic_errors": [
+    {
+      "path": "render_bridge/embedded.py:139-164; main.py:391-398",
+      "issue": "Poll failures raise outside cpp_publish exception handling and must route through cpp_fatal at the application boundary."
+    },
+    {
+      "path": "render_bridge/native_worker.py:115-162; render_bridge/embedded.py:93-98",
+      "issue": "A parent dying while native load/open/frame/poll/close blocks can leave an orphaned worker; an independent parent-lifetime guard is required."
+    }
+  ],
+  "suggestions": [
+    "Run the same native fault library tests on Windows rather than skipping POSIX-only fixtures.",
+    "Continue stdout draining if optional diagnostic persistence fails.",
+    "Update the obsolete in-process activation log.",
+    "Require real runtime and frozen-platform verification."
+  ],
+  "disposition": "Fix cycle 1 delegated to an independent implementation context; this receipt is a rejection, not acceptance."
+}

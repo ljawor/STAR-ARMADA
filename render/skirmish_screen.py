@@ -6,7 +6,18 @@ from render.clean_classic import SetupCanvas, INK, MUTED, ACCENT, BORDER
 from game.core.skirmish import SKIRMISH_MAP_IDS, PLAYER_COLORS, COLOR_NAMES
 
 
-def chart(c, data, options):
+def battlefield_list(c, menu, options, action):
+    """The same eight battlefield cards on Skirmish and LAN Host."""
+    c.text('BATTLEFIELD', (32,107,224,24),14,MUTED)
+    for i, mid in enumerate(SKIRMISH_MAP_IDS):
+        row = menu.skirmish_store.maps[mid]
+        y = 140+i*49
+        c.button((32,y,224,43),'',action,mid,mid==options['map_id'])
+        c.text(row['name'],(42,y+5,204,19),13)
+        c.text(f"{len(row['players'])} PLAYERS / TEAMS OR FFA",(42,y+24,204,17),11,MUTED)
+
+
+def chart(c, data, options, *, human_count=1, action='skirmish_spawn_point'):
     preview = pygame.Rect(280, 140, 420, 420)
     c.panel(preview)
     area = preview.inflate(-52, -52)
@@ -51,7 +62,7 @@ def chart(c, data, options):
         x,y = point(feature['pos'])
         pygame.draw.polygon(c.surface,(109,160,223),[(x,y-4),(x+4,y),(x,y+4),(x-4,y)],1)
     starts = options.get('spawn_slots', list(range(len(data['players']))))
-    active = options['ai_count'] + 1
+    active = options['ai_count'] + human_count
     for anchor, player in enumerate(data['players']):
         x,y = point(player['start'])
         c.starts.append((x,y))
@@ -62,7 +73,7 @@ def chart(c, data, options):
         pygame.draw.circle(c.surface, color, (x,y), 5)
         if owner == 0:
             pygame.draw.circle(c.surface, ACCENT, (x,y), 16, 1)
-        c.menu.buttons.append(dict(rect=pygame.Rect(x-16,y-16,32,32), action='skirmish_spawn_point', payload=anchor))
+        c.menu.buttons.append(dict(rect=pygame.Rect(x-16,y-16,32,32), action=action, payload=anchor))
         c.text(str(anchor+1), (x+17,y-9,18,19), 12, color)
     c.surface.set_clip(old_clip)
     return preview
@@ -75,13 +86,7 @@ def setup(menu):
     capacity = len(data['players'])
     c.text('STAR ARMADA', (32,20,300,30),24)
     c.text('Deploy your fleet', (32,65,780,36),28)
-    c.text('BATTLEFIELD', (32,107,224,24),14,MUTED)
-    for i,mid in enumerate(SKIRMISH_MAP_IDS):
-        row = menu.skirmish_store.maps[mid]
-        y = 140+i*49
-        c.button((32,y,224,43),'','skirmish_map',mid,mid==o['map_id'])
-        c.text(row['name'],(42,y+5,204,19),13)
-        c.text(f"{len(row['players'])} PLAYERS / TEAMS OR FFA",(42,y+24,204,17),11,MUTED)
+    battlefield_list(c, menu, o, 'skirmish_map')
     c.text(data['name'],(280,107,420,24),16)
     preview = chart(c,data,o)
     c.text('Click a start to deploy here.',(280,569,420,20),14,ACCENT)

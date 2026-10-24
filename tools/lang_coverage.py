@@ -31,6 +31,7 @@ LANG_DIR = os.path.join(ROOT, 'assets', 'data', 'lang')
 UI_SURFACE = (
     'render/menus.py',
     'render/skirmish_screen.py',
+    'render/lan_screen.py',
     'render/clean_classic.py',
     'render/classic_screens.py',
     'render/classic_saves.py',
@@ -67,6 +68,11 @@ SKIP_EXACT = {
 #: lowercase. A key that is not in the catalogue can never be reported as untranslated.
 EXTRA_UI_KEYS = (
     'Start {n}',
+    # LAN Host roster/count templates end in a format field, so the conservative
+    # literal scanner treats them as fragments unless explicitly catalogued.
+    'Humans {count} / {capacity}',
+    'AI {count} / {capacity}',
+    'Human {n}', 'AI {n}', 'Unused {n}',
     'Current resolution: {width} × {height} · {mode}',
     '{outcome} — {name}',
     '{label} +{percent}%',

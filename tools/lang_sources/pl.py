@@ -1,6 +1,11 @@
 """Polish pack for STAR ARMADA (#93) — msgid (English UI string) -> translation."""
 
 PL: dict[str, str] = {
+    "Humans {count} / {capacity}": "Ludzie {count} / {capacity}",
+    "AI {count} / {capacity}": "SI {count} / {capacity}",
+    "Human {n}": "Człowiek {n}",
+    "AI {n}": "SI {n}",
+    "Unused {n}": "Nieużywane {n}",
     "Click a start to deploy here.": "Kliknij punkt startowy, aby rozmieścić tu flotę.",
     "Gold: resources · Teal: worlds · Rings: starts": "Złoto: zasoby · Turkus: planety · Okręgi: punkty startowe",
     "Same team = allies. AI allies share vision, not control.": "Ta sama drużyna = sojusznicy. Sojusznicy SI dzielą się widocznością, nie kontrolą.",
@@ -16,7 +21,7 @@ PL: dict[str, str] = {
     "Changes apply at the next session, never during a battle.": "Zmiany obowiązują od następnej sesji, nigdy w trakcie bitwy.",
     "1-9 control groups · F fleet menu": "1-9 grupy sterowania · F menu floty",
     "ACTIONS / BUILD": "AKCJE / BUDOWA",
-    "AI": "SI",
+
     "AI DIFFICULTY": "POZIOM SI",
     "ALL": "WSZYSTKIE",
     "ALL replay JSON files, including files beyond the browser limit.":
@@ -118,8 +123,7 @@ PL: dict[str, str] = {
         "Dostarcz pasażerów: z załadowanym ładunkiem naciśnij R i kliknij własny kadłub bez pełnej załogi.",
     "Deploy your fleet": "Rozmieść flotę",
     "Destroy ALL defending satellites first.": "Najpierw zniszcz WSZYSTKIE satelity obronne.",
-    "Distinct colors. Unused slot choices are retained. Click to cycle.":
-        "Różne kolory. Nieużyte wybory miejsc pozostają. Kliknij, aby przełączać.",
+
     "Dynamic range": "Zakres dynamiki",
     "EN": "EN",
     "ENDED": "ZAKOŃCZONY",
@@ -150,7 +154,7 @@ PL: dict[str, str] = {
     "Gas and terrain cannot be colonized.": "Gazu i terenu nie można kolonizować.",
     "Goal: board and capture the hull.": "Cel: abordażuj i przejmij kadłub.",
     "HULL": "KADŁUB",
-    "HUMAN": "CZŁOWIEK",
+
     "High contrast panels": "Panele o wysokim kontraście",
     "Host IPv4 address": "Adres IPv4 hosta",
     "Host a game": "Prowadź grę",
@@ -340,7 +344,7 @@ PL: dict[str, str] = {
         "Ćwiczenie zaczyna się przy sprawnym podtrzymaniu życia na obu porzuconych celach; nie buduj okrętu budowlanego, dopóki naprawy nie staną się konieczne.",
     "The operation has ended. Regroup and try again.": "Operacja zakończona. Zbierz siły i spróbuj ponownie.",
     "Tutorial hints": "Podpowiedzi samouczka",
-    "UNUSED": "NIEUŻYTE",
+
     "UP - lower all shields": "W GÓRĘ - opuść wszystkie tarcze",
     "Unavailable": "Niedostępne",
     "Uncolonized": "Nieskolonizowana",

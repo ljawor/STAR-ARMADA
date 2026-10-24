@@ -17,7 +17,8 @@ import shutil
 import subprocess
 import time
 
-DEFAULT_BINARY = os.path.join('render_cpp', 'build-w02', 'armada_viewer')
+DEFAULT_BINARY = os.path.join(
+    'render_cpp', 'build-w02', 'armada_viewer.exe' if os.name == 'nt' else 'armada_viewer')
 SNAPSHOT_NAME = 'catalogue.snap'
 
 
@@ -80,9 +81,10 @@ def find_binary(root: str) -> str | None:
     import sys
     candidates = [os.environ.get('STAR_ARMADA_CPP_VIEWER')]
     bundle = getattr(sys, '_MEIPASS', None)
+    filename = 'armada_viewer.exe' if sys.platform == 'win32' else 'armada_viewer'
     if bundle:
-        candidates.append(os.path.join(bundle, 'cpp', 'armada_viewer'))
-    candidates.append(os.path.join(root, DEFAULT_BINARY))
+        candidates.append(os.path.join(bundle, 'cpp', filename))
+    candidates.append(os.path.join(root, os.path.dirname(DEFAULT_BINARY), filename))
     for path in candidates:
         if path and os.path.isfile(path) and os.access(path, os.X_OK):
             return path
@@ -138,7 +140,7 @@ def spawn(paths: dict, *, root: str, snapshot: str | None, size=(1280, 800), log
             log(f'cpp embedded renderer unavailable ({exc}); retaining this window')
             return None
         atexit.register(stop, window)
-        log('cpp renderer: in-process bgfx target, original pygame window retained')
+        log('cpp renderer: isolated bgfx worker, original pygame window retained')
         return window
     # Separate-window mode is diagnostic-only, never the normal game launch.
     player = shutil.which(binary) or binary

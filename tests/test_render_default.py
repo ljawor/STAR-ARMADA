@@ -55,7 +55,8 @@ class RendererSettingTest(unittest.TestCase):
 
 class FindBinaryTest(unittest.TestCase):
     def _executable(self, directory: str) -> str:
-        path = os.path.join(directory, "armada_viewer")
+        filename = 'armada_viewer.exe' if sys.platform == 'win32' else 'armada_viewer'
+        path = os.path.join(directory, filename)
         Path(path).write_text("#!/bin/sh\nexit 0\n")
         os.chmod(path, os.stat(path).st_mode | stat.S_IXUSR)
         return path

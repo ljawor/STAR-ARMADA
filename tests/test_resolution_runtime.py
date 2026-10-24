@@ -116,52 +116,68 @@ class NativeResolutionTests(unittest.TestCase):
 
     def test_spawn_forwards_host_size_to_argv_readback_in_source_and_bundle(self):
         import inspect
+        import json
+        import tempfile
         from render_bridge import cpp_window, embedded
         self.assertIn('size', inspect.signature(cpp_window.spawn).parameters,
                       'spawn cannot receive the actual host size')
         for bundle in (None, '/unused/bundle'):
-            library = Mock()
-            library.armada_abi_version.return_value = 1
-            library.armada_open.return_value = 1
-            with self.subTest(bundle=bundle), \
-                    patch.object(cpp_window, 'find_binary', return_value='/unused/armada_viewer'), \
-                    patch('os.path.isfile', return_value=True), \
-                    patch('pathlib.Path.is_file', return_value=True), \
-                    patch('pathlib.Path.exists', return_value=True), \
-                    patch.object(embedded.ctypes, 'CDLL', return_value=library) as load, \
-                    patch.object(embedded.sys, '_MEIPASS', bundle, create=True), \
-                    patch('atexit.register'), \
-                    patch.dict(os.environ, {'STAR_ARMADA_CPP_EXTERNAL': '0',
-                                            'STAR_ARMADA_CPP_LIBRARY': ''}):
-                window = cpp_window.spawn(self.paths(), root='/unused', snapshot='/unused/catalogue.snap',
-                                          size=(1920, 1080), log=lambda msg: None)
-                self.assertIsNotNone(window)
-                self.assertEqual(window.size, (1920, 1080))
-                self.assertEqual(len(window._pixels), 1920 * 1080 * 4)
-                argc, argv = library.armada_open.call_args.args
-                decoded = [argv[i].decode() for i in range(argc)]
-                self.assertEqual(decoded[decoded.index('--width') + 1], '1920')
-                self.assertEqual(decoded[decoded.index('--height') + 1], '1080')
-                library_name = 'armada_embedded.dll' if sys.platform == 'win32' else 'libarmada_embedded.dylib'
-                expected_library = (Path(bundle) / 'cpp' / library_name if bundle else
-                                    Path('/unused') / 'render_cpp' / 'build-w02' / library_name)
-                self.assertEqual(load.call_args.args[0], str(expected_library))
-                window.terminate()
-                library.armada_close.assert_called_once_with(1)
+            with tempfile.TemporaryDirectory(dir=os.environ['TMPDIR']) as directory:
+                process = Mock(stdout=None, returncode=0)
+                process.poll.return_value = 0
+                listener = Mock()
+                listener.getsockname.return_value = ('127.0.0.1', 12345)
+                listener.accept.return_value = (Mock(), ('127.0.0.1', 1))
+                with self.subTest(bundle=bundle), \
+                        patch.object(cpp_window, 'find_binary', return_value='/unused/armada_viewer'), \
+                        patch('os.path.isfile', return_value=True), \
+                        patch('pathlib.Path.is_file', return_value=True), \
+                        patch.object(embedded.ctypes, 'CDLL', side_effect=AssertionError('parent CDLL')), \
+                        patch.object(embedded.sys, '_MEIPASS', bundle, create=True), \
+                        patch.object(embedded.sys, 'frozen', bool(bundle), create=True), \
+                        patch.object(embedded.socket, 'socket', return_value=listener), \
+                        patch.object(embedded.secrets, 'token_hex', return_value='a' * 64), \
+                        patch.object(embedded, 'receive', side_effect=[{'nonce': 'a'*64}, {'ready': True}]), \
+                        patch.object(embedded, 'send'), \
+                        patch.object(embedded.EmbeddedWindow, '_drain_log'), \
+                        patch.object(embedded.subprocess, 'Popen', return_value=process) as launch, \
+                        patch('atexit.register'), \
+                        patch.dict(os.environ, {'STAR_ARMADA_CPP_EXTERNAL': '0',
+                                                'STAR_ARMADA_CPP_LIBRARY': ''}):
+                    paths = {key: str(Path(directory) / key) for key in self.paths()}
+                    window = cpp_window.spawn(paths, root=directory, snapshot='/unused/catalogue.snap',
+                                              size=(1920, 1080), log=lambda msg: None)
+                    self.assertIsNotNone(window)
+                    self.assertEqual(window.size, (1920, 1080))
+                    self.assertEqual(len(window._pixels), 1920 * 1080 * 4)
+                    command = launch.call_args.args[0]
+                    config = json.loads(Path(command[-1]).read_text())
+                    decoded = config['argv']
+                    self.assertEqual(decoded[decoded.index('--width') + 1], '1920')
+                    self.assertEqual(decoded[decoded.index('--height') + 1], '1080')
+                    self.assertEqual((config['width'], config['height']), (1920, 1080))
+                    self.assertEqual(Path(config['frame']).stat().st_size, 1920 * 1080 * 4)
+                    library_name = 'armada_embedded.dll' if sys.platform == 'win32' else 'libarmada_embedded.dylib'
+                    expected_library = (Path(bundle) / 'cpp' / library_name if bundle else
+                                        Path(directory) / 'render_cpp' / 'build-w02' / library_name)
+                    self.assertEqual(config['library'], str(expected_library))
+                    self.assertEqual(command[1:-1], ['--native-render-worker'] if bundle else
+                                     ['-u', '-m', 'render_bridge.native_worker'])
+                    self.assertEqual(launch.call_args.kwargs['cwd'], directory)
+                    window.terminate()
+                    self.assertIsNone(window._mapping)
+                    process.wait.assert_called()
 
     def test_embedded_rejects_unbounded_dimensions_before_loading_native(self):
         from render_bridge import embedded
         for size in (('999999999', '1080'), ('1920', '0'), ('-1', '800')):
-            with self.subTest(size=size), patch.object(embedded.ctypes, 'CDLL') as load:
-                try:
+            with self.subTest(size=size), patch.object(embedded.subprocess, 'Popen') as launch, \
+                    patch.object(embedded, 'find_library') as discover:
+                with self.assertRaises(ValueError):
                     embedded.EmbeddedWindow(['viewer', '--width', size[0], '--height', size[1]],
                                             root='/unused')
-                except (ValueError, RuntimeError) as exc:
-                    self.assertIsInstance(exc, ValueError,
-                                          'dimensions must be rejected before native discovery')
-                else:
-                    self.fail('unbounded dimensions were accepted')
-                load.assert_not_called()
+                discover.assert_not_called()
+                launch.assert_not_called()
 
     def test_external_diagnostic_receives_same_host_dimensions(self):
         import inspect
