@@ -73,6 +73,7 @@ LAN_TEST_MODULES = [
     'test_lan_launch_recovery', 'test_station_balance',
     'test_collection_points', 'test_collection_points_lan',
     'test_i18n', 'test_i18n_russian', 'test_language_tools',
+    'test_windows_worker_diagnostic',
 ]
 
 PROVISIONING = (

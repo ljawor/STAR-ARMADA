@@ -269,6 +269,8 @@ int main() {
     {
       RingWriter writer(path, slots, kMinSlotBytes);
       capacity = writer.payloadBytes();
+      check(capacity + kSlotOverhead + kSlotTrailer == kMinSlotBytes,
+            "capacity plus its framing is exactly one slot");
       std::vector<uint8_t> full(capacity);
       for (size_t i = 0; i < capacity; ++i)
         full[i] = uint8_t(i * 7 + 13);

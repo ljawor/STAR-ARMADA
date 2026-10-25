@@ -82,7 +82,16 @@ jobs:
         # Collection-point commands and recovery admission/launch regressions are
         # portable real-TCP gates. Localization tests also exercise native Cyrillic
         # font rendering and settings persistence without requiring an OpenGL context.
-        run: python -m unittest test_netdiag test_netdiag_compare test_lan_state_diff test_sim_profiles test_lan test_multiplayer test_checksum_canonicalization test_orbit_spacing_batch test_render_camera test_render_live test_render_single_path test_lan_human_safety test_lan_failure_diagnostics test_lan_reconnect test_lan_production_reconnect test_lan_reconnect_admission test_lan_launch_recovery test_station_balance test_collection_points test_collection_points_lan test_i18n test_i18n_russian test_language_tools test_lan_eight_players test_lan_deployment_ui test_lan_language test_release_packaging test_native_binary_discovery test_render_default test_native_worker_entry test_native_worker test_native_worker_main_boundary test_native_worker_parent_identity test_windows_worker_diagnostic -v
+        run: python -m unittest test_netdiag test_netdiag_compare test_lan_state_diff test_sim_profiles test_lan test_multiplayer test_checksum_canonicalization test_orbit_spacing_batch test_render_camera test_render_live test_render_single_path test_lan_human_safety test_lan_failure_diagnostics test_lan_reconnect test_lan_production_reconnect test_lan_reconnect_admission test_lan_launch_recovery test_station_balance test_collection_points test_collection_points_lan test_i18n test_i18n_russian test_language_tools test_lan_eight_players test_lan_deployment_ui test_lan_language test_release_packaging test_native_binary_discovery test_render_default test_native_worker_entry test_native_worker test_native_worker_main_boundary test_native_worker_parent_identity -v
+      - name: Worker cleanup diagnostic tests
+        env:
+          PYTHONPATH: tests
+          SDL_VIDEODRIVER: dummy
+          SDL_AUDIODRIVER: dummy
+        # Mocks only, but they are the only pins for the diagnostic's reporting; a
+        # module that loads zero cases or skips must not read as acceptance.
+        run: |
+          python -c "import unittest; suite = unittest.defaultTestLoader.loadTestsFromName('test_windows_worker_diagnostic'); expected = suite.countTestCases(); assert expected >= 5, f'only {expected} diagnostic cases loaded'; result = unittest.TextTestRunner(verbosity=2).run(suite); raise SystemExit(0 if result.wasSuccessful() and result.testsRun == expected and not result.skipped else 1)"
       - name: Replay deletion on real Windows
         env:
           PYTHONPATH: tests
@@ -114,8 +123,12 @@ jobs:
           $code = $LASTEXITCODE
           if ($null -eq $code) { $code = 127 }
           "native worker cleanup observation exited $code (findings non-blocking)" | Tee-Object -FilePath native-worker-cleanup-windows.log -Append
-          "Native worker cleanup observation: exited $code (findings non-blocking, see artifact)" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
-          if ($code -eq 9009 -or $code -eq 127 -or $code -eq 2) { Write-Error "cleanup diagnostic did not run (exit $code)"; exit 1 }
+          # Exit codes cannot separate a red baseline from a tool that died on startup,
+          # so demand the verdict frame the tool always emits (baseline_verdict, or
+          # diagnostic_error when it failed outside its own reporting).
+          $verdict = Select-String -Path native-worker-cleanup-windows.log -Pattern '"stage": "(baseline_verdict|diagnostic_error)"' -Quiet
+          "Native worker cleanup observation: exited $code, verdict frame present: $verdict (findings non-blocking, see artifact)" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          if (-not $verdict) { Write-Error "cleanup diagnostic produced no verdict frame (exit $code)"; exit 1 }
           exit 0
       - uses: actions/upload-artifact@v4
         if: always()
@@ -140,7 +153,9 @@ jobs:
     # a published release) to re-test the pairing on the real PC.
     name: Candidate Windows package (manual)
     # Runs even when windows-lan is red: the package job reports buildability of the
-    # exact candidate, and the release verdict is taken outside CI.
+    # exact candidate, and the release verdict is taken outside CI. The upstream
+    # verdict is recorded in the artifact and re-raised at the end of the job, so an
+    # unverified candidate cannot be mistaken for a validated one.
     if: always() && github.event_name == 'workflow_dispatch'
     runs-on: windows-2022
     env:
@@ -186,12 +201,23 @@ jobs:
           expected = exe.parent / '_internal/cpp/armada_embedded.dll'
           assert pathlib.Path(report['native_library']).resolve() == expected.resolve()
           print(json.dumps(report, indent=2))
+      - name: Mark the candidate with its gate verdict
+        run: |
+          $verdict = '${{ needs.windows-lan.result }}'
+          "windows-lan: $verdict" | Tee-Object -FilePath "dist/STAR ARMADA/GATE-STATUS.txt"
+          "**Windows LAN gate for this candidate:** $verdict" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
       - name: Zip
         run: |
           Compress-Archive -Path "dist/STAR ARMADA/*" `
             -DestinationPath "dist/STAR-ARMADA-candidate-win.zip"
       - uses: actions/upload-artifact@v4
         with:
-          name: star-armada-candidate-win
+          # An unverified candidate is still uploaded, under a name that says so.
+          name: star-armada-candidate-win${{ needs.windows-lan.result != 'success' && '-gate-failed' || '' }}
           path: dist/STAR-ARMADA-candidate-win.zip
           if-no-files-found: error
+      - name: Require a green LAN gate for a verified candidate
+        if: needs.windows-lan.result != 'success'
+        run: |
+          Write-Error "windows-lan was ${{ needs.windows-lan.result }}: this candidate is built but unverified"
+          exit 1

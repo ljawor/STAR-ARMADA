@@ -20,6 +20,7 @@ Layout (little-endian, all offsets from the start of the mapping):
     each slot, `slot_bytes`:
         0   u64 sequence tag (2n + 1 while slot n is being written, 2n + 2 when complete)
         +8  u32 payload length
+       +12  8 reserved bytes (padding; the payload starts at +20)
        +20  frame bytes
         end u64 the completing sequence tag, written after the payload
 

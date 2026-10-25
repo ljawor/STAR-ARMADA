@@ -63,14 +63,24 @@ def _cleanup_temporary(temporary, attempts=CLEANUP_ATTEMPTS, delay=CLEANUP_RETRY
     a scanner reading the file. A genuine leak exhausts the budget and still raises,
     which the fatal path turns into reported evidence rather than silence.
     """
+    name = getattr(temporary, 'name', None)
+    if not isinstance(name, (str, bytes, os.PathLike)):
+        name = None        # no verifiable path: trust the call, as before
     for remaining in range(attempts, 0, -1):
         try:
             temporary.cleanup()
-            return
         except OSError:
             if remaining == 1:
                 raise
             time.sleep(delay)
+            continue
+        # cleanup() is neither documented as re-entrant nor required to report that it
+        # removed anything, so a silent no-op must not read as success.
+        if name is None or not os.path.exists(name):
+            return
+        if remaining == 1:
+            raise OSError(f'worker storage survived cleanup: {name}')
+        time.sleep(delay)
 
 
 class EmbeddedWindow:
@@ -274,6 +284,7 @@ class EmbeddedWindow:
             self._mapping = None
         if self._temporary is not None:
             _cleanup_temporary(self._temporary)
+            self._temporary = None
         if self._texture is not None:
             from OpenGL.GL import glDeleteTextures
             glDeleteTextures([self._texture])

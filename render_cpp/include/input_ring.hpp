@@ -56,8 +56,9 @@ constexpr size_t kMaxRecords = 1024;
 constexpr char kRingMagic[8] = {'A', 'R', 'M', 'A', 'D', 'A', 'R', '1'};
 constexpr uint16_t kRingVersion = 1;
 constexpr size_t kRingHeaderBytes = 64;
-constexpr size_t kSlotOverhead = 8 + 4 + 8;   // begin tag, length, and the closing
-                                             // tag's reserved bytes (see kSlotTrailer)
+constexpr size_t kSlotOverhead = 8 + 4 + 8;   // begin tag, length, 8 unused bytes:
+                                             // the payload starts at 20 and the closing
+                                             // tag owns the slot's last bytes (kSlotTrailer)
 constexpr size_t kSlotTrailer = 8;            // the closing tag at the end of the slot
 constexpr size_t kMinSlotBytes = 1024;
 

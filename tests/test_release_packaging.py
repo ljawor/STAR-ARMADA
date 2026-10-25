@@ -220,12 +220,13 @@ class WindowsRuntimeGateTests(unittest.TestCase):
         step = self._step(self._workflow(), 'Native input-ring source contract')
         self.assertIn('render_cpp/tests/test_native_transport_platform_contract.py', step)
 
-    def test_windows_runs_the_worker_cleanup_diagnostic_tests_as_a_gate(self):
-        source = self._workflow()
-        gate = re.search(r'      - name: Focused LAN tests on Windows\n(.*?)(?=      - |\n  [a-z]|\Z)',
-                         source, re.DOTALL)
-        self.assertIsNotNone(gate, 'windows-lan gate step is missing')
-        self.assertIn('test_windows_worker_diagnostic', gate.group(1))
+    def test_windows_runs_the_worker_cleanup_diagnostic_tests_as_a_counted_gate(self):
+        body = self._step(self._workflow(), 'Worker cleanup diagnostic tests')
+        # Listed-but-empty and listed-but-skipped must not read as acceptance.
+        self.assertIn("loadTestsFromName('test_windows_worker_diagnostic')", body)
+        self.assertIn('assert expected >= 5', body)
+        self.assertIn('result.testsRun == expected', body)
+        self.assertIn('not result.skipped', body)
 
     def test_cleanup_diagnostic_can_fail_only_when_it_could_not_run(self):
         source = self._workflow()
@@ -236,7 +237,12 @@ class WindowsRuntimeGateTests(unittest.TestCase):
         # Its findings are not the verdict, but a diagnostic that never launched is:
         # otherwise a broken tool is indistinguishable from a red baseline.
         self.assertNotRegex(body, r'(?m)^\s+continue-on-error:')
-        self.assertRegex(body, r'(?m)^\s+if \(\$code -eq 9009.*\{.*exit 1 \}$')
+        # A red baseline and a tool that died on startup both exit nonzero, so the gate
+        # demands the verdict frame the tool emits rather than an exit-code allowlist.
+        self.assertIn('Select-String', body)
+        self.assertIn('"stage": "(baseline_verdict|diagnostic_error)"', body)
+        self.assertRegex(body, r'(?m)^\s+if \(-not \$verdict\).*exit 1 \}$')
+        self.assertNotIn('-eq 9009', body)
         self.assertRegex(body, r'(?m)^\s+exit 0$')
         self.assertIn('GITHUB_STEP_SUMMARY', body)
 
@@ -255,6 +261,13 @@ class WindowsRuntimeGateTests(unittest.TestCase):
         self.assertIsNotNone(job, 'package-windows job is missing')
         self.assertIn('needs: windows-lan', job.group(1))
         self.assertRegex(job.group(1), r"(?m)^    if: always\(\) && github\.event_name == 'workflow_dispatch'$")
+        # ... but the upstream verdict must stay visible in the artifact and the job.
+        self.assertIn('GATE-STATUS.txt', job.group(1))
+        self.assertIn('needs.windows-lan.result', job.group(1))
+        self.assertIn("star-armada-candidate-win${{ needs.windows-lan.result != 'success'", job.group(1))
+        self.assertRegex(job.group(1),
+                         r"(?m)^      - name: Require a green LAN gate for a verified candidate\n"
+                         r"        if: needs.windows-lan.result != 'success'")
 
 
 class WindowsMathConstantContractTests(unittest.TestCase):

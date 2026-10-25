@@ -213,4 +213,12 @@ def main():
 
 
 if __name__ == '__main__':
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except SystemExit:
+        raise
+    except BaseException as exc:                     # noqa: BLE001 - the sentinel must exist
+        # A crash before run() reported anything would otherwise look like an ordinary
+        # red baseline; the observation gate requires one of these frames.
+        emit('diagnostic_error', exception=repr(exc), traceback=traceback.format_exc())
+        raise SystemExit(2)
