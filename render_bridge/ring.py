@@ -13,14 +13,14 @@ Layout (little-endian, all offsets from the start of the mapping):
         0  8s  magic  b'ARMADAR1'
         8  u16 version (1)
        10  u16 slot count
-       13  u32 slot bytes (payload capacity is slot_bytes - 28)
+       12  u32 slot bytes (payload capacity is slot_bytes - 28)
        16  u64 published count (monotonic; the newest slot is (count - 1) % slots)
        24  .. reserved
 
     each slot, `slot_bytes`:
         0   u64 sequence tag (2n + 1 while slot n is being written, 2n + 2 when complete)
         +8  u32 payload length
-       +12  frame bytes
+       +20  frame bytes
         end u64 the completing sequence tag, written after the payload
 
 One process writes; any number of processes read. `head` is written last, so a reader

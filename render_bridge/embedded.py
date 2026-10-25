@@ -23,6 +23,12 @@ STARTUP_TIMEOUT = 20.0
 FRAME_TIMEOUT = 15.0
 SHUTDOWN_GRACE = 2.0
 REAP_TIMEOUT = 2.0
+# Windows reports a file still held by a closing handle, or by a scanner, as
+# WinError 5 during cleanup. The child is already reaped and our mapping is
+# closed at that point, so a short bounded retry separates that race from a
+# genuine leak, which keeps raising.
+CLEANUP_ATTEMPTS = 5
+CLEANUP_RETRY_DELAY = 0.05
 
 
 def worker_command(config):
@@ -47,6 +53,24 @@ def map_pointer_event(event, source_size, target_size):
         attrs['rel'] = (round(attrs['rel'][0] * sx), round(attrs['rel'][1] * sy))
     attrs['remote'] = True
     return pygame.event.Event(event.type, attrs)
+
+
+def _cleanup_temporary(temporary, attempts=CLEANUP_ATTEMPTS, delay=CLEANUP_RETRY_DELAY):
+    """Delete the worker's shared storage, retrying only a transient sharing violation.
+
+    By the time this runs the writer has been reaped and every mapping of ours is
+    closed, so an OSError here is either a handle that has not finished closing or
+    a scanner reading the file. A genuine leak exhausts the budget and still raises,
+    which the fatal path turns into reported evidence rather than silence.
+    """
+    for remaining in range(attempts, 0, -1):
+        try:
+            temporary.cleanup()
+            return
+        except OSError:
+            if remaining == 1:
+                raise
+            time.sleep(delay)
 
 
 class EmbeddedWindow:
@@ -249,7 +273,7 @@ class EmbeddedWindow:
             self._mapping.close()
             self._mapping = None
         if self._temporary is not None:
-            self._temporary.cleanup()
+            _cleanup_temporary(self._temporary)
         if self._texture is not None:
             from OpenGL.GL import glDeleteTextures
             glDeleteTextures([self._texture])

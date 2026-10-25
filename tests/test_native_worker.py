@@ -110,6 +110,50 @@ class AbortDiagnosticTests(unittest.TestCase):
                 window._request('frame')
 
 
+class CleanupRetryTests(unittest.TestCase):
+    """A closing handle or a scanner is a race, not a leak; a real leak still raises."""
+
+    def window(self, cleanup):
+        import threading
+        window = object.__new__(embedded.EmbeddedWindow)
+        window._owner = threading.get_ident()
+        window._terminal = False
+        window._process = None
+        window._connection = None
+        window._listener = None
+        window._log_thread = None
+        window._mapping = None
+        window._texture = None
+        window._temporary = Mock(cleanup=cleanup)
+        return window
+
+    def test_transient_sharing_violation_is_retried_before_it_is_reported(self):
+        calls = []
+
+        def cleanup():
+            calls.append(1)
+            if len(calls) < 3:
+                raise PermissionError('[WinError 5] frame.bgra is held by a closing handle')
+
+        window = self.window(cleanup)
+        window._stop(hard=True)
+        self.assertEqual(len(calls), 3, 'cleanup was not retried')
+
+    def test_persistent_cleanup_failure_is_still_reported_after_bounded_retries(self):
+        calls = []
+
+        def cleanup():
+            calls.append(1)
+            raise PermissionError('[WinError 5] frame.bgra is held')
+
+        window = self.window(cleanup)
+        with self.assertRaises(PermissionError):
+            window._stop(hard=True)
+        self.assertEqual(len(calls), embedded.CLEANUP_ATTEMPTS)
+        self.assertLess(len(calls), 10, 'retry budget must stay bounded')
+        self.assertTrue(window._terminal)
+
+
 class NativeWorkerTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -176,8 +220,9 @@ target_compile_definitions(bad PRIVATE ABI=99)
     def test_native_stdout_is_drained_and_diagnostics_are_bounded(self):
         window = self.window(6)
         mapping = window._mapping
-        assert mapping is not None and window._temporary is not None
-        assert window._process is not None
+        self.assertIsNotNone(mapping)
+        self.assertIsNotNone(window._temporary)
+        self.assertIsNotNone(window._process)
         directory = Path(window._temporary.name)
         self.assertFalse(mapping.closed)
         self.assertTrue((directory / 'frame.bgra').is_file())
@@ -238,8 +283,9 @@ time.sleep(30)
     def test_fatal_exit_is_contained_and_terminal(self):
         window = self.window(1)
         mapping = window._mapping
-        assert mapping is not None and window._temporary is not None
-        assert window._process is not None
+        self.assertIsNotNone(mapping)
+        self.assertIsNotNone(window._temporary)
+        self.assertIsNotNone(window._process)
         directory = Path(window._temporary.name)
         self.assertFalse(mapping.closed)
         self.assertTrue((directory / 'frame.bgra').is_file())

@@ -82,7 +82,7 @@ jobs:
         # Collection-point commands and recovery admission/launch regressions are
         # portable real-TCP gates. Localization tests also exercise native Cyrillic
         # font rendering and settings persistence without requiring an OpenGL context.
-        run: python -m unittest test_netdiag test_netdiag_compare test_lan_state_diff test_sim_profiles test_lan test_multiplayer test_checksum_canonicalization test_orbit_spacing_batch test_render_camera test_render_live test_render_single_path test_lan_human_safety test_lan_failure_diagnostics test_lan_reconnect test_lan_production_reconnect test_lan_reconnect_admission test_lan_launch_recovery test_station_balance test_collection_points test_collection_points_lan test_i18n test_i18n_russian test_language_tools test_lan_eight_players test_lan_deployment_ui test_lan_language test_release_packaging test_native_binary_discovery test_render_default test_native_worker_entry test_native_worker test_native_worker_main_boundary test_native_worker_parent_identity -v
+        run: python -m unittest test_netdiag test_netdiag_compare test_lan_state_diff test_sim_profiles test_lan test_multiplayer test_checksum_canonicalization test_orbit_spacing_batch test_render_camera test_render_live test_render_single_path test_lan_human_safety test_lan_failure_diagnostics test_lan_reconnect test_lan_production_reconnect test_lan_reconnect_admission test_lan_launch_recovery test_station_balance test_collection_points test_collection_points_lan test_i18n test_i18n_russian test_language_tools test_lan_eight_players test_lan_deployment_ui test_lan_language test_release_packaging test_native_binary_discovery test_render_default test_native_worker_entry test_native_worker test_native_worker_main_boundary test_native_worker_parent_identity test_windows_worker_diagnostic -v
       - name: Replay deletion on real Windows
         env:
           PYTHONPATH: tests
@@ -100,20 +100,22 @@ jobs:
         run: python render_cpp/tests/test_native_transport_platform_contract.py
       - name: Observe native Windows worker cleanup
         if: always()
-        continue-on-error: true
         timeout-minutes: 3
         env:
           SDL_VIDEODRIVER: dummy
           SDL_AUDIODRIVER: dummy
           TMPDIR: ${{ runner.temp }}
-        # Observation, not a gate: the frame-file handle retention it reports is a
-        # separate open defect, so a red baseline must not turn this job red (that
-        # would also skip the packaging job behind it). The log is uploaded either way.
+        # Its findings are not the verdict: the frame-file handle retention it reports
+        # is a separate open defect, so a red baseline stays non-fatal and the log is
+        # uploaded either way. What it cannot do is fail to run and look the same: a
+        # diagnostic that never launched exits 1, because then there is no evidence.
         run: |
           python tools/diag_windows_worker_cleanup.py --run --close-process-handle-hypothesis 2>&1 | Tee-Object -FilePath native-worker-cleanup-windows.log
           $code = $LASTEXITCODE
-          if ($null -eq $code) { $code = 1 }
-          Write-Output "native worker cleanup observation exited $code (non-blocking)"
+          if ($null -eq $code) { $code = 127 }
+          "native worker cleanup observation exited $code (findings non-blocking)" | Tee-Object -FilePath native-worker-cleanup-windows.log -Append
+          "Native worker cleanup observation: exited $code (findings non-blocking, see artifact)" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          if ($code -eq 9009 -or $code -eq 127 -or $code -eq 2) { Write-Error "cleanup diagnostic did not run (exit $code)"; exit 1 }
           exit 0
       - uses: actions/upload-artifact@v4
         if: always()
@@ -124,14 +126,22 @@ jobs:
             state-win-ticks0.json
             state-win-ticks1.json
             state-win-contact-ticks60.json
-            native-worker-cleanup-windows.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-worker-cleanup-windows
+          path: native-worker-cleanup-windows.log
+          # The log is the only record of this observation: a missing file is an error.
+          if-no-files-found: error
 
   package-windows:
     needs: windows-lan
     # Manual runs only: hands the reporter a candidate build (an artifact, never
     # a published release) to re-test the pairing on the real PC.
     name: Candidate Windows package (manual)
-    if: github.event_name == 'workflow_dispatch'
+    # Runs even when windows-lan is red: the package job reports buildability of the
+    # exact candidate, and the release verdict is taken outside CI.
+    if: always() && github.event_name == 'workflow_dispatch'
     runs-on: windows-2022
     env:
       # build_native_release.py preserves caches and delegates generator choice

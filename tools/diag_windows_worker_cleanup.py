@@ -183,9 +183,13 @@ def main():
         try:
             collected, _ = child.communicate(timeout=5)
             output = collected or output
-        except subprocess.TimeoutExpired:
+        except subprocess.TimeoutExpired as final:
             # Even when the child cannot be reaped, the evidence it produced is the
-            # reason this diagnostic ran: print it before reporting failure.
+            # reason this diagnostic ran: print it before reporting failure, and keep
+            # the newer snapshot when the second timeout carries more output.
+            late = final.output or b''
+            if len(late) > len(output):
+                output = late
             print(output.decode('utf-8', errors='replace'), end='', flush=True)
             emit('watchdog_failed', diagnostic_pid=child.pid, descendants_verified_stopped=False)
             return 125

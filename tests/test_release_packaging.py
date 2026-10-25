@@ -2,6 +2,7 @@
 from pathlib import Path
 import importlib.util
 import tempfile
+import re
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -196,16 +197,17 @@ class WindowsCompilerImageTests(unittest.TestCase):
 
 
 class WindowsRuntimeGateTests(unittest.TestCase):
+    def _workflow(self):
+        return (ROOT / '.github/workflows/windows-signal.yml').read_text(encoding='utf-8')
+
     def _step(self, source, name):
-        import re
-        block = re.search(r'      - name: ' + re.escape(name) + r'\n(.*?)(?=      - |\Z)',
+        block = re.search(r'      - name: ' + re.escape(name) + r'\n(.*?)(?=      - |\n  [a-z]|\Z)',
                           source, re.DOTALL)
         self.assertIsNotNone(block, f'workflow step is missing: {name}')
         return block.group(1)
 
     def test_windows_runs_every_portable_renderer_case_without_skips(self):
-        source = (ROOT / '.github/workflows/windows-signal.yml').read_text(encoding='utf-8')
-        body = self._step(source, 'Portable renderer transport on real Windows')
+        body = self._step(self._workflow(), 'Portable renderer transport on real Windows')
         for module in ('test_render_camera', 'test_render_live', 'test_render_single_path',
                        'test_render_ring'):
             self.assertIn(f"'{module}'", body)
@@ -215,23 +217,44 @@ class WindowsRuntimeGateTests(unittest.TestCase):
         self.assertIn('not result.skipped', body)
 
     def test_windows_steps_the_native_source_contract(self):
-        source = (ROOT / '.github/workflows/windows-signal.yml').read_text(encoding='utf-8')
-        step = self._step(source, 'Native input-ring source contract')
+        step = self._step(self._workflow(), 'Native input-ring source contract')
         self.assertIn('render_cpp/tests/test_native_transport_platform_contract.py', step)
 
-    def test_cleanup_diagnostic_is_observation_and_keeps_its_artifact(self):
-        source = (ROOT / '.github/workflows/windows-signal.yml').read_text(encoding='utf-8')
+    def test_windows_runs_the_worker_cleanup_diagnostic_tests_as_a_gate(self):
+        source = self._workflow()
+        gate = re.search(r'      - name: Focused LAN tests on Windows\n(.*?)(?=      - |\n  [a-z]|\Z)',
+                         source, re.DOTALL)
+        self.assertIsNotNone(gate, 'windows-lan gate step is missing')
+        self.assertIn('test_windows_worker_diagnostic', gate.group(1))
+
+    def test_cleanup_diagnostic_can_fail_only_when_it_could_not_run(self):
+        source = self._workflow()
         body = self._step(source, 'Observe native Windows worker cleanup')
         self.assertIn('if: always()', body)
         self.assertIn('tools/diag_windows_worker_cleanup.py --run --close-process-handle-hypothesis',
                       body)
-        # The handle retention it observes is still an open defect: a red baseline
-        # must stay out of the job verdict and must not starve the packaging job.
-        self.assertIn('continue-on-error: true', body)
-        self.assertIn('$null -eq $code', body)
-        self.assertIn('exit 0', body)
-        self.assertIn('native-worker-cleanup-windows.log', body)
-        self.assertIn('            native-worker-cleanup-windows.log\n', source)
+        # Its findings are not the verdict, but a diagnostic that never launched is:
+        # otherwise a broken tool is indistinguishable from a red baseline.
+        self.assertNotRegex(body, r'(?m)^\s+continue-on-error:')
+        self.assertRegex(body, r'(?m)^\s+if \(\$code -eq 9009.*\{.*exit 1 \}$')
+        self.assertRegex(body, r'(?m)^\s+exit 0$')
+        self.assertIn('GITHUB_STEP_SUMMARY', body)
+
+    def test_cleanup_log_is_its_own_artifact_and_missing_is_an_error(self):
+        source = self._workflow()
+        block = re.search(r'      - uses: actions/upload-artifact@v4\n        if: always\(\)\n'
+                          r'        with:\n          name: native-worker-cleanup-windows\n'
+                          r'(.*?)(?=\n      - |\n  [a-z]|\Z)', source, re.DOTALL)
+        self.assertIsNotNone(block, 'cleanup log artifact is missing')
+        self.assertIn('path: native-worker-cleanup-windows.log', block.group(1))
+        self.assertIn('if-no-files-found: error', block.group(1))
+
+    def test_packaging_is_not_starved_by_a_red_lan_gate(self):
+        source = self._workflow()
+        job = re.search(r'  package-windows:\n(.*?)(?=\n  [a-z-]+:\n|\Z)', source, re.DOTALL)
+        self.assertIsNotNone(job, 'package-windows job is missing')
+        self.assertIn('needs: windows-lan', job.group(1))
+        self.assertRegex(job.group(1), r"(?m)^    if: always\(\) && github\.event_name == 'workflow_dispatch'$")
 
 
 class WindowsMathConstantContractTests(unittest.TestCase):

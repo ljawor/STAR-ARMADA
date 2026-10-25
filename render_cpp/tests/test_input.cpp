@@ -259,6 +259,53 @@ int main() {
     }
   }
   {
+    // Exercise the boundary itself: a batch that exactly fills the capacity must leave
+    // the closing tag intact and must not write past the mapping, and one byte more
+    // must be refused rather than silently truncated.
+    const std::string path = root + "/input-capacity.bin";
+    ::remove(path.c_str());
+    const size_t slots = 4;
+    size_t capacity = 0;
+    {
+      RingWriter writer(path, slots, kMinSlotBytes);
+      capacity = writer.payloadBytes();
+      std::vector<uint8_t> full(capacity);
+      for (size_t i = 0; i < capacity; ++i)
+        full[i] = uint8_t(i * 7 + 13);
+      check(writer.publish(full) == 0, "full-capacity publish");
+      bool overRefused = false;
+      try {
+        writer.publish(std::vector<uint8_t>(capacity + 1, 0x5a));
+      } catch (const InputError&) {
+        overRefused = true;
+      }
+      check(overRefused, "one byte over capacity is refused");
+    }
+    const auto file = slurp(path);
+    check(file.size() == kRingHeaderBytes + slots * kMinSlotBytes,
+          "full-capacity publish did not grow the mapping");
+    uint64_t closing = 0;
+    std::memcpy(&closing, file.data() + kRingHeaderBytes + kMinSlotBytes - kSlotTrailer,
+                sizeof(closing));
+    check(closing == 2, "closing tag survived a full-capacity payload");
+    uint32_t length = 0;
+    std::memcpy(&length, file.data() + kRingHeaderBytes + 8, sizeof(length));
+    check(length == capacity, "full-capacity length field");
+    // The tail of a full-capacity payload must survive: with the capacity eight bytes too
+    // large, the closing tag overwrites the payload's last eight bytes.
+    bool payloadIntact = true;
+    for (size_t i = 0; i < capacity; ++i) {
+      const uint8_t* stored = file.data() + kRingHeaderBytes + kSlotOverhead + i;
+      if (*stored != uint8_t(i * 7 + 13)) {
+        payloadIntact = false;
+        std::cerr << "payload byte " << i << " was overwritten\n";
+        break;
+      }
+    }
+    check(payloadIntact, "full-capacity payload survives next to the closing tag");
+    std::filesystem::remove(path);
+  }
+  {
     // The header the Python reader validates: magic, version, slots, slot bytes, published count.
     const auto file = slurp(ringPath);
     check(file.size() == kRingHeaderBytes + 4 * kMinSlotBytes, "ring file size");
