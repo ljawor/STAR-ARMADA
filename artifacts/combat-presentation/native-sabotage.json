@@ -1,0 +1,36 @@
+[
+  {
+    "name": "control",
+    "returncode": 0,
+    "failing_assertions": [
+      "Projectile geometry/protocol: PASS"
+    ]
+  },
+  {
+    "name": "pixel_length",
+    "returncode": 1,
+    "failing_assertions": [
+      "FAIL exact world body/exhaust length",
+      "FAIL world length invariant under 4x zoom",
+      "Projectile geometry/protocol: FAIL"
+    ]
+  },
+  {
+    "name": "discard_depth",
+    "returncode": 1,
+    "failing_assertions": [
+      "FAIL body and exhaust stay BEHIND actual physics head",
+      "FAIL end-on shot is a small glow, not a horizontal streak",
+      "FAIL exact world body/exhaust length",
+      "Projectile geometry/protocol: FAIL"
+    ]
+  },
+  {
+    "name": "through_hulls",
+    "returncode": 1,
+    "failing_assertions": [
+      "FAIL decoder refuses through-hull flight",
+      "Projectile geometry/protocol: FAIL"
+    ]
+  }
+]

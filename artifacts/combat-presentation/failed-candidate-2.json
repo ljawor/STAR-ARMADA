@@ -1,0 +1,94 @@
+{
+  "passed": false,
+  "zoom_ratios": {
+    "laser": 5.279721205926669,
+    "missile": 6.666352180557482,
+    "torpedo": 5.8999671879726785
+  },
+  "results": {
+    "laser-near": {
+      "changed_pixels": 112,
+      "axis_extent_px": 37.00003391098312,
+      "bbox": [
+        438,
+        298,
+        475,
+        301
+      ],
+      "perspective_axis_error_degrees": null
+    },
+    "laser-far": {
+      "changed_pixels": 17,
+      "axis_extent_px": 7.007952213357271,
+      "bbox": [
+        471,
+        298,
+        478,
+        301
+      ],
+      "perspective_axis_error_degrees": null
+    },
+    "missile-near": {
+      "changed_pixels": 262,
+      "axis_extent_px": 80.00010739926233,
+      "bbox": [
+        396,
+        297,
+        476,
+        302
+      ],
+      "perspective_axis_error_degrees": null
+    },
+    "missile-far": {
+      "changed_pixels": 22,
+      "axis_extent_px": 12.000582212350537,
+      "bbox": [
+        465,
+        299,
+        477,
+        300
+      ],
+      "perspective_axis_error_degrees": null
+    },
+    "torpedo-near": {
+      "changed_pixels": 960,
+      "axis_extent_px": 177.0000045007082,
+      "bbox": [
+        299,
+        295,
+        476,
+        304
+      ],
+      "perspective_axis_error_degrees": null
+    },
+    "torpedo-far": {
+      "changed_pixels": 53,
+      "axis_extent_px": 30.000167604580895,
+      "bbox": [
+        446,
+        299,
+        476,
+        300
+      ],
+      "perspective_axis_error_degrees": null
+    },
+    "perspective": {
+      "changed_pixels": 31,
+      "axis_extent_px": 15.652416716180795,
+      "bbox": [
+        616,
+        214,
+        623,
+        228
+      ],
+      "perspective_axis_error_degrees": 0.6273405213254614
+    }
+  },
+  "head": "2eed8e322563ff59b8e6eb1f692acca117870497",
+  "source_hashes": {
+    "render/emissive_batch.py": "f086fb97622267270fe07b7762ea091c266083c62fc8ba4487652dd9327ea0a8",
+    "render_bridge/emissive.py": "5fbabacce941ed8f5c771566c369ec9a0325e47a66a1207a2f1c17007078abd1",
+    "render_cpp/src/viewer.cpp": "d9c074cad170dd41f80381b5650efe185929477201df665d64bbe498c7ce415b"
+  },
+  "native_sha256": "61c26f0997d1e9deec109f9ae4017ac540ae33c35d212caa34c8809d1985cf4e"
+}

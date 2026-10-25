@@ -1,0 +1,14 @@
+FAIL release-asset-lock.json is stale; re-run without --check
+F
+======================================================================
+FAIL: test_lock_check_mode_passes_on_the_committed_tree (test_s11_default_switch.ReleaseAssetLockTests.test_lock_check_mode_passes_on_the_committed_tree)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_s11_default_switch.py", line 139, in test_lock_check_mode_passes_on_the_committed_tree
+    self.assertEqual(tool.main(['--check']), 0)
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 1 test in 0.021s
+
+FAILED (failures=1)

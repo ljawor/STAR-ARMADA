@@ -1,0 +1,4308 @@
+{
+  "frames": 360,
+  "distance": 1600.0,
+  "weapon_types": [
+    "laser",
+    "missile",
+    "torpedo",
+    "turbolaser"
+  ],
+  "max_projectiles": 12,
+  "native_camera": {
+    "distance": 1600.0,
+    "fov": 55.0,
+    "pitch": 35.0,
+    "target": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "yaw": 15.0
+  },
+  "native_emissive": {
+    "batches": 360,
+    "blend": "additive, no depth write; FLIGHT world-sized, historical BOLT pixel-sized",
+    "decode_failures": 0,
+    "dropped_vertices": 0,
+    "flight_primitives": 2289,
+    "fx_demo": "",
+    "primitives": 6123,
+    "ring": "/Users/lukaszjawor/.hermes/cache/scratch/combat-camera-verified/close/user/cpp-window/match-xxivrd49/emit.ring",
+    "triangles": 36624
+  },
+  "all_presentations_state_identical": true,
+  "all_workers_reaped": true,
+  "head": "8b6aa096c15ba1d620a8df056296dad61b781067",
+  "source_hashes": {
+    "render/emissive_batch.py": "64b92f5656df5cf0839562e94899f889d2d942a6b6fdf14ea448a231c8a6c960",
+    "render_bridge/emissive.py": "dd23a7e5921cd34ffbc9d6a65d082dba56fa058fbe65601ca614229c3addb8dc",
+    "render_cpp/src/viewer.cpp": "ac752ece6ebaebde9dc77137939ebe51275ddb2ad49e474109000ea53ace4e52",
+    "render_cpp/include/projectile_effects.hpp": "8982beab4b08263cad739294400f190a2ff7251f5497f395f0acfb84ffba0313",
+    "render_cpp/include/emissive.hpp": "ffb59a01851cfdf6076a72ca8270e85c14d212a80cacdd4e3b0b58e657fe9195"
+  },
+  "fixture": [
+    {
+      "data_id": "imperial_cruiser",
+      "owner": 0,
+      "pos": [
+        -400,
+        0,
+        100
+      ]
+    },
+    {
+      "data_id": "imperial_frigate",
+      "owner": 0,
+      "pos": [
+        -420,
+        60,
+        -120
+      ]
+    },
+    {
+      "data_id": "imperial_tie_bomber_squadron",
+      "owner": 0,
+      "pos": [
+        -330,
+        30,
+        0
+      ]
+    },
+    {
+      "data_id": "rebel_cruiser",
+      "owner": 1,
+      "pos": [
+        400,
+        0,
+        -100
+      ]
+    },
+    {
+      "data_id": "rebel_frigate",
+      "owner": 1,
+      "pos": [
+        420,
+        60,
+        120
+      ]
+    },
+    {
+      "data_id": "rebel_y_squadron",
+      "owner": 1,
+      "pos": [
+        330,
+        30,
+        0
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "frame": 0,
+      "tick": 30,
+      "simulation_seconds": 0.9999999999999999,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "torpedo"
+      ],
+      "state_sha256": "ca9f202824bb8d4505a8ec3c975c92db6d12c0fdbd2b777619a04757a4ba00b8",
+      "hull_and_shield": 51463.6
+    },
+    {
+      "frame": 1,
+      "tick": 37,
+      "simulation_seconds": 1.2333333333333338,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "f9ec1c8a7e557ae1ea90df1519104865bd36154ef185e9506dcba316a17f6f7e",
+      "hull_and_shield": 50970.2
+    },
+    {
+      "frame": 2,
+      "tick": 38,
+      "simulation_seconds": 1.2666666666666673,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "a9c5914327362740f820d355486914acef85b17b1a61e796d16b16fb956eced1",
+      "hull_and_shield": 50970.2
+    },
+    {
+      "frame": 3,
+      "tick": 39,
+      "simulation_seconds": 1.3000000000000007,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "5523ed6c569fbb6f7c342d60cee64c2ced66b328a036320245419503eb63546e",
+      "hull_and_shield": 50970.2
+    },
+    {
+      "frame": 4,
+      "tick": 39,
+      "simulation_seconds": 1.3000000000000007,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "5523ed6c569fbb6f7c342d60cee64c2ced66b328a036320245419503eb63546e",
+      "hull_and_shield": 50970.2
+    },
+    {
+      "frame": 5,
+      "tick": 40,
+      "simulation_seconds": 1.3333333333333341,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "071dfdcc399730cd43edbb24e59a9a69ebbfadf2759d98a49f78f74e9699d70b",
+      "hull_and_shield": 50970.2
+    },
+    {
+      "frame": 6,
+      "tick": 40,
+      "simulation_seconds": 1.3333333333333341,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "071dfdcc399730cd43edbb24e59a9a69ebbfadf2759d98a49f78f74e9699d70b",
+      "hull_and_shield": 50970.2
+    },
+    {
+      "frame": 7,
+      "tick": 41,
+      "simulation_seconds": 1.3666666666666676,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "3f19b515a485e7953bc1c4bd0f2736e3761772a44a94bc8be856fa57df529ea5",
+      "hull_and_shield": 50970.2
+    },
+    {
+      "frame": 8,
+      "tick": 41,
+      "simulation_seconds": 1.3666666666666676,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "3f19b515a485e7953bc1c4bd0f2736e3761772a44a94bc8be856fa57df529ea5",
+      "hull_and_shield": 50970.2
+    },
+    {
+      "frame": 9,
+      "tick": 42,
+      "simulation_seconds": 1.400000000000001,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "c3d1c64624dfda64f801387eba96bb427bcc87518533334b5c435bdf8593e4a8",
+      "hull_and_shield": 50970.2
+    },
+    {
+      "frame": 10,
+      "tick": 42,
+      "simulation_seconds": 1.400000000000001,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "c3d1c64624dfda64f801387eba96bb427bcc87518533334b5c435bdf8593e4a8",
+      "hull_and_shield": 50970.2
+    },
+    {
+      "frame": 11,
+      "tick": 43,
+      "simulation_seconds": 1.4333333333333345,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "34455ed4c9eb9f601d477f3e60122702999aeea99171a2da566e56fd075f8d5c",
+      "hull_and_shield": 50970.2
+    },
+    {
+      "frame": 12,
+      "tick": 43,
+      "simulation_seconds": 1.4333333333333345,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "34455ed4c9eb9f601d477f3e60122702999aeea99171a2da566e56fd075f8d5c",
+      "hull_and_shield": 50970.2
+    },
+    {
+      "frame": 13,
+      "tick": 44,
+      "simulation_seconds": 1.466666666666668,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "8583c9f0d38f60239443274ca721594380b7b5c072a7d1ff80a09df7316f8ed6",
+      "hull_and_shield": 50970.2
+    },
+    {
+      "frame": 14,
+      "tick": 44,
+      "simulation_seconds": 1.466666666666668,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "8583c9f0d38f60239443274ca721594380b7b5c072a7d1ff80a09df7316f8ed6",
+      "hull_and_shield": 50970.2
+    },
+    {
+      "frame": 15,
+      "tick": 45,
+      "simulation_seconds": 1.5000000000000013,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "6c2924852c120fb3e757dbef0df0a188d49257962b3e569687f5acd6e2077645",
+      "hull_and_shield": 50970.2
+    },
+    {
+      "frame": 16,
+      "tick": 45,
+      "simulation_seconds": 1.5000000000000013,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "6c2924852c120fb3e757dbef0df0a188d49257962b3e569687f5acd6e2077645",
+      "hull_and_shield": 50970.2
+    },
+    {
+      "frame": 17,
+      "tick": 46,
+      "simulation_seconds": 1.5333333333333348,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "c15992ff2ccf2e601ae98a34bb60dfec3142811492d9dc518d0f82c3eed2aae4",
+      "hull_and_shield": 50970.2
+    },
+    {
+      "frame": 18,
+      "tick": 46,
+      "simulation_seconds": 1.5333333333333348,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "c15992ff2ccf2e601ae98a34bb60dfec3142811492d9dc518d0f82c3eed2aae4",
+      "hull_and_shield": 50970.2
+    },
+    {
+      "frame": 19,
+      "tick": 47,
+      "simulation_seconds": 1.5666666666666682,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "0cfdd4424e75b5f7adb0bbefcf9238c749c51c6e278339d00a501232b4d801de",
+      "hull_and_shield": 50970.2
+    },
+    {
+      "frame": 20,
+      "tick": 47,
+      "simulation_seconds": 1.5666666666666682,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "0cfdd4424e75b5f7adb0bbefcf9238c749c51c6e278339d00a501232b4d801de",
+      "hull_and_shield": 50970.2
+    },
+    {
+      "frame": 21,
+      "tick": 48,
+      "simulation_seconds": 1.6000000000000016,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "db573b10ef3285dccdfde626b086846426b849c4f304d1d789538ac101ac5a7b",
+      "hull_and_shield": 50970.2
+    },
+    {
+      "frame": 22,
+      "tick": 48,
+      "simulation_seconds": 1.6000000000000016,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "db573b10ef3285dccdfde626b086846426b849c4f304d1d789538ac101ac5a7b",
+      "hull_and_shield": 50970.2
+    },
+    {
+      "frame": 23,
+      "tick": 49,
+      "simulation_seconds": 1.633333333333335,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "8a23800fa9e1a3eaf4db63ec052184eab7a14644ad638f6bb1fd53a8f1095159",
+      "hull_and_shield": 50970.2
+    },
+    {
+      "frame": 24,
+      "tick": 49,
+      "simulation_seconds": 1.633333333333335,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "8a23800fa9e1a3eaf4db63ec052184eab7a14644ad638f6bb1fd53a8f1095159",
+      "hull_and_shield": 50970.2
+    },
+    {
+      "frame": 25,
+      "tick": 50,
+      "simulation_seconds": 1.6666666666666685,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "e1e4da4c568c61bb7928cb083c6611352b352b3fede4b65850ebc7f6a158b7f1",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 26,
+      "tick": 50,
+      "simulation_seconds": 1.6666666666666685,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "e1e4da4c568c61bb7928cb083c6611352b352b3fede4b65850ebc7f6a158b7f1",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 27,
+      "tick": 51,
+      "simulation_seconds": 1.700000000000002,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "75b9910f1bd69ce2c482ab9502304a1fa1ce54703e5536d6f7bf90bf4bb64b35",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 28,
+      "tick": 51,
+      "simulation_seconds": 1.700000000000002,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "75b9910f1bd69ce2c482ab9502304a1fa1ce54703e5536d6f7bf90bf4bb64b35",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 29,
+      "tick": 52,
+      "simulation_seconds": 1.7333333333333354,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "be73beccc681e4b18b644d69ecffa44c7a50195c79c09ae525349bef2d16603c",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 30,
+      "tick": 52,
+      "simulation_seconds": 1.7333333333333354,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "be73beccc681e4b18b644d69ecffa44c7a50195c79c09ae525349bef2d16603c",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 31,
+      "tick": 53,
+      "simulation_seconds": 1.7666666666666688,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "2ebafaaac992816e1c4bcd44788c7d14aa5d2da6771a09270aedb6709e09ac54",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 32,
+      "tick": 53,
+      "simulation_seconds": 1.7666666666666688,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "2ebafaaac992816e1c4bcd44788c7d14aa5d2da6771a09270aedb6709e09ac54",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 33,
+      "tick": 54,
+      "simulation_seconds": 1.8000000000000023,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "a8ba5a59a0eb56488c7b7e1d1c6fce97c1235730c78e3e84b12a937c755b4008",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 34,
+      "tick": 54,
+      "simulation_seconds": 1.8000000000000023,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "a8ba5a59a0eb56488c7b7e1d1c6fce97c1235730c78e3e84b12a937c755b4008",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 35,
+      "tick": 55,
+      "simulation_seconds": 1.8333333333333357,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "3fee8ffdf20c59a229d7d4b74c82d5d0bed015936d6bf1bda43a7ec5c984227f",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 36,
+      "tick": 55,
+      "simulation_seconds": 1.8333333333333357,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "3fee8ffdf20c59a229d7d4b74c82d5d0bed015936d6bf1bda43a7ec5c984227f",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 37,
+      "tick": 56,
+      "simulation_seconds": 1.8666666666666691,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "69ee04639d8aeda2d35795cda2ed47171a666032241e27cf87e0268446e9a910",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 38,
+      "tick": 56,
+      "simulation_seconds": 1.8666666666666691,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "69ee04639d8aeda2d35795cda2ed47171a666032241e27cf87e0268446e9a910",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 39,
+      "tick": 57,
+      "simulation_seconds": 1.9000000000000026,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "992ee184a3e7bdaebc75aec20ef061018a1e7364e6ef58b297d98ed00b4af4d9",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 40,
+      "tick": 57,
+      "simulation_seconds": 1.9000000000000026,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "992ee184a3e7bdaebc75aec20ef061018a1e7364e6ef58b297d98ed00b4af4d9",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 41,
+      "tick": 58,
+      "simulation_seconds": 1.933333333333336,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "3c8c9a27a92a8968583ac9e08342d363d77ec04e81dc04a2e1b422d3fcc4bf02",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 42,
+      "tick": 58,
+      "simulation_seconds": 1.933333333333336,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "3c8c9a27a92a8968583ac9e08342d363d77ec04e81dc04a2e1b422d3fcc4bf02",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 43,
+      "tick": 59,
+      "simulation_seconds": 1.9666666666666694,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "7699377c896df085be2ec55dcb079dd20da2507045cd81c33f2759434647525a",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 44,
+      "tick": 59,
+      "simulation_seconds": 1.9666666666666694,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "7699377c896df085be2ec55dcb079dd20da2507045cd81c33f2759434647525a",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 45,
+      "tick": 60,
+      "simulation_seconds": 2.0000000000000027,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "d61088ebbf2bb55e7c4168458a6c298da850ff1d0ede1b321da2cb972452082c",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 46,
+      "tick": 60,
+      "simulation_seconds": 2.0000000000000027,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "d61088ebbf2bb55e7c4168458a6c298da850ff1d0ede1b321da2cb972452082c",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 47,
+      "tick": 61,
+      "simulation_seconds": 2.033333333333336,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "565a9ae89ba587fea5047062dee842914d6d26513702cf6c5ee4e6bf1b1ced04",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 48,
+      "tick": 61,
+      "simulation_seconds": 2.033333333333336,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "565a9ae89ba587fea5047062dee842914d6d26513702cf6c5ee4e6bf1b1ced04",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 49,
+      "tick": 62,
+      "simulation_seconds": 2.066666666666669,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "164736da93f7f0c2513f8bc1d7d8637fab4745086bfb8fe67b12cbac92ea9d35",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 50,
+      "tick": 62,
+      "simulation_seconds": 2.066666666666669,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "164736da93f7f0c2513f8bc1d7d8637fab4745086bfb8fe67b12cbac92ea9d35",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 51,
+      "tick": 63,
+      "simulation_seconds": 2.1000000000000023,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "baaeec2eeefc7409277edf521b99cb7df1ae4fb9a9f2b1717acf0c6c2c1e3dc5",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 52,
+      "tick": 63,
+      "simulation_seconds": 2.1000000000000023,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "baaeec2eeefc7409277edf521b99cb7df1ae4fb9a9f2b1717acf0c6c2c1e3dc5",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 53,
+      "tick": 64,
+      "simulation_seconds": 2.1333333333333355,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "798fb2d21108750e58a2b0120a917b3d4bace11c8903910b310a56b715708502",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 54,
+      "tick": 64,
+      "simulation_seconds": 2.1333333333333355,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "798fb2d21108750e58a2b0120a917b3d4bace11c8903910b310a56b715708502",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 55,
+      "tick": 65,
+      "simulation_seconds": 2.1666666666666687,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "bbba970fbf47181f55f2bbc47aa603d7305c3012fd8f4ad6044624ccf714dd67",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 56,
+      "tick": 65,
+      "simulation_seconds": 2.1666666666666687,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "bbba970fbf47181f55f2bbc47aa603d7305c3012fd8f4ad6044624ccf714dd67",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 57,
+      "tick": 66,
+      "simulation_seconds": 2.200000000000002,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "5f566c13e644509c5202b31354cc208d8d89da47d6497a25951c9e380a3111c9",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 58,
+      "tick": 66,
+      "simulation_seconds": 2.200000000000002,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "5f566c13e644509c5202b31354cc208d8d89da47d6497a25951c9e380a3111c9",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 59,
+      "tick": 67,
+      "simulation_seconds": 2.233333333333335,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "b852bc151a8a5f030ae7f683699abc44c5a81465cf3ce748e8bd0d89222f594c",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 60,
+      "tick": 67,
+      "simulation_seconds": 2.233333333333335,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "b852bc151a8a5f030ae7f683699abc44c5a81465cf3ce748e8bd0d89222f594c",
+      "hull_and_shield": 50905.8
+    },
+    {
+      "frame": 61,
+      "tick": 68,
+      "simulation_seconds": 2.2666666666666684,
+      "projectiles": 8,
+      "weapon_types": [
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "75d850561e4f20ffb1c5bff547b0318a4d7467a31583778bdd14c01cd47a3d77",
+      "hull_and_shield": 50841.4
+    },
+    {
+      "frame": 62,
+      "tick": 69,
+      "simulation_seconds": 2.3000000000000016,
+      "projectiles": 8,
+      "weapon_types": [
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "4b812e48ba4bc3cad52e0b7820c72c4f706aeac72c17e534e1e50ff4b31362a1",
+      "hull_and_shield": 50841.4
+    },
+    {
+      "frame": 63,
+      "tick": 69,
+      "simulation_seconds": 2.3000000000000016,
+      "projectiles": 8,
+      "weapon_types": [
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "4b812e48ba4bc3cad52e0b7820c72c4f706aeac72c17e534e1e50ff4b31362a1",
+      "hull_and_shield": 50841.4
+    },
+    {
+      "frame": 64,
+      "tick": 70,
+      "simulation_seconds": 2.333333333333335,
+      "projectiles": 8,
+      "weapon_types": [
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "2b791c06c87f44b2deb677aebc2daa44a1d57ac04b901d8b337d518e48b121ac",
+      "hull_and_shield": 50841.4
+    },
+    {
+      "frame": 65,
+      "tick": 70,
+      "simulation_seconds": 2.333333333333335,
+      "projectiles": 8,
+      "weapon_types": [
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "2b791c06c87f44b2deb677aebc2daa44a1d57ac04b901d8b337d518e48b121ac",
+      "hull_and_shield": 50841.4
+    },
+    {
+      "frame": 66,
+      "tick": 70,
+      "simulation_seconds": 2.333333333333335,
+      "projectiles": 8,
+      "weapon_types": [
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "2b791c06c87f44b2deb677aebc2daa44a1d57ac04b901d8b337d518e48b121ac",
+      "hull_and_shield": 50841.4
+    },
+    {
+      "frame": 67,
+      "tick": 71,
+      "simulation_seconds": 2.366666666666668,
+      "projectiles": 8,
+      "weapon_types": [
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "7ebc179f3d0e1a04960e41a48e03a38d18223ebb0518d853c889dac7959b0e64",
+      "hull_and_shield": 50841.4
+    },
+    {
+      "frame": 68,
+      "tick": 71,
+      "simulation_seconds": 2.366666666666668,
+      "projectiles": 8,
+      "weapon_types": [
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "7ebc179f3d0e1a04960e41a48e03a38d18223ebb0518d853c889dac7959b0e64",
+      "hull_and_shield": 50841.4
+    },
+    {
+      "frame": 69,
+      "tick": 72,
+      "simulation_seconds": 2.4000000000000012,
+      "projectiles": 8,
+      "weapon_types": [
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "523aa19f0ce2fed40143e0d0bf13846a684fd84239af242d9211c79dfd6e6fd7",
+      "hull_and_shield": 50841.4
+    },
+    {
+      "frame": 70,
+      "tick": 72,
+      "simulation_seconds": 2.4000000000000012,
+      "projectiles": 8,
+      "weapon_types": [
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "523aa19f0ce2fed40143e0d0bf13846a684fd84239af242d9211c79dfd6e6fd7",
+      "hull_and_shield": 50841.4
+    },
+    {
+      "frame": 71,
+      "tick": 73,
+      "simulation_seconds": 2.4333333333333345,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "c022847c341c72d6d27711026996ce805652f36be69f61b55c708a7c185142e8",
+      "hull_and_shield": 50841.4
+    },
+    {
+      "frame": 72,
+      "tick": 74,
+      "simulation_seconds": 2.4666666666666677,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "edbc65c9225a2f81c48f2076c9bd0d5c606ba5248aef7d7845b28782245715c5",
+      "hull_and_shield": 50841.4
+    },
+    {
+      "frame": 73,
+      "tick": 74,
+      "simulation_seconds": 2.4666666666666677,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "edbc65c9225a2f81c48f2076c9bd0d5c606ba5248aef7d7845b28782245715c5",
+      "hull_and_shield": 50841.4
+    },
+    {
+      "frame": 74,
+      "tick": 75,
+      "simulation_seconds": 2.500000000000001,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "1ed05176c0fd56544be2b3a66f6e6a9ce79a8306904bd0bc5558a02b569a4f10",
+      "hull_and_shield": 50841.4
+    },
+    {
+      "frame": 75,
+      "tick": 75,
+      "simulation_seconds": 2.500000000000001,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "1ed05176c0fd56544be2b3a66f6e6a9ce79a8306904bd0bc5558a02b569a4f10",
+      "hull_and_shield": 50841.4
+    },
+    {
+      "frame": 76,
+      "tick": 76,
+      "simulation_seconds": 2.533333333333334,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "f8caf6863a76e058cf4b683b6c79a5fba60f95e9bd75052e4c8daf6d9eba53d6",
+      "hull_and_shield": 50841.4
+    },
+    {
+      "frame": 77,
+      "tick": 76,
+      "simulation_seconds": 2.533333333333334,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "f8caf6863a76e058cf4b683b6c79a5fba60f95e9bd75052e4c8daf6d9eba53d6",
+      "hull_and_shield": 50841.4
+    },
+    {
+      "frame": 78,
+      "tick": 77,
+      "simulation_seconds": 2.5666666666666673,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "6c1165d91ac94c4506b04e1ab34ea6391b28ba2cf183bd24ea54a7b7c49e08e6",
+      "hull_and_shield": 50841.4
+    },
+    {
+      "frame": 79,
+      "tick": 77,
+      "simulation_seconds": 2.5666666666666673,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "6c1165d91ac94c4506b04e1ab34ea6391b28ba2cf183bd24ea54a7b7c49e08e6",
+      "hull_and_shield": 50841.4
+    },
+    {
+      "frame": 80,
+      "tick": 78,
+      "simulation_seconds": 2.6000000000000005,
+      "projectiles": 10,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "8dac328735d03717e496503aa5622bd852e865a7b895534fcd48d057c20203c7",
+      "hull_and_shield": 50753.4
+    },
+    {
+      "frame": 81,
+      "tick": 78,
+      "simulation_seconds": 2.6000000000000005,
+      "projectiles": 10,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "8dac328735d03717e496503aa5622bd852e865a7b895534fcd48d057c20203c7",
+      "hull_and_shield": 50753.4
+    },
+    {
+      "frame": 82,
+      "tick": 79,
+      "simulation_seconds": 2.6333333333333337,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "5da5571e8537100b69c88ee57ed163869ac67032b2ec5734c6c0ab9b91f4b678",
+      "hull_and_shield": 50709.4
+    },
+    {
+      "frame": 83,
+      "tick": 79,
+      "simulation_seconds": 2.6333333333333337,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "5da5571e8537100b69c88ee57ed163869ac67032b2ec5734c6c0ab9b91f4b678",
+      "hull_and_shield": 50709.4
+    },
+    {
+      "frame": 84,
+      "tick": 80,
+      "simulation_seconds": 2.666666666666667,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "e6c08f528ea8585d44f0a8f045ca6849cb2142976caa8b05550fff7b0d12cdd5",
+      "hull_and_shield": 50709.4
+    },
+    {
+      "frame": 85,
+      "tick": 80,
+      "simulation_seconds": 2.666666666666667,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "e6c08f528ea8585d44f0a8f045ca6849cb2142976caa8b05550fff7b0d12cdd5",
+      "hull_and_shield": 50709.4
+    },
+    {
+      "frame": 86,
+      "tick": 81,
+      "simulation_seconds": 2.7,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "f3fd8de344d8fa9b3d41e22909376db2a0236c3491d2f67f99ad40481d3d6b00",
+      "hull_and_shield": 50709.4
+    },
+    {
+      "frame": 87,
+      "tick": 81,
+      "simulation_seconds": 2.7,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "f3fd8de344d8fa9b3d41e22909376db2a0236c3491d2f67f99ad40481d3d6b00",
+      "hull_and_shield": 50709.4
+    },
+    {
+      "frame": 88,
+      "tick": 83,
+      "simulation_seconds": 2.7666666666666666,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "e0063950f5a6b90d38475dc743327106e9b7f8a1670760e66111a7377b2692ad",
+      "hull_and_shield": 50709.4
+    },
+    {
+      "frame": 89,
+      "tick": 83,
+      "simulation_seconds": 2.7666666666666666,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "e0063950f5a6b90d38475dc743327106e9b7f8a1670760e66111a7377b2692ad",
+      "hull_and_shield": 50709.4
+    },
+    {
+      "frame": 90,
+      "tick": 84,
+      "simulation_seconds": 2.8,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "7c1ad02cc1d72b698e3d9051547b77885bdd9eff6ba8d9c35c15474fc3c51f36",
+      "hull_and_shield": 50709.4
+    },
+    {
+      "frame": 91,
+      "tick": 84,
+      "simulation_seconds": 2.8,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "7c1ad02cc1d72b698e3d9051547b77885bdd9eff6ba8d9c35c15474fc3c51f36",
+      "hull_and_shield": 50709.4
+    },
+    {
+      "frame": 92,
+      "tick": 85,
+      "simulation_seconds": 2.833333333333333,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "ab4de3040050a5e7fa94242d611bfc80322d4a3bce8fcdc156096d9d09a813ca",
+      "hull_and_shield": 50709.4
+    },
+    {
+      "frame": 93,
+      "tick": 85,
+      "simulation_seconds": 2.833333333333333,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "ab4de3040050a5e7fa94242d611bfc80322d4a3bce8fcdc156096d9d09a813ca",
+      "hull_and_shield": 50709.4
+    },
+    {
+      "frame": 94,
+      "tick": 86,
+      "simulation_seconds": 2.8666666666666663,
+      "projectiles": 5,
+      "weapon_types": [
+        "turbolaser"
+      ],
+      "state_sha256": "6552c8419d5bafbb9197e5089247108d05ec38828b340e6fdc87c6319a8dc8b5",
+      "hull_and_shield": 50645.0
+    },
+    {
+      "frame": 95,
+      "tick": 86,
+      "simulation_seconds": 2.8666666666666663,
+      "projectiles": 5,
+      "weapon_types": [
+        "turbolaser"
+      ],
+      "state_sha256": "6552c8419d5bafbb9197e5089247108d05ec38828b340e6fdc87c6319a8dc8b5",
+      "hull_and_shield": 50645.0
+    },
+    {
+      "frame": 96,
+      "tick": 87,
+      "simulation_seconds": 2.8999999999999995,
+      "projectiles": 5,
+      "weapon_types": [
+        "turbolaser"
+      ],
+      "state_sha256": "a2ac91abb719f7ef01612f5066a1b5670ee494f3dc886d0128476f9992f4a5db",
+      "hull_and_shield": 50645.0
+    },
+    {
+      "frame": 97,
+      "tick": 87,
+      "simulation_seconds": 2.8999999999999995,
+      "projectiles": 5,
+      "weapon_types": [
+        "turbolaser"
+      ],
+      "state_sha256": "a2ac91abb719f7ef01612f5066a1b5670ee494f3dc886d0128476f9992f4a5db",
+      "hull_and_shield": 50645.0
+    },
+    {
+      "frame": 98,
+      "tick": 88,
+      "simulation_seconds": 2.9333333333333327,
+      "projectiles": 3,
+      "weapon_types": [
+        "turbolaser"
+      ],
+      "state_sha256": "b4d3f8558dfc65009ef34cc06ba183f9ecdccfb6c0205e62ae7cfe5f90bc11fc",
+      "hull_and_shield": 50447.0
+    },
+    {
+      "frame": 99,
+      "tick": 88,
+      "simulation_seconds": 2.9333333333333327,
+      "projectiles": 3,
+      "weapon_types": [
+        "turbolaser"
+      ],
+      "state_sha256": "b4d3f8558dfc65009ef34cc06ba183f9ecdccfb6c0205e62ae7cfe5f90bc11fc",
+      "hull_and_shield": 50447.0
+    },
+    {
+      "frame": 100,
+      "tick": 89,
+      "simulation_seconds": 2.966666666666666,
+      "projectiles": 0,
+      "weapon_types": [],
+      "state_sha256": "ee847a1ff46f3585b4f3510bf9a2edf5e88bacd11124256456b8e64d3e052edf",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 101,
+      "tick": 89,
+      "simulation_seconds": 2.966666666666666,
+      "projectiles": 0,
+      "weapon_types": [],
+      "state_sha256": "ee847a1ff46f3585b4f3510bf9a2edf5e88bacd11124256456b8e64d3e052edf",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 102,
+      "tick": 90,
+      "simulation_seconds": 2.999999999999999,
+      "projectiles": 0,
+      "weapon_types": [],
+      "state_sha256": "aa243bed24bb7aedfa5cb441cc62b6c1d1fdaffb97a1da69c5e964d548bfe6b5",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 103,
+      "tick": 90,
+      "simulation_seconds": 2.999999999999999,
+      "projectiles": 0,
+      "weapon_types": [],
+      "state_sha256": "aa243bed24bb7aedfa5cb441cc62b6c1d1fdaffb97a1da69c5e964d548bfe6b5",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 104,
+      "tick": 91,
+      "simulation_seconds": 3.0333333333333323,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "05419e80f5949eabbe66b79216a8211fabcecf3a1785039a5708ea4d8c97189b",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 105,
+      "tick": 91,
+      "simulation_seconds": 3.0333333333333323,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "05419e80f5949eabbe66b79216a8211fabcecf3a1785039a5708ea4d8c97189b",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 106,
+      "tick": 92,
+      "simulation_seconds": 3.0666666666666655,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "8dfec9c186b22aade8db842cef07a9c84aec236df2c1826b424f495ac43a7f93",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 107,
+      "tick": 92,
+      "simulation_seconds": 3.0666666666666655,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "8dfec9c186b22aade8db842cef07a9c84aec236df2c1826b424f495ac43a7f93",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 108,
+      "tick": 93,
+      "simulation_seconds": 3.0999999999999988,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "bf0e480f7379fafc47e2e4115d275f78e6ece88a5fcd5e70467d71b922c35f41",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 109,
+      "tick": 93,
+      "simulation_seconds": 3.0999999999999988,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "bf0e480f7379fafc47e2e4115d275f78e6ece88a5fcd5e70467d71b922c35f41",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 110,
+      "tick": 94,
+      "simulation_seconds": 3.133333333333332,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "1d738209e7ba8d2171943cb9b82dea403b16dbeabe6c8e9d2270744b16b83256",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 111,
+      "tick": 94,
+      "simulation_seconds": 3.133333333333332,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "1d738209e7ba8d2171943cb9b82dea403b16dbeabe6c8e9d2270744b16b83256",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 112,
+      "tick": 95,
+      "simulation_seconds": 3.166666666666665,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "0789d8203060a565a3bbe95e991a80a80138460997a0aa15e6b6c181d41d6408",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 113,
+      "tick": 95,
+      "simulation_seconds": 3.166666666666665,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "0789d8203060a565a3bbe95e991a80a80138460997a0aa15e6b6c181d41d6408",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 114,
+      "tick": 96,
+      "simulation_seconds": 3.1999999999999984,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "e5f7bd7b8f576f568f9542f2dcb7d828d85c9b073b67e2552e1539e19961a04a",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 115,
+      "tick": 96,
+      "simulation_seconds": 3.1999999999999984,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "e5f7bd7b8f576f568f9542f2dcb7d828d85c9b073b67e2552e1539e19961a04a",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 116,
+      "tick": 97,
+      "simulation_seconds": 3.2333333333333316,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "e3f37e10eda6e5a016fec0f2c659c6b7266e17c53609f1cfd92537cb0520b1db",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 117,
+      "tick": 97,
+      "simulation_seconds": 3.2333333333333316,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "e3f37e10eda6e5a016fec0f2c659c6b7266e17c53609f1cfd92537cb0520b1db",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 118,
+      "tick": 98,
+      "simulation_seconds": 3.266666666666665,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "01793ad74bb9f32aae5a0d70fd3c6c8fde2e97903a3460dfe9de8eac2da1779e",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 119,
+      "tick": 98,
+      "simulation_seconds": 3.266666666666665,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "01793ad74bb9f32aae5a0d70fd3c6c8fde2e97903a3460dfe9de8eac2da1779e",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 120,
+      "tick": 99,
+      "simulation_seconds": 3.299999999999998,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "3fe8c5475fb082285dbe4d7521b0969c7b4d536fbe7d269a64a84409ed4ace52",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 121,
+      "tick": 99,
+      "simulation_seconds": 3.299999999999998,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "3fe8c5475fb082285dbe4d7521b0969c7b4d536fbe7d269a64a84409ed4ace52",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 122,
+      "tick": 100,
+      "simulation_seconds": 3.3333333333333313,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "47d23e30703ca02813069ddfc3e8a884ff288067a6469799757962c272f2b8b2",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 123,
+      "tick": 100,
+      "simulation_seconds": 3.3333333333333313,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "47d23e30703ca02813069ddfc3e8a884ff288067a6469799757962c272f2b8b2",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 124,
+      "tick": 101,
+      "simulation_seconds": 3.3666666666666645,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "54ad2208573a2f8e7662a9d22a1f6928f4e3baec7c5cf4255cfeba5fc91c178a",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 125,
+      "tick": 101,
+      "simulation_seconds": 3.3666666666666645,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "54ad2208573a2f8e7662a9d22a1f6928f4e3baec7c5cf4255cfeba5fc91c178a",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 126,
+      "tick": 102,
+      "simulation_seconds": 3.3999999999999977,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "6c9e27e83613619cf8ca3dc7f180c68480b79c74f868b26f2a5ef663cda94aa2",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 127,
+      "tick": 102,
+      "simulation_seconds": 3.3999999999999977,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "6c9e27e83613619cf8ca3dc7f180c68480b79c74f868b26f2a5ef663cda94aa2",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 128,
+      "tick": 103,
+      "simulation_seconds": 3.433333333333331,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "6900edd4fb9d3c02ce4f9700dae0dc33bf8237dc6e71adfefb88e937abbe2c59",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 129,
+      "tick": 103,
+      "simulation_seconds": 3.433333333333331,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "6900edd4fb9d3c02ce4f9700dae0dc33bf8237dc6e71adfefb88e937abbe2c59",
+      "hull_and_shield": 50150.0
+    },
+    {
+      "frame": 130,
+      "tick": 104,
+      "simulation_seconds": 3.466666666666664,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "afece772295cb0ab69a855f89b5ec3228b64434416a40fc61022848d8d7c2007",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 131,
+      "tick": 104,
+      "simulation_seconds": 3.466666666666664,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "afece772295cb0ab69a855f89b5ec3228b64434416a40fc61022848d8d7c2007",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 132,
+      "tick": 105,
+      "simulation_seconds": 3.4999999999999973,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "dd5396f5328fec137b4318234aa24c945551ed425eafac7096c252062fa6bca8",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 133,
+      "tick": 105,
+      "simulation_seconds": 3.4999999999999973,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "dd5396f5328fec137b4318234aa24c945551ed425eafac7096c252062fa6bca8",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 134,
+      "tick": 106,
+      "simulation_seconds": 3.5333333333333306,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "332436ef945fb69356e02b70a3ac407fd3723d48028cbc9269a44988fc91abc3",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 135,
+      "tick": 106,
+      "simulation_seconds": 3.5333333333333306,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "332436ef945fb69356e02b70a3ac407fd3723d48028cbc9269a44988fc91abc3",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 136,
+      "tick": 107,
+      "simulation_seconds": 3.5666666666666638,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "91213f11a179e39af23eb0f3ea692a4dd657e95c196c78f350f725133e1e4208",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 137,
+      "tick": 107,
+      "simulation_seconds": 3.5666666666666638,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "91213f11a179e39af23eb0f3ea692a4dd657e95c196c78f350f725133e1e4208",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 138,
+      "tick": 108,
+      "simulation_seconds": 3.599999999999997,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "3d6c005b048f9dfb5abaafb181a472cbfff790b2af0186bba8914249d925644b",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 139,
+      "tick": 108,
+      "simulation_seconds": 3.599999999999997,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "3d6c005b048f9dfb5abaafb181a472cbfff790b2af0186bba8914249d925644b",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 140,
+      "tick": 109,
+      "simulation_seconds": 3.63333333333333,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "9818512ceeb1fd096168262fb2d22c89fc38de93ac2856e906d5c70a54f96047",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 141,
+      "tick": 109,
+      "simulation_seconds": 3.63333333333333,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "9818512ceeb1fd096168262fb2d22c89fc38de93ac2856e906d5c70a54f96047",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 142,
+      "tick": 110,
+      "simulation_seconds": 3.6666666666666634,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "0bb4ab69491e706ce1214d698957afee12e21f29e068323027d30f08d7aece15",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 143,
+      "tick": 110,
+      "simulation_seconds": 3.6666666666666634,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "0bb4ab69491e706ce1214d698957afee12e21f29e068323027d30f08d7aece15",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 144,
+      "tick": 111,
+      "simulation_seconds": 3.6999999999999966,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "d42a5f418e32032309a1811865e4875cdb508eeacb7ef0598a3cfab28bf3a314",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 145,
+      "tick": 111,
+      "simulation_seconds": 3.6999999999999966,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "d42a5f418e32032309a1811865e4875cdb508eeacb7ef0598a3cfab28bf3a314",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 146,
+      "tick": 112,
+      "simulation_seconds": 3.73333333333333,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "86276113162585a234d242f8f5c425f961ee1855c9f2b0fc076e221697bd3789",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 147,
+      "tick": 112,
+      "simulation_seconds": 3.73333333333333,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "86276113162585a234d242f8f5c425f961ee1855c9f2b0fc076e221697bd3789",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 148,
+      "tick": 113,
+      "simulation_seconds": 3.766666666666663,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "2c878cb47fe6631609cf03352ba0100ddd68bf029e9262583b57f683f98f3931",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 149,
+      "tick": 113,
+      "simulation_seconds": 3.766666666666663,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "2c878cb47fe6631609cf03352ba0100ddd68bf029e9262583b57f683f98f3931",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 150,
+      "tick": 114,
+      "simulation_seconds": 3.7999999999999963,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "75d3167bc01a61168a5f8da618894fb1135d6a515627fabc81129dc5bd98fecf",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 151,
+      "tick": 114,
+      "simulation_seconds": 3.7999999999999963,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "75d3167bc01a61168a5f8da618894fb1135d6a515627fabc81129dc5bd98fecf",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 152,
+      "tick": 115,
+      "simulation_seconds": 3.8333333333333295,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "83039e17842b021e1625852b0193126f1bb026a14fd225bf543e616b818f0d51",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 153,
+      "tick": 115,
+      "simulation_seconds": 3.8333333333333295,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "83039e17842b021e1625852b0193126f1bb026a14fd225bf543e616b818f0d51",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 154,
+      "tick": 116,
+      "simulation_seconds": 3.8666666666666627,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "c0a9677bc2ee0f9dad0045b30e4687d4338978f8d1e1066399e734de91928ed5",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 155,
+      "tick": 116,
+      "simulation_seconds": 3.8666666666666627,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "c0a9677bc2ee0f9dad0045b30e4687d4338978f8d1e1066399e734de91928ed5",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 156,
+      "tick": 117,
+      "simulation_seconds": 3.899999999999996,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "e533d1e42a871344dc95428497c590ebe8e7df6cdcd3e3134b3cff7022a92d36",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 157,
+      "tick": 117,
+      "simulation_seconds": 3.899999999999996,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "e533d1e42a871344dc95428497c590ebe8e7df6cdcd3e3134b3cff7022a92d36",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 158,
+      "tick": 118,
+      "simulation_seconds": 3.933333333333329,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "380d207a5cab707ab2dc9b5bae1fcddb177c7adbd71ed2d62fd469c480eb7e78",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 159,
+      "tick": 118,
+      "simulation_seconds": 3.933333333333329,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "380d207a5cab707ab2dc9b5bae1fcddb177c7adbd71ed2d62fd469c480eb7e78",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 160,
+      "tick": 119,
+      "simulation_seconds": 3.9666666666666623,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "b458d53192646394bead04f6f47b690aad4c706d898ca2b8fdce9af276818b7c",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 161,
+      "tick": 119,
+      "simulation_seconds": 3.9666666666666623,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "b458d53192646394bead04f6f47b690aad4c706d898ca2b8fdce9af276818b7c",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 162,
+      "tick": 120,
+      "simulation_seconds": 3.9999999999999956,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "0965f4358273ba753483d94c35e7ab20de73d8c53e18fa27080d7b91c3d37aa0",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 163,
+      "tick": 120,
+      "simulation_seconds": 3.9999999999999956,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "0965f4358273ba753483d94c35e7ab20de73d8c53e18fa27080d7b91c3d37aa0",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 164,
+      "tick": 121,
+      "simulation_seconds": 4.033333333333329,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "d1f4cddd8042bddcdc11822de4c0801f1fb45ed893fc4f010daff57d80618736",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 165,
+      "tick": 121,
+      "simulation_seconds": 4.033333333333329,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "d1f4cddd8042bddcdc11822de4c0801f1fb45ed893fc4f010daff57d80618736",
+      "hull_and_shield": 50085.600000000006
+    },
+    {
+      "frame": 166,
+      "tick": 122,
+      "simulation_seconds": 4.066666666666662,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "97ce955adab75ceede9990aaadebeb2ca291dca475b4c232420e85b8f0f5c4de",
+      "hull_and_shield": 50021.200000000004
+    },
+    {
+      "frame": 167,
+      "tick": 122,
+      "simulation_seconds": 4.066666666666662,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "97ce955adab75ceede9990aaadebeb2ca291dca475b4c232420e85b8f0f5c4de",
+      "hull_and_shield": 50021.200000000004
+    },
+    {
+      "frame": 168,
+      "tick": 123,
+      "simulation_seconds": 4.099999999999995,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "20d7cb7a033ff3cea6c3f63340b3445f24e2170d8a11087ac4f39835bd0ccfd7",
+      "hull_and_shield": 50021.200000000004
+    },
+    {
+      "frame": 169,
+      "tick": 123,
+      "simulation_seconds": 4.099999999999995,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "20d7cb7a033ff3cea6c3f63340b3445f24e2170d8a11087ac4f39835bd0ccfd7",
+      "hull_and_shield": 50021.200000000004
+    },
+    {
+      "frame": 170,
+      "tick": 124,
+      "simulation_seconds": 4.133333333333328,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "7777e7240c53037ed072b1a0f4d536a5e200b44a012a5acc591fd74f8e740d67",
+      "hull_and_shield": 50021.200000000004
+    },
+    {
+      "frame": 171,
+      "tick": 124,
+      "simulation_seconds": 4.133333333333328,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "7777e7240c53037ed072b1a0f4d536a5e200b44a012a5acc591fd74f8e740d67",
+      "hull_and_shield": 50021.200000000004
+    },
+    {
+      "frame": 172,
+      "tick": 125,
+      "simulation_seconds": 4.166666666666662,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "e818777ba9fe0a666a91900f5c8f2be5a018576828be5ebe2de7b190f43eca92",
+      "hull_and_shield": 50021.200000000004
+    },
+    {
+      "frame": 173,
+      "tick": 125,
+      "simulation_seconds": 4.166666666666662,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "e818777ba9fe0a666a91900f5c8f2be5a018576828be5ebe2de7b190f43eca92",
+      "hull_and_shield": 50021.200000000004
+    },
+    {
+      "frame": 174,
+      "tick": 126,
+      "simulation_seconds": 4.199999999999995,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "03dc7cb973eefa59dc22a6e1214959675b0f68aa00655323878a473a598c4846",
+      "hull_and_shield": 50021.200000000004
+    },
+    {
+      "frame": 175,
+      "tick": 126,
+      "simulation_seconds": 4.199999999999995,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "03dc7cb973eefa59dc22a6e1214959675b0f68aa00655323878a473a598c4846",
+      "hull_and_shield": 50021.200000000004
+    },
+    {
+      "frame": 176,
+      "tick": 127,
+      "simulation_seconds": 4.233333333333328,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "bbec6b40df6c81f9dc64410552c548ffe91d42e5fa9a2987359fa910a7aa85e7",
+      "hull_and_shield": 50021.200000000004
+    },
+    {
+      "frame": 177,
+      "tick": 127,
+      "simulation_seconds": 4.233333333333328,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "bbec6b40df6c81f9dc64410552c548ffe91d42e5fa9a2987359fa910a7aa85e7",
+      "hull_and_shield": 50021.200000000004
+    },
+    {
+      "frame": 178,
+      "tick": 128,
+      "simulation_seconds": 4.266666666666661,
+      "projectiles": 6,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "014daa323ba6475f2bb865f9d2e8c709ba2f7ea8908949788680c310e8ee3107",
+      "hull_and_shield": 49977.200000000004
+    },
+    {
+      "frame": 179,
+      "tick": 128,
+      "simulation_seconds": 4.266666666666661,
+      "projectiles": 6,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "014daa323ba6475f2bb865f9d2e8c709ba2f7ea8908949788680c310e8ee3107",
+      "hull_and_shield": 49977.200000000004
+    },
+    {
+      "frame": 180,
+      "tick": 129,
+      "simulation_seconds": 4.2999999999999945,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "24eaffe74b62572a88dceb940515d986fa04e1de4d8b061a68073e702aa4afbb",
+      "hull_and_shield": 49889.200000000004
+    },
+    {
+      "frame": 181,
+      "tick": 129,
+      "simulation_seconds": 4.2999999999999945,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "24eaffe74b62572a88dceb940515d986fa04e1de4d8b061a68073e702aa4afbb",
+      "hull_and_shield": 49889.200000000004
+    },
+    {
+      "frame": 182,
+      "tick": 130,
+      "simulation_seconds": 4.333333333333328,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "c0478690e96f124ee81b721eee6d3b910731cdc88d7049bb0a5ced8c1977cc03",
+      "hull_and_shield": 49889.200000000004
+    },
+    {
+      "frame": 183,
+      "tick": 130,
+      "simulation_seconds": 4.333333333333328,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "c0478690e96f124ee81b721eee6d3b910731cdc88d7049bb0a5ced8c1977cc03",
+      "hull_and_shield": 49889.200000000004
+    },
+    {
+      "frame": 184,
+      "tick": 131,
+      "simulation_seconds": 4.366666666666661,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "0768937ae8866139ed382001bd2b3b4fb8526a5f92aac58ec257dc228d33b393",
+      "hull_and_shield": 49889.200000000004
+    },
+    {
+      "frame": 185,
+      "tick": 131,
+      "simulation_seconds": 4.366666666666661,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "0768937ae8866139ed382001bd2b3b4fb8526a5f92aac58ec257dc228d33b393",
+      "hull_and_shield": 49889.200000000004
+    },
+    {
+      "frame": 186,
+      "tick": 132,
+      "simulation_seconds": 4.399999999999994,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "3efa9bd65a70a2ecef19657222886387e77e7a5df391360e43794c2e7b3eac11",
+      "hull_and_shield": 49889.200000000004
+    },
+    {
+      "frame": 187,
+      "tick": 132,
+      "simulation_seconds": 4.399999999999994,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "3efa9bd65a70a2ecef19657222886387e77e7a5df391360e43794c2e7b3eac11",
+      "hull_and_shield": 49889.200000000004
+    },
+    {
+      "frame": 188,
+      "tick": 133,
+      "simulation_seconds": 4.433333333333327,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "f5936984c12dbfe318fb4bf460d2bcee8e3a133f7516702540e39b6eaca38d38",
+      "hull_and_shield": 49889.200000000004
+    },
+    {
+      "frame": 189,
+      "tick": 133,
+      "simulation_seconds": 4.433333333333327,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "f5936984c12dbfe318fb4bf460d2bcee8e3a133f7516702540e39b6eaca38d38",
+      "hull_and_shield": 49889.200000000004
+    },
+    {
+      "frame": 190,
+      "tick": 134,
+      "simulation_seconds": 4.466666666666661,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "5c82f65b1bee76d835ed602eb67cb82fbf21e4576984a2fc8be7df3100180c73",
+      "hull_and_shield": 49889.200000000004
+    },
+    {
+      "frame": 191,
+      "tick": 134,
+      "simulation_seconds": 4.466666666666661,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "5c82f65b1bee76d835ed602eb67cb82fbf21e4576984a2fc8be7df3100180c73",
+      "hull_and_shield": 49889.200000000004
+    },
+    {
+      "frame": 192,
+      "tick": 135,
+      "simulation_seconds": 4.499999999999994,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "f54e7161c3247bbc1766c7bef3ca13c3668e3ca9f79dd814b0814202a6042360",
+      "hull_and_shield": 49889.200000000004
+    },
+    {
+      "frame": 193,
+      "tick": 135,
+      "simulation_seconds": 4.499999999999994,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "f54e7161c3247bbc1766c7bef3ca13c3668e3ca9f79dd814b0814202a6042360",
+      "hull_and_shield": 49889.200000000004
+    },
+    {
+      "frame": 194,
+      "tick": 136,
+      "simulation_seconds": 4.533333333333327,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "7b1959ee1734a108165a71e4a795af53daada61384ffc9da686b11b7c6b9e862",
+      "hull_and_shield": 49889.200000000004
+    },
+    {
+      "frame": 195,
+      "tick": 136,
+      "simulation_seconds": 4.533333333333327,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "7b1959ee1734a108165a71e4a795af53daada61384ffc9da686b11b7c6b9e862",
+      "hull_and_shield": 49889.200000000004
+    },
+    {
+      "frame": 196,
+      "tick": 137,
+      "simulation_seconds": 4.56666666666666,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "897738ac492fe012922c243cb3e82c903cf67aeecc035c343f04a53f7f63bc63",
+      "hull_and_shield": 49889.200000000004
+    },
+    {
+      "frame": 197,
+      "tick": 137,
+      "simulation_seconds": 4.56666666666666,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "897738ac492fe012922c243cb3e82c903cf67aeecc035c343f04a53f7f63bc63",
+      "hull_and_shield": 49889.200000000004
+    },
+    {
+      "frame": 198,
+      "tick": 138,
+      "simulation_seconds": 4.599999999999993,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "f82095b2c6255b82d197b5bf60d00ba3b6d8cd9fec62d0f77af792b1fd0c2656",
+      "hull_and_shield": 49889.200000000004
+    },
+    {
+      "frame": 199,
+      "tick": 138,
+      "simulation_seconds": 4.599999999999993,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "f82095b2c6255b82d197b5bf60d00ba3b6d8cd9fec62d0f77af792b1fd0c2656",
+      "hull_and_shield": 49889.200000000004
+    },
+    {
+      "frame": 200,
+      "tick": 139,
+      "simulation_seconds": 4.633333333333327,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "e03d3a723ec0ce3426afad4916efe556aeac7e3a9658c7a1e3d7b7de3472372e",
+      "hull_and_shield": 49889.200000000004
+    },
+    {
+      "frame": 201,
+      "tick": 139,
+      "simulation_seconds": 4.633333333333327,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "e03d3a723ec0ce3426afad4916efe556aeac7e3a9658c7a1e3d7b7de3472372e",
+      "hull_and_shield": 49889.200000000004
+    },
+    {
+      "frame": 202,
+      "tick": 140,
+      "simulation_seconds": 4.66666666666666,
+      "projectiles": 5,
+      "weapon_types": [
+        "turbolaser"
+      ],
+      "state_sha256": "5ae622f8981a37e5ea573e81ad163ab948db5a70081e8592c764bcc5ba2992e0",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 203,
+      "tick": 140,
+      "simulation_seconds": 4.66666666666666,
+      "projectiles": 5,
+      "weapon_types": [
+        "turbolaser"
+      ],
+      "state_sha256": "5ae622f8981a37e5ea573e81ad163ab948db5a70081e8592c764bcc5ba2992e0",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 204,
+      "tick": 141,
+      "simulation_seconds": 4.699999999999993,
+      "projectiles": 5,
+      "weapon_types": [
+        "turbolaser"
+      ],
+      "state_sha256": "2d55be62e72b0a09ff1705c8f3e3d2387e3bd35aedf2acea614879d1be93f727",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 205,
+      "tick": 141,
+      "simulation_seconds": 4.699999999999993,
+      "projectiles": 5,
+      "weapon_types": [
+        "turbolaser"
+      ],
+      "state_sha256": "2d55be62e72b0a09ff1705c8f3e3d2387e3bd35aedf2acea614879d1be93f727",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 206,
+      "tick": 142,
+      "simulation_seconds": 4.733333333333326,
+      "projectiles": 5,
+      "weapon_types": [
+        "turbolaser"
+      ],
+      "state_sha256": "7278658f91424ef45853cbcab59f1df371a6bee5eb25b8b37ace0893a0ba112c",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 207,
+      "tick": 143,
+      "simulation_seconds": 4.7666666666666595,
+      "projectiles": 5,
+      "weapon_types": [
+        "turbolaser"
+      ],
+      "state_sha256": "6ed1f938c5f3933b791529a7ecef050282e3ce4e5865be1a683b5bf0c531e80a",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 208,
+      "tick": 144,
+      "simulation_seconds": 4.799999999999993,
+      "projectiles": 5,
+      "weapon_types": [
+        "turbolaser"
+      ],
+      "state_sha256": "40c474c0f1eddaddefa72e937a1a0eb19cbb8cab76f7c0a63609fc833a34309f",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 209,
+      "tick": 144,
+      "simulation_seconds": 4.799999999999993,
+      "projectiles": 5,
+      "weapon_types": [
+        "turbolaser"
+      ],
+      "state_sha256": "40c474c0f1eddaddefa72e937a1a0eb19cbb8cab76f7c0a63609fc833a34309f",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 210,
+      "tick": 145,
+      "simulation_seconds": 4.833333333333326,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "a6ac0d0bd11dff5a8856ff039c6616be40b7dc1aeac605d1081a2c048822d08b",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 211,
+      "tick": 145,
+      "simulation_seconds": 4.833333333333326,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "a6ac0d0bd11dff5a8856ff039c6616be40b7dc1aeac605d1081a2c048822d08b",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 212,
+      "tick": 146,
+      "simulation_seconds": 4.866666666666659,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "10b358ad243ec87d9e74ccb22c2cb9da02808128f1bb6b4a5fef19d1bf74013f",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 213,
+      "tick": 146,
+      "simulation_seconds": 4.866666666666659,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "10b358ad243ec87d9e74ccb22c2cb9da02808128f1bb6b4a5fef19d1bf74013f",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 214,
+      "tick": 147,
+      "simulation_seconds": 4.899999999999992,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "f7da38b116a35c5e3ef716f2d8400fcd49dc9886a01ba5e87256f95e7b908337",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 215,
+      "tick": 147,
+      "simulation_seconds": 4.899999999999992,
+      "projectiles": 9,
+      "weapon_types": [
+        "laser",
+        "turbolaser"
+      ],
+      "state_sha256": "f7da38b116a35c5e3ef716f2d8400fcd49dc9886a01ba5e87256f95e7b908337",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 216,
+      "tick": 148,
+      "simulation_seconds": 4.933333333333326,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "54c0a2288c562af280c00aed3d4a2a486d07f97f882a02faeda9d9c2cd7a25a7",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 217,
+      "tick": 148,
+      "simulation_seconds": 4.933333333333326,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "54c0a2288c562af280c00aed3d4a2a486d07f97f882a02faeda9d9c2cd7a25a7",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 218,
+      "tick": 149,
+      "simulation_seconds": 4.966666666666659,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "ac028f60e9e936dba864f3a4c17a3dc4a0d29ce308e1e26a833d4e0170ee3d24",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 219,
+      "tick": 149,
+      "simulation_seconds": 4.966666666666659,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "ac028f60e9e936dba864f3a4c17a3dc4a0d29ce308e1e26a833d4e0170ee3d24",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 220,
+      "tick": 150,
+      "simulation_seconds": 4.999999999999992,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "9bde9f0ce8a63be2c87710fcf013bbf3dc74e688796b820d0e4d95bd6f172294",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 221,
+      "tick": 150,
+      "simulation_seconds": 4.999999999999992,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "9bde9f0ce8a63be2c87710fcf013bbf3dc74e688796b820d0e4d95bd6f172294",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 222,
+      "tick": 151,
+      "simulation_seconds": 5.033333333333325,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "93c3c6c34f128e163df2ef40a98ee9ebb21ffe254d151ec34cee588b11f16171",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 223,
+      "tick": 151,
+      "simulation_seconds": 5.033333333333325,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "93c3c6c34f128e163df2ef40a98ee9ebb21ffe254d151ec34cee588b11f16171",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 224,
+      "tick": 152,
+      "simulation_seconds": 5.066666666666658,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "9b1b8090c6a25a5525476f61197d95848a1a0f264f4cc3d9cc96f7762dae0ed6",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 225,
+      "tick": 152,
+      "simulation_seconds": 5.066666666666658,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "9b1b8090c6a25a5525476f61197d95848a1a0f264f4cc3d9cc96f7762dae0ed6",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 226,
+      "tick": 153,
+      "simulation_seconds": 5.099999999999992,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "aab63ba9453159b2680559ecda60ec2957c8217245558514b632bdebc96c1c76",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 227,
+      "tick": 153,
+      "simulation_seconds": 5.099999999999992,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "aab63ba9453159b2680559ecda60ec2957c8217245558514b632bdebc96c1c76",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 228,
+      "tick": 154,
+      "simulation_seconds": 5.133333333333325,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "e953c4cc5dfbd57e8d4c7d7a0b2c8fb1339f29f33e60c002b40f1f9cb15feff5",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 229,
+      "tick": 154,
+      "simulation_seconds": 5.133333333333325,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "e953c4cc5dfbd57e8d4c7d7a0b2c8fb1339f29f33e60c002b40f1f9cb15feff5",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 230,
+      "tick": 155,
+      "simulation_seconds": 5.166666666666658,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "912593d74ee32273c909063ff5e51ebf07ea3d9712906da5111ba8e88f5c6581",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 231,
+      "tick": 155,
+      "simulation_seconds": 5.166666666666658,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "912593d74ee32273c909063ff5e51ebf07ea3d9712906da5111ba8e88f5c6581",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 232,
+      "tick": 156,
+      "simulation_seconds": 5.199999999999991,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "26df0a331fcf476c93ec268ec839cdf0bed67c9afcc448414c285e41444cfdeb",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 233,
+      "tick": 156,
+      "simulation_seconds": 5.199999999999991,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "26df0a331fcf476c93ec268ec839cdf0bed67c9afcc448414c285e41444cfdeb",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 234,
+      "tick": 157,
+      "simulation_seconds": 5.2333333333333245,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "b240637651e4a41efa97d0e0b24eb3aeb2c3de989ecdc36eea5553de576bf327",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 235,
+      "tick": 157,
+      "simulation_seconds": 5.2333333333333245,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "b240637651e4a41efa97d0e0b24eb3aeb2c3de989ecdc36eea5553de576bf327",
+      "hull_and_shield": 49824.8
+    },
+    {
+      "frame": 236,
+      "tick": 158,
+      "simulation_seconds": 5.266666666666658,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "97f2960436c39918ad515570d85bb50220656e8c5adb55258f0051c65e5ff436",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 237,
+      "tick": 158,
+      "simulation_seconds": 5.266666666666658,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "97f2960436c39918ad515570d85bb50220656e8c5adb55258f0051c65e5ff436",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 238,
+      "tick": 159,
+      "simulation_seconds": 5.299999999999991,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "9c8fcf5373ee19105668f6cbf355e4d18970726adda4b6a5ea50219b9c7cac07",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 239,
+      "tick": 159,
+      "simulation_seconds": 5.299999999999991,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "9c8fcf5373ee19105668f6cbf355e4d18970726adda4b6a5ea50219b9c7cac07",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 240,
+      "tick": 160,
+      "simulation_seconds": 5.333333333333324,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "2043a18bdcc48d7e88e285bc18f596f83a5bda8a913a45bdb6b5336e462aed32",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 241,
+      "tick": 160,
+      "simulation_seconds": 5.333333333333324,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "2043a18bdcc48d7e88e285bc18f596f83a5bda8a913a45bdb6b5336e462aed32",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 242,
+      "tick": 161,
+      "simulation_seconds": 5.366666666666657,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "dab2e9eb6cbd4f36944a5d94d3b048f25fd1e22c4e5234132576bbea291255ee",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 243,
+      "tick": 161,
+      "simulation_seconds": 5.366666666666657,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "dab2e9eb6cbd4f36944a5d94d3b048f25fd1e22c4e5234132576bbea291255ee",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 244,
+      "tick": 162,
+      "simulation_seconds": 5.399999999999991,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "7a180011fa091617695a22421dcc3c8d49142ff1d4391dc8d2f25a90de264338",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 245,
+      "tick": 162,
+      "simulation_seconds": 5.399999999999991,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "7a180011fa091617695a22421dcc3c8d49142ff1d4391dc8d2f25a90de264338",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 246,
+      "tick": 163,
+      "simulation_seconds": 5.433333333333324,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "5c00adf58b217fd1c0bce15302989b53032cd860771e237ed34c9b5be851afe0",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 247,
+      "tick": 163,
+      "simulation_seconds": 5.433333333333324,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "5c00adf58b217fd1c0bce15302989b53032cd860771e237ed34c9b5be851afe0",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 248,
+      "tick": 164,
+      "simulation_seconds": 5.466666666666657,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "32a48c00773b5762cc03aa8dbd5a53ea0b3ab308366caae319b916587fad674b",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 249,
+      "tick": 164,
+      "simulation_seconds": 5.466666666666657,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "32a48c00773b5762cc03aa8dbd5a53ea0b3ab308366caae319b916587fad674b",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 250,
+      "tick": 165,
+      "simulation_seconds": 5.49999999999999,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "0d15d844839e92d4b7fe385c0e3f626bffa03d65710da560bef56eda6f0151d3",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 251,
+      "tick": 165,
+      "simulation_seconds": 5.49999999999999,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "0d15d844839e92d4b7fe385c0e3f626bffa03d65710da560bef56eda6f0151d3",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 252,
+      "tick": 166,
+      "simulation_seconds": 5.5333333333333234,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "a8fb19419f02eef634181c84c87826e72da309f300ac827f0dd6d4bea211982f",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 253,
+      "tick": 166,
+      "simulation_seconds": 5.5333333333333234,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "a8fb19419f02eef634181c84c87826e72da309f300ac827f0dd6d4bea211982f",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 254,
+      "tick": 167,
+      "simulation_seconds": 5.566666666666657,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "daf7051e658d08535a1e77051b4fa06e843098dc2f0e1e4c0553b4f0d811c8e0",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 255,
+      "tick": 167,
+      "simulation_seconds": 5.566666666666657,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "daf7051e658d08535a1e77051b4fa06e843098dc2f0e1e4c0553b4f0d811c8e0",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 256,
+      "tick": 168,
+      "simulation_seconds": 5.59999999999999,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "595ad0141e96714a5bebfe5b0314e9f88ab312a6a9c1fee1d92c872e5fe409fd",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 257,
+      "tick": 168,
+      "simulation_seconds": 5.59999999999999,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "595ad0141e96714a5bebfe5b0314e9f88ab312a6a9c1fee1d92c872e5fe409fd",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 258,
+      "tick": 169,
+      "simulation_seconds": 5.633333333333323,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "50e2aff9054e39e83421b41b93fab0925d385a60375343c53f497e0960c1b3a1",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 259,
+      "tick": 169,
+      "simulation_seconds": 5.633333333333323,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "50e2aff9054e39e83421b41b93fab0925d385a60375343c53f497e0960c1b3a1",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 260,
+      "tick": 170,
+      "simulation_seconds": 5.666666666666656,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "f14ffbba6902607ded0a917ecb45d3eeb783dd28cd3aad088083b1a6c636b895",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 261,
+      "tick": 170,
+      "simulation_seconds": 5.666666666666656,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "f14ffbba6902607ded0a917ecb45d3eeb783dd28cd3aad088083b1a6c636b895",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 262,
+      "tick": 171,
+      "simulation_seconds": 5.6999999999999895,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "e652696117e2c8655da38efc49fc074621d4a18ea1cf687b17051649ce6f9edc",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 263,
+      "tick": 171,
+      "simulation_seconds": 5.6999999999999895,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "e652696117e2c8655da38efc49fc074621d4a18ea1cf687b17051649ce6f9edc",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 264,
+      "tick": 172,
+      "simulation_seconds": 5.733333333333323,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "72e2c19813a08487a15e7fc0fe359e413a9e45c7f468c00c5a43b0c6d540e735",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 265,
+      "tick": 172,
+      "simulation_seconds": 5.733333333333323,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "72e2c19813a08487a15e7fc0fe359e413a9e45c7f468c00c5a43b0c6d540e735",
+      "hull_and_shield": 49265.4
+    },
+    {
+      "frame": 266,
+      "tick": 173,
+      "simulation_seconds": 5.766666666666656,
+      "projectiles": 5,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "c21163a8e4e2712fd3ffa9e698c1ab9655efa174a9de6ea0943afdf500c8a8a2",
+      "hull_and_shield": 49233.200000000004
+    },
+    {
+      "frame": 267,
+      "tick": 173,
+      "simulation_seconds": 5.766666666666656,
+      "projectiles": 5,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "c21163a8e4e2712fd3ffa9e698c1ab9655efa174a9de6ea0943afdf500c8a8a2",
+      "hull_and_shield": 49233.200000000004
+    },
+    {
+      "frame": 268,
+      "tick": 174,
+      "simulation_seconds": 5.799999999999989,
+      "projectiles": 5,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "9ce8cb6f3fd4a161cddd97db3bae8bfa606276010d79fc89923557451df83429",
+      "hull_and_shield": 49233.200000000004
+    },
+    {
+      "frame": 269,
+      "tick": 174,
+      "simulation_seconds": 5.799999999999989,
+      "projectiles": 5,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "9ce8cb6f3fd4a161cddd97db3bae8bfa606276010d79fc89923557451df83429",
+      "hull_and_shield": 49233.200000000004
+    },
+    {
+      "frame": 270,
+      "tick": 175,
+      "simulation_seconds": 5.833333333333322,
+      "projectiles": 5,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "779e0271df717ccf90413dfbd17e47bf1fb603e110f606b0c655c442b7bfd71c",
+      "hull_and_shield": 49233.200000000004
+    },
+    {
+      "frame": 271,
+      "tick": 175,
+      "simulation_seconds": 5.833333333333322,
+      "projectiles": 5,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "779e0271df717ccf90413dfbd17e47bf1fb603e110f606b0c655c442b7bfd71c",
+      "hull_and_shield": 49233.200000000004
+    },
+    {
+      "frame": 272,
+      "tick": 176,
+      "simulation_seconds": 5.866666666666656,
+      "projectiles": 5,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "ecf87ad37ca34330cbc7d0f74f919f3f746fa6c0567cacce38be2de0ea963850",
+      "hull_and_shield": 49233.200000000004
+    },
+    {
+      "frame": 273,
+      "tick": 176,
+      "simulation_seconds": 5.866666666666656,
+      "projectiles": 5,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "ecf87ad37ca34330cbc7d0f74f919f3f746fa6c0567cacce38be2de0ea963850",
+      "hull_and_shield": 49233.200000000004
+    },
+    {
+      "frame": 274,
+      "tick": 177,
+      "simulation_seconds": 5.899999999999989,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "cc599ea3d24114be9ebe1c95d269db98c9c3a81ec98b23ad1613cbb9544ad6dd",
+      "hull_and_shield": 49201.0
+    },
+    {
+      "frame": 275,
+      "tick": 177,
+      "simulation_seconds": 5.899999999999989,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "cc599ea3d24114be9ebe1c95d269db98c9c3a81ec98b23ad1613cbb9544ad6dd",
+      "hull_and_shield": 49201.0
+    },
+    {
+      "frame": 276,
+      "tick": 178,
+      "simulation_seconds": 5.933333333333322,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "0c9a0c09a36a4c31dba65753a8caa347b43511f1c12dfadfe785894367b5dda9",
+      "hull_and_shield": 49201.0
+    },
+    {
+      "frame": 277,
+      "tick": 178,
+      "simulation_seconds": 5.933333333333322,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "0c9a0c09a36a4c31dba65753a8caa347b43511f1c12dfadfe785894367b5dda9",
+      "hull_and_shield": 49201.0
+    },
+    {
+      "frame": 278,
+      "tick": 179,
+      "simulation_seconds": 5.966666666666655,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "e306c755b8d6f6c70e6f1be7ace01b5d78e5bc0fde85b6d9a1b5ed52c81c810a",
+      "hull_and_shield": 49201.0
+    },
+    {
+      "frame": 279,
+      "tick": 179,
+      "simulation_seconds": 5.966666666666655,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "e306c755b8d6f6c70e6f1be7ace01b5d78e5bc0fde85b6d9a1b5ed52c81c810a",
+      "hull_and_shield": 49201.0
+    },
+    {
+      "frame": 280,
+      "tick": 180,
+      "simulation_seconds": 5.9999999999999885,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "7a1bffdd3534b79a3b2e84a20900eb50d210c1f34278b0c7a6731719db43c326",
+      "hull_and_shield": 49201.0
+    },
+    {
+      "frame": 281,
+      "tick": 180,
+      "simulation_seconds": 5.9999999999999885,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "7a1bffdd3534b79a3b2e84a20900eb50d210c1f34278b0c7a6731719db43c326",
+      "hull_and_shield": 49201.0
+    },
+    {
+      "frame": 282,
+      "tick": 181,
+      "simulation_seconds": 6.033333333333322,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "10c78a3dc435ce05405a0c51ab5635e3d0221c12c6fe50e1f3f1ec75f8ee472c",
+      "hull_and_shield": 49201.0
+    },
+    {
+      "frame": 283,
+      "tick": 181,
+      "simulation_seconds": 6.033333333333322,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "10c78a3dc435ce05405a0c51ab5635e3d0221c12c6fe50e1f3f1ec75f8ee472c",
+      "hull_and_shield": 49201.0
+    },
+    {
+      "frame": 284,
+      "tick": 182,
+      "simulation_seconds": 6.066666666666655,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "c09e3eff99e365ec47273cf237e03958098e105a792d5919114d9eaa9be2c275",
+      "hull_and_shield": 49069.0
+    },
+    {
+      "frame": 285,
+      "tick": 182,
+      "simulation_seconds": 6.066666666666655,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "c09e3eff99e365ec47273cf237e03958098e105a792d5919114d9eaa9be2c275",
+      "hull_and_shield": 49069.0
+    },
+    {
+      "frame": 286,
+      "tick": 183,
+      "simulation_seconds": 6.099999999999988,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "f656b084d84c98ff06a1a5245bc7da11bb3b122ed8d38757b57a7c5bf33394c5",
+      "hull_and_shield": 49069.0
+    },
+    {
+      "frame": 287,
+      "tick": 183,
+      "simulation_seconds": 6.099999999999988,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "f656b084d84c98ff06a1a5245bc7da11bb3b122ed8d38757b57a7c5bf33394c5",
+      "hull_and_shield": 49069.0
+    },
+    {
+      "frame": 288,
+      "tick": 184,
+      "simulation_seconds": 6.133333333333321,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "11c065285da7ca7b47808f386df32989e539a29d0957566ed62ba401fb525519",
+      "hull_and_shield": 49069.0
+    },
+    {
+      "frame": 289,
+      "tick": 184,
+      "simulation_seconds": 6.133333333333321,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "11c065285da7ca7b47808f386df32989e539a29d0957566ed62ba401fb525519",
+      "hull_and_shield": 49069.0
+    },
+    {
+      "frame": 290,
+      "tick": 185,
+      "simulation_seconds": 6.1666666666666545,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "d37992d0fe2262e29ed5349d4bb1367ec2ce188ca4981a9de5e2923fcc1be517",
+      "hull_and_shield": 49069.0
+    },
+    {
+      "frame": 291,
+      "tick": 185,
+      "simulation_seconds": 6.1666666666666545,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "d37992d0fe2262e29ed5349d4bb1367ec2ce188ca4981a9de5e2923fcc1be517",
+      "hull_and_shield": 49069.0
+    },
+    {
+      "frame": 292,
+      "tick": 186,
+      "simulation_seconds": 6.199999999999988,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "9167f1f056806a37af730e3364f8bf4a04f6ac118817a4403c9a1f6daea82add",
+      "hull_and_shield": 49069.0
+    },
+    {
+      "frame": 293,
+      "tick": 186,
+      "simulation_seconds": 6.199999999999988,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "9167f1f056806a37af730e3364f8bf4a04f6ac118817a4403c9a1f6daea82add",
+      "hull_and_shield": 49069.0
+    },
+    {
+      "frame": 294,
+      "tick": 187,
+      "simulation_seconds": 6.233333333333321,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "0a2099292417d356a121720363103491c2faa35023201945fa028e6ee49a4bb1",
+      "hull_and_shield": 49069.0
+    },
+    {
+      "frame": 295,
+      "tick": 187,
+      "simulation_seconds": 6.233333333333321,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "0a2099292417d356a121720363103491c2faa35023201945fa028e6ee49a4bb1",
+      "hull_and_shield": 49069.0
+    },
+    {
+      "frame": 296,
+      "tick": 188,
+      "simulation_seconds": 6.266666666666654,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "a23e40f99720a7e0d60fbed22cba33e9ba9b4293849bd78baa53a0b4e5829470",
+      "hull_and_shield": 49069.0
+    },
+    {
+      "frame": 297,
+      "tick": 188,
+      "simulation_seconds": 6.266666666666654,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "a23e40f99720a7e0d60fbed22cba33e9ba9b4293849bd78baa53a0b4e5829470",
+      "hull_and_shield": 49069.0
+    },
+    {
+      "frame": 298,
+      "tick": 189,
+      "simulation_seconds": 6.299999999999987,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "c94f955a65b9a3d7fd0148fb5a03a2935dc1f061a3cb0ad0e50a085103fea1f4",
+      "hull_and_shield": 49069.0
+    },
+    {
+      "frame": 299,
+      "tick": 189,
+      "simulation_seconds": 6.299999999999987,
+      "projectiles": 4,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "c94f955a65b9a3d7fd0148fb5a03a2935dc1f061a3cb0ad0e50a085103fea1f4",
+      "hull_and_shield": 49069.0
+    },
+    {
+      "frame": 300,
+      "tick": 190,
+      "simulation_seconds": 6.333333333333321,
+      "projectiles": 2,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "5d75af8babcdeed95f42602443dd116cc411fbe584bbcb088aaa9f3032ac9ffe",
+      "hull_and_shield": 49036.799999999996
+    },
+    {
+      "frame": 301,
+      "tick": 190,
+      "simulation_seconds": 6.333333333333321,
+      "projectiles": 2,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "5d75af8babcdeed95f42602443dd116cc411fbe584bbcb088aaa9f3032ac9ffe",
+      "hull_and_shield": 49036.799999999996
+    },
+    {
+      "frame": 302,
+      "tick": 191,
+      "simulation_seconds": 6.366666666666654,
+      "projectiles": 2,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "5cdc3eda039a845075170c48d8910035d726376dce7257b2fb1c903538baa872",
+      "hull_and_shield": 49036.799999999996
+    },
+    {
+      "frame": 303,
+      "tick": 191,
+      "simulation_seconds": 6.366666666666654,
+      "projectiles": 2,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "5cdc3eda039a845075170c48d8910035d726376dce7257b2fb1c903538baa872",
+      "hull_and_shield": 49036.799999999996
+    },
+    {
+      "frame": 304,
+      "tick": 192,
+      "simulation_seconds": 6.399999999999987,
+      "projectiles": 2,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "8d8ed951c47de845d82c68d62326370bb619e7e53e348b83a1d3525dcbe2aa12",
+      "hull_and_shield": 49036.799999999996
+    },
+    {
+      "frame": 305,
+      "tick": 192,
+      "simulation_seconds": 6.399999999999987,
+      "projectiles": 2,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "8d8ed951c47de845d82c68d62326370bb619e7e53e348b83a1d3525dcbe2aa12",
+      "hull_and_shield": 49036.799999999996
+    },
+    {
+      "frame": 306,
+      "tick": 193,
+      "simulation_seconds": 6.43333333333332,
+      "projectiles": 2,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "46b51cb1645a44e24afd40fc0d8ff01a987214aea2bab365bc1806cc4934dd9e",
+      "hull_and_shield": 49036.799999999996
+    },
+    {
+      "frame": 307,
+      "tick": 193,
+      "simulation_seconds": 6.43333333333332,
+      "projectiles": 2,
+      "weapon_types": [
+        "laser"
+      ],
+      "state_sha256": "46b51cb1645a44e24afd40fc0d8ff01a987214aea2bab365bc1806cc4934dd9e",
+      "hull_and_shield": 49036.799999999996
+    },
+    {
+      "frame": 308,
+      "tick": 194,
+      "simulation_seconds": 6.4666666666666535,
+      "projectiles": 0,
+      "weapon_types": [],
+      "state_sha256": "637f5ba5ec39d177c94ff0872b94c14e873c3b20eae80dc8ca807c6dc3d7ddf7",
+      "hull_and_shield": 49004.6
+    },
+    {
+      "frame": 309,
+      "tick": 194,
+      "simulation_seconds": 6.4666666666666535,
+      "projectiles": 0,
+      "weapon_types": [],
+      "state_sha256": "637f5ba5ec39d177c94ff0872b94c14e873c3b20eae80dc8ca807c6dc3d7ddf7",
+      "hull_and_shield": 49004.6
+    },
+    {
+      "frame": 310,
+      "tick": 195,
+      "simulation_seconds": 6.499999999999987,
+      "projectiles": 0,
+      "weapon_types": [],
+      "state_sha256": "30a8c4b4608a5c2d7ec137bf59f51891b755d8b7341309241d7a8ee39084b310",
+      "hull_and_shield": 49004.6
+    },
+    {
+      "frame": 311,
+      "tick": 195,
+      "simulation_seconds": 6.499999999999987,
+      "projectiles": 0,
+      "weapon_types": [],
+      "state_sha256": "30a8c4b4608a5c2d7ec137bf59f51891b755d8b7341309241d7a8ee39084b310",
+      "hull_and_shield": 49004.6
+    },
+    {
+      "frame": 312,
+      "tick": 196,
+      "simulation_seconds": 6.53333333333332,
+      "projectiles": 0,
+      "weapon_types": [],
+      "state_sha256": "b6e70938a2a6eef92e8936158fffe78172de061fc8c04da4a85496dd1486b652",
+      "hull_and_shield": 49004.6
+    },
+    {
+      "frame": 313,
+      "tick": 196,
+      "simulation_seconds": 6.53333333333332,
+      "projectiles": 0,
+      "weapon_types": [],
+      "state_sha256": "b6e70938a2a6eef92e8936158fffe78172de061fc8c04da4a85496dd1486b652",
+      "hull_and_shield": 49004.6
+    },
+    {
+      "frame": 314,
+      "tick": 197,
+      "simulation_seconds": 6.566666666666653,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "fc58bacc881a341ec3d42edb5a99fc277c69a0eef29986407ff8987c4f9d14da",
+      "hull_and_shield": 49004.6
+    },
+    {
+      "frame": 315,
+      "tick": 197,
+      "simulation_seconds": 6.566666666666653,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "fc58bacc881a341ec3d42edb5a99fc277c69a0eef29986407ff8987c4f9d14da",
+      "hull_and_shield": 49004.6
+    },
+    {
+      "frame": 316,
+      "tick": 198,
+      "simulation_seconds": 6.599999999999986,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "cd4bb4de319a8da57f198697f4923d0f9dd9129e9be39c6185bf110ef4edc9da",
+      "hull_and_shield": 49004.6
+    },
+    {
+      "frame": 317,
+      "tick": 198,
+      "simulation_seconds": 6.599999999999986,
+      "projectiles": 3,
+      "weapon_types": [
+        "missile"
+      ],
+      "state_sha256": "cd4bb4de319a8da57f198697f4923d0f9dd9129e9be39c6185bf110ef4edc9da",
+      "hull_and_shield": 49004.6
+    },
+    {
+      "frame": 318,
+      "tick": 199,
+      "simulation_seconds": 6.6333333333333195,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "ce3aec3ae8e81955bce9ac7ade0d9cd98c14fee30b7b216beee6147a05b9600a",
+      "hull_and_shield": 49004.6
+    },
+    {
+      "frame": 319,
+      "tick": 199,
+      "simulation_seconds": 6.6333333333333195,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "ce3aec3ae8e81955bce9ac7ade0d9cd98c14fee30b7b216beee6147a05b9600a",
+      "hull_and_shield": 49004.6
+    },
+    {
+      "frame": 320,
+      "tick": 200,
+      "simulation_seconds": 6.666666666666653,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "b2b5f1a801a82415a8ea18f31d51c2f4aa4cc41211efdd47c2f3686a6ddbdb0a",
+      "hull_and_shield": 49004.6
+    },
+    {
+      "frame": 321,
+      "tick": 200,
+      "simulation_seconds": 6.666666666666653,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "b2b5f1a801a82415a8ea18f31d51c2f4aa4cc41211efdd47c2f3686a6ddbdb0a",
+      "hull_and_shield": 49004.6
+    },
+    {
+      "frame": 322,
+      "tick": 201,
+      "simulation_seconds": 6.699999999999986,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "71cdf2fbe4ada18d9c45e0688679408cea9585eaab7236a7e0b5d6e07aa2d80d",
+      "hull_and_shield": 49004.6
+    },
+    {
+      "frame": 323,
+      "tick": 201,
+      "simulation_seconds": 6.699999999999986,
+      "projectiles": 7,
+      "weapon_types": [
+        "laser",
+        "missile"
+      ],
+      "state_sha256": "71cdf2fbe4ada18d9c45e0688679408cea9585eaab7236a7e0b5d6e07aa2d80d",
+      "hull_and_shield": 49004.6
+    },
+    {
+      "frame": 324,
+      "tick": 202,
+      "simulation_seconds": 6.733333333333319,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "e58a9a51c0e7e92bb016529438fad3b1db9d0b39574f55d92ea68df0f0eb1d4c",
+      "hull_and_shield": 49004.6
+    },
+    {
+      "frame": 325,
+      "tick": 203,
+      "simulation_seconds": 6.766666666666652,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "39c356792f5a4d13849418bbdcc06157f573aeffc09d65142bc0eee4db4db530",
+      "hull_and_shield": 49004.6
+    },
+    {
+      "frame": 326,
+      "tick": 204,
+      "simulation_seconds": 6.799999999999986,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "b587d68b0974bfbf547761e42ba936d57d61d4d3c1704585d5b42591558a0c33",
+      "hull_and_shield": 49004.6
+    },
+    {
+      "frame": 327,
+      "tick": 204,
+      "simulation_seconds": 6.799999999999986,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "b587d68b0974bfbf547761e42ba936d57d61d4d3c1704585d5b42591558a0c33",
+      "hull_and_shield": 49004.6
+    },
+    {
+      "frame": 328,
+      "tick": 204,
+      "simulation_seconds": 6.799999999999986,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "b587d68b0974bfbf547761e42ba936d57d61d4d3c1704585d5b42591558a0c33",
+      "hull_and_shield": 49004.6
+    },
+    {
+      "frame": 329,
+      "tick": 205,
+      "simulation_seconds": 6.833333333333319,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "3fea3fad3cf8301e6b69d1212ae5f0009fc7257d416763fd1067457af8449dff",
+      "hull_and_shield": 49004.6
+    },
+    {
+      "frame": 330,
+      "tick": 205,
+      "simulation_seconds": 6.833333333333319,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "3fea3fad3cf8301e6b69d1212ae5f0009fc7257d416763fd1067457af8449dff",
+      "hull_and_shield": 49004.6
+    },
+    {
+      "frame": 331,
+      "tick": 206,
+      "simulation_seconds": 6.866666666666652,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "f12899661432c23696fd21f6c4aee6691c2218c9bd4348ec534c0ab46d38e5d1",
+      "hull_and_shield": 49004.6
+    },
+    {
+      "frame": 332,
+      "tick": 206,
+      "simulation_seconds": 6.866666666666652,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "f12899661432c23696fd21f6c4aee6691c2218c9bd4348ec534c0ab46d38e5d1",
+      "hull_and_shield": 49004.6
+    },
+    {
+      "frame": 333,
+      "tick": 207,
+      "simulation_seconds": 6.899999999999985,
+      "projectiles": 10,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "657afa3b39c1d9bc3714ed050aa23c27cf2bfe23272053406a388a19c76fa682",
+      "hull_and_shield": 48972.4
+    },
+    {
+      "frame": 334,
+      "tick": 207,
+      "simulation_seconds": 6.899999999999985,
+      "projectiles": 10,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "657afa3b39c1d9bc3714ed050aa23c27cf2bfe23272053406a388a19c76fa682",
+      "hull_and_shield": 48972.4
+    },
+    {
+      "frame": 335,
+      "tick": 208,
+      "simulation_seconds": 6.9333333333333185,
+      "projectiles": 10,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "00aad40eb925d9d1e9bfe58763b5c074e8b08dcad989969d5c44fe891a813a3e",
+      "hull_and_shield": 48972.4
+    },
+    {
+      "frame": 336,
+      "tick": 208,
+      "simulation_seconds": 6.9333333333333185,
+      "projectiles": 10,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "00aad40eb925d9d1e9bfe58763b5c074e8b08dcad989969d5c44fe891a813a3e",
+      "hull_and_shield": 48972.4
+    },
+    {
+      "frame": 337,
+      "tick": 209,
+      "simulation_seconds": 6.966666666666652,
+      "projectiles": 10,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "a460ff6f923569c4ca3ae9facbcddbe5bad8c3b3e0f1577d899c05c587fe2e30",
+      "hull_and_shield": 48972.4
+    },
+    {
+      "frame": 338,
+      "tick": 209,
+      "simulation_seconds": 6.966666666666652,
+      "projectiles": 10,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "a460ff6f923569c4ca3ae9facbcddbe5bad8c3b3e0f1577d899c05c587fe2e30",
+      "hull_and_shield": 48972.4
+    },
+    {
+      "frame": 339,
+      "tick": 210,
+      "simulation_seconds": 6.999999999999985,
+      "projectiles": 10,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "8f71f99c9ef082d0e51dfbcb807d32b5a0292f62167d85b3dbf8e1c90897802f",
+      "hull_and_shield": 48972.4
+    },
+    {
+      "frame": 340,
+      "tick": 210,
+      "simulation_seconds": 6.999999999999985,
+      "projectiles": 10,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "8f71f99c9ef082d0e51dfbcb807d32b5a0292f62167d85b3dbf8e1c90897802f",
+      "hull_and_shield": 48972.4
+    },
+    {
+      "frame": 341,
+      "tick": 211,
+      "simulation_seconds": 7.033333333333318,
+      "projectiles": 10,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "e8bab1b5e499486bbde3113dd978c28cdc413113a3b0d872b9481ae55d56425a",
+      "hull_and_shield": 48972.4
+    },
+    {
+      "frame": 342,
+      "tick": 211,
+      "simulation_seconds": 7.033333333333318,
+      "projectiles": 10,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "e8bab1b5e499486bbde3113dd978c28cdc413113a3b0d872b9481ae55d56425a",
+      "hull_and_shield": 48972.4
+    },
+    {
+      "frame": 343,
+      "tick": 212,
+      "simulation_seconds": 7.066666666666651,
+      "projectiles": 10,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "d8bebcca9b082d264140e12554b88036dab8cb2e538ec71c2474181b1c63f2c7",
+      "hull_and_shield": 48972.4
+    },
+    {
+      "frame": 344,
+      "tick": 212,
+      "simulation_seconds": 7.066666666666651,
+      "projectiles": 10,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "d8bebcca9b082d264140e12554b88036dab8cb2e538ec71c2474181b1c63f2c7",
+      "hull_and_shield": 48972.4
+    },
+    {
+      "frame": 345,
+      "tick": 213,
+      "simulation_seconds": 7.0999999999999845,
+      "projectiles": 8,
+      "weapon_types": [
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "b961fe267563ecca85f7575998649081feb9a3f0a7a6b752749d7d85c1453cf9",
+      "hull_and_shield": 48940.200000000004
+    },
+    {
+      "frame": 346,
+      "tick": 213,
+      "simulation_seconds": 7.0999999999999845,
+      "projectiles": 8,
+      "weapon_types": [
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "b961fe267563ecca85f7575998649081feb9a3f0a7a6b752749d7d85c1453cf9",
+      "hull_and_shield": 48940.200000000004
+    },
+    {
+      "frame": 347,
+      "tick": 214,
+      "simulation_seconds": 7.133333333333318,
+      "projectiles": 8,
+      "weapon_types": [
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "3bcb2be0ff6532a423fa5134df4e4b8aca95d325d4378399aa2034fe45b84fd5",
+      "hull_and_shield": 48940.200000000004
+    },
+    {
+      "frame": 348,
+      "tick": 214,
+      "simulation_seconds": 7.133333333333318,
+      "projectiles": 8,
+      "weapon_types": [
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "3bcb2be0ff6532a423fa5134df4e4b8aca95d325d4378399aa2034fe45b84fd5",
+      "hull_and_shield": 48940.200000000004
+    },
+    {
+      "frame": 349,
+      "tick": 215,
+      "simulation_seconds": 7.166666666666651,
+      "projectiles": 8,
+      "weapon_types": [
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "34286bb78b8a9292e2e24ebc1a271ce1331a4fdda09e4387c5c6b7f69ee0a8f0",
+      "hull_and_shield": 48940.200000000004
+    },
+    {
+      "frame": 350,
+      "tick": 215,
+      "simulation_seconds": 7.166666666666651,
+      "projectiles": 8,
+      "weapon_types": [
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "34286bb78b8a9292e2e24ebc1a271ce1331a4fdda09e4387c5c6b7f69ee0a8f0",
+      "hull_and_shield": 48940.200000000004
+    },
+    {
+      "frame": 351,
+      "tick": 216,
+      "simulation_seconds": 7.199999999999984,
+      "projectiles": 8,
+      "weapon_types": [
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "7572a60ea9a17c5164c2572668469ccf1b5a6988e67b81733936a9fd9f9f58d4",
+      "hull_and_shield": 48940.200000000004
+    },
+    {
+      "frame": 352,
+      "tick": 216,
+      "simulation_seconds": 7.199999999999984,
+      "projectiles": 8,
+      "weapon_types": [
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "7572a60ea9a17c5164c2572668469ccf1b5a6988e67b81733936a9fd9f9f58d4",
+      "hull_and_shield": 48940.200000000004
+    },
+    {
+      "frame": 353,
+      "tick": 217,
+      "simulation_seconds": 7.233333333333317,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "83bd10292a8b27be3bfa78085003f1dfa3cb1cc405e513603659f71a0eac52f7",
+      "hull_and_shield": 48940.200000000004
+    },
+    {
+      "frame": 354,
+      "tick": 217,
+      "simulation_seconds": 7.233333333333317,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "83bd10292a8b27be3bfa78085003f1dfa3cb1cc405e513603659f71a0eac52f7",
+      "hull_and_shield": 48940.200000000004
+    },
+    {
+      "frame": 355,
+      "tick": 218,
+      "simulation_seconds": 7.266666666666651,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "4579659bce10d1ef47da46d6b1e736be72df4ef81035370241de4b28a0c106a6",
+      "hull_and_shield": 48940.200000000004
+    },
+    {
+      "frame": 356,
+      "tick": 218,
+      "simulation_seconds": 7.266666666666651,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "4579659bce10d1ef47da46d6b1e736be72df4ef81035370241de4b28a0c106a6",
+      "hull_and_shield": 48940.200000000004
+    },
+    {
+      "frame": 357,
+      "tick": 219,
+      "simulation_seconds": 7.299999999999984,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "1b24dd8a046e54c054e4f802c9b8647ea7e7702a80fb24e5252c4edcc77cddc8",
+      "hull_and_shield": 48940.200000000004
+    },
+    {
+      "frame": 358,
+      "tick": 219,
+      "simulation_seconds": 7.299999999999984,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "1b24dd8a046e54c054e4f802c9b8647ea7e7702a80fb24e5252c4edcc77cddc8",
+      "hull_and_shield": 48940.200000000004
+    },
+    {
+      "frame": 359,
+      "tick": 220,
+      "simulation_seconds": 7.333333333333317,
+      "projectiles": 12,
+      "weapon_types": [
+        "laser",
+        "missile",
+        "turbolaser"
+      ],
+      "state_sha256": "6b2d7491251a6007334f595e8a69a33dc2eac9079e8ffe2eb986be54c01ffe62",
+      "hull_and_shield": 48940.200000000004
+    }
+  ]
+}
