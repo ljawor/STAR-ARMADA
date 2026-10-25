@@ -37,6 +37,7 @@ def main():
     import pygame
     from PIL import Image
     from render import menus
+    from render.camera import Camera
     from render_bridge import embedded
     from game.benchmark import state_hash
     from game.core.manager import GameManager
@@ -54,6 +55,7 @@ def main():
     real_present=embedded.EmbeddedWindow.present
     real_init=embedded.EmbeddedWindow.__init__
     real_mode=pygame.display.set_mode
+    real_zoom=Camera.zoom
     windows=[]; rows=[]; seen=set(); best=-1; proc=None
     recipe=[]
     def start(map_def,*a,**kw):
@@ -81,6 +83,13 @@ def main():
                 unit_ids=tuple(e.id for e in fleet),target_id=groups[1-owner][0].id))
         for _ in range(30):gm.step(1/30)
         return gm
+    def zoom(camera, *a, **kw):
+        result=real_zoom(camera,*a,**kw)
+        # main.py's startup zoom precedes the first camera-ring publication. Configure the
+        # real Python camera: native CLI values alone are overwritten by that live ring.
+        camera.target[:]=[0.,0.,0.]
+        camera.distance=args.distance; camera.pitch=35.; camera.yaw=15.
+        return result
     def init(window,argv,*,root):
         argv=list(argv)+['--focus','0,0,0','--distance',str(args.distance),'--pitch','35','--yaw','15',
                          '--report',str(out/'native-viewer.json')]
@@ -117,6 +126,7 @@ def main():
         with patch.multiple(menus,**{k:str(v) for k,v in paths.items()}), \
              patch.object(GameManager,'start_skirmish',side_effect=start), \
              patch.object(pygame.display,'set_mode',side_effect=mode), \
+             patch.object(Camera,'zoom',zoom), \
              patch.object(embedded.EmbeddedWindow,'__init__',init), \
              patch.object(embedded.EmbeddedWindow,'present',present), \
              patch.object(sys,'argv',[str(ROOT/'main.py'),'--skirmish']):
@@ -131,6 +141,9 @@ def main():
     assert len(rows)>=args.frames, len(rows)
     assert windows and all(w._process.poll() is not None for w in windows),'Native worker leaked'
     native=json.loads((out/'native-viewer.json').read_text())
+    actual_camera=native['camera']
+    assert abs(actual_camera['distance']-args.distance)<.01, 'Live camera overrode requested zoom'
+    assert actual_camera['target']==[0.,0.,0.] and actual_camera['pitch']==35. and actual_camera['yaw']==15., actual_camera
     assert native['emissive']['flight_primitives']>0,'No FLIGHT geometry reached native draw'
     assert native['emissive']['decode_failures']==0,'Native emission decode failed'
     assert native['emissive']['dropped_vertices']==0,'Native emission geometry overflow'
@@ -138,7 +151,7 @@ def main():
     assert rows[-1]['tick']>rows[0]['tick'],'Simulation never advanced'
     assert min(r['hull_and_shield'] for r in rows)<rows[0]['hull_and_shield'],'No real damage'
     report=dict(frames=len(rows),distance=args.distance,weapon_types=sorted(seen),
-        max_projectiles=best,native_emissive=native['emissive'],
+        max_projectiles=best,native_camera=actual_camera,native_emissive=native['emissive'],
         all_presentations_state_identical=True,all_workers_reaped=True,
         head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
         source_hashes={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in
