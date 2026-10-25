@@ -332,16 +332,27 @@ class WindowsRuntimeGateTests(unittest.TestCase):
         for number, line in enumerate(source.splitlines(), 1):
             stripped = line.strip()
             if re.match(r'^ {4,8}- (name|uses):', line):
-                step, inside_run, indent, body_indent = stripped, False, None, None
-                continue
+                # ... but only outside a run block, or for a line indented less than that block's
+                # body: a script line that happens to look like a step (a dash plus `name:`) is
+                # still script, and treating it as a boundary leaves the rest of the block
+                # unscanned - the same hole as the `- ` check below, one indentation deeper.
+                here_now = len(line) - len(line.lstrip())
+                if not inside_run or here_now < (body_indent or 0):
+                    step, inside_run, indent, body_indent = stripped, False, None, None
+                    continue
             if re.match(r'^ {0,6}(jobs|[a-z-]+):$', line):
                 step = None
-            match = re.match(r'^(\s*)run: \|?', line)
+            match = re.match(r'^(\s*)run:(.*)$', line)
             if match:
+                rest = match.group(2).strip()
+                # A one-line `run: cmd` has no body: the script is that line, and the next
+                # indented line belongs to the step's other keys (`env:`, `if:`), not to it.
+                if rest and rest not in ('|', '>', '|-', '>-', '|+', '>+'):
+                    if '${{' in rest:
+                        offenders.append((number, step, rest[:80]))
+                    inside_run, body_indent = False, None
+                    continue
                 inside_run, indent, body_indent = True, len(match.group(1)), None
-                rest = line.split('run:', 1)[1].strip()
-                if rest and rest != '|' and '${{' in rest:
-                    offenders.append((number, step, rest[:80]))
                 continue
             if inside_run:
                 # A block scalar does not end at its first `- name:`-looking line: it ends at the

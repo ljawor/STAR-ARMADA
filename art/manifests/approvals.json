@@ -9792,7 +9792,7 @@
           "Asteroids look good"
         ],
         "appearance_approval_changed": true,
-        "reason": "The B5 row was re-authored and re-approved on 2026-10-25, so this decision's live pins move to the approved bytes. Unlike the s07 pin corrections this IS a new appearance approval: geometry, roles and tri count all changed, and the decision that authorises it is s06-b5-environment-2026-10-25. The previous pins are kept here so the 2026-10-17 record still says what it approved.",
+        "reason": "The B5 row was re-authored and re-approved on 2026-10-25, so this decision's live pins move to the approved bytes. Unlike the s07 pin corrections this IS a new appearance approval: geometry, roles and tri count all changed, and the decision that authorises it is s06-b5-environment-2026-10-25. The previous pins are kept here so the 2026-10-17 record still says what it approved. It also drops the live pin on render/renderer.py, a file that exists in no tree (git ls-tree -r HEAD has no render/renderer.py), so the assertion it carried could only ever fail; the hash is kept in previous_runtime rather than silently deleted, and the same removal is the reason this test went from 31 failures at the parent to 30 here.",
         "previous_source": {
           "art/blender/shared_asteroid_field.blend": "23260a7f81a54e874325fcca802c66c94fbb1c7f1e90378b799e129b17d4ea0e"
         },
@@ -12306,7 +12306,7 @@
       "approval_kind": "appearance-revision",
       "scope_statement": "Approved the appearance of the re-authored shared asteroid field prop - the only asset this revision changes. The owner's words were \"Asteroids look good\", after a before/after sheet of the field inside a real skirmish frame and two native captures of that frame (wide and close) in artifacts/s06_alliance_batch_review/b5-asteroid-v5. The revision replaces four overlapping bevelled boxes carrying faction hardware roles with one irregular boulder on stone roles only. This approves appearance only: it is not a landing, activation, merge, tag or release authorisation.",
       "owner_words_verbatim": "Asteroids look good",
-      "how_recorded": "Said after the comparison sheet and the two native captures of the same frame were shown in the session. The decision binds the revision those captures were rendered from; every hash below was re-derived from disk when this record was written. It is a judgement of the picture, not a technical sign-off - the pixel tool that measures the field is a separate engineering check with its own limits, recorded in the tool.",
+      "how_recorded": "Said after the comparison sheet and the two native captures of the same frame were shown in the session. The decision binds the revision those captures were rendered from; every hash below was re-derived from disk when this record was written. It is a judgement of the picture, not a technical sign-off: what the pixel measurement can and cannot see is written down in artifacts/s06_alliance_batch_review/b5-asteroid-v5/report.json (limits and controls), not in this entry.",
       "revision": {
         "asset_id": "core:environment/asteroid_field",
         "gameplay_binding": "environment:asteroid_field",
@@ -12353,7 +12353,8 @@
             "asteroid-field-before-close.png"
           ],
           "report": "report.json",
-          "native_verification": "native-field-verification.json"
+          "native_verification": "native-field-verification.json",
+          "controls": "artifacts/s06_alliance_batch_review/b5-asteroid-v5/controls/ (three sabotage runs of the same tool; engineering controls, not owner-review evidence)"
         }
       },
       "drawing_change": {

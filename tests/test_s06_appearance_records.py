@@ -83,12 +83,39 @@ def batch_sheets():
     return sheets
 
 
-def appearance_decisions():
-    return [d for d in load(APPROVALS)['decision_log']
-            if d.get('approval_kind') == 'appearance-batch-revisions']
+def appearance_decisions(kind='appearance-batch-revisions'):
+    return [d for d in load(APPROVALS)['decision_log'] if d.get('approval_kind') == kind]
 
+#: `appearance-revision` decisions are outside the batch sweep (it walks
+#: `appearance-batch-revisions`), so their pins were never checked by anything. One of them is
+#: stale and is not a renderer change's to re-pin: the battleship entry pins an `alliance_common.py`
+#: from before a later edit to that helper, and re-pinning another owner's decision would rewrite
+#: what they approved. Named here so the gap is debt rather than silence.
+KNOWN_STALE_REVISION_PINS = {
+    's06-battleship-hull-detail-2026-10-16': {'tools/art/alliance_common.py'},
+}
 
 class RecordedApprovals(unittest.TestCase):
+    def test_every_revision_decision_matches_the_files_it_pins(self):
+        # The batch sweep above walks `appearance-batch-revisions` only, and the B5 re-authoring
+        # was recorded as an `appearance-revision`, so for a while nothing asserted its hashes at
+        # all - a hole a reviewer had to catch by hand. This walks them.
+        problems = []
+        for decision in appearance_decisions('appearance-revision'):
+            stale = KNOWN_STALE_REVISION_PINS.get(decision['id'], set())
+            groups = decision['revision']
+            for group in ('source', 'exporter', 'runtime'):
+                for path, want in groups.get(group, {}).items():
+                    if path in stale:
+                        continue
+                    target = ROOT / path
+                    got = hashlib.sha256(target.read_bytes()).hexdigest() if target.exists() else None
+                    if got != want:
+                        problems.append((decision['id'], group, path, want[:12], (got or 'missing')[:12]))
+        self.assertEqual(problems, [],
+                         'a revision decision does not match the files it pins: '
+                         + '; '.join(f'{d} {g} {p} want {w} got {h}' for d, g, p, w, h in problems))
+
     def test_every_decision_still_names_the_revision_hashes_on_disk(self):
         """A decision is only worth reading if it can be re-derived from the tree."""
         for decision in appearance_decisions():

@@ -31,45 +31,97 @@
       "shows": "a measurement of the same revision in the real skirmish frame (see limits below)",
       "written_by": {
         "path": "tools/render/verify_native_asteroid_fields.py",
-        "sha256": "eaa82148b85bbbb9ad4cdef0cab1a5a31f14e80a7117965af7edf4b67860c258"
+        "sha256": "e4df1d5e6acd5878fe9c0c43df2399c237476e744198683847edd7b9b1bc3523"
       },
-      "sha256": "6fed6ee4a954d55b33b7e08248827ab1d2b8b0231d87fa2c36a2aaec0a0ef772"
+      "sha256": "44f0808555e892ea54e42e6ee29484462538077e83e802aefe8ae8a8d9a47ec9"
     }
   },
   "what_the_measurement_does": [
     "renders the whole scene the production collector builds for skirmish01 (ships, planets, stations, 320 rocks) through the native viewer",
     "renders the same frame again with only the aimed-at field removed, so occlusion by every other object cancels out",
+    "result on this revision: passed=True, centre_error=[0.014, 0.014], size_ratio=[0.86, 0.75], disc_fill=0.147, fields_drawn=5, rock_instances=320",
     "drops the sparse silhouette/starfield flicker between the two renders (dense mask), then measures the footprint against the projection: centre error, span ratio, share of the disc that is rock, and whether the field reaches the frame edge",
-    "result on this revision: passed=True, centre_error=[0.014, 0.014], size_ratio=[0.86, 0.75], disc_fill=0.147, fields_drawn=5, rock_instances=320"
+    "reproduces to the digit on every gated metric (centre_error, size_ratio, disc_fill, target_pixels, passed) across repeated runs; the frame-wide numbers it also records (changed_pixels, coverage, field_rgb) move by about 0.2 % between runs, which is the flicker the mask is there to remove"
   ],
   "controls": [
     {
-      "sabotage": "rocks scaled 3x too large (ASTEROID_EXTENT 0.58 -> 0.19)",
-      "expected": "fail",
-      "observed": "fail: disc_fill 0.688 > 0.50",
+      "control": "scale3",
+      "expected": "fail: is_a_scatter_not_a_boulder (disc_fill 0.688)",
+      "observed": {
+        "passed": false,
+        "centre_error": [
+          0.0140625,
+          0.005625
+        ],
+        "size_ratio": [
+          0.966302587586679,
+          0.925889630487919
+        ],
+        "disc_fill": 0.6757580553844432,
+        "touches_frame_edge": false
+      },
+      "failed_checks": [
+        "is_a_scatter_not_a_boulder"
+      ],
+      "run": "artifacts/s06_alliance_batch_review/b5-asteroid-v5/controls/scale3.json",
+      "sha256": "2b8b172fcbfd8703bf53858b5402e0db2caf30d9de57ae6d58c955e3bc03bf1f",
       "note": "the clipped bounding box still reads as correctly sized, which is why the disc fill and the frame-edge check exist"
     },
     {
-      "sabotage": "field shifted by 0.8 of its radius",
-      "expected": "fail",
-      "observed": "fail: centred (centre_error 0.12 / 0.08)"
+      "control": "shift",
+      "expected": "fail: centred and size_matches_projection (the belt sits off its mark)",
+      "observed": {
+        "passed": false,
+        "centre_error": [
+          0.125,
+          0.0825
+        ],
+        "size_ratio": [
+          2.664652590011751,
+          1.2189464401377648
+        ],
+        "disc_fill": 0.14856542958931054,
+        "touches_frame_edge": false
+      },
+      "failed_checks": [
+        "centred",
+        "size_matches_projection"
+      ],
+      "run": "artifacts/s06_alliance_batch_review/b5-asteroid-v5/controls/shift.json",
+      "sha256": "13ad93e6230a2055d0659bd03bbce9d997702ea3ab075d83f9121ae20926ad07",
+      "note": "a field of the right size in the wrong place is still wrong"
     },
     {
-      "sabotage": "one boulder at 0.95 of the radius instead of a scatter",
-      "expected": "fail",
-      "observed": "fail: disc_fill 1.219"
-    },
-    {
-      "sabotage": "the earlier flaky measurement (raw difference, no dense mask)",
-      "expected": "fail on ~1 run in 4 with no code change",
-      "observed": "6 of 27 runs failed; with the dense mask 4 of 4 runs agree to the digit"
+      "control": "boulder",
+      "expected": "fail: is_a_scatter_not_a_boulder (one rock fills the disc)",
+      "observed": {
+        "passed": false,
+        "centre_error": [
+          0.01015625,
+          0.00375
+        ],
+        "size_ratio": [
+          1.0183592926418537,
+          1.083036035662474
+        ],
+        "disc_fill": 1.17604914851235,
+        "touches_frame_edge": false
+      },
+      "failed_checks": [
+        "is_a_scatter_not_a_boulder"
+      ],
+      "run": "artifacts/s06_alliance_batch_review/b5-asteroid-v5/controls/boulder.json",
+      "sha256": "c6348e6277c7660d0d5fa0ddad59bc9dc9de256e62ea360be186e395c6896022",
+      "note": "the picture the owner rejected - the regression this work exists to prevent"
     }
   ],
   "limits": [
     "This measures a footprint, not beauty. The appearance was approved by the owner looking at the sheet and the two captures; the numbers here cannot approve a picture.",
-    "It proves one map (skirmish01) and one field. The unit tests cover the other maps, the live emitter and the rock scatter; the pixel proof does not.",
-    "A field drawn in the right place at the right size with ugly rocks would pass. That is what the sheet is for."
+    "It proves one map (skirmish01), one field and one camera. The unit tests cover the other maps, the live emitter and the rock scatter; the pixel proof does not.",
+    "A field drawn in the right place at the right size with ugly rocks would pass, and so would a field in the wrong colour: field_rgb is recorded but never asserted, and lit_rock only asks that the field is brighter than the background. Both are what the sheet is for.",
+    "The rock count and the rock shapes are not measured individually, only as an aggregate span and a wide fill band (3-50 %)."
   ],
   "reproduce": "python tools/render/verify_native_asteroid_fields.py --out OUTDIR",
-  "tool_sha256": "eaa82148b85bbbb9ad4cdef0cab1a5a31f14e80a7117965af7edf4b67860c258"
+  "tool_sha256": "e4df1d5e6acd5878fe9c0c43df2399c237476e744198683847edd7b9b1bc3523",
+  "controls_how": "python tools/render/verify_native_asteroid_fields.py --out OUT --control {scale3,shift,boulder} - the tool draws the field wrong on purpose and exits non-zero if a control slips through every check"
 }

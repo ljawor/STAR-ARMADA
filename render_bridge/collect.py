@@ -103,9 +103,10 @@ def _scatter(field_id, radius, x, z):
     """The rock layout of one field, cached: it depends only on these four numbers.
 
     A field neither moves nor changes radius, so its layout is the same on every frame of a
-    session, every reload and every replay. Recomputing it per frame cost 2.76 ms on the
-    sixteen-field map - 82 % of the whole gather and nearly three times the 1.0 ms producer
-    budget - for 64 rocks that cannot have changed since the previous frame.
+    session, every reload and every replay. Recomputing it per frame cost 2.23 ms of the 2.73 ms
+    gather on the sixteen-field map - 82 % of the frame's whole budget spend, 2.3 times its
+    1.0 ms producer limit - for 64 rocks that cannot have changed since the previous frame.
+    Cached, that gather is 0.43 ms. The first frame after a load still pays the 2.2 ms once.
     """
     seed = _splitmix64(int(field_id) + 1)
     tau = 6.283185307179586

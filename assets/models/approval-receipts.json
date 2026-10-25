@@ -501,8 +501,8 @@
    "evidence_sha256": {
     "artifacts/s06_alliance_batch_review/b5-asteroid-v5/asteroid-field-after-wide.png": "78134189618d18c54fb0e02ced69d3bf7f1f000cc556f9ea24ea389be77c8ea9",
     "artifacts/s06_alliance_batch_review/b5-asteroid-v5/asteroid-field-comparison.png": "6e9e7930409b6e0e8fd3bf7aefda9533015eae6085038e44b6365c0c334e2950",
-    "artifacts/s06_alliance_batch_review/b5-asteroid-v5/native-field-verification.json": "6fed6ee4a954d55b33b7e08248827ab1d2b8b0231d87fa2c36a2aaec0a0ef772",
-    "artifacts/s06_alliance_batch_review/b5-asteroid-v5/report.json": "aca25a989b33682a40d91349a1bbee3958d4f3d990353efb0035bf63237e94c2"
+    "artifacts/s06_alliance_batch_review/b5-asteroid-v5/native-field-verification.json": "44f0808555e892ea54e42e6ee29484462538077e83e802aefe8ae8a8d9a47ec9",
+    "artifacts/s06_alliance_batch_review/b5-asteroid-v5/report.json": "3bbb4c1d9113cb76ccaadbac1bf30c7e3c532f9d734c511b374726f35ab17345"
    },
    "manifest_sha256": "bb0079b794b16fa14f4d0d52dc3b2432ffe07afa22a52038063ea7a3a3569284",
    "reviewed_revision": "23ae8d76725aabc4a46447dddcf32965c98ba75bdca943db0a38a84e3c976d32"

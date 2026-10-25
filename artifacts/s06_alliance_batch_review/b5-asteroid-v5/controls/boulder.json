@@ -1,0 +1,77 @@
+{
+  "control": "boulder",
+  "expectation": "fail",
+  "tool": {
+    "path": "tools/render/verify_native_asteroid_fields.py",
+    "sha256": "e4df1d5e6acd5878fe9c0c43df2399c237476e744198683847edd7b9b1bc3523",
+    "pixel_threshold": 12
+  },
+  "map_id": "skirmish01",
+  "entity_id": 5,
+  "radius": 1800.0,
+  "distance": 9000.0,
+  "fov_deg": 55.0,
+  "fields_in_state": 5,
+  "fields_drawn": 5,
+  "rock_instances": 5,
+  "instances_with_fields": 19,
+  "instances_without_fields": 14,
+  "coverage": 0.11523828125,
+  "changed_pixels": 118004,
+  "frame": [
+    1280,
+    800
+  ],
+  "target_pixels": 66843,
+  "footprint_box": [
+    497,
+    276,
+    809,
+    530
+  ],
+  "footprint_centre": [
+    653.0,
+    403.0
+  ],
+  "footprint_span": [
+    313.0,
+    255.0
+  ],
+  "dense_mask_window": 4,
+  "dense_mask_minimum": 6,
+  "projected_span": [
+    307.3571403153866,
+    235.4492293915419
+  ],
+  "centre_error": [
+    0.01015625,
+    0.00375
+  ],
+  "size_ratio": [
+    1.0183592926418537,
+    1.083036035662474
+  ],
+  "disc_fill": 1.17604914851235,
+  "field_rgb": [
+    137.9085200501678,
+    143.98071251821972,
+    150.35445408630216
+  ],
+  "background_rgb": [
+    8.0,
+    14.0,
+    27.0
+  ],
+  "touches_frame_edge": false,
+  "omitted_planets": 0,
+  "checks": {
+    "coverage": true,
+    "lit_rock": true,
+    "target_drawn": true,
+    "inside_the_frame": true,
+    "centred": true,
+    "size_matches_projection": true,
+    "is_a_scatter_not_a_boulder": false
+  },
+  "passed": false
+}

@@ -67,10 +67,45 @@ def projected_radius_px(world_radius, distance, fov_deg, image_height):
     return (world_radius / (distance * math.tan(math.radians(fov_deg) * 0.5))) * (image_height * 0.5)
 
 
+CONTROLS = ('scale3', 'shift', 'boulder')
+
+
+def apply_control(name):
+    """Draw the field wrong on purpose, so the checks can be shown to notice.
+
+    These are the sabotage controls the report cites. They live here as a flag rather than as
+    prose in a table: anyone can re-run them and read the numbers instead of believing them. A
+    control run is not evidence about the game - it is evidence about the measurement.
+    """
+    if not name:
+        return
+    from render_bridge import collect
+    if name == 'scale3':
+        collect.ASTEROID_EXTENT = collect.ASTEROID_EXTENT / 3.0     # every rock 3x too large
+        return
+    original = collect.asteroid_rocks
+    if name == 'shift':
+        def asteroid_rocks(entity):
+            reach = float(entity.radius) * 0.8                       # the belt, moved off its mark
+            return tuple(((x + reach, y, z), yaw, scale, shade)
+                         for (x, y, z), yaw, scale, shade in original(entity))
+    elif name == 'boulder':
+        def asteroid_rocks(entity):                                  # one rock filling the field
+            size = float(entity.radius) * 0.95
+            return (((float(entity.pos.x), 0.0, float(entity.pos.z)), 0.0,
+                     size / collect.ASTEROID_EXTENT, 0.5),)
+    else:
+        raise SystemExit(f'unknown control {name!r}')
+    collect.asteroid_rocks = asteroid_rocks
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--out', required=True, type=Path)
+    parser.add_argument('--control', choices=CONTROLS, default=None,
+                        help='draw the field wrong on purpose to prove the checks notice')
     args = parser.parse_args()
+    apply_control(args.control)
     out = args.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
 
@@ -206,6 +241,8 @@ def main():
     import hashlib
     tool_path = Path(__file__).resolve()
     result = dict(
+        control=args.control,
+        expectation='fail' if args.control else 'pass',
         tool=dict(path=str(tool_path.relative_to(ROOT)),
                   sha256=hashlib.sha256(tool_path.read_bytes()).hexdigest(),
                   pixel_threshold=PIXEL_THRESHOLD),
@@ -225,6 +262,14 @@ def main():
         passed=bool(all(checks.values())))
     (out / 'verification.json').write_text(json.dumps(result, indent=2))
     print(json.dumps(result, indent=2))
+    if args.control:
+        # A control is expected to be rejected: that is the whole point of running it. Exit 0 so
+        # the output can be recorded alongside the passing run; the verdict is in the JSON.
+        failed = [name for name, ok in checks.items() if not ok]
+        if not failed:
+            raise SystemExit(f'control {args.control!r} was NOT caught by any check')
+        print(f'control {args.control!r} rejected by: {", ".join(failed)}')
+        return 0
     assert result['passed'], 'the native window did not draw the asteroid field in the real frame'
 
 

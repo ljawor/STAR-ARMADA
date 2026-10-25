@@ -1,7 +1,9 @@
 {
+  "control": null,
+  "expectation": "pass",
   "tool": {
     "path": "tools/render/verify_native_asteroid_fields.py",
-    "sha256": "eaa82148b85bbbb9ad4cdef0cab1a5a31f14e80a7117965af7edf4b67860c258",
+    "sha256": "e4df1d5e6acd5878fe9c0c43df2399c237476e744198683847edd7b9b1bc3523",
     "pixel_threshold": 12
   },
   "map_id": "skirmish01",
@@ -14,8 +16,8 @@
   "rock_instances": 320,
   "instances_with_fields": 334,
   "instances_without_fields": 14,
-  "coverage": 0.0137138671875,
-  "changed_pixels": 14043,
+  "coverage": 0.013720703125,
+  "changed_pixels": 14050,
   "frame": [
     1280,
     800
@@ -51,9 +53,9 @@
   ],
   "disc_fill": 0.14715789354393574,
   "field_rgb": [
-    127.59602649006622,
-    133.48287402976572,
-    140.21099480168056
+    127.56021352313168,
+    133.43067615658364,
+    140.1626334519573
   ],
   "background_rgb": [
     8.0,
