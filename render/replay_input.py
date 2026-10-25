@@ -23,7 +23,8 @@ class ReplayInput(InputController):
         elif ev.type == pygame.KEYUP:
             self.keys.discard(ev.key)
         elif ev.type == pygame.MOUSEWHEEL:
-            self.camera.zoom(.88 ** ev.y)
+            if not self._scroll_panel(-ev.y, getattr(ev, 'pos', None)):
+                self.camera.zoom(.88 ** ev.y)
         elif ev.type == pygame.MOUSEBUTTONDOWN:
             if ev.button == 3:
                 self.right_drag = ev.pos

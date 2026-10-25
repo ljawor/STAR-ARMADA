@@ -185,11 +185,11 @@ class InputController:
                     return
                 self.right_drag = ev.pos
             elif ev.button == 4:
-                if self._scroll_panel(-1):
+                if self._scroll_panel(-1, ev.pos):
                     return
                 self.camera.zoom(0.88)
             elif ev.button == 5:
-                if self._scroll_panel(1):
+                if self._scroll_panel(1, ev.pos):
                     return
                 self.camera.zoom(1.14)
         elif ev.type == pygame.MOUSEBUTTONUP:
@@ -242,7 +242,7 @@ class InputController:
 
     # ------------------------------------------------------------- panel scroll
     def _scroll_panel(self, direction: int, pos=None) -> bool:
-        """Wheel over a HUD scrollable list scrolls it; True if consumed."""
+        """Consume wheel over visible HUD; scroll a hovered list when available."""
         mp = pos if pos is not None else pygame.mouse.get_pos()
         for rect, key in self.hud.scroll_rects:
             if rect.collidepoint(mp):
@@ -252,7 +252,12 @@ class InputController:
                 cur = self.hud.scroll.get(key, 0)
                 self.hud.scroll[key] = max(0, cur + direction)
                 return True
-        return False
+        # Non-scrollable HUD still owns the pointer: headers, empty panel space,
+        # collapsed rails, overlays and the minimap must not zoom the world.
+        if any(rect.collidepoint(mp) for rect in getattr(self.hud, 'blocked_rects', [])):
+            return True
+        minimap = getattr(self.hud, 'minimap_rect', None)
+        return minimap is not None and minimap.collidepoint(mp)
 
     # ------------------------------------------------------------- helpers
     def _escape(self) -> None:
