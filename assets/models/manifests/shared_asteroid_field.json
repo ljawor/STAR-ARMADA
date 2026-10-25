@@ -2,13 +2,13 @@
   "contract": "star-armada/model-manifest",
   "contract_major": 1,
   "asset": "core:environment/asteroid_field",
-  "revision": "b4b95b8c74f69d8f6c244a2a4b92425c3cc2641be25e2544193fd1d73640a390",
+  "revision": "23ae8d76725aabc4a46447dddcf32965c98ba75bdca943db0a38a84e3c976d32",
   "display_name": "shared asteroid field (approved)",
   "files": {
     "mesh": {
       "path": "assets/models/shared_asteroid_field.mesh.json",
-      "sha256": "ad2b65483c330fecad28059fce9c489bc0bce2c050ebe38aa526e21f25c88ae7",
-      "bytes": 18854
+      "sha256": "ebcfb21f78289ba6deda5165c965960f8b7c0d2fa4a50fdc7fa2c6b66f40a2ba",
+      "bytes": 24285
     }
   },
   "export": {
@@ -36,11 +36,8 @@
   },
   "nominal_scale": 1.0,
   "roles": [
-    "accent",
     "base",
-    "cool",
     "dark",
-    "lit",
     "trim"
   ],
   "provenance": {
@@ -56,19 +53,21 @@
     "material_profile": "core:fleet/standard"
   },
   "budgets": {
-    "triangles": 216,
-    "draw_calls": 6,
+    "triangles": 320,
+    "draw_calls": 3,
     "texture_bytes": 0
   },
   "approval": {
     "status": "approved",
-    "decision_id": "s06-b5-environment-2026-10-17",
+    "decision_id": "s06-b5-environment-2026-10-25",
     "decided_by": "owner",
-    "decided_on": "2026-10-17",
-    "reviewed_revision": "b4b95b8c74f69d8f6c244a2a4b92425c3cc2641be25e2544193fd1d73640a390",
+    "decided_on": "2026-10-25",
+    "reviewed_revision": "23ae8d76725aabc4a46447dddcf32965c98ba75bdca943db0a38a84e3c976d32",
     "reviewed_evidence": [
-      "artifacts/s06_alliance_batch_review/b5-asteroid-v4/asteroid-field-comparison.png",
-      "artifacts/s06_alliance_batch_review/b5-asteroid-v4/report.json"
+      "artifacts/s06_alliance_batch_review/b5-asteroid-v5/asteroid-field-comparison.png",
+      "artifacts/s06_alliance_batch_review/b5-asteroid-v5/asteroid-field-after-wide.png",
+      "artifacts/s06_alliance_batch_review/b5-asteroid-v5/native-field-verification.json",
+      "artifacts/s06_alliance_batch_review/b5-asteroid-v5/report.json"
     ]
   }
 }

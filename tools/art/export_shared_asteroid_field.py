@@ -73,6 +73,10 @@ def main():
             batches[role].append(normal+indices);count+=1
         parts.append(dict(name=obj.name,role=role,triangles=count))
         evaluated.to_mesh_clear()
+    # An export declares the roles it actually fills. A natural prop carries stone roles only:
+    # `accent` is faction paint and `lit`/`cool` are emissive, so an empty batch for them is the
+    # truth, and the loader rejects a declared-but-empty role instead of drawing nothing.
+    batches={role:rows for role,rows in batches.items() if rows}
     lo=[min(p[i] for p in vertices) for i in range(3)]
     hi=[max(p[i] for p in vertices) for i in range(3)]
     for axis,(low,high) in enumerate(ENVELOPE):

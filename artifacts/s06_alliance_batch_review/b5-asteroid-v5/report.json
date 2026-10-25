@@ -1,0 +1,43 @@
+{
+ "schema": 1,
+ "batch": "s06-b5-environment-v5",
+ "row": "environment:asteroid_field",
+ "change": "re-authored prop: one irregular faceted boulder on stone roles only, drawn 64 times per field",
+ "field_radius": 1800.0,
+ "rocks_per_field": 64,
+ "rock_size_fraction": [
+  0.018,
+  0.092
+ ],
+ "prop": {
+  "triangles": 320,
+  "vertices": 162,
+  "roles": [
+   "base",
+   "dark",
+   "trim"
+  ],
+  "draw_calls": 3
+ },
+ "previous": {
+  "triangles": 216,
+  "instances_per_field": 1,
+  "scale": "radius / 0.58 (one boulder over the whole field)"
+ },
+ "wide_frame_delta": {
+  "changed_pixels": 44282,
+  "frame_pixels": 1024000
+ },
+ "captures": {
+  "wide": [
+   "asteroid-field-before-wide.png",
+   "asteroid-field-after-wide.png"
+  ],
+  "close": [
+   "asteroid-field-before-close.png",
+   "asteroid-field-after-close.png"
+  ],
+  "comparison": "asteroid-field-comparison.png"
+ },
+ "owner_instruction": "We need good looking small asteroids. The small asteroids should build our asteroid fields. The after picture has horrible fields."
+}

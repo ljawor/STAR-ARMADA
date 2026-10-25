@@ -1,10 +1,15 @@
-"""Prove the native window draws a map's asteroid fields, from a real skirmish state.
+"""Prove the native window draws a map's asteroid fields in a real skirmish frame.
 
 The collector used to drop asteroid fields ("not spheres"), so every map was drawn without
 its mining sites. The unit tests pin the collector; this proves the pixels: it takes a real
-skirmish map, builds the frame through the production collector, renders it with the native
-viewer, and compares the capture against the same camera with the fields removed. If the
-fields are drawn, the difference is confined to the field and is rock-coloured.
+skirmish map, builds the whole frame through the production collector (ships, planets,
+stations, effects), renders it with the native viewer, and compares it against the *same
+frame with only the asteroid records removed*. Everything else - camera, ships, planets,
+HUD-free scene - is identical, so the difference is the fields and nothing else.
+
+The check is not "some pixels changed": it measures the changed footprint against the
+field's own projection (world radius, camera distance, the viewer's reported fov) and
+against the frame centre, so a field drawn at the wrong scale or in the wrong place fails.
 
     python tools/render/verify_native_asteroid_fields.py --out OUTDIR
 """
@@ -17,6 +22,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 
+# A pixel counts as field when it moves more than this in any channel. The scene around the
+# field is identical in both frames, so anything above antialiasing noise is field.
+PIXEL_THRESHOLD = 12
+
 
 def run(command, cwd, label):
     result = subprocess.run(command, cwd=str(cwd), capture_output=True, text=True, timeout=180)
@@ -24,6 +33,24 @@ def run(command, cwd, label):
     if result.returncode != 0:
         raise SystemExit(f'{label} failed ({result.returncode}): {(result.stdout + result.stderr)[-4000:]}')
     return result
+
+
+def solid_mask(mask):
+    """Drop single-pixel noise so a bounding box describes the field, not a shimmering rim.
+
+    A planet's silhouette flickers by one pixel between the two renders; four such pixels put
+    the box around the whole frame. A pixel survives when it sits in a patch of similar ones.
+    """
+    import numpy as np
+    padded = np.pad(mask.astype(np.int32), 1)
+    neighbourhood = sum(padded[dy:dy + mask.shape[0], dx:dx + mask.shape[1]]
+                        for dy in range(3) for dx in range(3))
+    return mask & (neighbourhood >= 3)
+
+
+def projected_radius_px(world_radius, distance, fov_deg, image_height):
+    """Half-width of a world-space disc of `world_radius` seen `distance` away, in pixels."""
+    return (world_radius / (distance * math.tan(math.radians(fov_deg) * 0.5))) * (image_height * 0.5)
 
 
 def main():
@@ -62,9 +89,13 @@ def main():
                                        ship_binding=ship_binding, all_visible=True)
     instances, effects, stats = collector.collect(state)
     index = {name: i for i, name in enumerate(tables.bindings)}[collect.ASTEROID_BINDING]
-    drawn = [record for record in instances if record[1] == index]
-    if len(drawn) != len(fields):
-        raise SystemExit(f'collector emitted {len(drawn)} of {len(fields)} fields')
+    rocks = [record for record in instances if record[1] == index]
+    scene_without = [record for record in instances if record[1] != index]
+    rock_fields = {collect.rock_field_id(record[0]) for record in rocks}
+    if rock_fields != {(e.id & 0xFFFF) for e in fields}:
+        raise SystemExit(f'collector covered fields {sorted(rock_fields)} of {sorted(e.id for e in fields)}')
+    if not scene_without:
+        raise SystemExit('the fixture frame has no non-asteroid geometry: the comparison would be empty')
 
     def publish(name, records):
         stream = ring.Ring.create(out / f'{name}.ring', slots=4, slot_bytes=1 << 16)
@@ -74,14 +105,30 @@ def main():
         stream.close()
         return out / f'{name}.ring'
 
-    with_fields = publish('frame-with-fields', drawn)
-    without_fields = publish('frame-without-fields', [])
+    def without_target(records):
+        """The real frame with only the aimed-at field's rocks removed.
+
+        Several fields can share one 55-degree view (this fixture has five, three of them in
+        frame), so a single bounding box over "all changed pixels" would describe the belt, not
+        the field the camera is aimed at. Differencing against this frame isolates the target's
+        own pixels without moving the camera, so the footprint can be compared to its projection.
+        """
+        field = target.id & 0xFFFF
+        return [record for record in records
+                if record[1] != index or collect.rock_field_id(record[0]) != field]
+
+    with_fields = publish('frame-with-fields', instances)
+    without_fields = publish('frame-without-fields', scene_without)
+    without_target_frame = publish('frame-without-target', without_target(instances))
 
     radius = float(target.radius)
+    distance = radius * 5.0
+    pitch = 40.0
     camera = ['--focus', f'{target.pos.x:.3f},0,{target.pos.z:.3f}',
-              '--distance', f'{radius * 5.0:.3f}', '--pitch', '40', '--yaw', '0']
+              '--distance', f'{distance:.3f}', '--pitch', f'{pitch:g}', '--yaw', '0']
     viewer = ROOT / 'render_cpp/build-w02/armada_viewer'
-    for label, scene in [('with-fields', with_fields), ('without-fields', without_fields)]:
+    for label, scene in [('with-fields', with_fields), ('without-fields', without_fields),
+                         ('without-target', without_target_frame)]:
         folder = out / label
         folder.mkdir(exist_ok=True)
         run([str(viewer), '--snapshot', str(ROOT / 'assets/cpp/catalogue.snap'),
@@ -90,30 +137,66 @@ def main():
              '--screenshot', str(folder / 'capture.png'),
              '--report', str(folder / 'native.json')], folder, 'native')
 
-    drawn_image = np.asarray(Image.open(out / 'with-fields/capture.png').convert('RGB'), dtype=float)
-    empty_image = np.asarray(Image.open(out / 'without-fields/capture.png').convert('RGB'), dtype=float)
-    delta = np.abs(drawn_image - empty_image).max(axis=2)
-    changed = delta > 12
-    height, width = delta.shape
-    # The field sits at the centre of a 55-degree view, so its disc covers most of the frame;
-    # what matters is that a lot of pixels changed and that they are lit rock, not background.
+    def load(name):
+        return np.asarray(Image.open(out / name / 'capture.png').convert('RGB'), dtype=float)
+
+    drawn = load('with-fields')
+    bare = load('without-fields')
+    target_frame = load('without-target')
+    changed = np.abs(drawn - bare).max(axis=2) > PIXEL_THRESHOLD      # every field in the frame
+    # This field only, with the one-pixel silhouette noise removed before measuring it.
+    target_changed = solid_mask(np.abs(drawn - target_frame).max(axis=2) > PIXEL_THRESHOLD)
+    height, width = drawn.shape[:2]
     coverage = float(changed.mean())
-    if changed.any():
-        mean_rgb = drawn_image[changed].mean(axis=0).tolist()
+    mean_rgb = drawn[changed].mean(axis=0).tolist() if changed.any() else [0.0, 0.0, 0.0]
+    background = np.median(bare, axis=(0, 1)).tolist()
+
+    # Footprint against the field's own projection: the camera looks straight at the field
+    # centre, so the changed pixels must straddle the frame centre and span the projected disc.
+    report = json.loads((out / 'with-fields/native.json').read_text(encoding='utf-8'))
+    fov_deg = float(report['projection']['fov_deg'])
+    half_width_px = projected_radius_px(radius, distance, fov_deg, height)
+    half_height_px = half_width_px * math.cos(math.radians(pitch))
+    if target_changed.any():
+        rows = np.where(target_changed.any(axis=1))[0]
+        cols = np.where(target_changed.any(axis=0))[0]
+        box = [int(cols[0]), int(rows[0]), int(cols[-1]), int(rows[-1])]
+        centre = [float((box[0] + box[2]) / 2.0), float((box[1] + box[3]) / 2.0)]
+        span = [float(box[2] - box[0] + 1), float(box[3] - box[1] + 1)]
     else:
-        mean_rgb = [0.0, 0.0, 0.0]
-    background = np.median(empty_image, axis=(0, 1)).tolist()
+        box, centre, span = [0, 0, 0, 0], [width / 2.0, height / 2.0], [0.0, 0.0]
+    centre_error = [abs(centre[0] - width / 2.0) / width, abs(centre[1] - height / 2.0) / height]
+    size_ratio = [span[0] / (2.0 * half_width_px), span[1] / (2.0 * half_height_px)]
+    # How much of the field's own disc is rock. A scatter of small bodies leaves most of it
+    # empty; one boulder scaled up to fill the radius - the bug this replaced - fills most of
+    # it. Neither the bbox nor the pixel count separates those two, the fill fraction does.
+    disc_area = math.pi * half_width_px * half_height_px
+    disc_fill = float(target_changed.sum()) / disc_area if disc_area else 0.0
+
+    checks = {
+        'coverage': bool(coverage > 0.01),
+        'lit_rock': bool(sum(mean_rgb) / 3 > sum(background) / 3 + 8),
+        'target_drawn': bool(int(target_changed.sum()) > 200),
+        'centred': bool(max(centre_error) < 0.10),
+        'size_matches_projection': bool(0.55 <= size_ratio[0] <= 1.9 and 0.55 <= size_ratio[1] <= 1.9),
+        'is_a_scatter_not_a_boulder': bool(0.03 <= disc_fill <= 0.50),
+    }
     result = dict(
         map_id=options.get('map_id'), entity_id=target.id, radius=radius,
-        fields_in_state=len(fields), fields_emitted=len(drawn),
-        scale=float(drawn[0][11]), coverage=coverage,
-        changed_pixels=int(changed.sum()), frame=[width, height],
+        distance=distance, fov_deg=fov_deg,
+        fields_in_state=len(fields), fields_drawn=len(rock_fields), rock_instances=len(rocks),
+        instances_with_fields=len(instances), instances_without_fields=len(scene_without),
+        coverage=coverage, changed_pixels=int(changed.sum()), frame=[width, height],
+        target_pixels=int(target_changed.sum()),
+        footprint_box=box, footprint_centre=centre, footprint_span=span,
+        projected_span=[2.0 * half_width_px, 2.0 * half_height_px],
+        centre_error=centre_error, size_ratio=size_ratio, disc_fill=disc_fill,
         field_rgb=mean_rgb, background_rgb=background,
-        omitted_planets=stats['omitted_planets'],
-        passed=bool(coverage > 0.02 and sum(mean_rgb) / 3 > sum(background) / 3 + 8))
+        omitted_planets=stats['omitted_planets'], checks=checks,
+        passed=bool(all(checks.values())))
     (out / 'verification.json').write_text(json.dumps(result, indent=2))
     print(json.dumps(result, indent=2))
-    assert result['passed'], 'the native window did not draw the asteroid field'
+    assert result['passed'], 'the native window did not draw the asteroid field in the real frame'
 
 
 if __name__ == '__main__':

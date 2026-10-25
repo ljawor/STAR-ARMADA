@@ -654,26 +654,26 @@
    "approval": {
     "approved_by": null,
     "approved_on": null,
-    "decision_id": "s06-b5-environment-2026-10-17"
+    "decision_id": "s06-b5-environment-2026-10-25"
    },
    "asset": "core:environment/asteroid_field",
    "binding": "environment:asteroid_field",
-   "envelope_decision": "s06-b5-environment-2026-10-17",
+   "envelope_decision": "s06-b5-environment-2026-10-25",
    "files": {
     "mesh": {
-     "bytes": 18854,
+     "bytes": 24285,
      "path": "assets/models/shared_asteroid_field.mesh.json",
-     "sha256": "ad2b65483c330fecad28059fce9c489bc0bce2c050ebe38aa526e21f25c88ae7"
+     "sha256": "ebcfb21f78289ba6deda5165c965960f8b7c0d2fa4a50fdc7fa2c6b66f40a2ba"
     }
    },
    "manifest": {
-    "bytes": 1841,
+    "bytes": 1985,
     "path": "assets/models/manifests/shared_asteroid_field.json",
-    "sha256": "2eda9ead3d31d7326873d81a210dae4ccd3829b3cab2865617b470296520b423"
+    "sha256": "3cc1a793203e018a23d636c0502f1f868cc6ed807813f3ab28ab90a0bec7ff6a"
    },
    "material_profile": "core:fleet/standard",
    "min_engine": "0.15.1",
-   "revision": "b4b95b8c74f69d8f6c244a2a4b92425c3cc2641be25e2544193fd1d73640a390"
+   "revision": "23ae8d76725aabc4a46447dddcf32965c98ba75bdca943db0a38a84e3c976d32"
   },
   {
    "approval": {
@@ -2011,19 +2011,69 @@
    "envelope_decision": "s06-b4-hardware-2026-10-17",
    "files": {
     "mesh": {
-     "bytes": 129924,
+     "bytes": 190007,
      "path": "assets/models/syndicate_attack_satellite.mesh.json",
-     "sha256": "007c331eb494d62ae49953d7c8a225d993b942a088e392869138c5f1fa219d2d"
+     "sha256": "74da801c5b5ef6657d8e1c25d555d69dc38b4e4ad471360081ee618a4c82db2f"
     }
    },
    "manifest": {
-    "bytes": 1845,
+    "bytes": 2083,
     "path": "assets/models/manifests/syndicate_attack_satellite.json",
-    "sha256": "e58160d9129c5ed077ef2c5ed72c7793b074c7b6495bba40bd00c0737fe89db7"
+    "sha256": "f2d9897a31966e61def840358778b8d6340c2bccec1068939bfc4816579de1de"
    },
    "material_profile": "core:fleet/standard",
    "min_engine": "0.15.1",
-   "revision": "e25a40a2901e770ff5ba1a2c20683cde06494478b6eba4adcd6cad474abf73e8"
+   "revision": "f1b2ef767b687436d7ac0174264958d9decc4bd3b1355c03928608028e14eb1a"
+  },
+  {
+   "approval": {
+    "approved_by": null,
+    "approved_on": null,
+    "decision_id": "syndicate-rework-appearance-2026-10-23"
+   },
+   "asset": "core:syndicate/battleship",
+   "binding": "syndicate:battleship",
+   "envelope_decision": "syndicate-rework-appearance-2026-10-23",
+   "files": {
+    "mesh": {
+     "bytes": 1011877,
+     "path": "assets/models/syndicate_battleship.mesh.json",
+     "sha256": "477363742f063303a8edfe0e1f069b6a26a5384e48aadf3b579a1d74e1eb2259"
+    }
+   },
+   "manifest": {
+    "bytes": 1951,
+    "path": "assets/models/manifests/battleship.json",
+    "sha256": "f451edcbd8e099c7ff34d979c505cc1dcc8ce329ef5fb9da70b778cf13277d17"
+   },
+   "material_profile": "core:fleet/standard",
+   "min_engine": "0.16.0",
+   "revision": "d31e91dfe3522c0a18553c3062423095db195fbfaf2a6a5ab7046ce13ea31db0"
+  },
+  {
+   "approval": {
+    "approved_by": null,
+    "approved_on": null,
+    "decision_id": "syndicate-rework-appearance-2026-10-23"
+   },
+   "asset": "core:syndicate/bomber",
+   "binding": "syndicate:bomber",
+   "envelope_decision": "syndicate-rework-appearance-2026-10-23",
+   "files": {
+    "mesh": {
+     "bytes": 623817,
+     "path": "assets/models/syndicate_bomber.mesh.json",
+     "sha256": "29c1fd050fc28a02a01652958ea27029b40b44dc2409af22680289d577b71984"
+    }
+   },
+   "manifest": {
+    "bytes": 1927,
+    "path": "assets/models/manifests/bomber.json",
+    "sha256": "c02244b9c4524f8605d506925629083bb8d1317c263f5f89ae851184e466ebbb"
+   },
+   "material_profile": "core:fleet/standard",
+   "min_engine": "0.16.0",
+   "revision": "dce9960b80263619b63c7994d9b2a3de9a0ddff82a46f77bd5cf85a4854fcf8a"
   },
   {
    "approval": {
@@ -2036,19 +2086,19 @@
    "envelope_decision": "s06-b9-construction-2026-10-18",
    "files": {
     "mesh": {
-     "bytes": 208615,
+     "bytes": 389727,
      "path": "assets/models/syndicate_colonizer.mesh.json",
-     "sha256": "d5c59777eb31515745f5085246247e86dd14ede2bc5325d89c72530fd2944841"
+     "sha256": "2e1dd9fa6d37ff1623f3726c4b1148cb00001aa1c4f0f515b33804161edcd7d0"
     }
    },
    "manifest": {
-    "bytes": 1984,
+    "bytes": 2039,
     "path": "assets/models/manifests/syndicate_colonizer.json",
-    "sha256": "199fdc217b25df8212f725e850291cfafb94ae9160b1ec460aeee86e9981c858"
+    "sha256": "6255decce6b69aa349600b917e5ec1cc6967a8b920988a41826c26fa54f84b28"
    },
    "material_profile": "core:fleet/standard",
    "min_engine": "0.15.1",
-   "revision": "b7ab1a0e2821aa89dbeb086deb21b1e68159d4d39f0f3013184e0f1a916c6474"
+   "revision": "0ebba5c08532c2d23dd93107888dcb2dfd322249e3078ee9ccf780fa8633f4ab"
   },
   {
    "approval": {
@@ -2061,19 +2111,19 @@
    "envelope_decision": "s06-b3a-command-stations-2026-10-17",
    "files": {
     "mesh": {
-     "bytes": 221182,
+     "bytes": 474763,
      "path": "assets/models/syndicate_command_station.mesh.json",
-     "sha256": "edb2fc8369f6a0d8d4d40020ac538b553659a5066face5ef3b1273b6afea778a"
+     "sha256": "a6a7765ae0b54358fe8c3463fbb8d2866cb8f8256af8815c8b723b8581c4b8f5"
     }
    },
    "manifest": {
-    "bytes": 1872,
+    "bytes": 2086,
     "path": "assets/models/manifests/syndicate_command_station.json",
-    "sha256": "998a25f319aaae7ae78d4bc6ac267d761ca65673fd02bee81d3cb47bb18acff4"
+    "sha256": "05a2c2f76c51586eeed78b7bb9826b22ac3548392aa10846cea7e0fbcf86b29b"
    },
    "material_profile": "core:fleet/standard",
    "min_engine": "0.15.1",
-   "revision": "173a55bd6ce637b1101cecef9da6d28ab4e5172e9de6f5d78a58022b4223c13b"
+   "revision": "77cd5a9ea2f2bb5054426206e582d21ec0491f7f3f4da76e47b0250c7bcc7930"
   },
   {
    "approval": {
@@ -2086,19 +2136,19 @@
    "envelope_decision": "s06-b9-construction-2026-10-18",
    "files": {
     "mesh": {
-     "bytes": 191074,
+     "bytes": 390193,
      "path": "assets/models/syndicate_constructor.mesh.json",
-     "sha256": "b3d4946de75d41f6b02c591e3275ea3627ffdf010d83bd925b16c4d7d3a532c3"
+     "sha256": "4b8a5ec223b5b6099f818ec12da2895cd6ae69932d01ef06a8b2bddb30f8f172"
     }
    },
    "manifest": {
-    "bytes": 1993,
+    "bytes": 2052,
     "path": "assets/models/manifests/syndicate_constructor.json",
-    "sha256": "41f5dabeda06708f520f8b74d0ae42aa775373e55c9e64d74cef7988418bf8a2"
+    "sha256": "cc64f382c1fd6f5e840a1b4649cea5bf2d90826975fd3d6beb5afcba3314808d"
    },
    "material_profile": "core:fleet/standard",
    "min_engine": "0.15.1",
-   "revision": "a108859694d0d2b75f2cb36d4cfbc0f4a915d08dc70904582b1a9bef74988b9e"
+   "revision": "56f49a2705e122a16aa0afbccd317044e999b3dc7c01ed9be7f6b7339784a460"
   },
   {
    "approval": {
@@ -2111,19 +2161,19 @@
    "envelope_decision": "s06-b2-squadron-logistics-2026-10-17",
    "files": {
     "mesh": {
-     "bytes": 282964,
+     "bytes": 439212,
      "path": "assets/models/syndicate_convoy.mesh.json",
-     "sha256": "8e64349746f4818c9f1ba0024275949f1454847c4e1348cb77ee92cf521f5aea"
+     "sha256": "251256f118809f79cde61321ac6e98ca8dc493b07e760d02ca342eafb527354a"
     }
    },
    "manifest": {
-    "bytes": 1840,
+    "bytes": 2018,
     "path": "assets/models/manifests/syndicate_convoy.json",
-    "sha256": "2e43cf009b84172e03c38710a7d92e0778da5713ea35aa42d2b1a285cb6be1c5"
+    "sha256": "3f1f7eea4e45f5e99dfab79aff7c0d14294e0c853dc0be8f55b728c30cdfa84f"
    },
    "material_profile": "core:fleet/standard",
    "min_engine": "0.15.1",
-   "revision": "da23912b0fad1d51ea9a82791dbc55a90d2ec1999fe5ff1e6b2616a84094f73c"
+   "revision": "34be6838d88fa35a2181e5d83e8c920c4f11df7e8de1a78c83ed8375a39ae99d"
   },
   {
    "approval": {
@@ -2136,19 +2186,19 @@
    "envelope_decision": "s06-b8-remaining-combat-2026-10-18",
    "files": {
     "mesh": {
-     "bytes": 126752,
+     "bytes": 361108,
      "path": "assets/models/syndicate_corvette.mesh.json",
-     "sha256": "fb321326eaf5390d40bbe559d7340695deb27ae33b086864360bedab2f3b3b49"
+     "sha256": "2115bc86be6f9c8c94266c38bd593c1aa04afdb3bffcc72455e5e639e604be57"
     }
    },
    "manifest": {
-    "bytes": 1990,
+    "bytes": 2034,
     "path": "assets/models/manifests/syndicate_corvette.json",
-    "sha256": "2a14490ca0e229f43879d8d55fabec58713542b10840adbb3119066966da8ee1"
+    "sha256": "ac5001bb67da5586ea34ba5c452ce9eee8c52bfcf4359495e527afc2a0a19560"
    },
    "material_profile": "core:fleet/standard",
    "min_engine": "0.15.1",
-   "revision": "fe88721c7ab09eb36a9c8edb35ff8bb1b15358df9e24e33c8b9e8e2f34c85e70"
+   "revision": "e1bae4f63cff7f3b4d8e90257ff19f1577c64ea113fdc487feeb2755cae7a79d"
   },
   {
    "approval": {
@@ -2161,19 +2211,19 @@
    "envelope_decision": "s06-b8-remaining-combat-2026-10-18",
    "files": {
     "mesh": {
-     "bytes": 186853,
+     "bytes": 505053,
      "path": "assets/models/syndicate_cruiser.mesh.json",
-     "sha256": "121608999dd39710a35322e7689f5af855fc848b7305242221d3702a35e8c223"
+     "sha256": "caeb508b5fa01d9b3019c9fd71f0fdedd93857f8661739b9bdeafb23479afccb"
     }
    },
    "manifest": {
-    "bytes": 1979,
+    "bytes": 2027,
     "path": "assets/models/manifests/syndicate_cruiser.json",
-    "sha256": "f9c20d667c15401fc76001df95fc7df6230dca2a62984c1e9c6b880bd137a97d"
+    "sha256": "e89b7ea965d40d6e8bc70299290f0319d64bdc5a498fd64498195de1bb0506b5"
    },
    "material_profile": "core:fleet/standard",
    "min_engine": "0.15.1",
-   "revision": "8728ed41419613d4c920e0066706bee5f421d3460c7c97126e0d3b20082d4cfe"
+   "revision": "ffe532181547d3ca999050e501a08e53b7b556c2c70568519e02ccdc46b95fac"
   },
   {
    "approval": {
@@ -2186,19 +2236,19 @@
    "envelope_decision": "s06-b3c-stations-2026-10-17",
    "files": {
     "mesh": {
-     "bytes": 223464,
+     "bytes": 486457,
      "path": "assets/models/syndicate_defense_platform.mesh.json",
-     "sha256": "d74eb09809cc081177b3edb7cd542dc393812d00f151d70a0d5235aa49e1245b"
+     "sha256": "257c75592032378d871e2881c9fee0dca8c628aae317bc7179a69d14fdd7f31b"
     }
    },
    "manifest": {
-    "bytes": 1853,
+    "bytes": 2084,
     "path": "assets/models/manifests/syndicate_defense_platform.json",
-    "sha256": "fc3172ff0f6d7cf5c01976cf87f06545c3918a21a6fcc58fac6acfb8ff6a1b6a"
+    "sha256": "0ec3a173de78c68be473153944bac6910688c5b190053c99feef8e1e16c67fc4"
    },
    "material_profile": "core:fleet/standard",
    "min_engine": "0.15.1",
-   "revision": "6316df4e01073095f98be41ea0653709f17a19d9f206485917e235af35712223"
+   "revision": "afa479beb5037ed06b966f3a301863ab46f2339140427ed9098a0d6ece2dbd1f"
   },
   {
    "approval": {
@@ -2211,19 +2261,19 @@
    "envelope_decision": "s06-b4-hardware-2026-10-17",
    "files": {
     "mesh": {
-     "bytes": 116184,
+     "bytes": 183627,
      "path": "assets/models/syndicate_defense_satellite.mesh.json",
-     "sha256": "3fbe61b531055a10b3a269f07cf291ed779cce08396bf7d8a7367e8c5585b71f"
+     "sha256": "9657efaaf0f82757bdef6484a9b75de159ceb149301d5c4dd09c88bb3f4fa68c"
     }
    },
    "manifest": {
-    "bytes": 1850,
+    "bytes": 2088,
     "path": "assets/models/manifests/syndicate_defense_satellite.json",
-    "sha256": "485f56ca729944ff51d033be6ba84260e2ef04fc1974c9118131cb478a47635f"
+    "sha256": "5381c9c402204a4408b1b6f7c849b06aef6f157541605d5cf5f8af05de3f2fbd"
    },
    "material_profile": "core:fleet/standard",
    "min_engine": "0.15.1",
-   "revision": "dd20f0704d174984f444f86c7582c3c317b888447c2af62e9e01d9d8598010a2"
+   "revision": "ffa6c5cd771f733d58a504b91c43d8c03b5835cfa9b69b49a0d38b14069e3660"
   },
   {
    "approval": {
@@ -2236,19 +2286,19 @@
    "envelope_decision": "s06-b3b-stations-2026-10-17",
    "files": {
     "mesh": {
-     "bytes": 238302,
+     "bytes": 496423,
      "path": "assets/models/syndicate_energy_relay.mesh.json",
-     "sha256": "fabcb1e166385a6e0ae6c07fb3dd2fb040a309a332511aa8e19d638ff2f27af8"
+     "sha256": "33149e5819348e8412a742e48d5e7d9c58f0e1d44bd86de6350a2d61c6b08063"
     }
    },
    "manifest": {
-    "bytes": 1838,
+    "bytes": 2054,
     "path": "assets/models/manifests/syndicate_energy_relay.json",
-    "sha256": "c1ef6c6c969ea55818469468e3a99f1e7ab4d3723423bd81a099f317fbad02cf"
+    "sha256": "af8f4520adee1a4a06a8b0af90e87faa199273fe49528039c9720a8b57db456f"
    },
    "material_profile": "core:fleet/standard",
    "min_engine": "0.15.1",
-   "revision": "052381831f91a1d20cbdb612f9b485f12fbbcb374d7157420a4b2f0643ecec4b"
+   "revision": "690a24e33ea2dbaf2b7c255be91e88cb10730b3c0b309b19807e062793c28b08"
   },
   {
    "approval": {
@@ -2261,19 +2311,19 @@
    "envelope_decision": "s06-b2-squadron-logistics-2026-10-17",
    "files": {
     "mesh": {
-     "bytes": 146531,
-     "path": "assets/models/syndicate_jackal.mesh.json",
-     "sha256": "829f5a14e3dfae79437c3a3fb9749d4bd8c5fd5a0117ad00cc3665d1cd2fe126"
+     "bytes": 175610,
+     "path": "assets/models/syndicate_fighter.mesh.json",
+     "sha256": "6fb1590cc6b3e6679a0846ef38b79ce557c0cf4b1ea06232e2e36fb3f40a8685"
     }
    },
    "manifest": {
-    "bytes": 1831,
+    "bytes": 2023,
     "path": "assets/models/manifests/syndicate_jackal.json",
-    "sha256": "b84257811fbeb1f11c73dc07b90a8ea4be608447bbaf5f3b229f15785345af4a"
+    "sha256": "b698779192dfb32b98ab6046e6c95996d72e70a740852a1c10c9d27113be9635"
    },
    "material_profile": "core:fleet/standard",
    "min_engine": "0.15.1",
-   "revision": "8c51a4179b2932bcbf20ffaf84c69c852aec96cc75d027fe2b466d7a633e2028"
+   "revision": "342f10dc0cf6e40ec79b36b15e77088f3568daf2a0949a3dc85a53ab594690b4"
   },
   {
    "approval": {
@@ -2286,19 +2336,19 @@
    "envelope_decision": "s06-b3c-stations-2026-10-17",
    "files": {
     "mesh": {
-     "bytes": 222560,
+     "bytes": 467249,
      "path": "assets/models/syndicate_fighter_platform.mesh.json",
-     "sha256": "d3c1cd6a88c5087519a93a5ae5ed2debf756832d6a4298c9d0d2fe851115d036"
+     "sha256": "c14985feeab3e720ad9cd6b3428a13d8dbdcd05db12deb2a82bd8d5e38269da1"
     }
    },
    "manifest": {
-    "bytes": 1844,
+    "bytes": 2081,
     "path": "assets/models/manifests/syndicate_fighter_platform.json",
-    "sha256": "3479521c742743e7046aafacccdab4c8ee73ff512cfd2b3ede50ac517f436c39"
+    "sha256": "4765fa9e3d96fdf71f798f0893343841899b4020d07f8cd744d7ccc215b325aa"
    },
    "material_profile": "core:fleet/standard",
    "min_engine": "0.15.1",
-   "revision": "834a7b9a1d03c3d92fdabc5948af3c98e67b7a91f31d636dda2ef35c47f37d9c"
+   "revision": "07d7165e29110c37fb7e1910fd96cf1a0c53d9417088baa4195d1949bbed005b"
   },
   {
    "approval": {
@@ -2311,19 +2361,19 @@
    "envelope_decision": "s06-b8-remaining-combat-2026-10-18",
    "files": {
     "mesh": {
-     "bytes": 155568,
+     "bytes": 443014,
      "path": "assets/models/syndicate_frigate.mesh.json",
-     "sha256": "9563c320fb164133b7731aa398f41653e25844da72644e0b438d3b10aeba1471"
+     "sha256": "d043f8e33b16a4ba1c71ce61ec27d82c8f67cce0e6634793509ae204d07b939c"
     }
    },
    "manifest": {
-    "bytes": 1986,
+    "bytes": 2027,
     "path": "assets/models/manifests/syndicate_frigate.json",
-    "sha256": "49aae805c80445a8824cf8375b9ee9c93ee813683f457c8afc24641a637d8e88"
+    "sha256": "1506a4bbddc9d49a9683e5a74a067d854ebcc2e1d40010110e765487982f39f2"
    },
    "material_profile": "core:fleet/standard",
    "min_engine": "0.15.1",
-   "revision": "db352a8ffcd56d47687e15ce69bad0e685f2e6c9bfb668277160dcd3d55ac422"
+   "revision": "2dac0a24dfe1e4d3ce3d564787717aa176ac30dee9c347f9bbdb0a793379f234"
   },
   {
    "approval": {
@@ -2336,19 +2386,19 @@
    "envelope_decision": "s06-b3b-stations-2026-10-17",
    "files": {
     "mesh": {
-     "bytes": 244936,
+     "bytes": 517815,
      "path": "assets/models/syndicate_mining_station.mesh.json",
-     "sha256": "6ce810fdf0be8ba5a3c7485fd9df4d6b3ff5fc5ae5e8a0f9a8fe4bc5b88692aa"
+     "sha256": "bf8f73236bdd40bffa2e56f9785d2c0eb8bd5a54777214e414c0aeb605559e37"
     }
    },
    "manifest": {
-    "bytes": 1842,
+    "bytes": 2070,
     "path": "assets/models/manifests/syndicate_mining_station.json",
-    "sha256": "50341f9ed35ae1fc00fdb26c0c3225a98c98ec1604c2ca67517201610eb23163"
+    "sha256": "a11b4842c382b5b2d941c669c6719bd6e5969a980b38f8640725fc1ea27cdd44"
    },
    "material_profile": "core:fleet/standard",
    "min_engine": "0.15.1",
-   "revision": "55e5ddbbd3810466756224e07178754a5e31c99c4296fba599956692d7521ee8"
+   "revision": "7df3aa377cce1bbd12ccce1ff40ab2a8330cdc79a1df612d6ae5cf250dcb00da"
   },
   {
    "approval": {
@@ -2361,19 +2411,19 @@
    "envelope_decision": "s06-b4-hardware-2026-10-17",
    "files": {
     "mesh": {
-     "bytes": 135912,
+     "bytes": 293467,
      "path": "assets/models/syndicate_planet_extractor.mesh.json",
-     "sha256": "388ba2aa4d5ebb3f33edc309cc4c177ce6d499c74d751c6573f8f5302dca4fa1"
+     "sha256": "0c4bd4084b30baf0d5dcf6b2c6af5f5602be10b6f56aeb40ec0441442e24cff4"
     }
    },
    "manifest": {
-    "bytes": 1836,
+    "bytes": 2079,
     "path": "assets/models/manifests/syndicate_planet_extractor.json",
-    "sha256": "d526a1894600ccd51179b1916c1af4eabb753d1483a241a9c49e6849c038d6f2"
+    "sha256": "a09e67033e368bb6267286361a41be153983474dfac83ca4498620118d0117ed"
    },
    "material_profile": "core:fleet/standard",
    "min_engine": "0.15.1",
-   "revision": "a3a4f09f882b06a458ec36239b6da7061723393e1046e7053d6d4d71291232df"
+   "revision": "fb93470cb671e1de8e9b4a4442e6f57a7eed7b6d7791c9d3e5ad7afba9fec210"
   },
   {
    "approval": {
@@ -2386,19 +2436,19 @@
    "envelope_decision": "s06-b4-hardware-2026-10-17",
    "files": {
     "mesh": {
-     "bytes": 127078,
+     "bytes": 263939,
      "path": "assets/models/syndicate_planet_pulsar_cannon.mesh.json",
-     "sha256": "498e6232ec385e903942da4a873f0153d951cc601e49df170b274a6863cecc55"
+     "sha256": "db09c4636ce07ec7bb81c432fec17d04de36cee17ca468b9c24bfc617f8783c9"
     }
    },
    "manifest": {
-    "bytes": 1852,
+    "bytes": 2107,
     "path": "assets/models/manifests/syndicate_planet_pulsar_cannon.json",
-    "sha256": "99f57a924a1adac61cf7777d21c1c4d45caa2b55562d5c05729c637625b98ddb"
+    "sha256": "d3dbf35751d027be0190543a96f4ff249e8712d104ac9f1c3e621a56bc7626d6"
    },
    "material_profile": "core:fleet/standard",
    "min_engine": "0.15.1",
-   "revision": "9f14e368cbdc3372dfe5d9132d857f29d39ed9820fface47354094ef186526e5"
+   "revision": "268bd8c4c8415de5c20f58a0f558a4930c5c0de702f61374d07634075e926c7c"
   },
   {
    "approval": {
@@ -2411,19 +2461,19 @@
    "envelope_decision": "s06-b4-hardware-2026-10-17",
    "files": {
     "mesh": {
-     "bytes": 138031,
+     "bytes": 292525,
      "path": "assets/models/syndicate_planet_shield_generator.mesh.json",
-     "sha256": "f05eed613663d33ae5bad77d2489a4a8f986585374645e19cf8aefe1a98f939d"
+     "sha256": "1fcbaa6ca82dd2fd7c38530fbc71f1f7b8feb229d7c984a87f6cac6110d4235b"
     }
    },
    "manifest": {
-    "bytes": 1864,
+    "bytes": 2129,
     "path": "assets/models/manifests/syndicate_planet_shield_generator.json",
-    "sha256": "5279694e1725fa56863726498402d72b84fbc5e073b407ed231b4d0542962764"
+    "sha256": "c8f586df580d02e4931a7f1e5ed0e8c61e817b96a3afd98d76f72333e96aa557"
    },
    "material_profile": "core:fleet/standard",
    "min_engine": "0.15.1",
-   "revision": "1d3e33e24d0a9ad6e4c579333c82d5de12fa41ea7f043fba0e489e77c72afe71"
+   "revision": "17a6795df440cee2b5973b2f2edbdbe69a3409f62c78988585f8ef72f83ef345"
   },
   {
    "approval": {
@@ -2436,19 +2486,19 @@
    "envelope_decision": "s06-b4-hardware-2026-10-17",
    "files": {
     "mesh": {
-     "bytes": 123191,
+     "bytes": 268721,
      "path": "assets/models/syndicate_planet_trade_hub.mesh.json",
-     "sha256": "e287675b6e86d7b5bb986169941179ff8cad49fa9c021182f7d279aa89be2aed"
+     "sha256": "f45d9b99ad29d2dfe54ffcaf7740a44b1dd7c7aca9fa624f5f1bb0f067f75e1f"
     }
    },
    "manifest": {
-    "bytes": 1836,
+    "bytes": 2079,
     "path": "assets/models/manifests/syndicate_planet_trade_hub.json",
-    "sha256": "2835c7068c788280be834ddd9789bb46625bcca60478697ba5597d1c92bcef44"
+    "sha256": "6f075e5081a543d09a132836b41a983020f388967c93aade3497df4b130d769e"
    },
    "material_profile": "core:fleet/standard",
    "min_engine": "0.15.1",
-   "revision": "cf6a994253230790f4305436a6778dc4d94fed750fa6cede5aae8a87e828b1ca"
+   "revision": "e0a9c520696d1b415822a18c0eabf6630f6ff3fafa60c8315fcb652d9e7f4ee5"
   },
   {
    "approval": {
@@ -2461,19 +2511,19 @@
    "envelope_decision": "s06-b3c-stations-2026-10-17",
    "files": {
     "mesh": {
-     "bytes": 226350,
+     "bytes": 518153,
      "path": "assets/models/syndicate_repair_dock.mesh.json",
-     "sha256": "39c5ef2886f1c56c4d2702f5e07fb9eb0adc7245a6711ae34e4cdf73851b9faa"
+     "sha256": "a0dae4d9d25c133e5fd9d2fc92bff443bbaa14ca64ed4ed02f66fb675714d4c4"
     }
    },
    "manifest": {
-    "bytes": 1832,
+    "bytes": 2050,
     "path": "assets/models/manifests/syndicate_repair_dock.json",
-    "sha256": "23b9bc76d5810bb484c5d9d49487f81d5b5ca4e39365a51f49b646e19aa8569a"
+    "sha256": "d2e71e2812ddf4e821221931735524b4c4ee19f470c39a98e50ec92c773c82d7"
    },
    "material_profile": "core:fleet/standard",
    "min_engine": "0.15.1",
-   "revision": "6f04a9dc3b31a35d86eeaceb6467a0fbc8dfea0ade32dd0c4943c8eaf2900617"
+   "revision": "015208f6e90deed9ed00b168195ce81cbcee48541f44591de1d0a3381caaf60f"
   },
   {
    "approval": {
@@ -2486,19 +2536,19 @@
    "envelope_decision": "s06-b3c-stations-2026-10-17",
    "files": {
     "mesh": {
-     "bytes": 259774,
+     "bytes": 476214,
      "path": "assets/models/syndicate_research_station.mesh.json",
-     "sha256": "c2532f898553a4ff437be8f365d037551e4c1d1a5d5389f35e500c473c1b224c"
+     "sha256": "706bd3c00a3a46c03a06d48c67b4fd16f9bd26c649e0ec63faa2c0de2f50d3ff"
     }
    },
    "manifest": {
-    "bytes": 1843,
+    "bytes": 2082,
     "path": "assets/models/manifests/syndicate_research_station.json",
-    "sha256": "4ffeaee8621e27589d3dab7cd59a111a5cc598e2b16b68f15478d968fbf95210"
+    "sha256": "1a3b8de9bef8e5d46d0721560e128a9d0435966b09b4b62e128f327cce09f9b4"
    },
    "material_profile": "core:fleet/standard",
    "min_engine": "0.15.1",
-   "revision": "49bb828a8fc05a8ef36d1ffbea67a783840adae53d4e47156d6ec2845bea51c7"
+   "revision": "0455ff1581363710aa34e89faf63edf5cb6da1a35de8a021e0e2bd82b6814a39"
   },
   {
    "approval": {
@@ -2511,19 +2561,19 @@
    "envelope_decision": "s06-b3b-stations-2026-10-17",
    "files": {
     "mesh": {
-     "bytes": 253850,
+     "bytes": 489605,
      "path": "assets/models/syndicate_sensor_station.mesh.json",
-     "sha256": "e35b084c73b2702ab12f0611730bb4f99b24eefd80925344300360f68bb7a947"
+     "sha256": "1e29bd756a370a0ddbc96f302643426475540e7f44f212a62c446d6b337bd1db"
     }
    },
    "manifest": {
-    "bytes": 1846,
+    "bytes": 2072,
     "path": "assets/models/manifests/syndicate_sensor_station.json",
-    "sha256": "40f9b56b25a6b6aac00b1bac1b07d43e254480fe37225ca567835b078e12fb5a"
+    "sha256": "3e0d05f93c3d1a7b1e702466be1c8ba89954509681d77638d6c1f85476ca6c9d"
    },
    "material_profile": "core:fleet/standard",
    "min_engine": "0.15.1",
-   "revision": "5034252337170dfc88a4352c9da5b7ec5d665c99e35bbf4030e583bb480a4911"
+   "revision": "b4089320eaa9383a834a3520b58f8d2656ad1deb622b99c3d5601dcda449a057"
   },
   {
    "approval": {
@@ -2536,19 +2586,44 @@
    "envelope_decision": "s06-b3c-stations-2026-10-17",
    "files": {
     "mesh": {
-     "bytes": 241812,
+     "bytes": 559605,
      "path": "assets/models/syndicate_shipyard.mesh.json",
-     "sha256": "c1a0aad3e30a013b95c704390ef925f8beeb024924ddd4a5d525dc60156c4670"
+     "sha256": "4061374edeed429d35e970ba5cf292e930d37da701e4bc9390a4e3aa706974c7"
     }
    },
    "manifest": {
-    "bytes": 1824,
+    "bytes": 2028,
     "path": "assets/models/manifests/syndicate_shipyard.json",
-    "sha256": "723503c4f0188cf7fbe85e54c421bacd1701f69a0b845bfa4abe5706ceb33d47"
+    "sha256": "8f9d043fee8399a157ffe7614714afb579b35d9bb5d5d31986fe4d645255731e"
    },
    "material_profile": "core:fleet/standard",
    "min_engine": "0.15.1",
-   "revision": "440c9a50f38af58dbd87265ffab8f1c1351fbd4333516fb42d878c7f08884170"
+   "revision": "70b55ba0bd5c01ec62ec112d017554ef00f5b5881aca4362e1d44f8c5e72c43b"
+  },
+  {
+   "approval": {
+    "approved_by": null,
+    "approved_on": null,
+    "decision_id": "syndicate-rework-appearance-2026-10-23"
+   },
+   "asset": "core:syndicate/supercapital",
+   "binding": "syndicate:supercapital",
+   "envelope_decision": "syndicate-rework-appearance-2026-10-23",
+   "files": {
+    "mesh": {
+     "bytes": 1363200,
+     "path": "assets/models/syndicate_supercapital.mesh.json",
+     "sha256": "3df9894570b465d08d47f527aa9b0cad5c57857e9d75dfeca0c3d55cb3f73307"
+    }
+   },
+   "manifest": {
+    "bytes": 1984,
+    "path": "assets/models/manifests/supercapital.json",
+    "sha256": "60c272a9b4092a653a7b207d5eb1547cf1b023310cad3abe87b19c6e4a6d1ef6"
+   },
+   "material_profile": "core:fleet/standard",
+   "min_engine": "0.16.0",
+   "revision": "30f3dd85072b7f0fbcb3d4af367ddabd33d8edfbaca4595f99440ef83f55c5aa"
   },
   {
    "approval": {
@@ -2561,27 +2636,27 @@
    "envelope_decision": "s06-b3c-stations-2026-10-17",
    "files": {
     "mesh": {
-     "bytes": 223717,
+     "bytes": 522722,
      "path": "assets/models/syndicate_trade_station.mesh.json",
-     "sha256": "6bae5343f97a9d1881d8b1b7bbf21270a1acddc26a6b58752e258dcb90bd9e1c"
+     "sha256": "36089f5ece21fbe9320156383e2744f0df10cecb4bbd7184e033d86322a18b4a"
     }
    },
    "manifest": {
-    "bytes": 1840,
+    "bytes": 2061,
     "path": "assets/models/manifests/syndicate_trade_station.json",
-    "sha256": "d9987ff063cd1b5111468fa6c482c86fcc8f44a9e86ce88a9982b46fe92077d8"
+    "sha256": "37a0734697acebc95704dc6aaccfcd8f909db1fe2bf9c586041fea52341320b4"
    },
    "material_profile": "core:fleet/standard",
    "min_engine": "0.15.1",
-   "revision": "bec232e61fea50479f60ad0721001b2e6115bc78f040470d918644f70d3a6f69"
+   "revision": "d00e2bc892baa580243071ab069274050b6cbce28f91f17ed1c98a0ce4a8227f"
   }
  ],
  "contract": "star-armada/release-asset-lock",
  "contract_major": 1,
  "counts": {
-  "core_bindings": 103,
-  "payload_bytes": 21126346
+  "core_bindings": 106,
+  "payload_bytes": 28911256
  },
- "engine_version": "0.16.0",
+ "engine_version": "1.0.0",
  "purpose": "The exact catalogue a shipped default selection resolves to. Rollback is a settings change, not a lock change."
 }
