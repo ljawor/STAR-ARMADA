@@ -29,6 +29,26 @@ class WindowsWorkerDiagnosticTests(unittest.TestCase):
                   if line.startswith('{')]
         return code, output.getvalue(), events, run
 
+    def test_emitted_frames_are_the_shape_the_ci_gate_parses(self):
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            diag.emit('baseline_verdict', passed=False)
+        frame = json.loads(output.getvalue())
+        self.assertEqual(frame['stage'], 'baseline_verdict')
+        self.assertIs(frame['passed'], False)
+        self.assertTrue(output.getvalue().startswith('{"stage": "baseline_verdict"'))
+
+    def test_entry_point_turns_a_crash_into_a_diagnostic_error_frame(self):
+        output = io.StringIO()
+        with mock.patch.object(diag, 'main', side_effect=RuntimeError('boom')), \
+                contextlib.redirect_stdout(output):
+            code = diag._entry()
+        self.assertEqual(code, 2)
+        stages = [json.loads(line)['stage'] for line in output.getvalue().splitlines()
+                  if line.startswith('{')]
+        self.assertEqual(stages, ['diagnostic_error'])
+        self.assertIn('boom', output.getvalue())
+
     def test_taskkill_timeout_retains_tool_and_diagnostic_output(self):
         child = self.child(subprocess.TimeoutExpired('diagnostic', 100, output=b'evidence\n'),
                            (b'', None))

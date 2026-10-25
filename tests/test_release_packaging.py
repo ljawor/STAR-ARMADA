@@ -239,9 +239,14 @@ class WindowsRuntimeGateTests(unittest.TestCase):
         self.assertNotRegex(body, r'(?m)^\s+continue-on-error:')
         # A red baseline and a tool that died on startup both exit nonzero, so the gate
         # demands the verdict frame the tool emits rather than an exit-code allowlist.
-        self.assertIn('Select-String', body)
-        self.assertIn('"stage": "(baseline_verdict|diagnostic_error)"', body)
-        self.assertRegex(body, r'(?m)^\s+if \(-not \$verdict\).*exit 1 \}$')
+        self.assertNotIn('Select-String', body, 'do not match json.dumps spacing')
+        self.assertIn('ConvertFrom-Json', body)
+        # The baseline verdict is required on its own: a bare diagnostic_error means the
+        # tool crashed, which must not pass as a red baseline.
+        self.assertRegex(body, r"\$verdict = \$frames \| Where-Object \{ \$_\.stage -eq 'baseline_verdict' \}")
+        self.assertIn("if (-not $verdict)", body)
+        self.assertRegex(body, r'(?m)^\s+if \(-not \$verdict\) \{')
+        self.assertIn('exit 1', body)
         self.assertNotIn('-eq 9009', body)
         self.assertRegex(body, r'(?m)^\s+exit 0$')
         self.assertIn('GITHUB_STEP_SUMMARY', body)
@@ -265,6 +270,17 @@ class WindowsRuntimeGateTests(unittest.TestCase):
         self.assertIn('GATE-STATUS.txt', job.group(1))
         self.assertIn('needs.windows-lan.result', job.group(1))
         self.assertIn("star-armada-candidate-win${{ needs.windows-lan.result != 'success'", job.group(1))
+        # Provenance: a verdict without a run is not attributable evidence.
+        for field in ('commit: ${{ github.sha }}', 'actions/runs/${{ github.run_id }}'):
+            self.assertIn(field, job.group(1))
+        # The mark step must write where the zip reads, and before it compresses.
+        self.assertLess(job.group(1).index('Mark the candidate with its gate verdict'),
+                        job.group(1).index('Zip\n'), 'the verdict must be written before zipping')
+        self.assertIn('Tee-Object -FilePath "dist/STAR ARMADA/GATE-STATUS.txt"', job.group(1))
+        self.assertIn('-Path "dist/STAR ARMADA/*"', job.group(1))
+        # The payload name carries the verdict too, so the file and the artifact agree.
+        self.assertIn('STAR-ARMADA-candidate-win$suffix.zip', job.group(1))
+        self.assertIn('path: dist/STAR-ARMADA-candidate-win*.zip', job.group(1))
         self.assertRegex(job.group(1),
                          r"(?m)^      - name: Require a green LAN gate for a verified candidate\n"
                          r"        if: needs.windows-lan.result != 'success'")

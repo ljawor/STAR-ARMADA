@@ -113,6 +113,17 @@ class AbortDiagnosticTests(unittest.TestCase):
 class CleanupRetryTests(unittest.TestCase):
     """A closing handle or a scanner is a race, not a leak; a real leak still raises."""
 
+    def setUp(self):
+        import tempfile
+        self.directory = tempfile.TemporaryDirectory()
+        Path(self.directory.name, 'frame.bgra').write_bytes(b'frame')
+
+    def tearDown(self):
+        try:
+            self.directory.cleanup()      # detaches the finalizer even if the tree is gone
+        except OSError:
+            pass
+
     def window(self, cleanup):
         import threading
         window = object.__new__(embedded.EmbeddedWindow)
@@ -124,95 +135,27 @@ class CleanupRetryTests(unittest.TestCase):
         window._log_thread = None
         window._mapping = None
         window._texture = None
+        # Real path: every case below goes through the on-disk verification, not a mock
+        # attribute that could quietly turn the check off.
         window._temporary = Mock(cleanup=cleanup)
+        window._temporary.name = self.directory.name
         return window
 
     def test_transient_sharing_violation_is_retried_before_it_is_reported(self):
+        import shutil
         calls = []
 
         def cleanup():
             calls.append(1)
             if len(calls) < 3:
                 raise PermissionError('[WinError 5] frame.bgra is held by a closing handle')
+            shutil.rmtree(self.directory.name)
 
-        window = self.window(cleanup)
-        window._stop(hard=True)
+        self.window(cleanup)._stop(hard=True)
         self.assertEqual(len(calls), 3, 'cleanup was not retried')
+        self.assertFalse(Path(self.directory.name).exists())
 
-    def test_real_storage_that_stays_locked_spends_the_whole_budget_then_raises(self):
-        import tempfile
-        directory = tempfile.TemporaryDirectory()
-        Path(directory.name, 'frame.bgra').write_bytes(b'held')
-
-        def locked():
-            raise PermissionError('[WinError 5] frame.bgra is held by a closing handle')
-
-        window = object.__new__(embedded.EmbeddedWindow)
-        window._terminal = False
-        window._process = None
-        window._connection = None
-        window._listener = None
-        window._log_thread = None
-        window._mapping = None
-        window._texture = None
-        # Real storage, real path: only the removal itself is simulated as locked, which
-        # is what a Windows sharing violation looks like to this code.
-        window._temporary = Mock(name=directory.name, cleanup=locked)
-        window._temporary.name = directory.name
-        started = time.monotonic()
-        try:
-            with self.assertRaises(PermissionError):
-                window._stop(hard=True)
-            elapsed = time.monotonic() - started
-        finally:
-            directory.cleanup()
-        self.assertGreaterEqual(elapsed, embedded.CLEANUP_RETRY_DELAY * (embedded.CLEANUP_ATTEMPTS - 1),
-                                'the retry budget was not actually spent')
-
-    @unittest.skipUnless(os.name == 'posix', 'directory removal semantics differ on Windows')
-    def test_a_silent_cleanup_no_op_is_reported_instead_of_masked(self):
-        import tempfile
-        directory = tempfile.TemporaryDirectory()
-        Path(directory.name, 'frame.bgra').write_bytes(b'held')
-        os.chmod(directory.name, 0o500)
-        window = object.__new__(embedded.EmbeddedWindow)
-        window._terminal = False
-        window._process = None
-        window._connection = None
-        window._listener = None
-        window._log_thread = None
-        window._mapping = None
-        window._texture = None
-        # A cleanup() that returns without removing anything: trusting its return value
-        # would report a successful teardown while the storage is still on disk.
-        window._temporary = Mock(name=directory.name, cleanup=lambda: None)
-        window._temporary.name = directory.name
-        try:
-            with self.assertRaises(OSError) as caught:
-                window._stop(hard=True)
-        finally:
-            os.chmod(directory.name, 0o700)
-            directory.cleanup()
-        self.assertIn('survived cleanup', str(caught.exception))
-
-    def test_successful_cleanup_clears_the_temporary_handle(self):
-        import tempfile
-        directory = tempfile.TemporaryDirectory()
-        Path(directory.name, 'frame.bgra').write_bytes(b'frame')
-        window = object.__new__(embedded.EmbeddedWindow)
-        window._terminal = False
-        window._process = None
-        window._connection = None
-        window._listener = None
-        window._log_thread = None
-        window._mapping = None
-        window._texture = None
-        window._temporary = directory
-        window._stop(hard=True)
-        self.assertIsNone(window._temporary, 'a cleaned handle must not be re-entered')
-        self.assertFalse(Path(directory.name).exists())
-
-    def test_persistent_cleanup_failure_is_still_reported_after_bounded_retries(self):
+    def test_persistent_cleanup_failure_spends_the_budget_then_raises(self):
         calls = []
 
         def cleanup():
@@ -220,11 +163,31 @@ class CleanupRetryTests(unittest.TestCase):
             raise PermissionError('[WinError 5] frame.bgra is held')
 
         window = self.window(cleanup)
+        started = time.monotonic()
         with self.assertRaises(PermissionError):
             window._stop(hard=True)
+        elapsed = time.monotonic() - started
         self.assertEqual(len(calls), embedded.CLEANUP_ATTEMPTS)
         self.assertLess(len(calls), 10, 'retry budget must stay bounded')
+        self.assertGreaterEqual(elapsed, embedded.CLEANUP_RETRY_DELAY * (embedded.CLEANUP_ATTEMPTS - 1),
+                                'the retry budget was not actually spent')
         self.assertTrue(window._terminal)
+
+    def test_a_silent_cleanup_no_op_is_reported_instead_of_masked(self):
+        # A cleanup() that returns without removing anything: trusting its return value
+        # would report a successful teardown while the storage is still on disk.
+        window = self.window(lambda: None)
+        with self.assertRaises(OSError) as caught:
+            window._stop(hard=True)
+        self.assertIn('survived cleanup', str(caught.exception))
+        self.assertTrue(Path(self.directory.name).exists())
+
+    def test_successful_cleanup_clears_the_temporary_handle(self):
+        import shutil
+        window = self.window(lambda: shutil.rmtree(self.directory.name))
+        window._stop(hard=True)
+        self.assertIsNone(window._temporary, 'a cleaned handle must not be re-entered')
+        self.assertFalse(Path(self.directory.name).exists())
 
 
 class NativeWorkerTests(unittest.TestCase):

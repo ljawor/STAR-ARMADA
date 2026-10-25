@@ -212,13 +212,20 @@ def main():
     return 124 if timed_out else child.returncode
 
 
-if __name__ == '__main__':
+def _entry():
+    """Run main(), but never leave the log without a verdict frame.
+
+    A crash before run() reported anything would otherwise look like an ordinary red
+    baseline; the observation gate refuses a log with no frame at all.
+    """
     try:
-        raise SystemExit(main())
+        return main()
     except SystemExit:
         raise
-    except BaseException as exc:                     # noqa: BLE001 - the sentinel must exist
-        # A crash before run() reported anything would otherwise look like an ordinary
-        # red baseline; the observation gate requires one of these frames.
+    except BaseException as exc:                     # noqa: BLE001 - the frame must exist
         emit('diagnostic_error', exception=repr(exc), traceback=traceback.format_exc())
-        raise SystemExit(2)
+        return 2
+
+
+if __name__ == '__main__':
+    raise SystemExit(_entry())

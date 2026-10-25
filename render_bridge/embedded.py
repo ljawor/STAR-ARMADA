@@ -65,7 +65,9 @@ def _cleanup_temporary(temporary, attempts=CLEANUP_ATTEMPTS, delay=CLEANUP_RETRY
     """
     name = getattr(temporary, 'name', None)
     if not isinstance(name, (str, bytes, os.PathLike)):
-        name = None        # no verifiable path: trust the call, as before
+        # Nothing to verify against: the caller supplies a TemporaryDirectory in
+        # production, so this is a test double and the return value is all we have.
+        name = None
     for remaining in range(attempts, 0, -1):
         try:
             temporary.cleanup()
@@ -75,12 +77,22 @@ def _cleanup_temporary(temporary, attempts=CLEANUP_ATTEMPTS, delay=CLEANUP_RETRY
             time.sleep(delay)
             continue
         # cleanup() is neither documented as re-entrant nor required to report that it
-        # removed anything, so a silent no-op must not read as success.
-        if name is None or not os.path.exists(name):
+        # removed anything, so a silent no-op must not read as success. lstat instead of
+        # exists(): that call answers False for a stat it could not take, which would
+        # turn an unreadable parent directory into a clean teardown.
+        if name is None or not _storage_present(name):
             return
         if remaining == 1:
             raise OSError(f'worker storage survived cleanup: {name}')
         time.sleep(delay)
+
+
+def _storage_present(name):
+    try:
+        os.lstat(name)
+    except FileNotFoundError:
+        return False
+    return True        # other OSError propagates: unknown is not "removed"
 
 
 class EmbeddedWindow:
@@ -282,13 +294,15 @@ class EmbeddedWindow:
         if self._mapping is not None:
             self._mapping.close()
             self._mapping = None
-        if self._temporary is not None:
-            _cleanup_temporary(self._temporary)
-            self._temporary = None
         if self._texture is not None:
+            # Released before the storage, or a cleanup that raises would leak the
+            # texture until the context dies with the window.
             from OpenGL.GL import glDeleteTextures
             glDeleteTextures([self._texture])
             self._texture = None
+        if self._temporary is not None:
+            _cleanup_temporary(self._temporary)
+            self._temporary = None
 
     def terminate(self):
         self._check_thread()

@@ -73,7 +73,6 @@ LAN_TEST_MODULES = [
     'test_lan_launch_recovery', 'test_station_balance',
     'test_collection_points', 'test_collection_points_lan',
     'test_i18n', 'test_i18n_russian', 'test_language_tools',
-    'test_windows_worker_diagnostic',
 ]
 
 PROVISIONING = (
@@ -326,14 +325,36 @@ STEPS: list[dict] = [
     dict(id='package-windows.5', workflow='windows-signal.yml', job='package-windows',
          runs_on='windows-latest', ci_step='Zip',
          ci_command='Compress-Archive -Path "dist/STAR ARMADA/*" `\n  -DestinationPath '
-                    '"dist/STAR-ARMADA-candidate-win.zip"',
+                    '"dist/STAR-ARMADA-candidate-win$suffix.zip" (suffix -gate-failed when the gate was red)',
          kind='skip', skip_reason='PLATFORM MISMATCH: Compress-Archive is Windows PowerShell only. '
                      'Packaging step.'),
     dict(id='package-windows.6', workflow='windows-signal.yml', job='package-windows',
          runs_on='windows-latest', ci_step='Upload artifact (star-armada-candidate-win)',
-         ci_command='uses: actions/upload-artifact@v4\nwith:\n  name: star-armada-candidate-win\n  '
-                    'path: dist/STAR-ARMADA-candidate-win.zip',
+         ci_command='uses: actions/upload-artifact@v4\nwith:\n  name: star-armada-candidate-win '
+                    '(suffixed -gate-failed when windows-lan was not successful)\n  '
+                    'path: dist/STAR-ARMADA-candidate-win*.zip',
          kind='skip', skip_reason='CI artifact storage on a Windows-only, manual-only packaging job.'),
+
+    # ------------------------------------------------------------------
+    # Local mirror of the new counted cleanup-diagnostic gate (windows-lan,
+    # 'Worker cleanup diagnostic tests'), run with the same count/no-skip rule.
+    # ------------------------------------------------------------------
+    dict(id='windows-lan.9-local', workflow='windows-signal.yml', job='windows-lan',
+         runs_on='windows-latest', ci_step='Worker cleanup diagnostic tests',
+         ci_command='python -c "import unittest; suite = '
+                    "unittest.defaultTestLoader.loadTestsFromName('test_windows_worker_diagnostic'); "
+                    'expected = suite.countTestCases(); assert expected >= 5; result = ...; '
+                    'raise SystemExit(0 if result.wasSuccessful() and result.testsRun == expected '
+                    'and not result.skipped else 1)"',
+         kind='run', ci_step_is_ci=True,
+         local_command=[str(PYTHON), '-m', 'unittest', '-v', 'test_windows_worker_diagnostic'],
+         timeout=300,
+         env={'PYTHONPATH': 'tests', 'SDL_VIDEODRIVER': 'dummy', 'SDL_AUDIODRIVER': 'dummy'},
+         reproduction='equivalent',
+         note='EQUIVALENT, not identical: the CI pins the case count and rejects skips; unittest\'s '
+              'own runner here reports both, so read the Ran count rather than the exit code alone. '
+              'The module is mocked and platform-portable, so this is real evidence for its logic '
+              'but still not Windows evidence for the tool it observes.'),
 
     # ------------------------------------------------------------------
     # Local addition: not a CI step. The portable member of the skipped
