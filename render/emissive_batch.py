@@ -7,8 +7,9 @@ Three things are decided here and nowhere else:
     a visibility answer;
   * **how a beam is layered** — a wide soft sheath, a bright sheath and a hot core, each at its own
     width and alpha (`renderer.py::_draw_effects`, the `beam` branch);
-  * **how big a bolt is** — the same `projectile_extents` with a pixels-per-world of 1.0, which
-    yields the *pixel* extents; the window scales them by its own camera.
+  * **physical projectile dimensions** — world-sized laser cores and guided bodies, with the
+    actual head and full velocity; the native camera projects their geometry and applies only
+    its documented width-readability floor.
 
 Everything is emissive, so everything blends additive and writes no depth.
 """
@@ -26,10 +27,6 @@ JUMP_RING_BASE = 60.0
 JUMP_RING_GROWTH = 160.0
 JUMP_RING_WIDTH = 2.5
 JUMP_RING_COLOUR = (0.5, 0.7, 1.0)
-HALO_ALPHA = 0.30
-CORE_ALPHA = 0.95
-CORE_WHITEN = 0.55
-HALO_SCALE = (1.9, 2.6)        # BOLT_HALO in renderer.py
 FIRE_LIFETIME = 2.0
 EXPLOSION_LIFETIME = 1.5        # renderer.py::_draw_explosion `life`
 EXPLOSION_SMALL_LIFETIME = 0.6  # the small blast fades out over 0.6 s
@@ -44,10 +41,6 @@ HIT_HULL_LIFETIME = 0.42        # ...and for a bare-hull contact
 HIT_KINDS = ('shield_hit', 'hull_hit', 'impact')
 
 QUADRANTS = ('front', 'rear', 'left', 'right')
-
-
-def _lift(colour, amount):
-    return tuple(min(1.0, c * (1.0 - amount) + amount) for c in colour[:3])
 
 
 def explosions(effects) -> tuple[list, int]:
@@ -163,41 +156,31 @@ def rings(effects) -> list:
 
 
 def projectiles(shots, weapon_type_of, extents_of, lead=0.0) -> tuple[list, dict]:
-    """A halo quad and a hot core per shaped bolt.
+    """Physical flight records: real world velocity and world-sized body/core.
 
-    `extents_of(shape, size, 1.0)` returns *pixel* extents because a pixels-per-world of 1.0 makes
-    world units and pixels the same number: the window converts them back with its own camera.
-
-    `lead` is the elapsed part of the tick, in seconds: a bolt travels in a straight line, so its
-    position at the moment of presentation is its simulated position plus velocity times that.
+    The native camera owns projection, a subpixel width floor and the short tapered exhaust.
+    `extents_of` remains a compatibility argument for existing callers; pixel extents are no
+    longer consulted. `lead` moves only the presented head, never the simulation projectile.
     """
     out = []
+    # Keep the historical squares counter for receipt readers: the world-axis path emits none.
     stats = {'drawn': 0, 'legacy': 0, 'squares': 0}
     for shot in shots:
-        shape = _shape(weapon_type_of(getattr(shot, 'weapon_id', None)))
-        if shape == 'legacy':
-            stats['legacy'] += 1          # Python draws these as point sprites; not carried yet
+        weapon_type = weapon_type_of(getattr(shot, 'weapon_id', None))
+        shape = _shape(weapon_type)
+        if shape == 'legacy' or shot.vel.length() <= 1e-9:
+            stats['legacy'] += 1
             continue
-        length, width = extents_of(shape, shot.size, 1.0)
-        heading = shot.vel.to_tuple()
-        colour = tuple(float(c) for c in shot.color[:3])
-        if lead:
-            position, velocity = shot.pos, shot.vel
-            pos = (position.x + velocity.x * lead, position.y + velocity.y * lead,
-                   position.z + velocity.z * lead)
-        else:
-            pos = (shot.pos.x, shot.pos.y, shot.pos.z)
-        if shape == 'square':
-            stats['squares'] += 1
-            out.append(codec.bolt(pos, (0.0, 0.0, 0.0), length * HALO_SCALE[0] * 0.5,
-                                  length * HALO_SCALE[0] * 0.5, (*colour, HALO_ALPHA), square=True))
-            out.append(codec.bolt(pos, (0.0, 0.0, 0.0), length * 0.5, length * 0.5,
-                                  (*_lift(colour, CORE_WHITEN), CORE_ALPHA), square=True))
-        else:
-            out.append(codec.bolt(pos, heading, length * HALO_SCALE[0] * 0.5,
-                                  width * HALO_SCALE[1] * 0.5, (*colour, HALO_ALPHA)))
-            out.append(codec.bolt(pos, heading, length * 0.5, width * 0.5,
-                                  (*_lift(colour, CORE_WHITEN), CORE_ALPHA)))
+        size = max(0.1, float(shot.size))
+        subtype = {'missile': codec.FLIGHT_MISSILE, 'torpedo': codec.FLIGHT_TORPEDO}.get(
+            weapon_type, codec.FLIGHT_LASER)
+        half_length = size * (5.0 if weapon_type == 'torpedo' else 4.0 if weapon_type == 'missile' else 12.0)
+        half_width = size * (0.8 if weapon_type == 'torpedo' else 0.6 if weapon_type == 'missile' else 0.4)
+        position, velocity = shot.pos, shot.vel
+        pos = (position.x + velocity.x * lead, position.y + velocity.y * lead,
+               position.z + velocity.z * lead)
+        out.append(codec.flight(pos, velocity.to_tuple(), half_length, half_width,
+                                tuple(shot.color), subtype=subtype))
         stats['drawn'] += 1
     return out, stats
 

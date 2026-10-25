@@ -90,8 +90,9 @@ class RingTests(unittest.TestCase):
 
 class BoltTests(unittest.TestCase):
     def shot(self, **kwargs):
-        base = types.SimpleNamespace(pos=types.SimpleNamespace(x=10, y=0, z=0), size=1.0,
-                                     vel=types.SimpleNamespace(to_tuple=lambda: (0.0, 0.0, 1.0)),
+        from game.core.vectors import Vec3
+        base = types.SimpleNamespace(pos=Vec3(10,0,0), size=1.0,
+                                     vel=Vec3(0,0,1),
                                      color=(1.0, 0.9, 0.4), weapon_id='laser')
         for key, value in kwargs.items():
             setattr(base, key, value)
@@ -101,25 +102,26 @@ class BoltTests(unittest.TestCase):
         self.assertEqual(px_per_world, 1.0)      # pixels, by construction
         return (12.0, 2.0) if shape == 'bolt' else (8.0, 8.0)
 
-    def test_bolt_carries_pixel_extents_and_heading(self):
+    def test_bolt_carries_world_extents_and_heading(self):
         primitives, stats = emissive_batch.projectiles([self.shot()], lambda s: 'laser',
                                                         self.extents)
-        self.assertEqual(len(primitives), 2)               # halo + core
-        self.assertEqual(primitives[0]['kind'], codec.BOLT)
+        self.assertEqual(len(primitives), 1)               # native consumer layers the flight
+        self.assertEqual(primitives[0]['kind'], codec.FLIGHT)
         self.assertEqual(primitives[0]['b'], (0.0, 0.0, 1.0))
-        self.assertAlmostEqual(primitives[1]['radius'], 6.0)     # 12 px half-length
-        self.assertAlmostEqual(primitives[1]['width'], 1.0)
+        self.assertAlmostEqual(primitives[0]['radius'], 12.0)   # WORLD half-length, not pixels
+        self.assertAlmostEqual(primitives[0]['width'], .4)
         self.assertEqual(stats['drawn'], 1)
 
-    def test_square_bolts_and_legacy_shots(self):
+    def test_guided_flights_and_legacy_shots(self):
         primitives, stats = emissive_batch.projectiles(
             [self.shot(weapon_id='laser'), self.shot(weapon_id='torpedo'),
              self.shot(weapon_id='missile')],
             lambda s: 'legacy' if s == 'missile' else s, self.extents)
         self.assertEqual(stats['legacy'], 1)               # the legacy point sprite is not carried
-        self.assertEqual(stats['squares'], 1)
-        squares = [p for p in primitives if p['shape'] == codec.SHAPE_SQUARE]
-        self.assertEqual(len(squares), 2)                  # halo + core for the torpedo only
+        self.assertEqual(stats['squares'], 0)
+        torpedoes = [p for p in primitives if p['kind'] == codec.FLIGHT
+                     and p['shape'] == codec.FLIGHT_TORPEDO]
+        self.assertEqual(len(torpedoes), 1)                # directional body + native exhaust
 
 
 class ExplosionTests(unittest.TestCase):

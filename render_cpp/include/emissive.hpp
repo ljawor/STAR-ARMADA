@@ -5,7 +5,9 @@
 //
 //   header <8sHHII>          20 B  magic "ARMEMIT1", version, count, reserved, crc32(records)
 //   record <BBH4B3f3fffHH>   44 B
-//     kind B     1 ribbon, 2 disc, 3 ring, 4 bolt, 5 explosion, 6 shield, 7 shield hit, 8 hull hit
+//     kind B     1 ribbon, 2 disc, 3 ring, 4 bolt, 5 explosion, 6 shield, 7 shield hit, 8 hull hit,
+//                9 FLIGHT: head a, velocity b, world half-length radius, world half-width width;
+//                shape 0 laser / 1 missile / 2 torpedo, flags 3, segments 0. See projectile_effects.hpp.
 //     shape B    ribbon: 0 camera-facing, 1 flat
 //                disc/ring: 0 billboard, 1 flat
 //                bolt: 0 elongated along its axis, 1 square
@@ -20,6 +22,7 @@
 #pragma once
 
 #include <array>
+#include <cmath>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
@@ -44,6 +47,8 @@ constexpr uint8_t kExplosion = 5;    // a blast carried as parameters (see explo
 constexpr uint8_t kShield = 6;       // a standing shield shell (see shield.hpp)
 constexpr uint8_t kShieldHit = 7;    // a damage contact on that shell (see hit_effects.hpp)
 constexpr uint8_t kHullHit = 8;      // a contact on bare hull (see hit_effects.hpp)
+constexpr uint8_t kFlight = 9;       // WORLD head, velocity, half-length/width
+constexpr uint8_t kFlightLaser = 0, kFlightMissile = 1, kFlightTorpedo = 2;
 
 constexpr uint8_t kShapeCamera = 0;
 constexpr uint8_t kShapeFlat = 1;
@@ -131,12 +136,27 @@ inline std::vector<Primitive> decode(const uint8_t* data, size_t size) {
     std::memcpy(&primitive.radius, at + 32, 4);
     std::memcpy(&primitive.width, at + 36, 4);
     primitive.segments = get16(at + 40);
-    if (primitive.kind < kRibbon || primitive.kind > kHullHit)
+    if (primitive.kind < kRibbon || primitive.kind > kFlight)
       throw EmissiveError("unknown emissive kind");
     if (get16(at + 42) != 0)
       throw EmissiveError("reserved record field must be zero");
     if (!(primitive.radius >= 0.f) || !(primitive.width >= 0.f))
       throw EmissiveError("primitive has a non-finite extent");
+    if (primitive.kind == kFlight) {
+      if (primitive.shape > kFlightTorpedo || primitive.flags != 3 || primitive.segments)
+        throw EmissiveError("invalid flight subtype or flags");
+      for (float v : primitive.a)
+        if (!std::isfinite(v) || std::abs(v)>1e8f)
+          throw EmissiveError("flight position outside finite presentation bounds");
+      for (float v : primitive.b)
+        if (!std::isfinite(v) || std::abs(v)>1e8f)
+          throw EmissiveError("flight velocity outside finite presentation bounds");
+      if (!std::isfinite(primitive.radius) || !std::isfinite(primitive.width) ||
+          primitive.radius<=0.f || primitive.width<=0.f ||
+          primitive.radius>1e8f || primitive.width>1e8f ||
+          std::hypot(primitive.b[0],primitive.b[1],primitive.b[2])<=1e-9f)
+        throw EmissiveError("invalid flight extent or zero velocity");
+    }
     out.push_back(primitive);
   }
   return out;

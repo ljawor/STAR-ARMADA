@@ -2657,6 +2657,6 @@
   "core_bindings": 106,
   "payload_bytes": 28911256
  },
- "engine_version": "1.0.0",
+ "engine_version": "1.0.1",
  "purpose": "The exact catalogue a shipped default selection resolves to. Rollback is a settings change, not a lock change."
 }

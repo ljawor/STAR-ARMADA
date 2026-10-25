@@ -9,6 +9,7 @@
 #include "embedded.hpp"
 #include "shield.hpp"
 #include "hit_effects.hpp"
+#include "projectile_effects.hpp"
 #include "input_ring.hpp"
 #include "marker_ring.hpp"
 #include "overlay.hpp"
@@ -1048,6 +1049,7 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
   // triangles - but additive blending, so fire adds to the scene instead of covering it.
   std::unique_ptr<armada::bridge::RingReader> emitRing;
   uint64_t emitSequence = 0;
+  size_t emitFlights = 0; // Successfully expanded world-axis shots, not merely published records.
   size_t emitBatches = 0, emitDecodeFailures = 0, emitPrimitives = 0, emitTriangles = 0,
          emitDropped = 0;
   // W05 slice 5: shield shells are counted across the run - they are the only emissive primitive
@@ -2131,6 +2133,8 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
       // W05 slice 5: one bucket of instance records per detail level. Three instanced draws per
       // frame replace ~2,400 CPU-built vertices per shielded unit.
       std::vector<float> shieldInstances[3];
+      std::vector<armada::flight::Vertex> flightVertices;
+      flightVertices.reserve(48);
       for (const auto &primitive : emitList) {
         std::vector<CueVertex> &out = primitive.depth() ? farTriangles : nearTriangles;
         ++emitPrimitives;
@@ -2225,6 +2229,14 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
             }
             quad(out, i0, o0, o1, i1, colour);
           }
+        } else if (primitive.kind == emit::kFlight) {
+          flightVertices.clear();
+          armada::flight::append(primitive, {eye[0],eye[1],eye[2]}, {rx,ry,rz}, {ux,uy,uz},
+                                focal / eyeDepth(primitive.a.data()), flightVertices);
+          for (const auto& vertex : flightVertices)
+            push(out, vertex.position.data(), vertex.colour);
+          emitTriangles += flightVertices.size() / 3;
+          if (!flightVertices.empty()) ++emitFlights;
         } else if (primitive.kind == emit::kBolt) {
           // Bolts carry pixel extents: they are converted at this camera's depth, so a volley
           // keeps its size whatever the player's zoom is.
@@ -2850,9 +2862,10 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
         {"batches", emitBatches},
         {"decode_failures", emitDecodeFailures},
         {"primitives", emitPrimitives},
+        {"flight_primitives", emitFlights},
         {"triangles", emitTriangles},
         {"dropped_vertices", emitDropped},
-        {"blend", "additive, no depth write; bolts sized in pixels at this camera"},
+        {"blend", "additive, no depth write; FLIGHT world-sized, historical BOLT pixel-sized"},
     };
   }
   if (!o.fxDemo.empty() && !emitRing) {

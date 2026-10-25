@@ -59,3 +59,53 @@ record  <BBH4B3f3fffHH  44 B   kind, shape, flags, rgba, a xyz, b xyz, radius, w
   that is redrawn for 500 frames counts 500 times.
 * No frame-rate claim: the equal-workload benchmark is still slice 6, and this pass adds draw
   calls to a scene that has never been measured under equal work.
+
+## 1. Combat presentation amendment — world-axis flight
+
+The preceding sections describe the original W05 implementation. The combat presentation pass
+supersedes its pixel-sized **live** bolts, not its historical wire fixtures:
+
+- `FLIGHT = 9` carries the actual head in `a`, full world velocity in `b`, world half-length in
+  `radius` and world half-width in `width`. `shape` is laser 0, missile 1 or torpedo 2. One record
+  replaces the old pair of screen-facing halo/core rectangles. The existing header/version and
+  44-byte layout remain unchanged; an old consumer refuses unknown kind 9, so rebuild it.
+- Flags are depth-test plus additive (3), without depth writes; `segments` is reserved zero.
+  Position, velocity and extents must be finite and bounded in magnitude by 1e8; dimensions and
+  speed must be positive. Both codecs enforce the new kind's contract.
+- Laser cores and their soft glow follow the world trajectory. Guided shots have a pointed body,
+  an engine core and a tapering exhaust (warm for missiles, cooler/longer for torpedoes).
+  Exhaust follows the current velocity, **not** a fabricated curved history. The renderer does not
+  change or infer a target, muzzle, turn rate, accuracy, damage or projectile speed. All-round
+  capital mounts still use the simulation's existing single nose muzzle: correcting their physical
+  launch positions is a separate gameplay-bound change, not something this projection fix proves.
+- All long-axis vertices stay behind the physical head. Perspective, including the depth component
+  of velocity, determines the projected angle. End-on flight becomes a small glow, not an invented
+  horizontal streak. A **1.2-pixel full-width** readability floor prevents the core vanishing into
+  MSAA; length and plume length are world-sized and never enlarged to a pixel-length floor.
+- The historical `BOLT = 4` decoder and fixed-pixel fixture behavior remain supported. The legacy
+  Python/OpenGL projectile renderer is unchanged by this native-renderer pass.
+
+Verification commands (run native workloads serially and under process-group deadlines):
+
+```sh
+SDL_VIDEODRIVER=cocoa PYTHONPATH=tests .venv/bin/python -m unittest test_combat_presentation test_render_emissive test_render_frame_pacing test_projectile_aim test_detmath
+cmake --build render_cpp/build-w02 -j8
+ctest --test-dir render_cpp/build-w02 --output-on-failure
+.venv/bin/python tools/render/verify_combat_fire.py --out <new-evidence-directory>
+.venv/bin/python tools/render/capture_native_combat.py --out <new-battle-directory> --distance 1600 --frames 360
+```
+
+`verify_combat_fire.py` runs isolated production-producer/native-consumer shots, background-subtracts
+real Metal/D3D pixels, requires nonempty subjects, checks visible length scaling across a 4x camera
+distance change and compares the off-axis streak with the exact perspective derivative. The
+unchanged baseline measured zoom ratios 1/1/1 and a 27.63-degree off-axis error; that fails the same
+bars. Initial candidate attempts whose MSAA coverage lost too much of the distant tail are retained
+as failed attempts, not counted as passes. The final soft-sided streak keeps a readable body before
+its tapered end rather than a single bright midpoint.
+
+`capture_native_combat.py` runs the real `main.py` initialization, commands, simulation and embedded
+native presentation with a small stock-weapon fleet fixture, isolated user paths and hidden display.
+Its receipt lists each frame's simulation tick/hash, live weapon types and hull+shield total, and
+asserts real fire, damage, state-neutral presentation and worker cleanup. The fixture uses spawned
+fleets, not a claim of paid construction or stock fleet-cap eligibility. Pixel probes and macOS
+clips are not Windows runtime acceptance, full-suite acceptance or owner appearance approval.
