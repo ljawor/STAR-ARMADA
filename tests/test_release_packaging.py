@@ -328,22 +328,32 @@ class WindowsRuntimeGateTests(unittest.TestCase):
         step = None
         inside_run = False
         indent = None
+        body_indent = None
         for number, line in enumerate(source.splitlines(), 1):
             stripped = line.strip()
             if re.match(r'^ {4,8}- (name|uses):', line):
-                step, inside_run, indent = stripped, False, None
+                step, inside_run, indent, body_indent = stripped, False, None, None
                 continue
             if re.match(r'^ {0,6}(jobs|[a-z-]+):$', line):
                 step = None
             match = re.match(r'^(\s*)run: \|?', line)
             if match:
-                inside_run, indent = True, len(match.group(1))
+                inside_run, indent, body_indent = True, len(match.group(1)), None
                 rest = line.split('run:', 1)[1].strip()
                 if rest and rest != '|' and '${{' in rest:
                     offenders.append((number, step, rest[:80]))
                 continue
             if inside_run:
-                if stripped.startswith('- ') or re.match(r'^\s*[a-z-]+:', line) and len(line) - len(line.lstrip()) <= indent:
+                # A block scalar does not end at its first `- name:`-looking line: it ends at the
+                # first line indented less than its body. Ending on `- ` anywhere let a script
+                # line that begins with a dash stop the scan, so the rest of that block went
+                # unchecked - a hole wide enough to hide the very thing this test is for.
+                if not stripped:
+                    continue
+                here = len(line) - len(line.lstrip())
+                if body_indent is None:
+                    body_indent = here
+                if here < body_indent:
                     inside_run = False
                     continue
                 if '${{' in line:
