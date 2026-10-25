@@ -67,7 +67,7 @@ LAN_TEST_MODULES = [
     'test_netdiag', 'test_netdiag_compare', 'test_lan_state_diff',
     'test_sim_profiles', 'test_lan', 'test_multiplayer',
     'test_checksum_canonicalization', 'test_orbit_spacing_batch',
-    'test_draw_view_scope', 'test_lan_human_safety',
+    'test_lan_human_safety',
     'test_lan_failure_diagnostics', 'test_lan_reconnect',
     'test_lan_production_reconnect', 'test_lan_reconnect_admission',
     'test_lan_launch_recovery', 'test_station_balance',
@@ -269,8 +269,8 @@ STEPS: list[dict] = [
               'test_lan_eight_players, test_lan_deployment_ui, test_lan_language, '
               'test_release_packaging, test_native_binary_discovery, test_render_default, '
               'test_native_worker_entry, test_native_worker, test_native_worker_main_boundary, '
-              'test_native_worker_parent_identity. The 21st local module, test_draw_view_scope, is '
-              'not in that CI step at all, so the local order is not a prefix of the CI order. Same '
+              'test_native_worker_parent_identity. The local order is a subsequence of the CI order '
+              '(those modules sit between the ones run here), not a prefix of it. Same '
               'environment, same platform caveat: this is macOS evidence about portable modules, '
               'not Windows evidence. Two-process LAN tests in this list are load-sensitive; the '
               'summary records the load average before and after (host.loadavg_1_5_15_*) - read a '
@@ -395,8 +395,7 @@ STEPS: list[dict] = [
 COVERS = [
     '20 of the 33 modules in windows-signal.yml\'s focused LAN step, in the workflow order, under '
     'the same environment (PYTHONPATH=tests, dummy SDL video/audio, STAR_ARMADA_PACING_FLOOR=15) - '
-    'executed on macOS, plus test_draw_view_scope, which that step does not run. The other 13 CI '
-    'modules are not run here.',
+    'executed on macOS. The other 13 CI modules are not run here.',
     'The netdiag entry point (python main.py --netdiag info): environment probe, local-address '
     'enumeration and a real host+join socket pairing on macOS.',
     'The three tools/lan_state_diff.py scene-state dumps (ticks 0, ticks 1, contact scene at 60 '

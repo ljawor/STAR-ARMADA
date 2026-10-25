@@ -327,13 +327,21 @@ class ConstructionSystem:
         # radius away from its centre. energy_relay's flat 1100u sat entirely
         # inside that exclusion zone (gas giants are r2200 -> nearest legal
         # spot 2355u), so the station could not be built anywhere at all.
+        # An asteroid field is a region, not a point, and building inside it is
+        # the point (the planet-spacing rule above exempts it for that reason),
+        # so its window starts at the field's EDGE. Measured from the centre on
+        # a field of radius 1400-1800 only the inner 900u core was legal, which
+        # rejected sites standing well inside the visible rocks.
         for req_kind, rng in (sd.requires_range or {}).items():
             ok = False
             for e in st.entities.values():
                 if not (e.alive and e.data_id == req_kind):
                     continue
-                clear = _body_clearance(e, sd.radius) if req_kind != "asteroid_field" else 0.0
-                if math.dist((x, y, z), (e.pos.x, e.pos.y, e.pos.z)) <= clear + rng:
+                if req_kind == "asteroid_field":
+                    reach = e.radius
+                else:
+                    reach = _body_clearance(e, sd.radius)
+                if math.dist((x, y, z), (e.pos.x, e.pos.y, e.pos.z)) <= reach + rng:
                     ok = True
                     break
             if not ok:

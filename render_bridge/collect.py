@@ -55,6 +55,15 @@ GHOST_ENTITY = 0xFFFFFFFE
 GHOST_VALID = (0.30, 0.90, 0.55, 0.55)
 GHOST_INVALID = (1.00, 0.25, 0.20, 0.50)
 
+#: Asteroid fields are map features, not spheres: they use the approved environment prop
+#: (a cluster of rocks) instead of the planet texture path. They sat outside the frame for
+#: a while because "not spheres" was read as "not drawable", which cost every map its mining
+#: sites. The model's bounds are +-0.58 in X/Z (assets/models/shared_asteroid_field.mesh.json),
+#: so scaling by radius / ASTEROID_EXTENT makes the cluster fill the field radius the
+#: simulation already uses for mining range and body spacing.
+ASTEROID_BINDING = 'environment:asteroid_field'
+ASTEROID_EXTENT = 0.58
+
 
 def station_binding(data_id, faction):
     from render.faction_visuals import normalize_station_key
@@ -253,21 +262,28 @@ class FrameCollector:
             surface = None
             # W05: planets travel as instances too. Their binding names the texture the window
             # keeps in its own table (`planet:<data_id>:<name>`), and the scale is the planet's
-            # radius because the native body is a unit sphere. Asteroid fields are not spheres
-            # and stay out until they have their own pass.
+            # radius because the native body is a unit sphere. Asteroid fields are not spheres:
+            # they ride the approved environment prop and are scaled to their field radius.
             if entity.is_planet:
                 if entity.data_id == 'asteroid_field':
-                    omitted += 1
-                    continue
-                binding_id = binding_index.get(
-                    planets.binding_name(entity.data_id,
-                                         entity.name_override or entity.data_id))
-                if binding_id is None:
-                    unknown.add(entity.data_id)
-                    continue
-                scale = float(entity.radius)
-                faction, tint = 'imperial', _WHITE_BYTES
-                key = None  # not from the visual cache
+                    binding_id = binding_index.get(ASTEROID_BINDING)
+                    if binding_id is None:
+                        unknown.add(ASTEROID_BINDING)
+                        omitted += 1
+                        continue
+                    scale = float(entity.radius) / ASTEROID_EXTENT
+                    faction, tint = 'imperial', _WHITE_BYTES
+                    key = None  # not from the visual cache
+                else:
+                    binding_id = binding_index.get(
+                        planets.binding_name(entity.data_id,
+                                             entity.name_override or entity.data_id))
+                    if binding_id is None:
+                        unknown.add(entity.data_id)
+                        continue
+                    scale = float(entity.radius)
+                    faction, tint = 'imperial', _WHITE_BYTES
+                    key = None  # not from the visual cache
             else:
                 # Inline the visibility test: it is one method call per entity otherwise, and
                 # a supplied set makes it a plain membership test.
@@ -530,17 +546,23 @@ class FrameCollector:
                 continue
             if entity.is_planet:
                 # W05: planets ride as instances whose binding names their texture, with the
-                # radius as the scale of the unit sphere the window draws.
+                # radius as the scale of the unit sphere the window draws. Asteroid fields use
+                # the approved environment prop, scaled to fill the radius the sim mines within.
                 if entity.data_id == 'asteroid_field':
-                    omitted += 1
-                    continue
-                binding_id = self._binding_index.get(
-                    planets.binding_name(entity.data_id,
-                                         entity.name_override or entity.data_id))
-                if binding_id is None:
-                    unknown.add(entity.data_id)
-                    continue
-                scale = float(entity.radius)
+                    binding_id = self._binding_index.get(ASTEROID_BINDING)
+                    if binding_id is None:
+                        unknown.add(ASTEROID_BINDING)
+                        omitted += 1
+                        continue
+                    scale = float(entity.radius) / ASTEROID_EXTENT
+                else:
+                    binding_id = self._binding_index.get(
+                        planets.binding_name(entity.data_id,
+                                             entity.name_override or entity.data_id))
+                    if binding_id is None:
+                        unknown.add(entity.data_id)
+                        continue
+                    scale = float(entity.radius)
             else:
                 if not self.all_visible and not self._visible(state, entity):
                     continue
@@ -644,6 +666,10 @@ def required_names(state, ds, *, ship_size, ship_binding, local_player=0, all_vi
         for kind in (*BUILDING_TYPES, *STATION_TYPES):
             bindings.add(f'{faction}:{kind}')
     bindings.add(stations.SCAFFOLD)
+    # Reserved unconditionally: fields exist from map load, but a session table is built once
+    # and a missing binding is a silently invisible map feature, which is how mining sites
+    # disappeared. Same reasoning as the surface hardware above.
+    bindings.add(ASTEROID_BINDING)
     # A session's table never changes. Reserve the public unit/weapon catalogue,
     # not just hulls present at startup, or newly built types are silently omitted.
     for ship_id, data in ds.ships.items():
